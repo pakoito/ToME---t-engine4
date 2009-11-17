@@ -50,7 +50,7 @@ void free_map(map m)
 
 void map_delete_grid_all(map m, int x, int y)
 {
-	grid g = m->grids[i + j * m->w];
+	grid g = m->grids[x + y * m->w];
 	while (g)
 	{
 		grid next = g->next;
