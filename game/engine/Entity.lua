@@ -2,6 +2,9 @@ module(..., package.seeall, class.make)
 
 local next_uid = 1
 
+-- Setup the uids repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
+setmetatable(__uids, {__mode="v"})
+
 function _M:init(t)
 	t = t or {}
 	self.uid = next_uid

@@ -16,15 +16,21 @@
 
 #include "types.h"
 #include "script.h"
-#include "map.h"
 #include "physfs.h"
 
-#define FOVRADIUS	100
-
 lua_State *L = NULL;
-fov_settings_type fov_settings;
-map current_map = NULL;
+int current_map = LUA_NOREF;
 int px = 1, py = 1;
+
+void display_utime()
+{
+	struct timeval tv;
+	struct timezone tz;
+	struct tm *tm;
+	gettimeofday(&tv, &tz);
+	tm=localtime(&tv.tv_sec);
+	printf(" %d:%02d:%02d %d \n", tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec);
+}
 
 /**
  * Redraw the screen. Called in a loop to create the output.
@@ -32,11 +38,18 @@ int px = 1, py = 1;
 void redraw(void) {
 	display_clear();
 
-	if (current_map)
+//	display_utime();
+
+	if (current_map != LUA_NOREF)
 	{
-		fov_circle(&fov_settings, current_map, NULL, px, py, 20);
-		map_display(current_map);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_map);
+		lua_pushstring(L, "display");
+		lua_gettable(L, -2);
+		lua_remove(L, -2);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_map);
+		lua_call(L, 1, 0);
 	}
+//	display_utime();
 
 	display_put_char('@', px, py, 0x00, 0xFF, 0x00);
 	display_refresh();
@@ -47,7 +60,6 @@ void redraw(void) {
  */
 void normal_exit(void) {
 	display_exit();
-	fov_settings_free(&fov_settings);
 	exit(0);
 }
 
@@ -91,75 +103,9 @@ void keypressed(int key, int shift) {
 	redraw();
 }
 
-void map_seen(void *m, int x, int y, int dx, int dy, void *src)
-{
-	if ((x < 0) || (y < 0) || (x >= ((map)m)->w) || (y >= ((map)m)->h)) return;
-	((map)m)->seens[x + y * ((map)m)->w] = TRUE;
-	((map)m)->remembers[x + y * ((map)m)->w] = TRUE;
-}
-
-bool map_opaque(void *mm, int x, int y)
-{
-	int i = 1;
-	map m = (map)mm;
-	bool block = FALSE;
-
-	if (!m) return FALSE;
-	if ((x < 0) || (y < 0) || (x >= m->w) || (y >= m->h)) return FALSE;
-	grid g = m->grids[x + y * m->w];
-	while (g)
-	{
-		lua_getglobal(L, "__uids");
-		lua_pushnumber(L, g->uid);
-		lua_gettable(L, -2);
-		lua_pushstring(L, "block_sight");
-		lua_gettable(L, -2);
-		if (lua_isnil(L, 4))
-		{
-//			printf("block %d:%d => nil\n");
-		}
-		else if (lua_isboolean(L, 4))
-		{
-//			printf("block %d:%d [%d] => %d\n", x, y, i, lua_toboolean(L, 4));
-			block = TRUE;
-		}
-		else
-		{
-//			printf("block %d:%d [%d] => ??? %s\n", x, y, i, lua_tostring(L, 4));
-		}
-//		printf("lua top %d\n", lua_gettop(L));
-		lua_pop(L, 3);
-
-		if (block) return TRUE;
-
-		g = g->next;
-		i++;
-	}
-	return FALSE;
-}
-
-
 extern int luaopen_core(lua_State *L);
 
 static int traceback (lua_State *L) {
-#if 0
-	if (!lua_isstring(L, 1))  /* 'message' not a string? */
-		return 1;  /* keep it intact */
-	lua_getfield(L, LUA_GLOBALSINDEX, "debug");
-	if (!lua_istable(L, -1)) {
-		lua_pop(L, 1);
-		return 1;
-	}
-	lua_getfield(L, -1, "traceback");
-	if (!lua_isfunction(L, -1)) {
-		lua_pop(L, 2);
-		return 1;
-	}
-	lua_pushvalue(L, 1);  /* pass error message */
-	lua_pushinteger(L, 2);  /* skip this function and traceback */
-	lua_call(L, 2, 1);  /* call debug.traceback */
-	return 1;
-#endif
 	printf("Lua Error: %s\n", lua_tostring(L, 1));
 }
 
@@ -185,10 +131,6 @@ int main (int argc, char *argv[])
 	PHYSFS_mount("game/", "/", 1);
 
 	TTF_Init();
-
-	fov_settings_init(&fov_settings);
-	fov_settings_set_opacity_test_function(&fov_settings, map_opaque);
-	fov_settings_set_apply_lighting_function(&fov_settings, map_seen);
 
 	L = lua_open();  /* create state */
 	luaL_openlibs(L);  /* open libraries */
