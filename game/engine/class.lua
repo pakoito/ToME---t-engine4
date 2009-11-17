@@ -3,9 +3,9 @@ module("class", package.seeall)
 local base = _G
 
 function make(c)
+	setmetatable(c, {__index=_M})
 	c.new = function(...)
 		local obj = {}
-		setmetatable(c, {__index=_M})
 		setmetatable(obj, {__index=c})
 		if obj.init then obj:init(...) end
 		return obj
@@ -15,9 +15,9 @@ end
 
 function inherit(base)
 	return function(c)
+		setmetatable(c, {__index=base})
 		c.new = function(...)
 			local obj = {}
-			setmetatable(c, {__index=base})
 			setmetatable(obj, {__index=c})
 			if obj.init then obj:init(...) end
 			return obj

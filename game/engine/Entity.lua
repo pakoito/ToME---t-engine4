@@ -6,6 +6,7 @@ local next_uid = 1
 setmetatable(__uids, {__mode="v"})
 
 function _M:init(t)
+	print("entity init")
 	t = t or {}
 	self.uid = next_uid
 	__uids[self.uid] = self
@@ -15,6 +16,7 @@ function _M:init(t)
 	self.color_g = t.color_g or 0
 	self.color_b = t.color_b or 0
 	self.block_sight = t.block_sight
+	self.block_move = t.block_move
 
 	next_uid = next_uid + 1
 end
@@ -26,6 +28,8 @@ function _M:cloned()
 	next_uid = next_uid + 1
 end
 
-function _M:display()
-	return self.display, self.color_r, self.color_g, self.color_b
+function _M:check(prop, ...)
+	if type(self[prop]) == "function" then return self[prop](...)
+	else return self[prop]
+	end
 end

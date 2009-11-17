@@ -129,6 +129,7 @@ int main (int argc, char *argv[])
 {
 	PHYSFS_init(argv[0]);
 	PHYSFS_mount("game/", "/", 1);
+	PHYSFS_mount("game/modules/tome", "/tome", 1);
 
 	TTF_Init();
 

@@ -7,6 +7,8 @@ TERRAIN = 1
 OBJECT = 10
 ACTOR = 20
 
+displayOrder = { ACTOR, OBJECT, TERRAIN }
+
 function _M:init(w, h)
 	self.w, self.h = w, h
 	self.map = {}
@@ -46,10 +48,10 @@ function _M:display()
 	player:move(self, player.x+1, player.y)
 
 	for i = 0, self.w - 1 do for j = 0, self.h - 1 do
-		local e = self(i, j, TERRAIN)
+		local e, si = nil, 1
+		while not e and si <= #displayOrder do e = self(i, j, displayOrder[si]) si = si + 1 end
 		local z = i + j * self.w
 		if e then
---		print("grid", i, j, z, self.seens[z])
 			if self.seens[z] then
 				engine.display.char(e.display, i, j, e.color_r, e.color_g, e.color_b)
 			elseif self.remembers[z] then
@@ -68,7 +70,7 @@ end
 function _M:opaque(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
 	local e = self(x, y, TERRAIN)
-	if e and e.block_sight then return true end
+	if e and e:check("block_sight") then return true end
 end
 
 function _M:apply(x, y)
