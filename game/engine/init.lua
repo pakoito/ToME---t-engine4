@@ -1,3 +1,12 @@
+require "engine.KeyCommand"
+
+-- Setup a default key handler
+local key = engine.KeyCommand.new()
+key:setCurrent()
+
+-- Exit the game, this is brutal for now
+key:addCommand(key._x, {"ctrl"}, function() os.exit() end)
+
 local mod_def = loadfile("/tome/init.lua")
 if mod_def then
 	local mod = {}

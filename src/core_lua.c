@@ -6,7 +6,13 @@
 #include "types.h"
 #include "script.h"
 #include "display.h"
+#include "sge.h"
 
+/******************************************************************
+ ******************************************************************
+ *                              FOV                               *
+ ******************************************************************
+ ******************************************************************/
 struct lua_fov
 {
 	fov_settings_type fov_settings;
@@ -101,10 +107,71 @@ static const struct luaL_reg fov_reg[] =
 	{NULL, NULL},
 };
 
-extern int current_map;
+/******************************************************************
+ ******************************************************************
+ *                              Keys                              *
+ ******************************************************************
+ ******************************************************************/
+extern int current_keyhandler;
+static int lua_set_current_keyhandler(lua_State *L)
+{
+	if (current_keyhandler != LUA_NOREF)
+		luaL_unref(L, LUA_REGISTRYINDEX, current_keyhandler);
 
+	if (lua_isnil(L, 1))
+		current_keyhandler = LUA_NOREF;
+	else
+		current_keyhandler = luaL_ref(L, LUA_REGISTRYINDEX);
+
+	return 0;
+}
+static const struct luaL_reg keylib[] =
+{
+	{"set_current_handler", lua_set_current_keyhandler},
+	{NULL, NULL},
+};
+
+/******************************************************************
+ ******************************************************************
+ *                           Display                              *
+ ******************************************************************
+ ******************************************************************/
+static int sdl_new_surface(lua_State *L)
+{
+	int w = luaL_checknumber(L, 1);
+	int h = luaL_checknumber(L, 2);
+
+	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
+	auxiliar_setclass(L, "sdl{surface}", -1);
+
+	*s = SDL_CreateRGBSurface(
+		screen->flags,
+		w,
+		h,
+		screen->format->BitsPerPixel,
+		screen->format->Rmask,
+		screen->format->Gmask,
+		screen->format->Bmask,
+		screen->format->Amask
+	);
+
+	return 1;
+}
+
+static int sdl_free_surface(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	SDL_FreeSurface(*s);
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+extern int current_map;
 static int lua_set_current_map(lua_State *L)
 {
+	if (current_map != LUA_NOREF)
+		luaL_unref(L, LUA_REGISTRYINDEX, current_map);
+
 	if (lua_isnil(L, 1))
 		current_map = LUA_NOREF;
 	else
@@ -115,29 +182,49 @@ static int lua_set_current_map(lua_State *L)
 
 static int lua_display_char(lua_State *L)
 {
-	const char *c = luaL_checkstring(L, 1);
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
-	int r = luaL_checknumber(L, 4);
-	int g = luaL_checknumber(L, 5);
-	int b = luaL_checknumber(L, 6);
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	const char *c = luaL_checkstring(L, 2);
+	int x = luaL_checknumber(L, 3);
+	int y = luaL_checknumber(L, 4);
+	int r = luaL_checknumber(L, 5);
+	int g = luaL_checknumber(L, 6);
+	int b = luaL_checknumber(L, 7);
 
-	display_put_char(c[0], x, y, r, g, b);
+	display_put_char(*s, c[0], x, y, r, g, b);
 
+	return 0;
+}
+
+static int sdl_surface_erase(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	SDL_FillRect(*s, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
 	return 0;
 }
 
 static const struct luaL_reg displaylib[] =
 {
-	{"char", lua_display_char},
 	{"set_current_map", lua_set_current_map},
+	{"newSurface", sdl_new_surface},
 	{NULL, NULL},
 };
+
+static const struct luaL_reg sdl_surface_reg[] =
+{
+	{"__gc", sdl_free_surface},
+	{"close", sdl_free_surface},
+	{"erase", sdl_surface_erase},
+	{"putChar", lua_display_char},
+	{NULL, NULL},
+};
+
 
 int luaopen_core(lua_State *L)
 {
 	auxiliar_newclass(L, "fov{core}", fov_reg);
-	luaL_openlib(L, "engine.fov", fovlib, 0);
-	luaL_openlib(L, "engine.display", displaylib, 0);
+	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
+	luaL_openlib(L, "core.fov", fovlib, 0);
+	luaL_openlib(L, "core.display", displaylib, 0);
+	luaL_openlib(L, "core.key", keylib, 0);
 	return 1;
 }

@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<title>SDL Game Engine</title>
+		<link href="sge.css" rel="StyleSheet" type="text/css">
+	</head>
+	<body bgcolor="#ffffff">
+		<h1>Tutorial</h1>
+		<h3>Using Sprites</h3>
+		<p>SGE does offer some easy functions for handling your sprite data.</p>
+		<p>There are several ways how you can handle sprites:</p>
+		<ul>
+			<li><b>SGESPRITE</b> - A sprite which can have several images playing at a user definalbe speed (frames per seconds)</li>
+			<li><b>SGESPRITEGROUP</b> - A container to easy up handling of larger groups of sprites (e.g. colliding the player sprite against a horde of enemies)</li>
+		</ul>
+		<p>From now on all examples will assume you have a <a href="tutorialfiles.html">SGEFILE</a> open called <b>myfile</b>.</p>
+		<h3>SGESPRITE</h3>
+		<p>There are two functions for loading images. One to add a single image, it adds images to the end of the animation, and one to load a full range of images in one step.</p>
+		<p>To create a animated sprite and add single images you would do:</p>
+		<pre>SGESPRITE *player=sgeSpriteNew();
+sgeSpriteAddFile(player, myfile, "data/playerframeone.png");
+sgeSpriteAddFile(player, myfile, "data/playerframetwo.png");</pre>
+		<p>To ease up loading, you can load a range of images in one step. The files have to be named with a numeric value, e.g. player001.png, player002,png, player003.png ....</p>
+		<p>You would load a range of images like this:</p>
+		<pre>SGESPRITE *player=sgeSpriteNew();
+sgeSpriteAddFileRange(player, myfile, "data/player%03d.png, 1, 20);</pre>
+		<p>This would load images from player001.png to player020.png. The format of the filename string is as it would be for printf, in this case, %03d means, insert a number with 3 digits and leading with zeros, from 1 to 20.</p>
+		<p>To draw the sprites use:</p>
+		<pre>sgeSpriteDraw(myanimatedsprite, screen);
+sgeSpriteDrawXY(myanimatedsprite, 100, 50, screen);</pre>
+		<p>The first would draw the sprite on its internal x/y coordinates, whereas the second draws it on a specific x/y coordinate to the screen</p>
+		<p>To detect collision between sprites, there are two functions:</p>
+		<pre>sgeSpriteCollide(animsprite1, snimsprite2);</pre>
+		<p>Which does a pixel exact collision detection and returns 1 if sprites are colliding</p>
+		<pre>sgeSpriteBoxCollide(animsprite1, snimsprite2);</pre>
+		<p>Which does a bounding box collision detection. It is faster than pixel exact collision detection, so if you dont need pixel exact collision, you should use this function.</p>
+		<p>To free resources of a animated sprite call:</p>
+		<pre>sgeSpriteDestroy(myanimatedsprite);</pre>
+		<h3>SGESPRITEGROUP</h3>
+		<p>Spritegroups are a easy way to handle a bunch of sprites that are belonging to a certain group, e.g. bullets, enemies, players.</p>
+		<p>After creating a spritegroup by calling:</p>
+		<pre>SGESPRITEGROUP *mygroup=sgeSpriteGroupNew();</pre>
+		<p>...you can add simple sprites with:</p>
+		<pre>sgeSpriteGroupAddSprite(mygroup, mysprite);</pre>
+		<p>To draw a whole sprite group at once, just call:</p>
+		<pre>sgeSpriteGroupDraw(mygroup);</pre>
+		<p>Collision detection provides 3 functions, one for checking if two groups collide:</p>
+		<pre>sgeSpriteGroupCollide(mygroup, myothergroup);</pre>
+		<p>one for checking, if a simple sprite collides against a group:</p>
+		<pre>sgeSpriteGroupCollideSprite(mygroup, mysprite);</pre>
+		<p>To free resources of a sprite group call:</p>
+		<pre>sgeSpriteGroupDestroy(mygroup);</pre>
+	</body>
+</html>

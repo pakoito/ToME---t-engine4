@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2006, Greg McIntyre
- * All rights reserved. See the file named COPYING in the distribution
- * for more details.
- */
-
 #include "display.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,13 +7,16 @@
 #include "lauxlib.h"
 #include "lualib.h"
 #include "fov/fov.h"
+#include "sge.h"
 
 #include "types.h"
 #include "script.h"
 #include "physfs.h"
+#include "core_lua.h"
 
 lua_State *L = NULL;
 int current_map = LUA_NOREF;
+int current_keyhandler = LUA_NOREF;
 int px = 1, py = 1;
 
 void display_utime()
@@ -32,13 +29,59 @@ void display_utime()
 	printf(" %d:%02d:%02d %d \n", tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec);
 }
 
-/**
- * Redraw the screen. Called in a loop to create the output.
- */
-void redraw(void) {
-	display_clear();
+// define our data that is passed to our redraw function
+typedef struct {
+	Uint32 color;
+} MainStateData;
 
-//	display_utime();
+void on_event(SGEGAMESTATE *state, SDL_Event *event)
+{
+	switch (event->type) {
+	case SDL_KEYUP:
+		if (current_keyhandler)
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
+			lua_pushstring(L, "receiveKey");
+			lua_gettable(L, -2);
+			lua_remove(L, -2);
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
+			lua_pushnumber(L, event->key.keysym.sym);
+			lua_pushboolean(L, (event->key.keysym.mod & KMOD_CTRL) ? TRUE : FALSE);
+			lua_pushboolean(L, (event->key.keysym.mod & KMOD_SHIFT) ? TRUE : FALSE);
+			lua_pushboolean(L, (event->key.keysym.mod & KMOD_ALT) ? TRUE : FALSE);
+			lua_pushboolean(L, (event->key.keysym.mod & KMOD_META) ? TRUE : FALSE);
+			lua_pushnumber(L, event->key.keysym.unicode);
+			lua_call(L, 7, 0);
+		}
+		break;
+	}
+}
+
+// redraw the screen and update game logics, if any
+void on_redraw(SGEGAMESTATE *state)
+{
+	// prepare event and data variable form the gamestat passed to that
+	// function
+	SGEEVENTSTATE es = state->manager->event_state;
+	MainStateData *data = (MainStateData*)state->data;
+
+	// has the user closed the window?
+	if (es.start.released) {
+		sgeGameStateManagerQuit(state->manager);
+		return;
+	}
+
+	// draw a rectangle
+	//
+	// IMPORTANT: you should always lock and unlock surfaces if directly
+	// altering pixeldata, on some platforms, e.g. the gp2x, it will lead
+	// to a crash if you dont do so.
+	//
+	// you'll have to do so on most sgegfx.h functions. you do *NOT* need
+	// to lock a surface, if you blit on it (e.g. drawing sprites or using
+	// SDL_BlitSurface
+	sgeLock(screen);
+	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
 
 	if (current_map != LUA_NOREF)
 	{
@@ -47,68 +90,24 @@ void redraw(void) {
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_map);
-		lua_call(L, 1, 0);
+		lua_call(L, 1, 1);
+
+		SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", -1);
+		if (s && *s)
+		{
+			sgeDrawImage(screen, *s, 0, 0);
+		}
 	}
-//	display_utime();
 
-	display_put_char('@', px, py, 0x00, 0xFF, 0x00);
-	display_refresh();
+	sgeUnlock(screen);
+
+	// finally display the screen
+	sgeFlip();
 }
-
-/**
- * Clean up and exit.
- */
-void normal_exit(void) {
-	display_exit();
-	exit(0);
-}
-
-
-/**
- * Handle a keypress. Callback used by display_event_loop.
- */
-void keypressed(int key, int shift) {
-	switch (key) {
-	case KEY_UP:
-	case KEY_KP8:
-		py--;
-		break;
-	case KEY_KP2:
-	case KEY_DOWN:
-		py++;
-		break;
-	case KEY_KP4:
-	case KEY_LEFT:
-		px--;
-		break;
-	case KEY_KP6:
-	case KEY_RIGHT:
-		px++;
-		break;
-	case KEY_KP7:
-		break;
-	case KEY_KP9:
-		break;
-	case KEY_KP1:
-		break;
-	case KEY_KP3:
-		break;
-	case KEY_q:
-	case KEY_ESCAPE:
-		normal_exit();
-		break;
-	default:
-		break;
-	}
-	redraw();
-}
-
-extern int luaopen_core(lua_State *L);
 
 static int traceback (lua_State *L) {
 	printf("Lua Error: %s\n", lua_tostring(L, 1));
 }
-
 
 static int docall (lua_State *L, int narg, int clear) {
 	int status;
@@ -125,27 +124,56 @@ static int docall (lua_State *L, int narg, int clear) {
 /**
  * Program entry point.
  */
-int main (int argc, char *argv[])
+int run(int argc, char *argv[])
 {
+	/***************** Physfs Init *****************/
 	PHYSFS_init(argv[0]);
 	PHYSFS_mount("game/", "/", 1);
 	PHYSFS_mount("game/modules/tome", "/tome", 1);
 
-	TTF_Init();
-
+	/***************** Lua Init *****************/
 	L = lua_open();  /* create state */
 	luaL_openlibs(L);  /* open libraries */
 	luaopen_core(L);
 
+	// Make the uids repository
 	lua_newtable(L);
 	lua_setglobal(L, "__uids");
 
+	/***************** SDL TTF Init *****************/
+	TTF_Init();
+
+	/***************** SDL/SGE2D Init *****************/
+	SGEGAMESTATEMANAGER *manager;
+	SGEGAMESTATE *mainstate;
+	MainStateData data;
+
+	// initialize engine and set up resolution and depth
+	sgeInit(NOAUDIO, NOJOYSTICK);
+	sgeOpenScreen("T-Engine", 800, 600, 32, NOFULLSCREEN);
+	//	sgeHideMouse();
+//	SDL_EnableUNICODE(TRUE);
+
+	// add a new gamestate. you will usually have to add different gamestates
+	// like 'main menu', 'game loop', 'load screen', etc.
+	mainstate = sgeGameStateNew();
+	mainstate->onRedraw = on_redraw;
+	mainstate->onEvent = on_event;
+	mainstate->data = &data;
+
+	// now finally create the gamestate manager and change to the only state
+	// we defined, which is the on_redraw function
+	manager = sgeGameStateManagerNew();
+	sgeGameStateManagerChange(manager, mainstate);
+
+	// And run the lua engine scripts
 	luaL_loadfile(L, "/engine/init.lua");
 	docall(L, 0, LUA_MULTRET);
 
-	display_init();
-	redraw();
-	display_event_loop(keypressed);
-	normal_exit();
+	// start the game running with 25 frames per seconds
+	sgeGameStateManagerRun(manager, 25);
+
+	// close the screen and quit
+	sgeCloseScreen();
 	return 0;
 }

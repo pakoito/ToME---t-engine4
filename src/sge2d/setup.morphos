@@ -1,0 +1,7 @@
+CC=gcc
+PWD=`pwd`
+SDLCFLAGS=`sdl-config --cflags` -Iinclude
+SDLLDFLAGS=`sdl-config --libs` -lSDL_image -lSDL_mixer
+STATICLIBS=`sdl-config --libs` -lSDL_image -lSDL_mixer
+EXEC=
+DEFINES="-D_DEFAULT_VIDEOMODE_FLAGS_=SDL_HWSURFACE|SDL_DOUBLEBUF" -DMORPHOS -DNOROUND

@@ -1,0 +1,6 @@
+CC=gcc
+SDLCFLAGS=-I/usr/indexes/include/SDL `sdl-config --cflags`
+SDLLDFLAGS=-L/usr/indexes/libs `sdl-config --libs` -lSDL_image -lSDL_mixer
+STATICLIBS=
+EXEC=
+DEFINES="-D_DEFAULT_VIDEOMODE_FLAGS_=SDL_HWSURFACE|SDL_DOUBLEBUF" -DSYLLABLE

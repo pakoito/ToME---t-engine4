@@ -1,0 +1,8 @@
+Currently there is a problem with the sga archiver tool on MorphOS.
+
+sga always creates the data files in the directory of sga, so to
+generate data files on MorphOS, you have to copy the sga binary to
+the directory where you want to create the data file and start it
+from there.
+
+We are searching on a solution for this.

@@ -24,7 +24,7 @@ map(10, 6, Map.TERRAIN, e1)
 map(10, 7, Map.TERRAIN, e2)
 map(10, 8, Map.TERRAIN, e3)
 
-player = Actor.new{name="player!", display='#', color_r=125, color_g=125, color_b=0}
+player = Actor.new{name="player!", display='.', color_r=125, color_g=125, color_b=0}
 player:move(map, 2, 3)
 
 map:setCurrent()

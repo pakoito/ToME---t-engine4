@@ -1,0 +1,84 @@
+#!/bin/sh
+
+if [ "$1" = "--help" ]
+then
+	echo './configure [platform]'
+	echo 'set up build system for platform [platform]'
+	echo 'supported platforms:'
+	echo '	BeOS'
+	echo '	devkitgp2x'
+	echo '	FreeBSD'
+	echo '	GNU/Linux'
+	echo '	gp2x'
+	echo '	Haiku'
+	echo '	MINGW32_NT-5.1'
+	echo '	MorphOS'
+	echo '	open2x'
+	echo '	OpenBSD'
+	echo '	OpenSolaris'
+	echo '	Syllable'
+	exit 0
+fi
+
+echo -n "checking operating system... "
+if [ "$1" = "" ]
+then
+	OS=`uname -o 2>/dev/null`
+	if [ "$OS" = "" ]
+	then
+		OS=`uname -s 2>/dev/null`
+	fi
+else
+	OS=$1
+fi
+
+case "$OS" in
+	"GNU/Linux")
+		echo "PLATFORM=linux" > setup.project
+		;;
+	'MINGW32_NT-5.1')
+		echo "PLATFORM=mingw" > setup.project
+		;;
+	'open2x')
+		echo "PLATFORM=open2x" > setup.project
+		;;
+	'gp2x')
+		echo "PLATFORM=gp2x" > setup.project
+		;;
+	'devkitgp2x')
+		echo "PLATFORM=devkitgp2x" > setup.project
+		;;
+	'FreeBSD')
+		echo "PLATFORM=freebsd" > setup.project
+		;;
+	'OpenBSD')
+		echo "PLATFORM=openbsd" > setup.project
+		;;
+	'SunOS')
+		echo "PLATFORM=sunos" > setup.project
+		;;
+	'Syllable')
+		echo "PLATFORM=syllable" > setup.project
+		;;
+	'MorphOS')
+		echo "PLATFORM=morphos" > setup.project
+		;;
+	'BeOS')
+		echo "PLATFORM=beos" > setup.project
+		;;
+	'Haiku')
+		echo "PLATFORM=beos" > setup.project
+		;;
+	*)
+		echo "unknown platform: $OS"
+		exit 255
+		;;
+esac
+
+echo PATH="$PATH:`pwd`/tools" >> setup.project
+
+echo $OS
+echo
+
+echo configure done
+echo now type make to build
