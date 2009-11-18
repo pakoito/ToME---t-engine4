@@ -11,6 +11,8 @@ function _M:init(t)
 end
 
 function _M:move(map, x, y)
+	if map:checkAllEntity(x, y, "block_move") then return end
+
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.ACTOR)
 	end

@@ -133,6 +133,30 @@ static const struct luaL_reg keylib[] =
 
 /******************************************************************
  ******************************************************************
+ *                              Game                              *
+ ******************************************************************
+ ******************************************************************/
+extern int current_gametick;
+static int lua_set_current_gametick(lua_State *L)
+{
+	if (current_gametick != LUA_NOREF)
+		luaL_unref(L, LUA_REGISTRYINDEX, current_gametick);
+
+	if (lua_isnil(L, 1))
+		current_gametick = LUA_NOREF;
+	else
+		current_gametick = luaL_ref(L, LUA_REGISTRYINDEX);
+
+	return 0;
+}
+static const struct luaL_reg gamelib[] =
+{
+	{"set_current_gametick", lua_set_current_gametick},
+	{NULL, NULL},
+};
+
+/******************************************************************
+ ******************************************************************
  *                           Display                              *
  ******************************************************************
  ******************************************************************/
@@ -226,5 +250,6 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "core.fov", fovlib, 0);
 	luaL_openlib(L, "core.display", displaylib, 0);
 	luaL_openlib(L, "core.key", keylib, 0);
+	luaL_openlib(L, "core.game", gamelib, 0);
 	return 1;
 }

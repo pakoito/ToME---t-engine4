@@ -17,6 +17,7 @@
 lua_State *L = NULL;
 int current_map = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
+int current_gametick = LUA_NOREF;
 int px = 1, py = 1;
 
 void display_utime()
@@ -37,8 +38,8 @@ typedef struct {
 void on_event(SGEGAMESTATE *state, SDL_Event *event)
 {
 	switch (event->type) {
-	case SDL_KEYUP:
-		if (current_keyhandler)
+	case SDL_KEYDOWN:
+		if (current_keyhandler != LUA_NOREF)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
 			lua_pushstring(L, "receiveKey");
@@ -71,15 +72,16 @@ void on_redraw(SGEGAMESTATE *state)
 		return;
 	}
 
-	// draw a rectangle
-	//
-	// IMPORTANT: you should always lock and unlock surfaces if directly
-	// altering pixeldata, on some platforms, e.g. the gp2x, it will lead
-	// to a crash if you dont do so.
-	//
-	// you'll have to do so on most sgegfx.h functions. you do *NOT* need
-	// to lock a surface, if you blit on it (e.g. drawing sprites or using
-	// SDL_BlitSurface
+	if (current_gametick != LUA_NOREF)
+	{
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_gametick);
+		lua_pushstring(L, "tick");
+		lua_gettable(L, -2);
+		lua_remove(L, -2);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_gametick);
+		lua_call(L, 1, 0);
+	}
+
 	sgeLock(screen);
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
 
@@ -152,7 +154,8 @@ int run(int argc, char *argv[])
 	sgeInit(NOAUDIO, NOJOYSTICK);
 	sgeOpenScreen("T-Engine", 800, 600, 32, NOFULLSCREEN);
 	//	sgeHideMouse();
-//	SDL_EnableUNICODE(TRUE);
+	SDL_EnableUNICODE(TRUE);
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
 	// add a new gamestate. you will usually have to add different gamestates
 	// like 'main menu', 'game loop', 'load screen', etc.

@@ -25,9 +25,12 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
 end
 
 function _M:addCommand(sym, mods, fct)
+	if type(sym) == "string" then sym = self[sym] end
+	if not sym then return end
+
 	self.commands[sym] = self.commands[sym] or {}
-	if not mods or #mods == 0 then
-		self.commands[sym].plain = fct
+	if not fct then
+		self.commands[sym].plain = mods
 	else
 		table.sort(mods)
 		self.commands[sym][table.concat(mods,',')] = fct

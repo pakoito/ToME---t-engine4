@@ -51,9 +51,6 @@ void sgeGameStateManagerRun(SGEGAMESTATEMANAGER *manager, int fps)
 				sgeEventResetInputs(&manager->event_state);
 				break;
 			case SDL_KEYDOWN:
-			case SDL_KEYUP:
-			case SDL_JOYBUTTONUP:
-			case SDL_JOYBUTTONDOWN:
 				if (manager->current->onEvent)
 					manager->current->onEvent(manager->current, &event);
 //				sgeEventApply(&manager->event_state, &event);

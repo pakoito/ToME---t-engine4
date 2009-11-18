@@ -19,7 +19,7 @@ function _M:init(w, h)
 	setmetatable(self.seens, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
 	setmetatable(self.remembers, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
 
-	self.surface = core.display.newSurface(400, 400)
+	self.surface = core.display.newSurface(w * 16, h * 16)
 	self.fov = core.fov.new(_M.opaque, _M.apply, self)
 	self.changed = true
 end
@@ -34,7 +34,11 @@ function _M:call(x, y, pos, entity)
 		self.changed = true
 	else
 		if self.map[x + y * self.w] then
-			return self.map[x + y * self.w][pos]
+			if not pos then
+				return self.map[x + y * self.w]
+			else
+				return self.map[x + y * self.w][pos]
+			end
 		end
 	end
 end
@@ -47,10 +51,6 @@ function _M:remove(x, y, pos)
 end
 
 function _M:display()
-	self.fov(player.x, player.y, 20)
-	self.seens(player.x, player.y, true)
-	player:move(self, player.x+1, player.y)
-
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return self.surface end
 	self.changed = false
@@ -111,4 +111,13 @@ function _M:apply(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	self.seens[x + y * self.w] = true
 	self.remembers[x + y * self.w] = true
+end
+
+function _M:checkAllEntity(x, y, what, ...)
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if self.map[x + y * self.w] then
+		for _, e in pairs(self.map[x + y * self.w]) do
+			if e:check(what, x, y, ...) then return true end
+		end
+	end
 end

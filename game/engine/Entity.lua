@@ -6,7 +6,6 @@ local next_uid = 1
 setmetatable(__uids, {__mode="v"})
 
 function _M:init(t)
-	print("entity init")
 	t = t or {}
 	self.uid = next_uid
 	__uids[self.uid] = self
