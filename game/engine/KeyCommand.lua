@@ -3,6 +3,7 @@ require "engine.Key"
 module(..., package.seeall, class.inherit(engine.Key))
 
 function _M:init()
+	engine.Key.init(self)
 	self.commands = {}
 end
 
