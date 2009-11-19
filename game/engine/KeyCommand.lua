@@ -36,3 +36,14 @@ function _M:addCommand(sym, mods, fct)
 		self.commands[sym][table.concat(mods,',')] = fct
 	end
 end
+
+function _M:addCommands(t)
+	for k, e in pairs(t) do
+		if type(k) == "string" then
+			self:addCommand(k, e)
+		elseif type(k) == "table" then
+			local sym = table.remove(k, 1)
+			self:addCommand(sym, k, e)
+		end
+	end
+end

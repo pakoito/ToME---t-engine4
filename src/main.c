@@ -15,9 +15,8 @@
 #include "core_lua.h"
 
 lua_State *L = NULL;
-int current_map = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
-int current_gametick = LUA_NOREF;
+int current_game = LUA_NOREF;
 int px = 1, py = 1;
 
 void display_utime()
@@ -72,33 +71,27 @@ void on_redraw(SGEGAMESTATE *state)
 		return;
 	}
 
-	if (current_gametick != LUA_NOREF)
+	if (current_game != LUA_NOREF)
 	{
-		lua_rawgeti(L, LUA_REGISTRYINDEX, current_gametick);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		lua_pushstring(L, "tick");
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
-		lua_rawgeti(L, LUA_REGISTRYINDEX, current_gametick);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		lua_call(L, 1, 0);
 	}
 
 	sgeLock(screen);
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
 
-	if (current_map != LUA_NOREF)
+	if (current_game != LUA_NOREF)
 	{
-		lua_rawgeti(L, LUA_REGISTRYINDEX, current_map);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		lua_pushstring(L, "display");
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
-		lua_rawgeti(L, LUA_REGISTRYINDEX, current_map);
-		lua_call(L, 1, 1);
-
-		SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", -1);
-		if (s && *s)
-		{
-			sgeDrawImage(screen, *s, 0, 0);
-		}
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		lua_call(L, 1, 0);
 	}
 
 	sgeUnlock(screen);
@@ -142,9 +135,6 @@ int run(int argc, char *argv[])
 	lua_newtable(L);
 	lua_setglobal(L, "__uids");
 
-	/***************** SDL TTF Init *****************/
-	TTF_Init();
-
 	/***************** SDL/SGE2D Init *****************/
 	SGEGAMESTATEMANAGER *manager;
 	SGEGAMESTATE *mainstate;
@@ -153,9 +143,9 @@ int run(int argc, char *argv[])
 	// initialize engine and set up resolution and depth
 	sgeInit(NOAUDIO, NOJOYSTICK);
 	sgeOpenScreen("T-Engine", 800, 600, 32, NOFULLSCREEN);
-	//	sgeHideMouse();
 	SDL_EnableUNICODE(TRUE);
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+	TTF_Init();
 
 	// add a new gamestate. you will usually have to add different gamestates
 	// like 'main menu', 'game loop', 'load screen', etc.

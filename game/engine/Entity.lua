@@ -28,7 +28,7 @@ function _M:cloned()
 end
 
 function _M:check(prop, ...)
-	if type(self[prop]) == "function" then return self[prop](...)
+	if type(self[prop]) == "function" then return self[prop](self, ...)
 	else return self[prop]
 	end
 end

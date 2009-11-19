@@ -24,10 +24,6 @@ function _M:init(w, h)
 	self.changed = true
 end
 
-function _M:setCurrent()
-	core.display.set_current_map(self)
-end
-
 function _M:call(x, y, pos, entity)
 	if entity then
 		table.insert(self.map[x + y * self.w], pos, entity)

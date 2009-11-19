@@ -7,6 +7,7 @@
 #include "script.h"
 #include "display.h"
 #include "sge.h"
+#include <SDL_ttf.h>
 
 /******************************************************************
  ******************************************************************
@@ -136,22 +137,22 @@ static const struct luaL_reg keylib[] =
  *                              Game                              *
  ******************************************************************
  ******************************************************************/
-extern int current_gametick;
-static int lua_set_current_gametick(lua_State *L)
+extern int current_game;
+static int lua_set_current_game(lua_State *L)
 {
-	if (current_gametick != LUA_NOREF)
-		luaL_unref(L, LUA_REGISTRYINDEX, current_gametick);
+	if (current_game != LUA_NOREF)
+		luaL_unref(L, LUA_REGISTRYINDEX, current_game);
 
 	if (lua_isnil(L, 1))
-		current_gametick = LUA_NOREF;
+		current_game = LUA_NOREF;
 	else
-		current_gametick = luaL_ref(L, LUA_REGISTRYINDEX);
+		current_game = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	return 0;
 }
 static const struct luaL_reg gamelib[] =
 {
-	{"set_current_gametick", lua_set_current_gametick},
+	{"set_current_game", lua_set_current_game},
 	{NULL, NULL},
 };
 
@@ -160,6 +161,50 @@ static const struct luaL_reg gamelib[] =
  *                           Display                              *
  ******************************************************************
  ******************************************************************/
+static int sdl_new_font(lua_State *L)
+{
+	const char *name = luaL_checkstring(L, 1);
+	int size = luaL_checknumber(L, 2);
+
+	TTF_Font **f = (TTF_Font**)lua_newuserdata(L, sizeof(TTF_Font*));
+	auxiliar_setclass(L, "sdl{font}", -1);
+
+	*f = TTF_OpenFontRW(PHYSFSRWOPS_openRead(name), TRUE, size);
+
+	return 1;
+}
+
+static int sdl_free_font(lua_State *L)
+{
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	TTF_CloseFont(*f);
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int sdl_surface_drawstring(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 2);
+	const char *str = luaL_checkstring(L, 3);
+	int x = luaL_checknumber(L, 4);
+	int y = luaL_checknumber(L, 5);
+	int r = luaL_checknumber(L, 6);
+	int g = luaL_checknumber(L, 7);
+	int b = luaL_checknumber(L, 8);
+
+	SDL_Color color = {r,g,b};
+	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
+	if (txt)
+	{
+		sgeDrawImage(*s, txt, x, y);
+
+		SDL_FreeSurface(txt);
+	}
+
+	return 0;
+}
+
 static int sdl_new_surface(lua_State *L)
 {
 	int w = luaL_checknumber(L, 1);
@@ -190,20 +235,6 @@ static int sdl_free_surface(lua_State *L)
 	return 1;
 }
 
-extern int current_map;
-static int lua_set_current_map(lua_State *L)
-{
-	if (current_map != LUA_NOREF)
-		luaL_unref(L, LUA_REGISTRYINDEX, current_map);
-
-	if (lua_isnil(L, 1))
-		current_map = LUA_NOREF;
-	else
-		current_map = luaL_ref(L, LUA_REGISTRYINDEX);
-
-	return 0;
-}
-
 static int lua_display_char(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
@@ -226,9 +257,21 @@ static int sdl_surface_erase(lua_State *L)
 	return 0;
 }
 
+static int sdl_surface_toscreen(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	if (s && *s)
+	{
+		sgeDrawImage(screen, *s, x, y);
+	}
+	return 0;
+}
+
 static const struct luaL_reg displaylib[] =
 {
-	{"set_current_map", lua_set_current_map},
+	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
 	{NULL, NULL},
 };
@@ -238,15 +281,24 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"__gc", sdl_free_surface},
 	{"close", sdl_free_surface},
 	{"erase", sdl_surface_erase},
+	{"toScreen", sdl_surface_toscreen},
 	{"putChar", lua_display_char},
+	{"drawString", sdl_surface_drawstring},
 	{NULL, NULL},
 };
 
+static const struct luaL_reg sdl_font_reg[] =
+{
+	{"__gc", sdl_free_font},
+	{"close", sdl_free_font},
+	{NULL, NULL},
+};
 
 int luaopen_core(lua_State *L)
 {
 	auxiliar_newclass(L, "fov{core}", fov_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
+	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);
 	luaL_openlib(L, "core.fov", fovlib, 0);
 	luaL_openlib(L, "core.display", displaylib, 0);
 	luaL_openlib(L, "core.key", keylib, 0);

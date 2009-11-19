@@ -7,11 +7,12 @@ module(..., package.seeall, class.inherit(Entity))
 function _M:init(t)
 	t = t or {}
 	self.name = t.name
+	self.energy = { value=0, mod=1 }
 	Entity.init(self, t)
 end
 
 function _M:move(map, x, y)
-	if map:checkAllEntity(x, y, "block_move") then return end
+	if map:checkAllEntity(x, y, "block_move", self) then return true end
 
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.ACTOR)
@@ -22,4 +23,6 @@ function _M:move(map, x, y)
 	if y >= map.h then y = map.h - 1 end
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
+
+	return true
 end

@@ -1,25 +1,30 @@
 require "engine.class"
-require "engine.Game"
+require "engine.GameTurnBased"
 require "engine.KeyCommand"
+require "engine.LogDisplay"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
 local Entity = require "engine.Entity"
-local Actor = require "tome.class.Actor"
+local Player = require "tome.class.Player"
+local NPC = require "tome.class.NPC"
 
-module(..., package.seeall, class.inherit(engine.Game))
+module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
 function _M:init()
-	engine.Game.init(self, engine.KeyCommand.new())
+	engine.GameTurnBased.init(self, engine.KeyCommand.new(), 1000, 100)
 	self:setupCommands()
 
-	local map = Map.new(40, 40)
+	self.log = engine.LogDisplay.new(400, 150)
+	self.log("Welcome to Tales of Middle Earth!")
+
+	local map = Map.new(40, 20)
 	local floor = Entity.new{display='#', color_r=100, color_g=100, color_b=100}
 	local e1 = Entity.new{display='#', color_r=255, block_sight=true}
 	local e2 = Entity.new{display='#', color_g=255, block_sight=true}
 	local e3 = Entity.new{display='#', color_b=255, block_sight=true, block_move=true}
 	local e4 = e3:clone{color_r=255}
 
-	for i = 0, 39 do for j = 0, 39 do
+	for i = 0, 39 do for j = 0, 19 do
 		map(i, j, 1, floor)
 	end end
 
@@ -34,28 +39,96 @@ function _M:init()
 	map(10, 8, Map.TERRAIN, e3)
 
 	local level = Level.new(map)
-	level:activate()
 	self:setLevel(level)
 
-	self.player = Actor.new(self, {name="player!", display='.', color_r=125, color_g=125, color_b=0})
-	self.player:move(2, 3)
+	self.player = Player.new(self, {name="player!", display='.', color_r=125, color_g=125, color_b=0})
+	self.player:move(4, 3, true)
+	level:addEntity(self.player)
+
+	local m = NPC.new(self, {name="monster!", display='#', color_r=125, color_g=125, color_b=255})
+	m.energy.mod = 0.38
+	m:move(1, 3, true)
+	level:addEntity(m)
+
+	-- Ok everything is good to go, activate the game in the engine!
+	self:setCurrent()
 end
 
 function _M:tick()
+	engine.GameTurnBased.tick(self)
+end
+
+function _M:display()
+	if self.level and self.level.map then
+		local s = self.level.map:display()
+		if s then s:toScreen(0, 0) end
+	end
+	self.log:display():toScreen(0, 16 * 20 + 5)
 end
 
 function _M:setupCommands()
-	self.key:addCommand("_LEFT", function()
-		self.player:move(self.player.x - 1, self.player.y)
-	end)
-	self.key:addCommand("_RIGHT", function()
-		self.player:move(self.player.x + 1, self.player.y)
-	end)
-	self.key:addCommand("_UP", function()
-		self.player:move(self.player.x, self.player.y - 1)
-	end)
-	self.key:addCommand("_DOWN", function()
-		self.player:move(self.player.x, self.player.y + 1)
-	end)
+	self.key:addCommands
+	{
+		_LEFT = function()
+			if self.player:move(self.player.x - 1, self.player.y) then
+				self.paused = false
+			end
+		end,
+		_RIGHT = function()
+			if self.player:move(self.player.x + 1, self.player.y) then
+				self.paused = false
+			end
+		end,
+		_UP = function()
+			if self.player:move(self.player.x, self.player.y - 1) then
+				self.paused = false
+			end
+		end,
+		_DOWN = function()
+			if self.player:move(self.player.x, self.player.y + 1) then
+				self.paused = false
+			end
+		end,
+		_KP1 = function()
+			if self.player:move(self.player.x - 1, self.player.y + 1) then
+				self.paused = false
+			end
+		end,
+		_KP2 = function()
+			if self.player:move(self.player.x, self.player.y + 1) then
+				self.paused = false
+			end
+		end,
+		_KP3 = function()
+			if self.player:move(self.player.x + 1, self.player.y + 1) then
+				self.paused = false
+			end
+		end,
+		_KP4 = function()
+			if self.player:move(self.player.x - 1, self.player.y) then
+				self.paused = false
+			end
+		end,
+		_KP6 = function()
+			if self.player:move(self.player.x + 1, self.player.y) then
+				self.paused = false
+			end
+		end,
+		_KP7 = function()
+			if self.player:move(self.player.x - 1, self.player.y - 1) then
+				self.paused = false
+			end
+		end,
+		_KP8 = function()
+			if self.player:move(self.player.x, self.player.y - 1) then
+				self.paused = false
+			end
+		end,
+		_KP9 = function()
+			if self.player:move(self.player.x + 1, self.player.y - 1) then
+				self.paused = false
+			end
+		end,
+	}
 	self.key:setCurrent()
 end
