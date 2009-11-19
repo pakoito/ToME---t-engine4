@@ -2,29 +2,18 @@ require "engine.class"
 
 module(..., package.seeall, class.make)
 
-function _M:init(w, h, max, fontname, fontsize, color, bgcolor)
+function _M:init(fontname, fontsize, color, bgcolor)
 	self.color = color or {255,255,255}
 	self.bgcolor = bgcolor or {0,0,0}
 	self.w, self.h = w, h
 	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 10)
 	self.font_h = self.font:lineSkip()
-	self.surface = core.display.newSurface(w, h)
-	self.log = {}
-	getmetatable(self).__call = _M.call
 	self.max = max or 400
 	self.changed = true
 end
 
-function _M:call(str, ...)
-	table.insert(self.log, 1, str:format(...))
-	while #self.log > self.max do
-		table.remove(self.log)
-	end
-	self.changed = true
-end
-
-function _M:empty()
-	self.log = {}
+function _M:set(str, ...)
+	self.text = str:format(...)
 	self.changed = true
 end
 
@@ -33,13 +22,11 @@ function _M:display()
 	if not self.changed then return self.surface end
 	self.changed = false
 
+	local w, h = self.font:size(self.text)
+	self.surface = core.display.newSurface(w + 4, h + 4)
+
 	-- Erase and the display the map
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
-	local i = 1
-	while i < self.h do
-		if not self.log[i] then break end
-		self.surface:drawString(self.font, self.log[i], 0, (i-1) * self.font_h, self.color[1], self.color[2], self.color[3])
-		i = i + 1
-	end
+	self.surface:drawString(self.font, self.text, 0, 0, self.color[1], self.color[2], self.color[3])
 	return self.surface
 end

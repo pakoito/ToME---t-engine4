@@ -14,6 +14,9 @@ function _M:init(t)
 	self.color_r = t.color_r or 0
 	self.color_g = t.color_g or 0
 	self.color_b = t.color_b or 0
+	self.color_br = t.color_br or -1
+	self.color_bg = t.color_bg or -1
+	self.color_bb = t.color_bb or -1
 	self.block_sight = t.block_sight
 	self.block_move = t.block_move
 

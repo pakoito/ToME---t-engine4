@@ -19,6 +19,9 @@ function _M:move(x, y, force)
 end
 
 function _M:bumped(x, y, e)
-	self.game.log("%s bumped into %s!", tostring(e.name), tostring(self.name))
+	-- Dont bump yourself!
+	if e ~= self then
+		self.game.log("%s bumped into %s!", tostring(e.name), tostring(self.name))
+	end
 	return true
 end

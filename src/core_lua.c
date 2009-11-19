@@ -110,6 +110,27 @@ static const struct luaL_reg fov_reg[] =
 
 /******************************************************************
  ******************************************************************
+ *                             Mouse                              *
+ ******************************************************************
+ ******************************************************************/
+static int lua_get_mouse(lua_State *L)
+{
+	int x = 0, y = 0;
+	int buttons = SDL_GetMouseState(&x, &y);
+
+	lua_pushnumber(L, x);
+	lua_pushnumber(L, y);
+
+	return 2;
+}
+static const struct luaL_reg mouselib[] =
+{
+	{"get", lua_get_mouse},
+	{NULL, NULL},
+};
+
+/******************************************************************
+ ******************************************************************
  *                              Keys                              *
  ******************************************************************
  ******************************************************************/
@@ -161,6 +182,13 @@ static const struct luaL_reg gamelib[] =
  *                           Display                              *
  ******************************************************************
  ******************************************************************/
+
+static int sdl_fullscreen(lua_State *L)
+{
+	SDL_WM_ToggleFullScreen(screen);
+	return 0;
+}
+
 static int sdl_new_font(lua_State *L)
 {
 	const char *name = luaL_checkstring(L, 1);
@@ -182,6 +210,35 @@ static int sdl_free_font(lua_State *L)
 	return 1;
 }
 
+static int sdl_font_size(lua_State *L)
+{
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	const char *str = luaL_checkstring(L, 2);
+	int w, h;
+
+	if (!TTF_SizeUTF8(*f, str, &w, &h))
+	{
+		lua_pushnumber(L, w);
+		lua_pushnumber(L, h);
+		return 2;
+	}
+	return 0;
+}
+
+static int sdl_font_height(lua_State *L)
+{
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	lua_pushnumber(L, TTF_FontHeight(*f));
+	return 1;
+}
+
+static int sdl_font_lineskip(lua_State *L)
+{
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	lua_pushnumber(L, TTF_FontLineSkip(*f));
+	return 1;
+}
+
 static int sdl_surface_drawstring(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
@@ -198,7 +255,6 @@ static int sdl_surface_drawstring(lua_State *L)
 	if (txt)
 	{
 		sgeDrawImage(*s, txt, x, y);
-
 		SDL_FreeSurface(txt);
 	}
 
@@ -222,7 +278,8 @@ static int sdl_new_surface(lua_State *L)
 		screen->format->Gmask,
 		screen->format->Bmask,
 		screen->format->Amask
-	);
+		);
+	sgeUseAlpha(*s);
 
 	return 1;
 }
@@ -253,7 +310,10 @@ static int lua_display_char(lua_State *L)
 static int sdl_surface_erase(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
-	SDL_FillRect(*s, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
+	int r = lua_tonumber(L, 2);
+	int g = lua_tonumber(L, 3);
+	int b = lua_tonumber(L, 4);
+	SDL_FillRect(*s, NULL, SDL_MapRGB(screen->format, r, g, b));
 	return 0;
 }
 
@@ -269,8 +329,22 @@ static int sdl_surface_toscreen(lua_State *L)
 	return 0;
 }
 
+static int sdl_surface_merge(lua_State *L)
+{
+	SDL_Surface **dst = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	SDL_Surface **src = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 2);
+	int x = luaL_checknumber(L, 3);
+	int y = luaL_checknumber(L, 4);
+	if (dst && *dst && src && *src)
+	{
+		sgeDrawImage(*dst, *src, x, y);
+	}
+	return 0;
+}
+
 static const struct luaL_reg displaylib[] =
 {
+	{"fullscreen", sdl_fullscreen},
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
 	{NULL, NULL},
@@ -281,6 +355,7 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"__gc", sdl_free_surface},
 	{"close", sdl_free_surface},
 	{"erase", sdl_surface_erase},
+	{"merge", sdl_surface_merge},
 	{"toScreen", sdl_surface_toscreen},
 	{"putChar", lua_display_char},
 	{"drawString", sdl_surface_drawstring},
@@ -291,6 +366,9 @@ static const struct luaL_reg sdl_font_reg[] =
 {
 	{"__gc", sdl_free_font},
 	{"close", sdl_free_font},
+	{"size", sdl_font_size},
+	{"height", sdl_font_height},
+	{"lineSkip", sdl_font_lineskip},
 	{NULL, NULL},
 };
 
@@ -301,6 +379,7 @@ int luaopen_core(lua_State *L)
 	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);
 	luaL_openlib(L, "core.fov", fovlib, 0);
 	luaL_openlib(L, "core.display", displaylib, 0);
+	luaL_openlib(L, "core.mouse", mouselib, 0);
 	luaL_openlib(L, "core.key", keylib, 0);
 	luaL_openlib(L, "core.game", gamelib, 0);
 	return 1;

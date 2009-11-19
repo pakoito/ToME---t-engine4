@@ -1,5 +1,6 @@
 require "engine.class"
 local Entity = require "engine.Entity"
+local Tiles = require "engine.Tiles"
 
 module(..., package.seeall, class.make)
 
@@ -8,19 +9,24 @@ OBJECT = 10
 ACTOR = 20
 
 displayOrder = { ACTOR, OBJECT, TERRAIN }
+rememberDisplayOrder = { TERRAIN }
 
 function _M:init(w, h)
+	self.tiles = Tiles.new(16, 16)
 	self.w, self.h = w, h
 	self.map = {}
+	self.lites = {}
 	self.seens = {}
 	self.remembers = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 	getmetatable(self).__call = _M.call
+	setmetatable(self.lites, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
 	setmetatable(self.seens, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
 	setmetatable(self.remembers, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
 
 	self.surface = core.display.newSurface(w * 16, h * 16)
 	self.fov = core.fov.new(_M.opaque, _M.apply, self)
+	self.fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
 end
 
@@ -55,32 +61,41 @@ function _M:display()
 	self.surface:erase()
 	if not self.multi_display then
 		-- Version without multi display
+		local e, si
+		local z
+		local order
 		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
-			local e, si = nil, 1
-			while not e and si <= #displayOrder do e = self(i, j, displayOrder[si]) si = si + 1 end
-			local z = i + j * self.w
-			if e then
-				if self.seens[z] then
-					self.surface:putChar(e.display, i, j, e.color_r, e.color_g, e.color_b)
-				elseif self.remembers[z] then
-					self.surface:putChar(e.display, i, j, e.color_r/3, e.color_g/3, e.color_b/3)
+			e, si = nil, 1
+			z = i + j * self.w
+			order = displayOrder
+
+			if self.seens[z] or self.remembers[z] then
+				if not self.seens[z] then order = rememberDisplayOrder end
+				while not e and si <= #order do e = self(i, j, order[si]) si = si + 1 end
+				if e then
+					if self.seens[z] then
+						self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb), i * 16, j * 16)
+					elseif self.remembers[z] then
+						self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3), i * 16, j * 16)
+					end
 				end
 			end
 			self.seens[z] = nil
 		end end
 	else
 		-- Version with multi display
-		local e, si = nil, 1
+--[[
+		local z, e, si = nil, nil, 1
 		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
+			z = i + j * self.w
 			z, e, si = 0, nil, #displayOrder
 			while si >= 1 do
 				e = self(i, j, displayOrder[si])
-				z = i + j * self.w
 				if e then
 					if self.seens[z] then
-						self.surface:putChar(e.display, i, j, e.color_r, e.color_g, e.color_b)
-					elseif self.remembers[z] then
-						self.surface:putChar(e.display, i, j, e.color_r/3, e.color_g/3, e.color_b/3)
+					self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb), i * 16, j * 16)
+				elseif self.remembers[z] then
+					self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3), i * 16, j * 16)
 					end
 				end
 
@@ -88,11 +103,15 @@ function _M:display()
 			end
 			self.seens[z] = nil
 		end end
+]]
 	end
 	return self.surface
 end
 
 function _M:close()
+	self.tiles:close()
+	self.fovLite:close()
+	self.fovLite = nil
 	self.fov:close()
 	self.fov = nil
 end
@@ -105,6 +124,15 @@ end
 
 function _M:apply(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if self.lites[x + y * self.w] then
+		self.seens[x + y * self.w] = true
+		self.remembers[x + y * self.w] = true
+	end
+end
+
+function _M:applyLite(x, y)
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	self.lites[x + y * self.w] = true
 	self.seens[x + y * self.w] = true
 	self.remembers[x + y * self.w] = true
 end
@@ -113,7 +141,14 @@ function _M:checkAllEntity(x, y, what, ...)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.map[x + y * self.w] then
 		for _, e in pairs(self.map[x + y * self.w]) do
-			if e:check(what, x, y, ...) then return true end
+			local p = e:check(what, x, y, ...)
+			if p then return p end
 		end
 	end
+end
+
+function _M:liteAll(x, y, w, h)
+	for i = x, x + w - 1 do for j = y, y + h - 1 do
+		self.lites(i, j, true)
+	end end
 end
