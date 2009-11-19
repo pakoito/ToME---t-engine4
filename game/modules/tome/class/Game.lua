@@ -12,20 +12,20 @@ local NPC = require "tome.class.NPC"
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
 function _M:init()
-	engine.GameTurnBased.init(self, engine.KeyCommand.new(), 1000, 100)
+	engine.GameTurnBased.init(self, engine.Key.current, 1000, 100)
 	self:setupCommands()
 
 	self.tooltip = engine.Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 
 	self.log = engine.LogDisplay.new(400, 150, nil, nil, nil, {255,255,255}, {30,30,30})
-	self.log("Welcome to Tales of Middle Earth!")
+	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 
 	local map = Map.new(40, 20)
 --	map:liteAll(0, 0, map.w, map.h)
 
-	local floor = Entity.new{display='.', color_r=100, color_g=100, color_b=100, color_br=0, color_bg=50, color_bb=0}
-	local e1 = Entity.new{display='#', color_r=255, block_sight=true}
-	local e2 = Entity.new{display='#', color_g=255, block_sight=true}
+	local floor = Entity.new{display='.', color_r=100, color_g=200, color_b=100, color_br=0, color_bg=50, color_bb=0}
+	local e1 = Entity.new{display='#', color_r=255, block_sight=true, block_move=true}
+	local e2 = Entity.new{display='#', color_g=255, block_sight=true, block_move=true}
 	local e3 = Entity.new{display='#', color_b=255, block_sight=true, block_move=true}
 	local e4 = e3:clone{color_r=255}
 
@@ -147,12 +147,6 @@ function _M:setupCommands()
 			if self.player:move(self.player.x + 1, self.player.y - 1) then
 				self.paused = false
 			end
-		end,
-		[{"_x","ctrl"}] = function()
-			os.exit()
-		end,
-		[{"_RETURN","alt"}] = function()
-			core.display.fullscreen()
 		end,
 	}
 	self.key:setCurrent()

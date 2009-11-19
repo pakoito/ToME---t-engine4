@@ -5,7 +5,6 @@ module(..., package.seeall, class.inherit(tome.class.Actor))
 
 function _M:init(game, t)
 	tome.class.Actor.init(self, game, t)
-	self.tooltip = "This is you!"
 end
 
 function _M:move(x, y, force)

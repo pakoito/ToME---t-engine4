@@ -9,10 +9,10 @@ function _M:init(w, h, fontname, fontsize)
 end
 
 function _M:get(char, fr, fg, fb, br, bg, bb)
-	local fgidx = 65536 * fr + 256 + fg + fb
+	local fgidx = 65536 * fr + 256 * fg + fb
 	local bgidx
 	if br >= 0 and bg >= 0 and bb >= 0 then
-		bgidx = 65536 * br + 256 + bg + bb
+		bgidx = 65536 * br + 256 * bg + bb
 	else
 		bgidx = "none"
 	end

@@ -16,7 +16,10 @@ function _M:init(w, h, max, fontname, fontsize, color, bgcolor)
 end
 
 function _M:call(str, ...)
-	table.insert(self.log, 1, str:format(...))
+	local lines = str:format(...):splitLines(self.w - 4, self.font)
+	for i = #lines, 1, -1 do
+		table.insert(self.log, 1, lines[i])
+	end
 	while #self.log > self.max do
 		table.remove(self.log)
 	end
@@ -38,7 +41,7 @@ function _M:display()
 	local i = 1
 	while i < self.h do
 		if not self.log[i] then break end
-		self.surface:drawString(self.font, self.log[i], 0, (i-1) * self.font_h, self.color[1], self.color[2], self.color[3])
+		self.surface:drawColorString(self.font, self.log[i], 0, (i-1) * self.font_h, self.color[1], self.color[2], self.color[3])
 		i = i + 1
 	end
 	return self.surface
