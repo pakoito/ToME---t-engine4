@@ -189,6 +189,13 @@ static int sdl_fullscreen(lua_State *L)
 	return 0;
 }
 
+static int sdl_screen_size(lua_State *L)
+{
+	lua_pushnumber(L, screen->w);
+	lua_pushnumber(L, screen->h);
+	return 2;
+}
+
 static int sdl_new_font(lua_State *L)
 {
 	const char *name = luaL_checkstring(L, 1);
@@ -284,6 +291,18 @@ static int sdl_new_surface(lua_State *L)
 	return 1;
 }
 
+static int sdl_load_image(lua_State *L)
+{
+	const char *name = luaL_checkstring(L, 1);
+
+	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
+	auxiliar_setclass(L, "sdl{surface}", -1);
+
+	*s = IMG_Load_RW(PHYSFSRWOPS_openRead(name), TRUE);
+
+	return 1;
+}
+
 static int sdl_free_surface(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
@@ -345,8 +364,10 @@ static int sdl_surface_merge(lua_State *L)
 static const struct luaL_reg displaylib[] =
 {
 	{"fullscreen", sdl_fullscreen},
+	{"size", sdl_screen_size},
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
+	{"loadImage", sdl_load_image},
 	{NULL, NULL},
 };
 

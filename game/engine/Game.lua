@@ -4,6 +4,7 @@ module(..., package.seeall, class.make)
 function _M:init(keyhandler)
 	self.key = keyhandler
 	self.level = nil
+	self.w, self.h = core.display.size()
 end
 
 function _M:setLevel(level)
@@ -12,6 +13,7 @@ end
 
 function _M:setCurrent()
 	core.game.set_current_game(self)
+	_M.current = self
 end
 
 function _M:display()

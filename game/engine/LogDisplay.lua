@@ -11,7 +11,7 @@ function _M:init(w, h, max, fontname, fontsize, color, bgcolor)
 	self.surface = core.display.newSurface(w, h)
 	self.log = {}
 	getmetatable(self).__call = _M.call
-	self.max = max or 400
+	self.max = max or 4000
 	self.changed = true
 end
 

@@ -2,6 +2,7 @@
 dofile("/engine/utils.lua")
 
 require "engine.KeyCommand"
+require "engine.Tiles"
 
 -- Setup a default key handler
 local key = engine.KeyCommand.new()
@@ -20,6 +21,8 @@ if mod_def then
 	mod_def()
 
 	if not mod.name or not mod.short_name or not mod.version or not mod.starter then os.exit() end
+
+	engine.Tiles.prefix = "/"..mod.short_name.."/data/gfx/"
 	require(mod.starter)
 else
 	os.exit()

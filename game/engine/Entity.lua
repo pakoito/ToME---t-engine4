@@ -10,6 +10,7 @@ function _M:init(t)
 	self.uid = next_uid
 	__uids[self.uid] = self
 
+	self.image = t.image or nil
 	self.display = t.display or '.'
 	self.color_r = t.color_r or 0
 	self.color_g = t.color_g or 0

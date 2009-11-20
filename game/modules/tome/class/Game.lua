@@ -17,10 +17,10 @@ function _M:init()
 
 	self.tooltip = engine.Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 
-	self.log = engine.LogDisplay.new(400, 150, nil, nil, nil, {255,255,255}, {30,30,30})
+	self.log = engine.LogDisplay.new(self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 
-	local map = Map.new(40, 20)
+	local map = Map.new(self.w, math.floor(self.h * 0.80), 16, 16)
 --	map:liteAll(0, 0, map.w, map.h)
 
 	local floor = Entity.new{display='.', color_r=100, color_g=200, color_b=100, color_br=0, color_bg=50, color_bb=0}
@@ -29,7 +29,7 @@ function _M:init()
 	local e3 = Entity.new{display='#', color_b=255, block_sight=true, block_move=true}
 	local e4 = e3:clone{color_r=255}
 
-	for i = 0, 39 do for j = 0, 19 do
+	for i = 0, map.w-1 do for j = 0, map.h-1 do
 		map(i, j, 1, floor)
 	end end
 
@@ -46,7 +46,7 @@ function _M:init()
 	local level = Level.new(map)
 	self:setLevel(level)
 
-	self.player = Player.new(self, {name="player", display='@', color_r=230, color_g=230, color_b=230})
+	self.player = Player.new(self, {name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230})
 	self.player:move(4, 3, true)
 	level:addEntity(self.player)
 
@@ -64,14 +64,21 @@ function _M:tick()
 end
 
 function _M:display()
-	self.log:display():toScreen(0, 16 * 20 + 5)
+	self.log:display():toScreen(0, self.h * 0.80)
 
 	if self.level and self.level.map then
+		self.level.map.seens(self.player.x, self.player.y, true)
+		self.level.map.lites(self.player.x, self.player.y, true)
+		self.level.map.remembers(self.player.x, self.player.y, true)
+		self.level.map.fov(self.player.x, self.player.y, 20)
+		self.level.map.fov_lite(self.player.x, self.player.y, 4)
 		local s = self.level.map:display()
-		if s then s:toScreen(0, 0) end
+		if s then
+			s:toScreen(0, 0)
+		end
 
 		local mx, my = core.mouse.get()
-		local tt = self.level.map:checkAllEntity(math.floor(mx / 16), math.floor(my / 16), "tooltip")
+		local tt = self.level.map:checkAllEntity(math.floor(mx / self.level.map.tile_w), math.floor(my / self.level.map.tile_h), "tooltip")
 		if tt then
 			self.tooltip:set(tt)
 			local t = self.tooltip:display()

@@ -11,20 +11,28 @@ ACTOR = 20
 displayOrder = { ACTOR, OBJECT, TERRAIN }
 rememberDisplayOrder = { TERRAIN }
 
-function _M:init(w, h)
-	self.tiles = Tiles.new(16, 16)
-	self.w, self.h = w, h
+function _M:init(w, h, tile_w, tile_h)
+	self.tiles = Tiles.new(tile_w, tile_h)
+	self.w, self.h = math.floor(w / tile_w), math.floor(h / tile_h)
+	self.tile_w, self.tile_h = tile_w, tile_h
 	self.map = {}
 	self.lites = {}
 	self.seens = {}
 	self.remembers = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 	getmetatable(self).__call = _M.call
-	setmetatable(self.lites, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
-	setmetatable(self.seens, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
-	setmetatable(self.remembers, {__call = function(t, x, y, v) if v ~= nil then t[x + y * w] = v end return t[x + y * w] end})
+	local mapbool = function(t, x, y, v)
+		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if v ~= nil then
+			t[x + y * self.w] = v
+		end
+		return t[x + y * self.w]
+	end
+	setmetatable(self.lites, {__call = mapbool})
+	setmetatable(self.seens, {__call = mapbool})
+	setmetatable(self.remembers, {__call = mapbool})
 
-	self.surface = core.display.newSurface(w * 16, h * 16)
+	self.surface = core.display.newSurface(w, h)
 	self.fov = core.fov.new(_M.opaque, _M.apply, self)
 	self.fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
@@ -68,15 +76,14 @@ function _M:display()
 			e, si = nil, 1
 			z = i + j * self.w
 			order = displayOrder
-
 			if self.seens[z] or self.remembers[z] then
 				if not self.seens[z] then order = rememberDisplayOrder end
 				while not e and si <= #order do e = self(i, j, order[si]) si = si + 1 end
 				if e then
 					if self.seens[z] then
-						self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb), i * 16, j * 16)
+						self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), i * self.tile_w, j * self.tile_h)
 					elseif self.remembers[z] then
-						self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3), i * 16, j * 16)
+						self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3, e.image), i * self.tile_w, j * self.tile_h)
 					end
 				end
 			end
