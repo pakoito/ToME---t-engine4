@@ -50,7 +50,7 @@ function _M:init()
 	self.player:move(4, 3, true)
 	level:addEntity(self.player)
 
-	local m = NPC.new(self, {name="monster", display='D', color_r=125, color_g=125, color_b=255})
+	local m = NPC.new(self, {name="here be dragons", display='D', color_r=125, color_g=125, color_b=255})
 	m.energy.mod = 0.38
 	m:move(1, 3, true)
 	level:addEntity(m)
