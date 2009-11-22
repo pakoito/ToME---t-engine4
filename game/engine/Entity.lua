@@ -1,3 +1,7 @@
+--- A game entity
+-- An entity is anything that goes on a map, terrain features, objects, monsters, player, ...
+-- Usually there is no need to use it directly, and it is betetr to use specific engine.Grid, engine.Actor or engine.Object
+-- classes. Most modules will want to subclass those anyway to add new comportments
 module(..., package.seeall, class.make)
 
 local next_uid = 1
@@ -5,6 +9,10 @@ local next_uid = 1
 -- Setup the uids repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
 setmetatable(__uids, {__mode="v"})
 
+--- Initialize an entity
+-- Any subclass MUST call this constructor
+-- @param t a table defining the basic properties of the entity
+-- @usage Entity.new{display='#', color_r=255, color_g=255, color_b=255}
 function _M:init(t)
 	t = t or {}
 	self.uid = next_uid
@@ -31,12 +39,19 @@ function _M:cloned()
 	next_uid = next_uid + 1
 end
 
+--- Check for an entity's property
+-- If not a function it returns it directly, otherwise it calls the function
+-- with the extra parameters
+-- @param prop the property name to check
 function _M:check(prop, ...)
 	if type(self[prop]) == "function" then return self[prop](self, ...)
 	else return self[prop]
 	end
 end
 
+--- Loads a list of entities from a definition file
+-- @param ... the files to load from
+-- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
 function _M:loadList(...)
 	local res = {}
 

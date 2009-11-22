@@ -1,13 +1,24 @@
 require "engine.class"
+
+--- Basic keypress handler
+-- The engine calls receiveKey when a key is pressed
 module(..., package.seeall, class.make)
 
 function _M:init()
 end
 
+--- Called when a key is pressed
+-- @param sym a number representing the key, see all the _FOO fields
+-- @param ctrl is the control key pressed?
+-- @param shift is the shit key pressed?
+-- @param alt is the alt key pressed?
+-- @param meta is the meta key pressed?
+-- @param unicode the unicode representation of the key, if possible
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
 	print(sym, ctrl, shift, alt, meta, unicode)
 end
 
+--- Setups as the current game keyhandler
 function _M:setCurrent()
 	core.key.set_current_handler(self)
 	_M.current = self

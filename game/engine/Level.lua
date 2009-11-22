@@ -1,7 +1,8 @@
 require "engine.class"
 module(..., package.seeall, class.make)
 
-function _M:init(map)
+function _M:init(level, map)
+	self.level = level
 	self.map = map
 	self.entities = {}
 end

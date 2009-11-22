@@ -22,6 +22,8 @@ function _M:run()
 	self:setupCommands()
 
 	Zone:setup{npc_class="mod.class.NPC", grid_class="engine.Grid", object_class="engine.Entity"}
+	Map:setViewPort(self.w, math.floor(self.h * 0.80), 16, 16)
+
 	self.zone = Zone.new("ancient_ruins")
 
 	self.tooltip = engine.Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
@@ -29,17 +31,7 @@ function _M:run()
 	self.log = engine.LogDisplay.new(self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 
-	local map = Map.new(self.w, math.floor(self.h * 0.80), 16, 16)
-	map:liteAll(0, 0, map.w, map.h)
-	map:rememberAll(0, 0, map.w, map.h)
-
-	local floor = self.zone.grid_list.GRASS
-	local wall = self.zone.grid_list.TREE
-
-	local generator = BST.new(map, {0.4, 0.6}, floor, wall)
-	generator:generate()
-
-	local level = Level.new(map)
+	local level = self.zone:getLevel(1)
 	self:setLevel(level)
 
 	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}

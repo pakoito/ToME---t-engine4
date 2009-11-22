@@ -1,5 +1,7 @@
 require "engine.class"
 require "engine.Key"
+
+--- Receieves keypresses and acts upon them
 module(..., package.seeall, class.inherit(engine.Key))
 
 function _M:init()
@@ -24,6 +26,10 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
 	end
 end
 
+--- Adds a key/command combinaison
+-- @param sym the key to handle
+-- @param mods a table with the mod keys needed, i.e: {"ctrl", "alt"}
+-- @param fct the function to call when the key is pressed
 function _M:addCommand(sym, mods, fct)
 	if type(sym) == "string" then sym = self[sym] end
 	if not sym then return end
@@ -36,6 +42,19 @@ function _M:addCommand(sym, mods, fct)
 		self.commands[sym][table.concat(mods,',')] = fct
 	end
 end
+
+--- Adds many key/command at once
+-- @usage self.key:addCommands{<br/>
+--   _LEFT = function()<br/>
+--     print("left")<br/>
+--   end,<br/>
+--   _RIGHT = function()<br/>
+--     print("right")<br/>
+--   end,<br/>
+--   {{"x","ctrl"}] = function()<br/>
+--     print("control+x")<br/>
+--   end,<br/>
+-- }
 
 function _M:addCommands(t)
 	for k, e in pairs(t) do

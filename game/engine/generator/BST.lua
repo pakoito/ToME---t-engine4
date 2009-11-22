@@ -22,8 +22,8 @@ function _M:split(x, y, w, h)
 		split = rng.range(h * self.splitzone[1], h * self.splitzone[2])
 		x1, y1, w1, h1 = x, y, w, split
 		x2, y2, w2, h2 = x, y + split, w, h - split
-		print(x1, y1, w1, h1)
-		print(x2, y2, w2, h2)
+--		print(x1, y1, w1, h1)
+--		print(x2, y2, w2, h2)
 	end
 	return {x1, y1, w1, h1}, {x2, y2, w2, h2}
 end

@@ -11,10 +11,15 @@ ACTOR = 20
 displayOrder = { ACTOR, OBJECT, TERRAIN }
 rememberDisplayOrder = { TERRAIN }
 
-function _M:init(w, h, tile_w, tile_h)
+-- Static
+function _M:setViewPort(w, h, tile_w, tile_h)
+	self.viewport = {width=w, height=h}
 	self.tiles = Tiles.new(tile_w, tile_h)
-	self.w, self.h = math.floor(w / tile_w), math.floor(h / tile_h)
 	self.tile_w, self.tile_h = tile_w, tile_h
+end
+
+function _M:init(w, h)
+	self.w, self.h = w, h
 	self.map = {}
 	self.lites = {}
 	self.seens = {}
@@ -32,7 +37,7 @@ function _M:init(w, h, tile_w, tile_h)
 	setmetatable(self.seens, {__call = mapbool})
 	setmetatable(self.remembers, {__call = mapbool})
 
-	self.surface = core.display.newSurface(w, h)
+	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
 	self.fov = core.fov.new(_M.opaque, _M.apply, self)
 	self.fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
