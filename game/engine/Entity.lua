@@ -36,3 +36,19 @@ function _M:check(prop, ...)
 	else return self[prop]
 	end
 end
+
+function _M:loadList(...)
+	local res = {}
+
+	for i, file in ipairs{...} do
+		local f, err = loadfile(file)
+		if err then error(err) end
+		local data = f()
+		for i, a in ipairs(data) do
+			local e = self.new(a)
+			res[#res+1] = e
+			if a.define_as then res[a.define_as] = e end
+		end
+	end
+	return res
+end

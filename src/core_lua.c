@@ -6,6 +6,7 @@
 #include "types.h"
 #include "script.h"
 #include "display.h"
+#include "SFMT.h"
 #include "sge.h"
 #include <SDL_ttf.h>
 
@@ -393,6 +394,65 @@ static const struct luaL_reg sdl_font_reg[] =
 	{NULL, NULL},
 };
 
+/******************************************************************
+ ******************************************************************
+ *                              RNG                               *
+ ******************************************************************
+ ******************************************************************/
+
+static int rng_dice(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int i, res = 0;
+	for (i = 0; i < x; i++)
+		res += 1 + rand_div(y);
+	lua_pushnumber(L, res);
+	return 1;
+}
+
+static int rng_range(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	lua_pushnumber(L, x + rand_div(1 + y - x));
+	return 1;
+}
+
+static int rng_call(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	lua_pushnumber(L, rand_div(x));
+	return 1;
+}
+
+static int rng_seed(lua_State *L)
+{
+	int seed = luaL_checknumber(L, 1);
+	if (seed>=0)
+		init_gen_rand(seed);
+	else
+		init_gen_rand(time(NULL));
+	return 0;
+}
+
+static int rng_chance(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	lua_pushboolean(L, rand_div(x) == 0);
+	return 1;
+}
+
+static const struct luaL_reg rnglib[] =
+{
+	{"__call", rng_call},
+	{"range", rng_range},
+	{"dice", rng_dice},
+	{"seed", rng_seed},
+	{"chance", rng_chance},
+	{NULL, NULL},
+};
+
 int luaopen_core(lua_State *L)
 {
 	auxiliar_newclass(L, "fov{core}", fov_reg);
@@ -403,5 +463,6 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "core.mouse", mouselib, 0);
 	luaL_openlib(L, "core.key", keylib, 0);
 	luaL_openlib(L, "core.game", gamelib, 0);
+	luaL_openlib(L, "rng", rnglib, 0);
 	return 1;
 }

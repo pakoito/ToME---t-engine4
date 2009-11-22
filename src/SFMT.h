@@ -1,5 +1,5 @@
-/** 
- * @file SFMT.h 
+/**
+ * @file SFMT.h
  *
  * @brief SIMD oriented Fast Mersenne Twister(SFMT) pseudorandom
  * number generator
@@ -18,7 +18,7 @@
  * and you have to define PRIu64 and PRIx64 in this file as follows:
  * @verbatim
  typedef unsigned int uint32_t
- typedef unsigned long long uint64_t  
+ typedef unsigned long long uint64_t
  #define PRIu64 "llu"
  #define PRIx64 "llx"
 @endverbatim
@@ -65,13 +65,14 @@ void init_by_array(uint32_t init_key[], int key_length);
 char *get_idstring(void);
 int get_min_array_size32(void);
 int get_min_array_size64(void);
+uint32_t rand_div(uint32_t m);
 
 /* These real versions are due to Isaku Wada */
 /** generates a random number on [0,1]-real-interval */
 inline static double to_real1(uint32_t v)
 {
-    return v * (1.0/4294967295.0); 
-    /* divided by 2^32-1 */ 
+    return v * (1.0/4294967295.0);
+    /* divided by 2^32-1 */
 }
 
 /** generates a random number on [0,1]-real-interval */
@@ -83,7 +84,7 @@ inline static double genrand_real1(void)
 /** generates a random number on [0,1)-real-interval */
 inline static double to_real2(uint32_t v)
 {
-    return v * (1.0/4294967296.0); 
+    return v * (1.0/4294967296.0);
     /* divided by 2^32 */
 }
 
@@ -96,7 +97,7 @@ inline static double genrand_real2(void)
 /** generates a random number on (0,1)-real-interval */
 inline static double to_real3(uint32_t v)
 {
-    return (((double)v) + 0.5)*(1.0/4294967296.0); 
+    return (((double)v) + 0.5)*(1.0/4294967296.0);
     /* divided by 2^32 */
 }
 
@@ -108,14 +109,14 @@ inline static double genrand_real3(void)
 /** These real versions are due to Isaku Wada */
 
 /** generates a random number on [0,1) with 53-bit resolution*/
-inline static double to_res53(uint64_t v) 
-{ 
+inline static double to_res53(uint64_t v)
+{
     return v * (1.0/18446744073709551616.0L);
 }
 
 /** generates a random number on [0,1) with 53-bit resolution*/
-inline static double genrand_res53(void) 
-{ 
+inline static double genrand_res53(void)
+{
     return to_res53(gen_rand64());
-} 
+}
 #endif

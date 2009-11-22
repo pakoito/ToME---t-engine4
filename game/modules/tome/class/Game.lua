@@ -3,17 +3,26 @@ require "engine.GameTurnBased"
 require "engine.KeyCommand"
 require "engine.LogDisplay"
 local Tooltip = require "engine.Tooltip"
+local BST = require "engine.generator.BST"
+local Zone = require "engine.Zone"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
-local Entity = require "engine.Entity"
-local Player = require "tome.class.Player"
-local NPC = require "tome.class.NPC"
+local Grid = require "engine.Grid"
+local Actor = require "mod.class.Actor"
+local Player = require "mod.class.Player"
+local NPC = require "mod.class.NPC"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
 function _M:init()
 	engine.GameTurnBased.init(self, engine.Key.current, 1000, 100)
+end
+
+function _M:run()
 	self:setupCommands()
+
+	Zone:setup{npc_class="mod.class.NPC", grid_class="engine.Grid", object_class="engine.Entity"}
+	self.zone = Zone.new("ancient_ruins")
 
 	self.tooltip = engine.Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 
@@ -21,39 +30,29 @@ function _M:init()
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 
 	local map = Map.new(self.w, math.floor(self.h * 0.80), 16, 16)
---	map:liteAll(0, 0, map.w, map.h)
+	map:liteAll(0, 0, map.w, map.h)
+	map:rememberAll(0, 0, map.w, map.h)
 
-	local floor = Entity.new{display='.', color_r=100, color_g=200, color_b=100, color_br=0, color_bg=50, color_bb=0}
-	local e1 = Entity.new{display='#', color_r=255, block_sight=true, block_move=true}
-	local e2 = Entity.new{display='#', color_g=255, block_sight=true, block_move=true}
-	local e3 = Entity.new{display='#', color_b=255, block_sight=true, block_move=true}
-	local e4 = e3:clone{color_r=255}
+	local floor = self.zone.grid_list.GRASS
+	local wall = self.zone.grid_list.TREE
 
-	for i = 0, map.w-1 do for j = 0, map.h-1 do
-		map(i, j, 1, floor)
-	end end
-
-	map(8, 6, Map.TERRAIN, e4)
-	map(8, 7, Map.TERRAIN, e2)
-	map(8, 8, Map.TERRAIN, e3)
-	map(9, 6, Map.TERRAIN, e1)
-	map(9, 7, Map.TERRAIN, e2)
-	map(9, 8, Map.TERRAIN, e3)
-	map(10, 6, Map.TERRAIN, e1)
-	map(10, 7, Map.TERRAIN, e2)
-	map(10, 8, Map.TERRAIN, e3)
+	local generator = BST.new(map, {0.4, 0.6}, floor, wall)
+	generator:generate()
 
 	local level = Level.new(map)
 	self:setLevel(level)
 
-	self.player = Player.new(self, {name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230})
+	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}
 	self.player:move(4, 3, true)
 	level:addEntity(self.player)
 
-	local m = NPC.new(self, {name="here be dragons", display='D', color_r=125, color_g=125, color_b=255})
-	m.energy.mod = 0.38
-	m:move(1, 3, true)
-	level:addEntity(m)
+	for i = 1, 5 do
+--		local m = self.npc_list[rng.range(1, 2)]:clone()
+--		level:addEntity(m)
+--		local x, y = rng.range(0, map.w), rng.range(0, map.h)
+--		while map:checkAllEntity(x, y, "block_move") do x, y = rng.range(0, map.w), rng.range(0, map.h) end
+--		m:move(x, y, true)
+	end
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()

@@ -14,7 +14,8 @@ key:addCommand(key._x, {"ctrl"}, function() os.exit() end)
 key:addCommand(key._RETURN, {"alt"}, function() core.display.fullscreen() end)
 
 -- Load the game module
-local mod_def = loadfile("/tome/init.lua")
+game = false
+local mod_def = loadfile("/mod/init.lua")
 if mod_def then
 	local mod = {}
 	setfenv(mod_def, mod)
@@ -22,8 +23,9 @@ if mod_def then
 
 	if not mod.name or not mod.short_name or not mod.version or not mod.starter then os.exit() end
 
-	engine.Tiles.prefix = "/"..mod.short_name.."/data/gfx/"
-	require(mod.starter)
+	engine.Tiles.prefix = "/data/gfx/"
+	game = dofile("/"..mod.starter:gsub("%.", "/")..".lua")
+	game:run()
 else
 	os.exit()
 end

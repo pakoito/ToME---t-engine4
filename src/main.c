@@ -7,6 +7,7 @@
 #include "lauxlib.h"
 #include "lualib.h"
 #include "fov/fov.h"
+#include "SFMT.h"
 #include "sge.h"
 
 #include "types.h"
@@ -121,10 +122,14 @@ static int docall (lua_State *L, int narg, int clear) {
  */
 int run(int argc, char *argv[])
 {
+	// RNG init
+	init_gen_rand(time(NULL));
+
 	/***************** Physfs Init *****************/
 	PHYSFS_init(argv[0]);
 	PHYSFS_mount("game/", "/", 1);
-	PHYSFS_mount("game/modules/tome", "/tome", 1);
+	PHYSFS_mount("game/modules/tome", "/mod", 1);
+	PHYSFS_mount("game/modules/tome/data", "/data", 1);
 
 	/***************** Lua Init *****************/
 	L = lua_open();  /* create state */

@@ -159,3 +159,9 @@ function _M:liteAll(x, y, w, h)
 		self.lites(i, j, true)
 	end end
 end
+
+function _M:rememberAll(x, y, w, h)
+	for i = x, x + w - 1 do for j = y, y + h - 1 do
+		self.remembers(i, j, true)
+	end end
+end

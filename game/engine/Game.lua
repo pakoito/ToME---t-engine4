@@ -7,6 +7,9 @@ function _M:init(keyhandler)
 	self.w, self.h = core.display.size()
 end
 
+function _M:run()
+end
+
 function _M:setLevel(level)
 	self.level = level
 end

@@ -7,7 +7,9 @@ module(..., package.seeall, class.inherit(Entity))
 function _M:init(t)
 	t = t or {}
 	self.name = t.name
-	self.energy = { value=0, mod=1 }
+	self.energy = t.energy or { value=0, mod=1 }
+	self.energy.value = self.energy.value or 0
+	self.energy.mod = self.energy.mod or 0
 	Entity.init(self, t)
 end
 
