@@ -1,5 +1,7 @@
 require "engine.class"
 
+--- Handles tiles
+-- Used by engine.Map to reduce processing needed. Module authors wont use it directly mostly.
 module(..., package.seeall, class.make)
 
 prefix = "/data/gfx/"

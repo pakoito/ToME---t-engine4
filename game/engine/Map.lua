@@ -4,20 +4,33 @@ local Tiles = require "engine.Tiles"
 
 module(..., package.seeall, class.make)
 
+--- The place of a terrain entity in a map grid
 TERRAIN = 1
+--- The place of an actor entity in a map grid
 ACTOR = 100
+--- The place of an object entity in a map grid
 OBJECT = 1000
 
+--- The order of display for grid seen
 displayOrder = { ACTOR, OBJECT, TERRAIN }
+--- The order of display for grids remembered
 rememberDisplayOrder = { TERRAIN }
 
+--- Sets the viewport size
 -- Static
+-- @param w width
+-- @param h height
+-- @param tile_w width of a single tile
+-- @param tile_h height of a single tile
 function _M:setViewPort(w, h, tile_w, tile_h)
 	self.viewport = {width=w, height=h}
 	self.tiles = Tiles.new(tile_w, tile_h)
 	self.tile_w, self.tile_h = tile_w, tile_h
 end
 
+--- Creates a map
+-- @param w width (in grids)
+-- @param h height (in grids)
 function _M:init(w, h)
 	self.w, self.h = w, h
 	self.map = {}
@@ -26,6 +39,7 @@ function _M:init(w, h)
 	self.remembers = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 	getmetatable(self).__call = _M.call
+	getmetatable(self).__gc = _M.close
 	local mapbool = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
@@ -43,6 +57,12 @@ function _M:init(w, h)
 	self.changed = true
 end
 
+--- Sets/gets a value from the map
+-- It is defined as the function metamethod, so one can simply do: mymap(x, y, Map.TERRAIN)
+-- @param x position
+-- @param y position
+-- @param pos what kind of entity to set(Map.TERRAIN, Map.OBJECT, Map.ACTOR)
+-- @param entity the entity to set, if null it will return the current one
 function _M:call(x, y, pos, entity)
 	if entity then
 		self.map[x + y * self.w][pos] = entity
@@ -58,6 +78,10 @@ function _M:call(x, y, pos, entity)
 	end
 end
 
+--- Removes an entity
+-- @param x position
+-- @param y position
+-- @param pos what kind of entity to set(Map.TERRAIN, Map.OBJECT, Map.ACTOR)
 function _M:remove(x, y, pos)
 	if self.map[x + y * self.w] then
 		self.map[x + y * self.w][pos] = nil
@@ -65,6 +89,8 @@ function _M:remove(x, y, pos)
 	end
 end
 
+--- Displays the map on a surface
+-- @return a surface containing the drawn map
 function _M:display()
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return self.surface end
@@ -120,20 +146,28 @@ function _M:display()
 	return self.surface
 end
 
+--- Closes all stuff used by the map
+-- No need to call it manually usualy
 function _M:close()
 	self.tiles:close()
 	self.fovLite:close()
 	self.fovLite = nil
 	self.fov:close()
 	self.fov = nil
+	return true
 end
 
+
+--- Sets checks if a grid lets sigth pass through
+-- Used by FOV code
 function _M:opaque(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
 	local e = self(x, y, TERRAIN)
 	if e and e:check("block_sight") then return true end
 end
 
+--- Sets a grid as seen and remembered
+-- Used by FOV code
 function _M:apply(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.lites[x + y * self.w] then
@@ -142,6 +176,8 @@ function _M:apply(x, y)
 	end
 end
 
+--- Sets a grid as seen, lited and remembered
+-- Used by FOV code
 function _M:applyLite(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	self.lites[x + y * self.w] = true
@@ -149,6 +185,10 @@ function _M:applyLite(x, y)
 	self.remembers[x + y * self.w] = true
 end
 
+--- Check all entities of the grid for a property
+-- @param x position
+-- @param y position
+-- @param what property to check
 function _M:checkAllEntities(x, y, what, ...)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.map[x + y * self.w] then
@@ -159,12 +199,14 @@ function _M:checkAllEntities(x, y, what, ...)
 	end
 end
 
+--- Lite all grids
 function _M:liteAll(x, y, w, h)
 	for i = x, x + w - 1 do for j = y, y + h - 1 do
 		self.lites(i, j, true)
 	end end
 end
 
+--- Remember all grids
 function _M:rememberAll(x, y, w, h)
 	for i = x, x + w - 1 do for j = y, y + h - 1 do
 		self.remembers(i, j, true)

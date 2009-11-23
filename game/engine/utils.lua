@@ -94,6 +94,7 @@ function string.parseHex(str)
 	return res
 end
 
+do
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
 	local list = str:split("#%x%x%x%x%x%x#", true)
@@ -107,4 +108,5 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 			x = x + w
 		end
 	end
+end
 end
