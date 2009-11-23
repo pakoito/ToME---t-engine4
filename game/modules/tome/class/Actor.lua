@@ -38,7 +38,8 @@ function _M:die(src)
 	if src then
 		src:gainExp(self:worthExp())
 	end
-	self:bloodyDeath()
+	-- Do we get a blooooooody death ?
+	if rng.percent(33) then self:bloodyDeath() end
 end
 
 function _M:levelup()
