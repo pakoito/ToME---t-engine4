@@ -31,7 +31,17 @@ function _M:move(map, x, y, force)
 end
 
 function _M:deleteFromMap(map)
-	if self.x and self.y and game.level and game.level.map then
+	if self.x and self.y and map then
 		map:remove(self.x, self.y, engine.Map.ACTOR)
 	end
+end
+
+function _M:enoughEnergy(val)
+	val = val or game.energy_to_act
+	return self.energy.value >= val
+end
+
+function _M:useEnergy(val)
+	val = val or game.energy_to_act
+	self.energy.value = self.energy.value - val
 end

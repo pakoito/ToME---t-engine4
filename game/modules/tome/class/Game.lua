@@ -31,15 +31,20 @@ function _M:run()
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 	self.logSeen = function(e, ...) if e and self.level.map.seens(e.x, e.y) then self.log(...) end end
 
-	self.zone:getLevel(self, 1)
-
 	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}
-	self.player:move(self.level.start.x, self.level.start.y, true)
-	self.level:addEntity(self.player)
+
+	self:changeLevel(1)
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
 end
+
+function _M:changeLevel(lev)
+	self.zone:getLevel(self, lev)
+	self.player:move(self.level.start.x, self.level.start.y, true)
+	self.level:addEntity(self.player)
+end
+
 
 function _M:tick()
 	engine.GameTurnBased.tick(self)
@@ -137,6 +142,17 @@ function _M:setupCommands()
 				self.paused = false
 			end
 		end,
+		[{"_LESS","anymod"}] = function()
+			local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
+			if self.player:enoughEnergy() and e.change_level then
+				-- Do not unpause, the player is allowed first move on next level
+				self:changeLevel(self.level.level + e.change_level)
+				print(self.level.level)
+			else
+				self.log("There is no way out of this level here.")
+			end
+		end,
+		_GREATER = {"alias", "_LESS"},
 	}
 	self.key:setCurrent()
 end

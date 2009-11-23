@@ -4,6 +4,7 @@ return {
 	width = 50, height = 30,
 	all_remembered = true,
 	all_lited = true,
+	level_npcs = {5, 10},
 	generator =  {
 		map = {
 			class= "engine.generator.map.Empty",

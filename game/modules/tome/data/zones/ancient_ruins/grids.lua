@@ -4,11 +4,13 @@ return {
 	define_as = "UP",
 	name = "previous level",
 	display = '<', color_r=255, color_g=255, color_b=0,
+	change_level = -1
 },
 {
 	define_as = "DOWN",
 	name = "next level",
 	display = '>', color_r=255, color_g=255, color_b=0,
+	change_level = 1
 },
 {
 	define_as = "FLOOR",

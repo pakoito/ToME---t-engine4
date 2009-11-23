@@ -51,7 +51,32 @@ void on_event(SGEGAMESTATE *state, SDL_Event *event)
 			lua_pushboolean(L, (event->key.keysym.mod & KMOD_SHIFT) ? TRUE : FALSE);
 			lua_pushboolean(L, (event->key.keysym.mod & KMOD_ALT) ? TRUE : FALSE);
 			lua_pushboolean(L, (event->key.keysym.mod & KMOD_META) ? TRUE : FALSE);
-			lua_pushnumber(L, event->key.keysym.unicode);
+			/* Convert unicode UCS-2 to UTF8 string */
+			if (event->key.keysym.unicode)
+			{
+				wchar_t wc = event->key.keysym.unicode;
+
+				char buf[4] = {0,0,0,0};
+				if (wc < 0x80)
+				{
+					buf[0] = wc;
+				}
+				else if (wc < 0x800)
+				{
+					buf[0] = (0xC0 | wc>>6);
+					buf[1] = (0x80 | wc & 0x3F);
+				}
+				else
+				{
+					buf[0] = (0xE0 | wc>>12);
+					buf[1] = (0x80 | wc>>6 & 0x3F);
+					buf[2] = (0x80 | wc & 0x3F);
+				}
+
+				lua_pushstring(L, buf);
+			}
+			else
+				lua_pushnil(L);
 			lua_call(L, 7, 0);
 		}
 		break;

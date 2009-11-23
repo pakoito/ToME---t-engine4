@@ -29,6 +29,9 @@ function _M:defineExperienceChart(chart)
 	self.exp_chart = chart
 end
 
+--- Get the exp needed for the given level
+-- @param level the level to check exp for
+-- @return the exp needed, or nil if this level is not achievable
 function _M:getExpChart(level)
 	if type(self.exp_chart) == "table" then
 		return self.exp_chart[level]
@@ -40,12 +43,10 @@ end
 --- Gains some experience
 -- If a levelup happens it calls self:levelup(), modules are encourraged to rewrite it to do whatever is needed.
 function _M:gainExp(value)
-	print("gain exp",self.exp,"+",value)
 	self.exp = self.exp + value
 	while self:getExpChart(self.level + 1) and self.exp >= self:getExpChart(self.level + 1) do
 		self.level = self.level + 1
 		self.exp = self.exp - self:getExpChart(self.level)
-		print("levelup", self.level, self.exp)
 		self:levelup()
 	end
 end
@@ -56,5 +57,6 @@ function _M:worthExp()
 	return self.level * self.exp_worth
 end
 
+--- Method called when leveing up, module author rewrite it to do as you please
 function _M:levelup()
 end
