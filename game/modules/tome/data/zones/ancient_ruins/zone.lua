@@ -7,7 +7,7 @@ return {
 	level_npcs = {5, 10},
 	generator =  {
 		map = {
-			class= "engine.generator.map.Empty",
+			class= "engine.generator.map.Rooms",
 			floor = "FLOOR",
 			wall = "WALL",
 			up = "UP",

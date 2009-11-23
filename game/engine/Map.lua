@@ -65,6 +65,7 @@ end
 -- @param pos what kind of entity to set(Map.TERRAIN, Map.OBJECT, Map.ACTOR)
 -- @param entity the entity to set, if null it will return the current one
 function _M:call(x, y, pos, entity)
+	if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 	if entity then
 		self.map[x + y * self.w][pos] = entity
 		self.changed = true

@@ -2,8 +2,9 @@ require "engine.class"
 require "engine.Actor"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
+require "engine.interface.BloodyDeath"
 
-module(..., package.seeall, class.inherit(engine.Actor, engine.interface.ActorLife, engine.interface.ActorLevel))
+module(..., package.seeall, class.inherit(engine.Actor, engine.interface.ActorLife, engine.interface.ActorLevel, engine.interface.BloodyDeath))
 
 function _M:init(t)
 	engine.Actor.init(self, t)
@@ -29,6 +30,7 @@ function _M:die(src)
 	if src then
 		src:gainExp(self:worthExp())
 	end
+	self:bloodyDeath()
 end
 
 function _M:levelup()

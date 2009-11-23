@@ -7,6 +7,7 @@ return {
 	life = 20,
 	mana = 1000,
 	energy = { mod=0.8 },
+	has_blood = true,
 },
 {
 	name = "baby dragon",
@@ -15,6 +16,7 @@ return {
 	life = 30,
 	mana = 1000,
 	energy = { mod=0.3 },
+	has_blood = true,
 },
 
 }
