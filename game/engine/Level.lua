@@ -17,3 +17,11 @@ function _M:addEntity(e)
 	if self.entities[e.uid] then error("Entity "..e.uid.." already present on the level") end
 	self.entities[e.uid] = e
 end
+
+--- Removes an entity from the level
+function _M:removeEntity(e)
+	if not self.entities[e.uid] then error("Entity "..e.uid.." not present on the level") end
+	self.entities[e.uid] = nil
+	-- Tells it to delete itself if needed
+	if e.deleteFromMap then e:deleteFromMap(self.map) end
+end

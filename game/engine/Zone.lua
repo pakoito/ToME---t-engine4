@@ -49,23 +49,37 @@ end
 --- Asks the zone to generate a level of level "lev"
 -- @param lev the level (from 1 to zone.max_level)
 -- @return a Level object
-function _M:getLevel(lev)
+function _M:getLevel(game, lev)
 	local level_data = self:getLevelData(lev)
 
 	local map = self.map_class.new(level_data.width, level_data.height)
-	map:liteAll(0, 0, map.w, map.h)
-	map:rememberAll(0, 0, map.w, map.h)
+	if level_data.all_lited then map:liteAll(0, 0, map.w, map.h) end
+	if level_data.all_remembered then map:rememberAll(0, 0, map.w, map.h) end
 
-	local generator = require(level_data.generator.class).new(
+	-- Generate the map
+	local generator = require(level_data.generator.map.class).new(
 		map,
-		self.grid_list[level_data.generator.floor],
-		self.grid_list[level_data.generator.wall],
-		self.grid_list[level_data.generator.up],
-		self.grid_list[level_data.generator.down]
+		self.grid_list,
+		level_data.generator.map
 	)
 	local startx, starty = generator:generate()
 
 	local level = self.level_class.new(lev, map)
 	level.start = {x=startx, y=starty}
+
+	-- Setup the level in the game
+	game:setLevel(level)
+
+	-- Generate actors
+	if level_data.generator.actor then
+		local generator = require(level_data.generator.actor.class).new(
+			map,
+			level,
+			self.npc_list,
+			level_data.generator.actor
+		)
+		generator:generate()
+	end
+
 	return level
 end

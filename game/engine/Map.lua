@@ -2,6 +2,7 @@ require "engine.class"
 local Entity = require "engine.Entity"
 local Tiles = require "engine.Tiles"
 
+--- Represents a level map, handles display and various low level map work
 module(..., package.seeall, class.make)
 
 --- The place of a terrain entity in a map grid

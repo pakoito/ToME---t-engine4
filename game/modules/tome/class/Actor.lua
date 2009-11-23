@@ -30,11 +30,24 @@ end
 function _M:bumped(x, y, e)
 	-- Dont bump yourself!
 	if e and e ~= self then
-		game.log("%s bumped into %s!", tostring(e.name), tostring(self.name))
+		game.log("%s attacks %s.", tostring(e.name), tostring(self.name))
+		self:takeHit(10, e)
 	end
 	return true
 end
 
 function _M:tooltip()
 	return self.name.."\n#ff0000#HP: "..self.life
+end
+
+function _M:takeHit(value, src)
+	self.life = self.life - value
+	if self.life <= 0 then
+		game.log("%s killed %s!", src.name, self.name)
+		game.level:removeEntity(self)
+		self:die()
+	end
+end
+
+function _M:die()
 end

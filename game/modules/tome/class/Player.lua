@@ -15,3 +15,8 @@ end
 function _M:act()
 	game.paused = true
 end
+
+function _M:die()
+	-- a tad brutal
+	os.exit()
+end

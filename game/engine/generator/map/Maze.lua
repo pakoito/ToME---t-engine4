@@ -1,11 +1,14 @@
 require "engine.class"
 local Map = require "engine.Map"
-require "engine.MapGenerator"
-module(..., package.seeall, class.inherit(engine.MapGenerator))
+require "engine.Generator"
+module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(map, floor, wall, up, down)
-	engine.MapGenerator.init(self, map)
-	self.floor, self.wall, self.up, self.down = floor, wall, up, down
+function _M:init(map, grid_list, data)
+	engine.Generator.init(self, map)
+	self.floor = grid_list[data.floor]
+	self.wall = grid_list[data.wall]
+	self.up = grid_list[data.up]
+	self.down = grid_list[data.down]
 end
 
 function _M:generate()

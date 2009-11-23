@@ -28,3 +28,9 @@ function _M:move(map, x, y, force)
 
 	return true
 end
+
+function _M:deleteFromMap(map)
+	if self.x and self.y and game.level and game.level.map then
+		map:remove(self.x, self.y, engine.Map.ACTOR)
+	end
+end

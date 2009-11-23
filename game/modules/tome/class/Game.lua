@@ -30,20 +30,11 @@ function _M:run()
 	self.log = engine.LogDisplay.new(self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 
-	local level = self.zone:getLevel(1)
-	self:setLevel(level)
+	self.zone:getLevel(self, 1)
 
 	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}
-	self.player:move(level.start.x, level.start.y, true)
-	level:addEntity(self.player)
-
-	for i = 1, 5 do
---		local m = self.npc_list[rng.range(1, 2)]:clone()
---		level:addEntity(m)
---		local x, y = rng.range(0, map.w), rng.range(0, map.h)
---		while map:checkAllEntities(x, y, "block_move") do x, y = rng.range(0, map.w), rng.range(0, map.h) end
---		m:move(x, y, true)
-	end
+	self.player:move(self.level.start.x, self.level.start.y, true)
+	self.level:addEntity(self.player)
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()

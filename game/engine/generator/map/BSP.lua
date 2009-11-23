@@ -1,13 +1,18 @@
 require "engine.class"
-require "engine.MapGenerator"
-module(..., package.seeall, class.inherit(engine.MapGenerator))
+require "engine.Generator"
+module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(map, splitzone, floor, wall)
-	engine.MapGenerator.init(self, map)
-	self.min_dimention = 4
+function _M:init(map, grid_list, data)
+	engine.Generator.init(self, map)
+
+	self.floor = grid_list[data.floor]
+	self.wall = grid_list[data.wall]
+	self.up = grid_list[data.up]
+	self.down = grid_list[data.down]
+
+	self.min_dimention = data.min_dimention or 3
 	self.tree = {}
-	self.splitzone = splitzone
-	self.floor, self.wall = floor, wall
+	self.splitzone = data.splitzone or {0.4, 0.5}
 end
 
 function _M:split(x, y, w, h)
