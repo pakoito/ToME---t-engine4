@@ -4,7 +4,6 @@ require "engine.Actor"
 module(..., package.seeall, class.inherit(engine.Actor))
 
 function _M:init(t)
-	t.block_move = _M.bumped
 	self.level = 1
 	self.life = 100
 	self.mana = 100
@@ -27,7 +26,7 @@ function _M:move(x, y, force)
 	return moved
 end
 
-function _M:bumped(x, y, e)
+function _M:block_move(x, y, e)
 	-- Dont bump yourself!
 	if e and e ~= self then
 		game.log("%s attacks %s.", tostring(e.name), tostring(self.name))

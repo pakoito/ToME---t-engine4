@@ -18,16 +18,18 @@ function _M:init(t)
 	self.uid = next_uid
 	__uids[self.uid] = self
 
-	self.image = t.image or nil
-	self.display = t.display or '.'
-	self.color_r = t.color_r or 0
-	self.color_g = t.color_g or 0
-	self.color_b = t.color_b or 0
-	self.color_br = t.color_br or -1
-	self.color_bg = t.color_bg or -1
-	self.color_bb = t.color_bb or -1
-	self.block_sight = t.block_sight
-	self.block_move = t.block_move
+	for k, e in pairs(t) do self[k] = e end
+
+	self.image = self.image or nil
+	self.display = self.display or '.'
+	self.color_r = self.color_r or 0
+	self.color_g = self.color_g or 0
+	self.color_b = self.color_b or 0
+	self.color_br = self.color_br or -1
+	self.color_bg = self.color_bg or -1
+	self.color_bb = self.color_bb or -1
+	self.block_sight = self.block_sight or false
+	self.block_move = self.block_move or false
 
 	next_uid = next_uid + 1
 end

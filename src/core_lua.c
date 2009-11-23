@@ -422,7 +422,15 @@ static int rng_range(lua_State *L)
 static int rng_call(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
-	lua_pushnumber(L, rand_div(x));
+	if (lua_isnumber(L, 2))
+	{
+		int y = luaL_checknumber(L, 2);
+		lua_pushnumber(L, x + rand_div(1 + y - x));
+	}
+	else
+	{
+		lua_pushnumber(L, rand_div(x));
+	}
 	return 1;
 }
 
@@ -443,6 +451,13 @@ static int rng_chance(lua_State *L)
 	return 1;
 }
 
+static int rng_percent(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	lua_pushboolean(L, rand_div(100) < x);
+	return 1;
+}
+
 static const struct luaL_reg rnglib[] =
 {
 	{"__call", rng_call},
@@ -450,6 +465,7 @@ static const struct luaL_reg rnglib[] =
 	{"dice", rng_dice},
 	{"seed", rng_seed},
 	{"chance", rng_chance},
+	{"percent", rng_percent},
 	{NULL, NULL},
 };
 

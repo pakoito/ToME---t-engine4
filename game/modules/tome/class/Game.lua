@@ -20,7 +20,7 @@ end
 function _M:run()
 	self:setupCommands()
 
-	Zone:setup{npc_class="mod.class.NPC", grid_class="engine.Grid", object_class="engine.Entity"}
+	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
 	Map:setViewPort(self.w, math.floor(self.h * 0.80), 16, 16)
 
 	self.zone = Zone.new("ancient_ruins")

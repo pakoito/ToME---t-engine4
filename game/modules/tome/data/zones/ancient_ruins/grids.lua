@@ -22,5 +22,20 @@ return {
 	block_move = true,
 	block_sight = true,
 },
+{
+	define_as = "DOOR",
+	name = "door",
+	display = '+', color_r=238, color_g=154, color_b=77,
+	block_sight = true,
+	door_opened = "DOOR_OPEN",
+},
+{
+	define_as = "DOOR_OPEN",
+	name = "open door",
+	display = "'", color_r=238, color_g=154, color_b=77,
+	block_move = false,
+	block_sight = false,
+	door_closed = "DOOR",
+},
 
 }
