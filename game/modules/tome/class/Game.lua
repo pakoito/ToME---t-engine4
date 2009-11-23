@@ -3,7 +3,6 @@ require "engine.GameTurnBased"
 require "engine.KeyCommand"
 require "engine.LogDisplay"
 local Tooltip = require "engine.Tooltip"
-local BST = require "engine.generator.BST"
 local Zone = require "engine.Zone"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
@@ -35,14 +34,14 @@ function _M:run()
 	self:setLevel(level)
 
 	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}
-	self.player:move(4, 3, true)
+	self.player:move(level.start.x, level.start.y, true)
 	level:addEntity(self.player)
 
 	for i = 1, 5 do
 --		local m = self.npc_list[rng.range(1, 2)]:clone()
 --		level:addEntity(m)
 --		local x, y = rng.range(0, map.w), rng.range(0, map.h)
---		while map:checkAllEntity(x, y, "block_move") do x, y = rng.range(0, map.w), rng.range(0, map.h) end
+--		while map:checkAllEntities(x, y, "block_move") do x, y = rng.range(0, map.w), rng.range(0, map.h) end
 --		m:move(x, y, true)
 	end
 
@@ -69,7 +68,7 @@ function _M:display()
 		end
 
 		local mx, my = core.mouse.get()
-		local tt = self.level.map:checkAllEntity(math.floor(mx / self.level.map.tile_w), math.floor(my / self.level.map.tile_h), "tooltip")
+		local tt = self.level.map:checkAllEntities(math.floor(mx / self.level.map.tile_w), math.floor(my / self.level.map.tile_h), "tooltip")
 		if tt then
 			self.tooltip:set(tt)
 			local t = self.tooltip:display()

@@ -4,7 +4,7 @@ module(..., package.seeall, class.inherit(engine.MapGenerator))
 
 function _M:init(map, splitzone, floor, wall)
 	engine.MapGenerator.init(self, map)
-	self.smallest = 100000
+	self.min_dimention = 4
 	self.tree = {}
 	self.splitzone = splitzone
 	self.floor, self.wall = floor, wall
@@ -14,16 +14,18 @@ function _M:split(x, y, w, h)
 	local x1, y1, w1, h1
 	local x2, y2, w2, h2
 	local split, dir
-	if rng.chance(2) then
+	if w >= self.min_dimention * 2 + 1 and rng.chance(2) then
 		split = rng.range(w * self.splitzone[1], w * self.splitzone[2])
 		x1, y1, w1, h1 = x, y, split, h
 		x2, y2, w2, h2 = x + split, y, w - split, h
-	else
+	elseif h >= self.min_dimention * 2 + 1 then
 		split = rng.range(h * self.splitzone[1], h * self.splitzone[2])
 		x1, y1, w1, h1 = x, y, w, split
 		x2, y2, w2, h2 = x, y + split, w, h - split
 --		print(x1, y1, w1, h1)
 --		print(x2, y2, w2, h2)
+	else
+		return nil
 	end
 	return {x1, y1, w1, h1}, {x2, y2, w2, h2}
 end
@@ -52,7 +54,9 @@ function _M:generate()
 
 		local r1, r2 = self:split(unpack(baser))
 
-		if self:roomSize(r1) <= 40 or self:roomSize(r2) <= 40 or r1[3] < 6 or r1[4] < 6 or r2[3] < 6 or r2[4] < 6 then
+		if not r1 then
+			table.insert(process, baser)
+		elseif self:roomSize(r1) <= 40 or self:roomSize(r2) <= 40 or r1[3] < 6 or r1[4] < 6 or r2[3] < 6 or r2[4] < 6 then
 			table.insert(rooms, r1)
 			table.insert(rooms, r2)
 		else

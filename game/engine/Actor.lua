@@ -13,8 +13,8 @@ function _M:init(t)
 	Entity.init(self, t)
 end
 
-function _M:move(map, x, y)
-	if map:checkAllEntity(x, y, "block_move", self) then return true end
+function _M:move(map, x, y, force)
+	if not force and map:checkAllEntities(x, y, "block_move", self) then return true end
 
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.ACTOR)

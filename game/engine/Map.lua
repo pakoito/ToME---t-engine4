@@ -5,8 +5,8 @@ local Tiles = require "engine.Tiles"
 module(..., package.seeall, class.make)
 
 TERRAIN = 1
-OBJECT = 10
-ACTOR = 20
+ACTOR = 100
+OBJECT = 1000
 
 displayOrder = { ACTOR, OBJECT, TERRAIN }
 rememberDisplayOrder = { TERRAIN }
@@ -45,7 +45,7 @@ end
 
 function _M:call(x, y, pos, entity)
 	if entity then
-		table.insert(self.map[x + y * self.w], pos, entity)
+		self.map[x + y * self.w][pos] = entity
 		self.changed = true
 	else
 		if self.map[x + y * self.w] then
@@ -149,7 +149,7 @@ function _M:applyLite(x, y)
 	self.remembers[x + y * self.w] = true
 end
 
-function _M:checkAllEntity(x, y, what, ...)
+function _M:checkAllEntities(x, y, what, ...)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.map[x + y * self.w] then
 		for _, e in pairs(self.map[x + y * self.w]) do

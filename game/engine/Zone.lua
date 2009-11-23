@@ -56,12 +56,16 @@ function _M:getLevel(lev)
 	map:liteAll(0, 0, map.w, map.h)
 	map:rememberAll(0, 0, map.w, map.h)
 
-	local floor = self.grid_list.GRASS
-	local wall = self.grid_list.TREE
-
-	local generator = require(level_data.generator.class).new(map, {0.4, 0.6}, floor, wall)
-	generator:generate()
+	local generator = require(level_data.generator.class).new(
+		map,
+		self.grid_list[level_data.generator.floor],
+		self.grid_list[level_data.generator.wall],
+		self.grid_list[level_data.generator.up],
+		self.grid_list[level_data.generator.down]
+	)
+	local startx, starty = generator:generate()
 
 	local level = self.level_class.new(lev, map)
+	level.start = {x=startx, y=starty}
 	return level
 end
