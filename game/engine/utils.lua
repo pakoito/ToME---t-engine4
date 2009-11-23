@@ -1,3 +1,33 @@
+function string.capitalize(str)
+	if #str > 1 then
+		return string.upper(str:sub(1, 1))..str:sub(2)
+	elseif #str == 1 then
+		return str:upper()
+	else
+		return str
+	end
+end
+
+function string.bookCapitalize(str)
+	local words = str:split(' ')
+
+	for i = 1, #words do
+		local word = words[i]
+
+		-- Don't capitalize certain words unless they are at the begining
+		-- of the string.
+		if i == 1 or (word ~= "of" and word ~= "the" and word ~= "and" and word ~= "a" and word ~= "an")
+		then
+			words[i] = word:gsub("^(.)",
+							function(x)
+								return x:upper()
+							end)
+		end
+	end
+
+	return table.concat(words, " ")
+end
+
 function string.splitLine(str, max_width, font)
 	local space_w = font:size(" ")
 	local lines = {}

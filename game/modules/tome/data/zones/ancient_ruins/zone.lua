@@ -6,7 +6,7 @@ return {
 	all_lited = true,
 	generator =  {
 		map = {
-			class= "engine.generator.map.Rooms",
+			class= "engine.generator.map.Empty",
 			floor = "FLOOR",
 			wall = "WALL",
 			up = "UP",

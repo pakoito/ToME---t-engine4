@@ -10,6 +10,8 @@ module(..., package.seeall, class.make)
 function _M:init(keyhandler)
 	self.key = keyhandler
 	self.level = nil
+	self.log = function() end
+	self.logSeen = function() end
 	self.w, self.h = core.display.size()
 end
 

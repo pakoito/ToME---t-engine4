@@ -12,6 +12,7 @@ function _M:init(map, grid_list, data)
 	self.door = grid_list[data.door]
 	self.up = grid_list[data.up]
 	self.down = grid_list[data.down]
+	self.spots = {}
 end
 
 function _M:doRooms(room, no, tab)
@@ -33,6 +34,10 @@ function _M:doRooms(room, no, tab)
 			self:doRooms({ y=room.y, x=room.x + sx + 1, h=room.h, w=room.w - sx - 1}, no-1,"  "..tab)
 		end
 		self.map(room.x + sx, room.y + sy, Map.TERRAIN, self.door)
+	else
+		-- Final room, select an interresting "spot"
+		local spotx, spoty = rng.range(room.x, room.x + room.w - 1), rng.range(room.y, room.y + room.h - 1)
+		table.insert(self.spots, {x=spotx, y=spoty})
 	end
 end
 
@@ -47,7 +52,11 @@ function _M:generate()
 
 	self:doRooms({ x=1, y=1, h=self.map.h - 2, w=self.map.w - 2 }, 10, "#")
 
-	-- Always starts at 1, 1
-	self.map(1, 1, Map.TERRAIN, self.up)
-	return 1, 1
+	-- Select 2 spots, one for up and one for down, remove the up one, we dont want an actor generator to get smart
+	-- and place a monster where the player should be!
+	local up_spot = table.remove(self.spots, rng.range(1, #self.spots))
+	local down_spot = self.spots[rng.range(1, #self.spots)]
+	self.map(up_spot.x, up_spot.y, Map.TERRAIN, self.up)
+	self.map(down_spot.x, down_spot.y, Map.TERRAIN, self.down)
+	return up_spot.x, up_spot.y, self.spots
 end

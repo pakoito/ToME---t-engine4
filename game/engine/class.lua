@@ -2,6 +2,14 @@ module("class", package.seeall)
 
 local base = _G
 
+local function search(k, plist)
+	for i=1, #plist do
+		local v = plist[i][k]     -- try `i'-th superclass
+		if v then return v end
+	end
+end
+
+
 function make(c)
 	setmetatable(c, {__index=_M})
 	c.new = function(...)
@@ -14,9 +22,15 @@ function make(c)
 	return c
 end
 
-function inherit(base)
+function inherit(base, ...)
+	local ifs = {...}
 	return function(c)
-		setmetatable(c, {__index=base})
+		if #ifs == 0 then
+			setmetatable(c, {__index=base})
+		else
+			table.insert(ifs, 1, base)
+			setmetatable(c, {__index=function(t, k) return search(k, ifs) end})
+		end
 		c.new = function(...)
 			local obj = {}
 			obj.__CLASSNAME = c._NAME

@@ -29,6 +29,7 @@ function _M:run()
 
 	self.log = engine.LogDisplay.new(self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
+	self.logSeen = function(e, ...) if e and self.level.map.seens(e.x, e.y) then self.log(...) end end
 
 	self.zone:getLevel(self, 1)
 
