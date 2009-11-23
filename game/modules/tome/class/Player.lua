@@ -5,6 +5,8 @@ module(..., package.seeall, class.inherit(mod.class.Actor))
 
 function _M:init(t)
 	mod.class.Actor.init(self, t)
+
+	self.combat = { dam=10, atk=4, apr=2, def=6, armor=4 }
 end
 
 function _M:move(x, y, force)

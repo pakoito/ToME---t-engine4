@@ -1,6 +1,6 @@
 require "engine.class"
 
---- Interface to add a bloodyDeath() method to actords
+--- Interface to add a bloodyDeath() method to actors
 -- When this method is called, the floor or walls around the late actor is covered in blood
 module(..., package.seeall, class.make)
 

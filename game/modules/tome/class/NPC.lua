@@ -8,5 +8,5 @@ function _M:init(t)
 end
 
 function _M:act()
-	self:move(self.x + 1, self.y)
+--	self:move(self.x + 1, self.y)
 end

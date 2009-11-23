@@ -419,6 +419,20 @@ static int rng_range(lua_State *L)
 	return 1;
 }
 
+static int rng_avg(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int nb = 2;
+	double res = 0;
+	int i;
+	if (lua_isnumber(L, 3)) nb = luaL_checknumber(L, 3);
+	for (i = 0; i < nb; i++)
+		res += x + rand_div(1 + y - x);
+	lua_pushnumber(L, res / nb);
+	return 1;
+}
+
 static int rng_call(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
@@ -462,6 +476,7 @@ static const struct luaL_reg rnglib[] =
 {
 	{"__call", rng_call},
 	{"range", rng_range},
+	{"avg", rng_avg},
 	{"dice", rng_dice},
 	{"seed", rng_seed},
 	{"chance", rng_chance},

@@ -3,8 +3,16 @@ require "engine.Actor"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
 require "engine.interface.BloodyDeath"
+require "mod.class.interface.Combat"
 
-module(..., package.seeall, class.inherit(engine.Actor, engine.interface.ActorLife, engine.interface.ActorLevel, engine.interface.BloodyDeath))
+module(..., package.seeall, class.inherit(
+	-- a ToME actor is a complex beast it uses may inetrfaces
+	engine.Actor,
+	engine.interface.ActorLife,
+	engine.interface.ActorLevel,
+	engine.interface.BloodyDeath,
+	mod.class.interface.Combat
+))
 
 function _M:init(t)
 	engine.Actor.init(self, t)
@@ -35,4 +43,8 @@ end
 
 function _M:levelup()
 
+end
+
+function _M:attack(target)
+	self:attackTarget(target)
 end
