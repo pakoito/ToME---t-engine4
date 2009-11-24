@@ -47,5 +47,5 @@ function _M:levelup()
 end
 
 function _M:attack(target)
-	self:attackTarget(target)
+	self:bumpInto(target)
 end

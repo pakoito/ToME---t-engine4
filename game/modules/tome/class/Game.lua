@@ -153,6 +153,18 @@ function _M:setupCommands()
 			end
 		end,
 		_GREATER = {"alias", "_LESS"},
+		-- Toggle tactical displau
+		[{"_t","ctrl"}] = function()
+			if Map.view_faction then
+				Map:setViewerFaction(nil)
+				self.log("Tactical dislpay disabled.")
+				self.level.map.changed = true
+			else
+				Map:setViewerFaction("players")
+				self.log("Tactical dislpay enabled.")
+				self.level.map.changed = true
+			end
+		end,
 	}
 	self.key:setCurrent()
 end
