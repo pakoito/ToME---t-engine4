@@ -81,5 +81,8 @@ function _M:getLevel(game, lev)
 		generator:generate()
 	end
 
+	-- Clean up things
+	collectgarbage("collect")
+
 	return level
 end

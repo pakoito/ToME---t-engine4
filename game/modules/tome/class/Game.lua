@@ -55,11 +55,9 @@ function _M:display()
 
 	if self.level and self.level.map then
 		if self.level.map.changed then
-			self.level.map.seens(self.player.x, self.player.y, true)
-			self.level.map.lites(self.player.x, self.player.y, true)
-			self.level.map.remembers(self.player.x, self.player.y, true)
-			self.level.map.fov(self.player.x, self.player.y, 20)
-			self.level.map.fov_lite(self.player.x, self.player.y, 4)
+			self.level.map:fov(self.player.x, self.player.y, 20)
+			self.level.map:fovLite(self.player.x, self.player.y, 4)
+--			core.fov.calc_circle(15,15, 7, self.level.map.opaque, self.level.map.apply, self.level.map)
 		end
 		local s = self.level.map:display()
 		if s then

@@ -40,7 +40,6 @@ function _M:init(w, h)
 	self.remembers = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 	getmetatable(self).__call = _M.call
-	getmetatable(self).__gc = _M.close
 	local mapbool = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
@@ -53,9 +52,45 @@ function _M:init(w, h)
 	setmetatable(self.remembers, {__call = mapbool})
 
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
-	self.fov = function(x, y, d) core.fov.calc(x, y, d,_M.opaque, _M.apply, self) end
-	self.fov_lite = function(x, y, d) core.fov.calc(x, y, d,_M.opaque, _M.applyLite, self) end
+	self._fov = core.fov.new(_M.opaque, _M.apply, self)
+	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
+end
+
+--- Runs the FOV algorithm on the map
+-- @param x source point of the ligth
+-- @param y source point of the ligth
+-- @param d radius of the light
+function _M:fov(x, y, d)
+	-- Reset seen grids
+	if self.clean_fov then
+		self.clean_fov = false
+		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+	end
+	self._fov(x, y, d)
+
+	-- Also seen the source itself
+	self.seens(x, y, true)
+	self.lites(x, y, true)
+	self.remembers(x, y, true)
+end
+
+--- Runs the FOV algorithm on the map, ligthing grids to allow rememberance
+-- @param x source point of the ligth
+-- @param y source point of the ligth
+-- @param d radius of the light
+function _M:fovLite(x, y, d)
+	-- Reset seen grids
+	if self.clean_fov then
+		self.clean_fov = false
+		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+		self._fov_lite(x, y, d)
+	end
+
+	-- Also seen the source itself
+	self.seens(x, y, true)
+	self.lites(x, y, true)
+	self.remembers(x, y, true)
 end
 
 --- Sets/gets a value from the map
@@ -96,7 +131,8 @@ end
 function _M:display()
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return self.surface end
-	self.changed = false print("redraw")
+	self.changed = false
+	self.clean_fov = true
 
 	-- Erase and the display the map
 	self.surface:erase()
@@ -120,7 +156,6 @@ function _M:display()
 					end
 				end
 			end
-			self.seens[z] = nil
 		end end
 	else
 		-- Version with multi display
@@ -147,18 +182,6 @@ function _M:display()
 	end
 	return self.surface
 end
-
---- Closes all stuff used by the map
--- No need to call it manually usualy
-function _M:close()
-	self.tiles:close()
---	self.fovLite:close()
---	self.fovLite = nil
---	self.fov:close()
---	self.fov = nil
-	return true
-end
-
 
 --- Sets checks if a grid lets sigth pass through
 -- Used by FOV code

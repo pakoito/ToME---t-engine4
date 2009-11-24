@@ -1,4 +1,4 @@
-#include "fov.h"
+#include "fov/fov.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -15,25 +15,157 @@
  *                              FOV                               *
  ******************************************************************
  ******************************************************************/
+struct lua_fov
+{
+	fov_settings_type fov_settings;
+	int apply_ref;
+	int opaque_ref;
+	int map_ref;
+};
+
+static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *src)
+{
+	struct lua_fov *fov = (struct lua_fov *)m;
+	radius--;
+	if (dx*dx + dy*dy <= radius*radius + 1)
+	{	// circular view - can be changed if you like
+
+	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->apply_ref);
+	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->map_ref);
+	lua_pushnumber(L, x);
+	lua_pushnumber(L, y);
+	lua_call(L, 3, 0);
+	}
+}
+
+static bool map_opaque(void *m, int x, int y)
+{
+	struct lua_fov *fov = (struct lua_fov *)m;
+
+	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->opaque_ref);
+	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->map_ref);
+	lua_pushnumber(L, x);
+	lua_pushnumber(L, y);
+	lua_call(L, 3, 1);
+	bool res = lua_toboolean(L, -1);
+	lua_pop(L, 1);
+	return res;
+}
+
+static int lua_new_fov(lua_State *L)
+{
+	int map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	int apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+	struct lua_fov *fov = (struct lua_fov*)lua_newuserdata(L, sizeof(struct lua_fov));
+	auxiliar_setclass(L, "fov{core}", -1);
+	fov->apply_ref = apply_ref;
+	fov->opaque_ref = opaque_ref;
+	fov->map_ref = map_ref;
+	fov_settings_init(&(fov->fov_settings));
+	fov_settings_set_shape(&(fov->fov_settings), FOV_SHAPE_CIRCLE);
+	fov_settings_set_opacity_test_function(&(fov->fov_settings), map_opaque);
+	fov_settings_set_apply_lighting_function(&(fov->fov_settings), map_seen);
+
+	return 1;
+}
+
+static int lua_free_fov(lua_State *L)
+{
+	struct lua_fov *fov = (struct lua_fov*)auxiliar_checkclass(L, "fov{core}", 1);
+	fov_settings_free(&(fov->fov_settings));
+	luaL_unref(L, LUA_REGISTRYINDEX, fov->apply_ref);
+	luaL_unref(L, LUA_REGISTRYINDEX, fov->opaque_ref);
+	luaL_unref(L, LUA_REGISTRYINDEX, fov->map_ref);
+	lua_pushnumber(L, 1);
+	printf("fov gc\n");
+	return 1;
+}
+
 static int lua_fov(lua_State *L)
+{
+	struct lua_fov *fov = (struct lua_fov*)auxiliar_checkclass(L, "fov{core}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	int radius = luaL_checknumber(L, 4);
+
+	fov_circle(&(fov->fov_settings), fov, NULL, x, y, radius+1);
+	return 0;
+}
+
+static int lua_fov_calc_circle(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
 	int y = luaL_checknumber(L, 2);
 	int radius = luaL_checknumber(L, 3);
 	int map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	int apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	int check_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-	do_fov(x, y, radius, map_ref, check_ref, apply_ref);
+	struct lua_fov fov;
 
-	luaL_unref(L, LUA_REGISTRYINDEX, apply_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, check_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, map_ref);
+	fov_settings_init(&(fov.fov_settings));
+	fov_circle(&(fov.fov_settings), &fov, NULL, x, y, radius+1);
+	fov_settings_free(&(fov.fov_settings));
+
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.map_ref);
+
+	return 0;
+}
+
+static int lua_fov_calc_beam(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int radius = luaL_checknumber(L, 3);
+	int direction = luaL_checknumber(L, 4);
+	float angle = luaL_checknumber(L, 5);
+	int map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	int apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	int dir = 0;
+
+	switch (direction)
+	{
+	case 1: dir = FOV_SOUTHWEST; break;
+	case 2: dir = FOV_SOUTH; break;
+	case 3: dir = FOV_SOUTHEAST; break;
+	case 4: dir = FOV_WEST; break;
+	case 6: dir = FOV_EAST; break;
+	case 7: dir = FOV_NORTHWEST; break;
+	case 8: dir = FOV_NORTH; break;
+	case 9: dir = FOV_NORTHEAST; break;
+	}
+
+	struct lua_fov fov;
+
+	fov_settings_init(&(fov.fov_settings));
+	fov_beam(&(fov.fov_settings), &fov, NULL, x, y, radius+1, dir, angle);
+	fov_settings_free(&(fov.fov_settings));
+
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.map_ref);
+
+	return 0;
 }
 
 static const struct luaL_reg fovlib[] =
 {
-	{"calc", lua_fov},
+	{"new", lua_new_fov},
+	{"calc_circle", lua_fov_calc_circle},
+	{"calc_beam", lua_fov_calc_beam},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg fov_reg[] =
+{
+	{"__gc", lua_free_fov},
+	{"close", lua_free_fov},
+	{"__call", lua_fov},
 	{NULL, NULL},
 };
 
@@ -413,7 +545,7 @@ static const struct luaL_reg rnglib[] =
 
 int luaopen_core(lua_State *L)
 {
-//	auxiliar_newclass(L, "fov{core}", fov_reg);
+	auxiliar_newclass(L, "fov{core}", fov_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
 	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);
 	luaL_openlib(L, "core.fov", fovlib, 0);

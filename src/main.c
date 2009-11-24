@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
 	}
 	SDL_WM_SetCaption("T4Engine", NULL);
 	SDL_EnableUNICODE(TRUE);
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, 10);
+	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
 
 	// And run the lua engine scripts

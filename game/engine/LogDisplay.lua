@@ -18,6 +18,7 @@ end
 function _M:call(str, ...)
 	local lines = str:format(...):splitLines(self.w - 4, self.font)
 	for i = #lines, 1, -1 do
+		print("[LOG]", lines[i])
 		table.insert(self.log, 1, lines[i])
 	end
 	while #self.log > self.max do

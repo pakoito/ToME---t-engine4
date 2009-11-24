@@ -6,6 +6,7 @@ solution "TEngine"
 		"src",
 		"src/lua",
 		"src/luasocket",
+		"src/fov",
 		"src/physfs",
 		"src/physfs/zlib123",
 		"/usr/include/SDL",
@@ -31,7 +32,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua", "luasocket" }
+	links { "physfs", "lua", "fov", "luasocket" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 
 configuration "macosx"
@@ -101,3 +102,10 @@ project "luasocket"
 			"src/luasocket/wsocket.c",
 			"src/luasocket/mime.c",
 		}
+
+project "fov"
+	kind "StaticLib"
+	language "C"
+	targetname "fov"
+
+	files { "src/fov/*.c", }
