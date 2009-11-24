@@ -3,6 +3,7 @@ require "engine.GameTurnBased"
 require "engine.KeyCommand"
 require "engine.LogDisplay"
 local Tooltip = require "engine.Tooltip"
+local Calendar = require "engine.Calendar"
 local Zone = require "engine.Zone"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
@@ -23,6 +24,8 @@ function _M:run()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
 	Map:setViewPort(self.w, math.floor(self.h * 0.80), 16, 16)
 	Map:setViewerFaction("players")
+
+	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 
 	self.zone = Zone.new("ancient_ruins")
 
@@ -154,7 +157,7 @@ function _M:setupCommands()
 		end,
 		_GREATER = {"alias", "_LESS"},
 		-- Toggle tactical displau
-		[{"_t","ctrl"}] = function()
+		[{"_t","alt"}] = function()
 			if Map.view_faction then
 				Map:setViewerFaction(nil)
 				self.log("Tactical dislpay disabled.")
@@ -164,6 +167,10 @@ function _M:setupCommands()
 				self.log("Tactical dislpay enabled.")
 				self.level.map.changed = true
 			end
+		end,
+		-- Toggle tactical displau
+		[{"_t","ctrl"}] = function()
+			self.log(self.calendar:getTimeDate(self.turn))
 		end,
 	}
 	self.key:setCurrent()

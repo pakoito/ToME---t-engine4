@@ -10,6 +10,7 @@ module(..., package.seeall, class.inherit(engine.GameEnergyBased))
 
 --- See engine.GameEnergyBased
 function _M:init(keyhandler, energy_to_act, energy_per_tick)
+	self.turn = 0
 	self.paused = false
 	engine.GameEnergyBased.init(self, keyhandler, energy_to_act, energy_per_tick)
 end
@@ -17,5 +18,6 @@ end
 function _M:tick()
 	while not self.paused do
 		engine.GameEnergyBased.tick(self)
+		self.turn = self.turn + 1
 	end
 end

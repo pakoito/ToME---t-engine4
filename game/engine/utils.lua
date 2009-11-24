@@ -1,3 +1,16 @@
+function string.ordinal(number)
+	local suffix = "th"
+	number = tonumber(number)
+	if number == 1 then
+		suffix = "st"
+	elseif number == 2 then
+		suffix = "nd"
+	elseif number == 3 then
+		suffix = "rd"
+	end
+	return number..suffix
+end
+
 function string.capitalize(str)
 	if #str > 1 then
 		return string.upper(str:sub(1, 1))..str:sub(2)
