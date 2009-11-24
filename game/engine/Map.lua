@@ -53,8 +53,8 @@ function _M:init(w, h)
 	setmetatable(self.remembers, {__call = mapbool})
 
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
-	self.fov = core.fov.new(_M.opaque, _M.apply, self)
-	self.fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
+	self.fov = function(x, y, d) core.fov.calc(x, y, d,_M.opaque, _M.apply, self) end
+	self.fov_lite = function(x, y, d) core.fov.calc(x, y, d,_M.opaque, _M.applyLite, self) end
 	self.changed = true
 end
 
@@ -96,7 +96,7 @@ end
 function _M:display()
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return self.surface end
-	self.changed = false
+	self.changed = false print("redraw")
 
 	-- Erase and the display the map
 	self.surface:erase()
@@ -152,10 +152,10 @@ end
 -- No need to call it manually usualy
 function _M:close()
 	self.tiles:close()
-	self.fovLite:close()
-	self.fovLite = nil
-	self.fov:close()
-	self.fov = nil
+--	self.fovLite:close()
+--	self.fovLite = nil
+--	self.fov:close()
+--	self.fov = nil
 	return true
 end
 

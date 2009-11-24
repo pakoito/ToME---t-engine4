@@ -54,11 +54,13 @@ function _M:display()
 	self.log:display():toScreen(0, self.h * 0.80)
 
 	if self.level and self.level.map then
-		self.level.map.seens(self.player.x, self.player.y, true)
-		self.level.map.lites(self.player.x, self.player.y, true)
-		self.level.map.remembers(self.player.x, self.player.y, true)
-		self.level.map.fov(self.player.x, self.player.y, 20)
-		self.level.map.fov_lite(self.player.x, self.player.y, 4)
+		if self.level.map.changed then
+			self.level.map.seens(self.player.x, self.player.y, true)
+			self.level.map.lites(self.player.x, self.player.y, true)
+			self.level.map.remembers(self.player.x, self.player.y, true)
+			self.level.map.fov(self.player.x, self.player.y, 20)
+			self.level.map.fov_lite(self.player.x, self.player.y, 4)
+		end
 		local s = self.level.map:display()
 		if s then
 			s:toScreen(0, 0)
