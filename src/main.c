@@ -8,7 +8,6 @@
 #include "lualib.h"
 #include "fov/fov.h"
 #include "SFMT.h"
-#include "sge.h"
 
 #include "types.h"
 #include "script.h"
@@ -60,7 +59,7 @@ typedef struct {
 	Uint32 color;
 } MainStateData;
 
-void on_event(SGEGAMESTATE *state, SDL_Event *event)
+void on_event(SDL_Event *event)
 {
 	switch (event->type) {
 	case SDL_KEYDOWN:
@@ -109,18 +108,10 @@ void on_event(SGEGAMESTATE *state, SDL_Event *event)
 }
 
 // redraw the screen and update game logics, if any
-void on_redraw(SGEGAMESTATE *state)
+void on_redraw()
 {
-	// prepare event and data variable form the gamestat passed to that
-	// function
-	SGEEVENTSTATE es = state->manager->event_state;
-	MainStateData *data = (MainStateData*)state->data;
-
-	// has the user closed the window?
-	if (es.start.released) {
-		sgeGameStateManagerQuit(state->manager);
-		return;
-	}
+	static int Frames = 0;
+	static int T0     = 0;
 
 	if (current_game != LUA_NOREF)
 	{
@@ -132,7 +123,7 @@ void on_redraw(SGEGAMESTATE *state)
 		docall(L, 1, 0);
 	}
 
-	sgeLock(screen);
+	sdlLock(screen);
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
 
 	if (current_game != LUA_NOREF)
@@ -145,16 +136,29 @@ void on_redraw(SGEGAMESTATE *state)
 		docall(L, 1, 0);
 	}
 
-	sgeUnlock(screen);
+	sdlUnlock(screen);
 
 	// finally display the screen
-	sgeFlip();
+	SDL_Flip(screen);
+
+	/* Gather our frames per second */
+	Frames++;
+	{
+		int t = SDL_GetTicks();
+		if (t - T0 >= 1000) {
+			float seconds = (t - T0) / 1000.0;
+			float fps = Frames / seconds;
+			printf("%d frames in %g seconds = %g FPS\n", Frames, seconds, fps);
+			T0 = t;
+			Frames = 0;
+		}
+	}
 }
 
 /**
  * Program entry point.
  */
-int run(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	// RNG init
 	init_gen_rand(time(NULL));
@@ -177,38 +181,51 @@ int run(int argc, char *argv[])
 	lua_newtable(L);
 	lua_setglobal(L, "__uids");
 
-	/***************** SDL/SGE2D Init *****************/
-	SGEGAMESTATEMANAGER *manager;
-	SGEGAMESTATE *mainstate;
-	MainStateData data;
-
 	// initialize engine and set up resolution and depth
-	sgeInit(NOAUDIO, NOJOYSTICK);
-	sgeOpenScreen("T-Engine", 800, 600, 32, NOFULLSCREEN);
+	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
+	if (SDL_Init (flags) < 0) {
+		printf("cannot initialize SDL: %s\n", SDL_GetError ());
+		return;
+	}
+	screen = SDL_SetVideoMode(800, 600, 32, _DEFAULT_VIDEOMODE_FLAGS_);
+	if (screen==NULL) {
+		printf("error opening screen: %s\n", SDL_GetError());
+		return;
+	}
+	SDL_WM_SetCaption("T4Engine", NULL);
 	SDL_EnableUNICODE(TRUE);
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 	TTF_Init();
-
-	// add a new gamestate. you will usually have to add different gamestates
-	// like 'main menu', 'game loop', 'load screen', etc.
-	mainstate = sgeGameStateNew();
-	mainstate->onRedraw = on_redraw;
-	mainstate->onEvent = on_event;
-	mainstate->data = &data;
-
-	// now finally create the gamestate manager and change to the only state
-	// we defined, which is the on_redraw function
-	manager = sgeGameStateManagerNew();
-	sgeGameStateManagerChange(manager, mainstate);
 
 	// And run the lua engine scripts
 	luaL_loadfile(L, "/engine/init.lua");
 	docall(L, 0, 0);
 
-	// start the game running with 25 frames per seconds
-	sgeGameStateManagerRun(manager, 25);
+	bool done = FALSE;
+	SDL_Event event;
+	while ( !done )
+	{
+		/* handle the events in the queue */
+		while (SDL_PollEvent(&event))
+		{
+			switch(event.type)
+			{
+			case SDL_KEYDOWN:
+				/* handle key presses */
+				on_event(&event);
+				break;
+			case SDL_QUIT:
+				/* handle quit requests */
+				done = TRUE;
+				break;
+			default:
+				break;
+			}
+		}
 
-	// close the screen and quit
-	sgeCloseScreen();
+		/* draw the scene */
+		on_redraw();
+	}
+
 	return 0;
 }

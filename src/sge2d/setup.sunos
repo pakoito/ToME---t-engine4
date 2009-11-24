@@ -1,8 +1,0 @@
-SDLBASE=/opt/csw
-CC=gcc
-SDLCFLAGS=`$(SDLBASE)/bin/sdl-config --cflags`
-SDLLDFLAGS=`$(SDLBASE)/bin/sdl-config --libs` -lm -lSDL_image -lSDL_mixer
-STATICLIBS=
-EXEC=
-DEFINES="-D_DEFAULT_VIDEOMODE_FLAGS_=SDL_HWSURFACE|SDL_DOUBLEBUF" -DBSD -DFREEBSD
-

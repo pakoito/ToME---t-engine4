@@ -7,7 +7,7 @@
 #include "script.h"
 #include "display.h"
 #include "SFMT.h"
-#include "sge.h"
+#include <SDL.h>
 #include <SDL_ttf.h>
 
 /******************************************************************
@@ -262,7 +262,7 @@ static int sdl_surface_drawstring(lua_State *L)
 	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
 	if (txt)
 	{
-		sgeDrawImage(*s, txt, x, y);
+		sdlDrawImage(*s, txt, x, y);
 		SDL_FreeSurface(txt);
 	}
 
@@ -287,7 +287,6 @@ static int sdl_new_surface(lua_State *L)
 		screen->format->Bmask,
 		screen->format->Amask
 		);
-	sgeUseAlpha(*s);
 
 	return 1;
 }
@@ -344,7 +343,7 @@ static int sdl_surface_toscreen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	if (s && *s)
 	{
-		sgeDrawImage(screen, *s, x, y);
+		sdlDrawImage(screen, *s, x, y);
 	}
 	return 0;
 }
@@ -357,7 +356,7 @@ static int sdl_surface_merge(lua_State *L)
 	int y = luaL_checknumber(L, 4);
 	if (dst && *dst && src && *src)
 	{
-		sgeDrawImage(*dst, *src, x, y);
+		sdlDrawImage(*dst, *src, x, y);
 	}
 	return 0;
 }

@@ -9,7 +9,6 @@ solution "TEngine"
 		"src/fov",
 		"src/physfs",
 		"src/physfs/zlib123",
-		"src/sge2d/include",
 		"/usr/include/SDL",
 	}
 
@@ -33,7 +32,8 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua", "fov", "sge2d", "luasocket" }
+	links { "physfs", "lua", "fov", "luasocket" }
+	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 
 configuration "macosx"
 	linkoptions { "mac/SDLmain.m", "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa" }
@@ -109,12 +109,3 @@ project "fov"
 	targetname "fov"
 
 	files { "src/fov/*.c", }
-
-project "sge2d"
-	kind "StaticLib"
-	language "C"
-	targetname "sge2d"
-
-	files { "src/sge2d/src/*.c", }
-
-	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
