@@ -16,8 +16,13 @@ function _M:init(keyhandler, energy_to_act, energy_per_tick)
 end
 
 function _M:tick()
-	while not self.paused do
-		engine.GameEnergyBased.tick(self)
-		self.turn = self.turn + 1
+	if self.paused then
+		-- If we are paused do not get energy, but still process frames if needed
+		engine.Game.tick(self)
+	else
+		while not self.paused do
+			engine.GameEnergyBased.tick(self)
+			self.turn = self.turn + 1
+		end
 	end
 end

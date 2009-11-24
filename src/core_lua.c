@@ -350,7 +350,6 @@ static int sdl_new_surface(lua_State *L)
 		screen->format->Bmask,
 		screen->format->Amask
 		);
-
 	return 1;
 }
 
@@ -424,6 +423,14 @@ static int sdl_surface_merge(lua_State *L)
 	return 0;
 }
 
+static int sdl_surface_alpha(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	int a = luaL_checknumber(L, 2);
+	SDL_SetAlpha(*s, SDL_SRCALPHA | SDL_RLEACCEL, (a < 0) ? 0 : (a > 255) ? 255 : a);
+	return 0;
+}
+
 static const struct luaL_reg displaylib[] =
 {
 	{"fullscreen", sdl_fullscreen},
@@ -443,6 +450,7 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"toScreen", sdl_surface_toscreen},
 	{"putChar", lua_display_char},
 	{"drawString", sdl_surface_drawstring},
+	{"alpha", sdl_surface_alpha},
 	{NULL, NULL},
 };
 

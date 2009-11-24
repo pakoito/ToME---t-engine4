@@ -3,6 +3,7 @@ require "engine.GameTurnBased"
 require "engine.KeyCommand"
 require "engine.LogDisplay"
 local Tooltip = require "engine.Tooltip"
+local QuitDialog = require "mod.dialogs.Quit"
 local Calendar = require "engine.Calendar"
 local Zone = require "engine.Zone"
 local Map = require "engine.Map"
@@ -81,6 +82,8 @@ function _M:display()
 			if t then t:toScreen(mx, my) end
 		end
 	end
+
+	engine.GameTurnBased:display()
 end
 
 function _M:setupCommands()
@@ -177,6 +180,10 @@ function _M:setupCommands()
 		-- Toggle tactical displau
 		[{"_t","ctrl"}] = function()
 			self.log(self.calendar:getTimeDate(self.turn))
+		end,
+		-- Exit the game
+		[{"_x","ctrl"}] = function()
+			self:registerDialog(QuitDialog.new())
 		end,
 	}
 	self.key:setCurrent()
