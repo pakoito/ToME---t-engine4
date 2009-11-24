@@ -5,6 +5,7 @@ solution "TEngine"
 	includedirs {
 		"src",
 		"src/lua",
+		"src/luasocket",
 		"src/fov",
 		"src/physfs",
 		"src/physfs/zlib123",
@@ -32,7 +33,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua", "fov", "sge2d" }
+	links { "physfs", "lua", "fov", "sge2d", "luasocket" }
 
 configuration "macosx"
 	linkoptions { "mac/SDLmain.m", "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa" }
@@ -63,6 +64,44 @@ project "lua"
 	targetname "lua"
 
 	files { "src/lua/*.c", }
+
+project "luasocket"
+	kind "StaticLib"
+	language "C"
+	targetname "luasocket"
+
+	configuration "not windows"
+		files {
+			"src/luasocket/auxiliar.c",
+			"src/luasocket/buffer.c",
+			"src/luasocket/except.c",
+			"src/luasocket/inet.c",
+			"src/luasocket/io.c",
+			"src/luasocket/luasocket.c",
+			"src/luasocket/options.c",
+			"src/luasocket/select.c",
+			"src/luasocket/tcp.c",
+			"src/luasocket/timeout.c",
+			"src/luasocket/udp.c",
+			"src/luasocket/usocket.c",
+			"src/luasocket/mime.c",
+		}
+	configuration "windows"
+		files {
+			"src/luasocket/auxiliar.c",
+			"src/luasocket/buffer.c",
+			"src/luasocket/except.c",
+			"src/luasocket/inet.c",
+			"src/luasocket/io.c",
+			"src/luasocket/luasocket.c",
+			"src/luasocket/options.c",
+			"src/luasocket/select.c",
+			"src/luasocket/tcp.c",
+			"src/luasocket/timeout.c",
+			"src/luasocket/udp.c",
+			"src/luasocket/wsocket.c",
+			"src/luasocket/mime.c",
+		}
 
 project "fov"
 	kind "StaticLib"

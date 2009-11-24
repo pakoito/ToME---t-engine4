@@ -1,3 +1,8 @@
+--[[ Allows for remote debugging, but it makes things *SLOW*
+require"remdebug.engine"
+remdebug.engine.start()
+]]
+
 -- load some utility functions
 dofile("/engine/utils.lua")
 

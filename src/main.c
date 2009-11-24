@@ -20,6 +20,31 @@ int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
 int px = 1, py = 1;
 
+static int traceback (lua_State *L) {
+	lua_Debug ar;
+	int n;
+	n = 0;
+	printf("Lua Error: %s\n", lua_tostring(L, 1));
+	while(lua_getstack(L, n++, &ar)) {
+		lua_getinfo(L, "nSl", &ar);
+		printf("\tAt %s:%d %s\n", ar.short_src, ar.currentline, ar.name?ar.name:"");
+	}
+	return 1;
+}
+
+static int docall (lua_State *L, int narg, int nret)
+{
+	int status;
+	int base = lua_gettop(L) - narg;  /* function index */
+	lua_pushcfunction(L, traceback);  /* push traceback function */
+	lua_insert(L, base);  /* put it under chunk and args */
+	status = lua_pcall(L, narg, nret, base);
+	lua_remove(L, base);  /* remove traceback function */
+	/* force a complete garbage collection in case of errors */
+	if (status != 0) lua_gc(L, LUA_GCCOLLECT, 0);
+	return status;
+}
+
 void display_utime()
 {
 	struct timeval tv;
@@ -77,7 +102,7 @@ void on_event(SGEGAMESTATE *state, SDL_Event *event)
 			}
 			else
 				lua_pushnil(L);
-			lua_call(L, 7, 0);
+			docall(L, 7, 0);
 		}
 		break;
 	}
@@ -104,7 +129,7 @@ void on_redraw(SGEGAMESTATE *state)
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-		lua_call(L, 1, 0);
+		docall(L, 1, 0);
 	}
 
 	sgeLock(screen);
@@ -117,29 +142,13 @@ void on_redraw(SGEGAMESTATE *state)
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-		lua_call(L, 1, 0);
+		docall(L, 1, 0);
 	}
 
 	sgeUnlock(screen);
 
 	// finally display the screen
 	sgeFlip();
-}
-
-static int traceback (lua_State *L) {
-	printf("Lua Error: %s\n", lua_tostring(L, 1));
-}
-
-static int docall (lua_State *L, int narg, int clear) {
-	int status;
-	int base = lua_gettop(L) - narg;  /* function index */
-	lua_pushcfunction(L, traceback);  /* push traceback function */
-	lua_insert(L, base);  /* put it under chunk and args */
-	status = lua_pcall(L, narg, (clear ? 0 : LUA_MULTRET), base);
-	lua_remove(L, base);  /* remove traceback function */
-	/* force a complete garbage collection in case of errors */
-	if (status != 0) lua_gc(L, LUA_GCCOLLECT, 0);
-	return status;
 }
 
 /**
@@ -152,6 +161,7 @@ int run(int argc, char *argv[])
 
 	/***************** Physfs Init *****************/
 	PHYSFS_init(argv[0]);
+	PHYSFS_mount("game/thirdparty", "/", 1);
 	PHYSFS_mount("game/", "/", 1);
 	PHYSFS_mount("game/modules/tome", "/mod", 1);
 	PHYSFS_mount("game/modules/tome/data", "/data", 1);
@@ -160,6 +170,8 @@ int run(int argc, char *argv[])
 	L = lua_open();  /* create state */
 	luaL_openlibs(L);  /* open libraries */
 	luaopen_core(L);
+	luaopen_socket_core(L);
+	luaopen_mime_core(L);
 
 	// Make the uids repository
 	lua_newtable(L);
@@ -191,7 +203,7 @@ int run(int argc, char *argv[])
 
 	// And run the lua engine scripts
 	luaL_loadfile(L, "/engine/init.lua");
-	docall(L, 0, LUA_MULTRET);
+	docall(L, 0, 0);
 
 	// start the game running with 25 frames per seconds
 	sgeGameStateManagerRun(manager, 25);
