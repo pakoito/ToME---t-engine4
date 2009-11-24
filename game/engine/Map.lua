@@ -1,6 +1,7 @@
 require "engine.class"
 local Entity = require "engine.Entity"
 local Tiles = require "engine.Tiles"
+local Faction = require "engine.Faction"
 
 --- Represents a level map, handles display and various low level map work
 module(..., package.seeall, class.make)
@@ -27,6 +28,15 @@ function _M:setViewPort(w, h, tile_w, tile_h)
 	self.viewport = {width=w, height=h}
 	self.tiles = Tiles.new(tile_w, tile_h)
 	self.tile_w, self.tile_h = tile_w, tile_h
+end
+
+--- Defines the faction of the person seeing the map
+-- Usualy this will be the player's faction. If you do not want to use tactical display, dont use it
+function _M:setViewerFaction(faction, friend, neutral, enemy)
+	self.view_faction = faction
+	self.faction_friend = "tactical_friend.png"
+	self.faction_neutral = "tactical_neutral.png"
+	self.faction_enemy = "tactical_enemy.png"
 end
 
 --- Creates a map
@@ -77,11 +87,6 @@ function _M:fov(x, y, d)
 		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
 	end
 	self._fov(x, y, d)
-
-	-- Also seen the source itself
-	self.seens(x, y, true)
-	self.lites(x, y, true)
-	self.remembers(x, y, true)
 end
 
 --- Runs the FOV algorithm on the map, ligthing grids to allow rememberance
@@ -95,11 +100,6 @@ function _M:fovLite(x, y, d)
 		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
 		self._fov_lite(x, y, d)
 	end
-
-	-- Also seen the source itself
-	self.seens(x, y, true)
-	self.lites(x, y, true)
-	self.remembers(x, y, true)
 end
 
 --- Sets/gets a value from the map
@@ -150,6 +150,7 @@ function _M:display()
 		local e, si
 		local z
 		local order
+		local friend
 		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
 			e, si = nil, 1
 			z = i + j * self.w
@@ -162,6 +163,17 @@ function _M:display()
 						self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), i * self.tile_w, j * self.tile_h)
 					elseif self.remembers[z] then
 						self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3, e.image), i * self.tile_w, j * self.tile_h)
+					end
+					-- Tactical overlay ?
+					if self.view_faction and e.faction then
+						friend = Faction:factionReaction(self.view_faction, e.faction)
+						if friend > 0 then
+							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend), i * self.tile_w, j * self.tile_h)
+						elseif friend < 0 then
+							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy), i * self.tile_w, j * self.tile_h)
+						else
+							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral), i * self.tile_w, j * self.tile_h)
+						end
 					end
 				end
 			end

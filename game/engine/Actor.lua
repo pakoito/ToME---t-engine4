@@ -1,6 +1,7 @@
 require "engine.class"
 local Entity = require "engine.Entity"
 local Map = require "engine.Map"
+local Faction = require "engine.Faction"
 
 module(..., package.seeall, class.inherit(Entity))
 
@@ -8,9 +9,11 @@ function _M:init(t)
 	t = t or {}
 	self.name = t.name or "unknown npc"
 	self.level = t.level or 1
+	self.sight = t.sight or 20
 	self.energy = t.energy or { value=0, mod=1 }
 	self.energy.value = self.energy.value or 0
 	self.energy.mod = self.energy.mod or 0
+	self.faction = t.faction or "enemies"
 	Entity.init(self, t)
 end
 
@@ -44,4 +47,10 @@ end
 function _M:useEnergy(val)
 	val = val or game.energy_to_act
 	self.energy.value = self.energy.value - val
+end
+
+--- What is our reaction toward the target
+-- See Faction:factionReaction()
+function _M:reactionToward(target)
+	return Faction:factionReaction(self.faction, target.faction)
 end

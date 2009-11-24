@@ -64,7 +64,6 @@ static int lua_new_fov(lua_State *L)
 	fov->opaque_ref = opaque_ref;
 	fov->map_ref = map_ref;
 	fov_settings_init(&(fov->fov_settings));
-	fov_settings_set_shape(&(fov->fov_settings), FOV_SHAPE_CIRCLE);
 	fov_settings_set_opacity_test_function(&(fov->fov_settings), map_opaque);
 	fov_settings_set_apply_lighting_function(&(fov->fov_settings), map_seen);
 
@@ -90,6 +89,7 @@ static int lua_fov(lua_State *L)
 	int radius = luaL_checknumber(L, 4);
 
 	fov_circle(&(fov->fov_settings), fov, NULL, x, y, radius+1);
+	map_seen(fov, x, y, 0, 0, radius, NULL);
 	return 0;
 }
 
@@ -98,14 +98,16 @@ static int lua_fov_calc_circle(lua_State *L)
 	int x = luaL_checknumber(L, 1);
 	int y = luaL_checknumber(L, 2);
 	int radius = luaL_checknumber(L, 3);
-	int map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	int apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-
 	struct lua_fov fov;
+	fov.map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	fov_settings_init(&(fov.fov_settings));
+	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
+	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
 	fov_circle(&(fov.fov_settings), &fov, NULL, x, y, radius+1);
+	map_seen(&fov, x, y, 0, 0, radius, NULL);
 	fov_settings_free(&(fov.fov_settings));
 
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
@@ -122,9 +124,10 @@ static int lua_fov_calc_beam(lua_State *L)
 	int radius = luaL_checknumber(L, 3);
 	int direction = luaL_checknumber(L, 4);
 	float angle = luaL_checknumber(L, 5);
-	int map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	int apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	struct lua_fov fov;
+	fov.map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	int dir = 0;
 
 	switch (direction)
@@ -139,10 +142,11 @@ static int lua_fov_calc_beam(lua_State *L)
 	case 9: dir = FOV_NORTHEAST; break;
 	}
 
-	struct lua_fov fov;
-
 	fov_settings_init(&(fov.fov_settings));
+	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
+	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
 	fov_beam(&(fov.fov_settings), &fov, NULL, x, y, radius+1, dir, angle);
+	map_seen(&fov, x, y, 0, 0, radius, NULL);
 	fov_settings_free(&(fov.fov_settings));
 
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);

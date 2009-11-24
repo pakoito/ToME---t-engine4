@@ -14,6 +14,7 @@ return {
 {
 	name = "baby dragon",
 	display = "d", color_r=128,
+	faction = "poorsods",
 	level = 1, exp_worth = 1,
 	life = 30,
 	mana = 1000,

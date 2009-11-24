@@ -24,6 +24,7 @@ function _M:attackTarget(target)
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	if hit > 0 or (hit == 0 and rng.percent(50)) then
 		local dam = rng.avg(sc.dam * 2 / 3, sc.dam) - math.max(0, tc.armor - sc.apr)
+		if dam < 0 then dam = 0 end
 		game.logSeen(target, "%s hits %s for #aaaaaa#%0.2f physical damage#ffffff#.", self.name:capitalize(), target.name, dam)
 		target:takeHit(dam, self)
 	else

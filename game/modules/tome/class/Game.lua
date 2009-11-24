@@ -22,6 +22,7 @@ function _M:run()
 
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
 	Map:setViewPort(self.w, math.floor(self.h * 0.80), 16, 16)
+	Map:setViewerFaction("players")
 
 	self.zone = Zone.new("ancient_ruins")
 
