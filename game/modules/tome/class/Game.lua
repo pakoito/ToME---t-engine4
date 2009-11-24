@@ -57,7 +57,6 @@ function _M:display()
 		if self.level.map.changed then
 			self.level.map:fov(self.player.x, self.player.y, 20)
 			self.level.map:fovLite(self.player.x, self.player.y, 4)
---			core.fov.calc_circle(15,15, 7, self.level.map.opaque, self.level.map.apply, self.level.map)
 		end
 		local s = self.level.map:display()
 		if s then

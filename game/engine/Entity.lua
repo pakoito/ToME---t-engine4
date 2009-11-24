@@ -16,7 +16,7 @@ setmetatable(__uids, {__mode="v"})
 function _M:init(t)
 	t = t or {}
 	self.uid = next_uid
-	__uids[self.uid] = self
+--	__uids[self.uid] = self
 
 	for k, e in pairs(t) do self[k] = e end
 
@@ -37,7 +37,7 @@ end
 -- If we are cloned we need a new uid
 function _M:cloned()
 	self.uid = next_uid
-	__uids[self.uid] = self
+--	__uids[self.uid] = self
 	next_uid = next_uid + 1
 end
 

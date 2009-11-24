@@ -49,7 +49,12 @@ end
 --- Asks the zone to generate a level of level "lev"
 -- @param lev the level (from 1 to zone.max_level)
 -- @return a Level object
-function _M:getLevel(game, lev)
+function _M:getLevel(game, lev, no_close)
+	-- Before doing anything else, close the current level
+	if not no_close and game.level and game.level.map then
+		game.level.map:close()
+	end
+
 	local level_data = self:getLevelData(lev)
 
 	local map = self.map_class.new(level_data.width, level_data.height)
@@ -80,6 +85,9 @@ function _M:getLevel(game, lev)
 		)
 		generator:generate()
 	end
+
+	-- Setup the level in the game
+	game:setLevel(level)
 
 	-- Clean up things
 	collectgarbage("collect")

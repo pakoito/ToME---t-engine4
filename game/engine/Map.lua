@@ -38,8 +38,8 @@ function _M:init(w, h)
 	self.lites = {}
 	self.seens = {}
 	self.remembers = {}
-	for i = 0, w * h - 1 do self.map[i] = {} end
 	getmetatable(self).__call = _M.call
+	for i = 0, w * h - 1 do self.map[i] = {} end
 	local mapbool = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
@@ -55,6 +55,15 @@ function _M:init(w, h)
 	self._fov = core.fov.new(_M.opaque, _M.apply, self)
 	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
+end
+
+--- Closes things in the object to allow it to be garbage collected
+-- Map objects are NOT automatically garbage collected because they contain FOV C structure, which themselves have a reference
+-- to the map. Cyclic references! BAD BAD BAD !<br/>
+-- The closing should be handled automatically by the Zone class so no bother for authors
+function _M:close()
+	self._fov = false
+	self._fov_lite = false
 end
 
 --- Runs the FOV algorithm on the map
@@ -237,3 +246,4 @@ function _M:rememberAll(x, y, w, h)
 		self.remembers(i, j, true)
 	end end
 end
+

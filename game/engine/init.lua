@@ -22,6 +22,7 @@ key:addCommand(key._RETURN, {"alt"}, function() core.display.fullscreen() end)
 game = false
 local mod_def = loadfile("/mod/init.lua")
 if mod_def then
+	-- Call the file body inside its own private environment
 	local mod = {}
 	setfenv(mod_def, mod)
 	mod_def()

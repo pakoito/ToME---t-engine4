@@ -10,7 +10,6 @@ function _M:init(level, map)
 	self.entities = {}
 end
 
-
 --- Adds an entity to the level
 -- Only entities that need to act need to be added. Terrain features do not need this usualy
 function _M:addEntity(e)
