@@ -26,6 +26,7 @@ function _M:run()
 	Map:setViewerFaction("players")
 
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
+	self.day_of_year = self.calendar:getDayOfYear(self.turn)
 
 	self.zone = Zone.new("ancient_ruins")
 
@@ -52,6 +53,11 @@ end
 
 function _M:tick()
 	engine.GameTurnBased.tick(self)
+
+	if self.day_of_year ~= self.calendar:getDayOfYear(self.turn) then
+		self.log(self.calendar:getTimeDate(self.turn))
+		self.day_of_year = self.calendar:getDayOfYear(self.turn)
+	end
 end
 
 function _M:display()

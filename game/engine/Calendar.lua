@@ -40,7 +40,6 @@ function _M:getDayOfYear(turn)
 	d = math.floor(turn / self.DAY)
 	y = math.floor(d / 365)
 	d = math.floor(d % 365)
-	print(turn, d, y, self.YEAR)
 	return d, self.start_year + y
 end
 
@@ -49,7 +48,6 @@ function _M:getTimeOfDay(turn)
 	min = math.floor((turn % self.DAY) / self.MINUTE)
 	hour = math.floor(min / 60)
 	min = math.floor(min % 60)
-	print(turn, hour, min, self.HOUR)
 	return hour, min
 end
 
