@@ -6,7 +6,6 @@
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
-#include "fov/fov.h"
 #include "SFMT.h"
 
 #include "types.h"
@@ -194,7 +193,7 @@ int main(int argc, char *argv[])
 	}
 	SDL_WM_SetCaption("T4Engine", NULL);
 	SDL_EnableUNICODE(TRUE);
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, 10);
 	TTF_Init();
 
 	// And run the lua engine scripts
