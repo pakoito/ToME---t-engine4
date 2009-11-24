@@ -79,7 +79,6 @@ static int lua_free_fov(lua_State *L)
 	luaL_unref(L, LUA_REGISTRYINDEX, fov->opaque_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov->map_ref);
 	lua_pushnumber(L, 1);
-	printf("fov gc\n");
 	return 1;
 }
 
