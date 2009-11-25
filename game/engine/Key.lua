@@ -271,3 +271,5 @@ _MENU		= 319
 _POWER		= 320		-- Power Macintosh power key
 _EURO		= 321		-- Some european keyboards
 _UNDO		= 322		-- Atari keyboard has Undo
+
+__DEFAULT 	= -10000

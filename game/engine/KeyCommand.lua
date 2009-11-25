@@ -10,8 +10,8 @@ function _M:init()
 end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
-	if not self.commands[sym] then return end
-	if (ctrl or shift or alt or meta) and not self.commands[sym].anymod then
+	if not self.commands[sym] and not self.commands[self.__DEFAULT] then return end
+	if self.commands[sym] and (ctrl or shift or alt or meta) and not self.commands[sym].anymod then
 		local mods = {}
 		if alt then mods[#mods+1] = "alt" end
 		if ctrl then mods[#mods+1] = "ctrl" end
@@ -21,8 +21,10 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
 		if self.commands[sym][mods] then
 			self.commands[sym][mods](sym, ctrl, shift, alt, meta, unicode)
 		end
-	elseif self.commands[sym].plain then
+	elseif self.commands[sym] and self.commands[sym].plain then
 		self.commands[sym].plain(sym, ctrl, shift, alt, meta, unicode)
+	elseif self.commands[self.__DEFAULT] and self.commands[self.__DEFAULT].plain then
+		self.commands[self.__DEFAULT].plain(sym, ctrl, shift, alt, meta, unicode)
 	end
 end
 

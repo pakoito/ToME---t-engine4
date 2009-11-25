@@ -54,4 +54,5 @@ function _M:unregisterDialog(d)
 	if not self.dialogs[d] then return end
 	table.remove(self.dialogs, self.dialogs[d])
 	self.dialogs[d] = nil
+	d:unload()
 end

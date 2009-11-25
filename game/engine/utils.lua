@@ -141,6 +141,9 @@ do
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
 	local list = str:split("#%x%x%x%x%x%x#", true)
+	r = r or 255
+	g = g or 255
+	b = b or 255
 	for i, v in ipairs(list) do
 		local _, _, nr, ng, nb = v:find("^#(%x%x)(%x%x)(%x%x)#")
 		if nr and ng and nb then
@@ -152,4 +155,11 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 		end
 	end
 end
+
+getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, dy, dw, dh, r, g, b)
+	local w, h = font:size(str)
+	local x, y = dx + (dw - w) / 2, dy + (dh - h) / 2
+	s:drawColorString(font, str, x, y, r, g, b)
+end
+
 end
