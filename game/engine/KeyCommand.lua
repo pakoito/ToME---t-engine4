@@ -7,10 +7,14 @@ module(..., package.seeall, class.inherit(engine.Key))
 function _M:init()
 	engine.Key.init(self)
 	self.commands = {}
+	self.on_input = false
 end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
-	if not self.commands[sym] and not self.commands[self.__DEFAULT] then return end
+	if not self.commands[sym] and not self.commands[self.__DEFAULT] then
+		if self.on_input and unicode then self.on_input(unicode) end
+		return
+	end
 	if self.commands[sym] and (ctrl or shift or alt or meta) and not self.commands[sym].anymod then
 		local mods = {}
 		if alt then mods[#mods+1] = "alt" end
@@ -35,6 +39,8 @@ end
 function _M:addCommand(sym, mods, fct, anymod)
 	if type(sym) == "string" then sym = self[sym] end
 	if not sym then return end
+
+	if sym == self.__TEXTINPUT then return self:setTextInput(mods) end
 
 	self.commands[sym] = self.commands[sym] or {}
 	if not fct then
@@ -79,4 +85,10 @@ function _M:addCommands(t)
 	for i, alias in ipairs(aliases) do
 		self:addCommands{[alias[1]] = self.commands[self[alias[2]]].plain}
 	end
+end
+
+--- Receieves any unbound keys as UTF8 characters (if possible)
+-- @param fct the function to call for each key, get a single parameter to pass the UTF8 string
+function _M:setTextInput(fct)
+	self.on_input = fct
 end

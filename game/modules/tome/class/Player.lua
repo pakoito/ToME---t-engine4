@@ -23,3 +23,7 @@ function _M:die()
 	-- a tad brutal
 	os.exit()
 end
+
+function _M:setName(name)
+	self.name = name
+end

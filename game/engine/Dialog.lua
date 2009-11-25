@@ -7,9 +7,19 @@ module(..., package.seeall, class.make)
 
 tiles = engine.Tiles.new(16, 16)
 
---- Create a calendar
--- @param definition the file to load that returns a table containing calendar months
--- @param datestring a string to format the date when requested, in the format "%s %s %s %d %d", standing for, day, month, year, hour, minute
+--- Requests a simple, press any key, dialog
+function _M:simplePopup(title, text)
+	local font = core.display.newFont("/data/font/Vera.ttf", 12)
+	local w, h = font:size(text)
+	local d = new(title, w + 8, h + 25, nil, nil, nil, font)
+	d:keyCommands{__DEFAULT=function() game:unregisterDialog(d) end}
+	d.drawDialog = function(self, s)
+		s:drawColorStringCentered(self.font, text, 2, 2, self.iw - 2, self.ih - 2)
+	end
+	game:registerDialog(d)
+end
+
+--- Create a Dialog
 function _M:init(title, w, h, x, y, alpha, font)
 	self.title = title
 	self.w, self.h = w, h

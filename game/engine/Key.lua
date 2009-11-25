@@ -273,3 +273,4 @@ _EURO		= 321		-- Some european keyboards
 _UNDO		= 322		-- Atari keyboard has Undo
 
 __DEFAULT 	= -10000
+__TEXTINPUT 	= -10001

@@ -43,6 +43,8 @@ function _M:run()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
+
+	self:registerDialog(require('mod.dialogs.EnterName').new())
 end
 
 function _M:changeLevel(lev)
