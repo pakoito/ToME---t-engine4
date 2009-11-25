@@ -1,4 +1,4 @@
-name = "Tales of Middle Earth: 4th Age"
+name = "Tales of Middle Earth: The Fourth Age"
 short_name = "tome"
 author = { "DarkGod", "darkgod@t-o-m-e.net" }
 description = [[

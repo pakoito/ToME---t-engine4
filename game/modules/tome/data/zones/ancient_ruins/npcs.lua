@@ -6,7 +6,7 @@ return {
 	level = 1, exp_worth = 1,
 	life = 20,
 	mana = 1000,
-	energy = { mod=0.8 },
+	energy = { mod=0.5 },
 	has_blood = true,
 	stats = { str=15, dex=8, mag=12, },
 	combat = { dam=8, atk=10, apr=2, def=4, armor=6},

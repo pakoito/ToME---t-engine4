@@ -72,29 +72,33 @@ function _M:display()
 	self.log:display():toScreen(self.log.display_x, self.log.display_y)
 
 	if self.level and self.level.map then
+		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
 			self.level.map:fov(self.player.x, self.player.y, 20)
 			self.level.map:fovLite(self.player.x, self.player.y, 4)
 		end
-		local s = self.level.map:display()
-		if s then
-			s:toScreen(self.level.map.display_x, self.level.map.display_y)
-		end
+		self.level.map:display():toScreen(self.level.map.display_x, self.level.map.display_y)
 
+		-- DIsplay the targetting system if active
+		self.target:display()
+
+		-- Display a tooltip if available
 		local mx, my = core.mouse.get()
 		local tmx, tmy = math.floor(mx / self.level.map.tile_w), math.floor(my / self.level.map.tile_h)
 		local tt = self.level.map:checkAllEntities(tmx, tmy, "tooltip")
-		if tt then
+		if tt and self.level.map.seens(tmx, tmy) then
 			self.tooltip:set(tt)
 			local t = self.tooltip:display()
+			mx = mx - self.tooltip.w
+			my = my - self.tooltip.h
+			if mx < 0 then mx = 0 end
+			if my < 0 then my = 0 end
 			if t then t:toScreen(mx, my) end
 		end
 		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
 			self.target.target.x, self.target.target.y = tmx, tmy
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
-
-		self.target:display()
 	end
 
 	engine.GameTurnBased.display(self)
@@ -201,7 +205,7 @@ function _M:setupCommands()
 		end,
 		-- Exit the game
 		[{"_x","ctrl"}] = function()
-			self:registerDialog(QuitDialog.new())
+			self:onQuit()
 		end,
 
 		-- Targeting movement
@@ -242,4 +246,12 @@ function _M:setupMouse()
 		if button == "wheelup" then self.log:scrollUp(1) end
 		if button == "wheeldown" then self.log:scrollUp(-1) end
 	end)
+end
+
+--- Ask if we realy want to close, if so, save the game first
+function _M:onQuit()
+	if not self.quit_dialog then
+		self.quit_dialog = QuitDialog.new()
+		self:registerDialog(self.quit_dialog)
+	end
 end

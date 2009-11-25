@@ -59,6 +59,23 @@ typedef struct {
 	Uint32 color;
 } MainStateData;
 
+int event_filter(const SDL_Event *event)
+{
+	// Do not allow the user to close without asking the game to know about it
+	if (event->type == SDL_QUIT && (current_game != LUA_NOREF))
+	{
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		lua_pushstring(L, "onQuit");
+		lua_gettable(L, -2);
+		lua_remove(L, -2);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		docall(L, 1, 0);
+
+		return 0;
+	}
+	return 1;
+}
+
 void on_event(SDL_Event *event)
 {
 	switch (event->type) {
@@ -231,6 +248,9 @@ int main(int argc, char *argv[])
 	// And run the lua engine scripts
 	luaL_loadfile(L, "/engine/init.lua");
 	docall(L, 0, 0);
+
+	// Filter events, to catch the quit event
+	SDL_SetEventFilter(event_filter);
 
 	bool done = FALSE;
 	SDL_Event event;

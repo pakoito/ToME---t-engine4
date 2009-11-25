@@ -9,6 +9,8 @@ function _M:init(map, source_actor)
 	self.tile_w, self.tile_h = map.tile_w, map.tile_h
 	self.active = false
 
+	self.cursor = core.display.loadImage(engine.Tiles.prefix.."target_cursor.png")
+
 	self.sr = core.display.newSurface(map.tile_w, map.tile_h)
 	self.sr:alpha(125)
 	self.sr:erase(255, 0, 0)
@@ -17,7 +19,13 @@ function _M:init(map, source_actor)
 	self.sb:erase(0, 0, 255)
 
 	self.source_actor = source_actor
-	self.target = {x=self.source_actor.x, y=self.source_actor.y}
+
+	-- Setup the tracking target table
+	-- Notice its values are set to weak references, this has no effects on the number for x and y
+	-- but it means if the entity field is set to an entity, when it disappears this link wont prevent
+	-- the garbage collection
+	self.target = {x=self.source_actor.x, y=self.source_actor.y, entity=nil}
+	setmetatable(self.target, {__mode='v'})
 end
 
 function _M:display()
@@ -37,6 +45,7 @@ function _M:display()
 		s:toScreen(self.display_x + lx * self.tile_w, self.display_y + ly * self.tile_h)
 		lx, ly = l()
 	end
+	self.cursor:toScreen(self.display_x + self.target.x * self.tile_w, self.display_y + self.target.y * self.tile_h)
 end
 
 function _M:setActive(v)

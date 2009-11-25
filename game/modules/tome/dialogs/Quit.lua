@@ -11,6 +11,7 @@ function _M:init()
 		end,
 		__DEFAULT = function()
 			game:unregisterDialog(self)
+			game.quit_dialog = false
 		end,
 	}
 end

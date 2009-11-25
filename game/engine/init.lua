@@ -29,6 +29,8 @@ if mod_def then
 
 	if not mod.name or not mod.short_name or not mod.version or not mod.starter then os.exit() end
 
+	core.display.setWindowTitle(mod.name)
+
 	engine.Tiles.prefix = "/data/gfx/"
 	game = dofile("/"..mod.starter:gsub("%.", "/")..".lua")
 	game:run()

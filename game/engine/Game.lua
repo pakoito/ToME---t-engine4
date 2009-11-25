@@ -49,6 +49,10 @@ end
 function _M:tick()
 end
 
+--- Called by the engine when the user tries to close the window
+function _M:onQuit()
+end
+
 --- Registers a dialog to display
 function _M:registerDialog(d)
 	table.insert(self.dialogs, d)

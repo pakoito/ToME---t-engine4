@@ -445,6 +445,13 @@ static int sdl_surface_alpha(lua_State *L)
 	return 0;
 }
 
+static int sdl_set_window_title(lua_State *L)
+{
+	const char *title = luaL_checkstring(L, 1);
+	SDL_WM_SetCaption(title, NULL);
+	return 0;
+}
+
 static const struct luaL_reg displaylib[] =
 {
 	{"fullscreen", sdl_fullscreen},
@@ -452,6 +459,7 @@ static const struct luaL_reg displaylib[] =
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
 	{"loadImage", sdl_load_image},
+	{"setWindowTitle", sdl_set_window_title},
 	{NULL, NULL},
 };
 
