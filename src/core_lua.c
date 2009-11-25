@@ -187,9 +187,23 @@ static int lua_get_mouse(lua_State *L)
 
 	return 2;
 }
+extern int current_mousehandler;
+static int lua_set_current_mousehandler(lua_State *L)
+{
+	if (current_mousehandler != LUA_NOREF)
+		luaL_unref(L, LUA_REGISTRYINDEX, current_mousehandler);
+
+	if (lua_isnil(L, 1))
+		current_mousehandler = LUA_NOREF;
+	else
+		current_mousehandler = luaL_ref(L, LUA_REGISTRYINDEX);
+
+	return 0;
+}
 static const struct luaL_reg mouselib[] =
 {
 	{"get", lua_get_mouse},
+	{"set_current_handler", lua_set_current_mousehandler},
 	{NULL, NULL},
 };
 
@@ -554,8 +568,113 @@ static const struct luaL_reg rnglib[] =
 	{NULL, NULL},
 };
 
+
+/******************************************************************
+ ******************************************************************
+ *                             Line                               *
+ ******************************************************************
+ ******************************************************************/
+typedef struct {
+	int stepx;
+	int stepy;
+	int e;
+	int deltax;
+	int deltay;
+	int origx;
+	int origy;
+	int destx;
+	int desty;
+} line_data;
+
+/* ********** bresenham line drawing ********** */
+int lua_line_init(lua_State *L)
+{
+	int xFrom = luaL_checknumber(L, 1);
+	int yFrom = luaL_checknumber(L, 2);
+	int xTo = luaL_checknumber(L, 3);
+	int yTo = luaL_checknumber(L, 4);
+
+	line_data *data = (line_data*)lua_newuserdata(L, sizeof(line_data));
+	auxiliar_setclass(L, "line{core}", -1);
+
+	data->origx=xFrom;
+	data->origy=yFrom;
+	data->destx=xTo;
+	data->desty=yTo;
+	data->deltax=xTo - xFrom;
+	data->deltay=yTo - yFrom;
+	if ( data->deltax > 0 ) {
+		data->stepx=1;
+	} else if ( data->deltax < 0 ){
+		data->stepx=-1;
+	} else data->stepx=0;
+	if ( data->deltay > 0 ) {
+		data->stepy=1;
+	} else if ( data->deltay < 0 ){
+		data->stepy=-1;
+	} else data->stepy = 0;
+	if ( data->stepx*data->deltax > data->stepy*data->deltay ) {
+		data->e = data->stepx*data->deltax;
+		data->deltax *= 2;
+		data->deltay *= 2;
+	} else {
+		data->e = data->stepy*data->deltay;
+		data->deltax *= 2;
+		data->deltay *= 2;
+	}
+
+	return 1;
+}
+
+int lua_line_step(lua_State *L)
+{
+	line_data *data = (line_data*)auxiliar_checkclass(L, "line{core}", 1);
+
+	if ( data->stepx*data->deltax > data->stepy*data->deltay ) {
+		if ( data->origx == data->destx ) return 0;
+		data->origx+=data->stepx;
+		data->e -= data->stepy*data->deltay;
+		if ( data->e < 0) {
+			data->origy+=data->stepy;
+			data->e+=data->stepx*data->deltax;
+		}
+	} else {
+		if ( data->origy == data->desty ) return 0;
+		data->origy+=data->stepy;
+		data->e -= data->stepx*data->deltax;
+		if ( data->e < 0) {
+			data->origx+=data->stepx;
+			data->e+=data->stepy*data->deltay;
+		}
+	}
+	lua_pushnumber(L, data->origx);
+	lua_pushnumber(L, data->origy);
+	return 2;
+}
+
+int lua_free_line(lua_State *L)
+{
+	line_data *data = (line_data*)auxiliar_checkclass(L, "line{core}", 1);
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static const struct luaL_reg linelib[] =
+{
+	{"new", lua_line_init},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg line_reg[] =
+{
+	{"__gc", lua_free_line},
+	{"__call", lua_line_step},
+	{NULL, NULL},
+};
+
 int luaopen_core(lua_State *L)
 {
+	auxiliar_newclass(L, "line{core}", line_reg);
 	auxiliar_newclass(L, "fov{core}", fov_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
 	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);
@@ -565,5 +684,6 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "core.key", keylib, 0);
 	luaL_openlib(L, "core.game", gamelib, 0);
 	luaL_openlib(L, "rng", rnglib, 0);
+	luaL_openlib(L, "line", linelib, 0);
 	return 1;
 }

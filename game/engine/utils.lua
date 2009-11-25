@@ -163,3 +163,15 @@ getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, 
 end
 
 end
+
+dir_to_coord = {
+	[1] = {-1, 1},
+	[2] = { 0, 1},
+	[3] = { 1, 1},
+	[4] = {-1, 0},
+	[5] = { 0, 0},
+	[6] = { 1, 0},
+	[7] = {-1,-1},
+	[8] = { 0,-1},
+	[9] = { 1,-1},
+}

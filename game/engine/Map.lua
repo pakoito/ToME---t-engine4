@@ -24,7 +24,8 @@ rememberDisplayOrder = { TERRAIN }
 -- @param h height
 -- @param tile_w width of a single tile
 -- @param tile_h height of a single tile
-function _M:setViewPort(w, h, tile_w, tile_h)
+function _M:setViewPort(x, y, w, h, tile_w, tile_h)
+	self.display_x, self.display_y = x, y
 	self.viewport = {width=w, height=h}
 	self.tiles = Tiles.new(tile_w, tile_h)
 	self.tile_w, self.tile_h = tile_w, tile_h
@@ -42,6 +43,8 @@ end
 --- Creates a map
 -- @param w width (in grids)
 -- @param h height (in grids)
+-- @param x screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
+-- @param y screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
 function _M:init(w, h)
 	self.w, self.h = w, h
 	self.map = {}

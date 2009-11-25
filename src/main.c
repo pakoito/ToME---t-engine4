@@ -14,6 +14,7 @@
 #include "core_lua.h"
 
 lua_State *L = NULL;
+int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
 int px = 1, py = 1;
@@ -101,6 +102,37 @@ void on_event(SDL_Event *event)
 			else
 				lua_pushnil(L);
 			docall(L, 7, 0);
+		}
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		if (current_mousehandler != LUA_NOREF)
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
+			lua_pushstring(L, "receiveMouse");
+			lua_gettable(L, -2);
+			lua_remove(L, -2);
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
+			switch (event->button.button)
+			{
+			case SDL_BUTTON_LEFT:
+				lua_pushstring(L, "left");
+				break;
+			case SDL_BUTTON_MIDDLE:
+				lua_pushstring(L, "middle");
+				break;
+			case SDL_BUTTON_RIGHT:
+				lua_pushstring(L, "right");
+				break;
+			case SDL_BUTTON_WHEELUP:
+				lua_pushstring(L, "wheelup");
+				break;
+			case SDL_BUTTON_WHEELDOWN:
+				lua_pushstring(L, "wheeldown");
+				break;
+			}
+			lua_pushnumber(L, event->button.x);
+			lua_pushnumber(L, event->button.y);
+			docall(L, 4, 0);
 		}
 		break;
 	}
@@ -209,6 +241,7 @@ int main(int argc, char *argv[])
 		{
 			switch(event.type)
 			{
+			case SDL_MOUSEBUTTONDOWN:
 			case SDL_KEYDOWN:
 				/* handle key presses */
 				on_event(&event);

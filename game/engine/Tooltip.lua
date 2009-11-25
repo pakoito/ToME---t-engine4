@@ -22,6 +22,7 @@ function _M:display()
 	self.changed = false
 
 	self.surface = core.display.newSurface(300, self.font_h * #self.text)
+	self.surface:alpha(200)
 
 	-- Erase and the display the map
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])

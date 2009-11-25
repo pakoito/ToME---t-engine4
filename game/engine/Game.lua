@@ -1,4 +1,5 @@
 require "engine.class"
+require "engine.Mouse"
 
 --- Represent a game
 -- A module should subclass it and initialize anything it needs to play inside
@@ -14,6 +15,9 @@ function _M:init(keyhandler)
 	self.logSeen = function() end
 	self.w, self.h = core.display.size()
 	self.dialogs = {}
+
+	self.mouse = engine.Mouse.new()
+	self.mouse:setCurrent()
 end
 
 --- Starts the game
@@ -36,8 +40,8 @@ end
 --- Displays the screen
 -- Called by the engine core to redraw the screen every frame
 function _M:display()
-	for i, d in ipairs(game.dialogs) do
-		d:display():toScreen(d.x, d.y)
+	for i, d in ipairs(self.dialogs) do
+		d:display():toScreen(d.display_x, d.display_y)
 	end
 end
 
@@ -50,6 +54,8 @@ function _M:registerDialog(d)
 	table.insert(self.dialogs, d)
 	self.dialogs[d] = #self.dialogs
 end
+
+--- Undisplay a dialog, removing its own keyhandler if needed
 function _M:unregisterDialog(d)
 	if not self.dialogs[d] then return end
 	table.remove(self.dialogs, self.dialogs[d])

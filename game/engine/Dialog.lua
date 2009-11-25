@@ -23,8 +23,8 @@ end
 function _M:init(title, w, h, x, y, alpha, font)
 	self.title = title
 	self.w, self.h = w, h
-	self.x = x or (game.w - self.w) / 2
-	self.y = y or (game.h - self.h) / 2
+	self.display_x = x or (game.w - self.w) / 2
+	self.display_y = y or (game.h - self.h) / 2
 	self.font = font
 	if not font then self.font = core.display.newFont("/data/font/Vera.ttf", 12) end
 	self.surface = core.display.newSurface(w, h)
@@ -41,9 +41,9 @@ function _M:display()
 	s:erase()
 
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_7.png"), 0, 0)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_9.png"), self.w - 9, 0)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_1.png"), 0, self.h - 9)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_3.png"), self.w - 9, self.h - 9)
+	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_9.png"), self.w - 8, 0)
+	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_1.png"), 0, self.h - 8)
+	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_3.png"), self.w - 8, self.h - 8)
 	for i = 8, self.w - 9 do
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_8.png"), i, 0)
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_8.png"), i, 20)

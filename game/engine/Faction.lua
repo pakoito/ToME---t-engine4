@@ -28,5 +28,5 @@ end
 
 -- Add a few default factions
 _M:add{ short_name="players", name="Players", reaction={enemies=-100} }
-_M:add{ short_name="enemies", name="Enemies", reaction={player=-100,poorsods=-100} }
+_M:add{ short_name="enemies", name="Enemies", reaction={players=-100,poorsods=-100} }
 _M:add{ short_name="poorsods", name="Poor Sods", reaction={} }
