@@ -270,4 +270,27 @@ function _M:centerViewAround(x, y)
 	self.mx = x - math.floor(self.viewport.mwidth / 2)
 	self.my = y - math.floor(self.viewport.mheight / 2)
 	self.changed = true
+	self:checkMapViewBounded()
 end
+
+--- Sets the current view area if x and y are out of bounds
+function _M:moveViewSurround(x, y, marginx, marginy)
+	if self.mx + marginx >= x or self.mx + self.viewport.mwidth - marginx <= x then
+		self.mx = x - math.floor(self.viewport.mwidth / 2)
+		self.changed = true
+	end
+	if self.my + marginy >= y or self.my + self.viewport.mheight - marginy <= y then
+		self.my = y - math.floor(self.viewport.mheight / 2)
+		self.changed = true
+	end
+	self:checkMapViewBounded()
+end
+
+--- Checks the map is bound to the screen (no "empty space" if the map is big enough)
+function _M:checkMapViewBounded()
+	if self.mx < 0 then self.mx = 0 self.changed = true end
+	if self.my < 0 then self.my = 0 self.changed = true end
+	if self.mx > self.w - self.viewport.mwidth then self.mx = self.w - self.viewport.mwidth self.changed = true end
+	if self.my > self.h - self.viewport.mheight then self.my = self.h - self.viewport.mheight self.changed = true end
+end
+

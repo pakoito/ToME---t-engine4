@@ -13,7 +13,7 @@ end
 function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
-		game.level.map:centerViewAround(self.x, self.y)
+		game.level.map:moveViewSurround(self.x, self.y, 4, 4)
 	end
 	return moved
 end
