@@ -79,12 +79,12 @@ function _M:display()
 		end
 		self.level.map:display():toScreen(self.level.map.display_x, self.level.map.display_y)
 
-		-- DIsplay the targetting system if active
+		-- Display the targetting system if active
 		self.target:display()
 
 		-- Display a tooltip if available
 		local mx, my = core.mouse.get()
-		local tmx, tmy = math.floor(mx / self.level.map.tile_w), math.floor(my / self.level.map.tile_h)
+		local tmx, tmy = math.floor(mx / self.level.map.tile_w) + self.level.map.mx, math.floor(my / self.level.map.tile_h) + self.level.map.my
 		local tt = self.level.map:checkAllEntities(tmx, tmy, "tooltip")
 		if tt and self.level.map.seens(tmx, tmy) then
 			self.tooltip:set(tt)
@@ -246,6 +246,28 @@ function _M:setupMouse()
 		if button == "wheelup" then self.log:scrollUp(1) end
 		if button == "wheeldown" then self.log:scrollUp(-1) end
 	end)
+
+	local derivx, derivy = 0, 0
+	self.mouse.receiveMouseMotion = function(self, button, x, y, xrel, yrel)
+		if button ~= "left" then return end
+		derivx = derivx + xrel
+		derivy = derivy + yrel
+		game.level.map.changed = true
+		if derivx >= game.level.map.tile_w then
+			game.level.map.mx = game.level.map.mx - 1
+			derivx = derivx - game.level.map.tile_w
+		elseif derivx <= -game.level.map.tile_w then
+			game.level.map.mx = game.level.map.mx + 1
+			derivx = derivx + game.level.map.tile_w
+		end
+		if derivy >= game.level.map.tile_h then
+			game.level.map.my = game.level.map.my - 1
+			derivy = derivy - game.level.map.tile_h
+		elseif derivy <= -game.level.map.tile_h then
+			game.level.map.my = game.level.map.my + 1
+			derivy = derivy + game.level.map.tile_h
+		end
+	end
 end
 
 --- Ask if we realy want to close, if so, save the game first

@@ -152,6 +152,27 @@ void on_event(SDL_Event *event)
 			docall(L, 4, 0);
 		}
 		break;
+	case SDL_MOUSEMOTION:
+		if (current_mousehandler != LUA_NOREF)
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
+			lua_pushstring(L, "receiveMouseMotion");
+			lua_gettable(L, -2);
+			lua_remove(L, -2);
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
+			if (event->motion.state & SDL_BUTTON(1)) lua_pushstring(L, "left");
+			else if (event->motion.state & SDL_BUTTON(2)) lua_pushstring(L, "middle");
+			else if (event->motion.state & SDL_BUTTON(3)) lua_pushstring(L, "right");
+			else if (event->motion.state & SDL_BUTTON(4)) lua_pushstring(L, "wheelup");
+			else if (event->motion.state & SDL_BUTTON(5)) lua_pushstring(L, "wheeldown");
+			else lua_pushstring(L, "none");
+			lua_pushnumber(L, event->motion.x);
+			lua_pushnumber(L, event->motion.y);
+			lua_pushnumber(L, event->motion.xrel);
+			lua_pushnumber(L, event->motion.yrel);
+			docall(L, 6, 0);
+		}
+		break;
 	}
 }
 
@@ -261,6 +282,7 @@ int main(int argc, char *argv[])
 		{
 			switch(event.type)
 			{
+			case SDL_MOUSEMOTION:
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_KEYDOWN:
 				/* handle key presses */

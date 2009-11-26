@@ -26,7 +26,7 @@ rememberDisplayOrder = { TERRAIN }
 -- @param tile_h height of a single tile
 function _M:setViewPort(x, y, w, h, tile_w, tile_h)
 	self.display_x, self.display_y = x, y
-	self.viewport = {width=w, height=h}
+	self.viewport = {width=w, height=h, mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
 	self.tiles = Tiles.new(tile_w, tile_h)
 	self.tile_w, self.tile_h = tile_w, tile_h
 end
@@ -46,6 +46,8 @@ end
 -- @param x screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
 -- @param y screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
 function _M:init(w, h)
+	self.mx = 0
+	self.my = 0
 	self.w, self.h = w, h
 	self.map = {}
 	self.lites = {}
@@ -154,7 +156,8 @@ function _M:display()
 		local z
 		local order
 		local friend
-		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
+		for i = self.mx, self.mx + self.viewport.mwidth - 1 do
+		for j = self.my, self.my + self.viewport.mheight - 1 do
 			e, si = nil, 1
 			z = i + j * self.w
 			order = displayOrder
@@ -163,19 +166,19 @@ function _M:display()
 				while not e and si <= #order do e = self(i, j, order[si]) si = si + 1 end
 				if e then
 					if self.seens[z] then
-						self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), i * self.tile_w, j * self.tile_h)
+						self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 					elseif self.remembers[z] then
-						self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3, e.image), i * self.tile_w, j * self.tile_h)
+						self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3, e.image), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 					end
 					-- Tactical overlay ?
 					if self.view_faction and e.faction then
 						friend = Faction:factionReaction(self.view_faction, e.faction)
 						if friend > 0 then
-							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend), i * self.tile_w, j * self.tile_h)
+							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 						elseif friend < 0 then
-							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy), i * self.tile_w, j * self.tile_h)
+							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 						else
-							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral), i * self.tile_w, j * self.tile_h)
+							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 						end
 					end
 				end
@@ -262,3 +265,9 @@ function _M:rememberAll(x, y, w, h)
 	end end
 end
 
+--- Sets the current view area with the given coords at the center
+function _M:centerViewAround(x, y)
+	self.mx = x - math.floor(self.viewport.mwidth / 2)
+	self.my = y - math.floor(self.viewport.mheight / 2)
+	self.changed = true
+end

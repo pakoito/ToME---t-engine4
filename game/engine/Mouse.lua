@@ -20,6 +20,9 @@ function _M:receiveMouse(button, x, y)
 	end
 end
 
+function _M:receiveMouseMotion(button, x, y, xrel, yrel)
+end
+
 --- Setups as the current game keyhandler
 function _M:setCurrent()
 	core.mouse.set_current_handler(self)

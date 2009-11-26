@@ -42,10 +42,10 @@ function _M:display()
 	local lx, ly = l()
 	while lx and ly do
 		if not game.level.map.seens(lx, ly) then s = self.sr end
-		s:toScreen(self.display_x + lx * self.tile_w, self.display_y + ly * self.tile_h)
+		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
 		lx, ly = l()
 	end
-	self.cursor:toScreen(self.display_x + self.target.x * self.tile_w, self.display_y + self.target.y * self.tile_h)
+	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w, self.display_y + (self.target.y - game.level.map.my) * self.tile_h)
 end
 
 function _M:setActive(v)
@@ -71,7 +71,7 @@ function _M:scan(dir, radius)
 
 	if dir ~= 5 then
 		-- Get a list of actors in the direction given
-		core.fov.calc_beam(self.target.x, self.target.y, radius, dir, 45, checker, function()end, self)
+		core.fov.calc_beam(self.target.x, self.target.y, radius, dir, 55, checker, function()end, self)
 	else
 		-- Get a list of actors all around
 		core.fov.calc_circle(self.target.x, self.target.y, radius, checker, function()end, self)
