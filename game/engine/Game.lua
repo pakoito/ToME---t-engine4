@@ -1,5 +1,6 @@
 require "engine.class"
 require "engine.Mouse"
+require "engine.DebugConsole"
 
 --- Represent a game
 -- A module should subclass it and initialize anything it needs to play inside

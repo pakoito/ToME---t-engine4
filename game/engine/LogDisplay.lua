@@ -42,7 +42,7 @@ function _M:display()
 	-- Erase and the display the map
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 	local i, dh = 1, 0
-	while i < self.h do
+	while dh < self.h do
 		if not self.log[self.scroll + i] then break end
 		self.surface:drawColorString(self.font, self.log[self.scroll + i], 0, self.h - (i) * self.font_h, self.color[1], self.color[2], self.color[3])
 		i = i + 1

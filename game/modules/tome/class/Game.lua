@@ -2,6 +2,7 @@ require "engine.class"
 require "engine.GameTurnBased"
 require "engine.KeyCommand"
 require "engine.LogDisplay"
+local DebugConsole = require "engine.DebugConsole"
 local Tooltip = require "engine.Tooltip"
 local QuitDialog = require "mod.dialogs.Quit"
 local Calendar = require "engine.Calendar"
@@ -206,6 +207,10 @@ function _M:setupCommands()
 		-- Exit the game
 		[{"_x","ctrl"}] = function()
 			self:onQuit()
+		end,
+		-- Lua console
+		[{"_l","ctrl"}] = function()
+			self:registerDialog(DebugConsole.new())
 		end,
 
 		-- Targeting movement
