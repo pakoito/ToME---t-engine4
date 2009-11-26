@@ -1,13 +1,13 @@
 return {
 	name = "ancient ruins",
 	max_level = 5,
-	width = 100, height = 100,
+	width = 50, height = 30,
 	all_remembered = true,
 	all_lited = true,
 	level_npcs = {5, 10},
 	generator =  {
 		map = {
-			class= "engine.generator.map.Empty",
+			class= "engine.generator.map.Rooms",
 			floor = "FLOOR",
 			wall = "WALL",
 			up = "UP",
@@ -16,7 +16,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {200, 200},
+			nb_npc = {40, 40},
 		},
 	}
 }
