@@ -1,9 +1,19 @@
 require "engine.class"
 
+--- Savefile code
+-- T-Engine4 savefiles are direct serialization of in game objects<br/>
+-- Basically the engine is told to save your Game instance and then it will
+-- recursively save all that it contains: level, map, entities, your own objects, ...<br/>
+-- The savefile structure is a zip file that contains one file per object to be saved. Unzip one, it is quite obvious<br/>
+-- A simple object (that does not do anything too fancy in its constructor) will save/load without anything
+-- to code, it's magic!<br/>
+-- For more complex objects, look at the methods save() and loaded() in objects that have them
 module(..., package.seeall, class.make)
 
 _M.current_save = false
 
+--- Init a savefile
+-- @param savefile the name of the savefile, usually the player's name. It will be sanitized so dont bother doing it
 function _M:init(savefile)
 	self.save_dir = "/save/"..savefile:gsub("[^a-zA-Z0-9_-.]", "_").."/"
 	self.load_dir = "/tmp/loadsave/"
@@ -15,6 +25,8 @@ function _M:init(savefile)
 	_M.current_save = self
 end
 
+--- Finishes up a savefile
+-- Always call it once done
 function _M:close()
 	self.tables = nil
 	self.process = nil
@@ -54,6 +66,7 @@ function _M:saveObject(obj, zip)
 	return self.tables[game]
 end
 
+--- Save the given game
 function _M:saveGame(game)
 	fs.mkdir(self.save_dir)
 
@@ -62,6 +75,7 @@ function _M:saveGame(game)
 	zip:close()
 end
 
+--- Save a level
 function _M:saveLevel(level)
 	fs.mkdir(self.save_dir)
 
@@ -86,6 +100,7 @@ function _M:loadReal(load)
 	return o
 end
 
+--- Loads a game
 function _M:loadGame()
 	local path = fs.getRealPath(self.save_dir.."game.teag")
 	if not path or path == "" then return nil, "no savefile" end
@@ -104,6 +119,7 @@ function _M:loadGame()
 	return loadedGame
 end
 
+--- Loads a level
 function _M:loadLevel(zone, level)
 	local path = fs.getRealPath(self.save_dir..("level-%s-%d.teal"):format(zone, level))
 	if not path or path == "" then return false end

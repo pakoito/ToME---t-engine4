@@ -34,8 +34,8 @@ if mod_def then
 	core.display.setWindowTitle(mod.name)
 
 	local Game = require(mod.starter)
-	game = Game.new()
---[[
+--	game = Game.new()
+-- [[
 	local save = engine.Savefile.new("player")
 	game = save:loadGame()
 	save:close()
