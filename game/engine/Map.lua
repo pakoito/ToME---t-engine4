@@ -53,8 +53,20 @@ function _M:init(w, h)
 	self.lites = {}
 	self.seens = {}
 	self.remembers = {}
-	getmetatable(self).__call = _M.call
 	for i = 0, w * h - 1 do self.map[i] = {} end
+
+	self:loaded()
+end
+
+--- Serialization
+function _M:save()
+	return class.save(self, {
+		_fov_lite = true,
+		_fov = true,
+		surface = true
+	})
+end
+function _M:loaded()
 	local mapbool = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
@@ -62,6 +74,8 @@ function _M:init(w, h)
 		end
 		return t[x + y * self.w]
 	end
+
+	getmetatable(self).__call = _M.call
 	setmetatable(self.lites, {__call = mapbool})
 	setmetatable(self.seens, {__call = mapbool})
 	setmetatable(self.remembers, {__call = mapbool})

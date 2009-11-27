@@ -2,6 +2,7 @@ require "engine.class"
 require "engine.GameTurnBased"
 require "engine.KeyCommand"
 require "engine.LogDisplay"
+local Savefile = require "engine.Savefile"
 local DebugConsole = require "engine.DebugConsole"
 local Tooltip = require "engine.Tooltip"
 local QuitDialog = require "mod.dialogs.Quit"
@@ -19,26 +20,25 @@ module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
 function _M:init()
 	engine.GameTurnBased.init(self, engine.Key.current, 1000, 100)
+
+	-- Same init as when loaded from a savefile
+	self:loaded()
 end
 
 function _M:run()
-	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
-	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 16, 16)
-
+	self.log = engine.LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
-	self.day_of_year = self.calendar:getDayOfYear(self.turn)
-
-	self.zone = Zone.new("ancient_ruins")
-
 	self.tooltip = engine.Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 
-	self.log = engine.LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 	self.logSeen = function(e, ...) if e and self.level.map.seens(e.x, e.y) then self.log(...) end end
 
-	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}
+	-- Setup inputs
+	self:setupCommands()
+	self:setupMouse()
 
-	self:changeLevel(1)
+	-- Starting from here we create a new game
+	if not self.player then self:newGame() end
 
 	self.target = Target.new(Map, self.player)
 	self.target.target.entity = self.player
@@ -46,11 +46,26 @@ function _M:run()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
+end
 
-	self:setupCommands()
-	self:setupMouse()
+function _M:newGame()
+	self.zone = Zone.new("ancient_ruins")
+	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}
+	self:changeLevel(1)
 
 --	self:registerDialog(require('mod.dialogs.EnterName').new())
+end
+
+function _M:loaded()
+	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
+	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 16, 16)
+	engine.GameTurnBased.loaded(self)
+end
+
+function _M:save()
+	return class.save(self, {w=true, h=true, zone=true, player=true, level=true,
+		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
+	}, true)
 end
 
 function _M:changeLevel(lev)
@@ -63,7 +78,7 @@ end
 function _M:tick()
 	engine.GameTurnBased.tick(self)
 
-	if self.day_of_year ~= self.calendar:getDayOfYear(self.turn) then
+	if not self.day_of_year or self.day_of_year ~= self.calendar:getDayOfYear(self.turn) then
 		self.log(self.calendar:getTimeDate(self.turn))
 		self.day_of_year = self.calendar:getDayOfYear(self.turn)
 	end
@@ -239,6 +254,14 @@ function _M:setupCommands()
 		[{"_KP3","ctrl"}] = function() self.target:scan(3) end,
 		[{"_KP7","ctrl"}] = function() self.target:scan(7) end,
 		[{"_KP9","ctrl"}] = function() self.target:scan(9) end,
+
+		-- Save the game
+		[{"_s","ctrl"}] = function()
+			local save = Savefile.new(self.save_name)
+			save:saveGame(self)
+			save:close()
+			self.log("Saved game.")
+		end,
 
 	}
 	self.key:setCurrent()

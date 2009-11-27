@@ -28,8 +28,6 @@ function _M:init(t)
 	self.color_br = self.color_br or -1
 	self.color_bg = self.color_bg or -1
 	self.color_bb = self.color_bb or -1
-	self.block_sight = self.block_sight or false
-	self.block_move = self.block_move or false
 
 	next_uid = next_uid + 1
 end
@@ -42,7 +40,9 @@ function _M:cloned()
 end
 
 -- If we are loaded we need a new uid
+_M.loadNoDelay = true
 function _M:loaded()
+	local ouid = self.uid
 	self.uid = next_uid
 	__uids[self.uid] = self
 	next_uid = next_uid + 1

@@ -97,21 +97,25 @@ local function basicSerialize(o)
 	end
 end
 
-local function serialize_data(outf, name, value, saved, filter)
+local function serialize_data(outf, name, value, saved, filter, allow, savefile, force)
 	saved = saved or {}       -- initial value
 	outf(name, " = ")
 	if type(value) == "number" or type(value) == "string" or type(value) == "boolean" or type(value) == "function" then
 		outf(basicSerialize(value), "\n")
 	elseif type(value) == "table" then
-		if saved[value] then    -- value already saved?
+		if not force and value.__CLASSNAME then
+			savefile:addToProcess(value)
+			outf("loadObject('", savefile:getFileName(value), "')\n")
+		elseif saved[value] then    -- value already saved?
 			outf(saved[value], "\n")  -- use its previous name
 		else
 			saved[value] = name   -- save name for next time
 			outf("{}\n")     -- create a new table
 			for k,v in pairs(value) do      -- save its fields
-				if not filter[k] then
+--				print(allow, k , filter[k])
+				if (not allow and not filter[k]) or (allow and filter[k]) then
 					local fieldname = string.format("%s[%s]", name, basicSerialize(k))
-					serialize_data(outf, fieldname, v, saved, filter)
+					serialize_data(outf, fieldname, v, saved, filter, allow, savefile, false)
 				end
 			end
 		end
@@ -120,31 +124,53 @@ local function serialize_data(outf, name, value, saved, filter)
 	end
 end
 
-local function serialize(data, filter)
+local function serialize(data, filter, allow, savefile)
 	local tbl = {}
 	local outf = function(...) for i,str in ipairs(arg) do table.insert(tbl, str) end end
-	serialize_data(outf, "data", data, nil, filter)
+	serialize_data(outf, "data", data, nil, filter, allow, savefile, true)
 	table.insert(tbl, "return data\n")
 	return tbl
 end
 
+function _M:save(filter, allow, savefile)
+	filter = filter or {}
+	if not allow then
+		filter.new = true
+	else
+		filter.__CLASSNAME = true
+	end
+	local mt = getmetatable(self)
+	setmetatable(self, {})
+	local res = table.concat(serialize(self, filter, allow, engine.Savefile.current_save))
+	setmetatable(self, mt)
+	return res
+end
+
 local function deserialize(string)
-	local f = loadstring(string)
-	setfenv(f, {})
+	local f, err = loadstring(string)
+	if err then print("error deserializing", string, err) end
+	setfenv(f, {
+		loadObject = function(n)
+--			print("wants to load",n)
+			return engine.Savefile.current_save:loadReal(n)
+		end,
+	})
 	return f()
 end
 
-function _M:save(filter)
-	filter = filter or {}
-	filter.new = true
-	return table.concat(serialize(self, filter))
-end
-
-function load(str)
+function load(str, delayloading)
 	local obj = deserialize(str)
 	if obj then
+--		print("setting obj class", obj.__CLASSNAME)
 		setmetatable(obj, {__index=require(obj.__CLASSNAME)})
-		if obj.loaded then obj:loaded() end
+		if obj.loaded then
+--			print("loader found for class", obj, obj.__CLASSNAME)
+			if delayloading and not obj.loadNoDelay then
+				engine.Savefile.current_save:addDelayLoad(obj)
+			else
+				obj:loaded()
+			end
+		end
 	end
 	return obj
 end

@@ -2223,3 +2223,18 @@ void __PHYSFS_smallFree(void *ptr)
 
 /* end of physfs.c ... */
 
+char *PHYSFS_getDependentPath(const char *fname)
+{
+	char *retval = NULL;
+
+	BAIL_IF_MACRO(fname == NULL, ERR_INVALID_ARGUMENT, 0);
+
+	if (!PHYSFS_exists(fname)) return NULL;
+
+	if (fname[0] == '/')
+		retval = __PHYSFS_platformCvtToDependent(PHYSFS_getRealDir(fname), fname, "");
+	else
+		retval = __PHYSFS_platformCvtToDependent(PHYSFS_getRealDir(fname), "/", fname);
+
+	return(retval);
+}

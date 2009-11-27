@@ -2381,6 +2381,7 @@ __EXPORT__ void PHYSFS_utf8FromLatin1(const char *src, char *dst,
                                   PHYSFS_uint64 len);
 
 /* Everything above this line is part of the PhysicsFS 2.0 API. */
+__EXPORT__ char *PHYSFS_getDependentPath(const char *fname);
 
 
 #ifdef __cplusplus

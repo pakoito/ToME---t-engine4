@@ -6,5 +6,7 @@
 #include "lua/lauxlib.h"
 
 extern lua_State *L;
+extern int luaopen_struct (lua_State *L);
+
 
 #endif

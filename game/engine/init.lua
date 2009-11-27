@@ -7,7 +7,9 @@ remdebug.engine.start()
 dofile("/engine/utils.lua")
 
 require "engine.KeyCommand"
+require "engine.Savefile"
 require "engine.Tiles"
+engine.Tiles.prefix = "/data/gfx/"
 
 -- Setup a default key handler
 local key = engine.KeyCommand.new()
@@ -31,8 +33,13 @@ if mod_def then
 
 	core.display.setWindowTitle(mod.name)
 
-	engine.Tiles.prefix = "/data/gfx/"
-	game = dofile("/"..mod.starter:gsub("%.", "/")..".lua")
+	local Game = require(mod.starter)
+	game = Game.new()
+--[[
+	local save = engine.Savefile.new("player")
+	game = save:loadGame()
+	save:close()
+-- ]]
 	game:run()
 else
 	os.exit()

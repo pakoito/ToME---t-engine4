@@ -29,4 +29,5 @@ end
 
 function _M:setName(name)
 	self.name = name
+	game.save_name = name
 end

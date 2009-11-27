@@ -49,7 +49,9 @@ project "physfs"
 	language "C"
 	targetname "physfs"
 
-	files { "src/physfs/*.c", "src/physfs/archivers/*.c", }
+	defines {"PHYSFS_SUPPORTS_ZIP"}
+
+	files { "src/physfs/*.c", "src/physfs/zlib123/*.c", "src/physfs/archivers/*.c", }
 
 	configuration "linux"
 		files { "src/physfs/platform/unix.c", "src/physfs/platform/posix.c",  }

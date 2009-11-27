@@ -1,4 +1,5 @@
 require "engine.class"
+local Savefile = require "engine.Savefile"
 
 --- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
 module(..., package.seeall, class.make)
@@ -38,11 +39,11 @@ function _M:load()
 end
 
 function _M:getLevelData(lev)
-	if not self.levels[lev] then return self end
-
 	local res = {}
-	for k, e in pairs(self) do res[k] = e end
-	for k, e in pairs(self.levels[lev]) do res[k] = e end
+	for k, e in pairs(self) do if k ~= "__CLASSNAME" then res[k] = e end end
+	if self.levels[lev] then
+		for k, e in pairs(self.levels[lev]) do if k ~= "__CLASSNAME" then res[k] = e end end
+	end
 	return res
 end
 
@@ -52,11 +53,42 @@ end
 function _M:getLevel(game, lev, no_close)
 	-- Before doing anything else, close the current level
 	if not no_close and game.level and game.level.map then
+		if game.level.data.persistant then
+			local save = Savefile.new(game.save_name)
+			save:saveLevel(game.level)
+			save:close()
+		end
+
 		game.level.map:close()
 	end
 
 	local level_data = self:getLevelData(lev)
 
+	local level
+	-- Load persistant level?
+	if level_data.persistant == true then
+		local save = Savefile.new(game.save_name)
+		level = save:loadLevel(self.short_name, lev)
+		save:close()
+
+		if level then
+			-- Setup the level in the game
+			game:setLevel(level)
+		end
+	end
+
+	-- In any cases, make one if none was found
+	if not level then
+		level = self:newLevel(level_data, lev, game)
+	end
+
+	-- Clean up things
+	collectgarbage("collect")
+
+	return level
+end
+
+function _M:newLevel(level_data, lev, game)
 	local map = self.map_class.new(level_data.width, level_data.height)
 	if level_data.all_lited then map:liteAll(0, 0, map.w, map.h) end
 	if level_data.all_remembered then map:rememberAll(0, 0, map.w, map.h) end
@@ -86,11 +118,7 @@ function _M:getLevel(game, lev, no_close)
 		generator:generate()
 	end
 
-	-- Setup the level in the game
-	game:setLevel(level)
-
-	-- Clean up things
-	collectgarbage("collect")
-
+	-- Save level data
+	level.data = level_data
 	return level
 end

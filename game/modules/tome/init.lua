@@ -13,4 +13,4 @@ old places, venture into the unknown for wealth and glory.
 But beware, the eastern troubles could be yours all too soon...
 ]]
 version = {4,0,0}
-starter = "mod.load"
+starter = "mod.class.Game"

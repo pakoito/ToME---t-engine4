@@ -6,7 +6,9 @@
 #include "types.h"
 #include "script.h"
 #include "display.h"
+#include "physfs.h"
 #include "SFMT.h"
+#include "mzip.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
 
@@ -595,7 +597,7 @@ typedef struct {
 } line_data;
 
 /* ********** bresenham line drawing ********** */
-int lua_line_init(lua_State *L)
+static int lua_line_init(lua_State *L)
 {
 	int xFrom = luaL_checknumber(L, 1);
 	int yFrom = luaL_checknumber(L, 2);
@@ -634,7 +636,7 @@ int lua_line_init(lua_State *L)
 	return 1;
 }
 
-int lua_line_step(lua_State *L)
+static int lua_line_step(lua_State *L)
 {
 	line_data *data = (line_data*)auxiliar_checkclass(L, "line{core}", 1);
 
@@ -660,7 +662,7 @@ int lua_line_step(lua_State *L)
 	return 2;
 }
 
-int lua_free_line(lua_State *L)
+static int lua_free_line(lua_State *L)
 {
 	line_data *data = (line_data*)auxiliar_checkclass(L, "line{core}", 1);
 	lua_pushnumber(L, 1);
@@ -680,8 +682,277 @@ static const struct luaL_reg line_reg[] =
 	{NULL, NULL},
 };
 
+
+/******************************************************************
+ ******************************************************************
+ *                             FS                                 *
+ ******************************************************************
+ ******************************************************************/
+
+static int lua_fs_exists(lua_State *L)
+{
+	const char *file = luaL_checkstring(L, 1);
+
+	lua_pushboolean(L, PHYSFS_exists(file));
+
+	return 1;
+}
+
+static int lua_fs_mkdir(lua_State *L)
+{
+	const char *dir = luaL_checkstring(L, 1);
+
+	PHYSFS_mkdir(dir);
+
+	return 0;
+}
+
+static int lua_fs_delete(lua_State *L)
+{
+	const char *file = luaL_checkstring(L, 1);
+
+	PHYSFS_delete(file);
+
+	return 0;
+}
+
+static int lua_fs_list(lua_State* L)
+{
+	const char *dir = luaL_checkstring(L, 1);
+	bool only_dir = lua_toboolean(L, 2);
+
+	char **rc = PHYSFS_enumerateFiles(dir);
+	char **i;
+	int nb = 1;
+	char buf[2048];
+
+	lua_newtable(L);
+	for (i = rc; *i != NULL; i++)
+	{
+		strcpy(buf, dir);
+		strcat(buf, "/");
+		strcat(buf, *i);
+		if (only_dir && (!PHYSFS_isDirectory(buf)))
+			continue;
+
+		lua_pushnumber(L, nb);
+		lua_pushstring(L, *i);
+		lua_settable(L, -3);
+		nb++;
+	}
+
+	PHYSFS_freeList(rc);
+
+	return 1;
+}
+
+
+static int lua_fs_open(lua_State *L)
+{
+	const char *file = luaL_checkstring(L, 1);
+	const char *mode = luaL_checkstring(L, 2);
+
+	PHYSFS_file **f = (PHYSFS_file **)lua_newuserdata(L, sizeof(PHYSFS_file *));
+	auxiliar_setclass(L, "physfs{file}", -1);
+
+	if (strchr(mode, 'w'))
+		*f = PHYSFS_openWrite(file);
+	else if (strchr(mode, 'a'))
+		*f = PHYSFS_openAppend(file);
+	else
+		*f = PHYSFS_openRead(file);
+	if (!*f)
+	{
+		lua_pop(L, 1);
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+static int lua_file_read(lua_State *L)
+{
+	PHYSFS_file **f = (PHYSFS_file**)auxiliar_checkclass(L, "physfs{file}", 1);
+	long n = luaL_optlong(L, 2, ~((size_t)0));
+
+	size_t rlen;  /* how much to read */
+	size_t nr;  /* number of chars actually read */
+	luaL_Buffer b;
+	luaL_buffinit(L, &b);
+	rlen = LUAL_BUFFERSIZE;  /* try to read that much each time */
+	do {
+		char *p = luaL_prepbuffer(&b);
+		if (rlen > n) rlen = n;  /* cannot read more than asked */
+		nr = PHYSFS_read(*f, p, sizeof(char), rlen);
+		luaL_addsize(&b, nr);
+		n -= nr;  /* still have to read `n' chars */
+	} while (n > 0 && nr == rlen);  /* until end of count or eof */
+	luaL_pushresult(&b);  /* close buffer */
+	return (n == 0 || lua_objlen(L, -1) > 0);
+	return 1;
+}
+
+static int lua_file_write(lua_State *L)
+{
+	PHYSFS_file **f = (PHYSFS_file**)auxiliar_checkclass(L, "physfs{file}", 1);
+	int len;
+	const char *data = lua_tolstring(L, 2, &len);
+
+	PHYSFS_write(*f, data, sizeof(char), len);
+
+	return 0;
+}
+
+static int lua_close_file(lua_State *L)
+{
+	PHYSFS_file **f = (PHYSFS_file**)auxiliar_checkclass(L, "physfs{file}", 1);
+	if (*f)
+	{
+		PHYSFS_close(*f);
+		*f = NULL;
+	}
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int lua_fs_zipopen(lua_State *L)
+{
+	const char *file = luaL_checkstring(L, 1);
+
+	zipFile *zf = (zipFile*)lua_newuserdata(L, sizeof(zipFile*));
+	auxiliar_setclass(L, "physfs{zip}", -1);
+
+	*zf = zipOpen(file, APPEND_STATUS_CREATE);
+	if (!*zf)
+	{
+		lua_pop(L, 1);
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+static int lua_close_zip(lua_State *L)
+{
+	zipFile *zf = (zipFile*)auxiliar_checkclass(L, "physfs{zip}", 1);
+	if (*zf)
+	{
+		zipClose(*zf, NULL);
+		*zf = NULL;
+	}
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int lua_zip_add(lua_State *L)
+{
+	zipFile *zf = (zipFile*)auxiliar_checkclass(L, "physfs{zip}", 1);
+	const char *filenameinzip = luaL_checkstring(L, 2);
+	int datalen;
+	const char *data = lua_tolstring(L, 3, &datalen);
+	int opt_compress_level = luaL_optnumber(L, 4, 4);
+
+	int err=0;
+	zip_fileinfo zi;
+	unsigned long crcFile=0;
+
+	zi.tmz_date.tm_sec = zi.tmz_date.tm_min = zi.tmz_date.tm_hour =
+	zi.tmz_date.tm_mday = zi.tmz_date.tm_mon = zi.tmz_date.tm_year = 0;
+	zi.dosDate = 0;
+	zi.internal_fa = 0;
+	zi.external_fa = 0;
+
+	err = zipOpenNewFileInZip3(*zf,filenameinzip,&zi,
+		NULL,0,NULL,0,NULL /* comment*/,
+		(opt_compress_level != 0) ? Z_DEFLATED : 0,
+		opt_compress_level,0,
+		/* -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, */
+		-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+		NULL,crcFile);
+
+	if (err != ZIP_OK)
+	{
+		lua_pushnil(L);
+		lua_pushstring(L, "could not add file to zip");
+		return 2;
+	}
+	else
+	{
+		err = zipWriteInFileInZip(*zf, data, datalen);
+	}
+
+	zipCloseFileInZip(*zf);
+
+	lua_pushboolean(L, 1);
+	return 1;
+}
+
+static int lua_fs_mount(lua_State *L)
+{
+	const char *src = luaL_checkstring(L, 1);
+	const char *dest = luaL_checkstring(L, 2);
+	bool append = lua_toboolean(L, 3);
+
+	int err = PHYSFS_mount(src, dest, append);
+	if (err == 0)
+	{
+		lua_pushnil(L);
+		lua_pushstring(L, PHYSFS_getLastError());
+		return 2;
+	}
+	lua_pushboolean(L, TRUE);
+
+	return 1;
+}
+
+static int lua_fs_umount(lua_State *L)
+{
+	const char *src = luaL_checkstring(L, 1);
+
+	PHYSFS_removeFromSearchPath(src);
+	return 0;
+}
+
+static int lua_fs_get_real_path(lua_State *L)
+{
+	const char *src = luaL_checkstring(L, 1);
+	lua_pushstring(L, PHYSFS_getDependentPath(src));
+	return 1;
+}
+
+static const struct luaL_reg fslib[] =
+{
+	{"open", lua_fs_open},
+	{"zipOpen", lua_fs_zipopen},
+	{"exists", lua_fs_exists},
+	{"mkdir", lua_fs_mkdir},
+	{"delete", lua_fs_delete},
+	{"list", lua_fs_list},
+	{"getRealPath", lua_fs_get_real_path},
+	{"mount", lua_fs_mount},
+	{"umount", lua_fs_umount},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg fsfile_reg[] =
+{
+	{"__gc", lua_close_file},
+	{"close", lua_close_file},
+	{"read", lua_file_read},
+	{"write", lua_file_write},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg fszipfile_reg[] =
+{
+	{"__gc", lua_close_zip},
+	{"close", lua_close_zip},
+	{"add", lua_zip_add},
+	{NULL, NULL},
+};
+
 int luaopen_core(lua_State *L)
 {
+	auxiliar_newclass(L, "physfs{file}", fsfile_reg);
+	auxiliar_newclass(L, "physfs{zip}", fszipfile_reg);
 	auxiliar_newclass(L, "line{core}", line_reg);
 	auxiliar_newclass(L, "fov{core}", fov_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
@@ -693,5 +964,6 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "core.game", gamelib, 0);
 	luaL_openlib(L, "rng", rnglib, 0);
 	luaL_openlib(L, "line", linelib, 0);
+	luaL_openlib(L, "fs", fslib, 0);
 	return 1;
 }

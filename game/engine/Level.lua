@@ -24,3 +24,13 @@ function _M:removeEntity(e)
 	-- Tells it to delete itself if needed
 	if e.deleteFromMap then e:deleteFromMap(self.map) end
 end
+
+function _M:loaded()
+	-- Loading the game has defined new uids for entities, yet we hard referenced the old ones
+	-- So we fix it
+	local nes = {}
+	for uid, e in pairs(self.entities) do
+		nes[e.uid] = e
+	end
+	self.entities = nes
+end

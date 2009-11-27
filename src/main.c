@@ -238,6 +238,8 @@ int main(int argc, char *argv[])
 	PHYSFS_mount("game/", "/", 1);
 	PHYSFS_mount("game/modules/tome", "/mod", 1);
 	PHYSFS_mount("game/modules/tome/data", "/data", 1);
+	PHYSFS_mount("/home/dg/.tengine/4.0/tome/", "/", 1);
+	PHYSFS_setWriteDir("/home/dg/.tengine/4.0/tome/");
 
 	/***************** Lua Init *****************/
 	L = lua_open();  /* create state */
@@ -245,6 +247,7 @@ int main(int argc, char *argv[])
 	luaopen_core(L);
 	luaopen_socket_core(L);
 	luaopen_mime_core(L);
+	luaopen_struct(L);
 
 	// Make the uids repository
 	lua_newtable(L);
