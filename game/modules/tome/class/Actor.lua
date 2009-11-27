@@ -2,6 +2,8 @@ require "engine.class"
 require "engine.Actor"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
+require "engine.interface.ActorStats"
+require "engine.interface.ActorAbilities"
 require "engine.interface.BloodyDeath"
 require "mod.class.interface.Combat"
 
@@ -10,6 +12,8 @@ module(..., package.seeall, class.inherit(
 	engine.Actor,
 	engine.interface.ActorLife,
 	engine.interface.ActorLevel,
+	engine.interface.ActorStats,
+	engine.interface.ActorAbilities,
 	engine.interface.BloodyDeath,
 	mod.class.interface.Combat
 ))
@@ -18,6 +22,8 @@ function _M:init(t)
 	engine.Actor.init(self, t)
 	engine.interface.ActorLife.init(self, t)
 	engine.interface.ActorLevel.init(self, t)
+	engine.interface.ActorStats.init(self, t)
+	engine.interface.ActorAbilities.init(self, t)
 end
 
 function _M:move(x, y, force)

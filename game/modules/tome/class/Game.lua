@@ -13,6 +13,8 @@ local Target = require "engine.Target"
 local Level = require "engine.Level"
 local Grid = require "engine.Grid"
 local Actor = require "mod.class.Actor"
+local ActorStats = require "engine.interface.ActorStats"
+local ActorAbilities = require "engine.interface.ActorAbilities"
 local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
@@ -26,6 +28,15 @@ function _M:init()
 end
 
 function _M:run()
+	-- Actor stats
+	ActorStats:defineStat("Strength",	"str", 10, 1, 100)
+	ActorStats:defineStat("Dexterity",	"dex", 10, 1, 100)
+	ActorStats:defineStat("Magic",		"mag", 10, 1, 100)
+	ActorStats:defineStat("Willpower",	"wil", 10, 1, 100)
+	ActorStats:defineStat("Cunning",	"cun", 10, 1, 100)
+	ActorStats:defineStat("Constitution",	"con", 10, 1, 100)
+	ActorAbilities:loadDefinition("/data/abilities.lua")
+
 	self.log = engine.LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = engine.Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
@@ -59,7 +70,7 @@ end
 function _M:loaded()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
 --	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 20, 20, "/data/font/10X20.FON", 20)
-	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 16, 16)
+	Map:setViewPort(self.w * 0.2, 0, self.w * .8, math.floor(self.h * 0.80), 16, 16)
 	engine.GameTurnBased.loaded(self)
 	self.key = engine.KeyCommand.new()
 end
@@ -109,7 +120,7 @@ function _M:display()
 
 		-- Display a tooltip if available
 		local mx, my = core.mouse.get()
-		local tmx, tmy = math.floor(mx / self.level.map.tile_w) + self.level.map.mx, math.floor(my / self.level.map.tile_h) + self.level.map.my
+		local tmx, tmy = math.floor((mx - Map.display_x) / self.level.map.tile_w) + self.level.map.mx, math.floor((my - Map.display_y) / self.level.map.tile_h) + self.level.map.my
 		local tt = self.level.map:checkAllEntities(tmx, tmy, "tooltip")
 		if tt and self.level.map.seens(tmx, tmy) then
 			self.tooltip:set(tt)
@@ -291,7 +302,7 @@ function _M:setupMouse()
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
 		-- Compute map coordonates
 		if button == "right" then
-			local tmx, tmy = math.floor(mx / self.level.map.tile_w) + self.level.map.mx, math.floor(my / self.level.map.tile_h) + self.level.map.my
+			local tmx, tmy = math.floor((mx - Map.display_x) / self.level.map.tile_w) + self.level.map.mx, math.floor((my - Map.display_x) / self.level.map.tile_h) + self.level.map.my
 
 			local actor = self.level.map(tmx, tmy, Map.ACTOR)
 
