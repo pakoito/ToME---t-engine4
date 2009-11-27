@@ -58,6 +58,7 @@ end
 
 function _M:loaded()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
+--	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 20, 20, "/data/font/10X20.FON", 20)
 	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 16, 16)
 	engine.GameTurnBased.loaded(self)
 	self.key = engine.KeyCommand.new()

@@ -24,10 +24,12 @@ rememberDisplayOrder = { TERRAIN }
 -- @param h height
 -- @param tile_w width of a single tile
 -- @param tile_h height of a single tile
-function _M:setViewPort(x, y, w, h, tile_w, tile_h)
+-- @param fontname font parameters, can be nil
+-- @param fontsize font parameters, can be nil
+function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize)
 	self.display_x, self.display_y = x, y
 	self.viewport = {width=w, height=h, mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
-	self.tiles = Tiles.new(tile_w, tile_h)
+	self.tiles = Tiles.new(tile_w, tile_h, fontname, fontsize)
 	self.tile_w, self.tile_h = tile_w, tile_h
 end
 
