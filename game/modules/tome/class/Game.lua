@@ -19,7 +19,7 @@ local NPC = require "mod.class.NPC"
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
 function _M:init()
-	engine.GameTurnBased.init(self, engine.Key.current, 1000, 100)
+	engine.GameTurnBased.init(self, engine.KeyCommand.new(), 1000, 100)
 
 	-- Same init as when loaded from a savefile
 	self:loaded()
@@ -60,6 +60,7 @@ function _M:loaded()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
 	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 16, 16)
 	engine.GameTurnBased.loaded(self)
+	self.key = engine.KeyCommand.new()
 end
 
 function _M:save()
@@ -276,7 +277,10 @@ function _M:setupCommands()
 end
 
 function _M:setupMouse()
-	self.mouse:registerZoneClick(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my)
+	-- Those 2 locals will be "absorbed" into the mosue event handler function, this is a closure
+	local derivx, derivy = 0, 0
+
+	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
 		-- Compute map coordonates
 		if button == "right" then
 			local tmx, tmy = math.floor(mx / self.level.map.tile_w) + self.level.map.mx, math.floor(my / self.level.map.tile_h) + self.level.map.my
@@ -292,34 +296,30 @@ function _M:setupMouse()
 				self.target.target.y = tmy
 				self:targetMode(true, true)
 			end
+		elseif button == "left" and xrel and yrel then
+			derivx = derivx + xrel
+			derivy = derivy + yrel
+			game.level.map.changed = true
+			if derivx >= game.level.map.tile_w then
+				game.level.map.mx = game.level.map.mx - 1
+				derivx = derivx - game.level.map.tile_w
+			elseif derivx <= -game.level.map.tile_w then
+				game.level.map.mx = game.level.map.mx + 1
+				derivx = derivx + game.level.map.tile_w
+			end
+			if derivy >= game.level.map.tile_h then
+				game.level.map.my = game.level.map.my - 1
+				derivy = derivy - game.level.map.tile_h
+			elseif derivy <= -game.level.map.tile_h then
+				game.level.map.my = game.level.map.my + 1
+				derivy = derivy + game.level.map.tile_h
+			end
 		end
 	end)
-	self.mouse:registerZoneClick(self.log.display_x, self.log.display_y, self.w, self.h, function(button)
+	self.mouse:registerZone(self.log.display_x, self.log.display_y, self.w, self.h, function(button)
 		if button == "wheelup" then self.log:scrollUp(1) end
 		if button == "wheeldown" then self.log:scrollUp(-1) end
-	end)
-
-	local derivx, derivy = 0, 0
-	self.mouse.receiveMouseMotion = function(self, button, x, y, xrel, yrel)
-		if button ~= "left" then return end
-		derivx = derivx + xrel
-		derivy = derivy + yrel
-		game.level.map.changed = true
-		if derivx >= game.level.map.tile_w then
-			game.level.map.mx = game.level.map.mx - 1
-			derivx = derivx - game.level.map.tile_w
-		elseif derivx <= -game.level.map.tile_w then
-			game.level.map.mx = game.level.map.mx + 1
-			derivx = derivx + game.level.map.tile_w
-		end
-		if derivy >= game.level.map.tile_h then
-			game.level.map.my = game.level.map.my - 1
-			derivy = derivy - game.level.map.tile_h
-		elseif derivy <= -game.level.map.tile_h then
-			game.level.map.my = game.level.map.my + 1
-			derivy = derivy + game.level.map.tile_h
-		end
-	end
+	end, {button=true})
 end
 
 --- Ask if we realy want to close, if so, save the game first

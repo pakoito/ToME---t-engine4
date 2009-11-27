@@ -14,13 +14,18 @@ end
 -- @param y coordinate of the click
 function _M:receiveMouse(button, x, y)
 	for i, m in ipairs(self.areas) do
-		if x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2 then
+		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) then
 			m.fct(button, x, y)
 		end
 	end
 end
 
 function _M:receiveMouseMotion(button, x, y, xrel, yrel)
+	for i, m in ipairs(self.areas) do
+		if (not m.mode or m.mode.move) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) then
+			m.fct(button, x, y, xrel, yrel)
+		end
+	end
 end
 
 --- Setups as the current game keyhandler
@@ -30,12 +35,12 @@ function _M:setCurrent()
 end
 
 --- Registers a click zone that when clicked will call the object's "onClick" method
-function _M:registerZoneClick(x, y, w, h, fct)
-	table.insert(self.areas, {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct})
+function _M:registerZone(x, y, w, h, fct, mode)
+	table.insert(self.areas, 1, {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode})
 end
 
-function _M:unregisterZoneClick(fct)
+function _M:unregisterZone(fct)
 	for i, m in ipairs(self.areas) do
-		if m.obj == obj then self.areas[fct] = nil break end
+		if m.fct == fct then table.remove(self.areas, i) break end
 	end
 end

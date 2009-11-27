@@ -70,7 +70,7 @@ end
 
 function string.splitLines(str, max_width, font)
 	local lines = {}
-	for v in str:gmatch("([^\n]+)") do
+	for v in str:gmatch("([^\n]*)") do
 		local ls = v:splitLine(max_width, font)
 		for i, l in ipairs(ls) do
 			lines[#lines+1] = l

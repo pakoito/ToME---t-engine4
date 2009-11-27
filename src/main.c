@@ -224,6 +224,29 @@ void on_redraw()
 	}
 }
 
+void pass_command_args(int argc, char *argv[])
+{
+	int i;
+
+	if (current_game != LUA_NOREF)
+	{
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		lua_pushstring(L, "commandLineArgs");
+		lua_gettable(L, -2);
+		lua_remove(L, -2);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		lua_newtable(L);
+
+		for (i = 1; i <= argc; i++)
+		{
+			lua_pushnumber(L, i);
+			lua_pushstring(L, argv[i]);
+			lua_settable(L, -3);
+		}
+		docall(L, 2, 0);
+	}
+}
+
 /**
  * Program entry point.
  */
@@ -236,8 +259,6 @@ int main(int argc, char *argv[])
 	PHYSFS_init(argv[0]);
 	PHYSFS_mount("game/thirdparty", "/", 1);
 	PHYSFS_mount("game/", "/", 1);
-	PHYSFS_mount("game/modules/tome", "/mod", 1);
-	PHYSFS_mount("game/modules/tome/data", "/data", 1);
 	PHYSFS_mount("/home/dg/.tengine/4.0/tome/", "/", 1);
 	PHYSFS_setWriteDir("/home/dg/.tengine/4.0/tome/");
 
@@ -272,6 +293,8 @@ int main(int argc, char *argv[])
 	// And run the lua engine scripts
 	luaL_loadfile(L, "/engine/init.lua");
 	docall(L, 0, 0);
+
+	pass_command_args(argc, argv);
 
 	// Filter events, to catch the quit event
 	SDL_SetEventFilter(event_filter);

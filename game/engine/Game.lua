@@ -75,3 +75,10 @@ function _M:unregisterDialog(d)
 	self.dialogs[d] = nil
 	d:unload()
 end
+
+--- The C core gives us command line arguments
+function _M:commandLineArgs(args)
+	for i, a in ipairs(args) do
+		print("Command line: ", a)
+	end
+end

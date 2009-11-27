@@ -75,6 +75,8 @@ function _M:keyCommands(t)
 end
 
 function _M:unload()
-	game.key = self.old_key
-	game.key:setCurrent()
+	if self.old_key then
+		game.key = self.old_key
+		game.key:setCurrent()
+	end
 end
