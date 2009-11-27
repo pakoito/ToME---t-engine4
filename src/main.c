@@ -121,7 +121,7 @@ void on_event(SDL_Event *event)
 			docall(L, 7, 0);
 		}
 		break;
-	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
 		if (current_mousehandler != LUA_NOREF)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
 			switch(event.type)
 			{
 			case SDL_MOUSEMOTION:
-			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
 			case SDL_KEYDOWN:
 				/* handle key presses */
 				on_event(&event);

@@ -120,6 +120,20 @@ function _M:display()
 	engine.GameTurnBased.display(self)
 end
 
+function _M:targetMode(v, msg)
+	if not v then
+		Map:setViewerFaction(nil)
+		if msg then self.log("Tactical display disabled. Press 't' or right mouse click to enable.") end
+		self.level.map.changed = true
+		self.target:setActive(false)
+	else
+		Map:setViewerFaction("players")
+		if msg then self.log("Tactical display enabled. Press 't' to disable.") end
+		self.level.map.changed = true
+		self.target:setActive(true)
+	end
+end
+
 function _M:setupCommands()
 	self.key:addCommands
 	{
@@ -202,15 +216,9 @@ function _M:setupCommands()
 		-- Toggle tactical displau
 		_t = function()
 			if Map.view_faction then
-				Map:setViewerFaction(nil)
-				self.log("Tactical display disabled.")
-				self.level.map.changed = true
-				self.target:setActive(false)
+				self:targetMode(false, true)
 			else
-				Map:setViewerFaction("players")
-				self.log("Tactical display enabled.")
-				self.level.map.changed = true
-				self.target:setActive(true)
+				self:targetMode(true, true)
 				-- Find nearest target
 				self.target:scan(5)
 			end
@@ -268,8 +276,24 @@ function _M:setupCommands()
 end
 
 function _M:setupMouse()
---	self.mouse:registerZoneClick(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function()
---	end)
+	self.mouse:registerZoneClick(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my)
+		-- Compute map coordonates
+		if button == "right" then
+			local tmx, tmy = math.floor(mx / self.level.map.tile_w) + self.level.map.mx, math.floor(my / self.level.map.tile_h) + self.level.map.my
+
+			local actor = self.level.map(tmx, tmy, Map.ACTOR)
+
+			if actor and self.level.map.seens(tmx, tmy) then
+				self.target.target.entity = actor
+				self:targetMode(true, true)
+			else
+				self.target.target.entity = nil
+				self.target.target.x = tmx
+				self.target.target.y = tmy
+				self:targetMode(true, true)
+			end
+		end
+	end)
 	self.mouse:registerZoneClick(self.log.display_x, self.log.display_y, self.w, self.h, function(button)
 		if button == "wheelup" then self.log:scrollUp(1) end
 		if button == "wheeldown" then self.log:scrollUp(-1) end
