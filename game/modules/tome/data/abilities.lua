@@ -8,13 +8,13 @@ newAbility{
 	tactical = {
 		ATTACK = 10,
 	},
-	action = function(user)
-		user:project(game.target.x, game.target.y, Damages.MANA, 10 + user:getMag())
+	action = function(self)
+		self:project(game.target.target.x, game.target.target.y, DamageType.MANA, 10 + self:getMag())
 		return true
 	end,
 	require = { stat = { mag=12 }, },
-	info = function(user)
+	info = function(self)
 		return ([[Conjures up mana into a powerful bolt doing %d",
-		The damage is irresistible and will increase with magic stat]]):format(10 + user:getMag())
+		The damage is irresistible and will increase with magic stat]]):format(10 + self:getMag())
 	end
 }

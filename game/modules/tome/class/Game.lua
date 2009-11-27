@@ -7,6 +7,7 @@ local DebugConsole = require "engine.DebugConsole"
 local Tooltip = require "engine.Tooltip"
 local QuitDialog = require "mod.dialogs.Quit"
 local Calendar = require "engine.Calendar"
+local DamageType = require "engine.DamageType"
 local Zone = require "engine.Zone"
 local Map = require "engine.Map"
 local Target = require "engine.Target"
@@ -28,6 +29,8 @@ function _M:init()
 end
 
 function _M:run()
+	-- Damage types
+	DamageType:loadDefinition("/data/damage_types.lua")
 	-- Actor stats
 	ActorStats:defineStat("Strength",	"str", 10, 1, 100)
 	ActorStats:defineStat("Dexterity",	"dex", 10, 1, 100)
@@ -35,6 +38,7 @@ function _M:run()
 	ActorStats:defineStat("Willpower",	"wil", 10, 1, 100)
 	ActorStats:defineStat("Cunning",	"cun", 10, 1, 100)
 	ActorStats:defineStat("Constitution",	"con", 10, 1, 100)
+	-- Abilities
 	ActorAbilities:loadDefinition("/data/abilities.lua")
 
 	self.log = engine.LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
@@ -154,9 +158,22 @@ function _M:targetMode(v, msg)
 	end
 end
 
+function _M:getTarget()
+	if self.target.target.entity then
+		return self.target.target.entity.x, self.target.target.entity.y
+	else
+		return self.target.target.x, self.target.target.y
+	end
+end
+
 function _M:setupCommands()
 	self.key:addCommands
 	{
+		-- ability test
+		_a = function()
+			self.player:useAbility(ActorAbilities.AB_MANATHRUST)
+		end,
+
 		_LEFT = function()
 			if self.player:move(self.player.x - 1, self.player.y) then
 				self.paused = false
@@ -343,6 +360,8 @@ end
 
 --- Ask if we realy want to close, if so, save the game first
 function _M:onQuit()
+	-- HACK for quick test
+	os.exit()
 	if not self.quit_dialog then
 		self.quit_dialog = QuitDialog.new()
 		self:registerDialog(self.quit_dialog)

@@ -1,4 +1,5 @@
 require "engine.class"
+local DamageType = require "engine.DamageType"
 local Map = require "engine.Map"
 
 --- Interface to add ToME combat system
@@ -54,4 +55,11 @@ function _M:attackTarget(target)
 	else
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 	end
+end
+
+--- Project damage to a distance
+function _M:project(x, y, type, dam)
+	if dam < 0 then return end
+
+	DamageType:get(type).projector(self, x, y, type, dam)
 end
