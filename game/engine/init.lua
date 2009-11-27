@@ -26,28 +26,3 @@ game = false
 local Menu = require("special.mainmenu.class.Game")
 game = Menu.new()
 game:run()
-
---[[
-local mod_def = loadfile("/mod/init.lua")
-if mod_def then
-	-- Call the file body inside its own private environment
-	local mod = {}
-	setfenv(mod_def, mod)
-	mod_def()
-
-	if not mod.name or not mod.short_name or not mod.version or not mod.starter then os.exit() end
-
-	core.display.setWindowTitle(mod.name)
-
-	local Game = require(mod.starter)
-	game = Game.new()
-
---	local save = engine.Savefile.new("player")
---	game = save:loadGame()
---	save:close()
-
-	game:run()
-else
-	os.exit()
-end
-]]

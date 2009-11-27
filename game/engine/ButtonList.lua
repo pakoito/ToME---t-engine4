@@ -26,10 +26,10 @@ function _M:init(list, x, y, w, h, font, separator)
 	for i, b in ipairs(self.list) do
 		assert(b.name, "no button name")
 		assert(b.fct, "no button function")
-		local bw, bh = self.font:size(b.name)
+		local bw, bh = (b.font or self.font):size(b.name)
 		b.w, b.h = w, h / (#list + 1)
-		b.susel = self:makeButton(b.name, b.w, b.h, false)
-		b.ssel = self:makeButton(b.name, b.w, b.h, true)
+		b.susel = self:makeButton(b.name, b.font, b.w, b.h, false)
+		b.ssel = self:makeButton(b.name, b.font, b.w, b.h, true)
 		b.mouse_over = function(button)
 			self:select(i)
 
@@ -75,7 +75,7 @@ function _M:setMouseHandling()
 end
 
 function _M:select(i, offset)
-	local old = self.selected
+	self.old_selected = self.selected
 
 	if offset then
 		self.selected = self.selected + i
@@ -86,6 +86,11 @@ function _M:select(i, offset)
 	if self.selected < 1 then self.selected = #self.list end
 	if old ~= self.selected and self.list[self.selected].onSelect then self.list[self.selected].onSelect() end
 	self.changed = true
+end
+
+function _M:skipSelected()
+	if self.old_selected < self.selected then self:select(-1, true)
+	elseif self.old_selected > self.selected then self:select(1, true) end
 end
 
 function _M:click(i)
@@ -106,7 +111,8 @@ function _M:display()
 	return self.surface
 end
 
-function _M:makeButton(name, w, h, sel)
+function _M:makeButton(name, font, w, h, sel)
+	font = font or self.font
 	local s = core.display.newSurface(w, h)
 	if sel then
 		s:erase(143, 155, 85)
@@ -126,8 +132,8 @@ function _M:makeButton(name, w, h, sel)
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_4.png"), w - 3, i)
 	end
 
-	local sw, sh = self.font:size(name)
-	s:drawColorString(self.font, name, (w - sw) / 2, (h - sh) / 2)
+	local sw, sh = font:size(name)
+	s:drawColorString(font, name, (w - sw) / 2, (h - sh) / 2)
 
 	return s
 end

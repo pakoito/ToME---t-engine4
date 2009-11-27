@@ -82,3 +82,11 @@ function _M:commandLineArgs(args)
 		print("Command line: ", a)
 	end
 end
+
+--- Called by savefile code to describe the current game
+function _M:getSaveDescription()
+	return {
+		name = "player",
+		description = [[Busy adventuring!]],
+	}
+end

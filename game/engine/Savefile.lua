@@ -15,7 +15,8 @@ _M.current_save = false
 --- Init a savefile
 -- @param savefile the name of the savefile, usually the player's name. It will be sanitized so dont bother doing it
 function _M:init(savefile)
-	self.save_dir = "/save/"..savefile:gsub("[^a-zA-Z0-9_-.]", "_").."/"
+	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
+	self.save_dir = "/save/"..self.short_name.."/"
 	self.load_dir = "/tmp/loadsave/"
 
 	self.tables = {}
@@ -73,6 +74,13 @@ function _M:saveGame(game)
 	local zip = fs.zipOpen(self.save_dir.."game.teag")
 	self:saveObject(game, zip)
 	zip:close()
+
+	local desc = game:getSaveDescription()
+	local f = fs.open(self.save_dir.."desc.lua", "w")
+	f:write(("name = %q\n"):format(desc.name))
+	f:write(("short_name = %q\n"):format(self.short_name))
+	f:write(("description = %q\n"):format(desc.description))
+	f:close()
 end
 
 --- Save a level

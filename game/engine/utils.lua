@@ -1,3 +1,15 @@
+function table.clone(tbl, deep)
+	local n = {}
+	for k, e in pairs(tbl) do
+		if deep and type(e) == "table" then
+			n[k] = table.clone(e, true)
+		else
+			n[k] = e
+		end
+	end
+	return n
+end
+
 function string.ordinal(number)
 	local suffix = "th"
 	number = tonumber(number)

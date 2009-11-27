@@ -69,6 +69,13 @@ function _M:save()
 	}, true)
 end
 
+function _M:getSaveDescription()
+	return {
+		name = self.player.name,
+		description = [[Strolling in the old places of the world!]],
+	}
+end
+
 function _M:changeLevel(lev)
 	self.zone:getLevel(self, lev)
 	self.player:move(self.level.start.x, self.level.start.y, true)

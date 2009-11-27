@@ -918,6 +918,25 @@ static int lua_fs_get_real_path(lua_State *L)
 	return 1;
 }
 
+static int lua_fs_set_write_dir(lua_State *L)
+{
+	const char *src = luaL_checkstring(L, 1);
+	PHYSFS_setWriteDir(src);
+	return 0;
+}
+
+static int lua_fs_get_home_path(lua_State *L)
+{
+	lua_pushfstring(L, "%s%s.tengine%s4.0", PHYSFS_getUserDir(), PHYSFS_getDirSeparator(), PHYSFS_getDirSeparator());
+	return 1;
+}
+
+static int lua_fs_get_path_separator(lua_State *L)
+{
+	lua_pushstring(L, PHYSFS_getDirSeparator());
+	return 1;
+}
+
 static const struct luaL_reg fslib[] =
 {
 	{"open", lua_fs_open},
@@ -926,7 +945,10 @@ static const struct luaL_reg fslib[] =
 	{"mkdir", lua_fs_mkdir},
 	{"delete", lua_fs_delete},
 	{"list", lua_fs_list},
+	{"setWritePath", lua_fs_set_write_dir},
+	{"getPathSeparator", lua_fs_get_path_separator},
 	{"getRealPath", lua_fs_get_real_path},
+	{"getHomePath", lua_fs_get_home_path},
 	{"mount", lua_fs_mount},
 	{"umount", lua_fs_umount},
 	{NULL, NULL},

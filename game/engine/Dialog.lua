@@ -8,11 +8,11 @@ module(..., package.seeall, class.make)
 tiles = engine.Tiles.new(16, 16)
 
 --- Requests a simple, press any key, dialog
-function _M:simplePopup(title, text)
+function _M:simplePopup(title, text, fct)
 	local font = core.display.newFont("/data/font/Vera.ttf", 12)
 	local w, h = font:size(text)
 	local d = new(title, w + 8, h + 25, nil, nil, nil, font)
-	d:keyCommands{__DEFAULT=function() game:unregisterDialog(d) end}
+	d:keyCommands{__DEFAULT=function() game:unregisterDialog(d) if fct then fct() end end}
 	d.drawDialog = function(self, s)
 		s:drawColorStringCentered(self.font, text, 2, 2, self.iw - 2, self.ih - 2)
 	end

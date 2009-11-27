@@ -259,8 +259,6 @@ int main(int argc, char *argv[])
 	PHYSFS_init(argv[0]);
 	PHYSFS_mount("game/thirdparty", "/", 1);
 	PHYSFS_mount("game/", "/", 1);
-	PHYSFS_mount("/home/dg/.tengine/4.0/tome/", "/", 1);
-	PHYSFS_setWriteDir("/home/dg/.tengine/4.0/tome/");
 
 	/***************** Lua Init *****************/
 	L = lua_open();  /* create state */
