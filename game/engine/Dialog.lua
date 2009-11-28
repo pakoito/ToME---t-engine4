@@ -13,6 +13,7 @@ function _M:simplePopup(title, text, fct)
 	local w, h = font:size(text)
 	local d = new(title, w + 8, h + 25, nil, nil, nil, font)
 	d:keyCommands{__DEFAULT=function() game:unregisterDialog(d) if fct then fct() end end}
+	d:mouseZones{{x=0, y=0, w=game.w, h=game.h, fct=function(b) if b ~= "none" then game:unregisterDialog(d) if fct then fct() end end end, norestrict=true}}
 	d.drawDialog = function(self, s)
 		s:drawColorStringCentered(self.font, text, 2, 2, self.iw - 2, self.ih - 2)
 	end
@@ -27,6 +28,7 @@ function _M:init(title, w, h, x, y, alpha, font)
 	self.display_y = y or (game.h - self.h) / 2
 	self.font = font
 	if not font then self.font = core.display.newFont("/data/font/Vera.ttf", 12) end
+	self.font_h = self.font:lineSkip()
 	self.surface = core.display.newSurface(w, h)
 	self.iw, self.ih = w - 2 * 5, h - 8 - 16 - 3
 	self.internal_surface = core.display.newSurface(self.iw, self.ih)
@@ -74,9 +76,50 @@ function _M:keyCommands(t)
 	game.key:setCurrent()
 end
 
+function _M:mouseZones(t)
+	-- Offset the x and y with the window position and window title
+	if not t.norestrict then
+		for i, z in ipairs(t) do
+			z.x = z.x + self.display_x + 5
+			z.y = z.y + self.display_y + 20 + 3
+		end
+	end
+
+	self.old_mouse = game.mouse
+	game.mouse = engine.Mouse.new()
+	game.mouse:registerZones(t)
+	game.mouse:setCurrent()
+end
+
 function _M:unload()
 	if self.old_key then
 		game.key = self.old_key
 		game.key:setCurrent()
+	end
+	if self.old_mouse then
+		game.mouse = self.old_mouse
+		game.mouse:setCurrent()
+	end
+end
+
+function _M:drawWBorder(s, x, y, w)
+	for i = x, x + w do
+		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_8.png"), i, y)
+	end
+end
+function _M:drawHBorder(s, x, y, h)
+	for i = y, y + h do
+		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_4.png"), x, i)
+	end
+end
+
+function _M:drawSelectionList(s, x, y, hskip, list, sel)
+	for i, v in ipairs(list) do
+		v = tostring(v)
+		if sel == i then
+			s:drawColorString(self.font, v, x, y + (i-1) * hskip, 0, 255, 255)
+		else
+			s:drawColorString(self.font, v, x, y + (i-1) * hskip)
+		end
 	end
 end

@@ -38,7 +38,7 @@ newAbility{
 		local t = {type="ball", range=15, radius=math.min(6, 3 + self:getMag(6))}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.FIRE, 8 + self:getMag(70))
+		self:project(t, x, y, DamageType.FIRE, 28 + self:getMag(70))
 		return true
 	end,
 	require = { stat = { mag=16 }, },

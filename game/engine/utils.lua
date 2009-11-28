@@ -187,3 +187,10 @@ dir_to_coord = {
 	[8] = { 0,-1},
 	[9] = { 1,-1},
 }
+
+util = {}
+function util.boundWrap(i, min, max)
+	if i < min then i = max
+	elseif i > max then i = min end
+	return i
+end

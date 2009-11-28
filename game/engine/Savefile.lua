@@ -153,3 +153,8 @@ function _M:loadLevel(zone, level)
 	fs.umount(path)
 	return loadedLevel
 end
+
+--- Checks for existence
+function _M:check()
+	return fs.exists(self.save_dir.."game.teag")
+end

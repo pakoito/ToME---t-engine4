@@ -32,20 +32,28 @@ function _M:init(t)
 	next_uid = next_uid + 1
 end
 
--- If we are cloned we need a new uid
+--- If we are cloned we need a new uid
 function _M:cloned()
 	self.uid = next_uid
 	__uids[self.uid] = self
 	next_uid = next_uid + 1
 end
 
--- If we are loaded we need a new uid
 _M.loadNoDelay = true
+--- If we are loaded we need a new uid
 function _M:loaded()
 	local ouid = self.uid
 	self.uid = next_uid
 	__uids[self.uid] = self
 	next_uid = next_uid + 1
+end
+
+--- Change the entity's uid
+-- <strong>*WARNING*</strong>: ONLY DO THIS IF YOU KNOW WHAT YOU ARE DOING!. YOU DO NOT !
+function _M:changeUid(newuid)
+	__uids[self.uid] = nil
+	self.uid = newuid
+	__uids[self.uid] = self
 end
 
 --- Check for an entity's property

@@ -7,12 +7,13 @@ _M.stats_def = {}
 
 --- Defines stats
 -- Static!
-function _M:defineStat(name, short_name, default_value, min, max)
+function _M:defineStat(name, short_name, default_value, min, max, desc)
 	assert(name, "no stat name")
 	assert(short_name, "no stat short_name")
 	table.insert(self.stats_def, {
 		name = name,
 		short_name = short_name,
+		description = desc,
 		def = default_value or 10,
 		min = min or 1,
 		max = max or 100,
@@ -42,10 +43,18 @@ function _M:init(t)
 	end
 end
 
----
--- Module authors should rewrite it to handle combat, dialog, ...
--- @param target the actor attacking us
+--- Increases a stat
+-- @param stat the stat id to change
+-- @param val the increment to add/substract
 function _M:incStat(stat, val)
-	self.stats[stat] = max(min(val, _M.stats_def[stat].max), _M.stats_def[stat].min)
+	self.stats[stat] = math.max(math.min(self.stats[stat] + val, _M.stats_def[stat].max), _M.stats_def[stat].min)
+	return self.stats[stat]
+end
+
+--- Gets a stat value
+-- Not that the engine also auto-defines stat specific methods on the form: self:getShortname().
+-- If you stat short name is STR then it becomes getStr()
+-- @param stat the stat id
+function _M:getStat(stat)
 	return self.stats[stat]
 end
