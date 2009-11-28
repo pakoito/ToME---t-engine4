@@ -339,3 +339,9 @@ function _M:getTileToScreen(tx, ty)
 	local y = (ty - self.my) * self.tile_h + self.display_y
 	return x, y
 end
+
+--- Checks the given coords to see if they are in bound
+function _M:isBound(x, y)
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
+	return true
+end

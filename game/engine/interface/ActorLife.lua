@@ -1,4 +1,7 @@
 require "engine.class"
+local Map = require "engine.Map"
+local Target = require "engine.Target"
+local DamageType = require "engine.DamageType"
 
 --- Handles actors life and death
 module(..., package.seeall, class.make)
@@ -38,7 +41,7 @@ function _M:attack(target)
 end
 
 --- Project damage to a distance
--- @param t a type table describing the attack, as returned by engine.Target:getType()
+-- @param t a type table describing the attack, passed to engine.Target:getType() for interpretation
 -- @param x target coords
 -- @param y target coords
 -- @param damtype a damage type ID from the DamageType class
@@ -74,6 +77,7 @@ function _M:project(t, x, y, damtype, dam)
 		core.fov.calc_circle(lx, ly, typ.ball, function(self, px, py)
 			-- Deam damage: ball
 			addGrid(px, py)
+			if game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
 		end, function()end, self)
 		addGrid(lx, ly)
 	elseif typ.cone then

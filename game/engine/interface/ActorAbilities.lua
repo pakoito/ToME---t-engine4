@@ -61,7 +61,8 @@ function _M:useAbility(id)
 
 			if not self:postUseAbility(ab, ret) then return end
 		end)
-		coroutine.resume(co)
+		local ok, err = coroutine.resume(co)
+		if not ok and err then error(err) end
 	end
 end
 

@@ -35,7 +35,7 @@ newAbility{
 		ATTACKAREA = 10,
 	},
 	action = function(self)
-		local t = {type="ball", range=15, radius=math.min(6, 2 + self:getMag(6))}
+		local t = {type="ball", range=15, radius=math.min(6, 3 + self:getMag(6))}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
 		self:project(t, x, y, DamageType.FIRE, 8 + self:getMag(70))
@@ -44,7 +44,7 @@ newAbility{
 	require = { stat = { mag=16 }, },
 	info = function(self)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d",
-		The damage will increase with the Magic stat]]):format(8 + self:getMag(70), math.min(6, 2 + self:getMag(6)))
+		The damage will increase with the Magic stat]]):format(8 + self:getMag(70), math.min(6, 3 + self:getMag(6)))
 	end,
 }
 
@@ -57,15 +57,12 @@ newAbility{
 		ESCAPE = 4,
 	},
 	action = function(self)
-		local t = {type="ball", range=15, radius=math.min(6, 2 + self:getMag(6))}
-		local x, y = self:getTarget(t)
-		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.FIRE, 8 + self:getMag(70))
+		self:teleportRandom(10 + self:getMag(10))
 		return true
 	end,
 	require = { stat = { mag=16 }, },
 	info = function(self)
-		return ([[Teleports you randomly on a small scale range",
-		The damage will increase with the Magic stat]]):format(8 + self:getMag(70), math.min(6, 2 + self:getMag(6)))
+		return ([[Teleports you randomly on a small scale range (%d)",
+		The range will increase with the Magic stat]]):format(10 + self:getMag(10))
 	end,
 }

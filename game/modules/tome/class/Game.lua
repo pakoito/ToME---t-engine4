@@ -237,6 +237,9 @@ function _M:setupCommands()
 		_a = function()
 			self.player:useAbility(ActorAbilities.AB_FIREFLASH)
 		end,
+		_z = function()
+			self.player:useAbility(ActorAbilities.AB_PHASE_DOOR)
+		end,
 
 		_LEFT  = function() self.player:move(self.player.x - 1, self.player.y    ) end,
 		_RIGHT = function() self.player:move(self.player.x + 1, self.player.y    ) end,

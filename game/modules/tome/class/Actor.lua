@@ -35,6 +35,23 @@ function _M:move(x, y, force)
 	return moved
 end
 
+function _M:teleportRandom(dist)
+	local poss = {}
+
+	for i = self.x - dist, self.x + dist do
+		for j = self.y - dist, self.y + dist do
+			if game.level.map:isBound(i, j) and
+			   core.fov.distance(self.x, self.y, i, j) <= dist and
+			   not game.level.map:checkAllEntities(i, j, "block_move") then
+				poss[#poss+1] = {i,j}
+			end
+		end
+	end
+
+	local pos = poss[rng.range(1, #poss)]
+	return self:move(pos[1], pos[2], true)
+end
+
 function _M:tooltip()
 	return ("%s\n#00ffff#Level: %d\nExp: %d/%d\n#ff0000#HP: %d"):format(self.name, self.level, self.exp, self:getExpChart(self.level+1) or "---", self.life)
 end

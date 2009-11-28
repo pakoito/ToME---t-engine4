@@ -158,9 +158,21 @@ static int lua_fov_calc_beam(lua_State *L)
 	return 0;
 }
 
+static int lua_distance(lua_State *L)
+{
+	double x1 = luaL_checknumber(L, 1);
+	double y1 = luaL_checknumber(L, 2);
+	double x2 = luaL_checknumber(L, 3);
+	double y2 = luaL_checknumber(L, 4);
+
+	lua_pushnumber(L, sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)));
+	return 1;
+}
+
 static const struct luaL_reg fovlib[] =
 {
 	{"new", lua_new_fov},
+	{"distance", lua_distance},
 	{"calc_circle", lua_fov_calc_circle},
 	{"calc_beam", lua_fov_calc_beam},
 	{NULL, NULL},

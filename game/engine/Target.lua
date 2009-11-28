@@ -1,4 +1,5 @@
 require "engine.class"
+local Map = require "engine.Map"
 
 --- handles targetting
 module(..., package.seeall, class.make)
@@ -44,18 +45,24 @@ function _M:display()
 	local s = self.sb
 	local l = line.new(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
 	local lx, ly = l()
+	local stopx, stopy = self.source_actor.x, self.source_actor.y
 	while lx and ly do
 		if not game.level.map.seens(lx, ly) then s = self.sr end
-		if self.target_type.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then s = self.sr end
+		if self.target_type.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then s = self.sr
+		elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then s = self.sr end
 		if self.target_type.range and math.sqrt((self.source_actor.x-lx)^2 + (self.source_actor.y-ly)^2) > self.target_type.range then s = self.sr end
+		if s == self.sb then stopx, stopy = lx, ly end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
 		lx, ly = l()
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w, self.display_y + (self.target.y - game.level.map.my) * self.tile_h)
 
-	if self.target_type.ball and s == self.sb then
-		core.fov.calc_circle(self.target.x, self.target.y, self.target_type.ball, function(self, lx, ly)
+	if s == self.b then stopx, stopy = self.target.x, self.target.y end
+
+	if self.target_type.ball then
+		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(self, lx, ly)
 			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
+			if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
 		end, function()end, self)
 	end
 end
