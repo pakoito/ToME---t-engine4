@@ -56,38 +56,3 @@ function _M:attackTarget(target)
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 	end
 end
-
---- Project damage to a distance
-function _M:project(t, x, y, damtype, dam)
-	if dam < 0 then return end
-	local typ = Target:getType(t)
-
-	-- Stop at range or on block
-	local lx, ly = x, y
-	local l = line.new(self.x, self.y, x, y)
-	lx, ly = l()
-	while lx and ly do
-		if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
-		elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
-		if typ.range and math.sqrt((self.x-lx)^2 + (self.y-ly)^2) > typ.range then break end
-
-		-- Deam damage: beam
-		if typ.line then DamageType:get(damtype).projector(self, lx, ly, damtype, dam) end
-
-		lx, ly = l()
-	end
-	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly then lx, ly = x, y end
-
-	if typ.ball then
-		core.fov.calc_circle(lx, ly, typ.ball, function(self, px, py)
-			-- Deam damage: ball
-			DamageType:get(damtype).projector(self, px, py, damtype, dam)
-		end, function()end, self)
-		DamageType:get(damtype).projector(self, lx, ly, damtype, dam)
-	elseif typ.cone then
-	else
-		-- Deam damage: single
-		DamageType:get(damtype).projector(self, lx, ly, damtype, dam)
-	end
-end

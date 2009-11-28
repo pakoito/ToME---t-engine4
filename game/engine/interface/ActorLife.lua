@@ -36,3 +36,56 @@ function _M:attack(target)
 	game.logSeen(target, "%s attacks %s.", self.name:capitalize(), target.name:capitalize())
 	target:takeHit(10, self)
 end
+
+--- Project damage to a distance
+-- @param t a type table describing the attack, as returned by engine.Target:getType()
+-- @param x target coords
+-- @param y target coords
+-- @param damtype a damage type ID from the DamageType class
+-- @param dam damage to be done
+function _M:project(t, x, y, damtype, dam)
+	if dam < 0 then return end
+	local typ = Target:getType(t)
+
+	local grids = {}
+	local function addGrid(x, y)
+		if not grids[x] then grids[x] = {} end
+		grids[x][y] = true
+	end
+
+	-- Stop at range or on block
+	local lx, ly = x, y
+	local l = line.new(self.x, self.y, x, y)
+	lx, ly = l()
+	while lx and ly do
+		if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
+		elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
+		if typ.range and math.sqrt((self.x-lx)^2 + (self.y-ly)^2) > typ.range then break end
+
+		-- Deam damage: beam
+		if typ.line then addGrid(lx, ly) end
+
+		lx, ly = l()
+	end
+	-- Ok if we are at the end reset lx and ly for the next code
+	if not lx and not ly then lx, ly = x, y end
+
+	if typ.ball then
+		core.fov.calc_circle(lx, ly, typ.ball, function(self, px, py)
+			-- Deam damage: ball
+			addGrid(px, py)
+		end, function()end, self)
+		addGrid(lx, ly)
+	elseif typ.cone then
+	else
+		-- Deam damage: single
+		addGrid(lx, ly)
+	end
+
+	-- Now project on each grid, one type
+	for px, ys in pairs(grids) do
+		for py, _ in pairs(ys) do
+			DamageType:get(damtype).projector(self, px, py, damtype, dam)
+		end
+	end
+end
