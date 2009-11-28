@@ -45,12 +45,18 @@ function _M:incStat(v)
 	self.actor.unused_stats = self.actor.unused_stats - v
 end
 
-function _M:drawDialog(s, w, h)
+function _M:drawDialog(s)
 	-- Description part
-	self:drawHBorder(s, self.w / 2, 2, self.h - 4)
-	local lines = self.actor.stats_def[self.statsel].description:splitLines(self.w / 2 - 10, self.font)
+	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
+	local statshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to increase stat; #00FF00#left key#FFFFFF# to decrease a stat.
+Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF# to decrease a stat.
+]]):splitLines(self.iw / 2 - 10, self.font)
+	local lines = self.actor.stats_def[self.statsel].description:splitLines(self.iw / 2 - 10, self.font)
+	for i = 1, #statshelp do
+		s:drawColorString(self.font, statshelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
+	end
 	for i = 1, #lines do
-		s:drawColorString(self.font, lines[i], self.w / 2 + 5, 2 + i * self.font:lineSkip())
+		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #statshelp + 1) * self.font:lineSkip())
 	end
 
 	-- Stats
