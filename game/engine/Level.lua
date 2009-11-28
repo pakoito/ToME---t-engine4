@@ -25,6 +25,11 @@ function _M:removeEntity(e)
 	if e.deleteFromMap then e:deleteFromMap(self.map) end
 end
 
+--- Is the entity on the level?
+function _M:hasEntity(e)
+	return self.entities[e.uid]
+end
+
 function _M:loaded()
 	-- Loading the game has defined new uids for entities, yet we hard referenced the old ones
 	-- So we fix it

@@ -310,3 +310,10 @@ function _M:checkMapViewBounded()
 	if self.my > self.h - self.viewport.mheight then self.my = self.h - self.viewport.mheight self.changed = true end
 end
 
+--- Gets the tile under the mouse
+function _M:getMouseTile(mx, my)
+--	if mx < self.display_x or my < self.display_y or mx >= self.display_x + self.viewport.width or my >= self.display_y + self.viewport.height then return end
+	local tmx = math.floor((mx - self.display_x) / self.tile_w) + self.mx
+	local tmy = math.floor((my - self.display_y) / self.tile_h) + self.my
+	return tmx, tmy
+end

@@ -38,6 +38,7 @@ function _M:loadDefinition(dir)
 
 		-- Make a function to activate it
 		mod.load = function()
+			core.display.setWindowTitle(mod.long_name)
 			self:setupWrite(mod)
 			fs.mount(fs.getRealPath(dir), "/mod", false);
 			fs.mount(fs.getRealPath(dir).."/data/", "/data", false);

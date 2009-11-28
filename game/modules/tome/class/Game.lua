@@ -100,6 +100,8 @@ end
 
 
 function _M:tick()
+	if self.target.target.entity and not self.level:hasEntity(self.target.target.entity) then self.target.target.entity = false end
+
 	engine.GameTurnBased.tick(self)
 
 	if not self.day_of_year or self.day_of_year ~= self.calendar:getDayOfYear(self.turn) then
@@ -124,7 +126,7 @@ function _M:display()
 
 		-- Display a tooltip if available
 		local mx, my = core.mouse.get()
-		local tmx, tmy = math.floor((mx - Map.display_x) / self.level.map.tile_w) + self.level.map.mx, math.floor((my - Map.display_y) / self.level.map.tile_h) + self.level.map.my
+		local tmx, tmy = self.level.map:getMouseTile(mx, my)
 		local tt = self.level.map:checkAllEntities(tmx, tmy, "tooltip")
 		if tt and self.level.map.seens(tmx, tmy) then
 			self.tooltip:set(tt)
@@ -144,29 +146,88 @@ function _M:display()
 	engine.GameTurnBased.display(self)
 end
 
-function _M:targetMode(v, msg)
+function _M:targetMode(v, msg, co, typ)
 	if not v then
 		Map:setViewerFaction(nil)
-		if msg then self.log("Tactical display disabled. Press 't' or right mouse click to enable.") end
+		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press 't' or right mouse click to enable.") end
 		self.level.map.changed = true
 		self.target:setActive(false)
+
+		if tostring(self.target_mode) == "exclusive" then
+			self.key = self.normal_key
+			self.key:setCurrent()
+			if self.target_co then
+				local co = self.target_co
+				self.target_co = nil
+				local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y)
+				if not ok and err then error(err) end
+			end
+		end
 	else
 		Map:setViewerFaction("players")
-		if msg then self.log("Tactical display enabled. Press 't' to disable.") end
+		if msg then self.log(type(msg) == "string" and msg or "Tactical display enabled. Press 't' to disable.") end
 		self.level.map.changed = true
-		self.target:setActive(true)
-	end
-end
+		self.target:setActive(true, typ)
 
-function _M:getTarget()
-	if self.target.target.entity then
-		return self.target.target.entity.x, self.target.target.entity.y
-	else
-		return self.target.target.x, self.target.target.y
+		-- Exclusive mode means we disable the current key handler and use a specific one
+		-- that only allows targetting and resumes ability coroutine when done
+		if tostring(v) == "exclusive" then
+			self.target_co = co
+			self.key = self.targetmode_key
+			self.key:setCurrent()
+
+			if self.target.target.entity and self.level.map.seens(self.target.target.entity.x, self.target.target.entity.y) and self.player ~= self.target.target.entity then
+			else
+				self.target:scan(5, nil, self.player.x, self.player.y)
+			end
+		end
 	end
+	self.target_mode = v
 end
 
 function _M:setupCommands()
+	self.targetmode_key = engine.KeyCommand.new()
+	self.targetmode_key:addCommands
+	{
+		_t = function()
+			self:targetMode(false, false)
+		end,
+		_RETURN = {"alias", "_t"},
+		_ESCAPE = function()
+			self.target.target.entity = nil
+			self.target.target.x = nil
+			self.target.target.y = nil
+			self:targetMode(false, false)
+		end,
+		-- Targeting movement
+		[{"_LEFT","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
+		[{"_RIGHT","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,
+		[{"_UP","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y - 1 end,
+		[{"_DOWN","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y + 1 end,
+		[{"_KP4","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
+		[{"_KP6","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,
+		[{"_KP8","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y - 1 end,
+		[{"_KP2","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y + 1 end,
+		[{"_KP1","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 self.target.target.y = self.target.target.y + 1 end,
+		[{"_KP3","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y + 1 end,
+		[{"_KP7","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 self.target.target.y = self.target.target.y - 1 end,
+		[{"_KP9","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y - 1 end,
+
+		_LEFT = function() self.target:scan(4) end,
+		_RIGHT = function() self.target:scan(6) end,
+		_UP = function() self.target:scan(8) end,
+		_DOWN = function() self.target:scan(2) end,
+		_KP4 = function() self.target:scan(4) end,
+		_KP6 = function() self.target:scan(6) end,
+		_KP8 = function() self.target:scan(8) end,
+		_KP2 = function() self.target:scan(2) end,
+		_KP1 = function() self.target:scan(1) end,
+		_KP3 = function() self.target:scan(3) end,
+		_KP7 = function() self.target:scan(7) end,
+		_KP9 = function() self.target:scan(9) end,
+	}
+
+	self.normal_key = self.key
 	self.key:addCommands
 	{
 		-- ability test
@@ -174,77 +235,25 @@ function _M:setupCommands()
 			self.player:useAbility(ActorAbilities.AB_MANATHRUST)
 		end,
 
-		_LEFT = function()
-			if self.player:move(self.player.x - 1, self.player.y) then
-				self.paused = false
-			end
-		end,
-		_RIGHT = function()
-			if self.player:move(self.player.x + 1, self.player.y) then
-				self.paused = false
-			end
-		end,
-		_UP = function()
-			if self.player:move(self.player.x, self.player.y - 1) then
-				self.paused = false
-			end
-		end,
-		_DOWN = function()
-			if self.player:move(self.player.x, self.player.y + 1) then
-				self.paused = false
-			end
-		end,
-		_KP1 = function()
-			if self.player:move(self.player.x - 1, self.player.y + 1) then
-				self.paused = false
-			end
-		end,
-		_KP2 = function()
-			if self.player:move(self.player.x, self.player.y + 1) then
-				self.paused = false
-			end
-		end,
-		_KP3 = function()
-			if self.player:move(self.player.x + 1, self.player.y + 1) then
-				self.paused = false
-			end
-		end,
-		_KP4 = function()
-			if self.player:move(self.player.x - 1, self.player.y) then
-				self.paused = false
-			end
-		end,
-		_KP5 = function()
-			if self.player:move(self.player.x, self.player.y) then
-				self.paused = false
-			end
-		end,
-		_KP6 = function()
-			if self.player:move(self.player.x + 1, self.player.y) then
-				self.paused = false
-			end
-		end,
-		_KP7 = function()
-			if self.player:move(self.player.x - 1, self.player.y - 1) then
-				self.paused = false
-			end
-		end,
-		_KP8 = function()
-			if self.player:move(self.player.x, self.player.y - 1) then
-				self.paused = false
-			end
-		end,
-		_KP9 = function()
-			if self.player:move(self.player.x + 1, self.player.y - 1) then
-				self.paused = false
-			end
-		end,
+		_LEFT  = function() self.player:move(self.player.x - 1, self.player.y    ) end,
+		_RIGHT = function() self.player:move(self.player.x + 1, self.player.y    ) end,
+		_UP    = function() self.player:move(self.player.x    , self.player.y - 1) end,
+		_DOWN  = function() self.player:move(self.player.x    , self.player.y + 1) end,
+		_KP1   = function() self.player:move(self.player.x - 1, self.player.y + 1) end,
+		_KP2   = function() self.player:move(self.player.x    , self.player.y + 1) end,
+		_KP3   = function() self.player:move(self.player.x + 1, self.player.y + 1) end,
+		_KP4   = function() self.player:move(self.player.x - 1, self.player.y    ) end,
+		_KP5   = function() self.player:move(self.player.x    , self.player.y    ) end,
+		_KP6   = function() self.player:move(self.player.x + 1, self.player.y    ) end,
+		_KP7   = function() self.player:move(self.player.x - 1, self.player.y - 1) end,
+		_KP8   = function() self.player:move(self.player.x    , self.player.y - 1) end,
+		_KP9   = function() self.player:move(self.player.x + 1, self.player.y - 1) end,
+
 		[{"_LESS","anymod"}] = function()
 			local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
 			if self.player:enoughEnergy() and e.change_level then
 				-- Do not unpause, the player is allowed first move on next level
 				self:changeLevel(self.level.level + e.change_level)
-				print(self.level.level)
 			else
 				self.log("There is no way out of this level here.")
 			end
@@ -319,17 +328,20 @@ function _M:setupMouse()
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
 		-- Compute map coordonates
 		if button == "right" then
-			local tmx, tmy = math.floor((mx - Map.display_x) / self.level.map.tile_w) + self.level.map.mx, math.floor((my - Map.display_x) / self.level.map.tile_h) + self.level.map.my
+			local tmx, tmy = self.level.map:getMouseTile(mx, my)
 
 			local actor = self.level.map(tmx, tmy, Map.ACTOR)
 
 			if actor and self.level.map.seens(tmx, tmy) then
 				self.target.target.entity = actor
-				self:targetMode(true, true)
 			else
 				self.target.target.entity = nil
 				self.target.target.x = tmx
 				self.target.target.y = tmy
+			end
+			if tostring(self.target_mode) == "exclusive" then
+				self:targetMode(false, false)
+			else
 				self:targetMode(true, true)
 			end
 		elseif button == "left" and xrel and yrel then

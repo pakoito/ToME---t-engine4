@@ -8,6 +8,9 @@ function _M:init()
 	engine.Key.init(self)
 	self.commands = {}
 	self.on_input = false
+
+	-- Fullscreen toggle
+	self:addCommand(self._RETURN, {"alt"}, function() core.display.fullscreen() end)
 end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)

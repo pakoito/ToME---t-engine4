@@ -55,6 +55,29 @@ function _M:useAbility(id)
 	assert(ab, "trying to cast ability "..tostring(id).." but it is not defined")
 
 	if ab.action then
-		ab.action(self)
+		if not self:preUseAbility(ab) then return end
+		local co = coroutine.create(function()
+			local ret = ab.action(self)
+
+			if not self:postUseAbility(ab, ret) then return end
+		end)
+		coroutine.resume(co)
 	end
+end
+
+--- Called before an ability is used
+-- Redefine as needed
+-- @param ab the ability (not the id, the table)
+-- @return true to continue, false to stop
+function _M:preUseAbility(ab)
+	return true
+end
+
+--- Called before an ability is used
+-- Redefine as needed
+-- @param ab the ability (not the id, the table)
+-- @param ret the return of the ability action
+-- @return true to continue, false to stop
+function _M:postUseAbility(ab, ret)
+	return true
 end

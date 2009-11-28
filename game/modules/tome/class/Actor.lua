@@ -30,7 +30,7 @@ function _M:move(x, y, force)
 	local moved = false
 	if force or self:enoughEnergy() then
 		moved = engine.Actor.move(self, game.level.map, x, y, force)
-		if not force then self:useEnergy() end
+		if not force and moved then self:useEnergy() end
 	end
 	return moved
 end
@@ -54,4 +54,28 @@ end
 
 function _M:attack(target)
 	self:bumpInto(target)
+end
+
+--- Tries to get a target from the user
+function _M:getTarget()
+	return self.target.x, self.target.y
+end
+
+--- Called before an ability is used
+-- Check the actor can cast it
+-- @param ab the ability (not the id, the table)
+-- @return true to continue, false to stop
+function _M:preUseAbility(ab)
+	return self:enoughEnergy()
+end
+
+--- Called before an ability is used
+-- Check if it must use a turn, mana, stamina, ...
+-- @param ab the ability (not the id, the table)
+-- @param ret the return of the ability action
+-- @return true to continue, false to stop
+function _M:postUseAbility(ab, ret)
+	if ret == nil then return end
+	self:useEnergy()
+	return true
 end

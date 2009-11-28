@@ -9,7 +9,7 @@ print(src, x, y, type, dam)
 end)
 
 newDamageType{
-	name = "mana", type = "MANA",
+	name = "arcane", type = "ARCANE",
 }
 newDamageType{
 	name = "fire", type = "FIRE",

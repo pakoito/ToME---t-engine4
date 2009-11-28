@@ -8,15 +8,19 @@ function _M:init(map, source_actor)
 	self.w, self.h = map.viewport.width, map.viewport.height
 	self.tile_w, self.tile_h = map.tile_w, map.tile_h
 	self.active = false
+	self.target_type = {}
 
 	self.cursor = core.display.loadImage(engine.Tiles.prefix.."target_cursor.png")
 
 	self.sr = core.display.newSurface(map.tile_w, map.tile_h)
-	self.sr:alpha(125)
+	self.sr:alpha(90)
 	self.sr:erase(255, 0, 0)
 	self.sb = core.display.newSurface(map.tile_w, map.tile_h)
-	self.sb:alpha(125)
+	self.sb:alpha(90)
 	self.sb:erase(0, 0, 255)
+	self.sg = core.display.newSurface(map.tile_w, map.tile_h)
+	self.sg:alpha(90)
+	self.sg:erase(0, 255, 0)
 
 	self.source_actor = source_actor
 
@@ -25,7 +29,7 @@ function _M:init(map, source_actor)
 	-- but it means if the entity field is set to an entity, when it disappears this link wont prevent
 	-- the garbage collection
 	self.target = {x=self.source_actor.x, y=self.source_actor.y, entity=nil}
-	setmetatable(self.target, {__mode='v'})
+--	setmetatable(self.target, {__mode='v'})
 end
 
 function _M:display()
@@ -42,43 +46,88 @@ function _M:display()
 	local lx, ly = l()
 	while lx and ly do
 		if not game.level.map.seens(lx, ly) then s = self.sr end
+		if self.target_type.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then s = self.sr end
+		if self.target_type.range and math.sqrt((self.source_actor.x-lx)^2 + (self.source_actor.y-ly)^2) > self.target_type.range then s = self.sr end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
 		lx, ly = l()
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w, self.display_y + (self.target.y - game.level.map.my) * self.tile_h)
+
+	if self.target_type.ball and s == self.sb then
+		core.fov.calc_circle(self.target.x, self.target.y, self.target_type.ball, function(self, lx, ly)
+			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
+		end, function()end, self)
+	end
 end
 
-function _M:setActive(v)
+--- Returns data for the given target type
+-- Hit: simple project in LOS<br/>
+-- Beam: hits everything in LOS<br/>
+-- Bolt: hits first thing in path<br/>
+-- Ball: hits everything in a ball aounrd the target<br/>
+-- Cone: hits everything in a cone in the direction<br/>
+function _M:getType(t)
+	if not t or not t.type then return {} end
+	t.range = t.range or 20
+	if t.type == "hit" then
+		return {range=t.range}
+	elseif t.type == "beam" then
+		return {range=t.range, line=true}
+	elseif t.type == "bolt" then
+		return {range=t.range, stop_block=true}
+	elseif t.type == "ball" then
+		return {range=t.range, ball=t.radius}
+	elseif t.type == "cone" then
+		return {range=t.range, cone=t.radius}
+	else
+		return {}
+	end
+end
+
+function _M:setActive(v, type)
 	if v == nil then
 		return self.active
 	else
 		self.active = v
+		if v and type then
+			self.target_type = self:getType(type)
+		else
+			self.target_type = {}
+		end
 	end
 end
 
-function _M:scan(dir, radius)
+function _M:scan(dir, radius, sx, sy)
+	sx = sx or self.target.x
+	sy = sy or self.target.y
 	radius = radius or 20
 	local actors = {}
 	local checker = function(self, x, y)
-			if game.level.map.seens(x, y) and game.level.map(x, y, engine.Map.ACTOR) then
-				table.insert(actors, {
-					a = game.level.map(x, y, engine.Map.ACTOR),
-					dist = math.abs(self.target.x - x)*math.abs(self.target.x - x) + math.abs(self.target.y - y)*math.abs(self.target.y - y)
-				})
-			end
-			return false
+		if sx == x and sy == y then return false end
+		if game.level.map.seens(x, y) and game.level.map(x, y, engine.Map.ACTOR) then
+			local a = game.level.map(x, y, engine.Map.ACTOR)
+
+			table.insert(actors, {
+				a = a,
+				dist = math.abs(sx - x)*math.abs(sx - x) + math.abs(sy - y)*math.abs(sy - y)
+			})
+			actors[a] = true
+		end
+		return false
 	end
 
 	if dir ~= 5 then
 		-- Get a list of actors in the direction given
-		core.fov.calc_beam(self.target.x, self.target.y, radius, dir, 55, checker, function()end, self)
+		core.fov.calc_beam(sx, sy, radius, dir, 55, checker, function()end, self)
 	else
 		-- Get a list of actors all around
-		core.fov.calc_circle(self.target.x, self.target.y, radius, checker, function()end, self)
+		core.fov.calc_circle(sx, sy, radius, checker, function()end, self)
 	end
 
 	table.sort(actors, function(a,b) return a.dist<b.dist end)
 	if #actors > 0 then
 		self.target.entity = actors[1].a
+		self.target.x = self.target.entity.x
+		self.target.y = self.target.entity.y
 	end
 end
