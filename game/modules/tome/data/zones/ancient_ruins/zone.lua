@@ -7,7 +7,7 @@ return {
 	persistant = true,
 	generator =  {
 		map = {
-			class= "engine.generator.map.Empty",
+			class= "engine.generator.map.Rooms",
 			floor = "FLOOR",
 			wall = "WALL",
 			up = "UP",

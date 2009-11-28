@@ -267,6 +267,21 @@ function _M:checkAllEntities(x, y, what, ...)
 	end
 end
 
+--- Check specified entity position of the grid for a property
+-- @param x position
+-- @param y position
+-- @param pos entity position in the grid
+-- @param what property to check
+function _M:checkEntity(x, y, pos, what, ...)
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if self.map[x + y * self.w] then
+		if self.map[x + y * self.w][pos] then
+			local p = self.map[x + y * self.w][pos]:check(what, x, y, ...)
+			if p then return p end
+		end
+	end
+end
+
 --- Lite all grids
 function _M:liteAll(x, y, w, h)
 	for i = x, x + w - 1 do for j = y, y + h - 1 do

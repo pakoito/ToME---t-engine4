@@ -232,7 +232,7 @@ function _M:setupCommands()
 	{
 		-- ability test
 		_a = function()
-			self.player:useAbility(ActorAbilities.AB_MANATHRUST)
+			self.player:useAbility(ActorAbilities.AB_FIREFLASH)
 		end,
 
 		_LEFT  = function() self.player:move(self.player.x - 1, self.player.y    ) end,
