@@ -18,6 +18,7 @@ local Actor = require "mod.class.Actor"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorAbilities = require "engine.interface.ActorAbilities"
 local Player = require "mod.class.Player"
+local PlayerDisplay = require "mod.class.PlayerDisplay"
 local NPC = require "mod.class.NPC"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
@@ -43,6 +44,7 @@ function _M:run()
 	ActorAbilities:loadDefinition("/data/abilities.lua")
 
 	self.log = LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
+	self.player_display = PlayerDisplay.new(0, 0, self.w * 0.2, self.h * 0.8, {30,30,0})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
@@ -68,16 +70,14 @@ end
 
 function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
-	self.player = Player.new{name="player", image='player.png', display='@', color_r=230, color_g=230, color_b=230}
+	self.player = Player.new{name=self.player_name, image='player.png', display='@', color_r=230, color_g=230, color_b=230}
 	self:changeLevel(1)
-
---	self:registerDialog(require('mod.dialogs.EnterName').new())
 end
 
 function _M:loaded()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
 --	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 20, 20, "/data/font/10X20.FON", 20)
-	Map:setViewPort(self.w * 0.2, 0, self.w * .8, math.floor(self.h * 0.80), 16, 16)
+	Map:setViewPort(self.w * 0.2, 0, self.w * 0.8, math.floor(self.h * 0.80), 16, 16)
 	engine.GameTurnBased.loaded(self)
 	self.key = engine.KeyCommand.new()
 end
@@ -115,6 +115,7 @@ end
 
 function _M:display()
 	self.log:display():toScreen(self.log.display_x, self.log.display_y)
+	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
 
 	if self.level and self.level.map then
 		-- Display the map and compute FOV for the player if needed

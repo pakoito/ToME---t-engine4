@@ -17,6 +17,7 @@ function _M:init(keyhandler)
 	self.w, self.h = core.display.size()
 	self.dialogs = {}
 	self.save_name = "player"
+	self.player_name = "player"
 
 	self.mouse = engine.Mouse.new()
 	self.mouse:setCurrent()
@@ -27,6 +28,12 @@ function _M:loaded()
 	self.key = engine.Key.current
 	self.mouse = engine.Mouse.new()
 	self.mouse:setCurrent()
+end
+
+--- Sets the player name
+function _M:setPlayerName(name)
+	self.save_name = name
+	self.player_name = name
 end
 
 --- Starts the game

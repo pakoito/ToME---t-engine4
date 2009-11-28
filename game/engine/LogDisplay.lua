@@ -1,7 +1,9 @@
 require "engine.class"
 
+--- Module that handles message history ina mouse wheel scrollable zone
 module(..., package.seeall, class.make)
 
+--- Creates the log zone
 function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.color = color or {255,255,255}
 	self.bgcolor = bgcolor or {0,0,0}
@@ -17,6 +19,10 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.changed = true
 end
 
+--- Appends text to the log
+-- This method is set as the call methamethod too, this means it is usable like this:<br/>
+-- log = LogDisplay.new(...)<br/>
+-- log("foo %s", s)
 function _M:call(str, ...)
 	local lines = str:format(...):splitLines(self.w - 4, self.font)
 	for i = 1, #lines do
@@ -29,6 +35,7 @@ function _M:call(str, ...)
 	self.changed = true
 end
 
+--- Clear the log
 function _M:empty()
 	self.log = {}
 	self.changed = true
@@ -51,6 +58,8 @@ function _M:display()
 	return self.surface
 end
 
+--- Scroll the zone
+-- @param i number representing how many lines to scroll
 function _M:scrollUp(i)
 	self.scroll = self.scroll + i
 	if self.scroll > #self.log - 1 then self.scroll = #self.log - 1 end

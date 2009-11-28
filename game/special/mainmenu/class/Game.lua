@@ -44,6 +44,12 @@ function _M:commandLineArgs(args)
 		if mod then
 			local M = mod.load()
 			_G.game = M.new()
+
+			-- Delete the corresponding savefile if any
+			local save = engine.Savefile.new(_G.game.save_name)
+			save:delete()
+			save:close()
+
 			_G.game:run()
 		else
 			print("Error: module "..req_mod.." not found!")
@@ -90,9 +96,7 @@ function _M:selectStepNew()
 
 	for i, mod in ipairs(self.mod_list) do
 		mod.fct = function()
-			local M = mod.load()
-			_G.game = M.new()
-			_G.game:run()
+			self:registerDialog(require('special.mainmenu.dialogs.EnterName').new(mod))
 		end
 		mod.onSelect = function()
 			display_module.title = mod.long_name

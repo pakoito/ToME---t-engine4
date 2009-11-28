@@ -32,6 +32,12 @@ function _M:setName(name)
 	game.save_name = name
 end
 
+function _M:levelup()
+	local x, y = game.level.map:getTileToScreen(self.x, self.y)
+	game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
+	game.log("#00ffff#Welcome to level %d", self.level)
+end
+
 --- Tries to get a target from the user
 -- *WARNING* If used inside a coroutine it will yield and resume it later when a target is found.
 -- This is usualy just what you want so dont think too much about it :)

@@ -3,7 +3,7 @@ return {
 {
 	name = "dragon of death",
 	display = "D", color_r=255,
-	level = 1, exp_worth = 1,
+	level = 10, exp_worth = 1,
 	life = 20,
 	mana = 1000,
 	energy = { mod=0.5 },
@@ -15,7 +15,7 @@ return {
 	name = "baby dragon",
 	display = "d", color_r=128,
 	faction = "poorsods",
-	level = 1, exp_worth = 1,
+	level = 10, exp_worth = 1,
 	life = 30,
 	mana = 1000,
 	energy = { mod=0.3 },
