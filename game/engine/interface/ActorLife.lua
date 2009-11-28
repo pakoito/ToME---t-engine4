@@ -7,7 +7,8 @@ local DamageType = require "engine.DamageType"
 module(..., package.seeall, class.make)
 
 function _M:init(t)
-	self.life = t.life or 100
+	self.max_life = t.max_life or 100
+	self.life = t.life or self.max_life
 end
 
 --- Checks if something bumps in us

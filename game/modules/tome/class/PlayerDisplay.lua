@@ -22,8 +22,17 @@ function _M:display()
 	self.surface:drawString(self.font, game.player.name, 0, h, 0, 200, 255) h = h + self.font_h
 	self.surface:drawString(self.font, "Human", 0, h, 0, 200, 255) h = h + self.font_h
 	h = h + self.font_h
-	self.surface:drawString(self.font, "Level: "..game.player.level, 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawString(self.font, ("Exp: %2d%%"):format(100 * cur_exp / max_exp), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, "Level: #00ff00#"..game.player.level, 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, ("Exp: #00ff00#%2d%%"):format(100 * cur_exp / max_exp), 0, h, 255, 255, 255) h = h + self.font_h
+	h = h + self.font_h
+	self.surface:drawColorString(self.font, ("#c00000#Life: #00ff00#%d/%d"):format(game.player.life, game.player.max_life), 0, h, 255, 255, 255) h = h + self.font_h
+	h = h + self.font_h
+	self.surface:drawColorString(self.font, ("STR: #00ff00#%3d"):format(game.player:getStr()), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, ("DEX: #00ff00#%3d"):format(game.player:getDex()), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, ("MAG: #00ff00#%3d"):format(game.player:getMag()), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, ("WIL: #00ff00#%3d"):format(game.player:getWil()), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, ("CUN: #00ff00#%3d"):format(game.player:getCun()), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, ("CON: #00ff00#%3d"):format(game.player:getCon()), 0, h, 255, 255, 255) h = h + self.font_h
 
 
 	return self.surface
