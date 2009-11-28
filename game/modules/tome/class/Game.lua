@@ -1,25 +1,30 @@
 require "engine.class"
 require "engine.GameTurnBased"
 require "engine.KeyCommand"
-local LogDisplay = require "engine.LogDisplay"
 local Savefile = require "engine.Savefile"
-local DebugConsole = require "engine.DebugConsole"
-local FlyingText = require "engine.FlyingText"
-local Tooltip = require "engine.Tooltip"
-local QuitDialog = require "mod.dialogs.Quit"
-local Calendar = require "engine.Calendar"
 local DamageType = require "engine.DamageType"
 local Zone = require "engine.Zone"
 local Map = require "engine.Map"
 local Target = require "engine.Target"
 local Level = require "engine.Level"
+
 local Grid = require "engine.Grid"
 local Actor = require "mod.class.Actor"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorAbilities = require "engine.interface.ActorAbilities"
 local Player = require "mod.class.Player"
-local PlayerDisplay = require "mod.class.PlayerDisplay"
 local NPC = require "mod.class.NPC"
+
+local PlayerDisplay = require "mod.class.PlayerDisplay"
+
+local LogDisplay = require "engine.LogDisplay"
+local DebugConsole = require "engine.DebugConsole"
+local FlyingText = require "engine.FlyingText"
+local Tooltip = require "engine.Tooltip"
+local Calendar = require "engine.Calendar"
+
+local QuitDialog = require "mod.dialogs.Quit"
+local LevelupDialog = require "mod.dialogs.LevelupDialog"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
@@ -70,7 +75,7 @@ end
 
 function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
-	self.player = Player.new{name=self.player_name, image='player.png', display='@', color_r=230, color_g=230, color_b=230}
+	self.player = Player.new{name=self.player_name, max_life=10000, image='player.png', display='@', color_r=230, color_g=230, color_b=230}
 	self:changeLevel(1)
 end
 
@@ -240,6 +245,11 @@ function _M:setupCommands()
 		end,
 		_z = function()
 			self.player:useAbility(ActorAbilities.AB_PHASE_DOOR)
+		end,
+
+		[{"_g","shift"}] = function()
+			local levelup_dialog = LevelupDialog.new(self.player)
+			self:registerDialog(levelup_dialog)
 		end,
 
 		_LEFT  = function() self.player:move(self.player.x - 1, self.player.y    ) end,

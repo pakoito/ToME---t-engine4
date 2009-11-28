@@ -33,6 +33,8 @@ function _M:setName(name)
 end
 
 function _M:levelup()
+	mod.class.Actor.levelup(self)
+
 	local x, y = game.level.map:getTileToScreen(self.x, self.y)
 	game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
 	game.log("#00ffff#Welcome to level %d", self.level)

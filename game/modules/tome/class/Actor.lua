@@ -24,6 +24,9 @@ function _M:init(t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorStats.init(self, t)
 	engine.interface.ActorAbilities.init(self, t)
+
+	self.unused_stats = 0
+	self.unused_abilities = 0
 end
 
 function _M:move(x, y, force)
@@ -67,6 +70,8 @@ function _M:die(src)
 end
 
 function _M:levelup()
+	self.unused_stats = self.unused_stats + 3
+	self.unused_abilities = self.unused_abilities + 1
 
 end
 
