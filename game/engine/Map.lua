@@ -332,3 +332,10 @@ function _M:getMouseTile(mx, my)
 	local tmy = math.floor((my - self.display_y) / self.tile_h) + self.my
 	return tmx, tmy
 end
+
+--- Get the screen position corresponding to a tile
+function _M:getTileToScreen(tx, ty)
+	local x = (tx - self.mx) * self.tile_w + self.display_x
+	local y = (ty - self.my) * self.tile_h + self.display_y
+	return x, y
+end

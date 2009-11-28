@@ -1,12 +1,24 @@
 -- The basic stuff used to damage a grid
 defaultProjector(function(src, x, y, type, dam)
-print(src, x, y, type, dam)
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
 		game.logSeen(target, "%s hits %s for #aaaaaa#%0.2f %s damage#ffffff#.", src.name:capitalize(), target.name, dam, DamageType:get(type).name)
-		target:takeHit(dam, src)
+		local sx, sy = game.level.map:getTileToScreen(x, y)
+		if target:takeHit(dam, src) then
+			if src == game.player or target == game.player then
+				game.flyers:add(sx, sy, 30, 0.5, -3, "Kill!", {255,0,255})
+			end
+		else
+			if src == game.player or target == game.player then
+				game.flyers:add(sx, sy, 30, -0.5, -3, tostring(-dam), {255,0,255})
+			end
+		end
 	end
 end)
+
+newDamageType{
+	name = "physical", type = "PHYSICAL",
+}
 
 newDamageType{
 	name = "arcane", type = "ARCANE",

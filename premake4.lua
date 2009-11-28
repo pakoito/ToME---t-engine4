@@ -36,12 +36,12 @@ project "TEngine"
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 
 configuration "macosx"
-	linkoptions { "mac/SDLmain.m", "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa" }
+	linkoptions { "mac/SDLmain.m", "-framework SDL", "-framework SDL_gfx", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa" }
 	files { "mac/SDL*" }
 	targetdir "."
 
 configuration "not macosx"
-	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer" }
+	links { "SDL", "SDL_ttf", "SDL_image", "SDL_gfx", "SDL_mixer" }
 
 
 project "physfs"

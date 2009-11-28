@@ -52,6 +52,10 @@ function _M:display()
 	for i, d in ipairs(self.dialogs) do
 		d:display():toScreen(d.display_x, d.display_y)
 	end
+
+	if self.flyers then
+		self.flyers:display()
+	end
 end
 
 --- This is the "main game loop", do something here
@@ -60,6 +64,11 @@ end
 
 --- Called by the engine when the user tries to close the window
 function _M:onQuit()
+end
+
+--- Sets up a text flyers
+function _M:setFlyingText(fl)
+	self.flyers = fl
 end
 
 --- Registers a dialog to display

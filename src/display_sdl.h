@@ -35,6 +35,7 @@
 #define DISPLAY_SDL_H
 
 #include <SDL.h>
+#include <SDL_framerate.h>
 
 #ifdef __cplusplus
 extern "C" {

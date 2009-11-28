@@ -124,7 +124,6 @@ function _M:selectStepLoad()
 		table.insert(list, { name=mod.name, font=mod_font, description="", fct=function() end, onSelect=function() self.step:skipSelected() end})
 
 		for j, save in ipairs(mod.savefiles) do
-		print(save.name)
 			save.fct = function()
 				mod.load()
 				local save = Savefile.new(save.short_name)

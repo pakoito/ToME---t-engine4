@@ -36,6 +36,14 @@ function _M:close()
 	self.current_save_main = nil
 end
 
+--- Delete the savefile, if needed
+function _M:delete()
+	for i, f in ipairs(fs.list(self.save_dir)) do
+		fs.delete(self.save_dir..f)
+	end
+	fs.delete(self.save_dir)
+end
+
 function _M:addToProcess(o)
 	if not self.tables[o] then
 		table.insert(self.process, o)

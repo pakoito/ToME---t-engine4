@@ -46,6 +46,7 @@ function _M:die(src)
 	end
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
+	return true
 end
 
 function _M:levelup()

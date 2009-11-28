@@ -41,6 +41,7 @@ The ToME combat system has the following attributes:
 function _M:attackTarget(target)
 	local sc = self.combat
 	local tc = target.combat
+	local damtype = DamageType.PHYSICAL
 
 	if not sc then sc = {dam=0, atk=0, apr=0, def=0, armor=0} end
 	if not tc then tc = {dam=0, atk=0, apr=0, def=0, armor=0} end
@@ -50,9 +51,7 @@ function _M:attackTarget(target)
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	if hit > 0 or (hit == 0 and rng.percent(50)) then
 		local dam = rng.avg(sc.dam * 2 / 3, sc.dam) - math.max(0, tc.armor - sc.apr)
-		if dam < 0 then dam = 0 end
-		game.logSeen(target, "%s hits %s for #aaaaaa#%0.2f physical damage#ffffff#.", self.name:capitalize(), target.name, dam)
-		target:takeHit(dam, self)
+		DamageType:get(damtype).projector(self, target.x, target.y, damtype, dam)
 	else
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 	end
@@ -81,7 +80,6 @@ function _M:project(t, x, y, damtype, dam)
 	if not lx and not ly then lx, ly = x, y end
 
 	if typ.ball then
-	print(lx, ly, typ.ball)
 		core.fov.calc_circle(lx, ly, typ.ball, function(self, px, py)
 			-- Deam damage: ball
 			DamageType:get(damtype).projector(self, px, py, damtype, dam)

@@ -1,9 +1,10 @@
 require "engine.class"
 require "engine.GameTurnBased"
 require "engine.KeyCommand"
-require "engine.LogDisplay"
+local LogDisplay = require "engine.LogDisplay"
 local Savefile = require "engine.Savefile"
 local DebugConsole = require "engine.DebugConsole"
+local FlyingText = require "engine.FlyingText"
 local Tooltip = require "engine.Tooltip"
 local QuitDialog = require "mod.dialogs.Quit"
 local Calendar = require "engine.Calendar"
@@ -41,9 +42,11 @@ function _M:run()
 	-- Abilities
 	ActorAbilities:loadDefinition("/data/abilities.lua")
 
-	self.log = engine.LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
+	self.log = LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
-	self.tooltip = engine.Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
+	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
+	self.flyers = FlyingText.new()
+	self:setFlyingText(self.flyers)
 
 	self.log("Welcome to #00FF00#Tales of Middle Earth!")
 	self.logSeen = function(e, ...) if e and self.level.map.seens(e.x, e.y) then self.log(...) end end

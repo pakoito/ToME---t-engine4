@@ -177,11 +177,8 @@ void on_event(SDL_Event *event)
 }
 
 // redraw the screen and update game logics, if any
-void on_redraw()
+void on_tick()
 {
-	static int Frames = 0;
-	static int T0     = 0;
-
 	if (current_game != LUA_NOREF)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
@@ -191,6 +188,12 @@ void on_redraw()
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		docall(L, 1, 0);
 	}
+}
+
+void on_redraw()
+{
+	static int Frames = 0;
+	static int T0     = 0;
 
 	sdlLock(screen);
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
@@ -247,6 +250,27 @@ void pass_command_args(int argc, char *argv[])
 	}
 }
 
+Uint32 redraw_timer(Uint32 interval, void *param)
+{
+	SDL_Event event;
+	SDL_UserEvent userevent;
+
+	/* In this example, our callback pushes an SDL_USEREVENT event
+	 into the queue, and causes ourself to be called again at the
+	 same interval: */
+
+	userevent.type = SDL_USEREVENT;
+	userevent.code = 0;
+	userevent.data1 = NULL;
+	userevent.data2 = NULL;
+
+	event.type = SDL_USEREVENT;
+	event.user = userevent;
+
+	SDL_PushEvent(&event);
+	return(interval);
+}
+
 /**
  * Program entry point.
  */
@@ -297,6 +321,8 @@ int main(int argc, char *argv[])
 	// Filter events, to catch the quit event
 	SDL_SetEventFilter(event_filter);
 
+	SDL_AddTimer(30, redraw_timer, NULL);
+
 	bool done = FALSE;
 	SDL_Event event;
 	while ( !done )
@@ -316,13 +342,17 @@ int main(int argc, char *argv[])
 				/* handle quit requests */
 				done = TRUE;
 				break;
+			case SDL_USEREVENT:
+				if (event.user.code == 0)
+					on_redraw();
+				break;
 			default:
 				break;
 			}
 		}
 
 		/* draw the scene */
-		on_redraw();
+		on_tick();
 	}
 
 	return 0;

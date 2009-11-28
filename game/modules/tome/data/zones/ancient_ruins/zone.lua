@@ -2,9 +2,9 @@ return {
 	name = "ancient ruins",
 	max_level = 5,
 	width = 40, height = 30,
-	all_remembered = true,
+--	all_remembered = true,
 	all_lited = true,
-	persistant = true,
+--	persistant = true,
 	generator =  {
 		map = {
 			class= "engine.generator.map.Rooms",
