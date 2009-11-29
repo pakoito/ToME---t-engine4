@@ -8,6 +8,8 @@ function _M:init(t)
 	self.player = true
 	self.faction = "players"
 	self.combat = { dam=10, atk=40, apr=2, def=6, armor=4 }
+	self.talents_types = {["spell/arcane"]=true,["spell/fire"]=true,["physical/1hweapon"]=true}
+	self.talents = {[self.T_MANA_POOL]=true, [self.T_STAMINA_POOL]=true}
 end
 
 function _M:move(x, y, force)

@@ -14,6 +14,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorLevel,
 	engine.interface.ActorStats,
 	engine.interface.ActorTalents,
+--	engine.interface.ActorResource,
 	engine.interface.BloodyDeath,
 	mod.class.interface.Combat
 ))
@@ -24,6 +25,7 @@ function _M:init(t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorStats.init(self, t)
 	engine.interface.ActorTalents.init(self, t)
+--	engine.interface.ActorResouce.init(self, t)
 
 	self.unused_stats = 0
 	self.unused_talents = 0
@@ -37,23 +39,6 @@ function _M:move(x, y, force)
 		if not force and moved then self:useEnergy() end
 	end
 	return moved
-end
-
-function _M:teleportRandom(dist)
-	local poss = {}
-
-	for i = self.x - dist, self.x + dist do
-		for j = self.y - dist, self.y + dist do
-			if game.level.map:isBound(i, j) and
-			   core.fov.distance(self.x, self.y, i, j) <= dist and
-			   not game.level.map:checkAllEntities(i, j, "block_move") then
-				poss[#poss+1] = {i,j}
-			end
-		end
-	end
-
-	local pos = poss[rng.range(1, #poss)]
-	return self:move(pos[1], pos[2], true)
 end
 
 function _M:tooltip()
@@ -81,7 +66,7 @@ end
 function _M:onStatChange(stat, v)
 	if stat == self.STAT_CON then
 		self.max_life = self.max_life + 5 * v
-	elseif stat == self.STAT_MAG then
+	elseif stat == self.STAT_WIL then
 		self.max_mana = self.max_mana + 5 * v
 	end
 end

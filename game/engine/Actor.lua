@@ -33,6 +33,23 @@ function _M:move(map, x, y, force)
 	return true
 end
 
+function _M:teleportRandom(dist)
+	local poss = {}
+
+	for i = self.x - dist, self.x + dist do
+		for j = self.y - dist, self.y + dist do
+			if game.level.map:isBound(i, j) and
+			   core.fov.distance(self.x, self.y, i, j) <= dist and
+			   not game.level.map:checkAllEntities(i, j, "block_move") then
+				poss[#poss+1] = {i,j}
+			end
+		end
+	end
+
+	local pos = poss[rng.range(1, #poss)]
+	return self:move(pos[1], pos[2], true)
+end
+
 function _M:deleteFromMap(map)
 	if self.x and self.y and map then
 		map:remove(self.x, self.y, engine.Map.ACTOR)

@@ -194,3 +194,8 @@ function util.boundWrap(i, min, max)
 	elseif i > max then i = min end
 	return i
 end
+function util.bound(i, min, max)
+	if i < min then i = min
+	elseif i > max then i = max end
+	return i
+end

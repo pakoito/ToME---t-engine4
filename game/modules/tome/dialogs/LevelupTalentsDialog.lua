@@ -93,6 +93,10 @@ end
 
 function _M:learnType(tt, v)
 	if v then
+		if self.actor:knowTalentType(tt) then
+			self:simplePopup("Impossible", "You do already know this talent category!")
+			return
+		end
 		if self.actor.unused_talents_types == 0 then
 			self:simplePopup("Not enough talent category points", "You have no talent category points left!")
 			return
@@ -100,8 +104,12 @@ function _M:learnType(tt, v)
 		self.actor:learnTalentType(tt)
 		self.actor.unused_talents_types = self.actor.unused_talents_types - 1
 	else
-		if self.actor_dup:getStat(self.talentsel) == self.actor:getStat(self.talentsel) then
+		if self.actor_dup:knowTalentType(tt) == true and self.actor:knowTalentType(tt) == true then
 			self:simplePopup("Impossible", "You cannot take out more points!")
+			return
+		end
+		if not self.actor:knowTalentType(tt) then
+			self:simplePopup("Impossible", "You do not know this talent category!")
 			return
 		end
 		self.actor:unlearnTalentType(tt)

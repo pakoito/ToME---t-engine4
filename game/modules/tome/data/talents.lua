@@ -1,3 +1,20 @@
+-- "classes"
+newTalentType{ type="base/class", name = "class", description = "The basic talents defining a class." }
+newTalentType{ type="base/race", name = "race", description = "The various racial bonuses a character can have." }
+
+newTalent{
+	name = "Mana Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a mana pool. Mana is used to cast all spells.",
+}
+newTalent{
+	name = "Stamina Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a stamina pool. Stamina is used to activate special combat attacks.",
+}
+
+
+-- Spells
 newTalentType{ type="spell/arcane", name = "arcane", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
 newTalentType{ type="spell/fire", name = "fire", description = "Harness the power of fire to burn your foes to ashes." }
 newTalentType{ type="spell/earth", name = "earth", description = "Harness the power of the earth to protect and destroy." }
@@ -5,6 +22,7 @@ newTalentType{ type="spell/cold", name = "cold", description = "Harness the powe
 newTalentType{ type="spell/lightning", name = "lightning", description = "Harness the power of lightnings to fry your foes." }
 newTalentType{ type="spell/conveyance", name = "conveyance", description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
 
+-- Physical combat
 newTalentType{ type="physical/2hweapon", name = "two handed weapons", description = "Allows the user to be more proficient with two handed weapons." }
 newTalentType{ type="physical/1hweapon", name = "one handed weapons", description = "Allows the user to be more proficient with one handed weapons." }
 newTalentType{ type="physical/dualweapon", name = "dual wielding", description = "Allows the user to be more proficient with dual wielding weapons." }

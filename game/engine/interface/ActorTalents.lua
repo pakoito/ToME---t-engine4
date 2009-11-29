@@ -44,6 +44,11 @@ function _M:newTalent(t)
 	assert(t.mode == "activated" or t.mode == "sustained", "wrong talent mode, requires either 'activated' or 'sustained'")
 	assert(t.info, "no talent info")
 
+	-- Can pass a string, make it into a function
+	if type(t.info) == "string" then
+		local infostr = t.info
+		t.info = function() return infostr end
+	end
 	-- Remove line stat with tabs to be cleaner ..
 	local info = t.info
 	t.info = function(self) return info(self):gsub("\n\t+", "\n") end
@@ -151,7 +156,7 @@ function _M:canLearnTalent(t)
 
 	-- Check talent type
 	local known = self:numberKnownTalent(t.type[1])
-	if known < t.type[2] - 1 then
+	if t.type[2] and known < t.type[2] - 1 then
 		return nil, "not enough talents of this type known"
 	end
 
@@ -169,17 +174,21 @@ function _M:getTalentReqDesc(t_id)
 	local str = ""
 
 	if t.type[2] and t.type[2] > 1 then
-		str = str .. ("- Talents of the same category: %d\n"):format(t.type[2] - 1)
+		local known = self:numberKnownTalent(t.type[1])
+		local c = (known >= t.type[2] - 1) and "#00ff00#" or "#ff0000#"
+		str = str .. ("- %sTalents of the same category: %d\n"):format(c, t.type[2] - 1)
 	end
 
 	-- Obviously this requires the ActorStats interface
 	if req.stat then
 		for s, v in pairs(req.stat) do
-			str = str .. ("- %s %d\n"):format(self.stats_def[s].name, v)
+			local c = (self:getStat(s) >= v) and "#00ff00#" or "#ff0000#"
+			str = str .. ("- %s%s %d\n"):format(c, self.stats_def[s].name, v)
 		end
 	end
 	if req.level then
-		str = str .. ("- Level %d\n"):format(req.level)
+		local c = (self.level >= req.level) and "#00ff00#" or "#ff0000#"
+		str = str .. ("- %sLevel %d\n"):format(c, req.level)
 	end
 
 	return str
