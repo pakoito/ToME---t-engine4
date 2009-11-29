@@ -51,7 +51,8 @@ newTalent{
 newTalent{
 	name = "Disruption Shield",
 	type = {"spell/arcane",2},
-	mana = 80,
+	mode = "sustained",
+	sustain_mana = 60,
 	tactical = {
 		DEFEND = 10,
 	},
@@ -87,7 +88,8 @@ newTalent{
 newTalent{
 	name = "Fireflash",
 	type = {"spell/fire",2},
-	mana = 45,
+	mana = 35,
+	cooldown = 6,
 	tactical = {
 		ATTACKAREA = 10,
 	},
@@ -101,6 +103,7 @@ newTalent{
 	require = { stat = { mag=16 }, },
 	info = function(self)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
+		Cooldown: 6 turns
 		The damage will increase with the Magic stat]]):format(8 + self:getMag(70), math.min(6, 3 + self:getMag(6)))
 	end,
 }

@@ -21,6 +21,8 @@ function _M:move(x, y, force)
 end
 
 function _M:act()
+	mod.class.Actor.act(self)
+
 	game.paused = true
 end
 

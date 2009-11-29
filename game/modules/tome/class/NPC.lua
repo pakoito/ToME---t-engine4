@@ -8,5 +8,6 @@ function _M:init(t)
 end
 
 function _M:act()
+	mod.class.Actor.act(self)
 	self:move(self.x + 1, self.y)
 end

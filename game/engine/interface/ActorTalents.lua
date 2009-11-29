@@ -37,8 +37,6 @@ function _M:newTalent(t)
 	assert(t.type, "no or unknown talent type")
 	t.short_name = t.short_name or t.name
 	t.short_name = t.short_name:upper():gsub("[ ]", "_")
-	t.mana = t.mana or 0
-	t.stamina = t.stamina or 0
 	t.mode = t.mode or "activated"
 	t.points = t.points or 1
 	assert(t.mode == "activated" or t.mode == "sustained", "wrong talent mode, requires either 'activated' or 'sustained'")
@@ -65,6 +63,7 @@ end
 function _M:init(t)
 	self.talents = t.talents or {}
 	self.talents_types = t.talents_types or {}
+	self.talents_cd = {}
 end
 
 --- Make the actor use the talent
@@ -73,11 +72,18 @@ function _M:useTalent(id)
 	assert(ab, "trying to cast talent "..tostring(id).." but it is not defined")
 
 	if ab.action then
+		if self:isTalentCoolingDown(ab) then
+			game.logPlayer(self, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
+			return
+		end
 		if not self:preUseTalent(ab) then return end
 		local co = coroutine.create(function()
 			local ret = ab.action(self)
 
 			if not self:postUseTalent(ab, ret) then return end
+
+			-- Everything went ok? then start cooldown if any
+			self:startTalentCooldown(ab)
 		end)
 		local ok, err = coroutine.resume(co)
 		if not ok and err then error(err) end
@@ -228,4 +234,26 @@ end
 function _M:unlearnTalentType(tt)
 	self.talents_types[tt] = nil
 	return true
+end
+
+--- Starts a talent cooldown
+-- @param t the talent to cooldown
+function _M:startTalentCooldown(t)
+	if not t.cooldown then return end
+	self.talents_cd[t.id] = t.cooldown
+end
+
+--- Is talent in cooldown?
+function _M:isTalentCoolingDown(t)
+	if not t.cooldown then return false end
+	if self.talents_cd[t.id] and self.talents_cd[t.id] > 0 then return true else return false end
+end
+
+--- Cooldown all talents by one
+-- This should be called in your actors "act()" method
+function _M:cooldownTalents()
+	for tid, c in pairs(self.talents_cd) do
+		self.talents_cd[tid] = self.talents_cd[tid] - 1
+		if self.talents_cd[tid] == 0 then self.talents_cd[tid] = nil end
+	end
 end

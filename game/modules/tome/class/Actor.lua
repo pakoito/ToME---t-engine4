@@ -4,6 +4,7 @@ require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
 require "engine.interface.ActorStats"
 require "engine.interface.ActorTalents"
+require "engine.interface.ActorResource"
 require "engine.interface.BloodyDeath"
 require "mod.class.interface.Combat"
 
@@ -14,7 +15,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorLevel,
 	engine.interface.ActorStats,
 	engine.interface.ActorTalents,
---	engine.interface.ActorResource,
+	engine.interface.ActorResource,
 	engine.interface.BloodyDeath,
 	mod.class.interface.Combat
 ))
@@ -25,11 +26,16 @@ function _M:init(t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorStats.init(self, t)
 	engine.interface.ActorTalents.init(self, t)
---	engine.interface.ActorResouce.init(self, t)
+	engine.interface.ActorResource.init(self, t)
 
 	self.unused_stats = 0
 	self.unused_talents = 0
 	self.unused_talents_types = 0
+end
+
+function _M:act()
+	-- Cooldown talents
+	self:cooldownTalents()
 end
 
 function _M:move(x, y, force)
@@ -67,7 +73,8 @@ function _M:onStatChange(stat, v)
 	if stat == self.STAT_CON then
 		self.max_life = self.max_life + 5 * v
 	elseif stat == self.STAT_WIL then
-		self.max_mana = self.max_mana + 5 * v
+		self:incMaxMana(5 * v)
+		self:incMaxStamina(5 * v)
 	end
 end
 
@@ -85,17 +92,24 @@ end
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab)
-	local ret = self:enoughEnergy()
-	if ret == true then
-		if ab.message then
-			game.logSeen(self, "%s", self:useTalentMessage(ab))
-		elseif ab.type[1]:find("^spell/") then
-			game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
-		else
-			game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
-		end
+	if not self:enoughEnergy() then return end
+	if ab.mana and self:getMana() < ab.mana then
+		game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
+		return
 	end
-	return ret
+	if ab.stamina and self:getStamina() < ab.stamina then
+		game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
+		return
+	end
+
+	if ab.message then
+		game.logSeen(self, "%s", self:useTalentMessage(ab))
+	elseif ab.type[1]:find("^spell/") then
+		game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
+	else
+		game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
+	end
+	return true
 end
 
 --- Called before a talent is used
@@ -106,5 +120,13 @@ end
 function _M:postUseTalent(ab, ret)
 	if ret == nil then return end
 	self:useEnergy()
+
+	if ab.mana then
+		self:incMana(-ab.mana)
+	end
+	if ab.stamina then
+		self:incStamina(-ab.stamina)
+	end
+
 	return true
 end
