@@ -70,6 +70,17 @@ function _M:getStat(stat, scale)
 	return val
 end
 
+--- Is the stat maxed ?
+function _M:isStatMax(stat)
+	local val
+	if type(stat) == "string" then
+		val = self.stats[_M.stats_def[stat].id]
+	else
+		val = self.stats[stat]
+	end
+	if math.floor(val) == _M.stats_def[stat].max then return true end
+end
+
 --- Notifies a change of stat value
 function _M:onStatChange(stat, v)
 end

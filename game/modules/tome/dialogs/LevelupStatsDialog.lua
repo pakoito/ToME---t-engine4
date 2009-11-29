@@ -33,6 +33,10 @@ function _M:incStat(v)
 			self:simplePopup("Not enough stat points", "You have no stat points left!")
 			return
 		end
+		if self.actor:isStatMax(self.statsel) then
+			self:simplePopup("Stat is at the maximun", "You can not increase this stat further!")
+			return
+		end
 	else
 		if self.actor_dup:getStat(self.statsel) == self.actor:getStat(self.statsel) then
 			self:simplePopup("Impossible", "You cannot take out more points!")

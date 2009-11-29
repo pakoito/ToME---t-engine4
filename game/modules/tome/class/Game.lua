@@ -85,7 +85,6 @@ end
 
 function _M:loaded()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
---	Map:setViewPort(0, 0, self.w, math.floor(self.h * 0.80), 20, 20, "/data/font/10X20.FON", 20)
 	Map:setViewPort(self.w * 0.2, 0, self.w * 0.8, math.floor(self.h * 0.80), 16, 16)
 	engine.GameTurnBased.loaded(self)
 	self.key = engine.KeyCommand.new()
@@ -115,6 +114,9 @@ function _M:tick()
 	if self.target.target.entity and not self.level:hasEntity(self.target.target.entity) then self.target.target.entity = false end
 
 	engine.GameTurnBased.tick(self)
+	-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
+	-- (since display is on a set FPS while tick() ticks as much as possible
+	-- engine.GameEnergyBased.tick(self)
 
 	if not self.day_of_year or self.day_of_year ~= self.calendar:getDayOfYear(self.turn) then
 		self.log(self.calendar:getTimeDate(self.turn))

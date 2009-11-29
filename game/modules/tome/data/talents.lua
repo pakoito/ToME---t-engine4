@@ -24,9 +24,9 @@ newTalent{
 		self:project(t, x, y, DamageType.ARCANE, 10 + self:getMag())
 		return true
 	end,
-	require = { stat = { mag=12 }, },
+	require = { stat = { mag=10 }, },
 	info = function(self)
-		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage",
+		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage
 		The damage will increase with the Magic stat]]):format(10 + self:getMag())
 	end,
 }
@@ -42,7 +42,7 @@ newTalent{
 	end,
 	require = { stat = { mag=12 }, },
 	info = function(self)
-		return ([[Uses mana instead of life to take damage",
+		return ([[Uses mana instead of life to take damage
 		The damage to mana ratio increases with the Magic stat]]):format(10 + self:getMag())
 	end,
 }
@@ -61,7 +61,7 @@ newTalent{
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self)
-		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.",
+		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
 		The radius will increase with the Magic stat]]):format(5 + self:getMag(10))
 	end,
 }
@@ -82,7 +82,7 @@ newTalent{
 	end,
 	require = { stat = { mag=16 }, },
 	info = function(self)
-		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d",
+		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
 		The damage will increase with the Magic stat]]):format(8 + self:getMag(70), math.min(6, 3 + self:getMag(6)))
 	end,
 }
@@ -101,7 +101,7 @@ newTalent{
 	end,
 	require = { stat = { mag=16 }, },
 	info = function(self)
-		return ([[Teleports you randomly on a small scale range (%d)",
+		return ([[Teleports you randomly on a small scale range (%d)
 		The range will increase with the Magic stat]]):format(10 + self:getMag(10))
 	end,
 }

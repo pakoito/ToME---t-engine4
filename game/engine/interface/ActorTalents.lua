@@ -23,6 +23,8 @@ end
 function _M:newTalentType(t)
 	assert(t.name, "no talent type name")
 	assert(t.type, "no talent type type")
+	t.description = t.description or ""
+	t.points = t.points or 1
 	t.talents = {}
 	table.insert(self.talents_types_def, t)
 	self.talents_types_def[t.type] = t
@@ -38,6 +40,7 @@ function _M:newTalent(t)
 	t.mana = t.mana or 0
 	t.stamina = t.stamina or 0
 	t.mode = t.mode or "activated"
+	t.points = t.points or 1
 	assert(t.mode == "activated" or t.mode == "sustained", "wrong talent mode, requires either 'activated' or 'sustained'")
 	assert(t.info, "no talent info")
 
@@ -120,6 +123,14 @@ function _M:learnTalent(t_id)
 	return true
 end
 
+--- Actor forgets a talent
+-- @param t_id the id of the talent to learn
+-- @return true if the talent was unlearnt, nil and an error message otherwise
+function _M:unlearnTalent(t_id)
+	self.talents[t_id] = nil
+	return true
+end
+
 function _M:canLearnTalent(t)
 	-- Check prerequisites
 	if t.require then
@@ -136,7 +147,7 @@ function _M:canLearnTalent(t)
 
 	-- Check talent type
 	local known = self:numberKnownTalent(t.type[1])
-	if known < t.type[1] - 1 then
+	if known < t.type[2] - 1 then
 		return nil, "not enough talents of this type known"
 	end
 
@@ -145,11 +156,21 @@ function _M:canLearnTalent(t)
 end
 
 --- Do we know this talent type
-function _M:knowTalentType(t)
-	return self.talents_types[t]
+function _M:knowTalentType(name)
+	return self.talents_types[name]
 end
 
 --- Do we know this talent
-function _M:knowTalent(t)
-	return self.talents[t]
+function _M:knowTalent(id)
+	return self.talents[id] and true or false
+end
+
+--- Return talent definition from id
+function _M:getTalentFromId(id)
+	return _M.talents_def[id]
+end
+
+--- Return talent definition from id
+function _M:getTalentTypeFrom(id)
+	return _M.talents_types_def[id]
 end
