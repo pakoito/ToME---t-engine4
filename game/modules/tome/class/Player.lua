@@ -36,6 +36,15 @@ function _M:setName(name)
 	game.save_name = name
 end
 
+--- Notify the player of available cooldowns
+function _M:onTalentCooledDown(tid)
+	local t = self:getTalentFromId(tid)
+
+	local x, y = game.level.map:getTileToScreen(self.x, self.y)
+	game.flyers:add(x, y, 80, -0.3, -1.5, ("%s available"):format(t.name:capitalize()), {0,255,00})
+	game.log("#00ff00#Talent %s is ready to use.", t.name)
+end
+
 function _M:levelup()
 	mod.class.Actor.levelup(self)
 
