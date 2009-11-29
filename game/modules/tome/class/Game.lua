@@ -11,7 +11,7 @@ local Level = require "engine.Level"
 local Grid = require "engine.Grid"
 local Actor = require "mod.class.Actor"
 local ActorStats = require "engine.interface.ActorStats"
-local ActorAbilities = require "engine.interface.ActorAbilities"
+local ActorTalents = require "engine.interface.ActorTalents"
 local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
@@ -45,8 +45,8 @@ function _M:run()
 	ActorStats:defineStat("Willpower",	"wil", 10, 1, 100, "Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to resist mental attacks.")
 	ActorStats:defineStat("Cunning",	"cun", 10, 1, 100, "Cunning defines your character's ability to learn and think. It allows you to learn many wordly abilities, increases your mental resistance and armor penetration.")
 	ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines your character's ability to withstand and resist damage. It increases your maximun life and physical resistance.")
-	-- Abilities
-	ActorAbilities:loadDefinition("/data/abilities.lua")
+	-- Talents
+	ActorTalents:loadDefinition("/data/talents.lua")
 
 	self.log = LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.player_display = PlayerDisplay.new(0, 0, self.w * 0.2, self.h * 0.8, {30,30,0})
@@ -179,7 +179,7 @@ function _M:targetMode(v, msg, co, typ)
 		self.target:setActive(true, typ)
 
 		-- Exclusive mode means we disable the current key handler and use a specific one
-		-- that only allows targetting and resumes ability coroutine when done
+		-- that only allows targetting and resumes talent coroutine when done
 		if tostring(v) == "exclusive" then
 			self.target_co = co
 			self.key = self.targetmode_key
@@ -239,12 +239,15 @@ function _M:setupCommands()
 	self.normal_key = self.key
 	self.key:addCommands
 	{
-		-- ability test
+		-- talent test
+		_f = function()
+			self.player:useTalent(ActorTalents.T_MANATHRUST)
+		end,
 		_a = function()
-			self.player:useAbility(ActorAbilities.AB_FIREFLASH)
+			self.player:useTalent(ActorTalents.T_FIREFLASH)
 		end,
 		_z = function()
-			self.player:useAbility(ActorAbilities.AB_PHASE_DOOR)
+			self.player:useTalent(ActorTalents.T_PHASE_DOOR)
 		end,
 
 		[{"_g","shift"}] = function()

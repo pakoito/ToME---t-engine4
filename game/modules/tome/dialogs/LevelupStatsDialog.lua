@@ -8,7 +8,6 @@ function _M:init(actor)
 	self.actor_dup = actor:clone()
 	engine.Dialog.init(self, "Stats Levelup: "..actor.name, 500, 300)
 
---	self.statstpl = self:loadDisplayTemplate()
 	self.statsel = 1
 
 	self:keyCommands{

@@ -3,7 +3,7 @@ require "engine.Actor"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
 require "engine.interface.ActorStats"
-require "engine.interface.ActorAbilities"
+require "engine.interface.ActorTalents"
 require "engine.interface.BloodyDeath"
 require "mod.class.interface.Combat"
 
@@ -13,7 +13,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorLife,
 	engine.interface.ActorLevel,
 	engine.interface.ActorStats,
-	engine.interface.ActorAbilities,
+	engine.interface.ActorTalents,
 	engine.interface.BloodyDeath,
 	mod.class.interface.Combat
 ))
@@ -23,10 +23,10 @@ function _M:init(t)
 	engine.interface.ActorLife.init(self, t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorStats.init(self, t)
-	engine.interface.ActorAbilities.init(self, t)
+	engine.interface.ActorTalents.init(self, t)
 
 	self.unused_stats = 0
-	self.unused_abilities = 0
+	self.unused_talents = 0
 end
 
 function _M:move(x, y, force)
@@ -71,7 +71,7 @@ end
 
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3
-	self.unused_abilities = self.unused_abilities + 1
+	self.unused_talents = self.unused_talents + 1
 end
 
 --- Notifies a change of stat value
@@ -92,20 +92,20 @@ function _M:getTarget()
 	return self.target.x, self.target.y
 end
 
---- Called before an ability is used
+--- Called before a talent is used
 -- Check the actor can cast it
--- @param ab the ability (not the id, the table)
+-- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
-function _M:preUseAbility(ab)
+function _M:preUseTalent(ab)
 	return self:enoughEnergy()
 end
 
---- Called before an ability is used
+--- Called before a talent is used
 -- Check if it must use a turn, mana, stamina, ...
--- @param ab the ability (not the id, the table)
--- @param ret the return of the ability action
+-- @param ab the talent (not the id, the table)
+-- @param ret the return of the talent action
 -- @return true to continue, false to stop
-function _M:postUseAbility(ab, ret)
+function _M:postUseTalent(ab, ret)
 	if ret == nil then return end
 	self:useEnergy()
 	return true
