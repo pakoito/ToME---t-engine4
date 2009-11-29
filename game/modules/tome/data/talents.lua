@@ -1,12 +1,12 @@
 -- Mana spells
-newAbilityType{ type="spell/arcane", name = "arcane" }
-newAbilityType{ type="spell/fire", name = "fire" }
-newAbilityType{ type="spell/earth", name = "earth" }
-newAbilityType{ type="spell/cold", name = "cold" }
-newAbilityType{ type="spell/lightning", name = "lightning" }
-newAbilityType{ type="spell/conveyance", name = "conveyance" }
+newTalentType{ type="spell/arcane", name = "arcane" }
+newTalentType{ type="spell/fire", name = "fire" }
+newTalentType{ type="spell/earth", name = "earth" }
+newTalentType{ type="spell/cold", name = "cold" }
+newTalentType{ type="spell/lightning", name = "lightning" }
+newTalentType{ type="spell/conveyance", name = "conveyance" }
 
-newAbility{
+newTalent{
 	name = "Manathrust",
 	type = "spell/arcane",
 	mana = 10,
@@ -27,7 +27,7 @@ newAbility{
 	end,
 }
 
-newAbility{
+newTalent{
 	name = "Fireflash",
 	type = "spell/fire",
 	mana = 45,
@@ -48,7 +48,7 @@ newAbility{
 	end,
 }
 
-newAbility{
+newTalent{
 	name = "Phase Door",
 	type = "spell/conveyance",
 	message = "@Source@ blinks.",
