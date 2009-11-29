@@ -72,7 +72,15 @@ end
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3
 	self.unused_abilities = self.unused_abilities + 1
+end
 
+--- Notifies a change of stat value
+function _M:onStatChange(stat, v)
+	if stat == self.STAT_CON then
+		self.max_life = self.max_life + 5 * v
+	elseif stat == self.STAT_MAG then
+		self.max_mana = self.max_mana + 5 * v
+	end
 end
 
 function _M:attack(target)

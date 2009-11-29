@@ -47,7 +47,11 @@ end
 -- @param stat the stat id to change
 -- @param val the increment to add/substract
 function _M:incStat(stat, val)
+	local old = self.stats[stat]
 	self.stats[stat] = math.max(math.min(self.stats[stat] + val, _M.stats_def[stat].max), _M.stats_def[stat].min)
+	if self.stats[stat] - old ~= 0 then
+		self:onStatChange(stat, self.stats[stat] - old)
+	end
 	return self.stats[stat]
 end
 
@@ -57,4 +61,8 @@ end
 -- @param stat the stat id
 function _M:getStat(stat)
 	return self.stats[stat]
+end
+
+--- Notifies a change of stat value
+function _M:onStatChange(stat, v)
 end

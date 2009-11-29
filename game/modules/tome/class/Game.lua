@@ -24,7 +24,7 @@ local Tooltip = require "engine.Tooltip"
 local Calendar = require "engine.Calendar"
 
 local QuitDialog = require "mod.dialogs.Quit"
-local LevelupDialog = require "mod.dialogs.LevelupDialog"
+local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
@@ -248,8 +248,8 @@ function _M:setupCommands()
 		end,
 
 		[{"_g","shift"}] = function()
-			local levelup_dialog = LevelupDialog.new(self.player)
-			self:registerDialog(levelup_dialog)
+			local d = LevelupStatsDialog.new(self.player)
+			self:registerDialog(d)
 		end,
 
 		_LEFT  = function() self.player:move(self.player.x - 1, self.player.y    ) end,

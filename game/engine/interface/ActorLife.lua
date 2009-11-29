@@ -90,7 +90,14 @@ function _M:project(t, x, y, damtype, dam)
 	-- Now project on each grid, one type
 	for px, ys in pairs(grids) do
 		for py, _ in pairs(ys) do
-			DamageType:get(damtype).projector(self, px, py, damtype, dam)
+			-- Friendly fire ?
+			if px == self.x and py == self.y then
+				if t.friendlyfire then
+					DamageType:get(damtype).projector(self, px, py, damtype, dam)
+				end
+			else
+				DamageType:get(damtype).projector(self, px, py, damtype, dam)
+			end
 		end
 	end
 end

@@ -76,16 +76,17 @@ end
 function _M:getType(t)
 	if not t or not t.type then return {} end
 	t.range = t.range or 20
+	if t.friendlyfire == nil then t.friendlyfire = true end
 	if t.type == "hit" then
-		return {range=t.range}
+		return {range=t.range, friendlyfire=t.friendlyfire}
 	elseif t.type == "beam" then
-		return {range=t.range, line=true}
+		return {range=t.range, friendlyfire=t.friendlyfire, line=true}
 	elseif t.type == "bolt" then
-		return {range=t.range, stop_block=true}
+		return {range=t.range, friendlyfire=t.friendlyfire, stop_block=true}
 	elseif t.type == "ball" then
-		return {range=t.range, ball=t.radius}
+		return {range=t.range, friendlyfire=t.friendlyfire, ball=t.radius}
 	elseif t.type == "cone" then
-		return {range=t.range, cone=t.radius}
+		return {range=t.range, friendlyfire=t.friendlyfire, cone=t.radius}
 	else
 		return {}
 	end
