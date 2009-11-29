@@ -73,6 +73,8 @@ end
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3
 	self.unused_talents = self.unused_talents + 1
+	-- TODO: change it later, we need much less
+	self.unused_talents_types = self.unused_talents_types + 1
 end
 
 --- Notifies a change of stat value
@@ -98,7 +100,17 @@ end
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab)
-	return self:enoughEnergy()
+	local ret = self:enoughEnergy()
+	if ret == true then
+		if ab.message then
+			game.logSeen(self, "%s", self:useTalentMessage(ab))
+		elseif ab.type[1]:find("^spell/") then
+			game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
+		else
+			game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
+		end
+	end
+	return ret
 end
 
 --- Called before a talent is used
@@ -108,13 +120,6 @@ end
 -- @return true to continue, false to stop
 function _M:postUseTalent(ab, ret)
 	if ret == nil then return end
-	if ab.message then
-		game.logSeen(self, "%s", self:useTalentMessage(ab))
-	elseif ab.type[1]:find("^spell/") then
-		game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
-	else
-		game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
-	end
 	self:useEnergy()
 	return true
 end

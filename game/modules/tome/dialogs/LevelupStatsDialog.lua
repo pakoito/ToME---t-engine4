@@ -1,5 +1,6 @@
 require "engine.class"
 require "engine.Dialog"
+local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
@@ -15,7 +16,15 @@ function _M:init(actor)
 		_DOWN = function() self.statsel = util.boundWrap(self.statsel + 1, 1, 6) end,
 		_LEFT = function() self:incStat(-1) end,
 		_RIGHT = function() self:incStat(1) end,
-		_ESCAPE = function() game:unregisterDialog(self) end,
+		_ESCAPE = function()
+			game:unregisterDialog(self)
+
+			-- if talents to spend, do it now
+			if self.actor.unused_talents > 0 or self.actor.unused_talents_types > 0 then
+				local dt = LevelupTalentsDialog.new(self.actor)
+				game:registerDialog(dt)
+			end
+		end,
 	}
 	self:mouseZones{
 		{ x=2, y=25, w=130, h=self.font_h*6, fct=function(button, x, y, xrel, yrel, tx, ty)

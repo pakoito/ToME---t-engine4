@@ -44,6 +44,10 @@ function _M:newTalent(t)
 	assert(t.mode == "activated" or t.mode == "sustained", "wrong talent mode, requires either 'activated' or 'sustained'")
 	assert(t.info, "no talent info")
 
+	-- Remove line stat with tabs to be cleaner ..
+	local info = t.info
+	t.info = function(self) return info(self):gsub("\n\t+", "\n") end
+
 	table.insert(self.talents_def, t)
 	t.id = #self.talents_def
 	self["T_"..t.short_name] = #self.talents_def
@@ -155,6 +159,32 @@ function _M:canLearnTalent(t)
 	return true
 end
 
+--- Formats the requirements as a (multiline) string
+-- @param t_id the id of the talent to desc
+function _M:getTalentReqDesc(t_id)
+	local t = _M.talents_def[t_id]
+	local req = t.require
+	if not req then return "" end
+
+	local str = ""
+
+	if t.type[2] and t.type[2] > 1 then
+		str = str .. ("- Talents of the same category: %d\n"):format(t.type[2] - 1)
+	end
+
+	-- Obviously this requires the ActorStats interface
+	if req.stat then
+		for s, v in pairs(req.stat) do
+			str = str .. ("- %s %d\n"):format(self.stats_def[s].name, v)
+		end
+	end
+	if req.level then
+		str = str .. ("- Level %d\n"):format(req.level)
+	end
+
+	return str
+end
+
 --- Do we know this talent type
 function _M:knowTalentType(name)
 	return self.talents_types[name]
@@ -173,4 +203,20 @@ end
 --- Return talent definition from id
 function _M:getTalentTypeFrom(id)
 	return _M.talents_types_def[id]
+end
+
+--- Actor learns a talent type
+-- @param t_id the id of the talent to learn
+-- @return true if the talent was learnt, nil and an error message otherwise
+function _M:learnTalentType(tt)
+	self.talents_types[tt] = true
+	return true
+end
+
+--- Actor forgets a talent type
+-- @param t_id the id of the talent to learn
+-- @return true if the talent was unlearnt, nil and an error message otherwise
+function _M:unlearnTalentType(tt)
+	self.talents_types[tt] = nil
+	return true
 end

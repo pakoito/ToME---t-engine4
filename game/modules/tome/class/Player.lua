@@ -37,7 +37,10 @@ function _M:levelup()
 
 	local x, y = game.level.map:getTileToScreen(self.x, self.y)
 	game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
-	game.log("#00ffff#Welcome to level %d", self.level)
+	game.log("#00ffff#Welcome to level %d.", self.level)
+	if self.unused_stats > 0 then game.log("You have %d stat point(s) to spend. Press G to use them.", self.unused_stats) end
+	if self.unused_talents > 0 then game.log("You have %d talent point(s) to spend. Press G to use them.", self.unused_talents) end
+	if self.unused_talents_types > 0 then game.log("You have %d talent category point(s) to spend. Press G to use them.", self.unused_talents_types) end
 end
 
 --- Tries to get a target from the user

@@ -34,14 +34,18 @@ function _M:generateList()
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		local cat = tt.type:gsub("/.*", "")
 		list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() .." (category)", type=tt.type }
-		if self.actor:knowTalentType(tt.type) then known[#known+1] = "#00FF00#known" else known[#known+1] = tt.points.." point(s)" end
+		if self.actor:knowTalentType(tt.type) then
+			known[#known+1] = "#00FF00#known"
 
-		-- Find all talents of this school
-		for j, t in ipairs(tt.talents) do
-			local typename = "talent"
-			if t.type[1]:find("^spell/") then typename = "spell" end
-			list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id }
-			if self.actor:knowTalent(t.id) then known[#known+1] = "#00FF00#known" else known[#known+1] = t.points.." point(s)" end
+			-- Find all talents of this school
+			for j, t in ipairs(tt.talents) do
+				local typename = "talent"
+				if t.type[1]:find("^spell/") then typename = "spell" end
+				list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id }
+				if self.actor:knowTalent(t.id) then known[#known+1] = "#00FF00#known" else known[#known+1] = t.points.." point(s)" end
+			end
+		else
+			known[#known+1] = tt.points.." point(s)"
 		end
 	end
 	self.list = list
@@ -93,12 +97,14 @@ function _M:learnType(tt, v)
 			self:simplePopup("Not enough talent category points", "You have no talent category points left!")
 			return
 		end
+		self.actor:learnTalentType(tt)
 		self.actor.unused_talents_types = self.actor.unused_talents_types - 1
 	else
 		if self.actor_dup:getStat(self.talentsel) == self.actor:getStat(self.talentsel) then
 			self:simplePopup("Impossible", "You cannot take out more points!")
 			return
 		end
+		self.actor:unlearnTalentType(tt)
 		self.actor.unused_talents_types = self.actor.unused_talents_types + 1
 	end
 
@@ -113,7 +119,7 @@ function _M:drawDialog(s)
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 
-	local lines, helplines = {}
+	local lines, helplines, reqlines = {}, {}, {}
 	if self.list[self.talentsel].type then
 		local str = ""
 		str = str .. "#00FFFF#Talent Category\n"
@@ -126,17 +132,39 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, improve your character. You gain a talent point every level. You may also find trainers or artifacts that allows you to learn more.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		lines = self.actor:getTalentFromId(self.list[self.talentsel].talent).info(self.actor):splitLines(self.iw / 2 - 10, self.font)
+		local req = self.actor:getTalentReqDesc(self.list[self.talentsel].talent)
+		if req ~= "" then
+			req = "Requirements:\n"..req
+			reqlines = req:splitLines(self.iw / 2 - 10, self.font)
+		end
 	end
+	local h = 2
 	for i = 1, #talentshelp do
-		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
+		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)
+		h = h + self.font:lineSkip()
 	end
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, 2 + (0.5 + #talentshelp) * self.font:lineSkip(), self.iw / 6)
+
+	h = h + self.font:lineSkip()
+	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 	for i = 1, #helplines do
-		s:drawColorString(self.font, helplines[i], self.iw / 2 + 5, 2 + (i + #talentshelp) * self.font:lineSkip())
+		s:drawColorString(self.font, helplines[i], self.iw / 2 + 5, h)
+		h = h + self.font:lineSkip()
 	end
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, 2 + (1.5 + #talentshelp + #helplines) * self.font:lineSkip(), self.iw / 6)
+
+	if #reqlines > 0 then
+		h = h + self.font:lineSkip()
+		self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
+		for i = 1, #reqlines do
+			s:drawColorString(self.font, reqlines[i], self.iw / 2 + 5, h)
+			h = h + self.font:lineSkip()
+		end
+	end
+
+	h = h + self.font:lineSkip()
+	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 	for i = 1, #lines do
-		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #helplines + #talentshelp + 2) * self.font:lineSkip())
+		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + h)
+		h = h + self.font:lineSkip()
 	end
 
 	-- Talents

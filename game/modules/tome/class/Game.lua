@@ -257,9 +257,19 @@ function _M:setupCommands()
 		end,
 
 		[{"_g","shift"}] = function()
---			local d = LevelupStatsDialog.new(self.player)
-			local d = LevelupTalentsDialog.new(self.player)
-			self:registerDialog(d)
+			local none = true
+			if self.player.unused_stats > 0 then
+				local ds = LevelupStatsDialog.new(self.player)
+				self:registerDialog(ds)
+				none = false
+			elseif self.player.unused_talents > 0 or self.player.unused_talents_types > 0 then
+				local dt = LevelupTalentsDialog.new(self.player)
+				self:registerDialog(dt)
+				none = false
+			end
+			if none then
+				engine.Dialog:simplePopup("Nothing to level", "You character has no stat or talent points to spend. Levelup and try again.")
+			end
 		end,
 
 		_LEFT  = function() self.player:move(self.player.x - 1, self.player.y    ) end,
