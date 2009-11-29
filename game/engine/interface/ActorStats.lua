@@ -18,14 +18,11 @@ function _M:defineStat(name, short_name, default_value, min, max, desc)
 		min = min or 1,
 		max = max or 100,
 	})
+	self.stats_def[#self.stats_def].id = #self.stats_def
 	self.stats_def[short_name] = self.stats_def[#self.stats_def]
 	self["STAT_"..short_name:upper()] = #self.stats_def
 	self["get"..short_name:lower():capitalize()] = function(self, scale)
-		local val = self.stats[_M["STAT_"..short_name:upper()]]
-		if scale then
-			val = math.floor(val * scale / max)
-		end
-		return val
+		return self:getStat(_M["STAT_"..short_name:upper()], scale)
 	end
 end
 
@@ -59,8 +56,18 @@ end
 -- Not that the engine also auto-defines stat specific methods on the form: self:getShortname().
 -- If you stat short name is STR then it becomes getStr()
 -- @param stat the stat id
-function _M:getStat(stat)
-	return self.stats[stat]
+-- @param scale a scaling factor, nil means max stat value
+function _M:getStat(stat, scale)
+	local val
+	if type(stat) == "string" then
+		val = self.stats[_M.stats_def[stat].id]
+	else
+		val = self.stats[stat]
+	end
+	if scale then
+		val = math.floor(val * scale / _M.stats_def[stat].max)
+	end
+	return val
 end
 
 --- Notifies a change of stat value

@@ -27,6 +27,7 @@ function _M:init(t)
 
 	self.unused_stats = 0
 	self.unused_talents = 0
+	self.unused_talents_types = 0
 end
 
 function _M:move(x, y, force)
@@ -107,6 +108,13 @@ end
 -- @return true to continue, false to stop
 function _M:postUseTalent(ab, ret)
 	if ret == nil then return end
+	if ab.message then
+		game.logSeen(self, "%s", self:useTalentMessage(ab))
+	elseif ab.type[1]:find("^spell/") then
+		game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
+	else
+		game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
+	end
 	self:useEnergy()
 	return true
 end

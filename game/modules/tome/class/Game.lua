@@ -25,6 +25,7 @@ local Calendar = require "engine.Calendar"
 
 local QuitDialog = require "mod.dialogs.Quit"
 local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
+local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
@@ -75,7 +76,10 @@ end
 
 function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
-	self.player = Player.new{name=self.player_name, max_life=10000, image='player.png', display='@', color_r=230, color_g=230, color_b=230}
+	self.player = Player.new{
+		name=self.player_name, max_life=10000, image='player.png', display='@', color_r=230, color_g=230, color_b=230,
+		talents_types = {["spell/arcane"]=true,["spell/fire"]=true,["physical/1hweapon"]=true},
+	}
 	self:changeLevel(1)
 end
 
@@ -251,7 +255,8 @@ function _M:setupCommands()
 		end,
 
 		[{"_g","shift"}] = function()
-			local d = LevelupStatsDialog.new(self.player)
+--			local d = LevelupStatsDialog.new(self.player)
+			local d = LevelupTalentsDialog.new(self.player)
 			self:registerDialog(d)
 		end,
 

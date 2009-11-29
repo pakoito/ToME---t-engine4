@@ -35,3 +35,9 @@ newDamageType{
 newDamageType{
 	name = "lightning", type = "LIGHTNING",
 }
+newDamageType{
+	name = "light", type = "LIGHT",
+	projector = function(src, x, y, type, dam)
+		game.level.map.lites(x, y, true)
+	end,
+}

@@ -113,9 +113,10 @@ function _M:drawHBorder(s, x, y, h)
 	end
 end
 
-function _M:drawSelectionList(s, x, y, hskip, list, sel)
+function _M:drawSelectionList(s, x, y, hskip, list, sel, prop)
 	for i, v in ipairs(list) do
-		v = tostring(v)
+		if prop then v = tostring(v[prop])
+		else v = tostring(v) end
 		if sel == i then
 			s:drawColorString(self.font, v, x, y + (i-1) * hskip, 0, 255, 255)
 		else
