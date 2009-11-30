@@ -199,3 +199,35 @@ function util.bound(i, min, max)
 	elseif i > max then i = max end
 	return i
 end
+
+function core.fov.circle_grids(x, y, radius, block)
+	local grids = {}
+	core.fov.calc_circle(x, y, radius, function(self, lx, ly)
+		if not grids[lx] then grids[lx] = {} end
+		grids[lx][ly] = true
+
+		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+	end, function()end, self)
+
+	-- point of origin
+	if not grids[x] then grids[x] = {} end
+	grids[x][y] = true
+
+	return grids
+end
+
+function core.fov.beam_grids(x, y, radius, dir, angle, block)
+	local grids = {}
+	core.fov.calc_beam(x, y, radius, dir, angle, function(self, lx, ly)
+		if not grids[lx] then grids[lx] = {} end
+		grids[lx][ly] = true
+
+		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+	end, function()end, self)
+
+	-- point of origin
+	if not grids[x] then grids[x] = {} end
+	grids[x][y] = true
+
+	return grids
+end

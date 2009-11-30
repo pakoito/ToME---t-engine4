@@ -81,7 +81,7 @@ function _M:levelup()
 	-- Healp up on new level
 	self.life = self.max_life
 	self.mana = self.max_mana
-	self.stamina = self.man_stamina
+	self.stamina = self.max_stamina
 
 	-- Auto levelup ?
 	if self.autolevel then

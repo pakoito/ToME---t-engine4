@@ -124,6 +124,16 @@ function _M:tick()
 	-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
 	-- (since display is on a set FPS while tick() ticks as much as possible
 	-- engine.GameEnergyBased.tick(self)
+end
+
+--- Called every game turns
+-- Does nothing, you can override it
+function _M:onTurn()
+	-- The following happens only every 10 game turns (once for every turn of 1 mod speed actors)
+	if self.turn % 10 ~= 0 then return end
+
+	-- Process overlay effects
+	self.level.map:processEffects()
 
 	if not self.day_of_year or self.day_of_year ~= self.calendar:getDayOfYear(self.turn) then
 		self.log(self.calendar:getTimeDate(self.turn))
@@ -258,6 +268,9 @@ function _M:setupCommands()
 		end,
 		_a = function()
 			self.player:useTalent(ActorTalents.T_FIREFLASH)
+		end,
+		_e = function()
+			self.player:useTalent(ActorTalents.T_NOXIOUS_CLOUD)
 		end,
 		_z = function()
 			self.player:useTalent(ActorTalents.T_BLINK)

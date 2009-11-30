@@ -23,6 +23,12 @@ function _M:tick()
 		while not self.paused do
 			engine.GameEnergyBased.tick(self)
 			self.turn = self.turn + 1
+			self:onTurn()
 		end
 	end
+end
+
+--- Called every game turns
+-- Does nothing, you can override it
+function _M:onTurn()
 end

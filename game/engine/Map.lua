@@ -2,6 +2,7 @@ require "engine.class"
 local Entity = require "engine.Entity"
 local Tiles = require "engine.Tiles"
 local Faction = require "engine.Faction"
+local DamageType = require "engine.DamageType"
 
 --- Represents a level map, handles display and various low level map work
 module(..., package.seeall, class.make)
@@ -55,6 +56,7 @@ function _M:init(w, h)
 	self.lites = {}
 	self.seens = {}
 	self.remembers = {}
+	self.effects = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self:loaded()
@@ -223,6 +225,9 @@ function _M:display()
 		end end
 ]]
 	end
+
+	self:displayEffects()
+
 	return self.surface
 end
 
@@ -344,4 +349,79 @@ end
 function _M:isBound(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
 	return true
+end
+
+--- Adds a zone (temporary) effect
+-- @param src the source actor
+-- @param x the epicenter coords
+-- @param y the epicenter coords
+-- @param duration the number of turns to persist
+-- @param damtype the DamageType to apply
+-- @param radius the radius of the effect
+-- @param dir the numpad direction of the effect, 5 for a ball effect
+-- @param overlay a simple display entity to draw upon the map
+function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, overlay, update_fct)
+	table.insert(self.effects, {
+		src=src, x=x, y=y, duration=duration, damtype=damtype, dam=dam, radius=radius, dir=dir, angle=angle, overlay=overlay,
+		update_fct=update_fct,
+	})
+	self.changed = true
+end
+
+--- Display the overlay effects, called by self:display()
+function _M:displayEffects()
+	for i, e in ipairs(self.effects) do
+		local grids
+		local s = self.tiles:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image)
+		s:alpha(e.alpha or 150)
+
+		-- Handle balls
+		if e.dir == 5 then
+			grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
+		-- Handle beams
+		else
+			grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true)
+		end
+
+		-- Now display each grids
+		for lx, ys in pairs(grids) do
+			for ly, _ in pairs(ys) do
+				if self.seens(lx, ly) then
+					self.surface:merge(s, (lx - self.mx) * self.tile_w, (ly - self.my) * self.tile_h)
+				end
+			end
+		end
+	end
+end
+
+--- Process the overlay effects, call it from your tick function
+function _M:processEffects()
+	local todel = {}
+	for i, e in ipairs(self.effects) do
+		local grids
+
+		-- Handle balls
+		if e.dir == 5 then
+			grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
+		-- Handle beams
+		else
+			grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true)
+		end
+
+		-- Now display each grids
+		for lx, ys in pairs(grids) do
+			for ly, _ in pairs(ys) do
+				DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
+			end
+		end
+
+		e.duration = e.duration - 1
+		if e.duration <= 0 then
+			table.insert(todel, i)
+		elseif e.update_fct then
+			e:update_fct()
+		end
+	end
+
+	for i = #todel, 1, -1 do table.remove(self.effects, todel[i]) end
 end
