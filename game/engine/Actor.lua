@@ -33,19 +33,20 @@ function _M:move(map, x, y, force)
 	return true
 end
 
-function _M:teleportRandom(dist)
+function _M:teleportRandom(x, y, dist)
 	local poss = {}
 
-	for i = self.x - dist, self.x + dist do
-		for j = self.y - dist, self.y + dist do
+	for i = x - dist, x + dist do
+		for j = y - dist, y + dist do
 			if game.level.map:isBound(i, j) and
-			   core.fov.distance(self.x, self.y, i, j) <= dist and
+			   core.fov.distance(x, y, i, j) <= dist and
 			   not game.level.map:checkAllEntities(i, j, "block_move") then
 				poss[#poss+1] = {i,j}
 			end
 		end
 	end
 
+	if #poss == 0 then return false end
 	local pos = poss[rng.range(1, #poss)]
 	return self:move(pos[1], pos[2], true)
 end

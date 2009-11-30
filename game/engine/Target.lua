@@ -47,9 +47,11 @@ function _M:display()
 	local lx, ly = l()
 	local stopx, stopy = self.source_actor.x, self.source_actor.y
 	while lx and ly do
-		if not game.level.map.seens(lx, ly) then s = self.sr end
-		if self.target_type.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then s = self.sr
-		elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then s = self.sr end
+		if not self.target_type.no_restrict then
+			if not game.level.map.seens(lx, ly) then s = self.sr end
+			if self.target_type.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then s = self.sr
+			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then s = self.sr end
+		end
 		if self.target_type.range and math.sqrt((self.source_actor.x-lx)^2 + (self.source_actor.y-ly)^2) > self.target_type.range then s = self.sr end
 		if s == self.sb then stopx, stopy = lx, ly end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
@@ -62,7 +64,7 @@ function _M:display()
 	if self.target_type.ball then
 		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(self, lx, ly)
 			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
-			if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
+			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
 		end, function()end, self)
 	end
 end
@@ -78,15 +80,15 @@ function _M:getType(t)
 	t.range = t.range or 20
 	if t.friendlyfire == nil then t.friendlyfire = true end
 	if t.type == "hit" then
-		return {range=t.range, friendlyfire=t.friendlyfire}
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict}
 	elseif t.type == "beam" then
-		return {range=t.range, friendlyfire=t.friendlyfire, line=true}
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, line=true}
 	elseif t.type == "bolt" then
-		return {range=t.range, friendlyfire=t.friendlyfire, stop_block=true}
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, stop_block=true}
 	elseif t.type == "ball" then
-		return {range=t.range, friendlyfire=t.friendlyfire, ball=t.radius}
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius}
 	elseif t.type == "cone" then
-		return {range=t.range, friendlyfire=t.friendlyfire, cone=t.radius}
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius}
 	else
 		return {}
 	end
@@ -137,5 +139,20 @@ function _M:scan(dir, radius, sx, sy)
 		self.target.entity = actors[1].a
 		self.target.x = self.target.entity.x
 		self.target.y = self.target.entity.y
+	end
+end
+
+--- Returns the point at distance from the source on a line to the destination
+function _M:pointAtRange(srcx, srcy, destx, desty, dist)
+	local l = line.new(srcx, srcy, destx, desty)
+	local lx, ly = l()
+	while lx and ly do
+		if core.fov.distance(srcx, srcy, lx, ly) >= dist then break end
+		lx, ly = l()
+	end
+	if not lx then
+		return destx, desty
+	else
+		return lx, ly
 	end
 end

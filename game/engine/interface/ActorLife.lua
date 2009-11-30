@@ -22,6 +22,13 @@ function _M:block_move(x, y, e)
 	return true
 end
 
+--- Regenerate life, call it from your actor class act() method
+function _M:regenLife()
+	if self.regen_life then
+		self.life = util.bound(self.life + self.regen_life, 0, self.max_life)
+	end
+end
+
 --- Remove some HP from an actor
 -- If HP is reduced to 0 then remove from the level and call the die method
 function _M:takeHit(value, src)
@@ -62,9 +69,11 @@ function _M:project(t, x, y, damtype, dam)
 	local l = line.new(self.x, self.y, x, y)
 	lx, ly = l()
 	while lx and ly do
-		if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
-		elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
-		if typ.range and math.sqrt((self.x-lx)^2 + (self.y-ly)^2) > typ.range then break end
+		if not typ.no_restrict then
+			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
+			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
+			if typ.range and math.sqrt((self.x-lx)^2 + (self.y-ly)^2) > typ.range then break end
+		end
 
 		-- Deam damage: beam
 		if typ.line then addGrid(lx, ly) end
@@ -78,7 +87,7 @@ function _M:project(t, x, y, damtype, dam)
 		core.fov.calc_circle(lx, ly, typ.ball, function(self, px, py)
 			-- Deam damage: ball
 			addGrid(px, py)
-			if game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
+			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
 		end, function()end, self)
 		addGrid(lx, ly)
 	elseif typ.cone then

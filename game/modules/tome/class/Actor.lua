@@ -36,6 +36,9 @@ end
 function _M:act()
 	-- Cooldown talents
 	self:cooldownTalents()
+	-- Regen resources
+	self:regenLife()
+	self:regenResources()
 end
 
 function _M:move(x, y, force)
@@ -64,8 +67,14 @@ end
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3
 	self.unused_talents = self.unused_talents + 1
-	-- TODO: change it later, we need much less
-	self.unused_talents_types = self.unused_talents_types + 1
+	if self.level % 5 == 0 then
+		self.unused_talents_types = self.unused_talents_types + 1
+	end
+
+	-- Gain life and resources
+	self.max_life = self.max_life + 7
+	self:incMaxMana(7)
+	self:incMaxStamina(7)
 end
 
 --- Notifies a change of stat value

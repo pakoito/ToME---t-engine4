@@ -43,8 +43,8 @@ function _M:run()
 	-- Talents
 	ActorTalents:loadDefinition("/data/talents.lua")
 	-- Actor resources
-	ActorResource:defineResource("Mana", "mana", ActorTalents.T_MANA_POOL, "Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximun mana.")
-	ActorResource:defineResource("Stamina", "stamina", ActorTalents.T_STAMINA_POOL, "Stamina represents your physical fatigue. Each physical ability used reduces it.")
+	ActorResource:defineResource("Mana", "mana", ActorTalents.T_MANA_POOL, "mana_regen", "Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximun mana.")
+	ActorResource:defineResource("Stamina", "stamina", ActorTalents.T_STAMINA_POOL, "stamina_regen", "Stamina represents your physical fatigue. Each physical ability used reduces it.")
 	-- Actor stats
 	ActorStats:defineStat("Strength",	"str", 10, 1, 100, "Strength defines your character's ability to apply physical force. It increases your melee damage, damage with heavy weapons, your chance to resist physical effects, and carrying capacity.")
 	ActorStats:defineStat("Dexterity",	"dex", 10, 1, 100, "Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks and your damage with light weapons.")
@@ -257,7 +257,7 @@ function _M:setupCommands()
 			self.player:useTalent(ActorTalents.T_FIREFLASH)
 		end,
 		_z = function()
-			self.player:useTalent(ActorTalents.T_PHASE_DOOR)
+			self.player:useTalent(ActorTalents.T_BLINK)
 		end,
 
 		[{"_g","shift"}] = function()
