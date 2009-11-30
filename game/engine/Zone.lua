@@ -104,6 +104,9 @@ function _M:newLevel(level_data, lev, game)
 	local level = self.level_class.new(lev, map)
 	level.start = {x=startx, y=starty}
 
+	-- Save level data
+	level.data = level_data
+
 	-- Setup the level in the game
 	game:setLevel(level)
 
@@ -118,7 +121,5 @@ function _M:newLevel(level_data, lev, game)
 		generator:generate()
 	end
 
-	-- Save level data
-	level.data = level_data
 	return level
 end

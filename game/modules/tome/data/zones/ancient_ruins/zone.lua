@@ -17,7 +17,8 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {400, 400},
-			levelup = {5, 10},
+			level_range = {5, 10},
+			adjust_level_to_player = {-2, 2},
 		},
 	}
 }

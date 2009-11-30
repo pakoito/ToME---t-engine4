@@ -7,6 +7,7 @@ module(..., package.seeall, class.inherit(Entity))
 
 function _M:init(t)
 	t = t or {}
+
 	self.name = t.name or "unknown npc"
 	self.level = t.level or 1
 	self.sight = t.sight or 20

@@ -113,6 +113,9 @@ function _M:changeLevel(lev)
 	self.level:addEntity(self.player)
 end
 
+function _M:getPlayer()
+	return self.player
+end
 
 function _M:tick()
 	if self.target.target.entity and not self.level:hasEntity(self.target.target.entity) then self.target.target.entity = false end

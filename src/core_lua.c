@@ -557,8 +557,11 @@ static int rng_avg(lua_State *L)
 	int i;
 	if (lua_isnumber(L, 3)) nb = luaL_checknumber(L, 3);
 	for (i = 0; i < nb; i++)
-		res += x + rand_div(1 + y - x);
-	lua_pushnumber(L, res / nb);
+	{
+		int r = x + rand_div(1 + y - x);
+		res += r;
+	}
+	lua_pushnumber(L, res / (double)nb);
 	return 1;
 }
 

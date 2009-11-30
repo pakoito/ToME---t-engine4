@@ -1,5 +1,6 @@
 require "engine.class"
 require "engine.Actor"
+require "engine.interface.ActorTemporaryEffects"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
 require "engine.interface.ActorStats"
@@ -11,6 +12,7 @@ require "mod.class.interface.Combat"
 module(..., package.seeall, class.inherit(
 	-- a ToME actor is a complex beast it uses may inetrfaces
 	engine.Actor,
+	engine.interface.ActorTemporaryEffects,
 	engine.interface.ActorLife,
 	engine.interface.ActorLevel,
 	engine.interface.ActorStats,
@@ -22,6 +24,7 @@ module(..., package.seeall, class.inherit(
 
 function _M:init(t)
 	engine.Actor.init(self, t)
+	engine.interface.ActorTemporaryEffects.init(self, t)
 	engine.interface.ActorLife.init(self, t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorStats.init(self, t)
@@ -75,6 +78,14 @@ function _M:levelup()
 	self.max_life = self.max_life + 7
 	self:incMaxMana(7)
 	self:incMaxStamina(7)
+	-- Healp up on new level
+	self.life = self.max_life
+	self.mana = self.max_mana
+	self.stamina = self.man_stamina
+
+	-- Auto levelup ?
+	if self.autolevel then
+	end
 end
 
 --- Notifies a change of stat value

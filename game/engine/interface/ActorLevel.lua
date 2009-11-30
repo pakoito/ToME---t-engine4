@@ -16,7 +16,12 @@ _M.exp_chart = function(level)
 end
 
 function _M:init(t)
-	self.level = t.level or 1
+	if t.level_range then
+		self.level = t.level_range[1]
+		self.max_level = t.level_range[2]
+	else
+		self.level = t.level or 1
+	end
 	self.exp = t.exp or 0
 	self.exp_worth = t.exp_worth or 1
 end
@@ -45,6 +50,9 @@ end
 function _M:gainExp(value)
 	self.exp = self.exp + value
 	while self:getExpChart(self.level + 1) and self.exp >= self:getExpChart(self.level + 1) do
+		-- At max level, if any
+		if self.max_level and self.level >= self.max_level then break end
+
 		self.level = self.level + 1
 		self.exp = self.exp - self:getExpChart(self.level)
 		self:levelup()
@@ -59,4 +67,16 @@ end
 
 --- Method called when leveing up, module author rewrite it to do as you please
 function _M:levelup()
+end
+
+--- Forces an actor to levelup to "lev"
+function _M:forceLevelup(lev)
+	while self.level < lev do
+		-- At max level, if any
+		if self.max_level and self.level >= self.max_level then break end
+
+		self.level = self.level + 1
+		self.exp = 0
+		self:levelup()
+	end
 end

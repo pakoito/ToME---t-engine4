@@ -7,7 +7,11 @@ function _M:init(map, level, npc_list, data)
 	engine.Generator.init(self, map)
 	self.level = level
 	self.npc_list = npc_list
+	if data.adjust_level_to_player and game:getPlayer() then
+		self.adjust_level_to_player = {base=game:getPlayer().level, min=data.adjust_level_to_player[1], max=data.adjust_level_to_player[2]}
+	end
 	self.nb_npc = data.nb_npc or {10, 20}
+	self.level_range = data.level_range or {level, level}
 end
 
 function _M:generate()
@@ -22,6 +26,12 @@ function _M:generate()
 		if tries < 100 then
 			m:move(x, y, true)
 			self.level:addEntity(m)
+
+			-- Levelup ?
+			if self.adjust_level_to_player then
+				local newlevel = self.adjust_level_to_player.base + rng.avg(self.adjust_level_to_player.min, self.adjust_level_to_player.max)
+				m:forceLevelup(newlevel)
+			end
 		end
 	end
 end

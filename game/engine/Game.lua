@@ -65,6 +65,13 @@ function _M:display()
 	end
 end
 
+--- Returns the player
+-- Reimplement it in your module, this can just return nil if you dont want/need
+-- the engine adjusting stuff to the player or if you have many players or whatever
+function _M:getPlayer()
+	return nil
+end
+
 --- This is the "main game loop", do something here
 function _M:tick()
 end
