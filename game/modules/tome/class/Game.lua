@@ -52,6 +52,8 @@ function _M:run()
 	ActorStats:defineStat("Willpower",	"wil", 10, 1, 100, "Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to resist mental attacks.")
 	ActorStats:defineStat("Cunning",	"cun", 10, 1, 100, "Cunning defines your character's ability to learn and think. It allows you to learn many wordly abilities, increases your mental resistance and armor penetration.")
 	ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines your character's ability to withstand and resist damage. It increases your maximun life and physical resistance.")
+	-- Actor autolevel schemes
+	dofile("/data/autolevel_schemes.lua")
 
 	self.log = LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.player_display = PlayerDisplay.new(0, 0, self.w * 0.2, self.h * 0.8, {30,30,0})
@@ -82,7 +84,8 @@ end
 function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
 	self.player = Player.new{
-		name=self.player_name, max_life=10000, image='player.png', display='@', color_r=230, color_g=230, color_b=230,
+		name=self.player_name, max_life=10000, display='@', color_r=230, color_g=230, color_b=230,
+		level = 10,
 	}
 	self:changeLevel(1)
 end

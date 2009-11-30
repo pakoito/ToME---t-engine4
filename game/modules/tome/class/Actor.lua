@@ -1,5 +1,6 @@
 require "engine.class"
 require "engine.Actor"
+require "engine.Autolevel"
 require "engine.interface.ActorTemporaryEffects"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
@@ -85,6 +86,7 @@ function _M:levelup()
 
 	-- Auto levelup ?
 	if self.autolevel then
+		engine.Autolevel:autoLevel(self)
 	end
 end
 

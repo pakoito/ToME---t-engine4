@@ -10,4 +10,12 @@ _M.schemes = {}
 function _M:registerScheme(t)
 	assert(t.name, "no autolevel name")
 	assert(t.levelup, "no autolevel levelup function")
+	_M.schemes[t.name] = t
+end
+
+function _M:autoLevel(actor)
+	if not actor.autolevel then return end
+	assert(_M.schemes[actor.autolevel], "no autoleveling scheme "..actor.autolevel)
+
+	_M.schemes[actor.autolevel].levelup(actor)
 end
