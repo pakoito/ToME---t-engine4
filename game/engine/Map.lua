@@ -21,6 +21,8 @@ rememberDisplayOrder = { TERRAIN }
 
 --- Sets the viewport size
 -- Static
+-- @param x screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
+-- @param y screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
 -- @param w width
 -- @param h height
 -- @param tile_w width of a single tile
@@ -46,8 +48,6 @@ end
 --- Creates a map
 -- @param w width (in grids)
 -- @param h height (in grids)
--- @param x screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
--- @param y screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
 function _M:init(w, h)
 	self.mx = 0
 	self.my = 0
@@ -360,6 +360,7 @@ end
 -- @param radius the radius of the effect
 -- @param dir the numpad direction of the effect, 5 for a ball effect
 -- @param overlay a simple display entity to draw upon the map
+-- @param update_fct optional function that will be called each time the effect is updated with the effect itself as parameter. Use it to change radius, move around ....
 function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, overlay, update_fct)
 	table.insert(self.effects, {
 		src=src, x=x, y=y, duration=duration, damtype=damtype, dam=dam, radius=radius, dir=dir, angle=angle, overlay=overlay,
@@ -371,23 +372,26 @@ end
 --- Display the overlay effects, called by self:display()
 function _M:displayEffects()
 	for i, e in ipairs(self.effects) do
-		local grids
-		local s = self.tiles:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image)
-		s:alpha(e.alpha or 150)
+		-- Dont bother with obviously out of screen stuff
+		if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
+			local grids
+			local s = self.tiles:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image)
+			s:alpha(e.alpha or 150)
 
-		-- Handle balls
-		if e.dir == 5 then
-			grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
-		-- Handle beams
-		else
-			grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true)
-		end
+			-- Handle balls
+			if e.dir == 5 then
+				grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
+			-- Handle beams
+			else
+				grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true)
+			end
 
-		-- Now display each grids
-		for lx, ys in pairs(grids) do
-			for ly, _ in pairs(ys) do
-				if self.seens(lx, ly) then
-					self.surface:merge(s, (lx - self.mx) * self.tile_w, (ly - self.my) * self.tile_h)
+			-- Now display each grids
+			for lx, ys in pairs(grids) do
+				for ly, _ in pairs(ys) do
+					if self.seens(lx, ly) then
+						self.surface:merge(s, (lx - self.mx) * self.tile_w, (ly - self.my) * self.tile_h)
+					end
 				end
 			end
 		end
