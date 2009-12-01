@@ -8,13 +8,14 @@ module(..., package.seeall, class.inherit(Entity))
 function _M:init(t)
 	t = t or {}
 
-	self.name = t.name or "unknown npc"
+	self.name = t.name or "unknown actor"
 	self.level = t.level or 1
 	self.sight = t.sight or 20
 	self.energy = t.energy or { value=0, mod=1 }
 	self.energy.value = self.energy.value or 0
 	self.energy.mod = self.energy.mod or 0
 	self.faction = t.faction or "enemies"
+	self.changed = true
 	Entity.init(self, t)
 end
 
@@ -36,9 +37,9 @@ end
 
 function _M:canMove(x, y, terrain_only)
 	if terrain_only then
-		return game.level.map:checkEntity(i, j, Map.TERRAIN, "block_move")
+		return game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move")
 	else
-		return game.level.map:checkAllEntities(i, j, "block_move")
+		return game.level.map:checkAllEntities(x, y, "block_move")
 	end
 end
 

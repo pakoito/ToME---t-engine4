@@ -18,6 +18,7 @@ local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
 local PlayerDisplay = require "mod.class.PlayerDisplay"
+local TalentsDisplay = require "mod.class.TalentsDisplay"
 
 local LogDisplay = require "engine.LogDisplay"
 local DebugConsole = require "engine.DebugConsole"
@@ -58,8 +59,9 @@ function _M:run()
 	-- Actor AIs
 	ActorAI:loadDefinition("/engine/ai/")
 
-	self.log = LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
+	self.log = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.player_display = PlayerDisplay.new(0, 0, self.w * 0.2, self.h * 0.8, {30,30,0})
+	self.talents_display = TalentsDisplay.new(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
@@ -150,6 +152,7 @@ end
 function _M:display()
 	self.log:display():toScreen(self.log.display_x, self.log.display_y)
 	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
+	self.talents_display:display():toScreen(self.talents_display.display_x, self.talents_display.display_y)
 
 	if self.level and self.level.map then
 		-- Display the map and compute FOV for the player if needed
@@ -358,7 +361,6 @@ function _M:setupCommands()
 		[{"_KP3","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y + 1 end,
 		[{"_KP7","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 self.target.target.y = self.target.target.y - 1 end,
 		[{"_KP9","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y - 1 end,
-
 		[{"_LEFT","ctrl"}] = function() self.target:scan(4) end,
 		[{"_RIGHT","ctrl"}] = function() self.target:scan(6) end,
 		[{"_UP","ctrl"}] = function() self.target:scan(8) end,
@@ -389,7 +391,7 @@ function _M:setupMouse()
 	local derivx, derivy = 0, 0
 
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
-		-- Compute map coordonates
+		-- Target stuff
 		if button == "right" then
 			local tmx, tmy = self.level.map:getMouseTile(mx, my)
 
@@ -407,6 +409,7 @@ function _M:setupMouse()
 			else
 				self:targetMode(true, true)
 			end
+		-- Move map around
 		elseif button == "left" and xrel and yrel then
 			derivx = derivx + xrel
 			derivy = derivy + yrel
@@ -427,6 +430,7 @@ function _M:setupMouse()
 			end
 		end
 	end)
+	-- Scroll message log
 	self.mouse:registerZone(self.log.display_x, self.log.display_y, self.w, self.h, function(button)
 		if button == "wheelup" then self.log:scrollUp(1) end
 		if button == "wheeldown" then self.log:scrollUp(-1) end
@@ -435,8 +439,6 @@ end
 
 --- Ask if we realy want to close, if so, save the game first
 function _M:onQuit()
-	-- HACK for quick test
---	os.exit()
 	if not self.quit_dialog then
 		self.quit_dialog = QuitDialog.new()
 		self:registerDialog(self.quit_dialog)

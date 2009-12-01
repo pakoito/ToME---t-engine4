@@ -135,6 +135,7 @@ function _M:learnTalent(t_id)
 	if not ok and err then return nil, err end
 
 	self.talents[t_id] = true
+	self.changed = true
 	return true
 end
 
@@ -143,6 +144,7 @@ end
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id)
 	self.talents[t_id] = nil
+	self.changed = true
 	return true
 end
 
@@ -225,6 +227,7 @@ end
 -- @return true if the talent was learnt, nil and an error message otherwise
 function _M:learnTalentType(tt)
 	self.talents_types[tt] = true
+	self.changed = true
 	return true
 end
 
@@ -233,6 +236,7 @@ end
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalentType(tt)
 	self.talents_types[tt] = nil
+	self.changed = true
 	return true
 end
 
@@ -241,18 +245,20 @@ end
 function _M:startTalentCooldown(t)
 	if not t.cooldown then return end
 	self.talents_cd[t.id] = t.cooldown
+	self.changed = true
 end
 
 --- Is talent in cooldown?
 function _M:isTalentCoolingDown(t)
 	if not t.cooldown then return false end
-	if self.talents_cd[t.id] and self.talents_cd[t.id] > 0 then return true else return false end
+	if self.talents_cd[t.id] and self.talents_cd[t.id] > 0 then return self.talents_cd[t.id] else return false end
 end
 
 --- Cooldown all talents by one
 -- This should be called in your actors "act()" method
 function _M:cooldownTalents()
 	for tid, c in pairs(self.talents_cd) do
+		self.changed = true
 		self.talents_cd[tid] = self.talents_cd[tid] - 1
 		if self.talents_cd[tid] == 0 then
 			self.talents_cd[tid] = nil
