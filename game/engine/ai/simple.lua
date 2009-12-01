@@ -21,7 +21,7 @@ newAI("target_simple", function(self)
 	self.ai_target.actor = nil
 	core.fov.calc_circle(self.x, self.y, self.sight, function(self, lx, ly)
 		if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_sight") then return true end
-		if not self:canMove(lx, ly, true) then return true
+		if not self:canMove(lx, ly, true) then return true end
 
 		-- get and test the actor, if we are neutral or friendly, ignore it
 		local act = game.level.map(lx, ly, Map.ACTOR)
