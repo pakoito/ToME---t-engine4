@@ -179,6 +179,9 @@ void on_event(SDL_Event *event)
 // redraw the screen and update game logics, if any
 void on_tick()
 {
+	static int Frames = 0;
+	static int T0     = 0;
+
 	if (current_game != LUA_NOREF)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
@@ -187,6 +190,19 @@ void on_tick()
 		lua_remove(L, -2);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		docall(L, 1, 0);
+	}
+
+	/* Gather our frames per second */
+	Frames++;
+	{
+		int t = SDL_GetTicks();
+		if (t - T0 >= 1000) {
+			float seconds = (t - T0) / 1000.0;
+			float fps = Frames / seconds;
+			printf("%d ticks  in %g seconds = %g TPS\n", Frames, seconds, fps);
+			T0 = t;
+			Frames = 0;
+		}
 	}
 }
 
