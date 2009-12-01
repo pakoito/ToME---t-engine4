@@ -7,7 +7,7 @@ return {
 --	persistant = true,
 	generator =  {
 		map = {
-			class= "engine.generator.map.Empty",
+			class= "engine.generator.map.Rooms",
 			floor = "FLOOR",
 			wall = "WALL",
 			up = "UP",
@@ -16,7 +16,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {400, 400},
+			nb_npc = {40, 40},
 			level_range = {5, 10},
 			adjust_level_to_player = {-2, 2},
 		},

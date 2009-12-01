@@ -13,6 +13,7 @@ local Actor = require "mod.class.Actor"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
+local ActorAI = require "engine.interface.ActorAI"
 local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
@@ -54,6 +55,8 @@ function _M:run()
 	ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines your character's ability to withstand and resist damage. It increases your maximun life and physical resistance.")
 	-- Actor autolevel schemes
 	dofile("/data/autolevel_schemes.lua")
+	-- Actor AIs
+	ActorAI:loadDefinition("/engine/ai/")
 
 	self.log = LogDisplay.new(0, self.h * 0.80, self.w * 0.5, self.h * 0.20, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.player_display = PlayerDisplay.new(0, 0, self.w * 0.2, self.h * 0.8, {30,30,0})

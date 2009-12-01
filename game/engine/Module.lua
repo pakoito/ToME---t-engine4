@@ -82,7 +82,12 @@ end
 --- Setup write dir for a module
 -- Static
 function _M:setupWrite(mod)
-	local base = fs.getHomePath() .. fs.getPathSeparator() .. mod.short_name .. fs.getPathSeparator()
+	-- Create module directory
+	fs.setWritePath(engine.homepath)
+	fs.mkdir(mod.short_name)
+
+	-- Enter module directory
+	local base = engine.homepath .. fs.getPathSeparator() .. mod.short_name
 	fs.setWritePath(base)
 	fs.mount(base, "/", false)
 end

@@ -11,6 +11,13 @@ require "engine.Savefile"
 require "engine.Tiles"
 engine.Tiles.prefix = "/data/gfx/"
 
+-- Setup the user directory
+engine.homepath = fs.getUserPath()..fs.getPathSeparator()..fs.getHomePath()..fs.getPathSeparator().."4.0"
+fs.setWritePath(fs.getUserPath())
+fs.mkdir(fs.getHomePath())
+fs.mkdir(fs.getHomePath().."/4.0/")
+fs.setWritePath(fs.getHomePath())
+
 -- Setup a default key handler
 local key = engine.KeyCommand.new()
 key:setCurrent()

@@ -6,16 +6,19 @@ module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.Acto
 
 function _M:init(t)
 	mod.class.Actor.init(self, t)
-	ActorAI(self, t)
+	ActorAI.init(self, t)
 end
 
 function _M:act()
+	-- Do basic actor stuff
 	mod.class.Actor.act(self)
-	ActorAI:doAI()
+
+	-- Let the AI think .... beware of Shub !
+	self:doAI()
 end
 
 --- Called by ActorLife interface
 -- We use it to pass aggression values to the AIs
 function _M:onTakeHit(value, src)
-	self:aiAddThreat(value, src)
+--	self:aiAddThreat(value, src)
 end

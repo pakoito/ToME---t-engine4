@@ -34,6 +34,7 @@ project "TEngine"
 	files { "src/*.c", }
 	links { "physfs", "lua", "fov", "luasocket" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
+	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
 configuration "macosx"
 	linkoptions { "mac/SDLmain.m", "-framework SDL", "-framework SDL_gfx", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa" }
@@ -43,7 +44,15 @@ configuration "macosx"
 configuration "not macosx"
 	links { "SDL", "SDL_ttf", "SDL_image", "SDL_gfx", "SDL_mixer" }
 
+configuration "windows"
+	defines { [[TENGINE_HOME_PATH='"T-Engine"']] }
 
+
+----------------------------------------------------------------
+----------------------------------------------------------------
+-- Librairies used by T-Engine
+----------------------------------------------------------------
+----------------------------------------------------------------
 project "physfs"
 	kind "StaticLib"
 	language "C"

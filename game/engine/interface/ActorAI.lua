@@ -3,6 +3,29 @@ require "engine.class"
 --- Handles actors artificial intelligence (or dumbness ... ;)
 module(..., package.seeall, class.make)
 
+_M.ai_def = {}
+
+--- Deinfe AI
+function _M:newAI(name, fct)
+	_M.ai_def[name] = fct
+end
+
+--- Defines AIs
+-- Static!
+function _M:loadDefinition(dir)
+	for i, file in ipairs(fs.list(dir)) do
+		if file:find("%.lua$") then
+			local f, err = loadfile(dir.."/"..file)
+			if not f and err then error(err) end
+			setfenv(f, setmetatable({
+				Map = require("engine.Map"),
+				newAI = function(name, fct) self:newAI(name, fct) end,
+			}, {__index=_G}))
+			f()
+		end
+	end
+end
+
 function _M:init(t)
 	self.ai_state = {}
 	self.ai_target = {}
@@ -11,7 +34,7 @@ function _M:init(t)
 end
 
 function _M:aiFindTarget()
-	self.target = game.player
+	self.ai_target.actor = game.player
 end
 
 function _M:onTakeHit(value, src)
@@ -19,6 +42,15 @@ end
 
 --- Main entry point for AIs
 function _M:doAI()
-	local l = line.new(self.x, self.y, self.target.x, self.target.y)
-	self:move()
+	if not self.ai then return end
+
+	-- If we have a target but it is dead (it was not yet garbage collected but it'll come)
+	-- we forget it
+	if self.ai_target.actor and self.ai_target.actor.dead then self.ai_target.actor = nil end
+
+	self:runAI(self.ai)
+end
+
+function _M:runAI(ai)
+	return _M.ai_def[ai](self)
 end
