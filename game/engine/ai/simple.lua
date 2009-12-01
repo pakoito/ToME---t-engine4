@@ -14,13 +14,14 @@ newAI("move_simple", function(self)
 end)
 
 newAI("target_simple", function(self)
---	if self.ai_state.target_decay and self.ai_state.target_decay > 0 then
---	if game.turn % 100 ~= 0 then return end
+	-- Find new target every 10 +0speed turns or when no target exist
+	if self.ai_state.actor and game.turn % 100 ~= 0 then return end
 
 	-- Find closer ennemy and target it
 	self.ai_target.actor = nil
 	core.fov.calc_circle(self.x, self.y, self.sight, function(self, lx, ly)
 		if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_sight") then return true end
+		if not self:canMove(lx, ly, true) then return true
 
 		-- get and test the actor, if we are neutral or friendly, ignore it
 		local act = game.level.map(lx, ly, Map.ACTOR)
