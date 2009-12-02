@@ -28,3 +28,5 @@ game = false
 local Menu = require("special.mainmenu.class.Game")
 game = Menu.new()
 game:run()
+
+--profiler.start("/tmp/profiler.log")

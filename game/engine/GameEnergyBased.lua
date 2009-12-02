@@ -21,12 +21,17 @@ function _M:tick()
 
 	-- Give some energy to entities
 	if self.level then
-		for uid, e in pairs(self.level.entities) do
-			if e.energy and e.energy.value < self.energy_to_act then
-				e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1)
-			end
-			if e.energy.value >= self.energy_to_act and e.act then
-				e:act(self)
+		local i, e
+		local arr = self.level.e_array
+		for i = 1, #arr do
+			e = arr[i]
+			if e then
+				if e.energy and e.energy.value < self.energy_to_act then
+					e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1)
+				end
+				if e.energy.value >= self.energy_to_act and e.act then
+					e:act(self)
+				end
 			end
 		end
 	end

@@ -307,6 +307,7 @@ int main(int argc, char *argv[])
 	luaopen_socket_core(L);
 	luaopen_mime_core(L);
 	luaopen_struct(L);
+	luaopen_profiler(L);
 
 	// Make the uids repository
 	lua_newtable(L);

@@ -17,7 +17,7 @@ return {
 {
 	name = "baby dragon",
 	display = "d", color_r=128,
-	faction = "poorsods",
+--	faction = "poorsods",
 	level_range = {1, 4}, exp_worth = 1,
 	autolevel = "caster",
 	ai = "simple",
