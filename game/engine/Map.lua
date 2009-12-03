@@ -17,7 +17,7 @@ OBJECT = 1000
 --- The order of display for grid seen
 displayOrder = { ACTOR, OBJECT, TERRAIN }
 --- The order of display for grids remembered
-rememberDisplayOrder = { TERRAIN }
+rememberDisplayOrder = { ACTOR, TERRAIN }
 
 --- Sets the viewport size
 -- Static

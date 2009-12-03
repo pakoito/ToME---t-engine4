@@ -30,9 +30,6 @@ function _M:move(map, x, y, force)
 	if y < 0 then y = 0 end
 	if y >= map.h then y = map.h - 1 end
 	self.x, self.y = x, y
---	if self.levelid then
---		game.level.c_level:moveActor(self.levelid, x, y)
---	end
 	map(x, y, Map.ACTOR, self)
 	game.level:idleProcessActor(self)
 

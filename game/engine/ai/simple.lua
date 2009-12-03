@@ -4,11 +4,7 @@
 newAI("move_simple", function(self)
 	if self.ai_target.actor then
 		local act = self.ai_target.actor
-		local l = line.new(self.x, self.y, act.x, act.y)
-		local lx, ly = l()
-		if lx and ly then
-			self:move(lx, ly)
-		end
+		return self:moveDirection(act.x, act.y)
 	elseif self.ai_target.x and self.ai_target.y then
 		local l = line.new(self.x, self.y, self.ai_target.x, self.ai_target.y)
 		local lx, ly = l()
@@ -32,12 +28,16 @@ newAI("target_simple", function(self)
 	end
 	for i = 1, #arr do
 		act = __uids[arr[i].uid]
+
 		-- find the closest ennemy
 		if act and self:reactionToward(act) < 0 then
 			self.ai_target.actor = act
-			break
+			return true
 		end
 	end
+
+	-- No target ? Ask for more
+	game.level:idleProcessActor(self)
 end)
 
 newAI("target_player", function(self)

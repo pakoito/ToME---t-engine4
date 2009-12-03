@@ -73,6 +73,7 @@ function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
 	self.player = Player.new{
 		name=self.player_name, max_life=10000, display='@', color_r=230, color_g=230, color_b=230,
+		move_others=true,
 	}
 	self:changeLevel(1)
 end
@@ -164,6 +165,27 @@ function _M:display()
 			self.target.target.x, self.target.target.y = tmx, tmy
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
+
+		local act = self.level.map(tmx, tmy, engine.Map.ACTOR)
+		if act then
+
+		local s = core.display.newSurface(16,16)
+		s:alpha(125)
+		s:erase(0,255,255)
+
+	core.fov.calc_circle(act.x, act.y, act.sight, function(self, lx, ly)
+		if self.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_sight") then return true end
+
+		s:toScreen(self.level.map.display_x + (lx - game.level.map.mx) * self.level.map.tile_w, self.level.map.display_y + (ly - game.level.map.my) * self.level.map.tile_h)
+
+		local dst = self.level.map(lx, ly, engine.Map.ACTOR)
+		if dst then
+--			table.insert(self.e_distances[e.uid], {uid=dst.uid, dist=core.fov.distance(e.x, e.y, dst.x, dst.y)})
+--			print("found LOS", act.uid, dst.uid)
+		end
+	end, function()end, self)
+
+		end
 	end
 
 	engine.GameTurnBased.display(self)
