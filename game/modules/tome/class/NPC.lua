@@ -20,5 +20,13 @@ end
 --- Called by ActorLife interface
 -- We use it to pass aggression values to the AIs
 function _M:onTakeHit(value, src)
---	self:aiAddThreat(value, src)
+	print("took hit from", src.name, "::", self.ai_target.actor)
+	if not self.ai_target.actor then
+		self.ai_target.actor = src
+	end
+end
+
+function _M:tooltip()
+	local str = mod.class.Actor.tooltip(self)
+	return str..("\nTarget: %s\nUID: %d"):format(self.ai_target.actor and self.ai_target.actor.name or "none", self.uid)
 end

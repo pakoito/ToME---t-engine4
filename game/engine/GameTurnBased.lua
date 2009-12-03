@@ -19,12 +19,6 @@ function _M:tick()
 	if self.paused then
 		-- If we are paused do not get energy, but still process frames if needed
 		engine.Game.tick(self)
-
-		-- Run the level distancer
-		if self.level and self.level.distancer_co then
-			local ok, err = coroutine.resume(self.level.distancer_co)
-			if not ok and err then error(err) end
-		end
 	else
 		while not self.paused do
 			engine.GameEnergyBased.tick(self)

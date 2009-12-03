@@ -139,17 +139,19 @@ local hex_to_dec = {
 	["e"] = 14,
 	["f"] = 15,
 }
+local hexcache = {}
 function string.parseHex(str)
+	if hexcache[str] then return hexcache[str] end
 	local res = 0
 	local power = 1
 	for i = 1, #str do
 		res = res + power * (hex_to_dec[str:sub(#str-i+1,#str-i+1):lower()] or 0)
 		power = power * 16
 	end
+	hexcache[str] = res
 	return res
 end
 
-do
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
 	local list = str:split("#%x%x%x%x%x%x#", true)
@@ -172,8 +174,6 @@ getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, 
 	local w, h = font:size(str)
 	local x, y = dx + (dw - w) / 2, dy + (dh - h) / 2
 	s:drawColorString(font, str, x, y, r, g, b)
-end
-
 end
 
 dir_to_coord = {

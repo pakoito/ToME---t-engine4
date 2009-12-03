@@ -28,8 +28,15 @@ function inherit(base, ...)
 		if #ifs == 0 then
 			setmetatable(c, {__index=base})
 		else
-			table.insert(ifs, 1, base)
-			setmetatable(c, {__index=function(t, k) return search(k, ifs) end})
+			for i, _if in ipairs(ifs) do
+				for k, e in pairs(_if) do
+					if k ~= "init" and k ~= "_NAME" and k ~= "_M" and k ~= "_PACKAGE" and k ~= "new" then
+						c[k] = e
+						print(("caching interface value %s (%s) from %s to %s"):format(k, tostring(e), _if._NAME, c._NAME))
+					end
+				end
+			end
+			setmetatable(c, {__index=base})
 		end
 		c.new = function(...)
 			local obj = {}

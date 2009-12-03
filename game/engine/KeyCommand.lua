@@ -11,6 +11,18 @@ function _M:init()
 
 	-- Fullscreen toggle
 	self:addCommand(self._RETURN, {"alt"}, function() core.display.fullscreen() end)
+
+	-- Profiler
+	self:addCommand(self._p, {"ctrl","alt","shift"}, function()
+		if not _G.profiling then
+			print("Starting profiler")
+			_G.profiling = true
+			profiler.start("profiler.log")
+		else
+			profiler.stop()
+			print("Stopped profiler")
+		end
+	end)
 end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)

@@ -1,5 +1,6 @@
 require "engine.class"
 require "mod.class.Actor"
+local ActorTalents = require "engine.interface.ActorTalents"
 
 module(..., package.seeall, class.inherit(mod.class.Actor))
 
@@ -15,7 +16,7 @@ function _M:init(t)
 		["spell/fire"]=true,
 		["physical/1hweapon"]=true
 	}
-	self.talents = {[self.T_MANA_POOL]=true, [self.T_STAMINA_POOL]=true}
+	self.talents = {[ActorTalents.T_MANA_POOL]=true, [ActorTalents.T_STAMINA_POOL]=true}
 	self.mana_regen = 1
 	self.stamina_regen = 1
 	self.regen_life = 1

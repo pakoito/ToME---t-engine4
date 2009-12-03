@@ -34,5 +34,11 @@ function _M:tick()
 				end
 			end
 		end
+
+		-- Run the level distancer
+		if self.level.distancer_co then
+			local ok, err = coroutine.resume(self.level.distancer_co)
+			if not ok and err then error(err) end
+		end
 	end
 end

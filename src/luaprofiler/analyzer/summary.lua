@@ -40,8 +40,10 @@ function CreateSummary(lines, summary)
 	for i = 2, table.getn(lines) do
 		word = string.match(lines[i], "[^\t]+\t[^\t]+\t([^\t]+)")
 		local_time, total_time = string.match(lines[i], "[^\t]+\t[^\t]+\t[^\t]+\t[^\t]+\t[^\t]+\t([^\t]+)\t([^\t]+)")
-        if not (local_time and total_time) then return global_time end
-        if summary[word] == nil then
+		local_time = tonumber(local_time)
+		total_time = tonumber(total_time)
+		if not (local_time and total_time) then return global_time end
+		if summary[word] == nil then
 			summary[word] = {};
 			summary[word]["info"] = {}
 			summary[word]["info"]["calls"] = 1
