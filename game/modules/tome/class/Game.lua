@@ -7,6 +7,7 @@ local Zone = require "engine.Zone"
 local Map = require "engine.Map"
 local Target = require "engine.Target"
 local Level = require "engine.Level"
+local Birther = require "engine.Birther"
 
 local Grid = require "engine.Grid"
 local Actor = require "mod.class.Actor"
@@ -72,10 +73,18 @@ end
 function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
 	self.player = Player.new{
-		name=self.player_name, max_life=10000, display='@', color_r=230, color_g=230, color_b=230,
+		name=self.player_name, max_life=25, max_mana=25, max_stamina=25, display='@', color_r=230, color_g=230, color_b=230,
+		unused_stats = 6, unused_talents = 3,
 		move_others=true,
 	}
-	self:changeLevel(1)
+
+	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
+		self:changeLevel(1)
+
+		local ds = LevelupStatsDialog.new(self.player)
+		self:registerDialog(ds)
+	end)
+	self:registerDialog(birth)
 end
 
 function _M:loaded()
@@ -109,12 +118,14 @@ function _M:getPlayer()
 end
 
 function _M:tick()
-	if self.target.target.entity and not self.level:hasEntity(self.target.target.entity) then self.target.target.entity = false end
+	if self.level then
+		if self.target.target.entity and not self.level:hasEntity(self.target.target.entity) then self.target.target.entity = false end
 
-	engine.GameTurnBased.tick(self)
-	-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
-	-- (since display is on a set FPS while tick() ticks as much as possible
-	-- engine.GameEnergyBased.tick(self)
+		engine.GameTurnBased.tick(self)
+		-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
+		-- (since display is on a set FPS while tick() ticks as much as possible
+		-- engine.GameEnergyBased.tick(self)
+	end
 end
 
 --- Called every game turns
@@ -165,27 +176,6 @@ function _M:display()
 			self.target.target.x, self.target.target.y = tmx, tmy
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
-
-		local act = self.level.map(tmx, tmy, engine.Map.ACTOR)
-		if act then
-
-		local s = core.display.newSurface(16,16)
-		s:alpha(125)
-		s:erase(0,255,255)
-
-	core.fov.calc_circle(act.x, act.y, act.sight, function(self, lx, ly)
-		if self.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_sight") then return true end
-
-		s:toScreen(self.level.map.display_x + (lx - game.level.map.mx) * self.level.map.tile_w, self.level.map.display_y + (ly - game.level.map.my) * self.level.map.tile_h)
-
-		local dst = self.level.map(lx, ly, engine.Map.ACTOR)
-		if dst then
---			table.insert(self.e_distances[e.uid], {uid=dst.uid, dist=core.fov.distance(e.x, e.y, dst.x, dst.y)})
---			print("found LOS", act.uid, dst.uid)
-		end
-	end, function()end, self)
-
-		end
 	end
 
 	engine.GameTurnBased.display(self)
@@ -287,6 +277,9 @@ function _M:setupCommands()
 		end,
 		_z = function()
 			self.player:useTalent(ActorTalents.T_BLINK)
+		end,
+		_m = function()
+			self.player:listTalents()
 		end,
 
 		[{"_g","shift"}] = function()

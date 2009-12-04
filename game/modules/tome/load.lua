@@ -4,6 +4,7 @@ local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
 local ActorAI = require "engine.interface.ActorAI"
+local Birther = require "engine.Birther"
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
@@ -23,6 +24,9 @@ ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines y
 dofile("/data/autolevel_schemes.lua")
 -- Actor AIs
 ActorAI:loadDefinition("/engine/ai/")
+
+-- Birther descriptor
+Birther:loadDefinition("/data/birth/descriptors.lua")
 
 
 return require "mod.class.Game"

@@ -32,20 +32,24 @@ function _M:generateList()
 	-- Makes up the list
 	local list, known = {}, {}
 	for i, tt in ipairs(self.actor.talents_types_def) do
-		local cat = tt.type:gsub("/.*", "")
-		list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() .." (category)", type=tt.type }
-		if self.actor:knowTalentType(tt.type) then
-			known[#known+1] = "#00FF00#known"
+		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
+			local cat = tt.type:gsub("/.*", "")
+			list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() .." (category)", type=tt.type }
+			if self.actor:knowTalentType(tt.type) then
+				known[#known+1] = "#00FF00#known"
 
-			-- Find all talents of this school
-			for j, t in ipairs(tt.talents) do
-				local typename = "talent"
-				if t.type[1]:find("^spell/") then typename = "spell" end
-				list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id }
-				if self.actor:knowTalent(t.id) then known[#known+1] = "#00FF00#known" else known[#known+1] = t.points.." point(s)" end
+				-- Find all talents of this school
+				for j, t in ipairs(tt.talents) do
+					if not t.hide then
+						local typename = "talent"
+						if t.type[1]:find("^spell/") then typename = "spell" end
+						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id }
+						if self.actor:knowTalent(t.id) then known[#known+1] = "#00FF00#known" else known[#known+1] = t.points.." point(s)" end
+					end
+				end
+			else
+				known[#known+1] = tt.points.." point(s)"
 			end
-		else
-			known[#known+1] = tt.points.." point(s)"
 		end
 	end
 	self.list = list

@@ -32,9 +32,9 @@ function _M:init(t)
 	engine.interface.ActorTalents.init(self, t)
 	engine.interface.ActorResource.init(self, t)
 
-	self.unused_stats = 0
-	self.unused_talents = 0
-	self.unused_talents_types = 0
+	self.unused_stats = self.unused_stats or 0
+	self.unused_talents =  self.unused_talents or 0
+	self.unused_talents_types = self.unused_talents_types or 0
 end
 
 function _M:act()
@@ -76,9 +76,16 @@ function _M:levelup()
 	end
 
 	-- Gain life and resources
-	self.max_life = self.max_life + 7
-	self:incMaxMana(7)
-	self:incMaxStamina(7)
+	self.max_life = self.max_life + 10
+		+ (self:knowTalent(self.T_IMPROVED_HEALTH_I) and 1 or 0)
+		+ (self:knowTalent(self.T_IMPROVED_HEALTH_II) and 1 or 0)
+		+ (self:knowTalent(self.T_IMPROVED_HEALTH_III) and 1 or 0)
+		- (self:knowTalent(self.T_DECREASED_HEALTH_I) and 1 or 0)
+		- (self:knowTalent(self.T_DECREASED_HEALTH_II) and 1 or 0)
+		- (self:knowTalent(self.T_DECREASED_HEALTH_III) and 1 or 0)
+
+	self:incMaxMana(10)
+	self:incMaxStamina(10)
 	-- Healp up on new level
 	self.life = self.max_life
 	self.mana = self.max_mana

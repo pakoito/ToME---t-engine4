@@ -14,6 +14,7 @@ function _M:loadDefinition(file)
 		DamageType = require("engine.DamageType"),
 		newTalent = function(t) self:newTalent(t) end,
 		newTalentType = function(t) self:newTalentType(t) end,
+		load = function(f) self:loadDefinition(f) end
 	}, {__index=_G}))
 	f()
 end
@@ -128,11 +129,13 @@ end
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
-function _M:learnTalent(t_id)
+function _M:learnTalent(t_id, force)
 	local t = _M.talents_def[t_id]
 
-	local ok, err = self:canLearnTalent(t)
-	if not ok and err then return nil, err end
+	if not force then
+		local ok, err = self:canLearnTalent(t)
+		if not ok and err then return nil, err end
+	end
 
 	self.talents[t_id] = true
 	self.changed = true
@@ -225,8 +228,9 @@ end
 --- Actor learns a talent type
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
-function _M:learnTalentType(tt)
-	self.talents_types[tt] = true
+function _M:learnTalentType(tt, v)
+	if v == nil then v = true end
+	self.talents_types[tt] = v
 	self.changed = true
 	return true
 end
@@ -235,7 +239,7 @@ end
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalentType(tt)
-	self.talents_types[tt] = nil
+	self.talents_types[tt] = false
 	self.changed = true
 	return true
 end

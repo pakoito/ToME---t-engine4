@@ -44,6 +44,10 @@ end
 -- @param stat the stat id to change
 -- @param val the increment to add/substract
 function _M:incStat(stat, val)
+	if type(stat) == "string" then
+		stat = _M.stats_def[stat].id
+	end
+
 	local old = self.stats[stat]
 	self.stats[stat] = math.max(math.min(self.stats[stat] + val, _M.stats_def[stat].max), _M.stats_def[stat].min)
 	if self.stats[stat] - old ~= 0 then

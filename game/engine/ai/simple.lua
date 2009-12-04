@@ -3,14 +3,9 @@
 
 newAI("move_simple", function(self)
 	if self.ai_target.actor then
-		local act = self.ai_target.actor
-		return self:moveDirection(act.x, act.y)
+		return self:moveDirection(self.ai_target.actor.x, self.ai_target.actor.y)
 	elseif self.ai_target.x and self.ai_target.y then
-		local l = line.new(self.x, self.y, self.ai_target.x, self.ai_target.y)
-		local lx, ly = l()
-		if lx and ly then
-			self:move(lx, ly)
-		end
+		self:move(self.ai_target.x, self.ai_target.y)
 	end
 end)
 

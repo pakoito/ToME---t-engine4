@@ -23,6 +23,7 @@ function _M:init(t)
 		self.level = t.level or 1
 	end
 	self.exp = t.exp or 0
+	self.exp_mod = t.exp_mod or 1
 	self.exp_worth = t.exp_worth or 1
 end
 
@@ -39,9 +40,9 @@ end
 -- @return the exp needed, or nil if this level is not achievable
 function _M:getExpChart(level)
 	if type(self.exp_chart) == "table" then
-		return self.exp_chart[level]
+		return self.exp_chart[level] * self.exp_mod
 	else
-		return self.exp_chart(level)
+		return self.exp_chart(level) * self.exp_mod
 	end
 end
 
