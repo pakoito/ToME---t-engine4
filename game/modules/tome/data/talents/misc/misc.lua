@@ -6,12 +6,14 @@ newTalent{
 	name = "Mana Pool",
 	type = {"base/class", 1},
 	info = "Allows you to have a mana pool. Mana is used to cast all spells.",
+	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Stamina Pool",
 	type = {"base/class", 1},
 	info = "Allows you to have a stamina pool. Stamina is used to activate special combat attacks.",
+	mode = "passive",
 	hide = true,
 }
 
@@ -19,35 +21,41 @@ newTalent{
 	name = "Improved Health I",
 	type = {"base/race", 1},
 	info = "Improves the number of health points per levels.",
+	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Improved Health II",
 	type = {"base/race", 1},
 	info = "Improves the number of health points per levels.",
+	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Improved Health III",
 	type = {"base/race", 1},
 	info = "Improves the number of health points per levels.",
+	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Decreased Health I",
 	type = {"base/race", 1},
 	info = "Improves the number of health points per levels.",
+	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Decreased Health II",
 	type = {"base/race", 1},
 	info = "Improves the number of health points per levels.",
+	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Decreased Health III",
 	type = {"base/race", 1},
 	info = "Improves the number of health points per levels.",
+	mode = "passive",
 	hide = true,
 }

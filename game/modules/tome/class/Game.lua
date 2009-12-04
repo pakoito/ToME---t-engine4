@@ -279,7 +279,7 @@ function _M:setupCommands()
 			self.player:useTalent(ActorTalents.T_BLINK)
 		end,
 		_m = function()
-			self.player:listTalents()
+			self.player:useTalents()
 		end,
 
 		[{"_g","shift"}] = function()

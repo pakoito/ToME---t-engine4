@@ -119,6 +119,7 @@ newTalent{
 newTalent{
 	name = "Teleport Control",
 	type = {"spell/conveyance",2},
+	mode = "passive",
 	require = { stat = { mag=38 }, },
 	info = function(self)
 		return ([[Allows teleport spells to specify a target area. You will blink in this radius randomly.

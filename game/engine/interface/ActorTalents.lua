@@ -40,7 +40,7 @@ function _M:newTalent(t)
 	t.short_name = t.short_name:upper():gsub("[ ]", "_")
 	t.mode = t.mode or "activated"
 	t.points = t.points or 1
-	assert(t.mode == "activated" or t.mode == "sustained", "wrong talent mode, requires either 'activated' or 'sustained'")
+	assert(t.mode == "activated" or t.mode == "sustained" or t.mode == "passive", "wrong talent mode, requires either 'activated' or 'sustained'")
 	assert(t.info, "no talent info")
 
 	-- Can pass a string, make it into a function
@@ -269,4 +269,10 @@ function _M:cooldownTalents()
 			if self.onTalentCooledDown then self:onTalentCooledDown(tid) end
 		end
 	end
+end
+
+--- Show usage dialog
+function _M:useTalents()
+	local d = require("engine.dialogs.UseTalents").new(self)
+	game:registerDialog(d)
 end
