@@ -17,7 +17,7 @@ function _M:init(actor)
 		_ESCAPE = function() game:unregisterDialog(self) end,
 		__TEXTINPUT = function(c)
 			if c:find("^[a-z]$") then
-				self.talentsel = 1 + string.byte(c) - string.byte('a')
+				self.talentsel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
 				self:use()
 			end
 		end,
@@ -57,8 +57,8 @@ function _M:drawDialog(s)
 	-- Description part
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
 
-	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn.
-Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
+	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#enter#FFFFFF# to use.
+Mouse: #00FF00#Left click#FFFFFF# to use.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 
 	local lines = {}

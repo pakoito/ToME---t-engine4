@@ -77,3 +77,16 @@ end
 function _M:canSee(entity)
 	if entity.x and entity.y and game.level.map.seens(entity.x, entity.y) then return true end
 end
+
+--- Uses an hotkeyed talent
+function _M:hotkey(id)
+	local i = 1
+	for tid, _ in pairs(self.talents) do
+		if self:getTalentFromId(tid).mode ~= "passive" then
+			if i == id then
+				self:useTalent(tid)
+			end
+			i = i + 1
+		end
+	end
+end

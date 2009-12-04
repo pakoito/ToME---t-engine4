@@ -19,15 +19,22 @@ function _M:display()
 	if not a.changed then return self.surface end
 	a.changed = false
 
-	local talents = {a.T_MANATHRUST, a.T_FIREFLASH, a.T_NOXIOUS_CLOUD, a.T_BLINK}
+	local talents = {}
+	for tid, _ in pairs(a.talents) do
+		if a:getTalentFromId(tid).mode ~= "passive" then
+			talents[#talents+1] = tid
+		end
+	end
 
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
+
+	local acode = string.byte('1')
 
 	for i, tid in ipairs(talents) do
 		local t = a:getTalentFromId(tid)
 		local s
 		if a:isTalentCoolingDown(t) then
-			local txt = ("%s (%d)"):format(t.name, a:isTalentCoolingDown(t))
+			local txt = ("%s) %s (%d)"):format(string.char(acode + i - 1), t.name, a:isTalentCoolingDown(t))
 			local w, h = self.font:size(txt)
 			s = core.display.newSurface(w + 4, h + 4)
 			s:erase(40, 40, 40)
@@ -35,12 +42,13 @@ function _M:display()
 			s:alpha(128)
 			s:drawString(self.font, txt, 2, 2, 255, 0, 0)
 		else
-			local w, h = self.font:size(t.name)
+			local txt = ("%s) %s"):format(string.char(acode + i - 1), t.name)
+			local w, h = self.font:size(txt)
 			s = core.display.newSurface(w + 4, h + 4)
 			s:erase(40, 40, 40)
 
 			s:alpha(255)
-			s:drawString(self.font, t.name, 2, 2, 0, 255, 0)
+			s:drawString(self.font, txt, 2, 2, 0, 255, 0)
 		end
 
 		self.surface:merge(s, 0, (i-1) * 20)

@@ -8,10 +8,14 @@ function _M:init()
 	engine.Key.init(self)
 	self.commands = {}
 	self.on_input = false
+	self.locale_convert = {}
 
 	-- Fullscreen toggle
 	self:addCommand(self._RETURN, {"alt"}, function() core.display.fullscreen() end)
+end
 
+--- Adds the profiler keybind (ctrl, alt, chift, p)
+function _M:setupProfiler()
 	-- Profiler
 	self:addCommand(self._p, {"ctrl","alt","shift"}, function()
 		if not _G.profiling then
@@ -26,6 +30,9 @@ function _M:init()
 end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
+	-- Convert locale
+	sym = self.locale_convert[sym] or sym
+
 	if not self.commands[sym] and not self.commands[self.__DEFAULT] then
 		if self.on_input and unicode then self.on_input(unicode) end
 		return
@@ -106,4 +113,20 @@ end
 -- @param fct the function to call for each key, get a single parameter to pass the UTF8 string
 function _M:setTextInput(fct)
 	self.on_input = fct
+end
+
+--- Loads a locale converter
+-- WARNING: This only converts the "sym" key, *NOT* the unicode key
+-- @param file the locale convertion file to load
+function _M:loadLocaleConvertion(file)
+	local f, err = loadfile(file)
+	if not f and err then error(err) end
+	setfenv(f, setmetatable({
+		locale = "frFR",
+	}, {__index=engine.Key}))
+	conv = f() or {}
+
+	for k, e in pairs(conv) do
+		self.locale_convert[k] = e
+	end
 end

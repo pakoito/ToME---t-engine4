@@ -30,6 +30,8 @@ function _M:init(t)
 	self.color_bb = self.color_bb or -1
 
 	next_uid = next_uid + 1
+
+	self.changed = true
 end
 
 --- If we are cloned we need a new uid
@@ -37,6 +39,8 @@ function _M:cloned()
 	self.uid = next_uid
 	__uids[self.uid] = self
 	next_uid = next_uid + 1
+
+	self.changed = true
 end
 
 _M.loadNoDelay = true
@@ -46,6 +50,8 @@ function _M:loaded()
 	self.uid = next_uid
 	__uids[self.uid] = self
 	next_uid = next_uid + 1
+
+	self.changed = true
 end
 
 --- Change the entity's uid
