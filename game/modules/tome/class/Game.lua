@@ -266,18 +266,6 @@ function _M:setupCommands()
 	self.key:addCommands
 	{
 		-- talent test
-		_f = function()
-			self.player:useTalent(ActorTalents.T_MANATHRUST)
-		end,
-		_a = function()
-			self.player:useTalent(ActorTalents.T_FIREFLASH)
-		end,
-		_e = function()
-			self.player:useTalent(ActorTalents.T_NOXIOUS_CLOUD)
-		end,
-		_z = function()
-			self.player:useTalent(ActorTalents.T_BLINK)
-		end,
 		_m = function()
 			self.player:useTalents()
 		end,
