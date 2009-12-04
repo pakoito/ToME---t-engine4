@@ -1,5 +1,6 @@
 require "engine.class"
 require "mod.class.Actor"
+local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
 
 module(..., package.seeall, class.inherit(mod.class.Actor))
@@ -13,6 +14,7 @@ function _M:init(t)
 	self.stamina_regen = self.stamina_regen or 1
 	self.regen_life = self.regen_life or 0.5
 	self.descriptor = {}
+	self.hotkey = {}
 end
 
 function _M:move(x, y, force)
@@ -79,14 +81,10 @@ function _M:canSee(entity)
 end
 
 --- Uses an hotkeyed talent
-function _M:hotkey(id)
-	local i = 1
-	for tid, _ in pairs(self.talents) do
-		if self:getTalentFromId(tid).mode ~= "passive" then
-			if i == id then
-				self:useTalent(tid)
-			end
-			i = i + 1
-		end
+function _M:activateHotkey(id)
+	if self.hotkey[id] then
+		self:useTalent(self.hotkey[id])
+	else
+		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the inscructions there.")
 	end
 end

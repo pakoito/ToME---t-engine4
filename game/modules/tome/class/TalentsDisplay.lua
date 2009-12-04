@@ -20,9 +20,9 @@ function _M:display()
 	a.changed = false
 
 	local talents = {}
-	for tid, _ in pairs(a.talents) do
-		if a:getTalentFromId(tid).mode ~= "passive" then
-			talents[#talents+1] = tid
+	for i = 1, 12 do
+		if a.hotkey[i] then
+			talents[#talents+1] = a.hotkey[i]
 		end
 	end
 

@@ -5,12 +5,26 @@ module(..., package.seeall, class.inherit(engine.Dialog))
 
 function _M:init(actor)
 	self.actor = actor
+	actor.hotkey = actor.hotkey or {}
 	engine.Dialog.init(self, "Use Talents: "..actor.name, game.w / 2, game.h / 2)
 
 	self:generateList()
 
 	self.talentsel = 1
 	self:keyCommands{
+		_1 = function() self:defineHotkey(1) end,
+		_2 = function() self:defineHotkey(2) end,
+		_3 = function() self:defineHotkey(3) end,
+		_4 = function() self:defineHotkey(4) end,
+		_5 = function() self:defineHotkey(5) end,
+		_6 = function() self:defineHotkey(6) end,
+		_7 = function() self:defineHotkey(7) end,
+		_8 = function() self:defineHotkey(8) end,
+		_9 = function() self:defineHotkey(9) end,
+		_0 = function() self:defineHotkey(10) end,
+		_RIGHTPAREN = function() self:defineHotkey(11) end,
+		_EQUALS = function() self:defineHotkey(12) end,
+
 		_UP = function() self.talentsel = util.boundWrap(self.talentsel - 1, 1, #self.list) end,
 		_DOWN = function() self.talentsel = util.boundWrap(self.talentsel + 1, 1, #self.list) end,
 		_RETURN = function() self:use() end,
@@ -30,6 +44,11 @@ function _M:init(actor)
 			end
 		end },
 	}
+end
+
+function _M:defineHotkey(id)
+	self.actor.hotkey[id] = self.list[self.talentsel].talent
+	print("hotkey: ", id, "=>", self.list[self.talentsel].talent)
 end
 
 function _M:use()

@@ -74,6 +74,7 @@ function _M:keyCommands(t)
 	game.key = engine.KeyCommand.new()
 	game.key:addCommands(t)
 	game.key:setCurrent()
+	self.key = game.key
 end
 
 function _M:mouseZones(t)

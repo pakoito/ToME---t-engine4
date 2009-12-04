@@ -269,18 +269,18 @@ function _M:setupCommands()
 	self.key:setupProfiler()
 	self.key:addCommands
 	{
-		_1 = function() self.player:hotkey(1) end,
-		_2 = function() self.player:hotkey(2) end,
-		_3 = function() self.player:hotkey(3) end,
-		_4 = function() self.player:hotkey(4) end,
-		_5 = function() self.player:hotkey(5) end,
-		_6 = function() self.player:hotkey(6) end,
-		_7 = function() self.player:hotkey(7) end,
-		_8 = function() self.player:hotkey(8) end,
-		_9 = function() self.player:hotkey(9) end,
-		_0 = function() self.player:hotkey(10) end,
-		_RIGHTPAREN = function() self.player:hotkey(11) end,
-		_EQUALS = function() self.player:hotkey(12) end,
+		_1 = function() self.player:activateHotkey(1) end,
+		_2 = function() self.player:activateHotkey(2) end,
+		_3 = function() self.player:activateHotkey(3) end,
+		_4 = function() self.player:activateHotkey(4) end,
+		_5 = function() self.player:activateHotkey(5) end,
+		_6 = function() self.player:activateHotkey(6) end,
+		_7 = function() self.player:activateHotkey(7) end,
+		_8 = function() self.player:activateHotkey(8) end,
+		_9 = function() self.player:activateHotkey(9) end,
+		_0 = function() self.player:activateHotkey(10) end,
+		_RIGHTPAREN = function() self.player:activateHotkey(11) end,
+		_EQUALS = function() self.player:activateHotkey(12) end,
 
 		-- talent test
 		_m = function()
