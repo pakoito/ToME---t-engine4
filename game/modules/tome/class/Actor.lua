@@ -43,6 +43,8 @@ function _M:act()
 	-- Regen resources
 	self:regenLife()
 	self:regenResources()
+	-- Compute timed effects
+	self:timedEffects()
 end
 
 function _M:move(x, y, force)

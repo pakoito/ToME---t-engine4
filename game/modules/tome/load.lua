@@ -3,6 +3,7 @@ local DamageType = require "engine.DamageType"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
+local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local ActorAI = require "engine.interface.ActorAI"
 local Birther = require "engine.Birther"
 
@@ -10,6 +11,8 @@ local Birther = require "engine.Birther"
 DamageType:loadDefinition("/data/damage_types.lua")
 -- Talents
 ActorTalents:loadDefinition("/data/talents.lua")
+-- Timed Effects
+ActorTemporaryEffects:loadDefinition("/data/timed_effects.lua")
 -- Actor resources
 ActorResource:defineResource("Mana", "mana", ActorTalents.T_MANA_POOL, "mana_regen", "Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximun mana.")
 ActorResource:defineResource("Stamina", "stamina", ActorTalents.T_STAMINA_POOL, "stamina_regen", "Stamina represents your physical fatigue. Each physical ability used reduces it.")
