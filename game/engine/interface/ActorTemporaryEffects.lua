@@ -47,9 +47,13 @@ function _M:timedEffects()
 		if p.dur <= 0 then
 			self.tmp[eff] = nil
 			if _M.tempeffect_def[eff].on_lose then
-				local ret = _M.tempeffect_def[eff].on_lose(self, p)
+				local ret, fly = _M.tempeffect_def[eff].on_lose(self, p)
 				if ret then
-					game.logSeen(ret)
+					game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
+				end
+				if fly and game.flyers then
+					local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+					game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
 				end
 			end
 		else
@@ -62,17 +66,22 @@ end
 
 --- Sets a timed effect on the actor
 -- @param eff_id the effect to set
+-- @param dur the number of turns to go on
 -- @param p a table containing the effects parameters
 function _M:setEffect(eff_id, dur, p)
-	for k, e in pairs(_M.tempeffect_def[eff_id]).parameters do
+	for k, e in pairs(_M.tempeffect_def[eff_id].parameters) do
 		if not p[k] then p[k] = e end
 	end
 	p.dur = dur
 	self.tmp[eff_id] = p
 	if _M.tempeffect_def[eff_id].on_gain then
-		local ret = _M.tempeffect_def[eff_id].on_gain(self, p)
+		local ret, fly = _M.tempeffect_def[eff_id].on_gain(self, p)
 		if ret then
-			game.logSeen(ret)
+			game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
+		end
+		if fly and game.flyers then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
 		end
 	end
 end

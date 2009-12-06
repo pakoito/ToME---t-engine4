@@ -282,9 +282,10 @@ function _M:setupCommands()
 		_RIGHTPAREN = function() self.player:activateHotkey(11) end,
 		_EQUALS = function() self.player:activateHotkey(12) end,
 
-		-- talent test
+		-- talent use
 		_m = function()
 			self.player:useTalents()
+			self.player:setEffect(self.player.EFF_CUT, 10, {power=4}, self.player)
 		end,
 
 		[{"_g","shift"}] = function()
