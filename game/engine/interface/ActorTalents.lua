@@ -137,6 +137,16 @@ function _M:learnTalent(t_id, force)
 		if not ok and err then return nil, err end
 	end
 
+	-- Auto assign to hotkey
+	if t.mode ~= "passive" then
+		for i = 1, 12 do
+			if not self.hotkey[i] then
+				self.hotkey[i] = t_id
+				break
+			end
+		end
+	end
+
 	self.talents[t_id] = true
 	self.changed = true
 	return true
@@ -146,6 +156,9 @@ end
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id)
+	for i, known_t_id in pairs(self.hotkey) do
+		if known_t_id == t_id then self.hotkey[i] = nil end
+	end
 	self.talents[t_id] = nil
 	self.changed = true
 	return true

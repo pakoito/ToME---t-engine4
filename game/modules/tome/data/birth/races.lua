@@ -100,7 +100,7 @@ newBirthDescriptor{
 			Fallohide = "allow",
 		},
 	},
-	stats = { str=-2, cun=2, dex=3, con=2, },
+	stats = { str=-3, dex=3, con=2, lck=5, },
 	experience = 1.1,
 	talents = {
 		ActorTalents.T_IMPROVED_HEALTH_I,

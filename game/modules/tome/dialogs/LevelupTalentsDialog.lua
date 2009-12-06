@@ -44,7 +44,15 @@ function _M:generateList()
 						local typename = "talent"
 						if t.type[1]:find("^spell/") then typename = "spell" end
 						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id }
-						if self.actor:knowTalent(t.id) then known[#known+1] = "#00FF00#known" else known[#known+1] = t.points.." point(s)" end
+						if self.actor:knowTalent(t.id) then
+							known[#known+1] = "#00FF00#known"
+						else
+							if not self.actor:canLearnTalent(t) then
+								known[#known+1] = "#FF0000#"..t.points.." point(s)"
+							else
+								known[#known+1] = t.points.." point(s)"
+							end
+						end
 					end
 				end
 			else

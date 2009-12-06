@@ -49,6 +49,7 @@ end
 function _M:defineHotkey(id)
 	self.actor.hotkey[id] = self.list[self.talentsel].talent
 	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(self.list[self.talentsel].talent).name:capitalize().." assigned to hotkey "..id)
+	self.actor.changed = true
 end
 
 function _M:use()
