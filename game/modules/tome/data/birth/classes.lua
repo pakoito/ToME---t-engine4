@@ -61,6 +61,7 @@ newBirthDescriptor{
 		["spell/cold"]=true,
 		["spell/air"]=true,
 		["spell/conveyance"]=false,
+		["spell/nature"]=false,
 	},
 	talents = {
 		ActorTalents.T_MANATHRUST,

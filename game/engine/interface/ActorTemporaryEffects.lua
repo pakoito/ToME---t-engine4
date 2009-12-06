@@ -46,6 +46,7 @@ function _M:timedEffects()
 		p.dur = p.dur - 1
 		if p.dur <= 0 then
 			self.tmp[eff] = nil
+			self.changed = true
 			if _M.tempeffect_def[eff].on_lose then
 				local ret, fly = _M.tempeffect_def[eff].on_lose(self, p)
 				if ret then
@@ -56,6 +57,7 @@ function _M:timedEffects()
 					game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
 				end
 			end
+			if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end
 		else
 			if _M.tempeffect_def[eff].on_timeout then
 				_M.tempeffect_def[eff].on_timeout(self, p)
@@ -83,6 +85,8 @@ function _M:setEffect(eff_id, dur, p)
 			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 			game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
 		end
+		if _M.tempeffect_def[eff_id].activate then _M.tempeffect_def[eff_id].activate(self, p) end
+		self.changed = true
 	end
 end
 

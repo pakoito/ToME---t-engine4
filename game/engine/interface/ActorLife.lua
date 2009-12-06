@@ -29,6 +29,11 @@ function _M:regenLife()
 	end
 end
 
+--- Heal some
+function _M:heal(value, src)
+	self.life = util.bound(self.life + value, 0, self.max_life)
+end
+
 --- Remove some HP from an actor
 -- If HP is reduced to 0 then remove from the level and call the die method.<br/>
 -- When an actor dies its dead property is set to true, to wait until garbage collection deletes it

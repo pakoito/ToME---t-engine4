@@ -5,6 +5,7 @@ newTalentType{ type="spell/earth", name = "earth", description = "Harness the po
 newTalentType{ type="spell/cold", name = "cold", description = "Harness the power of winter to shatter your foes." }
 newTalentType{ type="spell/air", name = "air", description = "Harness the power of the air to fry your foes." }
 newTalentType{ type="spell/conveyance", name = "conveyance", description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
+newTalentType{ type="spell/nature", name = "nature", description = "Summons the power of nature to rejuvenate yourself and the world." }
 
 newTalent{
 	name = "Manathrust",
@@ -158,5 +159,45 @@ newTalent{
 		return ([[Noxious fumes raises from the ground doing %0.2f nature damage in a radius of 3 each turns for %d turns.
 		Cooldown: 8 turns
 		The damage and duration will increase with the Magic stat]]):format(4 + self:getMag(30), 5 + self:getMag(10))
+	end,
+}
+
+newTalent{
+	name = "Manaflow",
+	type = {"spell/arcane", 2},
+	mana = 10,
+	cooldown = 300,
+	tactical = {
+		MANA = 20,
+	},
+	action = function(self)
+		if not self:hasEffect(self.EFF_MANAFLOW) then
+			self:setEffect(self.EFF_MANAFLOW, 10, {power=5+self:getMag(30)})
+		end
+		return true
+	end,
+	require = { stat = { mag=10 }, },
+	info = function(self)
+		return ([[Engulf yourself into a surge of mana, quickly restoring %d mana every turns for 10 turns.
+		The mana restored will increase with the Magic stat]]):format(5 + self:getMag(30))
+	end,
+}
+
+newTalent{
+	name = "Heal",
+	type = {"spell/nature", 1},
+	mana = 30,
+	cooldown = 10,
+	tactical = {
+		HEAL = 10,
+	},
+	action = function(self)
+		self:heal(10 + self:getMag(200), self)
+		return true
+	end,
+	require = { stat = { mag=10 }, },
+	info = function(self)
+		return ([[Call upon the forces of nature to heal your body for %d life.
+		The life healed will increase with the Magic stat]]):format(10 + self:getMag(200))
 	end,
 }
