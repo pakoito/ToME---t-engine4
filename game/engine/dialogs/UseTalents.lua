@@ -48,7 +48,7 @@ end
 
 function _M:defineHotkey(id)
 	self.actor.hotkey[id] = self.list[self.talentsel].talent
-	print("hotkey: ", id, "=>", self.list[self.talentsel].talent)
+	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(self.list[self.talentsel].talent).name:capitalize().." assigned to hotkey "..id)
 end
 
 function _M:use()
@@ -77,6 +77,7 @@ function _M:drawDialog(s)
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
 
 	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#enter#FFFFFF# to use.
+#00FF00#1-0#FFFFFF# to assign a hotkey.
 Mouse: #00FF00#Left click#FFFFFF# to use.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 

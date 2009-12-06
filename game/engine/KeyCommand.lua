@@ -1,3 +1,4 @@
+require "config"
 require "engine.class"
 require "engine.Key"
 
@@ -122,7 +123,7 @@ function _M:loadLocaleConvertion(file)
 	local f, err = loadfile(file)
 	if not f and err then error(err) end
 	setfenv(f, setmetatable({
-		locale = "frFR",
+		locale = config.settings.keyboard.locale,
 	}, {__index=engine.Key}))
 	conv = f() or {}
 

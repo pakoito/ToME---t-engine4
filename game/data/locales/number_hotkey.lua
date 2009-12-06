@@ -1,6 +1,6 @@
 -- Convert unicode keys to other unicode keys depending on locale
 -- This allows to support the number bar "hotkeys" without too much trouble
-if locale == "frFR" then
+if locale == "fr_FR" then
 	return {
 		[_AMPERSAND] =	_1,
 		[_WORLD_73] =	_2,

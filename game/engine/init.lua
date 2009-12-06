@@ -1,11 +1,7 @@
---[[ Allows for remote debugging, but it makes things *SLOW*
-require"remdebug.engine"
-remdebug.engine.start()
-]]
-
 -- load some utility functions
 dofile("/engine/utils.lua")
 
+require "config"
 require "engine.KeyCommand"
 require "engine.Savefile"
 require "engine.Tiles"
@@ -17,6 +13,14 @@ fs.setWritePath(fs.getUserPath())
 fs.mkdir(fs.getHomePath())
 fs.mkdir(fs.getHomePath().."/4.0/")
 fs.setWritePath(fs.getHomePath())
+
+-- Loads default config & user config
+fs.mount(engine.homepath, "/")
+config.loadString[[
+keyboard.locale = "en_US"
+]]
+config.load("/settings.cfg")
+fs.umount(engine.homepath)
 
 -- Setup a default key handler
 local key = engine.KeyCommand.new()
