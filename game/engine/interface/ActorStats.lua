@@ -53,7 +53,7 @@ function _M:incStat(stat, val)
 	if self.stats[stat] - old ~= 0 then
 		self:onStatChange(stat, self.stats[stat] - old)
 	end
-	return self.stats[stat]
+	return self.stats[stat] - old
 end
 
 --- Gets a stat value

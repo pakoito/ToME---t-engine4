@@ -20,10 +20,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# starts to surge mana.", "+Manaflow" end,
 	on_lose = function(self, err) return "#Target# stops surging mana.", "-Manaflow" end,
 	activate = function(self, eff)
-		self.mana_regen = self.mana_regen + eff.power
+		eff.tmpid = self:addTemporaryValue("mana_regen", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self.mana_regen = self.mana_regen - eff.power
+		self:removeTemporaryValue("mana_regen", eff.tmpid)
 	end,
 }
 
@@ -36,9 +36,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target# starts to regenerating heath quickly.", "+Regen" end,
 	on_lose = function(self, err) return "#Target# stops regenerating health quickly.", "-Regen" end,
 	activate = function(self, eff)
-		self.life_regen = self.life_regen + eff.power
+		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self.life_regen = self.life_regen - eff.power
+		self:removeTemporaryValue("life_regen", eff.tmpid)
 	end,
 }
