@@ -75,7 +75,7 @@ end
 --- This is the "main game loop", do something here
 function _M:tick()
 	-- Run the level distancer
-	if self.level.distancer_co then
+	if self.level and self.level.distancer_co then
 		local ok, err = coroutine.resume(self.level.distancer_co)
 		if not ok and err then error(err) end
 	end
