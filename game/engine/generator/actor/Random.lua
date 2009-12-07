@@ -20,7 +20,7 @@ function _M:generate()
 		m:resolve()
 		local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
 		local tries = 0
-		while self.map:checkAllEntities(x, y, "block_move") and tries < 100 do
+		while m:canMove(x, y) and tries < 100 do
 			x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
 			tries = tries + 1
 		end

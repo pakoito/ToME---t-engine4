@@ -1,7 +1,9 @@
 newEntity{
+	group = "dragon",
 	name = "dragon of death",
 	display = "D", color_r=255,
-	level_range = {1, 10}, exp_worth = 100,
+	level_range = {3, 10}, exp_worth = 100,
+	rarity = 4,
 	autolevel = "warrior",
 	ai = "simple",
 	max_life = 20,
@@ -14,13 +16,31 @@ newEntity{
 }
 
 newEntity{
+	group = "dragon",
 	name = "baby dragon",
 	display = "d", color_r=128,
 --	faction = "poorsods",
 	level_range = {1, 4}, exp_worth = 100,
+	rarity = 2,
 	autolevel = "caster",
 	ai = "simple",
-	max_life = resolvers.rngavg(1,100),
+	max_life = resolvers.rngavg(20,30),
+	max_mana = 1000,
+	max_stamina = 1000,
+	energy = { mod=0.3 },
+	has_blood = {nb=3, color={50,255,120}},
+	combat = { dam=5, atk=6, def=2, apr=1, armor=2},
+}
+
+newEntity{
+	group = "icky things",
+	name = "white icky thing",
+	display = "i", color_r=255, color_g=255, color_b=255,
+	level_range = {3, 7}, exp_worth = 100,
+	rarity = 1,
+	autolevel = "warrior",
+	ai = "simple",
+	max_life = resolvers.rngavg(10,20),
 	max_mana = 1000,
 	max_stamina = 1000,
 	energy = { mod=0.3 },

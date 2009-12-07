@@ -31,6 +31,30 @@ function _M:init(short_name)
 	self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
 end
 
+--- Parses the npc/objects list and compute rarities for random generation
+-- ONLY entities with a rarity properties will be considered.<br/>
+-- This means that to get a never-random entity you simply do not put a rarity property on it.
+function _M:computeRarities(list, level, ood, filter)
+	local r = {}
+	for i, e in ipairs(list) do
+		if e.rarity and (not filter or filter(e)) then
+			local lev = level
+			-- Out of Depth chance
+			if ood and rng.percent(ood.chance) then
+				lev = level + rng.range(ood.range[1], ood.range[2])
+				print("OOD Entity !", e.name, ":=:", level, "to", lev)
+			end
+
+--			if lev <
+			local genprob = 100 / e.rarity
+
+			r[#r+1] = { e=e, genprob=genprob, level_diff = lev - level }
+		end
+	end
+	table.sort(r, function(a, b) return a.genprob < b.genprob end)
+	return r
+end
+
 function _M:load()
 	local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
 	if err then error(err) end
