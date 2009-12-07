@@ -5,6 +5,7 @@ local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
 local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local ActorAI = require "engine.interface.ActorAI"
+local ActorInventory = require "engine.interface.ActorInventory"
 local Birther = require "engine.Birther"
 
 -- Damage types
@@ -29,6 +30,20 @@ ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's
 dofile("/data/autolevel_schemes.lua")
 -- Actor AIs
 ActorAI:loadDefinition("/engine/ai/")
+
+-- Body parts
+ActorInventory:defineInventory("INVEN", "In inventory", false, "")
+ActorInventory:defineInventory("MAIN_HAND", "In main hand", true, "")
+ActorInventory:defineInventory("OFF_HAND", "In off hand", true, "")
+ActorInventory:defineInventory("FINGER", "On fingers", true, "")
+ActorInventory:defineInventory("NECK", "Around neck", true, "")
+ActorInventory:defineInventory("LITE", "Light source", true, "")
+ActorInventory:defineInventory("BODY", "Main armor", true, "")
+ActorInventory:defineInventory("CLOAK", "Cloak", true, "")
+ActorInventory:defineInventory("HEAD", "On head", true, "")
+ActorInventory:defineInventory("HANDS", "On hands", true, "")
+ActorInventory:defineInventory("FEET", "On feet", true, "")
+ActorInventory:defineInventory("TOOL", "Tool", true, "")
 
 -- Birther descriptor
 Birther:loadDefinition("/data/birth/descriptors.lua")

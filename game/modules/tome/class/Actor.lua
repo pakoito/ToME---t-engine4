@@ -1,6 +1,7 @@
 require "engine.class"
 require "engine.Actor"
 require "engine.Autolevel"
+require "engine.interface.ActorInventory"
 require "engine.interface.ActorTemporaryEffects"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorLevel"
@@ -13,6 +14,7 @@ require "mod.class.interface.Combat"
 module(..., package.seeall, class.inherit(
 	-- a ToME actor is a complex beast it uses may inetrfaces
 	engine.Actor,
+	engine.interface.ActorInventory,
 	engine.interface.ActorTemporaryEffects,
 	engine.interface.ActorLife,
 	engine.interface.ActorLevel,
@@ -25,6 +27,7 @@ module(..., package.seeall, class.inherit(
 
 function _M:init(t)
 	engine.Actor.init(self, t)
+	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
 	engine.interface.ActorLife.init(self, t)
 	engine.interface.ActorLevel.init(self, t)

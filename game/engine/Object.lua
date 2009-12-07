@@ -12,3 +12,8 @@ end
 function _M:getName()
 	return self.name
 end
+
+function _M:resolve(t)
+	Entity.resolve(self, t)
+	self.egos = nil
+end

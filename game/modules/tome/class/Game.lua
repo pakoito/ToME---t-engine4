@@ -88,7 +88,7 @@ function _M:newGame()
 end
 
 function _M:loaded()
-	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="engine.Entity"}
+	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object"}
 	Map:setViewPort(self.w * 0.2, 0, self.w * 0.8, math.floor(self.h * 0.80), 16, 16)
 	engine.GameTurnBased.loaded(self)
 	self.key = engine.KeyCommand.new()

@@ -1,3 +1,4 @@
+--[[
 newBirthDescriptor{
 	type = "class",
 	name = "Warrior",
@@ -29,7 +30,7 @@ newBirthDescriptor{
 		["physical/1hweapon"]=true,
 	},
 }
-
+]]
 newBirthDescriptor{
 	type = "class",
 	name = "Mage",

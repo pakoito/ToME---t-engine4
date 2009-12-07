@@ -21,5 +21,10 @@ return {
 			ood = {chance=5, range={1, 10}},
 			adjust_level_to_player = {-1, 2},
 		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_object = {10, 10},
+			ood = {chance=5, range={1, 10}},
+		},
 	}
 }

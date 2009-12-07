@@ -1,11 +1,25 @@
 require "engine.class"
 require "mod.class.Actor"
+local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
 
 module(..., package.seeall, class.inherit(mod.class.Actor))
 
 function _M:init(t)
+	t.body = {
+		INVEN = 1000,
+		MAIN_HAND = 1,
+		OFF_HAND = 1,
+		FINGER = 2,
+		NECK = 1,
+		LITE = 1,
+		BODY = 1,
+		HEAD = 1,
+		HANDS = 1,
+		FEET = 1,
+		TOOL = 1,
+	}
 	mod.class.Actor.init(self, t)
 	self.player = true
 	self.faction = "players"
@@ -21,6 +35,11 @@ function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 4, 4)
+
+		local obj = game.level.map(self.x, self.y, Map.OBJECT)
+		if obj then
+			game.logSeen(self, "There is an item here: "..obj:getName())
+		end
 	end
 	return moved
 end

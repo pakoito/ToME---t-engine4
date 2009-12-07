@@ -76,6 +76,7 @@ newBirthDescriptor
 	experience = 1.3,
 	talents = {},
 }
+--[[
 newBirthDescriptor
 {
 	type = "subrace",
@@ -93,7 +94,7 @@ newBirthDescriptor
 	talents = { ActorTalents.DECREASED_HEALTH_I },
 	experience = 1.1,
 }
-
+]]
 ---------------------------------------------------------
 --                       Hobbits                       --
 ---------------------------------------------------------
