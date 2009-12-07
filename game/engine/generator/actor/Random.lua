@@ -17,6 +17,7 @@ end
 function _M:generate()
 	for i = 1, rng.range(self.nb_npc[1], self.nb_npc[2]) do
 		local m = self.npc_list[rng.range(1, #self.npc_list)]:clone()
+		m:resolve()
 		local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
 		local tries = 0
 		while self.map:checkAllEntities(x, y, "block_move") and tries < 100 do

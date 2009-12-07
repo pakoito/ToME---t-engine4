@@ -1,2 +1,1 @@
-return {
-}
+load("/data/general/objects.lua")

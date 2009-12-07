@@ -1,6 +1,9 @@
 -- load some utility functions
 dofile("/engine/utils.lua")
 
+-- load resolver functions for entities cloning
+dofile("/engine/resolvers.lua")
+
 require "config"
 require "engine.KeyCommand"
 require "engine.Savefile"

@@ -32,7 +32,7 @@ function inherit(base, ...)
 				for k, e in pairs(_if) do
 					if k ~= "init" and k ~= "_NAME" and k ~= "_M" and k ~= "_PACKAGE" and k ~= "new" then
 						c[k] = e
-						print(("caching interface value %s (%s) from %s to %s"):format(k, tostring(e), _if._NAME, c._NAME))
+--						print(("caching interface value %s (%s) from %s to %s"):format(k, tostring(e), _if._NAME, c._NAME))
 					end
 				end
 			end

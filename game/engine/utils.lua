@@ -1,7 +1,8 @@
 function table.clone(tbl, deep)
 	local n = {}
 	for k, e in pairs(tbl) do
-		if deep and type(e) == "table" then
+		-- Deep copy subtables, but not objects!
+		if deep and type(e) == "table" and not e.__CLASSNAME then
 			n[k] = table.clone(e, true)
 		else
 			n[k] = e
