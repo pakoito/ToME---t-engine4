@@ -12,7 +12,7 @@ function _M:init(t)
 	self.combat = { dam=10, atk=40, apr=2, def=6, armor=4 }
 	self.mana_regen = self.mana_regen or 1
 	self.stamina_regen = self.stamina_regen or 1
-	self.regen_life = self.regen_life or 0.5
+	self.life_regen = self.life_regen or 0.5
 	self.descriptor = {}
 	self.hotkey = {}
 end

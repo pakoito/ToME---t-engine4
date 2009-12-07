@@ -285,7 +285,6 @@ function _M:setupCommands()
 		-- talent use
 		_m = function()
 			self.player:useTalents()
-			self.player:setEffect(self.player.EFF_CUT, 10, {power=4}, self.player)
 		end,
 
 		[{"_g","shift"}] = function()

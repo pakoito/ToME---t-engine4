@@ -9,6 +9,7 @@ module(..., package.seeall, class.make)
 function _M:init(t)
 	self.max_life = t.max_life or 100
 	self.life = t.life or self.max_life
+	self.life_regen = t.life_regen or 0
 end
 
 --- Checks if something bumps in us
@@ -24,8 +25,8 @@ end
 
 --- Regenerate life, call it from your actor class act() method
 function _M:regenLife()
-	if self.regen_life then
-		self.life = util.bound(self.life + self.regen_life, 0, self.max_life)
+	if self.life_regen then
+		self.life = util.bound(self.life + self.life_regen, 0, self.max_life)
 	end
 end
 

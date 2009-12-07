@@ -26,3 +26,19 @@ newEffect{
 		self.mana_regen = self.mana_regen - eff.power
 	end,
 }
+
+newEffect{
+	name = "REGENERATION",
+	desc = "Regeneration",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# starts to regenerating heath quickly.", "+Regen" end,
+	on_lose = function(self, err) return "#Target# stops regenerating health quickly.", "-Regen" end,
+	activate = function(self, eff)
+		self.life_regen = self.life_regen + eff.power
+	end,
+	deactivate = function(self, eff)
+		self.life_regen = self.life_regen - eff.power
+	end,
+}

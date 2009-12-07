@@ -135,6 +135,10 @@ function _M:preUseTalent(ab)
 
 	if ab.message then
 		game.logSeen(self, "%s", self:useTalentMessage(ab))
+	elseif ab.mode == "sustained" and not self:isTalentActive(ab.id) then
+		game.logSeen(self, "%s activates %s.", self.name:capitalize(), ab.name)
+	elseif ab.mode == "sustained" and self:isTalentActive(ab.id) then
+		game.logSeen(self, "%s deactivates %s.", self.name:capitalize(), ab.name)
 	elseif ab.type[1]:find("^spell/") then
 		game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
 	else

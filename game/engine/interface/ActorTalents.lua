@@ -9,7 +9,8 @@ _M.talents_types_def = {}
 --- Defines actor talents
 -- Static!
 function _M:loadDefinition(file)
-	local f = loadfile(file)
+	local f, err = loadfile(file)
+	if not f and err then error(err) end
 	setfenv(f, setmetatable({
 		DamageType = require("engine.DamageType"),
 		newTalent = function(t) self:newTalent(t) end,
@@ -65,6 +66,7 @@ function _M:init(t)
 	self.talents = t.talents or {}
 	self.talents_types = t.talents_types or {}
 	self.talents_cd = {}
+	self.sustain_talents = {}
 end
 
 --- Make the actor use the talent
@@ -72,7 +74,7 @@ function _M:useTalent(id)
 	local ab = _M.talents_def[id]
 	assert(ab, "trying to cast talent "..tostring(id).." but it is not defined")
 
-	if ab.action then
+	if ab.mode == "activated" and ab.action then
 		if self:isTalentCoolingDown(ab) then
 			game.logPlayer(self, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
@@ -88,6 +90,33 @@ function _M:useTalent(id)
 		end)
 		local ok, err = coroutine.resume(co)
 		if not ok and err then error(err) end
+	elseif ab.mode == "sustained" and ab.activate and ab.deactivate then
+		if self:isTalentCoolingDown(ab) then
+			game.logPlayer(self, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
+			return
+		end
+		if not self:preUseTalent(ab) then return end
+		local co = coroutine.create(function()
+			if not self.sustain_talents[id] then
+				local ret = ab.activate(self)
+
+				if not self:postUseTalent(ab, ret) then return end
+
+				self.sustain_talents[id] = ret
+			else
+				local ret = ab.deactivate(self, self.sustain_talents[id])
+
+				if not self:postUseTalent(ab, ret) then return end
+
+				-- Everything went ok? then start cooldown if any
+				self:startTalentCooldown(ab)
+				self.sustain_talents[id] = nil
+			end
+		end)
+		local ret, err = coroutine.resume(co)
+		if not ret and err then error(err) end
+	else
+		error("Activating non activable or sustainable talent: "..id.." :: "..ab.name.." :: "..ab.mode)
 	end
 end
 
@@ -114,6 +143,11 @@ end
 -- @return true to continue, false to stop
 function _M:postUseTalent(talent, ret)
 	return true
+end
+
+--- Is the sustained talent activated ?
+function _M:isTalentActive(t_id)
+	return self.sustain_talents[t_id]
 end
 
 --- Returns how many talents of this type the actor knows
