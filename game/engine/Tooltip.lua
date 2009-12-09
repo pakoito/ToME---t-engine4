@@ -32,10 +32,9 @@ function _M:display()
 	self.changed = false
 
 	self.surface = core.display.newSurface(self.w, self.h)
-	self.surface:alpha(200)
 
 	-- Erase and the display the tooltip
-	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
+	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3], 200)
 
 	self.surface:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_7.png"), 0, 0)
 	self.surface:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_9.png"), self.w - 8, 0)

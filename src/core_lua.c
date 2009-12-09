@@ -373,7 +373,8 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 		auxiliar_setclass(L, "sdl{surface}", -1);
-		*s = txt;
+		*s = SDL_DisplayFormatAlpha(txt);
+		SDL_FreeSurface(txt);
 		return 1;
 	}
 
@@ -453,7 +454,8 @@ static int sdl_surface_erase(lua_State *L)
 	int r = lua_tonumber(L, 2);
 	int g = lua_tonumber(L, 3);
 	int b = lua_tonumber(L, 4);
-	SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, r, g, b, 125));
+	int a = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 255;
+	SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, r, g, b, a));
 	return 0;
 }
 

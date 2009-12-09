@@ -40,7 +40,7 @@ function _M:display()
 	if not self.changed then return self.surface end
 
 	local s = self.surface
-	s:erase()
+	s:erase(0,0,0,200)
 
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_7.png"), 0, 0)
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_9.png"), self.w - 8, 0)
