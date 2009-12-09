@@ -453,7 +453,7 @@ static int sdl_surface_erase(lua_State *L)
 	int r = lua_tonumber(L, 2);
 	int g = lua_tonumber(L, 3);
 	int b = lua_tonumber(L, 4);
-	SDL_FillRect(*s, NULL, SDL_MapRGB(screen->format, r, g, b));
+	SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, r, g, b, 125));
 	return 0;
 }
 
@@ -500,7 +500,7 @@ static int sdl_surface_toscreen(lua_State *L)
 	}
 
 	// Jonction entre OpenGL et SDL.
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
 
 	glBegin( GL_QUADS );                 /* Draw A Quad              */
 	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
@@ -571,7 +571,7 @@ static int sdl_surface_alpha(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
 	int a = luaL_checknumber(L, 2);
-	SDL_SetAlpha(*s, SDL_SRCALPHA | SDL_RLEACCEL, (a < 0) ? 0 : (a > 255) ? 255 : a);
+//	SDL_SetAlpha(*s, SDL_SRCALPHA | SDL_RLEACCEL, (a < 0) ? 0 : (a > 255) ? 255 : a);
 	return 0;
 }
 

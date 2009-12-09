@@ -15,3 +15,9 @@ function _M:block_move(x, y, e)
 	end
 	return false
 end
+
+function _M:tooltip()
+	local mx, my = core.mouse.get()
+	local tmx, tmy = game.level.map:getMouseTile(mx, my)
+	return ("%d:%d\nSeen %s\nRemember %s\nLite %s"):format(tmx,tmy,tostring(game.level.map.seens(tmx, tmy)), tostring(game.level.map.remembers(tmx, tmy)), tostring(game.level.map.lites(tmx, tmy)))
+end

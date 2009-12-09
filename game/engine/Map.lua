@@ -91,6 +91,11 @@ function _M:loaded()
 	self._fov = core.fov.new(_M.opaque, _M.apply, self)
 	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
+
+	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight)
+	for i = 0, self.w - 1 do for j = 0, self.h - 1 do
+		self:updateMap(i, j)
+	end end
 end
 
 --- Closes things in the object to allow it to be garbage collected
@@ -111,7 +116,9 @@ function _M:fov(x, y, d)
 	if self.clean_fov then
 		self.clean_fov = false
 		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
-			self.seens(i, j, false)
+			t[i + j * self.w] = nil
+			self:updateMap(i, j)
+--			self.seens(i, j, false)
 		end end
 --		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
 	end
@@ -127,7 +134,9 @@ function _M:fovLite(x, y, d)
 	if self.clean_fov then
 		self.clean_fov = false
 		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
-			self.seens(i, j, false)
+			t[i + j * self.w] = nil
+			self:updateMap(i, j)
+--			self.seens(i, j, false)
 		end end
 --		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
 		self._fov_lite(x, y, d)
@@ -144,9 +153,9 @@ function _M:updateMap(x, y)
 		while not e and si <= #order do e = self(x, y, order[si]) si = si + 1 end
 		if e then
 			if self.seens[z] then
-				self._map:setGrid(x, y, self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image))
+				self._map:setGrid(x, y, self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), 255)
 			elseif self.remembers[z] then
-				self._map:setGrid(x, y, self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3, e.image))
+				self._map:setGrid(x, y, self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), 85)
 			end
 		end
 	end
