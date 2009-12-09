@@ -135,9 +135,9 @@ function _M:loadList(...)
 				local e = self.new(t)
 				res[#res+1] = e
 				if t.define_as then res[t.define_as] = e end
-				print("new entity", t.name)
+--				print("new entity", t.name)
 				for k, ee in pairs(e) do
-					print("prop:", k, ee)
+--					print("prop:", k, ee)
 				end
 			end,
 			load = function(f)

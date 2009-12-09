@@ -9,7 +9,6 @@
 #include "physfs.h"
 #include "SFMT.h"
 #include "mzip.h"
-#include <SDL.h>
 #include <SDL_ttf.h>
 
 /******************************************************************
@@ -390,15 +389,25 @@ static int sdl_new_surface(lua_State *L)
 	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 	auxiliar_setclass(L, "sdl{surface}", -1);
 
+	Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rmask = 0xff000000;
+	gmask = 0x00ff0000;
+	bmask = 0x0000ff00;
+	amask = 0x000000ff;
+#else
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+	bmask = 0x00ff0000;
+	amask = 0xff000000;
+#endif
+
 	*s = SDL_CreateRGBSurface(
-		screen->flags,
+		SDL_SWSURFACE | SDL_SRCALPHA,
 		w,
 		h,
-		screen->format->BitsPerPixel,
-		screen->format->Rmask,
-		screen->format->Gmask,
-		screen->format->Bmask,
-		screen->format->Amask
+		32,
+		rmask, gmask, bmask, amask
 		);
 	return 1;
 }
@@ -453,11 +462,96 @@ static int sdl_surface_toscreen(lua_State *L)
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
+
+	/*
 	if (s && *s)
 	{
 		sdlDrawImage(screen, *s, x, y);
 	}
+	*/
+
+	GLuint t;
+	glGenTextures(1, &t);
+	glBindTexture(GL_TEXTURE_2D, t);
+
+	// Paramétrage de la texture.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	// get the number of channels in the SDL surface
+	GLint nOfColors = (*s)->format->BytesPerPixel;
+	GLenum texture_format;
+	if (nOfColors == 4)     // contains an alpha channel
+	{
+		if ((*s)->format->Rmask == 0x000000ff)
+			texture_format = GL_RGBA;
+		else
+			texture_format = GL_BGRA;
+	} else if (nOfColors == 3)     // no alpha channel
+	{
+		if ((*s)->format->Rmask == 0x000000ff)
+			texture_format = GL_RGB;
+		else
+			texture_format = GL_BGR;
+	} else {
+		printf("warning: the image is not truecolor..  this will probably break %d\n", nOfColors);
+		// this error should not go unhandled
+	}
+
+	// Jonction entre OpenGL et SDL.
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
+
+	glBegin( GL_QUADS );                 /* Draw A Quad              */
+	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
+	glTexCoord2f(0,1); glVertex2f(0  + x, (*s)->h + y);
+	glTexCoord2f(1,1); glVertex2f((*s)->w + x, (*s)->h + y);
+	glTexCoord2f(1,0); glVertex2f((*s)->w + x, 0  + y);
+	glEnd( );                            /* Done Drawing The Quad    */
+
+	glDeleteTextures(1, &t);
+
 	return 0;
+}
+
+static int sdl_surface_to_texture(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+
+	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+
+	glGenTextures(1, t);
+	glBindTexture(GL_TEXTURE_2D, *t);
+
+	// Paramétrage de la texture.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	// get the number of channels in the SDL surface
+	GLint nOfColors = (*s)->format->BytesPerPixel;
+	GLenum texture_format;
+	if (nOfColors == 4)     // contains an alpha channel
+	{
+		if ((*s)->format->Rmask == 0x000000ff)
+			texture_format = GL_RGBA;
+		else
+			texture_format = GL_BGRA;
+	} else if (nOfColors == 3)     // no alpha channel
+	{
+		if ((*s)->format->Rmask == 0x000000ff)
+			texture_format = GL_RGB;
+		else
+			texture_format = GL_BGR;
+	} else {
+		printf("warning: the image is not truecolor..  this will probably break\n");
+		// this error should not go unhandled
+	}
+
+	// Jonction entre OpenGL et SDL.
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
+	return 1;
 }
 
 static int sdl_surface_merge(lua_State *L)
@@ -488,6 +582,32 @@ static int sdl_set_window_title(lua_State *L)
 	return 0;
 }
 
+static int sdl_free_texture(lua_State *L)
+{
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	glDeleteTextures(1, t);
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int sdl_texture_toscreen(lua_State *L)
+{
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+
+	glBindTexture(GL_TEXTURE_2D, *t);
+	glBegin( GL_QUADS );                 /* Draw A Quad              */
+	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
+	glTexCoord2f(0,1); glVertex2f(0  + x, 16 + y);
+	glTexCoord2f(1,1); glVertex2f(16 + x, 16 + y);
+	glTexCoord2f(1,0); glVertex2f(16 + x, 0  + y);
+	glEnd( );                            /* Done Drawing The Quad    */
+
+	return 0;
+}
+
+
 static const struct luaL_reg displaylib[] =
 {
 	{"fullscreen", sdl_fullscreen},
@@ -510,6 +630,15 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"putChar", lua_display_char},
 	{"drawString", sdl_surface_drawstring},
 	{"alpha", sdl_surface_alpha},
+	{"glTexture", sdl_surface_to_texture},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg sdl_texture_reg[] =
+{
+	{"__gc", sdl_free_texture},
+	{"close", sdl_free_texture},
+	{"toScreen", sdl_texture_toscreen},
 	{NULL, NULL},
 };
 
@@ -1022,6 +1151,7 @@ int luaopen_core(lua_State *L)
 	auxiliar_newclass(L, "physfs{zip}", fszipfile_reg);
 	auxiliar_newclass(L, "line{core}", line_reg);
 	auxiliar_newclass(L, "fov{core}", fov_reg);
+	auxiliar_newclass(L, "gl{texture}", sdl_texture_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
 	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);
 	luaL_openlib(L, "core.fov", fovlib, 0);

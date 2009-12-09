@@ -13,6 +13,9 @@
 #include "physfs.h"
 #include "core_lua.h"
 
+#define WIDTH 800
+#define HEIGHT 600
+
 lua_State *L = NULL;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
@@ -196,7 +199,7 @@ void on_tick()
 	Frames++;
 	{
 		int t = SDL_GetTicks();
-		if (t - T0 >= 5000) {
+		if (t - T0 >= 1000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
 			printf("%d ticks  in %g seconds = %g TPS\n", Frames, seconds, fps);
@@ -211,8 +214,8 @@ void on_redraw()
 	static int Frames = 0;
 	static int T0     = 0;
 
-	sdlLock(screen);
-	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
+	glClear( GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
 
 	if (current_game != LUA_NOREF)
 	{
@@ -224,16 +227,13 @@ void on_redraw()
 		docall(L, 1, 0);
 	}
 
-	sdlUnlock(screen);
-
-	// finally display the screen
-	SDL_Flip(screen);
+	SDL_GL_SwapBuffers();
 
 	/* Gather our frames per second */
 	Frames++;
 	{
 		int t = SDL_GetTicks();
-		if (t - T0 >= 5000) {
+		if (t - T0 >= 1000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
 			printf("%d frames in %g seconds = %g FPS\n", Frames, seconds, fps);
@@ -287,6 +287,72 @@ Uint32 redraw_timer(Uint32 interval, void *param)
 	return(interval);
 }
 
+/* general OpenGL initialization function */
+int initGL()
+{
+	/* Enable smooth shading */
+//	glShadeModel( GL_SMOOTH );
+
+	/* Set the background black */
+	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+
+	/* Depth buffer setup */
+//	glClearDepth( 1.0f );
+
+	/* Enables Depth Testing */
+//	glEnable( GL_DEPTH_TEST );
+
+	/* The Type Of Depth Test To Do */
+//	glDepthFunc( GL_LEQUAL );
+
+	/* Really Nice Perspective Calculations */
+	//	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+//	glDisable(GL_DEPTH_TEST);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+//	glAlphaFunc(GL_GREATER,0.1f);
+
+	return( TRUE );
+}
+
+int resizeWindow(int width, int height)
+{
+	/* Height / width ration */
+	GLfloat ratio;
+
+	/* Protect against a divide by zero */
+	if ( height == 0 )
+		height = 1;
+
+	ratio = ( GLfloat )width / ( GLfloat )height;
+
+	glEnable( GL_TEXTURE_2D );
+
+	/* Setup our viewport. */
+	glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );
+
+	/* change to the projection matrix and set our viewing volume. */
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	/* Set our perspective */
+	//gluPerspective( 45.0f, ratio, 0.1f, 100.0f );
+	glOrtho(0, width, height, 0, -100, 100);
+
+	/* Make sure we're chaning the model view and not the projection */
+	glMatrixMode( GL_MODELVIEW );
+
+	/* Reset The View */
+	glLoadIdentity( );
+
+//	glEnable(GL_ALPHA_TEST);
+//	glColor4f(1.0f,1.0f,1.0f,1.0f);
+
+	return( TRUE );
+}
+
 /**
  * Program entry point.
  */
@@ -308,7 +374,7 @@ int main(int argc, char *argv[])
 	luaopen_mime_core(L);
 	luaopen_struct(L);
 	luaopen_profiler(L);
-//	luaopen_map(L);
+	luaopen_map(L);
 
 	// Make the uids repository
 	lua_newtable(L);
@@ -320,7 +386,7 @@ int main(int argc, char *argv[])
 		printf("cannot initialize SDL: %s\n", SDL_GetError ());
 		return;
 	}
-	screen = SDL_SetVideoMode(800, 600, 32, _DEFAULT_VIDEOMODE_FLAGS_);
+	screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
 		return;
@@ -329,6 +395,11 @@ int main(int argc, char *argv[])
 	SDL_EnableUNICODE(TRUE);
 	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
+
+	/* Sets up OpenGL double buffering */
+	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+	initGL();
+	resizeWindow(WIDTH, HEIGHT);
 
 	// And run the lua engine scripts
 	luaL_loadfile(L, "/engine/init.lua");
@@ -371,6 +442,8 @@ int main(int argc, char *argv[])
 
 		/* draw the scene */
 		on_tick();
+//		on_redraw();
+
 	}
 
 	return 0;

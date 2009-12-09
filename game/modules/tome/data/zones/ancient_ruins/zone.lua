@@ -2,7 +2,7 @@ return {
 	name = "ancient ruins",
 	level_range = {1, 5},
 	max_level = 5,
-	width = 50, height = 50,
+	width = 100, height = 100,
 --	all_remembered = true,
 	all_lited = true,
 --	persistant = true,

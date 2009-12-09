@@ -74,7 +74,7 @@ function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
 	self.player = Player.new{
 		name=self.player_name, max_life=25, max_mana=25, max_stamina=25, display='@', color_r=230, color_g=230, color_b=230,
-		unused_stats = 6, unused_talents = 3,
+		unused_stats = 6, unused_talents = 3, image="player.png",
 		move_others=true,
 	}
 
@@ -144,6 +144,18 @@ function _M:onTurn()
 end
 
 function _M:display()
+--[[
+	if self.level and self.level.map then
+		-- Display the map and compute FOV for the player if needed
+--		if self.level.map.changed then
+--			self.level.map:fov(self.player.x, self.player.y, 20)
+--			self.level.map:fovLite(self.player.x, self.player.y, 4)
+--		end
+		self.level.map:display()
+		--:toScreen(self.level.map.display_x, self.level.map.display_y)
+	end
+-- ]]
+-- [[
 	self.log:display():toScreen(self.log.display_x, self.log.display_y)
 	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
 	self.talents_display:display():toScreen(self.talents_display.display_x, self.talents_display.display_y)
@@ -154,7 +166,8 @@ function _M:display()
 			self.level.map:fov(self.player.x, self.player.y, 20)
 			self.level.map:fovLite(self.player.x, self.player.y, 4)
 		end
-		self.level.map:display():toScreen(self.level.map.display_x, self.level.map.display_y)
+		self.level.map:display()
+--		:toScreen(self.level.map.display_x, self.level.map.display_y)
 
 		-- Display the targetting system if active
 		self.target:display()
@@ -179,6 +192,7 @@ function _M:display()
 	end
 
 	engine.GameTurnBased.display(self)
+-- ]]
 end
 
 function _M:targetMode(v, msg, co, typ)

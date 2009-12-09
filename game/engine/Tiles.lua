@@ -7,7 +7,8 @@ module(..., package.seeall, class.make)
 prefix = "/data/gfx/"
 use_images = true
 
-function _M:init(w, h, fontname, fontsize)
+function _M:init(w, h, fontname, fontsize, texture)
+	self.texture = texture
 	self.w, self.h = w, h
 	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 14)
 	self.repo = {}
@@ -41,9 +42,12 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image)
 			s:drawString(self.font, char, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb)
 		end
 
+		if self.texture then s = s:glTexture() end
+
 		self.repo[char] = self.repo[char] or {}
 		self.repo[char][fgidx] = self.repo[char][fgidx] or {}
 		self.repo[char][fgidx][bgidx] = s
+		print("caching")
 		return s
 	end
 end
