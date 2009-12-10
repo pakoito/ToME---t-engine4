@@ -13,8 +13,8 @@
 #include "physfs.h"
 #include "core_lua.h"
 
-#define WIDTH 1600
-#define HEIGHT 1200
+#define WIDTH 800
+#define HEIGHT 600
 
 lua_State *L = NULL;
 int current_mousehandler = LUA_NOREF;
