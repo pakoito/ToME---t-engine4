@@ -179,7 +179,6 @@ function _M:display()
 	end
 
 	engine.GameTurnBased.display(self)
--- ]]
 end
 
 function _M:targetMode(v, msg, co, typ)
@@ -286,6 +285,23 @@ function _M:setupCommands()
 		-- talent use
 		_m = function()
 			self.player:useTalents()
+		end,
+
+		-- Pickup object
+		_g = function()
+			self.player:pickupFloor(1, true)
+		end,
+
+		-- Show inventory
+		_i = function()
+			self.player:showInventory(self.player:getInven(self.player.INVEN_INVEN), nil, function() end)
+		end,
+		-- Drop item
+		_d = function()
+			local inven = self.player:getInven(self.player.INVEN_INVEN)
+			self.player:showInventory(inven, nil, function(o, item)
+				self.player:dropFloor(inven, item)
+			end)
 		end,
 
 		[{"_g","shift"}] = function()

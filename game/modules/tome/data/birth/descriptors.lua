@@ -5,6 +5,9 @@ newBirthDescriptor{
 	},
 	talents = {},
 	experience = 1.0,
+	body = {
+		INVEN=1000,
+	}
 }
 
 load("/data/birth/races.lua")

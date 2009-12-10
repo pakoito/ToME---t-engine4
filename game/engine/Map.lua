@@ -443,3 +443,17 @@ function _M:processEffects()
 
 	for i = #todel, 1, -1 do table.remove(self.effects, todel[i]) end
 end
+
+
+-------------------------------------------------------------
+-------------------------------------------------------------
+-- Object functions
+-------------------------------------------------------------
+-------------------------------------------------------------
+function _M:addObject(x, y, o)
+	local i = self.OBJECT
+	-- Find the first "hole"
+	while self(x, y, i) do i = i + 1 end
+	-- Fill it
+	self(x, y, i, o)
+end

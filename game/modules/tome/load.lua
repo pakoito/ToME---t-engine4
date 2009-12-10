@@ -32,7 +32,6 @@ dofile("/data/autolevel_schemes.lua")
 ActorAI:loadDefinition("/engine/ai/")
 
 -- Body parts
-ActorInventory:defineInventory("INVEN", "In inventory", false, "")
 ActorInventory:defineInventory("MAIN_HAND", "In main hand", true, "")
 ActorInventory:defineInventory("OFF_HAND", "In off hand", true, "")
 ActorInventory:defineInventory("FINGER", "On fingers", true, "")

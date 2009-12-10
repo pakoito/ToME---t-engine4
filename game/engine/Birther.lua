@@ -134,6 +134,10 @@ function _M:apply()
 			end
 		end
 		if d.experience then self.actor.exp_mod = self.actor.exp_mod * d.experience end
+		if d.body then
+			self.actor.body = d.body
+			self.actor:initBody()
+		end
 	end
 end
 

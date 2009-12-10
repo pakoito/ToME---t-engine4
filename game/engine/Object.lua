@@ -8,12 +8,17 @@ function _M:init(t)
 	Entity.init(self, t)
 end
 
+function _M:resolve(t)
+	Entity.resolve(self, t)
+	self.egos = nil
+end
+
 --- Gets the full name of the object
 function _M:getName()
 	return self.name
 end
 
-function _M:resolve(t)
-	Entity.resolve(self, t)
-	self.egos = nil
+--- Gets the full desc of the object
+function _M:getDesc()
+	return self.name
 end

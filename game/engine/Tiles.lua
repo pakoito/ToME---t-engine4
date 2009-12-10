@@ -50,7 +50,6 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
 		self.repo[char] = self.repo[char] or {}
 		self.repo[char][fgidx] = self.repo[char][fgidx] or {}
 		self.repo[char][fgidx][bgidx] = s
-		print("caching")
 		return s
 	end
 end
