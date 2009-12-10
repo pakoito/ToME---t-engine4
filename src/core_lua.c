@@ -410,6 +410,10 @@ static int sdl_new_surface(lua_State *L)
 		32,
 		rmask, gmask, bmask, amask
 		);
+
+        if (s == NULL)
+          printf("ERROR : SDL_CreateRGBSurface : %s\n",SDL_GetError());
+
 	return 1;
 }
 
@@ -503,6 +507,10 @@ static int sdl_surface_toscreen(lua_State *L)
 
 	// Jonction entre OpenGL et SDL.
 	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
+        GLenum err = glGetError();
+        if (err != GL_NO_ERROR) {
+          printf("glTexImage2D : %s\n",gluErrorString(err));
+        }
 
 	glBegin( GL_QUADS );                 /* Draw A Quad              */
 	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);

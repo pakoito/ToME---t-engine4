@@ -10,6 +10,7 @@ solution "TEngine"
 		"src/physfs",
 		"src/physfs/zlib123",
 		"/usr/include/SDL",
+		"/usr/include/GL",
 	}
 
 	libdirs {
@@ -37,8 +38,19 @@ project "TEngine"
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
 configuration "macosx"
-	linkoptions { "mac/SDLmain.m", "-framework SDL", "-framework SDL_gfx", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa" }
-	files { "mac/SDL*" }
+	linkoptions { "-framework SDL", "-framework SDL_gfx", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" }
+	files { "src/mac/SDL*" }
+        links { "IOKit" }
+        includedirs {
+              "/System/Library/Frameworks/OpenGL.framework/Headers",
+              "/Library/Frameworks/SDL.framework/Headers",
+              "/Library/Frameworks/SDL_net.framework/Headers",
+              "/Library/Frameworks/SDL_image.framework/Headers",
+              "/Library/Frameworks/SDL_ttf.framework/Headers",
+              "/Library/Frameworks/SDL_gfx.framework/Headers",
+              "/Library/Frameworks/SDL_mixer.framework/Headers"
+        }
+        defines { "USE_TENGINE_MAIN" }
 	targetdir "."
 
 configuration "not macosx"
@@ -68,6 +80,7 @@ project "physfs"
 		files { "src/physfs/platform/windows.c",  }
 	configuration "macosx"
 		files { "src/physfs/platform/macosx.c", "src/physfs/platform/posix.c",  }
+                includedirs { "/Library/Frameworks/SDL.framework/Headers" }
 
 project "lua"
 	kind "StaticLib"

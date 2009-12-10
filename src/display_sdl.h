@@ -36,8 +36,8 @@
 
 #include <SDL.h>
 #include <SDL_framerate.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <gl.h>
+#include <glu.h>
 
 #ifdef __cplusplus
 extern "C" {

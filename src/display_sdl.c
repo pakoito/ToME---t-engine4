@@ -37,5 +37,7 @@ inline void sdlDrawImage(SDL_Surface *dest, SDL_Surface *image, int x, int y)
 	r.h=image->h;
 	r.x=x;
 	r.y=y;
-	SDL_BlitSurface(image, NULL, dest, &r);
+	int errcode = SDL_BlitSurface(image, NULL, dest, &r);
+        if (errcode)
+          printf("ERROR! SDL_BlitSurface failed! (%d,%s)\n",errcode,SDL_GetError());
 }

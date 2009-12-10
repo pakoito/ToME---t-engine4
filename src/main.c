@@ -356,6 +356,12 @@ int resizeWindow(int width, int height)
 /**
  * Program entry point.
  */
+
+// Let some platforms use a different entry point
+#ifdef USE_TENGINE_MAIN
+#define main tengine_main
+#endif
+
 int main(int argc, char *argv[])
 {
 	// RNG init
