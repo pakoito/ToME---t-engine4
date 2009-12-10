@@ -17,7 +17,7 @@ OBJECT = 1000
 --- The order of display for grid seen
 displayOrder = { ACTOR, OBJECT, TERRAIN }
 --- The order of display for grids remembered
-rememberDisplayOrder = { ACTOR, TERRAIN }
+rememberDisplayOrder = { TERRAIN }
 
 --- Sets the viewport size
 -- Static
@@ -33,6 +33,7 @@ function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize)
 	self.display_x, self.display_y = x, y
 	self.viewport = {width=w, height=h, mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
 	self.tiles = Tiles.new(tile_w, tile_h, fontname, fontsize, true)
+	self.tilesSurface = Tiles.new(tile_w, tile_h, fontname, fontsize, false)
 	self.tile_w, self.tile_h = tile_w, tile_h
 end
 
@@ -57,7 +58,6 @@ function _M:init(w, h)
 	self.seens = {}
 	self.remembers = {}
 	self.effects = {}
-	self._map = core.map.newMap(w, h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight)
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self:loaded()
@@ -73,26 +73,43 @@ function _M:save()
 	})
 end
 function _M:loaded()
-	local mapbool = function(t, x, y, v)
+	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight)
+
+	local mapseen = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
 			t[x + y * self.w] = v
-			self:updateMap(x, y)
+			self._map:setSeen(x, y, v)
+		end
+		return t[x + y * self.w]
+	end
+	local mapremember = function(t, x, y, v)
+		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if v ~= nil then
+			t[x + y * self.w] = v
+			self._map:setRemember(x, y, v)
+		end
+		return t[x + y * self.w]
+	end
+	local maplite = function(t, x, y, v)
+		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if v ~= nil then
+			t[x + y * self.w] = v
+			self._map:setLite(x, y, v)
 		end
 		return t[x + y * self.w]
 	end
 
 	getmetatable(self).__call = _M.call
-	setmetatable(self.lites, {__call = mapbool})
-	setmetatable(self.seens, {__call = mapbool})
-	setmetatable(self.remembers, {__call = mapbool})
+	setmetatable(self.lites, {__call = maplite})
+	setmetatable(self.seens, {__call = mapseen})
+	setmetatable(self.remembers, {__call = mapremember})
 
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
 	self._fov = core.fov.new(_M.opaque, _M.apply, self)
 	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
 
-	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight)
 	for i = 0, self.w - 1 do for j = 0, self.h - 1 do
 		self:updateMap(i, j)
 	end end
@@ -115,12 +132,8 @@ function _M:fov(x, y, d)
 	-- Reset seen grids
 	if self.clean_fov then
 		self.clean_fov = false
-		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
-			t[i + j * self.w] = nil
-			self:updateMap(i, j)
---			self.seens(i, j, false)
-		end end
---		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+		self._map:cleanSeen();
 	end
 	self._fov(x, y, d)
 end
@@ -133,32 +146,22 @@ function _M:fovLite(x, y, d)
 	-- Reset seen grids
 	if self.clean_fov then
 		self.clean_fov = false
-		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
-			t[i + j * self.w] = nil
-			self:updateMap(i, j)
---			self.seens(i, j, false)
-		end end
---		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
-		self._fov_lite(x, y, d)
+		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+		self._map:cleanSeen();
 	end
+	self._fov_lite(x, y, d)
 end
 
 function _M:updateMap(x, y)
-	local order = displayOrder
-	local e, si = nil, 1
-	local z = x + y * self.w
+	local g = self(x, y, TERRAIN)
+	local o = self(x, y, OBJECT)
+	local a = self(x, y, ACTOR)
 
-	if self.seens[z] or self.remembers[z] then
-		if not self.seens[z] then order = rememberDisplayOrder end
-		while not e and si <= #order do e = self(x, y, order[si]) si = si + 1 end
-		if e then
-			if self.seens[z] then
-				self._map:setGrid(x, y, self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), 255)
-			elseif self.remembers[z] then
-				self._map:setGrid(x, y, self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image), 85)
-			end
-		end
-	end
+	if g then g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image) end
+	if o then o = self.tiles:get(o.display, o.color_r, o.color_g, o.color_b, o.color_br, o.color_bg, o.color_bb, o.image) end
+	if a then a = self.tiles:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image) end
+
+	self._map:setGrid(x, y, g, o, a)
 end
 
 --- Sets/gets a value from the map
@@ -200,80 +203,41 @@ end
 --- Displays the map on a surface
 -- @return a surface containing the drawn map
 function _M:display()
-	do
 	self._map:toScreen(self.display_x, self.display_y)
-	self.changed = false
-	return
-	end
 
-	-- If nothing changed, return the same surface as before
---	if not self.changed then return self.surface end
-	self.changed = false
-	self.clean_fov = true
-
-	-- Erase and the display the map
---	self.surface:erase()
-	if not self.multi_display then
-		-- Version without multi display
-		local e, si
+	-- Tactical display
+	if self.view_faction then
+		local e
 		local z
-		local order
 		local friend
 		for i = self.mx, self.mx + self.viewport.mwidth - 1 do
 		for j = self.my, self.my + self.viewport.mheight - 1 do
-			e, si = nil, 1
-			z = i + j * self.w
-			order = displayOrder
-			if self.seens[z] or self.remembers[z] then
-				if not self.seens[z] then order = rememberDisplayOrder end
-				while not e and si <= #order do e = self(i, j, order[si]) si = si + 1 end
+			local z = i + j * self.w
+			if self.seens[z] then
+				e = self(i, j, ACTOR)
 				if e then
-					if self.seens[z] then
-						self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb, e.image):toScreen((i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
-					elseif self.remembers[z] then
-						self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3, e.image):toScreen((i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
-					end
 					-- Tactical overlay ?
-					if self.view_faction and e.faction then
+					if e.faction then
 						friend = Faction:factionReaction(self.view_faction, e.faction)
 						if friend > 0 then
-							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 						elseif friend < 0 then
-							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 						else
-							self.surface:merge(self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral), (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
 						end
 					end
 				end
 			end
 		end end
-	else
-		-- Version with multi display
---[[
-		local z, e, si = nil, nil, 1
-		for i = 0, self.w - 1 do for j = 0, self.h - 1 do
-			z = i + j * self.w
-			z, e, si = 0, nil, #displayOrder
-			while si >= 1 do
-				e = self(i, j, displayOrder[si])
-				if e then
-					if self.seens[z] then
-					self.surface:merge(self.tiles:get(e.display, e.color_r, e.color_g, e.color_b, e.color_br, e.color_bg, e.color_bb), i * 16, j * 16)
-				elseif self.remembers[z] then
-					self.surface:merge(self.tiles:get(e.display, e.color_r/3, e.color_g/3, e.color_b/3, e.color_br/3, e.color_bg/3, e.color_bb/3), i * 16, j * 16)
-					end
-				end
-
-				si = si - 1
-			end
-			self.seens[z] = nil
-		end end
-]]
 	end
 
 	self:displayEffects()
 
-	return self.surface
+	-- If nothing changed, return the same surface as before
+	if not self.changed then return end
+	self.changed = false
+	self.clean_fov = true
 end
 
 --- Sets checks if a grid lets sigth pass through
@@ -291,7 +255,8 @@ function _M:apply(x, y)
 	if self.lites[x + y * self.w] then
 		self.seens[x + y * self.w] = true
 		self.remembers[x + y * self.w] = true
-		self:updateMap(x, y)
+		self._map:setSeen(x, y, true)
+		self._map:setRemember(x, y, true)
 	end
 end
 
@@ -302,7 +267,9 @@ function _M:applyLite(x, y)
 	self.lites[x + y * self.w] = true
 	self.seens[x + y * self.w] = true
 	self.remembers[x + y * self.w] = true
-	self:updateMap(x, y)
+	self._map:setSeen(x, y, true)
+	self._map:setRemember(x, y, true)
+	self._map:setLite(x, y, true)
 end
 
 --- Check all entities of the grid for a property
@@ -423,8 +390,7 @@ function _M:displayEffects()
 		-- Dont bother with obviously out of screen stuff
 		if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
 			local grids
-			local s = self.tiles:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image)
-			s:alpha(e.alpha or 150)
+			local s = self.tilesSurface:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, 120)
 
 			-- Handle balls
 			if e.dir == 5 then
@@ -438,7 +404,7 @@ function _M:displayEffects()
 			for lx, ys in pairs(grids) do
 				for ly, _ in pairs(ys) do
 					if self.seens(lx, ly) then
-						self.surface:merge(s, (lx - self.mx) * self.tile_w, (ly - self.my) * self.tile_h)
+						s:toScreen(self.display_x + (lx - self.mx) * self.tile_w, self.display_y + (ly - self.my) * self.tile_h)
 					end
 				end
 			end

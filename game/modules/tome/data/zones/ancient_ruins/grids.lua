@@ -16,6 +16,7 @@ newEntity{
 	define_as = "FLOOR",
 	name = "floor",
 	display = '.', color_r=255, color_g=255, color_b=255,
+--	color_br=55, color_bg=125, color_bb=5,
 }
 
 newEntity{

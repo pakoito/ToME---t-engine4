@@ -4,9 +4,14 @@
 #include <GL/gl.h>
 
 typedef struct {
-	GLuint **grids;
+	GLuint **grids_terrain;
+	GLuint **grids_actor;
+	GLuint **grids_object;
+	bool **grids_seens;
+	bool **grids_remembers;
+	bool **grids_lites;
 
-	GLuint dlist;
+	bool multidisplay;
 
 	// Map size
 	int w;

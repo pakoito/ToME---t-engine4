@@ -144,18 +144,6 @@ function _M:onTurn()
 end
 
 function _M:display()
---[[
-	if self.level and self.level.map then
-		-- Display the map and compute FOV for the player if needed
---		if self.level.map.changed then
---			self.level.map:fov(self.player.x, self.player.y, 20)
---			self.level.map:fovLite(self.player.x, self.player.y, 4)
---		end
-		self.level.map:display()
-		--:toScreen(self.level.map.display_x, self.level.map.display_y)
-	end
--- ]]
--- [[
 	self.log:display():toScreen(self.log.display_x, self.log.display_y)
 	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
 	self.talents_display:display():toScreen(self.talents_display.display_x, self.talents_display.display_y)
@@ -167,7 +155,6 @@ function _M:display()
 			self.level.map:fovLite(self.player.x, self.player.y, 4)
 		end
 		self.level.map:display()
---		:toScreen(self.level.map.display_x, self.level.map.display_y)
 
 		-- Display the targetting system if active
 		self.target:display()
@@ -176,7 +163,7 @@ function _M:display()
 		local mx, my = core.mouse.get()
 		local tmx, tmy = self.level.map:getMouseTile(mx, my)
 		local tt = self.level.map:checkAllEntities(tmx, tmy, "tooltip")
-		if tt and self.level.map.seens(tmx, tmy) then
+		if tt then
 			self.tooltip:set(tt)
 			local t = self.tooltip:display()
 			mx = mx - self.tooltip.w

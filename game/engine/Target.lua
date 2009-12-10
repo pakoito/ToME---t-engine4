@@ -14,14 +14,11 @@ function _M:init(map, source_actor)
 	self.cursor = core.display.loadImage(engine.Tiles.prefix.."target_cursor.png")
 
 	self.sr = core.display.newSurface(map.tile_w, map.tile_h)
-	self.sr:alpha(90)
-	self.sr:erase(255, 0, 0)
+	self.sr:erase(255, 0, 0, 90)
 	self.sb = core.display.newSurface(map.tile_w, map.tile_h)
-	self.sb:alpha(90)
-	self.sb:erase(0, 0, 255)
+	self.sb:erase(0, 0, 255, 90)
 	self.sg = core.display.newSurface(map.tile_w, map.tile_h)
-	self.sg:alpha(90)
-	self.sg:erase(0, 255, 0)
+	self.sg:erase(0, 255, 0, 90)
 
 	self.source_actor = source_actor
 

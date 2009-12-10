@@ -14,7 +14,8 @@ function _M:init(w, h, fontname, fontsize, texture)
 	self.repo = {}
 end
 
-function _M:get(char, fr, fg, fb, br, bg, bb, image)
+function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
+	alpha = alpha or 255
 	local fgidx = 65536 * fr + 256 * fg + fb
 	local bgidx
 	if br >= 0 and bg >= 0 and bb >= 0 then
@@ -35,7 +36,9 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image)
 			s = core.display.newSurface(self.w, self.h)
 
 			if br >= 0 then
-				s:erase(br, bg, bb)
+				s:erase(br, bg, bb, alpha)
+			else
+				s:erase(0, 0, 0, alpha)
 			end
 
 			local w, h = self.font:size(char)
