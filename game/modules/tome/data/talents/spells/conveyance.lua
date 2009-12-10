@@ -1,5 +1,5 @@
 newTalent{
-	name = "Blink",
+	name = "Phase Door",
 	type = {"spell/conveyance",1},
 	message = "@Source@ blinks.",
 	mana = 15,

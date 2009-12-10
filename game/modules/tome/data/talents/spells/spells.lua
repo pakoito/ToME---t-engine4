@@ -15,7 +15,7 @@ newTalentType{ type="spell/necromancy", name = "necromancy", description = "Necr
 load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/fire.lua")
 load("/data/talents/spells/earth.lua")
-load("/data/talents/spells/cold.lua")
+load("/data/talents/spells/water.lua")
 load("/data/talents/spells/air.lua")
 load("/data/talents/spells/conveyance.lua")
 load("/data/talents/spells/nature.lua")
