@@ -48,6 +48,8 @@ function _M:act()
 	self:regenResources()
 	-- Compute timed effects
 	self:timedEffects()
+
+	engine.Actor.act(self)
 end
 
 function _M:move(x, y, force)
@@ -100,6 +102,10 @@ function _M:levelup()
 	if self.autolevel then
 		engine.Autolevel:autoLevel(self)
 	end
+end
+
+function _M:updateBonus()
+	engine.Actor.updateBonus(self)
 end
 
 --- Notifies a change of stat value

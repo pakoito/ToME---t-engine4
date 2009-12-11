@@ -21,6 +21,15 @@ function _M:init(t)
 	self.compute_vals = {}
 end
 
+--- Tells the actor it can act
+function _M:act()
+	if self.changed then self:updateBonus() end
+end
+
+--- Recompute the bonus when something changed
+function _M:updateBonus()
+end
+
 --- Moves an actor on the map
 -- *WARNING*: changing x and y properties manualy is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto
