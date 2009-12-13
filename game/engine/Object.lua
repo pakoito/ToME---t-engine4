@@ -22,3 +22,10 @@ end
 function _M:getDesc()
 	return self.name
 end
+
+--- Returns the inventory type an object is worn on
+function _M:wornInven()
+	if not self.slot then return nil end
+	local invens = require "engine.interface.ActorInventory"
+	return invens["INVEN_"..self.slot]
+end

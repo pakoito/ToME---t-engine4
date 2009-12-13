@@ -7,7 +7,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	action = function(self)
-		local duration = 5 + self:getMag(10)
+		local duration = 5 + self:combatSpellpower(0.1)
 		local radius = 3
 		local t = {type="ball", range=15, radius=radius}
 		local x, y = self:getTarget(t)
@@ -16,7 +16,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, duration,
-			DamageType.NATURE, 4 + self:getMag(30),
+			DamageType.NATURE, 4 + self:combatSpellpower(0.3),
 			radius,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60}
@@ -27,6 +27,6 @@ newTalent{
 	info = function(self)
 		return ([[Noxious fumes raises from the ground doing %0.2f nature damage in a radius of 3 each turns for %d turns.
 		Cooldown: 8 turns
-		The damage and duration will increase with the Magic stat]]):format(4 + self:getMag(30), 5 + self:getMag(10))
+		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.3), 5 + self:combatSpellpower(0.1))
 	end,
 }

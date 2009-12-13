@@ -11,7 +11,7 @@ function _M:init()
 			local save = Savefile.new(game.save_name)
 			save:saveGame(game)
 			save:close()
-			os.exit()
+			util.showMainMenu()
 		end,
 		__DEFAULT = function()
 			game:unregisterDialog(self)

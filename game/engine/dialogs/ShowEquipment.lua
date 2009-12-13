@@ -3,11 +3,11 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(title, inven, filter, action)
-	self.inven = inven
+function _M:init(title, actor, filter, action)
+	self.actor = actor
 	self.filter = filter
 	self.action = action
-	engine.Dialog.init(self, title, "Inventory", game.w * 0.8, game.h * 0.8)
+	engine.Dialog.init(self, title or "Equipment", game.w * 0.8, game.h * 0.8)
 
 	self:generateList()
 
@@ -18,8 +18,8 @@ function _M:init(title, inven, filter, action)
 		_RETURN = function() self:use() end,
 		_ESCAPE = function() game:unregisterDialog(self) end,
 		__TEXTINPUT = function(c)
-			if c:find("^[a-z]$") then
-				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
+			if self.chars[c] then
+				self.sel = self.chars[c]
 				self:use()
 			end
 		end,
@@ -37,21 +37,31 @@ end
 function _M:use()
 	game:unregisterDialog(self)
 	if self.list[self.sel] then
-		self.action(self.list[self.sel].object, self.list[self.sel].item)
+		self.action(self.list[self.sel].object, self.list[self.sel].inven, self.list[self.sel].item)
 	end
 end
 
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
+	local chars = {}
 	local i = 0
-	for item, o in ipairs(self.inven) do
-		if not self.filter or self.filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..o:getName(), object=o, item=item }
-			i = i + 1
+	for inven_id =  1, #self.actor.inven_def do
+		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
+			list[#list+1] = { name="#10EF6F#"..self.actor.inven_def[inven_id].name, inven=inven_id }
+
+			for item, o in ipairs(self.actor.inven[inven_id]) do
+				if not self.filter or self.filter(o) then
+					local char = string.char(string.byte('a') + i)
+					list[#list+1] = { name=char..")  "..o:getName(), object=o, inven=inven_id, item=item }
+					chars[char] = #list
+					i = i + 1
+				end
+			end
 		end
 	end
 	self.list = list
+	self.chars = chars
 end
 
 function _M:drawDialog(s)
@@ -70,7 +80,9 @@ Mouse: #00FF00#Left click#FFFFFF# to use.
 	end
 
 	h = h + self.font:lineSkip()
-	if self.list[self.sel] then
+	if not self.list[self.sel].item then
+		lines = self.actor.inven_def[self.list[self.sel].inven].description:splitLines(self.iw / 2 - 10, self.font)
+	elseif self.list[self.sel] then
 		lines = self.list[self.sel].object:getDesc():splitLines(self.iw / 2 - 10, self.font)
 	else
 		lines = {}

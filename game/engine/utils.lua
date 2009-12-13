@@ -249,3 +249,9 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 
 	return grids
 end
+
+function util.showMainMenu()
+	local Menu = require("special.mainmenu.class.Game")
+	game = Menu.new()
+	game:run()
+end

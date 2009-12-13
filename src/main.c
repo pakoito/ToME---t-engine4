@@ -448,8 +448,6 @@ int main(int argc, char *argv[])
 
 		/* draw the scene */
 		on_tick();
-//		on_redraw();
-
 	}
 
 	return 0;

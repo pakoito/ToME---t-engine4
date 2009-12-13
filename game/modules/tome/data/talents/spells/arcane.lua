@@ -9,13 +9,13 @@ newTalent{
 		local t = {type="bolt", range=20}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.ARCANE, 10 + self:getMag())
+		self:project(t, x, y, DamageType.ARCANE, 10 + self:combatSpellpower())
 		return true
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self)
 		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage
-		The damage will increase with the Magic stat]]):format(10 + self:getMag())
+		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower())
 	end,
 }
 newTalent{
@@ -32,7 +32,7 @@ newTalent{
 	require = { stat = { mag=50 }, },
 	info = function(self)
 		return ([[Uses mana instead of life to take damage
-		The damage to mana ratio increases with the Magic stat]]):format(10 + self:getMag())
+		The damage to mana ratio increases with the Magic stat]]):format(10 + self:combatSpellpower())
 	end,
 }
 newTalent{
@@ -45,13 +45,13 @@ newTalent{
 	},
 	action = function(self)
 		if not self:hasEffect(self.EFF_MANAFLOW) then
-			self:setEffect(self.EFF_MANAFLOW, 10, {power=5+self:getMag(30)})
+			self:setEffect(self.EFF_MANAFLOW, 10, {power=5+self:combatSpellpower(0.3)})
 		end
 		return true
 	end,
 	require = { stat = { mag=60 }, },
 	info = function(self)
 		return ([[Engulf yourself into a surge of mana, quickly restoring %d mana every turns for 10 turns.
-		The mana restored will increase with the Magic stat]]):format(5 + self:getMag(30))
+		The mana restored will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.3))
 	end,
 }

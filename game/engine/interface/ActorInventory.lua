@@ -1,6 +1,7 @@
 require "engine.class"
 local Map = require "engine.Map"
 local ShowInventory = require "engine.dialogs.ShowInventory"
+local ShowEquipment = require "engine.dialogs.ShowEquipment"
 
 --- Handles actors stats
 module(..., package.seeall, class.make)
@@ -44,7 +45,11 @@ end
 
 --- Returns the content of an inventory as a table
 function _M:getInven(id)
-	return self.inven[id]
+	if type(id) == "number" then
+		return self.inven[id]
+	else
+		return id
+	end
 end
 
 --- Adds an object to an inventory
@@ -80,6 +85,7 @@ end
 -- @param item the item id to drop
 -- @return the object removed or nil if no item existed
 function _M:removeObject(inven, item)
+	if type(inven) == "number" then inven = self.inven[inven] end
 	return table.remove(inven, item)
 end
 
@@ -101,7 +107,43 @@ end
 -- @param inven the inventory (from self:getInven())
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
-function _M:showInventory(inven, filter, action)
-	local d = ShowInventory.new(inven, filter, action)
+function _M:showInventory(title, inven, filter, action)
+	local d = ShowInventory.new(title, inven, filter, action)
 	game:registerDialog(d)
+end
+
+--- Show equipment dialog
+-- @param filter nil or a function that filters the objects to list
+-- @param action a function called when an object is selected
+function _M:showEquipment(title, filter, action)
+	local d = ShowEquipment.new(title, self, filter, action)
+	game:registerDialog(d)
+end
+
+--- Wear/wield an item
+function _M:wearObject(o, replace, vocal)
+	local inven = o:wornInven()
+	if not o then
+		if vocal then game.logSeen(self, "%s is not wearable.", o:getName()) end
+		return false
+	end
+	if self:addObject(inven, o) then
+		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
+		return true
+	elseif replace then
+		local ro = self:removeObject(inven, 1)
+		-- Warning: assume there is now space
+		self:addObject(inven, o)
+		return ro
+	else
+		if vocal then game.logSeen(self, "%s can not wear: %s.", self.name:capitalize(), o:getName()) end
+		return false
+	end
+end
+
+--- Takeoff item
+function _M:takeoffObject(inven, item)
+	inven = self:getInven(inven)
+	local o = table.remove(inven, item)
+	return o
 end

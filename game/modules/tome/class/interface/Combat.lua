@@ -32,27 +32,133 @@ end
 --- Makes the death happen!
 --[[
 The ToME combat system has the following attributes:
-- attack power: increases chances to hit against high defence
+- attack: increases chances to hit against high defence
 - defence: increases chances to miss against high attack power
 - armor: direct reduction of damage done
 - armor penetration: reduction of target's armor
 - damage: raw damage done
 ]]
 function _M:attackTarget(target)
-	local sc = self.combat
-	local tc = target.combat
+	local speed = nil
+
+	-- All weaponsin main hands
+	if self:getInven(self.INVEN_MAINHAND) then
+		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
+			if o.combat then
+				local s = self:attackTargetWith(target, o.combat)
+				speed = math.max(speed or 0, s)
+			end
+		end
+	end
+	-- All wpeaons in off hands
+	if self:getInven(self.INVEN_OFFHAND) then
+		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
+			if o.combat then
+				local s = self:attackTargetWith(target, o.combat)
+				speed = math.max(speed or 0, s)
+			end
+		end
+	end
+
+	-- Barehanded ?
+	if not speed then
+		speed = self:attackTargetWith(target, self.combat)
+	end
+
+	-- We use up our own energy
+	if speed then
+		self:useEnergy(game.energy_to_act * speed)
+		self.did_energy = true
+	end
+end
+
+--- Attacks with one weapon
+function _M:attackTargetWith(target, weapon)
 	local damtype = DamageType.PHYSICAL
 
-	if not sc then sc = {dam=0, atk=0, apr=0, def=0, armor=0} end
-	if not tc then tc = {dam=0, atk=0, apr=0, def=0, armor=0} end
+	-- Does the blow connect? yes .. complex :/
+	local atk, def = self:combatAttack(weapon), target:combatDefense()
+	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
+	print(atk, def, "::", dam, apr, armor)
+	if afk == 0 then atk = 1 end
+	local hit = nil
+	if atk > def then
+		hit = math.log10(1 + 5 * (atk - def) / atk) * 100 + 50
+	else
+		hit = -math.log10(1 + 5 * (def - atk) / atk) * 100 + 50
+	end
+	hit = util.bound(hit, 5, 95)
+	print("hit: ", hit, "from", atk, def)
 
-	-- Does the blow connect?
-	local hit = rng.avg(sc.atk * 2 / 3, sc.atk) - tc.def
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
-	if hit > 0 or (hit == 0 and rng.percent(50)) then
-		local dam = rng.avg(sc.dam * 2 / 3, sc.dam) - math.max(0, tc.armor - sc.apr)
+	if rng.percent(hit) then
+		local dam = dam - math.max(0, armor - apr)
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, dam)
 	else
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 	end
+
+	return self:combatSpeed(weapon)
+end
+
+--- Gets the defense
+function _M:combatDefense()
+	return self.combat_def + self:getDex() - 10
+end
+
+--- Gets the armor
+function _M:combatArmor()
+	return self.combat_armor
+end
+
+--- Gets the attack
+function _M:combatAttack(weapon)
+	weapon = weapon or self.combat
+	return self.combat_atk + weapon.atk + (self:getStr(50) - 5) + (self:getDex(50) - 5)
+end
+
+--- Gets the armor penetration
+function _M:combatAPR(weapon)
+	weapon = weapon or self.combat
+	return self.combat_apr + weapon.apr
+end
+
+--- Gets the weapon speed
+function _M:combatSpeed(weapon)
+	weapon = weapon or self.combat
+	return self.combat_physspeed + (weapon.physspeed or 1)
+end
+
+--- Gets the crit rate
+function _M:combatCrit(weapon)
+	weapon = weapon or self.combat
+	return self.combat_physcrit + (self:getCun() - 10) * 0.3 + (weapon.physcrit or 1)
+end
+
+--- Gets the damage
+function _M:combatDamage(weapon)
+	weapon = weapon or self.combat
+	local add = 0
+	if weapon.dammod then
+		for stat, mod in pairs(weapon.dammod) do
+			add = add + (self:getStat(stat) - 10) * mod
+		end
+	end
+	return self.combat_armor + weapon.dam + add
+end
+
+--- Gets spellpower
+function _M:combatSpellpower(mod)
+	mod = mod or 1
+	return (self.combat_spellpower + self:getMag()) * mod
+end
+
+--- Gets spellcrit
+function _M:combatSpellCrit()
+	return self.combat_spellcrit + 1
+end
+
+--- Gets spellspeed
+function _M:combatSpellSpeed()
+	return self.combat_spellspeed + (self:getCun() - 10) * 0.3 + 1
 end

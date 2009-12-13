@@ -32,6 +32,4 @@ key:setCurrent()
 -- Load the game module
 game = false
 
-local Menu = require("special.mainmenu.class.Game")
-game = Menu.new()
-game:run()
+util.showMainMenu()

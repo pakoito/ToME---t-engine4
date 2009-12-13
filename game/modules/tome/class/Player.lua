@@ -9,8 +9,8 @@ module(..., package.seeall, class.inherit(mod.class.Actor))
 function _M:init(t)
 	t.body = {
 		INVEN = 1000,
-		MAIN_HAND = 1,
-		OFF_HAND = 1,
+		MAINHAND = 1,
+		OFFHAND = 1,
 		FINGER = 2,
 		NECK = 1,
 		LITE = 1,
@@ -23,10 +23,12 @@ function _M:init(t)
 	mod.class.Actor.init(self, t)
 	self.player = true
 	self.faction = "players"
-	self.combat = { dam=10, atk=40, apr=2, def=6, armor=4 }
+
+	-- Default regen
 	self.mana_regen = self.mana_regen or 1
 	self.stamina_regen = self.stamina_regen or 1
 	self.life_regen = self.life_regen or 0.5
+
 	self.descriptor = {}
 	self.hotkey = {}
 end

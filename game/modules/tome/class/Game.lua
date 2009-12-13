@@ -294,13 +294,38 @@ function _M:setupCommands()
 
 		-- Show inventory
 		_i = function()
-			self.player:showInventory(self.player:getInven(self.player.INVEN_INVEN), nil, function() end)
+			self.player:showInventory(nil, self.player:getInven(self.player.INVEN_INVEN), nil, function() end)
+		end,
+		-- Show equipment
+		_e = function()
+			self.player:showEquipment(nil, nil, function() end)
 		end,
 		-- Drop item
 		_d = function()
 			local inven = self.player:getInven(self.player.INVEN_INVEN)
-			self.player:showInventory(inven, nil, function(o, item)
+			self.player:showInventory("Drop object", inven, nil, function(o, item)
 				self.player:dropFloor(inven, item)
+			end)
+		end,
+		-- Wear item
+		_w = function()
+			local inven = self.player:getInven(self.player.INVEN_INVEN)
+			self.player:showInventory("Wield/wear object", inven, function(o)
+				return o:wornInven() and true or false
+			end, function(o, item)
+				local ro = self.player:wearObject(o, true, true)
+				if ro then
+					if type(ro) == "table" then self.player:addObject(self.player.INVEN_INVEN, ro) end
+					self.player:removeObject(self.player.INVEN_INVEN, item)
+				end
+			end)
+		end,
+		-- Takeoff item
+		_t = function()
+			self.player:showEquipment("Take off object", nil, function(o, inven, item)
+				if self.player:takeoffObject(inven, item) then
+					self.player:addObject(self.player.INVEN_INVEN, o)
+				end
 			end)
 		end,
 
@@ -345,7 +370,7 @@ function _M:setupCommands()
 		end,
 		_GREATER = {"alias", "_LESS"},
 		-- Toggle tactical displau
-		_t = function()
+		[{"_t","shift"}] = function()
 			if Map.view_faction then
 				self:targetMode(false, true)
 			else
@@ -354,7 +379,7 @@ function _M:setupCommands()
 				self.target:scan(5)
 			end
 		end,
-		-- Toggle tactical displau
+		-- Show time
 		[{"_t","ctrl"}] = function()
 			self.log(self.calendar:getTimeDate(self.turn))
 		end,

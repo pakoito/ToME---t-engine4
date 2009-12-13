@@ -26,6 +26,22 @@ module(..., package.seeall, class.inherit(
 ))
 
 function _M:init(t)
+	-- Define some basic combat stats
+	self.combat_def = 0
+	self.combat_armor = 0
+	self.combat_atk = 0
+	self.combat_apr = 0
+	self.combat_dam = 0
+	self.combat_physcrit = 0
+	self.combat_physspeed = 0
+	self.combat_spellspeed = 0
+	self.combat_spellcrit = 0
+	self.combat_spellpower = 0
+	self.fatigue = 0
+
+	-- Default melee barehanded damage
+	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
+
 	engine.Actor.init(self, t)
 	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
@@ -48,16 +64,15 @@ function _M:act()
 	self:regenResources()
 	-- Compute timed effects
 	self:timedEffects()
-
-	engine.Actor.act(self)
 end
 
 function _M:move(x, y, force)
 	local moved = false
 	if force or self:enoughEnergy() then
 		moved = engine.Actor.move(self, game.level.map, x, y, force)
-		if not force and moved then self:useEnergy() end
+		if not force and moved and not self.did_energy then self:useEnergy() end
 	end
+	self.did_energy = nil
 	return moved
 end
 
@@ -133,11 +148,11 @@ end
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab)
 	if not self:enoughEnergy() then return end
-	if ab.mana and self:getMana() < ab.mana then
+	if ab.mana and self:getMana() < ab.mana * (100 + self.fatigue) / 100 then
 		game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
 		return
 	end
-	if ab.stamina and self:getStamina() < ab.stamina then
+	if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
 		game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
 		return
 	end
@@ -163,13 +178,20 @@ end
 -- @return true to continue, false to stop
 function _M:postUseTalent(ab, ret)
 	if ret == nil then return end
-	self:useEnergy()
+
+	if ab.type[1]:find("^spell/") then
+		self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
+	elseif ab.type[1]:find("^physical/") then
+		self:useEnergy(game.energy_to_act * self:combatSpeed())
+	else
+		self:useEnergy()
+	end
 
 	if ab.mana then
-		self:incMana(-ab.mana)
+		self:incMana(-ab.mana * (100 + self.fatigue) / 100)
 	end
 	if ab.stamina then
-		self:incStamina(-ab.stamina)
+		self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
 	end
 
 	return true
