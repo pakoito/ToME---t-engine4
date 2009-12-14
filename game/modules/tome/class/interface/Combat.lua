@@ -93,6 +93,7 @@ function _M:attackTargetWith(target, weapon)
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	if rng.percent(hit) then
 		local dam = dam - math.max(0, armor - apr)
+		dam = self:physicalCrit(dam, weapon)
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, dam)
 	else
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
@@ -161,4 +162,22 @@ end
 --- Gets spellspeed
 function _M:combatSpellSpeed()
 	return self.combat_spellspeed + (self:getCun() - 10) * 0.3 + 1
+end
+
+--- Computes physical crit for a damage
+function _M:physicalCrit(dam, weapon)
+	local chance = self:combatCrit(weapon)
+	if rng.percent(chance) then
+		dam = dam * 2
+	end
+	return dam
+end
+
+--- Computes spell crit for a damage
+function _M:spellCrit(dam)
+	local chance = self:combatSpellCrit()
+	if rng.percent(chance) then
+		dam = dam * 2
+	end
+	return dam
 end

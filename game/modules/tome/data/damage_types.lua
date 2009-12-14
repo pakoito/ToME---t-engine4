@@ -41,3 +41,15 @@ newDamageType{
 		game.level.map.lites(x, y, true)
 	end,
 }
+
+newDamageType{
+	name = "fireburn", type = "FIREBURN",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam / 2)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Set on fire!
+			target:setEffect(target.EFF_BURNING, 3, {src=src, power=dam / 2 / 3})
+		end
+	end,
+}

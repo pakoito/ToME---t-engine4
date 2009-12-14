@@ -26,7 +26,7 @@ newTalent{
 		HEAL = 10,
 	},
 	action = function(self)
-		self:heal(10 + self:combatSpellpower(2), self)
+		self:heal(self:spellCrit(10 + self:combatSpellpower(2)), self)
 		return true
 	end,
 	require = { stat = { mag=20 }, },

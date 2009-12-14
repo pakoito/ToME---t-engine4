@@ -10,6 +10,7 @@ _M.tempeffect_def = {}
 function _M:loadDefinition(file)
 	local f = loadfile(file)
 	setfenv(f, setmetatable({
+		DamageType = require "engine.DamageType",
 		newEffect = function(t) self:newEffect(t) end,
 		load = function(f) self:loadDefinition(f) end
 	}, {__index=_G}))

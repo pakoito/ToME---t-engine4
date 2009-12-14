@@ -21,6 +21,12 @@ function _M:init(t)
 	self.compute_vals = {}
 end
 
+--- Called when it is time to act
+function _M:act()
+	if self.dead then return false end
+	return true
+end
+
 --- Moves an actor on the map
 -- *WARNING*: changing x and y properties manualy is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto
@@ -29,6 +35,7 @@ end
 -- @param force if true do not check for the presence of an other entity. *Use wisely*
 -- @return true if a move was *ATTEMPTED*. This means the actor will proably want to use energy
 function _M:move(map, x, y, force)
+	if self.dead then return true end
 	if not force and map:checkAllEntities(x, y, "block_move", self) then return true end
 
 	if self.x and self.y then

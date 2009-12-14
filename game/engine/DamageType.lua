@@ -36,6 +36,6 @@ function _M:newDamageType(t)
 end
 
 function _M:get(id)
-	assert(_M.dam_def[id], "damage type "..id.." used but undefined")
+	assert(_M.dam_def[id], "damage type "..tostring(id).." used but undefined")
 	return _M.dam_def[id]
 end

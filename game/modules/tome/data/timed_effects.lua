@@ -42,3 +42,16 @@ newEffect{
 		self:removeTemporaryValue("life_regen", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "BURNING",
+	desc = "Burning",
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is on fire!", "+Burn" end,
+	on_lose = function(self, err) return "#Target# stops burning.", "-Burn" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
+	end,
+}

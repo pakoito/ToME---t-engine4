@@ -13,6 +13,7 @@ function _M:loadDefinition(file)
 	if not f and err then error(err) end
 	setfenv(f, setmetatable({
 		DamageType = require("engine.DamageType"),
+		Talents = self,
 		newTalent = function(t) self:newTalent(t) end,
 		newTalentType = function(t) self:newTalentType(t) end,
 		load = function(f) self:loadDefinition(f) end
@@ -181,6 +182,8 @@ function _M:learnTalent(t_id, force)
 		end
 	end
 
+	if t.on_learn then t.on_learn(self) end
+
 	self.talents[t_id] = true
 	self.changed = true
 	return true
@@ -190,9 +193,14 @@ end
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id)
+	local t = _M.talents_def[t_id]
+
 	for i, known_t_id in pairs(self.hotkey) do
 		if known_t_id == t_id then self.hotkey[i] = nil end
 	end
+
+	if t.on_unlearn then t.on_unlearn(self) end
+
 	self.talents[t_id] = nil
 	self.changed = true
 	return true
@@ -209,6 +217,11 @@ function _M:canLearnTalent(t)
 		end
 		if t.require.level and self.level < t.require.level then
 			return nil, "not enough levels"
+		end
+		if t.require.talent then
+			for _, tid in ipairs(t.require.talent) do
+				if not self:knowTalent(tid) then return nil, "missing dependency" end
+			end
 		end
 	end
 
@@ -247,6 +260,12 @@ function _M:getTalentReqDesc(t_id)
 	if req.level then
 		local c = (self.level >= req.level) and "#00ff00#" or "#ff0000#"
 		str = str .. ("- %sLevel %d\n"):format(c, req.level)
+	end
+	if req.talent then
+		for _, tid in ipairs(req.talent) do
+			local c = self:knowTalent(tid) and "#00ff00#" or "#ff0000#"
+			str = str .. ("- %sTalent %s\n"):format(c, self:getTalentFromId(tid).name)
+		end
 	end
 
 	return str

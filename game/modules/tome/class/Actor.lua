@@ -57,6 +57,8 @@ function _M:init(t)
 end
 
 function _M:act()
+	if not engine.Actor.act(self) then return end
+
 	-- Cooldown talents
 	self:cooldownTalents()
 	-- Regen resources
@@ -64,6 +66,8 @@ function _M:act()
 	self:regenResources()
 	-- Compute timed effects
 	self:timedEffects()
+
+	return true
 end
 
 function _M:move(x, y, force)
