@@ -73,11 +73,29 @@ end
 function _M:move(x, y, force)
 	local moved = false
 	if force or self:enoughEnergy() then
-		moved = engine.Actor.move(self, game.level.map, x, y, force)
+		-- Should we prob travel through walls ?
+		if not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
+			moved = self:probabilityTravel(x, y)
+		else
+			moved = engine.Actor.move(self, game.level.map, x, y, force)
+		end
 		if not force and moved and not self.did_energy then self:useEnergy() end
 	end
 	self.did_energy = nil
 	return moved
+end
+
+function _M:probabilityTravel(x, y)
+	local dirx, diry = x - self.x, y - self.y
+	local tx, ty = x, y
+	while game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) do
+		tx = tx + dirx
+		ty = ty + diry
+	end
+	if game.level.map:isBound(x, y) then
+		return engine.Actor.move(self, game.level.map, tx, ty, false)
+	end
+	return true
 end
 
 function _M:tooltip()

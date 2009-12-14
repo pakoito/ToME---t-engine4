@@ -160,3 +160,24 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 		end
 	end
 end
+
+--- Increases/decreases an attribute
+-- The attributes are just actor properties, but this ensures they are numbers and not booleans
+-- thus making them compatible with temporary values system
+-- @param prop the property to use
+-- @param v the value to add, if nil this the function return
+-- @param fix forces the value to v, do not add
+-- @return nil if v was specified. If not then it returns the current value if it exists and is not 0 otherwise returns nil
+function _M:attr(prop, v, fix)
+	if v then
+		if fix then self.prop = v
+		else self.prop = (self.prop or 0) + v
+		end
+	else
+		if self.prop and self.prop ~= 0 then
+			return self.prop
+		else
+			return nil
+		end
+	end
+end

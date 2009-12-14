@@ -72,33 +72,34 @@ function _M:learn(v)
 	end
 end
 
-function _M:learnTalent(t, v)
+function _M:learnTalent(t_id, v)
+	local t = self.actor:getTalentFromId(t_id)
 	if v then
-		if self.actor.unused_talents == 0 then
+		if self.actor.unused_talents < t.points then
 			self:simplePopup("Not enough talent points", "You have no talent points left!")
 			return
 		end
-		if not self.actor:canLearnTalent(self.actor:getTalentFromId(t)) then
+		if not self.actor:canLearnTalent(t_id) then
 			self:simplePopup("Cannot learn talent", "Prerequisites not met!")
 			return
 		end
-		if self.actor:knowTalent(t) then
+		if self.actor:knowTalent(t_id) then
 			self:simplePopup("Already known", "You already know this talent!")
 			return
 		end
-		self.actor:learnTalent(t)
-		self.actor.unused_talents = self.actor.unused_talents - 1
+		self.actor:learnTalent(t_id)
+		self.actor.unused_talents = self.actor.unused_talents - t.points
 	else
-		if not self.actor:knowTalent(t) then
+		if not self.actor:knowTalent(t_id) then
 			self:simplePopup("Impossible", "You do not know this talent!")
 			return
 		end
-		if self.actor_dup:knowTalent(t) == true and self.actor:knowTalent(t) == true then
+		if self.actor_dup:knowTalent(t_id) == true and self.actor:knowTalent(t_id) == true then
 			self:simplePopup("Impossible", "You cannot unlearn talents!")
 			return
 		end
-		self.actor:unlearnTalent(t)
-		self.actor.unused_talents = self.actor.unused_talents + 1
+		self.actor:unlearnTalent(t_id)
+		self.actor.unused_talents = self.actor.unused_talents + t.points
 	end
 	self:generateList()
 end

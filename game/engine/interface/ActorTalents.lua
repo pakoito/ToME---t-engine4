@@ -14,6 +14,7 @@ function _M:loadDefinition(file)
 	setfenv(f, setmetatable({
 		DamageType = require("engine.DamageType"),
 		Talents = self,
+		Map = require("engine.Map"),
 		newTalent = function(t) self:newTalent(t) end,
 		newTalentType = function(t) self:newTalentType(t) end,
 		load = function(f) self:loadDefinition(f) end

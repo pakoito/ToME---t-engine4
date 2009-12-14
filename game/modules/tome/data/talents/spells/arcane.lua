@@ -75,7 +75,8 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
-	action = function(self)
+	activate = function(self)
+		game.log("IMPLEMENT ME!")
 		return true
 	end,
 	require = { stat = { mag=60 }, level=40 },

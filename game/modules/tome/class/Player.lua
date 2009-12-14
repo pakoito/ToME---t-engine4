@@ -89,7 +89,10 @@ function _M:getTarget(typ)
 	if coroutine.running() then
 		local msg
 		if type(typ) == "string" then msg, typ = typ, nil
-		elseif type(typ) == "table" then msg = typ.msg end
+		elseif type(typ) == "table" then
+			if typ.default_target then self.target.target.entity = typ.default_target end
+			msg = typ.msg
+		end
 		game:targetMode("exclusive", msg, coroutine.running(), typ)
 		return coroutine.yield()
 	end
