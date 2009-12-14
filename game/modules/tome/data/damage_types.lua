@@ -53,3 +53,7 @@ newDamageType{
 		end
 	end,
 }
+
+newDamageType{
+	name = "netherflame", type = "NETHERFLAME",
+}
