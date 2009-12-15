@@ -49,13 +49,14 @@ function _M:init(actor, order, at_end)
 	self:next()
 
 	self:keyCommands{
-		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) end,
-		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) end,
+		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list); self.changed = true end,
+		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list); self.changed = true end,
 		_RETURN = function() self:next() end,
 	}
 	self:mouseZones{
 		{ x=2, y=25, w=350, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
-			if ty <= self.font_h*#self.list then
+			self.changed = true
+			if ty < self.font_h*#self.list then
 				self.sel = 1 + math.floor(ty / self.font_h)
 				if button == "left" then self:next()
 				elseif button == "right" then self:learn(false)
@@ -91,6 +92,7 @@ function _M:selectType(type)
 end
 
 function _M:next()
+	self.changed = true
 	if self.list then
 		table.insert(self.descriptors, self.list[self.sel])
 
@@ -163,4 +165,5 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 	self:drawWBorder(s, 2, 20, 200)
 
 	self:drawSelectionList(s, 2, 25, self.font_h, self.list, self.sel, "name")
+	self.changed = false
 end

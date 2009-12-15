@@ -33,6 +33,7 @@ function _M:init(title, w, h, x, y, alpha, font)
 	self.iw, self.ih = w - 2 * 5, h - 8 - 16 - 3
 	self.internal_surface = core.display.newSurface(self.iw, self.ih)
 	self.surface:alpha(alpha or 220)
+	self.texture = self.surface:glTexture()
 	self.changed = true
 end
 
@@ -64,6 +65,10 @@ function _M:display()
 	s:merge(self.internal_surface, 5, 20 + 3)
 
 	return self.surface
+end
+
+function _M:toScreen(x,y)
+   self.surface:toScreenWithTexture(self.texture,x,y)
 end
 
 function _M:drawDialog(s)

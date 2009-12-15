@@ -266,6 +266,8 @@ void pass_command_args(int argc, char *argv[])
 	}
 }
 
+int redraw_pending = 0;
+
 Uint32 redraw_timer(Uint32 interval, void *param)
 {
 	SDL_Event event;
@@ -283,7 +285,10 @@ Uint32 redraw_timer(Uint32 interval, void *param)
 	event.type = SDL_USEREVENT;
 	event.user = userevent;
 
-	SDL_PushEvent(&event);
+	if (!redraw_pending) {
+		SDL_PushEvent(&event);
+		redraw_pending = 1;
+	}
 	return(interval);
 }
 
@@ -438,8 +443,10 @@ int main(int argc, char *argv[])
 				done = TRUE;
 				break;
 			case SDL_USEREVENT:
-				if (event.user.code == 0)
+				if (event.user.code == 0) {
 					on_redraw();
+					redraw_pending = 0;
+				}
 				break;
 			default:
 				break;
@@ -448,6 +455,9 @@ int main(int argc, char *argv[])
 
 		/* draw the scene */
 		on_tick();
+		//usleep(1000);
+		//on_redraw();
+
 	}
 
 	return 0;

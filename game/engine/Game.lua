@@ -57,7 +57,8 @@ end
 -- Called by the engine core to redraw the screen every frame
 function _M:display()
 	for i, d in ipairs(self.dialogs) do
-		d:display():toScreen(d.display_x, d.display_y)
+		d:display()
+		d:toScreen(d.display_x, d.display_y)
 	end
 
 	if self.flyers then

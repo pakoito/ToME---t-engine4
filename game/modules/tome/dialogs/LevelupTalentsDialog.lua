@@ -20,6 +20,7 @@ function _M:init(actor)
 	}
 	self:mouseZones{
 		{ x=2, y=45, w=350, h=self.font_h*#self.list, fct=function(button, x, y, xrel, yrel, tx, ty)
+			self.changed = true
 			self.talentsel = 1 + math.floor(ty / self.font_h)
 			if button == "left" then self:learn(true)
 			elseif button == "right" then self:learn(false)
