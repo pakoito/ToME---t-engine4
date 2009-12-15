@@ -24,10 +24,23 @@ function _M:init(t)
 	self.player = true
 	self.faction = "players"
 
+	self.display='@'
+	self.color_r=230
+	self.color_g=230
+	self.color_b=230
+	self.image="player.png"
+
 	-- Default regen
-	self.mana_regen = self.mana_regen or 1
-	self.stamina_regen = self.stamina_regen or 1
-	self.life_regen = self.life_regen or 0.5
+	self.mana_regen = 1
+	self.stamina_regen = 1
+	self.life_regen = 0.5
+
+	self.max_life=85
+	self.max_mana=85
+	self.max_stamina=85
+	self.unused_stats = 6
+	self.unused_talents = 3
+	self.move_others=true
 
 	self.descriptor = {}
 	self.hotkey = {}
@@ -47,7 +60,7 @@ function _M:move(x, y, force)
 end
 
 function _M:act()
-	mod.class.Actor.act(self)
+	if not mod.class.Actor.act(self) then return end
 
 	game.paused = true
 end

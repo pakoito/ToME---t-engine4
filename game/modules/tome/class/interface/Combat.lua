@@ -72,6 +72,23 @@ function _M:attackTarget(target)
 	end
 end
 
+--- Computes a logarithmic chance to hit, opposing chance to hit to chance to miss
+-- This will be used for melee attacks, physical and spell resistance
+function _M:checkHit(atk, def, min, max, facotr)
+print("checkHit", atk, def)
+	if atk == 0 then atk = 1 end
+	local hit = nil
+	factor = factor or 5
+	if atk > def then
+		hit = math.log10(1 + 5 * (atk - def) / atk) * 100 + 50
+	else
+		hit = -math.log10(1 + 5 * (def - atk) / atk) * 100 + 50
+	end
+	hit = util.bound(hit, min or 5, max or 95)
+print("=> chance to hit", hit)
+	return rng.percent(hit)
+end
+
 --- Attacks with one weapon
 function _M:attackTargetWith(target, weapon)
 	local damtype = DamageType.PHYSICAL
@@ -79,19 +96,9 @@ function _M:attackTargetWith(target, weapon)
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
-	print(atk, def, "::", dam, apr, armor)
-	if afk == 0 then atk = 1 end
-	local hit = nil
-	if atk > def then
-		hit = math.log10(1 + 5 * (atk - def) / atk) * 100 + 50
-	else
-		hit = -math.log10(1 + 5 * (def - atk) / atk) * 100 + 50
-	end
-	hit = util.bound(hit, 5, 95)
-	print("hit: ", hit, "from", atk, def)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
-	if rng.percent(hit) then
+	if self:checkHit(atk, def) then
 		local dam = dam - math.max(0, armor - apr)
 		dam = self:physicalCrit(dam, weapon)
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, dam)
@@ -180,4 +187,14 @@ function _M:spellCrit(dam)
 		dam = dam * 2
 	end
 	return dam
+end
+
+--- Computes physical resistance
+function _M:combatPhysicalResist()
+	return self.combat_physresist + (self:getCon() + self:getStr()) * 0.5
+end
+
+--- Computes spell resistance
+function _M:combatSpellResist()
+	return self.combat_spellresist + (self:getMag() + self:getWil()) * 0.5
 end

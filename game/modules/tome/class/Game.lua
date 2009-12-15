@@ -72,11 +72,7 @@ end
 
 function _M:newGame()
 	self.zone = Zone.new("ancient_ruins")
-	self.player = Player.new{
-		name=self.player_name, max_life=25, max_mana=25, max_stamina=25, display='@', color_r=230, color_g=230, color_b=230,
-		unused_stats = 6, unused_talents = 3, image="player.png",
-		move_others=true,
-	}
+	self.player = Player.new{name=self.player_name}
 
 	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
 		self:changeLevel(1)

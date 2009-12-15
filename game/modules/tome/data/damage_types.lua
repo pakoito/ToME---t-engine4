@@ -49,11 +49,30 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
-			target:setEffect(target.EFF_BURNING, 3, {src=src, power=dam / 2 / 3})
+			target:setEffect(target.EFF_BURNING, 3, {src=src, power=dam / 6})
 		end
 	end,
 }
 
 newDamageType{
 	name = "netherflame", type = "NETHERFLAME",
+}
+
+newDamageType{
+	name = "freeze", type = "FREEZE",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Freeze it, if we pass the test
+			local sx, sy = game.level.map:getTileToScreen(x, y)
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_FROZEN, dam, {src=src})
+
+				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Frozen!", {0,255,155})
+			else
+				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Resist!", {0,255,155})
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
 }

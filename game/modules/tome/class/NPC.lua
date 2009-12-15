@@ -11,7 +11,7 @@ end
 
 function _M:act()
 	-- Do basic actor stuff
-	mod.class.Actor.act(self)
+	if not mod.class.Actor.act(self) then return end
 
 	-- Let the AI think .... beware of Shub !
 	self:doAI()

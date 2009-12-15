@@ -55,3 +55,53 @@ newEffect{
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
 	end,
 }
+
+newEffect{
+	name = "FROZEN",
+	desc = "Frozen",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is frozen!" end,
+	on_lose = function(self, err) return "#Target# warms up.", "-Frozen" end,
+	activate = function(self, eff)
+		-- Change color
+		eff.old_r = self.color_r
+		eff.old_g = self.color_g
+		eff.old_b = self.color_b
+		self.color_r = 0
+		self.color_g = 255
+		self.color_b = 155
+		game.level.map:updateMap(self.x, self.y)
+
+		-- Frozen, cannot act
+		self.energy.value = 0
+	end,
+	on_timeout = function(self, eff)
+		-- Frozen, cannot act
+		self.energy.value = 0
+	end,
+	deactivate = function(self, eff)
+		self.color_r = eff.old_r
+		self.color_g = eff.old_g
+		self.color_b = eff.old_b
+	end,
+}
+
+newEffect{
+	name = "STUNNED",
+	desc = "STUN",
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is stunned!", "+Stunned" end,
+	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
+	activate = function(self, eff)
+		-- Frozen, cannot act
+		self.energy.value = 0
+	end,
+	on_timeout = function(self, eff)
+		-- Frozen, cannot act
+		self.energy.value = 0
+	end,
+}

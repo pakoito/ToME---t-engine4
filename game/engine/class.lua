@@ -98,7 +98,7 @@ local function basicSerialize(o)
 	if type(o) == "number" or type(o) == "boolean" then
 		return tostring(o)
 	elseif type(o) == "function" then
-		return string.format("%q", string.dump(o))
+		return string.format("loadstring(%q)", string.dump(o))
 	else   -- assume it is a string
 		return string.format("%q", o)
 	end
@@ -157,6 +157,7 @@ local function deserialize(string)
 	local f, err = loadstring(string)
 	if err then print("error deserializing", string, err) end
 	setfenv(f, {
+		loadstring = loadstring,
 		loadObject = function(n)
 --			print("wants to load",n)
 			return engine.Savefile.current_save:loadReal(n)

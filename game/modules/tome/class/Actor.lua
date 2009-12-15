@@ -37,6 +37,10 @@ function _M:init(t)
 	self.combat_spellspeed = 0
 	self.combat_spellcrit = 0
 	self.combat_spellpower = 0
+
+	self.combat_physresist = 0
+	self.combat_spellresist = 0
+
 	self.fatigue = 0
 
 	-- Default melee barehanded damage
@@ -66,6 +70,9 @@ function _M:act()
 	self:regenResources()
 	-- Compute timed effects
 	self:timedEffects()
+
+	-- Still enough energy to act ?
+	if self.energy.value < game.energy_to_act then return false end
 
 	return true
 end

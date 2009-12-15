@@ -59,7 +59,7 @@ newBirthDescriptor{
 		["spell/arcane"]=true,
 		["spell/fire"]=true,
 		["spell/earth"]=true,
-		["spell/cold"]=true,
+		["spell/water"]=true,
 		["spell/air"]=true,
 		["spell/mind"]=true,
 		["spell/temporal"]=true,

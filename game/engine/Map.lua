@@ -376,10 +376,12 @@ end
 -- @param dir the numpad direction of the effect, 5 for a ball effect
 -- @param overlay a simple display entity to draw upon the map
 -- @param update_fct optional function that will be called each time the effect is updated with the effect itself as parameter. Use it to change radius, move around ....
-function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, overlay, update_fct)
+function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, overlay, update_fct, friendlyfire)
+	if friendlyfire == nil then friendlyfire = true end
+	print(friendlyfire)
 	table.insert(self.effects, {
 		src=src, x=x, y=y, duration=duration, damtype=damtype, dam=dam, radius=radius, dir=dir, angle=angle, overlay=overlay,
-		update_fct=update_fct,
+		update_fct=update_fct, friendlyfire=friendlyfire
 	})
 	self.changed = true
 end
@@ -429,7 +431,9 @@ function _M:processEffects()
 		-- Now display each grids
 		for lx, ys in pairs(grids) do
 			for ly, _ in pairs(ys) do
-				DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
+				if e.friendlyfire or (lx ~= e.src.x and ly ~= e.src.y) then
+					DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
+				end
 			end
 		end
 
