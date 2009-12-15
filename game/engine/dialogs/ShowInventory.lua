@@ -7,7 +7,7 @@ function _M:init(title, inven, filter, action)
 	self.inven = inven
 	self.filter = filter
 	self.action = action
-	engine.Dialog.init(self, title, "Inventory", game.w * 0.8, game.h * 0.8)
+	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
 	self:generateList()
 

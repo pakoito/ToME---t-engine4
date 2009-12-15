@@ -100,3 +100,20 @@ newDamageType{
 		end
 	end,
 }
+
+-- Physical damage + repulsion; checks for spell power against physical resistance
+newDamageType{
+	name = "spellknockback", type = "SPELLKNOCKBACK",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) then
+				target:knockBack(src.x, src.y, 2)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the punch!", target.name:capitalize())
+			end
+		end
+	end,
+}

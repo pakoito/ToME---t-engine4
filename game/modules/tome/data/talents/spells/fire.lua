@@ -36,19 +36,19 @@ newTalent{
 	mana = 12,
 	cooldown = 4,
 	tactical = {
-		ATTACKAREA = 10,
+		ATTACK = 10,
 	},
 	action = function(self)
 		local t = {type="bolt", range=20}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.FIREBURN, self:spellCrit(28 + self:combatSpellpower(0.7)))
+		self:project(t, x, y, DamageType.FIREBURN, self:spellCrit(15 + self:combatSpellpower()))
 		return true
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self)
-		return ([[Conjures up a bolt of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.7), math.min(6, 3 + self:combatSpellpower(0.06)))
+		return ([[Conjures up a bolt of fire setting the target ablaze and doing %0.2f fire damage over 3 turns.
+		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower())
 	end,
 }
 
