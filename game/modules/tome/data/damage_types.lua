@@ -20,9 +20,11 @@ newDamageType{
 	name = "physical", type = "PHYSICAL",
 }
 
+-- Arcane is basic (usualy) unreistable damage
 newDamageType{
 	name = "arcane", type = "ARCANE",
 }
+-- The four elemental damges
 newDamageType{
 	name = "fire", type = "FIRE",
 }
@@ -35,6 +37,8 @@ newDamageType{
 newDamageType{
 	name = "lightning", type = "LIGHTNING",
 }
+
+-- Light up the room
 newDamageType{
 	name = "light", type = "LIGHT",
 	projector = function(src, x, y, type, dam)
@@ -42,6 +46,7 @@ newDamageType{
 	end,
 }
 
+-- Fire damage + DOT
 newDamageType{
 	name = "fireburn", type = "FIREBURN",
 	projector = function(src, x, y, type, dam)
@@ -54,10 +59,12 @@ newDamageType{
 	end,
 }
 
+-- Irresistible fire damage
 newDamageType{
 	name = "netherflame", type = "NETHERFLAME",
 }
 
+-- Freezes target, chcks for spellresistance
 newDamageType{
 	name = "freeze", type = "FREEZE",
 	projector = function(src, x, y, type, dam)
@@ -72,6 +79,23 @@ newDamageType{
 			else
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Resist!", {0,255,155})
 				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Cold damage + repulsion; checks for spell power against physical resistance
+newDamageType{
+	name = "wave", type = "WAVE",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) then
+				target:knockBack(src.x, src.y, 1)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the wave!", target.name:capitalize())
 			end
 		end
 	end,

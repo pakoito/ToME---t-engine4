@@ -34,8 +34,9 @@ end
 -- @param y coord of the destination
 -- @param force if true do not check for the presence of an other entity. *Use wisely*
 -- @return true if a move was *ATTEMPTED*. This means the actor will proably want to use energy
-function _M:move(map, x, y, force)
+function _M:move(x, y, force)
 	if self.dead then return true end
+	local map = game.level.map
 	if not force and map:checkAllEntities(x, y, "block_move", self) then return true end
 
 	if self.x and self.y then
@@ -83,6 +84,23 @@ function _M:teleportRandom(x, y, dist)
 	if #poss == 0 then return false end
 	local pos = poss[rng.range(1, #poss)]
 	return self:move(pos[1], pos[2], true)
+end
+
+--- Knock back the actor
+function _M:knockBack(srcx, srcy, dist)
+	local l = line.new(srcx, srcy, self.x, self.y, true)
+	local lx, ly = l(true)
+	dist = dist - 1
+
+	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move") and dist > 0 do
+		dist = dist - 1
+		lx, ly = l(true)
+		print("next step", lx, ly)
+	end
+
+	if game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move") then
+		self:move(lx, ly, true)
+	end
 end
 
 function _M:deleteFromMap(map)

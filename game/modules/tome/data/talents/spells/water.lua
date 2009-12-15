@@ -1,4 +1,18 @@
 newTalent{
+	name = "Ent-draught",
+	type = {"spell/water", 1},
+	mana = 10,
+	cooldown = 100,
+	action = function(self)
+		return true
+	end,
+	require = { stat = { mag=10 }, },
+	info = function(self)
+		return ([[Confures some Ent-draught to fill your stomach.]])
+	end,
+}
+
+newTalent{
 	name = "Freeze",
 	type = {"spell/water", 1},
 	mana = 14,
@@ -22,9 +36,42 @@ newTalent{
 }
 
 newTalent{
-	name = "Ice Storm",
+	name = "Tidal Wave",
 	type = {"spell/water",2},
-	mana = 45,
+	mana = 55,
+	cooldown = 8,
+	tactical = {
+		ATTACKAREA = 10,
+	},
+	action = function(self)
+		local duration = 5 + self:combatSpellpower(0.05)
+		local radius = 1
+		local dam = 1--12 + self:combatSpellpower(0.20)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			DamageType.WAVE, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
+			function(e)
+				e.radius = e.radius + 1
+			end,
+			false
+		)
+		return true
+	end,
+	require = { stat = { mag=34 }, level=25 },
+	info = function(self)
+		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
+		The damage and duration will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.20), 5 + self:combatSpellpower(0.25))
+	end,
+}
+
+newTalent{
+	name = "Ice Storm",
+	type = {"spell/water",4},
+	mana = 100,
 	cooldown = 30,
 	tactical = {
 		ATTACKAREA = 20,
@@ -48,7 +95,7 @@ newTalent{
 		)
 		return true
 	end,
-	require = { stat = { mag=16 }, },
+	require = { stat = { mag=34 }, level=25 },
 	info = function(self)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.20), 5 + self:combatSpellpower(0.25))

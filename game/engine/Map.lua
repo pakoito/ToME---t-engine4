@@ -431,7 +431,7 @@ function _M:processEffects()
 		-- Now display each grids
 		for lx, ys in pairs(grids) do
 			for ly, _ in pairs(ys) do
-				if e.friendlyfire or (lx ~= e.src.x and ly ~= e.src.y) then
+				if e.friendlyfire or not (lx == e.src.x and ly == e.src.y) then
 					DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
 				end
 			end

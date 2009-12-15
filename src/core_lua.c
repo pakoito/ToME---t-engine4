@@ -792,6 +792,7 @@ static int lua_line_init(lua_State *L)
 	int yFrom = luaL_checknumber(L, 2);
 	int xTo = luaL_checknumber(L, 3);
 	int yTo = luaL_checknumber(L, 4);
+	bool start_at_end = lua_toboolean(L, 5);
 
 	line_data *data = (line_data*)lua_newuserdata(L, sizeof(line_data));
 	auxiliar_setclass(L, "line{core}", -1);
@@ -822,15 +823,22 @@ static int lua_line_init(lua_State *L)
 		data->deltay *= 2;
 	}
 
+	if (start_at_end)
+	{
+		data->origx=xTo;
+		data->origy=yTo;
+	}
+
 	return 1;
 }
 
 static int lua_line_step(lua_State *L)
 {
 	line_data *data = (line_data*)auxiliar_checkclass(L, "line{core}", 1);
+	bool dont_stop_at_end = lua_toboolean(L, 2);
 
 	if ( data->stepx*data->deltax > data->stepy*data->deltay ) {
-		if ( data->origx == data->destx ) return 0;
+		if (!dont_stop_at_end && data->origx == data->destx ) return 0;
 		data->origx+=data->stepx;
 		data->e -= data->stepy*data->deltay;
 		if ( data->e < 0) {
@@ -838,7 +846,7 @@ static int lua_line_step(lua_State *L)
 			data->e+=data->stepx*data->deltax;
 		}
 	} else {
-		if ( data->origy == data->desty ) return 0;
+		if (!dont_stop_at_end && data->origy == data->desty ) return 0;
 		data->origy+=data->stepy;
 		data->e -= data->stepx*data->deltax;
 		if ( data->e < 0) {
