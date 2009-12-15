@@ -35,7 +35,7 @@ newEntity{
 newEntity{
 	group = "icky things",
 	name = "white icky",
-	display = "i", color_r=255, color_g=255, color_b=255,
+	display = "i", color=colors.YELLOW,
 	level_range = {3, 7}, exp_worth = 100,
 	rarity = 1,
 	autolevel = "warrior",

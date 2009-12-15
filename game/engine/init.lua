@@ -1,5 +1,6 @@
 -- load some utility functions
 dofile("/engine/utils.lua")
+dofile("/engine/colors.lua")
 
 -- load resolver functions for entities cloning
 dofile("/engine/resolvers.lua")

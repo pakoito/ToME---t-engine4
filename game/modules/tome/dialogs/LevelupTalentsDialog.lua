@@ -12,10 +12,10 @@ function _M:init(actor)
 
 	self.talentsel = 1
 	self:keyCommands{
-		_UP = function() self.talentsel = util.boundWrap(self.talentsel - 1, 1, #self.list) end,
-		_DOWN = function() self.talentsel = util.boundWrap(self.talentsel + 1, 1, #self.list) end,
-		_LEFT = function() self:learn(false) end,
-		_RIGHT = function() self:learn(true) end,
+		_UP = function() self.talentsel = util.boundWrap(self.talentsel - 1, 1, #self.list) self.changed = true end,
+		_DOWN = function() self.talentsel = util.boundWrap(self.talentsel + 1, 1, #self.list) self.changed = true end,
+		_LEFT = function() self:learn(false) self.changed = true end,
+		_RIGHT = function() self:learn(true) self.changed = true end,
 		_ESCAPE = function() game:unregisterDialog(self) end,
 	}
 	self:mouseZones{
@@ -24,6 +24,7 @@ function _M:init(actor)
 			if button == "left" then self:learn(true)
 			elseif button == "right" then self:learn(false)
 			end
+			self.changed = true
 		end },
 	}
 end
@@ -79,7 +80,7 @@ function _M:learnTalent(t_id, v)
 			self:simplePopup("Not enough talent points", "You have no talent points left!")
 			return
 		end
-		if not self.actor:canLearnTalent(t_id) then
+		if not self.actor:canLearnTalent(t) then
 			self:simplePopup("Cannot learn talent", "Prerequisites not met!")
 			return
 		end
@@ -195,4 +196,6 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 
 	self:drawSelectionList(s, 2, 45, self.font_h, self.list, self.talentsel, "name")
 	self:drawSelectionList(s, 300, 45, self.font_h, self.list_known, self.talentsel)
+
+	self.changed = false
 end

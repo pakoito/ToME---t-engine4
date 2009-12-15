@@ -41,6 +41,15 @@ function _M:init(t)
 
 	self.image = self.image or nil
 	self.display = self.display or '.'
+	if self.color then
+		self.color_r = self.color.r
+		self.color_g = self.color.g
+		self.color_b = self.color.b
+		self.color_br = self.color.br
+		self.color_bg = self.color.bg
+		self.color_bb = self.color.bb
+		self.color = nil
+	end
 	self.color_r = self.color_r or 0
 	self.color_g = self.color_g or 0
 	self.color_b = self.color_b or 0

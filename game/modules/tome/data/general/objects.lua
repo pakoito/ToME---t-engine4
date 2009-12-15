@@ -1,27 +1,4 @@
-newEntity{
-	define_as = "BASE_SWORD",
-	slot = "MAINHAND",
-	type = "weapon",
-	display = "/", color_r=255,
-	encumber = 3,
-	egos_chance = { },
-	egos = loadList("/data/general/egos.lua"),
-}
-
-newEntity{
-	base = "BASE_SWORD",
-	name = "& #1#longsword~#2#",
-	level_range = {1, 10},
-	rarity = 3,
-	combat = {
-		dam = resolvers.rngavg(7,11),
-		atk = 3,
-		apr = 2,
-		dammod = {str=1},
-	},
-	wielder = {
-	},
-}
+load("/data/general/swords.lua")
 
 newEntity{
 	name = "& tower shield~",

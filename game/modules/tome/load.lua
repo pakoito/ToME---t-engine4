@@ -8,6 +8,9 @@ local ActorAI = require "engine.interface.ActorAI"
 local ActorInventory = require "engine.interface.ActorInventory"
 local Birther = require "engine.Birther"
 
+-- Some default colors
+dofile("/mod/colors.lua")
+
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
 -- Talents
