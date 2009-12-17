@@ -14,7 +14,7 @@ return {
 			['#'] = "WALL",
 			up = "UP",
 			down = "DOWN",
-			door = "DOOR",
+			['+'] = "DOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

@@ -36,7 +36,7 @@ function _M:loadTiles(tileset)
 			local i = 1
 			for c in line:gmatch(".") do
 				t[i] = t[i] or {}
-				t[i][j] = self.data[c]
+				t[i][j] = c
 
 				-- Find edge openings
 				local mx, my = line:len(), #ts
@@ -91,6 +91,10 @@ function _M:roomAlloc(bx, by, bw, bh, rid)
 	return true
 end
 
+function _M:matchTile(t1, t2)
+	return self.raw.matcher(t1, t2)
+end
+
 function _M:findMatchingTiles(st, dir)
 	local m = {}
 
@@ -98,19 +102,19 @@ function _M:findMatchingTiles(st, dir)
 		local ok = true
 		if dir == 8 then
 			for i = 1, self.block.w do
-				if st[i][1] ~= dt[i][self.block.h] then ok = false end
+				if not self:matchTile(st[i][1], dt[i][self.block.h]) then ok = false end
 			end
 		elseif dir == 2 then
 			for i = 1, self.block.w do
-				if st[i][self.block.h] ~= dt[i][1] then ok = false end
+				if not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
 			end
 		elseif dir == 4 then
 			for j = 1, self.block.h do
-				if st[1][j] ~= dt[self.block.w][j] then ok = false end
+				if not self:matchTile(st[1][j], dt[self.block.w][j]) then ok = false end
 			end
 		elseif dir == 6 then
 			for j = 1, self.block.h do
-				if st[self.block.w][j] ~= dt[1][j] then ok = false end
+				if not self:matchTile(st[self.block.w][j], dt[1][j]) then ok = false end
 			end
 		end
 		if ok then
@@ -122,6 +126,17 @@ function _M:findMatchingTiles(st, dir)
 	return m
 end
 
+function _M:resolve(c)
+	local res = self.data[c]
+	if type(res) == "function" then
+		return res()
+	elseif type(res) == "table" then
+		return res[rng.range(1, #res)]
+	else
+		return res
+	end
+end
+
 function _M:buildTile(tile, bx, by, rid)
 	local bw, bh = 1, 1
 
@@ -129,7 +144,7 @@ function _M:buildTile(tile, bx, by, rid)
 
 	for i = 1, self.block.w do
 		for j = 1, self.block.h do
-			self.map(bx * self.block.w + i - 1, by * self.block.h + j - 1, Map.TERRAIN, self.grid_list[tile[i][j]])
+			self.map(bx * self.block.w + i - 1, by * self.block.h + j - 1, Map.TERRAIN, self.grid_list[self:resolve(tile[i][j])])
 		end
 	end
 	local opens = {}
@@ -146,13 +161,13 @@ end
 
 function _M:generate()
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self.data["#"]])
+		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
 	end end
 
 	local first = true
 	local process = {}
 	local id = 1
-	process[#process+1] = {rng.range(0, self.cols), rng.range(0, self.rows), tile=self.tiles[rng.range(1, #self.tiles)]}
+	process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[rng.range(1, #self.tiles)]}
 	while #process > 0 do
 		local b = table.remove(process)
 		local type = "room"
