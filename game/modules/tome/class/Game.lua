@@ -468,6 +468,7 @@ function _M:setupMouse()
 				game.level.map.my = game.level.map.my + 1
 				derivy = derivy + game.level.map.tile_h
 			end
+			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
 		end
 	end)
 	-- Scroll message log
