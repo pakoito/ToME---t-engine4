@@ -8,6 +8,7 @@ function _M:init(map, grid_list, data)
 	self.data = data
 	self.grid_list = grid_list
 	self.tiles, self.raw = self:loadTiles(data.tileset)
+	self.matching_tiles = {}
 
 	self.block = self.raw.base
 	self.cols = math.floor(self.map.w / self.block.w)
@@ -96,25 +97,69 @@ function _M:matchTile(t1, t2)
 end
 
 function _M:findMatchingTiles(st, dir)
+	if self.matching_tiles[st] and self.matching_tiles[st][dir] then return self.matching_tiles[st][dir] end
+
 	local m = {}
 
 	for _, dt in ipairs(self.tiles) do
 		local ok = true
+		print("try match ", st.id, dt.id)
 		if dir == 8 then
-			for i = 1, self.block.w do
-				if not self:matchTile(st[i][1], dt[i][self.block.h]) then ok = false end
+			local sw = #st
+			local dw = #dt
+			print("sw/dw", sw,dw,#st[1],#dt[1])
+			if dw < sw then
+				print("dest 8 smaller")
+				for offset = 0, sw - dw do
+					ok = true
+					for i = 1, dw do
+						print("","try offset",offset,i,"::",st[i+offset] and st[i+offset][1], dt[i] and dt[i][self.block.h])
+						if not st[i+offset] or not dt[i] or not self:matchTile(st[i+offset][1], dt[i][self.block.h]) then ok = false end
+					end
+					print("tried ",offset,"result",ok)
+					if ok then break end
+				end
+			else
+				print("dest 8 bigger")
+				for offset = 0, dw - sw do
+					ok = true
+					for i = 1, sw do
+						print("","try offset",offset,i,"::",st[i] and st[i][1], dt[i+offset] and dt[i+offset][self.block.h])
+						if not st[i] or not dt[i+offset] or not self:matchTile(st[i][1], dt[i+offset][self.block.h]) then ok = false end
+					end
+					print("tried ",offset,"result",ok)
+					if ok then break end
+				end
 			end
 		elseif dir == 2 then
-			for i = 1, self.block.w do
-				if not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
+--[[
+			local sw = #st
+			local dw = #dt
+			if dw < sw then
+				print("dest 2 smaller")
+				for offset = 0, sw - dw do
+					for i = offset + 1, offset + dw do
+						if not st[i] or not dt[i] or not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
+					end
+				print("tried ",offset,"result",ok)
+				end
+			else
+				print("dest 2 bigger")
+				for offset = 0, dw - sw do
+					for i = offset + 1, offset + sw do
+						if not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
+					end
+				print("tried ",offset,"result",ok)
+				end
 			end
+]]
 		elseif dir == 4 then
 			for j = 1, self.block.h do
-				if not self:matchTile(st[1][j], dt[self.block.w][j]) then ok = false end
+				if not self:matchTile(st[1][j], dt[#dt][j]) then ok = false end
 			end
 		elseif dir == 6 then
 			for j = 1, self.block.h do
-				if not self:matchTile(st[self.block.w][j], dt[1][j]) then ok = false end
+				if not self:matchTile(st[#dt][j], dt[1][j]) then ok = false end
 			end
 		end
 		if ok then
@@ -122,6 +167,9 @@ function _M:findMatchingTiles(st, dir)
 			print("found matching tile in dir", dir, "from", st.id, "to", dt.id)
 		end
 	end
+
+	self.matching_tiles[st] = self.matching_tiles[st] or {}
+	self.matching_tiles[st][dir] = m
 
 	return m
 end
@@ -142,8 +190,9 @@ function _M:buildTile(tile, bx, by, rid)
 
 	if not self:roomAlloc(bx, by, bw, bh, rid) then return false end
 
-	for i = 1, self.block.w do
-		for j = 1, self.block.h do
+	print("building tile", tile.id, #tile, #tile[1])
+	for i = 1, #tile do
+		for j = 1, #tile[1] do
 			self.map(bx * self.block.w + i - 1, by * self.block.h + j - 1, Map.TERRAIN, self.grid_list[self:resolve(tile[i][j])])
 		end
 	end
@@ -152,8 +201,10 @@ function _M:buildTile(tile, bx, by, rid)
 		local coord = dir_to_coord[o[3]]
 		local mts = self:findMatchingTiles(tile, o[3])
 
-		opens[#opens+1] = {bx + coord[1], by + coord[2], tile=mts[rng.range(1, #mts)]}
-		print("room at ",bx,by,"opens to",o[3],"::",bx + coord[1], by + coord[2])
+		if #mts > 0 then
+			opens[#opens+1] = {bx + coord[1], by + coord[2], tile=mts[rng.range(1, #mts)]}
+			print("room at ",bx,by,"opens to",o[3],"::",bx + coord[1], by + coord[2])
+		end
 	end
 
 	return opens
@@ -167,7 +218,7 @@ function _M:generate()
 	local first = true
 	local process = {}
 	local id = 1
-	process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[rng.range(1, #self.tiles)]}
+	process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[2 or rng.range(1, #self.tiles)]}
 	while #process > 0 do
 		local b = table.remove(process)
 		local type = "room"
