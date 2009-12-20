@@ -82,12 +82,18 @@ function _M:load()
 	for k, e in pairs(data) do self[k] = e end
 end
 
+local recurs = function(t)
+	local nt = {}
+	for k, e in pairs(nt) do if k ~= "__CLASSNAME" then nt[k] = e end end
+	return nt
+end
 function _M:getLevelData(lev)
-	local res = {}
-	for k, e in pairs(self) do if k ~= "__CLASSNAME" then res[k] = e end end
+	local res = table.clone(self)
 	if self.levels[lev] then
-		for k, e in pairs(self.levels[lev]) do if k ~= "__CLASSNAME" then res[k] = e end end
+		table.merge(res, self.levels[lev], true)
 	end
+	-- Make sure it is not considered a class
+	res.__CLASSNAME = nil
 	return res
 end
 
@@ -139,6 +145,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	-- Generate the map
 	local generator = require(level_data.generator.map.class).new(
+		self,
 		map,
 		self.grid_list,
 		level_data.generator.map

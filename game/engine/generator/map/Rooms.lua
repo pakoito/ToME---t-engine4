@@ -5,8 +5,8 @@ require "engine.Generator"
 --- Generator that makes a map
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(map, grid_list, data)
-	engine.Generator.init(self, map)
+function _M:init(zone, map, grid_list, data)
+	engine.Generator.init(self, zone, map)
 	self.floor = grid_list[data.floor]
 	self.wall = grid_list[data.wall]
 	self.door = grid_list[data.door]

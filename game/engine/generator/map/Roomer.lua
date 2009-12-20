@@ -3,8 +3,8 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(map, grid_list, data)
-	engine.Generator.init(self, map)
+function _M:init(zone, map, grid_list, data)
+	engine.Generator.init(self, zone, map)
 	self.data = data
 	self.data.tunnel_change = self.data.tunnel_change or 30
 	self.data.tunnel_random = self.data.tunnel_random or 10
@@ -27,8 +27,9 @@ end
 
 function _M:loadRoom(file)
 	local f = loadfile("/data/rooms/"..file..".lua")
-	local d = {}
-	setfenv(f, d)
+	setfenv(f, setmetatable({
+		Map = require("engine.Map"),
+	}, {__index=_G}))
 	local ret, err = f()
 	if not ret and err then error(err) end
 
@@ -248,7 +249,7 @@ function _M:generate(lev, old_lev)
 	while true do
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
 			break
 		end
 	end

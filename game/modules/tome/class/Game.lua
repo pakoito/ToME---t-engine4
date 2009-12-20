@@ -71,10 +71,11 @@ function _M:run()
 end
 
 function _M:newGame()
-	self.zone = Zone.new("ancient_ruins")
+	self.zone = Zone.new("wilderness")
 	self.player = Player.new{name=self.player_name}
 
 	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
+		self.player.wild_x, self.player.wild_y = 10, 10
 		self:changeLevel(1)
 
 		local ds = LevelupStatsDialog.new(self.player)
@@ -103,9 +104,18 @@ function _M:getSaveDescription()
 	}
 end
 
-function _M:changeLevel(lev)
-	self.zone:getLevel(self, lev, self.level and self.level.level or -1000)
-	self.player:move(self.level.start.x, self.level.start.y, true)
+function _M:changeLevel(lev, zone)
+	if zone then
+		self.zone = Zone.new(zone)
+	end
+	self.zone:getLevel(self, lev, (self.level and not zone) and self.level.level or -1000)
+
+	-- Move back to old wilderness position
+	if self.zone.short_name == "wilderness" then
+		self.player:move(self.player.wild_x, self.player.wild_y, true)
+	else
+		self.player:move(self.level.start.x, self.level.start.y, true)
+	end
 	self.level:addEntity(self.player)
 end
 
@@ -359,7 +369,7 @@ function _M:setupCommands()
 			local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
 			if self.player:enoughEnergy() and e.change_level then
 				-- Do not unpause, the player is allowed first move on next level
-				self:changeLevel(self.level.level + e.change_level)
+				self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
 			else
 				self.log("There is no way out of this level here.")
 			end

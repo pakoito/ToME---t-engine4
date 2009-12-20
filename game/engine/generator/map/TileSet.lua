@@ -3,8 +3,8 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(map, grid_list, data)
-	engine.Generator.init(self, map)
+function _M:init(zone, map, grid_list, data)
+	engine.Generator.init(self, zone, map)
 	self.data = data
 	self.grid_list = grid_list
 	self.tiles, self.raw = self:loadTiles(data.tileset)

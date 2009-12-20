@@ -56,6 +56,12 @@ function _M:move(x, y, force)
 			game.logSeen(self, "There is an item here: "..obj:getName())
 		end
 	end
+
+	-- Update wilderness coords
+	if game.zone.short_name == "wilderness" then
+		self.wild_x, self.wild_y = self.x, self.y
+	end
+
 	return moved
 end
 

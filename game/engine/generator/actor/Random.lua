@@ -4,8 +4,7 @@ require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, level)
-	engine.Generator.init(self, map)
-	self.zone = zone
+	engine.Generator.init(self, zone, map)
 	self.level = level
 	local data = level.data.generator.actor
 	self.npc_list = zone:computeRarities(zone.npc_list, level.level, data.ood, nil)

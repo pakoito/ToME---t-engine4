@@ -2,14 +2,14 @@ return {
 	name = "ancient ruins",
 	level_range = {1, 5},
 	max_level = 5,
-	width = 100, height = 100,
+	width = 50, height = 50,
 	all_remembered = true,
 	all_lited = true,
 --	persistant = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
-			nb_rooms = 9,
+			nb_rooms = 10,
 			rooms = {"simple", "pilar"},
 			['.'] = "FLOOR",
 			['#'] = "WALL",
@@ -19,14 +19,22 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {1, 1},
+			nb_npc = {20, 30},
 			ood = {chance=5, range={1, 10}},
 			adjust_level_to_player = {-1, 2},
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {1, 1},
+			nb_object = {3, 6},
 			ood = {chance=5, range={1, 10}},
 		},
-	}
+	},
+	levels =
+	{
+		[1] = {
+			generator = { map = {
+				up = "UP_WILDERNESS",
+			}, },
+		},
+	},
 }
