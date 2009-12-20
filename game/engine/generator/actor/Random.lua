@@ -7,8 +7,8 @@ function _M:init(zone, map, level)
 	engine.Generator.init(self, map)
 	self.zone = zone
 	self.level = level
-	local data = level.data
-	self.npc_list = zone:computeRarities(zone.npc_list, level.level, data.generator and data.generator.actor and data.generator.actor.ood, nil)
+	local data = level.data.generator.actor
+	self.npc_list = zone:computeRarities(zone.npc_list, level.level, data.ood, nil)
 	if data.adjust_level_to_player and game:getPlayer() then
 		self.adjust_level_to_player = {base=game:getPlayer().level, min=data.adjust_level_to_player[1], max=data.adjust_level_to_player[2]}
 	end

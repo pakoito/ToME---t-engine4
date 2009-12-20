@@ -56,6 +56,7 @@ end
 --- Can the actor go there
 -- @param terrain_only if true checks only the terrain, otherwise checks all entities
 function _M:canMove(x, y, terrain_only)
+	if not game.level.map:isBound(x, y) then return false end
 	if terrain_only then
 		return not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move")
 	else
