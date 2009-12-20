@@ -24,8 +24,8 @@ function _M:generate()
 			o:resolve()
 			local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
 			local tries = 0
-			while self.map(x, y, Map.OBJECT) and tries < 100 do
-				x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
+			while (self.map:checkEntity(x, y, Map.TERRAIN, "block_move") or self.map(x, y, Map.OBJECT)) and tries < 100 do
+				x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
 				tries = tries + 1
 			end
 			if tries < 100 then

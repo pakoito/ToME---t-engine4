@@ -104,7 +104,7 @@ function _M:getSaveDescription()
 end
 
 function _M:changeLevel(lev)
-	self.zone:getLevel(self, lev)
+	self.zone:getLevel(self, lev, self.level and self.level.level or -1000)
 	self.player:move(self.level.start.x, self.level.start.y, true)
 	self.level:addEntity(self.player)
 end

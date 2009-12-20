@@ -94,7 +94,7 @@ end
 --- Asks the zone to generate a level of level "lev"
 -- @param lev the level (from 1 to zone.max_level)
 -- @return a Level object
-function _M:getLevel(game, lev, no_close)
+function _M:getLevel(game, lev, old_lev, no_close)
 	-- Before doing anything else, close the current level
 	if not no_close and game.level and game.level.map then
 		if game.level.data.persistant then
@@ -123,7 +123,7 @@ function _M:getLevel(game, lev, no_close)
 
 	-- In any cases, make one if none was found
 	if not level then
-		level = self:newLevel(level_data, lev, game)
+		level = self:newLevel(level_data, lev, old_lev, game)
 	end
 
 	-- Clean up things
@@ -132,7 +132,7 @@ function _M:getLevel(game, lev, no_close)
 	return level
 end
 
-function _M:newLevel(level_data, lev, game)
+function _M:newLevel(level_data, lev, old_lev, game)
 	local map = self.map_class.new(level_data.width, level_data.height)
 	if level_data.all_lited then map:liteAll(0, 0, map.w, map.h) end
 	if level_data.all_remembered then map:rememberAll(0, 0, map.w, map.h) end
@@ -143,7 +143,7 @@ function _M:newLevel(level_data, lev, game)
 		self.grid_list,
 		level_data.generator.map
 	)
-	local startx, starty = generator:generate()
+	local startx, starty = generator:generate(lev, old_lev)
 
 	local level = self.level_class.new(lev, map)
 	level.start = {x=startx, y=starty}

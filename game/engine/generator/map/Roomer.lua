@@ -130,7 +130,7 @@ function _M:markTunnel(x, y, xdir, ydir, id)
 	local dir = coord_to_dir[xdir][ydir]
 	for i, d in ipairs(mark_dirs[dir]) do
 		local xd, yd = dir_to_coord[d][1], dir_to_coord[d][2]
-		if not self.room_map[x+xd][y+yd].tunnel then self.room_map[x+xd][y+yd].tunnel = id end
+		if self.map:isBound(x+xd, y+yd) and not self.room_map[x+xd][y+yd].tunnel then self.room_map[x+xd][y+yd].tunnel = id end
 	end
 	if not self.room_map[x][y].tunnel then self.room_map[x][y].tunnel = id end
 end
@@ -160,36 +160,37 @@ function _M:tunnel(x1, y1, x2, y2, id)
 			end
 			nx, ny = x1 + xdir, y1 + ydir
 		end
-		print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
+--		print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
 
 		if self.room_map[nx][ny].room then
 			tun[#tun+1] = {nx,ny}
 			x1, y1 = nx, ny
-			print(feat, "accept room")
+--			print(feat, "accept room")
 		elseif self.room_map[nx][ny].can_open ~= nil then
 			if self.room_map[nx][ny].can_open then
-				print(feat, "tunnel crossing can_open", nx,ny)
+--				print(feat, "tunnel crossing can_open", nx,ny)
 				for i = -1, 1 do for j = -1, 1 do if self.map:isBound(nx + i, ny + j) and self.room_map[nx + i][ny + j].can_open then
 					self.room_map[nx + i][ny + j].can_open = false
-					print(feat, "forbiding crossing at ", nx+i,ny+j)
+--					print(feat, "forbiding crossing at ", nx+i,ny+j)
 				end end end
 				tun[#tun+1] = {nx,ny,true}
 				x1, y1 = nx, ny
-				print(feat, "accept can_open")
+--				print(feat, "accept can_open")
 			else
-				print(feat, "reject can_open")
+--				print(feat, "reject can_open")
 			end
 		elseif self.room_map[x1][y1].tunnel then
 			if self.room_map[x1][y1].tunnel ~= id then
 				tun[#tun+1] = {nx,ny}
 				x1, y1 = nx, ny
+--				print(feat, "accept tunnel")
 			else
-				print(feat, "reject tunnel")
+--				print(feat, "reject tunnel")
 			end
 		else
 			tun[#tun+1] = {nx,ny}
 			x1, y1 = nx, ny
-			print(feat, "accept normal")
+--			print(feat, "accept normal")
 		end
 
 		self:markTunnel(x1, y2, xdir, ydir, id)
@@ -201,7 +202,6 @@ function _M:tunnel(x1, y1, x2, y2, id)
 
 	for _, t in ipairs(tun) do
 		local nx, ny = t[1], t[2]
---		self.room_map[nx][ny].tunnel = true
 		if t[3] and self.data.door and rng.percent(self.data.door_chance) then
 			self.map(nx, ny, Map.TERRAIN, self.grid_list[self:resolve("door")])
 		else
@@ -211,7 +211,7 @@ function _M:tunnel(x1, y1, x2, y2, id)
 end
 
 --- Make rooms and connect them with tunnels
-function _M:generate()
+function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
 		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
 	end end
@@ -233,7 +233,29 @@ function _M:generate()
 		tx, ty = rooms[i].cx, rooms[i].cy
 	end
 
-	-- Always starts at 1, 1
-	self.map(rooms[1].cx, rooms[1].cy, Map.TERRAIN, self.up)
-	return rooms[1].cx, rooms[1].cy
+	-- Put down stairs
+	local dx, dy
+	while true do
+		dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
+		if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.room_map[dx][dy].special then
+			self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+			break
+		end
+	end
+
+	-- Put up stairs
+	local ux, uy
+	while true do
+		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
+		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.room_map[ux][uy].special then
+			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+			break
+		end
+	end
+
+	if lev > old_lev then
+		return ux, uy
+	else
+		return dx, dy
+	end
 end

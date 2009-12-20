@@ -103,56 +103,14 @@ function _M:findMatchingTiles(st, dir)
 
 	for _, dt in ipairs(self.tiles) do
 		local ok = true
-		print("try match ", st.id, dt.id)
 		if dir == 8 then
-			local sw = #st
-			local dw = #dt
-			print("sw/dw", sw,dw,#st[1],#dt[1])
-			if dw < sw then
-				print("dest 8 smaller")
-				for offset = 0, sw - dw do
-					ok = true
-					for i = 1, dw do
-						print("","try offset",offset,i,"::",st[i+offset] and st[i+offset][1], dt[i] and dt[i][self.block.h])
-						if not st[i+offset] or not dt[i] or not self:matchTile(st[i+offset][1], dt[i][self.block.h]) then ok = false end
-					end
-					print("tried ",offset,"result",ok)
-					if ok then break end
-				end
-			else
-				print("dest 8 bigger")
-				for offset = 0, dw - sw do
-					ok = true
-					for i = 1, sw do
-						print("","try offset",offset,i,"::",st[i] and st[i][1], dt[i+offset] and dt[i+offset][self.block.h])
-						if not st[i] or not dt[i+offset] or not self:matchTile(st[i][1], dt[i+offset][self.block.h]) then ok = false end
-					end
-					print("tried ",offset,"result",ok)
-					if ok then break end
-				end
+			for i = 1, self.block.w do
+				if not self:matchTile(st[i][1], dt[i][self.block.h]) then ok = false end
 			end
 		elseif dir == 2 then
---[[
-			local sw = #st
-			local dw = #dt
-			if dw < sw then
-				print("dest 2 smaller")
-				for offset = 0, sw - dw do
-					for i = offset + 1, offset + dw do
-						if not st[i] or not dt[i] or not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
-					end
-				print("tried ",offset,"result",ok)
-				end
-			else
-				print("dest 2 bigger")
-				for offset = 0, dw - sw do
-					for i = offset + 1, offset + sw do
-						if not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
-					end
-				print("tried ",offset,"result",ok)
-				end
+			for i = 1, self.block.w do
+				if not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
 			end
-]]
 		elseif dir == 4 then
 			for j = 1, self.block.h do
 				if not self:matchTile(st[1][j], dt[#dt][j]) then ok = false end

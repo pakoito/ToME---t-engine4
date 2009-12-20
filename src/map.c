@@ -190,7 +190,7 @@ static int map_to_screen(lua_State *L)
 	{
 		for (j = map->my; j < map->my + map->mheight; j++)
 		{
-			if ((i >= map->w) || (j >= map->h)) continue;
+			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 
 			int dx = x + (i - map->mx) * 16;
 			int dy = y + (j - map->my) * 16;
