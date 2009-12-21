@@ -103,6 +103,11 @@ function _M:resolve(t)
 			self:resolve(e)
 		end
 	end
+
+	-- Finish resolving stuff
+	if t == self then
+		if self.resolveLevel then self:resolveLevel() end
+	end
 end
 
 --- Check for an entity's property

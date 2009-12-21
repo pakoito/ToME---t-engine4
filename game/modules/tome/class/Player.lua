@@ -34,6 +34,8 @@ function _M:init(t)
 	self.mana_regen = 1
 	self.stamina_regen = 1
 	self.life_regen = 0.5
+	self.life_rating = 10
+	self.fixed_rating = true
 
 	self.max_life=85
 	self.max_mana=85

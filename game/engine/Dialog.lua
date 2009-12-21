@@ -68,7 +68,7 @@ function _M:display()
 end
 
 function _M:toScreen(x,y)
-   self.surface:toScreenWithTexture(self.texture,x,y)
+	self.surface:toScreenWithTexture(self.texture,x,y)
 end
 
 function _M:drawDialog(s)

@@ -6,15 +6,16 @@ newEntity{
 	rarity = 4,
 	autolevel = "warrior",
 	ai = "simple",
-	max_life = 20,
+	max_life = 100,
+	life_rating = 10,
 	max_mana = 1000,
 	max_stamina = 1000,
 	energy = { mod=0.5 },
 	has_blood = true,
-	stats = { str=15, dex=8, mag=12, },
+	stats = { str=15, dex=8, mag=12, con=14 },
 	combat = { dam=8, atk=10, apr=2, def=4, armor=6},
 }
-
+--[[
 newEntity{
 	group = "dragon",
 	name = "baby dragon",
@@ -31,18 +32,18 @@ newEntity{
 	has_blood = {nb=3, color={50,255,120}},
 	combat = { dam=5, atk=6, def=2, apr=1, armor=2},
 }
-
+]]
 newEntity{
 	group = "icky things",
 	name = "white icky",
 	display = "i", color=colors.YELLOW,
-	level_range = {3, 7}, exp_worth = 100,
+	level_range = {1, 7}, exp_worth = 100,
 	rarity = 1,
 	autolevel = "warrior",
 	ai = "simple",
 	max_life = resolvers.rngavg(10,20),
-	max_mana = 1000,
-	max_stamina = 1000,
+	max_mana = resolvers.rngavg(10,20),
+	max_stamina = resolvers.rngavg(10,20),
 	energy = { mod=0.3 },
 	has_blood = {nb=3, color={50,255,120}},
 	combat = { dam=5, atk=6, def=2, apr=1, armor=2},

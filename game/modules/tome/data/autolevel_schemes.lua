@@ -10,11 +10,11 @@ local function learnStats(self, statorder)
 end
 
 Autolevel:registerScheme{ name = "warrior", levelup = function(self)
-	-- 2 STR for 1 CON
-	learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_CON })
+	-- 2 STR for 1 DEX
+	learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
 end}
 
 Autolevel:registerScheme{ name = "caster", levelup = function(self)
-	-- 2 STR for 1 CON
+	-- 2 MAG for 1 WIL
 	learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_WIL })
 end}

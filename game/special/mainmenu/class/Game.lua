@@ -24,7 +24,7 @@ function _M:run()
 end
 
 function _M:display()
-	self.step:display():toScreen(self.step.display_x, self.step.display_y)
+	self.step:toScreen(self.step.display_x, self.step.display_y)
 
 	engine.Game.display(self)
 end

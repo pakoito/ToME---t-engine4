@@ -17,14 +17,22 @@ end
 
 function _M:init(t)
 	if t.level_range then
-		self.level = t.level_range[1]
+		self.level = 1
+		self.start_level = t.level_range[1]
 		self.max_level = t.level_range[2]
 	else
-		self.level = t.level or 1
+		self.level = 1
+		self.start_level = t.level or 1
 	end
 	self.exp = t.exp or 0
 	self.exp_mod = t.exp_mod or 1
 	self.exp_worth = t.exp_worth or 1
+end
+
+--- Resolves the correct level
+-- called by self:resolve()
+function _M:resolveLevel()
+	self:forceLevelup(self.start_level)
 end
 
 --- Defines the experience chart used
@@ -72,6 +80,7 @@ end
 
 --- Forces an actor to levelup to "lev"
 function _M:forceLevelup(lev)
+print("force level", self.level, lev)
 	while self.level < lev do
 		-- At max level, if any
 		if self.max_level and self.level >= self.max_level then break end

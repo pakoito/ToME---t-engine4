@@ -43,6 +43,12 @@ function _M:init(t)
 
 	self.fatigue = 0
 
+	self.unused_stats = self.unused_stats or 0
+	self.unused_talents =  self.unused_talents or 0
+	self.unused_talents_types = self.unused_talents_types or 0
+
+	t.life_rating = t.life_rating or 10
+
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
 
@@ -50,14 +56,10 @@ function _M:init(t)
 	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
 	engine.interface.ActorLife.init(self, t)
-	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorStats.init(self, t)
 	engine.interface.ActorTalents.init(self, t)
 	engine.interface.ActorResource.init(self, t)
-
-	self.unused_stats = self.unused_stats or 0
-	self.unused_talents =  self.unused_talents or 0
-	self.unused_talents_types = self.unused_talents_types or 0
+	engine.interface.ActorLevel.init(self, t)
 end
 
 function _M:act()
@@ -127,7 +129,11 @@ function _M:levelup()
 	end
 
 	-- Gain life and resources
-	self.max_life = self.max_life + 10
+	local rating = self.life_rating
+	if not self.fixed_rating then
+		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
+	end
+	self.max_life = self.max_life + rating
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_I) and 1 or 0)
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_II) and 1 or 0)
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_III) and 1 or 0)

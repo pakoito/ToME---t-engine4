@@ -39,6 +39,9 @@ function _M:loadMap(file)
 		end
 	end
 
+	m.startx = ret.startx or math.floor(m.w / 2)
+	m.starty = ret.starty or math.floor(m.h / 2)
+
 	self.gen_map = m
 	self.tiles = t
 end
@@ -65,6 +68,5 @@ function _M:generate()
 --		self.map(i-1, j-1, Map.ACTOR, self.gen_map[i][j].actor)
 	end end
 
-	-- Always starts at 1, 1
-	return 1, 1
+	return self.gen_map.startx, self.gen_map.starty
 end
