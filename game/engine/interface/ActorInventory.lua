@@ -60,6 +60,10 @@ function _M:addObject(inven, o)
 
 	-- Ok add it
 	table.insert(self.inven[inven], o)
+
+	-- Do whatever is needed when wearing this object
+	if self.inven[inven].worn then self:onWear(o) end
+
 	return true
 end
 
@@ -86,7 +90,13 @@ end
 -- @return the object removed or nil if no item existed
 function _M:removeObject(inven, item)
 	if type(inven) == "number" then inven = self.inven[inven] end
-	return table.remove(inven, item)
+	local o = table.remove(inven, item)
+
+	-- Do whatever is needed when takingoff this object
+	print("remove object", inven, inven.max, inven.worn, item, o)
+	if inven.worn then self:onTakeoff(o) end
+
+	return o
 end
 
 --- Drop an object on the floor
@@ -143,7 +153,30 @@ end
 
 --- Takeoff item
 function _M:takeoffObject(inven, item)
-	inven = self:getInven(inven)
-	local o = table.remove(inven, item)
+	local o = self:removeObject(inven, item)
 	return o
+end
+
+--- Call when an object is worn
+function _M:onWear(o)
+	-- Apply wielder properties
+	if o.wielder then
+		o.wielded = {}
+		for k, e in pairs(o.wielder) do
+			o.wielded[k] = self:addTemporaryValue(k, e)
+			print("wear id", k, o.wielded[k])
+		end
+	end
+end
+
+--- Call when an object is taken off
+function _M:onTakeoff(o)
+	print("takeoff", o.name)
+	if o.wielded then
+		for k, id in pairs(o.wielded) do
+			print("take of id", k, id)
+			self:removeTemporaryValue(k, id)
+		end
+	end
+	o.wielded = nil
 end

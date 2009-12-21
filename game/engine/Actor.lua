@@ -148,6 +148,7 @@ function _M:addTemporaryValue(prop, v, noupdate)
 		if type(v) == "number" then
 			-- Simple addition
 			self[prop] = (self[prop] or 0) + v
+			print("addTmpVal", prop, v)
 --		elseif type(v) == "boolean" then
 --			-- False has precedence over true
 --			if v == false then
@@ -173,6 +174,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 	if not noupdate then
 		if type(oldval) == "number" then
 			self[prop] = self[prop] - oldval
+			print("delTmpVal", prop, oldval)
 --		elseif type(oldval) == "boolean" then
 		else
 			error("unsupported temporary value type: "..type(oldval))

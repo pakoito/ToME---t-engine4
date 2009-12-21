@@ -122,13 +122,13 @@ end
 --- Gets the attack
 function _M:combatAttack(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + weapon.atk + (self:getStr(50) - 5) + (self:getDex(50) - 5)
+	return self.combat_atk + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5)
 end
 
 --- Gets the armor penetration
 function _M:combatAPR(weapon)
 	weapon = weapon or self.combat
-	return self.combat_apr + weapon.apr
+	return self.combat_apr + (weapon.apr or 0)
 end
 
 --- Gets the weapon speed
@@ -152,7 +152,7 @@ function _M:combatDamage(weapon)
 			add = add + (self:getStat(stat) - 10) * mod
 		end
 	end
-	return self.combat_armor + weapon.dam + add
+	return self.combat_armor + (weapon.dam or 1) + add
 end
 
 --- Gets spellpower

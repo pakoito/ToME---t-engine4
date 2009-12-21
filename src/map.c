@@ -94,8 +94,8 @@ static int map_set_grid(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 	GLuint *t = lua_isnil(L, 4) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
-	GLuint *a = lua_isnil(L, 5) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
-	GLuint *o = lua_isnil(L, 6) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 6);
+	GLuint *o = lua_isnil(L, 5) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
+	GLuint *a = lua_isnil(L, 6) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 6);
 
 	map->grids_terrain[x][y] = t ? *t : 0;
 	map->grids_actor[x][y] = a ? *a : 0;

@@ -42,13 +42,13 @@ newTalent{
 		local t = {type="bolt", range=20}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.FIREBURN, self:spellCrit(15 + self:combatSpellpower()))
+		self:project(t, x, y, DamageType.FIREBURN, self:spellCrit(15 + self:combatSpellpower(2.1)))
 		return true
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self)
 		return ([[Conjures up a bolt of fire setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower())
+		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower(2.1))
 	end,
 }
 
@@ -64,13 +64,13 @@ newTalent{
 		local t = {type="ball", range=15, radius=math.min(6, 3 + self:combatSpellpower(0.06))}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.7)))
+		self:project(t, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(1.2)))
 		return true
 	end,
 	require = { stat = { mag=24 }, level=5, },
 	info = function(self)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.7), math.min(6, 3 + self:combatSpellpower(0.06)))
+		The damage will increase with the Magic stat]]):format(28 + self:combatSpellpower(1.2), math.min(6, 3 + self:combatSpellpower(0.06)))
 	end,
 }
 
@@ -85,7 +85,7 @@ newTalent{
 	action = function(self)
 		local duration = 5 + self:combatSpellpower(0.25)
 		local radius = 5
-		local dam = 15 + self:combatSpellpower(0.25)
+		local dam = 15 + self:combatSpellpower(1.6)
 		local t = {type="ball", range=20, radius=radius}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
@@ -104,6 +104,6 @@ newTalent{
 	info = function(self)
 		return ([[Raging flames burn foes and allies alike doing %0.2f netherflame damage in a radius of 5 each turns for %d turns.
 		Cooldown: 8 turns
-		The damage and duration will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.25), 5 + self:combatSpellpower(0.25))
+		The damage and duration will increase with the Magic stat]]):format(15 + self:combatSpellpower(1.6), 5 + self:combatSpellpower(0.25))
 	end,
 }

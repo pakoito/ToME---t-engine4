@@ -11,13 +11,13 @@ newTalent{
 		if self:knowTalent(Talents.T_ARCANE_LANCE) then t.type = "beam" end
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.ARCANE, self:spellCrit(10 + self:combatSpellpower()))
+		self:project(t, x, y, DamageType.ARCANE, self:spellCrit(10 + self:combatSpellpower(2)))
 		return true
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self)
 		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage
-		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower())
+		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(2))
 	end,
 }
 newTalent{

@@ -38,7 +38,8 @@ function _M:computeRarities(list, level, ood, filter)
 	local r = { total=0 }
 	print("******************", level)
 	for i, e in ipairs(list) do
-		if e.rarity and (not filter or filter(e)) then
+		if e.rarity and e.level_range and (not filter or filter(e)) then
+--			print("computing rarity of", e.name)
 			local lev = level
 			-- Out of Depth chance
 --			if ood and rng.percent(ood.chance) then

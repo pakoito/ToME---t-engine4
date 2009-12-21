@@ -1,4 +1,6 @@
+load("/data/general/staves.lua")
 load("/data/general/swords.lua")
+load("/data/general/massive-armor.lua")
 
 newEntity{
 	name = "& tower shield~",
@@ -10,24 +12,6 @@ newEntity{
 		combat_def = 6,
 		combat_armor = 1,
 	},
-}
-
-newEntity{
-	name = "& staff~ of fire",
-	type = "weapon",
-	display = "/", color_b=255,
-	level_range = {1, 10},
-	rarity = 2,
-	encumber = 4,
-	combat = {
-		dam = 1,
-		atk = 1,
-		apr = 0,
-		dammod = {wil=1},
-	},
-	wielder = {
-		stats = {mag=3, wil=2},
-	}
 }
 
 newEntity{

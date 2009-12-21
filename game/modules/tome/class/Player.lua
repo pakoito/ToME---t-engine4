@@ -31,9 +31,9 @@ function _M:init(t)
 	self.image="player.png"
 
 	-- Default regen
-	self.mana_regen = 1
-	self.stamina_regen = 1
-	self.life_regen = 0.5
+	self.mana_regen = 0.5
+	self.stamina_regen = 0.5
+	self.life_regen = 0.1
 	self.life_rating = 10
 	self.fixed_rating = true
 

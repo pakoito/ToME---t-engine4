@@ -34,12 +34,12 @@ newTalent{
 		local t = {type="bolt", range=20}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(8 + self:combatSpellpower(0.3)))
+		self:project(t, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(8 + self:combatSpellpower(0.6)))
 		return true
 	end,
 	require = { stat = { mag=24 }, level=5 },
 	info = function(self)
-		return ([[Conjures up a fist of stone doing %0.2f physical damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.7), math.min(6, 3 + self:combatSpellpower(0.06)))
+		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
+		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.6))
 	end,
 }
