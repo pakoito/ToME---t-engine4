@@ -48,6 +48,8 @@ function _M:init(t)
 	self.unused_talents_types = self.unused_talents_types or 0
 
 	t.life_rating = t.life_rating or 10
+	t.mana_rating = t.mana_rating or 10
+	t.stamina_rating = t.stamina_rating or 10
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
@@ -141,8 +143,8 @@ function _M:levelup()
 		- (self:knowTalent(self.T_DECREASED_HEALTH_II) and 1 or 0)
 		- (self:knowTalent(self.T_DECREASED_HEALTH_III) and 1 or 0)
 
-	self:incMaxMana(10)
-	self:incMaxStamina(10)
+	self:incMaxMana(self.mana_rating)
+	self:incMaxStamina(self.stamina_rating)
 	-- Healp up on new level
 	self.life = self.max_life
 	self.mana = self.max_mana

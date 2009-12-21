@@ -70,6 +70,6 @@ newBirthDescriptor{
 		["spell/necromancy"]=true,
 	},
 	talents = {
-		ActorTalents.T_MANATHRUST,
+		ActorTalents.T_MANATHRUST, ActorTalents.T_FLAME, ActorTalents.T_FREEZE,
 	},
 }

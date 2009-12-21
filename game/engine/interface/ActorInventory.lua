@@ -164,17 +164,14 @@ function _M:onWear(o)
 		o.wielded = {}
 		for k, e in pairs(o.wielder) do
 			o.wielded[k] = self:addTemporaryValue(k, e)
-			print("wear id", k, o.wielded[k])
 		end
 	end
 end
 
 --- Call when an object is taken off
 function _M:onTakeoff(o)
-	print("takeoff", o.name)
 	if o.wielded then
 		for k, id in pairs(o.wielded) do
-			print("take of id", k, id)
 			self:removeTemporaryValue(k, id)
 		end
 	end

@@ -28,7 +28,7 @@ function _M:init(t)
 	self.color_r=230
 	self.color_g=230
 	self.color_b=230
-	self.image="player.png"
+--	self.image="player.png"
 
 	-- Default regen
 	self.mana_regen = 0.5
@@ -41,7 +41,7 @@ function _M:init(t)
 	self.max_mana=85
 	self.max_stamina=85
 	self.unused_stats = 6
-	self.unused_talents = 3
+	self.unused_talents = 0
 	self.move_others=true
 
 	self.descriptor = {}

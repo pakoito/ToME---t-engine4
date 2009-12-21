@@ -60,7 +60,7 @@ function _M:canMove(x, y, terrain_only)
 	if terrain_only then
 		return not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move")
 	else
-		return not game.level.map:checkAllEntities(x, y, "block_move")
+		return not game.level.map:checkAllEntities(x, y, "block_move", self, true)
 	end
 end
 
@@ -71,6 +71,7 @@ end
 -- @return true if the teleport worked
 function _M:teleportRandom(x, y, dist)
 	local poss = {}
+	dist = math.floor(dist)
 
 	for i = x - dist, x + dist do
 		for j = y - dist, y + dist do

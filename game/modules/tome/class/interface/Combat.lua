@@ -101,7 +101,7 @@ function _M:attackTargetWith(target, weapon)
 	if self:checkHit(atk, def) then
 		local dam = dam - math.max(0, armor - apr)
 		dam = self:physicalCrit(dam, weapon)
-		DamageType:get(damtype).projector(self, target.x, target.y, damtype, dam)
+		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 	else
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 	end
