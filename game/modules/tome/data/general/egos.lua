@@ -11,6 +11,6 @@ newEntity{
 	level_range = {1, 10},
 	rarity = 3,
 	wielder = {
-		hit = 4,
+		combat_atk = 4,
 	},
 }

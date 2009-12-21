@@ -267,3 +267,21 @@ function util.showMainMenu()
 	game = Menu.new()
 	game:run()
 end
+
+function rng.mbonus(max, level, max_level)
+	if level > max_level - 1 then level = max_level - 1 end
+
+	local bonus = (max * level) / max_level
+	local extra = (max * level) % max_level
+	if rng.range(0, max_level - 1) < extra then bonus = bonus + 1 end
+
+	local stand = max / 4
+	extra = max % 4
+	if rng.range(0, 3) < extra then stand = stand + 1 end
+
+	local val = rng.normal(bonus, stand)
+	if val < 0 then val = 0 end
+	if val > max then val = max end
+
+	return val
+end

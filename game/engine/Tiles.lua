@@ -10,7 +10,7 @@ use_images = true
 function _M:init(w, h, fontname, fontsize, texture)
 	self.texture = texture
 	self.w, self.h = w, h
-	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 14)
+	self.font = core.display.newFont(fontname or "/data/font/VeraMoBd.ttf", fontsize or 14)
 	self.repo = {}
 end
 

@@ -52,7 +52,6 @@ function _M:resolve(typ, c)
 	if type(res) == "function" then
 		return self.grid_list[res()]
 	elseif type(res) == "table" and res.__CLASSNAME then
-		print("res", res.display)
 		return res
 	elseif type(res) == "table" then
 		return self.grid_list[res[rng.range(1, #res)]]

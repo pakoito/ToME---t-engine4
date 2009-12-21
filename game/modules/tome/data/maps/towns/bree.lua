@@ -1,4 +1,15 @@
+quickEntity('S', {name='brick roof top', display='#', color=colors.RED, block_move=true, block_sight=true})
+quickEntity('s', {name='brick roof', display='#', color=colors.RED, block_move=true, block_sight=true})
+quickEntity('t', {name='brick roof chimney', display='#', color=colors.LIGHT_RED, block_move=true, block_sight=true})
+quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true})
+quickEntity('C', {name='dark pit', display='#', color=colors.LIGHT_DARK, block_move=true, block_sight=true})
+quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true})
 quickEntity(' ', {name='forest', display='#', color=colors.GREEN, block_move=true, block_sight=true})
+quickEntity('V', {name='river', display='~', color=colors.BLUE, block_move=true,})
+quickEntity('O', {name='cooblestone road', display='.', color=colors.WHITE})
+quickEntity('.', {name='road', display='.', color=colors.WHITE})
+quickEntity(',', {name='dirt', display='.', color=colors.LIGHT_UMBER})
+quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN})
 
 startx = 131
 starty = 33
