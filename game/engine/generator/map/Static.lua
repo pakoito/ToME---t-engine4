@@ -1,5 +1,6 @@
 require "engine.class"
 local Map = require "engine.Map"
+local Grid = require "engine.Grid"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
@@ -18,6 +19,9 @@ function _M:loadMap(file)
 		Map = require("engine.Map"),
 		defineTile = function(char, grid, obj, actor)
 			t[char] = {grid=grid, obj=obj, actor=actor}
+		end,
+		quickEntity = function(char, e)
+			t[char] = {grid=Grid.new(e)}
 		end,
 	}, {__index=_G}))
 	local ret, err = f()
@@ -40,19 +44,23 @@ function _M:loadMap(file)
 end
 
 function _M:resolve(typ, c)
+	if not self.tiles[c] or not self.tiles[c][typ] then return end
 	local res = self.tiles[c][typ]
 	if type(res) == "function" then
-		return res()
-	elseif type(res) == "table" then
-		return res[rng.range(1, #res)]
-	else
+		return self.grid_list[res()]
+	elseif type(res) == "table" and res.__CLASSNAME then
+		print("res", res.display)
 		return res
+	elseif type(res) == "table" then
+		return self.grid_list[res[rng.range(1, #res)]]
+	else
+		return self.grid_list[res]
 	end
 end
 
 function _M:generate()
 	for i = 1, self.gen_map.w do for j = 1, self.gen_map.h do
-		self.map(i-1, j-1, Map.TERRAIN, self.grid_list[self:resolve("grid", self.gen_map[i][j])])
+		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", self.gen_map[i][j]))
 --		self.map(i-1, j-1, Map.OBJECT, self.gen_map[i][j].obj)
 --		self.map(i-1, j-1, Map.ACTOR, self.gen_map[i][j].actor)
 	end end
