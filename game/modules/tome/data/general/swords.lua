@@ -6,6 +6,7 @@ newEntity{
 	encumber = 3,
 	rarity = 3,
 	desc = [[Sharp, long, and deadly.]],
+	egos = "/data/general/egos.lua",
 }
 
 newEntity{ base = "BASE_LONGSWORD",

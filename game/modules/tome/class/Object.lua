@@ -3,8 +3,8 @@ require "engine.Object"
 
 module(..., package.seeall, class.inherit(engine.Object))
 
-function _M:init(t)
-	engine.Object.init(self, t)
+function _M:init(t, no_default)
+	engine.Object.init(self, t, no_default)
 end
 
 function _M:tooltip()

@@ -3,8 +3,8 @@ require "engine.Grid"
 
 module(..., package.seeall, class.inherit(engine.Grid))
 
-function _M:init(t)
-	engine.Grid.init(self, t)
+function _M:init(t, no_default)
+	engine.Grid.init(self, t, no_default)
 end
 
 function _M:block_move(x, y, e)

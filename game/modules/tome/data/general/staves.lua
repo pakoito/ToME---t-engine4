@@ -6,6 +6,7 @@ newEntity{
 	encumber = 5,
 	rarity = 3,
 	desc = [[Staves designed for wielders of magic, by the greats of the art.]],
+	egos = "/data/general/egos.lua",
 }
 
 newEntity{ base = "BASE_STAFF",

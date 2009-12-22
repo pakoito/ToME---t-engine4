@@ -7,7 +7,10 @@ function _M:init(zone, map, level)
 	engine.Generator.init(self, zone, map)
 	self.level = level
 	local data = level.data.generator.actor
-	self.npc_list = zone:computeRarities(zone.npc_list, level.level, data.ood, nil)
+
+	-- Setup the entities list
+	level:setEntitiesList("actor", zone:computeRarities(zone.npc_list, level.level, data.ood, nil))
+
 	if data.adjust_level_to_player and game:getPlayer() then
 		self.adjust_level_to_player = {base=game:getPlayer().level, min=data.adjust_level_to_player[1], max=data.adjust_level_to_player[2]}
 	end
@@ -17,10 +20,8 @@ end
 
 function _M:generate()
 	for i = 1, rng.range(self.nb_npc[1], self.nb_npc[2]) do
-		local m = self.zone:pickEntity(self.npc_list)
+		local m = self.zone:makeEntity(self.level, "actor")
 		if m then
-			m = m:clone()
-			m:resolve()
 			local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
 			local tries = 0
 			while not m:canMove(x, y) and tries < 100 do

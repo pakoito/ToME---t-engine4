@@ -4,8 +4,8 @@ require "mod.class.Actor"
 
 module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI))
 
-function _M:init(t)
-	mod.class.Actor.init(self, t)
+function _M:init(t, no_default)
+	mod.class.Actor.init(self, t, no_default)
 	ActorAI.init(self, t)
 end
 

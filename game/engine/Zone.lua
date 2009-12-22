@@ -52,7 +52,7 @@ function _M:computeRarities(list, level, ood, filter)
 			elseif lev > e.level_range[2] then max = 100 / (lev - e.level_range[2])
 			end
 			local genprob = max / e.rarity
-			print("prob", e.name, math.floor(genprob), "max", math.floor(max), e.level_range[1], e.level_range[2], lev)
+			print("prob", e.name, math.floor(genprob), "max", math.floor(max), e.level_range[1], e.level_range[2], lev, "egoable", e.egos and #e.egos)
 
 			r.total = r.total + genprob
 			r[#r+1] = { e=e, genprob=r.total + genprob, level_diff = lev - level }
@@ -74,6 +74,47 @@ function _M:pickEntity(list)
 		end
 	end
 	return nil
+end
+
+function _M:getEgosList(level, type, group, class)
+	-- Already loaded ? use it
+	local list = level:getEntitiesList(type.."/"..group)
+	if list then return list end
+
+	-- otehrwise loads it and store it
+	list = require(class):loadList(group, true)
+	level:setEntitiesList(type.."/"..group, list)
+
+	return list
+end
+
+function _M:makeEntity(level, type)
+	local list = level:getEntitiesList(type)
+	local e = self:pickEntity(list)
+	e = e:clone()
+	e:resolve()
+
+	-- Add "ego" properties
+	if e.egos then
+		local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
+		local ego = egos[rng.range(1, #egos)]
+		if ego then
+			print("ego", ego.__CLASSNAME, ego.name, getmetatable(ego))
+			ego = ego:clone()
+			ego:resolve()
+			local newname
+			if ego.prefix then
+				newname = ego.name .. e.name
+			else
+				newname = e.name .. ego.name
+			end
+			print("applying ego", ego.name, "to ", e.name, "::", newname)
+			table.merge(e, ego, true)
+			e.name = newname
+		end
+	end
+
+	return e
 end
 
 function _M:load()

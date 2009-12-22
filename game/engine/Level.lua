@@ -16,6 +16,8 @@ function _M:init(level, map)
 	self.e_distances = {}
 
 	self.distancer_co = self:createDistancer()
+
+	self.entities_list = {}
 end
 
 --- Adds an entity to the level
@@ -114,4 +116,15 @@ end
 --- Insert an actor to process
 function _M:idleProcessActor(act)
 	table.insert(self.e_toprocess, 1, act)
+end
+
+--- Setup an entity list for the level, this allwos the Zone to pick objects/actors/...
+function _M:setEntitiesList(type, list)
+	self.entities_list[type] = list
+	print("Stored entities list", type, list)
+end
+
+--- Gets an entity list for the level, this allows the Zone to pick objects/actors/...
+function _M:getEntitiesList(type)
+	return self.entities_list[type]
 end

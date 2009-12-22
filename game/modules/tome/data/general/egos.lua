@@ -1,5 +1,5 @@
 newEntity{
-	name = "flaming ",
+	name = "flaming ", prefix=true,
 	level_range = {1, 10},
 	rarity = 3,
 	wielder = {

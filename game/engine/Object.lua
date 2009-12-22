@@ -3,14 +3,9 @@ local Entity = require "engine.Entity"
 
 module(..., package.seeall, class.inherit(Entity))
 
-function _M:init(t)
+function _M:init(t, no_default)
 	t = t or {}
-	Entity.init(self, t)
-end
-
-function _M:resolve(t)
-	Entity.resolve(self, t)
-	self.egos = nil
+	Entity.init(self, t, no_default)
 end
 
 --- Gets the full name of the object

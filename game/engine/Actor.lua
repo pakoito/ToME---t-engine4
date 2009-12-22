@@ -5,7 +5,7 @@ local Faction = require "engine.Faction"
 
 module(..., package.seeall, class.inherit(Entity))
 
-function _M:init(t)
+function _M:init(t, no_default)
 	t = t or {}
 
 	self.name = t.name or "unknown actor"
@@ -16,7 +16,7 @@ function _M:init(t)
 	self.energy.mod = self.energy.mod or 0
 	self.faction = t.faction or "enemies"
 	self.changed = true
-	Entity.init(self, t)
+	Entity.init(self, t, no_default)
 
 	self.compute_vals = {}
 end

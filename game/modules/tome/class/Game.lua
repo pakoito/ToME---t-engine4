@@ -75,7 +75,7 @@ function _M:newGame()
 	self.player = Player.new{name=self.player_name}
 
 	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
-		self.player.wild_x, self.player.wild_y = 38, 15
+		self.player.wild_x, self.player.wild_y = 39, 17
 		self:changeLevel(1)
 
 		local ds = LevelupStatsDialog.new(self.player)

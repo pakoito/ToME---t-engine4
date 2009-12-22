@@ -25,7 +25,7 @@ module(..., package.seeall, class.inherit(
 	mod.class.interface.Combat
 ))
 
-function _M:init(t)
+function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.combat_def = 0
 	self.combat_armor = 0
@@ -54,7 +54,7 @@ function _M:init(t)
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
 
-	engine.Actor.init(self, t)
+	engine.Actor.init(self, t, no_default)
 	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
 	engine.interface.ActorLife.init(self, t)

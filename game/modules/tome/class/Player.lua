@@ -6,7 +6,7 @@ local ActorTalents = require "engine.interface.ActorTalents"
 
 module(..., package.seeall, class.inherit(mod.class.Actor))
 
-function _M:init(t)
+function _M:init(t, no_default)
 	t.body = {
 		INVEN = 1000,
 		MAINHAND = 1,
@@ -20,7 +20,7 @@ function _M:init(t)
 		FEET = 1,
 		TOOL = 1,
 	}
-	mod.class.Actor.init(self, t)
+	mod.class.Actor.init(self, t, no_default)
 	self.player = true
 	self.faction = "players"
 

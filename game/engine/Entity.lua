@@ -11,14 +11,16 @@ setmetatable(__uids, {__mode="v"})
 
 local function copy_recurs(dst, src, deep)
 	for k, e in pairs(src) do
-		if not dst[k] then
+		if type(e) == "table" and e.__CLASSNAME then
+			dst[k] = e
+		elseif not dst[k] then
 			if deep then
 				dst[k] = {}
 				copy_recurs(dst[k], e, deep)
 			else
 				dst[k] = e
 			end
-		elseif type(dst[k]) == "table" and type(e) == "table" then
+		elseif type(dst[k]) == "table" and type(e) == "table" and not e.__CLASSNAME then
 			copy_recurs(dst[k], e, deep)
 		end
 	end
@@ -28,7 +30,7 @@ end
 -- Any subclass MUST call this constructor
 -- @param t a table defining the basic properties of the entity
 -- @usage Entity.new{display='#', color_r=255, color_g=255, color_b=255}
-function _M:init(t)
+function _M:init(t, no_default)
 	t = t or {}
 	self.uid = next_uid
 	__uids[self.uid] = self
@@ -39,23 +41,25 @@ function _M:init(t)
 		self[k] = ee
 	end
 
-	self.image = self.image or nil
-	self.display = self.display or '.'
-	if self.color then
-		self.color_r = self.color.r
-		self.color_g = self.color.g
-		self.color_b = self.color.b
-		self.color_br = self.color.br
-		self.color_bg = self.color.bg
-		self.color_bb = self.color.bb
-		self.color = nil
+	if not no_default then
+		self.image = self.image or nil
+		self.display = self.display or '.'
+		if self.color then
+			self.color_r = self.color.r
+			self.color_g = self.color.g
+			self.color_b = self.color.b
+			self.color_br = self.color.br
+			self.color_bg = self.color.bg
+			self.color_bb = self.color.bb
+			self.color = nil
+		end
+		self.color_r = self.color_r or 0
+		self.color_g = self.color_g or 0
+		self.color_b = self.color_b or 0
+		self.color_br = self.color_br or -1
+		self.color_bg = self.color_bg or -1
+		self.color_bb = self.color_bb or -1
 	end
-	self.color_r = self.color_r or 0
-	self.color_g = self.color_g or 0
-	self.color_b = self.color_b or 0
-	self.color_br = self.color_br or -1
-	self.color_bg = self.color_bg or -1
-	self.color_bb = self.color_bb or -1
 
 	next_uid = next_uid + 1
 
@@ -121,48 +125,46 @@ function _M:check(prop, ...)
 end
 
 --- Loads a list of entities from a definition file
--- @param ... the files to load from
+-- @param file the file to load from
+-- @param no_default if true then no default values will be assigned
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
-function _M:loadList(...)
+function _M:loadList(file, no_default)
 	local res = {}
 
-	for i, file in ipairs{...} do
-		local f, err = loadfile(file)
-		if err then error(err) end
+	print("Loading entities file", file)
+	local f, err = loadfile(file)
+	if err then error(err) end
 
-		setfenv(f, setmetatable({
-			resolvers = resolvers,
-			DamageType = require "engine.DamageType",
-			newEntity = function(t)
-				-- Do we inherit things ?
-				if t.base then
-					for k, e in pairs(res[t.base]) do
-						if not t[k] then
-							t[k] = e
-						elseif type(t[k]) == "table" and type(e) == "table" then
-							copy_recurs(t[k], e)
-						end
+	setfenv(f, setmetatable({
+		resolvers = resolvers,
+		DamageType = require "engine.DamageType",
+		newEntity = function(t)
+			-- Do we inherit things ?
+			if t.base then
+				for k, e in pairs(res[t.base]) do
+					if not t[k] then
+						t[k] = e
+					elseif type(t[k]) == "table" and type(e) == "table" then
+						copy_recurs(t[k], e)
 					end
-					t.base = nil
 				end
+				t.base = nil
+			end
 
-				local e = self.new(t)
-				res[#res+1] = e
-				if t.define_as then res[t.define_as] = e end
---				print("new entity", t.name)
-				for k, ee in pairs(e) do
---					print("prop:", k, ee)
-				end
-			end,
-			load = function(f)
-				local ret = self:loadList(f)
-				for i, e in ipairs(ret) do res[#res+1] = e end
-			end,
-			loadList = function(f)
-				return self:loadList(f)
-			end,
-		}, {__index=_G}))
-		f()
-	end
+			local e = self.new(t, no_default)
+			print("loaded", e.name, no_default)
+			res[#res+1] = e
+			if t.define_as then res[t.define_as] = e end
+		end,
+		load = function(f)
+			local ret = self:loadList(f)
+			for i, e in ipairs(ret) do res[#res+1] = e end
+		end,
+		loadList = function(f)
+			return self:loadList(f)
+		end,
+	}, {__index=_G}))
+	f()
+
 	return res
 end
