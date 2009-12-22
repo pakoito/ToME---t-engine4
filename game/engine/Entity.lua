@@ -157,11 +157,11 @@ function _M:loadList(file, no_default)
 			if t.define_as then res[t.define_as] = e end
 		end,
 		load = function(f)
-			local ret = self:loadList(f)
+			local ret = self:loadList(f, no_default)
 			for i, e in ipairs(ret) do res[#res+1] = e end
 		end,
 		loadList = function(f)
-			return self:loadList(f)
+			return self:loadList(f, no_default)
 		end,
 	}, {__index=_G}))
 	f()

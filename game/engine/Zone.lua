@@ -34,17 +34,17 @@ end
 --- Parses the npc/objects list and compute rarities for random generation
 -- ONLY entities with a rarity properties will be considered.<br/>
 -- This means that to get a never-random entity you simply do not put a rarity property on it.
-function _M:computeRarities(list, level, ood, filter)
+function _M:computeRarities(type, list, level, ood, filter)
 	local r = { total=0 }
-	print("******************", level)
+	print("******************", level.level)
 	for i, e in ipairs(list) do
 		if e.rarity and e.level_range and (not filter or filter(e)) then
 --			print("computing rarity of", e.name)
-			local lev = level
+			local lev = level.level
 			-- Out of Depth chance
 --			if ood and rng.percent(ood.chance) then
---				lev = level + rng.range(ood.range[1], ood.range[2])
---				print("OOD Entity !", e.name, ":=:", level, "to", lev)
+--				lev = level.level + rng.range(ood.range[1], ood.range[2])
+--				print("OOD Entity !", e.name, ":=:", level.level, "to", lev)
 --			end
 
 			local max = 100
@@ -54,8 +54,17 @@ function _M:computeRarities(list, level, ood, filter)
 			local genprob = max / e.rarity
 			print("prob", e.name, math.floor(genprob), "max", math.floor(max), e.level_range[1], e.level_range[2], lev, "egoable", e.egos and #e.egos)
 
+			-- Generate and store egos list if needed
+			if e.egos and not level:getEntitiesList(type.."/"..e.egos) then
+				local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
+				if egos then
+					egos = self:computeRarities(type, egos, level, ood, filter)
+					level:setEntitiesList(type.."/"..e.egos, egos)
+				end
+			end
+
 			r.total = r.total + genprob
-			r[#r+1] = { e=e, genprob=r.total + genprob, level_diff = lev - level }
+			r[#r+1] = { e=e, genprob=r.total + genprob, level_diff = lev - level.level }
 		end
 	end
 	table.sort(r, function(a, b) return a.genprob < b.genprob end)
@@ -97,7 +106,7 @@ function _M:makeEntity(level, type)
 	-- Add "ego" properties
 	if e.egos then
 		local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
-		local ego = egos[rng.range(1, #egos)]
+		local ego = self:pickEntity(egos)
 		if ego then
 			print("ego", ego.__CLASSNAME, ego.name, getmetatable(ego))
 			ego = ego:clone()
