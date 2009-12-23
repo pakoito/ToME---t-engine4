@@ -43,6 +43,7 @@ newEntity{
 	rarity = 1,
 	autolevel = "warrior",
 	ai = "dumb_talented_simple",
+	ai_state = { talent_in=12, },
 	max_life = resolvers.rngavg(10,20),
 	max_mana = resolvers.rngavg(50,60),
 	max_stamina = resolvers.rngavg(10,20),

@@ -19,7 +19,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {2, 3},
 			ood = {chance=5, range={1, 10}},
 			adjust_level_to_player = {-1, 2},
 		},
