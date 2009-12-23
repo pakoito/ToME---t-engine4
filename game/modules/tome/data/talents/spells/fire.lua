@@ -6,7 +6,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 3,
 	},
-	action = function(self)
+	action = function(self, t)
 		local t = {type="ball", range=0, friendlyfire=false, radius=5 + self:combatSpellpower(0.2)}
 		self:project(t, self.x, self.y, DamageType.LIGHT, 1)
 		if self:knowTalent(Talents.T_GLOBE_OF_LIGHT) then
@@ -38,8 +38,9 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	action = function(self)
-		local t = {type="bolt", range=20}
+	range = 20,
+	action = function(self, t)
+		local t = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
 		self:project(t, x, y, DamageType.FIREBURN, self:spellCrit(15 + self:combatSpellpower(2.1)))
@@ -60,8 +61,9 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	action = function(self)
-		local t = {type="ball", range=15, radius=math.min(6, 3 + self:combatSpellpower(0.06))}
+	range = 15,
+	action = function(self, t)
+		local t = {type="ball", range=self:getTalentRange(t), radius=math.min(6, 3 + self:combatSpellpower(0.06))}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
 		self:project(t, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(1.2)))
@@ -82,11 +84,12 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 40,
 	},
-	action = function(self)
+	range = 20,
+	action = function(self, t)
 		local duration = 5 + self:combatSpellpower(0.25)
 		local radius = 5
 		local dam = 15 + self:combatSpellpower(1.6)
-		local t = {type="ball", range=20, radius=radius}
+		local t = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
 		x, y = game.target:pointAtRange(self.x, self.y, x, y, 15)

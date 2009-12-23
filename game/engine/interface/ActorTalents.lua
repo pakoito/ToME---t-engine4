@@ -83,7 +83,7 @@ function _M:useTalent(id)
 		end
 		if not self:preUseTalent(ab) then return end
 		local co = coroutine.create(function()
-			local ret = ab.action(self)
+			local ret = ab.action(self, ab)
 
 			if not self:postUseTalent(ab, ret) then return end
 
@@ -100,13 +100,13 @@ function _M:useTalent(id)
 		if not self:preUseTalent(ab) then return end
 		local co = coroutine.create(function()
 			if not self.sustain_talents[id] then
-				local ret = ab.activate(self)
+				local ret = ab.activate(self, ab)
 
 				if not self:postUseTalent(ab, ret) then return end
 
 				self.sustain_talents[id] = ret
 			else
-				local ret = ab.deactivate(self, self.sustain_talents[id])
+				local ret = ab.deactivate(self, ab, self.sustain_talents[id])
 
 				if not self:postUseTalent(ab, ret) then return end
 
@@ -120,6 +120,7 @@ function _M:useTalent(id)
 	else
 		error("Activating non activable or sustainable talent: "..id.." :: "..ab.name.." :: "..ab.mode)
 	end
+	return true
 end
 
 --- Replace some markers in a string with info on the talent
@@ -183,7 +184,7 @@ function _M:learnTalent(t_id, force)
 		end
 	end
 
-	if t.on_learn then t.on_learn(self) end
+	if t.on_learn then t.on_learn(self, t) end
 
 	self.talents[t_id] = true
 	self.changed = true
@@ -200,7 +201,7 @@ function _M:unlearnTalent(t_id)
 		if known_t_id == t_id then self.hotkey[i] = nil end
 	end
 
-	if t.on_unlearn then t.on_unlearn(self) end
+	if t.on_unlearn then t.on_unlearn(self, t) end
 
 	self.talents[t_id] = nil
 	self.changed = true
@@ -323,6 +324,13 @@ end
 function _M:isTalentCoolingDown(t)
 	if not t.cooldown then return false end
 	if self.talents_cd[t.id] and self.talents_cd[t.id] > 0 then return self.talents_cd[t.id] else return false end
+end
+
+--- Returns the range of a talent
+function _M:getTalentRange(t)
+	if not t.range then return 1 end
+	if type(t.range) == "function" then return t.range(self, t) end
+	return t.range
 end
 
 --- Cooldown all talents by one

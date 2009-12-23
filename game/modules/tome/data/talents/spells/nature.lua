@@ -6,7 +6,7 @@ newTalent{
 	tactical = {
 		HEAL = 10,
 	},
-	action = function(self)
+	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:combatSpellpower(0.35)})
 		return true
 	end,
@@ -25,7 +25,7 @@ newTalent{
 	tactical = {
 		HEAL = 10,
 	},
-	action = function(self)
+	action = function(self, t)
 		self:heal(self:spellCrit(10 + self:combatSpellpower(2)), self)
 		return true
 	end,

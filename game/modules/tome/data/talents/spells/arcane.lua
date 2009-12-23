@@ -6,8 +6,9 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	action = function(self)
-		local t = {type="bolt", range=20}
+	range = 20,
+	action = function(self, t)
+		local t = {type="bolt", range=self:getTalentRange(t)}
 		if self:knowTalent(Talents.T_ARCANE_LANCE) then t.type = "beam" end
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
@@ -38,7 +39,7 @@ newTalent{
 	tactical = {
 		MANA = 20,
 	},
-	action = function(self)
+	action = function(self, t)
 		if not self:hasEffect(self.EFF_MANAFLOW) then
 			self:setEffect(self.EFF_MANAFLOW, 10, {power=5+self:combatSpellpower(0.3)})
 		end
@@ -56,10 +57,10 @@ newTalent{
 	type = {"spell/arcane", 3},
 	mode = "passive",
 	require = { stat = { mag=40 }, },
-	on_learn = function(self)
+	on_learn = function(self, t)
 		self.combat_spellpower = self.combat_spellpower + 10
 	end,
-	on_unlearn = function(self)
+	on_unlearn = function(self, t)
 		self.combat_spellpower = self.combat_spellpower - 10
 	end,
 	info = function(self)
@@ -75,7 +76,7 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
-	activate = function(self)
+	activate = function(self, t)
 		game.log("IMPLEMENT ME!")
 		return true
 	end,

@@ -52,7 +52,7 @@ function _M:computeRarities(type, list, level, ood, filter)
 			elseif lev > e.level_range[2] then max = 100 / (lev - e.level_range[2])
 			end
 			local genprob = max / e.rarity
-			print("prob", e.name, math.floor(genprob), "max", math.floor(max), e.level_range[1], e.level_range[2], lev, "egoable", e.egos and #e.egos)
+			print("prob", e.name, math.floor(genprob), "max", math.floor(max), e.level_range[1], e.level_range[2], lev, "egoable", e.egos)
 
 			-- Generate and store egos list if needed
 			if e.egos and not level:getEntitiesList(type.."/"..e.egos) then
@@ -68,7 +68,12 @@ function _M:computeRarities(type, list, level, ood, filter)
 		end
 	end
 	table.sort(r, function(a, b) return a.genprob < b.genprob end)
+
 	print("*DONE", r.total)
+	for i, ee in ipairs(r) do
+		print(("entity chance %02d : chance(%04d): %s"):format(i, ee.genprob, ee.e.name))
+	end
+
 	return r
 end
 

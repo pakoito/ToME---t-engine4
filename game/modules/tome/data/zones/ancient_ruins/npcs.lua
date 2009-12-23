@@ -1,3 +1,5 @@
+local Talents = require("engine.interface.ActorTalents")
+
 newEntity{
 	group = "dragon",
 	name = "dragon of death",
@@ -40,11 +42,13 @@ newEntity{
 	level_range = {1, 7}, exp_worth = 1,
 	rarity = 1,
 	autolevel = "warrior",
-	ai = "simple",
+	ai = "dumb_talented_simple",
 	max_life = resolvers.rngavg(10,20),
-	max_mana = resolvers.rngavg(10,20),
+	max_mana = resolvers.rngavg(50,60),
 	max_stamina = resolvers.rngavg(10,20),
 	energy = { mod=0.3 },
 	has_blood = {nb=3, color={50,255,120}},
-	combat = { dam=5, atk=6, def=2, apr=1, armor=2},
+	combat = { dam=5, atk=6, def=2, apr=1, armor=2 },
+	stats = { str=10, dex=7, mag=14, con=10 },
+	talents = { Talents.T_MANATHRUST, Talents.T_FREEZE, Talents.T_FLAME }
 }

@@ -7,12 +7,12 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
-	activate = function(self)
+	activate = function(self, t)
 		local power = 1 + self:combatSpellpower(0.15)
 		self.combat.armor = self.combat.armor + power
 		return {power=power}
 	end,
-	deactivate = function(self, p)
+	deactivate = function(self, t, p)
 		self.combat.armor = self.combat.armor - p.power
 	end,
 	require = { stat = { mag=14 }, },
@@ -30,8 +30,9 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	action = function(self)
-		local t = {type="bolt", range=20}
+	range = 20,
+	action = function(self, t)
+		local t = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
 		self:project(t, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(8 + self:combatSpellpower(0.6)))

@@ -10,7 +10,7 @@ newAI("move_simple", function(self)
 end)
 
 newAI("target_simple", function(self)
-	if self.ai_target.actor and not self.ai_target.actor.dead and rng.percent(90) then return end
+	if self.ai_target.actor and not self.ai_target.actor.dead and rng.percent(90) then return true end
 
 	-- Find closer ennemy and target it
 	-- Get list of actors ordered by distance
@@ -40,6 +40,7 @@ newAI("target_player", function(self)
 end)
 
 newAI("simple", function(self)
-	self:runAI("target_simple")
-	self:runAI("move_simple")
+	if self:runAI("target_simple") then
+		self:runAI("move_simple")
+	end
 end)

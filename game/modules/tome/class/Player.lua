@@ -30,11 +30,6 @@ function _M:init(t, no_default)
 	self.color_b=230
 --	self.image="player.png"
 
-	-- Default regen
-	self.mana_regen = 0.5
-	self.stamina_regen = 0.5
-	self.life_regen = 0.1
-	self.life_rating = 10
 	self.fixed_rating = true
 
 	self.max_life=85

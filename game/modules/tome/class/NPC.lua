@@ -30,3 +30,9 @@ function _M:tooltip()
 	local str = mod.class.Actor.tooltip(self)
 	return str..("\nTarget: %s\nUID: %d"):format(self.ai_target.actor and self.ai_target.actor.name or "none", self.uid)
 end
+
+--- Tries to get a target from the NPC
+-- This simple returns current AI target for NPCs
+function _M:getTarget(typ)
+	return self.ai_target.actor.x, self.ai_target.actor.y
+end

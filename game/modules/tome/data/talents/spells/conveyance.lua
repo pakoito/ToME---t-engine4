@@ -7,7 +7,7 @@ newTalent{
 	tactical = {
 		ESCAPE = 4,
 	},
-	action = function(self)
+	action = function(self, t)
 		local target = self
 
 		if self:knowTalent(Talents.T_TARGETED_TELEPORT) then
@@ -46,7 +46,7 @@ newTalent{
 	tactical = {
 		ESCAPE = 8,
 	},
-	action = function(self)
+	action = function(self, t)
 		local target = self
 
 		if self:knowTalent(Talents.T_TARGETED_TELEPORT) then
@@ -108,11 +108,11 @@ newTalent{
 	tactical = {
 		MOVEMENT = 20,
 	},
-	activate = function(self)
+	activate = function(self, t)
 		self:attr("prob_travel", 1)
 		return true
 	end,
-	deactivate = function(self)
+	deactivate = function(self, t)
 		self:attr("prob_travel", -1)
 		return true
 	end,
@@ -127,7 +127,7 @@ newTalent{
 	type = {"spell/conveyance",3},
 	mana = 30,
 	cooldown = 10,
-	action = function(self)
+	action = function(self, t)
 --[[
 		local target = self
 		local tx, ty = self.x, self.y

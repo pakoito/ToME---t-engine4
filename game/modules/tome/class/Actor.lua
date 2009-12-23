@@ -51,6 +51,12 @@ function _M:init(t, no_default)
 	t.mana_rating = t.mana_rating or 10
 	t.stamina_rating = t.stamina_rating or 10
 
+	-- Default regen
+	self.mana_regen = 0.5
+	self.stamina_regen = 0.5
+	self.life_regen = 0.1
+	self.life_rating = 10
+
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
 
@@ -183,7 +189,7 @@ end
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
-function _M:preUseTalent(ab)
+function _M:preUseTalent(ab, silent)
 	if not self:enoughEnergy() then return end
 	if ab.mana and self:getMana() < ab.mana * (100 + self.fatigue) / 100 then
 		game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
@@ -194,16 +200,18 @@ function _M:preUseTalent(ab)
 		return
 	end
 
-	if ab.message then
-		game.logSeen(self, "%s", self:useTalentMessage(ab))
-	elseif ab.mode == "sustained" and not self:isTalentActive(ab.id) then
-		game.logSeen(self, "%s activates %s.", self.name:capitalize(), ab.name)
-	elseif ab.mode == "sustained" and self:isTalentActive(ab.id) then
-		game.logSeen(self, "%s deactivates %s.", self.name:capitalize(), ab.name)
-	elseif ab.type[1]:find("^spell/") then
-		game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
-	else
-		game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
+	if not silent then
+		if ab.message then
+			game.logSeen(self, "%s", self:useTalentMessage(ab))
+		elseif ab.mode == "sustained" and not self:isTalentActive(ab.id) then
+			game.logSeen(self, "%s activates %s.", self.name:capitalize(), ab.name)
+		elseif ab.mode == "sustained" and self:isTalentActive(ab.id) then
+			game.logSeen(self, "%s deactivates %s.", self.name:capitalize(), ab.name)
+		elseif ab.type[1]:find("^spell/") then
+			game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
+		else
+			game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
+		end
 	end
 	return true
 end

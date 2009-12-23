@@ -3,7 +3,7 @@ newTalent{
 	type = {"spell/water", 1},
 	mana = 10,
 	cooldown = 100,
-	action = function(self)
+	action = function(self, t)
 		return true
 	end,
 	require = { stat = { mag=10 }, },
@@ -20,8 +20,9 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	action = function(self)
-		local t = {type="hit", range=20}
+	range = 20,
+	action = function(self, t)
+		local t = {type="hit", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(t)
 		if not x or not y then return nil end
 		self:project(t, x, y, DamageType.COLD, self:spellCrit(7 + self:combatSpellpower(1.2)))
@@ -43,7 +44,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	action = function(self)
+	action = function(self, t)
 		local duration = 5 + self:combatSpellpower(0.05)
 		local radius = 1
 		local dam = 12 + self:combatSpellpower(0.5)
@@ -76,7 +77,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 20,
 	},
-	action = function(self)
+	action = function(self, t)
 		local duration = 5 + self:combatSpellpower(0.25)
 		local radius = 3
 		local dam = 12 + self:combatSpellpower(0.8)
