@@ -39,6 +39,9 @@ function _M:display()
 	self.surface:drawColorString(self.font, ("WIL: #00ff00#%3d"):format(game.player:getWil()), 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorString(self.font, ("CUN: #00ff00#%3d"):format(game.player:getCun()), 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorString(self.font, ("CON: #00ff00#%3d"):format(game.player:getCon()), 0, h, 255, 255, 255) h = h + self.font_h
+	h = h + self.font_h
+	self.surface:drawString(self.font, ("Armor %3d"):format(game.player:combatArmor()), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawString(self.font, ("Defence %3d"):format(game.player:combatDefense()), 0, h, 255, 255, 255) h = h + self.font_h
 
 	if game.zone and game.level then
 		self.surface:drawString(self.font, ("%s (%d)"):format(game.zone.name, game.level.level), 0, self.h - self.font_h, 0, 255, 255) h = h + self.font_h

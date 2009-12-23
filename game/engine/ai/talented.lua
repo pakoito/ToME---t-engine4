@@ -9,11 +9,12 @@ newAI("dumb_talented", function(self)
 		local t = self:getTalentFromId(tid)
 		if not self:isTalentCoolingDown(t) and target_dist <= self:getTalentRange(t) and self:preUseTalent(t, true) then
 			avail[#avail+1] = tid
-			print(self.name, self.uid, "dumb ai talents can use", t.name)
+			print(self.name, self.uid, "dumb ai talents can use", t.name, tid)
 		end
 	end
 	if #avail > 0 then
 		local tid = avail[rng.range(1, #avail)]
+		print("dumb ai uses", tid)
 		self:useTalent(tid)
 	end
 end)

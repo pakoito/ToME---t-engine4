@@ -17,7 +17,7 @@ function _M:bumpInto(target)
 		if self.player and target.can_talk then
 			-- TODO: implement !
 		elseif target.player and self.can_talk then
-			-- TODO: implement! requet the player to talk
+			-- TODO: implement! request the player to talk
 		elseif self.move_others then
 			-- Displace
 			game.level.map:remove(self.x, self.y, Map.ACTOR)

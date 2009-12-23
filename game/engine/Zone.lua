@@ -24,11 +24,22 @@ end
 function _M:init(short_name)
 	self.short_name = short_name
 	self:load()
+	self.level_range = self.level_range or {1,1}
+	if type(self.level_range) == "number" then self.level_range = {self.level_range, self.level_range} end
+	self.level_scheme = self.level_scheme or "fixed"
 	assert(self.max_level, "no zone max level")
 	self.levels = self.levels or {}
 	self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
 	self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
 	self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
+
+	-- Determine a zone base level
+	self.base_level = self.level_range[1]
+	if self.level_scheme == "player" then
+		local plev = game:getPlayer().level
+		self.base_level = util.bound(plev, self.level_range[1], self.level_range[2])
+	end
+	print("Initiated zone", self.name, "with base_level", self.base_level)
 end
 
 --- Parses the npc/objects list and compute rarities for random generation
@@ -40,19 +51,19 @@ function _M:computeRarities(type, list, level, ood, filter)
 	for i, e in ipairs(list) do
 		if e.rarity and e.level_range and (not filter or filter(e)) then
 --			print("computing rarity of", e.name)
-			local lev = level.level
+			local lev = self.base_level + (level.level - 1)
 			-- Out of Depth chance
 --			if ood and rng.percent(ood.chance) then
---				lev = level.level + rng.range(ood.range[1], ood.range[2])
+--				lev = self.base_level + level.level - 1 + rng.range(ood.range[1], ood.range[2])
 --				print("OOD Entity !", e.name, ":=:", level.level, "to", lev)
 --			end
 
-			local max = 100
-			if lev < e.level_range[1] then max = 100 / (3 * (e.level_range[1] - lev))
-			elseif lev > e.level_range[2] then max = 100 / (lev - e.level_range[2])
+			local max = 1000
+			if lev < e.level_range[1] then max = 1000 / (3 * (e.level_range[1] - lev))
+			elseif lev > e.level_range[2] then max = 1000 / (lev - e.level_range[2])
 			end
-			local genprob = max / e.rarity
-			print("prob", e.name, math.floor(genprob), "max", math.floor(max), e.level_range[1], e.level_range[2], lev, "egoable", e.egos)
+			local genprob = math.ceil(max / e.rarity)
+			print(("Entity(%30s) got %3d (=%3d / %3d) chance to generate. Level range(%2d-%2d), current %2d"):format(e.name, math.floor(genprob), math.floor(max), e.rarity, e.level_range[1], e.level_range[2], lev))
 
 			-- Generate and store egos list if needed
 			if e.egos and not level:getEntitiesList(type.."/"..e.egos) then
@@ -63,15 +74,17 @@ function _M:computeRarities(type, list, level, ood, filter)
 				end
 			end
 
-			r.total = r.total + genprob
-			r[#r+1] = { e=e, genprob=r.total + genprob, level_diff = lev - level.level }
+			if genprob > 0 then
+				r.total = r.total + genprob
+				r[#r+1] = { e=e, genprob=r.total, level_diff = lev - level.level }
+			end
 		end
 	end
 	table.sort(r, function(a, b) return a.genprob < b.genprob end)
 
 	print("*DONE", r.total)
 	for i, ee in ipairs(r) do
-		print(("entity chance %02d : chance(%04d): %s"):format(i, ee.genprob, ee.e.name))
+		print(("entity chance %2d : chance(%4d): %s"):format(i, ee.genprob, ee.e.name))
 	end
 
 	return r
@@ -103,13 +116,15 @@ function _M:getEgosList(level, type, group, class)
 end
 
 function _M:makeEntity(level, type)
+	resolvers.current_level = self.base_level + level.level - 1
+
 	local list = level:getEntitiesList(type)
 	local e = self:pickEntity(list)
 	e = e:clone()
 	e:resolve()
 
-	-- Add "ego" properties
-	if e.egos then
+	-- Add "ego" properties, sometimes
+	if e.egos and e.egos_chance and rng.percent(e.egos_chance) then
 		local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
 		local ego = self:pickEntity(egos)
 		if ego then

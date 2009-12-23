@@ -11,11 +11,10 @@ function _M:init(zone, map, level)
 	-- Setup the entities list
 	level:setEntitiesList("actor", zone:computeRarities("actor", zone.npc_list, level, data.ood, nil))
 
-	if data.adjust_level_to_player and game:getPlayer() then
-		self.adjust_level_to_player = {base=game:getPlayer().level, min=data.adjust_level_to_player[1], max=data.adjust_level_to_player[2]}
+	if data.adjust_level and game:getPlayer() then
+		self.adjust_level = {base=zone.base_level, min=data.adjust_level[1], max=data.adjust_level[2]}
 	end
 	self.nb_npc = data.nb_npc or {10, 20}
-	self.level_range = data.level_range or {level, level}
 end
 
 function _M:generate()
@@ -33,8 +32,8 @@ function _M:generate()
 				self.level:addEntity(m)
 
 				-- Levelup ?
-				if self.adjust_level_to_player then
-					local newlevel = self.adjust_level_to_player.base + rng.avg(self.adjust_level_to_player.min, self.adjust_level_to_player.max)
+				if self.adjust_level then
+					local newlevel = self.adjust_level.base + rng.avg(self.adjust_level.min, self.adjust_level.max)
 					m:forceLevelup(newlevel)
 				end
 			end

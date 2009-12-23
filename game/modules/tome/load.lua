@@ -11,6 +11,9 @@ local Birther = require "engine.Birther"
 -- Some default colors
 dofile("/mod/colors.lua")
 
+-- Additional entities resolvers
+dofile("/mod/resolvers.lua")
+
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
 -- Talents
@@ -50,6 +53,5 @@ ActorInventory:defineInventory("TOOL", "Tool", true, "This si your readied tool,
 
 -- Birther descriptor
 Birther:loadDefinition("/data/birth/descriptors.lua")
-
 
 return require "mod.class.Game"

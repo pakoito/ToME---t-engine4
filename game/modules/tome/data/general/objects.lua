@@ -1,18 +1,7 @@
 load("/data/general/staves.lua")
 load("/data/general/swords.lua")
+load("/data/general/shields.lua")
 load("/data/general/massive-armor.lua")
-
-newEntity{
-	name = "& tower shield~",
-	display = "[", color_r=255,
-	level_range = {1, 10},
-	rarity = 2,
-	encumber = 6,
-	wielder = {
-		combat_def = 6,
-		combat_armor = 1,
-	},
-}
 
 newEntity{
 	name = "& Staff of Olorin",

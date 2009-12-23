@@ -17,6 +17,11 @@ function resolvers.calc.rngavg(t)
 	return rng.avg(t[1], t[2])
 end
 
--- Load resolvers of the module, if any
-local mod_resolver = loadfile("mod.resolvers")
-if mod_resolver then mod_resolver() end
+--- Random bonus based on level
+resolvers.current_level = 1
+function resolvers.mbonus(max, add)
+	return {__resolver="mbonus", max, add}
+end
+function resolvers.calc.mbonus(t)
+	return rng.mbonus(t[1], resolvers.current_level, 50) + (t[2] or 0)
+end

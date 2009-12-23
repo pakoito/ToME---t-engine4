@@ -52,10 +52,9 @@ function _M:init(t, no_default)
 	t.stamina_rating = t.stamina_rating or 10
 
 	-- Default regen
-	self.mana_regen = 0.5
-	self.stamina_regen = 0.5
-	self.life_regen = 0.1
-	self.life_rating = 10
+	t.mana_regen = t.mana_regen or 0.5
+	t.stamina_regen = t.stamina_renge or 0.5
+	t.life_regen = t.life_regen or 0.1
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
