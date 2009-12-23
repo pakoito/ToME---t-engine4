@@ -4,8 +4,6 @@
 newAI("move_simple", function(self)
 	if self.ai_target.actor then
 		return self:moveDirection(self.ai_target.actor.x, self.ai_target.actor.y)
-	elseif self.ai_target.x and self.ai_target.y then
-		self:move(self.ai_target.x, self.ai_target.y)
 	end
 end)
 
@@ -37,10 +35,12 @@ end)
 
 newAI("target_player", function(self)
 	self.ai_target.actor = game.player
+	return true
 end)
 
 newAI("simple", function(self)
 	if self:runAI("target_simple") then
-		self:runAI("move_simple")
+		return self:runAI("move_simple")
 	end
+	return false
 end)

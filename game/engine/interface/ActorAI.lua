@@ -87,7 +87,7 @@ function _M:doAI()
 	-- we forget it
 	if self.ai_target.actor and self.ai_target.actor.dead then self.ai_target.actor = nil end
 
-	self:runAI(self.ai)
+	return self:runAI(self.ai)
 end
 
 function _M:runAI(ai)

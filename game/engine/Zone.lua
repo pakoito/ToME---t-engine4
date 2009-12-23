@@ -90,6 +90,16 @@ function _M:computeRarities(type, list, level, ood, filter)
 	return r
 end
 
+--- Checks an entity against a filter
+function _M:checkFilter(e, filter)
+	if not filter then return true end
+
+	if filter.type and filter.type ~= e.type then return false end
+	if filter.subtype and filter.subtype ~= e.subtype then return false end
+	return true
+end
+
+--- Picks an entity from a computed probability list
 function _M:pickEntity(list)
 	if #list == 0 then return nil end
 	local r = rng.range(1, list.total)
@@ -103,6 +113,7 @@ function _M:pickEntity(list)
 	return nil
 end
 
+--- Gets the possible egos
 function _M:getEgosList(level, type, group, class)
 	-- Already loaded ? use it
 	local list = level:getEntitiesList(type.."/"..group)
@@ -115,11 +126,29 @@ function _M:getEgosList(level, type, group, class)
 	return list
 end
 
-function _M:makeEntity(level, type)
+--- Picks and resolve an entity
+-- @return the fully resolved entity, ready to be used on a level. Or nil if a filter was given an nothing found
+function _M:makeEntity(level, type, filter)
 	resolvers.current_level = self.base_level + level.level - 1
 
 	local list = level:getEntitiesList(type)
-	local e = self:pickEntity(list)
+	local e
+	local tries = 200
+	-- CRUDE ! Brute force ! Make me smarter !
+	while tries > 0 do
+		e = self:pickEntity(list)
+		if e and self:checkFilter(e, filter) then break end
+		tries = tries - 1
+	end
+	if tries == 0 then return nil end
+
+	e = self:finishEntity(level, type, e)
+
+	return e
+end
+
+--- Finishes generating an entity
+function _M:finishEntity(level, type, e)
 	e = e:clone()
 	e:resolve()
 
@@ -142,7 +171,6 @@ function _M:makeEntity(level, type)
 			e.name = newname
 		end
 	end
-
 	return e
 end
 
@@ -232,17 +260,19 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	-- Setup the level in the game
 	game:setLevel(level)
 
-	-- Generate actors
-	if level_data.generator.actor then
-		local generator = require(level_data.generator.actor.class).new(
+	-- Generate objects (before actors so that actors can use the probability list of objects to get equipments)
+	if level_data.generator.object then
+		local generator = require(level_data.generator.object.class).new(
 			self,
 			map,
 			level
 		)
 		generator:generate()
 	end
-	if level_data.generator.object then
-		local generator = require(level_data.generator.object.class).new(
+
+	-- Generate actors
+	if level_data.generator.actor then
+		local generator = require(level_data.generator.actor.class).new(
 			self,
 			map,
 			level

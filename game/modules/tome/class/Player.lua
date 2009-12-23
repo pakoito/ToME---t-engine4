@@ -32,7 +32,7 @@ function _M:init(t, no_default)
 
 	self.fixed_rating = true
 
-	self.max_life=85
+	self.max_life=150
 	self.max_mana=85
 	self.max_stamina=85
 	self.unused_stats = 6

@@ -14,7 +14,8 @@ function _M:act()
 	if not mod.class.Actor.act(self) then return end
 
 	-- Let the AI think .... beware of Shub !
-	self:doAI()
+	-- If AI did nothing, use energy anyway
+	if not self:doAI() then self:useEnergy() end
 end
 
 --- Called by ActorLife interface

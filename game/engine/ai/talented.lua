@@ -16,6 +16,7 @@ newAI("dumb_talented", function(self)
 		local tid = avail[rng.range(1, #avail)]
 		print("dumb ai uses", tid)
 		self:useTalent(tid)
+		return true
 	end
 end)
 
@@ -25,5 +26,6 @@ newAI("dumb_talented_simple", function(self)
 		if rng.chance(self.ai_state.talent_in or 6) and not self:runAI("dumb_talented") then
 			self:runAI("move_simple")
 		end
+		return true
 	end
 end)

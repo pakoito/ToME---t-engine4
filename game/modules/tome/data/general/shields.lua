@@ -36,7 +36,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=1},
 	},
 	wielder = {
-		combat_armor = 3,
+		combat_armor = 2,
 		combat_def = 6,
 	},
 }
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=1},
 	},
 	wielder = {
-		combat_armor = 4,
+		combat_armor = 2,
 		combat_def = 8,
 	},
 }
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=1},
 	},
 	wielder = {
-		combat_armor = 4,
+		combat_armor = 2,
 		combat_def = 10,
 	},
 }
@@ -81,7 +81,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=1},
 	},
 	wielder = {
-		combat_armor = 4,
+		combat_armor = 3,
 		combat_def = 12,
 	},
 }
