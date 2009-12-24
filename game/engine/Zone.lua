@@ -142,18 +142,18 @@ function _M:makeEntity(level, type, filter)
 	end
 	if tries == 0 then return nil end
 
-	e = self:finishEntity(level, type, e)
+	e = self:finishEntity(level, type, e, filter and filter.ego_chance)
 
 	return e
 end
 
 --- Finishes generating an entity
-function _M:finishEntity(level, type, e)
+function _M:finishEntity(level, type, e, ego_chance)
 	e = e:clone()
 	e:resolve()
 
 	-- Add "ego" properties, sometimes
-	if e.egos and e.egos_chance and rng.percent(e.egos_chance) then
+	if e.egos and e.egos_chance and rng.percent(e.egos_chance + (ego_chance or 0)) then
 		local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
 		local ego = self:pickEntity(egos)
 		if ego then
@@ -169,6 +169,7 @@ function _M:finishEntity(level, type, e)
 			print("applying ego", ego.name, "to ", e.name, "::", newname)
 			table.merge(e, ego, true)
 			e.name = newname
+			e.egoed = true
 		end
 	end
 	return e

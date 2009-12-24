@@ -460,4 +460,31 @@ function _M:addObject(x, y, o)
 	while self(x, y, i) do i = i + 1 end
 	-- Fill it
 	self(x, y, i, o)
+	return true
+end
+
+function _M:getObject(x, y, i)
+	-- Compute the map stack position
+	i = i - 1 + self.OBJECT
+	return self(x, y, i)
+end
+
+function _M:removeObject(x, y, i)
+	-- Compute the map stack position
+	i = i - 1 + self.OBJECT
+	if not self(x, y, i) then return false end
+	-- Remove it
+	self:remove(x, y, i)
+	-- Move the last one to its position, to never get a "hole"
+	local j = i + 1
+	while self(x, y, j) do j = j + 1 end
+	j = j - 1
+	-- If the removed one was not the last
+	if j > i then
+		local o = self(x, y, j)
+		self:remove(x, y, j)
+		self(x, y, i, o)
+	end
+
+	return true
 end

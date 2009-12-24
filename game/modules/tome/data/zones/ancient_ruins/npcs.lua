@@ -72,7 +72,8 @@ newEntity{
 		BODY = 1, HEAD = 1, HANDS = 1, FEET = 1,
 		TOOL = 1,
 	},
-	equipment = resolvers.equip{ {type="weapon", subtype="longsword"},  {type="armor", subtype="massive"}, {type="armor", subtype="shield"}, },
+	equipment = resolvers.equip{ {type="weapon", subtype="longsword"}, {type="armor", subtype="massive"}, {type="armor", subtype="shield"}, },
+	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	stats = { str=14, dex=12, mag=8, con=13 },
 	talents = { },

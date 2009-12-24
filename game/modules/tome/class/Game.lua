@@ -295,7 +295,14 @@ function _M:setupCommands()
 
 		-- Pickup object
 		_g = function()
-			self.player:pickupFloor(1, true)
+			-- If 2 or more objects, display a pickup dialog, otehrwise just picks up
+			if self.level.map:getObject(self.player.x, self.player.y, 2) then
+				self.player:showPickupFloor(nil, nil, function(o, item)
+					self.player:pickupFloor(item, true)
+				end)
+			else
+				self.player:pickupFloor(1, true)
+			end
 		end,
 
 		-- Show inventory

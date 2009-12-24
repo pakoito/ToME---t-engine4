@@ -2,6 +2,7 @@ require "engine.class"
 local Map = require "engine.Map"
 local ShowInventory = require "engine.dialogs.ShowInventory"
 local ShowEquipment = require "engine.dialogs.ShowEquipment"
+local ShowPickupFloor = require "engine.dialogs.ShowPickupFloor"
 
 --- Handles actors stats
 module(..., package.seeall, class.make)
@@ -69,11 +70,10 @@ end
 
 --- Picks an object from the floor
 function _M:pickupFloor(i, vocal)
-	i = i - 1 + Map.OBJECT
-	local o = game.level.map(self.x, self.y, i)
+	local o = game.level.map:getObject(self.x, self.y, i)
 	if o then
 		if self:addObject(self.INVEN_INVEN, o) then
-			game.level.map:remove(self.x, self.y, i)
+			game.level.map:removeObject(self.x, self.y, i)
 
 			if vocal then game.logSeen(self, "%s picks up: %s.", self.name:capitalize(), o:getName()) end
 		else
@@ -127,6 +127,14 @@ end
 -- @param action a function called when an object is selected
 function _M:showEquipment(title, filter, action)
 	local d = ShowEquipment.new(title, self, filter, action)
+	game:registerDialog(d)
+end
+
+--- Show floor pickup dialog
+-- @param filter nil or a function that filters the objects to list
+-- @param action a function called when an object is selected
+function _M:showPickupFloor(title, filter, action)
+	local d = ShowPickupFloor.new(title, self.x, self.y, filter, action)
 	game:registerDialog(d)
 end
 

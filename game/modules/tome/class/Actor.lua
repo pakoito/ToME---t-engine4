@@ -125,6 +125,17 @@ function _M:die(src)
 	end
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
+
+	-- Drop stuff
+	for inven_id, inven in pairs(self.inven) do
+		for i, o in ipairs(inven) do
+			if not o.no_drop then
+				game.level.map:addObject(self.x, self.y, o)
+			end
+		end
+	end
+	self.inven = {}
+
 	return true
 end
 
