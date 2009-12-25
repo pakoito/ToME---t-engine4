@@ -140,6 +140,9 @@ function _M:apply()
 			self.actor.body = d.body
 			self.actor:initBody()
 		end
+		if d.copy then
+			table.merge(self.actor, d.copy, true)
+		end
 	end
 end
 

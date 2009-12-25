@@ -59,3 +59,19 @@ newTalent{
 	mode = "passive",
 	hide = true,
 }
+
+-- Dunadan's power, a "weak" regeneration
+newTalent{
+	short_name = "DUNADAN_HEAL",
+	name = "King's Gift",
+	type = {"base/class", 1},
+	cooldown = 50,
+	action = function(self, t)
+		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:getWil() * 0.5})
+		return true
+	end,
+	info = function(self)
+		return ([[Call upon the gift of the Kings to regenerate your body for %d life every turns for 10 turns.
+		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.5)
+	end,
+}

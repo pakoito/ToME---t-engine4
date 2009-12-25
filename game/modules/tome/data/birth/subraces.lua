@@ -1,6 +1,7 @@
 ---------------------------------------------------------
 --                       Humans                        --
 ---------------------------------------------------------
+--[[
 newBirthDescriptor
 {
 	type = "subrace",
@@ -9,6 +10,7 @@ newBirthDescriptor
 		"Humans are one of the youngest of the races of Arda.",
 	},
 }
+]]
 newBirthDescriptor
 {
 	type = "subrace",
@@ -19,7 +21,10 @@ newBirthDescriptor
 	},
 	stats = { str=1, cun=1, dex=1, wil=1 },
 	experience = 1.1,
-	talents = { ActorTalents.T_IMPROVED_HEALTH_I },
+	talents = { ActorTalents.T_IMPROVED_HEALTH_I, ActorTalents.T_DUNADAN_HEAL, },
+	copy = {
+		default_wilderness = {"wilderness/rhudaur", 9, 4},
+	},
 }
 --[[
 newBirthDescriptor
@@ -41,7 +46,6 @@ newBirthDescriptor
 		["Riding"]          = { mods.add(5000), mods.add(600)  }
 	}
 }
-]]
 newBirthDescriptor
 {
 	type = "subrace",
@@ -54,6 +58,7 @@ newBirthDescriptor
 	experience = 1.8,
 	talents = {},
 }
+]]
 
 ---------------------------------------------------------
 --                       Elves                         --
@@ -76,7 +81,7 @@ newBirthDescriptor
 	experience = 1.3,
 	talents = {},
 }
---[[
+
 newBirthDescriptor
 {
 	type = "subrace",
@@ -94,7 +99,7 @@ newBirthDescriptor
 	talents = { ActorTalents.DECREASED_HEALTH_I },
 	experience = 1.1,
 }
-]]
+
 ---------------------------------------------------------
 --                       Hobbits                       --
 ---------------------------------------------------------

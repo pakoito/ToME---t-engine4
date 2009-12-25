@@ -14,7 +14,9 @@ end
 function _M:loadMap(file)
 	local t = {}
 
-	local f = loadfile("/data/maps/"..file..".lua")
+	print("Static generator using file", "/data/maps/"..file..".lua")
+	local f, err = loadfile("/data/maps/"..file..".lua")
+	if not f and err then error(err) end
 	setfenv(f, setmetatable({
 		Map = require("engine.Map"),
 		defineTile = function(char, grid, obj, actor)

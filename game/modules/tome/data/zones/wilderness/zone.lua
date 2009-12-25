@@ -7,8 +7,7 @@ return {
 	all_lited = true,
 	generator =  {
 		map = {
-			class = "engine.generator.map.Static",
-			map = "wilderness/main",
+			class = "mod.class.generator.map.Wilderness",
 		},
 	}
 }
