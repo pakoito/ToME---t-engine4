@@ -38,7 +38,7 @@ The ToME combat system has the following attributes:
 - armor penetration: reduction of target's armor
 - damage: raw damage done
 ]]
-function _M:attackTarget(target, damtype, mult)
+function _M:attackTarget(target, damtype, mult, noenergy)
 	damtype = damtype or DamageType.PHYSICAL
 	mult = mult or 1
 	local speed = nil
@@ -68,7 +68,7 @@ function _M:attackTarget(target, damtype, mult)
 	end
 
 	-- We use up our own energy
-	if speed then
+	if speed and not noenergy then
 		self:useEnergy(game.energy_to_act * speed)
 		self.did_energy = true
 	end

@@ -37,6 +37,9 @@ newDamageType{
 newDamageType{
 	name = "lightning", type = "LIGHTNING",
 }
+newDamageType{
+	name = "acid", type = "ACID",
+}
 
 -- Light up the room
 newDamageType{

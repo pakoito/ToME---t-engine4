@@ -15,7 +15,7 @@ newTalent{
 newTalent{
 	name = "Freeze",
 	type = {"spell/water", 1},
-	mana = 4,
+	mana = 14,
 	cooldown = 3,
 	tactical = {
 		ATTACK = 10,

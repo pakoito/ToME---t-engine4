@@ -39,6 +39,8 @@ function _M:init(t, no_default)
 	self.unused_talents = 0
 	self.move_others=true
 
+	self.lite = 4
+
 	self.descriptor = {}
 	self.hotkey = {}
 end
@@ -46,7 +48,7 @@ end
 function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
-		game.level.map:moveViewSurround(self.x, self.y, 4, 4)
+		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
 
 		local obj = game.level.map(self.x, self.y, Map.OBJECT)
 		if obj then

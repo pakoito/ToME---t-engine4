@@ -34,7 +34,7 @@ newTalent{
 	name = "Flame",
 	type = {"spell/fire",1},
 	mana = 12,
-	cooldown = 4,
+	cooldown = 3,
 	tactical = {
 		ATTACK = 10,
 	},

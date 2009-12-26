@@ -61,6 +61,8 @@ function _M:init(t, no_default)
 		self.color_bb = self.color_bb or -1
 	end
 
+	if self.unique and type(self.unique) ~= "string" then self.unique = self.name end
+
 	next_uid = next_uid + 1
 
 	self.changed = true

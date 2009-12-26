@@ -127,8 +127,13 @@ end
 --- Replace some markers in a string with info on the talent
 function _M:useTalentMessage(ab)
 	local str = ab.message
+	local _, _, target = self:getTarget()
+	local tname = "unknown"
+	if target then tname = target.name end
 	str = str:gsub("@Source@", self.name:capitalize())
 	str = str:gsub("@source@", self.name)
+	str = str:gsub("@target@", tname)
+	str = str:gsub("@Target@", tname:capitalize())
 	return str
 end
 

@@ -159,7 +159,7 @@ function _M:display()
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
 			self.level.map:fov(self.player.x, self.player.y, 20)
-			self.level.map:fovLite(self.player.x, self.player.y, 4)
+			self.level.map:fovLite(self.player.x, self.player.y, self.player.lite)
 		end
 		self.level.map:display()
 
@@ -235,6 +235,8 @@ function _M:setupCommands()
 			self:targetMode(false, false)
 		end,
 		_RETURN = {"alias", "_t"},
+		_SPACE = {"alias", "_t"},
+		_KP_ENTER = {"alias", "_t"},
 		_ESCAPE = function()
 			self.target.target.entity = nil
 			self.target.target.x = nil

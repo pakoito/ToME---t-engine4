@@ -41,15 +41,70 @@ newTalent{
 	short_name = "CRAWL_POISON",
 	name = "Poisonous Crawl",
 	type = {"physical/other", 1},
+	message = "@Source@ crawls poison onto @target@.",
+	cooldown = 5,
+	range = 1,
+	action = function(self, t)
+		local x, y, target = self:getTarget()
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self:attackTarget(target, DamageType.POISON, 2, true)
+		return true
+	end,
+	info = function(self)
+		return ([[Crawl onto the target, convering it in poison.]])
+	end,
+}
+
+newTalent{
+	short_name = "CRAWL_ACID",
+	name = "Acidic Crawl",
+	type = {"physical/other", 1},
+	message = "@Source@ crawls acid onto @target@.",
 	cooldown = 2,
 	range = 1,
 	action = function(self, t)
 		local x, y, target = self:getTarget()
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, DamageType.POISON, 1)
+		self:attackTarget(target, DamageType.POISON, 1.5, true)
 		return true
 	end,
 	info = function(self)
-		return ([[Multiply yourself!]])
+		return ([[Crawl onto the target, convering it in acid.]])
+	end,
+}
+
+newTalent{
+	short_name = "SPORE_BLIND",
+	name = "Blinding Spores",
+	type = {"physical/other", 1},
+	message = "@Source@ releases blinding spores at @target@.",
+	cooldown = 2,
+	range = 1,
+	action = function(self, t)
+		local x, y, target = self:getTarget()
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self:attackTarget(target, DamageType.LIGHT, 0.5, true)
+		return true
+	end,
+	info = function(self)
+		return ([[Releases blinding spores at the target.]])
+	end,
+}
+
+newTalent{
+	short_name = "SPORE_POISON",
+	name = "Poisonous Spores",
+	type = {"physical/other", 1},
+	message = "@Source@ releases poisonous spores at @target@.",
+	cooldown = 2,
+	range = 1,
+	action = function(self, t)
+		local x, y, target = self:getTarget()
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self:attackTarget(target, DamageType.POISON, 1.5, true)
+		return true
+	end,
+	info = function(self)
+		return ([[Releases poisonous spores at the target.]])
 	end,
 }

@@ -54,7 +54,7 @@ configuration "macosx"
 	targetdir "."
 
 configuration "not macosx"
-	links { "SDL", "SDL_ttf", "SDL_image", "SDL_gfx", "SDL_mixer", "GL", "GLU" }
+	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU" }
 
 configuration "windows"
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']] }
