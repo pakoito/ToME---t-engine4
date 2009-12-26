@@ -128,8 +128,8 @@ end
 -- @param file the file to load from
 -- @param no_default if true then no default values will be assigned
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
-function _M:loadList(file, no_default)
-	local res = {}
+function _M:loadList(file, no_default, res)
+	res = res or {}
 
 	print("Loading entities file", file)
 	local f, err = loadfile(file)
@@ -157,8 +157,7 @@ function _M:loadList(file, no_default)
 			if t.define_as then res[t.define_as] = e end
 		end,
 		load = function(f)
-			local ret = self:loadList(f, no_default)
-			for i, e in ipairs(ret) do res[#res+1] = e end
+			self:loadList(f, no_default, res)
 		end,
 		loadList = function(f)
 			return self:loadList(f, no_default)

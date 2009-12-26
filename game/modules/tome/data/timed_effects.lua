@@ -57,6 +57,19 @@ newEffect{
 }
 
 newEffect{
+	name = "POISONED",
+	desc = "Poisoned",
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is poisoned!", "+Poison" end,
+	on_lose = function(self, err) return "#Target# stops beign poisoned.", "-Poison" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+	end,
+}
+
+newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
 	type = "magical",

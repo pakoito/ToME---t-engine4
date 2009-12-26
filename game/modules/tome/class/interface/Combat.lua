@@ -38,14 +38,16 @@ The ToME combat system has the following attributes:
 - armor penetration: reduction of target's armor
 - damage: raw damage done
 ]]
-function _M:attackTarget(target)
+function _M:attackTarget(target, damtype, mult)
+	damtype = damtype or DamageType.PHYSICAL
+	mult = mult or 1
 	local speed = nil
 
 	-- All weaponsin main hands
 	if self:getInven(self.INVEN_MAINHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
 			if o.combat then
-				local s = self:attackTargetWith(target, o.combat)
+				local s = self:attackTargetWith(target, o.combat, damtype, mult)
 				speed = math.max(speed or 0, s)
 			end
 		end
@@ -54,7 +56,7 @@ function _M:attackTarget(target)
 	if self:getInven(self.INVEN_OFFHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			if o.combat then
-				local s = self:attackTargetWith(target, o.combat)
+				local s = self:attackTargetWith(target, o.combat, damtype, mult)
 				speed = math.max(speed or 0, s)
 			end
 		end
@@ -62,7 +64,7 @@ function _M:attackTarget(target)
 
 	-- Barehanded ?
 	if not speed then
-		speed = self:attackTargetWith(target, self.combat)
+		speed = self:attackTargetWith(target, self.combat, damtype, mult)
 	end
 
 	-- We use up our own energy
@@ -90,9 +92,7 @@ print("=> chance to hit", hit)
 end
 
 --- Attacks with one weapon
-function _M:attackTargetWith(target, weapon)
-	local damtype = DamageType.PHYSICAL
-
+function _M:attackTargetWith(target, weapon, damtype, mult)
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
@@ -100,6 +100,7 @@ function _M:attackTargetWith(target, weapon)
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	if self:checkHit(atk, def) then
 		local dam = dam - math.max(0, armor - apr)
+		dam = dam * mult
 		dam = self:physicalCrit(dam, weapon)
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 	else

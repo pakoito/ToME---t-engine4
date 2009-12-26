@@ -1,3 +1,8 @@
+load("/data/general/npcs/vermin.lua")
+--load("/data/general/npcs/skeleton.lua")
+--load("/data/general/npcs/.lua")
+
+--[[
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
@@ -17,24 +22,6 @@ newEntity{
 	stats = { str=15, dex=8, mag=12, con=14 },
 	combat = { dam=8, atk=10, apr=2, def=4, armor=6},
 }
---[[
-newEntity{
-	group = "dragon",
-	name = "baby dragon",
-	display = "d", color_r=128,
---	faction = "poorsods",
-	level_range = {1, 4}, exp_worth = 100,
-	rarity = 2,
-	autolevel = "caster",
-	ai = "simple",
-	max_life = resolvers.rngavg(20,30),
-	max_mana = 1000,
-	max_stamina = 1000,
-	energy = { mod=0.3 },
-	has_blood = {nb=3, color={50,255,120}},
-	combat = { dam=5, atk=6, def=2, apr=1, armor=2},
-}
-]]
 newEntity{
 	group = "icky things",
 	name = "white icky",
@@ -78,3 +65,4 @@ newEntity{
 	stats = { str=14, dex=12, mag=8, con=13 },
 	talents = { },
 }
+]]

@@ -1,1 +1,1 @@
-load("/data/general/objects.lua")
+load("/data/general/objects/objects.lua")

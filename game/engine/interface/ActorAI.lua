@@ -93,3 +93,8 @@ end
 function _M:runAI(ai)
 	return _M.ai_def[ai](self)
 end
+
+--- Returns the current target
+function _M:getTarget(typ)
+	return self.ai_target.actor.x, self.ai_target.actor.y, self.ai_target.actor
+end

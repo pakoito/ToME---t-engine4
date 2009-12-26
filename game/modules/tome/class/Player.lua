@@ -112,7 +112,7 @@ function _M:getTarget(typ)
 		game:targetMode("exclusive", msg, coroutine.running(), typ)
 		return coroutine.yield()
 	end
-	return game.target.target.x, game.target.target.y
+	return game.target.target.x, game.target.target.y, game.level.map(game.target.target.x, game.target.target.y, Map.ACTOR)
 end
 
 --- Quick way to check if the player can see the target

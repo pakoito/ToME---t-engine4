@@ -4,8 +4,8 @@
 newAI("dumb_talented", function(self)
 	-- Find available talents
 	local avail = {}
-	local target_dist = core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)
-	for i, tid in ipairs(self.talents) do
+	local target_dist = math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y))
+	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)
 		if not self:isTalentCoolingDown(t) and target_dist <= self:getTalentRange(t) and self:preUseTalent(t, true) then
 			avail[#avail+1] = tid

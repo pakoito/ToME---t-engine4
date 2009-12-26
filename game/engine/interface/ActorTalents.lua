@@ -58,6 +58,7 @@ function _M:newTalent(t)
 	table.insert(self.talents_def, t)
 	t.id = #self.talents_def
 	self["T_"..t.short_name] = #self.talents_def
+	print("[TALENT]", t.name, t.short_name, #self.talents_def)
 
 	-- Register in the type
 	table.insert(self.talents_types_def[t.type[1]].talents, t)
@@ -175,7 +176,7 @@ function _M:learnTalent(t_id, force)
 	end
 
 	-- Auto assign to hotkey
-	if t.mode ~= "passive" then
+	if t.mode ~= "passive" and self.hotkey then
 		for i = 1, 12 do
 			if not self.hotkey[i] then
 				self.hotkey[i] = t_id
@@ -197,8 +198,10 @@ end
 function _M:unlearnTalent(t_id)
 	local t = _M.talents_def[t_id]
 
-	for i, known_t_id in pairs(self.hotkey) do
-		if known_t_id == t_id then self.hotkey[i] = nil end
+	if self.hotkey then
+		for i, known_t_id in pairs(self.hotkey) do
+			if known_t_id == t_id then self.hotkey[i] = nil end
+		end
 	end
 
 	if t.on_unlearn then t.on_unlearn(self, t) end

@@ -1,7 +1,7 @@
-load("/data/general/staves.lua")
-load("/data/general/swords.lua")
-load("/data/general/shields.lua")
-load("/data/general/massive-armor.lua")
+load("/data/general/objects/staves.lua")
+load("/data/general/objects/swords.lua")
+load("/data/general/objects/shields.lua")
+load("/data/general/objects/massive-armor.lua")
 
 newEntity{
 	name = "& Staff of Olorin",
