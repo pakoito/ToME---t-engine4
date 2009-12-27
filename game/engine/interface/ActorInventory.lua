@@ -207,4 +207,19 @@ function _M:sortInven(inven)
 			end
 		end
 	end
+
+	-- Sort them
+	table.sort(inven, function(a, b)
+		local ta, tb = a.type or "", b.type or ""
+		local sa, sb = a.subtype or "", b.subtype or ""
+		if ta == tb then
+			if sa == sb then
+				return a.name < b.name
+			else
+				return sa < sb
+			end
+		else
+			return ta < tb
+		end
+	end)
 end

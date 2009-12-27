@@ -46,7 +46,7 @@ function _M:timedEffects()
 	for eff, p in pairs(self.tmp) do
 		p.dur = p.dur - 1
 		if p.dur <= 0 then
---			self:removeEffect(eff)
+			self:removeEffect(eff)
 		else
 			if _M.tempeffect_def[eff].on_timeout then
 				_M.tempeffect_def[eff].on_timeout(self, p)
@@ -90,7 +90,7 @@ function _M:hasEffect(eff_id)
 end
 
 --- Removes the effect
-function _M:removeEffecf(eff)
+function _M:removeEffect(eff)
 	local p = self.tmp[eff]
 	self.tmp[eff] = nil
 	self.changed = true
