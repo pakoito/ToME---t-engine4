@@ -27,6 +27,15 @@ function _M:act()
 	return true
 end
 
+--- Gets the actor target
+-- Does nothing, AI redefines it so should a "Player" class
+function _M:getTarget()
+end
+--- Sets the actor target
+-- Does nothing, AI redefines it so should a "Player" class
+function _M:setTarget(target)
+end
+
 --- Moves an actor on the map
 -- *WARNING*: changing x and y properties manualy is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto

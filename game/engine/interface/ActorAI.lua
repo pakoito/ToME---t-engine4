@@ -98,3 +98,8 @@ end
 function _M:getTarget(typ)
 	return self.ai_target.actor.x, self.ai_target.actor.y, self.ai_target.actor
 end
+
+--- Sets the current target
+function _M:setTarget(target)
+	self.ai_target.actor = target
+end

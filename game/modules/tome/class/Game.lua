@@ -93,7 +93,7 @@ function _M:loaded()
 end
 
 function _M:save()
-	return class.save(self, {w=true, h=true, zone=true, player=true, level=true,
+	return class.save(self, {w=true, h=true, zone=true, player=true, level=true, entities=true,
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
 	}, true)
 end
@@ -344,6 +344,18 @@ function _M:setupCommands()
 				end
 			end)
 		end,
+
+		-- Use item
+		_u = function()
+			self.player:showInventory(nil, self.player:getInven(self.player.INVEN_INVEN), nil, function(o, item)
+				local ret = o:use(self.player)
+				if ret and ret == "destroy" then
+					self.player:removeObject(self.player:getInven(self.player.INVEN_INVEN), item)
+					game.log("You have no more "..o:getName())
+				end
+			end)
+		end,
+
 
 		[{"_g","shift"}] = function()
 			local none = true

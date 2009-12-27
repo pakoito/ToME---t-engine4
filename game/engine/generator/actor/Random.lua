@@ -41,7 +41,7 @@ function _M:generate()
 		end
 	end
 
---	if self.level.level <= self.zone.max_level then return end
+	if self.level.level <= self.zone.max_level then return end
 
 	if self.guardian then
 		local m = self.zone:makeEntityByName(self.level, "actor", self.guardian)

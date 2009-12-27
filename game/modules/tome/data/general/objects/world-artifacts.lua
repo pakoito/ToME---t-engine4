@@ -34,7 +34,7 @@ newEntity{
 	desc = [[A small crystal phial, with the light of Earendil's Star contained inside. Its light is imperishable, and near it darkness cannot endure.]],
 
 	wielder = {
-		lite = 3,
+		lite = 4,
 	},
 }
 
@@ -63,12 +63,33 @@ newEntity{
 	level_range = {1, 10},
 	display = '"', color=colors.VIOLET,
 	encumber = 1,
-	rarity = 100,
+	rarity = 1,
 	desc = [[A crystal clear stone hangs on the chain. It displays images of your surroundings, but somehow they seem closer.]],
 
-	use = function(self, o)
-		game.logSeen(self, "%s uses the Shifting Amulet and blinks away!", self.name:capitalize())
-		self:teleportRandom(self.x, self.y, 10)
-		self:useEnergy()
-	end,
+	max_power = 15, power_regen = 1,
+	use_power = { name = "blink away", power = 5,
+		use = function(self, who)
+			game.logSeen(who, "%s uses the Shifting Amulet and blinks away!", who.name:capitalize())
+			who:teleportRandom(who.x, who.y, 10)
+		end
+	},
+}
+
+newEntity{
+	unique = true,
+	type = "potion", subtype="potion",
+	name = "Ever Refilling Potion of Healing",
+	level_range = {35, 40},
+	display = '!', color=colors.VIOLET,
+	encumber = 0.4,
+	rarity = 80,
+	desc = [[Bottle containing healing magic. But the more you drink from it, the more it refills!]],
+
+	max_power = 40, power_regen = 1,
+	use_power = { name = "blink away", power = 30,
+		use = function(self, who)
+			who:heal(150 + who:getMag())
+			game.logSeen("%s quaffs an %s!", who.name:capitalize(), self:getName())
+		end
+	},
 }

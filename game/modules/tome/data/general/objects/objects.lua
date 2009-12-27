@@ -1,3 +1,4 @@
+load("/data/general/objects/potions.lua")
 load("/data/general/objects/staves.lua")
 load("/data/general/objects/swords.lua")
 load("/data/general/objects/shields.lua")

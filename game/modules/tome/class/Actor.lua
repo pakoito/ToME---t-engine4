@@ -190,11 +190,6 @@ function _M:attack(target)
 	self:bumpInto(target)
 end
 
---- Tries to get a target from the user
-function _M:getTarget()
-	return self.target.x, self.target.y
-end
-
 --- Called before a talent is used
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)

@@ -26,6 +26,7 @@ function _M:addEntity(e)
 	if self.entities[e.uid] then error("Entity "..e.uid.." already present on the level") end
 	self.entities[e.uid] = e
 	table.insert(self.e_array, e)
+	game:addEntity(e)
 end
 
 --- Removes an entity from the level
@@ -38,6 +39,7 @@ function _M:removeEntity(e)
 			break
 		end
 	end
+	game:removeEntity(e)
 	-- Tells it to delete itself if needed
 	if e.deleteFromMap then e:deleteFromMap(self.map) end
 end

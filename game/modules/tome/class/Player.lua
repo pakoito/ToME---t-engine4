@@ -117,6 +117,13 @@ function _M:getTarget(typ)
 	return game.target.target.x, game.target.target.y, game.level.map(game.target.target.x, game.target.target.y, Map.ACTOR)
 end
 
+--- Sets the current target
+function _M:setTarget(target)
+	game.target.target.entity = target
+	game.target.target.x = target.x
+	game.target.target.y = target.y
+end
+
 --- Quick way to check if the player can see the target
 function _M:canSee(entity)
 	if entity.x and entity.y and game.level.map.seens(entity.x, entity.y) then return true end

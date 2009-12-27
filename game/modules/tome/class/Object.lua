@@ -1,14 +1,45 @@
 require "engine.class"
 require "engine.Object"
+require "engine.interface.ObjectActivable"
 
 local Stats = require("engine.interface.ActorStats")
 
-module(..., package.seeall, class.inherit(engine.Object))
+module(..., package.seeall, class.inherit(engine.Object, engine.interface.ObjectActivable))
 
 function _M:init(t, no_default)
 	engine.Object.init(self, t, no_default)
+	engine.interface.ObjectActivable.init(self, t)
 end
 
+--- Can this object act at all
+-- Most object will want to anwser false, only recharging and stuff needs them
+function _M:canAct()
+	if self.power_regen then return true end
+	return false
+end
+
+--- Do something when its your turn
+-- For objects this mostly is to recharge them
+-- By default, does nothing at all
+function _M:act()
+	self:regenPower()
+	self:useEnergy()
+end
+
+--- Use the object (quaff, read, ...)
+function _M:use(who, typ)
+	local types = {}
+	if self:canUse() then types[#types+1] = "use" end
+
+	if not typ and #types == 1 then typ = types[1] end
+
+	if typ == "use" then
+		who:useEnergy()
+		return self:useObject(who)
+	end
+end
+
+--- Returns a tooltip for the object
 function _M:tooltip()
 	return self:getDesc()
 end
@@ -45,6 +76,9 @@ function _M:getDesc()
 	if w.combat_spellpower or w.combat_spellcrit then desc[#desc+1] = ("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0) end
 
 	if w.lite then desc[#desc+1] = ("Light radius %d"):format(w.lite) end
+
+	local use_desc = self:getUseDesc()
+	if use_desc then desc[#desc+1] = use_desc end
 
 	return table.concat(desc, "\n")
 end

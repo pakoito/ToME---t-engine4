@@ -9,7 +9,7 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{ {type="weapon", subtype="longsword"} },
-	drops = resolvers.drops{chance=20, nb=1, {} },
+	drops = resolvers.drops{chance=200, nb=10, {} },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
