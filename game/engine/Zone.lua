@@ -147,6 +147,23 @@ function _M:makeEntity(level, type, filter)
 	return e
 end
 
+--- Find a given entity and resolve it
+-- @return the fully resolved entity, ready to be used on a level. Or nil if a filter was given an nothing found
+function _M:makeEntityByName(level, type, name)
+	resolvers.current_level = self.base_level + level.level - 1
+
+	local e
+	if type == "actor" then e = self.npc_list[name]
+	elseif type == "object" then e = self.object_list[name]
+	elseif type == "grid" then e = self.grid_list[name]
+	end
+	if not e then return nil end
+
+	e = self:finishEntity(level, type, e)
+
+	return e
+end
+
 --- Finishes generating an entity
 function _M:finishEntity(level, type, e, ego_chance)
 	e = e:clone()
@@ -250,7 +267,8 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		self.grid_list,
 		level_data.generator.map
 	)
-	local startx, starty = generator:generate(lev, old_lev)
+	local startx, starty, spots = generator:generate(lev, old_lev)
+	spots = spots or {}
 
 	local level = self.level_class.new(lev, map)
 	level.start = {x=startx, y=starty}
@@ -266,7 +284,8 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		local generator = require(level_data.generator.object.class).new(
 			self,
 			map,
-			level
+			level,
+			spots
 		)
 		generator:generate()
 	end
@@ -276,7 +295,8 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		local generator = require(level_data.generator.actor.class).new(
 			self,
 			map,
-			level
+			level,
+			spots
 		)
 		generator:generate()
 	end

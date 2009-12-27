@@ -41,7 +41,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	max_mana = resolvers.rngavg(40,50),
 	combat_armor = 3, combat_def = 1,
 	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
-	talents = resolvers.talents{ Talents.T_FLAME, Talents.T_MANATHRUST },
+	talents = resolvers.talents{ Talents.T_MANA_POOL, Talents.T_FLAME, Talents.T_MANATHRUST },
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=6, },

@@ -23,6 +23,7 @@ return {
 			nb_npc = {20, 30},
 			ood = {chance=5, range={1, 10}},
 			adjust_level = {-1, 2},
+			guardian = "SHADE_OF_ANGMAR",
 		},
 		object = {
 			class = "engine.generator.object.Random",

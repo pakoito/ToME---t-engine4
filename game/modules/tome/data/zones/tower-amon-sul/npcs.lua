@@ -1,69 +1,22 @@
 load("/data/general/npcs/vermin.lua")
 load("/data/general/npcs/molds.lua")
 load("/data/general/npcs/skeleton.lua")
---load("/data/general/npcs/.lua")
 
---[[
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{
-	group = "dragon",
-	name = "dragon of death",
-	display = "D", color_r=255,
-	level_range = {3, 10}, exp_worth = 1,
-	rarity = 4,
-	autolevel = "warrior",
-	ai = "simple",
-	max_life = 100,
-	life_rating = 10,
-	max_mana = 1000,
-	max_stamina = 1000,
-	energy = { mod=0.5 },
-	has_blood = true,
-	stats = { str=15, dex=8, mag=12, con=14 },
-	combat = { dam=8, atk=10, apr=2, def=4, armor=6},
-}
-newEntity{
-	group = "icky things",
-	name = "white icky",
-	display = "i", color=colors.YELLOW,
-	level_range = {1, 7}, exp_worth = 1,
-	rarity = 1,
-	autolevel = "caster",
-	ai = "dumb_talented_simple",
-	ai_state = { talent_in=12, },
-	max_life = resolvers.rngavg(10,20),
-	max_mana = resolvers.rngavg(50,60),
-	energy = { mod=0.3 },
-	has_blood = {nb=3, color={50,255,120}},
-	combat = { dam=5, atk=6, def=2, apr=1, armor=2 },
-	stats = { str=10, dex=7, mag=14, con=10 },
-	talents = { Talents.T_MANATHRUST, Talents.T_FREEZE, Talents.T_FLAME }
-}
-newEntity{
-	group = "goblin",
-	name = "small goblin",
-	display = "g", color=colors.GREEN,
-	level_range = {1, 7}, exp_worth = 1,
-	rarity = 1,
-	autolevel = "warrior",
-	ai = "dumb_talented_simple",
-	ai_state = { talent_in=6, },
-	max_life = resolvers.rngavg(10,20),
-	max_stamina = resolvers.rngavg(50,60),
-	energy = { mod=0.3 },
-	has_blood = true,
+-- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
+newEntity{ base = "BASE_NPC_SKELETON", define_as = "SHADE_OF_ANGMAR",
+	unique = true,
+	name = "The Shade of Angmar", color=colors.VIOLET,
+	desc = [[This skeleton looks nasty. There is red flames in its empty eye sockets. It wield a nasty sword and towers toward you, throwing spells.]],
+	level_range = {6, 10}, exp_worth = 1,
+	max_life = 150, fixed_rating = true,
+	max_mana = 85,
+	combat_armor = 3, combat_def = 1,
+	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
 
-	body = {
-		INVEN = 1000, MAINHAND = 1, OFFHAND = 1,
-		FINGER = 2, NECK = 1, LITE = 1,
-		BODY = 1, HEAD = 1, HANDS = 1, FEET = 1,
-		TOOL = 1,
-	},
-	equipment = resolvers.equip{ {type="weapon", subtype="longsword"}, {type="armor", subtype="massive"}, {type="armor", subtype="shield"}, },
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	talents = resolvers.talents{ Talents.T_MANA_POOL, Talents.T_FREEZE, Talents.T_TIDAL_WAVE },
 
-	stats = { str=14, dex=12, mag=8, con=13 },
-	talents = { },
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 }
-]]

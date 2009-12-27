@@ -200,14 +200,16 @@ end
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab, silent)
-	if not self:enoughEnergy() then return end
+	if not self:enoughEnergy() then print("fail energy") return false end
 	if ab.mana and self:getMana() < ab.mana * (100 + self.fatigue) / 100 then
 		game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
-		return
+		print("fail mana", self:getMana(), ab.mana, ab.mana * (100 + self.fatigue) / 100)
+		return false
 	end
 	if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
+		print("fail stam")
 		game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
-		return
+		return false
 	end
 
 	if not silent then

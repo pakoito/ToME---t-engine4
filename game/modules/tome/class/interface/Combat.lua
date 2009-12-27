@@ -82,9 +82,11 @@ print("checkHit", atk, def)
 	local hit = nil
 	factor = factor or 5
 	if atk > def then
-		hit = math.log10(1 + 5 * (atk - def) / atk) * 100 + 50
+		local d = atk - def
+		hit = math.log10(1 + 5 * d / 50) * 100 + 50
 	else
-		hit = -math.log10(1 + 5 * (def - atk) / atk) * 100 + 50
+		local d = def - atk
+		hit = -math.log10(1 + 5 * d / 50) * 100 + 50
 	end
 	hit = util.bound(hit, min or 5, max or 95)
 print("=> chance to hit", hit)

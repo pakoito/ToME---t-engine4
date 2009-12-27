@@ -18,3 +18,13 @@ Autolevel:registerScheme{ name = "caster", levelup = function(self)
 	-- 2 MAG for 1 WIL
 	learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_WIL })
 end}
+
+Autolevel:registerScheme{ name = "warriormage", levelup = function(self)
+	if self.level % 2 == 0 then
+		-- 2 MAG for 1 WIL
+		learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_WIL })
+	else
+		-- 2 STR for 1 DEX
+		learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
+	end
+end}
