@@ -425,6 +425,7 @@ static int sdl_load_image(lua_State *L)
 	auxiliar_setclass(L, "sdl{surface}", -1);
 
 	*s = IMG_Load_RW(PHYSFSRWOPS_openRead(name), TRUE);
+	if (!*s) return 0;
 
 	return 1;
 }
@@ -461,6 +462,14 @@ static int sdl_surface_erase(lua_State *L)
 	int a = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 255;
 	SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, r, g, b, a));
 	return 0;
+}
+
+static int sdl_surface_get_size(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	lua_pushnumber(L, (*s)->w);
+	lua_pushnumber(L, (*s)->h);
+	return 2;
 }
 
 
@@ -646,8 +655,9 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"__gc", sdl_free_surface},
 	{"close", sdl_free_surface},
 	{"erase", sdl_surface_erase},
+	{"getSize", sdl_surface_get_size},
 	{"merge", sdl_surface_merge},
- 	{"toScreen", sdl_surface_toscreen},
+	{"toScreen", sdl_surface_toscreen},
 	{"toScreenWithTexture", sdl_surface_toscreen_with_texture},
 	{"putChar", lua_display_char},
 	{"drawString", sdl_surface_drawstring},

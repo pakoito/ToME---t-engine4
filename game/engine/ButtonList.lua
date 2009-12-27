@@ -99,22 +99,16 @@ function _M:click(i)
 end
 
 function _M:display()
-	if not self.changed then return self.surface end
-
-	self.surface:erase()
-	for i, b in ipairs(self.list) do
-		if i == self.selected then
-			self.surface:merge(b.ssel, 0, (i - 1) * (b.h + self.separator))
-		else
-			self.surface:merge(b.susel, 0, (i - 1) * (b.h + self.separator))
-		end
-	end
-
-	return self.surface
 end
 
 function _M:toScreen(x,y)
-	self.surface:toScreenWithTexture(self.texture,x,y)
+	for i, b in ipairs(self.list) do
+		if i == self.selected then
+			b.ssel:toScreen(x + 0, y + (i - 1) * (b.h + self.separator))
+		else
+			b.susel:toScreen(x + 0, y + (i - 1) * (b.h + self.separator))
+		end
+	end
 end
 
 function _M:makeButton(name, font, w, h, sel)
@@ -122,8 +116,9 @@ function _M:makeButton(name, font, w, h, sel)
 	local s = core.display.newSurface(w, h)
 	if sel then
 		s:erase(143, 155, 85, 200)
+	else
+		s:erase(0,0,0,200)
 	end
-	s:erase(0,0,0,200)
 
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_7"..(sel and "_sel" or "")..".png"), 0, 0)
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_9"..(sel and "_sel" or "")..".png"), w - 8, 0)

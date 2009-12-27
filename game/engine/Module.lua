@@ -52,8 +52,7 @@ end
 --- List all available savefiles
 -- Static
 function _M:listSavefiles()
-	local savemods_path = fs.getHomePath() .. fs.getPathSeparator()
-	fs.mount(savemods_path, "/tmp/listsaves")
+	fs.mount(engine.homepath, "/tmp/listsaves")
 
 	local mods = self:listModules()
 	for _, mod in ipairs(mods) do
@@ -74,7 +73,7 @@ function _M:listSavefiles()
 		end)
 	end
 
-	fs.umount(savemods_path)
+	fs.umount(engine.homepath)
 
 	return mods
 end

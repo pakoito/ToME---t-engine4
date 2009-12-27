@@ -10,6 +10,8 @@ module(..., package.seeall, class.inherit(engine.Game))
 
 function _M:init()
 	engine.Game.init(self, engine.KeyCommand.new())
+
+	self.background = core.display.loadImage("/data/gfx/mainmenu/background.jpg")
 end
 
 function _M:run()
@@ -24,6 +26,11 @@ function _M:run()
 end
 
 function _M:display()
+	if self.background then
+		local bw, bh = self.background:getSize()
+		self.background:toScreen((self.w - bw) / 2, (self.h - bh) / 2)
+	end
+	self.step:display()
 	self.step:toScreen(self.step.display_x, self.step.display_y)
 
 	engine.Game.display(self)
@@ -133,11 +140,17 @@ function _M:selectStepNew()
 end
 
 function _M:selectStepLoad()
+	local found = false
+	for i, mod in ipairs(self.save_list) do for j, save in ipairs(mod.savefiles) do found = true break end end
+	if not found then
+		Dialog:simplePopup("No savefiles", "You do not have any savefiles for any of the installed modules. Play a new game!")
+		return
+	end
+
 	local display_module = Dialog.new("", self.w * 0.73, self.h, self.w * 0.26, 0, 255)
 
 	local mod_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
 	local list = {}
-	local found = false
 	for i, mod in ipairs(self.save_list) do
 		table.insert(list, { name=mod.name, font=mod_font, description="", fct=function() end, onSelect=function() self.step:skipSelected() end})
 
@@ -156,11 +169,6 @@ function _M:selectStepLoad()
 			table.insert(list, save)
 			found = true
 		end
-	end
-
-	if not found then
-		Dialog:simplePopup("No savefiles", "You do not have any savefiles for any of the installed modules. Play a new game!")
-		return
 	end
 
 	-- Ok some saves to see, proceed
