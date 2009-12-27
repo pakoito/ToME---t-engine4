@@ -2,7 +2,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_VERMIN",
-	group = "vermins",
+	type = "nuisance", subtype = "vermins",
 	display = "w", color=colors.WHITE,
 	can_multiply = 2,
 	body = { INVEN = 10 },

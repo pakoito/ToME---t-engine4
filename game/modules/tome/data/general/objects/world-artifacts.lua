@@ -7,7 +7,7 @@ newEntity{
 	level_range = {20, 25},
 	display = "\\", color=colors.VIOLET,
 	encumber = 6,
-	rarity = 20,
+	rarity = 100,
 	desc = [[This unique looking staff is carved with runes of destruction.]],
 
 	require = { stat = { mag=24 }, },
@@ -30,7 +30,7 @@ newEntity{
 	level_range = {1, 10},
 	display = "~", color=colors.YELLOW,
 	encumber = 1,
-	rarity = 10,
+	rarity = 100,
 	desc = [[A small crystal phial, with the light of Earendil's Star contained inside. Its light is imperishable, and near it darkness cannot endure.]],
 
 	wielder = {
@@ -46,7 +46,7 @@ newEntity{
 	level_range = {20, 30},
 	display = "~", color=colors.YELLOW,
 	encumber = 1,
-	rarity = 25,
+	rarity = 250,
 
 	desc = [[A great globe seemingly filled with moonlight, the famed Heart of the Mountain, which splinters the light that falls upon it into a thousand glowing shards.]],
 
@@ -63,7 +63,7 @@ newEntity{
 	level_range = {1, 10},
 	display = '"', color=colors.VIOLET,
 	encumber = 1,
-	rarity = 10,
+	rarity = 100,
 	desc = [[A crystal clear stone hangs on the chain. It displays images of your surroundings, but somehow they seem closer.]],
 
 	use = function(self, o)

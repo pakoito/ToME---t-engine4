@@ -2,7 +2,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_MOLD",
-	group = "molds",
+	type = "immovable", subtype = "molds",
 	display = "m", color=colors.WHITE,
 	desc = "A strange growth on the dungeon floor.",
 	body = { INVEN = 10 },

@@ -35,7 +35,7 @@ function _M:getDesc()
 		for stat, i in pairs(self.combat.dammod or {}) do
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
-		desc[#desc+1] = ("%d Damage (%s), %d Attack, %d Armor Peneration, Crit %d%%"):format(self.combat.dam or 0, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat_physcrit or 0)
+		desc[#desc+1] = ("%d Damage (%s), %d Attack, %d Armor Peneration, Crit %d%%"):format(self.combat.dam or 0, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
 		desc[#desc+1] = ""
 	end
 

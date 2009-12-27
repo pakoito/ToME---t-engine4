@@ -199,7 +199,7 @@ void on_tick()
 	Frames++;
 	{
 		int t = SDL_GetTicks();
-		if (t - T0 >= 1000) {
+		if (t - T0 >= 10000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
 			printf("%d ticks  in %g seconds = %g TPS\n", Frames, seconds, fps);
@@ -233,7 +233,7 @@ void on_redraw()
 	Frames++;
 	{
 		int t = SDL_GetTicks();
-		if (t - T0 >= 1000) {
+		if (t - T0 >= 10000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
 			printf("%d frames in %g seconds = %g FPS\n", Frames, seconds, fps);
