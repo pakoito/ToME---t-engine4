@@ -205,7 +205,7 @@ local recurs = function(t)
 	return nt
 end
 function _M:getLevelData(lev)
-	local res = table.clone(self)
+	local res = table.clone(self, true)
 	if self.levels[lev] then
 		table.merge(res, self.levels[lev], true)
 	end

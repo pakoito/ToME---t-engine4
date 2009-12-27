@@ -111,6 +111,9 @@ function _M:loaded()
 	self.changed = true
 
 	for i = 0, self.w - 1 do for j = 0, self.h - 1 do
+		self._map:setSeen(i, j, self.seens(i, j))
+		self._map:setRemember(i, j, self.remembers(i, j))
+		self._map:setLite(i, j, self.lites(i, j))
 		self:updateMap(i, j)
 	end end
 end
