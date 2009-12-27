@@ -26,7 +26,7 @@ newEntity{
 newEntity{
 	unique = true,
 	slot = "LITE",
-	type = "jewelery", subtype="lite",
+	type = "jewelry", subtype="lite",
 	name = "Phial of Galadriel",
 	level_range = {1, 10},
 	display = "~", color=colors.YELLOW,
@@ -43,7 +43,7 @@ newEntity{
 newEntity{
 	unique = true,
 	slot = "LITE",
-	type = "jewelery", subtype="lite",
+	type = "jewlery", subtype="lite",
 	name = "Arkenstone of Thrain",
 	level_range = {20, 30},
 	display = "~", color=colors.YELLOW,

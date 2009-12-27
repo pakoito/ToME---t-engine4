@@ -114,3 +114,15 @@ function _M:getNumber()
 	if not self.stacked then return 1 end
 	return 1 + #self.stacked
 end
+
+--- Sorting by type function
+-- By default, sort by type name
+function _M:getTypeOrder()
+	return self.type or ""
+end
+
+--- Sorting by type function
+-- By default, sort by subtype name
+function _M:getSubtypeOrder()
+	return self.subtype or ""
+end

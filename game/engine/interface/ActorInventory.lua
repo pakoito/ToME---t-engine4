@@ -210,8 +210,8 @@ function _M:sortInven(inven)
 
 	-- Sort them
 	table.sort(inven, function(a, b)
-		local ta, tb = a.type or "", b.type or ""
-		local sa, sb = a.subtype or "", b.subtype or ""
+		local ta, tb = a:getTypeOrder(), b:getTypeOrder()
+		local sa, sb = a:getSubtypeOrder(), b:getSubtypeOrder()
 		if ta == tb then
 			if sa == sb then
 				return a.name < b.name

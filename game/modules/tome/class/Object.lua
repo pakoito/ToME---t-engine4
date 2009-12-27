@@ -82,3 +82,26 @@ function _M:getDesc()
 
 	return table.concat(desc, "\n")
 end
+
+local type_sort = {
+	potion = 1,
+	jewelry = 2,
+	weapon = 100,
+	armor = 101,
+}
+
+--- Sorting by type function
+-- By default, sort by type name
+function _M:getTypeOrder()
+	if self.type and type_sort[self.type] then
+		return type_sort[self.type]
+	else
+		return 99999
+	end
+end
+
+--- Sorting by type function
+-- By default, sort by subtype name
+function _M:getSubtypeOrder()
+	return self.subtype or ""
+end
