@@ -302,9 +302,11 @@ function _M:setupCommands()
 			if self.level.map:getObject(self.player.x, self.player.y, 2) then
 				self.player:showPickupFloor(nil, nil, function(o, item)
 					self.player:pickupFloor(item, true)
+					self.player:sortInven()
 				end)
 			else
 				self.player:pickupFloor(1, true)
+				self.player:sortInven()
 			end
 		end,
 
@@ -321,6 +323,7 @@ function _M:setupCommands()
 			local inven = self.player:getInven(self.player.INVEN_INVEN)
 			self.player:showInventory("Drop object", inven, nil, function(o, item)
 				self.player:dropFloor(inven, item)
+				self.player:sortInven()
 			end)
 		end,
 		-- Wear item
@@ -334,6 +337,7 @@ function _M:setupCommands()
 					if type(ro) == "table" then self.player:addObject(self.player.INVEN_INVEN, ro) end
 					self.player:removeObject(self.player.INVEN_INVEN, item)
 				end
+				self.player:sortInven()
 			end)
 		end,
 		-- Takeoff item
@@ -342,18 +346,25 @@ function _M:setupCommands()
 				if self.player:takeoffObject(inven, item) then
 					self.player:addObject(self.player.INVEN_INVEN, o)
 				end
+				self.player:sortInven()
 			end)
 		end,
 
 		-- Use item
 		_u = function()
-			self.player:showInventory(nil, self.player:getInven(self.player.INVEN_INVEN), nil, function(o, item)
-				local ret = o:use(self.player)
-				if ret and ret == "destroy" then
-					self.player:removeObject(self.player:getInven(self.player.INVEN_INVEN), item)
-					game.log("You have no more "..o:getName())
+			self.player:showInventory(nil, self.player:getInven(self.player.INVEN_INVEN),
+				function(o)
+					return o:canUseObject()
+				end,
+				function(o, item)
+					local ret = o:use(self.player)
+					if ret and ret == "destroy" then
+						self.player:removeObject(self.player:getInven(self.player.INVEN_INVEN), item)
+						game.log("You have no more "..o:getName())
+						self.player:sortInven()
+					end
 				end
-			end)
+			)
 		end,
 
 

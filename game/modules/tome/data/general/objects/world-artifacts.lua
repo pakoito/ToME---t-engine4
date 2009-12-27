@@ -9,6 +9,7 @@ newEntity{
 	encumber = 6,
 	rarity = 100,
 	desc = [[This unique looking staff is carved with runes of destruction.]],
+	cost = 10000,
 
 	require = { stat = { mag=24 }, },
 	combat = {
@@ -32,6 +33,7 @@ newEntity{
 	encumber = 1,
 	rarity = 100,
 	desc = [[A small crystal phial, with the light of Earendil's Star contained inside. Its light is imperishable, and near it darkness cannot endure.]],
+	cost = 2000,
 
 	wielder = {
 		lite = 4,
@@ -47,31 +49,11 @@ newEntity{
 	display = "~", color=colors.YELLOW,
 	encumber = 1,
 	rarity = 250,
-
 	desc = [[A great globe seemingly filled with moonlight, the famed Heart of the Mountain, which splinters the light that falls upon it into a thousand glowing shards.]],
+	cost = 4000,
 
 	wielder = {
 		lite = 5,
-	},
-}
-
-newEntity{
-	unique = true,
-	slot = "AMULET",
-	type = "jewelery", subtype="amulet",
-	name = "Shifting Amulet",
-	level_range = {1, 10},
-	display = '"', color=colors.VIOLET,
-	encumber = 1,
-	rarity = 1,
-	desc = [[A crystal clear stone hangs on the chain. It displays images of your surroundings, but somehow they seem closer.]],
-
-	max_power = 15, power_regen = 1,
-	use_power = { name = "blink away", power = 5,
-		use = function(self, who)
-			game.logSeen(who, "%s uses the Shifting Amulet and blinks away!", who.name:capitalize())
-			who:teleportRandom(who.x, who.y, 10)
-		end
 	},
 }
 
@@ -84,6 +66,7 @@ newEntity{
 	encumber = 0.4,
 	rarity = 80,
 	desc = [[Bottle containing healing magic. But the more you drink from it, the more it refills!]],
+	cost = 2000,
 
 	max_power = 40, power_regen = 1,
 	use_power = { name = "blink away", power = 30,

@@ -90,7 +90,11 @@ end
 -- @return the object removed or nil if no item existed
 function _M:removeObject(inven, item)
 	if type(inven) == "number" then inven = self.inven[inven] end
-	local o = table.remove(inven, item)
+	local o = inven[item]
+	local o, finish = o:unstack()
+	if finish then
+		table.remove(inven, item)
+	end
 
 	-- Do whatever is needed when takingoff this object
 	print("remove object", inven, inven.max, inven.worn, item, o)
@@ -104,7 +108,7 @@ end
 -- @param item the item id to drop
 -- @return the object removed or nil if no item existed
 function _M:dropFloor(inven, item, vocal)
-	local o = table.remove(inven, item)
+	local o = self:removeObject(inven, item)
 	if not o then
 		if vocal then game.logSeen(self, "There is nothing to drop.") end
 		return
@@ -184,4 +188,23 @@ function _M:onTakeoff(o)
 		end
 	end
 	o.wielded = nil
+end
+
+--- Re-order inventory, sorting and stacking it
+function _M:sortInven(inven)
+	if not inven then inven = self.inven[self.INVEN_INVEN] end
+
+	-- Stack objects first, from bottom
+	for i = #inven, 1, -1 do
+		-- If it is stackable, look for obejcts before it that it could stack into
+		if inven[i]:stackable() then
+			for j = i - 1, 1, -1 do
+				if inven[j]:stack(inven[i]) then
+					print("Stacked objects", i, inven[i].name, "into", j, inven[j].name)
+					table.remove(inven, i)
+					break
+				end
+			end
+		end
+	end
 end

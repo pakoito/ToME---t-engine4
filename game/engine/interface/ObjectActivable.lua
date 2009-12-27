@@ -16,7 +16,7 @@ function _M:regenPower()
 	self.power = util.bound(self.power + self.power_regen, 0, self.max_power)
 end
 
-function _M:canUse()
+function _M:canUseObject()
 	if self.use_simple or self.use_power then
 		return true
 	end

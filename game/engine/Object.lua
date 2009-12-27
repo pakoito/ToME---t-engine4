@@ -19,6 +19,11 @@ function _M:resolve(t)
 	engine.Entity.resolve(self, t)
 
 	if not t then
+		-- Stackable property is the name by default
+		if self.stacking and type(self.stacking) == "boolean" then
+			self.stacking = self.name
+		end
+
 		-- Auto add all objects to the game, if they can act
 		game:addEntity(self)
 	end
@@ -63,4 +68,49 @@ end
 function _M:useEnergy(val)
 	val = val or game.energy_to_act
 	self.energy.value = self.energy.value - val
+end
+
+--- Stackable, can it stack at all ?
+function _M:stackable()
+	return self.stacking
+end
+
+--- Can it stacks with others of its kind ?
+function _M:canStack(o)
+	if not self.stacking or not o.stacking then return false end
+	if  self.stacking == o.stacking then return true end
+	return false
+end
+
+--- Adds object to the stack
+-- @return true if stacking worked, false if not
+function _M:stack(o)
+	if not self:canStack(o) then return false end
+	self.stacked = self.stacked or {}
+	self.stacked[#self.stacked+1] = o
+
+	-- Merge stacks
+	if o.stacked then
+		for i, so in ipairs(o.stacked) do
+			self.stacked[#self.stacked+1] = so
+		end
+		o.stacked = nil
+	end
+	return true
+end
+
+--- Removes an object of the stack
+-- @return object, true if the last, or object, false if more
+function _M:unstack()
+	if not self:stackable() or not self.stacked or #self.stacked == 0 then return self, true end
+	local o = table.remove(self.stacked)
+	if #self.stacked == 0 then self.stacked = nil end
+	return o, false
+end
+
+--- Returns the number of objects available
+-- Always one for non stacking objects
+function _M:getNumber()
+	if not self.stacked then return 1 end
+	return 1 + #self.stacked
 end

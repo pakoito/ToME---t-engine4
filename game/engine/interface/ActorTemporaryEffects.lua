@@ -46,19 +46,7 @@ function _M:timedEffects()
 	for eff, p in pairs(self.tmp) do
 		p.dur = p.dur - 1
 		if p.dur <= 0 then
-			self.tmp[eff] = nil
-			self.changed = true
-			if _M.tempeffect_def[eff].on_lose then
-				local ret, fly = _M.tempeffect_def[eff].on_lose(self, p)
-				if ret then
-					game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
-				end
-				if fly and game.flyers then
-					local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
-					game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
-				end
-			end
-			if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end
+--			self:removeEffect(eff)
 		else
 			if _M.tempeffect_def[eff].on_timeout then
 				_M.tempeffect_def[eff].on_timeout(self, p)
@@ -72,6 +60,9 @@ end
 -- @param dur the number of turns to go on
 -- @param p a table containing the effects parameters
 function _M:setEffect(eff_id, dur, p)
+	-- Beware, setting to 0 means removing
+	if dur <= 0 then return self:removeEffect(eff_id) end
+
 	for k, e in pairs(_M.tempeffect_def[eff_id].parameters) do
 		if not p[k] then p[k] = e end
 	end
@@ -96,4 +87,22 @@ end
 -- @return either nil or the parameters table for the effect
 function _M:hasEffect(eff_id)
 	return self.tmp[eff_id]
+end
+
+--- Removes the effect
+function _M:removeEffecf(eff)
+	local p = self.tmp[eff]
+	self.tmp[eff] = nil
+	self.changed = true
+	if _M.tempeffect_def[eff].on_lose then
+		local ret, fly = _M.tempeffect_def[eff].on_lose(self, p)
+		if ret then
+			game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
+		end
+		if fly and game.flyers then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
+		end
+	end
+	if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end
 end

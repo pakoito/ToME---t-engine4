@@ -29,7 +29,7 @@ end
 --- Use the object (quaff, read, ...)
 function _M:use(who, typ)
 	local types = {}
-	if self:canUse() then types[#types+1] = "use" end
+	if self:canUseObject() then types[#types+1] = "use" end
 
 	if not typ and #types == 1 then typ = types[1] end
 
