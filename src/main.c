@@ -12,6 +12,7 @@
 #include "script.h"
 #include "physfs.h"
 #include "core_lua.h"
+#include "getself.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -369,13 +370,24 @@ int resizeWindow(int width, int height)
 
 int main(int argc, char *argv[])
 {
+	const char *selfexe;
+
 	// RNG init
 	init_gen_rand(time(NULL));
 
 	/***************** Physfs Init *****************/
 	PHYSFS_init(argv[0]);
-	PHYSFS_mount("game/thirdparty", "/", 1);
-	PHYSFS_mount("game/", "/", 1);
+
+	selfexe = get_self_executable(argc, argv);
+	if (selfexe)
+	{
+		PHYSFS_mount(selfexe, "/", 1);
+	}
+	else
+	{
+		printf("NO SELFEXE: bootstrapping from CWD\n");
+		PHYSFS_mount("bootstrap", "/bootstrap", 1);
+	}
 
 	/***************** Lua Init *****************/
 	L = lua_open();  /* create state */
@@ -390,6 +402,26 @@ int main(int argc, char *argv[])
 	// Make the uids repository
 	lua_newtable(L);
 	lua_setglobal(L, "__uids");
+
+	// Tell the boostrapping code the selfexe path
+	if (selfexe)
+		lua_pushstring(L, selfexe);
+	else
+		lua_pushnil(L);
+	lua_setglobal(L, "__SELFEXE");
+
+	// Run bootstrapping
+	if (!luaL_loadfile(L, "/bootstrap/boot.lua"))
+	{
+		docall(L, 0, 0);
+	}
+	// Could not load bootstrap! Try to mount the engine from working directory as last resort
+	else
+	{
+		printf("WARNING: No bootstrap code found, defaulting to working directory for engine code!\n");
+		PHYSFS_mount("game/thirdparty", "/", 1);
+		PHYSFS_mount("game/", "/", 1);
+	}
 
 	// initialize engine and set up resolution and depth
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;

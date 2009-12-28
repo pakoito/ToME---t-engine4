@@ -50,14 +50,17 @@ configuration "macosx"
               "/Library/Frameworks/SDL_gfx.framework/Headers",
               "/Library/Frameworks/SDL_mixer.framework/Headers"
         }
-        defines { "USE_TENGINE_MAIN" }
+        defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
 	targetdir "."
 
 configuration "not macosx"
 	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU" }
 
 configuration "windows"
-	defines { [[TENGINE_HOME_PATH='"T-Engine"']] }
+	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
+
+configuration "linux"
+	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_LINUX' }
 
 
 ----------------------------------------------------------------
