@@ -397,6 +397,7 @@ int main(int argc, char *argv[])
 	luaopen_mime_core(L);
 	luaopen_struct(L);
 	luaopen_profiler(L);
+	luaopen_lanes(L);
 	luaopen_map(L);
 
 	// Make the uids repository
@@ -422,6 +423,10 @@ int main(int argc, char *argv[])
 		PHYSFS_mount("game/thirdparty", "/", 1);
 		PHYSFS_mount("game/", "/", 1);
 	}
+
+	// And run the lua engine pre init scripts
+	luaL_loadfile(L, "/engine/pre-init.lua");
+	docall(L, 0, 0);
 
 	// initialize engine and set up resolution and depth
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
