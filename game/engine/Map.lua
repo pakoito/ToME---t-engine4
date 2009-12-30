@@ -48,7 +48,7 @@ end
 
 --- Defines the actor that sees the map
 -- Usualy this will be the player. This is used to determine invisibility/...
-function _M:setViewerFaction(player)
+function _M:setViewerActor(player)
 	self.actor_player = player
 end
 
