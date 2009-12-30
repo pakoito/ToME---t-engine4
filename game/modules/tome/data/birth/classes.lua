@@ -14,6 +14,9 @@ newBirthDescriptor{
 		},
 	},
 	talents = { ActorTalents.T_STAMINA_POOL, },
+	copy = {
+		equipment = resolvers.equip{ {type="weapon", subtype="longsword"} },
+	},
 }
 
 newBirthDescriptor{
@@ -46,6 +49,9 @@ newBirthDescriptor{
 		},
 	},
 	talents = { ActorTalents.T_MANA_POOL, },
+	copy = {
+		equipment = resolvers.equip{ {type="weapon", subtype="staff", name="elm staff"}, {type="armor", subtype="cloth", name="robe"} },
+	},
 }
 
 newBirthDescriptor{

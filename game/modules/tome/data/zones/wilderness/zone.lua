@@ -9,5 +9,9 @@ return {
 		map = {
 			class = "mod.class.generator.map.Wilderness",
 		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_object = {0,0},
+		},
 	}
 }

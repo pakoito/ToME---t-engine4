@@ -126,3 +126,29 @@ end
 function _M:getSubtypeOrder()
 	return self.subtype or ""
 end
+
+--- Describe requirements
+function _M:getRequirementDesc(who)
+	local req = rawget(self, "require")
+	if not req then return nil end
+
+	local str = "Requires:\n"
+
+	if req.stat then
+		for s, v in pairs(req.stat) do
+			local c = (who:getStat(s) >= v) and "#00ff00#" or "#ff0000#"
+			str = str .. ("- %s%s %d\n"):format(c, who.stats_def[s].name, v)
+		end
+	end
+	if req.level then
+		local c = (who.level >= req.level) and "#00ff00#" or "#ff0000#"
+		str = str .. ("- %sLevel %d\n"):format(c, req.level)
+	end
+	if req.talent then
+		for _, tid in ipairs(req.talent) do
+			local c = who:knowTalent(tid) and "#00ff00#" or "#ff0000#"
+			str = str .. ("- %sTalent %s\n"):format(c, who:getTalentFromId(tid).name)
+		end
+	end
+	return str
+end

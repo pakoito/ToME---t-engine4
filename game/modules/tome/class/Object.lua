@@ -61,6 +61,11 @@ function _M:getDesc()
 	end
 	local desc = { c..self:getName().."#FFFFFF#", self.desc }
 
+	local reqs = self:getRequirementDesc(game.player)
+	if reqs then
+		desc[#desc+1] = reqs
+	end
+
 	if self.combat then
 		local dm = {}
 		for stat, i in pairs(self.combat.dammod or {}) do

@@ -78,6 +78,7 @@ function _M:newGame()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[2], self.player.default_wilderness[3]
 		self.player.current_wilderness = self.player.default_wilderness[1]
 		self:changeLevel(1)
+		self.player:resolve()
 
 		local ds = LevelupStatsDialog.new(self.player)
 		self:registerDialog(ds)

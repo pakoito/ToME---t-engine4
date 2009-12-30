@@ -142,13 +142,41 @@ function _M:showPickupFloor(title, filter, action)
 	game:registerDialog(d)
 end
 
+--- Can we wear this item?
+function _M:canWearObject(o)
+	local req = rawget(o, "require")
+
+	-- Check prerequisites
+	if req then
+		-- Obviously this requires the ActorStats interface
+		if req.stat then
+			for s, v in pairs(req.stat) do
+				if self:getStat(s) < v then return nil, "not enough stat" end
+			end
+		end
+		if req.level and self.level < req.level then
+			return nil, "not enough levels"
+		end
+		if req.talent then
+			for _, tid in ipairs(req.talent) do
+				if not self:knowTalent(tid) then return nil, "missing dependency" end
+			end
+		end
+	end
+end
+
 --- Wear/wield an item
 function _M:wearObject(o, replace, vocal)
 	local inven = o:wornInven()
-	if not o then
+	if not inven then
 		if vocal then game.logSeen(self, "%s is not wearable.", o:getName()) end
 		return false
 	end
+	if not self:canWearObject(o) then
+		if vocal then game.logSeen(self, "%s can not wear: %s.", self.name:capitalize(), o:getName()) end
+		return false
+	end
+
 	if self:addObject(inven, o) then
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
 		return true
