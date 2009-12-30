@@ -113,14 +113,15 @@ end
 function _M:aiSeeTargetPos(target)
 	local tx, ty = target.x, target.y
 	local see, chance = self:canSee(target)
+
 	-- Directly seeing it, no spread at all
 	if see then
 		return tx, ty
 	-- Ok we can see it, spread coords around, the less chance to see it we had the more we spread
 	else
 		chance = math.floor((100 - chance) / 10)
-		tx = tx + rng.range(chance * 2) - chance
-		ty = ty + rng.range(chance * 2) - chance
+		tx = tx + rng.range(0, chance * 2) - chance
+		ty = ty + rng.range(0, chance * 2) - chance
 		return tx, ty
 	end
 end

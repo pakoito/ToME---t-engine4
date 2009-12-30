@@ -138,7 +138,7 @@ newEntity{ base = "BASE_POTION",
 	use_simple = { name="cures poison", use = function(self, who)
 		if who:hasEffect(who.EFF_POISONED) then
 			who:removeEffect(who.EFF_POISONED)
-			game.logSeen(who, "%s cures %s from poisoning!", self:getName(), who.name:capitalize())
+			game.logSeen(who, "%s cures %s from poisoning!", self:getName():capitalize(), who.name)
 			return "destroy", true
 		end
 		return "destroy", false

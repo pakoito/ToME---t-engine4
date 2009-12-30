@@ -124,11 +124,6 @@ function _M:setTarget(target)
 	game.target.target.y = target.y
 end
 
---- Quick way to check if the player can see the target
-function _M:canSee(entity)
-	if entity.x and entity.y and game.level.map.seens(entity.x, entity.y) then return true end
-end
-
 --- Uses an hotkeyed talent
 function _M:activateHotkey(id)
 	if self.hotkey[id] then

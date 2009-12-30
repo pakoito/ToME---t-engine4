@@ -1,4 +1,3 @@
---[[
 newBirthDescriptor{
 	type = "class",
 	name = "Warrior",
@@ -15,7 +14,11 @@ newBirthDescriptor{
 	},
 	talents = { ActorTalents.T_STAMINA_POOL, },
 	copy = {
-		equipment = resolvers.equip{ {type="weapon", subtype="longsword"} },
+		equipment = resolvers.equip{
+			{type="weapon", subtype="longsword", name="iron longsword"},
+			{type="armor", subtype="shield", name="iron shield"},
+			{type="armor", subtype="massive", name="iron massive armor"}
+		},
 	},
 }
 
@@ -33,7 +36,7 @@ newBirthDescriptor{
 		["physical/1hweapon"]=true,
 	},
 }
-]]
+
 newBirthDescriptor{
 	type = "class",
 	name = "Mage",
@@ -50,7 +53,10 @@ newBirthDescriptor{
 	},
 	talents = { ActorTalents.T_MANA_POOL, },
 	copy = {
-		equipment = resolvers.equip{ {type="weapon", subtype="staff", name="elm staff"}, {type="armor", subtype="cloth", name="robe"} },
+		equipment = resolvers.equip{
+			{type="weapon", subtype="staff", name="elm staff"},
+			{type="armor", subtype="cloth", name="robe"}
+		},
 	},
 }
 
