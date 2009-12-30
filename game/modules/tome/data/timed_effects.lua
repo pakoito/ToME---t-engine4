@@ -118,3 +118,51 @@ newEffect{
 		self.energy.value = 0
 	end,
 }
+
+newEffect{
+	name = "SPEED",
+	desc = "Speed",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# speeds up.", "+Fast" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Fast" end,
+	activate = function(self, eff)
+--		eff.tmpid = self:addTemporaryValue("mana_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+--		self:removeTemporaryValue("mana_regen", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "INVISIBILITY",
+	desc = "Invisibility",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# vanishes from sight.", "+Invis" end,
+	on_lose = function(self, err) return "#Target# is not more invisible.", "-Invis" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("invisible", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("invisible", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "SEE_INVISIBLE",
+	desc = "See Invisible",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# eyes tingle." end,
+	on_lose = function(self, err) return "#Target# eyes tingle no more." end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("see_invisible", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("see_invisible", eff.tmpid)
+	end,
+}

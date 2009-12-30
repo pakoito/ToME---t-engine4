@@ -9,7 +9,7 @@ newTalent{
 	name = "Poisonous Spores",
 	type = {"physical/slime", 1},
 	message = "@Source@ releases poisonous spores at @target@.",
-	cooldown = 2,
+	cooldown = 10,
 	range = 1,
 	action = function(self, t)
 		local t = {type="hit", range=self:getTalentRange(t)}

@@ -161,8 +161,48 @@ newEntity{ base = "BASE_POTION",
 		if rng.percent(1) then
 			who:learnTalentType("physical/slime")
 			game.logSeen(who, "%s is transformed by the slime mold juice.", who.name:capitalize())
-			game.logPlayer(who, "You gain an affinity for the molds. You can now learn new slime talents (press G).")
+			game.logPlayer(who, "#00FF00#You gain an affinity for the molds. You can now learn new slime talents (press G).")
 		end
+		return "destroy", true
+	end}
+}
+
+newEntity{ base = "BASE_POTION",
+	name = "potion of speed",
+	color = colors.LIGHT_BLUE,
+	level_range = {15, 40},
+	rarity = 10,
+	cost = 1.5,
+
+	use_simple = { name="increase your speed for a while", use = function(self, who)
+		who:setEffect(who.EFF_SPEED, 5 + who:getMag(10), {power=1})
+		return "destroy", true
+	end}
+}
+
+
+newEntity{ base = "BASE_POTION",
+	name = "potion of invisibility",
+	color = colors.YELLOW,
+	level_range = {15, 40},
+	rarity = 10,
+	cost = 1.5,
+
+	use_simple = { name="become invisible for a while", use = function(self, who)
+		who:setEffect(who.EFF_INVISIBILITY, 5 + who:getMag(10), {power=10 + who:getMag(5)})
+		return "destroy", true
+	end}
+}
+
+newEntity{ base = "BASE_POTION",
+	name = "potion of see invisibile",
+	color = colors.YELLOW,
+	level_range = {5, 30},
+	rarity = 6,
+	cost = 0.5,
+
+	use_simple = { name="sense invisible for a while", use = function(self, who)
+		who:setEffect(who.EFF_SEE_INVISIBLE, 25 + who:getMag(50), {power=10 + who:getMag(5)})
 		return "destroy", true
 	end}
 }

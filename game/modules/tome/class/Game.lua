@@ -73,7 +73,7 @@ end
 function _M:newGame()
 	self.zone = Zone.new("wilderness")
 	self.player = Player.new{name=self.player_name}
-	Map::setViewerActor(self.player)
+	Map:setViewerActor(self.player)
 
 	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[2], self.player.default_wilderness[3]
@@ -89,7 +89,7 @@ end
 
 function _M:loaded()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object"}
-	Map::setViewerActor(self.player)
+	Map:setViewerActor(self.player)
 	Map:setViewPort(self.w * 0.2, 0, self.w * 0.8, math.floor(self.h * 0.80), 16, 16)
 	engine.GameTurnBased.loaded(self)
 	self.key = engine.KeyCommand.new()
