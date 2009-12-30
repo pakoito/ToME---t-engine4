@@ -15,7 +15,7 @@ The High King died of old age two years ago and his son, #14fffc#Eldarion#ffffff
 But still, many elves dwell in Middle-earth, for some of them love this land they fought so hard for.
 
 In the the Lonely Mountain, the dwarves prosper along with their human allies of Dale
-under the guidance of #14fffc#Thorin III Stonehelm#ffffff#, the King under the Moutain,
+under the guidance of #14fffc#Thorin III Stonehelm#ffffff#, the King under the Moutain.
 
 In the Shire, life is... as usual, simple and full of joy and pipeweed!
 If such thing as ruling exists for Hobbits, then it is #14fffc#Thain Faramir I and Mayor Tolman Gardner#ffffff#
