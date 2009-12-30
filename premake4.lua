@@ -60,7 +60,7 @@ configuration "windows"
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
 
 configuration "linux"
-	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_LINUX' }
+	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 
 ----------------------------------------------------------------

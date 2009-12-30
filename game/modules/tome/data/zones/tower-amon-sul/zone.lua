@@ -1,5 +1,5 @@
 return {
-	name = "caves below the tower of Amon Sûl",
+	name = "Tower of Amon Sûl",
 	level_range = {1, 5},
 	level_scheme = "player",
 	max_level = 5,
