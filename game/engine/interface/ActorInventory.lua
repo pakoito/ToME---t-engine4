@@ -163,6 +163,16 @@ function _M:canWearObject(o)
 			end
 		end
 	end
+
+	-- Check forbidden slot
+	if o.slot_forbid then
+		local inven = self.inven[o.slot_forbid]
+		-- If the object cant coexist with that inventory slot and it exists and is not empty, refuse wearing
+		if inven and #inven > 0 then
+			return nil
+		end
+	end
+	return true
 end
 
 --- Wear/wield an item

@@ -145,3 +145,25 @@ newEntity{ base = "BASE_POTION",
 	end}
 }
 
+-------------------------------------------------------
+-- Misc
+-------------------------------------------------------
+newEntity{ base = "BASE_POTION",
+	name = "potion of slime mold juice",
+	color = colors.GREEN,
+	level_range = {1, 2},
+	rarity = 4,
+	cost = 0.01,
+
+	use_simple = { name="quaff", use = function(self, who)
+		game.logSeen(who, "%s quaff the slime juice. Yuck.", who.name:capitalize())
+		-- 1% chance of gaining slime mold powers
+		if rng.percent(1) then
+			who:learnTalentType("physical/slime")
+			game.logSeen(who, "%s is transformed by the slime mold juice.", who.name:capitalize())
+			game.logPlayer(who, "You gain an affinity for the molds. You can now learn new slime talents (press G).")
+		end
+		return "destroy", true
+	end}
+}
+

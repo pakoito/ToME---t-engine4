@@ -76,7 +76,7 @@ end
 
 --- Computes a logarithmic chance to hit, opposing chance to hit to chance to miss
 -- This will be used for melee attacks, physical and spell resistance
-function _M:checkHit(atk, def, min, max, facotr)
+function _M:checkHit(atk, def, min, max, factor)
 print("checkHit", atk, def)
 	if atk == 0 then atk = 1 end
 	local hit = nil
@@ -90,7 +90,7 @@ print("checkHit", atk, def)
 	end
 	hit = util.bound(hit, min or 5, max or 95)
 print("=> chance to hit", hit)
-	return rng.percent(hit)
+	return rng.percent(hit), hit
 end
 
 --- Attacks with one weapon

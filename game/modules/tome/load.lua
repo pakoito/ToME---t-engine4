@@ -49,7 +49,7 @@ ActorInventory:defineInventory("HEAD", "On head", true, "You can wear helmets or
 ActorInventory:defineInventory("BELT", "Around waist", true, "Belts are worn around waist.")
 ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be worn on your hands.")
 ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.")
-ActorInventory:defineInventory("TOOL", "Tool", true, "This si your readied tool, always available immediately.")
+ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.")
 
 -- Birther descriptor
 Birther:loadDefinition("/data/birth/descriptors.lua")

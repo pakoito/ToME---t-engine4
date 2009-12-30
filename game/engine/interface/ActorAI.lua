@@ -96,10 +96,31 @@ end
 
 --- Returns the current target
 function _M:getTarget(typ)
-	return self.ai_target.actor.x, self.ai_target.actor.y, self.ai_target.actor
+	local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+	return tx, tx, self.ai_target.actor
 end
 
 --- Sets the current target
 function _M:setTarget(target)
 	self.ai_target.actor = target
+end
+
+--- Returns the seen coords of the target
+-- This will usualy return the exact coords, but if the target is only partialy visible (or not at all)
+-- it will return estimates, to throw the AI a bit off
+-- @param target the target we are tracking
+-- @return x, y coords to move/cast to
+function _M:aiSeeTargetPos(target)
+	local tx, ty = target.x, target.y
+	local see, chance = self:canSee(target)
+	-- Directly seeing it, no spread at all
+	if see then
+		return tx, ty
+	-- Ok we can see it, spread coords around, the less chance to see it we had the more we spread
+	else
+		chance = math.floor((100 - chance) / 10)
+		tx = tx + rng.range(chance * 2) - chance
+		ty = ty + rng.range(chance * 2) - chance
+		return tx, ty
+	end
 end

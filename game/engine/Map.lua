@@ -46,6 +46,12 @@ function _M:setViewerFaction(faction, friend, neutral, enemy)
 	self.faction_enemy = "tactical_enemy.png"
 end
 
+--- Defines the actor that sees the map
+-- Usualy this will be the player. This is used to determine invisibility/...
+function _M:setViewerFaction(player)
+	self.actor_player = player
+end
+
 --- Creates a map
 -- @param w width (in grids)
 -- @param h height (in grids)
@@ -162,7 +168,14 @@ function _M:updateMap(x, y)
 
 	if g then g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image) end
 	if o then o = self.tiles:get(o.display, o.color_r, o.color_g, o.color_b, o.color_br, o.color_bg, o.color_bb, o.image) end
-	if a then a = self.tiles:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image) end
+	if a then
+		-- Handles invisibility and telepathy and otehr such things
+		if not self.actor_player or self.actor_player:canSee(a) then
+			a = self.tiles:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image)
+		else
+			a = nil
+		end
+	end
 
 	self._map:setGrid(x, y, g, o, a)
 end

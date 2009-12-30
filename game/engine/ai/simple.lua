@@ -3,7 +3,8 @@
 
 newAI("move_simple", function(self)
 	if self.ai_target.actor then
-		return self:moveDirection(self.ai_target.actor.x, self.ai_target.actor.y)
+		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		return self:moveDirection(tx, ty)
 	end
 end)
 

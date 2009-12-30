@@ -139,6 +139,15 @@ function _M:reactionToward(target)
 	return Faction:factionReaction(self.faction, target.faction)
 end
 
+--- Can the actor see the target actor
+-- This does not check LOS or such, only the actual ability to see it.<br/>
+-- By default this returns true, but a module can override it to check for telepathy, invisibility, stealth, ...
+-- @param actor the target actor to check
+-- @return true or false and a number from 0 to 100 representing the "chance" to be seen
+function _M:canSee(actor)
+	return true, 100
+end
+
 --- Computes a "temporary" value into a property
 -- Example: You cant to give an actor a boost to life_regen, but you do not want it to be permanent<br/>
 -- You cannot simply increase life_regen, so you use this method which will increase it AND

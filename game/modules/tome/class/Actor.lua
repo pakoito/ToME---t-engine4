@@ -248,3 +248,19 @@ function _M:postUseTalent(ab, ret)
 
 	return true
 end
+
+--- Can the actor see the target actor
+-- This does not check LOS or such, only the actual ability to see it.<br/>
+-- Check for telepathy, invisibility, stealth, ...
+function _M:canSee(actor)
+	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
+	if actor:attr("invisible") then
+		-- Special case, 0 see invisible, can NEVER see invisible things
+		if not self:attr("see_invisible") then return false, 0 end
+		local hit, chance = self:checkHit(self:attr("see_invisible"), actor:attr("invisible"), 0, 100)
+		if not hit then
+			return false, chance
+		end
+	end
+	return true, 100
+end
