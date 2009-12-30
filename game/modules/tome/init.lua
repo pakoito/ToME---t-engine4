@@ -12,7 +12,7 @@ rule of the High King of the Reunited Kingdom, #14fffc#Aragorn II Elessar#ffffff
 The High King died of old age two years ago and his son, #14fffc#Eldarion#ffffff#, is now king.
 
 #14fffc#Elrond and Galadriel#ffffff#, the great leaders of the Elves left Middle-earth for Valinor.
-But still, many elfes dwell in Middle-earth, for some of them love this land they fought so hard for.
+But still, many elves dwell in Middle-earth, for some of them love this land they fought so hard for.
 
 In the the Lonely Mountain, the dwarves prosper along with their human allies of Dale
 under the guidance of #14fffc#Thorin III Stonehelm#ffffff#, the King under the Moutain,
