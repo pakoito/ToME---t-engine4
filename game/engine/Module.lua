@@ -1,4 +1,5 @@
 require "engine.class"
+local lanes = require "lanes"
 
 --- Handles dialog windows
 module(..., package.seeall, class.make)
@@ -104,4 +105,46 @@ function _M:loadSavefileDescription(dir)
 		ls.dir = dir
 		return ls
 	end
+end
+
+--- Loads a list of modules from te4.org/modules.lualist
+-- Calling this function starts a background thread, which can be waited on by the returned lina object
+-- @param src the url to load the list from, if nil it will default to te4.org
+-- @return a linda object (see lua lanes documentation) which should be waited upon like this <code>local mylist = l:receive("moduleslist")</code>. Also returns a thread handle
+function _M:loadRemoteList(src)
+	local l = lanes.linda()
+
+	function list_handler(src)
+		require "socketed"
+		local http = require "socket.http"
+		local ltn12 = require "ltn12"
+
+		local t = {}
+		http.request{url = src, sink = ltn12.sink.table(t)}
+		local f, err = loadstring(table.concat(t))
+		if err then
+			print("Could not load modules list from ", src, ":", err)
+			l:send("moduleslist", {})
+			return
+		end
+
+		local list = {}
+		local dmods = {}
+		dmods.installableModule = function (t)
+			local ok = true
+
+			if not t.name or not t.long_name or not t.short_name or not t.author then ok = false end
+
+			if ok then
+				list[#list+1] = t
+			end
+		end
+		setfenv(f, dmods)
+		f()
+
+		l:send("moduleslist", list)
+	end
+
+	local h = lanes.gen("*", list_handler)(src or "http://te4.org/modules.lualist")
+	return l, h
 end
