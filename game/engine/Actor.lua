@@ -148,6 +148,13 @@ function _M:canSee(actor)
 	return true, 100
 end
 
+local function gettable(base, name)
+	for w in name:gmatch("[^.]+") do
+		base = base[w]
+	end
+	return base
+end
+
 --- Computes a "temporary" value into a property
 -- Example: You cant to give an actor a boost to life_regen, but you do not want it to be permanent<br/>
 -- You cannot simply increase life_regen, so you use this method which will increase it AND
@@ -168,6 +175,11 @@ function _M:addTemporaryValue(prop, v, noupdate)
 			-- Simple addition
 			self[prop] = (self[prop] or 0) + v
 			print("addTmpVal", prop, v)
+		elseif type(v) == "table" then
+			for k, e in pairs(v) do
+				self[prop][k] = (self[prop][k] or 0) + e
+				print("addTmpValTable", prop, k, e)
+			end
 --		elseif type(v) == "boolean" then
 --			-- False has precedence over true
 --			if v == false then
@@ -194,6 +206,10 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 		if type(oldval) == "number" then
 			self[prop] = self[prop] - oldval
 			print("delTmpVal", prop, oldval)
+		elseif type(oldval) == "table" then
+			for k, e in pairs(oldval) do
+				self[prop][k] = self[prop][k] - e
+			end
 --		elseif type(oldval) == "boolean" then
 		else
 			error("unsupported temporary value type: "..type(oldval))

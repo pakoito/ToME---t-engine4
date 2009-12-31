@@ -30,10 +30,11 @@ newBirthDescriptor{
 	},
 	stats = { str=3, con=2, dex=1, },
 	talents_types = {
-		["physical/1hweapon"]=true,
-		["physical/2hweapon"]=true,
 		["physical/shield"]=true,
-		["physical/1hweapon"]=true,
+		["physical/2hweapon"]=true,
+		["physical/dualweapon"]=true,
+		["physical/combat-training"]=true,
+		["physical/weapon-training"]=true,
 	},
 }
 

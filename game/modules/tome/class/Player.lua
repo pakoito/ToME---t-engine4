@@ -36,7 +36,8 @@ function _M:init(t, no_default)
 	self.max_mana=85
 	self.max_stamina=85
 	self.unused_stats = 6
-	self.unused_talents = 0
+	-- FIX
+	self.unused_talents = 6
 	self.move_others=true
 
 	self.lite = 4

@@ -24,6 +24,7 @@ newEntity{ base = "BASE_SHIELD",
 	wielder = {
 		combat_armor = 2,
 		combat_def = 4,
+		fatigue = 6,
 	},
 }
 
@@ -40,6 +41,7 @@ newEntity{ base = "BASE_SHIELD",
 	wielder = {
 		combat_armor = 2,
 		combat_def = 6,
+		fatigue = 8,
 	},
 }
 
@@ -56,6 +58,7 @@ newEntity{ base = "BASE_SHIELD",
 	wielder = {
 		combat_armor = 2,
 		combat_def = 8,
+		fatigue = 12,
 	},
 }
 
@@ -72,6 +75,7 @@ newEntity{ base = "BASE_SHIELD",
 	wielder = {
 		combat_armor = 2,
 		combat_def = 10,
+		fatigue = 14,
 	},
 }
 
@@ -88,5 +92,6 @@ newEntity{ base = "BASE_SHIELD",
 	wielder = {
 		combat_armor = 3,
 		combat_def = 12,
+		fatigue = 14,
 	},
 }

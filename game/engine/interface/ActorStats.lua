@@ -68,6 +68,7 @@ function _M:getStat(stat, scale)
 	else
 		val = self.stats[stat]
 	end
+	val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max)
 	if scale then
 		val = math.floor(val * scale / _M.stats_def[stat].max)
 	end

@@ -48,6 +48,8 @@ end
 function _M:getInven(id)
 	if type(id) == "number" then
 		return self.inven[id]
+	elseif type(id) == "string" then
+		return self.inven[self["INVEN_"..id]]
 	else
 		return id
 	end
@@ -166,12 +168,24 @@ function _M:canWearObject(o)
 
 	-- Check forbidden slot
 	if o.slot_forbid then
-		local inven = self.inven[o.slot_forbid]
+		local inven = self:getInven(o.slot_forbid)
 		-- If the object cant coexist with that inventory slot and it exists and is not empty, refuse wearing
 		if inven and #inven > 0 then
-			return nil
+			return nil, "cannot use currently due to an other worn object"
 		end
 	end
+
+	-- Check that we are not the forbidden slot of any other worn objects
+	for id, inven in pairs(self.inven) do
+		if self.inven_def[id].is_worn then
+			for i, wo in ipairs(inven) do
+				if wo.slot_forbid and wo.slot_forbid == o.slot then
+					return nil, "cannot use currently due to an other worn object"
+				end
+			end
+		end
+	end
+
 	return true
 end
 
@@ -182,8 +196,9 @@ function _M:wearObject(o, replace, vocal)
 		if vocal then game.logSeen(self, "%s is not wearable.", o:getName()) end
 		return false
 	end
-	if not self:canWearObject(o) then
-		if vocal then game.logSeen(self, "%s can not wear: %s.", self.name:capitalize(), o:getName()) end
+	local ok, err = self:canWearObject(o)
+	if not ok then
+		if vocal then game.logSeen(self, "%s can not wear: %s (%s).", self.name:capitalize(), o:getName(), err) end
 		return false
 	end
 

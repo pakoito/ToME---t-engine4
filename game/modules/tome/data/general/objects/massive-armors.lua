@@ -1,8 +1,11 @@
+local Talents = require "engine.interface.ActorTalents"
+
 newEntity{
 	define_as = "BASE_MASSIVE_ARMOR",
 	slot = "BODY",
 	type = "armor", subtype="massive",
 	display = "[", color=colors.SLATE,
+	require = { talent = { Talents.T_MASSIVE_ARMOUR_TRAINING }, },
 	encumber = 17,
 	rarity = 5,
 	desc = [[A suit of armour made of metal plates.]],

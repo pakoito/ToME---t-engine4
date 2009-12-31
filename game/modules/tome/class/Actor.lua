@@ -51,6 +51,9 @@ function _M:init(t, no_default)
 	t.mana_rating = t.mana_rating or 10
 	t.stamina_rating = t.stamina_rating or 10
 
+	-- Resistances
+	t.resists = t.resists or {}
+
 	-- Default regen
 	t.mana_regen = t.mana_regen or 0.5
 	t.stamina_regen = t.stamina_renge or 0.5

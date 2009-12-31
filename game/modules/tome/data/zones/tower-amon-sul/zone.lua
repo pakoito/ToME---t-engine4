@@ -1,6 +1,6 @@
 return {
 	name = "Tower of Amon Sûl",
-	level_range = {1, 5},
+	level_range = {40, 50},
 	level_scheme = "player",
 	max_level = 5,
 	width = 50, height = 50,
@@ -20,14 +20,14 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {0, 0},
 			ood = {chance=5, range={1, 10}},
 			adjust_level = {-1, 2},
 			guardian = "SHADE_OF_ANGMAR",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {2, 3},
+			nb_object = {200, 300},
 			ood = {chance=5, range={1, 10}},
 		},
 	},
