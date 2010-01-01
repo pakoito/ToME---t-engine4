@@ -2,6 +2,7 @@ require "engine.class"
 local DamageType = require "engine.DamageType"
 local Map = require "engine.Map"
 local Target = require "engine.Target"
+local Talents = require "engine.interface.ActorTalents"
 
 --- Interface to add ToME combat system
 module(..., package.seeall, class.make)
@@ -99,7 +100,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
-	print("[ATTACK] with", weapon, " to ", target, " :: ", dam, apr, armor, "::", mult)
+	print("[ATTACK] with", weapon.name, " to ", target.name, " :: ", dam, apr, armor, "::", mult)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
@@ -116,6 +117,29 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	return self:combatSpeed(weapon), hitted
 end
 
+local weapon_talents = {
+	sword = { Talents.T_SWORD_APPRENTICE, Talents.T_SWORD_MASTER, Talents.T_SWORD_GRAND_MASTER },
+	axe =   { Talents.T_AXE_APPRENTICE, Talents.T_AXE_MASTER, Talents.T_AXE_GRAND_MASTER },
+	mace =  { Talents.T_MACE_APPRENTICE, Talents.T_MACE_MASTER, Talents.T_MACE_GRAND_MASTER },
+	knife = { Talents.T_KNIFE_APPRENTICE, Talents.T_KNIFE_MASTER, Talents.T_KNIFE_GRAND_MASTER },
+}
+
+--- Checks weapon training
+function _M:combatCheckTraining(weapon)
+	if not weapon.talented then return 0 end
+	local max = 0
+
+	for i, tid in ipairs(weapon_talents[weapon.talented] or {}) do
+		print("Try", i, tid)
+		if not self:knowTalent(tid) then
+			break
+		end
+		max = i
+	end
+	print("Talented with", weapon.talented, "at", max, "using", #weapon_talents[weapon.talented])
+	return max
+end
+
 --- Gets the defense
 function _M:combatDefense()
 	return self.combat_def + self:getDex() - 10
@@ -129,7 +153,19 @@ end
 --- Gets the attack
 function _M:combatAttack(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5)
+	return self.combat_atk + self:combatCheckTraining(weapon) * 10 + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5)
+end
+
+--- Gets the attack using only strength
+function _M:combatAttackStr(weapon)
+	weapon = weapon or self.combat
+	return self.combat_atk + self:combatCheckTraining(weapon) * 10 + (weapon.atk or 0) + (self:getStr(100) - 10)
+end
+
+--- Gets the attack using only dexterity
+function _M:combatAttackDex(weapon)
+	weapon = weapon or self.combat
+	return self.combat_atk + self:combatCheckTraining(weapon) * 10 + (weapon.atk or 0) + (self:getDex(100) - 10)
 end
 
 --- Gets the armor penetration
@@ -159,7 +195,8 @@ function _M:combatDamage(weapon)
 			add = add + (self:getStat(stat) - 10) * mod
 		end
 	end
-	return self.combat_dam + (weapon.dam or 1) + add
+	local talented_mod = self:combatCheckTraining(weapon)
+	return self.combat_dam + (weapon.dam or 1) * (1 + talented_mod / 3) + add
 end
 
 --- Gets spellpower

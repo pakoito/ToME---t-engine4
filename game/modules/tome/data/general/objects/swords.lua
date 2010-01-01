@@ -5,6 +5,7 @@ newEntity{
 	display = "/", color=colors.SLATE,
 	encumber = 3,
 	rarity = 3,
+	combat = { talented = "sword", },
 	desc = [[Sharp, long, and deadly.]],
 --	egos = "/data/general/objects/egos/swords.lua", egos_chance = resolvers.mbonus(40, 5),
 }

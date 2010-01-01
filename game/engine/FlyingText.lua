@@ -3,7 +3,7 @@ require "engine.class"
 module(..., package.seeall, class.make)
 
 function _M:init(fontname, fontsize)
-	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 8)
+	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
 	self.flyers = {}
 end

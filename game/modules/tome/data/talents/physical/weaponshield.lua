@@ -128,6 +128,8 @@ newTalent{
 			knock = self:addTemporaryValue("knockback_immune", 1)
 		end
 		return {
+			atk = self:addTemporaryValue("combat_dam", -5),
+			dam = self:addTemporaryValue("combat_atk", -5),
 			def = self:addTemporaryValue("combat_def", 5 + self:getDex(10)),
 			armor = self:addTemporaryValue("combat_armor", 5 + self:getCun(10)),
 			stun = stun,
@@ -137,6 +139,8 @@ newTalent{
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("combat_def", p.def)
 		self:removeTemporaryValue("combat_armor", p.armor)
+		self:removeTemporaryValue("combat_atk", p.atk)
+		self:removeTemporaryValue("combat_dam", p.dam)
 		if p.stun then self:removeTemporaryValue("stun_immune", p.stun) end
 		if p.knock then self:removeTemporaryValue("knockback_immune", p.knock) end
 		return true

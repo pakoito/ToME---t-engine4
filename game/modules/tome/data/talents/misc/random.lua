@@ -13,8 +13,8 @@ newTalent{
 	range = 1,
 	action = function(self, t)
 		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y = self:getTarget(t)
-		if not x or not y then return nil end
+		local x, y, target = self:getTarget(t)
+		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self:attackTarget(target, DamageType.POISON, 1.5, true)
 		return true

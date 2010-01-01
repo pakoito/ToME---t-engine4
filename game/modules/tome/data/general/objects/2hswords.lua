@@ -6,6 +6,7 @@ newEntity{
 	display = "/", color=colors.SLATE,
 	encumber = 3,
 	rarity = 3,
+	combat = { talented = "sword", },
 	desc = [[Massive two-handed swords.]],
 	twohanded = true,
 }

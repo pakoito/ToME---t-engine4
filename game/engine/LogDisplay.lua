@@ -9,7 +9,7 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.bgcolor = bgcolor or {0,0,0}
 	self.display_x, self.display_y = x, y
 	self.w, self.h = w, h
-	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 10)
+	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
 	self.surface = core.display.newSurface(w, h)
 	self.log = {}

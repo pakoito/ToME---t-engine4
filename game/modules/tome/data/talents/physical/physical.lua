@@ -4,7 +4,7 @@ newTalentType{ type="physical/dualweapon", name = "dual wielding", description =
 newTalentType{ type="physical/shield", name = "weapon and shields", description = "Allows the user to be more proficient with shields and one handed weapons." }
 newTalentType{ type="physical/dirty", name = "dirty fighting", description = "Teaches various physical talents to criple your foes." }
 newTalentType{ type="physical/weapon-training", name = "weapon-training", description = "Grants bonuses to the different weapon types." }
-newTalentType{ type="physical/combat-training", name = "wombat-training", description = "Teaches to use various armors and improves health." }
+newTalentType{ type="physical/combat-training", name = "combat-training", description = "Teaches to use various armors and improves health." }
 
 load("/data/talents/physical/2hweapon.lua")
 load("/data/talents/physical/dualweapon.lua")

@@ -1,3 +1,7 @@
+-- Load other misc things
+load("/data/talents/misc/npcs.lua")
+load("/data/talents/misc/random.lua")
+
 -- race & classes
 newTalentType{ type="base/class", name = "class", hide = true, description = "The basic talents defining a class." }
 newTalentType{ type="base/race", name = "race", hide = true, description = "The various racial bonuses a character can have." }
