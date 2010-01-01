@@ -97,7 +97,7 @@ end
 --- Returns the current target
 function _M:getTarget(typ)
 	local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
-	return tx, tx, self.ai_target.actor
+	return tx, ty, self.ai_target.actor
 end
 
 --- Sets the current target

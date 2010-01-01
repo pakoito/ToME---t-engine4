@@ -15,6 +15,9 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
+
+	blind_immune = 1,
+	see_invisible = 2,
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",

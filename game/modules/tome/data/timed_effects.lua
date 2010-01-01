@@ -177,8 +177,10 @@ newEffect{
 	on_lose = function(self, err) return "#Target# recovers sight.", "-Blind" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("blind", 1)
+		if self.player then game.level.map:redisplay() end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("blind", eff.tmpid)
+		if self.player then game.level.map:redisplay() end
 	end,
 }

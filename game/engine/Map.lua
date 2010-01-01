@@ -116,6 +116,11 @@ function _M:loaded()
 	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self.changed = true
 
+	self:redisplay()
+end
+
+--- Redisplays the map, storing seen information
+function _M:redisplay()
 	for i = 0, self.w - 1 do for j = 0, self.h - 1 do
 		self._map:setSeen(i, j, self.seens(i, j))
 		self._map:setRemember(i, j, self.remembers(i, j))
