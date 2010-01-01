@@ -98,6 +98,7 @@ end
 function _M:save()
 	return class.save(self, {w=true, h=true, zone=true, player=true, level=true, entities=true,
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
+		always_target=true,
 	}, true)
 end
 
@@ -193,7 +194,7 @@ end
 
 function _M:targetMode(v, msg, co, typ)
 	if not v then
-		Map:setViewerFaction(nil)
+		Map:setViewerFaction(self.always_target and "players" or nil)
 		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press 't' or right mouse click to enable.") end
 		self.level.map.changed = true
 		self.target:setActive(false)
@@ -415,7 +416,9 @@ function _M:setupCommands()
 		[{"_t","shift"}] = function()
 			if Map.view_faction then
 				self:targetMode(false, true)
+				self.always_target = nil
 			else
+				self.always_target = true
 				self:targetMode(true, true)
 				-- Find nearest target
 				self.target:scan(5)

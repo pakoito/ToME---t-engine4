@@ -36,7 +36,7 @@ newTalent{
 newTalent{
 	name = "Death Blow",
 	type = {"physical/2hweapon", 2},
-	cooldown = 8,
+	cooldown = 30,
 	stamina = 15,
 	require = { stat = { str=22 }, },
 	action = function(self, t)
@@ -55,6 +55,7 @@ newTalent{
 		if self:knowTalent(Talents.T_MIGHTY_BLOWS) then
 			self.combat_dam = self.combat_dam + inc
 		end
+		self.combat_physcrit = self.combat_physcrit + 100
 
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1)
 
@@ -62,6 +63,7 @@ newTalent{
 			self.combat_dam = self.combat_dam - inc
 			self.stamina = 0
 		end
+		self.combat_physcrit = self.combat_physcrit - 100
 
 		-- Try to insta-kill
 		if hit then

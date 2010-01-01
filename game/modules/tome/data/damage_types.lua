@@ -55,6 +55,21 @@ newDamageType{
 	end,
 }
 
+-- Blinds
+newDamageType{
+	name = "blindness", type = "BLIND",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {})
+			else
+				game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Fire damage + DOT
 newDamageType{
 	name = "fireburn", type = "FIREBURN",

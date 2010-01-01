@@ -166,3 +166,19 @@ newEffect{
 		self:removeTemporaryValue("see_invisible", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "BLINDED",
+	desc = "Blinded",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# loses sight!.", "+Blind" end,
+	on_lose = function(self, err) return "#Target# recovers sight.", "-Blind" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("blind", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("blind", eff.tmpid)
+	end,
+}

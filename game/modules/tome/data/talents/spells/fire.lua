@@ -9,8 +9,8 @@ newTalent{
 	action = function(self, t)
 		local t = {type="ball", range=0, friendlyfire=false, radius=5 + self:combatSpellpower(0.2)}
 		self:project(t, self.x, self.y, DamageType.LIGHT, 1)
-		if self:knowTalent(Talents.T_GLOBE_OF_LIGHT) then
-			self:project(t, self.x, self.y, DamageType.BLIND, 1)
+		if self:knowTalent(Talents.T_BLINDING_LIGHT) then
+			self:project(t, self.x, self.y, DamageType.BLIND, 4 + self:combatSpellpower(0.03))
 		end
 		return true
 	end,

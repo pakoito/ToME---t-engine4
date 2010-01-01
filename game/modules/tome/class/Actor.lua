@@ -10,6 +10,7 @@ require "engine.interface.ActorTalents"
 require "engine.interface.ActorResource"
 require "engine.interface.BloodyDeath"
 require "mod.class.interface.Combat"
+local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(
 	-- a ToME actor is a complex beast it uses may inetrfaces
@@ -56,8 +57,8 @@ function _M:init(t, no_default)
 
 	-- Default regen
 	t.mana_regen = t.mana_regen or 0.5
-	t.stamina_regen = t.stamina_renge or 0.5
-	t.life_regen = t.life_regen or 0.1
+	t.stamina_regen = t.stamina_regen or 0.2 -- Stamina regens slower than mana
+	t.life_regen = t.life_regen or 0.1 -- Life regen real slow
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
@@ -284,6 +285,9 @@ end
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
 function _M:canSee(actor)
+	-- Blindness means can't see anything
+	if self:attr("blind") then return false, 0 end
+
 	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
 	if actor:attr("invisible") then
 		-- Special case, 0 see invisible, can NEVER see invisible things
@@ -299,6 +303,7 @@ end
 --- Can the target be applied some effects
 -- @param what a string describing what is being tried
 function _M:canBe(what)
+	if what == "blind" and self:attr("blind_immune") then return false end
 	if what == "stun" and self:attr("stun_immune") then return false end
 	if what == "knockback" and self:attr("knockback_immune") then return false end
 	return true
