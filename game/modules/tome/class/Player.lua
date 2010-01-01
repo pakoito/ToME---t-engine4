@@ -1,5 +1,6 @@
 require "engine.class"
 require "mod.class.Actor"
+local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -72,8 +73,10 @@ function _M:act()
 end
 
 function _M:die()
-	-- a tad brutal
-	os.exit()
+	local save = Savefile.new(game.save_name)
+	save:delete()
+	save:close()
+	util.showMainMenu()
 end
 
 function _M:setName(name)
