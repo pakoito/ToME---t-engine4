@@ -69,8 +69,9 @@ function _M:gainExp(value)
 end
 
 --- How much experience is this actor worth
+-- @param target to whom is the exp rewarded
 -- @return the experience rewarded
-function _M:worthExp()
+function _M:worthExp(target)
 	return self.level * self.exp_worth
 end
 

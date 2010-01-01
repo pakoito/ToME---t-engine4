@@ -125,7 +125,7 @@ end
 function _M:die(src)
 	-- Gives the killer some exp for the kill
 	if src then
-		src:gainExp(self:worthExp())
+		src:gainExp(self:worthExp(src))
 	end
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
@@ -282,8 +282,11 @@ function _M:postUseTalent(ab, ret)
 end
 
 --- How much experience is this actor worth
+-- @param target to whom is the exp rewarded
 -- @return the experience rewarded
-function _M:worthExp()
+function _M:worthExp(target)
+	if self.level < target.level - 5 then return 1 end
+
 	local mult = 2
 	if self.unique then mult = 6
 	elseif self.egoed then mult = 3 end
