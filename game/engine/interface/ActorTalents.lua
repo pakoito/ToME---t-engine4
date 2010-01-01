@@ -121,6 +121,7 @@ function _M:useTalent(id)
 	else
 		error("Activating non activable or sustainable talent: "..id.." :: "..ab.name.." :: "..ab.mode)
 	end
+	self.changed = true
 	return true
 end
 

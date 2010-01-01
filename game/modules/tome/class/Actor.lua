@@ -295,3 +295,11 @@ function _M:canSee(actor)
 	end
 	return true, 100
 end
+
+--- Can the target be applied some effects
+-- @param what a string describing what is being tried
+function _M:canBe(what)
+	if what == "stun" and self:attr("stun_immune") then return false end
+	if what == "knockback" and self:attr("knockback_immune") then return false end
+	return true
+end

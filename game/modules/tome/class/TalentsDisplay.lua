@@ -41,6 +41,14 @@ function _M:display()
 
 			s:alpha(128)
 			s:drawString(self.font, txt, 2, 2, 255, 0, 0)
+		elseif a:isTalentActive(t.id) then
+			local txt = ("%s) %s"):format(string.char(acode + i - 1), t.name)
+			local w, h = self.font:size(txt)
+			s = core.display.newSurface(w + 4, h + 4)
+			s:erase(40, 40, 40)
+
+			s:alpha(255)
+			s:drawString(self.font, txt, 2, 2, 255, 255, 0)
 		else
 			local txt = ("%s) %s"):format(string.char(acode + i - 1), t.name)
 			local w, h = self.font:size(txt)

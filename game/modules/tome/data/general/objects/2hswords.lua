@@ -7,6 +7,7 @@ newEntity{
 	encumber = 3,
 	rarity = 3,
 	desc = [[Massive two-handed swords.]],
+	twohanded = true,
 }
 
 newEntity{ base = "BASE_GREATSWORD",

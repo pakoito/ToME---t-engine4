@@ -19,7 +19,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5) then
+			if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 3, {})
 			else
 				game.logSeen(target, "%s resists the shield bash!", target.name:capitalize())
@@ -61,7 +61,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5) then
+			if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("knockback") then
 				target:knockBack(self.x, self.y, 4)
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
@@ -93,7 +93,7 @@ newTalent{
 			local x, y = self.x + i, self.y + j
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
-				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5) then
+				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("knockback") then
 					target:knockBack(self.x, self.y, 3)
 				else
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
@@ -116,17 +116,42 @@ newTalent{
 	sustain_stamina = 100,
 	require = { stat = { str=28 }, },
 	activate = function(self, t)
+		local shield = self:getInven("OFFHAND")[1]
+		if not shield or not shield.special_combat then
+			game.logPlayer(self, "You cannot use Shield Wall without a shield!")
+			return nil
+		end
+
+		local stun, knock
+		if self:knowTalent(Talents.T_SHIELD_MASTERY) then
+			stun = self:addTemporaryValue("stun_immune", 1)
+			knock = self:addTemporaryValue("knockback_immune", 1)
+		end
 		return {
 			def = self:addTemporaryValue("combat_def", 5 + self:getDex(10)),
 			armor = self:addTemporaryValue("combat_armor", 5 + self:getCun(10)),
+			stun = stun,
+			knock = knock
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("combat_def", p.def)
 		self:removeTemporaryValue("combat_armor", p.armor)
+		if p.stun then self:removeTemporaryValue("stun_immune", p.stun) end
+		if p.knock then self:removeTemporaryValue("knockback_immune", p.knock) end
 		return true
 	end,
 	info = function(self)
 		return ([[Enters a protective battle stance, incraesing defense and armor at the cost of attack and damage.]])
+	end,
+}
+
+newTalent{
+	name = "Shield Mastery",
+	type = {"physical/shield", 4},
+	mode = "passive",
+	require = { stat = { str=40 }, talent = { Talents.T_SHIELD_WALL } },
+	info = function(self)
+		return ([[Your Shield Wall now renders you immune to stuns and knockbacks.]])
 	end,
 }

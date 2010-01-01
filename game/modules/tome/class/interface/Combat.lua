@@ -159,7 +159,7 @@ function _M:combatDamage(weapon)
 			add = add + (self:getStat(stat) - 10) * mod
 		end
 	end
-	return self.combat_armor + (weapon.dam or 1) + add
+	return self.combat_dam + (weapon.dam or 1) + add
 end
 
 --- Gets spellpower

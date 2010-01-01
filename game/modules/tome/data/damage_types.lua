@@ -100,7 +100,7 @@ newDamageType{
 		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockBack(src.x, src.y, 1)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
@@ -117,7 +117,7 @@ newDamageType{
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockBack(src.x, src.y, 2)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
