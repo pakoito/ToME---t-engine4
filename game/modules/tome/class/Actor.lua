@@ -281,6 +281,15 @@ function _M:postUseTalent(ab, ret)
 	return true
 end
 
+--- How much experience is this actor worth
+-- @return the experience rewarded
+function _M:worthExp()
+	local mult = 2
+	if self.unique then mult = 6
+	elseif self.egoed then mult = 3 end
+	return self.level * mult * self.exp_worth
+end
+
 --- Can the actor see the target actor
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...

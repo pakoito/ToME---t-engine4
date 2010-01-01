@@ -59,9 +59,13 @@ end
 -- @param eff_id the effect to set
 -- @param dur the number of turns to go on
 -- @param p a table containing the effects parameters
-function _M:setEffect(eff_id, dur, p)
+-- @parm silent true to suppress messages
+function _M:setEffect(eff_id, dur, p, silent)
 	-- Beware, setting to 0 means removing
 	if dur <= 0 then return self:removeEffect(eff_id) end
+
+	-- If we already have it, we remove it and re-add it
+	if self:hasEffect(eff_id) then self:removeEffect(eff_id, true) end
 
 	for k, e in pairs(_M.tempeffect_def[eff_id].parameters) do
 		if not p[k] then p[k] = e end
@@ -70,12 +74,14 @@ function _M:setEffect(eff_id, dur, p)
 	self.tmp[eff_id] = p
 	if _M.tempeffect_def[eff_id].on_gain then
 		local ret, fly = _M.tempeffect_def[eff_id].on_gain(self, p)
-		if ret then
-			game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
-		end
-		if fly and game.flyers then
-			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
-			game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
+		if not silent then
+			if ret then
+				game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
+			end
+			if fly and game.flyers then
+				local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+				game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
+			end
 		end
 		if _M.tempeffect_def[eff_id].activate then _M.tempeffect_def[eff_id].activate(self, p) end
 		self.changed = true
@@ -90,18 +96,20 @@ function _M:hasEffect(eff_id)
 end
 
 --- Removes the effect
-function _M:removeEffect(eff)
+function _M:removeEffect(eff, silent)
 	local p = self.tmp[eff]
 	self.tmp[eff] = nil
 	self.changed = true
 	if _M.tempeffect_def[eff].on_lose then
 		local ret, fly = _M.tempeffect_def[eff].on_lose(self, p)
-		if ret then
-			game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
-		end
-		if fly and game.flyers then
-			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
-			game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
+		if not silent then
+			if ret then
+				game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
+			end
+			if fly and game.flyers then
+				local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+				game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
+			end
 		end
 	end
 	if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end

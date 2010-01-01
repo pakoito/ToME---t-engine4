@@ -105,7 +105,7 @@ end
 function _M:getSaveDescription()
 	return {
 		name = self.player.name,
-		description = [[Strolling in the old places of the world!]],
+		description = ([[Exploring level %d of %s.]]):format(self.level.level, self.zone.name),
 	}
 end
 

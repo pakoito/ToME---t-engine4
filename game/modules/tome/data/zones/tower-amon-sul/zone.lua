@@ -27,7 +27,7 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {200, 300},
+			nb_object = {2, 5},
 			ood = {chance=5, range={1, 10}},
 		},
 	},

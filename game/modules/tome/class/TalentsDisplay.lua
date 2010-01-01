@@ -8,7 +8,7 @@ function _M:init(x, y, w, h, bgcolor)
 	self.w, self.h = w, h
 	self.surface = core.display.newSurface(w, h)
 	self.bgcolor = bgcolor
-	self.font = core.display.newFont("/data/font/VeraMono.ttf", 8)
+	self.font = core.display.newFont("/data/font/VeraMono.ttf", 12)
 	self.font_h = self.font:lineSkip()
 end
 
@@ -29,12 +29,14 @@ function _M:display()
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 
 	local acode = string.byte('1')
+	local x = 0
+	local y = 0
 
 	for i, tid in ipairs(talents) do
 		local t = a:getTalentFromId(tid)
 		local s
 		if a:isTalentCoolingDown(t) then
-			local txt = ("%s) %s (%d)"):format(string.char(acode + i - 1), t.name, a:isTalentCoolingDown(t))
+			local txt = ("%d) %s (%d)"):format(i, t.name, a:isTalentCoolingDown(t))
 			local w, h = self.font:size(txt)
 			s = core.display.newSurface(w + 4, h + 4)
 			s:erase(40, 40, 40)
@@ -42,7 +44,7 @@ function _M:display()
 			s:alpha(128)
 			s:drawString(self.font, txt, 2, 2, 255, 0, 0)
 		elseif a:isTalentActive(t.id) then
-			local txt = ("%s) %s"):format(string.char(acode + i - 1), t.name)
+			local txt = ("%d) %s"):format(i, t.name)
 			local w, h = self.font:size(txt)
 			s = core.display.newSurface(w + 4, h + 4)
 			s:erase(40, 40, 40)
@@ -50,7 +52,7 @@ function _M:display()
 			s:alpha(255)
 			s:drawString(self.font, txt, 2, 2, 255, 255, 0)
 		else
-			local txt = ("%s) %s"):format(string.char(acode + i - 1), t.name)
+			local txt = ("%d) %s"):format(i, t.name)
 			local w, h = self.font:size(txt)
 			s = core.display.newSurface(w + 4, h + 4)
 			s:erase(40, 40, 40)
@@ -59,7 +61,13 @@ function _M:display()
 			s:drawString(self.font, txt, 2, 2, 0, 255, 0)
 		end
 
-		self.surface:merge(s, 0, (i-1) * 20)
+		self.surface:merge(s, x, y)
+		if y + self.font_h * 2 > self.h then
+			x = x + self.w / 3
+			y = 0
+		else
+			y = y + self.font_h
+		end
 	end
 
 	return self.surface
