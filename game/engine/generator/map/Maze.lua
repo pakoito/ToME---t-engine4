@@ -63,7 +63,9 @@ function _M:generate(lev, old_lev)
 	local ux, uy = 1, 1
 	local dx, dy = math.floor(self.map.w/2)*2-1-2*(1-math.mod(self.map.w,2)), math.floor(self.map.h/2)*2-1-2*(1-math.mod(self.map.h,2))
 	self.map(ux, uy, Map.TERRAIN, self.up)
-	self.map(dx, dy, Map.TERRAIN, self.down)
+	if lev < self.zone.max_level then
+		self.map(dx, dy, Map.TERRAIN, self.down)
+	end
 	if lev > old_lev then
 		return ux, uy
 	else

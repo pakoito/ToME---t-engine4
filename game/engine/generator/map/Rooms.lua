@@ -41,7 +41,7 @@ function _M:doRooms(room, no, tab)
 	end
 end
 
-function _M:generate()
+function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
 		if j == 0 or j == self.map.h - 1 or i == 0 or i == self.map.w - 1 then
 			self.map(i, j, Map.TERRAIN, self.wall)
@@ -57,6 +57,8 @@ function _M:generate()
 	local up_spot = table.remove(self.spots, rng.range(1, #self.spots))
 	local down_spot = self.spots[rng.range(1, #self.spots)]
 	self.map(up_spot.x, up_spot.y, Map.TERRAIN, self.up)
-	self.map(down_spot.x, down_spot.y, Map.TERRAIN, self.down)
+	if lev < self.zone.max_level then
+		self.map(down_spot.x, down_spot.y, Map.TERRAIN, self.down)
+	end
 	return up_spot.x, up_spot.y, self.spots
 end

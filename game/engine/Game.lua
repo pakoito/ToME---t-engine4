@@ -24,6 +24,7 @@ function _M:init(keyhandler)
 end
 
 function _M:loaded()
+	self.w, self.h = core.display.size()
 	self.dialogs = {}
 	self.key = engine.Key.current
 	self.mouse = engine.Mouse.new()
