@@ -21,7 +21,7 @@ lua_State *L = NULL;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
-int px = 1, py = 1;
+bool exit_engine = FALSE;
 
 static int traceback (lua_State *L) {
 	lua_Debug ar;
@@ -460,9 +460,8 @@ int main(int argc, char *argv[])
 
 	SDL_AddTimer(30, redraw_timer, NULL);
 
-	bool done = FALSE;
 	SDL_Event event;
-	while ( !done )
+	while (!exit_engine)
 	{
 		/* handle the events in the queue */
 		while (SDL_PollEvent(&event))
@@ -477,7 +476,7 @@ int main(int argc, char *argv[])
 				break;
 			case SDL_QUIT:
 				/* handle quit requests */
-				done = TRUE;
+				exit_engine = TRUE;
 				break;
 			case SDL_USEREVENT:
 				if (event.user.code == 0) {
@@ -492,10 +491,9 @@ int main(int argc, char *argv[])
 
 		/* draw the scene */
 		on_tick();
-		//usleep(1000);
-		//on_redraw();
-
 	}
+
+	SDL_Quit();
 
 	return 0;
 }

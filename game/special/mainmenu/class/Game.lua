@@ -102,7 +102,7 @@ function _M:selectStepMain()
 		{
 			name = "Exit",
 			fct = function()
-				os.exit()
+				core.game.exit_engine()
 			end,
 		},
 	}, self.w * 0.3, self.h * 0.2, self.w * 0.4, self.h * 0.3)
