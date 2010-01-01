@@ -13,7 +13,7 @@ newEntity{
 	define_as = "BASE_AMULET",
 	slot = "NECK",
 	type = "jewelry", subtype="amulet",
-	display = "=",
+	display = '"',
 	encumber = 0.1,
 	rarity = 8,
 	desc = [[Amulets can have magical properties.]],

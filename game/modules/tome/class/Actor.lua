@@ -199,15 +199,25 @@ end
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab, silent)
 	if not self:enoughEnergy() then print("fail energy") return false end
-	if ab.mana and self:getMana() < ab.mana * (100 + self.fatigue) / 100 then
-		game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
-		print("fail mana", self:getMana(), ab.mana, ab.mana * (100 + self.fatigue) / 100)
-		return false
-	end
-	if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
-		print("fail stam")
-		game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
-		return false
+
+	if ab.mode == "sustained" then
+		if ab.sustain_mana and self.max_mana < ab.sustain_mana then
+			game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
+			return false
+		end
+		if ab.sustain_stamina and self.max_stamina < ab.sustain_stamina then
+			game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
+			return false
+		end
+	else
+		if ab.mana and self:getMana() < ab.mana * (100 + self.fatigue) / 100 then
+			game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
+			return false
+		end
+		if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
+			game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
+			return false
+		end
 	end
 
 	if not silent then
@@ -242,11 +252,29 @@ function _M:postUseTalent(ab, ret)
 		self:useEnergy()
 	end
 
-	if ab.mana then
-		self:incMana(-ab.mana * (100 + self.fatigue) / 100)
-	end
-	if ab.stamina then
-		self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
+	if ab.mode == "sustained" then
+		if not self:isTalentActive(ab.id) then
+			if ab.sustain_mana then
+				self.max_mana = self.max_mana - ab.sustain_mana
+			end
+			if ab.sustain_stamina then
+				self.max_stamina = self.max_stamina - ab.sustain_stamina
+			end
+		else
+			if ab.sustain_mana then
+				self.max_mana = self.max_mana + ab.sustain_mana
+			end
+			if ab.sustain_stamina then
+				self.max_stamina = self.max_stamina + ab.sustain_stamina
+			end
+		end
+	else
+		if ab.mana then
+			self:incMana(-ab.mana * (100 + self.fatigue) / 100)
+		end
+		if ab.stamina then
+			self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
+		end
 	end
 
 	return true

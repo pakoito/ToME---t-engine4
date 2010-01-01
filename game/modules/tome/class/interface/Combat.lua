@@ -39,8 +39,6 @@ The ToME combat system has the following attributes:
 - damage: raw damage done
 ]]
 function _M:attackTarget(target, damtype, mult, noenergy)
-	damtype = damtype or DamageType.PHYSICAL
-	mult = mult or 1
 	local speed = nil
 
 	-- All weaponsin main hands
@@ -95,21 +93,27 @@ end
 
 --- Attacks with one weapon
 function _M:attackTargetWith(target, weapon, damtype, mult)
+	damtype = damtype or DamageType.PHYSICAL
+	mult = mult or 1
+
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
+	print("[ATTACK] with", weapon, " to ", target, " :: ", dam, apr, armor, "::", mult)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
+	local hitted = false
 	if self:checkHit(atk, def) then
 		local dam = dam - math.max(0, armor - apr)
 		dam = dam * mult
 		dam = self:physicalCrit(dam, weapon)
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+		hitted = true
 	else
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 	end
 
-	return self:combatSpeed(weapon)
+	return self:combatSpeed(weapon), hitted
 end
 
 --- Gets the defense

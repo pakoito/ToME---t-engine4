@@ -204,7 +204,7 @@ function _M:targetMode(v, msg, co, typ)
 			if self.target_co then
 				local co = self.target_co
 				self.target_co = nil
-				local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y)
+				local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y, self.target.target.entity)
 				if not ok and err then error(err) end
 			end
 		end

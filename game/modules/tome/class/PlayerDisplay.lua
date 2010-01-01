@@ -30,7 +30,7 @@ function _M:display()
 		self.surface:drawColorString(self.font, ("#7fffd4#Mana:    #00ff00#%d/%d"):format(game.player:getMana(), game.player.max_mana), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_STAMINA_POOL) then
-		self.surface:drawColorString(self.font, ("#ffcc80#Stamina: #00ff00#%d/%d"):format(game.player:getMana(), game.player.max_mana), 0, h, 255, 255, 255) h = h + self.font_h
+		self.surface:drawColorString(self.font, ("#ffcc80#Stamina: #00ff00#%d/%d"):format(game.player:getStamina(), game.player.max_stamina), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	h = h + self.font_h
 	self.surface:drawColorString(self.font, ("STR: #00ff00#%3d"):format(game.player:getStr()), 0, h, 255, 255, 255) h = h + self.font_h

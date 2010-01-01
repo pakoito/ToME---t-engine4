@@ -4,7 +4,9 @@ defaultProjector(function(src, x, y, type, dam)
 	if target then
 		-- Reduce damage with resistance
 		local res = target.resists[type] or 0
-		dam = dam * (100 - res)
+		if res == 10 then dam = 0
+		else dam = dam * (100 / (100 - res))
+		end
 
 		game.logSeen(target, "%s hits %s for #aaaaaa#%0.2f %s damage#ffffff#.", src.name:capitalize(), target.name, dam, DamageType:get(type).name)
 		local sx, sy = game.level.map:getTileToScreen(x, y)
