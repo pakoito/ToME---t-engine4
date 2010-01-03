@@ -29,7 +29,8 @@ rememberDisplayOrder = { TERRAIN }
 -- @param tile_h height of a single tile
 -- @param fontname font parameters, can be nil
 -- @param fontsize font parameters, can be nil
-function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize)
+function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidisplay)
+	self.multidisplay = multidisplay
 	self.display_x, self.display_y = x, y
 	self.viewport = {width=w, height=h, mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
 	self.tiles = Tiles.new(tile_w, tile_h, fontname, fontsize, true)
@@ -79,7 +80,7 @@ function _M:save()
 	})
 end
 function _M:loaded()
-	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight)
+	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
 
 	local mapseen = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
@@ -241,11 +242,11 @@ function _M:display()
 					if e.faction then
 						friend = Faction:factionReaction(self.view_faction, e.faction)
 						if friend > 0 then
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						elseif friend < 0 then
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						else
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						end
 					end
 				end

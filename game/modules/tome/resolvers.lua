@@ -8,10 +8,10 @@ function resolvers.calc.equip(t, e)
 	for i, filter in ipairs(t[1]) do
 		print("Equipment resolver", filter.type, filter.subtype)
 		local o
-		if not filter.name then
+		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter)
 		else
-			o = game.zone:makeEntityByName(game.level, "object", filter.name)
+			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
 		end
 		if o then
 			print("Zone made us an equipment according to filter!", o:getName())

@@ -389,6 +389,65 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 	return 1;
 }
 
+
+
+static int sdl_new_tile(lua_State *L)
+{
+	int w = luaL_checknumber(L, 1);
+	int h = luaL_checknumber(L, 2);
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 3);
+	const char *str = luaL_checkstring(L, 4);
+	int x = luaL_checknumber(L, 5);
+	int y = luaL_checknumber(L, 6);
+	int r = luaL_checknumber(L, 7);
+	int g = luaL_checknumber(L, 8);
+	int b = luaL_checknumber(L, 9);
+	int br = luaL_checknumber(L, 10);
+	int bg = luaL_checknumber(L, 11);
+	int bb = luaL_checknumber(L, 12);
+	int alpha = luaL_checknumber(L, 13);
+
+	SDL_Color color = {r,g,b};
+	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
+	if (txt)
+	{
+		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
+		auxiliar_setclass(L, "sdl{surface}", -1);
+
+		Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		rmask = 0xff000000;
+		gmask = 0x00ff0000;
+		bmask = 0x0000ff00;
+		amask = 0x000000ff;
+#else
+		rmask = 0x000000ff;
+		gmask = 0x0000ff00;
+		bmask = 0x00ff0000;
+		amask = 0xff000000;
+#endif
+
+		*s = SDL_CreateRGBSurface(
+			SDL_SWSURFACE | SDL_SRCALPHA,
+			w,
+			h,
+			32,
+			rmask, gmask, bmask, amask
+			);
+
+		SDL_SetAlpha(txt, 0, 0);
+		SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, br, bg, bb, alpha));
+
+		sdlDrawImage(*s, txt, x, y);
+		SDL_FreeSurface(txt);
+
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 static int sdl_new_surface(lua_State *L)
 {
 	int w = luaL_checknumber(L, 1);
@@ -632,13 +691,15 @@ static int sdl_texture_toscreen(lua_State *L)
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
+	int w = luaL_checknumber(L, 4);
+	int h = luaL_checknumber(L, 5);
 
 	glBindTexture(GL_TEXTURE_2D, *t);
 	glBegin( GL_QUADS );                 /* Draw A Quad              */
 	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
-	glTexCoord2f(0,1); glVertex2f(0  + x, 16 + y);
-	glTexCoord2f(1,1); glVertex2f(16 + x, 16 + y);
-	glTexCoord2f(1,0); glVertex2f(16 + x, 0  + y);
+	glTexCoord2f(0,1); glVertex2f(0  + x, h + y);
+	glTexCoord2f(1,1); glVertex2f(w + x, h + y);
+	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
 	glEnd( );                            /* Done Drawing The Quad    */
 
 	return 0;
@@ -651,6 +712,7 @@ static const struct luaL_reg displaylib[] =
 	{"size", sdl_screen_size},
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
+	{"newTile", sdl_new_tile},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"loadImage", sdl_load_image},
 	{"setWindowTitle", sdl_set_window_title},

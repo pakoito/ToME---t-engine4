@@ -16,13 +16,18 @@ static int map_new(lua_State *L)
 	int my = luaL_checknumber(L, 4);
 	int mwidth = luaL_checknumber(L, 5);
 	int mheight = luaL_checknumber(L, 6);
+	int tile_w = luaL_checknumber(L, 7);
+	int tile_h = luaL_checknumber(L, 8);
+	bool multidisplay = lua_toboolean(L, 9);
 
 	map_type *map = (map_type*)lua_newuserdata(L, sizeof(map_type));
 	auxiliar_setclass(L, "core{map}", -1);
 
-	map->multidisplay = FALSE;
+	map->multidisplay = multidisplay;
 	map->w = w;
 	map->h = h;
+	map->tile_w = tile_w;
+	map->tile_h = tile_h;
 	map->mx = mx;
 	map->my = my;
 	map->mwidth = mwidth;
@@ -192,8 +197,8 @@ static int map_to_screen(lua_State *L)
 		{
 			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 
-			int dx = x + (i - map->mx) * 16;
-			int dy = y + (j - map->my) * 16;
+			int dx = x + (i - map->mx) * map->tile_w;
+			int dy = y + (j - map->my) * map->tile_h;
 
 			if (map->grids_seens[i][j] || map->grids_remembers[i][j])
 			{
@@ -208,9 +213,9 @@ static int map_to_screen(lua_State *L)
 							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j]);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(16 +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(16 +dx, 16 +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, 16 +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 							glEnd();
 						}
 						if (map->grids_object[i][j])
@@ -218,9 +223,9 @@ static int map_to_screen(lua_State *L)
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j]);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(16 +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(16 +dx, 16 +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, 16 +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 							glEnd();
 						}
 						if (map->grids_actor[i][j])
@@ -228,9 +233,9 @@ static int map_to_screen(lua_State *L)
 							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j]);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(16 +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(16 +dx, 16 +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, 16 +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 							glEnd();
 						}
 					}
@@ -241,9 +246,9 @@ static int map_to_screen(lua_State *L)
 							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j]);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(16 +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(16 +dx, 16 +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, 16 +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 							glEnd();
 						}
 						else if (map->grids_object[i][j])
@@ -251,9 +256,9 @@ static int map_to_screen(lua_State *L)
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j]);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(16 +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(16 +dx, 16 +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, 16 +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 							glEnd();
 						}
 						else if (map->grids_terrain[i][j])
@@ -261,9 +266,9 @@ static int map_to_screen(lua_State *L)
 							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j]);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(16 +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(16 +dx, 16 +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, 16 +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 							glEnd();
 						}
 					}
@@ -276,9 +281,9 @@ static int map_to_screen(lua_State *L)
 						glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j]);
 						glBegin(GL_QUADS);
 						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(16 +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(16 +dx, 16 +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, 16 +dy,-99);
+						glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+						glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 						glEnd();
 					}
 				}

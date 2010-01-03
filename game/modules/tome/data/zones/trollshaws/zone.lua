@@ -4,7 +4,7 @@ return {
 	level_scheme = "player",
 	max_level = 5,
 	width = 50, height = 50,
-	all_remembered = true,
+--	all_remembered = true,
 --	all_lited = true,
 --	persistant = true,
 	generator =  {
@@ -12,11 +12,11 @@ return {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			rooms = {"simple", "pilar"},
-			['.'] = "FLOOR",
-			['#'] = "WALL",
+			['.'] = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
+			['#'] = "TREE",
 			up = "UP",
 			down = "DOWN",
-			door = "DOOR",
+			door = "GRASS",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
@@ -27,7 +27,7 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {2, 5},
+			nb_object = {200, 500},
 			ood = {chance=5, range={1, 10}},
 		},
 	},

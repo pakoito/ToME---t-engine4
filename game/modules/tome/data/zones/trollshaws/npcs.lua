@@ -18,7 +18,7 @@ newEntity{ define_as = "TROLL_BILL",
 	stats = { str=25, dex=10, cun=8, mag=10, con=20 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="greatmaul", name="GREATMAUL_BILL_TRUNK"}, },
+	equipment = resolvers.equip{ {type="weapon", subtype="greatmaul", defined="GREATMAUL_BILL_TRUNK"}, },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	talents = resolvers.talents{

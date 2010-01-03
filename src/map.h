@@ -16,6 +16,7 @@ typedef struct {
 	// Map size
 	int w;
 	int h;
+	int tile_w, tile_h;
 
 	// Scrolling
 	int mx, my, mwidth, mheight;

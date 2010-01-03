@@ -14,8 +14,8 @@
 #include "core_lua.h"
 #include "getself.h"
 
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 1200
+#define HEIGHT 1024
 
 lua_State *L = NULL;
 int current_mousehandler = LUA_NOREF;

@@ -22,13 +22,13 @@ newEntity{
 
 newEntity{
 	define_as = "FLOOR",
-	name = "floor",
+	name = "floor", image = "terrain/marble_floor.png",
 	display = '.', color_r=255, color_g=255, color_b=255,
 }
 
 newEntity{
 	define_as = "WALL",
-	name = "wall",
+	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255,
 	block_move = true,
 	block_sight = true,
@@ -36,7 +36,7 @@ newEntity{
 
 newEntity{
 	define_as = "DOOR",
-	name = "door",
+	name = "door", image = "terrain/granite_door1.png",
 	display = '+', color_r=238, color_g=154, color_b=77,
 	block_sight = true,
 	door_opened = "DOOR_OPEN",
@@ -44,9 +44,29 @@ newEntity{
 
 newEntity{
 	define_as = "DOOR_OPEN",
-	name = "open door",
+	name = "open door", image = "terrain/granite_door1_open.png",
 	display = "'", color_r=238, color_g=154, color_b=77,
 	block_move = false,
 	block_sight = false,
 	door_closed = "DOOR",
+}
+
+newEntity{
+	define_as = "GRASS",
+	name = "grass", image = "terrain/grass.png",
+	display = '.', color=colors.LIGHT_GREEN,
+}
+
+newEntity{
+	define_as = "FLOWER",
+	name = "flower",
+	display = ';', color=colors.YELLOW,
+}
+
+newEntity{
+	define_as = "TREE",
+	name = "tree", image = "terrain/tree.png",
+	display = '#', color=colors.LIGHT_GREEN,
+	block_move = true,
+	block_sight = true,
 }

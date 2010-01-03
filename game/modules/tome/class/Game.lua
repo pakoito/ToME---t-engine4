@@ -44,7 +44,7 @@ end
 
 function _M:run()
 	self.log = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
-	self.player_display = PlayerDisplay.new(0, 0, self.w * 0.2, self.h * 0.8, {30,30,0})
+	self.player_display = PlayerDisplay.new(0, 0, 200, self.h * 0.8, {30,30,0})
 	self.talents_display = TalentsDisplay.new(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
@@ -91,7 +91,7 @@ function _M:loaded()
 	engine.GameTurnBased.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object"}
 	Map:setViewerActor(self.player)
-	Map:setViewPort(self.w * 0.2, 0, self.w * 0.8, math.floor(self.h * 0.80), 16, 16)
+	Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 32, 32, nil, 20, true)
 	self.key = engine.KeyCommand.new()
 end
 
