@@ -4,7 +4,7 @@ return {
 	level_scheme = "player",
 	max_level = 5,
 	width = 50, height = 50,
-	all_remembered = true,
+--	all_remembered = true,
 --	all_lited = true,
 --	persistant = true,
 	generator =  {
@@ -27,7 +27,7 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {200, 500},
+			nb_object = {2, 5},
 			ood = {chance=5, range={1, 10}},
 		},
 	},

@@ -163,7 +163,7 @@ function _M:display()
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
 			self.level.map:fov(self.player.x, self.player.y, 20)
-			self.level.map:fovLite(self.player.x, self.player.y, self.player.lite)
+			if self.player.lite > 0 then self.level.map:fovLite(self.player.x, self.player.y, self.player.lite) end
 		end
 		self.level.map:display()
 

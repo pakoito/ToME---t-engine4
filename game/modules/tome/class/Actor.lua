@@ -278,6 +278,12 @@ function _M:postUseTalent(ab, ret)
 		end
 	end
 
+	-- Cancel stealth!
+	if ab.id ~= self.T_STEALTH and self:isTalentActive(self.T_STEALTH) then
+		self:useTalent(self.T_STEALTH)
+		self.changed = true
+	end
+
 	return true
 end
 
@@ -299,6 +305,16 @@ end
 function _M:canSee(actor)
 	-- Blindness means can't see anything
 	if self:attr("blind") then return false, 0 end
+
+	-- Check for stealth. Checks against the target cunning and level
+	if actor:attr("stealth") and actor ~= self then
+		local def = self.level / 2 + self:getCun(25)
+		local hit, chance = self:checkHit(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
+		print("Stealth", actor:attr("stealth") + (actor:attr("inc_stealth") or 0), "<:>", def, " ===> ", hit, chance)
+		if not hit then
+			return false, chance
+		end
+	end
 
 	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
 	if actor:attr("invisible") then

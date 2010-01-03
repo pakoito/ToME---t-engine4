@@ -73,11 +73,16 @@ newBirthDescriptor{
 		"Rogues are masters of tricks, they can steal from shops and monsters",
 		"and lure monsters into deadly traps.",
 	},
-	stats = { dex=3, con=1, cun=2, },
+	stats = { dex=3, wil=1, cun=3, },
 	talents_types = {
 		["physical/dualweapon"]=true,
 		["physical/combat-training"]=true,
 		["physical/weapon-training"]=true,
+		["cunning/stealth"]=true,
+	},
+	talents_types_mastery = {
+		["physical/dualweapon"]=0.2,
+		["cunning/stealth"]=0.3,
 	},
 }
 

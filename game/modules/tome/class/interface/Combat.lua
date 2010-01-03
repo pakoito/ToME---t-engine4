@@ -42,6 +42,13 @@ The ToME combat system has the following attributes:
 function _M:attackTarget(target, damtype, mult, noenergy)
 	local speed = nil
 
+	-- Cancel stealth early if we are noticed
+	if self:isTalentActive(self.T_STEALTH) and target:canSee(self) then
+		self:useTalent(self.T_STEALTH)
+		self.changed = true
+		game.logPlayer(self, "%s notices you at the last moment!", target.name:capitalize())
+	end
+
 	-- All weaponsin main hands
 	if self:getInven(self.INVEN_MAINHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
@@ -75,6 +82,12 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	if speed and not noenergy then
 		self:useEnergy(game.energy_to_act * speed)
 		self.did_energy = true
+	end
+
+	-- Cancel stealth!
+	if self:isTalentActive(self.T_STEALTH) then
+		self:useTalent(self.T_STEALTH)
+		self.changed = true
 	end
 end
 
@@ -111,8 +124,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	local hitted = false
 	if self:checkHit(atk, def) then
 		local dam = dam - math.max(0, armor - apr)
+		local crit
 		dam = dam * mult
-		dam = self:physicalCrit(dam, weapon)
+		dam, crit = self:physicalCrit(dam, weapon)
+		game.logSeen(self, "%s performs a critical stike!", self.name:capitalize())
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
 	else
@@ -213,20 +228,32 @@ end
 
 --- Computes physical crit for a damage
 function _M:physicalCrit(dam, weapon)
+	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+		return dam * (2 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 5), true
+	end
+
 	local chance = self:combatCrit(weapon)
+	local crit = false
 	if rng.percent(chance) then
 		dam = dam * 2
+		crit = true
 	end
-	return dam
+	return dam, crit
 end
 
 --- Computes spell crit for a damage
 function _M:spellCrit(dam)
+	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+		return dam * (2 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 5), true
+	end
+
 	local chance = self:combatSpellCrit()
+	local crit = false
 	if rng.percent(chance) then
 		dam = dam * 2
+		crit = true
 	end
-	return dam
+	return dam, crit
 end
 
 --- Computes physical resistance
