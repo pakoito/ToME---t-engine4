@@ -99,3 +99,35 @@ newTalent{
 		return ([[Greatly increases attack speed, but drains stamina quickly.]])
 	end,
 }
+
+
+newTalent{
+	name = "Momentum",
+	type = {"physical/dualweapon", 3},
+	mode = "sustained",
+	points = 5,
+	cooldown = 30,
+	sustain_stamina = 50,
+	require = { stat = { dex=20 }, },
+	activate = function(self, t)
+		local weapon = self:getInven("MAINHAND")[1]
+		local offweapon = self:getInven("OFFHAND")[1]
+		if not weapon or not offweapon or not weapon.combat or not offweapon.combat then
+			game.logPlayer(self, "You cannot use Flurry without dual wielding!")
+			return nil
+		end
+
+		return {
+			combat_physspeed = self:addTemporaryValue("combat_physspeed", -0.1 - self:getTalentLevel(t) / 10),
+			stamina_regen = self:addTemporaryValue("stamina_regen", -5),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_physspeed", p.combat_physspeed)
+		self:removeTemporaryValue("stamina_regen", p.stamina_regen)
+		return true
+	end,
+	info = function(self)
+		return ([[Greatly increases attack speed, but drains stamina quickly.]])
+	end,
+}

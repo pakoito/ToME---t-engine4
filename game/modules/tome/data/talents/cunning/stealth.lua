@@ -24,16 +24,17 @@ newTalent{
 
 		return {
 			stealth = self:addTemporaryValue("stealth", self:getCun(10) * self:getTalentLevel(t)),
-			lite = self:addTemporaryValue("lite", -100),
+--			lite = self:addTemporaryValue("lite", -100),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("stealth", p.stealth)
-		self:removeTemporaryValue("lite", p.lite)
+--		self:removeTemporaryValue("lite", p.lite)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Enters stealth mode, making you harder to detect.
+		Stealth cannot work with heavy or massive armours.
 		While in stealth mode, light radius is reduced to 0.
 		There needs to be no foes in sight in a radius of %d around you to enter stealth.]]):format(math.floor(10 - self:getTalentLevel(t) * 1.3))
 	end,
@@ -47,6 +48,6 @@ newTalent{
 	require = { stat = { cun=18 }, },
 	info = function(self, t)
 		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
-		Shadowstrikes do %.02f%% more damage than a normal hit.]]):format(math.floor(2 + self:getTalentLevel(t) / 5))
+		Shadowstrikes do %.02f%% damage than a normal hit.]]):format((2 + self:getTalentLevel(t) / 5) * 100)
 	end,
 }

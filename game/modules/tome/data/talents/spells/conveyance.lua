@@ -12,10 +12,10 @@ newTalent{
 		local target = self
 
 		if self:getTalentLevel(t) >= 5 then
-			local tx, ty = self:getTarget{default_target=self, type="hit", range=10}
-			if tx and ty then
-				target = game.level.map(tx, ty, Map.ACTOR) or self
-			end
+--			local tx, ty = self:getTarget{type="hit", range=10}
+--			if tx and ty then
+--				target = game.level.map(tx, ty, Map.ACTOR) or self
+--			end
 		end
 
 		local x, y = self.x, self.y
@@ -25,7 +25,7 @@ newTalent{
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
 			x, y = game.target:pointAtRange(self.x, self.y, x, y, 10 + self:combatSpellpower(0.1))
-			target:teleportRandom(x, y, 20 - self:getTalentLevel(t))
+			target:teleportRandom(x, y, 7 - self:getTalentLevel(t))
 		else
 			target:teleportRandom(x, y, 10 + self:combatSpellpower(0.1))
 		end

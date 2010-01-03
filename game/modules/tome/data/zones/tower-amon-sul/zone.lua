@@ -4,7 +4,7 @@ return {
 	level_scheme = "player",
 	max_level = 5,
 	width = 50, height = 50,
---	all_remembered = true,
+	all_remembered = true,
 --	all_lited = true,
 --	persistant = true,
 	generator =  {

@@ -35,11 +35,12 @@ function _M:tick()
 		local arr = self.level.e_array
 		for i = 1, #arr do
 			e = arr[i]
-			if e and e.act then
-				if e.energy and e.energy.value < self.energy_to_act then
+			if e and e.act and e.energy then
+				if e.energy.value < self.energy_to_act then
 					e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1)
 				end
 				if e.energy.value >= self.energy_to_act then
+					e.energy.used = false
 					e:act(self)
 				end
 			end
@@ -49,11 +50,12 @@ function _M:tick()
 	local arr = self.entities
 	for i, e in pairs(arr) do
 		e = arr[i]
-		if e and e.act then
-			if e.energy and e.energy.value < self.energy_to_act then
+		if e and e.act and e.energy then
+			if e.energy.value < self.energy_to_act then
 				e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1)
 			end
 			if e.energy.value >= self.energy_to_act then
+				e.energy.used = false
 				e:act(self)
 			end
 		end

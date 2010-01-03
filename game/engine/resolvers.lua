@@ -32,6 +32,6 @@ function resolvers.talents(list)
 end
 function resolvers.calc.talents(t, e)
 	local ts = {}
-	for i, tid in ipairs(t[1]) do ts[tid] = true end
+	for tid, level in pairs(t[1]) do ts[tid] = level end
 	return ts
 end

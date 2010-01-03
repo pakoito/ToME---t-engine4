@@ -15,9 +15,8 @@ function _M:act()
 
 	-- Let the AI think .... beware of Shub !
 	-- If AI did nothing, use energy anyway
-	local old = self.energy.value
 	self:doAI()
-	if old == self.energy.value then self:useEnergy() end
+	if not self.energy.used then self:useEnergy() end
 end
 
 --- Called by ActorLife interface

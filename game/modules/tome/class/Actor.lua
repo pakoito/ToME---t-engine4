@@ -145,8 +145,8 @@ end
 
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3
-	self.unused_talents = self.unused_talents + 1
-	if self.level % 5 == 0 then
+	self.unused_talents = self.unused_talents + 2
+	if self.level % 10 == 0 then
 		self.unused_talents_types = self.unused_talents_types + 1
 	end
 
