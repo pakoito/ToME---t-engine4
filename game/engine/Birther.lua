@@ -125,7 +125,14 @@ function _M:apply()
 		end
 		if d.talents_types then
 			for t, v in pairs(d.talents_types) do
+				local mastery
+				if type(v) == "table" then
+					v, mastery = v[1], v[2]
+				else
+					v, mastery = v, 0
+				end
 				self.actor:learnTalentType(t, v)
+				self.actor.talents_types_mastery[t] = (self.actor.talents_types_mastery[t] or 1) + mastery
 				print(t)
 			end
 		end

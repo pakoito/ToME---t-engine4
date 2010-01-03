@@ -14,13 +14,16 @@ function _M:init(zone, map, level)
 	if data.adjust_level and game:getPlayer() then
 		self.adjust_level = {base=zone.base_level, min=data.adjust_level[1], max=data.adjust_level[2]}
 	end
+	self.filters = data.filters
 	self.nb_npc = data.nb_npc or {10, 20}
 	self.guardian = data.guardian
 end
 
 function _M:generate()
 	for i = 1, rng.range(self.nb_npc[1], self.nb_npc[2]) do
-		local m = self.zone:makeEntity(self.level, "actor")
+		local f = nil
+		if self.filters then f = self.filters[rng.range(1, #self.filters)] end
+		local m = self.zone:makeEntity(self.level, "actor", f)
 		if m then
 			local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
 			local tries = 0

@@ -8,17 +8,17 @@ quickEntity('_', {name='river', display='~', color={r=0, g=80, b=255}})
 quickEntity('*', {name="Dunadan's Outpost", display='*', color={r=255, g=255, b=255}})
 quickEntity('1', {name="Caves below the tower of Amon Sûl", display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tower-amon-sul"})
 quickEntity('2', {name="Ettenmoors's cavern", display='>', color={r=80, g=255, b=255}})
-quickEntity('3', {name="Passageway into the Trollshaws", display='>', color={r=0, g=255, b=0}})
+quickEntity('3', {name="Passageway into the Trollshaws", display='>', color={r=0, g=255, b=0}, change_level=1, change_zone="trollshaws"})
 
 return {
 [[W..........&&.....MM.]],
 [[WW..........&&.....MM]],
-[[WW...........3&&&...M]],
+[[WW...........2&&&...M]],
 [[WW..............&&..M]],
 [[WW1......*_________MM]],
 [[WW.....___.........MM]],
 [[W....._............MM]],
-[[.....__..tt2t......MM]],
+[[.....__..tt3t......MM]],
 [[....__.ttttttt....MM.]],
 [[...._....tttt....MMM.]],
 }

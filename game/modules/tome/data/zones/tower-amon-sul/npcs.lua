@@ -13,10 +13,11 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	level_range = {7, 10}, exp_worth = 2,
 	max_life = 150, life_rating = 15, fixed_rating = true,
 	max_mana = 85,
-	stats = { str=20, dex=12, cun=14, mag=20, con=16 },
+	max_stamina = 85,
+	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="greatsword"}, {type="armor", subtype="light"}, },
+	equipment = resolvers.equip{ {type="weapon", subtype="stagg", name="STAFF_ANGMAR"}, {type="armor", subtype="light"}, },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	talents = resolvers.talents{

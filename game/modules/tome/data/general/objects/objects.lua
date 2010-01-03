@@ -10,6 +10,7 @@ load("/data/general/objects/swords.lua")
 load("/data/general/objects/2hswords.lua")
 load("/data/general/objects/knifes.lua")
 --load("/data/general/objects/maces.lua")
+load("/data/general/objects/2hmaces.lua")
 --load("/data/general/objects/axes.lua")
 
 -- Armours
