@@ -311,12 +311,10 @@ function _M:getTalentLevel(id)
 	local t
 
 	if type(id) == "table" then
-		print("GET LEVEL", id, id.name)
 		t, id = id, id.id
 	else
 		t = _M.talents_def[id]
 	end
-	print("ma", self.talents[id], self.talents_types_mastery[t.type[1]], t.type[1])
 	return (self.talents[id] or 0) * (self.talents_types_mastery[t.type[1]] or 1)
 end
 

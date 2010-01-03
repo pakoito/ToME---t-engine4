@@ -235,8 +235,8 @@ function _M:generate(lev, old_lev)
 	end
 
 	-- Put down stairs
+	local dx, dy
 	if lev < self.zone.max_level then
-		local dx, dy
 		while true do
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.room_map[dx][dy].special then

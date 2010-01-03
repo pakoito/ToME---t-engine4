@@ -10,7 +10,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
-		if self:getTalentLevel(t) >= 3 then t.type = "beam" end
+		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		print("lvel", self:getTalentLevel(t))
