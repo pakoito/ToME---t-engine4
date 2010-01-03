@@ -11,7 +11,7 @@ newEntity{
 newEntity{ base = "BASE_LIGHT_ARMOR",
 	name = "rough leather armour",
 	level_range = {1, 10},
-	require = { stat = { str=12 }, },
+	require = { stat = { str=10 }, },
 	cost = 10,
 	wielder = {
 		combat_def = 1,

@@ -53,7 +53,7 @@ function _M:newTalent(t)
 	end
 	-- Remove line stat with tabs to be cleaner ..
 	local info = t.info
-	t.info = function(self) return info(self):gsub("\n\t+", "\n") end
+	t.info = function(self, t) return info(self, t):gsub("\n\t+", "\n") end
 
 	table.insert(self.talents_def, t)
 	t.id = #self.talents_def
@@ -68,6 +68,7 @@ end
 function _M:init(t)
 	self.talents = t.talents or {}
 	self.talents_types = t.talents_types or {}
+	self.talents_types_mastery = {}
 	self.talents_cd = {}
 	self.sustain_talents = {}
 end
@@ -84,6 +85,7 @@ function _M:useTalent(id)
 		end
 		if not self:preUseTalent(ab) then return end
 		local co = coroutine.create(function()
+			print("USING", ab, ab.name)
 			local ret = ab.action(self, ab)
 
 			if not self:postUseTalent(ab, ret) then return end
@@ -181,19 +183,21 @@ function _M:learnTalent(t_id, force)
 		if not ok and err then return nil, err end
 	end
 
-	-- Auto assign to hotkey
-	if t.mode ~= "passive" and self.hotkey then
-		for i = 1, 12 do
-			if not self.hotkey[i] then
-				self.hotkey[i] = t_id
-				break
+	if not self.talents[t_id] then
+		-- Auto assign to hotkey
+		if t.mode ~= "passive" and self.hotkey then
+			for i = 1, 12 do
+				if not self.hotkey[i] then
+					self.hotkey[i] = t_id
+					break
+				end
 			end
 		end
 	end
 
 	if t.on_learn then t.on_learn(self, t) end
 
-	self.talents[t_id] = true
+	self.talents[t_id] = (self.talents[t_id] or 0) + 1
 	self.changed = true
 	return true
 end
@@ -204,15 +208,18 @@ end
 function _M:unlearnTalent(t_id)
 	local t = _M.talents_def[t_id]
 
-	if self.hotkey then
-		for i, known_t_id in pairs(self.hotkey) do
-			if known_t_id == t_id then self.hotkey[i] = nil end
+	if self.talents[t_id] and self.talents[t_id] == 1 then
+		if self.hotkey then
+			for i, known_t_id in pairs(self.hotkey) do
+				if known_t_id == t_id then self.hotkey[i] = nil end
+			end
 		end
 	end
 
 	if t.on_unlearn then t.on_unlearn(self, t) end
 
-	self.talents[t_id] = nil
+	self.talents[t_id] = self.talents[t_id] - 1
+	if self.talents[t_id] == 0 then self.talents[t_id] = nil end
 	self.changed = true
 	return true
 end
@@ -290,6 +297,32 @@ end
 --- Do we know this talent
 function _M:knowTalent(id)
 	return self.talents[id] and true or false
+end
+
+--- Talent level, 0 if not known
+function _M:getTalentLevelRaw(id)
+	if type(id) == "table" then id = id.id end
+	return self.talents[id] or 0
+end
+
+--- Talent level, 0 if not known
+-- Includes mastery
+function _M:getTalentLevel(id)
+	local t
+
+	if type(id) == "table" then
+		print("GET LEVEL", id, id.name)
+		t, id = id, id.id
+	else
+		t = _M.talents_def[id]
+	end
+	print("ma", self.talents[id], self.talents_types_mastery[t.type[1]], t.type[1])
+	return (self.talents[id] or 0) * (self.talents_types_mastery[t.type[1]] or 1)
+end
+
+--- Return talent definition from id
+function _M:getTalentTypeMastery(tt)
+	return self.talents_types_mastery[tt] or 1
 end
 
 --- Return talent definition from id

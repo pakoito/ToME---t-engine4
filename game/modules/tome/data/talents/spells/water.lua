@@ -1,20 +1,22 @@
 newTalent{
 	name = "Ent-draught",
 	type = {"spell/water", 1},
+	points = 5,
 	mana = 10,
 	cooldown = 100,
 	action = function(self, t)
 		return true
 	end,
 	require = { stat = { mag=10 }, },
-	info = function(self)
+	info = function(self, t)
 		return ([[Confures some Ent-draught to fill your stomach.]])
 	end,
 }
 
 newTalent{
 	name = "Freeze",
-	type = {"spell/water", 1},
+	type = {"spell/water", 2},
+	points = 5,
 	mana = 14,
 	cooldown = 3,
 	tactical = {
@@ -22,32 +24,33 @@ newTalent{
 	},
 	range = 20,
 	action = function(self, t)
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y = self:getTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(t, x, y, DamageType.COLD, self:spellCrit(7 + self:combatSpellpower(1.2)))
-		self:project(t, x, y, DamageType.FREEZE, 2)
+		self:project(tg, x, y, DamageType.COLD, self:spellCrit(7 + self:combatSpellpower(0.25) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.FREEZE, 2 + math.floor(self:getTalentLevel(t) / 3))
 		return true
 	end,
 	require = { stat = { mag=14 }, },
-	info = function(self)
+	info = function(self, t)
 		return ([[Condenses ambiant water on a target, freezing it for a short while.
-		The damage will increase with the Magic stat]]):format(7 + self:combatSpellpower(1.2))
+		The damage will increase with the Magic stat]]):format(7 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
 	end,
 }
 
 newTalent{
 	name = "Tidal Wave",
-	type = {"spell/water",2},
+	type = {"spell/water",3},
+	points = 5,
 	mana = 55,
 	cooldown = 8,
 	tactical = {
 		ATTACKAREA = 10,
 	},
 	action = function(self, t)
-		local duration = 5 + self:combatSpellpower(0.05)
+		local duration = 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t)
 		local radius = 1
-		local dam = 5 + self:combatSpellpower(0.4)
+		local dam = 5 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
@@ -63,24 +66,25 @@ newTalent{
 		return true
 	end,
 	require = { stat = { mag=34 }, level=25 },
-	info = function(self)
+	info = function(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.4), 5 + self:combatSpellpower(0.05))
+		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.1) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
 	end,
 }
 
 newTalent{
 	name = "Ice Storm",
 	type = {"spell/water",4},
+	points = 5,
 	mana = 100,
 	cooldown = 30,
 	tactical = {
 		ATTACKAREA = 20,
 	},
 	action = function(self, t)
-		local duration = 5 + self:combatSpellpower(0.25)
+		local duration = 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t)
 		local radius = 3
-		local dam = 5 + self:combatSpellpower(0.8)
+		local dam = 5 + self:combatSpellpower(0.15) * self:getTalentLevel(t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
@@ -97,8 +101,8 @@ newTalent{
 		return true
 	end,
 	require = { stat = { mag=34 }, level=25 },
-	info = function(self)
+	info = function(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.8), 5 + self:combatSpellpower(0.25))
+		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.15) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
 	end,
 }

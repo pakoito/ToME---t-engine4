@@ -41,13 +41,14 @@ newTalent{
 	short_name = "CRAWL_POISON",
 	name = "Poisonous Crawl",
 	type = {"physical/other", 1},
+	points = 5,
 	message = "@Source@ crawls poison onto @target@.",
 	cooldown = 5,
 	range = 1,
 	action = function(self, t)
 		local x, y, target = self:getTarget()
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, DamageType.POISON, 2, true)
+		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		return true
 	end,
 	info = function(self)
@@ -58,6 +59,7 @@ newTalent{
 newTalent{
 	short_name = "CRAWL_ACID",
 	name = "Acidic Crawl",
+	points = 5,
 	type = {"physical/other", 1},
 	message = "@Source@ crawls acid onto @target@.",
 	cooldown = 2,
@@ -65,7 +67,7 @@ newTalent{
 	action = function(self, t)
 		local x, y, target = self:getTarget()
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, DamageType.POISON, 1.5, true)
+		self:attackTarget(target, DamageType.ACID, 1 + self:getTalentLevel(t) / 3, true)
 		return true
 	end,
 	info = function(self)
@@ -77,6 +79,7 @@ newTalent{
 	short_name = "SPORE_BLIND",
 	name = "Blinding Spores",
 	type = {"physical/other", 1},
+	points = 5,
 	message = "@Source@ releases blinding spores at @target@.",
 	cooldown = 2,
 	range = 1,
@@ -85,7 +88,7 @@ newTalent{
 		local x, y, target = self:getTarget(t)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, DamageType.BLIND, 1, true)
+		self:attackTarget(target, DamageType.BLIND, 0.8 + self:getTalentLevel(t) / 10, true)
 		return true
 	end,
 	info = function(self)
@@ -97,13 +100,14 @@ newTalent{
 	short_name = "SPORE_POISON",
 	name = "Poisonous Spores",
 	type = {"physical/other", 1},
+	points = 5,
 	message = "@Source@ releases poisonous spores at @target@.",
 	cooldown = 2,
 	range = 1,
 	action = function(self, t)
 		local x, y, target = self:getTarget()
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, DamageType.POISON, 1.5, true)
+		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		return true
 	end,
 	info = function(self)

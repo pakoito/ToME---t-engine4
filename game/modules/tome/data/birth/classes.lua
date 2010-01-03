@@ -14,6 +14,8 @@ newBirthDescriptor{
 	},
 	talents = { ActorTalents.T_STAMINA_POOL, },
 	copy = {
+		max_life = 120,
+		life_rating = 10,
 		equipment = resolvers.equip{
 			{type="weapon", subtype="longsword", name="iron longsword"},
 			{type="armor", subtype="shield", name="iron shield"},
@@ -32,6 +34,47 @@ newBirthDescriptor{
 	talents_types = {
 		["physical/shield"]=true,
 		["physical/2hweapon"]=true,
+		["physical/combat-training"]=true,
+		["physical/weapon-training"]=true,
+	},
+}
+
+newBirthDescriptor{
+	type = "class",
+	name = "Rogue",
+	desc = {
+		"Rogues are masters of tricks, they can steal from shops and monsters",
+		"and lure monsters into deadly traps.",
+	},
+	descriptor_choices =
+	{
+		subclass =
+		{
+			__ALL__ = "never",
+			Rogue = "allow",
+		},
+	},
+	talents = { ActorTalents.T_STAMINA_POOL, },
+	copy = {
+		max_life = 100,
+		life_rating = 9,
+		equipment = resolvers.equip{
+			{type="weapon", subtype="dagger", name="iron dagger"},
+			{type="weapon", subtype="dagger", name="iron dagger"},
+			{type="armor", subtype="light", name="rough leather armour"}
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Rogue",
+	desc = {
+		"Rogues are masters of tricks, they can steal from shops and monsters",
+		"and lure monsters into deadly traps.",
+	},
+	stats = { dex=3, con=1, cun=2, },
+	talents_types = {
 		["physical/dualweapon"]=true,
 		["physical/combat-training"]=true,
 		["physical/weapon-training"]=true,
@@ -54,6 +97,8 @@ newBirthDescriptor{
 	},
 	talents = { ActorTalents.T_MANA_POOL, },
 	copy = {
+		max_life = 80,
+		life_rating = 7,
 		equipment = resolvers.equip{
 			{type="weapon", subtype="staff", name="elm staff"},
 			{type="armor", subtype="cloth", name="robe"}

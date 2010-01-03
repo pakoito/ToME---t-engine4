@@ -12,6 +12,7 @@ newTalentType{ type="spell/temporal", name = "temporal", description = "Temporal
 newTalentType{ type="spell/mind", name = "mind", description = "Mind the caster to directly attack the mind of its foes." }
 newTalentType{ type="spell/necromancy", name = "necromancy", description = "Necromancy is a dark school of magic dealing with death, and undeath." }
 
+load("/data/talents/spells/spellcasting.lua")
 load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/fire.lua")
 load("/data/talents/spells/earth.lua")

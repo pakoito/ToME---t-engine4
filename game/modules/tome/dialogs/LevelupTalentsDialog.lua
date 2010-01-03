@@ -10,18 +10,21 @@ function _M:init(actor)
 
 	self:generateList()
 
-	self.talentsel = 1
+	self.sel = 1
+	self.scroll = 1
+	self.max = math.floor((self.ih - 45) / self.font_h) - 1
+
 	self:keyCommands{
-		_UP = function() self.talentsel = util.boundWrap(self.talentsel - 1, 1, #self.list) self.changed = true end,
-		_DOWN = function() self.talentsel = util.boundWrap(self.talentsel + 1, 1, #self.list) self.changed = true end,
+		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		_LEFT = function() self:learn(false) self.changed = true end,
 		_RIGHT = function() self:learn(true) self.changed = true end,
 		_ESCAPE = function() game:unregisterDialog(self) end,
 	}
 	self:mouseZones{
-		{ x=2, y=45, w=350, h=self.font_h*#self.list, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=2, y=45, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.changed = true
-			self.talentsel = 1 + math.floor(ty / self.font_h)
+			self.sel = self.scroll + math.floor(ty / self.font_h)
 			if button == "left" then self:learn(true)
 			elseif button == "right" then self:learn(false)
 			end
@@ -36,7 +39,7 @@ function _M:generateList()
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
 			local cat = tt.type:gsub("/.*", "")
-			list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() .." (category)", type=tt.type }
+			list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), type=tt.type }
 			if self.actor:knowTalentType(tt.type) then
 				known[#known+1] = "#00FF00#known"
 
@@ -46,13 +49,13 @@ function _M:generateList()
 						local typename = "talent"
 						if t.type[1]:find("^spell/") then typename = "spell" end
 						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id }
-						if self.actor:knowTalent(t.id) then
+						if self.actor:getTalentLevelRaw(t.id) == t.points then
 							known[#known+1] = "#00FF00#known"
 						else
 							if not self.actor:canLearnTalent(t) then
-								known[#known+1] = "#FF0000#"..t.points.." point(s)"
+								known[#known+1] = "#FF0000#"..self.actor:getTalentLevelRaw(t.id).."/"..t.points
 							else
-								known[#known+1] = t.points.." point(s)"
+								known[#known+1] = self.actor:getTalentLevelRaw(t.id).."/"..t.points
 							end
 						end
 					end
@@ -67,17 +70,17 @@ function _M:generateList()
 end
 
 function _M:learn(v)
-	if self.list[self.talentsel].type then
-		self:learnType(self.list[self.talentsel].type, v)
+	if self.list[self.sel].type then
+		self:learnType(self.list[self.sel].type, v)
 	else
-		self:learnTalent(self.list[self.talentsel].talent, v)
+		self:learnTalent(self.list[self.sel].talent, v)
 	end
 end
 
 function _M:learnTalent(t_id, v)
 	local t = self.actor:getTalentFromId(t_id)
 	if v then
-		if self.actor.unused_talents < t.points then
+		if self.actor.unused_talents < 1 then
 			self:simplePopup("Not enough talent points", "You have no talent points left!")
 			return
 		end
@@ -85,23 +88,23 @@ function _M:learnTalent(t_id, v)
 			self:simplePopup("Cannot learn talent", "Prerequisites not met!")
 			return
 		end
-		if self.actor:knowTalent(t_id) then
-			self:simplePopup("Already known", "You already know this talent!")
+		if self.actor:getTalentLevelRaw(t_id) >= t.points then
+			self:simplePopup("Already known", "You already fully know this talent!")
 			return
 		end
 		self.actor:learnTalent(t_id)
-		self.actor.unused_talents = self.actor.unused_talents - t.points
+		self.actor.unused_talents = self.actor.unused_talents - 1
 	else
 		if not self.actor:knowTalent(t_id) then
 			self:simplePopup("Impossible", "You do not know this talent!")
 			return
 		end
-		if self.actor_dup:knowTalent(t_id) == true and self.actor:knowTalent(t_id) == true then
+		if self.actor_dup:getTalentLevelRaw(t_id) == self.actor:getTalentLevelRaw(t_id) then
 			self:simplePopup("Impossible", "You cannot unlearn talents!")
 			return
 		end
 		self.actor:unlearnTalent(t_id)
-		self.actor.unused_talents = self.actor.unused_talents + t.points
+		self.actor.unused_talents = self.actor.unused_talents + 1
 	end
 	self:generateList()
 end
@@ -143,19 +146,20 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 ]]):splitLines(self.iw / 2 - 10, self.font)
 
 	local lines, helplines, reqlines = {}, {}, {}
-	if self.list[self.talentsel].type then
+	if self.list[self.sel].type then
 		local str = ""
 		str = str .. "#00FFFF#Talent Category\n"
 		str = str .. "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point every few levels. You may also find trainers or artifacts that allows you to learn more.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
-		lines = self.actor:getTalentTypeFrom(self.list[self.talentsel].type).description:splitLines(self.iw / 2 - 10, self.font)
+		lines = self.actor:getTalentTypeFrom(self.list[self.sel].type).description:splitLines(self.iw / 2 - 10, self.font)
 	else
 		local str = ""
 		str = str .. "#00FFFF#Talent\n"
 		str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, improve your character. You gain a talent point every level. You may also find trainers or artifacts that allows you to learn more.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
-		lines = self.actor:getTalentFromId(self.list[self.talentsel].talent).info(self.actor):splitLines(self.iw / 2 - 10, self.font)
-		local req = self.actor:getTalentReqDesc(self.list[self.talentsel].talent)
+		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
+		lines = t.info(self.actor, t):splitLines(self.iw / 2 - 10, self.font)
+		local req = self.actor:getTalentReqDesc(self.list[self.sel].talent)
 		if req ~= "" then
 			req = "Requirements:\n"..req
 			reqlines = req:splitLines(self.iw / 2 - 10, self.font)
@@ -195,8 +199,8 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	s:drawColorString(self.font, "Talents points left: #00FF00#"..self.actor.unused_talents, 2, 2 + self.font_h)
 	self:drawWBorder(s, 2, 40, 200)
 
-	self:drawSelectionList(s, 2, 45, self.font_h, self.list, self.talentsel, "name")
-	self:drawSelectionList(s, 300, 45, self.font_h, self.list_known, self.talentsel)
+	self:drawSelectionList(s, 2, 45, self.font_h, self.list, self.sel, "name"     , self.scroll, self.max)
+	self:drawSelectionList(s, 300, 45, self.font_h, self.list_known, self.sel, nil, self.scroll, self.max)
 
 	self.changed = false
 end

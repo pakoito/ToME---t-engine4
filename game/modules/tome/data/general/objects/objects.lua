@@ -8,6 +8,7 @@ load("/data/general/objects/jewelry.lua")
 load("/data/general/objects/staves.lua")
 load("/data/general/objects/swords.lua")
 load("/data/general/objects/2hswords.lua")
+load("/data/general/objects/knifes.lua")
 --load("/data/general/objects/maces.lua")
 --load("/data/general/objects/axes.lua")
 

@@ -57,15 +57,22 @@ end
 
 --- Adds an object to an inventory
 -- @return false if the object could not be added
-function _M:addObject(inven, o)
+function _M:addObject(inven_id, o)
+	local inven
+	if type(inven_id) == "number" then
+		inven = self.inven[inven_id]
+	else
+		inven = inven_id
+	end
+
 	-- No room ?
-	if #self.inven[inven] >= self.inven[inven].max then return false end
+	if #inven >= inven.max then return false end
 
 	-- Ok add it
-	table.insert(self.inven[inven], o)
+	table.insert(inven, o)
 
 	-- Do whatever is needed when wearing this object
-	if self.inven[inven].worn then self:onWear(o) end
+	if inven.worn then self:onWear(o) end
 
 	return true
 end
@@ -205,6 +212,9 @@ function _M:wearObject(o, replace, vocal)
 	if self:addObject(inven, o) then
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
 		return true
+	elseif o.offslot and self:getInven(o.offslot) and #(self:getInven(o.offslot)) < self:getInven(o.offslot).max then
+		-- Warning: assume there is now space
+		self:addObject(self:getInven(o.offslot), o)
 	elseif replace then
 		local ro = self:removeObject(inven, 1)
 		-- Warning: assume there is now space

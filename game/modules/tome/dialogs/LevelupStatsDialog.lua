@@ -9,11 +9,11 @@ function _M:init(actor)
 	self.actor_dup = actor:clone()
 	engine.Dialog.init(self, "Stats Levelup: "..actor.name, 500, 300)
 
-	self.statsel = 1
+	self.sel = 1
 
 	self:keyCommands{
-		_UP = function() self.changed = true; self.statsel = util.boundWrap(self.statsel - 1, 1, 6) end,
-		_DOWN = function() self.changed = true; self.statsel = util.boundWrap(self.statsel + 1, 1, 6) end,
+		_UP = function() self.changed = true; self.sel = util.boundWrap(self.sel - 1, 1, 6) end,
+		_DOWN = function() self.changed = true; self.sel = util.boundWrap(self.sel + 1, 1, 6) end,
 		_LEFT = function() self.changed = true; self:incStat(-1) end,
 		_RIGHT = function() self.changed = true; self:incStat(1) end,
 		_ESCAPE = function()
@@ -29,7 +29,7 @@ function _M:init(actor)
 	self:mouseZones{
 		{ x=2, y=25, w=130, h=self.font_h*6, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.changed = true
-			self.statsel = 1 + math.floor(ty / self.font_h)
+			self.sel = 1 + math.floor(ty / self.font_h)
 			if button == "left" then self:incStat(1)
 			elseif button == "right" then self:incStat(-1)
 			end
@@ -43,18 +43,18 @@ function _M:incStat(v)
 			self:simplePopup("Not enough stat points", "You have no stat points left!")
 			return
 		end
-		if self.actor:isStatMax(self.statsel) then
+		if self.actor:isStatMax(self.sel) then
 			self:simplePopup("Stat is at the maximun", "You can not increase this stat further!")
 			return
 		end
 	else
-		if self.actor_dup:getStat(self.statsel) == self.actor:getStat(self.statsel) then
+		if self.actor_dup:getStat(self.sel) == self.actor:getStat(self.sel) then
 			self:simplePopup("Impossible", "You cannot take out more points!")
 			return
 		end
 	end
 
-	self.actor:incStat(self.statsel, v)
+	self.actor:incStat(self.sel, v)
 	self.actor.unused_stats = self.actor.unused_stats - v
 end
 
@@ -64,7 +64,7 @@ function _M:drawDialog(s)
 	local statshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to increase stat; #00FF00#left key#FFFFFF# to decrease a stat.
 Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF# to decrease a stat.
 ]]):splitLines(self.iw / 2 - 10, self.font)
-	local lines = self.actor.stats_def[self.statsel].description:splitLines(self.iw / 2 - 10, self.font)
+	local lines = self.actor.stats_def[self.sel].description:splitLines(self.iw / 2 - 10, self.font)
 	for i = 1, #statshelp do
 		s:drawColorString(self.font, statshelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
 	end
@@ -78,9 +78,9 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 
 	self:drawSelectionList(s, 2, 25, self.font_h, {
 		"Strength", "Dexterity", "Magic", "Willpower", "Cunning", "Constitution"
-	}, self.statsel)
+	}, self.sel)
 	self:drawSelectionList(s, 100, 25, self.font_h, {
 		self.actor:getStr(), self.actor:getDex(), self.actor:getMag(), self.actor:getWil(), self.actor:getCun(), self.actor:getCon(),
-	}, self.statsel)
+	}, self.sel)
 	self.changed = false
 end

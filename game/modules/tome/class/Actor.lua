@@ -202,12 +202,12 @@ function _M:preUseTalent(ab, silent)
 	if not self:enoughEnergy() then print("fail energy") return false end
 
 	if ab.mode == "sustained" then
-		if ab.sustain_mana and self.max_mana < ab.sustain_mana then
-			game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
+		if ab.sustain_mana and self.max_mana < ab.sustain_mana and not self:isTalentActive(ab.id) then
+			game.logPlayer(self, "You do not have enough mana to activate %s.", ab.name)
 			return false
 		end
-		if ab.sustain_stamina and self.max_stamina < ab.sustain_stamina then
-			game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
+		if ab.sustain_stamina and self.max_stamina < ab.sustain_stamina and not self:isTalentActive(ab.id) then
+			game.logPlayer(self, "You do not have enough stamina to activate %s.", ab.name)
 			return false
 		end
 	else

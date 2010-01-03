@@ -52,10 +52,15 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		end
 	end
 	-- All wpeaons in off hands
+	-- Offhand atatcks are with a damage penality, taht can be reduced by talents
 	if self:getInven(self.INVEN_OFFHAND) then
+		local offmult = (mult or 1) / 2
+		if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
+			offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
+		end
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			if o.combat then
-				local s = self:attackTargetWith(target, o.combat, damtype, mult)
+				local s = self:attackTargetWith(target, o.combat, damtype, offmult)
 				speed = math.max(speed or 0, s)
 			end
 		end
@@ -118,26 +123,17 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 end
 
 local weapon_talents = {
-	sword = { Talents.T_SWORD_APPRENTICE, Talents.T_SWORD_MASTER, Talents.T_SWORD_GRAND_MASTER },
-	axe =   { Talents.T_AXE_APPRENTICE, Talents.T_AXE_MASTER, Talents.T_AXE_GRAND_MASTER },
-	mace =  { Talents.T_MACE_APPRENTICE, Talents.T_MACE_MASTER, Talents.T_MACE_GRAND_MASTER },
-	knife = { Talents.T_KNIFE_APPRENTICE, Talents.T_KNIFE_MASTER, Talents.T_KNIFE_GRAND_MASTER },
+	sword = Talents.T_SWORD_MASTERY,
+	axe =   Talents.T_AXE_MASTERY,
+	mace =  Talents.T_MACE_MASTERY,
+	knife = Talents.T_KNIFE_MASTERY,
 }
 
 --- Checks weapon training
 function _M:combatCheckTraining(weapon)
 	if not weapon.talented then return 0 end
-	local max = 0
-
-	for i, tid in ipairs(weapon_talents[weapon.talented] or {}) do
-		print("Try", i, tid)
-		if not self:knowTalent(tid) then
-			break
-		end
-		max = i
-	end
-	print("Talented with", weapon.talented, "at", max, "using", #weapon_talents[weapon.talented])
-	return max
+	if not weapon_talents[weapon.talented] then return 0 end
+	return self:getTalentLevel(weapon_talents[weapon.talented])
 end
 
 --- Gets the defense

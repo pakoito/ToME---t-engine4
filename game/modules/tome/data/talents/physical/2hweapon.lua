@@ -1,6 +1,7 @@
 newTalent{
 	name = "Stunning Blow",
 	type = {"physical/2hweapon", 1},
+	points = 5,
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
@@ -19,8 +20,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getStr(4), {})
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t)) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
@@ -36,6 +37,7 @@ newTalent{
 newTalent{
 	name = "Death Blow",
 	type = {"physical/2hweapon", 2},
+	points = 5,
 	cooldown = 30,
 	stamina = 15,
 	require = { stat = { str=22 }, },
@@ -52,14 +54,14 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		local inc = self.stamina / 2
-		if self:knowTalent(Talents.T_MIGHTY_BLOWS) then
+		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam + inc
 		end
 		self.combat_physcrit = self.combat_physcrit + 100
 
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1 + self:getTalentLevel(t) / 10)
 
-		if self:knowTalent(Talents.T_MIGHTY_BLOWS) then
+		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam - inc
 			self.stamina = 0
 		end
@@ -67,7 +69,7 @@ newTalent{
 
 		-- Try to insta-kill
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("instadeath") and target.life > 0 and target.life < target.max_life * 0.2 then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t)) and target:canBe("instadeath") and target.life > 0 and target.life < target.max_life * 0.2 then
 				-- KILL IT !
 				game.logSeen(target, "%s feels the pain of the death blow!", target.name:capitalize())
 				target:takeHit(100000, self)
@@ -86,6 +88,7 @@ newTalent{
 newTalent{
 	name = "Death Danse",
 	type = {"physical/2hweapon", 3},
+	points = 5,
 	cooldown = 10,
 	stamina = 30,
 	require = { stat = { str=30 }, },
@@ -100,7 +103,7 @@ newTalent{
 			local x, y = self.x + i, self.y + j
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
-				self:attackTargetWith(target, weapon.combat, nil, 1)
+				self:attackTargetWith(target, weapon.combat, nil, 1 + self:getTalentLevel(t) / 8)
 			end
 		end end
 
@@ -115,6 +118,7 @@ newTalent{
 	name = "Berserker",
 	type = {"physical/2hweapon", 3},
 	mode = "sustained",
+	points = 5,
 	cooldown = 30,
 	sustain_stamina = 100,
 	require = { stat = { str=20 }, },
@@ -126,8 +130,8 @@ newTalent{
 		end
 
 		return {
-			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(20)),
-			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(20)),
+			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(4) * self:getTalentLevel(t)),
+			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(4) * self:getTalentLevel(t)),
 			def = self:addTemporaryValue("combat_def", -5),
 			armor = self:addTemporaryValue("combat_armor", -5),
 		}
@@ -141,15 +145,5 @@ newTalent{
 	end,
 	info = function(self)
 		return ([[Enters a protective battle stance, increasing attack and damage at the cost of defense and armor.]])
-	end,
-}
-
-newTalent{
-	name = "Mighty Blows",
-	type = {"physical/2hweapon", 4},
-	mode = "passive",
-	require = { stat = { str=40 }, talent = { Talents.T_DEATH_BLOW } },
-	info = function(self)
-		return ([[You put all your strength into your Death Blows, increasing attack and consuming all remaining stamina to increase damage.]])
 	end,
 }

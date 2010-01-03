@@ -229,6 +229,11 @@ function util.bound(i, min, max)
 	elseif i > max then i = max end
 	return i
 end
+function util.scroll(sel, scroll, max)
+	if sel > scroll + max - 1 then scroll = sel - max + 1 end
+	if sel < scroll then scroll = sel end
+	return scroll
+end
 
 function core.fov.circle_grids(x, y, radius, block)
 	local grids = {}

@@ -10,7 +10,10 @@ function _M:init(actor)
 
 	self:generateList()
 
-	self.talentsel = 1
+	self.sel = 1
+	self.scroll = 1
+	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+
 	self:keyCommands{
 		_1 = function() self:defineHotkey(1) end,
 		_2 = function() self:defineHotkey(2) end,
@@ -25,20 +28,20 @@ function _M:init(actor)
 		_RIGHTPAREN = function() self:defineHotkey(11) end,
 		_EQUALS = function() self:defineHotkey(12) end,
 
-		_UP = function() self.talentsel = util.boundWrap(self.talentsel - 1, 1, #self.list) end,
-		_DOWN = function() self.talentsel = util.boundWrap(self.talentsel + 1, 1, #self.list) end,
+		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		_RETURN = function() self:use() end,
 		_ESCAPE = function() game:unregisterDialog(self) end,
 		__TEXTINPUT = function(c)
 			if c:find("^[a-z]$") then
-				self.talentsel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
+				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
 				self:use()
 			end
 		end,
 	}
 	self:mouseZones{
 		{ x=2, y=5, w=350, h=self.font_h*#self.list, fct=function(button, x, y, xrel, yrel, tx, ty)
-			self.talentsel = 1 + math.floor(ty / self.font_h)
+			self.sel = self.scroll + math.floor(ty / self.font_h)
 			if button == "left" then self:use()
 			elseif button == "right" then
 			end
@@ -47,14 +50,14 @@ function _M:init(actor)
 end
 
 function _M:defineHotkey(id)
-	self.actor.hotkey[id] = self.list[self.talentsel].talent
-	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(self.list[self.talentsel].talent).name:capitalize().." assigned to hotkey "..id)
+	self.actor.hotkey[id] = self.list[self.sel].talent
+	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(self.list[self.sel].talent).name:capitalize().." assigned to hotkey "..id)
 	self.actor.changed = true
 end
 
 function _M:use()
 	game:unregisterDialog(self)
-	self.actor:useTalent(self.list[self.talentsel].talent)
+	self.actor:useTalent(self.list[self.sel].talent)
 end
 
 function _M:generateList()
@@ -83,7 +86,8 @@ Mouse: #00FF00#Left click#FFFFFF# to use.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 
 	local lines = {}
-	lines = self.actor:getTalentFromId(self.list[self.talentsel].talent).info(self.actor):splitLines(self.iw / 2 - 10, self.font)
+	local t = self.actor:getTalentFromId(self.list[self.sel].talent)
+	lines = t.info(self.actor, t):splitLines(self.iw / 2 - 10, self.font)
 	local h = 2
 	for i = 1, #talentshelp do
 		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)
@@ -98,5 +102,5 @@ Mouse: #00FF00#Left click#FFFFFF# to use.
 	end
 
 	-- Talents
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.talentsel, "name")
+	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
 end

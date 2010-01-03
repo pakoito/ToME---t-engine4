@@ -22,7 +22,7 @@ function _M:display()
 	local talents = {}
 	for i = 1, 12 do
 		if a.hotkey[i] then
-			talents[#talents+1] = a.hotkey[i]
+			talents[#talents+1] = {a.hotkey[i], i}
 		end
 	end
 
@@ -32,7 +32,9 @@ function _M:display()
 	local x = 0
 	local y = 0
 
-	for i, tid in ipairs(talents) do
+	for ii, ts in ipairs(talents) do
+		local tid = ts[1]
+		local i = ts[2]
 		local t = a:getTalentFromId(tid)
 		local s
 		if a:isTalentCoolingDown(t) then

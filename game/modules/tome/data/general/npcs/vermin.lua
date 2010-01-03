@@ -21,7 +21,7 @@ newEntity{ base = "BASE_NPC_VERMIN",
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=5, atk=15, apr=10 },
 
-	talents = resolvers.talents{ Talents.T_CRAWL_POISON },
+	talents = resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
 }
 
 newEntity{ base = "BASE_NPC_VERMIN",
@@ -31,5 +31,5 @@ newEntity{ base = "BASE_NPC_VERMIN",
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=5, atk=15, apr=10 },
 
-	talents = resolvers.talents{ Talents.T_CRAWL_ACID },
+	talents = resolvers.talents{ [Talents.T_CRAWL_ACID]=2 },
 }
