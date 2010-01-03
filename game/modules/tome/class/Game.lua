@@ -173,9 +173,9 @@ function _M:display()
 		-- Display a tooltip if available
 		local mx, my = core.mouse.get()
 		local tmx, tmy = self.level.map:getMouseTile(mx, my)
-		local tt = self.level.map:checkAllEntities(tmx, tmy, "tooltip")
-		if tt then
-			self.tooltip:set(tt)
+		local tt = self.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
+		if tt and self.level.map.seens(tmx, tmy) then
+			self.tooltip:set("%s", tt)
 			local t = self.tooltip:display()
 			mx = mx - self.tooltip.w
 			my = my - self.tooltip.h
