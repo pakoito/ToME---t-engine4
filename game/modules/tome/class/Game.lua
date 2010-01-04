@@ -68,6 +68,8 @@ function _M:run()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
+
+	self:setupDisplayMode()
 end
 
 function _M:newGame()
@@ -95,10 +97,37 @@ function _M:loaded()
 	self.key = engine.KeyCommand.new()
 end
 
+function _M:setupDisplayMode()
+	self.gfxmode = self.gfxmode or 1
+	if self.gfxmode == 1 then
+		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 32, 32, nil, 20, true)
+		Map.tiles:clean()
+		Map.tiles.w = 32
+		Map.tiles.h = 32
+		Map.tiles.use_images = true
+		game.level.map:recreate()
+	elseif self.gfxmode == 2 then
+		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, true)
+		Map.tiles:clean()
+		Map.tiles.w = 16
+		Map.tiles.h = 16
+		Map.tiles.use_images = true
+		game.level.map:recreate()
+	elseif self.gfxmode == 3 then
+		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, false)
+		Map.tiles:clean()
+		Map.tiles.w = 16
+		Map.tiles.h = 16
+		Map.tiles.use_images = false
+		game.level.map:recreate()
+	end
+	game.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+end
+
 function _M:save()
 	return class.save(self, {w=true, h=true, zone=true, player=true, level=true, entities=true,
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
-		always_target=true,
+		always_target=true, gfxmode=true;
 	}, true)
 end
 
@@ -441,29 +470,7 @@ function _M:setupCommands()
 		[{"_s","alt"}] = function()
 			self.gfxmode = self.gfxmode or 1
 			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 3)
-			if self.gfxmode == 1 then
-				Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 32, 32, nil, 20, true)
-				Map.tiles:clean()
-				Map.tiles.w = 32
-				Map.tiles.h = 32
-				Map.tiles.use_images = true
-				game.level.map:recreate()
-			elseif self.gfxmode == 2 then
-				Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, true)
-				Map.tiles:clean()
-				Map.tiles.w = 16
-				Map.tiles.h = 16
-				Map.tiles.use_images = true
-				game.level.map:recreate()
-			elseif self.gfxmode == 3 then
-				Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, false)
-				Map.tiles:clean()
-				Map.tiles.w = 16
-				Map.tiles.h = 16
-				Map.tiles.use_images = false
-				game.level.map:recreate()
-			end
-			game.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+			self:setupDisplayMode()
 		end,
 
 		-- Targeting movement
