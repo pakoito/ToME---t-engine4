@@ -159,9 +159,9 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
 		lines = t.info(self.actor, t):splitLines(self.iw / 2 - 10, self.font)
-		local req = self.actor:getTalentReqDesc(self.list[self.sel].talent)
+		local req = self.actor:getTalentReqDesc(self.list[self.sel].talent, 1)
 		if req ~= "" then
-			req = "Requirements:\n"..req
+			req = "Requirements for next point:\n"..req
 			reqlines = req:splitLines(self.iw / 2 - 10, self.font)
 		end
 	end

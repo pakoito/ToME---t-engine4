@@ -235,6 +235,13 @@ function util.scroll(sel, scroll, max)
 	return scroll
 end
 
+function util.getval(val, ...)
+	if type(val) == "function" then return val(...)
+	elseif type(val) == "table" then return val[rng.range(1, #val)]
+	else return val
+	end
+end
+
 function core.fov.circle_grids(x, y, radius, block)
 	local grids = {}
 	core.fov.calc_circle(x, y, radius, function(self, lx, ly)

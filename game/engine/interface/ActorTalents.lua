@@ -227,14 +227,19 @@ end
 function _M:canLearnTalent(t)
 	-- Check prerequisites
 	if t.require then
+		local tlev = self:getTalentLevelRaw(t) + 1
+
 		-- Obviously this requires the ActorStats interface
 		if t.require.stat then
 			for s, v in pairs(t.require.stat) do
+				v = util.getval(v, tlev)
 				if self:getStat(s) < v then return nil, "not enough stat" end
 			end
 		end
-		if t.require.level and self.level < t.require.level then
-			return nil, "not enough levels"
+		if t.require.level then
+			if self.level < util.getval(t.require.level, tlev) then
+				return nil, "not enough levels"
+			end
 		end
 		if t.require.talent then
 			for _, tid in ipairs(t.require.talent) do
@@ -255,10 +260,13 @@ end
 
 --- Formats the requirements as a (multiline) string
 -- @param t_id the id of the talent to desc
-function _M:getTalentReqDesc(t_id)
+-- @param levmod a number (1 should be the smartest) to add to current talent level to display requirements, defaults to 0
+function _M:getTalentReqDesc(t_id, levmod)
 	local t = _M.talents_def[t_id]
 	local req = t.require
 	if not req then return "" end
+
+	local tlev = self:getTalentLevelRaw(t_id) + (levmod or 0)
 
 	local str = ""
 
@@ -271,13 +279,15 @@ function _M:getTalentReqDesc(t_id)
 	-- Obviously this requires the ActorStats interface
 	if req.stat then
 		for s, v in pairs(req.stat) do
+			v = util.getval(v, tlev)
 			local c = (self:getStat(s) >= v) and "#00ff00#" or "#ff0000#"
 			str = str .. ("- %s%s %d\n"):format(c, self.stats_def[s].name, v)
 		end
 	end
 	if req.level then
-		local c = (self.level >= req.level) and "#00ff00#" or "#ff0000#"
-		str = str .. ("- %sLevel %d\n"):format(c, req.level)
+		local v = util.getval(req.level, tlev)
+		local c = (self.level >= v) and "#00ff00#" or "#ff0000#"
+		str = str .. ("- %sLevel %d\n"):format(c, v)
 	end
 	if req.talent then
 		for _, tid in ipairs(req.talent) do
