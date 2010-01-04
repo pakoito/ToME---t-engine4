@@ -33,9 +33,15 @@ function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidis
 	self.multidisplay = multidisplay
 	self.display_x, self.display_y = x, y
 	self.viewport = {width=w, height=h, mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
-	self.tiles = Tiles.new(tile_w, tile_h, fontname, fontsize, true)
-	self.tilesSurface = Tiles.new(tile_w, tile_h, fontname, fontsize, false)
 	self.tile_w, self.tile_h = tile_w, tile_h
+	self.fontname, self.fontsize = fontname, fontsize
+	self:resetTiles()
+end
+
+--- Create the tile repositories
+function _M:resetTiles()
+	self.tiles = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true)
+	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, false)
 end
 
 --- Defines the faction of the person seeing the map

@@ -101,27 +101,23 @@ function _M:setupDisplayMode()
 	self.gfxmode = self.gfxmode or 1
 	if self.gfxmode == 1 then
 		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 32, 32, nil, 20, true)
-		Map.tiles:clean()
-		Map.tiles.w = 32
-		Map.tiles.h = 32
+		Map:resetTiles()
 		Map.tiles.use_images = true
-		game.level.map:recreate()
+		self.level.map:recreate()
 	elseif self.gfxmode == 2 then
 		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, true)
-		Map.tiles:clean()
-		Map.tiles.w = 16
-		Map.tiles.h = 16
+		Map:resetTiles()
 		Map.tiles.use_images = true
-		game.level.map:recreate()
+		self.level.map:recreate()
 	elseif self.gfxmode == 3 then
 		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, false)
-		Map.tiles:clean()
-		Map.tiles.w = 16
-		Map.tiles.h = 16
+		Map:resetTiles()
 		Map.tiles.use_images = false
-		game.level.map:recreate()
+		self.level.map:recreate()
 	end
-	game.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+	self.target = Target.new(Map, self.player)
+	self.target.target.entity = self.player
+	self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
 end
 
 function _M:save()
@@ -393,7 +389,7 @@ function _M:setupCommands()
 					local ret = o:use(self.player)
 					if ret and ret == "destroy" then
 						self.player:removeObject(self.player:getInven(self.player.INVEN_INVEN), item)
-						game.log("You have no more "..o:getName())
+						self.log("You have no more "..o:getName())
 						self.player:sortInven()
 					end
 				end

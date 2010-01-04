@@ -409,42 +409,40 @@ static int sdl_new_tile(lua_State *L)
 
 	SDL_Color color = {r,g,b};
 	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
-	if (txt)
-	{
-		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
-		auxiliar_setclass(L, "sdl{surface}", -1);
 
-		Uint32 rmask, gmask, bmask, amask;
+	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
+	auxiliar_setclass(L, "sdl{surface}", -1);
+
+	Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-		rmask = 0xff000000;
-		gmask = 0x00ff0000;
-		bmask = 0x0000ff00;
-		amask = 0x000000ff;
+	rmask = 0xff000000;
+	gmask = 0x00ff0000;
+	bmask = 0x0000ff00;
+	amask = 0x000000ff;
 #else
-		rmask = 0x000000ff;
-		gmask = 0x0000ff00;
-		bmask = 0x00ff0000;
-		amask = 0xff000000;
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+	bmask = 0x00ff0000;
+	amask = 0xff000000;
 #endif
 
-		*s = SDL_CreateRGBSurface(
-			SDL_SWSURFACE | SDL_SRCALPHA,
-			w,
-			h,
-			32,
-			rmask, gmask, bmask, amask
-			);
+	*s = SDL_CreateRGBSurface(
+		SDL_SWSURFACE | SDL_SRCALPHA,
+		w,
+		h,
+		32,
+		rmask, gmask, bmask, amask
+		);
 
+	SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, br, bg, bb, alpha));
+
+	if (txt)
+	{
 		SDL_SetAlpha(txt, 0, 0);
-		SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, br, bg, bb, alpha));
-
 		sdlDrawImage(*s, txt, x, y);
 		SDL_FreeSurface(txt);
-
-		return 1;
 	}
 
-	lua_pushnil(L);
 	return 1;
 }
 
