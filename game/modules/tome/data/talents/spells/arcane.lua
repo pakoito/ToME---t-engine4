@@ -13,7 +13,6 @@ newTalent{
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		print("lvel", self:getTalentLevel(t))
 		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(10 + self:combatSpellpower(0.5) * self:getTalentLevel(t)))
 		return true
 	end,
@@ -54,13 +53,13 @@ newTalent{
 	points = 5,
 	require = { stat = { mag=28 }, },
 	on_learn = function(self, t)
-		self.combat_spellpower = self.combat_spellpower + 3
+		self.combat_spellpower = self.combat_spellpower + 5
 	end,
 	on_unlearn = function(self, t)
-		self.combat_spellpower = self.combat_spellpower - 3
+		self.combat_spellpower = self.combat_spellpower - 5
 	end,
 	info = function(self, t)
-		return [[Your mastery of magic allows your to permanently increase your spellpower by 3.]]
+		return [[Your mastery of magic allows your to permanently increase your spellpower by 5.]]
 	end,
 }
 
@@ -74,12 +73,18 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		game.log("IMPLEMENT ME!")
+		local power = 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280
+		return {
+			shield = self:addTemporaryValue("mana_shield", power),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("mana_shield", p.shield)
 		return true
 	end,
-	require = { stat = { mag=60 }, level=40 },
+	require = { stat = { mag=40 }, level=20 },
 	info = function(self, t)
-		return ([[Uses mana instead of life to take damage
-		The damage to mana ratio increases with the Magic stat]]):format(10 + self:combatSpellpower())
+		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage taken.
+		The damage to mana ratio increases with the Magic stat]]):format(3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
 	end,
 }

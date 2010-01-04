@@ -23,7 +23,7 @@ newTalent{
 	type = {"physical/combat-training", 1},
 	mode = "passive",
 	points = 5,
-	require = { stat = { con=14 }, },
+	require = { stat = { con=function(level) return 14 + level * 5 end }, },
 	on_learn = function(self, t)
 		self.max_life = self.max_life + 40
 	end,

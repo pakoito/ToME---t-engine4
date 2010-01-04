@@ -122,6 +122,21 @@ function _M:tooltip()
 	return ("%s\n#00ffff#Level: %d\nExp: %d/%d\n#ff0000#HP: %d"):format(self.name, self.level, self.exp, self:getExpChart(self.level+1) or "---", self.life)
 end
 
+--- Called before taking a hit, it's the chance to check for shields
+function _M:onTakeHit(value, src)
+	if self:attr("mana_shield") then
+		local mana = self:getMana()
+		local mana_val = value * self:attr("mana_shield")
+		-- We have enough to absord the full hit
+		if mana_val <= mana then
+			self:incMana(-mana_val)
+			return 0
+		-- Or we dont! and we do nothing
+		end
+	end
+	return value
+end
+
 function _M:die(src)
 	-- Gives the killer some exp for the kill
 	if src then

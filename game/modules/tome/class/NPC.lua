@@ -22,10 +22,11 @@ end
 --- Called by ActorLife interface
 -- We use it to pass aggression values to the AIs
 function _M:onTakeHit(value, src)
-	print("took hit from", src.name, "::", self.ai_target.actor)
 	if not self.ai_target.actor then
 		self.ai_target.actor = src
 	end
+
+	return mod.class.Actor.onTakeHit(self, value, src)
 end
 
 function _M:tooltip()
