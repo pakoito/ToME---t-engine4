@@ -25,13 +25,13 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
 		bgidx = "none"
 	end
 
-	if self.use_images and image then char = image end
+	if (self.use_images or not dochar) and image then char = image end
 
 	if self.repo[char] and self.repo[char][fgidx] and self.repo[char][fgidx][bgidx] then
 		return self.repo[char][fgidx][bgidx]
 	else
 		local s
-		if self.use_images and image then
+		if (self.use_images or not dochar) and image then
 			print("Loading tile", image)
 			s = core.display.loadImage(self.prefix..image)
 		end

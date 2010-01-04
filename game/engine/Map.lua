@@ -379,8 +379,8 @@ function _M:checkMapViewBounded()
 	if self.my > self.h - self.viewport.mheight then self.my = self.h - self.viewport.mheight self.changed = true end
 
 	-- Center if smaller than map viewport
-	if self.w < self.viewport.mwidth then self.mx = (self.w - self.viewport.mwidth) / 2 end
-	if self.h < self.viewport.mheight then self.my = (self.h - self.viewport.mheight) / 2 end
+	if self.w < self.viewport.mwidth then self.mx = math.floor((self.w - self.viewport.mwidth) / 2) end
+	if self.h < self.viewport.mheight then self.my = math.floor((self.h - self.viewport.mheight) / 2) end
 
 	self._map:setScroll(self.mx, self.my)
 end
