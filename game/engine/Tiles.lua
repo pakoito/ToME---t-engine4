@@ -62,3 +62,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
 		return s
 	end
 end
+
+function _M:clean()
+	self.repo = {}
+end

@@ -437,6 +437,35 @@ function _M:setupCommands()
 			self:registerDialog(DebugConsole.new())
 		end,
 
+		-- Switch gfx modes
+		[{"_s","alt"}] = function()
+			self.gfxmode = self.gfxmode or 1
+			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 3)
+			if self.gfxmode == 1 then
+				Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 32, 32, nil, 20, true)
+				Map.tiles:clean()
+				Map.tiles.w = 32
+				Map.tiles.h = 32
+				Map.tiles.use_images = true
+				game.level.map:recreate()
+			elseif self.gfxmode == 2 then
+				Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, true)
+				Map.tiles:clean()
+				Map.tiles.w = 16
+				Map.tiles.h = 16
+				Map.tiles.use_images = true
+				game.level.map:recreate()
+			elseif self.gfxmode == 3 then
+				Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, false)
+				Map.tiles:clean()
+				Map.tiles.w = 16
+				Map.tiles.h = 16
+				Map.tiles.use_images = false
+				game.level.map:recreate()
+			end
+			game.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+		end,
+
 		-- Targeting movement
 		[{"_LEFT","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
 		[{"_RIGHT","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,

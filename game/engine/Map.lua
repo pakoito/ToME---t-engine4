@@ -120,6 +120,13 @@ function _M:loaded()
 	self:redisplay()
 end
 
+--- Recreate the internal map using new dimensions
+function _M:recreate()
+	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
+	self.changed = true
+	self:redisplay()
+end
+
 --- Redisplays the map, storing seen information
 function _M:redisplay()
 	for i = 0, self.w - 1 do for j = 0, self.h - 1 do
