@@ -46,7 +46,7 @@ end
 function _M:move(x, y, force)
 	if self.dead then return true end
 	local map = game.level.map
-	if not force and map:checkAllEntities(x, y, "block_move", self) then return true end
+	if not force and map:checkAllEntities(x, y, "block_move", self, true) then return true end
 
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.ACTOR)
@@ -69,7 +69,7 @@ function _M:canMove(x, y, terrain_only)
 	if terrain_only then
 		return not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move")
 	else
-		return not game.level.map:checkAllEntities(x, y, "block_move", self, true)
+		return not game.level.map:checkAllEntities(x, y, "block_move", self)
 	end
 end
 

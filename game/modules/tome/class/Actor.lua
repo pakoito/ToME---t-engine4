@@ -96,6 +96,10 @@ function _M:move(x, y, force)
 		-- Should we prob travel through walls ?
 		if not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
 			moved = self:probabilityTravel(x, y)
+		-- Never move but tries to attack ? ok
+		elseif self:attr("never_move") then
+			-- A bit weird, but this simple asks the collision code to detect an attack
+			game.level.map:checkAllEntities(x, y, "block_move", self, true)
 		else
 			moved = engine.Actor.move(self, x, y, force)
 		end

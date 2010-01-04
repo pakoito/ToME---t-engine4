@@ -15,9 +15,9 @@ end
 --- Checks if something bumps in us
 -- If it happens the method attack is called on the target with the attacker as parameter.
 -- Do not touch!
-function _M:block_move(x, y, e, only_check)
+function _M:block_move(x, y, e, can_attack)
 	-- Dont bump yourself!
-	if e and e ~= self and not only_check then
+	if e and e ~= self and can_attack then
 		e:attack(self)
 	end
 	return true

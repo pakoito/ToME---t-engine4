@@ -11,7 +11,7 @@ newEntity{
 	stats = { str=10, dex=15, mag=3, con=3 },
 	energy = { mod=0.5 },
 	combat_armor = 1, combat_def = 1,
-	never_move = true,
+	never_move = 1,
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
