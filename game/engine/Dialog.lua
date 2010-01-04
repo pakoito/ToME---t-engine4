@@ -33,7 +33,7 @@ function _M:init(title, w, h, x, y, alpha, font)
 	self.iw, self.ih = w - 2 * 5, h - 8 - 16 - 3
 	self.internal_surface = core.display.newSurface(self.iw, self.ih)
 	self.surface:alpha(alpha or 220)
-	self.texture = self.surface:glTexture()
+	self.texture = self.surface:glTexture2()
 	self.changed = true
 end
 
@@ -60,7 +60,7 @@ function _M:display()
 	local tw, th = self.font:size(self.title)
 	s:drawColorString(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
 
-	self.internal_surface:erase()
+	self.internal_surface:erase(0, 0, 0, 200)
 	self:drawDialog(self.internal_surface)
 	s:merge(self.internal_surface, 5, 20 + 3)
 

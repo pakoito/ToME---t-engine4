@@ -69,7 +69,7 @@ function _M:run()
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
 
-	self:setupDisplayMode()
+	if self.level then self:setupDisplayMode() end
 end
 
 function _M:newGame()

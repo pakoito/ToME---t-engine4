@@ -359,6 +359,7 @@ static int sdl_surface_drawstring(lua_State *L)
 	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
 	if (txt)
 	{
+		SDL_SetAlpha(txt, 0, 0);
 		sdlDrawImage(*s, txt, x, y);
 		SDL_FreeSurface(txt);
 	}
@@ -389,7 +390,34 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 	return 1;
 }
 
+static SDL_Surface *make_surface(int w, int h)
+{
+	Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rmask = 0xff000000;
+	gmask = 0x00ff0000;
+	bmask = 0x0000ff00;
+	amask = 0x000000ff;
+#else
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+	bmask = 0x00ff0000;
+	amask = 0xff000000;
+#endif
 
+	SDL_Surface *s = SDL_CreateRGBSurface(
+		SDL_SWSURFACE | SDL_SRCALPHA,
+		w,
+		h,
+		32,
+		rmask, gmask, bmask, amask
+		);
+
+	if (s == NULL)
+		printf("ERROR : SDL_CreateRGBSurface : %s\n",SDL_GetError());
+
+	return s;
+}
 
 static int sdl_new_tile(lua_State *L)
 {
@@ -413,26 +441,7 @@ static int sdl_new_tile(lua_State *L)
 	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 	auxiliar_setclass(L, "sdl{surface}", -1);
 
-	Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	rmask = 0xff000000;
-	gmask = 0x00ff0000;
-	bmask = 0x0000ff00;
-	amask = 0x000000ff;
-#else
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-	bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif
-
-	*s = SDL_CreateRGBSurface(
-		SDL_SWSURFACE | SDL_SRCALPHA,
-		w,
-		h,
-		32,
-		rmask, gmask, bmask, amask
-		);
+	*s = make_surface(w, h);
 
 	SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, br, bg, bb, alpha));
 
@@ -453,31 +462,7 @@ static int sdl_new_surface(lua_State *L)
 
 	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 	auxiliar_setclass(L, "sdl{surface}", -1);
-
-	Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	rmask = 0xff000000;
-	gmask = 0x00ff0000;
-	bmask = 0x0000ff00;
-	amask = 0x000000ff;
-#else
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-	bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif
-
-	*s = SDL_CreateRGBSurface(
-		SDL_SWSURFACE | SDL_SRCALPHA,
-		w,
-		h,
-		32,
-		rmask, gmask, bmask, amask
-		);
-
-        if (s == NULL)
-          printf("ERROR : SDL_CreateRGBSurface : %s\n",SDL_GetError());
-
+	*s = make_surface(w, h);
 	return 1;
 }
 
@@ -576,6 +561,16 @@ static int sdl_surface_toscreen(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 
+	int nw = 1, nh = 1;
+	while (nw < (*s)->w) nw *= 2;
+	while (nh < (*s)->h) nh *= 2;
+	if (nw > nh) nh = nw;
+	else nw = nh;
+	SDL_Surface *st =  make_surface(nw, nh);
+	SDL_FillRect(st, NULL, SDL_MapRGBA((*s)->format, 0, 0, 0, 0));
+	SDL_SetAlpha(*s, 0, 0);
+	sdlDrawImage(st, *s, 0, 0);
+
 	GLuint t;
 	glGenTextures(1, &t);
 	glBindTexture(GL_TEXTURE_2D, t);
@@ -586,19 +581,28 @@ static int sdl_surface_toscreen(lua_State *L)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	// get the number of channels in the SDL surface
-	GLint nOfColors = (*s)->format->BytesPerPixel;
-	GLenum texture_format = sdl_gl_texture_format(*s);
+	GLint nOfColors = st->format->BytesPerPixel;
+	GLenum texture_format = sdl_gl_texture_format(st);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, st->w, st->h, 0, texture_format, GL_UNSIGNED_BYTE, st->pixels);
 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR) {
 		printf("glTexImage2D : %s\n",gluErrorString(err));
 	}
 
-	draw_textured_quad(x,y,(*s)->w,(*s)->h);
+//	draw_textured_quad(x,y,(*s)->w,(*s)->h);
+	glBegin( GL_QUADS );
+	float fw = (float)(*s)->w / (float)nw, fh = (float)(*s)->h / (float)nh;
+	glTexCoord2f(0,0); glVertex2f(0  + x, 		0  + y);
+	glTexCoord2f(0,fh); glVertex2f(0  + x, 		(*s)->h + y);
+	glTexCoord2f(fw,fh); glVertex2f((*s)->w + x, 	(*s)->h + y);
+	glTexCoord2f(fw,0); glVertex2f((*s)->w + x, 	0  + y);
+	glEnd( );
 
 	glDeleteTextures(1, &t);
+
+	SDL_FreeSurface(st);
 
 	return 0;
 }
@@ -610,19 +614,75 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 	int x = luaL_checknumber(L, 3);
 	int y = luaL_checknumber(L, 4);
 
+	int nw = 1, nh = 1;
+	while (nw < (*s)->w) nw *= 2;
+	while (nh < (*s)->h) nh *= 2;
+	if (nw > nh) nh = nw;
+	else nw = nh;
+	SDL_Surface *st =  make_surface(nw, nh);
+	SDL_FillRect(st, NULL, SDL_MapRGBA((*s)->format, 0, 0, 0, 0));
+	SDL_SetAlpha(*s, 0, 0);
+	sdlDrawImage(st, *s, 0, 0);
+
 	glBindTexture(GL_TEXTURE_2D, *t);
 
-	GLenum texture_format = sdl_gl_texture_format(*s);
+	GLenum texture_format = sdl_gl_texture_format(st);
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (*s)->w, (*s)->h, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, st->w, st->h, texture_format, GL_UNSIGNED_BYTE, st->pixels);
 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR) {
 		printf("glTexSubImage2D : %s\n",gluErrorString(err));
 	}
 
-	draw_textured_quad(x,y,(*s)->w,(*s)->h);
+//	draw_textured_quad(x,y,(*s)->w,(*s)->h);
+	glBegin( GL_QUADS );
+	float fw = (float)(*s)->w / (float)nw, fh = (float)(*s)->h / (float)nh;
+	glTexCoord2f(0,0); glVertex2f(0  + x, 		0  + y);
+	glTexCoord2f(0,fh); glVertex2f(0  + x, 		(*s)->h + y);
+	glTexCoord2f(fw,fh); glVertex2f((*s)->w + x, 	(*s)->h + y);
+	glTexCoord2f(fw,0); glVertex2f((*s)->w + x, 	0  + y);
+	glEnd( );
+
+	SDL_FreeSurface(st);
+
 	return 0;
+}
+
+static int sdl_surface_to_texture2(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+
+	int nw = 1, nh = 1;
+	while (nw < (*s)->w) nw *= 2;
+	while (nh < (*s)->h) nh *= 2;
+	if (nw > nh) nh = nw;
+	else nw = nh;
+	SDL_Surface *st =  make_surface(nw, nh);
+	SDL_FillRect(st, NULL, SDL_MapRGBA((*s)->format, 0, 0, 0, 0));
+	SDL_SetAlpha(*s, 0, 0);
+	sdlDrawImage(st, *s, 0, 0);
+
+	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+
+	glGenTextures(1, t);
+	glBindTexture(GL_TEXTURE_2D, *t);
+
+	// Paramétrage de la texture.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	// get the number of channels in the SDL surface
+	GLint nOfColors = st->format->BytesPerPixel;
+	GLenum texture_format = sdl_gl_texture_format(st);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, st->w, st->h, 0, texture_format, GL_UNSIGNED_BYTE, st->pixels);
+
+	SDL_FreeSurface(st);
+
+	return 1;
 }
 
 static int sdl_surface_to_texture(lua_State *L)
@@ -656,6 +716,7 @@ static int sdl_surface_merge(lua_State *L)
 	int y = luaL_checknumber(L, 4);
 	if (dst && *dst && src && *src)
 	{
+		SDL_SetAlpha(*src, 0, 0);
 		sdlDrawImage(*dst, *src, x, y);
 	}
 	return 0;
@@ -730,6 +791,7 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"drawString", sdl_surface_drawstring},
 	{"alpha", sdl_surface_alpha},
 	{"glTexture", sdl_surface_to_texture},
+	{"glTexture2", sdl_surface_to_texture2},
 	{NULL, NULL},
 };
 
