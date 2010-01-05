@@ -22,6 +22,7 @@ local PlayerDisplay = require "mod.class.PlayerDisplay"
 local TalentsDisplay = require "mod.class.TalentsDisplay"
 
 local LogDisplay = require "engine.LogDisplay"
+local LogFlasher = require "engine.LogFlasher"
 local DebugConsole = require "engine.DebugConsole"
 local FlyingText = require "engine.FlyingText"
 local Tooltip = require "engine.Tooltip"
@@ -43,17 +44,20 @@ function _M:init()
 end
 
 function _M:run()
-	self.log = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
-	self.player_display = PlayerDisplay.new(0, 0, 200, self.h * 0.8, {30,30,0})
+	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
+	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
+	self.player_display = PlayerDisplay.new(0, 20, 200, self.h * 0.8 - 20, {30,30,0})
 	self.talents_display = TalentsDisplay.new(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
 
-	self.log("Welcome to #00FF00#Tales of Middle Earth!")
-	self.logSeen = function(e, ...) if e and self.level.map.seens(e.x, e.y) then self.log(...) end end
-	self.logPlayer = function(e, ...) if e == game.player then self.log(...) end end
+	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
+	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
+	self.logPlayer = function(e, style, ...) if e == game.player then self.log(style, ...) end end
+
+	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Middle Earth!")
 
 	-- Setup inputs
 	self:setupCommands()
@@ -93,24 +97,24 @@ function _M:loaded()
 	engine.GameTurnBased.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object"}
 	Map:setViewerActor(self.player)
-	Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 32, 32, nil, 20, true)
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
 	self.key = engine.KeyCommand.new()
 end
 
 function _M:setupDisplayMode()
 	self.gfxmode = self.gfxmode or 1
 	if self.gfxmode == 1 then
-		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 32, 32, nil, 20, true)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
 		Map:resetTiles()
 		Map.tiles.use_images = true
 		self.level.map:recreate()
 	elseif self.gfxmode == 2 then
-		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, true)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, true)
 		Map:resetTiles()
 		Map.tiles.use_images = true
 		self.level.map:recreate()
 	elseif self.gfxmode == 3 then
-		Map:setViewPort(200, 0, self.w - 200, math.floor(self.h * 0.80), 16, 16, nil, 14, false)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, false)
 		Map:resetTiles()
 		Map.tiles.use_images = false
 		self.level.map:recreate()
@@ -180,7 +184,8 @@ function _M:onTurn()
 end
 
 function _M:display()
-	self.log:display():toScreen(self.log.display_x, self.log.display_y)
+	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
+	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
 	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
 	self.talents_display:display():toScreen(self.talents_display.display_x, self.talents_display.display_y)
 
@@ -510,6 +515,7 @@ function _M:setupCommands()
 			end
 		end,
 	}
+
 	self.key:setCurrent()
 end
 
@@ -559,9 +565,9 @@ function _M:setupMouse()
 		end
 	end)
 	-- Scroll message log
-	self.mouse:registerZone(self.log.display_x, self.log.display_y, self.w, self.h, function(button)
-		if button == "wheelup" then self.log:scrollUp(1) end
-		if button == "wheeldown" then self.log:scrollUp(-1) end
+	self.mouse:registerZone(self.logdisplay.display_x, self.logdisplay.display_y, self.w, self.h, function(button)
+		if button == "wheelup" then self.logdisplay:scrollUp(1) end
+		if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
 	end, {button=true})
 end
 

@@ -50,7 +50,7 @@ newTalent{
 	action = function(self, t)
 		local duration = 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t)
 		local radius = 1
-		local dam = 5 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
+		local dam = 5 + self:combatSpellpower(0.2) * self:getTalentLevel(t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
@@ -65,10 +65,10 @@ newTalent{
 		)
 		return true
 	end,
-	require = { stat = { mag=34 }, level=25 },
+	require = { stat = { mag=24 }, },
 	info = function(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.1) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.2) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
 	end,
 }
 
@@ -88,7 +88,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
-			DamageType.COLD, dam,
+			DamageType.ICE, dam,
 			radius,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
@@ -100,9 +100,10 @@ newTalent{
 		)
 		return true
 	end,
-	require = { stat = { mag=34 }, level=25 },
+	require = { stat = { mag=34 }, },
 	info = function(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
+		It has 25%% chance to freeze damaged targets.
 		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.15) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
 	end,
 }

@@ -8,15 +8,21 @@ setDefaultProjector(function(src, x, y, type, dam)
 		else dam = dam * (100 / (100 - res))
 		end
 
-		game.logSeen(target, "%s hits %s for #aaaaaa#%0.2f %s damage#ffffff#.", src.name:capitalize(), target.name, dam, DamageType:get(type).name)
+		local flash = game.flash.NEUTRAL
+		if target == game.player then flash = game.flash.BAD end
+		if src == game.player then flash = game.flash.GOOD end
+
+		game.logSeen(target, flash, "%s hits %s for #aaaaaa#%0.2f %s damage#ffffff#.", src.name:capitalize(), target.name, dam, DamageType:get(type).name)
 		local sx, sy = game.level.map:getTileToScreen(x, y)
 		if target:takeHit(dam, src) then
 			if src == game.player or target == game.player then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Kill!", {255,0,255})
 			end
 		else
-			if src == game.player or target == game.player then
-				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-dam), {255,0,255})
+			if src == game.player then
+				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-dam), {0,255,0})
+			elseif target == game.player then
+				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-dam), {255,0,0})
 			end
 		end
 	end
@@ -119,6 +125,17 @@ newDamageType{
 		if target then
 			-- Set on fire!
 			target:setEffect(target.EFF_BURNING, 3, {src=src, power=dam / 6})
+		end
+	end,
+}
+
+-- Cold damage + freeze chance
+newDamageType{
+	name = "ice", type = "ICE",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		if rng.percent(25) then
+			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, 2)
 		end
 	end,
 }
