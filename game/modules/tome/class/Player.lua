@@ -52,8 +52,10 @@ function _M:move(x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
 
-		local obj = game.level.map(self.x, self.y, Map.OBJECT)
-		if obj then
+		local obj = game.level.map:getObject(self.x, self.y, 1)
+		if obj and game.level.map:getObject(self.x, self.y, 2) then
+			game.logSeen(self, "There is more than one objects lying here.")
+		elseif obj then
 			game.logSeen(self, "There is an item here: "..obj:getName())
 		end
 	end

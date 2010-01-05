@@ -427,16 +427,6 @@ function _M:setupCommands()
 		_KP8   = function() self.player:move(self.player.x    , self.player.y - 1) end,
 		_KP9   = function() self.player:move(self.player.x + 1, self.player.y - 1) end,
 
-		[{"_LESS","anymod"}] = function()
-			local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
-			if self.player:enoughEnergy() and e.change_level then
-				-- Do not unpause, the player is allowed first move on next level
-				self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
-			else
-				self.log("There is no way out of this level here.")
-			end
-		end,
-		_GREATER = {"alias", "_LESS"},
 		-- Toggle tactical displau
 		[{"_t","shift"}] = function()
 			if Map.view_faction then
@@ -503,6 +493,18 @@ function _M:setupCommands()
 			self.log("Saved game.")
 		end,
 
+		-- Default handler, we treat here some "weird" keys that do not seem too havdle well on different keyboard layouts
+		__DEFAULT = function(sym, ctrl, shift, alt, meta, unicode)
+			if unicode == "<" or unicode == ">" then
+				local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
+				if self.player:enoughEnergy() and e.change_level then
+					-- Do not unpause, the player is allowed first move on next level
+					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
+				else
+					self.log("There is no way out of this level here.")
+				end
+			end
+		end,
 	}
 	self.key:setCurrent()
 end
