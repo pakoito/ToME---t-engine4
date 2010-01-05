@@ -6,7 +6,7 @@ newEntity{
 	display = "\\", color=colors.SLATE,
 	encumber = 5,
 	rarity = 3,
-	combat = { talented = "mace", },
+	combat = { talented = "mace", damrange = 1.5 },
 	desc = [[Massive two-handed maul.]],
 	twohanded = true,
 }

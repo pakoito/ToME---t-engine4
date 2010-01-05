@@ -5,7 +5,7 @@ newEntity{
 	display = "/", color=colors.WHITE,
 	encumber = 1,
 	rarity = 3,
-	combat = { talented = "knife", },
+	combat = { talented = "knife", damrange = 1.3 },
 	desc = [[Sharp, long, and deadly.]],
 --	egos = "/data/general/objects/egos/swords.lua", egos_chance = resolvers.mbonus(40, 5),
 }
@@ -19,7 +19,7 @@ newEntity{ base = "BASE_KNIFE",
 		dam = resolvers.rngavg(4,6),
 		apr = 5,
 		physcrit = 4,
-		dammod = {dex=1},
+		dammod = {dex=0.45,str=0.45},
 	},
 }
 
@@ -32,7 +32,7 @@ newEntity{ base = "BASE_KNIFE",
 		dam = resolvers.rngavg(8,15),
 		apr = 6,
 		physcrit = 5,
-		dammod = {dex=1},
+		dammod = {dex=0.45,str=0.45},
 	},
 }
 
@@ -45,7 +45,7 @@ newEntity{ base = "BASE_KNIFE",
 		dam = resolvers.rngavg(18,25),
 		apr = 7,
 		physcrit = 6,
-		dammod = {dex=1},
+		dammod = {dex=0.45,str=0.45},
 	},
 }
 
@@ -58,7 +58,7 @@ newEntity{ base = "BASE_KNIFE",
 		dam = resolvers.rngavg(38,45),
 		apr = 9,
 		physcrit = 8,
-		dammod = {dex=1},
+		dammod = {dex=0.45,str=0.45},
 	},
 }
 
@@ -71,6 +71,6 @@ newEntity{ base = "BASE_KNIFE",
 		dam = resolvers.rngavg(48,55),
 		apr = 9,
 		physcrit = 10,
-		dammod = {dex=1},
+		dammod = {dex=0.45,str=0.45},
 	},
 }

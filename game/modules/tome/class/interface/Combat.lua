@@ -124,6 +124,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	local hitted = false
 	if self:checkHit(atk, def) then
 		local dam = dam - math.max(0, armor - apr)
+		local damrange = self:combatDamageRange(weapon)
+		dam = rng.range(dam, dam * damrange)
 		local crit
 		dam = dam * mult
 		dam, crit = self:physicalCrit(dam, weapon)
@@ -195,6 +197,12 @@ end
 function _M:combatCrit(weapon)
 	weapon = weapon or self.combat
 	return self.combat_physcrit + (self:getCun() - 10) * 0.3 + (weapon.physcrit or 1)
+end
+
+--- Gets the damage range
+function _M:combatDamageRange(weapon)
+	weapon = weapon or self.combat
+	return (self.combat_damrange or 0) + (weapon.damrange or 1.3)
 end
 
 --- Gets the damage

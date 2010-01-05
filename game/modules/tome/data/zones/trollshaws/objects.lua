@@ -12,5 +12,6 @@ newEntity{ base = "BASE_GREATMAUL",
 		apr = 7,
 		physcrit = 1.5,
 		dammod = {str=1.3},
+		damrange = 1.7,
 	},
 }
