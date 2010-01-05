@@ -16,11 +16,11 @@ newTalent{
 		local x, y, target = self:getTarget(t)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 2)
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t)) and target:canBe("stun") then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
@@ -59,7 +59,7 @@ newTalent{
 		end
 		self.combat_physcrit = self.combat_physcrit + 100
 
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 2 + self:getTalentLevel(t) / 10)
 
 		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam - inc
@@ -69,7 +69,7 @@ newTalent{
 
 		-- Try to insta-kill
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t)) and target:canBe("instadeath") and target.life > 0 and target.life < target.max_life * 0.2 then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("instadeath") and target.life > 0 and target.life < target.max_life * 0.2 then
 				-- KILL IT !
 				game.logSeen(target, "%s feels the pain of the death blow!", target.name:capitalize())
 				target:takeHit(100000, self)
@@ -104,7 +104,7 @@ newTalent{
 			local x, y = self.x + i, self.y + j
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
-				self:attackTargetWith(target, weapon.combat, nil, 1 + self:getTalentLevel(t) / 8)
+				self:attackTargetWith(target, weapon.combat, nil, 1.4 + self:getTalentLevel(t) / 8)
 			end
 		end end
 

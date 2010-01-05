@@ -12,7 +12,7 @@ newBirthDescriptor{
 			Warrior = "allow",
 		},
 	},
-	talents = { ActorTalents.T_STAMINA_POOL, },
+	talents = { [ActorTalents.T_STAMINA_POOL]=1, },
 	copy = {
 		max_life = 120,
 		life_rating = 10,
@@ -37,6 +37,11 @@ newBirthDescriptor{
 		["physical/combat-training"]={true, 0.3},
 		["physical/weapon-training"]={true, 0.3},
 	},
+	talents = {
+		[ActorTalents.T_SHIELD_BASH] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_SWORD_MASTERY] = 1,
+	},
 }
 
 newBirthDescriptor{
@@ -54,7 +59,7 @@ newBirthDescriptor{
 			Rogue = "allow",
 		},
 	},
-	talents = { ActorTalents.T_STAMINA_POOL, },
+	talents = { [ActorTalents.T_STAMINA_POOL]=1, },
 	copy = {
 		max_life = 100,
 		life_rating = 9,
@@ -80,6 +85,11 @@ newBirthDescriptor{
 		["physical/weapon-training"]={true, 0},
 		["cunning/stealth"]={true, 0.3},
 	},
+	talents = {
+		[ActorTalents.T_STEALTH] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_KNIFE_MASTERY] = 1,
+	},
 }
 
 newBirthDescriptor{
@@ -96,7 +106,7 @@ newBirthDescriptor{
 			Mage = "allow",
 		},
 	},
-	talents = { ActorTalents.T_MANA_POOL, },
+	talents = { [ActorTalents.T_MANA_POOL]=1, },
 	copy = {
 		max_life = 80,
 		life_rating = 7,
@@ -129,6 +139,8 @@ newBirthDescriptor{
 		["spell/necromancy"]={true, 0.3},
 	},
 	talents = {
-		ActorTalents.T_MANATHRUST, ActorTalents.T_FLAME, ActorTalents.T_FREEZE,
+		[ActorTalents.T_MANATHRUST] = 1,
+		[ActorTalents.T_FLAME] = 1,
+		[ActorTalents.T_FREEZE] = 1,
 	},
 }

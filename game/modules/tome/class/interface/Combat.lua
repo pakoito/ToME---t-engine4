@@ -166,19 +166,19 @@ end
 --- Gets the attack
 function _M:combatAttack(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + self:combatCheckTraining(weapon) * 10 + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5)
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5)
 end
 
 --- Gets the attack using only strength
 function _M:combatAttackStr(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + self:combatCheckTraining(weapon) * 10 + (weapon.atk or 0) + (self:getStr(100) - 10)
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(100) - 10)
 end
 
 --- Gets the attack using only dexterity
 function _M:combatAttackDex(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + self:combatCheckTraining(weapon) * 10 + (weapon.atk or 0) + (self:getDex(100) - 10)
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getDex(100) - 10)
 end
 
 --- Gets the armor penetration
@@ -215,7 +215,7 @@ function _M:combatDamage(weapon)
 		end
 	end
 	local talented_mod = self:combatCheckTraining(weapon)
-	return self.combat_dam + (weapon.dam or 1) * (1 + talented_mod / 3) + add
+	return self.combat_dam + (weapon.dam or 1) * (1 + talented_mod / 4) + add
 end
 
 --- Gets spellpower
@@ -266,10 +266,10 @@ end
 
 --- Computes physical resistance
 function _M:combatPhysicalResist()
-	return self.combat_physresist + (self:getCon() + self:getStr()) * 0.5
+	return self.combat_physresist + (self:getCon() + self:getStr()) * 0.25
 end
 
 --- Computes spell resistance
 function _M:combatSpellResist()
-	return self.combat_spellresist + (self:getMag() + self:getWil()) * 0.5
+	return self.combat_spellresist + (self:getMag() + self:getWil()) * 0.25
 end

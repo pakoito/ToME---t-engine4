@@ -1,3 +1,6 @@
+-- Misc
+load("/data/general/objects/lites.lua")
+
 -- Usable stuff
 load("/data/general/objects/potions.lua")
 load("/data/general/objects/scrolls.lua")

@@ -16,7 +16,7 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 1,
 
 	use_simple = { name="light up the surrounding area", use = function(self, who)
-		self:project({type="ball", range=0, friendlyfire=false, radius=15}, self.x, self.y, DamageType.LIGHT, 1)
+		who:project({type="ball", range=0, friendlyfire=false, radius=15}, self.x, self.y, DamageType.LIGHT, 1)
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}
@@ -29,7 +29,7 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 3,
 
 	use_simple = { name="teleport you randomly over a short distance", use = function(self, who)
-		who:teleportRandom(x, y, 15)
+		who:teleportRandom(who.x, who.y, 15)
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}
@@ -42,7 +42,7 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 4,
 
 	use_simple = { name="teleport you anywhere and the level, randomly", use = function(self, who)
-		who:teleportRandom(x, y, 200)
+		who:teleportRandom(who.x, who.y, 200)
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}

@@ -28,9 +28,9 @@ newTalent{
 		local x, y, target = self:getTarget(t)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
-		self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
-		self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
+		self:attackTarget(target, nil, 1.8 + self:getTalentLevel(t) / 10, true)
+		self:attackTarget(target, nil, 1.8 + self:getTalentLevel(t) / 10, true)
+		self:attackTarget(target, nil, 1.8 + self:getTalentLevel(t) / 10, true)
 
 		return true
 	end,
@@ -58,7 +58,7 @@ newTalent{
 			local x, y = self.x + i, self.y + j
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
-				self:attackTarget(target, nil, 1 + self:getTalentLevel(t) / 10, true)
+				self:attackTarget(target, nil, 1.4 + self:getTalentLevel(t) / 10, true)
 			end
 		end end
 

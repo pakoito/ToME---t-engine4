@@ -1,33 +1,43 @@
 newTalent{
-	name = "Sword Mastery",
+	name = "Weapon Combat",
 	type = {"physical/weapon-training", 1},
 	points = 10,
+	require = { level=function(level) return (level - 1) * 2 end },
+	mode = "passive",
+	info = function(self)
+		return [[Increases chances to hit with melee weapons.]]
+	end,
+}
+newTalent{
+	name = "Sword Mastery",
+	type = {"physical/weapon-training", 1},
+	points = 12,
 	require = { stat = { str=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self)
-		return [[Increases damage and attack with swords.]]
+		return [[Increases damage with swords.]]
 	end,
 }
 
 newTalent{
 	name = "Axe Mastery",
 	type = {"physical/weapon-training", 1},
-	points = 10,
+	points = 12,
 	require = { stat = { str=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self)
-		return [[Increases damage and attack with axes.]]
+		return [[Increases damage with axes.]]
 	end,
 }
 
 newTalent{
 	name = "Mace Mastery",
 	type = {"physical/weapon-training", 1},
-	points = 10,
+	points = 14,
 	require = { stat = { str=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self)
-		return [[Increases damage and attack with maces.]]
+		return [[Increases damage with maces.]]
 	end,
 }
 
@@ -35,9 +45,9 @@ newTalent{
 	name = "Knife Mastery",
 	type = {"physical/weapon-training", 1},
 	points = 10,
-	require = { stat = { str=function(level) return 10 + level * 3 end }, },
+	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self)
-		return [[Increases damage and attack with knifes.]]
+		return [[Increases damage with knifes.]]
 	end,
 }

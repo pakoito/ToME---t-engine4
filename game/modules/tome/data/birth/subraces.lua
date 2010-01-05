@@ -21,7 +21,7 @@ newBirthDescriptor
 	},
 	stats = { str=1, cun=1, dex=1, wil=1 },
 	experience = 1.1,
-	talents = { ActorTalents.T_IMPROVED_HEALTH_I, ActorTalents.T_DUNADAN_HEAL, },
+	talents = { [ActorTalents.T_IMPROVED_HEALTH_I]=1, [ActorTalents.T_DUNADAN_HEAL]=1, },
 	copy = {
 		default_wilderness = {"wilderness/rhudaur", 9, 4},
 	},

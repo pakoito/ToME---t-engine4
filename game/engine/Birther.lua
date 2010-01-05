@@ -137,9 +137,10 @@ function _M:apply()
 			end
 		end
 		if d.talents then
-			for i, tid in ipairs(d.talents) do
-				self.actor:learnTalent(tid, true)
-				print(tid)
+			for tid, lev in pairs(d.talents) do
+				for i = 1, lev do
+					self.actor:learnTalent(tid, true)
+				end
 			end
 		end
 		if d.experience then self.actor.exp_mod = self.actor.exp_mod * d.experience end
