@@ -289,8 +289,8 @@ function _M:apply(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.lites[x + y * self.w] then
 		self.seens[x + y * self.w] = true
-		self.remembers[x + y * self.w] = true
 		self._map:setSeen(x, y, true)
+		self.remembers[x + y * self.w] = true
 		self._map:setRemember(x, y, true)
 	end
 end
@@ -299,12 +299,12 @@ end
 -- Used by FOV code
 function _M:applyLite(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
-	self.lites[x + y * self.w] = true
+	if self.lites[x + y * self.w] or self:checkAllEntities(x, y, "always_remember") then
+		self.remembers[x + y * self.w] = true
+		self._map:setRemember(x, y, true)
+	end
 	self.seens[x + y * self.w] = true
-	self.remembers[x + y * self.w] = true
 	self._map:setSeen(x, y, true)
-	self._map:setRemember(x, y, true)
-	self._map:setLite(x, y, true)
 end
 
 --- Check all entities of the grid for a property

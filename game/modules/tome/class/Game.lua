@@ -388,9 +388,13 @@ function _M:setupCommands()
 				function(o, item)
 					local ret = o:use(self.player)
 					if ret and ret == "destroy" then
-						self.player:removeObject(self.player:getInven(self.player.INVEN_INVEN), item)
-						self.log("You have no more "..o:getName())
-						self.player:sortInven()
+						if o.multicharge and o.multicharge > 1 then
+							o.multicharge = o.multicharge - 1
+						else
+							self.player:removeObject(self.player:getInven(self.player.INVEN_INVEN), item)
+							self.log("You have no more "..o:getName())
+							self.player:sortInven()
+						end
 					end
 				end
 			)

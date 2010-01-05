@@ -1,5 +1,6 @@
 -- Usable stuff
 load("/data/general/objects/potions.lua")
+load("/data/general/objects/scrolls.lua")
 
 -- Jewelry stuff
 load("/data/general/objects/jewelry.lua")

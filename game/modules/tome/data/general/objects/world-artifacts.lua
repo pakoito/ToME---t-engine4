@@ -9,7 +9,7 @@ newEntity{
 	encumber = 6,
 	rarity = 100,
 	desc = [[This unique looking staff is carved with runes of destruction.]],
-	cost = 10000,
+	cost = 5000,
 
 	require = { stat = { mag=24 }, },
 	combat = {

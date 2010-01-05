@@ -1,5 +1,5 @@
 -- The basic stuff used to damage a grid
-defaultProjector(function(src, x, y, type, dam)
+setDefaultProjector(function(src, x, y, type, dam)
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
 		-- Reduce damage with resistance
@@ -22,6 +22,17 @@ defaultProjector(function(src, x, y, type, dam)
 	end
 end)
 
+local function tryDestroy(who, inven, destroy_prop, proof_prop, msg)
+	for i = #inven, 1, -1 do
+		local o = inven[i]
+		print(who, inven, destroy_prop, proof_prop, msg, "::", i)
+		if o[destroy_prop] and rng.percent(o[destroy_prop]) and not o[proof_prop] then
+			game.logPlayer(who, msg, o:getName())
+			who:removeObject(inven, i)
+		end
+	end
+end
+
 newDamageType{
 	name = "physical", type = "PHYSICAL",
 }
@@ -33,18 +44,47 @@ newDamageType{
 -- The four elemental damges
 newDamageType{
 	name = "fire", type = "FIRE",
+	projector = function(src, x, y, type, dam)
+		DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target:attr("fire_proof") then
+			tryDestroy(target, target:getInven("INVEN"), "fire_destroy", "fire_proof", "The burst of heat destroys your %s!")
+		end
+	end,
 }
 newDamageType{
 	name = "cold", type = "COLD",
+	projector = function(src, x, y, type, dam)
+		DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target:attr("cold_proof") then
+			tryDestroy(target, target:getInven("INVEN"), "cold_destroy", "cold_proof", "The intense cold destroys your %s!")
+		end
+	end,
 }
 newDamageType{
 	name = "nature", type = "NATURE",
 }
 newDamageType{
 	name = "lightning", type = "LIGHTNING",
+	projector = function(src, x, y, type, dam)
+		DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target:attr("elec_proof") then
+			tryDestroy(target, target:getInven("INVEN"), "elec_destroy", "elec_proof", "The burst of lightning destroys your %s!")
+		end
+	end,
 }
+-- Acid detroys potions
 newDamageType{
 	name = "acid", type = "ACID",
+	projector = function(src, x, y, type, dam)
+		DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target:attr("acid_proof") then
+			tryDestroy(target, target:getInven("INVEN"), "acid_destroy", "acid_proof", "The splash of acid destroys your %s!")
+		end
+	end,
 }
 
 -- Light up the room

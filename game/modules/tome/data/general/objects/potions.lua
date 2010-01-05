@@ -4,7 +4,9 @@ newEntity{
 	display = "!", color=colors.WHITE, image="object/potion-0x0.png",
 	encumber = 0.2,
 	stacking = true,
+	acid_destroy = 20,
 	desc = [[Magical potions can have wildly different effects, from healing to killing you, beware! Most of them function better with a high Magic score]],
+	egos = "/data/general/objects/egos/potions.lua", egos_chance = resolvers.mbonus(10, 5),
 }
 
 -------------------------------------------------------
@@ -138,7 +140,7 @@ newEntity{ base = "BASE_POTION",
 	use_simple = { name="cures poison", use = function(self, who)
 		if who:hasEffect(who.EFF_POISONED) then
 			who:removeEffect(who.EFF_POISONED)
-			game.logSeen(who, "%s cures %s from poisoning!", self:getName():capitalize(), who.name)
+			game.logSeen(who, "%s cure %s from poisoning!", self:getName():capitalize(), who.name)
 			return "destroy", true
 		end
 		return "destroy", false
@@ -206,4 +208,3 @@ newEntity{ base = "BASE_POTION",
 		return "destroy", true
 	end}
 }
-

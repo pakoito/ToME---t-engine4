@@ -39,7 +39,7 @@ newTalent{
 	type = {"physical/2hweapon", 2},
 	points = 5,
 	cooldown = 30,
-	stamina = 15,
+	stamina = 30,
 	require = { stat = { str=22 }, },
 	action = function(self, t)
 		local weapon = self:getInven("MAINHAND")[1]
@@ -81,12 +81,13 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Hits the target with your weapon, if the atatck hits, the target is stunned.]])
+		return ([[Tries to perform a killing blow, granting automatic critical hit. If the target ends up with low enough life it might be instantly killed.
+		At level 4 it drains all remaining stamina and uses it to increase the blow damage.]])
 	end,
 }
 
 newTalent{
-	name = "Death Danse",
+	name = "Death Dance",
 	type = {"physical/2hweapon", 3},
 	points = 5,
 	cooldown = 10,
@@ -95,7 +96,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:getInven("MAINHAND")[1]
 		if not weapon or not weapon.twohanded then
-			game.logPlayer(self, "You cannot use Death Danse without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Death Dance without a two handed weapon!")
 			return nil
 		end
 

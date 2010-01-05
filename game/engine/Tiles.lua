@@ -50,7 +50,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
 			if br < 0 then br = nil end
 			if bg < 0 then bg = nil end
 			if bb < 0 then bb = nil end
-			s = core.display.newTile(self.w, self.h, self.font, dochar, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb, br or 0, bg or 0, bb or 0, alpha)
+			s = core.display.newTile(self.w, self.h, self.font, dochar, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb, br or 0, bg or 0, bb or 0, alpha, self.use_images)
 --			s = core.display.drawStringNewSurface(self.font, char, fr, fg, fb)
 		end
 

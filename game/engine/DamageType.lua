@@ -17,7 +17,7 @@ function _M:loadDefinition(file)
 	setfenv(f, setmetatable({
 		DamageType = _M,
 		Map = require("engine.Map"),
-		defaultProjector = function(fct) self.defaultProjector = fct end,
+		setDefaultProjector = function(fct) self.defaultProjector = fct end,
 		newDamageType = function(t) self:newDamageType(t) end,
 	}, {__index=_G}))
 	f()

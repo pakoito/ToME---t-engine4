@@ -109,6 +109,7 @@ function _M:move(x, y, force)
 	return moved
 end
 
+--- Blink through walls
 function _M:probabilityTravel(x, y)
 	local dirx, diry = x - self.x, y - self.y
 	local tx, ty = x, y
@@ -120,6 +121,15 @@ function _M:probabilityTravel(x, y)
 		return engine.Actor.move(self, tx, ty, false)
 	end
 	return true
+end
+
+--- Reveals location surrounding the actor
+function _M:magicMap(radius)
+	for i = self.x - radius, self.x + radius do for j = self.y - radius, self.y + radius do
+		if game.level.map:isBound(i, j) and core.fov.distance(self.x, self.y, i, j) < radius then
+			game.level.map.remembers(i, j, true)
+		end
+	end end
 end
 
 function _M:tooltip()

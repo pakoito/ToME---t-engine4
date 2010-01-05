@@ -12,13 +12,13 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(15 + self:combatSpellpower(0.4) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.ACID, self:spellCrit(15 + self:combatSpellpower(0.8) * self:getTalentLevel(t)))
 		return true
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.4) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
 	end,
 }
 
