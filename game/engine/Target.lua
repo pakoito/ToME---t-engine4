@@ -35,6 +35,8 @@ function _M:display()
 	if self.target.entity and self.target.entity.x and self.target.entity.y and game.level.map.seens(self.target.entity.x, self.target.entity.y) then
 		self.target.x, self.target.y = self.target.entity.x, self.target.entity.y
 	end
+	self.target.x = self.target.x or self.source_actor.x
+	self.target.y = self.target.y or self.source_actor.y
 
 	-- Do not display if not requested
 	if not self.active then return end
@@ -54,6 +56,7 @@ function _M:display()
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
 		lx, ly = l()
 	end
+	print(self.display_x, self.display_y, "::", self.display_x + (self.target.x - game.level.map.mx) * self.tile_w, self.display_y + (self.target.y - game.level.map.my) * self.tile_h)
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w, self.display_y + (self.target.y - game.level.map.my) * self.tile_h, self.tile_w, self.tile_h)
 
 	if s == self.b then stopx, stopy = self.target.x, self.target.y end

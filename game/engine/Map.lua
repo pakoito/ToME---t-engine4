@@ -255,11 +255,11 @@ function _M:display()
 					if e.faction then
 						friend = Faction:factionReaction(self.view_faction, e.faction)
 						if friend > 0 then
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						elseif friend < 0 then
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						else
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						end
 					end
 				end

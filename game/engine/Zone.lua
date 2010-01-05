@@ -96,6 +96,7 @@ function _M:checkFilter(e, filter)
 
 	if filter.type and filter.type ~= e.type then return false end
 	if filter.subtype and filter.subtype ~= e.subtype then return false end
+	if filter.name and filter.name ~= e.name then return false end
 	return true
 end
 
