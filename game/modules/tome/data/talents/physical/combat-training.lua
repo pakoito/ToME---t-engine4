@@ -3,7 +3,7 @@ newTalent{
 	type = {"physical/combat-training", 1},
 	mode = "passive",
 	require = { stat = { str=18 }, },
-	info = function(self)
+	info = function(self, t)
 		return [[Teaches the usage of heavy mail armours.]]
 	end,
 }
@@ -13,7 +13,7 @@ newTalent{
 	type = {"physical/combat-training", 2},
 	mode = "passive",
 	require = { stat = { str=22 }, talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
-	info = function(self)
+	info = function(self, t)
 		return [[Teaches the usage of massive plate armours.]]
 	end,
 }
@@ -30,7 +30,7 @@ newTalent{
 	on_unlearn = function(self, t)
 		self.max_life = self.max_life - 40
 	end,
-	info = function(self)
+	info = function(self, t)
 		return [[Increases your maximun life by 40 per talent level]]
 	end,
 }

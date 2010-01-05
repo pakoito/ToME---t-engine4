@@ -29,9 +29,9 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
-		return ([[Hits the target with a shield strike, stunning it.
-		The damage multiplier increases with your strength.]])
+	info = function(self, t)
+		return ([[Hits the target with a shield strike, stunning it and doing %d%% shield damage.
+		The damage multiplier increases with your strength.]]):format(100 * (2 + self:getTalentLevel(t) / 5))
 	end,
 }
 
@@ -72,9 +72,9 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
-		return ([[Hits the target with your weapon and two shield strikes, trying to overpower your target.
-		If the last attack hits, the target is knocked back.]])
+	info = function(self, t)
+		return ([[Hits the target with your weapon and two shield strikes doing %d%% damage, trying to overpower your target.
+		If the last attack hits, the target is knocked back.]]):format(100 * (1.8 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -106,7 +106,7 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Let all your foes pile up on your shield then put all your strengh in one mighty thurst and repel them all away.]])
 	end,
 }
@@ -132,8 +132,8 @@ newTalent{
 			knock = self:addTemporaryValue("knockback_immune", 1)
 		end
 		return {
-			atk = self:addTemporaryValue("combat_dam", -5),
-			dam = self:addTemporaryValue("combat_atk", -5),
+			atk = self:addTemporaryValue("combat_dam", -10),
+			dam = self:addTemporaryValue("combat_atk", -10),
 			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4) * self:getTalentLevel(t)),
 			armor = self:addTemporaryValue("combat_armor", 5 + self:getCun(4) * self:getTalentLevel(t)),
 			stun = stun,
@@ -149,8 +149,8 @@ newTalent{
 		if p.knock then self:removeTemporaryValue("knockback_immune", p.knock) end
 		return true
 	end,
-	info = function(self)
-		return ([[Enters a protective battle stance, incraesing defense and armor at the cost of attack and damage.
-		At level 5 it also makes you immnue to stuns and knockbacks.]])
+	info = function(self, t)
+		return ([[Enters a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
+		At level 5 it also makes you immnue to stuns and knockbacks.]]):format(5 + self:getDex(4) * self:getTalentLevel(t), 5 + self:getCun(4) * self:getTalentLevel(t))
 	end,
 }

@@ -4,8 +4,8 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = { stat = { dex=14 } },
-	info = function(self)
-		return ([[Reduces the damage penality of the off-hand weapon]])
+	info = function(self, t)
+		return ([[Reduces the damage penality of the off-hand weapon to %d%%]]):format(100 / (2 - self:getTalentLevel(t) / 6))
 	end,
 }
 
@@ -34,8 +34,8 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
-		return ([[Lashes out a flurry of blows, hiting your target three times with each weapons.]])
+	info = function(self, t)
+		return ([[Lashes out a flurry of blows, hiting your target three times with each weapons for %d%% damage.]]):format(100 * (1.8 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -64,8 +64,8 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
-		return ([[Spin around, damaging all targets around with both weapons.]])
+	info = function(self, t)
+		return ([[Spin around, damaging all targets around with both weapons for %d%%.]]):format(100 * (1.4 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -95,8 +95,8 @@ newTalent{
 		self:removeTemporaryValue("stamina_regen", p.stamina_regen)
 		return true
 	end,
-	info = function(self)
-		return ([[Greatly increases attack speed, but drains stamina quickly.]])
+	info = function(self, t)
+		return ([[Increases attack speed by %0.2f, but drains stamina quickly.]]):format(-0.1 - self:getTalentLevel(t) / 10)
 	end,
 }
 
@@ -127,7 +127,7 @@ newTalent{
 		self:removeTemporaryValue("stamina_regen", p.stamina_regen)
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Greatly increases attack speed, but drains stamina quickly.]])
 	end,
 }

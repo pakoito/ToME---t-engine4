@@ -17,7 +17,9 @@ newTalent{
 		local x, y, target = self:getTarget(t)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 1.5 + self:getTalentLevel(t) / 5, true)
+		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
 	info = function(self)

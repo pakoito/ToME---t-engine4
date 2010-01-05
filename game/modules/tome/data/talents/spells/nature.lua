@@ -8,13 +8,13 @@ newTalent{
 		HEAL = 10,
 	},
 	action = function(self, t)
-		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:combatSpellpower(0.7) * self:getTalentLevel(t)})
+		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:combatSpellpower(0.07) * self:getTalentLevel(t)})
 		return true
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self, t)
 		return ([[Call upon the forces of nature to regenerate your body for %d life every turns for 10 turns.
-		The life healed will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.7) * self:getTalentLevel(t))
+		The life healed will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.07) * self:getTalentLevel(t))
 	end,
 }
 

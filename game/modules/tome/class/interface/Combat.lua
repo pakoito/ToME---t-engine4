@@ -155,7 +155,7 @@ end
 
 --- Gets the defense
 function _M:combatDefense()
-	return self.combat_def + self:getDex() - 10
+	return self.combat_def + (self:getDex() - 10) * 0.35
 end
 
 --- Gets the armor

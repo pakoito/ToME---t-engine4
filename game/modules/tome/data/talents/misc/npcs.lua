@@ -48,7 +48,9 @@ newTalent{
 	action = function(self, t)
 		local x, y, target = self:getTarget()
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
+		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
 	info = function(self)
@@ -67,7 +69,9 @@ newTalent{
 	action = function(self, t)
 		local x, y, target = self:getTarget()
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.ACID, 1 + self:getTalentLevel(t) / 3, true)
+		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
 	info = function(self)
@@ -88,7 +92,9 @@ newTalent{
 		local x, y, target = self:getTarget(t)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.BLIND, 0.8 + self:getTalentLevel(t) / 10, true)
+		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
 	info = function(self)
@@ -107,7 +113,9 @@ newTalent{
 	action = function(self, t)
 		local x, y, target = self:getTarget()
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
+		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
 	info = function(self)

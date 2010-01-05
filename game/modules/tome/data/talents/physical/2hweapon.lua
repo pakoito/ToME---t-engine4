@@ -16,7 +16,7 @@ newTalent{
 		local x, y, target = self:getTarget(t)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 2)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
 
 		-- Try to stun !
 		if hit then
@@ -29,8 +29,8 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
-		return ([[Hits the target with your weapon, if the atatck hits, the target is stunned.]])
+	info = function(self, t)
+		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is stunned.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -59,7 +59,7 @@ newTalent{
 		end
 		self.combat_physcrit = self.combat_physcrit + 100
 
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 2 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 2 + self:getTalentLevel(t) / 5)
 
 		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam - inc
@@ -80,9 +80,9 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
-		return ([[Tries to perform a killing blow, granting automatic critical hit. If the target ends up with low enough life it might be instantly killed.
-		At level 4 it drains all remaining stamina and uses it to increase the blow damage.]])
+	info = function(self, t)
+		return ([[Tries to perform a killing blow doing %d%% weapon damage, granting automatic critical hit. If the target ends up with low enough life it might be instantly killed.
+		At level 4 it drains all remaining stamina and uses it to increase the blow damage.]]):format(100 * (2 + self:getTalentLevel(t) / 5))
 	end,
 }
 
@@ -110,8 +110,8 @@ newTalent{
 
 		return true
 	end,
-	info = function(self)
-		return ([[Spin around, extending your weapon and damaging all targets aruond.]])
+	info = function(self, t)
+		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
 	end,
 }
 
@@ -133,8 +133,8 @@ newTalent{
 		return {
 			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(4) * self:getTalentLevel(t)),
 			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(4) * self:getTalentLevel(t)),
-			def = self:addTemporaryValue("combat_def", -5),
-			armor = self:addTemporaryValue("combat_armor", -5),
+			def = self:addTemporaryValue("combat_def", -15),
+			armor = self:addTemporaryValue("combat_armor", -15),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -144,7 +144,7 @@ newTalent{
 		self:removeTemporaryValue("combat_dam", p.dam)
 		return true
 	end,
-	info = function(self)
-		return ([[Enters a protective battle stance, increasing attack and damage at the cost of defense and armor.]])
+	info = function(self, t)
+		return ([[Enters a protective battle stance, increasing attack by %d and damage by %d at the cost of 15 defense and 15 armor.]]):format(5 + self:getDex(4) * self:getTalentLevel(t), 5 + self:getStr(4) * self:getTalentLevel(t))
 	end,
 }

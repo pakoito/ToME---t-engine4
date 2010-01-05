@@ -27,14 +27,14 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.COLD, self:spellCrit(7 + self:combatSpellpower(0.25) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.COLD, self:spellCrit(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t)))
 		self:project(tg, x, y, DamageType.FREEZE, 2 + math.floor(self:getTalentLevel(t) / 3))
 		return true
 	end,
 	require = { stat = { mag=14 }, },
 	info = function(self, t)
-		return ([[Condenses ambiant water on a target, freezing it for a short while.
-		The damage will increase with the Magic stat]]):format(7 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
+		return ([[Condenses ambiant water on a target, freezing it for a short while and damaging it for %0.2f.
+		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
 	end,
 }
 

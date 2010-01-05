@@ -1,4 +1,28 @@
 newTalent{
+	name = "Lightning",
+	type = {"spell/air", 1},
+	points = 5,
+	mana = 10,
+	cooldown = 3,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		local tg = {type="beam", range=self:getTalentRange(t)}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3))
+		return true
+	end,
+	require = { stat = { mag=10 }, },
+	info = function(self, t)
+		return ([[Conjures up mana into a powerful beam of lightning doing 1 to %0.2f damage
+		The damage will increase with the Magic stat]]):format(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
 	name = "Noxious Cloud",
 	type = {"spell/air",1},
 	points = 5,

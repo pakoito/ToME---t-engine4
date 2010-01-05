@@ -9,7 +9,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		local power = 1 + self:combatSpellpower(0.3) * self:getTalentLevel(t)
+		local power = 1 + self:combatSpellpower(0.03) * self:getTalentLevel(t)
 		return {
 			armor = self:addTemporaryValue("combat_armor", power),
 		}
@@ -21,7 +21,7 @@ newTalent{
 	require = { stat = { mag=14 }, },
 	info = function(self, t)
 		return ([[The caster skin grows as hard as stone, granting %d bonus to armor.
-		The bonus to armor will increase with the Magic stat]]):format(1 + self:combatSpellpower(0.3) * self:getTalentLevel(t))
+		The bonus to armor will increase with the Magic stat]]):format(1 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }
 

@@ -13,14 +13,14 @@ newTalent{
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(10 + self:combatSpellpower(0.5) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t)))
 		return true
 	end,
 	require = { stat = { mag=10 }, },
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage
 		At level 3 it becomes a beam.
-		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.5) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t))
 	end,
 }
 
