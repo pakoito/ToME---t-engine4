@@ -126,9 +126,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		local dam = dam - math.max(0, armor - apr)
 		local damrange = self:combatDamageRange(weapon)
 		dam = rng.range(dam, dam * damrange)
+		print("[ATTACK] after range", dam)
 		local crit
 		dam = dam * mult
 		dam, crit = self:physicalCrit(dam, weapon)
+		print("[ATTACK] after crit", dam)
 		if crit then game.logSeen(self, "%s performs a critical stike!", self.name:capitalize()) end
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
@@ -202,7 +204,7 @@ end
 --- Gets the damage range
 function _M:combatDamageRange(weapon)
 	weapon = weapon or self.combat
-	return (self.combat_damrange or 0) + (weapon.damrange or 1.3)
+	return (self.combat_damrange or 0) + (weapon.damrange or 1.1)
 end
 
 --- Gets the damage
@@ -231,7 +233,7 @@ end
 
 --- Gets spellspeed
 function _M:combatSpellSpeed()
-	return self.combat_spellspeed + (self:getCun() - 10) * 0.3 + 1
+	return self.combat_spellspeed or 1
 end
 
 --- Computes physical crit for a damage
