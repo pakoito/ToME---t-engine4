@@ -40,8 +40,8 @@ function _M:init(actor)
 		end,
 	}
 	self:mouseZones{
-		{ x=2, y=5, w=350, h=self.font_h*#self.list, fct=function(button, x, y, xrel, yrel, tx, ty)
-			self.sel = self.scroll + math.floor(ty / self.font_h)
+		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 			if button == "left" then self:use()
 			elseif button == "right" then
 			end

@@ -19,6 +19,14 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.changed = true
 end
 
+--- Resize the display area
+function _M:resize(x, y, w, h)
+	self.display_x, self.display_y = x, y
+	self.w, self.h = w, h
+	self.surface = core.display.newSurface(w, h)
+	self.changed = true
+end
+
 --- Appends text to the log
 -- This method is set as the call methamethod too, this means it is usable like this:<br/>
 -- log = LogDisplay.new(...)<br/>

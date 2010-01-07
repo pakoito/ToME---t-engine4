@@ -12,6 +12,14 @@ function _M:init(x, y, w, h, bgcolor)
 	self.font_h = self.font:lineSkip()
 end
 
+--- Resize the display area
+function _M:resize(x, y, w, h)
+	self.display_x, self.display_y = x, y
+	self.w, self.h = w, h
+	self.surface = core.display.newSurface(w, h)
+	game.player.changed = true
+end
+
 -- Displays the talents, keybinds & cooldowns
 -- This could use some optimisation, to not redraw everything every time
 function _M:display()
@@ -28,7 +36,6 @@ function _M:display()
 
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 
-	local acode = string.byte('1')
 	local x = 0
 	local y = 0
 

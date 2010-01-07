@@ -12,9 +12,12 @@ function _M:init(title, inven, filter, action)
 	self:generateList()
 
 	self.sel = 1
+	self.scroll = 1
+	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+
 	self:keyCommands{
-		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) end,
-		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) end,
+		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
+		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
 		_RETURN = function() self:use() end,
 		_ESCAPE = function() game:unregisterDialog(self) end,
 		__TEXTINPUT = function(c)
@@ -25,8 +28,8 @@ function _M:init(title, inven, filter, action)
 		end,
 	}
 	self:mouseZones{
-		{ x=2, y=5, w=350, h=self.font_h*#self.list, fct=function(button, x, y, xrel, yrel, tx, ty)
-			self.sel = 1 + math.floor(ty / self.font_h)
+		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 			if button == "left" then self:use()
 			elseif button == "right" then
 			end
@@ -84,5 +87,5 @@ Mouse: #00FF00#Left click#FFFFFF# to use.
 	end
 
 	-- Talents
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name")
+	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
 end

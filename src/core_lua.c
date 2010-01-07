@@ -9,6 +9,7 @@
 #include "physfs.h"
 #include "SFMT.h"
 #include "mzip.h"
+#include "main.h"
 #include <SDL_ttf.h>
 
 /******************************************************************
@@ -669,13 +670,6 @@ static int sdl_surface_alpha(lua_State *L)
 	return 0;
 }
 
-static int sdl_set_window_title(lua_State *L)
-{
-	const char *title = luaL_checkstring(L, 1);
-	SDL_WM_SetCaption(title, NULL);
-	return 0;
-}
-
 static int sdl_free_texture(lua_State *L)
 {
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
@@ -703,6 +697,30 @@ static int sdl_texture_toscreen(lua_State *L)
 	return 0;
 }
 
+static int sdl_set_window_title(lua_State *L)
+{
+	const char *title = luaL_checkstring(L, 1);
+	SDL_WM_SetCaption(title, NULL);
+	return 0;
+}
+
+static int sdl_set_window_size(lua_State *L)
+{
+	int w = luaL_checknumber(L, 1);
+	int h = luaL_checknumber(L, 2);
+	bool fullscreen = lua_toboolean(L, 3);
+
+	screen = SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE);
+	if (screen==NULL) {
+		printf("error opening screen: %s\n", SDL_GetError());
+		return 0;
+	}
+
+	resizeWindow(screen->w, screen->h);
+
+	lua_pushboolean(L, TRUE);
+	return 1;
+}
 
 static const struct luaL_reg displaylib[] =
 {
@@ -714,6 +732,7 @@ static const struct luaL_reg displaylib[] =
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"loadImage", sdl_load_image},
 	{"setWindowTitle", sdl_set_window_title},
+	{"setWindowSize", sdl_set_window_size},
 	{NULL, NULL},
 };
 

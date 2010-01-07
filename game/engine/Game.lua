@@ -120,3 +120,27 @@ function _M:getSaveDescription()
 		description = [[Busy adventuring!]],
 	}
 end
+
+available_resolutions =
+{
+	["800x600"] = {800, 600},
+	["1024x768"] = {1024, 768},
+	["1200x1024"] = {1200, 1024},
+	["1600x1200"] = {1600, 1200},
+}
+--- Change screen resolution
+function _M:setResolution(res)
+	if not available_resolutions[res] then return false, "unknown resolution" end
+
+	local old_w, old_h = self.w, self.h
+	core.display.setWindowSize(available_resolutions[res][1], available_resolutions[res][2])
+	self.w, self.h = core.display.size()
+
+	if self.w ~= old_w or self.h ~= old_h then
+		self:onResolutionChange()
+	end
+end
+
+--- Called
+function _M:onResolutionChange()
+end

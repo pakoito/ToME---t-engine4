@@ -12,6 +12,14 @@ function _M:init(x, y, w, h, bgcolor)
 	self.surface = core.display.newSurface(w, h)
 end
 
+--- Resize the display area
+function _M:resize(x, y, w, h)
+	self.display_x, self.display_y = x, y
+	self.w, self.h = w, h
+	self.surface = core.display.newSurface(w, h)
+	self.changed = true
+end
+
 -- Displays the stats
 function _M:display()
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])

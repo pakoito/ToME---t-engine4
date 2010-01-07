@@ -55,7 +55,7 @@ function _M:run()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
 	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
-	self.logPlayer = function(e, style, ...) if e == game.player then self.log(style, ...) end end
+	self.logPlayer = function(e, style, ...) if e == self.player then self.log(style, ...) end end
 
 	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Middle Earth!")
 
@@ -99,6 +99,16 @@ function _M:loaded()
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
 	self.key = engine.KeyCommand.new()
+end
+
+function _M:onResolutionChange()
+	print("[RESOLUTION] changed to ", self.w, self.h)
+	self:setupDisplayMode()
+	print(self.level.map.display_x, self.level.map.display_y)
+	self.flash:resize(0, 0, self.w, 20)
+	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	self.player_display:resize(0, 20, 200, self.h * 0.8 - 20)
+	self.talents_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 end
 
 function _M:setupDisplayMode()
@@ -225,7 +235,7 @@ end
 function _M:targetMode(v, msg, co, typ)
 	if not v then
 		Map:setViewerFaction(self.always_target and "players" or nil)
-		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press 't' or right mouse click to enable.") end
+		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press shift+'t' or right mouse click to enable.") end
 		self.level.map.changed = true
 		self.target:setActive(false)
 
@@ -241,7 +251,7 @@ function _M:targetMode(v, msg, co, typ)
 		end
 	else
 		Map:setViewerFaction("players")
-		if msg then self.log(type(msg) == "string" and msg or "Tactical display enabled. Press 't' to disable.") end
+		if msg then self.log(type(msg) == "string" and msg or "Tactical display enabled. Press shift+'t' to disable.") end
 		self.level.map.changed = true
 		self.target:setActive(true, typ)
 
@@ -512,6 +522,9 @@ function _M:setupCommands()
 				else
 					self.log("There is no way out of this level here.")
 				end
+			end
+			if unicode == "r" then
+				self:setResolution("800x600")
 			end
 		end,
 	}
