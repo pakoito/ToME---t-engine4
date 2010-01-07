@@ -40,7 +40,7 @@ The ToME combat system has the following attributes:
 - damage: raw damage done
 ]]
 function _M:attackTarget(target, damtype, mult, noenergy)
-	local speed = nil
+	local speed, hit = nil, false
 
 	-- Cancel stealth early if we are noticed
 	if self:isTalentActive(self.T_STEALTH) and target:canSee(self) then
@@ -53,8 +53,9 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	if self:getInven(self.INVEN_MAINHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
 			if o.combat then
-				local s = self:attackTargetWith(target, o.combat, damtype, mult)
+				local s, h = self:attackTargetWith(target, o.combat, damtype, mult)
 				speed = math.max(speed or 0, s)
+				hit = hit or h
 			end
 		end
 	end
@@ -67,8 +68,9 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		end
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			if o.combat then
-				local s = self:attackTargetWith(target, o.combat, damtype, offmult)
+				local s, h = self:attackTargetWith(target, o.combat, damtype, offmult)
 				speed = math.max(speed or 0, s)
+				hit = hit or h
 			end
 		end
 	end
@@ -89,6 +91,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		self:useTalent(self.T_STEALTH)
 		self.changed = true
 	end
+	return hit
 end
 
 --- Computes a logarithmic chance to hit, opposing chance to hit to chance to miss

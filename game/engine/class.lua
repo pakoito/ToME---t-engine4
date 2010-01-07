@@ -153,21 +153,26 @@ function _M:save(filter, allow, savefile)
 	return res
 end
 
-local function deserialize(string)
+_M.LOAD_SELF = {}
+
+local function deserialize(string, src)
 	local f, err = loadstring(string)
 	if err then print("error deserializing", string, err) end
 	setfenv(f, {
 		loadstring = loadstring,
 		loadObject = function(n)
---			print("wants to load",n)
-			return engine.Savefile.current_save:loadReal(n)
+			if n == src then
+				return _M.LOAD_SELF
+			else
+				return engine.Savefile.current_save:loadReal(n)
+			end
 		end,
 	})
 	return f()
 end
 
 function load(str, delayloading)
-	local obj = deserialize(str)
+	local obj = deserialize(str, delayloading)
 	if obj then
 --		print("setting obj class", obj.__CLASSNAME)
 		setmetatable(obj, {__index=require(obj.__CLASSNAME)})

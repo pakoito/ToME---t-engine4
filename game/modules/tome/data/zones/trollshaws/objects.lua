@@ -14,4 +14,7 @@ newEntity{ base = "BASE_GREATMAUL",
 		dammod = {str=1.3},
 		damrange = 1.7,
 	},
+
+	wielder = {
+	},
 }

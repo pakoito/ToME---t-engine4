@@ -1,6 +1,6 @@
 load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/molds.lua")
-load("/data/general/npcs/skeleton.lua")
+load("/data/general/npcs/wolf.lua")
+load("/data/general/npcs/troll.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -22,7 +22,7 @@ newEntity{ define_as = "TROLL_BILL",
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	talents = resolvers.talents{
-		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUNNING_BLOW]=1,
+		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,
 	},
 
 	autolevel = "warrior",

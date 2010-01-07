@@ -122,3 +122,63 @@ newTalent{
 		return ([[Releases poisonous spores at the target.]])
 	end,
 }
+
+newTalent{
+	name = "Stun",
+	type = {"physical/other", 1},
+	points = 5,
+	cooldown = 6,
+	stamina = 8,
+	require = { stat = { str=12 }, },
+	action = function(self, t)
+		local t = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(t)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hit = self:attackTarget(target, 0.5 + self:getTalentLevel(t) / 10, true)
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
+			else
+				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is stunned.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+	end,
+}
+
+newTalent{
+	name = "Knockback",
+	type = {"physical/other", 1},
+	points = 5,
+	cooldown = 6,
+	stamina = 8,
+	require = { stat = { str=12 }, },
+	action = function(self, t)
+		local t = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(t)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hit = self:attackTarget(target, nil, 1.5 + self:getTalentLevel(t) / 10, true)
+
+		-- Try to knockback !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+				target:knockback(4)
+			else
+				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is knocked back.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
+	end,
+}

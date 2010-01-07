@@ -100,6 +100,20 @@ function _M:saveLevel(level)
 	zip:close()
 end
 
+local function resolveSelf(o, base, allow_object)
+	if o.__CLASSNAME and not allow_object then return end
+
+	local change = {}
+	for k, e in pairs(o) do
+		if type(e) == "table" then
+			if e == class.LOAD_SELF then change[#change+1] = k
+			else resolveSelf(e, base, false)
+			end
+		end
+	end
+	for i, k in ipairs(change) do o[k] = base end
+end
+
 function _M:loadReal(load)
 	if self.loaded[load] then return self.loaded[load] end
 	local f = fs.open(self.load_dir..load, "r")
@@ -112,6 +126,10 @@ function _M:loadReal(load)
 	end
 	f:close()
 	local o = class.load(table.concat(lines), load)
+
+	-- Resolve self referencing tables now
+	resolveSelf(o, o, true)
+
 	self.loaded[load] = o
 	return o
 end
