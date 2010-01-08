@@ -12,6 +12,7 @@ return {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			rooms = {"simple", "pilar"},
+			lite_room_chance = 100,
 			['.'] = "FLOOR",
 			['#'] = "WALL",
 			up = "UP",
@@ -27,8 +28,9 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {2, 5},
+			nb_object = {4, 6},
 			ood = {chance=5, range={1, 10}},
+			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 	},
 	levels =

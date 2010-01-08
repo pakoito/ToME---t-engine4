@@ -28,7 +28,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.COLD, self:spellCrit(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t)))
-		self:project(tg, x, y, DamageType.FREEZE, 2 + math.floor(self:getTalentLevel(t) / 3))
+		self:project(tg, x, y, DamageType.FREEZE, 3 + math.floor(self:getTalentLevel(t) / 3))
 		return true
 	end,
 	require = { stat = { mag=14 }, },

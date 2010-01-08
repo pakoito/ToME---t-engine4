@@ -126,7 +126,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
 	if self:checkHit(atk, def) then
-		local dam = dam - math.max(0, armor - apr)
+		local dam = math.max(0, dam - math.max(0, armor - apr))
 		local damrange = self:combatDamageRange(weapon)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK] after range", dam)
@@ -236,7 +236,7 @@ end
 
 --- Gets spellspeed
 function _M:combatSpellSpeed()
-	return self.combat_spellspeed or 1
+	return self.combat_spellspeed + 1
 end
 
 --- Computes physical crit for a damage

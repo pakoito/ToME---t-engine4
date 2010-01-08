@@ -400,6 +400,7 @@ int main(int argc, char *argv[])
 	luaopen_profiler(L);
 	luaopen_lanes(L);
 	luaopen_map(L);
+	luaopen_particles(L);
 
 	// Make the uids repository
 	lua_newtable(L);

@@ -5,10 +5,9 @@ newEntity{
 	type = "giant", subtype = "troll",
 	display = "T", color=colors.UMBER,
 
-	combat = { dam=resolvers.rngavg(15,25), atk=3, apr=6, physspeed=1.2 },
+	combat = { dam=resolvers.rngavg(15,20), atk=2, apr=6, physspeed=2 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="greatsword"} },
 	drops = resolvers.drops{chance=20, nb=1, {} },
 
 	life_rating = 15,
@@ -19,6 +18,8 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=5, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
+
+	tmasteries = resolvers.tmasteries{ ["physical/other"]=0.3 },
 
 	resists = { [DamageType.FIRE] = -50 },
 }

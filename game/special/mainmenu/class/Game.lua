@@ -23,17 +23,45 @@ function _M:run()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
+
+	self.particle = core.display.loadImage("/data/gfx/particle.png")
+	self.gl = self.particle:glTexture()
+	self.test = core.particles.newEmitter(1000, {
+		base = 1000,
+
+		angle = { 10, 60 }, anglev = { 3, 3000 }, anglea = { 1, 1000 },
+
+		life = { 30, 30 },
+		size = { 3, 50 }, sizev = {0, 0}, sizea = {0, 0},
+
+--		x_min = 0, x_max = 0,
+--		y_min = 0, y_max = 0,
+
+		r = {0, 0}, rv = {0, 0}, ra = {0, 0},
+		g = {0, 0}, gv = {0, 0}, ga = {0, 0},
+		b = {255, 255}, bv = {0, 0}, ba = {10, 50},
+		a = {0, 0}, av = {0, 0}, aa = {0, 0},
+	}, self.gl)
+	self.cnt = 0
 end
 
 function _M:display()
+--[[
 	if self.background then
 		local bw, bh = self.background:getSize()
 		self.background:toScreen((self.w - bw) / 2, (self.h - bh) / 2)
 	end
+
+]]
 	self.step:display()
 	self.step:toScreen(self.step.display_x, self.step.display_y)
-
 	engine.Game.display(self)
+
+	self.cnt = self.cnt + 1
+--	if self.cnt < 10 then
+	self.test:emit(100)
+--	end
+	self.test:toScreen(600, 600)
 end
 
 --- Skip to a module directly ?

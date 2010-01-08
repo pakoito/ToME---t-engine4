@@ -6,6 +6,7 @@ dofile("/engine/colors.lua")
 dofile("/engine/resolvers.lua")
 
 require "config"
+require "engine.Game"
 require "engine.KeyCommand"
 require "engine.Savefile"
 require "engine.Tiles"
@@ -22,6 +23,7 @@ fs.setWritePath(fs.getHomePath())
 fs.mount(engine.homepath, "/")
 config.loadString[[
 keyboard.locale = "en_US"
+window.size = "1024x768"
 ]]
 config.load("/settings.cfg")
 fs.umount(engine.homepath)
@@ -32,5 +34,7 @@ key:setCurrent()
 
 -- Load the game module
 game = false
+
+engine.Game:setResolution(config.settings.window.size)
 
 util.showMainMenu()

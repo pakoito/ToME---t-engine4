@@ -104,7 +104,6 @@ end
 function _M:onResolutionChange()
 	print("[RESOLUTION] changed to ", self.w, self.h)
 	self:setupDisplayMode()
-	print(self.level.map.display_x, self.level.map.display_y)
 	self.flash:resize(0, 0, self.w, 20)
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.player_display:resize(0, 20, 200, self.h * 0.8 - 20)

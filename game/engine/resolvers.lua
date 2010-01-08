@@ -35,3 +35,17 @@ function resolvers.calc.talents(t, e)
 	for tid, level in pairs(t[1]) do ts[tid] = level end
 	return ts
 end
+
+--- Talents masteries
+function resolvers.tmasteries(list)
+	return {__resolver="tmasteries", list}
+end
+function resolvers.calc.tmasteries(t, e)
+	local ts = {}
+	for tt, level in pairs(t[1]) do
+		assert(e.talents_types_def[tt], "unknown talent type "..tt)
+		e.talents_types[tt] = true
+		e.talents_types_mastery[tt] = level
+	end
+	return nil
+end

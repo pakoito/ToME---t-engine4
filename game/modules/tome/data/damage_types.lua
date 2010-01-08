@@ -4,9 +4,11 @@ setDefaultProjector(function(src, x, y, type, dam)
 	if target then
 		-- Reduce damage with resistance
 		local res = target.resists[type] or 0
+		print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 		if res >= 100 then dam = 0
-		else dam = dam / (100 * (100 - res))
+		else dam = dam * ((100 - res) / 100)
 		end
+		print("[PROJECTOR] final dam", dam)
 
 		local flash = game.flash.NEUTRAL
 		if target == game.player then flash = game.flash.BAD end

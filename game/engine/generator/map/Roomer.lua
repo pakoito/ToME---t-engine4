@@ -9,6 +9,7 @@ function _M:init(zone, map, grid_list, data)
 	self.data.tunnel_change = self.data.tunnel_change or 30
 	self.data.tunnel_random = self.data.tunnel_random or 10
 	self.data.door_chance = self.data.door_chance or 50
+	self.data.lite_room_chance = self.data.lite_room_chance or 25
 	self.grid_list = grid_list
 
 	self.rooms = {}
@@ -79,6 +80,8 @@ function _M:roomAlloc(room, id)
 		end
 
 		if ok then
+			local is_lit = rng.percent(self.data.lite_room_chance)
+
 			-- ok alloc it
 			for i = 1, room.w do
 				for j = 1, room.h do
@@ -91,6 +94,7 @@ function _M:roomAlloc(room, id)
 					else
 						self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve(c)])
 					end
+					if is_lit then self.map.lites(i-1+x, j-1+y, true) end
 				end
 			end
 			print("room allocated at", x, y,"with center",math.floor(x+(room.w-1)/2), math.floor(y+(room.h-1)/2))

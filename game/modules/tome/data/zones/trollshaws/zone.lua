@@ -5,7 +5,7 @@ return {
 	max_level = 5,
 	width = 50, height = 50,
 --	all_remembered = true,
---	all_lited = true,
+	all_lited = true,
 --	persistant = true,
 	generator =  {
 		map = {
@@ -27,8 +27,9 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {200, 500},
+			nb_object = {4, 6},
 			ood = {chance=5, range={1, 10}},
+			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 	},
 	levels =
