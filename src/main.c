@@ -329,6 +329,9 @@ int resizeWindow(int width, int height)
 	/* Height / width ration */
 	GLfloat ratio;
 
+	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+	initGL();
+
 	/* Protect against a divide by zero */
 	if ( height == 0 )
 		height = 1;
@@ -447,8 +450,6 @@ int main(int argc, char *argv[])
 	TTF_Init();
 
 	/* Sets up OpenGL double buffering */
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-	initGL();
 	resizeWindow(WIDTH, HEIGHT);
 
 	// And run the lua engine scripts
