@@ -16,17 +16,20 @@ typedef struct {
 	int nb;
 	int texture_ref;
 
-	float base;
+	int base;
 
-	float size_min, sizev_min, sizea_min;
-	float x_min, y_min, xv_min, yv_min, xa_min, ya_min;
-	float r_min, g_min, b_min, a_min, rv_min, gv_min, bv_min, av_min, ra_min, ga_min, ba_min, aa_min;
+	int angle_min, anglev_min, anglea_min;
+	int angle_max, anglev_max, anglea_max;
 
-	float size_max, sizev_max, sizea_max;
-	float x_max, y_max, xv_max, yv_max, xa_max, ya_max;
-	float r_max, g_max, b_max, a_max, rv_max, gv_max, bv_max, av_max, ra_max, ga_max, ba_max, aa_max;
+	int size_min, sizev_min, sizea_min;
+	int x_min, y_min, xv_min, yv_min, xa_min, ya_min;
+	int r_min, g_min, b_min, a_min, rv_min, gv_min, bv_min, av_min, ra_min, ga_min, ba_min, aa_min;
 
-	float life_min, life_max;
+	int size_max, sizev_max, sizea_max;
+	int x_max, y_max, xv_max, yv_max, xa_max, ya_max;
+	int r_max, g_max, b_max, a_max, rv_max, gv_max, bv_max, av_max, ra_max, ga_max, ba_max, aa_max;
+
+	int life_min, life_max;
 } particles_type;
 
 #endif

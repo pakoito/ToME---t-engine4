@@ -13,6 +13,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t)))
+		game.level.map:particleEmitter(x, y, 1, "flame")
 		return true
 	end,
 	require = { stat = { mag=10 }, },

@@ -11,26 +11,24 @@
 
 #define rng(x, y) (x + rand_div(1 + y - x))
 
-static bool getfield(const char *key, float *min, float *max)
+static void getfield(lua_State *L, const char *key, int *min, int *max)
 {
-	double result;
 	lua_pushstring(L, key);
 	lua_gettable(L, -2);
 
 	lua_pushnumber(L, 1);
 	lua_gettable(L, -2);
-	*min = (float)lua_tonumber(L, -1);
+	*min = (int)lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
 	lua_pushnumber(L, 2);
 	lua_gettable(L, -2);
-	*max = (float)lua_tonumber(L, -1);
+	*max = (int)lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	printf("%s :: %f %f\n", key, (float)*min, (float)*max);
+	printf("%s :: %d %d\n", key, (int)*min, (int)*max);
 
 	lua_pop(L, 1);
-	return result;
 }
 
 static int particles_new(lua_State *L)
@@ -49,6 +47,8 @@ static int particles_new(lua_State *L)
 
 	ps->particles = calloc(nb, sizeof(particle_type));
 
+	printf("Making particle emitter with %d particles\n", ps->nb);
+
 	// Grab all parameters
 	lua_rawgeti(L, LUA_REGISTRYINDEX, p_ref);
 
@@ -57,27 +57,31 @@ static int particles_new(lua_State *L)
 	ps->base = (float)lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	getfield("life", &(ps->life_min), &(ps->life_max));
+	getfield(L, "life", &(ps->life_min), &(ps->life_max));
 
-	getfield("size", &(ps->size_min), &(ps->size_max));
-	getfield("sizev", &(ps->sizev_min), &(ps->sizev_max));
-	getfield("sizea", &(ps->sizea_min), &(ps->sizea_max));
+	getfield(L, "angle", &(ps->angle_min), &(ps->angle_max));
+	getfield(L, "anglev", &(ps->anglev_min), &(ps->anglev_max));
+	getfield(L, "anglea", &(ps->anglea_min), &(ps->anglea_max));
 
-	getfield("r", &(ps->r_min), &(ps->r_max));
-	getfield("rv", &(ps->rv_min), &(ps->rv_max));
-	getfield("ra", &(ps->ra_min), &(ps->ra_max));
+	getfield(L, "size", &(ps->size_min), &(ps->size_max));
+	getfield(L, "sizev", &(ps->sizev_min), &(ps->sizev_max));
+	getfield(L, "sizea", &(ps->sizea_min), &(ps->sizea_max));
 
-	getfield("g", &(ps->g_min), &(ps->g_max));
-	getfield("gv", &(ps->gv_min), &(ps->gv_max));
-	getfield("ga", &(ps->ga_min), &(ps->ga_max));
+	getfield(L, "r", &(ps->r_min), &(ps->r_max));
+	getfield(L, "rv", &(ps->rv_min), &(ps->rv_max));
+	getfield(L, "ra", &(ps->ra_min), &(ps->ra_max));
 
-	getfield("b", &(ps->b_min), &(ps->b_max));
-	getfield("bv", &(ps->bv_min), &(ps->bv_max));
-	getfield("ba", &(ps->ba_min), &(ps->ba_max));
+	getfield(L, "g", &(ps->g_min), &(ps->g_max));
+	getfield(L, "gv", &(ps->gv_min), &(ps->gv_max));
+	getfield(L, "ga", &(ps->ga_min), &(ps->ga_max));
 
-	getfield("a", &(ps->a_min), &(ps->a_max));
-	getfield("av", &(ps->av_min), &(ps->av_max));
-	getfield("aa", &(ps->aa_min), &(ps->aa_max));
+	getfield(L, "b", &(ps->b_min), &(ps->b_max));
+	getfield(L, "bv", &(ps->bv_min), &(ps->bv_max));
+	getfield(L, "ba", &(ps->ba_min), &(ps->ba_max));
+
+	getfield(L, "a", &(ps->a_min), &(ps->a_max));
+	getfield(L, "av", &(ps->av_min), &(ps->av_max));
+	getfield(L, "aa", &(ps->aa_min), &(ps->aa_max));
 	lua_pop(L, 1);
 
 	luaL_unref(L, LUA_REGISTRYINDEX, p_ref);
@@ -115,27 +119,27 @@ static int particles_emit(lua_State *L)
 
 			p->x = p->y = 0;
 
-			float angle = rng(0, 360) / (2 * M_PI);
-			float v = rng(1, 100) / 100.0f;
-			p->xa = cos(angle) * v;
-			p->ya = sin(angle) * v;
-			p->xv = cos(angle) * rng(1, 100) / 100.0f * 3;
-			p->yv = sin(angle) * rng(1, 100) / 100.0f * 3;
-			printf("%f %f : %d\n", ps->b_min, ps->b_max, rng((int)ps->r_min, (int)ps->r_max));
-			p->r = rng((int)ps->r_min, (int)ps->r_max) / 255.0f;
-			p->g = rng((int)ps->g_min, (int)ps->g_max) / 255.0f;
-			p->b = rng((int)ps->b_min, (int)ps->b_max) / 255.0f;
-			p->a = rng((int)ps->a_min, (int)ps->a_max) / 255.0f;
+			float angle = rng(ps->angle_min, ps->angle_max) * M_PI / 180;
+			float v = rng(ps->anglev_min, ps->anglev_max) / ps->base;
+			float a = rng(ps->anglea_min, ps->anglea_max) / ps->base;
+			p->xa = cos(angle) * a;
+			p->ya = sin(angle) * a;
+			p->xv = cos(angle) * v;
+			p->yv = sin(angle) * v;
+			p->r = rng(ps->r_min, ps->r_max) / 255.0f;
+			p->g = rng(ps->g_min, ps->g_max) / 255.0f;
+			p->b = rng(ps->b_min, ps->b_max) / 255.0f;
+			p->a = rng(ps->a_min, ps->a_max) / 255.0f;
 
-			p->rv = 0;
-			p->gv = 0;
-			p->bv = 0;
-			p->av = -0.01 * rng(1, 5);
+			p->rv = rng(ps->rv_min, ps->rv_max) / ps->base;
+			p->gv = rng(ps->gv_min, ps->gv_max) / ps->base;
+			p->bv = rng(ps->bv_min, ps->bv_max) / ps->base;
+			p->av = rng(ps->av_min, ps->av_max) / ps->base;
 
-			p->ra = 0;
-			p->ga = 0;
-			p->ba = 0;
-			p->aa = 0;
+			p->ra = rng(ps->ra_min, ps->ra_max) / ps->base;
+			p->ga = rng(ps->ga_min, ps->ga_max) / ps->base;
+			p->ba = rng(ps->ba_min, ps->ba_max) / ps->base;
+			p->aa = rng(ps->aa_min, ps->aa_max) / ps->base;
 
 			nb--;
 			if (!nb) break;
@@ -151,6 +155,7 @@ static int particles_to_screen(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 	int i = 0;
+	bool alive = FALSE;
 
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
 
@@ -160,6 +165,8 @@ static int particles_to_screen(lua_State *L)
 
 		if (p->life)
 		{
+			alive = TRUE;
+
 			glColor4f(p->r, p->g, p->b, p->a);
 			glBegin(GL_QUADS);
 			glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
@@ -190,7 +197,9 @@ static int particles_to_screen(lua_State *L)
 
 	// Restore normal display
 	glColor4f(1, 1, 1, 1);
-	return 0;
+
+	lua_pushboolean(L, alive);
+	return 1;
 }
 
 static const struct luaL_reg particleslib[] =

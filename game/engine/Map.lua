@@ -71,6 +71,7 @@ function _M:init(w, h)
 	self.seens = {}
 	self.remembers = {}
 	self.effects = {}
+	self.particles = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self:loaded()
@@ -82,10 +83,13 @@ function _M:save()
 		_fov_lite = true,
 		_fov = true,
 		_map = true,
-		surface = true
+		surface = true,
+		particle = true,
 	})
 end
 function _M:loaded()
+	self.particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
+
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
 
 	local mapseen = function(t, x, y, v)
@@ -267,6 +271,7 @@ function _M:display()
 		end end
 	end
 
+	self:displayParticles()
 	self:displayEffects()
 
 	-- If nothing changed, return the same surface as before
@@ -527,4 +532,54 @@ function _M:removeObject(x, y, i)
 	end
 
 	return true
+end
+
+-------------------------------------------------------------
+-------------------------------------------------------------
+-- Particle projector
+-------------------------------------------------------------
+-------------------------------------------------------------
+_M.particles_def = {}
+
+--- Add a new particle emitter
+function _M:particleEmitter(x, y, radius, def, fct, max)
+	if type(def) == "string" then
+		if _M.particles_def[def] then
+			def, fct, max = _M.particles_def[def][1], _M.particles_def[def][2], _M.particles_def[def][3]
+		else
+			print("[PARTICLE] Loading from /data/gfx/particles/"..def..".lua")
+			local f = loadfile("/data/gfx/particles/"..def..".lua")
+			setfenv(f, {})
+			def, fct, max = f()
+			max = max or 1000
+			_M.particles_def[def] = { def, fct, max }
+		end
+	end
+
+	local e =
+	{
+		x = x, y = y, radius = radius or 1,
+		ps = core.particles.newEmitter(max or 1000, def, self.particle),
+		update = fct,
+	}
+	self.particles[#self.particles+1] = e
+end
+
+--- Display the particle emiters, called by self:display()
+function _M:displayParticles()
+	for i = #self.particles, 1, -1 do
+		local e = self.particles[i]
+		local alive = false
+
+		alive = not e.update(e)
+
+		-- Dont bother with obviously out of screen stuff
+		if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
+			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w, self.display_y + (e.y - self.my + 0.5) * self.tile_h)
+		end
+
+		if not alive then
+			table.remove(self.particles, i)
+		end
+	end
 end
