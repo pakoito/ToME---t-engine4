@@ -222,8 +222,10 @@ newDamageType{
 		local feat = game.level.map(x, y, Map.TERRAIN)
 		if feat then
 			if feat.dig then
-				game.level.map(x, y, Map.TERRAIN, game.zone.grid_list[feat.dig])
-				game.logSeen({x=x,y=y}, "%s turns into %s.", feat.name:capitalize(), game.zone.grid_list[feat.dig].name)
+				local newfeat_name = feat.dig
+				if type(feat.dig) == "function" then newfeat_name = feat.dig(self, x, y, feat) end
+				game.level.map(x, y, Map.TERRAIN, game.zone.grid_list[newfeat_name])
+				game.logSeen({x=x,y=y}, "%s turns into %s.", feat.name:capitalize(), game.zone.grid_list[newfeat_name].name)
 			end
 		end
 	end,

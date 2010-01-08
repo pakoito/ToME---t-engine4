@@ -37,7 +37,7 @@ function _M:init(t, no_default)
 
 	for k, e in pairs(t) do
 		local ee = e
-		if type(e) == "table" then ee = table.clone(e, true) end
+		if type(e) == "table" and not e.__CLASSNAME then ee = table.clone(e, true) end
 		self[k] = ee
 	end
 
