@@ -154,6 +154,7 @@ static int particles_to_screen(lua_State *L)
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
+	bool show = lua_toboolean(L, 4);
 	int i = 0;
 	bool alive = FALSE;
 
@@ -167,13 +168,16 @@ static int particles_to_screen(lua_State *L)
 		{
 			alive = TRUE;
 
-			glColor4f(p->r, p->g, p->b, p->a);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
-			glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
-			glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
-			glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
-			glEnd();
+			if (show)
+			{
+				glColor4f(p->r, p->g, p->b, p->a);
+				glBegin(GL_QUADS);
+				glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
+				glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
+				glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
+				glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
+				glEnd();
+			}
 
 			p->life--;
 

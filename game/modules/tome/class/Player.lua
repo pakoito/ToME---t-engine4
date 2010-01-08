@@ -120,6 +120,9 @@ function _M:getTarget(typ)
 			msg = typ.msg
 		end
 		game:targetMode("exclusive", msg, coroutine.running(), typ)
+		if typ.nolock then
+			game.target_style = "free"
+		end
 		return coroutine.yield()
 	end
 	return game.target.target.x, game.target.target.y, game.target.target.entity

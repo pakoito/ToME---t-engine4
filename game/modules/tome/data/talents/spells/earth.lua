@@ -9,7 +9,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		local power = 1 + self:combatSpellpower(0.03) * self:getTalentLevel(t)
+		local power = 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t)
 		return {
 			armor = self:addTemporaryValue("combat_armor", power),
 		}
@@ -21,7 +21,7 @@ newTalent{
 	require = { stat = { mag=14 }, },
 	info = function(self, t)
 		return ([[The caster skin grows as hard as stone, granting %d bonus to armor.
-		The bonus to armor will increase with the Magic stat]]):format(1 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
+		The bonus to armor will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }
 
@@ -32,16 +32,17 @@ newTalent{
 	mana = 40,
 	range = 20,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.DIG, 1)
+		for i = 1, self:getTalentLevelRaw(t) do
+			self:project(tg, x, y, DamageType.DIG, 1)
+		end
 		return true
 	end,
 	require = { stat = { mag=24 } },
 	info = function(self, t)
-		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
-		The damage will increase with the Magic stat]]):format(1)
+		return ([[Digs up to %d grids into walls/trees/...]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 

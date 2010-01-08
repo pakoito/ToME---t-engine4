@@ -126,3 +126,30 @@ function _M:project(t, x, y, damtype, dam, particles)
 		end
 	end
 end
+
+--- Can we project to this grid ?
+-- @param t a type table describing the attack, passed to engine.Target:getType() for interpretation
+-- @param x target coords
+-- @param y target coords
+function _M:canProject(t, x, y)
+	local typ = Target:getType(t)
+
+	-- Stop at range or on block
+	local lx, ly = x, y
+	local l = line.new(self.x, self.y, x, y)
+	lx, ly = l()
+	while lx and ly do
+		if not typ.no_restrict then
+			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
+			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
+			if typ.range and math.sqrt((self.x-lx)^2 + (self.y-ly)^2) > typ.range then break end
+		end
+
+		lx, ly = l()
+	end
+	-- Ok if we are at the end reset lx and ly for the next code
+	if not lx and not ly then lx, ly = x, y end
+
+	if lx == x and ly == y then return true end
+	return false
+end

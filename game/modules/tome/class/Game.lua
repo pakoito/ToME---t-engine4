@@ -69,6 +69,7 @@ function _M:run()
 	self.target = Target.new(Map, self.player)
 	self.target.target.entity = self.player
 	self.old_tmx, self.old_tmy = 0, 0
+	self.target_style = "lock"
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
@@ -253,6 +254,7 @@ function _M:targetMode(v, msg, co, typ)
 		if msg then self.log(type(msg) == "string" and msg or "Tactical display enabled. Press shift+'t' to disable.") end
 		self.level.map.changed = true
 		self.target:setActive(true, typ)
+		self.target_style = "lock"
 
 		-- Exclusive mode means we disable the current key handler and use a specific one
 		-- that only allows targetting and resumes talent coroutine when done
@@ -287,31 +289,31 @@ function _M:setupCommands()
 			self:targetMode(false, false)
 		end,
 		-- Targeting movement
-		[{"_LEFT","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
-		[{"_RIGHT","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,
-		[{"_UP","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y - 1 end,
-		[{"_DOWN","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP4","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
-		[{"_KP6","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,
-		[{"_KP8","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y - 1 end,
-		[{"_KP2","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP1","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP3","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP7","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 self.target.target.y = self.target.target.y - 1 end,
-		[{"_KP9","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y - 1 end,
+		[{"_LEFT","shift"}] = function() self.target:freemove(4) end,
+		[{"_RIGHT","shift"}] = function() self.target:freemove(6) end,
+		[{"_UP","shift"}] = function() self.target:freemove(8) end,
+		[{"_DOWN","shift"}] = function() self.target:freemove(2) end,
+		[{"_KP4","shift"}] = function() self.target:freemove(4) end,
+		[{"_KP6","shift"}] = function() self.target:freemove(6) end,
+		[{"_KP8","shift"}] = function() self.target:freemove(7) end,
+		[{"_KP2","shift"}] = function() self.target:freemove(2) end,
+		[{"_KP1","shift"}] = function() self.target:freemove(1) end,
+		[{"_KP3","shift"}] = function() self.target:freemove(3) end,
+		[{"_KP7","shift"}] = function() self.target:freemove(7) end,
+		[{"_KP9","shift"}] = function() self.target:freemove(9) end,
 
-		_LEFT = function() self.target:scan(4) end,
-		_RIGHT = function() self.target:scan(6) end,
-		_UP = function() self.target:scan(8) end,
-		_DOWN = function() self.target:scan(2) end,
-		_KP4 = function() self.target:scan(4) end,
-		_KP6 = function() self.target:scan(6) end,
-		_KP8 = function() self.target:scan(8) end,
-		_KP2 = function() self.target:scan(2) end,
-		_KP1 = function() self.target:scan(1) end,
-		_KP3 = function() self.target:scan(3) end,
-		_KP7 = function() self.target:scan(7) end,
-		_KP9 = function() self.target:scan(9) end,
+		_LEFT = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end end,
+		_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end end,
+		_UP = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end end,
+		_DOWN = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end end,
+		_KP4 = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end end,
+		_KP6 = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end end,
+		_KP8 = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end end,
+		_KP2 = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end end,
+		_KP1 = function() if self.target_style == "lock" then self.target:scan(1) else self.target:freemove(1) end end,
+		_KP3 = function() if self.target_style == "lock" then self.target:scan(3) else self.target:freemove(3) end end,
+		_KP7 = function() if self.target_style == "lock" then self.target:scan(7) else self.target:freemove(7) end end,
+		_KP9 = function() if self.target_style == "lock" then self.target:scan(9) else self.target:freemove(9) end end,
 	}
 
 	self.normal_key = self.key

@@ -171,7 +171,7 @@ function _M:finishEntity(level, type, e, ego_chance)
 	e:resolve()
 
 	-- Add "ego" properties, sometimes
-	if e.egos and e.egos_chance and rng.percent(e.egos_chance + (ego_chance or 0)) then
+	if not e.unique and e.egos and e.egos_chance and rng.percent(e.egos_chance + (ego_chance or 0)) then
 		local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
 		local ego = self:pickEntity(egos)
 		if ego then

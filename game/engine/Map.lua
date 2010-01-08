@@ -576,7 +576,7 @@ function _M:displayParticles()
 
 		-- Dont bother with obviously out of screen stuff
 		if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w, self.display_y + (e.y - self.my + 0.5) * self.tile_h)
+			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w, self.display_y + (e.y - self.my + 0.5) * self.tile_h, self.seens(e.x, e.y))
 		end
 
 		if not alive then

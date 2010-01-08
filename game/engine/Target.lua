@@ -106,6 +106,13 @@ function _M:setActive(v, type)
 	end
 end
 
+function _M:freemove(dir)
+	local d = dir_to_coord[dir]
+	self.target.entity = nil
+	self.target.x = self.target.x + d[1]
+	self.target.y = self.target.y + d[2]
+end
+
 function _M:scan(dir, radius, sx, sy)
 	sx = sx or self.target.x
 	sy = sy or self.target.y

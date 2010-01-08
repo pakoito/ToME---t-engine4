@@ -54,7 +54,7 @@ newTalent{
 	},
 	range = 15,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevel(t)}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t)), {type="flame"})
@@ -63,7 +63,7 @@ newTalent{
 	require = { stat = { mag=20 } },
 	info = function(self, t)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t), 1 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t), 1 + self:getTalentLevelRaw(t))
 	end,
 }
 

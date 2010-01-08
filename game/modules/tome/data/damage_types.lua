@@ -214,3 +214,17 @@ newDamageType{
 		end
 	end,
 }
+
+-- Poisoning damage
+newDamageType{
+	name = "dig", type = "DIG",
+	projector = function(src, x, y, type, dam)
+		local feat = game.level.map(x, y, Map.TERRAIN)
+		if feat then
+			if feat.dig then
+				game.level.map(x, y, Map.TERRAIN, game.zone.grid_list[feat.dig])
+				game.logSeen({x=x,y=y}, "%s turns into %s.", feat.name:capitalize(), game.zone.grid_list[feat.dig].name)
+			end
+		end
+	end,
+}

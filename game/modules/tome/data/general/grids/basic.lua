@@ -36,6 +36,7 @@ newEntity{
 	always_remember = true,
 	block_move = true,
 	block_sight = true,
+	dig = "FLOOR",
 }
 
 newEntity{
@@ -45,6 +46,7 @@ newEntity{
 	always_remember = true,
 	block_sight = true,
 	door_opened = "DOOR_OPEN",
+	dig = "DOOR_OPEN",
 }
 
 newEntity{
@@ -76,4 +78,5 @@ newEntity{
 	always_remember = true,
 	block_move = true,
 	block_sight = true,
+	dig = "GRASS",
 }
