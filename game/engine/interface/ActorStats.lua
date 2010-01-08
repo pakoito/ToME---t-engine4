@@ -29,6 +29,7 @@ end
 --- Initialises stats with default values if needed
 function _M:init(t)
 	self.stats = t.stats or {}
+	self.inc_stats = t.inc_stats or {}
 	for i, s in ipairs(_M.stats_def) do
 		if self.stats[i] then
 		elseif self.stats[s.short_name] then
@@ -37,6 +38,7 @@ function _M:init(t)
 		else
 			self.stats[i] = s.def
 		end
+		if not self.inc_stats[i] then self.inc_stats[i] = 0 end
 	end
 end
 
@@ -48,12 +50,12 @@ function _M:incStat(stat, val)
 		stat = _M.stats_def[stat].id
 	end
 
-	local old = self.stats[stat]
+	local old = self:getStat(stat)
 	self.stats[stat] = math.max(math.min(self.stats[stat] + val, _M.stats_def[stat].max), _M.stats_def[stat].min)
-	if self.stats[stat] - old ~= 0 then
-		self:onStatChange(stat, self.stats[stat] - old)
+	if self:getStat(stat) ~= old then
+		self:onStatChange(stat, self:getStat(stat) - old)
 	end
-	return self.stats[stat] - old
+	return self:getStat(stat) - old
 end
 
 --- Gets a stat value
@@ -62,13 +64,15 @@ end
 -- @param stat the stat id
 -- @param scale a scaling factor, nil means max stat value
 function _M:getStat(stat, scale)
-	local val
+	local val, inc
 	if type(stat) == "string" then
 		val = self.stats[_M.stats_def[stat].id]
+		inc = self.inc_stats[_M.stats_def[stat].id]
 	else
 		val = self.stats[stat]
+		inc = self.inc_stats[stat]
 	end
-	val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max)
+	val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + inc
 	if scale then
 		val = math.floor(val * scale / _M.stats_def[stat].max)
 	end

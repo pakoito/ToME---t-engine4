@@ -28,6 +28,6 @@ newEntity{
 	wielder = {
 		combat_spellpower = resolvers.mbonus(30, 3),
 		max_mana = resolvers.mbonus(100, 10),
-		stats = { [Stats.STAT_MAG] = resolvers.mbonus(5, 1), [Stats.STAT_WIL] = resolvers.mbonus(5, 1) },
+		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus(5, 1), [Stats.STAT_WIL] = resolvers.mbonus(5, 1) },
 	},
 }

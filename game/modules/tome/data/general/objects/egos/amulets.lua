@@ -7,7 +7,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		stats = { [Stats.STAT_CUN] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus(8, 2) },
 	},
 }
 newEntity{
@@ -16,6 +16,6 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		stats = { [Stats.STAT_WIL] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus(8, 2) },
 	},
 }

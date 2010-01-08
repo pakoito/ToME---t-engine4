@@ -20,6 +20,7 @@ newEntity{
 
 	blind_immune = 1,
 	see_invisible = 2,
+	undead = 1,
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",

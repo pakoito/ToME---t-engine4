@@ -66,17 +66,34 @@ function _M:getDesc()
 		desc[#desc+1] = reqs
 	end
 
+	if self.encumber then
+		desc[#desc+1] = ("#67AD00#%0.2f Encumberance.", self.encumber)
+	end
+
 	if self.combat then
 		local dm = {}
 		for stat, i in pairs(self.combat.dammod or {}) do
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
-		desc[#desc+1] = ("%d Damage (%s), %d Attack, %d Armor Peneration, Crit %d%%"):format(self.combat.dam or 0, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
+		desc[#desc+1] = ("%d Damage [Range %0.2f] (%s), %d Attack, %d Armor Peneration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
 		desc[#desc+1] = ""
 	end
 
 	local w = self.wielder or {}
 	if w.combat_armor or w.combat_def then desc[#desc+1] = ("Armor %d, Defense %d"):format(w.combat_armor or 0, w.combat_def or 0) end
+	if w.fatigue then desc[#desc+1] = ("Fatigue %d%%"):format(w.fatigue) end
+
+	if w.inc_stats then
+		local dm = {}
+		for stat, i in pairs(w.inc_stats) do
+			dm[#dm+1] = ("%d %s"):format(i, Stats.stats_def[stat].name)
+		end
+		desc[#desc+1] = ("Increases stats: %s."):format(table.concat(dm, ','))
+	end
+
+	if w.max_life then desc[#desc+1] = ("Maximun life %d"):format(w.max_life) end
+	if w.max_mana then desc[#desc+1] = ("Maximun mana %d"):format(w.max_mana) end
+	if w.max_stamina then desc[#desc+1] = ("Maximun stamina %d"):format(w.max_stamina) end
 
 	if w.combat_spellpower or w.combat_spellcrit then desc[#desc+1] = ("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0) end
 
