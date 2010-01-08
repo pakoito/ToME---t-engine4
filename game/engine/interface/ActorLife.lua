@@ -63,7 +63,8 @@ end
 -- @param y target coords
 -- @param damtype a damage type ID from the DamageType class
 -- @param dam damage to be done
-function _M:project(t, x, y, damtype, dam)
+-- @param particles particles effect configuration, or nil
+function _M:project(t, x, y, damtype, dam, particles)
 	if dam < 0 then return end
 	local typ = Target:getType(t)
 
@@ -112,9 +113,15 @@ function _M:project(t, x, y, damtype, dam)
 			if px == self.x and py == self.y then
 				if t.friendlyfire then
 					DamageType:get(damtype).projector(self, px, py, damtype, dam)
+					if particles then
+						game.level.map:particleEmitter(px, py, 1, particles.type)
+					end
 				end
 			else
 				DamageType:get(damtype).projector(self, px, py, damtype, dam)
+				if particles then
+					game.level.map:particleEmitter(px, py, 1, particles.type)
+				end
 			end
 		end
 	end

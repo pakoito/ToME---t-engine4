@@ -210,6 +210,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 		elseif type(oldval) == "table" then
 			for k, e in pairs(oldval) do
 				self[prop][k] = self[prop][k] - e
+				print("delTmpValTable", prop, k, e)
 			end
 --		elseif type(oldval) == "boolean" then
 		else

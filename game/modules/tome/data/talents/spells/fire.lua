@@ -12,8 +12,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t)))
-		game.level.map:particleEmitter(x, y, 1, "flame")
+		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), {type="flame"})
 		return true
 	end,
 	require = { stat = { mag=10 }, },
@@ -58,7 +57,7 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevel(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t)), {type="flame"})
 		return true
 	end,
 	require = { stat = { mag=20 } },

@@ -67,7 +67,7 @@ function _M:getDesc()
 	end
 
 	if self.encumber then
-		desc[#desc+1] = ("#67AD00#%0.2f Encumberance.", self.encumber)
+		desc[#desc+1] = ("#67AD00#%0.2f Encumberance."):format(self.encumber)
 	end
 
 	if self.combat then

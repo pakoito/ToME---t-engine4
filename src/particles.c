@@ -26,7 +26,7 @@ static void getfield(lua_State *L, const char *key, int *min, int *max)
 	*max = (int)lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	printf("%s :: %d %d\n", key, (int)*min, (int)*max);
+//	printf("%s :: %d %d\n", key, (int)*min, (int)*max);
 
 	lua_pop(L, 1);
 }
@@ -47,7 +47,7 @@ static int particles_new(lua_State *L)
 
 	ps->particles = calloc(nb, sizeof(particle_type));
 
-	printf("Making particle emitter with %d particles\n", ps->nb);
+//	printf("Making particle emitter with %d particles\n", ps->nb);
 
 	// Grab all parameters
 	lua_rawgeti(L, LUA_REGISTRYINDEX, p_ref);
