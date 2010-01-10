@@ -218,7 +218,7 @@ newDamageType{
 -- Poisoning damage
 newDamageType{
 	name = "dig", type = "DIG",
-	projector = function(src, x, y, type, dam)
+	projector = function(src, x, y, typ, dam)
 		local feat = game.level.map(x, y, Map.TERRAIN)
 		if feat then
 			if feat.dig then

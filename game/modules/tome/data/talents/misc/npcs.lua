@@ -182,3 +182,22 @@ newTalent{
 		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is knocked back.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
 	end,
 }
+
+newTalent{
+	short_name = "BITE_POISON",
+	name = "Poisonous Bite",
+	type = {"physical/other", 1},
+	points = 5,
+	message = "@Source@ bites poison into @target@.",
+	cooldown = 5,
+	range = 1,
+	action = function(self, t)
+		local x, y, target = self:getTarget()
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
+		return true
+	end,
+	info = function(self)
+		return ([[Bites the target, infecting ti with poison.]])
+	end,
+}

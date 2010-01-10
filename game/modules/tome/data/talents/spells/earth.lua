@@ -82,12 +82,9 @@ newTalent{
 	action = function(self, t)
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
---			local tg = {type="bolt", range=self:getTalentRange(t), nolock=true}
---			local x, y = self:getTarget(tg)
---			if not x or not y then return nil end
---			for i = 1, self:getTalentLevelRaw(t) do
---				self:project(tg, x, y, DamageType.DIG, 1)
---			end
+			local tg = {type="bolt", range=self:getTalentRange(t), nolock=true}
+			x, y = self:getTarget(tg)
+			if not x or not y then return nil end
 		end
 
 		for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(x + i, y + j) then

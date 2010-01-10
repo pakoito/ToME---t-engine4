@@ -46,14 +46,30 @@ local coords = {
 	[9] = { 8, 6, 7, 3 },
 }
 
+function _M:aiCanPass(x, y)
+	-- Nothing blocks, just go on
+	if not game.level.map:checkAllEntities(x, y, "block_move", self) then return true end
+
+	-- If there is an otehr actor, check hostility, if hostile, we move to attack
+	local target = game.level.map(x, y, Map.ACTOR)
+	if target and self:reactionToward(target) < 0 then return true end
+
+	-- If there is a target (not hostile) and we can move it, do so
+	if target and self:attr("move_body") then return true end
+
+	return false
+end
+
 --- Move one step to the given target if possible
 -- This tries the most direct route, if not available it checks sides and always tries to get closer
 function _M:moveDirection(x, y)
 	local l = line.new(self.x, self.y, x, y)
 	local lx, ly = l()
 	if lx and ly then
+		local target = game.level.map(lx, ly, Map.ACTOR)
+
 		-- if we are blocked, try some other way
-		if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then
+		if not self:aiCanPass(lx, ly) then
 			local dirx = lx - self.x
 			local diry = ly - self.y
 			local dir = coord_to_dir[dirx][diry]
@@ -63,7 +79,7 @@ function _M:moveDirection(x, y)
 			-- Find posiblities
 			for i = 1, #list do
 				local dx, dy = self.x + dir_to_coord[list[i]][1], self.y + dir_to_coord[list[i]][2]
-				if not game.level.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") then
+				if self:aiCanPass(dx, dy) then
 					l[#l+1] = {dx,dy, (dx-x)^2 + (dy-y)^2}
 				end
 			end
