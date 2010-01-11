@@ -21,14 +21,12 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
-			ood = {chance=5, range={1, 10}},
 			adjust_level = {-1, 2},
 			guardian = "TROLL_BILL",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {4, 6},
-			ood = {chance=5, range={1, 10}},
+			nb_object = {400, 600},
 			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 	},

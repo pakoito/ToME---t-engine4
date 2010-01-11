@@ -45,18 +45,13 @@ end
 --- Parses the npc/objects list and compute rarities for random generation
 -- ONLY entities with a rarity properties will be considered.<br/>
 -- This means that to get a never-random entity you simply do not put a rarity property on it.
-function _M:computeRarities(type, list, level, ood, filter)
+function _M:computeRarities(type, list, level, filter)
 	local r = { total=0 }
 	print("******************", level.level)
 	for i, e in ipairs(list) do
 		if e.rarity and e.level_range and (not filter or filter(e)) then
 --			print("computing rarity of", e.name)
 			local lev = self.base_level + (level.level - 1)
-			-- Out of Depth chance
---			if ood and rng.percent(ood.chance) then
---				lev = self.base_level + level.level - 1 + rng.range(ood.range[1], ood.range[2])
---				print("OOD Entity !", e.name, ":=:", level.level, "to", lev)
---			end
 
 			local max = 10000
 			if lev < e.level_range[1] then max = 10000 / (3 * (e.level_range[1] - lev))
@@ -69,7 +64,7 @@ function _M:computeRarities(type, list, level, ood, filter)
 			if e.egos and not level:getEntitiesList(type.."/"..e.egos) then
 				local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
 				if egos then
-					egos = self:computeRarities(type, egos, level, ood, filter)
+					egos = self:computeRarities(type, egos, level, filter)
 					level:setEntitiesList(type.."/"..e.egos, egos)
 				end
 			end

@@ -22,14 +22,12 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
-			ood = {chance=5, range={1, 10}},
 			adjust_level = {-1, 2},
 			guardian = "SHADE_OF_ANGMAR",
 		},
 		object = {
 			class = "engine.generator.object.Random",
 			nb_object = {4, 6},
-			ood = {chance=5, range={1, 10}},
 			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 	},
