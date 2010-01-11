@@ -454,19 +454,19 @@ function _M:setupCommands()
 			end
 		end,
 
-		_LEFT  = function() self.player:move(self.player.x - 1, self.player.y    ) end,
-		_RIGHT = function() self.player:move(self.player.x + 1, self.player.y    ) end,
-		_UP    = function() self.player:move(self.player.x    , self.player.y - 1) end,
-		_DOWN  = function() self.player:move(self.player.x    , self.player.y + 1) end,
-		_KP1   = function() self.player:move(self.player.x - 1, self.player.y + 1) end,
-		_KP2   = function() self.player:move(self.player.x    , self.player.y + 1) end,
-		_KP3   = function() self.player:move(self.player.x + 1, self.player.y + 1) end,
-		_KP4   = function() self.player:move(self.player.x - 1, self.player.y    ) end,
-		_KP5   = function() self.player:move(self.player.x    , self.player.y    ) end,
-		_KP6   = function() self.player:move(self.player.x + 1, self.player.y    ) end,
-		_KP7   = function() self.player:move(self.player.x - 1, self.player.y - 1) end,
-		_KP8   = function() self.player:move(self.player.x    , self.player.y - 1) end,
-		_KP9   = function() self.player:move(self.player.x + 1, self.player.y - 1) end,
+		_LEFT  = function() self.player:moveDir(4) end,
+		_RIGHT = function() self.player:moveDir(6) end,
+		_UP    = function() self.player:moveDir(8) end,
+		_DOWN  = function() self.player:moveDir(2) end,
+		_KP1   = function() self.player:moveDir(1) end,
+		_KP2   = function() self.player:moveDir(2) end,
+		_KP3   = function() self.player:moveDir(3) end,
+		_KP4   = function() self.player:moveDir(4) end,
+		_KP5   = function() self.player:moveDir(5) end,
+		_KP6   = function() self.player:moveDir(6) end,
+		_KP7   = function() self.player:moveDir(7) end,
+		_KP8   = function() self.player:moveDir(8) end,
+		_KP9   = function() self.player:moveDir(9) end,
 
 		-- Toggle tactical displau
 		[{"_t","shift"}] = function()
