@@ -49,12 +49,10 @@ function _M:runInit(dir)
 		block_left = block_left,
 		block_right = block_right,
 		cnt = 1,
---		dialog = Dialog:simplePopup("Resting...", "You are running, press any key to stop.", function()
---			self:runStop()
---		end),
+		dialog = Dialog:simplePopup("Running...", "You are running, press any key to stop.", function()
+			self:runStop()
+		end),
 	}
-
-	print("run", dir, block_left, block_right)
 
 	self:runStep()
 end
@@ -107,7 +105,6 @@ function _M:runCheck()
 		if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and not checkDir(self, sides[self.running.dir].left) and checkDir(self, sides[self.running.dir].right) then
 			self.running.newdir = turn[self.running.dir].left
 			self.running.ignore_left = 2
-			print("will turn left")
 			return true
 		end
 
@@ -115,7 +112,6 @@ function _M:runCheck()
 		if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and checkDir(self, sides[self.running.dir].left) and not checkDir(self, sides[self.running.dir].right) then
 			self.running.newdir = turn[self.running.dir].right
 			self.running.ignore_right = 2
-			print("will turn right")
 			return true
 		end
 	end
@@ -131,7 +127,7 @@ end
 function _M:runStop(msg)
 	if not self.running then return false end
 
---	game:unregisterDialog(self.running.dialog)
+	game:unregisterDialog(self.running.dialog)
 
 	if msg then
 		game.log("Ran for %d turns (stop reason: %s).", self.running.cnt, msg)
