@@ -369,6 +369,7 @@ function _M:setupCommands()
 				self.player:showPickupFloor(nil, nil, function(o, item)
 					self.player:pickupFloor(item, true)
 					self.player:sortInven()
+					self.player:useEnergy()
 				end)
 			else
 				self.player:pickupFloor(1, true)
@@ -390,6 +391,7 @@ function _M:setupCommands()
 			self.player:showInventory("Drop object", inven, nil, function(o, item)
 				self.player:dropFloor(inven, item)
 				self.player:sortInven()
+				self.player:useEnergy()
 			end)
 		end,
 		-- Wear item
@@ -404,6 +406,7 @@ function _M:setupCommands()
 					self.player:removeObject(self.player.INVEN_INVEN, item)
 				end
 				self.player:sortInven()
+				self.player:useEnergy()
 			end)
 		end,
 		-- Takeoff item
@@ -413,6 +416,7 @@ function _M:setupCommands()
 					self.player:addObject(self.player.INVEN_INVEN, o)
 				end
 				self.player:sortInven()
+				self.player:useEnergy()
 			end)
 		end,
 
@@ -432,6 +436,7 @@ function _M:setupCommands()
 							self.log("You have no more "..o:getName())
 							self.player:sortInven()
 						end
+						self.player:useEnergy()
 					end
 				end
 			)

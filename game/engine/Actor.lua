@@ -175,18 +175,21 @@ end
 function _M:addTemporaryValue(prop, v, noupdate)
 	self.compute_vals[prop] = self.compute_vals[prop] or {}
 	local t = self.compute_vals[prop]
-	t[#t+1] = v
+	local id = #t+1
+	while t[id] do id = id + 1 end
+	t[id] = v
 
 	-- Update the base prop
 	if not noupdate then
 		if type(v) == "number" then
 			-- Simple addition
 			self[prop] = (self[prop] or 0) + v
-			print("addTmpVal", prop, v)
+			print("addTmpVal", prop, v, " :=: ", #t, id)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
 				self[prop][k] = (self[prop][k] or 0) + e
-				print("addTmpValTable", prop, k, e)
+				print("addTmpValTable", prop, k, e, " :=: ", #t, id)
+				if #t == 0 then print("*******************************WARNING") end
 			end
 --		elseif type(v) == "boolean" then
 --			-- False has precedence over true
@@ -200,7 +203,7 @@ function _M:addTemporaryValue(prop, v, noupdate)
 		end
 	end
 
-	return #t
+	return id
 end
 
 --- Removes a temporary value, see addTemporaryValue()
@@ -209,6 +212,7 @@ end
 -- @param noupdate if true the actual property is not changed and needs to be changed by the caller
 function _M:removeTemporaryValue(prop, id, noupdate)
 	local oldval = self.compute_vals[prop][id]
+	print("removeTempVal", prop, oldval, " :=: ", id)
 	self.compute_vals[prop][id] = nil
 	if not noupdate then
 		if type(oldval) == "number" then

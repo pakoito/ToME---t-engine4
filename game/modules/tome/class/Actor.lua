@@ -74,6 +74,7 @@ function _M:init(t, no_default)
 end
 
 function _M:act()
+print("[memory]", collectgarbage("count"))
 	if not engine.Actor.act(self) then return end
 
 	-- Cooldown talents

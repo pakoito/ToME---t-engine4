@@ -213,10 +213,12 @@ function _M:wearObject(o, replace, vocal)
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
 		return true
 	elseif o.offslot and self:getInven(o.offslot) and #(self:getInven(o.offslot)) < self:getInven(o.offslot).max then
+		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
 		-- Warning: assume there is now space
 		self:addObject(self:getInven(o.offslot), o)
 	elseif replace then
 		local ro = self:removeObject(inven, 1)
+		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
 		-- Warning: assume there is now space
 		self:addObject(inven, o)
 		return ro
