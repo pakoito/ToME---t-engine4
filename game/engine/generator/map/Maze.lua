@@ -5,6 +5,7 @@ module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, grid_list, data)
 	engine.Generator.init(self, zone, map)
+	self.data = data
 	self.floor = grid_list[data.floor]
 	self.wall = grid_list[data.wall]
 	self.up = grid_list[data.up]
@@ -63,7 +64,7 @@ function _M:generate(lev, old_lev)
 	local ux, uy = 1, 1
 	local dx, dy = math.floor(self.map.w/2)*2-1-2*(1-math.mod(self.map.w,2)), math.floor(self.map.h/2)*2-1-2*(1-math.mod(self.map.h,2))
 	self.map(ux, uy, Map.TERRAIN, self.up)
-	if lev < self.zone.max_level then
+	if lev < self.zone.max_level or self.data.force_last_stair then
 		self.map(dx, dy, Map.TERRAIN, self.down)
 	end
 	if lev > old_lev then
