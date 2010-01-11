@@ -40,9 +40,20 @@ function _M:defineResource(name, short_name, talent, regen_prop, desc)
 				return 0
 			end
 		end
+		-- if there is an associated talent, check for it
+		self["getMax"..short_name:lower():capitalize()] = function(self)
+			if self:knowTalent(talent) then
+				return self[maxname]
+			else
+				return 0
+			end
+		end
 	else
 		self["get"..short_name:lower():capitalize()] = function(self)
 			return self[short_name]
+		end
+		self["getMax"..short_name:lower():capitalize()] = function(self)
+			return self[maxname]
 		end
 	end
 end

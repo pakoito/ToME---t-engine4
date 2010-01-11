@@ -2,6 +2,7 @@ newTalent{
 	name = "Heavy Armour Training",
 	type = {"physical/combat-training", 1},
 	mode = "passive",
+	points = 5,
 	require = { stat = { str=18 }, },
 	info = function(self, t)
 		return [[Teaches the usage of heavy mail armours.]]
@@ -12,6 +13,7 @@ newTalent{
 	name = "Massive Armour Training",
 	type = {"physical/combat-training", 2},
 	mode = "passive",
+	points = 5,
 	require = { stat = { str=22 }, talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	info = function(self, t)
 		return [[Teaches the usage of massive plate armours.]]

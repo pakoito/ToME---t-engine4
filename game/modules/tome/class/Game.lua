@@ -194,11 +194,13 @@ function _M:onTurn()
 end
 
 function _M:display()
+	-- We display the player's interface
 	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
 	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
 	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
 	self.talents_display:display():toScreen(self.talents_display.display_x, self.talents_display.display_y)
 
+	-- Now the map, if any
 	if self.level and self.level.map then
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
@@ -335,6 +337,11 @@ function _M:setupCommands()
 		_0 = function() self.player:activateHotkey(10) end,
 		_RIGHTPAREN = function() self.player:activateHotkey(11) end,
 		_EQUALS = function() self.player:activateHotkey(12) end,
+
+		-- resting
+		[{"_r","shift"}] = function()
+			self.player:restInit()
+		end,
 
 		-- talent use
 		_m = function()
@@ -587,6 +594,8 @@ end
 
 --- Ask if we realy want to close, if so, save the game first
 function _M:onQuit()
+	self.player:restStop()
+
 	if not self.quit_dialog then
 		self.quit_dialog = QuitDialog.new()
 		self:registerDialog(self.quit_dialog)

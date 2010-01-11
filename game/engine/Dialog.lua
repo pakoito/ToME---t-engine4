@@ -18,6 +18,7 @@ function _M:simplePopup(title, text, fct)
 		s:drawColorStringCentered(self.font, text, 2, 2, self.iw - 2, self.ih - 2)
 	end
 	game:registerDialog(d)
+	return d
 end
 
 --- Create a Dialog

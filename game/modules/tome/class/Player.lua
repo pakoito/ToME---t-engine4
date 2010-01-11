@@ -1,11 +1,12 @@
 require "engine.class"
 require "mod.class.Actor"
+require "engine.interface.PlayerRest"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
 
-module(..., package.seeall, class.inherit(mod.class.Actor))
+module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.PlayerRest))
 
 function _M:init(t, no_default)
 	t.body = {
@@ -73,7 +74,10 @@ function _M:act()
 	-- Clean log flasher
 	game.flash:empty()
 
-	game.paused = true
+	-- Resting ?
+	if not self:restStep() then
+		game.paused = true
+	end
 end
 
 function _M:die()
@@ -142,4 +146,22 @@ function _M:activateHotkey(id)
 	else
 		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the inscructions there.")
 	end
+end
+
+--- Can we continue resting ?
+-- We can rest if no hostiles are in sight, and if we need life/mana/stamina (and their regen rates allows them to fully regen)
+function _M:restCheck()
+	if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
+	if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
+	if self.life < self.max_life and self.life_regen> 0 then return true end
+
+
+--[[
+	core.fov.calc_circle(x, y, radius, function(self, lx, ly)
+		if not grids[lx] then grids[lx] = {} end
+		grids[lx][ly] = true
+
+		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+	end, function()end, self)
+]]
 end
