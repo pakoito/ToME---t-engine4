@@ -62,6 +62,13 @@ function _M:move(x, y, force)
 	return true
 end
 
+--- Moves into the given direction (calls actor:move() internally)
+function _M:moveDir(dir)
+	local dx, dy = dir_to_coord[dir][1], dir_to_coord[dir][2]
+	local x, y = self.x + dx, self.y + dy
+	return self:move(x, y)
+end
+
 --- Can the actor go there
 -- @param terrain_only if true checks only the terrain, otherwise checks all entities
 function _M:canMove(x, y, terrain_only)

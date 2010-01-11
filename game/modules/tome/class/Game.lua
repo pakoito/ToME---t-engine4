@@ -297,7 +297,7 @@ function _M:setupCommands()
 		[{"_DOWN","shift"}] = function() self.target:freemove(2) end,
 		[{"_KP4","shift"}] = function() self.target:freemove(4) end,
 		[{"_KP6","shift"}] = function() self.target:freemove(6) end,
-		[{"_KP8","shift"}] = function() self.target:freemove(7) end,
+		[{"_KP8","shift"}] = function() self.target:freemove(8) end,
 		[{"_KP2","shift"}] = function() self.target:freemove(2) end,
 		[{"_KP1","shift"}] = function() self.target:freemove(1) end,
 		[{"_KP3","shift"}] = function() self.target:freemove(3) end,
@@ -337,6 +337,20 @@ function _M:setupCommands()
 		_0 = function() self.player:activateHotkey(10) end,
 		_RIGHTPAREN = function() self.player:activateHotkey(11) end,
 		_EQUALS = function() self.player:activateHotkey(12) end,
+
+		-- running
+		[{"_LEFT","shift"}] = function() self.player:runInit(4) end,
+		[{"_RIGHT","shift"}] = function() self.player:runInit(6) end,
+		[{"_UP","shift"}] = function() self.player:runInit(8) end,
+		[{"_DOWN","shift"}] = function() self.player:runInit(2) end,
+		[{"_KP4","shift"}] = function() self.player:runInit(4) end,
+		[{"_KP6","shift"}] = function() self.player:runInit(6) end,
+		[{"_KP8","shift"}] = function() self.player:runInit(8) end,
+		[{"_KP2","shift"}] = function() self.player:runInit(2) end,
+		[{"_KP1","shift"}] = function() self.player:runInit(1) end,
+		[{"_KP3","shift"}] = function() self.player:runInit(3) end,
+		[{"_KP7","shift"}] = function() self.player:runInit(7) end,
+		[{"_KP9","shift"}] = function() self.player:runInit(9) end,
 
 		-- resting
 		[{"_r","shift"}] = function()

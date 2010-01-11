@@ -1,0 +1,160 @@
+require "engine.class"
+local Dialog = require "engine.Dialog"
+
+--- Handles player running
+-- This should work for running inside tunnel, alongside walls, in open spaces.<br/>
+module(..., package.seeall, class.make)
+
+local sides =
+{
+	[1] = {left=2, right=4},
+	[2] = {left=3, right=1},
+	[3] = {left=6, right=2},
+	[4] = {left=1, right=7},
+	[6] = {left=9, right=3},
+	[7] = {left=4, right=8},
+	[8] = {left=7, right=9},
+	[9] = {left=8, right=6},
+}
+local turn =
+{
+	[1] = {left=3, right=7},
+	[2] = {left=6, right=4},
+	[3] = {left=9, right=1},
+	[4] = {left=2, right=8},
+	[6] = {left=8, right=2},
+	[7] = {left=1, right=9},
+	[8] = {left=4, right=6},
+	[9] = {left=7, right=3},
+}
+
+local function checkDir(a, dir, dist)
+	dist = dist or 1
+	local dx, dy = dir_to_coord[dir][1], dir_to_coord[dir][2]
+	local x, y = a.x + dx * dist, a.y + dy * dist
+	return game.level.map:checkAllEntities(x, y, "block_move", a) and true or false
+end
+
+--- Initializes running
+-- We check the direction sides to know if we are in a tunnel, along a wall or in open space.
+function _M:runInit(dir)
+	local block_left, block_right = false, false
+
+	-- Check sides
+	if checkDir(self, sides[dir].left) then block_left = true end
+	if checkDir(self, sides[dir].right) then block_right = true end
+
+	self.running = {
+		dir = dir,
+		block_left = block_left,
+		block_right = block_right,
+		cnt = 1,
+--		dialog = Dialog:simplePopup("Resting...", "You are running, press any key to stop.", function()
+--			self:runStop()
+--		end),
+	}
+
+	print("run", dir, block_left, block_right)
+
+	self:runStep()
+end
+
+--- Run a turn
+-- For a turn based game you want in you player's act() something like that:<br/>
+-- <pre>
+-- if not self:runStep() then game.paused = true end
+-- </pre><br/>
+-- This will move the actor using the :move() method, this SHOULD have been redefined by the module
+-- to use energy, otherwise running will be free.
+-- @return true if we can continue to run, false otherwise
+function _M:runStep()
+	if not self.running then return false end
+
+	local ret, msg = self:runCheck()
+	if not ret then
+		self:runStop(msg)
+		return false
+	else
+		self:moveDir(self.running.dir)
+		self.running.cnt = self.running.cnt + 1
+		if self.running.newdir then
+			self.running.dir = self.running.newdir
+			self.running.newdir = nil
+		end
+		if self.running.ignore_left then
+			self.running.ignore_left = self.running.ignore_left - 1
+			if self.running.ignore_left <= 0 then self.running.ignore_left = nil end
+		end
+		if self.running.ignore_right then
+			self.running.ignore_right = self.running.ignore_right - 1
+			if self.running.ignore_right <= 0 then self.running.ignore_right = nil end
+		end
+
+		return true
+	end
+end
+
+--- Can we continue running ?
+-- Rewrite this method to hostiles, interresting terrain, whatever.
+-- This method should be called by its submethod, it tries to detect changes in the terrain.<br/>
+-- It will also try to follow tunnels when they simply change direction.
+-- @return true if we can continue to run, false otherwise
+function _M:runCheck()
+	-- Do we change run direction ? We can only choose to change for left or right, never backwards.
+	-- We must also be in a tunnel (both sides blocked)
+	if self.running.block_left and self.running.block_right then
+		-- Turn left
+		if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and not checkDir(self, sides[self.running.dir].left) and checkDir(self, sides[self.running.dir].right) then
+			self.running.newdir = turn[self.running.dir].left
+			self.running.ignore_left = 2
+			print("will turn left")
+			return true
+		end
+
+		-- Turn right
+		if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and checkDir(self, sides[self.running.dir].left) and not checkDir(self, sides[self.running.dir].right) then
+			self.running.newdir = turn[self.running.dir].right
+			self.running.ignore_right = 2
+			print("will turn right")
+			return true
+		end
+	end
+
+	if not self.running.ignore_left and self.running.block_left ~= checkDir(self, sides[self.running.dir].left) then return false, "terrain change on left side" end
+	if not self.running.ignore_right and self.running.block_right ~= checkDir(self, sides[self.running.dir].right) then return false, "terrain change on right side" end
+	if checkDir(self, self.running.dir) then return false, "terrain ahead blocks" end
+
+	return true
+end
+
+--- Stops running
+function _M:runStop(msg)
+	if not self.running then return false end
+
+--	game:unregisterDialog(self.running.dialog)
+
+	if msg then
+		game.log("Ran for %d turns (stop reason: %s).", self.running.cnt, msg)
+	end
+
+	self.running = nil
+	return true
+end
+
+--- Scan the run direction and sides with the given function
+function _M:runScan(fct)
+	-- Ahead
+	local dx, dy = dir_to_coord[self.running.dir][1], dir_to_coord[self.running.dir][2]
+	local x, y = self.x + dx, self.y + dy
+	fct(x, y)
+
+	-- Ahead left
+	local dx, dy = dir_to_coord[sides[self.running.dir].left][1], dir_to_coord[sides[self.running.dir].left][2]
+	local x, y = self.x + dx, self.y + dy
+	fct(x, y)
+
+	-- Ahead right
+	local dx, dy = dir_to_coord[sides[self.running.dir].right][1], dir_to_coord[sides[self.running.dir].right][2]
+	local x, y = self.x + dx, self.y + dy
+	fct(x, y)
+end

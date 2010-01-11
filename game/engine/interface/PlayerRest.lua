@@ -40,7 +40,7 @@ end
 -- Rewrite this method to check for mana, life, whatever. By default we alawys return false so resting will never work
 -- @return true if we can continue to rest, false otherwise
 function _M:restCheck()
-	return false
+	return false, "player:restCheck() method not defined"
 end
 
 --- Stops resting

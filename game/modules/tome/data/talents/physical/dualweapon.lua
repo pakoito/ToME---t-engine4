@@ -5,7 +5,7 @@ newTalent{
 	points = 5,
 	require = { stat = { dex=14 } },
 	info = function(self, t)
-		return ([[Reduces the damage penality of the off-hand weapon to %d%%]]):format(100 / (2 - self:getTalentLevel(t) / 6))
+		return ([[Increases the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - self:getTalentLevel(t) / 6))
 	end,
 }
 

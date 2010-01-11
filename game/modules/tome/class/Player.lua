@@ -1,12 +1,20 @@
 require "engine.class"
 require "mod.class.Actor"
 require "engine.interface.PlayerRest"
+require "engine.interface.PlayerRun"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
 
-module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.PlayerRest))
+--- Defines the player for ToME
+-- It is a normal actor, with some redefined methods to handle user interaction.<br/>
+-- It is also able to run and rest.
+module(..., package.seeall, class.inherit(
+	mod.class.Actor,
+	engine.interface.PlayerRest,
+	engine.interface.PlayerRun
+))
 
 function _M:init(t, no_default)
 	t.body = {
@@ -74,8 +82,8 @@ function _M:act()
 	-- Clean log flasher
 	game.flash:empty()
 
-	-- Resting ?
-	if not self:restStep() then
+	-- Resting ? Running ? Otherwise pause
+	if not self:restStep() and not self:runStep() then
 		game.paused = true
 	end
 end
@@ -148,16 +156,20 @@ function _M:activateHotkey(id)
 	end
 end
 
---- Can we continue resting ?
--- We can rest if no hostiles are in sight, and if we need life/mana/stamina (and their regen rates allows them to fully regen)
-function _M:restCheck()
+local function spotHostiles(self)
 	local seen = false
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
 	core.fov.calc_circle(self.x, self.y, 20, game.level.map.opaque, function(map, x, y)
 		local actor = map(x, y, map.ACTOR)
 		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) then seen = true end
 	end, game.level.map)
-	if seen then return false, "hostile spotted" end
+	return seen
+end
+
+--- Can we continue resting ?
+-- We can rest if no hostiles are in sight, and if we need life/mana/stamina (and their regen rates allows them to fully regen)
+function _M:restCheck()
+	if spotHostiles(self) then return false, "hostile spotted" end
 
 	-- Check ressources, make sure they CAN go up, otherwise we will never stop
 	if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
@@ -165,4 +177,25 @@ function _M:restCheck()
 	if self.life < self.max_life and self.life_regen> 0 then return true end
 
 	return false, "all resources and life at maximun"
+end
+
+--- Can we continue running?
+-- We can run if no hostiles are in sight, and if we no interresting terrains are next to us
+function _M:runCheck()
+	if spotHostiles(self) then return false, "hostile spotted" end
+
+	-- Notice any noticable terrain
+	local noticed = false
+	self:runScan(function(x, y)
+		-- Only notice interresting terrains
+		local grid = game.level.map(x, y, Map.TERRAIN)
+		if grid and grid.notice then noticed = "interresting terrain" end
+
+		-- Objects are always interresting
+		local obj = game.level.map:getObject(x, y, 1)
+		if obj then noticed = "object seen" end
+	end)
+	if noticed then return false, noticed end
+
+	return engine.interface.PlayerRun.runCheck(self)
 end
