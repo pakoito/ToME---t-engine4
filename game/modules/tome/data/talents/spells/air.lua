@@ -1,6 +1,7 @@
 newTalent{
 	name = "Lightning",
 	type = {"spell/air", 1},
+	require = spells_req1,
 	points = 5,
 	mana = 10,
 	cooldown = 3,
@@ -15,7 +16,6 @@ newTalent{
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3), {type="lightning"})
 		return true
 	end,
-	require = { stat = { mag=10 }, },
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful beam of lightning doing 1 to %0.2f damage
 		The damage will increase with the Magic stat]]):format(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
@@ -24,7 +24,8 @@ newTalent{
 
 newTalent{
 	name = "Noxious Cloud",
-	type = {"spell/air",1},
+	type = {"spell/air",2},
+	require = spells_req2,
 	points = 5,
 	mana = 45,
 	cooldown = 8,
@@ -50,7 +51,6 @@ newTalent{
 		)
 		return true
 	end,
-	require = { stat = { mag=16 }, },
 	info = function(self, t)
 		return ([[Noxious fumes raises from the ground doing %0.2f nature damage in a radius of 3 each turns for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.11) * self:getTalentLevel(t), self:getTalentLevel(t))

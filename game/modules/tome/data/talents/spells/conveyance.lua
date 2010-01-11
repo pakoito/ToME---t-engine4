@@ -2,6 +2,7 @@ newTalent{
 	name = "Phase Door",
 	type = {"spell/conveyance",1},
 	message = "@Source@ blinks.",
+	require = spells_req1,
 	points = 5,
 	mana = 10,
 	cooldown = 8,
@@ -31,7 +32,6 @@ newTalent{
 		end
 		return true
 	end,
-	require = { stat = { mag=15 }, },
 	info = function(self, t)
 		return ([[Teleports you randomly on a small scale range (%d)
 		At level 4 it allows to specify the target area.
@@ -44,6 +44,7 @@ newTalent{
 	name = "Teleport",
 	type = {"spell/conveyance",2},
 	message = "@Source@ teleports away.",
+	require = spells_req2,
 	points = 5,
 	mana = 20,
 	cooldown = 30,
@@ -73,7 +74,6 @@ newTalent{
 		end
 		return true
 	end,
-	require = { stat = { mag=24 }, },
 	info = function(self, t)
 		return ([[Teleports you randomly on a small scale range (%d)
 		At level 4 it allows to specify the target area.
@@ -85,6 +85,7 @@ newTalent{
 newTalent{
 	name = "Recall",
 	type = {"spell/conveyance",3},
+	require = spells_req3,
 	points = 5,
 	mana = 30,
 	cooldown = 10,
@@ -104,7 +105,6 @@ newTalent{
 		game.log("IMPLEMENT ME!")
 		return true
 	end,
-	require = { stat = { mag=34 }, },
 	info = function(self, t)
 		return ([[Recalls you to your home town after a few turns.]])
 	end,
@@ -114,6 +114,7 @@ newTalent{
 	name = "Probability Travel",
 	type = {"spell/conveyance",4},
 	mode = "sustained",
+	require = spells_req4,
 	points = 1,
 	points = 2,
 	cooldown = 40,
@@ -129,7 +130,6 @@ newTalent{
 		self:attr("prob_travel", -1)
 		return true
 	end,
-	require = { stat = { mag=34 }, },
 	info = function(self, t)
 		return ([[When you hit a solid surface this spell tears down the laws of probability to make you instantly appear on the other side.]])
 	end,

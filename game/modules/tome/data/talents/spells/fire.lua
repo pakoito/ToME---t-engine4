@@ -1,6 +1,7 @@
 newTalent{
 	name = "Flame",
 	type = {"spell/fire",1},
+	require = spells_req1,
 	points = 5,
 	mana = 12,
 	cooldown = 3,
@@ -15,7 +16,6 @@ newTalent{
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), {type="flame"})
 		return true
 	end,
-	require = { stat = { mag=10 }, },
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire setting the target ablaze and doing %0.2f fire damage over 3 turns.
 		The damage will increase with the Magic stat]]):format(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
@@ -25,6 +25,7 @@ newTalent{
 newTalent{
 	name = "Globe of Light",
 	type = {"spell/fire",2},
+	require = spells_req2,
 	points = 5,
 	mana = 5,
 	cooldown = 14,
@@ -36,9 +37,9 @@ newTalent{
 		end
 		return true
 	end,
-	require = { stat = { mag=14 }, },
 	info = function(self, t)
 		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
+		At level 3 it also blinds all who sees it (except the caster).
 		The radius will increase with the Magic stat]]):format(5 + self:getTalentLevel(t))
 	end,
 }
@@ -46,6 +47,7 @@ newTalent{
 newTalent{
 	name = "Fireflash",
 	type = {"spell/fire",3},
+	require = spells_req3,
 	points = 5,
 	mana = 40,
 	cooldown = 8,
@@ -60,7 +62,6 @@ newTalent{
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t)), {type="flame"})
 		return true
 	end,
-	require = { stat = { mag=20 } },
 	info = function(self, t)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
 		The damage will increase with the Magic stat]]):format(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t), 1 + self:getTalentLevelRaw(t))
@@ -70,6 +71,7 @@ newTalent{
 newTalent{
 	name = "Inferno",
 	type = {"spell/fire",4},
+	require = spells_req4,
 	points = 5,
 	mana = 200,
 	cooldown = 30,
@@ -95,7 +97,6 @@ newTalent{
 		)
 		return true
 	end,
-	require = { stat = { mag=34 } },
 	info = function(self, t)
 		return ([[Raging flames burn foes and allies alike doing %0.2f netherflame damage in a radius of 5 each turns for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.15) * self:getTalentLevel(t), 5 + self:getTalentLevel(t))

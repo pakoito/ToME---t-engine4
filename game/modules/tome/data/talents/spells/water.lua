@@ -1,21 +1,7 @@
 newTalent{
-	name = "Ent-draught",
-	type = {"spell/water", 1},
-	points = 5,
-	mana = 10,
-	cooldown = 100,
-	action = function(self, t)
-		return true
-	end,
-	require = { stat = { mag=10 }, },
-	info = function(self, t)
-		return ([[Confures some Ent-draught to fill your stomach.]])
-	end,
-}
-
-newTalent{
 	name = "Freeze",
-	type = {"spell/water", 2},
+	type = {"spell/water", 1},
+	require = spells_req1,
 	points = 5,
 	mana = 14,
 	cooldown = 3,
@@ -31,7 +17,6 @@ newTalent{
 		self:project(tg, x, y, DamageType.FREEZE, 3 + math.floor(self:getTalentLevel(t) / 3))
 		return true
 	end,
-	require = { stat = { mag=14 }, },
 	info = function(self, t)
 		return ([[Condenses ambiant water on a target, freezing it for a short while and damaging it for %0.2f.
 		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
@@ -39,8 +24,24 @@ newTalent{
 }
 
 newTalent{
+	name = "Ent-draught",
+	type = {"spell/water", 2},
+	require = spells_req2,
+	points = 5,
+	mana = 10,
+	cooldown = 100,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Confures some Ent-draught to fill your stomach.]])
+	end,
+}
+
+newTalent{
 	name = "Tidal Wave",
 	type = {"spell/water",3},
+	require = spells_req3,
 	points = 5,
 	mana = 55,
 	cooldown = 8,
@@ -65,7 +66,6 @@ newTalent{
 		)
 		return true
 	end,
-	require = { stat = { mag=24 }, },
 	info = function(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.2) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
@@ -75,6 +75,7 @@ newTalent{
 newTalent{
 	name = "Ice Storm",
 	type = {"spell/water",4},
+	require = spells_req4,
 	points = 5,
 	mana = 100,
 	cooldown = 30,
@@ -100,7 +101,6 @@ newTalent{
 		)
 		return true
 	end,
-	require = { stat = { mag=34 }, },
 	info = function(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
 		It has 25%% chance to freeze damaged targets.

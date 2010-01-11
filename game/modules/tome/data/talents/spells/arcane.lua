@@ -1,6 +1,7 @@
 newTalent{
 	name = "Manathrust",
 	type = {"spell/arcane", 1},
+	require = spells_req1,
 	points = 5,
 	mana = 10,
 	cooldown = 3,
@@ -16,7 +17,6 @@ newTalent{
 		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t)), {type="manathrust"})
 		return true
 	end,
-	require = { stat = { mag=10 }, },
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage
 		At level 3 it becomes a beam.
@@ -27,6 +27,7 @@ newTalent{
 newTalent{
 	name = "Manaflow",
 	type = {"spell/arcane", 2},
+	require = spells_req2,
 	points = 5,
 	mana = 0,
 	cooldown = 300,
@@ -39,7 +40,6 @@ newTalent{
 		end
 		return true
 	end,
-	require = { stat = { mag=20 }, },
 	info = function(self, t)
 		return ([[Engulf yourself into a surge of mana, quickly restoring %d mana every turns for 10 turns.
 		The mana restored will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
@@ -50,8 +50,8 @@ newTalent{
 	name = "Arcane Power",
 	type = {"spell/arcane", 3},
 	mode = "passive",
+	require = spells_req3,
 	points = 5,
-	require = { stat = { mag=28 }, },
 	on_learn = function(self, t)
 		self.combat_spellpower = self.combat_spellpower + 5
 	end,
@@ -66,6 +66,7 @@ newTalent{
 newTalent{
 	name = "Disruption Shield",
 	type = {"spell/arcane",4},
+	require = spells_req4,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 150,
@@ -82,7 +83,6 @@ newTalent{
 		self:removeTemporaryValue("mana_shield", p.shield)
 		return true
 	end,
-	require = { stat = { mag=40 }, level=20 },
 	info = function(self, t)
 		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage taken.
 		The damage to mana ratio increases with the Magic stat]]):format(3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)

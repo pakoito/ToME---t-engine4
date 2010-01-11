@@ -12,6 +12,29 @@ newTalentType{ type="spell/temporal", name = "temporal", description = "Temporal
 newTalentType{ type="spell/mind", name = "mind", description = "Mind the caster to directly attack the mind of its foes." }
 newTalentType{ type="spell/necromancy", name = "necromancy", description = "Necromancy is a dark school of magic dealing with death, and undeath." }
 
+-- Generic requires for spells based on talent level
+--
+spells_req1 = {
+	stat = { mag=function(level) return 12 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+}
+spells_req2 = {
+	stat = { mag=function(level) return 20 + (level-1) * 2 end },
+	level = function(level) return 4 + (level-1)  end,
+}
+spells_req3 = {
+	stat = { mag=function(level) return 28 + (level-1) * 2 end },
+	level = function(level) return 8 + (level-1)  end,
+}
+spells_req4 = {
+	stat = { mag=function(level) return 36 + (level-1) * 2 end },
+	level = function(level) return 12 + (level-1)  end,
+}
+spells_req5 = {
+	stat = { mag=function(level) return 44 + (level-1) * 2 end },
+	level = function(level) return 16 + (level-1)  end,
+}
+
 load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/fire.lua")
 load("/data/talents/spells/earth.lua")

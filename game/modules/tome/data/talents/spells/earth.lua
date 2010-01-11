@@ -4,6 +4,7 @@ newTalent{
 	name = "Stone Skin",
 	type = {"spell/earth", 1},
 	mode = "sustained",
+	require = spells_req1,
 	points = 5,
 	sustain_mana = 45,
 	cooldown = 10,
@@ -20,7 +21,6 @@ newTalent{
 		self:removeTemporaryValue("combat_armor", p.armor)
 		return true
 	end,
-	require = { stat = { mag=14 }, },
 	info = function(self, t)
 		return ([[The caster skin grows as hard as stone, granting %d bonus to armor.
 		The bonus to armor will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
@@ -30,6 +30,7 @@ newTalent{
 newTalent{
 	name = "Dig",
 	type = {"spell/earth",2},
+	require = spells_req2,
 	points = 5,
 	mana = 40,
 	range = 20,
@@ -42,7 +43,6 @@ newTalent{
 		end
 		return true
 	end,
-	require = { stat = { mag=24 } },
 	info = function(self, t)
 		return ([[Digs up to %d grids into walls/trees/...]]):format(self:getTalentLevelRaw(t))
 	end,
@@ -51,6 +51,7 @@ newTalent{
 newTalent{
 	name = "Strike",
 	type = {"spell/earth",3},
+	require = spells_req3,
 	points = 5,
 	mana = 18,
 	cooldown = 6,
@@ -65,7 +66,6 @@ newTalent{
 		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(8 + self:combatSpellpower(0.15) * self:getTalentLevel(t)))
 		return true
 	end,
-	require = { stat = { mag=24 }, },
 	info = function(self, t)
 		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
 		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.15) * self:getTalentLevel(t))
