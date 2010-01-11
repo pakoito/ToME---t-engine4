@@ -25,8 +25,9 @@ end
 function _M:restStep()
 	if not self.resting then return false end
 
-	if not self:restCheck() then
-		self:restStop()
+	local ret, msg = self:restCheck()
+	if not ret then
+		self:restStop(msg)
 		return false
 	else
 		self:useEnergy()
@@ -43,12 +44,16 @@ function _M:restCheck()
 end
 
 --- Stops resting
-function _M:restStop()
+function _M:restStop(msg)
 	if not self.resting then return false end
 
 	game:unregisterDialog(self.resting.dialog)
 
-	game.log("Rested for %d turns.", self.resting.cnt)
+	if msg then
+		game.log("Rested for %d turns (stop reason: %s).", self.resting.cnt, msg)
+	else
+		game.log("Rested for %d turns.", self.resting.cnt)
+	end
 
 	self.resting = nil
 	return true

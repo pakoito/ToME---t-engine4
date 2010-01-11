@@ -151,17 +151,18 @@ end
 --- Can we continue resting ?
 -- We can rest if no hostiles are in sight, and if we need life/mana/stamina (and their regen rates allows them to fully regen)
 function _M:restCheck()
+	local seen = false
+	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
+	core.fov.calc_circle(self.x, self.y, 20, game.level.map.opaque, function(map, x, y)
+		local actor = map(x, y, map.ACTOR)
+		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) then seen = true end
+	end, game.level.map)
+	if seen then return false, "hostile spotted" end
+
+	-- Check ressources, make sure they CAN go up, otherwise we will never stop
 	if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 	if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 	if self.life < self.max_life and self.life_regen> 0 then return true end
 
-
---[[
-	core.fov.calc_circle(x, y, radius, function(self, lx, ly)
-		if not grids[lx] then grids[lx] = {} end
-		grids[lx][ly] = true
-
-		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
-	end, function()end, self)
-]]
+	return false, "all resources and life at maximun"
 end
