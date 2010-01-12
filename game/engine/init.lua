@@ -17,15 +17,19 @@ engine.homepath = fs.getUserPath()..fs.getPathSeparator()..fs.getHomePath()..fs.
 fs.setWritePath(fs.getUserPath())
 fs.mkdir(fs.getHomePath())
 fs.mkdir(fs.getHomePath().."/4.0/")
+fs.mkdir(fs.getHomePath().."/4.0/settings/")
 fs.setWritePath(fs.getHomePath())
 
 -- Loads default config & user config
 fs.mount(engine.homepath, "/")
 config.loadString[[
-keyboard.locale = "en_US"
-window.size = "1024x768"
+window.size = "800x600"
 ]]
-config.load("/settings.cfg")
+for i, file in ipairs(fs.list("/settings/")) do
+	if file:find(".cfg$") then
+		config.load("/settings/"..file)
+	end
+end
 
 -- Load default keys
 engine.KeyBind:load("move,actions")

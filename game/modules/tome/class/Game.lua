@@ -452,7 +452,7 @@ function _M:setupCommands()
 		end,
 
 		EXIT = function()
-			local menu = require("engine.dialogs.GameMenu").new{"resume", "keybinds", "save", "quit"}
+			local menu = require("engine.dialogs.GameMenu").new{"resume", "keybinds", "resolution", "save", "quit"}
 			self:registerDialog(menu)
 		end,
 	}

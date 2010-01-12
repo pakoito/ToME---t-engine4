@@ -3,10 +3,10 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(actions)
-	self:generateList(actions)
+function _M:init()
+	self:generateList()
 
-	engine.Dialog.init(self, "Game Menu", 300, #self.list * 30 + 20)
+	engine.Dialog.init(self, "Switch Resolution", 300, #self.list * 30 + 20)
 
 	self.sel = 1
 	self.scroll = 1
@@ -36,39 +36,23 @@ function _M:init(actions)
 end
 
 function _M:use()
-	self.list[self.sel].fct()
+	game:setResolution(self.list[self.sel].r)
+	game:unregisterDialog(self)
 end
 
-function _M:generateList(actions)
-	local default_actions = {
-		resume = { "Resume", function() game:unregisterDialog(self) end },
-		keybinds = { "Key Bindings", function()
-			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key)
-			game:registerDialog(menu)
-		end },
-		resolution = { "Display Resolution", function()
-			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.DisplayResolution").new()
-			game:registerDialog(menu)
-		end },
-		save = { "Save Game", function() game:saveGame() end },
-		quit = { "Save and Exit", function() game:onQuit() end },
-	}
+function _M:generateList()
+	local l = {}
+	for r, _ in pairs(game.available_resolutions) do
+		l[#l+1] = r
+	end
+	table.sort(l, function(a,b) return game.available_resolutions[a][1] < game.available_resolutions[b][1] end)
 
 	-- Makes up the list
 	local list = {}
 	local i = 0
-	for _, act in ipairs(actions) do
-		if type(act) == "string" then
-			local a = default_actions[act]
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..a[1], fct=a[2] }
-			i = i + 1
-		else
-			local a = act
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..a[1], fct=a[2] }
-			i = i + 1
-		end
+	for _, r in ipairs(l) do
+		list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..r, r=r }
+		i = i + 1
 	end
 	self.list = list
 end

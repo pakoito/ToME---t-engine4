@@ -144,6 +144,6 @@ function _M:drawDialog(s)
 	local selcol = {255,255,0}
 
 	self:drawSelectionList(s, 2,   5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
-	self:drawSelectionList(s, 200, 5, self.font_h, self.list, self.sel, "b1", self.scroll, self.max, col, self.selcol == 1 and selcol or col)
-	self:drawSelectionList(s, 400, 5, self.font_h, self.list, self.sel, "b2", self.scroll, self.max, col, self.selcol == 2 and selcol or col)
+	self:drawSelectionList(s, 230, 5, self.font_h, self.list, self.sel, "b1", self.scroll, self.max, col, self.selcol == 1 and selcol or col)
+	self:drawSelectionList(s, 430, 5, self.font_h, self.list, self.sel, "b2", self.scroll, self.max, col, self.selcol == 2 and selcol or col)
 end
