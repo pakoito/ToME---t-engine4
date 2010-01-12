@@ -46,6 +46,9 @@ function _M:loadMap(file)
 
 	self.gen_map = m
 	self.tiles = t
+
+	self.map.w = m.w
+	self.map.h = m.h
 end
 
 function _M:resolve(typ, c)
