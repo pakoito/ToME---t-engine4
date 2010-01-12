@@ -453,6 +453,11 @@ function _M:setupCommands()
 			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 3)
 			self:setupDisplayMode()
 		end,
+
+		EXIT = function()
+			local menu = require("engine.dialogs.GameMenu").new{"resume", "keybinds", "save", "quit"}
+			self:registerDialog(menu)
+		end,
 	}
 --[[
 	self.key:addCommands

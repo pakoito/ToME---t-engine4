@@ -1344,6 +1344,12 @@ static int lua_fs_set_write_dir(lua_State *L)
 	return 0;
 }
 
+static int lua_fs_get_write_dir(lua_State *L)
+{
+	lua_pushstring(L, PHYSFS_getWriteDir());
+	return 1;
+}
+
 static int lua_fs_get_home_path(lua_State *L)
 {
 	lua_pushstring(L, TENGINE_HOME_PATH);
@@ -1371,6 +1377,7 @@ static const struct luaL_reg fslib[] =
 	{"delete", lua_fs_delete},
 	{"list", lua_fs_list},
 	{"setWritePath", lua_fs_set_write_dir},
+	{"getWritePath", lua_fs_get_write_dir},
 	{"getPathSeparator", lua_fs_get_path_separator},
 	{"getRealPath", lua_fs_get_real_path},
 	{"getUserPath", lua_fs_get_user_path},

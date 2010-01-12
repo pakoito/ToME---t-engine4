@@ -2,13 +2,13 @@ defineAction{
 	default = { "uni:i", },
 	type = "SHOW_INVENTORY",
 	group = "inventory",
-	name = "shows inventory",
+	name = "Show inventory",
 }
 defineAction{
 	default = { "uni:e", },
 	type = "SHOW_EQUIPMENT",
 	group = "inventory",
-	name = "shows equipment",
+	name = "Show equipment",
 }
 
 defineAction{
@@ -28,18 +28,18 @@ defineAction{
 	default = { "uni:w", },
 	type = "WEAR_ITEM",
 	group = "inventory",
-	name = "wield/wear items",
+	name = "Wield/wear items",
 }
 defineAction{
 	default = { "uni:t", },
 	type = "TAKEOFF_ITEM",
 	group = "inventory",
-	name = "takeoff items",
+	name = "Takeoff items",
 }
 
 defineAction{
 	default = { "uni:u", },
 	type = "USE_ITEM",
 	group = "inventory",
-	name = "use items",
+	name = "Use items",
 }

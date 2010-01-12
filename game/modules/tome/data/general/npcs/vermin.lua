@@ -1,8 +1,8 @@
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "BASE_NPC_VERMIN",
-	type = "nuisance", subtype = "vermins",
+	define_as = "BASE_NPC_WORM",
+	type = "vermin", subtype = "worms",
 	display = "w", color=colors.WHITE,
 	can_multiply = 2,
 	body = { INVEN = 10 },
@@ -14,7 +14,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 }
 
-newEntity{ base = "BASE_NPC_VERMIN",
+newEntity{ base = "BASE_NPC_WORM",
 	name = "white worm mass", color=colors.WHITE,
 	level_range = {1, 15}, exp_worth = 1,
 	rarity = 4,
@@ -24,7 +24,7 @@ newEntity{ base = "BASE_NPC_VERMIN",
 	talents = resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
 }
 
-newEntity{ base = "BASE_NPC_VERMIN",
+newEntity{ base = "BASE_NPC_WORM",
 	name = "green worm mass", color=colors.GREEN,
 	level_range = {2, 15}, exp_worth = 1,
 	rarity = 5,

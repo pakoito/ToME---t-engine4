@@ -8,13 +8,16 @@ module(..., package.seeall, class.inherit(engine.KeyCommand))
 _M.binds_def = {}
 _M.binds_remap = {}
 _M.binds_loaded = {}
+_M.bind_order = 1
 
 function _M:defineAction(t)
 	assert(t.default, "no keybind default")
 	assert(t.name, "no keybind name")
 	t.desc = t.desc or t.name
 
+	t.order = _M.bind_order
 	_M.binds_def[t.type] = t
+	_M.bind_order = _M.bind_order + 1
 end
 
 --- Loads a list of keybind definitions
@@ -51,11 +54,51 @@ function _M:loadRemap(file)
 	end
 end
 
+--- Saves a keybinds remap
+function _M:saveRemap(file)
+	local restore = false
+	if not file then
+		restore = fs.getWritePath()
+		fs.setWritePath(engine.homepath)
+		file = "keybinds.cfg"
+	end
+
+	local f = fs.open(file, "w")
+
+	for virtual, keys in pairs(_M.binds_remap) do
+		if keys[1] and not keys[2] then
+			f:write(("%s = {%q,nil}\n"):format(virtual, keys[1]))
+		elseif not keys[1] and keys[2] then
+			f:write(("%s = {nil,%q}\n"):format(virtual, keys[2]))
+		elseif keys[1] and keys[2] then
+			f:write(("%s = {%q,%q}\n"):format(virtual, keys[1], keys[2]))
+		elseif not keys[1] and not keys[2] then
+			f:write(("%s = {nil,nil}\n"):format(virtual))
+		end
+	end
+
+	f:close()
+
+	if restore then
+		fs.setWritePath(restore)
+	end
+end
+
+--- Returns the binding table for the given type
+function _M:getBindTable(type)
+	return _M.binds_remap[type.type] or type.default
+end
+
 function _M:init()
 	engine.KeyCommand.init(self)
 	self.virtuals = {}
-	self.binds = {}
 
+	self:bindKeys()
+end
+
+--- Binds all virtuals to keys, either defaults or remapped ones
+function _M:bindKeys()
+	self.binds = {}
 	-- Bind defaults
 	for type, t in pairs(_M.binds_def) do
 		for i, ks in ipairs(_M.binds_remap[type] or t.default) do
@@ -70,7 +113,7 @@ end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
 	local ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
-	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
+--	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then
 		self.virtuals[self.binds[ks]](sym, ctrl, shift, alt, meta, unicode)
 		return

@@ -121,18 +121,21 @@ function _M:drawHBorder(s, x, y, h)
 	end
 end
 
-function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max)
+function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, color, selcolor)
+	selcolor = selcolor or {0,255,255}
+	color = color or {255,255,255}
 	scroll = scroll or 1
 	max = max or 99999
 
 	for i = scroll, math.min(#list, scroll + max - 1) do
 		v = list[i]
-		if prop then v = tostring(v[prop])
+		if prop and type(v[prop]) == "string" then v = tostring(v[prop])
+		elseif prop and type(v[prop]) == "function" then v = tostring(v[prop](v))
 		else v = tostring(v) end
 		if sel == i then
-			s:drawColorString(self.font, v, x, y + (i-scroll) * hskip, 0, 255, 255)
+			s:drawColorString(self.font, v, x, y + (i-scroll) * hskip, selcolor[1], selcolor[2], selcolor[3])
 		else
-			s:drawColorString(self.font, v, x, y + (i-scroll) * hskip)
+			s:drawColorString(self.font, v, x, y + (i-scroll) * hskip, color[1], color[2], color[3])
 		end
 	end
 end
