@@ -454,7 +454,7 @@ function _M:setupCommands()
 			self:setupDisplayMode()
 		end,
 	}
-
+--[[
 	self.key:addCommands
 	{
 		-- Targeting movement
@@ -483,7 +483,7 @@ function _M:setupCommands()
 		[{"_KP7","ctrl"}] = function() self.target:scan(7) end,
 		[{"_KP9","ctrl"}] = function() self.target:scan(9) end,
 	}
-
+--]]
 	self.key:setCurrent()
 end
 

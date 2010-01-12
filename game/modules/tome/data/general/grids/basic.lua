@@ -71,7 +71,7 @@ newEntity{
 
 newEntity{
 	define_as = "FLOWER",
-	name = "flower",
+	name = "flower", image = "terrain/grass_flower3.png",
 	display = ';', color=colors.YELLOW,
 }
 
