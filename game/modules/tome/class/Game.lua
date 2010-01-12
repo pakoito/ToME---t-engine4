@@ -416,10 +416,7 @@ function _M:setupCommands()
 		end,
 
 		SAVE_GAME = function()
-			local save = Savefile.new(self.save_name)
-			save:saveGame(self)
-			save:close()
-			self.log("Saved game.")
+			self:saveGame()
 		end,
 
 		-- Toggle tactical displau
@@ -552,4 +549,12 @@ function _M:onQuit()
 		self.quit_dialog = QuitDialog.new()
 		self:registerDialog(self.quit_dialog)
 	end
+end
+
+--- Requests the game to save
+function _M:saveGame()
+	local save = Savefile.new(self.save_name)
+	save:saveGame(self)
+	save:close()
+	self.log("Saved game.")
 end

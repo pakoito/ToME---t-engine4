@@ -141,6 +141,10 @@ function _M:setResolution(res)
 	end
 end
 
---- Called
+--- Called when screen resolution changes
 function _M:onResolutionChange()
+end
+
+--- Requests the game to save
+function _M:saveGame()
 end
