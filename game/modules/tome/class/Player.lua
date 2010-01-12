@@ -199,3 +199,72 @@ function _M:runCheck()
 
 	return engine.interface.PlayerRun.runCheck(self)
 end
+
+function _M:playerPickup()
+	-- If 2 or more objects, display a pickup dialog, otehrwise just picks up
+	if game.level.map:getObject(self.x, self.y, 2) then
+		self:showPickupFloor(nil, nil, function(o, item)
+			self:pickupFloor(item, true)
+			self:sortInven()
+		end)
+	else
+		self:pickupFloor(1, true)
+		self:sortInven()
+		self:useEnergy()
+	end
+end
+
+function _M:playerDrop()
+	local inven = self:getInven(self.INVEN_INVEN)
+	self:showInventory("Drop object", inven, nil, function(o, item)
+		self:dropFloor(inven, item)
+		self:sortInven()
+		self:useEnergy()
+	end)
+end
+
+function _M:playerWear()
+	local inven = self:getInven(self.INVEN_INVEN)
+	self:showInventory("Wield/wear object", inven, function(o)
+		return o:wornInven() and true or false
+	end, function(o, item)
+		local ro = self:wearObject(o, true, true)
+		if ro then
+			if type(ro) == "table" then self:addObject(self.INVEN_INVEN, ro) end
+			self:removeObject(self.INVEN_INVEN, item)
+		end
+		self:sortInven()
+		self:useEnergy()
+	end)
+end
+
+function _M:playerTakeoff()
+	self:showEquipment("Take off object", nil, function(o, inven, item)
+		if self:takeoffObject(inven, item) then
+			self:addObject(self.INVEN_INVEN, o)
+		end
+		self:sortInven()
+		self:useEnergy()
+	end)
+end
+
+function _M:playerUseItem()
+	self:showInventory(nil, self:getInven(self.INVEN_INVEN),
+		function(o)
+			return o:canUseObject()
+		end,
+		function(o, item)
+			local ret = o:use(self)
+			if ret and ret == "destroy" then
+				if o.multicharge and o.multicharge > 1 then
+					o.multicharge = o.multicharge - 1
+				else
+					self:removeObject(self:getInven(self.INVEN_INVEN), item)
+					game.log("You have no more "..o:getName())
+					self:sortInven()
+					self:useEnergy()
+				end
+			end
+		end
+	)
+end

@@ -1,6 +1,6 @@
 require "engine.class"
 require "engine.GameTurnBased"
-require "engine.KeyCommand"
+require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local DamageType = require "engine.DamageType"
 local Zone = require "engine.Zone"
@@ -37,7 +37,7 @@ module(..., package.seeall, class.inherit(engine.GameTurnBased))
 collectgarbage("stop")
 
 function _M:init()
-	engine.GameTurnBased.init(self, engine.KeyCommand.new(), 1000, 100)
+	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
 
 	-- Same init as when loaded from a savefile
 	self:loaded()
@@ -99,7 +99,7 @@ function _M:loaded()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object"}
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
-	self.key = engine.KeyCommand.new()
+	self.key = engine.KeyBind.new()
 end
 
 function _M:onResolutionChange()
@@ -275,7 +275,7 @@ function _M:targetMode(v, msg, co, typ)
 end
 
 function _M:setupCommands()
-	self.targetmode_key = engine.KeyCommand.new()
+	self.targetmode_key = engine.KeyBind.new()
 	self.targetmode_key:addCommands
 	{
 		_t = function()
@@ -319,131 +319,87 @@ function _M:setupCommands()
 	}
 
 	self.normal_key = self.key
-	-- Load the locales
-	self.key:loadLocaleConvertion("/data/locales/number_hotkey.lua")
 	-- Activate profiler keybinds
 	self.key:setupProfiler()
-	self.key:addCommands
+
+	self.key:addBinds
 	{
-		_1 = function() self.player:activateHotkey(1) end,
-		_2 = function() self.player:activateHotkey(2) end,
-		_3 = function() self.player:activateHotkey(3) end,
-		_4 = function() self.player:activateHotkey(4) end,
-		_5 = function() self.player:activateHotkey(5) end,
-		_6 = function() self.player:activateHotkey(6) end,
-		_7 = function() self.player:activateHotkey(7) end,
-		_8 = function() self.player:activateHotkey(8) end,
-		_9 = function() self.player:activateHotkey(9) end,
-		_0 = function() self.player:activateHotkey(10) end,
-		_RIGHTPAREN = function() self.player:activateHotkey(11) end,
-		_EQUALS = function() self.player:activateHotkey(12) end,
+		-- Movements
+		MOVE_LEFT = function() self.player:moveDir(4) end,
+		MOVE_RIGHT = function() self.player:moveDir(6) end,
+		MOVE_UP = function() self.player:moveDir(8) end,
+		MOVE_DOWN = function() self.player:moveDir(2) end,
+		MOVE_LEFT_UP = function() self.player:moveDir(7) end,
+		MOVE_LEFT_DOWN = function() self.player:moveDir(1) end,
+		MOVE_RIGHT_UP = function() self.player:moveDir(9) end,
+		MOVE_RIGHT_DOWN = function() self.player:moveDir(3) end,
+		MOVE_STAY = function() self.player:useEnergy() end,
 
-		-- running
-		[{"_LEFT","shift"}] = function() self.player:runInit(4) end,
-		[{"_RIGHT","shift"}] = function() self.player:runInit(6) end,
-		[{"_UP","shift"}] = function() self.player:runInit(8) end,
-		[{"_DOWN","shift"}] = function() self.player:runInit(2) end,
-		[{"_KP4","shift"}] = function() self.player:runInit(4) end,
-		[{"_KP6","shift"}] = function() self.player:runInit(6) end,
-		[{"_KP8","shift"}] = function() self.player:runInit(8) end,
-		[{"_KP2","shift"}] = function() self.player:runInit(2) end,
-		[{"_KP1","shift"}] = function() self.player:runInit(1) end,
-		[{"_KP3","shift"}] = function() self.player:runInit(3) end,
-		[{"_KP7","shift"}] = function() self.player:runInit(7) end,
-		[{"_KP9","shift"}] = function() self.player:runInit(9) end,
+		RUN_LEFT = function() self.player:runInit(4) end,
+		RUN_RIGHT = function() self.player:runInit(6) end,
+		RUN_UP = function() self.player:runInit(8) end,
+		RUN_DOWN = function() self.player:runInit(2) end,
+		RUN_LEFT_UP = function() self.player:runInit(7) end,
+		RUN_LEFT_DOWN = function() self.player:runInit(1) end,
+		RUN_RIGHT_UP = function() self.player:runInit(9) end,
+		RUN_RIGHT_DOWN = function() self.player:runInit(3) end,
 
-		-- resting
-		[{"_r","shift"}] = function()
-			self.player:restInit()
-		end,
+		-- Hotkeys
+		HOTKEY_1 = function() self.player:activateHotkey(1) end,
+		HOTKEY_2 = function() self.player:activateHotkey(2) end,
+		HOTKEY_3 = function() self.player:activateHotkey(3) end,
+		HOTKEY_4 = function() self.player:activateHotkey(4) end,
+		HOTKEY_5 = function() self.player:activateHotkey(5) end,
+		HOTKEY_6 = function() self.player:activateHotkey(6) end,
+		HOTKEY_7 = function() self.player:activateHotkey(7) end,
+		HOTKEY_8 = function() self.player:activateHotkey(8) end,
+		HOTKEY_9 = function() self.player:activateHotkey(9) end,
+		HOTKEY_10 = function() self.player:activateHotkey(10) end,
+		HOTKEY_11 = function() self.player:activateHotkey(11) end,
+		HOTKEY_12 = function() self.player:activateHotkey(12) end,
 
-		-- talent use
-		_m = function()
-			self.player:useTalents()
-		end,
-
-		-- Pickup object
-		_g = function()
-			-- If 2 or more objects, display a pickup dialog, otehrwise just picks up
-			if self.level.map:getObject(self.player.x, self.player.y, 2) then
-				self.player:showPickupFloor(nil, nil, function(o, item)
-					self.player:pickupFloor(item, true)
-					self.player:sortInven()
-					self.player:useEnergy()
-				end)
+		-- Actions
+		CHANGE_LEVEL = function()
+			local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
+			if self.player:enoughEnergy() and e.change_level then
+				-- Do not unpause, the player is allowed first move on next level
+				self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
 			else
-				self.player:pickupFloor(1, true)
-				self.player:sortInven()
+				self.log("There is no way out of this level here.")
 			end
 		end,
 
-		-- Show inventory
-		_i = function()
+		REST = function()
+			self.player:restInit()
+		end,
+
+		PICKUP_FLOOR = function()
+			self.player:playerPickup()
+		end,
+		DROP_FLOOR = function()
+			self.player:playerDrop()
+		end,
+		SHOW_INVENTORY = function()
 			self.player:showInventory(nil, self.player:getInven(self.player.INVEN_INVEN), nil, function() end)
 		end,
-		-- Show equipment
-		_e = function()
+		SHOW_EQUIPMENT = function()
 			self.player:showEquipment(nil, nil, function() end)
 		end,
-		-- Drop item
-		_d = function()
-			local inven = self.player:getInven(self.player.INVEN_INVEN)
-			self.player:showInventory("Drop object", inven, nil, function(o, item)
-				self.player:dropFloor(inven, item)
-				self.player:sortInven()
-				self.player:useEnergy()
-			end)
+		WEAR_ITEM = function()
+			self.player:playerWear()
 		end,
-		-- Wear item
-		_w = function()
-			local inven = self.player:getInven(self.player.INVEN_INVEN)
-			self.player:showInventory("Wield/wear object", inven, function(o)
-				return o:wornInven() and true or false
-			end, function(o, item)
-				local ro = self.player:wearObject(o, true, true)
-				if ro then
-					if type(ro) == "table" then self.player:addObject(self.player.INVEN_INVEN, ro) end
-					self.player:removeObject(self.player.INVEN_INVEN, item)
-				end
-				self.player:sortInven()
-				self.player:useEnergy()
-			end)
+		TAKEOFF_ITEM = function()
+			self.player:playerTakeoff()
 		end,
-		-- Takeoff item
-		_t = function()
-			self.player:showEquipment("Take off object", nil, function(o, inven, item)
-				if self.player:takeoffObject(inven, item) then
-					self.player:addObject(self.player.INVEN_INVEN, o)
-				end
-				self.player:sortInven()
-				self.player:useEnergy()
-			end)
+		USE_ITEM = function()
+			self.player:playerUseItem()
 		end,
 
-		-- Use item
-		_u = function()
-			self.player:showInventory(nil, self.player:getInven(self.player.INVEN_INVEN),
-				function(o)
-					return o:canUseObject()
-				end,
-				function(o, item)
-					local ret = o:use(self.player)
-					if ret and ret == "destroy" then
-						if o.multicharge and o.multicharge > 1 then
-							o.multicharge = o.multicharge - 1
-						else
-							self.player:removeObject(self.player:getInven(self.player.INVEN_INVEN), item)
-							self.log("You have no more "..o:getName())
-							self.player:sortInven()
-						end
-						self.player:useEnergy()
-					end
-				end
-			)
+		USE_TALENTS = function()
+			self.player:useTalents()
 		end,
 
-
-		[{"_g","shift"}] = function()
+		LEVELUP = function()
 			local none = true
 			if self.player.unused_stats > 0 then
 				local ds = LevelupStatsDialog.new(self.player)
@@ -459,22 +415,15 @@ function _M:setupCommands()
 			end
 		end,
 
-		_LEFT  = function() self.player:moveDir(4) end,
-		_RIGHT = function() self.player:moveDir(6) end,
-		_UP    = function() self.player:moveDir(8) end,
-		_DOWN  = function() self.player:moveDir(2) end,
-		_KP1   = function() self.player:moveDir(1) end,
-		_KP2   = function() self.player:moveDir(2) end,
-		_KP3   = function() self.player:moveDir(3) end,
-		_KP4   = function() self.player:moveDir(4) end,
-		_KP5   = function() self.player:moveDir(5) end,
-		_KP6   = function() self.player:moveDir(6) end,
-		_KP7   = function() self.player:moveDir(7) end,
-		_KP8   = function() self.player:moveDir(8) end,
-		_KP9   = function() self.player:moveDir(9) end,
+		SAVE_GAME = function()
+			local save = Savefile.new(self.save_name)
+			save:saveGame(self)
+			save:close()
+			self.log("Saved game.")
+		end,
 
 		-- Toggle tactical displau
-		[{"_t","shift"}] = function()
+		SHOW_TIME = function()
 			if Map.view_faction then
 				self:targetMode(false, true)
 				self.always_target = nil
@@ -486,25 +435,28 @@ function _M:setupCommands()
 			end
 		end,
 		-- Show time
-		[{"_t","ctrl"}] = function()
+		SHOW_TIME = function()
 			self.log(self.calendar:getTimeDate(self.turn))
 		end,
 		-- Exit the game
-		[{"_x","ctrl"}] = function()
+		QUIT_GAME = function()
 			self:onQuit()
 		end,
 		-- Lua console
-		[{"_l","ctrl"}] = function()
+		LUA_CONSOLE = function()
 			self:registerDialog(DebugConsole.new())
 		end,
 
 		-- Switch gfx modes
-		[{"_s","alt"}] = function()
+		SWITCH_GFX = function()
 			self.gfxmode = self.gfxmode or 1
 			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 3)
 			self:setupDisplayMode()
 		end,
+	}
 
+	self.key:addCommands
+	{
 		-- Targeting movement
 		[{"_LEFT","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
 		[{"_RIGHT","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,
@@ -530,30 +482,6 @@ function _M:setupCommands()
 		[{"_KP3","ctrl"}] = function() self.target:scan(3) end,
 		[{"_KP7","ctrl"}] = function() self.target:scan(7) end,
 		[{"_KP9","ctrl"}] = function() self.target:scan(9) end,
-
-		-- Save the game
-		[{"_s","ctrl"}] = function()
-			local save = Savefile.new(self.save_name)
-			save:saveGame(self)
-			save:close()
-			self.log("Saved game.")
-		end,
-
-		-- Default handler, we treat here some "weird" keys that do not seem too havdle well on different keyboard layouts
-		__DEFAULT = function(sym, ctrl, shift, alt, meta, unicode)
-			if unicode == "<" or unicode == ">" then
-				local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
-				if self.player:enoughEnergy() and e.change_level then
-					-- Do not unpause, the player is allowed first move on next level
-					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
-				else
-					self.log("There is no way out of this level here.")
-				end
-			end
-			if unicode == "r" then
-				self:setResolution("800x600")
-			end
-		end,
 	}
 
 	self.key:setCurrent()

@@ -7,7 +7,7 @@ dofile("/engine/resolvers.lua")
 
 require "config"
 require "engine.Game"
-require "engine.KeyCommand"
+require "engine.KeyBind"
 require "engine.Savefile"
 require "engine.Tiles"
 engine.Tiles.prefix = "/data/gfx/"
@@ -26,10 +26,14 @@ keyboard.locale = "en_US"
 window.size = "1024x768"
 ]]
 config.load("/settings.cfg")
+
+-- Load remaps
+engine.KeyBind:loadRemap("/keybinds.cfg")
+
 fs.umount(engine.homepath)
 
 -- Setup a default key handler
-local key = engine.KeyCommand.new()
+local key = engine.KeyBind.new()
 key:setCurrent()
 
 -- Load the game module

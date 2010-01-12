@@ -1,4 +1,5 @@
 -- This file loads the game module, and loads data
+local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
@@ -7,6 +8,9 @@ local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local ActorAI = require "engine.interface.ActorAI"
 local ActorInventory = require "engine.interface.ActorInventory"
 local Birther = require "engine.Birther"
+
+-- Usefull keybinds
+KeyBind:load("move,hotkeys,inventory,actions,debug")
 
 -- Some default colors
 dofile("/mod/colors.lua")
