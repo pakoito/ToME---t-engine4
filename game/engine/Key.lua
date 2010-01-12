@@ -275,3 +275,11 @@ _UNDO		= 322		-- Atari keyboard has Undo
 
 __DEFAULT 	= -10000
 __TEXTINPUT 	= -10001
+
+-- Reverse sym calc
+_M.sym_to_name = {}
+for k, e in pairs(_M) do
+	if type(k) == "string" and type(e) == "number" then
+		_M.sym_to_name[e] = k
+	end
+end

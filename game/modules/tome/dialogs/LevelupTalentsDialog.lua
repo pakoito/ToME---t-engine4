@@ -14,13 +14,14 @@ function _M:init(actor)
 	self.scroll = 1
 	self.max = math.floor((self.ih - 45) / self.font_h) - 1
 
-	self:keyCommands{
-		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		_LEFT = function() self:learn(false) self.changed = true end,
-		_RIGHT = function() self:learn(true) self.changed = true end,
-		_ESCAPE = function() game:unregisterDialog(self) end,
-	}
+	self:keyCommands(nil, {
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_LEFT = function() self:learn(false) self.changed = true end,
+		MOVE_RIGHT = function() self:learn(true) self.changed = true end,
+		ACCEPT = "EXIT",
+		EXIT = function() game:unregisterDialog(self) end,
+	})
 	self:mouseZones{
 		{ x=2, y=45, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.changed = true

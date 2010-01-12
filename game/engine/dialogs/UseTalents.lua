@@ -14,31 +14,32 @@ function _M:init(actor)
 	self.scroll = 1
 	self.max = math.floor((self.ih - 5) / self.font_h) - 1
 
-	self:keyCommands{
-		_1 = function() self:defineHotkey(1) end,
-		_2 = function() self:defineHotkey(2) end,
-		_3 = function() self:defineHotkey(3) end,
-		_4 = function() self:defineHotkey(4) end,
-		_5 = function() self:defineHotkey(5) end,
-		_6 = function() self:defineHotkey(6) end,
-		_7 = function() self:defineHotkey(7) end,
-		_8 = function() self:defineHotkey(8) end,
-		_9 = function() self:defineHotkey(9) end,
-		_0 = function() self:defineHotkey(10) end,
-		_RIGHTPAREN = function() self:defineHotkey(11) end,
-		_EQUALS = function() self:defineHotkey(12) end,
-
-		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		_RETURN = function() self:use() end,
-		_ESCAPE = function() game:unregisterDialog(self) end,
+	self:keyCommands({
 		__TEXTINPUT = function(c)
 			if c:find("^[a-z]$") then
 				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
 				self:use()
 			end
 		end,
-	}
+	},{
+		HOTKEY_1 = function() self:defineHotkey(1) end,
+		HOTKEY_2 = function() self:defineHotkey(2) end,
+		HOTKEY_3 = function() self:defineHotkey(3) end,
+		HOTKEY_4 = function() self:defineHotkey(4) end,
+		HOTKEY_5 = function() self:defineHotkey(5) end,
+		HOTKEY_6 = function() self:defineHotkey(6) end,
+		HOTKEY_7 = function() self:defineHotkey(7) end,
+		HOTKEY_8 = function() self:defineHotkey(8) end,
+		HOTKEY_9 = function() self:defineHotkey(9) end,
+		HOTKEY_10 = function() self:defineHotkey(10) end,
+		HOTKEY_11 = function() self:defineHotkey(11) end,
+		HOTKEY_12 = function() self:defineHotkey(12) end,
+
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		ACCEPT = function() self:use() end,
+		EXIT = function() game:unregisterDialog(self) end,
+	})
 	self:mouseZones{
 		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)

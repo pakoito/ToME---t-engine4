@@ -15,18 +15,19 @@ function _M:init(title, inven, filter, action)
 	self.scroll = 1
 	self.max = math.floor((self.ih - 5) / self.font_h) - 1
 
-	self:keyCommands{
-		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
-		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
-		_RETURN = function() self:use() end,
-		_ESCAPE = function() game:unregisterDialog(self) end,
+	self:keyCommands({
 		__TEXTINPUT = function(c)
 			if c:find("^[a-z]$") then
 				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
 				self:use()
 			end
 		end,
-	}
+	},{
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
+		ACCEPT = function() self:use() end,
+		EXIT = function() game:unregisterDialog(self) end,
+	})
 	self:mouseZones{
 		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)

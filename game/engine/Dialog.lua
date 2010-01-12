@@ -1,6 +1,6 @@
 require "engine.class"
 require "engine.Tiles"
-require "engine.KeyCommand"
+require "engine.KeyBind"
 
 --- Handles dialog windows
 module(..., package.seeall, class.make)
@@ -75,10 +75,11 @@ end
 function _M:drawDialog(s)
 end
 
-function _M:keyCommands(t)
+function _M:keyCommands(t, b)
 	self.old_key = game.key
-	game.key = engine.KeyCommand.new()
-	game.key:addCommands(t)
+	game.key = engine.KeyBind.new()
+	if t then game.key:addCommands(t) end
+	if b then game.key:addBinds(b) end
 	game.key:setCurrent()
 	self.key = game.key
 end

@@ -11,12 +11,13 @@ function _M:init(actor)
 
 	self.sel = 1
 
-	self:keyCommands{
-		_UP = function() self.changed = true; self.sel = util.boundWrap(self.sel - 1, 1, 6) end,
-		_DOWN = function() self.changed = true; self.sel = util.boundWrap(self.sel + 1, 1, 6) end,
-		_LEFT = function() self.changed = true; self:incStat(-1) end,
-		_RIGHT = function() self.changed = true; self:incStat(1) end,
-		_ESCAPE = function()
+	self:keyCommands(nil, {
+		MOVE_UP = function() self.changed = true; self.sel = util.boundWrap(self.sel - 1, 1, 6) end,
+		MOVE_DOWN = function() self.changed = true; self.sel = util.boundWrap(self.sel + 1, 1, 6) end,
+		MOVE_LEFT = function() self.changed = true; self:incStat(-1) end,
+		MOVE_RIGHT = function() self.changed = true; self:incStat(1) end,
+		ACCEPT = "EXIT",
+		EXIT = function()
 			game:unregisterDialog(self)
 
 			-- if talents to spend, do it now
@@ -25,7 +26,7 @@ function _M:init(actor)
 				game:registerDialog(dt)
 			end
 		end,
-	}
+	})
 	self:mouseZones{
 		{ x=2, y=25, w=130, h=self.font_h*6, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.changed = true

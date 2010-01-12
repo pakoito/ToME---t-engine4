@@ -95,7 +95,15 @@ end
 -- @param mods a table with the mod keys needed, i.e: {"ctrl", "alt"}
 -- @param fct the function to call when the key is pressed
 function _M:addBinds(t)
+	local later = {}
 	for virtual, fct in pairs(t) do
-		self:addBind(virtual, fct)
+		if type(fct) == "function" then
+			self:addBind(virtual, fct)
+		else
+			later[virtual] = fct
+		end
+	end
+	for virtual, fct in pairs(later) do
+		self:addBind(virtual, self.virtuals[fct])
 	end
 end

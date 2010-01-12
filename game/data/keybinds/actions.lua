@@ -52,3 +52,24 @@ defineAction{
 	group = "actions",
 	name = "Switch graphical modes",
 }
+
+defineAction{
+	default = { "uni:?" },
+	type = "HELP",
+	group = "actions",
+	name = "Help",
+}
+
+defineAction{
+	default = { "sym:13:false:false:false:false", "sym:271:false:false:false:false" },
+	type = "ACCEPT",
+	group = "actions",
+	name = "Accept action",
+}
+
+defineAction{
+	default = { "sym:27:false:false:false:false" },
+	type = "EXIT",
+	group = "actions",
+	name = "Exit menu",
+}
