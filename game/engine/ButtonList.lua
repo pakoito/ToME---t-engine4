@@ -1,7 +1,7 @@
 require "engine.class"
 require "engine.Tiles"
 require "engine.Mouse"
-require "engine.KeyCommand"
+require "engine.KeyBind"
 
 --- Handles dialog windows
 module(..., package.seeall, class.make)
@@ -49,18 +49,18 @@ function _M:close()
 end
 
 function _M:setKeyHandling()
-	self.old_key = engine.KeyCommand.current
-	self.key = engine.KeyCommand.new()
+	self.old_key = engine.KeyBind.current
+	self.key = engine.KeyBind.new()
 	self.key:setCurrent()
-	self.key:addCommands
+	self.key:addBinds
 	{
-		_UP = function()
+		MOVE_UP = function()
 			self:select(-1, true)
 		end,
-		_DOWN = function()
+		MOVE_DOWN = function()
 			self:select(1, true)
 		end,
-		_RETURN = function()
+		ACCEPT = function()
 			self:click()
 		end,
 	}

@@ -27,6 +27,9 @@ window.size = "1024x768"
 ]]
 config.load("/settings.cfg")
 
+-- Load default keys
+engine.KeyBind:load("move,actions")
+
 -- Load remaps
 engine.KeyBind:loadRemap("/keybinds.cfg")
 

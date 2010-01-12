@@ -1,7 +1,7 @@
 require "engine.class"
 require "engine.Game"
 require "engine.Module"
-require "engine.KeyCommand"
+require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local Dialog = require "engine.Dialog"
 local ButtonList = require "engine.ButtonList"
@@ -9,7 +9,7 @@ local ButtonList = require "engine.ButtonList"
 module(..., package.seeall, class.inherit(engine.Game))
 
 function _M:init()
-	engine.Game.init(self, engine.KeyCommand.new())
+	engine.Game.init(self, engine.KeyBind.new())
 
 	self.background = core.display.loadImage("/data/gfx/mainmenu/background.jpg")
 end
@@ -135,7 +135,7 @@ function _M:selectStepNew()
 	self.step = ButtonList.new(self.mod_list, 10, 10, self.w * 0.24, (5 + 35) * #self.mod_list, nil, 5)
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
-	self.step.key:addCommand("_ESCAPE", function() self:unregisterDialog(display_module) self:selectStepMain() end)
+	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
 end
 
 function _M:selectStepLoad()
@@ -185,5 +185,5 @@ function _M:selectStepLoad()
 	self.step:select(2)
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
-	self.step.key:addCommand("_ESCAPE", function() self:unregisterDialog(display_module) self:selectStepMain() end)
+	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
 end

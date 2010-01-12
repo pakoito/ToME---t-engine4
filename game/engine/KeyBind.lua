@@ -70,7 +70,7 @@ end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
 	local ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
-	print("[BIND]", sym, ctrl, shift, alt, meta, unicode and string.byte(unicode), " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
+	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then
 		self.virtuals[self.binds[ks]](sym, ctrl, shift, alt, meta, unicode)
 		return
@@ -98,6 +98,7 @@ function _M:addBinds(t)
 	local later = {}
 	for virtual, fct in pairs(t) do
 		if type(fct) == "function" then
+		print("bind", virtual, fct)
 			self:addBind(virtual, fct)
 		else
 			later[virtual] = fct
