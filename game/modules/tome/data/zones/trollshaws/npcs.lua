@@ -1,3 +1,4 @@
+load("/data/general/npcs/rodent.lua")
 load("/data/general/npcs/vermin.lua")
 load("/data/general/npcs/wolf.lua")
 load("/data/general/npcs/troll.lua")
