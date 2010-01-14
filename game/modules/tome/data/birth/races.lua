@@ -19,7 +19,7 @@ newBirthDescriptor{
 	talents = {},
 	experience = 1.0,
 }
---[[
+
 newBirthDescriptor{
 	type = "race",
 	name = "Elf",
@@ -43,6 +43,7 @@ newBirthDescriptor{
 	experience = 1.05,
 }
 
+--[[
 newBirthDescriptor{
 	type = "race",
 	name = "Dwarf",

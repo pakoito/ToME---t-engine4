@@ -23,7 +23,7 @@ newBirthDescriptor
 	experience = 1.1,
 	talents = { [ActorTalents.T_IMPROVED_HEALTH_I]=1, [ActorTalents.T_DUNADAN_HEAL]=1, },
 	copy = {
-		default_wilderness = {"wilderness/rhudaur", 9, 4},
+		default_wilderness = {"wilderness/main", 9, 4},
 	},
 }
 --[[
@@ -80,6 +80,9 @@ newBirthDescriptor
 	stats = { str=1, mag=2, wil=3, cun=1, dex=1, },
 	experience = 1.3,
 	talents = {},
+	copy = {
+		default_wilderness = {"wilderness/main", 30, 30},
+	},
 }
 
 newBirthDescriptor
@@ -98,6 +101,9 @@ newBirthDescriptor
 	stats = { str=-1, dex=2, cun=2, mag=1, },
 	talents = { ActorTalents.DECREASED_HEALTH_I },
 	experience = 1.1,
+	copy = {
+		default_wilderness = {"wilderness/main", 30, 30},
+	},
 }
 
 ---------------------------------------------------------

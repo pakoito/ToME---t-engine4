@@ -1,21 +1,24 @@
-defineTile('1', 'TOWN_BREE')
-defineTile('a', 'DUN_ANCIENT_RUINS')
-
-quickEntity('B', {name='blue mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true})
-quickEntity('M', {name='misty mountains', display='^', color=colors.UMBER, image="terrain/mountain.png", block_move=true})
-quickEntity('G', {name='grey mountains', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true})
-quickEntity('T', {name='deep forest', display='#', color=colors.GREEN, image="terrain/tree.png", block_move=true})
+quickEntity('b', {name='blue mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true})
+quickEntity('m', {name='misty mountains', display='^', color=colors.UMBER, image="terrain/mountain.png", block_move=true})
+quickEntity('g', {name='grey mountains', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true})
+quickEntity('u', {name='deep forest', display='#', color=colors.GREEN, image="terrain/tree.png", block_move=true})
 quickEntity('t', {name='forest', display='#', color=colors.LIGHT_GREEN, image="terrain/tree.png", block_move=true})
-quickEntity('I', {name='iron mountains', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true})
+quickEntity('i', {name='iron mountains', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true})
 quickEntity('=', {name='the great sea', display='~', color=colors.BLUE, image="terrain/river.png", block_move=true})
 quickEntity('.', {name='plains', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
 quickEntity('g', {name='Forodwaith, the cold lands', display='.', color=colors.LIGHT_BLUE})
+quickEntity('q', {name='Icebay of Forochel', display=';', color=colors.LIGHT_BLUE})
 quickEntity('w', {name='ash', display='.', color=colors.WHITE})
 quickEntity('&', {name='hills', display='^', color=colors.GREEN, image="terrain/hills.png"})
 quickEntity('h', {name='low hills', display='^', color=colors.GREEN, image="terrain/hills.png"})
 quickEntity(' ', {name='sea of Rhun', display='~', color=colors.BLUE, image="terrain/river.png", block_move=true})
-quickEntity('_', {name='river', display='~', color={r=0, g=80, b=255}, image="terrain/river.png", block_move=true})
-quickEntity('~', {name='Anduin river', display='~', color={r=0, g=30, b=255}, image="terrain/river.png", block_move=true})
+quickEntity('_', {name='river', display='~', color={r=0, g=80, b=255}, image="terrain/river.png"})
+quickEntity('~', {name='Anduin river', display='~', color={r=0, g=30, b=255}, image="terrain/river.png"})
+
+quickEntity('A', {name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tower-amon-sul"})
+quickEntity('B', {name="Ettenmoors's cavern", 			display='>', color={r=80, g=255, b=255}})
+quickEntity('C', {name="Passageway into the Trollshaws", 	display='>', color={r=0, g=255, b=0}, change_level=1, change_zone="trollshaws"})
+quickEntity('D', {name="A gate into a maze", 			display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="maze"})
 
 return {
 [[========q=qqqqqqqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
@@ -23,61 +26,61 @@ return {
 [[==========qq=q=qqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
 [[==============qqq=qqggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
 [[===============q=q=q=gwwwwgggwwwwwgggggggggwwwwwwwwwwggggwwwwwwwwwwwwwggggwwwwwwwwggggwwwwwwwwwgggg]],
-[[====================qwwwwwwwwwwwwwwwwggggggggwwwwwwwwwwwwwwwwwwwwwwwwwwggwwwwwwwwwwwwwwwwwwwwwwTTTT]],
-[[======================wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.TTTTTTTT]],
-[[========================wwwwwwww...wwwwwwwwww..........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.TTTTTTTTTTT]],
-[[========================..www....wwwwwwww................wwwwGGGGwwwwwwww......wwwww.TTTTTTTTTTTTTT]],
-[[==========.......======.........hhhh..................GGGGGGGwwwDwwww.........wwww.TtTTTTtTTTTTTtTT]],
-[[========......BB..===.........hhhhhhhh..&&&&&...&..GGGGGGGGGGGGG.................tTTTtTtTTtTttTTTTt]],
-[[=======......BB..===............hhhh.......&&&&&&GG.._._...........................tttttttttttttttt]],
-[[======...._.BB._..._............................M....._._TTT................II........ttttttttttttt]],
-[[=======.._..BB.._.._..hhhh................&....&MM~~~~.TT_TTTT..........I.....III........tttttt^^^^]],
-[[======.._...BB..._._..hhh.......hhhhhh.....&&&&._MM..~.TTT_T_TT..^l......IIIIII..............ttt^^^]],
-[[=====.._..TBBB...._._..h.=....hhh|hh..........__.MM__~.TTTT_h_TT.l8........_.....................^^]],
-[[===...._....BB....._..hh.=_....h.|..........__...MM..~.TTTTTT_TT.=........_........................]],
-[[====.._...BBBB...._....hhhh__....|.....a..._.....MM..~.TTTTTT____........._........................]],
-[[=====.._..TTBB..._........._.....|h......._.tt...MM..~6TTTTT&&&T._........._.......................]],
-[[====...__..TBBB._......hh.._.....|.hh...._.t^^^._MM..~..TTT&G&&&T._........._......................]],
-[[=====..._.....__......hho+-_.2---x1hh-------_L...MM---------------_........_.......................]],
-[[======..==..=__....h....h|.._.hh.|ih....._..^^^._M...~..TTTTTTTTTT._........_......................]],
-[[=============.....hhh....|.._.ttt|h......_.._.._MMM...~..TTTTTTTTT.._........_....................t]],
-[[======........BB...h.....|..._ttt|hh...._.._...MM.....~..TTTTTTTT...._......_....................tt]],
-[[=====.........BB.........[---_.t.|.h...._._..MMMMM.s._~..TTTTTTTT....._......_..................ttt]],
-[[=====.........BB............._[--|....._.._..MMMM___s.~~.TTTTTTTT......_.._._..................tttt]],
-[[======........BB....B......._....|....._._...MMMM.....~~.TTTTT.T........._.._.................ttttt]],
-[[=======.....TBBB..BBBB....._.....|....._....MMMMM....~~...TTTT.............._...............ttttttt]],
-[[==========..TBBBT........._......|...._.....MMMM.....~~...TTTT..............._...._.......ttttttttt]],
-[[==========..TTTBBTBB....._.......|ss__.....hMMMM....~~....TTTTTTT............._.__._ ...ttttttttttt]],
-[[==========...TTBTT......_........___ss_....MMMMM....~~..TTTTTTTTTT............._....  ...t  ttttttt]],
-[[==========.....T.T....._........_.....______MM___...~~.TTTTTTTTTT...................        ttttttt]],
-[[===========.=........._........_...........MMMM_!.!~~..TT&TTTTTTT..................         ttttttt]],
-[[================....__........_..ttt......MMMM._!4!~~..TTTTTTTTT...................         ...tttt]],
-[[=================.==t........_....tt.....ttMMM..!!!~.....TTTTT..................^^.        ......tt]],
-[[===================tt........._.........ttMMM.......~~.........................^^^^.       .......t]],
-[[===================t==......._..........ttMMMttttt._..~~~~~~....................^^^.  ...  .......t]],
-[[===================t==......_...........t&MMMMtttt_s_.....~~~..................^^^^^. ... ........t]],
-[[=====================......_.ttt........t&MMMtttttt..__s~~~~...................^^^^^^.............t]],
-[[=====================.....=_.tt.........&&MMMttttt.....~...........................^^.............t]],
+[[====================qwwwwwwwwwwwwwwwwggggggggwwwwwwwwwwwwwwwwwwwwwwwwwwggwwwwwwwwwwwwwwwwwwwwwwuuuu]],
+[[======================wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.uuuuuuuu]],
+[[========================wwwwwwww...wwwwwwwwww..........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.uuuuuuuuuuu]],
+[[========================..www....wwwwwwww................wwwwffffwwwwwwww......wwwww.uuuuuuuuuuuuuu]],
+[[==========.......======.........hhhh..................fffffffwwwdwwww.........wwww.utuuuutuuuuuutuu]],
+[[========......bb..===.........hhhhhhhh..&&&&&...&..fffffffffffff.................tuuututuututtuuuut]],
+[[=======......bb..===............hhhh.......&&&&&&ff.._._...........................tttttttttttttttt]],
+[[======...._.bb._..._............................m....._._uuu................ii........ttttttttttttt]],
+[[=======.._..bb.._.._..hhhh................&....&mm~~~~.uu_uuuu..........i.....iii........tttttt^^^^]],
+[[======.._...bb..._._..hhh.......hhhhhh.....&&&&._mm..~.uuu_u_uu..^l......iiiiii..............ttt^^^]],
+[[=====.._..ubbb...._._..h.=....hhh|hh..........__.mm__~.uuuu_h_uu.l8........_.....................^^]],
+[[===...._....bb....._..hh.=_....h.|..........__...mm..~.uuuuuu_uu.=........_........................]],
+[[====.._...bbbb...._....hhhh__....|.....A..._.....mm..~.uuuuuu____........._........................]],
+[[=====.._..uubb..._........._.....|h......._Ctt...mm..~6uuuuu&&&u._........._.......................]],
+[[====...__..ubbb._......hh.._.....|.hh...._.t^^^._mm..~..uuu&f&&&u._........._......................]],
+[[=====..._.....__......hho+-_.2---x1hh-------_L...mm---------------_........_.......................]],
+[[======..==..=__....h....h|.._.hh.|ih....._..^^^._m...~..uuuuuuuuuu._........_......................]],
+[[=============.....hhh....|.._.ttt|h......_.._.._mmm...~..uuuuuuuuu.._........_....................t]],
+[[======........bb...h.....|..._ttt|hh...._.._...mm.....~..uuuuuuuu...._......_....................tt]],
+[[=====.........bb.........[---_.t.|.h...._._..mmmmm.s._~..uuuuuuuu....._......_..................ttt]],
+[[=====.........bb............._[--|....._.._..mmmm___s.~~.uuuuuuuu......_.._._..................tttt]],
+[[======........bb...Db......._....|....._._...mmmm.....~~.uuuuu.u........._.._.................ttttt]],
+[[=======.....ubbb..bbbb....._.....|....._....mmmmm....~~...uuuu.............._...............ttttttt]],
+[[==========..ubbbu........._......|...._.....mmmm.....~~...uuuu..............._...._.......ttttttttt]],
+[[==========..uuubbubb....._.......|ss__.....hmmmm....~~....uuuuuuu............._.__._ ...ttttttttttt]],
+[[==========...uubuu......_........___ss_....mmmmm....~~..uuuuuuuuuu............._....  ...t  ttttttt]],
+[[==========.....u.u....._........_.....______mm___...~~.uuuuuuuuuu...................        ttttttt]],
+[[===========.=........._........_...........mmmm_!.!~~..uu&uuuuuuu..................         ttttttt]],
+[[================....__........_..ttt......mmmm._!4!~~..uuuuuuuuu...................         ...tttt]],
+[[=================.==t........_....tt.....ttmmm..!!!~.....uuuuu..................^^.        ......tt]],
+[[===================tt........._.........ttmmm.......~~.........................^^^^.       .......t]],
+[[===================t==......._..........ttmmmttttt._..~~~~~~....................^^^.  ...  .......t]],
+[[===================t==......_...........t&mmmmtttt_s_.....~~~..................^^^^^. ... ........t]],
+[[=====================......_.ttt........t&mmmtttttt..__s~~~~...................^^^^^^.............t]],
+[[=====================.....=_.tt.........&&mmmttttt.....~...........................^^.............t]],
 [[======================...==..ttt........&&_&&&.._.......~~........................................t]],
 [[=======================.===..............^_^....._........~.......................................t]],
 [[===========================..............._........_.....~........................................t]],
 [[==========================.tt......._._.._........_....h=hh...SSS.................................t]],
 [[==========================.tt._.._t_...__.........._..h===h.SSSS.................................tt]],
-[[==========================..__.__._._._..&&&b....._....h=hh..SS.A.A.............................ttt]],
-[[============================....._..._.__.&&&......_....~~.....AAkAAA..A..AA..A..A..AA...A.....tttt]],
-[[===========================.............._&&&^^....._....~~s...DDvvAAAAAAAAAAAAAAAAAAAAAAAAAAAAJttt]],
-[[===========================.......^.&.^^&&&&&&&......__.~~sss...DDVVVVVVVAVVVAVAA_"""_""""""..AAAtt]],
-[[===========================.....^^.&.&_&^&.&^&_&&&9...._..~~ss..DDVVUVVVVVVVVVVA_"""""_""""""...AAt]],
-[[===========================....^....__^^...^^^._^&&........~~.c.DDVVUUVVVVVVVAA_"""""""_"""".....AA]],
-[[===========================..^^^_.._.......^^._.^^&&&........~~.DDVVVVVVVVVVAA""_""""""_"""""""....]],
-[[============================.^t_.__._........_&^^^.&&&&&......e.DDVAAVAAAVVV"""""_""""_""""""".....]],
-[[============================.t^_..._....hh.._&&&^^.._&&&&.&...~.DDD""A"A""""""""=="""_""""""""""...]],
-[[============================.t^._.hhhhhhhh...__...._^&^&&&&&.~..DD""""""""""""======_"""""""""""AAA]],
-[[===========================.^^._...h.h........._.._.^&^^._^3.~..DD"""_"_"""""=====""""""""""""AAAdd]],
-[[==========================..^^.._.....===.=====_._&^...._...^.~.DD"__"_"__======"""""AA""""AAAAdddd]],
-[[==========================.h...._...===========_&&^...._._...~~.DD_""""""""""""_""A"AAAAAAAAddddddd]],
-[[========================.hhh=...=_.==========&^^^^.._._..._.~~..DDD""DDD""D"""DD_DDAAdddddddddddddd]],
-[[======================....=====.==============^.^._=._.....~~...DDDDDDDDDDDDDDDDDDDdddddddddddddddd]],
+[[==========================..__.__._._._..&&&b....._....h=hh..SS.a.a.............................ttt]],
+[[============================....._..._.__.&&&......_....~~.....aakaaa..a..aa..a..a..aa...a.....tttt]],
+[[===========================.............._&&&^^....._....~~s...ddvvaaaaaaaaaaaaaaaaaaaaaaaaaaaaJttt]],
+[[===========================.......^.&.^^&&&&&&&......__.~~sss...ddvvvvvvvavvvavaa_"""_""""""..aaatt]],
+[[===========================.....^^.&.&_&^&.&^&_&&&9...._..~~ss..ddvvmvvvvvvvvvva_"""""_""""""...aat]],
+[[===========================....^....__^^...^^^._^&&........~~.c.ddvvmmvvvvvvvaa_"""""""_"""".....aa]],
+[[===========================..^^^_.._.......^^._.^^&&&........~~.ddvvvvvvvvvvaa""_""""""_"""""""....]],
+[[============================.^t_.__._........_&^^^.&&&&&......e.ddvaavaaavvv"""""_""""_""""""".....]],
+[[============================.t^_..._....hh.._&&&^^.._&&&&.&...~.ddd""a"a""""""""=="""_""""""""""...]],
+[[============================.t^._.hhhhhhhh...__...._^&^&&&&&.~..dd""""""""""""======_"""""""""""aaa]],
+[[===========================.^^._...h.h........._.._.^&^^._^3.~..dd"""_"_"""""=====""""""""""""aaadd]],
+[[==========================..^^.._.....===.=====_._&^...._...^.~.dd"__"_"__======"""""aa""""aaaadddd]],
+[[==========================.h...._...===========_&&^...._._...~~.dd_""""""""""""_""a"aaaaaaaaddddddd]],
+[[========================.hhh=...=_.==========&^^^^.._._..._.~~..ddd""ddd""d"""dd_ddaadddddddddddddd]],
+[[======================....=====.==============^.^._=._.....~~...ddddddddddddddddddddddddddddddddddd]],
 [[==============================================.^^^==....~~~~....................ddddddddddddddddddd]],
 [[===============================================..====~~~p................dddddddddddddddddddddddddd]],
 [[===============================================.==^==_............ddddddddddddddddddddddddddddddddd]],

@@ -44,6 +44,10 @@ function _M:incStat(v)
 			self:simplePopup("Not enough stat points", "You have no stat points left!")
 			return
 		end
+		if self.actor:getStat(self.sel) >= self.actor.level * 1.4 + 20 then
+			self:simplePopup("Stat is at the maximun for your level", "You can not increase this stat further until next level!")
+			return
+		end
 		if self.actor:isStatMax(self.sel) or self.actor:getStat(self.sel) >= 60 then
 			self:simplePopup("Stat is at the maximun", "You can not increase this stat further!")
 			return
