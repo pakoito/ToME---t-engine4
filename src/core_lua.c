@@ -539,11 +539,23 @@ static int sdl_surface_get_size(lua_State *L)
 
 
 static void draw_textured_quad(int x, int y, int w, int h) {
+	// In case we can't support NPOT textures, the tex coords will be different
+	// it might be more elegant to store the actual texture width/height somewhere.
+	// it's possible to ask opengl for it but I have a suspicion that is slow.
+	int realw=1;
+	int realh=1;
+
+	while (realw < w) realw *= 2;
+	while (realh < h) realh *= 2;
+	
+	GLfloat texw = (GLfloat)w/realw;
+	GLfloat texh = (GLfloat)h/realh;
+
 	glBegin( GL_QUADS );
 	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
-	glTexCoord2f(0,1); glVertex2f(0  + x, h + y);
-	glTexCoord2f(1,1); glVertex2f(w + x, h + y);
-	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
+	glTexCoord2f(0,texh); glVertex2f(0  + x, h + y);
+	glTexCoord2f(texw,texh); glVertex2f(w + x, h + y);
+	glTexCoord2f(texw,0); glVertex2f(w + x, 0  + y);
 	glEnd( );
 }
 
@@ -571,6 +583,47 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 	return texture_format;
 }
 
+// allocate memory for a texture without copying pixels in
+// caller binds texture
+static void make_texture_for_surface(SDL_Surface *s) {
+	// Paramétrage de la texture.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	// get the number of channels in the SDL surface
+	GLint nOfColors = s->format->BytesPerPixel;
+	GLenum texture_format = sdl_gl_texture_format(s);
+
+	// In case we can't support NPOT textures round up to nearest POT
+	int realw=1;
+	int realh=1;
+
+	while (realw < s->w) realw *= 2;
+	while (realh < s->h) realh *= 2;
+
+	//printf("request size (%d,%d), producing size (%d,%d)\n",s->w,s->h,realw,realh);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, realw, realh, 0, texture_format, GL_UNSIGNED_BYTE, NULL);
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		printf("make_texture_for_surface: glTexImage2D : %s\n",gluErrorString(err));
+	}
+}
+
+// copy pixels into previous allocated surface
+static void copy_surface_to_texture(SDL_Surface *s) {
+	GLenum texture_format = sdl_gl_texture_format(s);
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, s->w, s->h, texture_format, GL_UNSIGNED_BYTE, s->pixels);
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		printf("copy_surface_to_texture : glTexSubImage2D : %s\n",gluErrorString(err));
+	}
+}
+
 static int sdl_surface_toscreen(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
@@ -581,22 +634,8 @@ static int sdl_surface_toscreen(lua_State *L)
 	glGenTextures(1, &t);
 	glBindTexture(GL_TEXTURE_2D, t);
 
-	// Paramétrage de la texture.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	// get the number of channels in the SDL surface
-	GLint nOfColors = (*s)->format->BytesPerPixel;
-	GLenum texture_format = sdl_gl_texture_format(*s);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
-
-	GLenum err = glGetError();
-	if (err != GL_NO_ERROR) {
-		printf("glTexImage2D : %s\n",gluErrorString(err));
-	}
-
+	make_texture_for_surface(*s);
+	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
 
 	glDeleteTextures(1, &t);
@@ -613,16 +652,9 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 
 	glBindTexture(GL_TEXTURE_2D, *t);
 
-	GLenum texture_format = sdl_gl_texture_format(*s);
-
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (*s)->w, (*s)->h, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
-
-	GLenum err = glGetError();
-	if (err != GL_NO_ERROR) {
-		printf("glTexSubImage2D : %s\n",gluErrorString(err));
-	}
-
+	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
+
 	return 0;
 }
 
@@ -636,16 +668,9 @@ static int sdl_surface_to_texture(lua_State *L)
 	glGenTextures(1, t);
 	glBindTexture(GL_TEXTURE_2D, *t);
 
-	// Paramétrage de la texture.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	make_texture_for_surface(*s);
+	copy_surface_to_texture(*s);
 
-	// get the number of channels in the SDL surface
-	GLint nOfColors = (*s)->format->BytesPerPixel;
-	GLenum texture_format = sdl_gl_texture_format(*s);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, (*s)->w, (*s)->h, 0, texture_format, GL_UNSIGNED_BYTE, (*s)->pixels);
 	return 1;
 }
 
