@@ -115,3 +115,22 @@ newTalent{
 		The bonus will increase with the Constitution stat]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
 	end,
 }
+
+-- Hobbit's power, temporary crit bonus
+newTalent{
+	short_name = "HOBBIT_LUCK",
+	name = "Luck of the Little Folk",
+	type = {"base/class", 1},
+	cooldown = 50,
+	action = function(self, t)
+		self:setEffect(self.EFF_HOBBIT_LUCK, 5, {
+			physical=20 + self:getCun() / 2,
+			spell=20 + self:getCun() / 2,
+		})
+		return true
+	end,
+	info = function(self)
+		return ([[Call upon the luck and cunning of the Little Folk to increase your physical and spell critical strike change by %d%% for 5 turns.
+		The bonus will increase with the Constitution stat]]):format(10 + self:getCon() / 5, 10 + self:getCon() / 5)
+	end,
+}

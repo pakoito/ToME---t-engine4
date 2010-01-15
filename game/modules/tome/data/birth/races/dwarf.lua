@@ -28,8 +28,8 @@ newBirthDescriptor{
 	},
 	copy = {
 		default_wilderness = {"wilderness/main", 41, 18},
+		life_rating=12,
 	},
-	life_rating=12,
 	experience = 1.1,
 }
 

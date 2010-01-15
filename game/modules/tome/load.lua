@@ -32,10 +32,10 @@ ActorStats:defineStat("Strength",	"str", 10, 1, 100, "Strength defines your char
 ActorStats:defineStat("Dexterity",	"dex", 10, 1, 100, "Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks and your damage with light weapons.")
 ActorStats:defineStat("Magic",		"mag", 10, 1, 100, "Magic defines your character's ability to manipulate the magic of the world. It increases your spell power, the effect of spells and other magic items.")
 ActorStats:defineStat("Willpower",	"wil", 10, 1, 100, "Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to resist mental attacks.")
-ActorStats:defineStat("Cunning",	"cun", 10, 1, 100, "Cunning defines your character's ability to learn and think. It allows you to learn many wordly abilities, increases your mental resistance and armor penetration.")
+ActorStats:defineStat("Cunning",	"cun", 10, 1, 100, "Cunning defines your character's ability to learn, think and react. It allows you to learn many wordly abilities, increases your mental resistance, armor penetration and critical chance.")
 ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines your character's ability to withstand and resist damage. It increases your maximun life and physical resistance.")
 -- Luck is hidden and start at half max value (50) which is considered the standard
-ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's chance when dealing with unknown events. It increases yoru critical strike chances, your chance for random encounters, ...")
+ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's chance when dealing with unknown events. It increases your critical strike chances, your chance for random encounters, ...")
 -- Actor autolevel schemes
 dofile("/data/autolevel_schemes.lua")
 -- Actor AIs

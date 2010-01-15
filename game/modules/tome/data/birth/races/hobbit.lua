@@ -30,13 +30,13 @@ newBirthDescriptor{
 			Fallohide = "allow",
 		},
 	},
-	stats = { str=-3, dex=3, con=2, lck=5, },
+	stats = { str=-3, dex=3, con=1, cun=3, lck=5, },
 	experience = 1.1,
 	talents = {
-		ActorTalents.T_IMPROVED_HEALTH_I,
-		ActorTalents.T_IMPROVED_HEALTH_II,
+		[ActorTalents.T_HOBBIT_LUCK]=1,
 	},
 	copy = {
+		life_rating = 12,
 		default_wilderness = {"wilderness/main", 41, 18},
 	},
 }

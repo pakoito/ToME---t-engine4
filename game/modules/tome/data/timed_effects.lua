@@ -190,7 +190,7 @@ newEffect{
 	desc = "Dwarven Resilience",
 	type = "physical",
 	status = "beneficial",
-	parameters = { armor=10, mental=10, physical=10 },
+	parameters = { armor=10, spell=10, physical=10 },
 	on_gain = function(self, err) return "#Target#'s skin turns to stone." end,
 	on_lose = function(self, err) return "#Target# returns to normal." end,
 	activate = function(self, eff)
@@ -202,5 +202,23 @@ newEffect{
 		self:removeTemporaryValue("combat_armor", eff.aid)
 		self:removeTemporaryValue("combat_physresist", eff.pid)
 		self:removeTemporaryValue("combat_spellresist", eff.sid)
+	end,
+}
+
+newEffect{
+	name = "HOBBIT_LUCK",
+	desc = "Hobbit's Luck",
+	type = "physical",
+	status = "beneficial",
+	parameters = { spell=10, physical=10 },
+	on_gain = function(self, err) return "#Target# seems more aware." end,
+	on_lose = function(self, err) return "#Target# awareness returns to normal." end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("combat_physcrit", eff.physical)
+		eff.sid = self:addTemporaryValue("combat_spellcrit", eff.spell)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_physcrit", eff.pid)
+		self:removeTemporaryValue("combat_spellcrit", eff.sid)
 	end,
 }

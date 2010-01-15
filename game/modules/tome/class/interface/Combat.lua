@@ -233,7 +233,7 @@ end
 
 --- Gets spellcrit
 function _M:combatSpellCrit()
-	return self.combat_spellcrit + 1
+	return self.combat_spellcrit + (self:getCun() - 10) * 0.3 + 1
 end
 
 --- Gets spellspeed
