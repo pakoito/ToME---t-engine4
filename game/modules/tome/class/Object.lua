@@ -3,6 +3,7 @@ require "engine.Object"
 require "engine.interface.ObjectActivable"
 
 local Stats = require("engine.interface.ActorStats")
+local DamageType = require("engine.DamageType")
 
 module(..., package.seeall, class.inherit(engine.Object, engine.interface.ObjectActivable))
 
@@ -89,6 +90,14 @@ function _M:getDesc()
 			dm[#dm+1] = ("%d %s"):format(i, Stats.stats_def[stat].name)
 		end
 		desc[#desc+1] = ("Increases stats: %s."):format(table.concat(dm, ','))
+	end
+
+	if w.resists then
+		local rs = {}
+		for res, i in pairs(w.resists) do
+			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
+		end
+		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(dm, ','))
 	end
 
 	if w.max_life then desc[#desc+1] = ("Maximun life %d"):format(w.max_life) end
