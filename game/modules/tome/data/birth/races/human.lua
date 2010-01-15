@@ -47,7 +47,10 @@ newBirthDescriptor
 	},
 	stats = { str=1, cun=1, dex=1, wil=1 },
 	experience = 1.25,
-	talents = { [ActorTalents.T_IMPROVED_HEALTH_I]=1, [ActorTalents.T_DUNADAN_HEAL]=1, },
+	talents = {
+		[ActorTalents.T_IMPROVED_HEALTH_I]=1,
+		[ActorTalents.T_DUNADAN_HEAL]=1,
+	},
 	copy = {
 		default_wilderness = {"wilderness/main", 41, 18},
 	},
@@ -85,4 +88,3 @@ newBirthDescriptor
 	talents = {},
 }
 ]]
-

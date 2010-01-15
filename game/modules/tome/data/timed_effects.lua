@@ -124,14 +124,14 @@ newEffect{
 	desc = "Speed",
 	type = "magical",
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=0.1 },
 	on_gain = function(self, err) return "#Target# speeds up.", "+Fast" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Fast" end,
 	activate = function(self, eff)
---		eff.tmpid = self:addTemporaryValue("mana_regen", eff.power)
+		eff.tmpid = self:addTemporaryValue("energy", {mod=eff.power})
 	end,
 	deactivate = function(self, eff)
---		self:removeTemporaryValue("mana_regen", eff.tmpid)
+		self:removeTemporaryValue("energy", eff.tmpid)
 	end,
 }
 

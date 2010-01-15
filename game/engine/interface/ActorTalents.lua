@@ -399,7 +399,5 @@ end
 --- Show usage dialog
 function _M:useTalents()
 	local d = require("engine.dialogs.UseTalents").new(self)
-	-- Load the locales
-	d.key:loadLocaleConvertion("/data/locales/number_hotkey.lua")
 	game:registerDialog(d)
 end

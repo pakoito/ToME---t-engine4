@@ -40,7 +40,10 @@ newBirthDescriptor
 	},
 	stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
 	experience = 1.3,
-	talents = {},
+	talents = { [ActorTalents.T_NANDOR_SPEED]=1 },
+	copy = {
+		life_rating = 9,
+	},
 }
 
 newBirthDescriptor
@@ -51,6 +54,5 @@ newBirthDescriptor
 		"The Avari are those elves who refused the summons of Orome to come to Valinor, and stayed behind in Middle-earth instead.",
 	},
 	stats = { str=-1, mag=1, wil=1, cun=3, dex=2, con=0 },
-	talents = { ActorTalents.DECREASED_HEALTH_I },
 	experience = 1.1,
 }

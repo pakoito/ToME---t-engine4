@@ -8,8 +8,13 @@ newBirthDescriptor{
 	body = { INVEN = 1000, MAINHAND=1, OFFHAND=1, BODY=1 },
 
 	copy = {
-		equipment2 = resolvers.equip{
+		resolvers.equip{
 			{type="lite", subtype="lite", name="brass lantern"},
+		},
+		resolvers.inventory{
+			{type="potion", subtype="potion", name="potion of lesser healing"},
+			{type="potion", subtype="potion", name="potion of lesser healing"},
+			{type="potion", subtype="potion", name="potion of lesser healing"},
 		},
 	},
 }

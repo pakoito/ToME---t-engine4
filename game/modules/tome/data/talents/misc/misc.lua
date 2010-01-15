@@ -79,3 +79,19 @@ newTalent{
 		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.5)
 	end,
 }
+
+-- Nandor's power, a temporary speedup
+newTalent{
+	short_name = "NANDOR_SPEED",
+	name = "Grace of the Eldar",
+	type = {"base/class", 1},
+	cooldown = 50,
+	action = function(self, t)
+		self:setEffect(self.EFF_SPEED, 8, {power=0.20 + self:getDex() / 80})
+		return true
+	end,
+	info = function(self)
+		return ([[Call upon the grace of the Eldar to increase your general speed by %d%% for 8 turns.
+		The speed will increase with the Dexterity stat]]):format((0.20 + self:getDex() / 80) * 100)
+	end,
+}

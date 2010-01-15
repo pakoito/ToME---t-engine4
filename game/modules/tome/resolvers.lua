@@ -26,6 +26,31 @@ function resolvers.calc.equip(t, e)
 	return nil
 end
 
+--- Resolves inventory creation for an actor
+function resolvers.inventory(t)
+	return {__resolver="inventory", t}
+end
+--- Actually resolve the inventory creation
+function resolvers.calc.inventory(t, e)
+	-- Iterate of object requests, try to create them and equip them
+	for i, filter in ipairs(t[1]) do
+		print("Inventory resolver", filter.type, filter.subtype)
+		local o
+		if not filter.defined then
+			o = game.zone:makeEntity(game.level, "object", filter)
+		else
+			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
+		end
+		if o then
+			print("Zone made us an inventory according to filter!", o:getName())
+			e:addObject(e.INVEN_INVEN, o)
+		end
+	end
+	e:sortInven()
+	-- Delete the origin field
+	return nil
+end
+
 --- Resolves drops creation for an actor
 function resolvers.drops(t)
 	return {__resolver="drops", t}
@@ -33,14 +58,14 @@ end
 --- Actually resolve the drops creation
 function resolvers.calc.drops(t, e)
 	t = t[1]
-	if not rng.percent(t.chance) then return nil end
+	if not rng.percent(t.chance or 100) then return nil end
 
 	-- Iterate of object requests, try to create them and drops them
 	for i = 1, (t.nb or 1) do
 		local filter = t[rng.range(1, #t)]
 		print("Drops resolver", filter.type, filter.subtype)
 		local o
-		if not filter.name then
+		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter)
 		else
 			o = game.zone:makeEntityByName(game.level, "object", filter.name)
