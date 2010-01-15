@@ -28,7 +28,7 @@ function _M:display()
 
 	local h = 0
 	self.surface:drawString(self.font, game.player.name, 0, h, 0, 200, 255) h = h + self.font_h
-	self.surface:drawString(self.font, game.player.descriptor.race or "", 0, h, 0, 200, 255) h = h + self.font_h
+	self.surface:drawString(self.font, game.player.descriptor.subrace or "", 0, h, 0, 200, 255) h = h + self.font_h
 	h = h + self.font_h
 	self.surface:drawColorString(self.font, "Level: #00ff00#"..game.player.level, 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorString(self.font, ("Exp: #00ff00#%2d%%"):format(100 * cur_exp / max_exp), 0, h, 255, 255, 255) h = h + self.font_h

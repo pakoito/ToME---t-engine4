@@ -14,7 +14,9 @@ newBirthDescriptor{
 	},
 }
 
-load("/data/birth/races.lua")
-load("/data/birth/subraces.lua")
+load("/data/birth/races/human.lua")
+load("/data/birth/races/elf.lua")
+load("/data/birth/races/hobbit.lua")
+load("/data/birth/races/dwarf.lua")
 load("/data/birth/sexes.lua")
 load("/data/birth/classes.lua")

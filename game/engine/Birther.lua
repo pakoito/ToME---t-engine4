@@ -26,6 +26,8 @@ function _M:newBirthDescriptor(t)
 	t.short_name = t.short_name or t.name
 	t.short_name = t.short_name:upper():gsub("[ ]", "_")
 	assert(t.desc, "no birth description")
+	if type(t.desc) == "table" then t.desc = table.concat(t.desc, "\n") end
+	t.desc = t.desc:gsub("\n\t+", "\n")
 	t.descriptor_choices = t.descriptor_choices or {}
 
 	table.insert(self.birth_descriptor_def, t)
@@ -166,7 +168,7 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 		s:drawColorString(self.font, birthhelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
 	end
 
-	local lines = table.concat(self.list[self.sel].desc,"\n"):splitLines(self.iw / 2 - 10, self.font)
+	local lines = self.list[self.sel].desc:splitLines(self.iw / 2 - 10, self.font)
 	for i = 1, #lines do
 		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #birthhelp + 1) * self.font:lineSkip())
 	end
