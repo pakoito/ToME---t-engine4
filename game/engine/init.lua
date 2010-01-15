@@ -35,7 +35,7 @@ end
 engine.KeyBind:load("move,actions")
 
 -- Load remaps
-if fs.exist("/keybinds.cfg") then
+if fs.exists("/keybinds.cfg") then
 	engine.KeyBind:loadRemap("/keybinds.cfg")
 end
 
