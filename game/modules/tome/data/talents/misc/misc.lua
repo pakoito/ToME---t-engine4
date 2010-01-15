@@ -95,3 +95,23 @@ newTalent{
 		The speed will increase with the Dexterity stat]]):format((0.20 + self:getDex() / 80) * 100)
 	end,
 }
+
+-- Dwarf's power, a temporary stone shield
+newTalent{
+	short_name = "DWARF_RESILIENCE",
+	name = "Resilience of the Dwarves",
+	type = {"base/class", 1},
+	cooldown = 50,
+	action = function(self, t)
+		self:setEffect(self.EFF_DWARVEN_RESILIENCE, 8, {
+			armor=5 + self:getCon() / 5,
+			physical=10 + self:getCon() / 5,
+			spell=10 + self:getCon() / 5,
+		})
+		return true
+	end,
+	info = function(self)
+		return ([[Call legendary resilience of the Dwarven race to increase your armor(+%d), spell(+%d) and physical(+%d) resistances for 8 turns.
+		The bonus will increase with the Constitution stat]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
+	end,
+}

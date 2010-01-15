@@ -30,7 +30,7 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Bree-man",
 	desc = {
-		"Humans hailing from the northen town of Bree. A common kind of man.",
+		"Humans hailing from the northen town of Bree. A common kind of man, unremarkable in all respects.",
 	},
 	copy = {
 		default_wilderness = {"wilderness/main", 41, 18},
@@ -44,6 +44,7 @@ newBirthDescriptor
 	desc = {
 		"The greatest of the Edain, humans in all respects but",
 		"stronger, smarter and wiser.",
+		"They posses the Gift of Kings which allows them to regenerate their wounds once in a while.",
 	},
 	stats = { str=1, cun=1, dex=1, wil=1 },
 	experience = 1.25,

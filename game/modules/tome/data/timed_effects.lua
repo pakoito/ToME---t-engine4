@@ -184,3 +184,23 @@ newEffect{
 		if self.player then game.level.map:redisplay() end
 	end,
 }
+
+newEffect{
+	name = "DWARVEN_RESILIENCE",
+	desc = "Dwarven Resilience",
+	type = "physical",
+	status = "beneficial",
+	parameters = { armor=10, mental=10, physical=10 },
+	on_gain = function(self, err) return "#Target#'s skin turns to stone." end,
+	on_lose = function(self, err) return "#Target# returns to normal." end,
+	activate = function(self, eff)
+		eff.aid = self:addTemporaryValue("combat_armor", eff.armor)
+		eff.pid = self:addTemporaryValue("combat_physresist", eff.physical)
+		eff.sid = self:addTemporaryValue("combat_spellresist", eff.spell)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_armor", eff.aid)
+		self:removeTemporaryValue("combat_physresist", eff.pid)
+		self:removeTemporaryValue("combat_spellresist", eff.sid)
+	end,
+}

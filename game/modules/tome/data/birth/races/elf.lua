@@ -6,7 +6,7 @@ newBirthDescriptor{
 	name = "Elf",
 	desc = {
 		"Quendi are Elves, the first children of Eru.",
-		"The first Elves awoke by Cuiviénen, the Water of Awakening in the far east of Middle-earth, long Ages before the Rising of the Sun or Moon.",
+		"The first Elves awoke by CuiviÃ©nen, the Water of Awakening in the far east of Middle-earth, long Ages before the Rising of the Sun or Moon.",
 		"Unlike Men, the Elves are not subject to death by old age.",
 	},
 	descriptor_choices =
@@ -36,7 +36,8 @@ newBirthDescriptor
 	name = "Nandor",
 	desc = {
 		"Elves who turned aside from the Great Journey in the early days and settled in th east of the Misty Mountains.",
-		"Both the Wood-Elves of Mirkwood and the Elves of Lórien are Nandor.",
+		"Both the Wood-Elves of Mirkwood and the Elves of LÃ³rien are Nandor.",
+		"They posses the Grace of the Eldar talent which allows them a boost of speed every once in a while.",
 	},
 	stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
 	experience = 1.3,
@@ -45,7 +46,7 @@ newBirthDescriptor
 		life_rating = 9,
 	},
 }
-
+--[[
 newBirthDescriptor
 {
 	type = "subrace",
@@ -56,3 +57,4 @@ newBirthDescriptor
 	stats = { str=-1, mag=1, wil=1, cun=3, dex=2, con=0 },
 	experience = 1.1,
 }
+]]

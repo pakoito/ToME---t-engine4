@@ -24,7 +24,7 @@ newBirthDescriptor{
 	},
 	stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
 	talents = {
---		[ActorTalents.T_],
+		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},
 	copy = {
 		default_wilderness = {"wilderness/main", 41, 18},
