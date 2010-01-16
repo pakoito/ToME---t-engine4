@@ -34,7 +34,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 		[Talents.T_MANA_POOL]=1,
 		[Talents.T_ICE_STORM]=1,
 		[Talents.T_TIDAL_WAVE]=1,
-		[Talents.T_FREEZE]=1,
+		[Talents.T_FREEZE]=2,
 	},
 
 	autolevel = "caster",
