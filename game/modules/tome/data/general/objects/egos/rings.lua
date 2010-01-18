@@ -127,7 +127,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		combat_spellresist = resolvers.mbonus(15, 5),
+		combat_physresist = resolvers.mbonus(15, 5),
 	},
 }
 

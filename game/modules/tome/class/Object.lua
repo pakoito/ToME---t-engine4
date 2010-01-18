@@ -81,6 +81,7 @@ function _M:getDesc()
 	end
 
 	local w = self.wielder or {}
+	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Peneration %d, Physical Crit %d%%, Physical damage %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
 	if w.combat_armor or w.combat_def then desc[#desc+1] = ("Armor %d, Defense %d"):format(w.combat_armor or 0, w.combat_def or 0) end
 	if w.fatigue then desc[#desc+1] = ("Fatigue %d%%"):format(w.fatigue) end
 
@@ -97,8 +98,14 @@ function _M:getDesc()
 		for res, i in pairs(w.resists) do
 			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
 		end
-		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(dm, ','))
+		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
 	end
+
+	if w.combat_physresist then desc[#desc+1] = ("Increases physical resistance: %s."):format(w.combat_physresist) end
+	if w.combat_spellresist then desc[#desc+1] = ("Increases spell resistance: %s."):format(w.combat_spellresist) end
+
+	if w.life_regen then desc[#desc+1] = ("Regenerates %d hitpoints a turn."):format(w.life_regen) end
+	if w.mana_regen then desc[#desc+1] = ("Regenerates %d mana a turn."):format(w.mana_regen) end
 
 	if w.max_life then desc[#desc+1] = ("Maximun life %d"):format(w.max_life) end
 	if w.max_mana then desc[#desc+1] = ("Maximun mana %d"):format(w.max_mana) end
