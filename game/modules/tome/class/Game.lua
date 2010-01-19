@@ -137,7 +137,7 @@ end
 function _M:save()
 	return class.save(self, {w=true, h=true, zone=true, player=true, level=true, entities=true,
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
-		always_target=true, gfxmode=true;
+		always_target=true, gfxmode=true, uniques=true
 	}, true)
 end
 
@@ -150,6 +150,7 @@ end
 
 function _M:changeLevel(lev, zone)
 	if zone then
+		if self.zone then self.zone:leaveLevel() end
 		self.zone = Zone.new(zone)
 	end
 	self.zone:getLevel(self, lev, (self.level and not zone) and self.level.level or -1000)

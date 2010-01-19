@@ -114,6 +114,37 @@ function _M:resolve(t)
 	-- Finish resolving stuff
 	if t == self then
 		if self.resolveLevel then self:resolveLevel() end
+
+		if self.unique and type(self.unique) == "boolean" then
+			self.unique = self.name
+		end
+	end
+end
+
+--- Call when the entity is actually added to a level/whatever
+-- This helps ensuring uniqueness of uniques
+function _M:added()
+	if self.unique then
+		game.uniques[self.unique] = true
+		print("Added unique", self.unique)
+	end
+end
+
+--- Call when the entity is actually removed from existance
+-- This helps ensuring uniqueness of uniques.
+-- This recursively remvoes inventories too, if you need anythign special, overload this
+function _M:removed()
+	if self.inven then
+		for _, inven in pairs(self.inven) do
+			for i, o in ipairs(inven) do
+				o:removed()
+			end
+		end
+	end
+
+	if self.unique then
+		game.uniques[self.unique] = nil
+		print("Removed unique", self.unique)
 	end
 end
 

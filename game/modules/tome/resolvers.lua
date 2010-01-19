@@ -19,7 +19,7 @@ function resolvers.calc.equip(t, e)
 
 			-- Do not drop it unless it is an ego or better
 			if not o.egoed and not o.unique then o.no_drop = true end
-			print(o.name, o.unique, o.no_drop)
+			o:added()
 		end
 	end
 	-- Delete the origin field
@@ -44,6 +44,7 @@ function resolvers.calc.inventory(t, e)
 		if o then
 			print("Zone made us an inventory according to filter!", o:getName())
 			e:addObject(e.INVEN_INVEN, o)
+			o:added()
 		end
 	end
 	e:sortInven()
@@ -73,6 +74,7 @@ function resolvers.calc.drops(t, e)
 		if o then
 			print("Zone made us an drop according to filter!", o:getName())
 			e:addObject(e.INVEN_INVEN, o)
+			o:added()
 		end
 	end
 	-- Delete the origin field

@@ -33,6 +33,7 @@ function _M:generate()
 			end
 			if tries < 100 then
 				self.map(x, y, Map.OBJECT, o)
+				o:added()
 			end
 		end
 	end

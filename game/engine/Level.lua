@@ -130,3 +130,15 @@ end
 function _M:getEntitiesList(type)
 	return self.entities_list[type]
 end
+
+--- Removed, so we remove all entities
+function _M:removed()
+	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
+		local z = i + j * self.map.w
+		if self.map.map[z] then
+			for _, e in pairs(self.map.map[z]) do
+				e:removed()
+			end
+		end
+	end end
+end

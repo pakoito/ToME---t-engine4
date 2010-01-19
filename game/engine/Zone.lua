@@ -87,11 +87,16 @@ end
 
 --- Checks an entity against a filter
 function _M:checkFilter(e, filter)
+	if e.unique and game.uniques[e.unique] then print("refused unique", e.name, e.unique) return false end
+
 	if not filter then return true end
 
 	if filter.type and filter.type ~= e.type then return false end
 	if filter.subtype and filter.subtype ~= e.subtype then return false end
 	if filter.name and filter.name ~= e.name then return false end
+
+	if e.unique then print("accepted unique", e.name, e.unique) end
+
 	return true
 end
 
@@ -210,20 +215,28 @@ function _M:getLevelData(lev)
 	return res
 end
 
---- Asks the zone to generate a level of level "lev"
--- @param lev the level (from 1 to zone.max_level)
--- @return a Level object
-function _M:getLevel(game, lev, old_lev, no_close)
+--- Leave the level, forgetting uniques and such
+function _M:leaveLevel(no_close)
+print("leaving unique")
 	-- Before doing anything else, close the current level
 	if not no_close and game.level and game.level.map then
 		if game.level.data.persistant then
 			local save = Savefile.new(game.save_name)
 			save:saveLevel(game.level)
 			save:close()
+		else
+			game.level:removed()
 		end
 
 		game.level.map:close()
 	end
+end
+
+--- Asks the zone to generate a level of level "lev"
+-- @param lev the level (from 1 to zone.max_level)
+-- @return a Level object
+function _M:getLevel(game, lev, old_lev, no_close)
+	self:leaveLevel(no_close)
 
 	local level_data = self:getLevelData(lev)
 

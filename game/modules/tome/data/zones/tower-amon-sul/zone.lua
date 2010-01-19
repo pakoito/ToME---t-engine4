@@ -27,7 +27,7 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {4, 6},
+			nb_object = {40, 60},
 			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 	},

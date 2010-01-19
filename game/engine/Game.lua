@@ -21,6 +21,8 @@ function _M:init(keyhandler)
 
 	self.mouse = engine.Mouse.new()
 	self.mouse:setCurrent()
+
+	self.uniques = {}
 end
 
 function _M:loaded()

@@ -34,6 +34,7 @@ function _M:generate()
 			if tries < 100 then
 				m:move(x, y, true)
 				self.level:addEntity(m)
+				m:added()
 
 				-- Levelup ?
 				if self.adjust_level then
@@ -58,6 +59,7 @@ function _M:generate()
 			if tries < 100 then
 				m:move(x, y, true)
 				self.level:addEntity(m)
+				m:added()
 
 				-- Levelup ?
 				if self.adjust_level then

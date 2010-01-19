@@ -2,7 +2,7 @@ load("/data/general/objects/objects.lua")
 
 -- Artifact, droped (and used!) by the Shade of Angmar
 newEntity{ base = "BASE_STAFF",
-	define_as = "STAFF_ANGMAR",
+	define_as = "STAFF_ANGMAR", rarity=false,
 	name = "Angmar's Fall", unique=true,
 	require = { stat = { mag=25 }, },
 	cost = 5,
