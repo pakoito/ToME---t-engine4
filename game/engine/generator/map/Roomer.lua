@@ -215,29 +215,8 @@ function _M:tunnel(x1, y1, x2, y2, id)
 	end
 end
 
---- Make rooms and connect them with tunnels
-function _M:generate(lev, old_lev)
-	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
-	end end
-
-	local nb_room = self.data.nb_rooms or 10
-	local rooms = {}
-	while nb_room > 0 do
-		local r = self:roomAlloc(self.rooms[rng.range(1, #self.rooms)], #rooms+1)
-		if r then rooms[#rooms+1] = r end
-		nb_room = nb_room - 1
-	end
-
-	-- Tunnels !
-	print("Begin tunnel", #rooms, rooms[1])
-	local tx, ty = rooms[1].cx, rooms[1].cy
-	for ii = 2, #rooms + 1 do
-		local i = util.boundWrap(ii, 1, #rooms)
-		self:tunnel(tx, ty, rooms[i].cx, rooms[i].cy, rooms[i].id)
-		tx, ty = rooms[i].cx, rooms[i].cy
-	end
-
+--- Create the stairs inside the level
+function _M:makeStairsInside(lev, old_lev)
 	-- Put down stairs
 	local dx, dy
 	if lev < self.zone.max_level or self.data.force_last_stair then
@@ -264,5 +243,80 @@ function _M:generate(lev, old_lev)
 		return ux, uy
 	else
 		return dx, dy
+	end
+end
+
+--- Create the stairs on the sides
+function _M:makeStairsSides(lev, old_lev, sides, rooms)
+	-- Put down stairs
+	local dx, dy
+	if lev < self.zone.max_level or self.data.force_last_stair then
+		while true do
+			if     sides[2] == 4 then dx, dy = 0, rng.range(1, self.map.h - 1)
+			elseif sides[2] == 6 then dx, dy = self.map.w - 1, rng.range(1, self.map.h - 1)
+			elseif sides[2] == 8 then dx, dy = rng.range(1, self.map.w - 1), 0
+			elseif sides[2] == 2 then dx, dy = rng.range(1, self.map.w - 1), self.map.h - 1
+			end
+
+			if not self.room_map[dx][dy].special then
+				local i = rng.range(1, #rooms)
+				self:tunnel(dx, dy, rooms[i].cx, rooms[i].cy, rooms[i].id)
+				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				break
+			end
+		end
+	end
+
+	-- Put up stairs
+	local ux, uy
+	while true do
+		if     sides[1] == 4 then ux, uy = 0, rng.range(1, self.map.h - 1)
+		elseif sides[1] == 6 then ux, uy = self.map.w - 1, rng.range(1, self.map.h - 1)
+		elseif sides[1] == 8 then ux, uy = rng.range(1, self.map.w - 1), 0
+		elseif sides[1] == 2 then ux, uy = rng.range(1, self.map.w - 1), self.map.h - 1
+		end
+
+		if not self.room_map[ux][uy].special then
+			local i = rng.range(1, #rooms)
+			self:tunnel(ux, uy, rooms[i].cx, rooms[i].cy, rooms[i].id)
+			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			break
+		end
+	end
+
+	if lev > old_lev then
+		return ux, uy
+	else
+		return dx, dy
+	end
+end
+
+--- Make rooms and connect them with tunnels
+function _M:generate(lev, old_lev)
+	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
+		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
+	end end
+
+	local nb_room = self.data.nb_rooms or 10
+	local rooms = {}
+	while nb_room > 0 do
+		local r = self:roomAlloc(self.rooms[rng.range(1, #self.rooms)], #rooms+1)
+		if r then rooms[#rooms+1] = r end
+		nb_room = nb_room - 1
+	end
+
+	-- Tunnels !
+	print("Begin tunnel", #rooms, rooms[1])
+	local tx, ty = rooms[1].cx, rooms[1].cy
+	for ii = 2, #rooms + 1 do
+		local i = util.boundWrap(ii, 1, #rooms)
+		self:tunnel(tx, ty, rooms[i].cx, rooms[i].cy, rooms[i].id)
+		tx, ty = rooms[i].cx, rooms[i].cy
+	end
+
+	if self.data.edge_entrances then
+		return self:makeStairsSides(lev, old_lev, self.data.edge_entrances, rooms)
+	else
+		return self:makeStairsInside(lev, old_lev)
 	end
 end
