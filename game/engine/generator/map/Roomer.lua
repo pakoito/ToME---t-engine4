@@ -34,6 +34,12 @@ function _M:loadRoom(file)
 	local ret, err = f()
 	if not ret and err then error(err) end
 
+	-- We got a room generator function, save it for later
+	if type(ret) == "function" then
+		print("loaded room generator",file,ret)
+		return ret
+	end
+
 	-- Init the room with name and size
 	local t = { name=file, w=ret[1]:len(), h=#ret }
 
@@ -64,6 +70,10 @@ end
 
 --- Make up a room
 function _M:roomAlloc(room, id)
+	if type(room) == 'function' then
+		print("room generator", room, "is making a room")
+		room = room(self, id)
+	end
 	print("alloc", room.name)
 
 	local tries = 100
@@ -82,19 +92,23 @@ function _M:roomAlloc(room, id)
 		if ok then
 			local is_lit = rng.percent(self.data.lite_room_chance)
 
-			-- ok alloc it
-			for i = 1, room.w do
-				for j = 1, room.h do
-					self.room_map[i-1+x][j-1+y].room = id
-					local c = room[i][j]
-					if c == '!' then
-						self.room_map[i-1+x][j-1+y].room = nil
-						self.room_map[i-1+x][j-1+y].can_open = true
-						self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve('#')])
-					else
-						self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve(c)])
+			-- ok alloc it using the default generator or a specific one
+			if room.generator then
+				room:generator(x, y, is_lit)
+			else
+				for i = 1, room.w do
+					for j = 1, room.h do
+						self.room_map[i-1+x][j-1+y].room = id
+						local c = room[i][j]
+						if c == '!' then
+							self.room_map[i-1+x][j-1+y].room = nil
+							self.room_map[i-1+x][j-1+y].can_open = true
+							self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve('#')])
+						else
+							self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve(c)])
+						end
+						if is_lit then self.map.lites(i-1+x, j-1+y, true) end
 					end
-					if is_lit then self.map.lites(i-1+x, j-1+y, true) end
 				end
 			end
 			print("room allocated at", x, y,"with center",math.floor(x+(room.w-1)/2), math.floor(y+(room.h-1)/2))

@@ -1,7 +1,7 @@
 return function(gen, id)
 	local w = rng.range(5, 12)
 	local h = rng.range(5, 12)
-	return { name="simple"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
+	return { name="forest_clearing"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
 		for i = 1, self.w do
 			for j = 1, self.h do
 				if i == 1 or i == self.w or j == 1 or j == self.h then

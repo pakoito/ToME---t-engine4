@@ -11,6 +11,7 @@ return {
 		map = {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
+			edge_entrances = {6,4},
 			rooms = {"simple", "pilar"},
 			['.'] = "GRASS_DARK1",
 			['#'] = "TREE_DARK1",
