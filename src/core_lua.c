@@ -547,7 +547,7 @@ static void draw_textured_quad(int x, int y, int w, int h) {
 
 	while (realw < w) realw *= 2;
 	while (realh < h) realh *= 2;
-	
+
 	GLfloat texw = (GLfloat)w/realw;
 	GLfloat texh = (GLfloat)h/realh;
 
@@ -747,8 +747,16 @@ static int sdl_set_window_size(lua_State *L)
 	return 1;
 }
 
+extern void on_redraw();
+static int sdl_redraw_screen(lua_State *L)
+{
+	on_redraw();
+	return 0;
+}
+
 static const struct luaL_reg displaylib[] =
 {
+	{"forceRedraw", sdl_redraw_screen},
 	{"fullscreen", sdl_fullscreen},
 	{"size", sdl_screen_size},
 	{"newFont", sdl_new_font},

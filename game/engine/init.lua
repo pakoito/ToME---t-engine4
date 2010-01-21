@@ -48,15 +48,6 @@ key:setCurrent()
 -- Load the game module
 game = false
 
-require "engine.Heightmap"
-do
-local f = engine.Heightmap.new(10,10,3.5)
-f:generate()
-f:displayDebug("   #")
-os.exit()
-end
-
-
 engine.Game:setResolution(config.settings.window.size)
 
 util.showMainMenu()

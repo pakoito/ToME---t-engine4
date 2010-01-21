@@ -12,7 +12,7 @@ return {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			edge_entrances = {4,6},
-			rooms = {"simple", "pilar"},
+			rooms = {"forest_clearing"},
 			['.'] = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
 			['#'] = "TREE",
 			up = "UP",

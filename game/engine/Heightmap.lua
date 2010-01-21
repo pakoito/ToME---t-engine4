@@ -8,11 +8,12 @@ _M.max = 100000
 _M.min = 0
 
 --- Creates the fractal generator for the specified heightmap size
-function _M:init(w, h, roughness)
+function _M:init(w, h, roughness, start)
 	self.w = w
 	self.h = h
 	self.roughness = roughness or 1.2
 	self.hmap = {}
+	self.start = start or {}
 
 	print("Making heightmap", w, h)
 
@@ -30,23 +31,11 @@ function _M:generate()
 	local rects = {}
 
 	-- Init the four corners
---	self.hmap[1][1]           = rng.range(self.min, self.max / 10)
---	self.hmap[1][self.h]      = rng.range(self.min, self.max / 10)
---	self.hmap[self.w][1]      = rng.range(self.min, self.max / 10)
---	self.hmap[self.w][self.h] = rng.range(self.min, self.max / 10)
---	self.hmap[1][1]           = rng.range(self.min, self.max)
---	self.hmap[1][self.h]      = rng.range(self.min, self.max)
---	self.hmap[self.w][1]      = rng.range(self.min, self.max)
---	self.hmap[self.w][self.h] = rng.range(self.min, self.max)
---	self.hmap[1][1]           = 0
---	self.hmap[1][self.h]      = 0
---	self.hmap[self.w][1]      = 0
---	self.hmap[self.w][self.h] = 0
-	self.hmap[1][1]           = self.max
-	self.hmap[1][self.h]      = self.max
-	self.hmap[self.w][1]      = self.max
-	self.hmap[self.w][self.h] = self.max
-	rects[#rects+1] = {1, 1, self.w, self.h, force_middle=0}
+	self.hmap[1][1]           = self.start.up_left or rng.range(self.min, self.max)
+	self.hmap[1][self.h]      = self.start.down_left or rng.range(self.min, self.max)
+	self.hmap[self.w][1]      = self.start.up_right or rng.range(self.min, self.max)
+	self.hmap[self.w][self.h] = self.start.down_right or rng.range(self.min, self.max)
+	rects[#rects+1] = {1, 1, self.w, self.h, force_middle=self.start.middle}
 
 	-- While we have subzones to handle, handle them
 	while #rects > 0 do

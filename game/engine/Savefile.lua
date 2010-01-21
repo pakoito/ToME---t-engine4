@@ -1,4 +1,5 @@
 require "engine.class"
+local Dialog = require "engine.Dialog"
 
 --- Savefile code
 -- T-Engine4 savefiles are direct serialization of in game objects<br/>
@@ -83,12 +84,17 @@ function _M:saveGame(game)
 	self:saveObject(game, zip)
 	zip:close()
 
+	local popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
+	core.display.forceRedraw()
+
 	local desc = game:getSaveDescription()
 	local f = fs.open(self.save_dir.."desc.lua", "w")
 	f:write(("name = %q\n"):format(desc.name))
 	f:write(("short_name = %q\n"):format(self.short_name))
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
+
+	game:unregisterDialog(popup)
 end
 
 --- Save a level
@@ -141,6 +147,9 @@ function _M:loadGame()
 
 	fs.mount(path, self.load_dir)
 
+	local popup = Dialog:simplePopup("Loading game", "Please wait while loading the game...")
+	core.display.forceRedraw()
+
 	local loadedGame = self:loadReal("main")
 
 	-- Delay loaded must run
@@ -150,6 +159,9 @@ function _M:loadGame()
 	end
 
 	fs.umount(path)
+
+	game:unregisterDialog(popup)
+
 	return loadedGame
 end
 

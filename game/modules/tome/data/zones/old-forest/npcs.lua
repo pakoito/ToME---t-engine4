@@ -1,4 +1,4 @@
-load("/data/general/npcs/baer.lua")
+load("/data/general/npcs/bear.lua")
 load("/data/general/npcs/vermin.lua")
 load("/data/general/npcs/wolf.lua")
 load("/data/general/npcs/snake.lua")
