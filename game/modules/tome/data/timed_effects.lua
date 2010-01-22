@@ -136,6 +136,22 @@ newEffect{
 }
 
 newEffect{
+	name = "SLOW",
+	desc = "Slow",
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# slows down.", "+Slow" end,
+	on_lose = function(self, err) return "#Target# speeds up.", "-Slow" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("energy", {mod=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("energy", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "INVISIBILITY",
 	desc = "Invisibility",
 	type = "magical",
@@ -220,5 +236,25 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_physcrit", eff.pid)
 		self:removeTemporaryValue("combat_spellcrit", eff.sid)
+	end,
+}
+
+newEffect{
+	name = "TIME_PRISON",
+	desc = "Time Prison",
+	type = "other",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is removed from time!", "+Out of Time" end,
+	on_lose = function(self, err) return "#Target# is into normal time.", "-Out of Time" end,
+	activate = function(self, eff)
+		eff.iid = self:addTemporaryValue("invulnerable", 1)
+		self.energy.value = 0
+	end,
+	on_timeout = function(self, eff)
+		self.energy.value = 0
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("invulnerable", eff.iid)
 	end,
 }

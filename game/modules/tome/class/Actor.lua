@@ -138,6 +138,10 @@ end
 
 --- Called before taking a hit, it's the chance to check for shields
 function _M:onTakeHit(value, src)
+	if self:attr("invulnerable") then
+		return 0
+	end
+
 	if self:attr("mana_shield") then
 		local mana = self:getMana()
 		local mana_val = value * self:attr("mana_shield")

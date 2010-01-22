@@ -74,7 +74,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		local power = 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280
+		local power = math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
 		return {
 			shield = self:addTemporaryValue("mana_shield", power),
 		}
@@ -85,6 +85,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage taken.
-		The damage to mana ratio increases with the Magic stat]]):format(3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
+		The damage to mana ratio increases with the Magic stat]]):format(math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280))
 	end,
 }
