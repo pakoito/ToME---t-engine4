@@ -32,6 +32,8 @@ function _M:init(t, no_default)
 	}
 	mod.class.Actor.init(self, t, no_default)
 	self.player = true
+	self.type = "humanoid"
+	self.subtype = "player"
 	self.faction = "players"
 
 	self.display='@'

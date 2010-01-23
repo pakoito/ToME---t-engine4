@@ -27,6 +27,7 @@ newBirthDescriptor{
 		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},
 	copy = {
+		type = "humanoid", subtype="dwarf",
 		default_wilderness = {"wilderness/main", 41, 18},
 		life_rating=12,
 	},

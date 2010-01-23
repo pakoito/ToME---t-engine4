@@ -52,6 +52,8 @@ function _M:init(t, no_default)
 	t.mana_rating = t.mana_rating or 10
 	t.stamina_rating = t.stamina_rating or 10
 
+	t.esp = {range=10}
+
 	-- Resistances
 	t.resists = t.resists or {}
 
@@ -335,7 +337,23 @@ end
 --- Can the actor see the target actor
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
-function _M:canSee(actor)
+function _M:canSee(actor, def, def_pct)
+	-- ESP, see all, or only types/subtypes
+	if self:attr("esp") then
+		local esp = self:attr("esp")
+		-- Full ESP
+		if esp.all and esp.all > 0 then
+			if game.level then
+				game.level.map.seens(actor.x, actor.y, true)
+			end
+			return true, 100
+		end
+
+		-- Type based ESP
+		if esp[actor.type] and esp[actor.type] > 0 then return true, 100 end
+		if esp[actor.type.."/"..actor.subtype] and esp[actor.type.."/"..actor.subtype] > 0 then return true, 100 end
+	end
+
 	-- Blindness means can't see anything
 	if self:attr("blind") then return false, 0 end
 
@@ -343,7 +361,6 @@ function _M:canSee(actor)
 	if actor:attr("stealth") and actor ~= self then
 		local def = self.level / 2 + self:getCun(25)
 		local hit, chance = self:checkHit(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
-		print("Stealth", actor:attr("stealth") + (actor:attr("inc_stealth") or 0), "<:>", def, " ===> ", hit, chance)
 		if not hit then
 			return false, chance
 		end
@@ -358,7 +375,11 @@ function _M:canSee(actor)
 			return false, chance
 		end
 	end
-	return true, 100
+	if def ~= nil then
+		return def, def_pct
+	else
+		return true, 100
+	end
 end
 
 --- Can the target be applied some effects

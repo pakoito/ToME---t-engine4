@@ -80,6 +80,7 @@ end
 --- Serialization
 function _M:save()
 	return class.save(self, {
+		_fov_esp = true,
 		_fov_lite = true,
 		_fov = true,
 		_map = true,
@@ -125,6 +126,7 @@ function _M:loaded()
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
 	self._fov = core.fov.new(_M.opaque, _M.apply, self)
 	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
+	self._fov_esp = core.fov.new(_M.opaqueESP, _M.applyESP, self)
 	self.changed = true
 
 	self:redisplay()
@@ -154,6 +156,7 @@ end
 function _M:close()
 	self._fov = false
 	self._fov_lite = false
+	self._fov_esp = false
 end
 
 --- Runs the FOV algorithm on the map
@@ -184,6 +187,20 @@ function _M:fovLite(x, y, d)
 	self._fov_lite(x, y, d)
 end
 
+--- Runs the FOV algorithm on the map, finding ESP(Extra Sensorial Power) targets
+-- @param x source point of the ligth
+-- @param y source point of the ligth
+-- @param d radius of the light
+function _M:fovESP(x, y, d)
+	-- Reset seen grids
+	if self.clean_fov then
+		self.clean_fov = false
+		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+		self._map:cleanSeen();
+	end
+	self._fov_esp(x, y, d)
+end
+
 function _M:updateMap(x, y)
 	local g = self(x, y, TERRAIN)
 	local o = self(x, y, OBJECT)
@@ -192,7 +209,7 @@ function _M:updateMap(x, y)
 	if g then g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image) end
 	if o then o = self.tiles:get(o.display, o.color_r, o.color_g, o.color_b, o.color_br, o.color_bg, o.color_bb, o.image) end
 	if a then
-		-- Handles invisibility and telepathy and otehr such things
+		-- Handles invisibility and telepathy and other such things
 		if not self.actor_player or self.actor_player:canSee(a) then
 			a = self.tiles:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image)
 		else
@@ -288,6 +305,14 @@ function _M:opaque(x, y)
 	if e and e:check("block_sight") then return true end
 end
 
+--- Sets checks if a grid lets ESP pass through
+-- Used by FOV ESP code
+function _M:opaqueESP(x, y)
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
+	local e = self(x, y, TERRAIN)
+	if e and e:check("block_esp") then return true end
+end
+
 --- Sets a grid as seen and remembered
 -- Used by FOV code
 function _M:apply(x, y)
@@ -310,6 +335,18 @@ function _M:applyLite(x, y)
 	end
 	self.seens[x + y * self.w] = true
 	self._map:setSeen(x, y, true)
+end
+
+--- Sets a grid as seen if ESP'ed
+-- Used by FOV code
+function _M:applyESP(x, y)
+	if not self.actor_player then return end
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	local a = self(x, y, ACTOR)
+	if a and self.actor_player:canSee(a, false, 0) then
+		self.seens[x + y * self.w] = true
+		self._map:setSeen(x, y, true)
+	end
 end
 
 --- Check all entities of the grid for a property

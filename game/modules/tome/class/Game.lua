@@ -205,6 +205,7 @@ function _M:display()
 	if self.level and self.level.map then
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
+			self.level.map:fovESP(self.player.x, self.player.y, self.player.esp.range or 10)
 			self.level.map:fov(self.player.x, self.player.y, 20)
 			if self.player.lite > 0 then self.level.map:fovLite(self.player.x, self.player.y, self.player.lite) end
 		end

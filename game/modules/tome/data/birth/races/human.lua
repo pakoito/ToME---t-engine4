@@ -20,6 +20,9 @@ newBirthDescriptor{
 	},
 	talents = {},
 	experience = 1.0,
+	copy = {
+		type = "humanoid", subtype="human",
+	},
 }
 
 ---------------------------------------------------------

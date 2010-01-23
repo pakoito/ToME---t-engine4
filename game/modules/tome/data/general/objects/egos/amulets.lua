@@ -56,3 +56,21 @@ newEntity{
 		e.wielder.talents_types_mastery[tt] = (10 + rng.mbonus(30, resolvers.current_level, 50)) / 100
 	end),
 }
+newEntity{
+	name = " of greater telepathy",
+	level_range = {40, 50},
+	rarity = 15,
+	cost = 15,
+	wielder = {
+		esp = {all=1},
+	},
+}
+newEntity{
+	name = " of telepathic range",
+	level_range = {40, 50},
+	rarity = 15,
+	cost = 15,
+	wielder = {
+		esp = {range=10},
+	},
+}

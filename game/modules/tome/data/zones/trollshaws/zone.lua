@@ -29,6 +29,8 @@ return {
 			class = "engine.generator.object.Random",
 			nb_object = {4, 6},
 			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
+--			nb_object = {400, 600},
+--			filters = { {type="jewelry", subtype="amulet" }, }
 		},
 	},
 	levels =

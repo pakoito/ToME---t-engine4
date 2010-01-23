@@ -102,6 +102,22 @@ function _M:getDesc()
 		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
 	end
 
+	if w.esp then
+		local rs = {}
+		for type, i in pairs(w.esp) do
+			if type == "all" then rs[#rs+1] = "all"
+			else
+				local _, _, t, st = type:find("^([^/]+)/?(.*)$")
+				if st then
+					rs[#rs+1] = st
+				else
+					rs[#rs+1] = t
+				end
+			end
+		end
+		desc[#desc+1] = ("Grants telepathy to %s."):format(table.concat(rs, ','))
+	end
+
 	if w.talents_types_mastery then
 		local tms = {}
 		for ttn, i in pairs(w.talents_types_mastery) do

@@ -22,6 +22,7 @@ newBirthDescriptor{
 --		[ActorTalents.T_IMPROVED_MANA_I]=1,
 	},
 	copy = {
+		type = "humanoid", subtype="elf",
 		default_wilderness = {"wilderness/main", 41, 18},
 	},
 	experience = 1.05,

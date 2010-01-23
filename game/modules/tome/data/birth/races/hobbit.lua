@@ -36,6 +36,7 @@ newBirthDescriptor{
 		[ActorTalents.T_HOBBIT_LUCK]=1,
 	},
 	copy = {
+		type = "humanoid", subtype="hobbit",
 		life_rating = 12,
 		default_wilderness = {"wilderness/main", 41, 18},
 	},
