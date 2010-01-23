@@ -83,9 +83,9 @@ function _M:setEffect(eff_id, dur, p, silent)
 				game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
 			end
 		end
-		if _M.tempeffect_def[eff_id].activate then _M.tempeffect_def[eff_id].activate(self, p) end
-		self.changed = true
 	end
+	if _M.tempeffect_def[eff_id].activate then _M.tempeffect_def[eff_id].activate(self, p) end
+	self.changed = true
 end
 
 --- Check timed effect

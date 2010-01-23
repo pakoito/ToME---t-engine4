@@ -63,15 +63,17 @@ newTalent{
 		local power = 4 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
 		return {
 			invisible = self:addTemporaryValue("invisible", power),
+			drain = self:addTemporaryValue("mana_regen", 5),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("invisible", p.invisible)
+		self:removeTemporaryValue("mana_regen", p.drain)
 		return true
 	end,
 	info = function(self, t)
 		return ([[The caster fades from sight, granting %d bonus to invisibility.
+		This powerful spell constantly drains your mana while active.
 		The bonus will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
 	end,
 }
-

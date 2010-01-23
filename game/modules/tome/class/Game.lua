@@ -208,6 +208,26 @@ function _M:display()
 			self.level.map:fovESP(self.player.x, self.player.y, self.player.esp.range or 10)
 			self.level.map:fov(self.player.x, self.player.y, 20)
 			if self.player.lite > 0 then self.level.map:fovLite(self.player.x, self.player.y, self.player.lite) end
+
+			--
+			-- Handle Sense spell
+			--
+			if self.player:attr("detect_range") then
+				core.fov.calc_circle(self.player.x, self.player.y, self.player:attr("detect_range"), function(map, lx, ly)
+					if game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_sense") then return true end
+				end, function(map, lx, ly)
+					local ok = false
+					print(game.player:attr("detect_actor"), game.level.map(lx, ly, game.level.map.ACTOR), "::", lx, ly)
+					if game.player:attr("detect_actor") and game.level.map(lx, ly, game.level.map.ACTOR) then ok = true end
+					if game.player:attr("detect_object") and game.level.map(lx, ly, game.level.map.OBJECT) then ok = true end
+--					if game.player:attr("detect_trap") and game.level.map(lx, ly, game.level.map.ACTOR) then ok = true end
+
+					if ok then
+						game.level.map.seens(lx, ly, true)
+					end
+				end, self)
+				game.level.map:redisplay()
+			end
 		end
 		self.level.map:display()
 
