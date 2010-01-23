@@ -8,16 +8,16 @@ _M.talents_types_def = {}
 
 --- Defines actor talents
 -- Static!
-function _M:loadDefinition(file)
+function _M:loadDefinition(file, env)
 	local f, err = loadfile(file)
 	if not f and err then error(err) end
-	setfenv(f, setmetatable({
+	setfenv(f, setmetatable(env or {
 		DamageType = require("engine.DamageType"),
 		Talents = self,
 		Map = require("engine.Map"),
 		newTalent = function(t) self:newTalent(t) end,
 		newTalentType = function(t) self:newTalentType(t) end,
-		load = function(f) self:loadDefinition(f) end
+		load = function(f) self:loadDefinition(f, getfenv(2)) end
 	}, {__index=_G}))
 	f()
 end

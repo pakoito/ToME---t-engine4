@@ -23,31 +23,9 @@ newTalent{
 }
 
 newTalent{
-	name = "Globe of Light",
+	name = "Fireflash",
 	type = {"spell/fire",2},
 	require = spells_req2,
-	points = 5,
-	mana = 5,
-	cooldown = 14,
-	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=false, radius=5 + self:getTalentLevel(t)}
-		self:project(tg, self.x, self.y, DamageType.LIGHT, 1)
-		if self:getTalentLevel(t) >= 3 then
-			self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
-		end
-		return true
-	end,
-	info = function(self, t)
-		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
-		At level 3 it also blinds all who sees it (except the caster).
-		The radius will increase with the Magic stat]]):format(5 + self:getTalentLevel(t))
-	end,
-}
-
-newTalent{
-	name = "Fireflash",
-	type = {"spell/fire",3},
-	require = spells_req3,
 	points = 5,
 	mana = 40,
 	cooldown = 8,

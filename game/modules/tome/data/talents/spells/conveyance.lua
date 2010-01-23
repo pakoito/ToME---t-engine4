@@ -115,22 +115,24 @@ newTalent{
 	type = {"spell/conveyance",4},
 	mode = "sustained",
 	require = spells_req4,
-	points = 1,
-	points = 2,
+	points = 5,
 	cooldown = 40,
-	sustain_mana = 100,
+	sustain_mana = 200,
 	tactical = {
 		MOVEMENT = 20,
 	},
 	activate = function(self, t)
-		self:attr("prob_travel", 1)
-		return true
+		local power = math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
+		return {
+			prob_travel = self:addTemporaryValue("prob_travel", power),
+		}
 	end,
-	deactivate = function(self, t)
-		self:attr("prob_travel", -1)
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("prob_travel", p.prob_travel)
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you hit a solid surface this spell tears down the laws of probability to make you instantly appear on the other side.]])
+		return ([[When you hit a solid surface this spell tears down the laws of probability to make you instantly appear on the other side.
+		Works up to %d grids.]]):format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
 	end,
 }

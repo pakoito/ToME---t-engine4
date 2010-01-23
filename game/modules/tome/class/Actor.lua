@@ -97,7 +97,7 @@ function _M:move(x, y, force)
 	if force or self:enoughEnergy() then
 		-- Should we prob travel through walls ?
 		if not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
-			moved = self:probabilityTravel(x, y)
+			moved = self:probabilityTravel(x, y, self:attr("prob_travel"))
 		-- Never move but tries to attack ? ok
 		elseif not force and self:attr("never_move") then
 			-- A bit weird, but this simple asks the collision code to detect an attack
@@ -112,14 +112,15 @@ function _M:move(x, y, force)
 end
 
 --- Blink through walls
-function _M:probabilityTravel(x, y)
+function _M:probabilityTravel(x, y, dist)
 	local dirx, diry = x - self.x, y - self.y
 	local tx, ty = x, y
-	while game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) do
+	while game.level.map:isBound(tx, ty) and game.level.map:checkAllEntities(tx, ty, "block_move", self) and dist > 0 do
 		tx = tx + dirx
 		ty = ty + diry
+		dist = dist - 1
 	end
-	if game.level.map:isBound(x, y) then
+	if game.level.map:isBound(tx, ty) and not game.level.map:checkAllEntities(tx, ty, "block_move", self) then
 		return engine.Actor.move(self, tx, ty, false)
 	end
 	return true
