@@ -160,6 +160,8 @@ function _M:makeEntityByName(level, type, name)
 	end
 	if not e then return nil end
 
+	if e.unique and game.uniques[e.unique] then print("refused unique", e.name, e.unique) return nil end
+
 	e = self:finishEntity(level, type, e)
 
 	return e

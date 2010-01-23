@@ -9,7 +9,7 @@ newTalentType{ type="spell/nature", name = "nature", description = "Summons the 
 newTalentType{ type="spell/meta", name = "meta", description = "Meta spells alter the working of magic itself." }
 newTalentType{ type="spell/divination", name = "divination", description = "Divination allows the caster to sense its surroundings, find hidden things." }
 newTalentType{ type="spell/temporal", name = "temporal", description = "Temporal the school of time manipulation." }
-newTalentType{ type="spell/mind", name = "mind", description = "Mind the caster to directly attack the mind of its foes." }
+newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
 newTalentType{ type="spell/necromancy", name = "necromancy", description = "Necromancy is a dark school of magic dealing with death, and undeath." }
 
 -- Generic requires for spells based on talent level
@@ -45,5 +45,5 @@ load("/data/talents/spells/nature.lua")
 load("/data/talents/spells/meta.lua")
 load("/data/talents/spells/divination.lua")
 load("/data/talents/spells/temporal.lua")
-load("/data/talents/spells/mind.lua")
+load("/data/talents/spells/phantasm.lua")
 load("/data/talents/spells/necromancy.lua")

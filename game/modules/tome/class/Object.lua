@@ -3,6 +3,7 @@ require "engine.Object"
 require "engine.interface.ObjectActivable"
 
 local Stats = require("engine.interface.ActorStats")
+local Talents = require("engine.interface.ActorTalents")
 local DamageType = require("engine.DamageType")
 
 module(..., package.seeall, class.inherit(engine.Object, engine.interface.ObjectActivable))
@@ -99,6 +100,17 @@ function _M:getDesc()
 			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
 		end
 		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
+	end
+
+	if w.talents_types_mastery then
+		local tms = {}
+		for ttn, i in pairs(w.talents_types_mastery) do
+			local tt = Talents.talents_types_def[ttn]
+			local cat = tt.type:gsub("/.*", "")
+			local name = cat:capitalize().." / "..tt.name:capitalize()
+			tms[#tms+1] = ("%0.2f %s"):format(i, name)
+		end
+		desc[#desc+1] = ("Increases talent masteries: %s."):format(table.concat(tms, ','))
 	end
 
 	if w.combat_physresist then desc[#desc+1] = ("Increases physical resistance: %s."):format(w.combat_physresist) end
