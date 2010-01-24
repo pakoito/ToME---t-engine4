@@ -1,16 +1,22 @@
 require "engine.class"
 require "engine.Object"
 require "engine.interface.ObjectActivable"
+require "engine.interface.ObjectIdentify"
 
 local Stats = require("engine.interface.ActorStats")
 local Talents = require("engine.interface.ActorTalents")
 local DamageType = require("engine.DamageType")
 
-module(..., package.seeall, class.inherit(engine.Object, engine.interface.ObjectActivable))
+module(..., package.seeall, class.inherit(
+	engine.Object,
+	engine.interface.ObjectActivable,
+	engine.interface.ObjectIdentify
+))
 
 function _M:init(t, no_default)
 	engine.Object.init(self, t, no_default)
 	engine.interface.ObjectActivable.init(self, t)
+	engine.interface.ObjectIdentify.init(self, t)
 end
 
 --- Can this object act at all
@@ -46,12 +52,32 @@ function _M:tooltip()
 	return self:getDesc()
 end
 
+--- Describes an attribute, to expand object name
+function _M:descAttribute(attr)
+	if attr == "MASTERY" then
+		local tms = {}
+		for ttn, i in pairs(self.wielder.talents_types_mastery) do
+			local tt = Talents.talents_types_def[ttn]
+			local cat = tt.type:gsub("/.*", "")
+			local name = cat:capitalize().." / "..tt.name:capitalize()
+			tms[#tms+1] = ("%0.2f %s"):format(i, name)
+		end
+		return table.concat(tms, ",")
+	elseif attr == "COMBAT" then
+	end
+end
+
 --- Gets the full name of the object
 function _M:getName()
 	local qty = 1
 	local name = self.name
+
+	if not self:isIdentified() and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
+
 	-- To extend later
-	name = name:gsub("~", ""):gsub("#[1-9]#", ""):gsub("&", "a")
+	name = name:gsub("~", ""):gsub("&", "a"):gsub("#([^#]+)#", function(attr)
+		return self:descAttribute(attr)
+	end)
 	return name
 end
 
@@ -71,6 +97,10 @@ function _M:getDesc()
 	if self.encumber then
 		desc[#desc+1] = ("#67AD00#%0.2f Encumberance."):format(self.encumber)
 	end
+
+	-- Stop here if unided
+	if not self:isIdentified() then return table.concat(desc, "\n") end
+
 
 	if self.combat then
 		local dm = {}

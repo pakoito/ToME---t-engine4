@@ -4,6 +4,7 @@ newEntity{
 	unique = true, quest=true,
 	slot = "MAINHAND",
 	type = "weapon", subtype="staff",
+	unided_name = "dark runed staff",
 	name = "Staff of Absorption",
 	level_range = {30, 30},
 	display = "\\", color=colors.VIOLET,

@@ -1,6 +1,7 @@
 newEntity{
 	define_as = "BASE_SCROLL",
 	type = "scroll", subtype="scroll",
+	unided_name = "potion",
 	display = "?", color=colors.WHITE, image="object/scroll-0x0.png",
 	encumber = 0.1,
 	stacking = true,

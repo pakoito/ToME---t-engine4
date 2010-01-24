@@ -20,7 +20,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of mastery",
+	name = " of mastery (#MASTERY#)",
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 2,

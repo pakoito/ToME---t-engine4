@@ -187,6 +187,7 @@ function _M:finishEntity(level, type, e, ego_chance)
 				newname = e.name .. ego.name
 			end
 			print("applying ego", ego.name, "to ", e.name, "::", newname)
+			ego.unided_name = nil
 			table.merge(e, ego, true)
 			e.name = newname
 			e.egoed = true

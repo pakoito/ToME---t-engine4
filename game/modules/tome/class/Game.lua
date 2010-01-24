@@ -217,7 +217,6 @@ function _M:display()
 					if game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_sense") then return true end
 				end, function(map, lx, ly)
 					local ok = false
-					print(game.player:attr("detect_actor"), game.level.map(lx, ly, game.level.map.ACTOR), "::", lx, ly)
 					if game.player:attr("detect_actor") and game.level.map(lx, ly, game.level.map.ACTOR) then ok = true end
 					if game.player:attr("detect_object") and game.level.map(lx, ly, game.level.map.OBJECT) then ok = true end
 --					if game.player:attr("detect_trap") and game.level.map(lx, ly, game.level.map.ACTOR) then ok = true end

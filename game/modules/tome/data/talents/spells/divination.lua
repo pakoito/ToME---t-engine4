@@ -32,9 +32,30 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	mana = 20,
-	cooldown = 20,
 	action = function(self, t)
 		local rad = math.floor(0 + (self:getTalentLevel(t) - 4))
+
+		if self:getTalentLevel(t) < 3 then
+			self:showInventory("Identify object", self:getInven(self.INVEN_INVEN), nil, function(o, item)
+				o:identify(true)
+			end)
+			return true
+		end
+
+		if self:getTalentLevel(t) >= 3 then
+			for i, o in ipairs(self:getInven("INVEN")) do
+				o:identify(true)
+			end
+		end
+
+		if self:getTalentLevel(t) >= 4 then
+			while true do
+				local o = game.level.map:getObject(self.x, self.y, idx)
+				if not o then break end
+				o:identify(true)
+			end
+		end
+
 		return true
 	end,
 	info = function(self, t)
