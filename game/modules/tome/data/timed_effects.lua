@@ -1,3 +1,5 @@
+local Stats = require "engine.interface.ActorStats"
+
 newEffect{
 	name = "CUT",
 	desc = "Bleeding",
@@ -277,5 +279,27 @@ newEffect{
 		self:removeTemporaryValue("detect_actor", eff.aid)
 		self:removeTemporaryValue("detect_object", eff.oid)
 		self:removeTemporaryValue("detect_trap", eff.tid)
+	end,
+}
+
+newEffect{
+	name = "ALL_STAT",
+	desc = "All stats increase",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=1 },
+	activate = function(self, eff)
+		eff.stat = self:addTemporaryValue("stats",
+		{
+			[Stats.STAT_STR] = eff.power,
+			[Stats.STAT_DEX] = eff.power,
+			[Stats.STAT_MAG] = eff.power,
+			[Stats.STAT_WIL] = eff.power,
+			[Stats.STAT_CUN] = eff.power,
+			[Stats.STAT_CON] = eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stats", eff.stat)
 	end,
 }

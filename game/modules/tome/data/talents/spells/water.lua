@@ -28,13 +28,14 @@ newTalent{
 	type = {"spell/water", 2},
 	require = spells_req2,
 	points = 5,
-	mana = 10,
+	mana = 30,
 	cooldown = 100,
 	action = function(self, t)
+		self:setEffect(self.EFF_ALL_STAT, 20, {power=1+self:combatSpellpower(0.01) * self:getTalentLevel(t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Confures some Ent-draught to fill your stomach.]])
+		return ([[Confures some Ent-draught to fill your stomach and boost your stats by %d for 20 turns.]]):format(1+self:combatSpellpower(0.01) * self:getTalentLevel(t))
 	end,
 }
 

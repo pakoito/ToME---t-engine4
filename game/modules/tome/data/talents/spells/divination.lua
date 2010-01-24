@@ -30,7 +30,7 @@ newTalent{
 	name = "Indentify",
 	type = {"spell/divination", 2},
 	require = spells_req2,
-	points = 3,
+	points = 5,
 	mana = 20,
 	cooldown = 20,
 	action = function(self, t)
