@@ -132,7 +132,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of strength",
+	name = " of strength (#STATBONUS#)",
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -141,7 +141,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of dexterity",
+	name = " of dexterity (#STATBONUS#)",
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -150,7 +150,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of magic",
+	name = " of magic (#STATBONUS#)",
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -159,7 +159,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of constitution",
+	name = " of constitution (#STATBONUS#)",
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,

@@ -2,6 +2,7 @@ newEntity{
 	define_as = "BASE_LONGSWORD",
 	slot = "MAINHAND",
 	type = "weapon", subtype="longsword",
+	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE,
 	encumber = 3,
 	rarity = 3,

@@ -63,7 +63,12 @@ function _M:descAttribute(attr)
 			tms[#tms+1] = ("%0.2f %s"):format(i, name)
 		end
 		return table.concat(tms, ",")
+	elseif attr == "STATBONUS" then
+		local stat, i = next(self.wielder.inc_stats)
+		return i > 0 and "+"..i or tostring(i)
 	elseif attr == "COMBAT" then
+		local c = self.combat
+		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." dam, "..(c.apr or 0).." apr"
 	end
 end
 
@@ -78,6 +83,13 @@ function _M:getName()
 	name = name:gsub("~", ""):gsub("&", "a"):gsub("#([^#]+)#", function(attr)
 		return self:descAttribute(attr)
 	end)
+
+	if self.add_name and self:isIdentified() then
+		name = name .. self.add_name:gsub("#([^#]+)#", function(attr)
+			return self:descAttribute(attr)
+		end)
+	end
+
 	return name
 end
 

@@ -2,6 +2,7 @@ newEntity{
 	define_as = "BASE_STAFF",
 	slot = "MAINHAND",
 	type = "weapon", subtype="staff",
+	add_name = " (#COMBAT#)",
 	display = "\\", color=colors.LIGHT_RED,
 	encumber = 5,
 	rarity = 3,

@@ -256,7 +256,10 @@ function _M:playerUseItem()
 			return o:canUseObject()
 		end,
 		function(o, item)
-			local ret = o:use(self)
+			local ret, no_id = o:use(self)
+			if not no_id then
+				o:identify(true)
+			end
 			if ret and ret == "destroy" then
 				if o.multicharge and o.multicharge > 1 then
 					o.multicharge = o.multicharge - 1

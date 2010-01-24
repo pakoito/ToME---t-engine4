@@ -2,7 +2,7 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 newEntity{
-	name = " of cunning",
+	name = " of cunning (#STATBONUS#)",
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -11,7 +11,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of willpower",
+	name = " of willpower (#STATBONUS#)",
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,

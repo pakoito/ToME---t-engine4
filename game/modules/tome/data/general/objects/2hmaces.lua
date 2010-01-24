@@ -3,6 +3,7 @@ newEntity{
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="greatmaul",
+	add_name = " (#COMBAT#)",
 	display = "\\", color=colors.SLATE,
 	encumber = 5,
 	rarity = 3,

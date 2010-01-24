@@ -16,7 +16,7 @@ newBirthDescriptor{
 	copy = {
 		max_life = 120,
 		life_rating = 10,
-		equipment = resolvers.equip{
+		equipment = resolvers.equip{ id=true,
 			{type="weapon", subtype="longsword", name="iron longsword"},
 			{type="armor", subtype="shield", name="iron shield"},
 			{type="armor", subtype="massive", name="iron massive armor"}
@@ -63,7 +63,7 @@ newBirthDescriptor{
 	copy = {
 		max_life = 100,
 		life_rating = 9,
-		equipment = resolvers.equip{
+		equipment = resolvers.equip{ id=true,
 			{type="weapon", subtype="dagger", name="iron dagger"},
 			{type="weapon", subtype="dagger", name="iron dagger"},
 			{type="armor", subtype="light", name="rough leather armour"}
@@ -110,7 +110,7 @@ newBirthDescriptor{
 	copy = {
 		max_life = 80,
 		life_rating = 7,
-		equipment = resolvers.equip{
+		equipment = resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff"},
 			{type="armor", subtype="cloth", name="robe"}
 		},

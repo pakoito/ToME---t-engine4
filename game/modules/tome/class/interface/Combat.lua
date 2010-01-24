@@ -203,7 +203,11 @@ end
 --- Gets the crit rate
 function _M:combatCrit(weapon)
 	weapon = weapon or self.combat
-	return self.combat_physcrit + (self:getCun() - 10) * 0.3 + (weapon.physcrit or 1)
+	local addcrit = 0
+	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then
+		addcrit = 1 + self:getTalentLevel(Talents.T_LETHALITY) * 1.3
+	end
+	return self.combat_physcrit + (self:getCun() - 10) * 0.3 + (weapon.physcrit or 1) + addcrit
 end
 
 --- Gets the damage range
@@ -215,9 +219,14 @@ end
 --- Gets the damage
 function _M:combatDamage(weapon)
 	weapon = weapon or self.combat
+
+	local sub_con_to_str = false
+	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_con_to_str = true end
+
 	local add = 0
 	if weapon.dammod then
 		for stat, mod in pairs(weapon.dammod) do
+			if sub_con_to_str and stat == "str" then stat = "cun" end
 			add = add + (self:getStat(stat) - 10) * mod
 		end
 	end

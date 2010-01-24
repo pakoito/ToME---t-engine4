@@ -2,6 +2,7 @@ newEntity{
 	define_as = "BASE_KNIFE",
 	slot = "MAINHAND", offslot = "OFFHAND",
 	type = "weapon", subtype="dagger",
+	add_name = " (#COMBAT#)",
 	display = "/", color=colors.WHITE,
 	encumber = 1,
 	rarity = 3,
