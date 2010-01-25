@@ -44,6 +44,7 @@ function _M:display()
 	local s = self.sb
 	local l = line.new(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
 	local lx, ly = l()
+	local initial_dir = lx and coord_to_dir[lx - self.source_actor.x][ly - self.source_actor.y] or 5
 	local stopx, stopy = self.source_actor.x, self.source_actor.y
 	while lx and ly do
 		if not self.target_type.no_restrict then
@@ -62,6 +63,11 @@ function _M:display()
 
 	if self.target_type.ball then
 		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(self, lx, ly)
+			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
+			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
+		end, function()end, self)
+	elseif self.target_type.cone then
+		core.fov.calc_beam(stopx, stopy, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(self, lx, ly)
 			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
 		end, function()end, self)
@@ -87,7 +93,7 @@ function _M:getType(t)
 	elseif t.type == "ball" then
 		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius}
 	elseif t.type == "cone" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius}
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius, cone_angle=t.cone_angle or 55}
 	else
 		return {}
 	end

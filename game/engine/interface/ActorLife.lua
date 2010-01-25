@@ -65,7 +65,7 @@ end
 -- @param dam damage to be done
 -- @param particles particles effect configuration, or nil
 function _M:project(t, x, y, damtype, dam, particles)
-	if dam < 0 then return end
+	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 
 	local grids = {}
@@ -78,6 +78,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 	local lx, ly = x, y
 	local l = line.new(self.x, self.y, x, y)
 	lx, ly = l()
+	local initial_dir = lx and coord_to_dir[lx - self.x][ly - self.y] or 5
 	while lx and ly do
 		if not typ.no_restrict then
 			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
@@ -95,12 +96,18 @@ function _M:project(t, x, y, damtype, dam, particles)
 
 	if typ.ball then
 		core.fov.calc_circle(lx, ly, typ.ball, function(self, px, py)
-			-- Deam damage: ball
+			-- Deal damage: ball
 			addGrid(px, py)
 			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
 		end, function()end, self)
 		addGrid(lx, ly)
 	elseif typ.cone then
+		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(self, px, py)
+			-- Deal damage: cone
+			addGrid(px, py)
+			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
+		end, function()end, self)
+		addGrid(lx, ly)
 	else
 		-- Deam damage: single
 		addGrid(lx, ly)

@@ -104,8 +104,25 @@ newEffect{
 }
 
 newEffect{
+	name = "BURNING_SHOCK",
+	desc = "Burning Shock",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is stunned by the burning flame!", "+Burning Shock" end,
+	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Burning Shock" end,
+	activate = function(self, eff)
+		self.energy.value = 0
+	end,
+	on_timeout = function(self, eff)
+		self.energy.value = 0
+		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
+	end,
+}
+
+newEffect{
 	name = "STUNNED",
-	desc = "STUN",
+	desc = "Stunned",
 	type = "physical",
 	status = "detrimental",
 	parameters = {},

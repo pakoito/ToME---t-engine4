@@ -130,6 +130,17 @@ newDamageType{
 		end
 	end,
 }
+-- Fire DOT + Stun
+newDamageType{
+	name = "flameshock", type = "FLAMESHOCK",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Set on fire!
+			target:setEffect(target.EFF_BURNING_SHOCK, dam.dur, {src=src, power=dam.dam / dam.dur})
+		end
+	end,
+}
 
 -- Cold damage + freeze chance
 newDamageType{

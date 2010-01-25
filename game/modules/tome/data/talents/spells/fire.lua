@@ -23,9 +23,33 @@ newTalent{
 }
 
 newTalent{
-	name = "Fireflash",
+	name = "Flameshock",
 	type = {"spell/fire",2},
 	require = spells_req2,
+	points = 5,
+	mana = 30,
+	cooldown = 18,
+	tactical = {
+		ATTACKAREA = 10,
+	},
+	range = 1,
+	action = function(self, t)
+		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t), dam=self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t))}, {type="flame"})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be stunned over %d turns.
+		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t), self:getTalentLevelRaw(t))
+	end,
+}
+
+newTalent{
+	name = "Fireflash",
+	type = {"spell/fire",3},
+	require = spells_req3,
 	points = 5,
 	mana = 40,
 	cooldown = 8,
