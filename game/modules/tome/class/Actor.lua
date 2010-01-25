@@ -86,6 +86,12 @@ function _M:act()
 	-- Compute timed effects
 	self:timedEffects()
 
+	-- Handle thunderstorm, even if the actor is stunned or incampacited it still works
+	if self:isTalentActive(self.T_THUNDERSTORM) then
+		local t = self:getTalentFromId(self.T_THUNDERSTORM)
+		t.do_storm(self, t)
+	end
+
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
 

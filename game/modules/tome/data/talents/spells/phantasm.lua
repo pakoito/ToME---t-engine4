@@ -63,7 +63,7 @@ newTalent{
 		local power = 4 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
 		return {
 			invisible = self:addTemporaryValue("invisible", power),
-			drain = self:addTemporaryValue("mana_regen", 5),
+			drain = self:addTemporaryValue("mana_regen", -5),
 		}
 	end,
 	deactivate = function(self, t, p)

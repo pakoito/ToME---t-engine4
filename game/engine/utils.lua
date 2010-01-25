@@ -297,3 +297,8 @@ function rng.mbonus(max, level, max_level)
 
 	return val
 end
+
+function rng.table(t)
+	local id = rng.range(1, #t)
+	return t[id], id
+end
