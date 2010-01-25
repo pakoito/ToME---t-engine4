@@ -302,3 +302,8 @@ function rng.table(t)
 	local id = rng.range(1, #t)
 	return t[id], id
 end
+
+function rng.tableRemove(t)
+	local id = rng.range(1, #t)
+	return table.remove(t, id)
+end

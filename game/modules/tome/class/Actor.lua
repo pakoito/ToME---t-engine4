@@ -44,6 +44,8 @@ function _M:init(t, no_default)
 
 	self.fatigue = 0
 
+	self.spell_cooldown_reduction = 0
+
 	self.unused_stats = self.unused_stats or 0
 	self.unused_talents =  self.unused_talents or 0
 	self.unused_talents_types = self.unused_talents_types or 0
@@ -329,6 +331,14 @@ function _M:postUseTalent(ab, ret)
 	end
 
 	return true
+end
+
+--- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction
+-- @param t the talent to cooldown
+function _M:startTalentCooldown(t)
+	if not t.cooldown then return end
+	self.talents_cd[t.id] = math.ceil(t.cooldown * (1 - self.spell_cooldown_reduction or 0))
+	self.changed = true
 end
 
 --- How much experience is this actor worth
