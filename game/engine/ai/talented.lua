@@ -23,11 +23,11 @@ end)
 newAI("dumb_talented_simple", function(self)
 	if self:runAI("target_simple") then
 		-- One in "talent_in" chance of using a talent
-		if rng.chance(self.ai_state.talent_in or 6) then
+		if rng.chance(self.ai_state.talent_in or 6) and self:reactionToward(self.ai_target.actor) < 0 then
 			self:runAI("dumb_talented")
 		end
 		if not self.energy.used then
-			self:runAI("move_simple")
+			self:runAI(self.ai_move or "move_simple")
 		end
 		return true
 	end

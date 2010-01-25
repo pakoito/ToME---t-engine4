@@ -274,6 +274,40 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 	return grids
 end
 
+--- Finds free grids around coords in a radius.
+-- This will return a random grid, the closest possible to the epicenter
+-- @param sx the epicenter coordinates
+-- @param sy the epicenter coordinates
+-- @param radius the radius in which to search
+-- @param block true if we only consider line of sight
+-- @param what a table which can have the fields Map.ACTOR, Map.OBJECT, ..., set to true. If so it will only return grids that are free of this kind of entities.
+function util.findFreeGrid(sx, sy, radius, block, what)
+	what = what or {}
+	local grids = core.fov.circle_grids(sx, sy, radius, block)
+	local gs = {}
+	for x, yy in pairs(grids) do for y, _ in pairs(yy) do
+		local ok = true
+		for w, _ in pairs(what) do
+			if game.level.map(x, y, w) then ok = false end
+		end
+		if ok then
+			gs[#gs+1] = {x, y, math.floor(core.fov.distance(sx, sy, x, y)), rng.range(1, 1000)}
+		end
+	end end
+
+	if #gs == 0 then return nil end
+
+	table.sort(gs, function(a, b)
+		if a[3] == b[3] then
+			return a[4] < b[4]
+		else
+			return a[3] < b[3]
+		end
+	end)
+
+	return gs[1][1], gs[1][2]
+end
+
 function util.showMainMenu()
 	local Menu = require("special.mainmenu.class.Game")
 	game = Menu.new()

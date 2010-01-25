@@ -18,6 +18,20 @@ dofile("/mod/colors.lua")
 -- Additional entities resolvers
 dofile("/mod/resolvers.lua")
 
+-- Body parts
+ActorInventory:defineInventory("MAINHAND", "In main hand", true, "Most weapons are wielded in the main hand.")
+ActorInventory:defineInventory("OFFHAND", "In off hand", true, "You can use shields or a second weapon in your off hand, if you have the talents for it.")
+ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.")
+ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.")
+ActorInventory:defineInventory("LITE", "Light source", true, "Light source allows you to see in the dark places of the world.")
+ActorInventory:defineInventory("BODY", "Main armor", true, "Armor protects your from physical attacks. The heavier the armor the more it hinders the use of talents and spells.")
+ActorInventory:defineInventory("CLOAK", "Cloak", true, "A cloak can simply keep you warn or grant you wonderous powers should you find a magic one.")
+ActorInventory:defineInventory("HEAD", "On head", true, "You can wear helmets or crowns on your head")
+ActorInventory:defineInventory("BELT", "Around waist", true, "Belts are worn around waist.")
+ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be worn on your hands.")
+ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.")
+ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.")
+
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
 -- Talents
@@ -40,20 +54,7 @@ ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's
 dofile("/data/autolevel_schemes.lua")
 -- Actor AIs
 ActorAI:loadDefinition("/engine/ai/")
-
--- Body parts
-ActorInventory:defineInventory("MAINHAND", "In main hand", true, "Most weapons are wielded in the main hand.")
-ActorInventory:defineInventory("OFFHAND", "In off hand", true, "You can use shields or a second weapon in your off hand, if you have the talents for it.")
-ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.")
-ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.")
-ActorInventory:defineInventory("LITE", "Light source", true, "Light source allows you to see in the dark places of the world.")
-ActorInventory:defineInventory("BODY", "Main armor", true, "Armor protects your from physical attacks. The heavier the armor the more it hinders the use of talents and spells.")
-ActorInventory:defineInventory("CLOAK", "Cloak", true, "A cloak can simply keep you warn or grant you wonderous powers should you find a magic one.")
-ActorInventory:defineInventory("HEAD", "On head", true, "You can wear helmets or crowns on your head")
-ActorInventory:defineInventory("BELT", "Around waist", true, "Belts are worn around waist.")
-ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be worn on your hands.")
-ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.")
-ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.")
+ActorAI:loadDefinition("/mod/ai/")
 
 -- Birther descriptor
 Birther:loadDefinition("/data/birth/descriptors.lua")
