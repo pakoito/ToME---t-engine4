@@ -137,7 +137,11 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
-			target:setEffect(target.EFF_BURNING_SHOCK, dam.dur, {src=src, power=dam.dam / dam.dur})
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_BURNING_SHOCK, dam.dur, {src=src, power=dam.dam / dam.dur})
+			else
+				game.logSeen(target, "%s resists the searing flame!", target.name:capitalize())
+			end
 		end
 	end,
 }

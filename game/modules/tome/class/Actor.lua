@@ -54,6 +54,8 @@ function _M:init(t, no_default)
 
 	t.esp = {range=10}
 
+	t.on_melee_hit = {}
+
 	-- Resistances
 	t.resists = t.resists or {}
 
@@ -395,5 +397,6 @@ function _M:canBe(what)
 	if what == "blind" and self:attr("blind_immune") then return false end
 	if what == "stun" and self:attr("stun_immune") then return false end
 	if what == "knockback" and self:attr("knockback_immune") then return false end
+	if what == "instakill" and self:attr("instakill_immune") then return false end
 	return true
 end

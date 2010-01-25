@@ -107,7 +107,6 @@ newTalent{
 						self:useEnergy()
 						self.temporary = self.temporary - 1
 						if self.temporary <= 0 then
-						print("reseting", self.x, self.y, "to", self.old_feat, self.old_feat.name)
 							game.level.map(self.x, self.y, Map.TERRAIN, self.old_feat)
 							game:removeEntity(self)
 							game.level.map:redisplay()
@@ -115,7 +114,6 @@ newTalent{
 					end
 				}
 				game:addEntity(e)
-				print("setting", x+i, y+j, "to", game.level.map(x + i, y + j, Map.TERRAIN), game.level.map(x + i, y + j, Map.TERRAIN).name)
 				game.level.map(x + i, y + j, Map.TERRAIN, e)
 			end
 		end end end

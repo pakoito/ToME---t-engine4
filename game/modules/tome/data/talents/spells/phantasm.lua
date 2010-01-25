@@ -47,6 +47,32 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Phantasmal Shield",
+	type = {"spell/phantasm", 3},
+	mode = "sustained",
+	require = spells_req3,
+	points = 5,
+	sustain_mana = 100,
+	cooldown = 10,
+	tactical = {
+		DEFEND = 10,
+	},
+	activate = function(self, t)
+		local power = 10 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
+		return {
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ARCANE]=power}),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
+		return true
+	end,
+	info = function(self, t)
+		return ([[The caster surrounds herself with a phantasmal shield. If hit in melee the shield will last out at the attacker for %d arcane damage.
+		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
+	end,
+}
 
 newTalent{
 	name = "Invisibility",

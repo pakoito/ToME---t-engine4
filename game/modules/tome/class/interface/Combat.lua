@@ -143,6 +143,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 	end
 
+	-- Reactive target on hit damage
+	if hitted then for typ, dam in pairs(target.on_melee_hit) do
+		DamageType:get(typ).projector(target, self.x, self.y, typ, dam)
+	end end
+
 	return self:combatSpeed(weapon), hitted
 end
 
