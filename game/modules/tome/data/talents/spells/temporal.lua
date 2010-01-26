@@ -47,8 +47,8 @@ newTalent{
 
 newTalent{
 	name = "Essence of Speed",
-	type = {"spell/temporal",4},
-	require = spells_req4,
+	type = {"spell/temporal",3},
+	require = spells_req3,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 450,
@@ -69,5 +69,27 @@ newTalent{
 	info = function(self, t)
 		return ([[Increases the caster global speed by %.2f.
 		The speed increases with the Magic stat]]):format(util.bound((self:combatSpellpower(50) * self:getTalentLevel(t)) / 100, 0.1, 2))
+	end,
+}
+
+newTalent{
+	name = "Time Shield",
+	type = {"spell/temporal", 4},
+	require = spells_req4,
+	points = 5,
+	mana = 150,
+	cooldown = 200,
+	tactical = {
+		DEFENSE = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		print("IMPLEMENT ME §!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		return true
+	end,
+	info = function(self, t)
+		return ([[This intricate spell erects time shield around the caster, preventing any incomming damage and sending it forward in time.
+		Once the maximun damage (%d) is absorbed or the time runs out (%d turns) the stored damage will come back as a damage over time.
+		The duration and max absorption will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t), 1)
 	end,
 }

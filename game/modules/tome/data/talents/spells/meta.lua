@@ -35,7 +35,10 @@ newTalent{
 
 		-- Go through all spell effects
 		for eff_id, p in pairs(target.tmp) do
-			effs[#effs+1] = {"effect", eff_id}
+			local e = target.tempeffect_def[eff_id]
+			if e.type == "magical" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
 		end
 
 		-- Go through all sustained spells
