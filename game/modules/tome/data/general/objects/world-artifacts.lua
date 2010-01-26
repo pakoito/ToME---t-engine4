@@ -33,7 +33,7 @@ newEntity{
 	level_range = {1, 10},
 	display = "~", color=colors.YELLOW,
 	encumber = 1,
-	rarity = 1,
+	rarity = 100,
 	desc = [[A small crystal phial, with the light of Earendil's Star contained inside. Its light is imperishable, and near it darkness cannot endure.]],
 	cost = 2000,
 

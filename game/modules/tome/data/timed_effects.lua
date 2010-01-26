@@ -192,8 +192,8 @@ newEffect{
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# eyes tingle." end,
-	on_lose = function(self, err) return "#Target# eyes tingle no more." end,
+	on_gain = function(self, err) return "#Target#'s eyes tingle." end,
+	on_lose = function(self, err) return "#Target#'s eyes tingle no more." end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("see_invisible", eff.power)
 	end,

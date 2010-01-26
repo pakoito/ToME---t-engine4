@@ -27,7 +27,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Indentify",
+	name = "Identify",
 	type = {"spell/divination", 2},
 	require = spells_req2,
 	points = 5,

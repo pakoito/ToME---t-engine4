@@ -198,7 +198,7 @@ newEntity{ base = "BASE_POTION",
 }
 
 newEntity{ base = "BASE_POTION",
-	name = "potion of see invisibile",
+	name = "potion of see invisible",
 	color = colors.YELLOW,
 	level_range = {5, 30},
 	rarity = 6,
