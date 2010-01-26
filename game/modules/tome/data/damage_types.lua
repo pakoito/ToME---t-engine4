@@ -46,11 +46,11 @@ newDamageType{
 	name = "physical", type = "PHYSICAL",
 }
 
--- Arcane is basic (usualy) unreistable damage
+-- Arcane is basic (usualy) unresistable damage
 newDamageType{
 	name = "arcane", type = "ARCANE",
 }
--- The four elemental damges
+-- The elemental damges
 newDamageType{
 	name = "fire", type = "FIRE",
 	projector = function(src, x, y, type, dam)
