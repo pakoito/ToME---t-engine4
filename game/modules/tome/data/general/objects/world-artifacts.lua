@@ -76,7 +76,7 @@ newEntity{
 	use_power = { name = "blink away", power = 30,
 		use = function(self, who)
 			who:heal(150 + who:getMag())
-			game.logSeen("%s quaffs an %s!", who.name:capitalize(), self:getName())
+			game.logSeen(who, "%s quaffs an %s!", who.name:capitalize(), self:getName())
 		end
 	},
 }

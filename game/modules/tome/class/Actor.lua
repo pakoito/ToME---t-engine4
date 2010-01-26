@@ -337,7 +337,11 @@ end
 -- @param t the talent to cooldown
 function _M:startTalentCooldown(t)
 	if not t.cooldown then return end
-	self.talents_cd[t.id] = math.ceil(t.cooldown * (1 - self.spell_cooldown_reduction or 0))
+	if t.type[1]:find("^spell/") then
+		self.talents_cd[t.id] = math.ceil(t.cooldown * (1 - self.spell_cooldown_reduction or 0))
+	else
+		self.talents_cd[t.id] = t.cooldown
+	end
 	self.changed = true
 end
 

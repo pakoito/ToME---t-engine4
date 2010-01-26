@@ -4,7 +4,7 @@ newEntity{
 	define_as = "BASE_NPC_WORM",
 	type = "vermin", subtype = "worms",
 	display = "w", color=colors.WHITE,
-	can_multiply = 2,
+	can_multiply = 4,
 	body = { INVEN = 10 },
 
 	autolevel = "warrior",
@@ -19,9 +19,9 @@ newEntity{ base = "BASE_NPC_WORM",
 	level_range = {1, 15}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=1, atk=15, apr=100 },
 
-	talents = resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
+	talents = resolvers.talents{ [Talents.T_CRAWL_POISON]=1, [Talents.T_MULTIPLY]=1 },
 }
 
 newEntity{ base = "BASE_NPC_WORM",
@@ -29,7 +29,7 @@ newEntity{ base = "BASE_NPC_WORM",
 	level_range = {2, 15}, exp_worth = 1,
 	rarity = 5,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=1, atk=15, apr=100 },
 
-	talents = resolvers.talents{ [Talents.T_CRAWL_ACID]=2 },
+	talents = resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_MULTIPLY]=1 },
 }

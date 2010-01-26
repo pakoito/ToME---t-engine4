@@ -10,27 +10,27 @@ newTalent{
 	cooldown = 3,
 	range = 20,
 	action = function(self, t)
-		print("Multiply *****BROKEN***** Fix it!")
-		return nil
---[[
-		if not self.can_multiply or self.can_multiply <= 0 then return nil end
+		if not self.can_multiply or self.can_multiply <= 0 then print("no more multiply")  return nil end
+
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
+		if not x then print("no free space") return nil end
+
 		-- Find a place around to clone
-		for i = -1, 1 do for j = -1, 1 do
-			if not game.level.map:checkAllEntities(self.x + i, self.y + j, "block_move") then
-				self.can_multiply = self.can_multiply - 1
-				local a = self:clone()
-				a.energy.val = 0
-				a.exp_worth = 0.1
-				a.inven = {}
-				if a.can_multiply <= 0 then a:unlearnTalent(t.id) end
-				print("multiplied", a.can_multiply, "uids", self.uid,"=>",a.uid, "::", self.player, a.player)
-				a:move(self.x + i, self.y + j, true)
-				game.level:addEntity(a)
-				return true
-			end
-		end end
-		return nil
-]]
+		self.can_multiply = self.can_multiply - 1
+		local a = self:clone()
+		a.energy.val = 0
+		a.exp_worth = 0.1
+		a.inven = {}
+		if a.can_multiply <= 0 then a:unlearnTalent(t.id) end
+
+		print(x, y, "::", game.level.map(x,y,Map.ACTOR))
+
+		print("multiplied", a.can_multiply, "uids", self.uid,"=>",a.uid, "::", self.player, a.player)
+		a:move(x, y, true)
+		game.level:addEntity(a)
+		a:added()
+		return true
 	end,
 	info = function(self)
 		return ([[Multiply yourself!]])

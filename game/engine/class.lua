@@ -61,8 +61,8 @@ local function clonerecurs(d)
 	local n = {}
 	for k, e in pairs(d) do
 		local nk, ne = k, e
-		if type(k) == "table" then nk = clonerecurs(k) end
-		if type(e) == "table" then ne = clonerecurs(e) end
+		if type(k) == "table" and not k.__CLASSNAME then nk = clonerecurs(k) end
+		if type(e) == "table" and not e.__CLASSNAME then ne = clonerecurs(e) end
 		n[nk] = ne
 	end
 	return n
