@@ -75,16 +75,19 @@ newTalent{
 	},
 	activate = function(self, t)
 		local power = math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
+		self.disruption_shield_absorb = 0
 		return {
-			shield = self:addTemporaryValue("mana_shield", power),
+			shield = self:addTemporaryValue("disruption_shield", power),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("mana_shield", p.shield)
+		self:removeTemporaryValue("disruption_shield", p.shield)
+		self.disruption_shield_absorb = nil
 		return true
 	end,
 	info = function(self, t)
 		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage taken.
+		If your mana is brought too low by the shield it will de-activate and the chain reaction will release a deadly arcane explosion of the amount of damage absorbed.
 		The damage to mana ratio increases with the Magic stat]]):format(math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280))
 	end,
 }

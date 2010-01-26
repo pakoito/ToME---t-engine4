@@ -31,6 +31,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 end)
 
 local function tryDestroy(who, inven, destroy_prop, proof_prop, msg)
+	if not inven then return end
 	for i = #inven, 1, -1 do
 		local o = inven[i]
 		print(who, inven, destroy_prop, proof_prop, msg, "::", i)

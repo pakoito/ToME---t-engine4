@@ -320,3 +320,41 @@ newEffect{
 		self:removeTemporaryValue("stats", eff.stat)
 	end,
 }
+
+newEffect{
+	name = "TIME_SHIELD",
+	desc = "Time Shield",
+	type = "time",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "The very fabric of time alters around #target#.", "+Time Shield" end,
+	on_lose = function(self, err) return "The fabric of time around #target# stabilizes to normal.", "-Time Shield" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("time_shield", eff.power)
+		--- Warning there can be only one time shield active at once for an actor
+		self.time_shield_absorb = eff.power
+	end,
+	deactivate = function(self, eff)
+		-- Time shield ends, setup a dot if needed
+		if eff.power - self.time_shield_absorb > 0 then
+			print("Time shield dot", eff.power - self.time_shield_absorb, (eff.power - self.time_shield_absorb) / 5)
+			self:setEffect(self.EFF_TIME_DOT, 5, {power=(eff.power - self.time_shield_absorb) / 5})
+		end
+
+		self:removeTemporaryValue("time_shield", eff.tmpid)
+		self.time_shield_absorb = nil
+	end,
+}
+
+newEffect{
+	name = "TIME_DOT",
+	desc = "Time Shield Backfire",
+	type = "time",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "The powerfull time altering energies come crashing down on #target#.", "+Time Shield Backfire" end,
+	on_lose = function(self, err) return "The fabric of time around #target# returns to normal.", "-Time Shield Backfire" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.ARCANE).projector(self, self.x, self.y, DamageType.ARCANE, eff.power)
+	end,
+}

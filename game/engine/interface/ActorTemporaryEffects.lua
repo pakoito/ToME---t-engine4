@@ -43,15 +43,20 @@ end
 --- Counts down timed effects, call from your actors "act" method
 --
 function _M:timedEffects()
+	local todel = {}
 	for eff, p in pairs(self.tmp) do
 		p.dur = p.dur - 1
 		if p.dur <= 0 then
-			self:removeEffect(eff)
+			todel[#todel+1] = eff
 		else
 			if _M.tempeffect_def[eff].on_timeout then
 				_M.tempeffect_def[eff].on_timeout(self, p)
 			end
 		end
+	end
+
+	while #todel > 0 do
+		self:removeEffect(table.remove(todel))
 	end
 end
 

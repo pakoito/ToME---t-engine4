@@ -82,7 +82,7 @@ newTalent{
 			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, physspeed=2 },
 
 			summoner = self,
-			summon_time = util.bound(self:getTalentLevel(t) * self:combatSpellpower(25), 5, 90),
+			summon_time = util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.15), 5, 90),
 		}
 
 		bear:resolve()
@@ -94,6 +94,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the forces of nature to summon bear ally for %d turns.
-		The power of the ally will increase with the Magic stat]]):format(util.bound(self:getTalentLevel(t) * self:combatSpellpower(25), 5, 90))
+		The power of the ally will increase with the Magic stat]]):format(util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.15), 5, 90))
 	end,
 }

@@ -155,14 +155,45 @@ function _M:onTakeHit(value, src)
 		return 0
 	end
 
-	if self:attr("mana_shield") then
+	if self:attr("disruption_shield") then
 		local mana = self:getMana()
-		local mana_val = value * self:attr("mana_shield")
+		local mana_val = value * self:attr("disruption_shield")
 		-- We have enough to absord the full hit
 		if mana_val <= mana then
 			self:incMana(-mana_val)
+			self.disruption_shield_absorb = self.disruption_shield_absorb + value
 			return 0
-		-- Or we dont! and we do nothing
+		-- Or the shield collapses in a deadly arcane explosion
+		else
+			local dam = self.disruption_shield_absorb
+
+			-- Deactivate without loosing energy
+			local old = self.energy.value
+			self.energy.value = 10000
+			self:useTalent(self.T_DISRUPTION_SHIELD)
+			self.energy.value = old
+
+			-- Explode!
+			game.logSeen(self, "%s disruption shield collapses and then explodes in a powerfull manastorm!", self.name:capitalize())
+			local tg = {type="ball", radius=5}
+			self:project(tg, self.x, self.y, engine.DamageType.ARCANE, dam, {type="manathrust"})
+		end
+	end
+
+	if self:attr("time_shield") then
+		-- Absorb damage into the time shield
+		if value <= self.time_shield_absorb then
+			self.time_shield_absorb = self.time_shield_absorb - value
+			value = 0
+		else
+			self.time_shield_absorb = 0
+			value = value - self.time_shield_absorb
+		end
+
+		-- If we are at the end of the capacity, release the time shield damage
+		if self.time_shield_absorb <= 0 then
+			game.logPlayer(self, "Your time shield crumbles under the damage!")
+			self:removeEffect(self.EFF_TIME_SHIELD)
 		end
 	end
 	return value
@@ -190,7 +221,7 @@ function _M:die(src)
 end
 
 function _M:levelup()
-	self.unused_stats = self.unused_stats + 2
+	self.unused_stats = self.unused_stats + 3
 	self.unused_talents = self.unused_talents + 2
 	if self.level % 10 == 0 then
 		self.unused_talents_types = self.unused_talents_types + 1
@@ -220,10 +251,6 @@ function _M:levelup()
 	if self.autolevel then
 		engine.Autolevel:autoLevel(self)
 	end
-end
-
-function _M:updateBonus()
-	engine.Actor.updateBonus(self)
 end
 
 --- Notifies a change of stat value
