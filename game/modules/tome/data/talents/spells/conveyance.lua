@@ -26,9 +26,13 @@ newTalent{
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
 			x, y = game.target:pointAtRange(self.x, self.y, x, y, 10 + self:combatSpellpower(0.1))
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 			target:teleportRandom(x, y, 7 - self:getTalentLevel(t))
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		else
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 			target:teleportRandom(x, y, 10 + self:combatSpellpower(0.1))
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
 		return true
 	end,
@@ -68,9 +72,13 @@ newTalent{
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
 			x, y = game.target:pointAtRange(self.x, self.y, x, y, 10 + self:combatSpellpower(0.1))
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 			target:teleportRandom(x, y, 20 - self:getTalentLevel(t))
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		else
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 			target:teleportRandom(x, y, 100 + self:combatSpellpower(1))
+			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
 		return true
 	end,

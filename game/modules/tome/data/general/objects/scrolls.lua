@@ -1,7 +1,7 @@
 newEntity{
 	define_as = "BASE_SCROLL",
 	type = "scroll", subtype="scroll",
-	unided_name = "scroll",
+	unided_name = "scroll",, id_by_type = true,
 	display = "?", color=colors.WHITE, image="object/scroll-0x0.png",
 	encumber = 0.1,
 	stacking = true,
@@ -30,7 +30,9 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 3,
 
 	use_simple = { name="teleport you randomly over a short distance", use = function(self, who)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, 15)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}
@@ -43,7 +45,9 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 4,
 
 	use_simple = { name="teleport you anywhere and the level, randomly", use = function(self, who)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, 200)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}

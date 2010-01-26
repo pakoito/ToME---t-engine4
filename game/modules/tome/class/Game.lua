@@ -137,7 +137,7 @@ end
 function _M:save()
 	return class.save(self, {w=true, h=true, zone=true, player=true, level=true, entities=true,
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
-		always_target=true, gfxmode=true, uniques=true
+		always_target=true, gfxmode=true, uniques=true, object_known_types=true,
 	}, true)
 end
 

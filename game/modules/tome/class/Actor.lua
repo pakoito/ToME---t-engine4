@@ -138,6 +138,7 @@ end
 
 --- Reveals location surrounding the actor
 function _M:magicMap(radius)
+	radius = math.floor(radius)
 	for i = self.x - radius, self.x + radius do for j = self.y - radius, self.y + radius do
 		if game.level.map:isBound(i, j) and core.fov.distance(self.x, self.y, i, j) < radius then
 			game.level.map.remembers(i, j, true)
