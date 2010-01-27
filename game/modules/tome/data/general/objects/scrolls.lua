@@ -24,6 +24,28 @@ newEntity{ base = "BASE_SCROLL",
 }
 
 newEntity{ base = "BASE_SCROLL",
+	name = "scroll of identify",
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 1,
+
+	use_simple = { name="identify one object (or all with high magic stat)", use = function(self, who)
+		if who:getMag() < 28 then
+			who:showInventory("Identify object", who:getInven(who.INVEN_INVEN), nil, function(o, item)
+				o:identify(true)
+				game.logPlayer(who, "You identify: "..o:getName())
+			end)
+		else
+			for i, o in ipairs(who:getInven("INVEN")) do
+				o:identify(true)
+			end
+			game.logPlayer(who, "You identify all your inventory.")
+		end
+		return "destroy", true
+	end}
+}
+
+newEntity{ base = "BASE_SCROLL",
 	name = "scroll of phase door",
 	level_range = {1, 30},
 	rarity = 4,

@@ -19,7 +19,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
-	tmasteries = resolvers.tmasteries{ ["physical/other"]=0.3 },
+	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3 },
 
 	resists = { [DamageType.FIRE] = -50 },
 }

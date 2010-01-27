@@ -32,10 +32,10 @@ newBirthDescriptor{
 	},
 	stats = { str=3, con=2, dex=1, },
 	talents_types = {
-		["physical/shield"]={true, 0.3},
-		["physical/2hweapon"]={true, 0.3},
-		["physical/combat-training"]={true, 0.3},
-		["physical/weapon-training"]={true, 0.3},
+		["technique/shield"]={true, 0.3},
+		["technique/2hweapon"]={true, 0.3},
+		["technique/combat-training"]={true, 0.3},
+		["technique/weapon-training"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_SHIELD_BASH] = 1,
@@ -80,9 +80,9 @@ newBirthDescriptor{
 	},
 	stats = { dex=2, str=1, cun=3, },
 	talents_types = {
-		["physical/dualweapon"]={true, 0.3},
-		["physical/combat-training"]={true, 0},
-		["physical/weapon-training"]={true, 0},
+		["technique/dualweapon"]={true, 0.3},
+		["technique/combat-training"]={true, 0},
+		["technique/weapon-training"]={true, 0},
 		["cunning/stealth"]={true, 0.3},
 		["cunning/traps"]={true, 0.3},
 		["cunning/dirty"]={true, 0.3},

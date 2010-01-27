@@ -38,6 +38,7 @@ newTalent{
 		if self:getTalentLevel(t) < 3 then
 			self:showInventory("Identify object", self:getInven(self.INVEN_INVEN), nil, function(o, item)
 				o:identify(true)
+				game.logPlayer(who, "You identify: "..o:getName())
 			end)
 			return true
 		end
@@ -46,14 +47,18 @@ newTalent{
 			for i, o in ipairs(self:getInven("INVEN")) do
 				o:identify(true)
 			end
+			game.logPlayer(who, "You identify all your inventory.")
 		end
 
 		if self:getTalentLevel(t) >= 4 then
+			local idx = 1
 			while true do
 				local o = game.level.map:getObject(self.x, self.y, idx)
 				if not o then break end
 				o:identify(true)
+				idx = idx + 1
 			end
+			game.logPlayer(who, "You identify everything around you.")
 		end
 
 		return true

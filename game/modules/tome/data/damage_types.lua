@@ -231,6 +231,18 @@ newDamageType{
 	end,
 }
 
+-- Slime damage
+newDamageType{
+	name = "slime", type = "SLIME",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:setEffect(target.EFF_SLOW, 3, {power=0.3})
+		end
+	end,
+}
+
 -- Poisoning damage
 newDamageType{
 	name = "dig", type = "DIG",
