@@ -78,32 +78,6 @@ function _M:use()
 	game:registerDialog(d)
 end
 
-function _M:formatKeyString(ks)
-	if not ks then return "--" end
-
-	if ks:find("^uni:") then
-		return ks:sub(5)
-	else
-		local i, j, sym, ctrl, shift, alt, meta = ks:find("^sym:([0-9]+):([a-z]+):([a-z]+):([a-z]+):([a-z]+)$")
-		if not i then return "--" end
-
-		ctrl = ctrl == "true" and true or false
-		shift = shift == "true" and true or false
-		alt = alt == "true" and true or false
-		meta = meta == "true" and true or false
-		sym = tonumber(sym) or sym
-		sym = KeyBind.sym_to_name[sym] or sym
-		sym = sym:gsub("^_", "")
-
-		if ctrl then sym = "[ctrl]+"..sym end
-		if shift then sym = "[shift]+"..sym end
-		if alt then sym = "[alt]+"..sym end
-		if meta then sym = "[meta]+"..sym end
-
-		return sym
-	end
-end
-
 function _M:generateList(key_source)
 	local l = {}
 
@@ -131,8 +105,8 @@ function _M:generateList(key_source)
 			type = k.type,
 			bind1 = binds[1],
 			bind2 = binds[2],
-			b1 = function(v) return self:formatKeyString(v.bind1) end,
-			b2 = function(v) return self:formatKeyString(v.bind2) end,
+			b1 = function(v) return KeyBind:formatKeyString(v.bind1) end,
+			b2 = function(v) return KeyBind:formatKeyString(v.bind2) end,
 		}
 		i = i + 1
 	end

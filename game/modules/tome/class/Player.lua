@@ -2,6 +2,7 @@ require "engine.class"
 require "mod.class.Actor"
 require "engine.interface.PlayerRest"
 require "engine.interface.PlayerRun"
+require "engine.interface.PlayerHotkeys"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
@@ -9,11 +10,12 @@ local ActorTalents = require "engine.interface.ActorTalents"
 
 --- Defines the player for ToME
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
--- It is also able to run and rest.
+-- It is also able to run and rest and use hotkeys
 module(..., package.seeall, class.inherit(
 	mod.class.Actor,
 	engine.interface.PlayerRest,
-	engine.interface.PlayerRun
+	engine.interface.PlayerRun,
+	engine.interface.PlayerHotkeys
 ))
 
 function _M:init(t, no_default)
@@ -31,6 +33,7 @@ function _M:init(t, no_default)
 		TOOL = 1,
 	}
 	mod.class.Actor.init(self, t, no_default)
+	engine.interface.PlayerHotkeys.init(self, t)
 	self.player = true
 	self.type = "humanoid"
 	self.subtype = "player"
@@ -54,7 +57,6 @@ function _M:init(t, no_default)
 	self.lite = 0
 
 	self.descriptor = {}
-	self.hotkey = {}
 end
 
 function _M:move(x, y, force)
@@ -191,24 +193,6 @@ function _M:runCheck()
 	if noticed then return false, noticed end
 
 	return engine.interface.PlayerRun.runCheck(self)
-end
-
---- Uses an hotkeyed talent
-function _M:activateHotkey(id)
-	if self.hotkey[id] then
-		if self.hotkey[id][1] == "talent" then
-			self:useTalent(self.hotkey[id][2])
-		elseif self.hotkey[id][1] == "inventory" then
-			local o, item = self:findInInventory(self:getInven("INVEN"), self.hotkey[id][2])
-			if not o then
-				Dialog:simplePopup("Item not found", "You do not have any "..self.hotkey[id][2]..".")
-			else
-				self:playerUseItem(o, item)
-			end
-		end
-	else
-		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the inscructions there.")
-	end
 end
 
 function _M:playerPickup()

@@ -75,6 +75,8 @@ function _M:init(actor)
 end
 
 function _M:defineHotkey(id)
+	if not self.actor.hotkey then return end
+
 	self.actor.hotkey[id] = {"talent", self.list[self.sel].talent}
 	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(self.list[self.sel].talent).name:capitalize().." assigned to hotkey "..id)
 	self.actor.changed = true
@@ -110,10 +112,18 @@ function _M:drawDialog(s)
 	-- Description part
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
 
-	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#enter#FFFFFF# to use.
+	local help
+	if not self.actor.hotkey then
+		help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#enter#FFFFFF# to use.
+Mouse: #00FF00#Left click#FFFFFF# to use.
+]]
+	else
+		help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#enter#FFFFFF# to use.
 #00FF00#1-0#FFFFFF# to assign a hotkey.
 Mouse: #00FF00#Left click#FFFFFF# to use.
-]]):splitLines(self.iw / 2 - 10, self.font)
+]]
+	end
+	local talentshelp = help:splitLines(self.iw / 2 - 10, self.font)
 
 	local lines = {}
 	local t = self.actor:getTalentFromId(self.list[self.sel].talent)

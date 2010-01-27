@@ -19,7 +19,7 @@ local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
 local PlayerDisplay = require "mod.class.PlayerDisplay"
-local TalentsDisplay = require "mod.class.TalentsDisplay"
+local HotkeysDisplay = require "mod.class.HotkeysDisplay"
 
 local LogDisplay = require "engine.LogDisplay"
 local LogFlasher = require "engine.LogFlasher"
@@ -47,7 +47,7 @@ function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.player_display = PlayerDisplay.new(0, 20, 200, self.h * 0.8 - 20, {30,30,0})
-	self.talents_display = TalentsDisplay.new(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
+	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
@@ -65,6 +65,8 @@ function _M:run()
 
 	-- Starting from here we create a new game
 	if not self.player then self:newGame() end
+
+	self.hotkeys_display.actor = self.player
 
 	self.target = Target.new(Map, self.player)
 	self.target.target.entity = self.player
@@ -108,7 +110,7 @@ function _M:onResolutionChange()
 	self.flash:resize(0, 0, self.w, 20)
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.player_display:resize(0, 20, 200, self.h * 0.8 - 20)
-	self.talents_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 end
 
 function _M:setupDisplayMode()
@@ -199,7 +201,7 @@ function _M:display()
 	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
 	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
 	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
-	self.talents_display:display():toScreen(self.talents_display.display_x, self.talents_display.display_y)
+	self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
 
 	-- Now the map, if any
 	if self.level and self.level.map then
@@ -402,6 +404,8 @@ function _M:setupCommands()
 		HOTKEY_THIRD_10 = function() self.player:activateHotkey(34) end,
 		HOTKEY_THIRD_11 = function() self.player:activateHotkey(35) end,
 		HOTKEY_THIRD_12 = function() self.player:activateHotkey(36) end,
+		HOTKEY_PREV_PAGE = function() self.player:prevHotkeyPage() end,
+		HOTKEY_NEXT_PAGE = function() self.player:nextHotkeyPage() end,
 
 		-- Actions
 		CHANGE_LEVEL = function()

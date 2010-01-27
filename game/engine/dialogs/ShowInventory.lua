@@ -77,7 +77,7 @@ function _M:init(title, inven, filter, action, actor)
 end
 
 function _M:defineHotkey(id)
-	if not self.actor then return end
+	if not self.actor or not self.actor.hotkey then return end
 
 	self.actor.hotkey[id] = {"inventory", self.list[self.sel].object:getName()}
 	self:simplePopup("Hotkey "..id.." assigned", self.list[self.sel].object:getName():capitalize().." assigned to hotkey "..id)
@@ -111,7 +111,7 @@ function _M:drawDialog(s)
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
 
 	local help
-	if self.actor then
+	if self.actor and self.actor.hotkey then
 		help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select an object; #00FF00#enter#FFFFFF# to use. #00FF00#1-0#FFFFFF# to assign a hotkey.
 Mouse: #00FF00#Left click#FFFFFF# to use.
 ]]

@@ -15,7 +15,7 @@ function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = x, y
 	self.w, self.h = w, h
 	self.surface = core.display.newSurface(w, h)
-	self.actor.changed = true
+	if self.actor then self.actor.changed = true end
 
 	local cw, ch = self.font:size(" ")
 	self.font_w = cw
@@ -24,11 +24,10 @@ end
 
 local page_to_hotkey = {"", "SECOND_", "THIRD_"}
 
--- Displays the talents, keybinds & cooldowns
--- This could use some optimisation, to not redraw everything every time
+-- Displays the hotkeys, keybinds & cooldowns
 function _M:display()
 	local a = self.actor
-	if not a.changed then return self.surface end
+	if not a or not a.changed then return self.surface end
 	a.changed = false
 
 	local hks = {}

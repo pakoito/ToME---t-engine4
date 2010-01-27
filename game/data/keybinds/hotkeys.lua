@@ -219,3 +219,16 @@ defineAction{
 	group = "hotkeys",
 	name = "Third Hotkey 12",
 }
+
+defineAction{
+	default = { "sym:280:false:false:false:false" },
+	type = "HOTKEY_PREV_PAGE",
+	group = "hotkeys",
+	name = "Previous Hotkey Page",
+}
+defineAction{
+	default = { "sym:281:false:false:false:false" },
+	type = "HOTKEY_NEXT_PAGE",
+	group = "hotkeys",
+	name = "Next Hotkey Page",
+}
