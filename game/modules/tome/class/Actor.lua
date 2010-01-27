@@ -260,7 +260,7 @@ function _M:onStatChange(stat, v)
 		self.max_life = self.max_life + 5 * v
 	elseif stat == self.STAT_WIL then
 		self:incMaxMana(5 * v)
-		self:incMaxStamina(5 * v)
+		self:incMaxStamina(2 * v)
 	end
 end
 

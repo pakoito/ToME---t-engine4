@@ -19,8 +19,8 @@ local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
 local PlayerDisplay = require "mod.class.PlayerDisplay"
-local HotkeysDisplay = require "mod.class.HotkeysDisplay"
 
+local HotkeysDisplay = require "engine.HotkeysDisplay"
 local LogDisplay = require "engine.LogDisplay"
 local LogFlasher = require "engine.LogFlasher"
 local DebugConsole = require "engine.DebugConsole"
@@ -137,10 +137,7 @@ function _M:setupDisplayMode()
 end
 
 function _M:save()
-	return class.save(self, {w=true, h=true, zone=true, player=true, level=true, entities=true,
-		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
-		always_target=true, gfxmode=true, uniques=true, object_known_types=true,
-	}, true)
+	return class.save(self, self:defaultSavedFields{}, true)
 end
 
 function _M:getSaveDescription()

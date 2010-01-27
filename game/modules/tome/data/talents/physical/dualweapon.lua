@@ -1,6 +1,6 @@
 newTalent{
 	name = "Dual Weapon Training",
-	type = {"physical/dualweapon", 1},
+	type = {"technique/dualweapon", 1},
 	mode = "passive",
 	points = 5,
 	require = { stat = { dex=14 } },
@@ -11,7 +11,7 @@ newTalent{
 
 newTalent{
 	name = "Flurry",
-	type = {"physical/dualweapon", 1},
+	type = {"technique/dualweapon", 1},
 	points = 5,
 	cooldown = 12,
 	stamina = 15,
@@ -41,7 +41,7 @@ newTalent{
 
 newTalent{
 	name = "Whirlwind",
-	type = {"physical/dualweapon", 3},
+	type = {"technique/dualweapon", 3},
 	points = 5,
 	cooldown = 8,
 	stamina = 30,
@@ -71,7 +71,7 @@ newTalent{
 
 newTalent{
 	name = "Momentum",
-	type = {"physical/dualweapon", 3},
+	type = {"technique/dualweapon", 3},
 	mode = "sustained",
 	points = 5,
 	cooldown = 30,
@@ -103,7 +103,7 @@ newTalent{
 
 newTalent{
 	name = "Momentum",
-	type = {"physical/dualweapon", 3},
+	type = {"technique/dualweapon", 3},
 	mode = "sustained",
 	points = 5,
 	cooldown = 30,

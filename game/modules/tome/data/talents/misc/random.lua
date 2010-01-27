@@ -3,11 +3,11 @@
 ------------------------------------------------------------
 -- Slime Powers!
 ------------------------------------------------------------
-newTalentType{ type="slime/slime", name = "slime powers", description = "Through dedicated consumption of slime mold juice you have gained an affinity with them." }
+newTalentType{ type="gift/slime", name = "slime powers", description = "Through dedicated consumption of slime mold juice you have gained an affinity with them." }
 
 newTalent{
 	name = "Poisonous Spores",
-	type = {"slime/slime", 1},
+	type = {"gift/slime", 1},
 	points = 5,
 	message = "@Source@ releases poisonous spores at @target@.",
 	cooldown = 10,

@@ -1,6 +1,6 @@
 newTalent{
 	name = "Stunning Blow",
-	type = {"physical/2hweapon", 1},
+	type = {"technique/2hweapon", 1},
 	points = 5,
 	cooldown = 6,
 	stamina = 8,
@@ -36,7 +36,7 @@ newTalent{
 
 newTalent{
 	name = "Death Blow",
-	type = {"physical/2hweapon", 2},
+	type = {"technique/2hweapon", 2},
 	points = 5,
 	cooldown = 30,
 	stamina = 30,
@@ -88,7 +88,7 @@ newTalent{
 
 newTalent{
 	name = "Death Dance",
-	type = {"physical/2hweapon", 3},
+	type = {"technique/2hweapon", 3},
 	points = 5,
 	cooldown = 10,
 	stamina = 30,
@@ -117,7 +117,7 @@ newTalent{
 
 newTalent{
 	name = "Berserker",
-	type = {"physical/2hweapon", 3},
+	type = {"technique/2hweapon", 3},
 	mode = "sustained",
 	points = 5,
 	cooldown = 30,

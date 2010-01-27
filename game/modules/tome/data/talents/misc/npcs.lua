@@ -1,5 +1,5 @@
 -- race & classes
-newTalentType{ type="physical/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ type="technique/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 
@@ -40,7 +40,7 @@ newTalent{
 newTalent{
 	short_name = "CRAWL_POISON",
 	name = "Poisonous Crawl",
-	type = {"physical/other", 1},
+	type = {"technique/other", 1},
 	points = 5,
 	message = "@Source@ crawls poison onto @target@.",
 	cooldown = 5,
@@ -62,7 +62,7 @@ newTalent{
 	short_name = "CRAWL_ACID",
 	name = "Acidic Crawl",
 	points = 5,
-	type = {"physical/other", 1},
+	type = {"technique/other", 1},
 	message = "@Source@ crawls acid onto @target@.",
 	cooldown = 2,
 	range = 1,
@@ -82,7 +82,7 @@ newTalent{
 newTalent{
 	short_name = "SPORE_BLIND",
 	name = "Blinding Spores",
-	type = {"physical/other", 1},
+	type = {"technique/other", 1},
 	points = 5,
 	message = "@Source@ releases blinding spores at @target@.",
 	cooldown = 2,
@@ -105,7 +105,7 @@ newTalent{
 newTalent{
 	short_name = "SPORE_POISON",
 	name = "Poisonous Spores",
-	type = {"physical/other", 1},
+	type = {"technique/other", 1},
 	points = 5,
 	message = "@Source@ releases poisonous spores at @target@.",
 	cooldown = 2,
@@ -125,7 +125,7 @@ newTalent{
 
 newTalent{
 	name = "Stun",
-	type = {"physical/other", 1},
+	type = {"technique/other", 1},
 	points = 5,
 	cooldown = 6,
 	stamina = 8,
@@ -155,7 +155,7 @@ newTalent{
 
 newTalent{
 	name = "Knockback",
-	type = {"physical/other", 1},
+	type = {"technique/other", 1},
 	points = 5,
 	cooldown = 6,
 	stamina = 8,
@@ -186,7 +186,7 @@ newTalent{
 newTalent{
 	short_name = "BITE_POISON",
 	name = "Poisonous Bite",
-	type = {"physical/other", 1},
+	type = {"technique/other", 1},
 	points = 5,
 	message = "@Source@ bites poison into @target@.",
 	cooldown = 5,

@@ -1,6 +1,6 @@
 newTalent{
 	name = "Heavy Armour Training",
-	type = {"physical/combat-training", 1},
+	type = {"technique/combat-training", 1},
 	mode = "passive",
 	points = 5,
 	require = { stat = { str=18 }, },
@@ -11,7 +11,7 @@ newTalent{
 
 newTalent{
 	name = "Massive Armour Training",
-	type = {"physical/combat-training", 2},
+	type = {"technique/combat-training", 2},
 	mode = "passive",
 	points = 5,
 	require = { stat = { str=22 }, talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
@@ -22,7 +22,7 @@ newTalent{
 
 newTalent{
 	name = "Health",
-	type = {"physical/combat-training", 1},
+	type = {"technique/combat-training", 1},
 	mode = "passive",
 	points = 5,
 	require = { stat = { con=function(level) return 14 + level * 5 end }, },

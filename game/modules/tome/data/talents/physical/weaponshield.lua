@@ -1,6 +1,6 @@
 newTalent{
 	name = "Shield Bash",
-	type = {"physical/shield", 1},
+	type = {"technique/shield", 1},
 	points = 5,
 	cooldown = 6,
 	stamina = 8,
@@ -37,7 +37,7 @@ newTalent{
 
 newTalent{
 	name = "Overpower",
-	type = {"physical/shield", 2},
+	type = {"technique/shield", 2},
 	points = 5,
 	cooldown = 6,
 	stamina = 16,
@@ -80,7 +80,7 @@ newTalent{
 
 newTalent{
 	name = "Repulsion",
-	type = {"physical/shield", 2},
+	type = {"technique/shield", 2},
 	points = 5,
 	cooldown = 10,
 	stamina = 30,
@@ -113,7 +113,7 @@ newTalent{
 
 newTalent{
 	name = "Shield Wall",
-	type = {"physical/shield", 3},
+	type = {"technique/shield", 3},
 	mode = "sustained",
 	points = 5,
 	cooldown = 30,

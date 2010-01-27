@@ -1,6 +1,6 @@
 newTalent{
 	name = "Weapon Combat",
-	type = {"physical/weapon-training", 1},
+	type = {"technique/weapon-training", 1},
 	points = 10,
 	require = { level=function(level) return (level - 1) * 2 end },
 	mode = "passive",
@@ -10,7 +10,7 @@ newTalent{
 }
 newTalent{
 	name = "Sword Mastery",
-	type = {"physical/weapon-training", 1},
+	type = {"technique/weapon-training", 1},
 	points = 10,
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
@@ -21,7 +21,7 @@ newTalent{
 
 newTalent{
 	name = "Axe Mastery",
-	type = {"physical/weapon-training", 1},
+	type = {"technique/weapon-training", 1},
 	points = 10,
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
@@ -32,7 +32,7 @@ newTalent{
 
 newTalent{
 	name = "Mace Mastery",
-	type = {"physical/weapon-training", 1},
+	type = {"technique/weapon-training", 1},
 	points = 10,
 	require = { stat = { str=function(level) return 14 + level * 3 end }, },
 	mode = "passive",
@@ -43,7 +43,7 @@ newTalent{
 
 newTalent{
 	name = "Knife Mastery",
-	type = {"physical/weapon-training", 1},
+	type = {"technique/weapon-training", 1},
 	points = 10,
 	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",

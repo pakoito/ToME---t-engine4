@@ -33,6 +33,17 @@ function _M:loaded()
 	self.mouse:setCurrent()
 end
 
+--- Defines the default fields to be saved by the savefile code
+function _M:defaultSavedFields(t)
+	local def = {
+		w=true, h=true, zone=true, player=true, level=true, entities=true,
+		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
+		always_target=true, gfxmode=true, uniques=true, object_known_types=true
+	}
+	table.merge(def, t)
+	return def
+end
+
 --- Sets the player name
 function _M:setPlayerName(name)
 	self.save_name = name
