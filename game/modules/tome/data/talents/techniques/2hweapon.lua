@@ -1,42 +1,97 @@
 newTalent{
-	name = "Stunning Blow",
-	type = {"technique/2hweapon", 1},
+	name = "Berserker",
+	type = {"technique/2hweapon-offense", 1},
+	require = techs_req1,
 	points = 5,
-	cooldown = 6,
-	stamina = 8,
-	require = { stat = { str=12 }, },
-	action = function(self, t)
+	mode = "sustained",
+	cooldown = 30,
+	sustain_stamina = 40,
+	activate = function(self, t)
 		local weapon = self:getInven("MAINHAND")[1]
 		if not weapon or not weapon.twohanded then
-			game.logPlayer(self, "You cannot use Stunning Blow without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Berserker without a two handed weapon!")
 			return nil
 		end
 
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(t)
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+		return {
+			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(6) * self:getTalentLevel(t)),
+			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(6) * self:getTalentLevel(t)),
+			def = self:addTemporaryValue("combat_def", -5 - 2 * self:getTalentLevel(t)),
+			armor = self:addTemporaryValue("combat_armor", -5 - 2 * self:getTalentLevel(t)),
+		}
+	end,
 
-		-- Try to stun !
-		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
-			else
-				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
-			end
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_def", p.def)
+		self:removeTemporaryValue("combat_armor", p.armor)
+		self:removeTemporaryValue("combat_atk", p.atk)
+		self:removeTemporaryValue("combat_dam", p.dam)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Enters an aggressive battle stance, increasing attack by %d and damage by %d at the cost of %d defense and %d armor.]]):
+		format(5 + self:getDex(6) * self:getTalentLevel(t), 5 + self:getStr(6) * self:getTalentLevel(t), -5 - 2 * self:getTalentLevel(t), -5 - 2 * self:getTalentLevel(t))
+	end,
+}
+
+
+newTalent{
+	name = "Death Dance",
+	type = {"technique/2hweapon-offense", 2},
+	require = techs_req2,
+	points = 5,
+	cooldown = 10,
+	stamina = 30,
+	action = function(self, t)
+		local weapon = self:getInven("MAINHAND")[1]
+		if not weapon or not weapon.twohanded then
+			game.logPlayer(self, "You cannot use Death Dance without a two handed weapon!")
+			return nil
 		end
+
+		for i = -1, 1 do for j = -1, 1 do
+			local x, y = self.x + i, self.y + j
+			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
+				local target = game.level.map(x, y, Map.ACTOR)
+				self:attackTargetWith(target, weapon.combat, nil, 1.4 + self:getTalentLevel(t) / 8)
+			end
+		end end
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is stunned.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
+		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
+	end,
+}
+
+newTalent{
+	name = "Warshout",
+	type = {"technique/2hweapon-offense",3},
+	require = techs_req3,
+	points = 5,
+	stamina = 30,
+	cooldown = 18,
+	tactical = {
+		ATTACKAREA = 10,
+	},
+	range = 1,
+	action = function(self, t)
+		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.CONFUSION, {dur=self:getTalentLevelRaw(t), dam=50+self:getTalentLevelRaw(t)*10}, {type="flame"})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Shout your warcry in a frontal cone, any targets caught inside will be confused for %d turns.]]):
+		format(self:getTalentLevelRaw(t))
 	end,
 }
 
 newTalent{
 	name = "Death Blow",
-	type = {"technique/2hweapon", 2},
+	type = {"technique/2hweapon-offense", 4},
+	require = techs_req4,
 	points = 5,
 	cooldown = 30,
 	stamina = 30,
@@ -77,7 +132,6 @@ newTalent{
 				game.logSeen(target, "%s resists the death blow!", target.name:capitalize())
 			end
 		end
-
 		return true
 	end,
 	info = function(self, t)
@@ -86,65 +140,42 @@ newTalent{
 	end,
 }
 
+-----------------------------------------------------------------------------
+-- Cripple
+-----------------------------------------------------------------------------
 newTalent{
-	name = "Death Dance",
-	type = {"technique/2hweapon", 3},
+	name = "Stunning Blow",
+	type = {"technique/2hweapon-cripple", 1},
+	require = techs_req1,
 	points = 5,
-	cooldown = 10,
-	stamina = 30,
-	require = { stat = { str=30 }, },
+	cooldown = 6,
+	stamina = 8,
+	require = { stat = { str=12 }, },
 	action = function(self, t)
 		local weapon = self:getInven("MAINHAND")[1]
 		if not weapon or not weapon.twohanded then
-			game.logPlayer(self, "You cannot use Death Dance without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Stunning Blow without a two handed weapon!")
 			return nil
 		end
 
-		for i = -1, 1 do for j = -1, 1 do
-			local x, y = self.x + i, self.y + j
-			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
-				local target = game.level.map(x, y, Map.ACTOR)
-				self:attackTargetWith(target, weapon.combat, nil, 1.4 + self:getTalentLevel(t) / 8)
+		local t = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(t)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
+			else
+				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
-		end end
-
-		return true
-	end,
-	info = function(self, t)
-		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
-	end,
-}
-
-newTalent{
-	name = "Berserker",
-	type = {"technique/2hweapon", 3},
-	mode = "sustained",
-	points = 5,
-	cooldown = 30,
-	sustain_stamina = 100,
-	require = { stat = { str=20 }, },
-	activate = function(self, t)
-		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or not weapon.twohanded then
-			game.logPlayer(self, "You cannot use Berserker without a two handed weapon!")
-			return nil
 		end
 
-		return {
-			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(4) * self:getTalentLevel(t)),
-			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(4) * self:getTalentLevel(t)),
-			def = self:addTemporaryValue("combat_def", -15),
-			armor = self:addTemporaryValue("combat_armor", -15),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_def", p.def)
-		self:removeTemporaryValue("combat_armor", p.armor)
-		self:removeTemporaryValue("combat_atk", p.atk)
-		self:removeTemporaryValue("combat_dam", p.dam)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enters a protective battle stance, increasing attack by %d and damage by %d at the cost of 15 defense and 15 armor.]]):format(5 + self:getDex(4) * self:getTalentLevel(t), 5 + self:getStr(4) * self:getTalentLevel(t))
+		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is stunned.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
 	end,
 }

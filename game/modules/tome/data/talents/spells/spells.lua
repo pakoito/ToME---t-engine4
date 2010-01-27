@@ -13,7 +13,6 @@ newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control 
 newTalentType{ type="spell/necromancy", name = "necromancy", description = "Necromancy is a dark school of magic dealing with death, and undeath." }
 
 -- Generic requires for spells based on talent level
---
 spells_req1 = {
 	stat = { mag=function(level) return 12 + (level-1) * 2 end },
 	level = function(level) return 0 + (level-1)  end,

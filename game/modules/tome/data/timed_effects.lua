@@ -221,6 +221,22 @@ newEffect{
 }
 
 newEffect{
+	name = "CONFUSED",
+	desc = "Confused",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
+	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("confused", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "DWARVEN_RESILIENCE",
 	desc = "Dwarven Resilience",
 	type = "physical",

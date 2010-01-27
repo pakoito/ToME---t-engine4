@@ -292,3 +292,18 @@ newDamageType{
 		end
 	end,
 }
+
+-- Confusion
+newDamageType{
+	name = "confusion", type = "CONFUSION",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_CONFUSED, dam.dur, {power=dam.dam})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}

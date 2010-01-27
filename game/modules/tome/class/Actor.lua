@@ -63,8 +63,8 @@ function _M:init(t, no_default)
 
 	-- Default regen
 	t.mana_regen = t.mana_regen or 0.5
-	t.stamina_regen = t.stamina_regen or 0.2 -- Stamina regens slower than mana
-	t.life_regen = t.life_regen or 0.1 -- Life regen real slow
+	t.stamina_regen = t.stamina_regen or 0.4 -- Stamina regens slower than mana
+	t.life_regen = t.life_regen or 0.3 -- Life regen real slow
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
@@ -105,6 +105,13 @@ end
 function _M:move(x, y, force)
 	local moved = false
 	if force or self:enoughEnergy() then
+		-- Confused ?
+		if not force and self:attr("confused") then
+			if rng.chance(self:attr("confused")) then
+				x, y = self.x + rng.range(-1, 1), self.y + rng.range(-1, 1)
+			end
+		end
+
 		-- Should we prob travel through walls ?
 		if not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
 			moved = self:probabilityTravel(x, y, self:attr("prob_travel"))

@@ -14,7 +14,7 @@ newEntity{
 newEntity{ base = "BASE_HEAVY_ARMOR",
 	name = "iron mail armour",
 	level_range = {1, 10},
-	require = { stat = { str=18 }, },
+	require = { stat = { str=14 }, },
 	cost = 20,
 	wielder = {
 		combat_def = 2,

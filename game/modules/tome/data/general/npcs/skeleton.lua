@@ -16,7 +16,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
-	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon"]=0.3 },
+	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
 
 	blind_immune = 1,
 	see_invisible = 2,

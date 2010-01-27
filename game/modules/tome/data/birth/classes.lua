@@ -16,11 +16,6 @@ newBirthDescriptor{
 	copy = {
 		max_life = 120,
 		life_rating = 10,
-		equipment = resolvers.equip{ id=true,
-			{type="weapon", subtype="longsword", name="iron longsword"},
-			{type="armor", subtype="shield", name="iron shield"},
-			{type="armor", subtype="massive", name="iron massive armor"}
-		},
 	},
 }
 
@@ -33,14 +28,21 @@ newBirthDescriptor{
 	stats = { str=3, con=2, dex=1, },
 	talents_types = {
 		["technique/shield"]={true, 0.3},
-		["technique/2hweapon"]={true, 0.3},
+		["technique/2hweapon-offense"]={true, 0.3},
+		["technique/2hweapon-cripple"]={true, 0.3},
 		["technique/combat-training"]={true, 0.3},
 		["technique/weapon-training"]={true, 0.3},
 	},
 	talents = {
-		[ActorTalents.T_SHIELD_BASH] = 1,
+		[ActorTalents.T_BERSERKER] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_SWORD_MASTERY] = 1,
+		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
+	},
+	copy = {
+		equipment = resolvers.equip{ id=true,
+			{type="weapon", subtype="greatsword", name="iron greatsword"},
+			{type="armor", subtype="heavy", name="iron mail armour"}
+		},
 	},
 }
 
