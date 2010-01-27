@@ -72,12 +72,12 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SLIME, 20 + (self:getMag() * self:getTalentLevel(t)) * 0.3, {type="slime"})
+		self:project(tg, x, y, DamageType.SLIME, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3, {type="slime"})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down for 3 turns.
-		The damage will increase with the Dexterity stat]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.3)
+		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.3)
 	end,
 }
 
@@ -107,7 +107,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You extend slimy roots into the ground, follow them and re-appear somewhere else in a range of %d.
-		The process is quite a strain on your body and you will be stunned for %d turns.
-		The damage will increase with the Dexterity stat]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.3, util.bound(5 - self:getTalentLevel(t) / 2, 2, 7))
+		The process is quite a strain on your body and you will be stunned for %d turns.]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.3, util.bound(5 - self:getTalentLevel(t) / 2, 2, 7))
 	end,
 }

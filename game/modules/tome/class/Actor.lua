@@ -353,15 +353,28 @@ function _M:postUseTalent(ab, ret)
 	end
 
 	-- Cancel stealth!
-	if ab.id ~= self.T_STEALTH and self:isTalentActive(self.T_STEALTH) then
+	if ab.id ~= self.T_STEALTH then self:breakStealth() end
+
+	return true
+end
+
+--- Breaks stealth if active
+function _M:breakStealth()
+	if self:isTalentActive(self.T_STEALTH) then
+		local chance = 0
+		if self:knowTalent(self.T_UNSEEN_ACTIONS) then
+			chance = 10 + self:getTalentLevel(self.T_UNSEEN_ACTIONS) * 9
+		end
+
+		-- Do not break stealth
+		if rng.percent(chance) then return end
+
 		local old = self.energy.value
 		self.energy.value = 100000
 		self:useTalent(self.T_STEALTH)
 		self.energy.value = old
 		self.changed = true
 	end
-
-	return true
 end
 
 --- Return the full description of a talent

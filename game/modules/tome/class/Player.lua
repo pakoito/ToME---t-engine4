@@ -260,6 +260,7 @@ function _M:playerUseItem(object, item)
 				self:useEnergy()
 			end
 		end
+		self:breakStealth()
 	end
 
 	if object and item then return use_fct(object, item) end

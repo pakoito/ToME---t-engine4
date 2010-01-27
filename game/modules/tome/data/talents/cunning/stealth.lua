@@ -42,12 +42,24 @@ newTalent{
 
 newTalent{
 	name = "Shadowstrike",
-	type = {"cunning/stealth", 1},
+	type = {"cunning/stealth", 2},
 	mode = "passive",
 	points = 5,
 	require = { stat = { cun=18 }, },
 	info = function(self, t)
 		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
 		Shadowstrikes do %.02f%% damage than a normal hit.]]):format((2 + self:getTalentLevel(t) / 5) * 100)
+	end,
+}
+
+newTalent{
+	name = "Unseen Actions",
+	type = {"cunning/stealth", 3},
+	mode = "passive",
+	points = 5,
+	require = { stat = { cun=18 }, },
+	info = function(self, t)
+		return ([[When you perform an action from stealth (attacking, using objects, ...) you have %d%% chances to not break stealth.]]):
+		format(10 + self:getTalentLevel(t) * 9)
 	end,
 }

@@ -89,13 +89,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	end
 
 	-- Cancel stealth!
-	if self:isTalentActive(self.T_STEALTH) then
-		local old = self.energy.value
-		self.energy.value = 100000
-		self:useTalent(self.T_STEALTH)
-		self.energy.value = old
-		self.changed = true
-	end
+	self:breakStealth()
 	return hit
 end
 
