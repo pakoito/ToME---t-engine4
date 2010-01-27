@@ -84,6 +84,8 @@ newBirthDescriptor{
 		["physical/combat-training"]={true, 0},
 		["physical/weapon-training"]={true, 0},
 		["cunning/stealth"]={true, 0.3},
+		["cunning/traps"]={true, 0.3},
+		["cunning/dirty"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_STEALTH] = 1,

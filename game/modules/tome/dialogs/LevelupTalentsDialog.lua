@@ -156,10 +156,10 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	else
 		local str = ""
 		str = str .. "#00FFFF#Talent\n"
-		str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, improve your character. You gain a talent point every level. You may also find trainers or artifacts that allows you to learn more.\n\n"
+		str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, improve your character. You gain two talent point every level. You may also find trainers or artifacts that allows you to learn more.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
-		lines = t.info(self.actor, t):splitLines(self.iw / 2 - 10, self.font)
+		lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)
 		local req = self.actor:getTalentReqDesc(self.list[self.sel].talent, 1)
 		if req ~= "" then
 			req = "Requirements for next point:\n"..req

@@ -52,7 +52,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Noxious fumes raises from the ground doing %0.2f nature damage in a radius of 3 each turns for %d turns.
+		return ([[Noxious fumes rises from the ground doing %0.2f nature damage in a radius of 3 each turns for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.11) * self:getTalentLevel(t), self:getTalentLevel(t))
 	end,
 }
@@ -121,7 +121,7 @@ newTalent{
 		}
 	end,
 	deactivate = function(self, t, p)
-		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
+		game.logSeen(self, "#0080FF#The furious lightning storm around %s calms down and disappears.", self.name)
 		self:removeTemporaryValue("mana_regen", p.drain)
 		return true
 	end,

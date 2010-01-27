@@ -354,11 +354,35 @@ function _M:postUseTalent(ab, ret)
 
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and self:isTalentActive(self.T_STEALTH) then
+		local old = self.energy.value
+		self.energy.value = 100000
 		self:useTalent(self.T_STEALTH)
+		self.energy.value = old
 		self.changed = true
 	end
 
 	return true
+end
+
+--- Return the full description of a talent
+-- You may overload it to add more data (like power usage, ...)
+function _M:getTalentFullDescription(t)
+	local d = {}
+
+	if t.mode == "passive" then d[#d+1] = "#6fff83#Use mode: #00FF00#Passive"
+	elseif t.mode == "sustained" then d[#d+1] = "#6fff83#Use mode: #00FF00#Sustained"
+	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activable"
+	end
+
+	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.mana or t.sustain_mana) end
+	if t.stamina or t.sustain_stamina then d[#d+1] = "#6fff83#Stamina cost: #ffcc80#"..(t.stamina or t.sustain_stamina) end
+	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
+	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
+	end
+	if t.cooldown then d[#d+1] = "#6fff83#Cooldown: #FFFFFF#"..t.cooldown end
+
+
+	return table.concat(d, "\n").."\n#6fff83#Description: #FFFFFF#"..t.info(self, t)
 end
 
 --- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction

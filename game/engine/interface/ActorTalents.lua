@@ -299,6 +299,12 @@ function _M:getTalentReqDesc(t_id, levmod)
 	return str
 end
 
+--- Return the full description of a talent
+-- You may overload it to add more data (like power usage, ...)
+function _M:getTalentFullDescription(t)
+	return t.info(self, t)
+end
+
 --- Do we know this talent type
 function _M:knowTalentType(name)
 	return self.talents_types[name]

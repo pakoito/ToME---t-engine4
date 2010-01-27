@@ -17,7 +17,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Removes the target from the flow of time for %d turns. In this state the target cannot act nor be harmed.
+		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act or be harmed.
 		The duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }
@@ -36,12 +36,12 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SLOW, util.bound((self:combatSpellpower(0.25) * self:getTalentLevel(t)) / 100, 0.1, 0.4), {type="manathrust"})
+		self:project(tg, x, y, DamageType.SLOW, util.bound((self:combatSpellpower(0.15) * self:getTalentLevel(t)) / 100, 0.1, 0.4), {type="manathrust"})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Decreases the target global speed by %.2f for 7 turns.
-		The speed decreases with the Magic stat]]):format(util.bound((self:combatSpellpower(0.25) * self:getTalentLevel(t)) / 100, 0.1, 0.4))
+		The speed decreases with the Magic stat]]):format(util.bound((self:combatSpellpower(0.15) * self:getTalentLevel(t)) / 100, 0.1, 0.4))
 	end,
 }
 
