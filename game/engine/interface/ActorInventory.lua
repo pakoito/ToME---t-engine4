@@ -130,16 +130,16 @@ end
 -- @param inven the inventory (from self:getInven())
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
-function _M:showInventory(title, inven, filter, action)
-	local d = ShowInventory.new(title, inven, filter, action)
+function _M:showInventory(title, inven, filter, action, allow_keybind)
+	local d = ShowInventory.new(title, inven, filter, action, allow_keybind and self)
 	game:registerDialog(d)
 end
 
 --- Show equipment dialog
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
-function _M:showEquipment(title, filter, action)
-	local d = ShowEquipment.new(title, self, filter, action)
+function _M:showEquipment(title, filter, action, allow_keybind)
+	local d = ShowEquipment.new(title, self, filter, action, allow_keybind and self)
 	game:registerDialog(d)
 end
 
@@ -287,4 +287,11 @@ function _M:sortInven(inven)
 			return ta < tb
 		end
 	end)
+end
+
+--- Finds an object by name in an inventory
+function _M:findInInventory(inven, name)
+	for item, o in ipairs(inven) do
+		if o:getName() == name then return o, item end
+	end
 end

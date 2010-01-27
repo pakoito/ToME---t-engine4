@@ -27,10 +27,12 @@ function _M:display()
 	if not a.changed then return self.surface end
 	a.changed = false
 
-	local talents = {}
+	local hks = {}
 	for i = 1, 36 do
 		if a.hotkey[i] and a.hotkey[i][1] == "talent" then
-			talents[#talents+1] = {a.hotkey[i][2], i}
+			hks[#hks+1] = {a.hotkey[i][2], i, "talent"}
+		elseif a.hotkey[i] and a.hotkey[i][1] == "inventory" then
+			hks[#hks+1] = {a.hotkey[i][2], i, "inventory"}
 		end
 	end
 
@@ -39,35 +41,52 @@ function _M:display()
 	local x = 0
 	local y = 0
 
-	for ii, ts in ipairs(talents) do
-		local tid = ts[1]
-		local i = ts[2]
-		local t = a:getTalentFromId(tid)
+	for ii, ts in ipairs(hks) do
 		local s
-		if a:isTalentCoolingDown(t) then
-			local txt = ("%d) %s (%d)"):format(i, t.name, a:isTalentCoolingDown(t))
-			local w, h = self.font:size(txt)
-			s = core.display.newSurface(w + 4, h + 4)
-			s:erase(40, 40, 40)
+		local i = ts[2]
+		if ts[3] == "talent" then
+			local tid = ts[1]
+			local t = a:getTalentFromId(tid)
+			if a:isTalentCoolingDown(t) then
+				local txt = ("%d) %s (%d)"):format(i, t.name, a:isTalentCoolingDown(t))
+				local w, h = self.font:size(txt)
+				s = core.display.newSurface(w + 4, h + 4)
+--				s:erase(40, 40, 40)
 
-			s:alpha(128)
-			s:drawString(self.font, txt, 2, 2, 255, 0, 0)
-		elseif a:isTalentActive(t.id) then
-			local txt = ("%d) %s"):format(i, t.name)
+				s:alpha(128)
+				s:drawString(self.font, txt, 2, 2, 255, 0, 0)
+			elseif a:isTalentActive(t.id) then
+				local txt = ("%d) %s"):format(i, t.name)
+				local w, h = self.font:size(txt)
+				s = core.display.newSurface(w + 4, h + 4)
+--				s:erase(40, 40, 40)
+
+				s:alpha(255)
+				s:drawString(self.font, txt, 2, 2, 255, 255, 0)
+			else
+				local txt = ("%d) %s"):format(i, t.name)
+				local w, h = self.font:size(txt)
+				s = core.display.newSurface(w + 4, h + 4)
+--				s:erase(40, 40, 40)
+
+				s:alpha(255)
+				s:drawString(self.font, txt, 2, 2, 0, 255, 0)
+			end
+		elseif ts[3] == "inventory" then
+			local o = a:findInInventory(a:getInven("INVEN"), ts[1])
+			local cnt = 0
+			if o then cnt = o:getNumber() end
+			local txt = ("%d) %s (%d)"):format(i, ts[1], cnt)
 			local w, h = self.font:size(txt)
 			s = core.display.newSurface(w + 4, h + 4)
-			s:erase(40, 40, 40)
+--			s:erase(40, 40, 40)
 
 			s:alpha(255)
-			s:drawString(self.font, txt, 2, 2, 255, 255, 0)
-		else
-			local txt = ("%d) %s"):format(i, t.name)
-			local w, h = self.font:size(txt)
-			s = core.display.newSurface(w + 4, h + 4)
-			s:erase(40, 40, 40)
-
-			s:alpha(255)
-			s:drawString(self.font, txt, 2, 2, 0, 255, 0)
+			if cnt > 0 then
+				s:drawString(self.font, txt, 2, 2, 0, 255, 0)
+			else
+				s:drawString(self.font, txt, 2, 2, 128, 128, 128)
+			end
 		end
 
 		self.surface:merge(s, x, y)

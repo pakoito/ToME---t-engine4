@@ -149,17 +149,6 @@ function _M:setTarget(target)
 	game.target.target.y = target.y
 end
 
---- Uses an hotkeyed talent
-function _M:activateHotkey(id)
-	if self.hotkey[id] then
-		if self.hotkey[id][1] == "talent" then
-			self:useTalent(self.hotkey[id][2])
-		end
-	else
-		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the inscructions there.")
-	end
-end
-
 local function spotHostiles(self)
 	local seen = false
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
@@ -202,6 +191,24 @@ function _M:runCheck()
 	if noticed then return false, noticed end
 
 	return engine.interface.PlayerRun.runCheck(self)
+end
+
+--- Uses an hotkeyed talent
+function _M:activateHotkey(id)
+	if self.hotkey[id] then
+		if self.hotkey[id][1] == "talent" then
+			self:useTalent(self.hotkey[id][2])
+		elseif self.hotkey[id][1] == "inventory" then
+			local o, item = self:findInInventory(self:getInven("INVEN"), self.hotkey[id][2])
+			if not o then
+				Dialog:simplePopup("Item not found", "You do not have any "..self.hotkey[id][2]..".")
+			else
+				self:playerUseItem(o, item)
+			end
+		end
+	else
+		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the inscructions there.")
+	end
 end
 
 function _M:playerPickup()
@@ -252,26 +259,32 @@ function _M:playerTakeoff()
 	end)
 end
 
-function _M:playerUseItem()
+function _M:playerUseItem(object, item)
+	local use_fct = function(o, item)
+		self.changed = true
+		local ret, no_id = o:use(self)
+		if not no_id then
+			o:identify(true)
+		end
+		if ret and ret == "destroy" then
+			if o.multicharge and o.multicharge > 1 then
+				o.multicharge = o.multicharge - 1
+			else
+				self:removeObject(self:getInven(self.INVEN_INVEN), item)
+				game.log("You have no more "..o:getName())
+				self:sortInven()
+				self:useEnergy()
+			end
+		end
+	end
+
+	if object and item then return use_fct(object, item) end
+
 	self:showInventory(nil, self:getInven(self.INVEN_INVEN),
 		function(o)
 			return o:canUseObject()
 		end,
-		function(o, item)
-			local ret, no_id = o:use(self)
-			if not no_id then
-				o:identify(true)
-			end
-			if ret and ret == "destroy" then
-				if o.multicharge and o.multicharge > 1 then
-					o.multicharge = o.multicharge - 1
-				else
-					self:removeObject(self:getInven(self.INVEN_INVEN), item)
-					game.log("You have no more "..o:getName())
-					self:sortInven()
-					self:useEnergy()
-				end
-			end
-		end
+		use_fct,
+		true
 	)
 end

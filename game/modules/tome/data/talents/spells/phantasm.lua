@@ -69,7 +69,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[The caster surrounds herself with a phantasmal shield. If hit in melee the shield will last out at the attacker for %d arcane damage.
+		return ([[The caster surrounds herself with a phantasmal shield. If hit in melee the shield will deal %d arcane damage to the attacker.
 		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
 	end,
 }

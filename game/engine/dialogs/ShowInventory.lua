@@ -3,10 +3,11 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(title, inven, filter, action)
+function _M:init(title, inven, filter, action, actor)
 	self.inven = inven
 	self.filter = filter
 	self.action = action
+	self.actor = actor
 	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
 	self:generateList()
@@ -23,6 +24,43 @@ function _M:init(title, inven, filter, action)
 			end
 		end,
 	},{
+		HOTKEY_1 = function() self:defineHotkey(1) end,
+		HOTKEY_2 = function() self:defineHotkey(2) end,
+		HOTKEY_3 = function() self:defineHotkey(3) end,
+		HOTKEY_4 = function() self:defineHotkey(4) end,
+		HOTKEY_5 = function() self:defineHotkey(5) end,
+		HOTKEY_6 = function() self:defineHotkey(6) end,
+		HOTKEY_7 = function() self:defineHotkey(7) end,
+		HOTKEY_8 = function() self:defineHotkey(8) end,
+		HOTKEY_9 = function() self:defineHotkey(9) end,
+		HOTKEY_10 = function() self:defineHotkey(10) end,
+		HOTKEY_11 = function() self:defineHotkey(11) end,
+		HOTKEY_12 = function() self:defineHotkey(12) end,
+		HOTKEY_SECOND_1 = function() self:defineHotkey(13) end,
+		HOTKEY_SECOND_2 = function() self:defineHotkey(14) end,
+		HOTKEY_SECOND_3 = function() self:defineHotkey(15) end,
+		HOTKEY_SECOND_4 = function() self:defineHotkey(16) end,
+		HOTKEY_SECOND_5 = function() self:defineHotkey(17) end,
+		HOTKEY_SECOND_6 = function() self:defineHotkey(18) end,
+		HOTKEY_SECOND_7 = function() self:defineHotkey(19) end,
+		HOTKEY_SECOND_8 = function() self:defineHotkey(20) end,
+		HOTKEY_SECOND_9 = function() self:defineHotkey(21) end,
+		HOTKEY_SECOND_10 = function() self:defineHotkey(22) end,
+		HOTKEY_SECOND_11 = function() self:defineHotkey(23) end,
+		HOTKEY_SECOND_12 = function() self:defineHotkey(24) end,
+		HOTKEY_THIRD_1 = function() self:defineHotkey(25) end,
+		HOTKEY_THIRD_2 = function() self:defineHotkey(26) end,
+		HOTKEY_THIRD_3 = function() self:defineHotkey(27) end,
+		HOTKEY_THIRD_4 = function() self:defineHotkey(28) end,
+		HOTKEY_THIRD_5 = function() self:defineHotkey(29) end,
+		HOTKEY_THIRD_6 = function() self:defineHotkey(30) end,
+		HOTKEY_THIRD_7 = function() self:defineHotkey(31) end,
+		HOTKEY_THIRD_8 = function() self:defineHotkey(31) end,
+		HOTKEY_THIRD_9 = function() self:defineHotkey(33) end,
+		HOTKEY_THIRD_10 = function() self:defineHotkey(34) end,
+		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,
+		HOTKEY_THIRD_12 = function() self:defineHotkey(36) end,
+
 		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
 		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
 		ACCEPT = function() self:use() end,
@@ -36,6 +74,14 @@ function _M:init(title, inven, filter, action)
 			end
 		end },
 	}
+end
+
+function _M:defineHotkey(id)
+	if not self.actor then return end
+
+	self.actor.hotkey[id] = {"inventory", self.list[self.sel].object:getName()}
+	self:simplePopup("Hotkey "..id.." assigned", self.list[self.sel].object:getName():capitalize().." assigned to hotkey "..id)
+	self.actor.changed = true
 end
 
 function _M:use()
@@ -64,9 +110,17 @@ function _M:drawDialog(s)
 	-- Description part
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
 
-	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select an object; #00FF00#enter#FFFFFF# to use.
+	local help
+	if self.actor then
+		help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select an object; #00FF00#enter#FFFFFF# to use. #00FF00#1-0#FFFFFF# to assign a hotkey.
 Mouse: #00FF00#Left click#FFFFFF# to use.
-]]):splitLines(self.iw / 2 - 10, self.font)
+]]
+	else
+		help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select an object; #00FF00#enter#FFFFFF# to use.
+Mouse: #00FF00#Left click#FFFFFF# to use.
+]]
+	end
+	local talentshelp = help:splitLines(self.iw / 2 - 10, self.font)
 
 	local lines = {}
 	local h = 2
