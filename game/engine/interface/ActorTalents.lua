@@ -186,9 +186,9 @@ function _M:learnTalent(t_id, force)
 	if not self.talents[t_id] then
 		-- Auto assign to hotkey
 		if t.mode ~= "passive" and self.hotkey then
-			for i = 1, 12 do
+			for i = 1, 36 do
 				if not self.hotkey[i] then
-					self.hotkey[i] = t_id
+					self.hotkey[i] = {"talent", t_id}
 					break
 				end
 			end
@@ -211,7 +211,7 @@ function _M:unlearnTalent(t_id)
 	if self.talents[t_id] and self.talents[t_id] == 1 then
 		if self.hotkey then
 			for i, known_t_id in pairs(self.hotkey) do
-				if known_t_id == t_id then self.hotkey[i] = nil end
+				if known_t_id[1] == "talent" and known_t_id[2] == t_id then self.hotkey[i] = nil end
 			end
 		end
 	end

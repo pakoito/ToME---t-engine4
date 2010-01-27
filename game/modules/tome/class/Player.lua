@@ -152,7 +152,9 @@ end
 --- Uses an hotkeyed talent
 function _M:activateHotkey(id)
 	if self.hotkey[id] then
-		self:useTalent(self.hotkey[id])
+		if self.hotkey[id][1] == "talent" then
+			self:useTalent(self.hotkey[id][2])
+		end
 	else
 		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the inscructions there.")
 	end

@@ -34,6 +34,30 @@ function _M:init(actor)
 		HOTKEY_10 = function() self:defineHotkey(10) end,
 		HOTKEY_11 = function() self:defineHotkey(11) end,
 		HOTKEY_12 = function() self:defineHotkey(12) end,
+		HOTKEY_SECOND_1 = function() self:defineHotkey(13) end,
+		HOTKEY_SECOND_2 = function() self:defineHotkey(14) end,
+		HOTKEY_SECOND_3 = function() self:defineHotkey(15) end,
+		HOTKEY_SECOND_4 = function() self:defineHotkey(16) end,
+		HOTKEY_SECOND_5 = function() self:defineHotkey(17) end,
+		HOTKEY_SECOND_6 = function() self:defineHotkey(18) end,
+		HOTKEY_SECOND_7 = function() self:defineHotkey(19) end,
+		HOTKEY_SECOND_8 = function() self:defineHotkey(20) end,
+		HOTKEY_SECOND_9 = function() self:defineHotkey(21) end,
+		HOTKEY_SECOND_10 = function() self:defineHotkey(22) end,
+		HOTKEY_SECOND_11 = function() self:defineHotkey(23) end,
+		HOTKEY_SECOND_12 = function() self:defineHotkey(24) end,
+		HOTKEY_THIRD_1 = function() self:defineHotkey(25) end,
+		HOTKEY_THIRD_2 = function() self:defineHotkey(26) end,
+		HOTKEY_THIRD_3 = function() self:defineHotkey(27) end,
+		HOTKEY_THIRD_4 = function() self:defineHotkey(28) end,
+		HOTKEY_THIRD_5 = function() self:defineHotkey(29) end,
+		HOTKEY_THIRD_6 = function() self:defineHotkey(30) end,
+		HOTKEY_THIRD_7 = function() self:defineHotkey(31) end,
+		HOTKEY_THIRD_8 = function() self:defineHotkey(31) end,
+		HOTKEY_THIRD_9 = function() self:defineHotkey(33) end,
+		HOTKEY_THIRD_10 = function() self:defineHotkey(34) end,
+		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,
+		HOTKEY_THIRD_12 = function() self:defineHotkey(36) end,
 
 		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
@@ -51,7 +75,7 @@ function _M:init(actor)
 end
 
 function _M:defineHotkey(id)
-	self.actor.hotkey[id] = self.list[self.sel].talent
+	self.actor.hotkey[id] = {"talent", self.list[self.sel].talent}
 	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(self.list[self.sel].talent).name:capitalize().." assigned to hotkey "..id)
 	self.actor.changed = true
 end
@@ -70,10 +94,15 @@ function _M:generateList()
 		if t and t.mode ~= "passive" then
 			local typename = "talent"
 			if t.type[1]:find("^spell/") then typename = "spell" end
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..t.name.." ("..typename..")", talent=t.id }
+			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..t.name.." ("..typename..")", talent=t.id, type=t.type }
 			i = i + 1
 		end
 	end
+	table.sort(list, function(a, b)
+		if a.type[1] == b.type[1] then return a.type[2] < b.type[2]
+		else return a.type[1] < b.type[1]
+		end
+	end)
 	self.list = list
 end
 
@@ -88,7 +117,7 @@ Mouse: #00FF00#Left click#FFFFFF# to use.
 
 	local lines = {}
 	local t = self.actor:getTalentFromId(self.list[self.sel].talent)
-	lines = t.info(self.actor, t):splitLines(self.iw / 2 - 10, self.font)
+	lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)
 	local h = 2
 	for i = 1, #talentshelp do
 		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)

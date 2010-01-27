@@ -28,9 +28,9 @@ function _M:display()
 	a.changed = false
 
 	local talents = {}
-	for i = 1, 12 do
-		if a.hotkey[i] then
-			talents[#talents+1] = {a.hotkey[i], i}
+	for i = 1, 36 do
+		if a.hotkey[i] and a.hotkey[i][1] == "talent" then
+			talents[#talents+1] = {a.hotkey[i][2], i}
 		end
 	end
 
