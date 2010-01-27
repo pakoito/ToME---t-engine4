@@ -151,6 +151,12 @@ function _M:apply()
 			self.actor:initBody()
 		end
 		if d.copy then
+			-- Append array part
+			while #d.copy > 0 do
+				local f = table.remove(d.copy)
+				table.insert(self.actor, f)
+			end
+			-- Copy normal data
 			table.merge(self.actor, d.copy, true)
 		end
 	end

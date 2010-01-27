@@ -112,10 +112,17 @@ newBirthDescriptor{
 	copy = {
 		max_life = 80,
 		life_rating = 7,
-		equipment = resolvers.equip{ id=true,
+		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff"},
 			{type="armor", subtype="cloth", name="robe"}
 		},
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+		},
+		resolvers.generic(function(e)
+			e.hotkey[10] = {"inventory", "potion of lesser mana"}
+		end),
 	},
 }
 

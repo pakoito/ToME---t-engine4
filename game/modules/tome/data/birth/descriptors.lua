@@ -16,6 +16,9 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser healing"},
 			{type="potion", subtype="potion", name="potion of lesser healing"},
 		},
+		resolvers.generic(function(e)
+			e.hotkey[9] = {"inventory", "potion of lesser healing"}
+		end),
 	},
 }
 
