@@ -1,8 +1,9 @@
 -- Physical combat
 newTalentType{ type="technique/2hweapon-offense", name = "two handed weapons", description = "Specialized two handed techniques." }
 newTalentType{ type="technique/2hweapon-cripple", name = "two handed weapons", description = "Specialized two handed techniques." }
-newTalentType{ type="technique/dualweapon", name = "dual wielding", description = "Allows the user to be more proficient with dual wielding weapons." }
-newTalentType{ type="technique/shield", name = "weapon and shields", description = "Allows the user to be more proficient with shields and one handed weapons." }
+newTalentType{ type="technique/shield-offense", name = "weapon and shields", description = "Specialized weapon and shield techniques." }
+newTalentType{ type="technique/shield-defense", name = "weapon and shields", description = "Specialized weapon and shield techniques." }
+newTalentType{ type="technique/dualweapon", name = "dual wielding", description = "Specialized dual wielding techniques." }
 newTalentType{ type="technique/weapon-training", name = "weapon-training", description = "Grants bonuses to the different weapon types." }
 newTalentType{ type="technique/combat-training", name = "combat-training", description = "Teaches to use various armors and improves health." }
 

@@ -145,6 +145,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		DamageType:get(typ).projector(target, self.x, self.y, typ, dam)
 	end end
 
+	-- Riposte!
+	if not hitted and target:knowTalent(target.T_RIPOSTE) and rng.percent(util.bound(target:getTalentLevel(target.T_RIPOSTE) * target:getDex(50), 10, 80)) then
+		game.logSeen(self, "%s ripostes!", target.name:capitalize())
+		target:attackTarget(self, nil, nil, true)
+	end
+
 	return self:combatSpeed(weapon), hitted
 end
 
@@ -298,11 +304,20 @@ function _M:combatMentalResist()
 end
 
 
---- Check if the user has a two handed weapon
+--- Check if the actor has a two handed weapon
 function _M:hasTwoHandedWeapon()
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or not weapon.twohanded then
 		return nil
 	end
 	return weapon
+end
+
+--- Check if the actor has a shield
+function _M:hasShield()
+	local shield = self:getInven("OFFHAND")[1]
+	if not shield or not shield.special_combat then
+		return nil
+	end
+	return shield
 end
