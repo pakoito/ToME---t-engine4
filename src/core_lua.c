@@ -824,7 +824,8 @@ static int rng_range(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
 	int y = luaL_checknumber(L, 2);
-	lua_pushnumber(L, x + rand_div(1 + y - x));
+	int res = x + rand_div(1 + y - x);
+	lua_pushnumber(L, res);
 	return 1;
 }
 
@@ -851,7 +852,8 @@ static int rng_call(lua_State *L)
 	if (lua_isnumber(L, 2))
 	{
 		int y = luaL_checknumber(L, 2);
-		lua_pushnumber(L, x + rand_div(1 + y - x));
+		int res = x + rand_div(1 + y - x);
+		lua_pushnumber(L, res);
 	}
 	else
 	{

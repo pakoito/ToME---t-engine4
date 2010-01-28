@@ -299,7 +299,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
+			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatSpellResist)(target), 0, 95, 15) and target:canBe("stun") then
 				target:setEffect(target.EFF_CONFUSED, dam.dur, {power=dam.dam})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())

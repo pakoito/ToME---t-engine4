@@ -7,17 +7,17 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 40,
 	activate = function(self, t)
-		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or not weapon.twohanded then
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
 			game.logPlayer(self, "You cannot use Berserker without a two handed weapon!")
 			return nil
 		end
 
 		return {
-			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(6) * self:getTalentLevel(t)),
-			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(6) * self:getTalentLevel(t)),
-			def = self:addTemporaryValue("combat_def", -5 - 2 * self:getTalentLevel(t)),
-			armor = self:addTemporaryValue("combat_armor", -5 - 2 * self:getTalentLevel(t)),
+			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(7) * self:getTalentLevel(t)),
+			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(7) * self:getTalentLevel(t)),
+			def = self:addTemporaryValue("combat_def", -5 - 2 * (self:getTalentLevelRaw(t)-1)),
+			armor = self:addTemporaryValue("combat_armor", -5 - 2 * (self:getTalentLevelRaw(t)-1)),
 		}
 	end,
 
@@ -30,10 +30,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Enters an aggressive battle stance, increasing attack by %d and damage by %d at the cost of %d defense and %d armor.]]):
-		format(5 + self:getDex(6) * self:getTalentLevel(t), 5 + self:getStr(6) * self:getTalentLevel(t), -5 - 2 * self:getTalentLevel(t), -5 - 2 * self:getTalentLevel(t))
+		format(5 + self:getDex(7) * self:getTalentLevel(t), 5 + self:getStr(7) * self:getTalentLevel(t), -5 - 2 * (self:getTalentLevelRaw(t)-1), -5 - 2 * (self:getTalentLevelRaw(t)-1))
 	end,
 }
-
 
 newTalent{
 	name = "Death Dance",
@@ -43,8 +42,8 @@ newTalent{
 	cooldown = 10,
 	stamina = 30,
 	action = function(self, t)
-		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or not weapon.twohanded then
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
 			game.logPlayer(self, "You cannot use Death Dance without a two handed weapon!")
 			return nil
 		end
@@ -76,15 +75,26 @@ newTalent{
 	},
 	range = 1,
 	action = function(self, t)
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
+			game.logPlayer(self, "You cannot use Warshout without a two handed weapon!")
+			return nil
+		end
+
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.CONFUSION, {dur=self:getTalentLevelRaw(t), dam=50+self:getTalentLevelRaw(t)*10}, {type="flame"})
+		self:project(tg, x, y, DamageType.CONFUSION, {
+			dur=3+self:getTalentLevelRaw(t),
+			dam=50+self:getTalentLevelRaw(t)*10,
+			power_check=function() return self:combatAttackStr(weapon) end,
+			resist_check=self.combatPhysicalResist,
+		}, {type="flame"})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Shout your warcry in a frontal cone, any targets caught inside will be confused for %d turns.]]):
-		format(self:getTalentLevelRaw(t))
+		format(3 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -95,16 +105,15 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	stamina = 30,
-	require = { stat = { str=22 }, },
 	action = function(self, t)
-		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or not weapon.twohanded then
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
 			game.logPlayer(self, "You cannot use Death Blow without a two handed weapon!")
 			return nil
 		end
 
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
@@ -150,16 +159,15 @@ newTalent{
 	points = 5,
 	cooldown = 6,
 	stamina = 8,
-	require = { stat = { str=12 }, },
 	action = function(self, t)
-		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or not weapon.twohanded then
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
 			game.logPlayer(self, "You cannot use Stunning Blow without a two handed weapon!")
 			return nil
 		end
 
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
@@ -177,5 +185,113 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is stunned.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
+	end,
+}
+
+newTalent{
+	name = "Sunder Armour",
+	type = {"technique/2hweapon-cripple", 2},
+	require = techs_req2,
+	points = 5,
+	cooldown = 6,
+	stamina = 12,
+	action = function(self, t)
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
+			game.logPlayer(self, "You cannot use Sunder Armour without a two handed weapon!")
+			return nil
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t)})
+			else
+				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is armor is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 5*self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
+	name = "Sunder Arms",
+	type = {"technique/2hweapon-cripple", 3},
+	require = techs_req3,
+	points = 5,
+	cooldown = 6,
+	stamina = 12,
+	action = function(self, t)
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
+			game.logPlayer(self, "You cannot use Sunder Arms without a two handed weapon!")
+			return nil
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t)})
+			else
+				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is attack power is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 3*self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
+	name = "Crush",
+	type = {"technique/2hweapon-cripple", 4},
+	require = techs_req4,
+	points = 5,
+	cooldown = 6,
+	stamina = 12,
+	action = function(self, t)
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
+			game.logPlayer(self, "You cannot use Crush without a two handed weapon!")
+			return nil
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 2 + self:getTalentLevel(t) / 10)
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {})
+			else
+				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage, if the attack hits, the target is unable to move for %d turns.]]):format(100 * (2 + self:getTalentLevel(t) / 10), 2+self:getTalentLevel(t))
 	end,
 }

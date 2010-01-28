@@ -17,8 +17,8 @@ newTalent{
 		ATTACK = 10,
 	},
 	action = function(self, t)
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000

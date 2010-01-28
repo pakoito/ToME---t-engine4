@@ -46,7 +46,8 @@ newTalent{
 	cooldown = 5,
 	range = 1,
 	action = function(self, t)
-		local x, y, target = self:getTarget()
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
@@ -67,7 +68,8 @@ newTalent{
 	cooldown = 2,
 	range = 1,
 	action = function(self, t)
-		local x, y, target = self:getTarget()
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.ACID, 1 + self:getTalentLevel(t) / 3, true)
@@ -88,8 +90,8 @@ newTalent{
 	cooldown = 2,
 	range = 1,
 	action = function(self, t)
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
@@ -111,7 +113,8 @@ newTalent{
 	cooldown = 2,
 	range = 1,
 	action = function(self, t)
-		local x, y, target = self:getTarget()
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
@@ -131,8 +134,8 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	action = function(self, t)
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		local hit = self:attackTarget(target, 0.5 + self:getTalentLevel(t) / 10, true)
@@ -161,8 +164,8 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	action = function(self, t)
-		local t = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, 1.5 + self:getTalentLevel(t) / 10, true)
@@ -192,7 +195,8 @@ newTalent{
 	cooldown = 5,
 	range = 1,
 	action = function(self, t)
-		local x, y, target = self:getTarget()
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		return true

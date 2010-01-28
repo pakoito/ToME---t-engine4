@@ -291,3 +291,18 @@ end
 function _M:combatSpellResist()
 	return self.combat_spellresist + (self:getMag() + self:getWil()) * 0.25
 end
+
+--- Computes mental resistance
+function _M:combatMentalResist()
+	return self.combat_mentalresist + (self:getCun() + self:getWil()) * 0.25
+end
+
+
+--- Check if the user has a two handed weapon
+function _M:hasTwoHandedWeapon()
+	local weapon = self:getInven("MAINHAND")[1]
+	if not weapon or not weapon.twohanded then
+		return nil
+	end
+	return weapon
+end

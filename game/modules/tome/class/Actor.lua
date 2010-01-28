@@ -41,6 +41,7 @@ function _M:init(t, no_default)
 
 	self.combat_physresist = 0
 	self.combat_spellresist = 0
+	self.combat_mentalresist = 0
 
 	self.fatigue = 0
 
@@ -107,7 +108,7 @@ function _M:move(x, y, force)
 	if force or self:enoughEnergy() then
 		-- Confused ?
 		if not force and self:attr("confused") then
-			if rng.chance(self:attr("confused")) then
+			if rng.percent(self:attr("confused")) then
 				x, y = self.x + rng.range(-1, 1), self.y + rng.range(-1, 1)
 			end
 		end

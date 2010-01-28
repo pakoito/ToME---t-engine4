@@ -374,3 +374,47 @@ newEffect{
 		DamageType:get(DamageType.ARCANE).projector(self, self.x, self.y, DamageType.ARCANE, eff.power)
 	end,
 }
+
+newEffect{
+	name = "SUNDER_ARMOUR",
+	desc = "Sunder Armour",
+	type = "physical",
+	status = "detrimental",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_armor", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_armor", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "SUNDER_ARMS",
+	desc = "Sunder Arms",
+	type = "physical",
+	status = "detrimental",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_atk", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "PINNED",
+	desc = "Pinned to the ground",
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is pinned to the ground.", "+Pinned" end,
+	on_lose = function(self, err) return "#Target# is no longer pinned.", "-Pinned" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("never_move", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("never_move", eff.tmpid)
+	end,
+}
