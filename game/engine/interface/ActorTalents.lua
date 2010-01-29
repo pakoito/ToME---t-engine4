@@ -227,22 +227,24 @@ end
 function _M:canLearnTalent(t)
 	-- Check prerequisites
 	if t.require then
+		local req = t.require
+		if type(req) == "function" then req = req(self, t) end
 		local tlev = self:getTalentLevelRaw(t) + 1
 
 		-- Obviously this requires the ActorStats interface
-		if t.require.stat then
-			for s, v in pairs(t.require.stat) do
+		if req.stat then
+			for s, v in pairs(req.stat) do
 				v = util.getval(v, tlev)
 				if self:getStat(s) < v then return nil, "not enough stat" end
 			end
 		end
-		if t.require.level then
-			if self.level < util.getval(t.require.level, tlev) then
+		if req.level then
+			if self.level < util.getval(req.level, tlev) then
 				return nil, "not enough levels"
 			end
 		end
-		if t.require.talent then
-			for _, tid in ipairs(t.require.talent) do
+		if req.talent then
+			for _, tid in ipairs(req.talent) do
 				if not self:knowTalent(tid) then return nil, "missing dependency" end
 			end
 		end
@@ -265,6 +267,7 @@ function _M:getTalentReqDesc(t_id, levmod)
 	local t = _M.talents_def[t_id]
 	local req = t.require
 	if not req then return "" end
+	if type(req) == "function" then req = req(self, t) end
 
 	local tlev = self:getTalentLevelRaw(t_id) + (levmod or 0)
 

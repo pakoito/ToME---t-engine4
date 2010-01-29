@@ -52,6 +52,28 @@ techs_dex_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
+-- Generic rquires based either on str or dex
+techs_strdex_req1 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
+	stat = { [stat]=function(level) return 12 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+} end
+techs_strdex_req2 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
+	stat = { [stat]=function(level) return 20 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+} end
+techs_strdex_req3 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
+	stat = { [stat]=function(level) return 28 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+} end
+techs_strdex_req4 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
+	stat = { [stat]=function(level) return 36 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+} end
+techs_strdex_req5 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
+	stat = { [stat]=function(level) return 44 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+} end
+
 load("/data/talents/techniques/2hweapon.lua")
 load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")

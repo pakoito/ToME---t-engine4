@@ -418,3 +418,19 @@ newEffect{
 		self:removeTemporaryValue("never_move", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "ATTACK",
+	desc = "Attack",
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# aims carefully." end,
+	on_lose = function(self, err) return "#Target# aims less carefully." end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_atk", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.tmpid)
+	end,
+}

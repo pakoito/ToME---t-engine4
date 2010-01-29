@@ -179,7 +179,14 @@ end
 
 --- Gets the armor
 function _M:combatArmor()
-	return self.combat_armor
+	local add = 0
+	if self:hasHeavyArmor() and self:knowTalent(self.T_HEAVY_ARMOUR_TRAINING) then
+		add = add + self:getTalentLevel(self.T_HEAVY_ARMOUR_TRAINING)
+	end
+	if self:hasMassiveArmor() and self:knowTalent(self.T_MASSIVE_ARMOUR_TRAINING) then
+		add = add + self:getTalentLevel(self.T_MASSIVE_ARMOUR_TRAINING)
+	end
+	return self.combat_armor + add
 end
 
 --- Gets the attack
@@ -337,4 +344,24 @@ function _M:hasDualWeapon()
 		return nil
 	end
 	return weapon, offweapon
+end
+
+--- Check if the actor has a heavy armor
+function _M:hasHeavyArmor()
+	if not self:getInven("BODY") then return end
+	local armor = self:getInven("BODY")[1]
+	if not armor or armor.subtype ~= "heavy" then
+		return nil
+	end
+	return shield
+end
+
+--- Check if the actor has a massive armor
+function _M:hasMassiveArmor()
+	if not self:getInven("BODY") then return end
+	local armor = self:getInven("BODY")[1]
+	if not armor or armor.subtype ~= "massive" then
+		return nil
+	end
+	return shield
 end
