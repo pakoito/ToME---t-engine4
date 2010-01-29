@@ -22,9 +22,16 @@ newBirthDescriptor{
 	},
 }
 
+-- Races
 load("/data/birth/races/human.lua")
 load("/data/birth/races/elf.lua")
 load("/data/birth/races/hobbit.lua")
 load("/data/birth/races/dwarf.lua")
+
+-- Sexes
 load("/data/birth/sexes.lua")
-load("/data/birth/classes.lua")
+
+-- Classes
+load("/data/birth/warrior.lua")
+load("/data/birth/rogue.lua")
+load("/data/birth/mage.lua")

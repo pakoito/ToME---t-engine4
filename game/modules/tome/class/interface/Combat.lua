@@ -170,7 +170,11 @@ end
 
 --- Gets the defense
 function _M:combatDefense()
-	return self.combat_def + (self:getDex() - 10) * 0.35
+	local add = 0
+	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
+		add = add + 4 + (self:getTalentLevel(self.T_DUAL_WEAPON_DEFENSE) * self:getDex()) / 12
+	end
+	return self.combat_def + (self:getDex() - 10) * 0.35 + add
 end
 
 --- Gets the armor
@@ -306,6 +310,7 @@ end
 
 --- Check if the actor has a two handed weapon
 function _M:hasTwoHandedWeapon()
+	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or not weapon.twohanded then
 		return nil
@@ -315,9 +320,21 @@ end
 
 --- Check if the actor has a shield
 function _M:hasShield()
+	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
 	local shield = self:getInven("OFFHAND")[1]
 	if not shield or not shield.special_combat then
 		return nil
 	end
 	return shield
+end
+
+--- Check if the actor dual wields
+function _M:hasDualWeapon()
+	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
+	local weapon = self:getInven("MAINHAND")[1]
+	local offweapon = self:getInven("OFFHAND")[1]
+	if not weapon or not offweapon or not weapon.combat or not offweapon.combat then
+		return nil
+	end
+	return weapon, offweapon
 end

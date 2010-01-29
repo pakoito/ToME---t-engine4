@@ -481,6 +481,7 @@ end
 --- Can the target be applied some effects
 -- @param what a string describing what is being tried
 function _M:canBe(what)
+	if what == "cut" and self:attr("cut_immune") then return false end
 	if what == "blind" and self:attr("blind_immune") then return false end
 	if what == "stun" and self:attr("stun_immune") then return false end
 	if what == "knockback" and self:attr("knockback_immune") then return false end

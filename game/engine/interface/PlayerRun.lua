@@ -16,6 +16,7 @@ local sides =
 	[8] = {left=7, right=9},
 	[9] = {left=8, right=6},
 }
+
 local turn =
 {
 	[1] = {left=3, right=7},

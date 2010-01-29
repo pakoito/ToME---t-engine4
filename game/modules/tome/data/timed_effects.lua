@@ -9,7 +9,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# starts to bleed.", "+Bleeds" end,
 	on_lose = function(self, err) return "#Target# stops bleeding.", "-Bleeds" end,
 	on_timeout = function(self, eff)
-		self:takeHit(eff.power, self)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 	end,
 }
 

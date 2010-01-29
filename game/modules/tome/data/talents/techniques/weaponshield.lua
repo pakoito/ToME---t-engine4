@@ -21,7 +21,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self:attackTargetWith(target, shield.special_combat, nil, 1.5 + self:getTalentLevel(t) / 5)
-		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.3 + self:getTalentLevel(t) / 5)
+		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.3 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 5)
 
 		-- Try to stun !
 		if hit then
@@ -36,7 +36,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with two shield strikes, stunning it and doing %d%% shield damage.
-		The damage multiplier increases with your strength.]]):format(100 * (1.3 + self:getTalentLevel(t) / 5))
+		The damage multiplier increases with your strength.]]):format(100 * (1.3 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 5))
 	end,
 }
 
@@ -73,9 +73,9 @@ newTalent{
 		-- First attack with weapon
 		self:attackTarget(target, nil, 1.5 + self:getTalentLevel(t) / 10, true)
 		-- Second attack with shield
-		self:attackTargetWith(target, shield.special_combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+		self:attackTargetWith(target, shield.special_combat, nil, 1.5 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10)
 		-- Third attack with shield
-		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.5 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)) / 10)
 
 		-- Try to stun !
 		if hit then
@@ -90,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with your weapon and two shield strikes doing %d%% damage, trying to overpower your target.
-		If the last attack hits, the target is knocked back.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
+		If the last attack hits, the target is knocked back.]]):format(100 * (1.5 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
 	end,
 }
 
@@ -114,7 +114,7 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		-- First attack with shield
-		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.8 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.8 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10)
 
 		-- Second & third attack with weapon
 		if hit then
@@ -128,7 +128,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with shield doing %d%% damage. If it hits you follow up with 2 weapon strikes which are automatic crits.]]):
-		format(100 * (1.8 + self:getTalentLevel(t) / 10))
+		format(100 * (1.8 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
 	end,
 }
 
@@ -159,8 +159,8 @@ newTalent{
 		return {
 			atk = self:addTemporaryValue("combat_dam", -10),
 			dam = self:addTemporaryValue("combat_atk", -10),
-			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4) * self:getTalentLevel(t)),
-			armor = self:addTemporaryValue("combat_armor", 5 + self:getCun(4) * self:getTalentLevel(t)),
+			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
+			armor = self:addTemporaryValue("combat_armor", 5 + self:getCun(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 			stun = stun,
 			knock = knock
 		}
@@ -176,7 +176,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Enters a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
-		At level 5 it also makes you immnue to stuns and knockbacks.]]):format(5 + self:getDex(4) * self:getTalentLevel(t), 5 + self:getCun(4) * self:getTalentLevel(t))
+		At level 5 it also makes you immnue to stuns and knockbacks.]]):format(
+		5 + self:getDex(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
+		5 + self:getCun(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
+		)
 	end,
 }
 
@@ -219,8 +222,16 @@ newTalent{
 	require = techs_req3,
 	mode = "passive",
 	points = 5,
+	on_learn = function(self, t)
+		self.combat_physresist = self.combat_physresist + 4
+		self.combat_spellresist = self.combat_spellresist + 2
+	end,
+	on_unlearn = function(self, t)
+		self.combat_physresist = self.combat_physresist + 4
+		self.combat_spellresist = self.combat_spellresist + 2
+	end,
 	info = function(self, t)
-		return ([[.]]):format()
+		return ([[Improves your damage with shield attacks and increases your spell and physical resistance.]]):format()
 	end,
 }
 

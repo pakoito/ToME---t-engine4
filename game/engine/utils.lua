@@ -218,7 +218,31 @@ coord_to_dir = {
 	},
 }
 
+dir_sides =
+{
+	[1] = {left=2, right=4},
+	[2] = {left=3, right=1},
+	[3] = {left=6, right=2},
+	[4] = {left=1, right=7},
+	[6] = {left=9, right=3},
+	[7] = {left=4, right=8},
+	[8] = {left=7, right=9},
+	[9] = {left=8, right=6},
+}
+
 util = {}
+
+function util.getDir(x1, y1, x2, y2)
+	local xd, yd = x1 - x2, y1 - y2
+	if xd ~= 0 then xd = xd / math.abs(xd) end
+	if yd ~= 0 then yd = yd / math.abs(yd) end
+	return coord_to_dir[xd][yd], xd, yd
+end
+
+function util.coordAddDir(x, y, dir)
+	return x + dir_to_coord[dir][1], y + dir_to_coord[dir][2]
+end
+
 function util.boundWrap(i, min, max)
 	if i < min then i = max
 	elseif i > max then i = min end
