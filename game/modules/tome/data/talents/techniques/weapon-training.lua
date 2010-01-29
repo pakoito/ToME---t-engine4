@@ -1,6 +1,6 @@
 newTalent{
 	name = "Precise Striking",
-	type = {"technique/weapon-training", 1},
+	type = {"technique/combat-techniques", 1},
 	mode = "sustained",
 	points = 5,
 	require = techs_strdex_req1,
@@ -27,7 +27,7 @@ newTalent{
 
 newTalent{
 	name = "Blinding Speed",
-	type = {"technique/weapon-training", 2},
+	type = {"technique/combat-techniques", 2},
 	points = 5,
 	cooldown = 55,
 	stamina = 25,
@@ -43,7 +43,7 @@ newTalent{
 
 newTalent{
 	name = "Perfect Strike",
-	type = {"technique/weapon-training", 3},
+	type = {"technique/combat-techniques", 3},
 	points = 5,
 	cooldown = 55,
 	stamina = 25,
@@ -59,7 +59,7 @@ newTalent{
 
 newTalent{
 	name = "Rush",
-	type = {"technique/weapon-training", 4},
+	type = {"technique/combat-techniques", 4},
 	message = "@Source@ rushes out!",
 	require = techs_strdex_req4,
 	points = 5,
