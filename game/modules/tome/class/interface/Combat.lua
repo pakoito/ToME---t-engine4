@@ -76,7 +76,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	end
 
 	-- Barehanded ?
-	if not speed then
+	if not speed and self.combat then
 		local s, h = self:attackTargetWith(target, self.combat, damtype, mult)
 		speed = math.max(speed or 0, s)
 		hit = hit or h

@@ -5,6 +5,7 @@
 module(..., package.seeall, class.make)
 
 local next_uid = 1
+local entities_load_functions = {}
 
 -- Setup the uids repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
 setmetatable(__uids, {__mode="v"})
@@ -106,7 +107,7 @@ function _M:resolve(t)
 	for k, e in pairs(t) do
 		if type(e) == "table" and e.__resolver then
 			t[k] = resolvers.calc[e.__resolver](e, self)
-		elseif type(e) == "table" then
+		elseif type(e) == "table" and not e.__CLASSNAME then
 			self:resolve(e)
 		end
 	end
@@ -163,10 +164,19 @@ end
 -- @param no_default if true then no default values will be assigned
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
 function _M:loadList(file, no_default, res)
+	no_default = no_default and true or false
 	res = res or {}
 
-	print("Loading entities file", file)
-	local f, err = loadfile(file)
+	local f, err = nil, nil
+	if entities_load_functions[file] and entities_load_functions[file][no_default] then
+		print("Loading entities file from memory", file)
+		f = entities_load_functions[file][no_default]
+	else
+		f, err = loadfile(file)
+		print("Loading entities file from file", file)
+		entities_load_functions[file] = entities_load_functions[file] or {}
+		entities_load_functions[file][no_default] = f
+	end
 	if err then error(err) end
 
 	setfenv(f, setmetatable({
@@ -176,17 +186,19 @@ function _M:loadList(file, no_default, res)
 			-- Do we inherit things ?
 			if t.base then
 				for k, e in pairs(res[t.base]) do
-					if not t[k] then
-						t[k] = e
-					elseif type(t[k]) == "table" and type(e) == "table" then
-						copy_recurs(t[k], e)
+					if k ~= "define_as" then
+						if not t[k] then
+							t[k] = e
+						elseif type(t[k]) == "table" and type(e) == "table" then
+							copy_recurs(t[k], e)
+						end
 					end
 				end
 				t.base = nil
 			end
 
 			local e = self.new(t, no_default)
-			print("loaded", e.name, no_default)
+
 			res[#res+1] = e
 			if t.define_as then res[t.define_as] = e end
 		end,

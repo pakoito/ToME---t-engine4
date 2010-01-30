@@ -118,7 +118,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lashes out a flurry of blows, hiting your target three times with each weapons for %d%% damage.]]):format(100 * (1.8 + self:getTalentLevel(t) / 10))
+		return ([[Lashes out a flurry of blows, hitting your target three times with each weapons for %d%% damage.]]):format(100 * (1.8 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -147,7 +147,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lashes out a flurry of blows, hiting your target three times with each weapons for %d%% damage.]]):format(100 * (1.8 + self:getTalentLevel(t) / 10))
+		return ([[Lashes out a flurry of blows, hitting your target three times with each weapons for %d%% damage.]]):format(100 * (1.8 + self:getTalentLevel(t) / 10))
 	end,
 }
 

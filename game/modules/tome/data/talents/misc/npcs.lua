@@ -205,3 +205,44 @@ newTalent{
 		return ([[Bites the target, infecting ti with poison.]])
 	end,
 }
+
+newTalent{
+	name = "Summon",
+	type = {"other/other", 1},
+	cooldown = 4,
+	range = 20,
+	action = function(self, t)
+		local filters = self.summon or {{type=self.type, subtype=self.subtype, number=1, hasxp=true, lastfor=20}}
+		if #filters == 0 then return end
+		local filter = rng.table(filters)
+
+		for i = 1, filter.number do
+			-- Find space
+			local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to summon!")
+				break
+			end
+
+			-- Find an actor with that filter
+			local m = game.zone:makeEntity(game.level, "actor", filter)
+			if m then
+				if not filter.hasxp then m.exp_worth = 0 end
+				m:resolve()
+
+				m.summoner = self
+				m.summon_time = filter.lastfor
+
+				m:move(x, y, true)
+				game.level:addEntity(m)
+				m:added()
+
+				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
+			end
+		end
+		return true
+	end,
+	info = function(self)
+		return ([[Summon allies.]])
+	end,
+}

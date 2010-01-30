@@ -29,6 +29,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	rarity = 4,
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 5, combat_def = 1,
+	talents = resolvers.talents{ [Talents.T_SUMMON]=1 },
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
@@ -38,6 +39,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 5, combat_def = 1,
 	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUNNING_BLOW]=1, [Talents.T_DEATH_BLOW]=1 },
+	ai_state = { talent_in=1, },
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",

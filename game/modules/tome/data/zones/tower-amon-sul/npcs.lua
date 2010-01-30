@@ -1,8 +1,8 @@
-load("/data/general/npcs/rodent.lua")
-load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/molds.lua")
+--load("/data/general/npcs/rodent.lua")
+--load("/data/general/npcs/vermin.lua")
+--load("/data/general/npcs/molds.lua")
 load("/data/general/npcs/skeleton.lua")
-load("/data/general/npcs/snake.lua")
+--load("/data/general/npcs/snake.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 

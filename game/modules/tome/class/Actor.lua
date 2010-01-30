@@ -55,9 +55,9 @@ function _M:init(t, no_default)
 	t.mana_rating = t.mana_rating or 10
 	t.stamina_rating = t.stamina_rating or 10
 
-	t.esp = {range=10}
+	t.esp = t.esp or {range=10}
 
-	t.on_melee_hit = {}
+	t.on_melee_hit = t.on_melee_hit or {}
 
 	-- Resistances
 	t.resists = t.resists or {}

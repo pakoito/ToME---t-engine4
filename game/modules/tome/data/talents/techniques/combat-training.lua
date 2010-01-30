@@ -89,6 +89,6 @@ newTalent{
 	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage with knifes.]]
+		return [[Increases damage with knives.]]
 	end,
 }
