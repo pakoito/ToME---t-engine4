@@ -5,7 +5,8 @@ newTalentType{ type="technique/shield-offense", name = "weapon and shields", des
 newTalentType{ type="technique/shield-defense", name = "weapon and shields", description = "Specialized weapon and shield techniques." }
 newTalentType{ type="technique/dualweapon-training", name = "dual wielding", description = "Specialized dual wielding techniques." }
 newTalentType{ type="technique/dualweapon-attack", name = "dual wielding", description = "Specialized dual wielding techniques." }
-newTalentType{ type="technique/combat-techniques", name = "combat-techniques", description = "Generic combat oriented techniques." }
+newTalentType{ type="technique/combat-techniques-active", name = "combat-techniques", description = "Generic combat oriented techniques." }
+newTalentType{ type="technique/combat-techniques-passive", name = "combat-techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-training", name = "combat-training", description = "Teaches to use various armors and improves health." }
 
 -- Generic requires for techs based on talent level

@@ -35,7 +35,7 @@ newTalent{
 		self.max_life = self.max_life - 40
 	end,
 	info = function(self, t)
-		return ([[Increases your maximun life by %d]]):format(40 * self:getTalentLevel(t))
+		return ([[Increases your maximun life by %d]]):format(40 * self:getTalentLevelRaw(t))
 	end,
 }
 

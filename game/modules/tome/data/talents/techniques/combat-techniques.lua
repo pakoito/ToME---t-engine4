@@ -1,6 +1,9 @@
+----------------------------------------------------
+-- Active techniques
+----------------------------------------------------
 newTalent{
 	name = "Precise Striking",
-	type = {"technique/combat-techniques", 1},
+	type = {"technique/combat-techniques-active", 1},
 	mode = "sustained",
 	points = 5,
 	require = techs_strdex_req1,
@@ -27,7 +30,7 @@ newTalent{
 
 newTalent{
 	name = "Blinding Speed",
-	type = {"technique/combat-techniques", 2},
+	type = {"technique/combat-techniques-active", 2},
 	points = 5,
 	cooldown = 55,
 	stamina = 25,
@@ -43,7 +46,7 @@ newTalent{
 
 newTalent{
 	name = "Perfect Strike",
-	type = {"technique/combat-techniques", 3},
+	type = {"technique/combat-techniques-active", 3},
 	points = 5,
 	cooldown = 55,
 	stamina = 25,
@@ -59,7 +62,7 @@ newTalent{
 
 newTalent{
 	name = "Rush",
-	type = {"technique/combat-techniques", 4},
+	type = {"technique/combat-techniques-active", 4},
 	message = "@Source@ rushes out!",
 	require = techs_strdex_req4,
 	points = 5,
@@ -96,5 +99,70 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Rushes toward your target with incredible speed. If the target is reached you get a free attack doing 120% weapon damage.]])
+	end,
+}
+
+----------------------------------------------------
+-- Passive techniques
+----------------------------------------------------
+newTalent{
+	name = "Quick Recovery",
+	type = {"technique/combat-techniques-passive", 1},
+	require = techs_strdex_req1,
+	mode = "passive",
+	points = 5,
+	on_learn = function(self, t)
+		self.stamina_regen = self.stamina_regen + 0.2
+	end,
+	on_unlearn = function(self, t)
+		self.stamina_regen = self.stamina_regen - 0.2
+	end,
+	info = function(self, t)
+		return ([[Your focus on the combat allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevelRaw(t) / 5)
+	end,
+}
+
+newTalent{
+	name = "Fast Metabolism",
+	type = {"technique/combat-techniques-passive", 2},
+	require = techs_strdex_req2,
+	mode = "passive",
+	points = 5,
+	on_learn = function(self, t)
+		self.life_regen = self.life_regen + 0.2
+	end,
+	on_unlearn = function(self, t)
+		self.life_regen = self.life_regen - 0.2
+	end,
+	info = function(self, t)
+		return ([[Your focus on the combat allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevelRaw(t) / 5)
+	end,
+}
+
+newTalent{
+	name = "Spell Shield",
+	type = {"technique/combat-techniques-passive", 3},
+	require = techs_strdex_req3,
+	mode = "passive",
+	points = 5,
+	on_learn = function(self, t)
+		self.combat_spellresist = self.combat_spellresist + 4
+	end,
+	on_unlearn = function(self, t)
+		self.combat_spellresist = self.combat_spellresist - 4
+	end,
+	info = function(self, t)
+		return ([[Rigorous training allows you to be more resistant to some spells effects. (+%d spell resistance).]]):format(self:getTalentLevelRaw(t) * 4)
+	end,
+}
+
+newTalent{
+	name = "Unending Frenzy",
+	type = {"technique/combat-techniques-passive", 4},
+	require = techs_strdex_req4,
+	mode = "passive",
+	points = 5,
+	info = function(self, t)
+		return ([[You relish in the death of your foes, regaining %d stamina wit heach death.]]):format(self:getTalentLevel(t) * 2)
 	end,
 }
