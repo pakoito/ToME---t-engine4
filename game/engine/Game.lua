@@ -96,6 +96,10 @@ function _M:tick()
 	end
 end
 
+--- Called when a zone leaves a level
+function _M:leaveLevel(level)
+end
+
 --- Called by the engine when the user tries to close the window
 function _M:onQuit()
 end

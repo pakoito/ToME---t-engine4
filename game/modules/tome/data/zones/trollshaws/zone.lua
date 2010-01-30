@@ -4,9 +4,9 @@ return {
 	level_scheme = "player",
 	max_level = 5,
 	width = 50, height = 50,
-	all_remembered = true,
+--	all_remembered = true,
 	all_lited = true,
---	persistant = true,
+	persistant = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -27,10 +27,8 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {4, 6},
-			filters = { {type="potion" }, {type="scroll" }, {}, {} },
---			nb_object = {400, 600},
---			filters = { {type="jewelry", subtype="amulet" }, },
+			nb_object = {6, 9},
+			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 	},
 	levels =

@@ -147,6 +147,12 @@ function _M:getSaveDescription()
 	}
 end
 
+function _M:leaveLevel(level)
+	if level:hasEntity(self.player) then
+		level:removeEntity(self.player)
+	end
+end
+
 function _M:changeLevel(lev, zone)
 	if zone then
 		if self.zone then self.zone:leaveLevel() end
@@ -201,7 +207,7 @@ function _M:display()
 	self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
 
 	-- Now the map, if any
-	if self.level and self.level.map then
+	if self.level and self.level.map and self.level.map.loaded then
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
 			self.level.map:fovESP(self.player.x, self.player.y, self.player.esp.range or 10)

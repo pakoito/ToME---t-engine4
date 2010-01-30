@@ -6,7 +6,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
---	persistant = true,
+	persistant = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -27,8 +27,9 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {400, 600},
-			filters = { {type="potion" }, {type="potion" }, {}, {}, {} }
+			class = "engine.generator.object.Random",
+			nb_object = {6, 9},
+			filters = { {} }
 		},
 	},
 	levels =

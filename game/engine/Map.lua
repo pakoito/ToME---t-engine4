@@ -128,6 +128,7 @@ function _M:loaded()
 	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self._fov_esp = core.fov.new(_M.opaqueESP, _M.applyESP, self)
 	self.changed = true
+	self.loaded = true
 
 	self:redisplay()
 end

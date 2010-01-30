@@ -67,25 +67,25 @@ end
 
 function _M:saveObject(obj, zip)
 	self.current_save_main = obj
-	self:addToProcess(game)
+	self:addToProcess(obj)
 	while #self.process > 0 do
 		local tbl = table.remove(self.process)
 		self.tables[tbl] = self:getFileName(tbl)
 		zip:add(self:getFileName(tbl), tbl:save())
 	end
-	return self.tables[game]
+	return self.tables[obj]
 end
 
 --- Save the given game
 function _M:saveGame(game)
 	fs.mkdir(self.save_dir)
 
+	local popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
+	core.display.forceRedraw()
+
 	local zip = fs.zipOpen(self.save_dir.."game.teag")
 	self:saveObject(game, zip)
 	zip:close()
-
-	local popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
-	core.display.forceRedraw()
 
 	local desc = game:getSaveDescription()
 	local f = fs.open(self.save_dir.."desc.lua", "w")
@@ -101,9 +101,14 @@ end
 function _M:saveLevel(level)
 	fs.mkdir(self.save_dir)
 
+	local popup = Dialog:simplePopup("Saving level", "Please wait while saving the level...")
+	core.display.forceRedraw()
+
 	local zip = fs.zipOpen(self.save_dir..("level-%s-%d.teal"):format(level.data.short_name, level.level))
 	self:saveObject(level, zip)
 	zip:close()
+
+	game:unregisterDialog(popup)
 end
 
 local function resolveSelf(o, base, allow_object)
@@ -172,6 +177,9 @@ function _M:loadLevel(zone, level)
 
 	fs.mount(path, self.load_dir)
 
+	local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...")
+	core.display.forceRedraw()
+
 	local loadedLevel = self:loadReal("main")
 
 	-- Delay loaded must run
@@ -179,6 +187,8 @@ function _M:loadLevel(zone, level)
 --		print("loader executed for class", o, o.__CLASSNAME)
 		o:loaded()
 	end
+
+	game:unregisterDialog(popup)
 
 	fs.umount(path)
 	return loadedLevel

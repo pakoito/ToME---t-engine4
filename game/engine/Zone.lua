@@ -220,9 +220,10 @@ end
 
 --- Leave the level, forgetting uniques and such
 function _M:leaveLevel(no_close)
-print("leaving unique")
 	-- Before doing anything else, close the current level
 	if not no_close and game.level and game.level.map then
+		game:leaveLevel(game.level)
+
 		if game.level.data.persistant then
 			local save = Savefile.new(game.save_name)
 			save:saveLevel(game.level)
