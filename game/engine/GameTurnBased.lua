@@ -20,11 +20,9 @@ function _M:tick()
 		-- If we are paused do not get energy, but still process frames if needed
 		engine.Game.tick(self)
 	else
-		while not self.paused do
-			engine.GameEnergyBased.tick(self)
-			self.turn = self.turn + 1
-			self:onTurn()
-		end
+		engine.GameEnergyBased.tick(self)
+		self.turn = self.turn + 1
+		self:onTurn()
 	end
 end
 
