@@ -31,6 +31,10 @@ function _M:isIdentified()
 		self.identified = game.object_known_types[self.type][self.subtype][self.name]
 	end
 
+	if self.auto_id then
+		self.identified = self.auto_id
+	end
+
 	return self.identified
 end
 

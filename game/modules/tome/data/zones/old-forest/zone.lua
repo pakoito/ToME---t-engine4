@@ -31,6 +31,10 @@ return {
 			nb_object = {6, 9},
 			filters = { {} }
 		},
+		trap = {
+			class = "engine.generator.trap.Random",
+			nb_trap = {9, 15},
+		},
 	},
 	levels =
 	{
