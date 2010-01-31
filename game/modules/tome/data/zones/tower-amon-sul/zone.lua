@@ -30,6 +30,10 @@ return {
 			nb_object = {6, 9},
 			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
+		trap = {
+			class = "engine.generator.trap.Random",
+			nb_trap = {60, 90},
+		},
 	},
 	levels =
 	{

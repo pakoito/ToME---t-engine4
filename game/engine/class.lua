@@ -121,7 +121,13 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 			for k,v in pairs(value) do      -- save its fields
 --				print(allow, k , filter[k])
 				if (not allow and not filter[k]) or (allow and filter[k]) then
-					local fieldname = string.format("%s[%s]", name, basicSerialize(k))
+					local fieldname
+					-- Special case to handle index by objects
+					if type(k) == "table" and k.__CLASSNAME then
+						fieldname = string.format("%s[loadObject('%s')]", name, savefile:getFileName(k))
+					else
+						fieldname = string.format("%s[%s]", name, basicSerialize(k))
+					end
 					serialize_data(outf, fieldname, v, saved, filter, allow, savefile, false)
 				end
 			end

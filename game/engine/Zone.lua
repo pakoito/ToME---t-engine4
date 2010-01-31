@@ -16,6 +16,7 @@ function _M:setup(t)
 	self.level_class = require(t.level_class or "engine.Level")
 	self.npc_class = require(t.npc_class or "engine.Actor")
 	self.grid_class = require(t.grid_class or "engine.Grid")
+	self.trap_class = require(t.trap_class or "engine.Trap")
 	self.object_class = require(t.object_class or "engine.Object")
 end
 
@@ -32,6 +33,7 @@ function _M:init(short_name)
 	self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
 	self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
 	self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
+	self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
 
 	-- Determine a zone base level
 	self.base_level = self.level_range[1]
@@ -157,6 +159,7 @@ function _M:makeEntityByName(level, type, name)
 	if type == "actor" then e = self.npc_list[name]
 	elseif type == "object" then e = self.object_list[name]
 	elseif type == "grid" then e = self.grid_list[name]
+	elseif type == "trap" then e = self.trap_list[name]
 	end
 	if not e then return nil end
 
@@ -295,6 +298,17 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	-- Generate objects (before actors so that actors can use the probability list of objects to get equipments)
 	if level_data.generator.object then
 		local generator = require(level_data.generator.object.class).new(
+			self,
+			map,
+			level,
+			spots
+		)
+		generator:generate()
+	end
+
+	-- Generate traps
+	if level_data.generator.trap then
+		local generator = require(level_data.generator.trap.class).new(
 			self,
 			map,
 			level,

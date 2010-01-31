@@ -9,15 +9,15 @@ module(..., package.seeall, class.make)
 
 --- The place of a terrain entity in a map grid
 TERRAIN = 1
+--- The place of a terrain entity in a map grid
+TRAP = 50
 --- The place of an actor entity in a map grid
 ACTOR = 100
 --- The place of an object entity in a map grid
 OBJECT = 1000
 
 --- The order of display for grid seen
-displayOrder = { ACTOR, OBJECT, TERRAIN }
---- The order of display for grids remembered
-rememberDisplayOrder = { TERRAIN }
+searchOrder = { TERRAIN, TRAP, OBJECT, ACTOR }
 
 --- Sets the viewport size
 -- Static
@@ -128,7 +128,7 @@ function _M:loaded()
 	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
 	self._fov_esp = core.fov.new(_M.opaqueESP, _M.applyESP, self)
 	self.changed = true
-	self.loaded = true
+	self.finished = true
 
 	self:redisplay()
 end
@@ -206,8 +206,17 @@ function _M:updateMap(x, y)
 	local g = self(x, y, TERRAIN)
 	local o = self(x, y, OBJECT)
 	local a = self(x, y, ACTOR)
+	local t = self(x, y, TRAP)
 
 	if g then g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image) end
+	if t then
+		-- Handles invisibility and telepathy and other such things
+		if not self.actor_player or t:knownBy(self.actor_player) then
+			t = self.tiles:get(t.display, t.color_r, t.color_g, t.color_b, t.color_br, t.color_bg, t.color_bb, t.image)
+		else
+			t = nil
+		end
+	end
 	if o then o = self.tiles:get(o.display, o.color_r, o.color_g, o.color_b, o.color_br, o.color_bg, o.color_bb, o.image) end
 	if a then
 		-- Handles invisibility and telepathy and other such things
@@ -218,7 +227,7 @@ function _M:updateMap(x, y)
 		end
 	end
 
-	self._map:setGrid(x, y, g, o, a)
+	self._map:setGrid(x, y, g, t, o, a)
 end
 
 --- Sets/gets a value from the map

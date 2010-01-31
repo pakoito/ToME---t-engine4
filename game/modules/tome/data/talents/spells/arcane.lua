@@ -59,7 +59,7 @@ newTalent{
 		self.combat_spellpower = self.combat_spellpower - 5
 	end,
 	info = function(self, t)
-		return [[Your mastery of magic allows your to permanently increase your spellpower by 5.]]
+		return ([[Your mastery of magic allows your to permanently increase your spellpower by %d.]]):format(5 * self:getTalentLevelRaw(t))
 	end,
 }
 

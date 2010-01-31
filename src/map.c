@@ -34,6 +34,7 @@ static int map_new(lua_State *L)
 	map->mheight = mheight;
 	map->grids_terrain = calloc(w, sizeof(GLuint*));
 	map->grids_actor = calloc(w, sizeof(GLuint*));
+	map->grids_trap = calloc(w, sizeof(GLuint*));
 	map->grids_object = calloc(w, sizeof(GLuint*));
 	map->grids_seens = calloc(w, sizeof(bool*));
 	map->grids_remembers = calloc(w, sizeof(bool*));
@@ -46,6 +47,7 @@ static int map_new(lua_State *L)
 		map->grids_terrain[i] = calloc(h, sizeof(GLuint));
 		map->grids_actor[i] = calloc(h, sizeof(GLuint));
 		map->grids_object[i] = calloc(h, sizeof(GLuint));
+		map->grids_trap[i] = calloc(h, sizeof(GLuint));
 		map->grids_seens[i] = calloc(h, sizeof(bool));
 		map->grids_remembers[i] = calloc(h, sizeof(bool));
 		map->grids_lites[i] = calloc(h, sizeof(bool));
@@ -77,6 +79,7 @@ static int map_free(lua_State *L)
 	{
 		free(map->grids_terrain[i]);
 		free(map->grids_actor[i]);
+		free(map->grids_trap[i]);
 		free(map->grids_object[i]);
 		free(map->grids_seens[i]);
 		free(map->grids_remembers[i]);
@@ -85,6 +88,7 @@ static int map_free(lua_State *L)
 	free(map->grids_terrain);
 	free(map->grids_actor);
 	free(map->grids_object);
+	free(map->grids_trap);
 	free(map->grids_seens);
 	free(map->grids_remembers);
 	free(map->grids_lites);
@@ -98,13 +102,16 @@ static int map_set_grid(lua_State *L)
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
-	GLuint *t = lua_isnil(L, 4) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
-	GLuint *o = lua_isnil(L, 5) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
-	GLuint *a = lua_isnil(L, 6) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 6);
+	GLuint *g = lua_isnil(L, 4) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
+	GLuint *t = lua_isnil(L, 5) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
+	GLuint *o = lua_isnil(L, 6) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 6);
+	GLuint *a = lua_isnil(L, 7) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 7);
 
-	map->grids_terrain[x][y] = t ? *t : 0;
+	map->grids_terrain[x][y] = g ? *g : 0;
+	map->grids_trap[x][y] = t ? *t : 0;
 	map->grids_actor[x][y] = a ? *a : 0;
 	map->grids_object[x][y] = o ? *o : 0;
+	return 0;
 }
 
 static int map_set_seen(lua_State *L)
@@ -218,6 +225,16 @@ static int map_to_screen(lua_State *L)
 							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
 							glEnd();
 						}
+						if (map->grids_trap[i][j])
+						{
+							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j]);
+							glBegin(GL_QUADS);
+							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
+							glEnd();
+						}
 						if (map->grids_object[i][j])
 						{
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j]);
@@ -254,6 +271,16 @@ static int map_to_screen(lua_State *L)
 						else if (map->grids_object[i][j])
 						{
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j]);
+							glBegin(GL_QUADS);
+							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
+							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
+							glEnd();
+						}
+						else if (map->grids_trap[i][j])
+						{
+							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j]);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
 							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);

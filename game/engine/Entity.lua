@@ -171,11 +171,14 @@ function _M:loadList(file, no_default, res)
 	if entities_load_functions[file] and entities_load_functions[file][no_default] then
 		print("Loading entities file from memory", file)
 		f = entities_load_functions[file][no_default]
-	else
+	elseif fs.exists(file) then
 		f, err = loadfile(file)
 		print("Loading entities file from file", file)
 		entities_load_functions[file] = entities_load_functions[file] or {}
 		entities_load_functions[file][no_default] = f
+	else
+		-- No data
+		f = function() end
 	end
 	if err then error(err) end
 

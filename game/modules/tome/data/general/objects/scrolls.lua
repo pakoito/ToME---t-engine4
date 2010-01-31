@@ -109,7 +109,11 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 5,
 
 	use_simple = { name="detect enemies within a certain range", use = function(self, who)
-		who:detect(game.level.map.ACTOR, 20)
+		local rad = 15 + self:getMag(20)
+		self:setEffect(self.EFF_SENSE, 2, {
+			range = rad,
+			actor = 1,
+		})
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}

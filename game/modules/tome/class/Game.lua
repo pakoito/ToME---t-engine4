@@ -9,7 +9,8 @@ local Target = require "engine.Target"
 local Level = require "engine.Level"
 local Birther = require "engine.Birther"
 
-local Grid = require "engine.Grid"
+local Trap = require "mod.class.Trap"
+local Grid = require "mod.class.Grid"
 local Actor = require "mod.class.Actor"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
@@ -98,7 +99,7 @@ end
 
 function _M:loaded()
 	engine.GameTurnBased.loaded(self)
-	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object"}
+	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap"}
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
 	self.key = engine.KeyBind.new()
@@ -207,7 +208,7 @@ function _M:display()
 	self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
 
 	-- Now the map, if any
-	if self.level and self.level.map and self.level.map.loaded then
+	if self.level and self.level.map and self.level.map.finished then
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
 			self.level.map:fovESP(self.player.x, self.player.y, self.player.esp.range or 10)
@@ -224,7 +225,10 @@ function _M:display()
 					local ok = false
 					if game.player:attr("detect_actor") and game.level.map(lx, ly, game.level.map.ACTOR) then ok = true end
 					if game.player:attr("detect_object") and game.level.map(lx, ly, game.level.map.OBJECT) then ok = true end
---					if game.player:attr("detect_trap") and game.level.map(lx, ly, game.level.map.ACTOR) then ok = true end
+					if game.player:attr("detect_trap") and game.level.map(lx, ly, game.level.map.TRAP) then
+						game.level.map(lx, ly, game.level.map.TRAP):setKnown(self.player, true)
+						ok = true
+					end
 
 					if ok then
 						game.level.map.seens(lx, ly, true)
@@ -241,7 +245,7 @@ function _M:display()
 		-- Display a tooltip if available
 		local mx, my = core.mouse.get()
 		local tmx, tmy = self.level.map:getMouseTile(mx, my)
-		local tt = self.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
+		local tt = self.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
 		if tt and self.level.map.seens(tmx, tmy) then
 			self.tooltip:set("%s", tt)
 			local t = self.tooltip:display()
