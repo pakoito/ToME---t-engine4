@@ -353,7 +353,7 @@ function _M:hasHeavyArmor()
 	if not armor or armor.subtype ~= "heavy" then
 		return nil
 	end
-	return shield
+	return armor
 end
 
 --- Check if the actor has a massive armor
@@ -363,5 +363,5 @@ function _M:hasMassiveArmor()
 	if not armor or armor.subtype ~= "massive" then
 		return nil
 	end
-	return shield
+	return armor
 end

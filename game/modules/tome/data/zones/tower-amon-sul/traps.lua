@@ -1,1 +1,1 @@
-load("/data/general/traps/basic.lua")
+load("/data/general/traps/elemental.lua")

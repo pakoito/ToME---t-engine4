@@ -124,6 +124,7 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 					local fieldname
 					-- Special case to handle index by objects
 					if type(k) == "table" and k.__CLASSNAME then
+						savefile:addToProcess(k)
 						fieldname = string.format("%s[loadObject('%s')]", name, savefile:getFileName(k))
 					else
 						fieldname = string.format("%s[%s]", name, basicSerialize(k))

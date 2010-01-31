@@ -27,8 +27,8 @@ end
 --- Is the object identified ?
 function _M:isIdentified()
 	-- Auto id by type ?
-	if game.object_known_types and game.object_known_types[self.type] and game.object_known_types[self.type][self.subtype] then
-		self.identified = game.object_known_types[self.type][self.subtype]
+	if game.object_known_types and game.object_known_types[self.type] and game.object_known_types[self.type][self.subtype] and game.object_known_types[self.type][self.subtype][self.name] then
+		self.identified = game.object_known_types[self.type][self.subtype][self.name]
 	end
 
 	return self.identified
@@ -40,7 +40,8 @@ function _M:identify(id)
 	if self.id_by_type then
 		game.object_known_types = game.object_known_types or {}
 		game.object_known_types[self.type] = game.object_known_types[self.type] or {}
-		game.object_known_types[self.type][self.subtype] = id
+		game.object_known_types[self.type][self.subtype] = game.object_known_types[self.type][self.subtype] or {}
+		game.object_known_types[self.type][self.subtype][self.name] = id
 	end
 end
 

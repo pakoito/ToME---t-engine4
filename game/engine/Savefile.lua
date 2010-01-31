@@ -78,6 +78,8 @@ end
 
 --- Save the given game
 function _M:saveGame(game)
+	collectgarbage("collect")
+
 	fs.mkdir(self.save_dir)
 
 	local popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
@@ -128,7 +130,7 @@ end
 function _M:loadReal(load)
 	if self.loaded[load] then return self.loaded[load] end
 	local f = fs.open(self.load_dir..load, "r")
---	print("loading", load)
+	print("loading", load)
 	local lines = {}
 	while true do
 		local l = f:read()

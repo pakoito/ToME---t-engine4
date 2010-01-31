@@ -57,7 +57,7 @@ function _M:move(x, y, force)
 	if y >= map.h then y = map.h - 1 end
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
-	map:checkAllEntities(x, y, "on_move", self)
+	map:checkAllEntities(x, y, "on_move", self, force)
 	game.level:idleProcessActor(self)
 
 	return true

@@ -114,6 +114,9 @@ function _M:resolve(t)
 
 	-- Finish resolving stuff
 	if t == self then
+		-- Handle ided if possible
+		if self.resolveIdentify then self:resolveIdentify() end
+
 		if self.resolveLevel then self:resolveLevel() end
 
 		if self.unique and type(self.unique) == "boolean" then

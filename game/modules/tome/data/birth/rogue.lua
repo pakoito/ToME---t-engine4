@@ -41,10 +41,12 @@ newBirthDescriptor{
 		["cunning/stealth"]={true, 0.3},
 		["cunning/traps"]={true, 0.3},
 		["cunning/dirty"]={true, 0.3},
+		["cunning/survival"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_STEALTH] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_KNIFE_MASTERY] = 1,
+		[ActorTalents.T_TRAP_DETECTION] = 1,
 	},
 }

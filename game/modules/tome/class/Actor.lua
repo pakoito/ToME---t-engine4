@@ -126,6 +126,21 @@ function _M:move(x, y, force)
 		if not force and moved and not self.did_energy then self:useEnergy() end
 	end
 	self.did_energy = nil
+
+	-- Try to detect traps
+	if self:knowTalent(self.T_TRAP_DETECTION) then
+		local power = self:getTalentLevel(self.T_TRAP_DETECTION) * self:getCun(25)
+		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
+			local trap = game.level.map(x, y, Map.TRAP)
+			if trap and not trap:knownBy(self) and self:checkHit(power, trap.detect_power) then
+				trap:setKnown(self, true)
+				game.level.map:updateMap(x, y)
+				game.logPlayer(self, "You have found a trap (%s)!", trap:getName())
+			end
+		end end
+	end
+
 	return moved
 end
 

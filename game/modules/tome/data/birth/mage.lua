@@ -70,7 +70,6 @@ newBirthDescriptor{
 		[ActorTalents.T_MANATHRUST] = 1,
 		[ActorTalents.T_FLAME] = 1,
 		[ActorTalents.T_FREEZE] = 1,
-		[ActorTalents.T_SENSE] = 5,
 	},
 }
 

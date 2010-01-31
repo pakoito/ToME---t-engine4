@@ -189,6 +189,10 @@ function _M:runCheck()
 		-- Objects are always interresting
 		local obj = game.level.map:getObject(x, y, 1)
 		if obj then noticed = "object seen" end
+
+		-- Traps are always interresting if known
+		local trap = game.level.map(x, y, Map.TRAP)
+		if trap and trap:knownBy(self) then noticed = "trap spotted" end
 	end)
 	if noticed then return false, noticed end
 

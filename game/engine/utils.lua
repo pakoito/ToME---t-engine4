@@ -23,6 +23,20 @@ function table.merge(dst, src, deep)
 	end
 end
 
+function table.mergeAdd(dst, src, deep)
+	for k, e in pairs(src) do
+		if deep and dst[k] and type(e) == "table" and type(dst[k]) == "table" and not e.__CLASSNAME then
+			table.merge(dst[k], e, true)
+		elseif deep and not dst[k] and type(e) == "table" and not e.__CLASSNAME then
+			dst[k] = table.clone(e, true)
+		elseif dst[k] and type(e) == "number" then
+			dst[k] = dst[k] + e
+		else
+			dst[k] = e
+		end
+	end
+end
+
 function string.ordinal(number)
 	local suffix = "th"
 	number = tonumber(number)

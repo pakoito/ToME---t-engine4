@@ -16,13 +16,6 @@ end
 --- Resolves the object
 -- This will call the entities resolver and then add to the game entities list
 function _M:resolve(t)
-	if not t then
-		-- Handle ided if possible
-		if self.resolveIdentify then
-			self:resolveIdentify()
-		end
-	end
-
 	engine.Entity.resolve(self, t)
 
 	if not t then

@@ -59,6 +59,9 @@ ActorAI:loadDefinition("/mod/ai/")
 -- Birther descriptor
 Birther:loadDefinition("/data/birth/descriptors.lua")
 
+------------------------------------------------------------------------
+-- Count the number of talents per types
+------------------------------------------------------------------------
 local type_tot = {}
 for i, t in ipairs(ActorTalents.talents_def) do
 	type_tot[t.type[1]] = (type_tot[t.type[1]] or 0) + t.points
@@ -73,5 +76,6 @@ table.sort(stype_tot, function(a, b) return a[1] < b[1] end)
 for i, t in ipairs(stype_tot) do
 	print("[SCHOOL TOTAL]", t[2], t[1])
 end
+------------------------------------------------------------------------
 
 return require "mod.class.Game"
