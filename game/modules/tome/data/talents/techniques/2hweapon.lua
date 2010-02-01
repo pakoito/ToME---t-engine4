@@ -220,7 +220,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is armor is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 5*self:getTalentLevel(t))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's armour is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 5*self:getTalentLevel(t))
 	end,
 }
 
@@ -256,7 +256,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is attack power is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 3*self:getTalentLevel(t))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's attack power is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 3*self:getTalentLevel(t))
 	end,
 }
 

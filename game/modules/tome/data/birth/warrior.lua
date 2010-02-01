@@ -30,8 +30,8 @@ newBirthDescriptor{
 	talents_types = {
 		["technique/shield-offense"]={true, 0.3},
 		["technique/shield-defense"]={true, 0.3},
-		["technique/2hweapon-offense"]={true, 0},
-		["technique/2hweapon-cripple"]={true, 0},
+		["technique/2hweapon-offense"]={true, -0.1},
+		["technique/2hweapon-cripple"]={true, -0.1},
 		["technique/combat-training"]={true, 0.2},
 		["technique/weapon-training"]={true, 0.2},
 	},
@@ -57,8 +57,8 @@ newBirthDescriptor{
 	},
 	stats = { str=3, con=2, dex=1, },
 	talents_types = {
-		["technique/shield-offense"]={true, 0},
-		["technique/shield-defense"]={true, 0},
+		["technique/shield-offense"]={true, -0.1},
+		["technique/shield-defense"]={true, -0.1},
 		["technique/2hweapon-offense"]={true, 0.3},
 		["technique/2hweapon-cripple"]={true, 0.3},
 		["technique/combat-training"]={true, 0.2},

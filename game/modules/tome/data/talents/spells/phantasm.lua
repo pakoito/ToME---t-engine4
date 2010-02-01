@@ -15,7 +15,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
-		At level 3 it also blinds all who sees it (except the caster).
+		At level 3 it also blinds all who see it (except the caster).
 		The radius will increase with the Magic stat]]):format(5 + self:getTalentLevel(t))
 	end,
 }

@@ -49,7 +49,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Archmage",
 	desc = {
-		"Archmages devote their whole life to the study of magic. What they lack in most other skills they make up with magic.",
+		"Archmagi devote their whole life to the study of magic. What they lack in most other skills they make up with magic.",
 	},
 	stats = { mag=3, wil=2, cun=1, },
 	talents_types = {

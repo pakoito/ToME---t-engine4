@@ -100,7 +100,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Raging flames burn foes and allies alike doing %0.2f netherflame damage in a radius of 5 each turns for %d turns.
+		return ([[Raging flames burn foes and allies alike doing %0.2f netherflame damage in a radius of 5 each turn for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.15) * self:getTalentLevel(t), 5 + self:getTalentLevel(t))
 	end,
 }

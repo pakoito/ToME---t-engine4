@@ -13,7 +13,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the forces of nature to regenerate your body for %d life every turns for 10 turns.
+		return ([[Call upon the forces of nature to regenerate your body for %d life every turn for 10 turns.
 		The life healed will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.07) * self:getTalentLevel(t))
 	end,
 }
@@ -93,7 +93,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the forces of nature to summon bear ally for %d turns.
+		return ([[Call upon the forces of nature to summon a bear ally for %d turns.
 		The power of the ally will increase with the Magic stat]]):format(util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.15), 5, 90))
 	end,
 }

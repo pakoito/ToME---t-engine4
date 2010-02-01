@@ -83,7 +83,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Teleports you randomly on a small scale range (%d)
+		return ([[Teleports you randomly on a big scale range (%d)
 		At level 4 it allows to specify the target area.
 		At level 5 it allows to choose the target to teleport.
 		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1))

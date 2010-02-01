@@ -68,7 +68,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A wall of water rushes out from the caster doing %0.2f cold damage and knocking back targets each turns for %d turns.
+		return ([[A wall of water rushes out from the caster doing %0.2f cold damage and knocking back targets each turn for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.2) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
 	end,
 }
@@ -103,7 +103,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turns for %d turns.
+		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		It has 25%% chance to freeze damaged targets.
 		The damage and duration will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.15) * self:getTalentLevel(t), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
 	end,
