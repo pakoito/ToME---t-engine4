@@ -65,6 +65,7 @@ function _M:disarm(x, y, who)
 		self:removed(x, y, who)
 	end
 	game.logSeen(who, "%s disarms a trap (%s).", who.name:capitalize(), self:getName())
+	self:onDisarm(x, y, who)
 	return true
 end
 
@@ -96,4 +97,8 @@ end
 --- When moving on a trap, trigger it
 function _M:on_move(x, y, who, forced)
 	if not forced then self:trigger(x, y, who) end
+end
+
+--- Called when disarmed
+function _M:onDisarm(x, y, who)
 end

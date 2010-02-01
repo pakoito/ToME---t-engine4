@@ -2,7 +2,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Mage",
 	desc = {
-		"The basic spellcaster with lots of different skills",
+		"Mages are the wielder of the arcane powers. Able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
 	},
 	descriptor_choices =
 	{
@@ -15,33 +15,9 @@ newBirthDescriptor{
 	},
 	talents = { [ActorTalents.T_MANA_POOL]=1, },
 	copy = {
-		max_life = 80,
-		life_rating = 7,
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff"},
-			{type="armor", subtype="cloth", name="robe"}
-		},
-		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-		},
 		resolvers.generic(function(e)
 			e.hotkey[10] = {"inventory", "potion of lesser mana"}
 		end),
-	},
-	talents_types = {
-		["spell/arcane"]={true, -0.3},
-		["spell/fire"]={true, -0.3},
-		["spell/earth"]={true, -0.3},
-		["spell/water"]={true, -0.3},
-		["spell/air"]={true, -0.3},
-		["spell/phantasm"]={true, -0.3},
-		["spell/temporal"]={true, -0.3},
-		["spell/meta"]={true, -0.3},
-		["spell/divination"]={true, -0.3},
-		["spell/conveyance"]={true, -0.3},
-		["spell/nature"]={true, -0.3},
-		["spell/necromancy"]={true, -0.3},
 	},
 }
 
@@ -49,37 +25,12 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Archmage",
 	desc = {
-		"Archmagi devote their whole life to the study of magic. What they lack in most other skills they make up with magic.",
+		"An Archmage devote her whole life to the study of magic above anything else.",
+		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
+		"Archmagi know all schools of magic but the more intricates(Temporal and Meta) from the start. They however usualy refuse to have anything to do with Necromancy.",
+		"Their most important stats are: Magic and Willpower",
 	},
 	stats = { mag=3, wil=2, cun=1, },
-	talents_types = {
-		["spell/arcane"]={true, 0.7},
-		["spell/fire"]={true, 0.7},
-		["spell/earth"]={true, 0.7},
-		["spell/water"]={true, 0.7},
-		["spell/air"]={true, 0.7},
-		["spell/phantasm"]={true, 0.7},
-		["spell/temporal"]={true, 0.7},
-		["spell/meta"]={true, 0.7},
-		["spell/divination"]={true, 0.7},
-		["spell/conveyance"]={true, 0.7},
-		["spell/nature"]={true, 0.7},
-		["spell/necromancy"]={true, 0.7},
-	},
-	talents = {
-		[ActorTalents.T_MANATHRUST] = 1,
-		[ActorTalents.T_FLAME] = 1,
-		[ActorTalents.T_FREEZE] = 1,
-	},
-}
-
-newBirthDescriptor{
-	type = "subclass",
-	name = "Arcane Blade",
-	desc = {
-		"The Arcane Blade is a mage at heart but who can stand his own in a melee.",
-	},
-	stats = { mag=2, wil=1, str=2, dex=1},
 	talents_types = {
 		["spell/arcane"]={true, 0.3},
 		["spell/fire"]={true, 0.3},
@@ -92,14 +43,71 @@ newBirthDescriptor{
 		["spell/divination"]={true, 0.3},
 		["spell/conveyance"]={true, 0.3},
 		["spell/nature"]={true, 0.3},
-		["spell/necromancy"]={false, 0.3},
-		["technique/combat-training"]={true, 0},
+		["cunning/survival"]={false, -0.1},
+	},
+	talents = {
+		[ActorTalents.T_MANATHRUST] = 1,
+		[ActorTalents.T_FLAME] = 1,
+		[ActorTalents.T_FREEZE] = 1,
+	},
+	copy = {
+		max_life = 80,
+		life_rating = 7,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff"},
+			{type="armor", subtype="cloth", name="robe"}
+		},
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Arcane Blade",
+	desc = {
+		"The Arcane Blade is a mage who spent some time studying the more pratical art of hitting people with pointy sticks.",
+		"Arcane Blades may only cast spells from the most 'raw' magic schools (Arcane, Fire, Earth, Water and Air). Later on they can also learn Conveyance.",
+		"In order to do melee combat most Arcane Blades will actually prefer to fight with their staff, as it requires Magic more than Strength to do damage.",
+		"In the fields of melee combat they learn the use of shields and can later on train in various combat techniques.",
+		"Their most important stats are: Magic and Dexterity",
+	},
+	stats = { mag=2, str=2, dex=2},
+	talents_types = {
+		["spell/arcane"]={true, 0.2},
+		["spell/fire"]={true, 0.2},
+		["spell/earth"]={true, 0.2},
+		["spell/water"]={true, 0.2},
+		["spell/air"]={true, 0.2},
+		["spell/conveyance"]={false, 0.2},
+		["technique/shield-offense"]={true, 0},
+		["technique/shield-defense"]={true, 0},
+		["technique/combat-training-active"]={false, 0},
+		["technique/combat-training-passive"]={false, 0},
 		["technique/weapon-training"]={true, 0},
+		["cunning/survival"]={true, -0.1},
 	},
 	talents = {
 		[ActorTalents.T_MANATHRUST] = 1,
 		[ActorTalents.T_FLAME] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_STAMINA_POOL]=1,
+	},
+	copy = {
+		max_life = 90,
+		life_rating = 8,
+		mana_rating = 8,
+		stamina_rating = 8,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff"},
+			{type="armor", subtype="shield", name="iron shield"}
+			{type="armor", subtype="cloth", name="robe"}
+		},
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+		},
 	},
 }
