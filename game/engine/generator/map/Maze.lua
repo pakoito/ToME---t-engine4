@@ -67,9 +67,5 @@ function _M:generate(lev, old_lev)
 	if lev < self.zone.max_level or self.data.force_last_stair then
 		self.map(dx, dy, Map.TERRAIN, self.down)
 	end
-	if lev > old_lev then
-		return ux, uy
-	else
-		return dx, dy
-	end
+	return ux, uy, dx, dy
 end

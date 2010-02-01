@@ -146,12 +146,13 @@ local mark_dirs = {
 }
 --- Marks a tunnel as a tunnel and the space behind it
 function _M:markTunnel(x, y, xdir, ydir, id)
+	x, y = x - xdir, y - ydir
 	local dir = coord_to_dir[xdir][ydir]
 	for i, d in ipairs(mark_dirs[dir]) do
 		local xd, yd = dir_to_coord[d][1], dir_to_coord[d][2]
-		if self.map:isBound(x+xd, y+yd) and not self.room_map[x+xd][y+yd].tunnel then self.room_map[x+xd][y+yd].tunnel = id end
+		if self.map:isBound(x+xd, y+yd) and not self.room_map[x+xd][y+yd].tunnel then self.room_map[x+xd][y+yd].tunnel = id print("mark tunnel", x+xd, y+yd , id) end
 	end
-	if not self.room_map[x][y].tunnel then self.room_map[x][y].tunnel = id end
+	if not self.room_map[x][y].tunnel then self.room_map[x][y].tunnel = id print("mark tunnel", x, y , id) end
 end
 
 --- Tunnel from x1,y1 to x2,y2
@@ -163,6 +164,7 @@ function _M:tunnel(x1, y1, x2, y2, id)
 	local tun = {}
 
 	local tries = 2000
+	local no_move_tries = 0
 	while tries > 0 do
 		if rng.percent(self.data.tunnel_change) then
 			if rng.percent(self.data.tunnel_random) then xdir, ydir = self:randDir()
@@ -179,40 +181,45 @@ function _M:tunnel(x1, y1, x2, y2, id)
 			end
 			nx, ny = x1 + xdir, y1 + ydir
 		end
---		print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
+		print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
 
 		if self.room_map[nx][ny].room then
 			tun[#tun+1] = {nx,ny}
 			x1, y1 = nx, ny
---			print(feat, "accept room")
+			print(feat, "accept room")
 		elseif self.room_map[nx][ny].can_open ~= nil then
 			if self.room_map[nx][ny].can_open then
---				print(feat, "tunnel crossing can_open", nx,ny)
+				print(feat, "tunnel crossing can_open", nx,ny)
 				for i = -1, 1 do for j = -1, 1 do if self.map:isBound(nx + i, ny + j) and self.room_map[nx + i][ny + j].can_open then
-					self.room_map[nx + i][ny + j].can_open = false
+--					self.room_map[nx + i][ny + j].can_open = false
 --					print(feat, "forbiding crossing at ", nx+i,ny+j)
 				end end end
 				tun[#tun+1] = {nx,ny,true}
 				x1, y1 = nx, ny
---				print(feat, "accept can_open")
+				print(feat, "accept can_open")
 			else
---				print(feat, "reject can_open")
+				print(feat, "reject can_open")
 			end
-		elseif self.room_map[x1][y1].tunnel then
-			if self.room_map[x1][y1].tunnel ~= id then
+		elseif self.room_map[nx][ny].tunnel then
+			if self.room_map[nx][ny].tunnel ~= id or no_move_tries >= 15 then
 				tun[#tun+1] = {nx,ny}
 				x1, y1 = nx, ny
---				print(feat, "accept tunnel")
+				print(feat, "accept tunnel", self.room_map[nx][ny].tunnel, id)
 			else
---				print(feat, "reject tunnel")
+				print(feat, "reject tunnel", self.room_map[nx][ny].tunnel, id)
 			end
 		else
 			tun[#tun+1] = {nx,ny}
 			x1, y1 = nx, ny
---			print(feat, "accept normal")
+			print(feat, "accept normal")
 		end
 
-		self:markTunnel(x1, y2, xdir, ydir, id)
+		if x1 == nx and y1 == ny then
+			self:markTunnel(x1, y1, xdir, ydir, id)
+			no_move_tries = 0
+		else
+			no_move_tries = no_move_tries + 1
+		end
 
 		if x1 == x2 and y1 == y2 then print(feat, "done") break end
 

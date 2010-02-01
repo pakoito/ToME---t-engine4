@@ -68,9 +68,7 @@ end
 function _M:generate()
 	for i = 1, self.gen_map.w do for j = 1, self.gen_map.h do
 		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", self.gen_map[i][j]))
---		self.map(i-1, j-1, Map.OBJECT, self.gen_map[i][j].obj)
---		self.map(i-1, j-1, Map.ACTOR, self.gen_map[i][j].actor)
 	end end
 
-	return self.gen_map.startx, self.gen_map.starty
+	return self.gen_map.startx, self.gen_map.starty, self.gen_map.startx, self.gen_map.starty
 end

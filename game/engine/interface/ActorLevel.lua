@@ -81,7 +81,6 @@ end
 
 --- Forces an actor to levelup to "lev"
 function _M:forceLevelup(lev)
-print("force level", self.level, lev)
 	while self.level < lev do
 		-- At max level, if any
 		if self.max_level and self.level >= self.max_level then break end

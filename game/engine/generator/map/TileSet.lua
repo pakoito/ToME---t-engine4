@@ -194,5 +194,5 @@ function _M:generate()
 
 	-- Always starts at 1, 1
 	self.map(1, 1, Map.TERRAIN, self.up)
-	return 1, 1
+	return 1, 1, 1, 1
 end

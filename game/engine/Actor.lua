@@ -114,7 +114,6 @@ function _M:knockBack(srcx, srcy, dist)
 	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move") and dist > 0 do
 		dist = dist - 1
 		lx, ly = l(true)
-		print("next step", lx, ly)
 	end
 
 	if game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move") then
