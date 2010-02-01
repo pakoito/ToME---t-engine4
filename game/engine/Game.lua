@@ -97,7 +97,8 @@ function _M:tick()
 end
 
 --- Called when a zone leaves a level
-function _M:leaveLevel(level)
+-- Going from "old_lev" to "lev", leaving level "level"
+function _M:leaveLevel(level, lev, old_lev)
 end
 
 --- Called by the engine when the user tries to close the window

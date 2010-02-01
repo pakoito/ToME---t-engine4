@@ -1,10 +1,10 @@
 newTalent{
 	name = "Stealth",
 	type = {"cunning/stealth", 1},
+	require = cuns_req1,
 	mode = "sustained",
 	points = 5,
 	cooldown = 10,
-	require = { stat = { cun=12 }, },
 	activate = function(self, t)
 		local armor = self:getInven("BODY")[1]
 		if armor and (armor.subtype == "heavy" or armor.subtype == "massive") then
@@ -43,9 +43,9 @@ newTalent{
 newTalent{
 	name = "Shadowstrike",
 	type = {"cunning/stealth", 2},
+	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	require = { stat = { cun=18 }, },
 	info = function(self, t)
 		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
 		Shadowstrikes do %.02f%% damage than a normal hit.]]):format((2 + self:getTalentLevel(t) / 5) * 100)
@@ -53,11 +53,27 @@ newTalent{
 }
 
 newTalent{
+	name = "Steal",
+	type = {"cunning/stealth",3},
+	require = cuns_req3,
+	points = 5,
+	mana = 30,
+	cooldown = 10,
+	action = function(self, t)
+		game.log("IMPLEMENT ME!")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Steal!]])
+	end,
+}
+
+newTalent{
 	name = "Unseen Actions",
-	type = {"cunning/stealth", 3},
+	type = {"cunning/stealth", 4},
+	require = cuns_req4,
 	mode = "passive",
 	points = 5,
-	require = { stat = { cun=18 }, },
 	info = function(self, t)
 		return ([[When you perform an action from stealth (attacking, using objects, ...) you have %d%% chances to not break stealth.]]):
 		format(10 + self:getTalentLevel(t) * 9)

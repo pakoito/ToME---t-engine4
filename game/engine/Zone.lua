@@ -222,10 +222,10 @@ function _M:getLevelData(lev)
 end
 
 --- Leave the level, forgetting uniques and such
-function _M:leaveLevel(no_close)
+function _M:leaveLevel(no_close, lev, old_lev)
 	-- Before doing anything else, close the current level
 	if not no_close and game.level and game.level.map then
-		game:leaveLevel(game.level)
+		game:leaveLevel(game.level, lev, old_lev)
 
 		if game.level.data.persistant then
 			local save = Savefile.new(game.save_name)
@@ -243,7 +243,7 @@ end
 -- @param lev the level (from 1 to zone.max_level)
 -- @return a Level object
 function _M:getLevel(game, lev, old_lev, no_close)
-	self:leaveLevel(no_close)
+	self:leaveLevel(no_close, lev, old_lev)
 
 	local level_data = self:getLevelData(lev)
 
@@ -283,11 +283,12 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		self.grid_list,
 		level_data.generator.map
 	)
-	local startx, starty, spots = generator:generate(lev, old_lev)
+	local ux, uy, dx, dy, spots = generator:generate(lev, old_lev)
 	spots = spots or {}
 
 	local level = self.level_class.new(lev, map)
-	level.start = {x=startx, y=starty}
+	level.ups = {{x=ux, y=uy}}
+	level.downs = {{x=dx, y=dy}}
 
 	-- Save level data
 	level.data = level_data

@@ -148,24 +148,35 @@ function _M:getSaveDescription()
 	}
 end
 
-function _M:leaveLevel(level)
+function _M:leaveLevel(level, lev, old_lev)
 	if level:hasEntity(self.player) then
+		level.exited = level.exited or {}
+		if lev > old_lev then
+			level.exited.down = {x=self.player.x, y=self.player.y}
+		else
+			level.exited.up = {x=self.player.x, y=self.player.y}
+		end
 		level:removeEntity(self.player)
 	end
 end
 
 function _M:changeLevel(lev, zone)
+	local old_lev = (self.level and not zone) and self.level.level or -1000
 	if zone then
-		if self.zone then self.zone:leaveLevel() end
+		if self.zone then self.zone:leaveLevel(false, lev, old_lev) end
 		self.zone = Zone.new(zone)
 	end
-	self.zone:getLevel(self, lev, (self.level and not zone) and self.level.level or -1000)
+	self.zone:getLevel(self, lev, old_lev)
 
 	-- Move back to old wilderness position
 	if self.zone.short_name == "wilderness" then
 		self.player:move(self.player.wild_x, self.player.wild_y, true)
 	else
-		self.player:move(self.level.start.x, self.level.start.y, true)
+		if lev > old_lev then
+			self.player:move(self.level.ups[1].x, self.level.ups[1].y, true)
+		else
+			self.player:move(self.level.downs[1].x, self.level.downs[1].y, true)
+		end
 	end
 	self.level:addEntity(self.player)
 end

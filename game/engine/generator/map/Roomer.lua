@@ -253,11 +253,7 @@ function _M:makeStairsInside(lev, old_lev)
 		end
 	end
 
-	if lev > old_lev then
-		return ux, uy
-	else
-		return dx, dy
-	end
+	return ux, uy, dx, dy
 end
 
 --- Create the stairs on the sides
@@ -298,11 +294,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms)
 		end
 	end
 
-	if lev > old_lev then
-		return ux, uy
-	else
-		return dx, dy
-	end
+	return ux, uy, dx, uy
 end
 
 --- Make rooms and connect them with tunnels
