@@ -8,28 +8,30 @@ newTalentType{ type="technique/dualweapon-attack", name = "dual wielding", descr
 newTalentType{ type="technique/combat-techniques-active", name = "combat-techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-techniques-passive", name = "combat-techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-training", name = "combat-training", description = "Teaches to use various armors and improves health." }
+newTalentType{ type="technique/magical-combat", name = "magical-combat", description = "Blend magic and melee." }
 
 -- Generic requires for techs based on talent level
-techs_req1 = {
-	stat = { str=function(level) return 12 + (level-1) * 2 end },
+-- Uses STR unless the wielder knows Arcane Combat
+techs_req1 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+	stat = { [stat]=function(level) return 12 + (level-1) * 2 end },
 	level = function(level) return 0 + (level-1)  end,
-}
-techs_req2 = {
-	stat = { str=function(level) return 20 + (level-1) * 2 end },
+} end
+techs_req2 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+	stat = { [stat]=function(level) return 20 + (level-1) * 2 end },
 	level = function(level) return 4 + (level-1)  end,
-}
-techs_req3 = {
-	stat = { str=function(level) return 28 + (level-1) * 2 end },
+} end
+techs_req3 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+	stat = { [stat]=function(level) return 28 + (level-1) * 2 end },
 	level = function(level) return 8 + (level-1)  end,
-}
-techs_req4 = {
-	stat = { str=function(level) return 36 + (level-1) * 2 end },
+} end
+techs_req4 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+	stat = { [stat]=function(level) return 36 + (level-1) * 2 end },
 	level = function(level) return 12 + (level-1)  end,
-}
-techs_req5 = {
-	stat = { str=function(level) return 44 + (level-1) * 2 end },
+} end
+techs_req5 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+	stat = { [stat]=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
-}
+} end
 
 -- Generic requires for techs_dex based on talent level
 techs_dex_req1 = {
@@ -60,19 +62,19 @@ techs_strdex_req1 = function(self, t) local stat = self:getStr() >= self:getDex(
 } end
 techs_strdex_req2 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
 	stat = { [stat]=function(level) return 20 + (level-1) * 2 end },
-	level = function(level) return 0 + (level-1)  end,
+	level = function(level) return 4 + (level-1)  end,
 } end
 techs_strdex_req3 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
 	stat = { [stat]=function(level) return 28 + (level-1) * 2 end },
-	level = function(level) return 0 + (level-1)  end,
+	level = function(level) return 8 + (level-1)  end,
 } end
 techs_strdex_req4 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
 	stat = { [stat]=function(level) return 36 + (level-1) * 2 end },
-	level = function(level) return 0 + (level-1)  end,
+	level = function(level) return 12 + (level-1)  end,
 } end
 techs_strdex_req5 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
 	stat = { [stat]=function(level) return 44 + (level-1) * 2 end },
-	level = function(level) return 0 + (level-1)  end,
+	level = function(level) return 16 + (level-1)  end,
 } end
 
 load("/data/talents/techniques/2hweapon.lua")
@@ -80,3 +82,4 @@ load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")
 load("/data/talents/techniques/combat-techniques.lua")
 load("/data/talents/techniques/combat-training.lua")
+load("/data/talents/techniques/magical-combat.lua")

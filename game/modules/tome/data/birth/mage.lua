@@ -84,13 +84,14 @@ newBirthDescriptor{
 		["spell/conveyance"]={false, 0.2},
 		["technique/shield-offense"]={true, 0},
 		["technique/shield-defense"]={true, 0},
-		["technique/combat-training-active"]={false, 0},
-		["technique/combat-training-passive"]={false, 0},
+		["technique/combat-techniques-active"]={false, 0},
+		["technique/combat-techniques-passive"]={false, 0},
 		["technique/weapon-training"]={true, 0},
+		["technique/magical-combat"]={true, 0},
 		["cunning/survival"]={true, -0.1},
 	},
 	talents = {
-		[ActorTalents.T_MANATHRUST] = 1,
+		[ActorTalents.T_ARCANE_COMBAT] = 1,
 		[ActorTalents.T_FLAME] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_STAMINA_POOL]=1,
@@ -102,8 +103,8 @@ newBirthDescriptor{
 		stamina_rating = 8,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff"},
-			{type="armor", subtype="shield", name="iron shield"}
-			{type="armor", subtype="cloth", name="robe"}
+			{type="armor", subtype="shield", name="iron shield"},
+			{type="armor", subtype="cloth", name="robe"},
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana"},
