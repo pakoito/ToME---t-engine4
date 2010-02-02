@@ -11,9 +11,9 @@ newBirthDescriptor{
 			__ALL__ = "never",
 			["Arcane Blade"] = "allow",
 			Archmage = "allow",
+			Necromancer = "allow",
 		},
 	},
-	talents = { [ActorTalents.T_MANA_POOL]=1, },
 	copy = {
 		resolvers.generic(function(e)
 			e.hotkey[10] = {"inventory", "potion of lesser mana"}
@@ -49,6 +49,7 @@ newBirthDescriptor{
 		[ActorTalents.T_MANATHRUST] = 1,
 		[ActorTalents.T_FLAME] = 1,
 		[ActorTalents.T_FREEZE] = 1,
+		[ActorTalents.T_PHASE_DOOR] = 1,
 	},
 	copy = {
 		max_life = 80,
@@ -93,8 +94,8 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_ARCANE_COMBAT] = 1,
 		[ActorTalents.T_FLAME] = 1,
+		[ActorTalents.T_STONE_SKIN] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_STAMINA_POOL]=1,
 	},
 	copy = {
 		max_life = 90,
@@ -105,6 +106,48 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff"},
 			{type="armor", subtype="shield", name="iron shield"},
 			{type="armor", subtype="cloth", name="robe"},
+		},
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Necromancer",
+	desc = {
+		"Their most important stats are: Magic and Willpower",
+	},
+	stats = { mag=3, wil=2, cun=1, },
+	talents_types = {
+		["spell/arcane"]={true, 0.3},
+		["spell/fire"]={true, 0.3},
+		["spell/earth"]={true, 0.3},
+		["spell/water"]={true, 0.3},
+		["spell/air"]={true, 0.3},
+		["spell/phantasm"]={true, 0.3},
+		["spell/temporal"]={false, 0.3},
+		["spell/meta"]={false, 0.3},
+		["spell/divination"]={true, 0.3},
+		["spell/conveyance"]={true, 0.3},
+		["spell/nature"]={true, 0.3},
+		["spell/necromancy"]={true, 0.3},
+		["cunning/survival"]={false, -0.1},
+	},
+	talents = {
+		[ActorTalents.T_ABSORB_SOUL] = 1,
+		[ActorTalents.T_FLAME] = 1,
+		[ActorTalents.T_FREEZE] = 1,
+		[ActorTalents.T_PHASE_DOOR] = 1,
+	},
+	copy = {
+		max_life = 80,
+		life_rating = 7,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff"},
+			{type="armor", subtype="cloth", name="robe"}
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana"},

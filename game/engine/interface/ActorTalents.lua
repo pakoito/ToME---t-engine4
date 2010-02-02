@@ -195,9 +195,10 @@ function _M:learnTalent(t_id, force)
 		end
 	end
 
+	self.talents[t_id] = (self.talents[t_id] or 0) + 1
+
 	if t.on_learn then t.on_learn(self, t) end
 
-	self.talents[t_id] = (self.talents[t_id] or 0) + 1
 	self.changed = true
 	return true
 end
@@ -216,10 +217,11 @@ function _M:unlearnTalent(t_id)
 		end
 	end
 
-	if t.on_unlearn then t.on_unlearn(self, t) end
-
 	self.talents[t_id] = self.talents[t_id] - 1
 	if self.talents[t_id] == 0 then self.talents[t_id] = nil end
+
+	if t.on_unlearn then t.on_unlearn(self, t) end
+
 	self.changed = true
 	return true
 end
@@ -335,6 +337,16 @@ function _M:getTalentLevel(id)
 		t = _M.talents_def[id]
 	end
 	return (self.talents[id] or 0) * (self.talents_types_mastery[t.type[1]] or 1)
+end
+
+--- Talent type level, sum of all raw levels of talents inside
+function _M:getTalentTypeLevelRaw(tt)
+	local nb = 0
+	for tid, lev in pairs(self.talents) do
+		local t = self:getTalentFromId(tid)
+		if t.type[1] == tt then nb = nb + lev end
+	end
+	return nb
 end
 
 --- Return talent definition from id

@@ -14,7 +14,6 @@ newBirthDescriptor{
 			Shadowblade = "allow",
 		},
 	},
-	talents = { [ActorTalents.T_STAMINA_POOL]=1, },
 	copy = {
 		max_life = 100,
 		life_rating = 9,
@@ -38,12 +37,12 @@ newBirthDescriptor{
 	talents_types = {
 		["technique/dualweapon-attack"]={true, 0.3},
 		["technique/dualweapon-training"]={true, 0.3},
-		["technique/combat-training-active"]={true, 0.3},
+		["technique/combat-training-active"]={false, 0.3},
 		["technique/combat-training-passive"]={false, 0.3},
 		["technique/weapon-training"]={true, 0.3},
 		["cunning/stealth"]={true, 0.3},
 		["cunning/traps"]={false, 0.3},
-		["cunning/dirty"]={false, 0.3},
+		["cunning/dirty"]={true, 0.3},
 		["cunning/survival"]={true, 0.3},
 	},
 	talents = {
@@ -73,14 +72,14 @@ newBirthDescriptor{
 		["technique/combat-training-active"]={true, 0.2},
 		["technique/combat-training-passive"]={false, 0.2},
 		["technique/weapon-training"]={true, 0.2},
-		["cunning/stealth"]={true, 0.3},
+		["cunning/stealth"]={false, 0.3},
 		["cunning/survival"]={true, 0.1},
+		["cunning/dirty"]={true, 0.3},
 	},
 	talents = {
-		[ActorTalents.T_STEALTH] = 1,
+		[ActorTalents.T_DUAL_STRIKE] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_KNIFE_MASTERY] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
-		[ActorTalents.T_MANA_POOL] = 1,
 	},
 }

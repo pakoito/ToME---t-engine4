@@ -13,7 +13,6 @@ newBirthDescriptor{
 			Berserker = "allow",
 		},
 	},
-	talents = { [ActorTalents.T_STAMINA_POOL]=1, },
 	copy = {
 		max_life = 120,
 		life_rating = 10,
@@ -44,6 +43,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SHIELD_PUMMEL] = 1,
+		[ActorTalents.T_SHIELD_WALL] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},
@@ -80,6 +80,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_BERSERKER] = 1,
+		[ActorTalents.T_STUNNING_BLOW] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},

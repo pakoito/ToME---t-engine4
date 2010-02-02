@@ -34,13 +34,18 @@ ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool,
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
+
 -- Talents
 ActorTalents:loadDefinition("/data/talents.lua")
+
 -- Timed Effects
 ActorTemporaryEffects:loadDefinition("/data/timed_effects.lua")
+
 -- Actor resources
 ActorResource:defineResource("Mana", "mana", ActorTalents.T_MANA_POOL, "mana_regen", "Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximun mana.")
 ActorResource:defineResource("Stamina", "stamina", ActorTalents.T_STAMINA_POOL, "stamina_regen", "Stamina represents your physical fatigue. Each physical ability used reduces it.")
+ActorResource:defineResource("Soul", "soul", ActorTalents.T_SOUL_POOL, "soul_regen", "Soul represents the amount of life energies/souls you have stolen. Each Necromantic spell requires some.")
+
 -- Actor stats
 ActorStats:defineStat("Strength",	"str", 10, 1, 100, "Strength defines your character's ability to apply physical force. It increases your melee damage, damage with heavy weapons, your chance to resist physical effects, and carrying capacity.")
 ActorStats:defineStat("Dexterity",	"dex", 10, 1, 100, "Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks and your damage with light weapons.")
@@ -50,8 +55,10 @@ ActorStats:defineStat("Cunning",	"cun", 10, 1, 100, "Cunning defines your charac
 ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines your character's ability to withstand and resist damage. It increases your maximun life and physical resistance.")
 -- Luck is hidden and start at half max value (50) which is considered the standard
 ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's chance when dealing with unknown events. It increases your critical strike chances, your chance for random encounters, ...")
+
 -- Actor autolevel schemes
 dofile("/data/autolevel_schemes.lua")
+
 -- Actor AIs
 ActorAI:loadDefinition("/engine/ai/")
 ActorAI:loadDefinition("/mod/ai/")

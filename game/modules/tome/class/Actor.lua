@@ -296,6 +296,27 @@ function _M:attack(target)
 	self:bumpInto(target)
 end
 
+--- Actor learns a talent
+-- @param t_id the id of the talent to learn
+-- @return true if the talent was learnt, nil and an error message otherwise
+function _M:learnTalent(t_id, force)
+	if not engine.interface.ActorTalents.learnTalent(self, t_id, force) then return false end
+
+	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
+	local t = _M.talents_def[t_id]
+	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) then self:learnTalent(self.T_MANA_POOL) end
+	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) then self:learnTalent(self.T_STAMINA_POOL) end
+	return true
+end
+
+--- Actor forgets a talent
+-- @param t_id the id of the talent to learn
+-- @return true if the talent was unlearnt, nil and an error message otherwise
+function _M:unlearnTalent(t_id)
+	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, force) then return false end
+	return true
+end
+
 --- Called before a talent is used
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)

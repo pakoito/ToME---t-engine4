@@ -14,6 +14,13 @@ newTalent{
 	hide = true,
 }
 newTalent{
+	name = "Soul Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a soul pool. Souls are used by necromantic spells.",
+	mode = "passive",
+	hide = true,
+}
+newTalent{
 	name = "Stamina Pool",
 	type = {"base/class", 1},
 	info = "Allows you to have a stamina pool. Stamina is used to activate special combat attacks.",
