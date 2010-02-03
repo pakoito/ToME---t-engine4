@@ -1,3 +1,5 @@
+--updated 7:33 PM 1/28/2010
+
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{

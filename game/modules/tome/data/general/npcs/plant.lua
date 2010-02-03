@@ -67,4 +67,4 @@ newEntity{ base = "BASE_NPC_PLANT",
 	},
 
 	talents = resolvers.talents{ [Talents.T_SUMMON]=1 },
-}}
+}

@@ -1,7 +1,9 @@
 load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/wolf.lua")
+load("/data/general/npcs/canine.lua")
 load("/data/general/npcs/troll.lua")
 load("/data/general/npcs/snake.lua")
+load("/data/general/npcs/ooze.lua")
+load("/data/general/npcs/jelly.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 

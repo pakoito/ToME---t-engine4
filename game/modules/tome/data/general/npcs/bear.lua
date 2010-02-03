@@ -18,7 +18,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	combat = { dam=resolvers.rngavg(12,25), atk=10, apr=3, physspeed=2 },
 	life_rating = 12,
-	tmasteries = resolvers.tmasteries{ ["physical/other"]=0.25 },
+	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.25 },
 
 	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.POISON] = 20 },
 }
