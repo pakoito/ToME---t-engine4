@@ -1,3 +1,6 @@
+load("/data/general/npcs/vermin.lua")
+load("/data/general/npcs/ooze.lua")
+load("/data/general/npcs/jelly.lua")
 --load("/data/general/npcs/sandworm.lua")
 
 local Talents = require("engine.interface.ActorTalents")
@@ -6,7 +9,7 @@ local Talents = require("engine.interface.ActorTalents")
 -- High life to not kill them by accident
 newEntity{ define_as = "SANDWORM_TUNNELER",
 	type = "vermin", subtype = "sandworm",
-	name = "sandworm tunneler",
+	name = "sandworm burrower",
 	display = "w", color=colors.GREEN,
 	desc = [[This sandworm seems to not care about your presence at all and simply continues digging its way through the sand.
 	Maybe following it is the only way to move around here...]],
