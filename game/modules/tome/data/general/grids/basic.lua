@@ -39,6 +39,7 @@ newEntity{
 	always_remember = true,
 	block_move = true,
 	block_sight = true,
+	air_level = -20,
 	dig = "FLOOR",
 }
 

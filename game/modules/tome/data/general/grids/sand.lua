@@ -11,6 +11,7 @@ newEntity{
 	always_remember = true,
 	block_move = true,
 	block_sight = true,
+	air_level = -10,
 	-- Dig only makes unstable tunnels
 	dig = function(src, x, y, old)
 		local sand = require("engine.Object").new{
@@ -24,6 +25,13 @@ newEntity{
 					game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
 					game:removeEntity(self)
 					game.logSeen(self, "The unstable sand tunnel collapses!")
+
+					local a = game.level.map(self.x, self.y, engine.Map.ACTOR)
+					if a then
+						game.logPlayer(a, "You are crushed by the collapsing tunnel! You suffocate!")
+						a:suffocate(30, self)
+						DamageType:get(DamageType.PHYSICAL).projector(self, self.x, self.y, DamageType.PHYSICAL, a.life / 2)
+					end
 				end
 			end
 		}

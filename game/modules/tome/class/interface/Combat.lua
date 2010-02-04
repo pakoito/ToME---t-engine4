@@ -114,7 +114,7 @@ end
 
 --- Attacks with one weapon
 function _M:attackTargetWith(target, weapon, damtype, mult)
-	damtype = damtype or DamageType.PHYSICAL
+	damtype = damtype or weapon.damtype or DamageType.PHYSICAL
 	mult = mult or 1
 
 	-- Does the blow connect? yes .. complex :/

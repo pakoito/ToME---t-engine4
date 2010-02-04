@@ -32,17 +32,25 @@ function _M:display()
 	h = h + self.font_h
 	self.surface:drawColorString(self.font, "Level: #00ff00#"..game.player.level, 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorString(self.font, ("Exp: #00ff00#%2d%%"):format(100 * cur_exp / max_exp), 0, h, 255, 255, 255) h = h + self.font_h
+
 	h = h + self.font_h
+
+	if game.player:getAir() < game.player.max_air then
+		self.surface:drawColorString(self.font, ("Air level: %d/%d"):format(game.player:getAir(), game.player.max_air), 0, h, 255, 0, 0) h = h + self.font_h
+		h = h + self.font_h
+	end
+
 	self.surface:drawColorString(self.font, ("#c00000#Life:    #00ff00#%d/%d"):format(game.player.life, game.player.max_life), 0, h, 255, 255, 255) h = h + self.font_h
 	if game.player:knowTalent(game.player.T_MANA_POOL) then
 		self.surface:drawColorString(self.font, ("#7fffd4#Mana:    #00ff00#%d/%d"):format(game.player:getMana(), game.player.max_mana), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_SOUL_POOL) then
-		self.surface:drawColorString(self.font, ("#777777#Soul: #00ff00#%d/%d"):format(game.player:getSoul(), game.player.max_soul), 0, h, 255, 255, 255) h = h + self.font_h
+		self.surface:drawColorString(self.font, ("#777777#Soul:    #00ff00#%d/%d"):format(game.player:getSoul(), game.player.max_soul), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_STAMINA_POOL) then
 		self.surface:drawColorString(self.font, ("#ffcc80#Stamina: #00ff00#%d/%d"):format(game.player:getStamina(), game.player.max_stamina), 0, h, 255, 255, 255) h = h + self.font_h
 	end
+
 	h = h + self.font_h
 	self.surface:drawColorString(self.font, ("STR: #00ff00#%3d"):format(game.player:getStr()), 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorString(self.font, ("DEX: #00ff00#%3d"):format(game.player:getDex()), 0, h, 255, 255, 255) h = h + self.font_h

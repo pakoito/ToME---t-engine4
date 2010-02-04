@@ -63,9 +63,10 @@ function _M:init(t, no_default)
 	t.resists = t.resists or {}
 
 	-- Default regen
+	t.air_regen = t.air_regen or 3
 	t.mana_regen = t.mana_regen or 0.5
-	t.stamina_regen = t.stamina_regen or 0.4 -- Stamina regens slower than mana
-	t.life_regen = t.life_regen or 0.3 -- Life regen real slow
+	t.stamina_regen = t.stamina_regen or 0.3 -- Stamina regens slower than mana
+	t.life_regen = t.life_regen or 0.25 -- Life regen real slow
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
@@ -96,6 +97,10 @@ function _M:act()
 		local t = self:getTalentFromId(self.T_THUNDERSTORM)
 		t.do_storm(self, t)
 	end
+
+	-- Suffocate ?
+	local air_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level")
+	if air_level then self:suffocate(-air_level, self) end
 
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
@@ -472,6 +477,17 @@ function _M:worthExp(target)
 	if self.unique then mult = 6
 	elseif self.egoed then mult = 3 end
 	return self.level * mult * self.exp_worth
+end
+
+--- Suffocate a bit, lose air
+function _M:suffocate(value, src)
+	self.air = self.air - value
+	if self.air <= 0 and not self:attr("no_breath") then
+		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())
+		game.level:removeEntity(self)
+		self.dead = true
+		return self:die(src)
+	end
 end
 
 --- Can the actor see the target actor
