@@ -4,14 +4,15 @@ return {
 	level_scheme = "player",
 	max_level = 7,
 	width = 50, height = 50,
-	all_remembered = true,
-	all_lited = true,
+--	all_remembered = true,
+--	all_lited = true,
 --	persistant = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
 			no_tunnels = true,
 			nb_rooms = 10,
+			lite_room_chance = 0,
 			rooms = {"forest_clearing"},
 			['.'] = "SAND",
 			['#'] = "SANDWALL",
@@ -25,7 +26,7 @@ return {
 			adjust_level = {-1, 2},
 			guardian = "SANDWORM_QUEEN",
 			-- Number of tunnelers + 2 (one per stair)
-			nb_tunnelers = 2,
+			nb_tunnelers = 3,
 		},
 		object = {
 			class = "engine.generator.object.Random",

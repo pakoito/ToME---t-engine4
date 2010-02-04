@@ -1,27 +1,20 @@
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped (and used!) by Bill the Stone Troll
+-- Artifact, droped by the sandworm queen
+newEntity{
+	define_as = "TOME_OF_IMPROVEMENT",
+	type = "scroll", subtype = "tome",
+	name = "Tome of Improvemend", unique=true,
+	display = "?", color=colors.VIOLET,
+	desc = [[This very rare tome of power contains magic words that can make the user stronger, wiser, more able, ...]],
+	cost = 4000,
 
-newEntity{ base = "BASE_SHIELD",
-	define_as = "OLD_MAN_WILLOW_SHIELD",
-	name = "Old Man's Willow Barkwood", unique=true,
-	desc = [[The barkwood of the Old Man's Willow, made into roughtly the shape of a shield.]],
-	require = { stat = { str=25 }, },
-	cost = 20,
-
-	special_combat = {
-		dam = resolvers.rngavg(20,30),
-		physcrit = 2,
-		dammod = {str=1.5},
-	},
-	wielder = {
-		combat_armor = 5,
-		combat_def = 9,
-		fatigue = 14,
-		resists = {
-			[DamageType.FIRE] = -20,
-			[DamageType.COLD] = 20,
-			[DamageType.NATURE] = 20,
-		},
-	},
+	use_simple = { name="increase talent and stat points", use = function(self, who)
+		game.logPlayer(who, "#00FFFF#You read the tome alound and feel its magic change you!")
+		who.unused_stats = who.unused_stats + 3
+		who.unused_talents = who.unused_talents + 2
+		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)
+		game.logPlayer(who, "You have %d talent point(s) to spend. Press G to use them.", who.unused_talents)
+		return "destroy", true
+	end}
 }

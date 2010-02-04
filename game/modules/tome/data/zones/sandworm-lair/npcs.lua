@@ -14,6 +14,8 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	max_life = 500,
 	energy = {mod=0.5},
 
+	move_body = 1,
+
 	autolevel = "warrior",
 	ai = "sandworm_tunneler", ai_state = {},
 }
@@ -33,8 +35,9 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	resists = { [DamageType.FIRE] = -50 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="OLD_MAN_WILLOW_SHIELD"}, },
-	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+
+	resolvers.drops{chance=100, nb=1, {defined="TOME_OF_IMPROVEMENT"}, },
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	talents = resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2,
