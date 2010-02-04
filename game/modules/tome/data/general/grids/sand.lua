@@ -11,5 +11,27 @@ newEntity{
 	always_remember = true,
 	block_move = true,
 	block_sight = true,
-	dig = "SAND",
+	-- Dig only makes unstable tunnels
+	dig = function(src, x, y, old)
+		local sand = require("engine.Object").new{
+			name = "unstable sand tunnel", image = "terrain/sand.png",
+			display = '.', color={r=203,g=189,b=72},
+			canAct = function() return true end,
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+					game:removeEntity(self)
+					game.logSeen(self, "The unstable sand tunnel collapses!")
+				end
+			end
+		}
+		sand.old_feat = old
+		sand.temporary = 10
+		sand.x = x
+		sand.y = y
+		game:addEntity(sand)
+		return nil, sand, true
+	end,
 }
