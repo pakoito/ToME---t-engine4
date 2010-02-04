@@ -1,20 +1,21 @@
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped (and used!) by Bill the Stone Troll
+local Stats = require"engine.interface.ActorStats"
 
-newEntity{ base = "BASE_GREATMAUL",
-	define_as = "GREATMAUL_BILL_TRUNK",
-	name = "Bill's Tree Trunk", unique=true,
-	require = { stat = { str=25 }, },
-	cost = 5,
-	combat = {
-		dam = 30,
-		apr = 7,
-		physcrit = 1.5,
-		dammod = {str=1.3},
-		damrange = 1.7,
-	},
+-- Artifact, droped (and used!) by the Minautaur
+newEntity{ base = "BASE_HELM",
+	define_as = "HELM_OF_HAMMERHAND",
+	name = "Steel Helm of Hammerhand", unique=true,
+	desc = [[A great helm as steady as the heroes of the Westdike. Mighty were the blows of Helm, the Hammerhand!]],
+	require = { level=11, },
+	cost = 20,
 
 	wielder = {
+		combat_armor = 3,
+		fatigue = 8,
+		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_CON] = 3, [Stats.STAT_WIL] = 4 },
+		combat_physresist = 7,
+		combat_mentalresist = 7,
+		combat_spellresist = 7,
 	},
 }

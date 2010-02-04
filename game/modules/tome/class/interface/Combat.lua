@@ -120,19 +120,21 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
-	print("[ATTACK] with", weapon.name, " to ", target.name, " :: ", dam, apr, armor, "::", mult)
+	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
 	if self:checkHit(atk, def) then
+		print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
 		local dam = math.max(0, dam - math.max(0, armor - apr))
 		local damrange = self:combatDamageRange(weapon)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK] after range", dam)
 		local crit
-		dam = dam * mult
 		dam, crit = self:physicalCrit(dam, weapon)
 		print("[ATTACK] after crit", dam)
+		dam = dam * mult
+		print("[ATTACK] after mult", dam)
 		if crit then game.logSeen(self, "%s performs a critical stike!", self.name:capitalize()) end
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
@@ -246,7 +248,7 @@ function _M:combatDamage(weapon)
 	if weapon.dammod then
 		for stat, mod in pairs(weapon.dammod) do
 			if sub_con_to_str and stat == "str" then stat = "cun" end
-			add = add + (self:getStat(stat) - 10) * mod
+			add = add + (self:getStat(stat) - 10) * 0.7 * mod
 		end
 	end
 	local talented_mod = self:combatCheckTraining(weapon)
@@ -256,7 +258,7 @@ end
 --- Gets spellpower
 function _M:combatSpellpower(mod)
 	mod = mod or 1
-	return (self.combat_spellpower + self:getMag()) * mod
+	return (self.combat_spellpower + self:getMag() * 0.7) * mod
 end
 
 --- Gets spellcrit

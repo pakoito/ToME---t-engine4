@@ -17,7 +17,7 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 1,
 
 	use_simple = { name="light up the surrounding area", use = function(self, who)
-		who:project({type="ball", range=0, friendlyfire=false, radius=15}, self.x, self.y, DamageType.LIGHT, 1)
+		who:project({type="ball", range=0, friendlyfire=false, radius=15}, who.x, who.y, DamageType.LIGHT, 1)
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}
@@ -109,8 +109,8 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 5,
 
 	use_simple = { name="detect enemies within a certain range", use = function(self, who)
-		local rad = 15 + self:getMag(20)
-		self:setEffect(self.EFF_SENSE, 2, {
+		local rad = 15 + who:getMag(20)
+		who:setEffect(who.EFF_SENSE, 2, {
 			range = rad,
 			actor = 1,
 		})

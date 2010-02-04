@@ -9,7 +9,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "OLD_MAN_WILLOW",
-	type = "giant", subtype = "ent", unique = true,
+	type = "giant", subtype = "huorn", unique = true,
 	name = "Old Man Willow",
 	display = "#", color=colors.OLIVE_DRAB,
 	desc = [[The ancient grey willow tree, ruler of the Old Forest. He despises
@@ -17,7 +17,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	Enormous it looked, its sprawling branches going up like racing arms
 	with may long-fingered hands, its knotted and twisted trunk gaping in
 	wide fissures that creaked faintly as the boughs moved."]],
-	level_range = {7, 10}, exp_worth = 2,
+	level_range = {12, 18}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	max_mana = 200,
@@ -27,7 +27,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="OLD_MAN_WILLOW_SHIELD"}, },
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	talents = resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2,

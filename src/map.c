@@ -107,6 +107,7 @@ static int map_set_grid(lua_State *L)
 	GLuint *o = lua_isnil(L, 6) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 6);
 	GLuint *a = lua_isnil(L, 7) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 7);
 
+	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_terrain[x][y] = g ? *g : 0;
 	map->grids_trap[x][y] = t ? *t : 0;
 	map->grids_actor[x][y] = a ? *a : 0;
@@ -121,6 +122,7 @@ static int map_set_seen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	bool v = lua_toboolean(L, 4);
 
+	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_seens[x][y] = v;
 	return 0;
 }
@@ -132,6 +134,7 @@ static int map_set_remember(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	bool v = lua_toboolean(L, 4);
 
+	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_remembers[x][y] = v;
 	return 0;
 }
@@ -143,6 +146,7 @@ static int map_set_lite(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	bool v = lua_toboolean(L, 4);
 
+	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_lites[x][y] = v;
 	return 0;
 }

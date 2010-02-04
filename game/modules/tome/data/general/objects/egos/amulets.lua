@@ -27,28 +27,32 @@ newEntity{
 	wielder = {},
 	resolvers.generic(function(e)
 		local tts = {
-			"physical/2hweapon",
-			"physical/dualweapon",
-			"physical/shield",
-			"physical/weapon-training",
-			"physical/combat-training",
-
-			"cunning/stealth",
-			"cunning/traps",
 			"cunning/dirty",
+			"cunning/stealth",
+			"cunning/survival",
 
-			"spell/arcane",
-			"spell/fire",
-			"spell/earth",
-			"spell/water",
 			"spell/air",
+			"spell/arcane",
 			"spell/conveyance",
-			"spell/nature",
-			"spell/meta",
 			"spell/divination",
-			"spell/temporal",
-			"spell/phantasm",
+			"spell/earth",
+			"spell/fire",
+			"spell/meta",
+			"spell/nature",
 			"spell/necromancy",
+			"spell/phantasm",
+			"spell/temporal",
+			"spell/water",
+
+			"technique/2hweapon-cripple",
+			"technique/2hweapon-offense",
+			"technique/combat-techniques-active",
+			"technique/combat-techniques-passive",
+			"technique/combat-training",
+			"technique/dualweapon-attack",
+			"technique/dualweapon-training",
+			"technique/shield-defense",
+			"technique/shield-offense",
 		}
 		local tt = tts[rng.range(1, #tts)]
 

@@ -19,7 +19,7 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
 			adjust_level = {-1, 2},
-			guardian = "TROLL_BILL",
+			guardian = "MINOTAUR_MAZE",
 		},
 		object = {
 			class = "engine.generator.object.Random",

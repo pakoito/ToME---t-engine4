@@ -12,7 +12,7 @@ newTalent{
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
-			game.logPlayer(self, "You cannot use Shield Bash without a shield!")
+			game.logPlayer(self, "You cannot use Shield Pummel without a shield!")
 			return nil
 		end
 
@@ -71,11 +71,11 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		-- First attack with weapon
-		self:attackTarget(target, nil, 1.5 + self:getTalentLevel(t) / 10, true)
+		self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
 		-- Second attack with shield
-		self:attackTargetWith(target, shield.special_combat, nil, 1.5 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10)
+		self:attackTargetWith(target, shield.special_combat, nil, 0.8 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10)
 		-- Third attack with shield
-		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.5 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)) / 10)
+		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 0.8 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)) / 10)
 
 		-- Try to stun !
 		if hit then
@@ -90,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with your weapon and two shield strikes doing %d%% damage, trying to overpower your target.
-		If the last attack hits, the target is knocked back.]]):format(100 * (1.5 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
+		If the last attack hits, the target is knocked back.]]):format(100 * (0.8 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
 	end,
 }
 
@@ -114,13 +114,13 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		-- First attack with shield
-		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1.8 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10)
+		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, 1 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10)
 
 		-- Second & third attack with weapon
 		if hit then
 			self.combat_physcrit = self.combat_physcrit + 1000
-			self:attackTarget(target, nil, 1.8 + self:getTalentLevel(t) / 10, true)
-			self:attackTarget(target, nil, 1.8 + self:getTalentLevel(t) / 10, true)
+			self:attackTarget(target, nil, 1 + self:getTalentLevel(t) / 10, true)
+			self:attackTarget(target, nil, 1 + self:getTalentLevel(t) / 10, true)
 			self.combat_physcrit = self.combat_physcrit - 1000
 		end
 
@@ -128,7 +128,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with shield doing %d%% damage. If it hits you follow up with 2 weapon strikes which are automatic crits.]]):
-		format(100 * (1.8 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
+		format(100 * (1 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
 	end,
 }
 

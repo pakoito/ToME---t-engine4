@@ -5,6 +5,7 @@ load("/data/general/objects/objects.lua")
 newEntity{ base = "BASE_GREATMAUL",
 	define_as = "GREATMAUL_BILL_TRUNK",
 	name = "Bill's Tree Trunk", unique=true,
+	desc = [[This ia big nasty looking tree trunk that Bill was using as a weapon. It could still serve this purpose, should you be strong enough to wield it!]],
 	require = { stat = { str=25 }, },
 	cost = 5,
 	combat = {

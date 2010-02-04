@@ -4,6 +4,7 @@ load("/data/general/objects/objects.lua")
 newEntity{ base = "BASE_STAFF",
 	define_as = "STAFF_ANGMAR", rarity=false,
 	name = "Angmar's Fall", unique=true,
+	desc = [[Made from the bones of of many creatures this staff glows with power. You can feel its evilness as you touch it.]],
 	require = { stat = { mag=25 }, },
 	cost = 5,
 	combat = {
