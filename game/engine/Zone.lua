@@ -289,6 +289,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	local level = self.level_class.new(lev, map)
 	level.ups = {{x=ux, y=uy}}
 	level.downs = {{x=dx, y=dy}}
+	level.spots = spots
 
 	-- Save level data
 	level.data = level_data

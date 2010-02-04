@@ -237,7 +237,7 @@ function _M:tunnel(x1, y1, x2, y2, id)
 end
 
 --- Create the stairs inside the level
-function _M:makeStairsInside(lev, old_lev)
+function _M:makeStairsInside(lev, old_lev, spots)
 	-- Put down stairs
 	local dx, dy
 	if lev < self.zone.max_level or self.data.force_last_stair then
@@ -260,11 +260,11 @@ function _M:makeStairsInside(lev, old_lev)
 		end
 	end
 
-	return ux, uy, dx, dy
+	return ux, uy, dx, dy, spots
 end
 
 --- Create the stairs on the sides
-function _M:makeStairsSides(lev, old_lev, sides, rooms)
+function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 	-- Put down stairs
 	local dx, dy
 	if lev < self.zone.max_level or self.data.force_last_stair then
@@ -301,7 +301,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms)
 		end
 	end
 
-	return ux, uy, dx, uy
+	return ux, uy, dx, uy, spots
 end
 
 --- Make rooms and connect them with tunnels
@@ -319,17 +319,25 @@ function _M:generate(lev, old_lev)
 	end
 
 	-- Tunnels !
-	print("Begin tunnel", #rooms, rooms[1])
-	local tx, ty = rooms[1].cx, rooms[1].cy
-	for ii = 2, #rooms + 1 do
-		local i = util.boundWrap(ii, 1, #rooms)
-		self:tunnel(tx, ty, rooms[i].cx, rooms[i].cy, rooms[i].id)
-		tx, ty = rooms[i].cx, rooms[i].cy
+	if not self.data.no_tunnels then
+		print("Begin tunnel", #rooms, rooms[1])
+		local tx, ty = rooms[1].cx, rooms[1].cy
+		for ii = 2, #rooms + 1 do
+			local i = util.boundWrap(ii, 1, #rooms)
+			self:tunnel(tx, ty, rooms[i].cx, rooms[i].cy, rooms[i].id)
+			tx, ty = rooms[i].cx, rooms[i].cy
+		end
+	end
+
+	-- Find out "interresting" spots
+	local spots = {}
+	for i, r in ipairs(rooms) do
+		spots[#spots+1] = {x=rooms[i].cx, y=rooms[i].cy, type="room"}
 	end
 
 	if self.data.edge_entrances then
-		return self:makeStairsSides(lev, old_lev, self.data.edge_entrances, rooms)
+		return self:makeStairsSides(lev, old_lev, self.data.edge_entrances, rooms, spots)
 	else
-		return self:makeStairsInside(lev, old_lev)
+		return self:makeStairsInside(lev, old_lev, spots)
 	end
 end

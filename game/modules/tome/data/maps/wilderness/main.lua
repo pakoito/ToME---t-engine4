@@ -17,10 +17,10 @@ quickEntity('_', {name='river', display='~', color={r=0, g=80, b=255}, image="te
 quickEntity('~', {name='Anduin river', display='~', color={r=0, g=30, b=255}, image="terrain/river.png"})
 
 quickEntity('A', {name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tower-amon-sul"})
---quickEntity('B', {name="Ettenmoors's cavern", 			display='>', color={r=80, g=255, b=255}})
-quickEntity('C', {name="Passageway into the Trollshaws", 	display='>', color={r=0, g=255, b=0}, change_level=1, change_zone="trollshaws"})
-quickEntity('D', {name="A gate into a maze", 			display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="maze"})
-quickEntity('E', {name="A path into the Old Forest", 		display='>', color={r=0, g=255, b=155}, change_level=1, change_zone="old-forest"})
+quickEntity('B', {name="Passageway into the Trollshaws", 	display='>', color={r=0, g=255, b=0}, change_level=1, change_zone="trollshaws"})
+quickEntity('C', {name="A gate into a maze", 			display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="maze"})
+quickEntity('D', {name="A path into the Old Forest", 		display='>', color={r=0, g=255, b=155}, change_level=1, change_zone="old-forest"})
+quickEntity('E', {name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, change_level=1, change_zone="sandworm-lair"})
 
 return {
 [[========q=qqqqqqqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
@@ -41,15 +41,15 @@ return {
 [[=====.._..ubbb...._._..h.=....hhh|hh..........__.mm__~.uuuu_h_uu.l8........_.....................^^]],
 [[===...._....bb....._..hh.=_....h.|..........__...mm..~.uuuuuu_uu.=........_........................]],
 [[====.._...bbbb...._....hhhh__....|.....A..._.....mm..~.uuuuuu____........._........................]],
-[[=====.._..uubb..._........._.....|h......._Ctt...mm..~6uuuuu&&&u._........._.......................]],
+[[=====.._..uubb..._........._.....|h......._Btt...mm..~6uuuuu&&&u._........._.......................]],
 [[====...__..ubbb._......hh.._.....|.hh...._.t^^^._mm..~..uuu&f&&&u._........._......................]],
 [[=====..._.....__......hho+-_.2---x1hh-------_L...mm---------------_........_.......................]],
 [[======..==..=__....h....h|.._.hh.|ih....._..^^^._m...~..uuuuuuuuuu._........_......................]],
-[[=============.....hhh....|.._.vvE|h......_.._.._mmm...~..uuuuuuuuu.._........_....................t]],
+[[=============.....hhh....|.._.vvD|h......_.._.._mmm...~..uuuuuuuuu.._........_....................t]],
 [[======........bb...h.....|..._vvv|hh...._.._...mm.....~..uuuuuuuu...._......_....................tt]],
-[[=====.........bb.........[---_.v.|.h...._._..mmmmm.s._~..uuuuuuuu....._......_..................ttt]],
+[[=====E........bb.........[---_.v.|.h...._._..mmmmm.s._~..uuuuuuuu....._......_..................ttt]],
 [[=====.........bb............._[--|....._.._..mmmm___s.~~.uuuuuuuu......_.._._..................tttt]],
-[[======........bb...Db......._....|....._._...mmmm.....~~.uuuuu.u........._.._.................ttttt]],
+[[======........bb...Cb......._....|....._._...mmmm.....~~.uuuuu.u........._.._.................ttttt]],
 [[=======.....ubbb..bbbb....._.....|....._....mmmmm....~~...uuuu.............._...............ttttttt]],
 [[==========..ubbbu........._......|...._.....mmmm.....~~...uuuu..............._...._.......ttttttttt]],
 [[==========..uuubbubb....._.......|ss__.....hmmmm....~~....uuuuuuu............._.__._ ...ttttttttttt]],
