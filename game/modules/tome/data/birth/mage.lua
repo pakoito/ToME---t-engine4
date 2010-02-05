@@ -11,7 +11,7 @@ newBirthDescriptor{
 			__ALL__ = "never",
 			["Arcane Blade"] = "allow",
 			Archmage = "allow",
-			Necromancer = "allow",
+--			Necromancer = "allow",
 		},
 	},
 	copy = {

@@ -471,7 +471,7 @@ end
 -- @param target to whom is the exp rewarded
 -- @return the experience rewarded
 function _M:worthExp(target)
-	if self.level < target.level - 5 then return 1 end
+	if not target.level or self.level < target.level - 5 then return 1 end
 
 	local mult = 2
 	if self.unique then mult = 6

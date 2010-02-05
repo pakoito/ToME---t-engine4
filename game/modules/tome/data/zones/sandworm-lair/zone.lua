@@ -26,7 +26,7 @@ return {
 			adjust_level = {-1, 2},
 			guardian = "SANDWORM_QUEEN",
 			-- Number of tunnelers + 2 (one per stair)
-			nb_tunnelers = 3,
+			nb_tunnelers = 7,
 		},
 		object = {
 			class = "engine.generator.object.Random",

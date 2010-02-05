@@ -1,4 +1,4 @@
--- last updated:  9:34 AM 1/29/2010
+-- last updated:  10:00 AM 2/3/2010
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -24,7 +24,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=15, apr=5, damtype=DamageType.POISON },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -33,7 +33,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=15, apr=5, damtype=DamageType.FIRE },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -42,7 +42,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=15, apr=5, damtype=DamageType.COLD },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=15, apr=5 },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=15, apr=5, damtype=DamageType.LIGHTNING },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -69,5 +69,5 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=15, apr=5, damtype=DamageType.ACID },
 }

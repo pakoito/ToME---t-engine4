@@ -36,7 +36,7 @@ newEntity{
 			end
 		}
 		sand.old_feat = old
-		sand.temporary = 10
+		sand.temporary = 20
 		sand.x = x
 		sand.y = y
 		game:addEntity(sand)

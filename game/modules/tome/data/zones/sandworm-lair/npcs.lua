@@ -1,6 +1,6 @@
-load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/ooze.lua")
-load("/data/general/npcs/jelly.lua")
+--load("/data/general/npcs/vermin.lua")
+--load("/data/general/npcs/ooze.lua")
+--load("/data/general/npcs/jelly.lua")
 --load("/data/general/npcs/sandworm.lua")
 
 local Talents = require("engine.interface.ActorTalents")
@@ -14,8 +14,9 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	desc = [[This sandworm seems to not care about your presence at all and simply continues digging its way through the sand.
 	Maybe following it is the only way to move around here...]],
 	level_range = {12, 18}, exp_worth = 2,
-	max_life = 500,
-	energy = {mod=0.5},
+	max_life = 10000,
+	faction = "sandworm burrowers",
+	energy = {mod=1},
 
 	move_body = 1,
 
