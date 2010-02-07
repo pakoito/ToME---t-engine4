@@ -4,6 +4,7 @@ load("/data/general/npcs/canine.lua")
 load("/data/general/npcs/snake.lua")
 load("/data/general/npcs/swarm.lua")
 load("/data/general/npcs/plant.lua")
+load("/data/general/npcs/ant.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 

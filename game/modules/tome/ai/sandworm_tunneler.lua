@@ -24,5 +24,12 @@ newAI("sandworm_tunneler", function(self)
 			self:project({type="hit"}, lx, ly, DamageType.DIG, 1)
 		end
 		self:move(lx, ly)
+
+		-- if we could not move, find a new spot
+		if self.x ~= lx or self.y ~= ly then
+			local s = rng.table(game.level.spots)
+			self.ai_state.spot_x = s.x
+			self.ai_state.spot_y = s.y
+		end
 	end
 end)

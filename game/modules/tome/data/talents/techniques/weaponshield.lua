@@ -260,8 +260,6 @@ newTalent{
 		self:removeTemporaryValue("combat_def", p.def)
 		self:removeTemporaryValue("max_life", p.max_life)
 		self:removeTemporaryValue("never_move", p.nomove)
-		if p.stun then self:removeTemporaryValue("stun_immune", p.stun) end
-		if p.knock then self:removeTemporaryValue("knockback_immune", p.knock) end
 		return true
 	end,
 	info = function(self, t)
