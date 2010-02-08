@@ -71,6 +71,7 @@ function _M:init(t, no_default)
 
 	-- Equilibrium has a default very high max, as bad effects happen even before reaching it
 	t.max_equilibrium = t.max_equilibrium or 100000
+	t.equilibrium = t.equilibrium or 0
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
@@ -478,6 +479,8 @@ function _M:getTalentFullDescription(t)
 
 	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.mana or t.sustain_mana) end
 	if t.stamina or t.sustain_stamina then d[#d+1] = "#6fff83#Stamina cost: #ffcc80#"..(t.stamina or t.sustain_stamina) end
+	if t.equilibrium or t.sustain_equilibrium then d[#d+1] = "#6fff83#Equilibrium cost: #00ff74#"..(t.equilibrium or t.sustain_equilibrium) end
+	if t.soul or t.sustain_soul then d[#d+1] = "#6fff83#Soul cost: #888888#"..(t.soul or t.sustain_soul) end
 	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
 	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
 	end
