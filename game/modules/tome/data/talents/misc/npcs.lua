@@ -246,25 +246,3 @@ newTalent{
 		return ([[Summon allies.]])
 	end,
 }
-
-newTalent{
-	name = "Sand Breath",
-	type = {"other/other",1},
-	points = 5,
-	cooldown = 4,
-	tactical = {
-		ATTACKAREA = 10,
-	},
-	range = 4,
-	action = function(self, t)
-		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SAND, {dur=2+self:getTalentLevelRaw(t), dam=10 + self:getStr() * 0.3 * self:getTalentLevel(t)}, {type="flame"})
-		return true
-	end,
-	info = function(self, t)
-		return ([[You breath sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded over %d turns.
-		The damage will increase with the Strength stat]]):format(10 + self:getStr() * 0.3 * self:getTalentLevel(t), 2+self:getTalentLevelRaw(t))
-	end,
-}

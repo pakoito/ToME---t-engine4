@@ -314,7 +314,7 @@ newDamageType{
 newDamageType{
 	name = "sand", type = "SAND",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("blind") then

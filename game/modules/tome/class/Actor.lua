@@ -107,6 +107,10 @@ function _M:act()
 	local air_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level")
 	if air_level then self:suffocate(-air_level, self) end
 
+	-- Regain natural balance?
+	local equilibrium_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "equilibrium_level")
+	if equilibrium_level then self:incEquilibrium(equilibrium_level) end
+
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
 
@@ -271,7 +275,7 @@ function _M:levelup()
 	if not self.fixed_rating then
 		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
 	end
-	self.max_life = self.max_life + rating + 5
+	self.max_life = self.max_life + rating + 1 -- + 5
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_I) and 1 or 0)
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_II) and 1 or 0)
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_III) and 1 or 0)
