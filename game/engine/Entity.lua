@@ -165,8 +165,10 @@ end
 --- Loads a list of entities from a definition file
 -- @param file the file to load from
 -- @param no_default if true then no default values will be assigned
+-- @param res the table to load into, defaults to a new one
+-- @param mod an optional function to which will be passed each entity as they are created. Can be used to adjust some values on the fly
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
-function _M:loadList(file, no_default, res)
+function _M:loadList(file, no_default, res, mod)
 	no_default = no_default and true or false
 	res = res or {}
 
@@ -205,14 +207,16 @@ function _M:loadList(file, no_default, res)
 
 			local e = self.new(t, no_default)
 
+			if mod then mod(e) end
+
 			res[#res+1] = e
 			if t.define_as then res[t.define_as] = e end
 		end,
-		load = function(f)
-			self:loadList(f, no_default, res)
+		load = function(f, new_mod)
+			self:loadList(f, no_default, res, new_mod or mod)
 		end,
-		loadList = function(f)
-			return self:loadList(f, no_default)
+		loadList = function(f, new_mod)
+			return self:loadList(f, no_default, nil, new_mod or mod)
 		end,
 	}, {__index=_G}))
 	f()
