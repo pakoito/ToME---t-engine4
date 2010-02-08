@@ -27,25 +27,25 @@ defineAction{
 	default = { "sym:263:false:false:false:false" },
 	type = "MOVE_LEFT_UP",
 	group = "movement",
-	name = "Move diagonaly left and up",
+	name = "Move diagonally left and up",
 }
 defineAction{
 	default = { "sym:265:false:false:false:false" },
 	type = "MOVE_RIGHT_UP",
 	group = "movement",
-	name = "Move diagonaly right and up",
+	name = "Move diagonally right and up",
 }
 defineAction{
 	default = { "sym:257:false:false:false:false" },
 	type = "MOVE_LEFT_DOWN",
 	group = "movement",
-	name = "Move diagonaly left and down",
+	name = "Move diagonally left and down",
 }
 defineAction{
 	default = { "sym:259:false:false:false:false" },
 	type = "MOVE_RIGHT_DOWN",
 	group = "movement",
-	name = "Move diagonaly right and down",
+	name = "Move diagonally right and down",
 }
 
 defineAction{
@@ -84,23 +84,23 @@ defineAction{
 	default = { "sym:263:false:true:false:false" },
 	type = "RUN_LEFT_UP",
 	group = "movement",
-	name = "Run diagonaly left and up",
+	name = "Run diagonally left and up",
 }
 defineAction{
 	default = { "sym:265:false:true:false:false" },
 	type = "RUN_RIGHT_UP",
 	group = "movement",
-	name = "Run diagonaly right and up",
+	name = "Run diagonally right and up",
 }
 defineAction{
 	default = { "sym:257:false:true:false:false" },
 	type = "RUN_LEFT_DOWN",
 	group = "movement",
-	name = "Run diagonaly left and down",
+	name = "Run diagonally left and down",
 }
 defineAction{
 	default = { "sym:259:false:true:false:false" },
 	type = "RUN_RIGHT_DOWN",
 	group = "movement",
-	name = "Run diagonaly right and down",
+	name = "Run diagonally right and down",
 }
