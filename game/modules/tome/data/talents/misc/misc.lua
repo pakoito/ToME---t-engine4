@@ -1,6 +1,5 @@
 -- Load other misc things
 load("/data/talents/misc/npcs.lua")
-load("/data/talents/misc/random.lua")
 
 -- race & classes
 newTalentType{ type="base/class", name = "class", hide = true, description = "The basic talents defining a class." }
@@ -24,6 +23,13 @@ newTalent{
 	name = "Stamina Pool",
 	type = {"base/class", 1},
 	info = "Allows you to have a stamina pool. Stamina is used to activate special combat attacks.",
+	mode = "passive",
+	hide = true,
+}
+newTalent{
+	name = "Equilibrium Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have an equilibrium pool. Equilibrium is used to mesure your balance with nature and the use of wild gifts.",
 	mode = "passive",
 	hide = true,
 }

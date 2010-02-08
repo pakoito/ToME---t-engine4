@@ -43,8 +43,9 @@ ActorTemporaryEffects:loadDefinition("/data/timed_effects.lua")
 
 -- Actor resources
 ActorResource:defineResource("Air", "air", nil, "air_regen", "Air capacity in your lungs. Entities that need not to breath are not affected.")
-ActorResource:defineResource("Mana", "mana", ActorTalents.T_MANA_POOL, "mana_regen", "Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximun mana.")
 ActorResource:defineResource("Stamina", "stamina", ActorTalents.T_STAMINA_POOL, "stamina_regen", "Stamina represents your physical fatigue. Each physical ability used reduces it.")
+ActorResource:defineResource("Mana", "mana", ActorTalents.T_MANA_POOL, "mana_regen", "Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximun mana.")
+ActorResource:defineResource("Equilibrium", "equilibrium", ActorTalents.T_EQUILIBRIUM_POOL, "equilibrium_regen", "Equilibrium represents your stand in the grand balance of nature. The closer it is to 0 the more inbalance you are. Higher equilibrium states will impact negatively your ability to use Wild Gifts.")
 ActorResource:defineResource("Soul", "soul", ActorTalents.T_SOUL_POOL, "soul_regen", "Soul represents the amount of life energies/souls you have stolen. Each Necromantic spell requires some.")
 
 -- Actor stats

@@ -1,18 +1,12 @@
--- Some randomly gained talents
-
-------------------------------------------------------------
--- Slime Powers!
-------------------------------------------------------------
-newTalentType{ type="gift/slime", name = "slime powers", description = "Through dedicated consumption of slime mold juice you have gained an affinity with them." }
-
 newTalent{
 	name = "Poisonous Spores",
 	type = {"gift/slime", 1},
+	require = gifts_req1,
 	points = 5,
 	message = "@Source@ releases poisonous spores at @target@.",
+	equilibrium = 2,
 	cooldown = 10,
 	range = 1,
-	require = {level = function(level) return 0 + (level-1)  end,},
 	tactical = {
 		ATTACK = 10,
 	},
@@ -34,12 +28,13 @@ newTalent{
 newTalent{
 	name = "Acidic Skin",
 	type = {"gift/slime", 2},
+	require = gifts_req2,
 	points = 5,
 	mode = "sustained",
 	message = "The skin of @Source@ starts dripping acid.",
+	sustain_equilibrium = 25,
 	cooldown = 10,
 	range = 1,
-	require = {level = function(level) return 4 + (level-1)  end,},
 	tactical = {
 		DEFEND = 10,
 	},
@@ -61,13 +56,14 @@ newTalent{
 newTalent{
 	name = "Slime Spit",
 	type = {"gift/slime", 3},
+	require = gifts_req3,
 	points = 5,
+	equilibrium = 4,
 	cooldown = 30,
 	tactical = {
 		ATTACK = 10,
 	},
 	range = 20,
-	require = {level = function(level) return 8 + (level-1)  end,},
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -84,15 +80,16 @@ newTalent{
 newTalent{
 	name = "Slime Roots",
 	type = {"gift/slime", 4},
+	require = gifts_req4,
 	points = 5,
+	equilibrium = 5,
 	cooldown = 20,
 	tactical = {
 		MOVEMENT = 10,
 	},
 	range = 20,
-	require = {level = function(level) return 12 + (level-1)  end,},
 	action = function(self, t)
-		local x, y = self:getTarget{type="ball", range=20 + self:getTalentLevel(t), radius=7 - self:getTalentLevel(t)}
+		local x, y = self:getTarget{type="ball", range=20 + self:getTalentLevel(t), radius=math.min(0, 5 - self:getTalentLevel(t))}
 		if not x then return nil end
 		-- Target code doesnot restrict the self coordinates to the range, it lets the poject function do it
 		-- but we cant ...

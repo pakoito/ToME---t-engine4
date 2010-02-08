@@ -2,15 +2,15 @@ load("/data/general/objects/objects.lua")
 
 -- Artifact, droped by the sandworm queen
 newEntity{
-	define_as = "TOME_OF_IMPROVEMENT",
-	type = "scroll", subtype = "tome",
-	name = "Tome of Improvement", unique=true,
-	display = "?", color=colors.VIOLET,
-	desc = [[This very rare tome of power contains magic words that can make the user stronger, wiser, more able, ...]],
+	define_as = "SANDQUEEN_HEART",
+	type = "corpse", subtype = "heart",
+	name = "Heart of the Sandworm Queen", unique=true,
+	display = "*", color=colors.VIOLET,
+	desc = [[The heart of the Ssandworm Queen, ripped from her dead body. You could ... consume it, should you feel mad enough.]],
 	cost = 4000,
 
-	use_simple = { name="increase talent and stat points", use = function(self, who)
-		game.logPlayer(who, "#00FFFF#You read the tome alound and feel its magic changing you!")
+	use_simple = { name="consume the heart", use = function(self, who)
+		game.logPlayer(who, "#00FFFF#You consume the heart and feel the knowledge of this very old creature fill you!")
 		who.unused_stats = who.unused_stats + 3
 		who.unused_talents = who.unused_talents + 2
 		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)

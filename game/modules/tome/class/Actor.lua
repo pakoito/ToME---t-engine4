@@ -67,6 +67,10 @@ function _M:init(t, no_default)
 	t.mana_regen = t.mana_regen or 0.5
 	t.stamina_regen = t.stamina_regen or 0.3 -- Stamina regens slower than mana
 	t.life_regen = t.life_regen or 0.25 -- Life regen real slow
+	t.equilibrium_regen = t.equilibrium_regen or -0.01 -- Equilibrium resets real slow
+
+	-- Equilibrium has a default very high max, as bad effects happen even before reaching it
+	t.max_equilibrium = t.max_equilibrium or 100000
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
@@ -280,6 +284,7 @@ function _M:levelup()
 	self.life = self.max_life
 	self.mana = self.max_mana
 	self.stamina = self.max_stamina
+	self.equilibrium = 0
 
 	-- Auto levelup ?
 	if self.autolevel then
@@ -310,6 +315,7 @@ function _M:learnTalent(t_id, force)
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) then self:learnTalent(self.T_MANA_POOL) end
+	if t.type[1]:find("^gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL) end
 	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) then self:learnTalent(self.T_STAMINA_POOL) end
 	return true
 end
@@ -345,6 +351,21 @@ function _M:preUseTalent(ab, silent)
 		end
 		if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
 			game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
+			return false
+		end
+	end
+
+	-- Equilibrium is special, it has no max, but the higher it is the higher the chance of failure (and loss of the turn)
+	-- But it is not affected by fatigue
+	if ab.equilibrium or ab.sustain_equilibrium then
+		local eq = ab.equilibrium or ab.sustain_equilibrium
+		local chance = math.sqrt(eq + self:getEquilibrium()) / 60
+		-- Fail ? lose energy and 1/10 more equilibrium
+		print("[Equilibrium] Use chance: ", 100 - chance * 100)
+		if not rng.percent(100 - chance * 100) then
+			game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name)
+			self:incEquilibrium(eq / 10)
+			self:useEnergy()
 			return false
 		end
 	end
@@ -392,12 +413,18 @@ function _M:postUseTalent(ab, ret)
 			if ab.sustain_stamina then
 				self.max_stamina = self.max_stamina - ab.sustain_stamina
 			end
+			if ab.sustain_equilibrium then
+				self:incEquilibrium(ab.sustain_equilibrium)
+			end
 		else
 			if ab.sustain_mana then
 				self.max_mana = self.max_mana + ab.sustain_mana
 			end
 			if ab.sustain_stamina then
 				self.max_stamina = self.max_stamina + ab.sustain_stamina
+			end
+			if ab.sustain_equilibrium then
+				self:incEquilibrium(-ab.sustain_equilibrium)
 			end
 		end
 	else
@@ -407,7 +434,12 @@ function _M:postUseTalent(ab, ret)
 		if ab.stamina then
 			self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
 		end
+		-- Equilibrium is not affected by fatigue
+		if ab.equilibrium then
+			self:incEquilibrium(ab.equilibrium)
+		end
 	end
+
 
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH then self:breakStealth() end
