@@ -9,8 +9,9 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	reflectable = true,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t)}
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3), {type="lightning"})
@@ -105,7 +106,7 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		for i = 1, math.floor(self:getTalentLevel(t)) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)

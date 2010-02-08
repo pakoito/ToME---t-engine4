@@ -34,8 +34,9 @@ newTalent{
 	points = 5,
 	mana = 40,
 	range = 20,
+	reflectable = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true}
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		for i = 1, self:getTalentLevelRaw(t) do
@@ -59,8 +60,9 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	reflectable = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(8 + self:combatSpellpower(0.15) * self:getTalentLevel(t)))
@@ -79,10 +81,11 @@ newTalent{
 	cooldown = 12,
 	mana = 70,
 	range = 20,
+	reflectable = true,
 	action = function(self, t)
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
-			local tg = {type="bolt", range=self:getTalentRange(t), nolock=true}
+			local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 			x, y = self:getTarget(tg)
 			if not x or not y then return nil end
 		end

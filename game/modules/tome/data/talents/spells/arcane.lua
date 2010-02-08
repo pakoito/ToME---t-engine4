@@ -9,8 +9,9 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	reflectable = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end

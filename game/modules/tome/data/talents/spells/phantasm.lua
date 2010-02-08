@@ -6,7 +6,7 @@ newTalent{
 	mana = 5,
 	cooldown = 14,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=false, radius=5 + self:getTalentLevel(t)}
+		local tg = {type="ball", range=0, friendlyfire=false, radius=5 + self:getTalentLevel(t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LIGHT, 1)
 		if self:getTalentLevel(t) >= 3 then
 			self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))

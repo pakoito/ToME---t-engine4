@@ -548,3 +548,28 @@ function _M:canBe(what)
 	if what == "instakill" and self:attr("instakill_immune") then return false end
 	return true
 end
+
+--- Called when we are projected upon
+-- This is used to do spell reflection, antimagic, ...
+function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)
+	-- Spell reflect
+	if self:attr("spell_reflect") and ((t.talent and t.talent.reflectable) or t.reflectable) and rng.percent(self:attr("spell_reflect")) then
+		game.logSeen(self, "%s reflects the spell!", self.name:capitalize())
+		-- Setup the bypass so it does not eternally reflect between two actors
+		t.bypass = true
+		who:project(t, x, y, damtype, dam, particles)
+		return true
+	end
+
+	-- Spell absorb
+	if self:attr("spell_absorb") and (t.talent and t.talent.type[1]:find("^spell/")) and rng.percent(self:attr("spell_absorb")) then
+		game.logSeen(self, "%s ignores the spell!", self.name:capitalize())
+		return true
+	end
+	return false
+end
+
+--- Called when we have been projected upon and the DamageType is about to be called
+function _M:projected(tx, ty, who, t, x, y, damtype, dam, particles)
+	return false
+end

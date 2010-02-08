@@ -65,6 +65,11 @@ end
 -- @param dam damage to be done
 -- @param particles particles effect configuration, or nil
 function _M:project(t, x, y, damtype, dam, particles)
+	-- Call the on project of the target grid if possible
+	if not t.bypass and game.level.map:checkAllEntities(x, y, "on_project", self, t, x, y, damtype, dam, particles) then
+		return
+	end
+
 	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 
@@ -116,18 +121,21 @@ function _M:project(t, x, y, damtype, dam, particles)
 	-- Now project on each grid, one type
 	for px, ys in pairs(grids) do
 		for py, _ in pairs(ys) do
-			-- Friendly fire ?
-			if px == self.x and py == self.y then
-				if t.friendlyfire then
+			-- Call the projected method of the target grid if possible
+			if not game.level.map:checkAllEntities(x, y, "projected", self, t, x, y, damtype, dam, particles) then
+				-- Friendly fire ?
+				if px == self.x and py == self.y then
+					if t.friendlyfire then
+						DamageType:get(damtype).projector(self, px, py, damtype, dam)
+						if particles then
+							game.level.map:particleEmitter(px, py, 1, particles.type)
+						end
+					end
+				else
 					DamageType:get(damtype).projector(self, px, py, damtype, dam)
 					if particles then
 						game.level.map:particleEmitter(px, py, 1, particles.type)
 					end
-				end
-			else
-				DamageType:get(damtype).projector(self, px, py, damtype, dam)
-				if particles then
-					game.level.map:particleEmitter(px, py, 1, particles.type)
 				end
 			end
 		end

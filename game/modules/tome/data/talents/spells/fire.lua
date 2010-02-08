@@ -9,8 +9,9 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	reflectable = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), {type="flame"})
@@ -34,7 +35,7 @@ newTalent{
 	},
 	range = 1,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
+		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t), dam=self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t))}, {type="flame"})
@@ -58,7 +59,7 @@ newTalent{
 	},
 	range = 15,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t)}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t)), {type="flame"})
