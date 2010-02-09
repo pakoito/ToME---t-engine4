@@ -1,6 +1,6 @@
 -- Wild Gifts
-newTalentType{ type="gift/slime", name = "slime powers", description = "Through dedicated consumption of slime mold juice you have gained an affinity with slime molds." }
-newTalentType{ type="gift/sand", name = "sand powers", description = "After consuming the heart of the Sandworm Queen you begin to gain command over the sand." }
+newTalentType{ type="gift/slime", name = "slime aspect", description = "Through dedicated consumption of slime mold juice you have gained an affinity with slime molds." }
+newTalentType{ type="gift/sand", name = "sand aspect", description = "After consuming the heart of the Sandworm Queen you begin to gain command over the sand." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {
