@@ -71,7 +71,6 @@ function _M:init(w, h)
 	self.seens = {}
 	self.remembers = {}
 	self.effects = {}
-	self.particles = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self:loaded()
@@ -86,9 +85,11 @@ function _M:save()
 		_map = true,
 		surface = true,
 		particle = true,
+		particles = true,
 	})
 end
 function _M:loaded()
+	self.particles = {}
 	self.particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
 
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
