@@ -118,7 +118,7 @@ newTalent{
 		self.stamina_regen = self.stamina_regen - 0.2
 	end,
 	info = function(self, t)
-		return ([[Your focus on the combat allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevelRaw(t) / 5)
+		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevelRaw(t) / 5)
 	end,
 }
 
@@ -135,7 +135,7 @@ newTalent{
 		self.life_regen = self.life_regen - 0.2
 	end,
 	info = function(self, t)
-		return ([[Your focus on the combat allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevelRaw(t) / 5)
+		return ([[Your combat focus allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevelRaw(t) / 5)
 	end,
 }
 
@@ -152,7 +152,7 @@ newTalent{
 		self.combat_spellresist = self.combat_spellresist - 4
 	end,
 	info = function(self, t)
-		return ([[Rigorous training allows you to be more resistant to some spells effects. (+%d spell resistance).]]):format(self:getTalentLevelRaw(t) * 4)
+		return ([[Rigorous training allows you to be more resistant to some spell effects. (+%d spell resistance).]]):format(self:getTalentLevelRaw(t) * 4)
 	end,
 }
 
@@ -163,6 +163,6 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[You relish in the death of your foes, regaining %d stamina wit heach death.]]):format(self:getTalentLevel(t) * 2)
+		return ([[You revel in the death of your foes, regaining %d stamina with each death.]]):format(self:getTalentLevel(t) * 2)
 	end,
 }

@@ -1,6 +1,6 @@
 newEntity{
 	define_as = "BASE_LEATHER_CAP",
-	slot = "BODY",
+	slot = "HEAD",
 	type = "armor", subtype="head",
 	display = "]", color=colors.UMBER,
 	encumber = 2,

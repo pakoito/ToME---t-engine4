@@ -118,7 +118,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit wit your offhand weapon for %d%% damage, if the attack hits the target is stunned and you hit it with your mainhand weapon.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
+		return ([[Hit with your offhand weapon for %d%% damage, if the attack hits the target is stunned and you hit it with your mainhand weapon.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
 	end,
 }
 

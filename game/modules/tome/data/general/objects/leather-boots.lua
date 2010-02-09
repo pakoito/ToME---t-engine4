@@ -1,6 +1,6 @@
 newEntity{
 	define_as = "BASE_LEATHER_BOOT",
-	slot = "BODY",
+	slot = "FEET",
 	type = "armor", subtype="feet",
 	display = "]", color=colors.UMBER,
 	encumber = 2,

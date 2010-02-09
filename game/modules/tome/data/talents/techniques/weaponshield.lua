@@ -47,7 +47,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[When you block/avoid a melee blow you have %d%% chances to get a free, automatic, melee attack against your foe.]]):format(util.bound(self:getTalentLevel(t) * self:getDex(50), 10, 80))
+		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic, melee attack against your foe.]]):format(util.bound(self:getTalentLevel(t) * self:getDex(50), 10, 80))
 	end,
 }
 
@@ -212,7 +212,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Let all your foes pile up on your shield then put all your strengh in one mighty thurst and repel them all away.]])
+		return ([[Let all your foes pile up on your shield then put all your strengh in one mighty thrust and repel them all away.]])
 	end,
 }
 

@@ -87,7 +87,7 @@ newBirthDescriptor{
 		["technique/shield-defense"]={true, 0},
 		["technique/combat-techniques-active"]={false, 0},
 		["technique/combat-techniques-passive"]={false, 0},
-		["technique/weapon-training"]={true, 0},
+		["technique/combat-training"]={true, 0},
 		["technique/magical-combat"]={true, 0},
 		["cunning/survival"]={true, -0.1},
 	},
