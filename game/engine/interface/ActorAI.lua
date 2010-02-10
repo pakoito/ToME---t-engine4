@@ -1,4 +1,5 @@
 require "engine.class"
+require "engine.Actor"
 local Map = require "engine.Map"
 
 --- Handles actors artificial intelligence (or dumbness ... ;)
@@ -30,6 +31,10 @@ end
 function _M:init(t)
 	self.ai_state = {}
 	self.ai_target = {}
+	self:autoLoadedAI()
+end
+
+function _M:autoLoadedAI()
 	-- Make the table with weak values, so that threat list does not prevent garbage collection
 	setmetatable(self.ai_target, {__mode='v'})
 end

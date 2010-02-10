@@ -79,6 +79,7 @@ function _M:cloned()
 	self.changed = true
 end
 
+_M.__autoload = {}
 _M.loadNoDelay = true
 --- If we are loaded we need a new uid
 function _M:loaded()
@@ -88,6 +89,9 @@ function _M:loaded()
 	next_uid = next_uid + 1
 
 	self.changed = true
+
+	-- hackish :/
+	if self.autoLoadedAI then self:autoLoadedAI() end
 end
 
 --- Change the entity's uid
