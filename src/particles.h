@@ -6,6 +6,7 @@
 typedef struct {
 	float size, sizev, sizea;
 	float x, y, xv, yv, xa, ya;
+	float dir, dirv, dira, vel, velv, vela;
 	float r, g, b, a, rv, gv, bv, av, ra, ga, ba, aa;
 	int life;
 } particle_type;
@@ -15,6 +16,7 @@ typedef struct {
 	particle_type *particles;
 	int nb;
 	int texture_ref;
+	int generator_ref;
 
 	int base;
 

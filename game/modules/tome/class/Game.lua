@@ -518,6 +518,7 @@ function _M:setupCommands()
 			self:registerDialog(menu)
 		end,
 	}
+
 --[[
 	self.key:addCommands
 	{
