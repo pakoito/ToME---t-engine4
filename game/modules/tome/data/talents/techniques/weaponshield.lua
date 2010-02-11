@@ -127,7 +127,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with shield doing %d%% damage. If it hits you follow up with 2 weapon strikes which are automatic crits.]]):
+		return ([[Hits the target with shield doing %d%% damage. If it hits, you follow up with two weapon strikes which are automatic crits.]]):
 		format(100 * (1 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
 	end,
 }
@@ -175,8 +175,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enters a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
-		At level 5 it also makes you immnue to stuns and knockbacks.]]):format(
+		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
+		At level 5 it also makes you immune to stuns and knockbacks.]]):format(
 		5 + self:getDex(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
 		5 + self:getCun(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
 		)
@@ -212,7 +212,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Let all your foes pile up on your shield then put all your strengh in one mighty thrust and repel them all away.]])
+		return ([[Let all your foes pile up on your shield then put all your strength in one mighty thrust and repel them all away.]])
 	end,
 }
 
@@ -251,7 +251,7 @@ newTalent{
 		end
 
 		return {
-			max_life = self:addTemporaryValue("max_life", 10 * self:getTalentLevel(t)),
+			max_life = self:addTemporaryValue("max_life", (10 + self:getCon() * 0.25) * self:getTalentLevel(t)),
 			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4) * self:getTalentLevel(t)),
 			nomove = self:addTemporaryValue("never_move", 1),
 		}

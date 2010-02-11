@@ -124,7 +124,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Call legendary resilience of the Dwarven race to increase your armor(+%d), spell(+%d) and physical(+%d) resistances for 8 turns.
+		return ([[Call upon the legendary resilience of the Dwarven race to increase your armor(+%d), spell(+%d) and physical(+%d) resistances for 8 turns.
 		The bonus will increase with the Constitution stat]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
 	end,
 }

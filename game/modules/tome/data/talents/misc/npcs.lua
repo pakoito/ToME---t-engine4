@@ -138,7 +138,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hit = self:attackTarget(target, 0.5 + self:getTalentLevel(t) / 10, true)
+		local hit = self:attackTarget(target, nil, 0.5 + self:getTalentLevel(t) / 10, true)
 
 		-- Try to stun !
 		if hit then

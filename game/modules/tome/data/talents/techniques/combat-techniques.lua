@@ -2,7 +2,7 @@
 -- Active techniques
 ----------------------------------------------------
 newTalent{
-	name = "Precise Striking",
+	name = "Precise Strikes",
 	type = {"technique/combat-techniques-active", 1},
 	mode = "sustained",
 	points = 5,

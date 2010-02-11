@@ -29,6 +29,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	talents = resolvers.talents{
+		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
 		[Talents.T_STAMINA_POOL]=1,
 		[Talents.T_WARSHOUT]=1,
 		[Talents.T_STUNNING_BLOW]=1,
