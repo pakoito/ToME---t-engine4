@@ -171,7 +171,7 @@ newDamageType{
 		if target then
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
 				target:setEffect(target.EFF_FROZEN, dam, {src=src})
 
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Frozen!", {0,255,155})

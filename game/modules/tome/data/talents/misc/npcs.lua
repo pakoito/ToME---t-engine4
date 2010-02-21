@@ -142,7 +142,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
@@ -172,7 +172,7 @@ newTalent{
 
 		-- Try to knockback !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
 				target:knockback(4)
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())

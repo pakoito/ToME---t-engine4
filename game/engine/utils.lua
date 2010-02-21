@@ -329,7 +329,7 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 			if game.level.map(x, y, w) then ok = false end
 		end
 		if game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then ok = false end
-		print("findFreeGrid", x, y, "from", sx,sy,"=>", ok)
+--		print("findFreeGrid", x, y, "from", sx,sy,"=>", ok)
 		if ok then
 			gs[#gs+1] = {x, y, math.floor(core.fov.distance(sx, sy, x, y)), rng.range(1, 1000)}
 		end

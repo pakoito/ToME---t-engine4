@@ -7,7 +7,7 @@ newEntity{ base = "BASE_HELM",
 	define_as = "HELM_OF_HAMMERHAND",
 	name = "Steel Helm of Hammerhand", unique=true,
 	desc = [[A great helm as steady as the heroes of the Westdike. Mighty were the blows of Helm, the Hammerhand!]],
-	require = { level=11, },
+	require = { stat = { str=16 }, },
 	cost = 20,
 
 	wielder = {

@@ -162,7 +162,7 @@ newEntity{ base = "BASE_POTION",
 		game.logSeen(who, "%s quaffs the slime juice. Yuck.", who.name:capitalize())
 		-- 1% chance of gaining slime mold powers
 		if rng.percent(1) then
-			who:learnTalentType("gift/slime", true)
+			who:learnTalentType("gift/slime", false)
 			game.logSeen(who, "%s is transformed by the slime mold juice.", who.name:capitalize())
 			game.logPlayer(who, "#00FF00#You gain an affinity for the molds. You can now learn new slime talents (press G).")
 		end

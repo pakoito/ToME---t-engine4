@@ -191,7 +191,7 @@ function _M:runCheck()
 	self:runScan(function(x, y)
 		-- Only notice interresting terrains
 		local grid = game.level.map(x, y, Map.TERRAIN)
-		if grid and grid.notice then noticed = "interresting terrain" end
+		if grid and grid.notice then noticed = "interesting terrain" end
 
 		-- Objects are always interresting
 		local obj = game.level.map:getObject(x, y, 1)

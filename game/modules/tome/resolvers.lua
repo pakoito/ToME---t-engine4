@@ -68,12 +68,12 @@ function resolvers.calc.drops(t, e)
 	-- Iterate of object requests, try to create them and drops them
 	for i = 1, (t.nb or 1) do
 		local filter = t[rng.range(1, #t)]
-		print("Drops resolver", filter.type, filter.subtype)
+		print("Drops resolver", filter.type, filter.subtype, filter.defined)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter)
 		else
-			o = game.zone:makeEntityByName(game.level, "object", filter.name)
+			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
 		end
 		if o then
 			print("Zone made us an drop according to filter!", o:getName())

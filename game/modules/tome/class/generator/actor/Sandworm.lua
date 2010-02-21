@@ -35,6 +35,7 @@ function _M:generate()
 end
 
 function _M:placeWorm(s)
+	if not s.x or not s.y then return end
 	local m = self.zone:makeEntityByName(self.level, "actor", "SANDWORM_TUNNELER")
 	if m then
 		local x, y = util.findFreeGrid(s.x, s.y, 5, true, {[Map.ACTOR]=true})
