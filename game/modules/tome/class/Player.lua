@@ -92,6 +92,13 @@ function _M:act()
 	end
 end
 
+--- Called before taking a hit, overload mod.class.Actor:onTakeHit() to stop resting and running
+function _M:onTakeHit(value, src)
+	self:runStop("taken damage")
+	self:restStop("taken damage")
+	return mod.class.Actor.onTakeHit(self, value, src)
+end
+
 function _M:die()
 	local save = Savefile.new(game.save_name)
 	save:delete()

@@ -590,7 +590,7 @@ end
 _M.particles_def = {}
 
 --- Add a new particle emitter
-function _M:particleEmitter(x, y, radius, def, fct, max)
+function _M:particleEmitter(x, y, radius, def, fct, max, args)
 	if type(def) == "string" then
 		if _M.particles_def[def] then
 			def, fct, max = _M.particles_def[def]()
@@ -598,7 +598,7 @@ function _M:particleEmitter(x, y, radius, def, fct, max)
 			local odef = def
 			print("[PARTICLE] Loading from /data/gfx/particles/"..def..".lua")
 			local f = loadfile("/data/gfx/particles/"..def..".lua")
-			setfenv(f, setmetatable({}, {__index=_G}))
+			setfenv(f, setmetatable(args or {}, {__index=_G}))
 			def, fct, max = f()
 			max = max or 1000
 			_M.particles_def[odef] = f

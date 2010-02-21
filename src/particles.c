@@ -66,11 +66,12 @@ static int particles_new(lua_State *L)
 	if (lua_isnil(L, -1))
 	{
 		lua_pop(L, 1);
+		ps->generator_ref = LUA_NOREF;
 	}
 	else
 		ps->generator_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-	if (!ps->generator_ref)
+	if (ps->generator_ref == LUA_NOREF)
 	{
 		lua_pushstring(L, "base");
 		lua_gettable(L, -2);
@@ -134,7 +135,7 @@ static int particles_emit(lua_State *L)
 
 		if (!p->life)
 		{
-			if (!ps->generator_ref)
+			if (ps->generator_ref == LUA_NOREF)
 			{
 				p->life = rng(ps->life_min, ps->life_max);
 				p->size = rng(ps->size_min, ps->size_max);
@@ -239,7 +240,7 @@ static int particles_to_screen(lua_State *L)
 	{
 		particle_type *p = &ps->particles[i];
 
-		if (p->life)
+		if (p->life > 0)
 		{
 			alive = TRUE;
 
