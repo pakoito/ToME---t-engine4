@@ -1,7 +1,7 @@
 -- Load some various npc types but up their rarity to make some sandworms are the norm
-load("/data/general/npcs/vermin.lua", function(e) if e.rarity then e.rarity = e.rarity * 2 end end)
-load("/data/general/npcs/ooze.lua", function(e) if e.rarity then e.rarity = e.rarity * 2 end end)
-load("/data/general/npcs/jelly.lua", function(e) if e.rarity then e.rarity = e.rarity * 2 end end)
+load("/data/general/npcs/vermin.lua", function(e) if e.rarity then e.rarity = e.rarity * 6 end end)
+load("/data/general/npcs/ooze.lua", function(e) if e.rarity then e.rarity = e.rarity * 6 end end)
+load("/data/general/npcs/jelly.lua", function(e) if e.rarity then e.rarity = e.rarity * 6 end end)
 load("/data/general/npcs/sandworm.lua")
 
 local Talents = require("engine.interface.ActorTalents")
@@ -14,7 +14,7 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	display = "w", color=colors.GREEN,
 	desc = [[This sandworm seems to not care about your presence at all and simply continues digging its way through the sand.
 	Maybe following it is the only way to move around here...]],
-	level_range = {12, 18}, exp_worth = 0,
+	level_range = {12, 50}, exp_worth = 0,
 	max_life = 10000,
 	faction = "sandworm burrowers",
 	energy = {mod=1},
@@ -31,7 +31,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	name = "Sandworm Queen",
 	display = "w", color=colors.VIOLET,
 	desc = [[Before you stands the queen of the sandworms. Massive and bloated she slugs toward you, calling for her offspring!]],
-	level_range = {12, 18}, exp_worth = 2,
+	level_range = {15, 50}, exp_worth = 2,
 	max_life = 150, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	max_mana = 85,
@@ -60,5 +60,5 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
 }

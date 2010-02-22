@@ -68,6 +68,7 @@ newTalent{
 	points = 5,
 	equilibrium = 12,
 	cooldown = 12,
+	message = "@Source@ breathes sand!",
 	tactical = {
 		ATTACKAREA = 10,
 	},
