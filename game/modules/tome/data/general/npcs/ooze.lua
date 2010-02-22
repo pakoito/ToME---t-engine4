@@ -14,6 +14,8 @@ newEntity{
 	energy = { mod=0.7 },
 	combat_armor = 1, combat_def = 1,
 
+	drops = resolvers.drops{chance=90, nb=1, {} },
+
 	resists = { [DamageType.LIGHT] = -50 },
 }
 
@@ -81,4 +83,5 @@ newEntity{ base = "BASE_NPC_OOZE",
 	rarity = 7,
 	max_life = resolvers.rngavg(50,100),
 	combat = { dam=7, atk=15, apr=6, damtype=DamageType.ACID },
+	drops = resolvers.drops{chance=90, nb=3, {} },
 }

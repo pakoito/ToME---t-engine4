@@ -12,6 +12,8 @@ newEntity{
 	max_mana = 85,
 	resists = { [DamageType.FIRE] = 30, [DamageType.COLD] = -30 },
 
+	drops = resolvers.drops{chance=20, nb=1, {{type="potion"},{type="scroll"}} },
+
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 	stats = { str=15, dex=7, mag=3, con=3 },
