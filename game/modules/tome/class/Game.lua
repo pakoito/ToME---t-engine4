@@ -481,18 +481,6 @@ function _M:setupCommands()
 			self:saveGame()
 		end,
 
-		-- Toggle tactical displau
-		SHOW_TIME = function()
-			if Map.view_faction then
-				self:targetMode(false, true)
-				self.always_target = nil
-			else
-				self.always_target = true
-				self:targetMode(true, true)
-				-- Find nearest target
-				self.target:scan(5)
-			end
-		end,
 		-- Show time
 		SHOW_TIME = function()
 			self.log(self.calendar:getTimeDate(self.turn))
@@ -516,6 +504,16 @@ function _M:setupCommands()
 		EXIT = function()
 			local menu = require("engine.dialogs.GameMenu").new{"resume", "keybinds", "resolution", "save", "quit"}
 			self:registerDialog(menu)
+		end,
+
+		TACTICAL_DISPLAY = function()
+			if Map.view_faction then
+				self.always_target = nil
+				Map:setViewerFaction(nil)
+			else
+				self.always_target = true
+				Map:setViewerFaction("players")
+			end
 		end,
 	}
 

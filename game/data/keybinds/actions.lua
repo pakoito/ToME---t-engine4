@@ -40,6 +40,13 @@ defineAction{
 }
 
 defineAction{
+	default = { "sym:116:false:true:false:false" },
+	type = "TACTICAL_DISPLAY",
+	group = "actions",
+	name = "Tactical display on/off",
+}
+
+defineAction{
 	default = { "sym:116:true:false:false:false" },
 	type = "SHOW_TIME",
 	group = "actions",
