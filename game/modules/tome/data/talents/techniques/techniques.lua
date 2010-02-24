@@ -5,6 +5,10 @@ newTalentType{ type="technique/shield-offense", name = "weapon and shields", des
 newTalentType{ type="technique/shield-defense", name = "weapon and shields", description = "Specialized weapon and shield techniques." }
 newTalentType{ type="technique/dualweapon-training", name = "dual wielding", description = "Specialized dual wielding techniques." }
 newTalentType{ type="technique/dualweapon-attack", name = "dual wielding", description = "Specialized dual wielding techniques." }
+newTalentType{ type="technique/archery-bow", name = "archery - bows", description = "Specialized bow techniques." }
+newTalentType{ type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
+newTalentType{ type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
+newTalentType{ type="technique/archery-cripple", name = "archery - cripple", description = "Specialized archery techniques to maim your targets." }
 newTalentType{ type="technique/combat-techniques-active", name = "combat-techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-techniques-passive", name = "combat-techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-training", name = "combat-training", description = "Teaches to use various armors and improves health." }
@@ -82,4 +86,7 @@ load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")
 load("/data/talents/techniques/combat-techniques.lua")
 load("/data/talents/techniques/combat-training.lua")
+load("/data/talents/techniques/bow.lua")
+load("/data/talents/techniques/sling.lua")
+load("/data/talents/techniques/archery.lua")
 load("/data/talents/techniques/magical-combat.lua")
