@@ -18,7 +18,7 @@ function _M:init(t, no_default)
 	self.changed = true
 	Entity.init(self, t, no_default)
 
-	self.compute_vals = {}
+	self.compute_vals = {n=0}
 end
 
 --- Called when it is time to act
@@ -173,11 +173,11 @@ end
 -- @param noupdate if true the actual property is not changed and needs to be changed by the caller
 -- @return an id that can be passed to removeTemporaryValue() to delete this value
 function _M:addTemporaryValue(prop, v, noupdate)
-	self.compute_vals[prop] = self.compute_vals[prop] or {}
-	local t = self.compute_vals[prop]
-	local id = #t+1
-	while t[id] do id = id + 1 end
+	local t = self.compute_vals
+	local id = t.n + 1
+	while t[id] ~= nil do id = id + 1 end
 	t[id] = v
+	t.n = id
 
 	-- Update the base prop
 	if not noupdate then
@@ -211,9 +211,9 @@ end
 -- @param id the id of the increase to delete
 -- @param noupdate if true the actual property is not changed and needs to be changed by the caller
 function _M:removeTemporaryValue(prop, id, noupdate)
-	local oldval = self.compute_vals[prop][id]
+	local oldval = self.compute_vals[id]
 	print("removeTempVal", prop, oldval, " :=: ", id)
-	self.compute_vals[prop][id] = nil
+	self.compute_vals[id] = nil
 	if not noupdate then
 		if type(oldval) == "number" then
 			self[prop] = self[prop] - oldval
