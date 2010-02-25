@@ -31,6 +31,7 @@ ActorInventory:defineInventory("BELT", "Around waist", true, "Belts are worn aro
 ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be worn on your hands.")
 ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.")
 ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.")
+ActorInventory:defineInventory("QUIVER", "Quiver", true, "Your readied ammo.")
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
