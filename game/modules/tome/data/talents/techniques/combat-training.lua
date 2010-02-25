@@ -49,6 +49,7 @@ newTalent{
 		return [[Increases chances to hit with melee weapons.]]
 	end,
 }
+
 newTalent{
 	name = "Sword Mastery",
 	type = {"technique/combat-training", 1},
