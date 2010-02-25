@@ -403,12 +403,14 @@ end
 function _M:postUseTalent(ab, ret)
 	if ret == nil then return end
 
-	if ab.type[1]:find("^spell/") then
-		self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
-	elseif ab.type[1]:find("^physical/") then
-		self:useEnergy(game.energy_to_act * self:combatSpeed())
-	else
-		self:useEnergy()
+	if not ab.no_energy then
+		if ab.type[1]:find("^spell/") then
+			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
+		elseif ab.type[1]:find("^physical/") then
+			self:useEnergy(game.energy_to_act * self:combatSpeed())
+		else
+			self:useEnergy()
+		end
 	end
 
 	if ab.mode == "sustained" then
