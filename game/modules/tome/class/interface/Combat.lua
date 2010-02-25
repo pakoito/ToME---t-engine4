@@ -93,6 +93,66 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	return hit
 end
 
+function _M:archeryShoot(damtype, mult)
+	local weapon, ammo = self:hasArcheryWeapon()
+	if not weapon then
+		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
+		return nil
+	end
+
+	print("[SHOOT WITH]", weapon.name, ammo.name)
+	weapon = weapon.combat
+	ammo = ammo.combat
+
+	local ret = {}
+
+	local tg = {type="bolt", range=weapon.range or 10, min_range=5 - self:getTalentLevelRaw(self.T_POINT_BLANK_SHOT)}
+	local x, y, target = self:getTarget(tg)
+	if not x or not y or not target then return nil end
+	self:project(tg, x, y, function(tx, ty)
+		local ammo = self:removeObject(self:getInven("QUIVER"), 1)
+		if not ammo then return end
+		ammo = ammo.combat
+
+		damtype = damtype or ammo.damtype or DamageType.PHYSICAL
+		mult = mult or 1
+
+		-- Does the blow connect? yes .. complex :/
+		local atk, def = self:combatAttack(weapon), target:combatDefense()
+		local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
+		print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
+
+		-- If hit is over 0 it connects, if it is 0 we still have 50% chance
+		local hitted = false
+		if self:checkHit(atk, def) then
+			print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
+			local dam = math.max(0, dam - math.max(0, armor - apr))
+			local damrange = self:combatDamageRange(ammo)
+			dam = rng.range(dam, dam * damrange)
+			print("[ATTACK] after range", dam)
+			local crit
+			dam, crit = self:physicalCrit(dam, ammo)
+			print("[ATTACK] after crit", dam)
+			dam = dam * mult
+			print("[ATTACK] after mult", dam)
+			if crit then game.logSeen(self, "%s performs a critical stike!", self.name:capitalize()) end
+			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+			game.level.map:particleEmitter(target.x, target.y, 1, "archery")
+			hitted = true
+		else
+			game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
+		end
+
+		ret.speed = self:combatSpeed(weapon)
+		ret.hitted = hitted
+	end, nil, {type="manathrust"})
+
+	print("[SHOOT] speed", ret.speed, "=>", game.energy_to_act * ret.speed)
+	self:useEnergy(game.energy_to_act * ret.speed)
+
+	return ret.hitted
+end
+
 --- Computes a logarithmic chance to hit, opposing chance to hit to chance to miss
 -- This will be used for melee attacks, physical and spell resistance
 function _M:checkHit(atk, def, min, max, factor)
@@ -161,6 +221,8 @@ local weapon_talents = {
 	axe =   Talents.T_AXE_MASTERY,
 	mace =  Talents.T_MACE_MASTERY,
 	knife = Talents.T_KNIFE_MASTERY,
+	bow = Talents.T_BOW_MASTERY,
+	sling = Talents.T_SLING_MASTERY,
 }
 
 --- Checks weapon training
@@ -316,6 +378,21 @@ function _M:combatMentalResist()
 	return self.combat_mentalresist + (self:getCun() + self:getWil()) * 0.25
 end
 
+
+--- Check if the actor has a bow or sling and corresponding ammo
+function _M:hasArcheryWeapon()
+	if not self:getInven("MAINHAND") then return nil, "no shooter" end
+	if not self:getInven("QUIVER") then return nil, "no ammo" end
+	local weapon = self:getInven("MAINHAND")[1]
+	local ammo = self:getInven("QUIVER")[1]
+	if not weapon or not weapon.archery then
+		return nil, "no shooter"
+	end
+	if not ammo or not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
+		return nil, "bad or no ammo"
+	end
+	return weapon, ammo
+end
 
 --- Check if the actor has a two handed weapon
 function _M:hasTwoHandedWeapon()
