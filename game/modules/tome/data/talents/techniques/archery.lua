@@ -1,11 +1,12 @@
 -- Default archery attack
 newTalent{
 	name = "Shoot",
-	type = {"technique/archery-training", 1},
+	type = {"technique/archery-base", 1},
 	no_energy = true,
 	hide = true,
 	points = 1,
 	range = 20,
+	message = "@Source@ shoots!",
 	action = function(self, t)
 		self:archeryShoot()
 		return true
@@ -41,23 +42,35 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 50,
 	activate = function(self, t)
-		local weapon, offweapon = self:hasArcheryWeapon()
+		local weapon = self:hasArcheryWeapon()
 		if not weapon then
 			game.logPlayer(self, "You cannot use Aim without a bow or sling!")
 			return nil
 		end
 
 		return {
-			apr = self:addTemporaryValue("combat_apr", 4 + (self:getTalentLevel(t) * self:getDex()) / 20),
+			move = self:addTemporaryValue("never_move", 1),
+			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed(weapon.combat) * (self:getTalentLevelRaw(t) * 0.1)),
+			crit = self:addTemporaryValue("combat_physcrit", 7 + self:getTalentLevel(t) * self:getDex(10)),
+			atk = self:addTemporaryValue("combat_dam", 4 + self:getTalentLevel(t) * self:getDex(10)),
+			dam = self:addTemporaryValue("combat_atk", 4 + self:getTalentLevel(t) * self:getDex(10)),
+			apr = self:addTemporaryValue("combat_apr", 3 + self:getTalentLevel(t) * self:getDex(10)),
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeTemporaryValue("never_move", p.move)
+		self:removeTemporaryValue("combat_physspeed", p.speed)
+		self:removeTemporaryValue("combat_physcrit", p.crit)
 		self:removeTemporaryValue("combat_apr", p.apr)
+		self:removeTemporaryValue("combat_atk", p.atk)
+		self:removeTemporaryValue("combat_dam", p.dam)
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused, stance, increasing your damage(+%d), attack(+%d), armor peneration(+%d) and critical chance(+%d%%) but reducing your firing speed by %0.2f.]]):
-		format(4 + (self:getTalentLevel(t) * self:getDex()) / 20)
+		return ([[You enter a calm, focused, stance, increasing your damage(+%d), attack(+%d), armor peneration(+%d) and critical chance(+%d%%) but reducing your firing speed by %d%% and making your unable to move.]]):
+		format(4 + self:getTalentLevel(t) * self:getDex(10), 4 + self:getTalentLevel(t) * self:getDex(10),
+		3 + self:getTalentLevel(t) * self:getDex(10), 7 + self:getTalentLevel(t) * self:getDex(10),
+		self:getTalentLevelRaw(t) * 10)
 	end,
 }
 
@@ -70,22 +83,29 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 50,
 	activate = function(self, t)
-		local weapon, offweapon = self:hasDualWeapon()
+		local weapon = self:hasArcheryWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Precision without dual wielding!")
+			game.logPlayer(self, "You cannot use Aim without a bow or sling!")
 			return nil
 		end
 
 		return {
-			apr = self:addTemporaryValue("combat_apr", 4 + (self:getTalentLevel(t) * self:getDex()) / 20),
+			speed = self:addTemporaryValue("combat_physspeed", -self:combatSpeed(weapon.combat) * (self:getTalentLevelRaw(t) * 0.14)),
+			atk = self:addTemporaryValue("combat_dam", -8 - self:getTalentLevelRaw(t) * 2.4),
+			dam = self:addTemporaryValue("combat_atk", -8 - self:getTalentLevelRaw(t) * 2.4),
+			crit = self:addTemporaryValue("combat_physcrit", -8 - self:getTalentLevelRaw(t) * 2.4),
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_physspeed", p.speed)
+		self:removeTemporaryValue("combat_physcrit", p.crit)
 		self:removeTemporaryValue("combat_apr", p.apr)
+		self:removeTemporaryValue("combat_atk", p.atk)
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to hit the right spot, increasing your armor penetration by %d.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 20)
+		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), damage(%d) and critical chance(%d).]]):
+		format(self:getTalentLevelRaw(t) * 14, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }
 
@@ -93,39 +113,16 @@ newTalent{
 	name = "Critical Shot",
 	type = {"technique/archery-training", 4},
 	points = 5,
-	cooldown = 30,
-	sustain_stamina = 50,
+	cooldown = 20,
+	stamina = 35,
 	require = techs_dex_req4,
 	action = function(self, t)
-		local weapon, offweapon = self:hasDualWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use Dual Strike without dual wielding!")
-			return nil
-		end
-
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-
-		-- First attack with offhand
-		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, 1.2 + self:getTalentLevel(t) / 10)
-
-		-- Second attack with mainhand
-		if hit then
-			if target:checkHit(self:combatAttackDex(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
-			else
-				game.logSeen(target, "%s resists the stunning strike!", target.name:capitalize())
-			end
-
-			-- Attack after the stun, to benefit from backstabs
-			self:attackTargetWith(target, weapon.combat, nil, 1.2 + self:getTalentLevel(t) / 10)
-		end
-
+		self.combat_physcrit = self.combat_physcrit + 1000
+		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 4)
+		self.combat_physcrit = self.combat_physcrit - 1000
 		return true
 	end,
 	info = function(self, t)
-		return ([[Increases attack speed by %0.2f, but drains stamina quickly.]]):format(-0.1 - self:getTalentLevel(t) / 14)
+		return ([[You concentrate on your aim to produce a guaranted critical hit (with a base damage of %d%%).]]):format((1.2 + self:getTalentLevel(t) / 4) * 100)
 	end,
 }

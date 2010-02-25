@@ -64,7 +64,7 @@ newTalent{
 		end
 
 		return {
-			combat_physspeed = self:addTemporaryValue("combat_physspeed", -0.1 - self:getTalentLevel(t) / 14),
+			combat_physspeed = self:addTemporaryValue("combat_physspeed", -self:combatSpeed(weapon.combat) * (self:getTalentLevel(t) * 0.14)),
 			stamina_regen = self:addTemporaryValue("stamina_regen", -6),
 		}
 	end,
@@ -74,7 +74,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Increases attack speed by %0.2f, but drains stamina quickly.]]):format(-0.1 - self:getTalentLevel(t) / 14)
+		return ([[Increases attack speed by %d%%, but drains stamina quickly.]]):format(self:combatSpeed(weapon.combat) * (self:getTalentLevel(t) * 14))
 	end,
 }
 

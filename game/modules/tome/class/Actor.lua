@@ -323,6 +323,9 @@ function _M:learnTalent(t_id, force)
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) then self:learnTalent(self.T_MANA_POOL) end
 	if t.type[1]:find("^gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL) end
 	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) then self:learnTalent(self.T_STAMINA_POOL) end
+
+	-- If we learn an archery talent, also learn to shoot
+	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then self:learnTalent(self.T_SHOOT) end
 	return true
 end
 
