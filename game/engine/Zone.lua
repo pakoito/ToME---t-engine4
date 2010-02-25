@@ -196,6 +196,17 @@ function _M:finishEntity(level, type, e, ego_chance)
 			e.egoed = true
 		end
 	end
+
+	-- Generate a stack ?
+	if e.generate_stack then
+		local s = {}
+		while e.generate_stack > 0 do
+			s[#s+1] = e:clone()
+			e.generate_stack = e.generate_stack - 1
+		end
+		for i = 1, #s do e:stack(s[i]) end
+	end
+
 	return e
 end
 
