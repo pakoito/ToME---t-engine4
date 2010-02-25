@@ -119,22 +119,30 @@ function _M:project(t, x, y, damtype, dam, particles)
 	end
 
 	-- Now project on each grid, one type
-	for px, ys in pairs(grids) do
-		for py, _ in pairs(ys) do
-			-- Call the projected method of the target grid if possible
-			if not game.level.map:checkAllEntities(x, y, "projected", self, t, x, y, damtype, dam, particles) then
-				-- Friendly fire ?
-				if px == self.x and py == self.y then
-					if t.friendlyfire then
+	if type(damtype) == "function" then
+		for px, ys in pairs(grids) do
+			for py, _ in pairs(ys) do
+				damtype(px, py)
+			end
+		end
+	else
+		for px, ys in pairs(grids) do
+			for py, _ in pairs(ys) do
+				-- Call the projected method of the target grid if possible
+				if not game.level.map:checkAllEntities(x, y, "projected", self, t, x, y, damtype, dam, particles) then
+					-- Friendly fire ?
+					if px == self.x and py == self.y then
+						if t.friendlyfire then
+							DamageType:get(damtype).projector(self, px, py, damtype, dam)
+							if particles then
+								game.level.map:particleEmitter(px, py, 1, particles.type)
+							end
+						end
+					else
 						DamageType:get(damtype).projector(self, px, py, damtype, dam)
 						if particles then
 							game.level.map:particleEmitter(px, py, 1, particles.type)
 						end
-					end
-				else
-					DamageType:get(damtype).projector(self, px, py, damtype, dam)
-					if particles then
-						game.level.map:particleEmitter(px, py, 1, particles.type)
 					end
 				end
 			end
