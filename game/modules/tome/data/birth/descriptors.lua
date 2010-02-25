@@ -5,7 +5,7 @@ newBirthDescriptor{
 	},
 	talents = {},
 	experience = 1.0,
-	body = { INVEN = 1000, MAINHAND=1, OFFHAND=1, BODY=1 },
+	body = { INVEN = 1000, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 
 	copy = {
 		resolvers.equip{ id=true,
@@ -34,4 +34,5 @@ load("/data/birth/sexes.lua")
 -- Classes
 load("/data/birth/warrior.lua")
 load("/data/birth/rogue.lua")
+load("/data/birth/archer.lua")
 load("/data/birth/mage.lua")
