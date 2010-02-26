@@ -12,6 +12,8 @@ function _M:block_move(x, y, e, act)
 	if self.door_opened and act then
 		game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list.DOOR_OPEN)
 		return true
+	elseif self.door_opened then
+		return true
 	end
 	return false
 end
