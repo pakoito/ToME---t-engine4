@@ -234,10 +234,12 @@ function _M:playerWear()
 	self:showInventory("Wield/wear object", inven, function(o)
 		return o:wornInven() and true or false
 	end, function(o, item)
+		self:removeObject(self.INVEN_INVEN, item, true)
 		local ro = self:wearObject(o, true, true)
 		if ro then
 			if type(ro) == "table" then self:addObject(self.INVEN_INVEN, ro) end
-			self:removeObject(self.INVEN_INVEN, item)
+		else
+			self:addObject(self.INVEN_INVEN, o)
 		end
 		self:sortInven()
 		self:useEnergy()

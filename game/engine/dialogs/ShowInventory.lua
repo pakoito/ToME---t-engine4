@@ -97,9 +97,7 @@ function _M:generateList()
 	local i = 0
 	for item, o in ipairs(self.inven) do
 		if not self.filter or self.filter(o) then
-			local nb = o:getNumber()
-			nb = (nb == 1) and "" or nb.." "
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..nb..o:getName(), object=o, item=item }
+			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..o:getName(), object=o, item=item }
 			i = i + 1
 		end
 	end

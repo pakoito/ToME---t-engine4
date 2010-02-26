@@ -96,17 +96,19 @@ end
 --- Removes an object from inventory
 -- @param inven the inventory to drop from
 -- @param item the item id to drop
+-- @param no_unstack if the item was a stack takes off the whole stack if true
 -- @return the object removed or nil if no item existed
-function _M:removeObject(inven, item)
+function _M:removeObject(inven, item, no_unstack)
 	if type(inven) == "number" then inven = self.inven[inven] end
-	local o = inven[item]
-	local o, finish = o:unstack()
+	local o, finish = inven[item], true
+	if not no_unstack then
+		o, finish = o:unstack()
+	end
 	if finish then
 		table.remove(inven, item)
 	end
 
 	-- Do whatever is needed when takingoff this object
-	print("remove object", inven, inven.max, inven.worn, item, o)
 	if inven.worn then self:onTakeoff(o) end
 
 	return o
@@ -217,8 +219,13 @@ function _M:wearObject(o, replace, vocal)
 		-- Warning: assume there is now space
 		self:addObject(self:getInven(o.offslot), o)
 	elseif replace then
-		local ro = self:removeObject(inven, 1)
+		local ro = self:removeObject(inven, 1, true)
+
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
+
+		-- Can we stack the old and new one ?
+		if o:stack(ro) then ro = true end
+
 		-- Warning: assume there is now space
 		self:addObject(inven, o)
 		return ro
@@ -230,7 +237,7 @@ end
 
 --- Takeoff item
 function _M:takeoffObject(inven, item)
-	local o = self:removeObject(inven, item)
+	local o = self:removeObject(inven, item, true)
 	return o
 end
 
@@ -263,7 +270,9 @@ function _M:sortInven(inven)
 	for i = #inven, 1, -1 do
 		-- If it is stackable, look for obejcts before it that it could stack into
 		if inven[i]:stackable() then
+print("sorting", #inven, i, i-1)
 			for j = i - 1, 1, -1 do
+			print("j",j)
 				if inven[j]:stack(inven[i]) then
 					print("Stacked objects", i, inven[i].name, "into", j, inven[j].name)
 					table.remove(inven, i)

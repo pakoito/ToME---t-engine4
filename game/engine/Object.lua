@@ -43,7 +43,12 @@ end
 
 --- Gets the full name of the object
 function _M:getName()
-	return self.name
+	local qty = self:getNumber()
+	local name = self.name
+
+	if qty == 1 then return name
+	else return qty.." "..name
+	end
 end
 
 --- Gets the full desc of the object
@@ -91,8 +96,8 @@ function _M:stack(o)
 
 	-- Merge stacks
 	if o.stacked then
-		for i, so in ipairs(o.stacked) do
-			self.stacked[#self.stacked+1] = so
+		for i = 1, #o.stacked do
+			self.stacked[#self.stacked+1] = o.stacked[i]
 		end
 		o.stacked = nil
 	end

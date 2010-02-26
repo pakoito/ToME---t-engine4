@@ -74,7 +74,7 @@ end
 
 --- Gets the full name of the object
 function _M:getName()
-	local qty = 1
+	local qty = self:getNumber()
 	local name = self.name
 
 	if not self:isIdentified() and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
@@ -90,7 +90,11 @@ function _M:getName()
 		end)
 	end
 
-	return name
+	if qty == 1 then
+		return name
+	else
+		return qty.." "..name
+	end
 end
 
 --- Gets the full desc of the object
