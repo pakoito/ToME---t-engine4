@@ -24,12 +24,12 @@ newBirthDescriptor{
 	name = "Archer",
 	desc = {
 		"Archer",
-		"Their most important stats are: Strength and Dexterity",
+		"Their most important stats are: Dexterity and Strength",
 	},
 	stats = { dex=3, str=2, con=1, },
 	talents_types = {
 		["technique/archery-training"]={true, 0.3},
-		["technique/archery-cripple"]={true, 0.3},
+		["technique/archery-utility"]={true, 0.3},
 		["technique/archery-bow"]={true, 0.3},
 		["technique/archery-sling"]={false, 0.1},
 		["technique/combat-techniques-active"]={true, -0.1},
@@ -57,12 +57,12 @@ newBirthDescriptor{
 	name = "Slinger",
 	desc = {
 		"Slinger",
-		"Their most important stats are: Strength and Dexterity",
+		"Their most important stats are: Dexterity and Cunning",
 	},
 	stats = { dex=3, str=2, con=1, },
 	talents_types = {
 		["technique/archery-training"]={true, 0.3},
-		["technique/archery-cripple"]={true, 0.3},
+		["technique/archery-utility"]={true, 0.3},
 		["technique/archery-bow"]={false, 0.1},
 		["technique/archery-sling"]={true, 0.3},
 		["technique/combat-techniques-active"]={true, -0.1},

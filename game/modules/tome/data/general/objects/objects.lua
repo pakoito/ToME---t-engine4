@@ -22,7 +22,7 @@ load("/data/general/objects/2hmaces.lua")
 load("/data/general/objects/2haxes.lua")
 
 load("/data/general/objects/bows.lua")
---load("/data/general/objects/slings.lua")
+load("/data/general/objects/slings.lua")
 
 -- Armours
 load("/data/general/objects/shields.lua")

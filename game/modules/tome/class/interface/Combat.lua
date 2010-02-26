@@ -111,57 +111,59 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 	local x, y = self:getTarget(tg)
 	if not x or not y then return nil end
 	self:project(tg, x, y, function(tx, ty)
-		local ammo = ammo
-		if not params.one_shot then
-			ammo = self:removeObject(self:getInven("QUIVER"), 1)
-			if not ammo then return end
+		for i = 1, params.multishots or 1 do
+			local ammo = ammo
+			if not params.one_shot then
+				ammo = self:removeObject(self:getInven("QUIVER"), 1)
+				if not ammo then return end
+			end
+			if params.limit_shots then
+				if params.limit_shots <= 0 then return end
+				params.limit_shots = params.limit_shots - 1
+			end
+
+			local target = game.level.map(tx, ty, game.level.map.ACTOR)
+			if not target then return end
+			ammo = ammo.combat
+
+			damtype = damtype or ammo.damtype or DamageType.PHYSICAL
+			mult = mult or 1
+
+			-- Does the blow connect? yes .. complex :/
+			local atk, def = self:combatAttack(weapon), target:combatDefense()
+			local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
+			print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
+
+			-- If hit is over 0 it connects, if it is 0 we still have 50% chance
+			local hitted = false
+			if self:checkHit(atk, def) then
+				print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
+				local dam = math.max(0, dam - math.max(0, armor - apr))
+				local damrange = self:combatDamageRange(ammo)
+				dam = rng.range(dam, dam * damrange)
+				print("[ATTACK] after range", dam)
+				local crit
+				dam, crit = self:physicalCrit(dam, ammo)
+				print("[ATTACK] after crit", dam)
+				dam = dam * mult
+				print("[ATTACK] after mult", dam)
+				if crit then game.logSeen(self, "%s performs a critical stike!", self.name:capitalize()) end
+				DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+				game.level.map:particleEmitter(target.x, target.y, 1, "archery")
+				hitted = true
+
+				if on_hit then on_hit(target, target.x, target.y) end
+			else
+				game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
+			end
+
+			ret.speed = self:combatSpeed(weapon)
+			ret.hitted = hitted
 		end
-		if params.limit_shots then
-			if params.limit_shots <= 0 then return end
-			params.limit_shots = params.limit_shots - 1
-		end
+	end)
 
-		local target = game.level.map(tx, ty, game.level.map.ACTOR)
-		if not target then return end
-		ammo = ammo.combat
-
-		damtype = damtype or ammo.damtype or DamageType.PHYSICAL
-		mult = mult or 1
-
-		-- Does the blow connect? yes .. complex :/
-		local atk, def = self:combatAttack(weapon), target:combatDefense()
-		local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
-		print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
-
-		-- If hit is over 0 it connects, if it is 0 we still have 50% chance
-		local hitted = false
-		if self:checkHit(atk, def) then
-			print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
-			local dam = math.max(0, dam - math.max(0, armor - apr))
-			local damrange = self:combatDamageRange(ammo)
-			dam = rng.range(dam, dam * damrange)
-			print("[ATTACK] after range", dam)
-			local crit
-			dam, crit = self:physicalCrit(dam, ammo)
-			print("[ATTACK] after crit", dam)
-			dam = dam * mult
-			print("[ATTACK] after mult", dam)
-			if crit then game.logSeen(self, "%s performs a critical stike!", self.name:capitalize()) end
-			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
-			game.level.map:particleEmitter(target.x, target.y, 1, "archery")
-			hitted = true
-
-			if on_hit then on_hit(target, target.x, target.y) end
-		else
-			game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
-		end
-
-		ret.speed = self:combatSpeed(weapon)
-		ret.hitted = hitted
-	end, nil, {type="manathrust"})
-
-	print("[SHOOT] speed", ret.speed, "=>", game.energy_to_act * ret.speed)
-	self:useEnergy(game.energy_to_act * ret.speed)
+	print("[SHOOT] speed", ret.speed or 1, "=>", game.energy_to_act * (ret.speed or 1))
+	self:useEnergy(game.energy_to_act * (ret.speed or 1))
 
 	-- If we used only one arrow, use it
 	if params.one_shot then self:removeObject(self:getInven("QUIVER"), 1) end
