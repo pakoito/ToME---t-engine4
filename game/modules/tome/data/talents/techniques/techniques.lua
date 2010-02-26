@@ -9,7 +9,7 @@ newTalentType{ type="technique/archery-base", name = "archery - base", descripti
 newTalentType{ type="technique/archery-bow", name = "archery - bows", description = "Specialized bow techniques." }
 newTalentType{ type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
 newTalentType{ type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
-newTalentType{ type="technique/archery-cripple", name = "archery - cripple", description = "Specialized archery techniques to maim your targets." }
+newTalentType{ type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
 newTalentType{ type="technique/combat-techniques-active", name = "combat-techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-techniques-passive", name = "combat-techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-training", name = "combat-training", description = "Teaches to use various armors and improves health." }

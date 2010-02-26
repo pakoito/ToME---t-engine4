@@ -93,25 +93,36 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	return hit
 end
 
-function _M:archeryShoot(damtype, mult)
+function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 	local weapon, ammo = self:hasArcheryWeapon()
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
 	end
+	params = params or {}
 
 	print("[SHOOT WITH]", weapon.name, ammo.name)
 	weapon = weapon.combat
-	ammo = ammo.combat
 
 	local ret = {}
 
-	local tg = {type="bolt", range=weapon.range or 10, min_range=5 - self:getTalentLevelRaw(self.T_POINT_BLANK_SHOT)}
-	local x, y, target = self:getTarget(tg)
-	if not x or not y or not target then return nil end
+	local tg = tg or {type="bolt"}
+	if not tg.range then tg.range=weapon.range or 10 end
+	local x, y = self:getTarget(tg)
+	if not x or not y then return nil end
 	self:project(tg, x, y, function(tx, ty)
-		local ammo = self:removeObject(self:getInven("QUIVER"), 1)
-		if not ammo then return end
+		local ammo = ammo
+		if not params.one_shot then
+			ammo = self:removeObject(self:getInven("QUIVER"), 1)
+			if not ammo then return end
+		end
+		if params.limit_shots then
+			if params.limit_shots <= 0 then return end
+			params.limit_shots = params.limit_shots - 1
+		end
+
+		local target = game.level.map(tx, ty, game.level.map.ACTOR)
+		if not target then return end
 		ammo = ammo.combat
 
 		damtype = damtype or ammo.damtype or DamageType.PHYSICAL
@@ -139,6 +150,8 @@ function _M:archeryShoot(damtype, mult)
 			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 			game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 			hitted = true
+
+			if on_hit then on_hit(target, target.x, target.y) end
 		else
 			game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 		end
@@ -149,6 +162,9 @@ function _M:archeryShoot(damtype, mult)
 
 	print("[SHOOT] speed", ret.speed, "=>", game.energy_to_act * ret.speed)
 	self:useEnergy(game.energy_to_act * ret.speed)
+
+	-- If we used only one arrow, use it
+	if params.one_shot then self:removeObject(self:getInven("QUIVER"), 1) end
 
 	return ret.hitted
 end
