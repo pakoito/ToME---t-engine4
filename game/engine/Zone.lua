@@ -136,7 +136,7 @@ function _M:makeEntity(level, type, filter)
 
 	local list = level:getEntitiesList(type)
 	local e
-	local tries = 200
+	local tries = 500
 	-- CRUDE ! Brute force ! Make me smarter !
 	while tries > 0 do
 		e = self:pickEntity(list)

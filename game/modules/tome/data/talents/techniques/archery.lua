@@ -135,10 +135,29 @@ newTalent{
 	type = {"technique/archery-utility", 1},
 	no_energy = true,
 	points = 5,
-	cooldown = 500,
+	cooldown = 1000,
 	stamina = 30,
 	require = techs_dex_req1,
 	action = function(self, t)
+		if not self:getInven("MAINHAND") then return nil end
+		local weapon = self:getInven("MAINHAND")[1]
+		if not weapon or not weapon.archery then
+			game.logPlayer("You must wield your archery weapon to forage.")
+			return nil
+		end
+
+		local st = "arrow"
+		if weapon.archery == "sling" then st = "shot" end
+
+		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st})
+		if o and rng.percent(10 + self:getTalentLevel(t) * 10) then
+			o:identify(true)
+			o:forAllStack(function(so) so.cost = 0 end)
+			self:addObject(self.INVEN_INVEN, o)
+			game.logPlayer(self, "You create some ammo: %d %s", o:getNumber(), o:getName())
+		else
+			game.logPlayer(self, "You found nothing!")
+		end
 		return true
 	end,
 	info = function(self, t)

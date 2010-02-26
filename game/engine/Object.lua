@@ -108,6 +108,14 @@ function _M:unstack()
 	return o, false
 end
 
+--- Applies a function to all items of the stack
+function _M:forAllStack(fct)
+	fct(self)
+	for i, so in ipairs(self.stacked) do
+		fct(so)
+	end
+end
+
 --- Returns the number of objects available
 -- Always one for non stacking objects
 function _M:getNumber()
