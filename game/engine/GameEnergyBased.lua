@@ -21,6 +21,14 @@ end
 function _M:loaded()
 	engine.Game.loaded(self)
 
+	-- Loading the game has defined new uids for entities, yet we hard referenced the old ones
+	-- So we fix it
+	local nes = {}
+	for uid, e in pairs(self.entities) do
+		nes[e.uid] = e
+	end
+	self.entities = nes
+
 	-- Setup the entities repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
 	setmetatable(self.entities, {__mode="v"})
 end

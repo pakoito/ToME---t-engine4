@@ -105,18 +105,18 @@ newTalent{
 					block_sight = true,
 					temporary = 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t),
 					x = x + i, y = y + j,
-					canAct = function() return true end,
+					canAct = false,
 					act = function(self)
 						self:useEnergy()
 						self.temporary = self.temporary - 1
 						if self.temporary <= 0 then
 							game.level.map(self.x, self.y, Map.TERRAIN, self.old_feat)
-							game:removeEntity(self)
+							game.level:removeEntity(self)
 							game.level.map:redisplay()
 						end
 					end
 				}
-				game:addEntity(e)
+				game.level:addEntity(e)
 				game.level.map(x + i, y + j, Map.TERRAIN, e)
 			end
 		end end end
