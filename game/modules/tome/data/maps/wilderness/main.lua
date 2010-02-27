@@ -21,6 +21,7 @@ quickEntity('B', {name="Passageway into the Trollshaws", 	display='>', color={r=
 quickEntity('C', {name="A gate into a maze", 			display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="maze"})
 quickEntity('D', {name="A path into the Old Forest", 		display='>', color={r=0, g=255, b=155}, change_level=1, change_zone="old-forest"})
 quickEntity('E', {name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, change_level=1, change_zone="sandworm-lair"})
+quickEntity('F', {name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tol-falas"})
 
 return {
 [[========q=qqqqqqqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
@@ -80,7 +81,7 @@ return {
 [[============================.t^._.hhhhhhhh...__...._^&^&&&&&.~..dd""""""""""""======_"""""""""""aaa]],
 [[===========================.^^._...h.h........._.._.^&^^._^3.~..dd"""_"_"""""=====""""""""""""aaadd]],
 [[==========================..^^.._.....===.=====_._&^...._...^.~.dd"__"_"__======"""""aa""""aaaadddd]],
-[[==========================.h...._...===========_&&^...._._...~~.dd_""""""""""""_""a"aaaaaaaaddddddd]],
+[[==========================.h...._...=====F=====_&&^...._._...~~.dd_""""""""""""_""a"aaaaaaaaddddddd]],
 [[========================.hhh=...=_.==========&^^^^.._._..._.~~..ddd""ddd""d"""dd_ddaadddddddddddddd]],
 [[======================....=====.==============^.^._=._.....~~...ddddddddddddddddddddddddddddddddddd]],
 [[==============================================.^^^==....~~~~....................ddddddddddddddddddd]],
