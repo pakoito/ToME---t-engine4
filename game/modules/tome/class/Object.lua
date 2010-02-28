@@ -69,6 +69,8 @@ function _M:descAttribute(attr)
 	elseif attr == "COMBAT" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." dam, "..(c.apr or 0).." apr"
+	elseif attr == "MONEY" then
+		return ("worth %0.2f"):format(self.money_value / 10)
 	end
 end
 

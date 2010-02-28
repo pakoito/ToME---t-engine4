@@ -8,6 +8,7 @@ newBirthDescriptor{
 	body = { INVEN = 1000, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 
 	copy = {
+		money = 10,
 		resolvers.equip{ id=true,
 			{type="lite", subtype="lite", name="brass lantern"},
 		},

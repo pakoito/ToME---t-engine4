@@ -32,6 +32,7 @@ function _M:display()
 	h = h + self.font_h
 	self.surface:drawColorString(self.font, "Level: #00ff00#"..game.player.level, 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorString(self.font, ("Exp: #00ff00#%2d%%"):format(100 * cur_exp / max_exp), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawColorString(self.font, ("Gold: #00ff00#%0.2f"):format(game.player.money), 0, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
 

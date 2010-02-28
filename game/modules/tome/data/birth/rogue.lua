@@ -18,9 +18,9 @@ newBirthDescriptor{
 		max_life = 100,
 		life_rating = 9,
 		equipment = resolvers.equip{ id=true,
-			{type="weapon", subtype="dagger", name="iron dagger"},
-			{type="weapon", subtype="dagger", name="iron dagger"},
-			{type="armor", subtype="light", name="rough leather armour"}
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true},
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true}
 		},
 	},
 }

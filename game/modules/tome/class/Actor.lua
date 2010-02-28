@@ -73,6 +73,8 @@ function _M:init(t, no_default)
 	t.max_equilibrium = t.max_equilibrium or 100000
 	t.equilibrium = t.equilibrium or 0
 
+	t.money = t.money or 0
+
 	-- Default melee barehanded damage
 	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
 

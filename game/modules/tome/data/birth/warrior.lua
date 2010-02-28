@@ -86,8 +86,8 @@ newBirthDescriptor{
 	},
 	copy = {
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="greatsword", name="iron greatsword"},
-			{type="armor", subtype="heavy", name="iron mail armour"}
+			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true},
 		},
 	},
 }

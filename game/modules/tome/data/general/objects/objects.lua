@@ -1,4 +1,5 @@
 -- Misc
+load("/data/general/objects/money.lua")
 load("/data/general/objects/lites.lua")
 
 -- Usable stuff

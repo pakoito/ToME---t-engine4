@@ -55,8 +55,8 @@ newBirthDescriptor{
 		max_life = 80,
 		life_rating = 7,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff"},
-			{type="armor", subtype="cloth", name="robe"}
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="robe", autoreq=true}
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana"},
@@ -103,9 +103,9 @@ newBirthDescriptor{
 		mana_rating = 8,
 		stamina_rating = 8,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff"},
-			{type="armor", subtype="shield", name="iron shield"},
-			{type="armor", subtype="cloth", name="robe"},
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="shield", name="iron shield", autoreq=true},
+			{type="armor", subtype="cloth", name="robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana"},
@@ -146,8 +146,8 @@ newBirthDescriptor{
 		max_life = 80,
 		life_rating = 7,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff"},
-			{type="armor", subtype="cloth", name="robe"}
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="robe", autoreq=true}
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana"},
