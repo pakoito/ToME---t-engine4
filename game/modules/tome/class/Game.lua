@@ -277,13 +277,16 @@ function _M:display()
 end
 
 function _M:targetMode(v, msg, co, typ)
+	local old = self.target_mode
+	self.target_mode = v
+
 	if not v then
 		Map:setViewerFaction(self.always_target and "players" or nil)
 		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press shift+'t' or right mouse click to enable.") end
 		self.level.map.changed = true
 		self.target:setActive(false)
 
-		if tostring(self.target_mode) == "exclusive" then
+		if tostring(old) == "exclusive" then
 			self.key = self.normal_key
 			self.key:setCurrent()
 			if self.target_co then
@@ -313,51 +316,39 @@ function _M:targetMode(v, msg, co, typ)
 			end
 		end
 	end
-	self.target_mode = v
 end
 
 function _M:setupCommands()
 	self.targetmode_key = engine.KeyBind.new()
-	self.targetmode_key:addCommands
+	self.targetmode_key:addCommands{ _SPACE=function() self:targetMode(false, false) end, }
+	self.targetmode_key:addBinds
 	{
-		_t = function()
-			self:targetMode(false, false)
-		end,
-		_RETURN = {"alias", "_t"},
-		_SPACE = {"alias", "_t"},
-		_KP_ENTER = {"alias", "_t"},
-		_ESCAPE = function()
+		TACTICAL_DISPLAY = function() self:targetMode(false, false) end,
+		ACCEPT = function() self:targetMode(false, false) end,
+		EXCIT = function()
 			self.target.target.entity = nil
 			self.target.target.x = nil
 			self.target.target.y = nil
 			self:targetMode(false, false)
 		end,
 		-- Targeting movement
-		[{"_LEFT","shift"}] = function() self.target:freemove(4) end,
-		[{"_RIGHT","shift"}] = function() self.target:freemove(6) end,
-		[{"_UP","shift"}] = function() self.target:freemove(8) end,
-		[{"_DOWN","shift"}] = function() self.target:freemove(2) end,
-		[{"_KP4","shift"}] = function() self.target:freemove(4) end,
-		[{"_KP6","shift"}] = function() self.target:freemove(6) end,
-		[{"_KP8","shift"}] = function() self.target:freemove(8) end,
-		[{"_KP2","shift"}] = function() self.target:freemove(2) end,
-		[{"_KP1","shift"}] = function() self.target:freemove(1) end,
-		[{"_KP3","shift"}] = function() self.target:freemove(3) end,
-		[{"_KP7","shift"}] = function() self.target:freemove(7) end,
-		[{"_KP9","shift"}] = function() self.target:freemove(9) end,
+		RUN_LEFT = function() self.target:freemove(4) end,
+		RUN_RIGHT = function() self.target:freemove(6) end,
+		RUN_UP = function() self.target:freemove(8) end,
+		RUN_DOWN = function() self.target:freemove(2) end,
+		RUN_LEFT_DOWN = function() self.target:freemove(1) end,
+		RUN_RIGHT_DOWN = function() self.target:freemove(3) end,
+		RUN_LEFT_UP = function() self.target:freemove(7) end,
+		RUN_RIGHT_UP = function() self.target:freemove(9) end,
 
-		_LEFT = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end end,
-		_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end end,
-		_UP = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end end,
-		_DOWN = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end end,
-		_KP4 = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end end,
-		_KP6 = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end end,
-		_KP8 = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end end,
-		_KP2 = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end end,
-		_KP1 = function() if self.target_style == "lock" then self.target:scan(1) else self.target:freemove(1) end end,
-		_KP3 = function() if self.target_style == "lock" then self.target:scan(3) else self.target:freemove(3) end end,
-		_KP7 = function() if self.target_style == "lock" then self.target:scan(7) else self.target:freemove(7) end end,
-		_KP9 = function() if self.target_style == "lock" then self.target:scan(9) else self.target:freemove(9) end end,
+		MOVE_LEFT = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end end,
+		MOVE_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end end,
+		MOVE_UP = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end end,
+		MOVE_DOWN = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end end,
+		MOVE_LEFT_DOWN = function() if self.target_style == "lock" then self.target:scan(1) else self.target:freemove(1) end end,
+		MOVE_RIGHT_DOWN = function() if self.target_style == "lock" then self.target:scan(3) else self.target:freemove(3) end end,
+		MOVE_LEFT_UP = function() if self.target_style == "lock" then self.target:scan(7) else self.target:freemove(7) end end,
+		MOVE_RIGHT_UP = function() if self.target_style == "lock" then self.target:scan(9) else self.target:freemove(9) end end,
 	}
 
 	self.normal_key = self.key
@@ -600,6 +591,7 @@ function _M:setupMouse()
 		if button == "wheelup" then self.logdisplay:scrollUp(1) end
 		if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
 	end, {button=true})
+	self.mouse:setCurrent()
 end
 
 --- Ask if we realy want to close, if so, save the game first

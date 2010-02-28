@@ -1,7 +1,6 @@
 newTalent{
 	name = "Phase Door",
 	type = {"spell/conveyance",1},
-	message = "@Source@ blinks.",
 	require = spells_req1,
 	points = 5,
 	mana = 10,
@@ -13,15 +12,15 @@ newTalent{
 		local target = self
 
 		if self:getTalentLevel(t) >= 5 then
---			local tx, ty = self:getTarget{type="hit", range=10}
---			if tx and ty then
---				target = game.level.map(tx, ty, Map.ACTOR) or self
---			end
+			local tx, ty = self:getTarget{type="hit", range=10}
+			if tx and ty then
+				target = game.level.map(tx, ty, Map.ACTOR) or self
+			end
 		end
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
-			x, y = self:getTarget{type="ball", range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevel(t)}
+			x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevel(t)}
 			if not x then return nil end
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
@@ -47,7 +46,6 @@ newTalent{
 newTalent{
 	name = "Teleport",
 	type = {"spell/conveyance",2},
-	message = "@Source@ teleports away.",
 	require = spells_req2,
 	points = 5,
 	mana = 20,
@@ -67,17 +65,17 @@ newTalent{
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
-			x, y = self:getTarget{type="ball", range=100 + self:combatSpellpower(1), radius=20 - self:getTalentLevel(t)}
+			x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, range=100 + self:combatSpellpower(1), radius=20 - self:getTalentLevel(t)}
 			if not x then return nil end
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
-			x, y = game.target:pointAtRange(self.x, self.y, x, y, 10 + self:combatSpellpower(0.1))
+			x, y = game.target:pointAtRange(self.x, self.y, x, y, 100 + self:combatSpellpower(0.1))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 			target:teleportRandom(x, y, 20 - self:getTalentLevel(t))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		else
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, 100 + self:combatSpellpower(1))
+			target:teleportRandom(x, y, 100 + self:combatSpellpower(0.1))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
 		return true
@@ -86,7 +84,7 @@ newTalent{
 		return ([[Teleports you randomly on a big scale range (%d)
 		At level 4 it allows to specify the target area.
 		At level 5 it allows to choose the target to teleport.
-		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1))
+		The range will increase with the Magic stat]]):format(100 + self:combatSpellpower(0.1))
 	end,
 }
 
