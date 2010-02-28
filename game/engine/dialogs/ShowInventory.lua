@@ -8,7 +8,7 @@ function _M:init(title, inven, filter, action, actor)
 	self.filter = filter
 	self.action = action
 	self.actor = actor
-	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 10))
+	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
 
 	self:generateList()
 

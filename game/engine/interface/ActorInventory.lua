@@ -77,7 +77,13 @@ function _M:addObject(inven_id, o)
 		self:onWear(o)
 	end
 
+	self:onAddObject(o)
+
 	return true
+end
+
+--- Called upon adding an object
+function _M:onAddObject(o)
 end
 
 --- Picks an object from the floor
@@ -118,7 +124,13 @@ function _M:removeObject(inven, item, no_unstack)
 		self:onTakeoff(o)
 	end
 
+	self:onRemoveObject(o)
+
 	return o
+end
+
+--- Called upon removing an object
+function _M:onRemoveObject(o)
 end
 
 --- Drop an object on the floor

@@ -330,6 +330,46 @@ function _M:attack(target)
 	self:bumpInto(target)
 end
 
+function _M:getMaxEncumberance()
+	return math.floor(40 + self:getStr() * 1.8)
+end
+
+function _M:checkEncumberance()
+	-- Compute encumberance
+	local enc, max = 0, self:getMaxEncumberance()
+	for inven_id, inven in pairs(self.inven) do
+		for item, o in ipairs(inven) do
+			o:forAllStack(function(so) enc = enc + so.encumber end)
+		end
+	end
+	print("Total encumberance", enc, max)
+
+	-- We are pinned to the ground if we carry too much
+	if not self.encumbered and enc > max then
+		game.logPlayer(self, "#FF0000#You carry too much, you are encumbered!")
+		game.logPlayer(self, "#FF0000#Drop some of your items.")
+		self.encumbered = self:addTemporaryValue("never_move", 1)
+	elseif self.encumbered and enc <= max then
+		self:removeTemporaryValue("never_move", self.encumbered)
+		self.encumbered = nil
+		game.logPlayer(self, "#00FF00#You are no longer encumbered.")
+	end
+end
+
+--- Call when an object is added
+function _M:onAddObject(o)
+	engine.interface.ActorInventory.onAddObject(self, o)
+
+	self:checkEncumberance()
+end
+
+--- Call when an object is removed
+function _M:onRemoveObject(o)
+	engine.interface.ActorInventory.onRemoveObject(self, o)
+
+	self:checkEncumberance()
+end
+
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
