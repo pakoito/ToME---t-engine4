@@ -82,6 +82,7 @@ function _M:newGame()
 	self.zone = Zone.new("wilderness")
 	self.player = Player.new{name=self.player_name}
 	Map:setViewerActor(self.player)
+	self:setupDisplayMode()
 
 	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[2], self.player.default_wilderness[3]
@@ -112,26 +113,32 @@ function _M:onResolutionChange()
 end
 
 function _M:setupDisplayMode()
-	self.gfxmode = self.gfxmode or 1
+	self.gfxmode = self.gfxmode or config.settings.tome.gfxmode or 1
 	if self.gfxmode == 1 then
+		print("[DISPLAY MODE] 32x32")
 		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
 		Map:resetTiles()
 		Map.tiles.use_images = true
-		self.level.map:recreate()
 	elseif self.gfxmode == 2 then
+		print("[DISPLAY MODE] 16x16")
 		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, true)
 		Map:resetTiles()
 		Map.tiles.use_images = true
-		self.level.map:recreate()
 	elseif self.gfxmode == 3 then
+		print("[DISPLAY MODE] ASCII")
 		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, false)
 		Map:resetTiles()
 		Map.tiles.use_images = false
-		self.level.map:recreate()
+	else
+		print("[DISPLAY MODE] ????", self.gfxmode)
 	end
-	self.target = Target.new(Map, self.player)
-	self.target.target.entity = self.player
-	self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+	if self.level then
+		self.level.map:recreate()
+		self.target = Target.new(Map, self.player)
+		self.target.target.entity = self.player
+		self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+	end
+	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
 end
 
 function _M:save()

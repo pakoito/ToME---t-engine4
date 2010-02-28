@@ -139,6 +139,16 @@ function _M:getSaveDescription()
 	}
 end
 
+--- Save a settings file
+function _M:saveSettings(file, data)
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	local f = fs.open("/settings/"..file..".cfg", "w")
+	f:write(data)
+	f:close()
+	if restore then fs.setWritePath(restore) end
+end
+
 available_resolutions =
 {
 	["800x600"] = {800, 600},
@@ -157,12 +167,7 @@ function _M:setResolution(res)
 	if self.w ~= old_w or self.h ~= old_h then
 		self:onResolutionChange()
 
-		local restore = fs.getWritePath()
-		fs.setWritePath(engine.homepath)
-		local f = fs.open("/settings/resolution.cfg", "w")
-		f:write(("window.size = %q\n"):format(res))
-		f:close()
-		if restore then fs.setWritePath(restore) end
+		self:saveSettings("resolution", ("window.size = %q\n"):format(res))
 	end
 end
 
