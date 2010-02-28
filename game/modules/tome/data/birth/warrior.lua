@@ -48,10 +48,10 @@ newBirthDescriptor{
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
-		equipment = resolvers.equip{ id=true,
-			{type="weapon", subtype="longsword", name="iron longsword"},
-			{type="armor", subtype="shield", name="iron shield"},
-			{type="armor", subtype="heavy", name="iron mail armour"}
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true},
+			{type="armor", subtype="shield", name="iron shield", autoreq=true},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
 		},
 	},
 }
@@ -85,7 +85,7 @@ newBirthDescriptor{
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
-		equipment = resolvers.equip{ id=true,
+		resolvers.equip{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword"},
 			{type="armor", subtype="heavy", name="iron mail armour"}
 		},

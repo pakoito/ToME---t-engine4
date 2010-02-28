@@ -133,7 +133,8 @@ function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, colo
 
 	for i = scroll, math.min(#list, scroll + max - 1) do
 		local v = list[i]
-		local vc = v.color
+		local vc = nil
+		if type(v) == "table" then vc = v.color end
 		if prop and type(v[prop]) == "string" then v = tostring(v[prop])
 		elseif prop and type(v[prop]) == "function" then v = tostring(v[prop](v))
 		else v = tostring(v) end

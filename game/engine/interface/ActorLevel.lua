@@ -5,6 +5,8 @@ require "engine.class"
 -- to the monster level default exp
 module(..., package.seeall, class.make)
 
+_M.actors_max_level = false
+
 _M.exp_chart = function(level)
 	local exp = 10
 	local mult = 10
@@ -37,10 +39,17 @@ end
 
 --- Defines the experience chart used
 -- Static!
--- @param chart etiher a table of format "[level] = exp_needed" or a function that takes one parameter, a level, and returns the experience needed to reach it.
+-- @param chart either a table of format "[level] = exp_needed" or a function that takes one parameter, a level, and returns the experience needed to reach it.
 function _M:defineExperienceChart(chart)
 	assert(type(chart) == "table" or type(chart) == "function", "chart is neither table nor function")
-	self.exp_chart = chart
+	_M.exp_chart = chart
+end
+
+--- Defines the max level attainable
+-- @param max the maximun level. Can be nil to not have a limit
+-- Static!
+function _M:defineMaxLevel(max)
+	_M.actors_max_level = max
 end
 
 --- Get the exp needed for the given level
@@ -57,8 +66,9 @@ end
 --- Gains some experience
 -- If a levelup happens it calls self:levelup(), modules are encourraged to rewrite it to do whatever is needed.
 function _M:gainExp(value)
+	if self.actors_max_level and self.level >= self.actors_max_level then return end
 	self.exp = self.exp + value
-	while self:getExpChart(self.level + 1) and self.exp >= self:getExpChart(self.level + 1) do
+	while self:getExpChart(self.level + 1) and self.exp >= self:getExpChart(self.level + 1) and (not self.actors_max_level or self.level < self.actors_max_level) do
 		-- At max level, if any
 		if self.max_level and self.level >= self.max_level then break end
 

@@ -1,21 +1,15 @@
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped (and used!) by the Shade of Angmar
-newEntity{ base = "BASE_STAFF",
-	define_as = "STAFF_ANGMAR", rarity=false,
-	name = "Angmar's Fall", unique=true,
-	desc = [[Made from the bones of of many creatures this staff glows with power. You can feel its evilness as you touch it.]],
-	require = { stat = { mag=25 }, },
-	cost = 5,
-	combat = {
-		dam = 10,
-		apr = 0,
-		physcrit = 1.5,
-		dammod = {mag=1.1},
-	},
+newEntity{ base = "BASE_AMULET",
+	define_as = "AMULET_DREAD", rarity=false,
+	name = "Choker of Dread", unique=true,
+	unided_name = "dark amulet", color=colors.LIGHT_DARK,
+	desc = [[The evilness of undeath radiates from this amulet.]],
+	cost = 5000,
 	wielder = {
-		see_invisible = 2,
-		combat_spellpower = 15,
-		combat_spellcrit = 8,
+		see_invisible = 10,
+		blind_immune = 1,
+		combat_spellpower = 5,
+		combat_dam = 5,
 	},
 }

@@ -112,13 +112,13 @@ newTalent{
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3), {type="lightning"})
+			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), 3), {type="lightning"})
 		end
 	end,
 	activate = function(self, t)
 		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
 		return {
-			drain = self:addTemporaryValue("mana_regen", -2),
+			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -130,6 +130,6 @@ newTalent{
 		return ([[Conjures a furious raging lightning storm with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
 		This powerfull spell will continuously drain mana while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 20 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
 	end,
 }

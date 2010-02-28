@@ -7,6 +7,8 @@ local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
+local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
+local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 
 --- Defines the player for ToME
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
@@ -285,4 +287,14 @@ function _M:playerUseItem(object, item)
 		use_fct,
 		true
 	)
+end
+
+function _M:playerLevelup()
+	if self.unused_stats > 0 then
+		local ds = LevelupStatsDialog.new(self)
+		game:registerDialog(ds)
+	else
+		local dt = LevelupTalentsDialog.new(self)
+		game:registerDialog(dt)
+	end
 end

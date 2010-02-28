@@ -7,6 +7,7 @@ local ActorTalents = require "engine.interface.ActorTalents"
 local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local ActorAI = require "engine.interface.ActorAI"
 local ActorInventory = require "engine.interface.ActorInventory"
+local ActorLevel = require "engine.interface.ActorLevel"
 local Birther = require "engine.Birther"
 
 -- Usefull keybinds
@@ -58,6 +59,9 @@ ActorStats:defineStat("Cunning",	"cun", 10, 1, 100, "Cunning defines your charac
 ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines your character's ability to withstand and resist damage. It increases your maximun life and physical resistance.")
 -- Luck is hidden and start at half max value (50) which is considered the standard
 ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's chance when dealing with unknown events. It increases your critical strike chances, your chance for random encounters, ...")
+
+-- Actor leveling
+ActorLevel:defineMaxLevel(50)
 
 -- Actor autolevel schemes
 dofile("/data/autolevel_schemes.lua")

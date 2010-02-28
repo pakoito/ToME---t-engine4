@@ -30,8 +30,6 @@ local Tooltip = require "engine.Tooltip"
 local Calendar = require "engine.Calendar"
 
 local QuitDialog = require "mod.dialogs.Quit"
-local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
-local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased))
 
@@ -90,9 +88,8 @@ function _M:newGame()
 		self.player.current_wilderness = self.player.default_wilderness[1]
 		self:changeLevel(1)
 		self.player:resolve()
-
-		local ds = LevelupStatsDialog.new(self.player)
-		self:registerDialog(ds)
+		self.player:resolve(nil, true)
+		self.player:playerLevelup()
 	end)
 	self:registerDialog(birth)
 end
@@ -459,13 +456,7 @@ function _M:setupCommands()
 		end,
 
 		LEVELUP = function()
-			if self.player.unused_stats > 0 then
-				local ds = LevelupStatsDialog.new(self.player)
-				self:registerDialog(ds)
-			else
-				local dt = LevelupTalentsDialog.new(self.player)
-				self:registerDialog(dt)
-			end
+			self.player:playerLevelup()
 		end,
 
 		SAVE_GAME = function()

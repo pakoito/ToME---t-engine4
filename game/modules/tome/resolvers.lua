@@ -15,6 +15,19 @@ function resolvers.calc.equip(t, e)
 		end
 		if o then
 			print("Zone made us an equipment according to filter!", o:getName())
+
+			-- Auto alloc some stats to be able to wear it
+			if filter.autoreq and o.require and o.require.stat then
+				print("Autorequire stats")
+				for s, v in pairs(o.require.stat) do
+					print(s,v)
+					if e:getStat(s) < v then
+						e.unused_stats = e.unused_stats - (v - e:getStat(s))
+						e:incStat(s, v - e:getStat(s))
+					end
+				end
+			end
+
 			e:wearObject(o, true, false)
 
 			-- Do not drop it unless it is an ego or better
