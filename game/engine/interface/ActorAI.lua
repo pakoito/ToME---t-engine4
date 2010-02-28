@@ -29,7 +29,7 @@ function _M:loadDefinition(dir)
 end
 
 function _M:init(t)
-	self.ai_state = {}
+	self.ai_state = self.ai_state or {}
 	self.ai_target = {}
 	self:autoLoadedAI()
 end

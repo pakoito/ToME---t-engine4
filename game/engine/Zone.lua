@@ -207,6 +207,8 @@ function _M:finishEntity(level, type, e, ego_chance)
 		for i = 1, #s do e:stack(s[i]) end
 	end
 
+	e:resolve(nil, true)
+
 	return e
 end
 

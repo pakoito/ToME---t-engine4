@@ -1,6 +1,6 @@
 -- Special items, used for quests
 
-newEntity{
+newEntity{ define_as = "STAFF_ABSORPTION",
 	unique = true, quest=true,
 	slot = "MAINHAND",
 	type = "weapon", subtype="staff",
@@ -23,4 +23,18 @@ newEntity{
 		combat_spellpower = 20,
 		combat_spellcrit = 10,
 	},
+
+	max_power = 1000, power_regen = 1,
+	use_power = { name = "absorb energies", power = 1000,
+		use = function(self, who)
+			game.logPlayer(who, "This power seems to much to wield, you fear it might absorb YOU.")
+		end
+	},
+
+	on_pickup = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "#00FFFF#You can feel the power of this staff just by carrying it. This is both ancient and dangerous.")
+			game.logPlayer(who, "#00FFFF#It should be shown to the wise elders in Minas Tirith!")
+		end
+	end,
 }

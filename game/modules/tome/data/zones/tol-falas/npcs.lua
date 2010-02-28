@@ -1,32 +1,46 @@
-load("/data/general/npcs/rodent.lua")
-load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/molds.lua")
 load("/data/general/npcs/skeleton.lua")
 load("/data/general/npcs/snake.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
-newEntity{ define_as = "SHADE_OF_ANGMAR",
-	type = "undead", subtype = "skeleton", unique = true,
-	name = "The Shade of Angmar",
-	display = "s", color=colors.VIOLET,
-	desc = [[This skeleton looks nasty. There is red flames in its empty eye sockets. It wield a nasty sword and towers toward you, throwing spells.]],
-	level_range = {7, 10}, exp_worth = 2,
-	max_life = 150, life_rating = 15, fixed_rating = true,
-	max_mana = 85,
-	max_stamina = 85,
-	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
+-- The boss of Tol Falas, no "rarity" field means it will not be randomly generated
+newEntity{ define_as = "THE_MASTER",
+	type = "undead", subtype = "vampire", unique = true,
+	name = "The Master",
+	display = "V", color=colors.VIOLET,
+	desc = [[This elder vampire seems to be in control here and does not seem very happy about you.]],
+	level_range = {18, 25}, exp_worth = 2,
+	max_life = 350, life_rating = 15, fixed_rating = true,
+	max_mana = 145,
+	max_stamina = 145,
+	stats = { str=19, dex=19, cun=34, mag=25, con=16 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="stagg", defined="STAFF_ANGMAR"}, {type="armor", subtype="light"}, },
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	equipment = resolvers.equip{ {type="weapon", subtype="greatsword"}, {type="armor", subtype="heavy"}, },
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {type="weapon", subtype="staff", defined="STAFF_ABSORPTION"} },
+
+	summon = {
+		{type="undead", number=2, hasxp=true},
+	},
+
+	blind_immune = 1,
+	see_invisible = 20,
+	undead = 1,
 
 	talents = resolvers.talents{
-		[Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
-		[Talents.T_STAMINA_POOL]=1, [Talents.T_SWORD_MASTERY]=3, [Talents.T_STUNNING_BLOW]=1,
+		[Talents.T_SUMMON]=1,
+		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
+		[Talents.T_MANA_POOL]=1,
+			[Talents.T_CONGEAL_TIME]=2,
+			[Talents.T_MANATHRUST]=4,
+			[Talents.T_FREEZE]=4,
+			[Talents.T_PHASE_DOOR]=2,
+		[Talents.T_STAMINA_POOL]=1,
+			[Talents.T_SWORD_MASTERY]=3,
+			[Talents.T_STUNNING_BLOW]=1,
 	},
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 }

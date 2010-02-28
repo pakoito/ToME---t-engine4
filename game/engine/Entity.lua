@@ -106,13 +106,13 @@ end
 -- This is called when generatingthe final clones of an entity for use in a level.<br/>
 -- This can be used to make random enchants on objects, random properties on actors, ...<br/>
 -- by default this only looks for properties with a table value containing a __resolver field
-function _M:resolve(t)
+function _M:resolve(t, last)
 	t = t or self
 	for k, e in pairs(t) do
-		if type(e) == "table" and e.__resolver then
+		if type(e) == "table" and e.__resolver and (not e.__resolve_last or last) then
 			t[k] = resolvers.calc[e.__resolver](e, self)
 		elseif type(e) == "table" and not e.__CLASSNAME then
-			self:resolve(e)
+			self:resolve(e, last)
 		end
 	end
 

@@ -1,6 +1,6 @@
 --- Resolves equipment creation for an actor
 function resolvers.equip(t)
-	return {__resolver="equip", t}
+	return {__resolver="equip", __resolve_last=true, t}
 end
 --- Actually resolve the equipment creation
 function resolvers.calc.equip(t, e)
@@ -30,7 +30,7 @@ end
 
 --- Resolves inventory creation for an actor
 function resolvers.inventory(t)
-	return {__resolver="inventory", t}
+	return {__resolver="inventory", __resolve_last=true, t}
 end
 --- Actually resolve the inventory creation
 function resolvers.calc.inventory(t, e)
@@ -58,7 +58,7 @@ end
 
 --- Resolves drops creation for an actor
 function resolvers.drops(t)
-	return {__resolver="drops", t}
+	return {__resolver="drops", __resolve_last=true, t}
 end
 --- Actually resolve the drops creation
 function resolvers.calc.drops(t, e)

@@ -41,12 +41,18 @@ end
 function _M:act()
 end
 
+--- Gets the color in which to display the object in lists
+function _M:getDisplayColor()
+	return {255,255,255}
+end
+
 --- Gets the full name of the object
-function _M:getName()
+function _M:getName(t)
+	t = t or {}
 	local qty = self:getNumber()
 	local name = self.name
 
-	if qty == 1 then return name
+	if qty == 1 or t.no_count then return name
 	else return qty.." "..name
 	end
 end

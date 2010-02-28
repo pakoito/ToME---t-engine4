@@ -7,7 +7,7 @@ function _M:init(title, actor, filter, action)
 	self.actor = actor
 	self.filter = filter
 	self.action = action
-	engine.Dialog.init(self, title or "Equipment", game.w * 0.8, game.h * 0.8)
+	engine.Dialog.init(self, title or "Equipment", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
 
 	self:generateList()
 
@@ -52,12 +52,12 @@ function _M:generateList()
 	local i = 0
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
-			list[#list+1] = { name="#10EF6F#"..self.actor.inven_def[inven_id].name, inven=inven_id }
+			list[#list+1] = { name=self.actor.inven_def[inven_id].name, color={0x90, 0x90, 0x90}, inven=inven_id }
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = string.char(string.byte('a') + i)
-					list[#list+1] = { name=char..")  "..o:getName(), object=o, inven=inven_id, item=item }
+					list[#list+1] = { name=char..") "..o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item }
 					chars[char] = #list
 					i = i + 1
 				end

@@ -23,7 +23,7 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
 			adjust_level = {-1, 2},
-			guardian = "SHADE_OF_ANGMAR",
+			guardian = "THE_MASTER",
 		},
 		object = {
 			class = "engine.generator.object.Random",

@@ -72,8 +72,17 @@ function _M:descAttribute(attr)
 	end
 end
 
+--- Gets the color in which to display the object in lists
+function _M:getDisplayColor()
+	if self.egoed then return {0, 255, 128}
+	elseif self.unique then return {255, 255, 0}
+	else return {255, 255, 255}
+	end
+end
+
 --- Gets the full name of the object
-function _M:getName()
+function _M:getName(t)
+	t = t or {}
 	local qty = self:getNumber()
 	local name = self.name
 
@@ -90,7 +99,7 @@ function _M:getName()
 		end)
 	end
 
-	if qty == 1 then
+	if qty == 1 or t.no_count then
 		return name
 	else
 		return qty.." "..name
@@ -100,7 +109,7 @@ end
 --- Gets the full desc of the object
 function _M:getDesc()
 	local c = ""
-	if self.egoed then c = "#00FFFF#"
+	if self.egoed then c = "#00FF80#"
 	elseif self.unique then c = "#FFFF00#"
 	end
 	local desc = { c..self:getName().."#FFFFFF#", self.desc }

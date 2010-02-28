@@ -8,7 +8,7 @@ function _M:init(title, inven, filter, action, actor)
 	self.filter = filter
 	self.action = action
 	self.actor = actor
-	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
+	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 10))
 
 	self:generateList()
 
@@ -97,7 +97,7 @@ function _M:generateList()
 	local i = 0
 	for item, o in ipairs(self.inven) do
 		if not self.filter or self.filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..o:getName(), object=o, item=item }
+			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getName(), color=o:getDisplayColor(), object=o, item=item }
 			i = i + 1
 		end
 	end

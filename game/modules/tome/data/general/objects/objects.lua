@@ -40,3 +40,4 @@ load("/data/general/objects/heavy-boots.lua")
 
 -- Artifacts
 load("/data/general/objects/world-artifacts.lua")
+load("/data/general/objects/quest-artifacts.lua")

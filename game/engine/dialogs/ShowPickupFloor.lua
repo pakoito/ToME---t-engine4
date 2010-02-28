@@ -7,7 +7,7 @@ function _M:init(title, x, y, filter, action)
 	self.x, self.y = x, y
 	self.filter = filter
 	self.action = action
-	engine.Dialog.init(self, title or "Pickup", game.w * 0.8, game.h * 0.8)
+	engine.Dialog.init(self, title or "Pickup", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
 
 	self:generateList()
 
@@ -60,7 +60,7 @@ function _M:generateList()
 		local o = game.level.map:getObject(self.x, self.y, idx)
 		if not o then break end
 		if not self.filter or self.filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..o:getName(), object=o, item=idx }
+			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getName(), color=o:getDisplayColor(), object=o, item=idx }
 			i = i + 1
 		end
 		idx = idx + 1

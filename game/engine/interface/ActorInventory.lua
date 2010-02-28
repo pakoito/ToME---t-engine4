@@ -72,7 +72,10 @@ function _M:addObject(inven_id, o)
 	table.insert(inven, o)
 
 	-- Do whatever is needed when wearing this object
-	if inven.worn then self:onWear(o) end
+	if inven.worn then
+		o:check("on_wear", self)
+		self:onWear(o)
+	end
 
 	return true
 end
@@ -83,6 +86,7 @@ function _M:pickupFloor(i, vocal)
 	if o then
 		if self:addObject(self.INVEN_INVEN, o) then
 			game.level.map:removeObject(self.x, self.y, i)
+			o:check("on_pickup", self)
 
 			if vocal then game.logSeen(self, "%s picks up: %s.", self.name:capitalize(), o:getName()) end
 		else
@@ -109,7 +113,10 @@ function _M:removeObject(inven, item, no_unstack)
 	end
 
 	-- Do whatever is needed when takingoff this object
-	if inven.worn then self:onTakeoff(o) end
+	if inven.worn then
+		o:check("on_takeoff", self)
+		self:onTakeoff(o)
+	end
 
 	return o
 end
@@ -124,6 +131,7 @@ function _M:dropFloor(inven, item, vocal)
 		if vocal then game.logSeen(self, "There is nothing to drop.") end
 		return
 	end
+	if o:check("on_drop", self) then return end
 	game.level.map:addObject(self.x, self.y, o)
 	if vocal then game.logSeen(self, "%s drops on the floor: %s.", self.name:capitalize(), o:getName()) end
 end
@@ -270,11 +278,8 @@ function _M:sortInven(inven)
 	for i = #inven, 1, -1 do
 		-- If it is stackable, look for obejcts before it that it could stack into
 		if inven[i]:stackable() then
-print("sorting", #inven, i, i-1)
 			for j = i - 1, 1, -1 do
-			print("j",j)
 				if inven[j]:stack(inven[i]) then
-					print("Stacked objects", i, inven[i].name, "into", j, inven[j].name)
 					table.remove(inven, i)
 					break
 				end
@@ -301,6 +306,6 @@ end
 --- Finds an object by name in an inventory
 function _M:findInInventory(inven, name)
 	for item, o in ipairs(inven) do
-		if o:getName() == name then return o, item end
+		if o:getName{no_count=true} == name then return o, item end
 	end
 end

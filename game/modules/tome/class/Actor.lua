@@ -184,7 +184,25 @@ function _M:magicMap(radius)
 end
 
 function _M:tooltip()
-	return ("%s\n#00ffff#Level: %d\nExp: %d/%d\n#ff0000#HP: %d"):format(self.name, self.level, self.exp, self:getExpChart(self.level+1) or "---", self.life)
+	return ([[%s
+#00ffff#Level: %d
+Exp: %d/%d
+#ff0000#HP: %d
+Stats: %d /  %d / %d / %d / %d / %d
+%s]]):format(
+	self.name,
+	self.level,
+	self.exp,
+	self:getExpChart(self.level+1) or "---",
+	self.life,
+	self:getStr(),
+	self:getDex(),
+	self:getMag(),
+	self:getWil(),
+	self:getCun(),
+	self:getCon(),
+	self.desc or ""
+	)
 end
 
 --- Called before taking a hit, it's the chance to check for shields

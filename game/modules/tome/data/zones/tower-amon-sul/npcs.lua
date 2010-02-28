@@ -19,7 +19,7 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="stagg", defined="STAFF_ANGMAR"}, {type="armor", subtype="light"}, },
+	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_ANGMAR"}, {type="armor", subtype="light"}, },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	talents = resolvers.talents{

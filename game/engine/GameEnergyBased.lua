@@ -76,7 +76,7 @@ end
 -- collecting if they are not
 function _M:addEntity(e)
 	if not e.canAct or not e:canAct() then return end
-	if self.entities[e.uid] then error("Entity "..e.uid.." already present in the game") end
+	if self.entities[e.uid] and self.entities[e.uid] ~= e then error("Entity "..e.uid.." already present in the game and not the same") end
 	self.entities[e.uid] = e
 end
 
