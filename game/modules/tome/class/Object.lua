@@ -88,7 +88,7 @@ function _M:getName(t)
 	local qty = self:getNumber()
 	local name = self.name
 
-	if not self:isIdentified() and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
+	if not self:isIdentified() and not t.force_id and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
 
 	-- To extend later
 	name = name:gsub("~", ""):gsub("&", "a"):gsub("#([^#]+)#", function(attr)

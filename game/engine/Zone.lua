@@ -183,6 +183,7 @@ function _M:finishEntity(level, type, e, ego_chance)
 			print("ego", ego.__CLASSNAME, ego.name, getmetatable(ego))
 			ego = ego:clone()
 			ego:resolve()
+			ego:resolve(nil, true)
 			local newname
 			if ego.prefix then
 				newname = ego.name .. e.name

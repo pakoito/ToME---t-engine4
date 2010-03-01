@@ -8,7 +8,8 @@ newEntity{
 	display = "H", color=colors.WHITE,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	drops = resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=40, nb=1, {{type="money"}} },
 
 	max_stamina = 100,
 	life_rating = 13,

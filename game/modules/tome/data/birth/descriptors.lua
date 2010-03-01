@@ -13,9 +13,9 @@ newBirthDescriptor{
 			{type="lite", subtype="lite", name="brass lantern"},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser healing"},
-			{type="potion", subtype="potion", name="potion of lesser healing"},
-			{type="potion", subtype="potion", name="potion of lesser healing"},
+			{type="potion", subtype="potion", name="potion of lesser healing", ego_chance=-1000},
+			{type="potion", subtype="potion", name="potion of lesser healing", ego_chance=-1000},
+			{type="potion", subtype="potion", name="potion of lesser healing", ego_chance=-1000},
 		},
 		resolvers.generic(function(e)
 			e.hotkey[9] = {"inventory", "potion of lesser healing"}

@@ -14,7 +14,8 @@ newEntity{
 	energy = { mod=0.7 },
 	combat_armor = 1, combat_def = 1,
 
-	drops = resolvers.drops{chance=90, nb=1, {} },
+	resolvers.drops{chance=90, nb=1, {} },
+	resolvers.drops{chance=60, nb=1, {{type="money"}} },
 
 	resists = { [DamageType.LIGHT] = -50 },
 }

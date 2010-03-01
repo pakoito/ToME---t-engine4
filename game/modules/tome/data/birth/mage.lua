@@ -59,8 +59,8 @@ newBirthDescriptor{
 			{type="armor", subtype="cloth", name="robe", autoreq=true}
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
 	},
 }

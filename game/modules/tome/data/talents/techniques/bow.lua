@@ -24,7 +24,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire an arrow that cuts right throught anything, piercing multiple tagerts if possible with near infinite armor penetration, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 7))
+		return ([[You fire an arrow that cuts right throught anything, piercing multiple targets if possible with near infinite armor penetration, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 7))
 	end,
 }
 

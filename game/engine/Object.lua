@@ -15,13 +15,13 @@ end
 
 --- Resolves the object
 -- This will call the entities resolver and then add to the game entities list
-function _M:resolve(t)
-	engine.Entity.resolve(self, t)
+function _M:resolve(t, last)
+	engine.Entity.resolve(self, t, last)
 
-	if not t then
+	if not t and last then
 		-- Stackable property is the name by default
 		if self.stacking and type(self.stacking) == "boolean" then
-			self.stacking = self.name
+			self.stacking = self:getName{no_count=true, force_id=true}
 		end
 
 		-- Auto add all objects to the game, if they can act

@@ -15,6 +15,8 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	never_move = 1,
 
+	drops = resolvers.drops{chance=60, nb=1, {{type="money"}} },
+
 	resists = { [DamageType.LIGHT] = -50 },
 }
 

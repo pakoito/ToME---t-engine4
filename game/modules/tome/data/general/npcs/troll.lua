@@ -8,7 +8,8 @@ newEntity{
 	combat = { dam=resolvers.rngavg(15,20), atk=2, apr=6, physspeed=2 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	drops = resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=60, nb=1, {{type="money"}} },
 
 	life_rating = 15,
 	life_regen = 2,

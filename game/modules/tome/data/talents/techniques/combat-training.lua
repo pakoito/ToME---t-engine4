@@ -46,7 +46,7 @@ newTalent{
 	require = { level=function(level) return (level - 1) * 2 end },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases chances to hit with melee weapons.]]
+		return [[Increases chances to hit with melee and ranged weapons.]]
 	end,
 }
 
