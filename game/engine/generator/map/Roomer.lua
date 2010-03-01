@@ -301,7 +301,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 		end
 	end
 
-	return ux, uy, dx, uy, spots
+	return ux, uy, dx, dy, spots
 end
 
 --- Make rooms and connect them with tunnels

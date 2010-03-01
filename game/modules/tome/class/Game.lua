@@ -9,6 +9,7 @@ local Target = require "engine.Target"
 local Level = require "engine.Level"
 local Birther = require "engine.Birther"
 
+local Store = require "mod.class.Store"
 local Trap = require "mod.class.Trap"
 local Grid = require "mod.class.Grid"
 local Actor = require "mod.class.Actor"
@@ -79,6 +80,8 @@ function _M:run()
 end
 
 function _M:newGame()
+	self.stores_def = Store:loadList("/data/general/stores/basic.lua")
+
 	self.zone = Zone.new("wilderness")
 	self.player = Player.new{name=self.player_name}
 	Map:setViewerActor(self.player)

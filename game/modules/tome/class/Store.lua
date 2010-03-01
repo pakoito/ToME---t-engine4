@@ -2,7 +2,7 @@ require "engine.class"
 local Entity = require "engine.Entity"
 local Inventory = require "engine.interface.ActorInventory"
 
-module(..., package.seeall, class.inherit(Entity))
+module(..., package.seeall, class.inherit(Entity, Inventory))
 
 _M.stores_def = {}
 
