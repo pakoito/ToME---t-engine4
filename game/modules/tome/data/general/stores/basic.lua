@@ -8,8 +8,8 @@ newEntity{
 		min_fill = 10,
 		max_fill = 20,
 		filters = {
-			{type="potion"},
-			{type="scroll"},
+			{type="potion", id=true},
+			{type="scroll", id=true},
 		},
 --		fixed = {
 --		},

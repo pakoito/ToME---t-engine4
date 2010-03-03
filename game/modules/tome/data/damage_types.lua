@@ -221,6 +221,7 @@ newDamageType{
 newDamageType{
 	name = "poison", type = "POISON",
 	projector = function(src, x, y, type, dam)
+		if not target:canBe("poison") then return end
 		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam / 6)
 		dam = dam - dam / 6
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -325,3 +326,4 @@ newDamageType{
 		end
 	end,
 }
+

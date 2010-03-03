@@ -29,9 +29,17 @@ function _M:loadup(level, zone)
 		local filter = rng.table(s.filters)
 		local e = zone:makeEntity(level, "object", filter)
 		if e then
+			if filter.id then e:identify(filter.id) end
 			self:addObject(inven, e)
 			print("[STORE] stocking up: ", e.name)
 		end
 	end
+	self:sortInven(inven)
 	self.last_filled = game.turn
+end
+
+function _M:interact(who)
+	local D = require "engine.dialogs.ShowStore"
+	local d = D.new("Store: "..self.name, self:getInven("INVEN"), who:getInven("INVEN"), nil, nil, function() end)
+	game:registerDialog(d)
 end
