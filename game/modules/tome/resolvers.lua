@@ -99,3 +99,22 @@ function resolvers.calc.drops(t, e)
 	-- Delete the origin field
 	return nil
 end
+
+--- Resolves drops creation for an actor
+function resolvers.store(def)
+	return {__resolver="store", def}
+end
+--- Actually resolve the drops creation
+function resolvers.calc.store(t, e)
+	t = t[1]
+
+	e.on_move = function(self, x, y, who)
+		self.store:loadup(game.level, game.zone)
+		self.store:interact(who)
+	end
+	e.store = game:getStore(t)
+	print("[STORE] created for entity", t, e, e.name)
+
+	-- Delete the origin field
+	return nil
+end

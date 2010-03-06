@@ -6,6 +6,10 @@ module(..., package.seeall, class.inherit(Store))
 
 _M.stores_def = {}
 
+function _M:loadStores(f)
+	self.stores_def = self:loadList(f)
+end
+
 function _M:init(t, no_default)
 	Store.init(self, t, no_default)
 end

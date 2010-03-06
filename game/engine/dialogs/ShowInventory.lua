@@ -79,8 +79,8 @@ end
 function _M:defineHotkey(id)
 	if not self.actor or not self.actor.hotkey then return end
 
-	self.actor.hotkey[id] = {"inventory", self.list[self.sel].object:getName()}
-	self:simplePopup("Hotkey "..id.." assigned", self.list[self.sel].object:getName():capitalize().." assigned to hotkey "..id)
+	self.actor.hotkey[id] = {"inventory", self.list[self.sel].object:getName{no_count=true}}
+	self:simplePopup("Hotkey "..id.." assigned", self.list[self.sel].object:getName{no_count=true}:capitalize().." assigned to hotkey "..id)
 	self.actor.changed = true
 end
 

@@ -80,8 +80,6 @@ function _M:run()
 end
 
 function _M:newGame()
-	self.stores_def = Store:loadList("/data/general/stores/basic.lua")
-
 	self.zone = Zone.new("wilderness")
 	self.player = Player.new{name=self.player_name}
 	Map:setViewerActor(self.player)
@@ -145,7 +143,7 @@ function _M:setupDisplayMode()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{stores_def=true}, true)
+	return class.save(self, self:defaultSavedFields{}, true)
 end
 
 function _M:getSaveDescription()
@@ -153,6 +151,10 @@ function _M:getSaveDescription()
 		name = self.player.name,
 		description = ([[Exploring level %d of %s.]]):format(self.level.level, self.zone.name),
 	}
+end
+
+function _M:getStore(def)
+	return Store.stores_def[def]:clone()
 end
 
 function _M:leaveLevel(level, lev, old_lev)
@@ -264,8 +266,7 @@ function _M:display()
 		local mx, my = core.mouse.get()
 		local tmx, tmy = self.level.map:getMouseTile(mx, my)
 		local tt = self.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip") or self.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
---		if tt and self.level.map.seens(tmx, tmy) then
-		if tt then
+		if tt and self.level.map.seens(tmx, tmy) then
 			self.tooltip:set("%s", tt)
 			local t = self.tooltip:display()
 			mx = mx - self.tooltip.w

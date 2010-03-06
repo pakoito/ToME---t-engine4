@@ -23,7 +23,10 @@ function _M:loadMap(file)
 			t[char] = {grid=grid, obj=obj, actor=actor}
 		end,
 		quickEntity = function(char, e)
-			t[char] = {grid=Grid.new(e)}
+			local e = Grid.new(e)
+			e:resolve()
+			e:resolve(nil, true)
+			t[char] = {grid=e}
 		end,
 	}, {__index=_G}))
 	local ret, err = f()

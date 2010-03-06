@@ -9,6 +9,7 @@ local ActorAI = require "engine.interface.ActorAI"
 local ActorInventory = require "engine.interface.ActorInventory"
 local ActorLevel = require "engine.interface.ActorLevel"
 local Birther = require "engine.Birther"
+local Store = require "mod.class.Store"
 
 -- Usefull keybinds
 KeyBind:load("move,hotkeys,inventory,actions,debug")
@@ -72,6 +73,9 @@ ActorAI:loadDefinition("/mod/ai/")
 
 -- Birther descriptor
 Birther:loadDefinition("/data/birth/descriptors.lua")
+
+-- Stores
+Store:loadStores("/data/general/stores/basic.lua")
 
 ------------------------------------------------------------------------
 -- Count the number of talents per types
