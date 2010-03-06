@@ -11,13 +11,26 @@ quickEntity('O', {name='cooblestone road', display='.', color=colors.WHITE, imag
 quickEntity('.', {name='road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
 quickEntity(',', {name='dirt', display='.', color=colors.LIGHT_UMBER, image="terrain/sand.png"})
 quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
-quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true})
+quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true})
 
+quickEntity('1', {name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('2', {name="Closed store", display='2', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('3', {name="Closed store", display='3', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('4', {name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
 quickEntity('5', {name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), image="terrain/wood_store_book.png"})
+quickEntity('6', {name="Closed store", display='6', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('7', {name="Closed store", display='7', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('8', {name="Closed store", display='8', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('9', {name="Closed store", display='9', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('0', {name="Closed store", display='0', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('a', {name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('b', {name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('c', {name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('d', {name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('e', {name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 
-startx = 31
-starty = 13
+startx = 76
+starty = 36
 
 return {
 [[                                                                             ]],
@@ -41,10 +54,10 @@ return {
 [[     ,--T-..-##5####----,----ssssss-..........--ssss,-ssss--,------...-^^^  ^]],
 [[     ,-  OOOO--OOOOO----,----#c##4#-.---.,----,-SStS,-SSSS--,-----..---^^   ^]],
 [[<OO  ,-T-OssOOOO---OOOOOOOOO--OOOO--.-T-.-sss--,ssss,-ssss---,---..--T^^     ]],
-[[  OOOOOOOOSt.---------XXXX-OOOO--OOOO---.-StS--,#0##,-ssss---,---.---^^     ^]],
-[[   ,,-T--.ss.-sssss---XXXX,---------OOOO.-sss---,,,,,-####--,---..-T^^   ^ ^ ]],
+[[  OOOOOOOOSt.---------ssss-OOOO--OOOO---.-StS--,#0##,-ssss---,---.---^^     ^]],
+[[   ,,-T--.ss.-sssss---ssss,---------OOOO.-sss---,,,,,-####--,---..-T^^   ^ ^ ]],
 [[   ,,-T--.##.-SStSS---####,------------OO-#>#-ssssss-,,,---,----.--T^^   ^   ]],
-[[   ,,-TT-....-sssss--,,,,,,----------F--OO-,--SSSSSt-ss-,-,---...-T^^  ^ ^   ]],
+[[   ,,-TT-....-sssss--,,,,,,-------------OO-,--SSSSSt-ss-,-,---...-T^^  ^ ^   ]],
 [[   ,,--TT---..#2###-,sssss,-SSSSSSSS-----OO,--ssssss-tS--,.....---^^ ^^     ^]],
 [[    ,,--T----..,,,,,-StSSS,-ssssssss------OOO-#1##a#-ss....-----T^^        ^^]],
 [[    ,,--TT----..----,sssss,-##7#####--------OO,.,,.,-##.----TTTT^^     ^  ^^ ]],

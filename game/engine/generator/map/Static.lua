@@ -17,7 +17,7 @@ function _M:loadMap(file)
 	print("Static generator using file", "/data/maps/"..file..".lua")
 	local f, err = loadfile("/data/maps/"..file..".lua")
 	if not f and err then error(err) end
-	setfenv(f, setmetatable({
+	local g = {
 		Map = require("engine.Map"),
 		defineTile = function(char, grid, obj, actor)
 			t[char] = {grid=grid, obj=obj, actor=actor}
@@ -28,7 +28,8 @@ function _M:loadMap(file)
 			e:resolve(nil, true)
 			t[char] = {grid=e}
 		end,
-	}, {__index=_G}))
+	}
+	setfenv(f, setmetatable(g, {__index=_G}))
 	local ret, err = f()
 	if not ret and err then error(err) end
 
@@ -44,8 +45,8 @@ function _M:loadMap(file)
 		end
 	end
 
-	m.startx = ret.startx or math.floor(m.w / 2)
-	m.starty = ret.starty or math.floor(m.h / 2)
+	m.startx = g.startx or math.floor(m.w / 2)
+	m.starty = g.starty or math.floor(m.h / 2)
 
 	self.gen_map = m
 	self.tiles = t

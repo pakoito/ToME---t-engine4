@@ -15,6 +15,9 @@ quickEntity('h', {show_tooltip=true, name='low hills', display='^', color=colors
 quickEntity(' ', {show_tooltip=true, name='sea of Rhun', display='~', color=colors.BLUE, image="terrain/river.png", block_move=true})
 quickEntity('_', {show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, image="terrain/river.png", equilibrium_level=-10})
 quickEntity('~', {show_tooltip=true, name='Anduin river', display='~', color={r=0, g=30, b=255}, image="terrain/river.png", equilibrium_level=-10})
+quickEntity('-', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png", equilibrium_level=-10})
+quickEntity('|', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png", equilibrium_level=-10})
+quickEntity('x', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png", equilibrium_level=-10})
 
 quickEntity('A', {show_tooltip=true, name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tower-amon-sul"})
 quickEntity('B', {show_tooltip=true, name="Passageway into the Trollshaws", 	display='>', color={r=0, g=255, b=0}, change_level=1, change_zone="trollshaws"})
