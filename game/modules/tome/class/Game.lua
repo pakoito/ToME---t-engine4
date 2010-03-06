@@ -145,7 +145,7 @@ function _M:setupDisplayMode()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{}, true)
+	return class.save(self, self:defaultSavedFields{stores_def=true}, true)
 end
 
 function _M:getSaveDescription()

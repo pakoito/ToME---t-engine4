@@ -23,13 +23,7 @@ quickEntity('D', {name="A path into the Old Forest", 		display='>', color={r=0, 
 quickEntity('E', {name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, change_level=1, change_zone="sandworm-lair"})
 quickEntity('F', {name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tol-falas"})
 
-quickEntity('1', {name="General Store", display='1', color={r=0, g=255, b=255},
-	on_move = function(self, x, y, who)
-		self.store:loadup(game.level, game.zone)
-		self.store:interact(who)
-	end,
-	store = game.stores_def[1]:clone(),
-})
+quickEntity('1', {name="Bree (Town)", display='*', color={r=255, g=255, b=255}, change_level=1, change_zone="town-bree"})
 
 return {
 [[========q=qqqqqqqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],

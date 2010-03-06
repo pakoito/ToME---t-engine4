@@ -228,3 +228,8 @@ end
 function _M:getSubtypeOrder()
 	return self.subtype or ""
 end
+
+--- Get item cost
+function _M:getPrice()
+	return self.cost
+end

@@ -128,22 +128,24 @@ end
 function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, color, selcolor)
 	selcolor = selcolor or {0,255,255}
 	color = color or {255,255,255}
-	scroll = scroll or 1
+	scroll = util.bound(scroll or 1, 1, max)
 	max = max or 99999
 
 	for i = scroll, math.min(#list, scroll + max - 1) do
 		local v = list[i]
 		local vc = nil
-		if type(v) == "table" then vc = v.color end
-		if prop and type(v[prop]) == "string" then v = tostring(v[prop])
-		elseif prop and type(v[prop]) == "function" then v = tostring(v[prop](v))
-		else v = tostring(v) end
-		if sel == i then
-			s:drawColorString(self.font, v, x, y + (i-scroll) * hskip, selcolor[1], selcolor[2], selcolor[3])
-		else
-			local r, g, b = color[1], color[2], color[3]
-			if vc then r, g, b = vc[1], vc[2], vc[3] end
-			s:drawColorString(self.font, v, x, y + (i-scroll) * hskip, r, g, b)
+		if v then
+			if type(v) == "table" then vc = v.color end
+			if prop and type(v[prop]) == "string" then v = tostring(v[prop])
+			elseif prop and type(v[prop]) == "function" then v = tostring(v[prop](v))
+			else v = tostring(v) end
+			if sel == i then
+				s:drawColorString(self.font, v, x, y + (i-scroll) * hskip, selcolor[1], selcolor[2], selcolor[3])
+			else
+				local r, g, b = color[1], color[2], color[3]
+				if vc then r, g, b = vc[1], vc[2], vc[3] end
+				s:drawColorString(self.font, v, x, y + (i-scroll) * hskip, r, g, b)
+			end
 		end
 	end
 end

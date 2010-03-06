@@ -11,6 +11,14 @@ quickEntity('.', {name='road', display='.', color=colors.WHITE})
 quickEntity(',', {name='dirt', display='.', color=colors.LIGHT_UMBER})
 quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN})
 
+quickEntity('1', {name="General Store", display='1', color={r=0, g=255, b=255},
+	on_move = function(self, x, y, who)
+		self.store:loadup(game.level, game.zone)
+		self.store:interact(who)
+	end,
+	store = game.stores_def[1]:clone(),
+})
+
 startx = 131
 starty = 33
 

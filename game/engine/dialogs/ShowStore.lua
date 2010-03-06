@@ -3,7 +3,9 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action)
+function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc)
+	self.action = action
+	self.desc = desc
 	self.store_inven = store_inven
 	self.actor_inven = actor_inven
 	self.store_filter = store_filter
@@ -25,10 +27,10 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			end
 		end,
 	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
-		MOVE_LEFT = function() end,
-		MOVE_RIGHT = function() end,
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_LEFT = function() self.list = self.store_list self.sel = util.bound(self.sel, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_RIGHT = function() self.list = self.actor_list self.sel = util.bound(self.sel, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		ACCEPT = function() self:use() end,
 		EXIT = function() game:unregisterDialog(self) end,
 	})
@@ -42,10 +44,23 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	}
 end
 
+function _M:updateStore()
+	self:generateList()
+	self.list = #self.store_list > 0 and self.store_list or self.actor_list
+	self.sel = util.bound(self.sel, 1, #self.list)
+	self.scroll = util.scroll(self.sel, self.scroll, self.max)
+	self.changed = true
+end
+
 function _M:use()
-	game:unregisterDialog(self)
 	if self.list[self.sel] then
-		self.action(self.list[self.sel].object, self.list[self.sel].item)
+		if self.list == self.store_list then
+			self.action("buy", self.list[self.sel].object, self.list[self.sel].item)
+			self:updateStore()
+		else
+			self.action("sell", self.list[self.sel].object, self.list[self.sel].item)
+			self:updateStore()
+		end
 	end
 end
 
@@ -74,33 +89,20 @@ function _M:generateList()
 end
 
 function _M:drawDialog(s)
-	-- Description part
-	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
+	h = self.ih * 0.80 + 4
+	if self.list[self.sel] then
+		lines = self.desc(self.list == self.store_list and "buy" or "sell", self.list[self.sel].object):splitLines(self.iw - 10, self.font)
+	else
+		lines = {}
+	end
 
-	local help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select an object; #00FF00#enter#FFFFFF# to use.
-Mouse: #00FF00#Left click#FFFFFF# to use.
-]]
-	local talentshelp = help:splitLines(self.iw / 2 - 10, self.font)
+	self:drawWBorder(s, 3, self.ih * 0.80, self.iw - 6)
+	for i = 1, #lines do
+		s:drawColorString(self.font, lines[i], 5, 2 + h)
+		h = h + self.font:lineSkip()
+	end
 
---	local lines = {}
---	local h = 2
---	for i = 1, #talentshelp do
---		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)
---		h = h + self.font:lineSkip()
---	end
-
---	h = h + self.font:lineSkip()
---	if self.store_list[self.store_sel] then
---		lines = self.store_list[self.store_sel].object:getDesc():splitLines(self.iw / 2 - 10, self.font)
---	else
---		lines = {}
---	end
---	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
---	for i = 1, #lines do
---		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + h)
---		h = h + self.font:lineSkip()
---	end
-
-	self:drawSelectionList(s, 2, 5, self.font_h, self.store_list, self.sel, "name", self.scroll, self.max)
-	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.actor_list, self.sel, "name", self.scroll, self.max)
+	self:drawSelectionList(s, 2, 5, self.font_h, self.store_list, self.list == self.store_list and self.sel or -1, "name", self.scroll, self.max)
+	self:drawHBorder(s, self.iw / 2, 2, self.ih * 0.80 - 4)
+	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.actor_list, self.list == self.actor_list and self.sel or -1, "name", self.scroll, self.max)
 end
