@@ -23,6 +23,9 @@ static int map_new(lua_State *L)
 	map_type *map = (map_type*)lua_newuserdata(L, sizeof(map_type));
 	auxiliar_setclass(L, "core{map}", -1);
 
+	map->obscure_r = map->obscure_g = map->obscure_b = 0.6f;
+	map->obscure_a = 1;
+
 	map->multidisplay = multidisplay;
 	map->w = w;
 	map->h = h;
@@ -95,6 +98,20 @@ static int map_free(lua_State *L)
 
 	lua_pushnumber(L, 1);
 	return 1;
+}
+
+static int map_set_obscure(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	float r = luaL_checknumber(L, 2);
+	float g = luaL_checknumber(L, 3);
+	float b = luaL_checknumber(L, 4);
+	float a = luaL_checknumber(L, 5);
+	map->obscure_r = r;
+	map->obscure_g = g;
+	map->obscure_b = b;
+	map->obscure_a = a;
+	return 0;
 }
 
 static int map_set_grid(lua_State *L)
@@ -306,7 +323,7 @@ static int map_to_screen(lua_State *L)
 				}
 				else
 				{
-					glColor4f(1, 1, 1, 0.3f);
+					glColor4f(map->obscure_r, map->obscure_g, map->obscure_b, map->obscure_a);
 					if (map->grids_terrain[i][j])
 					{
 						glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j]);
@@ -337,6 +354,7 @@ static const struct luaL_reg map_reg[] =
 {
 	{"__gc", map_free},
 	{"close", map_free},
+	{"setObscure", map_set_obscure},
 	{"setGrid", map_set_grid},
 	{"cleanSeen", map_clean_seen},
 	{"cleanRemember", map_clean_remember},

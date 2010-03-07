@@ -49,9 +49,13 @@ end
 -- @param o the object
 -- @return a string (possibly multiline) describing the object
 function _M:descObject(who, what, o)
-	local desc = ([[Price: %0.2f gold (You have %0.2f gold)
-
-]]):format(o:getPrice(), who.money)
-	desc = desc .. o:getDesc()
-	return desc
+	if what == "buy" then
+		local desc = ("Buy for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice(), who.money)
+		desc = desc .. o:getDesc()
+		return desc
+	else
+		local desc = ("Sell for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice() / 10, who.money)
+		desc = desc .. o:getDesc()
+		return desc
+	end
 end

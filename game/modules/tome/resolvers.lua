@@ -6,7 +6,7 @@ end
 function resolvers.calc.equip(t, e)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
-		print("Equipment resolver", filter.type, filter.subtype)
+		print("Equipment resolver", e.name, filter.type, filter.subtype)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter)
@@ -49,7 +49,7 @@ end
 function resolvers.calc.inventory(t, e)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
-		print("Inventory resolver", filter.type, filter.subtype)
+		print("Inventory resolver", e.name, filter.type, filter.subtype)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter)
@@ -81,7 +81,7 @@ function resolvers.calc.drops(t, e)
 	-- Iterate of object requests, try to create them and drops them
 	for i = 1, (t.nb or 1) do
 		local filter = t[rng.range(1, #t)]
-		print("Drops resolver", filter.type, filter.subtype, filter.defined)
+		print("Drops resolver", e.name, filter.type, filter.subtype, filter.defined)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter)

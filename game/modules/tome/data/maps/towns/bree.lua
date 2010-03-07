@@ -56,7 +56,7 @@ return {
 [[<OO  ,-T-OssOOOO---OOOOOOOOO--OOOO--.-T-.-sss--,ssss,-ssss---,---..--T^^     ]],
 [[  OOOOOOOOSt.---------ssss-OOOO--OOOO---.-StS--,#0##,-ssss---,---.---^^     ^]],
 [[   ,,-T--.ss.-sssss---ssss,---------OOOO.-sss---,,,,,-####--,---..-T^^   ^ ^ ]],
-[[   ,,-T--.##.-SStSS---####,------------OO-#>#-ssssss-,,,---,----.--T^^   ^   ]],
+[[   ,,-T--.##.-SStSS---####,------------OO-###-ssssss-,,,---,----.--T^^   ^   ]],
 [[   ,,-TT-....-sssss--,,,,,,-------------OO-,--SSSSSt-ss-,-,---...-T^^  ^ ^   ]],
 [[   ,,--TT---..#2###-,sssss,-SSSSSSSS-----OO,--ssssss-tS--,.....---^^ ^^     ^]],
 [[    ,,--T----..,,,,,-StSSS,-ssssssss------OOO-#1##a#-ss....-----T^^        ^^]],

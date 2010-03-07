@@ -165,7 +165,7 @@ local function spotHostiles(self)
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
 	core.fov.calc_circle(self.x, self.y, 20, game.level.map.opaque, function(map, x, y)
 		local actor = map(x, y, map.ACTOR)
-		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) then seen = true end
+		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then seen = true end
 	end, game.level.map)
 	return seen
 end
@@ -225,7 +225,7 @@ end
 function _M:playerDrop()
 	local inven = self:getInven(self.INVEN_INVEN)
 	self:showInventory("Drop object", inven, nil, function(o, item)
-		self:dropFloor(inven, item)
+		self:dropFloor(inven, item, true, true)
 		self:sortInven()
 		self:useEnergy()
 	end)

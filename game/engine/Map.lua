@@ -19,6 +19,8 @@ OBJECT = 1000
 --- The order of display for grid seen
 searchOrder = { TERRAIN, TRAP, OBJECT, ACTOR }
 
+obscure = { 0.6, 0.6, 0.6, 1 }
+
 --- Sets the viewport size
 -- Static
 -- @param x screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
@@ -36,6 +38,14 @@ function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidis
 	self.tile_w, self.tile_h = tile_w, tile_h
 	self.fontname, self.fontsize = fontname, fontsize
 	self:resetTiles()
+end
+
+--- Defines the "obscure" factor of unseen map
+-- By default it is 0.6, 0.6, 0.6, 1
+function _M:setObscure(r, g, b, a)
+	self.obscure = {r, g, b, a}
+	-- If we are used on a real map, set it localy
+	if self._map then self._map:setObscure(unpack(self.obscure)) end
 end
 
 --- Create the tile repositories
@@ -93,6 +103,7 @@ function _M:loaded()
 	self.particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
 
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
+	self._map:setObscure(unpack(self.obscure))
 
 	local mapseen = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end

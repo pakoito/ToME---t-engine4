@@ -137,8 +137,8 @@ end
 -- @param inven the inventory to drop from
 -- @param item the item id to drop
 -- @return the object removed or nil if no item existed
-function _M:dropFloor(inven, item, vocal)
-	local o = self:removeObject(inven, item)
+function _M:dropFloor(inven, item, vocal, all)
+	local o = self:removeObject(inven, item, all)
 	if not o then
 		if vocal then game.logSeen(self, "There is nothing to drop.") end
 		return

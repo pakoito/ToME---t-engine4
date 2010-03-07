@@ -10,15 +10,17 @@ function _M:init(actor)
 
 	self:generateList()
 
-	self.sel = 1
 	self.scroll = 1
 	self.max = math.floor((self.ih - 5) / self.font_h) - 1
 
 	self:keyCommands({
 		__TEXTINPUT = function(c)
-			if c:find("^[a-z]$") then
-				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
-				self:use()
+			if c:find("^[a-zA-Z]$") then
+				local sel = self.keybind[c]
+				if sel then
+					self.sel = sel
+					self:use()
+				end
 			end
 		end,
 	},{
@@ -87,25 +89,43 @@ function _M:use()
 	self.actor:useTalent(self.list[self.sel].talent)
 end
 
+function _M:makeKey(letter)
+	if letter >= 26 then
+		return string.char(string.byte('A') + letter - 26)
+	else
+		return string.char(string.byte('a') + letter)
+	end
+end
+
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
-	local i = 0
-	for tid, _ in pairs(self.actor.talents) do
-		local t = self.actor:getTalentFromId(tid)
-		if t and t.mode ~= "passive" then
-			local typename = "talent"
-			if t.type[1]:find("^spell/") then typename = "spell" end
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..t.name.." ("..typename..")", talent=t.id, type=t.type }
-			i = i + 1
+	local keybind = {}
+	local letter = 0
+	for i, tt in ipairs(self.actor.talents_types_def) do
+		local cat = tt.type:gsub("/.*", "")
+		local where = #list
+		local added = false
+
+		-- Find all talents of this school
+		for j, t in ipairs(tt.talents) do
+			if self.actor:knowTalent(t.id) and t.mode ~= "passive" then
+				local typename = "talent"
+				if t.type[1]:find("^spell/") then typename = "spell" end
+				list[#list+1] = { name=self:makeKey(letter)..")    "..t.name.." ("..typename..")", talent=t.id }
+				keybind[self:makeKey(letter)] = #list + 1
+				if not self.sel then self.sel = #list + 1 end
+				letter = letter + 1
+				added = true
+			end
+		end
+
+		if added then
+			table.insert(list, where+1, { name=cat:capitalize().." / "..tt.name:capitalize(), type=tt.type, color={0x80, 0x80, 0x80} })
 		end
 	end
-	table.sort(list, function(a, b)
-		if a.type[1] == b.type[1] then return a.type[2] < b.type[2]
-		else return a.type[1] < b.type[1]
-		end
-	end)
 	self.list = list
+	self.keybind = keybind
 end
 
 function _M:drawDialog(s)
@@ -126,8 +146,13 @@ Mouse: #00FF00#Left click#FFFFFF# to use.
 	local talentshelp = help:splitLines(self.iw / 2 - 10, self.font)
 
 	local lines = {}
-	local t = self.actor:getTalentFromId(self.list[self.sel].talent)
-	lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)
+	if self.list[self.sel].type then
+		lines = self.actor:getTalentTypeFrom(self.list[self.sel].type).description:splitLines(self.iw / 2 - 10, self.font)
+	else
+		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
+		lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)
+	end
+
 	local h = 2
 	for i = 1, #talentshelp do
 		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)

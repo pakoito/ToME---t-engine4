@@ -92,6 +92,7 @@ function _M:checkFilter(e, filter)
 	if e.unique and game.uniques[e.unique] then print("refused unique", e.name, e.unique) return false end
 
 	if not filter then return true end
+	print("Filtering", filter.type, filter.subtype)
 
 	if filter.type and filter.type ~= e.type then return false end
 	if filter.subtype and filter.subtype ~= e.subtype then return false end

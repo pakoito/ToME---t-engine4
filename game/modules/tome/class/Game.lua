@@ -114,7 +114,7 @@ function _M:onResolutionChange()
 end
 
 function _M:setupDisplayMode()
-	self.gfxmode = self.gfxmode or config.settings.tome.gfxmode or 1
+	self.gfxmode = self.gfxmode or (config.settings.tome and config.settings.tome.gfxmode) or 1
 	if self.gfxmode == 1 then
 		print("[DISPLAY MODE] 32x32")
 		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)

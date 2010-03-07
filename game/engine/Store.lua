@@ -89,7 +89,7 @@ end
 function _M:doSell(who, o, item, nb)
 	local max_nb = o:getNumber()
 	nb = math.min(nb, max_nb)
-	nb = self:onSell(who, o, item)
+	nb = self:onSell(who, o, item, nb)
 	if nb then
 		local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
 		for i = 1, nb do

@@ -14,6 +14,9 @@ typedef struct {
 
 	bool multidisplay;
 
+	// Map parameters
+	float obscure_r, obscure_g, obscure_b, obscure_a;
+
 	// Map size
 	int w;
 	int h;

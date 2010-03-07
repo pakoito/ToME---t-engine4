@@ -68,7 +68,7 @@ newEntity{
 	type = "ammo", subtype="shot",
 	add_name = " (#COMBAT#)",
 	display = "{", color=colors.UMBER,
-	encumber = 3,
+	encumber = 0.03,
 	rarity = 3,
 	combat = { talented = "sling", damrange = 1.2},
 	archery_ammo = "sling",
