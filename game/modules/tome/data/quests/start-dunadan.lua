@@ -19,7 +19,8 @@ end
 on_status_change = function(self, who, status, sub)
 	if sub then
 		if self:isCompleted("amon-sul") and self:isCompleted("trollshaws") then
-			who:setQuestStatus(self.id, engine.Quest.FINISHED)
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+			who:grantQuest("starter-zones")
 		end
 	end
 end

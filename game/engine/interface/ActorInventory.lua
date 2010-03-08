@@ -90,12 +90,13 @@ end
 function _M:pickupFloor(i, vocal)
 	local o = game.level.map:getObject(self.x, self.y, i)
 	if o then
-		if not o:check("on_prepickup", self, i) and self:addObject(self.INVEN_INVEN, o) then
+		local prepickup = o:check("on_prepickup", self, i)
+		if not prepickup and self:addObject(self.INVEN_INVEN, o) then
 			game.level.map:removeObject(self.x, self.y, i)
 			o:check("on_pickup", self)
 
 			if vocal then game.logSeen(self, "%s picks up: %s.", self.name:capitalize(), o:getName()) end
-		else
+		elseif not prepickup then
 			if vocal then game.logSeen(self, "%s has no room for: %s.", self.name:capitalize(), o:getName()) end
 		end
 	else

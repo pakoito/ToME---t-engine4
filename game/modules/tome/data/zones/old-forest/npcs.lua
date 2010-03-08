@@ -41,4 +41,8 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+
+	on_die = function(self, who)
+		who:setQuestStatus("starter-zones", engine.Quest.COMPLETED, "old-forest")
+	end,
 }

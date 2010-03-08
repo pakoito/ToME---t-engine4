@@ -302,17 +302,17 @@ end
 
 ------ Quest Events
 function _M:on_quest_grant(quest)
-	game.logPlayer(self, "#LIGHT_GREEN#Accepted quest '%s'!", quest.name)
+	game.logPlayer(self, "#LIGHT_GREEN#Accepted quest '%s'! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
 end
 
 function _M:on_quest_status(quest, status, sub)
 	if sub then
-		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' status updated!", quest.name)
+		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' status updated! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
 	elseif status == engine.Quest.COMPLETED then
-		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' completed!", quest.name)
+		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' completed! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
 	elseif status == engine.Quest.DONE then
-		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' is done!", quest.name)
+		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' is done! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
 	elseif status == engine.Quest.FAILED then
-		game.logPlayer(self, "#LIGHT_RED#Quest '%s' is failed!", quest.name)
+		game.logPlayer(self, "#LIGHT_RED#Quest '%s' is failed! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
 	end
 end

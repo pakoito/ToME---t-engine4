@@ -61,4 +61,8 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+
+	on_die = function(self, who)
+		who:setQuestStatus("starter-zones", engine.Quest.COMPLETED, "sandworm-lair")
+	end,
 }
