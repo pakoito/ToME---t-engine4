@@ -31,6 +31,7 @@ newBirthDescriptor{
 		default_wilderness = {"wilderness/main", 39, 19},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
+		starting_intro = "dwarf",
 		life_rating=12,
 	},
 	experience = 1.1,

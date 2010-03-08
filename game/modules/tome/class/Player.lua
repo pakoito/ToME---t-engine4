@@ -289,12 +289,12 @@ function _M:playerUseItem(object, item)
 	)
 end
 
-function _M:playerLevelup()
+function _M:playerLevelup(on_finish)
 	if self.unused_stats > 0 then
-		local ds = LevelupStatsDialog.new(self)
+		local ds = LevelupStatsDialog.new(self, on_finish)
 		game:registerDialog(ds)
 	else
-		local dt = LevelupTalentsDialog.new(self)
+		local dt = LevelupTalentsDialog.new(self, on_finish)
 		game:registerDialog(dt)
 	end
 end

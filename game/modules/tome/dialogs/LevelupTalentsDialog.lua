@@ -3,7 +3,7 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(actor)
+function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor_dup = actor:clone()
 	engine.Dialog.init(self, "Talents Levelup: "..actor.name, 800, 600)
@@ -20,7 +20,7 @@ function _M:init(actor)
 		MOVE_LEFT = function() self:learn(false) self.changed = true end,
 		MOVE_RIGHT = function() self:learn(true) self.changed = true end,
 		ACCEPT = "EXIT",
-		EXIT = function() game:unregisterDialog(self) end,
+		EXIT = function() game:unregisterDialog(self) if on_finish then on_finish() end end,
 	})
 	self:mouseZones{
 		{ x=2, y=45, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)

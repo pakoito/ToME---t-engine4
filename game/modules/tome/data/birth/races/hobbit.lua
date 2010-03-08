@@ -5,29 +5,16 @@ newBirthDescriptor{
 	type = "race",
 	name = "Hobbit",
 	desc = {
-		"Hobbits, or halflings, are very good at ranged combat ",
-		"(especially with slings), throwing, and have good saving ",
-		"throws. They also are very good at searching, disarming, ",
-		"perception and stealth; so they make excellent rogues, but ",
-		"prefer to be called burglars.  They are much weaker than ",
-		"humans, thus not as good at melee fighting, and also not ",
-		"capable of carrying as many objects.  Halflings have fair ",
-		"infra-vision, so they can detect warm creatures at a ",
-		"distance. Hobbits have their dexterity sustained and in time ",
-		"they learn to cook a delicious meal from available ",
-		"ingredients.  Their sturdy constitutions also allow them to ",
-		"resist the insidious poison of the ring-wraiths.  Their feet ",
-		"are cover from the ankle down in brown hairy fur, preventing ",
-		"them from wearing boots and shoes. ",
+		"Hobbits, or halflings, are a race of very short stature, rarely exceeded four feet in height.",
+		"Most of them are happy to live a quiet life farming and gardening, but a few get an adventurous heart.",
+		"Hobbits are agile, lucky and resilient but lack in strength.",
 	},
 	descriptor_choices =
 	{
 		subrace =
 		{
 			__ALL__ = "never",
-			Harfoot = "allow",
-			Stoor = "allow",
-			Fallohide = "allow",
+			Hobbit = "allow",
 		},
 	},
 	stats = { str=-3, dex=3, con=1, cun=3, lck=5, },
@@ -41,6 +28,7 @@ newBirthDescriptor{
 		default_wilderness = {"wilderness/main", 39, 19},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
+		starting_intro = "hobbit",
 	},
 }
 
@@ -50,27 +38,10 @@ newBirthDescriptor{
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Harfoot",
+	name = "Hobbit",
 	desc = {
-		"An old but quiet race related to humans.",
-		"They are small and quite weak but good at many things.",
-	},
-}
-newBirthDescriptor
-{
-	type = "subrace",
-	name = "Fallohide",
-	desc = {
-		"An old but quiet race related to humans.",
-		"They are small and quite weak but good at many things.",
-	},
-}
-newBirthDescriptor
-{
-	type = "subrace",
-	name = "Stoor",
-	desc = {
-		"An old but quiet race related to humans.",
-		"They are small and quite weak but good at many things.",
+		"Hobbits, or halflings, are a race of very short stature, rarely exceeded four feet in height.",
+		"Most of them are happy to live a quiet life farming and gardening, but a few get an adventurous heart.",
+		"Hobbits are agile, lucky and resilient but lack in strength.",
 	},
 }

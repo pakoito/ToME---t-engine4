@@ -4,7 +4,7 @@ local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(actor)
+function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor_dup = actor:clone()
 	engine.Dialog.init(self, "Stats Levelup: "..actor.name, 500, 300)
@@ -22,7 +22,7 @@ function _M:init(actor)
 
 			-- if talents to spend, do it now
 			if self.actor.unused_talents > 0 or self.actor.unused_talents_types > 0 then
-				local dt = LevelupTalentsDialog.new(self.actor)
+				local dt = LevelupTalentsDialog.new(self.actor, on_finish)
 				game:registerDialog(dt)
 			end
 		end,

@@ -12,7 +12,7 @@ newBirthDescriptor{
 		subrace =
 		{
 			["Bree-man"] = "allow",
-			Dunadan = "allow",
+			["Dúnadan"] = "allow",
 			Rohirrim = "allow",
 			Beorning = "allow",
 			__ALL__ = "never",
@@ -39,16 +39,16 @@ newBirthDescriptor
 		default_wilderness = {"wilderness/main", 39, 19},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
+		starting_intro = "bree-man",
 	},
 }
 
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Dunadan",
+	name = "Dúnadan",
 	desc = {
-		"The greatest of the Edain, humans in all respects but",
-		"stronger, smarter and wiser.",
+		"The greatest of the Edain, humans in all respects but stronger, smarter and wiser.",
 		"They posses the Gift of Kings which allows them to regenerate their wounds once in a while.",
 	},
 	stats = { str=1, cun=1, dex=1, wil=1 },
@@ -61,6 +61,7 @@ newBirthDescriptor
 		default_wilderness = {"wilderness/main", 39, 19},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
+		starting_intro = "dunadan",
 	},
 }
 --[[
