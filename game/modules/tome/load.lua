@@ -14,9 +14,6 @@ local Store = require "mod.class.Store"
 -- Usefull keybinds
 KeyBind:load("move,hotkeys,inventory,actions,debug")
 
--- Some default colors
-dofile("/mod/colors.lua")
-
 -- Additional entities resolvers
 dofile("/mod/resolvers.lua")
 

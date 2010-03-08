@@ -4,6 +4,8 @@ load("/data/general/npcs/canine.lua")
 load("/data/general/npcs/troll.lua")
 load("/data/general/npcs/snake.lua")
 load("/data/general/npcs/plant.lua")
+load("/data/general/npcs/swarm.lua")
+load("/data/general/npcs/bear.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -30,4 +32,8 @@ newEntity{ define_as = "TROLL_BILL",
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+
+	on_die = function(self, who)
+		who:setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "trollshaws")
+	end,
 }

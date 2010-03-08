@@ -80,7 +80,6 @@ function _M:run()
 end
 
 function _M:newGame()
-	self.zone = Zone.new("wilderness")
 	self.player = Player.new{name=self.player_name}
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
@@ -88,10 +87,11 @@ function _M:newGame()
 	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[2], self.player.default_wilderness[3]
 		self.player.current_wilderness = self.player.default_wilderness[1]
-		self:changeLevel(1)
+		self:changeLevel(1, self.player.starting_zone)
 		self.player:resolve()
 		self.player:resolve(nil, true)
 		self.player:playerLevelup()
+		self.player:grantQuest(self.player.starting_quest)
 	end)
 	self:registerDialog(birth)
 end
@@ -472,6 +472,10 @@ function _M:setupCommands()
 
 		SAVE_GAME = function()
 			self:saveGame()
+		end,
+
+		SHOW_QUESTS = function()
+			self:registerDialog(require("engine.dialogs.ShowQuests").new(self.player))
 		end,
 
 		-- Show time

@@ -49,6 +49,11 @@ function _M:takeHit(value, src)
 	end
 end
 
+--- Called when died
+function _M:die(src)
+	self:check("on_die", src)
+end
+
 --- Actor is being attacked!
 -- Module authors should rewrite it to handle combat, dialog, ...
 -- @param target the actor attacking us

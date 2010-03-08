@@ -298,3 +298,21 @@ function _M:playerLevelup()
 		game:registerDialog(dt)
 	end
 end
+
+
+------ Quest Events
+function _M:on_quest_grant(quest)
+	game.logPlayer(self, "#LIGHT_GREEN#Accepted quest '%s'!", quest.name)
+end
+
+function _M:on_quest_status(quest, status, sub)
+	if sub then
+		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' status updated!", quest.name)
+	elseif status == engine.Quest.COMPLETED then
+		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' completed!", quest.name)
+	elseif status == engine.Quest.DONE then
+		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' is done!", quest.name)
+	elseif status == engine.Quest.FAILED then
+		game.logPlayer(self, "#LIGHT_RED#Quest '%s' is failed!", quest.name)
+	end
+end

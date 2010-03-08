@@ -8,6 +8,7 @@ require "engine.interface.ActorLevel"
 require "engine.interface.ActorStats"
 require "engine.interface.ActorTalents"
 require "engine.interface.ActorResource"
+require "engine.interface.ActorQuest"
 require "engine.interface.BloodyDeath"
 require "mod.class.interface.Combat"
 local Map = require "engine.Map"
@@ -22,6 +23,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorStats,
 	engine.interface.ActorTalents,
 	engine.interface.ActorResource,
+	engine.interface.ActorQuest,
 	engine.interface.BloodyDeath,
 	mod.class.interface.Combat
 ))
@@ -258,6 +260,8 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:die(src)
+	engine.interface.ActorLife.die(self, src)
+
 	-- Gives the killer some exp for the kill
 	if src then
 		src:gainExp(self:worthExp(src))

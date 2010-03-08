@@ -19,6 +19,13 @@ defineAction{
 }
 
 defineAction{
+	default = { "sym:113:true:false:false:false" },
+	type = "SHOW_QUESTS",
+	group = "actions",
+	name = "Show quests",
+}
+
+defineAction{
 	default = { "uni:R" },
 	type = "REST",
 	group = "actions",

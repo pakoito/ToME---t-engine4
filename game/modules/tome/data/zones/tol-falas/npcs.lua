@@ -17,8 +17,8 @@ newEntity{ define_as = "THE_MASTER",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="greatsword"},
-		{type="armor", subtype="heavy"},
+		{type="weapon", subtype="greatsword", ego_chance=100},
+		{type="armor", subtype="heavy", ego_chance=50},
 		{type="jewelry", subtype="amulet", defined="AMULET_DREAD"},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },

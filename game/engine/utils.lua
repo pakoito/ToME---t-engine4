@@ -93,6 +93,11 @@ function string.splitLine(str, max_width, font)
 			local color_w = font:size(color)
 			w = w - color_w
 		end
+		local _, _, color = v:find("(#[A-Z_]+#)")
+		if color then
+			local color_w = font:size(color)
+			w = w - color_w
+		end
 
 		if cur_size + space_w + w < max_width then
 			cur_line = cur_line..(cur_size==0 and "" or " ")..v
@@ -181,20 +186,24 @@ end
 
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
-	local list = str:split("#%x%x%x%x%x%x#", true)
+	local list = str:split("#[a-zA-Z0-9_]+#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
 	for i, v in ipairs(list) do
 		local _, _, nr, ng, nb = v:find("^#(%x%x)(%x%x)(%x%x)#")
+		local _, _, col = v:find("^#([A-Z_]+)#")
 		if nr and ng and nb then
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
+		elseif col then
+			r, g, b = colors[col].r, colors[col].g, colors[col].b
 		else
 			local w, h = font:size(v)
 			s:drawString(font, v, x, y, r, g, b)
 			x = x + w
 		end
 	end
+	return r, g, b
 end
 
 getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, dy, dw, dh, r, g, b)

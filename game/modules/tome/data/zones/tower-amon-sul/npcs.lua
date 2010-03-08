@@ -29,4 +29,8 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+
+	on_die = function(self, who)
+		who:setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
+	end,
 }

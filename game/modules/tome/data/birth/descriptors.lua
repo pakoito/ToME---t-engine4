@@ -34,6 +34,6 @@ load("/data/birth/sexes.lua")
 
 -- Classes
 load("/data/birth/warrior.lua")
-load("/data/birth/rogue.lua")
 load("/data/birth/archer.lua")
+load("/data/birth/rogue.lua")
 load("/data/birth/mage.lua")

@@ -175,8 +175,9 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 	end
 
 	local lines = self.list[self.sel].desc:splitLines(self.iw / 2 - 10, self.font)
+	local r, g, b
 	for i = 1, #lines do
-		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #birthhelp + 1) * self.font:lineSkip())
+		r, g, b = s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #birthhelp + 1) * self.font:lineSkip(), r, g, b)
 	end
 
 	-- Stats

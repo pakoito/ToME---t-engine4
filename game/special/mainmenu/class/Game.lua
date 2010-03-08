@@ -126,8 +126,9 @@ function _M:selectStepNew()
 
 	display_module.drawDialog = function(self, s)
 		local lines = game.mod_list[game.step.selected].description:splitLines(self.w - 8, self.font)
+		local r, g, b
 		for i = 1, #lines do
-			s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip())
+			r, g, b = s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
 		end
 	end
 	self:registerDialog(display_module)
@@ -175,8 +176,9 @@ function _M:selectStepLoad()
 
 	display_module.drawDialog = function(self, s)
 		local lines = list[game.step.selected].description:splitLines(self.w - 8, self.font)
+		local r, g, b
 		for i = 1, #lines do
-			s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip())
+			r, g, b = s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
 		end
 	end
 	self:registerDialog(display_module)

@@ -28,7 +28,9 @@ newBirthDescriptor{
 	},
 	copy = {
 		type = "humanoid", subtype="dwarf",
-		default_wilderness = {"wilderness/main", 41, 18},
+		default_wilderness = {"wilderness/main", 39, 19},
+		starting_zone = "tower-amon-sul",
+		starting_quest = "start-dunadan",
 		life_rating=12,
 	},
 	experience = 1.1,
