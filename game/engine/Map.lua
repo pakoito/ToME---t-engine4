@@ -470,6 +470,33 @@ function _M:isBound(x, y)
 	return true
 end
 
+--- Import a map into the current one
+-- @param map the map to import
+-- @param dx coordinate where to import it in the current map
+-- @param dy coordinate where to import it in the current map
+-- @param sx coordinate where to start importing the map, defaults to 0
+-- @param sy coordinate where to start importing the map, defaults to 0
+-- @param sw size of the imported map to get, defaults to map size
+-- @param sh size of the imported map to get, defaults to map size
+function _M:import(map, dx, dy, sx, sy, sw, sh)
+	sx = sx or 0
+	sy = sy or 0
+	sw = sw or map.w
+	sh = sh or map.h
+
+	for i = sx, sx + sw - 1 do for j = sy, sy + sh - 1 do
+		local x, y = dx + i, dy + j
+		self.map[x + y * self.w] = map.map[i + j * map.w]
+
+		self.remembers(x, y, map.remembers(i, j))
+		self.seens(x, y, map.seens(i, j))
+		self.lites(x, y, map.lites(i, j))
+
+		self:updateMap(x, y)
+	end end
+	self.changed = true
+end
+
 --- Adds a zone (temporary) effect
 -- @param src the source actor
 -- @param x the epicenter coords

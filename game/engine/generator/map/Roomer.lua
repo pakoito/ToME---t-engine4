@@ -69,10 +69,10 @@ function _M:resolve(c)
 end
 
 --- Make up a room
-function _M:roomAlloc(room, id)
+function _M:roomAlloc(room, id, lev, old_lev)
 	if type(room) == 'function' then
 		print("room generator", room, "is making a room")
-		room = room(self, id)
+		room = room(self, id, lev, old_lev)
 	end
 	print("alloc", room.name)
 
@@ -183,7 +183,9 @@ function _M:tunnel(x1, y1, x2, y2, id)
 		end
 		print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
 
-		if self.room_map[nx][ny].room then
+		if self.room_map[nx][ny].special then
+			print(feat, "refuse special")
+		elseif self.room_map[nx][ny].room then
 			tun[#tun+1] = {nx,ny}
 			x1, y1 = nx, ny
 			print(feat, "accept room")
@@ -313,7 +315,7 @@ function _M:generate(lev, old_lev)
 	local nb_room = self.data.nb_rooms or 10
 	local rooms = {}
 	while nb_room > 0 do
-		local r = self:roomAlloc(self.rooms[rng.range(1, #self.rooms)], #rooms+1)
+		local r = self:roomAlloc(self.rooms[rng.range(1, #self.rooms)], #rooms+1, lev, old_lev)
 		if r then rooms[#rooms+1] = r end
 		nb_room = nb_room - 1
 	end

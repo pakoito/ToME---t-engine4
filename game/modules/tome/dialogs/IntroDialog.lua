@@ -5,7 +5,7 @@ module(..., package.seeall, class.inherit(engine.Dialog))
 
 function _M:init(actor)
 	self.actor = actor
-	engine.Dialog.init(self, "Welcome to ToME "..actor.name, 500, 300)
+	engine.Dialog.init(self, "Welcome to ToME", 500, 300)
 
 	self:keyCommands(nil, {
 		ACCEPT = "EXIT",

@@ -365,6 +365,11 @@ function _M:setupCommands()
 	-- Activate profiler keybinds
 	self.key:setupProfiler()
 
+	self.key:addCommands{
+		[{"_d","ctrl"}] = function()
+			self:changeLevel(5, "tower-amon-sul")
+		end,
+	}
 	self.key:addBinds
 	{
 		-- Movements

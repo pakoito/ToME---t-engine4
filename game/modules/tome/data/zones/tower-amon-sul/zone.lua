@@ -4,9 +4,9 @@ return {
 	level_scheme = "player",
 	max_level = 5,
 	width = 50, height = 50,
---	all_remembered = true,
---	all_lited = true,
-	persistant = true,
+	all_remembered = true,
+	all_lited = true,
+--	persistant = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -23,7 +23,7 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
 			adjust_level = {-1, 2},
-			guardian = "SHADE_OF_ANGMAR",
+--			guardian = "SHADE_OF_ANGMAR", -- The gardian is set in the static map
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -40,6 +40,12 @@ return {
 		[1] = {
 			generator = { map = {
 				up = "UP_WILDERNESS",
+			}, },
+		},
+		[5] = {
+			generator = { map = {
+				class = "engine.generator.map.Static",
+				map = "zones/tower-amon-sul-last",
 			}, },
 		},
 	},
