@@ -3,8 +3,9 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(zone, map, grid_list, data)
-	engine.Generator.init(self, zone, map)
+function _M:init(zone, map, level, data)
+	engine.Generator.init(self, zone, map, level)
+	local grid_list = zone.grid_list
 	self.floor = grid_list[data.floor]
 	self.up = grid_list[data.up]
 end

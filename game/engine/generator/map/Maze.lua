@@ -4,8 +4,9 @@ require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, grid_list, data)
-	engine.Generator.init(self, zone, map)
+	engine.Generator.init(self, zone, map, level)
 	self.data = data
+	local grid_list = zone.grid_list
 	self.floor = grid_list[data.floor]
 	self.wall = grid_list[data.wall]
 	self.up = grid_list[data.up]

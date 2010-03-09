@@ -8,11 +8,10 @@ function _M:init(zone, map, level)
 	self.level = level
 	local data = level.data.generator.actor
 
-	-- Setup the entities list
-	level:setEntitiesList("actor", zone:computeRarities("actor", zone.npc_list, level, nil))
-
-	if data.adjust_level and game:getPlayer() then
+	if data.adjust_level then
 		self.adjust_level = {base=zone.base_level, min=data.adjust_level[1], max=data.adjust_level[2]}
+	else
+		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=0, 0}
 	end
 	self.filters = data.filters
 	self.nb_npc = data.nb_npc or {10, 20}

@@ -5,10 +5,10 @@ return function(gen, id)
 		for i = 1, self.w do
 			for j = 1, self.h do
 				if i == 1 or i == self.w or j == 1 or j == self.h then
-					gen.room_map[i-1+x][j-1+y].can_open = true
+					gen.map.room_map[i-1+x][j-1+y].can_open = true
 					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('#')])
 				else
-					gen.room_map[i-1+x][j-1+y].room = id
+					gen.map.room_map[i-1+x][j-1+y].room = id
 					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('.')])
 				end
 				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end

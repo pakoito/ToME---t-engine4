@@ -291,17 +291,22 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	if level_data.all_lited then map:liteAll(0, 0, map.w, map.h) end
 	if level_data.all_remembered then map:rememberAll(0, 0, map.w, map.h) end
 
+	-- Setup the entities list
+	local level = self.level_class.new(lev, map)
+	level:setEntitiesList("actor", self:computeRarities("actor", self.npc_list, level, nil))
+	level:setEntitiesList("object", self:computeRarities("object", self.object_list, level, nil))
+	level:setEntitiesList("trap", self:computeRarities("trap", self.trap_list, level, nil))
+
 	-- Generate the map
 	local generator = require(level_data.generator.map.class).new(
 		self,
 		map,
-		self.grid_list,
+		level,
 		level_data.generator.map
 	)
 	local ux, uy, dx, dy, spots = generator:generate(lev, old_lev)
 	spots = spots or {}
 
-	local level = self.level_class.new(lev, map)
 	level.ups = {{x=ux, y=uy}}
 	level.downs = {{x=dx, y=dy}}
 	level.spots = spots
@@ -312,7 +317,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	-- Setup the level in the game
 	game:setLevel(level)
 
-	-- Generate objects (before actors so that actors can use the probability list of objects to get equipments)
+	-- Generate objects
 	if level_data.generator.object then
 		local generator = require(level_data.generator.object.class).new(
 			self,
@@ -344,6 +349,9 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		)
 		generator:generate()
 	end
+
+	-- Delete the room_map, now useless
+	map.room_map = nil
 
 	return level
 end

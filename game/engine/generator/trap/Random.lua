@@ -8,9 +8,6 @@ function _M:init(zone, map, level)
 	self.level = level
 	local data = level.data.generator.trap
 
-	-- Setup the entities list
-	level:setEntitiesList("trap", zone:computeRarities("trap", zone.trap_list, level, nil))
-
 	self.filters = data.filters
 	self.nb_trap = data.nb_trap or {10, 20}
 	self.level_range = data.level_range or {level, level}

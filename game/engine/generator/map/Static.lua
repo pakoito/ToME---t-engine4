@@ -4,12 +4,11 @@ local Grid = require "engine.Grid"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(zone, map, grid_list, data)
-	engine.Generator.init(self, zone, map)
-	self.grid_list = grid_list
+function _M:init(zone, map, level, data)
+	engine.Generator.init(self, zone, map, level)
+	self.grid_list = zone.grid_list
 	self.subgen = {}
 	self.data = data
-
 	self:loadMap(data.map)
 end
 
@@ -76,7 +75,23 @@ end
 
 function _M:generate(lev, old_lev)
 	for i = 1, self.gen_map.w do for j = 1, self.gen_map.h do
-		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", self.gen_map[i][j]))
+		local c = self.gen_map[i][j]
+		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", c))
+
+		local actor = self.tiles[c].actor
+
+		if actor then
+			local m = self.zone:makeEntityByName(self.level, "actor", f)
+			if m then
+				m:move(x, y, true)
+				self.level:addEntity(m)
+				m:added()
+				if self.adjust_level then
+					local newlevel = self.adjust_level.base + rng.avg(self.adjust_level.min, self.adjust_level.max)
+					m:forceLevelup(newlevel)
+				end
+			end
+		end
 	end end
 
 	for i = 1, #self.subgen do
@@ -88,12 +103,13 @@ function _M:generate(lev, old_lev)
 		local generator = require(g.generator).new(
 			self.zone,
 			map,
-			self.grid_list,
+			self.level,
 			data
 		)
 		generator:generate(lev, old_lev)
 
 		self.map:import(map, g.x, g.y)
+		map:close()
 	end
 
 	return self.gen_map.startx, self.gen_map.starty, self.gen_map.startx, self.gen_map.starty

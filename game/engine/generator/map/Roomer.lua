@@ -4,25 +4,17 @@ require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, grid_list, data)
-	engine.Generator.init(self, zone, map)
+	engine.Generator.init(self, zone, map, level)
 	self.data = data
 	self.data.tunnel_change = self.data.tunnel_change or 30
 	self.data.tunnel_random = self.data.tunnel_random or 10
 	self.data.door_chance = self.data.door_chance or 50
 	self.data.lite_room_chance = self.data.lite_room_chance or 25
-	self.grid_list = grid_list
+	self.grid_list = zone.grid_list
 
 	self.rooms = {}
 	for i, file in ipairs(data.rooms) do
 		table.insert(self.rooms, self:loadRoom(file))
-	end
-
-	self.room_map = {}
-	for i = 0, self.map.w - 1 do
-		self.room_map[i] = {}
-		for j = 0, self.map.h - 1 do
-			self.room_map[i][j] = {}
-		end
 	end
 end
 
@@ -84,7 +76,7 @@ function _M:roomAlloc(room, id, lev, old_lev)
 		-- Do we stomp ?
 		for i = 1, room.w do
 			for j = 1, room.h do
-				if self.room_map[i-1+x][j-1+y].room then ok = false break end
+				if self.map.room_map[i-1+x][j-1+y].room then ok = false break end
 			end
 			if not ok then break end
 		end
@@ -98,11 +90,11 @@ function _M:roomAlloc(room, id, lev, old_lev)
 			else
 				for i = 1, room.w do
 					for j = 1, room.h do
-						self.room_map[i-1+x][j-1+y].room = id
+						self.map.room_map[i-1+x][j-1+y].room = id
 						local c = room[i][j]
 						if c == '!' then
-							self.room_map[i-1+x][j-1+y].room = nil
-							self.room_map[i-1+x][j-1+y].can_open = true
+							self.map.room_map[i-1+x][j-1+y].room = nil
+							self.map.room_map[i-1+x][j-1+y].can_open = true
 							self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve('#')])
 						else
 							self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve(c)])
@@ -150,9 +142,9 @@ function _M:markTunnel(x, y, xdir, ydir, id)
 	local dir = coord_to_dir[xdir][ydir]
 	for i, d in ipairs(mark_dirs[dir]) do
 		local xd, yd = dir_to_coord[d][1], dir_to_coord[d][2]
-		if self.map:isBound(x+xd, y+yd) and not self.room_map[x+xd][y+yd].tunnel then self.room_map[x+xd][y+yd].tunnel = id print("mark tunnel", x+xd, y+yd , id) end
+		if self.map:isBound(x+xd, y+yd) and not self.map.room_map[x+xd][y+yd].tunnel then self.map.room_map[x+xd][y+yd].tunnel = id print("mark tunnel", x+xd, y+yd , id) end
 	end
-	if not self.room_map[x][y].tunnel then self.room_map[x][y].tunnel = id print("mark tunnel", x, y , id) end
+	if not self.map.room_map[x][y].tunnel then self.map.room_map[x][y].tunnel = id print("mark tunnel", x, y , id) end
 end
 
 --- Tunnel from x1,y1 to x2,y2
@@ -183,17 +175,17 @@ function _M:tunnel(x1, y1, x2, y2, id)
 		end
 		print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
 
-		if self.room_map[nx][ny].special then
+		if self.map.room_map[nx][ny].special then
 			print(feat, "refuse special")
-		elseif self.room_map[nx][ny].room then
+		elseif self.map.room_map[nx][ny].room then
 			tun[#tun+1] = {nx,ny}
 			x1, y1 = nx, ny
 			print(feat, "accept room")
-		elseif self.room_map[nx][ny].can_open ~= nil then
-			if self.room_map[nx][ny].can_open then
+		elseif self.map.room_map[nx][ny].can_open ~= nil then
+			if self.map.room_map[nx][ny].can_open then
 				print(feat, "tunnel crossing can_open", nx,ny)
-				for i = -1, 1 do for j = -1, 1 do if self.map:isBound(nx + i, ny + j) and self.room_map[nx + i][ny + j].can_open then
---					self.room_map[nx + i][ny + j].can_open = false
+				for i = -1, 1 do for j = -1, 1 do if self.map:isBound(nx + i, ny + j) and self.map.room_map[nx + i][ny + j].can_open then
+--					self.map.room_map[nx + i][ny + j].can_open = false
 --					print(feat, "forbiding crossing at ", nx+i,ny+j)
 				end end end
 				tun[#tun+1] = {nx,ny,true}
@@ -202,13 +194,13 @@ function _M:tunnel(x1, y1, x2, y2, id)
 			else
 				print(feat, "reject can_open")
 			end
-		elseif self.room_map[nx][ny].tunnel then
-			if self.room_map[nx][ny].tunnel ~= id or no_move_tries >= 15 then
+		elseif self.map.room_map[nx][ny].tunnel then
+			if self.map.room_map[nx][ny].tunnel ~= id or no_move_tries >= 15 then
 				tun[#tun+1] = {nx,ny}
 				x1, y1 = nx, ny
-				print(feat, "accept tunnel", self.room_map[nx][ny].tunnel, id)
+				print(feat, "accept tunnel", self.map.room_map[nx][ny].tunnel, id)
 			else
-				print(feat, "reject tunnel", self.room_map[nx][ny].tunnel, id)
+				print(feat, "reject tunnel", self.map.room_map[nx][ny].tunnel, id)
 			end
 		else
 			tun[#tun+1] = {nx,ny}
@@ -245,7 +237,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 	if lev < self.zone.max_level or self.data.force_last_stair then
 		while true do
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
-			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.room_map[dx][dy].special then
+			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
 				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
 				break
 			end
@@ -256,7 +248,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 	local ux, uy
 	while true do
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
-		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.room_map[ux][uy].special then
+		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
 			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
 			break
 		end
@@ -277,7 +269,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 			elseif sides[2] == 2 then dx, dy = rng.range(1, self.map.w - 1), self.map.h - 1
 			end
 
-			if not self.room_map[dx][dy].special then
+			if not self.map.room_map[dx][dy].special then
 				local i = rng.range(1, #rooms)
 				self:tunnel(dx, dy, rooms[i].cx, rooms[i].cy, rooms[i].id)
 				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
@@ -295,7 +287,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 		elseif sides[1] == 2 then ux, uy = rng.range(1, self.map.w - 1), self.map.h - 1
 		end
 
-		if not self.room_map[ux][uy].special then
+		if not self.map.room_map[ux][uy].special then
 			local i = rng.range(1, #rooms)
 			self:tunnel(ux, uy, rooms[i].cx, rooms[i].cy, rooms[i].id)
 			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
