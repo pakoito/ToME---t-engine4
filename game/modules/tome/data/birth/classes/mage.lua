@@ -52,8 +52,8 @@ newBirthDescriptor{
 		[ActorTalents.T_PHASE_DOOR] = 1,
 	},
 	copy = {
-		max_life = 80,
-		life_rating = 7,
+		max_life = 90,
+		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="robe", autoreq=true}
@@ -98,8 +98,8 @@ newBirthDescriptor{
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
-		max_life = 90,
-		life_rating = 8,
+		max_life = 100,
+		life_rating = 9,
 		mana_rating = 8,
 		stamina_rating = 8,
 		resolvers.equip{ id=true,

@@ -16,7 +16,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 100,
-		life_rating = 9,
+		life_rating = 10,
 		equipment = resolvers.equip{ id=true,
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true},
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true},

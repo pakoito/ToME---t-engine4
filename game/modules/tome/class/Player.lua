@@ -98,7 +98,13 @@ end
 function _M:onTakeHit(value, src)
 	self:runStop("taken damage")
 	self:restStop("taken damage")
-	return mod.class.Actor.onTakeHit(self, value, src)
+	local ret = mod.class.Actor.onTakeHit(self, value, src)
+	if self.life < self.max_life * 0.3 and (not self.last_life_warning or self.last_life_warning < game.turn) then
+		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+		game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, 2, "LOW HEALTH!", {255,0,0}, true)
+		self.last_life_warning = game.turn
+	end
+	return ret
 end
 
 function _M:die()
@@ -270,7 +276,7 @@ function _M:playerUseItem(object, item)
 				o.multicharge = o.multicharge - 1
 			else
 				self:removeObject(self:getInven(self.INVEN_INVEN), item)
-				game.log("You have no more "..o:getName())
+				game.log("You have no more "..o:getName{no_count=true})
 				self:sortInven()
 			end
 		end

@@ -58,6 +58,8 @@ function _M:loadMap(file)
 
 	m.startx = g.startx or math.floor(m.w / 2)
 	m.starty = g.starty or math.floor(m.h / 2)
+	m.endx = g.endx or math.floor(m.w / 2)
+	m.endy = g.endy or math.floor(m.h / 2)
 
 	self.gen_map = m
 	self.tiles = t
@@ -113,11 +115,14 @@ function _M:generate(lev, old_lev)
 			self.level,
 			data
 		)
-		generator:generate(lev, old_lev)
+		local ux, uy, dx, dy = generator:generate(lev, old_lev)
 
 		self.map:import(map, g.x, g.y)
 		map:close()
+
+		if g.define_up then self.gen_map.startx, self.gen_map.starty = ux + g.x, uy + g.y end
+		if g.define_down then self.gen_map.endx, self.gen_map.endy = dx + g.x, dy + g.y end
 	end
 
-	return self.gen_map.startx, self.gen_map.starty, self.gen_map.startx, self.gen_map.starty
+	return self.gen_map.startx, self.gen_map.starty, self.gen_map.endx, self.gen_map.endy
 end

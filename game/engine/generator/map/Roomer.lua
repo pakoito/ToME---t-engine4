@@ -323,6 +323,26 @@ function _M:generate(lev, old_lev)
 		end
 	end
 
+	-- Forced tunnels
+	if self.data.force_tunnels then
+		for _, t in ipairs(self.data.force_tunnels) do
+			local sx, sy, ex, ey
+			if type(t[1]) == "string" then
+				local i = rng.range(1, #rooms)
+				sx, sy = rooms[i].cx, rooms[i].cy
+			else
+				sx, sy = t[1][1], t[1][2]
+			end
+			if type(t[2]) == "string" then
+				local i = rng.range(1, #rooms)
+				ex, ey = rooms[i].cx, rooms[i].cy
+			else
+				ex, ey = t[2][1], t[2][2]
+			end
+			self:tunnel(sx, sy, ex, ey, t.id)
+		end
+	end
+
 	-- Find out "interresting" spots
 	local spots = {}
 	for i, r in ipairs(rooms) do

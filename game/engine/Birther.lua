@@ -119,6 +119,15 @@ function _M:apply()
 		print("[BIRTH] Applying descriptor "..d.name)
 		self.actor.descriptor[d.type] = d.name
 
+		if d.copy then
+			-- Append array part
+			while #d.copy > 0 do
+				local f = table.remove(d.copy)
+				table.insert(self.actor, f)
+			end
+			-- Copy normal data
+			table.merge(self.actor, d.copy, true)
+		end
 		-- Change stats
 		if d.stats then
 			for stat, inc in pairs(d.stats) do
@@ -149,15 +158,6 @@ function _M:apply()
 		if d.body then
 			self.actor.body = d.body
 			self.actor:initBody()
-		end
-		if d.copy then
-			-- Append array part
-			while #d.copy > 0 do
-				local f = table.remove(d.copy)
-				table.insert(self.actor, f)
-			end
-			-- Copy normal data
-			table.merge(self.actor, d.copy, true)
 		end
 	end
 end

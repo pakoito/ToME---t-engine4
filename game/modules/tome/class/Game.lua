@@ -335,7 +335,7 @@ function _M:setupCommands()
 	{
 		TACTICAL_DISPLAY = function() self:targetMode(false, false) end,
 		ACCEPT = function() self:targetMode(false, false) end,
-		EXCIT = function()
+		EXIT = function()
 			self.target.target.entity = nil
 			self.target.target.x = nil
 			self.target.target.y = nil
