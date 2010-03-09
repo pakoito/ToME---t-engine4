@@ -7,6 +7,7 @@ newEntity{
 	encumber = 2,
 	rarity = 5,
 	desc = [[A cloth vestment. It offers no intrinsinc protection but can be enchanted.]],
+	egos = "/data/general/objects/egos/robe.lua", egos_chance = resolvers.mbonus(30, 15),
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",

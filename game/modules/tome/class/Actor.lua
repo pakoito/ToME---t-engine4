@@ -651,12 +651,12 @@ end
 --- Can the target be applied some effects
 -- @param what a string describing what is being tried
 function _M:canBe(what)
-	if what == "poison" and rng.percent(100 * self:attr("poison_immune")) then return false end
-	if what == "cut" and rng.percent(100 * self:attr("cut_immune")) then return false end
-	if what == "blind" and rng.percent(100 * self:attr("blind_immune")) then return false end
-	if what == "stun" and rng.percent(100 * self:attr("stun_immune")) then return false end
-	if what == "knockback" and rng.percent(100 * self:attr("knockback_immune")) then return false end
-	if what == "instakill" and rng.percent(100 * self:attr("instakill_immune")) then return false end
+	if what == "poison" and rng.percent(100 * (self:attr("poison_immune") or 0)) then return false end
+	if what == "cut" and rng.percent(100 * (self:attr("cut_immune") or 0)) then return false end
+	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
+	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
+	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
+	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	return true
 end
 
