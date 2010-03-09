@@ -164,7 +164,7 @@ function _M:getDesc()
 	if w.on_melee_hit then
 		local rs = {}
 		for typ, dam in pairs(w.on_melee_hit) do
-			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[res].name)
+			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
 		desc[#desc+1] = ("Damage when hit: %s."):format(table.concat(rs, ','))
 	end
@@ -172,7 +172,7 @@ function _M:getDesc()
 	if w.resists then
 		local rs = {}
 		for res, i in pairs(w.resists) do
-			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[typ].name)
+			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
 		end
 		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
 	end

@@ -390,3 +390,15 @@ function rng.tableRemove(t)
 	local id = rng.range(1, #t)
 	return table.remove(t, id)
 end
+
+function util.show_backtrace()
+	local level = 2
+
+	print("backtrace:")
+	while true do
+		local stacktrace = debug.getinfo(level, "nlS")
+		if stacktrace == nil then break end
+		print(("    function: %s (%s) at %s:%d"):format(stacktrace.name or "???", stacktrace.what, stacktrace.source or stacktrace.short_src or "???", stacktrace.currentline))
+		level = level + 1
+	end
+end

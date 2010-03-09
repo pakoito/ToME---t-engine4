@@ -9,6 +9,13 @@ function _M:init(zone, map, level, data)
 	self.grid_list = zone.grid_list
 	self.subgen = {}
 	self.data = data
+
+	if data.adjust_level then
+		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=data.adjust_level[1], max=data.adjust_level[2]}
+	else
+		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=0, max=0}
+	end
+
 	self:loadMap(data.map)
 end
 
@@ -78,16 +85,16 @@ function _M:generate(lev, old_lev)
 		local c = self.gen_map[i][j]
 		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", c))
 
-		local actor = self.tiles[c].actor
+		local actor = self.tiles[c] and self.tiles[c].actor
 
 		if actor then
-			local m = self.zone:makeEntityByName(self.level, "actor", f)
+			local m = self.zone:makeEntityByName(self.level, "actor", actor)
 			if m then
-				m:move(x, y, true)
+				m:move(i-1, j-1, true)
 				self.level:addEntity(m)
 				m:added()
 				if self.adjust_level then
-					local newlevel = self.adjust_level.base + rng.avg(self.adjust_level.min, self.adjust_level.max)
+					local newlevel = self.adjust_level.base + self.adjust_level.lev + rng.avg(self.adjust_level.min, self.adjust_level.max)
 					m:forceLevelup(newlevel)
 				end
 			end

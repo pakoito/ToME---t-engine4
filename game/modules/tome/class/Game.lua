@@ -562,21 +562,8 @@ function _M:setupMouse()
 		-- Target stuff
 		if button == "right" then
 			local tmx, tmy = self.level.map:getMouseTile(mx, my)
-
-			local actor = self.level.map(tmx, tmy, Map.ACTOR)
-
-			if actor and self.level.map.seens(tmx, tmy) then
-				self.target.target.entity = actor
-			else
-				self.target.target.entity = nil
-				self.target.target.x = tmx
-				self.target.target.y = tmy
-			end
-			if tostring(self.target_mode) == "exclusive" then
-				self:targetMode(false, false)
-			else
-				self:targetMode(true, true)
-			end
+			-- DEBUG
+			game.player:move(tmx, tmy, true)
 		-- Move map around
 		elseif button == "left" and xrel and yrel then
 			derivx = derivx + xrel

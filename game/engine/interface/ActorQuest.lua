@@ -31,7 +31,7 @@ end
 --- Sets the status of a quest for an actor
 -- If the actor does not have the quest, does nothing
 function _M:setQuestStatus(quest, status, sub)
-	print("[QUEST] try update status on", self.name, quest, status, sub, "::", self.quests[quest])
+	print("[QUEST] try update status on", self.name, quest, status, sub)
 	if not self.quests then return end
 	local q = self.quests[quest]
 	if not q then return end

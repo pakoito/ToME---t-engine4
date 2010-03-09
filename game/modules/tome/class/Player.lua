@@ -272,7 +272,6 @@ function _M:playerUseItem(object, item)
 				self:removeObject(self:getInven(self.INVEN_INVEN), item)
 				game.log("You have no more "..o:getName())
 				self:sortInven()
-				self:useEnergy()
 			end
 		end
 		self:breakStealth()

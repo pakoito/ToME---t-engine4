@@ -9,9 +9,9 @@ function _M:init(zone, map, level)
 	local data = level.data.generator.actor
 
 	if data.adjust_level then
-		self.adjust_level = {base=zone.base_level, min=data.adjust_level[1], max=data.adjust_level[2]}
+		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=data.adjust_level[1], max=data.adjust_level[2]}
 	else
-		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=0, 0}
+		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=0, max=0}
 	end
 	self.filters = data.filters
 	self.nb_npc = data.nb_npc or {10, 20}
@@ -37,7 +37,7 @@ function _M:generate()
 
 				-- Levelup ?
 				if self.adjust_level then
-					local newlevel = self.adjust_level.base + rng.avg(self.adjust_level.min, self.adjust_level.max)
+					local newlevel = self.adjust_level.base + self.adjust_level.lev - 1 + rng.avg(self.adjust_level.min, self.adjust_level.max)
 					m:forceLevelup(newlevel)
 				end
 			end

@@ -50,6 +50,8 @@ function _M:move(x, y, force)
 
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.ACTOR)
+	else
+		print("[MOVE] actor moved without a starting position", self.name)
 	end
 	if x < 0 then x = 0 end
 	if x >= map.w then x = map.w - 1 end
