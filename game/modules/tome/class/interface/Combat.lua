@@ -42,6 +42,15 @@ The ToME combat system has the following attributes:
 function _M:attackTarget(target, damtype, mult, noenergy)
 	local speed, hit = nil, false
 
+	if self:attr("feared") then
+		if not noenergy then
+			self:useEnergy(game.energy_to_act * speed)
+			self.did_energy = true
+		end
+		game.logSeen(self, "%s is too afraid to attack.", self.name:capitalize())
+		return false
+	end
+
 	-- Cancel stealth early if we are noticed
 	if self:isTalentActive(self.T_STEALTH) and target:canSee(self) then
 		self:useTalent(self.T_STEALTH)

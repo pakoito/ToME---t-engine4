@@ -407,6 +407,11 @@ end
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab, silent)
+	if self:attr("feared") then
+		game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name)
+		return false
+	end
+
 	if not self:enoughEnergy() then print("fail energy") return false end
 
 	if ab.mode == "sustained" then
@@ -655,6 +660,7 @@ function _M:canBe(what)
 	if what == "cut" and rng.percent(100 * (self:attr("cut_immune") or 0)) then return false end
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
+	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	return true

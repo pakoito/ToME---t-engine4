@@ -23,6 +23,7 @@ newEntity{
 	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3 },
 
 	resists = { [DamageType.FIRE] = -50 },
+	fear_immune = 1,
 }
 
 newEntity{ base = "BASE_NPC_TROLL",

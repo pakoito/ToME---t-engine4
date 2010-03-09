@@ -12,6 +12,7 @@ newEntity{
 	energy = { mod=0.5 },
 	combat_armor = 1, combat_def = 1,
 	never_move = 1,
+	fear_immune = 1,
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
