@@ -3,7 +3,7 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(zone, map, grid_list, data)
+function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
 	self.data = data
 	self.data.tunnel_change = self.data.tunnel_change or 30
@@ -14,7 +14,11 @@ function _M:init(zone, map, grid_list, data)
 
 	self.rooms = {}
 	for i, file in ipairs(data.rooms) do
-		table.insert(self.rooms, self:loadRoom(file))
+		if type(file) == "table" then
+			table.insert(self.rooms, {self:loadRoom(file[1]), chance_room=file[2]})
+		else
+			table.insert(self.rooms, self:loadRoom(file))
+		end
 	end
 end
 
@@ -307,7 +311,20 @@ function _M:generate(lev, old_lev)
 	local nb_room = self.data.nb_rooms or 10
 	local rooms = {}
 	while nb_room > 0 do
-		local r = self:roomAlloc(self.rooms[rng.range(1, #self.rooms)], #rooms+1, lev, old_lev)
+		local rroom
+		while true do
+			rroom = self.rooms[rng.range(1, #self.rooms)]
+			if type(rroom) == "table" and rroom.chance_room then
+				if rng.percent(rroom.chance_room) then
+					rroom = rroom[1]
+					break
+				end
+			else
+				break
+			end
+		end
+
+		local r = self:roomAlloc(rroom, #rooms+1, lev, old_lev)
 		if r then rooms[#rooms+1] = r end
 		nb_room = nb_room - 1
 	end

@@ -11,7 +11,7 @@ return {
 		map = {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
-			rooms = {"simple", "pilar"},
+			rooms = {"simple", "pilar", {"money_vault",5}},
 			lite_room_chance = 100,
 			['.'] = "FLOOR",
 			['#'] = "WALL",

@@ -99,10 +99,9 @@ function _M:onTakeHit(value, src)
 	self:runStop("taken damage")
 	self:restStop("taken damage")
 	local ret = mod.class.Actor.onTakeHit(self, value, src)
-	if self.life < self.max_life * 0.3 and (not self.last_life_warning or self.last_life_warning < game.turn) then
+	if self.life < self.max_life * 0.3 then
 		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 		game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, 2, "LOW HEALTH!", {255,0,0}, true)
-		self.last_life_warning = game.turn
 	end
 	return ret
 end

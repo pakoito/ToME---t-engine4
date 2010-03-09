@@ -297,6 +297,12 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	level:setEntitiesList("object", self:computeRarities("object", self.object_list, level, nil))
 	level:setEntitiesList("trap", self:computeRarities("trap", self.trap_list, level, nil))
 
+	-- Save level data
+	level.data = level_data
+
+	-- Setup the level in the game
+	game:setLevel(level)
+
 	-- Generate the map
 	local generator = require(level_data.generator.map.class).new(
 		self,
@@ -310,12 +316,6 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	level.ups = {{x=ux, y=uy}}
 	level.downs = {{x=dx, y=dy}}
 	level.spots = spots
-
-	-- Save level data
-	level.data = level_data
-
-	-- Setup the level in the game
-	game:setLevel(level)
 
 	-- Generate objects
 	if level_data.generator.object then
