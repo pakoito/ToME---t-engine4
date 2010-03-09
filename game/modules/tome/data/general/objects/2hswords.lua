@@ -10,6 +10,7 @@ newEntity{
 	combat = { talented = "sword", damrange = 1.6 },
 	desc = [[Massive two-handed swords.]],
 	twohanded = true,
+	egos = "/data/general/objects/egos/weapon.lua", egos_chance = resolvers.mbonus(40, 5),
 }
 
 newEntity{ base = "BASE_GREATSWORD",

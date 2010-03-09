@@ -7,7 +7,7 @@ newEntity{
 	encumber = 5,
 	rarity = 3,
 	desc = [[Staves designed for wielders of magic, by the greats of the art.]],
-	egos = "/data/general/objects/egos/staves.lua", egos_chance = 100,--resolvers.mbonus(40, 5),
+	egos = "/data/general/objects/egos/staves.lua", egos_chance = resolvers.mbonus(40, 5),
 }
 
 newEntity{ base = "BASE_STAFF",

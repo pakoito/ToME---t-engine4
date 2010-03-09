@@ -8,7 +8,7 @@ newEntity{
 	rarity = 3,
 	combat = { talented = "sword", damrange = 1.4},
 	desc = [[Sharp, long, and deadly.]],
---	egos = "/data/general/objects/egos/swords.lua", egos_chance = resolvers.mbonus(40, 5),
+	egos = "/data/general/objects/egos/weapon.lua", egos_chance = resolvers.mbonus(40, 5),
 }
 
 newEntity{ base = "BASE_LONGSWORD",

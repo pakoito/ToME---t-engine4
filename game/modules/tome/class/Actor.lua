@@ -60,6 +60,7 @@ function _M:init(t, no_default)
 	t.esp = t.esp or {range=10}
 
 	t.on_melee_hit = t.on_melee_hit or {}
+	t.melee_project = t.melee_project or {}
 
 	-- Resistances
 	t.resists = t.resists or {}
@@ -650,12 +651,12 @@ end
 --- Can the target be applied some effects
 -- @param what a string describing what is being tried
 function _M:canBe(what)
-	if what == "poison" and self:attr("poison_immune") then return false end
-	if what == "cut" and self:attr("cut_immune") then return false end
-	if what == "blind" and self:attr("blind_immune") then return false end
-	if what == "stun" and self:attr("stun_immune") then return false end
-	if what == "knockback" and self:attr("knockback_immune") then return false end
-	if what == "instakill" and self:attr("instakill_immune") then return false end
+	if what == "poison" and rng.percent(100 * self:attr("poison_immune")) then return false end
+	if what == "cut" and rng.percent(100 * self:attr("cut_immune")) then return false end
+	if what == "blind" and rng.percent(100 * self:attr("blind_immune")) then return false end
+	if what == "stun" and rng.percent(100 * self:attr("stun_immune")) then return false end
+	if what == "knockback" and rng.percent(100 * self:attr("knockback_immune")) then return false end
+	if what == "instakill" and rng.percent(100 * self:attr("instakill_immune")) then return false end
 	return true
 end
 

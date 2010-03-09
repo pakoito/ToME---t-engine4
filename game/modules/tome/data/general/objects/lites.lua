@@ -4,6 +4,7 @@ newEntity{
 	type = "lite", subtype="lite",
 	display = "~",
 	desc = [[Lite up the dark places of the world!]],
+	egos = "/data/general/objects/egos/lite.lua", egos_chance = resolvers.mbonus(15, 3),
 }
 
 newEntity{ base = "BASE_LITE",

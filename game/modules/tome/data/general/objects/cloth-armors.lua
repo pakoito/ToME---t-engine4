@@ -2,6 +2,7 @@ newEntity{
 	define_as = "BASE_CLOTH_ARMOR",
 	slot = "BODY",
 	type = "armor", subtype="cloth",
+	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
 	encumber = 2,
 	rarity = 5,

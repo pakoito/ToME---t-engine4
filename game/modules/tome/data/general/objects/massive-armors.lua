@@ -4,6 +4,7 @@ newEntity{
 	define_as = "BASE_MASSIVE_ARMOR",
 	slot = "BODY",
 	type = "armor", subtype="massive",
+	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
 	require = { talent = { Talents.T_MASSIVE_ARMOUR_TRAINING }, },
 	encumber = 17,

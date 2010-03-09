@@ -10,6 +10,7 @@ newEntity{
 	combat = { talented = "axe", damrange = 1.5 },
 	desc = [[Massive two-handed battleaxes.]],
 	twohanded = true,
+	egos = "/data/general/objects/egos/weapon.lua", egos_chance = resolvers.mbonus(40, 5),
 }
 
 newEntity{ base = "BASE_BATTLEAXE",

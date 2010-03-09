@@ -17,7 +17,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.list = self.store_list
 	self.sel = 1
 	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self.max = math.floor((self.ih * 0.8 - 5) / self.font_h) - 1
 
 	self:keyCommands({
 		__TEXTINPUT = function(c)

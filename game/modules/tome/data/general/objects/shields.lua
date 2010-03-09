@@ -2,9 +2,11 @@ newEntity{
 	define_as = "BASE_SHIELD",
 	slot = "OFFHAND",
 	type = "armor", subtype="shield",
+	add_name = " (#ARMOR#)",
 	display = ")", color=colors.UMBER,
 	encumber = 7,
 	desc = [[Handheld deflection devices]],
+	egos = "/data/general/objects/egos/shield.lua", egos_chance = resolvers.mbonus(40, 5),
 }
 
 -- All shields have a "special_combat" field, this is used to compute damage mde with them

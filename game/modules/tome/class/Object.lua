@@ -69,6 +69,8 @@ function _M:descAttribute(attr)
 	elseif attr == "COMBAT" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." dam, "..(c.apr or 0).." apr"
+	elseif attr == "ARMOR" then
+		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armor"
 	elseif attr == "MONEY" then
 		return ("worth %0.2f"):format(self.money_value / 10)
 	end
@@ -151,10 +153,26 @@ function _M:getDesc()
 		desc[#desc+1] = ("Increases stats: %s."):format(table.concat(dm, ','))
 	end
 
+	if w.melee_project then
+		local rs = {}
+		for typ, dam in pairs(w.melee_project) do
+			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
+		end
+		desc[#desc+1] = ("Damage on hit: %s."):format(table.concat(rs, ','))
+	end
+
+	if w.on_melee_hit then
+		local rs = {}
+		for typ, dam in pairs(w.on_melee_hit) do
+			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[res].name)
+		end
+		desc[#desc+1] = ("Damage when hit: %s."):format(table.concat(rs, ','))
+	end
+
 	if w.resists then
 		local rs = {}
 		for res, i in pairs(w.resists) do
-			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
+			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[typ].name)
 		end
 		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
 	end

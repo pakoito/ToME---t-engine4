@@ -17,6 +17,37 @@ newEntity{
 }
 
 newEntity{
+	define_as = "ARMOR",
+	name = "armour smith",
+	display = '2', color=colors.UMBER,
+	store = {
+		restock_after = 200,
+		buy_percent = 10,
+		min_fill = 10,
+		max_fill = 20,
+		filters = {
+			{type="armor", id=true},
+		},
+	},
+}
+
+newEntity{
+	define_as = "WEAPON",
+	name = "weapon mith",
+	display = '3', color=colors.UMBER,
+	store = {
+		restock_after = 200,
+		buy_percent = 10,
+		min_fill = 10,
+		max_fill = 20,
+		filters = {
+			{type="weapon", id=true},
+			{type="ammo", id=true},
+		},
+	},
+}
+
+newEntity{
 	define_as = "POTION",
 	name = "alchemist store",
 	display = '4', color=colors.LIGHT_BLUE,

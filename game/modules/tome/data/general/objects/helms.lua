@@ -4,6 +4,7 @@ newEntity{
 	define_as = "BASE_HELM",
 	slot = "HEAD",
 	type = "armor", subtype="head",
+	add_name = " (#ARMOR#)",
 	display = "]", color=colors.SLATE,
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	encumber = 3,

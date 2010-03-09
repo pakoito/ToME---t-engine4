@@ -2,6 +2,7 @@ newEntity{
 	define_as = "BASE_LEATHER_BOOT",
 	slot = "FEET",
 	type = "armor", subtype="feet",
+	add_name = " (#ARMOR#)",
 	display = "]", color=colors.UMBER,
 	encumber = 2,
 	rarity = 6,
