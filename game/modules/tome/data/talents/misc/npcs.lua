@@ -233,9 +233,7 @@ newTalent{
 				m.summoner = self
 				m.summon_time = filter.lastfor
 
-				m:move(x, y, true)
-				game.level:addEntity(m)
-				m:added()
+				game.zone:addEntity(game.level, m, "actor", x, y)
 
 				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
 			end

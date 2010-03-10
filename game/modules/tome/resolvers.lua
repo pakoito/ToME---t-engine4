@@ -32,7 +32,7 @@ function resolvers.calc.equip(t, e)
 
 			-- Do not drop it unless it is an ego or better
 			if not o.egoed and not o.unique then o.no_drop = true end
-			o:added()
+			game.zone:addEntity(game.level, o, "object")
 
 			if t[1].id then o:identify(t[1].id) end
 		end
@@ -59,7 +59,7 @@ function resolvers.calc.inventory(t, e)
 		if o then
 			print("Zone made us an inventory according to filter!", o:getName())
 			e:addObject(e.INVEN_INVEN, o)
-			o:added()
+			game.zone:addEntity(game.level, o, "object")
 
 			if t[1].id then o:identify(t[1].id) end
 		end
@@ -91,7 +91,7 @@ function resolvers.calc.drops(t, e)
 		if o then
 			print("Zone made us an drop according to filter!", o:getName())
 			e:addObject(e.INVEN_INVEN, o)
-			o:added()
+			game.zone:addEntity(game.level, o, "object")
 
 			if t.id then o:identify(t.id) end
 		end

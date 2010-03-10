@@ -1,5 +1,6 @@
 require "engine.class"
 local Savefile = require "engine.Savefile"
+local Map = require "engine.Map"
 
 --- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
 module(..., package.seeall, class.make)
@@ -212,6 +213,36 @@ function _M:finishEntity(level, type, e, ego_chance)
 	e:resolve(nil, true)
 
 	return e
+end
+
+--- Do the various stuff needed to setup an entity on the level
+-- Grids do not really need that, this is mostly done for traps, objects and actors<br/>
+-- This will do all the corect initializations and setup required
+-- @param level the level on which to add the entity
+-- @param e the entity to add
+-- @param typ the type of entity, one of "actor", "object", "trap" or "terrain"
+-- @param x the coordinates where to add it. This CAN be null in which case it wont be added to the map
+-- @param y the coordinates where to add it. This CAN be null in which case it wont be added to the map
+function _M:addEntity(level, e, typ, x, y)
+	if typ == "actor" then
+		if x and y then e:move(x, y, true) end
+		level:addEntity(e)
+		e:added()
+
+		-- Levelup ?
+		if self.actor_adjust_level and e.forceLevelup then
+			local newlevel = self:actor_adjust_level(level, e)
+			e:forceLevelup(newlevel)
+		end
+	elseif typ == "object" then
+		if x and y then level.map:addObject(x, y, e) end
+		e:added()
+	elseif typ == "trap" then
+		if x and y then level.map(x, y, Map.TRAP, e) end
+		e:added()
+	elseif typ == "terrain" then
+		if x and y then level.map(x, y, Map.TERRAIN, e) end
+	end
 end
 
 function _M:load()

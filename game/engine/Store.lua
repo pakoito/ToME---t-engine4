@@ -33,6 +33,7 @@ function _M:loadup(level, zone)
 		if e then
 			if filter.id then e:identify(filter.id) end
 			self:addObject(inven, e)
+			zone:addEntity(level, e, "object")
 			print("[STORE] stocking up: ", e.name)
 		end
 	end

@@ -31,15 +31,7 @@ function _M:generate()
 				tries = tries + 1
 			end
 			if tries < 100 then
-				m:move(x, y, true)
-				self.level:addEntity(m)
-				m:added()
-
-				-- Levelup ?
-				if self.adjust_level then
-					local newlevel = self.adjust_level.base + self.adjust_level.lev - 1 + rng.avg(self.adjust_level.min, self.adjust_level.max)
-					m:forceLevelup(newlevel)
-				end
+				self.zone:addEntity(self.level, m, "actor", x, y)
 			end
 		end
 	end
@@ -56,15 +48,7 @@ function _M:generate()
 				tries = tries + 1
 			end
 			if tries < 100 then
-				m:move(x, y, true)
-				self.level:addEntity(m)
-				m:added()
-
-				-- Levelup ?
-				if self.adjust_level then
-					local newlevel = self.adjust_level.base + rng.avg(self.adjust_level.min, self.adjust_level.max)
-					m:forceLevelup(newlevel)
-				end
+				self.zone:addEntity(self.level, m, "actor", x, y)
 				print("Guardian allocated: ", self.guardian, m.uid, m.name)
 			end
 		else

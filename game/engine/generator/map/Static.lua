@@ -88,17 +88,19 @@ function _M:generate(lev, old_lev)
 		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", c))
 
 		local actor = self.tiles[c] and self.tiles[c].actor
+		local object = self.tiles[c] and self.tiles[c].object
+
+		if object then
+			local o = self.zone:makeEntityByName(self.level, "object", object)
+			if o then
+				self.zone:addEntity(self.level, o, "object", i-1, j-1)
+			end
+		end
 
 		if actor then
 			local m = self.zone:makeEntityByName(self.level, "actor", actor)
 			if m then
-				m:move(i-1, j-1, true)
-				self.level:addEntity(m)
-				m:added()
-				if self.adjust_level then
-					local newlevel = self.adjust_level.base + self.adjust_level.lev + rng.avg(self.adjust_level.min, self.adjust_level.max)
-					m:forceLevelup(newlevel)
-				end
+				self.zone:addEntity(self.level, m, "actor", i-1, j-1)
 			end
 		end
 	end end

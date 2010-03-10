@@ -1,7 +1,7 @@
 return function(gen, id)
 	local w = 5
 	local h = 5
-	return { name="money_vault"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
+	return { name="greater_vault"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
 		for i = 1, self.w do
 			for j = 1, self.h do
 				if i == 1 or i == self.w or j == 1 or j == self.h then

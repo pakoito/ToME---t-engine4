@@ -154,6 +154,7 @@ newTalent{
 			o:identify(true)
 			o:forAllStack(function(so) so.cost = 0 end)
 			self:addObject(self.INVEN_INVEN, o)
+			game.zone:addEntity(game.level, o, "object")
 			game.logPlayer(self, "You create some ammo: %s", o:getName())
 		else
 			game.logPlayer(self, "You found nothing!")

@@ -86,9 +86,8 @@ newTalent{
 		}
 
 		bear:resolve()
-		bear:move(x, y, true)
-		game.level:addEntity(bear)
-		bear:added()
+
+		game.zone:addEntity(game.level, bear, "actor", x, y)
 
 		return true
 	end,

@@ -13,7 +13,6 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {0, 0},
-			adjust_level = {0, 0},
 		},
 		object = {
 			class = "engine.generator.object.Random",

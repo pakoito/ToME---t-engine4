@@ -29,8 +29,7 @@ function _M:generate()
 				tries = tries + 1
 			end
 			if tries < 100 then
-				self.map(x, y, Map.OBJECT, o)
-				o:added()
+				self.zone:addEntity(self.level, o, "object", x, y)
 			end
 		end
 	end
