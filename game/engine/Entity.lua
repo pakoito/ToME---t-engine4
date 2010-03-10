@@ -117,7 +117,7 @@ function _M:resolve(t, last)
 	end
 
 	-- Finish resolving stuff
-	if t == self then
+	if t == self and last then
 		-- Handle ided if possible
 		if self.resolveIdentify then self:resolveIdentify() end
 
