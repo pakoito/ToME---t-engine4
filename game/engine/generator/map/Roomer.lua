@@ -153,6 +153,8 @@ end
 
 --- Tunnel from x1,y1 to x2,y2
 function _M:tunnel(x1, y1, x2, y2, id)
+	-- Disable the many prints of tunnelling
+	local print = function()end
 	local xdir, ydir = self:tunnelDir(x1, y1, x2, y2)
 	print("tunneling from",x1, y1, "to", x2, y2, "initial dir", xdir, ydir)
 

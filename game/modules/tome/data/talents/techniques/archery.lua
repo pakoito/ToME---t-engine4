@@ -135,7 +135,7 @@ newTalent{
 	type = {"technique/archery-utility", 1},
 	no_energy = true,
 	points = 5,
-	cooldown = 1000,
+	cooldown = 200,
 	stamina = 30,
 	require = techs_dex_req1,
 	action = function(self, t)
@@ -150,7 +150,7 @@ newTalent{
 		if weapon.archery == "sling" then st = "shot" end
 
 		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st})
-		if o and rng.percent(40 + self:getTalentLevel(t) * 10) then
+		if o and rng.percent(10 + self:getTalentLevel(t) * 10) then
 			o:identify(true)
 			o:forAllStack(function(so) so.cost = 0 end)
 			self:addObject(self.INVEN_INVEN, o)

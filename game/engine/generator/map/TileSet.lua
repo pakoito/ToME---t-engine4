@@ -3,7 +3,7 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(zone, map, grid_list, data)
+function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
 	self.data = data
 	self.grid_list = zone.grid_list
@@ -23,7 +23,8 @@ function _M:init(zone, map, grid_list, data)
 end
 
 function _M:loadTiles(tileset)
-	local f = loadfile("/data/tilesets/"..tileset..".lua")
+	local f, err = loadfile("/data/tilesets/"..tileset..".lua")
+	if not f and err then error(err) end
 	local d = {}
 	setfenv(f, d)
 	local ret, err = f()
@@ -180,7 +181,7 @@ function _M:generate()
 	while #process > 0 do
 		local b = table.remove(process)
 		local type = "room"
-		if not first and rng.percent(70) then type = "tunnel" end
+		if not first and rng.percent(30) then type = "tunnel" end
 		first = false
 
 		local opens = self:buildTile(b.tile, b[1], b[2], id)

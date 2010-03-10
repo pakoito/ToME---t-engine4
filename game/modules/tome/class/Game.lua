@@ -367,7 +367,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			self:changeLevel(5, "tower-amon-sul")
+			self:changeLevel(2, "illusory-castle")
 		end,
 	}
 	self.key:addBinds

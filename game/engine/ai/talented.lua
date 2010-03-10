@@ -10,6 +10,9 @@ newAI("dumb_talented", function(self)
 		if t.mode == "activated" and not self:isTalentCoolingDown(t) and target_dist <= self:getTalentRange(t) and self:preUseTalent(t, true) and self:canProject({type="bolt"}, self.ai_target.actor.x, self.ai_target.actor.y) then
 			avail[#avail+1] = tid
 			print(self.name, self.uid, "dumb ai talents can use", t.name, tid)
+		elseif t.mode == "sustained" and not self:isTalentCoolingDown(t) and not self:isTalentActive(t) and self:preUseTalent(t, true) then
+			avail[#avail+1] = tid
+			print(self.name, self.uid, "dumb ai talents can activate", t.name, tid)
 		end
 	end
 	if #avail > 0 then
