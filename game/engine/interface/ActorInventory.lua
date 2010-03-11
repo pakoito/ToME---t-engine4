@@ -95,9 +95,9 @@ function _M:pickupFloor(i, vocal)
 			game.level.map:removeObject(self.x, self.y, i)
 			o:check("on_pickup", self)
 
-			if vocal then game.logSeen(self, "%s picks up: %s.", self.name:capitalize(), o:getName()) end
+			if vocal then game.logSeen(self, "%s picks up: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		elseif not prepickup then
-			if vocal then game.logSeen(self, "%s has no room for: %s.", self.name:capitalize(), o:getName()) end
+			if vocal then game.logSeen(self, "%s has no room for: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		end
 	else
 		if vocal then game.logSeen(self, "There is nothing to pickup there.") end
@@ -146,7 +146,7 @@ function _M:dropFloor(inven, item, vocal, all)
 	end
 	if o:check("on_drop", self) then return end
 	game.level.map:addObject(self.x, self.y, o)
-	if vocal then game.logSeen(self, "%s drops on the floor: %s.", self.name:capitalize(), o:getName()) end
+	if vocal then game.logSeen(self, "%s drops on the floor: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 end
 
 --- Show inventory dialog
@@ -223,26 +223,26 @@ end
 function _M:wearObject(o, replace, vocal)
 	local inven = o:wornInven()
 	if not inven then
-		if vocal then game.logSeen(self, "%s is not wearable.", o:getName()) end
+		if vocal then game.logSeen(self, "%s is not wearable.", o:getName{do_color=true}) end
 		return false
 	end
 	local ok, err = self:canWearObject(o)
 	if not ok then
-		if vocal then game.logSeen(self, "%s can not wear: %s (%s).", self.name:capitalize(), o:getName(), err) end
+		if vocal then game.logSeen(self, "%s can not wear: %s (%s).", self.name:capitalize(), o:getName{do_color=true}, err) end
 		return false
 	end
 
 	if self:addObject(inven, o) then
-		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
+		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		return true
 	elseif o.offslot and self:getInven(o.offslot) and #(self:getInven(o.offslot)) < self:getInven(o.offslot).max then
-		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
+		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		-- Warning: assume there is now space
 		self:addObject(self:getInven(o.offslot), o)
 	elseif replace then
 		local ro = self:removeObject(inven, 1, true)
 
-		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName()) end
+		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 
 		-- Can we stack the old and new one ?
 		if o:stack(ro) then ro = true end
@@ -251,7 +251,7 @@ function _M:wearObject(o, replace, vocal)
 		self:addObject(inven, o)
 		return ro
 	else
-		if vocal then game.logSeen(self, "%s can not wear: %s.", self.name:capitalize(), o:getName()) end
+		if vocal then game.logSeen(self, "%s can not wear: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		return false
 	end
 end

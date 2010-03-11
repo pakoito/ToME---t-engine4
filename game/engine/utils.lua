@@ -190,13 +190,20 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 	r = r or 255
 	g = g or 255
 	b = b or 255
+	local oldr, oldg, oldb = r, g, b
 	for i, v in ipairs(list) do
 		local _, _, nr, ng, nb = v:find("^#(%x%x)(%x%x)(%x%x)#")
 		local _, _, col = v:find("^#([A-Z_]+)#")
 		if nr and ng and nb then
+			oldr, oldg, oldb = r, g, b
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
 		elseif col then
-			r, g, b = colors[col].r, colors[col].g, colors[col].b
+			if col == "LAST" then
+				r, g, b = oldr, oldg, oldb
+			else
+				oldr, oldg, oldb = r, g, b
+				r, g, b = colors[col].r, colors[col].g, colors[col].b
+			end
 		else
 			local w, h = font:size(v)
 			s:drawString(font, v, x, y, r, g, b)

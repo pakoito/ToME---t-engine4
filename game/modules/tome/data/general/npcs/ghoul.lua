@@ -10,11 +10,11 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	drops = resolvers.drops{chance=70, nb=1, {type="money"}, {} },
 	autolevel = "ghoul",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
-	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3, },
+	tmasteries = resolvers.tmasteries{ ["technique/other"]=1, },
 
 	blind_immune = 1,
 	see_invisible = 2,

@@ -70,7 +70,7 @@ function _M:move(x, y, force)
 		if obj and game.level.map:getObject(self.x, self.y, 2) then
 			game.logSeen(self, "There is more than one objects lying here.")
 		elseif obj then
-			game.logSeen(self, "There is an item here: "..obj:getName())
+			game.logSeen(self, "There is an item here: %s", obj:getName{do_color=true})
 		end
 	end
 
@@ -275,7 +275,7 @@ function _M:playerUseItem(object, item)
 				o.multicharge = o.multicharge - 1
 			else
 				self:removeObject(self:getInven(self.INVEN_INVEN), item)
-				game.log("You have no more "..o:getName{no_count=true})
+				game.log("You have no more %s", o:getName{no_count=true, do_color=true})
 				self:sortInven()
 			end
 		end

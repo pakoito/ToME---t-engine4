@@ -78,9 +78,10 @@ end
 
 --- Gets the color in which to display the object in lists
 function _M:getDisplayColor()
-	if self.egoed then return {0, 255, 128}
-	elseif self.unique then return {255, 255, 0}
-	else return {255, 255, 255}
+	if not self:isIdentified() then return {255, 255, 255}, "#FFFFFF#" end
+	if self.egoed then return {0, 255, 128}, "#00FF80#"
+	elseif self.unique then return {255, 255, 0}, "#FFFF00#"
+	else return {255, 255, 255}, "#FFFFFF#"
 	end
 end
 
@@ -103,19 +104,21 @@ function _M:getName(t)
 		end)
 	end
 
-	if qty == 1 or t.no_count then
-		return name
+	if not t.do_color then
+		if qty == 1 or t.no_count then return name
+		else return qty.." "..name
+		end
 	else
-		return qty.." "..name
+		local _, c = self:getDisplayColor()
+		if qty == 1 or t.no_count then return c..name.."#LAST#"
+		else return c..qty.." "..name.."#LAST#"
+		end
 	end
 end
 
 --- Gets the full desc of the object
 function _M:getDesc()
-	local c = ""
-	if self.egoed then c = "#00FF80#"
-	elseif self.unique then c = "#FFFF00#"
-	end
+	local _, c = self:getDisplayColor()
 	local desc = { c..self:getName().."#FFFFFF#", self.desc }
 
 	local reqs = self:getRequirementDesc(game.player)

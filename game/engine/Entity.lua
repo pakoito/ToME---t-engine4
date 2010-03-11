@@ -117,14 +117,16 @@ function _M:resolve(t, last)
 	end
 
 	-- Finish resolving stuff
-	if t == self and last then
-		-- Handle ided if possible
-		if self.resolveIdentify then self:resolveIdentify() end
+	if t == self then
+		if last then
+			if self.resolveLevel then self:resolveLevel() end
 
-		if self.resolveLevel then self:resolveLevel() end
-
-		if self.unique and type(self.unique) == "boolean" then
-			self.unique = self.name
+			if self.unique and type(self.unique) == "boolean" then
+				self.unique = self.name
+			end
+		else
+			-- Handle ided if possible
+			if self.resolveIdentify then self:resolveIdentify() end
 		end
 	end
 end
