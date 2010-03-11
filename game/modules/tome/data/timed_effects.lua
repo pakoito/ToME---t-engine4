@@ -61,7 +61,7 @@ newEffect{
 newEffect{
 	name = "POISONED",
 	desc = "Poisoned",
-	type = "magical",
+	type = "poison",
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is poisoned!", "+Poison" end,
@@ -277,7 +277,7 @@ newEffect{
 newEffect{
 	name = "TIME_PRISON",
 	desc = "Time Prison",
-	type = "other",
+	type = "other", -- Type "other" so that nothing can dispel it
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# is removed from time!", "+Out of Time" end,
@@ -322,7 +322,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=1 },
 	activate = function(self, eff)
-		eff.stat = self:addTemporaryValue("stats",
+		eff.stat = self:addTemporaryValue("inc_stats",
 		{
 			[Stats.STAT_STR] = eff.power,
 			[Stats.STAT_DEX] = eff.power,
@@ -333,14 +333,14 @@ newEffect{
 		})
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("stats", eff.stat)
+		self:removeTemporaryValue("inc_stats", eff.stat)
 	end,
 }
 
 newEffect{
 	name = "TIME_SHIELD",
 	desc = "Time Shield",
-	type = "time",
+	type = "time", -- Type "time" so that very little should be able to dispel it
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "The very fabric of time alters around #target#.", "+Time Shield" end,
@@ -432,5 +432,89 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_atk", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "ROTTING_DISEASE",
+	desc = "Rotting Disease",
+	type = "disease",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is afflicted by a rotting disease!" end,
+	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.power)
+	end,
+	-- Lost of CON
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = eff.con})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "ROTTING_DISEASE",
+	desc = "Rotting Disease",
+	type = "disease",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is afflicted by a rotting disease!" end,
+	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam)
+	end,
+	-- Lost of CON
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = -eff.con})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "DECREPITUDE_DISEASE",
+	desc = "Decrepitude Disease",
+	type = "disease",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is afflicted by a decrepitude disease!" end,
+	on_lose = function(self, err) return "#Target# is free from the decrepitude disease." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam)
+	end,
+	-- Lost of CON
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_DEX] = -eff.dex})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "WEAKNESS_DISEASE",
+	desc = "Weakness Disease",
+	type = "disease",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is afflicted by a weakness disease!" end,
+	on_lose = function(self, err) return "#Target# is free from the weakness disease." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam)
+	end,
+	-- Lost of CON
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_STR] = -eff.str})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
 	end,
 }

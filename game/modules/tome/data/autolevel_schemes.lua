@@ -14,9 +14,9 @@ Autolevel:registerScheme{ name = "warrior", levelup = function(self)
 	learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
 end}
 
-Autolevel:registerScheme{ name = "warrior", levelup = function(self)
-	-- 2 STR for 1 DEX
-	learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
+Autolevel:registerScheme{ name = "ghoul", levelup = function(self)
+	-- 1 STR for 1 CON, 1 nothing
+	learnStats(self, { self.STAT_STR, self.STAT_CON })
 end}
 
 Autolevel:registerScheme{ name = "rogue", levelup = function(self)

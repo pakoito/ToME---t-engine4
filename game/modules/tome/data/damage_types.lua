@@ -71,9 +71,15 @@ newDamageType{
 		end
 	end,
 }
+
+-- Nature & Blight: Opposing damage types
 newDamageType{
 	name = "nature", type = "NATURE",
 }
+newDamageType{
+	name = "blight", type = "BLIGHT",
+}
+
 newDamageType{
 	name = "lightning", type = "LIGHTNING",
 	projector = function(src, x, y, type, dam)

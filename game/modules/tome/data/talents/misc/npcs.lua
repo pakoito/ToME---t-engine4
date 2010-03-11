@@ -244,3 +244,90 @@ newTalent{
 		return ([[Summon allies.]])
 	end,
 }
+
+newTalent{
+	name = "Rotting Disease",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 8,
+	message = "@Source@ diseases @target@.",
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hit = self:attackTarget(target, nil, 0.5 + self:getTalentLevel(t) / 10, true)
+
+		-- Try to rot !
+		if hit then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
+				target:setEffect(target.EFF_ROTTING_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, con=math.floor(4 + target:getCon() * 0.1)})
+			else
+				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target doing %d%% damage, if the atatck hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+	end,
+}
+
+newTalent{
+	name = "Decrepitude Disease",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 8,
+	message = "@Source@ diseases @target@.",
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hit = self:attackTarget(target, nil, 0.5 + self:getTalentLevel(t) / 10, true)
+
+		-- Try to rot !
+		if hit then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
+				target:setEffect(target.EFF_DECREPITUDE_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, dex=math.floor(4 + target:getDex() * 0.1)})
+			else
+				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target doing %d%% damage, if the atatck hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+	end,
+}
+
+newTalent{
+	name = "Weakness Disease",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 8,
+	message = "@Source@ diseases @target@.",
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hit = self:attackTarget(target, nil, 0.5 + self:getTalentLevel(t) / 10, true)
+
+		-- Try to rot !
+		if hit then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
+				target:setEffect(target.EFF_WEAKNESS_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, str=math.floor(4 + target:getStr() * 0.1)})
+			else
+				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target doing %d%% damage, if the atatck hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+	end,
+}
