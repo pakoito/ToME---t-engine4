@@ -33,13 +33,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 
 	on_pickup = function(self, who)
 		if who == game.player then
-			game.logPlayer(who, "#00FFFF#You can feel the power of this staff just by carrying it. This is both ancient and dangerous.")
-			game.logPlayer(who, "#00FFFF#It should be shown to the wise elders in Minas Tirith!")
-			who.winner = true
 			who:grantQuest("staff-absorption")
-
-			local D = require "engine.Dialog"
-			D:simplePopup("Winner!", "#VIOLET#Congratulations you have won the game! At least for now... The quest has only started!")
 		end
 	end,
 }

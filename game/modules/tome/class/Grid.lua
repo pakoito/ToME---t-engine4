@@ -20,6 +20,11 @@ end
 
 function _M:tooltip()
 	if self.show_tooltip then
-		return (self.show_tooltip == true) and self.name or self.show_tooltip
+		local name = ((self.show_tooltip == true) and self.name or self.show_tooltip)
+		if self.desc then
+			return name.."\n"..self.desc
+		else
+			return name
+		end
 	end
 end

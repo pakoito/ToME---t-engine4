@@ -118,3 +118,22 @@ function resolvers.calc.store(t, e)
 	-- Delete the origin field
 	return nil
 end
+
+--- Resolves chat creation for an actor
+function resolvers.chatfeature(def)
+	return {__resolver="chatfeature", def}
+end
+--- Actually resolve the drops creation
+function resolvers.calc.chatfeature(t, e)
+	t = t[1]
+
+	e.on_move = function(self, x, y, who)
+		local Chat = require("engine.Chat")
+		local chat = Chat.new(self.chat, self, who)
+		chat:invoke()
+	end
+	e.chat = t
+
+	-- Delete the origin field
+	return nil
+end

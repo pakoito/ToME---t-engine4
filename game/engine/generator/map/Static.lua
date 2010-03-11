@@ -1,6 +1,5 @@
 require "engine.class"
 local Map = require "engine.Map"
-local Grid = require "engine.Grid"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
@@ -34,7 +33,7 @@ function _M:loadMap(file)
 			t[char] = {grid=grid, obj=obj, actor=actor, trap=trap}
 		end,
 		quickEntity = function(char, e)
-			local e = Grid.new(e)
+			local e = self.zone.grid_class.new(e)
 			e:resolve()
 			e:resolve(nil, true)
 			t[char] = {grid=e}

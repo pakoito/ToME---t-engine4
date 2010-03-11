@@ -1,5 +1,6 @@
 require "engine.class"
 
+--- Handle quests
 module(..., package.seeall, class.make)
 
 PENDING = 0
@@ -13,6 +14,7 @@ function _M:init(q)
 	end
 	self.status = PENDING
 	self.objectives = {}
+	self:check("on_grant", who)
 end
 
 --- Checks if the quest (or sub-objective) is complete
