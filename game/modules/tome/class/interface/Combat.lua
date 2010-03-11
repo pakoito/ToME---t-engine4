@@ -270,7 +270,7 @@ function _M:combatDefense()
 	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
 		add = add + 4 + (self:getTalentLevel(self.T_DUAL_WEAPON_DEFENSE) * self:getDex()) / 12
 	end
-	return self.combat_def + (self:getDex() - 10) * 0.35 + add
+	return self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the armor
@@ -288,19 +288,19 @@ end
 --- Gets the attack
 function _M:combatAttack(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5)
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5) + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the attack using only strength
 function _M:combatAttackStr(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(100) - 10)
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(100) - 10) + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the attack using only dexterity
 function _M:combatAttackDex(weapon)
 	weapon = weapon or self.combat
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getDex(100) - 10)
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getDex(100) - 10) + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the armor penetration
@@ -322,7 +322,7 @@ function _M:combatCrit(weapon)
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then
 		addcrit = 1 + self:getTalentLevel(Talents.T_LETHALITY) * 1.3
 	end
-	return self.combat_physcrit + (self:getCun() - 10) * 0.3 + (weapon.physcrit or 1) + addcrit
+	return self.combat_physcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + (weapon.physcrit or 1) + addcrit
 end
 
 --- Gets the damage range
@@ -357,7 +357,7 @@ end
 
 --- Gets spellcrit
 function _M:combatSpellCrit()
-	return self.combat_spellcrit + (self:getCun() - 10) * 0.3 + 1
+	return self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
 end
 
 --- Gets spellspeed
@@ -395,19 +395,24 @@ function _M:spellCrit(dam)
 	return dam, crit
 end
 
+--- Do we get hit by our own AOE ?
+function _M:spellFriendlyFire()
+	return rng.chance(self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
+end
+
 --- Computes physical resistance
 function _M:combatPhysicalResist()
-	return self.combat_physresist + (self:getCon() + self:getStr()) * 0.25
+	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.25
 end
 
 --- Computes spell resistance
 function _M:combatSpellResist()
-	return self.combat_spellresist + (self:getMag() + self:getWil()) * 0.25
+	return self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.25
 end
 
 --- Computes mental resistance
 function _M:combatMentalResist()
-	return self.combat_mentalresist + (self:getCun() + self:getWil()) * 0.25
+	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.25
 end
 
 

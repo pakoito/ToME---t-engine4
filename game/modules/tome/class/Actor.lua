@@ -533,7 +533,7 @@ function _M:breakStealth()
 	if self:isTalentActive(self.T_STEALTH) then
 		local chance = 0
 		if self:knowTalent(self.T_UNSEEN_ACTIONS) then
-			chance = 10 + self:getTalentLevel(self.T_UNSEEN_ACTIONS) * 9
+			chance = 10 + self:getTalentLevel(self.T_UNSEEN_ACTIONS) * 9 + (self:getLck() - 50) * 0.2
 		end
 
 		-- Do not break stealth

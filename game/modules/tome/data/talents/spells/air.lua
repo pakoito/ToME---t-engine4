@@ -48,7 +48,8 @@ newTalent{
 			DamageType.NATURE, dam,
 			radius,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60}
+			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
+			nil, self:spellFriendlyFire()
 		)
 		return true
 	end,

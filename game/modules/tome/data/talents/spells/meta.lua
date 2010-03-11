@@ -71,9 +71,21 @@ newTalent{
 }
 
 newTalent{
-	name = "Quicken Spells",
+	name = "Spell Shaping",
 	type = {"spell/meta",3},
 	require = spells_req3,
+	points = 5,
+	mode = "passive",
+	info = function(self, t)
+		return ([[You learn to shape your area spells, allowing you to carve a hole in them to not get hit with a chance of %d%%.]]):
+		format(self:getTalentLevelRaw(t) * 20)
+	end,
+}
+
+newTalent{
+	name = "Quicken Spells",
+	type = {"spell/meta",4},
+	require = spells_req4,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 150,

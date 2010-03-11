@@ -53,9 +53,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
-	wielder = {
-		combat={atk = resolvers.mbonus(20, 2)},
-	},
+	combat={atk = resolvers.mbonus(20, 2)},
 }
 
 newEntity{
@@ -63,9 +61,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 6,
-	wielder = {
-		combat={apr = resolvers.mbonus(15, 1)},
-	},
+	combat={apr = resolvers.mbonus(15, 1)},
 }
 
 newEntity{

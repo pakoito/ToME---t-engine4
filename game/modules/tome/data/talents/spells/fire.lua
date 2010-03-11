@@ -59,7 +59,7 @@ newTalent{
 	},
 	range = 15,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t)), {type="flame"})
@@ -96,7 +96,8 @@ newTalent{
 			DamageType.NETHERFLAME, dam,
 			radius,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=180, color_bg=30, color_bb=60}
+			engine.Entity.new{alpha=100, display='', color_br=180, color_bg=30, color_bb=60},
+			nil, self:spellFriendlyFire()
 		)
 		game.level.map:particleEmitter(x, y, radius, "static_fire", nil, nil, {radius=radius})
 		return true
