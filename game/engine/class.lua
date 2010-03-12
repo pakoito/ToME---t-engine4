@@ -118,6 +118,12 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 		else
 			saved[value] = name   -- save name for next time
 			outf("{}\n")     -- create a new table
+
+			-- If we are the base table, decalre ourselves
+			if name == "data" then
+				outf('setLoaded("'..savefile:getFileName(value)..'", data)\n')
+			end
+
 			for k,v in pairs(value) do      -- save its fields
 --				print(allow, k , filter[k])
 				if (not allow and not filter[k]) or (allow and filter[k]) then
@@ -140,7 +146,7 @@ end
 
 local function serialize(data, filter, allow, savefile)
 	local tbl = {}
-	local outf = function(...) for i,str in ipairs(arg) do table.insert(tbl, str) end end
+	local outf = function(...) for i,str in ipairs{...} do table.insert(tbl, str) end end
 	serialize_data(outf, "data", data, nil, filter, allow, savefile, true)
 	table.insert(tbl, "return data\n")
 	return tbl
@@ -166,6 +172,10 @@ local function deserialize(string, src)
 	local f, err = loadstring(string)
 	if err then print("error deserializing", string, err) end
 	setfenv(f, {
+		setLoaded = function(name, t)
+			print("[setLoaded]", name, t)
+			engine.Savefile.current_save.loaded[name] = t
+		end,
 		loadstring = loadstring,
 		loadObject = function(n)
 			if n == src then
