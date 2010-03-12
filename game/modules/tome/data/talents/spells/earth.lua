@@ -6,7 +6,7 @@ newTalent{
 	mode = "sustained",
 	require = spells_req1,
 	points = 5,
-	sustain_mana = 45,
+	sustain_mana = 30,
 	cooldown = 10,
 	tactical = {
 		DEFEND = 10,

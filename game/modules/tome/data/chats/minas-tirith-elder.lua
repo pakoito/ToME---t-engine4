@@ -7,7 +7,7 @@ newChat{ id="welcome",
 }
 
 newChat{ id="found_staff",
-	text = [[*He examines the staff* Indeed you were right in bringing it here. While I cannot sense its true purpose I feel this could be used to cause many wrongs.
+	text = [[#LIGHT_GREEN#*He examines the staff*#WHITE# Indeed you were right in bringing it here. While I cannot sense its true purpose I feel this could be used to cause many wrongs.
 Please surrender the staff to the protection of the King while we work to learn its power.
 This could be related to the rumours we hear from the far east...]],
 	answers = {

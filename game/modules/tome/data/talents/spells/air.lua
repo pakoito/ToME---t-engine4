@@ -28,14 +28,14 @@ newTalent{
 	type = {"spell/air",2},
 	require = spells_req2,
 	points = 5,
-	mana = 45,
+	mana = 25,
 	cooldown = 8,
 	tactical = {
 		ATTACKAREA = 10,
 	},
 	range = 15,
 	action = function(self, t)
-		local duration = self:getTalentLevel(t)
+		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
 		local dam = 4 + self:combatSpellpower(0.11) * self:getTalentLevel(t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
@@ -55,7 +55,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Noxious fumes rises from the ground doing %0.2f nature damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.11) * self:getTalentLevel(t), self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.11) * self:getTalentLevel(t), self:getTalentLevel(t) + 2)
 	end,
 }
 

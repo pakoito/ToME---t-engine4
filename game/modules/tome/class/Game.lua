@@ -88,8 +88,10 @@ function _M:newGame()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[2], self.player.default_wilderness[3]
 		self.player.current_wilderness = self.player.default_wilderness[1]
 		self:changeLevel(1, self.player.starting_zone)
+		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
 		self.player:resolve(nil, true)
+		print("[PLAYER BIRTH] resolved!")
 		self.player:playerLevelup(function()
 			self.player:grantQuest(self.player.starting_quest)
 			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))

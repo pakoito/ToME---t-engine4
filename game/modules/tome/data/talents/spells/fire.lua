@@ -14,12 +14,12 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), {type="flame"})
+		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(1.2) * self:getTalentLevel(t)), {type="flame"})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(25 + self:combatSpellpower(1.2) * self:getTalentLevel(t))
 	end,
 }
 
@@ -38,12 +38,12 @@ newTalent{
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t), dam=self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t))}, {type="flame"})
+		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t) + 2, dam=self:spellCrit(10 + self:combatSpellpower(0.4) * self:getTalentLevel(t))}, {type="flame"})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be stunned over %d turns.
-		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t), self:getTalentLevelRaw(t))
+		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.4) * self:getTalentLevel(t), self:getTalentLevelRaw(t) + 2)
 	end,
 }
 

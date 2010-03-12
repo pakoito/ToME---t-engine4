@@ -120,13 +120,14 @@ function _M:apply()
 		self.actor.descriptor[d.type] = d.name
 
 		if d.copy then
+			local copy = table.clone(d.copy, true)
 			-- Append array part
-			while #d.copy > 0 do
-				local f = table.remove(d.copy)
+			while #copy > 0 do
+				local f = table.remove(copy)
 				table.insert(self.actor, f)
 			end
 			-- Copy normal data
-			table.merge(self.actor, d.copy, true)
+			table.merge(self.actor, copy, true)
 		end
 		-- Change stats
 		if d.stats then
