@@ -68,6 +68,8 @@ function _M:addObject(inven_id, o)
 	-- No room ?
 	if #inven >= inven.max then return false end
 
+	if o:check("on_preaddobject", self, inven) then return false end
+
 	-- Ok add it
 	table.insert(inven, o)
 
@@ -111,7 +113,11 @@ end
 -- @return the object removed or nil if no item existed
 function _M:removeObject(inven, item, no_unstack)
 	if type(inven) == "number" then inven = self.inven[inven] end
+
 	local o, finish = inven[item], true
+
+	if o:check("on_preremoveobject", self, inven) then return false end
+
 	if not no_unstack then
 		o, finish = o:unstack()
 	end
@@ -139,14 +145,16 @@ end
 -- @param item the item id to drop
 -- @return the object removed or nil if no item existed
 function _M:dropFloor(inven, item, vocal, all)
-	local o = self:removeObject(inven, item, all)
+	local o = self:getInven(inven)[item]
 	if not o then
 		if vocal then game.logSeen(self, "There is nothing to drop.") end
 		return
 	end
-	if o:check("on_drop", self) then return end
+	if o:check("on_drop", self) then return false end
+	o = self:removeObject(inven, item, all)
 	game.level.map:addObject(self.x, self.y, o)
 	if vocal then game.logSeen(self, "%s drops on the floor: %s.", self.name:capitalize(), o:getName{do_color=true}) end
+	return true
 end
 
 --- Show inventory dialog
@@ -231,6 +239,7 @@ function _M:wearObject(o, replace, vocal)
 		if vocal then game.logSeen(self, "%s can not wear: %s (%s).", self.name:capitalize(), o:getName{do_color=true}, err) end
 		return false
 	end
+	if o:check("on_canwear", self, inven) then return false end
 
 	if self:addObject(inven, o) then
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
@@ -258,7 +267,10 @@ end
 
 --- Takeoff item
 function _M:takeoffObject(inven, item)
-	local o = self:removeObject(inven, item, true)
+	local o = self:getInven(inven)[item]
+	if o:check("on_cantakeoff", self, inven) then return false end
+
+	o = self:removeObject(inven, item, true)
 	return o
 end
 
@@ -317,8 +329,22 @@ function _M:sortInven(inven)
 end
 
 --- Finds an object by name in an inventory
-function _M:findInInventory(inven, name)
+-- @param inven the inventory to look into
+-- @param name the name to look for
+-- @param getname the parameters to pass to getName(), if nil the default is {no_count=true, force_id=true}
+function _M:findInInventory(inven, name, getname)
+	getname = getname or {no_count=true, force_id=true}
 	for item, o in ipairs(inven) do
-		if o:getName{no_count=true} == name then return o, item end
+		if o:getName(getname) == name then return o, item end
+	end
+end
+
+--- Finds an object by name in all the actor's inventories
+-- @param name the name to look for
+-- @param getname the parameters to pass to getName(), if nil the default is {no_count=true, force_id=true}
+function _M:findInAllInventories(name, getname)
+	for inven_id, inven in pairs(self.inven) do
+		local o, item = self:findInInventory(inven, name, getname)
+		if o and item then return o, item, inven_id end
 	end
 end

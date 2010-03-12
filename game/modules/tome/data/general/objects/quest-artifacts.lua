@@ -36,4 +36,10 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 			who:grantQuest("staff-absorption")
 		end
 	end,
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
 }

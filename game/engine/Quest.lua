@@ -43,11 +43,11 @@ function _M:check(prop, ...)
 	end
 end
 
---- Sets the quets status or sub-objective status
+--- Sets the quests status or sub-objective status
 -- @param status one of the possible quest status (PENDING, COMPLETED, DONE, FAILED)
 function _M:setStatus(status, sub, who)
 	if sub then
-		if self.objectives[sub] == status then return false end
+		if self.objectives[sub] and self.objectives[sub] == status then return false end
 		self.objectives[sub] = status
 		self:check("on_status_change", who, status, sub)
 		return true
@@ -56,5 +56,17 @@ function _M:setStatus(status, sub, who)
 		self.status = status
 		self:check("on_status_change", who, status)
 		return true
+	end
+end
+
+--- Checks the quests status or sub-objective status
+-- @param status one of the possible quest status (PENDING, COMPLETED, DONE, FAILED)
+function _M:isStatus(status, sub)
+	if sub then
+		if self.objectives[sub] and self.objectives[sub] == status then return true end
+		return false
+	else
+		if self.status == status then return true end
+		return false
 	end
 end

@@ -45,3 +45,12 @@ function _M:hasQuest(id)
 	if not self.quests then return false end
 	return self.quests[id] and true or false
 end
+
+--- Checks the status of the given quest
+-- If the actor does not have the quest, does nothing
+function _M:isQuestStatus(quest, status, sub)
+	if not self.quests then return end
+	local q = self.quests[quest]
+	if not q then return end
+	return q:isStatus(status, sub)
+end
