@@ -488,6 +488,10 @@ function _M:setupCommands()
 			self:registerDialog(require("engine.dialogs.ShowQuests").new(self.player))
 		end,
 
+		SHOW_CHARACTER_SHEET = function()
+			self:registerDialog(require("mod.dialogs.CharacterSheet").new(self.player))
+		end,
+
 		-- Show time
 		SHOW_TIME = function()
 			self.log(self.calendar:getTimeDate(self.turn))

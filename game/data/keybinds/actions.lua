@@ -61,6 +61,13 @@ defineAction{
 }
 
 defineAction{
+	default = { "uni:C" },
+	type = "SHOW_CHARACTER_SHEET",
+	group = "actions",
+	name = "Show character sheet",
+}
+
+defineAction{
 	default = { "sym:115:false:false:true:false" },
 	type = "SWITCH_GFX",
 	group = "actions",
