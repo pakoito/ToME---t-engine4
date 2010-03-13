@@ -78,11 +78,11 @@ function _M:drawDialog(s)
 		end
 		for i, o in ipairs(self.actor:getInven(self.actor.INVEN_OFFHAND)) do
 			if o.combat then
-				s:drawColorString(self.font, ("Attack(Off Hand): #00ff00#%3d"):format(game.player:combatAttack(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
-				s:drawColorString(self.font, ("Damage(Off Hand): #00ff00#%3d"):format(game.player:combatDamage(o.combat) * offmult), w, h, 255, 255, 255) h = h + self.font_h
-				s:drawColorString(self.font, ("APR   (Off Hand): #00ff00#%3d"):format(game.player:combatAPR(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
-				s:drawColorString(self.font, ("Crit  (Off Hand): #00ff00#%3d%%"):format(game.player:combatCrit(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
-				s:drawColorString(self.font, ("Speed (Off Hand): #00ff00#%0.2f"):format(game.player:combatSpeed(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
+				s:drawColorString(self.font, ("Attack (Off Hand): #00ff00#%3d"):format(game.player:combatAttack(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
+				s:drawColorString(self.font, ("Damage (Off Hand): #00ff00#%3d"):format(game.player:combatDamage(o.combat) * offmult), w, h, 255, 255, 255) h = h + self.font_h
+				s:drawColorString(self.font, ("APR    (Off Hand): #00ff00#%3d"):format(game.player:combatAPR(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
+				s:drawColorString(self.font, ("Crit   (Off Hand): #00ff00#%3d%%"):format(game.player:combatCrit(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
+				s:drawColorString(self.font, ("Speed  (Off Hand): #00ff00#%0.2f"):format(game.player:combatSpeed(o.combat)), w, h, 255, 255, 255) h = h + self.font_h
 			end
 		end
 	end

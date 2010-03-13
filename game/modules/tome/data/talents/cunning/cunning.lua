@@ -2,6 +2,7 @@
 newTalentType{ type="cunning/stealth", name = "stealth", description = "Allows the user to enter stealth." }
 newTalentType{ type="cunning/trapping", name = "trapping", description = "The knowledge of trap laying." }
 newTalentType{ type="cunning/dirty", name = "dirty fighting", description = "Teaches various talents to criple your foes." }
+newTalentType{ type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
 newTalentType{ type="cunning/survival", name = "survival", description = "The knowledge of the dangers of the world, and how to best avoid them." }
 
 -- Generic requires for cunning based on talent level
@@ -28,5 +29,6 @@ cuns_req5 = {
 
 load("/data/talents/cunning/stealth.lua")
 load("/data/talents/cunning/traps.lua")
-load("/data/talents/cunning/survival.lua")
 load("/data/talents/cunning/dirty.lua")
+load("/data/talents/cunning/lethality.lua")
+load("/data/talents/cunning/survival.lua")
