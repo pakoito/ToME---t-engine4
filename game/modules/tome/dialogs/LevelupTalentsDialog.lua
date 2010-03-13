@@ -100,10 +100,8 @@ function _M:learn(v)
 end
 
 function _M:checkDeps()
-	print("Check deps!")
 	for t_id, _ in pairs(self.talents_changed) do
 		local t = self.actor:getTalentFromId(t_id)
-		print("Check deps!", t.name, self.actor:canLearnTalent(t, 0), self.actor:knowTalent(t))
 		if not self.actor:canLearnTalent(t, 0) and self.actor:knowTalent(t) then return false, t.name end
 	end
 	return true

@@ -55,7 +55,7 @@ function _M:init(t, no_default)
 
 	t.life_rating = t.life_rating or 10
 	t.mana_rating = t.mana_rating or 10
-	t.stamina_rating = t.stamina_rating or 10
+	t.stamina_rating = t.stamina_rating or 6
 
 	t.esp = t.esp or {range=10}
 
@@ -329,7 +329,7 @@ function _M:onStatChange(stat, v)
 		self.max_life = self.max_life + 5 * v
 	elseif stat == self.STAT_WIL then
 		self:incMaxMana(5 * v)
-		self:incMaxStamina(2 * v)
+		self:incMaxStamina(3 * v)
 	end
 end
 

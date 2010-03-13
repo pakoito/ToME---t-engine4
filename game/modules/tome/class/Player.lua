@@ -3,12 +3,12 @@ require "mod.class.Actor"
 require "engine.interface.PlayerRest"
 require "engine.interface.PlayerRun"
 require "engine.interface.PlayerHotkeys"
-local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
 local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
 local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
+local DeathDialog = require "mod.dialogs.DeathDialog"
 
 --- Defines the player for ToME
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
@@ -107,10 +107,7 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:die()
-	local save = Savefile.new(game.save_name)
-	save:delete()
-	save:close()
-	util.showMainMenu()
+	game:registerDialog(DeathDialog.new(self))
 end
 
 function _M:setName(name)
