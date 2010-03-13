@@ -57,7 +57,7 @@ newTalent{
 	type = {"cunning/stealth",3},
 	require = cuns_req3,
 	points = 5,
-	mana = 30,
+	stamina = 30,
 	cooldown = 10,
 	action = function(self, t)
 		game.log("IMPLEMENT ME!")

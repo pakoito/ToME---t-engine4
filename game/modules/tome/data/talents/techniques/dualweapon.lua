@@ -74,6 +74,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local weapon, offweapon = self:hasDualWeapon()
+		weapon = weapon or {}
 		return ([[Increases attack speed by %d%%, but drains stamina quickly.]]):format(self:combatSpeed(weapon.combat) * (self:getTalentLevel(t) * 14))
 	end,
 }

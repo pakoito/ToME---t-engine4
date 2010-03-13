@@ -151,3 +151,26 @@ newEntity{
 		end
 	},
 }
+
+newEntity{
+	unique = true,
+	type = "potion", subtype="potion",
+	name = "Blood of Life",
+	unided_name = "bloody phial",
+	level_range = {1, 50},
+	display = '!', color=colors.VIOLET, image="object/potion-0x3-violet.png",
+	encumber = 0.4,
+	rarity = 350,
+	desc = [[The Blood of Life! It can let a living being resurrect in case of an untimely demise. But only once!]],
+	cost = 1000,
+
+	use_simple = { name = "quaff the Blood of Life", use = function(self, who)
+		if not who:attr("undead") then
+			who.blood_life = true
+			game.logPlayer(who, "#LIGHT_RED#You feel the Blood of Life rushing through your veins.")
+		else
+			game.logPlayer(who, "The Blood of Life seems to have no effect on you.")
+		end
+		game.logSeen(who, "%s quaffs the %s!", who.name:capitalize(), self:getName())
+	end},
+}

@@ -183,7 +183,7 @@ end
 --- Computes a logarithmic chance to hit, opposing chance to hit to chance to miss
 -- This will be used for melee attacks, physical and spell resistance
 function _M:checkHit(atk, def, min, max, factor)
-print("checkHit", atk, def)
+	print("checkHit", atk, def)
 	if atk == 0 then atk = 1 end
 	local hit = nil
 	factor = factor or 5
@@ -195,8 +195,19 @@ print("checkHit", atk, def)
 		hit = -math.log10(1 + 5 * d / 50) * 100 + 50
 	end
 	hit = util.bound(hit, min or 5, max or 95)
-print("=> chance to hit", hit)
+	print("=> chance to hit", hit)
 	return rng.percent(hit), hit
+end
+
+--- Try to totaly evade an attack
+function _M:checkEvasion(target)
+	if not target:attr("evasion") then return end
+
+	local evasion = target:attr("evasion")
+	print("checkEvasion", evasion, target.level, self.level)
+	evasion = evasion * (target.level / self.level)
+	print("=> evasion chance", evasion)
+	return rng.percent(evasion)
 end
 
 --- Attacks with one weapon
@@ -211,7 +222,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
-	if self:checkHit(atk, def) then
+	local evaded = false
+	if self:checkEvasion(target) then
+		evaded = true
+		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
+	elseif self:checkHit(atk, def) then
 		print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
 		local dam = math.max(0, dam - math.max(0, armor - apr))
 		local damrange = self:combatDamageRange(weapon)
@@ -240,7 +255,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end end
 
 	-- Riposte!
-	if not hitted and target:knowTalent(target.T_RIPOSTE) and rng.percent(util.bound(target:getTalentLevel(target.T_RIPOSTE) * target:getDex(50), 10, 80)) then
+	if not hitted and not evaded and target:knowTalent(target.T_RIPOSTE) and rng.percent(util.bound(target:getTalentLevel(target.T_RIPOSTE) * target:getDex(50), 10, 80)) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
 	end

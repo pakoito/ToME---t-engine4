@@ -139,6 +139,22 @@ newEffect{
 }
 
 newEffect{
+	name = "EVASION",
+	desc = "Evasion",
+	type = "physical",
+	status = "beneficial",
+	parameters = { chance=10 },
+	on_gain = function(self, err) return "#Target# tries to evade attacks.", "+Evasion" end,
+	on_lose = function(self, err) return "#Target# is no more evading attacks.", "-Evasion" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("evasion", eff.chance)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("evasion", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "SPEED",
 	desc = "Speed",
 	type = "magical",
