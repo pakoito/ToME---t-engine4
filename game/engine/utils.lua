@@ -88,14 +88,13 @@ function string.splitLine(str, max_width, font)
 		local w, h = font:size(v)
 
 		-- Ignore the size of color markers
-		local _, _, color = v:find("(#%x%x%x%x%x%x#)")
-		if color then
-			local color_w = font:size(color)
+		local _, _, color1 = v:find("(#%x%x%x%x%x%x#)")
+		local _, _, color2 = v:find("(#[A-Z_]+#)")
+		if color1 then
+			local color_w = font:size(color1)
 			w = w - color_w
-		end
-		local _, _, color = v:find("(#[A-Z_]+#)")
-		if color then
-			local color_w = font:size(color)
+		elseif color2 then
+			local color_w = font:size(color2)
 			w = w - color_w
 		end
 
