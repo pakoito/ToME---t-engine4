@@ -6,15 +6,33 @@ module(..., package.seeall, class.inherit(engine.Dialog))
 function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor_dup = actor:clone()
-	engine.Dialog.init(self, "Talents Levelup: "..actor.name, 800, 600)
+	engine.Dialog.init(self, "Talents Levelup: "..actor.name, math.max(game.w * 0.85, 800), math.max(game.h * 0.85, 600))
+
+	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}
 
 	self:generateList()
+
+	self.talents_changed = {}
 
 	self.sel = 1
 	self.scroll = 1
 	self.max = math.floor((self.ih - 45) / self.font_h) - 1
 
-	self:keyCommands(nil, {
+	self:keyCommands({
+		__TEXTINPUT = function(c)
+			if not self.list[self.sel] or not self.list[self.sel].type then return end
+			if c == "+" then
+				self.actor.__hidden_talent_types[self.list[self.sel].type] = false
+				self:generateList()
+				self.changed = true
+			end
+			if c == "-" then
+				self.actor.__hidden_talent_types[self.list[self.sel].type] = true
+				self:generateList()
+				self.changed = true
+			end
+		end,
+	}, {
 		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		MOVE_LEFT = function() self:learn(false) self.changed = true end,
@@ -40,29 +58,32 @@ function _M:generateList()
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
 			local cat = tt.type:gsub("/.*", "")
-			list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), type=tt.type }
-			if self.actor:knowTalentType(tt.type) then
-				known[#known+1] = "#00FF00#known"
+			local ttknown = self.actor:knowTalentType(tt.type)
+			list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), type=tt.type, color=ttknown and {0,200,0} or {128,128,128} }
+			if ttknown then
+				known[#known+1] = {name="known", color={0,200,0}}
+			else
+				known[#known+1] = {name="0/1", color={128,128,128}}
+			end
 
-				-- Find all talents of this school
+			-- Find all talents of this school
+			if (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type]) then
 				for j, t in ipairs(tt.talents) do
 					if not t.hide then
 						local typename = "talent"
 						if t.type[1]:find("^spell/") then typename = "spell" end
-						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id }
+						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id, color=not ttknown and {128,128,128} }
 						if self.actor:getTalentLevelRaw(t.id) == t.points then
-							known[#known+1] = "#00FF00#known"
+							known[#known+1] = {name="known", color=ttknown and {0,255,0} or {128,128,128}}
 						else
 							if not self.actor:canLearnTalent(t) then
-								known[#known+1] = "#FF0000#"..self.actor:getTalentLevelRaw(t.id).."/"..t.points
+								known[#known+1] = {name=self.actor:getTalentLevelRaw(t.id).."/"..t.points, color=ttknown and {255,0,0} or {128,128,128}}
 							else
-								known[#known+1] = self.actor:getTalentLevelRaw(t.id).."/"..t.points
+								known[#known+1] = {name=self.actor:getTalentLevelRaw(t.id).."/"..t.points, color = not ttknown and {128,128,128}}
 							end
 						end
 					end
 				end
-			else
-				known[#known+1] = tt.points.." point(s)"
 			end
 		end
 	end
@@ -76,6 +97,16 @@ function _M:learn(v)
 	else
 		self:learnTalent(self.list[self.sel].talent, v)
 	end
+end
+
+function _M:checkDeps()
+	print("Check deps!")
+	for t_id, _ in pairs(self.talents_changed) do
+		local t = self.actor:getTalentFromId(t_id)
+		print("Check deps!", t.name, self.actor:canLearnTalent(t, 0), self.actor:knowTalent(t))
+		if not self.actor:canLearnTalent(t, 0) and self.actor:knowTalent(t) then return false, t.name end
+	end
+	return true
 end
 
 function _M:learnTalent(t_id, v)
@@ -95,6 +126,7 @@ function _M:learnTalent(t_id, v)
 		end
 		self.actor:learnTalent(t_id)
 		self.actor.unused_talents = self.actor.unused_talents - 1
+		self.talents_changed[t_id] = true
 	else
 		if not self.actor:knowTalent(t_id) then
 			self:simplePopup("Impossible", "You do not know this talent!")
@@ -105,7 +137,14 @@ function _M:learnTalent(t_id, v)
 			return
 		end
 		self.actor:unlearnTalent(t_id)
-		self.actor.unused_talents = self.actor.unused_talents + 1
+		local ok, dep_miss = self:checkDeps()
+		if ok then
+			self.actor.unused_talents = self.actor.unused_talents + 1
+		else
+			self:simplePopup("Impossible", "You can not unlearn this talent because of talent: "..dep_miss)
+			self.actor:learnTalent(t_id)
+			return
+		end
 	end
 	self:generateList()
 end
@@ -132,7 +171,14 @@ function _M:learnType(tt, v)
 			return
 		end
 		self.actor:unlearnTalentType(tt)
-		self.actor.unused_talents_types = self.actor.unused_talents_types + 1
+		local ok, dep_miss = self:checkDeps()
+		if ok then
+			self.actor.unused_talents_types = self.actor.unused_talents_types + 1
+		else
+			self:simplePopup("Impossible", "You can not unlearn this category because of talent: "..dep_miss)
+			self.actor:learnTalentType(tt)
+			return
+		end
 	end
 
 	self:generateList()
@@ -142,7 +188,7 @@ function _M:drawDialog(s)
 	-- Description part
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
 
-	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn.
+	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn; #00FF00#+#FFFFFF# to expand a category; #00FF00#-#FFFFFF# to reduce a category.
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 
@@ -201,7 +247,7 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	self:drawWBorder(s, 2, 40, 200)
 
 	self:drawSelectionList(s, 2, 45, self.font_h, self.list, self.sel, "name"     , self.scroll, self.max)
-	self:drawSelectionList(s, 300, 45, self.font_h, self.list_known, self.sel, nil, self.scroll, self.max)
+	self:drawSelectionList(s, self.iw / 2 - 70, 45, self.font_h, self.list_known, self.sel, "name", self.scroll, self.max)
 
 	self.changed = false
 end

@@ -140,7 +140,9 @@ function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, colo
 			elseif prop and type(v[prop]) == "function" then v = tostring(v[prop](v))
 			else v = tostring(v) end
 
-			local lines = v:splitLines(max_size or 100000, self.font)
+			local lines
+			if max_size then lines = v:splitLines(max_size, self.font)
+			else lines = {v} end
 			for j = 1, #lines do
 				if sel == i then
 					s:drawColorString(self.font, lines[j], x, y, selcolor[1], selcolor[2], selcolor[3])

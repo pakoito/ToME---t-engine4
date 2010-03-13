@@ -164,11 +164,13 @@ function _M:isTalentActive(t_id)
 end
 
 --- Returns how many talents of this type the actor knows
-function _M:numberKnownTalent(type)
+-- @param type the talent type to count
+-- @param exlude_id if not nil the count will ignore this talent id
+function _M:numberKnownTalent(type, exlude_id)
 	local nb = 0
 	for id, _ in pairs(self.talents) do
 		local t = _M.talents_def[id]
-		if t.type[1] == type then nb = nb + 1 end
+		if t.type[1] == type and (not exlude_id or exlude_id ~= id) then nb = nb + 1 end
 	end
 	return nb
 end
@@ -227,12 +229,15 @@ function _M:unlearnTalent(t_id)
 	return true
 end
 
-function _M:canLearnTalent(t)
+--- Checks the talent if learnable
+-- @param t the talent to check
+-- @param offset the level offset to check, defaults to 1
+function _M:canLearnTalent(t, offset)
 	-- Check prerequisites
 	if t.require then
 		local req = t.require
 		if type(req) == "function" then req = req(self, t) end
-		local tlev = self:getTalentLevelRaw(t) + 1
+		local tlev = self:getTalentLevelRaw(t) + (offset or 1)
 
 		-- Obviously this requires the ActorStats interface
 		if req.stat then
@@ -257,8 +262,10 @@ function _M:canLearnTalent(t)
 		end
 	end
 
+	if not self:knowTalentType(t.type[1]) and not t.type_no_req then return nil, "unknown talent type" end
+
 	-- Check talent type
-	local known = self:numberKnownTalent(t.type[1])
+	local known = self:numberKnownTalent(t.type[1], t.id)
 	if t.type[2] and known < t.type[2] - 1 then
 		return nil, "not enough talents of this type known"
 	end
@@ -280,8 +287,12 @@ function _M:getTalentReqDesc(t_id, levmod)
 
 	local str = ""
 
+	if not t.type_no_req then
+		str = str .. (self:knowTalentType(t.type[1]) and "#00ff00#" or "#ff0000#") .. "- Talent category known\n"
+	end
+
 	if t.type[2] and t.type[2] > 1 then
-		local known = self:numberKnownTalent(t.type[1])
+		local known = self:numberKnownTalent(t.type[1], t.id)
 		local c = (known >= t.type[2] - 1) and "#00ff00#" or "#ff0000#"
 		str = str .. ("- %sTalents of the same category: %d\n"):format(c, t.type[2] - 1)
 	end
@@ -327,6 +338,7 @@ end
 
 --- Do we know this talent
 function _M:knowTalent(id)
+	if type(id) == "table" then id = id.id end
 	return self.talents[id] and true or false
 end
 
