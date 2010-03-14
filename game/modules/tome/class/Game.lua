@@ -1,5 +1,6 @@
 require "engine.class"
 require "engine.GameTurnBased"
+require "engine.interface.GameMusic"
 require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local DamageType = require "engine.DamageType"
@@ -32,12 +33,13 @@ local Calendar = require "engine.Calendar"
 
 local QuitDialog = require "mod.dialogs.Quit"
 
-module(..., package.seeall, class.inherit(engine.GameTurnBased))
+module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic))
 
 collectgarbage("stop")
 
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
+	engine.interface.GameMusic.init(self)
 
 	-- Same init as when loaded from a savefile
 	self:loaded()
@@ -76,6 +78,9 @@ function _M:run()
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
 
+	-- Run the current music if any
+	self:playMusic()
+
 	if self.level then self:setupDisplayMode() end
 end
 
@@ -102,6 +107,7 @@ end
 
 function _M:loaded()
 	engine.GameTurnBased.loaded(self)
+	engine.interface.GameMusic.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap"}
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
@@ -192,6 +198,10 @@ function _M:changeLevel(lev, zone)
 		end
 	end
 	self.level:addEntity(self.player)
+
+	if self.level.data.ambiant_music then
+		self:playMusic(self.level.data.ambiant_music)
+	end
 end
 
 function _M:getPlayer()

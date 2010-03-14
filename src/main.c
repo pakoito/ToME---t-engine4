@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include <SDL_mixer.h>
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -13,6 +14,7 @@
 #include "physfs.h"
 #include "core_lua.h"
 #include "getself.h"
+#include "music.h"
 #include "main.h"
 
 #define WIDTH 1024
@@ -23,6 +25,7 @@ int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
 bool exit_engine = FALSE;
+bool no_sound = FALSE;
 
 static int traceback (lua_State *L) {
 	lua_Debug ar;
@@ -404,6 +407,7 @@ int main(int argc, char *argv[])
 	luaopen_lanes(L);
 	luaopen_map(L);
 	luaopen_particles(L);
+	luaopen_sound(L);
 
 	// Make the uids repository
 	lua_newtable(L);
@@ -448,6 +452,15 @@ int main(int argc, char *argv[])
 	SDL_EnableUNICODE(TRUE);
 	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
+	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 4096) == -1)
+	{
+		no_sound = TRUE;
+	}
+	else
+	{
+		Mix_VolumeMusic(SDL_MIX_MAXVOLUME);
+		Mix_Volume(-1, SDL_MIX_MAXVOLUME);
+	}
 
 	/* Sets up OpenGL double buffering */
 	resizeWindow(WIDTH, HEIGHT);

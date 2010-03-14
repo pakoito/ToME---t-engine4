@@ -99,7 +99,6 @@ newTalent{
 			engine.Entity.new{alpha=100, display='', color_br=180, color_bg=30, color_bb=60},
 			nil, self:spellFriendlyFire()
 		)
-		game.level.map:particleEmitter(x, y, radius, "static_fire", nil, nil, {radius=radius})
 		return true
 	end,
 	info = function(self, t)
