@@ -388,6 +388,8 @@ function _M:physicalCrit(dam, weapon)
 
 	local chance = self:combatCrit(weapon)
 	local crit = false
+	if self:knowTalent(self.T_BACKSTAB) then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
+
 	if rng.percent(chance) then
 		dam = dam * 2
 		crit = true
@@ -403,6 +405,8 @@ function _M:spellCrit(dam)
 
 	local chance = self:combatSpellCrit()
 	local crit = false
+	if self:knowTalent(self.T_BACKSTAB) then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
+
 	if rng.percent(chance) then
 		dam = dam * 2
 		crit = true
