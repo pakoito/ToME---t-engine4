@@ -45,6 +45,14 @@ function _M:use()
 	self.changed = true
 
 	print("[CHAT] selected", a[1], a.action, a.jump)
+	if a.jump then
+		self.cur_id = a.jump
+		self:generateList()
+		self.sel = 1
+		self.scroll = 1
+	else
+		game:unregisterDialog(self)
+	end
 	if a.action then
 		local id = a.action(self.npc, self.player)
 		if id then
@@ -54,14 +62,6 @@ function _M:use()
 			self.scroll = 1
 			return
 		end
-	end
-	if a.jump then
-		self.cur_id = a.jump
-		self:generateList()
-		self.sel = 1
-		self.scroll = 1
-	else
-		game:unregisterDialog(self)
 	end
 end
 

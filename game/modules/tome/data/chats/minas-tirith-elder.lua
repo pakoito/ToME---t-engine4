@@ -1,8 +1,8 @@
 newChat{ id="welcome",
 	text = [[Welcome @playername@ to Minas Tirith traveler, please be quick my time is precious.]],
 	answers = {
-		{"Nothing, excuse me. Bye!"},
 		{"I have found this staff in my travels, it looks really old and powerful. I dare not use it.", jump="found_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.PENDING) and player:findInAllInventories("Staff of Absorption") end},
+		{"Nothing, excuse me. Bye!"},
 	}
 }
 

@@ -110,6 +110,7 @@ function _M:loaded()
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setSeen(x, y, v)
+			self.changed = true
 		end
 		return t[x + y * self.w]
 	end
@@ -118,6 +119,7 @@ function _M:loaded()
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setRemember(x, y, v)
+			self.changed = true
 		end
 		return t[x + y * self.w]
 	end
@@ -126,6 +128,7 @@ function _M:loaded()
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setLite(x, y, v)
+			self.changed = true
 		end
 		return t[x + y * self.w]
 	end

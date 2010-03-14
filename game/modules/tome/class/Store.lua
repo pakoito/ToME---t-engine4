@@ -40,6 +40,7 @@ function _M:onSell(who, o, item, nb)
 	local price = o:getPrice() / 10
 	if price <= 0 then return end
 	who.money = who.money + price * nb
+	o:identify(true)
 	return nb
 end
 

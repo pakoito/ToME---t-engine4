@@ -48,3 +48,11 @@ Autolevel:registerScheme{ name = "warriormage", levelup = function(self)
 		learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
 	end
 end}
+
+Autolevel:registerScheme{ name = "snake", levelup = function(self)
+	if self.level % 2 == 0 then
+		learnStats(self, { self.STAT_CUN, self.STAT_DEX, self.STAT_CON })
+	else
+		learnStats(self, { self.STAT_CUN, self.STAT_DEX, self.STAT_STR })
+	end
+end}
