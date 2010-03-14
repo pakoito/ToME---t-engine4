@@ -372,7 +372,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			self:changeLevel(1, "town-minas-tirith")
+			if config.settings.tome.cheat then self:changeLevel(5, "tower-amon-sul") end
 		end,
 	}
 	self.key:addBinds
@@ -504,7 +504,9 @@ function _M:setupCommands()
 		end,
 		-- Lua console
 		LUA_CONSOLE = function()
-			self:registerDialog(DebugConsole.new())
+			if config.settings.tome.cheat then
+				self:registerDialog(DebugConsole.new())
+			end
 		end,
 
 		-- Switch gfx modes
@@ -572,7 +574,9 @@ function _M:setupMouse()
 		if button == "right" then
 			local tmx, tmy = self.level.map:getMouseTile(mx, my)
 			-- DEBUG
-			game.player:move(tmx, tmy, true)
+			if config.settings.tome.cheat then
+				game.player:move(tmx, tmy, true)
+			end
 		-- Move map around
 		elseif button == "left" and xrel and yrel then
 			derivx = derivx + xrel
