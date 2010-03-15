@@ -89,9 +89,6 @@ end
 --- Serialization
 function _M:save()
 	return class.save(self, {
-		_fov_esp = true,
-		_fov_lite = true,
-		_fov = true,
 		_map = true,
 		surface = true,
 		particle = true,
@@ -139,9 +136,6 @@ function _M:loaded()
 	setmetatable(self.remembers, {__call = mapremember})
 
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
-	self._fov = core.fov.new(_M.opaque, _M.apply, self)
-	self._fov_lite = core.fov.new(_M.opaque, _M.applyLite, self)
-	self._fov_esp = core.fov.new(_M.opaqueESP, _M.applyESP, self)
 	self.changed = true
 	self.finished = true
 
@@ -170,51 +164,14 @@ end
 -- to the map. Cyclic references! BAD BAD BAD !<br/>
 -- The closing should be handled automatically by the Zone class so no bother for authors
 function _M:close()
-	self._fov = false
-	self._fov_lite = false
-	self._fov_esp = false
 end
 
---- Runs the FOV algorithm on the map
--- @param x source point of the ligth
--- @param y source point of the ligth
--- @param d radius of the light
-function _M:fov(x, y, d)
-	-- Reset seen grids
-	if self.clean_fov then
-		self.clean_fov = false
-		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
-		self._map:cleanSeen();
-	end
-	self._fov(x, y, d)
-end
-
---- Runs the FOV algorithm on the map, ligthing grids to allow rememberance
--- @param x source point of the ligth
--- @param y source point of the ligth
--- @param d radius of the light
-function _M:fovLite(x, y, d)
-	-- Reset seen grids
-	if self.clean_fov then
-		self.clean_fov = false
-		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
-		self._map:cleanSeen();
-	end
-	self._fov_lite(x, y, d)
-end
-
---- Runs the FOV algorithm on the map, finding ESP(Extra Sensorial Power) targets
--- @param x source point of the ligth
--- @param y source point of the ligth
--- @param d radius of the light
-function _M:fovESP(x, y, d)
-	-- Reset seen grids
-	if self.clean_fov then
-		self.clean_fov = false
-		for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
-		self._map:cleanSeen();
-	end
-	self._fov_esp(x, y, d)
+--- Cleans the FOV infos (seens table)
+function _M:cleanFOV()
+	if not self.clean_fov then return end
+	self.clean_fov = false
+	for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+	self._map:cleanSeen()
 end
 
 function _M:updateMap(x, y)

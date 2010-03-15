@@ -1,5 +1,7 @@
 require "engine.class"
+local Map = require "engine.Map"
 
+--- Displays a tooltip
 module(..., package.seeall, class.make)
 
 tiles = engine.Tiles.new(16, 16)
@@ -13,6 +15,7 @@ function _M:init(fontname, fontsize, color, bgcolor)
 	self.changed = true
 end
 
+--- Set the tooltip text
 function _M:set(str, ...)
 	self.text = str:format(...):splitLines(300, self.font)
 	self.w, self.h = 0, 0
@@ -53,4 +56,29 @@ function _M:display()
 		self.surface:drawColorString(self.font, self.text[i], 4, 4 + (i-1) * self.font_h, self.color[1], self.color[2], self.color[3])
 	end
 	return self.surface
+end
+
+--- Displays the tooltip at the given map coordinates
+-- @param tmx the map coordinate to get tooltip from
+-- @param tmy the map coordinate to get tooltip from
+-- @param mx the screen coordinate to display at, if nil it will be computed from tmx
+-- @param my the screen coordinate to display at, if nil it will be computed from tmy
+function _M:displayAtMap(tmx, tmy, mx, my)
+	if not mx then
+		mx, my = game.level.map:getTileToScreen(tmx, tmy)
+	end
+
+	local tt = game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip") or
+			game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip") or
+			game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip") or
+			game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
+	if tt and game.level.map.seens(tmx, tmy) then
+		self:set("%s", tt)
+		local t = self:display()
+		mx = mx - self.w
+		my = my - self.h
+		if mx < 0 then mx = 0 end
+		if my < 0 then my = 0 end
+		if t then t:toScreen(mx, my) end
+	end
 end

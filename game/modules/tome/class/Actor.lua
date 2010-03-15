@@ -10,6 +10,7 @@ require "engine.interface.ActorTalents"
 require "engine.interface.ActorResource"
 require "engine.interface.ActorQuest"
 require "engine.interface.BloodyDeath"
+require "engine.interface.ActorFOV"
 require "mod.class.interface.Combat"
 local Map = require "engine.Map"
 
@@ -25,6 +26,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorResource,
 	engine.interface.ActorQuest,
 	engine.interface.BloodyDeath,
+	engine.interface.ActorFOV,
 	mod.class.interface.Combat
 ))
 
@@ -89,6 +91,7 @@ function _M:init(t, no_default)
 	engine.interface.ActorTalents.init(self, t)
 	engine.interface.ActorResource.init(self, t)
 	engine.interface.ActorLevel.init(self, t)
+	engine.interface.ActorFOV.init(self, t)
 end
 
 function _M:act()

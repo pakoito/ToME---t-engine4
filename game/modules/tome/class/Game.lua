@@ -245,31 +245,32 @@ function _M:display()
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
-			self.level.map:fovESP(self.player.x, self.player.y, self.player.esp.range or 10)
-			self.level.map:fov(self.player.x, self.player.y, 20)
-			if self.player.lite > 0 then self.level.map:fovLite(self.player.x, self.player.y, self.player.lite) end
+			-- Compute FOV, if needed
+			self.level.map:cleanFOV()
+			self.player:computeFOV(self.player.esp.range or 10, "block_esp", function(x, y) self.level.map:applyESP(x, y) end, true, true)
+			self.player:computeFOV(self.player.sight or 20, "block_sight", function(x, y) self.level.map:apply(x, y) end, true)
+			if self.player.lite > 0 then self.player:computeFOV(self.player.life, "block_sight", function(x, y) self.level.map:applyLite(x, y) end, true, true) end
 
 			--
 			-- Handle Sense spell
 			--
 			if self.player:attr("detect_range") then
-				core.fov.calc_circle(self.player.x, self.player.y, self.player:attr("detect_range"), function(map, lx, ly)
-					if game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_sense") then return true end
-				end, function(map, lx, ly)
+				self.player:computeFOV(self.player:attr("detect_range"), "block_sense", function(x, y)
 					local ok = false
-					if game.player:attr("detect_actor") and game.level.map(lx, ly, game.level.map.ACTOR) then ok = true end
-					if game.player:attr("detect_object") and game.level.map(lx, ly, game.level.map.OBJECT) then ok = true end
-					if game.player:attr("detect_trap") and game.level.map(lx, ly, game.level.map.TRAP) then
-						game.level.map(lx, ly, game.level.map.TRAP):setKnown(self.player, true)
+					if self.player:attr("detect_actor") and self.level.map(x, y, self.level.map.ACTOR) then ok = true end
+					if self.player:attr("detect_object") and self.level.map(x, y, self.level.map.OBJECT) then ok = true end
+					if self.player:attr("detect_trap") and self.level.map(x, y, self.level.map.TRAP) then
+						self.level.map(x, y, self.level.map.TRAP):setKnown(self.player, true)
 						ok = true
 					end
 
 					if ok then
-						game.level.map.seens(lx, ly, true)
+						self.level.map.seens(x, y, true)
 					end
-				end, self)
+				end, true, true)
 			end
 		end
+
 		self.level.map:display()
 
 		-- Display the targetting system if active
@@ -278,19 +279,9 @@ function _M:display()
 		-- Display a tooltip if available
 		local mx, my = core.mouse.get()
 		local tmx, tmy = self.level.map:getMouseTile(mx, my)
-		local tt = self.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip") or
-				self.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip") or
-				self.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip") or
-				self.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
-		if tt and self.level.map.seens(tmx, tmy) then
-			self.tooltip:set("%s", tt)
-			local t = self.tooltip:display()
-			mx = mx - self.tooltip.w
-			my = my - self.tooltip.h
-			if mx < 0 then mx = 0 end
-			if my < 0 then my = 0 end
-			if t then t:toScreen(mx, my) end
-		end
+		self.tooltip:displayAtMap(tmx, tmy, mx, my)
+
+		-- Move target around
 		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
 			self.target.target.x, self.target.target.y = tmx, tmy
 		end
