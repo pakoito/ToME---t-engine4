@@ -72,10 +72,10 @@ newEntity{ base = "BASE_NPC_THIEF",
 	max_life = resolvers.rngavg(90,100),
 	combat = { dam=resolvers.rngavg(6,7), atk=10, apr=4},
 	summon = {
-		{type="human", subtype="thief", name="bandit", number=1, hasxp=true},
 		{type="human", subtype="thief", name="bandit", number=1, hasxp=false},
-		{type="human", subtype="thief", name="thief", number=1, hasxp=true},
-		{type="human", subtype="thief", name="rogue", number=2, hasxp=true},
+		{type="human", subtype="thief", name="bandit", number=1, hasxp=false},
+		{type="human", subtype="thief", name="thief", number=1, hasxp=false},
+		{type="human", subtype="thief", name="rogue", number=2, hasxp=false},
 	},
 	talents = resolvers.talents{ [Talents.T_STEAL]=2, [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
 }

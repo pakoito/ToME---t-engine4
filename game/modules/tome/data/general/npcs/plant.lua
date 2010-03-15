@@ -59,12 +59,12 @@ newEntity{ base = "BASE_NPC_PLANT",
 	combat = false,
 
 		summon = {
-			{type="insect", subtype="swarms", name="bee swarm", number=1, hasxp=true},
-			{type="insect", subtype="swarms", name="bee swarm", number=1, hasxp=true},
-			{type="insect", subtype="swarms", name="bee swarm", number=1, hasxp=true},
-			{type="insect", subtype="swarms", name="bee swarm", number=2, hasxp=true},
-			{type="insect", subtype="swarms", name="bee swarm", number=2, hasxp=true},
-			{type="animal", subtype="bear", number=1, hasxp=true},
+			{type="insect", subtype="swarms", name="bee swarm", number=1, hasxp=false},
+			{type="insect", subtype="swarms", name="bee swarm", number=1, hasxp=false},
+			{type="insect", subtype="swarms", name="bee swarm", number=1, hasxp=false},
+			{type="insect", subtype="swarms", name="bee swarm", number=2, hasxp=false},
+			{type="insect", subtype="swarms", name="bee swarm", number=2, hasxp=false},
+			{type="animal", subtype="bear", number=1, hasxp=false},
 		},
 
 	talents = resolvers.talents{ [Talents.T_SUMMON]=1 },
