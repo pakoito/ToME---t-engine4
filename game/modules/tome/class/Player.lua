@@ -3,6 +3,7 @@ require "mod.class.Actor"
 require "engine.interface.PlayerRest"
 require "engine.interface.PlayerRun"
 require "engine.interface.PlayerHotkeys"
+require "engine.interface.PlayerSlide"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -17,7 +18,8 @@ module(..., package.seeall, class.inherit(
 	mod.class.Actor,
 	engine.interface.PlayerRest,
 	engine.interface.PlayerRun,
-	engine.interface.PlayerHotkeys
+	engine.interface.PlayerHotkeys,
+	engine.interface.PlayerSlide
 ))
 
 function _M:init(t, no_default)
@@ -62,6 +64,8 @@ function _M:init(t, no_default)
 end
 
 function _M:move(x, y, force)
+	x, y = self:tryPlayerSlide(x, y, force)
+
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
