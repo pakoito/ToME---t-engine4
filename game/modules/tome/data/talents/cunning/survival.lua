@@ -40,3 +40,15 @@ newTalent{
 		format(self:getTalentLevel(t) * self:getCun(25))
 	end,
 }
+
+newTalent{
+	name = "Long Strides",
+	type = {"cunning/survival", 4},
+	require = cuns_req4,
+	mode = "passive",
+	points = 5,
+	info = function(self, t)
+		return ([[Reduces the movement penality when moving over dangerous terrain.]]):
+		format()
+	end,
+}

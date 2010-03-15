@@ -382,7 +382,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			if config.settings.tome.cheat then self:changeLevel(5, "tower-amon-sul") end
+			if config.settings.tome.cheat then self:changeLevel(7, "sandworm-lair") end
 		end,
 	}
 	self.key:addBinds

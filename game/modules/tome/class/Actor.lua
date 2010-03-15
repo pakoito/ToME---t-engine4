@@ -108,6 +108,8 @@ function _M:act()
 		t.do_storm(self, t)
 	end
 
+	if self:attr("stunned") then self.energy.value = 0 end
+
 	-- Suffocate ?
 	local air_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level")
 	if air_level then self:suffocate(-air_level, self) end

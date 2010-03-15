@@ -14,6 +14,8 @@ module(..., package.seeall, class.inherit(
 ))
 
 function _M:init(t, no_default)
+	t.encumber = t.encumber or 0
+
 	engine.Object.init(self, t, no_default)
 	engine.interface.ObjectActivable.init(self, t)
 	engine.interface.ObjectIdentify.init(self, t)

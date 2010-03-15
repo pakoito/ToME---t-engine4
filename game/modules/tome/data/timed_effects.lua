@@ -89,14 +89,10 @@ newEffect{
 		self.color_b = 155
 		game.level.map:updateMap(self.x, self.y)
 
-		-- Frozen, cannot act
-		self.energy.value = 0
-	end,
-	on_timeout = function(self, eff)
-		-- Frozen, cannot act
-		self.energy.value = 0
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("stunned", eff.tmpid)
 		self.color_r = eff.old_r
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b
@@ -112,11 +108,13 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is stunned by the burning flame!", "+Burning Shock" end,
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Burning Shock" end,
 	activate = function(self, eff)
-		self.energy.value = 0
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
 	end,
 	on_timeout = function(self, eff)
-		self.energy.value = 0
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stunned", eff.tmpid)
 	end,
 }
 
@@ -129,12 +127,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is stunned!", "+Stunned" end,
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
 	activate = function(self, eff)
-		-- Frozen, cannot act
-		self.energy.value = 0
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
 	end,
-	on_timeout = function(self, eff)
-		-- Frozen, cannot act
-		self.energy.value = 0
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stunned", eff.tmpid)
 	end,
 }
 
@@ -548,5 +544,39 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "CRIPPLE",
+	desc = "Cripple",
+	type = "physical",
+	status = "detrimental",
+	parameters = { atk=10, dam=10 },
+	on_gain = function(self, err) return "#Target# is crippled." end,
+	on_lose = function(self, err) return "#Target# is not cripple anymore." end,
+	activate = function(self, eff)
+		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
+		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.atkid)
+		self:removeTemporaryValue("combat_dam", eff.damid)
+	end,
+}
+
+newEffect{
+	name = "WILLFUL_COMBAT",
+	desc = "Willful Combat",
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# lashes out with pure willpower." end,
+	on_lose = function(self, err) return "#Target# willpower rush ends.." end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_dam", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_dam", eff.tmpid)
 	end,
 }

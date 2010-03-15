@@ -173,7 +173,7 @@ local function deserialize(string, src)
 	if err then print("error deserializing", string, err) end
 	setfenv(f, {
 		setLoaded = function(name, t)
-			print("[setLoaded]", name, t)
+--			print("[setLoaded]", name, t)
 			engine.Savefile.current_save.loaded[name] = t
 		end,
 		loadstring = loadstring,

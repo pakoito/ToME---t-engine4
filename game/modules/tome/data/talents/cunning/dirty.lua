@@ -76,3 +76,39 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Cripple",
+	type = {"cunning/dirty", 4},
+	points = 5,
+	cooldown = 25,
+	stamina = 30,
+	require = cuns_req4,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hitted = self:attackTarget(target, nil, 0.9 + self:getTalentLevel(t) / 9, true)
+
+		if hitted then
+			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
+				local tw = target:getInven("MAINHAND")
+				if tw then
+					tw = tw[1] and tw[1].combat
+				end
+				tw = tw or target.combat
+				local atk = target:combatAttack(tw) * (10 + self:getTalentLevel(t) * 3) / 100
+				local dam = target:combatDamage(tw) * (10 + self:getTalentLevel(t) * 4) / 100
+				target:setEffect(target.EFF_CRIPPLE, 3 + math.ceil(self:getTalentLevel(t)), {atk=atk, dam=dam})
+			else
+				game.logSeen(target, "%s is not crippled!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[You hit your target doing %d%% damage. If your attack hits the target is cripple for %d turns, losing %d%% attack and %d%% damage.]]):
+		format(100 * (0.9 + self:getTalentLevel(t) / 9), 3 + math.ceil(self:getTalentLevel(t)), 10 + self:getTalentLevel(t) * 3, 10 + self:getTalentLevel(t) * 4)
+	end,
+}

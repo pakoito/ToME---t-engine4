@@ -16,6 +16,7 @@ end
 
 function _M:playMusic(name)
 	name = name or self.current_music
+	if not name then return end
 	local m = self.loaded_musics[name]
 	if not m then
 		self.loaded_musics[name] = core.sound.newMusic("/data/music/"..name)

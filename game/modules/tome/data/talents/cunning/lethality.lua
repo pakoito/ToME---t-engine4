@@ -38,3 +38,22 @@ newTalent{
 		format(100 * (0.8 + self:getTalentLevel(t) / 10), 4 + (self:getTalentLevel(t) * self:getCun()) / 20, 5 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
+
+newTalent{
+	name = "Willful Combat",
+	type = {"cunning/lethality", 3},
+	points = 5,
+	cooldown = 60,
+	stamina = 25,
+	require = cuns_req3,
+	action = function(self, t)
+		local dur = 3 + math.ceil(self:getTalentLevel(t) * 1.5)
+		local power = self:getWil(70)
+		self:setEffect(self.EFF_WILLFUL_COMBAT, dur, {power=power})
+		return true
+	end,
+	info = function(self, t)
+		return ([[For a %d turns you put all your will into your blows, additing %d (based on Willpower) damage to each strikes.]]):
+		format(3 + math.ceil(self:getTalentLevel(t) * 1.5), self:getWil(70))
+	end,
+}

@@ -152,7 +152,7 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 				dam = rng.range(dam, dam * damrange)
 				print("[ATTACK] after range", dam)
 				local crit
-				dam, crit = self:physicalCrit(dam, ammo)
+				dam, crit = self:physicalCrit(dam, ammo, target)
 				print("[ATTACK] after crit", dam)
 				dam = dam * mult
 				print("[ATTACK] after mult", dam)
@@ -233,7 +233,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK] after range", dam)
 		local crit
-		dam, crit = self:physicalCrit(dam, weapon)
+		dam, crit = self:physicalCrit(dam, weapon, target)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
@@ -381,15 +381,16 @@ function _M:combatSpellSpeed()
 end
 
 --- Computes physical crit for a damage
-function _M:physicalCrit(dam, weapon)
+function _M:physicalCrit(dam, weapon, target)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
 		return dam * (2 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 5), true
 	end
 
 	local chance = self:combatCrit(weapon)
 	local crit = false
-	if self:knowTalent(self.T_BACKSTAB) then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
+	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
 
+	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
 		dam = dam * 2
 		crit = true
@@ -405,8 +406,9 @@ function _M:spellCrit(dam)
 
 	local chance = self:combatSpellCrit()
 	local crit = false
-	if self:knowTalent(self.T_BACKSTAB) then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
+--	if self:knowTalent(self.T_BACKSTAB) then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
 
+	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
 		dam = dam * 2
 		crit = true
