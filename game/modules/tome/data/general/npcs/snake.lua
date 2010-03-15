@@ -9,7 +9,7 @@ newEntity{
 	max_stamina = 110,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_snake" },
 	energy = { mod=1.3 },
 	stats = { str=14, dex=23, mag=5, con=5 },
 	combat_armor = 1, combat_def = 1,

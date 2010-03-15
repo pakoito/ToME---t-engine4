@@ -30,7 +30,7 @@ newAI("dumb_talented_simple", function(self)
 			self:runAI("dumb_talented")
 		end
 		if not self.energy.used then
-			self:runAI(self.ai_move or "move_simple")
+			self:runAI(self.ai_state.ai_move or "move_simple")
 		end
 		return true
 	end

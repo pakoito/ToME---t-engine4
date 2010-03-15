@@ -10,7 +10,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	drops = resolvers.drops{chance=70, nb=1, {type="money"}, {} },
 	autolevel = "ghoul",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_ghoul", },
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	rarity = 10,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 3, combat_def = 10,
-	ai_state = { talent_in=2, },
+	ai_state = { talent_in=2, ai_pause=20 },
 
 	combat = { dam=10, atk=8, apr=4, dammod={str=0.6} },
 

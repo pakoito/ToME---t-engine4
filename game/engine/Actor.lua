@@ -264,3 +264,13 @@ function _M:attr(prop, v, fix)
 		end
 	end
 end
+
+--- Are we within a certain distance of the target
+-- @param x the spot we test for near-ness
+-- @param y the spot we test for near-ness
+-- @param radius how close we should be (defaults to 1)
+function _M:isNear(x, y, radius)
+	radius = radius or 1
+	if math.floor(core.fov.distance(self.x, self.y, x, y)) > radius then return false end
+	return true
+end
