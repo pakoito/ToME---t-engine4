@@ -268,7 +268,6 @@ function _M:display()
 						game.level.map.seens(lx, ly, true)
 					end
 				end, self)
-				game.level.map:redisplay()
 			end
 		end
 		self.level.map:display()

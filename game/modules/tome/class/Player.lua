@@ -4,6 +4,7 @@ require "engine.interface.PlayerRest"
 require "engine.interface.PlayerRun"
 require "engine.interface.PlayerHotkeys"
 require "engine.interface.PlayerSlide"
+local ActorFOV = require "engine.interface.ActorFOV"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -19,7 +20,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerRest,
 	engine.interface.PlayerRun,
 	engine.interface.PlayerHotkeys,
-	engine.interface.PlayerSlide
+	engine.interface.PlayerSlide,
+	engine.interface.ActorFOV
 ))
 
 function _M:init(t, no_default)
@@ -38,6 +40,7 @@ function _M:init(t, no_default)
 	}
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
+	ActorFOV.init(self, t)
 	self.player = true
 	self.type = "humanoid"
 	self.subtype = "player"
@@ -88,6 +91,9 @@ end
 
 function _M:act()
 	if not mod.class.Actor.act(self) then return end
+
+	-- Compute FOV, if needed
+	self:computeFOV(self.sight or 20)
 
 	-- Clean log flasher
 	game.flash:empty()

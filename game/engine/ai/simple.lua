@@ -13,25 +13,17 @@ newAI("target_simple", function(self)
 
 	-- Find closer ennemy and target it
 	-- Get list of actors ordered by distance
-	local arr = game.level:getDistances(self)
+	local arr = self.fov.actors_dist
 	local act
-	if not arr or #arr == 0 then
-		-- No target? Ask the distancer to find one
-		game.level:idleProcessActor(self)
-		return
-	end
 	for i = 1, #arr do
-		act = __uids[arr[i].uid]
-
+		act = self.fov.actors_dist[i]
+--		print("AI looking for target", self.uid, self.name, "::", act.uid, act.name, self.fov.actors[act].sqdist)
 		-- find the closest ennemy
-		if act and self:reactionToward(act) < 0 then
+		if act and self:reactionToward(act) < 0 and not act.dead then
 			self.ai_target.actor = act
 			return true
 		end
 	end
-
-	-- No target ? Ask for more
-	game.level:idleProcessActor(self)
 end)
 
 newAI("target_player", function(self)

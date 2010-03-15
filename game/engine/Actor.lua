@@ -60,7 +60,6 @@ function _M:move(x, y, force)
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
 	map:checkAllEntities(x, y, "on_move", self, force)
-	game.level:idleProcessActor(self)
 
 	return true
 end

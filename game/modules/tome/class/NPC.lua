@@ -1,12 +1,14 @@
 require "engine.class"
 local ActorAI = require "engine.interface.ActorAI"
+local ActorFOV = require "engine.interface.ActorFOV"
 require "mod.class.Actor"
 
-module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI))
+module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI, engine.interface.ActorFOV))
 
 function _M:init(t, no_default)
 	mod.class.Actor.init(self, t, no_default)
 	ActorAI.init(self, t)
+	ActorFOV.init(self, t)
 end
 
 function _M:act()
@@ -17,6 +19,9 @@ function _M:act()
 	-- If AI did nothing, use energy anyway
 	self:doAI()
 	if not self.energy.used then self:useEnergy() end
+
+	-- Compute FOV, if needed
+	self:computeFOV(self.sight or 20)
 end
 
 --- Called by ActorLife interface

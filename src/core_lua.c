@@ -36,7 +36,9 @@ static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *sr
 	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->map_ref);
 	lua_pushnumber(L, x);
 	lua_pushnumber(L, y);
-	lua_call(L, 3, 0);
+	lua_pushnumber(L, dx);
+	lua_pushnumber(L, dy);
+	lua_call(L, 5, 0);
 	}
 }
 
