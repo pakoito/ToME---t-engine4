@@ -2,6 +2,7 @@ require "engine.class"
 local Map = require "engine.Map"
 local ShowInventory = require "engine.dialogs.ShowInventory"
 local ShowEquipment = require "engine.dialogs.ShowEquipment"
+local ShowEquipInven = require "engine.dialogs.ShowEquipInven"
 local ShowPickupFloor = require "engine.dialogs.ShowPickupFloor"
 
 --- Handles actors stats
@@ -157,6 +158,16 @@ function _M:dropFloor(inven, item, vocal, all)
 	return true
 end
 
+--- Show combined equipment/inventory dialog
+-- @param inven the inventory (from self:getInven())
+-- @param filter nil or a function that filters the objects to list
+-- @param action a function called when an object is selected
+function _M:showEquipInven(title, filter, action, allow_keybind)
+	local d = ShowEquipInven.new(title, self, filter, action, allow_keybind and self)
+	game:registerDialog(d)
+	return d
+end
+
 --- Show inventory dialog
 -- @param inven the inventory (from self:getInven())
 -- @param filter nil or a function that filters the objects to list
@@ -164,6 +175,7 @@ end
 function _M:showInventory(title, inven, filter, action, allow_keybind)
 	local d = ShowInventory.new(title, inven, filter, action, allow_keybind and self)
 	game:registerDialog(d)
+	return d
 end
 
 --- Show equipment dialog
@@ -172,6 +184,7 @@ end
 function _M:showEquipment(title, filter, action, allow_keybind)
 	local d = ShowEquipment.new(title, self, filter, action, allow_keybind and self)
 	game:registerDialog(d)
+	return d
 end
 
 --- Show floor pickup dialog
@@ -180,6 +193,7 @@ end
 function _M:showPickupFloor(title, filter, action)
 	local d = ShowPickupFloor.new(title, self.x, self.y, filter, action)
 	game:registerDialog(d)
+	return d
 end
 
 --- Can we wear this item?

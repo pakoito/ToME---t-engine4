@@ -214,6 +214,32 @@ function _M:runCheck()
 	return engine.interface.PlayerRun.runCheck(self)
 end
 
+function _M:doDrop(inven, item)
+	self:dropFloor(inven, item, true, true)
+	self:sortInven()
+	self:useEnergy()
+end
+
+function _M:doWear(inven, item, o)
+	self:removeObject(self.INVEN_INVEN, item, true)
+	local ro = self:wearObject(o, true, true)
+	if ro then
+		if type(ro) == "table" then self:addObject(self.INVEN_INVEN, ro) end
+	else
+		self:addObject(self.INVEN_INVEN, o)
+	end
+	self:sortInven()
+	self:useEnergy()
+end
+
+function _M:doTakeoff(inven, item, o)
+	if self:takeoffObject(inven, item) then
+		self:addObject(self.INVEN_INVEN, o)
+	end
+	self:sortInven()
+	self:useEnergy()
+end
+
 function _M:playerPickup()
 	-- If 2 or more objects, display a pickup dialog, otehrwise just picks up
 	if game.level.map:getObject(self.x, self.y, 2) then
@@ -231,9 +257,7 @@ end
 function _M:playerDrop()
 	local inven = self:getInven(self.INVEN_INVEN)
 	self:showInventory("Drop object", inven, nil, function(o, item)
-		self:dropFloor(inven, item, true, true)
-		self:sortInven()
-		self:useEnergy()
+		self:doDrop(inven, item)
 	end)
 end
 
@@ -242,25 +266,13 @@ function _M:playerWear()
 	self:showInventory("Wield/wear object", inven, function(o)
 		return o:wornInven() and true or false
 	end, function(o, item)
-		self:removeObject(self.INVEN_INVEN, item, true)
-		local ro = self:wearObject(o, true, true)
-		if ro then
-			if type(ro) == "table" then self:addObject(self.INVEN_INVEN, ro) end
-		else
-			self:addObject(self.INVEN_INVEN, o)
-		end
-		self:sortInven()
-		self:useEnergy()
+		self:doWear(inven, item, o)
 	end)
 end
 
 function _M:playerTakeoff()
 	self:showEquipment("Take off object", nil, function(o, inven, item)
-		if self:takeoffObject(inven, item) then
-			self:addObject(self.INVEN_INVEN, o)
-		end
-		self:sortInven()
-		self:useEnergy()
+		self:doTakeoff(inven, item, o)
 	end)
 end
 

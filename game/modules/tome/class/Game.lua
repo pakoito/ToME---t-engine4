@@ -459,7 +459,13 @@ function _M:setupCommands()
 			self.player:playerDrop()
 		end,
 		SHOW_INVENTORY = function()
-			self.player:showInventory(nil, self.player:getInven(self.player.INVEN_INVEN), nil, function() end)
+			local d
+			d = self.player:showEquipInven(nil, nil, function(o, inven, item)
+				local ud = require("mod.dialogs.UseItemDialog").new(self.player, o, item, inven, function()
+					d:generateList()
+				end)
+				self:registerDialog(ud)
+			end)
 		end,
 		SHOW_EQUIPMENT = function()
 			self.player:showEquipment(nil, nil, function() end)

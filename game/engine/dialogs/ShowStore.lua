@@ -89,20 +89,21 @@ function _M:generateList()
 end
 
 function _M:drawDialog(s)
-	h = self.ih * 0.80 + 4
 	if self.list[self.sel] then
 		lines = self.desc(self.list == self.store_list and "buy" or "sell", self.list[self.sel].object):splitLines(self.iw - 10, self.font)
 	else
 		lines = {}
 	end
 
-	self:drawWBorder(s, 3, self.ih * 0.80, self.iw - 6)
+	local sh = self.ih - 4 - #lines * self.font:lineSkip()
+	h = sh
+	self:drawWBorder(s, 3, sh, self.iw - 6)
 	for i = 1, #lines do
 		s:drawColorString(self.font, lines[i], 5, 2 + h)
 		h = h + self.font:lineSkip()
 	end
 
 	self:drawSelectionList(s, 2, 5, self.font_h, self.store_list, self.list == self.store_list and self.sel or -1, "name", self.scroll, self.max)
-	self:drawHBorder(s, self.iw / 2, 2, self.ih * 0.80 - 4)
+	self:drawHBorder(s, self.iw / 2, 2, sh - 4)
 	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.actor_list, self.list == self.actor_list and self.sel or -1, "name", self.scroll, self.max)
 end
