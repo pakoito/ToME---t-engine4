@@ -1,10 +1,11 @@
 require "engine.class"
 require "engine.Game"
-require "engine.Module"
 require "engine.KeyBind"
+local Module = require "engine.Module"
 local Savefile = require "engine.Savefile"
 local Dialog = require "engine.Dialog"
 local ButtonList = require "engine.ButtonList"
+local DownloadDialog = require "engine.dialogs.DownloadDialog"
 
 module(..., package.seeall, class.inherit(engine.Game))
 
@@ -15,8 +16,8 @@ function _M:init()
 end
 
 function _M:run()
-	self.mod_list = engine.Module:listModules()
-	self.save_list = engine.Module:listSavefiles()
+	self.mod_list = Module:listModules()
+	self.save_list = Module:listSavefiles()
 
 	-- Setup display
 	self:selectStepMain()
@@ -56,7 +57,7 @@ function _M:commandLineArgs(args)
 	end
 
 	if req_mod then
-		local mod = engine.Module:loadDefinition("/modules/"..req_mod)
+		local mod = Module:loadDefinition("/modules/"..req_mod)
 		if mod then
 			local M = mod.load()
 			_G.game = M.new()
@@ -96,6 +97,12 @@ function _M:selectStepMain()
 			name = "Load a saved game",
 			fct = function()
 				self:selectStepLoad()
+			end,
+		},
+		{
+			name = "Install a game module",
+			fct = function()
+				self:selectStepInstall()
 			end,
 		},
 		{
@@ -183,8 +190,44 @@ function _M:selectStepLoad()
 	end
 	self:registerDialog(display_module)
 
-	self.step = ButtonList.new(list, 10, 10, self.w * 0.24, (5 + 35) * #self.mod_list, nil, 5)
+	self.step = ButtonList.new(list, 10, 10, self.w * 0.24, (5 + mod_font:lineSkip()) * #self.mod_list, nil, 5)
 	self.step:select(2)
+	self.step:setKeyHandling()
+	self.step:setMouseHandling()
+	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
+end
+
+function _M:selectStepInstall()
+	local linda, th = Module:loadRemoteList()
+	local dllist = linda:receive("moduleslist")
+	th:join()
+
+	local display_module = Dialog.new("", self.w * 0.73, self.h, self.w * 0.26, 0, 255)
+
+	for i, mod in ipairs(dllist) do
+		mod.fct = function()
+			local d = DownloadDialog.new("Downloading: "..mod.long_name, mod.download, function(self)
+				print("Got ", #self.data, self.data)
+			end)
+			self:registerDialog(d)
+			d:startDownload()
+		end
+		mod.onSelect = function()
+			display_module.title = mod.long_name
+			display_module.changed = true
+		end
+	end
+
+	display_module.drawDialog = function(self, s)
+		local lines = dllist[game.step.selected].description:splitLines(self.w - 8, self.font)
+		local r, g, b
+		for i = 1, #lines do
+			r, g, b = s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
+		end
+	end
+	self:registerDialog(display_module)
+
+	self.step = ButtonList.new(dllist, 10, 10, self.w * 0.24, (5 + 35) * #dllist, nil, 5)
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
 	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
