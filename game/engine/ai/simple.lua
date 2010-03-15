@@ -8,6 +8,8 @@ newAI("move_simple", function(self)
 	end
 end)
 
+-- Find an hostile target
+-- this requires the ActorFOV interface, or an interface that provides self.fov.actors*
 newAI("target_simple", function(self)
 	if self.ai_target.actor and not self.ai_target.actor.dead and rng.percent(90) then return true end
 
