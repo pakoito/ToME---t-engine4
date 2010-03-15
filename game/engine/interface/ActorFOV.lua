@@ -87,7 +87,7 @@ function _M:updateFOV(a, sqdist)
 		fov.actors_dist[#fov.actors_dist+1] = a
 	end
 	fov.actors[a] = t
-	table.sort(fov.actors_dist, function(a, b) return fov.actors[a].sqdist < fov.actors[b].sqdist end)
 --	print("Updated FOV for", self.uid, self.name, ":: seen ", #fov.actors_dist, "actors closeby; from", a, sqdist)
+	table.sort(fov.actors_dist, function(a, b) if a and b then return fov.actors[a].sqdist < fov.actors[b].sqdist elseif a then return 1 else return nil end end)
 	self.fov_last_change = game.turn
 end

@@ -10,7 +10,7 @@ function _M:bloodyDeath()
 	local color = {255,0,100}
 	local done = 3
 	if type(self.has_blood) == "table" then
-		done = self.has_blood.nb
+		done = self.has_blood.nb or 3
 		color = self.has_blood.color
 	end
 	for i = 1, done do
