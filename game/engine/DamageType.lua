@@ -13,7 +13,8 @@ end
 --- Defines new damage type
 -- Static!
 function _M:loadDefinition(file)
-	local f = loadfile(file)
+	local f, err = loadfile(file)
+	if not f and err then error(err) end
 	setfenv(f, setmetatable({
 		DamageType = _M,
 		Map = require("engine.Map"),

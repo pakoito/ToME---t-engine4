@@ -8,11 +8,19 @@ module(..., package.seeall, class.make)
 -- Static
 function _M:listModules()
 	local ms = {}
+	fs.mount(engine.homepath, "/")
 	for i, short_name in ipairs(fs.list("/modules/")) do
 		local dir = "/modules/"..short_name
 		if fs.exists(dir.."/init.lua") then
 			local mod = self:loadDefinition(dir)
 			table.insert(ms, mod)
+		elseif short_name:find(".team$") then
+			fs.mount(fs.getRealPath(dir), "/testload", false);
+			if fs.exists("/testload/init.lua") then
+				local mod = self:loadDefinition("/testload", dir)
+				table.insert(ms, mod)
+			end
+			fs.umount(fs.getRealPath(dir))
 		end
 	end
 
@@ -22,12 +30,13 @@ function _M:listModules()
 		else return a.name < b.name
 		end
 	end)
+	fs.umount(engine.homepath)
 
 	return ms
 end
 
 --- Get a module definition from the module init.lua file
-function _M:loadDefinition(dir)
+function _M:loadDefinition(dir, team)
 	local mod_def = loadfile(dir.."/init.lua")
 	if mod_def then
 		-- Call the file body inside its own private environment
@@ -41,8 +50,16 @@ function _M:loadDefinition(dir)
 		mod.load = function()
 			core.display.setWindowTitle(mod.long_name)
 			self:setupWrite(mod)
-			fs.mount(fs.getRealPath(dir), "/mod", false);
-			fs.mount(fs.getRealPath(dir).."/data/", "/data", false);
+			if not team then
+				fs.mount(fs.getRealPath(dir), "/mod", false)
+				fs.mount(fs.getRealPath(dir).."/data/", "/data", false)
+			else
+				fs.mount(engine.homepath, "/")
+				local src = fs.getRealPath(team)
+				fs.umount(engine.homepath)
+				fs.mount(src, "/", false)
+				fs.mount(src, "/mod", false)
+			end
 			return require(mod.starter)
 		end
 
@@ -120,6 +137,7 @@ function _M:loadRemoteList(src)
 		local ltn12 = require "ltn12"
 
 		local t = {}
+		print("Downloading modules list from", src)
 		http.request{url = src, sink = ltn12.sink.table(t)}
 		local f, err = loadstring(table.concat(t))
 		if err then

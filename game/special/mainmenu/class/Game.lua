@@ -206,8 +206,11 @@ function _M:selectStepInstall()
 
 	for i, mod in ipairs(dllist) do
 		mod.fct = function()
-			local d = DownloadDialog.new("Downloading: "..mod.long_name, mod.download, function(self)
-				print("Got ", #self.data, self.data)
+			local d = DownloadDialog.new("Downloading: "..mod.long_name, mod.download, function(self, data)
+				fs.mkdir("/modules")
+				local f = fs.open("/modules/"..mod.short_name..".team", "w")
+				for i, v in ipairs(data) do f:write(v) end
+				f:close()
 			end)
 			self:registerDialog(d)
 			d:startDownload()

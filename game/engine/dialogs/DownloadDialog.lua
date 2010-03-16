@@ -8,7 +8,7 @@ function _M:init(title, url, on_finish)
 	self.received = 0
 	self.on_finish = on_finish
 
-	engine.Dialog.init(self, title or "Download", 400, 100)
+	engine.Dialog.init(self, title or "Downloading...", 400, 50)
 
 	self:keyCommands({
 	},{
@@ -18,20 +18,21 @@ end
 function _M:drawDialog(s)
 	if self.th then
 		local t = self.linda:receive(0, "final")
---		print("done ?", t)
-
 		local len = self.linda:receive(0, "received")
-		print("got", len)
-		if len then self.received = self.received + len end
+		while len do
+			len = self.linda:receive(0, "received")
+			if len then self.received = len end
+		end
 
 		local v, err = self.th:join(0)
 		if err then error(err) end
 
 		if t then
-			print("done !", #t, table.concat(t))
 			self.changed = false
 			self.linda = nil
 			self.th = nil
+			game:unregisterDialog(self)
+			self:on_finish(t)
 		end
 	end
 
@@ -47,9 +48,11 @@ function _M:startDownload()
 		local ltn12 = require "ltn12"
 
 		local t = {}
+		local size = 0
 		http.request{url = src, sink = function(chunk, err)
 			if chunk then
-				l:send(0, "received", #chunk)
+				size = size + #chunk
+				l:send(0, "received", size)
 				table.insert(t, chunk)
 			end
 			return 1
