@@ -20,7 +20,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
-	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3 },
+	resolvers.tmasteries{ ["technique/other"]=0.3 },
 
 	resists = { [DamageType.FIRE] = -50 },
 	fear_immune = 1,
@@ -42,7 +42,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 7,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 7, combat_def = 0,
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
@@ -52,7 +52,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 7,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 9, combat_def = 3,
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1,},
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1,},
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
@@ -62,5 +62,5 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 7,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 12, combat_def = 4,
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1, },
 }

@@ -178,7 +178,7 @@ end
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
-function _M:learnTalent(t_id, force)
+function _M:learnTalent(t_id, force, nb)
 	local t = _M.talents_def[t_id]
 
 	if not force then
@@ -198,7 +198,7 @@ function _M:learnTalent(t_id, force)
 		end
 	end
 
-	self.talents[t_id] = (self.talents[t_id] or 0) + 1
+	self.talents[t_id] = (self.talents[t_id] or 0) + (nb or 1)
 
 	if t.on_learn then t.on_learn(self, t) end
 

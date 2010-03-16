@@ -41,7 +41,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 	max_life = resolvers.rngavg(1,1),
 	combat = { dam=5, atk=15, apr=10 },
 
-	talents = resolvers.talents{ [Talents.T_SPORE_BLIND]=1 },
+	resolvers.talents{ [Talents.T_SPORE_BLIND]=1 },
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
@@ -51,5 +51,5 @@ newEntity{ base = "BASE_NPC_MOLD",
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=5, atk=15, apr=10 },
-	talents = resolvers.talents{ [Talents.T_SPORE_POISON]=1 },
+	resolvers.talents{ [Talents.T_SPORE_POISON]=1 },
 }

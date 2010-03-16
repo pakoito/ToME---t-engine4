@@ -32,7 +32,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	desc = [[A huge worm coloured as the sand it inhabits. This particular sandworm seems to have been bred for one purpose only, the eradication of everything that is non-sandworm, such as ... you.]],
 	rarity = 6,
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1,
 		[Talents.T_STUN]=2,
 		[Talents.T_KNOCKBACK]=2,
@@ -45,7 +45,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	desc = [[This unholy creature looks like a wingless dragon in shape but ressembles a sandworm in color.]],
 	rarity = 8,
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1,
 		[Talents.T_SAND_BREATH]=3,
 		[Talents.T_KNOCKBACK]=2,

@@ -20,7 +20,7 @@ newEntity{
 	energy = { mod=1.2 },
 	stats = { str=15, dex=12, mag=6, cun=12, con=15 },
 
-	tmasteries = resolvers.tmasteries{ ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3, ["technique/combat-training"]=0.3, },
+	resolvers.tmasteries{ ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3, ["technique/combat-training"]=0.3, },
 }
 
 newEntity{ base = "BASE_NPC_MINOTAUR",
@@ -30,7 +30,7 @@ newEntity{ base = "BASE_NPC_MINOTAUR",
 	level_range = {10, 50}, exp_worth = 1,
 	rarity = 9,
 	combat_armor = 13, combat_def = 8,
-	talents = resolvers.talents{ [Talents.T_WARSHOUT]=3, [Talents.T_STUNNING_BLOW]=3, [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_SUNDER_ARMS]=2, },
+	resolvers.talents{ [Talents.T_WARSHOUT]=3, [Talents.T_STUNNING_BLOW]=3, [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_SUNDER_ARMS]=2, },
 }
 
 newEntity{ base = "BASE_NPC_MINOTAUR",
@@ -44,5 +44,5 @@ newEntity{ base = "BASE_NPC_MINOTAUR",
 	autolevel = "caster",
 	resists = { [DamageType.FIRE] = 100 },
 	max_mana = 100,
-	talents = resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAME]=3, [Talents.T_FIREFLASH]=2 },
+	resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAME]=3, [Talents.T_FIREFLASH]=2 },
 }

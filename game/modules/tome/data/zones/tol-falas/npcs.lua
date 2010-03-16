@@ -32,7 +32,7 @@ newEntity{ define_as = "THE_MASTER",
 	see_invisible = 20,
 	undead = 1,
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
 		[Talents.T_MANA_POOL]=1,

@@ -30,7 +30,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="OLD_MAN_WILLOW_SHIELD"}, },
 	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2,
 
 		[Talents.T_MANA_POOL]=1,

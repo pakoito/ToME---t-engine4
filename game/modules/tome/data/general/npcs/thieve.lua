@@ -19,8 +19,8 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
-	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=0.3, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
-	talents = resolvers.talents{ [Talents.T_LETHALITY]=1, },
+	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=0.3, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
+	resolvers.talents{ [Talents.T_LETHALITY]=1, },
 }
 
 newEntity{ base = "BASE_NPC_THIEF",
@@ -30,7 +30,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	rarity = 5,
 	combat_armor = 1, combat_def = 5,
 	max_life = resolvers.rngavg(60,80),
-	talents = resolvers.talents{ [Talents.T_STEAL]=1, },
+	resolvers.talents{ [Talents.T_STEAL]=1, },
 }
 
 newEntity{ base = "BASE_NPC_THIEF",
@@ -39,7 +39,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {2, 50}, exp_worth = 1,
 	rarity = 5,
 	combat_armor = 2, combat_def = 5,
-	talents = resolvers.talents{ [Talents.T_STEALTH]=1, [Talents.T_STEAL]=1, },
+	resolvers.talents{ [Talents.T_STEALTH]=1, [Talents.T_STEAL]=1, },
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -49,7 +49,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {3, 50}, exp_worth = 1,
 	rarity = 5,
 	combat_armor = 3, combat_def = 5,
-	talents = resolvers.talents{ [Talents.T_STEALTH]=2, [Talents.T_STEAL]=2, },
+	resolvers.talents{ [Talents.T_STEALTH]=2, [Talents.T_STEAL]=2, },
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {5, 50}, exp_worth = 1,
 	rarity = 7,
 	combat_armor = 4, combat_def = 6,
-	talents = resolvers.talents{ [Talents.T_STEAL]=1, [Talents.T_STEALTH]=3, [Talents.T_LETHALITY]=2, },
+	resolvers.talents{ [Talents.T_STEAL]=1, [Talents.T_STEALTH]=3, [Talents.T_LETHALITY]=2, },
 	max_life = resolvers.rngavg(80,100),
 }
 
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 		{type="human", subtype="thief", name="thief", number=1, hasxp=false},
 		{type="human", subtype="thief", name="rogue", number=2, hasxp=false},
 	},
-	talents = resolvers.talents{ [Talents.T_STEAL]=2, [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
+	resolvers.talents{ [Talents.T_STEAL]=2, [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
 }
 
 newEntity{ base = "BASE_NPC_THIEF",
@@ -86,6 +86,6 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {12, 50}, exp_worth = 1,
 	rarity = 12,
 	combat_armor = 3, combat_def = 10,
-	talents = resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_PRECISION]=3, [Talents.T_DUAL_WEAPON_TRAINING]=2, [Talents.T_DUAL_WEAPON_DEFENSE]=2, [Talents.T_DUAL_STRIKE]=1, [Talents.T_SWEEP]=1, [Talents.T_SHADOWSTRIKE]=2, [Talents.T_LETHALITY]=5, },
+	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_PRECISION]=3, [Talents.T_DUAL_WEAPON_TRAINING]=2, [Talents.T_DUAL_WEAPON_DEFENSE]=2, [Talents.T_DUAL_STRIKE]=1, [Talents.T_SWEEP]=1, [Talents.T_SHADOWSTRIKE]=2, [Talents.T_LETHALITY]=5, },
 	max_life = resolvers.rngavg(70,90),
 }

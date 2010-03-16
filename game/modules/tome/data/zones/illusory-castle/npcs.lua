@@ -23,7 +23,7 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_ANGMAR"}, {type="armor", subtype="light"}, },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_SWORD_MASTERY]=3, [Talents.T_STUNNING_BLOW]=1,
 	},

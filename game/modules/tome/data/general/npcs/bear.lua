@@ -18,7 +18,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	combat = { dam=resolvers.rngavg(12,25), atk=10, apr=3, physspeed=2 },
 	life_rating = 12,
-	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.25 },
+	resolvers.tmasteries{ ["technique/other"]=0.25 },
 
 	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.POISON] = 20 },
 }
@@ -30,7 +30,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	rarity = 7,
 	max_life = resolvers.rngavg(80,90),
 	combat_armor = 7, combat_def = 3,
-	talents = resolvers.talents{ [Talents.T_STUN]=1 },
+	resolvers.talents{ [Talents.T_STUN]=1 },
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
@@ -40,7 +40,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	rarity = 7,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 8, combat_def = 3,
-	talents = resolvers.talents{ [Talents.T_STUN]=1 },
+	resolvers.talents{ [Talents.T_STUN]=1 },
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	max_life = resolvers.rngavg(100,110),
 	combat_armor = 9, combat_def = 4,
 	combat = { dam=resolvers.rngavg(13,17), atk=7, apr=2, physspeed=2 },
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,},
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,},
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	max_life = resolvers.rngavg(100,120),
 	combat_armor = 9, combat_def = 4,
 	combat = { dam=resolvers.rngavg(13,17), atk=10, apr=3, physspeed=2 },
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,},
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,},
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	max_life = resolvers.rngavg(110,120),
 	combat_armor = 10, combat_def = 5,
 	combat = { dam=resolvers.rngavg(15,20), atk=10, apr=3, physspeed=2 },
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2,},
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2,},
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
@@ -84,6 +84,6 @@ newEntity{ base = "BASE_NPC_BEAR",
 	max_life = resolvers.rngavg(110,120),
 	combat_armor = 10, combat_def = 7,
 	combat = { dam=resolvers.rngavg(15,20), atk=12, apr=3, physspeed=2 },
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2,},
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2,},
 	resists = { [DamageType.COLD] = 100, },
 }

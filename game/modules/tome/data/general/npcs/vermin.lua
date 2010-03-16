@@ -21,7 +21,7 @@ newEntity{ base = "BASE_NPC_WORM",
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=1, atk=15, apr=100 },
 
-	talents = resolvers.talents{ [Talents.T_CRAWL_POISON]=1, [Talents.T_MULTIPLY]=1 },
+	resolvers.talents{ [Talents.T_CRAWL_POISON]=1, [Talents.T_MULTIPLY]=1 },
 }
 
 newEntity{ base = "BASE_NPC_WORM",
@@ -31,5 +31,5 @@ newEntity{ base = "BASE_NPC_WORM",
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=1, atk=15, apr=100 },
 
-	talents = resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_MULTIPLY]=1 },
+	resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_MULTIPLY]=1 },
 }

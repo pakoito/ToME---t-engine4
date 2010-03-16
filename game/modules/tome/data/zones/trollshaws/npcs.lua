@@ -26,7 +26,7 @@ newEntity{ define_as = "TROLL_BILL",
 	equipment = resolvers.equip{ {type="weapon", subtype="greatmaul", defined="GREATMAUL_BILL_TRUNK"}, },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,
 	},
 

@@ -44,7 +44,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	combat_armor = 2, combat_def = 5,
 	combat = { dam=3, atk=30, apr=10 },
 
-	talents = resolvers.talents{ [Talents.T_BITE_POISON]=1 },
+	resolvers.talents{ [Talents.T_BITE_POISON]=1 },
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	combat_armor = 2, combat_def = 8,
 	combat = { dam=5, atk=30, apr=10 },
 
-	talents = resolvers.talents{ [Talents.T_BITE_POISON]=1 },
+	resolvers.talents{ [Talents.T_BITE_POISON]=1 },
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
@@ -68,7 +68,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	combat_armor = 3, combat_def = 11,
 	combat = { dam=7, atk=30, apr=10 },
 
-	talents = resolvers.talents{ [Talents.T_BITE_POISON]=2 },
+	resolvers.talents{ [Talents.T_BITE_POISON]=2 },
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
@@ -80,7 +80,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	combat_armor = 4, combat_def = 12,
 	combat = { dam=10, atk=30, apr=10 },
 
-	talents = resolvers.talents{ [Talents.T_BITE_POISON]=3 },
+	resolvers.talents{ [Talents.T_BITE_POISON]=3 },
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
@@ -93,5 +93,5 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	combat = { dam=12, atk=10, apr=10 },
 	energy = { mod=0.8 },
 
-	talents = resolvers.talents{ [Talents.T_STUN]=5 },
+	resolvers.talents{ [Talents.T_STUN]=5 },
 }

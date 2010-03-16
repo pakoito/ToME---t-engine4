@@ -33,7 +33,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 	max_life = resolvers.rngavg(1,3),
 	combat = { dam=2, atk=15, apr=20 },
 
-	talents = resolvers.talents{ [Talents.T_SPORE_POISON]=1 },
+	resolvers.talents{ [Talents.T_SPORE_POISON]=1 },
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
@@ -44,7 +44,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 	max_life = resolvers.rngavg(3,5),
 	combat = { dam=5, atk=15, apr=20 },
 
-	talents = resolvers.talents{ [Talents.T_SPORE_POISON]=2 },
+	resolvers.talents{ [Talents.T_SPORE_POISON]=2 },
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
@@ -56,5 +56,5 @@ newEntity{ base = "BASE_NPC_INSECT",
 	combat = { dam=10, atk=15, apr=20 },
 	can_multiply = 4,
 
-	talents = resolvers.talents{ [Talents.T_SPORE_POISON]=3 },
+	resolvers.talents{ [Talents.T_SPORE_POISON]=3 },
 }

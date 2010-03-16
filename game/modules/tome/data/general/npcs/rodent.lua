@@ -81,7 +81,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 6,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=5, atk=15, apr=10 },
-	talents = resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
+	resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -90,5 +90,5 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 7,
 	max_life = resolvers.rngavg(15,20),
 	combat = { dam=7, atk=15, apr=10 },
-	talents = resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
+	resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
 }

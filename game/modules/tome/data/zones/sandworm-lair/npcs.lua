@@ -46,7 +46,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	resolvers.drops{chance=100, nb=1, {defined="SANDQUEEN_HEART"}, },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1,
 		[Talents.T_MANA_POOL]=1,
 		[Talents.T_SUMMON]=1,

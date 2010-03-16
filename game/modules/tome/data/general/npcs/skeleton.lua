@@ -17,7 +17,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
-	tmasteries = resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
+	resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
 
 	blind_immune = 1,
 	fear_immune = 1,
@@ -39,7 +39,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	rarity = 3,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 5, combat_def = 1,
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUNNING_BLOW]=1, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUNNING_BLOW]=1, },
 	ai_state = { talent_in=1, },
 }
 
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	max_mana = resolvers.rngavg(70,80),
 	combat_armor = 3, combat_def = 1,
 	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
-	talents = resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAME]=2, [Talents.T_MANATHRUST]=3 },
+	resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAME]=2, [Talents.T_MANATHRUST]=3 },
 
 	equipment = resolvers.equip{ {type="weapon", subtype="staff"} },
 

@@ -14,7 +14,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
-	tmasteries = resolvers.tmasteries{ ["technique/other"]=1, },
+	resolvers.tmasteries{ ["technique/other"]=1, },
 
 	blind_immune = 1,
 	see_invisible = 2,
@@ -28,7 +28,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	rarity = 5,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 2, combat_def = 7,
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_BITE_POISON]=1, [Talents.T_ROTTING_DISEASE]=1, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_BITE_POISON]=1, [Talents.T_ROTTING_DISEASE]=1, },
 	ai_state = { talent_in=4, },
 
 	combat = { dam=5, atk=5, apr=3, dammod={str=0.6} },
@@ -46,7 +46,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	combat = { dam=7, atk=6, apr=3, dammod={str=0.6} },
 
 	summon = {{type="undead", subtype="ghoul", name="ghoul", number=1, hasxp=false}, },
-	talents = resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_BITE_POISON]=2,  [Talents.T_SUMMON]=1, [Talents.T_ROTTING_DISEASE]=2, [Talents.T_DECREPITUDE_DISEASE]=2, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_BITE_POISON]=2,  [Talents.T_SUMMON]=1, [Talents.T_ROTTING_DISEASE]=2, [Talents.T_DECREPITUDE_DISEASE]=2, },
 }
 
 newEntity{ base = "BASE_NPC_GHOUL",
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 		{type="undead", subtype="ghoul", name="ghast", number=1, hasxp=false},
 	},
 
-	talents = resolvers.talents{
+	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_BITE_POISON]=3,  [Talents.T_SUMMON]=1,
 		[Talents.T_ROTTING_DISEASE]=4, [Talents.T_DECREPITUDE_DISEASE]=3, [Talents.T_WEAKNESS_DISEASE]=3,
 	},
