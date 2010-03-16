@@ -1405,6 +1405,26 @@ static int lua_fs_get_path_separator(lua_State *L)
 	return 1;
 }
 
+static int lua_fs_get_search_path(lua_State *L)
+{
+	char **rc = PHYSFS_getSearchPath();
+
+	char **i;
+	int nb = 1;
+
+	lua_newtable(L);
+	for (i = rc; *i != NULL; i++)
+	{
+		lua_pushnumber(L, nb);
+		lua_pushstring(L, *i);
+		lua_settable(L, -3);
+		nb++;
+	}
+
+	PHYSFS_freeList(rc);
+	return 1;
+}
+
 static const struct luaL_reg fslib[] =
 {
 	{"open", lua_fs_open},
@@ -1419,6 +1439,7 @@ static const struct luaL_reg fslib[] =
 	{"getRealPath", lua_fs_get_real_path},
 	{"getUserPath", lua_fs_get_user_path},
 	{"getHomePath", lua_fs_get_home_path},
+	{"getSearchPath", lua_fs_get_search_path},
 	{"mount", lua_fs_mount},
 	{"umount", lua_fs_umount},
 	{NULL, NULL},

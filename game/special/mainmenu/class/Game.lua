@@ -57,7 +57,7 @@ function _M:commandLineArgs(args)
 	end
 
 	if req_mod then
-		local mod = Module:loadDefinition("/modules/"..req_mod)
+		local mod = self.mod_list[req_mod]
 		if mod then
 			local M = mod.load()
 			_G.game = M.new()
@@ -99,12 +99,14 @@ function _M:selectStepMain()
 				self:selectStepLoad()
 			end,
 		},
+--[[
 		{
 			name = "Install a game module",
 			fct = function()
 				self:selectStepInstall()
 			end,
 		},
+]]
 		{
 			name = "Exit",
 			fct = function()
@@ -199,18 +201,40 @@ end
 
 function _M:selectStepInstall()
 	local linda, th = Module:loadRemoteList()
-	local dllist = linda:receive("moduleslist")
+	local rawdllist = linda:receive("moduleslist")
 	th:join()
+
+	local dllist = {}
+	for i, mod in ipairs(rawdllist) do
+		if not self.mod_list[mod.short_name] then
+			dllist[#dllist+1] = mod
+		else
+			local lmod = self.mod_list[mod.short_name]
+			if mod.version[1] * 1000000 + mod.version[2] * 1000 + mod.version[3] > lmod.version[1] * 1000000 + lmod.version[2] * 1000 + lmod.version[3] then
+				dllist[#dllist+1] = mod
+			end
+		end
+	end
 
 	local display_module = Dialog.new("", self.w * 0.73, self.h, self.w * 0.26, 0, 255)
 
 	for i, mod in ipairs(dllist) do
 		mod.fct = function()
-			local d = DownloadDialog.new("Downloading: "..mod.long_name, mod.download, function(self, data)
+			local d = DownloadDialog.new("Downloading: "..mod.long_name, mod.download, function(di, data)
 				fs.mkdir("/modules")
 				local f = fs.open("/modules/"..mod.short_name..".team", "w")
 				for i, v in ipairs(data) do f:write(v) end
 				f:close()
+
+				-- Relist modules and savefiles
+				self.mod_list = Module:listModules()
+				self.save_list = Module:listSavefiles()
+
+				if self.mod_list[mod.short_name] then
+					Dialog:simplePopup("Success!", "Your new game is now installed, you can play!", function() self:unregisterDialog(display_module) self:selectStepMain() end)
+				else
+					Dialog:simplePopup("Error!", "The downloaded game does not seem to respond to the test. Please contact contact@te4.org")
+				end
 			end)
 			self:registerDialog(d)
 			d:startDownload()

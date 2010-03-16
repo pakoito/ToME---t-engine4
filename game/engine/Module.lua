@@ -9,16 +9,25 @@ module(..., package.seeall, class.make)
 function _M:listModules()
 	local ms = {}
 	fs.mount(engine.homepath, "/")
+--	print("Search Path: ") for k,e in ipairs(fs.getSearchPath()) do print("*",k,e) end
+
 	for i, short_name in ipairs(fs.list("/modules/")) do
+--print("!!", short_name)
 		local dir = "/modules/"..short_name
 		if fs.exists(dir.."/init.lua") then
 			local mod = self:loadDefinition(dir)
-			table.insert(ms, mod)
-		elseif short_name:find(".team$") then
-			fs.mount(fs.getRealPath(dir), "/testload", false);
-			if fs.exists("/testload/init.lua") then
-				local mod = self:loadDefinition("/testload", dir)
+			if mod then
 				table.insert(ms, mod)
+				ms[mod.short_name] = mod
+			end
+		elseif short_name:find(".team$") then
+			fs.mount(fs.getRealPath(dir), "/testload", false)
+			if fs.exists("/testload/mod/init.lua") then
+				local mod = self:loadDefinition("/testload", dir)
+				if mod then
+					table.insert(ms, mod)
+					ms[mod.short_name] = mod
+				end
 			end
 			fs.umount(fs.getRealPath(dir))
 		end
@@ -30,14 +39,14 @@ function _M:listModules()
 		else return a.name < b.name
 		end
 	end)
-	fs.umount(engine.homepath)
+--	fs.umount(engine.homepath)
 
 	return ms
 end
 
 --- Get a module definition from the module init.lua file
 function _M:loadDefinition(dir, team)
-	local mod_def = loadfile(dir.."/init.lua")
+	local mod_def = loadfile(team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
 	if mod_def then
 		-- Call the file body inside its own private environment
 		local mod = {}
@@ -46,6 +55,12 @@ function _M:loadDefinition(dir, team)
 
 		if not mod.long_name or not mod.name or not mod.short_name or not mod.version or not mod.starter then return end
 
+		-- Test engine version
+		if mod.engine[1] * 1000000 + mod.engine[2] * 1000 + mod.engine[3] > engine.version[1] * 1000000 + engine.version[2] * 1000 + engine.version[3] then
+			print("Module mismatch engine version", mod.short_name, mod.engine[1] * 1000000 + mod.engine[2] * 1000 + mod.engine[3], engine.version[1] * 1000000 + engine.version[2] * 1000 + engine.version[3])
+			return
+		end
+
 		-- Make a function to activate it
 		mod.load = function()
 			core.display.setWindowTitle(mod.long_name)
@@ -53,12 +68,11 @@ function _M:loadDefinition(dir, team)
 			if not team then
 				fs.mount(fs.getRealPath(dir), "/mod", false)
 				fs.mount(fs.getRealPath(dir).."/data/", "/data", false)
+				if fs.exists(dir.."/engine") then fs.mount(fs.getRealPath(dir).."/engine/", "/engine", false) end
 			else
-				fs.mount(engine.homepath, "/")
 				local src = fs.getRealPath(team)
-				fs.umount(engine.homepath)
+
 				fs.mount(src, "/", false)
-				fs.mount(src, "/mod", false)
 			end
 			return require(mod.starter)
 		end
@@ -70,13 +84,13 @@ end
 --- List all available savefiles
 -- Static
 function _M:listSavefiles()
-	fs.mount(engine.homepath, "/tmp/listsaves")
+--	fs.mount(engine.homepath, "/tmp/listsaves")
 
 	local mods = self:listModules()
 	for _, mod in ipairs(mods) do
 		local lss = {}
-		for i, short_name in ipairs(fs.list("/tmp/listsaves/"..mod.short_name.."/save/")) do
-			local dir = "/tmp/listsaves/"..mod.short_name.."/save/"..short_name
+		for i, short_name in ipairs(fs.list("/"..mod.short_name.."/save/")) do
+			local dir = "/"..mod.short_name.."/save/"..short_name
 			if fs.exists(dir.."/game.teag") then
 				local def = self:loadSavefileDescription(dir)
 				if def then
@@ -91,7 +105,7 @@ function _M:listSavefiles()
 		end)
 	end
 
-	fs.umount(engine.homepath)
+--	fs.umount(engine.homepath)
 
 	return mods
 end

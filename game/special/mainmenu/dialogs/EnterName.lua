@@ -8,7 +8,7 @@ function _M:init(runmod)
 	engine.Dialog.init(self, "Enter your character's name?", 300, 100)
 	self.runmod = runmod
 	self.name = ""
-	self:keyCommands{
+	self:keyCommands({
 		_RETURN = function()
 			if self.name:len() >= 3 then
 				game:unregisterDialog(self)
@@ -38,7 +38,11 @@ function _M:init(runmod)
 				self.changed = true
 			end
 		end,
-	}
+	},{
+		EXIT = function()
+			game:unregisterDialog(self)
+		end
+	})
 end
 
 function _M:drawDialog(s, w, h)

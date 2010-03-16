@@ -12,6 +12,9 @@ require "engine.Savefile"
 require "engine.Tiles"
 engine.Tiles.prefix = "/data/gfx/"
 
+-- Engine Version
+engine.version = {1,0,0}
+
 -- Setup the user directory
 engine.homepath = fs.getUserPath()..fs.getPathSeparator()..fs.getHomePath()..fs.getPathSeparator().."4.0"
 fs.setWritePath(fs.getUserPath())

@@ -8,7 +8,8 @@ function _M:init(title, url, on_finish)
 	self.received = 0
 	self.on_finish = on_finish
 
-	engine.Dialog.init(self, title or "Downloading...", 400, 50)
+	local font = core.display.newFont("/data/font/Vera.ttf", 12)
+	engine.Dialog.init(self, title or "Downloading...", math.max(400, font:size("From: "..url) + 10), 75, nil, nil, nil, font)
 
 	self:keyCommands({
 	},{
@@ -36,7 +37,8 @@ function _M:drawDialog(s)
 		end
 	end
 
-	s:drawString(self.font, "Received: "..self.received, 2, 2, 255, 255, 255)
+	s:drawString(self.font, "From: "..self.url, 2, 2, 255, 255, 255)
+	s:drawString(self.font, "Received: "..self.received, 2, 25, 255, 255, 255)
 end
 
 function _M:startDownload()
