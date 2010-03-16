@@ -1,7 +1,7 @@
 name = "T.o.M.E"
 long_name = "Tales of Middle Earth: The Fourth Age"
 short_name = "tome"
-author = { "DarkGod", "darkgod@t-o-m-e.net" }
+author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://tome.te4.org/"
 version = {4,0,0}
 engine = {1,0,0}

@@ -111,6 +111,7 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:die()
+	game.paused = true
 	game:registerDialog(DeathDialog.new(self))
 end
 

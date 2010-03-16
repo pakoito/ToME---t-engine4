@@ -172,5 +172,6 @@ newEntity{
 			game.logPlayer(who, "The Blood of Life seems to have no effect on you.")
 		end
 		game.logSeen(who, "%s quaffs the %s!", who.name:capitalize(), self:getName())
+		return "destroy", true
 	end},
 }

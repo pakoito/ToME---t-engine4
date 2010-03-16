@@ -43,7 +43,7 @@ newTalent{
 	action = function(self, t)
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockBack(self.x, self.y, 4)
+				target:knockback(self.x, self.y, 4)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the wave!", target.name:capitalize())

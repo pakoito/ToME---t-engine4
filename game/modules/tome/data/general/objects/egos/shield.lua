@@ -51,7 +51,7 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		resists={[DamageType.FIRE] = resolvers.mbonus(7, 3)},
+		on_melee_hit={[DamageType.FIRE] = resolvers.mbonus(7, 3)},
 	},
 }
 newEntity{

@@ -26,7 +26,7 @@ newEntity{
 newEntity{ base = "BASE_NPC_MINOTAUR",
 	name = "minotaur", color=colors.UMBER,
 	desc = [[It is a cross between a human and a bull.]],
-	equipment = resolvers.equip{ {type="weapon", subtype="greataxe"}, },
+	equipment = resolvers.equip{ {type="weapon", subtype="battleaxe"}, },
 	level_range = {10, 50}, exp_worth = 1,
 	rarity = 9,
 	combat_armor = 13, combat_def = 8,

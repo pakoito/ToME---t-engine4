@@ -107,7 +107,7 @@ function _M:teleportRandom(x, y, dist)
 end
 
 --- Knock back the actor
-function _M:knockBack(srcx, srcy, dist)
+function _M:knockback(srcx, srcy, dist)
 	local l = line.new(srcx, srcy, self.x, self.y, true)
 	local lx, ly = l(true)
 	dist = dist - 1

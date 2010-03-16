@@ -199,8 +199,17 @@ function _M:loadList(file, no_default, res, mod)
 		newEntity = function(t)
 			-- Do we inherit things ?
 			if t.base then
+				-- Append array part
+				for i = 1, #t.base do
+					local b = t.base[i]
+					if type(b) == "table" and not b.__CLASSNAME then b = table.clone(b, true)
+					elseif type(b) == "table" and b.__CLASSNAME then b = b:clone()
+					end
+					table.insert(t, b)
+				end
+
 				for k, e in pairs(res[t.base]) do
-					if k ~= "define_as" then
+					if k ~= "define_as" and type(k) ~= "number" then
 						if not t[k] then
 							t[k] = e
 						elseif type(t[k]) == "table" and type(e) == "table" then

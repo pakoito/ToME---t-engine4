@@ -80,7 +80,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
-				target:knockBack(self.x, self.y, 4)
+				target:knockback(self.x, self.y, 4)
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 			end
@@ -202,7 +202,7 @@ newTalent{
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
-					target:knockBack(self.x, self.y, 1 + self:getTalentLevel(t))
+					target:knockback(self.x, self.y, 1 + self:getTalentLevel(t))
 				else
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end

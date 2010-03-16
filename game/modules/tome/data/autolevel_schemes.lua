@@ -9,6 +9,9 @@ local function learnStats(self, statorder)
 	end
 end
 
+Autolevel:registerScheme{ name = "none", levelup = function(self)
+end}
+
 Autolevel:registerScheme{ name = "warrior", levelup = function(self)
 	learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
 end}

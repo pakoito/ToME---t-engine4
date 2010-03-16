@@ -197,7 +197,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockBack(src.x, src.y, 1)
+				target:knockback(src.x, src.y, 1)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the wave!", target.name:capitalize())
@@ -214,7 +214,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockBack(src.x, src.y, 2)
+				target:knockback(src.x, src.y, 2)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the punch!", target.name:capitalize())

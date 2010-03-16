@@ -6,15 +6,15 @@ newTalent{ short_name = "FIRE_IMP_BOLT",
 	range = 20,
 	reflectable = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(12 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), {type="flame"})
+		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(12 + self:combatSpellpower(0.3) * self:getTalentLevel(t)), {type="flame"})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire doing %0.2f fire damage.
-		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.3) * self:getTalentLevel(t))
 	end,
 }
 
@@ -48,9 +48,9 @@ newTalent{
 			display = "u", color=colors.RED,
 			name = "fire imp", faction = self.faction,
 			desc = [[]],
-			autolevel = "caster",
+			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { str=5, dex=5, mag=15, wil=15, con=7 },
+			stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, con=10 + self:getTalentLevel(t) * 2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -62,7 +62,7 @@ newTalent{
 			max_mana = 150,
 			resolvers.talents{
 				[self.T_MANA_POOL]=1,
-				[self.T_FIRE_IMP_BOLT]=self:getTalentLevelRaw()
+				[self.T_FIRE_IMP_BOLT]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true,
@@ -78,6 +78,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Fire Imp to burn your foes to death.]])
+		return ([[Summon a Fire Imp to burn your foes to death. Fire Imps are really weak in melee and die easily, but they can burn your foes from afar.
+		It will get %d magic and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }
