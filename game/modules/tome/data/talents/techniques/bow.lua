@@ -17,6 +17,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req2,
+	range = 20,
 	action = function(self, t)
 		self.combat_apr = self.combat_apr + 1000
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 7, nil, {type="beam"}, {one_shot=true})
@@ -36,6 +37,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req3,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, nil, {type="ball", radius=1}, {limit_shots=2})
 		return true
@@ -53,6 +55,7 @@ newTalent{
 	cooldown = 20,
 	stamina = 35,
 	require = techs_dex_req4,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 0.7 + self:getTalentLevel(t) / 5, nil, {type="ball", radius=2 + self:getTalentLevel(t)/3, firendlyfire=false})
 		return true

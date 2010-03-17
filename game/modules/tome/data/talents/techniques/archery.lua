@@ -24,6 +24,7 @@ newTalent{
 	cooldown = 3,
 	stamina = 8,
 	require = techs_dex_req1,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5)
 		return true
@@ -117,6 +118,7 @@ newTalent{
 	cooldown = 20,
 	stamina = 35,
 	require = techs_dex_req4,
+	range = 20,
 	action = function(self, t)
 		self.combat_physcrit = self.combat_physcrit + 1000
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 4)
@@ -174,6 +176,7 @@ newTalent{
 	cooldown = 20,
 	stamina = 15,
 	require = techs_dex_req2,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 1 + self:getTalentLevel(t) / 6, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
@@ -197,6 +200,7 @@ newTalent{
 	cooldown = 20,
 	stamina = 15,
 	require = techs_dex_req3,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 1 + self:getTalentLevel(t) / 6, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
@@ -220,6 +224,7 @@ newTalent{
 	cooldown = 20,
 	stamina = 15,
 	require = techs_dex_req4,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 1 + self:getTalentLevel(t) / 6, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then

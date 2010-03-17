@@ -17,6 +17,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req2,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
@@ -40,6 +41,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req3,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
@@ -64,6 +66,7 @@ newTalent{
 	cooldown = 20,
 	stamina = 35,
 	require = techs_dex_req4,
+	range = 20,
 	action = function(self, t)
 		self:archeryShoot(nil, 0.7 + self:getTalentLevel(t) / 5, nil, nil, {multishots=2+self:getTalentLevelRaw(t)/2})
 		return true

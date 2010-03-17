@@ -9,7 +9,7 @@ _M.factions = {}
 -- Static method
 function _M:add(t)
 	assert(t.name, "no faction name")
-	assert(t.short_name, "no faction short_name")
+	t.short_name = t.short_name or t.name:lower():gsub(" ", "-")
 	t.reaction = t.reaction or {}
 	self.factions[t.short_name] = t
 end
@@ -27,6 +27,5 @@ function _M:factionReaction(f1, f2)
 end
 
 -- Add a few default factions
-_M:add{ short_name="players", name="Players", reaction={enemies=-100} }
-_M:add{ short_name="enemies", name="Enemies", reaction={players=-100,poorsods=-100} }
-_M:add{ short_name="poorsods", name="Poor Sods", reaction={} }
+_M:add{ name="Players", reaction={enemies=-100} }
+_M:add{ name="Enemies", reaction={players=-100} }

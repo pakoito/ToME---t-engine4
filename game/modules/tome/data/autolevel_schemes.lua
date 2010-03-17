@@ -28,11 +28,11 @@ Autolevel:registerScheme{ name = "rogue", levelup = function(self)
 	learnStats(self, { self.STAT_DEX, self.STAT_CUN, self.STAT_CUN })
 end}
 
-Autolevel:registerScheme{ name = "archer", levelup = function(self)
+Autolevel:registerScheme{ name = "slinger", levelup = function(self)
 	learnStats(self, { self.STAT_DEX, self.STAT_DEX, self.STAT_CUN })
 end}
 
-Autolevel:registerScheme{ name = "slinger", levelup = function(self)
+Autolevel:registerScheme{ name = "archer", levelup = function(self)
 	learnStats(self, { self.STAT_DEX, self.STAT_DEX, self.STAT_STR })
 end}
 
