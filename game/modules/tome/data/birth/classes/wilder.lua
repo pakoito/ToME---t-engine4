@@ -21,14 +21,18 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Summoner",
 	desc = {
-		"Their most important stats are: Magic and Willpower",
+		"",
+		"Their most important stats are: Willpower",
 	},
 	stats = { wil=3, mag=2, cun=1, },
 	talents_types = {
 		["gift/summon-melee"]={true, 0.3},
 		["gift/summon-distance"]={true, 0.3},
 		["gift/summon-utility"]={true, 0.3},
-		["cunning/survival"]={false, -0.1},
+		["cunning/survival"]={false, 0},
+		["technique/combat-techniques-active"]={true, 0},
+		["technique/combat-techniques-passive"]={true, 0},
+		["technique/combat-training"]={true, 0},
 	},
 	talents = {
 		[ActorTalents.T_WAR_HOUND] = 1,
