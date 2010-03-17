@@ -216,6 +216,7 @@ function _M:runCheck()
 end
 
 function _M:doDrop(inven, item)
+	if self.zone.short_name ~= "wilderness" then game.logPlayer(self, "You can not drop on the world map.") return end
 	self:dropFloor(inven, item, true, true)
 	self:sortInven()
 	self:useEnergy()

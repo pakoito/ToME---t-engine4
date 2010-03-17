@@ -370,6 +370,9 @@ function _M:setupCommands()
 	-- Activate profiler keybinds
 	self.key:setupProfiler()
 
+	-- Helper function to not allow some actions on the wilderness map
+	local not_wild = function(f) if self.zone.short_name ~= "wilderness" then f() else self.logPlayer(self.player, "You can not do that on the world map.") end end
+
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then self:changeLevel(7, "sandworm-lair") end
@@ -398,44 +401,44 @@ function _M:setupCommands()
 		RUN_RIGHT_DOWN = function() self.player:runInit(3) end,
 
 		-- Hotkeys
-		HOTKEY_1 = function() self.player:activateHotkey(1) end,
-		HOTKEY_2 = function() self.player:activateHotkey(2) end,
-		HOTKEY_3 = function() self.player:activateHotkey(3) end,
-		HOTKEY_4 = function() self.player:activateHotkey(4) end,
-		HOTKEY_5 = function() self.player:activateHotkey(5) end,
-		HOTKEY_6 = function() self.player:activateHotkey(6) end,
-		HOTKEY_7 = function() self.player:activateHotkey(7) end,
-		HOTKEY_8 = function() self.player:activateHotkey(8) end,
-		HOTKEY_9 = function() self.player:activateHotkey(9) end,
-		HOTKEY_10 = function() self.player:activateHotkey(10) end,
-		HOTKEY_11 = function() self.player:activateHotkey(11) end,
-		HOTKEY_12 = function() self.player:activateHotkey(12) end,
-		HOTKEY_SECOND_1 = function() self.player:activateHotkey(13) end,
-		HOTKEY_SECOND_2 = function() self.player:activateHotkey(14) end,
-		HOTKEY_SECOND_3 = function() self.player:activateHotkey(15) end,
-		HOTKEY_SECOND_4 = function() self.player:activateHotkey(16) end,
-		HOTKEY_SECOND_5 = function() self.player:activateHotkey(17) end,
-		HOTKEY_SECOND_6 = function() self.player:activateHotkey(18) end,
-		HOTKEY_SECOND_7 = function() self.player:activateHotkey(19) end,
-		HOTKEY_SECOND_8 = function() self.player:activateHotkey(20) end,
-		HOTKEY_SECOND_9 = function() self.player:activateHotkey(21) end,
-		HOTKEY_SECOND_10 = function() self.player:activateHotkey(22) end,
-		HOTKEY_SECOND_11 = function() self.player:activateHotkey(23) end,
-		HOTKEY_SECOND_12 = function() self.player:activateHotkey(24) end,
-		HOTKEY_THIRD_1 = function() self.player:activateHotkey(25) end,
-		HOTKEY_THIRD_2 = function() self.player:activateHotkey(26) end,
-		HOTKEY_THIRD_3 = function() self.player:activateHotkey(27) end,
-		HOTKEY_THIRD_4 = function() self.player:activateHotkey(28) end,
-		HOTKEY_THIRD_5 = function() self.player:activateHotkey(29) end,
-		HOTKEY_THIRD_6 = function() self.player:activateHotkey(30) end,
-		HOTKEY_THIRD_7 = function() self.player:activateHotkey(31) end,
-		HOTKEY_THIRD_8 = function() self.player:activateHotkey(31) end,
-		HOTKEY_THIRD_9 = function() self.player:activateHotkey(33) end,
-		HOTKEY_THIRD_10 = function() self.player:activateHotkey(34) end,
-		HOTKEY_THIRD_11 = function() self.player:activateHotkey(35) end,
-		HOTKEY_THIRD_12 = function() self.player:activateHotkey(36) end,
-		HOTKEY_PREV_PAGE = function() self.player:prevHotkeyPage() end,
-		HOTKEY_NEXT_PAGE = function() self.player:nextHotkeyPage() end,
+		HOTKEY_1 = not_wild(function() self.player:activateHotkey(1) end),
+		HOTKEY_2 = not_wild(function() self.player:activateHotkey(2) end),
+		HOTKEY_3 = not_wild(function() self.player:activateHotkey(3) end),
+		HOTKEY_4 = not_wild(function() self.player:activateHotkey(4) end),
+		HOTKEY_5 = not_wild(function() self.player:activateHotkey(5) end),
+		HOTKEY_6 = not_wild(function() self.player:activateHotkey(6) end),
+		HOTKEY_7 = not_wild(function() self.player:activateHotkey(7) end),
+		HOTKEY_8 = not_wild(function() self.player:activateHotkey(8) end),
+		HOTKEY_9 = not_wild(function() self.player:activateHotkey(9) end),
+		HOTKEY_10 = not_wild(function() self.player:activateHotkey(10) end),
+		HOTKEY_11 = not_wild(function() self.player:activateHotkey(11) end),
+		HOTKEY_12 = not_wild(function() self.player:activateHotkey(12) end),
+		HOTKEY_SECOND_1 = not_wild(function() self.player:activateHotkey(13) end),
+		HOTKEY_SECOND_2 = not_wild(function() self.player:activateHotkey(14) end),
+		HOTKEY_SECOND_3 = not_wild(function() self.player:activateHotkey(15) end),
+		HOTKEY_SECOND_4 = not_wild(function() self.player:activateHotkey(16) end),
+		HOTKEY_SECOND_5 = not_wild(function() self.player:activateHotkey(17) end),
+		HOTKEY_SECOND_6 = not_wild(function() self.player:activateHotkey(18) end),
+		HOTKEY_SECOND_7 = not_wild(function() self.player:activateHotkey(19) end),
+		HOTKEY_SECOND_8 = not_wild(function() self.player:activateHotkey(20) end),
+		HOTKEY_SECOND_9 = not_wild(function() self.player:activateHotkey(21) end),
+		HOTKEY_SECOND_10 = not_wild(function() self.player:activateHotkey(22) end),
+		HOTKEY_SECOND_11 = not_wild(function() self.player:activateHotkey(23) end),
+		HOTKEY_SECOND_12 = not_wild(function() self.player:activateHotkey(24) end),
+		HOTKEY_THIRD_1 = not_wild(function() self.player:activateHotkey(25) end),
+		HOTKEY_THIRD_2 = not_wild(function() self.player:activateHotkey(26) end),
+		HOTKEY_THIRD_3 = not_wild(function() self.player:activateHotkey(27) end),
+		HOTKEY_THIRD_4 = not_wild(function() self.player:activateHotkey(28) end),
+		HOTKEY_THIRD_5 = not_wild(function() self.player:activateHotkey(29) end),
+		HOTKEY_THIRD_6 = not_wild(function() self.player:activateHotkey(30) end),
+		HOTKEY_THIRD_7 = not_wild(function() self.player:activateHotkey(31) end),
+		HOTKEY_THIRD_8 = not_wild(function() self.player:activateHotkey(31) end),
+		HOTKEY_THIRD_9 = not_wild(function() self.player:activateHotkey(33) end),
+		HOTKEY_THIRD_10 = not_wild(function() self.player:activateHotkey(34) end),
+		HOTKEY_THIRD_11 = not_wild(function() self.player:activateHotkey(35) end),
+		HOTKEY_THIRD_12 = not_wild(function() self.player:activateHotkey(36) end),
+		HOTKEY_PREV_PAGE = not_wild(function() self.player:prevHotkeyPage() end),
+		HOTKEY_NEXT_PAGE = not_wild(function() self.player:nextHotkeyPage() end),
 
 		-- Actions
 		CHANGE_LEVEL = function()
@@ -452,12 +455,12 @@ function _M:setupCommands()
 			self.player:restInit()
 		end,
 
-		PICKUP_FLOOR = function()
+		PICKUP_FLOOR = not_wild(function()
 			self.player:playerPickup()
-		end,
-		DROP_FLOOR = function()
+		end),
+		DROP_FLOOR = not_wild(function()
 			self.player:playerDrop()
-		end,
+		end),
 		SHOW_INVENTORY = function()
 			local d
 			d = self.player:showEquipInven(nil, nil, function(o, inven, item)
@@ -476,13 +479,13 @@ function _M:setupCommands()
 		TAKEOFF_ITEM = function()
 			self.player:playerTakeoff()
 		end,
-		USE_ITEM = function()
+		USE_ITEM = not_wild(function()
 			self.player:playerUseItem()
-		end,
+		end),
 
-		USE_TALENTS = function()
+		USE_TALENTS = not_wild(function()
 			self.player:useTalents()
-		end,
+		end),
 
 		LEVELUP = function()
 			self.player:playerLevelup()
