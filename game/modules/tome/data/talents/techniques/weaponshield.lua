@@ -47,7 +47,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic, melee attack against your foe.]]):format(util.bound(self:getTalentLevel(t) * self:getDex(50), 10, 80))
+		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic, melee attack against your foe.]]):format(util.bound(self:getTalentLevel(t) * self:getDex(40), 10, 60))
 	end,
 }
 

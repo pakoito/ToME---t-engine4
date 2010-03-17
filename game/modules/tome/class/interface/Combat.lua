@@ -255,7 +255,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end end
 
 	-- Riposte!
-	if not hitted and not evaded and target:knowTalent(target.T_RIPOSTE) and rng.percent(util.bound(target:getTalentLevel(target.T_RIPOSTE) * target:getDex(50), 10, 80)) then
+	if not hitted and not evaded and target:knowTalent(target.T_RIPOSTE) and rng.percent(util.bound(target:getTalentLevel(target.T_RIPOSTE) * target:getDex(40), 10, 60)) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
 	end
