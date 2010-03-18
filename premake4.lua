@@ -1,9 +1,22 @@
+newoption {
+	trigger     = "lua",
+	value       = "VM_Type",
+	description = "Virtual Machine to use for Lua, either the default one or a JIT",
+	allowed = {
+		{ "default",	"Default Lua Virtual Machine" },
+		{ "jitx86",	"LuaJIT x86" }
+	}
+}
+
+_OPTIONS.lua = _OPTIONS.lua or "default"
+
 solution "TEngine"
 	configurations { "Debug", "Release" }
 	objdir "obj"
 
 	includedirs {
 		"src",
+		"src/dynasm",
 		"src/lua",
 		"src/luasocket",
 		"src/fov",
@@ -24,8 +37,8 @@ configuration "Debug"
 
 configuration "Release"
 	defines { "NDEBUG=1" }
-	flags { "Optimize" }
-	buildoptions { "-O2" }
+	flags { "Optimize", "NoFramePointer" }
+	buildoptions { "-O3" }
 	targetdir "bin/Release"
 
 project "TEngine"
@@ -33,7 +46,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua", "fov", "luasocket", "luaprofiler", "lualanes" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -85,12 +98,22 @@ project "physfs"
 		files { "src/physfs/platform/macosx.c", "src/physfs/platform/posix.c",  }
                 includedirs { "/Library/Frameworks/SDL.framework/Headers" }
 
-project "lua"
-	kind "StaticLib"
-	language "C"
-	targetname "lua"
+if _OPTIONS.lua == "default" then
+	project "luadefault"
+		kind "StaticLib"
+		language "C"
+		targetname "lua"
 
-	files { "src/lua/*.c", }
+		files { "src/lua/*.c", }
+elseif _OPTIONS.lua == "jitx86" then
+	project "luajitx86"
+		kind "StaticLib"
+		language "C"
+		targetname "lua"
+
+		files { "src/luajit/*.c", }
+		defines { "LUA_USE_POSIX" }
+end
 
 project "luasocket"
 	kind "StaticLib"
