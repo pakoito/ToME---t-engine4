@@ -613,6 +613,10 @@ function _M:setupMouse()
 		if button == "wheelup" then self.logdisplay:scrollUp(1) end
 		if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
 	end, {button=true})
+	-- Use hotkeys with mouse
+	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel)
+		self.hotkeys_display:onMouse(button, mx, my)
+	end)
 	self.mouse:setCurrent()
 end
 

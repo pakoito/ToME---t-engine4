@@ -216,10 +216,11 @@ function _M:runCheck()
 end
 
 function _M:doDrop(inven, item)
-	if self.zone.short_name ~= "wilderness" then game.logPlayer(self, "You can not drop on the world map.") return end
+	if game.zone.short_name ~= "wilderness" then game.logPlayer(self, "You can not drop on the world map.") return end
 	self:dropFloor(inven, item, true, true)
 	self:sortInven()
 	self:useEnergy()
+	self.changed = true
 end
 
 function _M:doWear(inven, item, o)
@@ -232,6 +233,7 @@ function _M:doWear(inven, item, o)
 	end
 	self:sortInven()
 	self:useEnergy()
+	self.changed = true
 end
 
 function _M:doTakeoff(inven, item, o)
@@ -240,6 +242,7 @@ function _M:doTakeoff(inven, item, o)
 	end
 	self:sortInven()
 	self:useEnergy()
+	self.changed = true
 end
 
 function _M:playerPickup()
@@ -248,11 +251,13 @@ function _M:playerPickup()
 		self:showPickupFloor(nil, nil, function(o, item)
 			self:pickupFloor(item, true)
 			self:sortInven()
+			self.changed = true
 		end)
 	else
 		self:pickupFloor(1, true)
 		self:sortInven()
 		self:useEnergy()
+	self.changed = true
 	end
 end
 
@@ -279,6 +284,8 @@ function _M:playerTakeoff()
 end
 
 function _M:playerUseItem(object, item)
+	if game.zone.short_name ~= "wilderness" then game.logPlayer(self, "You can not use items on the world map.") return end
+
 	local use_fct = function(o, item)
 		self.changed = true
 		local ret, no_id = o:use(self)
@@ -295,6 +302,7 @@ function _M:playerUseItem(object, item)
 			end
 		end
 		self:breakStealth()
+		self.changed = true
 	end
 
 	if object and item then return use_fct(object, item) end

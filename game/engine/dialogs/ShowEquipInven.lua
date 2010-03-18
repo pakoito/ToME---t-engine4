@@ -93,9 +93,9 @@ function _M:generateList()
 end
 
 function _M:drawDialog(s)
-	if not self.list[self.sel].item then
+	if self.list[self.sel] and not self.list[self.sel].item then
 		lines = self.actor.inven_def[self.list[self.sel].inven].description:splitLines(self.iw / 2 - 10, self.font)
-	elseif self.list[self.sel] and self.list[self.sel].object then
+	elseif self.list[self.sel] and self.list[self.sel] and self.list[self.sel].object then
 		lines = self.list[self.sel].object:getDesc():splitLines(self.iw - 10, self.font)
 	else
 		lines = {}

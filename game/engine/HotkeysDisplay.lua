@@ -7,6 +7,7 @@ function _M:init(actor, x, y, w, h, bgcolor)
 	self.bgcolor = bgcolor
 	self.font = core.display.newFont("/data/font/VeraMono.ttf", 10)
 	self.font_h = self.font:lineSkip()
+	self.clics = {}
 	self:resize(x, y, w, h)
 end
 
@@ -45,6 +46,7 @@ function _M:display()
 
 	local x = 0
 	local y = 0
+	self.clics = {}
 
 	for ii, ts in ipairs(hks) do
 		local s
@@ -76,8 +78,9 @@ function _M:display()
 		txt = ("%2d) %-"..(self.max_char_w-4-24).."s Key: %s"):format(i, txt, ts[4])
 		local w, h = self.font:size(txt)
 		s = core.display.newSurface(w + 4, h + 4)
-		s:alpha(255)
+		if self.cur_sel and self.cur_sel == i then s:erase(0, 50, 120) end
 		s:drawString(self.font, txt, 2, 2, color[1], color[2], color[3])
+		self.clics[i] = {x,y,w+4,h+4}
 
 		self.surface:merge(s, x, y)
 		if y + self.font_h * 2 > self.h then
@@ -89,4 +92,22 @@ function _M:display()
 	end
 
 	return self.surface
+end
+
+--- Call when a mouse event arrives in this zone
+-- This is optional, only if you need mouse support
+function _M:onMouse(button, mx, my)
+	mx, my = mx - self.display_x, my - self.display_y
+	for i, zone in pairs(self.clics) do
+		if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
+			if button == "left" then
+				self.actor:activateHotkey(i)
+			else
+				self.actor.changed = true
+				self.cur_sel = i
+			end
+			return
+		end
+	end
+	self.cur_sel = nil
 end
