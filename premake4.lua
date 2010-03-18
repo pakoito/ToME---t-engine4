@@ -17,7 +17,7 @@ solution "TEngine"
 	includedirs {
 		"src",
 		"src/dynasm",
-		"src/lua",
+		_OPTIONS.lua == "default" and "src/lua" or "src/luajit",
 		"src/luasocket",
 		"src/fov",
 		"src/physfs",
@@ -112,7 +112,8 @@ elseif _OPTIONS.lua == "jitx86" then
 		targetname "lua"
 
 		files { "src/luajit/*.c", }
-		defines { "LUA_USE_POSIX" }
+		configuration "linux"
+			defines { "LUA_USE_POSIX" }
 end
 
 project "luasocket"

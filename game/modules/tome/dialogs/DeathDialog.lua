@@ -117,7 +117,7 @@ end
 function _M:generateList()
 	local list = {}
 
-	if self.actor.cheat or true then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
+	if config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
 
 	list[#list+1] = {name="Character dump", action="dump"}
