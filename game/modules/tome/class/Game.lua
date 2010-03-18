@@ -250,13 +250,8 @@ function _M:display()
 			-- Compute ESP FOV, using cache
 			if self.zone.short_name ~= "wilderness" then self.player:computeFOV(self.player.esp.range or 10, "block_esp", function(x, y) self.level.map:applyESP(x, y) end, true, true) end
 			-- Compute both the normal and the lite FOV, using cache
-			self.player:computeFOV(self.player.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
-				if sqdist <= self.player.lite * self.player.lite then
-					self.level.map:applyLite(x, y)
-				else
-					self.level.map:apply(x, y)
-				end
-			end, true, false, true)
+			self.player:computeFOV(self.player.sight or 20, "block_sight", function(x, y, dx, dy, sqdist) self.level.map:apply(x, y) end, true, false, true)
+			self.player:computeFOV(self.player.lite, "block_sight", function(x, y, dx, dy, sqdist) self.level.map:applyLite(x, y) end, true, true, true)
 
 			-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
 			if self.player:attr("detect_range") then

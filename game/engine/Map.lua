@@ -265,6 +265,7 @@ function _M:display()
 		for i = self.mx, self.mx + self.viewport.mwidth - 1 do
 		for j = self.my, self.my + self.viewport.mheight - 1 do
 			local z = i + j * self.w
+
 			if self.seens[z] then
 				e = self(i, j, ACTOR)
 				if e and (not self.actor_player or self.actor_player:canSee(e)) then

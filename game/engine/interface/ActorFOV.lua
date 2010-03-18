@@ -8,6 +8,7 @@ module(..., package.seeall, class.make)
 
 --- Initialises stats with default values if needed
 function _M:init(t)
+--	self.distance_map = {}
 	self.fov = {actors={}, actors_dist={}}
 	self.fov_computed = false
 	self.fov_last_x = -1
@@ -50,6 +51,8 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 		end, function(_, x, y, dx, dy, sqdist)
 			if apply then apply(x, y, dx, dy, sqdist) end
 
+--			if dist_map then self:distanceMap(x, y, math.floor(game.turn + math.sqrt(sqdist))) end
+
 			-- Note actors
 			local a = map(x, y, Map.ACTOR)
 			if a and a ~= self and not a.dead then
@@ -91,4 +94,13 @@ function _M:updateFOV(a, sqdist)
 --	print("Updated FOV for", self.uid, self.name, ":: seen ", #fov.actors_dist, "actors closeby; from", a, sqdist)
 	table.sort(fov.actors_dist, function(a, b) if a and b then return fov.actors[a].sqdist < fov.actors[b].sqdist elseif a then return 1 else return nil end end)
 	self.fov_last_change = game.turn
+end
+
+--- Unused
+function _M:distanceMap(x, y, v)
+	if v == nil then
+		return self.distance_map[x + y * game.level.map.w]
+	else
+		self.distance_map[x + y * game.level.map.w] = v
+	end
 end
