@@ -22,7 +22,7 @@ end
 -- @param apply an apply function that will be called on each seen grids, defaults to nil
 -- @param force set to true to force a regeneration even if we did not move
 -- @param no_store do not store FOV informations
-function _M:computeFOV(radius, block, apply, force, no_store)
+function _M:computeFOV(radius, block, apply, force, no_store, cache)
 	-- If we did not move, do not update
 	if not force and self.fov_last_x == self.x and self.fov_last_y == self.y and self.fov_computed then return end
 	radius = radius or 20
@@ -35,7 +35,7 @@ function _M:computeFOV(radius, block, apply, force, no_store)
 			if map:checkAllEntities(x, y, block, self) then return true end
 		end, function(_, x, y, dx, dy)
 			apply(x, y, dx, dy)
-		end, self)
+		end, cache and game.level.map._fovcache[block])
 
 	-- FOV + storage
 	elseif not no_store then
@@ -57,7 +57,7 @@ function _M:computeFOV(radius, block, apply, force, no_store)
 				fov.actors_dist[#fov.actors_dist+1] = a
 				a:updateFOV(self, t.sqdist)
 			end
-		end, self)
+		end, cache and game.level.map._fovcache[block])
 
 		-- Sort actors by distance (squared but we do not care)
 		table.sort(fov.actors_dist, function(a, b) return fov.actors[a].sqdist < fov.actors[b].sqdist end)

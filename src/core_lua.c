@@ -17,12 +17,19 @@
  *                              FOV                               *
  ******************************************************************
  ******************************************************************/
+struct lua_fovcache
+{
+	bool *cache;
+	int w, h;
+};
+
 struct lua_fov
 {
 	fov_settings_type fov_settings;
 	int apply_ref;
 	int opaque_ref;
-	int map_ref;
+	int cache_ref;
+	struct lua_fovcache *cache;
 };
 
 static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *src)
@@ -30,15 +37,16 @@ static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *sr
 	struct lua_fov *fov = (struct lua_fov *)m;
 	radius--;
 	if (dx*dx + dy*dy <= radius*radius + 1)
-	{	// circular view - can be changed if you like
-
-	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->apply_ref);
-	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->map_ref);
-	lua_pushnumber(L, x);
-	lua_pushnumber(L, y);
-	lua_pushnumber(L, dx);
-	lua_pushnumber(L, dy);
-	lua_call(L, 5, 0);
+	{
+		// circular view - can be changed if you like
+		lua_rawgeti(L, LUA_REGISTRYINDEX, fov->apply_ref);
+		if (fov->cache) lua_rawgeti(L, LUA_REGISTRYINDEX, fov->cache_ref);
+		else lua_pushnil(L);
+		lua_pushnumber(L, x);
+		lua_pushnumber(L, y);
+		lua_pushnumber(L, dx);
+		lua_pushnumber(L, dy);
+		lua_call(L, 5, 0);
 	}
 }
 
@@ -46,19 +54,38 @@ static bool map_opaque(void *m, int x, int y)
 {
 	struct lua_fov *fov = (struct lua_fov *)m;
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->opaque_ref);
-	lua_rawgeti(L, LUA_REGISTRYINDEX, fov->map_ref);
-	lua_pushnumber(L, x);
-	lua_pushnumber(L, y);
-	lua_call(L, 3, 1);
-	bool res = lua_toboolean(L, -1);
-	lua_pop(L, 1);
-	return res;
+	if (fov->cache)
+	{
+		return fov->cache->cache[x + y * fov->cache->w];
+	}
+	else
+	{
+		lua_rawgeti(L, LUA_REGISTRYINDEX, fov->opaque_ref);
+		if (fov->cache) lua_rawgeti(L, LUA_REGISTRYINDEX, fov->cache_ref);
+		else lua_pushnil(L);
+		lua_pushnumber(L, x);
+		lua_pushnumber(L, y);
+		lua_call(L, 3, 1);
+		bool res = lua_toboolean(L, -1);
+		lua_pop(L, 1);
+		return res;
+	}
 }
 
 static int lua_new_fov(lua_State *L)
 {
-	int map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	struct lua_fovcache* cache;
+	int cache_ref;
+	if (lua_isuserdata(L, 1))
+	{
+		cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 1);
+		cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	else
+	{
+		cache_ref = LUA_NOREF;
+		cache = NULL;
+	}
 	int apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
@@ -66,7 +93,8 @@ static int lua_new_fov(lua_State *L)
 	auxiliar_setclass(L, "fov{core}", -1);
 	fov->apply_ref = apply_ref;
 	fov->opaque_ref = opaque_ref;
-	fov->map_ref = map_ref;
+	fov->cache_ref = cache_ref;
+	fov->cache = cache;
 	fov_settings_init(&(fov->fov_settings));
 	fov_settings_set_opacity_test_function(&(fov->fov_settings), map_opaque);
 	fov_settings_set_apply_lighting_function(&(fov->fov_settings), map_seen);
@@ -80,7 +108,7 @@ static int lua_free_fov(lua_State *L)
 	fov_settings_free(&(fov->fov_settings));
 	luaL_unref(L, LUA_REGISTRYINDEX, fov->apply_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov->opaque_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, fov->map_ref);
+	if (fov->cache_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, fov->cache_ref);
 	lua_pushnumber(L, 1);
 	return 1;
 }
@@ -103,20 +131,30 @@ static int lua_fov_calc_circle(lua_State *L)
 	int y = luaL_checknumber(L, 2);
 	int radius = luaL_checknumber(L, 3);
 	struct lua_fov fov;
-	fov.map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	if (lua_isuserdata(L, 6))
+	{
+		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 6);
+		fov.cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	else
+	{
+		lua_pop(L, 1);
+		fov.cache_ref = LUA_NOREF;
+		fov.cache = NULL;
+	}
 	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-
+//	int i= SDL_GetTicks();
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
 	fov_circle(&(fov.fov_settings), &fov, NULL, x, y, radius+1);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
 	fov_settings_free(&(fov.fov_settings));
-
+//	printf("map display ticks %d\n",SDL_GetTicks()-i);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, fov.map_ref);
+	if (fov.cache_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, fov.cache_ref);
 
 	return 0;
 }
@@ -129,9 +167,20 @@ static int lua_fov_calc_beam(lua_State *L)
 	int direction = luaL_checknumber(L, 4);
 	float angle = luaL_checknumber(L, 5);
 	struct lua_fov fov;
-	fov.map_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	if (lua_isuserdata(L, 8))
+	{
+		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 8);
+		fov.cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	else
+	{
+		lua_pop(L, 1);
+		fov.cache_ref = LUA_NOREF;
+		fov.cache = NULL;
+	}
 	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.cache = NULL;
 	int dir = 0;
 
 	switch (direction)
@@ -155,7 +204,7 @@ static int lua_fov_calc_beam(lua_State *L)
 
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, fov.map_ref);
+	if (fov.cache_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, fov.cache_ref);
 
 	return 0;
 }
@@ -171,9 +220,40 @@ static int lua_distance(lua_State *L)
 	return 1;
 }
 
+static int lua_new_fovcache(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int i, j;
+
+	struct lua_fovcache *cache = (struct lua_fovcache*)lua_newuserdata(L, sizeof(struct lua_fovcache));
+	auxiliar_setclass(L, "fov{cache}", -1);
+	cache->w = x;
+	cache->h = y;
+	cache->cache = calloc(x * y, sizeof(bool));
+	for (i = 0; i < x; i++)
+		for (j = 0; j < y; j++)
+			cache->cache[i + j * x] = FALSE;
+
+	return 1;
+}
+
+static int lua_fovcache_set(lua_State *L)
+{
+	struct lua_fovcache *cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	bool opaque = lua_toboolean(L, 4);
+
+	cache->cache[x + y * cache->w] = opaque;
+
+	return 0;
+}
+
 static const struct luaL_reg fovlib[] =
 {
 	{"new", lua_new_fov},
+	{"newCache", lua_new_fovcache},
 	{"distance", lua_distance},
 	{"calc_circle", lua_fov_calc_circle},
 	{"calc_beam", lua_fov_calc_beam},
@@ -185,6 +265,12 @@ static const struct luaL_reg fov_reg[] =
 	{"__gc", lua_free_fov},
 	{"close", lua_free_fov},
 	{"__call", lua_fov},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg fovcache_reg[] =
+{
+	{"set", lua_fovcache_set},
 	{NULL, NULL},
 };
 
@@ -1468,6 +1554,7 @@ int luaopen_core(lua_State *L)
 	auxiliar_newclass(L, "physfs{zip}", fszipfile_reg);
 	auxiliar_newclass(L, "line{core}", line_reg);
 	auxiliar_newclass(L, "fov{core}", fov_reg);
+	auxiliar_newclass(L, "fov{cache}", fovcache_reg);
 	auxiliar_newclass(L, "gl{texture}", sdl_texture_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
 	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);

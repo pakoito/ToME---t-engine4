@@ -62,15 +62,15 @@ function _M:display()
 	if s == self.b then stopx, stopy = self.target.x, self.target.y end
 
 	if self.target_type.ball then
-		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(self, lx, ly)
+		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(_, lx, ly)
 			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
-		end, function()end, self)
+		end, function()end, nil)
 	elseif self.target_type.cone then
-		core.fov.calc_beam(stopx, stopy, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(self, lx, ly)
+		core.fov.calc_beam(stopx, stopy, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, lx, ly)
 			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
-		end, function()end, self)
+		end, function()end, nil)
 	end
 end
 
@@ -124,7 +124,7 @@ function _M:scan(dir, radius, sx, sy)
 	sy = sy or self.target.y
 	radius = radius or 20
 	local actors = {}
-	local checker = function(self, x, y)
+	local checker = function(_, x, y)
 		if sx == x and sy == y then return false end
 		if game.level.map.seens(x, y) and game.level.map(x, y, engine.Map.ACTOR) then
 			local a = game.level.map(x, y, engine.Map.ACTOR)
@@ -140,10 +140,10 @@ function _M:scan(dir, radius, sx, sy)
 
 	if dir ~= 5 then
 		-- Get a list of actors in the direction given
-		core.fov.calc_beam(sx, sy, radius, dir, 55, checker, function()end, self)
+		core.fov.calc_beam(sx, sy, radius, dir, 55, checker, function()end, nil)
 	else
 		-- Get a list of actors all around
-		core.fov.calc_circle(sx, sy, radius, checker, function()end, self)
+		core.fov.calc_circle(sx, sy, radius, checker, function()end, nil)
 	end
 
 	table.sort(actors, function(a,b) return a.dist<b.dist end)

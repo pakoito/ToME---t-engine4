@@ -105,18 +105,18 @@ function _M:project(t, x, y, damtype, dam, particles)
 	if not lx and not ly then lx, ly = x, y end
 
 	if typ.ball then
-		core.fov.calc_circle(lx, ly, typ.ball, function(self, px, py)
+		core.fov.calc_circle(lx, ly, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
 			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
-		end, function()end, self)
+		end, function()end, nil)
 		addGrid(lx, ly)
 	elseif typ.cone then
-		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(self, px, py)
+		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
 			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
-		end, function()end, self)
+		end, function()end, nil)
 		addGrid(lx, ly)
 	else
 		-- Deam damage: single

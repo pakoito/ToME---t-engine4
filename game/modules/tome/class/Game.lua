@@ -247,9 +247,9 @@ function _M:display()
 		if self.level.map.changed then
 			-- Compute FOV, if needed
 			self.level.map:cleanFOV()
-			self.player:computeFOV(self.player.esp.range or 10, "block_esp", function(x, y) self.level.map:applyESP(x, y) end, true, true)
-			self.player:computeFOV(self.player.sight or 20, "block_sight", function(x, y) self.level.map:apply(x, y) end, true)
-			if self.player.lite > 0 then self.player:computeFOV(self.player.life, "block_sight", function(x, y) self.level.map:applyLite(x, y) end, true, true) end
+			if self.zone.short_name ~= "wilderness" then self.player:computeFOV(self.player.esp.range or 10, "block_esp", function(x, y) self.level.map:applyESP(x, y) end, true, true) end
+			self.player:computeFOV(self.player.sight or 20, "block_sight", function(x, y) self.level.map:apply(x, y) end, true, false, true)
+			if self.player.lite > 0 then self.player:computeFOV(self.player.lite, "block_sight", function(x, y) self.level.map:applyLite(x, y) end, true, true, true) end
 
 			--
 			-- Handle Sense spell
@@ -267,7 +267,7 @@ function _M:display()
 					if ok then
 						self.level.map.seens(x, y, true)
 					end
-				end, true, true)
+				end, true, true, true)
 			end
 		end
 
@@ -371,7 +371,7 @@ function _M:setupCommands()
 	self.key:setupProfiler()
 
 	-- Helper function to not allow some actions on the wilderness map
-	local not_wild = function(f) if self.zone.short_name ~= "wilderness" then f() else self.logPlayer(self.player, "You can not do that on the world map.") end end
+	local not_wild = function(f) return function() if self.zone and self.zone.short_name ~= "wilderness" then f() else self.logPlayer(self.player, "You can not do that on the world map.") end end end
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()

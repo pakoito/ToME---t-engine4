@@ -90,6 +90,7 @@ end
 function _M:save()
 	return class.save(self, {
 		_map = true,
+		_fovcache = true,
 		surface = true,
 		particle = true,
 		particles = true,
@@ -101,6 +102,12 @@ function _M:loaded()
 
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
 	self._map:setObscure(unpack(self.obscure))
+	self._fovcache =
+	{
+		block_sight = core.fov.newCache(self.w, self.h),
+		block_esp = core.fov.newCache(self.w, self.h),
+		block_sense = core.fov.newCache(self.w, self.h),
+	}
 
 	local mapseen = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
@@ -200,6 +207,13 @@ function _M:updateMap(x, y)
 	end
 
 	self._map:setGrid(x, y, g, t, o, a)
+
+	if self:checkAllEntities(x, y, "block_sight", self.actor_player) then self._fovcache.block_sight:set(x, y, true)
+	else self._fovcache.block_sight:set(x, y, false) end
+	if self:checkAllEntities(x, y, "block_esp", self.actor_player) then self._fovcache.block_esp:set(x, y, true)
+	else self._fovcache.block_esp:set(x, y, false) end
+	if self:checkAllEntities(x, y, "block_sense", self.actor_player) then self._fovcache.block_sense:set(x, y, true)
+	else self._fovcache.block_sense:set(x, y, false) end
 end
 
 --- Sets/gets a value from the map
@@ -311,7 +325,7 @@ end
 -- Used by FOV code
 function _M:applyLite(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
-	if self.lites[x + y * self.w] or self:checkAllEntities(x, y, "always_remember") then
+	if self.lites[x + y * self.w] or self:checkEntity(x, y, TERRAIN, "always_remember") then
 		self.remembers[x + y * self.w] = true
 		self._map:setRemember(x, y, true)
 	end
