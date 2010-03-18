@@ -22,6 +22,7 @@ end
 -- @param apply an apply function that will be called on each seen grids, defaults to nil
 -- @param force set to true to force a regeneration even if we did not move
 -- @param no_store do not store FOV informations
+-- @param cache if true it will use the cache given by the map, for the map actor. It can be used for other actors is they have the same block settings
 function _M:computeFOV(radius, block, apply, force, no_store, cache)
 	-- If we did not move, do not update
 	if not force and self.fov_last_x == self.x and self.fov_last_y == self.y and self.fov_computed then return end
