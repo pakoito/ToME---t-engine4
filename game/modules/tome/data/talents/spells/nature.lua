@@ -39,9 +39,44 @@ newTalent{
 }
 
 newTalent{
-	name = "Nature's Call",
+	name = "Restoration",
 	type = {"spell/nature", 3},
 	require = spells_req3,
+	points = 5,
+	mana = 30,
+	cooldown = 15,
+	action = function(self, t)
+		local target = self
+		local effs = {}
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.type == "poison" or e.type == "disease" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, math.floor(self:getTalentLevel(t)) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Call upon the forces of nature to cure your body of %d poisons and diseases(at level 3).]]):format(math.floor(self:getTalentLevel(t)))
+	end,
+}
+
+newTalent{
+	name = "Nature's Call",
+	type = {"spell/nature", 4},
+	require = spells_req4,
 	points = 5,
 	mana = 60,
 	cooldown = 100,
