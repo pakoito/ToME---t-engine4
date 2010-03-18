@@ -192,7 +192,7 @@ function _M:selectStepLoad()
 	end
 	self:registerDialog(display_module)
 
-	self.step = ButtonList.new(list, 10, 10, self.w * 0.24, (5 + mod_font:lineSkip()) * #self.mod_list, nil, 5)
+	self.step = ButtonList.new(list, 10, 10, self.w * 0.24, (5 + 25) * #list, nil, 5)
 	self.step:select(2)
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
