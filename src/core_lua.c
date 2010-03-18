@@ -46,7 +46,8 @@ static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *sr
 		lua_pushnumber(L, y);
 		lua_pushnumber(L, dx);
 		lua_pushnumber(L, dy);
-		lua_call(L, 5, 0);
+		lua_pushnumber(L, dx*dx + dy*dy);
+		lua_call(L, 6, 0);
 	}
 }
 

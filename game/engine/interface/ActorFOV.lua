@@ -33,8 +33,8 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 		local map = game.level.map
 		core.fov.calc_circle(self.x, self.y, radius, function(_, x, y)
 			if map:checkAllEntities(x, y, block, self) then return true end
-		end, function(_, x, y, dx, dy)
-			apply(x, y, dx, dy)
+		end, function(_, x, y, dx, dy, sqdist)
+			apply(x, y, dx, dy, sqdist)
 		end, cache and game.level.map._fovcache[block])
 
 	-- FOV + storage
@@ -46,13 +46,13 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 		local map = game.level.map
 		core.fov.calc_circle(self.x, self.y, radius, function(_, x, y)
 			if map:checkAllEntities(x, y, block, self) then return true end
-		end, function(_, x, y, dx, dy)
-			if apply then apply(x, y, dx, dy) end
+		end, function(_, x, y, dx, dy, sqdist)
+			if apply then apply(x, y, dx, dy, sqdist) end
 
 			-- Note actors
 			local a = map(x, y, Map.ACTOR)
 			if a and a ~= self and not a.dead then
-				local t = {x=x,y=y, dx=dx, dy=dy, sqdist=dx*dx+dy*dy}
+				local t = {x=x,y=y, dx=dx, dy=dy, sqdist=sqdist}
 				fov.actors[a] = t
 				fov.actors_dist[#fov.actors_dist+1] = a
 				a:updateFOV(self, t.sqdist)

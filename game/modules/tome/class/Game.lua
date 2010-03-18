@@ -248,8 +248,13 @@ function _M:display()
 			-- Compute FOV, if needed
 			self.level.map:cleanFOV()
 			if self.zone.short_name ~= "wilderness" then self.player:computeFOV(self.player.esp.range or 10, "block_esp", function(x, y) self.level.map:applyESP(x, y) end, true, true) end
-			self.player:computeFOV(self.player.sight or 20, "block_sight", function(x, y) self.level.map:apply(x, y) end, true, false, true)
-			if self.player.lite > 0 then self.player:computeFOV(self.player.lite, "block_sight", function(x, y) self.level.map:applyLite(x, y) end, true, true, true) end
+			self.player:computeFOV(self.player.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
+				if sqdist <= self.player.lite * self.player.lite then
+					self.level.map:applyLite(x, y)
+				else
+					self.level.map:apply(x, y)
+				end
+			end, true, false, true)
 
 			--
 			-- Handle Sense spell

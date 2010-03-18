@@ -267,7 +267,7 @@ function _M:display()
 			local z = i + j * self.w
 			if self.seens[z] then
 				e = self(i, j, ACTOR)
-				if e then
+				if e and (not self.actor_player or self.actor_player:canSee(e)) then
 					-- Tactical overlay ?
 					if e.faction then
 						friend = Faction:factionReaction(self.view_faction, e.faction)
