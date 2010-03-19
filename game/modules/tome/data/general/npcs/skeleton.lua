@@ -57,7 +57,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=6, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",

@@ -159,7 +159,7 @@ newTalent{
 
 			resolvers.tmasteries{ ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3, ["technique/combat-training"]=0.3, },
 			desc = [[It is a cross between a human and a bull.]],
-			equipment = resolvers.equip{ {type="weapon", subtype="battleaxe"}, },
+			equipment = resolvers.equip{ {type="weapon", subtype="battleaxe", auto_req=true}, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			combat_armor = 13, combat_def = 8,

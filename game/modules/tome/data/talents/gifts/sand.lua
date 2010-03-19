@@ -1,6 +1,6 @@
 newTalent{
 	name = "Burrow",
-	type = {"gift/sand", 1},
+	type = {"gift/sand-drake", 1},
 	require = gifts_req1,
 	points = 5,
 	message = "@Source@ burrows into the ground!",
@@ -19,13 +19,11 @@ newTalent{
 }
 
 newTalent{
-	name = "????",
-	type = {"gift/sand", 2},
+	name = "Swallow",
+	type = {"gift/sand-drake", 2},
 	require = gifts_req2,
 	points = 5,
-	mode = "sustained",
-	message = "The skin of @Source@ starts dripping acid.",
-	sustain_equilibrium = 25,
+	equilibrium = 10,
 	cooldown = 10,
 	range = 1,
 	tactical = {
@@ -43,8 +41,8 @@ newTalent{
 }
 
 newTalent{
-	name = "???????",
-	type = {"gift/sand", 3},
+	name = "Quake",
+	type = {"gift/sand-drake", 3},
 	require = gifts_req3,
 	points = 5,
 	equilibrium = 4,
@@ -63,7 +61,7 @@ newTalent{
 
 newTalent{
 	name = "Sand Breath",
-	type = {"gift/sand", 4},
+	type = {"gift/sand-drake", 4},
 	require = gifts_req4,
 	points = 5,
 	equilibrium = 12,
