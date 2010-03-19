@@ -216,7 +216,7 @@ function _M:runCheck()
 end
 
 function _M:doDrop(inven, item)
-	if game.zone.short_name ~= "wilderness" then game.logPlayer(self, "You can not drop on the world map.") return end
+	if game.zone.short_name == "wilderness" then game.logPlayer(self, "You can not drop on the world map.") return end
 	self:dropFloor(inven, item, true, true)
 	self:sortInven()
 	self:useEnergy()
@@ -284,7 +284,7 @@ function _M:playerTakeoff()
 end
 
 function _M:playerUseItem(object, item)
-	if game.zone.short_name ~= "wilderness" then game.logPlayer(self, "You can not use items on the world map.") return end
+	if game.zone.short_name == "wilderness" then game.logPlayer(self, "You can not use items on the world map.") return end
 
 	local use_fct = function(o, item)
 		self.changed = true
