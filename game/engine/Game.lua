@@ -147,17 +147,21 @@ end
 
 available_resolutions =
 {
-	["800x600"] = {800, 600},
-	["1024x768"] = {1024, 768},
-	["1200x1024"] = {1200, 1024},
-	["1600x1200"] = {1600, 1200},
+	["800x600"] = {800, 600, false},
+	["1024x768"] = {1024, 768, false},
+	["1200x1024"] = {1200, 1024, false},
+	["1600x1200"] = {1600, 1200, false},
+	["800x600 Fullscreen"] = {800, 600, true},
+	["1024x768 Fullscreen"] = {1024, 768, true},
+	["1200x1024 Fullscreen"] = {1200, 1024, true},
+	["1600x1200 Fullscreen"] = {1600, 1200, true},
 }
 --- Change screen resolution
 function _M:setResolution(res)
 	if not available_resolutions[res] then return false, "unknown resolution" end
 
 	local old_w, old_h = self.w, self.h
-	core.display.setWindowSize(available_resolutions[res][1], available_resolutions[res][2])
+	core.display.setWindowSize(available_resolutions[res][1], available_resolutions[res][2], available_resolutions[res][3])
 	self.w, self.h = core.display.size()
 
 	if self.w ~= old_w or self.h ~= old_h then

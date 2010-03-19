@@ -45,7 +45,15 @@ function _M:generateList()
 	for r, _ in pairs(game.available_resolutions) do
 		l[#l+1] = r
 	end
-	table.sort(l, function(a,b) return game.available_resolutions[a][1] < game.available_resolutions[b][1] end)
+	table.sort(l, function(a,b)
+		if game.available_resolutions[a][2] == game.available_resolutions[b][2] then
+			return (game.available_resolutions[a][3] and 1 or 0) < (game.available_resolutions[b][3] and 1 or 0)
+		elseif game.available_resolutions[a][1] == game.available_resolutions[b][1] then
+			return game.available_resolutions[a][2] < game.available_resolutions[b][2]
+		else
+			return game.available_resolutions[a][1] < game.available_resolutions[b][1]
+		end
+	end)
 
 	-- Makes up the list
 	local list = {}

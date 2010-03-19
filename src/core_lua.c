@@ -823,8 +823,11 @@ static int sdl_set_window_size(lua_State *L)
 	int w = luaL_checknumber(L, 1);
 	int h = luaL_checknumber(L, 2);
 	bool fullscreen = lua_toboolean(L, 3);
+	int flags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE;
 
-	screen = SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE);
+	if (fullscreen) flags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_FULLSCREEN;
+
+	screen = SDL_SetVideoMode(w, h, 32, flags);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
 		return 0;

@@ -64,7 +64,7 @@ function _M:init(t, no_default)
 end
 
 function _M:move(x, y, force)
-	x, y = self:tryPlayerSlide(x, y, force)
+--	x, y = self:tryPlayerSlide(x, y, force)
 
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
