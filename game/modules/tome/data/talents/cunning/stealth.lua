@@ -13,10 +13,10 @@ newTalent{
 		end
 
 		-- Check nearby actors
-		local grids = core.fov.circle_grids(self.x, self.y, math.floor(10 - self:getTalentLevel(t) * 1.3), true)
+		local grids = core.fov.circle_grids(self.x, self.y, math.floor(10 - self:getTalentLevel(t) * 1.1), true)
 		for x, yy in pairs(grids) do for y in pairs(yy) do
 			local actor = game.level.map(x, y, game.level.map.ACTOR)
-			if actor and actor ~= self and actor:reactionToward(self) < 0 then
+			if actor and actor ~= self and actor:reactionToward(self) < 0 and not rng.percent(self.hide_chance or 0) then
 				game.logPlayer(self, "You cannot Stealth with nearby foes watching!")
 				return nil
 			end
@@ -36,7 +36,7 @@ newTalent{
 		return ([[Enters stealth mode, making you harder to detect.
 		Stealth cannot work with heavy or massive armours.
 		While in stealth mode, light radius is reduced to 0.
-		There needs to be no foes in sight in a radius of %d around you to enter stealth.]]):format(math.floor(10 - self:getTalentLevel(t) * 1.3))
+		There needs to be no foes in sight in a radius of %d around you to enter stealth.]]):format(math.floor(10 - self:getTalentLevel(t) * 1.1))
 	end,
 }
 
@@ -53,18 +53,26 @@ newTalent{
 }
 
 newTalent{
-	name = "Steal",
+	name = "Hide in Plain Sight",
 	type = {"cunning/stealth",3},
 	require = cuns_req3,
+	no_energy = true,
 	points = 5,
-	stamina = 30,
-	cooldown = 10,
+	stamina = 20,
+	cooldown = 40,
 	action = function(self, t)
-		game.log("IMPLEMENT ME!")
+		if self:isTalentActive(self.T_STEALTH) then return end
+
+		self.talents_cd[self.T_STEALTH] = nil
+		self.changed = true
+		self.hide_chance = 40 + self:getTalentLevel(t) * 7
+		self:useTalent(self.T_STEALTH)
+		self.hide_chance = nil
 		return true
 	end,
 	info = function(self, t)
-		return ([[Steal!]])
+		return ([[You have learned how to stealth even when in plain sight of your foes, giving your %d%% chances of success. This also resets the cooldown of your stealth talent.]]):
+		format(40 + self:getTalentLevel(t) * 7)
 	end,
 }
 

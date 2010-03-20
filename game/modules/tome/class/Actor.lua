@@ -543,7 +543,7 @@ function _M:postUseTalent(ab, ret)
 
 
 	-- Cancel stealth!
-	if ab.id ~= self.T_STEALTH then self:breakStealth() end
+	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT then self:breakStealth() end
 
 	return true
 end
