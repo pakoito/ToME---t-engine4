@@ -57,3 +57,33 @@ newTalent{
 		format(3 + math.ceil(self:getTalentLevel(t) * 1.5), self:getWil(70))
 	end,
 }
+
+newTalent{
+	name = "Snap",
+	type = {"cunning/lethality",4},
+	require = cuns_req4,
+	points = 5,
+	stamina = 50,
+	cooldown = 50,
+	action = function(self, t)
+		local nb = math.ceil(self:getTalentLevel(t) + 2)
+		local tids = {}
+		for tid, _ in pairs(self.talents_cd) do
+			local tt = self:getTalentFromId(tid)
+			if tt.type[2] <= self:getTalentLevelRaw(t) then
+				tids[#tids+1] = tid
+			end
+		end
+		for i = 1, nb do
+			if #tids == 0 then break end
+			local tid = rng.tableRemove(tids)
+			self.talents_cd[tid] = nil
+		end
+		self.changed = true
+		return true
+	end,
+	info = function(self, t)
+		return ([[Your quick wits allow you to reset the cooldown of %d of your combat talents of level %d or less.]]):
+		format(math.ceil(self:getTalentLevel(t) + 2), self:getTalentLevelRaw(t))
+	end,
+}
