@@ -26,7 +26,7 @@ end
 function table.mergeAdd(dst, src, deep)
 	for k, e in pairs(src) do
 		if deep and dst[k] and type(e) == "table" and type(dst[k]) == "table" and not e.__CLASSNAME then
-			table.merge(dst[k], e, true)
+			table.mergeAdd(dst[k], e, true)
 		elseif deep and not dst[k] and type(e) == "table" and not e.__CLASSNAME then
 			dst[k] = table.clone(e, true)
 		elseif dst[k] and type(e) == "number" then

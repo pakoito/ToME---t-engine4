@@ -406,7 +406,7 @@ function _M:learnTalent(t_id, force, nb)
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) then self:learnTalent(self.T_MANA_POOL, true) end
-	if t.type[1]:find("^gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL, true) end
+	if t.type[1]:find("^wild-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL, true) end
 	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) then self:learnTalent(self.T_STAMINA_POOL, true) end
 
 	-- If we learn an archery talent, also learn to shoot
@@ -606,7 +606,7 @@ end
 -- @param target to whom is the exp rewarded
 -- @return the experience rewarded
 function _M:worthExp(target)
-	if not target.level or self.level < target.level - 5 then return 1 end
+	if not target.level or self.level < target.level - 3 then return 0 end
 
 	local mult = 2
 	if self.unique then mult = 6

@@ -1,6 +1,6 @@
 newTalent{
 	name = "Poisonous Spores",
-	type = {"gift/slime", 1},
+	type = {"wild-gift/slime", 1},
 	require = gifts_req1,
 	points = 5,
 	message = "@Source@ releases poisonous spores at @target@.",
@@ -27,7 +27,7 @@ newTalent{
 
 newTalent{
 	name = "Acidic Skin",
-	type = {"gift/slime", 2},
+	type = {"wild-gift/slime", 2},
 	require = gifts_req2,
 	points = 5,
 	mode = "sustained",
@@ -55,7 +55,7 @@ newTalent{
 
 newTalent{
 	name = "Slime Spit",
-	type = {"gift/slime", 3},
+	type = {"wild-gift/slime", 3},
 	require = gifts_req3,
 	points = 5,
 	equilibrium = 4,
@@ -79,7 +79,7 @@ newTalent{
 
 newTalent{
 	name = "Slime Roots",
-	type = {"gift/slime", 4},
+	type = {"wild-gift/slime", 4},
 	require = gifts_req4,
 	points = 5,
 	equilibrium = 5,

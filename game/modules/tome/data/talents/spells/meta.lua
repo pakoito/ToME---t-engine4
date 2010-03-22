@@ -1,23 +1,7 @@
 newTalent{
-	name = "Recharge",
+	name = "Disperse Magic",
 	type = {"spell/meta",1},
 	require = spells_req1,
-	points = 5,
-	mana = 80,
-	cooldown = 30,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return ([[Recharges a magic item.
-		The power increases with the Magic stat]]):format(util.bound((self:combatSpellpower(25) * self:getTalentLevel(t)) / 100, 0.1, 0.4))
-	end,
-}
-
-newTalent{
-	name = "Disperse Magic",
-	type = {"spell/meta",2},
-	require = spells_req2,
 	points = 5,
 	mana = 40,
 	cooldown = 7,
@@ -72,8 +56,8 @@ newTalent{
 
 newTalent{
 	name = "Spell Shaping",
-	type = {"spell/meta",3},
-	require = spells_req3,
+	type = {"spell/meta",2},
+	require = spells_req2,
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
@@ -84,8 +68,8 @@ newTalent{
 
 newTalent{
 	name = "Quicken Spells",
-	type = {"spell/meta",4},
-	require = spells_req4,
+	type = {"spell/meta",3},
+	require = spells_req3,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 150,
@@ -106,5 +90,35 @@ newTalent{
 	info = function(self, t)
 		return ([[Reduces the cooldown of all spells by %d%%.
 		The reduction increases with the Magic stat]]):format(util.bound(self:getTalentLevel(t) / 15, 0.05, 0.3) * 100)
+	end,
+}
+
+newTalent{
+	name = "Metaflow",
+	type = {"spell/meta",4},
+	require = spells_req4,
+	points = 5,
+	mana = 70,
+	cooldown = 50,
+	action = function(self, t)
+		local nb = math.ceil(self:getTalentLevel(t) + 2)
+		local tids = {}
+		for tid, _ in pairs(self.talents_cd) do
+			local tt = self:getTalentFromId(tid)
+			if tt.type[2] <= self:getTalentLevelRaw(t) and tt.type[1]:find("^spell/") then
+				tids[#tids+1] = tid
+			end
+		end
+		for i = 1, nb do
+			if #tids == 0 then break end
+			local tid = rng.tableRemove(tids)
+			self.talents_cd[tid] = nil
+		end
+		self.changed = true
+		return true
+	end,
+	info = function(self, t)
+		return ([[Your mastery of the arcane flows allow you to reset the cooldown of %d of your spells of level %d or less.]]):
+		format(math.ceil(self:getTalentLevel(t) + 2), self:getTalentLevelRaw(t))
 	end,
 }

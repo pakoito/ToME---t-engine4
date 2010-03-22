@@ -1,6 +1,6 @@
 newTalent{
 	name = "War Hound",
-	type = {"gift/summon-melee", 1},
+	type = {"wild-gift/summon-melee", 1},
 	require = gifts_req1,
 	points = 5,
 	message = "@Source@ summons a War Hound!",
@@ -58,7 +58,7 @@ newTalent{
 
 newTalent{
 	name = "Jelly",
-	type = {"gift/summon-melee", 2},
+	type = {"wild-gift/summon-melee", 2},
 	require = gifts_req2,
 	points = 5,
 	message = "@Source@ summons a Jelly!",
@@ -119,12 +119,12 @@ newTalent{
 
 newTalent{
 	name = "Minotaur",
-	type = {"gift/summon-melee", 3},
+	type = {"wild-gift/summon-melee", 3},
 	require = gifts_req3,
 	points = 5,
 	message = "@Source@ summons a Minotaur!",
 	equilibrium = 10,
-	cooldown = 10,
+	cooldown = 15,
 	range = 20,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
@@ -167,7 +167,7 @@ newTalent{
 
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 2,
+			summon_time = math.ceil(self:getTalentLevel(t) / 2) + 2,
 			ai_target = {actor=target}
 		}
 
@@ -180,6 +180,73 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Minotaur to attack your foes. Minotaurs can not stay summoned for long but they deal lots of damage.
+		It will get %d strength and %d constitution.]]):format(25 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+	end,
+}
+
+newTalent{
+	name = "Stone Golem",
+	type = {"wild-gift/summon-melee", 4},
+	require = gifts_req4,
+	points = 5,
+	message = "@Source@ summons an Stone Golem!",
+	equilibrium = 15,
+	cooldown = 20,
+	range = 20,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		if target == self then target = nil end
+
+		-- Find space
+		local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			type = "golem", subtype = "stone",
+			display = "g",
+			name = "stone golem", color=colors.WHITE,
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+
+			max_stamina = 100,
+			life_rating = 13,
+			max_life = resolvers.rngavg(50,80),
+
+			autolevel = "none",
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
+			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
+
+			desc = [[It is a massive animated statue.]],
+			level_range = {self.level, self.level}, exp_worth = 0,
+
+			combat_armor = 25, combat_def = -20,
+			combat = { dam=resolvers.rngavg(25,50), atk=20, apr=5, dammod={str=0.9} },
+			resolvers.talents{ [Talents.T_QUAKE]=3, [Talents.T_STUN]=3, },
+
+			poison_immune=1, cut_immune=1, fear_immune=1, blind_immune=1,
+
+			faction = self.faction,
+			summoner = self, summoner_gain_exp=true,
+			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			ai_target = {actor=target}
+		}
+
+		m:resolve() m:resolve(nil, true)
+		m:forceLevelup(self.level)
+		game.zone:addEntity(game.level, m, "actor", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Summon a Stone Golem to attack your foes. Stone golems are formidable foes that can shake the ground with their might.
 		It will get %d strength and %d constitution.]]):format(25 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }

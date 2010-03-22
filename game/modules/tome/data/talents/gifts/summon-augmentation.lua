@@ -1,6 +1,6 @@
 newTalent{
 	name = "Rage",
-	type = {"gift/summon-augmentation", 1},
+	type = {"wild-gift/summon-augmentation", 1},
 	require = gifts_req1,
 	points = 5,
 	equilibrium = 5,

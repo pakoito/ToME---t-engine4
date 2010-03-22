@@ -1,6 +1,6 @@
 newTalent{
 	name = "Burrow",
-	type = {"gift/sand-drake", 1},
+	type = {"wild-gift/sand-drake", 1},
 	require = gifts_req1,
 	points = 5,
 	message = "@Source@ burrows into the ground!",
@@ -20,7 +20,7 @@ newTalent{
 
 newTalent{
 	name = "Swallow",
-	type = {"gift/sand-drake", 2},
+	type = {"wild-gift/sand-drake", 2},
 	require = gifts_req2,
 	points = 5,
 	equilibrium = 10,
@@ -42,26 +42,29 @@ newTalent{
 
 newTalent{
 	name = "Quake",
-	type = {"gift/sand-drake", 3},
+	type = {"wild-gift/sand-drake", 3},
 	require = gifts_req3,
 	points = 5,
 	equilibrium = 4,
 	cooldown = 30,
 	tactical = {
-		ATTACK = 10,
+		ATTACKAREA = 10,
 	},
 	range = 20,
 	action = function(self, t)
+		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t) / 2, talent=t}
+		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=self:combatDamage() * 0.8, dist=4})
+		return true
 	end,
 	info = function(self, t)
-		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down for 3 turns.
-		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.3)
+		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damage and knocking back your foes.
+		The damage will increase with the Strength stat]]):format(2 + self:getTalentLevel(t) / 2)
 	end,
 }
 
 newTalent{
 	name = "Sand Breath",
-	type = {"gift/sand-drake", 4},
+	type = {"wild-gift/sand-drake", 4},
 	require = gifts_req4,
 	points = 5,
 	equilibrium = 12,

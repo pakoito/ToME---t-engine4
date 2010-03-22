@@ -1,6 +1,7 @@
 -- race & classes
 newTalentType{ type="technique/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ type="wild-gift/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 
 -- Multiply!!!
