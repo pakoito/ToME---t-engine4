@@ -357,19 +357,19 @@ function _M:attack(target)
 	self:bumpInto(target)
 end
 
-function _M:getMaxEncumberance()
+function _M:getMaxEncumbrance()
 	return math.floor(40 + self:getStr() * 1.8)
 end
 
-function _M:checkEncumberance()
-	-- Compute encumberance
-	local enc, max = 0, self:getMaxEncumberance()
+function _M:checkEncumbrance()
+	-- Compute encumbrance
+	local enc, max = 0, self:getMaxEncumbrance()
 	for inven_id, inven in pairs(self.inven) do
 		for item, o in ipairs(inven) do
 			o:forAllStack(function(so) enc = enc + so.encumber end)
 		end
 	end
-	print("Total encumberance", enc, max)
+	print("Total encumbrance", enc, max)
 
 	-- We are pinned to the ground if we carry too much
 	if not self.encumbered and enc > max then
@@ -387,14 +387,14 @@ end
 function _M:onAddObject(o)
 	engine.interface.ActorInventory.onAddObject(self, o)
 
-	self:checkEncumberance()
+	self:checkEncumbrance()
 end
 
 --- Call when an object is removed
 function _M:onRemoveObject(o)
 	engine.interface.ActorInventory.onRemoveObject(self, o)
 
-	self:checkEncumberance()
+	self:checkEncumbrance()
 end
 
 --- Actor learns a talent

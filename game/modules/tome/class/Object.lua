@@ -129,7 +129,7 @@ function _M:getDesc()
 	end
 
 	if self.encumber then
-		desc[#desc+1] = ("#67AD00#%0.2f Encumberance."):format(self.encumber)
+		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance."):format(self.encumber)
 	end
 
 	-- Stop here if unided
@@ -141,12 +141,12 @@ function _M:getDesc()
 		for stat, i in pairs(self.combat.dammod or {}) do
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
-		desc[#desc+1] = ("%d Damage [Range %0.2f] (%s), %d Attack, %d Armor Peneration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
+		desc[#desc+1] = ("%d Damage [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
 		desc[#desc+1] = ""
 	end
 
 	local w = self.wielder or {}
-	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Peneration %d, Physical Crit %d%%, Physical damage %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
+	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical damage %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
 	if w.combat_armor or w.combat_def then desc[#desc+1] = ("Armor %d, Defense %d"):format(w.combat_armor or 0, w.combat_def or 0) end
 	if w.fatigue then desc[#desc+1] = ("Fatigue %d%%"):format(w.fatigue) end
 
