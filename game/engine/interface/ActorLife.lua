@@ -178,6 +178,6 @@ function _M:canProject(t, x, y)
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly then lx, ly = x, y end
 
-	if lx == x and ly == y then return true end
-	return false
+	if lx == x and ly == y then return true, lx, ly end
+	return false, lx, ly
 end

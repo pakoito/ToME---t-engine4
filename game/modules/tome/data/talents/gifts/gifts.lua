@@ -34,7 +34,9 @@ gifts_req5 = {
 
 load("/data/talents/gifts/call.lua")
 load("/data/talents/gifts/slime.lua")
-load("/data/talents/gifts/sand.lua")
+load("/data/talents/gifts/sand-drake.lua")
+load("/data/talents/gifts/fire-drake.lua")
+load("/data/talents/gifts/cold-drake.lua")
 load("/data/talents/gifts/summon-melee.lua")
 load("/data/talents/gifts/summon-distance.lua")
 load("/data/talents/gifts/summon-utility.lua")

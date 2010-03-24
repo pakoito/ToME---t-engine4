@@ -106,7 +106,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if target == self then target = nil end
 
 		-- Find space
@@ -169,7 +169,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if target == self then target = nil end
 
 		-- Find space
@@ -222,11 +222,11 @@ newTalent{
 }
 
 newTalent{
-	name = "???",
+	name = "Warper",
 	type = {"wild-gift/summon-distance", 3},
 	require = gifts_req3,
 	points = 5,
-	message = "@Source@ summons a Fire Imp!",
+	message = "@Source@ summons a Warper!",
 	equilibrium = 2,
 	cooldown = 10,
 	range = 20,
@@ -234,7 +234,8 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+
 		if target == self then target = nil end
 
 		-- Find space
@@ -299,7 +300,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if target == self then target = nil end
 
 		-- Find space

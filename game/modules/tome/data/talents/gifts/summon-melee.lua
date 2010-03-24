@@ -11,7 +11,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if target == self then target = nil end
 
 		-- Find space
@@ -69,7 +69,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if target == self then target = nil end
 
 		-- Find space
@@ -130,7 +130,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if target == self then target = nil end
 
 		-- Find space
@@ -197,7 +197,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = game.target:pointAtRange(self.x, self.y, tx, ty, self:getTalentRange(t))
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if target == self then target = nil end
 
 		-- Find space

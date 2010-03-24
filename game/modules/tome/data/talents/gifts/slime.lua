@@ -93,7 +93,7 @@ newTalent{
 		if not x then return nil end
 		-- Target code doesnot restrict the self coordinates to the range, it lets the poject function do it
 		-- but we cant ...
-		x, y = game.target:pointAtRange(self.x, self.y, x, y, 20 + self:getTalentLevel(t))
+		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
 		self:teleportRandom(x, y, 7 - self:getTalentLevel(t))
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")

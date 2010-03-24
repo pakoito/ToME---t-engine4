@@ -41,7 +41,7 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = game.target:pointAtRange(self.x, self.y, x, y, 15)
+		local _ _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, duration,
