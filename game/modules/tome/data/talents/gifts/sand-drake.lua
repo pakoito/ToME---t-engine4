@@ -52,8 +52,9 @@ newTalent{
 	},
 	range = 20,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t) / 2, talent=t}
+		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t) / 2, talent=t, no_restrict=true}
 		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=self:combatDamage() * 0.8, dist=4})
+		self:doQuake(tg, self.x, self.y)
 		return true
 	end,
 	info = function(self, t)

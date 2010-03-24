@@ -77,6 +77,7 @@ newTalent{
 newTalent{
 	name = "Stone Wall",
 	type = {"spell/earth",4},
+	require = spells_req4,
 	points = 5,
 	cooldown = 12,
 	mana = 70,
@@ -123,7 +124,6 @@ newTalent{
 
 		return true
 	end,
-	require = { stat = { mag=34 } },
 	info = function(self, t)
 		return ([[Entombs yourself in a wall of stone for %d turns.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,

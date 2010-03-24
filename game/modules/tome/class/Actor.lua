@@ -184,6 +184,29 @@ function _M:probabilityTravel(x, y, dist)
 end
 
 --- Reveals location surrounding the actor
+function _M:doQuake(tg, x, y)
+	local locs = {}
+	local ms = {}
+	self:project(tg, x, y, function(tx, ty)
+		locs[#locs+1] = {x=tx,y=ty}
+		ms[#ms+1] = game.level.map.map[tx + ty * game.level.map.w]
+	end)
+
+	while #locs > 0 do
+		local l = rng.tableRemove(locs)
+		local m = rng.tableRemove(ms)
+		game.level.map.map[l.x + l.y * game.level.map.w] = m
+		for k, e in pairs(m) do
+			if e.x and e.y and e.move then e:move(l.x, l.y, true)
+			elseif e.x and e.y then e.x, e.ly = l.x, l.y end
+		end
+	end
+	game.level.map:cleanFOV()
+	game.level.map.changed = true
+	game.level.map:redisplay()
+end
+
+--- Reveals location surrounding the actor
 function _M:magicMap(radius)
 	radius = math.floor(radius)
 	for i = self.x - radius, self.x + radius do for j = self.y - radius, self.y + radius do

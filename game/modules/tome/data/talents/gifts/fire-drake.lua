@@ -3,7 +3,7 @@ newTalent{
 	type = {"wild-gift/fire-drake", 1},
 	require = gifts_req1,
 	points = 5,
-	message = "@Source@ burrows into the ground!",
+	message = "@Source@ roars!",
 	equilibrium = 3,
 	cooldown = 20,
 	range = 5,

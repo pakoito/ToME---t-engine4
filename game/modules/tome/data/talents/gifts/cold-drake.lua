@@ -1,3 +1,5 @@
+local Object = require "engine.Object"
+
 newTalent{
 	name = "Ice Claw",
 	type = {"wild-gift/cold-drake", 1},
@@ -14,7 +16,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTargetWith(target, DamageType.COLD, 1.4 + self:getTalentLevel(t) / 8, true)
+		self:attackTarget(target, DamageType.COLD, 1.4 + self:getTalentLevel(t) / 8, true)
 		return true
 	end,
 	info = function(self, t)
@@ -59,11 +61,38 @@ newTalent{
 	cooldown = 30,
 	range = 20,
 	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
+
+		local e = Object.new{
+			old_feat = game.level.map(x, y, Map.TERRAIN),
+			name = "summoned ice wall",
+			display = '#', color=colors.LIGHT_BLUE,
+			always_remember = true,
+			block_move = true,
+			block_sight = false,
+			temporary = 4 + self:getTalentLevel(t),
+			x = x, y = y,
+			canAct = false,
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map(self.x, self.y, Map.TERRAIN, self.old_feat)
+					game.level:removeEntity(self)
+					game.level.map:redisplay()
+				end
+			end
+		}
+		game.level:addEntity(e)
+		game.level.map(x, y, Map.TERRAIN, e)
 		return true
 	end,
 	info = function(self, t)
-		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damage and knocking back your foes.
-		The damage will increase with the Strength stat]]):format(2 + self:getTalentLevel(t) / 2)
+		return ([[Summons an icy wall for %d turns. Ice walls are transparent.]]):format(4 + self:getTalentLevel(t))
 	end,
 }
 
