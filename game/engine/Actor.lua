@@ -46,6 +46,12 @@ end
 function _M:move(x, y, force)
 	if self.dead then return true end
 	local map = game.level.map
+
+	if x < 0 then x = 0 end
+	if x >= map.w then x = map.w - 1 end
+	if y < 0 then y = 0 end
+	if y >= map.h then y = map.h - 1 end
+
 	if not force and map:checkAllEntities(x, y, "block_move", self, true) then return true end
 
 	if self.x and self.y then
@@ -53,10 +59,6 @@ function _M:move(x, y, force)
 	else
 		print("[MOVE] actor moved without a starting position", self.name)
 	end
-	if x < 0 then x = 0 end
-	if x >= map.w then x = map.w - 1 end
-	if y < 0 then y = 0 end
-	if y >= map.h then y = map.h - 1 end
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
 	map:checkAllEntities(x, y, "on_move", self, force)
