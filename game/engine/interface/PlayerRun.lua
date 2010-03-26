@@ -75,6 +75,7 @@ function _M:runStep()
 		return false
 	else
 		self:moveDir(self.running.dir)
+		if not self.running then return false end
 		self.running.cnt = self.running.cnt + 1
 		if self.running.newdir then
 			self.running.dir = self.running.newdir

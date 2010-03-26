@@ -35,6 +35,8 @@ newEntity{
 				end
 			end
 		}
+		sand.summoner_gain_exp = true
+		sand.summoner = src
 		sand.old_feat = old
 		sand.temporary = 20
 		sand.x = x

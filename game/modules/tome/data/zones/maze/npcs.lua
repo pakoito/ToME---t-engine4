@@ -42,6 +42,6 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 
 	on_die = function(self, who)
-		who:setQuestStatus("starter-zones", engine.Quest.COMPLETED, "maze")
+		who:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "maze")
 	end,
 }

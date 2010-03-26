@@ -115,7 +115,9 @@ newTalent{
 							game.level:removeEntity(self)
 							game.level.map:redisplay()
 						end
-					end
+					end,
+					summoner_gain_exp = true,
+					summoner = self,
 				}
 				game.level:addEntity(e)
 				game.level.map(x + i, y + j, Map.TERRAIN, e)

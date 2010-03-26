@@ -55,6 +55,6 @@ newEntity{ define_as = "THE_MASTER",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 
 	on_die = function(self, who)
-		who:setQuestStatus("tol-falas", engine.Quest.DONE)
+		who:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
 	end,
 }

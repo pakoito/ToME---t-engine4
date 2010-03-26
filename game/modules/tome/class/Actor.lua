@@ -183,7 +183,8 @@ function _M:probabilityTravel(x, y, dist)
 	return true
 end
 
---- Reveals location surrounding the actor
+--- Quake a zone
+-- Moves randomly each grid to an other grid
 function _M:doQuake(tg, x, y)
 	local locs = {}
 	local ms = {}
@@ -288,16 +289,20 @@ function _M:onTakeHit(value, src)
 	return value
 end
 
+function _M:resolveSource()
+	if self.summoner_gain_exp and self.summoner then
+		return self.summoner:resolveSource()
+	else
+		return self
+	end
+end
+
 function _M:die(src)
 	engine.interface.ActorLife.die(self, src)
 
 	-- Gives the killer some exp for the kill
 	if src then
-		if src.summoner_gain_exp and src.summoner then
-			src.summoner:gainExp(self:worthExp(src.summoner))
-		else
-			src:gainExp(self:worthExp(src))
-		end
+		src:resolveSource():gainExp(self:worthExp(src:resolveSource()))
 	end
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
