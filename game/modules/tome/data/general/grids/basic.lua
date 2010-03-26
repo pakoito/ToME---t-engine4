@@ -37,7 +37,8 @@ newEntity{
 	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255,
 	always_remember = true,
-	block_move = true,
+	does_block_move = true,
+	can_pass = {pass_wall=1},
 	block_sight = true,
 	air_level = -20,
 	dig = "FLOOR",
@@ -59,7 +60,5 @@ newEntity{
 	name = "open door", image = "terrain/granite_door1_open.png",
 	display = "'", color_r=238, color_g=154, color_b=77,
 	always_remember = true,
-	block_move = false,
-	block_sight = false,
 	door_closed = "DOOR",
 }

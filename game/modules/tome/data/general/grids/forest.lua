@@ -9,7 +9,8 @@ newEntity{
 	name = "tree", image = "terrain/tree.png",
 	display = '#', color=colors.LIGHT_GREEN,
 	always_remember = true,
-	block_move = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
 	block_sight = true,
 	dig = "GRASS",
 }
@@ -25,7 +26,8 @@ newEntity{
 	name = "tree", image = "terrain/tree_dark1.png",
 	display = '#', color=colors.GREEN,
 	always_remember = true,
-	block_move = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
 	block_sight = true,
 	dig = "GRASS_DARK1",
 }

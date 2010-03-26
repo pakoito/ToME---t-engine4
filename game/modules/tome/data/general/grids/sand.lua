@@ -9,7 +9,8 @@ newEntity{
 	name = "sandwall", image = "terrain/sandwall.png",
 	display = '#', color={r=203,g=189,b=72},
 	always_remember = true,
-	block_move = true,
+	can_pass = {pass_wall=1},
+	does_block_move = true,
 	block_sight = true,
 	air_level = -10,
 	-- Dig only makes unstable tunnels

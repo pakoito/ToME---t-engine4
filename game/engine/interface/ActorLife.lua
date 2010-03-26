@@ -43,14 +43,15 @@ function _M:takeHit(value, src)
 	self.life = self.life - value
 	if self.life <= 0 then
 		game.logSeen(self, "%s killed %s!", src.name:capitalize(), self.name)
-		game.level:removeEntity(self)
-		self.dead = true
 		return self:die(src)
 	end
 end
 
 --- Called when died
 function _M:die(src)
+	game.level:removeEntity(self)
+	self.dead = true
+
 	self:check("on_die", src)
 end
 

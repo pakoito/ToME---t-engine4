@@ -63,6 +63,8 @@ function _M:init(t, no_default)
 
 	t.on_melee_hit = t.on_melee_hit or {}
 	t.melee_project = t.melee_project or {}
+	t.can_pass = t.can_pass or {}
+	t.move_project = t.move_project or {}
 
 	-- Resistances
 	t.resists = t.resists or {}
@@ -221,14 +223,14 @@ function _M:tooltip()
 	return ([[%s
 #00ffff#Level: %d
 Exp: %d/%d
-#ff0000#HP: %d
+#ff0000#HP: %d (%d%%)
 Stats: %d /  %d / %d / %d / %d / %d
 %s]]):format(
 	self.name,
 	self.level,
 	self.exp,
 	self:getExpChart(self.level+1) or "---",
-	self.life,
+	self.life, self.life * 100 / self.max_life,
 	self:getStr(),
 	self:getDex(),
 	self:getMag(),
@@ -434,7 +436,7 @@ function _M:learnTalent(t_id, force, nb)
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) then self:learnTalent(self.T_MANA_POOL, true) end
-	if t.type[1]:find("^wild-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL, true) end
+	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL, true) end
 	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) then self:learnTalent(self.T_STAMINA_POOL, true) end
 
 	-- If we learn an archery talent, also learn to shoot
@@ -647,8 +649,6 @@ function _M:suffocate(value, src)
 	self.air = self.air - value
 	if self.air <= 0 and not self:attr("no_breath") then
 		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())
-		game.level:removeEntity(self)
-		self.dead = true
 		return self:die(src)
 	end
 end

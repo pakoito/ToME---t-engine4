@@ -1,5 +1,6 @@
 require "engine.class"
 require "engine.Grid"
+local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(engine.Grid))
 
@@ -15,7 +16,24 @@ function _M:block_move(x, y, e, act)
 	elseif self.door_opened then
 		return true
 	end
-	return false
+
+	-- Pass walls
+	if e and self.can_pass and e.can_pass then
+		for what, check in pairs(e.can_pass) do
+			if self.can_pass[what] and self.can_pass[what] <= check then return false end
+		end
+	end
+
+	return self.does_block_move
+end
+
+function _M:on_move(x, y, who, forced)
+	if forced then return end
+	if who.move_project and next(who.move_project) then
+		for typ, dam in pairs(who.move_project) do
+			DamageType:get(typ).projector(who, x, y, typ, dam)
+		end
+	end
 end
 
 function _M:tooltip()
@@ -28,3 +46,4 @@ function _M:tooltip()
 		end
 	end
 end
+

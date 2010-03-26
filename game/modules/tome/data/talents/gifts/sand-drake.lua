@@ -3,18 +3,26 @@ newTalent{
 	type = {"wild-gift/sand-drake", 1},
 	require = gifts_req1,
 	points = 5,
-	message = "@Source@ burrows into the ground!",
-	equilibrium = 10,
-	cooldown = 150,
+	mode = "sustained",
+	sustain_equilibrium = 30,
+	cooldown = 30,
 	range = 20,
-	tactical = {
-		DEFEND = 10,
-	},
-	action = function(self, t)
+	activate = function(self, t)
+		return {
+			pass = self:addTemporaryValue("can_pass", {pass_wall=1}),
+			dig = self:addTemporaryValue("move_project", {[DamageType.DIG]=1}),
+			drain = self:addTemporaryValue("equilibrium_regen", 8 - self:getTalentLevelRaw(t)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("equilibrium_regen", p.drain)
+		self:removeTemporaryValue("move_project", p.dig)
+		self:removeTemporaryValue("can_pass", p.pass)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Burrows into the ground to protect yourself and regenerate life.]]):format(100 * (1.5 + self:getTalentLevel(t) / 4))
+		return ([[Allows to burrow into walls, increasing equilibrium quickly.
+		Higher talent levels reduce equilibrium cost per turn.]])
 	end,
 }
 
@@ -24,19 +32,34 @@ newTalent{
 	require = gifts_req2,
 	points = 5,
 	equilibrium = 10,
-	cooldown = 10,
+	cooldown = 20,
 	range = 1,
+	message = "@Source@ swallows its target!",
 	tactical = {
-		DEFEND = 10,
+		ATTACK = 10,
 	},
-	activate = function(self, t)
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("on_melee_hit", p.onhit)
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+
+		if target.life * 100 / target.max_life > 10 + 3 * self:getTalentLevel(t) then
+			return nil
+		end
+
+		if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("instakill") then
+			target:die(self)
+			self:incEquilibrium(-target.level - 5)
+			self:heal(target.level * 2 + 5)
+		else
+			game.logSeen(target, "%s resists!", target.name:capitalize())
+		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hits your for %d acid damage.]]):format(10 + 5 * self:getTalentLevel(t))
+		return ([[When your target is below %d life you can try to swallow it, killing it automatically regaining life and equilibrium.]]):
+		format(10 + 3 * self:getTalentLevel(t))
 	end,
 }
 
