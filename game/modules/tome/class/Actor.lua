@@ -706,6 +706,7 @@ end
 function _M:canBe(what)
 	if what == "poison" and rng.percent(100 * (self:attr("poison_immune") or 0)) then return false end
 	if what == "cut" and rng.percent(100 * (self:attr("cut_immune") or 0)) then return false end
+	if what == "confusion" and rng.percent(100 * (self:attr("confusion_immune") or 0)) then return false end
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end

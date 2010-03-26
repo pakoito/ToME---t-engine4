@@ -153,7 +153,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is stunned.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -183,7 +183,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is knocked back.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is knocked back.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -271,7 +271,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the atatck hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target doing %d%% damage, if the attack hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -300,7 +300,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the atatck hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target doing %d%% damage, if the attack hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -329,6 +329,25 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the atatck hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target doing %d%% damage, if the attack hits, the target is diseased.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+	end,
+}
+
+newTalent{
+	name = "Mind Disruption",
+	type = {"spell/other", 1},
+	points = 5,
+	cooldown = 10,
+	mana = 16,
+	range = 20,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.CONFUSION, {dur=2+self:getTalentLevel(t), dam=50+self:getTalentLevelRaw(t)*10}, {type="manathrust"})
+		return true
+	end,
+	info = function(self)
+		return ([[Try to confuse the target's mind fr a while.]])
 	end,
 }

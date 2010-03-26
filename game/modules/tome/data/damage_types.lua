@@ -324,7 +324,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatSpellResist)(target), 0, 95, 15) and target:canBe("stun") then
+			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) and target:canBe("confusion") then
 				target:setEffect(target.EFF_CONFUSED, dam.dur, {power=dam.dam})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
@@ -349,3 +349,20 @@ newDamageType{
 	end,
 }
 
+-- Drain Exp
+newDamageType{
+	name = "drain experience", type = "DRAINEXP",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam} end
+		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) then
+				target:gainExp(-dam.dam*2)
+				game.logSeen(target, "%s drains %s experience!", src.name:capitalize(), target.name)
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}

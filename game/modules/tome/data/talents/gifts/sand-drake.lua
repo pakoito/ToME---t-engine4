@@ -45,6 +45,7 @@ newTalent{
 	type = {"wild-gift/sand-drake", 3},
 	require = gifts_req3,
 	points = 5,
+	message = "@Source@ shakes the ground!",
 	equilibrium = 4,
 	cooldown = 30,
 	tactical = {
