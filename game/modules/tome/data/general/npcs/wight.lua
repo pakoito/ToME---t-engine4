@@ -17,7 +17,7 @@ newEntity{
 	combat = { dam=resolvers.rngavg(9,13), atk=10, apr=9, damtype=DamageType.DRAINEXP },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=20, nb=1, {ego_chance=20} },
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
