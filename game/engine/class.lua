@@ -89,6 +89,18 @@ function _M:clone(t)
 	return n
 end
 
+--- Replaces the object with an other, by copying (not deeply)
+function _M:replaceWith(t)
+	-- Delete fields
+	for k, e in pairs(self) do
+		self[k] = nil
+	end
+	for k, e in pairs(t) do
+		self[k] = e
+	end
+	setmetatable(self, getmetatable(t))
+end
+
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
 -- LOAD & SAVE

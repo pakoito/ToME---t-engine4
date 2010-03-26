@@ -40,3 +40,18 @@ function _M:nextHotkeyPage()
 	self.hotkey_page = util.boundWrap(self.hotkey_page + 1, 1, 3)
 	self.changed = true
 end
+
+-- Autoadd talents to hotkeys
+function _M:hotkeyAutoTalents()
+	for tid, _ in pairs(self.talents) do
+		local t = self:getTalentFromId(tid)
+		if t.mode == "activated" or t.mode == "sustained" then
+			for i = 1, 36 do
+				if not self.hotkey[i] then
+					self.hotkey[i] = {"talent", tid}
+					break
+				end
+			end
+		end
+	end
+end

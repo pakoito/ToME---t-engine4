@@ -85,7 +85,7 @@ function _M:run()
 end
 
 function _M:newGame()
-	self.player = Player.new{name=self.player_name}
+	self.player = Player.new{name=self.player_name, game_ender=true}
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
 
@@ -180,6 +180,11 @@ function _M:leaveLevel(level, lev, old_lev)
 end
 
 function _M:changeLevel(lev, zone)
+	if not self.player.game_ender then
+		game.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
+		return
+	end
+
 	local old_lev = (self.level and not zone) and self.level.level or -1000
 	if zone then
 		if self.zone then self.zone:leaveLevel(false, lev, old_lev) end

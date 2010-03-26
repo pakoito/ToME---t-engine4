@@ -320,7 +320,7 @@ function _M:die(src)
 	self.inven = {}
 
 	-- Give stamina back
-	if src:knowTalent(src.T_UNENDING_FRENZY) then
+	if src and src:knowTalent(src.T_UNENDING_FRENZY) then
 		src:incStamina(src:getTalentLevel(src.T_UNENDING_FRENZY) * 2)
 	end
 

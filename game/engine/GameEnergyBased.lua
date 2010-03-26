@@ -44,6 +44,7 @@ function _M:tick()
 		for i = 1, #arr do
 			e = arr[i]
 			if e and e.act and e.energy then
+--				print("<ENERGY", e.name, e.uid, "::", e.energy.value, game.paused, "::", e.player)
 				if e.energy.value < self.energy_to_act then
 					e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1)
 				end
@@ -51,6 +52,7 @@ function _M:tick()
 					e.energy.used = false
 					e:act(self)
 				end
+--				print(">ENERGY", e.name, e.uid, "::", e.energy.value, game.paused, "::", e.player)
 			end
 		end
 	end

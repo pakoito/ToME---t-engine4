@@ -264,7 +264,6 @@ newTalent{
 
 			max_mana = 150,
 			resolvers.talents{
-				[self.T_MANA_POOL]=1,
 				[self.T_TIME_PRISON]=self:getTalentLevelRaw(t),
 				[self.T_MANATHRUST]=self:getTalentLevelRaw(t),
 				[self.T_PHASE_DOOR]=self:getTalentLevelRaw(t),

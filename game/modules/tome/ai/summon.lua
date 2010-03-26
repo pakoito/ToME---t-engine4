@@ -4,11 +4,7 @@ newAI("summoned", function(self)
 		self.summon_time = self.summon_time - 1
 		if self.summon_time <= 0 then
 			game.logPlayer(self.summoner, "#PINK#Your summoned %s disappears.", self.name)
-			self.dead = true
-			if game.level:hasEntity(self) then
-				game.level:removeEntity(self)
-				self:removed()
-			end
+			self:die()
 		end
 	end
 

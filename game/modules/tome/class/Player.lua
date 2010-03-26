@@ -39,26 +39,22 @@ function _M:init(t, no_default)
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
 	self.player = true
-	self.type = "humanoid"
-	self.subtype = "player"
-	self.faction = "players"
+	self.type = self.type or "humanoid"
+	self.subtype = self.subtype or "player"
+	self.faction = self.faction or "players"
 
-	self.display='@'
-	self.color_r=230
-	self.color_g=230
-	self.color_b=230
---	self.image="player.png"
+	self.display=self.display or '@'
+	self.color_r=self.color_r or 230
+	self.color_g=self.color_g or 230
+	self.color_b=self.color_b or 230
 
 	self.fixed_rating = true
 
-	self.max_life=150
-	self.max_mana=85
-	self.max_stamina=85
 	self.unused_stats = 6
 	self.unused_talents = 2
 	self.move_others=true
 
-	self.lite = 0
+	self.lite = self.lite or 0
 
 	self.descriptor = {}
 end
@@ -89,11 +85,21 @@ end
 function _M:act()
 	if not mod.class.Actor.act(self) then return end
 
+	-- Run out of time ?
+	if self.summon_time then
+		self.summon_time = self.summon_time - 1
+		if self.summon_time <= 0 then
+			game.logPlayer(self, "#PINK#Your summoned %s disappears.", self.name)
+			self:die()
+			return true
+		end
+	end
+
 	-- Clean log flasher
 	game.flash:empty()
 
 	-- Resting ? Running ? Otherwise pause
-	if not self:restStep() and not self:runStep() then
+	if not self:restStep() and not self:runStep() and self.player then
 		game.paused = true
 	end
 end
@@ -111,9 +117,13 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:die(src)
-	engine.interface.ActorLife.die(self, src)
-	game.paused = true
-	game:registerDialog(DeathDialog.new(self))
+	if self.game_ender then
+		engine.interface.ActorLife.die(self, src)
+		game.paused = true
+		game:registerDialog(DeathDialog.new(self))
+	else
+		mod.class.Actor.die(self, src)
+	end
 end
 
 function _M:setName(name)
