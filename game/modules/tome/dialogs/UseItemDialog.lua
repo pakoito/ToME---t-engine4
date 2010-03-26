@@ -42,6 +42,8 @@ end
 
 function _M:use()
 	if not self.list[self.sel] then return end
+	game:unregisterDialog(self)
+
 	local act = self.list[self.sel].action
 
 	if act == "use" then self.actor:playerUseItem(self.object, self.item)
@@ -51,8 +53,6 @@ function _M:use()
 	end
 
 	self.onuse(self.inven, self.item, self.object)
-
-	game:unregisterDialog(self)
 end
 
 function _M:generateList()
