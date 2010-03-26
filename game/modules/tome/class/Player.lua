@@ -110,7 +110,8 @@ function _M:onTakeHit(value, src)
 	return ret
 end
 
-function _M:die()
+function _M:die(src)
+	engine.interface.ActorLife.die(self, src)
 	game.paused = true
 	game:registerDialog(DeathDialog.new(self))
 end

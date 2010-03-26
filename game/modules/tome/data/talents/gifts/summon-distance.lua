@@ -162,7 +162,7 @@ newTalent{
 	require = gifts_req2,
 	points = 5,
 	message = "@Source@ summons a 5-headed hydra!",
-	equilibrium = 2,
+	equilibrium = 5,
 	cooldown = 10,
 	range = 20,
 	action = function(self, t)
@@ -227,7 +227,7 @@ newTalent{
 	require = gifts_req3,
 	points = 5,
 	message = "@Source@ summons a Warper!",
-	equilibrium = 2,
+	equilibrium = 8,
 	cooldown = 10,
 	range = 20,
 	action = function(self, t)
@@ -244,14 +244,13 @@ newTalent{
 			game.logPlayer(self, "Not enough space to summon!")
 			return
 		end
-		print("Invoking Fire Imp on", x, y)
 
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "demon", subtype = "lesser",
-			display = "u", color=colors.RED,
-			name = "fire imp", faction = self.faction,
-			desc = [[]],
+			display = "u", color=colors.BLUE,
+			name = "warper", faction = self.faction,
+			desc = [[It looks like a hole in reality, the Warper disrupts the normal flow of space and time.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
 			stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, con=10 + self:getTalentLevel(t) * 2, },
@@ -266,7 +265,9 @@ newTalent{
 			max_mana = 150,
 			resolvers.talents{
 				[self.T_MANA_POOL]=1,
-				[self.T_FIRE_IMP_BOLT]=self:getTalentLevelRaw(t),
+				[self.T_TIME_PRISON]=self:getTalentLevelRaw(t),
+				[self.T_MANATHRUST]=self:getTalentLevelRaw(t),
+				[self.T_PHASE_DOOR]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true,
@@ -292,8 +293,8 @@ newTalent{
 	type = {"wild-gift/summon-distance", 4},
 	require = gifts_req4,
 	points = 5,
-	message = "@Source@ summons a Fire Imp!",
-	equilibrium = 2,
+	message = "@Source@ summons a Fire Drake!",
+	equilibrium = 15,
 	cooldown = 10,
 	range = 20,
 	action = function(self, t)
@@ -309,33 +310,33 @@ newTalent{
 			game.logPlayer(self, "Not enough space to summon!")
 			return
 		end
-		print("Invoking Fire Imp on", x, y)
 
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
-			type = "demon", subtype = "lesser",
-			display = "u", color=colors.RED,
-			name = "fire imp", faction = self.faction,
-			desc = [[]],
+			type = "dragon", subtype = "fire",
+			display = "D", color=colors.RED,
+			name = "fire drake", faction = self.faction,
+			desc = [[A mighty fire drake, an Uruloki.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, con=10 + self:getTalentLevel(t) * 2, },
+			stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=38, con=20 + self:getTalentLevel(t) * 3, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
-			max_life = resolvers.rngavg(5,10),
+			max_life = resolvers.rngavg(100, 150),
 			life_rating = 8,
 
 			combat_armor = 0, combat_def = 0,
-			combat = { dam=1, atk=1, },
+			combat = { dam=15, atk=10, apr=15 },
 
-			max_mana = 150,
 			resolvers.talents{
-				[self.T_MANA_POOL]=1,
-				[self.T_FIRE_IMP_BOLT]=self:getTalentLevelRaw(t),
+				[self.T_FIRE_BREATH]=self:getTalentLevelRaw(t),
+				[self.T_BELLOWING_ROAR]=self:getTalentLevelRaw(t),
+				[self.T_WING_BUFFET]=self:getTalentLevelRaw(t),
+				[self.T_DEVOURING_FLAME]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			summon_time = math.ceil(self:getTalentLevel(t)) + 2,
 			ai_target = {actor=target}
 		}
 
@@ -347,7 +348,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Fire Imp to burn your foes to death. Fire Imps are really weak in melee and die easily, but they can burn your foes from afar.
-		It will get %d magic and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Fire Drake to burn and crush your foes to death. Fire Drakes a behemoths that can burn your foes from afar with their fiery breath.
+		It will get %d strenght and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }

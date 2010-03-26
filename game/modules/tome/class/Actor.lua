@@ -499,6 +499,15 @@ function _M:preUseTalent(ab, silent)
 		end
 	end
 
+	-- Confused ? lose a turn!
+	if self:attr("confused") then
+		if rng.percent(self:attr("confused")) then
+			game.logSeen(self, "%s is confused and fails to use %s.", self.name:capitalize(), ab.name)
+			self:useEnergy()
+			return false
+		end
+	end
+
 	if not silent then
 		-- Allow for silent talents
 		if ab.message ~= nil then
