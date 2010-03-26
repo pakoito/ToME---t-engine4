@@ -241,7 +241,7 @@ newTalent{
 			game.player.player = true
 			game.hotkeys_display.actor = self.summoner
 			game.target.source_actor = self.summoner
-			Map:setViewerActor(self.summoner)
+			engine.Map:setViewerActor(self.summoner)
 			game.paused = false
 			game.level.map:moveViewSurround(self.summoner.x, self.summoner.y, 8, 8)
 		end

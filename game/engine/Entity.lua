@@ -37,9 +37,11 @@ function _M:init(t, no_default)
 	__uids[self.uid] = self
 
 	for k, e in pairs(t) do
-		local ee = e
-		if type(e) == "table" and not e.__CLASSNAME then ee = table.clone(e, true) end
-		self[k] = ee
+		if k ~= "__CLASSNAME" then
+			local ee = e
+			if type(e) == "table" and not e.__CLASSNAME then ee = table.clone(e, true) end
+			self[k] = ee
+		end
 	end
 
 	if self.color then
