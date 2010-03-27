@@ -36,25 +36,26 @@ function _M:init(t, no_default)
 		FEET = 1,
 		TOOL = 1,
 	}
+	t.display=t.display or '@'
+	t.color_r=t.color_r or 230
+	t.color_g=t.color_g or 230
+	t.color_b=t.color_b or 230
+
+	t.player = true
+	t.type = t.type or "humanoid"
+	t.subtype = t.subtype or "player"
+	t.faction = t.faction or "players"
+
+	if t.fixed_rating == nil then t.fixed_rating = true end
+
+	t.unused_stats = 6
+	t.unused_talents = 2
+	t.move_others=true
+
+	t.lite = t.lite or 0
+
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
-	self.player = true
-	self.type = self.type or "humanoid"
-	self.subtype = self.subtype or "player"
-	self.faction = self.faction or "players"
-
-	self.display=self.display or '@'
-	self.color_r=self.color_r or 230
-	self.color_g=self.color_g or 230
-	self.color_b=self.color_b or 230
-
-	self.fixed_rating = true
-
-	self.unused_stats = 6
-	self.unused_talents = 2
-	self.move_others=true
-
-	self.lite = self.lite or 0
 
 	self.descriptor = {}
 end
