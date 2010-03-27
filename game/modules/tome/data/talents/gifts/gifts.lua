@@ -33,10 +33,28 @@ gifts_req5 = {
 }
 
 load("/data/talents/gifts/call.lua")
+
 load("/data/talents/gifts/slime.lua")
+
 load("/data/talents/gifts/sand-drake.lua")
 load("/data/talents/gifts/fire-drake.lua")
 load("/data/talents/gifts/cold-drake.lua")
+
+function checkMaxSummon(self)
+	local nb = 0
+	for _, e in pairs(game.level.entities) do
+		if e.summoner and e.summoner == self then nb = nb + 1 end
+	end
+
+	local max = math.max(1, math.floor(self:getCun() / 10))
+	if nb >= max then
+		game.logPlayer(self, "#PINK#You can not summon any more, you have too many summons already (%d). You can increase the limit with higher Cunning.", nb)
+		return true
+	else
+		return false
+	end
+end
+
 load("/data/talents/gifts/summon-melee.lua")
 load("/data/talents/gifts/summon-distance.lua")
 load("/data/talents/gifts/summon-utility.lua")

@@ -24,9 +24,9 @@ newBirthDescriptor{
 	desc = {
 		"Summoners never fight alone, they are always ready to invoke one of their many summons to fight at their side.",
 		"Summons can range from a combat hound to a fire drake.",
-		"Their most important stats are: Willpower and Constitution",
+		"Their most important stats are: Willpower and Cunning",
 	},
-	stats = { wil=3, con=2, cun=1, },
+	stats = { wil=3, cun=2, con=1, },
 	talents_types = {
 		["wild-gift/call"]={true, 0.2},
 		["wild-gift/summon-melee"]={true, 0.3},

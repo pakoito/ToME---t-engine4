@@ -129,6 +129,9 @@ function _M:project(t, x, y, damtype, dam, particles)
 		for px, ys in pairs(grids) do
 			for py, _ in pairs(ys) do
 				damtype(px, py)
+				if particles then
+					game.level.map:particleEmitter(px, py, 1, particles.type)
+				end
 			end
 		end
 	else

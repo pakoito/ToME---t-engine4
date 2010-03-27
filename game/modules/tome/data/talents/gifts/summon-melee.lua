@@ -8,6 +8,7 @@ newTalent{
 	cooldown = 15,
 	range = 20,
 	action = function(self, t)
+		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
@@ -29,7 +30,7 @@ newTalent{
 			desc = [[]],
 			autolevel = "warrior",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
-			stats = { str=10 + self:getWil() * self:getTalentLevel(t) / 5, dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 },
+			stats = { str=10 + self:getWil() * self:getTalentLevel(t) / 5, dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(25,50),
@@ -39,7 +40,7 @@ newTalent{
 			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
 
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
 
@@ -66,6 +67,7 @@ newTalent{
 	cooldown = 10,
 	range = 20,
 	action = function(self, t)
+		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
@@ -86,7 +88,7 @@ newTalent{
 			desc = "A strange blob on the dungeon floor.",
 			name = "black jelly",
 			autolevel = "none", faction=self.faction,
-			stats = { con=10 + self:getWil() * self:getTalentLevel(t) / 5, str=10 + self:getTalentLevel(t) * 2 },
+			stats = { con=10 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE) * 3, str=10 + self:getTalentLevel(t) * 2 },
 			resists = { [DamageType.LIGHT] = -50 },
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -100,7 +102,7 @@ newTalent{
 			combat = { dam=8, atk=15, apr=5, damtype=DamageType.ACID, dammod={str=0.7} },
 
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
 
@@ -127,6 +129,7 @@ newTalent{
 	cooldown = 15,
 	range = 20,
 	action = function(self, t)
+		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
@@ -155,7 +158,7 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			energy = { mod=1.2 },
-			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
+			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
 			resolvers.tmasteries{ ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3, ["technique/combat-training"]=0.3, },
 			desc = [[It is a cross between a human and a bull.]],
@@ -167,7 +170,7 @@ newTalent{
 
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t) / 2) + 2,
+			summon_time = math.ceil(self:getTalentLevel(t) / 2) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
 
@@ -194,6 +197,7 @@ newTalent{
 	cooldown = 20,
 	range = 20,
 	action = function(self, t)
+		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
@@ -221,7 +225,7 @@ newTalent{
 
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
-			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
+			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
 			desc = [[It is a massive animated statue.]],
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -234,7 +238,7 @@ newTalent{
 
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
 
