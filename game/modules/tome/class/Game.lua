@@ -187,7 +187,10 @@ function _M:changeLevel(lev, zone)
 
 	local old_lev = (self.level and not zone) and self.level.level or -1000
 	if zone then
-		if self.zone then self.zone:leaveLevel(false, lev, old_lev) end
+		if self.zone then
+			self.zone:leaveLevel(false, lev, old_lev)
+			if self.zone.on_leave then self.zone.on_leave(lev, old_lev, zone) end
+		end
 		self.zone = Zone.new(zone)
 	end
 	self.zone:getLevel(self, lev, old_lev)
