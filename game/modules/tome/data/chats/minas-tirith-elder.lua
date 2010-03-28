@@ -21,9 +21,7 @@ This could be related to the rumours we hear from the far east...]],
 			local D = require "engine.Dialog"
 			D:simplePopup("Winner!", "#VIOLET#Congratulations you have won the game! At least for now... The quest has only started!")
 
-			config.settings.tome = config.settings.tome or {}
-			config.settings.tome.allow_evil = true
-			game:saveSettings("tome.allow_evil", ("tome.allow_evil = %s\n"):format(tostring(config.settings.tome.allow_evil)))
+--			game:setAllowedBuild("evil_race", true)
 		end},
 	}
 }

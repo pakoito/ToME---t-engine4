@@ -237,6 +237,11 @@ newTalent{
 				game.zone:addEntity(game.level, m, "actor", x, y)
 
 				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
+
+				-- Learn about summoners
+				if game.level.map.seens(self.x, self.y) then
+					game:setAllowedBuild("wilder_summoner", true)
+				end
 			end
 		end
 		return true

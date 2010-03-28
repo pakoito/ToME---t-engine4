@@ -642,3 +642,21 @@ function _M:saveGame()
 	save:close()
 	self.log("Saved game.")
 end
+
+function _M:setAllowedBuild(what, notify)
+	config.settings.tome = config.settings.tome or {}
+	config.settings.tome.allow_build = config.settings.tome.allow_build or {}
+	if config.settings.tome.allow_build[what] then return false end
+	config.settings.tome.allow_build[what] = true
+	local t = {}
+	for k, e in pairs(config.settings.tome.allow_build) do
+		t[#t+1] = ("tome.allow_build.%s = %s\n"):format(k, tostring(e))
+	end
+	game:saveSettings("tome.allow_build", table.concat(t, "\n"))
+
+	if notify then
+		self:registerDialog(require("mod.dialogs.UnlockDialog").new(what))
+	end
+
+	return true
+end

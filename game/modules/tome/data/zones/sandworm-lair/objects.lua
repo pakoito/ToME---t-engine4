@@ -20,6 +20,8 @@ newEntity{
 		game.logPlayer(who, "You are transformed by the heart of the Queen!.")
 		game.logPlayer(who, "#00FF00#You gain an affinity for sand. You can now learn new sand talents (press G).")
 
+		game:setAllowedBuild("wilder_wyrmic", true)
+
 		return "destroy", true
 	end}
 }

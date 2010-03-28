@@ -11,6 +11,9 @@ local ActorLevel = require "engine.interface.ActorLevel"
 local Birther = require "engine.Birther"
 local Store = require "mod.class.Store"
 
+config.settings.tome = config.settings.tome or {}
+config.settings.tome.allow_build = config.settings.tome.allow_build or {}
+
 -- Usefull keybinds
 KeyBind:load("move,hotkeys,inventory,actions,debug")
 

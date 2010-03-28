@@ -12,9 +12,18 @@ newBirthDescriptor{
 			Elf = "allow",
 			Dwarf = "allow",
 			Hobbit = "allow",
---			Orc = config.settings.tome.allow_evil and "allow" or "never",
---			Troll = config.settings.tome.allow_evil and "allow" or "never",
---			Spider = config.settings.tome.allow_evil and "allow" or "never",
+--			Orc = config.settings.tome.allow_build.evil and "allow" or "never",
+--			Troll = config.settings.tome.allow_build.evil and "allow" or "never",
+--			Spider = config.settings.tome.allow_build.spider and "allow" or "never",
+		},
+
+		class =
+		{
+			__ALL__ = "allow",
+			Wilder = (
+				config.settings.tome.allow_build.wilder_summoner or
+				config.settings.tome.allow_build.wilder_wyrmic
+				) and "allow" or "never",
 		},
 	},
 	talents = {},
