@@ -1,20 +1,23 @@
+quickEntity('<', {show_tooltip=true, name="exit to the wilds", 	display='<', color={r=0, g=255, b=255}})
 defineTile('.', "GRASS")
+defineTile('#', "TREE")
+defineTile('u', "GRASS", nil, "UKRUK")
 defineTile('o', "GRASS", nil, "HILL_ORC_WARRIOR")
 defineTile('O', "GRASS", nil, "HILL_ORC_ARCHER")
 
-startx = 1
-starty = 1
+startx = 0
+starty = 0
 
 return {
-[[.....oooo..OO..###]],
-[[....oooo...OO.####]],
-[[...oooo..OOO..####]],
-[[..oooo.OOO...#####]],
-[[oooo..OOO...######]],
-[[oo..OOO....#######]],
-[[..OOO.....<#######]],
-[[OOO...############]],
-[[O...##############]],
+[[...........O...###]],
+[[...........O..####]],
+[[.....oo.......####]],
+[[....ouo......#####]],
+[[....oo.....O######]],
+[[...........#######]],
+[[O..O...O..<#######]],
+[[......############]],
+[[.OO.##############]],
 [[..################]],
 [[##################]],
 }

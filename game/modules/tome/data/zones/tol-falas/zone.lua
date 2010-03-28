@@ -43,4 +43,11 @@ return {
 			}, },
 		},
 	},
+	on_leave = function(lev, old_lev, newzone)
+		if not newzone then return end
+		-- Ambushed!
+		if game.player:isQuestStatus("staff-absorption", engine.Quest.PENDING) then
+			return 1, "tol-falas-ambush"
+		end
+	end,
 }

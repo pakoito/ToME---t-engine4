@@ -185,11 +185,16 @@ function _M:changeLevel(lev, zone)
 		return
 	end
 
+	if self.zone.on_leave then
+		local nl, nz = self.zone.on_leave(lev, old_lev, zone)
+		if nl then lev = nl end
+		if nz then zone = nz end
+	end
+
 	local old_lev = (self.level and not zone) and self.level.level or -1000
 	if zone then
 		if self.zone then
 			self.zone:leaveLevel(false, lev, old_lev)
-			if self.zone.on_leave then self.zone.on_leave(lev, old_lev, zone) end
 		end
 		self.zone = Zone.new(zone)
 	end
@@ -206,6 +211,10 @@ function _M:changeLevel(lev, zone)
 		end
 	end
 	self.level:addEntity(self.player)
+
+	if self.zone.on_enter then
+		self.zone.on_enter(lev, old_lev, zone)
+	end
 
 	if self.level.data.ambiant_music then
 		self:playMusic(self.level.data.ambiant_music)
