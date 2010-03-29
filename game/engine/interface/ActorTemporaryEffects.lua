@@ -50,7 +50,9 @@ function _M:timedEffects()
 			todel[#todel+1] = eff
 		else
 			if _M.tempeffect_def[eff].on_timeout then
-				_M.tempeffect_def[eff].on_timeout(self, p)
+				if _M.tempeffect_def[eff].on_timeout(self, p) then
+					todel[#todel+1] = eff
+				end
 			end
 		end
 	end

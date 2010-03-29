@@ -288,6 +288,16 @@ function _M:onTakeHit(value, src)
 			self:removeEffect(self.EFF_TIME_SHIELD)
 		end
 	end
+
+	if self:attr("displacement_shield") then
+		-- Absorb damage into the displacement shield
+		if value <= self.displacement_shield and rng.percent(self.displacement_shield_chance) then
+			game.logSeen("The displacement shield teleports the damage to %s!", self.displacement_shield_target.name)
+			self.displacement_shield = self.displacement_shield - value
+			self.displacement_shield_target:takeHit(value, src)
+			value = 0
+		end
+	end
 	return value
 end
 

@@ -350,6 +350,34 @@ newEffect{
 }
 
 newEffect{
+	name = "DISPLACEMENT_SHIELD",
+	desc = "Displacement Shield",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10, target=nil, chance=25 },
+	on_gain = function(self, err) return "The very fabric of space alters around #target#.", "+Displacement Shield" end,
+	on_lose = function(self, err) return "The fabric of space around #target# stabilizes to normal.", "-Displacement Shield" end,
+	activate = function(self, eff)
+		eff.powerid = self:addTemporaryValue("displacement_shield", eff.power)
+		eff.chanceid = self:addTemporaryValue("displacement_shield_chance", eff.chance)
+		--- Warning there can be only one time shield active at once for an actor
+		self.displacement_shield_target = eff.target
+	end,
+	on_timeout = function(self, eff)
+		if eff.target.dead then
+			eff.target = nil
+			return true
+		end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("displacement_shield", eff.powerid)
+		self:removeTemporaryValue("displacement_shield_chance", eff.chanceid)
+		self.displacement_shield_target = nil
+	end,
+}
+
+
+newEffect{
 	name = "TIME_SHIELD",
 	desc = "Time Shield",
 	type = "time", -- Type "time" so that very little should be able to dispel it

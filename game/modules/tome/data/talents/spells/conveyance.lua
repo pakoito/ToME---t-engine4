@@ -89,30 +89,32 @@ newTalent{
 }
 
 newTalent{
-	name = "Recall",
-	type = {"spell/conveyance",3},
+	name = "Displacement Shield",
+	type = {"spell/conveyance", 3},
 	require = spells_req3,
 	points = 5,
-	mana = 30,
-	cooldown = 10,
+	mana = 80,
+	cooldown = 100,
+	tactical = {
+		DEFENSE = 10,
+	},
+	range = 10,
 	action = function(self, t)
---[[
-		local target = self
-		local tx, ty = self.x, self.y
-		if self:knowTalent(Talents.T_TELEKINESIS) or self:knowTalent(Talents.T_IMPERIOUS_SUMMON) then
-			local tx, ty = self:getTarget{default_target=self, type="hit", range=20}
-			if tx and ty then
-				target = game.level.map(tx, ty, Map.ACTOR) or self
-			end
-		end
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty or not target then return nil end
 
-		if
-]]
-		game.log("IMPLEMENT ME!")
+		local dur = util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25)
+		local power = 50 + self:combatSpellpower(0.4) * self:getTalentLevel(t)
+		local chance = 20 + self:getTalentLevel(t) * 5
+		self:setEffect(self.EFF_DISPLACEMENT_SHIELD, dur, {power=power, target=target, chance=chance})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Recalls you to your home town after a few turns.]])
+		return ([[This intricate spell erects a space distortion around the caster that is linked to an other one on a target.
+		Any time the caster should take damage there is %d%% chances that it would instead be warped byu the shield and hit the designated target.
+		Once the maximun damage (%d) is absorbed, the time runs out (%d turns) or the target dies the shield will crumble.
+		The duration and max absorption will increase with the Magic stat]]):format(20 + self:getTalentLevel(t) * 5, 50 + self:combatSpellpower(0.4) * self:getTalentLevel(t), util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25))
 	end,
 }
 
