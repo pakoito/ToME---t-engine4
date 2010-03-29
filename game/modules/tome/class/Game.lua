@@ -185,7 +185,7 @@ function _M:changeLevel(lev, zone)
 		return
 	end
 
-	if self.zone.on_leave then
+	if self.zone and self.zone.on_leave then
 		local nl, nz = self.zone.on_leave(lev, old_lev, zone)
 		if nl then lev = nl end
 		if nz then zone = nz end
