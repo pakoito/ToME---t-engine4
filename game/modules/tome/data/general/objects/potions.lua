@@ -156,7 +156,7 @@ newEntity{ base = "BASE_POTION",
 	color = colors.GREEN, image="object/potion-2x0.png",
 	level_range = {1, 2},
 	rarity = 4,
-	cost = 0.01,
+	cost = 0.5,
 
 	use_simple = { name="quaff", use = function(self, who)
 		game.logSeen(who, "%s quaffs the slime juice. Yuck.", who.name:capitalize())

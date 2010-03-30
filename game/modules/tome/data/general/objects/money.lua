@@ -20,3 +20,12 @@ newEntity{ base = "BASE_MONEY",
 	level_range = {1, 50},
 	money_value = resolvers.rngavg(1, 20),
 }
+
+newEntity{ base = "BASE_MONEY",
+	name = "huge pile of gold pieces",
+	add_name = " (#MONEY#)",
+	level_range = {30, 50},
+	color=colors.GOLD,
+	rarity = 15,
+	money_value = resolvers.rngavg(30, 50),
+}

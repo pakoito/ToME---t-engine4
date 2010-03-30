@@ -127,11 +127,9 @@ function _M:generateList()
 end
 
 function _M:drawDialog(s)
-	local help = ([[
-You have died!
-Death in T.o.M.E is usually permanent. If you have a mean of resurrection it will be proposed in the menu below.
-
-You can dump your character data to a file, to remember her/him forever or you can exit and try again to survive in the wilds!
+	local help = ([[You have #LIGHT_RED#died##LAST#!
+Death in T.o.M.E. is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
+You can dump your character data to a file to remember her/him forever, or you can exit and try again to survive in the wilds!
 ]]):splitLines(self.iw - 10, self.font)
 
 	local h = 2

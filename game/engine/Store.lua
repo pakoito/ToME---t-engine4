@@ -27,6 +27,14 @@ function _M:loadup(level, zone)
 	end
 	local inven = self:getInven("INVEN")
 
+	if s.empty_before_restock then
+		for i = #inven, 1, -1 do
+			local e = inven[i]
+			inven[i] = nil
+			e:removed()
+		end
+	end
+
 	for i = 1, rng.range(s.min_fill, s.max_fill) - #inven do
 		local filter = rng.table(s.filters)
 		local e = zone:makeEntity(level, "object", filter)

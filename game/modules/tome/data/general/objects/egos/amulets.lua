@@ -28,9 +28,9 @@ newEntity{
 	resolvers.generic(function(e)
 		local tts = {
 			"cunning/dirty",
+			"cunning/lethality",
 			"cunning/stealth",
 			"cunning/survival",
-
 			"spell/air",
 			"spell/arcane",
 			"spell/conveyance",
@@ -39,13 +39,15 @@ newEntity{
 			"spell/fire",
 			"spell/meta",
 			"spell/nature",
-			"spell/necromancy",
 			"spell/phantasm",
 			"spell/temporal",
 			"spell/water",
-
 			"technique/2hweapon-cripple",
 			"technique/2hweapon-offense",
+			"technique/archery-bow",
+			"technique/archery-sling",
+			"technique/archery-training",
+			"technique/archery-utility",
 			"technique/combat-techniques-active",
 			"technique/combat-techniques-passive",
 			"technique/combat-training",
@@ -53,6 +55,15 @@ newEntity{
 			"technique/dualweapon-training",
 			"technique/shield-defense",
 			"technique/shield-offense",
+			"wild-gift/call",
+			"wild-gift/cold-drake",
+			"wild-gift/fire-drake",
+			"wild-gift/sand-drake",
+			"wild-gift/slime",
+			"wild-gift/summon-augmentation",
+			"wild-gift/summon-distance",
+			"wild-gift/summon-melee",
+			"wild-gift/summon-utility",
 		}
 		local tt = tts[rng.range(1, #tts)]
 
