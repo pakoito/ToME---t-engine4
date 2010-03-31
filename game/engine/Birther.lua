@@ -75,7 +75,7 @@ function _M:selectType(type)
 		local allowed = true
 		for j, od in ipairs(self.descriptors) do
 			if od.descriptor_choices[type] then
-				local what = od.descriptor_choices[type][d.name] or od.descriptor_choices[type].__ALL__
+				local what = util.getval(od.descriptor_choices[type][d.name]) or util.getval(od.descriptor_choices[type].__ALL__)
 				if what and what == "allow" then
 					allowed = true
 				elseif what and what == "never" then

@@ -56,6 +56,7 @@ function _M:leave()
 		save:saveZone(self)
 		save:close()
 	end
+	game.level = nil
 end
 
 --- Parses the npc/objects list and compute rarities for random generation
