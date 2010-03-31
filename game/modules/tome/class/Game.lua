@@ -544,7 +544,14 @@ function _M:setupCommands()
 		end,
 
 		EXIT = function()
-			local menu = require("engine.dialogs.GameMenu").new{"resume", "keybinds", "resolution", "save", "quit"}
+			local menu menu = require("engine.dialogs.GameMenu").new{
+				"resume",
+				"keybinds",
+				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
+				"resolution",
+				"save",
+				"quit"
+			}
 			self:registerDialog(menu)
 		end,
 
