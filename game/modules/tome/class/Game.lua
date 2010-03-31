@@ -195,6 +195,7 @@ function _M:changeLevel(lev, zone)
 	if zone then
 		if self.zone then
 			self.zone:leaveLevel(false, lev, old_lev)
+			self.zone:leave()
 		end
 		self.zone = Zone.new(zone)
 	end

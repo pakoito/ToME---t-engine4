@@ -7,7 +7,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = true,
+	persistant = "zone",
 --	ambiant_music = "10_23.ogg",
 	generator =  {
 		map = {

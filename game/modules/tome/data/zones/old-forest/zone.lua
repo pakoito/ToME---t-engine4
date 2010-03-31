@@ -7,7 +7,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
-	persistant = true,
+	persistant = "zone",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

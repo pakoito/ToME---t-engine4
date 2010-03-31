@@ -25,24 +25,37 @@ end
 -- @param short_name the short name of the zone to load, if should correspond to a directory in your module data/zones/short_name/ with a zone.lua, npcs.lua, grids.lua and objects.lua files inside
 function _M:init(short_name)
 	self.short_name = short_name
-	self:load()
-	self.level_range = self.level_range or {1,1}
-	if type(self.level_range) == "number" then self.level_range = {self.level_range, self.level_range} end
-	self.level_scheme = self.level_scheme or "fixed"
-	assert(self.max_level, "no zone max level")
-	self.levels = self.levels or {}
-	self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
-	self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
-	self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
-	self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
+	if not self:load() then
+		self.level_range = self.level_range or {1,1}
+		if type(self.level_range) == "number" then self.level_range = {self.level_range, self.level_range} end
+		self.level_scheme = self.level_scheme or "fixed"
+		assert(self.max_level, "no zone max level")
+		self.levels = self.levels or {}
+		self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
+		self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
+		self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
+		self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
 
-	-- Determine a zone base level
-	self.base_level = self.level_range[1]
-	if self.level_scheme == "player" then
-		local plev = game:getPlayer().level
-		self.base_level = util.bound(plev, self.level_range[1], self.level_range[2])
+		-- Determine a zone base level
+		self.base_level = self.level_range[1]
+		if self.level_scheme == "player" then
+			local plev = game:getPlayer().level
+			self.base_level = util.bound(plev, self.level_range[1], self.level_range[2])
+		end
+		print("Initiated zone", self.name, "with base_level", self.base_level)
+	else
+		print("Loaded zone", self.name, "with base_level", self.base_level)
 	end
-	print("Initiated zone", self.name, "with base_level", self.base_level)
+end
+
+--- Leaves a zone
+-- Saves the zone to a .teaz file if requested with persistant="zone" flag
+function _M:leave()
+	if type(self.persistant) == "string" and self.persistant == "zone" then
+		local save = Savefile.new(game.save_name)
+		save:saveZone(self)
+		save:close()
+	end
 end
 
 --- Parses the npc/objects list and compute rarities for random generation
@@ -246,9 +259,16 @@ function _M:addEntity(level, e, typ, x, y)
 end
 
 function _M:load()
-	local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
-	if err then error(err) end
-	local data = f()
+	-- Try to load from a savefile
+	local save = Savefile.new(game.save_name)
+	local data = save:loadZone(self.short_name)
+	save:close()
+
+	if not data then
+		local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
+		if err then error(err) end
+		data = f()
+	end
 	for k, e in pairs(data) do self[k] = e end
 end
 
@@ -273,7 +293,11 @@ function _M:leaveLevel(no_close, lev, old_lev)
 	if not no_close and game.level and game.level.map then
 		game:leaveLevel(game.level, lev, old_lev)
 
-		if type(game.level.data.persistant) == "string" and game.level.data.persistant == "memory" then
+		if type(game.level.data.persistant) == "string" and game.level.data.persistant == "zone" then
+			print("[LEVEL] persisting to zone memory", game.level.id)
+			self.memory_levels = self.memory_levels or {}
+			self.memory_levels[game.level.level] = game.level
+		elseif type(game.level.data.persistant) == "string" and game.level.data.persistant == "memory" then
 			print("[LEVEL] persisting to memory", game.level.id)
 			game.memory_levels = game.memory_levels or {}
 			game.memory_levels[game.level.id] = game.level
@@ -300,7 +324,18 @@ function _M:getLevel(game, lev, old_lev, no_close)
 
 	local level
 	-- Load persistant level?
-	if type(level_data.persistant) == "string" and level_data.persistant == "memory" then
+	if type(level_data.persistant) == "string" and level_data.persistant == "zone" then
+		self.memory_levels = self.memory_levels or {}
+		level = self.memory_levels[lev]
+
+		if level then
+			-- Setup the level in the game
+			game:setLevel(level)
+			-- Recreate the map because it could have been saved with a different tileset or whatever
+			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
+			level.map:recreate()
+		end
+	elseif type(level_data.persistant) == "string" and level_data.persistant == "memory" then
 		game.memory_levels = game.memory_levels or {}
 		level = game.memory_levels[self.short_name.."-"..lev]
 

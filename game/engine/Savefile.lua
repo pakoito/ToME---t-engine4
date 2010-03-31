@@ -99,6 +99,20 @@ function _M:saveGame(game)
 	game:unregisterDialog(popup)
 end
 
+--- Save a zone
+function _M:saveZone(zone)
+	fs.mkdir(self.save_dir)
+
+	local popup = Dialog:simplePopup("Saving zone", "Please wait while saving the zone...")
+	core.display.forceRedraw()
+
+	local zip = fs.zipOpen(self.save_dir..("zone-%s.teaz"):format(zone.short_name))
+	self:saveObject(zone, zip)
+	zip:close()
+
+	game:unregisterDialog(popup)
+end
+
 --- Save a level
 function _M:saveLevel(level)
 	fs.mkdir(self.save_dir)
@@ -170,6 +184,30 @@ function _M:loadGame()
 	game:unregisterDialog(popup)
 
 	return loadedGame
+end
+
+--- Loads a zone
+function _M:loadZone(zone)
+	local path = fs.getRealPath(self.save_dir..("zone-%s.teaz"):format(zone))
+	if not path or path == "" then return false end
+
+	fs.mount(path, self.load_dir)
+
+	local popup = Dialog:simplePopup("Loading zone", "Please wait while loading the zone...")
+	core.display.forceRedraw()
+
+	local loadedZone = self:loadReal("main")
+
+	-- Delay loaded must run
+	for i, o in ipairs(self.delayLoad) do
+--		print("loader executed for class", o, o.__CLASSNAME)
+		o:loaded()
+	end
+
+	game:unregisterDialog(popup)
+
+	fs.umount(path)
+	return loadedZone
 end
 
 --- Loads a level
