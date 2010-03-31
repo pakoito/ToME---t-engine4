@@ -96,6 +96,8 @@ function _M:newGame()
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
 		self.player:resolve(nil, true)
+		self.player.energy.value = self.energy_to_act
+		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
 		self.player:playerLevelup(function()
 			self.player:grantQuest(self.player.starting_quest)
