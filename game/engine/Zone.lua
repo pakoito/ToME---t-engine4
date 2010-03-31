@@ -273,7 +273,12 @@ function _M:leaveLevel(no_close, lev, old_lev)
 	if not no_close and game.level and game.level.map then
 		game:leaveLevel(game.level, lev, old_lev)
 
-		if game.level.data.persistant then
+		if type(game.level.data.persistant) == "string" and game.level.data.persistant == "memory" then
+			print("[LEVEL] persisting to memory", game.level.id)
+			game.memory_levels = game.memory_levels or {}
+			game.memory_levels[game.level.id] = game.level
+		elseif game.level.data.persistant then
+			print("[LEVEL] persisting to disk file", game.level.id)
 			local save = Savefile.new(game.save_name)
 			save:saveLevel(game.level)
 			save:close()
@@ -295,7 +300,18 @@ function _M:getLevel(game, lev, old_lev, no_close)
 
 	local level
 	-- Load persistant level?
-	if level_data.persistant == true then
+	if type(level_data.persistant) == "string" and level_data.persistant == "memory" then
+		game.memory_levels = game.memory_levels or {}
+		level = game.memory_levels[self.short_name.."-"..lev]
+
+		if level then
+			-- Setup the level in the game
+			game:setLevel(level)
+			-- Recreate the map because it could have been saved with a different tileset or whatever
+			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
+			level.map:recreate()
+		end
+	elseif level_data.persistant then
 		local save = Savefile.new(game.save_name)
 		level = save:loadLevel(self.short_name, lev)
 		save:close()
@@ -330,6 +346,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	-- Save level data
 	level.data = level_data
+	level.id = self.short_name.."-"..lev
 
 	-- Setup the level in the game
 	game:setLevel(level)

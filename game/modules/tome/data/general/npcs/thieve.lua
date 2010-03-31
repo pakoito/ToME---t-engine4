@@ -30,7 +30,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	rarity = 5,
 	combat_armor = 1, combat_def = 5,
 	max_life = resolvers.rngavg(60,80),
-	resolvers.talents{ [Talents.T_STEAL]=1, },
+	resolvers.talents{  },
 }
 
 newEntity{ base = "BASE_NPC_THIEF",
@@ -39,7 +39,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {2, 50}, exp_worth = 1,
 	rarity = 5,
 	combat_armor = 2, combat_def = 5,
-	resolvers.talents{ [Talents.T_STEALTH]=1, [Talents.T_STEAL]=1, },
+	resolvers.talents{ [Talents.T_STEALTH]=1,  },
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -49,7 +49,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {3, 50}, exp_worth = 1,
 	rarity = 5,
 	combat_armor = 3, combat_def = 5,
-	resolvers.talents{ [Talents.T_STEALTH]=2, [Talents.T_STEAL]=2, },
+	resolvers.talents{ [Talents.T_STEALTH]=2,  },
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {5, 50}, exp_worth = 1,
 	rarity = 7,
 	combat_armor = 4, combat_def = 6,
-	resolvers.talents{ [Talents.T_STEAL]=1, [Talents.T_STEALTH]=3, [Talents.T_LETHALITY]=2, },
+	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_LETHALITY]=2, },
 	max_life = resolvers.rngavg(80,100),
 }
 
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 		{type="human", subtype="thief", name="thief", number=1, hasxp=false},
 		{type="human", subtype="thief", name="rogue", number=2, hasxp=false},
 	},
-	resolvers.talents{ [Talents.T_STEAL]=2, [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
+	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
 }
 
 newEntity{ base = "BASE_NPC_THIEF",

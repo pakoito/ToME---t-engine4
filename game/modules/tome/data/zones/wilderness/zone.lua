@@ -5,7 +5,7 @@ return {
 	width = 200, height = 130,
 	all_remembered = true,
 	all_lited = true,
-	persistant = true,
+	persistant = "memory",
 	generator =  {
 		map = {
 			class = "mod.class.generator.map.Wilderness",

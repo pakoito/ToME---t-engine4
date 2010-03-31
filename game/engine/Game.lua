@@ -39,7 +39,7 @@ function _M:defaultSavedFields(t)
 		w=true, h=true, zone=true, player=true, level=true, entities=true,
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
 		always_target=true, gfxmode=true, uniques=true, object_known_types=true,
-		current_music=true,
+		current_music=true, memory_levels=true,
 	}
 	table.merge(def, t)
 	return def

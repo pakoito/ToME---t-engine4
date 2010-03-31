@@ -24,6 +24,7 @@ function _M:init(t, no_default)
 end
 
 function _M:loaded()
+	Entity.loaded(self)
 	-- known_by table is a weak table on keys, so taht it does not prevent garbage collection of actors
 	setmetatable(self.known_by, {__mode="k"})
 end

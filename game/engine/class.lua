@@ -137,7 +137,7 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 			end
 
 			for k,v in pairs(value) do      -- save its fields
---				print(allow, k , filter[k])
+--				print(allow, k , filter[k], v, "will dump", (not allow and not filter[k]) or (allow and filter[k]))
 				if (not allow and not filter[k]) or (allow and filter[k]) then
 					local fieldname
 					-- Special case to handle index by objects
@@ -147,7 +147,7 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 					else
 						fieldname = string.format("%s[%s]", name, basicSerialize(k))
 					end
-					serialize_data(outf, fieldname, v, saved, filter, allow, savefile, false)
+					serialize_data(outf, fieldname, v, saved, {new=true}, false, savefile, false)
 				end
 			end
 		end
