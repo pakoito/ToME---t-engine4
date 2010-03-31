@@ -69,6 +69,9 @@ function _M:init(t, no_default)
 	-- Resistances
 	t.resists = t.resists or {}
 
+	-- % Increase damage
+	t.inc_damage = t.inc_damage or {}
+
 	-- Default regen
 	t.air_regen = t.air_regen or 3
 	t.mana_regen = t.mana_regen or 0.5

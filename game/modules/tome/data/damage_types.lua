@@ -2,6 +2,10 @@
 setDefaultProjector(function(src, x, y, type, dam)
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
+		-- Increases damage
+		local inc = src.inc_damage[type] or 0
+		dam = dam + (dam * inc / 100)
+
 		-- Reduce damage with resistance
 		local res = target.resists[type] or 0
 		print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
@@ -14,7 +18,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 		if target == game.player then flash = game.flash.BAD end
 		if src == game.player then flash = game.flash.GOOD end
 
-		game.logSeen(target, flash, "%s hits %s for #aaaaaa#%0.2f %s damage#ffffff#.", src.name:capitalize(), target.name, dam, DamageType:get(type).name)
+		game.logSeen(target, flash, "%s hits %s for %s%0.2f %s damage#LAST#.", src.name:capitalize(), target.name, DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name)
 		local sx, sy = game.level.map:getTileToScreen(x, y)
 		if target:takeHit(dam, src) then
 			if src == game.player or target == game.player then
@@ -48,11 +52,11 @@ newDamageType{
 
 -- Arcane is basic (usualy) unresistable damage
 newDamageType{
-	name = "arcane", type = "ARCANE",
+	name = "arcane", type = "ARCANE", text_color = "#PURPLE#",
 }
 -- The elemental damges
 newDamageType{
-	name = "fire", type = "FIRE",
+	name = "fire", type = "FIRE", text_color = "#LIGHT_RED#",
 	projector = function(src, x, y, type, dam)
 		DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -62,7 +66,7 @@ newDamageType{
 	end,
 }
 newDamageType{
-	name = "cold", type = "COLD",
+	name = "cold", type = "COLD", text_color = "#BLUE#",
 	projector = function(src, x, y, type, dam)
 		DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -74,14 +78,14 @@ newDamageType{
 
 -- Nature & Blight: Opposing damage types
 newDamageType{
-	name = "nature", type = "NATURE",
+	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
 }
 newDamageType{
-	name = "blight", type = "BLIGHT",
+	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
 }
 
 newDamageType{
-	name = "lightning", type = "LIGHTNING",
+	name = "lightning", type = "LIGHTNING", text_color = "#ROYAL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -92,7 +96,7 @@ newDamageType{
 }
 -- Acid detroys potions
 newDamageType{
-	name = "acid", type = "ACID",
+	name = "acid", type = "ACID", text_color = "#GREEN#",
 	projector = function(src, x, y, type, dam)
 		DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -104,10 +108,15 @@ newDamageType{
 
 -- Light up the room
 newDamageType{
-	name = "light", type = "LIGHT",
+	name = "light", type = "LIGHT", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
 		game.level.map.lites(x, y, true)
 	end,
+}
+
+-- Irresistible fire damage
+newDamageType{
+	name = "netherflame", type = "NETHERFLAME", text_color = "#FIREBRICK#",
 }
 
 -- Blinds
@@ -137,6 +146,7 @@ newDamageType{
 		end
 	end,
 }
+
 -- Fire DOT + Stun
 newDamageType{
 	name = "flameshock", type = "FLAMESHOCK",
@@ -162,11 +172,6 @@ newDamageType{
 			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, 2)
 		end
 	end,
-}
-
--- Irresistible fire damage
-newDamageType{
-	name = "netherflame", type = "NETHERFLAME",
 }
 
 -- Freezes target, chcks for spellresistance
