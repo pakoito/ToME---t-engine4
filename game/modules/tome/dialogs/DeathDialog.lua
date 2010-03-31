@@ -106,6 +106,7 @@ function _M:use()
 		self:restoreRessources()
 		self:resurrectBasic()
 	elseif act == "blood_life" then
+		self.actor.blood_life = false
 		game.logPlayer(self.actor, "#LIGHT_RED#The Blood of Life rushes through your dead body. You come back to life!")
 
 		self:cleanActor()

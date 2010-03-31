@@ -160,7 +160,7 @@ newEntity{
 	level_range = {1, 50},
 	display = '!', color=colors.VIOLET, image="object/potion-0x3-violet.png",
 	encumber = 0.4,
-	rarity = 350,
+	rarity = 1,
 	desc = [[The Blood of Life! It can let a living being resurrect in case of an untimely demise. But only once!]],
 	cost = 1000,
 
