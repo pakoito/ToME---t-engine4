@@ -5,7 +5,7 @@ newEntity{
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.WHITE,
 	encumber = 1,
-	rarity = 3,
+	rarity = 5,
 	combat = { talented = "knife", damrange = 1.3 },
 	desc = [[Sharp, long, and deadly.]],
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = resolvers.mbonus(40, 5),

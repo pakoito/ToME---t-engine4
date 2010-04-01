@@ -172,8 +172,8 @@ newEntity{
 newEntity{
 	name = " of massacre (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.PHYSICAL] = resolvers.mbonus(15, 5) },
 	},
@@ -181,8 +181,8 @@ newEntity{
 newEntity{
 	name = " of arcane power (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.ARCANE] = resolvers.mbonus(15, 5) },
 	},
@@ -190,8 +190,8 @@ newEntity{
 newEntity{
 	name = " of burning (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.FIRE] = resolvers.mbonus(15, 5) },
 	},
@@ -199,8 +199,8 @@ newEntity{
 newEntity{
 	name = " of freezing (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.COLD] = resolvers.mbonus(15, 5) },
 	},
@@ -208,8 +208,8 @@ newEntity{
 newEntity{
 	name = " of nature's blessing (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.NATURE] = resolvers.mbonus(15, 5) },
 	},
@@ -217,8 +217,8 @@ newEntity{
 newEntity{
 	name = " of blight (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus(15, 5) },
 	},
@@ -226,8 +226,8 @@ newEntity{
 newEntity{
 	name = " of shock (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus(15, 5) },
 	},
@@ -235,8 +235,8 @@ newEntity{
 newEntity{
 	name = " of corrosion (#DAMBONUS#)",
 	level_range = {6, 50},
-	rarity = 1,
-	cost = 4, identified=true,
+	rarity = 4,
+	cost = 4,
 	wielder = {
 		inc_damage = { [DamageType.ACID] = resolvers.mbonus(15, 5) },
 	},

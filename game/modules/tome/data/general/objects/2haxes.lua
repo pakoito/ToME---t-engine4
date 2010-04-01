@@ -6,7 +6,7 @@ newEntity{
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE,
 	encumber = 3,
-	rarity = 3,
+	rarity = 5,
 	combat = { talented = "axe", damrange = 1.5 },
 	desc = [[Massive two-handed battleaxes.]],
 	twohanded = true,

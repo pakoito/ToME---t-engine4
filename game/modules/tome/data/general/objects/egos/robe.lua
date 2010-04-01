@@ -63,3 +63,23 @@ newEntity{
 		on_melee_hit={[DamageType.SLIME] = resolvers.mbonus(7, 3)},
 	},
 }
+
+newEntity{
+	name = " of power",
+	level_range = {20, 50},
+	rarity = 9,
+	cost = 15,
+	wielder = {
+		inc_damage = {
+			[DamageType.ARCANE] = resolvers.mbonus(15, 5)
+			[DamageType.FIRE] = resolvers.mbonus(15, 5)
+			[DamageType.COLD] = resolvers.mbonus(15, 5)
+			[DamageType.ACID] = resolvers.mbonus(15, 5)
+			[DamageType.LIGHTNING] = resolvers.mbonus(15, 5)
+			[DamageType.NATURE] = resolvers.mbonus(15, 5)
+			[DamageType.BLIGHT] = resolvers.mbonus(15, 5)
+			[DamageType.PHYSICAL] = resolvers.mbonus(15, 5)
+		},
+		combat_spellpower = 4,
+	},
+}
