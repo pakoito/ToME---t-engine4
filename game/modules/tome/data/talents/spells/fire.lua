@@ -62,12 +62,12 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t)), {type="flame"})
+		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.6) * self:getTalentLevel(t)), {type="flame"})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(28 + self:combatSpellpower(0.4) * self:getTalentLevel(t), 1 + self:getTalentLevelRaw(t))
+		The damage will increase with the Magic stat]]):format(28 + self:combatSpellpower(0.6) * self:getTalentLevel(t), 1 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -93,7 +93,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, duration,
-			DamageType.NETHERFLAME, dam,
+			DamageType.FIRE, dam,
 			radius,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=180, color_bg=30, color_bb=60},
@@ -102,7 +102,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Raging flames burn foes and allies alike doing %0.2f netherflame damage in a radius of 5 each turn for %d turns.
+		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of 5 each turn for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.15) * self:getTalentLevel(t), 5 + self:getTalentLevel(t))
 	end,
 }

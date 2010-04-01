@@ -167,3 +167,77 @@ newEntity{
 		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus(8, 2) },
 	},
 }
+
+-------------------------- Damage increase rings
+newEntity{
+	name = " of massacre (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.PHYSICAL] = resolvers.mbonus(15, 5) },
+	},
+}
+newEntity{
+	name = " of arcane power (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.ARCANE] = resolvers.mbonus(15, 5) },
+	},
+}
+newEntity{
+	name = " of burning (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.FIRE] = resolvers.mbonus(15, 5) },
+	},
+}
+newEntity{
+	name = " of freezing (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.COLD] = resolvers.mbonus(15, 5) },
+	},
+}
+newEntity{
+	name = " of nature's blessing (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.NATURE] = resolvers.mbonus(15, 5) },
+	},
+}
+newEntity{
+	name = " of blight (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus(15, 5) },
+	},
+}
+newEntity{
+	name = " of shock (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus(15, 5) },
+	},
+}
+newEntity{
+	name = " of corrosion (#DAMBONUS#)",
+	level_range = {6, 50},
+	rarity = 1,
+	cost = 4, identified=true,
+	wielder = {
+		inc_damage = { [DamageType.ACID] = resolvers.mbonus(15, 5) },
+	},
+}

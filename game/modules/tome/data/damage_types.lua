@@ -114,11 +114,6 @@ newDamageType{
 	end,
 }
 
--- Irresistible fire damage
-newDamageType{
-	name = "netherflame", type = "NETHERFLAME", text_color = "#FIREBRICK#",
-}
-
 -- Blinds
 newDamageType{
 	name = "blindness", type = "BLIND",

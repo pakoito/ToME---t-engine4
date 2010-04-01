@@ -64,6 +64,27 @@ newEntity{ base = "BASE_RING",
 	},
 }
 
+newEntity{ base = "BASE_RING",
+	unique = true,
+	name = "Elemental Fury", color = colors.PURPLE,
+	unided_name = "multi-hued ring",
+	desc = [[This ring shines with many colors.]],
+	level_range = {15, 30},
+	rarity = 150,
+	cost = 500,
+
+	wielder = {
+		inc_stats = { [Stats.STAT_CUN] = 3, },
+		inc_damage = {
+			[DamageType.ARCANE]    = 15,
+			[DamageType.FIRE]      = 15,
+			[DamageType.COLD]      = 15,
+			[DamageType.ACID]      = 15,
+			[DamageType.LIGHTNING] = 15,
+		},
+	},
+}
+
 newEntity{ base = "BASE_LITE",
 	unique = true,
 	name = "Phial of Galadriel",

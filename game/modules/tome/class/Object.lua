@@ -68,6 +68,9 @@ function _M:descAttribute(attr)
 	elseif attr == "STATBONUS" then
 		local stat, i = next(self.wielder.inc_stats)
 		return i > 0 and "+"..i or tostring(i)
+	elseif attr == "DAMBONUS" then
+		local stat, i = next(self.wielder.inc_damage)
+		return (i > 0 and "+"..i or tostring(i)).."%"
 	elseif attr == "COMBAT" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." dam, "..(c.apr or 0).." apr"
@@ -132,6 +135,8 @@ function _M:getDesc()
 		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance."):format(self.encumber)
 	end
 
+	desc[#desc+1] = ("Type: %s / %s"):format(self.type, self.subtype)
+
 	-- Stop here if unided
 	if not self:isIdentified() then return table.concat(desc, "\n") end
 
@@ -180,6 +185,14 @@ function _M:getDesc()
 			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
 		end
 		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
+	end
+
+	if w.inc_damage then
+		local rs = {}
+		for res, i in pairs(w.inc_damage) do
+			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
+		end
+		desc[#desc+1] = ("Increases damage type: %s."):format(table.concat(rs, ','))
 	end
 
 	if w.esp then

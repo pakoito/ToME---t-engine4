@@ -35,8 +35,6 @@ local QuitDialog = require "mod.dialogs.Quit"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic))
 
-collectgarbage("stop")
-
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
 	engine.interface.GameMusic.init(self)
