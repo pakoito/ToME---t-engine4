@@ -1,3 +1,22 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
 quickEntity('b', {show_tooltip=true, name='blue mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true})
 quickEntity('m', {show_tooltip=true, name='misty mountains', display='^', color=colors.UMBER, image="terrain/mountain.png", block_move=true})
 quickEntity('g', {show_tooltip=true, name='grey mountains', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true})
