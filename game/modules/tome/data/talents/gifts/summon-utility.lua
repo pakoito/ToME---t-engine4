@@ -161,8 +161,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Fire Imp to burn your foes to death. Fire Imps are really weak in melee and die easily, but they can burn your foes from afar.
-		It will get %d magic and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Turtle to distract your foes. Turtles are resilient but not very powerful. However they will periodicaly force any foes to attack them.
+		It will get %d constitution and %d dexterity.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }
 
@@ -225,7 +225,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Spider to arras your foes. Spiders can poison your foes and throw webs to pin them to the ground.
+		return ([[Summon a Spider to harass your foes. Spiders can poison your foes and throw webs to pin them to the ground.
 		It will get %d strength and %d dexterity.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }

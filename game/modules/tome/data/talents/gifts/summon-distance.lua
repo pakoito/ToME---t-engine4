@@ -285,7 +285,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Warper to arras your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathursts and time prisons at your foes.
+		return ([[Summon a Warper to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathursts and time prisons at your foes.
 		It will get %d magic and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }
@@ -351,7 +351,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Fire Drake to burn and crush your foes to death. Fire Drakes a behemoths that can burn your foes from afar with their fiery breath.
+		return ([[Summon a Fire Drake to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
 		It will get %d strengh and %d constitution.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }
