@@ -98,3 +98,27 @@ function _M:removed()
 		end
 	end end
 end
+
+--- Decay the level
+-- Decaying means we look on the map for the given type of entities and if we are allowed to we delete them
+-- @param what what Map feature to decay (ACTOR, OBJECT, ...)
+-- @param check either a boolean or a function, if true the given entity will be decayed
+-- @return the number of decayed entities and the total number of such entities remaining
+function _M:decay(what, check)
+	local total, nb = 0, 0
+	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
+		local e = self.map(i, j, what)
+		if e and not e.no_decay and util.getval(check, e, i, j) then
+			print("[DECAY] decaying", e.uid, e.name)
+			if self:hasEntity(e) then
+				self:removeEntity(e)
+			else
+				self.map:remove(i, j, what)
+			end
+			nb = nb + 1
+		elseif e then
+			total = total + 1
+		end
+	end end
+	return nb, total
+end

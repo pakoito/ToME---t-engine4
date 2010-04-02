@@ -194,6 +194,7 @@ function _M:leaveLevel(level, lev, old_lev)
 		else
 			level.exited.up = {x=self.player.x, y=self.player.y}
 		end
+		level.last_turn = game.turn
 		level:removeEntity(self.player)
 	end
 end
@@ -219,6 +220,18 @@ function _M:changeLevel(lev, zone)
 		self.zone = Zone.new(zone)
 	end
 	self.zone:getLevel(self, lev, old_lev)
+
+	-- Decay level ?
+	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] < game.turn then
+		local nb_actor, remain_actor = self.level:decay(Map.ACTOR, function(e) return self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < game.turn end)
+		local nb_object, remain_object = self.level:decay(Map.OBJECT, function(e) return self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < game.turn end)
+
+		local gen = self.zone:getGenerator("actor", self.level)
+		if gen.regenFrom then gen:regenFrom(remain_actor) end
+
+		local gen = self.zone:getGenerator("object", self.level)
+		if gen.regenFrom then gen:regenFrom(remain_object) end
+	end
 
 	-- Move back to old wilderness position
 	if self.zone.short_name == "wilderness" then

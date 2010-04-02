@@ -22,6 +22,7 @@ return {
 	level_range = {7, 18},
 	level_scheme = "player",
 	max_level = 7,
+	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
 --	all_remembered = true,

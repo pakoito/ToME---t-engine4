@@ -388,6 +388,15 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	return level
 end
 
+function _M:getGenerator(what, level, spots)
+	return require(level.data.generator[what].class).new(
+			self,
+			level.map,
+			level,
+			spots
+		)
+end
+
 function _M:newLevel(level_data, lev, old_lev, game)
 	local map = self.map_class.new(level_data.width, level_data.height)
 	if level_data.all_lited then map:liteAll(0, 0, map.w, map.h) end
@@ -422,34 +431,19 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	-- Generate objects
 	if level_data.generator.object then
-		local generator = require(level_data.generator.object.class).new(
-			self,
-			map,
-			level,
-			spots
-		)
+		local generator = self:getGenerator("object", level, spots)
 		generator:generate()
 	end
 
 	-- Generate traps
 	if level_data.generator.trap then
-		local generator = require(level_data.generator.trap.class).new(
-			self,
-			map,
-			level,
-			spots
-		)
+		local generator = self:getGenerator("trap", level, spots)
 		generator:generate()
 	end
 
 	-- Generate actors
 	if level_data.generator.actor then
-		local generator = require(level_data.generator.actor.class).new(
-			self,
-			map,
-			level,
-			spots
-		)
+		local generator = self:getGenerator("actor", level, spots)
 		generator:generate()
 	end
 

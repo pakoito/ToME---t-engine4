@@ -23,8 +23,7 @@ require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, level)
-	engine.Generator.init(self, zone, map)
-	self.level = level
+	engine.Generator.init(self, zone, map, level)
 	local data = level.data.generator.object
 
 	if data.adjust_level_to_player and game:getPlayer() then
@@ -36,20 +35,28 @@ function _M:init(zone, map, level)
 end
 
 function _M:generate()
-	for i = 1, rng.range(self.nb_object[1], self.nb_object[2]) do
-		local f = nil
-		if self.filters then f = self.filters[rng.range(1, #self.filters)] end
-		local o = self.zone:makeEntity(self.level, "object", f)
-		if o then
-			local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
-			local tries = 0
-			while (self.map:checkEntity(x, y, Map.TERRAIN, "block_move") or self.map(x, y, Map.OBJECT)) and tries < 100 do
-				x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
-				tries = tries + 1
-			end
-			if tries < 100 then
-				self.zone:addEntity(self.level, o, "object", x, y)
-			end
+	self:regenFrom(1)
+end
+
+function _M:generateOne()
+	local f = nil
+	if self.filters then f = self.filters[rng.range(1, #self.filters)] end
+	local o = self.zone:makeEntity(self.level, "object", f)
+	if o then
+		local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
+		local tries = 0
+		while (self.map:checkEntity(x, y, Map.TERRAIN, "block_move") or self.map(x, y, Map.OBJECT)) and tries < 100 do
+			x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
+			tries = tries + 1
 		end
+		if tries < 100 then
+			self.zone:addEntity(self.level, o, "object", x, y)
+		end
+	end
+end
+
+function _M:regenFrom(current)
+	for i = current, rng.range(self.nb_object[1], self.nb_object[2]) do
+		self:generateOne()
 	end
 end

@@ -59,6 +59,7 @@ function _M:placeWorm(s)
 	if m then
 		local x, y = util.findFreeGrid(s.x, s.y, 5, true, {[Map.ACTOR]=true})
 		if x and y then
+			m.no_decay = true
 			self.zone:addEntity(self.level, m, "actor", x, y)
 		end
 	end
