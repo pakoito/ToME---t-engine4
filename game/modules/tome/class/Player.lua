@@ -201,7 +201,7 @@ end
 local function spotHostiles(self)
 	local seen = false
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
-	core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) game.level.map:opaque(x, y) end, function(_, x, y)
+	core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 		local actor = game.level.map(x, y, game.level.map.ACTOR)
 		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then seen = true end
 	end, nil)
