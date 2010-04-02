@@ -481,8 +481,18 @@ function _M:setupCommands()
 		CHANGE_LEVEL = function()
 			local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
 			if self.player:enoughEnergy() and e.change_level then
-				-- Do not unpause, the player is allowed first move on next level
-				self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
+				local stop = {}
+				for eff_id, p in pairs(game.player.tmp) do
+					local e = game.player.tempeffect_def[eff_id]
+					if e.status == "detrimental" then stop[#stop+1] = e.desc end
+				end
+
+				if not e.change_zone or (#stop > 0 and e.change_zone ~= "wilderness") or #stop == 0 then
+					-- Do not unpause, the player is allowed first move on next level
+					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
+				else
+					self.log("You can not go into the wilds wit hthe following effects: %s", table.concat(stop, ", "))
+				end
 			else
 				self.log("There is no way out of this level here.")
 			end

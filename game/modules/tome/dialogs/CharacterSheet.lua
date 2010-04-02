@@ -128,5 +128,20 @@ function _M:drawDialog(s)
 		end
 	end
 
+	h = 0
+	w = 600
+	s:drawColorString(self.font, ("#LIGHT_BLUE#Current effects:"):format(game.player.fatigue), w, h, 255, 255, 255) h = h + self.font_h
+	for tid, act in pairs(game.player.sustain_talents) do
+		if act then s:drawColorString(self.font, ("#LIGHT_GREEN#%s"):format(game.player:getTalentFromId(tid).name), w, h, 255, 255, 255) h = h + self.font_h end
+	end
+	for eff_id, p in pairs(game.player.tmp) do
+		local e = game.player.tempeffect_def[eff_id]
+		if e.status == "detrimental" then
+			s:drawColorString(self.font, ("#LIGHT_RED#%s"):format(e.desc), w, h, 255, 255, 255) h = h + self.font_h
+		else
+			s:drawColorString(self.font, ("#LIGHT_GREEN#%s"):format(e.desc), w, h, 255, 255, 255) h = h + self.font_h
+		end
+	end
+
 	self.changed = false
 end

@@ -90,14 +90,14 @@ newEntity{
 	cost = 15,
 	wielder = {
 		inc_damage = {
-			[DamageType.ARCANE] = resolvers.mbonus(15, 5)
-			[DamageType.FIRE] = resolvers.mbonus(15, 5)
-			[DamageType.COLD] = resolvers.mbonus(15, 5)
-			[DamageType.ACID] = resolvers.mbonus(15, 5)
-			[DamageType.LIGHTNING] = resolvers.mbonus(15, 5)
-			[DamageType.NATURE] = resolvers.mbonus(15, 5)
-			[DamageType.BLIGHT] = resolvers.mbonus(15, 5)
-			[DamageType.PHYSICAL] = resolvers.mbonus(15, 5)
+			[DamageType.ARCANE] = resolvers.mbonus(15, 5),
+			[DamageType.FIRE] = resolvers.mbonus(15, 5),
+			[DamageType.COLD] = resolvers.mbonus(15, 5),
+			[DamageType.ACID] = resolvers.mbonus(15, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus(15, 5),
+			[DamageType.NATURE] = resolvers.mbonus(15, 5),
+			[DamageType.BLIGHT] = resolvers.mbonus(15, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus(15, 5),
 		},
 		combat_spellpower = 4,
 	},
