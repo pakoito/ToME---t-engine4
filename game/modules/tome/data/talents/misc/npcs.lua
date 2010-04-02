@@ -42,14 +42,12 @@ newTalent{
 		a.energy.val = 0
 		a.exp_worth = 0.1
 		a.inven = {}
+		a.x, a.y = nil, nil
 		if a.can_multiply <= 0 then a:unlearnTalent(t.id) end
 
-		print(x, y, "::", game.level.map(x,y,Map.ACTOR))
-
-		print("multiplied", a.can_multiply, "uids", self.uid,"=>",a.uid, "::", self.player, a.player)
-		a:move(x, y, true)
-		game.level:addEntity(a)
-		a:added()
+		print("[MULTIPLY]", x, y, "::", game.level.map(x,y,Map.ACTOR))
+		print("[MULTIPLY]", a.can_multiply, "uids", self.uid,"=>",a.uid, "::", self.player, a.player)
+		game.zone:addEntity(game.level, a, "actor", x, y)
 		return true
 	end,
 	info = function(self)
