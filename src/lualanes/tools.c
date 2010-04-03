@@ -97,6 +97,7 @@ extern int luaopen_socket_core(lua_State *L);
 extern int luaopen_mime_core(lua_State *L);
 extern int luaopen_struct(lua_State *L);
 extern int luaopen_profiler(lua_State *L);
+extern int luaopen_lpeg(lua_State *L);
 
 static const luaL_Reg libs[] = {
   { LUA_LOADLIBNAME, luaopen_package },
@@ -115,6 +116,7 @@ static const luaL_Reg libs[] = {
   { "mime.core", luaopen_mime_core },
   { "struct", luaopen_struct },
   { "profiler", luaopen_profiler },
+  { "lpeg", luaopen_lpeg },
   { NULL, NULL }
 };
 

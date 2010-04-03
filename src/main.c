@@ -425,6 +425,7 @@ int main(int argc, char *argv[])
 	luaopen_struct(L);
 	luaopen_profiler(L);
 	luaopen_lanes(L);
+	luaopen_lpeg(L);
 	luaopen_map(L);
 	luaopen_particles(L);
 	luaopen_sound(L);

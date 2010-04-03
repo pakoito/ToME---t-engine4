@@ -17,6 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local lpeg = require "lpeg"
+
+function lpeg.anywhere (p)
+	return lpeg.P{ p + 1 * lpeg.V(1) }
+end
+
 function table.clone(tbl, deep)
 	local n = {}
 	for k, e in pairs(tbl) do
@@ -103,7 +109,7 @@ function string.splitLine(str, max_width, font)
 	local space_w = font:size(" ")
 	local lines = {}
 	local cur_line, cur_size = "", 0
-	for v in str:gmatch("([^\n ]+)") do
+	for _, v in ipairs(str:split(lpeg.S"\n ")) do
 		local w, h = font:size(v)
 
 		-- Ignore the size of color markers
@@ -132,43 +138,26 @@ end
 
 function string.splitLines(str, max_width, font)
 	local lines = {}
-	for v in str:gmatch("([^\n]*)") do
+	for _, v in ipairs(str:split(lpeg.S"\n")) do
 		local ls = v:splitLine(max_width, font)
-		for i, l in ipairs(ls) do
-			lines[#lines+1] = l
+		if #ls > 0 then
+			for i, l in ipairs(ls) do
+				lines[#lines+1] = l
+			end
+		else
+			lines[#lines+1] = ""
 		end
 	end
 	return lines
 end
 
 -- Split a string by the given character(s)
-function string.split(str, char, keep_sperator)
-	local ret   = {}
-	local len   = str:len()
-	local start = 1
-
-	while true do
-		local split_start, split_end, sep = str:find(char, start)
-
-		if not split_start then
-			table.insert(ret, str:sub(start))
-			break
-		end
-
-		table.insert(ret, str:sub(start, split_start - 1))
-
-		if split_start and keep_sperator then
-			table.insert(ret, str:sub(split_start, split_end))
-		end
-
-		if split_end == len then
-			break
-		end
-
-		start = split_end + 1
-	end
-
-	return ret
+function string.split(str, char, keep_separator)
+	char = lpeg.P(char)
+	if keep_separator then char = lpeg.C(char) end
+	local elem = lpeg.C((1 - char)^0)
+	local p = lpeg.Ct(elem * (char * elem)^0)
+	return lpeg.match(p, str)
 end
 
 local hex_to_dec = {
@@ -204,14 +193,18 @@ end
 
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
-	local list = str:split("#[a-zA-Z0-9_]+#", true)
+	local Pcolorname = (lpeg.R"AZ" + "_")^3
+	local Pcode = (lpeg.R"az" + lpeg.R"AZ" + lpeg.R"09")
+	local Pcolorcode = Pcode * Pcode
+
+	local list = str:split("#" * (Pcolorname + (Pcolorcode * Pcolorcode * Pcolorcode)) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
 	local oldr, oldg, oldb = r, g, b
 	for i, v in ipairs(list) do
-		local _, _, nr, ng, nb = v:find("^#(%x%x)(%x%x)(%x%x)#")
-		local _, _, col = v:find("^#([A-Z_]+)#")
+		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
+		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		if nr and ng and nb then
 			oldr, oldg, oldb = r, g, b
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()

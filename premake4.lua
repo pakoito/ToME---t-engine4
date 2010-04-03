@@ -46,7 +46,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -160,6 +160,13 @@ project "fov"
 	targetname "fov"
 
 	files { "src/fov/*.c", }
+
+project "lpeg"
+	kind "StaticLib"
+	language "C"
+	targetname "lpeg"
+
+	files { "src/lpeg/*.c", }
 
 project "luaprofiler"
 	kind "StaticLib"
