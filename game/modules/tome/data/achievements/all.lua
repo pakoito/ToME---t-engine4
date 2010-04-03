@@ -39,3 +39,11 @@ newAchievement{
 	name = "Size matters",
 	desc = [[Do over 600 damage in one attack]],
 }
+newAchievement{
+	name = "Exterminator",
+	desc = [[Killed 1000 creatures]],
+	can_gain = function(who)
+		who.nb_kill_creatures = (who.nb_kill_creatures or 0) + 1
+		if who.nb_kill_creatures >= 1000 then return true end
+	end
+}

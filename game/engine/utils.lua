@@ -62,6 +62,12 @@ function table.mergeAdd(dst, src, deep)
 	end
 end
 
+function table.reverse(t)
+	local tt = {}
+	for i, e in ipairs(t) do tt[e] = i end
+	return tt
+end
+
 function string.ordinal(number)
 	local suffix = "th"
 	number = tonumber(number)

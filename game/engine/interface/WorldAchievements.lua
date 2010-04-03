@@ -66,7 +66,9 @@ end
 -- @param src who did it
 function _M:gainAchievement(id, src)
 	if not self.achiev_defs[id] then error("Unknown achievement "..id) return end
+	if self.achiev_defs[id].can_gain and not self.achiev_defs[id].can_gain(src) then return end
 	if self.achieved[id] then return end
+
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
 	game.log("#LIGHT_GREEN#New Achievement: %s!", self.achiev_defs[id].name)
 	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..self.achiev_defs[id].name, self.achiev_defs[id].desc)

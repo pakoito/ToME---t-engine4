@@ -43,6 +43,7 @@ But do not let me trouble you, you brought important news and you are lucky to b
 			local D = require "engine.Dialog"
 			D:simplePopup("Winner!", "#VIOLET#Congratulations you have won the game! At least for now... The quest has only started!")
 
+			world:gainAchievement("A_DANGEROUS_SECRET", player)
 --			game:setAllowedBuild("evil_race", true)
 		end},
 	}
