@@ -19,7 +19,7 @@
 
 require "engine.class"
 require "engine.Dialog"
-require "engine.Savefile"
+local Savefile = require "engine.Savefile"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
@@ -33,9 +33,20 @@ function _M:init(runmod)
 				game:unregisterDialog(self)
 
 				-- Ok run the module
-				local M = self.runmod.load()
+				local M, W = self.runmod.load()
 				_G.game = M.new()
 				_G.game:setPlayerName(self.name)
+
+				-- Load the world, or make a new one
+				if W then
+					local save = Savefile.new("")
+					_G.world = save:loadWorld()
+					save:close()
+					if not _G.world then
+						_G.world = W.new()
+					end
+					_G.world:run()
+				end
 
 				-- Delete the corresponding savefile if any
 				local save = engine.Savefile.new(_G.game.save_name)

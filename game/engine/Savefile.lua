@@ -95,6 +95,22 @@ function _M:saveObject(obj, zip)
 	return self.tables[obj]
 end
 
+--- Save the given world
+function _M:saveWorld(world)
+	collectgarbage("collect")
+
+	fs.mkdir(self.save_dir)
+
+	local popup = Dialog:simplePopup("Saving world", "Please wait while saving the world...")
+	core.display.forceRedraw()
+
+	local zip = fs.zipOpen(self.save_dir.."world.teaw")
+	self:saveObject(world, zip)
+	zip:close()
+
+	game:unregisterDialog(popup)
+end
+
 --- Save the given game
 function _M:saveGame(game)
 	collectgarbage("collect")
@@ -178,6 +194,31 @@ function _M:loadReal(load)
 
 	self.loaded[load] = o
 	return o
+end
+
+--- Loads a world
+function _M:loadWorld()
+	local path = fs.getRealPath(self.save_dir.."world.teaw")
+	if not path or path == "" then return nil, "no savefile" end
+
+	fs.mount(path, self.load_dir)
+
+	local popup = Dialog:simplePopup("Loading world", "Please wait while loading the world...")
+	core.display.forceRedraw()
+
+	local loadedWorld = self:loadReal("main")
+
+	-- Delay loaded must run
+	for i, o in ipairs(self.delayLoad) do
+--		print("loader executed for class", o, o.__CLASSNAME)
+		o:loaded()
+	end
+
+	fs.umount(path)
+
+	game:unregisterDialog(popup)
+
+	return loadedWorld
 end
 
 --- Loads a game

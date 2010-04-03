@@ -93,7 +93,8 @@ function _M:loadDefinition(dir, team)
 
 				fs.mount(src, "/", false)
 			end
-			return require(mod.starter)
+			local m = require(mod.starter)
+			return m[1], m[2]
 		end
 
 		return mod

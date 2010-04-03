@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	message = "@Source@ meditates on nature.",
 	equilibrium = 0,
-	cooldown = 300,
+	cooldown = 150,
 	range = 20,
 	action = function(self, t)
 		self:setEffect(self.EFF_STUNNED, 17 - self:getTalentLevel(t), {})
@@ -33,26 +33,33 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Meditate on your link with Nature. You are considered stunned for %d turns and regenerate %d equilibrium.
-		The effect will incease with your Willpower stat.]]):
+		The effect will increase with your Willpower stat.]]):
 		format(17 - self:getTalentLevel(t), 10 + self:getWil(50) * self:getTalentLevel(t))
 	end,
 }
 
 newTalent{
-	name = "???",
+	name = "Nature's Touch",
 	type = {"wild-gift/call", 2},
 	require = gifts_req2,
 	points = 5,
-	equilibrium = 0,
-	cooldown = 300,
-	range = 20,
+	equilibrium = 10,
+	cooldown = 20,
+	range = 1,
 	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if not target.undead then
+			target:heal(20 + self:getWil(50) * self:getTalentLevel(t))
+		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Meditate on your link with Nature. You are considered stunned for %d turns and regenerate %d equilibrium.
-		The effect will incease with your Willpower stat.]]):
-		format(17 - self:getTalentLevel(t), 10 + self:getWil(50) * self:getTalentLevel(t))
+		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d.
+		The effect will increase with your Willpower stat.]]):
+		format(20 + self:getWil(25) * self:getTalentLevel(t))
 	end,
 }
 

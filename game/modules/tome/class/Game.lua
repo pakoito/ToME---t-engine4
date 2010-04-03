@@ -702,6 +702,7 @@ function _M:saveGame()
 	local save = Savefile.new(self.save_name)
 	save:saveGame(self)
 	save:close()
+	world:saveWorld()
 	self.log("Saved game.")
 end
 

@@ -115,4 +115,4 @@ for i, t in ipairs(stype_tot) do
 end
 ------------------------------------------------------------------------
 
-return require "mod.class.Game"
+return {require "mod.class.Game", require "mod.class.World"}

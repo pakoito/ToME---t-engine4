@@ -78,8 +78,19 @@ function _M:commandLineArgs(args)
 	if req_mod then
 		local mod = self.mod_list[req_mod]
 		if mod then
-			local M = mod.load()
+			local M, W = mod.load()
 			_G.game = M.new()
+
+			-- Load the world, or make a new one
+			if W then
+				local save = Savefile.new("")
+				_G.world = save:loadWorld()
+				save:close()
+				if not _G.world then
+					_G.world = W.new()
+				end
+				_G.world:run()
+			end
 
 			-- Delete the corresponding savefile if any
 			if req_save then _G.game:setPlayerName(req_save) end
@@ -184,7 +195,19 @@ function _M:selectStepLoad()
 
 		for j, save in ipairs(mod.savefiles) do
 			save.fct = function()
-				mod.load()
+				local M, W = mod.load()
+
+				-- Load the world, or make a new one
+				if W then
+					local save = Savefile.new("")
+					_G.world = save:loadWorld()
+					save:close()
+					if not _G.world then
+						_G.world = W.new()
+					end
+					_G.world:run()
+				end
+
 				local save = Savefile.new(save.short_name)
 				_G.game = save:loadGame()
 				save:close()
