@@ -29,9 +29,13 @@ local ActorInventory = require "engine.interface.ActorInventory"
 local ActorLevel = require "engine.interface.ActorLevel"
 local Birther = require "engine.Birther"
 local Store = require "mod.class.Store"
+local WorldAchievements = require "engine.interface.WorldAchievements"
 
 config.settings.tome = config.settings.tome or {}
 config.settings.tome.allow_build = config.settings.tome.allow_build or {}
+
+-- Achievements
+WorldAchievements:loadDefinition("/data/achievements/")
 
 -- Usefull keybinds
 KeyBind:load("move,hotkeys,inventory,actions,debug")

@@ -588,6 +588,7 @@ function _M:setupCommands()
 		EXIT = function()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",
+				"achievements",
 				"keybinds",
 				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
 				"resolution",

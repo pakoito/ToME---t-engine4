@@ -19,12 +19,14 @@
 
 require "engine.class"
 require "engine.World"
+require "engine.interface.WorldAchievements"
 local Savefile = require "engine.Savefile"
 
-module(..., package.seeall, class.inherit(engine.World))
+module(..., package.seeall, class.inherit(engine.World, engine.interface.WorldAchievements))
 
 function _M:init()
 	engine.World.init(self)
+	engine.interface.WorldAchievements.init(self)
 end
 
 --- Requests the world to save
@@ -33,4 +35,10 @@ function _M:saveWorld()
 	save:saveWorld(self)
 	save:close()
 	game.log("Saved world.")
+end
+
+--- Format an achievement source
+-- @param src the actor who did it
+function _M:achievementWho(src)
+	return src.name.." the "..game.player.descriptor.subrace.." "..game.player.descriptor.subclass
 end

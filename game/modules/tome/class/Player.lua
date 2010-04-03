@@ -169,6 +169,12 @@ function _M:levelup()
 	if self.unused_stats > 0 then game.log("You have %d stat point(s) to spend. Press G to use them.", self.unused_stats) end
 	if self.unused_talents > 0 then game.log("You have %d talent point(s) to spend. Press G to use them.", self.unused_talents) end
 	if self.unused_talents_types > 0 then game.log("You have %d talent category point(s) to spend. Press G to use them.", self.unused_talents_types) end
+
+	if self.level == 10 then world:gainAchievement("LEVEL_10", self) end
+	if self.level == 20 then world:gainAchievement("LEVEL_20", self) end
+	if self.level == 30 then world:gainAchievement("LEVEL_30", self) end
+	if self.level == 40 then world:gainAchievement("LEVEL_40", self) end
+	if self.level == 50 then world:gainAchievement("LEVEL_50", self) end
 end
 
 --- Tries to get a target from the user

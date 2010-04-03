@@ -71,6 +71,11 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.DisplayResolution").new()
 			game:registerDialog(menu)
 		end },
+		achievements = { "Show Achievements", function()
+			game:unregisterDialog(self)
+			local menu = require("engine.dialogs.ShowAchievements").new()
+			game:registerDialog(menu)
+		end },
 		save = { "Save Game", function() game:saveGame() end },
 		quit = { "Save and Exit", function() game:onQuit() end },
 	}

@@ -320,6 +320,12 @@ function _M:onTakeHit(value, src)
 			value = 0
 		end
 	end
+
+	-- Achievements
+	if src and src:resolveSource().player and value >= 600 then
+		world:gainAchievement("SIZE_MATTERS", src:resolveSource())
+	end
+
 	return value
 end
 
@@ -354,6 +360,11 @@ function _M:die(src)
 	-- Give stamina back
 	if src and src:knowTalent(src.T_UNENDING_FRENZY) then
 		src:incStamina(src:getTalentLevel(src.T_UNENDING_FRENZY) * 2)
+	end
+
+	-- Achievements
+	if src and src:resolveSource().player and src:resolveSource().life == 1 then
+		world:gainAchievement("THAT_WAS_CLOSE", src:resolveSource())
 	end
 
 	return true

@@ -30,7 +30,8 @@ tiles = engine.Tiles.new(16, 16)
 function _M:simplePopup(title, text, fct, no_leave)
 	local font = core.display.newFont("/data/font/Vera.ttf", 12)
 	local w, h = font:size(text)
-	local d = new(title, w + 8, h + 25, nil, nil, nil, font)
+	local tw, th = font:size(title)
+	local d = new(title, math.max(w, tw) + 8, h + 25, nil, nil, nil, font)
 	if no_leave then
 		d:keyCommands{}
 	else
