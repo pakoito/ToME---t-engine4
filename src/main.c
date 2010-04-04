@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
 	SDL_EnableUNICODE(TRUE);
 	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
-	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 4096) == -1)
+	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 512) == -1)
 	{
 		no_sound = TRUE;
 	}
@@ -484,6 +484,7 @@ int main(int argc, char *argv[])
 	{
 		Mix_VolumeMusic(SDL_MIX_MAXVOLUME);
 		Mix_Volume(-1, SDL_MIX_MAXVOLUME);
+		Mix_AllocateChannels(16);
 	}
 
 	/* Sets up OpenGL double buffering */

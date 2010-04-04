@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.GameTurnBased"
 require "engine.interface.GameMusic"
+require "engine.interface.GameSound"
 require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local DamageType = require "engine.DamageType"
@@ -52,11 +53,12 @@ local Calendar = require "engine.Calendar"
 
 local QuitDialog = require "mod.dialogs.Quit"
 
-module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic))
+module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound))
 
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
 	engine.interface.GameMusic.init(self)
+	engine.interface.GameSound.init(self)
 
 	-- Same init as when loaded from a savefile
 	self:loaded()
@@ -127,6 +129,7 @@ end
 function _M:loaded()
 	engine.GameTurnBased.loaded(self)
 	engine.interface.GameMusic.loaded(self)
+	engine.interface.GameSound.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap"}
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)

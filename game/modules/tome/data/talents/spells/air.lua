@@ -43,9 +43,67 @@ newTalent{
 }
 
 newTalent{
-	name = "Noxious Cloud",
-	type = {"spell/air",2},
+	name = "Chain Lightning",
+	type = {"spell/air", 2},
 	require = spells_req2,
+	points = 5,
+	mana = 20,
+	cooldown = 8,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	reflectable = true,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local fx, fy = self:getTarget(tg)
+		if not fx or not fy then return nil end
+
+		local nb = 3 + self:getTalentLevelRaw(t)
+		local affected = {[self]=true}
+
+		local fork fork = function(x, y, sx, sy)
+			self:project(tg, x, y, function(dx, dy)
+				local actor = game.level.map(dx, dy, Map.ACTOR)
+				if actor and not affected[actor] then
+					local tgr = {type="beam", range=self:getTalentRange(t), talent=t, x=sx, y=sy}
+					self:project(tgr, dx, dy, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 5), {type="lightning"})
+					affected[actor] = true
+					nb = nb - 1
+					if nb <= 0 then return true end
+
+					self:project({type="ball", friendlyfire=false, x=dx, y=dy, radius=10, range=0}, dx, dy, function(bx, by)
+						local actor = game.level.map(bx, by, Map.ACTOR)
+						if actor and not affected[actor] then
+							fork(bx, by, dx, dy)
+							return true
+						end
+					end)
+
+					return true
+				end
+			end)
+		end
+
+		fork(fx, fy)
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Invokes a forking beam of lightning doing 1 to %0.2f damage and forking to an other target.
+		It can hit up to %d targets and will never hit the same one twice, neither will it hit the caster.
+		The damage will increase with the Magic stat]]):
+		format(
+			20 + self:combatSpellpower(0.8) * self:getTalentLevel(t),
+			3 + self:getTalentLevelRaw(t)
+		)
+	end,
+}
+
+newTalent{
+	name = "Noxious Cloud",
+	type = {"spell/air",3},
+	require = spells_req3,
 	points = 5,
 	mana = 25,
 	cooldown = 8,
@@ -56,7 +114,7 @@ newTalent{
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
-		local dam = 4 + self:combatSpellpower(0.11) * self:getTalentLevel(t)
+		local dam = 4 + self:combatSpellpower(0.17) * self:getTalentLevel(t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -74,32 +132,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Noxious fumes rises from the ground doing %0.2f nature damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.11) * self:getTalentLevel(t), self:getTalentLevel(t) + 2)
-	end,
-}
-
-newTalent{
-	name = "Wings of Wind",
-	type = {"spell/air",3},
-	require = spells_req3,
-	points = 5,
-	mode = "sustained",
-	sustain_mana = 100,
-	tactical = {
-		MOVEMENT = 10,
-	},
-	activate = function(self, t)
-		return {
-			fly = self:addTemporaryValue("fly", math.floor(self:getTalentLevel(t))),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("fly", p.fly)
-		return true
-	end,
-	info = function(self, t)
-		return ([[Grants the caster a pair of wings made of pure wind, allowing her to fly up to %d height.]]):
-		format(math.floor(self:getTalentLevel(t)))
+		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.17) * self:getTalentLevel(t), self:getTalentLevel(t) + 2)
 	end,
 }
 
@@ -116,6 +149,14 @@ newTalent{
 	},
 	range = 5,
 	do_storm = function(self, t)
+		if self:getMana() <= 0 then
+			local old = self.energy.value
+			self.energy.value = 100000
+			self:useTalent(self.T_THUNDERSTORM)
+			self.energy.value = old
+			return
+		end
+
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do

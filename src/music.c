@@ -72,9 +72,44 @@ static int music_stop(lua_State *L)
 	return 0;
 }
 
+static int sound_new(lua_State *L)
+{
+	const char *name = luaL_checkstring(L, 1);
+
+	Mix_Chunk **m = (Mix_Chunk**)lua_newuserdata(L, sizeof(Mix_Chunk*));
+	auxiliar_setclass(L, "core{sound}", -1);
+
+	SDL_RWops *rops = PHYSFSRWOPS_openRead(name);
+	if (!rops)
+	{
+		return 0;
+	}
+	*m = Mix_LoadWAV_RW(rops, 1);
+	if (!*m) return 0;
+	Mix_VolumeChunk(m, SDL_MIX_MAXVOLUME);
+
+	return 1;
+}
+
+static int sound_free(lua_State *L)
+{
+	Mix_Chunk **m = (Mix_Chunk**)auxiliar_checkclass(L, "core{sound}", 1);
+	Mix_FreeChunk(*m);
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int sound_play(lua_State *L)
+{
+	Mix_Chunk **m = (Mix_Chunk**)auxiliar_checkclass(L, "core{sound}", 1);
+	Mix_PlayChannel(-1, m, 0);
+	return 0;
+}
+
 static const struct luaL_reg soundlib[] =
 {
 	{"newMusic", music_new},
+	{"newSound", sound_new},
 	{NULL, NULL},
 };
 
@@ -86,9 +121,17 @@ static const struct luaL_reg music_reg[] =
 	{NULL, NULL},
 };
 
+static const struct luaL_reg sound_reg[] =
+{
+	{"__gc", sound_free},
+	{"play", sound_play},
+	{NULL, NULL},
+};
+
 int luaopen_sound(lua_State *L)
 {
 	auxiliar_newclass(L, "core{music}", music_reg);
+	auxiliar_newclass(L, "core{sound}", sound_reg);
 	luaL_openlib(L, "core.sound", soundlib, 0);
 	return 1;
 }

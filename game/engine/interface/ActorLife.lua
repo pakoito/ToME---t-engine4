@@ -104,16 +104,18 @@ function _M:project(t, x, y, damtype, dam, particles)
 		grids[x][y] = true
 	end
 
+	local srcx, srcy = t.x or self.x, t.y or self.y
+
 	-- Stop at range or on block
 	local lx, ly = x, y
-	local l = line.new(self.x, self.y, x, y)
+	local l = line.new(srcx, srcy, x, y)
 	lx, ly = l()
-	local initial_dir = lx and coord_to_dir[lx - self.x][ly - self.y] or 5
+	local initial_dir = lx and coord_to_dir[lx - srcx][ly - srcy] or 5
 	while lx and ly do
 		if not typ.no_restrict then
 			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
 			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
-			if typ.range and math.sqrt((self.x-lx)^2 + (self.y-ly)^2) > typ.range then break end
+			if typ.range and math.sqrt((srcx-lx)^2 + (srcy-ly)^2) > typ.range then break end
 		end
 
 		-- Deam damage: beam
@@ -145,13 +147,15 @@ function _M:project(t, x, y, damtype, dam, particles)
 
 	-- Now project on each grid, one type
 	if type(damtype) == "function" then
+		local stop = false
 		for px, ys in pairs(grids) do
 			for py, _ in pairs(ys) do
-				damtype(px, py)
 				if particles then
 					game.level.map:particleEmitter(px, py, 1, particles.type)
 				end
+				if damtype(px, py) then stop=true break end
 			end
+			if stop then break end
 		end
 	else
 		for px, ys in pairs(grids) do

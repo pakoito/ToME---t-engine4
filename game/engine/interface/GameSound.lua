@@ -19,36 +19,24 @@
 
 require "engine.class"
 
---- Handles music in the game
+--- Handles sounds in the game
 module(..., package.seeall, class.make)
 
---- Initializes musics
+--- Initializes
 function _M:init()
-	self.current_music = nil
-	self.loaded_musics = {}
+	self.loaded_sounds = {}
 end
 
 function _M:loaded()
-	self.loaded_musics = self.loaded_musics or {}
+	self.loaded_sounds = self.loaded_sounds or {}
 end
 
-function _M:playMusic(name)
-	name = name or self.current_music
-	if not name then return end
-	local m = self.loaded_musics[name]
-	if not m then
-		self.loaded_musics[name] = core.sound.newMusic("/data/music/"..name)
-		m = self.loaded_musics[name]
+function _M:playSound(name)
+	local s = self.loaded_sounds[name]
+	if not s then
+		self.loaded_sounds[name] = core.sound.newSound("/data/sound/"..name)
+		s = self.loaded_sounds[name]
 	end
-	if not m then return end
-	if self.current_music then
-		self:stopMusic()
-	end
-	m:play()
-	self.current_music = name
-end
-
-function _M:stopMusic()
-	if not self.loaded_musics[self.current_music] then return end
-	self.loaded_musics[self.current_music]:stop()
+	if not s then return end
+	s:play()
 end
