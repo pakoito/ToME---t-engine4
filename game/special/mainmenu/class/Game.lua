@@ -136,7 +136,7 @@ function _M:selectStepMain()
 				self:selectStepInstall()
 			end,
 		},
-]]
+--]]
 		{
 			name = "Exit",
 			fct = function()
