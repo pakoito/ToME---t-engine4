@@ -33,6 +33,7 @@ const char *get_self_executable(int argc, char **argv)
 }
 
 #elif defined(SELFEXE_WINDOWS)
+#include <stdlib.h>
 #include <windows.h>
 
 const char *get_self_executable(int argc, char **argv)
