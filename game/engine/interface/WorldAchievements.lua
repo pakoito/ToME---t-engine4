@@ -44,6 +44,7 @@ function _M:newAchievement(t)
 	assert(t.name, "no achivement name")
 	assert(t.desc, "no achivement desc")
 
+	t.mode = t.mode or "none"
 	t.id = t.id or t.name
 	t.id = t.id:upper():gsub("[ ]", "_")
 	t.order = #self.achiev_defs+1
@@ -64,14 +65,32 @@ end
 --- Gain an achievement
 -- @param id the achivement to gain
 -- @param src who did it
-function _M:gainAchievement(id, src)
-	if not self.achiev_defs[id] then error("Unknown achievement "..id) return end
-	if self.achiev_defs[id].can_gain and not self.achiev_defs[id].can_gain(src) then return end
+function _M:gainAchievement(id, src, ...)
+	local a = self.achiev_defs[id]
+	if not a then error("Unknown achievement "..id) return end
 	if self.achieved[id] then return end
 
+	if a.can_gain then
+		local data = nil
+		if a.mode == "world" then
+			self.achievement_data = self.achievement_data or {}
+			self.achievement_data[id] = self.achievement_data[id] or {}
+			data = self.achievement_data[id]
+		elseif a.mode == "game" then
+			game.achievement_data = game.achievement_data or {}
+			game.achievement_data[id] = game.achievement_data[id] or {}
+			data = game.achievement_data[id]
+		elseif a.mode == "player" then
+			src.achievement_data = src.achievement_data or {}
+			src.achievement_data[id] = src.achievement_data[id] or {}
+			data = src.achievement_data[id]
+		end
+		if not a.can_gain(data, src, ...) then return end
+	end
+
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
-	game.log("#LIGHT_GREEN#New Achievement: %s!", self.achiev_defs[id].name)
-	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..self.achiev_defs[id].name, self.achiev_defs[id].desc)
+	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
+	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
 end
 
 --- Format an achievement source

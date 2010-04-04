@@ -363,8 +363,9 @@ function _M:die(src)
 	end
 
 	-- Achievements
-	if src and src:resolveSource().player and src:resolveSource().life == 1 then
-		world:gainAchievement("THAT_WAS_CLOSE", src:resolveSource())
+	if src and src:resolveSource().player then
+		if src:resolveSource().life == 1 then world:gainAchievement("THAT_WAS_CLOSE", src:resolveSource()) end
+		world:gainAchievement("PEST_CONTROL", src:resolveSource(), self)
 	end
 
 	return true
@@ -461,6 +462,11 @@ function _M:onAddObject(o)
 	engine.interface.ActorInventory.onAddObject(self, o)
 
 	self:checkEncumbrance()
+
+	-- Achievement checks
+	if self.player then
+		world:gainAchievement("DEUX_EX_MACHINA", self, o)
+	end
 end
 
 --- Call when an object is removed

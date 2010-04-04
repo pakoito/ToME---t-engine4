@@ -59,8 +59,8 @@ function _M:init(actor, on_finish)
 		ACCEPT = "EXIT",
 		EXIT = function() game:unregisterDialog(self)
 			-- Achievements checks
-			world:gainAchievement("ELEMENTALIST", self)
-			world:gainAchievement("WARPER", self)
+			world:gainAchievement("ELEMENTALIST", self.actor)
+			world:gainAchievement("WARPER", self.actor)
 
 			if on_finish then on_finish() end
 		end,

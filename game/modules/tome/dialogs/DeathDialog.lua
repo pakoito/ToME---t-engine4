@@ -106,6 +106,8 @@ function _M:resurrectBasic()
 	game.level:addEntity(self.actor)
 	game:unregisterDialog(self)
 	game.level.map:redisplay()
+
+	world:gainAchievement("UNSTOPPABLE", self.actor)
 end
 
 function _M:use()
