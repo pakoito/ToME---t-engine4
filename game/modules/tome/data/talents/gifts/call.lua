@@ -64,20 +64,23 @@ newTalent{
 }
 
 newTalent{
-	name = "???",
+	name = "Earth's Eyes",
 	type = {"wild-gift/call", 3},
 	require = gifts_req3,
 	points = 5,
-	equilibrium = 0,
-	cooldown = 300,
-	range = 20,
+	equilibrium = 3,
+	cooldown = 10,
+	range = 100,
 	action = function(self, t)
+		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, range=100, radius=3 + self:getTalentLevel(t)}
+		if not x then return nil end
+
+		self:magicMap(3 + self:getTalentLevel(t), x, y)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Meditate on your link with Nature. You are considered stunned for %d turns and regenerate %d equilibrium.
-		The effect will incease with your Willpower stat.]]):
-		format(17 - self:getTalentLevel(t), 10 + self:getWil(50) * self:getTalentLevel(t))
+		return ([[Using your connection to Nature you can see remote areas in a radius of %d.]]):
+		format(3 + self:getTalentLevel(t))
 	end,
 }
 

@@ -232,10 +232,12 @@ function _M:doQuake(tg, x, y)
 end
 
 --- Reveals location surrounding the actor
-function _M:magicMap(radius)
+function _M:magicMap(radius, x, y)
+	x = x or self.x
+	y = y or self.y
 	radius = math.floor(radius)
-	for i = self.x - radius, self.x + radius do for j = self.y - radius, self.y + radius do
-		if game.level.map:isBound(i, j) and core.fov.distance(self.x, self.y, i, j) < radius then
+	for i = x - radius, x + radius do for j = y - radius, y + radius do
+		if game.level.map:isBound(i, j) and core.fov.distance(x, y, i, j) < radius then
 			game.level.map.remembers(i, j, true)
 		end
 	end end
