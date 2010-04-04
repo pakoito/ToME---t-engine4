@@ -29,6 +29,22 @@ solution "TEngine"
 	libdirs {
 	}
 
+configuration "windows"
+	libdirs {
+		"/e/libs/SDL-1.2.14/lib", 
+		"/e/libs/SDL_ttf-2.0.9/lib", 
+		"/e/libs/SDL_image-1.2.10/lib", 
+		"/e/libs/SDL_mixer-1.2.11/lib", 
+		"/e/apps/mingw/lib",
+	}
+	includedirs {
+		"/e/libs/SDL-1.2.14/include/SDL", 
+		"/e/libs/SDL_ttf-2.0.9/include/", 
+		"/e/libs/SDL_image-1.2.10/include/", 
+		"/e/libs/SDL_mixer-1.2.11/include/", 
+		"/e/apps/mingw/include/GL",
+	}
+
 configuration "Debug"
 	defines { }
 	flags { "Symbols" }
@@ -66,13 +82,13 @@ configuration "macosx"
         defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
 	targetdir "."
 
-configuration "not macosx"
-	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU" }
-
 configuration "windows"
+	linkoptions { "-mwindows" }
+	links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32" }
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
 
 configuration "linux"
+	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 
