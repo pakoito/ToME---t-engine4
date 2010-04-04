@@ -31,6 +31,7 @@ newAchievement{
 	mode = "player",
 	can_gain = function(self, who)
 		self.nb = (self.nb or 0) + 1
+		print(self.nb, "***")
 		if self.nb >= 1000 then return true end
 	end
 }
@@ -39,7 +40,7 @@ newAchievement{
 	desc = [[Killed 1000 reproducing vermins]],
 	mode = "player",
 	can_gain = function(self, who, target)
-		if target:hasTalent(target.T_MULTIPLY) then
+		if target:knowTalent(target.T_MULTIPLY) then
 			self.nb = (self.nb or 0) + 1
 			if self.nb >= 1000 then return true end
 		end

@@ -69,7 +69,7 @@ function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]
 	if not a then error("Unknown achievement "..id) return end
 	if self.achieved[id] then return end
-
+print("CHECK ACHIEV", id, src.name)
 	if a.can_gain then
 		local data = nil
 		if a.mode == "world" then

@@ -365,6 +365,7 @@ function _M:die(src)
 	-- Achievements
 	if src and src:resolveSource().player then
 		if src:resolveSource().life == 1 then world:gainAchievement("THAT_WAS_CLOSE", src:resolveSource()) end
+		world:gainAchievement("EXTERMINATOR", src:resolveSource(), self)
 		world:gainAchievement("PEST_CONTROL", src:resolveSource(), self)
 	end
 
