@@ -20,7 +20,8 @@
 newAchievement{
 	name = "Elementalist",
 	desc = [[Maxed all elemental spells.]],
-	can_gain = function(who)
+	mode = "player",
+	can_gain = function(self, who)
 		local types = table.reverse{"spell/fire", "spell/earth", "spell/water", "spell/air"}
 		local nb = 0
 		for id, _ in pairs(who.talents) do
@@ -34,7 +35,8 @@ newAchievement{
 newAchievement{
 	name = "Warper",
 	desc = [[Maxed all arcane, conveyance, divination and temporal spells.]],
-	can_gain = function(who)
+	mode = "player",
+	can_gain = function(self, who)
 		local types = table.reverse{"spell/arcane", "spell/temporal", "spell/conveyance", "spell/divination"}
 		local nb = 0
 		for id, _ in pairs(who.talents) do
