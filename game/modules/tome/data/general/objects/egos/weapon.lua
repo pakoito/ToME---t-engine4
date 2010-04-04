@@ -97,3 +97,13 @@ newEntity{
 		},
 	},
 }
+
+newEntity{
+	name = " of massacre",
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	wielder = {
+		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus(25, 8), },
+	},
+}

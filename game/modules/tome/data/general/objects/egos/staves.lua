@@ -60,3 +60,63 @@ newEntity{
 		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus(5, 1), [Stats.STAT_WIL] = resolvers.mbonus(5, 1) },
 	},
 }
+
+newEntity{
+	name = "magma ", prefix=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.FIRE] = resolvers.mbonus(25, 8), },
+	},
+}
+
+newEntity{
+	name = "icy ", prefix=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.COLD] = resolvers.mbonus(25, 8), },
+	},
+}
+
+newEntity{
+	name = "acidic ", prefix=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.ACID] = resolvers.mbonus(25, 8), },
+	},
+}
+
+newEntity{
+	name = "crackling ", prefix=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.LIGHTNING] = resolvers.mbonus(25, 8), },
+	},
+}
+
+newEntity{
+	name = "naturalist ", prefix=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.NATURE] = resolvers.mbonus(25, 8), },
+	},
+}
+
+newEntity{
+	name = "blighted ", prefix=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.BLIGHT] = resolvers.mbonus(25, 8), },
+	},
+}

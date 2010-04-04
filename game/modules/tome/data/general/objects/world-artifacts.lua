@@ -39,6 +39,10 @@ newEntity{ base = "BASE_STAFF",
 	wielder = {
 		combat_spellpower = 10,
 		combat_spellcrit = 15,
+		inc_damage={
+			[DamageType.FIRE] = resolvers.mbonus(25, 8),
+			[DamageType.LIGHTNING] = resolvers.mbonus(25, 8),
+		},
 	},
 }
 

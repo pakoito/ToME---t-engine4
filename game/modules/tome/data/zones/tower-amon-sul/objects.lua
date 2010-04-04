@@ -36,5 +36,12 @@ newEntity{ base = "BASE_STAFF",
 		see_invisible = 2,
 		combat_spellpower = 15,
 		combat_spellcrit = 8,
+		inc_damage={
+			[DamageType.FIRE] = 7,
+			[DamageType.COLD] = 7,
+			[DamageType.ACID] = 7,
+			[DamageType.LIGHTNING] = 7,
+			[DamageType.BLIGHT] = 7,
+		},
 	},
 }

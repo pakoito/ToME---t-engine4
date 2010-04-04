@@ -218,6 +218,7 @@ function _M:getDesc()
 		local rs = {}
 		for type, i in pairs(w.esp) do
 			if type == "all" then rs[#rs+1] = "all"
+			elseif type == "range" then rs[#rs+1] = "increase range by "..i
 			else
 				local _, _, t, st = type:find("^([^/]+)/?(.*)$")
 				if st then
@@ -227,7 +228,7 @@ function _M:getDesc()
 				end
 			end
 		end
-		desc[#desc+1] = ("Grants telepathy to %s."):format(table.concat(rs, ','))
+		desc[#desc+1] = ("Grants telepathy: %s."):format(table.concat(rs, ','))
 	end
 
 	if w.talents_types_mastery then
@@ -243,6 +244,16 @@ function _M:getDesc()
 
 	if w.combat_physresist then desc[#desc+1] = ("Increases physical resistance: %s."):format(w.combat_physresist) end
 	if w.combat_spellresist then desc[#desc+1] = ("Increases spell resistance: %s."):format(w.combat_spellresist) end
+	if w.combat_mentalresist then desc[#desc+1] = ("Increases mental resistance: %s."):format(w.combat_mentalresist) end
+
+	if w.blind_immune then desc[#desc+1] = ("Increases blindness immunity: %d%%."):format(w.blind_immune * 100) end
+	if w.poison_immune then desc[#desc+1] = ("Increases poison immunity: %d%%."):format(w.poison_immune * 100) end
+	if w.cut_immune then desc[#desc+1] = ("Increases cut immunity: %d%%."):format(w.cut_immune * 100) end
+	if w.confusion_immune then desc[#desc+1] = ("Increases confusion immunity: %d%%."):format(w.confusion_immune * 100) end
+	if w.stun_immune then desc[#desc+1] = ("Increases stun immunity: %d%%."):format(w.stun_immune * 100) end
+	if w.fear_immune then desc[#desc+1] = ("Increases fear immunity: %d%%."):format(w.fear_immune * 100) end
+	if w.knockback_immune then desc[#desc+1] = ("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100) end
+	if w.instakill_immune then desc[#desc+1] = ("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100) end
 
 	if w.life_regen then desc[#desc+1] = ("Regenerates %d hitpoints a turn."):format(w.life_regen) end
 	if w.mana_regen then desc[#desc+1] = ("Regenerates %d mana a turn."):format(w.mana_regen) end
@@ -254,6 +265,9 @@ function _M:getDesc()
 	if w.combat_spellpower or w.combat_spellcrit then desc[#desc+1] = ("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0) end
 
 	if w.lite then desc[#desc+1] = ("Light radius %d"):format(w.lite) end
+
+	if w.see_invisible then desc[#desc+1] = ("See invisible: %d"):format(w.see_invisible) end
+	if w.invisible then desc[#desc+1] = ("Invisibility: %d"):format(w.invisible) end
 
 	local use_desc = self:getUseDesc()
 	if use_desc then desc[#desc+1] = use_desc end
