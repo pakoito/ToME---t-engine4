@@ -34,6 +34,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.TIME_PRISON, 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t), {type="manathrust"})
+		game:playSound("talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -58,6 +59,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.SLOW, util.bound((self:combatSpellpower(0.15) * self:getTalentLevel(t)) / 100, 0.1, 0.4), {type="manathrust"})
+		game:playSound("talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -78,6 +80,7 @@ newTalent{
 		BUFF = 10,
 	},
 	activate = function(self, t)
+		game:playSound("talents/spell_generic")
 		local power = util.bound((self:combatSpellpower(0.5) * self:getTalentLevel(t)) / 100, 0.1, 2)
 		return {
 			speed = self:addTemporaryValue("energy", {mod=power}),
@@ -108,6 +111,7 @@ newTalent{
 		local dur = util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15)
 		local power = 50 + self:combatSpellpower(0.5) * self:getTalentLevel(t)
 		self:setEffect(self.EFF_TIME_SHIELD, dur, {power=power})
+		game:playSound("talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)

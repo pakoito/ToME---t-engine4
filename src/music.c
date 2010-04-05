@@ -111,11 +111,14 @@ static int sound_play(lua_State *L)
 	Mix_Chunk **m = (Mix_Chunk**)auxiliar_checkclass(L, "core{sound}", 1);
 	int loop = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
 	int ms = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
+	int chan;
 	if (!ms)
-		Mix_PlayChannel(-1, *m, loop);
+		chan = Mix_PlayChannel(-1, *m, loop);
 	else
-		Mix_PlayChannelTimed(-1, *m, loop , ms);
-	return 0;
+		chan = Mix_PlayChannelTimed(-1, *m, loop , ms);
+	if (chan == -1) lua_pushnil(L);
+	else lua_pushnumber(L, chan);
+	return 1;
 }
 
 static int sound_volume(lua_State *L)
@@ -126,12 +129,22 @@ static int sound_volume(lua_State *L)
 	return 0;
 }
 
+static int channel_fadeout(lua_State *L)
+{
+	int chan = luaL_checknumber(L, 1);
+	int ms = luaL_checknumber(L, 2);
+
+	Mix_FadeOutChannel(chan, ms);
+	return 0;
+}
+
 static const struct luaL_reg soundlib[] =
 {
 	{"newMusic", music_new},
 	{"newSound", sound_new},
 	{"musicStop", music_stop},
 	{"musicVolume", music_volume},
+	{"channelFadeOut", channel_fadeout},
 	{NULL, NULL},
 };
 

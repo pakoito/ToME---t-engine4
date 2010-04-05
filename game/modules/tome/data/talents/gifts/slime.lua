@@ -37,6 +37,7 @@ newTalent{
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 1.5 + self:getTalentLevel(t) / 4, true)
 		self.combat_apr = self.combat_apr - 1000
+		game:playSound("talents/slime")
 		return true
 	end,
 	info = function(self, t)
@@ -58,6 +59,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
+		game:playSound("talents/slime")
 		local power = 10 + 5 * self:getTalentLevel(t)
 		return {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID]=power}),
@@ -88,6 +90,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.SLIME, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3, {type="slime"})
+		game:playSound("talents/slime")
 		return true
 	end,
 	info = function(self, t)
@@ -119,6 +122,7 @@ newTalent{
 
 		-- Stunned!
 		self:setEffect(self.EFF_STUNNED, util.bound(5 - self:getTalentLevel(t) / 2, 2, 7), {})
+		game:playSound("talents/slime")
 		return true
 	end,
 	info = function(self, t)

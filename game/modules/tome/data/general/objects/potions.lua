@@ -22,6 +22,7 @@ newEntity{
 	type = "potion", subtype="potion",
 	unided_name = "potion", id_by_type = true,
 	display = "!", color=colors.WHITE, image="object/potion-0x0.png",
+	use_sound = "actions/quaff",
 	encumber = 0.2,
 	stacking = true,
 	acid_destroy = 20,

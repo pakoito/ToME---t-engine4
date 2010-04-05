@@ -24,6 +24,7 @@ newEntity{
 	type = "weapon", subtype="greatsword",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE,
+	sound = "actions/melee", sound_miss = "actions/melee_miss",
 	encumber = 3,
 	rarity = 5,
 	combat = { talented = "sword", damrange = 1.6 },

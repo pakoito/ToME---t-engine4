@@ -35,6 +35,7 @@ newTalent{
 			object = (self:getTalentLevel(t) >= 2) and 1 or 0,
 			trap = (self:getTalentLevel(t) >= 5) and 1 or 0,
 		})
+		game:playSound("talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -80,6 +81,7 @@ newTalent{
 			game.logPlayer(who, "You identify everything around you.")
 		end
 
+		game:playSound("talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -98,6 +100,7 @@ newTalent{
 	cooldown = 20,
 	action = function(self, t)
 		self:magicMap(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
+		game:playSound("talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -116,6 +119,7 @@ newTalent{
 	activate = function(self, t)
 		-- There is an implicit +10, as it is the default radius
 		local rad = self:combatSpellpower(0.1) * self:getTalentLevel(t)
+		game:playSound("talents/spell_generic")
 		return {
 			esp = self:addTemporaryValue("esp", {range=rad, all=1}),
 		}

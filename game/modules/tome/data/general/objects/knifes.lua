@@ -23,6 +23,7 @@ newEntity{
 	type = "weapon", subtype="dagger",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.WHITE,
+	sound = "actions/melee", sound_miss = "actions/melee_miss",
 	encumber = 1,
 	rarity = 5,
 	combat = { talented = "knife", damrange = 1.3 },

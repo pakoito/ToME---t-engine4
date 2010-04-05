@@ -24,6 +24,7 @@ newEntity{
 	display = "?", color=colors.WHITE, image="object/scroll-0x0.png",
 	encumber = 0.1,
 	stacking = true,
+	use_sound = "actions/read",
 	fire_destroy = 20,
 	desc = [[Magical scrolls can have wildly different effects! Most of them function better with a high Magic score]],
 	egos = "/data/general/objects/egos/scrolls.lua", egos_chance = resolvers.mbonus(10, 5),

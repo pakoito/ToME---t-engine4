@@ -24,6 +24,7 @@ newEntity{
 	type = "weapon", subtype="greatmaul",
 	add_name = " (#COMBAT#)",
 	display = "\\", color=colors.SLATE,
+	sound = "actions/melee", sound_miss = "actions/melee_miss",
 	encumber = 5,
 	rarity = 5,
 	combat = { talented = "mace", damrange = 1.5, physspeed=1.2 },

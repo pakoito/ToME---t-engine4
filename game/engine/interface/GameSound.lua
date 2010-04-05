@@ -34,16 +34,22 @@ end
 function _M:playSound(name)
 	local s = self.loaded_sounds[name]
 	if not s then
-		local f = loadfile("/data/sound/"..name..".lua")
-		setfenv(f, setmetatable({}, {__index=_G}))
-		local def = f()
-		print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", def.file)
-		def.file = core.sound.newSound("/data/sound/"..def.file)
-		if def.volume then def.file:setVolume(def.volume) end
+		local def
+		if fs.exists("/data/sound/"..name..".lua") then
+			local f = loadfile("/data/sound/"..name..".lua")
+			setfenv(f, setmetatable({}, {__index=_G}))
+			def = f()
+			print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", def.file)
+			def.file = core.sound.newSound("/data/sound/"..def.file)
+			if def.volume then def.file:setVolume(def.volume) end
+		else
+			def = {file = core.sound.newSound("/data/sound/"..name..".wav")}
+		end
 
 		self.loaded_sounds[name] = def
 		s = self.loaded_sounds[name]
 	end
 	if not s then return end
-	s.file:play(s.loop, s.timed)
+	local chan = s.file:play(s.loop, s.timed)
+	if chan and s.fadeout then core.sound.channelFadeOut(chan, s.fadeout) end
 end

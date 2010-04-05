@@ -64,6 +64,7 @@ function _M:use(who, typ)
 
 	if typ == "use" then
 		who:useEnergy()
+		if self.use_sound then game:playSound(self.use_sound) end
 		return self:useObject(who)
 	end
 end

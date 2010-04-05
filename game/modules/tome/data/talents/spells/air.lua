@@ -169,6 +169,7 @@ newTalent{
 		end
 	end,
 	activate = function(self, t)
+		game:playSound("talents/thunderstorm")
 		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
 		return {
 			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),

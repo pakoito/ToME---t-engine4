@@ -24,6 +24,7 @@ newEntity{
 	type = "weapon", subtype="battleaxe",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE,
+	sound = "actions/melee", sound_miss = "actions/melee_miss",
 	encumber = 3,
 	rarity = 5,
 	combat = { talented = "axe", damrange = 1.5 },

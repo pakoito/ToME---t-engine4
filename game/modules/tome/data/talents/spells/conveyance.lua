@@ -52,6 +52,7 @@ newTalent{
 			target:teleportRandom(x, y, 10 + self:combatSpellpower(0.1))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
+		game:playSound("talents/teleport")
 		return true
 	end,
 	info = function(self, t)
@@ -97,6 +98,7 @@ newTalent{
 			target:teleportRandom(x, y, 100 + self:combatSpellpower(0.1))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
+		game:playSound("talents/teleport")
 		return true
 	end,
 	info = function(self, t)
@@ -127,6 +129,7 @@ newTalent{
 		local power = 50 + self:combatSpellpower(0.4) * self:getTalentLevel(t)
 		local chance = 20 + self:getTalentLevel(t) * 5
 		self:setEffect(self.EFF_DISPLACEMENT_SHIELD, dur, {power=power, target=target, chance=chance})
+		game:playSound("talents/teleport")
 		return true
 	end,
 	info = function(self, t)
@@ -149,6 +152,7 @@ newTalent{
 		MOVEMENT = 20,
 	},
 	activate = function(self, t)
+		game:playSound("talents/teleport")
 		local power = math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
 		return {
 			prob_travel = self:addTemporaryValue("prob_travel", power),

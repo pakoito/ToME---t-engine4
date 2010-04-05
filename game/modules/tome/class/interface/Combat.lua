@@ -60,6 +60,7 @@ The ToME combat system has the following attributes:
 ]]
 function _M:attackTarget(target, damtype, mult, noenergy)
 	local speed, hit = nil, false
+	local sound, sound_miss = nil, nil
 
 	if self:attr("feared") then
 		if not noenergy then
@@ -84,6 +85,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 				local s, h = self:attackTargetWith(target, o.combat, damtype, mult)
 				speed = math.max(speed or 0, s)
 				hit = hit or h
+				if hit and not sound then sound = o.combat.sound
+				elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
 			end
 		end
 	end
@@ -99,6 +102,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 				local s, h = self:attackTargetWith(target, o.combat, damtype, offmult)
 				speed = math.max(speed or 0, s)
 				hit = hit or h
+				if hit and not sound then sound = o.combat.sound
+				elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
 			end
 		end
 	end
@@ -108,6 +113,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		local s, h = self:attackTargetWith(target, self.combat, damtype, mult)
 		speed = math.max(speed or 0, s)
 		hit = hit or h
+		if hit and not sound then sound = self.combat.sound
+		elseif not hit and not sound_miss then sound_miss = self.combat.sound_miss end
 	end
 
 	-- We use up our own energy
@@ -115,6 +122,9 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		self:useEnergy(game.energy_to_act * speed)
 		self.did_energy = true
 	end
+
+	if sound then game:playSound(sound)
+	elseif sound_miss then game:playSound(sound_miss) end
 
 	-- Cancel stealth!
 	self:breakStealth()

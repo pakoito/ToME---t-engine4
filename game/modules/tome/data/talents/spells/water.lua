@@ -45,6 +45,7 @@ newTalent{
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
 			nil, self:spellFriendlyFire()
 		)
+		game:playSound("talents/cloud")
 		return true
 	end,
 	info = function(self, t)
@@ -71,6 +72,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.COLD, self:spellCrit(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="freeze"})
 		self:project(tg, x, y, DamageType.FREEZE, 3 + math.floor(self:getTalentLevel(t) / 3))
+		game:playSound("talents/ice")
 		return true
 	end,
 	info = function(self, t)
@@ -140,6 +142,7 @@ newTalent{
 			end,
 			false
 		)
+		game:playSound("talents/ice")
 		return true
 	end,
 	info = function(self, t)
