@@ -49,7 +49,7 @@ function _M:playSound(name)
 		self.loaded_sounds[name] = def
 		s = self.loaded_sounds[name]
 	end
-	if not s then return end
+	if not s or not s.file then return end
 	local chan = s.file:play(s.loop, s.timed)
 	if chan and s.fadeout then core.sound.channelFadeOut(chan, s.fadeout) end
 end

@@ -30,6 +30,7 @@ newTalent{
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self then return nil end
 		target:setEffect(target.EFF_ALL_STAT, 5, {power=2+math.floor(self:getTalentLevel(t) * 2)})
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -71,6 +72,7 @@ newTalent{
 			game.logPlayer("You may not detonate this summon.")
 			return nil
 		end
+		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
@@ -118,6 +120,7 @@ newTalent{
 		game.level.map(target.x, target.y, Map.ACTOR, self)
 		self.x, self.y, target.x, target.y = target.x, target.y, self.x, self.y
 
+		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
 	info = function(self, t)

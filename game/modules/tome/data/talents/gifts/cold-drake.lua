@@ -135,6 +135,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ICE, 10 + self:getStr() * 0.3 * self:getTalentLevel(t), {type="freeze"})
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)

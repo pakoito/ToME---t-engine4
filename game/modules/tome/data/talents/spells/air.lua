@@ -34,7 +34,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3), {type="lightning"})
-		game:playSound("talents/lightning")
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
@@ -87,7 +87,7 @@ newTalent{
 		end
 
 		fork(fx, fy)
-		game:playSound("talents/lightning")
+		game:playSoundNear(self, "talents/lightning")
 
 		return true
 	end,
@@ -165,11 +165,11 @@ newTalent{
 			table.remove(tgts, id)
 
 			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), 3), {type="lightning"})
-			game:playSound("talents/lightning")
+			game:playSoundNear(self, "talents/lightning")
 		end
 	end,
 	activate = function(self, t)
-		game:playSound("talents/thunderstorm")
+		game:playSoundNear(self, "talents/thunderstorm")
 		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
 		return {
 			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),

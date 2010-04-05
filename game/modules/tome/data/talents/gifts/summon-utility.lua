@@ -177,6 +177,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -241,6 +242,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -305,6 +307,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -358,6 +361,7 @@ newTalent{
 			game.level.map:moveViewSurround(self.summoner.x, self.summoner.y, 8, 8)
 		end
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)

@@ -123,8 +123,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		self.did_energy = true
 	end
 
-	if sound then game:playSound(sound)
-	elseif sound_miss then game:playSound(sound_miss) end
+	if sound then game:playSoundNear(self, sound)
+	elseif sound_miss then game:playSoundNear(self, sound_miss) end
 
 	-- Cancel stealth!
 	self:breakStealth()

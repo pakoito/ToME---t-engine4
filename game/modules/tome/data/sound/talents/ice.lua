@@ -1,5 +1,5 @@
 return {
 	file = "talents/ice.wav",
-	volume = 50,
+	volume = 70,
 	fadeout = 700,
 }

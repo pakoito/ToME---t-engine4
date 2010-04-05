@@ -34,7 +34,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(1.2) * self:getTalentLevel(t)), {type="flame"})
-		game:playSound("talents/fire")
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
@@ -59,7 +59,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t) + 2, dam=self:spellCrit(10 + self:combatSpellpower(0.6) * self:getTalentLevel(t))}, {type="flame"})
-		game:playSound("talents/fire")
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
@@ -84,7 +84,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.6) * self:getTalentLevel(t)), {type="flame"})
-		game:playSound("talents/fireflash")
+		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
@@ -121,7 +121,7 @@ newTalent{
 			engine.Entity.new{alpha=100, display='', color_br=180, color_bg=30, color_bb=60},
 			nil, self:spellFriendlyFire()
 		)
-		game:playSound("talents/fire")
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)

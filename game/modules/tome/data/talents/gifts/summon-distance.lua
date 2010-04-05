@@ -29,6 +29,7 @@ newTalent{ short_name = "FIRE_IMP_BOLT",
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(8 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), {type="flame"})
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
@@ -54,6 +55,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ACID, 30 + self:getWil(50) * self:getTalentLevel(t), {type="acid"})
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
@@ -79,6 +81,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.range(1, 30 + self:getWil(80) * self:getTalentLevel(t)), {type="lightning"})
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
@@ -104,6 +107,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.POISON, 30 + self:getWil(70) * self:getTalentLevel(t), {type="slime"})
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
@@ -168,6 +172,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -234,6 +239,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -301,6 +307,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -367,6 +374,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)

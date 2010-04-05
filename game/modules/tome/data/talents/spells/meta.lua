@@ -64,7 +64,7 @@ newTalent{
 				target.energy.value = old
 			end
 		end
-		game:playSound("talents/spell_generic")
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
@@ -98,7 +98,7 @@ newTalent{
 		BUFF = 10,
 	},
 	activate = function(self, t)
-		game:playSound("talents/spell_generic")
+		game:playSoundNear(self, "talents/spell_generic")
 		local power = util.bound(self:getTalentLevel(t) / 15, 0.05, 0.3)
 		return {
 			cd = self:addTemporaryValue("spell_cooldown_reduction", power),
@@ -136,7 +136,7 @@ newTalent{
 			self.talents_cd[tid] = nil
 		end
 		self.changed = true
-		game:playSound("talents/spell_generic")
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)

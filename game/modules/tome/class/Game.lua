@@ -732,3 +732,9 @@ function _M:setAllowedBuild(what, notify)
 
 	return true
 end
+
+function _M:playSoundNear(who, ...)
+	if who and self.level.map.seens(who.x, who.y) then
+		self:playSound(...)
+	end
+end

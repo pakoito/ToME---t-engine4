@@ -31,7 +31,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		game:playSound("talents/earth")
+		game:playSoundNear(self, "talents/earth")
 		local power = 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t)
 		return {
 			armor = self:addTemporaryValue("combat_armor", power),
@@ -62,7 +62,7 @@ newTalent{
 		for i = 1, self:getTalentLevelRaw(t) do
 			self:project(tg, x, y, DamageType.DIG, 1)
 		end
-		game:playSound("talents/earth")
+		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
@@ -87,7 +87,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(8 + self:combatSpellpower(0.15) * self:getTalentLevel(t)))
-		game:playSound("talents/earth")
+		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
@@ -147,7 +147,7 @@ newTalent{
 			end
 		end end end
 
-		game:playSound("talents/earth")
+		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
