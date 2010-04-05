@@ -50,7 +50,7 @@ end
 --- Setups as the current game keyhandler
 function _M:setCurrent()
 	core.mouse.set_current_handler(self)
-	if game then game.mouse = self end
+--	if game then game.mouse = self end
 	_M.current = self
 end
 

@@ -40,7 +40,7 @@ end
 --- Setups as the current game keyhandler
 function _M:setCurrent()
 	core.key.set_current_handler(self)
-	if game then game.key = self end
+--	if game then game.key = self end
 	_M.current = self
 end
 

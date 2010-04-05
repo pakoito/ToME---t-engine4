@@ -32,7 +32,7 @@ function _M:loaded()
 	self.loaded_musics = self.loaded_musics or {}
 end
 
-function _M:playMusic(name)
+function _M:playMusic(name, loop)
 	name = name or self.current_music
 	if not name then return end
 	local m = self.loaded_musics[name]
@@ -45,7 +45,7 @@ function _M:playMusic(name)
 	if self.current_music then
 		core.sound.musicStop()
 	end
-	m:play()
+	m:play(loop or -1)
 	self.current_music = name
 	self.playing_music = true
 end

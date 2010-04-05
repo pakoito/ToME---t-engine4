@@ -164,6 +164,7 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 
 			local target = game.level.map(tx, ty, game.level.map.ACTOR)
 			if not target then return end
+			ret.firsttarget = ret.firsttarget or target
 			ammo = ammo.combat
 
 			damtype = damtype or ammo.damtype or DamageType.PHYSICAL
@@ -211,8 +212,8 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 	-- If we used only one arrow, use it
 	if params.one_shot then self:removeObject(self:getInven("QUIVER"), 1) end
 
-	if sound then game:playSoundNear(self, sound)
-	elseif sound_miss then game:playSoundNear(self, sound_miss) end
+	if sound then game:playSoundNear(ret.firsttarget or self, sound)
+	elseif sound_miss then game:playSoundNear(ret.firsttarget or self, sound_miss) end
 
 	return ret.hitted
 end

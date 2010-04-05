@@ -129,6 +129,8 @@ end
 function _M:registerDialog(d)
 	table.insert(self.dialogs, d)
 	self.dialogs[d] = #self.dialogs
+	if d.key then d.key:setCurrent() end
+	if d.mouse then d.mouse:setCurrent() end
 end
 
 --- Undisplay a dialog, removing its own keyhandler if needed
@@ -137,6 +139,12 @@ function _M:unregisterDialog(d)
 	table.remove(self.dialogs, self.dialogs[d])
 	self.dialogs[d] = nil
 	d:unload()
+	-- Update positions
+	for i, id in ipairs(self.dialogs) do self.dialogs[id] = i end
+
+	local last = self.dialogs[#self.dialogs] or self
+	if last.key then last.key:setCurrent() end
+	if last.mouse then last.mouse:setCurrent() end
 end
 
 --- The C core gives us command line arguments

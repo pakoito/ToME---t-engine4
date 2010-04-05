@@ -100,12 +100,9 @@ function _M:drawDialog(s)
 end
 
 function _M:keyCommands(t, b)
-	self.old_key = game.key
-	game.key = engine.KeyBind.new()
-	if t then game.key:addCommands(t) end
-	if b then game.key:addBinds(b) end
-	game.key:setCurrent()
-	self.key = game.key
+	self.key = engine.KeyBind.new()
+	if t then self.key:addCommands(t) end
+	if b then self.key:addBinds(b) end
 end
 
 function _M:mouseZones(t)
@@ -117,13 +114,12 @@ function _M:mouseZones(t)
 		end
 	end
 
-	self.old_mouse = game.mouse
-	game.mouse = engine.Mouse.new()
-	game.mouse:registerZones(t)
-	game.mouse:setCurrent()
+	self.mouse = engine.Mouse.new()
+	self.mouse:registerZones(t)
 end
 
 function _M:unload()
+--[[
 	if self.old_key then
 		game.key = self.old_key
 		game.key:setCurrent()
@@ -132,6 +128,7 @@ function _M:unload()
 		game.mouse = self.old_mouse
 		game.mouse:setCurrent()
 	end
+]]
 end
 
 function _M:drawWBorder(s, x, y, w)
