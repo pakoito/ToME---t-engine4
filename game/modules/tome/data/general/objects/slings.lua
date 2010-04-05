@@ -22,6 +22,7 @@ newEntity{
 	slot = "MAINHAND",
 	type = "weapon", subtype="sling",
 	display = "}", color=colors.UMBER,
+	sound = "actions/arrow", sound_miss = "actions/arrow",
 	encumber = 4,
 	rarity = 5,
 	combat = { talented = "sling", },

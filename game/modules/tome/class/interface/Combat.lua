@@ -133,6 +133,7 @@ end
 
 function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 	local weapon, ammo = self:hasArcheryWeapon()
+	local sound, sound_miss = nil, nil
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
@@ -140,6 +141,7 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 	params = params or {}
 
 	print("[SHOOT WITH]", weapon.name, ammo.name)
+	local realweapon = weapon
 	weapon = weapon.combat
 
 	local ret = {}
@@ -200,11 +202,17 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 		end
 	end)
 
+	if ret.hitted and not sound then sound = realweapon.sound
+	elseif not ret.hitted and not sound_miss then sound_miss = realweapon.sound_miss end
+
 	print("[SHOOT] speed", ret.speed or 1, "=>", game.energy_to_act * (ret.speed or 1))
 	self:useEnergy(game.energy_to_act * (ret.speed or 1))
 
 	-- If we used only one arrow, use it
 	if params.one_shot then self:removeObject(self:getInven("QUIVER"), 1) end
+
+	if sound then game:playSoundNear(self, sound)
+	elseif sound_miss then game:playSoundNear(self, sound_miss) end
 
 	return ret.hitted
 end

@@ -39,11 +39,15 @@ function _M:playSound(name)
 			local f = loadfile("/data/sound/"..name..".lua")
 			setfenv(f, setmetatable({}, {__index=_G}))
 			def = f()
-			print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", def.file)
+			print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", "/data/sound/"..def.file, ":>")
 			def.file = core.sound.newSound("/data/sound/"..def.file)
+			print("[SOUND] :=>", def.file)
 			if def.volume then def.file:setVolume(def.volume) end
-		else
+		elseif fs.exists("/data/sound/"..name..".wav") then
 			def = {file = core.sound.newSound("/data/sound/"..name..".wav")}
+			print("[SOUND] loading from", "/data/sound/"..name..".wav", ":=:", def.file)
+		else
+			def = {}
 		end
 
 		self.loaded_sounds[name] = def
