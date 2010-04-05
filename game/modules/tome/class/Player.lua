@@ -124,6 +124,33 @@ function _M:act()
 	end
 end
 
+function _M:playerFOV()
+	-- Clean FOV before computing it
+	game.level.map:cleanFOV()
+	-- Compute ESP FOV, using cache
+	if game.zone.short_name ~= "wilderness" then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true) end
+	-- Compute both the normal and the lite FOV, using cache
+	self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:apply(x, y) end, true, false, true)
+	self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
+
+	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
+	if self:attr("detect_range") then
+		self:computeFOV(self:attr("detect_range"), "block_sense", function(x, y)
+			local ok = false
+			if self:attr("detect_actor") and game.level.map(x, y, game.level.map.ACTOR) then ok = true end
+			if self:attr("detect_object") and game.level.map(x, y, game.level.map.OBJECT) then ok = true end
+			if self:attr("detect_trap") and game.level.map(x, y, game.level.map.TRAP) then
+				game.level.map(x, y, game.level.map.TRAP):setKnown(self, true)
+				ok = true
+			end
+
+			if ok then
+				game.level.map.seens(x, y, true)
+			end
+		end, true, true, true)
+	end
+end
+
 --- Called before taking a hit, overload mod.class.Actor:onTakeHit() to stop resting and running
 function _M:onTakeHit(value, src)
 	self:runStop("taken damage")
@@ -248,6 +275,8 @@ function _M:runCheck()
 		if trap and trap:knownBy(self) then noticed = "trap spotted" end
 	end)
 	if noticed then return false, noticed end
+
+	self:playerFOV()
 
 	return engine.interface.PlayerRun.runCheck(self)
 end
