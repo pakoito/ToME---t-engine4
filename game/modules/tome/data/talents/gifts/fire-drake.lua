@@ -55,6 +55,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=15 + self:getStr() * 0.1 * self:getTalentLevel(t), dist=4})
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
@@ -90,6 +91,7 @@ newTalent{
 			engine.Entity.new{alpha=100, display='', color_br=180, color_bg=30, color_bb=60},
 			nil, true
 		)
+		game:playSoundNear(self, "talents/devouringflame")
 		return true
 	end,
 	info = function(self, t)

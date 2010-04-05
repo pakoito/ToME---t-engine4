@@ -29,6 +29,7 @@ newTalent{
 	action = function(self, t)
 		self:setEffect(self.EFF_STUNNED, 17 - self:getTalentLevel(t), {})
 		self:incEquilibrium(-10 - self:getWil(50) * self:getTalentLevel(t))
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
@@ -54,6 +55,7 @@ newTalent{
 		if not target.undead then
 			target:heal(20 + self:getWil(50) * self:getTalentLevel(t))
 		end
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -76,6 +78,7 @@ newTalent{
 		if not x then return nil end
 
 		self:magicMap(3 + self:getTalentLevel(t), x, y)
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
@@ -107,6 +110,7 @@ newTalent{
 			self.talents_cd[tid] = nil
 		end
 		self.changed = true
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)

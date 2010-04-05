@@ -30,6 +30,7 @@ newTalent{
 		if self:getTalentLevel(t) >= 3 then
 			self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
 		end
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -52,6 +53,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		local power = 4 + self:combatSpellpower(0.04) * self:getTalentLevel(t)
+		game:playSoundNear(self, "talents/heal")
 		return {
 			def = self:addTemporaryValue("combat_def", power),
 		}
@@ -79,6 +81,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		local power = 10 + self:combatSpellpower(0.06) * self:getTalentLevel(t)
+		game:playSoundNear(self, "talents/heal")
 		return {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ARCANE]=power}),
 		}
@@ -106,6 +109,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		local power = 4 + self:combatSpellpower(0.04) * self:getTalentLevel(t)
+		game:playSoundNear(self, "talents/heal")
 		return {
 			invisible = self:addTemporaryValue("invisible", power),
 			drain = self:addTemporaryValue("mana_regen", -5),

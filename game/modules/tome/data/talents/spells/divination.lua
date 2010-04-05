@@ -58,7 +58,7 @@ newTalent{
 		if self:getTalentLevel(t) < 3 then
 			self:showInventory("Identify object", self:getInven(self.INVEN_INVEN), nil, function(o, item)
 				o:identify(true)
-				game.logPlayer(who, "You identify: "..o:getName())
+				game.logPlayer(self, "You identify: "..o:getName())
 			end)
 			return true
 		end

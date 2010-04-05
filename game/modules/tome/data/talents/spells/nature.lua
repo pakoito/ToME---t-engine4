@@ -29,6 +29,7 @@ newTalent{
 	},
 	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:combatSpellpower(0.07) * self:getTalentLevel(t)})
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -49,6 +50,7 @@ newTalent{
 	},
 	action = function(self, t)
 		self:heal(self:spellCrit(10 + self:combatSpellpower(0.5) * self:getTalentLevel(t)), self)
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -85,6 +87,7 @@ newTalent{
 			end
 		end
 
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -142,6 +145,7 @@ newTalent{
 		bear:resolve()
 		game.zone:addEntity(game.level, bear, "actor", x, y)
 
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)

@@ -96,20 +96,6 @@ newEntity{ base = "BASE_SCROLL",
 }
 
 newEntity{ base = "BASE_SCROLL",
-	name = "scroll of recall",
-	level_range = {10, 50},
-	rarity = 8,
-	cost = 2,
-
-	use_simple = { name="recall to your base town.", use = function(self, who)
-		error("****************** IMPLEMENT SCROLL OF RECALL ****************")
-		who:recall()
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
-		return "destroy", true
-	end}
-}
-
-newEntity{ base = "BASE_SCROLL",
 	name = "scroll of magic mapping",
 	level_range = {1, 50},
 	rarity = 5,
