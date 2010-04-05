@@ -254,7 +254,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	mult = mult or 1
 
 	-- Does the blow connect? yes .. complex :/
-	local atk, def = self:combatAttack(weapon), target:combatDefense()
+	local atk, def = self:combatAttack(weapon), target:combatDefenseRanged()
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 
@@ -328,6 +328,11 @@ function _M:combatDefense()
 		add = add + 4 + (self:getTalentLevel(self.T_DUAL_WEAPON_DEFENSE) * self:getDex()) / 12
 	end
 	return self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4
+end
+
+--- Gets the defense ranged
+function _M:combatDefenseRanged()
+	return self:combatDefense() + (self.combat_def_ranged or 0)
 end
 
 --- Gets the armor

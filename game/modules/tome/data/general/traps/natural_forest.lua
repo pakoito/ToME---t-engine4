@@ -31,6 +31,7 @@ newEntity{ base = "TRAP_NATURAL_FOREST",
 	detect_power = 6, disarm_power = 16,
 	rarity = 3, level_range = {1, 50},
 	color=colors.UMBER,
+	safe_levitation = true,
 	message = "@Target@ slides on a rock!",
 	triggered = function(self, x, y, who)
 		if who:checkHit(self.disarm_power + 5, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("stun") then

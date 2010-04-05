@@ -65,3 +65,9 @@ end
 function _M:onDisarm(x, y, who)
 	-- Let the actor gain exp
 end
+
+--- Called when triggered
+function _M:canTrigger(x, y, who)
+	if self.safe_levitation and who:attr("levitation") then return false end
+	return true
+end

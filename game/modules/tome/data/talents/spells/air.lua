@@ -103,27 +103,34 @@ newTalent{
 }
 
 newTalent{
-	name = "Wings of Wind",
+	name = "Feather Wind",
 	type = {"spell/air",3},
 	require = spells_req3,
 	points = 5,
 	mode = "sustained",
+	cooldown = 10,
 	sustain_mana = 100,
 	tactical = {
 		MOVEMENT = 10,
 	},
 	activate = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic2")
 		return {
-			fly = self:addTemporaryValue("fly", math.floor(self:getTalentLevel(t))),
+			encumb = self:addTemporaryValue("max_encumber", math.floor(self:getTalentLevel(t) * self:combatSpellpower(0.15))),
+			def = self:addTemporaryValue("combat_def_ranged", 6 + self:combatSpellpower(0.07) * self:getTalentLevel(t)),
+			lev = self:addTemporaryValue("levitation", 1),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("fly", p.fly)
+		self:removeTemporaryValue("max_encumber", p.encumb)
+		self:removeTemporaryValue("combat_def_ranged", p.def)
+		self:removeTemporaryValue("levitation", p.lev)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Grants the caster a pair of wings made of pure wind, allowing her to fly up to %d height.]]):
-		format(math.floor(self:getTalentLevel(t)))
+		return ([[A gentle wind circles arround the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
+		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.]]):
+		format(self:getTalentLevel(t) * self:combatSpellpower(0.15), 6 + self:combatSpellpower(0.07) * self:getTalentLevel(t))
 	end,
 }
 

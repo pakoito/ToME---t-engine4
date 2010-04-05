@@ -110,11 +110,19 @@ function _M:drawDialog(s)
 	s:drawColorString(self.font, ("Spell Crit:  #00ff00#%3d"):format(game.player:combatSpellCrit()), w, h, 255, 255, 255) h = h + self.font_h
 	s:drawColorString(self.font, ("Spell Speed: #00ff00#%3d"):format(game.player:combatSpellSpeed()), w, h, 255, 255, 255) h = h + self.font_h
 
+	h = h + self.font_h
+	for i, t in ipairs(DamageType.dam_def) do
+		if self.actor.inc_damage[DamageType[t.type]] then
+			s:drawColorString(self.font, ("%s damage: #00ff00#%3d%%"):format(t.name:capitalize(), self.actor.inc_damage[DamageType[t.type]]), w, h, 255, 255, 255) h = h + self.font_h
+		end
+	end
+
 	h = 0
 	w = 400
-	s:drawColorString(self.font, ("Fatigue: #00ff00#%3d%%"):format(game.player.fatigue), w, h, 255, 255, 255) h = h + self.font_h
-	s:drawColorString(self.font, ("Armor:   #00ff00#%3d"):format(game.player:combatArmor()), w, h, 255, 255, 255) h = h + self.font_h
-	s:drawColorString(self.font, ("Defence: #00ff00#%3d"):format(game.player:combatDefense()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, ("Fatigue:        #00ff00#%3d%%"):format(game.player.fatigue), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, ("Armor:          #00ff00#%3d"):format(game.player:combatArmor()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, ("Defence:        #00ff00#%3d"):format(game.player:combatDefense()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, ("Ranged Defence: #00ff00#%3d"):format(game.player:combatDefenseRanged()), w, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
 	s:drawColorString(self.font, ("Physical Resist: #00ff00#%3d"):format(game.player:combatPhysicalResist()), w, h, 255, 255, 255) h = h + self.font_h

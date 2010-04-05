@@ -435,7 +435,7 @@ function _M:attack(target)
 end
 
 function _M:getMaxEncumbrance()
-	return math.floor(40 + self:getStr() * 1.8)
+	return math.floor(40 + self:getStr() * 1.8) + (self.max_encumber or 0)
 end
 
 function _M:checkEncumbrance()
