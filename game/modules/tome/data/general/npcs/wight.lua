@@ -63,7 +63,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	combat_armor = 7, combat_def = 6,
 
 	resolvers.talents{
-		[Talents.T_FLAMESHOCK]=1, [Talents.T_LIGHTNING]=1, [Talents.T_NOXIOUS_CLOUD]=1,
+		[Talents.T_FLAMESHOCK]=1, [Talents.T_LIGHTNING]=1, [Talents.T_CORROSIVE_VAPOUR]=1,
 		[Talents.T_MIND_DISRUPTION]=1,
 	},
 }
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	max_life = resolvers.rngavg(70,80),
 	combat_armor = 9, combat_def = 6,
 
-	resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAMESHOCK]=2, [Talents.T_LIGHTNING]=2, [Talents.T_NOXIOUS_CLOUD]=2,
+	resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAMESHOCK]=2, [Talents.T_LIGHTNING]=2, [Talents.T_CORROSIVE_VAPOUR]=2,
 		[Talents.T_MIND_DISRUPTION]=2,
 	},
 }
@@ -89,7 +89,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	max_life = resolvers.rngavg(80,90),
 	combat_armor = 10, combat_def = 8,
 
-	resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAMESHOCK]=3, [Talents.T_LIGHTNING]=3, [Talents.T_NOXIOUS_CLOUD]=3,
+	resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAMESHOCK]=3, [Talents.T_LIGHTNING]=3, [Talents.T_CORROSIVE_VAPOUR]=3,
 		[Talents.T_MIND_DISRUPTION]=3,
 	},
 }
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	rarity = 9,
 	max_life = resolvers.rngavg(100,150),
 	combat_armor = 12, combat_def = 10,
-	resolvers.talents{ [Talents.T_MANA_POOL]=3, [Talents.T_FLAMESHOCK]=3, [Talents.T_LIGHTNING]=4, [Talents.T_NOXIOUS_CLOUD]=3, [Talents.T_THUNDERSTORM]=2,
+	resolvers.talents{ [Talents.T_MANA_POOL]=3, [Talents.T_FLAMESHOCK]=3, [Talents.T_LIGHTNING]=4, [Talents.T_CORROSIVE_VAPOUR]=3, [Talents.T_THUNDERSTORM]=2,
 		[Talents.T_MIND_DISRUPTION]=4,
 	},
 }

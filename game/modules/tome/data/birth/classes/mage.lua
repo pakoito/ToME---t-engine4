@@ -67,7 +67,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_MANATHRUST] = 1,
 		[ActorTalents.T_FLAME] = 1,
-		[ActorTalents.T_FREEZE] = 1,
+		[ActorTalents.T_CORROSIVE_VAPOUR] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
 	},
 	copy = {
@@ -125,48 +125,6 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="shield", name="iron shield", autoreq=true},
 			{type="armor", subtype="cloth", name="robe", autoreq=true},
-		},
-		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-		},
-	},
-}
-
-newBirthDescriptor{
-	type = "subclass",
-	name = "Necromancer",
-	desc = {
-		"Their most important stats are: Magic and Willpower",
-	},
-	stats = { mag=3, wil=2, cun=1, },
-	talents_types = {
-		["spell/arcane"]={true, 0.3},
-		["spell/fire"]={true, 0.3},
-		["spell/earth"]={true, 0.3},
-		["spell/water"]={true, 0.3},
-		["spell/air"]={true, 0.3},
-		["spell/phantasm"]={true, 0.3},
-		["spell/temporal"]={false, 0.3},
-		["spell/meta"]={false, 0.3},
-		["spell/divination"]={true, 0.3},
-		["spell/conveyance"]={true, 0.3},
-		["spell/nature"]={true, 0.3},
-		["spell/necromancy"]={true, 0.3},
-		["cunning/survival"]={false, -0.1},
-	},
-	talents = {
-		[ActorTalents.T_ABSORB_SOUL] = 1,
-		[ActorTalents.T_FLAME] = 1,
-		[ActorTalents.T_FREEZE] = 1,
-		[ActorTalents.T_PHASE_DOOR] = 1,
-	},
-	copy = {
-		max_life = 80,
-		life_rating = 7,
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="robe", autoreq=true}
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana"},

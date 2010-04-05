@@ -25,6 +25,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 	persistant = "memory",
+	ambiant_music = "last",
 	generator =  {
 		map = {
 			class = "mod.class.generator.map.Wilderness",

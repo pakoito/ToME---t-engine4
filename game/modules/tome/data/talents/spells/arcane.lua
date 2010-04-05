@@ -35,6 +35,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t)), {type="manathrust"})
+		game:playSound("talents/arcane")
 		return true
 	end,
 	info = function(self, t)
@@ -57,6 +58,7 @@ newTalent{
 	action = function(self, t)
 		if not self:hasEffect(self.EFF_MANAFLOW) then
 			self:setEffect(self.EFF_MANAFLOW, 10, {power=5+self:combatSpellpower(0.06) * self:getTalentLevel(t)})
+			game:playSound("talents/arcane")
 		end
 		return true
 	end,
@@ -96,6 +98,7 @@ newTalent{
 	activate = function(self, t)
 		local power = math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
 		self.disruption_shield_absorb = 0
+		game:playSound("talents/arcane")
 		return {
 			shield = self:addTemporaryValue("disruption_shield", power),
 		}

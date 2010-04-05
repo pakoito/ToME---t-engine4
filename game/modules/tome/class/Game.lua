@@ -98,6 +98,7 @@ function _M:run()
 	self:setCurrent()
 
 	-- Run the current music if any
+	self:volumeMusic(30)
 	self:playMusic()
 
 	if self.level then self:setupDisplayMode() end
@@ -253,7 +254,11 @@ function _M:changeLevel(lev, zone)
 	end
 
 	if self.level.data.ambiant_music then
-		self:playMusic(self.level.data.ambiant_music)
+		if self.level.data.ambiant_music ~= "last" then
+			self:playMusic(self.level.data.ambiant_music)
+		end
+	else
+		self:stopMusic()
 	end
 end
 

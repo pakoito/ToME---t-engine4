@@ -66,9 +66,16 @@ static int music_play(lua_State *L)
 
 static int music_stop(lua_State *L)
 {
-	Mix_Music **m = (Mix_Music**)auxiliar_checkclass(L, "core{music}", 1);
-	int fadeout = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
+	int fadeout = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 	Mix_FadeOutMusic(fadeout);
+	return 0;
+}
+
+static int music_volume(lua_State *L)
+{
+	int vol = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 100;
+
+	Mix_VolumeMusic(SDL_MIX_MAXVOLUME * vol / 100);
 	return 0;
 }
 
@@ -86,7 +93,7 @@ static int sound_new(lua_State *L)
 	}
 	*m = Mix_LoadWAV_RW(rops, 1);
 	if (!*m) return 0;
-	Mix_VolumeChunk(m, SDL_MIX_MAXVOLUME);
+	Mix_VolumeChunk(*m, SDL_MIX_MAXVOLUME);
 
 	return 1;
 }
@@ -102,7 +109,20 @@ static int sound_free(lua_State *L)
 static int sound_play(lua_State *L)
 {
 	Mix_Chunk **m = (Mix_Chunk**)auxiliar_checkclass(L, "core{sound}", 1);
-	Mix_PlayChannel(-1, m, 0);
+	int loop = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
+	int ms = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
+	if (!ms)
+		Mix_PlayChannel(-1, *m, loop);
+	else
+		Mix_PlayChannelTimed(-1, *m, loop , ms);
+	return 0;
+}
+
+static int sound_volume(lua_State *L)
+{
+	Mix_Chunk **m = (Mix_Chunk**)auxiliar_checkclass(L, "core{sound}", 1);
+	int vol = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 100;
+	Mix_VolumeChunk(*m, SDL_MIX_MAXVOLUME * vol / 100);
 	return 0;
 }
 
@@ -110,6 +130,8 @@ static const struct luaL_reg soundlib[] =
 {
 	{"newMusic", music_new},
 	{"newSound", sound_new},
+	{"musicStop", music_stop},
+	{"musicVolume", music_volume},
 	{NULL, NULL},
 };
 
@@ -117,7 +139,6 @@ static const struct luaL_reg music_reg[] =
 {
 	{"__gc", music_free},
 	{"play", music_play},
-	{"stop", music_stop},
 	{NULL, NULL},
 };
 
@@ -125,6 +146,7 @@ static const struct luaL_reg sound_reg[] =
 {
 	{"__gc", sound_free},
 	{"play", sound_play},
+	{"setVolume", sound_volume},
 	{NULL, NULL},
 };
 

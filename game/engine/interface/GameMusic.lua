@@ -41,14 +41,22 @@ function _M:playMusic(name)
 		m = self.loaded_musics[name]
 	end
 	if not m then return end
+	if self.current_music == name and self.playing_music then return end
 	if self.current_music then
-		self:stopMusic()
+		core.sound.musicStop()
 	end
 	m:play()
 	self.current_music = name
+	self.playing_music = true
 end
 
 function _M:stopMusic()
 	if not self.loaded_musics[self.current_music] then return end
-	self.loaded_musics[self.current_music]:stop()
+	core.sound.musicStop()
+	self.current_music = nil
+	self.playing_music = false
+end
+
+function _M:volumeMusic(vol)
+	core.sound.musicVolume(vol or 100)
 end

@@ -34,6 +34,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3), {type="lightning"})
+		game:playSound("talents/lightning")
 		return true
 	end,
 	info = function(self, t)
@@ -86,6 +87,7 @@ newTalent{
 		end
 
 		fork(fx, fy)
+		game:playSound("talents/lightning")
 
 		return true
 	end,
@@ -101,38 +103,27 @@ newTalent{
 }
 
 newTalent{
-	name = "Noxious Cloud",
+	name = "Wings of Wind",
 	type = {"spell/air",3},
 	require = spells_req3,
 	points = 5,
-	mana = 25,
-	cooldown = 8,
+	mode = "sustained",
+	sustain_mana = 100,
 	tactical = {
-		ATTACKAREA = 10,
+		MOVEMENT = 10,
 	},
-	range = 15,
-	action = function(self, t)
-		local duration = self:getTalentLevel(t) + 2
-		local radius = 3
-		local dam = 4 + self:combatSpellpower(0.17) * self:getTalentLevel(t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
-		-- Add a lasting map effect
-		game.level.map:addEffect(self,
-			x, y, duration,
-			DamageType.NATURE, dam,
-			radius,
-			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
-			nil, self:spellFriendlyFire()
-		)
+	activate = function(self, t)
+		return {
+			fly = self:addTemporaryValue("fly", math.floor(self:getTalentLevel(t))),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("fly", p.fly)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Noxious fumes rises from the ground doing %0.2f nature damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.17) * self:getTalentLevel(t), self:getTalentLevel(t) + 2)
+		return ([[Grants the caster a pair of wings made of pure wind, allowing her to fly up to %d height.]]):
+		format(math.floor(self:getTalentLevel(t)))
 	end,
 }
 
@@ -174,6 +165,7 @@ newTalent{
 			table.remove(tgts, id)
 
 			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), 3), {type="lightning"})
+			game:playSound("talents/lightning")
 		end
 	end,
 	activate = function(self, t)
