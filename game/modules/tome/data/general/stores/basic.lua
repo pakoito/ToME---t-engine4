@@ -54,7 +54,7 @@ newEntity{
 
 newEntity{
 	define_as = "WEAPON",
-	name = "weapon mith",
+	name = "weapon smith",
 	display = '3', color=colors.UMBER,
 	store = {
 		restock_after = 1000,
