@@ -121,10 +121,10 @@ newTalent{
 			name = "guardian bear", faction = "players",
 			desc = [[A bear summoned by the powers of nature to help you.]],
 			autolevel = "warrior",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
 			energy = { mod=1 },
 			stats = { str=18, dex=13, mag=5, con=15 },
-			tmasteries = resolvers.tmasteries{ ["physical/other"]=0.25 },
+			tmasteries = resolvers.tmasteries{ ["technique/other"]=0.25 },
 
 			talents = resolvers.talents{ [Talents.T_STUN]=2 },
 			max_stamina = 100,

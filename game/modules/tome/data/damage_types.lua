@@ -22,8 +22,10 @@ setDefaultProjector(function(src, x, y, type, dam)
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
 		-- Increases damage
-		local inc = src.inc_damage[type] or 0
-		dam = dam + (dam * inc / 100)
+		if src.inc_damage then
+			local inc = src.inc_damage[type] or 0
+			dam = dam + (dam * inc / 100)
+		end
 
 		-- Reduce damage with resistance
 		local res = target.resists[type] or 0
