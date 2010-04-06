@@ -122,14 +122,17 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		return {
 			esp = self:addTemporaryValue("esp", {range=rad, all=1}),
+			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("esp", p.esp)
+		self:removeTemporaryValue("mana_regen", p.drain)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Allows to sense the presence of foes in your mind, in a radius of %d.
+		This powerfull spell will continuously drain mana while active.
 		The bonus will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
 	end,
 }

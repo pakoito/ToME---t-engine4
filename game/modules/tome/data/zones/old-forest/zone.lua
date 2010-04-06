@@ -28,6 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
+	ambiant_music = "aasesdeath.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
