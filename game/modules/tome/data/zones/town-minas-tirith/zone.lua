@@ -24,6 +24,7 @@ return {
 	width = 196, height = 80,
 	all_remembered = true,
 	all_lited = true,
+	ambiant_music = "fall.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
