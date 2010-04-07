@@ -84,8 +84,10 @@ function _M:generate(lev, old_lev)
 	local ux, uy = 1, 1
 	local dx, dy = math.floor(self.map.w/2)*2-1-2*(1-math.mod(self.map.w,2)), math.floor(self.map.h/2)*2-1-2*(1-math.mod(self.map.h,2))
 	self.map(ux, uy, Map.TERRAIN, self.up)
+	self.map.room_map[ux][uy].special = "exit"
 	if lev < self.zone.max_level or self.data.force_last_stair then
 		self.map(dx, dy, Map.TERRAIN, self.down)
+		self.map.room_map[dx][dy].special = "exit"
 	end
 	return ux, uy, dx, dy
 end

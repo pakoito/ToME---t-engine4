@@ -41,6 +41,7 @@ function _M:playMusic(name, loop)
 		m = self.loaded_musics[name]
 	end
 	if not m then return end
+	print("[MUSIC] playing", name, m, " :: current ? ", self.playing_music)
 	if self.current_music == name and self.playing_music then return end
 	if self.current_music then
 		core.sound.musicStop()

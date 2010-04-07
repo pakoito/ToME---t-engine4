@@ -35,5 +35,6 @@ function _M:generate()
 	end end
 	-- Always starts at 1, 1
 	self.map(1, 1, Map.TERRAIN, self.up)
+	self.map.room_map[1][1].special = "exit"
 	return 1, 1
 end

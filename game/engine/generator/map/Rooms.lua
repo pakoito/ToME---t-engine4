@@ -77,8 +77,10 @@ function _M:generate(lev, old_lev)
 	local up_spot = table.remove(self.spots, rng.range(1, #self.spots))
 	local down_spot = self.spots[rng.range(1, #self.spots)]
 	self.map(up_spot.x, up_spot.y, Map.TERRAIN, self.up)
+	self.map.room_map[up_spot.x][up_spot.y].special = "exit"
 	if lev < self.zone.max_level then
 		self.map(down_spot.x, down_spot.y, Map.TERRAIN, self.down)
+		self.map.room_map[down_spot.x][down_spot.y].special = "exit"
 	end
 	return up_spot.x, up_spot.y, self.spots
 end

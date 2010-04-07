@@ -144,5 +144,11 @@ function _M:generate(lev, old_lev)
 		if g.define_down then self.gen_map.endx, self.gen_map.endy = dx + g.x, dy + g.y end
 	end
 
+	if self.gen_map.startx and self.gen_map.starty then
+		self.map.room_map[self.gen_map.startx][self.gen_map.starty].special = "exit"
+	end
+	if self.gen_map.startx and self.gen_map.starty then
+		self.map.room_map[self.gen_map.endx][self.gen_map.endy].special = "exit"
+	end
 	return self.gen_map.startx, self.gen_map.starty, self.gen_map.endx, self.gen_map.endy
 end

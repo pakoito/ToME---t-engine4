@@ -60,6 +60,7 @@ static int music_play(lua_State *L)
 	int loop = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 1;
 	int fadein = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
 
+	printf("play music %x %d %d\n", *m, loop, fadein);
 	lua_pushboolean(L, (Mix_FadeInMusic(*m, loop, fadein) == -1) ? FALSE : TRUE);
 	return 1;
 }

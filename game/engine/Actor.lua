@@ -76,7 +76,7 @@ function _M:move(x, y, force)
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.ACTOR)
 	else
-		print("[MOVE] actor moved without a starting position", self.name)
+		print("[MOVE] actor moved without a starting position", self.name, x, y)
 	end
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
@@ -133,12 +133,12 @@ function _M:knockback(srcx, srcy, dist)
 	local lx, ly = l(true)
 	dist = dist - 1
 
-	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move") and dist > 0 do
+	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
 		dist = dist - 1
 		lx, ly = l(true)
 	end
 
-	if game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move") then
+	if game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 		self:move(lx, ly, true)
 	end
 end

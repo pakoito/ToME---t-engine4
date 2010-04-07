@@ -40,9 +40,9 @@ function _M:generateOne()
 	if self.filters then f = self.filters[rng.range(1, #self.filters)] end
 	local o = self.zone:makeEntity(self.level, "trap", f)
 	if o then
-		local x, y = rng.range(0, self.map.w), rng.range(0, self.map.h)
+		local x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
 		local tries = 0
-		while (self.map:checkEntity(x, y, Map.TERRAIN, "block_move") or self.map(x, y, Map.TRAP)) and tries < 100 do
+		while (self.map:checkEntity(x, y, Map.TERRAIN, "block_move") or self.map(x, y, Map.TRAP) or self.map.room_map[x][y].special) and tries < 100 do
 			x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
 			tries = tries + 1
 		end

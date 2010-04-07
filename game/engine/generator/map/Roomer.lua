@@ -268,6 +268,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
 				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
 		end
@@ -279,6 +280,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
 			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map.room_map[ux][uy].special = "exit"
 			break
 		end
 	end
@@ -302,6 +304,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 				local i = rng.range(1, #rooms)
 				self:tunnel(dx, dy, rooms[i].cx, rooms[i].cy, rooms[i].id)
 				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
 		end
@@ -320,6 +323,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 			local i = rng.range(1, #rooms)
 			self:tunnel(ux, uy, rooms[i].cx, rooms[i].cy, rooms[i].id)
 			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map.room_map[ux][uy].special = "exit"
 			break
 		end
 	end
