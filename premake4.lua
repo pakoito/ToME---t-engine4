@@ -31,17 +31,17 @@ solution "TEngine"
 
 configuration "windows"
 	libdirs {
-		"/e/libs/SDL-1.2.14/lib", 
-		"/e/libs/SDL_ttf-2.0.9/lib", 
-		"/e/libs/SDL_image-1.2.10/lib", 
-		"/e/libs/SDL_mixer-1.2.11/lib", 
+		"/e/libs/SDL-1.2.14/lib",
+		"/e/libs/SDL_ttf-2.0.9/lib",
+		"/e/libs/SDL_image-1.2.10/lib",
+		"/e/libs/SDL_mixer-1.2.11/lib",
 		"/e/apps/mingw/lib",
 	}
 	includedirs {
-		"/e/libs/SDL-1.2.14/include/SDL", 
-		"/e/libs/SDL_ttf-2.0.9/include/", 
-		"/e/libs/SDL_image-1.2.10/include/", 
-		"/e/libs/SDL_mixer-1.2.11/include/", 
+		"/e/libs/SDL-1.2.14/include/SDL",
+		"/e/libs/SDL_ttf-2.0.9/include/",
+		"/e/libs/SDL_image-1.2.10/include/",
+		"/e/libs/SDL_mixer-1.2.11/include/",
 		"/e/apps/mingw/include/GL",
 	}
 
@@ -67,7 +67,7 @@ project "TEngine"
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
 configuration "macosx"
-	linkoptions { "-framework SDL", "-framework SDL_gfx", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" }
+	linkoptions { "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" }
 	files { "src/mac/SDL*" }
         links { "IOKit" }
         includedirs {
@@ -76,7 +76,6 @@ configuration "macosx"
               "/Library/Frameworks/SDL_net.framework/Headers",
               "/Library/Frameworks/SDL_image.framework/Headers",
               "/Library/Frameworks/SDL_ttf.framework/Headers",
-              "/Library/Frameworks/SDL_gfx.framework/Headers",
               "/Library/Frameworks/SDL_mixer.framework/Headers"
         }
         defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
