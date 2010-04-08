@@ -26,7 +26,3 @@ if jit then
 else
 	print("LuaVM:", _VERSION)
 end
-
--- Requiring "socketed" instead of "socket" makes sockets work
--- Thsi is due to the way luasocket is embeded statically in TE4
-require "socketed"

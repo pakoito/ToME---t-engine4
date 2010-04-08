@@ -166,7 +166,6 @@ function _M:loadRemoteList(src)
 	local l = lanes.linda()
 
 	function list_handler(src)
-		require "socketed"
 		local http = require "socket.http"
 		local ltn12 = require "ltn12"
 
