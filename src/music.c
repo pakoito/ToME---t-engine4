@@ -30,6 +30,7 @@
 
 static int music_new(lua_State *L)
 {
+	if (no_sound) return 0;
 	const char *name = luaL_checkstring(L, 1);
 
 	Mix_Music **m = (Mix_Music**)lua_newuserdata(L, sizeof(Mix_Music*));
@@ -67,6 +68,7 @@ static int music_play(lua_State *L)
 
 static int music_stop(lua_State *L)
 {
+	if (no_sound) return 0;
 	int fadeout = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 	Mix_FadeOutMusic(fadeout);
 	return 0;
@@ -74,6 +76,7 @@ static int music_stop(lua_State *L)
 
 static int music_volume(lua_State *L)
 {
+	if (no_sound) return 0;
 	int vol = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 100;
 
 	Mix_VolumeMusic(SDL_MIX_MAXVOLUME * vol / 100);
@@ -82,6 +85,7 @@ static int music_volume(lua_State *L)
 
 static int sound_new(lua_State *L)
 {
+	if (no_sound) return 0;
 	const char *name = luaL_checkstring(L, 1);
 
 	Mix_Chunk **m = (Mix_Chunk**)lua_newuserdata(L, sizeof(Mix_Chunk*));
@@ -132,6 +136,7 @@ static int sound_volume(lua_State *L)
 
 static int channel_fadeout(lua_State *L)
 {
+	if (no_sound) return 0;
 	int chan = luaL_checknumber(L, 1);
 	int ms = luaL_checknumber(L, 2);
 
