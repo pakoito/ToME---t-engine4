@@ -23,6 +23,7 @@ require "engine.Autolevel"
 require "engine.interface.ActorInventory"
 require "engine.interface.ActorTemporaryEffects"
 require "engine.interface.ActorLife"
+require "engine.interface.ActorProject"
 require "engine.interface.ActorLevel"
 require "engine.interface.ActorStats"
 require "engine.interface.ActorTalents"
@@ -39,6 +40,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorInventory,
 	engine.interface.ActorTemporaryEffects,
 	engine.interface.ActorLife,
+	engine.interface.ActorProject,
 	engine.interface.ActorLevel,
 	engine.interface.ActorStats,
 	engine.interface.ActorTalents,
@@ -111,6 +113,7 @@ function _M:init(t, no_default)
 	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
 	engine.interface.ActorLife.init(self, t)
+	engine.interface.ActorProject.init(self, t)
 	engine.interface.ActorTalents.init(self, t)
 	engine.interface.ActorResource.init(self, t)
 	engine.interface.ActorStats.init(self, t)
