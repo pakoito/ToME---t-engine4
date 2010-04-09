@@ -34,6 +34,7 @@ newBirthDescriptor{
 --			Orc = function() return config.settings.tome.allow_build.evil and "allow" or "never" end,
 --			Troll = function() return config.settings.tome.allow_build.evil and "allow" or "never" end,
 --			Spider = function() return config.settings.tome.allow_build.spider and "allow" or "never" end,
+			Undead = function() return config.settings.tome.allow_build.undead and "allow" or "never" end,
 		},
 
 		class =
@@ -74,6 +75,7 @@ load("/data/birth/races/dwarf.lua")
 load("/data/birth/races/orc.lua")
 load("/data/birth/races/troll.lua")
 --load("/data/birth/races/spider.lua")
+load("/data/birth/races/undead.lua")
 
 -- Sexes
 load("/data/birth/sexes.lua")
