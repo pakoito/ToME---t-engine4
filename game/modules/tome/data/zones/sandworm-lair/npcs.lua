@@ -83,6 +83,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
 
 	on_die = function(self, who)
+		who:resolveSource():grantQuest("starter-zones")
 		who:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "sandworm-lair")
 	end,
 }
