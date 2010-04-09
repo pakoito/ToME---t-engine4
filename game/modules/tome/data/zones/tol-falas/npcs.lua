@@ -76,6 +76,7 @@ newEntity{ define_as = "THE_MASTER",
 
 	on_die = function(self, who)
 		world:gainAchievement("VAMPIRE_CRUSHER", who:resolveSource())
+		who:resolveSource():grantQuest("tol-falas")
 		who:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
 	end,
 }
