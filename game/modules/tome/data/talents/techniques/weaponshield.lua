@@ -178,8 +178,8 @@ newTalent{
 		return {
 			atk = self:addTemporaryValue("combat_dam", -10),
 			dam = self:addTemporaryValue("combat_atk", -10),
-			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
-			armor = self:addTemporaryValue("combat_armor", 5 + self:getCun(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
+			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
+			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 			stun = stun,
 			knock = knock
 		}
@@ -196,8 +196,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
 		At level 5 it also makes you immune to stuns and knockbacks.]]):format(
-		5 + self:getDex(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
-		5 + self:getCun(4) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
 		)
 	end,
 }

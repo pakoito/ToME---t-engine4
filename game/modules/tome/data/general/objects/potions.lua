@@ -159,12 +159,67 @@ newEntity{ base = "BASE_POTION",
 	cost = 3,
 
 	use_simple = { name="cures poison", use = function(self, who)
-		if who:hasEffect(who.EFF_POISONED) then
-			who:removeEffect(who.EFF_POISONED)
-			game.logSeen(who, "%s cure %s from poisoning!", self:getName():capitalize(), who.name)
-			return "destroy", true
+		local target = who
+		local effs = {}
+		local known = false
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.type == "poison" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
 		end
-		return "destroy", false
+
+		for i = 1, 2 + math.floor(who:getMag() / 10) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+				known = true
+			end
+		end
+		if known then
+			game.logSeen(who, "%s cure %s from poisons!", self:getName():capitalize(), who.name)
+		end
+		return "destroy", known
+	end}
+}
+
+newEntity{ base = "BASE_POTION",
+	name = "potion of cure disease",
+	color = colors.LIGHT_GREEN,
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 3,
+
+	use_simple = { name="cures poison", use = function(self, who)
+		local target = who
+		local effs = {}
+		local known = false
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.type == "disease" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, 2 + math.floor(who:getMag() / 10) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+				known = true
+			end
+		end
+		if known then
+			game.logSeen(who, "%s cure %s from diseases!", self:getName():capitalize(), who.name)
+		end
+		return "destroy", known
 	end}
 }
 

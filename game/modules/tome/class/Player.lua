@@ -311,13 +311,22 @@ function _M:doTakeoff(inven, item, o)
 	self.changed = true
 end
 
+function _M:getEncumberTitleUpdator(title)
+	return function()
+		local enc, max = self:getEncumbrance(), self:getMaxEncumbrance()
+		return ("%s - Encumbered %d/%d"):format(title, enc, max)
+	end
+end
+
 function _M:playerPickup()
 	-- If 2 or more objects, display a pickup dialog, otehrwise just picks up
 	if game.level.map:getObject(self.x, self.y, 2) then
-		self:showPickupFloor(nil, nil, function(o, item)
+		local titleupdator = self:getEncumberTitleUpdator("Pickup")
+		local d d = self:showPickupFloor(titleupdator(), nil, function(o, item)
 			self:pickupFloor(item, true)
 			self:sortInven()
 			self.changed = true
+			d.title = titleupdator()
 		end)
 	else
 		self:pickupFloor(1, true)
@@ -329,14 +338,16 @@ end
 
 function _M:playerDrop()
 	local inven = self:getInven(self.INVEN_INVEN)
-	self:showInventory("Drop object", inven, nil, function(o, item)
+	local titleupdator = self:getEncumberTitleUpdator("Drop object")
+	self:showInventory(titleupdator(), inven, nil, function(o, item)
 		self:doDrop(inven, item)
 	end)
 end
 
 function _M:playerWear()
 	local inven = self:getInven(self.INVEN_INVEN)
-	self:showInventory("Wield/wear object", inven, function(o)
+	local titleupdator = self:getEncumberTitleUpdator("Wield/wear object")
+	self:showInventory(titleupdator(), inven, function(o)
 		return o:wornInven() and true or false
 	end, function(o, item)
 		self:doWear(inven, item, o)
@@ -344,7 +355,8 @@ function _M:playerWear()
 end
 
 function _M:playerTakeoff()
-	self:showEquipment("Take off object", nil, function(o, inven, item)
+	local titleupdator = self:getEncumberTitleUpdator("Take off object")
+	self:showEquipment(titleupdator(), nil, function(o, inven, item)
 		self:doTakeoff(inven, item, o)
 	end)
 end
@@ -373,7 +385,8 @@ function _M:playerUseItem(object, item)
 
 	if object and item then return use_fct(object, item) end
 
-	self:showInventory(nil, self:getInven(self.INVEN_INVEN),
+	local titleupdator = self:getEncumberTitleUpdator("Use object")
+	self:showInventory(titleupdator(), self:getInven(self.INVEN_INVEN),
 		function(o)
 			return o:canUseObject()
 		end,

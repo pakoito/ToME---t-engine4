@@ -112,7 +112,7 @@ function _M:drawDialog(s)
 
 	h = h + self.font_h
 	for i, t in ipairs(DamageType.dam_def) do
-		if self.actor.inc_damage[DamageType[t.type]] then
+		if self.actor.inc_damage[DamageType[t.type]] and self.actor.inc_damage[DamageType[t.type]] ~= 0 then
 			s:drawColorString(self.font, ("%s damage: #00ff00#%3d%%"):format(t.name:capitalize(), self.actor.inc_damage[DamageType[t.type]]), w, h, 255, 255, 255) h = h + self.font_h
 		end
 	end
@@ -131,7 +131,7 @@ function _M:drawDialog(s)
 
 	h = h + self.font_h
 	for i, t in ipairs(DamageType.dam_def) do
-		if self.actor.resists[DamageType[t.type]] then
+		if self.actor.resists[DamageType[t.type]] and self.actor.resists[DamageType[t.type]] ~= 0 then
 			s:drawColorString(self.font, ("%s Resist: #00ff00#%3d%%"):format(t.name:capitalize(), self.actor.resists[DamageType[t.type]]), w, h, 255, 255, 255) h = h + self.font_h
 		end
 	end

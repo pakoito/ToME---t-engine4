@@ -508,16 +508,16 @@ function _M:setupCommands()
 		end),
 		SHOW_INVENTORY = function()
 			local d
-			d = self.player:showEquipInven(nil, nil, function(o, inven, item)
+			local titleupdator = self.player:getEncumberTitleUpdator("Inventory")
+			d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item)
 				local ud = require("mod.dialogs.UseItemDialog").new(self.player, o, item, inven, function()
 					d:generateList()
+					d.title = titleupdator()
 				end)
 				self:registerDialog(ud)
 			end)
 		end,
-		SHOW_EQUIPMENT = function()
-			self.player:showEquipment(nil, nil, function() end)
-		end,
+		SHOW_EQUIPMENT = "SHOW_INVENTORY",
 		WEAR_ITEM = function()
 			self.player:playerWear()
 		end,
