@@ -361,10 +361,10 @@ function _M:playerTakeoff()
 	end)
 end
 
-function _M:playerUseItem(object, item)
+function _M:playerUseItem(object, item, inven)
 	if game.zone.short_name == "wilderness" then game.logPlayer(self, "You can not use items on the world map.") return end
 
-	local use_fct = function(o, item)
+	local use_fct = function(o, item, inven)
 		self.changed = true
 		local ret, no_id = o:use(self)
 		if not no_id then
@@ -374,19 +374,20 @@ function _M:playerUseItem(object, item)
 			if o.multicharge and o.multicharge > 1 then
 				o.multicharge = o.multicharge - 1
 			else
-				self:removeObject(self:getInven(self.INVEN_INVEN), item)
+				self:removeObject(self:getInven(inven), item)
 				game.log("You have no more %s", o:getName{no_count=true, do_color=true})
-				self:sortInven()
+				self:sortInven(self:getInven(inven))
 			end
+			return true
 		end
 		self:breakStealth()
 		self.changed = true
 	end
 
-	if object and item then return use_fct(object, item) end
+	if object and item then return use_fct(object, item, inven) end
 
 	local titleupdator = self:getEncumberTitleUpdator("Use object")
-	self:showInventory(titleupdator(), self:getInven(self.INVEN_INVEN),
+	self:showEquipInven(titleupdator(),
 		function(o)
 			return o:canUseObject()
 		end,

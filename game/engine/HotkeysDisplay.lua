@@ -85,7 +85,7 @@ function _M:display()
 				color = {0,255,0}
 			end
 		elseif ts[3] == "inventory" then
-			local o = a:findInInventory(a:getInven("INVEN"), ts[1])
+			local o = a:findInAllInventories(ts[1])
 			local cnt = 0
 			if o then cnt = o:getNumber() end
 			txt = ("%s (%d)"):format(ts[1], cnt)
