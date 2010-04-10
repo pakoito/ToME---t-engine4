@@ -30,7 +30,7 @@ newEntity{ base = "BASE_HELM",
 	cost = 20,
 
 	wielder = {
-		combat_armor = 3,
+		combat_armor = 4,
 		fatigue = 8,
 		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_CON] = 3, [Stats.STAT_WIL] = 4 },
 		combat_physresist = 7,
