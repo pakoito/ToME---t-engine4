@@ -73,6 +73,7 @@ function _M:init(actor, order, at_end)
 		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list); self.changed = true end,
 		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list); self.changed = true end,
 		_RETURN = function() self:next() end,
+		_BACKSPACE = function() self:prev() end,
 	}
 	self:mouseZones{
 		{ x=2, y=25, w=350, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
@@ -110,6 +111,17 @@ function _M:selectType(type)
 	end
 	self.sel = 1
 	self.current_type = type
+end
+
+function _M:prev()
+	if not self.list then return end
+	self.changed = true
+	table.remove(self.descriptors)
+	self.cur_order = self.cur_order - 1
+	self:selectType(self.order[self.cur_order])
+	if #self.list == 1 then
+		self:prev()
+	end
 end
 
 function _M:next()
