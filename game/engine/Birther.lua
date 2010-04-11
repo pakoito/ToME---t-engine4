@@ -81,7 +81,7 @@ function _M:init(actor, order, at_end)
 			if ty < self.font_h*#self.list then
 				self.sel = 1 + math.floor(ty / self.font_h)
 				if button == "left" then self:next()
-				elseif button == "right" then self:learn(false)
+				elseif button == "right" then self:prev()
 				end
 			end
 		end },
@@ -114,6 +114,10 @@ function _M:selectType(type)
 end
 
 function _M:prev()
+	if self.cur_order == 1 then
+		if #self.list == 1 then self:next() end
+		return
+	end
 	if not self.list then return end
 	self.changed = true
 	table.remove(self.descriptors)
@@ -199,8 +203,8 @@ function _M:drawDialog(s)
 
 	-- Description part
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
-	local birthhelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to increase stat; #00FF00#left key#FFFFFF# to decrease a stat.
-Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF# to decrease a stat.
+	local birthhelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select an option; #00FF00#Enter#FFFFFF# to accept; #00FF00#Backspace#FFFFFF# to go back.
+Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go back.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 	for i = 1, #birthhelp do
 		s:drawColorString(self.font, birthhelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
