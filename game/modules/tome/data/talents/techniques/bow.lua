@@ -71,7 +71,7 @@ newTalent{
 	type = {"technique/archery-bow", 4},
 	no_energy = true,
 	points = 5,
-	cooldown = 20,
+	cooldown = 12,
 	stamina = 35,
 	require = techs_dex_req4,
 	range = 20,
