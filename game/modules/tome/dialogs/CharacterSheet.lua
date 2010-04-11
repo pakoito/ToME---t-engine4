@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.Dialog"
 local DamageType = require "engine.DamageType"
 local Talents = require "engine.interface.ActorTalents"
 
@@ -26,9 +26,15 @@ module(..., package.seeall, class.inherit(engine.Dialog))
 
 function _M:init(actor)
 	self.actor = actor
-	engine.Dialog.init(self, "Character Sheet: "..self.actor.name, 800, 400, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	engine.Dialog.init(self, "Character Sheet: "..self.actor.name.." (Press 'd' to save)", 800, 400, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
 
-	self:keyCommands(nil, {
+	self:keyCommands({
+		__TEXTINPUT = function(c)
+			if c == 'd' or c == 'D' then
+				self:dump()
+			end
+		end,
+	}, {
 		ACCEPT = "EXIT",
 		EXIT = function()
 			game:unregisterDialog(self)
@@ -107,7 +113,7 @@ function _M:drawDialog(s)
 	end
 	h = h + self.font_h
 	s:drawColorString(self.font, ("Spellpower:  #00ff00#%3d"):format(game.player:combatSpellpower()), w, h, 255, 255, 255) h = h + self.font_h
-	s:drawColorString(self.font, ("Spell Crit:  #00ff00#%3d"):format(game.player:combatSpellCrit()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, ("Spell Crit:  #00ff00#%3d%%"):format(game.player:combatSpellCrit()), w, h, 255, 255, 255) h = h + self.font_h
 	s:drawColorString(self.font, ("Spell Speed: #00ff00#%3d"):format(game.player:combatSpellSpeed()), w, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
@@ -138,7 +144,7 @@ function _M:drawDialog(s)
 
 	h = 0
 	w = 600
-	s:drawColorString(self.font, ("#LIGHT_BLUE#Current effects:"):format(game.player.fatigue), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, "#LIGHT_BLUE#Current effects:", w, h, 255, 255, 255) h = h + self.font_h
 	for tid, act in pairs(game.player.sustain_talents) do
 		if act then s:drawColorString(self.font, ("#LIGHT_GREEN#%s"):format(game.player:getTalentFromId(tid).name), w, h, 255, 255, 255) h = h + self.font_h end
 	end
@@ -152,4 +158,122 @@ function _M:drawDialog(s)
 	end
 
 	self.changed = false
+end
+
+function _M:dump()
+	fs.mkdir("/character-dumps")
+	local file = "/character-dumps/"..(game.player.name:gsub("[^a-zA-Z0-9_-.]", "_")).."-"..os.date("%Y%m%d-%H%M%S")..".txt"
+	local fff = fs.open(file, "w")
+	local nl = function(s) fff:write(s or "") fff:write("\n") end
+	local nnl = function(s) fff:write(s or "") end
+
+	nl("Sex:   "..game.player.descriptor.sex)
+	nl("Race:  "..game.player.descriptor.subrace)
+	nl("Class: "..game.player.descriptor.subclass)
+	nl("Level: "..game.player.level)
+
+	nl()
+	local cur_exp, max_exp = game.player.exp, game.player:getExpChart(game.player.level+1)
+	nl(("Exp:  %2d%%"):format(100 * cur_exp / max_exp))
+	nl(("Gold: %0.2f"):format(game.player.money))
+
+	nl()
+	nl(("Life:    %d/%d"):format(game.player.life, game.player.max_life))
+	if game.player:knowTalent(game.player.T_STAMINA_POOL) then
+		nl(("Stamina: %d/%d"):format(game.player:getStamina(), game.player.max_stamina))
+	end
+	if game.player:knowTalent(game.player.T_MANA_POOL) then
+		nl(("Mana:    %d/%d"):format(game.player:getMana(), game.player.max_mana))
+	end
+	if game.player:knowTalent(game.player.T_SOUL_POOL) then
+		nl(("Soul:    %d/%d"):format(game.player:getSoul(), game.player.max_soul))
+	end
+	if game.player:knowTalent(game.player.T_EQUILIBRIUM_POOL) then
+		nl(("Equi:    %d"):format(game.player:getEquilibrium()))
+	end
+
+	nl()
+	nl(("STR: %3d"):format(game.player:getStr()))
+	nl(("DEX: %3d"):format(game.player:getDex()))
+	nl(("MAG: %3d"):format(game.player:getMag()))
+	nl(("WIL: %3d"):format(game.player:getWil()))
+	nl(("CUN: %3d"):format(game.player:getCun()))
+	nl(("CON: %3d"):format(game.player:getCon()))
+
+	-- All weapons in main hands
+	if self.actor:getInven(self.actor.INVEN_MAINHAND) then
+		for i, o in ipairs(self.actor:getInven(self.actor.INVEN_MAINHAND)) do
+			if o.combat then
+				nl()
+				nl(("Attack(Main Hand): %3d"):format(game.player:combatAttack(o.combat)))
+				nl(("Damage(Main Hand): %3d"):format(game.player:combatDamage(o.combat)))
+				nl(("APR   (Main Hand): %3d"):format(game.player:combatAPR(o.combat)))
+				nl(("Crit  (Main Hand): %3d%%"):format(game.player:combatCrit(o.combat)))
+				nl(("Speed (Main Hand): %0.2f"):format(game.player:combatSpeed(o.combat)))
+			end
+		end
+	end
+
+	-- All wpeaons in off hands
+	-- Offhand atatcks are with a damage penality, taht can be reduced by talents
+	if self.actor:getInven(self.actor.INVEN_OFFHAND) then
+		local offmult = (mult or 1) / 2
+		if self.actor:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
+			offmult = (mult or 1) / (2 - (self.actor:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
+		end
+		for i, o in ipairs(self.actor:getInven(self.actor.INVEN_OFFHAND)) do
+			if o.combat then
+				nl()
+				nl(("Attack (Off Hand): %3d"):format(game.player:combatAttack(o.combat)))
+				nl(("Damage (Off Hand): %3d"):format(game.player:combatDamage(o.combat) * offmult))
+				nl(("APR    (Off Hand): %3d"):format(game.player:combatAPR(o.combat)))
+				nl(("Crit   (Off Hand): %3d%%"):format(game.player:combatCrit(o.combat)))
+				nl(("Speed  (Off Hand): %0.2f"):format(game.player:combatSpeed(o.combat)))
+			end
+		end
+	end
+
+	nl()
+	nl(("Spellpower:  %3d"):format(game.player:combatSpellpower()))
+	nl(("Spell Crit:  %3d%%"):format(game.player:combatSpellCrit()))
+	nl(("Spell Speed: %3d"):format(game.player:combatSpellSpeed()))
+
+	nl()
+	for i, t in ipairs(DamageType.dam_def) do
+		if self.actor.inc_damage[DamageType[t.type]] and self.actor.inc_damage[DamageType[t.type]] ~= 0 then
+			nl(("%s damage: %3d%%"):format(t.name:capitalize(), self.actor.inc_damage[DamageType[t.type]]))
+		end
+	end
+
+	nl()
+	nl(("Fatigue:        %3d%%"):format(game.player.fatigue))
+	nl(("Armor:          %3d"):format(game.player:combatArmor()))
+	nl(("Defence:        %3d"):format(game.player:combatDefense()))
+	nl(("Ranged Defence: %3d"):format(game.player:combatDefenseRanged()))
+
+	nl()
+	nl(("Physical Resist: %3d"):format(game.player:combatPhysicalResist()))
+	nl(("Spell Resist:    %3d"):format(game.player:combatSpellResist()))
+	nl(("Mental Resist:   %3d"):format(game.player:combatMentalResist()))
+
+	nl()
+	for i, t in ipairs(DamageType.dam_def) do
+		if self.actor.resists[DamageType[t.type]] and self.actor.resists[DamageType[t.type]] ~= 0 then
+			nl(("%s Resist: %3d%%"):format(t.name:capitalize(), self.actor.resists[DamageType[t.type]]))
+		end
+	end
+
+	nl()
+	local most_kill, most_kill_max = nil, 0
+	local total_kill = 0
+	for name, nb in pairs(game.player.all_kills) do
+		if nb > most_kill_max then most_kill_max = nb most_kill = name end
+		total_kill = total_kill + nb
+	end
+	nl(("Number of NPC killed: %s"):format(total_kill))
+	nl(("Most killed NPC: %s (%d)"):format(most_kill, most_kill_max))
+
+	fff:close()
+
+	Dialog:simplePopup("Character dump complete", "File: "..fs.getRealPath(file))
 end

@@ -374,6 +374,14 @@ function _M:die(src)
 		world:gainAchievement("PEST_CONTROL", src:resolveSource(), self)
 	end
 
+	-- Record kills
+	if src and src:resolveSource().player then
+		local p = src:resolveSource()
+		p.all_kills = p.all_kills or {}
+		p.all_kills[self.name] = p.all_kills[self.name] or 0
+		p.all_kills[self.name] = p.all_kills[self.name] + 1
+	end
+
 	return true
 end
 
