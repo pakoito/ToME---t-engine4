@@ -54,6 +54,12 @@ local function checkDir(a, dir, dist)
 	local x, y = a.x + dx * dist, a.y + dy * dist
 	return game.level.map:checkAllEntities(x, y, "block_move", a) and true or false
 end
+local function isEdge(a, dir, dist)
+	dist = dist or 1
+	local dx, dy = dir_to_coord[dir][1], dir_to_coord[dir][2]
+	local x, y = a.x + dx * dist, a.y + dy * dist
+	return not game.level.map:isBound(x, y) and true or false
+end
 
 --- Initializes running
 -- We check the direction sides to know if we are in a tunnel, along a wall or in open space.
@@ -93,7 +99,9 @@ function _M:runStep()
 		self:runStop(msg)
 		return false
 	else
-		self:moveDir(self.running.dir)
+		if isEdge(self, self.running.dir) then self:runStop()
+		else self:moveDir(self.running.dir) end
+
 		if not self.running then return false end
 		self.running.cnt = self.running.cnt + 1
 		if self.running.newdir then
