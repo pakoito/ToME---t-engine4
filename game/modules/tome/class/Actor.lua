@@ -507,6 +507,7 @@ function _M:learnTalent(t_id, force, nb)
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) then self:learnTalent(self.T_MANA_POOL, true) end
 	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL, true) end
 	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) then self:learnTalent(self.T_STAMINA_POOL, true) end
+	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) then self:learnTalent(self.T_VIM_POOL, true) end
 
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then self:learnTalent(self.T_SHOOT, true) end
@@ -688,7 +689,7 @@ function _M:getTalentFullDescription(t)
 	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.mana or t.sustain_mana) end
 	if t.stamina or t.sustain_stamina then d[#d+1] = "#6fff83#Stamina cost: #ffcc80#"..(t.stamina or t.sustain_stamina) end
 	if t.equilibrium or t.sustain_equilibrium then d[#d+1] = "#6fff83#Equilibrium cost: #00ff74#"..(t.equilibrium or t.sustain_equilibrium) end
-	if t.soul or t.sustain_soul then d[#d+1] = "#6fff83#Soul cost: #888888#"..(t.soul or t.sustain_soul) end
+	if t.vim or t.sustain_vim then d[#d+1] = "#6fff83#Vim cost: #888888#"..(t.vim or t.sustain_vim) end
 	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
 	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
 	end

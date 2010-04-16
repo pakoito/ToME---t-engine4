@@ -200,7 +200,7 @@ end
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
 	local Pcolorname = (lpeg.R"AZ" + "_")^3
-	local Pcode = (lpeg.R"az" + lpeg.R"AZ" + lpeg.R"09")
+	local Pcode = (lpeg.R"az" + lpeg.R"09" + lpeg.R"AZ")
 	local Pcolorcode = Pcode * Pcode
 
 	local list = str:split("#" * (Pcolorname + (Pcolorcode * Pcolorcode * Pcolorcode)) * "#", true)
@@ -209,6 +209,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 	b = b or 255
 	local oldr, oldg, oldb = r, g, b
 	for i, v in ipairs(list) do
+		print("LSIT", i, v)
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		if nr and ng and nb then
@@ -223,6 +224,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 			end
 		else
 			local w, h = font:size(v)
+		print("DRAW", v,r,g,b)
 			s:drawString(font, v, x, y, r, g, b)
 			x = x + w
 		end

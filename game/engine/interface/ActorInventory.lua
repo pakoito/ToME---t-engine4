@@ -281,6 +281,7 @@ function _M:wearObject(o, replace, vocal)
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		-- Warning: assume there is now space
 		self:addObject(self:getInven(o.offslot), o)
+		return false
 	elseif replace then
 		local ro = self:removeObject(inven, 1, true)
 

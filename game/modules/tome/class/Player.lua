@@ -290,12 +290,12 @@ function _M:doDrop(inven, item)
 end
 
 function _M:doWear(inven, item, o)
-	self:removeObject(self.INVEN_INVEN, item, true)
+	self:removeObject(inven, item, true)
 	local ro = self:wearObject(o, true, true)
 	if ro then
-		if type(ro) == "table" then self:addObject(self.INVEN_INVEN, ro) end
-	else
-		self:addObject(self.INVEN_INVEN, o)
+		if type(ro) == "table" then self:addObject(inven, ro) end
+	elseif ro then
+		self:addObject(inven, o)
 	end
 	self:sortInven()
 	self:useEnergy()

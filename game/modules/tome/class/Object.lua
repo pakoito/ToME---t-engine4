@@ -103,9 +103,9 @@ end
 
 --- Gets the color in which to display the object in lists
 function _M:getDisplayColor()
-	if not self:isIdentified() then return {255, 255, 255}, "#FFFFFF#" end
+	if not self:isIdentified() then return {180, 180, 180}, "#B4B4B4#" end
 	if self.egoed then return {0, 255, 128}, "#00FF80#"
-	elseif self.unique then return {255, 255, 0}, "#FFFF00#"
+	elseif self.unique then return {255, 255, 0}, "#1FFF00#"
 	else return {255, 255, 255}, "#FFFFFF#"
 	end
 end
