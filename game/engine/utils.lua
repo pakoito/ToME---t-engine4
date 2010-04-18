@@ -209,7 +209,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 	b = b or 255
 	local oldr, oldg, oldb = r, g, b
 	for i, v in ipairs(list) do
-		print("LSIT", i, v)
+--		print("LSIT", i, v)
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		if nr and ng and nb then
@@ -224,7 +224,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 			end
 		else
 			local w, h = font:size(v)
-		print("DRAW", v,r,g,b)
+--		print("DRAW", v,r,g,b)
 			s:drawString(font, v, x, y, r, g, b)
 			x = x + w
 		end
