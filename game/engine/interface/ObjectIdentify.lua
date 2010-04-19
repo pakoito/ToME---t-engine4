@@ -59,13 +59,15 @@ end
 
 --- Identify the object
 function _M:identify(id)
-	self.identified = id
-	if self.id_by_type then
-		game.object_known_types = game.object_known_types or {}
-		game.object_known_types[self.type] = game.object_known_types[self.type] or {}
-		game.object_known_types[self.type][self.subtype] = game.object_known_types[self.type][self.subtype] or {}
-		game.object_known_types[self.type][self.subtype][self.name] = id
-	end
+	self:forAllStack(function(so)
+		so.identified = id
+		if so.id_by_type then
+			game.object_known_types = game.object_known_types or {}
+			game.object_known_types[so.type] = game.object_known_types[so.type] or {}
+			game.object_known_types[so.type][so.subtype] = game.object_known_types[so.type][so.subtype] or {}
+			game.object_known_types[so.type][so.subtype][so.name] = id
+		end
+	end)
 end
 
 --- Get the unided name

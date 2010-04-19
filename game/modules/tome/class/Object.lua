@@ -144,7 +144,12 @@ end
 --- Gets the full desc of the object
 function _M:getDesc()
 	local _, c = self:getDisplayColor()
-	local desc = { c..self:getName().."#FFFFFF#", self.desc }
+	local desc
+	if not self:isIdentified() then
+		desc = { c..self:getName().."#FFFFFF#" }
+	else
+		desc = { c..self:getName().."#FFFFFF#", self.desc }
+	end
 
 	local reqs = self:getRequirementDesc(game.player)
 	if reqs then
