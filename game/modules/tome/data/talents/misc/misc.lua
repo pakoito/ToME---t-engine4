@@ -32,9 +32,9 @@ newTalent{
 	hide = true,
 }
 newTalent{
-	name = "Soul Pool",
+	name = "Vim Pool",
 	type = {"base/class", 1},
-	info = "Allows you to have a soul pool. Souls are used by necromantic spells.",
+	info = "Allows you to have a vim pool. Vim is used by corruptions.",
 	mode = "passive",
 	hide = true,
 }

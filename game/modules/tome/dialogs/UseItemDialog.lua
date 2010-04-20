@@ -65,7 +65,7 @@ function _M:use()
 
 	local act = self.list[self.sel].action
 
-	if act == "use" then self.actor:playerUseItem(self.object, self.item)
+	if act == "use" then self.actor:playerUseItem(self.object, self.item, self.inven)
 	elseif act == "drop" then self.actor:doDrop(self.inven, self.item)
 	elseif act == "wear" then self.actor:doWear(self.inven, self.item, self.object)
 	elseif act == "takeoff" then self.actor:doTakeoff(self.inven, self.item, self.object)
