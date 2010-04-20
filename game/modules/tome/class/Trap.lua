@@ -19,16 +19,19 @@
 
 require "engine.class"
 require "engine.Trap"
+require "engine.interface.ActorProject"
 require "engine.interface.ObjectIdentify"
 
 module(..., package.seeall, class.inherit(
 	engine.Trap,
-	engine.interface.ObjectIdentify
+	engine.interface.ObjectIdentify,
+	engine.interface.ActorProject
 ))
 
 function _M:init(t, no_default)
 	engine.Trap.init(self, t, no_default)
 	engine.interface.ObjectIdentify.init(self, t)
+	engine.interface.ActorProject.init(self, t)
 end
 
 --- Gets the full name of the object
@@ -70,4 +73,12 @@ end
 function _M:canTrigger(x, y, who)
 	if self.safe_levitation and who:attr("levitation") then return false end
 	return true
+end
+
+function _M:resolveSource()
+	if self.summoner_gain_exp and self.summoner then
+		return self.summoner:resolveSource()
+	else
+		return self
+	end
 end

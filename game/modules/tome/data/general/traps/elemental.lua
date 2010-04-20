@@ -21,7 +21,7 @@ newEntity{ define_as = "TRAP_ELEMENTAL",
 	type = "elemental", id_by_type=true, unided_name = "trap",
 	display = '^',
 	triggered = function(self, x, y, who)
-		(self.src or who):project({type="hit"}, x, y, self.damtype, self.dam, self.particles and {type=self.particles})
+		self:project({type="hit",x=x,y=y}, x, y, self.damtype, self.dam, self.particles and {type=self.particles})
 		return true
 	end,
 }
@@ -29,7 +29,7 @@ newEntity{ define_as = "TRAP_ELEMENTAL_BLAST",
 	type = "elemental", id_by_type=true, unided_name = "trap",
 	display = '^',
 	triggered = function(self, x, y, who)
-		(self.src or who):project({type="ball", radius=self.radius or 2}, x, y, self.damtype, self.dam, self.particles and {type=self.particles})
+		self:project({type="ball",x=x,y=y, radius=self.radius or 2}, x, y, self.damtype, self.dam, self.particles and {type=self.particles})
 		return true
 	end,
 }

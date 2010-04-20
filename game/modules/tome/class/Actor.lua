@@ -346,7 +346,7 @@ function _M:die(src)
 	engine.interface.ActorLife.die(self, src)
 
 	-- Gives the killer some exp for the kill
-	if src then
+	if src and src:resolveSource().gainExp then
 		src:resolveSource():gainExp(self:worthExp(src:resolveSource()))
 	end
 	-- Do we get a blooooooody death ?
@@ -363,20 +363,18 @@ function _M:die(src)
 	self.inven = {}
 
 	-- Give stamina back
-	if src and src:knowTalent(src.T_UNENDING_FRENZY) then
+	if src and src.knowTalent and src:knowTalent(src.T_UNENDING_FRENZY) then
 		src:incStamina(src:getTalentLevel(src.T_UNENDING_FRENZY) * 2)
 	end
 
-	-- Achievements
 	if src and src:resolveSource().player then
-		if src:resolveSource().life == 1 then world:gainAchievement("THAT_WAS_CLOSE", src:resolveSource()) end
-		world:gainAchievement("EXTERMINATOR", src:resolveSource(), self)
-		world:gainAchievement("PEST_CONTROL", src:resolveSource(), self)
-	end
-
-	-- Record kills
-	if src and src:resolveSource().player then
+		-- Achievements
 		local p = src:resolveSource()
+		if p.life == 1 then world:gainAchievement("THAT_WAS_CLOSE", p) end
+		world:gainAchievement("EXTERMINATOR", p, self)
+		world:gainAchievement("PEST_CONTROL", p, self)
+
+		-- Record kills
 		p.all_kills = p.all_kills or {}
 		p.all_kills[self.name] = p.all_kills[self.name] or 0
 		p.all_kills[self.name] = p.all_kills[self.name] + 1
