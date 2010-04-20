@@ -41,13 +41,34 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = function(self, t) return math.floor(5 + self:getTalentLevel(t) * 1.2) end,
 	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+
+		local l = line.new(self.x, self.y, x, y)
+		local lx, ly = l()
+		local tx, ty = lx, ly
+		lx, ly = l()
+		while lx and ly do
+			if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move", self) then break end
+			tx, ty = lx, ly
+			lx, ly = l()
+		end
+
+		-- Find space
+		local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+		if not fx then
+			return
+		end
+		self:move(fx, fy, true)
+
 		return true
 	end,
 	info = function(self, t)
 		return ([[Leap toward your target.]])
-
 	end,
 }
 
@@ -62,10 +83,25 @@ newTalent{
 	},
 	range = 1,
 	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hitted = self:attackTarget(target, nil, 0.2 + self:getTalentLevel(t) / 12, true)
+
+		if hitted then
+			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 3 + math.ceil(self:getTalentLevel(t)), {})
+			else
+				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+			end
+		end
+
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gnaw your target, trying to stun it.]])
+		return ([[Gnaw your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits the target is stunned for %d turns.]]):
+		format(100 * (0.2 + self:getTalentLevel(t) / 12), 3 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
 
