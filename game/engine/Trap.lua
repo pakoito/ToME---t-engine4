@@ -99,7 +99,7 @@ function _M:trigger(x, y, who)
 		end
 	end
 
-	if not self:canTrigger() then return end
+	if not self:canTrigger(x, y, who) then return end
 
 	if not self.message then
 		game.logSeen(who, "%s triggers a trap (%s)!", who.name:capitalize(), self:getName())
