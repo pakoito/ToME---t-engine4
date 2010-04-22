@@ -83,6 +83,7 @@ function _M:setKeyHandling()
 			self:click()
 		end,
 	}
+	game.key = self.key
 end
 
 function _M:setMouseHandling()
@@ -92,6 +93,7 @@ function _M:setMouseHandling()
 	for i, b in ipairs(self.list) do
 		self.mouse:registerZone(self.display_x, self.display_y + (i - 1) * (b.h + self.separator), b.w, b.h, b.mouse_over)
 	end
+	game.mouse = self.mouse
 end
 
 function _M:select(i, offset)

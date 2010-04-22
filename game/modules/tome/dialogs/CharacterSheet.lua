@@ -264,9 +264,9 @@ function _M:dump()
 	end
 
 	nl()
-	local most_kill, most_kill_max = nil, 0
+	local most_kill, most_kill_max = "none", 0
 	local total_kill = 0
-	for name, nb in pairs(game.player.all_kills) do
+	for name, nb in pairs(game.player.all_kills or {}) do
 		if nb > most_kill_max then most_kill_max = nb most_kill = name end
 		total_kill = total_kill + nb
 	end

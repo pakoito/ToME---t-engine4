@@ -120,6 +120,7 @@ function _M:use()
 		save:close()
 		util.showMainMenu()
 	elseif act == "dump" then
+		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
 	elseif act == "cheat" then
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER !")
 
