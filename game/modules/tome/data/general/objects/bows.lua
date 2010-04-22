@@ -23,10 +23,9 @@ newEntity{
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="longbow",
 	display = "}", color=colors.UMBER,
-	sound = "actions/arrow", sound_miss = "actions/arrow",
 	encumber = 4,
 	rarity = 5,
-	combat = { talented = "bow", damrange = 1.4},
+	combat = { talented = "bow", damrange = 1.4, sound = "actions/arrow", sound_miss = "actions/arrow",},
 	archery = "bow",
 	desc = [[Longbows are used to shoot arrows at your foes.]],
 }

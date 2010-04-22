@@ -22,10 +22,9 @@ newEntity{
 	slot = "MAINHAND",
 	type = "weapon", subtype="sling",
 	display = "}", color=colors.UMBER,
-	sound = "actions/arrow", sound_miss = "actions/arrow",
 	encumber = 4,
 	rarity = 5,
-	combat = { talented = "sling", },
+	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },
 	archery = "sling",
 	desc = [[Slings are used to shoot peebles at your foes.]],
 }

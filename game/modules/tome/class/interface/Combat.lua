@@ -203,8 +203,8 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 		end
 	end)
 
-	if ret.hitted and not sound then sound = realweapon.sound
-	elseif not ret.hitted and not sound_miss then sound_miss = realweapon.sound_miss end
+	if ret.hitted and not sound then sound = weapon.sound
+	elseif not ret.hitted and not sound_miss then sound_miss = weapon.sound_miss end
 
 	print("[SHOOT] speed", ret.speed or 1, "=>", game.energy_to_act * (ret.speed or 1))
 	self:useEnergy(game.energy_to_act * (ret.speed or 1))

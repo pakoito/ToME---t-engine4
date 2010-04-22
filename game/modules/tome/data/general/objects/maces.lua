@@ -23,10 +23,9 @@ newEntity{
 	type = "weapon", subtype="mace",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE,
-	sound = "actions/melee", sound_miss = "actions/melee_miss",
 	encumber = 3,
 	rarity = 5,
-	combat = { talented = "mace", damrange = 1.4},
+	combat = { talented = "mace", damrange = 1.4, sound = "actions/melee", sound_miss = "actions/melee_miss",},
 	desc = [[Blunt and deadly.]],
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = resolvers.mbonus(40, 5),
 }

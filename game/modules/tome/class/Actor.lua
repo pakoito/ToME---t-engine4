@@ -276,7 +276,8 @@ function _M:TextSizeCategory()
 	elseif self.size_category == 2 then sizecat = "small"
 	elseif self.size_category == 3 then sizecat = "medium"
 	elseif self.size_category == 4 then sizecat = "big"
-	elseif self.size_category >= 5 then sizecat = "huge"
+	elseif self.size_category == 5 then sizecat = "huge"
+	elseif self.size_category >= 6 then sizecat = "gargantuan"
 	end
 	return sizecat
 end
