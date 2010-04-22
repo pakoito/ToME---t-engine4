@@ -30,6 +30,7 @@ newEntity{
 	max_stamina = 85,
 	max_mana = 85,
 	resists = { [DamageType.FIRE] = 30, [DamageType.COLD] = -30 },
+	size_category = 2,
 
 	drops = resolvers.drops{chance=20, nb=1, {type="potion"}, {type="scroll"} },
 
@@ -63,6 +64,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	color={r=204,g=255,b=95},
 	desc = [[This unholy creature looks like a wingless dragon in shape but ressembles a sandworm in color.]],
 	rarity = 8,
+	size_category = 5,
 
 	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1,

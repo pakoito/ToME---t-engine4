@@ -31,6 +31,7 @@ newEntity{ --rodent base
 	energy = { mod=1 },
 	stats = { str=8, dex=15, mag=3, con=5 },
 	combat_armor = 1, combat_def = 1,
+	size_category = 1,
 }
 
 newEntity{ base = "BASE_NPC_RODENT",

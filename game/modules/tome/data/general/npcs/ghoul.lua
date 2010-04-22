@@ -32,6 +32,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_ghoul", },
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
+	size_category = 3,
 
 	resolvers.tmasteries{ ["technique/other"]=1, },
 

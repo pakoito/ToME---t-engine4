@@ -39,6 +39,7 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	energy = {mod=1},
 
 	move_body = 1,
+	size_category = 5,
 
 	autolevel = "warrior",
 	ai = "sandworm_tunneler", ai_state = {},
@@ -58,6 +59,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 
 	stun_immune = 1,
 	no_breath = 1,
+	size_category = 5,
 
 	resists = { [DamageType.FIRE] = 30, [DamageType.COLD] = -30 },
 

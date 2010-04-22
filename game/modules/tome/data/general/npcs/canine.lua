@@ -28,6 +28,7 @@ newEntity{
 	body = { INVEN = 10 },
 
 	max_stamina = 150,
+	size_category = 2,
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=10, },

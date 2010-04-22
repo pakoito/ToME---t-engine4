@@ -32,6 +32,7 @@ newEntity{
 	resolvers.drops{chance=100, nb=2, {type="money"} },
 
 	max_stamina = 100,
+	size_category = 3,
 
 	autolevel = "rogue",
 	ai = "dumb_talented_simple", ai_state = { talent_in=5, },

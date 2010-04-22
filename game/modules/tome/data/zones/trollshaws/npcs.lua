@@ -40,6 +40,7 @@ newEntity{ define_as = "TROLL_BILL",
 	max_life = 250, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	stats = { str=25, dex=10, cun=8, mag=10, con=20 },
+	size_category = 4,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{ {type="weapon", subtype="greatmaul", defined="GREATMAUL_BILL_TRUNK"}, },

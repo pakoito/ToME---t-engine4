@@ -32,6 +32,7 @@ newEntity{
 	stats = { str=10, dex=10, mag=3, con=10 },
 	energy = { mod=1 },
 	combat_armor = 1, combat_def = 1,
+	size_category = 1,
 	never_move = 1,
 	fear_immune = 1,
 }
@@ -54,6 +55,7 @@ newEntity{ base = "BASE_NPC_PLANT",
 	life_rating = 15,
 	combat = { dam=resolvers.rngavg(8,13), atk=15, apr=5 },
 	never_move = 0,
+	size_category = 5,
 }
 
 newEntity{ base = "BASE_NPC_PLANT",
@@ -76,6 +78,7 @@ newEntity{ base = "BASE_NPC_PLANT",
 	max_life = resolvers.rngavg(100,130),
 	life_rating = 15,
 	combat = false,
+	size_category = 5,
 
 	summon = {
 		{type="insect", subtype="swarms", name="bee swarm", number=1, hasxp=false},

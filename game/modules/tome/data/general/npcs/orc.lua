@@ -31,6 +31,7 @@ newEntity{
 	resolvers.drops{chance=20, nb=1, {type="money"} },
 
 	life_rating = 11,
+	size_category = 3,
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },

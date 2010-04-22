@@ -33,6 +33,7 @@ newEntity{ define_as = "THE_MASTER",
 	max_life = 350, life_rating = 19, fixed_rating = true,
 	max_mana = 145,
 	max_stamina = 145,
+	size_category = 3,
 	stats = { str=19, dex=19, cun=34, mag=25, con=16 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },

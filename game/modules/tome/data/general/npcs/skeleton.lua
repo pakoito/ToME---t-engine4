@@ -29,6 +29,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.drops{chance=60, nb=1, {type="money"} },
+	size_category = 3,
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },

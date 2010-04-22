@@ -26,6 +26,7 @@ newEntity{
 	body = { INVEN = 10 },
 
 	max_stamina = 110,
+	size_category = 2,
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_snake" },
