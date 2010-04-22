@@ -37,7 +37,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	Enormous it looked, its sprawling branches going up like racing arms
 	with may long-fingered hands, its knotted and twisted trunk gaping in
 	wide fissures that creaked faintly as the boughs moved."]],
-	level_range = {12, 18}, exp_worth = 2,
+	level_range = {12, 35}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	max_mana = 200,

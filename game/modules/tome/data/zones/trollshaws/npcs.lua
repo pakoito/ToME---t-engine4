@@ -36,7 +36,7 @@ newEntity{ define_as = "TROLL_BILL",
 	desc = [[Big, brawny, powerful and with a taste for hobbit. He has friends called Bert and Tom.
 	He is wielding a small tree trunk and towering toward you.
 	He should have turned to stone long ago, how could he still walk?!]],
-	level_range = {7, 10}, exp_worth = 2,
+	level_range = {7, 20}, exp_worth = 2,
 	max_life = 250, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	stats = { str=25, dex=10, cun=8, mag=10, con=20 },

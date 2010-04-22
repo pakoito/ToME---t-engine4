@@ -249,9 +249,19 @@ function _M:magicMap(radius, x, y)
 	end end
 end
 
+function _M:getRankLevelAdjust()
+	if self.rank == 1 then return -1
+	elseif self.rank == 2 then return 0
+	elseif self.rank == 3 then return 1
+	elseif self.rank == 4 then return 3
+	elseif self.rank >= 5 then return 4
+	else return 0
+	end
+end
+
 function _M:TextRank()
 	local rank, color = "normal", "#ANTIQUE_WHITE#"
-	if self.rank == 1 then rank, color = "critter", "#A09090#"
+	if self.rank == 1 then rank, color = "critter", "#C0C0C0#"
 	elseif self.rank == 2 then rank, color = "normal", "#ANTIQUE_WHITE#"
 	elseif self.rank == 3 then rank, color = "elite", "#YELLOW#"
 	elseif self.rank == 4 then rank, color = "boss", "#ORANGE#"
