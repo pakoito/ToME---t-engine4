@@ -42,6 +42,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	max_stamina = 85,
 	max_mana = 200,
 	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
+	rank = 4,
 	size_category = 5,
 
 	resists = { [DamageType.FIRE] = -50 },

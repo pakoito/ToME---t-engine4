@@ -26,6 +26,7 @@ newEntity{
 	body = { INVEN = 10 },
 
 	max_stamina = 110,
+	rank = 2,
 	size_category = 2,
 
 	autolevel = "warrior",
@@ -108,6 +109,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	desc = [[You recoil in fear as you notice this huge, 10 meter long snake.  It seeks to crush the life out of you.]],
 	level_range = {10, 50}, exp_worth = 1,
 	rarity = 11,
+	rank = 3,
 	max_life = resolvers.rngavg(100,120),
 	combat_armor = 14, combat_def = 5,
 	combat = { dam=12, atk=10, apr=10 },

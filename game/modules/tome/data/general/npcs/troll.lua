@@ -33,6 +33,7 @@ newEntity{
 	life_rating = 15,
 	life_regen = 2,
 	max_stamina = 90,
+	rank = 2,
 	size_category = 4,
 
 	autolevel = "warrior",

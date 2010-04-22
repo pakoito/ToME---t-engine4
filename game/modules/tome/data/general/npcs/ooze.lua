@@ -32,6 +32,7 @@ newEntity{
 	stats = { str=10, dex=15, mag=3, con=10 },
 	energy = { mod=0.7 },
 	combat_armor = 1, combat_def = 1,
+	rank = 1,
 	size_category = 3,
 
 	resolvers.drops{chance=90, nb=1, {} },

@@ -76,6 +76,9 @@ function _M:init(t, no_default)
 	self.unused_talents =  self.unused_talents or 0
 	self.unused_talents_types = self.unused_talents_types or 0
 
+	t.size_category = t.size_category or 3
+	t.rank = t.rank or 2
+
 	t.life_rating = t.life_rating or 10
 	t.mana_rating = t.mana_rating or 10
 	t.stamina_rating = t.stamina_rating or 4
@@ -246,14 +249,40 @@ function _M:magicMap(radius, x, y)
 	end end
 end
 
+function _M:TextRank()
+	local rank, color = "normal", "#ANTIQUE_WHITE#"
+	if self.rank == 1 then rank, color = "critter", "#A09090#"
+	elseif self.rank == 2 then rank, color = "normal", "#ANTIQUE_WHITE#"
+	elseif self.rank == 3 then rank, color = "elite", "#YELLOW#"
+	elseif self.rank == 4 then rank, color = "boss", "#ORANGE#"
+	elseif self.rank >= 5 then rank, color = "elite boss", "#GOLD#"
+	end
+	return rank, color
+end
+
+function _M:TextSizeCategory()
+	local sizecat = "medium"
+	if self.size_category <= 1 then sizecat = "tiny"
+	elseif self.size_category == 2 then sizecat = "small"
+	elseif self.size_category == 3 then sizecat = "medium"
+	elseif self.size_category == 4 then sizecat = "big"
+	elseif self.size_category >= 5 then sizecat = "huge"
+	end
+	return sizecat
+end
+
 function _M:tooltip()
-	return ([[%s
+	local rank, rank_color = self:TextRank()
+	return ([[%s%s
+Rank: %s%s
 #00ffff#Level: %d
 Exp: %d/%d
 #ff0000#HP: %d (%d%%)
 Stats: %d /  %d / %d / %d / %d / %d
+Size: #ANTIQUE_WHITE#%s
 %s]]):format(
-	self.name,
+	rank_color, self.name,
+	rank_color, rank,
 	self.level,
 	self.exp,
 	self:getExpChart(self.level+1) or "---",
@@ -264,6 +293,7 @@ Stats: %d /  %d / %d / %d / %d / %d
 	self:getWil(),
 	self:getCun(),
 	self:getCon(),
+	self:TextSizeCategory(),
 	self.desc or ""
 	)
 end
@@ -734,6 +764,8 @@ end
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
 function _M:canSee(actor, def, def_pct)
+	if not actor then return false, 0 end
+
 	-- ESP, see all, or only types/subtypes
 	if self:attr("esp") then
 		local esp = self:attr("esp")

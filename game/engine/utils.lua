@@ -189,8 +189,9 @@ function string.parseHex(str)
 	if hexcache[str] then return hexcache[str] end
 	local res = 0
 	local power = 1
+	str = str:lower()
 	for i = 1, #str do
-		res = res + power * (hex_to_dec[str:sub(#str-i+1,#str-i+1):lower()] or 0)
+		res = res + power * (hex_to_dec[str:sub(#str-i+1,#str-i+1)] or 0)
 		power = power * 16
 	end
 	hexcache[str] = res
@@ -200,16 +201,15 @@ end
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
 	local Pcolorname = (lpeg.R"AZ" + "_")^3
-	local Pcode = (lpeg.R"az" + lpeg.R"09" + lpeg.R"AZ")
+	local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
 	local Pcolorcode = Pcode * Pcode
 
-	local list = str:split("#" * (Pcolorname + (Pcolorcode * Pcolorcode * Pcolorcode)) * "#", true)
+	local list = str:split("#" * ((Pcolorcode * Pcolorcode * Pcolorcode) + Pcolorname) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
 	local oldr, oldg, oldb = r, g, b
 	for i, v in ipairs(list) do
---		print("LSIT", i, v)
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		if nr and ng and nb then
@@ -224,7 +224,6 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 			end
 		else
 			local w, h = font:size(v)
---		print("DRAW", v,r,g,b)
 			s:drawString(font, v, x, y, r, g, b)
 			x = x + w
 		end

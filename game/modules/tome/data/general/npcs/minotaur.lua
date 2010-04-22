@@ -33,6 +33,7 @@ newEntity{
 	max_stamina = 100,
 	life_rating = 13,
 	max_life = resolvers.rngavg(100,120),
+	rank = 2,
 	size_category = 4,
 
 	autolevel = "warrior",

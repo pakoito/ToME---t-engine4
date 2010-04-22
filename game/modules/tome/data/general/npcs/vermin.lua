@@ -31,6 +31,7 @@ newEntity{
 	energy = { mod=0.9 },
 	stats = { str=10, dex=15, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,
+	rank = 1,
 	size_category = 1,
 }
 

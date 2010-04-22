@@ -39,6 +39,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	max_life = 250, life_rating = 17, fixed_rating = true,
 	max_stamina = 200,
 	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
+	rank = 4,
 	size_category = 4,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },

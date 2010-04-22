@@ -28,6 +28,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	desc = [[This ugly orc looks really nasty and vicious. He is obviously looking for something and bears an unkown symbol on his shield.]],
 	level_range = {50, 50}, exp_worth = 2,
 	max_life = 15000, life_rating = 15, fixed_rating = true,
+	rank = 4,
 	size_category = 3,
 
 	resolvers.equip{

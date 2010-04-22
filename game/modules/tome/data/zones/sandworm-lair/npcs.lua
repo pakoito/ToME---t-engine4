@@ -59,6 +59,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 
 	stun_immune = 1,
 	no_breath = 1,
+	rank = 4,
 	size_category = 5,
 
 	resists = { [DamageType.FIRE] = 30, [DamageType.COLD] = -30 },

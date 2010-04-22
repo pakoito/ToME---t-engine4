@@ -73,6 +73,8 @@ function _M:init(t, no_default)
 
 	t.lite = t.lite or 0
 
+	t.rank = t.rank or 3
+
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
 
@@ -364,7 +366,7 @@ end
 function _M:playerUseItem(object, item, inven)
 	if game.zone.short_name == "wilderness" then game.logPlayer(self, "You can not use items on the world map.") return end
 
-	local use_fct = function(o, item, inven)
+	local use_fct = function(o, inven, item)
 		self.changed = true
 		local ret, no_id = o:use(self)
 		if not no_id then
@@ -384,7 +386,7 @@ function _M:playerUseItem(object, item, inven)
 		self.changed = true
 	end
 
-	if object and item then return use_fct(object, item, inven) end
+	if object and item then return use_fct(object, inven, item) end
 
 	local titleupdator = self:getEncumberTitleUpdator("Use object")
 	self:showEquipInven(titleupdator(),

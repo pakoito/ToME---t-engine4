@@ -32,6 +32,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_ghoul", },
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
+	rank = 2,
 	size_category = 3,
 
 	resolvers.tmasteries{ ["technique/other"]=1, },
@@ -77,6 +78,8 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 3, combat_def = 10,
 	ai_state = { talent_in=2, ai_pause=20 },
+
+	rank = 3,
 
 	combat = { dam=10, atk=8, apr=4, dammod={str=0.6} },
 

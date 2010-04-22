@@ -28,6 +28,7 @@ newEntity{
 	body = { INVEN = 10 },
 
 	max_stamina = 150,
+	rank = 1,
 	size_category = 2,
 
 	autolevel = "warrior",

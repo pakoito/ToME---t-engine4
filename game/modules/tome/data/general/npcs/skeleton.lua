@@ -29,6 +29,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.drops{chance=60, nb=1, {type="money"} },
+	rank = 2,
 	size_category = 3,
 
 	autolevel = "warrior",
@@ -112,6 +113,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	rarity = 8,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 5, combat_def = 1,
+	rank = 3,
 	resolvers.talents{
 		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
 		[Talents.T_SHIELD_PUMMEL]=1,
