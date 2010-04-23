@@ -20,6 +20,7 @@
 load("/data/general/npcs/skeleton.lua")
 load("/data/general/npcs/ghoul.lua")
 load("/data/general/npcs/wight.lua")
+load("/data/general/npcs/vampire.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 

@@ -54,6 +54,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {255,0,0})
 			end
 		end
+		return dam
 	end
 end)
 
@@ -386,6 +387,20 @@ newDamageType{
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
+		end
+	end,
+}
+
+-- Drain Life
+newDamageType{
+	name = "drain life", type = "DRAINLIFE",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, healfactor=0.4} end
+		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			src:heal(realdam * dam.healfactor)
+			game.logSeen(target, "%s drains %s life!", src.name:capitalize(), target.name)
 		end
 	end,
 }
