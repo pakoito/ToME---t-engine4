@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
 	SDL_EnableUNICODE(TRUE);
 	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
-	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 512) == -1)
+	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 2048) == -1)
 	{
 		no_sound = TRUE;
 	}

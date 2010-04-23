@@ -27,39 +27,101 @@
 
 local Talents = require("engine.interface.ActorTalents")
 
+-- Of the greater undead, vampires are the crossover between physical and magical prowness.  They possess a life draining attack and they are able to cast some powerful spells.
+-- Ranks: vampire, master vampire, elder vampire, vampire lord.
+-- to be added? ancient vampire
+--taken from the T2 list, with oriental vampire removed, does it really have a part here in ToME?
+
+-- last updated: 4:00pm March 1st, 2010
+
+local Talents = require("engine.interface.ActorTalents")
+
 newEntity{
 	define_as = "BASE_NPC_VAMPIRE",
-	type = "undead", subtype = "vampire",
+	type = "undead", subtype = "vampires",
 	display = "V", color=colors.WHITE,
+	desc = [[These ancient cursed beings often take upon the form of a bat and attack its prey.]],
 
-	combat = { dam=resolvers.rngavg(9,13), atk=10, apr=9, dammod={str=0.85}, damtype=DamageType.DRAINLIFE },
+	combat = { dam=resolvers.rngavg(9,13), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=20, nb=1, {ego_chance=20} },
+	drops = resolvers.drops{chance=20, nb=1, {} },
 
-	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=9, },
 	energy = { mod=1 },
-	stats = { str=11, dex=11, mag=15, con=12 },
-	rank = 2,
+	stats = { str=12, dex=12, mag=12, con=12 },
+	life_regen = 3,
 	size_category = 3,
+	rank = 2,
 
-	resolvers.tmasteries{ ["technique/other"]=0.3, ["spell/air"]=0.3, ["spell/fire"]=0.3 },
+	resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
 
-	resists = { [DamageType.COLD] = 80, [DamageType.FIRE] = 20, [DamageType.PHYSICAL] = 15, [DamageType.LIGHT] = -100, },
-	poison_immune = 1,
+	resists = { [DamageType.COLD] = 80, [DamageType.NATURE] = 80, [DamageType.LIGHT] = -50,  },
 	blind_immune = 1,
-	see_invisible = 7,
+	confusion_immune = 1,
+	see_invisible = 5,
 	undead = 1,
-	stun_immune = 0.7,
-	sleep_immune = 1,
+--	free_action = 1,
+--	sleep_immune = 1,
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
-	name = "lesser vampire", color=colors.GREEN,
-	desc=[[it sucks blood! It wants yours!]],
-	level_range = {16, 50}, exp_worth = 1,
-	rarity = 1,
+	name = "lesser vampire", color=colors.SLATE,
+	desc=[[This vampire has only just begun it's new life, it has not yet fathomed its newfound power.  Yet it still has its thirst for blood.]],
+	level_range = {15, 50}, exp_worth = 1,
+	rarity = 4,
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 7, combat_def = 6,
+
+	resolvers.talents{ [Talents.T_STUN]=1 },
+}
+
+newEntity{ base = "BASE_NPC_VAMPIRE",
+	name = "vampire", color=colors.SLATE,
+	desc=[[It is a humanoid with an aura of power. You notice a sharp set of front teeth.]],
+	level_range = {20, 50}, exp_worth = 1,
+	rarity = 4,
+	max_life = resolvers.rngavg(70,80),
+	combat_armor = 9, combat_def = 6,
+
+	resolvers.talents{ [Talents.T_STUN]=1, [Talents.T_BLUR_SIGHT]=1, [Talents.T_ROTTING_DISEASE]=1, },
+}
+
+newEntity{ base = "BASE_NPC_VAMPIRE",
+	name = "master vampire", color=colors.GREEN,
+	desc=[[It is a humanoid form dressed in robes. Power emanates from its chilling frame.]],
+	level_range = {23, 50}, exp_worth = 1,
+	rarity = 4,
+	max_life = resolvers.rngavg(80,90),
+	combat_armor = 10, combat_def = 8,
+	ai = "dumb_talented_simple", ai_state = { talent_in=6, },
+	resolvers.talents{ [Talents.T_STUN]=1, [Talents.T_BLUR_SIGHT]=2, [Talents.T_PHANTASMAL_SHIELD]=1, [Talents.T_ROTTING_DISEASE]=2, },
+}
+
+newEntity{ base = "BASE_NPC_VAMPIRE",
+	name = "elder vampire", color=colors.RED,
+	desc=[[A terrible robed undead figure, this creature has existed in its unlife for many centuries by stealing the life of others. It can
+			summon the very shades of its victims from beyond the grave to come enslaved to its aid.]],
+	level_range = {26, 50}, exp_worth = 1,
+	rarity = 4,
+	max_life = resolvers.rngavg(90,100),
+	combat_armor = 12, combat_def = 10,
+	rank = 3,
+	ai = "dumb_talented_simple", ai_state = { talent_in=6, },
+	summon = {{type="undead", number=1, hasxp=false}, },
+	resolvers.talents{ [Talents.T_STUN]=2, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]=3, [Talents.T_PHANTASMAL_SHIELD]=2, [Talents.T_ROTTING_DISEASE]=3, },
+}
+
+newEntity{ base = "BASE_NPC_VAMPIRE",
+	name = "vampire lord", color=colors.BLUE,
+	desc=[[A foul wind chills your bones as this ghastly figure approaches.]],
+	level_range = {30, 50}, exp_worth = 1,
+	rarity = 9,
+	max_life = resolvers.rngavg(100,120),
+	combat_armor = 15, combat_def = 15,
+	rank = 3,
+	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	summon = {{type="undead", number=1, hasxp=false}, },
+	resolvers.talents{ [Talents.T_STUN]=4, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]=4, [Talents.T_PHANTASMAL_SHIELD]=5, [Talents.T_ROTTING_DISEASE]=5, },
 }

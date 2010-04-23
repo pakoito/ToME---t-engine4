@@ -102,6 +102,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	combat_armor = 5, combat_def = 1,
 	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_SHOOT]=1, [Talents.T_PINNING_SHOT]=3, [Talents.T_CRIPPLING_SHOT]=3, },
 	ai_state = { talent_in=1, },
+	rank = 3,
 
 	autolevel = "archer",
 	resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
