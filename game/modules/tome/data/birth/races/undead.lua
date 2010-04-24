@@ -33,8 +33,14 @@ newBirthDescriptor{
 		{
 			__ALL__ = "never",
 			Ghoul = function() return config.settings.tome.allow_build.undead_ghoul and "allow" or "never" end,
+			Skeleton = function() return config.settings.tome.allow_build.undead_skeleton and "allow" or "never" end,
+			Vampire = function() return config.settings.tome.allow_build.undead_vampire and "allow" or "never" end,
+			Wight = function() return config.settings.tome.allow_build.undead_wight and "allow" or "never" end,
 		},
 	},
+	copy = {
+		undead = 1,
+	}
 }
 
 newBirthDescriptor
@@ -48,6 +54,7 @@ newBirthDescriptor
 		"- bleeding immunity",
 		"- stun resistance",
 		"- fear immunity",
+		"- special ghoul talents: ghoulish leap, gnaw and retch",
 		"The rotting body of ghouls also forces them to act a bit slower than most creatures.",
 	},
 	descriptor_choices =
@@ -60,7 +67,7 @@ newBirthDescriptor
 	},
 	stats = { str=3, con=5, wil=-2, mag=0, dex=1, cun=2 },
 	talents_types = {
-		["undead/ghoul"]={true, 0.3},
+		["undead/ghoul"]={true, 0.1},
 	},
 	talents = {
 		[ActorTalents.T_GHOUL]=1,
@@ -77,6 +84,50 @@ newBirthDescriptor
 		stun_immune = 0.5,
 		fear_immune = 1,
 		energy = {mod=0.8},
+	},
+	experience = 2,
+}
+
+newBirthDescriptor
+{
+	type = "subrace",
+	name = "Skeleton",
+	desc = {
+		"Skeletons are animated bones, undead creatures, both strong and dextrous.",
+		"They have access to special skeleton talents and a wide range of undead abilities:",
+		"- poison immunity",
+		"- bleeding immunity",
+		"- fear immunity",
+		"- no need to breath",
+		"- special skeleton talents: ",
+		"The rotting body of ghouls also forces them to act a bit slower than most creatures.",
+	},
+	descriptor_choices =
+	{
+		sex =
+		{
+			__ALL__ = "never",
+			Male = "allow",
+		},
+	},
+	stats = { str=3, con=0, wil=0, mag=0, dex=4, cun=0 },
+	talents_types = {
+		["undead/skeleton"]={true, 0.1},
+	},
+	talents = {
+		[ActorTalents.T_SKELETON]=1,
+	},
+	copy = {
+		type = "undead", subtype="skeleton",
+		default_wilderness = {"wilderness/main", 39, 17},
+		starting_zone = "tower-amon-sul",
+		starting_quest = "start-dunadan",
+		starting_intro = "dwarf",
+		life_rating=12,
+		poison_immune = 1,
+		cut_immune = 1,
+		fear_immune = 1,
+		no_breath = 1,
 	},
 	experience = 2,
 }

@@ -278,6 +278,20 @@ newDamageType{
 	end,
 }
 
+-- Bleeding damage
+newDamageType{
+	name = "bleed", type = "BLEED",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 6)
+		dam = dam - dam / 6
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:canBe("cut") then
+			-- Set on fire!
+			target:setEffect(target.EFF_CUT, 5, {src=src, power=dam / 5})
+		end
+	end,
+}
+
 -- Slime damage
 newDamageType{
 	name = "slime", type = "SLIME",
@@ -401,6 +415,19 @@ newDamageType{
 		if target then
 			src:heal(realdam * dam.healfactor)
 			game.logSeen(target, "%s drains %s life!", src.name:capitalize(), target.name)
+		end
+	end,
+}
+
+-- Retch: heal undead; damage living
+newDamageType{
+	name = "retch", type = "RETCH",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target.undead then
+			target:heal(dam)
+		elseif target then
+			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
 		end
 	end,
 }

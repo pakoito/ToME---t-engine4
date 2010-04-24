@@ -110,9 +110,14 @@ function _M:trigger(x, y, who)
 		str = str:gsub("@Target@", tname:capitalize())
 		game.logSeen(who, "%s", str)
 	end
-	if self:triggered(x, y, who) then
+	local known, del = self:triggered(x, y, who)
+	if known then
 		self:setKnown(who, true)
 		game.level.map:updateMap(x, y)
+	end
+	if del then
+		game.level.map:remove(x, y, Map.TRAP)
+		if self.removed then self:removed(x, y, who) end
 	end
 end
 

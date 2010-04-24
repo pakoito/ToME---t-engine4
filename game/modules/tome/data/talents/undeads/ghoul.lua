@@ -24,11 +24,15 @@ newTalent{
 	require = undeads_req1,
 	points = 5,
 	on_learn = function(self, t)
+		self:incStat(self.STAT_STR, 2)
+		self:incStat(self.STAT_CON, 2)
 	end,
 	on_unlearn = function(self, t)
+		self:incStat(self.STAT_STR, -2)
+		self:incStat(self.STAT_CON, -2)
 	end,
 	info = function(self, t)
-		return ([[Improves your ghoulish body.]]):format()
+		return ([[Improves your ghoulish body, increasing strength and constitution by %d.]]):format(2 * self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -110,13 +114,31 @@ newTalent{
 	type = {"undead/ghoul",4},
 	require = undeads_req4,
 	points = 5,
+	cooldown = 25,
 	tactical = {
 		DEFEND = 10,
+		ATTACK = 10,
 	},
+	range=1,
 	action = function(self, t)
+		local duration = self:getTalentLevel(t) / 2 + 4
+		local radius = 3
+		local dam = (2 + self:getCon(8)) * self:getTalentLevel(t)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			DamageType.RETCH, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
+			nil, self:spellFriendlyFire()
+		)
+		game:playSoundNear(self, "talents/cloud")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Vomit on the ground aruond you, healing any undeads in the area and damaging others.]])
+		return ([[Vomit on the ground aruond you, healing any undeads in the area and damaging others.
+		Lasts %d turns and deals %d blight damage.]]):format(self:getTalentLevel(t) / 2 + 4, (2 + self:getCon(8)) * self:getTalentLevel(t))
 	end,
 }

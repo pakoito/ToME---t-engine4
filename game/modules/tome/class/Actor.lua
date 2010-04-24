@@ -357,6 +357,23 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
+	if self:attr("damage_shield") then
+		-- Absorb damage into the shield
+		if value <= self.damage_shield_absorb then
+			self.damage_shield_absorb = self.damage_shield_absorb - value
+			value = 0
+		else
+			self.damage_shield_absorb = 0
+			value = value - self.damage_shield_absorb
+		end
+
+		-- If we are at the end of the capacity, release the time shield damage
+		if self.damage_shield_absorb <= 0 then
+			game.logPlayer(self, "Your shield crumbles under the damage!")
+			self:removeEffect(self.EFF_DAMAGE_SHIELD)
+		end
+	end
+
 	if self:attr("displacement_shield") then
 		-- Absorb damage into the displacement shield
 		if value <= self.displacement_shield and rng.percent(self.displacement_shield_chance) then

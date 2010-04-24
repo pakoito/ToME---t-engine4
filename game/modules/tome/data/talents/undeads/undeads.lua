@@ -41,3 +41,4 @@ undeads_req5 = {
 }
 
 load("/data/talents/undeads/ghoul.lua")
+load("/data/talents/undeads/skeleton.lua")

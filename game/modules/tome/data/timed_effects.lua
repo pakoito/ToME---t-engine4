@@ -395,6 +395,24 @@ newEffect{
 	end,
 }
 
+newEffect{
+	name = "DAMAGE_SHIELD",
+	desc = "Damage Shield",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=100 },
+	on_gain = function(self, err) return "A shield forms around #target#.", "+Shield" end,
+	on_lose = function(self, err) return "The shield around #target# crumbles.", "-Shield" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("damage_shield", eff.power)
+		--- Warning there can be only one time shield active at once for an actor
+		self.damage_shield_absorb = eff.power
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("damage_shield", eff.tmpid)
+		self.damage_shield_absorb = nil
+	end,
+}
 
 newEffect{
 	name = "TIME_SHIELD",

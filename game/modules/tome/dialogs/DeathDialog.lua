@@ -134,6 +134,13 @@ function _M:use()
 		self:cleanActor()
 		self:restoreRessources()
 		self:resurrectBasic()
+	elseif act == "skeleton" then
+		self.actor:attr("re-assembled", 1)
+		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish pain to your foes!")
+
+		self:cleanActor()
+		self:restoreRessources()
+		self:resurrectBasic()
 	end
 end
 
@@ -142,6 +149,7 @@ function _M:generateList()
 
 	if config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
+	if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones ad resurrect (Skeleton ability)", action="skeleton"} end
 
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Exit to main menu", action="exit"}
