@@ -699,7 +699,7 @@ function _M:setAllowedBuild(what, notify)
 	config.settings.tome.allow_build[what] = true
 	local t = {}
 	for k, e in pairs(config.settings.tome.allow_build) do
-		t[#t+1] = ("tome.allow_build.%s = %s\n"):format(k, tostring(e))
+		t[#t+1] = ("tome.allow_build.%s = %s"):format(k, tostring(e))
 	end
 	game:saveSettings("tome.allow_build", table.concat(t, "\n"))
 

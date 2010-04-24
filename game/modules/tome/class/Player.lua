@@ -173,6 +173,14 @@ function _M:die(src)
 	else
 		mod.class.Actor.die(self, src)
 	end
+
+	if src and src.type == "undead" and src.subtype == "skeleton" and rng.percent(src.rank + math.ceil(math.max(src.level / 2, 1))) then
+		game:setAllowedBuild("undead")
+		game:setAllowedBuild("undead_skeleton", true)
+	elseif src and src.type == "undead" and src.subtype == "ghoul" and rng.percent(src.rank + math.ceil(math.max(src.level / 2, 1))) then
+		game:setAllowedBuild("undead")
+		game:setAllowedBuild("undead_ghoul", true)
+	end
 end
 
 function _M:setName(name)
