@@ -26,7 +26,8 @@ function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
 	self.data = data
 	self.grid_list = zone.grid_list
-	self.tiles, self.raw = self:loadTiles(data.tileset)
+	self.tiles, self.raw = {}, {}
+	self:loadTiles(data.tileset)
 	self.matching_tiles = {}
 
 	self.block = self.raw.base
@@ -44,15 +45,17 @@ end
 function _M:loadTiles(tileset)
 	local f, err = loadfile("/data/tilesets/"..tileset..".lua")
 	if not f and err then error(err) end
-	local d = {}
-	setfenv(f, d)
+	local d = self.raw
+	setfenv(f, setmetatable(d, {__index=_G}))
 	local ret, err = f()
 	if not ret and err then error(err) end
 
-	local tiles = {}
+	local tiles = self.tiles
 	for idx, ts in ipairs(d.tiles) do
-		local t = { id=idx, openings={} }
-		tiles[idx] = t
+		local t = { id=#tiles+1, openings={}, type=ts.type }
+		if not ts.no_random then tiles[#tiles+1] = t end
+		if ts.define_as then tiles[ts.define_as] = t end
+
 		for j, line in ipairs(ts) do
 			local i = 1
 			for c in line:gmatch(".") do
@@ -81,12 +84,13 @@ function _M:loadTiles(tileset)
 					end
 				end
 
+				t.sizew = mx / d.base.w
+				t.sizeh = my / d.base.h
+
 				i = i + 1
 			end
 		end
 	end
-
-	return tiles, d
 end
 
 function _M:roomAlloc(bx, by, bw, bh, rid)
@@ -142,13 +146,13 @@ function _M:findMatchingTiles(st, dir)
 			end
 		elseif dir == 4 then
 			for j = 1, self.block.h do
-				local ret, fo = self:matchTile(st[1][j], dt[#dt][j])
+				local ret, fo = self:matchTile(st[1][j], dt[self.block.w][j])
 				fullok = fullok or fo
 				if not ret then ok = false end
 			end
 		elseif dir == 6 then
 			for j = 1, self.block.h do
-				local ret, fo = self:matchTile(st[#dt][j], dt[1][j])
+				local ret, fo = self:matchTile(st[self.block.w][j], dt[1][j])
 				fullok = fullok or fo
 				if not ret then ok = false end
 			end
@@ -177,14 +181,16 @@ function _M:resolve(c)
 end
 
 function _M:buildTile(tile, bx, by, rid)
-	local bw, bh = 1, 1
+	local bw, bh = tile.sizew, tile.sizeh
 
 	if not self:roomAlloc(bx, by, bw, bh, rid) then return false end
 
 	print("building tile", tile.id, #tile, #tile[1])
 	for i = 1, #tile do
 		for j = 1, #tile[1] do
-			self.map(bx * self.block.w + i - 1, by * self.block.h + j - 1, Map.TERRAIN, self.grid_list[self:resolve(tile[i][j])])
+			if self.map.room_map[bx * self.block.w + i - 1] and self.map.room_map[bx * self.block.w + i - 1][by * self.block.h + j - 1] then
+				self.map.room_map[bx * self.block.w + i - 1][by * self.block.h + j - 1].symbol = tile[i][j]
+			end
 		end
 	end
 	local opens = {}
@@ -199,6 +205,14 @@ function _M:buildTile(tile, bx, by, rid)
 	end
 
 	return opens
+end
+
+function _M:createMap()
+	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
+		local c = self.map.room_map[i][j].symbol
+		if self.raw.filler then c = self.raw.filler(c, i, j, self.map.room_map, self.data) end
+		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve(c)])
+	end end
 end
 
 function _M:generate()
@@ -224,6 +238,9 @@ function _M:generate()
 			for i, o in ipairs(opens) do process[#process+1] = o end
 		end
 	end
+
+	-- Fill the map with the real entities based on the map.room_map symbols
+	self:createMap()
 
 	-- Always starts at 1, 1
 	self.map(1, 1, Map.TERRAIN, self.up)

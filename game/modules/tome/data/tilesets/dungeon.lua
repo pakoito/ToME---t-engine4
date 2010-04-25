@@ -33,15 +33,35 @@ matcher = function(t1, t2)
 	return false
 end
 
+-- Remove some silly doors
+filler = function(c, x, y, room_map, data)
+	if c ~= "'" then return c end
+	local nb = 0
+	if room_map[x-1] and room_map[x-1][y] and (room_map[x-1][y].symbol == '.' or room_map[x-1][y].symbol == '+' or room_map[x-1][y].symbol == "'") then nb = nb + 1 end
+	if room_map[x+1] and room_map[x+1][y] and (room_map[x+1][y].symbol == '.' or room_map[x+1][y].symbol == '+' or room_map[x+1][y].symbol == "'") then nb = nb + 1 end
+	if room_map[x] and room_map[x][y-1]   and (room_map[x][y-1].symbol == '.' or room_map[x][y-1].symbol == '+' or room_map[x][y-1].symbol == "'") then nb = nb + 1 end
+	if room_map[x] and room_map[x][y+1]   and (room_map[x][y+1].symbol == '.' or room_map[x][y+1].symbol == '+' or room_map[x][y+1].symbol == "'") then nb = nb + 1 end
+
+	if nb == 2 and rng.percent(data.door_chance or 25) then return '+'
+	elseif nb < 2 then return '#'
+	else return '.'
+	end
+end
+
 tiles =
 {
 
 {type="room",
-[[##.##]],
-[[#.#.#]],
-[[.#.#.]],
-[[#.#.#]],
-[[##.##]],
+[[##'#######]],
+[[#........#]],
+[['........#]],
+[[#........#]],
+[[#........#]],
+[[#........#]],
+[[#........#]],
+[[#........']],
+[[#........#]],
+[[##'#######]],
 },
 
 {type="tunnel",
