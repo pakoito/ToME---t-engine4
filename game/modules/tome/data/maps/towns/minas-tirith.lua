@@ -21,14 +21,17 @@ quickEntity('<', {show_tooltip=true, name='into the wild', display='<', color=co
 quickEntity('S', {name='brick roof top', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
 quickEntity('s', {name='brick roof', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
 quickEntity('t', {name='brick roof chimney', display='#', color=colors.LIGHT_RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
 quickEntity('C', {name='dark pit', display='#', color=colors.LIGHT_DARK, block_move=true, block_sight=true})
 quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/tree.png"})
 quickEntity('V', {name='river', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png"})
 quickEntity('O', {name='cooblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
 quickEntity(' ', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
 quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
+quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
 quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true})
+quickEntity(',', {name='dirt', display='.', color=colors.LIGHT_UMBER, image="terrain/sand.png"})
+quickEntity('I', {name='tunneled wall', show_tooltip=true, display='#', color=colors.WHITE, image="terrain/wood_wall1.png"})
+quickEntity('M', {name='tunneled hills', show_tooltip=true, display='^', color=colors.SLATE, image="terrain/mountain.png"})
 
 quickEntity('1', {show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"})
@@ -59,30 +62,30 @@ return {
 [[#^^----ssss-----###--------####------        ^^^^^^                                             ]],
 [[#^^^---StSS-------###--#ssss--###-------      ^^^^^^^^                                          ]],
 [[#^^----ssss----OO---##--#StSS---####------     ^^^^^^^^                                         ]],
-[[#^^----x#a#-----OOO--##--#sssss----###------    ^^^^^^^^                                        ]],
-[[#^ ---------------OO--###-#m#7#------###-----   ^^^^^^^^^^                                      ]],
+[[#^^----##a#-----OOO--##--#sssss----###------    ^^^^^^^^                                        ]],
+[[#^ ---------------OO--###-###7#------###-----   ^^^^^^^^^^                                      ]],
 [[#^ StSSSS-----ss---OO---##-----OOOOO---###----   ^^^^^^^^^^^                                    ]],
-[[#^^ssssss----Ssss---OOO--##---OOOOOOOO---##----   ^l^^^^^^^                                     ]],
+[[#^^ssssss----Ssss---OOO--##---OOOOOOOO---##----   ^^^^^^^^^                                     ]],
 [[#^ ####9#---sstSss---OOO--##-OOOOOOOOOOO--##----    ^^^^^                                       ]],
 [[#^^^-------##sssSss---OOO--#OOO--s--OOOOO--###---                                               ]],
-[[#^^^######---##ssh--s--OOO-OOO--StS--OOOOO---##---                                              ]],
+[[#^^^######---##sss--s--OOO-OOO--StS--OOOOO---##---                                              ]],
 [[#^^^^----###---##--ssS--OOOOO#--ssss--OOOOOO--##---                                             ]],
 [[#^^--------###----ssSs#--OOO-##-#####--OOOOOO--##---            ----                            ]],
-[[#^ ----------##--#stsi--OOOO--#---------OOOOOO--#------       --------                          ]],
+[[#^ ----------##--#sts#--OOOO--#---------OOOOOO--#------       --------                          ]],
 [[#^^-----------###-#s#--OOOOOO-##-#sssss--OOOOOO,#####---     -----------                        ]],
 [[#^^-------------##-#--OOO-OOO--#--ssssss--OOOOO,,,,,#----  ---ssssssss---                       ]],
 [[#^^--------------#---OOO-t-OOO-##-#SStSS--OOOOOO,##,#---------ssssssss----                      ]],
 [[#^^^--#----------##-OOO-sssOOO--#--ssssss-OOOOOO--#,#####-----SStSSSSS-----                     ]],
 [[#^^^--#-----------#OOO-##4##OOO-##-ssssss--OOOOOO-#,,######---ssssssss--O---                    ]],
-[[#^^--###----------OOO-------OOO--#-####2#--OOOOOO-##,#k#,,##--ssssssss--O----                   ]],
+[[#^^--###----------OOO-------OOO--#-####2#--OOOOOO-##,###,,##--ssssssss--O----                   ]],
 [[#^^^-###---------OOO#--SSStS-OOO-#---------OOOOO---#,,,,,,,#--ssssssss--O-----                  ]],
 [[#^^-#####-------OOO-#--sssss-OOO-#--ssss--OOOOO--T-#,-----,#--#####d##--O------                 ]],
-[[#^^#######------OOO-##-###j#-OOO-##-ssss--OOOOO-TT-#------,#-------,,,,,O------                 ]],
+[[#^^#######------OOO-##-#####-OOO-##-ssss--OOOOO-TT-#------,#-------,,,,,O------                 ]],
 [[#^^^########----OOO--#-------OOO--#-StSS--OOOOO-TT-#-----,,#------------O-------                ]],
 [[#^^############-OOO--##-StSSS-OOO-#-ssss--OOOOO--T-#----,,##---ssssssss-O--------               ]],
 [[#^^^#########---OOO---#-sssss-OOO-#-ssss--OOOOOO---#,,,,,##----SSSSStSS-O---------              ]],
-[[#^^#####B###----OOO---#-###6#-OOO-#-##g#---OOOOOO--#######-----ssssssss-O----------             ]],
-[[#^^^#######-----OOO---#-------OOO-#---------OOOOOOOOOOOOOOOOO--###e####-O-----------            ]],
+[[#^^#########----OOO---#-###6#-OOO-#-####---OOOOOO--#######-----ssssssss-O----------             ]],
+[[#^^^#######-----OOO---#-------OOO-#---------OOOOOOOOOOOOOOOOO--########-O-----------            ]],
 [[#^^#######bOOOOOOOO-^^^^^^^^^^MMM^^^^^^^^^^^^OOOOOOOOOOOOOOOOOOOOOOOOOOOO-----------            ]],
 [[#^^#######bOOOOOOO############III############^OOOOOOOOOOOOOOOOOOOOOOOOOOOOO---------            ]],
 [[#^ #######bOOOOOOO############III############^OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO---------           ]],
@@ -90,7 +93,7 @@ return {
 [[#^^^#######-----OOO---#-sSss--OOO-#---------OOOOOOOOOOOOOOOOO-----------OOOOOOO------           ]],
 [[#^^#########----OOO---#-sSss--OOO-#-sssss--OOOOOO--#######--------sssss-O-OOOOO-----            ]],
 [[#^^#########E---OOO---#-stss--OOO-#-SStSS-OOOOOO---####,,##-------SStSS-O-OOOOO----             ]],
-[[#^^############-OOO--##-sSss--OOO-#-sssss-OOOOO--T-##k#,,,##------sssss-O--OOOOO---             ]],
+[[#^^############-OOO--##-sSss--OOO-#-sssss-OOOOO--T-####,,,##------sssss-O--OOOOO---             ]],
 [[#^^#########----OOO--#--####-OOO--#-sssss-OOOOO-TT-#,,,,-,,#------sssss-O---OOOO---             ]],
 [[#^^#######------OOO-##-------OOO-##-###3#-OOOOO-TT-#,-----,#------###0#-O---OOOOO---            ]],
 [[#^^-#####-------OOO-#--Ssss--OOO-#--------OOOOO--T-#,-----,#------------O----OOOO----           ]],
@@ -103,15 +106,15 @@ return {
 [[#^^^----------###--ss--OOOOOO-##-ssSs----OOOOOO,#####------------------O-------- ---OOOOOOOOO---]],
 [[#^^^---------##---ssSs--OOOO--#--ssts#--OOOOOO--#------ ------ssssss--OO------    ---OOOOO----- ]],
 [[#^^--------###---sstss#--OOO-##-ssSs#--OOOOOO--##-----    ----StSSSS--O------      -----------  ]],
-[[#^^------###-----#Sss#--OOOOO#--sSsf--OOOOOO--##-----      ---ssssss--O-----        -------     ]],
-[[#^^^######---ss---#s#--OOO-OOO--Ss#--OOOOO---##-----        --###w##-OO-----                    ]],
+[[#^^------###-----#Sss#--OOOOO#--sSs#--OOOOOO--##-----      ---ssssss--O-----        -------     ]],
+[[#^^^######---ss---#s#--OOO-OOO--Ss#--OOOOO---##-----        --######-OO-----                    ]],
 [[#^^^-------ssssS---#--OOO--#OOO--#--OOOOO--###-----          --------O-----                     ]],
 [[#^^-sssss-#ssstss----OOO--##-OOO---OOOOO--##------            ------OO----                      ]],
 [[#^^-SSStS--#sSsss#--OOO--##---OOOOOOOO---##------               ----O----                       ]],
-[[#^^-sssss---#ss##--OO---##--X--OOOOO---###------                ---O---                         ]],
-[[#^^^#####----##---OO--###--XXX-OOO---###------                    ---                           ]],
-[[#^^^------------OOO--##---XXX#-----###-----                                                     ]],
-[[#^^--SStSS-----OO---##--XX###---####-----                                                       ]],
+[[#^^-sssss---#ss##--OO---##--#--OOOOO---###------                ---O---                         ]],
+[[#^^^#####----##---OO--###--###-OOO---###------                    ---                           ]],
+[[#^^^------------OOO--##---####-----###-----                                                     ]],
+[[#^^--SStSS-----OO---##--#####---####-----                                                       ]],
 [[#^^^-sssss--------###--###----###------                                                         ]],
 [[#^^--#####------###--------####------                                                           ]],
 [[#^^^----------###----#######------                                                              ]],

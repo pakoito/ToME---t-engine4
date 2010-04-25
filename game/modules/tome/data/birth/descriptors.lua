@@ -24,27 +24,10 @@ newBirthDescriptor{
 	},
 	descriptor_choices =
 	{
-		race =
+		world =
 		{
-			__ALL__ = "never",
-			Human = "allow",
-			Elf = "allow",
-			Dwarf = "allow",
-			Hobbit = "allow",
---			Orc = function() return config.settings.tome.allow_build.evil and "allow" or "never" end,
---			Troll = function() return config.settings.tome.allow_build.evil and "allow" or "never" end,
---			Spider = function() return config.settings.tome.allow_build.spider and "allow" or "never" end,
-			Undead = function() return config.settings.tome.allow_build.undead and "allow" or "never" end,
-		},
-
-		class =
-		{
-			__ALL__ = "allow",
-			Wilder = function() return (
-				config.settings.tome.allow_build.wilder_summoner or
-				config.settings.tome.allow_build.wilder_wyrmic
-				) and "allow" or "never"
-			end,
+			Arda = "allow",
+			["Spydrë"] = function() return config.settings.tome.allow_build.world_spydre and "allow" or "never" end,
 		},
 	},
 	talents = {},
@@ -52,6 +35,7 @@ newBirthDescriptor{
 	body = { INVEN = 1000, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 
 	copy = {
+		max_level = 50,
 		money = 10,
 		resolvers.equip{ id=true,
 			{type="lite", subtype="lite", name="brass lantern"},
@@ -66,6 +50,9 @@ newBirthDescriptor{
 		end),
 	},
 }
+
+-- Worlds
+load("/data/birth/worlds.lua")
 
 -- Races
 load("/data/birth/races/human.lua")

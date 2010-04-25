@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Meditation",
+	name = "???",
 	type = {"corruption/ritual", 1},
 	require = corrs_req1,
 	points = 5,
@@ -40,7 +40,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Nature's Touch",
+	name = "???",
 	type = {"corruption/ritual", 2},
 	require = corrs_req2,
 	points = 5,
@@ -66,7 +66,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Earth's Eyes",
+	name = "???",
 	type = {"corruption/ritual", 3},
 	require = corrs_req3,
 	points = 5,
@@ -88,7 +88,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Nature's Balance",
+	name = "???",
 	type = {"corruption/ritual", 4},
 	require = corrs_req4,
 	points = 5,

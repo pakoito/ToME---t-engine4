@@ -109,7 +109,7 @@ function _M:newGame()
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
 
-	local birth = Birther.new(self.player, {"base", "race", "subrace", "sex", "class", "subclass" }, function()
+	local birth = Birther.new(self.player, {"base", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[2], self.player.default_wilderness[3]
 		self.player.current_wilderness = self.player.default_wilderness[1]
 		self:changeLevel(1, self.player.starting_zone)
@@ -410,7 +410,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			if config.settings.tome.cheat then self:changeLevel(7, "sandworm-lair") end
+			if config.settings.tome.cheat then self:changeLevel(1, "illusory-castle") end
 		end,
 	}
 	self.key:addBinds

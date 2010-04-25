@@ -42,15 +42,15 @@ quickEntity('x', {show_tooltip=true, name='plains', display='.', color=colors.LI
 quickEntity('s', {show_tooltip=true, name='dead marches', display='~', color=colors.DARK_GREEN, })
 quickEntity('"', {show_tooltip=true, name='the valley of Nurn', display='.', color=colors.WHITE, image="terrain/ash1.png"})
 
-quickEntity('A', {show_tooltip=true, name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tower-amon-sul"})
-quickEntity('B', {show_tooltip=true, name="Passageway into the Trollshaws", 	display='>', color={r=0, g=255, b=0}, change_level=1, change_zone="trollshaws"})
-quickEntity('C', {show_tooltip=true, name="A gate into a maze", 			display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="maze"})
-quickEntity('D', {show_tooltip=true, name="A path into the Old Forest", 		display='>', color={r=0, g=255, b=155}, change_level=1, change_zone="old-forest"})
-quickEntity('E', {show_tooltip=true, name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, change_level=1, change_zone="sandworm-lair"})
-quickEntity('F', {show_tooltip=true, name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, change_level=1, change_zone="tol-falas"})
+quickEntity('A', {show_tooltip=true, name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tower-amon-sul"})
+quickEntity('B', {show_tooltip=true, name="Passageway into the Trollshaws", 	display='>', color={r=0, g=255, b=0}, notice = true, change_level=1, change_zone="trollshaws"})
+quickEntity('C', {show_tooltip=true, name="A gate into a maze", 			display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="maze"})
+quickEntity('D', {show_tooltip=true, name="A path into the Old Forest", 		display='>', color={r=0, g=255, b=155}, notice = true, change_level=1, change_zone="old-forest"})
+quickEntity('E', {show_tooltip=true, name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, notice = true, change_level=1, change_zone="sandworm-lair"})
+quickEntity('F', {show_tooltip=true, name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tol-falas"})
 
-quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", change_level=1, change_zone="town-bree"})
-quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", change_level=1, change_zone="town-minas-tirith"})
+quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-bree"})
+quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
 
 return {
 [[========q=qqqqqqqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],

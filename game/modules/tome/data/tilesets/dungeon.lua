@@ -19,16 +19,31 @@
 
 base = {w=5, h=5}
 
+is_opening = function(c)
+	return (c == '.' or c == "'" or c == '+') and true or false
+end
+
 matcher = function(t1, t2)
-	if t1 == t2 then return true end
-	if t1 == '.' and t2 == '+' then return true end
-	if t1 == '.' and t2 == '+' then return true end
+	local ok = false
+	if t1 == '.' or t2 == '.' or t1 == "'" or t2 == "'" then ok = true end
+
+	if t1 == t2 then return true, ok end
+	if t1 == '.' and t2 == "'" then return true, ok end
+	if t2 == '.' and t1 == "'" then return true, ok end
 	return false
 end
 
 tiles =
 {
 
+{type="room",
+[[##.##]],
+[[#.#.#]],
+[[.#.#.]],
+[[#.#.#]],
+[[##.##]],
+},
+
 {type="tunnel",
 [[##.##]],
 [[##.##]],
@@ -126,11 +141,11 @@ tiles =
 },
 
 {type="room",
-[[##+##]],
+[[##'##]],
 [[#...#]],
-[[+...+]],
+[['...']],
 [[#...#]],
-[[##+##]],
+[[##'##]],
 },
 
 {type="room",
@@ -157,7 +172,7 @@ tiles =
 {type="room",
 [[#....]],
 [[#....]],
-[[+....]],
+[['....]],
 [[#....]],
 [[#####]],
 },
@@ -184,7 +199,7 @@ tiles =
 [[#####]],
 },
 {type="room",
-[[##+##]],
+[[##'##]],
 [[##.##]],
 [[#...#]],
 [[#...#]],
@@ -195,6 +210,6 @@ tiles =
 [[#...#]],
 [[#...#]],
 [[##.##]],
-[[##+##]],
+[[##'##]],
 },
 }

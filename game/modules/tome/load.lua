@@ -84,8 +84,8 @@ ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines y
 -- Luck is hidden and start at half max value (50) which is considered the standard
 ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's chance when dealing with unknown events. It increases your critical strike chances, your chance for random encounters, ...")
 
--- Actor leveling
-ActorLevel:defineMaxLevel(50)
+-- Actor leveling, player is restricted to 50 bu npcs can go higher
+ActorLevel:defineMaxLevel(75)
 
 -- Actor autolevel schemes
 dofile("/data/autolevel_schemes.lua")

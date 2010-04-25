@@ -61,7 +61,7 @@ function _M:loadTiles(tileset)
 
 				-- Find edge openings
 				local mx, my = line:len(), #ts
-				if c == '.' and (i == 1 or i == mx or j == 1 or j == my) then
+				if self:isOpening(c, d) and (i == 1 or i == mx or j == 1 or j == my) then
 					if i == 1 and j == 1 then
 						table.insert(t.openings, {i, j, 7})
 					elseif i == 1 and j == my then
@@ -112,6 +112,10 @@ function _M:roomAlloc(bx, by, bw, bh, rid)
 	return true
 end
 
+function _M:isOpening(c, d)
+	return d.is_opening(c)
+end
+
 function _M:matchTile(t1, t2)
 	return self.raw.matcher(t1, t2)
 end
@@ -123,24 +127,33 @@ function _M:findMatchingTiles(st, dir)
 
 	for _, dt in ipairs(self.tiles) do
 		local ok = true
+		local fullok = false
 		if dir == 8 then
 			for i = 1, self.block.w do
-				if not self:matchTile(st[i][1], dt[i][self.block.h]) then ok = false end
+				local ret, fo = self:matchTile(st[i][1], dt[i][self.block.h])
+				fullok = fullok or fo
+				if not ret then ok = false end
 			end
 		elseif dir == 2 then
 			for i = 1, self.block.w do
-				if not self:matchTile(st[i][self.block.h], dt[i][1]) then ok = false end
+				local ret, fo = self:matchTile(st[i][self.block.h], dt[i][1])
+				fullok = fullok or fo
+				if not ret then ok = false end
 			end
 		elseif dir == 4 then
 			for j = 1, self.block.h do
-				if not self:matchTile(st[1][j], dt[#dt][j]) then ok = false end
+				local ret, fo = self:matchTile(st[1][j], dt[#dt][j])
+				fullok = fullok or fo
+				if not ret then ok = false end
 			end
 		elseif dir == 6 then
 			for j = 1, self.block.h do
-				if not self:matchTile(st[#dt][j], dt[1][j]) then ok = false end
+				local ret, fo = self:matchTile(st[#dt][j], dt[1][j])
+				fullok = fullok or fo
+				if not ret then ok = false end
 			end
 		end
-		if ok then
+		if ok and fullok then
 			m[#m+1] = dt
 			print("found matching tile in dir", dir, "from", st.id, "to", dt.id)
 		end
@@ -196,7 +209,7 @@ function _M:generate()
 	local first = true
 	local process = {}
 	local id = 1
-	process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[2 or rng.range(1, #self.tiles)]}
+	process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[self.data.center_room or rng.range(1, #self.tiles)]}
 	while #process > 0 do
 		local b = table.remove(process)
 		local type = "room"
