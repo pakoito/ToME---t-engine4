@@ -125,46 +125,67 @@ function _M:matchTile(t1, t2)
 end
 
 function _M:findMatchingTiles(st, dir)
-	if self.matching_tiles[st] and self.matching_tiles[st][dir] then return self.matching_tiles[st][dir] end
+	local type = "room"
+	if rng.percent(self.data.tunnel_chance or 50) then type = "tunnel" end
+
+	if self.matching_tiles[st] and self.matching_tiles[st][dir] and self.matching_tiles[st][dir][type] then return self.matching_tiles[st][dir][type] end
 
 	local m = {}
 
-	for _, dt in ipairs(self.tiles) do
-		local ok = true
-		local fullok = false
-		if dir == 8 then
-			for i = 1, self.block.w do
-				local ret, fo = self:matchTile(st[i][1], dt[i][self.block.h])
-				fullok = fullok or fo
-				if not ret then ok = false end
+	-- Examine all the size of the tile, and only the sides (for >1 base size tiles)
+	-- This only handles multisize tiles as source, but it's good enough for now
+	for stw = 1, st.sizew do for sth = 1, st.sizeh do if stw == 1 or stw == st.sizew or sth == 1 or sth == st.sizeh then
+		local stwr, sthr = (stw-1) * self.block.w, (sth-1) * self.block.h
+
+		for _, dt in ipairs(self.tiles) do if dt.type == type then
+			local ok = true
+			local fullok = false
+
+			-- Check each directions, for the correct side and see if the tile matches
+			if dir == 8 and sth == 1 then
+				for i = 1, self.block.w do
+					local ret, fo = self:matchTile(st[i+stwr][1], dt[i][self.block.h])
+					fullok = fullok or fo
+					if not ret then ok = false end
+				end
+			elseif dir == 2 and sth == st.sizeh then
+				for i = 1, self.block.w do
+					local ret, fo = self:matchTile(st[i+stwr][self.block.h*st.sizeh], dt[i][1])
+					fullok = fullok or fo
+					if not ret then ok = false end
+				end
+			elseif dir == 4 and stw == 1 then
+				for j = 1, self.block.h do
+					local ret, fo = self:matchTile(st[1][j+sthr], dt[self.block.w][j])
+					fullok = fullok or fo
+					if not ret then ok = false end
+				end
+			elseif dir == 6 and stw == st.sizew then
+				for j = 1, self.block.h do
+					local ret, fo = self:matchTile(st[self.block.w*st.sizew][j+sthr], dt[1][j])
+					fullok = fullok or fo
+					if not ret then ok = false end
+				end
 			end
-		elseif dir == 2 then
-			for i = 1, self.block.w do
-				local ret, fo = self:matchTile(st[i][self.block.h], dt[i][1])
-				fullok = fullok or fo
-				if not ret then ok = false end
+
+			-- if the tile matches, and there is a passageway then remember it
+			if ok and fullok then
+				m[#m+1] = {tile=dt, stw=stw-1, sth=sth-1}
+				print("found matching tile in dir", dir, "from", st.id, stw, sth, "to", dt.id)
+				for j = 1, self.block.h do
+					local s = ""
+					for i = 1, self.block.w do
+						s = s..dt[i][j]
+					end
+					print(s)
+				end
 			end
-		elseif dir == 4 then
-			for j = 1, self.block.h do
-				local ret, fo = self:matchTile(st[1][j], dt[self.block.w][j])
-				fullok = fullok or fo
-				if not ret then ok = false end
-			end
-		elseif dir == 6 then
-			for j = 1, self.block.h do
-				local ret, fo = self:matchTile(st[self.block.w][j], dt[1][j])
-				fullok = fullok or fo
-				if not ret then ok = false end
-			end
-		end
-		if ok and fullok then
-			m[#m+1] = dt
-			print("found matching tile in dir", dir, "from", st.id, "to", dt.id)
-		end
-	end
+		end end
+	end end end
 
 	self.matching_tiles[st] = self.matching_tiles[st] or {}
-	self.matching_tiles[st][dir] = m
+	self.matching_tiles[st][dir] = self.matching_tiles[st][dir] or {}
+	self.matching_tiles[st][dir][type] = m
 
 	return m
 end
@@ -199,7 +220,8 @@ function _M:buildTile(tile, bx, by, rid)
 		local mts = self:findMatchingTiles(tile, o[3])
 
 		if #mts > 0 then
-			opens[#opens+1] = {bx + coord[1], by + coord[2], tile=mts[rng.range(1, #mts)]}
+			local mt = mts[rng.range(1, #mts)]
+			opens[#opens+1] = {bx + coord[1] + mt.stw, by + coord[2] + mt.sth, tile=mt.tile}
 			print("room at ",bx,by,"opens to",o[3],"::",bx + coord[1], by + coord[2])
 		end
 	end
@@ -215,20 +237,50 @@ function _M:createMap()
 	end end
 end
 
-function _M:generate()
+--- Create the stairs inside the level
+function _M:makeStairsInside(lev, old_lev, spots)
+	-- Put down stairs
+	local dx, dy
+	if lev < self.zone.max_level or self.data.force_last_stair then
+		while true do
+			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
+			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
+				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map.room_map[dx][dy].special = "exit"
+				break
+			end
+		end
+	end
+
+	-- Put up stairs
+	local ux, uy
+	while true do
+		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
+		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
+			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map.room_map[ux][uy].special = "exit"
+			break
+		end
+	end
+
+	return ux, uy, dx, dy, spots
+end
+
+--- Create the stairs on the sides
+function _M:makeStairsSides(lev, old_lev, sides, spots)
+	error("Side stairs not supported by TileSet map generator")
+end
+
+function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
 		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
 	end end
 
-	local first = true
 	local process = {}
 	local id = 1
 	process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[self.data.center_room or rng.range(1, #self.tiles)]}
 	while #process > 0 do
 		local b = table.remove(process)
-		local type = "room"
-		if not first and rng.percent(30) then type = "tunnel" end
-		first = false
 
 		local opens = self:buildTile(b.tile, b[1], b[2], id)
 		if opens then
@@ -242,7 +294,11 @@ function _M:generate()
 	-- Fill the map with the real entities based on the map.room_map symbols
 	self:createMap()
 
-	-- Always starts at 1, 1
-	self.map(1, 1, Map.TERRAIN, self.up)
-	return 1, 1, 1, 1
+	-- Make stairs
+	local spots = {}
+	if self.data.edge_entrances then
+		return self:makeStairsSides(lev, old_lev, self.data.edge_entrances, spots)
+	else
+		return self:makeStairsInside(lev, old_lev, spots)
+	end
 end
