@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- The western parts of Middle-earth on Arda
+
 quickEntity('a', {show_tooltip=true, name='Ephel Duath', display='^', color=colors.LIGHT_DARK, image="terrain/mountain.png", block_move=true})
 quickEntity('d', {show_tooltip=true, name='Haradwaith', display='.', color={r=203,g=189,b=72}, image="terrain/sand.png", block_move=true})
 quickEntity('b', {show_tooltip=true, name='blue mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true})
@@ -48,6 +50,7 @@ quickEntity('C', {show_tooltip=true, name="A gate into a maze", 			display='>', 
 quickEntity('D', {show_tooltip=true, name="A path into the Old Forest", 		display='>', color={r=0, g=255, b=155}, notice = true, change_level=1, change_zone="old-forest"})
 quickEntity('E', {show_tooltip=true, name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, notice = true, change_level=1, change_zone="sandworm-lair"})
 quickEntity('F', {show_tooltip=true, name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tol-falas"})
+quickEntity('G', {show_tooltip=true, name="A way into ancient elven ruins",display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="ancient-elven-ruins"})
 
 quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-bree"})
 quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
@@ -65,7 +68,7 @@ return {
 [[==========.......======.........hhhh..................fffffffwwwwwwww.........wwww.utuuuutuuuuuutuu]],
 [[========......bb..===.........hhhhhhhh..&&&&&...&..fffffffffffff.................tuuututuututtuuuut]],
 [[=======......bb..===............hhhh.......&&&&&&ff.._._...........................tttttttttttttttt]],
-[[======...._.bb._..._............................m....._._uuu................ii........ttttttttttttt]],
+[[======...._.bb._..._..G.........................m....._._uuu................ii........ttttttttttttt]],
 [[=======.._..bb.._.._..hhhh................&....&mm~~~~.uu_uuuu..........i.....iii........tttttthhhh]],
 [[======.._...bb..._._..hhh.......hhhhhh.....&&&&._mm..~.uuu_u_uu..........iiiiii..............ttthhh]],
 [[=====.._..ubbb...._._..h.=....hhh.hh..........__.mm__~.uuuu_h_uu..........._.....................hh]],

@@ -27,7 +27,8 @@ function _M:init(zone, map, level, data)
 	self.data = data
 	self.grid_list = zone.grid_list
 	self.tiles, self.raw = {}, {}
-	self:loadTiles(data.tileset)
+	if type(data.tileset) == "string" then self:loadTiles(data.tileset)
+	else for i, ts in ipairs(data.tileset) do self:loadTiles(ts) end end
 	self.matching_tiles = {}
 
 	self.block = self.raw.base
@@ -124,11 +125,14 @@ function _M:matchTile(t1, t2)
 	return self.raw.matcher(t1, t2)
 end
 
-function _M:findMatchingTiles(st, dir)
-	local type = "room"
-	if rng.percent(self.data.tunnel_chance or 50) then type = "tunnel" end
+function _M:findMatchingTiles(st, dir, type)
+	-- If no type is given choose one
+	if not type then
+		type = "room"
+		if rng.percent(self.data.tunnel_chance or 50) then type = "tunnel" end
+	end
 
-	if self.matching_tiles[st] and self.matching_tiles[st][dir] and self.matching_tiles[st][dir][type] then return self.matching_tiles[st][dir][type] end
+	if self.matching_tiles[st] and self.matching_tiles[st][dir] and self.matching_tiles[st][dir][type] then return self.matching_tiles[st][dir][type], type end
 
 	local m = {}
 
@@ -187,7 +191,7 @@ function _M:findMatchingTiles(st, dir)
 	self.matching_tiles[st][dir] = self.matching_tiles[st][dir] or {}
 	self.matching_tiles[st][dir][type] = m
 
-	return m
+	return m, type
 end
 
 function _M:resolve(c)
@@ -217,7 +221,9 @@ function _M:buildTile(tile, bx, by, rid)
 	local opens = {}
 	for i, o in ipairs(tile.openings) do
 		local coord = dir_to_coord[o[3]]
-		local mts = self:findMatchingTiles(tile, o[3])
+		local mts, type = self:findMatchingTiles(tile, o[3])
+		-- if we found no match for the given type try the other one
+		if #mts == 0 then mts, type = self:findMatchingTiles(tile, o[3], type == "room" and "tunnel" or "room") end
 
 		if #mts > 0 then
 			local mt = mts[rng.range(1, #mts)]

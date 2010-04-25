@@ -55,7 +55,7 @@ newBirthDescriptor
 		"Humans hailing from the northen town of Bree. A common kind of man, unremarkable in all respects.",
 	},
 	copy = {
-		default_wilderness = {"wilderness/main", 39, 17},
+		default_wilderness = {"wilderness/arda_west", 39, 17},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
 		starting_intro = "bree-man",
@@ -77,7 +77,7 @@ newBirthDescriptor
 		[ActorTalents.T_DUNADAN_HEAL]=1,
 	},
 	copy = {
-		default_wilderness = {"wilderness/main", 39, 17},
+		default_wilderness = {"wilderness/arda_west", 39, 17},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
 		starting_intro = "dunadan",

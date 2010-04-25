@@ -44,7 +44,7 @@ newBirthDescriptor{
 	copy = {
 		type = "humanoid", subtype="hobbit",
 		life_rating = 12,
-		default_wilderness = {"wilderness/main", 39, 17},
+		default_wilderness = {"wilderness/arda_west", 39, 17},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
 		starting_intro = "hobbit",
