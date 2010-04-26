@@ -32,8 +32,8 @@ return {
 		map = {
 --			class = "engine.generator.map.Rooms",
 			class = "engine.generator.map.TileSet",
-			tileset = {"5x5/base", "5x5/tunnel", "5x5/windy_tunnel"},
-			tunnel_chance = 60,
+			tileset = {"3x3/base", "3x3/tunnel", "3x3/windy_tunnel"},
+			tunnel_chance = 100,
 			center_room = 1,
 			['.'] = "FLOOR",
 			['#'] = "WALL",

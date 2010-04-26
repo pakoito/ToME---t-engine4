@@ -17,28 +17,31 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
-load("/data/general/objects/mummy-wrappings.lua")
+-- Mummy wrappings, not included in global
 
--- Artifact, droped (and used!) by the Shade of Angmar
-newEntity{ base = "BASE_LONGSWORD",
-	define_as = "LONGSWORD_RINGIL", rarity=false, unided_name = "glittering longsword",
-	name = "Ringil, the glittering sword of Fingolfin", unique=true,
-	desc = [[The sword of Fingolfin, said to have glittered like ice. With it he wounded Morgoth in single combat after the Dagor Bragollach.]],
-	require = { stat = { str=25 }, },
-	cost = 2000,
-	combat = {
-		dam = 38,
-		apr = 10,
-		physcrit = 10,
-		dammod = {str=1},
-		damrange = 1.4,
-	},
+newEntity{
+	define_as = "BASE_MUMMY_WRAPPING",
+	slot = "BODY",
+	type = "armor", subtype="mummy",
+	add_name = " (#ARMOR#)",
+	display = "[", color=colors.ANTIQUE_WHITE,
+	encumber = 6,
+	rarity = 5,
+	desc = [[Decaying mummy wrappings.]],
+	egos = "/data/general/objects/egos/armor.lua", egos_chance = resolvers.mbonus(40, 5),
 	wielder = {
-		lite = 1,
-		see_invisible = 2,
-		resists={[DamageType.COLD] = 25},
-		inc_damage = { [DamageType.COLD] = 20 },
-		melee_project={[DamageType.ICE] = 15},
+		resists={[DamageType.FIRE] = -50},
+	}
+}
+
+newEntity{ base = "BASE_MUMMY_WRAPPING",
+	name = "mummy wrappings",
+	level_range = {10, 40},
+	require = { stat = { dex=15 }, },
+	cost = 1,
+	wielder = {
+		combat_def = 5,
+		combat_armor = 2,
+		fatigue = 2,
 	},
 }

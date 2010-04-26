@@ -20,7 +20,73 @@
 load("/data/general/npcs/rodent.lua")
 load("/data/general/npcs/vermin.lua")
 load("/data/general/npcs/molds.lua")
+load("/data/general/npcs/mummy.lua")
 load("/data/general/npcs/skeleton.lua")
-load("/data/general/npcs/snake.lua")
 
 local Talents = require("engine.interface.ActorTalents")
+
+-- The boss , no "rarity" field means it will not be randomly generated
+newEntity{ define_as = "GREATER_MUMMY_LORD",
+	type = "undead", subtype = "mummy", unique = true,
+	name = "Greater Mummy Lord",
+	display = "Z", color=colors.VIOLET,
+	desc = [[The wrappings of this mummy radiates with so much power it feels like wind is blowing from it.]],
+	level_range = {20, 35}, exp_worth = 2,
+	max_life = 250, life_rating = 21, fixed_rating = true,
+	max_stamina = 200,
+	max_mana = 200,
+	stats = { str=25, dex=10, cun=8, mag=35, wil=20, con=20 },
+	rank = 4,
+	size_category = 2,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="longsword", defined="LONGSWORD_RINGIL", autoreq=true},
+		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
+		{type="armor", subtype="mummy", ego_chance=100, autoreq=true},
+	},
+	drops = resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_SHIELD_PUMMEL]=3,
+		[Talents.T_ASSAULT]=3,
+		[Talents.T_OVERPOWER]=3,
+		[Talents.T_BLINDING_SPEED]=3,
+		[Talents.T_SWORD_MASTERY]=4,
+		[Talents.T_WEAPON_COMBAT]=5,
+
+		[Talents.T_FREEZE]=3,
+		[Talents.T_ICE_STORM]=3,
+		[Talents.T_INVISIBILITY]=3,
+
+		[Talents.T_ROTTING_DISEASE]=3,
+	},
+
+	blind_immune = 1,
+	see_invisible = 4,
+	undead = 1,
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+}
+
+-- Some mummy minions
+newEntity{ base = "BASE_NPC_MUMMY",
+	name = "ancient elven mummy", color=colors.ANTIQUE_WHITE,
+	desc = [[An animated corpse in mummy wrappings.]],
+	level_range = {7, 50}, exp_worth = 1,
+	rarity = 2,
+	max_life = resolvers.rngavg(120,140),
+	ai_state = { talent_in=4, },
+
+	resolvers.equip{
+		{type="weapon", subtype="greatsword", autoreq=true},
+		{type="armor", subtype="mummy", ego_chance=100, autoreq=true},
+	},
+	resolvers.talents{
+		[Talents.T_STUNNING_BLOW]=2,
+		[Talents.T_CRUSH]=3,
+		[Talents.T_MANATHRUST]=3,
+	},
+	drops = resolvers.drops{chance=70, nb=1, {type="money"}, {} },
+}

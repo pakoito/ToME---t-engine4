@@ -19,23 +19,22 @@
 
 return {
 	name = "Elven Ruins",
-	level_range = {1, 5},
+	level_range = {10, 28},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 150, height = 150,
+	width = 30, height = 30,
 --	all_remembered = true,
 --	all_lited = true,
 	persistant = "zone",
 	generator =  {
 		map = {
 			class = "engine.generator.map.TileSet",
-			tileset = {"5x5/base", "5x5/tunnel", "5x5/windy_tunnel", "5x5/basic_rooms"},
-			tunnel_chance = 30,
-			center_room = 1,
-			['.'] = "FLOOR",
-			['#'] = "WALL",
+			tileset = {"3x3/base", "3x3/tunnel", "3x3/windy_tunnel"},
+			tunnel_chance = 100,
+			['.'] = "OLD_FLOOR",
+			['#'] = {"OLD_WALL","WALL","WALL","WALL","WALL"},
 			['+'] = "DOOR",
 			["'"] = "DOOR",
 			up = "UP",
@@ -43,16 +42,16 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20*5, 20*5},
---			guardian = "SHADE_OF_ANGMAR", -- The gardian is set in the static map
+			nb_npc = {20, 20},
+			guardian = "GREATER_MUMMY_LORD",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {6*5, 9*5},
+			nb_object = {6, 9},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {6*8, 9*8},
+			nb_trap = {6, 9},
 		},
 	},
 	levels =
@@ -61,6 +60,26 @@ return {
 			generator = { map = {
 				up = "UP_WILDERNESS",
 			}, },
+		},
+		[3] = {
+			width = 80, height = 80,
+			generator = {
+				map = {
+					tileset = {"5x5/base", "5x5/tunnel", "5x5/windy_tunnel", "5x5/basic_rooms"},
+					tunnel_chance = 30,
+					force_last_stair = true,
+					down = "QUICK_EXIT",
+				},
+				actor = {
+					nb_npc = {20*5, 20*5},
+				},
+				object = {
+					nb_object = {6*5, 9*5},
+				},
+				trap = {
+					nb_trap = {6*8, 9*8},
+				},
+			},
 		},
 	},
 }

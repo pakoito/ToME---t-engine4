@@ -56,6 +56,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 		end
 		return dam
 	end
+	return 0
 end)
 
 local function tryDestroy(who, inven, destroy_prop, proof_prop, msg)

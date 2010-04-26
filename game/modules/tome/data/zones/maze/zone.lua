@@ -34,8 +34,8 @@ return {
 			class = "engine.generator.map.Maze",
 			up = "UP",
 			down = "DOWN",
-			wall = "MAZE_WALL",
-			floor = "MAZE_FLOOR",
+			wall = "OLD_WALL",
+			floor = "OLD_FLOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

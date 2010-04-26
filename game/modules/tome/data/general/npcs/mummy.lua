@@ -17,12 +17,26 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
+local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "QUICK_EXIT",
-	name = "teleporting circle to the surface", image = "terrain/maze_teleport.png",
-	display = '>', color_r=255, color_g=0, color_b=255,
-	notice = true, show_tooltip = true,
-	change_level = 1, change_zone = "wilderness",
+	define_as = "BASE_NPC_MUMMY",
+	type = "undead", subtype = "mummy",
+	display = "Z", color=colors.WHITE,
+
+	combat = { dam=1, atk=1, apr=1 },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+	energy = { mod=0.8 },
+	stats = { str=14, dex=12, mag=10, con=12 },
+	rank = 2,
+	size_category = 3,
+
+	resolvers.tmasteries{ ["technique/2hweapon"]=1, },
+
+	blind_immune = 1,
+	see_invisible = 4,
+	undead = 1,
 }
