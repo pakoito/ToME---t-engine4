@@ -78,10 +78,11 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	rarity = 2,
 	max_life = resolvers.rngavg(120,140),
 	ai_state = { talent_in=4, },
+	stats = { mag=25, wil=20, },
 
 	resolvers.equip{
 		{type="weapon", subtype="greatsword", autoreq=true},
-		{type="armor", subtype="mummy", ego_chance=100, autoreq=true},
+		{type="armor", subtype="mummy", autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_STUNNING_BLOW]=2,
@@ -90,3 +91,46 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	},
 	drops = resolvers.drops{chance=70, nb=1, {type="money"}, {} },
 }
+
+newEntity{ base = "BASE_NPC_MUMMY",
+	name = "animated mummy wrappings", color=colors.SLATE, display='[',
+	desc = [[An animated mummy wrappings, without a corpse inside... It seems like it can not move.]],
+	level_range = {7, 50}, exp_worth = 1,
+	rarity = 7,
+	max_life = resolvers.rngavg(20,40), life_rating=4,
+	ai_state = { talent_in=2, },
+	never_move = 1,
+
+	resolvers.equip{
+		{type="armor", subtype="mummy", ego_chance=100, autoreq=true},
+	},
+	autolevel = "caster",
+	resolvers.talents{
+		[Talents.T_MANATHRUST]=3,
+		[Talents.T_FREEZE]=3,
+		[Talents.T_LIGHTNING]=3,
+		[Talents.T_STRIKE]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_MUMMY",
+	name = "rotting mummy", color=colors.TAN,
+	desc = [[An rotting animated corpse in mummy wrappings.]],
+	level_range = {7, 50}, exp_worth = 1,
+	rarity = 3,
+	max_life = resolvers.rngavg(60,80), life_rating=7,
+	ai_state = { talent_in=4, },
+
+	resolvers.equip{
+		{type="armor", subtype="mummy", autoreq=true},
+	},
+	autolevel = "ghoul",
+	resolvers.talents{
+		[Talents.T_WEAKNESS_DISEASE]=1,
+		[Talents.T_GNAW]=3,
+		[Talents.T_RETCH]=3,
+		[Talents.T_BITE_POISON]=3,
+	},
+	combat = { dam=8, atk=10, apr=0, dammod={str=0.7} },
+}
+

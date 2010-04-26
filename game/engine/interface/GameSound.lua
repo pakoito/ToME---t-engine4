@@ -42,7 +42,7 @@ function _M:playSound(name)
 			print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", "/data/sound/"..def.file, ":>")
 			def.file = core.sound.newSound("/data/sound/"..def.file)
 			print("[SOUND] :=>", def.file)
-			if def.volume then def.file:setVolume(def.volume) end
+			if def.volume and def.file then def.file:setVolume(def.volume) end
 		elseif fs.exists("/data/sound/"..name..".wav") then
 			def = {file = core.sound.newSound("/data/sound/"..name..".wav")}
 			print("[SOUND] loading from", "/data/sound/"..name..".wav", ":=:", def.file)

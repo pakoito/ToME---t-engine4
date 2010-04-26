@@ -151,6 +151,7 @@ end
 -- @param target the target we are tracking
 -- @return x, y coords to move/cast to
 function _M:aiSeeTargetPos(target)
+	if not target then return self.x, self.y end
 	local tx, ty = target.x, target.y
 	local see, chance = self:canSee(target)
 
