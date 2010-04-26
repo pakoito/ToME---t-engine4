@@ -312,9 +312,11 @@ function _M:display()
 		self.target:display()
 
 		-- Display a tooltip if available
-		local mx, my = core.mouse.get()
-		local tmx, tmy = self.level.map:getMouseTile(mx, my)
-		self.tooltip:displayAtMap(tmx, tmy, mx, my)
+		if self.tooltip_x then
+			local mx, my = self.tooltip_x , self.tooltip_y
+			local tmx, tmy = self.level.map:getMouseTile(mx, my)
+			self.tooltip:displayAtMap(tmx, tmy, mx, my)
+		end
 
 		-- Move target around
 		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
@@ -365,6 +367,7 @@ function _M:targetMode(v, msg, co, typ)
 				self.target:scan(5, nil, self.player.x, self.player.y)
 			end
 		end
+		self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y)
 	end
 end
 
@@ -374,31 +377,35 @@ function _M:setupCommands()
 	self.targetmode_key:addBinds
 	{
 		TACTICAL_DISPLAY = function() self:targetMode(false, false) end,
-		ACCEPT = function() self:targetMode(false, false) end,
+		ACCEPT = function()
+			self:targetMode(false, false)
+			self.tooltip_x, self.tooltip_y = nil, nil
+		end,
 		EXIT = function()
 			self.target.target.entity = nil
 			self.target.target.x = nil
 			self.target.target.y = nil
 			self:targetMode(false, false)
+			self.tooltip_x, self.tooltip_y = nil, nil
 		end,
 		-- Targeting movement
-		RUN_LEFT = function() self.target:freemove(4) end,
-		RUN_RIGHT = function() self.target:freemove(6) end,
-		RUN_UP = function() self.target:freemove(8) end,
-		RUN_DOWN = function() self.target:freemove(2) end,
-		RUN_LEFT_DOWN = function() self.target:freemove(1) end,
-		RUN_RIGHT_DOWN = function() self.target:freemove(3) end,
-		RUN_LEFT_UP = function() self.target:freemove(7) end,
-		RUN_RIGHT_UP = function() self.target:freemove(9) end,
+		RUN_LEFT = function() self.target:freemove(4) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		RUN_RIGHT = function() self.target:freemove(6) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		RUN_UP = function() self.target:freemove(8) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		RUN_DOWN = function() self.target:freemove(2) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		RUN_LEFT_DOWN = function() self.target:freemove(1) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		RUN_RIGHT_DOWN = function() self.target:freemove(3) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		RUN_LEFT_UP = function() self.target:freemove(7) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		RUN_RIGHT_UP = function() self.target:freemove(9) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
 
-		MOVE_LEFT = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end end,
-		MOVE_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end end,
-		MOVE_UP = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end end,
-		MOVE_DOWN = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end end,
-		MOVE_LEFT_DOWN = function() if self.target_style == "lock" then self.target:scan(1) else self.target:freemove(1) end end,
-		MOVE_RIGHT_DOWN = function() if self.target_style == "lock" then self.target:scan(3) else self.target:freemove(3) end end,
-		MOVE_LEFT_UP = function() if self.target_style == "lock" then self.target:scan(7) else self.target:freemove(7) end end,
-		MOVE_RIGHT_UP = function() if self.target_style == "lock" then self.target:scan(9) else self.target:freemove(9) end end,
+		MOVE_LEFT = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_UP = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_DOWN = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_LEFT_DOWN = function() if self.target_style == "lock" then self.target:scan(1) else self.target:freemove(1) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_RIGHT_DOWN = function() if self.target_style == "lock" then self.target:scan(3) else self.target:freemove(3) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_LEFT_UP = function() if self.target_style == "lock" then self.target:scan(7) else self.target:freemove(7) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_RIGHT_UP = function() if self.target_style == "lock" then self.target:scan(9) else self.target:freemove(9) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
 	}
 
 	self.normal_key = self.key
@@ -410,7 +417,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			if config.settings.tome.cheat then self:changeLevel(1, "illusory-castle") end
+			if config.settings.tome.cheat then self:changeLevel(3, "ancient-elven-ruins") end
 		end,
 	}
 	self.key:addBinds
@@ -592,6 +599,14 @@ function _M:setupCommands()
 				Map:setViewerFaction("players")
 			end
 		end,
+
+		LOOK_AROUND = function()
+			self.flash:empty(true)
+			self.flash(self.flash.GOOD, "Looking around... (direction keys to select interresting things, shift+direction keys to move freely)")
+			local co = coroutine.create(function() self.player:getTarget{type="hit", no_restrict=true, range=2000} end)
+			local ok, err = coroutine.resume(co)
+			if not ok and err then error(err) end
+		end,
 	}
 
 --[[
@@ -632,6 +647,9 @@ function _M:setupMouse()
 	local derivx, derivy = 0, 0
 
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
+		-- Move tooltip
+		self.tooltip_x, self.tooltip_y = mx, my
+
 		-- Target stuff
 		if button == "right" then
 			local tmx, tmy = self.level.map:getMouseTile(mx, my)

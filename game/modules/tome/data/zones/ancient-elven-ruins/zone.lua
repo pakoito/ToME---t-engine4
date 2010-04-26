@@ -62,22 +62,23 @@ return {
 			}, },
 		},
 		[3] = {
-			width = 80, height = 80,
+			width = 120, height = 120,
 			generator = {
 				map = {
-					tileset = {"5x5/base", "5x5/tunnel", "5x5/windy_tunnel", "5x5/basic_rooms"},
-					tunnel_chance = 30,
+					tileset = {"5x5/base", "5x5/tunnel", "5x5/windy_tunnel", "5x5/crypt"},
+					start_tiles = {{tile="LONG_TUNNEL_82", x=8, y=0}},
+					tunnel_chance = 60,
 					force_last_stair = true,
 					down = "QUICK_EXIT",
 				},
 				actor = {
-					nb_npc = {20*5, 20*5},
+					nb_npc = {20*3, 25*3},
 				},
 				object = {
-					nb_object = {6*5, 9*5},
+					nb_object = {6*3, 9*3},
 				},
 				trap = {
-					nb_trap = {6*8, 9*8},
+					nb_trap = {6*4, 9*4},
 				},
 			},
 		},

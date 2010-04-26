@@ -43,6 +43,29 @@ function _M:init(zone, map, level, data)
 	end
 end
 
+function _M:findOpenings(t, c, i, j, mx, my)
+	local d = self.raw
+	if self:isOpening(c, d) and (i == 1 or i == mx or j == 1 or j == my) then
+		if i == 1 and j == 1 then
+			table.insert(t.openings, {i, j, 7})
+		elseif i == 1 and j == my then
+			table.insert(t.openings, {i, j, 1})
+		elseif i == mx and j == my then
+			table.insert(t.openings, {i, j, 3})
+		elseif i == mx and j == 1 then
+			table.insert(t.openings, {i, j, 9})
+		elseif i == 1 then
+			table.insert(t.openings, {i, j, 4})
+		elseif i == mx then
+			table.insert(t.openings, {i, j, 6})
+		elseif j == 1 then
+			table.insert(t.openings, {i, j, 8})
+		elseif j == my then
+			table.insert(t.openings, {i, j, 2})
+		end
+	end
+end
+
 function _M:loadTiles(tileset)
 	local f, err = loadfile("/data/tilesets/"..tileset..".lua")
 	if not f and err then error(err) end
@@ -57,38 +80,81 @@ function _M:loadTiles(tileset)
 		if not ts.no_random then tiles[#tiles+1] = t end
 		if ts.define_as then tiles[ts.define_as] = t end
 
-		for j, line in ipairs(ts) do
-			local i = 1
-			for c in line:gmatch(".") do
+		-- X symetric tile definition
+		if ts.base and ts.symetric and ts.symetric == "x" then
+			local ts = tiles[ts.base]
+			local mx, my = #ts, #ts[1]
+			for j = 1, my do for ri = 1, mx do
+				local i = mx - ri + 1
 				t[i] = t[i] or {}
-				t[i][j] = c
+				t[i][j] = ts[ri][j]
+				self:findOpenings(t, c, i, j, mx, my)
+			end end
+			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
-				-- Find edge openings
-				local mx, my = line:len(), #ts
-				if self:isOpening(c, d) and (i == 1 or i == mx or j == 1 or j == my) then
-					if i == 1 and j == 1 then
-						table.insert(t.openings, {i, j, 7})
-					elseif i == 1 and j == my then
-						table.insert(t.openings, {i, j, 1})
-					elseif i == mx and j == my then
-						table.insert(t.openings, {i, j, 3})
-					elseif i == mx and j == 1 then
-						table.insert(t.openings, {i, j, 9})
-					elseif i == 1 then
-						table.insert(t.openings, {i, j, 4})
-					elseif i == mx then
-						table.insert(t.openings, {i, j, 6})
-					elseif j == 1 then
-						table.insert(t.openings, {i, j, 8})
-					elseif j == my then
-						table.insert(t.openings, {i, j, 2})
-					end
+		-- Y symetric tile definition
+		elseif ts.base and ts.symetric and ts.symetric == "y" then
+			local ts = tiles[ts.base]
+			local mx, my = #ts, #ts[1]
+			for rj = 1, my do for i = 1, mx do
+				local j = my - rj + 1
+				t[i] = t[i] or {}
+				t[i][j] = ts[i][rj]
+				self:findOpenings(t, c, i, j, mx, my)
+			end end
+			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
+
+		-- 90degree rotation
+		elseif ts.base and ts.rotation and ts.rotation == "90" then
+			local ts = tiles[ts.base]
+			local mx, my = #ts[1], #ts
+			for j = 1, my do for ri = 1, mx do
+				local i = mx - ri + 1
+				t[i] = t[i] or {}
+				t[i][j] = ts[j][ri]
+				self:findOpenings(t, c, i, j, mx, my)
+			end end
+			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
+
+		-- 180degree rotation
+		elseif ts.base and ts.rotation and ts.rotation == "180" then
+			local ts = tiles[ts.base]
+			local mx, my = #ts, #ts[1]
+			for rj = 1, my do for ri = 1, mx do
+				local i = mx - ri + 1
+				local j = my - rj + 1
+				t[i] = t[i] or {}
+				t[i][j] = ts[ri][rj]
+				self:findOpenings(t, c, i, j, mx, my)
+			end end
+			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
+
+		-- 270degree rotation
+		elseif ts.base and ts.rotation and ts.rotation == "270" then
+			local ts = tiles[ts.base]
+			local mx, my = #ts[1], #ts
+			for rj = 1, my do for i = 1, mx do
+				local j = my - rj + 1
+				t[i] = t[i] or {}
+				t[i][j] = ts[rj][i]
+				self:findOpenings(t, c, i, j, mx, my)
+			end end
+			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
+
+		-- Normal tile definition
+		else
+			local my = #ts
+			for j, line in ipairs(ts) do
+				local i = 1
+				local mx = line:len()
+				for c in line:gmatch(".") do
+					t[i] = t[i] or {}
+					t[i][j] = c
+					self:findOpenings(t, c, i, j, mx, my)
+
+					i = i + 1
 				end
-
-				t.sizew = mx / d.base.w
-				t.sizeh = my / d.base.h
-
-				i = i + 1
+				t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 			end
 		end
 	end
@@ -137,53 +203,61 @@ function _M:findMatchingTiles(st, dir, type)
 	local m = {}
 
 	-- Examine all the size of the tile, and only the sides (for >1 base size tiles)
-	-- This only handles multisize tiles as source, but it's good enough for now
+	-- This is extremely convoluted but the idea is simplistic:
+	-- check each combinaison of position of tiles and find matching ones
 	for stw = 1, st.sizew do for sth = 1, st.sizeh do if stw == 1 or stw == st.sizew or sth == 1 or sth == st.sizeh then
 		local stwr, sthr = (stw-1) * self.block.w, (sth-1) * self.block.h
 
+		-- Now look for matching tiles
 		for _, dt in ipairs(self.tiles) do if dt.type == type then
-			local ok = true
-			local fullok = false
 
-			-- Check each directions, for the correct side and see if the tile matches
-			if dir == 8 and sth == 1 then
-				for i = 1, self.block.w do
-					local ret, fo = self:matchTile(st[i+stwr][1], dt[i][self.block.h])
-					fullok = fullok or fo
-					if not ret then ok = false end
-				end
-			elseif dir == 2 and sth == st.sizeh then
-				for i = 1, self.block.w do
-					local ret, fo = self:matchTile(st[i+stwr][self.block.h*st.sizeh], dt[i][1])
-					fullok = fullok or fo
-					if not ret then ok = false end
-				end
-			elseif dir == 4 and stw == 1 then
-				for j = 1, self.block.h do
-					local ret, fo = self:matchTile(st[1][j+sthr], dt[self.block.w][j])
-					fullok = fullok or fo
-					if not ret then ok = false end
-				end
-			elseif dir == 6 and stw == st.sizew then
-				for j = 1, self.block.h do
-					local ret, fo = self:matchTile(st[self.block.w*st.sizew][j+sthr], dt[1][j])
-					fullok = fullok or fo
-					if not ret then ok = false end
-				end
-			end
+			-- On all their subtile if they are big
+			for dtw = 1, dt.sizew do for dth = 1, dt.sizeh do if dtw == 1 or dtw == dt.sizew or dth == 1 or dth == dt.sizeh then
+				local dtwr, dthr = (dtw-1) * self.block.w, (dth-1) * self.block.h
 
-			-- if the tile matches, and there is a passageway then remember it
-			if ok and fullok then
-				m[#m+1] = {tile=dt, stw=stw-1, sth=sth-1}
-				print("found matching tile in dir", dir, "from", st.id, stw, sth, "to", dt.id)
-				for j = 1, self.block.h do
-					local s = ""
+				local ok = true
+				local fullok = false
+
+				-- Check each directions, for the correct side and see if the tile matches
+				if dir == 8 and sth == 1 and dth == dt.sizeh then
 					for i = 1, self.block.w do
-						s = s..dt[i][j]
+						local ret, fo = self:matchTile(st[i+stwr][1], dt[i+dtwr][self.block.h*dt.sizeh])
+						fullok = fullok or fo
+						if not ret then ok = false end
 					end
-					print(s)
+				elseif dir == 2 and sth == st.sizeh and dth == 1 then
+					for i = 1, self.block.w do
+						local ret, fo = self:matchTile(st[i+stwr][self.block.h*st.sizeh], dt[i+dtwr][1])
+						fullok = fullok or fo
+						if not ret then ok = false end
+					end
+				elseif dir == 4 and stw == 1 and dtw == dt.sizew then
+					for j = 1, self.block.h do
+						local ret, fo = self:matchTile(st[1][j+sthr], dt[self.block.w*dt.sizew][j+dthr])
+						fullok = fullok or fo
+						if not ret then ok = false end
+					end
+				elseif dir == 6 and stw == st.sizew and dtw == 1 then
+					for j = 1, self.block.h do
+						local ret, fo = self:matchTile(st[self.block.w*st.sizew][j+sthr], dt[1][j+dthr])
+						fullok = fullok or fo
+						if not ret then ok = false end
+					end
 				end
-			end
+
+				-- if the tile matches, and there is a passageway then remember it
+				if ok and fullok then
+					m[#m+1] = {tile=dt, stw=stw-1, sth=sth-1, dtw=dtw-1, dth=dth-1}
+					print("found matching tile in dir", dir, "from", st.id, stw, sth, "to", dt.id, dtw, dth)
+					for j = 1, self.block.h * dt.sizeh do
+						local s = ""
+						for i = 1, self.block.w * dt.sizew do
+							s = s..dt[i][j]
+						end
+						print(s)
+					end
+				end
+			end end end
 		end end
 	end end end
 
@@ -211,8 +285,8 @@ function _M:buildTile(tile, bx, by, rid)
 	if not self:roomAlloc(bx, by, bw, bh, rid) then return false end
 
 	print("building tile", tile.id, #tile, #tile[1])
-	for i = 1, #tile do
-		for j = 1, #tile[1] do
+	for j = 1, #tile[1] do
+		for i = 1, #tile do
 			if self.map.room_map[bx * self.block.w + i - 1] and self.map.room_map[bx * self.block.w + i - 1][by * self.block.h + j - 1] then
 				self.map.room_map[bx * self.block.w + i - 1][by * self.block.h + j - 1].symbol = tile[i][j]
 			end
@@ -277,6 +351,14 @@ function _M:makeStairsSides(lev, old_lev, sides, spots)
 	error("Side stairs not supported by TileSet map generator")
 end
 
+function _M:placeStartTiles(tiles, process)
+	for i, td in ipairs(tiles) do
+		local tile = td.tile or rng.range(1, #self.tiles)
+		local x, y = td.x or math.floor(self.cols / 2), td.y or math.floor(self.rows / 2)
+		process[#process+1] = {x, y, tile=self.tiles[tile]}
+	end
+end
+
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
 		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
@@ -284,7 +366,12 @@ function _M:generate(lev, old_lev)
 
 	local process = {}
 	local id = 1
-	process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[self.data.center_room or rng.range(1, #self.tiles)]}
+
+	if not self.data.start_tiles then
+		process[#process+1] = {math.floor(self.cols / 2), math.floor(self.rows / 2), tile=self.tiles[rng.range(1, #self.tiles)]}
+	else
+		self:placeStartTiles(self.data.start_tiles, process)
+	end
 	while #process > 0 do
 		local b = table.remove(process)
 

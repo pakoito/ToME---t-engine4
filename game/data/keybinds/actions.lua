@@ -73,6 +73,13 @@ defineAction{
 }
 
 defineAction{
+	default = { "uni:l" },
+	type = "LOOK_AROUND",
+	group = "actions",
+	name = "Look around",
+}
+
+defineAction{
 	default = { "sym:116:true:false:false:false" },
 	type = "SHOW_TIME",
 	group = "actions",
