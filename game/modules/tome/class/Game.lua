@@ -417,7 +417,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			if config.settings.tome.cheat then self:changeLevel(3, "ancient-elven-ruins") end
+			if config.settings.tome.cheat then self:changeLevel(1, "flooded-cave") end
 		end,
 	}
 	self.key:addBinds
