@@ -108,3 +108,12 @@ newEntity{
 		esp = {range=10},
 	},
 }
+newEntity{
+	name = " of the fish",
+	level_range = {25, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		can_breath = {water=1},
+	},
+}

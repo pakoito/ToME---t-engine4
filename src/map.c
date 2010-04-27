@@ -45,6 +45,8 @@ static int map_new(lua_State *L)
 
 	map->obscure_r = map->obscure_g = map->obscure_b = 0.6f;
 	map->obscure_a = 1;
+	map->shown_r = map->shown_g = map->shown_b = 1;
+	map->shown_a = 1;
 
 	map->multidisplay = multidisplay;
 	map->w = w;
@@ -131,6 +133,20 @@ static int map_set_obscure(lua_State *L)
 	map->obscure_g = g;
 	map->obscure_b = b;
 	map->obscure_a = a;
+	return 0;
+}
+
+static int map_set_shown(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	float r = luaL_checknumber(L, 2);
+	float g = luaL_checknumber(L, 3);
+	float b = luaL_checknumber(L, 4);
+	float a = luaL_checknumber(L, 5);
+	map->shown_r = r;
+	map->shown_g = g;
+	map->shown_b = b;
+	map->shown_a = a;
 	return 0;
 }
 
@@ -252,7 +268,7 @@ static int map_to_screen(lua_State *L)
 			{
 				if (map->grids_seens[i][j])
 				{
-					glColor4f(1, 1, 1, 1);
+					glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
 
 					if (map->multidisplay)
 					{
@@ -374,6 +390,7 @@ static const struct luaL_reg map_reg[] =
 {
 	{"__gc", map_free},
 	{"close", map_free},
+	{"setShown", map_set_shown},
 	{"setObscure", map_set_obscure},
 	{"setGrid", map_set_grid},
 	{"cleanSeen", map_clean_seen},

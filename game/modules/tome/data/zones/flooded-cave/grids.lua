@@ -23,6 +23,7 @@ newEntity{
 	define_as = "WATER_FLOOR",
 	name = "underwater", image = "terrain/water_floor.png",
 	display = '.', color=colors.LIGHT_BLUE,
+	air_level = -5, air_condition="water",
 }
 
 newEntity{
@@ -33,4 +34,5 @@ newEntity{
 	can_pass = {pass_wall=1},
 	does_block_move = true,
 	block_sight = true,
+	air_level = -20,
 }

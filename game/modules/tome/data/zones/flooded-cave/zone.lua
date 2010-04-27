@@ -25,10 +25,13 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
---	all_remembered = true,
+	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
+--	persistant = "zone",
 	ambiant_music = "elven_town.ogg",
+	-- Apply a bluish tint to all the map
+	color_shown = {0.5, 1, 0.8, 1},
+	color_obscure = {0.5*0.6, 1*0.6, 0.8*0.6, 1},
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -55,7 +58,7 @@ return {
 		trap = {
 			class = "engine.generator.trap.Random",
 --			nb_object = {6, 9},
-			nb_object = {0, 0},
+			nb_trap = {0, 0},
 		},
 	},
 	levels =

@@ -447,6 +447,10 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		generator:generate()
 	end
 
+	-- Adjust shown & obscure colors
+	if level_data.color_shown then map:setShown(unpack(level_data.color_shown)) end
+	if level_data.color_obscure then map:setObscure(unpack(level_data.color_obscure)) end
+
 	-- Delete the room_map, now useless
 	map.room_map = nil
 

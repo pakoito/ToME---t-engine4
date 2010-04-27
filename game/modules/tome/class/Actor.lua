@@ -89,6 +89,7 @@ function _M:init(t, no_default)
 	t.melee_project = t.melee_project or {}
 	t.can_pass = t.can_pass or {}
 	t.move_project = t.move_project or {}
+	t.can_breath = t.can_breath or {}
 
 	-- Resistances
 	t.resists = t.resists or {}
@@ -144,8 +145,10 @@ function _M:act()
 	if self:attr("stunned") then self.energy.value = 0 end
 
 	-- Suffocate ?
-	local air_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level")
-	if air_level then self:suffocate(-air_level, self) end
+	local air_level, air_condition = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level"), game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_condition")
+	if air_level then
+		if not air_condition or not self.can_breath[air_condition] then self:suffocate(-air_level, self) end
+	end
 
 	-- Regain natural balance?
 	local equilibrium_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "equilibrium_level")
@@ -781,8 +784,9 @@ end
 
 --- Suffocate a bit, lose air
 function _M:suffocate(value, src)
+	if self:attr("no_breath") then return end
 	self.air = self.air - value
-	if self.air <= 0 and not self:attr("no_breath") then
+	if self.air <= 0 then
 		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())
 		return self:die(src)
 	end

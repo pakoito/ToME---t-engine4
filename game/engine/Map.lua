@@ -38,7 +38,8 @@ OBJECT = 1000
 --- The order of display for grid seen
 searchOrder = { TERRAIN, TRAP, OBJECT, ACTOR }
 
-obscure = { 0.6, 0.6, 0.6, 1 }
+color_shown   = { 1, 1, 1, 1 }
+color_obscure = { 0.6, 0.6, 0.6, 1 }
 
 --- Sets the viewport size
 -- Static
@@ -62,9 +63,17 @@ end
 --- Defines the "obscure" factor of unseen map
 -- By default it is 0.6, 0.6, 0.6, 1
 function _M:setObscure(r, g, b, a)
-	self.obscure = {r, g, b, a}
+	self.color_obscure = {r, g, b, a}
 	-- If we are used on a real map, set it localy
-	if self._map then self._map:setObscure(unpack(self.obscure)) end
+	if self._map then self._map:setObscure(unpack(self.color_obscure)) end
+end
+
+--- Defines the "shown" factor of seen map
+-- By default it is 1, 1, 1, 1
+function _M:setShown(r, g, b, a)
+	self.color_shown= {r, g, b, a}
+	-- If we are used on a real map, set it localy
+	if self._map then self._map:setShown(unpack(self.color_shown)) end
 end
 
 --- Create the tile repositories
@@ -120,7 +129,8 @@ function _M:loaded()
 	self.particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
 
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
-	self._map:setObscure(unpack(self.obscure))
+	self._map:setObscure(unpack(self.color_obscure))
+	self._map:setShown(unpack(self.color_shown))
 	self._fovcache =
 	{
 		block_sight = core.fov.newCache(self.w, self.h),
