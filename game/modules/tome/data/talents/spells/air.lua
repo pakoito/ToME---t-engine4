@@ -75,7 +75,7 @@ newTalent{
 
 					self:project({type="ball", friendlyfire=false, x=dx, y=dy, radius=10, range=0}, dx, dy, function(bx, by)
 						local actor = game.level.map(bx, by, Map.ACTOR)
-						if actor and not affected[actor] then
+						if actor and not affected[actor] and self:reactionToward(actor) < 0 then
 							fork(bx, by, dx, dy)
 							return true
 						end

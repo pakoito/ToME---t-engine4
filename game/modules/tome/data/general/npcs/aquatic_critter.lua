@@ -1,0 +1,96 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+-- last updated:  10:46 AM 2/3/2010
+
+local Talents = require("engine.interface.ActorTalents")
+
+newEntity{
+	define_as = "BASE_NPC_AQUATIC_CRITTER",
+	type = "aquatic", subtype = "critter",
+	display = "A", color=colors.WHITE,
+	body = { INVEN = 10 },
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+	stats = { str=12, dex=10, mag=3, con=13 },
+	energy = { mod=1 },
+	combat_armor = 1, combat_def = 1,
+	combat = { dam=5, atk=15, apr=7, dammod={str=0.6} },
+	max_life = resolvers.rngavg(10,20), life_rating = 6,
+	rank = 1,
+	size_category = 2,
+	can_breath={water=1},
+
+	resists = { [DamageType.COLD] = 25, },
+}
+
+newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
+	name = "giant eel", color=colors.CADET_BLUE,
+	desc = "A snake like being moving toward you.",
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 4,
+}
+
+newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
+	name = "electric eel", color=colors.STEEL_BLUE,
+	desc = "A snake-like being, radiating electricity.",
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 7,
+	autolevel = "warriormage",
+	combat = {damtype=DamageType.LIGHTNING},
+	resolvers.talents{ [Talents.T_CHAIN_LIGHTNING]=3, [Talents.T_LIGHTNING]=3 },
+}
+
+newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
+	name = "dragon turtle", color=colors.DARK_SEA_GREEN,
+	desc = "A snake-like being, radiating electricity.",
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 5,
+	rank = 2,
+	stats = { str=22, dex=10, mag=3, con=13 },
+	resists = { [DamageType.PHYSICAL] = 50, },
+}
+
+newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
+	name = "ancient dragon turtle", color=colors.DARK_SEA_GREEN,
+	desc = "A snake-like being, radiating electricity.",
+	level_range = {20, 50}, exp_worth = 1,
+	rarity = 10,
+	rank = 3,
+	autolevel = "warriormage",
+	resists = { [DamageType.PHYSICAL] = 60, },
+	resolvers.talents{ [Talents.T_TIDAL_WAVE]=3, [Talents.T_FREEZE]=3 },
+}
+
+newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
+	name = "squid", color=colors.TEAL,
+	desc = "Darting its many tentacles toward you it tries to lock you down.",
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 4,
+	resolvers.talents{ [Talents.T_GRAB]=3, },
+}
+
+newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
+	name = "ink squid", color=colors.LIGHT_STEEL_BLUE,
+	desc = "Darting its many tentacles toward you it tries to lock you down.",
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 5,
+	stats = { mag=30, },
+	resolvers.talents{ [Talents.T_GRAB]=3, [Talents.T_BLINDING_INK]=3, },
+}

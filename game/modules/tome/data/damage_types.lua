@@ -153,6 +153,19 @@ newDamageType{
 		end
 	end,
 }
+newDamageType{
+	name = "blinding ink", type = "BLINDING_INK",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatAttackStr(), target:combatMentalResist(), 0, 95, 15) and target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {})
+			else
+				game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
+			end
+		end
+	end,
+}
 
 -- Fire damage + DOT
 newDamageType{
@@ -383,6 +396,22 @@ newDamageType{
 				target:setEffect(target.EFF_BLINDED, dam.dur, {})
 			else
 				game.logSeen(target, "%s resists the sandstorm!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Physical + Pinned
+newDamageType{
+	name = "pinning", type = "PINNING",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_PINNED, dam.dur, {})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
 		end
 	end,

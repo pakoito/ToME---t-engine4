@@ -373,3 +373,83 @@ newTalent{
 		return ([[Try to confuse the target's mind fr a while.]])
 	end,
 }
+
+newTalent{
+	name = "Water Bolt",
+	type = {"spell/other", },
+	points = 5,
+	mana = 10,
+	cooldown = 3,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	reflectable = true,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.COLD, self:spellCrit(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="freeze"})
+		game:playSoundNear(self, "talents/ice")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Condenses ambient water on a target, damaging it for %0.2f.
+		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
+	name = "Grab",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 6,
+	stamina = 8,
+	require = { stat = { str=12 }, },
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hit = self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 7, true)
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_PINNED, 1 + self:getTalentLevel(t), {})
+			else
+				game.logSeen(target, "%s resists the grab!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target doing %d%% damage, if the attack hits, the target is pinned tp the ground.]]):format(100 * (0.8 + self:getTalentLevel(t) / 7))
+	end,
+}
+
+newTalent{
+	name = "Blinding Ink",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	equilibrium = 12,
+	cooldown = 12,
+	message = "@Source@ projects ink!",
+	tactical = {
+		ATTACKAREA = 10,
+		DEFEND = 5,
+	},
+	range = 4,
+	action = function(self, t)
+		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.BLINDING_INK, 2+self:getTalentLevelRaw(t), {type="dark"})
+		game:playSoundNear(self, "talents/breath")
+		return true
+	end,
+	info = function(self, t)
+		return ([[You project thick black ink, blinding your targets for %d turns.]]):format(2+self:getTalentLevelRaw(t))
+	end,
+}

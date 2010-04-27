@@ -18,21 +18,4 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
-
-newEntity{
-	define_as = "WATER_FLOOR",
-	name = "underwater", image = "terrain/water_floor.png",
-	display = '.', color=colors.LIGHT_BLUE,
-	air_level = -5, air_condition="water",
-}
-
-newEntity{
-	define_as = "WATER_WALL",
-	name = "wall", image = "terrain/water_wall.png",
-	display = '#', color=colors.AQUAMARINE,
-	always_remember = true,
-	can_pass = {pass_wall=1},
-	does_block_move = true,
-	block_sight = true,
-	air_level = -20,
-}
+load("/data/general/grids/water.lua")

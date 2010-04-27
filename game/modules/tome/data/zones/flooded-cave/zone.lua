@@ -46,9 +46,8 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
---			nb_npc = {20, 30},
-			nb_npc = {0, 0},
---			guardian = "TROLL_BILL",
+			nb_npc = {20, 30},
+			guardian = "UKLLMSWWIK",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -57,8 +56,7 @@ return {
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
---			nb_object = {6, 9},
-			nb_trap = {0, 0},
+			nb_object = {6, 9},
 		},
 	},
 	levels =
