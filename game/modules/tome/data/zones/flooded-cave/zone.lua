@@ -24,7 +24,7 @@ return {
 	max_level = 1,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 50, height = 50,
+	width = 100, height = 100,
 	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
@@ -35,7 +35,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
-			nb_rooms = 10,
+			nb_rooms = 50,
 			edge_entrances = {4,6},
 			rooms = {"forest_clearing"},
 			['.'] = "WATER_FLOOR",
@@ -46,7 +46,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {30, 40},
 			guardian = "UKLLMSWWIK",
 		},
 		object = {
