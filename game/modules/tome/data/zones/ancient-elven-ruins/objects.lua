@@ -45,7 +45,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	use_power = { name = "generate a burst of ice", power = 8,
 		use = function(self, who)
 			local tg = {type="ball", range=0, radius=4, friendlyfire=false}
-			who:project(tg, who.x, who.y, engine.DamageType.ICE, {dur=2, dam=10 + (who:getMag() + who:getWil()) / 2}, {type="freeze"})
+			who:project(tg, who.x, who.y, engine.DamageType.ICE, 10 + (who:getMag() + who:getWil()) / 2, {type="freeze"})
 			game:playSoundNear(who, "talents/ice")
 			game.logSeen(who, "%s invokes the power of his icy sword!", who.name:capitalize())
 			return true
