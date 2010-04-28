@@ -34,6 +34,7 @@ function _M:init(zone, map, level)
 	self.filters = data.filters
 	self.nb_npc = data.nb_npc or {10, 20}
 	self.guardian = data.guardian
+	self.post_generation = data.post_generation
 end
 
 function _M:generate()
@@ -73,6 +74,7 @@ function _M:generateOne()
 		end
 		if tries < 100 then
 			self.zone:addEntity(self.level, m, "actor", x, y)
+			if self.post_generation then self.post_generation(m) end
 		end
 	end
 end

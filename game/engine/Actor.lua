@@ -27,6 +27,7 @@ module(..., package.seeall, class.inherit(Entity))
 function _M:init(t, no_default)
 	t = t or {}
 
+	if not self.targetable and self.targetable == nil then self.targetable = true end
 	self.name = t.name or "unknown actor"
 	self.level = t.level or 1
 	self.sight = t.sight or 20

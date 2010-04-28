@@ -21,7 +21,7 @@ return {
 	name = "Flooded Cave",
 	level_range = {25, 35},
 	level_scheme = "player",
-	max_level = 1,
+	max_level = 2,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 100, height = 100,
@@ -37,7 +37,7 @@ return {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 50,
 			edge_entrances = {4,6},
-			rooms = {"forest_clearing"},
+			rooms = {"forest_clearing","money_vault"},
 			['.'] = "WATER_FLOOR",
 			['#'] = "WATER_WALL",
 			up = "UP",
@@ -47,7 +47,7 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {30, 40},
-			guardian = "UKLLMSWWIK",
+--			guardian = "UKLLMSWWIK",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -65,6 +65,18 @@ return {
 			generator = { map = {
 				up = "UP_WILDERNESS",
 			}, },
+		},
+		[2] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/flooded-cave-last",
+				},
+				actor = {
+					nb_npc = {7, 7},
+					post_generation = function(e) e.faction="water-lair" end,
+				},
+			},
 		},
 	},
 }

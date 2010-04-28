@@ -20,6 +20,7 @@
 require "engine.class"
 local DamageType = require "engine.DamageType"
 local Map = require "engine.Map"
+local Chat = require "engine.Chat"
 local Target = require "engine.Target"
 local Talents = require "engine.interface.ActorTalents"
 
@@ -34,10 +35,13 @@ function _M:bumpInto(target)
 		return self:attackTarget(target)
 	elseif reaction >= 0 then
 		-- Talk ?
+		print(self.player , target.can_talk)
 		if self.player and target.can_talk then
-			-- TODO: implement !
+			local chat = Chat.new(target.can_talk, target, self)
+			chat:invoke()
 		elseif target.player and self.can_talk then
-			-- TODO: implement! request the player to talk
+			local chat = Chat.new(self.can_talk, self, target)
+			chat:invoke()
 		elseif self.move_others then
 			-- Displace
 			game.level.map:remove(self.x, self.y, Map.ACTOR)

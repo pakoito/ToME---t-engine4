@@ -33,7 +33,6 @@ function _M:add(t)
 	self.factions[t.short_name] = t
 end
 
-
 --- Returns the status of faction f1 toward f2
 -- @param f1 the source faction
 -- @param f2 the target faction
@@ -41,8 +40,28 @@ end
 function _M:factionReaction(f1, f2)
 	-- Faction always like itself
 	if f1 == f2 then return 100 end
+	if game.factions and game.factions[f1] and game.factions[f1][f2] then return game.factions[f1][f2] end
 	if not self.factions[f1] then return 0 end
 	return self.factions[f1].reaction[f2] or 0
+end
+
+--- Sets the status of faction f1 toward f2
+-- @param f1 the source faction
+-- @param f2 the target faction
+-- @param reaction a numerical value representing the reaction, 0 is neutral, <0 is aggressive, >0 is friendly
+-- @param mutual if true the same status will be set for f2 toward f1
+function _M:setFactionReaction(f1, f2, reaction, mutual)
+	-- Faction always like itself
+	if f1 == f2 then return end
+	if not self.factions[f1] then return end
+	if not self.factions[f2] then return end
+	game.factions = game.factions or {}
+	game.factions[f1] = game.factions[f1] or {}
+	game.factions[f1][f2] = reaction
+	if mutual then
+		game.factions[f2] = game.factions[f2] or {}
+		game.factions[f2][f1] = reaction
+	end
 end
 
 -- Add a few default factions

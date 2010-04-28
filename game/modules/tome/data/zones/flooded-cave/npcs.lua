@@ -26,6 +26,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ define_as = "UKLLMSWWIK",
 	type = "dragon", subtype = "water", unique = true,
 	name = "Ukllmswwik the wise",
+	faction="water-lair",
 	display = "D", color=colors.VIOLET,
 	desc = [[It looks like a cross between a shark and a dragon, only nastier.]],
 	level_range = {3, 40}, exp_worth = 2,
@@ -45,4 +46,6 @@ newEntity{ define_as = "UKLLMSWWIK",
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+
+	can_talk = "ukllmswwik",
 }

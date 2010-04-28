@@ -20,6 +20,7 @@
 -- This file loads the game module, and loads data
 local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
+local Faction = require "engine.Faction"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -86,6 +87,9 @@ ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's
 
 -- Actor leveling, player is restricted to 50 bu npcs can go higher
 ActorLevel:defineMaxLevel(75)
+
+-- Factions
+Faction:add{ name="water lair", reaction={} }
 
 -- Actor autolevel schemes
 dofile("/data/autolevel_schemes.lua")
