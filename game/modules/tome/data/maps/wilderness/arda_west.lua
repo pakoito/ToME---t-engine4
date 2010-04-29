@@ -55,69 +55,71 @@ quickEntity('G', {show_tooltip=true, name="A way into ancient elven ruins",displ
 quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-bree"})
 quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
 
-return {
-[[========q=qqqqqqqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
-[[=========q=qq=qqqqggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
-[[==========qq=q=qqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
-[[==============qqq=qqggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg]],
-[[===============q=q=q=gwwwwgggwwwwwgggggggggwwwwwwwwwwggggwwwwwwwwwwwwwggggwwwwwwwwggggwwwwwwwwwgggg]],
-[[====================qwwwwwwwwwwwwwwwwggggggggwwwwwwwwwwwwwwwwwwwwwwwwwwggwwwwwwwwwwwwwwwwwwwwwwuuuu]],
-[[======================wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.uuuuuuuu]],
-[[========================wwwwwwww...wwwwwwwwww..........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.uuuuuuuuuuu]],
-[[========================..www....wwwwwwww................wwwwffffwwwwwwww......wwwww.uuuuuuuuuuuuuu]],
-[[==========.......======.........hhhh..................fffffffwwwwwwww.........wwww.utuuuutuuuuuutuu]],
-[[========......bb..===.........hhhhhhhh..&&&&&...&..fffffffffffff.................tuuututuututtuuuut]],
-[[=======......bb..===............hhhh.......&&&&&&ff.._._...........................tttttttttttttttt]],
-[[======...._.bb._..._..G.........................m....._._uuu................ii........ttttttttttttt]],
-[[=======.._..bb.._.._..hhhh................&....&mm~~~~.uu_uuuu..........i.....iii........tttttthhhh]],
-[[======.._...bb..._._..hhh.......hhhhhh.....&&&&._mm..~.uuu_u_uu..........iiiiii..............ttthhh]],
-[[=====.._..ubbb...._._..h.=....hhh.hh..........__.mm__~.uuuu_h_uu..........._.....................hh]],
-[[===...._....bb....._..hh.=_....h............__...mm..~.uuuuuu_uu.=........_........................]],
-[[====.._...bbbb...._....hhhh__..........A..._.....mm..~.uuuuuu____........._........................]],
-[[=====.._..uubb..._........._......h......._Btt...mm..~.uuuuu&&&u._........._.......................]],
-[[====...__..ubbb._......hh.._.......hh...._.thhh._mm..~..uuu&&&&&u._........._......................]],
-[[=====..._.....__......hhh.-_......1hh......._h...mm..~..uuuuuuuuu._........_.......................]],
-[[======..==..=__....h....h..._.hh..ih....._..hhh._m...~..uuuuuuuuuu._........_......................]],
-[[=============.....hhh......._.vvD.h......_.._.._mmm...~..uuuuuuuuu.._........_....................t]],
-[[======........bb...h........._vvv.hh...._.._...mm.....~..uuuuuuuu...._......_....................tt]],
-[[=====E........bb............._.v...h...._._..mmmmm..._~..uuuuuuuu....._......_..................ttt]],
-[[=====.........bb............._........._.._..mmmm____.~~.uuuuuuuu......_.._._..................tttt]],
-[[======........bb...Cb......._.........._._...mmmm.....~~.uuuuu.u........._.._.................ttttt]],
-[[=======.....ubbb..bbbb....._..........._....mmmmm....~~...uuuu.............._...............ttttttt]],
-[[==========..ubbbu........._..........._.....mmmm.....~~...uuuu..............._...._.......ttttttttt]],
-[[==========..uuubbubb....._........____.....hmmmm....~~....uuuuuuu............._.__._ ...ttttttttttt]],
-[[==========...uubuu......_........______....mmmmm....~~..uuuuuuuuuu............._....  ...t  ttttttt]],
-[[==========.....u.u....._........_.....______mm___...~~.uuuuuuuuuu...................        ttttttt]],
-[[===========.=........._........_...........mmmm_...~~..uu&uuuuuuu..................         ttttttt]],
-[[================....__........_..ttt......mmmm.____~~..uuuuuuuuu...................         ...tttt]],
-[[=================.==t........_....tt.....ttmmm.....~.....uuuuu..................hh.        ......tt]],
-[[===================tt........._.........ttmmm.......~~.........................hhhh.       .......t]],
-[[===================t==......._..........ttmmmttttt._..~~~~~~....................hhh.  ...  .......t]],
-[[===================t==......_...........t&mmmmtttt___.....~~~..................hhhhh. ... ........t]],
-[[=====================......_.ttt........t&mmmtttttt..__~~~~~...................hhhhhh.............t]],
-[[=====================.....=_.tt.........&&mmmttttt.....~...........................hh.............t]],
-[[======================...==..ttt........&&_&&&.._.......~~........................................t]],
-[[=======================.===..............h_h....._........~.......................................t]],
-[[===========================..............._........_.....~........................................t]],
-[[==========================.tt......._._.._........_....h=hh...sss.................................t]],
-[[==========================.tt._.._t_...__.........._..h===h.ssss.................................tt]],
-[[==========================..__.__._._._..&&&b....._....h=hh..ss.a.a.............................ttt]],
-[[============================....._..._.__.&&&......_....~~.....aaaaaa..a..aa..a..a..aa...a.....tttt]],
-[[===========================.............._&&&hh....._....~~....aavvaaaaaaaaaaaaaaaaaaaaaaaaaaaaattt]],
-[[===========================.......h.&.hh&&&&&&&......__.~~~~....aavvvvvvvavvvavaa_"""_""""""..aaatt]],
-[[===========================.....hh.&.&_&h&.&h&_&&&....._..~~~...aavvmvvvvvvvvvva_"""""_""""""...aat]],
-[[===========================....h....__hh...hhh._h&&........~~...aavvmmvvvvvvvaa_"""""""_"""".....aa]],
-[[===========================..hhh_.._.......hh._.hh&&&........~~.aavvvvvvvvvvaa""_""""""_"""""""....]],
-[[============================.ht_.__._........_&hhh.&&&&&........aavaavaaavvv"""""_""""_""""""".....]],
-[[============================.th_..._....hh.._&&&hh.._&&&&.&...~.aaa""a"a""""""""=="""_""""""""""...]],
-[[============================.th._.hhhhhhhh...__...._h&h&&&&&.~..aa""""""""""""======_"""""""""""aaa]],
-[[===========================.hh._...h.h........._.._.h&hh._h2.~..aa"""_"_"""""=====""""""""""""aaaaa]],
-[[==========================..hh.._.....===.=====_._&h...._...h.~.aa"__"_"__======"""""aa""""aaaadddd]],
-[[==========================.h...._...=====F=====_&&h...._._...~~.aa_""""""""""""_""a"aaaaaaaaddddddd]],
-[[========================.hhh=...=_.==========&hhhh.._._..._.~~..aaa""aaa""a"""aa_adaadddddddddddddd]],
-[[======================....=====.==============h.h._=._.....~~...aaaaaaaaaaaaaaaaaaadddddddddddddddd]],
-[[==============================================.hhh==....~~~~....................ddddddddddddddddddd]],
-[[===============================================..====~~~~................dddddddddddddddddddddddddd]],
-[[===============================================.==h==_............ddddddddddddddddddddddddddddddddd]],
-[[=================================================hh===........ddddddddddddddddddddddddddddddddddddd]],
-}
+-- Load encounters for this map
+prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounters/arda-west.lua")
+
+return [[
+========q=qqqqqqqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+=========q=qq=qqqqggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+==========qq=q=qqqqgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+==============qqq=qqggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+===============q=q=q=gwwwwgggwwwwwgggggggggwwwwwwwwwwggggwwwwwwwwwwwwwggggwwwwwwwwggggwwwwwwwwwgggg
+====================qwwwwwwwwwwwwwwwwggggggggwwwwwwwwwwwwwwwwwwwwwwwwwwggwwwwwwwwwwwwwwwwwwwwwwuuuu
+======================wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.uuuuuuuu
+========================wwwwwwww...wwwwwwwwww..........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.uuuuuuuuuuu
+========================..www....wwwwwwww................wwwwffffwwwwwwww......wwwww.uuuuuuuuuuuuuu
+==========.......======.........hhhh..................fffffffwwwwwwww.........wwww.utuuuutuuuuuutuu
+========......bb..===.........hhhhhhhh..&&&&&...&..fffffffffffff.................tuuututuututtuuuut
+=======......bb..===............hhhh.......&&&&&&ff.._._...........................tttttttttttttttt
+======...._.bb._..._..G.........................m....._._uuu................ii........ttttttttttttt
+=======.._..bb.._.._..hhhh................&....&mm~~~~.uu_uuuu..........i.....iii........tttttthhhh
+======.._...bb..._._..hhh.......hhhhhh.....&&&&._mm..~.uuu_u_uu..........iiiiii..............ttthhh
+=====.._..ubbb...._._..h.=....hhh.hh..........__.mm__~.uuuu_h_uu..........._.....................hh
+===...._....bb....._..hh.=_....h............__...mm..~.uuuuuu_uu.=........_........................
+====.._...bbbb...._....hhhh__..........A..._.....mm..~.uuuuuu____........._........................
+=====.._..uubb..._........._......h......._Btt...mm..~.uuuuu&&&u._........._.......................
+====...__..ubbb._......hh.._.......hh...._.thhh._mm..~..uuu&&&&&u._........._......................
+=====..._.....__......hhh.-_......1hh......._h...mm..~..uuuuuuuuu._........_.......................
+======..==..=__....h....h..._.hh..ih....._..hhh._m...~..uuuuuuuuuu._........_......................
+=============.....hhh......._.vvD.h......_.._.._mmm...~..uuuuuuuuu.._........_....................t
+======........bb...h........._vvv.hh...._.._...mm.....~..uuuuuuuu...._......_....................tt
+=====E........bb............._.v...h...._._..mmmmm..._~..uuuuuuuu....._......_..................ttt
+=====.........bb............._........._.._..mmmm____.~~.uuuuuuuu......_.._._..................tttt
+======........bb...Cb......._.........._._...mmmm.....~~.uuuuu.u........._.._.................ttttt
+=======.....ubbb..bbbb....._..........._....mmmmm....~~...uuuu.............._...............ttttttt
+==========..ubbbu........._..........._.....mmmm.....~~...uuuu..............._...._.......ttttttttt
+==========..uuubbubb....._........____.....hmmmm....~~....uuuuuuu............._.__._ ...ttttttttttt
+==========...uubuu......_........______....mmmmm....~~..uuuuuuuuuu............._....  ...t  ttttttt
+==========.....u.u....._........_.....______mm___...~~.uuuuuuuuuu...................        ttttttt
+===========.=........._........_...........mmmm_...~~..uu&uuuuuuu..................         ttttttt
+================....__........_..ttt......mmmm.____~~..uuuuuuuuu...................         ...tttt
+=================.==t........_....tt.....ttmmm.....~.....uuuuu..................hh.        ......tt
+===================tt........._.........ttmmm.......~~.........................hhhh.       .......t
+===================t==......._..........ttmmmttttt._..~~~~~~....................hhh.  ...  .......t
+===================t==......_...........t&mmmmtttt___.....~~~..................hhhhh. ... ........t
+=====================......_.ttt........t&mmmtttttt..__~~~~~...................hhhhhh.............t
+=====================.....=_.tt.........&&mmmttttt.....~...........................hh.............t
+======================...==..ttt........&&_&&&.._.......~~........................................t
+=======================.===..............h_h....._........~.......................................t
+===========================..............._........_.....~........................................t
+==========================.tt......._._.._........_....h=hh...sss.................................t
+==========================.tt._.._t_...__.........._..h===h.ssss.................................tt
+==========================..__.__._._._..&&&b....._....h=hh..ss.a.a.............................ttt
+============================....._..._.__.&&&......_....~~.....aaaaaa..a..aa..a..a..aa...a.....tttt
+===========================.............._&&&hh....._....~~....aavvaaaaaaaaaaaaaaaaaaaaaaaaaaaaattt
+===========================.......h.&.hh&&&&&&&......__.~~~~....aavvvvvvvavvvavaa_"""_""""""..aaatt
+===========================.....hh.&.&_&h&.&h&_&&&....._..~~~...aavvmvvvvvvvvvva_"""""_""""""...aat
+===========================....h....__hh...hhh._h&&........~~...aavvmmvvvvvvvaa_"""""""_"""".....aa
+===========================..hhh_.._.......hh._.hh&&&........~~.aavvvvvvvvvvaa""_""""""_"""""""....
+============================.ht_.__._........_&hhh.&&&&&........aavaavaaavvv"""""_""""_""""""".....
+============================.th_..._....hh.._&&&hh.._&&&&.&...~.aaa""a"a""""""""=="""_""""""""""...
+============================.th._.hhhhhhhh...__...._h&h&&&&&.~..aa""""""""""""======_"""""""""""aaa
+===========================.hh._...h.h........._.._.h&hh._h2.~..aa"""_"_"""""=====""""""""""""aaaaa
+==========================..hh.._.....===.=====_._&h...._...h.~.aa"__"_"__======"""""aa""""aaaadddd
+==========================.h...._...=====F=====_&&h...._._...~~.aa_""""""""""""_""a"aaaaaaaaddddddd
+========================.hhh=...=_.==========&hhhh.._._..._.~~..aaa""aaa""a"""aa_adaadddddddddddddd
+======================....=====.==============h.h._=._.....~~...aaaaaaaaaaaaaaaaaaadddddddddddddddd
+==============================================.hhh==....~~~~....................ddddddddddddddddddd
+===============================================..====~~~~................dddddddddddddddddddddddddd
+===============================================.==h==_............ddddddddddddddddddddddddddddddddd
+=================================================hh===........ddddddddddddddddddddddddddddddddddddd]]

@@ -57,10 +57,15 @@ function _M:loadMap(file)
 			e:resolve(nil, true)
 			t[char] = {grid=e}
 		end,
+		prepareEntitiesList = function(type, class, file)
+			local list = require(class):loadList(file)
+			self.level:setEntitiesList(type, self.zone:computeRarities(type, list, self.level, nil))
+		end,
 	}
 	setfenv(f, setmetatable(g, {__index=_G}))
 	local ret, err = f()
 	if not ret and err then error(err) end
+	if type(ret) == "string" then ret = ret:split("\n") end
 
 	local m = { w=ret[1]:len(), h=#ret }
 

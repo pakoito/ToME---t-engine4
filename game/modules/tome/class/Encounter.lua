@@ -17,28 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "An apprentice task"
-desc = function(self, who)
-	local desc = {}
-	desc[#desc+1] = "You met a novice mage who was tasked to collect many staves."
-	desc[#desc+1] = "He asked for your help should you collect some that you do not use."
-	if self:isCompleted() then
-	else
-		desc[#desc+1] = "#SLATE#* "..self.nb_collect.."/15#WHITE#"
-	end
-	return table.concat(desc, "\n")
+require "engine.class"
+require "engine.Entity"
+
+module(..., package.seeall, class.inherit(engine.Entity))
+
+function _M:init(t, no_default)
+	assert(t.coords, "no encounter coords")
+	assert(t.level_range, "no encounter level_range")
+	assert(t.on_encounter, "no encounter on_encounter")
+
+	engine.Entity.init(self, t, no_default)
 end
 
-on_status_change = function(self, who, status, sub)
-	if self:isCompleted() then
-	end
-end
-
-on_grant = function(self, who)
-	self.nb_collect = 0
-end
-
-collect_staff = function(self, who, o)
-	self.nb_collect = self.nb_collect + 1
-	if self.nb_collect > 15 then who:setQuestStatus(self, self.COMPLETED) end
-end

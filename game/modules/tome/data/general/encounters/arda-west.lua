@@ -17,28 +17,24 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "An apprentice task"
-desc = function(self, who)
-	local desc = {}
-	desc[#desc+1] = "You met a novice mage who was tasked to collect many staves."
-	desc[#desc+1] = "He asked for your help should you collect some that you do not use."
-	if self:isCompleted() then
-	else
-		desc[#desc+1] = "#SLATE#* "..self.nb_collect.."/15#WHITE#"
-	end
-	return table.concat(desc, "\n")
-end
+newEntity{
+	name = "Novice mage",
+	level_range = {1, 10},
+	rarity = 4,
+	coords = {{ x=23, y=10, likelymap={
+		[[    11111111   ]],
+		[[ 1111122222211 ]],
+		[[111111222222111]],
+		[[111111222222211]],
+		[[111111232222211]],
+		[[111111222222211]],
+		[[111111222222111]],
+		[[111111222222111]],
+		[[111111111111111]],
+		[[ 1111111111111 ]],
+		[[   111111111   ]],
+	}}},
+	on_encounter = function(self, who)
 
-on_status_change = function(self, who, status, sub)
-	if self:isCompleted() then
-	end
-end
-
-on_grant = function(self, who)
-	self.nb_collect = 0
-end
-
-collect_staff = function(self, who, o)
-	self.nb_collect = self.nb_collect + 1
-	if self.nb_collect > 15 then who:setQuestStatus(self, self.COMPLETED) end
-end
+	end,
+}
