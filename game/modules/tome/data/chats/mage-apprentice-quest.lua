@@ -21,8 +21,9 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a young man, a novice mage by his looks*#WHITE#
 Good day to you fellow traveller!]],
 	answers = {
-		{"What brings an apprentice mage in the wilds?", cond=function(npc, player) return not player:hasQuest("mage-apprentice") end, jump="quest"},
-		{"Do you have any items to sell?", jump="store"},
+		{"What brings an apprentice mage in the wilds?", jump="quest", cond=function(npc, player) return not player:hasQuest("mage-apprentice") end},
+		{"I have a staff for you!", jump="offer", cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end},
+--		{"Do you have any items to sell?", jump="store"},
 		{"Sorry I have to go!"},
 	}
 }
@@ -48,6 +49,13 @@ Anyway, I must collect 15 magic staves and I have yet to find one. If you could 
 	answers = {
 		{"I will keep that in mind", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
+	}
+}
+
+newChat{ id="offer",
+	text = [[Thank you!]],
+	answers = {
+		{"Bye!"},
 	}
 }
 

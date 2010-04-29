@@ -123,7 +123,7 @@ end
 
 --- Checks an entity against a filter
 function _M:checkFilter(e, filter)
-	if e.unique and game.uniques[e.unique] then print("refused unique", e.name, e.unique) return false end
+	if e.unique and game.uniques[e.__CLASSNAME.."/"..e.unique] then print("refused unique", e.name, e.__CLASSNAME.."/"..e.unique) return false end
 
 	if not filter then return true end
 	print("Filtering", filter.type, filter.subtype)
@@ -131,8 +131,9 @@ function _M:checkFilter(e, filter)
 	if filter.type and filter.type ~= e.type then return false end
 	if filter.subtype and filter.subtype ~= e.subtype then return false end
 	if filter.name and filter.name ~= e.name then return false end
+	if e.checkFilter and not e:checkFilter(filter) then return end
 
-	if e.unique then print("accepted unique", e.name, e.unique) end
+	if e.unique then print("accepted unique", e.name, e.__CLASSNAME.."/"..e.unique) end
 
 	return true
 end
@@ -171,7 +172,7 @@ function _M:makeEntity(level, type, filter)
 
 	local list = level:getEntitiesList(type)
 	local e
-	local tries = 500
+	local tries = filter and filter.nb_tries or 500
 	-- CRUDE ! Brute force ! Make me smarter !
 	while tries > 0 do
 		e = self:pickEntity(list)
@@ -198,7 +199,7 @@ function _M:makeEntityByName(level, type, name)
 	end
 	if not e then return nil end
 
-	if e.unique and game.uniques[e.unique] then print("refused unique", e.name, e.unique) return nil end
+	if e.unique and game.uniques[e.__CLASSNAME.."/"..e.unique] then print("refused unique", e.name, e.__CLASSNAME.."/"..e.unique) return nil end
 
 	e = self:finishEntity(level, type, e)
 

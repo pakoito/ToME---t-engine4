@@ -156,8 +156,8 @@ end
 -- This helps ensuring uniqueness of uniques
 function _M:added()
 	if self.unique then
-		game.uniques[self.unique] = true
-		print("Added unique", self.unique)
+		game.uniques[self.__CLASSNAME.."/"..self.unique] = true
+		print("Added unique", self.__CLASSNAME.."/"..self.unique)
 	end
 end
 
@@ -174,8 +174,8 @@ function _M:removed()
 	end
 
 	if self.unique then
-		game.uniques[self.unique] = nil
-		print("Removed unique", self.unique)
+		game.uniques[self.__CLASSNAME.."/"..self.unique] = nil
+		print("Removed unique", self.__CLASSNAME.."/"..self.unique)
 	end
 end
 

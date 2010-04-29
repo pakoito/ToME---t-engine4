@@ -19,9 +19,10 @@
 
 newEntity{
 	name = "Novice mage",
+	type = "harmless", subtype = "quest", unique = true,
 	level_range = {1, 10},
 	rarity = 4,
-	coords = {{ x=23, y=10, likelymap={
+	coords = {{ x=10, y=23, likelymap={
 		[[    11111111   ]],
 		[[ 1111122222211 ]],
 		[[111111222222111]],
@@ -34,7 +35,31 @@ newEntity{
 		[[ 1111111111111 ]],
 		[[   111111111   ]],
 	}}},
+	-- Spawn the novice mage near the player
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.NPC.new{
+			name="Novice mage",
+			type="humanoid", subtype="elf", faction="players",
+			display='@', color=colors.RED,
+			can_talk = "mage-apprentice-quest",
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "actor", x, y)
+		return true
+	end,
+}
+
+newEntity{
+	name = "Lost merchant",
+	type = "harmless", subtype = "quest", unique = true,
+	level_range = {10, 20},
+	rarity = 4,
+	coords = {{ x=0, y=0, w=40, h=40}},
 	on_encounter = function(self, who)
 
+		return true
 	end,
 }

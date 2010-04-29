@@ -42,3 +42,11 @@ collect_staff = function(self, who, o)
 	self.nb_collect = self.nb_collect + 1
 	if self.nb_collect > 15 then who:setQuestStatus(self, self.COMPLETED) end
 end
+
+can_offer = function(self, who)
+	for inven_id, inven in pairs(who.inven) do
+		for item, o in ipairs(inven) do
+			if o.type == "weapon" and o.subtype == "staff" then return true end
+		end
+	end
+end

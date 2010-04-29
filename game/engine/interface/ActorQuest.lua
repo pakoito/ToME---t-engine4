@@ -62,7 +62,7 @@ end
 --- Checks if the actor has this quest
 function _M:hasQuest(id)
 	if not self.quests then return false end
-	return self.quests[id] and true or false
+	return self.quests[id]
 end
 
 --- Checks the status of the given quest

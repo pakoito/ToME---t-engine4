@@ -28,5 +28,52 @@ function _M:init(t, no_default)
 	assert(t.on_encounter, "no encounter on_encounter")
 
 	engine.Entity.init(self, t, no_default)
+
+	self:parseCoords()
 end
 
+function _M:parseCoords()
+	self.on_map = {}
+	for i, coord in ipairs(self.coords) do
+		if coord.likelymap then
+			for y, line in ipairs(coord.likelymap) do
+				local i = 1
+				for c in line:gmatch(".") do
+					if c ~= ' ' then
+						self.on_map[(coord.x+i-1).."x"..(coord.y+y-1)] = tonumber(c)
+						print("coords", (coord.x+i-1).."x"..(coord.y+y-1), tonumber(c))
+					end
+					i = i + 1
+				end
+			end
+		elseif coord.w and coord.h then
+			for y = 1, coord.h do
+				for i = 1, coord.w do
+					self.on_map[(coord.x+i-1).."x"..(coord.y+y-1)] = 1
+				end
+			end
+		end
+	end
+end
+
+function _M:checkFilter(filter)
+	if filter.mapx and filter.mapy then
+		return self.on_map[filter.mapx.."x"..filter.mapy]
+	else
+		return true
+	end
+end
+
+function _M:findSpot(who, what)
+	what = what or "block_move"
+	local spots = {}
+	for i = -1, 1 do for j = -1, 1 do if i ~= 0 or j ~= 0 then
+		if not game.level.map:checkAllEntities(who.x + i, who.y + j, what, who) then
+			spots[#spots+1] = {who.x + i, who.y + j}
+		end
+	end end end
+	if #spots > 0 then
+		local s = rng.table(spots)
+		return s[1], s[2]
+	end
+end
