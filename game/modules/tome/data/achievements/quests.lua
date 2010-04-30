@@ -26,3 +26,7 @@ newAchievement{
 	name = "A dangerous secret",
 	desc = [[Found the mysterious staff and told Minas Tirith about it.]],
 }
+newAchievement{
+	name = "The secret city",
+	desc = [[Discovered the truth about mages.]],
+}

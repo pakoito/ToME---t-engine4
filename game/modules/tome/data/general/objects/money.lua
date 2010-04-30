@@ -29,6 +29,11 @@ newEntity{
 		who.money = who.money + self.money_value / 10
 		-- Remove from the map
 		game.level.map:removeObject(who.x, who.y, id)
+		if who.player then
+			world:gainAchievement("TREASURE_HUNTER")
+			world:gainAchievement("TREASURE_HOARDER")
+			world:gainAchievement("DRAGON_GREED")
+		end
 		return true
 	end,
 }

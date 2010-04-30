@@ -58,7 +58,7 @@ can_offer = function(self, who)
 	end
 end
 
-access_angolwen = function(self)
+access_angolwen = function(self, player)
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
 		name="Angolwen, the hidden city of magic",
@@ -81,6 +81,7 @@ access_angolwen = function(self)
 	game.zone:addEntity(game.level, p, "terrain", 16, 27)
 
 	game:setAllowedBuild("mage", true)
+	world:gainAchievement("THE_SECRET_CITY", who)
 end
 
 ring_gift = function(self, player)

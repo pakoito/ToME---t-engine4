@@ -84,7 +84,7 @@ Not many people are accepted there but I will arrange for you to be allowed insi
 	answers = {
 		{"Oh! How could such a place be kept secret for so long.. This is interresting indeed, thanks for your trust.",
 			action = function(npc, player)
-				player:hasQuest("mage-apprentice"):access_angolwen()
+				player:hasQuest("mage-apprentice"):access_angolwen(player)
 				npc:die()
 			end,
 		},

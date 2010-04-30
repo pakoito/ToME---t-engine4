@@ -27,3 +27,27 @@ newAchievement{
 		return self.mana and self.life
 	end
 }
+
+newAchievement{
+	name = "Treasure Hunter",
+	desc = [[Amass 1000 gold pieces.]],
+	can_gain = function(self, who)
+		return who.money >= 1000
+	end,
+}
+
+newAchievement{
+	name = "Treasure Hoarder",
+	desc = [[Amass 3000 gold pieces.]],
+	can_gain = function(self, who)
+		return who.money >= 3000
+	end,
+}
+
+newAchievement{ id = "DRAGON_GREED",
+	name = "Dragon's Greed",
+	desc = [[Amass 8000 gold pieces.]],
+	can_gain = function(self, who)
+		return who.money >= 8000
+	end,
+}

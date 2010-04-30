@@ -48,6 +48,7 @@ newEntity{
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "actor", x, y)
+		game.log("#LIGHT_BLUE#You notice a novice mage nearby.")
 		return true
 	end,
 }
