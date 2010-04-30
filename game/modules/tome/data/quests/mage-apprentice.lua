@@ -29,24 +29,64 @@ desc = function(self, who)
 	return table.concat(desc, "\n")
 end
 
-on_status_change = function(self, who, status, sub)
-	if self:isCompleted() then
-	end
-end
-
 on_grant = function(self, who)
-	self.nb_collect = 0
+	self.nb_collect = 14
 end
 
-collect_staff = function(self, who, o)
-	self.nb_collect = self.nb_collect + 1
-	if self.nb_collect > 15 then who:setQuestStatus(self, self.COMPLETED) end
+collect_staff = function(self, who, dialog)
+	who:showEquipInven("Offer which staff?",
+		function(o) return o.type == "weapon" and o.subtype == "staff" end,
+		function(o, inven, item)
+			self.nb_collect = self.nb_collect + 1
+			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
+			who:removeObject(who:getInven(inven), item)
+			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
+			who:sortInven(who:getInven(inven))
+			dialog:regen()
+			return true
+		end
+	)
 end
 
 can_offer = function(self, who)
+	if self.nb_collect >= 15 then return end
+
 	for inven_id, inven in pairs(who.inven) do
 		for item, o in ipairs(inven) do
 			if o.type == "weapon" and o.subtype == "staff" then return true end
 		end
+	end
+end
+
+access_angolwen = function(self)
+	local g = mod.class.Grid.new{
+		show_tooltip=true,
+		name="Angolwen, the hidden city of magic",
+		desc="Secret place of magic, set apart from the world to protect it.",
+		display='*', color=colors.WHITE, image="terrain/town1.png",
+		notice = true,
+		change_level=1, change_zone="town-angolwen"
+	}
+	local p = mod.class.Grid.new{
+		show_tooltip=true,
+		name="Portal to Angolwen",
+		desc="The city of magic lies inside the mountains to the west, either a spell or a portal is needed to access it.",
+		display='*', color=colors.VIOLET, image="terrain/grass_teleport.png",
+		notice = true,
+		change_level=1, change_zone="town-angolwen"
+	}
+	g:resolve() g:resolve(nil, true)
+	p:resolve() p:resolve(nil, true)
+	game.zone:addEntity(game.level, g, "terrain", 14, 27)
+	game.zone:addEntity(game.level, p, "terrain", 16, 27)
+end
+
+ring_gift = function(self, player)
+	local o = game.zone:makeEntity(game.level, "object", {type="jewelry", subtype="ring", force_ego={"RING_ARCANE_POWER","RING_BURNING","RING_FREEZING","RING_SHOCK","RING_MAGIC"}}, player.level + 3)
+	if o then
+		o:identify(true)
+		player:addObject(player.INVEN_INVEN, o)
+		game.zone:addEntity(game.level, o, "object")
+		game.logPlayer(player, "You receive: %s", o:getName{do_color=true})
 	end
 end

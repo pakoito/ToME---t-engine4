@@ -27,7 +27,8 @@ _M.quest_class = "engine.Quest"
 --- Grants a quest to an actor from the given quest definition
 function _M:grantQuest(quest)
 	if type(quest) == "string" then
-		local f = loadfile("/data/quests/"..quest..".lua")
+		local f, err = loadfile("/data/quests/"..quest..".lua")
+		if not f and err then error(err) end
 		local ret = {}
 		setfenv(f, setmetatable(ret, {__index=_G}))
 		f()
@@ -52,6 +53,7 @@ end
 function _M:setQuestStatus(quest, status, sub)
 	print("[QUEST] try update status on", self.name, quest, status, sub)
 	if not self.quests then return end
+	if type(quest) == "table" then quest = quest.id end
 	local q = self.quests[quest]
 	if not q then return end
 	if q:setStatus(status, sub, self) then
@@ -69,6 +71,7 @@ end
 -- If the actor does not have the quest, does nothing
 function _M:isQuestStatus(quest, status, sub)
 	if not self.quests then return end
+	if type(quest) == "table" then quest = quest.id end
 	local q = self.quests[quest]
 	if not q then return end
 	return q:isStatus(status, sub)

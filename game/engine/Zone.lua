@@ -100,8 +100,9 @@ function _M:computeRarities(type, list, level, filter)
 			if e.egos and not level:getEntitiesList(type.."/"..e.egos) then
 				local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
 				if egos then
-					egos = self:computeRarities(type, egos, level, filter)
-					level:setEntitiesList(type.."/"..e.egos, egos)
+					local egos_prob = self:computeRarities(type, egos, level, filter)
+					level:setEntitiesList(type.."/"..e.egos, egos_prob)
+					level:setEntitiesList(type.."/base/"..e.egos, egos)
 				end
 			end
 
@@ -167,8 +168,9 @@ end
 
 --- Picks and resolve an entity
 -- @return the fully resolved entity, ready to be used on a level. Or nil if a filter was given an nothing found
-function _M:makeEntity(level, type, filter)
+function _M:makeEntity(level, type, filter, force_level)
 	resolvers.current_level = self.base_level + level.level - 1
+	if force_level then resolvers.current_level = force_level end
 
 	local list = level:getEntitiesList(type)
 	local e
@@ -180,6 +182,8 @@ function _M:makeEntity(level, type, filter)
 		tries = tries - 1
 	end
 	if tries == 0 then return nil end
+
+	if filter then e.force_ego = filter.force_ego end
 
 	e = self:finishEntity(level, type, e, filter and filter.ego_chance)
 
@@ -212,9 +216,20 @@ function _M:finishEntity(level, type, e, ego_chance)
 	e:resolve()
 
 	-- Add "ego" properties, sometimes
-	if not e.unique and e.egos and e.egos_chance and rng.percent(util.bound(e.egos_chance + (ego_chance or 0), 0, 100)) then
-		local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
-		local ego = self:pickEntity(egos)
+	if not e.unique and e.egos and (e.force_ego or (e.egos_chance and rng.percent(util.bound(e.egos_chance + (ego_chance or 0), 0, 100)))) then
+		local ego
+		if not e.force_ego then
+			local egos = level:getEntitiesList(type.."/"..e.egos)
+			ego = self:pickEntity(egos)
+		else
+			local name = e.force_ego
+			if _G.type(name) == "table" then name = rng.table(name) end
+			print("Forcing ego", name)
+			local egos = level:getEntitiesList(type.."/base/"..e.egos)
+			ego = egos[name]
+			e.force_ego = nil
+		end
+
 		if ego then
 			print("ego", ego.__CLASSNAME, ego.name, getmetatable(ego))
 			ego = ego:clone()

@@ -168,7 +168,7 @@ newEntity{
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus(8, 2) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_MAGIC",
 	name = " of magic (#STATBONUS#)",
 	level_range = {1, 50},
 	rarity = 6,
@@ -197,7 +197,7 @@ newEntity{
 		inc_damage = { [DamageType.PHYSICAL] = resolvers.mbonus(15, 5) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_ARCANE_POWER",
 	name = " of arcane power (#DAMBONUS#)",
 	level_range = {6, 50},
 	rarity = 4,
@@ -206,7 +206,7 @@ newEntity{
 		inc_damage = { [DamageType.ARCANE] = resolvers.mbonus(15, 5) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_BURNING",
 	name = " of burning (#DAMBONUS#)",
 	level_range = {6, 50},
 	rarity = 4,
@@ -215,7 +215,7 @@ newEntity{
 		inc_damage = { [DamageType.FIRE] = resolvers.mbonus(15, 5) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_FREEZING",
 	name = " of freezing (#DAMBONUS#)",
 	level_range = {6, 50},
 	rarity = 4,
@@ -224,7 +224,7 @@ newEntity{
 		inc_damage = { [DamageType.COLD] = resolvers.mbonus(15, 5) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_NATURE_BLESSING",
 	name = " of nature's blessing (#DAMBONUS#)",
 	level_range = {6, 50},
 	rarity = 4,
@@ -233,7 +233,7 @@ newEntity{
 		inc_damage = { [DamageType.NATURE] = resolvers.mbonus(15, 5) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_BLIGHT",
 	name = " of blight (#DAMBONUS#)",
 	level_range = {6, 50},
 	rarity = 4,
@@ -242,7 +242,7 @@ newEntity{
 		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus(15, 5) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_SHOCK",
 	name = " of shock (#DAMBONUS#)",
 	level_range = {6, 50},
 	rarity = 4,
@@ -251,7 +251,7 @@ newEntity{
 		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus(15, 5) },
 	},
 }
-newEntity{
+newEntity{ define_as = "RING_CORROSION",
 	name = " of corrosion (#DAMBONUS#)",
 	level_range = {6, 50},
 	rarity = 4,
