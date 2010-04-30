@@ -22,6 +22,7 @@ newBirthDescriptor{
 	name = "Mage",
 	desc = {
 		"Mages are the wielder of the arcane powers. Able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
+		"All mages have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 	},
 	descriptor_choices =
 	{
@@ -33,6 +34,7 @@ newBirthDescriptor{
 --			Necromancer = "allow",
 		},
 	},
+	talents = { [ActorTalents.T_TELEPORT_ANGOLWEN]=1 },
 	copy = {
 		resolvers.generic(function(e)
 			e.hotkey[10] = {"inventory", "potion of lesser mana"}

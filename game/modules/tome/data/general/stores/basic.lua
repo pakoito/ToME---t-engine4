@@ -100,3 +100,35 @@ newEntity{
 		},
 	},
 }
+
+newEntity{
+	define_as = "ANGOLWEN_STAFF_WAND",
+	name = "staves and wands store",
+	display = '6', color=colors.RED,
+	store = {
+		restock_after = 1000,
+		empty_before_restock = true,
+		buy_percent = 10,
+		min_fill = 15,
+		max_fill = 25,
+		filters = {
+			{type="weapon", subtype="staff", id=true},
+		},
+	},
+}
+
+newEntity{
+	define_as = "ANGOLWEN_JEWELRY",
+	name = "jewelry store",
+	display = '2', color=colors.BLUE,
+	store = {
+		restock_after = 1000,
+		empty_before_restock = true,
+		buy_percent = 10,
+		min_fill = 15,
+		max_fill = 25,
+		filters = {
+			{type="jewelry", id=true},
+		},
+	},
+}

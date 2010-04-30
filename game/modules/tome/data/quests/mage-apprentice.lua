@@ -30,7 +30,7 @@ desc = function(self, who)
 end
 
 on_grant = function(self, who)
-	self.nb_collect = 14
+	self.nb_collect = 0
 end
 
 collect_staff = function(self, who, dialog)
@@ -79,6 +79,8 @@ access_angolwen = function(self)
 	p:resolve() p:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 14, 27)
 	game.zone:addEntity(game.level, p, "terrain", 16, 27)
+
+	game:setAllowedBuild("mage", true)
 end
 
 ring_gift = function(self, player)

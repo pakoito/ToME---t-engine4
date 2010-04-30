@@ -46,6 +46,7 @@ newBirthDescriptor{
 		class =
 		{
 			__ALL__ = "allow",
+			Mage = function() return config.settings.tome.allow_build.mage and "allow" or "never" end,
 			Wilder = function() return (
 				config.settings.tome.allow_build.wilder_summoner or
 				config.settings.tome.allow_build.wilder_wyrmic

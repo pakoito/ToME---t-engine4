@@ -96,11 +96,37 @@ newTalent{
 	hide = true,
 }
 
+-- Mages class talent, teleport to angolwen
+newTalent{
+	short_name = "TELEPORT_ANGOLWEN",
+	name = "Teleport: Angolwen",
+	type = {"base/class", 1},
+	cooldown = 1000,
+	action = function(self, t)
+		local seen = false
+		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
+		core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+			local actor = game.level.map(x, y, game.level.map.ACTOR)
+			if actor and actor ~= self then seen = true end
+		end, nil)
+		if seen then
+			game.log("There are creatures that could be watching you, you can not take the risk.")
+			return
+		end
+
+		game:changeLevel(1, "town-angolwen")
+		return true
+	end,
+	info = [[Allows the mage to teleport to the secret town of Angolwen.
+	You have studied the magic arts there and have been granted a special portal spell to teleport there.
+	Nobody must learn about this spell and so it should never be used while seen by any creatures.]]
+}
+
 -- Dunadan's power, a "weak" regeneration
 newTalent{
 	short_name = "DUNADAN_HEAL",
 	name = "King's Gift",
-	type = {"base/class", 1},
+	type = {"base/race", 1},
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:getWil() * 0.5})
@@ -116,7 +142,7 @@ newTalent{
 newTalent{
 	short_name = "NANDOR_SPEED",
 	name = "Grace of the Eldar",
-	type = {"base/class", 1},
+	type = {"base/race", 1},
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_SPEED, 8, {power=0.20 + self:getDex() / 80})
@@ -132,7 +158,7 @@ newTalent{
 newTalent{
 	short_name = "DWARF_RESILIENCE",
 	name = "Resilience of the Dwarves",
-	type = {"base/class", 1},
+	type = {"base/race", 1},
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_DWARVEN_RESILIENCE, 8, {
@@ -152,7 +178,7 @@ newTalent{
 newTalent{
 	short_name = "HOBBIT_LUCK",
 	name = "Luck of the Little Folk",
-	type = {"base/class", 1},
+	type = {"base/race", 1},
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_HOBBIT_LUCK, 5, {

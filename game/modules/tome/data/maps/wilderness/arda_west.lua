@@ -55,6 +55,13 @@ quickEntity('G', {show_tooltip=true, name="A way into ancient elven ruins",displ
 quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-bree"})
 quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
 
+-- Angolwen is only know from the start to mages
+if game.player.descriptor.class == "Mage" then
+	quickEntity('3', {show_tooltip=true, name="Angolwen, the hidden city of magic", desc="Secret place of magic, set apart from the world to protect it.", display='*', color=colors.WHITE, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-angolwen"})
+else
+	quickEntity('3', 'b')
+end
+
 -- Load encounters for this map
 prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounters/arda-west.lua")
 
@@ -86,7 +93,7 @@ return [[
 =====E........bb............._.v...h...._._..mmmmm..._~..uuuuuuuu....._......_..................ttt
 =====.........bb............._........._.._..mmmm____.~~.uuuuuuuu......_.._._..................tttt
 ======.......bbb...Cb......._.........._._...mmmm.....~~.uuuuu.u........._.._.................ttttt
-=======.....ubbb..bbbb....._..........._....mmmmm....~~...uuuu.............._...............ttttttt
+=======.....ub3b..bbbb....._..........._....mmmmm....~~...uuuu.............._...............ttttttt
 ==========..ubbbu........._..........._.....mmmm.....~~...uuuu..............._...._.......ttttttttt
 ==========..uuubbubb....._........____.....hmmmm....~~....uuuuuuu............._.__._ ...ttttttttttt
 ==========...uubuu......_........______....mmmmm....~~..uuuuuuuuuu............._....  ...t  ttttttt

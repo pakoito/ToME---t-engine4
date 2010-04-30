@@ -52,10 +52,14 @@ function _M:loadMap(file)
 			t[char] = {grid=grid, obj=obj, actor=actor, trap=trap}
 		end,
 		quickEntity = function(char, e)
-			local e = self.zone.grid_class.new(e)
-			e:resolve()
-			e:resolve(nil, true)
-			t[char] = {grid=e}
+			if type(e) == "table" then
+				local e = self.zone.grid_class.new(e)
+				e:resolve()
+				e:resolve(nil, true)
+				t[char] = {grid=e}
+			else
+				t[char] = t[e]
+			end
 		end,
 		prepareEntitiesList = function(type, class, file)
 			local list = require(class):loadList(file)
