@@ -35,7 +35,7 @@ newEntity{
 		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)
 		game.logPlayer(who, "You have %d talent point(s) to spend. Press G to use them.", who.unused_talents)
 
-		who:learnTalentType("gift/sand", false)
+		who:learnTalentType("wild-gift/sand-drake", false)
 		game.logPlayer(who, "You are transformed by the heart of the Queen!.")
 		game.logPlayer(who, "#00FF00#You gain an affinity for sand. You can now learn new sand talents (press G).")
 

@@ -88,8 +88,15 @@ function _M:init(title, actor, filter, action)
 		EXIT = function() game:unregisterDialog(self) end,
 	})
 	self:mouseZones{
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+			if tx < self.iw / 2 then
+				self.list = self.equip_list
+			else
+				self.list = self.inven_list
+			end
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			self.changed = true
+
 			if button == "left" then self:use()
 			elseif button == "right" then
 			end
