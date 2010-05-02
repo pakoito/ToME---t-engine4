@@ -47,9 +47,27 @@ newTalent{
 }
 
 newTalent{
-	name = "Frost Hands",
-	type = {"spell/enhancement",2},
+	name = "Earthen Barrier",
+	type = {"spell/enhancement", 2},
+	points = 5,
+	cooldown = 25,
+	mana = 45,
 	require = spells_req2,
+	range = 20,
+	action = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic")
+		self:setEffect(self.EFF_EARTHEN_BARRIER, 10, {power=10 + self:getTalentLevel(t) * self:combatSpellpower(0.08)})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%%.]]):format(10 + self:getTalentLevel(t) * self:combatSpellpower(0.08))
+	end,
+}
+
+newTalent{
+	name = "Frost Hands",
+	type = {"spell/enhancement", 3},
+	require = spells_req3,
 	points = 5,
 	mode = "sustained",
 	cooldown = 10,
@@ -72,5 +90,40 @@ newTalent{
 	info = function(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attacks and increasing all cold damage by %d%%.]]):
 		format(3 + self:getTalentLevel(t) * self:combatSpellpower(0.05), 4 + self:getTalentLevel(t) * self:combatSpellpower(0.04))
+	end,
+}
+
+newTalent{
+	name = "Inner Power",
+	type = {"spell/enhancement", 4},
+	require = spells_req4,
+	points = 5,
+	mode = "sustained",
+	cooldown = 10,
+	sustain_mana = 40,
+	tactical = {
+		DEFEND = 10,
+	},
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic")
+		local power = math.floor(2 + self:getTalentLevel(t) * self:combatSpellpower(0.06))
+		return {
+			stats = self:addTemporaryValue("inc_stats", {
+				[self.STAT_STR] = power,
+				[self.STAT_DEX] = power,
+				[self.STAT_MAG] = power,
+				[self.STAT_WIL] = power,
+				[self.STAT_CUN] = power,
+				[self.STAT_CON] = power,
+			}),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("inc_stats", p.stats)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Concentrate on your inner self, increasing your stats by %d.]]):
+		format(2 + self:getTalentLevel(t) * self:combatSpellpower(0.06))
 	end,
 }

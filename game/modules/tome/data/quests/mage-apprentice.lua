@@ -81,7 +81,7 @@ access_angolwen = function(self, player)
 	game.zone:addEntity(game.level, p, "terrain", 16, 27)
 
 	game:setAllowedBuild("mage", true)
-	world:gainAchievement("THE_SECRET_CITY", who)
+	world:gainAchievement("THE_SECRET_CITY", player)
 end
 
 ring_gift = function(self, player)

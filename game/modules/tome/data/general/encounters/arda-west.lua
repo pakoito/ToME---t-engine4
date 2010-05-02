@@ -21,7 +21,7 @@ newEntity{
 	name = "Novice mage",
 	type = "harmless", subtype = "quest", unique = true,
 	level_range = {1, 10},
-	rarity = 4,
+	rarity = 3,
 	coords = {{ x=10, y=23, likelymap={
 		[[    11111111   ]],
 		[[ 1111122222211 ]],

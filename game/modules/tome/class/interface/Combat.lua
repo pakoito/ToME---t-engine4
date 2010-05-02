@@ -436,6 +436,11 @@ function _M:combatDamage(weapon)
 			add = add + (self:getStat(stat) - 10) * 0.7 * mod
 		end
 	end
+
+	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
+		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9
+	end
+
 	local talented_mod = self:combatCheckTraining(weapon)
 	return self.combat_dam + (weapon.dam or 1) * (1 + talented_mod / 4) + add
 end
@@ -445,7 +450,7 @@ function _M:combatSpellpower(mod)
 	mod = mod or 1
 	local add = 0
 	if self:knowTalent(self.T_ARCANE_DEXTERITY) then
-		add = (20 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 7) * self:getDex() / 100
+		add = (15 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 5) * self:getDex() / 100
 	end
 	return (self.combat_spellpower + add + self:getMag() * 0.7) * mod
 end

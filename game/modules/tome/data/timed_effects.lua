@@ -170,6 +170,22 @@ newEffect{
 }
 
 newEffect{
+	name = "EARTHEN_BARRIER",
+	desc = "Earthen Barrier",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# hardens its skin.", "+Earthen barrier" end,
+	on_lose = function(self, err) return "#Target# skin returns to normal.", "-Earthen barrier" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "SPEED",
 	desc = "Speed",
 	type = "magical",

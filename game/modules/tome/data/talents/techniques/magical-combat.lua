@@ -39,6 +39,35 @@ newTalent{
 	require = techs_req2,
 	info = function(self, t)
 		return ([[The user gains a bonus to spellpower equal to %d%% of her dexterity.]]):
-		format(20 + self:getTalentLevel(t) * 7)
+		format(15 + self:getTalentLevel(t) * 5)
+	end,
+}
+
+newTalent{
+	name = "Arcane Feed",
+	type = {"technique/magical-combat", 3},
+	points = 5,
+	cooldown = 5,
+	stamina = 100,
+	require = techs_req3,
+	range = 20,
+	action = function(self, t)
+		self:incMana(40 + self:getTalentLevel(t) * 12)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Regenerates %d mana at the cost of 100 stamina.]]):format(40 + self:getTalentLevel(t) * 12)
+	end,
+}
+
+newTalent{
+	name = "Arcane Destruction",
+	type = {"technique/magical-combat", 4},
+	mode = "passive",
+	points = 5,
+	require = techs_req4,
+	info = function(self, t)
+		return ([[Raw magical damage channels through the caster's weapon, increasing physical damage by %d.]]):
+		format(self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9)
 	end,
 }
