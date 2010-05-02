@@ -65,6 +65,9 @@ function _M:loadMap(file)
 			local list = require(class):loadList(file)
 			self.level:setEntitiesList(type, self.zone:computeRarities(type, list, self.level, nil))
 		end,
+		addData = function(t)
+			table.merge(self.level.data, t, true)
+		end,
 	}
 	setfenv(f, setmetatable(g, {__index=_G}))
 	local ret, err = f()

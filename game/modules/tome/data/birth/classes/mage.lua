@@ -29,7 +29,6 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "never",
-			["Arcane Blade"] = "allow",
 			Archmage = "allow",
 --			Necromancer = "allow",
 		},
@@ -82,55 +81,6 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-		},
-	},
-}
-
-newBirthDescriptor{
-	type = "subclass",
-	name = "Arcane Blade",
-	desc = {
-		"The Arcane Blade is a mage who spent some time studying the more pratical art of hitting people with pointy sticks.",
-		"Arcane Blades may only cast spells from the most 'raw' magic schools (Arcane, Fire, Earth, Water and Air). Later on they can also learn Conveyance.",
-		"In order to do melee combat most Arcane Blades will actually prefer to fight with their staff, as it requires Magic more than Strength to do damage.",
-		"In the fields of melee combat they learn the use of shields and can later on train in various combat techniques.",
-		"Their most important stats are: Magic and Dexterity",
-	},
-	stats = { mag=2, str=2, dex=2},
-	talents_types = {
-		["spell/arcane"]={true, 0.2},
-		["spell/fire"]={true, 0.2},
-		["spell/earth"]={true, 0.2},
-		["spell/water"]={true, 0.2},
-		["spell/air"]={true, 0.2},
-		["spell/conveyance"]={false, 0.2},
-		["technique/shield-offense"]={true, 0},
-		["technique/shield-defense"]={true, 0},
-		["technique/combat-techniques-active"]={false, 0},
-		["technique/combat-techniques-passive"]={false, 0},
-		["technique/combat-training"]={true, 0},
-		["technique/magical-combat"]={true, 0},
-		["cunning/survival"]={true, -0.1},
-	},
-	talents = {
-		[ActorTalents.T_ARCANE_COMBAT] = 1,
-		[ActorTalents.T_FLAME] = 1,
-		[ActorTalents.T_STONE_SKIN] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
-	},
-	copy = {
-		max_life = 100,
-		life_rating = 9,
-		mana_rating = 8,
-		stamina_rating = 8,
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="shield", name="iron shield", autoreq=true},
-			{type="armor", subtype="cloth", name="robe", autoreq=true},
-		},
-		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-			{type="potion", subtype="potion", name="potion of lesser mana"},
 		},
 	},
 }

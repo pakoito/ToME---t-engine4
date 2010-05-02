@@ -35,24 +35,24 @@ newTalentType{ type="technique/combat-training", name = "combat-training", descr
 newTalentType{ type="technique/magical-combat", name = "magical-combat", description = "Blend magic and melee." }
 
 -- Generic requires for techs based on talent level
--- Uses STR unless the wielder knows Arcane Combat
-techs_req1 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+-- Uses STR
+techs_req1 = function(self, t) local stat = "str"; return {
 	stat = { [stat]=function(level) return 12 + (level-1) * 2 end },
 	level = function(level) return 0 + (level-1)  end,
 } end
-techs_req2 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+techs_req2 = function(self, t) local stat = "str"; return {
 	stat = { [stat]=function(level) return 20 + (level-1) * 2 end },
 	level = function(level) return 4 + (level-1)  end,
 } end
-techs_req3 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+techs_req3 = function(self, t) local stat = "str"; return {
 	stat = { [stat]=function(level) return 28 + (level-1) * 2 end },
 	level = function(level) return 8 + (level-1)  end,
 } end
-techs_req4 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+techs_req4 = function(self, t) local stat = "str"; return {
 	stat = { [stat]=function(level) return 36 + (level-1) * 2 end },
 	level = function(level) return 12 + (level-1)  end,
 } end
-techs_req5 = function(self, t) local stat = self:getMag() >= self:getStr() and self:knowTalent(self.T_ARCANE_COMBAT) and "mag" or "str"; return {
+techs_req5 = function(self, t) local stat = "str"; return {
 	stat = { [stat]=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 } end

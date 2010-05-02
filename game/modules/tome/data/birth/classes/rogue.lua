@@ -77,8 +77,9 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Shadowblade",
 	desc = {
-		"Shadowblades are a blend of rogues and mages, able to kill with their daggers under a veil of stealth while casting spells",
-		"to enhance their performance and survival.",
+		"Shadowblades are a blend of rogues that were touched by the gift of magic, able to kill with their daggers under a veil of stealth while casting spells to enhance their performance and survival.",
+		"Their use of magic is innate and they never really studied it.",
+		"They use the schools of phantasm, temporal, divination and conveyance to enhance their arts.",
 		"Their most important stats are: Dexterity, Cunning and Magic",
 	},
 	stats = { dex=2, mag=2, cun=2, },

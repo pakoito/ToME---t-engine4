@@ -29,6 +29,7 @@ newTalentType{ type="spell/meta", name = "meta", description = "Meta spells alte
 newTalentType{ type="spell/divination", name = "divination", description = "Divination allows the caster to sense its surroundings, find hidden things." }
 newTalentType{ type="spell/temporal", name = "temporal", description = "Temporal the school of time manipulation." }
 newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
+newTalentType{ type="spell/enhancement", name = "enhancement", description = "Enhance your own body." }
 
 -- Generic requires for spells based on talent level
 spells_req1 = {
@@ -63,3 +64,4 @@ load("/data/talents/spells/meta.lua")
 load("/data/talents/spells/divination.lua")
 load("/data/talents/spells/temporal.lua")
 load("/data/talents/spells/phantasm.lua")
+load("/data/talents/spells/enhancement.lua")

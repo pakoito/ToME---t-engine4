@@ -293,6 +293,31 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		end
 	end end
 
+	-- Autospell cast
+	if hitted and self:knowTalent(self.T_ARCANE_COMBAT) and rng.percent(20 + self:getTalentLevel(self.T_ARCANE_COMBAT) * (1 + self:getDex(9, true))) then
+		local spells = {}
+		if self:knowTalent(self.T_FLAME) then spells[#spells+1] = self.T_FLAME end
+		if self:knowTalent(self.T_FLAMESHOCK) then spells[#spells+1] = self.T_FLAMESHOCK end
+		if self:knowTalent(self.T_LIGHTNING) then spells[#spells+1] = self.T_LIGHTNING end
+		if self:knowTalent(self.T_CHAIN_LIGHTNING) then spells[#spells+1] = self.T_CHAIN_LIGHTNING end
+		local tid = rng.table(spells)
+		if tid then
+			print("[ARCANE COMBAT] autocast ",self:getTalentFromId(tid).name)
+			local old_cd = self:isTalentCoolingDown(self:getTalentFromId(tid))
+			local old = self.energy.value
+			self.energy.value = 100000
+			self.getTarget = function() return target.x, target.y, target end
+			self:useTalent(tid)
+			self.getTarget = nil
+			self.energy.value = old
+			-- Do not setup a cooldown
+			if not old_cd then
+				self.talents_cd[tid] = nil
+			end
+			self.changed = true
+		end
+	end
+
 	-- Reactive target on hit damage
 	if hitted then for typ, dam in pairs(target.on_melee_hit) do
 		if dam > 0 then
@@ -418,7 +443,11 @@ end
 --- Gets spellpower
 function _M:combatSpellpower(mod)
 	mod = mod or 1
-	return (self.combat_spellpower + self:getMag() * 0.7) * mod
+	local add = 0
+	if self:knowTalent(self.T_ARCANE_DEXTERITY) then
+		add = (20 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 7) * self:getDex() / 100
+	end
+	return (self.combat_spellpower + add + self:getMag() * 0.7) * mod
 end
 
 --- Gets spellcrit

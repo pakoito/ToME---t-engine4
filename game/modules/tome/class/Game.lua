@@ -221,7 +221,11 @@ function _M:changeLevel(lev, zone)
 			self.zone:leaveLevel(false, lev, old_lev)
 			self.zone:leave()
 		end
-		self.zone = Zone.new(zone)
+		if type(zone) == "string" then
+			self.zone = Zone.new(zone)
+		else
+			self.zone = zone
+		end
 	end
 	self.zone:getLevel(self, lev, old_lev)
 

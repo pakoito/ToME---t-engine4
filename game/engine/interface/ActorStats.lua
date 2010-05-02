@@ -40,8 +40,8 @@ function _M:defineStat(name, short_name, default_value, min, max, desc)
 	self.stats_def[#self.stats_def].id = #self.stats_def
 	self.stats_def[short_name] = self.stats_def[#self.stats_def]
 	self["STAT_"..short_name:upper()] = #self.stats_def
-	self["get"..short_name:lower():capitalize()] = function(self, scale)
-		return self:getStat(_M["STAT_"..short_name:upper()], scale)
+	self["get"..short_name:lower():capitalize()] = function(self, scale, raw)
+		return self:getStat(_M["STAT_"..short_name:upper()], scale, raw)
 	end
 end
 
@@ -82,7 +82,8 @@ end
 -- If you stat short name is STR then it becomes getStr()
 -- @param stat the stat id
 -- @param scale a scaling factor, nil means max stat value
-function _M:getStat(stat, scale)
+-- @param raw false if the scaled result must be rounded down
+function _M:getStat(stat, scale, raw)
 	local val, inc
 	if type(stat) == "string" then
 		val = self.stats[_M.stats_def[stat].id]
@@ -93,7 +94,11 @@ function _M:getStat(stat, scale)
 	end
 	val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + inc
 	if scale then
-		val = math.floor(val * scale / _M.stats_def[stat].max)
+		if not raw then
+			val = math.floor(val * scale / _M.stats_def[stat].max)
+		else
+			val = val * scale / _M.stats_def[stat].max
+		end
 	end
 	return val
 end

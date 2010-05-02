@@ -42,18 +42,20 @@ end
 
 --- Loads a zone definition
 -- @param short_name the short name of the zone to load, if should correspond to a directory in your module data/zones/short_name/ with a zone.lua, npcs.lua, grids.lua and objects.lua files inside
-function _M:init(short_name)
+function _M:init(short_name, dynamic)
 	self.short_name = short_name
-	if not self:load() then
+	if not self:load(dynamic) then
 		self.level_range = self.level_range or {1,1}
 		if type(self.level_range) == "number" then self.level_range = {self.level_range, self.level_range} end
 		self.level_scheme = self.level_scheme or "fixed"
 		assert(self.max_level, "no zone max level")
 		self.levels = self.levels or {}
-		self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
-		self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
-		self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
-		self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
+		if not dynamic then
+			self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
+			self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
+			self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
+			self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
+		end
 
 		-- Determine a zone base level
 		self.base_level = self.level_range[1]
@@ -294,16 +296,18 @@ function _M:addEntity(level, e, typ, x, y)
 	end
 end
 
-function _M:load()
+function _M:load(dynamic)
 	-- Try to load from a savefile
 	local save = Savefile.new(game.save_name)
 	local data = save:loadZone(self.short_name)
 	save:close()
 
-	if not data then
+	if not data and not dynamic then
 		local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
 		if err then error(err) end
 		data = f()
+	elseif not data and dynamic then
+		data = dynamic
 	end
 	for k, e in pairs(data) do self[k] = e end
 end

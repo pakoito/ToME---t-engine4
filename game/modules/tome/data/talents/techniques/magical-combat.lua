@@ -21,10 +21,24 @@ newTalent{
 	name = "Arcane Combat",
 	type = {"technique/magical-combat", 1},
 	mode = "passive",
-	points = 1,
-	require = { stat = { mag=14, dex=12 }, },
+	points = 5,
+	require = techs_req1,
 	info = function(self, t)
-		return ([[The user has learned how to blend the sword and the word, and is able to substitute her Magic stat to her Strength stat for the purpose of meeting techniques requirements.]]):
-		format()
+		return ([[Allows to use a melee weapon as a spell focus, granting %d%% chance per melee attacks to deliver a Flame, Flameshock, Lightning or Chain Lightning spell as a free action on their target.
+		Delivering the spell this way will not trigger a spell cooldown but only works if the spell is not on cooldown.
+		The chance increases with dexterity.]]):
+		format(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true)))
+	end,
+}
+
+newTalent{
+	name = "Arcane Dexterity",
+	type = {"technique/magical-combat", 2},
+	mode = "passive",
+	points = 5,
+	require = techs_req2,
+	info = function(self, t)
+		return ([[The user gains a bonus to spellpower equal to %d%% of her dexterity.]]):
+		format(20 + self:getTalentLevel(t) * 7)
 	end,
 }

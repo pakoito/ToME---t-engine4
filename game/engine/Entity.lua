@@ -196,6 +196,14 @@ end
 -- @param mod an optional function to which will be passed each entity as they are created. Can be used to adjust some values on the fly
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
 function _M:loadList(file, no_default, res, mod)
+	if type(file) == "table" then
+		res = res or {}
+		for i, f in ipairs(file) do
+			self:loadList(f, no_default, res, mod)
+		end
+		return res
+	end
+
 	no_default = no_default and true or false
 	res = res or {}
 
