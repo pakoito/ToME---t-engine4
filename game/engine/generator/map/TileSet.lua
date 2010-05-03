@@ -47,13 +47,13 @@ function _M:findOpenings(t, c, i, j, mx, my)
 	local d = self.raw
 	if self:isOpening(c, d) and (i == 1 or i == mx or j == 1 or j == my) then
 		if i == 1 and j == 1 then
-			table.insert(t.openings, {i, j, 7})
+--			table.insert(t.openings, {i, j, 7})
 		elseif i == 1 and j == my then
-			table.insert(t.openings, {i, j, 1})
+--			table.insert(t.openings, {i, j, 1})
 		elseif i == mx and j == my then
-			table.insert(t.openings, {i, j, 3})
+--			table.insert(t.openings, {i, j, 3})
 		elseif i == mx and j == 1 then
-			table.insert(t.openings, {i, j, 9})
+--			table.insert(t.openings, {i, j, 9})
 		elseif i == 1 then
 			table.insert(t.openings, {i, j, 4})
 		elseif i == mx then
@@ -88,7 +88,7 @@ function _M:loadTiles(tileset)
 				local i = mx - ri + 1
 				t[i] = t[i] or {}
 				t[i][j] = ts[ri][j]
-				self:findOpenings(t, c, i, j, mx, my)
+				self:findOpenings(t, t[i][j], i, j, mx, my)
 			end end
 			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
@@ -100,7 +100,7 @@ function _M:loadTiles(tileset)
 				local j = my - rj + 1
 				t[i] = t[i] or {}
 				t[i][j] = ts[i][rj]
-				self:findOpenings(t, c, i, j, mx, my)
+				self:findOpenings(t, t[i][j], i, j, mx, my)
 			end end
 			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
@@ -112,7 +112,7 @@ function _M:loadTiles(tileset)
 				local i = mx - ri + 1
 				t[i] = t[i] or {}
 				t[i][j] = ts[j][ri]
-				self:findOpenings(t, c, i, j, mx, my)
+				self:findOpenings(t, t[i][j], i, j, mx, my)
 			end end
 			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
@@ -125,7 +125,7 @@ function _M:loadTiles(tileset)
 				local j = my - rj + 1
 				t[i] = t[i] or {}
 				t[i][j] = ts[ri][rj]
-				self:findOpenings(t, c, i, j, mx, my)
+				self:findOpenings(t, t[i][j], i, j, mx, my)
 			end end
 			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
@@ -137,7 +137,7 @@ function _M:loadTiles(tileset)
 				local j = my - rj + 1
 				t[i] = t[i] or {}
 				t[i][j] = ts[rj][i]
-				self:findOpenings(t, c, i, j, mx, my)
+				self:findOpenings(t, t[i][j], i, j, mx, my)
 			end end
 			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
@@ -294,6 +294,7 @@ function _M:buildTile(tile, bx, by, rid)
 	end
 	local opens = {}
 	for i, o in ipairs(tile.openings) do
+		print(" * opening in dir ", o[3], "::", o[1], o[2])
 		local coord = dir_to_coord[o[3]]
 		local mts, type = self:findMatchingTiles(tile, o[3])
 		-- if we found no match for the given type try the other one
