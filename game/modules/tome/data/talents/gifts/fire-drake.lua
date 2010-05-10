@@ -54,7 +54,7 @@ newTalent{
 		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=15 + self:getStr() * 0.1 * self:getTalentLevel(t), dist=4})
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=15 + self:getStr() * 0.1 * self:getTalentLevel(t), dist=4})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
