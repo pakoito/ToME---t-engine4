@@ -183,6 +183,7 @@ function _M:die(src)
 	if self.game_ender then
 		engine.interface.ActorLife.die(self, src)
 		game.paused = true
+		self.energy.value = game.energy_to_act
 		game:registerDialog(DeathDialog.new(self))
 	else
 		mod.class.Actor.die(self, src)
