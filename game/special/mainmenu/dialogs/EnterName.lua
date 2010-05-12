@@ -29,7 +29,7 @@ function _M:init(runmod)
 	self.name = ""
 	self:keyCommands({
 		_RETURN = function()
-			if self.name:len() >= 3 then
+			if self.name:len() >= 2 then
 				game:unregisterDialog(self)
 
 				-- Ok run the module
