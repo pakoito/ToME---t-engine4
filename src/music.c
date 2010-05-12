@@ -28,6 +28,8 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
+bool sound_active = TRUE;
+
 static int music_new(lua_State *L)
 {
 	if (no_sound) return 0;
@@ -57,6 +59,7 @@ static int music_free(lua_State *L)
 
 static int music_play(lua_State *L)
 {
+	if (!sound_active) return 0;
 	Mix_Music **m = (Mix_Music**)auxiliar_checkclass(L, "core{music}", 1);
 	int loop = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 1;
 	int fadein = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
@@ -113,6 +116,7 @@ static int sound_free(lua_State *L)
 
 static int sound_play(lua_State *L)
 {
+	if (!sound_active) return 0;
 	Mix_Chunk **m = (Mix_Chunk**)auxiliar_checkclass(L, "core{sound}", 1);
 	int loop = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
 	int ms = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
@@ -144,8 +148,24 @@ static int channel_fadeout(lua_State *L)
 	return 0;
 }
 
+static int sound_status(lua_State *L)
+{
+	if (lua_isboolean(L, 1))
+	{
+		int act = lua_toboolean(L, 1);
+		sound_active = act;
+		return 0;
+	}
+	else
+	{
+		lua_pushboolean(L, sound_active);
+		return 1;
+	}
+}
+
 static const struct luaL_reg soundlib[] =
 {
+	{"soundSystemStatus", sound_status},
 	{"newMusic", music_new},
 	{"newSound", sound_new},
 	{"musicStop", music_stop},

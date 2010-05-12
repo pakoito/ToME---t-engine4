@@ -61,3 +61,21 @@ end
 function _M:volumeMusic(vol)
 	core.sound.musicVolume(vol or 100)
 end
+
+function _M:soundSystemStatus(act, init_setup)
+	if type(act) == "boolean" then
+		core.sound.soundSystemStatus(act)
+		if not init_setup then
+			self:saveSettings("sound", ("sound.enabled = %s\n"):format(act and "true" or "false"))
+			if act then
+				self:playMusic()
+			else
+				local o = self.current_music
+				self:stopMusic()
+				self.current_music = o
+			end
+		end
+	else
+		return core.sound.soundSystemStatus()
+	end
+end

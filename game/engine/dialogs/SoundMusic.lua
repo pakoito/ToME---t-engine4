@@ -22,10 +22,10 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(actions)
-	self:generateList(actions)
+function _M:init()
+	self:generateList()
 
-	engine.Dialog.init(self, "Game Menu", 300, #self.list * 30 + 20)
+	engine.Dialog.init(self, "Sound & Music", 300, #self.list * 30 + 40)
 
 	self.sel = 1
 	self.scroll = 1
@@ -55,50 +55,25 @@ function _M:init(actions)
 end
 
 function _M:use()
-	self.list[self.sel].fct()
+	if self.list[self.sel].act == "enable" then
+		game:soundSystemStatus(true)
+	else
+		game:soundSystemStatus(false)
+	end
+	game:unregisterDialog(self)
 end
 
-function _M:generateList(actions)
-	local default_actions = {
-		resume = { "Resume", function() game:unregisterDialog(self) end },
-		keybinds = { "Key Bindings", function()
-			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key)
-			game:registerDialog(menu)
-		end },
-		resolution = { "Display Resolution", function()
-			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.DisplayResolution").new()
-			game:registerDialog(menu)
-		end },
-		achievements = { "Show Achievements", function()
-			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.ShowAchievements").new()
-			game:registerDialog(menu)
-		end },
-		sound = { "Sound & Music", function()
-			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.SoundMusic").new()
-			game:registerDialog(menu)
-		end },
-		save = { "Save Game", function() game:saveGame() end },
-		quit = { "Save and Exit", function() game:onQuit() end },
-	}
-
+function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	local i = 0
-	for _, act in ipairs(actions) do
-		if type(act) == "string" then
-			local a = default_actions[act]
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..a[1], fct=a[2] }
-			i = i + 1
-		else
-			local a = act
-			list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..a[1], fct=a[2] }
-			i = i + 1
-		end
+
+	if game:soundSystemStatus() then
+		list[#list+1] = { name=string.char(string.byte('a') + i)..")  Disable sound & music", act="disable" } i = i + 1
+	else
+		list[#list+1] = { name=string.char(string.byte('a') + i)..")  Enable sound & music", act="enable" } i = i + 1
 	end
+
 	self.list = list
 end
 

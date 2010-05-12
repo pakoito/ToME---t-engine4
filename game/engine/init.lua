@@ -26,6 +26,7 @@ dofile("/engine/resolvers.lua")
 
 require "config"
 require "engine.Game"
+require "engine.interface.GameMusic"
 require "engine.KeyBind"
 require "engine.Savefile"
 require "engine.Tiles"
@@ -46,6 +47,7 @@ fs.setWritePath(fs.getHomePath())
 fs.mount(engine.homepath, "/")
 config.loadString[[
 window.size = "800x600"
+sound.enabled = true
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then
@@ -71,5 +73,6 @@ key:setCurrent()
 game = false
 
 engine.Game:setResolution(config.settings.window.size)
+engine.interface.GameMusic:soundSystemStatus(config.settings.sound.enabled, true)
 
 util.showMainMenu()

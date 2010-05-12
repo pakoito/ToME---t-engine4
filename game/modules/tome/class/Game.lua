@@ -588,6 +588,7 @@ function _M:setupCommands()
 				"keybinds",
 				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
 				"resolution",
+				"sound",
 				"save",
 				"quit"
 			}
