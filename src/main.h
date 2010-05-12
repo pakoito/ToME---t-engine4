@@ -22,6 +22,7 @@
 #define _MAIN_H_
 
 extern int resizeWindow(int width, int height);
+extern void do_resize(int w, int h, bool fullscreen);
 
 #endif
 

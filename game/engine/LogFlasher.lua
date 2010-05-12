@@ -30,8 +30,8 @@ BAD = 3
 function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.color = color or {255,255,255}
 	self.bgcolor = bgcolor or {0,0,0}
-	self.display_x, self.display_y = x, y
-	self.w, self.h = w, h
+	self.display_x, self.display_y = math.floor(x), math.floor(y)
+	self.w, self.h = math.floor(w), math.floor(h)
 	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 16)
 	self.font_h = self.font:lineSkip()
 	self.surface = core.display.newSurface(w, h)
@@ -44,8 +44,8 @@ end
 
 --- Resize the display area
 function _M:resize(x, y, w, h)
-	self.display_x, self.display_y = x, y
-	self.w, self.h = w, h
+	self.display_x, self.display_y = math.floor(x), math.floor(y)
+	self.w, self.h = math.floor(w), math.floor(h)
 	self.surface = core.display.newSurface(w, h)
 	self.changed = true
 end

@@ -30,9 +30,9 @@ tiles = engine.Tiles.new(16, 16)
 --- Create a buttons list
 function _M:init(list, x, y, w, h, font, separator)
 	self.separator = separator or 20
-	self.w, self.h = w, h
-	self.display_x = x or (game.w - self.w) / 2
-	self.display_y = y or (game.h - self.h) / 2
+	self.w, self.h = math.floor(w), math.floor(h)
+	self.display_x = math.floor(x or (game.w - self.w) / 2)
+	self.display_y = math.floor(y or (game.h - self.h) / 2)
 	self.font = font
 	self.list = list
 	if not font then self.font = core.display.newFont("/data/font/VeraBd.ttf", 16) end

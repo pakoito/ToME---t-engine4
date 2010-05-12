@@ -48,9 +48,9 @@ end
 --- Create a Dialog
 function _M:init(title, w, h, x, y, alpha, font)
 	self.title = title
-	self.w, self.h = w, h
-	self.display_x = x or (game.w - self.w) / 2
-	self.display_y = y or (game.h - self.h) / 2
+	self.w, self.h = math.floor(w), math.floor(h)
+	self.display_x = math.floor(x or (game.w - self.w) / 2)
+	self.display_y = math.floor(y or (game.h - self.h) / 2)
 	self.font = font
 	if not font then self.font = core.display.newFont("/data/font/Vera.ttf", 12) end
 	self.font_h = self.font:lineSkip()

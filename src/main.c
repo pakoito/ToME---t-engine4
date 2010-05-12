@@ -386,6 +386,21 @@ int resizeWindow(int width, int height)
 	return( TRUE );
 }
 
+void do_resize(int w, int h, bool fullscreen)
+{
+	int flags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_RESIZABLE;
+
+	if (fullscreen) flags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_FULLSCREEN;
+
+	screen = SDL_SetVideoMode(w, h, 32, flags);
+	if (screen==NULL) {
+		printf("error opening screen: %s\n", SDL_GetError());
+		return 0;
+	}
+
+	resizeWindow(screen->w, screen->h);
+}
+
 /**
  * Program entry point.
  */
@@ -467,7 +482,8 @@ int main(int argc, char *argv[])
 
 	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/data/gfx/te4-icon.png"), TRUE), NULL);
 
-	screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE);
+//	screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_RESIZABLE);
+	do_resize(WIDTH, HEIGHT, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
 		return;
@@ -509,6 +525,22 @@ int main(int argc, char *argv[])
 		{
 			switch(event.type)
 			{
+			case SDL_VIDEORESIZE:
+				printf("resize %d x %d\n", event.resize.w, event.resize.h);
+				do_resize(event.resize.w, event.resize.h, FALSE);
+
+				if (current_game != LUA_NOREF)
+				{
+					lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+					lua_pushstring(L, "onResolutionChange");
+					lua_gettable(L, -2);
+					lua_remove(L, -2);
+					lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+					docall(L, 1, 0);
+				}
+
+				break;
+
 			case SDL_MOUSEMOTION:
 			case SDL_MOUSEBUTTONUP:
 			case SDL_KEYDOWN:

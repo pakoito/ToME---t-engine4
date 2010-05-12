@@ -200,6 +200,7 @@ end
 
 --- Called when screen resolution changes
 function _M:onResolutionChange()
+	self.w, self.h = core.display.size()
 end
 
 --- Requests the game to save

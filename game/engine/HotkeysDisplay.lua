@@ -32,14 +32,14 @@ end
 
 --- Resize the display area
 function _M:resize(x, y, w, h)
-	self.display_x, self.display_y = x, y
-	self.w, self.h = w, h
+	self.display_x, self.display_y = math.floor(x), math.floor(y)
+	self.w, self.h = math.floor(w), math.floor(h)
 	self.surface = core.display.newSurface(w, h)
 	if self.actor then self.actor.changed = true end
 
 	local cw, ch = self.font:size(" ")
 	self.font_w = cw
-	self.max_char_w = math.floor(w / self.font_w)
+	self.max_char_w = math.min(127, math.floor(w / self.font_w))
 end
 
 local page_to_hotkey = {"", "SECOND_", "THIRD_"}
