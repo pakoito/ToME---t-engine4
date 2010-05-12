@@ -108,6 +108,7 @@ void on_event(SDL_Event *event)
 {
 	switch (event->type) {
 	case SDL_KEYDOWN:
+	case SDL_KEYUP:
 		if (current_keyhandler != LUA_NOREF)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
@@ -146,9 +147,11 @@ void on_event(SDL_Event *event)
 			}
 			else
 				lua_pushnil(L);
-			docall(L, 7, 0);
+			lua_pushboolean(L, (event->type == SDL_KEYUP) ? TRUE : FALSE);
+			docall(L, 8, 0);
 		}
 		break;
+	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
 		if (current_mousehandler != LUA_NOREF)
 		{
@@ -177,7 +180,8 @@ void on_event(SDL_Event *event)
 			}
 			lua_pushnumber(L, event->button.x);
 			lua_pushnumber(L, event->button.y);
-			docall(L, 4, 0);
+			lua_pushboolean(L, (event->type == SDL_MOUSEBUTTONUP) ? TRUE : FALSE);
+			docall(L, 5, 0);
 		}
 		break;
 	case SDL_MOUSEMOTION:
@@ -542,8 +546,10 @@ int main(int argc, char *argv[])
 				break;
 
 			case SDL_MOUSEMOTION:
+			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
 			case SDL_KEYDOWN:
+			case SDL_KEYUP:
 				/* handle key presses */
 				on_event(&event);
 				break;

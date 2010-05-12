@@ -164,7 +164,11 @@ function _M:formatKeyString(ks)
 	end
 end
 
-function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
+function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
+	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
+
+	if isup then return end
+
 	local ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 --	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then
@@ -175,7 +179,7 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
 		return
 	end
 
-	engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode)
+	engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
 end
 
 --- Adds a key/command combinaison

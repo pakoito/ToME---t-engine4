@@ -31,7 +31,10 @@ end
 -- @param button
 -- @param x coordinate of the click
 -- @param y coordinate of the click
-function _M:receiveMouse(button, x, y)
+-- @param isup true if the key was released, false if pressed
+function _M:receiveMouse(button, x, y, isup)
+	if not isup then return end
+
 	for i, m in ipairs(self.areas) do
 		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) then
 			m.fct(button, x, y, nil, nil, x-m.x1, y-m.y1)

@@ -328,6 +328,13 @@ function _M:display()
 			self.target.target.x, self.target.target.y = tmx, tmy
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
+
+		if self.test_path and self.key.status[self.key._LSHIFT] then
+			for i, c in ipairs(self.test_path) do
+				local lx, ly = c.x, c.y
+				self.test_sprite:toScreen(self.level.map.display_x + (lx - game.level.map.mx) * self.level.map.tile_w, self.level.map.display_y + (ly - game.level.map.my) * self.level.map.tile_h)
+			end
+		end
 	end
 
 	engine.GameTurnBased.display(self)
@@ -655,20 +662,17 @@ function _M:setupMouse()
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
 		-- Move tooltip
 		self.tooltip_x, self.tooltip_y = mx, my
+		local tmx, tmy = self.level.map:getMouseTile(mx, my)
 
 		-- Target stuff
 		if button == "right" then
-			local tmx, tmy = self.level.map:getMouseTile(mx, my)
 			-- DEBUG
---			if config.settings.tome.cheat then
---				game.player:move(tmx, tmy, true)
---			else
-				local Astar = require"engine.Astar"
-				local a = Astar.new(self.level.map, self.player)
-				local path = a:CalcPath(a:CalcMoves(self.player.x, self.player.y, tmx, tmy))
-				print("A* from", self.player.x, self.player.y, "to", tmx, tmy)
-				for i, c in ipairs(path) do print("A*", c.x, c.y) end
---			end
+			if config.settings.tome.cheat then
+				game.player:move(tmx, tmy, true)
+			else
+				-- Move along the projected A* path
+			end
+
 		-- Move map around
 		elseif button == "left" and xrel and yrel then
 			derivx = derivx + xrel
@@ -689,6 +693,18 @@ function _M:setupMouse()
 				derivy = derivy + game.level.map.tile_h
 			end
 			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
+		elseif button == "none" then
+			if self.key.status[self.key._LSHIFT] and self.test_x ~= tmx or self.test_y ~= tmy then
+				local Astar = require"engine.Astar"
+				local a = Astar.new(self.level.map, self.player)
+				local path = a:calc(self.player.x, self.player.y, tmx, tmy)
+				self.test_x = tmx
+				self.text_y = tmy
+				self.test_path = path
+				self.test_sprite = core.display.newSurface(self.level.map.tile_w, self.level.map.tile_h)
+				self.test_sprite:erase(0, 0, 255, 90)
+			end
+
 		end
 	end)
 	-- Scroll message log

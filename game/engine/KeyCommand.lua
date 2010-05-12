@@ -49,7 +49,11 @@ function _M:setupProfiler()
 	end)
 end
 
-function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
+function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
+	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
+
+	if isup then return end
+
 	-- Convert locale
 	sym = self.locale_convert[sym] or sym
 

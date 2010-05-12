@@ -24,6 +24,7 @@ require "engine.class"
 module(..., package.seeall, class.make)
 
 function _M:init()
+	self.status = {}
 end
 
 --- Called when a key is pressed
@@ -33,8 +34,15 @@ end
 -- @param alt is the alt key pressed?
 -- @param meta is the meta key pressed?
 -- @param unicode the unicode representation of the key, if possible
-function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode)
-	print(sym, ctrl, shift, alt, meta, unicode)
+-- @param isup true if the key was released, false if pressed
+function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
+	print(sym, ctrl, shift, alt, meta, unicode, isup)
+	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
+end
+
+--- Maintain the self.status table, which can be used to know if a key is currently pressed
+function _M:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
+	self.status[sym] = not isup
 end
 
 --- Setups as the current game keyhandler
