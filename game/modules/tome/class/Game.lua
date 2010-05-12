@@ -138,6 +138,7 @@ function _M:loaded()
 end
 
 function _M:onResolutionChange()
+	engine.Game.onResolutionChange(self)
 	print("[RESOLUTION] changed to ", self.w, self.h)
 	self:setupDisplayMode()
 	self.flash:resize(0, 0, self.w, 20)
@@ -659,9 +660,15 @@ function _M:setupMouse()
 		if button == "right" then
 			local tmx, tmy = self.level.map:getMouseTile(mx, my)
 			-- DEBUG
-			if config.settings.tome.cheat then
-				game.player:move(tmx, tmy, true)
-			end
+--			if config.settings.tome.cheat then
+--				game.player:move(tmx, tmy, true)
+--			else
+				local Astar = require"engine.Astar"
+				local a = Astar.new(self.level.map, self.player)
+				local path = a:CalcPath(a:CalcMoves(self.player.x, self.player.y, tmx, tmy))
+				print("A* from", self.player.x, self.player.y, "to", tmx, tmy)
+				for i, c in ipairs(path) do print("A*", c.x, c.y) end
+--			end
 		-- Move map around
 		elseif button == "left" and xrel and yrel then
 			derivx = derivx + xrel

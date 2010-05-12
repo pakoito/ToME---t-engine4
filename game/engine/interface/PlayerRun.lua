@@ -83,6 +83,24 @@ function _M:runInit(dir)
 	self:runStep()
 end
 
+--- Initializes running to a specific position
+-- This does not use the normal running algorithm but instead an A*
+function _M:runTo(x, y)
+	local block_left, block_right = false, false
+
+	self.running = {
+		to = {x=x, y=y},
+		block_left = block_left,
+		block_right = block_right,
+		cnt = 1,
+		dialog = Dialog:simplePopup("Running...", "You are running, press any key to stop.", function()
+			self:runStop()
+		end),
+	}
+
+	self:runStep()
+end
+
 --- Run a turn
 -- For a turn based game you want in you player's act() something like that:<br/>
 -- <pre>

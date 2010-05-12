@@ -319,7 +319,7 @@ function _M:doWear(inven, item, o)
 	local ro = self:wearObject(o, true, true)
 	if ro then
 		if type(ro) == "table" then self:addObject(inven, ro) end
-	elseif ro then
+	elseif not ro then
 		self:addObject(inven, o)
 	end
 	self:sortInven()
