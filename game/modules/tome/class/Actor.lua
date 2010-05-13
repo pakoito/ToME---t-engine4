@@ -248,6 +248,7 @@ function _M:magicMap(radius, x, y)
 	for i = x - radius, x + radius do for j = y - radius, y + radius do
 		if game.level.map:isBound(i, j) and core.fov.distance(x, y, i, j) < radius then
 			game.level.map.remembers(i, j, true)
+			game.level.map.has_seens(i, j, true)
 		end
 	end end
 end

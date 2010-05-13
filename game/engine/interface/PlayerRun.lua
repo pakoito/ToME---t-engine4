@@ -83,15 +83,25 @@ function _M:runInit(dir)
 	self:runStep()
 end
 
---- Initializes running to a specific position
--- This does not use the normal running algorithm but instead an A*
-function _M:runTo(x, y)
-	local block_left, block_right = false, false
+--- Initializes running to a specific position using the given path
+-- This does not use the normal running algorithm
+function _M:runFollow(path)
+	local found = false
+	local runpath = {}
+
+	-- Find ourself along the path
+	for i, c in ipairs(path) do
+		if found then runpath[#runpath+1] = c
+		elseif c.x == self.x and c.y == self.y then found = true end
+	end
+
+	if #runpath == 0 then
+		game.logPlayer(self, "Invalid running path.")
+		return
+	end
 
 	self.running = {
-		to = {x=x, y=y},
-		block_left = block_left,
-		block_right = block_right,
+		path = runpath,
 		cnt = 1,
 		dialog = Dialog:simplePopup("Running...", "You are running, press any key to stop.", function()
 			self:runStop()
@@ -117,11 +127,21 @@ function _M:runStep()
 		self:runStop(msg)
 		return false
 	else
-		if isEdge(self, self.running.dir) then self:runStop()
-		else self:moveDir(self.running.dir) end
+		local oldx, oldy = self.x, self.y
+		if self.running.path then
+			if not self.running.path[self.running.cnt] then self:runStop()
+			else self:move(self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y) end
+		else
+			if isEdge(self, self.running.dir) then self:runStop()
+			else self:moveDir(self.running.dir) end
+		end
+
+		-- Did not move ? no use in running
+		if self.x == oldx and self.y == oldy then self:runStop() end
 
 		if not self.running then return false end
 		self.running.cnt = self.running.cnt + 1
+
 		if self.running.newdir then
 			self.running.dir = self.running.newdir
 			self.running.newdir = nil
@@ -145,27 +165,29 @@ end
 -- It will also try to follow tunnels when they simply change direction.
 -- @return true if we can continue to run, false otherwise
 function _M:runCheck()
-	-- Do we change run direction ? We can only choose to change for left or right, never backwards.
-	-- We must also be in a tunnel (both sides blocked)
-	if self.running.block_left and self.running.block_right then
-		-- Turn left
-		if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and not checkDir(self, sides[self.running.dir].left) and checkDir(self, sides[self.running.dir].right) then
-			self.running.newdir = turn[self.running.dir].left
-			self.running.ignore_left = 2
-			return true
+	if not self.running.path then
+		-- Do we change run direction ? We can only choose to change for left or right, never backwards.
+		-- We must also be in a tunnel (both sides blocked)
+		if self.running.block_left and self.running.block_right then
+			-- Turn left
+			if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and not checkDir(self, sides[self.running.dir].left) and checkDir(self, sides[self.running.dir].right) then
+				self.running.newdir = turn[self.running.dir].left
+				self.running.ignore_left = 2
+				return true
+			end
+
+			-- Turn right
+			if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and checkDir(self, sides[self.running.dir].left) and not checkDir(self, sides[self.running.dir].right) then
+				self.running.newdir = turn[self.running.dir].right
+				self.running.ignore_right = 2
+				return true
+			end
 		end
 
-		-- Turn right
-		if not checkDir(self, self.running.dir) and checkDir(self, self.running.dir, 2) and checkDir(self, sides[self.running.dir].left) and not checkDir(self, sides[self.running.dir].right) then
-			self.running.newdir = turn[self.running.dir].right
-			self.running.ignore_right = 2
-			return true
-		end
+		if not self.running.ignore_left and self.running.block_left ~= checkDir(self, sides[self.running.dir].left) then return false, "terrain change on left side" end
+		if not self.running.ignore_right and self.running.block_right ~= checkDir(self, sides[self.running.dir].right) then return false, "terrain change on right side" end
+		if checkDir(self, self.running.dir) then return false, "terrain ahead blocks" end
 	end
-
-	if not self.running.ignore_left and self.running.block_left ~= checkDir(self, sides[self.running.dir].left) then return false, "terrain change on left side" end
-	if not self.running.ignore_right and self.running.block_right ~= checkDir(self, sides[self.running.dir].right) then return false, "terrain change on right side" end
-	if checkDir(self, self.running.dir) then return false, "terrain ahead blocks" end
 
 	return true
 end
@@ -186,18 +208,24 @@ end
 
 --- Scan the run direction and sides with the given function
 function _M:runScan(fct)
-	-- Ahead
-	local dx, dy = dir_to_coord[self.running.dir][1], dir_to_coord[self.running.dir][2]
-	local x, y = self.x + dx, self.y + dy
-	fct(x, y)
+	if not self.running.path then
+		-- Ahead
+		local dx, dy = dir_to_coord[self.running.dir][1], dir_to_coord[self.running.dir][2]
+		local x, y = self.x + dx, self.y + dy
+		fct(x, y)
 
-	-- Ahead left
-	local dx, dy = dir_to_coord[sides[self.running.dir].left][1], dir_to_coord[sides[self.running.dir].left][2]
-	local x, y = self.x + dx, self.y + dy
-	fct(x, y)
+		-- Ahead left
+		local dx, dy = dir_to_coord[sides[self.running.dir].left][1], dir_to_coord[sides[self.running.dir].left][2]
+		local x, y = self.x + dx, self.y + dy
+		fct(x, y)
 
-	-- Ahead right
-	local dx, dy = dir_to_coord[sides[self.running.dir].right][1], dir_to_coord[sides[self.running.dir].right][2]
-	local x, y = self.x + dx, self.y + dy
-	fct(x, y)
+		-- Ahead right
+		local dx, dy = dir_to_coord[sides[self.running.dir].right][1], dir_to_coord[sides[self.running.dir].right][2]
+		local x, y = self.x + dx, self.y + dy
+		fct(x, y)
+	elseif self.running.path[self.running.cnt] then
+		-- Ahead
+		local x, y = self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y
+		fct(x, y)
+	end
 end

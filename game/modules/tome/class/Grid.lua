@@ -27,12 +27,12 @@ function _M:init(t, no_default)
 	engine.Grid.init(self, t, no_default)
 end
 
-function _M:block_move(x, y, e, act)
+function _M:block_move(x, y, e, act, couldpass)
 	-- Open doors
 	if self.door_opened and act then
 		game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list.DOOR_OPEN)
 		return true
-	elseif self.door_opened then
+	elseif self.door_opened and not couldpass then
 		return true
 	end
 

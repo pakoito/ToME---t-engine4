@@ -29,6 +29,8 @@ local ActorTalents = require "engine.interface.ActorTalents"
 local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
 local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 local DeathDialog = require "mod.dialogs.DeathDialog"
+local Astar = require"engine.Astar"
+local DirectPath = require"engine.DirectPath"
 
 --- Defines the player for ToME
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
@@ -82,8 +84,6 @@ function _M:init(t, no_default)
 end
 
 function _M:move(x, y, force)
---	x, y = self:tryPlayerSlide(x, y, force)
-
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
@@ -431,6 +431,42 @@ function _M:playerLevelup(on_finish)
 	end
 end
 
+--- Runs to the clicked mouse spot
+-- if no monsters in sight it will try to make an A* path, if it fails it will do a direct path
+-- if there are monsters in sight it will move one stop in the direct path direction
+function _M:mouseMove(tmx, tmy)
+	if config.settings.tome.cheat and game.key.status[game.key._LSHIFT] and game.key.status[game.key._LCTRL] then
+		game.log("[CHEAT] teleport to %dx%d", tmx, tmy)
+		self:move(tmx, tmy, true)
+	else
+		-- If hostiles, attack!
+		if spotHostiles(self) or math.floor(core.fov.distance(self.x, self.y, tmx, tmy)) == 1 then
+			local l = line.new(self.x, self.y, tmx, tmy)
+			local nx, ny = l()
+			self:move(nx or self.x, ny or self.y)
+			return
+		end
+
+		local a = Astar.new(game.level.map, self)
+		local path = a:calc(self.x, self.y, tmx, tmy, true)
+		-- No Astar path ? jsut be dumb and try direct line
+		if not path then
+			local d = DirectPath.new(game.level.map, self)
+			path = d:calc(self.x, self.y, tmx, tmy, true)
+		end
+
+		if path then
+			-- Should we just try to move in the direction, aka: attack!
+			if path[1] and game.level.map:checkAllEntities(path[1].x, path[1].y, "block_move", self) then self:move(path[1].x, path[1].y) return end
+
+			 -- Insert the player coords, running needs to find the player
+			table.insert(path, 1, {x=self.x, y=self.y})
+
+			-- Move along the projected A* path
+			self:runFollow(path)
+		end
+	end
+end
 
 ------ Quest Events
 function _M:on_quest_grant(quest)

@@ -670,12 +670,7 @@ function _M:setupMouse()
 
 		-- Target stuff
 		if button == "right" then
-			-- DEBUG
-			if config.settings.tome.cheat then
-				game.player:move(tmx, tmy, true)
-			else
-				-- Move along the projected A* path
-			end
+			self.player:mouseMove(tmx, tmy)
 
 		-- Move map around
 		elseif button == "left" and xrel and yrel then
@@ -699,9 +694,13 @@ function _M:setupMouse()
 			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
 		elseif button == "none" then
 			if self.key.status[self.key._LSHIFT] and (self.test_x ~= tmx or self.test_y ~= tmy) then
-				local Astar = require"engine.Astar"
 				local a = Astar.new(self.level.map, self.player)
-				local path = a:calc(self.player.x, self.player.y, tmx, tmy)
+				local path = a:calc(self.player.x, self.player.y, tmx, tmy, true)
+				-- No Astar path ? jsut be dumb and try direct line
+				if not path then
+					local d= DirectPath.new(self.level.map, self.player)
+					path = d:calc(self.player.x, self.player.y, tmx, tmy, true)
+				end
 				self.test_x = tmx
 				self.text_y = tmy
 				self.test_path = path

@@ -107,6 +107,7 @@ function _M:init(w, h)
 	self.map = {}
 	self.lites = {}
 	self.seens = {}
+	self.has_seens = {}
 	self.remembers = {}
 	self.effects = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
@@ -143,7 +144,15 @@ function _M:loaded()
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setSeen(x, y, v)
+			if v then self.has_seen[x + y * self.w] = true end
 			self.changed = true
+		end
+		return t[x + y * self.w]
+	end
+	local maphasseen = function(t, x, y, v)
+		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if v ~= nil then
+			t[x + y * self.w] = v
 		end
 		return t[x + y * self.w]
 	end
@@ -169,6 +178,7 @@ function _M:loaded()
 	getmetatable(self).__call = _M.call
 	setmetatable(self.lites, {__call = maplite})
 	setmetatable(self.seens, {__call = mapseen})
+	setmetatable(self.has_seens, {__call = maphasseen})
 	setmetatable(self.remembers, {__call = mapremember})
 
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
@@ -345,6 +355,7 @@ function _M:apply(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.lites[x + y * self.w] then
 		self.seens[x + y * self.w] = true
+		self.has_seens[x + y * self.w] = true
 		self._map:setSeen(x, y, true)
 		self.remembers[x + y * self.w] = true
 		self._map:setRemember(x, y, true)
@@ -360,6 +371,7 @@ function _M:applyLite(x, y)
 		self._map:setRemember(x, y, true)
 	end
 	self.seens[x + y * self.w] = true
+	self.has_seens[x + y * self.w] = true
 	self._map:setSeen(x, y, true)
 end
 

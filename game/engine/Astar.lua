@@ -45,12 +45,13 @@ end
 
 function _M:createPath(came_from, cur)
 	if not came_from[cur] then return end
-	local path = {}
+	local rpath, path = {}, {}
 	while came_from[cur] do
 		local x, y = self:toDouble(cur)
-		path[#path+1] = {x=x,y=y}
+		rpath[#rpath+1] = {x=x,y=y}
 		cur = came_from[cur]
 	end
+	for i = #rpath, 1, -1 do path[#path+1] = rpath[i] end
 	return path
 end
 
@@ -59,10 +60,9 @@ end
 -- @param sy the start coord
 -- @param tx the end coord
 -- @param ty the end coord
+-- @param use_has_seen if true the astar wont consider non-has_seen grids
 -- @return either nil if no path or a list of nodes in the form { {x=...,y=...}, {x=...,y=...}, ..., {x=tx,y=ty}}
-function _M:calc(sx, sy, tx, ty)
-	if self.actor.changed then
-
+function _M:calc(sx, sy, tx, ty, use_has_seen)
 	local w, h = self.map.w, self.map.h
 	local start = self:toSingle(sx, sy)
 	local stop = self:toSingle(tx, ty)
@@ -75,7 +75,7 @@ function _M:calc(sx, sy, tx, ty)
 
 	local checkPos = function(node, nx, ny)
 		local nnode = self:toSingle(nx, ny)
-		if not closed[nnode] and self.map:isBound(nx, ny) and not self.map:checkEntity(nx, ny, Map.TERRAIN, "block_move", self.actor) then
+		if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not self.map:checkEntity(nx, ny, Map.TERRAIN, "block_move", self.actor, nil, true)) then
 			local tent_g_score = g_score[node] + 1 -- we can adjust hre for difficult passable terrain
 			local tent_is_better = false
 			if not open[nnode] then open[nnode] = true; tent_is_better = true
