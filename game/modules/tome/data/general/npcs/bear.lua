@@ -55,7 +55,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
-	name = "black bear", color={0,0,0},
+	name = "black bear", color={50,50,50},
 	desc = [[Do you smell like honey? 'cause this bear wants honey.]],
 	level_range = {6, 50}, exp_worth = 1,
 	rarity = 7,
