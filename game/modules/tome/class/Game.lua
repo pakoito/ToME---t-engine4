@@ -29,6 +29,7 @@ local Map = require "engine.Map"
 local Target = require "engine.Target"
 local Level = require "engine.Level"
 local Birther = require "engine.Birther"
+local Astar = require "engine.Astar"
 
 local Store = require "mod.class.Store"
 local Trap = require "mod.class.Trap"

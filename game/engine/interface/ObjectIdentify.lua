@@ -59,6 +59,7 @@ end
 
 --- Identify the object
 function _M:identify(id)
+	print("[Identify]", self.name, true)
 	self:forAllStack(function(so)
 		so.identified = id
 		if so.id_by_type then

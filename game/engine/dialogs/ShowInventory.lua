@@ -104,10 +104,10 @@ function _M:defineHotkey(id)
 end
 
 function _M:use()
-	game:unregisterDialog(self)
 	if self.list[self.sel] then
 		self.action(self.list[self.sel].object, self.list[self.sel].item)
 	end
+	game:unregisterDialog(self)
 end
 
 function _M:generateList()

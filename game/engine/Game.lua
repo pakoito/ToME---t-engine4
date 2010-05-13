@@ -145,6 +145,7 @@ function _M:unregisterDialog(d)
 	local last = self.dialogs[#self.dialogs] or self
 	if last.key then last.key:setCurrent() end
 	if last.mouse then last.mouse:setCurrent() end
+	if last.on_recover_focus then last:on_recover_focus() end
 end
 
 --- The C core gives us command line arguments

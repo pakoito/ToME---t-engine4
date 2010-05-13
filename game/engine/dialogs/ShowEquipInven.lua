@@ -163,6 +163,10 @@ function _M:generateList()
 	self.scroll = 1
 end
 
+function _M:on_recover_focus()
+	self:generateList()
+end
+
 function _M:drawDialog(s)
 	if self.list[self.sel] and not self.list[self.sel].item then
 		lines = self.actor.inven_def[self.list[self.sel].inven].description:splitLines(self.iw / 2 - 10, self.font)
