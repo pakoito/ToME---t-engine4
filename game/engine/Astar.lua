@@ -18,13 +18,16 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Map = require "engine.Map"
 
 --- Pathfinding using A*
 module(..., package.seeall, class.make)
 
+--- Initializes Astar for a map and an actor
 function _M:init(map, actor)
 	self.map = map
 	self.actor = actor
+	self.move_cache = {}
 end
 
 --- The default heuristic for A*, simple distance
@@ -58,6 +61,8 @@ end
 -- @param ty the end coord
 -- @return either nil if no path or a list of nodes in the form { {x=...,y=...}, {x=...,y=...}, ..., {x=tx,y=ty}}
 function _M:calc(sx, sy, tx, ty)
+	if self.actor.changed then
+
 	local w, h = self.map.w, self.map.h
 	local start = self:toSingle(sx, sy)
 	local stop = self:toSingle(tx, ty)
@@ -70,7 +75,7 @@ function _M:calc(sx, sy, tx, ty)
 
 	local checkPos = function(node, nx, ny)
 		local nnode = self:toSingle(nx, ny)
-		if not closed[nnode] and self.map:isBound(nx, ny) and not self.map:checkAllEntities(nx, ny, "block_move", self.actor) then
+		if not closed[nnode] and self.map:isBound(nx, ny) and not self.map:checkEntity(nx, ny, Map.TERRAIN, "block_move", self.actor) then
 			local tent_g_score = g_score[node] + 1 -- we can adjust hre for difficult passable terrain
 			local tent_is_better = false
 			if not open[nnode] then open[nnode] = true; tent_is_better = true
@@ -99,10 +104,14 @@ function _M:calc(sx, sy, tx, ty)
 		closed[node] = true
 		local x, y = self:toDouble(node)
 
-		-- Check right
+		-- Check sides
 		checkPos(node, x + 1, y)
 		checkPos(node, x - 1, y)
 		checkPos(node, x, y + 1)
 		checkPos(node, x, y - 1)
+		checkPos(node, x + 1, y + 1)
+		checkPos(node, x + 1, y - 1)
+		checkPos(node, x - 1, y + 1)
+		checkPos(node, x - 1, y - 1)
 	end
 end

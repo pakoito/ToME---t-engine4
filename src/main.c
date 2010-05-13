@@ -47,6 +47,7 @@ int current_game = LUA_NOREF;
 bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
+bool tickPaused = FALSE;
 
 static int traceback (lua_State *L) {
 	lua_Debug ar;
@@ -222,7 +223,8 @@ void on_tick()
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-		docall(L, 1, 0);
+		docall(L, 1, 1);
+		tickPaused = lua_toboolean(L, -1);
 	}
 
 	/* Gather our frames per second */
@@ -525,7 +527,8 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	while (!exit_engine)
 	{
-		if (!isActive) SDL_WaitEvent(NULL);
+		if (!isActive || tickPaused) SDL_WaitEvent(NULL);
+//		else if (tickPaused) SDL_Delay(1000 / 30);
 
 		/* handle the events in the queue */
 		while (SDL_PollEvent(&event))
@@ -566,6 +569,7 @@ int main(int argc, char *argv[])
 			case SDL_KEYUP:
 				/* handle key presses */
 				on_event(&event);
+				tickPaused = FALSE;
 				break;
 			case SDL_QUIT:
 				/* handle quit requests */
@@ -583,7 +587,7 @@ int main(int argc, char *argv[])
 		}
 
 		/* draw the scene */
-		if (isActive) on_tick();
+		if (isActive && !tickPaused) on_tick();
 	}
 
 	SDL_Quit();

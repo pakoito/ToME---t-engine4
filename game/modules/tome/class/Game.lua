@@ -60,6 +60,9 @@ function _M:init()
 	engine.interface.GameMusic.init(self)
 	engine.interface.GameSound.init(self)
 
+	-- Pause at birth
+	self.paused = true
+
 	-- Same init as when loaded from a savefile
 	self:loaded()
 end
@@ -280,6 +283,7 @@ function _M:tick()
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
+	if game.paused then return true end
 end
 
 --- Called every game turns
@@ -694,7 +698,7 @@ function _M:setupMouse()
 			end
 			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
 		elseif button == "none" then
-			if self.key.status[self.key._LSHIFT] and self.test_x ~= tmx or self.test_y ~= tmy then
+			if self.key.status[self.key._LSHIFT] and (self.test_x ~= tmx or self.test_y ~= tmy) then
 				local Astar = require"engine.Astar"
 				local a = Astar.new(self.level.map, self.player)
 				local path = a:calc(self.player.x, self.player.y, tmx, tmy)

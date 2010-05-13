@@ -74,6 +74,7 @@ ActorResource:defineResource("Stamina", "stamina", ActorTalents.T_STAMINA_POOL, 
 ActorResource:defineResource("Mana", "mana", ActorTalents.T_MANA_POOL, "mana_regen", "Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximun mana.")
 ActorResource:defineResource("Equilibrium", "equilibrium", ActorTalents.T_EQUILIBRIUM_POOL, "equilibrium_regen", "Equilibrium represents your stand in the grand balance of nature. The closer it is to 0 the more inbalance you are. Higher equilibrium states will impact negatively your ability to use Wild Gifts.")
 ActorResource:defineResource("Vim", "vim", ActorTalents.T_VIM_POOL, "vim_regen", "Vim represents the amount of life energies/souls you have stolen. Each corruption talents requires some.")
+--ActorResource:defineResource("Destiny", "destiny", nil, "destiny_regen", "")
 
 -- Actor stats
 ActorStats:defineStat("Strength",	"str", 10, 1, 100, "Strength defines your character's ability to apply physical force. It increases your melee damage, damage with heavy weapons, your chance to resist physical effects, and carrying capacity.")
