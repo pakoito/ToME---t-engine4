@@ -25,6 +25,7 @@ module(..., package.seeall, class.make)
 
 function _M:init()
 	self.areas = {}
+	self.status = {}
 end
 
 --- Called when a mouse is pressed
@@ -33,6 +34,7 @@ end
 -- @param y coordinate of the click
 -- @param isup true if the key was released, false if pressed
 function _M:receiveMouse(button, x, y, isup)
+	self.status[button] = not isup
 	if not isup then return end
 
 	for i, m in ipairs(self.areas) do

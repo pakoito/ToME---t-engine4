@@ -30,6 +30,7 @@ local Target = require "engine.Target"
 local Level = require "engine.Level"
 local Birther = require "engine.Birther"
 local Astar = require "engine.Astar"
+local DirectPath = require "engine.DirectPath"
 
 local Store = require "mod.class.Store"
 local Trap = require "mod.class.Trap"
@@ -699,7 +700,7 @@ function _M:setupMouse()
 				local path = a:calc(self.player.x, self.player.y, tmx, tmy, true)
 				-- No Astar path ? jsut be dumb and try direct line
 				if not path then
-					local d= DirectPath.new(self.level.map, self.player)
+					local d = DirectPath.new(self.level.map, self.player)
 					path = d:calc(self.player.x, self.player.y, tmx, tmy, true)
 				end
 				self.test_x = tmx
@@ -718,7 +719,7 @@ function _M:setupMouse()
 	end, {button=true})
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel)
-		self.hotkeys_display:onMouse(button, mx, my)
+		self.hotkeys_display:onMouse(button, mx, my, not xrel)
 	end)
 	self.mouse:setCurrent()
 end

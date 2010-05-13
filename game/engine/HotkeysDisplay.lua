@@ -115,11 +115,11 @@ end
 
 --- Call when a mouse event arrives in this zone
 -- This is optional, only if you need mouse support
-function _M:onMouse(button, mx, my)
+function _M:onMouse(button, mx, my, click)
 	mx, my = mx - self.display_x, my - self.display_y
 	for i, zone in pairs(self.clics) do
 		if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
-			if button == "left" then
+			if button == "left" and click then
 				self.actor:activateHotkey(i)
 			else
 				self.actor.changed = true
