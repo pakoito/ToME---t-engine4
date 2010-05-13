@@ -46,6 +46,7 @@ int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
 bool exit_engine = FALSE;
 bool no_sound = FALSE;
+bool isActive = TRUE;
 
 static int traceback (lua_State *L) {
 	lua_Debug ar;
@@ -314,7 +315,7 @@ Uint32 redraw_timer(Uint32 interval, void *param)
 	event.type = SDL_USEREVENT;
 	event.user = userevent;
 
-	if (!redraw_pending) {
+	if (!redraw_pending && isActive) {
 		SDL_PushEvent(&event);
 		redraw_pending = 1;
 	}
@@ -524,11 +525,24 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	while (!exit_engine)
 	{
+		if (!isActive) SDL_WaitEvent(NULL);
+
 		/* handle the events in the queue */
 		while (SDL_PollEvent(&event))
 		{
 			switch(event.type)
 			{
+			case SDL_ACTIVEEVENT:
+				if ((event.active.state & SDL_APPACTIVE) || (event.active.state & SDL_APPINPUTFOCUS))
+				{
+					if (event.active.gain == 0)
+						isActive = FALSE;
+					else
+						isActive = TRUE;
+				}
+				printf("SDL Activity %d\n", isActive);
+				break;
+
 			case SDL_VIDEORESIZE:
 				printf("resize %d x %d\n", event.resize.w, event.resize.h);
 				do_resize(event.resize.w, event.resize.h, FALSE);
@@ -558,7 +572,7 @@ int main(int argc, char *argv[])
 				exit_engine = TRUE;
 				break;
 			case SDL_USEREVENT:
-				if (event.user.code == 0) {
+				if (event.user.code == 0 && isActive) {
 					on_redraw();
 					redraw_pending = 0;
 				}
@@ -569,7 +583,7 @@ int main(int argc, char *argv[])
 		}
 
 		/* draw the scene */
-		on_tick();
+		if (isActive) on_tick();
 	}
 
 	SDL_Quit();
