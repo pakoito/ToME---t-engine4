@@ -38,6 +38,7 @@ newTalent{
 	require = techs_dex_req2,
 	range = 20,
 	action = function(self, t)
+		local energy = self.energy.value
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
 				target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {})
@@ -45,7 +46,7 @@ newTalent{
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
 		end)
-		return true
+		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
 		return ([[You fire a shot to your target's eyes, blinding it for %d turns and doing %d%% damage.]]):format(2 + self:getTalentLevelRaw(t), 100 * (1.2 + self:getTalentLevel(t) / 5))
@@ -62,6 +63,7 @@ newTalent{
 	require = techs_dex_req3,
 	range = 20,
 	action = function(self, t)
+		local energy = self.energy.value
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(self.x, self.y, 4)
@@ -70,7 +72,7 @@ newTalent{
 				game.logSeen(target, "%s resists the wave!", target.name:capitalize())
 			end
 		end)
-		return true
+		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
 		return ([[You fire a mighty shot at your target doing %d%% damage and knocking it back.]]):format(100 * (1.2 + self:getTalentLevel(t) / 5))
@@ -87,8 +89,9 @@ newTalent{
 	require = techs_dex_req4,
 	range = 20,
 	action = function(self, t)
+		local energy = self.energy.value
 		self:archeryShoot(nil, 0.7 + self:getTalentLevel(t) / 5, nil, nil, {multishots=2+self:getTalentLevelRaw(t)/2})
-		return true
+		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
 		return ([[You fire %d shots at your target, doing %d%% damage with each shots.]]):format(2+self:getTalentLevelRaw(t)/2, 100 * (0.7 + self:getTalentLevel(t) / 5))

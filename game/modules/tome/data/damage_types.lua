@@ -64,7 +64,7 @@ local function tryDestroy(who, inven, destroy_prop, proof_prop, msg)
 	for i = #inven, 1, -1 do
 		local o = inven[i]
 		if o[destroy_prop] and rng.percent(o[destroy_prop]) and not o[proof_prop] then
-			game.logPlayer(who, msg, o:getName())
+			game.logPlayer(who, msg, o:getName{do_color=true, no_count=true})
 			local obj = who:removeObject(inven, i)
 			obj:removed()
 		end

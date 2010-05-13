@@ -38,10 +38,11 @@ newTalent{
 	require = techs_dex_req2,
 	range = 20,
 	action = function(self, t)
+		local energy = self.energy.value
 		self.combat_apr = self.combat_apr + 1000
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 7, nil, {type="beam"}, {one_shot=true})
 		self.combat_apr = self.combat_apr - 1000
-		return true
+		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
 		return ([[You fire an arrow that cuts right throught anything, piercing multiple targets if possible with near infinite armor penetration, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 7))
@@ -58,8 +59,9 @@ newTalent{
 	require = techs_dex_req3,
 	range = 20,
 	action = function(self, t)
+		local energy = self.energy.value
 		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, nil, {type="ball", radius=1}, {limit_shots=2})
-		return true
+		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
 		return ([[You fire two arrows at your target, hitting it and a nearby foes if possible, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 5))
@@ -76,8 +78,9 @@ newTalent{
 	require = techs_dex_req4,
 	range = 20,
 	action = function(self, t)
+		local energy = self.energy.value
 		self:archeryShoot(nil, 0.7 + self:getTalentLevel(t) / 5, nil, {type="ball", radius=2 + self:getTalentLevel(t)/3, firendlyfire=false})
-		return true
+		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
 		return ([[You fire multiple arrows at the area, doing %d%% damage.]]):format(100 * (0.7 + self:getTalentLevel(t) / 5))

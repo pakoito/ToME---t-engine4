@@ -663,7 +663,7 @@ end
 -- @param ret the return of the talent action
 -- @return true to continue, false to stop
 function _M:postUseTalent(ab, ret)
-	if ret == nil then return end
+	if not ret then return end
 
 	if not ab.no_energy then
 		if ab.type[1]:find("^spell/") then
