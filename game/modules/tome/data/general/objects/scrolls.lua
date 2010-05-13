@@ -51,13 +51,16 @@ newEntity{ base = "BASE_SCROLL",
 
 	use_simple = { name="identify one object (or all with high magic stat)", use = function(self, who)
 		if who:getMag() < 28 then
-			who:showInventory("Identify object", who:getInven(who.INVEN_INVEN), nil, function(o, item)
+			who:showEquipInven("Identify object", function(o) return not o:isIdentified() end, function(o)
 				o:identify(true)
-				game.logPlayer(who, "You identify: "..o:getName())
+				game.logPlayer(who, "You identify: "..o:getName{do_color=true})
+				return true
 			end)
 		else
-			for i, o in ipairs(who:getInven("INVEN")) do
-				o:identify(true)
+			for inven_id, inven in pairs(who.inven) do
+				for i, o in ipairs(inven) do
+					o:identify(true)
+				end
 			end
 			game.logPlayer(who, "You identify all your inventory.")
 		end

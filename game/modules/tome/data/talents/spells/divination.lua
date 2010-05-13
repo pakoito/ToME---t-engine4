@@ -56,18 +56,21 @@ newTalent{
 		local rad = math.floor(0 + (self:getTalentLevel(t) - 4))
 
 		if self:getTalentLevel(t) < 3 then
-			self:showInventory("Identify object", self:getInven(self.INVEN_INVEN), nil, function(o, item)
+			self:showEquipInven("Identify object", function(o) return not o:isIdentified() end, function(o)
 				o:identify(true)
-				game.logPlayer(self, "You identify: "..o:getName())
+				game.logPlayer(self, "You identify: "..o:getName{do_color=true})
+				return true
 			end)
 			return true
 		end
 
 		if self:getTalentLevel(t) >= 3 then
-			for i, o in ipairs(self:getInven("INVEN")) do
-				o:identify(true)
+			for inven_id, inven in pairs(self.inven) do
+				for i, o in ipairs(inven) do
+					o:identify(true)
+				end
 			end
-			game.logPlayer(who, "You identify all your inventory.")
+			game.logPlayer(self, "You identify all your inventory.")
 		end
 
 		if self:getTalentLevel(t) >= 4 then
