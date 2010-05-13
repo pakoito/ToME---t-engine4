@@ -45,6 +45,10 @@ function _M:run()
 	self:setCurrent()
 end
 
+function _M:tick()
+	return true
+end
+
 function _M:display()
 	if self.background then
 		local bw, bh = self.background:getSize()

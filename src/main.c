@@ -528,7 +528,6 @@ int main(int argc, char *argv[])
 	while (!exit_engine)
 	{
 		if (!isActive || tickPaused) SDL_WaitEvent(NULL);
-//		else if (tickPaused) SDL_Delay(1000 / 30);
 
 		/* handle the events in the queue */
 		while (SDL_PollEvent(&event))
