@@ -144,7 +144,7 @@ function _M:loaded()
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setSeen(x, y, v)
-			if v then self.has_seen[x + y * self.w] = true end
+			if v then self.has_seens[x + y * self.w] = true end
 			self.changed = true
 		end
 		return t[x + y * self.w]

@@ -17,69 +17,64 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/skeleton.lua")
-load("/data/general/npcs/ghoul.lua")
-load("/data/general/npcs/wight.lua")
-load("/data/general/npcs/vampire.lua")
+load("/data/general/npcs/orc.lua")
+load("/data/general/npcs/toll.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of Tol Falas, no "rarity" field means it will not be randomly generated
-newEntity{ define_as = "THE_MASTER",
-	type = "undead", subtype = "vampire", unique = true,
-	name = "The Master",
-	display = "V", color=colors.VIOLET,
-	desc = [[This elder vampire seems to be in control here and does not seem very happy about you.]],
-	level_range = {23, 45}, exp_worth = 2,
-	max_life = 350, life_rating = 19, fixed_rating = true,
-	max_mana = 145,
-	max_stamina = 145,
-	rank = 5,
+-- The boss of Moria, no "rarity" field means it will not be randomly generated
+newEntity{ define_as = "GOLBUG",
+	type = "humanoid", subtype = "orc", unique = true,
+	name = "Golbug the Destroyer",
+	display = "o", color=colors.VIOLET,
+	desc = [[A huge and muscular orc of unknown breed. He looks both menacing and cunning...]],
+	level_range = {28, 45}, exp_worth = 2,
+	max_life = 350, life_rating = 16, fixed_rating = true,
+	max_stamina = 245,
+	rank = 4,
 	size_category = 3,
-	stats = { str=19, dex=19, cun=34, mag=25, con=16 },
+	stats = { str=22, dex=19, cun=34, mag=10, con=16 },
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, HEAD=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="greatsword", ego_chance=100},
-		{type="armor", subtype="heavy", ego_chance=50},
-		{type="jewelry", subtype="amulet", defined="AMULET_DREAD"},
+		{type="weapon", subtype="mace", ego_chance=100, autoreq=true},
+		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
+		{type="armor", subtype="head", autoreq=true},
+		{type="armor", subtype="massive", ego_chance=50, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
-	resolvers.drops{chance=100, nb=1, {type="weapon", subtype="staff", defined="STAFF_ABSORPTION"} },
+	resolvers.drops{chance=100, nb=1, {type="jewelry", subtype="orb", defined="ORB_MANY_WAYS"} },
 
 	summon = {
-		{type="undead", number=2, hasxp=true},
+		{type="humanoid", subtype="orc", number=2, hasxp=true},
+		{type="humanoid", subtype="troll", number=1, hasxp=true},
 	},
 
-	blind_immune = 1,
-	stun_immone = 0.7,
-	see_invisible = 20,
-	undead = 1,
+	stun_immune = 1,
+	see_invisible = 5,
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
-		[Talents.T_MANA_POOL]=1,
-			[Talents.T_CONGEAL_TIME]=2,
-			[Talents.T_MANATHRUST]=4,
-			[Talents.T_FREEZE]=4,
-			[Talents.T_PHASE_DOOR]=2,
-			[Talents.T_STRIKE]=3,
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
+		[Talents.T_WEAPON_COMBAT]=6,
+		[Talents.T_MACE_MASTERY]=6,
 		[Talents.T_STAMINA_POOL]=1,
-			[Talents.T_SWORD_MASTERY]=3,
-			[Talents.T_STUNNING_BLOW]=1,
+			[Talents.T_SHIELD_PUMMEL]=4,
 			[Talents.T_RUSH]=4,
-			[Talents.T_SPELL_SHIELD]=4,
+			[Talents.T_RIPOSTE]=4,
 			[Talents.T_BLINDING_SPEED]=4,
-			[Talents.T_PERFECT_STRIKE]=3,
+			[Talents.T_OVERPOWER]=3,
+			[Talents.T_ASSAULT]=3,
+			[Talents.T_SHIELD_WALL]=3,
+			[Talents.T_SHIELD_EXPERTISE]=2,
 	},
 
-	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
 
 	on_die = function(self, who)
-		world:gainAchievement("VAMPIRE_CRUSHER", who:resolveSource())
-		who:resolveSource():grantQuest("tol-falas")
-		who:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
+--		who:resolveSource():grantQuest("tol-falas")
+--		who:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
 	end,
 }

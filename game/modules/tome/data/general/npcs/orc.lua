@@ -28,14 +28,14 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	resolvers.drops{chance=20, nb=1, {} },
-	resolvers.drops{chance=20, nb=1, {type="money"} },
+	resolvers.drops{chance=10, nb=1, {type="money"} },
 
 	life_rating = 11,
 	rank = 2,
 	size_category = 3,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 }
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	rarity = 4,
 	max_life = resolvers.rngavg(70,80),
 	resolvers.equip{
-		{type="weapon", subtype="longsword", autoreq=true},
+		{type="weapon", subtype="waraxe", autoreq=true},
 		{type="armor", subtype="shield", autoreq=true},
 	},
 	combat_armor = 2, combat_def = 0,
@@ -70,5 +70,57 @@ newEntity{ base = "BASE_NPC_ORC",
 	resolvers.equip{
 		{type="weapon", subtype="longbow", autoreq=true},
 		{type="ammo", subtype="arrow", autoreq=true},
+	},
+}
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "uruk-hai", color=colors.DARK_RED,
+	desc = [[A fierce soldier-orc.]],
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 6,
+	max_life = resolvers.rngavg(120,140),
+	life_rating = 11,
+	resolvers.equip{
+		{type="weapon", subtype="battleaxe", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{ [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_CRUSH]=2, },
+}
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "fiery wyrmic uruk-hai", color=colors.RED,
+	desc = [[A fierce soldier-orc trained in the discipline of dragons.]],
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 8,
+	rank = 3,
+	max_life = resolvers.rngavg(100,110),
+	life_rating = 10,
+	resolvers.equip{
+		{type="weapon", subtype="battleaxe", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{
+		[Talents.T_BELLOWING_ROAR]=2,
+		[Talents.T_WING_BUFFET]=2,
+		[Talents.T_FIRE_BREATH]=2,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "icy wyrmic uruk-hai", color=colors.BLUE,
+	desc = [[A fierce soldier-orc trained in the discipline of dragons.]],
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 8,
+	rank = 3,
+	max_life = resolvers.rngavg(100,110),
+	life_rating = 10,
+	resolvers.equip{
+		{type="weapon", subtype="battleaxe", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{
+		[Talents.T_ICE_CLAW]=2,
+		[Talents.T_ICY_SKIN]=2,
+		[Talents.T_ICE_BREATH]=2,
 	},
 }

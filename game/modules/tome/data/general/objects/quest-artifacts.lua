@@ -62,3 +62,35 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 		end
 	end,
 }
+
+newEntity{ define_as = "ORB_MANY_WAYS",
+	unique = true, quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "swirling orb",
+	name = "Orb of Many Ways",
+	level_range = {30, 30},
+	display = "*", color=colors.VIOLET,
+	encumber = 1,
+	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
+	If used near an portal it could probably activate it.]],
+
+	max_power = 50, power_regen = 1,
+	use_power = { name = "activate a portal", power = 25,
+		use = function(self, who)
+			local g = game.level.map(who.x, who.y, game.level.map.TERRAIN)
+			if g and g.orb_portal then
+				world:gainAchievement("SLIDERS", who:resolveSource())
+				game:changeLevel(g.orb_portal.level, g.orb_portal.zone)
+			else
+				game.logPlayer(who, "There is no portal to activate here.")
+			end
+		end
+	},
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}

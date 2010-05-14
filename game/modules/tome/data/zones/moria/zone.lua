@@ -21,10 +21,10 @@ return {
 	name = "Mines of Moria",
 	level_range = {20, 30},
 	level_scheme = "player",
-	max_level = 7,
+	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 140, height = 140,
+	width = 100, height = 100,
 	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
@@ -40,12 +40,12 @@ return {
 			up = "UP",
 			down = "DOWN",
 		},
---[[
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
-			guardian = "THE_MASTER",
+			guardian = "GOLBUG",
 		},
+--[[
 		object = {
 			class = "engine.generator.object.Random",
 			nb_object = {6, 9},
@@ -63,6 +63,17 @@ return {
 			generator = { map = {
 				up = "UP_WILDERNESS",
 			}, },
+		},
+		[4] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/moria-last",
+				},
+				actor = {
+					nb_npc = {7, 7},
+				},
+			},
 		},
 	},
 }

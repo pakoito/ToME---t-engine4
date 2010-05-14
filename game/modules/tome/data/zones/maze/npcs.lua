@@ -44,8 +44,8 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="battleaxe"},
-		{type="armor", subtype="head", defined="HELM_OF_HAMMERHAND"},
+		{type="weapon", subtype="battleaxe", autoreq=true},
+		{type="armor", subtype="head", defined="HELM_OF_HAMMERHAND", autoreq=true},
 	},
 	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 

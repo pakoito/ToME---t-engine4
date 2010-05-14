@@ -30,3 +30,7 @@ newAchievement{
 	name = "The secret city",
 	desc = [[Discovered the truth about mages.]],
 }
+newAchievement{
+	name = "Sliders",
+	desc = [[Activated a portal using the Orb of Many Ways.]],
+}

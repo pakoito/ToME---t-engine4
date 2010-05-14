@@ -334,13 +334,14 @@ function _M:display()
 			self.target.target.x, self.target.target.y = tmx, tmy
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
-
+--[[ too slow
 		if self.test_path and self.key.status[self.key._LSHIFT] then
 			for i, c in ipairs(self.test_path) do
 				local lx, ly = c.x, c.y
 				self.test_sprite:toScreen(self.level.map.display_x + (lx - game.level.map.mx) * self.level.map.tile_w, self.level.map.display_y + (ly - game.level.map.my) * self.level.map.tile_h)
 			end
 		end
+]]
 	end
 
 	engine.GameTurnBased.display(self)
@@ -435,7 +436,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			if config.settings.tome.cheat then self:changeLevel(1, "moria") end
+			if config.settings.tome.cheat then self:changeLevel(3, "moria") end
 		end,
 	}
 	self.key:addBinds
@@ -695,6 +696,7 @@ function _M:setupMouse()
 			end
 			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
 		elseif button == "none" then
+--[[ too slow
 			if self.key.status[self.key._LSHIFT] and (self.test_x ~= tmx or self.test_y ~= tmy) then
 				local a = Astar.new(self.level.map, self.player)
 				local path = a:calc(self.player.x, self.player.y, tmx, tmy, true)
@@ -709,7 +711,7 @@ function _M:setupMouse()
 				self.test_sprite = core.display.newSurface(self.level.map.tile_w, self.level.map.tile_h)
 				self.test_sprite:erase(0, 0, 255, 90)
 			end
-
+]]
 		end
 	end)
 	-- Scroll message log

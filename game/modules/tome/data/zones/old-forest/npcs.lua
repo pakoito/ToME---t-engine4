@@ -48,7 +48,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	resists = { [DamageType.FIRE] = -50 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="OLD_MAN_WILLOW_SHIELD"}, },
+	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="OLD_MAN_WILLOW_SHIELD", autoreq=true}, },
 	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{

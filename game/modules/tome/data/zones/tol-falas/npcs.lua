@@ -40,9 +40,9 @@ newEntity{ define_as = "THE_MASTER",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="greatsword", ego_chance=100},
-		{type="armor", subtype="heavy", ego_chance=50},
-		{type="jewelry", subtype="amulet", defined="AMULET_DREAD"},
+		{type="weapon", subtype="greatsword", ego_chance=100, autoreq=true},
+		{type="armor", subtype="heavy", ego_chance=50, autoreq=true},
+		{type="jewelry", subtype="amulet", defined="AMULET_DREAD", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=1, {type="weapon", subtype="staff", defined="STAFF_ABSORPTION"} },
@@ -52,7 +52,7 @@ newEntity{ define_as = "THE_MASTER",
 	},
 
 	blind_immune = 1,
-	stun_immone = 0.7,
+	stun_immune = 0.7,
 	see_invisible = 20,
 	undead = 1,
 

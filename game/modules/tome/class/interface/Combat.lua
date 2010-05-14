@@ -86,6 +86,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	if self:getInven(self.INVEN_MAINHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
 			if o.combat then
+				print("[ATTACK] attacking with", o.name)
 				local s, h = self:attackTargetWith(target, o.combat, damtype, mult)
 				speed = math.max(speed or 0, s)
 				hit = hit or h
@@ -103,6 +104,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		end
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			if o.combat then
+				print("[ATTACK] attacking with", o.name)
 				local s, h = self:attackTargetWith(target, o.combat, damtype, offmult)
 				speed = math.max(speed or 0, s)
 				hit = hit or h
@@ -114,6 +116,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Barehanded ?
 	if not speed and self.combat then
+		print("[ATTACK] attacking with inate combat")
 		local s, h = self:attackTargetWith(target, self.combat, damtype, mult)
 		speed = math.max(speed or 0, s)
 		hit = hit or h
