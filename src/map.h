@@ -31,6 +31,10 @@ typedef struct {
 	bool **grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;
+	unsigned char **minimap;
+	GLuint mm_floor, mm_block, mm_object, mm_trap, mm_friend, mm_neutral, mm_hostile, mm_level_change;
+
+	int minimap_gridsize;
 
 	bool multidisplay;
 

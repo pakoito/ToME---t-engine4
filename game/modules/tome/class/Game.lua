@@ -178,7 +178,23 @@ function _M:setupDisplayMode()
 		self.target.target.entity = self.player
 		self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
 	end
+	self:setupMiniMap()
 	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
+end
+
+function _M:setupMiniMap()
+	print("[MINIMAP MODE]", self.minimap_mode)
+	self.minimap_mode = self.minimap_mode or (config.settings.tome and config.settings.tome.minimap_mode) or 1
+	if self.minimap_mode == 1 then
+		print("[MINIMAP MODE] disabled")
+	elseif self.minimap_mode == 2 then
+		if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(4) end
+		print("[MINIMAP MODE] small")
+	elseif self.minimap_mode == 3 then
+		if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(8) end
+		print("[MINIMAP MODE] full")
+	end
+	self:saveSettings("tome.minimap_mode", ("tome.minimap_mode = %d\n"):format(self.minimap_mode))
 end
 
 function _M:save()
@@ -270,6 +286,8 @@ function _M:changeLevel(lev, zone)
 	else
 		self:stopMusic()
 	end
+
+	self:setupMiniMap()
 end
 
 function _M:getPlayer()
@@ -342,6 +360,21 @@ function _M:display()
 			end
 		end
 ]]
+
+		if self.minimap_mode == 2 then
+			self.level.map:minimapDisplay(self.w - 200, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 0.6)
+		elseif self.minimap_mode == 3 then
+			local mx, my = 0, 0
+			local mw, mh = math.floor((self.w - 200) / 8), math.floor(self.h * .80 / 8)
+
+			mx = self.player.x - math.floor(mw / 2)
+			my = self.player.y - math.floor(mh / 2)
+
+			if self.level.map.w < mw then mx = math.floor((self.level.map.w - mw) / 2) end
+			if self.level.map.h < mh then my = math.floor((self.level.map.h - mh) / 2) end
+
+			self.level.map:minimapDisplay(200, 20, mx, my, mw, mh, 0.9)
+		end
 	end
 
 	engine.GameTurnBased.display(self)
@@ -594,6 +627,13 @@ function _M:setupCommands()
 			self.gfxmode = self.gfxmode or 1
 			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 3)
 			self:setupDisplayMode()
+		end,
+
+		-- Toggle mini map
+		TOGGLE_MINIMAP = function()
+			self.minimap_mode = self.minimap_mode or 1
+			self.minimap_mode = util.boundWrap(self.minimap_mode + 1, 1, 3)
+			self:setupMiniMap()
 		end,
 
 		EXIT = function()

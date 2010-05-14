@@ -446,7 +446,6 @@ int main(int argc, char *argv[])
 	luaopen_mime_core(L);
 	luaopen_struct(L);
 	luaopen_profiler(L);
-	luaopen_lanes(L);
 	luaopen_lpeg(L);
 	luaopen_map(L);
 	luaopen_particles(L);
@@ -512,6 +511,9 @@ int main(int argc, char *argv[])
 
 	/* Sets up OpenGL double buffering */
 	resizeWindow(WIDTH, HEIGHT);
+
+	// Now we can open lua lanes, the physfs paths are set and it can load it's lanes-keeper.lua file
+	luaopen_lanes(L);
 
 	// And run the lua engine scripts
 	luaL_loadfile(L, "/engine/init.lua");

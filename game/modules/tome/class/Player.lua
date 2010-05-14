@@ -98,6 +98,9 @@ function _M:move(x, y, force)
 
 	-- Update wilderness coords
 	if game.zone.short_name == "wilderness" then
+		-- Cheat with time
+		game.turn = game.turn + 1000
+
 		self.wild_x, self.wild_y = self.x, self.y
 		local g = game.level.map(self.x, self.y, Map.TERRAIN)
 		if g and g.can_encounter and game.level.data.encounters then

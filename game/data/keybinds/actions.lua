@@ -80,6 +80,13 @@ defineAction{
 }
 
 defineAction{
+	default = { "sym:9:false:false:false:false" },
+	type = "TOGGLE_MINIMAP",
+	group = "actions",
+	name = "Toggle minimap",
+}
+
+defineAction{
 	default = { "sym:116:true:false:false:false" },
 	type = "SHOW_TIME",
 	group = "actions",

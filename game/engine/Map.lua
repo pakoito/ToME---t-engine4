@@ -41,6 +41,59 @@ searchOrder = { TERRAIN, TRAP, OBJECT, ACTOR }
 color_shown   = { 1, 1, 1, 1 }
 color_obscure = { 0.6, 0.6, 0.6, 1 }
 
+-- The minimap data
+MM_FLOOR = 1
+MM_BLOCK = 2
+MM_OBJECT = 4
+MM_TRAP = 8
+MM_FRIEND = 16
+MM_NEUTRAL = 32
+MM_HOSTILE = 64
+MM_LEVEL_CHANGE = 128
+
+local s_floor = core.display.newSurface(4, 4)
+s_floor:erase(0, 0, 0, 255)
+local s_floor_gl = s_floor:glTexture()
+
+local s_block = core.display.newSurface(4, 4)
+s_block:erase(240, 240, 240, 255)
+local s_block_gl = s_block:glTexture()
+
+local s_level_change = core.display.newSurface(4, 4)
+s_level_change:erase(240, 0, 240, 255)
+local s_level_change_gl = s_level_change:glTexture()
+
+local s_hostile = core.display.newSurface(4, 4)
+s_hostile:erase(240, 0, 0, 255)
+local s_hostile_gl = s_hostile:glTexture()
+
+local s_friend = core.display.newSurface(4, 4)
+s_friend:erase(0, 240, 0, 255)
+local s_friend_gl = s_friend:glTexture()
+
+local s_neutral = core.display.newSurface(4, 4)
+s_neutral:erase(0, 0, 240, 255)
+local s_neutral_gl = s_neutral:glTexture()
+
+local s_object = core.display.newSurface(4, 4)
+s_object:erase(0, 0, 240, 255)
+local s_object_gl = s_object:glTexture()
+
+local s_trap = core.display.newSurface(4, 4)
+s_trap:erase(240, 240, 0, 255)
+local s_trap_gl = s_trap:glTexture()
+
+mm_blocks = {
+	[MM_FLOOR] = s_floor_gl,
+	[MM_BLOCK] = s_block_gl,
+	[MM_LEVEL_CHANGE] = s_level_change_gl,
+	[MM_HOSTILE] = s_hostile_gl,
+	[MM_FRIEND] = s_friend_gl,
+	[MM_NEUTRAL] = s_neutral_gl,
+	[MM_OBJECT] = s_object_gl,
+	[MM_TRAP] = s_trap_gl,
+}
+
 --- Sets the viewport size
 -- Static
 -- @param x screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
@@ -125,19 +178,34 @@ function _M:save()
 		particles = true,
 	})
 end
-function _M:loaded()
-	self.particles = {}
-	self.particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
 
+function _M:makeCMap()
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
 	self._map:setObscure(unpack(self.color_obscure))
 	self._map:setShown(unpack(self.color_shown))
+	self._map:setupMiniMap(
+		mm_blocks[MM_FLOOR],
+		mm_blocks[MM_BLOCK],
+		mm_blocks[MM_OBJECT],
+		mm_blocks[MM_TRAP],
+		mm_blocks[MM_FRIEND],
+		mm_blocks[MM_NEUTRAL],
+		mm_blocks[MM_HOSTILE],
+		mm_blocks[MM_LEVEL_CHANGE]
+	)
 	self._fovcache =
 	{
 		block_sight = core.fov.newCache(self.w, self.h),
 		block_esp = core.fov.newCache(self.w, self.h),
 		block_sense = core.fov.newCache(self.w, self.h),
 	}
+end
+
+function _M:loaded()
+	self.particles = {}
+	self.particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
+
+	self:makeCMap()
 
 	local mapseen = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
@@ -190,7 +258,7 @@ end
 
 --- Recreate the internal map using new dimensions
 function _M:recreate()
-	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
+	self:makeCMap()
 	self.changed = true
 	self:redisplay()
 end
@@ -220,33 +288,50 @@ function _M:cleanFOV()
 	self._map:cleanSeen()
 end
 
+--- Updates the map on the given spot
+-- This updates many things, from the C map object, the FOC caches, the minimap if it exists, ...
 function _M:updateMap(x, y)
 	local g = self(x, y, TERRAIN)
 	local o = self(x, y, OBJECT)
 	local a = self(x, y, ACTOR)
 	local t = self(x, y, TRAP)
 
-	if g then g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image) end
+	-- Update minimap if any
+	local mm = MM_FLOOR
+
+	if g then
+		mm = mm + (g:check("block_move") and MM_BLOCK or 0)
+		mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
+		g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image)
+	end
 	if t then
 		-- Handles invisibility and telepathy and other such things
 		if not self.actor_player or t:knownBy(self.actor_player) then
 			t = self.tiles:get(t.display, t.color_r, t.color_g, t.color_b, t.color_br, t.color_bg, t.color_bb, t.image)
+			mm = mm + MM_TRAP
 		else
 			t = nil
 		end
 	end
-	if o then o = self.tiles:get(o.display, o.color_r, o.color_g, o.color_b, o.color_br, o.color_bg, o.color_bb, o.image) end
+	if o then
+		o = self.tiles:get(o.display, o.color_r, o.color_g, o.color_b, o.color_br, o.color_bg, o.color_bb, o.image)
+		mm = mm + MM_OBJECT
+	end
 	if a then
 		-- Handles invisibility and telepathy and other such things
 		if not self.actor_player or self.actor_player:canSee(a) then
+			local r = self.actor_player:reactionToward(a)
+			mm = mm + (r > 0 and MM_FRIEND or (r == 0 and MM_NEUTRAL or MM_HOSTILE))
 			a = self.tiles:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image)
 		else
 			a = nil
 		end
 	end
 
-	self._map:setGrid(x, y, g, t, o, a)
+	-- Cache the textures in the C map object
+	self._map:setGrid(x, y, g, t, o, a, mm)
 
+	-- Update FOV caches
 	if self:checkAllEntities(x, y, "block_sight", self.actor_player) then self._fovcache.block_sight:set(x, y, true)
 	else self._fovcache.block_sight:set(x, y, false) end
 	if self:checkAllEntities(x, y, "block_esp", self.actor_player) then self._fovcache.block_esp:set(x, y, true)
@@ -289,6 +374,12 @@ function _M:remove(x, y, pos)
 		self:updateMap(x, y)
 		self.changed = true
 	end
+end
+
+--- Displays the minimap
+-- @return a surface containing the drawn map
+function _M:minimapDisplay(dx, dy, x, y, w, h, transp)
+	self._map:toScreenMiniMap(dx, dy, x, y, w, h, transp or 0.6)
 end
 
 --- Displays the map on a surface
