@@ -103,6 +103,8 @@
 		28B42695119F618100562F94 /* getself.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B42694119F618100562F94 /* getself.m */; };
 		28B426B0119F673600562F94 /* posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 28B426AF119F673600562F94 /* posix.c */; };
 		28B426BC119F67FB00562F94 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B426BB119F67FB00562F94 /* IOKit.framework */; };
+		28B4299C119F6A1100562F94 /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 28B426D1119F6A1000562F94 /* bootstrap */; };
+		28B4299D119F6A1100562F94 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 28B426D4119F6A1000562F94 /* game */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -111,7 +113,7 @@
 		28B423CB119F511B00562F94 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = Frameworks;
+			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
 				28B423C5119F511200562F94 /* SDL_image.framework in Copy Frameworks */,
@@ -301,6 +303,8 @@
 		28B42694119F618100562F94 /* getself.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = getself.m; sourceTree = "<group>"; };
 		28B426AF119F673600562F94 /* posix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = posix.c; sourceTree = "<group>"; };
 		28B426BB119F67FB00562F94 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		28B426D1119F6A1000562F94 /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = ../../bootstrap; sourceTree = SOURCE_ROOT; };
+		28B426D4119F6A1000562F94 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../../game; sourceTree = SOURCE_ROOT; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* T_Engine-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "T_Engine-Info.plist"; sourceTree = "<group>"; };
@@ -650,6 +654,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				28B426D1119F6A1000562F94 /* bootstrap */,
+				28B426D4119F6A1000562F94 /* game */,
 				8D1107310486CEB800E47090 /* T_Engine-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 			);
@@ -713,6 +719,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				28B4299C119F6A1100562F94 /* bootstrap in Resources */,
+				28B4299D119F6A1100562F94 /* game in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
