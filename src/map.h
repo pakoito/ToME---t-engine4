@@ -21,7 +21,7 @@
 #ifndef _MAP_H_
 #define _MAP_H_
 
-#include <gl.h>
+#include "tgl.h"
 
 typedef struct {
 	GLuint **grids_terrain;

@@ -22,9 +22,7 @@
 #define DISPLAY_SDL_H
 
 #include "tSDL.h"
-#include <gl.h>
-#include <glu.h>
-#include <glext.h>
+#include "tgl.h"
 
 #ifdef __cplusplus
 extern "C" {

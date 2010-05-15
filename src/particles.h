@@ -21,7 +21,7 @@
 #ifndef _PARTICLES_H_
 #define _PARTICLES_H_
 
-#include <gl.h>
+#include "tgl.h"
 
 typedef struct {
 	float size, sizev, sizea;
