@@ -376,7 +376,10 @@ int get_min_array_size64(void) {
  * init_gen_rand or init_by_array must be called before this function.
  * @return 32-bit pseudorandom number
  */
-inline uint32_t gen_rand32(void) {
+#ifndef __APPLE__
+inline
+#endif
+uint32_t gen_rand32(void) {
     uint32_t r;
 
     assert(initialized);
