@@ -31,13 +31,19 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	rank = 4,
 	size_category = 3,
 
+	stun_immune = 1,
+	blind_immune = 1,
+	combat_spellresist = 70,
+	combat_mentalresist = 70,
+	combat_physresist = 70,
+
 	resolvers.equip{
 		{type="weapon", subtype="longsword", ego_chance=100, autoreq=true},
 		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
 	},
 
 	resolvers.talents{
-		[Talents.T_SWORD_MASTERY]=10, [Talents.T_ASSAULT]=5, [Talents.T_OVERPOWER]=5,
+		[Talents.T_SWORD_MASTERY]=10, [Talents.T_ASSAULT]=5, [Talents.T_OVERPOWER]=5, [Talents.T_RUSH]=5,
 	},
 	combat_atk = 1000,
 

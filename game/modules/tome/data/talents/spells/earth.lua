@@ -125,7 +125,7 @@ newTalent{
 					display = '#', color_r=255, color_g=255, color_b=255,
 					always_remember = true,
 					can_pass = {pass_wall=1},
-					does_block_move = true,
+					block_move = true,
 					block_sight = true,
 					temporary = 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t),
 					x = x + i, y = y + j,
