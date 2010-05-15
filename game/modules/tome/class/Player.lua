@@ -97,7 +97,7 @@ function _M:move(x, y, force)
 	end
 
 	-- Update wilderness coords
-	if game.zone.short_name == "wilderness" then
+	if game.zone.wilderness then
 		-- Cheat with time
 		game.turn = game.turn + 1000
 
@@ -147,10 +147,14 @@ function _M:playerFOV()
 	-- Clean FOV before computing it
 	game.level.map:cleanFOV()
 	-- Compute ESP FOV, using cache
-	if game.zone.short_name ~= "wilderness" then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true) end
+	if not game.zone.wilderness then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true) end
 	-- Compute both the normal and the lite FOV, using cache
-	self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:apply(x, y) end, true, false, true)
-	self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
+	if game.zone.wilderness_see_radius then
+		self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
+	else
+		self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:apply(x, y) end, true, false, true)
+		self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
+	end
 
 	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
 	if self:attr("detect_range") then
@@ -310,7 +314,7 @@ function _M:runCheck()
 end
 
 function _M:doDrop(inven, item)
-	if game.zone.short_name == "wilderness" then game.logPlayer(self, "You can not drop on the world map.") return end
+	if game.zone.wilderness then game.logPlayer(self, "You can not drop on the world map.") return end
 	self:dropFloor(inven, item, true, true)
 	self:sortInven()
 	self:useEnergy()
@@ -390,7 +394,7 @@ function _M:playerTakeoff()
 end
 
 function _M:playerUseItem(object, item, inven)
-	if game.zone.short_name == "wilderness" then game.logPlayer(self, "You can not use items on the world map.") return end
+	if game.zone.wilderness then game.logPlayer(self, "You can not use items on the world map.") return end
 
 	local use_fct = function(o, inven, item)
 		self.changed = true
@@ -469,6 +473,17 @@ function _M:mouseMove(tmx, tmy)
 			self:runFollow(path)
 		end
 	end
+end
+
+--- Use a portal with the orb of many ways
+function _M:useOrbPortal(portal)
+	if portal.change_wilderness then
+		self.current_wilderness = portal.change_wilderness.name
+		self.wild_x = portal.change_wilderness.x or 0
+		self.wild_y = portal.change_wilderness.y or 0
+	end
+	game:changeLevel(portal.change_level, portal.change_zone)
+	if portal.message then game.logPlayer(self, portal.message) end
 end
 
 ------ Quest Events

@@ -45,7 +45,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		type = "humanoid", subtype="orc",
-		default_wilderness = {"wilderness/arda-east", 39, 17},
+		default_wilderness = {39, 17},
 		starting_zone = "tower-amon-sul",
 		starting_quest = "start-dunadan",
 		starting_intro = "dwarf",

@@ -506,6 +506,7 @@ end
 
 --- Do we get hit by our own AOE ?
 function _M:spellFriendlyFire()
+	print("[SPELL] friendly fire chance", self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
 	return rng.chance(self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
 end
 

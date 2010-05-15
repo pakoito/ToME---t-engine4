@@ -17,23 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-
-newEntity{
-	define_as = "FAR_EAST_PORTAL",
-	name = "Farportal: the Far East",
-	display = '&', color_r=255, color_g=0, color_b=220,
-	notice = true,
-	always_remember = true,
-	show_tooltip = true,
-	desc = [[A farportal is a way to travel increible distances in the blink of an eye. They usualy require an external item to use. You have no idea if it is even two-way.
-This one seems to go to the Far East, a continent of Arda of which only rumours are know...]],
-	orb_portal = {
-		change_level = 1,
-		change_zone = "wilderness-arda-fareast",
-		change_wilderness = {
-			x = 9, y = 5,
+return {
+	name = "Far East",
+	level_range = {1, 1},
+	max_level = 1,
+	width = 100, height = 100,
+	all_remembered = true,
+	all_lited = true,
+	persistant = "memory",
+	wilderness = true,
+	wilderness_see_radius = 3,
+	ambiant_music = "last",
+	generator =  {
+		map = {
+			class = "engine.generator.map.Static",
+			map = "wilderness/arda-fareast",
 		},
-		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on an unfamiliar land, with no trace of the portal...",
 	}
 }

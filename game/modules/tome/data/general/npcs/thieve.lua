@@ -28,7 +28,11 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	drops = resolvers.drops{chance=20, nb=1, {} },
-	resolvers.equip{ {type="weapon", subtype="dagger", autoreq=true}, {type="weapon", subtype="dagger", autoreq=true}, {type="armor", subtype="light", autoreq=true} },
+	resolvers.equip{
+		{type="weapon", subtype="dagger", autoreq=true},
+		{type="weapon", subtype="dagger", autoreq=true},
+		{type="armor", subtype="light", autoreq=true}
+	},
 	resolvers.drops{chance=100, nb=2, {type="money"} },
 
 	max_stamina = 100,

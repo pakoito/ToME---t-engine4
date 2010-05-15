@@ -38,14 +38,14 @@ newEntity{
 	end,
 }
 
-newEntity{ base = "BASE_MONEY",
+newEntity{ base = "BASE_MONEY", define_as = "MONEY_SMALL",
 	name = "gold pieces",
 	add_name = " (#MONEY#)",
 	level_range = {1, 50},
 	money_value = resolvers.rngavg(1, 20),
 }
 
-newEntity{ base = "BASE_MONEY",
+newEntity{ base = "BASE_MONEY", define_as = "MONEY_BIG",
 	name = "huge pile of gold pieces",
 	add_name = " (#MONEY#)",
 	level_range = {30, 50},

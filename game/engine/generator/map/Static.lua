@@ -118,12 +118,20 @@ function _M:generate(lev, old_lev)
 		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", c))
 
 		local actor = self.tiles[c] and self.tiles[c].actor
+		local trap = self.tiles[c] and self.tiles[c].trap
 		local object = self.tiles[c] and self.tiles[c].object
 
 		if object then
 			local o = self.zone:makeEntityByName(self.level, "object", object)
 			if o then
 				self.zone:addEntity(self.level, o, "object", i-1, j-1)
+			end
+		end
+
+		if trap then
+			local t = self.zone:makeEntityByName(self.level, "trap", trap)
+			if t then
+				self.zone:addEntity(self.level, t, "trap", i-1, j-1)
 			end
 		end
 

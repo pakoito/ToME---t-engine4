@@ -25,6 +25,7 @@ module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
+	self.data = data
 	local grid_list = zone.grid_list
 	self.floor = grid_list[data.floor]
 	self.wall = grid_list[data.wall]
@@ -37,21 +38,23 @@ function _M:generate()
 	end end
 
 	-- make the fractal heightmap
-	local hm = Heightmap.new(self.map.w, self.map.h, 2, {
-		middle =	Heightmap.min,
-		up_left =	rng.range(Heightmap.max / 2, Heightmap.max),
-		down_left =	rng.range(Heightmap.max / 2, Heightmap.max),
-		up_right =	rng.range(Heightmap.max / 2, Heightmap.max),
-		down_right =	rng.range(Heightmap.max / 2, Heightmap.max)
+	local hm = Heightmap.new(self.map.w, self.map.h, 4, {
+		middle =	Heightmap.max,
+		up_left =	rng.range(Heightmap.min, Heightmap.max / 2),
+		down_left =	rng.range(Heightmap.min, Heightmap.max / 2),
+		up_right =	rng.range(Heightmap.min, Heightmap.max / 2),
+		down_right =	rng.range(Heightmap.min, Heightmap.max / 2)
 	})
 	hm:generate()
 
 	for i = 1, self.map.w do
 		for j = 1, self.map.h do
-			if hm.hmap[i][j] >= Heightmap.max * 3 / 6 then
-				self.map(i-1, j-1, Map.TERRAIN, self.wall)
-			else
-				self.map(i-1, j-1, Map.TERRAIN, self.floor)
+			for z = #self.data.tiles, 1, -1 do
+				local t = self.data.tiles[z]
+				if hm.hmap[i][j] >= Heightmap.max * t[1] then
+					self.map(i-1, j-1, Map.TERRAIN, self.zone.grid_list[t[2]])
+					break
+				end
 			end
 		end
 	end

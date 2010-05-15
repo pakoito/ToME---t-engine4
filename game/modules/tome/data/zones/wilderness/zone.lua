@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "wilderness",
+	name = "Middle-earth",
 	level_range = {1, 1},
 	max_level = 1,
 	width = 200, height = 130,
@@ -26,13 +26,11 @@ return {
 	all_lited = true,
 	persistant = "memory",
 	ambiant_music = "last",
+	wilderness = true,
 	generator =  {
 		map = {
-			class = "mod.class.generator.map.Wilderness",
-		},
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {0,0},
+			class = "engine.generator.map.Static",
+			map = "wilderness/arda-west",
 		},
 	}
 }

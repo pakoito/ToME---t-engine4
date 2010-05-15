@@ -17,8 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Special items, used for quests
-
+-- The staff of absorption, the reason the game exists!
 newEntity{ define_as = "STAFF_ABSORPTION",
 	unique = true, quest=true,
 	slot = "MAINHAND",
@@ -29,7 +28,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	display = "\\", color=colors.VIOLET,
 	encumber = 7,
 	desc = [[Carved with runes of power this staff seems to have been made long ago. Yet it retains no signs of tarnishment.
-	Light around it seems to dim and you can feel its tremoundous power simply by touching it.]],
+Light around it seems to dim and you can feel its tremoundous power simply by touching it.]],
 
 	require = { stat = { mag=60 }, },
 	combat = {
@@ -63,6 +62,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	end,
 }
 
+-- The orb of many ways, allows usage of Farportals
 newEntity{ define_as = "ORB_MANY_WAYS",
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
@@ -72,7 +72,7 @@ newEntity{ define_as = "ORB_MANY_WAYS",
 	display = "*", color=colors.VIOLET,
 	encumber = 1,
 	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
-	If used near an portal it could probably activate it.]],
+If used near an portal it could probably activate it.]],
 
 	max_power = 50, power_regen = 1,
 	use_power = { name = "activate a portal", power = 25,
@@ -80,7 +80,7 @@ newEntity{ define_as = "ORB_MANY_WAYS",
 			local g = game.level.map(who.x, who.y, game.level.map.TERRAIN)
 			if g and g.orb_portal then
 				world:gainAchievement("SLIDERS", who:resolveSource())
-				game:changeLevel(g.orb_portal.level, g.orb_portal.zone)
+				who:useOrbPortal(g.orb_portal)
 			else
 				game.logPlayer(who, "There is no portal to activate here.")
 			end

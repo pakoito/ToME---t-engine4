@@ -115,8 +115,7 @@ function _M:newGame()
 	self:setupDisplayMode()
 
 	local birth = Birther.new(self.player, {"base", "world", "race", "subrace", "sex", "class", "subclass" }, function()
-		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[2], self.player.default_wilderness[3]
-		self.player.current_wilderness = self.player.default_wilderness[1]
+		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self:changeLevel(1, self.player.starting_zone)
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
@@ -264,7 +263,7 @@ function _M:changeLevel(lev, zone)
 	end
 
 	-- Move back to old wilderness position
-	if self.zone.short_name == "wilderness" then
+	if self.zone.wilderness then
 		self.player:move(self.player.wild_x, self.player.wild_y, true)
 	else
 		if lev > old_lev then
@@ -465,11 +464,12 @@ function _M:setupCommands()
 	self.key:setupProfiler()
 
 	-- Helper function to not allow some actions on the wilderness map
-	local not_wild = function(f) return function() if self.zone and self.zone.short_name ~= "wilderness" then f() else self.logPlayer(self.player, "You can not do that on the world map.") end end end
+	local not_wild = function(f) return function() if self.zone and not self.zone.wilderness then f() else self.logPlayer(self.player, "You can not do that on the world map.") end end end
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			if config.settings.tome.cheat then self:changeLevel(3, "moria") end
+--			if config.settings.tome.cheat then self:changeLevel(3, "moria") end
+			if config.settings.tome.cheat then self:changeLevel(1, "wilderness-arda-fareast") end
 		end,
 	}
 	self.key:addBinds
@@ -544,11 +544,11 @@ function _M:setupCommands()
 					if e.status == "detrimental" then stop[#stop+1] = e.desc end
 				end
 
-				if not e.change_zone or (#stop > 0 and e.change_zone ~= "wilderness") or #stop == 0 then
+				if not e.change_zone or (#stop > 0 and e.change_zone:find("^wilderness")) or #stop == 0 then
 					-- Do not unpause, the player is allowed first move on next level
 					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
 				else
-					self.log("You can not go into the wilds wit hthe following effects: %s", table.concat(stop, ", "))
+					self.log("You can not go into the wilds with the following effects: %s", table.concat(stop, ", "))
 				end
 			else
 				self.log("There is no way out of this level here.")

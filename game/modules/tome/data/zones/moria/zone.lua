@@ -28,7 +28,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
-	ambiant_music = "cirith-ungol.ogg",
+	ambiant_music = "a_lomos_del_dragon_blanco.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.TileSet",
@@ -42,20 +42,16 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
-			guardian = "GOLBUG",
+			nb_npc = {40, 50},
 		},
---[[
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
-			filters = { {ego_chance = 20} }
+			nb_object = {12, 16},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {6, 9},
+			nb_trap = {20, 30},
 		},
-]]
 	},
 	levels =
 	{
@@ -70,9 +66,9 @@ return {
 					class = "engine.generator.map.Static",
 					map = "zones/moria-last",
 				},
-				actor = {
-					nb_npc = {7, 7},
-				},
+				actor = { nb_npc = {3, 3}, },
+				object = { nb_object = {8, 10}, },
+				trap = { nb_trap = {1, 1}, },
 			},
 		},
 	},

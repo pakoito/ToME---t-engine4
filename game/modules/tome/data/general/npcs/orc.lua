@@ -73,7 +73,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	},
 }
 
-newEntity{ base = "BASE_NPC_ORC",
+newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI",
 	name = "uruk-hai", color=colors.DARK_RED,
 	desc = [[A fierce soldier-orc.]],
 	level_range = {1, 50}, exp_worth = 1,
@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	resolvers.talents{ [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_CRUSH]=2, },
 }
 
-newEntity{ base = "BASE_NPC_ORC",
+newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI_FIRE_WYRMIC",
 	name = "fiery wyrmic uruk-hai", color=colors.RED,
 	desc = [[A fierce soldier-orc trained in the discipline of dragons.]],
 	level_range = {1, 50}, exp_worth = 1,
@@ -107,7 +107,7 @@ newEntity{ base = "BASE_NPC_ORC",
 }
 
 newEntity{ base = "BASE_NPC_ORC",
-	name = "icy wyrmic uruk-hai", color=colors.BLUE,
+	name = "icy wyrmic uruk-hai", color=colors.BLUE, define_as = "URUK-HAI_ICE_WYRMIC",
 	desc = [[A fierce soldier-orc trained in the discipline of dragons.]],
 	level_range = {1, 50}, exp_worth = 1,
 	rarity = 8,
