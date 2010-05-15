@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
-#include <SDL_mixer.h>
+#include "tSDL.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"

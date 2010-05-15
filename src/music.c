@@ -25,8 +25,7 @@
 #include "types.h"
 #include "music.h"
 #include "script.h"
-#include <SDL.h>
-#include <SDL_mixer.h>
+#include "tSDL.h"
 
 bool sound_active = TRUE;
 

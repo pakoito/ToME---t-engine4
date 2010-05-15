@@ -21,7 +21,7 @@
 #ifndef DISPLAY_SDL_H
 #define DISPLAY_SDL_H
 
-#include <SDL.h>
+#include "tSDL.h"
 #include <gl.h>
 #include <glu.h>
 #include <glext.h>

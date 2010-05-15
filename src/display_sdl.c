@@ -18,7 +18,6 @@
     Nicolas Casalini "DarkGod"
     darkgod@te4.org
 */
-#include "SDL.h"
 #include "display_sdl.h"
 #include <stdlib.h>
 

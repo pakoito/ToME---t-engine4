@@ -26,8 +26,7 @@
 #include "particles.h"
 #include "script.h"
 #include <math.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include "tSDL.h"
 
 #define rng(x, y) (x + rand_div(1 + y - x))
 

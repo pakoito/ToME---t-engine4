@@ -25,8 +25,7 @@
 #include "types.h"
 #include "map.h"
 #include "script.h"
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include "tSDL.h"
 
 // Minimap defines
 #define MM_FLOOR 1
