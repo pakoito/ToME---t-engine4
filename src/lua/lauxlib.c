@@ -554,7 +554,6 @@ static int errfile (lua_State *L, const char *what, int fnameindex) {
 LUALIB_API int luaL_loadfile (lua_State *L, const char *filename) {
   LoadF lf;
   int status, readstatus = 0;
-  int c;
   int fnameindex = lua_gettop(L) + 1;  /* index of filename on the stack */
   lf.extraline = 0;
   lua_pushfstring(L, "@%s", filename);
