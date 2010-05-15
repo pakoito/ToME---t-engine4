@@ -61,32 +61,47 @@ newTalent{
 		if not fx or not fy then return nil end
 
 		local nb = 3 + self:getTalentLevelRaw(t)
-		local affected = {[self]=true}
+		local affected = {}
+		local first = nil
 
-		local fork fork = function(x, y, sx, sy)
-			self:project(tg, x, y, function(dx, dy)
-				local actor = game.level.map(dx, dy, Map.ACTOR)
-				if actor and not affected[actor] then
-					local tgr = {type="beam", range=self:getTalentRange(t), talent=t, x=sx, y=sy}
-					self:project(tgr, dx, dy, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 5), {type="lightning"})
-					affected[actor] = true
-					nb = nb - 1
-					if nb <= 0 then return true end
+		self:project(tg, fx, fy, function(dx, dy)
+			print("[Chain lightning] targetting", fx, fy, "from", self.x, self.y)
+			local actor = game.level.map(dx, dy, Map.ACTOR)
+			if actor and not affected[actor] then
+				ignored = false
+				affected[actor] = true
+				first = actor
 
-					self:project({type="ball", friendlyfire=false, x=dx, y=dy, radius=10, range=0}, dx, dy, function(bx, by)
-						local actor = game.level.map(bx, by, Map.ACTOR)
-						if actor and not affected[actor] and self:reactionToward(actor) < 0 then
-							fork(bx, by, dx, dy)
-							return true
-						end
-					end)
+				print("[Chain lightning] looking for more targets", nb, " at ", dx, dy, "radius ", 10, "from", actor.name)
+				self:project({type="ball", friendlyfire=false, x=dx, y=dy, radius=10, range=0}, dx, dy, function(bx, by)
+					local actor = game.level.map(bx, by, Map.ACTOR)
+					if actor and not affected[actor] and self:reactionToward(actor) < 0 then
+						print("[Chain lightning] found possible actor", actor.name, bx, by, "distance", core.fov.distance(dx, dy, bx, by))
+						affected[actor] = true
+					end
+				end)
+				return true
+			end
+		end)
 
-					return true
-				end
-			end)
+		local targets = { first }
+		affected[first] = nil
+		local possible_targets = table.listify(affected)
+		print("[Chain lightning] Found targets:", #possible_targets)
+		for i = 2, nb do
+			if #possible_targets == 0 then break end
+			local act = rng.tableRemove(possible_targets)
+			targets[#targets+1] = act[1]
 		end
 
-		fork(fx, fy)
+		local sx, sy = self.x, self.y
+		for i, actor in ipairs(targets) do
+			local tgr = {type="beam", range=self:getTalentRange(t), talent=t, x=sx, y=sy}
+			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
+			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 5), {type="lightning"})
+			sx, sy = actor.x, actor.y
+		end
+
 		game:playSoundNear(self, "talents/lightning")
 
 		return true

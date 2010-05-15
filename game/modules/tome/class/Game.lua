@@ -396,7 +396,7 @@ function _M:targetMode(v, msg, co, typ)
 				local co = self.target_co
 				self.target_co = nil
 				local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y, self.target.target.entity)
-				if not ok and err then error(err) end
+				if not ok and err then print(debug.traceback(co)) error(err) end
 			end
 		end
 	else
@@ -665,7 +665,7 @@ function _M:setupCommands()
 			self.flash(self.flash.GOOD, "Looking around... (direction keys to select interresting things, shift+direction keys to move freely)")
 			local co = coroutine.create(function() self.player:getTarget{type="hit", no_restrict=true, range=2000} end)
 			local ok, err = coroutine.resume(co)
-			if not ok and err then error(err) end
+			if not ok and err then print(debug.traceback(co)) error(err) end
 		end,
 	}
 

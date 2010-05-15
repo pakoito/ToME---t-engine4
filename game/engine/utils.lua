@@ -67,6 +67,11 @@ function table.reverse(t)
 	for i, e in ipairs(t) do tt[e] = i end
 	return tt
 end
+function table.listify(t)
+	local tt = {}
+	for k, e in pairs(t) do tt[#tt+1] = {k, e} print("listify", #tt, k, e) end
+	return tt
+end
 
 function string.ordinal(number)
 	local suffix = "th"

@@ -113,7 +113,7 @@ function _M:useTalent(id)
 			self:startTalentCooldown(ab)
 		end)
 		local ok, err = coroutine.resume(co)
-		if not ok and err then error(err) end
+		if not ok and err then print(debug.traceback(co)) error(err) end
 	elseif ab.mode == "sustained" and ab.activate and ab.deactivate then
 		if self:isTalentCoolingDown(ab) then
 			game.logPlayer(self, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
@@ -138,7 +138,7 @@ function _M:useTalent(id)
 			end
 		end)
 		local ret, err = coroutine.resume(co)
-		if not ret and err then error(err) end
+		if not ret and err then print(debug.traceback(co)) error(err) end
 	else
 		error("Activating non activable or sustainable talent: "..id.." :: "..ab.name.." :: "..ab.mode)
 	end

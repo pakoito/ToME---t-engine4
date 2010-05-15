@@ -393,8 +393,8 @@ newEffect{
 	on_gain = function(self, err) return "The very fabric of space alters around #target#.", "+Displacement Shield" end,
 	on_lose = function(self, err) return "The fabric of space around #target# stabilizes to normal.", "-Displacement Shield" end,
 	activate = function(self, eff)
-		eff.powerid = self:addTemporaryValue("displacement_shield", eff.power)
-		eff.chanceid = self:addTemporaryValue("displacement_shield_chance", eff.chance)
+		self.displacement_shield = eff.power
+		self.displacement_shield_chance = eff.chance
 		--- Warning there can be only one time shield active at once for an actor
 		self.displacement_shield_target = eff.target
 	end,
@@ -405,8 +405,8 @@ newEffect{
 		end
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("displacement_shield", eff.powerid)
-		self:removeTemporaryValue("displacement_shield_chance", eff.chanceid)
+		self.displacement_shield = nil
+		self.displacement_shield_chance = nil
 		self.displacement_shield_target = nil
 	end,
 }
