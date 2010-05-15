@@ -24,7 +24,11 @@
 #define _INCLUDE_PHYSFSRWOPS_H_
 
 #include "physfs.h"
+#ifdef __APPLE__
+#include <SDL/SDL.h>
+#else
 #include "SDL.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
