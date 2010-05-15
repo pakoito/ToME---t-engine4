@@ -95,14 +95,14 @@ newTalent{
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		else
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, 100 + self:combatSpellpower(0.1))
+			target:teleportRandom(x, y, 100 + self:combatSpellpower(0.1), 15)
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
 		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Teleports you randomly on a big scale range (%d)
+		return ([[Teleports you randomly on a big scale range (%d), with a minimun range of 15
 		At level 4 it allows to specify the target area.
 		At level 5 it allows to choose the target to teleport.
 		The range will increase with the Magic stat]]):format(100 + self:combatSpellpower(0.1))

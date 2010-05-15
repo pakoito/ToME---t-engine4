@@ -108,15 +108,18 @@ end
 -- @param x the coord of the teleporatation
 -- @param y the coord of the teleporatation
 -- @param dist the radius of the random effect, if set to 0 it is a precise teleport
+-- @param min_dist the minimun radius of of the effect, will never teleport closer. Defaults to 0 if not set
 -- @return true if the teleport worked
-function _M:teleportRandom(x, y, dist)
+function _M:teleportRandom(x, y, dist, min_dist)
 	local poss = {}
 	dist = math.floor(dist)
+	min_dist = math.floor(min_dist or 0)
 
 	for i = x - dist, x + dist do
 		for j = y - dist, y + dist do
 			if game.level.map:isBound(i, j) and
 			   core.fov.distance(x, y, i, j) <= dist and
+			   core.fov.distance(x, y, i, j) >= min_dist and
 			   self:canMove(i, j) then
 				poss[#poss+1] = {i,j}
 			end

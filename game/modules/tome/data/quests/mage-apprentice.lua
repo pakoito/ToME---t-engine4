@@ -33,6 +33,14 @@ on_grant = function(self, who)
 	self.nb_collect = 0
 end
 
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted() then
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+		end
+	end
+end
+
 collect_staff = function(self, who, dialog)
 	who:showEquipInven("Offer which staff?",
 		function(o) return o.type == "weapon" and o.subtype == "staff" end,

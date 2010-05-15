@@ -571,6 +571,7 @@ function _M:learnTalent(t_id, force, nb)
 
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then self:learnTalent(self.T_SHOOT, true) end
+
 	return true
 end
 

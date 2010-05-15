@@ -130,16 +130,19 @@ newTalent{
 	},
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
-		return {
+		local ret = {
 			encumb = self:addTemporaryValue("max_encumber", math.floor(self:getTalentLevel(t) * self:combatSpellpower(0.15))),
 			def = self:addTemporaryValue("combat_def_ranged", 6 + self:combatSpellpower(0.07) * self:getTalentLevel(t)),
 			lev = self:addTemporaryValue("levitation", 1),
 		}
+		self:checkEncumbrance()
+		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("max_encumber", p.encumb)
 		self:removeTemporaryValue("combat_def_ranged", p.def)
 		self:removeTemporaryValue("levitation", p.lev)
+		self:checkEncumbrance()
 		return true
 	end,
 	info = function(self, t)
