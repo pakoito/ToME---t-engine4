@@ -30,7 +30,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "elm sling",
+	name = "rough leather sling",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 5,
@@ -40,7 +40,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "ash sling",
+	name = "cured leather sling",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 10,
@@ -50,7 +50,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "yew sling",
+	name = "hardened leather sling",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 15,
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "elven-wood sling",
+	name = "reinforced leather sling",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 25,
@@ -70,7 +70,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "dragonbone sling",
+	name = "drakeskin leather sling",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 35,

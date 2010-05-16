@@ -457,12 +457,12 @@ end
 
 --- Sets a grid as seen and remembered
 -- Used by FOV code
-function _M:apply(x, y)
+function _M:apply(x, y, v)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.lites[x + y * self.w] then
-		self.seens[x + y * self.w] = true
+		self.seens[x + y * self.w] = v or 1
 		self.has_seens[x + y * self.w] = true
-		self._map:setSeen(x, y, true)
+		self._map:setSeen(x, y, v or 1)
 		self.remembers[x + y * self.w] = true
 		self._map:setRemember(x, y, true)
 	end
@@ -470,26 +470,26 @@ end
 
 --- Sets a grid as seen, lited and remembered
 -- Used by FOV code
-function _M:applyLite(x, y)
+function _M:applyLite(x, y, v)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.lites[x + y * self.w] or self:checkEntity(x, y, TERRAIN, "always_remember") then
 		self.remembers[x + y * self.w] = true
 		self._map:setRemember(x, y, true)
 	end
-	self.seens[x + y * self.w] = true
+	self.seens[x + y * self.w] = v or 1
 	self.has_seens[x + y * self.w] = true
-	self._map:setSeen(x, y, true)
+	self._map:setSeen(x, y, v or 1)
 end
 
 --- Sets a grid as seen if ESP'ed
 -- Used by FOV code
-function _M:applyESP(x, y)
+function _M:applyESP(x, y, v)
 	if not self.actor_player then return end
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	local a = self(x, y, ACTOR)
 	if a and self.actor_player:canSee(a, false, 0) then
-		self.seens[x + y * self.w] = true
-		self._map:setSeen(x, y, true)
+		self.seens[x + y * self.w] = v or 1
+		self._map:setSeen(x, y, v or 1)
 	end
 end
 

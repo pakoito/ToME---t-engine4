@@ -98,7 +98,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		equipment = resolvers.equip{ id=true,
-			{type="weapon", subtype="sling", name="elm sling", autoreq=true},
+			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true},
 			{type="ammo", subtype="shot", name="iron shot", autoreq=true},
 		},
 	},

@@ -74,7 +74,7 @@ static int map_new(lua_State *L)
 	map->grids_actor = calloc(w, sizeof(map_texture*));
 	map->grids_trap = calloc(w, sizeof(map_texture*));
 	map->grids_object = calloc(w, sizeof(map_texture*));
-	map->grids_seens = calloc(w, sizeof(bool*));
+	map->grids_seens = calloc(w, sizeof(float*));
 	map->grids_remembers = calloc(w, sizeof(bool*));
 	map->grids_lites = calloc(w, sizeof(bool*));
 	map->minimap = calloc(w, sizeof(unsigned char*));
@@ -87,7 +87,7 @@ static int map_new(lua_State *L)
 		map->grids_actor[i] = calloc(h, sizeof(map_texture));
 		map->grids_object[i] = calloc(h, sizeof(map_texture));
 		map->grids_trap[i] = calloc(h, sizeof(map_texture));
-		map->grids_seens[i] = calloc(h, sizeof(bool));
+		map->grids_seens[i] = calloc(h, sizeof(float));
 		map->grids_remembers[i] = calloc(h, sizeof(bool));
 		map->grids_lites[i] = calloc(h, sizeof(bool));
 		map->minimap[i] = calloc(h, sizeof(unsigned char));
@@ -224,7 +224,7 @@ static int map_set_grid(lua_State *L)
 	float a_g = lua_tonumber(L, 18);
 	float a_b = lua_tonumber(L, 19);
 
-	unsigned char mm = lua_tonumber(L, 8);
+	unsigned char mm = lua_tonumber(L, 20);
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 
@@ -257,7 +257,7 @@ static int map_set_seen(lua_State *L)
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
-	bool v = lua_toboolean(L, 4);
+	float v = lua_tonumber(L, 4);
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_seens[x][y] = v;
@@ -295,7 +295,7 @@ static int map_clean_seen(lua_State *L)
 
 	for (i = 0; i < map->w; i++)
 		for (j = 0; j < map->h; j++)
-			map->grids_seens[i][j] = FALSE;
+			map->grids_seens[i][j] = 0;
 	return 0;
 }
 
@@ -353,15 +353,16 @@ static int map_to_screen(lua_State *L)
 			{
 				if (map->grids_seens[i][j])
 				{
+					a = map->shown_a * map->grids_seens[i][j];
 					if (map->multidisplay)
 					{
 						if (map->grids_terrain[i][j].texture)
 						{
 							map_texture *m = &(map->grids_terrain[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -374,9 +375,9 @@ static int map_to_screen(lua_State *L)
 						{
 							map_texture *m = &(map->grids_trap[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -389,9 +390,9 @@ static int map_to_screen(lua_State *L)
 						{
 							map_texture *m = &(map->grids_object[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -404,9 +405,9 @@ static int map_to_screen(lua_State *L)
 						{
 							map_texture *m = &(map->grids_actor[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -422,9 +423,9 @@ static int map_to_screen(lua_State *L)
 						{
 							map_texture *m = &(map->grids_actor[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -437,9 +438,9 @@ static int map_to_screen(lua_State *L)
 						{
 							map_texture *m = &(map->grids_object[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -452,9 +453,9 @@ static int map_to_screen(lua_State *L)
 						{
 							map_texture *m = &(map->grids_trap[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -467,9 +468,9 @@ static int map_to_screen(lua_State *L)
 						{
 							map_texture *m = &(map->grids_terrain[i][j]);
 							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, map->shown_a);
+								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a);
+								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -519,7 +520,6 @@ static int minimap_to_screen(lua_State *L)
 	float transp = luaL_checknumber(L, 8);
 	int i = 0, j = 0;
 
-	glColor4f(1, 1, 1, 0.5f);
 	for (i = mdx; i < mdx + mdw; i++)
 	{
 		for (j = mdy; j < mdy + mdh; j++)
@@ -538,80 +538,80 @@ static int minimap_to_screen(lua_State *L)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_level_change);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_HOSTILE) && map->mm_hostile)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_hostile);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_NEUTRAL) && map->mm_neutral)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_neutral);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_FRIEND) && map->mm_friend)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_friend);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_TRAP) && map->mm_trap)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_trap);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_OBJECT) && map->mm_object)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_object);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_BLOCK) && map->mm_block)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_block);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_FLOOR) && map->mm_floor)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_floor);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 				}
@@ -622,30 +622,30 @@ static int minimap_to_screen(lua_State *L)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_level_change);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_BLOCK) && map->mm_block)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_block);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 					else if ((map->minimap[i][j] & MM_FLOOR) && map->mm_floor)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_floor);
 						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-99);
+						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
+						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
+						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
+						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
 						glEnd();
 					}
 				}

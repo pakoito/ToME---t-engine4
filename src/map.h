@@ -35,7 +35,7 @@ typedef struct {
 	map_texture **grids_actor;
 	map_texture **grids_object;
 	map_texture **grids_trap;
-	bool **grids_seens;
+	float **grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;
 	unsigned char **minimap;
