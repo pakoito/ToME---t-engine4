@@ -72,6 +72,12 @@ function _M:init(t, no_default)
 		self.color_bb = self.color.bb
 		self.color = nil
 	end
+	if self.tint then
+		self.tint_r = self.tint.r / 255
+		self.tint_g = self.tint.g / 255
+		self.tint_b = self.tint.b / 255
+		self.tint = nil
+	end
 
 	if not no_default then
 		self.image = self.image or nil
@@ -82,6 +88,9 @@ function _M:init(t, no_default)
 		self.color_br = self.color_br or -1
 		self.color_bg = self.color_bg or -1
 		self.color_bb = self.color_bb or -1
+		self.tint_r = self.tint_r or 1
+		self.tint_g = self.tint_g or 1
+		self.tint_b = self.tint_b or 1
 	end
 
 	if self.unique and type(self.unique) ~= "string" then self.unique = self.name end

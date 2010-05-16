@@ -150,6 +150,7 @@ function _M:playerFOV()
 	if not game.zone.wilderness then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true) end
 	-- Compute both the normal and the lite FOV, using cache
 	if game.zone.wilderness_see_radius then
+		self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:apply(x, y) end, true, false, true)
 		self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
 	else
 		self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:apply(x, y) end, true, false, true)

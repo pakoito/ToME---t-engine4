@@ -19,19 +19,19 @@
 
 -- The far east on Arda
 
-quickEntity('w', {show_tooltip=true, name='Sun Wall', display='^', color=colors.GOLD, image="terrain/mountain.png", block_move=true})
-quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.BLUE, image="terrain/river.png", block_move=true})
-quickEntity(' ', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
-quickEntity('~', {show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, image="terrain/river.png", can_encounter=true, equilibrium_level=-10})
-quickEntity('s', {show_tooltip=true, name='desert', display='.', color={r=203,g=189,b=72}, image="terrain/sand.png", can_encounter=true, equilibrium_level=-10})
-quickEntity('t', {show_tooltip=true, name='forest', display='#', color=colors.LIGHT_GREEN, image="terrain/tree.png", block_move=true})
-quickEntity('m', {show_tooltip=true, name='mountains', display='^', color=colors.UMBER, image="terrain/mountain.png", block_move=true})
-quickEntity('h', {show_tooltip=true, name='low hills', display='^', color=colors.GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
+quickEntity('w', {always_remember = true, show_tooltip=true, name='Sun Wall', display='^', color=colors.GOLD, image="terrain/mountain.png", tint=colors.GOLD, block_move=true})
+quickEntity('=', {always_remember = true, show_tooltip=true, name='the great sea', display='~', color=colors.BLUE, image="terrain/river.png", block_move=true})
+quickEntity(' ', {always_remember = true, show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
+quickEntity('~', {always_remember = true, show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, image="terrain/river.png", can_encounter=true, equilibrium_level=-10})
+quickEntity('s', {always_remember = true, show_tooltip=true, name='desert', display='.', color={r=203,g=189,b=72}, image="terrain/sand.png", can_encounter=true, equilibrium_level=-10})
+quickEntity('t', {always_remember = true, show_tooltip=true, name='forest', display='#', color=colors.LIGHT_GREEN, image="terrain/tree.png", block_move=true})
+quickEntity('m', {always_remember = true, show_tooltip=true, name='mountains', display='^', color=colors.UMBER, image="terrain/mountain.png", block_move=true})
+quickEntity('h', {always_remember = true, show_tooltip=true, name='low hills', display='^', color=colors.GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
 
---quickEntity('A', {show_tooltip=true, name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tower-amon-sul"})
+--quickEntity('A', {always_remember = true, show_tooltip=true, name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tower-amon-sul"})
 
---quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-bree"})
---quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
+quickEntity('1', {always_remember = true, show_tooltip=true, name="Gates of Morning", desc="A massive hole in the Sun Wall", display='*', color=colors.GOLD, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
+--quickEntity('2', {always_remember = true, show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
 
 -- Load encounters for this map
 --[[
@@ -84,7 +84,7 @@ return [[
 =====                                                             www============
 =====                                                             www============
 ======                                                            www============
-========          =======              hhhhhh                     Mww============
+========          =======              hhhhhh                     1ww============
 ==============================       hhhhhhh                      www============
 ================================         h                        www============
 =================================                  hh             www============
