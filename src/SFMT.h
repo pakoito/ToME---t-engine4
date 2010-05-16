@@ -56,10 +56,22 @@
   #endif
 #endif
 
-inline uint32_t gen_rand32(void);
-inline uint64_t gen_rand64(void);
-inline void fill_array32(uint32_t array[], int size);
-inline void fill_array64(uint64_t array[], int size);
+#ifndef __APPLE__
+inline
+#endif
+uint32_t gen_rand32(void);
+#ifndef __APPLE__
+inline
+#endif
+uint64_t gen_rand64(void);
+#ifndef __APPLE__
+inline
+#endif
+void fill_array32(uint32_t array[], int size);
+#ifndef __APPLE__
+inline
+#endif
+void fill_array64(uint64_t array[], int size);
 void init_gen_rand(uint32_t seed);
 void init_by_array(uint32_t init_key[], int key_length);
 char *get_idstring(void);
