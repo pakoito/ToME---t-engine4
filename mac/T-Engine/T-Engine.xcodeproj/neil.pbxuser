@@ -1,5 +1,13 @@
 // !$*UTF8*$!
 {
+	089C165DFE840E0CC02AAC07 /* English */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {827, 712}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 45}";
+			sepNavWindowFrame = "{{15, 183}, {886, 840}}";
+		};
+	};
 	28B4225B119F4E5700562F94 /* T-Engine */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -129,5 +137,10 @@
 		executables = (
 			28B4225B119F4E5700562F94 /* T-Engine */,
 		);
+	};
+	8D1107310486CEB800E47090 /* T_Engine-Info.plist */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{38, 162}, {886, 840}}";
+		};
 	};
 }
