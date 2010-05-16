@@ -6,10 +6,7 @@ const char *get_self_executable(int argc, char **argv)
 
 	if(!cstr)
 	{
-		NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-		resourcePath = [NSString stringWithFormat:@"%@/", resourcePath];
-		const char *utf8 = [resourcePath UTF8String];
-
+		const char *utf8 = [[[NSBundle mainBundle] resourcePath] UTF8String];
 		cstr = malloc(strlen(utf8) + 1);
 		strcpy(cstr, utf8);
 	}
