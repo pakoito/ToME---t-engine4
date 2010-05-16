@@ -24,7 +24,7 @@ newEntity{
 	type = "giant", subtype = "troll",
 	display = "T", color=colors.UMBER,
 
-	combat = { dam=resolvers.rngavg(15,20), atk=2, apr=6, physspeed=2 },
+	combat = { dam=resolvers.rngavg(15,20), atk=2, apr=6, physspeed=2, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {} },

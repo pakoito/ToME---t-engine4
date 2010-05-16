@@ -20,6 +20,7 @@
 newEntity{ define_as = "TRAP_ALARM",
 	type = "annoy", subtype="alarm", id_by_type=true, unided_name = "trap",
 	display = '^',
+	triggered = function() end,
 }
 
 newEntity{ base = "TRAP_ALARM",
