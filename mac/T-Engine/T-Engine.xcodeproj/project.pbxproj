@@ -105,6 +105,7 @@
 		28B426BC119F67FB00562F94 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B426BB119F67FB00562F94 /* IOKit.framework */; };
 		28B4299D119F6A1100562F94 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 28B426D4119F6A1000562F94 /* game */; };
 		28B429EF119F708400562F94 /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 28B429EC119F708400562F94 /* bootstrap */; };
+		28B429FF119F761700562F94 /* te4.icns in Resources */ = {isa = PBXBuildFile; fileRef = 28B429FE119F761700562F94 /* te4.icns */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -305,6 +306,7 @@
 		28B426BB119F67FB00562F94 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		28B426D4119F6A1000562F94 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../../game; sourceTree = SOURCE_ROOT; };
 		28B429EC119F708400562F94 /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = ../../bootstrap; sourceTree = SOURCE_ROOT; };
+		28B429FE119F761700562F94 /* te4.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = te4.icns; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* T_Engine-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "T_Engine-Info.plist"; sourceTree = "<group>"; };
@@ -654,6 +656,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				28B429FE119F761700562F94 /* te4.icns */,
 				28B429EC119F708400562F94 /* bootstrap */,
 				28B426D4119F6A1000562F94 /* game */,
 				8D1107310486CEB800E47090 /* T_Engine-Info.plist */,
@@ -721,6 +724,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				28B4299D119F6A1100562F94 /* game in Resources */,
 				28B429EF119F708400562F94 /* bootstrap in Resources */,
+				28B429FF119F761700562F94 /* te4.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
