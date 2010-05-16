@@ -462,6 +462,12 @@ int main(int argc, char *argv[])
 		lua_pushnil(L);
 	lua_setglobal(L, "__SELFEXE");
 
+	// Will be useful
+#ifdef __APPLE__
+	lua_pushboolean(L, TRUE);
+	lua_setglobal(L, "__APPLE__");
+#endif
+
 	// Run bootstrapping
 	if (!luaL_loadfile(L, "/bootstrap/boot.lua"))
 	{

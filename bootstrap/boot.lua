@@ -11,8 +11,10 @@ if __SELFEXE then
 	-- Remove bin/Debug from the path, to make dev easier
 	dir = dir:gsub("bin"..fs.getPathSeparator().."Debug"..fs.getPathSeparator(), "")
 
-	-- Now remove executable name
-	dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1")
+	if not __APPLE__ then
+		-- Now remove executable name
+		dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1")
+	end
 
 	print("SelfExe gave us app directory of:", dir)
 	fs.mount(dir..fs.getPathSeparator().."game"..fs.getPathSeparator().."thirdparty", "/", true)
