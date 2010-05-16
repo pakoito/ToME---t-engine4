@@ -40,22 +40,6 @@ static NSString *getApplicationName(void)
 /* The main class of the application, the application's delegate */
 @implementation SDLMain
 
-/* Set the working directory to the .app's parent directory */
-- (void) setupWorkingDirectory:(BOOL)shouldChdir
-{
-    if (shouldChdir)
-    {
-        char parentdir[MAXPATHLEN];
-        CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-        CFURLRef url2 = CFURLCreateCopyDeletingLastPathComponent(0, url);
-        if (CFURLGetFileSystemRepresentation(url2, true, parentdir, MAXPATHLEN))
-            assert ( chdir (parentdir) == 0 );   /* chdir to the binary app's parent */
-        CFRelease(url);
-        CFRelease(url2);
-    }
-
-}
-
 static NSMenu *setupApplicationMenu(NSMenu *mainMenu)
 {
     NSMenu *appleMenu;
@@ -125,6 +109,8 @@ static NSMenu *setupWindowMenu(NSMenu *mainMenu)
     /* Finally give up our references to the objects */
     [windowMenu release];
     [windowMenuItem release];
+
+    return windowMenu;
 }
 
 char *macToMEConfigPath = 0;
@@ -221,9 +207,6 @@ int tengine_main(int, char **);
 - (void) applicationDidFinishLaunching: (NSNotification *) note
 {
     int status;
-
-    /* Set the working directory to the .app's parent directory */
-    [self setupWorkingDirectory:gFinderLaunch];
 
     /* Hand off to main application code */
     gCalledAppMainline = TRUE;
