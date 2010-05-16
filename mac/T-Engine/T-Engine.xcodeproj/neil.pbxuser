@@ -54,7 +54,7 @@
 	};
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeArchitecturePreference = i386;
-		activeBuildConfigurationName = Debug;
+		activeBuildConfigurationName = Release;
 		activeExecutable = 28B4225B119F4E5700562F94 /* T-Engine */;
 		activeTarget = 8D1107260486CEB800E47090 /* T-Engine */;
 		addToTargets = (
