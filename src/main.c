@@ -27,11 +27,14 @@
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
+#include "luasocket.h"
+#include "luasocket/mime.h"
 #include "SFMT.h"
 
 #include "types.h"
 #include "script.h"
 #include "physfs.h"
+#include "physfsrwops.h"
 #include "core_lua.h"
 #include "getself.h"
 #include "music.h"
@@ -48,6 +51,15 @@ bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
 bool tickPaused = FALSE;
+
+/* Some lua stuff that's external but has no headers */
+int luaopen_mime_core(lua_State *L);
+int luaopen_profiler(lua_State *L);
+int luaopen_lpeg(lua_State *L);
+int luaopen_map(lua_State *L);
+int luaopen_particles(lua_State *L);
+int luaopen_sound(lua_State *L);
+int luaopen_lanes(lua_State *L);
 
 static int traceback (lua_State *L) {
 	lua_Debug ar;
@@ -402,7 +414,7 @@ void do_resize(int w, int h, bool fullscreen)
 	screen = SDL_SetVideoMode(w, h, 32, flags);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
-		return 0;
+		return;
 	}
 
 	resizeWindow(screen->w, screen->h);
@@ -414,6 +426,9 @@ void do_resize(int w, int h, bool fullscreen)
 
 // Let some platforms use a different entry point
 #ifdef USE_TENGINE_MAIN
+#ifdef main
+#undef main
+#endif
 #define main tengine_main
 #endif
 
@@ -489,7 +504,7 @@ int main(int argc, char *argv[])
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
 	if (SDL_Init (flags) < 0) {
 		printf("cannot initialize SDL: %s\n", SDL_GetError ());
-		return;
+		return -1;
 	}
 
 	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/data/gfx/te4-icon.png"), TRUE), NULL);
@@ -498,7 +513,7 @@ int main(int argc, char *argv[])
 	do_resize(WIDTH, HEIGHT, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
-		return;
+		return -1;
 	}
 	SDL_WM_SetCaption("T4Engine", NULL);
 	SDL_EnableUNICODE(TRUE);

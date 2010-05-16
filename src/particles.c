@@ -27,6 +27,7 @@
 #include "script.h"
 #include <math.h>
 #include "tSDL.h"
+#include "SFMT.h"
 
 #define rng(x, y) (x + rand_div(1 + y - x))
 

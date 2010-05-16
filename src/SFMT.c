@@ -593,7 +593,7 @@ void init_by_array(uint32_t init_key[], int key_length) {
 
 uint32_t rand_div(uint32_t m)
 {
-	uint32_t r, n;
+	uint32_t r;
 
 	/* Hack -- simple case */
 	if (m <= 1) return (0);

@@ -26,6 +26,8 @@
 #include "music.h"
 #include "script.h"
 #include "tSDL.h"
+#include "physfs.h"
+#include "physfsrwops.h"
 
 bool sound_active = TRUE;
 
@@ -63,7 +65,7 @@ static int music_play(lua_State *L)
 	int loop = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 1;
 	int fadein = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
 
-	printf("play music %x %d %d\n", *m, loop, fadein);
+	printf("play music %x %d %d\n", (unsigned int)(*m), loop, fadein);
 	lua_pushboolean(L, (Mix_FadeInMusic(*m, loop, fadein) == -1) ? FALSE : TRUE);
 	return 1;
 }

@@ -27,10 +27,13 @@
 #include "script.h"
 #include "display.h"
 #include "physfs.h"
+#include "physfsrwops.h"
 #include "SFMT.h"
 #include "mzip.h"
 #include "main.h"
 #include "tSDL.h"
+#include <math.h>
+#include <time.h>
 
 /******************************************************************
  ******************************************************************
@@ -303,7 +306,7 @@ static const struct luaL_reg fovcache_reg[] =
 static int lua_get_mouse(lua_State *L)
 {
 	int x = 0, y = 0;
-	int buttons = SDL_GetMouseState(&x, &y);
+	(void)SDL_GetMouseState(&x, &y);
 
 	lua_pushnumber(L, x);
 	lua_pushnumber(L, y);
@@ -1221,7 +1224,7 @@ static int lua_line_step(lua_State *L)
 
 static int lua_free_line(lua_State *L)
 {
-	line_data *data = (line_data*)auxiliar_checkclass(L, "line{core}", 1);
+	(void)auxiliar_checkclass(L, "line{core}", 1);
 	lua_pushnumber(L, 1);
 	return 1;
 }
@@ -1351,7 +1354,7 @@ static int lua_file_read(lua_State *L)
 static int lua_file_write(lua_State *L)
 {
 	PHYSFS_file **f = (PHYSFS_file**)auxiliar_checkclass(L, "physfs{file}", 1);
-	int len;
+	size_t len;
 	const char *data = lua_tolstring(L, 2, &len);
 
 	PHYSFS_write(*f, data, sizeof(char), len);
@@ -1403,7 +1406,7 @@ static int lua_zip_add(lua_State *L)
 {
 	zipFile *zf = (zipFile*)auxiliar_checkclass(L, "physfs{zip}", 1);
 	const char *filenameinzip = luaL_checkstring(L, 2);
-	int datalen;
+	size_t datalen;
 	const char *data = lua_tolstring(L, 3, &datalen);
 	int opt_compress_level = luaL_optnumber(L, 4, 4);
 
