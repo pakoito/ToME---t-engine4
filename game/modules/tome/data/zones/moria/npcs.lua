@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/orc.lua")
-load("/data/general/npcs/toll.lua")
+load("/data/general/npcs/troll.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -45,19 +45,12 @@ newEntity{ define_as = "GOLBUG",
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=1, {type="jewelry", subtype="orb", defined="ORB_MANY_WAYS"} },
 
-	summon = {
-		{type="humanoid", subtype="orc", number=2, hasxp=true},
-		{type="humanoid", subtype="troll", number=1, hasxp=true},
-	},
-
 	stun_immune = 1,
 	see_invisible = 5,
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-
 		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=3,
 		[Talents.T_WEAPON_COMBAT]=6,
 		[Talents.T_MACE_MASTERY]=6,
 		[Talents.T_SHIELD_PUMMEL]=4,

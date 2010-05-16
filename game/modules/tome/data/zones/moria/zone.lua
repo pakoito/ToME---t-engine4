@@ -68,7 +68,7 @@ return {
 				},
 				actor = { nb_npc = {3, 3}, },
 				object = { nb_object = {8, 10}, },
-				trap = { nb_trap = {1, 1}, },
+				trap = { nb_trap = {3, 3}, },
 			},
 		},
 	},

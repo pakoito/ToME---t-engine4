@@ -133,6 +133,7 @@ end
 --- Create the tile repositories
 function _M:resetTiles()
 	self.tiles = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, self.allow_backcolor)
+	self.tilesTactic = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, false)
 	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, false, true)
 end
 
@@ -418,11 +419,11 @@ function _M:display()
 					if e.faction then
 						friend = Faction:factionReaction(self.view_faction, e.faction)
 						if friend > 0 then
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						elseif friend < 0 then
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						else
-							self.tiles:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
 						end
 					end
 				end

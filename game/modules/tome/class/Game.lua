@@ -484,8 +484,8 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
---			if config.settings.tome.cheat then self:changeLevel(3, "moria") end
-			if config.settings.tome.cheat then self:changeLevel(1, "wilderness-arda-fareast") end
+			if config.settings.tome.cheat then self:changeLevel(3, "moria") end
+--			if config.settings.tome.cheat then self:changeLevel(1, "wilderness-arda-fareast") end
 		end,
 	}
 	self.key:addBinds
