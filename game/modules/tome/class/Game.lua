@@ -326,6 +326,7 @@ function _M:display()
 	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
 	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
 	self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
+	if self.player then self.player.changed = false end
 
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then

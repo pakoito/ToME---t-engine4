@@ -128,6 +128,8 @@ end
 function _M:act()
 	if not engine.Actor.act(self) then return end
 
+	self.changed = true
+
 	-- Cooldown talents
 	self:cooldownTalents()
 	-- Regen resources

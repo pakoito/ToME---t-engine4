@@ -41,6 +41,8 @@ end
 
 -- Displays the stats
 function _M:display()
+	if not game.player or not game.player.changed then return self.surface end
+
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 
 	local cur_exp, max_exp = game.player.exp, game.player:getExpChart(game.player.level+1)

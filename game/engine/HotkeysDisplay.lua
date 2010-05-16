@@ -48,7 +48,6 @@ local page_to_hotkey = {"", "SECOND_", "THIRD_"}
 function _M:display()
 	local a = self.actor
 	if not a or not a.changed then return self.surface end
-	a.changed = false
 
 	local hks = {}
 	for i = 1, 12 do
