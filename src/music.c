@@ -42,6 +42,7 @@ static int music_new(lua_State *L)
 	SDL_RWops *rops = PHYSFSRWOPS_openRead(name);
 	if (!rops)
 	{
+		*m = NULL;
 		return 0;
 	}
 	*m = Mix_LoadMUS_RW(rops);
@@ -53,7 +54,7 @@ static int music_new(lua_State *L)
 static int music_free(lua_State *L)
 {
 	Mix_Music **m = (Mix_Music**)auxiliar_checkclass(L, "core{music}", 1);
-	Mix_FreeMusic(*m);
+	if (*m) Mix_FreeMusic(*m);
 	lua_pushnumber(L, 1);
 	return 1;
 }
@@ -98,6 +99,7 @@ static int sound_new(lua_State *L)
 	SDL_RWops *rops = PHYSFSRWOPS_openRead(name);
 	if (!rops)
 	{
+		*m = NULL;
 		return 0;
 	}
 	*m = Mix_LoadWAV_RW(rops, 1);
@@ -110,7 +112,7 @@ static int sound_new(lua_State *L)
 static int sound_free(lua_State *L)
 {
 	Mix_Chunk **m = (Mix_Chunk**)auxiliar_checkclass(L, "core{sound}", 1);
-	Mix_FreeChunk(*m);
+	if (*m) Mix_FreeChunk(*m);
 	lua_pushnumber(L, 1);
 	return 1;
 }
