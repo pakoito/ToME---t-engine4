@@ -20,14 +20,14 @@
 newEntity{
 	define_as = "WATER_FLOOR",
 	name = "underwater", image = "terrain/water_floor.png",
-	display = '.', color=colors.LIGHT_BLUE,
+	display = '.', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
 	air_level = -5, air_condition="water",
 }
 
 newEntity{
 	define_as = "WATER_WALL",
 	name = "wall", image = "terrain/water_wall.png",
-	display = '#', color=colors.AQUAMARINE,
+	display = '#', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	can_pass = {pass_wall=1},
 	does_block_move = true,

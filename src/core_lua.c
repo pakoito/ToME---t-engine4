@@ -551,7 +551,7 @@ static int sdl_new_tile(lua_State *L)
 
 	if (txt)
 	{
-		SDL_SetAlpha(txt, 0, 0);
+		if (!alpha) SDL_SetAlpha(txt, 0, 0);
 		sdlDrawImage(*s, txt, x, y);
 		SDL_FreeSurface(txt);
 	}

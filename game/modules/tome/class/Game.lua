@@ -154,18 +154,33 @@ end
 function _M:setupDisplayMode()
 	self.gfxmode = self.gfxmode or (config.settings.tome and config.settings.tome.gfxmode) or 1
 	if self.gfxmode == 1 then
-		print("[DISPLAY MODE] 32x32")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
+		print("[DISPLAY MODE] 32x32 GFX")
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
 		Map:resetTiles()
 		Map.tiles.use_images = true
 	elseif self.gfxmode == 2 then
-		print("[DISPLAY MODE] 16x16")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, true)
+		print("[DISPLAY MODE] 16x16 GFX")
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, true, true)
 		Map:resetTiles()
 		Map.tiles.use_images = true
 	elseif self.gfxmode == 3 then
-		print("[DISPLAY MODE] ASCII")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, false)
+		print("[DISPLAY MODE] 32x32 ASCII")
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, false)
+		Map:resetTiles()
+		Map.tiles.use_images = false
+	elseif self.gfxmode == 4 then
+		print("[DISPLAY MODE] 16x16 ASCII")
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, false, false)
+		Map:resetTiles()
+		Map.tiles.use_images = false
+	elseif self.gfxmode == 5 then
+		print("[DISPLAY MODE] 32x32 ASCII/background")
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
+		Map:resetTiles()
+		Map.tiles.use_images = false
+	elseif self.gfxmode == 6 then
+		print("[DISPLAY MODE] 16x16 ASCII/background")
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, false, true)
 		Map:resetTiles()
 		Map.tiles.use_images = false
 	else
@@ -626,7 +641,7 @@ function _M:setupCommands()
 		-- Switch gfx modes
 		SWITCH_GFX = function()
 			self.gfxmode = self.gfxmode or 1
-			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 3)
+			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 6)
 			self:setupDisplayMode()
 		end,
 

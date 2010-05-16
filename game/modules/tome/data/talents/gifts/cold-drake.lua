@@ -89,7 +89,7 @@ newTalent{
 		local e = Object.new{
 			old_feat = game.level.map(x, y, Map.TERRAIN),
 			name = "summoned ice wall",
-			display = '#', color=colors.LIGHT_BLUE,
+			display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
 			always_remember = true,
 			can_pass = {pass_wall=1},
 			does_block_move = true,

@@ -104,7 +104,8 @@ mm_blocks = {
 -- @param tile_h height of a single tile
 -- @param fontname font parameters, can be nil
 -- @param fontsize font parameters, can be nil
-function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidisplay)
+function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidisplay, allow_backcolor)
+	self.allow_backcolor = allow_backcolor
 	self.multidisplay = multidisplay
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.viewport = {width=math.floor(w), height=math.floor(h), mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
@@ -131,8 +132,8 @@ end
 
 --- Create the tile repositories
 function _M:resetTiles()
-	self.tiles = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true)
-	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, false)
+	self.tiles = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, self.allow_backcolor)
+	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, false, true)
 end
 
 --- Defines the faction of the person seeing the map
@@ -307,7 +308,7 @@ function _M:updateMap(x, y)
 		mm = mm + (g:check("block_move") and MM_BLOCK or 0)
 		mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
 		g_r, g_g, g_b = g.tint_r, g.tint_g, g.tint_b
-		g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image)
+		g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image, 255)
 	end
 	if t then
 		-- Handles invisibility and telepathy and other such things

@@ -178,7 +178,9 @@ function _M:move(x, y, force)
 		-- Never move but tries to attack ? ok
 		elseif not force and self:attr("never_move") then
 			-- A bit weird, but this simple asks the collision code to detect an attack
-			game.level.map:checkAllEntities(x, y, "block_move", self, true)
+			if not game.level.map:checkAllEntities(x, y, "block_move", self, true) then
+				game.logPlayer(self, "You are unable to move!")
+			end
 		else
 			moved = engine.Actor.move(self, x, y, force)
 		end

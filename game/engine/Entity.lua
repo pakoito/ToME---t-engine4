@@ -67,10 +67,13 @@ function _M:init(t, no_default)
 		self.color_r = self.color.r
 		self.color_g = self.color.g
 		self.color_b = self.color.b
-		self.color_br = self.color.br
-		self.color_bg = self.color.bg
-		self.color_bb = self.color.bb
 		self.color = nil
+	end
+	if self.back_color then
+		self.color_br = self.back_color.r
+		self.color_bg = self.back_color.g
+		self.color_bb = self.back_color.b
+		self.back_color = nil
 	end
 	if self.tint then
 		self.tint_r = self.tint.r / 255

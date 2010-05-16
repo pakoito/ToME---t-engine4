@@ -122,7 +122,7 @@ newTalent{
 				local e = Object.new{
 					old_feat = game.level.map(x + i, y + j, Map.TERRAIN),
 					name = "summoned wall", image = "terrain/granite_wall1.png",
-					display = '#', color_r=255, color_g=255, color_b=255,
+					display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 					always_remember = true,
 					can_pass = {pass_wall=1},
 					block_move = true,

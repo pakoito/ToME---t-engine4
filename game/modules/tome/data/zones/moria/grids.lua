@@ -22,7 +22,7 @@ load("/data/general/grids/basic.lua")
 newEntity{
 	define_as = "FAR_EAST_PORTAL",
 	name = "Farportal: the Far East",
-	display = '&', color_r=255, color_g=0, color_b=220,
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,

@@ -26,7 +26,8 @@ module(..., package.seeall, class.make)
 prefix = "/data/gfx/"
 use_images = true
 
-function _M:init(w, h, fontname, fontsize, texture)
+function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
+	self.allow_backcolor = allow_backcolor
 	self.texture = texture
 	self.w, self.h = w, h
 	self.font = core.display.newFont(fontname or "/data/font/VeraMoBd.ttf", fontsize or 14)
@@ -66,9 +67,10 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
 
 			s:drawString(self.font, char, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb)
 ]]
-			if br < 0 then br = nil end
-			if bg < 0 then bg = nil end
-			if bb < 0 then bb = nil end
+			if not self.allow_backcolor or br < 0 then br = nil end
+			if not self.allow_backcolor or bg < 0 then bg = nil end
+			if not self.allow_backcolor or bb < 0 then bb = nil end
+			if not self.allow_backcolor then alpha = 0 end
 			s = core.display.newTile(self.w, self.h, self.font, dochar, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb, br or 0, bg or 0, bb or 0, alpha, self.use_images)
 --			s = core.display.drawStringNewSurface(self.font, char, fr, fg, fb)
 		end

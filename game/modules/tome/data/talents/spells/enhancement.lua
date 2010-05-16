@@ -100,7 +100,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	cooldown = 10,
-	sustain_mana = 40,
+	sustain_mana = 75,
 	tactical = {
 		DEFEND = 10,
 	},

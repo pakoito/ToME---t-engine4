@@ -48,13 +48,13 @@ newEntity{
 newEntity{
 	define_as = "FLOOR",
 	name = "floor", image = "terrain/marble_floor.png",
-	display = '.', color_r=255, color_g=255, color_b=255,
+	display = '.', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY,
 }
 
 newEntity{
 	define_as = "WALL",
 	name = "wall", image = "terrain/granite_wall1.png",
-	display = '#', color_r=255, color_g=255, color_b=255,
+	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 	always_remember = true,
 	does_block_move = true,
 	can_pass = {pass_wall=1},
@@ -66,7 +66,7 @@ newEntity{
 newEntity{
 	define_as = "DOOR",
 	name = "door", image = "terrain/granite_door1.png",
-	display = '+', color_r=238, color_g=154, color_b=77,
+	display = '+', color_r=238, color_g=154, color_b=77, back_color=colors.DARK_UMBER,
 	notice = true,
 	always_remember = true,
 	block_sight = true,
@@ -77,7 +77,7 @@ newEntity{
 newEntity{
 	define_as = "DOOR_OPEN",
 	name = "open door", image = "terrain/granite_door1_open.png",
-	display = "'", color_r=238, color_g=154, color_b=77,
+	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
 	always_remember = true,
 	door_closed = "DOOR",
 }
@@ -85,12 +85,12 @@ newEntity{
 newEntity{
 	define_as = "OLD_FLOOR",
 	name = "floor", image = "terrain/maze_floor.png",
-	display = '.', color_r=255, color_g=255, color_b=255,
+	display = '.', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY,
 }
 
 newEntity{
 	define_as = "OLD_WALL",
-	name = "wall", image = "terrain/granite_wall_lichen.png",
+	name = "wall", image = "terrain/granite_wall_lichen.png", back_color=colors.GREY,
 	display = '#', color_r=255, color_g=255, color_b=255,
 	always_remember = true,
 	does_block_move = true,

@@ -62,9 +62,12 @@ end
 
 function _M:generateList()
 	local list = {
-		{name="32x32 Graphical", mode=1},
-		{name="16x16 Graphical", mode=2},
-		{name="16x16 ASCII",     mode=3},
+		{name="32x32 Graphical",		mode=1},
+		{name="16x16 Graphical",		mode=2},
+		{name="32x32 ASCII",			mode=3},
+		{name="16x16 ASCII",			mode=4},
+		{name="32x32 ASCII with background",	mode=5},
+		{name="16x16 ASCII with background",	mode=6},
 	}
 	self.list = list
 end
