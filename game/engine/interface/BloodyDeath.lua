@@ -24,7 +24,8 @@ require "engine.class"
 module(..., package.seeall, class.make)
 
 --- Makes the bloody death happen
-function _M:bloodyDeath()
+-- @param tint true if the color is applied as a tint, false if it changes the actual color
+function _M:bloodyDeath(tint)
 	if not self.has_blood then return end
 	local color = {255,0,100}
 	local done = 3
@@ -36,7 +37,15 @@ function _M:bloodyDeath()
 		local x, y = rng.range(self.x - 1, self.x + 1), rng.range(self.y - 1, self.y + 1)
 		if game.level.map(x, y, engine.Map.TERRAIN) then
 			-- Get the grid, clone it and alter its color
-			game.level.map(x, y, engine.Map.TERRAIN, game.level.map(x, y, engine.Map.TERRAIN):clone{color_r=color[1],color_g=color[2],color_b=color[3]})
+			if tint then
+				game.level.map(x, y, engine.Map.TERRAIN, game.level.map(x, y, engine.Map.TERRAIN):clone{
+					tint_r=color[1],tint_g=color[2],tint_b=color[3]
+				})
+			else
+				game.level.map(x, y, engine.Map.TERRAIN, game.level.map(x, y, engine.Map.TERRAIN):clone{
+					color_r=color[1],color_g=color[2],color_b=color[3]
+				})
+			end
 		end
 	end
 end
