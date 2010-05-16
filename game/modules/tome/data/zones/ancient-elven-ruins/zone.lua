@@ -62,7 +62,7 @@ return {
 			}, },
 		},
 		[3] = {
-			width = 120, height = 120,
+			width = 100, height = 100,
 			generator = {
 				map = {
 					tileset = {"5x5/base", "5x5/tunnel", "5x5/windy_tunnel", "5x5/crypt"},
