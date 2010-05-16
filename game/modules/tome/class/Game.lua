@@ -198,7 +198,7 @@ end
 
 function _M:setupMiniMap()
 	print("[MINIMAP MODE]", self.minimap_mode)
-	self.minimap_mode = self.minimap_mode or (config.settings.tome and config.settings.tome.minimap_mode) or 1
+	self.minimap_mode = self.minimap_mode or (config.settings.tome and config.settings.tome.minimap_mode) or 2
 	if self.minimap_mode == 1 then
 		print("[MINIMAP MODE] disabled")
 	elseif self.minimap_mode == 2 then

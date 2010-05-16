@@ -26,6 +26,7 @@ quickEntity('m', {show_tooltip=true, name='misty mountains', display='^', color=
 quickEntity('f', {show_tooltip=true, name='grey mountains', display='^', color=colors.SLATE, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
 quickEntity('u', {show_tooltip=true, name='deep forest', display='#', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/tree.png", block_move=true})
 quickEntity('t', {show_tooltip=true, name='forest', display='#', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/tree.png", block_move=true})
+quickEntity('l', {show_tooltip=true, name='Lorien', display='#', color=colors.GOLD, back_color=colors.DARK_GREEN, image="terrain/lorien.png", block_move=true})
 quickEntity('v', {show_tooltip=true, name='old forest', display='#', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/tree_dark1.png", block_move=true})
 quickEntity('i', {show_tooltip=true, name='iron mountains', display='^', color=colors.SLATE, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
 quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true})
@@ -107,9 +108,9 @@ return [[
 ==========..uuubbubb....._........____.....hmmmm....~~....uuuuuuu............._.__._ ...ttttttttttt
 ==========...uubuu......_........______....mmmmm....~~..uuuuuuuuuu............._....  ...t  ttttttt
 ==========.....u.u....._........_.....______mm___...~~.uuuuuuuuuu...................        ttttttt
-===========.=........._........_...........mmmm_...~~..uu&uuuuuuu..................         ttttttt
-================....__........_..ttt......mmmm.____~~..uuuuuuuuu...................         ...tttt
-=================.==t........_....tt.....ttmmm.....~.....uuuuu..................hh.        ......tt
+===========.=........._........_...........mmmm_lll~~..uu&uuuuuuu..................         ttttttt
+================....__........_..ttt......mmmm.llll~~..uuuuuuuuu...................         ...tttt
+=================.==t........_....tt.....ttmmm.lll.~.....uuuuu..................hh.        ......tt
 ===================tt........._.........ttmmm.......~~.........................hhhh.       .......t
 ===================t==......._..........ttmmmttttt._..~~~~~~....................hhh.  ...  .......t
 ===================t==......_...........t&mmmmtttt___.....~~~..................hhhhh. ... ........t
