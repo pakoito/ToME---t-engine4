@@ -57,7 +57,6 @@ voidpf ZCALLBACK fopen_file_func (opaque, filename, mode)
    int mode;
 {
     PHYSFS_file* file = NULL;
-    const char* mode_fopen = NULL;
     if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
 	    file = PHYSFS_openRead(filename);
     else
