@@ -29,7 +29,7 @@ local DeathDialog = require "mod.dialogs.DeathDialog"
 local Astar = require"engine.Astar"
 local DirectPath = require"engine.DirectPath"
 
---- Defines the player for ToME
+--- Defines the player
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
 -- It is also able to run and rest and use hotkeys
 module(..., package.seeall, class.inherit(

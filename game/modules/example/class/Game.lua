@@ -169,6 +169,13 @@ function _M:changeLevel(lev, zone)
 	end
 	self.zone:getLevel(self, lev, old_lev)
 
+	if lev > old_lev then
+		self.player:move(self.level.ups[1].x, self.level.ups[1].y, true)
+	else
+		self.player:move(self.level.downs[1].x, self.level.downs[1].y, true)
+	end
+	self.level:addEntity(self.player)
+
 	self:setupMiniMap()
 end
 

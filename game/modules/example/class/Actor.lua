@@ -31,7 +31,6 @@ require "mod.class.interface.Combat"
 local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(
-	-- a ToME actor is a complex beast it uses may inetrfaces
 	engine.Actor,
 	engine.interface.ActorLife,
 	engine.interface.ActorProject,
@@ -39,7 +38,6 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorStats,
 	engine.interface.ActorTalents,
 	engine.interface.ActorResource,
-	engine.interface.ActorQuest,
 	engine.interface.ActorFOV,
 	mod.class.interface.Combat
 ))
