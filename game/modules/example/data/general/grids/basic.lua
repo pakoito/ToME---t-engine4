@@ -20,7 +20,7 @@
 newEntity{
 	define_as = "UP_WILDERNESS",
 	name = "exit to the wilds",
-	display = '<', color_r=255, color_g=0, color_b=255,
+	display = '<', color_r=255, color_g=0, color_b=255, back_color=colors.DARK_GREY,
 	always_remember = true,
 	notice = true,
 	change_level = 1,
@@ -30,7 +30,7 @@ newEntity{
 newEntity{
 	define_as = "UP",
 	name = "previous level",
-	display = '<', color_r=255, color_g=255, color_b=0,
+	display = '<', color_r=255, color_g=255, color_b=0, back_color=colors.DARK_GREY,
 	notice = true,
 	always_remember = true,
 	change_level = -1,
@@ -39,7 +39,7 @@ newEntity{
 newEntity{
 	define_as = "DOWN",
 	name = "next level",
-	display = '>', color_r=255, color_g=255, color_b=0,
+	display = '>', color_r=255, color_g=255, color_b=0, back_color=colors.DARK_GREY,
 	notice = true,
 	always_remember = true,
 	change_level = 1,
@@ -48,7 +48,7 @@ newEntity{
 newEntity{
 	define_as = "FLOOR",
 	name = "floor", image = "terrain/marble_floor.png",
-	display = '.', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY,
+	display = ' ', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY,
 }
 
 newEntity{
@@ -80,20 +80,4 @@ newEntity{
 	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
 	always_remember = true,
 	door_closed = "DOOR",
-}
-
-newEntity{
-	define_as = "OLD_FLOOR",
-	name = "floor", image = "terrain/maze_floor.png",
-	display = '.', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY,
-}
-
-newEntity{
-	define_as = "OLD_WALL",
-	name = "wall", image = "terrain/granite_wall_lichen.png", back_color=colors.GREY,
-	display = '#', color_r=255, color_g=255, color_b=255,
-	always_remember = true,
-	does_block_move = true,
-	block_sight = true,
-	air_level = -20,
 }

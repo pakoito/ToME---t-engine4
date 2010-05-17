@@ -85,10 +85,7 @@ end
 --- Restore ressources
 function _M:restoreRessources()
 	self.actor.life = self.actor.max_life
-	self.actor.mana = self.actor.max_mana
-	self.actor.stamina = self.actor.max_stamina
-	self.actor.equilibrium = 0
-	self.actor.air = self.actor.max_air
+	self.actor.power = self.actor.max_power
 
 	self.actor.energy.value = game.energy_to_act
 end
@@ -106,8 +103,6 @@ function _M:resurrectBasic()
 	game.level:addEntity(self.actor)
 	game:unregisterDialog(self)
 	game.level.map:redisplay()
-
-	world:gainAchievement("UNSTOPPABLE", self.actor)
 end
 
 function _M:use()
@@ -119,24 +114,8 @@ function _M:use()
 		save:delete()
 		save:close()
 		util.showMainMenu()
-	elseif act == "dump" then
-		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
 	elseif act == "cheat" then
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER !")
-
-		self:cleanActor()
-		self:restoreRessources()
-		self:resurrectBasic()
-	elseif act == "blood_life" then
-		self.actor.blood_life = false
-		game.logPlayer(self.actor, "#LIGHT_RED#The Blood of Life rushes through your dead body. You come back to life!")
-
-		self:cleanActor()
-		self:restoreRessources()
-		self:resurrectBasic()
-	elseif act == "skeleton" then
-		self.actor:attr("re-assembled", 1)
-		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish pain to your foes!")
 
 		self:cleanActor()
 		self:restoreRessources()
@@ -148,8 +127,6 @@ function _M:generateList()
 	local list = {}
 
 	if config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
-	if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
-	if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones ad resurrect (Skeleton ability)", action="skeleton"} end
 
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Exit to main menu", action="exit"}
@@ -159,7 +136,7 @@ end
 
 function _M:drawDialog(s)
 	local help = ([[You have #LIGHT_RED#died#LAST#!
-Death in T.o.M.E. is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
+Death in Example is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
 You can dump your character data to a file to remember her/him forever, or you can exit and try again to survive in the wilds!
 ]]):splitLines(self.iw - 10, self.font)
 

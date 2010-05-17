@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Actor"
 require "engine.Autolevel"
+require "engine.interface.ActorTemporaryEffects"
 require "engine.interface.ActorLife"
 require "engine.interface.ActorProject"
 require "engine.interface.ActorLevel"
@@ -32,6 +33,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(
 	engine.Actor,
+	engine.interface.ActorTemporaryEffects,
 	engine.interface.ActorLife,
 	engine.interface.ActorProject,
 	engine.interface.ActorLevel,
@@ -51,9 +53,10 @@ function _M:init(t, no_default)
 	t.life_regen = t.life_regen or 0.25 -- Life regen real slow
 
 	-- Default melee barehanded damage
-	self.combat = { dam=1, dammod={str=1} }
+	self.combat = { dam=1 }
 
 	engine.Actor.init(self, t, no_default)
+	engine.interface.ActorTemporaryEffects.init(self, t)
 	engine.interface.ActorLife.init(self, t)
 	engine.interface.ActorProject.init(self, t)
 	engine.interface.ActorTalents.init(self, t)
@@ -73,6 +76,8 @@ function _M:act()
 	-- Regen resources
 	self:regenLife()
 	self:regenResources()
+	-- Compute timed effects
+	self:timedEffects()
 
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
@@ -101,8 +106,13 @@ Stats: %d /  %d / %d
 	self.life, self.life * 100 / self.max_life,
 	self:getStr(),
 	self:getDex(),
-	self:getCon()
+	self:getCon(),
+	self.desc or ""
 	)
+end
+
+function _M:onTakeHit(value, src)
+	return value
 end
 
 function _M:die(src)
@@ -117,9 +127,9 @@ function _M:die(src)
 end
 
 function _M:levelup()
-	self.max_life = self.max_life + 5
+	self.max_life = self.max_life + 2
 
-	self:incMaxEnergy(3)
+	self:incMaxPower(3)
 
 	-- Healp up on new level
 	self.life = self.max_life

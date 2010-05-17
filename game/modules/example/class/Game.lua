@@ -106,7 +106,7 @@ function _M:loaded()
 	engine.GameTurnBased.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", }
 	Map:setViewerActor(self.player)
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
+	self:setupDisplayMode()
 	self.key = engine.KeyBind.new()
 end
 
@@ -123,11 +123,6 @@ function _M:setupDisplayMode()
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
 	Map:resetTiles()
 	Map.tiles.use_images = false
-	self:setupMiniMap()
-end
-
-function _M:setupMiniMap()
-	if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(4) end
 end
 
 function _M:save()
@@ -175,8 +170,6 @@ function _M:changeLevel(lev, zone)
 		self.player:move(self.level.downs[1].x, self.level.downs[1].y, true)
 	end
 	self.level:addEntity(self.player)
-
-	self:setupMiniMap()
 end
 
 function _M:getPlayer()

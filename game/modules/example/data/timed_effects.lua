@@ -17,32 +17,17 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Talents = require("engine.interface.ActorTalents")
+local Stats = require "engine.interface.ActorStats"
 
-newEntity{
-	define_as = "BASE_NPC_KOBOLD",
-	type = "humanoid", subtype = "kobold",
-	display = "k", color=colors.WHITE,
-	desc = [[Ugly and green!]],
-
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
-	stats = { str=5, dex=5, con=5 },
-	combat_armor = 0,
-}
-
-newEntity{ base = "BASE_NPC_KOBOLD",
-	name = "kobold warrior", color=colors.GREEN,
-	level_range = {1, 4}, exp_worth = 1,
-	rarity = 4,
-	max_life = resolvers.rngavg(5,9),
-	combat = { dam=2 },
-}
-
-newEntity{ base = "BASE_NPC_KOBOLD",
-	name = "armoured kobold warrior", color=colors.AQUAMARINE,
-	level_range = {6, 10}, exp_worth = 1,
-	rarity = 4,
-	max_life = resolvers.rngavg(10,12),
-	combat_armor = 3,
-	combat = { dam=5 },
+newEffect{
+	name = "ACIDBURN",
+	desc = "Burning from acid",
+	type = "physical",
+	status = "detrimental",
+	parameters = { power=1 },
+	on_gain = function(self, err) return "#Target# is covered in acid!", "+Acid" end,
+	on_lose = function(self, err) return "#Target# is free from the acid.", "-Acid" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.ACID).projector(eff.src or self, self.x, self.y, DamageType.ACID, eff.power)
+	end,
 }

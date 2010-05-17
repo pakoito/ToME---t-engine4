@@ -25,6 +25,7 @@ local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
 local ActorAI = require "engine.interface.ActorAI"
 local ActorLevel = require "engine.interface.ActorLevel"
+local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local Birther = require "engine.Birther"
 
 -- Usefull keybinds
@@ -35,6 +36,9 @@ DamageType:loadDefinition("/data/damage_types.lua")
 
 -- Talents
 ActorTalents:loadDefinition("/data/talents.lua")
+
+-- Timed Effects
+ActorTemporaryEffects:loadDefinition("/data/timed_effects.lua")
 
 -- Actor resources
 ActorResource:defineResource("Power", "power", nil, "power_regen", "Power represent your ability to use special talents.")

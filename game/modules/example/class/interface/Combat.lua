@@ -20,7 +20,6 @@
 require "engine.class"
 local DamageType = require "engine.DamageType"
 local Map = require "engine.Map"
-local Chat = require "engine.Chat"
 local Target = require "engine.Target"
 local Talents = require "engine.interface.ActorTalents"
 
@@ -46,20 +45,12 @@ function _M:bumpInto(target)
 end
 
 --- Makes the death happen!
-function _M:attackTarget(target, damtype, mult, noenergy)
-	local speed, hit = nil, false
-
+function _M:attackTarget(target, mult)
 	if self.combat then
-		local s, h = self:attackTargetWith(target, self.combat, damtype, mult)
-		speed = math.max(speed or 0, s)
-		hit = hit or h
+		local dam = self.combat.dam + self:getStr() - target.combat_armor
+		DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, math.max(0, dam))
 	end
 
 	-- We use up our own energy
-	if speed and not noenergy then
-		self:useEnergy(game.energy_to_act * speed)
-		self.did_energy = true
-	end
-
-	return hit
+	self:useEnergy(game.energy_to_act)
 end
