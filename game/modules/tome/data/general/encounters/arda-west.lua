@@ -19,7 +19,7 @@
 
 newEntity{
 	name = "Novice mage",
-	type = "harmless", subtype = "quest", unique = true,
+	type = "harmless", subtype = "special", unique = true,
 	level_range = {1, 10},
 	rarity = 3,
 	coords = {{ x=10, y=23, likelymap={
@@ -55,12 +55,62 @@ newEntity{
 
 newEntity{
 	name = "Lost merchant",
-	type = "harmless", subtype = "quest", unique = true,
-	level_range = {10, 20},
-	rarity = 4,
+	type = "hostile", subtype = "special", unique = true,
+	level_range = {1, 2},
+	rarity = 1,
 	coords = {{ x=0, y=0, w=40, h=40}},
 	on_encounter = function(self, who)
+		who:runStop()
+		engine.Dialog:yesnoPopup("Encounter", "You find an hidden trap door, and hear cries for help from within... Enter ?", function(ok)
+			if not ok then
+				engine.Dialog:simplePopup("Encounter", "You carefully get away without making a sound.")
+			else
+				engine.Dialog:simplePopup("Encounter", "You carefully open the trap door and enter the underground tunnels...")
 
+				local zone = engine.Zone.new("ambush", {
+					name = "Unknown tunnels",
+					level_range = {8, 18},
+					level_scheme = "player",
+					max_level = 2,
+					actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+					width = 20, height = 20,
+					no_worldport = true,
+					ambiant_music = "a_lomos_del_dragon_blanco.ogg",
+					generator =  {
+						map = {
+							class = "engine.generator.map.TileSet",
+							tileset = {"3x3/base", "3x3/tunnel", "3x3/windy_tunnel"},
+							tunnel_chance = 100,
+							['.'] = "OLD_FLOOR",
+							['#'] = "OLD_WALL",
+							['+'] = "DOOR",
+							["'"] = "DOOR",
+							up = "OLD_FLOOR",
+							down = "DOWN",
+						},
+						actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
+						trap = { class = "engine.generator.trap.Random", nb_trap = {3, 3}, },
+					},
+					npc_list = mod.class.NPC:loadList("/data/general/npcs/thieve.lua"),
+					grid_list = mod.class.Grid:loadList("/data/general/grids/basic.lua"),
+					object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
+					trap_list = mod.class.Trap:loadList("/data/general/traps/alarm.lua"),
+					levels = { [2] = {
+						all_lited=true, all_remembered=true,
+						generator = {
+							map = { class = "engine.generator.map.Static", map = "quests/lost-merchant",},
+							actor = {
+								nb_npc = {1, 1},
+								post_generation = function(e) e.faction="assassin-lair" end,
+							},
+						},
+					}, },
+				})
+				game:changeLevel(1, zone)
+				game.logPlayer(who, "#LIGHT_RED#As you enter you notice the trap door has no visible handle on the inside. You are stuck here!")
+				who:grantQuest("lost-merchant")
+			end
+		end)
 		return true
 	end,
 }

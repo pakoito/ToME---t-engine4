@@ -103,6 +103,11 @@ newTalent{
 	type = {"base/class", 1},
 	cooldown = 1000,
 	action = function(self, t)
+		if not self:canBe("worldport") then
+			game.logPlayer(self, "The spell fizzles...")
+			return
+		end
+
 		local seen = false
 		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
 		core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)

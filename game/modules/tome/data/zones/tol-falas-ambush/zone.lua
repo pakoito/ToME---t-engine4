@@ -24,6 +24,7 @@ return {
 	max_level = 1,
 	actor_adjust_level = function(zone, level, e) return zone.base_level + 20 end,
 	width = 50, height = 50,
+	no_worldport = true,
 --	all_remembered = true,
 	all_lited = true,
 --	persistant = true,

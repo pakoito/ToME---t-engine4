@@ -165,7 +165,7 @@ function _M:setupDisplayMode()
 		Map.tiles.use_images = true
 	elseif self.gfxmode == 3 then
 		print("[DISPLAY MODE] 32x32 ASCII")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, false)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, false, false)
 		Map:resetTiles()
 		Map.tiles.use_images = false
 	elseif self.gfxmode == 4 then
@@ -180,7 +180,7 @@ function _M:setupDisplayMode()
 		Map.tiles.use_images = false
 	elseif self.gfxmode == 6 then
 		print("[DISPLAY MODE] 16x16 ASCII/background")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, false, true)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, true, true)
 		Map:resetTiles()
 		Map.tiles.use_images = false
 	else

@@ -91,6 +91,7 @@ ActorLevel:defineMaxLevel(75)
 
 -- Factions
 Faction:add{ name="water lair", reaction={} }
+Faction:add{ name="assassin lair", reaction={} }
 
 -- Actor autolevel schemes
 dofile("/data/autolevel_schemes.lua")

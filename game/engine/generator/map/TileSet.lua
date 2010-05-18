@@ -22,6 +22,9 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
+-- Deactaivte too many prints
+local print = function() end
+
 function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
 	self.data = data

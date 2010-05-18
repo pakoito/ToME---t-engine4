@@ -27,7 +27,7 @@ newEntity{
 	display = "p", color=colors.BLUE,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	drops = resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.equip{
 		{type="weapon", subtype="dagger", autoreq=true},
 		{type="weapon", subtype="dagger", autoreq=true},
@@ -65,6 +65,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	rarity = 5,
 	combat_armor = 2, combat_def = 5,
 	resolvers.talents{ [Talents.T_STEALTH]=1,  },
+	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -75,16 +76,18 @@ newEntity{ base = "BASE_NPC_THIEF",
 	rarity = 5,
 	combat_armor = 3, combat_def = 5,
 	resolvers.talents{ [Talents.T_STEALTH]=2,  },
+	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(70,90),
 }
 
-newEntity{ base = "BASE_NPC_THIEF",
+newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_BANDIT",
 	name = "bandit", color_r=0, color_g=0, color_b=resolvers.rngrange(175, 195),
 	desc = [[These ruffians often employ brute force over thievery but they are capable of stealing as well.]],
 	level_range = {5, 50}, exp_worth = 1,
 	rarity = 7,
 	combat_armor = 4, combat_def = 6,
 	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_LETHALITY]=2, },
+	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(80,100),
 }
 
@@ -97,20 +100,22 @@ newEntity{ base = "BASE_NPC_THIEF",
 	max_life = resolvers.rngavg(90,100),
 	combat = { dam=resolvers.rngavg(6,7), atk=10, apr=4},
 	summon = {
-		{type="human", subtype="thief", name="bandit", number=1, hasxp=false},
-		{type="human", subtype="thief", name="bandit", number=1, hasxp=false},
-		{type="human", subtype="thief", name="thief", number=1, hasxp=false},
-		{type="human", subtype="thief", name="rogue", number=2, hasxp=false},
+		{type="humanoid", subtype="human", name="bandit", number=1, hasxp=false},
+		{type="humanoid", subtype="human", name="bandit", number=1, hasxp=false},
+		{type="humanoid", subtype="human", name="thief", number=1, hasxp=false},
+		{type="humanoid", subtype="human", name="rogue", number=2, hasxp=false},
 	},
 	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
+	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 }
 
-newEntity{ base = "BASE_NPC_THIEF",
+newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
 	name = "assassin", color_r=resolvers.rngrange(0, 10), color_g=resolvers.rngrange(0, 10), color_b=resolvers.rngrange(0, 10),
 	desc = [[Before you looms a pair of eyes... A glint of steel... death.]],
 	level_range = {12, 50}, exp_worth = 1,
 	rarity = 12,
 	combat_armor = 3, combat_def = 10,
 	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_PRECISION]=3, [Talents.T_DUAL_WEAPON_TRAINING]=2, [Talents.T_DUAL_WEAPON_DEFENSE]=2, [Talents.T_DUAL_STRIKE]=1, [Talents.T_SWEEP]=1, [Talents.T_SHADOWSTRIKE]=2, [Talents.T_LETHALITY]=5, },
+	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(70,90),
 }

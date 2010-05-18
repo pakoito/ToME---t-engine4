@@ -859,6 +859,7 @@ function _M:canBe(what)
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
+	if what == "worldport" and game.zone.no_worldport then return false end
 	return true
 end
 

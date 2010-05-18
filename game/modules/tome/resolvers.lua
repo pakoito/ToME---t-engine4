@@ -23,6 +23,7 @@ function resolvers.equip(t)
 end
 --- Actually resolve the equipment creation
 function resolvers.calc.equip(t, e)
+	print("Equipment resolver for", e.name)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
 		print("Equipment resolver", e.name, filter.type, filter.subtype)

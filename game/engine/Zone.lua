@@ -294,6 +294,7 @@ function _M:addEntity(level, e, typ, x, y)
 	elseif typ == "terrain" then
 		if x and y then level.map(x, y, Map.TERRAIN, e) end
 	end
+	e:check("on_added", level, x, y)
 end
 
 function _M:load(dynamic)

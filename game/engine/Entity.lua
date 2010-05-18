@@ -241,8 +241,8 @@ function _M:loadList(file, no_default, res, mod)
 			-- Do we inherit things ?
 			if t.base then
 				-- Append array part
-				for i = 1, #t.base do
-					local b = t.base[i]
+				for i = 1, #res[t.base] do
+					local b = res[t.base][i]
 					if type(b) == "table" and not b.__CLASSNAME then b = table.clone(b, true)
 					elseif type(b) == "table" and b.__CLASSNAME then b = b:clone()
 					end
