@@ -36,6 +36,7 @@ newEntity{ base = "BASE_LONGBOW",
 	require = { stat = { dex=11 }, },
 	cost = 5,
 	combat = {
+		range = 8,
 		physspeed = 0.8,
 	},
 }
@@ -46,6 +47,7 @@ newEntity{ base = "BASE_LONGBOW",
 	require = { stat = { dex=16 }, },
 	cost = 10,
 	combat = {
+		range = 10,
 		physspeed = 0.8,
 	},
 }
@@ -56,6 +58,7 @@ newEntity{ base = "BASE_LONGBOW",
 	require = { stat = { dex=24 }, },
 	cost = 15,
 	combat = {
+		range = 12,
 		physspeed = 0.8,
 	},
 }
@@ -66,6 +69,7 @@ newEntity{ base = "BASE_LONGBOW",
 	require = { stat = { dex=35 }, },
 	cost = 25,
 	combat = {
+		range = 15,
 		physspeed = 0.8,
 	},
 }
@@ -76,6 +80,7 @@ newEntity{ base = "BASE_LONGBOW",
 	require = { stat = { dex=48 }, },
 	cost = 35,
 	combat = {
+		range = 18,
 		physspeed = 0.8,
 	},
 }

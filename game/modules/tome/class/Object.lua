@@ -172,6 +172,7 @@ function _M:getDesc()
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
 		desc[#desc+1] = ("%d Damage [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
+		if self.combat.range then desc[#desc+1] = "Firing range: "..self.combat.range end
 		desc[#desc+1] = ""
 	end
 
