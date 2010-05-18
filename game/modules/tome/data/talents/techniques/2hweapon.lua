@@ -33,8 +33,8 @@ newTalent{
 		end
 
 		return {
-			atk = self:addTemporaryValue("combat_dam", 5 + self:getStr(7) * self:getTalentLevel(t)),
-			dam = self:addTemporaryValue("combat_atk", 5 + self:getDex(7) * self:getTalentLevel(t)),
+			dam = self:addTemporaryValue("combat_dam", 5 + self:getStr(7) * self:getTalentLevel(t)),
+			atk = self:addTemporaryValue("combat_atk", 5 + self:getDex(7) * self:getTalentLevel(t)),
 			def = self:addTemporaryValue("combat_def", -5 - 2 * (self:getTalentLevelRaw(t)-1)),
 			armor = self:addTemporaryValue("combat_armor", -5 - 2 * (self:getTalentLevelRaw(t)-1)),
 		}

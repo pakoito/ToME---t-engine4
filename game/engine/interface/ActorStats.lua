@@ -74,6 +74,7 @@ function _M:incStat(stat, val)
 	if self:getStat(stat) ~= old then
 		self:onStatChange(stat, self:getStat(stat) - old)
 	end
+	self.changed = true
 	return self:getStat(stat) - old
 end
 
@@ -83,7 +84,8 @@ end
 -- @param stat the stat id
 -- @param scale a scaling factor, nil means max stat value
 -- @param raw false if the scaled result must be rounded down
-function _M:getStat(stat, scale, raw)
+-- @param no_inc if true it wont include stats gained by self.inc_stats
+function _M:getStat(stat, scale, raw, no_inc)
 	local val, inc
 	if type(stat) == "string" then
 		val = self.stats[_M.stats_def[stat].id]
@@ -92,7 +94,7 @@ function _M:getStat(stat, scale, raw)
 		val = self.stats[stat]
 		inc = self.inc_stats[stat]
 	end
-	val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + inc
+	val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + ((not no_inc) and inc or 0)
 	if scale then
 		if not raw then
 			val = math.floor(val * scale / _M.stats_def[stat].max)

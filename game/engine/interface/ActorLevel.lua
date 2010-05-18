@@ -85,6 +85,7 @@ end
 --- Gains some experience
 -- If a levelup happens it calls self:levelup(), modules are encourraged to rewrite it to do whatever is needed.
 function _M:gainExp(value)
+	self.changed = true
 	self.exp = math.max(0, self.exp + value)
 	while self:getExpChart(self.level + 1) and self.exp >= self:getExpChart(self.level + 1) and (not self.actors_max_level or self.level < self.actors_max_level) do
 		-- At max level, if any

@@ -52,6 +52,7 @@ end
 --- Heal some
 function _M:heal(value, src)
 	self.life = util.bound(self.life + value, 0, self.max_life)
+	self.changed = true
 end
 
 --- Remove some HP from an actor
@@ -60,6 +61,7 @@ end
 function _M:takeHit(value, src)
 	if self.onTakeHit then value = self:onTakeHit(value, src) end
 	self.life = self.life - value
+	self.changed = true
 	if self.life <= 0 then
 		game.logSeen(self, "%s killed %s!", src.name:capitalize(), self.name)
 		return self:die(src)
@@ -70,6 +72,7 @@ end
 function _M:die(src)
 	game.level:removeEntity(self)
 	self.dead = true
+	self.changed = true
 
 	self:check("on_die", src)
 end
