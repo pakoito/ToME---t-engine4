@@ -66,7 +66,7 @@ newEntity{ base = "TRAP_ALARM",
 			local m = game.zone:makeEntity(game.level, "actor")
 			if m then
 				game.zone:addEntity(game.level, m, "actor", x, y)
-				game.logSeen(self, "%s appears out of the thin air!", m.name:capitalize())
+				game.logSeen(who, "%s appears out of the thin air!", m.name:capitalize())
 			end
 		end
 		return true, true

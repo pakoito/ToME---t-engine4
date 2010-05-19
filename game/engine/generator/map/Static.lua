@@ -122,21 +122,26 @@ function _M:generate(lev, old_lev)
 		local object = self.tiles[c] and self.tiles[c].object
 
 		if object then
-			local o = self.zone:makeEntityByName(self.level, "object", object)
+			local o = type(object) == "string" and self.zone:makeEntityByName(self.level, "object", object) or self.zone:finishEntity(self.level, "object", object)
 			if o then
 				self.zone:addEntity(self.level, o, "object", i-1, j-1)
 			end
 		end
 
 		if trap then
-			local t = self.zone:makeEntityByName(self.level, "trap", trap)
+			local t = type(trap) == "string" and self.zone:makeEntityByName(self.level, "trap", trap) or self.zone:finishEntity(self.level, "trap", trap)
 			if t then
 				self.zone:addEntity(self.level, t, "trap", i-1, j-1)
 			end
 		end
 
 		if actor then
-			local m = self.zone:makeEntityByName(self.level, "actor", actor)
+			local m
+			if type(actor) == "string" then
+				m = self.zone:makeEntityByName(self.level, "actor", actor)
+			else
+				m = self.zone:finishEntity(self.level, "actor", actor)
+			end
 			if m then
 				self.zone:addEntity(self.level, m, "actor", i-1, j-1)
 			end

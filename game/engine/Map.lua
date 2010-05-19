@@ -323,6 +323,12 @@ function _M:updateMap(x, y)
 	local mm = MM_FLOOR
 
 	if g then
+		-- Update path caches from path strings
+		for i = 1, #self.path_strings do
+			local ps = self.path_strings[i]
+			self._fovcache.path_caches[ps]:set(x, y, g:check("block_move", x, y, ps, false, true))
+		end
+
 		mm = mm + (g:check("block_move") and MM_BLOCK or 0)
 		mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
 		g_r, g_g, g_b = g.tint_r, g.tint_g, g.tint_b
@@ -371,12 +377,6 @@ function _M:updateMap(x, y)
 	else self._fovcache.block_esp:set(x, y, false) end
 	if self:checkAllEntities(x, y, "block_sense", self.actor_player) then self._fovcache.block_sense:set(x, y, true)
 	else self._fovcache.block_sense:set(x, y, false) end
-
-	-- Update path caches from path strings
-	for i = 1, #self.path_strings do
-		local ps = self.path_strings[i]
-		self._fovcache.path_caches[ps]:set(x, y, self:checkEntity(x, y, "block_move", ps, false, true))
-	end
 end
 
 --- Sets/gets a value from the map

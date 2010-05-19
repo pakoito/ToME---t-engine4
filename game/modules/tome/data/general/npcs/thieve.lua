@@ -46,7 +46,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
-	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=0.3, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
+	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=1, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
 	resolvers.talents{ [Talents.T_LETHALITY]=1, },
 }
 

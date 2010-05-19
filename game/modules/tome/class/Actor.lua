@@ -208,11 +208,11 @@ end
 --- Get the "path string" for this actor
 -- See Map:addPathString() for more info
 function _M:getPathString()
-	local ps = self.open_door and "open_door=true;can_pass={" or "can_pass={"
+	local ps = self.open_door and "return {open_door=true,can_pass={" or "return {can_pass={"
 	for what, check in pairs(self.can_pass) do
 		ps = ps .. what.."="..check..","
 	end
-	ps = ps.."}"
+	ps = ps.."}}"
 	print("[PATH STRING] for", self.name, " :=: ", ps)
 	return ps
 end

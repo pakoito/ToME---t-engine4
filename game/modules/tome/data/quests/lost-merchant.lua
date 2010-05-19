@@ -26,9 +26,30 @@ desc = function(self, who)
 end
 
 on_status_change = function(self, who, status, sub)
-	if sub then
-		if self:isCompleted() then
-			who:setQuestStatus(self.id, engine.Quest.DONE)
+	if sub and sub == "evil" then
+		game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+		game.logPlayer(who, "A stair out appears at your feet. The Lord says: 'And rememeber, you are MINE, I will call you.'")
+	end
+
+	if self:isCompleted() then
+		who:setQuestStatus(self.id, engine.Quest.DONE)
+	end
+end
+
+leave_zone = function(self, who)
+	if self:isStatus(self.COMPLETED, "evil") then return end
+	local merchant_alive = false
+	for uid, e in pairs(game.level.entities) do
+		if e.is_merchant and not e.dead then
+			merchant_alive = true
+			break
 		end
 	end
+	if merchant_alive then
+		game.logPlayer(who, "#LIGHT_BLUE#The merchant thanks you for saving his life. He gives you 8 gold and asks you to meet him again in Minas Tirith.")
+		who.money = who.money + 8
+		who.changed = true
+		who:setQuestStatus(self.id, engine.Quest.COMPLETED, "saved")
+	end
+	who:setQuestStatus(self.id, engine.Quest.COMPLETED)
 end

@@ -115,6 +115,7 @@ function _M:decay(what, check)
 			else
 				self.map:remove(i, j, what)
 			end
+			e:removed()
 			nb = nb + 1
 		elseif e then
 			total = total + 1

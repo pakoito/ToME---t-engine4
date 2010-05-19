@@ -41,14 +41,17 @@ newTalent{
 			end
 		end end
 
-		return {
+		local res = {
 			stealth = self:addTemporaryValue("stealth", self:getCun(10) * self:getTalentLevel(t)),
 --			lite = self:addTemporaryValue("lite", -100),
 		}
+		game.level.map:updateMap(self.x, self.y)
+		return res
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("stealth", p.stealth)
 --		self:removeTemporaryValue("lite", p.lite)
+		game.level.map:updateMap(self.x, self.y)
 		return true
 	end,
 	info = function(self, t)

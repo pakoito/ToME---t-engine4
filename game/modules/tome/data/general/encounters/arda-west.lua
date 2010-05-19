@@ -24,13 +24,13 @@ newEntity{
 	rarity = 3,
 	coords = {{ x=10, y=23, likelymap={
 		[[    11111111   ]],
-		[[ 1111122222211 ]],
-		[[111111222222111]],
-		[[111111222222211]],
-		[[111111232222211]],
-		[[111111222222211]],
-		[[111111222222111]],
-		[[111111222222111]],
+		[[ 1111111111111 ]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
 		[[111111111111111]],
 		[[ 1111111111111 ]],
 		[[   111111111   ]],
@@ -56,17 +56,15 @@ newEntity{
 newEntity{
 	name = "Lost merchant",
 	type = "hostile", subtype = "special", unique = true,
-	level_range = {1, 2},
-	rarity = 1,
-	coords = {{ x=0, y=0, w=40, h=40}},
+	level_range = {10, 20},
+	rarity = 7,
+	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)
 		who:runStop()
 		engine.Dialog:yesnoPopup("Encounter", "You find an hidden trap door, and hear cries for help from within... Enter ?", function(ok)
 			if not ok then
-				engine.Dialog:simplePopup("Encounter", "You carefully get away without making a sound.")
+				game.logPlayer(who, "#LIGHT_BLUE#You carefully get away without making a sound.")
 			else
-				engine.Dialog:simplePopup("Encounter", "You carefully open the trap door and enter the underground tunnels...")
-
 				local zone = engine.Zone.new("ambush", {
 					name = "Unknown tunnels",
 					level_range = {8, 18},
@@ -100,13 +98,21 @@ newEntity{
 						generator = {
 							map = { class = "engine.generator.map.Static", map = "quests/lost-merchant",},
 							actor = {
-								nb_npc = {1, 1},
-								post_generation = function(e) e.faction="assassin-lair" end,
+								nb_npc = {0, 0},
 							},
 						},
+						post_process = function(level)
+							for uid, e in pairs(level.entities) do if e.faction ~= "players" then e.faction="assassin-lair" end end
+						end,
 					}, },
+
+					on_leave = function(lev, old_lev, newzone)
+						if not newzone then return end
+						game.player:hasQuest("lost-merchant"):leave_zone(game.player)
+					end,
 				})
 				game:changeLevel(1, zone)
+				game.logPlayer(who, "#LIGHT_RED#You carefully open the trap door and enter the underground tunnels...")
 				game.logPlayer(who, "#LIGHT_RED#As you enter you notice the trap door has no visible handle on the inside. You are stuck here!")
 				who:grantQuest("lost-merchant")
 			end

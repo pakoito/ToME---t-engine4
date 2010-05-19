@@ -20,10 +20,60 @@
 defineTile('<', "UP_WILDERNESS")
 defineTile(' ', "FLOOR")
 defineTile('#', "WALL")
+defineTile('+', "DOOR")
 defineTile('a', "FLOOR", nil, "THIEF_ASSASSIN")
 defineTile('p', "FLOOR", nil, "THIEF_BANDIT")
-defineTile('P', "FLOOR", nil, "")
-defineTile('@', "FLOOR", nil, "")
+
+defineTile('P', "FLOOR", nil, mod.class.NPC.new{
+	type = "humanoid", subtype = "human",
+	display = "p", color=colors.VIOLET,
+	name = "Assassin Lord",
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+
+	resolvers.drops{chance=20, nb=1, {} },
+	resolvers.equip{
+		{type="weapon", subtype="dagger", autoreq=true, ego_change=50},
+		{type="weapon", subtype="dagger", autoreq=true, ego_change=50},
+		{type="armor", subtype="light", autoreq=true}
+	},
+	resolvers.drops{chance=100, nb=2, {type="money"} },
+
+	rank = 4,
+	size_category = 3,
+
+	open_door = true,
+
+	autolevel = "rogue",
+	ai = "dumb_talented_simple", ai_state = { talent_in=5, },
+	energy = { mod=1 },
+	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
+
+	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=1.3, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
+
+	desc = [[He is the leader of a gang of bandits, watch out for his men.]],
+	level_range = {8, 50}, exp_worth = 1,
+	rarity = 12,
+	combat_armor = 5, combat_def = 7,
+	max_life = resolvers.rngavg(90,100),
+	resolvers.talents{ [engine.interface.ActorTalents.T_LETHALITY]=3,[engine.interface.ActorTalents.T_STEALTH]=3, [engine.interface.ActorTalents.T_LETHALITY]=3, },
+
+	can_talk = "assassin-lord",
+
+	on_die = function(self, who)
+		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+		game.logSeen(who, "As the assassin dies the magical veil protecting the stairs out vanishes.")
+	end,
+})
+
+defineTile('@', "FLOOR", nil, mod.class.NPC.new{
+	type = "humanoid", subtype = "human",
+	display = "@", color=colors.UMBER,
+	name = "Lost Merchant",
+	size_category = 3,
+	ai = "simple",
+	faction = "players",
+	is_merchant = true,
+})
 
 startx = 1
 starty = 9
@@ -38,7 +88,7 @@ return [[
 ## ####+# p ##### ##
 ##            a   ##
 ##              @ ##
-#<              P ##
+##              P ##
 ##            a   ##
 ##  p     #+##### ##
 ## #####  #     # ##
