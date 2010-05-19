@@ -41,6 +41,8 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
+	open_door = true,
+
 	resolvers.tmasteries{ ["technique/other"]=0.3 },
 
 	resists = { [DamageType.FIRE] = -50 },

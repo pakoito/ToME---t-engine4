@@ -39,6 +39,8 @@ newEntity{
 
 	resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
 
+	open_door = true,
+
 	blind_immune = 1,
 	fear_immune = 1,
 	see_invisible = 2,

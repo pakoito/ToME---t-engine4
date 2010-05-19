@@ -73,20 +73,42 @@ function _M:calc(sx, sy, tx, ty, use_has_seen)
 	local f_score = {[start] = self:heuristic(sx, sy, tx, ty)}
 	local came_from = {}
 
-	local checkPos = function(node, nx, ny)
-		local nnode = self:toSingle(nx, ny)
-		if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not self.map:checkEntity(nx, ny, Map.TERRAIN, "block_move", self.actor, nil, true)) then
-			local tent_g_score = g_score[node] + 1 -- we can adjust hre for difficult passable terrain
-			local tent_is_better = false
-			if not open[nnode] then open[nnode] = true; tent_is_better = true
-			elseif tent_g_score < g_score[nnode] then tent_is_better = true
-			end
+	local cache = self.map._fovcache.path_caches[self.actor:getPathString()]
+	local checkPos
+	if cache then
+		checkPos = function(node, nx, ny)
+			local nnode = self:toSingle(nx, ny)
+			if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not cache:get(nx, ny)) then
+				local tent_g_score = g_score[node] + 1 -- we can adjust hre for difficult passable terrain
+				local tent_is_better = false
+				if not open[nnode] then open[nnode] = true; tent_is_better = true
+				elseif tent_g_score < g_score[nnode] then tent_is_better = true
+				end
 
-			if tent_is_better then
-				came_from[nnode] = node
-				g_score[nnode] = tent_g_score
-				h_score[nnode] = self:heuristic(tx, ty, nx, ny)
-				f_score[nnode] = g_score[nnode] + h_score[nnode]
+				if tent_is_better then
+					came_from[nnode] = node
+					g_score[nnode] = tent_g_score
+					h_score[nnode] = self:heuristic(tx, ty, nx, ny)
+					f_score[nnode] = g_score[nnode] + h_score[nnode]
+				end
+			end
+		end
+	else
+		checkPos = function(node, nx, ny)
+			local nnode = self:toSingle(nx, ny)
+			if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not self.map:checkEntity(nx, ny, Map.TERRAIN, "block_move", self.actor, nil, true)) then
+				local tent_g_score = g_score[node] + 1 -- we can adjust hre for difficult passable terrain
+				local tent_is_better = false
+				if not open[nnode] then open[nnode] = true; tent_is_better = true
+				elseif tent_g_score < g_score[nnode] then tent_is_better = true
+				end
+
+				if tent_is_better then
+					came_from[nnode] = node
+					g_score[nnode] = tent_g_score
+					h_score[nnode] = self:heuristic(tx, ty, nx, ny)
+					f_score[nnode] = g_score[nnode] + h_score[nnode]
+				end
 			end
 		end
 	end

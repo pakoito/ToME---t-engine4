@@ -36,7 +36,10 @@ newBirthDescriptor{
 	name = "Destroyer",
 	desc =
 	{
-		"Boom!",
+		"Crashhhhh!",
+	},
+	talents = {
+		[ActorTalents.T_KICK]=1,
 	},
 }
 
@@ -46,5 +49,8 @@ newBirthDescriptor{
 	desc =
 	{
 		"Zshhhhhhhh!",
+	},
+	talents = {
+		[ActorTalents.T_ACID_SPRAY]=1,
 	},
 }

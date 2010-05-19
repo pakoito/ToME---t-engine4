@@ -161,7 +161,7 @@ function _M:preUseTalent(ab, silent)
 			return false
 		end
 	else
-		if ab.power and self:getMana() < ab.power * (100 + self.fatigue) / 100 then
+		if ab.power and self:getPower() < ab.power then
 			game.logPlayer(self, "You do not have enough power to cast %s.", ab.name)
 			return false
 		end
@@ -223,7 +223,7 @@ function _M:getTalentFullDescription(t)
 	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activable"
 	end
 
-	if t.power or t.sustain_power then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.power or t.sustain_power) end
+	if t.power or t.sustain_power then d[#d+1] = "#6fff83#Power cost: #7fffd4#"..(t.power or t.sustain_power) end
 	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
 	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
 	end

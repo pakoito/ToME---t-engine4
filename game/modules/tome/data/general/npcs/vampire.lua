@@ -55,6 +55,8 @@ newEntity{
 	size_category = 3,
 	rank = 2,
 
+	open_door = true,
+
 	resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
 
 	resists = { [DamageType.COLD] = 80, [DamageType.NATURE] = 80, [DamageType.LIGHT] = -50,  },

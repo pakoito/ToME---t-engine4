@@ -34,6 +34,8 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 
+	open_door = true,
+
 	resolvers.tmasteries{ ["technique/2hweapon"]=1, },
 
 	blind_immune = 1,

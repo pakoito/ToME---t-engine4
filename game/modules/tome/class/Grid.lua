@@ -28,16 +28,22 @@ function _M:init(t, no_default)
 end
 
 function _M:block_move(x, y, e, act, couldpass)
+	-- Path strings
+	if not e then e = {}
+	elseif type(e) == "string" then
+		e = loadstring(e)()
+	end
+
 	-- Open doors
-	if self.door_opened and act then
-		game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list.DOOR_OPEN)
+	if self.door_opened and e.open_door and act then
+		game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
 		return true
-	elseif self.door_opened and not couldpass then
+	elseif self.door_opened and e.open_door and not couldpass then
 		return true
 	end
 
 	-- Pass walls
-	if e and self.can_pass and e.can_pass then
+	if self.can_pass and e.can_pass then
 		for what, check in pairs(e.can_pass) do
 			if self.can_pass[what] and self.can_pass[what] <= check then return false end
 		end

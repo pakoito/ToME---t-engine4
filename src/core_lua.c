@@ -274,6 +274,16 @@ static int lua_fovcache_set(lua_State *L)
 	return 0;
 }
 
+static int lua_fovcache_get(lua_State *L)
+{
+	struct lua_fovcache *cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+
+	lua_pushboolean(L, cache->cache[x + y * cache->w]);
+	return 1;
+}
+
 static const struct luaL_reg fovlib[] =
 {
 	{"new", lua_new_fov},
@@ -295,6 +305,7 @@ static const struct luaL_reg fov_reg[] =
 static const struct luaL_reg fovcache_reg[] =
 {
 	{"set", lua_fovcache_set},
+	{"get", lua_fovcache_get},
 	{NULL, NULL},
 };
 

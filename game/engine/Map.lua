@@ -165,6 +165,7 @@ function _M:init(w, h)
 	self.has_seens = {}
 	self.remembers = {}
 	self.effects = {}
+	self.path_strings = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self:loaded()
@@ -200,7 +201,23 @@ function _M:makeCMap()
 		block_sight = core.fov.newCache(self.w, self.h),
 		block_esp = core.fov.newCache(self.w, self.h),
 		block_sense = core.fov.newCache(self.w, self.h),
+		path_caches = {},
 	}
+	for i, ps in ipairs(self.path_strings) do
+		self._fovcache.path_caches[ps] = core.fov.newCache(self.w, self.h)
+	end
+end
+
+--- Adds a "path string" to the map
+-- "Path strings" are strings defining what terrain an actor can cross. Their format is left to the module to decide (by overloading Actor:getPathString() )<br/>
+-- They are totally optional as they re only used to compute A* paths adn the likes and even then the algorithms still work without them, only slower<br/>
+-- If you use them the block_move function of your Grid class must be able to handle either an actor or a "path string" as their third argument
+function _M:addPathString(ps)
+	for i, eps in ipairs(self.path_strings) do
+		if eps == ps then return end
+	end
+	self.path_strings[#self.path_strings+1] = ps
+	if self._fovcache then self._fovcache.path_caches[ps] = core.fov.newCache(self.w, self.h) end
 end
 
 function _M:loaded()
@@ -291,7 +308,7 @@ function _M:cleanFOV()
 end
 
 --- Updates the map on the given spot
--- This updates many things, from the C map object, the FOC caches, the minimap if it exists, ...
+-- This updates many things, from the C map object, the FOV caches, the minimap if it exists, ...
 function _M:updateMap(x, y)
 	local g = self(x, y, TERRAIN)
 	local o = self(x, y, OBJECT)
@@ -354,6 +371,12 @@ function _M:updateMap(x, y)
 	else self._fovcache.block_esp:set(x, y, false) end
 	if self:checkAllEntities(x, y, "block_sense", self.actor_player) then self._fovcache.block_sense:set(x, y, true)
 	else self._fovcache.block_sense:set(x, y, false) end
+
+	-- Update path caches from path strings
+	for i = 1, #self.path_strings do
+		local ps = self.path_strings[i]
+		self._fovcache.path_caches[ps]:set(x, y, self:checkEntity(x, y, "block_move", ps, false, true))
+	end
 end
 
 --- Sets/gets a value from the map

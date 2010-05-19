@@ -205,6 +205,18 @@ function _M:move(x, y, force)
 	return moved
 end
 
+--- Get the "path string" for this actor
+-- See Map:addPathString() for more info
+function _M:getPathString()
+	local ps = self.open_door and "open_door=true;can_pass={" or "can_pass={"
+	for what, check in pairs(self.can_pass) do
+		ps = ps .. what.."="..check..","
+	end
+	ps = ps.."}"
+	print("[PATH STRING] for", self.name, " :=: ", ps)
+	return ps
+end
+
 --- Blink through walls
 function _M:probabilityTravel(x, y, dist)
 	local dirx, diry = x - self.x, y - self.y

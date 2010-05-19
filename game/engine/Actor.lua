@@ -104,6 +104,12 @@ function _M:canMove(x, y, terrain_only)
 	end
 end
 
+--- Get the "path string" for this actor
+-- See Map:addPathString() for more info
+function _M:getPathString()
+	return ""
+end
+
 --- Teleports randomly to a passable grid
 -- @param x the coord of the teleporatation
 -- @param y the coord of the teleporatation
@@ -133,17 +139,28 @@ end
 
 --- Knock back the actor
 function _M:knockback(srcx, srcy, dist)
+	print("[KNOCKBACK] from", srcx, srcy, "over", dist)
+
 	local l = line.new(srcx, srcy, self.x, self.y, true)
 	local lx, ly = l(true)
+	local ox, oy = lx, ly
 	dist = dist - 1
+
+	print("[KNOCKBACK] try", lx, ly, dist)
 
 	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
 		dist = dist - 1
+		ox, oy = lx, ly
 		lx, ly = l(true)
+		print("[KNOCKBACK] try", lx, ly, dist, "::", game.level.map:checkAllEntities(lx, ly, "block_move", self))
 	end
 
 	if game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+		print("[KNOCKBACK] ok knocked to", lx, ly, "::", game.level.map:checkAllEntities(lx, ly, "block_move", self))
 		self:move(lx, ly, true)
+	elseif game.level.map:isBound(ox, oy) and not game.level.map:checkAllEntities(ox, oy, "block_move", self) then
+		print("[KNOCKBACK] failsafe knocked to", ox, oy, "::", game.level.map:checkAllEntities(ox, oy, "block_move", self))
+		self:move(ox, oy, true)
 	end
 end
 

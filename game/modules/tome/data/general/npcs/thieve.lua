@@ -39,6 +39,8 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 
+	open_door = true,
+
 	autolevel = "rogue",
 	ai = "dumb_talented_simple", ai_state = { talent_in=5, },
 	energy = { mod=1 },

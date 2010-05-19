@@ -301,7 +301,14 @@ function _M:changeLevel(lev, zone)
 		self:stopMusic()
 	end
 
+	-- Update the minimap
 	self:setupMiniMap()
+
+	-- Tell the map to use path strings to speed up path calculations
+	for uid, e in pairs(self.level.entities) do
+		self.level.map:addPathString(e:getPathString())
+	end
+	self.level.map:redisplay()
 end
 
 function _M:getPlayer()

@@ -34,6 +34,8 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 
+	open_door = true,
+
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 	energy = { mod=1 },

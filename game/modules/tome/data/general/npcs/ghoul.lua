@@ -37,6 +37,8 @@ newEntity{
 
 	resolvers.tmasteries{ ["technique/other"]=1, },
 
+	open_door = true,
+
 	blind_immune = 1,
 	see_invisible = 2,
 	undead = 1,
