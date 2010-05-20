@@ -20,9 +20,16 @@
 newTalent{
 	name = "Arcane Combat",
 	type = {"technique/magical-combat", 1},
-	mode = "passive",
+	mode = "sustained",
 	points = 5,
 	require = techs_req1,
+	sustain_stamina = 20,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
 	info = function(self, t)
 		return ([[Allows to use a melee weapon as a spell focus, granting %d%% chance per melee attacks to deliver a Flame, Flameshock, Lightning or Chain Lightning spell as a free action on their target.
 		Delivering the spell this way will not trigger a spell cooldown but only works if the spell is not on cooldown.

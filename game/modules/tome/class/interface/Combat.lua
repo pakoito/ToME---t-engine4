@@ -297,7 +297,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end end
 
 	-- Autospell cast
-	if hitted and self:knowTalent(self.T_ARCANE_COMBAT) and rng.percent(20 + self:getTalentLevel(self.T_ARCANE_COMBAT) * (1 + self:getDex(9, true))) then
+	if hitted and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) and rng.percent(20 + self:getTalentLevel(self.T_ARCANE_COMBAT) * (1 + self:getDex(9, true))) then
 		local spells = {}
 		if self:knowTalent(self.T_FLAME) then spells[#spells+1] = self.T_FLAME end
 		if self:knowTalent(self.T_FLAMESHOCK) then spells[#spells+1] = self.T_FLAMESHOCK end
