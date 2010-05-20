@@ -51,6 +51,7 @@ end
 -- @param reaction a numerical value representing the reaction, 0 is neutral, <0 is aggressive, >0 is friendly
 -- @param mutual if true the same status will be set for f2 toward f1
 function _M:setFactionReaction(f1, f2, reaction, mutual)
+	print("[FACTION]", f1, f2, reaction, mutual)
 	-- Faction always like itself
 	if f1 == f2 then return end
 	if not self.factions[f1] then return end

@@ -129,6 +129,8 @@ function _M:checkFilter(e, filter)
 	if e.unique and game.uniques[e.__CLASSNAME.."/"..e.unique] then print("refused unique", e.name, e.__CLASSNAME.."/"..e.unique) return false end
 
 	if not filter then return true end
+	if filter.ignore and self:checkFilter(e, filter.ignore) then return false end
+
 	print("Filtering", filter.type, filter.subtype)
 
 	if filter.type and filter.type ~= e.type then return false end

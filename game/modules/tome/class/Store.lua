@@ -30,6 +30,8 @@ function _M:loadStores(f)
 end
 
 function _M:init(t, no_default)
+	t.buy_percent = t.buy_percent or 10
+	t.sell_percent = t.sell_percent or 100
 	Store.init(self, t, no_default)
 end
 
@@ -40,7 +42,7 @@ end
 -- @param nb number of items (if stacked) to buy
 -- @return true if allowed to buy
 function _M:onBuy(who, o, item, nb)
-	local price = o:getPrice()
+	local price = o:getPrice() * self.sell_percent / 100
 	if who.money >= price * nb then
 		who.money = who.money - price * nb
 		return nb
@@ -56,7 +58,7 @@ end
 -- @param nb number of items (if stacked) to sell
 -- @return true if allowed to sell
 function _M:onSell(who, o, item, nb)
-	local price = o:getPrice() / 10
+	local price = o:getPrice() * self.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
 	who.money = who.money + price * nb
 	o:identify(true)
@@ -70,11 +72,11 @@ end
 -- @return a string (possibly multiline) describing the object
 function _M:descObject(who, what, o)
 	if what == "buy" then
-		local desc = ("Buy for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice(), who.money)
+		local desc = ("Buy for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice() * self.sell_percent / 100, who.money)
 		desc = desc .. o:getDesc()
 		return desc
 	else
-		local desc = ("Sell for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice() / 10, who.money)
+		local desc = ("Sell for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice() * self.buy_percent / 100, who.money)
 		desc = desc .. o:getDesc()
 		return desc
 	end

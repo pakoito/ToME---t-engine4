@@ -132,3 +132,21 @@ newEntity{
 		},
 	},
 }
+
+----------- Lost Merchant
+newEntity{
+	define_as = "LOST_MERCHANT",
+	name = "rare goods",
+	display = '7', color=colors.BLUE,
+	store = {
+		restock_after = 1000,
+		empty_before_restock = true,
+		buy_percent = 10,
+		sell_percent = 140,
+		min_fill = 10,
+		max_fill = 20,
+		filters = {
+			{ego_chance=80, id=true, ignore={type="money"}},
+		},
+	},
+}

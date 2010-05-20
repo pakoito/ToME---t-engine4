@@ -57,19 +57,13 @@ function _M:init(chat, id)
 	}
 end
 
-function _M:use()
-	local a = self.chat:get(self.cur_id).answers[self.list[self.sel].answer]
+function _M:use(a)
+	a = a or self.chat:get(self.cur_id).answers[self.list[self.sel].answer]
 	if not a then return end
 
 	self.changed = true
 
 	print("[CHAT] selected", a[1], a.action, a.jump)
-	if a.jump then
-		self.cur_id = a.jump
-		self:regen()
-	else
-		game:unregisterDialog(self)
-	end
 	if a.action then
 		local id = a.action(self.npc, self.player, self)
 		if id then
@@ -77,6 +71,13 @@ function _M:use()
 			self:regen()
 			return
 		end
+	end
+	if a.jump then
+		self.cur_id = a.jump
+		self:regen()
+	else
+		game:unregisterDialog(self)
+		return
 	end
 end
 
@@ -87,7 +88,20 @@ function _M:regen()
 	self.scroll = 1
 end
 
+function _M:resolveAuto()
+	if not self.chat:get(self.cur_id).auto then return end
+	for i, a in ipairs(self.chat:get(self.cur_id).answers) do
+		if not a.cond or a.cond(self.npc, self.player) then
+			if not self:use(a) then return
+			else return self:resolveAuto()
+			end
+		end
+	end
+end
+
 function _M:generateList()
+	self:resolveAuto()
+
 	-- Makes up the list
 	local list = {}
 	for i, a in ipairs(self.chat:get(self.cur_id).answers) do
@@ -96,6 +110,7 @@ function _M:generateList()
 		end
 	end
 	self.list = list
+	return true
 end
 
 function _M:drawDialog(s)
