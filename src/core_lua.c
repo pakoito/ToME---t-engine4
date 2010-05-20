@@ -481,7 +481,7 @@ static int sdl_surface_drawstring(lua_State *L)
 	int b = luaL_checknumber(L, 8);
 
 	SDL_Color color = {r,g,b};
-	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
+	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
 	if (txt)
 	{
 		sdlDrawImage(*s, txt, x, y);
@@ -500,7 +500,7 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 	int b = luaL_checknumber(L, 5);
 
 	SDL_Color color = {r,g,b};
-	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
+	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
 	if (txt)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));

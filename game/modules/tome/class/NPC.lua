@@ -49,6 +49,10 @@ function _M:onTakeHit(value, src)
 		self.ai_target.actor = src
 	end
 
+	if Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
+		Faction:setFactionReaction(self.faction, src.faction, -100, true)
+	end
+
 	return mod.class.Actor.onTakeHit(self, value, src)
 end
 

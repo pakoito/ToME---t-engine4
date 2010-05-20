@@ -33,6 +33,11 @@ function _M:add(t)
 	self.factions[t.short_name] = t
 end
 
+--- Returns the faction definition
+function _M:get(id)
+	return self.factions[id]
+end
+
 --- Returns the status of faction f1 toward f2
 -- @param f1 the source faction
 -- @param f2 the target faction
