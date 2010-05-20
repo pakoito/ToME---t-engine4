@@ -69,12 +69,13 @@ function _M:init(actor, order, at_end)
 	self.cur_order = 1
 	self:next()
 
-	self:keyCommands{
-		_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list); self.changed = true end,
-		_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list); self.changed = true end,
-		_RETURN = function() self:next() end,
+	self:keyCommands({
 		_BACKSPACE = function() self:prev() end,
-	}
+	},{
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list); self.changed = true end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list); self.changed = true end,
+		ACCEPT = function() self:next() end,
+	})
 	self:mouseZones{
 		{ x=2, y=25, w=350, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.changed = true
