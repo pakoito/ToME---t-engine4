@@ -38,7 +38,9 @@ function _M:block_move(x, y, e, act, couldpass)
 	if self.door_opened and e.open_door and act then
 		game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
 		return true
-	elseif self.door_opened and e.open_door and not couldpass then
+	elseif self.door_opened and not couldpass then
+		return true
+	elseif self.door_opened and couldpass and not e.open_door then
 		return true
 	end
 

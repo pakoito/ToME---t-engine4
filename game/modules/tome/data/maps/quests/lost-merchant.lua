@@ -75,7 +75,7 @@ defineTile('@', "FLOOR", nil, mod.class.NPC.new{
 	is_merchant = true,
 })
 
-startx = 1
+startx = 2
 starty = 9
 
 return [[
