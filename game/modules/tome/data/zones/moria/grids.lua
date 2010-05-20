@@ -28,6 +28,7 @@ newEntity{
 	show_tooltip = true,
 	desc = [[A farportal is a way to travel increible distances in the blink of an eye. They usualy require an external item to use. You have no idea if it is even two-way.
 This one seems to go to the Far East, a continent of Arda of which only rumours are know...]],
+--[[
 	orb_portal = {
 		change_level = 1,
 		change_zone = "wilderness-arda-fareast",
@@ -36,4 +37,5 @@ This one seems to go to the Far East, a continent of Arda of which only rumours 
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on an unfamiliar land, with no trace of the portal...",
 	}
+]]
 }
