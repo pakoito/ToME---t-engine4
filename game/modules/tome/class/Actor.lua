@@ -269,12 +269,32 @@ function _M:magicMap(radius, x, y)
 	end end
 end
 
+function _M:getRankStatAdjust()
+	if self.rank == 1 then return -1
+	elseif self.rank == 2 then return -0.5
+	elseif self.rank == 3 then return 0
+	elseif self.rank == 4 then return 1
+	elseif self.rank >= 5 then return 1
+	else return 0
+	end
+end
+
 function _M:getRankLevelAdjust()
 	if self.rank == 1 then return -1
 	elseif self.rank == 2 then return 0
 	elseif self.rank == 3 then return 1
 	elseif self.rank == 4 then return 3
 	elseif self.rank >= 5 then return 4
+	else return 0
+	end
+end
+
+function _M:getRankLifeAdjust()
+	if self.rank == 1 then return -2
+	elseif self.rank == 2 then return -0.5
+	elseif self.rank == 3 then return 1
+	elseif self.rank == 4 then return 2
+	elseif self.rank >= 5 then return 3
 	else return 0
 	end
 end
@@ -462,7 +482,7 @@ function _M:die(src)
 end
 
 function _M:levelup()
-	self.unused_stats = self.unused_stats + 3
+	self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
 	self.unused_talents = self.unused_talents + 2
 	-- At levels 10, 20 and 30 we gain a new talent type
 	if self.level == 10 or  self.level == 20 or  self.level == 30 then
@@ -474,7 +494,7 @@ function _M:levelup()
 	if not self.fixed_rating then
 		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
 	end
-	self.max_life = self.max_life + rating + 1 -- + 5
+	self.max_life = self.max_life + math.max(rating + self:getRankLifeAdjust(), 1)
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_I) and 1 or 0)
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_II) and 1 or 0)
 		+ (self:knowTalent(self.T_IMPROVED_HEALTH_III) and 1 or 0)

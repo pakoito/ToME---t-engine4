@@ -20,10 +20,10 @@
 local Autolevel = require "engine.Autolevel"
 
 local function learnStats(self, statorder)
-	local i = 1
+	self.auto_stat_cnt = self.auto_stat_cnt or 1
 	while self.unused_stats > 0 do
-		self:incStat(statorder[i], 1)
-		i = util.boundWrap(i + 1, 1, #statorder)
+		self:incStat(statorder[self.auto_stat_cnt], 1)
+		self.auto_stat_cnt = util.boundWrap(self.auto_stat_cnt + 1, 1, #statorder)
 		self.unused_stats = self.unused_stats - 1
 	end
 end
@@ -60,17 +60,9 @@ Autolevel:registerScheme{ name = "caster", levelup = function(self)
 end}
 
 Autolevel:registerScheme{ name = "warriormage", levelup = function(self)
-	if self.level % 2 == 0 then
-		learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_WIL })
-	else
-		learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
-	end
+	learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_WIL, self.STAT_STR, self.STAT_STR, self.STAT_DEX })
 end}
 
 Autolevel:registerScheme{ name = "snake", levelup = function(self)
-	if self.level % 2 == 0 then
-		learnStats(self, { self.STAT_CUN, self.STAT_DEX, self.STAT_CON })
-	else
-		learnStats(self, { self.STAT_CUN, self.STAT_DEX, self.STAT_STR })
-	end
+	learnStats(self, { self.STAT_CUN, self.STAT_DEX, self.STAT_CON, self.STAT_CUN, self.STAT_DEX, self.STAT_STR })
 end}
