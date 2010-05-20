@@ -21,7 +21,7 @@
 
 quickEntity('a', {show_tooltip=true, name='Ephel Duath', display='^', color=colors.LIGHT_DARK, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
 quickEntity('d', {show_tooltip=true, name='Haradwaith', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", block_move=true})
-quickEntity('b', {show_tooltip=true, name='blue mountains', display='^', color=colors.LIGHT_BLUE, back_color=colors.BLUE, image="terrain/mountain.png", block_move=true})
+quickEntity('b', {show_tooltip=true, name='blue mountains', display='^', color=colors.LIGHT_BLUE, back_color=colors.BLUE, tint=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true})
 quickEntity('m', {show_tooltip=true, name='misty mountains', display='^', color=colors.LIGHT_UMBER, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
 quickEntity('f', {show_tooltip=true, name='grey mountains', display='^', color=colors.SLATE, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
 quickEntity('u', {show_tooltip=true, name='deep forest', display='#', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/tree.png", block_move=true})

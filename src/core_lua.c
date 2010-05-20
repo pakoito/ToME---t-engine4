@@ -427,6 +427,7 @@ static int sdl_new_font(lua_State *L)
 	auxiliar_setclass(L, "sdl{font}", -1);
 
 	*f = TTF_OpenFontRW(PHYSFSRWOPS_openRead(name), TRUE, size);
+//	TTF_SetFontOutline(*f, 2);
 
 	return 1;
 }
@@ -480,7 +481,7 @@ static int sdl_surface_drawstring(lua_State *L)
 	int b = luaL_checknumber(L, 8);
 
 	SDL_Color color = {r,g,b};
-	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
+	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
 	if (txt)
 	{
 		sdlDrawImage(*s, txt, x, y);
@@ -499,7 +500,7 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 	int b = luaL_checknumber(L, 5);
 
 	SDL_Color color = {r,g,b};
-	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
+	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
 	if (txt)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
@@ -648,7 +649,17 @@ static int sdl_surface_erase(lua_State *L)
 	int g = lua_tonumber(L, 3);
 	int b = lua_tonumber(L, 4);
 	int a = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 255;
-	SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, r, g, b, a));
+	if (lua_isnumber(L, 6))
+	{
+		SDL_Rect rect;
+		rect.x = lua_tonumber(L, 6);
+		rect.y = lua_tonumber(L, 7);
+		rect.w = lua_tonumber(L, 8);
+		rect.h = lua_tonumber(L, 9);
+		SDL_FillRect(*s, &rect, SDL_MapRGBA((*s)->format, r, g, b, a));
+	}
+	else
+		SDL_FillRect(*s, NULL, SDL_MapRGBA((*s)->format, r, g, b, a));
 	return 0;
 }
 
@@ -752,6 +763,14 @@ static int sdl_surface_toscreen(lua_State *L)
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
+	if (lua_isnumber(L, 4))
+	{
+		float r = luaL_checknumber(L, 4);
+		float g = luaL_checknumber(L, 5);
+		float b = luaL_checknumber(L, 6);
+		float a = luaL_checknumber(L, 7);
+		glColor4f(r, g, b, a);
+	}
 
 	GLuint t;
 	glGenTextures(1, &t);
@@ -763,6 +782,8 @@ static int sdl_surface_toscreen(lua_State *L)
 
 	glDeleteTextures(1, &t);
 
+	if (lua_isnumber(L, 4)) glColor4f(1, 1, 1, 1);
+
 	return 0;
 }
 
@@ -772,11 +793,21 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 2);
 	int x = luaL_checknumber(L, 3);
 	int y = luaL_checknumber(L, 4);
+	if (lua_isnumber(L, 5))
+	{
+		float r = luaL_checknumber(L, 5);
+		float g = luaL_checknumber(L, 6);
+		float b = luaL_checknumber(L, 7);
+		float a = luaL_checknumber(L, 8);
+		glColor4f(r, g, b, a);
+	}
 
 	glBindTexture(GL_TEXTURE_2D, *t);
 
 	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
+
+	if (lua_isnumber(L, 5)) glColor4f(1, 1, 1, 1);
 
 	return 0;
 }
@@ -833,6 +864,14 @@ static int sdl_texture_toscreen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	int w = luaL_checknumber(L, 4);
 	int h = luaL_checknumber(L, 5);
+	if (lua_isnumber(L, 6))
+	{
+		float r = luaL_checknumber(L, 6);
+		float g = luaL_checknumber(L, 7);
+		float b = luaL_checknumber(L, 8);
+		float a = luaL_checknumber(L, 9);
+		glColor4f(r, g, b, a);
+	}
 
 	glBindTexture(GL_TEXTURE_2D, *t);
 	glBegin( GL_QUADS );                 /* Draw A Quad              */
@@ -842,6 +881,7 @@ static int sdl_texture_toscreen(lua_State *L)
 	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
 	glEnd( );                            /* Done Drawing The Quad    */
 
+	if (lua_isnumber(L, 6)) glColor4f(1, 1, 1, 1);
 	return 0;
 }
 

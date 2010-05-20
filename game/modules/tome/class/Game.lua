@@ -343,13 +343,6 @@ function _M:onTurn()
 end
 
 function _M:display()
-	-- We display the player's interface
-	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
-	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
-	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
-	self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
-	if self.player then self.player.changed = false end
-
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display the map and compute FOV for the player if needed
@@ -398,6 +391,13 @@ function _M:display()
 			self.level.map:minimapDisplay(200, 20, mx, my, mw, mh, 0.9)
 		end
 	end
+
+	-- We display the player's interface
+	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
+	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
+	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
+	self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
+	if self.player then self.player.changed = false end
 
 	engine.GameTurnBased.display(self)
 end

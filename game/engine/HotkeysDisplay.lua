@@ -95,12 +95,10 @@ function _M:display()
 
 		txt = ("%2d) %-"..(self.max_char_w-4-24).."s Key: %s"):format(i, txt, ts[4])
 		local w, h = self.font:size(txt)
-		s = core.display.newSurface(w + 4, h + 4)
-		if self.cur_sel and self.cur_sel == i then s:erase(0, 50, 120) end
-		s:drawString(self.font, txt, 2, 2, color[1], color[2], color[3])
+		if self.cur_sel and self.cur_sel == i then self.surface:erase(0, 50, 120, nil, x, y, w+4, h+4) end
+		self.surface:drawString(self.font, txt, x+2, y+2, color[1], color[2], color[3])
 		self.clics[i] = {x,y,w+4,h+4}
 
-		self.surface:merge(s, x, y)
 		if y + self.font_h * 2 > self.h then
 			x = x + self.w / 2
 			y = 0
