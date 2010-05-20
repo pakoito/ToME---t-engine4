@@ -35,6 +35,10 @@ newBirthDescriptor{
 	body = { INVEN = 1000, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 
 	copy = {
+		-- Mages are unheard of at first, nobody but them regenerates mana
+		mana_rating = 6,
+		mana_regen = 0,
+
 		max_level = 50,
 		money = 10,
 		resolvers.equip{ id=true,

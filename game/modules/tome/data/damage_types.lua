@@ -139,6 +139,11 @@ newDamageType{
 	end,
 }
 
+-- Darkness damage
+newDamageType{
+	name = "darkness", type = "DARKNESS", text_color = "#DARK_GREY#",
+}
+
 -- Blinds
 newDamageType{
 	name = "blindness", type = "BLIND",

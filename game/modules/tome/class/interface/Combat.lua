@@ -296,6 +296,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		end
 	end end
 
+	-- Shadow cast
+	if hitted and self:knowTalent(self.T_SHADOW_COMBAT) and self:isTalentActive(self.T_SHADOW_COMBAT) and self:getMana() > 0 then
+		local dam = 3 + self:getTalentLevel(self.T_SHADOW_COMBAT) * 2
+		local mana = 1 + self:getTalentLevelRaw(t) / 1.5
+		DamageType:get(DamageType.DARKNESS).projector(self, target.x, target.y, DamageType.DARKNESS, dam)
+		self:incMana(-mana)
+	end
+
 	-- Autospell cast
 	if hitted and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) and rng.percent(20 + self:getTalentLevel(self.T_ARCANE_COMBAT) * (1 + self:getDex(9, true))) then
 		local spells = {}
@@ -454,6 +462,9 @@ function _M:combatSpellpower(mod)
 	local add = 0
 	if self:knowTalent(self.T_ARCANE_DEXTERITY) then
 		add = (15 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 5) * self:getDex() / 100
+	end
+	if self:knowTalent(self.T_SHADOW_CUNNING) then
+		add = (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 3) * self:getCun() / 100
 	end
 	return (self.combat_spellpower + add + self:getMag() * 0.7) * mod
 end

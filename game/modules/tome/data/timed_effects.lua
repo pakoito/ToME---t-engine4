@@ -154,6 +154,22 @@ newEffect{
 }
 
 newEffect{
+	name = "DAZED",
+	desc = "Dazed",
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is dazed!", "+Dazed" end,
+	on_lose = function(self, err) return "#Target# is not dazed anymore.", "-Dazed" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("dazed", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("dazed", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "EVASION",
 	desc = "Evasion",
 	type = "physical",

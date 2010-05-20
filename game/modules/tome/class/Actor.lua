@@ -145,6 +145,7 @@ function _M:act()
 	end
 
 	if self:attr("stunned") then self.energy.value = 0 end
+	if self:attr("dazed") then self.energy.value = 0 end
 
 	-- Suffocate ?
 	local air_level, air_condition = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level"), game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_condition")
@@ -351,6 +352,11 @@ end
 
 --- Called before taking a hit, it's the chance to check for shields
 function _M:onTakeHit(value, src)
+	-- Un-daze
+	if self:hasEffect(self.EFF_DAZED) then
+		self:removeEffect(self.EFF_DAZED)
+	end
+
 	if self:attr("invulnerable") then
 		return 0
 	end

@@ -35,6 +35,8 @@ newBirthDescriptor{
 	},
 	talents = { [ActorTalents.T_TELEPORT_ANGOLWEN]=1 },
 	copy = {
+		mana_regen = 0.5,
+		mana_rating = 10,
 		resolvers.generic(function(e)
 			e.hotkey[10] = {"inventory", "potion of lesser mana"}
 		end),

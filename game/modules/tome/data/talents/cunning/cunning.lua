@@ -23,6 +23,7 @@ newTalentType{ type="cunning/trapping", name = "trapping", description = "The kn
 newTalentType{ type="cunning/dirty", name = "dirty fighting", description = "Teaches various talents to criple your foes." }
 newTalentType{ type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
 newTalentType{ type="cunning/survival", name = "survival", description = "The knowledge of the dangers of the world, and how to best avoid them." }
+newTalentType{ type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
 
 -- Generic requires for cunning based on talent level
 cuns_req1 = {
@@ -51,3 +52,4 @@ load("/data/talents/cunning/traps.lua")
 load("/data/talents/cunning/dirty.lua")
 load("/data/talents/cunning/lethality.lua")
 load("/data/talents/cunning/survival.lua")
+load("/data/talents/cunning/shadow-magic.lua")

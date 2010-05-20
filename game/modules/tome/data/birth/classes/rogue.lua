@@ -78,7 +78,7 @@ newBirthDescriptor{
 	name = "Shadowblade",
 	desc = {
 		"Shadowblades are a blend of rogues that were touched by the gift of magic, able to kill with their daggers under a veil of stealth while casting spells to enhance their performance and survival.",
-		"Their use of magic is innate and they never really studied it.",
+		"Their use of magic is innate and they never really studied it, as such they do not naturally regenerate mana and must use external means of recharging.",
 		"They use the schools of phantasm, temporal, divination and conveyance to enhance their arts.",
 		"Their most important stats are: Dexterity, Cunning and Magic",
 	},
@@ -97,11 +97,18 @@ newBirthDescriptor{
 		["cunning/survival"]={true, 0.1},
 		["cunning/lethality"]={true, 0.3},
 		["cunning/dirty"]={true, 0.3},
+		["cunning/shadow-magic"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_DUAL_STRIKE] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_SHADOW_COMBAT] = 1,
 		[ActorTalents.T_KNIFE_MASTERY] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
+	},
+	copy = {
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="potion", subtype="potion", name="potion of lesser mana"},
+		},
 	},
 }
