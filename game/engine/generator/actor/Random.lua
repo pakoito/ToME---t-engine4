@@ -22,8 +22,8 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
-function _M:init(zone, map, level)
-	engine.Generator.init(self, zone, map, level)
+function _M:init(zone, map, level, spots)
+	engine.Generator.init(self, zone, map, level, spots)
 	local data = level.data.generator.actor
 
 	if data.adjust_level then
@@ -52,6 +52,7 @@ function _M:generate()
 				tries = tries + 1
 			end
 			if tries < 100 then
+				self.spots[#self.spots+1] = {x=x, y=y, gardian=true, check_connectivity="entrance"}
 				self.zone:addEntity(self.level, m, "actor", x, y)
 				print("Guardian allocated: ", self.guardian, m.uid, m.name)
 			end

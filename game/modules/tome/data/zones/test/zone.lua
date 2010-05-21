@@ -18,42 +18,39 @@
 -- darkgod@te4.org
 
 return {
-	name = "Trollshaws",
-	level_range = {1, 5},
+	name = "Mines of Moria",
+	level_range = {20, 30},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "elven_town.ogg",
+--	persistant = "zone",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",
 			edge_entrances = {4,6},
-			zoom = 5,
-			noise = "fbm_perlin",
-			floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,,
+			floor = "GRASS",
 			wall = "TREE",
 			up = "UP",
 			down = "DOWN",
 		},
+--[[
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
-			guardian = "TROLL_BILL",
+			nb_npc = {40, 50},
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
-			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
+			nb_object = {12, 16},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {6, 9},
+			nb_trap = {20, 30},
 		},
+]]
 	},
 	levels =
 	{

@@ -20,6 +20,7 @@
 require "engine.class"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
+local Astar = require "engine.Astar"
 
 --- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
 module(..., package.seeall, class.make)
@@ -450,7 +451,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	level.ups = {{x=ux, y=uy}}
 	level.downs = {{x=dx, y=dy}}
-	level.spots = spots
+	level.spots = spots or {}
 
 	-- Generate objects
 	if level_data.generator.object then
@@ -481,6 +482,30 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	-- Delete the room_map, now useless
 	map.room_map = nil
+
+	-- Check for connectivity from entrance to exit
+	local a = Astar.new(map, game:getPlayer())
+	if ux and uy and dx and dy and not a:calc(ux, uy, dx, dy) then
+		print("Level unconnected, no way from entrance to exit")
+		level:removed()
+		return self:newLevel(level_data, lev, old_lev, game)
+	end
+	for i = 1, #spots do
+		local spot = spots[i]
+		if spot.check_connectivity then
+			local cx, cy
+			if type(spot.check_connectivity) == "string" and spot.check_connectivity == "entrance" then cx, cy = ux, uy
+			elseif type(spot.check_connectivity) == "string" and spot.check_connectivity == "exit" then cx, cy = dx, dy
+			else cx, cy = spot.check_connectivity.x, spot.check_connectivity.y
+			end
+
+			if not a:calc(spot.x, spot.y, cx, cy) then
+				print("Level unconnected, no way from", spot.x, spot.y, "to", cx, cy)
+				level:removed()
+				return self:newLevel(level_data, lev, old_lev, game)
+			end
+		end
+	end
 
 	return level
 end

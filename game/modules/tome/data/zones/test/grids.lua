@@ -1,4 +1,4 @@
--- TE4 - T-Engine 4
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,26 +17,5 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-require "engine.class"
-module(..., package.seeall, class.make)
-
-function _M:init(zone, map, level, spots)
-	self.zone = zone
-	self.map = map
-	self.level = level
-	self.spots = spots
-
-	-- Setup the map's room-map
-	if not map.room_map then
-		map.room_map = {}
-		for i = 0, map.w - 1 do
-			map.room_map[i] = {}
-			for j = 0, map.h - 1 do
-				map.room_map[i][j] = {}
-			end
-		end
-	end
-end
-
-function _M:generate()
-end
+load("/data/general/grids/basic.lua")
+load("/data/general/grids/forest.lua")

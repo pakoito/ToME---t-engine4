@@ -73,10 +73,10 @@ static int noise_simplex(lua_State *L)
 static int noise_fbm_simplex(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	float octave = luaL_checknumber(L, 2);
 	float p[4];
 	int i;
-	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 3 + i);
+	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 2 + i);
+	float octave = luaL_checknumber(L, 2 + i);
 
 	lua_pushnumber(L, TCOD_noise_fbm_simplex(n->noise, p, octave));
 	return 1;
@@ -85,10 +85,10 @@ static int noise_fbm_simplex(lua_State *L)
 static int noise_turbulence_simplex(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	float octave = luaL_checknumber(L, 2);
 	float p[4];
 	int i;
-	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 3 + i);
+	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 2 + i);
+	float octave = luaL_checknumber(L, 2 + i);
 
 	lua_pushnumber(L, TCOD_noise_turbulence_simplex(n->noise, p, octave));
 	return 1;
@@ -108,10 +108,10 @@ static int noise_perlin(lua_State *L)
 static int noise_fbm_perlin(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	float octave = luaL_checknumber(L, 2);
 	float p[4];
 	int i;
-	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 3 + i);
+	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 2 + i);
+	float octave = luaL_checknumber(L, 2 + i);
 
 	lua_pushnumber(L, TCOD_noise_fbm_perlin(n->noise, p, octave));
 	return 1;
@@ -120,10 +120,10 @@ static int noise_fbm_perlin(lua_State *L)
 static int noise_turbulence_perlin(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	float octave = luaL_checknumber(L, 2);
 	float p[4];
 	int i;
-	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 3 + i);
+	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 2 + i);
+	float octave = luaL_checknumber(L, 2 + i);
 
 	lua_pushnumber(L, TCOD_noise_turbulence_perlin(n->noise, p, octave));
 	return 1;
@@ -143,10 +143,10 @@ static int noise_wavelet(lua_State *L)
 static int noise_fbm_wavelet(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	float octave = luaL_checknumber(L, 2);
 	float p[4];
 	int i;
-	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 3 + i);
+	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 2 + i);
+	float octave = luaL_checknumber(L, 2 + i);
 
 	lua_pushnumber(L, TCOD_noise_fbm_wavelet(n->noise, p, octave));
 	return 1;
@@ -155,10 +155,10 @@ static int noise_fbm_wavelet(lua_State *L)
 static int noise_turbulence_wavelet(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	float octave = luaL_checknumber(L, 2);
 	float p[4];
 	int i;
-	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 3 + i);
+	for (i = 0; i < n->ndim; i++) p[i] = luaL_checknumber(L, 2 + i);
+	float octave = luaL_checknumber(L, 2 + i);
 
 	lua_pushnumber(L, TCOD_noise_turbulence_wavelet(n->noise, p, octave));
 	return 1;
