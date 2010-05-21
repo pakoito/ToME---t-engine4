@@ -275,7 +275,9 @@ local function spotHostiles(self)
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
 	core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 		local actor = game.level.map(x, y, game.level.map.ACTOR)
-		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then seen = true end
+		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then
+			seen = {x=x,y=y,actor=actor}
+		end
 	end, nil)
 	return seen
 end
@@ -283,7 +285,8 @@ end
 --- Can we continue resting ?
 -- We can rest if no hostiles are in sight, and if we need life/mana/stamina (and their regen rates allows them to fully regen)
 function _M:restCheck()
-	if spotHostiles(self) then return false, "hostile spotted" end
+	local spotted = spotHostiles(self)
+	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
 	-- Check ressources, make sure they CAN go up, otherwise we will never stop
 	if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
@@ -296,7 +299,8 @@ end
 --- Can we continue running?
 -- We can run if no hostiles are in sight, and if we no interresting terrains are next to us
 function _M:runCheck()
-	if spotHostiles(self) then return false, "hostile spotted" end
+	local spotted = spotHostiles(self)
+	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
 	-- Notice any noticable terrain
 	local noticed = false

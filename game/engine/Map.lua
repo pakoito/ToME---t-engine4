@@ -616,6 +616,14 @@ function _M:isBound(x, y)
 	return true
 end
 
+--- Checks the given coords to see if they are displayed on screen
+function _M:isOnScreen(x, y)
+	if x >= self.mx and x < self.mx + self.viewport.mwidth and y >= self.my and y < self.my + self.viewport.mheight then
+		return true
+	end
+	return false
+end
+
 --- Import a map into the current one
 -- @param map the map to import
 -- @param dx coordinate where to import it in the current map
