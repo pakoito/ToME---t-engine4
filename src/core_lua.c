@@ -973,6 +973,14 @@ static const struct luaL_reg sdl_font_reg[] =
  ******************************************************************
  ******************************************************************/
 
+static int rng_float(lua_State *L)
+{
+	float min = luaL_checknumber(L, 1);
+	float max = luaL_checknumber(L, 2);
+	lua_pushnumber(L, genrand_real(min, max));
+	return 1;
+}
+
 static int rng_dice(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
@@ -1185,6 +1193,7 @@ static const struct luaL_reg rnglib[] =
 	{"chance", rng_chance},
 	{"percent", rng_percent},
 	{"normal", rng_normal},
+	{"float", rng_float},
 	{NULL, NULL},
 };
 

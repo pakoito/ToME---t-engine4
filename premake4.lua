@@ -20,6 +20,7 @@ solution "TEngine"
 		_OPTIONS.lua == "default" and "src/lua" or "src/luajit",
 		"src/luasocket",
 		"src/fov",
+		"src/libtcod_import",
 		"src/physfs",
 		"src/physfs/zlib123",
 		"/usr/include/SDL",
@@ -62,7 +63,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -196,3 +197,10 @@ project "lualanes"
 	targetname "lualanes"
 
 	files { "src/lualanes/*.c", }
+
+project "tcodimport"
+	kind "StaticLib"
+	language "C"
+	targetname "tcodimport"
+
+	files { "src/libtcod_import/*.c", }

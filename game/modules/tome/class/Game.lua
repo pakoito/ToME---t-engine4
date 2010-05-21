@@ -822,7 +822,7 @@ end
 
 function _M:setAllowedBuild(what, notify)
 	-- Do not unlock things in easy mode
-	if game.difficulty == game.DIFFICULTY_EASY then return end
+	--if game.difficulty == game.DIFFICULTY_EASY then return end
 
 	config.settings.tome = config.settings.tome or {}
 	config.settings.tome.allow_build = config.settings.tome.allow_build or {}

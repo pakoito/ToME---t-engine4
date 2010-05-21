@@ -462,6 +462,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_map(L);
 		luaopen_particles(L);
 		luaopen_sound(L);
+		luaopen_noise(L);
 
 		// Make the uids repository
 		lua_newtable(L);

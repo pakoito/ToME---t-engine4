@@ -93,6 +93,12 @@ inline static double genrand_real1(void)
     return to_real1(gen_rand32());
 }
 
+/** generates a random number on [-1,1]-real-interval */
+inline static double genrand_real(double min, double max)
+{
+    return gen_rand32() * ((max-min)/4294967295.0)+min;
+}
+
 /** generates a random number on [0,1)-real-interval */
 inline static double to_real2(uint32_t v)
 {

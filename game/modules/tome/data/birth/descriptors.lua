@@ -66,6 +66,7 @@ newBirthDescriptor{
 		"Easy game setting",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",
+		"No achievements possible.",
 	},
 	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end) },
 }
