@@ -53,7 +53,7 @@ newEntity{ base = "BASE_SCROLL",
 		if who:getMag() < 28 then
 			who:showEquipInven("Identify object", function(o) return not o:isIdentified() end, function(o)
 				o:identify(true)
-				game.logPlayer(who, "You identify: "..o:getName{do_color=true})
+				game.logPlayer(who, "You identify: %s", o:getName{do_color=true})
 				return true
 			end)
 		else

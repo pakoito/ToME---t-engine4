@@ -36,7 +36,7 @@ newEntity{
 
 	open_door = true,
 
-	resolvers.tmasteries{ ["technique/2hweapon"]=1, },
+	resolvers.tmasteries{ ["technique/2hweapon-offense"]=1, ["technique/2hweapon-cripple"]=1, },
 
 	blind_immune = 1,
 	see_invisible = 4,
