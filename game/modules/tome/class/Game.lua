@@ -218,7 +218,11 @@ end
 function _M:getSaveDescription()
 	return {
 		name = self.player.name,
-		description = ([[Exploring level %d of %s.]]):format(self.level.level, self.zone.name),
+		description = ([[%s the level %d %s %s.
+Exploring level %d of %s.]]):format(
+		self.player.name, self.player.level, self.player.descriptor.subrace, self.player.descriptor.subclass,
+		self.level.level, self.zone.name
+		),
 	}
 end
 

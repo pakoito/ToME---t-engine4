@@ -47,6 +47,7 @@ lua_State *L = NULL;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
+bool reboot_lua = FALSE;
 bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
@@ -420,6 +421,95 @@ void do_resize(int w, int h, bool fullscreen)
 	resizeWindow(screen->w, screen->h);
 }
 
+void boot_lua(int state, bool rebooting, int argc, char *argv[])
+{
+	reboot_lua = FALSE;
+
+	if (state == 1)
+	{
+		const char *selfexe;
+
+		/* When rebooting we destroy the lua state to free memory and we reset physfs */
+		if (rebooting)
+		{
+			lua_close(L);
+			PHYSFS_deinit();
+		}
+
+		/***************** Physfs Init *****************/
+		PHYSFS_init(argv[0]);
+
+		selfexe = get_self_executable(argc, argv);
+		if (selfexe)
+		{
+			PHYSFS_mount(selfexe, "/", 1);
+		}
+		else
+		{
+			printf("NO SELFEXE: bootstrapping from CWD\n");
+			PHYSFS_mount("bootstrap", "/bootstrap", 1);
+		}
+
+		/***************** Lua Init *****************/
+		L = lua_open();  /* create state */
+		luaL_openlibs(L);  /* open libraries */
+		luaopen_core(L);
+		luaopen_socket_core(L);
+		luaopen_mime_core(L);
+		luaopen_struct(L);
+		luaopen_profiler(L);
+		luaopen_lpeg(L);
+		luaopen_map(L);
+		luaopen_particles(L);
+		luaopen_sound(L);
+
+		// Make the uids repository
+		lua_newtable(L);
+		lua_setglobal(L, "__uids");
+
+		// Tell the boostrapping code the selfexe path
+		if (selfexe)
+			lua_pushstring(L, selfexe);
+		else
+			lua_pushnil(L);
+		lua_setglobal(L, "__SELFEXE");
+
+		// Will be useful
+#ifdef __APPLE__
+		lua_pushboolean(L, TRUE);
+		lua_setglobal(L, "__APPLE__");
+#endif
+
+		// Run bootstrapping
+		if (!luaL_loadfile(L, "/bootstrap/boot.lua"))
+		{
+			docall(L, 0, 0);
+		}
+		// Could not load bootstrap! Try to mount the engine from working directory as last resort
+		else
+		{
+			printf("WARNING: No bootstrap code found, defaulting to working directory for engine code!\n");
+			PHYSFS_mount("game/thirdparty", "/", 1);
+			PHYSFS_mount("game/", "/", 1);
+		}
+
+		// And run the lua engine pre init scripts
+		luaL_loadfile(L, "/engine/pre-init.lua");
+		docall(L, 0, 0);
+	}
+	else if (state == 2)
+	{
+		SDL_WM_SetCaption("T4Engine", NULL);
+
+		// Now we can open lua lanes, the physfs paths are set and it can load it's lanes-keeper.lua file
+		luaopen_lanes(L);
+
+		// And run the lua engine scripts
+		luaL_loadfile(L, "/engine/init.lua");
+		docall(L, 0, 0);
+	}
+}
+
 /**
  * Program entry point.
  */
@@ -434,71 +524,10 @@ void do_resize(int w, int h, bool fullscreen)
 
 int main(int argc, char *argv[])
 {
-	const char *selfexe;
-
 	// RNG init
 	init_gen_rand(time(NULL));
 
-	/***************** Physfs Init *****************/
-	PHYSFS_init(argv[0]);
-
-	selfexe = get_self_executable(argc, argv);
-	if (selfexe)
-	{
-		PHYSFS_mount(selfexe, "/", 1);
-	}
-	else
-	{
-		printf("NO SELFEXE: bootstrapping from CWD\n");
-		PHYSFS_mount("bootstrap", "/bootstrap", 1);
-	}
-
-	/***************** Lua Init *****************/
-	L = lua_open();  /* create state */
-	luaL_openlibs(L);  /* open libraries */
-	luaopen_core(L);
-	luaopen_socket_core(L);
-	luaopen_mime_core(L);
-	luaopen_struct(L);
-	luaopen_profiler(L);
-	luaopen_lpeg(L);
-	luaopen_map(L);
-	luaopen_particles(L);
-	luaopen_sound(L);
-
-	// Make the uids repository
-	lua_newtable(L);
-	lua_setglobal(L, "__uids");
-
-	// Tell the boostrapping code the selfexe path
-	if (selfexe)
-		lua_pushstring(L, selfexe);
-	else
-		lua_pushnil(L);
-	lua_setglobal(L, "__SELFEXE");
-
-	// Will be useful
-#ifdef __APPLE__
-	lua_pushboolean(L, TRUE);
-	lua_setglobal(L, "__APPLE__");
-#endif
-
-	// Run bootstrapping
-	if (!luaL_loadfile(L, "/bootstrap/boot.lua"))
-	{
-		docall(L, 0, 0);
-	}
-	// Could not load bootstrap! Try to mount the engine from working directory as last resort
-	else
-	{
-		printf("WARNING: No bootstrap code found, defaulting to working directory for engine code!\n");
-		PHYSFS_mount("game/thirdparty", "/", 1);
-		PHYSFS_mount("game/", "/", 1);
-	}
-
-	// And run the lua engine pre init scripts
-	luaL_loadfile(L, "/engine/pre-init.lua");
-	docall(L, 0, 0);
+	boot_lua(1, FALSE, argc, argv);
 
 	// initialize engine and set up resolution and depth
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
@@ -533,12 +562,7 @@ int main(int argc, char *argv[])
 	/* Sets up OpenGL double buffering */
 	resizeWindow(WIDTH, HEIGHT);
 
-	// Now we can open lua lanes, the physfs paths are set and it can load it's lanes-keeper.lua file
-	luaopen_lanes(L);
-
-	// And run the lua engine scripts
-	luaL_loadfile(L, "/engine/init.lua");
-	docall(L, 0, 0);
+	boot_lua(2, FALSE, argc, argv);
 
 	pass_command_args(argc, argv);
 
@@ -610,6 +634,13 @@ int main(int argc, char *argv[])
 
 		/* draw the scene */
 		if (isActive && !tickPaused) on_tick();
+
+		/* Reboot the lua engine */
+		if (reboot_lua)
+		{
+			boot_lua(1, TRUE, argc, argv);
+			boot_lua(2, TRUE, argc, argv);
+		}
 	}
 
 	SDL_Quit();

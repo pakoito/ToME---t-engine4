@@ -94,6 +94,7 @@ function _M:loadDefinition(dir, team)
 				fs.mount(src, "/", false)
 			end
 			local m = require(mod.starter)
+			print("[MODULE LOADER] loading module", mod.long_name, "["..mod.starter.."]", "::", m[1] and m[1].__CLASSNAME, m[2] and m[2].__CLASSNAME)
 			return m[1], m[2]
 		end
 

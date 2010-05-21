@@ -75,4 +75,4 @@ game = false
 engine.Game:setResolution(config.settings.window.size)
 engine.interface.GameMusic:soundSystemStatus(config.settings.sound.enabled, true)
 
-util.showMainMenu()
+util.showMainMenu(true)

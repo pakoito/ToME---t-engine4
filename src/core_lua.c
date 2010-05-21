@@ -392,8 +392,15 @@ static int lua_exit_engine(lua_State *L)
 	exit_engine = TRUE;
 	return 0;
 }
+extern bool reboot_lua;
+static int lua_reboot_lua(lua_State *L)
+{
+	reboot_lua = TRUE;
+	return 0;
+}
 static const struct luaL_reg gamelib[] =
 {
+	{"reboot", lua_reboot_lua},
 	{"set_current_game", lua_set_current_game},
 	{"exit_engine", lua_exit_engine},
 	{NULL, NULL},

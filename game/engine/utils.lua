@@ -387,10 +387,16 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 	return gs[1][1], gs[1][2]
 end
 
-function util.showMainMenu()
-	local Menu = require("special.mainmenu.class.Game")
-	game = Menu.new()
-	game:run()
+function util.showMainMenu(no_reboot)
+	if no_reboot then
+		local Menu = require("special.mainmenu.class.Game")
+		game = Menu.new()
+		game:run()
+	else
+		-- Tell the C engine to discard the current lua state and make a new one
+		print("[MAIN] rebooting lua state")
+		core.game.reboot()
+	end
 end
 
 function rng.mbonus(max, level, max_level)

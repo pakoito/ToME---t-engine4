@@ -168,6 +168,7 @@ function _M:selectStepNew()
 	end
 
 	display_module.drawDialog = function(self, s)
+		if not game.step and not game.mod_list then return end
 		local lines = game.mod_list[game.step.selected].description:splitLines(self.w - 8, self.font)
 		local r, g, b
 		for i = 1, #lines do
@@ -230,6 +231,7 @@ function _M:selectStepLoad()
 	if self.step and self.step.close then self.step:close() end
 
 	display_module.drawDialog = function(self, s)
+		if not game.step and not game.mod_list then return end
 		local lines = list[game.step.selected].description:splitLines(self.w - 8, self.font)
 		local r, g, b
 		for i = 1, #lines do
