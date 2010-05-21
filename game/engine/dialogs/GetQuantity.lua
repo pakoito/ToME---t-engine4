@@ -28,6 +28,9 @@ function _M:init(title, prompt, act)
 	self.act = act
 	self.qty = 0
 	self:keyCommands{
+		_ESCAPE = function()
+			game:unregisterDialog(self)
+		end,
 		_RETURN = function()
 			game:unregisterDialog(self)
 			act(self.qty)
