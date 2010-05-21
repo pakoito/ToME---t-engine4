@@ -18,19 +18,19 @@
 -- darkgod@te4.org
 
 return {
-	name = "Mines of Moria",
-	level_range = {20, 30},
+	name = "TestZone!",
+	level_range = {1, 1},
 	level_scheme = "player",
 	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
---	all_remembered = true,
+	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Forest",
+			class = "engine.generator.map.GOL",
 			edge_entrances = {4,6},
 			floor = "GRASS",
 			wall = "TREE",

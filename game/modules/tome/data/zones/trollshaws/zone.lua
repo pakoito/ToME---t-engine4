@@ -35,7 +35,7 @@ return {
 			edge_entrances = {4,6},
 			zoom = 5,
 			noise = "fbm_perlin",
-			floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,,
+			floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
 			wall = "TREE",
 			up = "UP",
 			down = "DOWN",
