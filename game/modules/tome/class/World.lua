@@ -42,3 +42,13 @@ end
 function _M:achievementWho(src)
 	return src.name.." the "..game.player.descriptor.subrace.." "..game.player.descriptor.subclass
 end
+
+--- Gain an achievement
+-- @param id the achivement to gain
+-- @param src who did it
+function _M:gainAchievement(id, src, ...)
+	-- Do not unlock things in easy mode
+	if game.difficulty == game.DIFFICULTY_EASY then return end
+
+	engine.interface.WorldAchievements.gainAchievement(self, id, src, ...)
+end

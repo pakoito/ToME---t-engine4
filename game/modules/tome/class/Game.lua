@@ -218,7 +218,7 @@ function _M:setupMiniMap()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true}, true)
 end
 
 function _M:getSaveDescription()
@@ -821,6 +821,9 @@ function _M:saveGame()
 end
 
 function _M:setAllowedBuild(what, notify)
+	-- Do not unlock things in easy mode
+	if game.difficulty == game.DIFFICULTY_EASY then return end
+
 	config.settings.tome = config.settings.tome or {}
 	config.settings.tome.allow_build = config.settings.tome.allow_build or {}
 	if config.settings.tome.allow_build[what] then return false end
