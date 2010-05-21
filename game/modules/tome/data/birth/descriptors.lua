@@ -57,6 +57,54 @@ newBirthDescriptor{
 	},
 }
 
+--------------- Difficulties
+newBirthDescriptor{
+	type = "difficulty",
+	name = "Easy",
+	desc =
+	{
+		"Easy game setting",
+		"All damage done to the player reduced by 20%",
+		"All healing for the player increased by 10%",
+	},
+	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end) },
+}
+newBirthDescriptor{
+	type = "difficulty",
+	name = "Normal",
+	selection_default = true,
+	desc =
+	{
+		"Normal game setting",
+		"No changes to the rules.",
+	},
+	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_NORMAL end) },
+}
+newBirthDescriptor{
+	type = "difficulty",
+	name = "Nightmare",
+	desc =
+	{
+		"Hard game setting",
+		"All damage done to the player increased by 20%",
+		"All healing for the player decreased by 10%",
+	},
+	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_NIGHTMARE end) },
+}
+newBirthDescriptor{
+	type = "difficulty",
+	name = "Insane",
+	desc =
+	{
+		"Absolutly unfair game setting",
+		"All damage done to the player increased by 20%",
+		"All damage done by the player decreased by 20%",
+		"All healing for the player decreased by 20%",
+	},
+	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_INSANE end) },
+}
+
+
 -- Worlds
 load("/data/birth/worlds.lua")
 

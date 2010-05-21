@@ -57,6 +57,12 @@ local QuitDialog = require "mod.dialogs.Quit"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound))
 
+-- Difficulty settings
+DIFFICULTY_EASY = 1
+DIFFICULTY_NORMAL = 2
+DIFFICULTY_NIGHTMARE = 3
+DIFFICULTY_INSANE = 4
+
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
 	engine.interface.GameMusic.init(self)
@@ -114,7 +120,7 @@ function _M:newGame()
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
 
-	local birth = Birther.new(self.player, {"base", "world", "race", "subrace", "sex", "class", "subclass" }, function()
+	local birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self:changeLevel(1, self.player.starting_zone)
 		print("[PLAYER BIRTH] resolve...")
@@ -219,8 +225,10 @@ function _M:getSaveDescription()
 	return {
 		name = self.player.name,
 		description = ([[%s the level %d %s %s.
+Difficulty: %s
 Exploring level %d of %s.]]):format(
 		self.player.name, self.player.level, self.player.descriptor.subrace, self.player.descriptor.subclass,
+		self.player.descriptor.difficulty,
 		self.level.level, self.zone.name
 		),
 	}

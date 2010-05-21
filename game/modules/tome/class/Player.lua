@@ -193,6 +193,19 @@ function _M:onTakeHit(value, src)
 	return ret
 end
 
+function _M:heal(value, src)
+	-- Difficulty settings
+	if game.difficulty == game.DIFFICULTY_EASY then
+		value = value * 1.1
+	elseif game.difficulty == game.DIFFICULTY_NIGHTMARE then
+		value = value * 0.9
+	elseif game.difficulty == game.DIFFICULTY_INSANE then
+		value = value * 0.8
+	end
+
+	mod.class.Actor.heal(self, value, src)
+end
+
 function _M:die(src)
 	if self.game_ender then
 		engine.interface.ActorLife.die(self, src)

@@ -90,6 +90,7 @@ function _M:init(actor, order, at_end)
 end
 
 function _M:selectType(type)
+	local default = 1
 	self.list = {}
 	-- Make up the list
 	for i, d in ipairs(self.birth_descriptor_def[type]) do
@@ -108,9 +109,10 @@ function _M:selectType(type)
 		-- Check it is allowed
 		if allowed then
 			table.insert(self.list, d)
+			if d.selection_default then default = #self.list end
 		end
 	end
-	self.sel = 1
+	self.sel = default
 	self.current_type = type
 end
 

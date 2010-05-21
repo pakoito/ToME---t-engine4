@@ -21,6 +21,19 @@
 setDefaultProjector(function(src, x, y, type, dam)
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
+		print("[PROJECTOR] starting dam", dam)
+
+		-- Difficulty settings
+		if game.difficulty == game.DIFFICULTY_EASY and target.player then
+			dam = dam * 0.8
+		elseif game.difficulty == game.DIFFICULTY_NIGHTMARE and target.player then
+			dam = dam * 1.2
+		elseif game.difficulty == game.DIFFICULTY_INSANE then
+			if target.player then dam = dam * 1.2
+			elseif src.player then dam = dam * 0.8 end
+		end
+		print("[PROJECTOR] after difficulty dam", dam)
+
 		-- Increases damage
 		if src.inc_damage then
 			local inc = src.inc_damage[type] or 0
