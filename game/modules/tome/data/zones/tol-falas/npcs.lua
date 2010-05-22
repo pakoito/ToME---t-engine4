@@ -78,8 +78,8 @@ newEntity{ define_as = "THE_MASTER",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 
 	on_die = function(self, who)
-		world:gainAchievement("VAMPIRE_CRUSHER", who:resolveSource())
-		who:resolveSource():grantQuest("tol-falas")
-		who:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
+		world:gainAchievement("VAMPIRE_CRUSHER", game.player:resolveSource())
+		game.player:resolveSource():grantQuest("tol-falas")
+		game.player:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
 	end,
 }

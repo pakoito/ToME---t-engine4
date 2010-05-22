@@ -55,6 +55,6 @@ newEntity{ define_as = "TROLL_BILL",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
 
 	on_die = function(self, who)
-		who:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "trollshaws")
+		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "trollshaws")
 	end,
 }

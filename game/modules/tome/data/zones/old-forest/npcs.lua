@@ -64,7 +64,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 
 	on_die = function(self, who)
-		who:resolveSource():grantQuest("starter-zones")
-		who:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "old-forest")
+		game.player:resolveSource():grantQuest("starter-zones")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "old-forest")
 	end,
 }

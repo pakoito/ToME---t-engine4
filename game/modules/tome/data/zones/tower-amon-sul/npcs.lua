@@ -52,6 +52,6 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
 
 	on_die = function(self, who)
-		who:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
+		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
 	end,
 }
