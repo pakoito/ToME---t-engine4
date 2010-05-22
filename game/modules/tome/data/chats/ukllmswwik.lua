@@ -19,7 +19,7 @@
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*@npcname@ deep voice booms through the level.*#WHITE#
-This is my domain, and I do not take on intruders kindly. What is your purpose here?]],
+This is my domain, and I do not take kindly to intruders. What is your purpose here?]],
 	answers = {
 		{"I am here to kill you and take your treasures! Die bastard fish!", action=function(npc, player) engine.Faction:setFactionReaction(player.faction, npc.faction, -100, true) end},
 		{"I did not mean to intrude, I shall leave now."},

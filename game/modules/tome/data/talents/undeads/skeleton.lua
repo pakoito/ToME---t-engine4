@@ -114,7 +114,7 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	end,
 	info = function(self, t)
 		return ([[Re-position some of your bones, healing yourself for %d.
-		At level 5 you will gain the ability to completly re-assemble your body should it be destroyed (can only be used once)]]):
+		At level 5 you will gain the ability to completely re-assemble your body should it be destroyed (can only be used once)]]):
 		format(self:getTalentLevel(t) * self.level / 2)
 	end,
 }

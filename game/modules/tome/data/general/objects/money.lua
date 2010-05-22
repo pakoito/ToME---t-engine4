@@ -24,7 +24,7 @@ newEntity{
 	encumber = 0,
 	rarity = 5,
 	identified = true,
-	desc = [[All that glisters is not gold, all that is gold does not glitter.]],
+	desc = [[All that glitters is not gold, all that is gold does not glitter.]],
 	on_prepickup = function(self, who, id)
 		who.money = who.money + self.money_value / 10
 		-- Remove from the map

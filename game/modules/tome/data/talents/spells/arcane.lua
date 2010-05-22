@@ -39,7 +39,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage
+		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage.
 		At level 3 it becomes a beam.
 		The damage will increase with the Magic stat]]):format(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t))
 	end,
@@ -63,7 +63,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Engulf yourself into a surge of mana, quickly restoring %d mana every turns for 10 turns.
+		return ([[Engulf yourself in a surge of mana, quickly restoring %d mana every turns for 10 turns.
 		The mana restored will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
 	end,
 }
@@ -81,7 +81,7 @@ newTalent{
 		self.combat_spellpower = self.combat_spellpower - 5
 	end,
 	info = function(self, t)
-		return ([[Your mastery of magic allows your to permanently increase your spellpower by %d.]]):format(5 * self:getTalentLevelRaw(t))
+		return ([[Your mastery of magic allows you to permanently increase your spellpower by %d.]]):format(5 * self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -109,8 +109,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage taken.
-		If your mana is brought too low by the shield it will de-activate and the chain reaction will release a deadly arcane explosion of the amount of damage absorbed.
+		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage point taken.
+		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane explosion of the amount of damage absorbed.
 		The damage to mana ratio increases with the Magic stat]]):format(math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280))
 	end,
 }

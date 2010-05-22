@@ -41,7 +41,7 @@ newEntity{ base = "TRAP_WATER",
 	detect_power = 8, disarm_power = 2,
 	rarity = 3, level_range = {1, 50},
 	color=colors.BLUE,
-	message = "@Target@ is caught into a water siphon!",
+	message = "@Target@ is caught by a water siphon!",
 	dam = resolvers.mbonus(90, 15),
 	combatAttackStr = function(self) return self.disarm_power * 2 end,
 	triggered = function(self, x, y, who)

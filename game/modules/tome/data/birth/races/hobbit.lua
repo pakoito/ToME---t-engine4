@@ -24,9 +24,9 @@ newBirthDescriptor{
 	type = "race",
 	name = "Hobbit",
 	desc = {
-		"Hobbits, or halflings, are a race of very short stature, rarely exceeded four feet in height.",
-		"Most of them are happy to live a quiet life farming and gardening, but a few get an adventurous heart.",
-		"Hobbits are agile, lucky and resilient but lack in strength.",
+		"Hobbits, or halflings, are a race of very short stature, rarely exceeding four feet in height.",
+		"Most of them are happy to live a quiet life of farming and gardening, but a few have an adventurous heart.",
+		"Hobbits are agile, lucky, and resilient but lacking in strength.",
 	},
 	descriptor_choices =
 	{
@@ -59,8 +59,8 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Hobbit",
 	desc = {
-		"Hobbits, or halflings, are a race of very short stature, rarely exceeded four feet in height.",
-		"Most of them are happy to live a quiet life farming and gardening, but a few get an adventurous heart.",
-		"Hobbits are agile, lucky and resilient but lack in strength.",
+		"Hobbits, or halflings, are a race of very short stature, rarely exceeding four feet in height.",
+		"Most of them are happy to live a quiet life of farming and gardening, but a few have an adventurous heart.",
+		"Hobbits are agile, lucky, and resilient but lacking in strength.",
 	},
 }

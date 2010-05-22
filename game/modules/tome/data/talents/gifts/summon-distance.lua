@@ -59,7 +59,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Breath acid on your foes, doing %d damage.
+		return ([[Breathe acid on your foes, doing %d damage.
 		The damage will increase with the Willpower stat]]):format(30 + self:getWil(50) * self:getTalentLevel(t))
 	end,
 }
@@ -85,7 +85,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Breath lightning on your foes, doing 1 to %d damage.
+		return ([[Breathe lightning on your foes, doing 1 to %d damage.
 		The damage will increase with the Willpower stat]]):format(30 + self:getWil(70) * self:getTalentLevel(t))
 	end,
 }
@@ -111,7 +111,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Breath poison on your foes, doing %d damage over a few turns.
+		return ([[Breathe poison on your foes, doing %d damage over a few turns.
 		The damage will increase with the Willpower stat]]):format(10 + self:getWil(70) * self:getTalentLevel(t))
 	end,
 }
@@ -186,7 +186,7 @@ newTalent{
 	type = {"wild-gift/summon-distance", 2},
 	require = gifts_req2,
 	points = 5,
-	message = "@Source@ summons a 5-headed hydra!",
+	message = "@Source@ summons a 3-headed hydra!",
 	equilibrium = 5,
 	cooldown = 10,
 	range = 20,
@@ -243,7 +243,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a 3-headed Hydra to destroy your foes. 3-headed hydras are able to breath poison, acid and lightning.
+		return ([[Summon a 3-headed Hydra to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
 		It will get %d willpower and %d constitution.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }

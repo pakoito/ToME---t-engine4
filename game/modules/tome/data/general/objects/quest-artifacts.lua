@@ -27,8 +27,8 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	level_range = {30, 30},
 	display = "\\", color=colors.VIOLET,
 	encumber = 7,
-	desc = [[Carved with runes of power this staff seems to have been made long ago. Yet it retains no signs of tarnishment.
-Light around it seems to dim and you can feel its tremoundous power simply by touching it.]],
+	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
+Light around it seems to dim and you can feel its tremendous power simply by touching it.]],
 
 	require = { stat = { mag=60 }, },
 	combat = {
@@ -45,7 +45,7 @@ Light around it seems to dim and you can feel its tremoundous power simply by to
 	max_power = 1000, power_regen = 1,
 	use_power = { name = "absorb energies", power = 1000,
 		use = function(self, who)
-			game.logPlayer(who, "This power seems to much to wield, you fear it might absorb YOU.")
+			game.logPlayer(who, "This power seems too much to wield, you fear it might absorb YOU.")
 		end
 	},
 

@@ -77,7 +77,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When your target is below %d life you can try to swallow it, killing it automatically regaining life and equilibrium.]]):
+		return ([[When your target is below %d life you can try to swallow it, killing it automatically and regaining life and equilibrium.]]):
 		format(10 + 3 * self:getTalentLevel(t))
 	end,
 }
@@ -127,7 +127,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You breath sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded over %d turns.
+		return ([[You breathe sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded over %d turns.
 		The damage will increase with the Strength stat]]):format(10 + self:getStr() * 0.3 * self:getTalentLevel(t), 2+self:getTalentLevelRaw(t))
 	end,
 }

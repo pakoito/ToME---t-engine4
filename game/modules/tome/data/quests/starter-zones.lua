@@ -21,7 +21,7 @@
 name = "Into the darkness"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "It is time to explore some new places, dark, forgotten and dangerous ones."
+	desc[#desc+1] = "It is time to explore some new places---dark, forgotten and dangerous ones."
 	desc[#desc+1] = "The Old Forest is just south-west of the town of Bree."
 	desc[#desc+1] = "The Maze is west of Bree."
 	desc[#desc+1] = "The Sandworm is to the far west of Bree, near the sea."

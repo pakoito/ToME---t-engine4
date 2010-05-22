@@ -39,7 +39,7 @@ newEntity{ base = "BASE_AMULET",
 			game.logPlayer(who, "Not enough space to invoke the vampire!")
 			return
 		end
-		print("Invoking gardian on", x, y)
+		print("Invoking guardian on", x, y)
 
 		local NPC = require "mod.class.NPC"
 		local vampire = NPC.new{

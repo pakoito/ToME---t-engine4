@@ -77,7 +77,7 @@ function _M:drawDialog(s)
 	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
 
 	local r, g, b
-	local help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#t#FFFFFF# to toggle finished quests.
+	local help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select a quest; #00FF00#t#FFFFFF# to toggle finished quests.
 ]]
 	local talentshelp = help:splitLines(self.iw / 2 - 10, self.font)
 

@@ -24,8 +24,8 @@ newTalent{
 	points = 5,
 	require = cuns_req1,
 	info = function(self, t)
-		return ([[You have learned to find and hit the weak spots. Your strikes have %0.2f%% more chances to be critical hits.
-		Also when using knives you now use your cunning score instead of your strength for bonus damage.]]):format(1 + self:getTalentLevel(t) * 1.3)
+		return ([[You have learned to find and hit the weak spots. Your strikes have a %0.2f%% greater chance to be critical hits.
+		Also, when using knives, you now use your cunning score instead of your strength for bonus damage.]]):format(1 + self:getTalentLevel(t) * 1.3)
 	end,
 }
 
@@ -52,7 +52,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits you gain %d armour penetration for %d turns
+		return ([[You hit your target doing %d%% damage. If your attack hits, you gain %d armour penetration for %d turns.
 		The APR will increase with Cunning.]]):
 		format(100 * (0.8 + self:getTalentLevel(t) / 10), 4 + (self:getTalentLevel(t) * self:getCun()) / 20, 5 + math.ceil(self:getTalentLevel(t)))
 	end,
@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[For a %d turns you put all your will into your blows, additing %d (based on Willpower) damage to each strikes.]]):
+		return ([[For %d turns you put all your will into your blows, adding %d (based on Willpower) damage to each strike.]]):
 		format(3 + math.ceil(self:getTalentLevel(t) * 1.5), self:getWil(70))
 	end,
 }

@@ -27,9 +27,9 @@ newTalentType{ type="spell/conveyance", name = "conveyance", description = "Conv
 newTalentType{ type="spell/nature", name = "nature", description = "Summons the power of nature to rejuvenate yourself and the world." }
 newTalentType{ type="spell/meta", name = "meta", description = "Meta spells alter the working of magic itself." }
 newTalentType{ type="spell/divination", name = "divination", description = "Divination allows the caster to sense its surroundings, find hidden things." }
-newTalentType{ type="spell/temporal", name = "temporal", description = "Temporal the school of time manipulation." }
+newTalentType{ type="spell/temporal", name = "temporal", description = "The school of time manipulation." }
 newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
-newTalentType{ type="spell/enhancement", name = "enhancement", description = "Enhance your own body." }
+newTalentType{ type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
 
 -- Generic requires for spells based on talent level
 spells_req1 = {

@@ -293,7 +293,7 @@ newEntity{
 			trap_list = {},
 		})
 		game:changeLevel(1, zone)
-		engine.Dialog:simplePopup("Ambush!", "You setp in a nest of ants!")
+		engine.Dialog:simplePopup("Ambush!", "You step in a nest of ants!")
 		return true
 	end,
 }

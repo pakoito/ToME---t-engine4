@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Warrior",
 	desc = {
-		"Warriors train in all aspects of physical combat. They can be an juggernaut of destruction wielding a two-handed greatsword or a massive iron-clad protector with a shield.",
+		"Warriors train in all aspects of physical combat. They can be a juggernaut of destruction wielding a two-handed greatsword, or a massive iron-clad protector with a shield.",
 	},
 	descriptor_choices =
 	{
@@ -43,8 +43,8 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Fighter",
 	desc = {
-		"A Fighter specializes in weapon and shield combat, rarely leaving the cover of her many protective techniques.",
-		"A good Fighter is able to withstand terrible attacks from all sides, protected by her shield, and when the time comes she lashes out at her foes with incredible strength.",
+		"A Fighter specializes in weapon and shield combat, rarely leaving the cover of their many protective techniques.",
+		"A good Fighter is able to withstand terrible attacks from all sides, protected by their shield, and when the time comes they lash out at their foes with incredible strength.",
 		"Their most important stats are: Strength and Dexterity",
 	},
 	stats = { str=3, con=2, dex=1, },
@@ -80,8 +80,8 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Berserker",
 	desc = {
-		"A Berserker wields huge two-handed weapons of destruction, bringing pain and death to her foes as she cleaves them in two.",
-		"A Berserker usualy forfeits all ideas of self-defence to concentrate on what she does best: killing things.",
+		"A Berserker wields huge two-handed weapons of destruction, bringing pain and death to their foes as they cleaves them in two.",
+		"A Berserker usually forfeits all ideas of self-defense to concentrate on what they do best: killing things.",
 		"Their most important stats are: Strength and Constitution",
 	},
 	stats = { str=3, con=2, dex=1, },
@@ -117,9 +117,9 @@ newBirthDescriptor{
 	name = "Arcane Blade",
 	desc = {
 		"The Arcane Blade is a warrior who has been touched by the gift of magic.",
-		"Their use of magic is innate and they never really studied it, as such they do not naturally regenerate mana and must use external means of recharging.",
+		"Their use of magic is innate and not really studied; as such they do not naturally regenerate mana and must use external means of recharging.",
 		"They can cast spells from a limited selection but have the unique capacity to 'channel' their attack spells through their melee attacks.",
-		"They are adept of two handed weapons for the sheer destruction they can bring.",
+		"They are adept at two-handed weapons, for the sheer destruction they can bring.",
 		"Their most important stats are: Strength, Dexterity and Magic",
 	},
 	stats = { mag=2, str=2, dex=2},

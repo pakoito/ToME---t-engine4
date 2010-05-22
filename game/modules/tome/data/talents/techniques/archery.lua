@@ -90,7 +90,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused, stance, increasing your damage(+%d), attack(+%d), armor peneration(+%d) and critical chance(+%d%%) but reducing your firing speed by %d%% and making your unable to move.]]):
+		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor peneration(+%d), and critical chance(+%d%%)---but reducing your firing speed by %d%% and making you unable to move.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10), 4 + self:getTalentLevel(t) * self:getDex(10),
 		3 + self:getTalentLevel(t) * self:getDex(10), 7 + self:getTalentLevel(t) * self:getDex(10),
 		self:getTalentLevelRaw(t) * 10)
@@ -127,7 +127,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), damage(%d) and critical chance(%d).]]):
+		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), damage(%d), and critical chance(%d).]]):
 		format(self:getTalentLevelRaw(t) * 14, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }

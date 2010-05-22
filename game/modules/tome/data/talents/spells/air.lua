@@ -146,7 +146,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A gentle wind circles arround the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
+		return ([[A gentle wind circles around the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
 		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.]]):
 		format(self:getTalentLevel(t) * self:combatSpellpower(0.15), 6 + self:combatSpellpower(0.07) * self:getTalentLevel(t))
 	end,
@@ -206,9 +206,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures a furious raging lightning storm with a radius of 5 that follows you as long as this spell is active.
+		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerfull spell will continuously drain mana while active.
+		This powerful spell will continuously drain mana while active.
 		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 20 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
 	end,
 }

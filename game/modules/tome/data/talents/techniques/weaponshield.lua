@@ -146,7 +146,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with shield doing %d%% damage. If it hits, you follow up with two weapon strikes which are automatic crits.]]):
+		return ([[Hits the target with your shield doing %d%% damage. If it hits, you follow up with two weapon strikes which are automatic critrical hits.]]):
 		format(100 * (1 + (self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) / 2) / 10))
 	end,
 }
@@ -195,7 +195,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
-		At level 5 it also makes you immune to stuns and knockbacks.]]):format(
+		At level 5 it also makes you immune to stunning and knockback.]]):format(
 		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
 		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
 		)
@@ -282,7 +282,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Brace yourself for the final stand, increasing defense by %d and maximun life by %d but makes you unable to move.]]):
+		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but makes you unable to move.]]):
 		format(5 + self:getDex(4) * self:getTalentLevel(t), 10 * self:getTalentLevel(t))
 	end,
 }

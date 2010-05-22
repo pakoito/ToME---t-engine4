@@ -45,7 +45,7 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire an arrow that cuts right throught anything, piercing multiple targets if possible with near infinite armor penetration, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 7))
+		return ([[You fire an arrow that cuts right through anything, piercing multiple targets if possible with nigh infinite armor penetration, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 7))
 	end,
 }
 
@@ -64,7 +64,7 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire two arrows at your target, hitting it and a nearby foes if possible, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 5))
+		return ([[You fire two arrows at your target, hitting it and a nearby foe if possible, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 5))
 	end,
 }
 

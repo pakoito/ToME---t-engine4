@@ -380,7 +380,7 @@ function _M:onTakeHit(value, src)
 			self.energy.value = old
 
 			-- Explode!
-			game.logSeen(self, "%s disruption shield collapses and then explodes in a powerfull manastorm!", self.name:capitalize())
+			game.logSeen(self, "%s disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
 			local tg = {type="ball", radius=5}
 			self:project(tg, self.x, self.y, engine.DamageType.ARCANE, dam, {type="manathrust"})
 		end
@@ -587,7 +587,7 @@ function _M:onAddObject(o)
 
 	-- Achievement checks
 	if self.player then
-		world:gainAchievement("DEUX_EX_MACHINA", self, o)
+		world:gainAchievement("DEUS_EX_MACHINA", self, o)
 	end
 end
 
@@ -786,7 +786,7 @@ function _M:getTalentFullDescription(t)
 
 	if t.mode == "passive" then d[#d+1] = "#6fff83#Use mode: #00FF00#Passive"
 	elseif t.mode == "sustained" then d[#d+1] = "#6fff83#Use mode: #00FF00#Sustained"
-	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activable"
+	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activated"
 	end
 
 	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.mana or t.sustain_mana) end

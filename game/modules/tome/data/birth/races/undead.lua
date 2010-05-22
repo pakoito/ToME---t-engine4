@@ -25,7 +25,7 @@ newBirthDescriptor{
 	name = "Undead",
 	desc = {
 		"Undeads are humanoids (humans, elves, dwarves, ...) that have been brought back to life by the corruption of dark magics.",
-		"Undead can take many forms from ghouls to vampires and liches.",
+		"Undead can take many forms, from ghouls to vampires and liches.",
 	},
 	descriptor_choices =
 	{
@@ -48,7 +48,7 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Ghoul",
 	desc = {
-		"Ghouls are dumb but resilient rotting undead creatures, making good fighters.",
+		"Ghouls are dumb, but resilient, rotting undead creatures, making good fighters.",
 		"They have access to special ghoul talents and a wide range of undead abilities:",
 		"- great poison resistance",
 		"- bleeding immunity",
@@ -93,12 +93,12 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Skeleton",
 	desc = {
-		"Skeletons are animated bones, undead creatures, both strong and dextrous.",
+		"Skeletons are animated bones, undead creatures both strong and dextrous.",
 		"They have access to special skeleton talents and a wide range of undead abilities:",
 		"- poison immunity",
 		"- bleeding immunity",
 		"- fear immunity",
-		"- no need to breath",
+		"- no need to breathe",
 		"- special skeleton talents: sharp bones, bone amour, re-assemble",
 		"The rotting body of ghouls also forces them to act a bit slower than most creatures.",
 	},

@@ -27,7 +27,7 @@
 
 local Talents = require("engine.interface.ActorTalents")
 
--- Of the greater undead, vampires are the crossover between physical and magical prowness.  They possess a life draining attack and they are able to cast some powerful spells.
+-- Of the greater undead, vampires are the crossover between physical and magical prowess.  They possess a life draining attack and they are able to cast some powerful spells.
 -- Ranks: vampire, master vampire, elder vampire, vampire lord.
 -- to be added? ancient vampire
 --taken from the T2 list, with oriental vampire removed, does it really have a part here in ToME?

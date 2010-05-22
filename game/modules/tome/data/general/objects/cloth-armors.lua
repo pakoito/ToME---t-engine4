@@ -25,7 +25,7 @@ newEntity{
 	display = "[", color=colors.SLATE,
 	encumber = 2,
 	rarity = 5,
-	desc = [[A cloth vestment. It offers no intrinsinc protection but can be enchanted.]],
+	desc = [[A cloth vestment. It offers no intrinsic protection but can be enchanted.]],
 	egos = "/data/general/objects/egos/robe.lua", egos_chance = resolvers.mbonus(30, 15),
 }
 

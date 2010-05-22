@@ -54,7 +54,7 @@ newTalent{
 		self.max_life = self.max_life - 40
 	end,
 	info = function(self, t)
-		return ([[Increases your maximun life by %d]]):format(40 * self:getTalentLevelRaw(t))
+		return ([[Increases your maximum life by %d]]):format(40 * self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -65,7 +65,7 @@ newTalent{
 	require = { level=function(level) return (level - 1) * 2 end },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases chances to hit with melee and ranged weapons.]]
+		return [[Increases chance to hit with melee and ranged weapons.]]
 	end,
 }
 
@@ -76,7 +76,7 @@ newTalent{
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage with swords.]]
+		return [[Increases damage done with swords.]]
 	end,
 }
 
@@ -87,7 +87,7 @@ newTalent{
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage with axes.]]
+		return [[Increases damage done with axes.]]
 	end,
 }
 
@@ -98,7 +98,7 @@ newTalent{
 	require = { stat = { str=function(level) return 14 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage with maces.]]
+		return [[Increases damage done with maces.]]
 	end,
 }
 
@@ -109,6 +109,6 @@ newTalent{
 	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage with knives.]]
+		return [[Increases damage done with knives.]]
 	end,
 }

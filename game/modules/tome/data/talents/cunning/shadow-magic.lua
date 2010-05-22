@@ -32,7 +32,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Canalize raw magical energy with your melee attacks, each doing %d damage but costing %.2f mana.]]):
+		return ([[Channel raw magical energy with your melee attacks, each doing %d damage and costing %.2f mana.]]):
 		format(3 + self:getTalentLevel(t) * 2, 1 + self:getTalentLevelRaw(t) / 1.5)
 	end,
 }
@@ -44,7 +44,7 @@ newTalent{
 	points = 5,
 	require = cuns_req2,
 	info = function(self, t)
-		return ([[The user gains a bonus to spellpower equal to %d%% of her cunning.]]):
+		return ([[The user gains a bonus to spellpower equal to %d%% of their cunning.]]):
 		format(15 + self:getTalentLevel(t) * 3)
 	end,
 }
@@ -103,8 +103,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Steps through the shadows to your target, dazing it for %d turns
-		Dazed targets can not act but any damage will free them.]]):
+		return ([[Steps through the shadows to your target, dazing it for %d turns.
+		Dazed targets can not act, but any damage will free them.]]):
 		format(2 + self:getTalentLevel(t))
 	end,
 }

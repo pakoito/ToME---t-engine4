@@ -70,7 +70,7 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
-		Shadowstrikes do %.02f%% damage than a normal hit.]]):format((2 + self:getTalentLevel(t) / 5) * 100)
+		Shadowstrikes do %.02f%% damage versus a normal hit.]]):format((2 + self:getTalentLevel(t) / 5) * 100)
 	end,
 }
 
@@ -93,7 +93,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned how to stealth even when in plain sight of your foes, giving your %d%% chances of success. This also resets the cooldown of your stealth talent.]]):
+		return ([[You have learned how to be stealthly even when in plain sight of your foes, with a %d%% chance of success. This also resets the cooldown of your stealth talent.]]):
 		format(40 + self:getTalentLevel(t) * 7)
 	end,
 }
@@ -105,7 +105,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[When you perform an action from stealth (attacking, using objects, ...) you have %d%% chances to not break stealth.]]):
+		return ([[When you perform an action from stealth (attacking, using objects, ...) you have a %d%% chance to not break stealth.]]):
 		format(10 + self:getTalentLevel(t) * 9)
 	end,
 }

@@ -56,42 +56,42 @@ newTalent{
 newTalent{
 	name = "Improved Health I",
 	type = {"base/race", 1},
-	info = "Improves the number of health points per levels.",
+	info = "Improves the number of health points per level.",
 	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Improved Health II",
 	type = {"base/race", 1},
-	info = "Improves the number of health points per levels.",
+	info = "Improves the number of health points per level.",
 	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Improved Health III",
 	type = {"base/race", 1},
-	info = "Improves the number of health points per levels.",
+	info = "Improves the number of health points per level.",
 	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Decreased Health I",
 	type = {"base/race", 1},
-	info = "Improves the number of health points per levels.",
+	info = "Improves the number of health points per level.",
 	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Decreased Health II",
 	type = {"base/race", 1},
-	info = "Improves the number of health points per levels.",
+	info = "Improves the number of health points per level.",
 	mode = "passive",
 	hide = true,
 }
 newTalent{
 	name = "Decreased Health III",
 	type = {"base/race", 1},
-	info = "Improves the number of health points per levels.",
+	info = "Improves the number of health points per level.",
 	mode = "passive",
 	hide = true,
 }
@@ -122,7 +122,7 @@ newTalent{
 		game:changeLevel(1, "town-angolwen")
 		return true
 	end,
-	info = [[Allows the mage to teleport to the secret town of Angolwen.
+	info = [[Allows a mage to teleport to the secret town of Angolwen.
 	You have studied the magic arts there and have been granted a special portal spell to teleport there.
 	Nobody must learn about this spell and so it should never be used while seen by any creatures.]]
 }
@@ -138,7 +138,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Call upon the gift of the Kings to regenerate your body for %d life every turns for 10 turns.
+		return ([[Call upon the gift of the Kings to regenerate your body for %d life every turn for 10 turns.
 		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.5)
 	end,
 }
@@ -155,7 +155,7 @@ newTalent{
 	end,
 	info = function(self)
 		return ([[Call upon the grace of the Eldar to increase your general speed by %d%% for 8 turns.
-		The speed will increase with the Dexterity stat]]):format((0.20 + self:getDex() / 80) * 100)
+		The speed bonus will increase with the Dexterity stat]]):format((0.20 + self:getDex() / 80) * 100)
 	end,
 }
 
@@ -193,7 +193,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Call upon the luck and cunning of the Little Folk to increase your physical and spell critical strike change by %d%% for 5 turns.
+		return ([[Call upon the luck and cunning of the Little Folk to increase your physical and spell critical strike chance by %d%% for 5 turns.
 		The bonus will increase with the Constitution stat]]):format(10 + self:getCon() / 5, 10 + self:getCon() / 5)
 	end,
 }

@@ -19,14 +19,13 @@
 
 return "New Race: #LIGHT_GREEN#Skeleton (Undead)",
 [[
-Skeletons are evil undeads creatures. Usually raised by necromancers to serve as mindless servants, some however manage to keep their sentience
-and roam the world in a blazing path of destruction.
-While you have died at the hands of such a creature you can now create a new character with the  #LIGHT_GREEN#Skeleton race#WHITE#.
+Skeletons are evil undead creatures. Usually raised by necromancers to serve as mindless servants, some however manage to keep their sentience and roam the world in a blazing path of destruction.
+While you have died at the hands of such a creature, you can now create a new character with the  #LIGHT_GREEN#Skeleton race#WHITE#.
 
 Race features:#YELLOW#
 - poison immunity
 - bleeding immunity
 - fear immunity
-- no need to breath
+- no need to breathe
 - special skeleton talents: sharp bones, bone amour, re-assemble#WHITE#
 ]]

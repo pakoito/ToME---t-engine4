@@ -21,8 +21,8 @@ newBirthDescriptor{
 	type = "class",
 	name = "Wilder",
 	desc = {
-		"Wilders are one with nature, in a manner or an other. There are as many different wilders as there are aspects of nature.",
-		"They can take on the aspect of creatures, summon creatures to them, feel the druidic call, ...",
+		"Wilders are one with nature, in one manner or another. There are as many different wilders as there are aspects of nature.",
+		"They can take on the aspects of creatures, summon creatures to them, feel the druidic call, ...",
 	},
 	descriptor_choices =
 	{
@@ -41,7 +41,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Summoner",
 	desc = {
-		"Summoners never fight alone, they are always ready to invoke one of their many summons to fight at their side.",
+		"Summoners never fight alone, they are always ready to summon one of their many minions to fight at their side.",
 		"Summons can range from a combat hound to a fire drake.",
 		"Their most important stats are: Willpower and Cunning",
 	},
@@ -78,7 +78,7 @@ newBirthDescriptor{
 	name = "Wyrmic",
 	desc = {
 		"Wyrmics are fighters who have learnt how to mimic some of the aspects of the dragons.",
-		"They have access to talents normaly belonging to the various kind of drakes.",
+		"They have access to talents normally belonging to the various kind of drakes.",
 		"Their most important stats are: Strength and Willpower",
 	},
 	stats = { str=3, wil=2, dex=1, },

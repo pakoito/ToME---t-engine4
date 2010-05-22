@@ -38,7 +38,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of fire setting the target ablaze and doing %0.2f fire damage over 3 turns.
+		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
 		The damage will increase with the Magic stat]]):format(25 + self:combatSpellpower(1.2) * self:getTalentLevel(t))
 	end,
 }

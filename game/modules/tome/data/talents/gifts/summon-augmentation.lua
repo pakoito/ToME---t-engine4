@@ -92,7 +92,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[Improves all your summons life time and Constitution.]])
+		return ([[Improves all your summons' lifetime and Constitution.]])
 	end,
 }
 

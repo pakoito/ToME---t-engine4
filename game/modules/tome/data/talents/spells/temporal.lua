@@ -38,7 +38,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act or be harmed.
+		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act nor be harmed.
 		The duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }
@@ -63,8 +63,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Decreases the target global speed by %.2f for 7 turns.
-		The speed decreases with the Magic stat]]):format(util.bound((self:combatSpellpower(0.15) * self:getTalentLevel(t)) / 100, 0.1, 0.4))
+		return ([[Decreases the target's global speed by %.2f for 7 turns.
+		The speed decrease improves with the Magic stat]]):format(util.bound((self:combatSpellpower(0.15) * self:getTalentLevel(t)) / 100, 0.1, 0.4))
 	end,
 }
 
@@ -91,8 +91,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Increases the caster global speed by %.2f.
-		The speed increases with the Magic stat]]):format(util.bound((self:combatSpellpower(0.5) * self:getTalentLevel(t)) / 100, 0.1, 2))
+		return ([[Increases the caster's global speed by %.2f.
+		The speed increase improves with the Magic stat]]):format(util.bound((self:combatSpellpower(0.5) * self:getTalentLevel(t)) / 100, 0.1, 2))
 	end,
 }
 
@@ -115,8 +115,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[This intricate spell erects a time shield around the caster, preventing any incomming damage and sending it forward in time.
-		Once the maximun damage (%d) is absorbed or the time runs out (%d turns) the stored damage will come back as a damage over time (5 turns).
+		return ([[This intricate spell erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
+		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (5 turns).
 		The duration and max absorption will increase with the Magic stat]]):format(50 + self:combatSpellpower(0.5) * self:getTalentLevel(t), util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15))
 	end,
 }

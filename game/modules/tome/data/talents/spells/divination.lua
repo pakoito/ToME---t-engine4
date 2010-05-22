@@ -134,8 +134,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows to sense the presence of foes in your mind, in a radius of %d.
-		This powerfull spell will continuously drain mana while active.
+		return ([[Allows one to sense the presence of foes in their mind, in a radius of %d.
+		This powerful spell will continuously drain mana while active.
 		The bonus will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
 	end,
 }

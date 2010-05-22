@@ -50,10 +50,10 @@ return {
 
 	on_enter = function(lev, old_lev, newzone)
 		if newzone then
-			game.logPlayer(game.player, "#VIOLET#As you come out of Tol Falas you encounter a band of orcs!")
+			game.logPlayer(game.player, "#VIOLET#As you come out of Tol Falas, you encounter a band of orcs!")
 			game.player:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush")
 
-			-- Next tiem the player dies (and he WILL die) he wont really die
+			-- Next time the player dies (and he WILL die) he wont really die
 			game.player.die = function(self)
 				self.dead = false
 				self.die = nil

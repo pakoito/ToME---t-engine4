@@ -220,7 +220,7 @@ function _M:getTalentFullDescription(t)
 
 	if t.mode == "passive" then d[#d+1] = "#6fff83#Use mode: #00FF00#Passive"
 	elseif t.mode == "sustained" then d[#d+1] = "#6fff83#Use mode: #00FF00#Sustained"
-	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activable"
+	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activated"
 	end
 
 	if t.power or t.sustain_power then d[#d+1] = "#6fff83#Power cost: #7fffd4#"..(t.power or t.sustain_power) end

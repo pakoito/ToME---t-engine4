@@ -29,7 +29,7 @@ newEntity{
 	egos = "/data/general/objects/egos/shield.lua", egos_chance = resolvers.mbonus(40, 5),
 }
 
--- All shields have a "special_combat" field, this is used to compute damage mde with them
+-- All shields have a "special_combat" field, this is used to compute damage made with them
 -- when using special talents
 
 newEntity{ base = "BASE_SHIELD",

@@ -121,7 +121,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You breath fire in a frontal cone. Any target caught in the area will take %0.2f fire damage over 3 turns.
+		return ([[You breathe fire in a frontal cone. Any target caught in the area will take %0.2f fire damage over 3 turns.
 		The damage will increase with the Strength stat]]):format(10 + self:getStr() * 0.3 * self:getTalentLevel(t))
 	end,
 }

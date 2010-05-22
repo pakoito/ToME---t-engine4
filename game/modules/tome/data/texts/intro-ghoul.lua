@@ -20,12 +20,11 @@
 return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
 You have died ages ago, but that did not stop you, you were raised as an undead ghoul.
 
-After wandering aimlessly for eons you found a goal: to become a force to be reckonned with in this world.
+After wandering aimlessly for eons you found a goal: to become a force to be reckoned with in this world.
 You have decided to venture into the old and wild places of the world, looking for ancient treasures and enough power to carve your way in blood through the world!
 
 You have come to a land called Rhudaur, on the western steppes of the Misty Mountains, far away from your home, in search of the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead.
 To the east lies another dangerous place: the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
 
-After days of travels you have found the ruined tower and entered the caves, what will you find there...
+After days of travel, you have found the ruined tower and entered the caves, what will you find there?...
 ]]
-

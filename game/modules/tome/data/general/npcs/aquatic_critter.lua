@@ -42,7 +42,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	name = "giant eel", color=colors.CADET_BLUE,
-	desc = "A snake like being moving toward you.",
+	desc = "A snake-like being, moving toward you.",
 	level_range = {1, 50}, exp_worth = 1,
 	rarity = 4,
 }
@@ -80,7 +80,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	name = "squid", color=colors.TEAL,
-	desc = "Darting its many tentacles toward you it tries to lock you down.",
+	desc = "Darting its many tentacles toward you, it tries to lock you down.",
 	level_range = {1, 50}, exp_worth = 1,
 	rarity = 4,
 	resolvers.talents{ [Talents.T_GRAB]=3, },
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	name = "ink squid", color=colors.LIGHT_STEEL_BLUE,
-	desc = "Darting its many tentacles toward you it tries to lock you down.",
+	desc = "Darting its many tentacles toward you, it tries to lock you down.",
 	level_range = {1, 50}, exp_worth = 1,
 	rarity = 5,
 	stats = { mag=30, },

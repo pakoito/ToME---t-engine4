@@ -104,7 +104,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gnaw your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits the target is stunned for %d turns.]]):
+		return ([[Gnaw your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.]]):
 		format(100 * (0.2 + self:getTalentLevel(t) / 12), 3 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
@@ -138,7 +138,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Vomit on the ground aruond you, healing any undeads in the area and damaging others.
+		return ([[Vomit on the ground aruond you, healing any undead in the area and damaging others.
 		Lasts %d turns and deals %d blight damage.]]):format(self:getTalentLevel(t) / 2 + 4, (2 + self:getCon(8)) * self:getTalentLevel(t))
 	end,
 }

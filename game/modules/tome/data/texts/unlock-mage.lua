@@ -21,16 +21,16 @@ return "New Class: #LIGHT_GREEN#Mage",
 [[
 Magic has not disappeared from Middle-earth with the downfall of Sauron and the departing of Gandalf the Grey.
 
-Before the war of the ring Gandalf, fearing that he might die leaving his task incomplete, started a secret plan with a group of trusted elves and men to form a place of knowledge, hidden from all.
-This place is Angolwen, the city of magic and for over one hundred years has taught magic to preserve and expand it.
+Before the war of the ring, Gandalf, fearing that he might die leaving his task incomplete, started a secret plan with a group of trusted elves and men to form a place of knowledge, hidden from all.
+This place is Angolwen, the City of Magic, and for over one hundred years has taught magic to preserve and expand it.
 
 You have been told this story and can now create new characters with the #LIGHT_GREEN#Mage class#WHITE#.
 
-Mages are spellcasters, attuned with the magic property of the world.
+Mages are spellcasters, attuned to the magical properties of the world.
 Class features:#YELLOW#
 - Cast elemental spells to burn your foes to death or freeze them
-- Summon the powers of space and time to protect and cripple
-- Dabble in phanstasms and illusion
+- Summon the powers of Space and Time to protect and cripple
+- Dabble in Phanstasms and Illusions
 - Manipulate the forces of magic themselves#WHITE#
 
 All mages use mana to cast their spells.

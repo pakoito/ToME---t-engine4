@@ -127,8 +127,8 @@ function _M:drawDialog(s)
 	w = 400
 	s:drawColorString(self.font, ("Fatigue:        #00ff00#%3d%%"):format(game.player.fatigue), w, h, 255, 255, 255) h = h + self.font_h
 	s:drawColorString(self.font, ("Armor:          #00ff00#%3d"):format(game.player:combatArmor()), w, h, 255, 255, 255) h = h + self.font_h
-	s:drawColorString(self.font, ("Defence:        #00ff00#%3d"):format(game.player:combatDefense()), w, h, 255, 255, 255) h = h + self.font_h
-	s:drawColorString(self.font, ("Ranged Defence: #00ff00#%3d"):format(game.player:combatDefenseRanged()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, ("Defense:        #00ff00#%3d"):format(game.player:combatDefense()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorString(self.font, ("Ranged Defense: #00ff00#%3d"):format(game.player:combatDefenseRanged()), w, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
 	s:drawColorString(self.font, ("Physical Resist: #00ff00#%3d"):format(game.player:combatPhysicalResist()), w, h, 255, 255, 255) h = h + self.font_h
@@ -248,8 +248,8 @@ function _M:dump()
 	nl()
 	nl(("Fatigue:        %3d%%"):format(game.player.fatigue))
 	nl(("Armor:          %3d"):format(game.player:combatArmor()))
-	nl(("Defence:        %3d"):format(game.player:combatDefense()))
-	nl(("Ranged Defence: %3d"):format(game.player:combatDefenseRanged()))
+	nl(("Defense:        %3d"):format(game.player:combatDefense()))
+	nl(("Ranged Defense: %3d"):format(game.player:combatDefenseRanged()))
 
 	nl()
 	nl(("Physical Resist: %3d"):format(game.player:combatPhysicalResist()))

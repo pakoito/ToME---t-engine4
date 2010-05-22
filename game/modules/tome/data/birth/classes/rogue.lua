@@ -21,8 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Rogue",
 	desc = {
-		"Rogues are masters of tricks, they can steal from shops and monsters",
-		"and lure monsters into deadly traps.",
+		"Rogues are masters of tricks; they can steal from shops and monsters, and lure monsters into deadly traps.",
 	},
 	descriptor_choices =
 	{
@@ -49,7 +48,7 @@ newBirthDescriptor{
 	name = "Rogue",
 	desc = {
 		"Rogues are masters of tricks. A rogue can get behind you unnoticed and stab you in the back for tremendous damage.",
-		"Rogues usualy prefer to dual-wield daggers. They can also become trapping experts, from detecting and disarming them to setting them.",
+		"Rogues usually prefer to dual-wield daggers. They can also become trapping experts, from detecting and disarming traps to setting them.",
 		"Their most important stats are: Dexterity and Cunning",
 	},
 	stats = { dex=2, str=1, cun=3, },
@@ -77,9 +76,9 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Shadowblade",
 	desc = {
-		"Shadowblades are a blend of rogues that were touched by the gift of magic, able to kill with their daggers under a veil of stealth while casting spells to enhance their performance and survival.",
-		"Their use of magic is innate and they never really studied it, as such they do not naturally regenerate mana and must use external means of recharging.",
-		"They use the schools of phantasm, temporal, divination and conveyance to enhance their arts.",
+		"Shadowblades are a blend of rogues that are touched by the gift of magic; able to kill with their daggers under a veil of stealth while casting spells to enhance their performance and survival.",
+		"Their use of magic is innate and not really studied; as such they do not naturally regenerate mana and must use external means of recharging.",
+		"They use the schools of Phantasm, Temporal, Divination and Conveyance magic to enhance their arts.",
 		"Their most important stats are: Dexterity, Cunning and Magic",
 	},
 	stats = { dex=2, mag=2, cun=2, },

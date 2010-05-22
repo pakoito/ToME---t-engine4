@@ -70,7 +70,7 @@ newTalent{ short_name="SPIDER_WEB",
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spread a web and throw it toward your target. If caught it wont be able to move for %d turns.]]):format(3 + self:getTalentLevel(t))
+		return ([[Spread a web and throw it toward your target. If caught, it won't be able to move for %d turns.]]):format(3 + self:getTalentLevel(t))
 	end,
 }
 
@@ -181,7 +181,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Turtle to distract your foes. Turtles are resilient but not very powerful. However they will periodicaly force any foes to attack them.
+		return ([[Summon a Turtle to distract your foes. Turtles are resilient, but not very powerful. However they will periodically force any foes to attack them.
 		It will get %d constitution and %d dexterity.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }
@@ -366,6 +366,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Take direct control of one of your summons.
-		When taking control your summon gets its life time increase by %d turns.]]):format(2 + self:getTalentLevel(t) * 3)
+		When taking control, your summon has its lifetime increased by %d turns.]]):format(2 + self:getTalentLevel(t) * 3)
 	end,
 }

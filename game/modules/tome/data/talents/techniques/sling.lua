@@ -80,7 +80,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Multishots",
+	name = "Multishot",
 	type = {"technique/archery-sling", 4},
 	no_energy = true,
 	points = 5,
@@ -94,6 +94,6 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire %d shots at your target, doing %d%% damage with each shots.]]):format(2+self:getTalentLevelRaw(t)/2, 100 * (0.7 + self:getTalentLevel(t) / 5))
+		return ([[You fire %d shots at your target, doing %d%% damage with each shot.]]):format(2+self:getTalentLevelRaw(t)/2, 100 * (0.7 + self:getTalentLevel(t) / 5))
 	end,
 }

@@ -477,7 +477,7 @@ newEffect{
 	type = "time",
 	status = "detrimental",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "The powerfull time altering energies come crashing down on #target#.", "+Time Shield Backfire" end,
+	on_gain = function(self, err) return "The powerful time altering energies come crashing down on #target#.", "+Time Shield Backfire" end,
 	on_lose = function(self, err) return "The fabric of time around #target# returns to normal.", "-Time Shield Backfire" end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.ARCANE).projector(self, self.x, self.y, DamageType.ARCANE, eff.power)
@@ -669,7 +669,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# lashes out with pure willpower." end,
-	on_lose = function(self, err) return "#Target# willpower rush ends.." end,
+	on_lose = function(self, err) return "#Target#'s willpower rush ends." end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("combat_dam", eff.power)
 	end,

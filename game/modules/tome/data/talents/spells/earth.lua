@@ -42,7 +42,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[The caster skin grows as hard as stone, granting %d bonus to armor.
+		return ([[The caster's skin grows as hard as stone, granting %d bonus to armor.
 		The bonus to armor will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }

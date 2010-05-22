@@ -28,7 +28,7 @@ newTalent{
 	activate = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Berserker without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Berserker without a two-handed weapon!")
 			return nil
 		end
 
@@ -63,7 +63,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Death Dance without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Death Dance without a two-handed weapon!")
 			return nil
 		end
 
@@ -96,7 +96,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Warshout without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Warshout without a two-handed weapon!")
 			return nil
 		end
 
@@ -127,7 +127,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Death Blow without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Death Blow without a two-handed weapon!")
 			return nil
 		end
 
@@ -163,7 +163,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Tries to perform a killing blow doing %d%% weapon damage, granting automatic critical hit. If the target ends up with low enough life it might be instantly killed.
+		return ([[Tries to perform a killing blow doing %d%% weapon damage, granting an automatic critical hit. If the target ends up with low enough life it might be instantly killed.
 		At level 4 it drains all remaining stamina and uses it to increase the blow damage.]]):format(100 * (1.4 + self:getTalentLevel(t) / 6))
 	end,
 }
@@ -181,7 +181,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Stunning Blow without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Stunning Blow without a two-handed weapon!")
 			return nil
 		end
 
@@ -203,7 +203,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the atatck hits, the target is stunned.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -217,7 +217,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Sunder Armour without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Sunder Armour without a two-handed weapon!")
 			return nil
 		end
 
@@ -253,7 +253,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Sunder Arms without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Sunder Arms without a two-handed weapon!")
 			return nil
 		end
 
@@ -289,7 +289,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Crush without a two handed weapon!")
+			game.logPlayer(self, "You cannot use Crush without a two-handed weapon!")
 			return nil
 		end
 

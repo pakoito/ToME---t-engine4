@@ -70,7 +70,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hits your for %d acid damage.]]):format(10 + 5 * self:getTalentLevel(t))
+		return ([[Your skin drips with acid, damaging all that hits you for %d acid damage.]]):format(10 + 5 * self:getTalentLevel(t))
 	end,
 }
 
@@ -126,7 +126,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You extend slimy roots into the ground, follow them and re-appear somewhere else in a range of %d.
+		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d.
 		The process is quite a strain on your body and you will be stunned for %d turns.]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.3, util.bound(5 - self:getTalentLevel(t) / 2, 2, 7))
 	end,
 }

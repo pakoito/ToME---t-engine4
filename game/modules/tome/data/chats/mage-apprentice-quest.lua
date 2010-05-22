@@ -51,7 +51,7 @@ newChat{ id="quest",
 }
 newChat{ id="quest2",
 	text = [[Well if you insist...
-I am a novice mage, as you might have noticed, and my goal is to be accepted by the elves of Angolwen to be taugth the secrets of the arcane.]],
+I am a novice mage, as you might have noticed, and my goal is to be accepted by the elves of Angolwen to be taught the secrets of the arcane.]],
 	answers = {
 		{"Who are the elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.descriptor.class ~= "Mage" end,},
 		{"Ah yes Angolwen, this place I called home for many years...", jump="quest3_mage", cond=function(npc, player) return player.descriptor.class == "Mage" end,},
@@ -76,13 +76,13 @@ Anyway, I must collect 15 magic staves and I have yet to find one. If you could 
 }
 
 newChat{ id="thanks",
-	text = [[Ah yes! I am so glad! I will be able to go back to Angolw..err. Oh well I just I can tell you, you deserve it for helping me.
+	text = [[Ah yes! I am so glad! I will be able to go back to Angolw...err. Oh well I guess I can tell you, you deserve it for helping me.
 During the late years of Sauron, more than one hundred years ago, Gandalf the Grey worried that magic could disappear with him and would be lost to mortals should they need it again.
-So he set a secret plan into action and taught a small group of elves and men into its usage with a specific task: to build a secret place where magic would be kept alive.
-His plan worked and the group built a town called Angolwen in the Blue Mountains #LIGHT_GREEN#*he marks it on your map, along with a portal to access it*#WHITE#.
+So he set a secret plan into action and taught a small group of elves and men its usage with a specific task: to build a secret place where magic would be kept alive.
+His plan worked and the group built a town called Angolwen in the Blue Mountains. #LIGHT_GREEN#*He marks it on your map, along with a portal to access it*#WHITE#
 Not many people are accepted there but I will arrange for you to be allowed inside.]],
 	answers = {
-		{"Oh! How could such a place be kept secret for so long.. This is interresting indeed, thanks for your trust.",
+		{"Oh! How could such a place be kept secret for so long... This is interesting indeed, thank you for your trust.",
 			action = function(npc, player)
 				player:hasQuest("mage-apprentice"):access_angolwen(player)
 				npc:die()
@@ -95,7 +95,7 @@ newChat{ id="thanks_mage",
 	text = [[Ah yes! I am so glad! I will be able to go back to Angolwen now, maybe we will meet there.
 Oh and take this ring, it has served me well.]],
 	answers = {
-		{"Thanks, and best luck for you studies!",
+		{"Thanks, and best luck on your studies!",
 			action = function(npc, player)
 				player:hasQuest("mage-apprentice"):ring_gift(player)
 				npc:die()

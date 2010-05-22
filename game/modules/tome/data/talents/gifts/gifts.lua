@@ -20,11 +20,11 @@
 -- Wild Gifts
 newTalentType{ type="wild-gift/call", name = "call of the wild", description = "Be at one with nature." }
 newTalentType{ type="wild-gift/antimagic", name = "antimagic", description = "The way to combat magic, or even nullify it." }
-newTalentType{ type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your help." }
-newTalentType{ type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your help." }
-newTalentType{ type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your help." }
-newTalentType{ type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your help." }
-newTalentType{ type="wild-gift/slime", name = "slime aspect", description = "Through dedicated consumption of slime mold juice you have gained an affinity with slime molds." }
+newTalentType{ type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
+newTalentType{ type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
+newTalentType{ type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }
+newTalentType{ type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your aid." }
+newTalentType{ type="wild-gift/slime", name = "slime aspect", description = "Through dedicated consumption of slime mold juice, you have gained an affinity with slime molds." }
 newTalentType{ type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
 newTalentType{ type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
 newTalentType{ type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }

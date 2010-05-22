@@ -306,7 +306,7 @@ function _M:restCheck()
 	if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 	if self.life < self.max_life and self.life_regen> 0 then return true end
 
-	return false, "all resources and life at maximun"
+	return false, "all resources and life at maximum"
 end
 
 --- Can we continue running?

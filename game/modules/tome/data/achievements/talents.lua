@@ -34,7 +34,7 @@ newAchievement{
 
 newAchievement{
 	name = "Warper",
-	desc = [[Maxed all arcane, conveyance, divination and temporal spells.]],
+	desc = [[Maxed all arcane, conveyance, divination, and temporal spells.]],
 	mode = "player",
 	can_gain = function(self, who)
 		local types = table.reverse{"spell/arcane", "spell/temporal", "spell/conveyance", "spell/divination"}

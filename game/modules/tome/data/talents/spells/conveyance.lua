@@ -56,9 +56,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Teleports you randomly on a small scale range (%d)
-		At level 4 it allows to specify the target area.
-		At level 5 it allows to choose the target to teleport.
+		return ([[Teleports you randomly with a small range (%d).
+		At level 4 it allows one to choose the target area.
+		At level 5 it allows one to specify the exact target.
 		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1))
 	end,
 }
@@ -102,9 +102,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Teleports you randomly on a big scale range (%d), with a minimun range of 15
-		At level 4 it allows to specify the target area.
-		At level 5 it allows to choose the target to teleport.
+		return ([[Teleports you randomly with a large range (%d), with a minimum range of 15.
+		At level 4 it allows one to choose the target area.
+		At level 5 it allows one to specify the exact target.
 		The range will increase with the Magic stat]]):format(100 + self:combatSpellpower(0.1))
 	end,
 }
@@ -133,9 +133,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[This intricate spell erects a space distortion around the caster that is linked to an other one on a target.
-		Any time the caster should take damage there is %d%% chances that it would instead be warped byu the shield and hit the designated target.
-		Once the maximun damage (%d) is absorbed, the time runs out (%d turns) or the target dies the shield will crumble.
+		return ([[This intricate spell erects a space distortion around the caster that is linked to another one around a target.
+		Any time the caster should take damage there is a %d%% chance that it will instead be warped by the shield and hit the designated target.
+		Once the maximum damage (%d) is absorbed, the time runs out (%d turns), or the target dies, the shield will crumble.
 		The duration and max absorption will increase with the Magic stat]]):format(20 + self:getTalentLevel(t) * 5, 50 + self:combatSpellpower(0.4) * self:getTalentLevel(t), util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25))
 	end,
 }
@@ -164,6 +164,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[When you hit a solid surface this spell tears down the laws of probability to make you instantly appear on the other side.
-		Works up to %d grids.]]):format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
+		Teleports up to %d grids.]]):format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
 	end,
 }

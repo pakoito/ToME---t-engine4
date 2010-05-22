@@ -26,7 +26,7 @@ newEntity{
 	rarity = 5,
 	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },
 	archery = "sling",
-	desc = [[Slings are used to shoot peebles at your foes.]],
+	desc = [[Slings are used to shoot pebbles at your foes.]],
 }
 
 newEntity{ base = "BASE_SLING",

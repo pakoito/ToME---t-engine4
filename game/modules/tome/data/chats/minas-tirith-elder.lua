@@ -20,7 +20,7 @@
 newChat{ id="welcome",
 	text = [[Welcome @playername@ to Minas Tirith traveler, please be quick my time is precious.]],
 	answers = {
-		{"I have found a strange staff(#LIGHT_GREEN#*describe it in details*#LAST#) in my travels, it looked really old and powerful. I dared not use it.", jump="found_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.PENDING) end},
+		{"I have found a strange staff (#LIGHT_GREEN#*describe it in detail*#LAST#) in my travels, it looked really old and powerful. I dared not use it.", jump="found_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.PENDING) end},
 		{"Nothing, excuse me. Bye!"},
 	}
 }
@@ -41,7 +41,7 @@ But do not let me trouble you, you brought important news and you are lucky to b
 			player:setQuestStatus("staff-absorption", engine.Quest.DONE)
 			player.winner = true
 			local D = require "engine.Dialog"
-			D:simplePopup("Winner!", "#VIOLET#Congratulations you have won the game! At least for now... The quest has only started!")
+			D:simplePopup("Winner!", "#VIOLET#Congratulations, you have won the game! At least for now... The quest has only started!")
 
 			world:gainAchievement("A_DANGEROUS_SECRET", player)
 --			game:setAllowedBuild("evil_race", true)

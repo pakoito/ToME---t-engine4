@@ -136,7 +136,7 @@ function _M:use()
 		self:resurrectBasic()
 	elseif act == "skeleton" then
 		self.actor:attr("re-assembled", 1)
-		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish pain to your foes!")
+		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish out pain to your foes!")
 
 		self:cleanActor()
 		self:restoreRessources()
@@ -149,7 +149,7 @@ function _M:generateList()
 
 	if config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
-	if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones ad resurrect (Skeleton ability)", action="skeleton"} end
+	if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones and resurrect (Skeleton ability)", action="skeleton"} end
 
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Exit to main menu", action="exit"}
@@ -160,7 +160,7 @@ end
 function _M:drawDialog(s)
 	local help = ([[You have #LIGHT_RED#died#LAST#!
 Death in T.o.M.E. is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
-You can dump your character data to a file to remember her/him forever, or you can exit and try again to survive in the wilds!
+You can dump your character data to a file to remember her/him forever, or you can exit and try once again to survive in the wilds!
 ]]):splitLines(self.iw - 10, self.font)
 
 	local h = 2

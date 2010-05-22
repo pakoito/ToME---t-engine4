@@ -97,7 +97,7 @@ newBirthDescriptor{
 	name = "Insane",
 	desc =
 	{
-		"Absolutly unfair game setting",
+		"Absolutely unfair game setting",
 		"All damage done to the player increased by 20%",
 		"All damage done by the player decreased by 20%",
 		"All healing for the player decreased by 20%",

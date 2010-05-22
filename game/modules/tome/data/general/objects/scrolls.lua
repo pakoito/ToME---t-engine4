@@ -89,7 +89,7 @@ newEntity{ base = "BASE_SCROLL",
 	rarity = 8,
 	cost = 4,
 
-	use_simple = { name="teleport you anywhere and the level, randomly", use = function(self, who)
+	use_simple = { name="teleport you anywhere on the level, randomly", use = function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, 200)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")

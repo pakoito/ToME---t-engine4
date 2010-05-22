@@ -44,7 +44,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits the target is stunned for %d turns.]]):
+		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.]]):
 		format(100 * (0.2 + self:getTalentLevel(t) / 12), 3 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
@@ -56,7 +56,7 @@ newTalent{
 	points = 5,
 	require = cuns_req2,
 	info = function(self, t)
-		return ([[Your quick wit gives you a big advantage against stunned targets, all your hits will have %d%% more chances of being critical.]]):
+		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.]]):
 		format(self:getTalentLevel(t) * 10)
 	end,
 }
@@ -89,8 +89,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Using a serie of tricks and maneuvers you switch places with your target.
-		Switch places will confuse your foes for a few turns, granting your evasion(50%%) for %d turns.]]):
+		return ([[Using a series of tricks and maneuvers, you switch places with your target.
+		Switching places will confuse your foes for a few turns, granting you evasion(50%%) for %d turns.]]):
 		format(1 + self:getTalentLevel(t))
 	end,
 }
@@ -127,7 +127,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits the target is cripple for %d turns, losing %d%% attack and %d%% damage.]]):
+		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% attack and %d%% damage.]]):
 		format(100 * (0.9 + self:getTalentLevel(t) / 9), 3 + math.ceil(self:getTalentLevel(t)), 10 + self:getTalentLevel(t) * 3, 10 + self:getTalentLevel(t) * 4)
 	end,
 }

@@ -56,8 +56,8 @@ end
 --- Makes the death happen!
 --[[
 The ToME combat system has the following attributes:
-- attack: increases chances to hit against high defence
-- defence: increases chances to miss against high attack power
+- attack: increases chances to hit against high defense
+- defense: increases chances to miss against high attack power
 - armor: direct reduction of damage done
 - armor penetration: reduction of target's armor
 - damage: raw damage done

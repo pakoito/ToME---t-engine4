@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 newAchievement{
-	name = "Deux Ex Machina",
+	name = "Deus Ex Machina",
 	desc = [[Found both ever-refilling potions.]],
 	mode = "player",
 	can_gain = function(self, who, obj)
-		if obj:getName{force_id=true} == "Ever Refilling Potion of Mana" then self.mana = true end
-		if obj:getName{force_id=true} == "Ever Refilling Potion of Healing" then self.life = true end
+		if obj:getName{force_id=true} == "Ever-Refilling Potion of Mana" then self.mana = true end
+		if obj:getName{force_id=true} == "Ever-Refilling Potion of Healing" then self.life = true end
 		return self.mana and self.life
 	end
 }

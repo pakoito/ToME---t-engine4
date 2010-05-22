@@ -112,7 +112,7 @@ newTalent{
 			game.logPlayer(self, "Not enough space to invoke the guardian!")
 			return
 		end
-		print("Invoking gardian on", x, y)
+		print("Invoking guardian on", x, y)
 
 		local NPC = require "mod.class.NPC"
 		local bear = NPC.new{

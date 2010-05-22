@@ -40,7 +40,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_CANINE",
 	name = "wolf", color=colors.UMBER,
-	desc = [[Lean, mean and shaggy, it stares at you with hungry eyes.]],
+	desc = [[Lean, mean, and shaggy, it stares at you with hungry eyes.]],
 	level_range = {1, 50}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(40,70),

@@ -123,7 +123,7 @@ newEntity{ base = "BASE_NPC_ANT",
 
 newEntity{ base = "BASE_NPC_ANT",
 	name = "giant lightning ant", color=colors.YELLOW,
-	desc = "It's a large yellow ant with sparks arching across its body.",
+	desc = "It's a large yellow ant with sparks arcing across its body.",
 	level_range = {15, 50}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(20,40),

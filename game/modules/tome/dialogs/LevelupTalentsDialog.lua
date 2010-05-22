@@ -219,13 +219,13 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	if self.list[self.sel].type then
 		local str = ""
 		str = str .. "#00FFFF#Talent Category\n"
-		str = str .. "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point every few levels. You may also find trainers or artifacts that allows you to learn more.\n\n"
+		str = str .. "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point every few levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		lines = self.actor:getTalentTypeFrom(self.list[self.sel].type).description:splitLines(self.iw / 2 - 10, self.font)
 	else
 		local str = ""
 		str = str .. "#00FFFF#Talent\n"
-		str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, improve your character. You gain two talent point every level. You may also find trainers or artifacts that allows you to learn more.\n\n"
+		str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, and improve your character. You gain two talent point every level. You may also find trainers or artifacts that allow you to learn more.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
 		lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)

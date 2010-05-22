@@ -41,7 +41,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %d fire damage per melee attacks and increasing all fire damage by %d%%.]]):
+		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %d fire damage per melee attack and increasing all fire damage by %d%%.]]):
 		format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.05))
 	end,
 }
@@ -88,7 +88,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attacks and increasing all cold damage by %d%%.]]):
+		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.]]):
 		format(3 + self:getTalentLevel(t) * self:combatSpellpower(0.05), 4 + self:getTalentLevel(t) * self:combatSpellpower(0.04))
 	end,
 }
@@ -123,7 +123,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate on your inner self, increasing your stats by %d.]]):
+		return ([[You concentrate on your inner self, increasing your stats each by %d.]]):
 		format(2 + self:getTalentLevel(t) * self:combatSpellpower(0.06))
 	end,
 }

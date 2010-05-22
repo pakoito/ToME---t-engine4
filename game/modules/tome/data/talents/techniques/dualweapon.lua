@@ -139,7 +139,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit with your offhand weapon for %d%% damage, if the attack hits the target is stunned and you hit it with your mainhand weapon.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
+		return ([[Hit with your offhand weapon for %d%% damage, if the attack hits, the target is stunned and you hit it with your mainhand weapon.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
 	end,
 }
 
@@ -168,7 +168,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lashes out a flurry of blows, hitting your target three times with each weapons for %d%% damage.]]):format(100 * (0.8 + self:getTalentLevel(t) / 10))
+		return ([[Lashes out a flurry of blows, hitting your target three times with each weapon for %d%% damage.]]):format(100 * (0.8 + self:getTalentLevel(t) / 10))
 	end,
 }
 

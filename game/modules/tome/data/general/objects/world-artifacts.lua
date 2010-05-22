@@ -19,7 +19,7 @@
 
 local Stats = require "engine.interface.ActorStats"
 
--- This file describes artifact not bound to a special location, they can be found anywhere
+-- This file describes artifacts not bound to a special location, they can be found anywhere
 newEntity{ base = "BASE_STAFF",
 	unique = true,
 	name = "Staff of Destruction",
@@ -157,7 +157,7 @@ newEntity{ base = "BASE_LITE",
 newEntity{
 	unique = true,
 	type = "potion", subtype="potion",
-	name = "Ever Refilling Potion of Healing",
+	name = "Ever-Refilling Potion of Healing",
 	unided_name = "strange potion",
 	level_range = {35, 40},
 	display = '!', color=colors.VIOLET, image="object/potion-0x3-violet.png",
@@ -178,7 +178,7 @@ newEntity{
 newEntity{
 	unique = true,
 	type = "potion", subtype="potion",
-	name = "Ever Refilling Potion of Mana",
+	name = "Ever-Refilling Potion of Mana",
 	unided_name = "strange potion",
 	level_range = {35, 40},
 	display = '!', color=colors.VIOLET, image="object/potion-0x3-violet.png",

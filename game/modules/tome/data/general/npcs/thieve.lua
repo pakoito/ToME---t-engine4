@@ -84,7 +84,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 
 newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_BANDIT",
 	name = "bandit", color_r=0, color_g=0, color_b=resolvers.rngrange(175, 195),
-	desc = [[These ruffians often employ brute force over thievery but they are capable of stealing as well.]],
+	desc = [[These ruffians often employ brute force over thievery, but they are capable of stealing as well.]],
 	level_range = {5, 50}, exp_worth = 1,
 	rarity = 7,
 	combat_armor = 4, combat_def = 6,

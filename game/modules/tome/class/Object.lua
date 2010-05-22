@@ -262,12 +262,12 @@ function _M:getDesc()
 	if w.knockback_immune then desc[#desc+1] = ("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100) end
 	if w.instakill_immune then desc[#desc+1] = ("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100) end
 
-	if w.life_regen then desc[#desc+1] = ("Regenerates %d hitpoints a turn."):format(w.life_regen) end
-	if w.mana_regen then desc[#desc+1] = ("Regenerates %d mana a turn."):format(w.mana_regen) end
+	if w.life_regen then desc[#desc+1] = ("Regenerates %d hitpoints each turn."):format(w.life_regen) end
+	if w.mana_regen then desc[#desc+1] = ("Regenerates %d mana each turn."):format(w.mana_regen) end
 
-	if w.max_life then desc[#desc+1] = ("Maximun life %d"):format(w.max_life) end
-	if w.max_mana then desc[#desc+1] = ("Maximun mana %d"):format(w.max_mana) end
-	if w.max_stamina then desc[#desc+1] = ("Maximun stamina %d"):format(w.max_stamina) end
+	if w.max_life then desc[#desc+1] = ("Maximum life %d"):format(w.max_life) end
+	if w.max_mana then desc[#desc+1] = ("Maximum mana %d"):format(w.max_mana) end
+	if w.max_stamina then desc[#desc+1] = ("Maximum stamina %d"):format(w.max_stamina) end
 
 	if w.combat_spellpower or w.combat_spellcrit then desc[#desc+1] = ("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0) end
 

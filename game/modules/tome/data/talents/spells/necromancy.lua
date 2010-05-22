@@ -40,8 +40,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Absorbing souls is the base of the necromantic arts. Whenever you slay a foe that grants experience you absorb its life-force, or soul for sentient beings.
-		This energy is is used to fuel all other necromantic spells.
+		return ([[Absorbing souls is the base of the necromantic arts. Whenever you slay a foe that grants experience, you absorb its life-force, or soul for sentient beings.
+		This energy is used to fuel all other necromantic spells.
 		]]):format()
 	end,
 }

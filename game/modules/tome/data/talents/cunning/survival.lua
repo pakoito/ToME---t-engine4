@@ -24,7 +24,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[Your attention to details allows you to detect traps around you (%d detection 'power').]]):
+		return ([[Your attention to detail allows you to detect traps around you (%d detection 'power').]]):
 		format(self:getTalentLevel(t) * self:getCun(25))
 	end,
 }
@@ -36,7 +36,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[You have learnt to disarm traps. (%d disarm power).]]):
+		return ([[You have learnt to disarm traps (%d disarm power).]]):
 		format(self:getTalentLevel(t) * self:getCun(25))
 	end,
 }
@@ -55,8 +55,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your quick wit allows you to see attacks before they come, granting you %d%% chances to completly evade them for %d turns.
-		Duration increases with Willpower and chances to evade with Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25) + self:getDex(25), 5 + self:getWil(10))
+		return ([[Your quick wit allows you to see attacks before they come, granting you a %d%% chance to completely evade them for %d turns.
+		Duration increases with Willpower, and chance to evade with Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25) + self:getDex(25), 5 + self:getWil(10))
 	end,
 }
 

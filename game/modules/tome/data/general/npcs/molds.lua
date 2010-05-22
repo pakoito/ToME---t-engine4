@@ -38,7 +38,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_MOLD",
 	name = "grey mold", color=colors.SLATE,
-	desc = "A strange brey growth on the dungeon floor.",
+	desc = "A strange grey growth on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),

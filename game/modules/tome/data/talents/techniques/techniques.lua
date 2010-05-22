@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 -- Physical combat
-newTalentType{ type="technique/2hweapon-offense", name = "two handed weapons", description = "Specialized two handed techniques." }
-newTalentType{ type="technique/2hweapon-cripple", name = "two handed weapons", description = "Specialized two handed techniques." }
-newTalentType{ type="technique/shield-offense", name = "weapon and shields", description = "Specialized weapon and shield techniques." }
-newTalentType{ type="technique/shield-defense", name = "weapon and shields", description = "Specialized weapon and shield techniques." }
+newTalentType{ type="technique/2hweapon-offense", name = "two-handed weapons", description = "Specialized two-handed techniques." }
+newTalentType{ type="technique/2hweapon-cripple", name = "two-handed weapons", description = "Specialized two-handed techniques." }
+newTalentType{ type="technique/shield-offense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
+newTalentType{ type="technique/shield-defense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
 newTalentType{ type="technique/dualweapon-training", name = "dual wielding", description = "Specialized dual wielding techniques." }
 newTalentType{ type="technique/dualweapon-attack", name = "dual wielding", description = "Specialized dual wielding techniques." }
 newTalentType{ type="technique/archery-base", name = "archery - base", description = "Ability to shoot, you should never this this." }
@@ -29,10 +29,10 @@ newTalentType{ type="technique/archery-bow", name = "archery - bows", descriptio
 newTalentType{ type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
 newTalentType{ type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
 newTalentType{ type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
-newTalentType{ type="technique/combat-techniques-active", name = "combat-techniques", description = "Generic combat oriented techniques." }
-newTalentType{ type="technique/combat-techniques-passive", name = "combat-techniques", description = "Generic combat oriented techniques." }
-newTalentType{ type="technique/combat-training", name = "combat-training", description = "Teaches to use various armors and improves health." }
-newTalentType{ type="technique/magical-combat", name = "magical-combat", description = "Blend magic and melee." }
+newTalentType{ type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
+newTalentType{ type="technique/combat-techniques-passive", name = "combat techniques", description = "Generic combat oriented techniques." }
+newTalentType{ type="technique/combat-training", name = "combat training", description = "Teaches to use various armors and improves health." }
+newTalentType{ type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
 
 -- Generic requires for techs based on talent level
 -- Uses STR

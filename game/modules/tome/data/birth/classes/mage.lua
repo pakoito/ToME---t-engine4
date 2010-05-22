@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Mage",
 	desc = {
-		"Mages are the wielder of the arcane powers. Able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
+		"Mages are the wielders of the arcane powers, able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
 		"All mages have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 	},
 	descriptor_choices =
@@ -47,9 +47,9 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Archmage",
 	desc = {
-		"An Archmage devote her whole life to the study of magic above anything else.",
+		"An Archmage devotes their whole life to the study of magic above anything else.",
 		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
-		"Archmagi know all schools of magic but the more intricates(Temporal and Meta) from the start. They however usualy refuse to have anything to do with Necromancy.",
+		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
 		"Their most important stats are: Magic and Willpower",
 	},
 	stats = { mag=3, wil=2, cun=1, },

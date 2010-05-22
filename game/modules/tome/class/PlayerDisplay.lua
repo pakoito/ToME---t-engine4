@@ -86,7 +86,7 @@ function _M:display()
 	h = h + self.font_h
 	self.surface:drawString(self.font, ("Fatigue %3d%%"):format(game.player.fatigue), 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawString(self.font, ("Armor   %3d"):format(game.player:combatArmor()), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawString(self.font, ("Defence %3d"):format(game.player:combatDefense()), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:drawString(self.font, ("Defense %3d"):format(game.player:combatDefense()), 0, h, 255, 255, 255) h = h + self.font_h
 
 	if game.zone and game.level then
 		self.surface:drawString(self.font, ("%s (%d)"):format(game.zone.name, game.level.level), 0, self.h - self.font_h, 0, 255, 255) h = h + self.font_h

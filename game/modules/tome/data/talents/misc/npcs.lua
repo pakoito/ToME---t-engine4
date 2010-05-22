@@ -220,7 +220,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Bites the target, infecting ti with poison.]])
+		return ([[Bites the target, infecting it with poison.]])
 	end,
 }
 
@@ -370,7 +370,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Try to confuse the target's mind fr a while.]])
+		return ([[Try to confuse the target's mind for a while.]])
 	end,
 }
 
@@ -425,7 +425,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the attack hits, the target is pinned tp the ground.]]):format(100 * (0.8 + self:getTalentLevel(t) / 7))
+		return ([[Hits the target doing %d%% damage; if the attack hits, the target is pinned to the ground.]]):format(100 * (0.8 + self:getTalentLevel(t) / 7))
 	end,
 }
 

@@ -24,7 +24,7 @@ newBirthDescriptor{
 	type = "race",
 	name = "Human",
 	desc = {
-		"The Edain are the humans are one of the youngest of the races of Arda.",
+		"The Edain, humans, are one of the youngest of the races of Arda.",
 	},
 	descriptor_choices =
 	{
@@ -67,8 +67,8 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Dúnadan",
 	desc = {
-		"The greatest of the Edain, humans in all respects but stronger, smarter and wiser.",
-		"They posses the Gift of Kings which allows them to regenerate their wounds once in a while.",
+		"The greatest of the Edain, humans in all respects but stronger, smarter, and wiser.",
+		"They possess the Gift of Kings which allows them to regenerate their wounds once in a while.",
 	},
 	stats = { str=1, cun=1, dex=1, wil=1 },
 	experience = 1.25,
@@ -89,7 +89,7 @@ newBirthDescriptor
 	type = "subrace"
 	name = "Rohirrim"
 	desc = {
-		"Humans from the land of Rohan, riding the great Mearas.",
+		"Humans from the land of Rohan, who ride the great Mearas.",
 	}
 	stats = { [A_STR]=1, [A_INT]=1, [A_WIS]=0, [A_DEX]=3, [A_CON]=1, [A_CHR]=2, }
 	experience = 70
@@ -108,8 +108,8 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Beorning",
 	desc = {
-		"A race of men shapeshifters.",
-		"They have the unique power of being able to polymorph to bear form.",
+		"A race of shapeshifter men.",
+		"They have the unique power of being able to polymorph into bear form.",
 	},
 	stats = { str=2, con=2, dex=-1, cun=-3, },
 	experience = 1.8,
