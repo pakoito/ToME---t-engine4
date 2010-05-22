@@ -180,7 +180,7 @@ function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, colo
 	selcolor = selcolor or {0,255,255}
 	color = color or {255,255,255}
 	max = max or 99999
-	scroll = util.bound(scroll or 1, 1, max)
+	scroll = util.bound(scroll or 1, 1, #list)
 
 	for i = scroll, math.min(#list, scroll + max - 1) do
 		local v = list[i]
