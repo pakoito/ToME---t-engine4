@@ -39,6 +39,8 @@ subGenerator{
 	define_up = true,
 }
 
+checkConnectivity({26,44}, "entrance")
+
 return {
 [[                                                  ]],
 [[                                                  ]],

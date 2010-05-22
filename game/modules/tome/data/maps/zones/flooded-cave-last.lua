@@ -22,6 +22,9 @@ defineTile('.', "WATER_FLOOR")
 defineTile('#', "WATER_WALL")
 defineTile('s', "WATER_FLOOR", nil, "UKLLMSWWIK")
 
+startx = 0
+starty = 6
+
 return {
 [[##################################################]],
 [[##..............................................##]],

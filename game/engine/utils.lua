@@ -62,6 +62,10 @@ function table.mergeAdd(dst, src, deep)
 	end
 end
 
+function table.append(dst, src)
+	for i = 1, #src do dst[#dst+1] = src[i] end
+end
+
 function table.reverse(t)
 	local tt = {}
 	for i, e in ipairs(t) do tt[e] = i end

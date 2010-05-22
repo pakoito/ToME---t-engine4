@@ -26,6 +26,7 @@ function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
 	self.grid_list = zone.grid_list
 	self.subgen = {}
+	self.spots = {}
 	self.data = data
 
 	if data.adjust_level then
@@ -67,6 +68,15 @@ function _M:loadMap(file)
 		end,
 		addData = function(t)
 			table.merge(self.level.data, t, true)
+		end,
+		checkConnectivity = function(dst, src)
+			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], check_connectivity=src}
+			print("********************************************")
+			print("********************************************")
+			print(dst[1], dst[2], src)
+			print("********************************************")
+			print("********************************************")
+			print("********************************************")
 		end,
 	}
 	setfenv(f, setmetatable(g, {__index=_G}))
@@ -113,6 +123,8 @@ function _M:resolve(typ, c)
 end
 
 function _M:generate(lev, old_lev)
+	local spots = {}
+
 	for i = 1, self.gen_map.w do for j = 1, self.gen_map.h do
 		local c = self.gen_map[i][j]
 		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", c))
@@ -160,10 +172,12 @@ function _M:generate(lev, old_lev)
 			self.level,
 			data
 		)
-		local ux, uy, dx, dy = generator:generate(lev, old_lev)
+		local ux, uy, dx, dy, subspots = generator:generate(lev, old_lev)
 
 		self.map:import(map, g.x, g.y)
 		map:close()
+
+		table.append(self.spots, subspots)
 
 		if g.define_up then self.gen_map.startx, self.gen_map.starty = ux + g.x, uy + g.y end
 		if g.define_down then self.gen_map.endx, self.gen_map.endy = dx + g.x, dy + g.y end
@@ -175,5 +189,5 @@ function _M:generate(lev, old_lev)
 	if self.gen_map.startx and self.gen_map.starty then
 		self.map.room_map[self.gen_map.endx][self.gen_map.endy].special = "exit"
 	end
-	return self.gen_map.startx, self.gen_map.starty, self.gen_map.endx, self.gen_map.endy
+	return self.gen_map.startx, self.gen_map.starty, self.gen_map.endx, self.gen_map.endy, self.spots
 end
