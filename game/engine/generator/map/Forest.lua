@@ -64,7 +64,8 @@ function _M:generate(lev, old_lev)
 		end
 	end
 
-	local ux, uy, dx, dy, spots
+	local spots = {}
+	local ux, uy, dx, dy
 	if self.data.edge_entrances then
 		ux, uy, dx, dy, spots = self:makeStairsSides(lev, old_lev, self.data.edge_entrances, spots)
 	else
