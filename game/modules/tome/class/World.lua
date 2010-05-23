@@ -26,7 +26,10 @@ module(..., package.seeall, class.inherit(engine.World, engine.interface.WorldAc
 
 function _M:init()
 	engine.World.init(self)
-	engine.interface.WorldAchievements.init(self)
+end
+
+function _M:run()
+	self:loadAchievements()
 end
 
 --- Requests the world to save

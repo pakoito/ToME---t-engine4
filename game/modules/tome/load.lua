@@ -33,7 +33,7 @@ local Store = require "mod.class.Store"
 local WorldAchievements = require "engine.interface.WorldAchievements"
 
 config.settings.tome = config.settings.tome or {}
-config.settings.tome.allow_build = config.settings.tome.allow_build or {}
+profile.mod.allow_build = profile.mod.allow_build or {}
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")

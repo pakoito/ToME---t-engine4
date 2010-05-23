@@ -27,7 +27,7 @@ newBirthDescriptor{
 		world =
 		{
 			Arda = "allow",
-			["Spydrë"] = function() return config.settings.tome.allow_build.world_spydre and "allow" or "never" end,
+			["Spydrë"] = function() return profile.mod.allow_build.world_spydre and "allow" or "never" end,
 		},
 	},
 	talents = {},

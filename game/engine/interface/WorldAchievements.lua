@@ -54,8 +54,17 @@ function _M:newAchievement(t)
 	print("[ACHIEVEMENT] defined", t.order, t.id)
 end
 
-function _M:init()
+function _M:loadAchievements()
 	self.achieved = {}
+
+	for k, e in pairs(profile.mod) do
+		if k:find('^achievement_') then
+			local id = k:gsub('^achievement_', '')
+			if self.achiev_defs[id] then
+				self.achieved[id] = e
+			end
+		end
+	end
 end
 
 function _M:getAchievementFromId(id)
@@ -88,6 +97,7 @@ function _M:gainAchievement(id, src, ...)
 		if not a.can_gain(data, src, ...) then return end
 	end
 
+	profile:saveModuleProfile("achievement_"..id, ("turn=%d\nwho=%q\nwhen=%q\n"):format(game.turn, self:achievementWho(src), os.date("%Y-%m-%d %H:%M:%S")))
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
 	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
 	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)

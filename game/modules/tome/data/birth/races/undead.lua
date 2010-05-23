@@ -32,10 +32,10 @@ newBirthDescriptor{
 		subrace =
 		{
 			__ALL__ = "never",
-			Ghoul = function() return config.settings.tome.allow_build.undead_ghoul and "allow" or "never" end,
-			Skeleton = function() return config.settings.tome.allow_build.undead_skeleton and "allow" or "never" end,
-			Vampire = function() return config.settings.tome.allow_build.undead_vampire and "allow" or "never" end,
-			Wight = function() return config.settings.tome.allow_build.undead_wight and "allow" or "never" end,
+			Ghoul = function() return profile.mod.allow_build.undead_ghoul and "allow" or "never" end,
+			Skeleton = function() return profile.mod.allow_build.undead_skeleton and "allow" or "never" end,
+			Vampire = function() return profile.mod.allow_build.undead_vampire and "allow" or "never" end,
+			Wight = function() return profile.mod.allow_build.undead_wight and "allow" or "never" end,
 		},
 	},
 	copy = {

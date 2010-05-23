@@ -29,8 +29,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "never",
-			Summoner = function() return config.settings.tome.allow_build.wilder_summoner and "allow" or "never" end,
-			Wyrmic = function() return config.settings.tome.allow_build.wilder_wyrmic and "allow" or "never" end,
+			Summoner = function() return profile.mod.allow_build.wilder_summoner and "allow" or "never" end,
+			Wyrmic = function() return profile.mod.allow_build.wilder_wyrmic and "allow" or "never" end,
 		},
 	},
 	copy = {

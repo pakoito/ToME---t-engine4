@@ -93,6 +93,7 @@ function _M:loadDefinition(dir, team)
 
 				fs.mount(src, "/", false)
 			end
+			profile:loadModuleProfile(mod.short_name)
 			local m = require(mod.starter)
 			print("[MODULE LOADER] loading module", mod.long_name, "["..mod.starter.."]", "::", m[1] and m[1].__CLASSNAME, m[2] and m[2].__CLASSNAME)
 			return m[1], m[2]
@@ -192,7 +193,14 @@ function _M:loadRemoteList(src)
 			end
 		end
 		setfenv(f, dmods)
-		f()
+		local ok, err = pcall(f)
+		if not ok and err then
+			print("Could not read modules list from ", src, ":", err)
+			l:send("moduleslist", {})
+			return
+		end
+
+		for k, e in ipairs(list) do print("[INSTALLABLE MODULE] ", e.name) end
 
 		l:send("moduleslist", list)
 	end

@@ -29,6 +29,7 @@ local DownloadDialog = require "engine.dialogs.DownloadDialog"
 module(..., package.seeall, class.inherit(engine.Game))
 
 function _M:init()
+	self.profile_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
 	engine.Game.init(self, engine.KeyBind.new())
 
 	self.background = core.display.loadImage("/data/gfx/mainmenu/background.jpg")
@@ -41,8 +42,18 @@ function _M:run()
 	-- Setup display
 	self:selectStepMain()
 
+	self:checkLogged()
+
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
+end
+
+function _M:checkLogged()
+	if profile.auth then
+		self.s_log = core.display.drawStringNewSurface(self.profile_font, "Online Profile: "..profile.auth.name.."[http://te4.org/players/"..profile.auth.page.."]", 255, 255, 0)
+	else
+		self.s_log = nil
+	end
 end
 
 function _M:tick()
@@ -56,6 +67,12 @@ function _M:display()
 	end
 	self.step:display()
 	self.step:toScreen(self.step.display_x, self.step.display_y)
+
+	if self.s_log then
+		local w, h = self.s_log:getSize()
+		self.s_log:toScreen(self.w - w, self.h - h)
+	end
+
 	engine.Game.display(self)
 end
 
@@ -133,7 +150,7 @@ function _M:selectStepMain()
 				self:selectStepLoad()
 			end,
 		},
---[[
+-- [[
 		{
 			name = "Install a game module",
 			fct = function()
@@ -262,6 +279,11 @@ function _M:selectStepInstall()
 				dllist[#dllist+1] = mod
 			end
 		end
+	end
+
+	if #dllist == 0 then
+		Dialog:simplePopup("No modules available", "There are no modules to install or upgrade.")
+		return
 	end
 
 	local display_module = Dialog.new("", self.w * 0.73, self.h, self.w * 0.26, 0, 255)

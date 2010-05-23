@@ -38,18 +38,18 @@ newBirthDescriptor{
 			Elf = "allow",
 			Dwarf = "allow",
 			Hobbit = "allow",
---			Orc = function() return config.settings.tome.allow_build.evil and "allow" or "never" end,
---			Troll = function() return config.settings.tome.allow_build.evil and "allow" or "never" end,
-			Undead = function() return config.settings.tome.allow_build.undead and "allow" or "never" end,
+--			Orc = function() return profile.mod.allow_build.evil and "allow" or "never" end,
+--			Troll = function() return profile.mod.allow_build.evil and "allow" or "never" end,
+			Undead = function() return profile.mod.allow_build.undead and "allow" or "never" end,
 		},
 
 		class =
 		{
 			__ALL__ = "allow",
-			Mage = function() return config.settings.tome.allow_build.mage and "allow" or "never" end,
+			Mage = function() return profile.mod.allow_build.mage and "allow" or "never" end,
 			Wilder = function() return (
-				config.settings.tome.allow_build.wilder_summoner or
-				config.settings.tome.allow_build.wilder_wyrmic
+				profile.mod.allow_build.wilder_summoner or
+				profile.mod.allow_build.wilder_wyrmic
 				) and "allow" or "never"
 			end,
 		},
@@ -71,7 +71,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "never",
 			Human = "allow",
---			Spider = function() return config.settings.tome.allow_build.spider and "allow" or "never" end,
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "never" end,
 		},
 	},
 }

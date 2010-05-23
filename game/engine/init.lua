@@ -30,6 +30,7 @@ require "engine.interface.GameMusic"
 require "engine.KeyBind"
 require "engine.Savefile"
 require "engine.Tiles"
+require "engine.PlayerProfile"
 engine.Tiles.prefix = "/data/gfx/"
 
 -- Engine Version
@@ -40,6 +41,7 @@ engine.homepath = fs.getUserPath()..fs.getPathSeparator()..fs.getHomePath()..fs.
 fs.setWritePath(fs.getUserPath())
 fs.mkdir(fs.getHomePath())
 fs.mkdir(fs.getHomePath().."/4.0/")
+fs.mkdir(fs.getHomePath().."/4.0/profiles/")
 fs.mkdir(fs.getHomePath().."/4.0/settings/")
 fs.setWritePath(fs.getHomePath())
 
@@ -74,5 +76,8 @@ game = false
 
 engine.Game:setResolution(config.settings.window.size)
 engine.interface.GameMusic:soundSystemStatus(config.settings.sound.enabled, true)
+
+-- Load profile configs
+profile = engine.PlayerProfile.new()
 
 util.showMainMenu(true)
