@@ -23,6 +23,49 @@ local url = require "socket.url"
 local ltn12 = require "ltn12"
 require "Json2"
 
+------------------------------------------------------------
+-- some simple serialization stuff
+------------------------------------------------------------
+local function basicSerialize(o)
+	if type(o) == "number" or type(o) == "boolean" then
+		return tostring(o)
+	elseif type(o) == "function" then
+		return string.format("loadstring(%q)", string.dump(o))
+	else   -- assume it is a string
+		return string.format("%q", o)
+	end
+end
+
+local function serialize_data(outf, name, value, saved, filter, allow, savefile, force)
+	saved = saved or {}       -- initial value
+	outf(name, " = ")
+	if type(value) == "number" or type(value) == "string" or type(value) == "boolean" or type(value) == "function" then
+		outf(basicSerialize(value), "\n")
+	elseif type(value) == "table" then
+			saved[value] = name   -- save name for next time
+			outf("{}\n")     -- create a new table
+
+			for k,v in pairs(value) do      -- save its fields
+				local fieldname
+				fieldname = string.format("%s[%s]", name, basicSerialize(k))
+				serialize_data(outf, fieldname, v, saved, {new=true}, false, savefile, false)
+			end
+	else
+		error("cannot save a " .. type(value) .. " ("..name..")")
+	end
+end
+
+local function serialize(data)
+	local tbl = {}
+	local outf = function(...) for i,str in ipairs{...} do table.insert(tbl, str) end end
+	for k, e in pairs(data) do
+		serialize_data(outf, tostring(k), e)
+	end
+	return table.concat(tbl)
+end
+------------------------------------------------------------
+
+
 --- Handles the player profile, possible online
 module(..., package.seeall, class.make)
 
@@ -39,6 +82,7 @@ function _M:init(name)
 		self.pass = self.generic.online.pass
 		self:tryAuth()
 		self:getConfigs("generic")
+		self:syncOnline("generic")
 	end
 end
 
@@ -86,6 +130,7 @@ function _M:loadModuleProfile(short_name)
 	fs.umount(engine.homepath)
 
 	self:getConfigs(short_name)
+	self:syncOnline(short_name)
 
 	self.mod = self.modules[short_name]
 	self.mod_name = short_name
@@ -93,6 +138,8 @@ end
 
 --- Saves a profile data
 function _M:saveGenericProfile(name, data)
+	data = serialize(data)
+
 	-- Check for readability
 	local f, err = loadstring(data)
 	if not f then print("[PROFILES] cannot save generic data ", name, data, "it does not parse:") error(err) end
@@ -112,6 +159,8 @@ end
 
 --- Saves a module profile data
 function _M:saveModuleProfile(name, data)
+	data = serialize(data)
+
 	-- Check for readability
 	local f, err = loadstring(data)
 	if not f then print("[PROFILES] cannot save module data ", name, data, "it does not parse:") error(err) end
@@ -171,7 +220,24 @@ end
 
 function _M:setConfigs(module, name, val)
 	if not self.auth then return end
-	local data = self:rpc{action="SetConfigs", login=self.login, pass=self.pass, module=module, name=name, data=val}
+
+	if type(val) ~= "string" then val = serialize(val) end
+
+	local data = self:rpc{action="SetConfigs", login=self.login, pass=self.pass, module=module, data={[name] = val}}
 	if not data then return end
-	print("[ONLINE PROFILE] saved ", module, name)
+	print("[ONLINE PROFILE] saved ", module, name, val)
+end
+
+function _M:syncOnline(module)
+	if not self.auth then return end
+	local sync = self.generic
+	if module ~= "generic" then sync = self.modules[module] end
+	if not sync then return end
+
+	local data = {}
+	for k, v in pairs(sync) do if k ~= "online" then data[k] = serialize(v) end end
+
+	local data = self:rpc{action="SetConfigs", login=self.login, pass=self.pass, module=module, data=data}
+	if not data then return end
+	print("[ONLINE PROFILE] saved ", module)
 end

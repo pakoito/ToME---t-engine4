@@ -97,8 +97,9 @@ function _M:gainAchievement(id, src, ...)
 		if not a.can_gain(data, src, ...) then return end
 	end
 
-	profile:saveModuleProfile("achievement_"..id, ("turn=%d\nwho=%q\nwhen=%q\n"):format(game.turn, self:achievementWho(src), os.date("%Y-%m-%d %H:%M:%S")))
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
+	profile:saveModuleProfile("achievement."..id, self.achieved[id])
+
 	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
 	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
 end

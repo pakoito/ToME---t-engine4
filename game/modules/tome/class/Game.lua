@@ -505,7 +505,6 @@ function _M:setupCommands()
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
 				self:changeLevel(1, "test")
-				self:setAllowedBuild("mage", true)
 			end
 		end,
 	}
@@ -830,11 +829,7 @@ function _M:setAllowedBuild(what, notify)
 	if profile.mod.allow_build[what] then return end
 	profile.mod.allow_build[what] = true
 
-	local t = {}
-	for k, e in pairs(profile.mod.allow_build) do
-		t[#t+1] = ("%s = %s"):format(k, tostring(e))
-	end
-	profile:saveModuleProfile("allow_build", table.concat(t, "\n"))
+	profile:saveModuleProfile("allow_build", profile.mod.allow_build)
 
 	if notify then
 		self:registerDialog(require("mod.dialogs.UnlockDialog").new(what))
