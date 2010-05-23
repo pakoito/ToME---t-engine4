@@ -103,8 +103,8 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
 	name = "elder vampire", color=colors.RED,
-	desc=[[A terrible robed undead figure, this creature has existed in its unlife for many centuries by stealing the life of others. It can
-			summon the very shades of its victims from beyond the grave to come enslaved to its aid.]],
+	desc=[[A terrible robed undead figure, this creature has existed in its unlife for many centuries by stealing the life of others.
+It can summon the very shades of its victims from beyond the grave to come enslaved to its aid.]],
 	level_range = {26, 50}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(90,100),
