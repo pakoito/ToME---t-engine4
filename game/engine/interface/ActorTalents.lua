@@ -411,6 +411,7 @@ end
 function _M:learnTalentType(tt, v)
 	if v == nil then v = true end
 	self.talents_types[tt] = v
+	self.talents_types_mastery[tt] = self.talents_types_mastery[tt] or 1
 	self.changed = true
 	return true
 end
