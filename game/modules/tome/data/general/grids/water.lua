@@ -34,3 +34,18 @@ newEntity{
 	block_sight = true,
 	air_level = -20,
 }
+
+newEntity{
+	define_as = "SHALLOW_WATER",
+	name = "shallow water", image = "terrain/water_floor.png",
+	display = '~', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
+	always_remember = true,
+}
+
+newEntity{
+	define_as = "DEEP_WATER",
+	name = "deep water", image = "terrain/water_floor.png",
+	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
+	always_remember = true,
+	air_level = -5, air_condition="water",
+}

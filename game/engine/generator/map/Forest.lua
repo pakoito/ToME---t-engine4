@@ -33,6 +33,11 @@ function _M:init(zone, map, level, data)
 	self.hurst = data.hurst or nil
 	self.lacunarity = data.lacunarity or nil
 	self.octave = data.octave or 4
+	self.do_ponds = data.do_ponds
+	self.do_ponds.zoom = self.do_ponds.zoom or 5
+	self.do_ponds.octave = self.do_ponds.octave or 5
+	self.do_ponds.hurst = self.do_ponds.hurst or nil
+	self.do_ponds.lacunarity = self.do_ponds.lacunarity or nil
 end
 
 function _M:resolve(c)
@@ -44,6 +49,59 @@ function _M:resolve(c)
 	else
 		return res
 	end
+end
+
+function _M:addPond(x, y, spots)
+	local noise = core.noise.new(2, self.do_ponds.size.w, self.do_ponds.size.h)
+	local nmap = {}
+	local lowest = {v=100, x=nil, y=nil}
+	for i = 1, self.do_ponds.size.w do
+		nmap[i] = {}
+		for j = 1, self.do_ponds.size.h do
+			nmap[i][j] = noise:fbm_simplex(self.do_ponds.zoom * i / self.do_ponds.size.w, self.do_ponds.zoom * j / self.do_ponds.size.h, self.do_ponds.octave)
+			if nmap[i][j] < lowest.v then lowest.v = nmap[i][j]; lowest.x = i; lowest.y = j end
+		end
+	end
+	print("Lowest pond point", lowest.x, lowest.y," ::", lowest.v)
+
+	local quadrant = function(i, j)
+		local highest = {v=-100, x=nil, y=nil}
+		local l = line.new(lowest.x, lowest.y, i, j)
+		local lx, ly = l()
+		while lx do
+			print(lx, ly, nmap[lx][ly])
+			if nmap[lx][ly] > highest.v then highest.v = nmap[lx][ly]; highest.x = lx; highest.y = ly end
+			lx, ly = l()
+		end
+		print("Highest pond point", highest.x, highest.y," ::", highest.v)
+		local split = (highest.v + lowest.v)
+
+		local l = line.new(lowest.x, lowest.y, i, j)
+		local lx, ly = l()
+		while lx do
+			local stop = true
+			for _ = 1, #self.do_ponds.pond do
+				if nmap[lx][ly] < split * self.do_ponds.pond[_][1] then
+					self.map(lx-1+x, ly-1+y, Map.TERRAIN, self.grid_list[self.do_ponds.pond[_][2]])
+					stop = false
+					break
+				end
+			end
+			if stop then break end
+			lx, ly = l()
+		end
+	end
+
+	for i = 1, self.do_ponds.size.w do
+		quadrant(i, 1)
+		quadrant(i, self.do_ponds.size.h)
+	end
+	for i = 1, self.do_ponds.size.h do
+		quadrant(1, i)
+		quadrant(self.do_ponds.size.w, i)
+	end
+
+	spots[#spots+1] = {x=x, y=y, type="pond"}
 end
 
 function _M:generate(lev, old_lev)
@@ -65,6 +123,13 @@ function _M:generate(lev, old_lev)
 	end
 
 	local spots = {}
+
+	if self.do_ponds then
+		for i = 1, rng.range(self.do_ponds.nb[1], self.do_ponds.nb[2]) do
+			self:addPond(rng.range(self.do_ponds.size.w, self.map.w - self.do_ponds.size.w), rng.range(self.do_ponds.size.h, self.map.h - self.do_ponds.size.h), spots)
+		end
+	end
+
 	local ux, uy, dx, dy
 	if self.data.edge_entrances then
 		ux, uy, dx, dy, spots = self:makeStairsSides(lev, old_lev, self.data.edge_entrances, spots)

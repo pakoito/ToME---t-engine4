@@ -749,7 +749,7 @@ function _M:setupMouse()
 
 		-- Target stuff
 		if button == "right" then
-			self.player:mouseMove(tmx, tmy)
+			if self.key == self.normal_key then self.player:mouseMove(tmx, tmy) end
 
 		-- Move map around
 		elseif button == "left" and xrel and yrel then

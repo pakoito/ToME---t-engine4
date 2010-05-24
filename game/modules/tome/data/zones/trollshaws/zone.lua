@@ -39,6 +39,11 @@ return {
 			wall = "TREE",
 			up = "UP",
 			down = "DOWN",
+			do_ponds =  {
+				nb = {0, 2},
+				size = {w=25, h=25},
+				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
+			},
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

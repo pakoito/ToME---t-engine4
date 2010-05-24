@@ -25,18 +25,21 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 90, height = 90,
---	all_remembered = true,
+	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Town",
-			floor = "FLOOR",
-			external_floor = "GRASS",
-			wall = "WALL",
+			class = "engine.generator.map.Forest",
+			floor = "GRASS",
+			wall = "TREE",
 			up = "UP",
 			down = "DOWN",
-			door = "DOOR",
+			do_ponds =  {
+				nb = {0, 3},
+				size = {w=25, h=25},
+				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
+			},
 		},
 --[[
 		actor = {
