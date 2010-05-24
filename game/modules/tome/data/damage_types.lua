@@ -144,12 +144,17 @@ newDamageType{
 	end,
 }
 
--- Light up the room
+-- Lite up the room
 newDamageType{
-	name = "light", type = "LIGHT", text_color = "#YELLOW#",
+	name = "lite", type = "LITE", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
 		game.level.map.lites(x, y, true)
 	end,
+}
+
+-- Light damage
+newDamageType{
+	name = "light", type = "LIGHT", text_color = "#YELLOW#",
 }
 
 -- Darkness damage

@@ -37,7 +37,7 @@ newEntity{ base = "BASE_SCROLL",
 	cost = 1,
 
 	use_simple = { name="light up the surrounding area", use = function(self, who)
-		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.DamageType.LIGHT, 1)
+		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end}

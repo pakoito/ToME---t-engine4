@@ -1,0 +1,57 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+local Talents = require("engine.interface.ActorTalents")
+
+newEntity{
+	define_as = "BASE_NPC_SUNWALL_HUMAN",
+	type = "humanoid", subtype = "human",
+	display = "p", color=colors.WHITE,
+	faction = "sunwall",
+
+	combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+	resolvers.drops{chance=20, nb=1, {} },
+
+	life_rating = 10,
+	rank = 2,
+	size_category = 3,
+
+	open_door = true,
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	energy = { mod=1 },
+	stats = { str=12, dex=8, mag=6, con=10 },
+}
+
+newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
+	name = "human sun-paladin", color=colors.GOLD,
+	desc = [[A human in a shiny plate armour.]],
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 6,
+	max_life = resolvers.rngavg(70,80),
+	resolvers.equip{
+		{type="weapon", subtype="longsword", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="heavy", autoreq=true},
+	},
+	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, [Talents.T_PERFECT_STRIKE]=1, },
+}

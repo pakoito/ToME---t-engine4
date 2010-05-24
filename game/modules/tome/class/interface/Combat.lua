@@ -181,6 +181,7 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 			local atk, def = self:combatAttack(weapon), target:combatDefense()
 			local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
 			print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
+			if not self:canSee(target) then atk = atk / 3 end
 
 			-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 			local hitted = false
@@ -262,6 +263,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefenseRanged()
+	if not self:canSee(target) then atk = atk / 3 end
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 

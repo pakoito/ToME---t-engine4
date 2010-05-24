@@ -56,7 +56,7 @@ function _M:init(runmod)
 				-- And now run it!
 				_G.game:run()
 			else
-				engine.Dialog:simplePopup("Error", "Character name must be between 3 and 25 characters.")
+				engine.Dialog:simplePopup("Error", "Character name must be between 2 and 25 characters.")
 			end
 		end,
 		_BACKSPACE = function()

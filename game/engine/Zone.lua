@@ -488,7 +488,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	-- Check for connectivity from entrance to exit
 	local a = Astar.new(map, game:getPlayer())
 	print("[LEVEL GENERATION] checking entrance to exit A*", ux, uy, "to", dx, dy)
-	if ux and uy and dx and dy and (ux ~= dx or uy ~= dy) and not a:calc(ux, uy, dx, dy) then
+	if ux and uy and dx and dy and (ux ~= dx or uy ~= dy) and not spot.no_level_connectivity and not a:calc(ux, uy, dx, dy) then
 		print("Level unconnected, no way from entrance to exit", ux, uy, "to", dx, dy)
 		level:removed()
 		return self:newLevel(level_data, lev, old_lev, game)
