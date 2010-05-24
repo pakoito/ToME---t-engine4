@@ -197,3 +197,19 @@ newTalent{
 		The bonus will increase with the Constitution stat]]):format(10 + self:getCon() / 5, 10 + self:getCon() / 5)
 	end,
 }
+
+-- Orc's power: temporary damage increase
+newTalent{
+	short_name = "ORC_FURY",
+	name = "Orcish Fury",
+	type = {"base/race", 1},
+	cooldown = 50,
+	action = function(self, t)
+		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
+		return true
+	end,
+	info = function(self)
+		return ([[Summons your lust for blood and destruction, increasing all damage by %d for 5 turns.
+		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
+	end,
+}

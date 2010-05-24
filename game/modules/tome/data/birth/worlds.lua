@@ -38,8 +38,8 @@ newBirthDescriptor{
 			Elf = "allow",
 			Dwarf = "allow",
 			Hobbit = "allow",
---			Orc = function() return profile.mod.allow_build.evil and "allow" or "never" end,
---			Troll = function() return profile.mod.allow_build.evil and "allow" or "never" end,
+			Orc = function() return profile.mod.allow_build.orc and "allow" or "never" end,
+			Troll = function() return profile.mod.allow_build.troll and "allow" or "never" end,
 			Undead = function() return profile.mod.allow_build.undead and "allow" or "never" end,
 		},
 

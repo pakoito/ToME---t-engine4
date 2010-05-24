@@ -17,21 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	name = "Far East",
-	level_range = {1, 1},
-	max_level = 1,
-	width = 100, height = 100,
---	all_remembered = true,
-	all_lited = true,
-	persistant = "memory",
-	wilderness = true,
---	wilderness_see_radius = 3,
-	ambiant_music = "last",
-	generator =  {
-		map = {
-			class = "engine.generator.map.Static",
-			map = "wilderness/arda-fareast",
-		},
-	}
-}
+load("/data/general/grids/basic.lua")
+load("/data/general/grids/forest.lua")
+load("/data/general/grids/water.lua")

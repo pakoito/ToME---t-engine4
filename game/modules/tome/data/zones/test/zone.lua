@@ -24,19 +24,19 @@ return {
 	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 70, height = 70,
-	all_remembered = true,
+	width = 90, height = 90,
+--	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Cavern",
-			zoom = 16,
-			min_floor = 1200,
+			class = "engine.generator.map.Town",
 			floor = "FLOOR",
+			external_floor = "GRASS",
 			wall = "WALL",
 			up = "UP",
 			down = "DOWN",
+			door = "DOOR",
 		},
 --[[
 		actor = {
@@ -57,7 +57,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "UP_WILDERNESS_FAR_EAST",
 			}, },
 		},
 	},

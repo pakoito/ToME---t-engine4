@@ -17,21 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	name = "Far East",
-	level_range = {1, 1},
-	max_level = 1,
-	width = 100, height = 100,
---	all_remembered = true,
-	all_lited = true,
-	persistant = "memory",
-	wilderness = true,
---	wilderness_see_radius = 3,
-	ambiant_music = "last",
-	generator =  {
-		map = {
-			class = "engine.generator.map.Static",
-			map = "wilderness/arda-fareast",
-		},
-	}
-}
+return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
+You are a member of the feared race of the Orcs.
+For ages your kind has served Morgoth and his lieutenant Sauron, but they have all been vanquished by the free people.
+Now as come the time for your revenge, a new power is rising in the far east of Arda, and you are one of its soldiers!
+
+You have been sent to a remote island on the south-west coast of the Far East to crush an outpost of the Sun Wall, the last remaining bastion of men, elves and dwarves on this continent.
+
+A little to the south lies the outpost. Your task: destroy it and bathe in the blood of its people!
+]]

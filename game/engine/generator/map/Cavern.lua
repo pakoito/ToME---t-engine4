@@ -55,7 +55,7 @@ function _M:generate(lev, old_lev)
 		opens[i] = {}
 		for j = 0, self.map.h - 1 do
 			if noise[self.noise](noise, self.zoom * i / self.map.w, self.zoom * j / self.map.h, self.octave) > 0 then
-				self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("floor")]:clone())
+				self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("floor")])
 				opens[i][j] = #list+1
 				list[#list+1] = {x=i, y=j}
 			else

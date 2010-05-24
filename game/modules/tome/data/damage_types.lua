@@ -36,7 +36,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 
 		-- Increases damage
 		if src.inc_damage then
-			local inc = src.inc_damage[type] or 0
+			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)
 			dam = dam + (dam * inc / 100)
 		end
 

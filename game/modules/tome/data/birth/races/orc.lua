@@ -24,7 +24,9 @@ newBirthDescriptor{
 	type = "race",
 	name = "Orc",
 	desc = {
-		"",
+		"Since their creation by Morgoth the Orcs have been the pawns of the forces of darkness.",
+		"While both Sauron and Morgoth were destroy, the orcs survived and found a new master in the Far East.",
+		"Orcs are a ruthless warriors, yet they are not dumb and some are terribly cunning.",
 	},
 	descriptor_choices =
 	{
@@ -38,25 +40,29 @@ newBirthDescriptor{
 			__ALL__ = "never",
 			Male = "allow",
 		},
+		class =
+		{
+			Mage = "never",
+		},
 	},
-	stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
+	stats = { str=4, con=1, wil=2, mag=-2, dex=-2 },
 	talents = {
---		[ActorTalents.T_DWARF_RESILIENCE]=1,
+		[ActorTalents.T_ORC_FURY]=1,
 	},
 	copy = {
 		type = "humanoid", subtype="orc",
-		default_wilderness = {39, 17},
-		starting_zone = "tower-amon-sul",
+		default_wilderness = {10, 39},
+		starting_zone = "wilderness-arda-fareast",
 		starting_quest = "start-dunadan",
-		starting_intro = "dwarf",
+		starting_intro = "orc",
 		life_rating=12,
 	},
-	experience = 1.1,
+	experience = 1.3,
 }
 
----------------------------------------------------------
---                       Dwarves                       --
----------------------------------------------------------
+--------------------------------------------------------
+--                       Orcs                         --
+--------------------------------------------------------
 newBirthDescriptor
 {
 	type = "subrace",

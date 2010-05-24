@@ -30,9 +30,18 @@ function _M:init(map, actor)
 	self.move_cache = {}
 end
 
---- The default heuristic for A*, simple distance
-function _M:heuristic(sx, sy, tx, ty)
-	return core.fov.distance(sx, sy, tx, ty)
+--- The default heuristic for A*, tries to come close to the straight path
+function _M:heuristicCloserPath(sx, sy, cx, cy, tx, ty)
+	local dx1 = cx - tx
+	local dy1 = cy - ty
+	local dx2 = sx - tx
+	local dy2 = sy - ty
+	return math.abs(dx1*dy2 - dx2*dy1)
+end
+
+--- The a simple heuristic for A*, using distance
+function _M:heuristicDistance(sx, sy, cx, cy, tx, ty)
+	return core.fov.distance(cx, cy, tx, ty)
 end
 
 function _M:toSingle(x, y)
@@ -62,15 +71,16 @@ end
 -- @param ty the end coord
 -- @param use_has_seen if true the astar wont consider non-has_seen grids
 -- @return either nil if no path or a list of nodes in the form { {x=...,y=...}, {x=...,y=...}, ..., {x=tx,y=ty}}
-function _M:calc(sx, sy, tx, ty, use_has_seen)
+function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic)
+	local heur = heuristic or self.heuristicCloserPath
 	local w, h = self.map.w, self.map.h
 	local start = self:toSingle(sx, sy)
 	local stop = self:toSingle(tx, ty)
 	local open = {[start]=true}
 	local closed = {}
 	local g_score = {[start] = 0}
-	local h_score = {[start] = self:heuristic(sx, sy, tx, ty)}
-	local f_score = {[start] = self:heuristic(sx, sy, tx, ty)}
+	local h_score = {[start] = heur(self, sx, sy, sx, sy, tx, ty)}
+	local f_score = {[start] = heur(self, sx, sy, sx, sy, tx, ty)}
 	local came_from = {}
 
 	local cache = self.map._fovcache.path_caches[self.actor:getPathString()]
@@ -88,7 +98,7 @@ function _M:calc(sx, sy, tx, ty, use_has_seen)
 				if tent_is_better then
 					came_from[nnode] = node
 					g_score[nnode] = tent_g_score
-					h_score[nnode] = self:heuristic(tx, ty, nx, ny)
+					h_score[nnode] = heur(self, sx, sy, tx, ty, nx, ny)
 					f_score[nnode] = g_score[nnode] + h_score[nnode]
 				end
 			end
@@ -106,7 +116,7 @@ function _M:calc(sx, sy, tx, ty, use_has_seen)
 				if tent_is_better then
 					came_from[nnode] = node
 					g_score[nnode] = tent_g_score
-					h_score[nnode] = self:heuristic(tx, ty, nx, ny)
+					h_score[nnode] = heur(self, sx, sy, tx, ty, nx, ny)
 					f_score[nnode] = g_score[nnode] + h_score[nnode]
 				end
 			end

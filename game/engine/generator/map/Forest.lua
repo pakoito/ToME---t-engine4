@@ -48,7 +48,7 @@ end
 
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self.floor])
+		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("floor")])
 	end end
 
 	-- make the noise

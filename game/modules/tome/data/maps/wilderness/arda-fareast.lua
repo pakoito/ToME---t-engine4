@@ -28,7 +28,7 @@ quickEntity('t', {always_remember = true, show_tooltip=true, name='forest', disp
 quickEntity('m', {always_remember = true, show_tooltip=true, name='mountains', display='^', color=colors.LIGHT_UMBER, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
 quickEntity('h', {always_remember = true, show_tooltip=true, name='low hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
 
---quickEntity('A', {always_remember = true, show_tooltip=true, name="Caves below the tower of Amon Sûl", 	display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tower-amon-sul"})
+quickEntity('A', {always_remember = true, show_tooltip=true, name="Sun Wall Outpost (Town)", display='*', color=colors.GOLD, notice = true, change_level=1, change_zone="town-sunwall-outpost"})
 
 quickEntity('1', {always_remember = true, show_tooltip=true, name="Gates of Morning", desc="A massive hole in the Sun Wall", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
 --quickEntity('2', {always_remember = true, show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
@@ -88,13 +88,13 @@ return [[
 ==============================       hhhhhhh                      www============
 ================================         h                        www============
 =================================                  hh             www============
-=================================                  hhh            www============
-=================================tttt             hhhh            www============
-================================tttttttt          hh               w  ===========
-================================tttttttttt                            ===========
-================================ttttttttttt                            ==========
-===============================stttttttttttt                sssssss    ==========
-==============================sstssstttttttt            sssssssssssssss==========
+========== ======================                  hhh            www============
+=======h   ======================tttt             hhhh            www============
+=====hh     ====================tttttttt          hh               w  ===========
+======mm    ====================tttttttttt                            ===========
+======tttmm A===================ttttttttttt                            ==========
+======ttt=mm===================stttttttttttt                sssssss    ==========
+=======t======================sstssstttttttt            sssssssssssssss==========
 =============================sstssttsst            ssssssssssssssssssss==========
 =============================ssssssssssssssssssssssssssssssssssssssssss==========
 =============================sssssssssssssssssssssssssssssssssssssssss===========

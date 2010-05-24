@@ -1,0 +1,214 @@
+-- TE4 - T-Engine 4
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+require "engine.class"
+local Map = require "engine.Map"
+local BSP = require "engine.BSP"
+require "engine.Generator"
+module(..., package.seeall, class.inherit(engine.Generator))
+
+function _M:init(zone, map, level, data)
+	engine.Generator.init(self, zone, map, level)
+	self.data = data
+	self.grid_list = self.zone.grid_list
+	self.max_building_w = data.max_building_w or 12
+	self.max_building_h = data.max_building_h or 12
+	self.building_chance = data.building_chance or  85
+	self.lshape_chance = data.lshape_chance or 50
+	self.double_lshape_chance = data.double_lshape_chance or 40
+	self.yard_chance = data.yard_chance or 30
+end
+
+function _M:resolve(c)
+	local res = self.data[c]
+	if type(res) == "function" then
+		return res()
+	elseif type(res) == "table" then
+		return res[rng.range(1, #res)]
+	else
+		return res
+	end
+end
+
+function _M:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
+	if #inner_grids == 0 then return end
+	local door_grids = {}
+	local void = rng.percent(self.yard_chance)
+	local point = rng.tableRemove(inner_grids)
+	local dx1, dx2 = math.abs(point.x - ix1), math.abs(point.x - ix2)
+	local dy1, dy2 = math.abs(point.y - iy1), math.abs(point.y - iy2)
+	if dx1 == dx2 then if rng.percent(50) then dx1 = dx1 + 1 else dx2 = dx2 + 1 end end
+	if dy1 == dy2 then if rng.percent(50) then dy1 = dy1 + 1 else dy2 = dy2 + 1 end end
+	print("room", dx1, dx2, "::", dy1, dy2)
+
+	if dx2 > dx1 and dy2 > dy1 then
+		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for i = point.x+1, x2 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+	elseif dx1 > dx2 and dy2 > dy1 then
+		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for i = x1, point.x-1 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+	elseif dx1 > dx2 and dy1 > dy2 then
+		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for i = x1, point.x-1 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+	elseif dx2 > dx1 and dy1 > dy2 then
+		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
+		for i = point.x+1, x2 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+	end
+
+	-- Door
+	if #door_grids > 0 then
+		local door = rng.table(door_grids)
+		self.map(door.x, door.y, Map.TERRAIN, self.grid_list[self:resolve("door")])
+	end
+end
+
+function _M:building(leaf)
+	local x1, x2 = leaf.rx + rng.range(2, math.max(2, math.floor(leaf.w / 2 - 3))), leaf.rx + leaf.w - rng.range(2, math.max(2, math.floor(leaf.w / 2 - 3)))
+	local y1, y2 = leaf.ry + rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3))), leaf.ry + leaf.h - rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3)))
+	local ix1, ix2, iy1, iy2 = x1 + 2, x2 - 2, y1 + 2, y2 - 2
+	local inner_grids = {}
+	local door_grids = {}
+
+	for i = x1, x2 do for j = y1, y2 do
+		if i == x1 or i == x2 or j == y1 or j == y2 then
+			self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("wall")])
+			door_grids[#door_grids+1] = {x=i,y=j}
+		else
+			self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("floor")])
+			if i >= ix1 and i <= ix2 and j >= iy1 and j <= iy2 then
+				inner_grids[#inner_grids+1] = {x=i,y=j}
+			end
+		end
+	end end
+
+	-- Door
+	local door = rng.table(door_grids)
+	self.map(door.x, door.y, Map.TERRAIN, self.grid_list[self:resolve("door")])
+	-- Eliminate inner grids that face the door
+	for i = #inner_grids, 1, -1 do
+		local g = inner_grids[i]
+		if g.x == door.x or g.y == door.y then table.remove(inner_grids, i) end
+	end
+
+	-- L shape
+	if rng.percent(self.lshape_chance) then
+		self:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
+	end
+--	if rng.percent(self.lshape_chance) then
+--		self:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
+--	end
+end
+
+function _M:generate(lev, old_lev)
+	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
+		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")])
+	end end
+
+	local bsp = BSP.new(self.map.w, self.map.h, self.max_building_w, self.max_building_h)
+	bsp:partition()
+
+	print("Town gen made ", #bsp.leafs, "BSP leafs")
+	for z, leaf in ipairs(bsp.leafs) do
+		if rng.percent(self.building_chance) then
+			self:building(leaf)
+		end
+	end
+
+	local spots = {}
+	local ux, uy, dx, dy
+	if self.data.edge_entrances then
+		ux, uy, dx, dy, spots = self:makeStairsSides(lev, old_lev, self.data.edge_entrances, spots)
+	else
+		ux, uy, dx, dy, spots = self:makeStairsInside(lev, old_lev, spots)
+	end
+
+	return ux, uy, dx, dy, spots
+end
+
+--- Create the stairs inside the level
+function _M:makeStairsInside(lev, old_lev, spots)
+	-- Put down stairs
+	local dx, dy
+	if lev < self.zone.max_level or self.data.force_last_stair then
+		while true do
+			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
+			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
+				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map.room_map[dx][dy].special = "exit"
+				break
+			end
+		end
+	end
+
+	-- Put up stairs
+	local ux, uy
+	while true do
+		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
+		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
+			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map.room_map[ux][uy].special = "exit"
+			break
+		end
+	end
+
+	return ux, uy, dx, dy, spots
+end
+
+--- Create the stairs on the sides
+function _M:makeStairsSides(lev, old_lev, sides, spots)
+	-- Put down stairs
+	local dx, dy
+	if lev < self.zone.max_level or self.data.force_last_stair then
+		while true do
+			if     sides[2] == 4 then dx, dy = 0, rng.range(0, self.map.h - 1)
+			elseif sides[2] == 6 then dx, dy = self.map.w - 1, rng.range(0, self.map.h - 1)
+			elseif sides[2] == 8 then dx, dy = rng.range(0, self.map.w - 1), 0
+			elseif sides[2] == 2 then dx, dy = rng.range(0, self.map.w - 1), self.map.h - 1
+			end
+
+			if not self.map.room_map[dx][dy].special then
+				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map.room_map[dx][dy].special = "exit"
+				break
+			end
+		end
+	end
+
+	-- Put up stairs
+	local ux, uy
+	while true do
+		if     sides[1] == 4 then ux, uy = 0, rng.range(0, self.map.h - 1)
+		elseif sides[1] == 6 then ux, uy = self.map.w - 1, rng.range(0, self.map.h - 1)
+		elseif sides[1] == 8 then ux, uy = rng.range(0, self.map.w - 1), 0
+		elseif sides[1] == 2 then ux, uy = rng.range(0, self.map.w - 1), self.map.h - 1
+		end
+
+		if not self.map.room_map[ux][uy].special then
+			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map.room_map[ux][uy].special = "exit"
+			break
+		end
+	end
+
+	return ux, uy, dx, dy, spots
+end

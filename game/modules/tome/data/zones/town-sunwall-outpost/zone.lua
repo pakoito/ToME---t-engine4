@@ -18,20 +18,42 @@
 -- darkgod@te4.org
 
 return {
-	name = "Far East",
-	level_range = {1, 1},
-	max_level = 1,
-	width = 100, height = 100,
+	name = "Sun Wall Outpost",
+	level_range = {1, 10},
+	max_level = 5,
+	width = 50, height = 50,
+	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "memory",
-	wilderness = true,
---	wilderness_see_radius = 3,
-	ambiant_music = "last",
+	ambiant_music = "80s_song.ogg",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Static",
-			map = "wilderness/arda-fareast",
+			class = "engine.generator.map.Town",
+			building_chance = 70,
+			max_building_w = 8, max_building_h = 8,
+			edge_entrances = {8,2},
+			floor = "FLOOR",
+			external_floor = "GRASS",
+			wall = "WALL",
+			up = "UP",
+			down = "DOWN",
+			door = "DOOR",
 		},
-	}
+		actor = {
+			class = "engine.generator.actor.Random",
+			nb_npc = {0, 0},
+		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_object = {0, 0},
+		},
+	},
+	levels =
+	{
+		[1] = {
+			generator = { map = {
+				up = "UP_WILDERNESS_FAR_EAST",
+			}, },
+		},
+	},
 }

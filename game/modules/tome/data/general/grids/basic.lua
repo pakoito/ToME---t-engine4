@@ -26,6 +26,15 @@ newEntity{
 	change_level = 1,
 	change_zone = "wilderness",
 }
+newEntity{
+	define_as = "UP_WILDERNESS_FAR_EAST",
+	name = "exit to the wilds",
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness-arda-fareast",
+}
 
 newEntity{
 	define_as = "UP",

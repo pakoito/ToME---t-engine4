@@ -338,6 +338,22 @@ newEffect{
 }
 
 newEffect{
+	name = "ORC_FURY",
+	desc = "Orcish Fury",
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# enters a state of bloodlust." end,
+	on_lose = function(self, err) return "#Target# calms down." end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("inc_damage", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.pid)
+	end,
+}
+
+newEffect{
 	name = "TIME_PRISON",
 	desc = "Time Prison",
 	type = "other", -- Type "other" so that nothing can dispel it
