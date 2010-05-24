@@ -392,7 +392,7 @@ function _M:generate(lev, old_lev)
 	-- Find out "interresting" spots
 	local spots = {}
 	for i, r in ipairs(rooms) do
-		spots[#spots+1] = {x=rooms[i].cx, y=rooms[i].cy, type="room"}
+		spots[#spots+1] = {x=rooms[i].cx, y=rooms[i].cy, type="room", subtype=rooms[i].room.name}
 	end
 
 	if self.data.edge_entrances then

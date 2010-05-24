@@ -46,6 +46,7 @@ newBirthDescriptor{
 		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},
 	copy = {
+		faction = "lonely-mountain",
 		type = "humanoid", subtype="dwarf",
 		default_wilderness = {39, 17},
 		starting_zone = "tower-amon-sul",

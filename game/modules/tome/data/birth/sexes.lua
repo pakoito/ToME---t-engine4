@@ -26,7 +26,7 @@ newBirthDescriptor{
 		"You are a female of the species.",
 		"There is no in-game difference between the two sexes.",
 	},
-	data = { female=true, },
+	copy = { female=true, },
 }
 
 newBirthDescriptor{
@@ -37,5 +37,5 @@ newBirthDescriptor{
 		"You are a male of the species.",
 		"There is no in-game difference between the two sexes.",
 	},
-	flags = { male=true, },
+	copy = { male=true, },
 }

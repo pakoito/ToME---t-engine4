@@ -32,6 +32,7 @@ require "engine.interface.ActorQuest"
 require "engine.interface.BloodyDeath"
 require "engine.interface.ActorFOV"
 require "mod.class.interface.Combat"
+local Faction = require "engine.Faction"
 local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(
@@ -324,6 +325,11 @@ function _M:TextSizeCategory()
 end
 
 function _M:tooltip()
+	local factcolor, factstate = "#ANTIQUE_WHITE#", "neutral"
+	if self:reactionToward(game.player) < 0 then factcolor, factstate = "#LIGHT_RED#", "hostile"
+	elseif self:reactionToward(game.player) > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
+	end
+
 	local rank, rank_color = self:TextRank()
 	return ([[%s%s
 Rank: %s%s
@@ -332,7 +338,9 @@ Exp: %d/%d
 #ff0000#HP: %d (%d%%)
 Stats: %d /  %d / %d / %d / %d / %d
 Size: #ANTIQUE_WHITE#%s
-%s]]):format(
+%s
+Faction: %s%s (%s)
+]]):format(
 	rank_color, self.name,
 	rank_color, rank,
 	self.level,
@@ -346,7 +354,8 @@ Size: #ANTIQUE_WHITE#%s
 	self:getCun(),
 	self:getCon(),
 	self:TextSizeCategory(),
-	self.desc or ""
+	self.desc or "",
+	factcolor, Faction.factions[self.faction].name, factstate
 	)
 end
 

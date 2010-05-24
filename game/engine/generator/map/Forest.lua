@@ -101,7 +101,7 @@ function _M:addPond(x, y, spots)
 		quadrant(self.do_ponds.size.w, i)
 	end
 
-	spots[#spots+1] = {x=x, y=y, type="pond"}
+	spots[#spots+1] = {x=x, y=y, type="pond", subtype="pond"}
 end
 
 function _M:generate(lev, old_lev)

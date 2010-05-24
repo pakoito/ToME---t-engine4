@@ -39,7 +39,7 @@ subGenerator{
 	define_up = true,
 }
 
-checkConnectivity({26,44}, "entrance")
+checkConnectivity({26,44}, "entrance", "boss-area", "boss-area")
 
 return {
 [[                                                  ]],

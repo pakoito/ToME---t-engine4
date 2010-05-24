@@ -82,7 +82,7 @@ function _M:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
 	end
 end
 
-function _M:building(leaf)
+function _M:building(leaf, spots)
 	local x1, x2 = leaf.rx + rng.range(2, math.max(2, math.floor(leaf.w / 2 - 3))), leaf.rx + leaf.w - rng.range(2, math.max(2, math.floor(leaf.w / 2 - 3)))
 	local y1, y2 = leaf.ry + rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3))), leaf.ry + leaf.h - rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3)))
 	local ix1, ix2, iy1, iy2 = x1 + 2, x2 - 2, y1 + 2, y2 - 2
@@ -117,6 +117,8 @@ function _M:building(leaf)
 --	if rng.percent(self.lshape_chance) then
 --		self:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
 --	end
+
+	spots[#spots+1] = {x=math.floor((x1+x2)/2), y=math.floor((y1+y2)/2), type="building", subtype="building"}
 end
 
 function _M:generate(lev, old_lev)
@@ -128,13 +130,13 @@ function _M:generate(lev, old_lev)
 	bsp:partition()
 
 	print("Town gen made ", #bsp.leafs, "BSP leafs")
+	local spots = {}
 	for z, leaf in ipairs(bsp.leafs) do
 		if rng.percent(self.building_chance) then
-			self:building(leaf)
+			self:building(leaf, spots)
 		end
 	end
 
-	local spots = {}
 	local ux, uy, dx, dy
 	if self.data.edge_entrances then
 		ux, uy, dx, dy, spots = self:makeStairsSides(lev, old_lev, self.data.edge_entrances, spots)

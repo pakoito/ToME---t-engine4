@@ -71,7 +71,7 @@ defineTile('@', "FLOOR", nil, mod.class.NPC.new{
 	name = "Lost Merchant",
 	size_category = 3,
 	ai = "simple",
-	faction = "players",
+	faction = "reunited-kingdom",
 	is_merchant = true,
 })
 

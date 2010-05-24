@@ -69,14 +69,11 @@ function _M:loadMap(file)
 		addData = function(t)
 			table.merge(self.level.data, t, true)
 		end,
-		checkConnectivity = function(dst, src)
-			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], check_connectivity=src}
-			print("********************************************")
-			print("********************************************")
-			print(dst[1], dst[2], src)
-			print("********************************************")
-			print("********************************************")
-			print("********************************************")
+		checkConnectivity = function(dst, src, type, subtype)
+			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], check_connectivity=src, type=type or "static", subtype=subtype or "static"}
+		end,
+		addSpot = function(dst, type, subtype)
+			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], type=type or "static", subtype=subtype or "static"}
 		end,
 	}
 	setfenv(f, setmetatable(g, {__index=_G}))

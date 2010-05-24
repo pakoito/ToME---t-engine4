@@ -44,6 +44,7 @@ newBirthDescriptor{
 --		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},
 	copy = {
+		faction = "orc-pride",
 		type = "humanoid", subtype="troll",
 		default_wilderness = {39, 17},
 		starting_zone = "tower-amon-sul",

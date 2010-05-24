@@ -39,6 +39,7 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
+		faction = "players",
 		undead = 1,
 	}
 }

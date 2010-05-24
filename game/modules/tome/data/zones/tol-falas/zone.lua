@@ -56,6 +56,9 @@ return {
 			nb_trap = {6, 9},
 		},
 	},
+	post_process = function(level)
+		for uid, e in pairs(level.entities) do e.faction="tol-falas" end
+	end,
 	levels =
 	{
 		[1] = {

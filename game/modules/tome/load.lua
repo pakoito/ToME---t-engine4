@@ -90,8 +90,7 @@ ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's
 ActorLevel:defineMaxLevel(75)
 
 -- Factions
-Faction:add{ name="water lair", reaction={}, hostile_on_attack=true }
-Faction:add{ name="assassin lair", reaction={}, hostile_on_attack=true }
+dofile("/data/factions.lua")
 
 -- Actor autolevel schemes
 dofile("/data/autolevel_schemes.lua")

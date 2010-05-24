@@ -118,7 +118,7 @@ newTalent{
 		local bear = NPC.new{
 			type = "animal", subtype = "bear",
 			display = "q", color=colors.LIGHT_GREEN,
-			name = "guardian bear", faction = "players",
+			name = "guardian bear", faction = self.faction,
 			desc = [[A bear summoned by the powers of nature to help you.]],
 			autolevel = "warrior",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },

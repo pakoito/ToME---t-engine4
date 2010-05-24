@@ -41,6 +41,7 @@ newBirthDescriptor{
 --		[ActorTalents.T_IMPROVED_MANA_I]=1,
 	},
 	copy = {
+		faction = "eryn-lasgalen",
 		type = "humanoid", subtype="elf",
 		default_wilderness = {39, 17},
 		starting_zone = "tower-amon-sul",

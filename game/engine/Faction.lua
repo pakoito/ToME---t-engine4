@@ -29,8 +29,30 @@ _M.factions = {}
 function _M:add(t)
 	assert(t.name, "no faction name")
 	t.short_name = t.short_name or t.name:lower():gsub(" ", "-")
+	if self.factions[t.short_name] then print("[FACTION] tried to redefine", t.name) return t.short_name end
+
+	local r = {}
 	t.reaction = t.reaction or {}
+	for n, v in pairs(t.reaction) do
+		n = n:lower():gsub(" ", "-")
+		r[n] = v
+	end
+	t.reaction = r
 	self.factions[t.short_name] = t
+	return t.short_name
+end
+
+--- Sets the initial reaction
+-- Static method
+function _M:setInitialReaction(f1, f2, reaction, mutual)
+	-- Faction always like itself
+	if f1 == f2 then return end
+	if not self.factions[f1] then return end
+	if not self.factions[f2] then return end
+	self.factions[f1].reaction[f2] = reaction
+	if mutual then
+		self.factions[f2].reaction[f1] = reaction
+	end
 end
 
 --- Returns the faction definition

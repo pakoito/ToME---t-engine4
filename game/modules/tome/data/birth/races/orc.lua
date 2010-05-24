@@ -50,6 +50,7 @@ newBirthDescriptor{
 		[ActorTalents.T_ORC_FURY]=1,
 	},
 	copy = {
+		faction = "orc-pride",
 		type = "humanoid", subtype="orc",
 		default_wilderness = {10, 39},
 		starting_zone = "wilderness-arda-fareast",

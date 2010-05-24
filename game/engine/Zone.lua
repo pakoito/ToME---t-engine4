@@ -449,9 +449,11 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	local ux, uy, dx, dy, spots = generator:generate(lev, old_lev)
 	spots = spots or {}
 
+	for i = 1, #spots do print("[NEW LEVEL] spot", spots[i].x, spots[i].y, spots[i].type, spots[i].subtype) end
+
 	level.ups = {{x=ux, y=uy}}
 	level.downs = {{x=dx, y=dy}}
-	level.spots = spots or {}
+	level.spots = spots
 
 	-- Generate objects
 	if level_data.generator.object then

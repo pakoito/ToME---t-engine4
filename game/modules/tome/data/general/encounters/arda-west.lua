@@ -42,7 +42,7 @@ newEntity{
 
 		local g = mod.class.NPC.new{
 			name="Novice mage",
-			type="humanoid", subtype="elf", faction="players",
+			type="humanoid", subtype="elf", faction="angolwen",
 			display='@', color=colors.RED,
 			can_talk = "mage-apprentice-quest",
 		}
@@ -102,7 +102,7 @@ newEntity{
 							},
 						},
 						post_process = function(level)
-							for uid, e in pairs(level.entities) do if e.faction ~= "players" then e.faction="assassin-lair" end end
+							for uid, e in pairs(level.entities) do if e.faction ~= "reunited-kingdom" then e.faction="assassin-lair" end end
 						end,
 					}, },
 

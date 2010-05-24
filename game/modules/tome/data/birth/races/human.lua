@@ -40,6 +40,7 @@ newBirthDescriptor{
 	talents = {},
 	experience = 1.0,
 	copy = {
+		faction = "reunited-kingdom",
 		type = "humanoid", subtype="human",
 	},
 }

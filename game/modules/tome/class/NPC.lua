@@ -57,18 +57,11 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:tooltip()
-	local factcolor, factstate = "#ANTIQUE_WHITE#", "neutral"
-	if self:reactionToward(game.player) < 0 then factcolor, factstate = "#LIGHT_RED#", "hostile"
-	elseif self:reactionToward(game.player) > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
-	end
-
 	local str = mod.class.Actor.tooltip(self)
 	return str..([[
 
-Faction: %s%s (%s)
 Target: %s
 UID: %d]]):format(
-	factcolor, Faction.factions[self.faction].name, factstate,
 	self.ai_target.actor and self.ai_target.actor.name or "none",
 	self.uid)
 end

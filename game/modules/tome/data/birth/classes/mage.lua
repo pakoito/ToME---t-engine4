@@ -35,6 +35,8 @@ newBirthDescriptor{
 	},
 	talents = { [ActorTalents.T_TELEPORT_ANGOLWEN]=1 },
 	copy = {
+		-- All mages are of angolwen faction
+		faction = "angolwen",
 		mana_regen = 0.5,
 		mana_rating = 10,
 		resolvers.generic(function(e)
