@@ -20,6 +20,7 @@
 require "engine.class"
 local Entity = require "engine.Entity"
 local Tiles = require "engine.Tiles"
+local Particles = require "engine.Particles"
 local Faction = require "engine.Faction"
 local DamageType = require "engine.DamageType"
 
@@ -168,6 +169,8 @@ function _M:init(w, h)
 	self.path_strings = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
+	self.particles = {}
+
 	self:loaded()
 end
 
@@ -177,8 +180,6 @@ function _M:save()
 		_map = true,
 		_fovcache = true,
 		surface = true,
-		particle = true,
-		particles = true,
 	})
 end
 
@@ -221,9 +222,6 @@ function _M:addPathString(ps)
 end
 
 function _M:loaded()
-	self.particles = {}
-	self.particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
-
 	self:makeCMap()
 
 	local mapseen = function(t, x, y, v)
@@ -779,37 +777,37 @@ end
 -- Particle projector
 -------------------------------------------------------------
 -------------------------------------------------------------
-_M.particles_def = {}
 
 --- Add a new particle emitter
-function _M:particleEmitter(x, y, radius, def, fct, max, args)
-	if type(def) == "string" then
-		if _M.particles_def[def] then
-			def, fct, max = _M.particles_def[def]()
-		else
-			local odef = def
-			print("[PARTICLE] Loading from /data/gfx/particles/"..def..".lua")
-			local f = loadfile("/data/gfx/particles/"..def..".lua")
-			setfenv(f, setmetatable(args or {}, {__index=_G}))
-			def, fct, max = f()
-			max = max or 1000
-			_M.particles_def[odef] = f
-		end
-	end
+function _M:particleEmitter(x, y, radius, def, args)
+	local e = Particles.new(def, args)
+	e.x = x
+	e.y = y
+	e.radius = radius or 1
 
-	local e =
-	{
-		x = x, y = y, radius = radius or 1,
-		ps = core.particles.newEmitter(max or 1000, def, self.particle),
-		update = fct,
-	}
-	self.particles[#self.particles+1] = e
+	self.particles[e] = true
+	return e
+end
+
+--- Adds an existing particle emitter to the map
+function _M:addParticleEmitter(e)
+	if self.particles[e] then return false end
+	self.particles[e] = true
+	return e
+end
+
+--- Removes a particle emitter from the map
+function _M:removeParticleEmitter(e)
+	if not self.particles[e] then return false end
+	self.particles[e] = nil
+	return true
 end
 
 --- Display the particle emiters, called by self:display()
 function _M:displayParticles()
-	for i = #self.particles, 1, -1 do
-		local e = self.particles[i]
+	local del = {}
+	local e = next(self.particles)
+	while e do
 		local alive = false
 
 		alive = not e.update(e)
@@ -820,7 +818,10 @@ function _M:displayParticles()
 		end
 
 		if not alive then
-			table.remove(self.particles, i)
+			del[#del+1] = e
 		end
+
+		e = next(self.particles, e)
 	end
+	for i = 1, #del do self.particles[del[i]] = nil end
 end

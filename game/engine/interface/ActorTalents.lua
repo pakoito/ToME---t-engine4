@@ -32,6 +32,7 @@ function _M:loadDefinition(file, env)
 	if not f and err then error(err) end
 	setfenv(f, setmetatable(env or {
 		DamageType = require("engine.DamageType"),
+		Particles = require("engine.Particles"),
 		Talents = self,
 		Map = require("engine.Map"),
 		newTalent = function(t) self:newTalent(t) end,

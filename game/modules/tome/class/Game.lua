@@ -504,7 +504,8 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "test")
+--				self:changeLevel(1, "test")
+				self.level.map:particleEmitter(self.player.x, self.player.y, 1, "shield")
 			end
 		end,
 	}

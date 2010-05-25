@@ -101,6 +101,7 @@ function _M:init(t, no_default)
 	next_uid = next_uid + 1
 
 	self.changed = true
+	self.particles = self.particles or {}
 end
 
 --- If we are cloned we need a new uid

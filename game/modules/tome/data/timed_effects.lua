@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Particles = require "engine.Particles"
 
 newEffect{
 	name = "CUT",
@@ -429,6 +430,7 @@ newEffect{
 		self.displacement_shield_chance = eff.chance
 		--- Warning there can be only one time shield active at once for an actor
 		self.displacement_shield_target = eff.target
+		eff.particle = self:addParticles(Particles.new("displacement_shield", 1))
 	end,
 	on_timeout = function(self, eff)
 		if eff.target.dead then
@@ -437,6 +439,7 @@ newEffect{
 		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 		self.displacement_shield = nil
 		self.displacement_shield_chance = nil
 		self.displacement_shield_target = nil
@@ -455,8 +458,10 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("damage_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.damage_shield_absorb = eff.power
+		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("damage_shield", eff.tmpid)
 		self.damage_shield_absorb = nil
 	end,
@@ -474,8 +479,10 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("time_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
+		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 		-- Time shield ends, setup a dot if needed
 		if eff.power - self.time_shield_absorb > 0 then
 			print("Time shield dot", eff.power - self.time_shield_absorb, (eff.power - self.time_shield_absorb) / 5)

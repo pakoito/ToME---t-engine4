@@ -56,6 +56,27 @@ end
 function _M:setTarget(target)
 end
 
+--- Adds a particles emitter following the actor
+function _M:addParticles(ps)
+	self.__particles[ps] = true
+	if self.x and self.y and game.level and game.level.map then
+		ps.x = self.x
+		ps.y = self.y
+		game.level.map:addParticleEmitter(ps)
+	end
+	return ps
+end
+
+--- Removes a particles emitter following the actor
+function _M:removeParticles(ps)
+	self.__particles[ps] = nil
+	if self.x and self.y and game.level and game.level.map then
+		ps.x = nil
+		ps.y = nil
+		game.level.map:removeParticleEmitter(ps)
+	end
+end
+
 --- Moves an actor on the map
 -- *WARNING*: changing x and y properties manualy is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto
@@ -81,6 +102,14 @@ function _M:move(x, y, force)
 	end
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
+
+	-- Update particle emitters attached to that actor
+	for e, _ in pairs(self.__particles) do
+		e.x = x
+		e.y = y
+		map.particles[e] = true
+	end
+
 	map:checkAllEntities(x, y, "on_move", self, force)
 
 	return true
@@ -167,6 +196,11 @@ end
 function _M:deleteFromMap(map)
 	if self.x and self.y and map then
 		map:remove(self.x, self.y, engine.Map.ACTOR)
+		for e, _ in pairs(self.__particles) do
+			e.x = nil
+			e.y = nil
+			map:removeParticleEmitter(e)
+		end
 	end
 end
 

@@ -25,10 +25,12 @@
 
 typedef struct {
 	float size, sizev, sizea;
+	float ox, oy;
 	float x, y, xv, yv, xa, ya;
 	float dir, dirv, dira, vel, velv, vela;
 	float r, g, b, a, rv, gv, bv, av, ra, ga, ba, aa;
 	int life;
+	bool trail;
 } particle_type;
 
 typedef struct {

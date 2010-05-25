@@ -193,12 +193,16 @@ static int particles_emit(lua_State *L)
 				p->ga = rng(ps->ga_min, ps->ga_max) / ps->base;
 				p->ba = rng(ps->ba_min, ps->ba_max) / ps->base;
 				p->aa = rng(ps->aa_min, ps->aa_max) / ps->base;
+				p->trail = FALSE;
 			}
 			else
 			{
 				lua_rawgeti(L, LUA_REGISTRYINDEX, ps->generator_ref);
 				lua_call(L, 0, 1);
 				float life;
+				float trail;
+				getparticulefield(L, "trail", &trail); p->trail = trail;
+
 				getparticulefield(L, "life", &life); p->life = life;
 				getparticulefield(L, "size", &(p->size));
 				getparticulefield(L, "sizev", &(p->sizev));
@@ -236,6 +240,8 @@ static int particles_emit(lua_State *L)
 				getparticulefield(L, "av", &(p->av));
 				getparticulefield(L, "aa", &(p->aa));
 			}
+			p->ox = p->x;
+			p->oy = p->y;
 
 			nb--;
 			if (!nb) break;
@@ -268,14 +274,51 @@ static int particles_to_screen(lua_State *L)
 			{
 				glColor4f(p->r, p->g, p->b, p->a);
 				glBegin(GL_QUADS);
-				glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
-				glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
-				glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
-				glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
+				if (!p->trail)
+				{
+					glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
+					glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
+					glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
+					glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
+				}
+				else
+				{
+					if ((p->ox <= p->x) && (p->oy <= p->y))
+					{
+						glTexCoord2f(0,0); glVertex3f(0 + x + p->ox,	0 + y + p->oy,		-97);
+						glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
+						glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
+						glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
+					}
+					else if ((p->ox <= p->x) && (p->oy > p->y))
+					{
+						glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
+						glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
+						glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
+						glTexCoord2f(0,1); glVertex3f(0 + x + p->ox,	p->size + y + p->oy,	-97);
+					}
+					else if ((p->ox > p->x) && (p->oy <= p->y))
+					{
+						glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
+						glTexCoord2f(1,0); glVertex3f(p->size + x + p->ox,	0 + y + p->oy,		-97);
+						glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
+						glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
+					}
+					else if ((p->ox > p->x) && (p->oy > p->y))
+					{
+						glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
+						glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
+						glTexCoord2f(1,1); glVertex3f(p->size + x + p->ox,	p->size + y + p->oy,	-97);
+						glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
+					}
+				}
 				glEnd();
 			}
 
 			p->life--;
+
+			p->ox = p->x;
+			p->oy = p->y;
 
 			p->x += p->xv;
 			p->y += p->yv;
