@@ -195,9 +195,11 @@ newEffect{
 	on_gain = function(self, err) return "#Target# hardens its skin.", "+Earthen barrier" end,
 	on_lose = function(self, err) return "#Target# skin returns to normal.", "-Earthen barrier" end,
 	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("stone_skin", 1, {density=4}))
 		eff.tmpid = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("resists", eff.tmpid)
 	end,
 }

@@ -35,9 +35,11 @@ newTalent{
 		local power = 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t)
 		return {
 			armor = self:addTemporaryValue("combat_armor", power),
+			particle = self:addParticles(Particles.new("stone_skin", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		self:removeTemporaryValue("combat_armor", p.armor)
 		return true
 	end,

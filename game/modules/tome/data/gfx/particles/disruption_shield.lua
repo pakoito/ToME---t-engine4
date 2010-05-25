@@ -36,7 +36,7 @@ return { generator = function()
 		r = rng.range(130, 220)/255, rv = rng.range(0, 10), ra = 0,
 		g = 0,   gv = 0, ga = 0,
 		b = rng.range(170, 255)/255, bv = rng.range(0, 10), ba = 0,
-		a = 1,   av = 0, aa = 0,
+		a = rng.range(70, 255)/255,   av = 0, aa = 0,
 	}
 end, },
 function(self)

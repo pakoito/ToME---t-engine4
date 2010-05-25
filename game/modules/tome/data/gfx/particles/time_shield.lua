@@ -22,6 +22,7 @@ return { generator = function()
 	local a = math.rad(ad)
 	local dir = math.rad(ad + 90)
 	local r = rng.range(12, 20)
+	local dirv = math.rad(1)
 
 	return {
 		trail = 1,
@@ -30,7 +31,7 @@ return { generator = function()
 
 		x = r * math.cos(a), xv = -0.1, xa = 0,
 		y = r * math.sin(a), yv = -0.1, ya = 0,
-		dir = dir, dirv = 1, dira = 0,
+		dir = dir, dirv = dirv, dira = 0,
 		vel = 1, velv = 0, vela = 0,
 
 		r = rng.range(10, 220)/255, rv = rng.range(0, 10), ra = 0,

@@ -56,10 +56,12 @@ newTalent{
 		local power = 4 + self:combatSpellpower(0.04) * self:getTalentLevel(t)
 		game:playSoundNear(self, "talents/heal")
 		return {
+			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
 			def = self:addTemporaryValue("combat_def", power),
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		self:removeTemporaryValue("combat_def", p.def)
 		return true
 	end,
@@ -84,10 +86,12 @@ newTalent{
 		local power = 10 + self:combatSpellpower(0.06) * self:getTalentLevel(t)
 		game:playSoundNear(self, "talents/heal")
 		return {
+			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ARCANE]=power}),
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		return true
 	end,

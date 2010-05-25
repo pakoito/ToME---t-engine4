@@ -99,10 +99,9 @@ newTalent{
 		local power = math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
 		self.disruption_shield_absorb = 0
 		game:playSoundNear(self, "talents/arcane")
-		local ps = self:addParticles(Particles.new("disruption_shield", 1))
 		return {
 			shield = self:addTemporaryValue("disruption_shield", power),
-			particle = ps,
+			particle = self:addParticles(Particles.new("disruption_shield", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)

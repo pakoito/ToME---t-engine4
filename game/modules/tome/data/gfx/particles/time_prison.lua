@@ -25,12 +25,12 @@ return { generator = function()
 
 	return {
 		trail = 1,
-		life = 20,
-		size = 2, sizev = 0.2, sizea = 0,
+		life = 30,
+		size = 2, sizev = 0.08, sizea = 0,
 
 		x = r * math.cos(a), xv = 0, xa = 0,
 		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = 0, dira = 0,
+		dir = dir, dirv = math.rad(3), dira = math.rad(3) / 3,
 		vel = 1, velv = 0, vela = 0,
 
 		r = rng.range(10, 220)/255, rv = rng.range(0, 10), ra = 0,
@@ -40,6 +40,6 @@ return { generator = function()
 	}
 end, },
 function(self)
-	self.ps:emit(10)
+	self.ps:emit(5)
 end,
-100
+150

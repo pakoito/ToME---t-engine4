@@ -52,7 +52,7 @@ function _M:loaded()
 			local odef = self.def
 			print("[PARTICLE] Loading from /data/gfx/particles/"..self.def..".lua")
 			local f = loadfile("/data/gfx/particles/"..self.def..".lua")
-			setfenv(f, setmetatable(args or {}, {__index=_G}))
+			setfenv(f, setmetatable(self.args or {}, {__index=_G}))
 			def, fct, max = f()
 			max = max or 1000
 			_M.particles_def[odef] = f
