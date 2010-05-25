@@ -169,6 +169,8 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 
 	if isup then return end
 
+	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup) end
+
 	local ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 --	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then

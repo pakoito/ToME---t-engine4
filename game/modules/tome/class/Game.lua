@@ -459,10 +459,13 @@ end
 
 function _M:setupCommands()
 	self.targetmode_key = engine.KeyBind.new()
-	self.targetmode_key:addCommands{ _SPACE=function() self:targetMode(false, false) end, }
+	self.targetmode_key:addCommands{ _SPACE=function() self:targetMode(false, false) self.tooltip_x, self.tooltip_y = nil, nil end, }
 	self.targetmode_key:addBinds
 	{
-		TACTICAL_DISPLAY = function() self:targetMode(false, false) end,
+		TACTICAL_DISPLAY = function()
+			self:targetMode(false, false)
+			self.tooltip_x, self.tooltip_y = nil, nil
+		end,
 		ACCEPT = function()
 			self:targetMode(false, false)
 			self.tooltip_x, self.tooltip_y = nil, nil

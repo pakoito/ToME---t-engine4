@@ -21,8 +21,9 @@
 local forks = {{}, {}}
 local m1 = forks[1]
 local m2 = forks[2]
-local tx = tx * 32
-local ty = ty * 32
+local tiles = math.ceil(math.sqrt(tx*tx+ty*ty))
+local tx = tx * engine.Map.tile_w
+local ty = ty * engine.Map.tile_h
 local breakdir = math.rad(rng.range(-8, 8))
 m1.bx = 0
 m1.by = 0
@@ -76,7 +77,7 @@ end, },
 function(self)
 	self.nb = (self.nb or 0) + 1
 	if self.nb < 4 then
-		self.ps:emit(1000)
+		self.ps:emit(230*tiles)
 	end
 end,
-4000
+4*230*tiles
