@@ -17,22 +17,66 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	base = 1000,
+-- Make the 2 main forks
+local forks = {{}, {}}
+local m1 = forks[1]
+local m2 = forks[2]
+local tx = tx * 32
+local ty = ty * 32
+local breakdir = math.rad(rng.range(-8, 8))
+m1.bx = 0
+m1.by = 0
+m1.thick = 5
+m1.dir = math.atan2(ty, tx) + breakdir
+m1.size = math.sqrt(tx*tx+ty*ty) / 2
 
-	angle = { 0, 360 }, anglev = { 2000, 4000 }, anglea = { 200, 600 },
+m2.bx = m1.size * math.cos(m1.dir)
+m2.by = m1.size * math.sin(m1.dir)
+m2.thick = 5
+m2.dir = math.atan2(ty, tx) - breakdir
+m2.size = math.sqrt(tx*tx+ty*ty) / 2
 
-	life = { 5, 10 },
-	size = { 3, 6 }, sizev = {0, 0}, sizea = {0, 0},
+-- Add more forks
+for i = 1, math.min(math.max(3, m1.size / 5), 20) do
+	local m = rng.percent(50) and forks[1] or forks[2]
+	if rng.percent(60) then m = rng.table(forks) end
+	local f = {}
+	f.thick = 2
+	f.dir = m.dir + math.rad(rng.range(-30,30))
+	f.size = rng.range(6, 25)
+	local br = rng.range(1, m.size)
+	f.bx = br * math.cos(m.dir) + m.bx
+	f.by = br * math.sin(m.dir) + m.by
+	forks[#forks+1] = f
+end
 
-	r = {180, 220}, rv = {0, 0}, ra = {0, 0},
-	g = {240, 255}, gv = {0, 0}, ga = {0, 0},
-	b = {220, 240}, bv = {0, 0}, ba = {0, 0},
-	a = {255, 255}, av = {0, 0}, aa = {0, 0},
+-- Populate the lightning based on the forks
+return { generator = function()
+	local f = rng.table(forks)
+	local a = f.dir
+	local rad = rng.range(-3,3)
+	local ra = math.rad(rad)
+	local r = rng.range(1, f.size)
 
-}, function(self)
+	return {
+		life = 4,
+		size = f.thick, sizev = 0, sizea = 0,
+
+		x = r * math.cos(a) + 3 * math.cos(ra) + f.bx, xv = 0, xa = 0,
+		y = r * math.sin(a) + 3 * math.sin(ra) + f.by, yv = 0, ya = 0,
+		dir = 0, dirv = 0, dira = 0,
+		vel = 0, velv = 0, vela = 0,
+
+		r = rng.range(140, 200)/255, rv = 0, ra = 0,
+		g = rng.range(180, 220)/255, gv = 0, ga = 0,
+		b = rng.range(220, 240)/255, bv = 0, ba = 0,
+		a = rng.range(230, 255)/255, av = 0, aa = 0,
+	}
+end, },
+function(self)
 	self.nb = (self.nb or 0) + 1
 	if self.nb < 4 then
-		self.ps:emit(100)
+		self.ps:emit(1000)
 	end
-end
+end,
+4000

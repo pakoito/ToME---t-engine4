@@ -780,10 +780,9 @@ end
 
 --- Add a new particle emitter
 function _M:particleEmitter(x, y, radius, def, args)
-	local e = Particles.new(def, args)
+	local e = Particles.new(def, radius, args)
 	e.x = x
 	e.y = y
-	e.radius = radius or 1
 
 	self.particles[e] = true
 	return e

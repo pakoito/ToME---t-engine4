@@ -33,7 +33,9 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3), {type="lightning"})
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3))
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, 1, "lightning", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
@@ -98,7 +100,8 @@ newTalent{
 		for i, actor in ipairs(targets) do
 			local tgr = {type="beam", range=self:getTalentRange(t), talent=t, x=sx, y=sy}
 			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
-			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 5), {type="lightning"})
+			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 5))
+			game.level.map:particleEmitter(sx, sy, 1, "lightning", {tx=actor.x-sx, ty=actor.y-sy})
 			sx, sy = actor.x, actor.y
 		end
 
@@ -189,7 +192,8 @@ newTalent{
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), 3), {type="lightning"})
+			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), 3))
+			game.level.map:particleEmitter(self.x, self.y, 1, "lightning", {tx=a.x-self.x, ty=a.y-self.y})
 			game:playSoundNear(self, "talents/lightning")
 		end
 	end,

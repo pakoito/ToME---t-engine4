@@ -47,14 +47,15 @@ function _M:loaded()
 	local def, fct, max
 	if type(self.def) == "string" then
 		if _M.particles_def[self.def] then
+			setfenv(_M.particles_def[self.def], setmetatable(self.args or {}, {__index=_G}))
 			def, fct, max = _M.particles_def[self.def]()
 		else
 			local odef = self.def
 			print("[PARTICLE] Loading from /data/gfx/particles/"..self.def..".lua")
-			local f = loadfile("/data/gfx/particles/"..self.def..".lua")
+			local f, err = loadfile("/data/gfx/particles/"..self.def..".lua")
+			if not f and err then error(err) end
 			setfenv(f, setmetatable(self.args or {}, {__index=_G}))
 			def, fct, max = f()
-			max = max or 1000
 			_M.particles_def[odef] = f
 		end
 	else error("unsupported particle type: "..type(self.def))
