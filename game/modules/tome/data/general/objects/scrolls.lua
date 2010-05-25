@@ -127,3 +127,17 @@ newEntity{ base = "BASE_SCROLL",
 		return "destroy", true
 	end}
 }
+
+newEntity{ base = "BASE_SCROLL",
+	name = "scroll of shielding",
+	level_range = {10, 50},
+	rarity = 9,
+	cost = 7,
+
+	use_simple = { name="create a temporary shield that absorbs damage", use = function(self, who)
+		local power = 60 + who:getMag(100)
+		who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=power})
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
+		return "destroy", true
+	end}
+}

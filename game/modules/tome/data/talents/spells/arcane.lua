@@ -106,7 +106,7 @@ newTalent{
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeParticles(p.particles)
+		self:removeParticles(p.particle)
 		self:removeTemporaryValue("disruption_shield", p.shield)
 		self.disruption_shield_absorb = nil
 		return true
