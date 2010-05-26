@@ -199,46 +199,49 @@ static int particles_emit(lua_State *L)
 			{
 				lua_rawgeti(L, LUA_REGISTRYINDEX, ps->generator_ref);
 				lua_call(L, 0, 1);
-				float life;
-				float trail;
-				getparticulefield(L, "trail", &trail); p->trail = trail;
+				if (!lua_isnil(L, -1))
+				{
+					float life;
+					float trail;
+					getparticulefield(L, "trail", &trail); p->trail = trail;
 
-				getparticulefield(L, "life", &life); p->life = life;
-				getparticulefield(L, "size", &(p->size));
-				getparticulefield(L, "sizev", &(p->sizev));
-				getparticulefield(L, "sizea", &(p->sizea));
+					getparticulefield(L, "life", &life); p->life = life;
+					getparticulefield(L, "size", &(p->size));
+					getparticulefield(L, "sizev", &(p->sizev));
+					getparticulefield(L, "sizea", &(p->sizea));
 
-				getparticulefield(L, "x", &(p->x));
-				getparticulefield(L, "xv", &(p->xv));
-				getparticulefield(L, "xa", &(p->xa));
+					getparticulefield(L, "x", &(p->x));
+					getparticulefield(L, "xv", &(p->xv));
+					getparticulefield(L, "xa", &(p->xa));
 
-				getparticulefield(L, "y", &(p->y));
-				getparticulefield(L, "yv", &(p->yv));
-				getparticulefield(L, "ya", &(p->ya));
+					getparticulefield(L, "y", &(p->y));
+					getparticulefield(L, "yv", &(p->yv));
+					getparticulefield(L, "ya", &(p->ya));
 
-				getparticulefield(L, "dir", &(p->dir));
-				getparticulefield(L, "dirv", &(p->dirv));
-				getparticulefield(L, "dira", &(p->dira));
+					getparticulefield(L, "dir", &(p->dir));
+					getparticulefield(L, "dirv", &(p->dirv));
+					getparticulefield(L, "dira", &(p->dira));
 
-				getparticulefield(L, "vel", &(p->vel));
-				getparticulefield(L, "velv", &(p->velv));
-				getparticulefield(L, "vela", &(p->vela));
+					getparticulefield(L, "vel", &(p->vel));
+					getparticulefield(L, "velv", &(p->velv));
+					getparticulefield(L, "vela", &(p->vela));
 
-				getparticulefield(L, "r", &(p->r));
-				getparticulefield(L, "rv", &(p->rv));
-				getparticulefield(L, "ra", &(p->ra));
+					getparticulefield(L, "r", &(p->r));
+					getparticulefield(L, "rv", &(p->rv));
+					getparticulefield(L, "ra", &(p->ra));
 
-				getparticulefield(L, "g", &(p->g));
-				getparticulefield(L, "gv", &(p->gv));
-				getparticulefield(L, "ga", &(p->ga));
+					getparticulefield(L, "g", &(p->g));
+					getparticulefield(L, "gv", &(p->gv));
+					getparticulefield(L, "ga", &(p->ga));
 
-				getparticulefield(L, "b", &(p->b));
-				getparticulefield(L, "bv", &(p->bv));
-				getparticulefield(L, "ba", &(p->ba));
+					getparticulefield(L, "b", &(p->b));
+					getparticulefield(L, "bv", &(p->bv));
+					getparticulefield(L, "ba", &(p->ba));
 
-				getparticulefield(L, "a", &(p->a));
-				getparticulefield(L, "av", &(p->av));
-				getparticulefield(L, "aa", &(p->aa));
+					getparticulefield(L, "a", &(p->a));
+					getparticulefield(L, "av", &(p->av));
+					getparticulefield(L, "aa", &(p->aa));
+				}
 			}
 			p->ox = p->x;
 			p->oy = p->y;

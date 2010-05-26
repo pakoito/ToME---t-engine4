@@ -126,6 +126,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 			end
 		end
 	end
+	return grids
 end
 
 --- Can we project to this grid ?

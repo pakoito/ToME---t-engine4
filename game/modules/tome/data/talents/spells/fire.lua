@@ -83,7 +83,11 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.6) * self:getTalentLevel(t)), {type="flame"})
+		local grids = self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.6) * self:getTalentLevel(t)))
+
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, grids=grids, tx=x, ty=y})
+
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,

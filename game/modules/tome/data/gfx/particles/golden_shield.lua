@@ -32,7 +32,7 @@ return { generator = function()
 		x = r * math.cos(a), xv = -0.1, xa = 0,
 		y = r * math.sin(a), yv = -0.1, ya = 0,
 		dir = dir, dirv = dirv, dira = 0,
-		vel = 1, velv = 0, vela = 0,
+		vel = rng.percent(50) and -1 or 1, velv = 0, vela = 0,
 
 		r = rng.range(220, 255)/255,  rv = 0, ra = 0,
 		g = rng.range(200, 230)/255,  gv = 0, ga = 0,
