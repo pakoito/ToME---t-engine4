@@ -903,6 +903,7 @@
 					"PHYSFS_PLATFORM_MACOSX=1",
 					"NULL=0",
 					"TENGINE_HOME_PATH=\"\\\"/Library/Application Support/T-Engine/\\\"\"",
+					"PHYSFS_SUPPORTS_ZIP=1",
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -922,6 +923,7 @@
 					"PHYSFS_PLATFORM_MACOSX=1",
 					"NULL=0",
 					"TENGINE_HOME_PATH=\"\\\"/Library/Application Support/T-Engine/\\\"\"",
+					"PHYSFS_SUPPORTS_ZIP=1",
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
