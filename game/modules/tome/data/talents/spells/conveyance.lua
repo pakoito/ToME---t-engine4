@@ -29,7 +29,6 @@ newTalent{
 	},
 	action = function(self, t)
 		local target = self
-
 		if self:getTalentLevel(t) >= 5 then
 			local tx, ty = self:getTarget{type="hit", range=10}
 			if tx and ty then
@@ -39,7 +38,8 @@ newTalent{
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
-			x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevel(t)}
+			local tg = {type="ball", nolock=true, no_restrict=true, range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevel(t)}
+			x, y = self:getTarget(tg)
 			if not x then return nil end
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
@@ -85,7 +85,8 @@ newTalent{
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
-			x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, range=100 + self:combatSpellpower(1), radius=20 - self:getTalentLevel(t)}
+			local tg = {type="ball", nolock=true, no_restrict=true, range=100 + self:combatSpellpower(1), radius=20 - self:getTalentLevel(t)}
+			x, y = self:getTarget(tg)
 			if not x then return nil end
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
