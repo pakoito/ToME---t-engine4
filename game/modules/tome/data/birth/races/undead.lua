@@ -37,6 +37,10 @@ newBirthDescriptor{
 			Vampire = function() return profile.mod.allow_build.undead_vampire and "allow" or "never" end,
 			Wight = function() return profile.mod.allow_build.undead_wight and "allow" or "never" end,
 		},
+		class =
+		{
+			Divine = "never",
+		},
 	},
 	copy = {
 		faction = "players",

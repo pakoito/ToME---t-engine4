@@ -17,11 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/talents/misc/misc.lua")
-load("/data/talents/techniques/techniques.lua")
-load("/data/talents/cunning/cunning.lua")
-load("/data/talents/spells/spells.lua")
-load("/data/talents/gifts/gifts.lua")
-load("/data/talents/divine/divine.lua")
-load("/data/talents/corruptions/corruptions.lua")
-load("/data/talents/undeads/undeads.lua")
+return { generator = function()
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = math.rad(ad + 90)
+	local r = rng.range(12, 20)
+	local dirv = math.rad(1)
+
+	return {
+		trail = 1,
+		life = 10,
+		size = 4, sizev = -0.1, sizea = 0,
+
+		x = r * math.cos(a), xv = -0.1, xa = 0,
+		y = r * math.sin(a), yv = -0.1, ya = 0,
+		dir = dir, dirv = dirv, dira = 0,
+		vel = 1, velv = 0, vela = 0,
+
+		r = rng.range(220, 255)/255,  rv = 0, ra = 0,
+		g = rng.range(200, 230)/255,  gv = 0, ga = 0,
+		b = 0,                        bv = 0, ba = 0,
+		a = rng.range(25, 220)/255,   av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.ps:emit(10)
+end,
+100

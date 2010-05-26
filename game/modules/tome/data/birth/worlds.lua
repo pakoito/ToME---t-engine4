@@ -47,6 +47,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "allow",
 			Mage = function() return profile.mod.allow_build.mage and "allow" or "never" end,
+			Divine = function() return profile.mod.allow_build.divine and "allow" or "never" end,
 			Wilder = function() return (
 				profile.mod.allow_build.wilder_summoner or
 				profile.mod.allow_build.wilder_wyrmic

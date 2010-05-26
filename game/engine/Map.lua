@@ -675,7 +675,7 @@ function _M:displayEffects()
 		-- Dont bother with obviously out of screen stuff
 		if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
 			local grids
-			local s = self.tilesSurface:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, 120)
+			local s = self.tilesSurface:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, e.overlay.alpha)
 
 			-- Handle balls
 			if e.dir == 5 then

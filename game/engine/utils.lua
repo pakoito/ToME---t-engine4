@@ -324,6 +324,7 @@ function util.getval(val, ...)
 end
 
 function core.fov.circle_grids(x, y, radius, block)
+	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
 	core.fov.calc_circle(x, y, radius, function(_, lx, ly)
 		if not grids[lx] then grids[lx] = {} end
@@ -340,6 +341,7 @@ function core.fov.circle_grids(x, y, radius, block)
 end
 
 function core.fov.beam_grids(x, y, radius, dir, angle, block)
+	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
 	core.fov.calc_beam(x, y, radius, dir, angle, function(_, lx, ly)
 		if not grids[lx] then grids[lx] = {} end
