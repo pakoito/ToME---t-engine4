@@ -34,13 +34,13 @@ return { generator = function()
 	local r = rng.range(1, ray.size)
 
 	return {
-		life = 8,
-		size = 4, sizev = -0.2, sizea = 0,
+		life = 14,
+		size = 4, sizev = -0.1, sizea = 0,
 
 		x = r * math.cos(a) + 2 * math.cos(ra), xv = 0, xa = 0,
 		y = r * math.sin(a) + 2 * math.sin(ra), yv = 0, ya = 0,
 		dir = rng.percent(50) and ray.dir + math.rad(90) or ray.dir - math.rad(90), dirv = 0, dira = 0,
-		vel = rng.percent(80) and 1 or 0, velv = 0, vela = 0,
+		vel = rng.percent(80) and 1 or 0, velv = -0.2, vela = 0.01,
 
 		r = rng.range(220, 255)/255,  rv = 0, ra = 0,
 		g = rng.range(200, 230)/255,  gv = -0.04, ga = 0,
