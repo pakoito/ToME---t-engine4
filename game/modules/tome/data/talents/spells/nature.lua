@@ -124,9 +124,9 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
 			energy = { mod=1 },
 			stats = { str=18, dex=13, mag=5, con=15 },
-			tmasteries = resolvers.tmasteries{ ["technique/other"]=0.25 },
+			resolvers.tmasteries{ ["technique/other"]=0.25 },
 
-			talents = resolvers.talents{ [Talents.T_STUN]=2 },
+			resolvers.talents{ [Talents.T_STUN]=2 },
 			max_stamina = 100,
 
 			resists = { [DamageType.COLD] = 20, [DamageType.NATURE] = 20 },
@@ -139,7 +139,7 @@ newTalent{
 			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, physspeed=2 },
 
 			summoner = self,
-			summon_time = util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.15), 5, 90),
+			summon_time = util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.10), 5, 90),
 		}
 
 		bear:resolve()
@@ -150,6 +150,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the forces of nature to summon a bear ally for %d turns.
-		The power of the ally will increase with the Magic stat]]):format(util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.15), 5, 90))
+		The power of the ally will increase with the Magic stat]]):format(util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.10), 5, 90))
 	end,
 }

@@ -25,7 +25,7 @@ module(..., package.seeall, class.make)
 
 _M.particles_def = {}
 
-_M.default_particle = core.display.loadImage("/data/gfx/particle.png"):glTexture()
+_M.__particles_gl = { particle = core.display.loadImage("/data/gfx/particle.png"):glTexture() }
 
 --- Make a particle emiter
 function _M:init(def, radius, args)
@@ -44,23 +44,27 @@ function _M:save()
 end
 
 function _M:loaded()
-	local def, fct, max
+	local def, fct, max, gl
 	if type(self.def) == "string" then
 		if _M.particles_def[self.def] then
 			setfenv(_M.particles_def[self.def], setmetatable(self.args or {}, {__index=_G}))
-			def, fct, max = _M.particles_def[self.def]()
+			def, fct, max, gl = _M.particles_def[self.def]()
 		else
 			local odef = self.def
 			print("[PARTICLE] Loading from /data/gfx/particles/"..self.def..".lua")
 			local f, err = loadfile("/data/gfx/particles/"..self.def..".lua")
 			if not f and err then error(err) end
 			setfenv(f, setmetatable(self.args or {}, {__index=_G}))
-			def, fct, max = f()
+			def, fct, max, gl = f()
 			_M.particles_def[odef] = f
 		end
 	else error("unsupported particle type: "..type(self.def))
 	end
 
+	gl = gl or "particle"
+	if not self.__particles_gl[gl] then self.__particles_gl[gl] = core.display.loadImage("/data/gfx/"..gl..".png"):glTexture() end
+	gl = self.__particles_gl[gl]
+
 	self.update = fct
-	self.ps = core.particles.newEmitter(max or 1000, def, self.default_particle)
+	self.ps = core.particles.newEmitter(max or 1000, def, gl)
 end
