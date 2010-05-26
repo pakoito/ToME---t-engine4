@@ -45,7 +45,7 @@ newEntity{ base = "TRAP_WATER",
 	dam = resolvers.mbonus(90, 15),
 	combatAttackStr = function(self) return self.disarm_power * 2 end,
 	triggered = function(self, x, y, who)
-		self:project({type="ball",radius=2,x=x,y=y}, x, y, DamageType.PINNING, {dam=self.dam,dur=4})
+		self:project({type="ball",radius=2,x=x,y=y}, x, y, engine.DamageType.PINNING, {dam=self.dam,dur=4})
 		return true
 	end,
 }

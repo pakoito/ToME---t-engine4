@@ -32,7 +32,7 @@ for i = -radius, radius do for j = -radius, radius  do
 		else
 			gs[lx] = gs[lx] or {}
 			gs[lx][ly] = {x=lastx, y=lasty, radius=math.sqrt(lastx^2 + lasty^2)}
-			print("block", lx, ly, "=>", math.sqrt(lastx^2 + lasty^2))
+--			print("block", lx, ly, "=>", math.sqrt(lastx^2 + lasty^2))
 		end
 		lx, ly = l()
 	end
@@ -50,7 +50,7 @@ return { generator = function()
 	local bx = math.floor(x / engine.Map.tile_w)
 	local by = math.floor(y / engine.Map.tile_h)
 	if gs[bx] and gs[bx][by] and rng.chance(2) then
-		print("block at angle", ad, radius, ":=>", gs[bx][by].radius)
+--		print("block at angle", ad, radius, ":=>", gs[bx][by].radius)
 		radius = gs[bx][by].radius
 		sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
 		local r = rng.float(sradius - 5, sradius)
@@ -61,18 +61,18 @@ return { generator = function()
 
 	return {
 		trail = 1,
-		life = 12,
-		size = 3, sizev = static and 0.1 or 0.3, sizea = 0,
+		life = 24,
+		size = 3, sizev = static and 0.05 or 0.15, sizea = 0,
 
 		x = x, xv = 0, xa = 0,
 		y = y, yv = 0, ya = 0,
 		dir = static and a + math.rad(90 - rng.range(10, 20)) or a, dirv = 0, dira = 0,
-		vel = static and -1 or (-1-nb) * radius / 2.7, velv = 0, vela = static and -0.01 or rng.float(-0.3, -0.2),
+		vel = static and -2 or 0.5 * (-1-nb) * radius / 2.7, velv = 0, vela = static and -0.01 or rng.float(-0.3, -0.2) * 0.3,
 
 		r = rng.range(200, 255)/255,   rv = 0, ra = 0,
-		g = rng.range(120, 170)/255,   gv = 0.01, ga = 0.001,
+		g = rng.range(120, 170)/255,   gv = 0.005, ga = 0.0005,
 		b = rng.range(0, 10)/255,      bv = 0, ba = 0,
-		a = rng.range(25, 220)/255,    av = static and -0.07 or 0, aa = 0.01,
+		a = rng.range(25, 220)/255,    av = static and -0.034 or 0, aa = 0.005,
 	}
 end, },
 function(self)

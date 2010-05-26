@@ -20,7 +20,7 @@
 return { generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
-	local dir = math.rad(ad + 90)
+	local dir = math.rad(ad)
 	local r = rng.range(15, 18)
 
 	return {
@@ -30,8 +30,8 @@ return { generator = function()
 
 		x = r * math.cos(a), xv = 0.1, xa = 0,
 		y = r * math.sin(a), yv = 0.1, ya = 0,
-		dir = dir, dirv = 1, dira = 0,
-		vel = 1, velv = 0, vela = 0,
+		dir = dir, dirv = 0.1, dira = 0,
+		vel = 1, velv = 0, vela = -0.2,
 
 		r = rng.range(130, 220)/255, rv = rng.range(0, 10), ra = 0,
 		g = 0,   gv = 0, ga = 0,
