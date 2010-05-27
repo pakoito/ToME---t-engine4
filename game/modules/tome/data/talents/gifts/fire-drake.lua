@@ -88,7 +88,7 @@ newTalent{
 			DamageType.FIRE, dam,
 			radius,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=180, color_bg=30, color_bb=60},
+			{type="inferno"},
 			nil, true
 		)
 		game:playSoundNear(self, "talents/devouringflame")

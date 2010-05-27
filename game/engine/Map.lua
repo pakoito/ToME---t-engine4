@@ -716,18 +716,8 @@ end
 function _M:processEffects()
 	local todel = {}
 	for i, e in ipairs(self.effects) do
-		local grids
-
-		-- Handle balls
-		if e.dir == 5 then
-			grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
-		-- Handle beams
-		else
-			grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true)
-		end
-
 		-- Now display each grids
-		for lx, ys in pairs(grids) do
+		for lx, ys in pairs(e.grids) do
 			for ly, _ in pairs(ys) do
 				if e.friendlyfire or not (lx == e.src.x and ly == e.src.y) then
 					DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
@@ -739,7 +729,19 @@ function _M:processEffects()
 		if e.duration <= 0 then
 			table.insert(todel, i)
 		elseif e.update_fct then
-			e:update_fct()
+			if e:update_fct() then
+				if e.dir == 5 then e.grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
+				else e.grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true) end
+				if e.particles then
+					for j, ps in ipairs(e.particles) do self:removeParticleEmitter(ps) end
+					e.particles = {}
+					for lx, ys in pairs(grids) do
+						for ly, _ in pairs(ys) do
+							e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+						end
+					end
+				end
+			end
 		end
 	end
 

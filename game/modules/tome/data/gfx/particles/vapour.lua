@@ -27,7 +27,7 @@ return { generator = function()
 	return {
 		trail = 1,
 		life = 10,
-		size = 1, sizev = 0.4, sizea = 0,
+		size = 1, sizev = 0.5, sizea = 0,
 
 		x = r * math.cos(a), xv = -0.1, xa = 0,
 		y = r * math.sin(a), yv = -0.1, ya = 0,

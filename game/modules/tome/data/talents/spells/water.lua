@@ -140,6 +140,7 @@ newTalent{
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y
+				return true
 			end,
 			false
 		)
