@@ -43,15 +43,64 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
-	name = "human sun-paladin", color=colors.GOLD,
-	desc = [[A human in a shiny plate armour.]],
+	name = "human guard", color=colors.LIGHT_UMBER,
+	desc = [[A stern looking guard, he will not let you disturb the town.]],
 	level_range = {1, 50}, exp_worth = 1,
-	rarity = 6,
+	rarity = 4,
 	max_life = resolvers.rngavg(70,80),
 	resolvers.equip{
 		{type="weapon", subtype="longsword", autoreq=true},
 		{type="armor", subtype="shield", autoreq=true},
-		{type="armor", subtype="heavy", autoreq=true},
 	},
-	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, [Talents.T_PERFECT_STRIKE]=1, },
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{ [Talents.T_RUSH]=1, [Talents.T_PERFECT_STRIKE]=1, },
+}
+
+newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
+	name = "human archer", color=colors.UMBER,
+	desc = [[A stern looking guard, he will not let you disturb the town.]],
+	level_range = {1, 50}, exp_worth = 1,
+	rarity = 7,
+	max_life = resolvers.rngavg(50,60),
+	resolvers.talents{ [Talents.T_SHOOT]=1, },
+	ai_state = { talent_in=2, },
+	autolevel = "archer",
+	resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
+}
+
+newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
+	name = "human sun-paladin", color=colors.GOLD,
+	desc = [[A human in a shiny plate armour.]],
+	level_range = {5, 50}, exp_worth = 1,
+	rarity = 7,
+	rank = 3,
+	max_life = resolvers.rngavg(80,90),
+	resolvers.equip{
+		{type="weapon", subtype="mace", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="massive", autoreq=true},
+	},
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
+		[Talents.T_CHANT_OF_FORTITUDE]=2,
+		[Talents.T_SEARING_LIGHT]=2,
+	},
+}
+
+newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
+	name = "elven sun-mage", color=colors.YELLOW,
+	desc = [[An elf dressed in glowing robes.]],
+	level_range = {3, 50}, exp_worth = 1,
+	rarity = 7,
+	rank = 3,
+	max_life = resolvers.rngavg(70,80),
+	resolvers.equip{
+		{type="weapon", subtype="stagg", autoreq=true},
+		{type="armor", subtype="robe", autoreq=true},
+	},
+	resolvers.talents{
+		[Talents.T_CHANT_OF_LIGHT]=2,
+		[Talents.T_SEARING_LIGHT]=3,
+		[Talents.T_FIREBEAM]=2,
+	},
 }
