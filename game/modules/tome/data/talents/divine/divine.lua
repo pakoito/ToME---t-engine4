@@ -48,3 +48,4 @@ divi_req5 = {
 
 load("/data/talents/divine/chants.lua")
 load("/data/talents/divine/sun.lua")
+load("/data/talents/divine/combat.lua")

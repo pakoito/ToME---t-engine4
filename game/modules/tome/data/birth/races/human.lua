@@ -36,6 +36,10 @@ newBirthDescriptor{
 			Beorning = "allow",
 			__ALL__ = "never",
 		},
+		subclass =
+		{
+			['Sun Paladin'] = "allow",
+		},
 	},
 	talents = {},
 	experience = 1.0,

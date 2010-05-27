@@ -36,6 +36,10 @@ newBirthDescriptor{
 			Avari = "allow",
 			__ALL__ = "never",
 		},
+		subclass =
+		{
+			['Sun Paladin'] = "allow",
+		},
 	},
 	talents = {
 --		[ActorTalents.T_IMPROVED_MANA_I]=1,

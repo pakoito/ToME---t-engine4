@@ -43,8 +43,10 @@ newTalent{
 	activate = function(self, t)
 		cancelChants(self)
 		local power = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.12)
+		local dam = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=dam}),
 			phys = self:addTemporaryValue("combat_physresist", power),
 			spell = self:addTemporaryValue("combat_spellresist", power),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
@@ -53,14 +55,16 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("combat_physresist", p.phys)
 		self:removeTemporaryValue("combat_spellresist", p.spell)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d physical and spell resistance.
+		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.12))
+		The resistance and damage will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.12), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,
 }
 
@@ -78,8 +82,10 @@ newTalent{
 	activate = function(self, t)
 		cancelChants(self)
 		local power = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.08)
+		local dam = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=dam}),
 			phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL] = power}),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
 		}
@@ -87,13 +93,15 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("resists", p.phys)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d%% physical damage resistance.
+		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08))
+		The resistance and damage will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,
 }
 
@@ -111,8 +119,10 @@ newTalent{
 	activate = function(self, t)
 		cancelChants(self)
 		local power = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.08)
+		local dam = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=dam}),
 			res = self:addTemporaryValue("resists", {
 				[DamageType.FIRE] = power,
 				[DamageType.LIGHTNING] = power,
@@ -125,13 +135,15 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("resists", p.res)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d%% elemental resistances.
+		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08))
+		The resistance and damage will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,
 }
 
@@ -149,8 +161,10 @@ newTalent{
 	activate = function(self, t)
 		cancelChants(self)
 		local power = 10 + self:getTalentLevel(t) * self:combatSpellpower(0.10)
+		local dam = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=dam}),
 			phys = self:addTemporaryValue("inc_damage", {[DamageType.LIGHT] = power}),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
 		}
@@ -158,12 +172,14 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("inc_damage", p.phys)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d%% more light damage.
+		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The damage will increase with the Magic stat]]):format(10 + self:getTalentLevel(t) * self:combatSpellpower(0.10))
+		The damage will increase with the Magic stat]]):format(10 + self:getTalentLevel(t) * self:combatSpellpower(0.10), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,
 }

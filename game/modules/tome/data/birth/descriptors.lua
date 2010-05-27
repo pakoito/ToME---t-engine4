@@ -29,6 +29,11 @@ newBirthDescriptor{
 			Arda = "allow",
 			["Spydrë"] = function() return profile.mod.allow_build.world_spydre and "allow" or "never" end,
 		},
+		subclass =
+		{
+			-- Nobdoy can be a sun paladin but humans & elves
+			['Sun Paladin'] = "never",
+		},
 	},
 	talents = {},
 	experience = 1.0,

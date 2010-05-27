@@ -704,3 +704,19 @@ newEffect{
 		self:removeTemporaryValue("combat_dam", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "MARTYRDOM",
+	desc = "Martyrdom",
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is a martyr.", "+Martyr" end,
+	on_lose = function(self, err) return "#Target# is no more influenced by martyrdom.", "-Martyr" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("martyrdom", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("martyrdom", eff.tmpid)
+	end,
+}

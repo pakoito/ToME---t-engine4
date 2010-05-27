@@ -67,6 +67,10 @@ setDefaultProjector(function(src, x, y, type, dam)
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {255,0,0})
 			end
 		end
+
+		if src:attr("martyrdom") then
+			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100)
+		end
 		return dam
 	end
 	return 0
