@@ -65,13 +65,14 @@ newTalent{
 	},
 	range = 6,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=true, radius=5 + self:getTalentLevel(t), talent=t}
+		local tg = {type="ball", range=0, friendlyfire=true, radius=2 + self:getTalentLevel(t) / 2, talent=t}
 		tg.friendlyfire = false
-		self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
+		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		if self:getTalentLevel(t) then
 			self:project(tg, self.x, self.y, DamageType.LIGHT, 4 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
 		end
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y, max_alpha=80})
 		game:playSoundNear(self, "talents/flame")
 		return true
 	end,
@@ -125,7 +126,10 @@ newTalent{
 	range = 3,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=3, friendlyfire=false, talent=t}
-		self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.17) * self:getTalentLevel(t)), {type="light"})
+		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.17) * self:getTalentLevel(t)))
+
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
+
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,

@@ -43,6 +43,10 @@ function _M:save()
 	})
 end
 
+function _M:cloned()
+	self:loaded()
+end
+
 function _M:loaded()
 	local def, fct, max, gl
 	if type(self.def) == "string" then

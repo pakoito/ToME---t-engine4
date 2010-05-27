@@ -657,15 +657,39 @@ end
 -- @param damtype the DamageType to apply
 -- @param radius the radius of the effect
 -- @param dir the numpad direction of the effect, 5 for a ball effect
--- @param overlay a simple display entity to draw upon the map
+-- @param overlay either a simple display entity to draw upon the map or a Particle class
 -- @param update_fct optional function that will be called each time the effect is updated with the effect itself as parameter. Use it to change radius, move around ....
 function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, overlay, update_fct, friendlyfire)
 	if friendlyfire == nil then friendlyfire = true end
-	print(friendlyfire)
-	table.insert(self.effects, {
-		src=src, x=x, y=y, duration=duration, damtype=damtype, dam=dam, radius=radius, dir=dir, angle=angle, overlay=overlay,
+
+	local grids
+
+	-- Handle balls
+	if dir == 5 then
+		grids = core.fov.circle_grids(x, y, radius, true)
+	-- Handle beams
+	else
+		grids = core.fov.beam_grids(x, y, radius, dir, angle, true)
+	end
+
+	local e = {
+		src=src, x=x, y=y, duration=duration, damtype=damtype, dam=dam, radius=radius, dir=dir, angle=angle,
+		overlay=overlay.__CLASSNAME and overlay,
+		grids = grids,
 		update_fct=update_fct, friendlyfire=friendlyfire
-	})
+	}
+
+	if not overlay.__CLASSNAME then
+		e.particles = {}
+		for lx, ys in pairs(grids) do
+			for ly, _ in pairs(ys) do
+				e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+			end
+		end
+	end
+
+	table.insert(self.effects, e)
+
 	self.changed = true
 end
 
@@ -673,20 +697,11 @@ end
 function _M:displayEffects()
 	for i, e in ipairs(self.effects) do
 		-- Dont bother with obviously out of screen stuff
-		if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-			local grids
+		if e.overlay and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
 			local s = self.tilesSurface:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, e.overlay.alpha)
 
-			-- Handle balls
-			if e.dir == 5 then
-				grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
-			-- Handle beams
-			else
-				grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true)
-			end
-
 			-- Now display each grids
-			for lx, ys in pairs(grids) do
+			for lx, ys in pairs(e.grids) do
 				for ly, _ in pairs(ys) do
 					if self.seens(lx, ly) then
 						s:toScreen(self.display_x + (lx - self.mx) * self.tile_w, self.display_y + (ly - self.my) * self.tile_h)
@@ -728,7 +743,12 @@ function _M:processEffects()
 		end
 	end
 
-	for i = #todel, 1, -1 do table.remove(self.effects, todel[i]) end
+	for i = #todel, 1, -1 do
+		if self.effects[todel[i]].particles then
+			for j, ps in ipairs(self.effects[todel[i]].particles) do self:removeParticleEmitter(ps) end
+		end
+		table.remove(self.effects, todel[i])
+	end
 end
 
 
