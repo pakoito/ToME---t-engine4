@@ -42,6 +42,7 @@ newAI("target_simple", function(self)
 		-- find the closest ennemy
 		if act and self:reactionToward(act) < 0 and not act.dead then
 			self.ai_target.actor = act
+			self:check("on_acquire_target", act)
 			return true
 		end
 	end

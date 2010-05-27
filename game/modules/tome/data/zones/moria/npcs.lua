@@ -74,8 +74,22 @@ newEntity{ define_as = "GOLBUG",
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
 
+	on_acquire_target = function(self, who)
+		-- Doesnt matter who, jsut assume the player is there
+		if not self.has_chatted then
+			self.has_chatted = true
+			local Chat = require("engine.Chat")
+			local chat = Chat.new("golbug-explains", self, game.player)
+			chat:invoke()
+		end
+	end,
+
 	on_die = function(self, who)
---		who:resolveSource():grantQuest("tol-falas")
---		who:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
+		world:gainAchievement("DESTROYER_BANE", game.player:resolveSource())
+		game.player.winner = true
+		game.player:setQuestStatus("orc-hunt", engine.Quest.DONE)
+		game.player:grantQuest("wild-wild-east")
+		local D = require "engine.Dialog"
+		D:simplePopup("Winner!", "#VIOLET#Congratulations, you have won the game! At least for now... The quest has only started!")
 	end,
 }

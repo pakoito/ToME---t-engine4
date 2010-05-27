@@ -17,24 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---------------- Main objectives
-newAchievement{
-	name = "Vampire crusher",
-	desc = [[Destroyed the Master in its lair of Tol Falas.]],
+newChat{ id="welcome",
+	text = [[#VIOLET#*As you open the door you notice a huge orc in the distance, covered in both flames and ice.*#LAST#
+@playerdescriptor.race@! You should never have come, your doom awaits!
+The Orc Pride will never yield to anybody, they have their precious and there is nothing you can do.]],
+	answers = {
+		{"The Orc Pride obeys to a master? Yes .. 'pride' indeed!", jump="mock"},
+		{"#LIGHT_GREEN#[Attack]"},
+	}
 }
-newAchievement{
-	name = "A dangerous secret",
-	desc = [[Found the mysterious staff and told Minas Tirith about it.]],
+
+newChat{ id="mock",
+	text = [[The Pride chooses its allies, it has no master! ATTACK!]],
+	answers = {
+		{"#LIGHT_GREEN#[Attack]"},
+	}
 }
-newAchievement{
-	name = "The secret city",
-	desc = [[Discovered the truth about mages.]],
-}
-newAchievement{
-	name = "Sliders",
-	desc = [[Activated a portal using the Orb of Many Ways.]],
-}
-newAchievement{
-	name = "Destroyer's bane", id = "DESTROYER_BANE",
-	desc = [[Killed Golbug the Destroyer.]],
-}
+
+return "welcome"

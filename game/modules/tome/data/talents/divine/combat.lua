@@ -20,6 +20,7 @@
 newTalent{
 	name = "Weapon of Light",
 	type = {"divine/combat", 1},
+	mode = "sustained",
 	require = divi_req1,
 	points = 5,
 	cooldown = 30,
@@ -63,16 +64,18 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		game:playSoundNear(self, "talents/spell_generic")
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
+		if target and target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15)then
 			target:setEffect(self.EFF_MARTYRDOM, 10, {power=8 * self:getTalentLevelRaw(t)})
+		else
+			return
 		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[
+		return ([[Designate a target as martyr. When the martyr deals damage it also damages it for %d%%.
 		The damage percent will increase with the Magic stat]]):
 		format(
-			4 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
+			8 * self:getTalentLevelRaw(t)
 		)
 	end,
 }
@@ -86,46 +89,47 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 10,
+	range = function(self, t) return 2 + self:getStr(12) end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)))
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "light_beam", {tx=x-self.x, ty=y-self.y})
-
-		game:playSoundNear(self, "talents/flame")
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			self:attackTarget(target, nil, 1.1 + self:getTalentLevel(t) / 7, true)
+		else
+			return
+		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fire a beam of sun flames at your foes, burning all those in line for %0.2f light damage.
-		The damage will increase with the Magic stat]]):
-		format(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
+		return ([[In a pure display of power you project a melee attack up to a range of %d, doing %d%% damage.
+		The range will increase with the Strength stat]]):
+		format(self:getTalentRange(t), 100 * (1.1 + self:getTalentLevel(t) / 7))
 	end,
 }
 
 newTalent{
-	name = "Rune of Peace",
+	name = "Crusade",
 	type = {"divine/combat", 4},
 	require = divi_req4,
 	points = 5,
-	cooldown = 35,
+	cooldown = 20,
 	tactical = {
 		ATTACKAREA = 10,
 	},
 	range = 3,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=3, friendlyfire=false, talent=t}
-		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.17) * self:getTalentLevel(t)))
-
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
-
-		game:playSoundNear(self, "talents/fireflash")
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self:attackTarget(target, DamageType.LIGHT, 1.1 + self:getTalentLevel(t) / 7, true)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures a furious burst of sunlight, dealing %0.2f light damage to all those around you in a radius of 3.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 10 + self:combatSpellpower(0.17) * self:getTalentLevel(t))
+		return ([[Concentrate the power of the sun in a single blow doing %d%% light damage.]]):
+		format(100 * (1.1 + self:getTalentLevel(t) / 7))
 	end,
 }

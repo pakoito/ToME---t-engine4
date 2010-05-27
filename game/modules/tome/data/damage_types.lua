@@ -68,7 +68,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 			end
 		end
 
-		if src:attr("martyrdom") then
+		if src.attr and src:attr("martyrdom") then
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100)
 		end
 		return dam
@@ -485,6 +485,17 @@ newDamageType{
 			target:heal(dam)
 		elseif target then
 			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
+		end
+	end,
+}
+
+-- Heals
+newDamageType{
+	name = "healing", type = "HEAL",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:heal(dam, src)
 		end
 	end,
 }

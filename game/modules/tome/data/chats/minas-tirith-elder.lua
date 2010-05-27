@@ -35,16 +35,21 @@ The staff you describe reminds me of some artifact of power of the old ages. Ple
 
 newChat{ id="lost_staff",
 	text = [[Orcs?! In the west! This is most alarming! We have not seen any for nearly eighty years. They must come from the far east...
-But do not let me trouble you, you brought important news and you are lucky to be alive. Please rest for a while.]],
+But do not let me trouble you, you brought important news and you are lucky to be alive.]],
 	answers = {
 		{"Thank you Sir.", action=function(npc, player)
 			player:setQuestStatus("staff-absorption", engine.Quest.DONE)
-			player.winner = true
-			local D = require "engine.Dialog"
-			D:simplePopup("Winner!", "#VIOLET#Congratulations, you have won the game! At least for now... The quest has only started!")
-
 			world:gainAchievement("A_DANGEROUS_SECRET", player)
---			game:setAllowedBuild("evil_race", true)
+		end, jump="orc_hunt"},
+	}
+}
+
+newChat{ id="orc_hunt",
+	text = [[We have heard rumours from the dwarves that there is still an orc presence deep in the mines of Moria.
+I know you have been through a lot, but we need somebody to investigate this lead and if there is a connection with the staff.]],
+	answers = {
+		{"I will check the mines.", action=function(npc, player)
+			player:grantQuest("orc-hunt")
 		end},
 	}
 }

@@ -17,24 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---------------- Main objectives
-newAchievement{
-	name = "Vampire crusher",
-	desc = [[Destroyed the Master in its lair of Tol Falas.]],
-}
-newAchievement{
-	name = "A dangerous secret",
-	desc = [[Found the mysterious staff and told Minas Tirith about it.]],
-}
-newAchievement{
-	name = "The secret city",
-	desc = [[Discovered the truth about mages.]],
-}
-newAchievement{
-	name = "Sliders",
-	desc = [[Activated a portal using the Orb of Many Ways.]],
-}
-newAchievement{
-	name = "Destroyer's bane", id = "DESTROYER_BANE",
-	desc = [[Killed Golbug the Destroyer.]],
-}
+-- Explore the far east
+name = "The wild wild east"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "There must be a way to go into the far east from the lair of Golbug, find it and explore the unknown far east, looking for clues."
+	return table.concat(desc, "\n")
+end

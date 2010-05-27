@@ -41,7 +41,7 @@ newTalent{
 			DamageType.LIGHT, 6 + self:combatSpellpower(0.2) * self:getTalentLevel(t),
 			0,
 			5, nil,
-			engine.Entity.new{alpha=30, display='', color_br=255, color_bg=215, color_bb=0},
+			{type="light_zone"},
 			nil, self:spellFriendlyFire()
 		)
 

@@ -59,5 +59,7 @@ end
 
 --- Replace some keywords in the given text
 function _M:replace(text)
-	return text:gsub("@playername@", self.player.name):gsub("@npcname@", self.npc.name)
+	text = text:gsub("@playername@", self.player.name):gsub("@npcname@", self.npc.name)
+	text = text:gsub("@playerdescriptor.(.-)@", function(what) return self.player.descriptor[what] end)
+	return text
 end
