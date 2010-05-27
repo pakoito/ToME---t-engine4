@@ -110,7 +110,7 @@ newTalent{
 	action = function(self, t)
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
-			local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+			local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 			x, y = self:getTarget(tg)
 			if not x or not y then return nil end
 		end

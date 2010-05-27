@@ -34,7 +34,7 @@ newTalent{
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t)), nil)
 		local _ _, x, y = self:canProject(tg, x, y)
 		if tg.type == "beam" then
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})

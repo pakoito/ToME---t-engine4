@@ -53,6 +53,7 @@ local FlyingText = require "engine.FlyingText"
 local Tooltip = require "engine.Tooltip"
 local Calendar = require "engine.Calendar"
 
+local Dialog = require "engine.Dialog"
 local QuitDialog = require "mod.dialogs.Quit"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound))
@@ -425,13 +426,26 @@ function _M:targetMode(v, msg, co, typ)
 		self.target:setActive(false)
 
 		if tostring(old) == "exclusive" then
-			self.key = self.normal_key
-			self.key:setCurrent()
-			if self.target_co then
-				local co = self.target_co
-				self.target_co = nil
-				local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y, self.target.target.entity)
-				if not ok and err then print(debug.traceback(co)) error(err) end
+			local fct = function(ok)
+				if not ok then
+					self.target.target.entity = nil
+					self.target.target.x = nil
+					self.target.target.y = nil
+				end
+
+				self.key = self.normal_key
+				self.key:setCurrent()
+				if self.target_co then
+					local co = self.target_co
+					self.target_co = nil
+					local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y, self.target.target.entity)
+					if not ok and err then print(debug.traceback(co)) error(err) end
+				end
+			end
+			if self.target_warning and self.target.target.x == game.player.x and self.target.target.y == game.player.y then
+				Dialog:yesnoPopup("Target yourself?", "Are you sure you want to target yourself?", fct)
+			else
+				fct(true)
 			end
 		end
 	else
@@ -440,6 +454,7 @@ function _M:targetMode(v, msg, co, typ)
 		self.level.map.changed = true
 		self.target:setActive(true, typ)
 		self.target_style = "lock"
+		self.target_warning = true
 
 		-- Exclusive mode means we disable the current key handler and use a specific one
 		-- that only allows targetting and resumes talent coroutine when done
@@ -453,7 +468,9 @@ function _M:targetMode(v, msg, co, typ)
 				self.target:scan(5, nil, self.player.x, self.player.y)
 			end
 		end
-		self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y)
+		if self.target.target.x then
+			self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y)
+		end
 	end
 end
 

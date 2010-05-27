@@ -41,6 +41,8 @@ function _M:project(t, x, y, damtype, dam, particles)
 		return
 	end
 
+	if type(particles) ~= "table" then particles = nil end
+
 	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 

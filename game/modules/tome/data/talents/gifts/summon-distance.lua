@@ -127,7 +127,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
@@ -192,7 +192,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
@@ -259,7 +259,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
@@ -327,7 +327,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
