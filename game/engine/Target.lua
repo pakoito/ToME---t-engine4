@@ -148,11 +148,13 @@ function _M:scan(dir, radius, sx, sy)
 		if game.level.map.seens(x, y) and game.level.map(x, y, engine.Map.ACTOR) then
 			local a = game.level.map(x, y, engine.Map.ACTOR)
 
-			table.insert(actors, {
-				a = a,
-				dist = math.abs(sx - x)*math.abs(sx - x) + math.abs(sy - y)*math.abs(sy - y)
-			})
-			actors[a] = true
+			if not self.source_actor or self.source_actor:canSee(a) then
+				table.insert(actors, {
+					a = a,
+					dist = math.abs(sx - x)*math.abs(sx - x) + math.abs(sy - y)*math.abs(sy - y)
+				})
+				actors[a] = true
+			end
 		end
 		return false
 	end

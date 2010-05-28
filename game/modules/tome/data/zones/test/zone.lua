@@ -19,7 +19,7 @@
 
 return {
 	name = "TestZone!",
-	level_range = {1, 1},
+	level_range = {1, 50},
 	level_scheme = "player",
 	max_level = 4,
 	decay = {300, 800},
@@ -41,11 +41,11 @@ return {
 				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
 			},
 		},
---[[
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {40, 50},
 		},
+--[[
 		object = {
 			class = "engine.generator.object.Random",
 			nb_object = {12, 16},

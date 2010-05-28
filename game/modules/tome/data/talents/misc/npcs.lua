@@ -453,3 +453,98 @@ newTalent{
 		return ([[You project thick black ink, blinding your targets for %d turns.]]):format(2+self:getTalentLevelRaw(t))
 	end,
 }
+
+newTalent{
+	name = "Spit Poison",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	equilibrium = 4,
+	cooldown = 6,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.POISON, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.8, {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Spit poison at your target doing %0.2f poison damage.
+		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.8)
+	end,
+}
+
+newTalent{
+	name = "Lay Web",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	equilibrium = 4,
+	cooldown = 6,
+	message = "@Source@ seems to search the ground...",
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		local dur = 2 + self:getTalentLevel(t)
+		local trap = mod.class.Trap.new{
+			type = "web", subtype="web", id_by_type=true, unided_name = "sticky web",
+			display = '^', color=colors.YELLOW,
+			name = "sticky web", auto_id = true,
+			detect_power = 6 * self:getTalentLevel(t), disarm_power = 10 * self:getTalentLevel(t),
+			level_range = {self.level, self.level},
+			message = "@Target@ is caught in a web!",
+			canTrigger = function(self, x, y, who)
+				if who.type == "spiderkin" then return false end
+				return mod.class.Trap.canTrigger(self, x, y, who)
+			end,
+			triggered = function(self, x, y, who)
+				if who:checkHit(self.disarm_power + 5, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("stun") then
+					who:setEffect(who.EFF_PINNED, dur, {})
+				else
+					game.logSeen(who, "%s resists!", who.name:capitalize())
+				end
+				return true, true
+			end
+		}
+		game.level.map(self.x, self.y, Map.TRAP, trap)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay an invisible web under you trapping all non-spiderkin that passes.]]):format()
+	end,
+}
+
+newTalent{
+	name = "Darkness",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	equilibrium = 4,
+	cooldown = 6,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			local g = engine.Entity.new{block_sight=true, always_remember=false, unlit=self:getTalentLevel(t) * 10}
+			game.level.map(px, py, Map.TERRAIN+1, g)
+			game.level.map.remembers(px, py, false)
+			game.level.map.lites(px, py, false)
+		end, nil, {type="dark"})
+		self:teleportRandom(self.x, self.y, 5)
+		game:playSoundNear(self, "talents/breath")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Weave darkness, blocking all light but the most powerful and teleport your a short range.
+		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.3)
+	end,
+}

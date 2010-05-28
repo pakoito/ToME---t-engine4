@@ -152,6 +152,13 @@ newDamageType{
 newDamageType{
 	name = "lite", type = "LITE", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
+		-- Dont lit magically unlit grids
+		local g = game.level.map(x, y, Map.TERRAIN+1)
+		if g and g.unlit then
+			if g.unlit <= dam then game.level.map:remove(x, y, Map.TERRAIN+1)
+			else return end
+		end
+
 		game.level.map.lites(x, y, true)
 	end,
 }
