@@ -20,7 +20,7 @@
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "BASE_NPC_SUNWALL_HUMAN",
+	define_as = "BASE_NPC_SUNWALL_TOWN",
 	type = "humanoid", subtype = "human",
 	display = "p", color=colors.WHITE,
 	faction = "sunwall",
@@ -42,7 +42,7 @@ newEntity{
 	stats = { str=12, dex=8, mag=6, con=10 },
 }
 
-newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
+newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	name = "human guard", color=colors.LIGHT_UMBER,
 	desc = [[A stern looking guard, he will not let you disturb the town.]],
 	level_range = {1, 50}, exp_worth = 1,
@@ -56,8 +56,8 @@ newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
 	resolvers.talents{ [Talents.T_RUSH]=1, [Talents.T_PERFECT_STRIKE]=1, },
 }
 
-newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
-	name = "human archer", color=colors.UMBER,
+newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
+	name = "elven archer", color=colors.UMBER,
 	desc = [[A stern looking guard, he will not let you disturb the town.]],
 	level_range = {1, 50}, exp_worth = 1,
 	rarity = 7,
@@ -68,7 +68,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
 	resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
 }
 
-newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
+newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	name = "human sun-paladin", color=colors.GOLD,
 	desc = [[A human in a shiny plate armour.]],
 	level_range = {5, 50}, exp_worth = 1,
@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
 	},
 }
 
-newEntity{ base = "BASE_NPC_SUNWALL_HUMAN",
+newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	name = "elven sun-mage", color=colors.YELLOW,
 	desc = [[An elf dressed in glowing robes.]],
 	level_range = {3, 50}, exp_worth = 1,

@@ -331,6 +331,20 @@ function _M:tooltip()
 	end
 
 	local rank, rank_color = self:TextRank()
+
+	local effs = {}
+	for tid, act in pairs(self.sustain_talents) do
+		if act then effs[#effs+1] = ("- #LIGHT_GREEN#%s"):format(self:getTalentFromId(tid).name) end
+	end
+	for eff_id, p in pairs(self.tmp) do
+		local e = self.tempeffect_def[eff_id]
+		if e.status == "detrimental" then
+			effs[#effs+1] = ("- #LIGHT_RED#%s"):format(e.desc)
+		else
+			effs[#effs+1] = ("- #LIGHT_GREEN#%s"):format(e.desc)
+		end
+	end
+
 	return ([[%s%s
 Rank: %s%s
 #00ffff#Level: %d
@@ -340,7 +354,7 @@ Stats: %d /  %d / %d / %d / %d / %d
 Size: #ANTIQUE_WHITE#%s
 %s
 Faction: %s%s (%s)
-]]):format(
+%s]]):format(
 	rank_color, self.name,
 	rank_color, rank,
 	self.level,
@@ -355,7 +369,8 @@ Faction: %s%s (%s)
 	self:getCon(),
 	self:TextSizeCategory(),
 	self.desc or "",
-	factcolor, Faction.factions[self.faction].name, factstate
+	factcolor, Faction.factions[self.faction].name, factstate,
+	table.concat(effs, "\n")
 	)
 end
 

@@ -18,14 +18,16 @@
 -- darkgod@te4.org
 
 return {
-	name = "Sun Wall Outpost",
+	name = "Sunwall Outpost",
 	level_range = {1, 10},
+	level_scheme = "player",
 	max_level = 5,
+	decay = {300, 800},
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
 	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	ambiant_music = "80s_song.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Town",
@@ -42,10 +44,11 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
+			guardian = "SUN_PALADIN_AERYN",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {0, 0},
+			nb_object = {3, 6},
 		},
 	},
 	levels =

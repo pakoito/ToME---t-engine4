@@ -25,13 +25,14 @@ local Talents = require("engine.interface.ActorTalents")
 -- The boss of Moria, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "GOLBUG",
 	type = "humanoid", subtype = "orc", unique = true,
+	faction = "orc-pride",
 	name = "Golbug the Destroyer",
 	display = "o", color=colors.VIOLET,
 	desc = [[A huge and muscular orc of unknown breed. He looks both menacing and cunning...]],
 	level_range = {28, 45}, exp_worth = 2,
 	max_life = 350, life_rating = 16, fixed_rating = true,
 	max_stamina = 245,
-	rank = 4,
+	rank = 5,
 	size_category = 3,
 	stats = { str=22, dex=19, cun=34, mag=10, con=16 },
 

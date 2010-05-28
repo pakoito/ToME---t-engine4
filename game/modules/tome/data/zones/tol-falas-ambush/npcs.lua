@@ -24,6 +24,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	unique = true,
 	name = "Ukruk the Fierce",
+	faction = "orc-pride",
 	color=colors.VIOLET,
 	desc = [[This ugly orc looks really nasty and vicious. He is obviously looking for something and bears an unkown symbol on his shield.]],
 	level_range = {50, 50}, exp_worth = 2,

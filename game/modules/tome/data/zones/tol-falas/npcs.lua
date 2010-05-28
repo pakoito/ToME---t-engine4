@@ -26,6 +26,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of Tol Falas, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "THE_MASTER",
+	faction = "tol-falas",
 	type = "undead", subtype = "vampire", unique = true,
 	name = "The Master",
 	display = "V", color=colors.VIOLET,
