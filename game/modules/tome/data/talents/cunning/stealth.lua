@@ -70,7 +70,7 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
-		Shadowstrikes do %.02f%% damage versus a normal hit.]]):format((2 + self:getTalentLevel(t) / 5) * 100)
+		Shadowstrikes do %.02f%% damage versus a normal hit.]]):format((1.5 + self:getTalentLevel(t) / 7) * 100)
 	end,
 }
 

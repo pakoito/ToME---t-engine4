@@ -484,7 +484,7 @@ end
 --- Computes physical crit for a damage
 function _M:physicalCrit(dam, weapon, target)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
-		return dam * (2 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 5), true
+		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
 	end
 
 	local chance = self:combatCrit(weapon)
@@ -493,7 +493,7 @@ function _M:physicalCrit(dam, weapon, target)
 
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * 2
+		dam = dam * 1.5
 		crit = true
 	end
 	return dam, crit
@@ -502,16 +502,15 @@ end
 --- Computes spell crit for a damage
 function _M:spellCrit(dam)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
-		return dam * (2 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 5), true
+		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
 	end
 
 	local chance = self:combatSpellCrit()
 	local crit = false
---	if self:knowTalent(self.T_BACKSTAB) then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
 
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * 2
+		dam = dam * 1.5
 		crit = true
 	end
 	return dam, crit
