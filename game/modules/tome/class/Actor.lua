@@ -131,6 +131,19 @@ function _M:act()
 
 	self.changed = true
 
+	-- If ressources are too low, disable sustains
+	if self.mana < 1 or self.stamina < 1 then
+		for tid, _ in pairs(self.sustain_talents) do
+			local t = self:getTalentFromId(tid)
+			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) then
+				local old = self.energy.value
+				self.energy.value = 100000
+				self:useTalent(tid)
+				self.energy.value = old
+			end
+		end
+	end
+
 	-- Cooldown talents
 	self:cooldownTalents()
 	-- Regen resources

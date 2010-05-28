@@ -73,7 +73,7 @@ newTalent{
 
 		return {
 			move = self:addTemporaryValue("never_move", 1),
-			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed(weapon.combat) * (self:getTalentLevelRaw(t) * 0.1)),
+			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed(weapon.combat) - 1 / (1 + self:getTalentLevel(t) * 0.1)),
 			crit = self:addTemporaryValue("combat_physcrit", 7 + self:getTalentLevel(t) * self:getDex(10)),
 			atk = self:addTemporaryValue("combat_dam", 4 + self:getTalentLevel(t) * self:getDex(10)),
 			dam = self:addTemporaryValue("combat_atk", 4 + self:getTalentLevel(t) * self:getDex(10)),
@@ -90,7 +90,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor peneration(+%d), and critical chance(+%d%%)---but reducing your firing speed by %d%% and making you unable to move.]]):
+		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor peneration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10), 4 + self:getTalentLevel(t) * self:getDex(10),
 		3 + self:getTalentLevel(t) * self:getDex(10), 7 + self:getTalentLevel(t) * self:getDex(10),
 		self:getTalentLevelRaw(t) * 10)
@@ -113,7 +113,7 @@ newTalent{
 		end
 
 		return {
-			speed = self:addTemporaryValue("combat_physspeed", -self:combatSpeed(weapon.combat) * (self:getTalentLevelRaw(t) * 0.14)),
+			speed = self:addTemporaryValue("combat_physspeed", -self:combatSpeed(weapon.combat) + 1 / (1 + self:getTalentLevel(t) * 0.09)),
 			atk = self:addTemporaryValue("combat_dam", -8 - self:getTalentLevelRaw(t) * 2.4),
 			dam = self:addTemporaryValue("combat_atk", -8 - self:getTalentLevelRaw(t) * 2.4),
 			crit = self:addTemporaryValue("combat_physcrit", -8 - self:getTalentLevelRaw(t) * 2.4),
@@ -128,7 +128,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), damage(%d), and critical chance(%d).]]):
-		format(self:getTalentLevelRaw(t) * 14, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
+		format(self:getTalentLevelRaw(t) * 9, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }
 

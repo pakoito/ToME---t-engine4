@@ -58,13 +58,13 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SLOW, util.bound((self:combatSpellpower(0.15) * self:getTalentLevel(t)) / 100, 0.1, 0.4), {type="manathrust"})
+		self:project(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + self:getTalentLevel(t) * 0.07), {type="manathrust"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Decreases the target's global speed by %.2f for 7 turns.
-		The speed decrease improves with the Magic stat]]):format(util.bound((self:combatSpellpower(0.15) * self:getTalentLevel(t)) / 100, 0.1, 0.4))
+		return ([[Decreases the target's global speed by %d%% for 7 turns.
+		The speed decrease improves with the Magic stat]]):format(self:getTalentLevel(t) * 7)
 	end,
 }
 
@@ -81,7 +81,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = util.bound((self:combatSpellpower(0.5) * self:getTalentLevel(t)) / 100, 0.1, 2)
+		local power = 1 - 1 / (1 + self:getTalentLevel(t) * 0.07)
 		return {
 			speed = self:addTemporaryValue("energy", {mod=power}),
 		}
@@ -91,8 +91,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Increases the caster's global speed by %.2f.
-		The speed increase improves with the Magic stat]]):format(util.bound((self:combatSpellpower(0.5) * self:getTalentLevel(t)) / 100, 0.1, 2))
+		return ([[Increases the caster's global speed by %d%%.
+		The speed increase improves with the Magic stat]]):format(self:getTalentLevel(t) * 7)
 	end,
 }
 

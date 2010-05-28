@@ -33,6 +33,8 @@ function _M:init(t, no_default)
 	t.buy_percent = t.buy_percent or 10
 	t.sell_percent = t.sell_percent or 100
 	Store.init(self, t, no_default)
+
+	if self.store and self.store.restock_after then self.store.restock_after = self.store.restock_after * 10 end
 end
 
 --- Called on object purchase
