@@ -40,3 +40,49 @@ on_grant = function(self, who)
 	game.logPlayer(who, "#00FFFF#You can feel the power of this staff just by carrying it. This is both ancient and dangerous.")
 	game.logPlayer(who, "#00FFFF#It should be shown to the wise elders in Minas Tirith!")
 end
+
+start_ambush = function(self, who)
+	game.logPlayer(who, "#VIOLET#As you come out of Tol Falas, you encounter a band of orcs!")
+	who:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush")
+
+	-- Next time the player dies (and he WILL die) he wont really die
+	who.die = function(self)
+		self.dead = false
+		self.die = nil
+		self.life = 1
+		for _, e in pairs(game.level.entities) do
+			if e ~= self then
+				game.level:removeEntity(e)
+				e.dead = true
+			end
+		end
+		-- Protect from other hits on the same turn
+		self:setEffect(self.EFF_BARRIER, 3, {power=1000000})
+
+		local o, item, inven_id = who:findInAllInventories("Staff of Absorption")
+		who:removeObject(inven_id, item, true)
+		o:removed()
+
+		game.logPlayer(self, "#VIOLET#You wake up after a few hours, surprised to be alive, but the staff is gone!")
+		game.logPlayer(self, "#VIOLET#Go at once to Minas Tirith to report those events!")
+
+		game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+
+		self:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush-finish")
+	end
+
+	local Chat = require("engine.Chat")
+	local chat = Chat.new("tol-falas-ambush", {name="Ukruk the Fierce"}, who)
+	chat:invoke()
+end
+
+killed_ukruk = function(self, who)
+	game.player.die = nil
+
+	game.logPlayer(self, "#VIOLET#You are surprised to still be alive.")
+	game.logPlayer(self, "#VIOLET#Go at once to Minas Tirith to report those events!")
+
+	game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+
+	self:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk")
+end

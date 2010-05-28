@@ -29,7 +29,26 @@ newChat{ id="found_staff",
 	text = [[#LIGHT_GREEN#*He remains silent for a while*#WHITE# Indeed you were right in coming here.
 The staff you describe reminds me of some artifact of power of the old ages. Please may I see it?]],
 	answers = {
-		{"I am afraid I lost it. #LIGHT_GREEN#*Tell him the encounter with the orcs*", jump="lost_staff"},
+		{"Here it is. #LIGHT_GREEN#*Tell him the encounter with the orcs* You should keep it, I can feel its power and it would be safer if guarded by the armies of the kingdom.",
+		 jump="given_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk") end},
+		{"I am afraid I lost it. #LIGHT_GREEN#*Tell him the encounter with the orcs*",
+		 jump="lost_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush-finish") end},
+	}
+}
+
+newChat{ id="given_staff",
+	text = [[I am truly astonished by your strength, surviving this encounter is truly an epic feat. Please take this as a token of gratitude for your service.
+As for orcs, this is most troubling, we have not seen any for eithy years, could they come from the far east?
+Anyway, thanks again @playername@ for your help.]],
+	answers = {
+		{"Thank you Sir.", action=function(npc, player)
+			local o, item, inven_id = player:findInAllInventories("Staff of Absorption")
+			player:removeObject(inven_id, item, true)
+			o:removed()
+
+			player:setQuestStatus("staff-absorption", engine.Quest.DONE)
+			world:gainAchievement("A_DANGEROUS_SECRET", player)
+		end, jump="orc_hunt"},
 	}
 }
 

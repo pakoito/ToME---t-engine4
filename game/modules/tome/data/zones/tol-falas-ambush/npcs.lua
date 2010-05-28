@@ -27,8 +27,8 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	faction = "orc-pride",
 	color=colors.VIOLET,
 	desc = [[This ugly orc looks really nasty and vicious. He is obviously looking for something and bears an unkown symbol on his shield.]],
-	level_range = {50, 50}, exp_worth = 2,
-	max_life = 15000, life_rating = 15, fixed_rating = true,
+	level_range = {30, 50}, exp_worth = 2,
+	max_life = 1500, life_rating = 15, fixed_rating = true,
 	rank = 4,
 	size_category = 3,
 
@@ -50,4 +50,8 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+
+	on_die = function(self, who)
+		game.player:resolveSource():hasQuest("staff-absorption"):killed_ukruk(game.player:resolveSource())
+	end,
 }

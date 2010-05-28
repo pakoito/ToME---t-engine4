@@ -21,10 +21,10 @@ load("/data/general/objects/objects.lua")
 
 newEntity{ base = "BASE_RING",
 	define_as = "RING_LOST_LOVE", rarity=false,
-	name = "Choker of Dread", unique=true,
-	unided_name = "dark amulet", color=colors.LIGHT_DARK,
-	desc = [[The evilness of undeath radiates from this amulet.]],
-	cost = 5000,
+	name = "Ring of Lost Love", unique=true,
+	unided_name = "wedding ring", color=colors.LIGHT_BLUE,
+	desc = [[Letters are engraved in it: "Crichton my love".]],
+	cost = 500,
 	wielder = {
 		see_invisible = 10,
 		blind_immune = 1,
