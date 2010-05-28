@@ -57,7 +57,7 @@ start_ambush = function(self, who)
 			end
 		end
 		-- Protect from other hits on the same turn
-		self:setEffect(self.EFF_BARRIER, 3, {power=1000000})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=1000000})
 
 		local o, item, inven_id = who:findInAllInventories("Staff of Absorption")
 		who:removeObject(inven_id, item, true)
@@ -84,5 +84,5 @@ killed_ukruk = function(self, who)
 
 	game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
 
-	self:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk")
+	who:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk")
 end

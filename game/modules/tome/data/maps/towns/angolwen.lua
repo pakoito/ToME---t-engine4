@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 quickEntity('^', {name='blue mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true, block_sight=true})
-quickEntity('<', {show_tooltip=true, name='portal to the wilds', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness"})
+quickEntity('<', {show_tooltip=true, name='portal to the wilds', display='<', color=colors.WHITE, change_level=1, change_zone=game.player.last_wilderness})
 quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/tree.png"})
 quickEntity('o', {name='fountain', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png"})
 quickEntity(' ', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})

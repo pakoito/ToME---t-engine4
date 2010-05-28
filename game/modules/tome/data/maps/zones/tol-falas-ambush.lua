@@ -17,26 +17,25 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-quickEntity('<', {show_tooltip=true, name="exit to the wilds", 	display='<', color={r=0, g=255, b=255}})
 defineTile('.', "GRASS")
 defineTile('#', "TREE")
 defineTile('u', "GRASS", nil, "UKRUK")
 defineTile('o', "GRASS", nil, "HILL_ORC_WARRIOR")
 defineTile('O', "GRASS", nil, "HILL_ORC_ARCHER")
 
-startx = 0
-starty = 0
+startx = 3
+starty = 1
 
 return {
-[[...........O...###]],
-[[..............####]],
-[[.....oo.......####]],
-[[....ouo......#####]],
-[[....oo.....O######]],
-[[...........#######]],
-[[O......O..<#######]],
-[[......############]],
-[[....##############]],
-[[..################]],
+[[##################]],
+[[###....##.O#######]],
+[[##...ooo......####]],
+[[#...ouoo......O###]],
+[[#..oooo....O...###]],
+[[#O..o..........###]],
+[[#......O.......###]],
+[[#.O.............##]],
+[[##..#......#...###]],
+[[#######...########]],
 [[##################]],
 }

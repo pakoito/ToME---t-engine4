@@ -86,6 +86,7 @@ newTalent{
 			end
 		end)
 
+		if not first then return end
 		local targets = { first }
 		affected[first] = nil
 		local possible_targets = table.listify(affected)

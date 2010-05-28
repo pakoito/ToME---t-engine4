@@ -123,6 +123,7 @@ function _M:newGame()
 
 	local birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
+		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
 		self:changeLevel(1, self.player.starting_zone)
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
@@ -293,6 +294,7 @@ function _M:changeLevel(lev, zone)
 	-- Move back to old wilderness position
 	if self.zone.wilderness then
 		self.player:move(self.player.wild_x, self.player.wild_y, true)
+		self.player.last_wilderness = self.zone.short_name
 	else
 		if lev > old_lev then
 			self.player:move(self.level.ups[1].x, self.level.ups[1].y, true)

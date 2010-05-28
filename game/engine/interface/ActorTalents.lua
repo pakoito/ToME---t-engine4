@@ -59,6 +59,8 @@ end
 function _M:newTalent(t)
 	assert(t.name, "no talent name")
 	assert(t.type, "no or unknown talent type")
+	if type(t.type) == "string" then t.type = {t.type, 1} end
+	if not t.type[2] then t.type[2] = 1 end
 	t.short_name = t.short_name or t.name
 	t.short_name = t.short_name:upper():gsub("[ ]", "_")
 	t.mode = t.mode or "activated"
