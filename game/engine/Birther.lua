@@ -23,6 +23,7 @@ require "engine.Dialog"
 module(..., package.seeall, class.inherit(engine.Dialog))
 
 _M.birth_descriptor_def = {}
+_M.birth_auto = {}
 
 --- Defines birth descriptors
 -- Static!
@@ -32,6 +33,7 @@ function _M:loadDefinition(file)
 	setfenv(f, setmetatable({
 		ActorTalents = require("engine.interface.ActorTalents"),
 		newBirthDescriptor = function(t) self:newBirthDescriptor(t) end,
+		setAuto = function(type, v) self.birth_auto[type] = v end,
 		load = function(f) self:loadDefinition(f) end
 	}, {__index=_G}))
 	f()
@@ -118,7 +120,7 @@ end
 
 function _M:prev()
 	if self.cur_order == 1 then
-		if #self.list == 1 then self:next() end
+		if #self.list == 1 and self.birth_auto[self.current_type] ~= false  then self:next() end
 		return
 	end
 	if not self.list then return end
@@ -145,7 +147,7 @@ function _M:next()
 		end
 	end
 	self:selectType(self.order[self.cur_order])
-	if #self.list == 1 then
+	if #self.list == 1 and self.birth_auto[self.current_type] ~= false then
 		self:next()
 	end
 end

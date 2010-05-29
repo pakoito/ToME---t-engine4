@@ -101,6 +101,11 @@ newEntity{ base = "BASE_NPC_THIEF",
 	combat_armor = 5, combat_def = 7,
 	max_life = resolvers.rngavg(90,100),
 	combat = { dam=resolvers.rngavg(6,7), atk=10, apr=4},
+	make_escort = {
+		{type="humanoid", subtype="human", name="bandit", number=2},
+		{type="humanoid", subtype="human", name="thief", number=2},
+		{type="humanoid", subtype="human", name="rogue", number=2},
+	},
 	summon = {
 		{type="humanoid", subtype="human", name="bandit", number=1, hasxp=false},
 		{type="humanoid", subtype="human", name="bandit", number=1, hasxp=false},

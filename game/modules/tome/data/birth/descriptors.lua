@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setAuto("subclass", false)
+
 newBirthDescriptor{
 	type = "base",
 	name = "base",
@@ -106,8 +108,9 @@ newBirthDescriptor{
 		"All damage done to the player increased by 20%",
 		"All damage done by the player decreased by 20%",
 		"All healing for the player decreased by 20%",
+		"Player rank is normal instead of elite",
 	},
-	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_INSANE end) },
+	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_INSANE end), rank=2 },
 }
 
 

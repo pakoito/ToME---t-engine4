@@ -56,6 +56,57 @@ function _M:onTakeHit(value, src)
 	return mod.class.Actor.onTakeHit(self, value, src)
 end
 
+function _M:die(src)
+	-- Sefl resurrect, mouhaha!
+	if self:attr("self_resurrect") then
+		self:attr("self_resurrect", -1)
+		game.logSeen(src, "#LIGHT_RED#%s raises from the dead!", self.name:capitalize()) -- src, not self as the source, to make sure the player knows his doom ;>
+		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+		game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "RESURRECT!", {255,120,0})
+
+		local effs = {}
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			effs[#effs+1] = {"effect", eff_id}
+		end
+
+		-- Go through all sustained spells
+		for tid, act in pairs(self.sustain_talents) do
+			if act then
+				effs[#effs+1] = {"talent", tid}
+			end
+		end
+
+		while #effs > 0 do
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				self:removeEffect(eff[2])
+			else
+				local old = self.energy.value
+				self:useTalent(eff[2])
+				-- Prevent using energy
+				self.energy.value = old
+			end
+		end
+		self.life = self.max_life
+		self.mana = self.max_mana
+		self.stamina = self.max_stamina
+		self.equilibrium = 0
+		self.air = self.max_air
+
+		self.dead = false
+		self.died = (self.died or 0) + 1
+		self:move(self.x, self.y, true)
+
+		return
+	end
+
+	return mod.class.Actor.die(self, src)
+end
+
 function _M:tooltip()
 	local str = mod.class.Actor.tooltip(self)
 	return str..([[

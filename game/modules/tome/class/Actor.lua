@@ -996,3 +996,22 @@ end
 function _M:projected(tx, ty, who, t, x, y, damtype, dam, particles)
 	return false
 end
+
+--- Call when added to a level
+-- Used to make escorts and such
+function _M:addedToLevel(level, x, y)
+	if self.make_escort then
+		for _, filter in ipairs(self.make_escort) do
+			for i = 1, filter.number do
+				-- Find space
+				local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[Map.ACTOR]=true})
+				if not x then break end
+
+				-- Find an actor with that filter
+				local m = game.zone:makeEntity(game.level, "actor", filter)
+				if m then game.zone:addEntity(game.level, m, "actor", x, y) end
+			end
+		end
+		self.make_escort = nil
+	end
+end

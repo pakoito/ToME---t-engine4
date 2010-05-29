@@ -126,4 +126,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
 	summon = {{type="undead", number=1, hasxp=false}, },
 	resolvers.talents{ [Talents.T_STUN]=4, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]=4, [Talents.T_PHANTASMAL_SHIELD]=5, [Talents.T_ROTTING_DISEASE]=5, },
+	make_escort = {
+		{type="undead", number=resolvers.mbonus(2, 2)},
+	},
 }

@@ -32,9 +32,10 @@ newEntity{
 	size_category = 2,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=10, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
 	energy = { mod=1.1 },
 	stats = { str=10, dex=17, mag=3, con=7 },
+	combat = { dammod={str=0.6} },
 	combat_armor = 1, combat_def = 1,
 }
 
@@ -98,4 +99,24 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 1, combat_def = 3,
 	combat = { dam=4, atk=10, apr=3 },
+}
+
+newEntity{ base = "BASE_NPC_CANINE",
+	name = "Rungof the Warg Titan", color=colors.VIOLET,
+	desc = [[It is a large wolf with eyes full of cunning, only 3 times bigger than a normal warg.]],
+	level_range = {20, 50}, exp_worth = 2,
+	rank = 4,
+	size_category = 4,
+	rarity = 50,
+	max_life = 220,
+	combat_armor = 25, combat_def = 0,
+	combat = { dam=20, atk=20, apr=16 },
+
+	make_escort = {
+		{type="animal", subtype="canine", name="warg", number=6},
+	},
+	resolvers.talents{
+		[Talents.T_RUSH]=3,
+		[Talents.T_CRIPPLE]=3,
+	},
 }

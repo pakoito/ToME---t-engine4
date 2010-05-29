@@ -86,7 +86,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 }
 
 newEntity{ base = "BASE_NPC_WIGHT",
-	name = "barrow wight", color=colors.VIOLET,
+	name = "barrow wight", color=colors.LIGHT_RED,
 	desc=[[It is a ghostly nightmare of an entity.]],
 	level_range = {25, 50}, exp_worth = 1,
 	rarity = 8,
@@ -107,6 +107,9 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	max_life = resolvers.rngavg(100,150),
 	max_mana = resolvers.rngavg(300,350),
 	combat_armor = 12, combat_def = 10,
+	make_escort = {
+		{type="undead", subtype="wights", number=resolvers.mbonus(2, 2)},
+	},
 	resolvers.talents{ [Talents.T_MANA_POOL]=3, [Talents.T_FLAMESHOCK]=3, [Talents.T_LIGHTNING]=4, [Talents.T_CORROSIVE_VAPOUR]=3, [Talents.T_THUNDERSTORM]=2,
 		[Talents.T_MIND_DISRUPTION]=4,
 	},

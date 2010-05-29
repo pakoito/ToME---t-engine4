@@ -31,7 +31,7 @@ newEntity{
 	stats = { str=12, dex=10, mag=3, con=13 },
 	energy = { mod=1 },
 	combat_armor = 1, combat_def = 1,
-	combat = { dam=5, atk=15, apr=7 },
+	combat = { dam=5, atk=15, apr=7, dammod={str=0.6} },
 	max_life = resolvers.rngavg(10,20),
 	rank = 1,
 	size_category = 1,
@@ -150,4 +150,23 @@ newEntity{ base = "BASE_NPC_ANT",
 	rarity = 4,
 	max_life = resolvers.rngavg(50,60),
 	combat_armor = 15, combat_def = 7,
+}
+
+newEntity{ base = "BASE_NPC_ANT",
+	name = "Queen Ant", color=colors.VIOLET, unique=true,
+	desc = "Queen of the ants, queen of the biting death!",
+	level_range = {25, 50}, exp_worth = 2,
+	rank = 4,
+	size_category = 3,
+	rarity = 50,
+	max_life = 230, life_rating=12,
+	combat_armor = 18, combat_def = 7,
+	resolvers.drops{chance=100, nb=12, {type="money"} },
+	make_escort = {
+		{type="insect", subtype="ant", number=resolvers.mbonus(5, 5)},
+	},
+	summon = {
+		{type="insect", subtype="ant", number=2, hasexp=false},
+	},
+	resolvers.talents{ [Talents.T_STUN]=3, [Talents.T_ACIDIC_SKIN]=5, [Talents.T_SUMMON]=1,},
 }
