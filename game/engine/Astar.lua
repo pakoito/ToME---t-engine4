@@ -84,6 +84,7 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic)
 	local came_from = {}
 
 	local cache = self.map._fovcache.path_caches[self.actor:getPathString()]
+	print("pathing using", self.actor:getPathString())
 	local checkPos
 	if cache then
 		checkPos = function(node, nx, ny)

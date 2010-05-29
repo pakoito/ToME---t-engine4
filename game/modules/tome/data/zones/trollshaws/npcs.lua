@@ -52,7 +52,7 @@ newEntity{ define_as = "TROLL_BILL",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "trollshaws")

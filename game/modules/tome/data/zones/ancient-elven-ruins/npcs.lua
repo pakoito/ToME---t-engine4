@@ -38,6 +38,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	stats = { str=25, dex=10, cun=8, mag=35, wil=20, con=20 },
 	rank = 4,
 	size_category = 2,
+	open_door = true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{
@@ -67,7 +68,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	undead = 1,
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 }
 
 -- Some mummy minions

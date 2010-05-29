@@ -20,10 +20,25 @@
 -- Defines a simple AI building blocks
 -- Target nearest and move/attack it
 
+local Astar = require "engine.Astar"
+
 newAI("move_simple", function(self)
 	if self.ai_target.actor then
 		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
 		return self:moveDirection(tx, ty)
+	end
+end)
+
+newAI("move_astar", function(self)
+	if self.ai_target.actor then
+		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		local a = Astar.new(game.level.map, self)
+		local path = a:calc(self.x, self.y, tx, ty)
+		if not path then
+			return self:runAI("move_simple")
+		else
+			return self:move(path[1].x, path[1].y)
+		end
 	end
 end)
 
@@ -55,7 +70,7 @@ end)
 
 newAI("simple", function(self)
 	if self:runAI("target_simple") then
-		return self:runAI("move_simple")
+		return self:runAI(self.ai_state.ai_move or "move_simple")
 	end
 	return false
 end)

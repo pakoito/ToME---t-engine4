@@ -77,7 +77,7 @@ newEntity{ define_as = "THE_MASTER",
 	},
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
 		world:gainAchievement("VAMPIRE_CRUSHER", game.player:resolveSource())

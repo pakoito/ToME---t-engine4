@@ -61,7 +61,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	},
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
 
 	on_die = function(self, who)
 		game.player:resolveSource():grantQuest("starter-zones")

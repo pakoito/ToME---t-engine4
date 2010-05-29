@@ -49,7 +49,7 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	},
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")

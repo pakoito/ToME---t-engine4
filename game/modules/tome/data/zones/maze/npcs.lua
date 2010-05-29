@@ -60,7 +60,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
 		game.player:resolveSource():grantQuest("starter-zones")

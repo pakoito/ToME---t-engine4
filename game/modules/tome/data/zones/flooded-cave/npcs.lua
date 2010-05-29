@@ -45,7 +45,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
 
 	can_talk = "ukllmswwik",
 }

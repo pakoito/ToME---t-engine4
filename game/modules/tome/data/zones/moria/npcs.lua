@@ -73,7 +73,7 @@ newEntity{ define_as = "GOLBUG",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	on_acquire_target = function(self, who)
 		-- Doesnt matter who, jsut assume the player is there
