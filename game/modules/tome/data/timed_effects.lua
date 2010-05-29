@@ -158,6 +158,28 @@ newEffect{
 }
 
 newEffect{
+	name = "CONSTRICTED",
+	desc = "Constricted",
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is constricted!", "+Constricted" end,
+	on_lose = function(self, err) return "#Target# is free to breathe.", "-Constricted" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("never_move", 1)
+	end,
+	on_timeout = function(self, eff)
+		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 then
+			return true
+		end
+		self:suffocate(eff.power, eff.src)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("never_move", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "DAZED",
 	desc = "Dazed",
 	type = "physical",

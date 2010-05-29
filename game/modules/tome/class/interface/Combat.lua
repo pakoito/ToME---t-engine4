@@ -35,7 +35,6 @@ function _M:bumpInto(target)
 		return self:attackTarget(target)
 	elseif reaction >= 0 then
 		-- Talk ?
-		print(self.player , target.can_talk)
 		if self.player and target.can_talk then
 			local chat = Chat.new(target.can_talk, target, self)
 			chat:invoke()

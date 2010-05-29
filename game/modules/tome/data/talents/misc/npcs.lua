@@ -170,7 +170,37 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
+	end,
+}
+
+newTalent{
+	name = "Constrict",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 6,
+	stamina = 8,
+	require = { stat = { str=12 }, },
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local hit = self:attackTarget(target, nil, 0.5 + self:getTalentLevel(t) / 10, true)
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_CONSTRICTED, (2 + self:getTalentLevel(t)) * 10, {src=self, power=1.5 * self:getTalentLevel(t)})
+			else
+				game.logSeen(target, "%s resists the constriction!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target doing %d%% damage, if the attack hits, the target is constricted.]]):format(100 * (0.5 + self:getTalentLevel(t) / 10))
 	end,
 }
 
