@@ -190,6 +190,16 @@ function _M:onTakeHit(value, src)
 		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 		game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, 2, "LOW HEALTH!", {255,0,0}, true)
 	end
+
+	-- Hit direction warning
+	if src.x and src.y and (self.x ~= src.x or self.y ~= src.y) then
+		local range = math.floor(core.fov.distance(src.x, src.y, self.x,  self.y))
+		if range > 1 then
+			local angle = math.atan2(src.y - self.y, src.x - self.x)
+			game.level.map:particleEmitter(self.x, self.y, 1, "hit_warning", {angle=math.deg(angle)})
+		end
+	end
+
 	return ret
 end
 
