@@ -938,6 +938,40 @@ function _M:canBe(what)
 	return true
 end
 
+--- Adjusts timed effect durations based on rank and other things
+function _M:updateEffectDuration(dur, what)
+	-- Rank reduction: below elite = none; elite = 1, boss = 2, elite boss = 3
+	local rankmod = 0
+	if self.rank == 3 then rankmod = 25
+	elseif self.rank == 4 then rankmod = 45
+	elseif self.rank == 5 then rankmod = 75
+	end
+	if rankmod <= 0 then return dur end
+
+	print("Effect duration reduction <", dur)
+	if what == "stun" then
+		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	elseif what == "pin" then
+		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	elseif what == "frozen" then
+		local p = self:combatSpellResist(), rankmod * (util.bound(self:combatSpellResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	elseif what == "blind" then
+		local p = self:combatMentalResist(), rankmod * (util.bound(self:combatMentalResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	elseif what == "slow" then
+		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	elseif what == "confusion" then
+		local p = self:combatMentalResist(), rankmod * (util.bound(self:combatMentalResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	end
+	print("Effect duration reduction >", dur)
+	return dur
+end
+
 --- Called when we are projected upon
 -- This is used to do spell reflection, antimagic, ...
 function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)

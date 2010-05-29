@@ -60,7 +60,7 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	mana = 14,
-	cooldown = 3,
+	cooldown = 5,
 	tactical = {
 		ATTACK = 10,
 	},

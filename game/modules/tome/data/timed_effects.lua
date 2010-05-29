@@ -97,7 +97,7 @@ newEffect{
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#Target# is frozen!" end,
+	on_gain = function(self, err) return "#Target# is frozen!", "+Frozen" end,
 	on_lose = function(self, err) return "#Target# warms up.", "-Frozen" end,
 	activate = function(self, eff)
 		-- Change color
@@ -110,6 +110,7 @@ newEffect{
 		game.level.map:updateMap(self.x, self.y)
 
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "freeze")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
@@ -129,6 +130,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Burning Shock" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
@@ -148,6 +150,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
@@ -230,6 +233,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# speeds up.", "-Slow" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("energy", {mod=-eff.power})
+		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("energy", eff.tmpid)
@@ -278,6 +282,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# recovers sight.", "-Blind" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("blind", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "blind")
 		if self.player then game.level.map:redisplay() end
 	end,
 	deactivate = function(self, eff)
@@ -296,6 +301,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("confused", eff.tmpid)
@@ -549,6 +555,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer pinned.", "-Pinned" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "pin")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("never_move", eff.tmpid)
