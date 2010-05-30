@@ -27,7 +27,7 @@ COMPLETED = 1
 DONE = 100
 FAILED = 101
 
-function _M:init(q)
+function _M:init(q, who)
 	for k, e in pairs(q) do
 		self[k] = e
 	end
