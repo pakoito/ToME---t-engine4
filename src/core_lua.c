@@ -80,6 +80,7 @@ static bool map_opaque(void *m, int x, int y)
 
 	if (fov->cache)
 	{
+		if (x < 0 || y < 0 || x >= fov->cache->w || y >= fov->cache->h) return TRUE;
 		return fov->cache->cache[x + y * fov->cache->w];
 	}
 	else
