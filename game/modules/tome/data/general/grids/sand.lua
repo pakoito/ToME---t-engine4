@@ -65,3 +65,14 @@ newEntity{
 		return nil, sand, true
 	end,
 }
+
+newEntity{
+	define_as = "PALMTREE",
+	name = "tree", image = "terrain/palmtree.png",
+	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
+	always_remember = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
+	block_sight = true,
+	dig = "SAND",
+}

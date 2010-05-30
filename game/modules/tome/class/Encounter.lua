@@ -57,11 +57,12 @@ function _M:parseCoords()
 end
 
 function _M:checkFilter(filter)
+	if filter.special_filter and not filter.special_filter(self) then return false end
+
 	if filter.mapx and filter.mapy then
-		return self.on_map[filter.mapx.."x"..filter.mapy]
-	else
-		return true
+		if not self.on_map[filter.mapx.."x"..filter.mapy] then return false end
 	end
+	return true
 end
 
 function _M:findSpot(who, what)

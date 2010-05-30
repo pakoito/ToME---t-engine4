@@ -34,10 +34,12 @@ function _M:init(zone, map, level, data)
 	self.lacunarity = data.lacunarity or nil
 	self.octave = data.octave or 4
 	self.do_ponds = data.do_ponds
-	self.do_ponds.zoom = self.do_ponds.zoom or 5
-	self.do_ponds.octave = self.do_ponds.octave or 5
-	self.do_ponds.hurst = self.do_ponds.hurst or nil
-	self.do_ponds.lacunarity = self.do_ponds.lacunarity or nil
+	if self.do_ponds then
+		self.do_ponds.zoom = self.do_ponds.zoom or 5
+		self.do_ponds.octave = self.do_ponds.octave or 5
+		self.do_ponds.hurst = self.do_ponds.hurst or nil
+		self.do_ponds.lacunarity = self.do_ponds.lacunarity or nil
+	end
 end
 
 function _M:resolve(c)

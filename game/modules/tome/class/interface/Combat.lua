@@ -195,7 +195,7 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 				print("[ATTACK] after crit", dam)
 				dam = dam * mult
 				print("[ATTACK] after mult", dam)
-				if crit then game.logSeen(self, "%s performs a critical stike!", self.name:capitalize()) end
+				if crit then game.logSeen(self, "%s performs a critical strike!", self.name:capitalize()) end
 				DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 				game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 				hitted = true
@@ -531,7 +531,7 @@ end
 --- Do we get hit by our own AOE ?
 function _M:spellFriendlyFire()
 	print("[SPELL] friendly fire chance", self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
-	return rng.chance(self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
+	return not rng.percent(self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
 end
 
 --- Computes physical resistance
