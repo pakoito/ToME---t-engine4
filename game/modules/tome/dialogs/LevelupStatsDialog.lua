@@ -59,7 +59,7 @@ end
 
 function _M:incStat(v)
 	if v == 1 then
-		if self.actor.unused_stats == 0 then
+		if self.actor.unused_stats <= 0 then
 			self:simplePopup("Not enough stat points", "You have no stat points left!")
 			return
 		end
