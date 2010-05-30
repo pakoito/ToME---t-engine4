@@ -26,12 +26,10 @@ local Random = require "engine.generator.actor.Random"
 module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, level, spots)
-	engine.Generator.init(self, zone, map)
-	self.level = level
+	engine.Generator.init(self, zone, map, level, spots)
 	self.data = level.data.generator.actor
-	self.spots = spots
 
-	self.random = Random.new(zone, map, level)
+	self.random = Random.new(zone, map, level, spots)
 end
 
 function _M:generate()

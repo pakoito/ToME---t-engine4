@@ -57,17 +57,17 @@ newBirthDescriptor{
 		["divine/light"]={false, 0},
 	},
 	talents = {
+		[ActorTalents.T_SEARING_LIGHT] = 1,
 		[ActorTalents.T_CHANT_OF_FORTITUDE] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
-		[ActorTalents.T_MASSIVE_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
 		max_life = 110,
 		life_rating = 12,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="mace", name="iron mace", autoreq=true},
-			{type="armor", subtype="massive", name="iron plate armour", autoreq=true}
+			{type="armor", subtype="heavy", name="iron heavy armour", autoreq=true}
 		},
 	},
 }

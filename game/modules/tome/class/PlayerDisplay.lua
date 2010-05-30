@@ -69,11 +69,14 @@ function _M:display()
 	if game.player:knowTalent(game.player.T_MANA_POOL) then
 		self.surface:drawColorString(self.font, ("#7fffd4#Mana:    #00ff00#%d/%d"):format(game.player:getMana(), game.player.max_mana), 0, h, 255, 255, 255) h = h + self.font_h
 	end
-	if game.player:knowTalent(game.player.T_SOUL_POOL) then
-		self.surface:drawColorString(self.font, ("#777777#Soul:    #00ff00#%d/%d"):format(game.player:getSoul(), game.player.max_soul), 0, h, 255, 255, 255) h = h + self.font_h
-	end
 	if game.player:knowTalent(game.player.T_EQUILIBRIUM_POOL) then
 		self.surface:drawColorString(self.font, ("#00ff74#Equi:    #00ff00#%d"):format(game.player:getEquilibrium()), 0, h, 255, 255, 255) h = h + self.font_h
+	end
+	if game.player:knowTalent(game.player.T_POSITIVE_POOL) then
+		self.surface:drawColorString(self.font, ("#7fffd4#Positive:#GOLD#%d/%d"):format(game.player:getPositive(), game.player.max_positive), 0, h, 255, 255, 255) h = h + self.font_h
+	end
+	if game.player:knowTalent(game.player.T_NEGATIVE_POOL) then
+		self.surface:drawColorString(self.font, ("#7fffd4#Negative:#GREY#%d/%d"):format(game.player:getNegative(), game.player.max_negative), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 
 	h = h + self.font_h

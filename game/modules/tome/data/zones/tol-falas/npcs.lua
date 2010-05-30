@@ -57,6 +57,7 @@ newEntity{ define_as = "THE_MASTER",
 	see_invisible = 20,
 	undead = 1,
 	self_resurrect = 1,
+	open_door = 1,
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,

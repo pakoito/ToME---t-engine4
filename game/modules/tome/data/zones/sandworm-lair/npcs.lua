@@ -35,7 +35,7 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	Maybe following it is the only way to move around here...]],
 	level_range = {12, 50}, exp_worth = 0,
 	max_life = 10000,
-	faction = "sandworm burrowers",
+	faction = "sandworm-burrowers",
 	energy = {mod=1},
 
 	move_body = 1,

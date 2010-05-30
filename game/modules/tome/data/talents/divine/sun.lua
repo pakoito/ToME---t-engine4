@@ -22,7 +22,8 @@ newTalent{
 	type = {"divine/sun", 1},
 	require = divi_req1,
 	points = 5,
-	cooldown = 9,
+	cooldown = 6,
+	positive = -15,
 	tactical = {
 		ATTACK = 10,
 	},
@@ -38,7 +39,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, 4,
-			DamageType.LIGHT, 6 + self:combatSpellpower(0.2) * self:getTalentLevel(t),
+			DamageType.LIGHT, 6 + self:combatSpellpower(0.3) * self:getTalentLevel(t),
 			0,
 			5, nil,
 			{type="light_zone"},
@@ -50,7 +51,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Calls the power of the Sun into a searing light doing %0.2f damage and leaving a spot on the ground for 4 turns doing %0.2f damage.
-		The damage will increase with the Magic stat]]):format(6 + self:combatSpellpower(0.3) * self:getTalentLevel(t), 6 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(6 + self:combatSpellpower(0.3) * self:getTalentLevel(t), 6 + self:combatSpellpower(0.3) * self:getTalentLevel(t))
 	end,
 }
 
@@ -60,6 +61,7 @@ newTalent{
 	require = divi_req2,
 	points = 5,
 	cooldown = 22,
+	positive = -15,
 	tactical = {
 		ATTACK = 10,
 	},
@@ -70,7 +72,7 @@ newTalent{
 		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		if self:getTalentLevel(t) then
-			self:project(tg, self.x, self.y, DamageType.LIGHT, 4 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
+			self:project(tg, self.x, self.y, DamageType.LIGHT, 4 + self:combatSpellpower(0.15) * self:getTalentLevel(t))
 		end
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y, max_alpha=80})
 		game:playSoundNear(self, "talents/flame")
@@ -81,7 +83,7 @@ newTalent{
 		At level 3 it will start dealing %0.2f light damage.
 		The damage will increase with the Magic stat]]):
 		format(
-			4 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
+			4 + self:combatSpellpower(0.15) * self:getTalentLevel(t)
 		)
 	end,
 }
@@ -91,7 +93,8 @@ newTalent{
 	type = {"divine/sun",3},
 	require = divi_req3,
 	points = 5,
-	cooldown = 10,
+	cooldown = 7,
+	positive = -20,
 	tactical = {
 		ATTACK = 10,
 	},
@@ -100,7 +103,7 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(10 + self:combatSpellpower(0.4) * self:getTalentLevel(t)))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "light_beam", {tx=x-self.x, ty=y-self.y})
 
@@ -108,9 +111,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fire a beam of sun flames at your foes, burning all those in line for %0.2f light damage.
+		return ([[Fire a beam of sun flames at your foes, burning all those in line for %0.2f fire damage.
 		The damage will increase with the Magic stat]]):
-		format(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
+		format(10 + self:combatSpellpower(0.4) * self:getTalentLevel(t))
 	end,
 }
 
@@ -119,14 +122,15 @@ newTalent{
 	type = {"divine/sun", 4},
 	require = divi_req4,
 	points = 5,
-	cooldown = 35,
+	cooldown = 15,
+	positive = -20,
 	tactical = {
 		ATTACKAREA = 10,
 	},
 	range = 3,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=3, friendlyfire=false, talent=t}
-		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.17) * self:getTalentLevel(t)))
+		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.27) * self:getTalentLevel(t)))
 
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 
@@ -134,7 +138,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures a furious burst of sunlight, dealing %0.2f light damage to all those around you in a radius of 3.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 10 + self:combatSpellpower(0.17) * self:getTalentLevel(t))
+		return ([[Conjures a furious burst of sunlight, dealing %0.2f light damage to all those around you in a radius of 4.
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 10 + self:combatSpellpower(0.27) * self:getTalentLevel(t))
 	end,
 }

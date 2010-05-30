@@ -36,6 +36,7 @@ newTalent{
 	require = divi_req1,
 	points = 5,
 	cooldown = 30,
+	sustain_positive = 20,
 	tactical = {
 		BUFF = 10,
 	},
@@ -75,6 +76,7 @@ newTalent{
 	require = divi_req2,
 	points = 5,
 	cooldown = 30,
+	sustain_positive = 20,
 	tactical = {
 		BUFF = 10,
 	},
@@ -112,6 +114,7 @@ newTalent{
 	require = divi_req3,
 	points = 5,
 	cooldown = 30,
+	sustain_positive = 20,
 	tactical = {
 		BUFF = 10,
 	},
@@ -154,6 +157,7 @@ newTalent{
 	require = divi_req4,
 	points = 5,
 	cooldown = 30,
+	sustain_positive = 20,
 	tactical = {
 		BUFF = 10,
 	},

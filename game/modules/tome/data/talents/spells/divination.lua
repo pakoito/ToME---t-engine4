@@ -58,7 +58,7 @@ newTalent{
 		if self:getTalentLevel(t) < 3 then
 			self:showEquipInven("Identify object", function(o) return not o:isIdentified() end, function(o)
 				o:identify(true)
-				game.logPlayer(self, "You identify: "..o:getName{do_color=true})
+				game.logPlayer(self, "You identify: %s", o:getName{do_color=true})
 				return true
 			end)
 			return true

@@ -52,6 +52,20 @@ newTalent{
 	mode = "passive",
 	hide = true,
 }
+newTalent{
+	name = "Positive Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a positive energy pool.",
+	mode = "passive",
+	hide = true,
+}
+newTalent{
+	name = "Negative Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a negative energy pool.",
+	mode = "passive",
+	hide = true,
+}
 
 newTalent{
 	name = "Improved Health I",

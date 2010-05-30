@@ -23,26 +23,25 @@ newTalent{
 	mode = "sustained",
 	require = divi_req1,
 	points = 5,
-	cooldown = 30,
+	cooldown = 10,
+	sustain_positive = 10,
 	tactical = {
 		BUFF = 10,
 	},
 	range = 20,
 	activate = function(self, t)
-		local dam = 7 + self:getTalentLevel(t) * self:combatSpellpower(0.092)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			onhit = self:addTemporaryValue("melee_project", {[DamageType.LIGHT]=dam}),
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("melee_project", p.onhit)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Infuse your weapon of the power of the Sun, doing %0.2f light damage with each hit.
-		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.092) * self:getTalentLevel(t))
+		Each hit will drain 3 positive energy, the spell ends when energy reaches 0.
+		The damage will increase with the Magic stat]]):format(7 + self:combatSpellpower(0.092) * self:getTalentLevel(t))
 	end,
 }
 
@@ -52,6 +51,7 @@ newTalent{
 	require = divi_req2,
 	points = 5,
 	cooldown = 22,
+	positive = 25,
 	tactical = {
 		ATTACK = 10,
 	},
@@ -64,7 +64,7 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		game:playSoundNear(self, "talents/spell_generic")
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15)then
+		if target and target:checkHit(self:combatSpellpower(), target:combatMentalResist(), 0, 95, 15)then
 			target:setEffect(self.EFF_MARTYRDOM, 10, {power=8 * self:getTalentLevelRaw(t)})
 		else
 			return
@@ -85,7 +85,8 @@ newTalent{
 	type = {"divine/combat",3},
 	require = divi_req3,
 	points = 5,
-	cooldown = 10,
+	cooldown = 6,
+	positive = 10,
 	tactical = {
 		ATTACK = 10,
 	},
@@ -115,7 +116,8 @@ newTalent{
 	type = {"divine/combat", 4},
 	require = divi_req4,
 	points = 5,
-	cooldown = 20,
+	cooldown = 10,
+	positive = 10,
 	tactical = {
 		ATTACKAREA = 10,
 	},

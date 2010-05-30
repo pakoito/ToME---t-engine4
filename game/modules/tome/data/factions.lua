@@ -19,21 +19,23 @@
 
 -- CSV export
 local src = [[
-,Enemies,,Reunited Kingdom,Shire,Lonely Mountain,Eryn Lasgalen,Angolwen,Tol Falas,,Water lair|H,Assassin lair|H,,Sunwall,Orc Pride
-Enemies,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-Reunited Kingdom,-1,,,,,,,,,,,,,
-Shire,-1,,1,,,,,,,,,,,
-Lonely Mountain,-1,,0.5,1,,,,,,,,,,
-Eryn Lasgalen,-1,,0.5,1,0.3,,,,,,,,,
-Angolwen,-1,,,,,,,,,,,,,
-Tol Falas,,,-1,-1,-1,-1,-1,,,,,,,
-,,,,,,,,,,,,,,
-Water lair|H,-1,,,,,,,,,,,,,
-Assassin lair|H,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-Sunwall,-1,,,,,,0,-1,,,-1,,,
-Orc Pride,,,-1,-1,-1,-1,-1,-1,,,,,-1,
+,Enemies,,Reunited Kingdom,Shire,Lonely Mountain,Eryn Lasgalen,Angolwen,Tol Falas,,Water lair|H,Assassin lair|H,,Sunwall,Orc Pride,,Sandworm Burrowers
+Enemies,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+Reunited Kingdom,-1,,,,,,,,,,,,,,,
+Shire,-1,,1,,,,,,,,,,,,,
+Lonely Mountain,-1,,0.5,1,,,,,,,,,,,,
+Eryn Lasgalen,-1,,0.5,1,0.3,,,,,,,,,,,
+Angolwen,-1,,,,,,,,,,,,,,,
+Tol Falas,,,-1,-1,-1,-1,-1,,,,,,,,,
+,,,,,,,,,,,,,,,,
+Water lair|H,-1,,,,,,,,,,,,,,,
+Assassin lair|H,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+Sunwall,-1,,,,,,0,-1,,,-1,,,,,
+Orc Pride,,,-1,-1,-1,-1,-1,-1,,,,,-1,,,
+,,,,,,,,,,,,,,,,
+Sandworm Burrowers,,,,,,,,,,,,,,,,
 ]]
 
 local facts = {}

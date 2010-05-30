@@ -487,27 +487,29 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	map.room_map = nil
 
 	-- Check for connectivity from entrance to exit
-	local a = Astar.new(map, game:getPlayer())
-	print("[LEVEL GENERATION] checking entrance to exit A*", ux, uy, "to", dx, dy)
-	if ux and uy and dx and dy and (ux ~= dx or uy ~= dy) and not spots.no_level_connectivity and not a:calc(ux, uy, dx, dy) then
-		print("Level unconnected, no way from entrance to exit", ux, uy, "to", dx, dy)
-		level:removed()
-		return self:newLevel(level_data, lev, old_lev, game)
-	end
-	for i = 1, #spots do
-		local spot = spots[i]
-		if spot.check_connectivity then
-			local cx, cy
-			if type(spot.check_connectivity) == "string" and spot.check_connectivity == "entrance" then cx, cy = ux, uy
-			elseif type(spot.check_connectivity) == "string" and spot.check_connectivity == "exit" then cx, cy = dx, dy
-			else cx, cy = spot.check_connectivity.x, spot.check_connectivity.y
-			end
+	if not level_data.no_level_connectivity then
+		local a = Astar.new(map, game:getPlayer())
+		print("[LEVEL GENERATION] checking entrance to exit A*", ux, uy, "to", dx, dy)
+		if ux and uy and dx and dy and (ux ~= dx or uy ~= dy)  and not a:calc(ux, uy, dx, dy) then
+			print("Level unconnected, no way from entrance to exit", ux, uy, "to", dx, dy)
+			level:removed()
+			return self:newLevel(level_data, lev, old_lev, game)
+		end
+		for i = 1, #spots do
+			local spot = spots[i]
+			if spot.check_connectivity then
+				local cx, cy
+				if type(spot.check_connectivity) == "string" and spot.check_connectivity == "entrance" then cx, cy = ux, uy
+				elseif type(spot.check_connectivity) == "string" and spot.check_connectivity == "exit" then cx, cy = dx, dy
+				else cx, cy = spot.check_connectivity.x, spot.check_connectivity.y
+				end
 
-			print("[LEVEL GENERATION] checking A*", spot.x, spot.y, "to", cx, cy)
-			if spot.x and spot.y and cx and cy and (spot.x ~= cx or spot.y ~= cy) and not a:calc(spot.x, spot.y, cx, cy) then
-				print("Level unconnected, no way from", spot.x, spot.y, "to", cx, cy)
-				level:removed()
-				return self:newLevel(level_data, lev, old_lev, game)
+				print("[LEVEL GENERATION] checking A*", spot.x, spot.y, "to", cx, cy)
+				if spot.x and spot.y and cx and cy and (spot.x ~= cx or spot.y ~= cy) and not a:calc(spot.x, spot.y, cx, cy) then
+					print("Level unconnected, no way from", spot.x, spot.y, "to", cx, cy)
+					level:removed()
+					return self:newLevel(level_data, lev, old_lev, game)
+				end
 			end
 		end
 	end
