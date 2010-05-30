@@ -105,8 +105,8 @@ function _M:init(t, no_default)
 	t.stamina_regen = t.stamina_regen or 0.3 -- Stamina regens slower than mana
 	t.life_regen = t.life_regen or 0.25 -- Life regen real slow
 	t.equilibrium_regen = t.equilibrium_regen or 0 -- Equilibrium does not regen
-	t.positive_regen = t.positive_regen or -0.1 -- Positive energy slowly decays
-	t.negative_regen = t.negative_regen or -0.1 -- Positive energy slowly decays
+	t.positive_regen = t.positive_regen or -0.2 -- Positive energy slowly decays
+	t.negative_regen = t.negative_regen or -0.2 -- Positive energy slowly decays
 
 	t.max_positive = t.max_positive or 50
 	t.max_negative = t.max_negative or 50

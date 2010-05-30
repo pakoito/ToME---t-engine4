@@ -22,17 +22,17 @@ load("/data/general/npcs/.lua", function(e) e.faction = "sunwall" end)
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ define_as = "SUN_PALADIN_TORNUK",
+newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	type = "humanoid", subtype = "human",
 	display = "p",
 	faction = "sunwall",
-	name = "Sun Paladin Tornuk", color=colors.VIOLET, unique = true,
+	name = "High Sun Paladin Aeryn", color=colors.VIOLET, unique = true,
 	desc = [[A beautiful woman, clad in a shining plate armour. Power radiates from her.]],
-	level_range = {7, 50}, exp_worth = 2,
+	level_range = {50, 50}, exp_worth = 2,
 	rank = 4,
 	size_category = 3,
 	female = true,
-	max_life = 150, life_rating = 14, fixed_rating = true,
+	max_life = 250, life_rating = 14, fixed_rating = true,
 	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
 
 	open_door = true,
@@ -47,18 +47,15 @@ newEntity{ define_as = "SUN_PALADIN_TORNUK",
 		{type="weapon", subtype="mace", autoreq=true},
 		{type="armor", subtype="shield", autoreq=true},
 		{type="armor", subtype="massive", autoreq=true},
-		{type="jewelry", subtype="ring", defined="RING_FLAMES", autoreq=true},
 	},
 	resolvers.talents{
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
-		[Talents.T_CHANT_OF_FORTITUDE]=2,
-		[Talents.T_SEARING_LIGHT]=3,
-		[Talents.T_MARTYRDOM]=3,
-		[Talents.T_BARRIER]=3,
-		[Talents.T_WEAPON_OF_LIGHT]=2,
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_CHANT_OF_LIGHT]=5,
+		[Talents.T_SEARING_LIGHT]=5,
+		[Talents.T_MARTYRDOM]=5,
+		[Talents.T_BARRIER]=5,
+		[Talents.T_WEAPON_OF_LIGHT]=5,
 	},
 
-	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("start-orc", engine.Quest.COMPLETED, "sunwall-outpost")
-	end,
+	can_talk = "gates-of-morning-welcome",
 }

@@ -141,6 +141,26 @@ newEffect{
 }
 
 newEffect{
+	name = "SPYDRIC_POISON",
+	desc = "Spydric Poison",
+	type = "poison",
+	status = "detrimental",
+	parameters = {power=10},
+	on_gain = function(self, err) return "#Target# is poisoned and cannot move!", "+Spydric Poison" end,
+	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Spydric Poison" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("never_move", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "pin")
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("never_move", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "STUNNED",
 	desc = "Stunned",
 	type = "physical",

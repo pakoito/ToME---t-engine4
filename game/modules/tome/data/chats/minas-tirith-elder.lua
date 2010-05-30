@@ -29,7 +29,7 @@ newChat{ id="found_staff",
 	text = [[#LIGHT_GREEN#*He remains silent for a while*#WHITE# Indeed you were right in coming here.
 The staff you describe reminds me of some artifact of power of the old ages. Please may I see it?]],
 	answers = {
-		{"Here it is. #LIGHT_GREEN#*Tell him the encounter with the orcs* You should keep it, I can feel its power and it would be safer if guarded by the armies of the kingdom.",
+		{"Here it is. #LIGHT_GREEN#*Tell him the encounter with the orcs*#LAST# You should keep it, I can feel its power and it would be safer if guarded by the armies of the kingdom.",
 		 jump="given_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk") end},
 		{"I am afraid I lost it. #LIGHT_GREEN#*Tell him the encounter with the orcs*",
 		 jump="lost_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush-finish") end},

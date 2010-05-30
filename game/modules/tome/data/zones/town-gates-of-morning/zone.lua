@@ -18,18 +18,18 @@
 -- darkgod@te4.org
 
 return {
-	name = "Minas Tirith",
-	level_range = {15, 15},
+	name = "Gates of Morning",
+	level_range = {1, 1},
 	max_level = 1,
 	width = 196, height = 80,
 	persistant = "zone",
 	all_remembered = true,
 	all_lited = true,
-	ambiant_music = "fall.ogg",
+	ambiant_music = "80s_song.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "towns/minas-tirith",
+			map = "towns/gates-of-morning",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

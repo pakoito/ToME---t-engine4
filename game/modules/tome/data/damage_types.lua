@@ -317,11 +317,21 @@ newDamageType{
 	name = "poison", type = "POISON",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam / 6)
-		dam = dam - dam / 6
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:canBe("poison") then
-			-- Set on fire!
-			target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam / 5})
+			target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam / 6})
+		end
+	end,
+}
+
+-- Spydric poison: prevents movement
+newDamageType{
+	name = "spydric poison", type = "SPYDRIC_POISON",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam / dam.dur)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:canBe("poison") then
+			target:setEffect(target.EFF_SPYDRIC_POISON, dam.dur, {src=src, power=dam.dam / dam.dur})
 		end
 	end,
 }

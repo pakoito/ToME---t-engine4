@@ -32,8 +32,8 @@ newEntity{
 	size_category = 2,
 	rank = 1,
 
-	autolevel = "snake",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	autolevel = "spider",
+	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
 	energy = { mod=1.2 },
 	stats = { str=15, dex=15, mag=8, con=10 },
 
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	level_range = {27, 50}, exp_worth = 1,
 	rarity = 6,
 	max_life = 120,
-	life_rating = 14,
+	life_rating = 13,
 
 	combat_armor = 7, combat_def = 17,
 
@@ -126,7 +126,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	level_range = {27, 50}, exp_worth = 1,
 	rarity = 6,
 	max_life = 120,
-	life_rating = 14,
+	life_rating = 13,
 	rank = 2,
 
 	combat_armor = 7, combat_def = 17,
@@ -178,7 +178,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	level_range = {38, 50}, exp_worth = 1,
 	rarity = 8,
 	max_life = 120,
-	life_rating = 20,
+	life_rating = 16,
 	rank = 3,
 
 	combat_armor = 75, combat_def = 12,  -- perhaps too impenetrable?  though at this level people should be doing over 100 damage each hit, so it could be more :D
@@ -203,7 +203,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	level_range = {27, 50}, exp_worth = 1,
 	rarity = 8,
 	max_life = 120,
-	life_rating = 16,
+	life_rating = 14,
 	rank = 3,
 
 	combat_armor = 7, combat_def = 17,

@@ -24,6 +24,7 @@ load("/data/general/objects/lites.lua")
 -- Usable stuff
 load("/data/general/objects/potions.lua")
 load("/data/general/objects/scrolls.lua")
+load("/data/general/objects/wands.lua")
 
 -- Jewelry stuff
 load("/data/general/objects/jewelry.lua")

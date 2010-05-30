@@ -22,6 +22,7 @@ return {
 	level_range = {1, 1},
 	max_level = 1,
 	width = 196, height = 80,
+	persistant = "zone",
 	all_remembered = true,
 	all_lited = true,
 	ambiant_music = "80s_song.ogg",

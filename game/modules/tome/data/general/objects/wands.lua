@@ -17,27 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	name = "Minas Tirith",
-	level_range = {15, 15},
-	max_level = 1,
-	width = 196, height = 80,
-	persistant = "zone",
-	all_remembered = true,
-	all_lited = true,
-	ambiant_music = "fall.ogg",
-	generator =  {
-		map = {
-			class = "engine.generator.map.Static",
-			map = "towns/minas-tirith",
-		},
-		actor = {
-			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
-		},
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {0, 0},
-		},
-	}
+newEntity{
+	define_as = "BASE_WAND",
+	type = "wand", subtype="wand",
+	unided_name = "wand", id_by_type = true,
+	display = "_", color=colors.WHITE,
+	encumber = 0.7,
+	use_sound = "talents/spell_generic",
+	elec_destroy = 20,
+	desc = [[Magical wands are made by powerful alchemists to store spells. Anybody can use them to release the spells.]],
+--	egos = "/data/general/objects/egos/wands.lua", egos_chance = resolvers.mbonus(10, 5),
 }

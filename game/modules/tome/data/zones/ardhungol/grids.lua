@@ -17,27 +17,5 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	name = "Minas Tirith",
-	level_range = {15, 15},
-	max_level = 1,
-	width = 196, height = 80,
-	persistant = "zone",
-	all_remembered = true,
-	all_lited = true,
-	ambiant_music = "fall.ogg",
-	generator =  {
-		map = {
-			class = "engine.generator.map.Static",
-			map = "towns/minas-tirith",
-		},
-		actor = {
-			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
-		},
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {0, 0},
-		},
-	}
-}
+load("/data/general/grids/basic.lua")
+load("/data/general/grids/water.lua")

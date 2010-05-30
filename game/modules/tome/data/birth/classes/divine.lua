@@ -21,7 +21,8 @@ newBirthDescriptor{
 	type = "class",
 	name = "Divine",
 	desc = {
-		"Divine.",
+		"Divine class is composed of worshippers of many various gods and entities.",
+		"They range from the worship of the Sun, the Moon, powerful spirits, ...",
 	},
 	descriptor_choices =
 	{
@@ -41,10 +42,12 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Sun Paladin",
 	desc = {
-		"Wohhha",
-		"Their most important stats are: Magic and Willpower",
+		"Sun Paladins hail from the Gates of Morning, the last bastion of the free people in the Far East.",
+		"They can channel the power of the Sun to smite all who seek to destroy the Sunwall.",
+		"Competent in both weapon and shield combat and magic they usually burn their foes from afar before engaging in melee.",
+		"Their most important stats are: Strength and Magic",
 	},
-	stats = { mag=2, str=2, dex=2, },
+	stats = { mag=3, str=3, },
 	talents_types = {
 		["technique/shield-offense"]={true, 0.1},
 		["technique/combat-techniques-active"]={false, 0.1},
@@ -58,7 +61,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SEARING_LIGHT] = 1,
-		[ActorTalents.T_CHANT_OF_FORTITUDE] = 1,
+		[ActorTalents.T_WEAPON_OF_LIGHT] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},
@@ -67,7 +70,8 @@ newBirthDescriptor{
 		life_rating = 12,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="mace", name="iron mace", autoreq=true},
-			{type="armor", subtype="heavy", name="iron heavy armour", autoreq=true}
+			{type="armor", subtype="shield", name="iron shield", autoreq=true},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true},
 		},
 	},
 }

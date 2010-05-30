@@ -66,3 +66,7 @@ end}
 Autolevel:registerScheme{ name = "snake", levelup = function(self)
 	learnStats(self, { self.STAT_CUN, self.STAT_DEX, self.STAT_CON, self.STAT_CUN, self.STAT_DEX, self.STAT_STR })
 end}
+
+Autolevel:registerScheme{ name = "spider", levelup = function(self)
+	learnStats(self, { self.STAT_CUN, self.STAT_WIL, self.STAT_MAG, self.STAT_DEX, self.STAT_DEX })
+end}
