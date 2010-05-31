@@ -69,6 +69,9 @@ function _M:loadMap(file)
 		addData = function(t)
 			table.merge(self.level.data, t, true)
 		end,
+		getMap = function(t)
+			return self.map
+		end,
 		checkConnectivity = function(dst, src, type, subtype)
 			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], check_connectivity=src, type=type or "static", subtype=subtype or "static"}
 		end,
