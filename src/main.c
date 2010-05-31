@@ -61,6 +61,7 @@ int luaopen_map(lua_State *L);
 int luaopen_particles(lua_State *L);
 int luaopen_sound(lua_State *L);
 int luaopen_lanes(lua_State *L);
+int luaopen_noise(lua_State *L);
 
 static int traceback (lua_State *L) {
 	lua_Debug ar;
