@@ -338,7 +338,7 @@ static int map_to_screen(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 	int i = 0, j = 0;
-	float r, g, b, a, n;
+	float a;
 
 	for (i = map->mx; i < map->mx + map->mwidth; i++)
 	{
