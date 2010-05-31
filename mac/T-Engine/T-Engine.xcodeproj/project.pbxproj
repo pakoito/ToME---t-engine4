@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		285E4C5011B3B41C00E7CAD8 /* noise_c.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C4F11B3B41C00E7CAD8 /* noise_c.c */; };
+		285E4C5211B3B42700E7CAD8 /* noise.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C5111B3B42700E7CAD8 /* noise.c */; };
 		28B4238A119F50AE00562F94 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B42386119F50AE00562F94 /* SDL_image.framework */; };
 		28B4238B119F50AE00562F94 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B42387119F50AE00562F94 /* SDL_mixer.framework */; };
 		28B4238C119F50AE00562F94 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B42388119F50AE00562F94 /* SDL_ttf.framework */; };
@@ -132,6 +134,10 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		256AC3F00F4B6AF500CF3369 /* T_Engine_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T_Engine_Prefix.pch; sourceTree = "<group>"; };
+		285E4C4D11B3B41C00E7CAD8 /* libtcod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libtcod.h; sourceTree = "<group>"; };
+		285E4C4E11B3B41C00E7CAD8 /* noise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = noise.h; sourceTree = "<group>"; };
+		285E4C4F11B3B41C00E7CAD8 /* noise_c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = noise_c.c; sourceTree = "<group>"; };
+		285E4C5111B3B42700E7CAD8 /* noise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = noise.c; path = ../../src/noise.c; sourceTree = SOURCE_ROOT; };
 		28B42386119F50AE00562F94 /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = /Library/Frameworks/SDL_image.framework; sourceTree = "<absolute>"; };
 		28B42387119F50AE00562F94 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
 		28B42388119F50AE00562F94 /* SDL_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_ttf.framework; path = /Library/Frameworks/SDL_ttf.framework; sourceTree = "<absolute>"; };
@@ -362,6 +368,17 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		285E4C4C11B3B41C00E7CAD8 /* libtcod_import */ = {
+			isa = PBXGroup;
+			children = (
+				285E4C4D11B3B41C00E7CAD8 /* libtcod.h */,
+				285E4C4E11B3B41C00E7CAD8 /* noise.h */,
+				285E4C4F11B3B41C00E7CAD8 /* noise_c.c */,
+			);
+			name = libtcod_import;
+			path = ../../src/libtcod_import;
+			sourceTree = SOURCE_ROOT;
 		};
 		28B424F7119F51A600562F94 /* dynasm */ = {
 			isa = PBXGroup;
@@ -637,11 +654,13 @@
 				28B42616119F520F00562F94 /* main.c */,
 				28B42617119F520F00562F94 /* map.c */,
 				28B42618119F520F00562F94 /* music.c */,
+				285E4C5111B3B42700E7CAD8 /* noise.c */,
 				28B42619119F520F00562F94 /* particles.c */,
 				28B4261A119F520F00562F94 /* SFMT.c */,
 				28B4261B119F520F00562F94 /* struct.c */,
 				28B424F7119F51A600562F94 /* dynasm */,
 				28B424FC119F51A600562F94 /* fov */,
+				285E4C4C11B3B41C00E7CAD8 /* libtcod_import */,
 				28B424FF119F51A600562F94 /* lpeg */,
 				28B42501119F51A600562F94 /* lua */,
 				28B42538119F51A600562F94 /* lualanes */,
@@ -844,6 +863,8 @@
 				28B42625119F520F00562F94 /* struct.c in Sources */,
 				28B42695119F618100562F94 /* getself.m in Sources */,
 				28B426B0119F673600562F94 /* posix.c in Sources */,
+				285E4C5011B3B41C00E7CAD8 /* noise_c.c in Sources */,
+				285E4C5211B3B42700E7CAD8 /* noise.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -900,7 +921,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"USE_TENGINE_MAIN=1",
-					"PHYSFS_PLATFORM_MACOSX=1",
 					"NULL=0",
 					"TENGINE_HOME_PATH=\"\\\"/Library/Application Support/T-Engine/\\\"\"",
 					"PHYSFS_SUPPORTS_ZIP=1",
@@ -920,7 +940,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"USE_TENGINE_MAIN=1",
-					"PHYSFS_PLATFORM_MACOSX=1",
 					"NULL=0",
 					"TENGINE_HOME_PATH=\"\\\"/Library/Application Support/T-Engine/\\\"\"",
 					"PHYSFS_SUPPORTS_ZIP=1",
