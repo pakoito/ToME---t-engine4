@@ -61,6 +61,7 @@ int luaopen_map(lua_State *L);
 int luaopen_particles(lua_State *L);
 int luaopen_sound(lua_State *L);
 int luaopen_lanes(lua_State *L);
+int luaopen_shaders(lua_State *L);
 int luaopen_noise(lua_State *L);
 
 static int traceback (lua_State *L) {
@@ -464,6 +465,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_particles(L);
 		luaopen_sound(L);
 		luaopen_noise(L);
+		luaopen_shaders(L);
 
 		// Make the uids repository
 		lua_newtable(L);

@@ -25,6 +25,7 @@
 
 typedef struct {
 	GLuint texture;
+	GLuint shader;
 	float tint_r;
 	float tint_g;
 	float tint_b;

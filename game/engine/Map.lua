@@ -305,6 +305,14 @@ function _M:cleanFOV()
 	self._map:cleanSeen()
 end
 
+local shad = core.shader.newProgram(nil, [[
+void main()
+{
+        // Sampling The Texture And Passing It To The Frame Buffer
+        gl_FragColor = vec4(0.0,1.0,0.0,1.0);
+}
+]])
+
 --- Updates the map on the given spot
 -- This updates many things, from the C map object, the FOV caches, the minimap if it exists, ...
 function _M:updateMap(x, y)
@@ -361,10 +369,10 @@ function _M:updateMap(x, y)
 
 	-- Cache the textures in the C map object
 	self._map:setGrid(x, y,
-		g, g_r, g_g, g_b,
-		t, t_r, t_g, t_b,
-		o, o_r, o_g, o_b,
-		a, a_r, a_g, a_b,
+		g, shad, g_r, g_g, g_b,
+		t, nil, t_r, t_g, t_b,
+		o, nil, o_r, o_g, o_b,
+		a, nil, a_r, a_g, a_b,
 		mm
 	)
 
