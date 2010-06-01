@@ -17,30 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return { generator = function()
-	local ad = rng.range(0, 360)
-	local a = math.rad(ad)
-	local dir = math.rad(ad + (rng.chance(2) and 90 or -90))
-	local r = rng.range(1, 60)
-	local dirv = math.rad(1)
-
-	return {
-		trail = 1,
-		life = 30,
-		size = rng.range(4, 7), sizev = -0.1, sizea = 0,
-
-		x = r * math.cos(a), xv = 0, xa = 0,
-		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = dirv, dira = 0,
-		vel = 1 / (61 - r), velv = 0, vela = 0,
-
-		r = rng.range(10, 20)/255, rv = 0, ra = 0,
-		g = rng.range(30, 120)/255,   gv = 0, ga = 0,
-		b = rng.range(220, 255)/255, bv = 0, ba = 0,
-		a = rng.range(75, 220)/255,   av = 0, aa = 0,
-	}
-end, },
-function(self)
-	self.ps:emit(80)
-end,
-80 * 30
+return {
+	frag = "water",
+	clone = false,
+}

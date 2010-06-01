@@ -1,6 +1,18 @@
 #ifndef __SHADERS_H
 #define __SHADERS_H
 
+inline bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
+{
+    GLenum errCode;
+    if((errCode = glGetError())!=GL_NO_ERROR)
+    {
+		printf("OPENGL ERROR #%i: (%s) in file %s on line %i\n",errCode,gluErrorString(errCode), file, line);
+        printf("OPENGL Call: %s\n",GLcall);
+        return FALSE;
+    }
+    return TRUE;
+}
+
 inline bool _CheckGLSLShaderCompile(GLuint shader, const char* file)
 {
 	int success;
@@ -86,6 +98,7 @@ inline bool _CheckGLSLProgramValid(GLuint program)
 	return TRUE;
 }
 
+#define _DEBUG
 #ifdef _DEBUG
 
 #define CHECKGL( GLcall )                               		\

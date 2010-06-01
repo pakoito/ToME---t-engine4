@@ -21,6 +21,7 @@ require "engine.class"
 local Entity = require "engine.Entity"
 local Tiles = require "engine.Tiles"
 local Particles = require "engine.Particles"
+local Shader = require "engine.Shader"
 local Faction = require "engine.Faction"
 local DamageType = require "engine.DamageType"
 
@@ -305,14 +306,6 @@ function _M:cleanFOV()
 	self._map:cleanSeen()
 end
 
-local shad = core.shader.newProgram(nil, [[
-void main()
-{
-        // Sampling The Texture And Passing It To The Frame Buffer
-        gl_FragColor = vec4(0.0,1.0,0.0,1.0);
-}
-]])
-
 --- Updates the map on the given spot
 -- This updates many things, from the C map object, the FOV caches, the minimap if it exists, ...
 function _M:updateMap(x, y)
@@ -324,6 +317,7 @@ function _M:updateMap(x, y)
 	local o_r, o_g, o_b
 	local a_r, a_g, a_b
 	local t_r, t_g, t_b
+	local g_shad, t_shad, o_shad, a_shad
 
 	-- Update minimap if any
 	local mm = MM_FLOOR
@@ -338,6 +332,7 @@ function _M:updateMap(x, y)
 		mm = mm + (g:check("block_move") and MM_BLOCK or 0)
 		mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
 		g_r, g_g, g_b = g.tint_r, g.tint_g, g.tint_b
+		if self.tiles.use_images and g.shader then g_shad = g.shader.shad end
 		g = self.tiles:get(g.display, g.color_r, g.color_g, g.color_b, g.color_br, g.color_bg, g.color_bb, g.image, 255)
 	end
 	if t then
@@ -369,10 +364,10 @@ function _M:updateMap(x, y)
 
 	-- Cache the textures in the C map object
 	self._map:setGrid(x, y,
-		g, shad, g_r, g_g, g_b,
-		t, nil, t_r, t_g, t_b,
-		o, nil, o_r, o_g, o_b,
-		a, nil, a_r, a_g, a_b,
+		g, g_shad, g_r, g_g, g_b,
+		t, t_shad, t_r, t_g, t_b,
+		o, o_shad, o_r, o_g, o_b,
+		a, a_shad, a_r, a_g, a_b,
 		mm
 	)
 
@@ -394,6 +389,11 @@ end
 function _M:call(x, y, pos, entity)
 	if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 	if entity then
+		-- Instanciate shader
+		if entity.shader and type(entity.shader) == "string" then
+			entity.shader = Shader.new(entity.shader)
+		end
+
 		self.map[x + y * self.w][pos] = entity
 		self.changed = true
 

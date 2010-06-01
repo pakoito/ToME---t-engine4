@@ -57,6 +57,7 @@ newEntity{
 newEntity{
 	define_as = "FLOOR",
 	name = "floor", image = "terrain/marble_floor.png",
+--	shader = "water", shader_args = {},
 	display = '.', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY,
 }
 
