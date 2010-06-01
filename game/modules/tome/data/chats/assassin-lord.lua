@@ -31,7 +31,7 @@ newChat{ id="hostile",
 	text = [[Ohh you will go nowhere I am afraid! KILL!]],
 	answers = {
 		{"[attack]", action=function(npc, player) engine.Faction:setFactionReaction(player.faction, npc.faction, -100, true) end},
-		{"Wait! Maybe we could work out some kind of arrangement, you seem to be a pratical men.", jump="offer"},
+		{"Wait! Maybe we could work out some kind of arrangement, you seem to be a practical man.", jump="offer"},
 	}
 }
 
