@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
-	ambiant_music = "elven_town.ogg",
+	ambiant_music = "Rainy Day.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

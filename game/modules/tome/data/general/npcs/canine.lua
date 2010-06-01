@@ -102,7 +102,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "Rungof the Warg Titan", color=colors.VIOLET,
+	name = "Rungof the Warg Titan", color=colors.VIOLET, unique=true,
 	desc = [[It is a large wolf with eyes full of cunning, only 3 times bigger than a normal warg.]],
 	level_range = {20, 50}, exp_worth = 2,
 	rank = 4,

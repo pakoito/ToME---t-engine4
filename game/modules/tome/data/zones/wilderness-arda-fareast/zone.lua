@@ -27,7 +27,7 @@ return {
 	persistant = "memory",
 	wilderness = true,
 --	wilderness_see_radius = 3,
-	ambiant_music = "last",
+	ambiant_music = "Far away.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

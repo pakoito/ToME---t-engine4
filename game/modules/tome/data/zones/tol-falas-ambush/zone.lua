@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 --	persistant = true,
-	ambiant_music = "last",
+	ambiant_music = "Hold the Line.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

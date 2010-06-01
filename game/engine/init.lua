@@ -50,6 +50,7 @@ fs.mount(engine.homepath, "/")
 config.loadString[[
 window.size = "800x600"
 sound.enabled = true
+music.volume = 60
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then

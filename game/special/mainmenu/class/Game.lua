@@ -20,15 +20,17 @@
 require "engine.class"
 require "engine.Game"
 require "engine.KeyBind"
+require "engine.interface.GameMusic"
 local Module = require "engine.Module"
 local Savefile = require "engine.Savefile"
 local Dialog = require "engine.Dialog"
 local ButtonList = require "engine.ButtonList"
 local DownloadDialog = require "engine.dialogs.DownloadDialog"
 
-module(..., package.seeall, class.inherit(engine.Game))
+module(..., package.seeall, class.inherit(engine.Game, engine.interface.GameMusic))
 
 function _M:init()
+	engine.interface.GameMusic.init(self)
 	self.profile_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
 	engine.Game.init(self, engine.KeyBind.new())
 
@@ -46,6 +48,10 @@ function _M:run()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
+
+	-- Run the current music if any
+	self:volumeMusic(config.settings.music.volume)
+	self:playMusic("The saga begins.ogg")
 end
 
 function _M:checkLogged()

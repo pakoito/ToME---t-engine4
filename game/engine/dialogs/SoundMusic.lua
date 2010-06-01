@@ -41,26 +41,45 @@ function _M:init()
 	},{
 		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_LEFT = function() self:changeVol(-5) self.changed = true end,
+		MOVE_RIGHT = function() self:changeVol(5) self.changed = true end,
 		ACCEPT = function() self:use() end,
 		EXIT = function() game:unregisterDialog(self) end,
 	})
 	self:mouseZones{
 		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			if button == "left" then self:use()
-			elseif button == "right" then
+			if button == "left" then self:use(true)
+			elseif button == "right" then self:use(false)
 			end
 		end },
 	}
 end
 
-function _M:use()
+function _M:changeVol(v)
+	print("vv", v, self.list[self.sel].act)
+	if self.list[self.sel].act == "music_volume" then
+		print("v<<v", v)
+		game:volumeMusic(game:volumeMusic() + v)
+		self:generateList()
+	elseif self.list[self.sel].act == "sound_volume" then
+--		self:changeVol(v and 5 or -5)
+	end
+end
+
+function _M:use(v)
 	if self.list[self.sel].act == "enable" then
 		game:soundSystemStatus(true)
-	else
+		self:generateList()
+	elseif self.list[self.sel].act == "disable" then
 		game:soundSystemStatus(false)
+		self:generateList()
+	elseif self.list[self.sel].act == "music_volume" then
+		self:changeVol(v and 5 or -5)
+	elseif self.list[self.sel].act == "sound_volume" then
+		self:changeVol(v and 5 or -5)
 	end
-	game:unregisterDialog(self)
+--	game:unregisterDialog(self)
 end
 
 function _M:generateList()
@@ -73,8 +92,11 @@ function _M:generateList()
 	else
 		list[#list+1] = { name=string.char(string.byte('a') + i)..")  Enable sound & music", act="enable" } i = i + 1
 	end
+	list[#list+1] = { name=string.char(string.byte('a') + i)..")  Music volume ("..game:volumeMusic().."%)", act="music_volume" } i = i + 1
+--	list[#list+1] = { name=string.char(string.byte('a') + i)..")  Sound volume", act="sound_volume" } i = i + 1
 
 	self.list = list
+	self.changed = true
 end
 
 function _M:drawDialog(s)

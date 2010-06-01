@@ -25,6 +25,7 @@ module(..., package.seeall, class.make)
 --- Initializes musics
 function _M:init()
 	self.current_music = nil
+	self.next_music = nil
 	self.loaded_musics = {}
 end
 
@@ -51,15 +52,18 @@ function _M:playMusic(name, loop)
 	self.playing_music = true
 end
 
-function _M:stopMusic()
+function _M:stopMusic(fadeout)
 	if not self.loaded_musics[self.current_music] then return end
-	core.sound.musicStop()
+	core.sound.musicStop(fadeout)
 	self.current_music = nil
 	self.playing_music = false
 end
 
 function _M:volumeMusic(vol)
-	core.sound.musicVolume(vol or 100)
+	if vol then
+		self:saveSettings("music", ("music.volume = %q\n"):format(vol))
+	end
+	return core.sound.musicVolume(vol)
 end
 
 function _M:soundSystemStatus(act, init_setup)

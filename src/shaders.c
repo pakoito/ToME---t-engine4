@@ -35,6 +35,9 @@ bool shaders_active = TRUE;
 int noise3DTexSize = 128;
 GLuint noise3DTexName = 0;
 GLubyte noise3DTexPtr[128][128][128][4];
+int noise2DTexSize = 128;
+GLuint noise2DTexName = 0;
+GLubyte noise2DTexPtr[128][128][4];
 
 void make3DNoiseTexture(void)
 {
@@ -68,6 +71,31 @@ void make3DNoiseTexture(void)
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 128, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, noise3DTexPtr);
+
+
+	for (i = 0; i < noise2DTexSize; ++i)
+	{
+		for (j = 0; j < noise2DTexSize; ++j)
+		{
+			p[0] = i;
+			p[1] = j;
+			p[2] = 1;
+//			float v = ((TCOD_noise_simplex(noise, p) + 1) / 2) * 255;
+			noise2DTexPtr[i][j][0] = i * 2;
+			noise2DTexPtr[i][j][1] = 0;
+			noise2DTexPtr[i][j][2] = 0;
+			noise2DTexPtr[i][j][3] = 255;
+		}
+	}
+
+	glGenTextures(1, &noise2DTexName);
+	glBindTexture(GL_TEXTURE_2D, noise2DTexName);
+/*	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+*/	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, noise2DTexPtr));
 }
 
 void useShader(GLuint p)
@@ -79,7 +107,17 @@ void useShader(GLuint p)
 	i = 1;
 	CHECKGL(glActiveTexture(GL_TEXTURE1));
 	CHECKGL(glBindTexture(GL_TEXTURE_3D, noise3DTexName));
+	CHECKGL(glEnable(GL_TEXTURE_2D));
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "noisevol"), 1, &i));
+
+	i = 2;
+	CHECKGL(glActiveTexture(GL_TEXTURE2));
+	CHECKGL(glBindTexture(GL_TEXTURE_2D, noise2DTexName));
+	CHECKGL(glEnable(GL_TEXTURE_2D));
+	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "noise2d"), 1, &i));
+
+	CHECKGL(glActiveTexture(GL_TEXTURE0));
+//	CHECKGL(glBindTexture(GL_TEXTURE_2D, t));
 }
 
 static GLuint loadShader(const char* code, GLuint type)

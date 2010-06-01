@@ -26,7 +26,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistent = "zone",
-	ambiant_music = "fall.ogg",
+	ambiant_music = "Dreaming of Flying.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

@@ -82,10 +82,14 @@ static int music_stop(lua_State *L)
 static int music_volume(lua_State *L)
 {
 	if (no_sound) return 0;
-	int vol = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 100;
+	int vol = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : -1;
 
-	Mix_VolumeMusic(SDL_MIX_MAXVOLUME * vol / 100);
-	return 0;
+	if (vol == -1)
+		vol = Mix_VolumeMusic(-1);
+	else
+		vol = Mix_VolumeMusic(SDL_MIX_MAXVOLUME * vol / 100);
+	lua_pushnumber(L, vol * 100 / SDL_MIX_MAXVOLUME);
+	return 1;
 }
 
 static int sound_new(lua_State *L)

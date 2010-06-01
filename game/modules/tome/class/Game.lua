@@ -110,7 +110,6 @@ function _M:run()
 	self:setCurrent()
 
 	-- Run the current music if any
-	self:volumeMusic(30)
 	self:playMusic()
 
 	if self.level then self:setupDisplayMode() end

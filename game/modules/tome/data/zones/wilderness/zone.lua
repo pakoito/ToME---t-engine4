@@ -25,7 +25,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 	persistant = "memory",
-	ambiant_music = "last",
+	ambiant_music = "Remembrance.ogg",
 	wilderness = true,
 	generator =  {
 		map = {

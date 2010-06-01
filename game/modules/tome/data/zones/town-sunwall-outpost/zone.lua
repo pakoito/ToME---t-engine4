@@ -28,6 +28,7 @@ return {
 	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
+	ambiant_music = "Straight Into Ambush.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Town",
