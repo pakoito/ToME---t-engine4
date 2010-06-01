@@ -20,6 +20,7 @@
 newEntity{
 	define_as = "BASE_STAFF",
 	slot = "MAINHAND",
+	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",
 	add_name = " (#COMBAT#)",
 	display = "\\", color=colors.LIGHT_RED,

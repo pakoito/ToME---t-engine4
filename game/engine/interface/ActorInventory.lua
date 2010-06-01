@@ -216,7 +216,7 @@ function _M:showPickupFloor(title, filter, action)
 end
 
 --- Can we wear this item?
-function _M:canWearObject(o)
+function _M:canWearObject(o, try_slot)
 	local req = rawget(o, "require")
 
 	-- Check prerequisites
@@ -250,7 +250,8 @@ function _M:canWearObject(o)
 	for id, inven in pairs(self.inven) do
 		if self.inven_def[id].is_worn then
 			for i, wo in ipairs(inven) do
-				if wo.slot_forbid and wo.slot_forbid == o.slot then
+				print("fight: ", o.name, wo.name, "::", wo.slot_forbid, try_slot or o.slot)
+				if wo.slot_forbid and wo.slot_forbid == (try_slot or o.slot) then
 					return nil, "cannot use currently due to an other worn object"
 				end
 			end
@@ -277,8 +278,8 @@ function _M:wearObject(o, replace, vocal)
 	if self:addObject(inven, o) then
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		return true
-	elseif o.offslot and self:getInven(o.offslot) and #(self:getInven(o.offslot)) < self:getInven(o.offslot).max then
-		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
+	elseif o.offslot and self:getInven(o.offslot) and #(self:getInven(o.offslot)) < self:getInven(o.offslot).max and self:canWearObject(o, o.offslot) then
+		if vocal then game.logSeen(self, "%s wears(offslot): %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		-- Warning: assume there is now space
 		self:addObject(self:getInven(o.offslot), o)
 		return true
