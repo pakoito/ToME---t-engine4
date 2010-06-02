@@ -93,17 +93,19 @@ function _M:loaded()
 		setfenv(f, setmetatable(self.args or {}, {__index=_G}))
 		local def = f()
 		_M.progs[self.name] = self:createProgram(def)
-	end
 
-	self.shad = _M.progs[self.name]
-
-	for k, v in pairs(self.args) do
-		if type(v) == "number" then
-			self.shad:paramNumber(k, v)
-		elseif type(v) == "table"
-			if v.texture then
-				self.shad:paramNumber(k, v.texture, v.is3d)
+		for k, v in pairs(def.args) do
+			if type(v) == "number" then
+				print("[SHADER] setting param", k, v)
+				_M.progs[self.name]:paramNumber(k, v)
+			elseif type(v) == "table" then
+				if v.texture then
+					print("[SHADER] setting texture param", k, v.texture)
+					_M.progs[self.name]:paramTexture(k, v.texture, v.is3d)
+				end
 			end
 		end
 	end
+
+	self.shad = _M.progs[self.name]
 end

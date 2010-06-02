@@ -17,7 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local noise = core.noise.new(2)
+local tex = noise:makeTexture2D("simplex", 128, 128, 4, 0, 0)
+
 return {
 	frag = "water",
+	args = {
+		noise2d = { texture = tex },
+	},
 	clone = false,
 }

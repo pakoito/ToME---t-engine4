@@ -159,8 +159,8 @@ static int program_set_uniform_number(lua_State *L)
 	const char *var = luaL_checkstring(L, 2);
 	GLfloat i = luaL_checknumber(L, 3);
 
-	CHECKGL(glUseProgramObjectARB(p));
-	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, var), 1, &i));
+	CHECKGL(glUseProgramObjectARB(*p));
+	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(*p, var), 1, &i));
 	CHECKGL(glUseProgramObjectARB(0));
 	return 0;
 }
@@ -173,12 +173,12 @@ static int program_set_uniform_texture(lua_State *L)
 	bool is3d = lua_toboolean(L, 4);
 
 	GLint i = 1;
-	CHECKGL(glUseProgramObjectARB(p));
+	CHECKGL(glUseProgramObjectARB(*p));
 	CHECKGL(glActiveTexture(GL_TEXTURE1));
 	CHECKGL(glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t));
-	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, var), 1, &i));
-	CHECKGL(glActiveTexture(GL_TEXTURE0));
+	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(*p, var), 1, &i));
 	CHECKGL(glUseProgramObjectARB(0));
+//	CHECKGL(glActiveTexture(GL_TEXTURE0));
 	return 0;
 }
 

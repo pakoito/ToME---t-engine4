@@ -1,6 +1,7 @@
 uniform int tick;
 uniform sampler3D noisevol;
 uniform sampler2D noise2d;
+uniform float red;
 
 void main(void)
 {
@@ -17,4 +18,9 @@ void main(void)
 	vec4 n = texture2D(noise2d, gl_TexCoord[0].xy);
 	n.x = 1;
 	gl_FragColor = n;
+
+//	int i = (tick / 30) % 255;
+//	float t = (float)i;
+//	t = t / 255;
+//	gl_FragColor = vec4(red, 0, t, 1);
 }
