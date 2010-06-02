@@ -417,9 +417,9 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-glActiveTexture(GL_TEXTURE1);
-glBindTexture(GL_TEXTURE_3D, pfftex);
-glActiveTexture(GL_TEXTURE0);
+//glActiveTexture(GL_TEXTURE1);
+//glBindTexture(GL_TEXTURE_3D, pfftex);
+//glActiveTexture(GL_TEXTURE0);
 							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
 							if (m->shader) useShader(m->shader, i, j, a);
 							glBegin(GL_QUADS);

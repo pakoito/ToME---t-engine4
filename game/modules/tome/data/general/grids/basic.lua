@@ -62,7 +62,7 @@ newEntity{
 
 newEntity{
 	define_as = "WALL",
-	shader = "water", shader_args = {},
+--	shader = "water", shader_args = {},
 	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 	always_remember = true,
