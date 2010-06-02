@@ -32,95 +32,16 @@
 
 bool shaders_active = TRUE;
 
-int noise3DTexSize = 128;
-GLuint noise3DTexName = 0;
-GLubyte noise3DTexPtr[128][128][128][4];
-int noise2DTexSize = 128;
-GLuint noise2DTexName = 0;
-GLubyte noise2DTexPtr[128][128][3];
-
-void make3DNoiseTexture(void)
+void useShader(GLuint p, int x, int y)
 {
-	static bool init = FALSE;
-	if (init) return;
-	init = TRUE;
-
-	int f, i, j, k, inc;
-	TCOD_noise_t noise = TCOD_noise_new(3, TCOD_NOISE_DEFAULT_HURST, TCOD_NOISE_DEFAULT_LACUNARITY);
-	float p[3];
-
-	for (i = 0; i < noise3DTexSize; ++i)
-	{
-		for (j = 0; j < noise3DTexSize; ++j)
-		{
-			for (k = 0; k < noise3DTexSize; ++k)
-			{
-				p[0] = i;
-				p[1] = j;
-				p[2] = k;
-				float v = ((TCOD_noise_simplex(noise, p) + 1) / 2) * 255;
-				noise3DTexPtr[i][j][k][0] = v;
-				noise3DTexPtr[i][j][k][1] = v;
-				noise3DTexPtr[i][j][k][2] = v;
-				noise3DTexPtr[i][j][k][3] = 255;
-			}
-		}
-	}
-
-	glGenTextures(1, &noise3DTexName);
-	glBindTexture(GL_TEXTURE_3D, noise3DTexName);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 128, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, noise3DTexPtr);
-
-
-	for (i = 0; i < noise2DTexSize; ++i)
-	{
-		for (j = 0; j < noise2DTexSize; ++j)
-		{
-			p[0] = i;
-			p[1] = j;
-			p[2] = 1;
-			float v = ((TCOD_noise_simplex(noise, p) + 1) / 2) * 255;
-			noise2DTexPtr[i][j][0] = v;
-			noise2DTexPtr[i][j][1] = v;
-			noise2DTexPtr[i][j][2] = v;
-		}
-	}
-
-	glGenTextures(1, &noise2DTexName);
-	glBindTexture(GL_TEXTURE_2D, noise2DTexName);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, noise2DTexPtr));
-}
-
-void useShader(GLuint p)
-{
-	make3DNoiseTexture();
-
 	CHECKGL(glUseProgramObjectARB(p));
 	GLint i = SDL_GetTicks();
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "tick"), 1, &i));
 
-	i = 1;
-	CHECKGL(glActiveTexture(GL_TEXTURE1));
-	CHECKGL(glBindTexture(GL_TEXTURE_3D, noise3DTexName));
-	CHECKGL(glEnable(GL_TEXTURE_2D));
-	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "noisevol"), 1, &i));
-
-	i = 2;
-	CHECKGL(glActiveTexture(GL_TEXTURE2));
-	CHECKGL(glBindTexture(GL_TEXTURE_2D, noise2DTexName));
-	CHECKGL(glEnable(GL_TEXTURE_2D));
-	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "noise2d"), 1, &i));
-
-	CHECKGL(glActiveTexture(GL_TEXTURE0));
+	i = x;
+	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "mapx"), 1, &i));
+	i = y;
+	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "mapy"), 1, &i));
 }
 
 static GLuint loadShader(const char* code, GLuint type)
@@ -232,6 +153,31 @@ static int program_detach(lua_State *L)
 	return 0;
 }
 
+static int program_set_uniform_number(lua_State *L)
+{
+	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	const char *var = luaL_checkstring(L, 2);
+	GLfloat i = luaL_checknumber(L, 3);
+
+	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, var), 1, &i));
+	return 0;
+}
+
+static int program_set_uniform_texture(lua_State *L)
+{
+	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	const char *var = luaL_checkstring(L, 2);
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 3);
+	bool is3d = lua_toboolean(L, 4);
+
+	GLint i = 1;
+	CHECKGL(glActiveTexture(GL_TEXTURE1));
+	CHECKGL(glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t));
+	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, var), 1, &i));
+	CHECKGL(glActiveTexture(GL_TEXTURE0));
+	return 0;
+}
+
 static const struct luaL_reg shaderlib[] =
 {
 	{"newShader", shader_new},
@@ -245,6 +191,8 @@ static const struct luaL_reg program_reg[] =
 	{"compile", program_compile},
 	{"attach", program_attach},
 	{"detach", program_detach},
+	{"paramNumber", program_set_uniform_number},
+	{"paramTexture", program_set_uniform_texture},
 	{NULL, NULL},
 };
 

@@ -29,7 +29,7 @@
 #include "tSDL.h"
 //#include "shaders.h"
 
-extern void useShader(GLuint p);
+extern void useShader(GLuint p, int x, int y);
 
 // Minimap defines
 #define MM_FLOOR 1
@@ -371,7 +371,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -388,7 +388,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -405,7 +405,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -422,7 +422,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -442,7 +442,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -459,7 +459,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -476,7 +476,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -493,7 +493,7 @@ static int map_to_screen(lua_State *L)
 								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
 							else
 								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader);
+							if (m->shader) useShader(m->shader, i, j);
 							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
 							glBegin(GL_QUADS);
 							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
@@ -514,7 +514,7 @@ static int map_to_screen(lua_State *L)
 							glColor4f((map->obscure_r + m->tint_r)/2, (map->obscure_g + m->tint_g)/2, (map->obscure_b + m->tint_b)/2, map->obscure_a);
 						else
 							glColor4f(map->obscure_r, map->obscure_g, map->obscure_b, map->obscure_a);
-						if (m->shader) useShader(m->shader);
+						if (m->shader) useShader(m->shader, i, j);
 						glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
 						glBegin(GL_QUADS);
 						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);

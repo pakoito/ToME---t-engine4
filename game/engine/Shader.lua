@@ -29,7 +29,7 @@ _M.progs = {}
 
 --- Make a shader
 function _M:init(name, args)
-	self.args = args
+	self.args = args or {}
 	self.name = name
 
 	self:loaded()
@@ -96,4 +96,14 @@ function _M:loaded()
 	end
 
 	self.shad = _M.progs[self.name]
+
+	for k, v in pairs(self.args) do
+		if type(v) == "number" then
+			self.shad:paramNumber(k, v)
+		elseif type(v) == "table"
+			if v.texture then
+				self.shad:paramNumber(k, v.texture, v.is3d)
+			end
+		end
+	end
 end

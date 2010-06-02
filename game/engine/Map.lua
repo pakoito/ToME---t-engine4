@@ -391,7 +391,7 @@ function _M:call(x, y, pos, entity)
 	if entity then
 		-- Instanciate shader
 		if entity.shader and type(entity.shader) == "string" then
-			entity.shader = Shader.new(entity.shader)
+			entity.shader = Shader.new(entity.shader, entity.shader_args)
 		end
 
 		self.map[x + y * self.w][pos] = entity
