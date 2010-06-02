@@ -27,6 +27,7 @@
 #include <math.h>
 #include "libtcod.h"
 #include "noise.h"
+#include "tgl.h"
 
 typedef struct
 {
@@ -164,6 +165,56 @@ static int noise_turbulence_wavelet(lua_State *L)
 	return 1;
 }
 
+#define BYTES_PER_TEXEL 3
+#define LAYER(r)	(w * h * r * BYTES_PER_TEXEL)
+// 2->1 dimension mapping function
+#define TEXEL2(s, t)	(BYTES_PER_TEXEL * (s * w + t))
+// 3->1 dimension mapping function
+#define TEXEL3(s, t, r)	(TEXEL2(s, t) + LAYER(r))
+
+static int noise_texture2d(lua_State *L)
+{
+	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
+	const char *type = luaL_checkstring(L, 2);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+	float zoom = luaL_checknumber(L, 4);
+	float x = luaL_checknumber(L, 5);
+	float y = luaL_checknumber(L, 6);
+	float octave = lua_tonumber(L, 7);
+	GLubyte *map = malloc(w * h * 3 * sizeof(GLubyte));
+
+	float p[2];
+	int i, j;
+	for (i = 0; i < w; i++)
+	{
+		for (j = 0; j < h; j++)
+		{
+			p[0] = zoom * ((float)(i+x)) / w;
+			p[1] = zoom * ((float)(j+y)) / h;
+			float v = ((TCOD_noise_simplex(n->noise, p) + 1) / 2) * 255;
+			map[TEXEL2(i, j)] = (GLubyte)v;
+			map[TEXEL2(i, j)+1] = (GLubyte)v;
+			map[TEXEL2(i, j)+2] = (GLubyte)v;
+		}
+	}
+
+	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+
+	glGenTextures(1, t);
+	glBindTexture(GL_TEXTURE_2D, *t);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, map);
+
+	free(map);
+
+	return 1;
+}
+
 static const struct luaL_reg noiselib[] =
 {
 	{"new", noise_new},
@@ -182,6 +233,7 @@ static const struct luaL_reg noise_reg[] =
 	{"wavelet", noise_wavelet},
 	{"fbm_wavelet", noise_fbm_wavelet},
 	{"turbulence_wavelet", noise_turbulence_wavelet},
+	{"makeTexture2D", noise_texture2d},
 	{NULL, NULL},
 };
 

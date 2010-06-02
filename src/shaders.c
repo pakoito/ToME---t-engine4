@@ -81,9 +81,13 @@ void make3DNoiseTexture(void)
 	{
 		for (j = 0; j < noise2DTexSize; ++j)
 		{
-			noise2DTexPtr[i][j][0] = i;
-			noise2DTexPtr[i][j][1] = j;
-			noise2DTexPtr[i][j][2] = 255;
+			p[0] = i;
+			p[1] = j;
+			p[2] = 1;
+			float v = ((TCOD_noise_simplex(noise, p) + 1) / 2) * 255;
+			noise2DTexPtr[i][j][0] = v;
+			noise2DTexPtr[i][j][1] = v;
+			noise2DTexPtr[i][j][2] = v;
 		}
 	}
 
