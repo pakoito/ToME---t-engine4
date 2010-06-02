@@ -25,6 +25,7 @@
 #include "types.h"
 #include "script.h"
 #include <math.h>
+#include <stdlib.h>
 #include "libtcod.h"
 #include "noise.h"
 #include "tgl.h"
@@ -178,10 +179,10 @@ static int noise_texture2d(lua_State *L)
 	const char *type = luaL_checkstring(L, 2);
 	int w = luaL_checknumber(L, 3);
 	int h = luaL_checknumber(L, 4);
-	float zoom = luaL_checknumber(L, 4);
-	float x = luaL_checknumber(L, 5);
-	float y = luaL_checknumber(L, 6);
-	float octave = lua_tonumber(L, 7);
+	float zoom = luaL_checknumber(L, 5);
+	float x = luaL_checknumber(L, 6);
+	float y = luaL_checknumber(L, 7);
+	float octave = lua_tonumber(L, 8);
 	GLubyte *map = malloc(w * h * 3 * sizeof(GLubyte));
 
 	float p[2];
@@ -209,6 +210,56 @@ static int noise_texture2d(lua_State *L)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, map);
+
+	free(map);
+
+	return 1;
+}
+
+static int noise_texture3d(lua_State *L)
+{
+	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
+	const char *type = luaL_checkstring(L, 2);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+	int d = luaL_checknumber(L, 5);
+	float zoom = luaL_checknumber(L, 6);
+	float x = luaL_checknumber(L, 7);
+	float y = luaL_checknumber(L, 8);
+	float z = luaL_checknumber(L, 9);
+	float octave = lua_tonumber(L, 10);
+	GLubyte *map = malloc(w * h * d * 3 * sizeof(GLubyte));
+
+	float p[3];
+	int i, j, k;
+	for (i = 0; i < w; i++)
+	{
+		for (j = 0; j < h; j++)
+		{
+			for (k = 0; k < d; k++)
+			{
+				p[0] = zoom * ((float)(i+x)) / w;
+				p[1] = zoom * ((float)(j+y)) / h;
+				p[2] = zoom * ((float)(k+z)) / d;
+				float v = ((TCOD_noise_simplex(n->noise, p) + 1) / 2) * 255;
+				map[TEXEL3(i, j, k)] = (GLubyte)v;
+				map[TEXEL3(i, j, k)+1] = (GLubyte)v;
+				map[TEXEL3(i, j, k)+2] = (GLubyte)v;
+			}
+		}
+	}
+
+	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+
+	glGenTextures(1, t);
+	glBindTexture(GL_TEXTURE_3D, *t);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB8, w, h, d, 0, GL_RGB, GL_UNSIGNED_BYTE, map);
 
 	free(map);
 
