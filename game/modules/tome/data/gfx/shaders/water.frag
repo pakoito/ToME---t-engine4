@@ -1,7 +1,8 @@
-uniform int tick;
-uniform sampler3D noisevol;
+varying vec2 texCoord;
+
+//uniform int tick;
+//uniform sampler3D noisevol;
 uniform sampler2D noise2d;
-uniform float red;
 
 void main(void)
 {
@@ -15,12 +16,18 @@ void main(void)
 //	gl_FragColor.xyz = (1.0-bump.xyz)*vec3(0.3,0.3,1.0)+(bump.xyz)*vec3(0.0,0.0,0.0);
 //	gl_FragColor = bump;
 
-	vec4 n = texture2D(noise2d, gl_TexCoord[0].xy);
-	n.x = 1;
-	gl_FragColor = n;
+//	vec4 n = texture2D(noise2d, texCoord.xy);
+//	n.x = 1;
+//	gl_FragColor = n;
+	gl_FragColor = texture2D(noise2d, texCoord.xy);
+	gl_FragColor.r = 1;
+	gl_FragColor.a = 1.0;
 
 //	int i = (tick / 30) % 255;
 //	float t = (float)i;
 //	t = t / 255;
 //	gl_FragColor = vec4(red, 0, t, 1);
+
+//	gl_FragColor.xy = gl_TexCoord[0].xy;
 }
+

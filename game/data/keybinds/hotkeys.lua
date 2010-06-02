@@ -251,3 +251,18 @@ defineAction{
 	group = "hotkeys",
 	name = "Next Hotkey Page",
 }
+
+defineAction{
+	default = { "sym:306:false:false:false:false" },
+	type = "HOTKEY_HOTPAGE2",
+	updown = true,
+	group = "hotkeys",
+	name = "Quick switch to Hotkey Page 2",
+}
+defineAction{
+	default = { "sym:304:false:false:false:false" },
+	type = "HOTKEY_HOTPAGE3",
+	updown = true,
+	group = "hotkeys",
+	name = "Quick switch to Hotkey Page 3",
+}

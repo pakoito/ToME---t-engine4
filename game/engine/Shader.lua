@@ -69,7 +69,7 @@ function _M:getVertex(name)
 		code[#code+1] = l
 	end
 	f:close()
-	self.verts[name] = core.shader.newShader(table.concat(code, "\n"))
+	self.verts[name] = core.shader.newShader(table.concat(code, "\n"), true)
 	print("[SHADER] created vertex shader from /data/gfx/shaders/"..name..".vert")
 	return self.verts[name]
 end

@@ -19,9 +19,11 @@
 
 local noise = core.noise.new(2)
 local tex = noise:makeTexture2D("simplex", 128, 128, 4, 0, 0)
+tex = core.display.loadImage("/data/gfx/terrain/tree.png"):glTexture()
 
 return {
 	frag = "water",
+	vert = "default",
 	args = {
 		noise2d = { texture = tex },
 	},

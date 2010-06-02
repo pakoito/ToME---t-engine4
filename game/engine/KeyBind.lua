@@ -167,19 +167,21 @@ end
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
-	if isup then return end
-
 	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup) end
 
 	local ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 --	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then
-		self.virtuals[self.binds[ks]](sym, ctrl, shift, alt, meta, unicode)
+		if isup and not _M.binds_def[self.binds[ks]].updown then return end
+		self.virtuals[self.binds[ks]](sym, ctrl, shift, alt, meta, unicode, isup)
 		return
 	elseif us and self.binds[us] and self.virtuals[self.binds[us]] then
-		self.virtuals[self.binds[us]](sym, ctrl, shift, alt, meta, unicode)
+		if isup and not _M.binds_def[self.binds[us]].updown then return end
+		self.virtuals[self.binds[us]](sym, ctrl, shift, alt, meta, unicode, isup)
 		return
 	end
+
+	if isup then return end
 
 	engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
 end

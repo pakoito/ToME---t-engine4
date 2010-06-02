@@ -42,6 +42,8 @@ void useShader(GLuint p, int x, int y)
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "mapx"), 1, &i));
 	i = y;
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "mapy"), 1, &i));
+
+	CHECKGLSLVALID(p);
 }
 
 static GLuint loadShader(const char* code, GLuint type)
@@ -178,7 +180,7 @@ static int program_set_uniform_texture(lua_State *L)
 	CHECKGL(glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t));
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(*p, var), 1, &i));
 	CHECKGL(glUseProgramObjectARB(0));
-//	CHECKGL(glActiveTexture(GL_TEXTURE0));
+	CHECKGL(glActiveTexture(GL_TEXTURE0));
 	return 0;
 }
 

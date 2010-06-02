@@ -366,7 +366,7 @@ int initGL()
 //	glShadeModel( GL_SMOOTH );
 
 	/* Set the background black */
-	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+	glClearColor( 0.0f, 0.0f, 1.0f, 1.0f );
 
 	/* Depth buffer setup */
 //	glClearDepth( 1.0f );
@@ -403,7 +403,11 @@ int resizeWindow(int width, int height)
 
 	ratio = ( GLfloat )width / ( GLfloat )height;
 
+	glActiveTexture(GL_TEXTURE0);
 	glEnable( GL_TEXTURE_2D );
+	glActiveTexture(GL_TEXTURE1);
+	glEnable(GL_TEXTURE_2D);
+	glActiveTexture(GL_TEXTURE0);
 
 	/* Setup our viewport. */
 	glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );

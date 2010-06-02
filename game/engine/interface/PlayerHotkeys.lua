@@ -59,6 +59,11 @@ function _M:nextHotkeyPage()
 	self.hotkey_page = util.boundWrap(self.hotkey_page + 1, 1, 3)
 	self.changed = true
 end
+--- Switch to hotkey page
+function _M:setHotkeyPage(v)
+	self.hotkey_page = v
+	self.changed = true
+end
 
 -- Autoadd talents to hotkeys
 function _M:hotkeyAutoTalents()
