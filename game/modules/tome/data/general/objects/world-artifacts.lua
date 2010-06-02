@@ -64,7 +64,7 @@ newEntity{ base = "BASE_RING",
 			-- Add a lasting map effect
 			game.level.map:addEffect(who,
 				who.x, who.y, duration,
-				DamageType.WAVE, dam,
+				engine.DamageType.WAVE, dam,
 				radius,
 				5, nil,
 				engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},

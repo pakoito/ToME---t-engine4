@@ -51,9 +51,9 @@ newEntity{
 
 newEntity{
 	name = " of wizardry",
-	level_range = {25, 50},
-	rarity = 4,
-	cost = 25,
+	level_range = {30, 50},
+	rarity = 12,
+	cost = 45,
 	wielder = {
 		combat_spellpower = resolvers.mbonus(30, 3),
 		max_mana = resolvers.mbonus(100, 10),

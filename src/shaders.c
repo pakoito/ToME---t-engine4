@@ -37,10 +37,14 @@ GLuint noise3DTexName = 0;
 GLubyte noise3DTexPtr[128][128][128][4];
 int noise2DTexSize = 128;
 GLuint noise2DTexName = 0;
-GLubyte noise2DTexPtr[128][128][4];
+GLubyte noise2DTexPtr[128][128][3];
 
 void make3DNoiseTexture(void)
 {
+	static bool init = FALSE;
+	if (init) return;
+	init = TRUE;
+
 	int f, i, j, k, inc;
 	TCOD_noise_t noise = TCOD_noise_new(3, TCOD_NOISE_DEFAULT_HURST, TCOD_NOISE_DEFAULT_LACUNARITY);
 	float p[3];
@@ -77,29 +81,25 @@ void make3DNoiseTexture(void)
 	{
 		for (j = 0; j < noise2DTexSize; ++j)
 		{
-			p[0] = i;
-			p[1] = j;
-			p[2] = 1;
-//			float v = ((TCOD_noise_simplex(noise, p) + 1) / 2) * 255;
-			noise2DTexPtr[i][j][0] = i * 2;
-			noise2DTexPtr[i][j][1] = 0;
-			noise2DTexPtr[i][j][2] = 0;
-			noise2DTexPtr[i][j][3] = 255;
+			noise2DTexPtr[i][j][0] = i;
+			noise2DTexPtr[i][j][1] = j;
+			noise2DTexPtr[i][j][2] = 255;
 		}
 	}
 
 	glGenTextures(1, &noise2DTexName);
 	glBindTexture(GL_TEXTURE_2D, noise2DTexName);
-/*	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-*/	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, noise2DTexPtr));
+	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, noise2DTexPtr));
 }
 
 void useShader(GLuint p)
 {
+	make3DNoiseTexture();
+
 	CHECKGL(glUseProgramObjectARB(p));
 	GLint i = SDL_GetTicks();
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "tick"), 1, &i));
@@ -117,7 +117,6 @@ void useShader(GLuint p)
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "noise2d"), 1, &i));
 
 	CHECKGL(glActiveTexture(GL_TEXTURE0));
-//	CHECKGL(glBindTexture(GL_TEXTURE_2D, t));
 }
 
 static GLuint loadShader(const char* code, GLuint type)
@@ -256,8 +255,6 @@ int luaopen_shaders(lua_State *L)
 	auxiliar_newclass(L, "gl{shader}", shader_reg);
 	auxiliar_newclass(L, "gl{program}", program_reg);
 	luaL_openlib(L, "core.shader", shaderlib, 0);
-
-	make3DNoiseTexture();
 
 	return 1;
 }

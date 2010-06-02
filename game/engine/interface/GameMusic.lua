@@ -66,6 +66,10 @@ function _M:volumeMusic(vol)
 	return core.sound.musicVolume(vol)
 end
 
+--- Called by the C core when the current music stops
+function _M:onMusicStop()
+end
+
 function _M:soundSystemStatus(act, init_setup)
 	if type(act) == "boolean" then
 		core.sound.soundSystemStatus(act)

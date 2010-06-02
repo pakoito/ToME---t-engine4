@@ -75,8 +75,12 @@ key:setCurrent()
 -- Load the game module
 game = false
 
+-- Setup resolution
 engine.Game:setResolution(config.settings.window.size)
+
+-- Setup musics
 engine.interface.GameMusic:soundSystemStatus(config.settings.sound.enabled, true)
+core.sound.activateMusicCallback()
 
 -- Load profile configs
 profile = engine.PlayerProfile.new()

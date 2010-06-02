@@ -170,6 +170,32 @@ static int sound_status(lua_State *L)
 	}
 }
 
+static void music_finished()
+{
+	SDL_Event event;
+	SDL_UserEvent userevent;
+
+	/* In this example, our callback pushes an SDL_USEREVENT event
+	 into the queue, and causes ourself to be called again at the
+	 same interval: */
+
+	userevent.type = SDL_USEREVENT;
+	userevent.code = 1;
+	userevent.data1 = NULL;
+	userevent.data2 = NULL;
+
+	event.type = SDL_USEREVENT;
+	event.user = userevent;
+
+	SDL_PushEvent(&event);
+}
+
+static int music_callback(lua_State *L)
+{
+	Mix_HookMusicFinished(music_finished);
+	return 0;
+}
+
 static const struct luaL_reg soundlib[] =
 {
 	{"soundSystemStatus", sound_status},
@@ -178,6 +204,7 @@ static const struct luaL_reg soundlib[] =
 	{"musicStop", music_stop},
 	{"musicVolume", music_volume},
 	{"channelFadeOut", channel_fadeout},
+	{"activateMusicCallback", music_callback},
 	{NULL, NULL},
 };
 

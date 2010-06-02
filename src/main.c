@@ -339,6 +339,26 @@ Uint32 redraw_timer(Uint32 interval, void *param)
 	return(interval);
 }
 
+// Calls the lua music callback
+void on_music_stop()
+{
+	if (current_game != LUA_NOREF)
+	{
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		lua_pushstring(L, "onMusicStop");
+		lua_gettable(L, -2);
+		lua_remove(L, -2);
+		if (lua_isfunction(L, -1))
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+			docall(L, 1, 0);
+		}
+		else
+			lua_pop(L, 1);
+	}
+}
+
+
 /* general OpenGL initialization function */
 int initGL()
 {
@@ -629,6 +649,9 @@ int main(int argc, char *argv[])
 				if (event.user.code == 0 && isActive) {
 					on_redraw();
 					redraw_pending = 0;
+				}
+				else if (event.user.code == 1) {
+					on_music_stop();
 				}
 				break;
 			default:

@@ -189,7 +189,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
 	end,
 	on_timeout = function(self, eff)
-		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 then
+		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead then
 			return true
 		end
 		self:suffocate(eff.power, eff.src)
