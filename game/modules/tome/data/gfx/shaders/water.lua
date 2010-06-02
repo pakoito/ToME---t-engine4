@@ -23,9 +23,10 @@ tex = core.display.loadImage("/data/gfx/terrain/tree.png"):glTexture()
 
 return {
 	frag = "water",
-	vert = "default",
+	vert = nil,
 	args = {
-		noise2d = { texture = tex },
+--		noise2d = { texture = tex },
+		noisevol = { texture = tex, is3d=true },
 	},
 	clone = false,
 }

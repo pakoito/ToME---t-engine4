@@ -413,6 +413,7 @@ end
 -- @return true if the talent was learnt, nil and an error message otherwise
 function _M:learnTalentType(tt, v)
 	if v == nil then v = true end
+	if self.talents_types[tt] then return end
 	self.talents_types[tt] = v
 	self.talents_types_mastery[tt] = self.talents_types_mastery[tt] or 1
 	self.changed = true

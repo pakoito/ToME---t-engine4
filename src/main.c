@@ -366,7 +366,7 @@ int initGL()
 //	glShadeModel( GL_SMOOTH );
 
 	/* Set the background black */
-	glClearColor( 0.0f, 0.0f, 1.0f, 1.0f );
+	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 	/* Depth buffer setup */
 //	glClearDepth( 1.0f );
@@ -598,6 +598,8 @@ int main(int argc, char *argv[])
 	SDL_SetEventFilter(event_filter);
 
 	SDL_AddTimer(30, redraw_timer, NULL);
+
+	doit();
 
 	SDL_Event event;
 	while (!exit_engine)

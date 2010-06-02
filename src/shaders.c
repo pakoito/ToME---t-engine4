@@ -32,16 +32,15 @@
 
 bool shaders_active = TRUE;
 
-void useShader(GLuint p, int x, int y)
+void useShader(GLuint p, int x, int y, float a)
 {
 	CHECKGL(glUseProgramObjectARB(p));
-	GLint i = SDL_GetTicks();
-	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "tick"), 1, &i));
+	GLfloat t = SDL_GetTicks();
+	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, "tick"), 1, &t));
+	t = a; CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, "alpha"), 1, &t));
 
-	i = x;
-	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "mapx"), 1, &i));
-	i = y;
-	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(p, "mapy"), 1, &i));
+	GLint c[2] = {x, y};
+	CHECKGL(glUniform2ivARB(glGetUniformLocationARB(p, "mapCoord"), 2, c));
 
 	CHECKGLSLVALID(p);
 }
@@ -176,11 +175,11 @@ static int program_set_uniform_texture(lua_State *L)
 
 	GLint i = 1;
 	CHECKGL(glUseProgramObjectARB(*p));
-	CHECKGL(glActiveTexture(GL_TEXTURE1));
-	CHECKGL(glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t));
+//	CHECKGL(glActiveTexture(GL_TEXTURE1));
+//	CHECKGL(glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t));
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(*p, var), 1, &i));
 	CHECKGL(glUseProgramObjectARB(0));
-	CHECKGL(glActiveTexture(GL_TEXTURE0));
+//	CHECKGL(glActiveTexture(GL_TEXTURE0));
 	return 0;
 }
 
