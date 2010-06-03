@@ -22,6 +22,9 @@ local Entity = require "engine.Entity"
 
 module(..., package.seeall, class.inherit(Entity))
 
+-- When used on the map, do not draw alpha channel
+_M._noalpha = true
+
 function _M:init(t, no_default)
 	t = t or {}
 	self.name = t.name

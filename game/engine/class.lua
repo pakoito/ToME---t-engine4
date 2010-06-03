@@ -187,6 +187,7 @@ function _M:save(filter, allow, savefile)
 	filter = filter or {}
 	if not allow then
 		filter.new = true
+		filter._mo = true
 	else
 		filter.__CLASSNAME = true
 	end

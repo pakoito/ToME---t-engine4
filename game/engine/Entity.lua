@@ -26,8 +26,20 @@ module(..., package.seeall, class.make)
 local next_uid = 1
 local entities_load_functions = {}
 
--- Setup the uids repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
+_M.__mo_repo = {}
+
+-- Setup the uids & MO repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
 setmetatable(__uids, {__mode="v"})
+setmetatable(_M.__mo_repo, {__mode="v"})
+
+--- Invalidates the whole MO repository
+function _M:invalidateAllMO()
+	for i, mo in ipairs(_M.__mo_repo) do
+		mo:invalidate()
+	end
+	_M.__mo_repo = {}
+	setmetatable(_M.__mo_repo, {__mode="v"})
+end
 
 local function copy_recurs(dst, src, deep)
 	for k, e in pairs(src) do
@@ -134,6 +146,25 @@ function _M:changeUid(newuid)
 	__uids[self.uid] = nil
 	self.uid = newuid
 	__uids[self.uid] = self
+end
+
+--- Create the "map object" representing this entity
+-- Do not touch unless you *KNOW* what you are doing.<br/>
+-- You do *NOT* need this, this is used by the engine.Map class automatically.<br/>
+-- *DO NOT TOUCH!!!*
+function _M:makeMapObject(tiles)
+	if self._mo and self._mo:isValid() then return self._mo end
+
+	-- Create the map object with 1 + additional textures
+	self._mo = core.map.newObject(1 + (self.textures and #self.textures or 0))
+	_M.__mo_repo[#_M.__mo_repo+1] = self._mo
+
+	-- Setup tint
+	self._mo:tint(self.tint_r, self.tint_g, self.tint_b)
+
+	-- Texture 0 is always the normal image/ascii tile
+	self._mo:texture(0, tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255))
+	return self._mo
 end
 
 --- Resolves an entity

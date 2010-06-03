@@ -24,18 +24,20 @@
 #include "tgl.h"
 
 typedef struct {
-	GLuint texture;
+	int nb_textures;
+	GLuint *textures;
 	GLuint shader;
 	float tint_r;
 	float tint_g;
 	float tint_b;
-} map_texture;
+	bool valid;
+} map_object;
 
 typedef struct {
-	map_texture **grids_terrain;
-	map_texture **grids_actor;
-	map_texture **grids_object;
-	map_texture **grids_trap;
+	map_object* **grids_terrain;
+	map_object* **grids_actor;
+	map_object* **grids_object;
+	map_object* **grids_trap;
 	float **grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;

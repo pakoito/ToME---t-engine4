@@ -599,8 +599,6 @@ int main(int argc, char *argv[])
 
 	SDL_AddTimer(30, redraw_timer, NULL);
 
-	doit();
-
 	SDL_Event event;
 	while (!exit_engine)
 	{

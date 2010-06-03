@@ -31,6 +31,80 @@
 
 extern void useShader(GLuint p, int x, int y, float a);
 
+static int map_object_new(lua_State *L)
+{
+	int nb_textures = luaL_checknumber(L, 1);
+	int i;
+
+	map_object *obj = (map_object*)lua_newuserdata(L, sizeof(map_object));
+	auxiliar_setclass(L, "core{mapobj}", -1);
+	obj->textures = calloc(nb_textures, sizeof(GLuint));
+	obj->nb_textures = nb_textures;
+
+	obj->valid = TRUE;
+	obj->shader = 0;
+	obj->tint_r = obj->tint_g = obj->tint_b = 1;
+	for (i = 0; i < nb_textures; i++) obj->textures[i] = 0;
+
+	return 1;
+}
+
+static int map_object_free(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	int i;
+
+	free(obj->textures);
+
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int map_object_texture(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	int i = luaL_checknumber(L, 2);
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 3);
+	if (i < 0 || i >= obj->nb_textures) return 0;
+	obj->textures[i] = *t;
+	return 0;
+}
+
+static int map_object_shader(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	GLuint *s = (GLuint*)auxiliar_checkclass(L, "gl{program}", 2);
+	obj->shader = *s;
+	return 0;
+}
+
+static int map_object_tint(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	float r = luaL_checknumber(L, 2);
+	float g = luaL_checknumber(L, 3);
+	float b = luaL_checknumber(L, 4);
+	obj->tint_r = r;
+	obj->tint_g = g;
+	obj->tint_b = b;
+	return 0;
+}
+
+static int map_object_invalid(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	obj->valid = FALSE;
+	return 0;
+}
+
+static int map_object_is_valid(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	lua_pushboolean(L, obj->valid);
+	return 1;
+}
+
+
 // Minimap defines
 #define MM_FLOOR 1
 #define MM_BLOCK 2
@@ -73,10 +147,10 @@ static int map_new(lua_State *L)
 	map->my = my;
 	map->mwidth = mwidth;
 	map->mheight = mheight;
-	map->grids_terrain = calloc(w, sizeof(map_texture*));
-	map->grids_actor = calloc(w, sizeof(map_texture*));
-	map->grids_trap = calloc(w, sizeof(map_texture*));
-	map->grids_object = calloc(w, sizeof(map_texture*));
+	map->grids_terrain = calloc(w, sizeof(map_object**));
+	map->grids_actor = calloc(w, sizeof(map_object**));
+	map->grids_trap = calloc(w, sizeof(map_object**));
+	map->grids_object = calloc(w, sizeof(map_object**));
 	map->grids_seens = calloc(w, sizeof(float*));
 	map->grids_remembers = calloc(w, sizeof(bool*));
 	map->grids_lites = calloc(w, sizeof(bool*));
@@ -86,10 +160,10 @@ static int map_new(lua_State *L)
 	int i;
 	for (i = 0; i < w; i++)
 	{
-		map->grids_terrain[i] = calloc(h, sizeof(map_texture));
-		map->grids_actor[i] = calloc(h, sizeof(map_texture));
-		map->grids_object[i] = calloc(h, sizeof(map_texture));
-		map->grids_trap[i] = calloc(h, sizeof(map_texture));
+		map->grids_terrain[i] = calloc(h, sizeof(map_object*));
+		map->grids_actor[i] = calloc(h, sizeof(map_object*));
+		map->grids_object[i] = calloc(h, sizeof(map_object*));
+		map->grids_trap[i] = calloc(h, sizeof(map_object*));
 		map->grids_seens[i] = calloc(h, sizeof(float));
 		map->grids_remembers[i] = calloc(h, sizeof(bool));
 		map->grids_lites[i] = calloc(h, sizeof(bool));
@@ -207,54 +281,18 @@ static int map_set_grid(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 
-	GLuint *g = lua_isnil(L, 4) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
-	GLuint *shad_g = lua_isnil(L, 5) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{program}", 5);
-	float g_r = lua_tonumber(L, 6);
-	float g_g = lua_tonumber(L, 7);
-	float g_b = lua_tonumber(L, 8);
-
-	GLuint *t = lua_isnil(L, 9) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 9);
-	GLuint *shad_t = lua_isnil(L, 10) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{program}", 10);
-	float t_r = lua_tonumber(L, 11);
-	float t_g = lua_tonumber(L, 12);
-	float t_b = lua_tonumber(L, 13);
-
-	GLuint *o = lua_isnil(L, 14) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 14);
-	GLuint *shad_o = lua_isnil(L, 15) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{program}", 15);
-	float o_r = lua_tonumber(L, 16);
-	float o_g = lua_tonumber(L, 17);
-	float o_b = lua_tonumber(L, 18);
-
-	GLuint *a = lua_isnil(L, 19) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{texture}", 19);
-	GLuint *shad_a = lua_isnil(L, 20) ? NULL : (GLuint*)auxiliar_checkclass(L, "gl{program}", 20);
-	float a_r = lua_tonumber(L, 21);
-	float a_g = lua_tonumber(L, 22);
-	float a_b = lua_tonumber(L, 23);
-
-	unsigned char mm = lua_tonumber(L, 24);
+	map_object *g = lua_isnil(L, 4) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 4);
+	map_object *t = lua_isnil(L, 5) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 5);
+	map_object *o = lua_isnil(L, 6) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 6);
+	map_object *a = lua_isnil(L, 7) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 7);
+	unsigned char mm = lua_tonumber(L, 8);
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 
-	map->grids_terrain[x][y].texture = g ? *g : 0;
-	map->grids_terrain[x][y].shader = shad_g ? *shad_g : 0;
-	map->grids_terrain[x][y].tint_r = g_r;
-	map->grids_terrain[x][y].tint_g = g_g;
-	map->grids_terrain[x][y].tint_b = g_b;
-
-	map->grids_trap[x][y].texture = t ? *t : 0;
-	map->grids_trap[x][y].tint_r = t_r;
-	map->grids_trap[x][y].tint_g = t_g;
-	map->grids_trap[x][y].tint_b = t_b;
-
-	map->grids_actor[x][y].texture = a ? *a : 0;
-	map->grids_actor[x][y].tint_r = a_r;
-	map->grids_actor[x][y].tint_g = a_g;
-	map->grids_actor[x][y].tint_b = a_b;
-
-	map->grids_object[x][y].texture = o ? *o : 0;
-	map->grids_object[x][y].tint_r = o_r;
-	map->grids_object[x][y].tint_g = o_g;
-	map->grids_object[x][y].tint_b = o_b;
+	map->grids_terrain[x][y] = g ? g : 0;
+	map->grids_trap[x][y] = t ? t : 0;
+	map->grids_actor[x][y] = a ? a : 0;
+	map->grids_object[x][y] = o ? o : 0;
 
 	map->minimap[x][y] = mm;
 	return 0;
@@ -340,50 +378,36 @@ static int map_set_scroll(lua_State *L)
 	return 0;
 }
 
-GLuint pfftex;
-#include "libtcod.h"
-#define BYTES_PER_TEXEL 3
-#define LAYER(r)	(w * h * r * BYTES_PER_TEXEL)
-// 2->1 dimension mapping function
-#define TEXEL2(s, t)	(BYTES_PER_TEXEL * (s * w + t))
-// 3->1 dimension mapping function
-#define TEXEL3(s, t, r)	(TEXEL2(s, t) + LAYER(r))
-void doit()
+inline void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure)
 {
-	TCOD_noise_t *noise = TCOD_noise_new(3, TCOD_NOISE_DEFAULT_HURST, TCOD_NOISE_DEFAULT_LACUNARITY);
-	int w = 128, h = 128, d=128, zoom = 4;
-	int x=0, y=0, z=0;
-	GLubyte *map = malloc(w * h * d * 3 * sizeof(GLubyte));
-
-	float p[3];
-	int i, j, k;
-	for (i = 0; i < w; i++)
+	if (!obscure)
 	{
-		for (j = 0; j < h; j++)
-		{
-			for (k = 0; k < d; k++)
-			{
-				p[0] = zoom * ((float)(i+x)) / w;
-				p[1] = zoom * ((float)(j+y)) / h;
-				p[2] = zoom * ((float)(k+z)) / d;
-				float v = ((TCOD_noise_simplex(noise, p) + 1) / 2) * 255;
-				map[TEXEL3(i, j, k)] = (GLubyte)v;
-				map[TEXEL3(i, j, k)+1] = (GLubyte)v;
-				map[TEXEL3(i, j, k)+2] = (GLubyte)v;
-			}
-		}
+		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
+			glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
+		else
+			glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
 	}
-
-	glGenTextures(1, &pfftex);
-	glBindTexture(GL_TEXTURE_3D, pfftex);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB8, w, h, d, 0, GL_RGB, GL_UNSIGNED_BYTE, map);
-
-	free(map);
+	else
+	{
+		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
+			glColor4f((map->obscure_r + m->tint_r)/2, (map->obscure_g + m->tint_g)/2, (map->obscure_b + m->tint_b)/2, map->obscure_a);
+		else
+			glColor4f(map->obscure_r, map->obscure_g, map->obscure_b, a);
+	}
+	int z;
+	for (z = m->nb_textures - 1; z >= 0; z--)
+	{
+		glActiveTexture(GL_TEXTURE0 + z);
+		glBindTexture(GL_TEXTURE_2D, m->textures[z]);
+	}
+	if (m->shader) useShader(m->shader, i, j, a);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
+	glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
+	glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
+	glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
+	glEnd();
+	if (m->shader) glUseProgramObjectARB(0);
 }
 
 static int map_to_screen(lua_State *L)
@@ -410,169 +434,23 @@ static int map_to_screen(lua_State *L)
 					a = map->shown_a * map->grids_seens[i][j];
 					if (map->multidisplay)
 					{
-						if (map->grids_terrain[i][j].texture)
-						{
-							map_texture *m = &(map->grids_terrain[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-//glActiveTexture(GL_TEXTURE1);
-//glBindTexture(GL_TEXTURE_3D, pfftex);
-//glActiveTexture(GL_TEXTURE0);
-							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
-						if (map->grids_trap[i][j].texture)
-						{
-							map_texture *m = &(map->grids_trap[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j].texture);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
-						if (map->grids_object[i][j].texture)
-						{
-							map_texture *m = &(map->grids_object[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j].texture);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
-						if (map->grids_actor[i][j].texture)
-						{
-							map_texture *m = &(map->grids_actor[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j].texture);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
+						if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, FALSE);
+						if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, FALSE);
+						if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, FALSE);
+						if (map->grids_actor[i][j]) display_map_quad(map, dx, dy, map->grids_actor[i][j], i, j, a, FALSE);
 					}
 					else
 					{
-						if (map->grids_actor[i][j].texture)
-						{
-							map_texture *m = &(map->grids_actor[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBindTexture(GL_TEXTURE_2D, map->grids_actor[i][j].texture);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
-						else if (map->grids_object[i][j].texture)
-						{
-							map_texture *m = &(map->grids_object[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBindTexture(GL_TEXTURE_2D, map->grids_object[i][j].texture);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
-						else if (map->grids_trap[i][j].texture)
-						{
-							map_texture *m = &(map->grids_trap[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBindTexture(GL_TEXTURE_2D, map->grids_trap[i][j].texture);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
-						else if (map->grids_terrain[i][j].texture)
-						{
-							map_texture *m = &(map->grids_terrain[i][j]);
-							if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-								glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
-							else
-								glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
-							if (m->shader) useShader(m->shader, i, j, a);
-							glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
-							glBegin(GL_QUADS);
-							glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-							glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-							glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-							glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-							glEnd();
-							if (m->shader) glUseProgramObjectARB(0);
-						}
+						if (map->grids_actor[i][j]) display_map_quad(map, dx, dy, map->grids_actor[i][j], i, j, a, FALSE);
+						else if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, FALSE);
+						else if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, FALSE);
+						else if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, FALSE);
 					}
 				}
 				else
 				{
-					if (map->grids_terrain[i][j].texture)
-					{
-						map_texture *m = &(map->grids_terrain[i][j]);
-						if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-							glColor4f((map->obscure_r + m->tint_r)/2, (map->obscure_g + m->tint_g)/2, (map->obscure_b + m->tint_b)/2, map->obscure_a);
-						else
-							glColor4f(map->obscure_r, map->obscure_g, map->obscure_b, map->obscure_a);
-						if (m->shader) useShader(m->shader, i, j, a);
-						glBindTexture(GL_TEXTURE_2D, map->grids_terrain[i][j].texture);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-						glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-						glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-						glEnd();
-						if (m->shader) glUseProgramObjectARB(0);
-					}
+					a = map->obscure_a;
+					if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, TRUE);
 				}
 			}
 		}
@@ -736,6 +614,7 @@ static int minimap_to_screen(lua_State *L)
 static const struct luaL_reg maplib[] =
 {
 	{"newMap", map_new},
+	{"newObject", map_object_new},
 	{NULL, NULL},
 };
 
@@ -760,10 +639,21 @@ static const struct luaL_reg map_reg[] =
 	{NULL, NULL},
 };
 
+static const struct luaL_reg map_object_reg[] =
+{
+	{"__gc", map_object_free},
+	{"texture", map_object_texture},
+	{"tint", map_object_tint},
+	{"shader", map_object_shader},
+	{"invalidate", map_object_invalid},
+	{"isValid", map_object_is_valid},
+	{NULL, NULL},
+};
+
 int luaopen_map(lua_State *L)
 {
 	auxiliar_newclass(L, "core{map}", map_reg);
-//	auxiliar_newclass(L, "core{level}", level_reg);
+	auxiliar_newclass(L, "core{mapobj}", map_object_reg);
 	luaL_openlib(L, "core.map", maplib, 0);
 	return 1;
 }
