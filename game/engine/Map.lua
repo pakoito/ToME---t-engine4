@@ -21,7 +21,6 @@ require "engine.class"
 local Entity = require "engine.Entity"
 local Tiles = require "engine.Tiles"
 local Particles = require "engine.Particles"
-local Shader = require "engine.Shader"
 local Faction = require "engine.Faction"
 local DamageType = require "engine.DamageType"
 

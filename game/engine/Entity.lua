@@ -21,6 +21,8 @@
 -- An entity is anything that goes on a map, terrain features, objects, monsters, player, ...
 -- Usually there is no need to use it directly, and it is betetr to use specific engine.Grid, engine.Actor or engine.Object
 -- classes. Most modules will want to subclass those anyway to add new comportments
+local Shader = require "engine.Shader"
+
 module(..., package.seeall, class.make)
 
 local next_uid = 1
@@ -156,7 +158,7 @@ function _M:makeMapObject(tiles)
 	if self._mo and self._mo:isValid() then return self._mo end
 
 	-- Create the map object with 1 + additional textures
-	self._mo = core.map.newObject(1 + (self.textures and #self.textures or 0))
+	self._mo = core.map.newObject(1 + (tiles.use_images and self.textures and #self.textures or 0))
 	_M.__mo_repo[#_M.__mo_repo+1] = self._mo
 
 	-- Setup tint
@@ -164,6 +166,24 @@ function _M:makeMapObject(tiles)
 
 	-- Texture 0 is always the normal image/ascii tile
 	self._mo:texture(0, tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255))
+
+	-- Setup additional textures
+	if tiles.use_images and self.textures then
+		for i = 1, #self.textures do
+			local t = self.textures[i]
+			if type(t) == "function" then self._mo:texture(i, t(self, tiles))
+			elseif type(t) == "table" then
+				if t[1] == "image" then self._mo:texture(i, tiles:get('', 0, 0, 0, 0, 0, 0, t[2]))
+				end
+			end
+		end
+	end
+
+	-- Setup shader
+	if tiles.use_images and self.shader then
+		self._mo:shader(Shader.new(self.shader, self.shader_args).shad)
+	end
+
 	return self._mo
 end
 

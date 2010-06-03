@@ -285,6 +285,7 @@ static const struct luaL_reg noise_reg[] =
 	{"fbm_wavelet", noise_fbm_wavelet},
 	{"turbulence_wavelet", noise_turbulence_wavelet},
 	{"makeTexture2D", noise_texture2d},
+	{"makeTexture3D", noise_texture3d},
 	{NULL, NULL},
 };
 
