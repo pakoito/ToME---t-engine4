@@ -29,7 +29,7 @@ quickEntity('t', {show_tooltip=true, name='forest', display='#', color=colors.LI
 quickEntity('l', {show_tooltip=true, name='Lorien', display='#', color=colors.GOLD, back_color=colors.DARK_GREEN, image="terrain/lorien.png", block_move=true})
 quickEntity('v', {show_tooltip=true, name='old forest', display='#', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/tree_dark1.png", block_move=true})
 quickEntity('i', {show_tooltip=true, name='iron mountains', display='^', color=colors.SLATE, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
-quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true})
+quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, shader = "water", textures = { function() return core.noise.new(3):makeTexture3D("simplex", 128, 128, 128, 4, 0, 0, 0), true end },}) --
 quickEntity('.', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
 quickEntity('g', {show_tooltip=true, name='Forodwaith, the cold lands', display='.', color=colors.LIGHT_BLUE, back_color=colors.BLUE, can_encounter=true, equilibrium_level=-10})
 quickEntity('q', {show_tooltip=true, name='Icebay of Forochel', display=';', color=colors.LIGHT_BLUE, back_color=colors.BLUE, can_encounter=true, equilibrium_level=-10})

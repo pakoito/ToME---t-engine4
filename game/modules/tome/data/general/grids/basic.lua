@@ -62,7 +62,6 @@ newEntity{
 
 newEntity{
 	define_as = "WALL",
---	shader = "water", textures = { function() return core.noise.new(3):makeTexture3D("simplex", 128, 128, 128, 4, 0, 0, 0) end },
 	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 	always_remember = true,

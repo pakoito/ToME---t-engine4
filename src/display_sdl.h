@@ -22,6 +22,7 @@
 #define DISPLAY_SDL_H
 
 #include "tSDL.h"
+#include "glew.h"
 #include "tgl.h"
 
 #ifdef __cplusplus

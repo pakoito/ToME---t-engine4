@@ -20,6 +20,7 @@
 newEntity{
 	define_as = "WATER_FLOOR",
 	name = "underwater", image = "terrain/water_floor.png",
+--	shader = "water", textures = { function() return core.noise.new(3):makeTexture3D("simplex", 128, 128, 128, 4, 0, 0, 0), true end },
 	display = '.', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
 	air_level = -5, air_condition="water",
 }
@@ -27,6 +28,7 @@ newEntity{
 newEntity{
 	define_as = "WATER_WALL",
 	name = "wall", image = "terrain/water_wall.png",
+--	shader = "water", textures = { function() return core.noise.new(3):makeTexture3D("simplex", 128, 128, 128, 4, 0, 0, 0), true end },
 	display = '#', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	can_pass = {pass_wall=1},
@@ -38,6 +40,7 @@ newEntity{
 newEntity{
 	define_as = "SHALLOW_WATER",
 	name = "shallow water", image = "terrain/water_floor.png",
+--	shader = "water", textures = { function() return core.noise.new(3):makeTexture3D("simplex", 128, 128, 128, 4, 0, 0, 0), true end },
 	display = '~', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
 	always_remember = true,
 }
@@ -45,6 +48,7 @@ newEntity{
 newEntity{
 	define_as = "DEEP_WATER",
 	name = "deep water", image = "terrain/water_floor.png",
+--	shader = "water", textures = { function() return core.noise.new(3):makeTexture3D("simplex", 128, 128, 128, 4, 0, 0, 0), true end },
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	air_level = -5, air_condition="water",

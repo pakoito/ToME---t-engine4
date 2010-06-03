@@ -18,10 +18,11 @@
 -- darkgod@te4.org
 
 return {
-	frag = "water",
+	frag = "dual_hue",
 	vert = nil,
 	args = {
-		noisevol = { texture = 1 },
+		color1 = hue_color1 or {1,0,0,1},
+		color2 = hue_color2 or {0,1,0,1},
 	},
 	clone = false,
 }

@@ -238,9 +238,13 @@ static int noise_texture3d(lua_State *L)
 		{
 			for (k = 0; k < d; k++)
 			{
-				p[0] = zoom * ((float)(i+x)) / w;
-				p[1] = zoom * ((float)(j+y)) / h;
-				p[2] = zoom * ((float)(k+z)) / d;
+				int ii, jj, kk;
+				ii = (i > w / 2) ? w - i : i;
+				jj = (j > h / 2) ? h - j : j;
+				kk = (k > d / 2) ? d - k : k;
+				p[0] = zoom * ((float)(ii+x)) / w;
+				p[1] = zoom * ((float)(jj+y)) / h;
+				p[2] = zoom * ((float)(kk+z)) / d;
 				float v = ((TCOD_noise_simplex(n->noise, p) + 1) / 2) * 255;
 				map[TEXEL3(i, j, k)] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+1] = (GLubyte)v;
@@ -262,7 +266,6 @@ static int noise_texture3d(lua_State *L)
 	glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB8, w, h, d, 0, GL_RGB, GL_UNSIGNED_BYTE, map);
 
 	free(map);
-
 	return 1;
 }
 

@@ -18,10 +18,13 @@
 -- darkgod@te4.org
 
 return {
-	frag = "water",
+	frag = "quad_hue",
 	vert = nil,
 	args = {
-		noisevol = { texture = 1 },
+		color1 = hue_color1 or {1,0,0,1},
+		color2 = hue_color2 or {0,1,0,1},
+		color3 = hue_color3 or {0,0,1,1},
+		color4 = hue_color4 or {0,1,1,1},
 	},
 	clone = false,
 }

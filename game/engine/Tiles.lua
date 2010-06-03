@@ -32,6 +32,7 @@ function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
 	self.w, self.h = w, h
 	self.font = core.display.newFont(fontname or "/data/font/VeraMoBd.ttf", fontsize or 14)
 	self.repo = {}
+	self.texture_store = {}
 end
 
 function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
@@ -86,4 +87,5 @@ end
 
 function _M:clean()
 	self.repo = {}
+	self.texture_store = {}
 end

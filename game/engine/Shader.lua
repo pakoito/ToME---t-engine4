@@ -32,7 +32,7 @@ function _M:init(name, args)
 	self.args = args or {}
 	self.name = name
 
-	self:loaded()
+	if core.shader.active() then self:loaded() end
 end
 
 --- Serialization
@@ -102,6 +102,15 @@ function _M:loaded()
 				if v.texture then
 					print("[SHADER] setting texture param", k, v.texture)
 					_M.progs[self.name]:paramTexture(k, v.texture, v.is3d)
+				elseif #v == 2 then
+					print("[SHADER] setting vec2 param", k, v[1], v[2])
+					_M.progs[self.name]:paramNumber2(k, v[1], v[2])
+				elseif #v == 3 then
+					print("[SHADER] setting vec3 param", k, v[1], v[2], v[3])
+					_M.progs[self.name]:paramNumber3(k, v[1], v[2], v[3])
+				elseif #v == 4 then
+					print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
+					_M.progs[self.name]:paramNumber4(k, v[1], v[2], v[3], v[4])
 				end
 			end
 		end

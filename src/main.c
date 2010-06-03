@@ -52,6 +52,7 @@ bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
 bool tickPaused = FALSE;
+extern bool shaders_active;
 
 /* Some lua stuff that's external but has no headers */
 int luaopen_mime_core(lua_State *L);
@@ -404,10 +405,7 @@ int resizeWindow(int width, int height)
 	ratio = ( GLfloat )width / ( GLfloat )height;
 
 	glActiveTexture(GL_TEXTURE0);
-	glEnable( GL_TEXTURE_2D );
-	glActiveTexture(GL_TEXTURE1);
 	glEnable(GL_TEXTURE_2D);
-	glActiveTexture(GL_TEXTURE0);
 
 	/* Setup our viewport. */
 	glViewport( 0, 0, ( GLsizei )width, ( GLsizei )height );
@@ -434,15 +432,16 @@ int resizeWindow(int width, int height)
 
 void do_resize(int w, int h, bool fullscreen)
 {
-	int flags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_RESIZABLE;
+	int flags = SDL_OPENGL;
 
-	if (fullscreen) flags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_FULLSCREEN;
+	if (fullscreen) flags = SDL_OPENGL | SDL_FULLSCREEN;
 
 	screen = SDL_SetVideoMode(w, h, 32, flags);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
 		return;
 	}
+	glewInit();
 
 	resizeWindow(screen->w, screen->h);
 }
@@ -567,6 +566,7 @@ int main(int argc, char *argv[])
 	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/data/gfx/te4-icon.png"), TRUE), NULL);
 
 //	screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_RESIZABLE);
+	glewInit();
 	do_resize(WIDTH, HEIGHT, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
@@ -589,6 +589,8 @@ int main(int argc, char *argv[])
 
 	/* Sets up OpenGL double buffering */
 	resizeWindow(WIDTH, HEIGHT);
+
+	shaders_active = glewIsSupported("GL_ARB_shader_objects");
 
 	boot_lua(2, FALSE, argc, argv);
 

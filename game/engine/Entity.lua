@@ -171,16 +171,16 @@ function _M:makeMapObject(tiles)
 	if tiles.use_images and self.textures then
 		for i = 1, #self.textures do
 			local t = self.textures[i]
-			if type(t) == "function" then self._mo:texture(i, t(self, tiles))
+			if type(t) == "function" then local tex, is3d = t(self, tiles); self._mo:texture(i, tex, is3d) tiles.texture_store[tex] = true
 			elseif type(t) == "table" then
-				if t[1] == "image" then self._mo:texture(i, tiles:get('', 0, 0, 0, 0, 0, 0, t[2]))
+				if t[1] == "image" then local tex = tiles:get('', 0, 0, 0, 0, 0, 0, t[2]); self._mo:texture(i, tex, false) tiles.texture_store[tex] = true
 				end
 			end
 		end
 	end
 
 	-- Setup shader
-	if tiles.use_images and self.shader then
+	if tiles.use_images and core.shader.active() and self.shader then
 		self._mo:shader(Shader.new(self.shader, self.shader_args).shad)
 	end
 

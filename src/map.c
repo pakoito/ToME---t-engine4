@@ -39,12 +39,17 @@ static int map_object_new(lua_State *L)
 	map_object *obj = (map_object*)lua_newuserdata(L, sizeof(map_object));
 	auxiliar_setclass(L, "core{mapobj}", -1);
 	obj->textures = calloc(nb_textures, sizeof(GLuint));
+	obj->textures_is3d = calloc(nb_textures, sizeof(bool));
 	obj->nb_textures = nb_textures;
 
 	obj->valid = TRUE;
 	obj->shader = 0;
 	obj->tint_r = obj->tint_g = obj->tint_b = 1;
-	for (i = 0; i < nb_textures; i++) obj->textures[i] = 0;
+	for (i = 0; i < nb_textures; i++)
+	{
+		obj->textures[i] = 0;
+		obj->textures_is3d[i] = FALSE;
+	}
 
 	return 1;
 }
@@ -55,6 +60,7 @@ static int map_object_free(lua_State *L)
 	int i;
 
 	free(obj->textures);
+	free(obj->textures_is3d);
 
 	lua_pushnumber(L, 1);
 	return 1;
@@ -65,8 +71,12 @@ static int map_object_texture(lua_State *L)
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	int i = luaL_checknumber(L, 2);
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 3);
+	bool is3d = lua_toboolean(L, 4);
 	if (i < 0 || i >= obj->nb_textures) return 0;
+
 	obj->textures[i] = *t;
+	obj->textures_is3d[i] = is3d;
+	printf("Map Object set texture %d : %d (%d 3D)\n", i, *t, is3d);
 	return 0;
 }
 
@@ -390,17 +400,17 @@ inline void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i
 	else
 	{
 		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-			glColor4f((map->obscure_r + m->tint_r)/2, (map->obscure_g + m->tint_g)/2, (map->obscure_b + m->tint_b)/2, map->obscure_a);
+			glColor4f((map->obscure_r + m->tint_r)/2, (map->obscure_g + m->tint_g)/2, (map->obscure_b + m->tint_b)/2, a);
 		else
 			glColor4f(map->obscure_r, map->obscure_g, map->obscure_b, a);
 	}
 	int z;
+	if (m->shader) useShader(m->shader, i, j, a);
 	for (z = m->nb_textures - 1; z >= 0; z--)
 	{
-		glActiveTexture(GL_TEXTURE0 + z);
-		glBindTexture(GL_TEXTURE_2D, m->textures[z]);
+		glActiveTexture(GL_TEXTURE0+z);
+		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 	}
-	if (m->shader) useShader(m->shader, i, j, a);
 	glBegin(GL_QUADS);
 	glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
 	glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);

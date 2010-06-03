@@ -39,10 +39,10 @@ void useShader(GLuint p, int x, int y, float a)
 	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, "tick"), 1, &t));
 	t = a; CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, "alpha"), 1, &t));
 
-	GLint c[2] = {x, y};
-	CHECKGL(glUniform2ivARB(glGetUniformLocationARB(p, "mapCoord"), 2, c));
-
-	CHECKGLSLVALID(p);
+	GLfloat c[2];
+	c[0] = x;
+	c[1] = y;
+	CHECKGL(glUniform2fvARB(glGetUniformLocationARB(p, "mapCoord"), 1, c));
 }
 
 static GLuint loadShader(const char* code, GLuint type)
@@ -110,7 +110,9 @@ static int program_compile(lua_State *L)
 	glLinkProgramARB(*p);
 	CHECKGLSLLINK(*p);
 
-#if 0
+	CHECKGLSLVALID(*p);
+
+#if 1
 	char buffer[256];
 	int count;
 	int dummysize;
@@ -129,7 +131,6 @@ static int program_compile(lua_State *L)
 			printf("*p %i: Uniform: %i: %X %s\n", *p,uniLoc, dummytype, buffer);
 		}
 	}
-	exit(1);
 #endif
 	return 0;
 }
@@ -166,27 +167,74 @@ static int program_set_uniform_number(lua_State *L)
 	return 0;
 }
 
+static int program_set_uniform_number2(lua_State *L)
+{
+	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	const char *var = luaL_checkstring(L, 2);
+	GLfloat i[2];
+	i[0] = luaL_checknumber(L, 3);
+	i[1] = luaL_checknumber(L, 4);
+
+	CHECKGL(glUseProgramObjectARB(*p));
+	CHECKGL(glUniform2fvARB(glGetUniformLocationARB(*p, var), 2, i));
+	CHECKGL(glUseProgramObjectARB(0));
+	return 0;
+}
+
+static int program_set_uniform_number3(lua_State *L)
+{
+	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	const char *var = luaL_checkstring(L, 2);
+	GLfloat i[3];
+	i[0] = luaL_checknumber(L, 3);
+	i[1] = luaL_checknumber(L, 4);
+	i[2] = luaL_checknumber(L, 5);
+
+	CHECKGL(glUseProgramObjectARB(*p));
+	CHECKGL(glUniform3fvARB(glGetUniformLocationARB(*p, var), 3, i));
+	CHECKGL(glUseProgramObjectARB(0));
+	return 0;
+}
+
+static int program_set_uniform_number4(lua_State *L)
+{
+	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	const char *var = luaL_checkstring(L, 2);
+	GLfloat i[4];
+	i[0] = luaL_checknumber(L, 3);
+	i[1] = luaL_checknumber(L, 4);
+	i[2] = luaL_checknumber(L, 5);
+	i[3] = luaL_checknumber(L, 6);
+
+	CHECKGL(glUseProgramObjectARB(*p));
+	CHECKGL(glUniform4fvARB(glGetUniformLocationARB(*p, var), 1, i));
+	CHECKGL(glUseProgramObjectARB(0));
+	return 0;
+}
+
 static int program_set_uniform_texture(lua_State *L)
 {
 	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
 	const char *var = luaL_checkstring(L, 2);
-	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 3);
-	bool is3d = lua_toboolean(L, 4);
+	GLint i = luaL_checknumber(L, 3);
 
-	GLint i = 1;
 	CHECKGL(glUseProgramObjectARB(*p));
-//	CHECKGL(glActiveTexture(GL_TEXTURE1));
-//	CHECKGL(glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t));
 	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(*p, var), 1, &i));
 	CHECKGL(glUseProgramObjectARB(0));
-//	CHECKGL(glActiveTexture(GL_TEXTURE0));
 	return 0;
+}
+
+static int shader_is_active(lua_State *L)
+{
+	lua_pushboolean(L, shaders_active);
+	return 1;
 }
 
 static const struct luaL_reg shaderlib[] =
 {
 	{"newShader", shader_new},
 	{"newProgram", program_new},
+	{"active", shader_is_active},
 	{NULL, NULL},
 };
 
@@ -197,6 +245,9 @@ static const struct luaL_reg program_reg[] =
 	{"attach", program_attach},
 	{"detach", program_detach},
 	{"paramNumber", program_set_uniform_number},
+	{"paramNumber2", program_set_uniform_number2},
+	{"paramNumber3", program_set_uniform_number3},
+	{"paramNumber4", program_set_uniform_number4},
 	{"paramTexture", program_set_uniform_texture},
 	{NULL, NULL},
 };

@@ -13,6 +13,7 @@ _OPTIONS.lua = _OPTIONS.lua or "default"
 solution "TEngine"
 	configurations { "Debug", "Release" }
 	objdir "obj"
+	defines {"GLEW_STATIC"}
 
 	includedirs {
 		"src",
