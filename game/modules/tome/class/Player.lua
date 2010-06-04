@@ -163,6 +163,11 @@ function _M:playerFOV()
 	end
 
 	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
+	if self:attr("infravision") then
+		self:computeFOV(self.infravision, "block_sight", function(x, y) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, 1) end end, true, true, true)
+	end
+
+	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
 	if self:attr("detect_range") then
 		self:computeFOV(self:attr("detect_range"), "block_sense", function(x, y)
 			local ok = false

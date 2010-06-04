@@ -214,6 +214,23 @@ newDamageType{
 	end,
 }
 
+-- Darkness + Stun
+newDamageType{
+	name = "darkstun", type = "DARKSTUN",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Set on fire!
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 4, {})
+			else
+				game.logSeen(target, "%s resists the darkness!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Fire DOT + Stun
 newDamageType{
 	name = "flameshock", type = "FLAMESHOCK",

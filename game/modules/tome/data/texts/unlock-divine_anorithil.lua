@@ -17,22 +17,22 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return "New Class: #LIGHT_GREEN#Sun Paladin (Divine)",
+return "New Class: #LIGHT_GREEN#Anorithil (Divine)",
 [[
 In the uttermost east of Arda, on the continent known as the Far East, dwells the last remnants of the free people, fighting the Orc Pride and the many perils of the Far East.
 
-Sun Paladins are humans warriors who are trained in special magic to manipulate the Sun powers.
-Paragons of all that is good they are nonetheless terrible in their battle against the Pride.
+Anorithil are elven mages who are trained in special magic to manipulate the Sun and Moon powers.
+They have learned to harness the powers of both shadows and light in their battle against the Pride.
 
-You have discovered the Gates of Morning and can now create new characters with the #LIGHT_GREEN#Sun Paladin class#WHITE#.
+You have discovered the Gates of Morning and can now create new characters with the #LIGHT_GREEN#Anorithil class#WHITE#.
 
-Sun Paladins are heavy melee with spellcasting support.
+Anorithil are pure spellcasters that rely on posivite and negative energies.
 Class features:#YELLOW#
 - Burn your foes from afar with the light and fire of the Sun
-- Head into battle enhanced by your powerful Chants
-- Channel the power of the Sun through your weapon
-- Become a walking fortress, protected by your shield#WHITE#
+- Head into battle enhanced by your powerful Sun Chants and Moon Hymns
+- Engulf your foes in the shadows
+- Set glyphs of power to confuse and control your foes#WHITE#
 
-Sun Paladins use "positive energy" to use their special abilities.
+Anorithil use "positive and negative energy" to use their special abilities.
 It is filled by some of their spells and depleted by others, making them alternate their talents.
 ]]

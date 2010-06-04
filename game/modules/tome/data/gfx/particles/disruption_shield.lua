@@ -28,8 +28,8 @@ return { generator = function()
 		life = 10,
 		size = 4, sizev = -0.1, sizea = 0,
 
-		x = r * math.cos(a), xv = 0.1, xa = 0,
-		y = r * math.sin(a), yv = 0.1, ya = 0,
+		x = r * math.cos(a), xv = 0, xa = 0,
+		y = r * math.sin(a), yv = 0, ya = 0,
 		dir = dir, dirv = 0.1, dira = 0,
 		vel = 1, velv = 0, vela = -0.2,
 

@@ -245,7 +245,7 @@ static int noise_texture3d(lua_State *L)
 				p[0] = zoom * ((float)(ii+x)) / w;
 				p[1] = zoom * ((float)(jj+y)) / h;
 				p[2] = zoom * ((float)(kk+z)) / d;
-				float v = ((TCOD_noise_simplex(n->noise, p) + 1) / 2) * 255;
+				float v = ((TCOD_noise_fbm_simplex(n->noise, p, 4) + 1) / 2) * 255;
 				map[TEXEL3(i, j, k)] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+1] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+2] = (GLubyte)v;

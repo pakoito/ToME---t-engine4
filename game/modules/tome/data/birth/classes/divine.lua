@@ -30,6 +30,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "never",
 			['Sun Paladin'] = function() return profile.mod.allow_build.divine_sun_paladin and "allow" or "never" end,
+			Anorithil = function() return profile.mod.allow_build.divine_anorithil and "allow" or "never" end,
 		},
 	},
 	copy = {
@@ -72,6 +73,42 @@ newBirthDescriptor{
 			{type="weapon", subtype="mace", name="iron mace", autoreq=true},
 			{type="armor", subtype="shield", name="iron shield", autoreq=true},
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true},
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Anorithil",
+	desc = {
+		"Anorithils hail from the Gates of Morning, the last bastion of the free people in the Far East.",
+		"Their way of life is well represented by their motto 'We are Grey. We stand between the darkness and the light.'",
+		"They can channel the power of the Sun and the Moon to burn and tear apart all who seek to destroy the Sunwall.",
+		"Masters of sun and moon magic they usually burn their foes with sun rays before calling the fury of the stars.",
+		"Their most important stats are: Magic and Cunning",
+	},
+	stats = { mag=4, cun=2, },
+	talents_types = {
+		["cunning/survival"]={false, 0.1},
+		["divine/sun"]={true, 0.3},
+		["divine/chants"]={true, 0.3},
+		["divine/glyphs"]={true, 0.3},
+		["divine/light"]={false, 0.3},
+		["divine/twilight"]={true, 0.3},
+		["divine/hymns"]={true, 0.3},
+		["divine/star-fury"]={true, 0.3},
+	},
+	talents = {
+		[ActorTalents.T_SEARING_LIGHT] = 1,
+		[ActorTalents.T_MOONLIGHT_RAY] = 1,
+		[ActorTalents.T_HYMN_OF_SHADOWS] = 1,
+		[ActorTalents.T_TWILIGHT] = 1,
+	},
+	copy = {
+		max_life = 90,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="stagg", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="robe", autoreq=true},
 		},
 	},
 }

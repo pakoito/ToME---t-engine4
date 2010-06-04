@@ -76,7 +76,6 @@ static int map_object_texture(lua_State *L)
 
 	obj->textures[i] = *t;
 	obj->textures_is3d[i] = is3d;
-	printf("Map Object set texture %d : %d (%d 3D)\n", i, *t, is3d);
 	return 0;
 }
 

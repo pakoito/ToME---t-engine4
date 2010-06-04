@@ -165,6 +165,10 @@ function _M:act()
 		local t = self:getTalentFromId(self.T_THUNDERSTORM)
 		t.do_storm(self, t)
 	end
+	if self:isTalentActive(self.T_HYMN_OF_MOONLIGHT) then
+		local t = self:getTalentFromId(self.T_HYMN_OF_MOONLIGHT)
+		t.do_beams(self, t)
+	end
 
 	if self:attr("stunned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
@@ -502,10 +506,12 @@ function _M:die(src)
 	if rng.percent(33) then self:bloodyDeath() end
 
 	-- Drop stuff
-	for inven_id, inven in pairs(self.inven) do
-		for i, o in ipairs(inven) do
-			if not o.no_drop then
-				game.level.map:addObject(self.x, self.y, o)
+	if not self.no_drops then
+		for inven_id, inven in pairs(self.inven) do
+			for i, o in ipairs(inven) do
+				if not o.no_drop then
+					game.level.map:addObject(self.x, self.y, o)
+				end
 			end
 		end
 	end

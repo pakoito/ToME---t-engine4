@@ -24,6 +24,12 @@ newTalentType{ type="divine/combat", name = "combat", description = "Your devoti
 newTalentType{ type="divine/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
 newTalentType{ type="divine/glyphs", name = "glyphs", description = "Bind the holy powers into glyphs to trap your foes." }
 
+newTalentType{ type="divine/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
+newTalentType{ type="divine/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
+newTalentType{ type="divine/hymns", name = "hymns", description = "Chant the glory of the moon." }
+
+newTalentType{ type="divine/other", name = "other", description = "Various divine talents." }
+
 -- Generic requires for corruptions based on talent level
 divi_req1 = {
 	stat = { mag=function(level) return 12 + (level-1) * 2 end },
@@ -50,3 +56,7 @@ load("/data/talents/divine/chants.lua")
 load("/data/talents/divine/sun.lua")
 load("/data/talents/divine/combat.lua")
 load("/data/talents/divine/light.lua")
+
+load("/data/talents/divine/twilight.lua")
+load("/data/talents/divine/hymns.lua")
+load("/data/talents/divine/star-fury.lua")

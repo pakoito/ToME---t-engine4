@@ -20,27 +20,30 @@
 return { generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
-	local dir = math.rad(ad + 90)
-	local r = rng.range(14, 18)
-	local dirv = math.rad(2)
+	local dir = math.rad(ad + 180)
+	local r = rng.range(12, 20)
+	local col = rng.range(20, 80)/255
 
 	return {
 		trail = 1,
 		life = 10,
-		size = 4, sizev = -0.1, sizea = 0,
+		size = 4, sizev = 0.08, sizea = 0,
 
 		x = r * math.cos(a), xv = 0, xa = 0,
 		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = dirv, dira = 0,
-		vel = 1, velv = 0, vela = 0,
+		dir = dir, dirv = math.rad(3), dira = math.rad(3) / 3,
+		vel = 1.4, velv = 0, vela = 0,
 
-		r = rng.range(100, 220)/255, rv = rng.range(0, 10), ra = 0,
-		g = rng.range(120, 100)/255,   gv = 0, ga = 0,
-		b = rng.range(10, 255)/255, bv = rng.range(0, 10), ba = 0,
-		a = rng.range(25, 220)/255,   av = 0, aa = 0,
+		r = col,  rv = 0, ra = 0,
+		g = col,  gv = 0, ga = 0,
+		b = col,  bv = 0, ba = 0,
+		a = rng.range(220, 255)/255,  av = 0, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(10)
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 4 then
+		self.ps:emit(20)
+	end
 end,
-100
+800

@@ -260,14 +260,15 @@ static int particles_to_screen(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 	bool show = lua_toboolean(L, 4);
-	int i = 0;
+	int w = 0;
+	int i, j;
 	bool alive = FALSE;
 
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
 
-	for (i = 0; i < ps->nb; i++)
+	for (w = 0; w < ps->nb; w++)
 	{
-		particle_type *p = &ps->particles[i];
+		particle_type *p = &ps->particles[w];
 
 		if (p->life > 0)
 		{
@@ -279,10 +280,12 @@ static int particles_to_screen(lua_State *L)
 				glBegin(GL_QUADS);
 				if (!p->trail)
 				{
-					glTexCoord2f(0,0); glVertex3f(0 + x + p->x,	0 + y + p->y,		-97);
-					glTexCoord2f(1,0); glVertex3f(p->size + x + p->x,	0 + y + p->y,		-97);
-					glTexCoord2f(1,1); glVertex3f(p->size + x + p->x,	p->size + y + p->y,	-97);
-					glTexCoord2f(0,1); glVertex3f(0 + x + p->x,	p->size + y + p->y,	-97);
+					i = x + p->x - p->size / 2;
+					j = y + p->y - p->size / 2;
+					glTexCoord2f(0,0); glVertex3f(0 + i,	0 + j,		-97);
+					glTexCoord2f(1,0); glVertex3f(p->size + i,	0 + j,		-97);
+					glTexCoord2f(1,1); glVertex3f(p->size + i,	p->size + j,	-97);
+					glTexCoord2f(0,1); glVertex3f(0 + i,	p->size + j,	-97);
 				}
 				else
 				{

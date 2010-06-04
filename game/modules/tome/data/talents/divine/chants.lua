@@ -63,7 +63,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d physical and spell resistance.
-		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
+		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
 		The resistance and damage will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.12), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,
@@ -101,7 +101,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d%% physical damage resistance.
-		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
+		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
 		The resistance and damage will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,
@@ -144,7 +144,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d%% elemental resistances.
-		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
+		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
 		The resistance and damage will increase with the Magic stat]]):format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,
@@ -182,7 +182,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the sun, granting you %d%% more light damage.
-		In addition it surrounds you with a shield of light, damaging anythnig that attacks you for %0.2f light damage.
+		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
 		The damage will increase with the Magic stat]]):format(10 + self:getTalentLevel(t) * self:combatSpellpower(0.10), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
 	end,

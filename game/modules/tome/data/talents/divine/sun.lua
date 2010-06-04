@@ -23,7 +23,7 @@ newTalent{
 	require = divi_req1,
 	points = 5,
 	cooldown = 6,
-	positive = -15,
+	positive = -16,
 	tactical = {
 		ATTACK = 10,
 	},

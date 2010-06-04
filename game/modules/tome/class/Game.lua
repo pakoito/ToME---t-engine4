@@ -525,7 +525,8 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "wilderness-arda-fareast")
+--				self:changeLevel(1, "wilderness-arda-fareast")
+				game.level.map:particleEmitter(game.player.x,game.player.y, 1, "nova")
 			end
 		end,
 	}
