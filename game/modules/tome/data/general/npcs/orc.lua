@@ -102,6 +102,11 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI_FIRE_WYRMIC",
 		{type="weapon", subtype="battleaxe", autoreq=true},
 	},
 	combat_armor = 2, combat_def = 0,
+
+	make_escort = {
+		{type="humanoid", subtype="orc", name="uruk-hai", number=resolvers.mbonus(3, 2)},
+	},
+
 	resolvers.talents{
 		[Talents.T_BELLOWING_ROAR]=2,
 		[Talents.T_WING_BUFFET]=2,
@@ -121,6 +126,11 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="weapon", subtype="battleaxe", autoreq=true},
 	},
 	combat_armor = 2, combat_def = 0,
+
+	make_escort = {
+		{type="humanoid", subtype="orc", name="uruk-hai", number=resolvers.mbonus(3, 2)},
+	},
+
 	resolvers.talents{
 		[Talents.T_ICE_CLAW]=2,
 		[Talents.T_ICY_SKIN]=2,

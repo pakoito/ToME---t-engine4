@@ -37,7 +37,7 @@ newEntity{
 	size_category = 4,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=5, },
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 7,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 7, combat_def = 0,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 7,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 9, combat_def = 3,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1,},
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1, [Talents.T_KNOCKBACK]=2, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
@@ -85,5 +85,22 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 7,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 12, combat_def = 4,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=3, [Talents.T_RUSH]=3, },
+}
+
+newEntity{ base = "BASE_NPC_TROLL",
+	name = "mountain troll thunderer", color=colors.AQUAMARINE,
+	desc = [[A large and athletic troll with an extremely tough and warty hide.]],
+	level_range = {20, 50}, exp_worth = 1,
+	rarity = 7,
+	rank = 3,
+	max_life = resolvers.rngavg(120,140),
+	mana_regen = 20,
+	combat_armor = 8, combat_def = 4,
+	autolevel = "warriormage",
+	resolvers.talents{
+		[Talents.T_STUN]=4, [Talents.T_KNOCKBACK]=3,
+		[Talents.T_LIGHTNING]=4,
+		[Talents.T_THUNDERSTORM]=3,
+	},
 }

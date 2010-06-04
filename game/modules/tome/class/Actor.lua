@@ -1057,7 +1057,8 @@ function _M:addedToLevel(level, x, y)
 
 				-- Find an actor with that filter
 				local m = game.zone:makeEntity(game.level, "actor", filter)
-				if m then game.zone:addEntity(game.level, m, "actor", x, y) end
+				if m and m:canMove(x, y) then game.zone:addEntity(game.level, m, "actor", x, y)
+				else m:removed() end
 			end
 		end
 		self.make_escort = nil
