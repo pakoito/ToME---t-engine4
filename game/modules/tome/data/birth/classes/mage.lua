@@ -70,9 +70,9 @@ newBirthDescriptor{
 		["cunning/survival"]={false, -0.1},
 	},
 	talents = {
-		[ActorTalents.T_MANATHRUST] = 1,
+		[ActorTalents.T_ARCANE_POWER] = 1,
 		[ActorTalents.T_FLAME] = 1,
-		[ActorTalents.T_CORROSIVE_VAPOUR] = 1,
+		[ActorTalents.T_LIGHTNING] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
 	},
 	copy = {

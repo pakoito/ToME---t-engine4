@@ -18,9 +18,34 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Manathrust",
+	name = "Arcane Power",
 	type = {"spell/arcane", 1},
+	mode = "sustained",
 	require = spells_req1,
+	sustain_mana = 50,
+	points = 5,
+	activate = function(self, t)
+		local power = 5 * self:getTalentLevelRaw(t)
+		game:playSoundNear(self, "talents/arcane")
+		return {
+			power = self:addTemporaryValue("combat_spellpower", power),
+			particle = self:addParticles(Particles.new("arcane_power", 1)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		self:removeTemporaryValue("combat_spellpower", p.power)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Your mastery of magic allows you to enter a deep concentration state, increasing your spellpower by %d.]]):format(5 * self:getTalentLevelRaw(t))
+	end,
+}
+
+newTalent{
+	name = "Manathrust",
+	type = {"spell/arcane", 2},
+	require = spells_req2,
 	points = 5,
 	mana = 10,
 	cooldown = 3,
@@ -53,8 +78,8 @@ newTalent{
 
 newTalent{
 	name = "Manaflow",
-	type = {"spell/arcane", 2},
-	require = spells_req2,
+	type = {"spell/arcane", 3},
+	require = spells_req3,
 	points = 5,
 	mana = 0,
 	cooldown = 300,
@@ -71,23 +96,6 @@ newTalent{
 	info = function(self, t)
 		return ([[Engulf yourself in a surge of mana, quickly restoring %d mana every turns for 10 turns.
 		The mana restored will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
-	end,
-}
-
-newTalent{
-	name = "Arcane Power",
-	type = {"spell/arcane", 3},
-	mode = "passive",
-	require = spells_req3,
-	points = 5,
-	on_learn = function(self, t)
-		self.combat_spellpower = self.combat_spellpower + 5
-	end,
-	on_unlearn = function(self, t)
-		self.combat_spellpower = self.combat_spellpower - 5
-	end,
-	info = function(self, t)
-		return ([[Your mastery of magic allows you to permanently increase your spellpower by %d.]]):format(5 * self:getTalentLevelRaw(t))
 	end,
 }
 
