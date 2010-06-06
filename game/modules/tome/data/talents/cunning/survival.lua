@@ -30,9 +30,32 @@ newTalent{
 }
 
 newTalent{
-	name = "Trap Disarm",
+	name = "Heightened Senses",
 	type = {"cunning/survival", 2},
 	require = cuns_req2,
+	mode = "passive",
+	points = 5,
+	on_learn = function(self, t)
+		self.heightened_senses = 2 + math.ceil(self:getTalentLevel(t))
+	end,
+	on_unlearn = function(self, t)
+		if self:knowTalent(t) then
+			self.heightened_senses = 2 + math.ceil(self:getTalentLevel(t))
+		else
+			self.heightened_senses = nil
+		end
+	end,
+	info = function(self, t)
+		return ([[You notice the small things others do not notice, allowing you to "see" creatures in a %d radius even outside of light radius.
+		This is not telepathy though and is still limited to line of sight.]]):
+		format(2 + math.ceil(self:getTalentLevel(t)))
+	end,
+}
+
+newTalent{
+	name = "Trap Disarm",
+	type = {"cunning/survival", 3},
+	require = cuns_req3,
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
@@ -43,9 +66,9 @@ newTalent{
 
 newTalent{
 	name = "Evasion",
-	type = {"cunning/survival", 3},
+	type = {"cunning/survival", 4},
 	points = 5,
-	require = cuns_req3,
+	require = cuns_req4,
 	stamina = 35,
 	cooldown = 30,
 	action = function(self, t)
@@ -57,17 +80,5 @@ newTalent{
 	info = function(self, t)
 		return ([[Your quick wit allows you to see attacks before they come, granting you a %d%% chance to completely evade them for %d turns.
 		Duration increases with Willpower, and chance to evade with Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25) + self:getDex(25), 5 + self:getWil(10))
-	end,
-}
-
-newTalent{
-	name = "Long Strides",
-	type = {"cunning/survival", 4},
-	require = cuns_req4,
-	mode = "passive",
-	points = 5,
-	info = function(self, t)
-		return ([[Reduces the movement penality when moving over dangerous terrain.]]):
-		format()
 	end,
 }

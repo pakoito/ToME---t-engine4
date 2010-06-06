@@ -48,42 +48,10 @@ newTalent{
 }
 
 newTalent{
-	name = "Blinding Speed",
-	type = {"technique/combat-techniques-active", 2},
-	points = 5,
-	cooldown = 55,
-	stamina = 25,
-	require = techs_strdex_req2,
-	action = function(self, t)
-		self:setEffect(self.EFF_SPEED, 5, {power=1 - (1 / (1 + self:getTalentLevel(t) * 0.06))})
-		return true
-	end,
-	info = function(self, t)
-		return ([[Through rigorous training you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(self:getTalentLevel(t) * 6)
-	end,
-}
-
-newTalent{
-	name = "Perfect Strike",
-	type = {"technique/combat-techniques-active", 3},
-	points = 5,
-	cooldown = 55,
-	stamina = 25,
-	require = techs_strdex_req3,
-	action = function(self, t)
-		self:setEffect(self.EFF_ATTACK, 1 + self:getTalentLevel(t), {power=100})
-		return true
-	end,
-	info = function(self, t)
-		return ([[You have learned to focus your blows to hit your target, granting +100 attack for %d turns.]]):format(1 + self:getTalentLevel(t))
-	end,
-}
-
-newTalent{
 	name = "Rush",
-	type = {"technique/combat-techniques-active", 4},
+	type = {"technique/combat-techniques-active", 2},
 	message = "@Source@ rushes out!",
-	require = techs_strdex_req4,
+	require = techs_strdex_req2,
 	points = 5,
 	stamina = 45,
 	cooldown = 50,
@@ -118,6 +86,38 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Rushes toward your target with incredible speed. If the target is reached you get a free attack doing 120% weapon damage.]])
+	end,
+}
+
+newTalent{
+	name = "Perfect Strike",
+	type = {"technique/combat-techniques-active", 3},
+	points = 5,
+	cooldown = 55,
+	stamina = 25,
+	require = techs_strdex_req3,
+	action = function(self, t)
+		self:setEffect(self.EFF_ATTACK, 1 + self:getTalentLevel(t), {power=100})
+		return true
+	end,
+	info = function(self, t)
+		return ([[You have learned to focus your blows to hit your target, granting +100 attack for %d turns.]]):format(1 + self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
+	name = "Blinding Speed",
+	type = {"technique/combat-techniques-active", 4},
+	points = 5,
+	cooldown = 55,
+	stamina = 25,
+	require = techs_strdex_req4,
+	action = function(self, t)
+		self:setEffect(self.EFF_SPEED, 5, {power=1 - (1 / (1 + self:getTalentLevel(t) * 0.06))})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Through rigorous training you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(self:getTalentLevel(t) * 6)
 	end,
 }
 
