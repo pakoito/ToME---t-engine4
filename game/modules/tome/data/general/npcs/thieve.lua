@@ -34,6 +34,7 @@ newEntity{
 		{type="armor", subtype="light", autoreq=true}
 	},
 	resolvers.drops{chance=100, nb=2, {type="money"} },
+	infravision = 10,
 
 	max_stamina = 100,
 	rank = 2,

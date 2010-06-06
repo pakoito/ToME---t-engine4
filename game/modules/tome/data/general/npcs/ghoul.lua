@@ -34,6 +34,7 @@ newEntity{
 	stats = { str=14, dex=12, mag=10, con=12 },
 	rank = 2,
 	size_category = 3,
+	infravision = 20,
 
 	resolvers.tmasteries{ ["technique/other"]=1, },
 

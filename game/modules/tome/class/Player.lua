@@ -159,7 +159,7 @@ function _M:playerFOV()
 		self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
 			game.level.map:apply(x, y, math.max((20 - math.sqrt(sqdist)) / 14, 0.6))
 		end, true, false, true)
-		if self.lite == 0 then game.level.map:applyLite(self.x, self.y)
+		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
 		else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
 	end
 
@@ -524,6 +524,17 @@ function _M:useOrbPortal(portal)
 	end
 	game:changeLevel(portal.change_level, portal.change_zone)
 	if portal.message then game.logPlayer(self, portal.message) end
+end
+
+--- Tell us when we are targetted
+function _M:on_targeted(act)
+	if self:attr("invisible") or self:attr("stealth") then
+		if self:canSee(act) and game.level.map.seens(act.x, act.y) then
+			game.logPlayer(self, "#LIGHT_RED#%s has seen you!", act.name:capitalize())
+		else
+			game.logPlayer(self, "#LIGHT_RED#Something has seen you!")
+		end
+	end
 end
 
 ------ Quest Events

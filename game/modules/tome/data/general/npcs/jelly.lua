@@ -35,6 +35,7 @@ newEntity{
 	never_move = 1,
 	rank = 2,
 	size_category = 3,
+	infravision = 20,
 
 	drops = resolvers.drops{chance=60, nb=1, {type="money"} },
 

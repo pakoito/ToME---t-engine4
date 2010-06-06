@@ -29,6 +29,7 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
+	infravision = 20,
 	size_category = 2,
 	rank = 1,
 

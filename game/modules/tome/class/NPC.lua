@@ -34,6 +34,10 @@ function _M:act()
 	if not mod.class.Actor.act(self) then return end
 
 	-- Compute FOV, if needed
+--	if self.lite > 0 then
+--	print("lite", self.name, self.lite)
+--		self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true)
+--	end
 	self:computeFOV(self.sight or 20)
 
 	-- Let the AI think .... beware of Shub !

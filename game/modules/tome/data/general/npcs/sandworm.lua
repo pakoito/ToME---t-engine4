@@ -26,6 +26,7 @@ newEntity{
 	level_range = {15, 50},
 	body = { INVEN = 10 },
 
+	infravision = 20,
 	max_life = 40, life_rating = 5,
 	max_stamina = 85,
 	max_mana = 85,

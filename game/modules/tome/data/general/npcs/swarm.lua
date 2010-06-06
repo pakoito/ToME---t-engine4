@@ -32,6 +32,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 	stats = { str=1, dex=20, mag=3, con=1 },
 	energy = { mod=2 },
+	infravision = 20,
 	combat_armor = 1, combat_def = 10,
 	rank = 1,
 	size_category = 1,

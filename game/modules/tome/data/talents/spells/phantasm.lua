@@ -127,6 +127,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The caster fades from sight, granting %d bonus to invisibility.
+		Beware, you should take off your light, otherwise you will still be easily spotted.
 		This powerful spell constantly drains your mana while active.
 		The bonus will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.04) * self:getTalentLevel(t))
 	end,

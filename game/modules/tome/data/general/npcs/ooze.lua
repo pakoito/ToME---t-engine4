@@ -34,6 +34,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	rank = 1,
 	size_category = 3,
+	infravision = 20,
 
 	resolvers.drops{chance=90, nb=1, {} },
 	resolvers.drops{chance=60, nb=1, {type="money"} },

@@ -32,6 +32,8 @@ newEntity{
 
 newEntity{
 	name = " of invisibility",
+	desc = [[Allows the wearer to become invisible to normal sight
+Beware, you should take off your light, otherwise you will still be easily spotted.]],
 	level_range = {30, 40},
 	rarity = 4,
 	cost = 16,

@@ -77,6 +77,8 @@ function _M:init(t, no_default)
 	self.unused_talents =  self.unused_talents or 0
 	self.unused_talents_types = self.unused_talents_types or 0
 
+	t.lite = t.lite or 0
+
 	t.size_category = t.size_category or 3
 	t.rank = t.rank or 2
 
