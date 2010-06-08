@@ -69,7 +69,7 @@ newAI("target_player", function(self)
 end)
 
 newAI("simple", function(self)
-	if self:runAI("target_simple") then
+	if self:runAI(self.ai_state.ai_target or "target_simple") then
 		return self:runAI(self.ai_state.ai_move or "move_simple")
 	end
 	return false

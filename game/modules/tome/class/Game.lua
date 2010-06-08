@@ -529,8 +529,7 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
---				self:changeLevel(1, "wilderness-arda-fareast")
-				game.level.map:particleEmitter(game.player.x,game.player.y, 1, "nova")
+				self:changeLevel(1, "carn-dum")
 			end
 		end,
 	}
@@ -595,8 +594,8 @@ function _M:setupCommands()
 		HOTKEY_THIRD_12 = not_wild(function() self.player:activateHotkey(36) end),
 		HOTKEY_PREV_PAGE = not_wild(function() self.player:prevHotkeyPage() end),
 		HOTKEY_NEXT_PAGE = not_wild(function() self.player:nextHotkeyPage() end),
-		HOTKEY_HOTPAGE2 = function(sym, ctrl, shift, alt, meta, unicode, isup) self.player:setHotkeyPage(isup and 1 or 2) end,
-		HOTKEY_HOTPAGE3 = function(sym, ctrl, shift, alt, meta, unicode, isup) self.player:setHotkeyPage(isup and 1 or 3) end,
+--		HOTKEY_HOTPAGE2 = function(sym, ctrl, shift, alt, meta, unicode, isup) self.player:setHotkeyPage(isup and 1 or 2) end,
+--		HOTKEY_HOTPAGE3 = function(sym, ctrl, shift, alt, meta, unicode, isup) self.player:setHotkeyPage(isup and 1 or 3) end,
 
 		-- Actions
 		CHANGE_LEVEL = function()
