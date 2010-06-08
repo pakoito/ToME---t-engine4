@@ -22,7 +22,8 @@ You are a hobbit of the Shire. Most hobbits never leave the borders of their bel
 
 You are one of those rare few, inpired by the stories of dragons, gold, and the treasures of Bilbo nearly two hundred years before. You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 
-You have come to a land called Rhudaur, east of the Shire, in search of the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead. To the east lies another dangerous place: the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+You have come to a land called Rhudaur, east of the Shire, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+To the east lies another dangerous place: the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead.
 
-After days of travel, you have found the ruined tower and entered the caves, what will you find there?...
+After days of travel, you have found the forest and entered it, what will you find there?...
 ]]

@@ -24,8 +24,8 @@ You lived a peaceful life deep in the forest for many years, but lately you have
 
 You have decided to venture into the old and wild places looking for ancient treasures and glory.
 
-You have come to a land called Rhudaur on the western side of the Misty Mountains, far away from your home, in search of the ruined tower of Amon Sûl. You have heard that the caverns below are infested with vermin and undead.
-To the east lies another dangerous place: the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+You have come to a land called Rhudaur on the western side of the Misty Mountains, far away from your home, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+To the east lies another dangerous place: the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead.
 
-After days of travel, you have found the tower and are about to enter the caves. What will you discover?...
+After days of travel, you have found the forest and entered it, what will you find there?...
 ]]
