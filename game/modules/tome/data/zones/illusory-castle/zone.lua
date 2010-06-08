@@ -19,7 +19,7 @@
 
 return {
 	name = "Illusory Castle",
-	level_range = {1, 5},
+	level_range = {25, 30},
 	level_scheme = "player",
 	max_level = 5,
 	decay = {300, 800},

@@ -19,7 +19,7 @@
 
 return {
 	name = "Flooded Cave",
-	level_range = {25, 35},
+	level_range = {20, 25},
 	level_scheme = "player",
 	max_level = 2,
 	decay = {300, 800},

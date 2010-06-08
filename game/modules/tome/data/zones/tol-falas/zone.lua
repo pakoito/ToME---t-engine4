@@ -19,7 +19,7 @@
 
 return {
 	name = "Tol Falas",
-	level_range = {14, 25},
+	level_range = {15, 20},
 	level_scheme = "player",
 	max_level = 9,
 	decay = {300, 800},

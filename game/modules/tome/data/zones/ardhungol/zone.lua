@@ -19,7 +19,7 @@
 
 return {
 	name = "Ardhungol",
-	level_range = {20, 30},
+	level_range = {25, 30},
 	level_scheme = "player",
 	max_level = 5,
 --	decay = {300, 800},

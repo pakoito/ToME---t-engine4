@@ -19,7 +19,7 @@
 
 return {
 	name = "Mines of Moria",
-	level_range = {21, 30},
+	level_range = {18, 23},
 	level_scheme = "player",
 	max_level = 4,
 	decay = {300, 800},

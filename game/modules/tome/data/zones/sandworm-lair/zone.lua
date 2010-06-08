@@ -19,7 +19,7 @@
 
 return {
 	name = "Sandworm lair",
-	level_range = {7, 18},
+	level_range = {7, 12},
 	level_scheme = "player",
 	max_level = 7,
 	decay = {300, 800},

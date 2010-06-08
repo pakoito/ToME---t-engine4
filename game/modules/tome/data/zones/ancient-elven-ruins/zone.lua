@@ -19,7 +19,7 @@
 
 return {
 	name = "Elven Ruins",
-	level_range = {15, 28},
+	level_range = {18, 25},
 	level_scheme = "player",
 	max_level = 3,
 	decay = {300, 800},
