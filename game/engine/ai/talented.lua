@@ -44,7 +44,7 @@ newAI("dumb_talented", function(self)
 end)
 
 newAI("dumb_talented_simple", function(self)
-	if self:runAI("target_simple") then
+	if self:runAI(self.ai_state.ai_target or "target_simple") then
 		-- One in "talent_in" chance of using a talent
 		if rng.chance(self.ai_state.talent_in or 6) and self:reactionToward(self.ai_target.actor) < 0 then
 			self:runAI("dumb_talented")
