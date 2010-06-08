@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 setAuto("subclass", false)
+setAuto("subrace", false)
 
 newBirthDescriptor{
 	type = "base",

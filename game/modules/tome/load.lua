@@ -31,6 +31,7 @@ local ActorLevel = require "engine.interface.ActorLevel"
 local Birther = require "engine.Birther"
 local Store = require "mod.class.Store"
 local WorldAchievements = require "engine.interface.WorldAchievements"
+local Quest = require "engine.Quest"
 
 config.settings.tome = config.settings.tome or {}
 profile.mod.allow_build = profile.mod.allow_build or {}

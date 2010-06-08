@@ -36,11 +36,11 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
-		self.heightened_senses = 2 + math.ceil(self:getTalentLevel(t))
+		self.heightened_senses = 4 + math.ceil(self:getTalentLevel(t))
 	end,
 	on_unlearn = function(self, t)
 		if self:knowTalent(t) then
-			self.heightened_senses = 2 + math.ceil(self:getTalentLevel(t))
+			self.heightened_senses = 4 + math.ceil(self:getTalentLevel(t))
 		else
 			self.heightened_senses = nil
 		end
@@ -48,7 +48,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You notice the small things others do not notice, allowing you to "see" creatures in a %d radius even outside of light radius.
 		This is not telepathy though and is still limited to line of sight.]]):
-		format(2 + math.ceil(self:getTalentLevel(t)))
+		format(4 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
 

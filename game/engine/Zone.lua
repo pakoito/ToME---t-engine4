@@ -302,6 +302,7 @@ function _M:addEntity(level, e, typ, x, y)
 end
 
 function _M:load(dynamic)
+	local ret = true
 	-- Try to load from a savefile
 	local save = Savefile.new(game.save_name)
 	local data = save:loadZone(self.short_name)
@@ -311,10 +312,13 @@ function _M:load(dynamic)
 		local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
 		if err then error(err) end
 		data = f()
+		ret = false
 	elseif not data and dynamic then
 		data = dynamic
+		ret = false
 	end
 	for k, e in pairs(data) do self[k] = e end
+	return ret
 end
 
 local recurs = function(t)

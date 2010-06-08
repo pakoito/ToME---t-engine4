@@ -460,6 +460,20 @@ static int map_to_screen(lua_State *L)
 				{
 					a = map->obscure_a;
 					if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, TRUE);
+					/*
+					a = map->obscure_a;
+					if (map->multidisplay)
+					{
+						if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, TRUE);
+						if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, TRUE);
+						if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, TRUE);
+					}
+					else
+					{
+						if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, TRUE);
+						else if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, TRUE);
+						else if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, TRUE);
+					}*/
 				}
 			}
 		}

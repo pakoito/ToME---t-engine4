@@ -279,7 +279,7 @@ function _M:changeLevel(lev, zone)
 	self.zone:getLevel(self, lev, old_lev)
 
 	-- Decay level ?
-	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] < game.turn * 10 then
+	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < game.turn then
 		local nb_actor, remain_actor = self.level:decay(Map.ACTOR, function(e) return not e.unique and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < game.turn * 10 end)
 		local nb_object, remain_object = self.level:decay(Map.OBJECT, function(e) return not e.unique and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < game.turn * 10 end)
 
