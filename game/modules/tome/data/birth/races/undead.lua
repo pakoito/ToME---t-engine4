@@ -79,8 +79,8 @@ newBirthDescriptor
 	},
 	copy = {
 		type = "undead", subtype="ghoul",
-		default_wilderness = {39, 17},
-		starting_zone = "tower-amon-sul",
+		default_wilderness = {43, 18},
+		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",
 		starting_intro = "ghoul",
 		life_rating=14,
@@ -124,8 +124,8 @@ newBirthDescriptor
 	},
 	copy = {
 		type = "undead", subtype="skeleton",
-		default_wilderness = {39, 17},
-		starting_zone = "tower-amon-sul",
+		default_wilderness = {43, 18},
+		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",
 		starting_intro = "skeleton",
 		life_rating=12,

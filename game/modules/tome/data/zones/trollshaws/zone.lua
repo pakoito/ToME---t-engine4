@@ -33,7 +33,8 @@ return {
 		map = {
 			class = "engine.generator.map.Forest",
 			edge_entrances = {4,6},
-			zoom = 5,
+			zoom = 4,
+			sqrt_percent = 30,
 			noise = "fbm_perlin",
 			floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
 			wall = "TREE",

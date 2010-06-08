@@ -105,7 +105,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 			if ret then
 				game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
 			end
-			if fly and game.flyers then
+			if fly and game.flyers and game.level.map.seens(self.x, self.y) then
 				local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 				game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
 			end

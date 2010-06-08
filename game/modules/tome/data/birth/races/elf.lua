@@ -47,8 +47,8 @@ newBirthDescriptor{
 	copy = {
 		faction = "eryn-lasgalen",
 		type = "humanoid", subtype="elf",
-		default_wilderness = {39, 17},
-		starting_zone = "tower-amon-sul",
+		default_wilderness = {43, 18},
+		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",
 		starting_intro = "elf",
 	},
