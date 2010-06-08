@@ -128,6 +128,8 @@ function _M:newGame()
 		self.player:resolve()
 		self.player:resolve(nil, true)
 		self.player.energy.value = self.energy_to_act
+		self.always_target = true
+		Map:setViewerFaction(self.player.faction)
 		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
 		self.player:playerLevelup(function()
@@ -146,6 +148,8 @@ function _M:loaded()
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
 	self.key = engine.KeyBind.new()
+
+	if self.always_target then Map:setViewerFaction(self.player.faction) end
 end
 
 function _M:onResolutionChange()
