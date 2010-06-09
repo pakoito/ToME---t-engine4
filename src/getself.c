@@ -26,7 +26,7 @@
 
 const char *get_self_executable(int argc, char **argv)
 {
-	char res[PATH_MAX];
+	static char res[PATH_MAX];
 	// On linux systems /proc/self/exe is always a symlink to the real executable, so we jsut resolve it
 	realpath("/proc/self/exe", res);
 	return res;
@@ -38,7 +38,7 @@ const char *get_self_executable(int argc, char **argv)
 
 const char *get_self_executable(int argc, char **argv)
 {
-	TCHAR szEXEPath[MAX_PATH];
+	static TCHAR szEXEPath[MAX_PATH];
 	GetModuleFileName(NULL,szEXEPath,MAX_PATH);
 	return szEXEPath;
 }

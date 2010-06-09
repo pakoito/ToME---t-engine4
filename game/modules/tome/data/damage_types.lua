@@ -76,14 +76,19 @@ setDefaultProjector(function(src, x, y, type, dam)
 	return 0
 end)
 
-local function tryDestroy(who, inven, destroy_prop, proof_prop, msg)
+local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)
 	if not inven then return end
 	for i = #inven, 1, -1 do
 		local o = inven[i]
-		if o[destroy_prop] and rng.percent(o[destroy_prop]) and not o[proof_prop] then
-			game.logPlayer(who, msg, o:getName{do_color=true, no_count=true})
-			local obj = who:removeObject(inven, i)
-			obj:removed()
+		if o[destroy_prop] and not o[proof_prop] then
+			for j, test in ipairs(o[destroy_prop]) do
+				if realdam >= test[1] and rng.percent(test[2]) then
+					game.logPlayer(who, msg, o:getName{do_color=true, no_count=true})
+					local obj = who:removeObject(inven, i)
+					obj:removed()
+					break
+				end
+			end
 		end
 	end
 end
@@ -103,7 +108,7 @@ newDamageType{
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if realdam > 0 and target and not target:attr("fire_proof") then
-			tryDestroy(target, target:getInven("INVEN"), "fire_destroy", "fire_proof", "The burst of heat destroys your %s!")
+			tryDestroy(target, target:getInven("INVEN"), realdam, "fire_destroy", "fire_proof", "The burst of heat destroys your %s!")
 		end
 	end,
 }
@@ -113,7 +118,7 @@ newDamageType{
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if realdam > 0 and target and not target:attr("cold_proof") then
-			tryDestroy(target, target:getInven("INVEN"), "cold_destroy", "cold_proof", "The intense cold destroys your %s!")
+			tryDestroy(target, target:getInven("INVEN"), realdam, "cold_destroy", "cold_proof", "The intense cold destroys your %s!")
 		end
 	end,
 }
@@ -132,7 +137,7 @@ newDamageType{
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if realdam > 0 and target and not target:attr("elec_proof") then
-			tryDestroy(target, target:getInven("INVEN"), "elec_destroy", "elec_proof", "The burst of lightning destroys your %s!")
+			tryDestroy(target, target:getInven("INVEN"), realdam, "elec_destroy", "elec_proof", "The burst of lightning destroys your %s!")
 		end
 	end,
 }
@@ -143,7 +148,7 @@ newDamageType{
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if realdam > 0 and target and not target:attr("acid_proof") then
-			tryDestroy(target, target:getInven("INVEN"), "acid_destroy", "acid_proof", "The splash of acid destroys your %s!")
+			tryDestroy(target, target:getInven("INVEN"), realdam, "acid_destroy", "acid_proof", "The splash of acid destroys your %s!")
 		end
 	end,
 }

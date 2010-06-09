@@ -74,6 +74,7 @@ static int map_object_texture(lua_State *L)
 	bool is3d = lua_toboolean(L, 4);
 	if (i < 0 || i >= obj->nb_textures) return 0;
 
+//	printf("C Map Object setting texture %d = %d\n", i, *t);
 	obj->textures[i] = *t;
 	obj->textures_is3d[i] = is3d;
 	return 0;

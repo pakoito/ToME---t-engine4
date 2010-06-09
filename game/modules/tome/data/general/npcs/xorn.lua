@@ -31,6 +31,7 @@ newEntity{
 	resolvers.drops{chance=60, nb=1, {type="money"} },
 
 	can_pass = {pass_wall=20},
+	move_project = {[DamageType.DIG]=1},
 
 	infravision = 20,
 	life_rating = 12,

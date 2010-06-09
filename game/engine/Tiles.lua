@@ -88,4 +88,5 @@ end
 function _M:clean()
 	self.repo = {}
 	self.texture_store = {}
+	collectgarbage("collect")
 end
