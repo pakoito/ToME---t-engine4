@@ -89,11 +89,23 @@ function _M:move(x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
 
-		local obj = game.level.map:getObject(self.x, self.y, 1)
-		if obj and game.level.map:getObject(self.x, self.y, 2) then
+		-- Autopickup money
+		local i, nb = 1, 0
+		local obj = game.level.map:getObject(self.x, self.y, i)
+		while obj do
+			if obj.auto_pickup then
+				self:pickupFloor(i, true)
+				self:sortInven()
+			else
+				nb = nb + 1
+				i = i + 1
+			end
+			obj = game.level.map:getObject(self.x, self.y, i)
+		end
+		if nb >= 2 then
 			game.logSeen(self, "There is more than one objects lying here.")
-		elseif obj then
-			game.logSeen(self, "There is an item here: %s", obj:getName{do_color=true})
+		elseif nb == 1 then
+			game.logSeen(self, "There is an item here: %s", game.level.map:getObject(self.x, self.y, 1):getName{do_color=true})
 		end
 	end
 

@@ -27,6 +27,7 @@ newEntity{
 	desc = [[All that glitters is not gold, all that is gold does not glitter.]],
 	on_prepickup = function(self, who, id)
 		who.money = who.money + self.money_value / 10
+		game.logPlayer(who, "You pickup %0.2f gold pieces.", self.money_value / 10)
 		-- Remove from the map
 		game.level.map:removeObject(who.x, who.y, id)
 		if who.player then
@@ -36,6 +37,7 @@ newEntity{
 		end
 		return true
 	end,
+	auto_pickup = true,
 }
 
 newEntity{ base = "BASE_MONEY", define_as = "MONEY_SMALL",

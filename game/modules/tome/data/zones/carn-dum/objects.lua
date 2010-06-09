@@ -19,9 +19,10 @@
 
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped by Rantha
+local Stats = require "engine.interface.ActorStats"
 
-newEntity{ base = "BASE_SHIELD",
+-- Artifact, droped by Rantha
+newEntity{ base = "BASE_LEATHER_BOOT",
 	define_as = "FROST_TREADS",
 	name = "Frost Treads", unique=true,
 	desc = [[A pair of leather boots. Cold to the touch, they radiate a cold blue light.]],
@@ -40,5 +41,6 @@ newEntity{ base = "BASE_SHIELD",
 			[DamageType.COLD] = 20,
 			[DamageType.NATURE] = 10,
 		},
+		inc_stats = { [Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, [Stats.STAT_CUN] = 4, },
 	},
 }

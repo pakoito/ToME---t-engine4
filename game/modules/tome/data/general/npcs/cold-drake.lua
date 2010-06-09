@@ -48,13 +48,13 @@ newEntity{
 newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	name = "cold drake hatchling", color=colors.WHITE, display="d",
 	desc = [[A drake hatchling, not too powerful in itself, but it usually comes with its brothers and sisters.]],
-	level_range = {7, 50}, exp_worth = 1,
+	level_range = {8, 50}, exp_worth = 1,
 	rarity = 7,
 	rank = 1, size_category = 2,
 	max_life = resolvers.rngavg(40,60),
 	combat_armor = 5, combat_def = 0,
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(7, 2)},
-	combat = { dam=resolvers.rngavg(15,20), atk=15, apr=25, dammod={str=0.7} },
+	combat = { dam=resolvers.rngavg(10,15), atk=15, apr=5, dammod={str=0.6} },
 
 	make_escort = {
 		{type="dragon", subtype="cold", name="cold drake hatchling", number=3, no_subescort=true},
