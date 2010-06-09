@@ -20,6 +20,7 @@
 load("/data/general/npcs/xorn.lua")
 load("/data/general/npcs/canine.lua", function(e) if e.rarity then e.rarity = e.rarity * 2 end end)
 load("/data/general/npcs/snow-giant.lua")
+load("/data/general/npcs/cold-drake.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -51,7 +52,7 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 		[Talents.T_ICE_STORM]=2,
 		[Talents.T_FREEZE]=3,
 
-		[Talents.T_ICE_CLAW]=2,
+		[Talents.T_ICE_CLAW]=4,
 		[Talents.T_ICY_SKIN]=3,
 		[Talents.T_ICE_BREATH]=4,
 	},
