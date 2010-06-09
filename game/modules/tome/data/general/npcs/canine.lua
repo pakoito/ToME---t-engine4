@@ -58,6 +58,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(60,90),
 	combat_armor =2, combat_def = 4,
 	combat = { dam=6, atk=15, apr=3 },
+	resolvers.talents{ [Talents.T_HOWL]=1, },
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -68,6 +69,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(80,110),
 	combat_armor = 3, combat_def = 5,
 	combat = { dam=9, atk=15, apr=4 },
+	resolvers.talents{ [Talents.T_HOWL]=1, },
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -78,6 +80,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(70,100),
 	combat_armor = 3, combat_def = 4,
 	combat = { dam=8, atk=15, apr=3 },
+	resolvers.talents{ [Talents.T_HOWL]=2, },
 
 	resists = { [DamageType.FIRE] = -50, [DamageType.COLD] = 100 },
 }
@@ -90,6 +93,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(60,100),
 	combat_armor = 5, combat_def = 7,
 	combat = { dam=10, atk=17, apr=5 },
+	resolvers.talents{ [Talents.T_HOWL]=3, },
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -117,6 +121,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 		{type="animal", subtype="canine", name="warg", number=6},
 	},
 	resolvers.talents{
+		[Talents.T_HOWL]=5,
 		[Talents.T_RUSH]=3,
 		[Talents.T_CRIPPLE]=3,
 	},

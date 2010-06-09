@@ -602,3 +602,35 @@ newTalent{
 		The damage will increase with the Strength stat]]):format(12 + self:getStr(50) * self:getTalentLevel(t))
 	end,
 }
+
+newTalent{
+	name = "Howl",
+	type = {"wild-gift/other", },
+	points = 5,
+	equilibrium = 5,
+	cooldown = 10,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		local rad = self:getTalentLevel(t) + 5
+		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
+			local actor = game.level.map(i, j, game.level.map.ACTOR)
+			if actor and not actor.player then
+				if self:reactionToward(actor) >= 0 then
+					local tx, ty, a = self:getTarget()
+					if a then
+						actor:setTarget(a)
+					end
+				else
+					actor:setTarget(self)
+				end
+			end
+		end end end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Howl a call to your hunting pack.]])
+	end,
+}
