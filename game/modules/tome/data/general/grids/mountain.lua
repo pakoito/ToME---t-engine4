@@ -31,6 +31,7 @@ newEntity{
 	can_pass = {pass_wall=1},
 	does_block_move = true,
 	block_sight = true,
+	air_level = -20,
 	dig = "ROCKY_GROUND",
 }
 

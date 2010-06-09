@@ -42,7 +42,7 @@ newChat{ id="orcs",
 	text = [[Orcs! Ah! Well then this is your lucky day, this whole continent is filled with Orcs. They have united themselves as the Orc Pride and rumours speak of some powerful masters.
 They roam the lands freely, ever assaulting us.
 @playername@ you are welcome to the Gates of Morning, should you prove to be trustful.
-There is a cavern full of spiders just to he north, we can not stand against both them and the Orc Pride.
+There is a cavern full of spiders just to the north, we can not stand against both them and the Orc Pride.
 Please go there and destroy the source of infestation.]],
 	answers = {
 		{"I will my Lady.", action=function(npc, player) player:grantQuest("spydric-infestation") end},

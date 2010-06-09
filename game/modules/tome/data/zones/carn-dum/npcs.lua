@@ -18,6 +18,8 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/xorn.lua")
+load("/data/general/npcs/canine.lua", function(e) if e.rarity then e.rarity = e.rarity * 2 end end)
+load("/data/general/npcs/snow-giant.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 

@@ -578,3 +578,27 @@ newTalent{
 		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.3)
 	end,
 }
+
+newTalent{
+	name = "Throw Boulder",
+	type = {"wild-gift/other", },
+	points = 5,
+	equilibrium = 5,
+	cooldown = 3,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=3+self:getTalentLevelRaw(t), dam=self:spellCrit(12 + self:getStr(50) * self:getTalentLevel(t))}, {type="archery"})
+		game:playSoundNear(self, "talents/ice")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Throws a huge boulder at a target, damaging it for %0.2f and knocking it back.
+		The damage will increase with the Strength stat]]):format(12 + self:getStr(50) * self:getTalentLevel(t))
+	end,
+}

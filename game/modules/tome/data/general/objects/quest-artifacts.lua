@@ -72,7 +72,7 @@ newEntity{ define_as = "ORB_MANY_WAYS",
 	display = "*", color=colors.VIOLET,
 	encumber = 1,
 	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
-If used near an portal it could probably activate it.]],
+If used near a portal it could probably activate it.]],
 
 	max_power = 50, power_regen = 1,
 	use_power = { name = "activate a portal", power = 25,

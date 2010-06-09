@@ -24,7 +24,7 @@ newEntity{
 	display = "_", color=colors.WHITE,
 	encumber = 0.7,
 	use_sound = "talents/spell_generic",
-	elec_destroy = 20,
+	elec_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
 	desc = [[Magical wands are made by powerful alchemists to store spells. Anybody can use them to release the spells.]],
 --	egos = "/data/general/objects/egos/wands.lua", egos_chance = resolvers.mbonus(10, 5),
 }

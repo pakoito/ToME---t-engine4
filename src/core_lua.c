@@ -270,6 +270,7 @@ static int lua_fovcache_set(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	bool opaque = lua_toboolean(L, 4);
 
+	if (x < 0 || y < 0 || x >= cache->w || y >= cache->h) return 0;
 	cache->cache[x + y * cache->w] = opaque;
 
 	return 0;

@@ -134,7 +134,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant acid ant", color=colors.BLACK,
+	name = "giant acid ant", color=colors.DARK_GREY,
 	desc = "It's a large black ant.  Its porous skin oozes acid.",
 	level_range = {15, 50}, exp_worth = 1,
 	rarity = 4,

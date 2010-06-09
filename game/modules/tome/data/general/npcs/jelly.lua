@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
-	name = "black jelly", color=colors.BLACK,
+	name = "black jelly", color=colors.DARK_GREY,
 	desc = "A strange black blob on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
