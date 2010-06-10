@@ -114,7 +114,7 @@ newTalent{
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(25,50),
-			life_rating = 10,
+			life_rating = 15,
 
 			combat_armor = 1, combat_def = 1,
 			never_move = 1,
@@ -177,7 +177,7 @@ newTalent{
 			max_life = resolvers.rngavg(50,80),
 
 			autolevel = "none",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 			energy = { mod=1.2 },
 			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
@@ -190,7 +190,7 @@ newTalent{
 
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t) / 2) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
 
