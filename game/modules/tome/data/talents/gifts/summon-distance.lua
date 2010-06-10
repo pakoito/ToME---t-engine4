@@ -80,7 +80,7 @@ newTalent{
 		local tg = {type="cone", range=0, radius=5, friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.LIGHTNING, rng.range(1, 30 + self:getWil(80) * self:getTalentLevel(t)), {type="lightning"})
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.range(1, 30 + self:getWil(80) * self:getTalentLevel(t)), {type="lightning_explosion"})
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
