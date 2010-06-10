@@ -133,9 +133,9 @@ end
 
 function _M:freemove(dir)
 	local d = dir_to_coord[dir]
-	self.target.entity = nil
 	self.target.x = self.target.x + d[1]
 	self.target.y = self.target.y + d[2]
+	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
 end
 
 function _M:scan(dir, radius, sx, sy)

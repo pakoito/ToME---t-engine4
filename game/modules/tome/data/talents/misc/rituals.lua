@@ -20,7 +20,7 @@
 newTalent{
 	name = "Rituals Capacity",
 	type = {"rituals/rituals", 1},
-	points = 5
+	points = 5,
 	mode = "passive",
 	info = function(self, t)
 		return ([[Allows you to learn up to %d rituals.]]):
@@ -31,10 +31,10 @@ newTalent{
 newTalent{
 	name = "Rituals Study",
 	type = {"rituals/rituals", 1},
-	points = 5
+	points = 5,
 	mode = "passive",
 	info = function(self, t)
 		return ([[Allows you to learn rituals of level %d at most.]]):
-		format(math.ceil(self:getTalentLevelRaw(t))
+		format(math.ceil(self:getTalentLevelRaw(t)))
 	end,
 }
