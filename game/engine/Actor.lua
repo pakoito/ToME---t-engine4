@@ -100,6 +100,7 @@ function _M:move(x, y, force)
 	else
 		print("[MOVE] actor moved without a starting position", self.name, x, y)
 	end
+	self.old_x, self.old_y = self.x or x, self.y or y
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
 

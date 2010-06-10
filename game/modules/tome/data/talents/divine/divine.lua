@@ -56,6 +56,7 @@ load("/data/talents/divine/chants.lua")
 load("/data/talents/divine/sun.lua")
 load("/data/talents/divine/combat.lua")
 load("/data/talents/divine/light.lua")
+load("/data/talents/divine/glyphs.lua")
 
 load("/data/talents/divine/twilight.lua")
 load("/data/talents/divine/hymns.lua")

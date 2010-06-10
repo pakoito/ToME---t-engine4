@@ -76,7 +76,6 @@ newTalent{
 	type = {"divine/light", 3},
 	require = spells_req3,
 	points = 5,
---	mana = 30,
 	positive = -20,
 	cooldown = 60,
 	action = function(self, t)

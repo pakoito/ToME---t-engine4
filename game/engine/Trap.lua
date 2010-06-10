@@ -48,6 +48,18 @@ function _M:loaded()
 	setmetatable(self.known_by, {__mode="k"})
 end
 
+--- Do we have enough energy
+function _M:enoughEnergy(val)
+	val = val or game.energy_to_act
+	return self.energy.value >= val
+end
+
+--- Use some energy
+function _M:useEnergy(val)
+	val = val or game.energy_to_act
+	self.energy.value = self.energy.value - val
+end
+
 --- Get trap name
 -- Can be overloaded to do trap identification if needed
 function _M:getName()

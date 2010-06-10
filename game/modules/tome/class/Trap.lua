@@ -82,3 +82,8 @@ function _M:resolveSource()
 		return self
 	end
 end
+
+--- Identify the trap
+function _M:identify(id)
+	self.identified = id
+end
