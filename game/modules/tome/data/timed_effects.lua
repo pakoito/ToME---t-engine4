@@ -405,6 +405,22 @@ newEffect{
 }
 
 newEffect{
+	name = "SHELL_SHIELD",
+	desc = "Shell Shield",
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=50 },
+	on_gain = function(self, err) return "#Target# takes cover under its shell.", "+Shell Shield" end,
+	on_lose = function(self, err) return "#Target# leaves the cover of its shell.", "-Shell Shield" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("resists", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.pid)
+	end,
+}
+
+newEffect{
 	name = "TIME_PRISON",
 	desc = "Time Prison",
 	type = "other", -- Type "other" so that nothing can dispel it

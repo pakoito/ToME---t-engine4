@@ -50,6 +50,23 @@ newTalent{
 	end,
 }
 
+
+newTalent{
+	name = "Shell Shield",
+	type = {"technique/other",1},
+	points = 5,
+	cooldown = 10,
+	action = function(self, t)
+		local dur = math.ceil(4 + self:getTalentLevel(t) * 0.7)
+		local power = 34 + self:getTalentLevel(t) * 7
+		self:setEffect(self.EFF_SHELL_SHIELD, dur, {power=power})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Under the cover of your shell you take %d%% less damage for %d turns]]):format(34 + self:getTalentLevel(t) * 7, math.ceil(4 + self:getTalentLevel(t) * 0.7))
+	end,
+}
+
 newTalent{ short_name="SPIDER_WEB",
 	name = "Web",
 	type = {"wild-gift/other",1},
@@ -165,6 +182,7 @@ newTalent{
 
 			resolvers.talents{
 				[self.T_TAUNT]=self:getTalentLevelRaw(t),
+				[self.T_SHELL_SHIELD]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true,
@@ -181,7 +199,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Turtle to distract your foes. Turtles are resilient, but not very powerful. However they will periodically force any foes to attack them.
+		return ([[Summon a Turtle to distract your foes. Turtles are resilient, but not very powerful. However they will periodically force any foes to attack them and can protect themselves with their shell.
 		It will get %d constitution and %d dexterity.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }
@@ -218,18 +236,18 @@ newTalent{
 			desc = [[]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, dex=10 + self:getTalentLevel(t) * 2, con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
+			stats = { dex=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, str=10 + self:getTalentLevel(t) * 2, con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = 50,
 			life_rating = 10,
 
 			combat_armor = 0, combat_def = 0,
-			combat = { dam=10, atk=16, },
+			combat = { dam=resolvers.rngavg(20,25), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
 
 			resolvers.talents{
 				[self.T_SPIDER_WEB]=self:getTalentLevelRaw(t),
-				[self.T_BITE_POISON]=self:getTalentLevelRaw(t),
+				[self.T_SPIT_POISON]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true,
@@ -247,7 +265,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Spider to harass your foes. Spiders can poison your foes and throw webs to pin them to the ground.
-		It will get %d strength and %d dexterity.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		It will get %d dexterity and %d strength.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }
 

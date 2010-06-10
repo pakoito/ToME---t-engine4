@@ -24,13 +24,13 @@ setDefaultProjector(function(src, x, y, type, dam)
 		print("[PROJECTOR] starting dam", dam)
 
 		-- Difficulty settings
-		if game.difficulty == game.DIFFICULTY_EASY and target.player then
+		if game.difficulty == game.DIFFICULTY_EASY and target:resolveSource().player then
 			dam = dam * 0.8
-		elseif game.difficulty == game.DIFFICULTY_NIGHTMARE and target.player then
+		elseif game.difficulty == game.DIFFICULTY_NIGHTMARE and target:resolveSource().player then
 			dam = dam * 1.2
 		elseif game.difficulty == game.DIFFICULTY_INSANE then
-			if target.player then dam = dam * 1.2
-			elseif src.player then dam = dam * 0.8 end
+			if target:resolveSource().player then dam = dam * 1.2
+			elseif target:resolveSource().player then dam = dam * 0.8 end
 		end
 		print("[PROJECTOR] after difficulty dam", dam)
 
@@ -42,7 +42,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 
 		-- Reduce damage with resistance
 		if target.resists then
-			local res = target.resists[type] or 0
+			local res = (target.resists.all or 0) + (target.resists[type] or 0)
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 			if res >= 100 then dam = 0
 			else dam = dam * ((100 - res) / 100)
