@@ -330,6 +330,7 @@ function _M:restCheck()
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
 	-- Check ressources, make sure they CAN go up, otherwise we will never stop
+	if self.air_regen < 0 then return false, "loosing breath!" end
 	if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 	if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 	if self.life < self.max_life and self.life_regen> 0 then return true end
@@ -342,6 +343,8 @@ end
 function _M:runCheck()
 	local spotted = spotHostiles(self)
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
+
+	if self.air_regen < 0 then return false, "loosing breath!" end
 
 	-- Notice any noticable terrain
 	local noticed = false
