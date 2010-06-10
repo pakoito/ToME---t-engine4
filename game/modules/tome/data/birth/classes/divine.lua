@@ -92,7 +92,7 @@ newBirthDescriptor{
 		["cunning/survival"]={false, 0.1},
 		["divine/sun"]={true, 0.3},
 		["divine/chants"]={true, 0.3},
-		["divine/glyphs"]={true, 0.3},
+		["divine/glyphs"]={false, 0.3},
 		["divine/light"]={false, 0.3},
 		["divine/twilight"]={true, 0.3},
 		["divine/hymns"]={true, 0.3},

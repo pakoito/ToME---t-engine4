@@ -24,6 +24,7 @@ newTalent{
 	require = spells_req1,
 	sustain_mana = 50,
 	points = 5,
+	cooldown = 30,
 	activate = function(self, t)
 		local power = 5 * self:getTalentLevelRaw(t)
 		game:playSoundNear(self, "talents/arcane")

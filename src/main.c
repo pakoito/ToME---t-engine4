@@ -566,7 +566,7 @@ int main(int argc, char *argv[])
 	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/data/gfx/te4-icon.png"), TRUE), NULL);
 
 //	screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_RESIZABLE);
-	glewInit();
+//	glewInit();
 	do_resize(WIDTH, HEIGHT, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
