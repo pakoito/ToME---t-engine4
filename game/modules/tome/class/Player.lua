@@ -153,6 +153,8 @@ function _M:act()
 	-- Resting ? Running ? Otherwise pause
 	if not self:restStep() and not self:runStep() and self.player then
 		game.paused = true
+	elseif not self.player then
+		self:useEnergy()
 	end
 end
 
