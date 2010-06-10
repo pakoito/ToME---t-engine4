@@ -352,10 +352,12 @@ newTalent{
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(100, 150),
-			life_rating = 8,
+			life_rating = 12,
 
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=15, atk=10, apr=15 },
+
+			resists = { [DamageType.FIRE] = 100, },
 
 			resolvers.talents{
 				[self.T_FIRE_BREATH]=self:getTalentLevelRaw(t),

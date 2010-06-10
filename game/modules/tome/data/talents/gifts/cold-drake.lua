@@ -134,12 +134,12 @@ newTalent{
 		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ICE, 10 + self:getStr() * 0.3 * self:getTalentLevel(t), {type="freeze"})
+		self:project(tg, x, y, DamageType.ICE, 30 + self:getStr(50) * self:getTalentLevel(t), {type="freeze"})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
 		return ([[You breathe ice in a frontal cone. Any target caught in the area will take %0.2f cold damage and can be frozen for a few turns.
-		The damage will increase with the Strength stat]]):format(10 + self:getStr() * 0.3 * self:getTalentLevel(t), 2+self:getTalentLevelRaw(t))
+		The damage will increase with the Strength stat]]):format(30 + self:getStr(50) * self:getTalentLevel(t), 2+self:getTalentLevelRaw(t))
 	end,
 }

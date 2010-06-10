@@ -59,14 +59,14 @@ start_ambush = function(self, who)
 		-- Protect from other hits on the same turn
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=1000000})
 
-		local o, item, inven_id = who:findInAllInventories("Staff of Absorption")
-		who:removeObject(inven_id, item, true)
+		local o, item, inven_id = self:findInAllInventories("Staff of Absorption")
+		self:removeObject(inven_id, item, true)
 		o:removed()
 
 		game.logPlayer(self, "#VIOLET#You wake up after a few hours, surprised to be alive, but the staff is gone!")
 		game.logPlayer(self, "#VIOLET#Go at once to Minas Tirith to report those events!")
 
-		game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
 
 		self:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush-finish")
 	end

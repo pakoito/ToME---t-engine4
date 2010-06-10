@@ -177,13 +177,12 @@ newTalent{
 			max_life = resolvers.rngavg(50,80),
 
 			autolevel = "none",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
 			energy = { mod=1.2 },
 			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
-			resolvers.tmasteries{ ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3, ["technique/combat-training"]=0.3, },
 			desc = [[It is a cross between a human and a bull.]],
-			equipment = resolvers.equip{ {type="weapon", subtype="battleaxe", auto_req=true}, },
+			resolvers.equip{ {type="weapon", subtype="battleaxe", auto_req=true}, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			combat_armor = 13, combat_def = 8,
