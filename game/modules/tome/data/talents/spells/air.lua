@@ -33,15 +33,16 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 3))
+		local dam = self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 5, dam, 3))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up mana into a powerful beam of lightning doing 1 to %0.2f damage
-		The damage will increase with the Magic stat]]):format(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
+		The damage will increase with the Magic stat]]):format((20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)) / 5, 20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
 	end,
 }
 

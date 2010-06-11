@@ -23,7 +23,7 @@ newEntity{
 	type = "lite", subtype="lite",
 	display = "~",
 	desc = [[Lite up the dark places of the world!]],
-	egos = "/data/general/objects/egos/lite.lua", egos_chance = resolvers.mbonus(15, 3),
+	egos = "/data/general/objects/egos/lite.lua", egos_chance = { prefix=resolvers.mbonus(15, 3), suffix=resolvers.mbonus(15, 3) },
 }
 
 newEntity{ base = "BASE_LITE",
@@ -33,6 +33,7 @@ newEntity{ base = "BASE_LITE",
 	rarity = 7,
 	encumber = 2,
 	cost = 0.5,
+	material_level = 1,
 
 	wielder = {
 		lite = 2,
@@ -46,6 +47,7 @@ newEntity{ base = "BASE_LITE",
 	rarity = 3,
 	encumber = 1,
 	cost = 2,
+	material_level = 3,
 
 	wielder = {
 		lite = 3,
@@ -59,6 +61,7 @@ newEntity{ base = "BASE_LITE",
 	rarity = 3,
 	encumber = 1,
 	cost = 4,
+	material_level = 5,
 
 	wielder = {
 		lite = 4,

@@ -28,7 +28,7 @@ newEntity{
 	encumber = 6,
 	rarity = 5,
 	desc = [[Decaying mummy wrappings.]],
-	egos = "/data/general/objects/egos/armor.lua", egos_chance = resolvers.mbonus(40, 5),
+	egos = "/data/general/objects/egos/armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 	wielder = {
 		resists={[DamageType.FIRE] = -50},
 	}
@@ -39,6 +39,7 @@ newEntity{ base = "BASE_MUMMY_WRAPPING",
 	level_range = {10, 40},
 	require = { stat = { dex=15 }, },
 	cost = 1,
+	material_level = 3,
 	wielder = {
 		combat_def = 5,
 		combat_armor = 2,

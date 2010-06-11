@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{
-	name = " of fire resistance",
+	name = " of fire resistance", suffix=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -27,7 +27,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of cold resistance",
+	name = " of cold resistance", suffix=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -36,7 +36,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of acid resistance",
+	name = " of acid resistance", suffix=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -45,7 +45,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of lightning resistance",
+	name = " of lightning resistance", suffix=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -54,7 +54,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of nature resistance",
+	name = " of nature resistance", suffix=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -64,7 +64,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of stability",
+	name = " of stability", suffix=true,
 	level_range = {10, 50},
 	rarity = 7,
 	cost = 6,

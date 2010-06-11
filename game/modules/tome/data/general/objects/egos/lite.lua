@@ -28,7 +28,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of clear sight",
+	name = " of clear sight", suffix=true,
 	level_range = {10, 50},
 	rarity = 5,
 	cost = 1,

@@ -100,12 +100,20 @@ function _M:computeRarities(type, list, level, filter)
 			print(("Entity(%30s) got %3d (=%3d / %3d) chance to generate. Level range(%2d-%2d), current %2d"):format(e.name, math.floor(genprob), math.floor(max), e.rarity, e.level_range[1], e.level_range[2], lev))
 
 			-- Generate and store egos list if needed
-			if e.egos and not level:getEntitiesList(type.."/"..e.egos) then
-				local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
-				if egos then
-					local egos_prob = self:computeRarities(type, egos, level, filter)
-					level:setEntitiesList(type.."/"..e.egos, egos_prob)
-					level:setEntitiesList(type.."/base/"..e.egos, egos)
+			if e.egos and e.egos_chance then
+				if _G.type(e.egos_chance) == "number" then e.egos_chance = {e.egos_chance} end
+				for ie, edata in pairs(e.egos_chance) do
+					local etype = ie
+					if _G.type(ie) == "number" then etype = "" end
+					if not level:getEntitiesList(type.."/"..e.egos..":"..etype) then
+						print("Generating specific ego list", type.."/"..e.egos..":"..etype)
+						local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
+						if egos then
+							local egos_prob = self:computeRarities(type, egos, level, etype ~= "" and function(e) return e[etype] end or nil)
+							level:setEntitiesList(type.."/"..e.egos..":"..etype, egos_prob)
+							level:setEntitiesList(type.."/base/"..e.egos..":"..etype, egos)
+						end
+					end
 				end
 			end
 
@@ -221,37 +229,50 @@ function _M:finishEntity(level, type, e, ego_chance)
 	e:resolve()
 
 	-- Add "ego" properties, sometimes
-	if not e.unique and e.egos and (e.force_ego or (e.egos_chance and rng.percent(util.bound(e.egos_chance + (ego_chance or 0), 0, 100)))) then
-		local ego
+	if not e.unique and e.egos and (e.force_ego or e.egos_chance) then
+		local egos_list = {}
 		if not e.force_ego then
-			local egos = level:getEntitiesList(type.."/"..e.egos)
-			ego = self:pickEntity(egos)
+			if _G.type(e.egos_chance) == "number" then e.egos_chance = {e.egos_chance} end
+			-- Pick an ego, then an other and so until we get no more
+			local picked_etype = {}
+			local etype = rng.tableIndex(e.egos_chance, picked_etype)
+			local echance = etype and e.egos_chance[etype]
+			while etype and rng.percent(util.bound(echance + (ego_chance or 0), 100, 100)) do
+				picked_etype[etype] = true
+				if _G.type(etype) == "number" then etype = "" end
+				local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
+				egos_list[#egos_list+1] = self:pickEntity(egos)
+				if egos_list[#egos_list] then print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", egos_list[#egos_list].name) else print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", #egos_list) end
+
+				etype = rng.tableIndex(e.egos_chance, picked_etype)
+				echance = e.egos_chance[etype]
+			end
 		else
 			local name = e.force_ego
 			if _G.type(name) == "table" then name = rng.table(name) end
 			print("Forcing ego", name)
-			local egos = level:getEntitiesList(type.."/base/"..e.egos)
-			ego = egos[name]
+			local egos = level:getEntitiesList(type.."/base/"..e.egos..":")
+			egos_list = {egos[name]}
 			e.force_ego = nil
 		end
 
-		if ego then
-			print("ego", ego.__CLASSNAME, ego.name, getmetatable(ego))
-			ego = ego:clone()
-			ego:resolve()
-			ego:resolve(nil, true)
-			local newname
-			if ego.prefix then
-				newname = ego.name .. e.name
-			else
-				newname = e.name .. ego.name
+		if #egos_list > 0 then
+			for ie, ego in ipairs(egos_list) do
+				print("ego", ego.__CLASSNAME, ego.name, getmetatable(ego))
+				ego = ego:clone()
+				ego:resolve()
+				ego:resolve(nil, true)
+				local newname
+				if ego.prefix then newname = ego.name .. e.name
+				else newname = e.name .. ego.name end
+				print("applying ego", ego.name, "to ", e.name, "::", newname)
+				ego.unided_name = nil
+				table.mergeAdd(e, ego, true)
+				e.name = newname
+				e.egoed = true
 			end
-			print("applying ego", ego.name, "to ", e.name, "::", newname)
-			ego.unided_name = nil
-			table.mergeAdd(e, ego, true)
-			e.name = newname
-			e.egoed = true
 		end
+		e.egos = nil e.egos_chance = nil e.force_ego = nil
 	end
 
 	-- Generate a stack ?

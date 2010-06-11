@@ -26,7 +26,7 @@ newEntity{
 	rarity = 5,
 	encumber = 7,
 	desc = [[Handheld deflection devices]],
-	egos = "/data/general/objects/egos/shield.lua", egos_chance = resolvers.mbonus(40, 5),
+	egos = "/data/general/objects/egos/shield.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 -- All shields have a "special_combat" field, this is used to compute damage made with them
@@ -37,6 +37,7 @@ newEntity{ base = "BASE_SHIELD",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
+	material_level = 1,
 	special_combat = {
 		dam = resolvers.rngavg(7,11),
 		physcrit = 2.5,
@@ -55,6 +56,7 @@ newEntity{ base = "BASE_SHIELD",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
+	material_level = 2,
 	special_combat = {
 		dam = resolvers.rngavg(10,20),
 		physcrit = 3,
@@ -73,6 +75,7 @@ newEntity{ base = "BASE_SHIELD",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
+	material_level = 3,
 	special_combat = {
 		dam = resolvers.rngavg(25,35),
 		physcrit = 3.5,
@@ -91,6 +94,7 @@ newEntity{ base = "BASE_SHIELD",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
+	material_level = 4,
 	special_combat = {
 		dam = resolvers.rngavg(40,55),
 		physcrit = 4.5,
@@ -109,6 +113,7 @@ newEntity{ base = "BASE_SHIELD",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,
+	material_level = 5,
 	special_combat = {
 		dam = resolvers.rngavg(60,75),
 		physcrit = 5,

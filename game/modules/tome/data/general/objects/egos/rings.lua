@@ -21,7 +21,7 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 newEntity{
-	name = " of see invisible",
+	name = " of see invisible", suffix=true,
 	level_range = {1, 20},
 	rarity = 4,
 	cost = 2,
@@ -31,7 +31,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of invisibility",
+	name = " of invisibility", suffix=true,
 	desc = [[Allows the wearer to become invisible to normal sight
 Beware, you should take off your light, otherwise you will still be easily spotted.]],
 	level_range = {30, 40},
@@ -43,7 +43,7 @@ Beware, you should take off your light, otherwise you will still be easily spott
 }
 
 newEntity{
-	name = " of regeneration",
+	name = " of regeneration", suffix=true,
 	level_range = {10, 20},
 	rarity = 10,
 	cost = 8,
@@ -63,7 +63,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of accuracy",
+	name = " of accuracy", suffix=true,
 	level_range = {1, 30},
 	rarity = 6,
 	cost = 2,
@@ -73,7 +73,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of defense",
+	name = " of defense", suffix=true,
 	level_range = {1, 30},
 	rarity = 6,
 	cost = 2,
@@ -83,7 +83,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of fire resistance",
+	name = " of fire resistance", suffix=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
@@ -93,7 +93,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of cold resistance",
+	name = " of cold resistance", suffix=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
@@ -103,7 +103,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of nature resistance",
+	name = " of nature resistance", suffix=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
@@ -113,7 +113,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of lightning resistance",
+	name = " of lightning resistance", suffix=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
@@ -123,7 +123,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of acid resistance",
+	name = " of acid resistance", suffix=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
@@ -133,7 +133,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of spell resistance",
+	name = " of spell resistance", suffix=true,
 	level_range = {1, 30},
 	rarity = 6,
 	cost = 2,
@@ -143,7 +143,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of physical resistance",
+	name = " of physical resistance", suffix=true,
 	level_range = {1, 30},
 	rarity = 6,
 	cost = 2,
@@ -153,7 +153,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of strength (#STATBONUS#)",
+	name = " of strength (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -162,7 +162,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of dexterity (#STATBONUS#)",
+	name = " of dexterity (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -171,7 +171,7 @@ newEntity{
 	},
 }
 newEntity{ define_as = "RING_MAGIC",
-	name = " of magic (#STATBONUS#)",
+	name = " of magic (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -180,7 +180,7 @@ newEntity{ define_as = "RING_MAGIC",
 	},
 }
 newEntity{
-	name = " of constitution (#STATBONUS#)",
+	name = " of constitution (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -191,7 +191,7 @@ newEntity{
 
 -------------------------- Damage increase rings
 newEntity{
-	name = " of massacre (#DAMBONUS#)",
+	name = " of massacre (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -200,7 +200,7 @@ newEntity{
 	},
 }
 newEntity{ define_as = "RING_ARCANE_POWER",
-	name = " of arcane power (#DAMBONUS#)",
+	name = " of arcane power (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -209,7 +209,7 @@ newEntity{ define_as = "RING_ARCANE_POWER",
 	},
 }
 newEntity{ define_as = "RING_BURNING",
-	name = " of burning (#DAMBONUS#)",
+	name = " of burning (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -218,7 +218,7 @@ newEntity{ define_as = "RING_BURNING",
 	},
 }
 newEntity{ define_as = "RING_FREEZING",
-	name = " of freezing (#DAMBONUS#)",
+	name = " of freezing (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -227,7 +227,7 @@ newEntity{ define_as = "RING_FREEZING",
 	},
 }
 newEntity{ define_as = "RING_NATURE_BLESSING",
-	name = " of nature's blessing (#DAMBONUS#)",
+	name = " of nature's blessing (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -236,7 +236,7 @@ newEntity{ define_as = "RING_NATURE_BLESSING",
 	},
 }
 newEntity{ define_as = "RING_BLIGHT",
-	name = " of blight (#DAMBONUS#)",
+	name = " of blight (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -245,7 +245,7 @@ newEntity{ define_as = "RING_BLIGHT",
 	},
 }
 newEntity{ define_as = "RING_SHOCK",
-	name = " of shock (#DAMBONUS#)",
+	name = " of shock (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -254,7 +254,7 @@ newEntity{ define_as = "RING_SHOCK",
 	},
 }
 newEntity{ define_as = "RING_CORROSION",
-	name = " of corrosion (#DAMBONUS#)",
+	name = " of corrosion (#DAMBONUS#)", suffix=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,

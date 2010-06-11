@@ -20,7 +20,7 @@
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{
-	name = " of power",
+	name = " of power", suffix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 8,
@@ -40,7 +40,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of might",
+	name = " of might", suffix=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 8,
@@ -50,7 +50,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of wizardry",
+	name = " of wizardry", suffix=true,
 	level_range = {30, 50},
 	rarity = 12,
 	cost = 45,

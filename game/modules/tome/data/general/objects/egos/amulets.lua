@@ -21,7 +21,7 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 newEntity{
-	name = " of cunning (#STATBONUS#)",
+	name = " of cunning (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -30,7 +30,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of willpower (#STATBONUS#)",
+	name = " of willpower (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -39,7 +39,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of mastery (#MASTERY#)",
+	name = " of mastery (#MASTERY#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 2,
@@ -91,7 +91,7 @@ newEntity{
 	end),
 }
 newEntity{
-	name = " of greater telepathy",
+	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
 	rarity = 15,
 	cost = 15,
@@ -100,7 +100,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of telepathic range",
+	name = " of telepathic range", suffix=true,
 	level_range = {40, 50},
 	rarity = 15,
 	cost = 15,
@@ -109,7 +109,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of the fish",
+	name = " of the fish", suffix=true,
 	level_range = {25, 50},
 	rarity = 10,
 	cost = 10,

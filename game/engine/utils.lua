@@ -433,6 +433,13 @@ function rng.tableRemove(t)
 	return table.remove(t, id)
 end
 
+function rng.tableIndex(t, ignore)
+	local rt = {}
+	if not ignore then ignore = {} end
+	for k, e in pairs(t) do if not ignore[k] then rt[#rt+1] = k end end
+	return rng.table(rt)
+end
+
 function util.show_backtrace()
 	local level = 2
 

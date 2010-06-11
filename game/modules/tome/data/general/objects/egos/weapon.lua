@@ -68,7 +68,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of accuracy",
+	name = " of accuracy", suffix=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
@@ -99,7 +99,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of massacre",
+	name = " of massacre", suffix=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,

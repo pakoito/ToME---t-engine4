@@ -64,18 +64,18 @@ function _M:addPond(x, y, spots)
 			if nmap[i][j] < lowest.v then lowest.v = nmap[i][j]; lowest.x = i; lowest.y = j end
 		end
 	end
-	print("Lowest pond point", lowest.x, lowest.y," ::", lowest.v)
+--	print("Lowest pond point", lowest.x, lowest.y," ::", lowest.v)
 
 	local quadrant = function(i, j)
 		local highest = {v=-100, x=nil, y=nil}
 		local l = line.new(lowest.x, lowest.y, i, j)
 		local lx, ly = l()
 		while lx do
-			print(lx, ly, nmap[lx][ly])
+--			print(lx, ly, nmap[lx][ly])
 			if nmap[lx][ly] > highest.v then highest.v = nmap[lx][ly]; highest.x = lx; highest.y = ly end
 			lx, ly = l()
 		end
-		print("Highest pond point", highest.x, highest.y," ::", highest.v)
+--		print("Highest pond point", highest.x, highest.y," ::", highest.v)
 		local split = (highest.v + lowest.v)
 
 		local l = line.new(lowest.x, lowest.y, i, j)
