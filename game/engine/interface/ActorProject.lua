@@ -94,6 +94,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 	end
 
 	-- Now project on each grid, one type
+	local tmp = {}
 	if type(damtype) == "function" then
 		local stop = false
 		for px, ys in pairs(grids) do
@@ -113,13 +114,13 @@ function _M:project(t, x, y, damtype, dam, particles)
 					-- Friendly fire ?
 					if px == self.x and py == self.y then
 						if t.friendlyfire then
-							DamageType:get(damtype).projector(self, px, py, damtype, dam)
+							DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp)
 							if particles then
 								game.level.map:particleEmitter(px, py, 1, particles.type)
 							end
 						end
 					else
-						DamageType:get(damtype).projector(self, px, py, damtype, dam)
+						DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp)
 						if particles then
 							game.level.map:particleEmitter(px, py, 1, particles.type)
 						end

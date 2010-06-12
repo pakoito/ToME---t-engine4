@@ -303,10 +303,11 @@ newDamageType{
 -- Physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
 	name = "spellknockback", type = "SPELLKNOCKBACK",
-	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
+		if target and not tmp[target] then
+			tmp[target] = true
+			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, 3)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -320,10 +321,11 @@ newDamageType{
 -- Physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
 	name = "physknockback", type = "PHYSKNOCKBACK",
-	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
+	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
+		if target and not tmp[target] then
+			tmp[target] = true
+			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, dam.dist)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
