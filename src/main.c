@@ -431,7 +431,7 @@ int resizeWindow(int width, int height)
 
 void do_resize(int w, int h, bool fullscreen)
 {
-	int flags = SDL_OPENGL;
+	int flags = SDL_OPENGL | SDL_RESIZABLE;
 
 	if (fullscreen) flags = SDL_OPENGL | SDL_FULLSCREEN;
 
