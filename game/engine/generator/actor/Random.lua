@@ -33,6 +33,7 @@ function _M:init(zone, map, level, spots)
 	end
 	self.filters = data.filters
 	self.nb_npc = data.nb_npc or {10, 20}
+	self.area = data.area or {x1=0, x2=self.map.w-1, y1=0, y2=self.map.h-1}
 	self.guardian = data.guardian
 	self.post_generation = data.post_generation
 end
@@ -45,10 +46,10 @@ function _M:generate()
 	if self.guardian then
 		local m = self.zone:makeEntityByName(self.level, "actor", self.guardian)
 		if m then
-			local x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
+			local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
 			local tries = 0
 			while (not m:canMove(x, y) or self.map.room_map[x][y].special) and tries < 100 do
-				x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
+				x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
 				tries = tries + 1
 			end
 			if tries < 100 then
@@ -67,10 +68,10 @@ function _M:generateOne()
 	if self.filters then f = self.filters[rng.range(1, #self.filters)] end
 	local m = self.zone:makeEntity(self.level, "actor", f)
 	if m then
-		local x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
+		local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
 		local tries = 0
 		while (not m:canMove(x, y) or self.map.room_map[x][y].special) and tries < 100 do
-			x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
+			x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
 			tries = tries + 1
 		end
 		if tries < 100 then

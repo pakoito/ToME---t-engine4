@@ -44,6 +44,7 @@ newBirthDescriptor{
 	name = "Sun Paladin",
 	desc = {
 		"Sun Paladins hail from the Gates of Morning, the last bastion of the free people in the Far East.",
+		"Their way of life is well represented by their motto 'We walk in the dark places no others will enter. We stand on the bridge, and no one may pass.'",
 		"They can channel the power of the Sun to smite all who seek to destroy the Sunwall.",
 		"Competent in both weapon and shield combat and magic they usually burn their foes from afar before engaging in melee.",
 		"Their most important stats are: Strength and Magic",

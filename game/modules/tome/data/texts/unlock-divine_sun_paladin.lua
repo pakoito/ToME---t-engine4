@@ -23,6 +23,7 @@ In the uttermost east of Arda, on the continent known as the Far East, dwells th
 
 Sun Paladins are humans warriors who are trained in special magic to manipulate the Sun powers.
 Paragons of all that is good they are nonetheless terrible in their battle against the Pride.
+Their motto is: "We walk in the dark places no others will enter. We stand on the bridge, and no one may pass."
 
 You have discovered the Gates of Morning and can now create new characters with the #LIGHT_GREEN#Sun Paladin class#WHITE#.
 

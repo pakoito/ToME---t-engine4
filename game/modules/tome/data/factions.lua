@@ -58,7 +58,7 @@ for i, line in ipairs(lines) do
 			end
 		else
 			local n = tonumber(d)
-			if n then
+			if n then print(j, i, factsid[j], factsid[i], n*100)
 				facts[factsid[j]].reactions[factsid[i]] = n * 100
 			end
 		end
@@ -71,3 +71,6 @@ for f1, data in pairs(facts) do
 		engine.Faction:setInitialReaction(f1, f2, v, true)
 	end
 end
+
+engine.Faction:add{ name="Neutral", reaction={}, }
+engine.Faction:setInitialReaction("neutral", "enemies", -100, true)

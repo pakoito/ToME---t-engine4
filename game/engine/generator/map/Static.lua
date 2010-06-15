@@ -49,8 +49,8 @@ function _M:loadMap(file)
 		subGenerator = function(g)
 			self.subgen[#self.subgen+1] = g
 		end,
-		defineTile = function(char, grid, obj, actor, trap)
-			t[char] = {grid=grid, obj=obj, actor=actor, trap=trap}
+		defineTile = function(char, grid, obj, actor, trap, status)
+			t[char] = {grid=grid, obj=obj, actor=actor, trap=trap, status=status}
 		end,
 		quickEntity = function(char, e)
 			if type(e) == "table" then
@@ -132,6 +132,7 @@ function _M:generate(lev, old_lev)
 		local actor = self.tiles[c] and self.tiles[c].actor
 		local trap = self.tiles[c] and self.tiles[c].trap
 		local object = self.tiles[c] and self.tiles[c].object
+		local status = self.tiles[c] and self.tiles[c].status
 
 		if object then
 			local o = type(object) == "string" and self.zone:makeEntityByName(self.level, "object", object) or self.zone:finishEntity(self.level, "object", object)
@@ -157,6 +158,11 @@ function _M:generate(lev, old_lev)
 			if m then
 				self.zone:addEntity(self.level, m, "actor", i-1, j-1)
 			end
+		end
+
+		if status then
+			if status.lite then self.level.map.lites(i-1, j-1, true) end
+			if status.remember then self.level.map.remembers(i-1, j-1, true) end
 		end
 	end end
 

@@ -529,7 +529,7 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "carn-dum")
+				self:changeLevel(1, "unremarkable-cave")
 			end
 		end,
 	}

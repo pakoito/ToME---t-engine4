@@ -237,7 +237,7 @@ function _M:finishEntity(level, type, e, ego_chance)
 			local picked_etype = {}
 			local etype = rng.tableIndex(e.egos_chance, picked_etype)
 			local echance = etype and e.egos_chance[etype]
-			while etype and rng.percent(util.bound(echance + (ego_chance or 0), 100, 100)) do
+			while etype and rng.percent(util.bound(echance + (ego_chance or 0), 0, 100)) do
 				picked_etype[etype] = true
 				if _G.type(etype) == "number" then etype = "" end
 				local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)

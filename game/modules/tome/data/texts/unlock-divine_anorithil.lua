@@ -23,8 +23,9 @@ In the uttermost east of Arda, on the continent known as the Far East, dwells th
 
 Anorithil are elven mages who are trained in special magic to manipulate the Sun and Moon powers.
 They have learned to harness the powers of both shadows and light in their battle against the Pride.
+Their motto is: "I am Grey. I stand between the candle and the star. We are Grey. We stand between the darkness and the light."
 
-You have discovered the Gates of Morning and can now create new characters with the #LIGHT_GREEN#Anorithil class#WHITE#.
+You have helped one of them and can now create new characters with the #LIGHT_GREEN#Anorithil class#WHITE#.
 
 Anorithil are pure spellcasters that rely on posivite and negative energies.
 Class features:#YELLOW#

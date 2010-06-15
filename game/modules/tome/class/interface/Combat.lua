@@ -43,11 +43,11 @@ function _M:bumpInto(target)
 			chat:invoke()
 		elseif self.move_others then
 			-- Displace
-			game.level.map:remove(self.x, self.y, Map.ACTOR)
-			game.level.map:remove(target.x, target.y, Map.ACTOR)
-			game.level.map(self.x, self.y, Map.ACTOR, target)
-			game.level.map(target.x, target.y, Map.ACTOR, self)
-			self.x, self.y, target.x, target.y = target.x, target.y, self.x, self.y
+			local tx, ty, sx, sy = target.x, target.y, self.x, self.y
+			target.x = nil target.y = nil
+			self.x = nil self.y = nil
+			target:move(sx, sy, true)
+			self:move(tx, ty, true)
 		end
 	end
 end
