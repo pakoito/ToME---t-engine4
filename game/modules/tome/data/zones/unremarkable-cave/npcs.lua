@@ -74,10 +74,6 @@ newEntity{ define_as = "FILLAREL",
 	end,
 
 	can_talk = "unremarkable-cave-fillarel",
-
-	on_die = function(self, who)
---		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
-	end,
 }
 
 newEntity{ define_as = "CORRUPTOR",
@@ -115,7 +111,5 @@ newEntity{ define_as = "CORRUPTOR",
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 
-	on_die = function(self, who)
---		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
-	end,
+	can_talk = "unremarkable-cave-krogar",
 }
