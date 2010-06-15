@@ -18,6 +18,7 @@
     Nicolas Casalini "DarkGod"
     darkgod@te4.org
 */
+#include "display.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -25,7 +26,6 @@
 #include "types.h"
 #include "music.h"
 #include "script.h"
-#include "tSDL.h"
 #include "physfs.h"
 #include "physfsrwops.h"
 

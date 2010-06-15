@@ -18,6 +18,7 @@
     Nicolas Casalini "DarkGod"
     darkgod@te4.org
 */
+#include "display.h"
 #include "fov/fov.h"
 #include "lua.h"
 #include "lauxlib.h"
@@ -31,7 +32,6 @@
 #include "SFMT.h"
 #include "mzip.h"
 #include "main.h"
-#include "tSDL.h"
 #include <math.h>
 #include <time.h>
 

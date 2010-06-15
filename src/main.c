@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
-#include "tSDL.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"

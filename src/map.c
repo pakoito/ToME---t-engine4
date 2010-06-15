@@ -18,6 +18,7 @@
     Nicolas Casalini "DarkGod"
     darkgod@te4.org
 */
+#include "display.h"
 #include <math.h>
 #include "lua.h"
 #include "lauxlib.h"
@@ -26,7 +27,6 @@
 #include "types.h"
 #include "map.h"
 #include "script.h"
-#include "tSDL.h"
 //#include "shaders.h"
 
 extern void useShader(GLuint p, int x, int y, float a);

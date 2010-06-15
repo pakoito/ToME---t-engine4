@@ -18,6 +18,7 @@
     Nicolas Casalini "DarkGod"
     darkgod@te4.org
 */
+#include "display.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -28,7 +29,6 @@
 #include <stdlib.h>
 #include "libtcod.h"
 #include "noise.h"
-#include "tgl.h"
 
 typedef struct
 {
