@@ -22,7 +22,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
-		melee_project={[DamageType.FIRE] = resolvers.mbonus(25, 4)},
+		melee_project={[DamageType.FIRE] = resolvers.mbonus_material(25, 4)},
 	},
 }
 newEntity{
@@ -30,7 +30,7 @@ newEntity{
 	level_range = {15, 50},
 	rarity = 5,
 	wielder = {
-		melee_project={[DamageType.ICE] = resolvers.mbonus(15, 4)},
+		melee_project={[DamageType.ICE] = resolvers.mbonus_material(15, 4)},
 	},
 }
 newEntity{
@@ -38,7 +38,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
-		melee_project={[DamageType.ACID] = resolvers.mbonus(25, 4)},
+		melee_project={[DamageType.ACID] = resolvers.mbonus_material(25, 4)},
 	},
 }
 newEntity{
@@ -46,7 +46,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
-		melee_project={[DamageType.LIGHTNING] = resolvers.mbonus(25, 4)},
+		melee_project={[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4)},
 	},
 }
 newEntity{
@@ -54,7 +54,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
-		melee_project={[DamageType.POISON] = resolvers.mbonus(45, 6)},
+		melee_project={[DamageType.POISON] = resolvers.mbonus_material(45, 6)},
 	},
 }
 
@@ -63,7 +63,7 @@ newEntity{
 	level_range = {10, 50},
 	rarity = 5,
 	wielder = {
-		melee_project={[DamageType.SLIME] = resolvers.mbonus(45, 6)},
+		melee_project={[DamageType.SLIME] = resolvers.mbonus_material(45, 6)},
 	},
 }
 
@@ -72,7 +72,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
-	combat={atk = resolvers.mbonus(20, 2)},
+	combat={atk = resolvers.mbonus_material(20, 2)},
 }
 
 newEntity{
@@ -80,7 +80,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 6,
-	combat={apr = resolvers.mbonus(15, 1)},
+	combat={apr = resolvers.mbonus_material(15, 1)},
 }
 
 newEntity{
@@ -90,10 +90,10 @@ newEntity{
 	cost = 35,
 	wielder = {
 		melee_project={
-			[DamageType.FIRE] = resolvers.mbonus(25, 4),
-			[DamageType.ICE] = resolvers.mbonus(15, 4),
-			[DamageType.ACID] = resolvers.mbonus(25, 4),
-			[DamageType.LIGHTNING] = resolvers.mbonus(25, 4),
+			[DamageType.FIRE] = resolvers.mbonus_material(25, 4),
+			[DamageType.ICE] = resolvers.mbonus_material(15, 4),
+			[DamageType.ACID] = resolvers.mbonus_material(25, 4),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4),
 		},
 	},
 }
@@ -104,6 +104,6 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	wielder = {
-		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus(25, 8), },
+		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 8), },
 	},
 }

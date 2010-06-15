@@ -23,7 +23,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.FIRE] = resolvers.mbonus(30, 10)},
+		resists={[DamageType.FIRE] = resolvers.mbonus_material(30, 10)},
 	},
 }
 newEntity{
@@ -32,7 +32,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.COLD] = resolvers.mbonus(30, 10)},
+		resists={[DamageType.COLD] = resolvers.mbonus_material(30, 10)},
 	},
 }
 newEntity{
@@ -41,7 +41,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.ACID] = resolvers.mbonus(30, 10)},
+		resists={[DamageType.ACID] = resolvers.mbonus_material(30, 10)},
 	},
 }
 newEntity{
@@ -50,7 +50,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.LIGHTNING] = resolvers.mbonus(30, 10)},
+		resists={[DamageType.LIGHTNING] = resolvers.mbonus_material(30, 10)},
 	},
 }
 newEntity{
@@ -59,7 +59,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.NATURE] = resolvers.mbonus(30, 10)},
+		resists={[DamageType.NATURE] = resolvers.mbonus_material(30, 10)},
 	},
 }
 
@@ -69,7 +69,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		max_mana = resolvers.mbonus(100, 10),
+		max_mana = resolvers.mbonus_material(100, 10),
 	},
 }
 
@@ -79,7 +79,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		on_melee_hit={[DamageType.SLIME] = resolvers.mbonus(7, 3)},
+		on_melee_hit={[DamageType.SLIME] = resolvers.mbonus_material(7, 3)},
 	},
 }
 
@@ -90,14 +90,14 @@ newEntity{
 	cost = 15,
 	wielder = {
 		inc_damage = {
-			[DamageType.ARCANE] = resolvers.mbonus(15, 5),
-			[DamageType.FIRE] = resolvers.mbonus(15, 5),
-			[DamageType.COLD] = resolvers.mbonus(15, 5),
-			[DamageType.ACID] = resolvers.mbonus(15, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus(15, 5),
-			[DamageType.NATURE] = resolvers.mbonus(15, 5),
-			[DamageType.BLIGHT] = resolvers.mbonus(15, 5),
-			[DamageType.PHYSICAL] = resolvers.mbonus(15, 5),
+			[DamageType.ARCANE] = resolvers.mbonus_material(15, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(15, 5),
+			[DamageType.ACID] = resolvers.mbonus_material(15, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
+			[DamageType.NATURE] = resolvers.mbonus_material(15, 5),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
 		},
 		combat_spellpower = 4,
 	},

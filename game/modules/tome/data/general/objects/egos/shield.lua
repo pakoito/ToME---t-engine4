@@ -23,7 +23,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.FIRE] = resolvers.mbonus(20, 10)},
+		resists={[DamageType.FIRE] = resolvers.mbonus_material(20, 10)},
 	},
 }
 newEntity{
@@ -32,7 +32,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.COLD] = resolvers.mbonus(20, 10)},
+		resists={[DamageType.COLD] = resolvers.mbonus_material(20, 10)},
 	},
 }
 newEntity{
@@ -41,7 +41,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.ACID] = resolvers.mbonus(20, 10)},
+		resists={[DamageType.ACID] = resolvers.mbonus_material(20, 10)},
 	},
 }
 newEntity{
@@ -50,7 +50,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.LIGHTNING] = resolvers.mbonus(20, 10)},
+		resists={[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 10)},
 	},
 }
 newEntity{
@@ -59,7 +59,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.NATURE] = resolvers.mbonus(20, 10)},
+		resists={[DamageType.NATURE] = resolvers.mbonus_material(20, 10)},
 	},
 }
 
@@ -70,7 +70,7 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		on_melee_hit={[DamageType.FIRE] = resolvers.mbonus(7, 3)},
+		on_melee_hit={[DamageType.FIRE] = resolvers.mbonus_material(7, 3)},
 	},
 }
 newEntity{
@@ -79,7 +79,7 @@ newEntity{
 	rarity = 8,
 	cost = 10,
 	wielder = {
-		on_melee_hit={[DamageType.ICE] = resolvers.mbonus(4, 3)},
+		on_melee_hit={[DamageType.ICE] = resolvers.mbonus_material(4, 3)},
 	},
 }
 newEntity{
@@ -88,7 +88,7 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		on_melee_hit={[DamageType.ACID] = resolvers.mbonus(7, 3)},
+		on_melee_hit={[DamageType.ACID] = resolvers.mbonus_material(7, 3)},
 	},
 }
 newEntity{
@@ -97,7 +97,7 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		on_melee_hit={[DamageType.LIGHTNING] = resolvers.mbonus(7, 3)},
+		on_melee_hit={[DamageType.LIGHTNING] = resolvers.mbonus_material(7, 3)},
 	},
 }
 
@@ -107,7 +107,7 @@ newEntity{
 	rarity = 15,
 	cost = 20,
 	wielder = {
-		combat_def=resolvers.mbonus(15, 4),
+		combat_def=resolvers.mbonus_material(15, 4),
 	},
 }
 
@@ -117,6 +117,6 @@ newEntity{
 	rarity = 15,
 	cost = 20,
 	wielder = {
-		max_life=resolvers.mbonus(100, 10),
+		max_life=resolvers.mbonus_material(100, 10),
 	},
 }

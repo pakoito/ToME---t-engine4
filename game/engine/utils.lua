@@ -62,6 +62,36 @@ function table.mergeAdd(dst, src, deep)
 	end
 end
 
+--- Merges additively the named fields and append the array part
+-- Yes this is weird and you'll probably not need it, but the engine does :)
+function table.mergeAddAppendArray(dst, src, deep)
+	-- Append the array part
+	for i = 1, #src do
+		local b = src[i]
+		if deep and type(b) == "table" and not b.__CLASSNAME then b = table.clone(b, true)
+		elseif deep and type(b) == "table" and b.__CLASSNAME then b = b:clone()
+		end
+		table.insert(dst, b)
+	end
+
+	-- Copy the table part
+	for k, e in pairs(src) do
+		if type(k) ~= "number" then
+			if deep and dst[k] and type(e) == "table" and type(dst[k]) == "table" and not e.__CLASSNAME then
+				-- WARNING we do not recurse on ourself but instead of the simple mergeAdd, we do not want to do the array stuff for subtables
+				-- yes I warned you this is weird
+				table.mergeAdd(dst[k], e, true)
+			elseif deep and not dst[k] and type(e) == "table" and not e.__CLASSNAME then
+				dst[k] = table.clone(e, true)
+			elseif dst[k] and type(e) == "number" then
+				dst[k] = dst[k] + e
+			else
+				dst[k] = e
+			end
+		end
+	end
+end
+
 function table.append(dst, src)
 	for i = 1, #src do dst[#dst+1] = src[i] end
 end

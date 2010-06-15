@@ -25,7 +25,7 @@ newEntity{
 	rarity = 4,
 	cost = 8,
 	wielder = {
-		combat_spellpower = resolvers.mbonus(30, 3),
+		combat_spellpower = resolvers.mbonus_material(30, 3),
 	},
 }
 
@@ -35,7 +35,7 @@ newEntity{
 	rarity = 3,
 	cost = 8,
 	wielder = {
-		max_mana = resolvers.mbonus(100, 10),
+		max_mana = resolvers.mbonus_material(100, 10),
 	},
 }
 
@@ -45,7 +45,7 @@ newEntity{
 	rarity = 3,
 	cost = 8,
 	wielder = {
-		combat_spellcrit = resolvers.mbonus(15, 4),
+		combat_spellcrit = resolvers.mbonus_material(15, 4),
 	},
 }
 
@@ -55,9 +55,9 @@ newEntity{
 	rarity = 12,
 	cost = 45,
 	wielder = {
-		combat_spellpower = resolvers.mbonus(30, 3),
-		max_mana = resolvers.mbonus(100, 10),
-		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus(5, 1), [Stats.STAT_WIL] = resolvers.mbonus(5, 1) },
+		combat_spellpower = resolvers.mbonus_material(30, 3),
+		max_mana = resolvers.mbonus_material(100, 10),
+		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(5, 1), [Stats.STAT_WIL] = resolvers.mbonus_material(5, 1) },
 	},
 }
 
@@ -67,7 +67,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.FIRE] = resolvers.mbonus(25, 8), },
+		inc_damage={ [DamageType.FIRE] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -77,7 +77,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.COLD] = resolvers.mbonus(25, 8), },
+		inc_damage={ [DamageType.COLD] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -87,7 +87,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.ACID] = resolvers.mbonus(25, 8), },
+		inc_damage={ [DamageType.ACID] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -97,7 +97,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.LIGHTNING] = resolvers.mbonus(25, 8), },
+		inc_damage={ [DamageType.LIGHTNING] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -107,7 +107,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.NATURE] = resolvers.mbonus(25, 8), },
+		inc_damage={ [DamageType.NATURE] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -117,6 +117,6 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.BLIGHT] = resolvers.mbonus(25, 8), },
+		inc_damage={ [DamageType.BLIGHT] = resolvers.mbonus_material(25, 8), },
 	},
 }

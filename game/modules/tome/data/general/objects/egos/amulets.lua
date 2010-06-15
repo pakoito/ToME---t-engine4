@@ -26,7 +26,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2) },
 	},
 }
 newEntity{
@@ -35,7 +35,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(8, 2) },
 	},
 }
 newEntity{
@@ -87,7 +87,7 @@ newEntity{
 		local tt = tts[rng.range(1, #tts)]
 
 		e.wielder.talents_types_mastery = {}
-		e.wielder.talents_types_mastery[tt] = (10 + rng.mbonus(30, resolvers.current_level, 50)) / 100
+		e.wielder.talents_types_mastery[tt] = (10 + rng.mbonus(math.ceil(30 * e.material_level / 5), resolvers.current_level, 50)) / 100
 	end),
 }
 newEntity{

@@ -158,3 +158,17 @@ function resolvers.calc.chatfeature(t, e)
 	-- Delete the origin field
 	return nil
 end
+
+--- Random bonus based on level (sets the mbonus max level, we use 60 instead of 50 to get some forced randomness at high level)
+resolvers.mbonus_max_level = 60
+
+--- Random bonus based on level and material quality
+resolvers.current_level = 1
+function resolvers.mbonus_material(max, add)
+	return {__resolver="mbonus_material", max, add}
+end
+function resolvers.calc.mbonus_material(t, e)
+	local ml = e.material_level or 1
+	print("RESOLVER MBONUS MATERIAL", ml, math.ceil(t[1] * ml / 5))
+	return math.ceil(rng.mbonus(t[1], resolvers.current_level, resolvers.mbonus_max_level) * ml / 5) + (t[2] or 0)
+end

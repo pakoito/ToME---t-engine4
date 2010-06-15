@@ -260,17 +260,18 @@ function _M:finishEntity(level, type, e, ego_chance)
 			for ie, ego in ipairs(egos_list) do
 				print("ego", ego.__CLASSNAME, ego.name, getmetatable(ego))
 				ego = ego:clone()
-				ego:resolve()
-				ego:resolve(nil, true)
 				local newname
 				if ego.prefix then newname = ego.name .. e.name
 				else newname = e.name .. ego.name end
 				print("applying ego", ego.name, "to ", e.name, "::", newname)
 				ego.unided_name = nil
-				table.mergeAdd(e, ego, true)
+				-- Merge additively but with array appending, so that nameless resolvers are not lost
+				table.mergeAddAppendArray(e, ego, true)
 				e.name = newname
 				e.egoed = true
 			end
+			-- Re-resolve with the (possibly) new resolvers
+			e:resolve()
 		end
 		e.egos = nil e.egos_chance = nil e.force_ego = nil
 	end

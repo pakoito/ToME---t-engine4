@@ -26,7 +26,7 @@ newEntity{
 	rarity = 4,
 	cost = 2,
 	wielder = {
-		see_invisible = resolvers.mbonus(20, 5),
+		see_invisible = resolvers.mbonus_material(20, 5),
 	},
 }
 
@@ -38,7 +38,7 @@ Beware, you should take off your light, otherwise you will still be easily spott
 	rarity = 4,
 	cost = 16,
 	wielder = {
-		invisible = resolvers.mbonus(10, 5),
+		invisible = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -48,7 +48,7 @@ newEntity{
 	rarity = 10,
 	cost = 8,
 	wielder = {
-		life_regen = resolvers.mbonus(3, 1),
+		life_regen = resolvers.mbonus_material(3, 1),
 	},
 }
 
@@ -58,7 +58,7 @@ newEntity{
 	rarity = 8,
 	cost = 3,
 	wielder = {
-		mana_regen = resolvers.mbonus(3, 1),
+		mana_regen = resolvers.mbonus_material(3, 1),
 	},
 }
 
@@ -68,7 +68,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		combat_atk = resolvers.mbonus(15, 5),
+		combat_atk = resolvers.mbonus_material(15, 5),
 	},
 }
 
@@ -78,7 +78,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		combat_def = resolvers.mbonus(15, 5),
+		combat_def = resolvers.mbonus_material(15, 5),
 	},
 }
 
@@ -88,7 +88,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		resists = { [DamageType.FIRE] = resolvers.mbonus(15, 20), }
+		resists = { [DamageType.FIRE] = resolvers.mbonus_material(15, 20), }
 	},
 }
 
@@ -98,7 +98,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		resists = { [DamageType.COLD] = resolvers.mbonus(15, 20), }
+		resists = { [DamageType.COLD] = resolvers.mbonus_material(15, 20), }
 	},
 }
 
@@ -108,7 +108,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		resists = { [DamageType.NATURE] = resolvers.mbonus(15, 20), }
+		resists = { [DamageType.NATURE] = resolvers.mbonus_material(15, 20), }
 	},
 }
 
@@ -118,7 +118,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		resists = { [DamageType.LIGHTNING] = resolvers.mbonus(15, 20), }
+		resists = { [DamageType.LIGHTNING] = resolvers.mbonus_material(15, 20), }
 	},
 }
 
@@ -128,7 +128,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		resists = { [DamageType.ACID] = resolvers.mbonus(15, 20), }
+		resists = { [DamageType.ACID] = resolvers.mbonus_material(15, 20), }
 	},
 }
 
@@ -138,7 +138,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		combat_spellresist = resolvers.mbonus(15, 5),
+		combat_spellresist = resolvers.mbonus_material(15, 5),
 	},
 }
 
@@ -148,7 +148,7 @@ newEntity{
 	rarity = 6,
 	cost = 2,
 	wielder = {
-		combat_physresist = resolvers.mbonus(15, 5),
+		combat_physresist = resolvers.mbonus_material(15, 5),
 	},
 }
 
@@ -158,7 +158,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(8, 2) },
 	},
 }
 newEntity{
@@ -167,7 +167,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(8, 2) },
 	},
 }
 newEntity{ define_as = "RING_MAGIC",
@@ -176,7 +176,7 @@ newEntity{ define_as = "RING_MAGIC",
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(8, 2) },
 	},
 }
 newEntity{
@@ -185,7 +185,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus(8, 2) },
+		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(8, 2) },
 	},
 }
 
@@ -196,7 +196,7 @@ newEntity{
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.PHYSICAL] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5) },
 	},
 }
 newEntity{ define_as = "RING_ARCANE_POWER",
@@ -205,7 +205,7 @@ newEntity{ define_as = "RING_ARCANE_POWER",
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.ARCANE] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.ARCANE] = resolvers.mbonus_material(15, 5) },
 	},
 }
 newEntity{ define_as = "RING_BURNING",
@@ -214,7 +214,7 @@ newEntity{ define_as = "RING_BURNING",
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.FIRE] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.FIRE] = resolvers.mbonus_material(15, 5) },
 	},
 }
 newEntity{ define_as = "RING_FREEZING",
@@ -223,7 +223,7 @@ newEntity{ define_as = "RING_FREEZING",
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.COLD] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.COLD] = resolvers.mbonus_material(15, 5) },
 	},
 }
 newEntity{ define_as = "RING_NATURE_BLESSING",
@@ -232,7 +232,7 @@ newEntity{ define_as = "RING_NATURE_BLESSING",
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.NATURE] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.NATURE] = resolvers.mbonus_material(15, 5) },
 	},
 }
 newEntity{ define_as = "RING_BLIGHT",
@@ -241,7 +241,7 @@ newEntity{ define_as = "RING_BLIGHT",
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus_material(15, 5) },
 	},
 }
 newEntity{ define_as = "RING_SHOCK",
@@ -250,7 +250,7 @@ newEntity{ define_as = "RING_SHOCK",
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5) },
 	},
 }
 newEntity{ define_as = "RING_CORROSION",
@@ -259,6 +259,6 @@ newEntity{ define_as = "RING_CORROSION",
 	rarity = 4,
 	cost = 4,
 	wielder = {
-		inc_damage = { [DamageType.ACID] = resolvers.mbonus(15, 5) },
+		inc_damage = { [DamageType.ACID] = resolvers.mbonus_material(15, 5) },
 	},
 }

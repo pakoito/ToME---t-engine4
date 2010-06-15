@@ -38,11 +38,12 @@ end
 
 --- Random bonus based on level
 resolvers.current_level = 1
+resolvers.mbonus_max_level = 50
 function resolvers.mbonus(max, add)
 	return {__resolver="mbonus", max, add}
 end
 function resolvers.calc.mbonus(t)
-	return rng.mbonus(t[1], resolvers.current_level, 50) + (t[2] or 0)
+	return rng.mbonus(t[1], resolvers.current_level, resolvers.mbonus_max_level) + (t[2] or 0)
 end
 
 --- Talents resolver
