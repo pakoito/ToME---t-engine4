@@ -27,13 +27,18 @@ Good day to you fellow traveller!]],
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(player, dialog) end
 		},
+		{"I have found this staff, it looks powerful maybe it would be enough?",
+			jump="angmar_fall",
+			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_angmar(player) end,
+			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_angmar(player, dialog) end
+		},
 		-- Reward for non-mages: access to Angolwen
 		{"So you have enough staves now?",
 			jump="thanks",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.descriptor.class ~= "Mage" end,
 		},
 		-- Reward for mages: upgrade a talent mastery
-		{"So you have enough staves now?",
+		{"So you have enough items now?",
 			jump="thanks_mage",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.descriptor.class == "Mage" end,
 		},
@@ -60,7 +65,7 @@ I am a novice mage, as you might have noticed, and my goal is to be accepted by 
 }
 newChat{ id="quest3",
 	text = [[The keepers of ar... err I do not think I am supposed to talk about them sorry my friend...
-Anyway, I must collect 15 magic staves and I have yet to find one. If you could bring me some should you find any, I would be grateful]],
+Anyway, I must collect 15 magic staves, rings or amulets and I have yet to find one. If you could bring me some should you find any, I would be grateful]],
 	answers = {
 		{"I will keep that in mind", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
@@ -68,10 +73,18 @@ Anyway, I must collect 15 magic staves and I have yet to find one. If you could 
 }
 newChat{ id="quest3_mage",
 	text = [[I hope I will too ...
-Anyway, I must collect 15 magic staves and I have yet to find one. If you could bring me some should you find any, I would be grateful]],
+Anyway, I must collect 15 magic staves, rings or amulets and I have yet to find one. If you could bring me some should you find any, I would be grateful]],
 	answers = {
 		{"I will keep that in mind", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
+	}
+}
+
+newChat{ id="angmar_fall",
+	text = [[Let me examine it.
+Oh yes my friend this is indeed a powerful staff, I think that alone should suffice to complete my quest! Many thanks!]],
+	answers = {
+		{"Well I can not use it anyway.", jump="welcome"},
 	}
 }
 

@@ -20,7 +20,7 @@
 name = "An apprentice task"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You met a novice mage who was tasked to collect many staves."
+	desc[#desc+1] = "You met a novice mage who was tasked to collect many staves or jewelry."
 	desc[#desc+1] = "He asked for your help should you collect some that you do not use."
 	if self:isCompleted() then
 	else
@@ -42,8 +42,8 @@ on_status_change = function(self, who, status, sub)
 end
 
 collect_staff = function(self, who, dialog)
-	who:showEquipInven("Offer which staff?",
-		function(o) return o.type == "weapon" and o.subtype == "staff" end,
+	who:showEquipInven("Offer which item?",
+		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_ANGMAR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
 		function(o, inven, item)
 			self.nb_collect = self.nb_collect + 1
 			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
@@ -61,7 +61,34 @@ can_offer = function(self, who)
 
 	for inven_id, inven in pairs(who.inven) do
 		for item, o in ipairs(inven) do
-			if o.type == "weapon" and o.subtype == "staff" then return true end
+			if (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_ANGMAR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") then return true end
+		end
+	end
+end
+
+collect_staff_angmar = function(self, who, dialog)
+	who:showEquipInven("Offer which item?",
+		function(o) return o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_ANGMAR" end,
+		function(o, inven, item)
+			self.nb_collect = self.nb_collect + 15
+			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
+			who:removeObject(who:getInven(inven), item)
+			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
+			who:sortInven(who:getInven(inven))
+			dialog:regen()
+			return true
+		end
+	)
+end
+
+can_offer_angmar = function(self, who)
+	if self.nb_collect >= 15 then return end
+	-- Only works after mages are unlocked
+	if not profile.mod.allow_build.mage then return end
+
+	for inven_id, inven in pairs(who.inven) do
+		for item, o in ipairs(inven) do
+			if o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_ANGMAR" then return true end
 		end
 	end
 end
