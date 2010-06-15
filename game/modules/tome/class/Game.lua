@@ -529,7 +529,7 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "unremarkable-cave")
+				self:changeLevel(1, "wilderness-arda-fareast")
 			end
 		end,
 	}

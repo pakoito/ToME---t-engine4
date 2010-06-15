@@ -43,7 +43,7 @@ prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounte
 addData{ encounters = {
 	chance=function(who)
 		local harmless_chance = 1 + who:getLck(7)
-		local hostile_chance = 5
+		local hostile_chance = 2
 		if rng.percent(hostile_chance) then return "hostile"
 		elseif rng.percent(harmless_chance) then return "harmless"
 		end

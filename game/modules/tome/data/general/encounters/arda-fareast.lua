@@ -17,6 +17,42 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+newEntity{
+	name = "Unmarked Cave",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {25, 35},
+	rarity = 8,
+	coords = {{ x=36, y=28, likelymap={
+		[[    11111111   ]],
+		[[ 1111111111111 ]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[ 1111111111111 ]],
+		[[   111111111   ]],
+	}}},
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Entrance to an unmarked cave",
+			display='>', color={r=0, g=255, b=255},
+			notice = true,
+			change_level=1, change_zone="unremarkable-cave"
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to what seems to be a cave...")
+		return true
+	end,
+}
+
 ---------------------------- Hostiles -----------------------------
 
 -- Ambushed!
@@ -61,7 +97,7 @@ newEntity{
 				trap = { class = "engine.generator.trap.Random", nb_trap = {0, 0}, },
 			},
 
-			npc_list = mod.class.NPC:loadList("/data/general/npcs/orc.lua"),
+			npc_list = mod.class.NPC:loadList("/data/general/npcs/orc.lua", nil, nil, function(e) e.make_escort=nil end),
 			grid_list = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua", "/data/general/grids/sand.lua"},
 			object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
 			trap_list = {},
