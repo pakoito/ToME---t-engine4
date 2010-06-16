@@ -113,6 +113,31 @@ function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidis
 	self.tile_w, self.tile_h = tile_w, tile_h
 	self.fontname, self.fontsize = fontname, fontsize
 	self:resetTiles()
+	self.zoom = 1
+end
+
+--- Sets zoom level
+-- @param zoom nil to reset to default, ortherwise a number to increment the zoom with
+-- @param tmx make sure this coords are visible after zoom (can be nil)
+-- @param tmy make sure this coords are visible after zoom (can be nil)
+function _M:setZoom(zoom, tmx, tmy)
+	self.changed = true
+	_M.zoom = util.bound(_M.zoom + zoom, 0.1, 4)
+	self.viewport.mwidth = math.floor(self.viewport.width / (self.tile_w * _M.zoom))
+	self.viewport.mheight = math.floor(self.viewport.height / (self.tile_h * _M.zoom))
+	print("[MAP] setting zoom level", _M.zoom, self.viewport.mwidth, self.viewport.mheight)
+
+	self._map:setZoom(
+		self.tile_w * self.zoom,
+		self.tile_h * self.zoom,
+		self.viewport.mwidth,
+		self.viewport.mheight
+	)
+	if tmx and tmy then
+		self:centerViewAround(tmx, tmy)
+	else
+		self:checkMapViewBounded()
+	end
 end
 
 --- Defines the "obscure" factor of unseen map
@@ -136,7 +161,7 @@ function _M:resetTiles()
 	Entity:invalidateAllMO()
 	self.tiles = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, self.allow_backcolor)
 	self.tilesTactic = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, false)
-	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, false, true)
+	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, true)
 end
 
 --- Defines the faction of the person seeing the map
@@ -427,11 +452,11 @@ function _M:display()
 					if e.faction then
 						friend = Faction:factionReaction(self.view_faction, e.faction)
 						if friend > 0 then
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w * self.zoom, self.display_y + (j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 						elseif friend < 0 then
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (i - self.mx) * self.tile_w * self.zoom, self.display_y + (j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 						else
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w, self.display_y + (j - self.my) * self.tile_h, self.tile_w, self.tile_h)
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (i - self.mx) * self.tile_w * self.zoom, self.display_y + (j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 						end
 					end
 				end
@@ -583,15 +608,15 @@ end
 --- Gets the tile under the mouse
 function _M:getMouseTile(mx, my)
 --	if mx < self.display_x or my < self.display_y or mx >= self.display_x + self.viewport.width or my >= self.display_y + self.viewport.height then return end
-	local tmx = math.floor((mx - self.display_x) / self.tile_w) + self.mx
-	local tmy = math.floor((my - self.display_y) / self.tile_h) + self.my
+	local tmx = math.floor((mx - self.display_x) / (self.tile_w * self.zoom)) + self.mx
+	local tmy = math.floor((my - self.display_y) / (self.tile_h * self.zoom)) + self.my
 	return tmx, tmy
 end
 
 --- Get the screen position corresponding to a tile
 function _M:getTileToScreen(tx, ty)
-	local x = (tx - self.mx) * self.tile_w + self.display_x
-	local y = (ty - self.my) * self.tile_h + self.display_y
+	local x = (tx - self.mx) * self.tile_w * self.zoom + self.display_x
+	local y = (ty - self.my) * self.tile_h * self.zoom + self.display_y
 	return x, y
 end
 
@@ -691,7 +716,7 @@ function _M:displayEffects()
 			for lx, ys in pairs(e.grids) do
 				for ly, _ in pairs(ys) do
 					if self.seens(lx, ly) then
-						s:toScreen(self.display_x + (lx - self.mx) * self.tile_w, self.display_y + (ly - self.my) * self.tile_h)
+						s:toScreen(self.display_x + (lx - self.mx) * self.tile_w * self.zoom, self.display_y + (ly - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 					end
 				end
 			end
@@ -822,7 +847,7 @@ function _M:displayParticles()
 
 		-- Dont bother with obviously out of screen stuff
 		if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w, self.display_y + (e.y - self.my + 0.5) * self.tile_h, self.seens(e.x, e.y))
+			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), self.zoom)
 		end
 
 		if not alive then

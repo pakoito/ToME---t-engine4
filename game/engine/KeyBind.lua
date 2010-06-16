@@ -138,12 +138,16 @@ function _M:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 	return ("sym:%s:%s:%s:%s:%s"):format(tostring(sym), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta)), unicode and "uni:"..unicode
 end
 
+function _M:makeMouseString(button, ctrl, shift, alt, meta)
+	return ("mouse:%s:%s:%s:%s:%s"):format(tostring(button), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta))
+end
+
 function _M:formatKeyString(ks)
 	if not ks then return "--" end
 
 	if ks:find("^uni:") then
 		return ks:sub(5)
-	else
+	elseif ks:find("^sym:") then
 		local i, j, sym, ctrl, shift, alt, meta = ks:find("^sym:([0-9]+):([a-z]+):([a-z]+):([a-z]+):([a-z]+)$")
 		if not i then return "--" end
 
@@ -161,15 +165,33 @@ function _M:formatKeyString(ks)
 		if meta then sym = "[meta]+"..sym end
 
 		return sym
+	elseif ks:find("^mouse:") then
+		local i, j, sym, ctrl, shift, alt, meta = ks:find("^mouse:([a-zA-Z0-9]+):([a-z]+):([a-z]+):([a-z]+):([a-z]+)$")
+		if not i then return "--" end
+
+		ctrl = ctrl == "true" and true or false
+		shift = shift == "true" and true or false
+		alt = alt == "true" and true or false
+		meta = meta == "true" and true or false
+		sym = "mouse["..sym.."]"
+
+		if ctrl then sym = "[ctrl]+"..sym end
+		if shift then sym = "[shift]+"..sym end
+		if alt then sym = "[alt]+"..sym end
+		if meta then sym = "[meta]+"..sym end
+
+		return sym
 	end
 end
 
-function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
+function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
 	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup) end
 
-	local ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
+	local ks, us
+	if not ismouse then ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
+	else ks = self:makeMouseString(sym, ctrl, shift, alt, meta) end
 --	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then
 		if isup and not _M.binds_def[self.binds[ks]].updown then return end

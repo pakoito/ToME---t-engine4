@@ -49,8 +49,14 @@ function _M:init(key_source)
 		end,
 	})
 	self:mouseZones{
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=2, y=5, w=600, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+			if tx < 430 then
+				self.selcol = 1
+			else
+				self.selcol = 2
+			end
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			self.changed = true
 			if button == "left" then self:use()
 			elseif button == "right" then
 			end
@@ -91,6 +97,28 @@ function _M:use()
 		end
 		game:unregisterDialog(d)
 	end}
+
+	d:mouseZones{ norestrict=true,
+		{ x=0, y=0, w=game.w, h=game.h, fct=function(button, x, y, xrel, yrel, tx, ty)
+			if xrel or yrel then return end
+			if button == "left" then return end
+
+			local ks = KeyBind:makeMouseString(
+				button,
+				core.key.modState("ctrl") and true or false,
+				core.key.modState("shift") and true or false,
+				core.key.modState("alt") and true or false,
+				core.key.modState("meta") and true or false
+			)
+			print("Binding", t.name, "to", ks)
+			t["bind"..self.selcol] = ks
+
+			KeyBind.binds_remap[t.type] = KeyBind.binds_remap[t.type] or t.k.default
+			KeyBind.binds_remap[t.type][self.selcol] = ks
+			game:unregisterDialog(d)
+		end },
+	}
+
 	d.drawDialog = function(self, s)
 		s:drawColorStringCentered(self.font, self.selcol == 1 and "Bind key" or "Bind alternate key", 2, 2, self.iw - 2, self.ih - 2)
 	end

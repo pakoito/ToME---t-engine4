@@ -291,6 +291,7 @@ end
 -- *WARNING* If used inside a coroutine it will yield and resume it later when a target is found.
 -- This is usualy just what you want so dont think too much about it :)
 function _M:getTarget(typ)
+	if game.target.forced then return unpack(game.target.forced) end
 	if coroutine.running() then
 		local msg
 		if type(typ) == "string" then msg, typ = typ, nil

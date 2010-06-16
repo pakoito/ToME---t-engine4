@@ -32,6 +32,7 @@ function _M:init(fontname, fontsize, color, bgcolor)
 	self.font_h = self.font:lineSkip()
 	self.max = max or 400
 	self.changed = true
+	self.old_tmx, self.old_tmy = -1,-1
 end
 
 --- Set the tooltip text
@@ -46,6 +47,16 @@ function _M:set(str, ...)
 	self.w = self.w + 8
 	self.h = self.h + 8
 	self.changed = true
+end
+
+function _M:drawWBorder(s, x, y, w)
+	for i = x, x + w do
+		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_8.png"), i, y)
+	end
+end
+
+function _M:erase()
+	self.surface = nil
 end
 
 function _M:display()
@@ -71,10 +82,17 @@ function _M:display()
 		self.surface:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_4.png"), self.w - 3, i)
 	end
 
-	for i, l in ipairs(self.text) do
-		self.surface:drawColorString(self.font, self.text[i], 4, 4 + (i-1) * self.font_h, self.color[1], self.color[2], self.color[3])
+	local i = 1
+	for ii, l in ipairs(self.text) do
+		if self.text[i] == "---" then
+			self:drawWBorder(self.surface, 4, 4 + (i-1 + 0.5) * self.font_h, self.w - 8)
+			i = i + 1
+		else
+			self.surface:drawColorString(self.font, self.text[i], 4, 4 + (i-1) * self.font_h, self.color[1], self.color[2], self.color[3])
+			i = i + 1
+		end
 	end
-	return self.surface
+	self.texture = self.surface:glTexture()
 end
 
 --- Displays the tooltip at the given map coordinates
@@ -87,17 +105,28 @@ function _M:displayAtMap(tmx, tmy, mx, my)
 		mx, my = game.level.map:getTileToScreen(tmx, tmy)
 	end
 
-	local tt = game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip") or
-			game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip") or
-			game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip") or
-			game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
-	if tt and game.level.map.seens(tmx, tmy) then
-		self:set("%s", tt)
-		local t = self:display()
-		mx = mx - self.w
+	if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
+		self.old_tmx, self.old_tmy = tmx, tmy
+		local tt = {}
+		local seen = game.level.map.seens(tmx, tmy)
+		local remember = game.level.map.remembers(tmx, tmy)
+		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip")
+		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip")
+		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip")
+		tt[#tt+1] = remember and game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip")
+		if #tt > 0 then
+			self:set("%s", table.concat(tt, "\n---\n"))
+			self:display()
+		else
+			self:erase()
+		end
+	end
+
+	if self.surface then
+		mx = mx - self.w / 2 + game.level.map.tile_w / 2
 		my = my - self.h
 		if mx < 0 then mx = 0 end
 		if my < 0 then my = 0 end
-		if t then t:toScreen(mx, my) end
+		self.surface:toScreenWithTexture(self.texture, mx, my)
 	end
 end

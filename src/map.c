@@ -226,6 +226,20 @@ static int map_free(lua_State *L)
 	return 1;
 }
 
+static int map_set_zoom(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	int tile_w = luaL_checknumber(L, 2);
+	int tile_h = luaL_checknumber(L, 3);
+	int mwidth = luaL_checknumber(L, 4);
+	int mheight = luaL_checknumber(L, 5);
+	map->tile_w = tile_w;
+	map->tile_h = tile_h;
+	map->mwidth = mwidth;
+	map->mheight = mheight;
+	return 0;
+}
+
 static int map_set_obscure(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
@@ -647,6 +661,7 @@ static const struct luaL_reg map_reg[] =
 {
 	{"__gc", map_free},
 	{"close", map_free},
+	{"setZoom", map_set_zoom},
 	{"setShown", map_set_shown},
 	{"setObscure", map_set_obscure},
 	{"setGrid", map_set_grid},

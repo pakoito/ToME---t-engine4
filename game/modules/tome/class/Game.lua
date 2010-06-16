@@ -21,7 +21,7 @@ require "engine.class"
 require "engine.GameTurnBased"
 require "engine.interface.GameMusic"
 require "engine.interface.GameSound"
-require "engine.KeyBind"
+local KeyBind = require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local DamageType = require "engine.DamageType"
 local Zone = require "engine.Zone"
@@ -384,7 +384,7 @@ function _M:display()
 		if self.tooltip_x then
 			local mx, my = self.tooltip_x , self.tooltip_y
 			local tmx, tmy = self.level.map:getMouseTile(mx, my)
-			self.tooltip:displayAtMap(tmx, tmy, mx, my)
+			self.tooltip:displayAtMap(tmx, tmy)
 		end
 
 		-- Move target around
@@ -766,16 +766,37 @@ function _M:setupCommands()
 end
 
 function _M:setupMouse()
-	-- Those 2 locals will be "absorbed" into the mosue event handler function, this is a closure
+	-- Those 2 locals will be "absorbed" into the mouse event handler function, this is a closure
 	local derivx, derivy = 0, 0
+	local zoom = 1
+	local moving_around = false
 
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
 		-- Move tooltip
 		self.tooltip_x, self.tooltip_y = mx, my
 		local tmx, tmy = self.level.map:getMouseTile(mx, my)
 
-		-- Target stuff
-		if button == "right" then
+		if self.key == self.targetmode_key then
+			-- Target with mouse
+			if button == "none" and xrel and yrel then
+				self.target:setSpot(tmx, tmy)
+			-- Cancel target
+			elseif button ~= "left" and not xrel and not yrel then
+				self:targetMode(false, false)
+				self.tooltip_x, self.tooltip_y = nil, nil
+			-- Accept target
+			elseif not xrel and not yrel then
+				self.target.target.entity = nil
+				self.target.target.x = nil
+				self.target.target.y = nil
+				self:targetMode(false, false)
+				self.tooltip_x, self.tooltip_y = nil, nil
+			end
+			return
+		end
+
+		-- Move
+		if button == "left" and not xrel and not yrel and not moving_around then
 			if self.key == self.normal_key then self.player:mouseMove(tmx, tmy) end
 
 		-- Move map around
@@ -798,24 +819,25 @@ function _M:setupMouse()
 				derivy = derivy + game.level.map.tile_h
 			end
 			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
-		elseif button == "none" then
---[[ too slow
-			if self.key.status[self.key._LSHIFT] and (self.test_x ~= tmx or self.test_y ~= tmy) then
-				local a = Astar.new(self.level.map, self.player)
-				local path = a:calc(self.player.x, self.player.y, tmx, tmy, true)
-				-- No Astar path ? jsut be dumb and try direct line
-				if not path then
-					local d = DirectPath.new(self.level.map, self.player)
-					path = d:calc(self.player.x, self.player.y, tmx, tmy, true)
-				end
-				self.test_x = tmx
-				self.text_y = tmy
-				self.test_path = path
-				self.test_sprite = core.display.newSurface(self.level.map.tile_w, self.level.map.tile_h)
-				self.test_sprite:erase(0, 0, 255, 90)
-			end
-]]
+			moving_around = true
+		-- Zoom map
+--		elseif button == "wheelup" then
+--			game.level.map:setZoom(0.1, tmx, tmy)
+--		elseif button == "wheeldown" then
+--			game.level.map:setZoom(-0.1, tmx, tmy)
+		-- Pass any other buttons to the keybinder
+		elseif button ~= "none" and not xrel and not yrel then
+			self.key:receiveKey(
+				button,
+				core.key.modState("ctrl") and true or false,
+				core.key.modState("shift") and true or false,
+				core.key.modState("alt") and true or false,
+				core.key.modState("meta") and true or false,
+				nil, false, true
+			)
 		end
+
+		if not xrel and not yrel then moving_around = false end
 	end)
 	-- Scroll message log
 	self.mouse:registerZone(self.logdisplay.display_x, self.logdisplay.display_y, self.w, self.h, function(button)

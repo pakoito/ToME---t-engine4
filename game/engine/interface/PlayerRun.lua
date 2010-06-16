@@ -123,7 +123,7 @@ function _M:runStep()
 	if not self.running then return false end
 
 	local ret, msg = self:runCheck()
-	if not ret then
+	if not ret and self.running.cnt > 1 then
 		self:runStop(msg)
 		return false
 	else
@@ -208,6 +208,7 @@ end
 
 --- Scan the run direction and sides with the given function
 function _M:runScan(fct)
+	fct(self.x, self.y)
 	if not self.running.path then
 		-- Ahead
 		local dx, dy = dir_to_coord[self.running.dir][1], dir_to_coord[self.running.dir][2]

@@ -364,9 +364,23 @@ static int lua_set_current_keyhandler(lua_State *L)
 
 	return 0;
 }
+static int lua_get_mod_state(lua_State *L)
+{
+	const char *mod = luaL_checkstring(L, 1);
+	SDLMod smod = SDL_GetModState();
+
+	if (!strcmp(mod, "shift")) lua_pushboolean(L, smod & KMOD_SHIFT);
+	else if (!strcmp(mod, "ctrl")) lua_pushboolean(L, smod & KMOD_CTRL);
+	else if (!strcmp(mod, "alt")) lua_pushboolean(L, smod & KMOD_ALT);
+	else if (!strcmp(mod, "meta")) lua_pushboolean(L, smod & KMOD_META);
+	else lua_pushnil(L);
+
+	return 1;
+}
 static const struct luaL_reg keylib[] =
 {
 	{"set_current_handler", lua_set_current_keyhandler},
+	{"modState", lua_get_mod_state},
 	{NULL, NULL},
 };
 

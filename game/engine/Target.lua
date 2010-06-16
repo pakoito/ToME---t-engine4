@@ -34,10 +34,13 @@ function _M:init(map, source_actor)
 
 	self.sr = core.display.newSurface(map.tile_w, map.tile_h)
 	self.sr:erase(255, 0, 0, 90)
+	self.sr = self.sr:glTexture()
 	self.sb = core.display.newSurface(map.tile_w, map.tile_h)
 	self.sb:erase(0, 0, 255, 90)
+	self.sb = self.sb:glTexture()
 	self.sg = core.display.newSurface(map.tile_w, map.tile_h)
 	self.sg:erase(0, 255, 0, 90)
+	self.sg = self.sg:glTexture()
 
 	self.source_actor = source_actor
 
@@ -73,21 +76,21 @@ function _M:display()
 		end
 		if self.target_type.range and math.sqrt((self.source_actor.x-lx)^2 + (self.source_actor.y-ly)^2) > self.target_type.range then s = self.sr end
 		if s == self.sb then stopx, stopy = lx, ly end
-		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
+		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 		lx, ly = l()
 	end
-	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w, self.display_y + (self.target.y - game.level.map.my) * self.tile_h, self.tile_w, self.tile_h)
+	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
 	if s == self.b then stopx, stopy = self.target.x, self.target.y end
 
 	if self.target_type.ball then
 		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(_, lx, ly)
-			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
+			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
 		end, function()end, nil)
 	elseif self.target_type.cone then
 		core.fov.calc_beam(stopx, stopy, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, lx, ly)
-			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w, self.display_y + (ly - game.level.map.my) * self.tile_h)
+			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
 		end, function()end, nil)
 	end
@@ -135,6 +138,12 @@ function _M:freemove(dir)
 	local d = dir_to_coord[dir]
 	self.target.x = self.target.x + d[1]
 	self.target.y = self.target.y + d[2]
+	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
+end
+
+function _M:setSpot(x, y)
+	self.target.x = x
+	self.target.y = y
 	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
 end
 

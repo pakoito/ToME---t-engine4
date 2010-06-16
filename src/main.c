@@ -194,6 +194,11 @@ void on_event(SDL_Event *event)
 			case SDL_BUTTON_WHEELDOWN:
 				lua_pushstring(L, "wheeldown");
 				break;
+			default:
+				lua_pushstring(L, "button");
+				lua_pushnumber(L, event->button.button);
+				lua_concat(L, 2);
+				break;
 			}
 			lua_pushnumber(L, event->button.x);
 			lua_pushnumber(L, event->button.y);

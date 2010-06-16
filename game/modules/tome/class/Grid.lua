@@ -71,6 +71,8 @@ function _M:tooltip()
 		else
 			return name
 		end
+	else
+		return self.name
 	end
 end
 
