@@ -215,7 +215,8 @@ function _M:drawDialog(s)
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 
-	local lines, helplines, reqlines = {}, {}, {}
+	local lines, helplines, reqlines = nil, {}, nil
+	local lines2, reqlines2 = nil, nil
 	if self.list[self.sel].type then
 		local str = ""
 		str = str .. "#00FFFF#Talent Category\n"
@@ -228,11 +229,19 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, and improve your character. You gain two talent point every level. You may also find trainers or artifacts that allow you to learn more.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
-		lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)
-		local req = self.actor:getTalentReqDesc(self.list[self.sel].talent, 1)
-		if req ~= "" then
-			req = "Requirements for next point:\n"..req
+
+		if self.actor:getTalentLevelRaw(t.id) > 0 then
+			lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)
+			local req = self.actor:getTalentReqDesc(self.list[self.sel].talent, 0)
+			req = "Current talent level: "..self.actor:getTalentLevelRaw(t.id).."\n"..req
 			reqlines = req:splitLines(self.iw / 2 - 10, self.font)
+		end
+
+		if self.actor:getTalentLevelRaw(t.id) < t.points then
+			local req2 = self.actor:getTalentReqDesc(self.list[self.sel].talent, 1)
+			req2 = "Next talent level: "..(self.actor:getTalentLevelRaw(t.id)+1).."\n"..req2
+			reqlines2 = req2:splitLines(self.iw / 2 - 10, self.font)
+			lines2 = self.actor:getTalentFullDescription(t, 1):splitLines(self.iw / 2 - 10, self.font)
 		end
 	end
 	local h = 2
@@ -248,20 +257,31 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		h = h + self.font:lineSkip()
 	end
 
-	if #reqlines > 0 then
+	if reqlines2 and lines2 then
+		self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
+		for i = 1, #reqlines2 do
+			s:drawColorString(self.font, reqlines2[i], self.iw / 2 + 5, h)
+			h = h + self.font:lineSkip()
+		end
+
+		for i = 1, #lines2 do
+			s:drawColorString(self.font, lines2[i], self.iw / 2 + 5, 2 + h)
+			h = h + self.font:lineSkip()
+		end
+	end
+
+	if reqlines and lines then
 		h = h + self.font:lineSkip()
 		self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 		for i = 1, #reqlines do
 			s:drawColorString(self.font, reqlines[i], self.iw / 2 + 5, h)
 			h = h + self.font:lineSkip()
 		end
-	end
 
-	h = h + self.font:lineSkip()
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-	for i = 1, #lines do
-		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + h)
-		h = h + self.font:lineSkip()
+		for i = 1, #lines do
+			s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + h)
+			h = h + self.font:lineSkip()
+		end
 	end
 
 	-- Talents

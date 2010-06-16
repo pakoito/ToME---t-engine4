@@ -872,7 +872,10 @@ end
 
 --- Return the full description of a talent
 -- You may overload it to add more data (like power usage, ...)
-function _M:getTalentFullDescription(t)
+function _M:getTalentFullDescription(t, addlevel)
+	local old = self.talents[t.id]
+	self.talents[t.id] = (self.talents[t.id] or 0) + (addlevel or 0)
+
 	local d = {}
 
 	if t.mode == "passive" then d[#d+1] = "#6fff83#Use mode: #00FF00#Passive"
@@ -891,8 +894,11 @@ function _M:getTalentFullDescription(t)
 	end
 	if t.cooldown then d[#d+1] = "#6fff83#Cooldown: #FFFFFF#"..t.cooldown end
 
+	local ret = table.concat(d, "\n").."\n#6fff83#Description: #FFFFFF#"..t.info(self, t)
 
-	return table.concat(d, "\n").."\n#6fff83#Description: #FFFFFF#"..t.info(self, t)
+	self.talents[t.id] = old
+
+	return ret
 end
 
 --- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction
