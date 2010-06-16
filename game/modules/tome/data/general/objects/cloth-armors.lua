@@ -37,7 +37,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	name = "woolen robe",
+	name = "woollen robe",
 	level_range = {10, 20},
 	cost = 1.5,
 	material_level = 2,

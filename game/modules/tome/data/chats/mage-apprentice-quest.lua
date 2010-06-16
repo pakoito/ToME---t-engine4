@@ -22,7 +22,7 @@ newChat{ id="welcome",
 Good day to you fellow traveller!]],
 	answers = {
 		{"What brings an apprentice mage in the wilds?", jump="quest", cond=function(npc, player) return not player:hasQuest("mage-apprentice") end},
-		{"I have a staff for you!",
+		{"I have something for you!",
 			jump="welcome",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(player, dialog) end
