@@ -31,8 +31,31 @@ _M.progs = {}
 function _M:init(name, args)
 	self.args = args or {}
 	self.name = name
+	self.totalname = self:makeTotalName()
+	print("[SHADER] making shader from", name, " into ", self.totalname)
 
 	if core.shader.active() then self:loaded() end
+end
+
+function _M:makeTotalName()
+	local str = {}
+	for k, v in pairs(self.args) do
+		if type(v) == "number" then
+			str[#str+1] = v
+		elseif type(v) == "table" then
+			if v.texture then
+				if v.is3d then str[#str+1] = k.."=tex3d("..v.texture..")"
+				else str[#str+1] = k.."=tex3d("..v.texture..")" end
+			elseif #v == 2 then
+				str[#str+1] = k.."=vec2("..v[1]..","..v[2]..")"
+			elseif #v == 3 then
+				str[#str+1] = k.."=vec3("..v[1]..","..v[2]..","..v[3]..")"
+			elseif #v == 4 then
+				str[#str+1] = k.."=vec4("..v[1]..","..v[2]..","..v[3]..","..v[4]..")"
+			end
+		end
+	end
+	return self.name.."["..table.concat(str,",").."]"
 end
 
 --- Serialization
@@ -83,38 +106,38 @@ function _M:createProgram(def)
 end
 
 function _M:loaded()
-	if _M.progs[self.name] then
-		self.shad = _M.progs[self.name]
-		print("[SHADER] using cached shader "..self.name)
+	if _M.progs[self.totalname] then
+		self.shad = _M.progs[self.totalname]
+		print("[SHADER] using cached shader "..self.totalname)
 	else
 		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
 		local f, err = loadfile("/data/gfx/shaders/"..self.name..".lua")
 		if not f and err then error(err) end
 		setfenv(f, setmetatable(self.args or {}, {__index=_G}))
 		local def = f()
-		_M.progs[self.name] = self:createProgram(def)
+		_M.progs[self.totalname] = self:createProgram(def)
 
 		for k, v in pairs(def.args) do
 			if type(v) == "number" then
 				print("[SHADER] setting param", k, v)
-				_M.progs[self.name]:paramNumber(k, v)
+				_M.progs[self.totalname]:paramNumber(k, v)
 			elseif type(v) == "table" then
 				if v.texture then
 					print("[SHADER] setting texture param", k, v.texture)
-					_M.progs[self.name]:paramTexture(k, v.texture, v.is3d)
+					_M.progs[self.totalname]:paramTexture(k, v.texture, v.is3d)
 				elseif #v == 2 then
 					print("[SHADER] setting vec2 param", k, v[1], v[2])
-					_M.progs[self.name]:paramNumber2(k, v[1], v[2])
+					_M.progs[self.totalname]:paramNumber2(k, v[1], v[2])
 				elseif #v == 3 then
 					print("[SHADER] setting vec3 param", k, v[1], v[2], v[3])
-					_M.progs[self.name]:paramNumber3(k, v[1], v[2], v[3])
+					_M.progs[self.totalname]:paramNumber3(k, v[1], v[2], v[3])
 				elseif #v == 4 then
 					print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
-					_M.progs[self.name]:paramNumber4(k, v[1], v[2], v[3], v[4])
+					_M.progs[self.totalname]:paramNumber4(k, v[1], v[2], v[3], v[4])
 				end
 			end
 		end
 	end
 
-	self.shad = _M.progs[self.name]
+	self.shad = _M.progs[self.totalname]
 end

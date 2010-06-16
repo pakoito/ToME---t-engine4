@@ -529,7 +529,7 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "wilderness-arda-fareast")
+				self:changeLevel(1, "town-gates-of-morning")
 			end
 		end,
 	}
