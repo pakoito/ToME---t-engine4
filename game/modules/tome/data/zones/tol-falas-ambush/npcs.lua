@@ -31,6 +31,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	max_life = 1500, life_rating = 15, fixed_rating = true,
 	rank = 4,
 	size_category = 3,
+	infravision = 20,
 
 	stun_immune = 1,
 	blind_immune = 1,

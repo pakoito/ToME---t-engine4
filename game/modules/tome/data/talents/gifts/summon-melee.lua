@@ -54,7 +54,8 @@ newTalent{
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(25,50),
-			life_rating = 4,
+			life_rating = 6,
+			infravision = 20,
 
 			combat_armor = 2, combat_def = 4,
 			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
@@ -117,6 +118,7 @@ newTalent{
 
 			max_life = resolvers.rngavg(25,50),
 			life_rating = 15,
+			infravision = 20,
 
 			combat_armor = 1, combat_def = 1,
 			never_move = 1,
@@ -178,6 +180,7 @@ newTalent{
 			max_stamina = 100,
 			life_rating = 13,
 			max_life = resolvers.rngavg(50,80),
+			infravision = 20,
 
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
@@ -247,6 +250,7 @@ newTalent{
 			max_stamina = 100,
 			life_rating = 13,
 			max_life = resolvers.rngavg(50,80),
+			infravision = 20,
 
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },

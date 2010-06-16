@@ -55,6 +55,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	max_life = 150, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	max_mana = 85,
+	infravision = 20,
 	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
 
 	stun_immune = 1,

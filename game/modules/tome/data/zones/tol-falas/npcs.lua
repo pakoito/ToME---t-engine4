@@ -37,6 +37,7 @@ newEntity{ define_as = "THE_MASTER",
 	max_stamina = 145,
 	rank = 5,
 	size_category = 3,
+	infravision = 20,
 	stats = { str=19, dex=19, cun=34, mag=25, con=16 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },

@@ -41,6 +41,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
 	rank = 4,
 	size_category = 4,
+	infravision = 20,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{

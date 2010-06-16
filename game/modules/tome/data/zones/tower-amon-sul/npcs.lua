@@ -37,6 +37,7 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	max_stamina = 85,
 	rank = 4,
 	size_category = 3,
+	infravision = 20,
 	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },

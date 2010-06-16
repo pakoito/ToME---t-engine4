@@ -29,6 +29,7 @@
 #include "script.h"
 //#include "shaders.h"
 
+extern bool shaders_active;
 extern void useShader(GLuint p, int x, int y, float a);
 
 static int map_object_new(lua_State *L)
@@ -406,9 +407,9 @@ inline void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i
 	}
 	int z;
 	if (m->shader) useShader(m->shader, i, j, a);
-	for (z = m->nb_textures - 1; z >= 0; z--)
+	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 	{
-		glActiveTexture(GL_TEXTURE0+z);
+		if (shaders_active) glActiveTexture(GL_TEXTURE0+z);
 		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 	}
 	glBegin(GL_QUADS);

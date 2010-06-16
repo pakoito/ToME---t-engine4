@@ -36,6 +36,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	rank = 4,
 	size_category = 4,
 	can_breath={water=1},
+	infravision = 20,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },

@@ -154,6 +154,7 @@ newTalent{
 
 			max_life = resolvers.rngavg(5,10),
 			life_rating = 8,
+			infravision = 20,
 
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=1, atk=1, },
@@ -220,6 +221,7 @@ newTalent{
 
 			max_life = resolvers.rngavg(5,10),
 			life_rating = 10,
+			infravision = 20,
 
 			combat_armor = 7, combat_def = 0,
 			combat = { dam=12, atk=5, },
@@ -289,6 +291,7 @@ newTalent{
 
 			max_life = resolvers.rngavg(5,10),
 			life_rating = 8,
+			infravision = 20,
 
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=1, atk=1, },
@@ -357,6 +360,7 @@ newTalent{
 
 			max_life = resolvers.rngavg(100, 150),
 			life_rating = 12,
+			infravision = 20,
 
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=15, atk=10, apr=15 },

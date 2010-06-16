@@ -128,6 +128,7 @@ newTalent{
 
 			resolvers.talents{ [Talents.T_STUN]=2 },
 			max_stamina = 100,
+			infravision = 20,
 
 			resists = { [DamageType.COLD] = 20, [DamageType.NATURE] = 20 },
 			level_range = {self.level, self.level}, exp_worth = 0,
