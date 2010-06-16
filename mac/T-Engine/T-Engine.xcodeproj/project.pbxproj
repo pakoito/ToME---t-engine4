@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28133EF911C9094A00A7FDAC /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EF811C9094900A7FDAC /* glew.c */; };
+		28133EFD11C9096E00A7FDAC /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EFC11C9096E00A7FDAC /* shaders.c */; };
 		285E4C5011B3B41C00E7CAD8 /* noise_c.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C4F11B3B41C00E7CAD8 /* noise_c.c */; };
 		285E4C5211B3B42700E7CAD8 /* noise.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C5111B3B42700E7CAD8 /* noise.c */; };
 		28B4238A119F50AE00562F94 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B42386119F50AE00562F94 /* SDL_image.framework */; };
@@ -134,6 +136,11 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		256AC3F00F4B6AF500CF3369 /* T_Engine_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T_Engine_Prefix.pch; sourceTree = "<group>"; };
+		28133EF811C9094900A7FDAC /* glew.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glew.c; path = ../../src/glew.c; sourceTree = SOURCE_ROOT; };
+		28133EFA11C9095100A7FDAC /* glew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glew.h; path = ../../src/glew.h; sourceTree = SOURCE_ROOT; };
+		28133EFB11C9095500A7FDAC /* glxew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glxew.h; path = ../../src/glxew.h; sourceTree = SOURCE_ROOT; };
+		28133EFC11C9096E00A7FDAC /* shaders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shaders.c; path = ../../src/shaders.c; sourceTree = SOURCE_ROOT; };
+		28133EFE11C9097600A7FDAC /* wglew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wglew.h; path = ../../src/wglew.h; sourceTree = SOURCE_ROOT; };
 		285E4C4D11B3B41C00E7CAD8 /* libtcod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libtcod.h; sourceTree = "<group>"; };
 		285E4C4E11B3B41C00E7CAD8 /* noise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = noise.h; sourceTree = "<group>"; };
 		285E4C4F11B3B41C00E7CAD8 /* noise_c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = noise_c.c; sourceTree = "<group>"; };
@@ -640,6 +647,8 @@
 				28B42606119F520F00562F94 /* display_sdl.h */,
 				28B42607119F520F00562F94 /* display.h */,
 				28B42608119F520F00562F94 /* getself.h */,
+				28133EFA11C9095100A7FDAC /* glew.h */,
+				28133EFB11C9095500A7FDAC /* glxew.h */,
 				28B42609119F520F00562F94 /* main.h */,
 				28B4260A119F520F00562F94 /* map.h */,
 				28B4260B119F520F00562F94 /* music.h */,
@@ -649,14 +658,17 @@
 				28B4260F119F520F00562F94 /* SFMT-params19937.h */,
 				28B42610119F520F00562F94 /* SFMT.h */,
 				28B42611119F520F00562F94 /* types.h */,
+				28133EFE11C9097600A7FDAC /* wglew.h */,
 				28B42613119F520F00562F94 /* core_lua.c */,
 				28B42614119F520F00562F94 /* display_sdl.c */,
+				28133EF811C9094900A7FDAC /* glew.c */,
 				28B42616119F520F00562F94 /* main.c */,
 				28B42617119F520F00562F94 /* map.c */,
 				28B42618119F520F00562F94 /* music.c */,
 				285E4C5111B3B42700E7CAD8 /* noise.c */,
 				28B42619119F520F00562F94 /* particles.c */,
 				28B4261A119F520F00562F94 /* SFMT.c */,
+				28133EFC11C9096E00A7FDAC /* shaders.c */,
 				28B4261B119F520F00562F94 /* struct.c */,
 				28B424F7119F51A600562F94 /* dynasm */,
 				28B424FC119F51A600562F94 /* fov */,
@@ -865,6 +877,8 @@
 				28B426B0119F673600562F94 /* posix.c in Sources */,
 				285E4C5011B3B41C00E7CAD8 /* noise_c.c in Sources */,
 				285E4C5211B3B42700E7CAD8 /* noise.c in Sources */,
+				28133EF911C9094A00A7FDAC /* glew.c in Sources */,
+				28133EFD11C9096E00A7FDAC /* shaders.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
