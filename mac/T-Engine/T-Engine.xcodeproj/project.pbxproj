@@ -780,7 +780,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\n[ \"$ACTION\" = build ] || exit 0\n[ \"$BUILD_VARIANTS\" = \"normal\" ] || exit 0\n\ndir=\"$DERIVED_FILES_DIR/disk\"\ndmg=\"$SCRIPT_OUTPUT_FILE_0\"\necho Creating Disk Image....\nrm -rf \"$dir\"\nmkdir -p \"$dir\"\necho - Assembling Disk Image...\nfor a in `ruby -e \"(0...(ENV['SCRIPT_INPUT_FILE_COUNT'].to_i)).to_a.collect { |i| print (ENV['SCRIPT_INPUT_FILE_' + i.to_s] + ' ') }\"`\ndo\n\tcp -R \"$a\" \"$dir\"\ndone\nrm -f \"$dmg\"\necho - Creating Disk Image...\nhdiutil create -format UDZO -srcfolder \"$dir\" -volname \"$TARGET_NAME\" \"$dmg\"\necho - Removing Intermediate...\nrm -rf \"$dir\"\necho Done.";
+			shellScript = "set -e\n\n[ \"$ACTION\" = build ] || exit 0\n[ \"$BUILD_VARIANTS\" = \"normal\" ] || exit 0\n[ \"$BUILD_STYLE\" = \"Release\" ] || exit 0\n\ndir=\"$DERIVED_FILES_DIR/disk\"\ndmg=\"$SCRIPT_OUTPUT_FILE_0\"\necho Creating Disk Image....\nrm -rf \"$dir\"\nmkdir -p \"$dir\"\necho - Assembling Disk Image...\nfor a in `ruby -e \"(0...(ENV['SCRIPT_INPUT_FILE_COUNT'].to_i)).to_a.collect { |i| print (ENV['SCRIPT_INPUT_FILE_' + i.to_s] + ' ') }\"`\ndo\n\tcp -R \"$a\" \"$dir\"\ndone\nrm -f \"$dmg\"\necho - Creating Disk Image...\nhdiutil create -format UDZO -srcfolder \"$dir\" -volname \"$TARGET_NAME\" \"$dmg\"\necho - Removing Intermediate...\nrm -rf \"$dir\"\necho Done.";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
