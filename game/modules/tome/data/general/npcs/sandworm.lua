@@ -23,7 +23,7 @@ newEntity{
 	define_as = "BASE_NPC_SANDWORM",
 	type = "vermin", subtype = "sandworm",
 	display = "w", color=colors.YELLOW,
-	level_range = {15, 50},
+	level_range = {15, nil},
 	body = { INVEN = 10 },
 
 	infravision = 20,

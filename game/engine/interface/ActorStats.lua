@@ -29,6 +29,8 @@ _M.stats_def = {}
 function _M:defineStat(name, short_name, default_value, min, max, desc)
 	assert(name, "no stat name")
 	assert(short_name, "no stat short_name")
+	local no_max = false
+	if type(max) == "table" then no_max = max.no_max; max = max[1] end
 	table.insert(self.stats_def, {
 		name = name,
 		short_name = short_name,
@@ -36,6 +38,7 @@ function _M:defineStat(name, short_name, default_value, min, max, desc)
 		def = default_value or 10,
 		min = min or 1,
 		max = max or 100,
+		no_max = no_max,
 	})
 	self.stats_def[#self.stats_def].id = #self.stats_def
 	self.stats_def[short_name] = self.stats_def[#self.stats_def]
@@ -70,7 +73,11 @@ function _M:incStat(stat, val)
 	end
 
 	local old = self:getStat(stat)
-	self.stats[stat] = math.max(math.min(self.stats[stat] + val, _M.stats_def[stat].max), _M.stats_def[stat].min)
+	if _M.stats_def[stat].no_max then
+		self.stats[stat] = math.max(self.stats[stat] + val, _M.stats_def[stat].min)
+	else
+		self.stats[stat] = math.max(math.min(self.stats[stat] + val, _M.stats_def[stat].max), _M.stats_def[stat].min)
+	end
 	if self:getStat(stat) ~= old then
 		self:onStatChange(stat, self:getStat(stat) - old)
 	end
@@ -94,7 +101,11 @@ function _M:getStat(stat, scale, raw, no_inc)
 		val = self.stats[stat]
 		inc = self.inc_stats[stat]
 	end
-	val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + ((not no_inc) and inc or 0)
+	if _M.stats_def[stat].no_max then
+		val = math.max(val, _M.stats_def[stat].min) + ((not no_inc) and inc or 0)
+	else
+		val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + ((not no_inc) and inc or 0)
+	end
 	if scale then
 		if not raw then
 			val = math.floor(val * scale / _M.stats_def[stat].max)
@@ -113,7 +124,7 @@ function _M:isStatMax(stat)
 	else
 		val = self.stats[stat]
 	end
-	if math.floor(val) == _M.stats_def[stat].max then return true end
+	if math.floor(val) >= _M.stats_def[stat].max then return true end
 end
 
 --- Notifies a change of stat value

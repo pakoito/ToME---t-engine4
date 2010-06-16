@@ -94,10 +94,10 @@ function _M:computeRarities(type, list, level, filter)
 
 			local max = 10000
 			if lev < e.level_range[1] then max = 10000 / (3 * (e.level_range[1] - lev))
-			elseif lev > e.level_range[2] then max = 10000 / (lev - e.level_range[2])
+			elseif e.level_range[2] and lev > e.level_range[2] then max = 10000 / (lev - e.level_range[2])
 			end
 			local genprob = math.ceil(max / e.rarity)
-			print(("Entity(%30s) got %3d (=%3d / %3d) chance to generate. Level range(%2d-%2d), current %2d"):format(e.name, math.floor(genprob), math.floor(max), e.rarity, e.level_range[1], e.level_range[2], lev))
+			print(("Entity(%30s) got %3d (=%3d / %3d) chance to generate. Level range(%2d-%2s), current %2d"):format(e.name, math.floor(genprob), math.floor(max), e.rarity, e.level_range[1], e.level_range[2] or "--", lev))
 
 			-- Generate and store egos list if needed
 			if e.egos and e.egos_chance then
