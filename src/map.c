@@ -58,7 +58,6 @@ static int map_object_new(lua_State *L)
 static int map_object_free(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
-	int i;
 
 	free(obj->textures);
 	free(obj->textures_is3d);
