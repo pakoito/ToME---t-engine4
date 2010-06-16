@@ -388,7 +388,8 @@ static int map_set_scroll(lua_State *L)
 	return 0;
 }
 
-inline void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure)
+inline void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure) ALWAYS_INLINE;
+void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure)
 {
 	if (!obscure)
 	{

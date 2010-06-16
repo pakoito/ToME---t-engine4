@@ -27,4 +27,12 @@ typedef char bool;
 #define FALSE 0
 #define TRUE 1
 
+#ifndef ALWAYS_INLINE
+#ifdef __GNUC__
+#define ALWAYS_INLINE __attribute__((always_inline))
+#else
+#define ALWAYS_INLINE
+#endif
+#endif
+
 #endif
