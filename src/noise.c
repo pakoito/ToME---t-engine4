@@ -176,13 +176,11 @@ static int noise_turbulence_wavelet(lua_State *L)
 static int noise_texture2d(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	const char *type = luaL_checkstring(L, 2);
 	int w = luaL_checknumber(L, 3);
 	int h = luaL_checknumber(L, 4);
 	float zoom = luaL_checknumber(L, 5);
 	float x = luaL_checknumber(L, 6);
 	float y = luaL_checknumber(L, 7);
-	float octave = lua_tonumber(L, 8);
 	GLubyte *map = malloc(w * h * 3 * sizeof(GLubyte));
 
 	float p[2];
@@ -219,7 +217,6 @@ static int noise_texture2d(lua_State *L)
 static int noise_texture3d(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	const char *type = luaL_checkstring(L, 2);
 	int w = luaL_checknumber(L, 3);
 	int h = luaL_checknumber(L, 4);
 	int d = luaL_checknumber(L, 5);
@@ -227,7 +224,6 @@ static int noise_texture3d(lua_State *L)
 	float x = luaL_checknumber(L, 7);
 	float y = luaL_checknumber(L, 8);
 	float z = luaL_checknumber(L, 9);
-	float octave = lua_tonumber(L, 10);
 	GLubyte *map = malloc(w * h * d * 3 * sizeof(GLubyte));
 
 	float p[3];
