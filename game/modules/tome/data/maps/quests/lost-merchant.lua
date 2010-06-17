@@ -63,6 +63,8 @@ defineTile('P', "FLOOR", nil, mod.class.NPC.new{
 		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
 		game.logSeen(who, "As the assassin dies the magical veil protecting the stairs out vanishes.")
 	end,
+
+	is_assassin_lord = true,
 })
 
 defineTile('@', "FLOOR", nil, mod.class.NPC.new{

@@ -53,3 +53,14 @@ leave_zone = function(self, who)
 	end
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED)
 end
+
+is_assassin_alive = function(self)
+	local assassin_alive = false
+	for uid, e in pairs(game.level.entities) do
+		if e.is_assassin_lord and not e.dead then
+			assassin_alive = true
+			break
+		end
+	end
+	return assassin_alive
+end

@@ -24,4 +24,16 @@ newChat{ id="welcome",
 		{"Sorry I have to go!"},
 	}
 }
-return "welcome"
+
+newChat{ id="welcome2",
+	text = [[Please get me out of here!]],
+	answers = {
+		{"Come, there is a way out!"},
+	}
+}
+
+if game.player:hasQuest("lost-merchant") and game.player:hasQuest("lost-merchant"):is_assassin_alive() then
+	return "welcome"
+else
+	return "welcome2"
+end
