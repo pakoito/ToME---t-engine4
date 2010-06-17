@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function cancelHymns(self)
-	local hymns = {self.T_HYMN_OF_SHADOW, self.T_HYMN_OF_DETECTION, self.T_HYMN_OF_PERSEVERANCE, self.T_HYMN_OF_MOONLIGHT}
+	local hymns = {self.T_HYMN_OF_SHADOWS, self.T_HYMN_OF_DETECTION, self.T_HYMN_OF_PERSEVERANCE, self.T_HYMN_OF_MOONLIGHT}
 	for i, t in ipairs(hymns) do
 		if self:isTalentActive(t) then
 			local old = self.energy.value

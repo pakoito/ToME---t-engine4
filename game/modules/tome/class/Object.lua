@@ -308,5 +308,5 @@ end
 
 --- Get item cost
 function _M:getPrice()
-	return self.cost
+	return self.cost or 0
 end

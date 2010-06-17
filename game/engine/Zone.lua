@@ -301,6 +301,9 @@ end
 -- @param y the coordinates where to add it. This CAN be null in which case it wont be added to the map
 function _M:addEntity(level, e, typ, x, y)
 	if typ == "actor" then
+		-- We are additing it, this means there is no old position
+		e.x = nil
+		e.y = nil
 		if x and y then e:move(x, y, true) end
 		level:addEntity(e)
 		e:added()

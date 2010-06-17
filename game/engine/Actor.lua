@@ -102,7 +102,12 @@ function _M:move(x, y, force)
 	end
 	self.old_x, self.old_y = self.x or x, self.y or y
 	self.x, self.y = x, y
+	if map(x, y, Map.ACTOR) then
+		print("[MOVE] WARNING erasing actor!!!")
+		util.show_backtrace()
+	end
 	map(x, y, Map.ACTOR, self)
+--	print("[MOVE]", self.uid, x, y)
 
 	-- Update particle emitters attached to that actor
 	for e, _ in pairs(self.__particles) do

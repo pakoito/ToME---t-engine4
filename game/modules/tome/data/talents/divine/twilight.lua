@@ -155,7 +155,7 @@ newTalent{
 		if not target or self:reactionToward(target) >= 0 then return end
 
 		-- Find space
-		local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+		local x, y = util.findFreeGrid(tx, ty, 1, true, {[Map.ACTOR]=true})
 		if not x then
 			game.logPlayer(self, "Not enough space to summon!")
 			return
@@ -166,8 +166,10 @@ newTalent{
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 3,
-			ai_target = {actor=target}
+			ai_target = {actor=target},
+			ai = "summoned", ai_real = target.ai,
 		}
+		m.energy.value = 0
 		m.life = m.life / 2
 
 		game.zone:addEntity(game.level, m, "actor", x, y)

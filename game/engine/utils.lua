@@ -401,6 +401,7 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 	for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 		local ok = true
 		for w, _ in pairs(what) do
+--			print("findFreeGrid test", x, y, w, ":=>", game.level.map(x, y, w))
 			if game.level.map(x, y, w) then ok = false end
 		end
 		if game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then ok = false end
@@ -420,6 +421,7 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 		end
 	end)
 
+--	print("findFreeGrid using", gs[1][1], gs[1][2])
 	return gs[1][1], gs[1][2]
 end
 

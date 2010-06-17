@@ -68,9 +68,9 @@ newTalent{
 	range = 6,
 	action = function(self, t)
 		local tg = {type="ball", range=0, friendlyfire=true, radius=2 + self:getTalentLevel(t) / 2, talent=t}
+		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		tg.friendlyfire = false
 		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
-		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		if self:getTalentLevel(t) then
 			self:project(tg, self.x, self.y, DamageType.LIGHT, 4 + self:combatSpellpower(0.15) * self:getTalentLevel(t))
 		end

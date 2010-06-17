@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Designate a target as martyr. When the martyr deals damage it also damages it for %d%%.
+		return ([[Designate a target as martyr. When the martyr deals damage it also damages itself for %d%% of its damage dealt.
 		The damage percent will increase with the Magic stat]]):
 		format(
 			8 * self:getTalentLevelRaw(t)
