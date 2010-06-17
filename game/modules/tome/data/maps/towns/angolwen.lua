@@ -23,7 +23,7 @@ quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move
 quickEntity('o', {name='fountain', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png"})
 quickEntity(' ', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
 
-quickEntity('2', {show_tooltip=true, name="Jewelry", display='2', color=colors.BLUE, resolvers.store("ANGOLWEN_JEWELRY"), image="terrain/wood_store_closed.png"})
+quickEntity('2', {show_tooltip=true, name="Jewelry", display='2', color=colors.BLUE, resolvers.store("ANGOLWEN_JEWELRY"), image="terrain/terrain/wood_store_gem.png"})
 quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
 quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), image="terrain/wood_store_book.png"})
 quickEntity('6', {show_tooltip=true, name="Staves & Wands", display='6', color=colors.RED, resolvers.store("ANGOLWEN_STAFF_WAND"), image="terrain/wood_store_closed.png"})

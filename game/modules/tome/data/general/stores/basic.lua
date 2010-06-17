@@ -101,6 +101,23 @@ newEntity{
 	},
 }
 
+
+newEntity{
+	define_as = "GEMSTORE",
+	name = "gem store",
+	display = '9', color=colors.BLUE,
+	store = {
+		restock_after = 1000,
+		empty_before_restock = true,
+		buy_percent = 10,
+		min_fill = 40,
+		max_fill = 60,
+		filters = {
+			{type="gem", id=true},
+		},
+	},
+}
+
 newEntity{
 	define_as = "ANGOLWEN_STAFF_WAND",
 	name = "staves and wands store",
