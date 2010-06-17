@@ -284,7 +284,8 @@ end
 
 local type_sort = {
 	potion = 1,
-	jewelry = 2,
+	scroll = 1,
+	jewelry = 3,
 	weapon = 100,
 	armor = 101,
 }

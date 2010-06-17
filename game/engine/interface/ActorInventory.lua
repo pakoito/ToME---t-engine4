@@ -130,7 +130,7 @@ end
 -- @param inven the inventory to drop from
 -- @param item the item id to drop
 -- @param no_unstack if the item was a stack takes off the whole stack if true
--- @return the object removed or nil if no item existed
+-- @return the object removed or nil if no item existed and a boolean saying if there is no more objects
 function _M:removeObject(inven, item, no_unstack)
 	if type(inven) == "number" then inven = self.inven[inven] end
 
@@ -153,7 +153,7 @@ function _M:removeObject(inven, item, no_unstack)
 
 	self:onRemoveObject(o)
 
-	return o
+	return o, finish
 end
 
 --- Called upon removing an object
