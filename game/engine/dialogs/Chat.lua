@@ -48,10 +48,14 @@ function _M:init(chat, id)
 		ACCEPT = function() self:use() end,
 	})
 	self:mouseZones{
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			if button == "left" then self:use()
-			elseif button == "right" then
+		{ x=0, y=0, w=self.w, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
+			if y >= self.start_answer_y then
+				ty = ty - self.start_answer_y
+				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+				self.changed = true
+				if button == "left" then self:use()
+				elseif button == "right" then
+				end
 			end
 		end },
 	}
@@ -127,6 +131,7 @@ function _M:drawDialog(s)
 	self:drawWBorder(s, 5, h + 0.5 * self.font:lineSkip(), self.iw - 10)
 
 	-- Answers
+	self.start_answer_y = h + 1.5 * self.font:lineSkip()
 	self:drawSelectionList(s, 5, h + 1.5 * self.font:lineSkip(), self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, self.iw - 10)
 	self.changed = false
 end
