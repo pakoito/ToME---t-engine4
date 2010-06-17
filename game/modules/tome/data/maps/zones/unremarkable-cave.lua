@@ -32,7 +32,7 @@ subGenerator{
 		rooms = {"simple", "pilar"},
 		['.'] = "FLOOR",
 		['#'] = "WALL",
-		up = "UP",
+		up = "UP_WILDERNESS_FAR_EAST",
 		door = "DOOR",
 		force_tunnels = {
 			{"random", {85, 25}, id=-500},

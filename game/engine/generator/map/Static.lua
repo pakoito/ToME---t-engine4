@@ -64,7 +64,7 @@ function _M:loadMap(file)
 		end,
 		prepareEntitiesList = function(type, class, file)
 			local list = require(class):loadList(file)
-			self.level:setEntitiesList(type, self.zone:computeRarities(type, list, self.level, nil))
+			self.level:setEntitiesList(type, list)
 		end,
 		addData = function(t)
 			table.merge(self.level.data, t, true)

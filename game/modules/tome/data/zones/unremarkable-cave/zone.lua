@@ -48,12 +48,4 @@ return {
 			nb_trap = {10, 15},
 		},
 	},
-	levels =
-	{
-		[1] = {
-			generator = { map = {
-				up = "UP_WILDERNESS",
-			}, },
-		},
-	},
 }
