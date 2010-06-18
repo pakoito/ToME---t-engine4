@@ -122,7 +122,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("combat_physspeed", p.speed)
 		self:removeTemporaryValue("combat_physcrit", p.crit)
-		self:removeTemporaryValue("combat_apr", p.apr)
+		self:removeTemporaryValue("combat_dam", p.dam)
 		self:removeTemporaryValue("combat_atk", p.atk)
 		return true
 	end,
