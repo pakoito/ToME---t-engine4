@@ -59,8 +59,8 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.NATURE] = resolvers.mbonus_material(30, 10)},
-	},                                                                     , function(e, v) return v * 0.15 end
+		resists={[DamageType.NATURE] = resolvers.mbonus_material(30, 10, function(e, v) return v * 0.15 end)},
+	},
 }
 
 newEntity{
