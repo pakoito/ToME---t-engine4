@@ -91,11 +91,19 @@ function _M:descAttribute(attr)
 	elseif attr == "DAMBONUS" then
 		local stat, i = next(self.wielder.inc_damage)
 		return (i > 0 and "+"..i or tostring(i)).."%"
+	elseif attr == "RESIST" then
+		local stat, i = next(self.wielder.resists)
+		return (i > 0 and "+"..i or tostring(i)).."%"
+	elseif attr == "REGEN" then
+		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen
+		return ("%s%0.2f/turn"):format(i > 0 and "+" or "-", math.abs(i))
 	elseif attr == "COMBAT" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." dam, "..(c.apr or 0).." apr"
 	elseif attr == "ARMOR" then
 		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armor"
+	elseif attr == "ATTACK" then
+		return (self.wielder and self.wielder.combat_atk or 0).." attack, "..(self.wielder and self.wielder.combat_apr or 0).." apr"..(self.wielder and self.wielder.combat_dam or 0).." dam"
 	elseif attr == "MONEY" then
 		return ("worth %0.2f"):format(self.money_value / 10)
 	end
@@ -262,8 +270,8 @@ function _M:getDesc()
 	if w.knockback_immune then desc[#desc+1] = ("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100) end
 	if w.instakill_immune then desc[#desc+1] = ("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100) end
 
-	if w.life_regen then desc[#desc+1] = ("Regenerates %d hitpoints each turn."):format(w.life_regen) end
-	if w.mana_regen then desc[#desc+1] = ("Regenerates %d mana each turn."):format(w.mana_regen) end
+	if w.life_regen then desc[#desc+1] = ("Regenerates %0.2f hitpoints each turn."):format(w.life_regen) end
+	if w.mana_regen then desc[#desc+1] = ("Regenerates %0.2f mana each turn."):format(w.mana_regen) end
 
 	if w.max_life then desc[#desc+1] = ("Maximum life %d"):format(w.max_life) end
 	if w.max_mana then desc[#desc+1] = ("Maximum mana %d"):format(w.max_mana) end

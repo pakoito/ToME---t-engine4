@@ -26,7 +26,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2) },
+		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
 	},
 }
 newEntity{
@@ -35,7 +35,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(8, 2) },
+		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
 	},
 }
 newEntity{
@@ -87,14 +87,16 @@ newEntity{
 		local tt = tts[rng.range(1, #tts)]
 
 		e.wielder.talents_types_mastery = {}
-		e.wielder.talents_types_mastery[tt] = (10 + rng.mbonus(math.ceil(30 * e.material_level / 5), resolvers.current_level, 50)) / 100
+		local v = (10 + rng.mbonus(math.ceil(30 * e.material_level / 5), resolvers.current_level, 50)) / 100
+		e.wielder.talents_types_mastery[tt] = v
+		e.cost = e.cost + v * 60
 	end),
 }
 newEntity{
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
 	rarity = 15,
-	cost = 15,
+	cost = 25,
 	wielder = {
 		esp = {all=1},
 	},
