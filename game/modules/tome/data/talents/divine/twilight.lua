@@ -161,6 +161,17 @@ newTalent{
 			return
 		end
 
+		if target.rank >= 4 or -- No boss
+			target.on_die or -- No special die handler
+			target.on_acquire_target or -- No special vision handled
+			target.seen_by or -- No special vision handled
+			target.can_talk or -- No talking things
+			target:reactionToward(self) >= 0 -- No friends
+			then
+			game.logPlayer(self, "%s resists!", target.name:capitalize())
+			return true
+		end
+
 		local m = target:clone{
 			no_drops = true,
 			faction = self.faction,

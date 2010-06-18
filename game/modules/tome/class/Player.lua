@@ -504,7 +504,7 @@ end
 -- if no monsters in sight it will try to make an A* path, if it fails it will do a direct path
 -- if there are monsters in sight it will move one stop in the direct path direction
 function _M:mouseMove(tmx, tmy)
-	if config.settings.tome.cheat and game.key.status[game.key._LSHIFT] and game.key.status[game.key._LCTRL] then
+	if config.settings.tome.cheat and core.key.modState("ctrl") then
 		game.log("[CHEAT] teleport to %dx%d", tmx, tmy)
 		self:move(tmx, tmy, true)
 	else

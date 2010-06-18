@@ -529,7 +529,7 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "infinite-dungeon")
+				self:changeLevel(1, "wilderness-arda-fareast")
 			end
 		end,
 	}
@@ -796,11 +796,11 @@ function _M:setupMouse()
 		end
 
 		-- Move
-		if button == "left" and not xrel and not yrel and not moving_around then
+		if button == "left" and not core.key.modState("shift") and not moving_around then
 			if self.key == self.normal_key then self.player:mouseMove(tmx, tmy) end
 
 		-- Move map around
-		elseif button == "left" and xrel and yrel then
+		elseif button == "left" and xrel and yrel and core.key.modState("shift") then
 			derivx = derivx + xrel
 			derivy = derivy + yrel
 			game.level.map.changed = true
