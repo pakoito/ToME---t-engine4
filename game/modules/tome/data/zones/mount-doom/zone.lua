@@ -21,15 +21,15 @@ return {
 	name = "Mount Doom",
 	level_range = {30, 35},
 	level_scheme = "player",
-	max_level = 3,
+	max_level = 1,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 12, height = 500,
-	all_remembered = true,
+--	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
 	no_level_connectivity = true,
-	ambiant_music = "a_lomos_del_dragon_blanco.ogg",
+	ambiant_music = "Hold the Line.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
@@ -37,12 +37,10 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
+			area = {x1=0, x2=11, y1=30, y2=410},
+			nb_npc = {30, 30},
 			rate = 0.25,
-		},
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
+			max_attackers = 12,
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
@@ -50,7 +48,11 @@ return {
 		},
 	},
 
+	post_process = function(level)
+		level.turn_counter = 700 * 10
+	end,
 	on_turn = function(self)
 		require("mod.class.generator.actor.MountDoom").new(self, game.level.map, game.level, {}):tick()
+		game.level.turn_counter = game.level.turn_counter - 1
 	end,
 }

@@ -17,11 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/rodent.lua")
-load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/molds.lua")
-load("/data/general/npcs/skeleton.lua")
-load("/data/general/npcs/snake.lua")
+load("/data/general/npcs/faeros.lua")
+load("/data/general/npcs/fire_elemental.lua")
+load("/data/general/npcs/molten_golem.lua")
+load("/data/general/npcs/fire-drake.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -77,6 +76,36 @@ newEntity{ base = "BASE_NPC_SUNWALL_DEFENDER", define_as = "SUN_PALADIN_DEFENDER
 	end,
 }
 
+newEntity{ base = "BASE_NPC_SUNWALL_DEFENDER", define_as = "SUN_PALADIN_DEFENDER_RODMOUR",
+	name = "High Sun-Paladin Rodmour", color=colors.VIOLET,
+	desc = [[A human in a shiny plate armour.]],
+	level_range = {70, nil}, exp_worth = 1,
+	rank = 3,
+	positive_regen = 10,
+	life_regen = 5,
+	max_life = resolvers.rngavg(240,270),
+	resolvers.equip{
+		{type="weapon", subtype="mace", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="massive", autoreq=true},
+	},
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_CHANT_OF_FORTRESS]=5,
+		[Talents.T_SEARING_LIGHT]=5,
+		[Talents.T_MARTYRDOM]=5,
+		[Talents.T_WEAPON_OF_LIGHT]=5,
+		[Talents.T_FIREBEAM]=5,
+		[Talents.T_WEAPON_COMBAT]=10,
+		[Talents.T_HEALING_LIGHT]=5,
+	},
+	on_added = function(self)
+		self.energy.value = game.energy_to_act self:useTalent(self.T_WEAPON_OF_LIGHT)
+		self.energy.value = game.energy_to_act self:useTalent(self.T_CHANT_OF_FORTRESS)
+		self:doEmote("Go "..game.player.name.."! We will hold the line!", 150)
+	end,
+}
+
 newEntity{
 	define_as = "BASE_NPC_ORC_ATTACKER",
 	type = "humanoid", subtype = "orc",
@@ -105,7 +134,6 @@ newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "URUK-HAI_ATTACK",
 	name = "uruk-hai", color=colors.DARK_RED,
 	desc = [[A fierce soldier-orc.]],
 	level_range = {42, nil}, exp_worth = 1,
-	rarity = 6,
 	max_life = resolvers.rngavg(120,140),
 	life_rating = 8,
 	resolvers.equip{
@@ -118,4 +146,10 @@ newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "URUK-HAI_ATTACK",
 		[Talents.T_RUSH]=4,
 		[Talents.T_WEAPON_COMBAT]=4,
 	},
+	on_added = function(self)
+		game.level.nb_attackers = (game.level.nb_attackers or 0) + 1
+	end,
+	on_die = function(self)
+		game.level.nb_attackers = game.level.nb_attackers - 1
+	end,
 }

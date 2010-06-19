@@ -20,6 +20,7 @@
 require "engine.class"
 local ActorAI = require "engine.interface.ActorAI"
 local Faction = require "engine.Faction"
+local Emote = require("engine.Emote")
 require "mod.class.Actor"
 
 module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI))
@@ -43,6 +44,11 @@ function _M:act()
 	-- Let the AI think .... beware of Shub !
 	-- If AI did nothing, use energy anyway
 	self:doAI()
+
+	if self.emote_random and rng.percent(self.emote_random.chance) then
+		self:doEmote(rng.table(self.emote_random))
+	end
+
 	if not self.energy.used then self:useEnergy() end
 end
 
@@ -119,4 +125,15 @@ Target: %s
 UID: %d]]):format(
 	self.ai_target.actor and self.ai_target.actor.name or "none",
 	self.uid)
+end
+
+--- Make emotes appear in the log too
+function _M:setEmote(e)
+	game.logSeen(self, "%s says: '%s'", self.name:capitalize(), e.text)
+	mod.class.Actor.setEmote(self, e)
+end
+
+--- Simple emote
+function _M:doEmote(text, dur, color)
+	self:setEmote(Emote.new(text, dur, color))
 end

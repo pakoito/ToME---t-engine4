@@ -21,7 +21,8 @@ defineTile("'", "LAVA_FLOOR")
 defineTile('~', "LAVA")
 defineTile('#', "LAVA_WALL")
 defineTile(' ', "FLOOR")
-defineTile('@', "FLOOR", nil, "SUN_PALADIN_DEFENDER")
+defineTile('p', "FLOOR", nil, "SUN_PALADIN_DEFENDER")
+defineTile('@', "FLOOR", nil, "SUN_PALADIN_DEFENDER_RODMOUR")
 defineTile('o', "FLOOR", nil, "URUK-HAI_ATTACK")
 
 subGenerator{
@@ -49,18 +50,18 @@ return [[
 #          #
 ##         #
 ###       ##
-###@@@@@# ##
+###pp@pp# ##
 ##      ####
 ###     ####
 ##      ####
 ###      ###
 ###     ####
 ####   #####
+#####'######
+####'#'#####
+#####'######
 ####'''#####
-####'''#####
-####'''#####
-####'''#####
-####'''#####
+####'#######
 ####'''#####
 #####'''####
 ............

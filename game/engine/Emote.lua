@@ -30,32 +30,41 @@ function _M:init(text, dur, color)
 	w = w + 10
 	h = h + 15
 	self.dur = dur or 30
-	color = color or {r=0, g=0, b=0}
+	self.color = color or {r=0, g=0, b=0}
+	self.text = text
+	self.w = w
+	self.h = h
+	self:loaded()
+end
 
-	local s = core.display.newSurface(w, h)
+--- Serialization
+function _M:save()
+	return class.save(self, {
+		surface = true,
+	})
+end
+
+function _M:loaded()
+	local s = core.display.newSurface(self.w, self.h)
 	if not s then return end
 	s:erase(0, 0, 0, 255)
 
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/7.png"), 0, 0)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/9.png"), w - 6, 0)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/1.png"), 0, h - 10)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/3.png"), w - 6, h - 10)
-	for i = 6, w - 6 do
+	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/9.png"), self.w - 6, 0)
+	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/1.png"), 0, self.h - 10)
+	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/3.png"), self.w - 6, self.h - 10)
+	for i = 6, self.w - 6 do
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/8.png"), i, 0)
-		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/2.png"), i, h - 10)
+		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/2.png"), i, self.h - 10)
 	end
-	for i = 6, h - 10 do
+	for i = 6, self.h - 10 do
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/4.png"), 0, i)
-		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/6.png"), w - 6, i)
+		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/6.png"), self.w - 6, i)
 	end
-	s:erase(255, 255, 255, 255, 6, 6, w - 6 - 6, h - 10 - 6)
-	s:erase(0, 0, 0, 0, 6, h - 4, w - 6, 4)
+	s:erase(255, 255, 255, 255, 6, 6, self.w - 6 - 6, self.h - 10 - 6)
+	s:erase(0, 0, 0, 0, 6, self.h - 4, self.w - 6, 4)
 
-	s:drawStringBlended(font, text, 5, 5, color.r, color.g, color.b)
-
-	self.text = text
-	self.w = w
-	self.h = h
+	s:drawStringBlended(font, self.text, 5, 5, self.color.r, self.color.g, self.color.b)
 	self.surface = s
 end
 

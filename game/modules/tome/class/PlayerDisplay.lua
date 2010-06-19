@@ -57,6 +57,11 @@ function _M:display()
 
 	h = h + self.font_h
 
+	if game.level and game.level.turn_counter then
+		self.surface:drawColorString(self.font, ("Turns remaining: %d"):format(game.level.turn_counter / 10), 0, h, 255, 0, 0) h = h + self.font_h
+		h = h + self.font_h
+	end
+
 	if game.player:getAir() < game.player.max_air then
 		self.surface:drawColorString(self.font, ("Air level: %d/%d"):format(game.player:getAir(), game.player.max_air), 0, h, 255, 0, 0) h = h + self.font_h
 		h = h + self.font_h

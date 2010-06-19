@@ -533,7 +533,7 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self.player:setEmote(require("engine.Emote").new("Hello World!", 100))
+				self.player:forceLevelup(50)
 --				self:changeLevel(1, "wilderness-arda-fareast")
 			end
 		end,

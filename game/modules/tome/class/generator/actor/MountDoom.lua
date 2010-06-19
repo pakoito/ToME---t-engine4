@@ -33,6 +33,8 @@ function _M:init(zone, map, level, spots)
 end
 
 function _M:tick()
+	if self.level.nb_attackers >= self.data.max_attackers then return end
+
 	local val = rng.float(0,1)
 	for i = 1,self.max_rate - 1 do
 		if val < rng.poissonProcess(i, self.turn_scale, self.rate) then
