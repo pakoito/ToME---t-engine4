@@ -153,3 +153,137 @@ newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "URUK-HAI_ATTACK",
 		game.level.nb_attackers = game.level.nb_attackers - 1
 	end,
 }
+
+
+newEntity{
+	define_as = "ALATAR",
+	type = "humanoid", subtype = "istari",
+	name = "Alatar the Blue",
+	display = "@", color=colors.AQUAMARINE,
+	faction = "blue-wizards",
+
+	desc = [[Lost to the memory of the West, the Blue Wizards have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	level_range = {70, 70}, exp_worth = 15,
+	max_life = 1000, life_rating = 36, fixed_rating = true,
+	max_mana = 10000,
+	mana_regen = 10,
+	rank = 5,
+	size_category = 3,
+	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
+	inc_damage = {all=-70},
+	invulnerable = 1,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=10, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_FLAME]=5,
+		[Talents.T_FREEZE]=5,
+		[Talents.T_LIGHTNING]=5,
+		[Talents.T_MANATHRUST]=5,
+		[Talents.T_INFERNO]=5,
+		[Talents.T_FLAMESHOCK]=5,
+		[Talents.T_STONE_SKIN]=5,
+		[Talents.T_STRIKE]=5,
+		[Talents.T_HEAL]=5,
+		[Talents.T_REGENERATION]=5,
+		[Talents.T_ILLUMINATE]=5,
+		[Talents.T_QUICKEN_SPELLS]=5,
+		[Talents.T_SPELL_SHAPING]=5,
+		[Talents.T_ARCANE_POWER]=5,
+		[Talents.T_METAFLOW]=5,
+		[Talents.T_PHASE_DOOR]=5,
+		[Talents.T_ESSENCE_OF_SPEED]=5,
+	},
+
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+
+	on_acquire_target = function(self, who)
+		self:doEmote("Damn you, you only postpone your death! Fyrk!", 60)
+		game.player:hasQuest("mount-doom"):start_fyrk()
+		game.player:hasQuest("mount-doom"):setStatus(engine.Quest.COMPLETED, "stopped")
+	end,
+}
+
+newEntity{
+	define_as = "PALLANDO",
+	type = "humanoid", subtype = "istari",
+	name = "Pallando the Blue",
+	display = "@", color=colors.LIGHT_BLUE,
+	faction = "blue-wizards",
+
+	desc = [[Lost to the memory of the West, the Blue Wizards have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	level_range = {70, 70}, exp_worth = 15,
+	max_life = 1000, life_rating = 36, fixed_rating = true,
+	max_mana = 10000,
+	mana_regen = 10,
+	rank = 5,
+	size_category = 3,
+	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
+	inc_damage = {all=-70},
+	invulnerable = 1,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=10, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_FLAME]=5,
+		[Talents.T_FREEZE]=5,
+		[Talents.T_LIGHTNING]=5,
+		[Talents.T_MANATHRUST]=5,
+		[Talents.T_INFERNO]=5,
+		[Talents.T_FLAMESHOCK]=5,
+		[Talents.T_STONE_SKIN]=5,
+		[Talents.T_STRIKE]=5,
+		[Talents.T_HEAL]=5,
+		[Talents.T_REGENERATION]=5,
+		[Talents.T_ILLUMINATE]=5,
+		[Talents.T_QUICKEN_SPELLS]=5,
+		[Talents.T_SPELL_SHAPING]=5,
+		[Talents.T_ARCANE_POWER]=5,
+		[Talents.T_METAFLOW]=5,
+		[Talents.T_PHASE_DOOR]=5,
+		[Talents.T_ESSENCE_OF_SPEED]=5,
+	},
+
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+}
+
+newEntity{ base = "BASE_NPC_FAEROS", define_as = "FYRK",
+	name = "Fyrk, Faeros High Guard", color=colors.VIOLET,
+	desc = [[Faeros are highly intelligent fire elementals, rarely seen outside volcanos they are probably not native to this world.
+This one looks even nastier and looks toward you with what seems to be disdain. Flames swirly all around him.]],
+	level_range = {35, nil}, exp_worth = 2,
+	rank = 5,
+	max_life = resolvers.rngavg(300,400), life_rating = 20, fixed_rating = true,
+	combat_armor = 0, combat_def = 20,
+	on_melee_hit = { [DamageType.FIRE] = resolvers.mbonus(30, 10), },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1 },
+
+	resolvers.equip{
+		{type="jewelry", subtype="amulet", defined="FIERY_CHOKER"},
+	},
+
+	resolvers.talents{
+		[Talents.T_FLAME]=4,
+		[Talents.T_FIERY_HANDS]=5,
+		[Talents.T_FLAMESHOCK]=5,
+		[Talents.T_INFERNO]=5,
+		[Talents.T_KNOCKBACK]=5,
+		[Talents.T_STUN]=2,
+	},
+
+	blind_immune = 1,
+	stun_immune = 1,
+}

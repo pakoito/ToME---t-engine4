@@ -60,6 +60,7 @@ newEntity{ base = "BASE_AMULET",
 			life_regen = 3,
 			size_category = 3,
 			rank = 3,
+			infravision = 20,
 
 			resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
 

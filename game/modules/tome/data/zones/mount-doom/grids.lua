@@ -43,3 +43,22 @@ newEntity{
 	does_block_move = true,
 	shader = "lava",
 }
+
+newEntity{
+	define_as = "FAR_EAST_PORTAL",
+	name = "Farportal: the Far East",
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	notice = true,
+	always_remember = true,
+	show_tooltip = true,
+	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use.]],
+
+	orb_portal = {
+		change_level = 1,
+		change_zone = "wilderness-arda-fareast",
+		change_wilderness = {
+			x = 9, y = 5,
+		},
+		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to the far east.",
+	},
+}

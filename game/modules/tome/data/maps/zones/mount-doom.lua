@@ -25,6 +25,9 @@ defineTile('p', "FLOOR", nil, "SUN_PALADIN_DEFENDER")
 defineTile('@', "FLOOR", nil, "SUN_PALADIN_DEFENDER_RODMOUR")
 defineTile('o', "FLOOR", nil, "URUK-HAI_ATTACK")
 
+defineTile('1', "LAVA_FLOOR", nil, "ALATAR")
+defineTile('2', "LAVA_FLOOR", nil, "PALLANDO")
+
 subGenerator{
 	x = 0, y = 23, w = 12, h = 401,
 	generator = "mod.class.generator.map.MountDoom",
@@ -486,16 +489,16 @@ return [[
 ~~~~~'''~~~~
 ~~~~~'''~~~~
 ~~~~~'''~~~~
+~~~~~'#'~~~~
+~~~~~#'#~~~~
+~~~~~'#'~~~~
 ~~~~~'''~~~~
 ~~~~~'''~~~~
 ~~~~~'''~~~~
 ~~~~~'''~~~~
 ~~~~~'''~~~~
 ~~~~~'''~~~~
-~~~~~'''~~~~
-~~~~~'''~~~~
-~~~~~'''~~~~
-~~~~~'''~~~~
+~~~~~1'2~~~~
 ~~~~~~~~~~~~
 ~~~~~~~~~~~~
 ~~~~~~~~~~~~

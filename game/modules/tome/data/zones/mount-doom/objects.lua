@@ -19,29 +19,25 @@
 
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped (and used!) by the Shade of Angmar
-newEntity{ base = "BASE_STAFF",
-	define_as = "STAFF_ANGMAR", rarity=false,
-	name = "Angmar's Fall", unique=true,
-	desc = [[Made from the bones of of many creatures this staff glows with power. You can feel its evilness as you touch it.]],
-	require = { stat = { mag=25 }, },
-	cost = 5,
-	combat = {
-		dam = 10,
-		apr = 0,
-		physcrit = 1.5,
-		dammod = {mag=1.1},
-	},
+local Stats = require"engine.interface.ActorStats"
+
+newEntity{ base = "BASE_AMULET",
+	define_as = "FIERY_CHOKER", rarity=false,
+	name = "Fiery Choker", unique=true,
+	desc = [[A choker made of pure flame, forever shifting patterns around the neck of its wearer. Its fire seems to not harm the wearer.]],
+	cost = 50,
 	wielder = {
-		see_invisible = 2,
+		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
 		combat_spellpower = 7,
 		combat_spellcrit = 8,
-		inc_damage={
-			[DamageType.FIRE] = 4,
-			[DamageType.COLD] = 4,
-			[DamageType.ACID] = 4,
-			[DamageType.LIGHTNING] = 4,
-			[DamageType.BLIGHT] = 4,
+		resists = {
+			[DamageType.FIRE] = 20,
+			[DamageType.COLD] = -20,
 		},
+		inc_damage={
+			[DamageType.FIRE] = 10,
+			[DamageType.COLD] = -10,
+		},
+		blind_immune = 1,
 	},
 }

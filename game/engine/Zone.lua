@@ -211,7 +211,7 @@ function _M:makeEntityByName(level, type, name)
 	local e
 	if type == "actor" then e = self.npc_list[name]
 	elseif type == "object" then e = self.object_list[name]
-	elseif type == "grid" then e = self.grid_list[name]
+	elseif type == "grid" or type == "terrain" then e = self.grid_list[name]
 	elseif type == "trap" then e = self.trap_list[name]
 	end
 	if not e then return nil end
@@ -319,7 +319,7 @@ function _M:addEntity(level, e, typ, x, y)
 	elseif typ == "trap" then
 		if x and y then level.map(x, y, Map.TRAP, e) end
 		e:added()
-	elseif typ == "terrain" then
+	elseif typ == "terrain" or typ == "grid" then
 		if x and y then level.map(x, y, Map.TERRAIN, e) end
 	end
 	e:check("addedToLevel", level, x, y)

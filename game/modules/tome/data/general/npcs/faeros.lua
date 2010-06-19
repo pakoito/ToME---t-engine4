@@ -38,7 +38,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=10, dex=8, mag=6, con=16 },
 
-	resists = { [DamageType.PHYSICAL] = 10, [DamageType.FIRE] = 100, },
+	resists = { [DamageType.PHYSICAL] = 10, [DamageType.FIRE] = 100, [DamageType.COLD] = -30, },
 
 	no_breath = 1,
 	poison_immune = 1,

@@ -51,8 +51,20 @@ return {
 	post_process = function(level)
 		level.turn_counter = 700 * 10
 	end,
+
+	on_enter = function(lev, old_lev, newzone)
+		if newzone then
+			game.player:grantQuest("mount-doom")
+		end
+	end,
+
 	on_turn = function(self)
 		require("mod.class.generator.actor.MountDoom").new(self, game.level.map, game.level, {}):tick()
 		game.level.turn_counter = game.level.turn_counter - 1
+		game.player.changed = true
+		if game.level.turn_counter < 0 then
+			game.player:hasQuest("mount-doom"):start_fyrk()
+			game.player:hasQuest("mount-doom"):setStatus(engine.Quest.COMPLETED, "not-stopped")
+		end
 	end,
 }
