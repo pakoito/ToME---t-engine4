@@ -77,6 +77,20 @@ function _M:removeParticles(ps)
 	end
 end
 
+--- Set the current emote
+function _M:setEmote(e)
+	-- Remove previous
+	if self.__emote then
+		game.level.map:removeEmote(self.__emote)
+	end
+	self.__emote = e
+	if e and self.x and self.y and game.level and game.level.map then
+		e.x = self.x
+		e.y = self.y
+		game.level.map:addEmote(e)
+	end
+end
+
 --- Moves an actor on the map
 -- *WARNING*: changing x and y properties manualy is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto
@@ -102,18 +116,28 @@ function _M:move(x, y, force)
 	end
 	self.old_x, self.old_y = self.x or x, self.y or y
 	self.x, self.y = x, y
-	if map(x, y, Map.ACTOR) then
-		print("[MOVE] WARNING erasing actor!!!")
-		util.show_backtrace()
-	end
 	map(x, y, Map.ACTOR, self)
---	print("[MOVE]", self.uid, x, y)
 
 	-- Update particle emitters attached to that actor
+	local del = {}
 	for e, _ in pairs(self.__particles) do
-		e.x = x
-		e.y = y
-		map.particles[e] = true
+		if e.dead then del[#del+1] = e
+		else
+			e.x = x
+			e.y = y
+			map.particles[e] = true
+		end
+	end
+	for i = 1, #del do self.particles[del[i]] = nil end
+
+	-- Move emote
+	if self.__emote then
+		if self.__emote.dead then self.__emote = nil
+		else
+			self.__emote.x = x
+			self.__emote.y = y
+			map.emotes[self.__emote] = true
+		end
 	end
 
 	map:checkAllEntities(x, y, "on_move", self, force)

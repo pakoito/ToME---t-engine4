@@ -514,6 +514,28 @@ static int sdl_surface_drawstring(lua_State *L)
 	return 0;
 }
 
+static int sdl_surface_drawstring_aa(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 2);
+	const char *str = luaL_checkstring(L, 3);
+	int x = luaL_checknumber(L, 4);
+	int y = luaL_checknumber(L, 5);
+	int r = luaL_checknumber(L, 6);
+	int g = luaL_checknumber(L, 7);
+	int b = luaL_checknumber(L, 8);
+
+	SDL_Color color = {r,g,b};
+	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
+	if (txt)
+	{
+		sdlDrawImage(*s, txt, x, y);
+		SDL_FreeSurface(txt);
+	}
+
+	return 0;
+}
+
 static int sdl_surface_drawstring_newsurface(lua_State *L)
 {
 	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
@@ -960,6 +982,7 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"toScreenWithTexture", sdl_surface_toscreen_with_texture},
 	{"putChar", lua_display_char},
 	{"drawString", sdl_surface_drawstring},
+	{"drawStringBlended", sdl_surface_drawstring_aa},
 	{"alpha", sdl_surface_alpha},
 	{"glTexture", sdl_surface_to_texture},
 	{NULL, NULL},

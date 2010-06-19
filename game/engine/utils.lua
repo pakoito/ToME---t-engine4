@@ -472,6 +472,18 @@ function rng.tableIndex(t, ignore)
 	return rng.table(rt)
 end
 
+function util.factorial(n)
+	if n == 0 then
+		return 1
+	else
+		return n * util.factorial(n - 1)
+	end
+end
+
+function rng.poissonProcess(k, turn_scale, rate)
+	return math.exp(-rate*turn_scale) * ((rate*turn_scale) ^ k)/ util.factorial(k)
+end
+
 function util.show_backtrace()
 	local level = 2
 

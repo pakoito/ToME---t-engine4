@@ -95,6 +95,7 @@ function _M:selectType(type)
 	local default = 1
 	self.list = {}
 	-- Make up the list
+	print("[BIRTHER] selecting type", type)
 	for i, d in ipairs(self.birth_descriptor_def[type]) do
 		local allowed = true
 		for j, od in ipairs(self.descriptors) do

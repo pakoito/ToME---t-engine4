@@ -196,6 +196,7 @@ function _M:init(w, h)
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self.particles = {}
+	self.emotes = {}
 
 	self:loaded()
 end
@@ -466,6 +467,7 @@ function _M:display()
 
 	self:displayParticles()
 	self:displayEffects()
+	self:displayEmotes()
 
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return end
@@ -852,9 +854,54 @@ function _M:displayParticles()
 
 		if not alive then
 			del[#del+1] = e
+			e.dead = true
 		end
 
 		e = next(self.particles, e)
 	end
 	for i = 1, #del do self.particles[del[i]] = nil end
+end
+
+-------------------------------------------------------------
+-------------------------------------------------------------
+-- Emotes
+-------------------------------------------------------------
+-------------------------------------------------------------
+
+--- Adds an existing emote to the map
+function _M:addEmote(e)
+	if self.emotes[e] then return false end
+	self.emotes[e] = true
+	print("[EMOTE] added", e.text, e.x, e.y)
+	return e
+end
+
+--- Removes an emote from the map
+function _M:removeEmote(e)
+	if not self.emotes[e] then return false end
+	self.emotes[e] = nil
+	return true
+end
+
+--- Display the emotes, called by self:display()
+function _M:displayEmotes()
+	local del = {}
+	local e = next(self.emotes)
+	while e do
+		-- Dont bother with obviously out of screen stuff
+		if e.x >= self.mx and e.x < self.mx + self.viewport.mwidth and e.y >= self.my and e.y < self.my + self.viewport.mheight and self.seens(e.x, e.y) then
+			e.surface:toScreen(
+				self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom,
+				self.display_y + (e.y - self.my - 0.9) * self.tile_h * self.zoom
+			)
+		end
+
+		if e:update() then
+			del[#del+1] = e
+			e.dead = true
+		end
+
+		e = next(self.emotes, e)
+	end
+	for i = 1, #del do self.emotes[del[i]] = nil end
 end

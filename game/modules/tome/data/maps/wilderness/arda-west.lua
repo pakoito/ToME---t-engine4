@@ -29,11 +29,7 @@ quickEntity('t', {show_tooltip=true, name='forest', display='#', color=colors.LI
 quickEntity('l', {show_tooltip=true, name='Lorien', display='#', color=colors.GOLD, back_color=colors.DARK_GREEN, image="terrain/lorien.png", block_move=true})
 quickEntity('v', {show_tooltip=true, name='old forest', display='#', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/tree_dark1.png", block_move=true})
 quickEntity('i', {show_tooltip=true, name='iron mountains', display='^', color=colors.SLATE, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
-
-quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true,
-})
---shader = "water", textures = { function() return core.noise.new(3):makeTexture3D("simplex", 128, 128, 128, 1, 0, 0, 0), true end }})
-
+quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true,})
 quickEntity('.', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
 quickEntity('g', {show_tooltip=true, name='Forodwaith, the cold lands', display='.', color=colors.LIGHT_BLUE, back_color=colors.BLUE, can_encounter=true, equilibrium_level=-10})
 quickEntity('q', {show_tooltip=true, name='Icebay of Forochel', display=';', color=colors.LIGHT_BLUE, back_color=colors.BLUE, can_encounter=true, equilibrium_level=-10})
@@ -56,6 +52,7 @@ quickEntity('D', {show_tooltip=true, name="A path into the Old Forest", 		displa
 quickEntity('E', {show_tooltip=true, name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, notice = true, change_level=1, change_zone="sandworm-lair"})
 quickEntity('F', {show_tooltip=true, name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tol-falas"})
 quickEntity('G', {show_tooltip=true, name="Passageway into Carn Dûm",display='>', color=colors.UMBER, notice = true, change_level=1, change_zone="carn-dum"})
+quickEntity('H', {show_tooltip=true, name='Mount Doom (Orodruin)', display='>', color=colors.RED, back_color=colors.LIGHT_DARK, image="terrain/volcano1.png", notice = true, change_level=1, change_zone="mount-doom"})
 
 quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-bree"})
 quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
@@ -129,10 +126,10 @@ return [[
 ============================....._..._.__.&&&......_....~~.....aaaaaa..a..aa..a..a..aa...a.....tttt
 ===========================.............._&&&hh....._....~~....aavvaaaaaaaaaaaaaaaaaaaaaaaaaaaaattt
 ===========================.......h.&.hh&&&&&&&......__.~~~~....aavvvvvvvavvvavaa_"""_""""""..aaatt
-===========================.....hh.&.&_&h&.&h&_&&&....._..~~~...aavvmvvvvvvvvvva_"""""_""""""...aat
-===========================....h....__hh...hhh._h&&........~~...aavvmmvvvvvvvaa_"""""""_"""".....aa
-===========================..hhh_.._.......hh._.hh&&&........~~.aavvvvvvvvvvaa""_""""""_"""""""....
-============================.ht_.__._........_&hhh.&&&&&........aavaavaaavvv"""""_""""_""""""".....
+===========================.....hh.&.&_&h&.&h&_&&&....._..~~~...aavvmm""vvvvvvva_"""""_""""""...aat
+===========================....h....__hh...hhh._h&&........~~...aavvmH"""""""aa_"""""""_"""".....aa
+===========================..hhh_.._.......hh._.hh&&&........~~.aa""""""""""aa""_""""""_"""""""....
+============================.ht_.__._........_&hhh.&&&&&........aa"aa"aaa""""""""_""""_""""""".....
 ============================.th_..._....hh.._&&&hh.._&&&&.&...~.aaa""a"a""""""""=="""_""""""""""...
 ============================.th._.hhhhhhhh...__...._h&h&&&&&.~..aa""""""""""""======_"""""""""""aaa
 ===========================.hh._...h.h........._.._.h&hh._h2.~..aa"""_"_"""""=====""""""""""""aaaaa

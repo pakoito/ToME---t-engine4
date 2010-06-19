@@ -32,9 +32,17 @@ newAI("target_simple", function(self)
 	end
 end)
 
+-- Target the player if within sense radius
 newAI("target_player_radius", function(self)
 	if core.fov.distance(self.x, self.y, game.player.x, game.player.y) < self.ai_state.sense_radius then
 		self.ai_target.actor = game.player
 		return true
 	end
+end)
+
+-- Special targetting for mount doom, select a normal target, if none is found go for the player
+newAI("mount_doom_target", function(self)
+	if self:runAI("target_simple") then return true end
+	self.ai_target.actor = game.player
+	return true
 end)

@@ -348,6 +348,10 @@ end
 --- Called every game turns
 -- Does nothing, you can override it
 function _M:onTurn()
+	if self.zone then
+		if self.zone.on_turn then self.zone:on_turn() end
+	end
+
 	-- The following happens only every 10 game turns (once for every turn of 1 mod speed actors)
 	if self.turn % 10 ~= 0 then return end
 
@@ -529,7 +533,8 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "wilderness-arda-fareast")
+				self.player:setEmote(require("engine.Emote").new("Hello World!", 100))
+--				self:changeLevel(1, "wilderness-arda-fareast")
 			end
 		end,
 	}

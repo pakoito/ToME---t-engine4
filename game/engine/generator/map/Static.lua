@@ -106,6 +106,7 @@ function _M:loadMap(file)
 
 	self.map.w = m.w
 	self.map.h = m.h
+	print("[STATIC MAP] size", m.w, m.h)
 end
 
 function _M:resolve(typ, c)
