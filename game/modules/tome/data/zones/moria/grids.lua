@@ -36,5 +36,8 @@ This one seems to go to the Far East, a continent of Arda of which only rumours 
 			x = 9, y = 5,
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on an unfamiliar land, with no trace of the portal...",
+		on_use = function(self, who)
+			who:setQuestStatus("wild-wild-east", engine.Quest.DONE)
+		end,
 	},
 }

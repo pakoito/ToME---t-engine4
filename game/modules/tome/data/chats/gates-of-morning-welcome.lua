@@ -64,7 +64,8 @@ You may now enter the Gates of Morning.]],
 	answers = {
 		{"Thank you my Lady.", action=function(npc, player)
 			player:setQuestStatus("spydric-infestation", engine.Quest.DONE)
-			game.level:removeEntity(npc)
+			npc:move(47, 27, true)
+			npc.can_talk = "gates-of-morning-main"
 			game:setAllowedBuild("divine")
 			game:setAllowedBuild("divine_sun_paladin", true)
 		end},

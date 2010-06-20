@@ -546,6 +546,7 @@ function _M:useOrbPortal(portal)
 	end
 	game:changeLevel(portal.change_level, portal.change_zone)
 	if portal.message then game.logPlayer(self, portal.message) end
+	if portal.on_use then portal:on_use(self) end
 end
 
 --- Tell us when we are targetted

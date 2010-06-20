@@ -32,7 +32,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	rank = 4,
 	size_category = 3,
 	female = true,
-	max_life = 250, life_rating = 14, fixed_rating = true,
+	max_life = 250, life_rating = 24, fixed_rating = true,
 	infravision = 20,
 	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
 
