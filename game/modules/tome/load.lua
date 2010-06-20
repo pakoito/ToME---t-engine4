@@ -90,6 +90,27 @@ ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's
 
 -- Actor leveling, player is restricted to 50 but npcs can go higher
 ActorLevel:defineMaxLevel(nil)
+ActorLevel.exp_chart = function(level)
+	local exp = 10
+	local mult = 8
+	local min = 2
+	for i = 2, level do
+		exp = exp + level * mult
+		mult = util.bound(mult - 0.5, min, mult)
+	end
+	return math.ceil(exp)
+end
+--[[
+local tnb, tznb = 0, 0
+for i = 2, 50 do
+	local nb = math.ceil(ActorLevel.exp_chart(i) / i)
+	local znb = math.ceil(nb/25)
+	tnb = tnb + nb
+	tznb = tznb + znb
+	print("level", i, "::", ActorLevel.exp_chart(i), "must kill", nb, "actors of same level; which is about ", znb, "zone levels")
+end
+print("total", tnb, "::", tznb)
+]]
 
 -- Factions
 dofile("/data/factions.lua")
