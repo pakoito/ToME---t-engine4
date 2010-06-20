@@ -100,7 +100,7 @@ newTalent{
 
 		local sx, sy = self.x, self.y
 		for i, actor in ipairs(targets) do
-			local tgr = {type="beam", range=self:getTalentRange(t), talent=t, x=sx, y=sy}
+			local tgr = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t, x=sx, y=sy}
 			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
 			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 5))
 			game.level.map:particleEmitter(sx, sy, math.max(math.abs(actor.x-sx), math.abs(actor.y-sy)), "lightning", {tx=actor.x-sx, ty=actor.y-sy})
