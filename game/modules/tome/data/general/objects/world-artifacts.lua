@@ -99,11 +99,11 @@ newEntity{ base = "BASE_RING",
 	wielder = {
 		inc_stats = { [Stats.STAT_CUN] = 3, },
 		inc_damage = {
-			[DamageType.ARCANE]    = 15,
-			[DamageType.FIRE]      = 15,
-			[DamageType.COLD]      = 15,
-			[DamageType.ACID]      = 15,
-			[DamageType.LIGHTNING] = 15,
+			[DamageType.ARCANE]    = 10,
+			[DamageType.FIRE]      = 10,
+			[DamageType.COLD]      = 10,
+			[DamageType.ACID]      = 10,
+			[DamageType.LIGHTNING] = 10,
 		},
 	},
 }
