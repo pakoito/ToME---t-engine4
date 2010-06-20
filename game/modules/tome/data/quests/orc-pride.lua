@@ -20,12 +20,33 @@
 name = "The many Prides of the Orcs"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "The known bastions of the Pride are:"
-	desc[#desc+1] = "- Rak'shor Pride, in the south west of the High Peek"
-	desc[#desc+1] = "- Gorbat Pride, in the southern desert"
-	desc[#desc+1] = "- Vor Pride, in the north east"
-	desc[#desc+1] = "- Grushnak Pride, which we could never locate, we only heard evasive rumours about it"
-	desc[#desc+1] = "- A group of corrupted humans live in Eastport on the southen costline, they have contact wit the Pride"
+	desc[#desc+1] = "Investigate the bastions of the Pride."
+
+	if self:isCompleted("rak-shor") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Rak'shor.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* Rak'shor Pride, in the south west of the High Peek#WHITE#"
+	end
+	if self:isCompleted("eastport") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have killed the master of Easport.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* A group of corrupted humans live in Eastport on the southern costline, they have contact with the Pride#WHITE#"
+	end
+	if self:isCompleted("vor") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Vor.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* Vor Pride, in the north east#WHITE#"
+	end
+	if self:isCompleted("grushnak") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Grushnak.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* Grushnak Pride, whose location remains unknown#WHITE#"
+	end
+	if self:isCompleted("gorbat") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Gorbat.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* Gorbat Pride, in the southern desert#WHITE#"
+	end
 	return table.concat(desc, "\n")
 end
 

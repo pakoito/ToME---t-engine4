@@ -90,14 +90,14 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 ]]):splitLines(self.iw / 2 - 10, self.font)
 	local lines = self.actor.stats_def[self.sel].description:splitLines(self.iw / 2 - 10, self.font)
 	for i = 1, #statshelp do
-		s:drawColorString(self.font, statshelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
+		s:drawColorStringBlended(self.font, statshelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
 	end
 	for i = 1, #lines do
-		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #statshelp + 1) * self.font:lineSkip())
+		s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #statshelp + 1) * self.font:lineSkip())
 	end
 
 	-- Stats
-	s:drawColorString(self.font, "Stats points left: #00FF00#"..self.actor.unused_stats, 2, 2)
+	s:drawColorStringBlended(self.font, "Stats points left: #00FF00#"..self.actor.unused_stats, 2, 2)
 	self:drawWBorder(s, 2, 20, 200)
 
 	self:drawSelectionList(s, 2, 25, self.font_h, {

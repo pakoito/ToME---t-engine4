@@ -120,7 +120,7 @@ function _M:use()
 	}
 
 	d.drawDialog = function(self, s)
-		s:drawColorStringCentered(self.font, self.selcol == 1 and "Bind key" or "Bind alternate key", 2, 2, self.iw - 2, self.ih - 2)
+		s:drawColorStringBlendedCentered(self.font, self.selcol == 1 and "Bind key" or "Bind alternate key", 2, 2, self.iw - 2, self.ih - 2)
 	end
 	game:registerDialog(d)
 end

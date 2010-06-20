@@ -124,7 +124,7 @@ function _M:drawDialog(s)
 	local lines = self.chat:replace(self.chat:get(self.cur_id).text):splitLines(self.iw - 10, self.font)
 	local r, g, b
 	for i = 1, #lines do
-		r, g, b = s:drawColorString(self.font, lines[i], 5, 2 + h, r, g, b)
+		r, g, b = s:drawColorStringBlended(self.font, lines[i], 5, 2 + h, r, g, b)
 		h = h + self.font:lineSkip()
 	end
 

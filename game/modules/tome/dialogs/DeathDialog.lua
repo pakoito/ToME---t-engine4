@@ -45,7 +45,6 @@ function _M:init(actor)
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 			if button == "left" then self:use()
 			end
-			self.changed = true
 		end },
 	}
 end
@@ -166,7 +165,7 @@ You can dump your character data to a file to remember her/him forever, or you c
 	local h = 2
 	local r, g, b
 	for i = 1, #help do
-		r, g, b = s:drawColorString(self.font, help[i], 5, h, r, g, b)
+		r, g, b = s:drawColorStringBlended(self.font, help[i], 5, h, r, g, b)
 		h = h + self.font:lineSkip()
 	end
 	h = h + self.font:lineSkip()

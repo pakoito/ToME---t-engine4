@@ -48,6 +48,7 @@ function _M:init()
 	})
 	self:mouseZones{
 		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+			self.changed = true
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 			if button == "left" then self:use(true)
 			elseif button == "right" then self:use(false)
@@ -101,4 +102,5 @@ end
 
 function _M:drawDialog(s)
 	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
+	self.changed = false
 end

@@ -246,26 +246,26 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	end
 	local h = 2
 	for i = 1, #talentshelp do
-		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)
+		s:drawColorStringBlended(self.font, talentshelp[i], self.iw / 2 + 5, h)
 		h = h + self.font:lineSkip()
 	end
 
 	h = h + self.font:lineSkip()
 	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 	for i = 1, #helplines do
-		s:drawColorString(self.font, helplines[i], self.iw / 2 + 5, h)
+		s:drawColorStringBlended(self.font, helplines[i], self.iw / 2 + 5, h)
 		h = h + self.font:lineSkip()
 	end
 
 	if reqlines2 and lines2 then
 		self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 		for i = 1, #reqlines2 do
-			s:drawColorString(self.font, reqlines2[i], self.iw / 2 + 5, h)
+			s:drawColorStringBlended(self.font, reqlines2[i], self.iw / 2 + 5, h)
 			h = h + self.font:lineSkip()
 		end
 
 		for i = 1, #lines2 do
-			s:drawColorString(self.font, lines2[i], self.iw / 2 + 5, 2 + h)
+			s:drawColorStringBlended(self.font, lines2[i], self.iw / 2 + 5, 2 + h)
 			h = h + self.font:lineSkip()
 		end
 	end
@@ -274,19 +274,19 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		h = h + self.font:lineSkip()
 		self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 		for i = 1, #reqlines do
-			s:drawColorString(self.font, reqlines[i], self.iw / 2 + 5, h)
+			s:drawColorStringBlended(self.font, reqlines[i], self.iw / 2 + 5, h)
 			h = h + self.font:lineSkip()
 		end
 
 		for i = 1, #lines do
-			s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + h)
+			s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h)
 			h = h + self.font:lineSkip()
 		end
 	end
 
 	-- Talents
-	s:drawColorString(self.font, "Talent categories points left: #00FF00#"..self.actor.unused_talents_types, 2, 2)
-	s:drawColorString(self.font, "Talents points left: #00FF00#"..self.actor.unused_talents, 2, 2 + self.font_h)
+	s:drawColorStringBlended(self.font, "Talent categories points left: #00FF00#"..self.actor.unused_talents_types, 2, 2)
+	s:drawColorStringBlended(self.font, "Talents points left: #00FF00#"..self.actor.unused_talents, 2, 2 + self.font_h)
 	self:drawWBorder(s, 2, 40, 200)
 
 	self:drawSelectionList(s, 2, 45, self.font_h, self.list, self.sel, "name"     , self.scroll, self.max)

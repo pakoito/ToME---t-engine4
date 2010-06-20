@@ -50,6 +50,7 @@ function _M:init(title, x, y, filter, action)
 	})
 	self:mouseZones{
 		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+			self.changed = true
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 			if button == "left" then self:use()
 			elseif button == "right" then
@@ -99,7 +100,7 @@ Mouse: #00FF00#Left click#FFFFFF# to pickup.
 	local lines = {}
 	local h = 2
 	for i = 1, #talentshelp do
-		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)
+		s:drawColorStringBlended(self.font, talentshelp[i], self.iw / 2 + 5, h)
 		h = h + self.font:lineSkip()
 	end
 
@@ -111,10 +112,11 @@ Mouse: #00FF00#Left click#FFFFFF# to pickup.
 	end
 	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 	for i = 1, #lines do
-		s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + h)
+		s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h)
 		h = h + self.font:lineSkip()
 	end
 
 	-- Talents
 	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
+	self.changed = false
 end

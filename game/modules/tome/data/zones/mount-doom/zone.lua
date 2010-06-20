@@ -27,7 +27,7 @@ return {
 	width = 12, height = 500,
 --	all_remembered = true,
 	all_lited = true,
---	persistant = "zone",
+	persistant = "zone",
 	no_level_connectivity = true,
 	ambiant_music = "Hold the Line.ogg",
 	generator =  {

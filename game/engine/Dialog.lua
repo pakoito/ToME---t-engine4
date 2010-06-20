@@ -117,7 +117,7 @@ function _M:display()
 	end
 
 	local tw, th = self.font:size(self.title)
-	s:drawColorString(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
+	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
 
 	self.internal_surface:erase()
 	self:drawDialog(self.internal_surface)
@@ -196,11 +196,11 @@ function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, colo
 			else lines = {v} end
 			for j = 1, #lines do
 				if sel == i then
-					s:drawColorString(self.font, lines[j], x, y, selcolor[1], selcolor[2], selcolor[3])
+					s:drawColorStringBlended(self.font, lines[j], x, y, selcolor[1], selcolor[2], selcolor[3])
 				else
 					local r, g, b = color[1], color[2], color[3]
 					if vc then r, g, b = vc[1], vc[2], vc[3] end
-					s:drawColorString(self.font, lines[j], x, y, r, g, b)
+					s:drawColorStringBlended(self.font, lines[j], x, y, r, g, b)
 				end
 				y = y + hskip
 			end

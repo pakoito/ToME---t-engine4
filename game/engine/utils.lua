@@ -276,6 +276,44 @@ getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, 
 	s:drawColorString(font, str, x, y, r, g, b)
 end
 
+getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y, r, g, b)
+	local Pcolorname = (lpeg.R"AZ" + "_")^3
+	local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
+	local Pcolorcode = Pcode * Pcode
+
+	local list = str:split("#" * ((Pcolorcode * Pcolorcode * Pcolorcode) + Pcolorname) * "#", true)
+	r = r or 255
+	g = g or 255
+	b = b or 255
+	local oldr, oldg, oldb = r, g, b
+	for i, v in ipairs(list) do
+		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
+		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
+		if nr and ng and nb then
+			oldr, oldg, oldb = r, g, b
+			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
+		elseif col then
+			if col == "LAST" then
+				r, g, b = oldr, oldg, oldb
+			else
+				oldr, oldg, oldb = r, g, b
+				r, g, b = colors[col].r, colors[col].g, colors[col].b
+			end
+		else
+			local w, h = font:size(v)
+			s:drawStringBlended(font, v, x, y, r, g, b)
+			x = x + w
+		end
+	end
+	return r, g, b
+end
+
+getmetatable(tmps).__index.drawColorStringBlendedCentered = function(s, font, str, dx, dy, dw, dh, r, g, b)
+	local w, h = font:size(str)
+	local x, y = dx + (dw - w) / 2, dy + (dh - h) / 2
+	s:drawColorStringBlended(font, str, x, y, r, g, b)
+end
+
 dir_to_coord = {
 	[1] = {-1, 1},
 	[2] = { 0, 1},

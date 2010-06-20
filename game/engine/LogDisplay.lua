@@ -78,7 +78,7 @@ function _M:display()
 	local i, dh = 1, 0
 	while dh < self.h do
 		if not self.log[self.scroll + i] then break end
-		self.surface:drawColorString(self.font, self.log[self.scroll + i], 0, self.h - (i) * self.font_h, self.color[1], self.color[2], self.color[3])
+		self.surface:drawColorStringBlended(self.font, self.log[self.scroll + i], 0, self.h - (i) * self.font_h, self.color[1], self.color[2], self.color[3])
 		i = i + 1
 		dh = dh + self.font_h
 	end

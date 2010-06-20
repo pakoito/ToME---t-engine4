@@ -48,6 +48,7 @@ function _M:init(actor)
 	})
 	self:mouseZones{
 		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+			self.changed = true
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 			if button == "left" then
 			elseif button == "right" then
@@ -88,17 +89,18 @@ function _M:drawDialog(s)
 
 	local h = 2
 	for i = 1, #talentshelp do
-		s:drawColorString(self.font, talentshelp[i], self.iw / 2 + 5, h)
+		s:drawColorStringBlended(self.font, talentshelp[i], self.iw / 2 + 5, h)
 		h = h + self.font:lineSkip()
 	end
 
 	h = h + self.font:lineSkip()
 	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
 	for i = 1, #lines do
-		r, g, b = s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + h, r, g, b)
+		r, g, b = s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h, r, g, b)
 		h = h + self.font:lineSkip()
 	end
 
 	-- Talents
 	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
+	self.changed = false
 end

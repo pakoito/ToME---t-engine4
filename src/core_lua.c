@@ -560,6 +560,30 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 }
 
 
+static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
+{
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	const char *str = luaL_checkstring(L, 2);
+	int r = luaL_checknumber(L, 3);
+	int g = luaL_checknumber(L, 4);
+	int b = luaL_checknumber(L, 5);
+
+	SDL_Color color = {r,g,b};
+	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
+	if (txt)
+	{
+		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
+		auxiliar_setclass(L, "sdl{surface}", -1);
+		*s = SDL_DisplayFormatAlpha(txt);
+		SDL_FreeSurface(txt);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
+
 
 static int sdl_new_tile(lua_State *L)
 {
@@ -965,6 +989,7 @@ static const struct luaL_reg displaylib[] =
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
+	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
 	{"loadImage", sdl_load_image},
 	{"setWindowTitle", sdl_set_window_title},
 	{"setWindowSize", sdl_set_window_size},

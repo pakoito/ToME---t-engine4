@@ -91,7 +91,7 @@ function _M:display()
 	else
 		self.surface:erase(self.bgcolor[1], self.bgcolor[2] + self.flashing * 10, self.bgcolor[3])
         end
-	self.surface:drawColorString(self.font, self.log[1] or "", 0, 0, self.color[1], self.color[2], self.color[3])
+	self.surface:drawColorStringBlended(self.font, self.log[1] or "", 0, 0, self.color[1], self.color[2], self.color[3])
 
 	self.flashing = self.flashing - 1
 	if self.flashing > 0 then self.changed = true

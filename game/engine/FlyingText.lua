@@ -33,7 +33,7 @@ function _M:add(x, y, duration, xvel, yvel, str, color, bigfont)
 	assert(y, "no y flyer")
 	assert(str, "no str flyer")
 	color = color or {255,255,255}
-	local s = core.display.drawStringNewSurface(bigfont and self.bigfont or self.font, str, color[1], color[2], color[3])
+	local s = core.display.drawStringBlendedNewSurface(bigfont and self.bigfont or self.font, str, color[1], color[2], color[3])
 	if not s then return end
 	local f = {
 		x=x,

@@ -41,7 +41,7 @@ function _M:drawDialog(s)
 	local str = f()
 	local lines = str:splitLines(self.iw - 10, self.font)
 	for i = 1, #lines do
-		s:drawColorString(self.font, lines[i], 5, 4 + i * self.font:lineSkip())
+		s:drawColorStringBlended(self.font, lines[i], 5, 4 + i * self.font:lineSkip())
 	end
 	self.changed = false
 end

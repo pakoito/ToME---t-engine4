@@ -54,6 +54,7 @@ function _M:init(title, prompt, act)
 end
 
 function _M:drawDialog(s, w, h)
-	s:drawColorStringCentered(self.font, self.prompt or "Quantity:", 2, 2, self.iw - 2, self.ih - 2 - self.font:lineSkip())
-	s:drawColorStringCentered(self.font, tostring(self.qty), 2, 2 + self.font:lineSkip(), self.iw - 2, self.ih - 2 - self.font:lineSkip())
+	s:drawColorStringBlendedCentered(self.font, self.prompt or "Quantity:", 2, 2, self.iw - 2, self.ih - 2 - self.font:lineSkip())
+	s:drawColorStringBlendedCentered(self.font, tostring(self.qty), 2, 2 + self.font:lineSkip(), self.iw - 2, self.ih - 2 - self.font:lineSkip())
+	self.changed = false
 end
