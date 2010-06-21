@@ -534,7 +534,7 @@ function _M:setupCommands()
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
 				self.player:forceLevelup(50)
---				self:changeLevel(1, "wilderness-arda-fareast")
+				self:changeLevel(1, "rak-shor-pride")
 			end
 		end,
 	}
