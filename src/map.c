@@ -26,6 +26,7 @@
 #include "auxiliar.h"
 #include "types.h"
 #include "map.h"
+#include "main.h"
 #include "script.h"
 //#include "shaders.h"
 
@@ -423,7 +424,7 @@ void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j
 	if (m->shader) useShader(m->shader, i, j, a);
 	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 	{
-		if (shaders_active) glActiveTexture(GL_TEXTURE0+z);
+		if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
 		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 	}
 	glBegin(GL_QUADS);

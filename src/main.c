@@ -51,8 +51,11 @@ bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
 bool tickPaused = FALSE;
+
+/* OpenGL capabilities */
 extern bool shaders_active;
 bool fbo_active;
+bool multitexture_active;
 
 /* Some lua stuff that's external but has no headers */
 int luaopen_mime_core(lua_State *L);
@@ -596,8 +599,10 @@ int main(int argc, char *argv[])
 	resizeWindow(WIDTH, HEIGHT);
 
 	// Get OpenGL capabilities
+	multitexture_active = glewIsSupported("GL_ARB_multitexture");
 	shaders_active = glewIsSupported("GL_ARB_shader_objects");
 	fbo_active = glewIsSupported("GL_EXT_framebuffer_object") || glewIsSupported("GL_ARB_framebuffer_object");
+	if (!multitexture_active) shaders_active = FALSE;
 
 	boot_lua(2, FALSE, argc, argv);
 
