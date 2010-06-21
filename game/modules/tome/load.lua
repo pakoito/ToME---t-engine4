@@ -17,10 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- Entities that are ASCII are outline
+local Entity = require "engine.Entity"
+Entity.ascii_outline = {x=2, y=2, r=0, g=0, b=0, a=0.8}
+
 -- This file loads the game module, and loads data
 local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
 local Faction = require "engine.Faction"
+
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -35,6 +40,7 @@ local Quest = require "engine.Quest"
 
 config.settings.tome = config.settings.tome or {}
 profile.mod.allow_build = profile.mod.allow_build or {}
+
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")

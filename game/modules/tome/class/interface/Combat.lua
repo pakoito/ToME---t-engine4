@@ -163,10 +163,7 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 				ammo = self:removeObject(self:getInven("QUIVER"), 1)
 				if not ammo then return end
 			end
-			if params.limit_shots then
-				if params.limit_shots <= 0 then return end
-				params.limit_shots = params.limit_shots - 1
-			end
+			if params.limit_shots then if params.limit_shots <= 0 then return end end
 
 			local target = game.level.map(tx, ty, game.level.map.ACTOR)
 			if not target then return end
@@ -175,6 +172,8 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 
 			damtype = damtype or ammo.damtype or DamageType.PHYSICAL
 			mult = mult or 1
+
+			if params.limit_shots then params.limit_shots = params.limit_shots - 1 end
 
 			-- Does the blow connect? yes .. complex :/
 			local atk, def = self:combatAttack(weapon), target:combatDefense()

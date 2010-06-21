@@ -165,7 +165,7 @@ function _M:makeMapObject(tiles)
 	self._mo:tint(self.tint_r, self.tint_g, self.tint_b)
 
 	-- Texture 0 is always the normal image/ascii tile
-	self._mo:texture(0, tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255))
+	self._mo:texture(0, tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline))
 
 	-- Setup additional textures
 	if tiles.use_images and self.textures then

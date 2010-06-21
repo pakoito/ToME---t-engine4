@@ -80,8 +80,8 @@ function _M:init(title, inven, filter, action, actor)
 		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,
 		HOTKEY_THIRD_12 = function() self:defineHotkey(36) end,
 
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) end,
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
 		ACCEPT = function() self:use() end,
 		EXIT = function() game:unregisterDialog(self) end,
 	})

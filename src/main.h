@@ -23,6 +23,7 @@
 
 extern int resizeWindow(int width, int height);
 extern void do_resize(int w, int h, bool fullscreen);
+extern bool fbo_active;
 
 #endif
 

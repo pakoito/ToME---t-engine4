@@ -35,7 +35,7 @@ function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
 	self.texture_store = {}
 end
 
-function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
+function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
 	alpha = alpha or 0
 	local dochar = char
 	local fgidx = 65536 * fr + 256 * fg + fb
@@ -52,9 +52,11 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
 		return self.repo[char][fgidx][bgidx]
 	else
 		local s
+		local is_image = false
 		if (self.use_images or not dochar) and image then
 			print("Loading tile", image)
 			s = core.display.loadImage(self.prefix..image)
+			if s then is_image = true end
 		end
 		if not s then
 			local w, h = self.font:size(dochar)
@@ -76,7 +78,16 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha)
 --			s = core.display.drawStringNewSurface(self.font, char, fr, fg, fb)
 		end
 
-		if self.texture then s = s:glTexture() end
+		if self.texture then
+			s = s:glTexture()
+			if not is_image and do_outline then
+				if type(do_outline) == "boolean" then
+					s = s:makeOutline(2, 2, self.w, self.h, 0, 0, 0, 1) or s
+				else
+					s = s:makeOutline(do_outline.x, do_outline.y, self.w, self.h, do_outline.r, do_outline.g, do_outline.b, do_outline.a) or s
+				end
+			end
+		end
 
 		self.repo[char] = self.repo[char] or {}
 		self.repo[char][fgidx] = self.repo[char][fgidx] or {}

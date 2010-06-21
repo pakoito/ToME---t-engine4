@@ -450,7 +450,6 @@ static int sdl_new_font(lua_State *L)
 	auxiliar_setclass(L, "sdl{font}", -1);
 
 	*f = TTF_OpenFontRW(PHYSFSRWOPS_openRead(name), TRUE, size);
-//	TTF_SetFontOutline(*f, 2);
 
 	return 1;
 }
@@ -602,6 +601,7 @@ static int sdl_new_tile(lua_State *L)
 	int alpha = luaL_checknumber(L, 13);
 
 	SDL_Color color = {r,g,b};
+	SDL_Color bcolor = {0,0,0};
 	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
 
 	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
@@ -954,6 +954,112 @@ static int sdl_texture_toscreen(lua_State *L)
 	return 0;
 }
 
+static bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
+{
+    GLenum errCode;
+    if((errCode = glGetError())!=GL_NO_ERROR)
+    {
+		printf("OPENGL ERROR #%i: (%s) in file %s on line %i\n",errCode,gluErrorString(errCode), file, line);
+        printf("OPENGL Call: %s\n",GLcall);
+        return FALSE;
+    }
+    return TRUE;
+}
+#define CHECKGL( GLcall )                               		\
+    GLcall;                                             		\
+    if(!_CheckGL_Error( #GLcall, __FILE__, __LINE__))     		\
+    exit(-1);
+
+static int sdl_texture_outline(lua_State *L)
+{
+	if (!fbo_active) return 0;
+
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	int w = luaL_checknumber(L, 4);
+	int h = luaL_checknumber(L, 5);
+	float r = luaL_checknumber(L, 6);
+	float g = luaL_checknumber(L, 7);
+	float b = luaL_checknumber(L, 8);
+	float a = luaL_checknumber(L, 9);
+
+	// Setup our FBO
+	GLuint fbo;
+	CHECKGL(glGenFramebuffersEXT(1, &fbo));
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo));
+
+	// Now setup a texture to render to
+	GLuint *img = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+	CHECKGL(glGenTextures(1, img));
+	CHECKGL(glBindTexture(GL_TEXTURE_2D, *img));
+	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, *img, 0));
+
+	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
+	{
+		return 0;
+	}
+
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo));
+
+	// Set the viewport and save the old one
+	CHECKGL(glPushAttrib(GL_VIEWPORT_BIT));
+
+	CHECKGL(glViewport(0, 0, w, h));
+	glMatrixMode(GL_PROJECTION);
+	CHECKGL(glPushMatrix());
+	glLoadIdentity();
+	glOrtho(0, w, 0, h, -100, 100);
+	glMatrixMode( GL_MODELVIEW );
+
+	/* Reset The View */
+	glLoadIdentity( );
+
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
+	CHECKGL(glLoadIdentity());
+
+	/* Render to buffer */
+	CHECKGL(glBindTexture(GL_TEXTURE_2D, *t));
+	CHECKGL(glColor4f(r, g, b, a));
+	glBegin(GL_QUADS);
+	glTexCoord2f(0,0); glVertex3f(0+x, 0+y, -1);
+	glTexCoord2f(1,0); glVertex3f(w+x, 0+y, -1);
+	glTexCoord2f(1,1); glVertex3f(w+x, h+y, -1);
+	glTexCoord2f(0,1); glVertex3f(0+x, h+y, -1);
+	glEnd();
+
+	CHECKGL(glColor4f(1, 1, 1, 1));
+	glBegin(GL_QUADS);
+	glTexCoord2f(0,0); glVertex3f(0, 0, 0);
+	glTexCoord2f(1,0); glVertex3f(w, 0, 0);
+	glTexCoord2f(1,1); glVertex3f(w, h, 0);
+	glTexCoord2f(0,1); glVertex3f(0, h, 0);
+	glEnd();
+
+
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	// Restore viewport
+	CHECKGL(glPopAttrib());
+
+	// Cleanup
+	CHECKGL(glDeleteFramebuffersEXT(1, &fbo));
+
+	glMatrixMode(GL_PROJECTION);
+	CHECKGL(glPopMatrix());
+	glMatrixMode( GL_MODELVIEW );
+	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+
+	return 1;
+}
+
 static int sdl_set_window_title(lua_State *L)
 {
 	const char *title = luaL_checkstring(L, 1);
@@ -1018,6 +1124,7 @@ static const struct luaL_reg sdl_texture_reg[] =
 	{"__gc", sdl_free_texture},
 	{"close", sdl_free_texture},
 	{"toScreen", sdl_texture_toscreen},
+	{"makeOutline", sdl_texture_outline},
 	{NULL, NULL},
 };
 
