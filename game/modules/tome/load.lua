@@ -54,6 +54,8 @@ dofile("/mod/resolvers.lua")
 -- Body parts
 ActorInventory:defineInventory("MAINHAND", "In main hand", true, "Most weapons are wielded in the main hand.")
 ActorInventory:defineInventory("OFFHAND", "In off hand", true, "You can use shields or a second weapon in your off-hand, if you have the talents for it.")
+ActorInventory:defineInventory("QS_MAINHAND", "In main hand (2)", false, "Weapon Set 2: Most weapons are wielded in the main hand.")
+ActorInventory:defineInventory("QS_OFFHAND", "In off hand (2)", false, "Weapon Set 2: You can use shields or a second weapon in your off-hand, if you have the talents for it.")
 ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.")
 ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.")
 ActorInventory:defineInventory("LITE", "Light source", true, "A light source allows you to see in the dark places of the world.")

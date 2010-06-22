@@ -44,19 +44,6 @@ module(..., package.seeall, class.inherit(
 ))
 
 function _M:init(t, no_default)
-	t.body = {
-		INVEN = 1000,
-		MAINHAND = 1,
-		OFFHAND = 1,
-		FINGER = 2,
-		NECK = 1,
-		LITE = 1,
-		BODY = 1,
-		HEAD = 1,
-		HANDS = 1,
-		FEET = 1,
-		TOOL = 1,
-	}
 	t.display=t.display or '@'
 	t.color_r=t.color_r or 230
 	t.color_g=t.color_g or 230
@@ -488,6 +475,28 @@ function _M:playerUseItem(object, item, inven)
 		use_fct,
 		true
 	)
+end
+
+function _M:quickSwitchWeapons()
+	local mh1, mh2 = self.inven[self.INVEN_MAINHAND], self.inven[self.INVEN_QS_MAINHAND]
+	local oh1, oh2 = self.inven[self.INVEN_OFFHAND], self.inven[self.INVEN_QS_OFFHAND]
+
+	local mhset1, mhset2 = {}, {}
+	local ohset1, ohset2 = {}, {}
+	-- Remove them all
+	for i = #mh1, 1, -1 do mhset1[#mhset1+1] = self:removeObject(mh1, i, true) end
+	for i = #mh2, 1, -1 do mhset2[#mhset2+1] = self:removeObject(mh2, i, true) end
+	for i = #oh1, 1, -1 do ohset1[#ohset1+1] = self:removeObject(oh1, i, true) end
+	for i = #oh2, 1, -1 do ohset2[#ohset2+1] = self:removeObject(oh2, i, true) end
+
+	-- Put them all back
+	for i = 1, #mhset1 do self:addObject(mh2, mhset1[i]) end
+	for i = 1, #mhset2 do self:addObject(mh1, mhset2[i]) end
+	for i = 1, #ohset1 do self:addObject(oh2, ohset1[i]) end
+	for i = 1, #ohset2 do self:addObject(oh1, ohset2[i]) end
+
+	self:useEnergy()
+	game.logPlayer(self, "You switch your weapons.")
 end
 
 function _M:playerLevelup(on_finish)

@@ -62,3 +62,10 @@ defineAction{
 	group = "inventory",
 	name = "Use items",
 }
+
+defineAction{
+	default = { "uni:x", },
+	type = "QUICK_SWITCH_WEAPON",
+	group = "inventory",
+	name = "Quick switch weapons set",
+}

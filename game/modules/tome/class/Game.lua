@@ -655,6 +655,10 @@ function _M:setupCommands()
 			self.player:playerUseItem()
 		end),
 
+		QUICK_SWITCH_WEAPON = function()
+			self.player:quickSwitchWeapons()
+		end,
+
 		USE_TALENTS = not_wild(function()
 			self.player:useTalents()
 		end),

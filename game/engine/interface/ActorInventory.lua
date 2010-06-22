@@ -44,6 +44,7 @@ function _M:defineInventory(short_name, name, is_worn, desc)
 	self.inven_def[#self.inven_def].id = #self.inven_def
 	self.inven_def[short_name] = self.inven_def[#self.inven_def]
 	self["INVEN_"..short_name:upper()] = #self.inven_def
+	print("[INVENTORY] define slot", #self.inven_def, self.inven_def[#self.inven_def].name)
 end
 
 -- Auto define the inventory
@@ -268,6 +269,7 @@ function _M:wearObject(o, replace, vocal)
 		if vocal then game.logSeen(self, "%s is not wearable.", o:getName{do_color=true}) end
 		return false
 	end
+	print("wear slot", inven)
 	local ok, err = self:canWearObject(o)
 	if not ok then
 		if vocal then game.logSeen(self, "%s can not wear: %s (%s).", self.name:capitalize(), o:getName{do_color=true}, err) end
