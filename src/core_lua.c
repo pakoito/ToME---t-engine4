@@ -985,8 +985,10 @@ static int sdl_texture_outline(lua_State *L)
 	float a = luaL_checknumber(L, 9);
 
 	// Setup our FBO
-	GLuint fbo;
-	CHECKGL(glGenFramebuffersEXT(1, &fbo));
+	// WARNING: this is a static, only one FBO is ever made, and never deleted, for some reasons
+	// deleting it makes the game crash when doing a chain lightning spell under luajit1 ... (yeah I know .. weird)
+	static GLuint fbo = 0;
+	if (!fbo) CHECKGL(glGenFramebuffersEXT(1, &fbo));
 	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo));
 
 	// Now setup a texture to render to
@@ -1001,13 +1003,7 @@ static int sdl_texture_outline(lua_State *L)
 	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, *img, 0));
 
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
-	{
-		return 0;
-	}
-
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo));
+	if(status != GL_FRAMEBUFFER_COMPLETE_EXT) return 0;
 
 	// Set the viewport and save the old one
 	CHECKGL(glPushAttrib(GL_VIEWPORT_BIT));
@@ -1050,7 +1046,8 @@ static int sdl_texture_outline(lua_State *L)
 	CHECKGL(glPopAttrib());
 
 	// Cleanup
-	CHECKGL(glDeleteFramebuffersEXT(1, &fbo));
+	// No, dot not it's a static, see upwards
+//	CHECKGL(glDeleteFramebuffersEXT(1, &fbo));
 
 	glMatrixMode(GL_PROJECTION);
 	CHECKGL(glPopMatrix());
