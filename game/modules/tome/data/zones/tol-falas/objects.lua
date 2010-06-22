@@ -49,7 +49,7 @@ newEntity{ base = "BASE_AMULET",
 			desc=[[A terrible robed undead figure, this creature has existed in its unlife for many centuries by stealing the life of others. It can
 			summon the very shades of its victims from beyond the grave to come enslaved to its aid.]],
 
-			combat = { dam=resolvers.rngavg(9,13), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
+			combat = { dam=resolvers.rngavg(9,13), atk=10, apr=9, damtype=engine.DamageType.DRAINLIFE, dammod={str=1.9} },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -64,7 +64,7 @@ newEntity{ base = "BASE_AMULET",
 
 			resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
 
-			resists = { [DamageType.COLD] = 80, [DamageType.NATURE] = 80, [DamageType.LIGHT] = -50,  },
+			resists = { [engine.DamageType.COLD] = 80, [engine.DamageType.NATURE] = 80, [engine.DamageType.LIGHT] = -50,  },
 			blind_immune = 1,
 			confusion_immune = 1,
 			see_invisible = 5,
