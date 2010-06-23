@@ -145,7 +145,6 @@ newBirthDescriptor{
 	copy = {
 		max_life = 100,
 		life_rating = 9,
-		stamina_rating = 6,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true},

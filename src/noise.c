@@ -214,6 +214,33 @@ static int noise_texture2d(lua_State *L)
 	return 1;
 }
 
+inline static float noise3d(noise_t *n, float x, float y, float z) ALWAYS_INLINE;
+static float noise3d(noise_t *n, float x, float y, float z)
+{
+	float p[3];
+	p[0] = x;
+	p[1] = y;
+	p[2] = y;
+	return TCOD_noise_simplex(n->noise, p);
+}
+
+// Source: http://web.archive.org/web/20070706003038/http://www.cs.cmu.edu/~mzucker/code/perlin-noise-math-faq.html
+static float tilablenoise3d(noise_t *n, double ix, double iy, double iz, double w, double h, double d)
+{
+	double x = fmod(ix,w);
+	double y = fmod(iy,h);
+	double z = fmod(iz,d);
+
+	return(( 	noise3d(n, x, y, z) * (w-x) * (h-y) * (d-z) +
+			noise3d(n, x-w, y, z) * (x) * (h-y) * (d-z) +
+			noise3d(n, x-w, y-h, z) * (x) * (y) * (d-z) +
+			noise3d(n, x, y-h, z) * (w-x) * (y) * (d-z) +
+			noise3d(n, x, y, z-d) * (w-x) * (h-y) * (z) +
+			noise3d(n, x-w, y, z-d) * (x) * (h-y) * (z) +
+			noise3d(n, x-w, y-h, z-d) * (x) * (y) * (z) +
+			noise3d(n, x, y-h, z-d) * (w-x) * (y) * (z))/(w*h*d));
+}
+
 static int noise_texture3d(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
@@ -226,7 +253,6 @@ static int noise_texture3d(lua_State *L)
 	float z = luaL_checknumber(L, 9);
 	GLubyte *map = malloc(w * h * d * 3 * sizeof(GLubyte));
 
-	float p[3];
 	int i, j, k;
 	for (i = 0; i < w; i++)
 	{
@@ -234,14 +260,7 @@ static int noise_texture3d(lua_State *L)
 		{
 			for (k = 0; k < d; k++)
 			{
-				int ii, jj, kk;
-				ii = (i > w / 2) ? w - i : i;
-				jj = (j > h / 2) ? h - j : j;
-				kk = (k > d / 2) ? d - k : k;
-				p[0] = zoom * ((float)(ii+x)) / w;
-				p[1] = zoom * ((float)(jj+y)) / h;
-				p[2] = zoom * ((float)(kk+z)) / d;
-				float v = ((TCOD_noise_fbm_simplex(n->noise, p, 4) + 1) / 2) * 255;
+				float v = tilablenoise3d(n, i+x, j+y, k+z, w, h, d);
 				map[TEXEL3(i, j, k)] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+1] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+2] = (GLubyte)v;
