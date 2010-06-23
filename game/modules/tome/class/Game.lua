@@ -120,7 +120,17 @@ function _M:newGame()
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
 
+	-- Load for quick birth
+	local save = Savefile.new(self.save_name)
+	local quickbirth = save:loadQuickBirth()
+	save:close()
+
 	local birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
+		-- Save for quick birth
+		local save = Savefile.new(self.save_name)
+		save:saveQuickBirth(self.player.descriptor)
+		save:close()
+
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
 		self:changeLevel(1, self.player.starting_zone)
@@ -134,7 +144,7 @@ function _M:newGame()
 		print("[PLAYER BIRTH] resolved!")
 		self.player:grantQuest(self.player.starting_quest)
 		self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))
-	end)
+	end, quickbirth)
 	self:registerDialog(birth)
 end
 

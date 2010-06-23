@@ -60,10 +60,12 @@ end
 
 
 --- Instanciates a birther for the given actor
-function _M:init(actor, order, at_end)
+function _M:init(actor, order, at_end, quickbirth)
+	self.quickbirth = quickbirth
 	self.actor = actor
 	self.order = order
 	self.at_end = at_end
+
 	engine.Dialog.init(self, "Character Creation: "..actor.name, 600, 400)
 
 	self.descriptors = {}
@@ -89,6 +91,34 @@ function _M:init(actor, order, at_end)
 			end
 		end },
 	}
+end
+
+function _M:on_register()
+	if self.quickbirth then
+		self:yesnoPopup("Quick Birth", "Do you want to recreate the same character?", function(ret)
+			self.do_quickbirth = true
+			self:quickBirth()
+		end)
+	end
+end
+
+function _M:quickBirth()
+	if not self.do_quickbirth then return end
+	-- Aborth quickbirth if stage not found
+	if not self.quickbirth[self.current_type] then self.do_quickbirth = false end
+
+	-- Find the corect descriptor
+	for i, d in ipairs(self.list) do
+		if self.quickbirth[self.current_type] == d.name then
+			print("[QUICK BIRTH] using", d.name, "for", self.current_type)
+			self.sel = i
+			self:next()
+			return true
+		end
+	end
+
+	-- Abord if not found
+	self.do_quickbirth = false
 end
 
 function _M:selectType(type)
@@ -148,6 +178,9 @@ function _M:next()
 		end
 	end
 	self:selectType(self.order[self.cur_order])
+
+	if self:quickBirth() then return end
+
 	if #self.list == 1 and self.birth_auto[self.current_type] ~= false then
 		self:next()
 	end

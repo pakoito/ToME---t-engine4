@@ -131,6 +131,7 @@ function _M:registerDialog(d)
 	self.dialogs[d] = #self.dialogs
 	if d.key then d.key:setCurrent() end
 	if d.mouse then d.mouse:setCurrent() end
+	if d.on_register then d:on_register() end
 end
 
 --- Undisplay a dialog, removing its own keyhandler if needed

@@ -37,6 +37,7 @@ _M.current_save = false
 function _M:init(savefile)
 	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
 	self.save_dir = "/save/"..self.short_name.."/"
+	self.quickbirth_file = "/save/"..self.short_name..".quickbirth"
 	self.load_dir = "/tmp/loadsave/"
 
 	self.tables = {}
@@ -109,6 +110,34 @@ function _M:saveWorld(world)
 	zip:close()
 
 	game:unregisterDialog(popup)
+end
+
+--- Save the given birth descriptors, used for quick start
+function _M:saveQuickBirth(descriptor)
+	collectgarbage("collect")
+
+	local f = fs.open(self.quickbirth_file, "w")
+	for k, e in pairs(descriptor) do
+		f:write(("%s = %q\n"):format(tostring(k), tostring(e)))
+	end
+	f:close()
+end
+
+--- Load the given birth descriptors, used for quick start
+function _M:loadQuickBirth()
+	collectgarbage("collect")
+
+	local f = loadfile(self.quickbirth_file)
+	print("[QUICK BIRTH]", f)
+	if f then
+		-- Call the file body inside its own private environment
+		local def = {}
+		setfenv(f, def)
+		if pcall(f) then
+			return def
+		end
+	end
+	return nil
 end
 
 --- Save the given game
