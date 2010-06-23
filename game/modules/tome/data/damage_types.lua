@@ -214,7 +214,8 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
-			target:setEffect(target.EFF_BURNING, 3, {src=src, power=dam / 6})
+			dam = dam / 2
+			target:setEffect(target.EFF_BURNING, 3, {src=src, power=dam / 3})
 		end
 	end,
 }

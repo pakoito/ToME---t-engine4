@@ -38,7 +38,7 @@ newBirthDescriptor{
 		-- All mages are of angolwen faction
 		faction = "angolwen",
 		mana_regen = 0.5,
-		mana_rating = 10,
+		mana_rating = 5,
 		resolvers.generic(function(e)
 			e.hotkey[10] = {"inventory", "potion of lesser mana"}
 		end),

@@ -28,7 +28,8 @@ function _M:init(name, npc, player)
 	self.npc = npc
 	self.player = player
 
-	local f = loadfile("/data/chats/"..name..".lua")
+	local f, err = loadfile("/data/chats/"..name..".lua")
+	if not f and err then error(err) end
 	setfenv(f, setmetatable({
 		newChat = function(c) self:addChat(c) end,
 	}, {__index=_G}))

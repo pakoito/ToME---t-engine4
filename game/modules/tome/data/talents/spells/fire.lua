@@ -33,13 +33,13 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), {type="flame"})
+		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)), {type="flame"})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(25 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
 	end,
 }
 
@@ -58,13 +58,13 @@ newTalent{
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t) + 2, dam=self:spellCrit(10 + self:combatSpellpower(0.6) * self:getTalentLevel(t))}, {type="flame"})
+		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t) + 2, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 120))}, {type="flame"})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be stunned over %d turns.
-		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.6) * self:getTalentLevel(t), self:getTalentLevelRaw(t) + 2)
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 120), self:getTalentLevelRaw(t) + 2)
 	end,
 }
 
@@ -83,7 +83,7 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local grids = self:project(tg, x, y, DamageType.FIRE, self:spellCrit(28 + self:combatSpellpower(0.6) * self:getTalentLevel(t)))
+		local grids = self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 28, 200)))
 
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, grids=grids, tx=x, ty=y})
@@ -93,7 +93,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(28 + self:combatSpellpower(0.6) * self:getTalentLevel(t), 1 + self:getTalentLevelRaw(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 200), 1 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -111,7 +111,7 @@ newTalent{
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
 		local radius = 5
-		local dam = 15 + self:combatSpellpower(0.15) * self:getTalentLevel(t)
+		local dam = self:combatTalentSpellDamage(t, 15, 80)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -133,6 +133,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of 5 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.15) * self:getTalentLevel(t), 5 + self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 15, 80), 5 + self:getTalentLevel(t))
 	end,
 }

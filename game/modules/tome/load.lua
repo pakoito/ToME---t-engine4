@@ -87,12 +87,12 @@ ActorResource:defineResource("Positive", "positive", ActorTalents.T_POSITIVE_POO
 ActorResource:defineResource("Negative", "negative", ActorTalents.T_NEGATIVE_POOL, "negative_regen", "Negative energy represents your reserve of negative power. It slowly decreases.")
 
 -- Actor stats
-ActorStats:defineStat("Strength",	"str", 10, 1, 80, "Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to resist physical effects, and carrying capacity.")
-ActorStats:defineStat("Dexterity",	"dex", 10, 1, 80, "Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks, and your damage with light weapons.")
-ActorStats:defineStat("Magic",		"mag", 10, 1, 80, "Magic defines your character's ability to manipulate the magic of the world. It increases your spell power, and the effect of spells and other magic items.")
-ActorStats:defineStat("Willpower",	"wil", 10, 1, 80, "Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to resist mental attacks.")
-ActorStats:defineStat("Cunning",	"cun", 10, 1, 80, "Cunning defines your character's ability to learn, think, and react. It allows you to learn many wordly abilities, increases your mental resistance, armor penetration, and critical chance.")
-ActorStats:defineStat("Constitution",	"con", 10, 1, 80, "Constitution defines your character's ability to withstand and resist damage. It increases your maximum life and physical resistance.")
+ActorStats:defineStat("Strength",	"str", 10, 1, 100, "Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to resist physical effects, and carrying capacity.")
+ActorStats:defineStat("Dexterity",	"dex", 10, 1, 100, "Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks, and your damage with light weapons.")
+ActorStats:defineStat("Magic",		"mag", 10, 1, 100, "Magic defines your character's ability to manipulate the magic of the world. It increases your spell power, and the effect of spells and other magic items.")
+ActorStats:defineStat("Willpower",	"wil", 10, 1, 100, "Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to resist mental attacks.")
+ActorStats:defineStat("Cunning",	"cun", 10, 1, 100, "Cunning defines your character's ability to learn, think, and react. It allows you to learn many wordly abilities, increases your mental resistance, armor penetration, and critical chance.")
+ActorStats:defineStat("Constitution",	"con", 10, 1, 100, "Constitution defines your character's ability to withstand and resist damage. It increases your maximum life and physical resistance.")
 -- Luck is hidden and starts at half max value (50) which is considered the standard
 ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's chance when dealing with unknown events. It increases your critical strike chance, your chance of random encounters, ...")
 

@@ -99,11 +99,11 @@ function _M:descAttribute(attr)
 		return ("%s%0.2f/turn"):format(i > 0 and "+" or "-", math.abs(i))
 	elseif attr == "COMBAT" then
 		local c = self.combat
-		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." dam, "..(c.apr or 0).." apr"
+		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr"
 	elseif attr == "ARMOR" then
 		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armor"
 	elseif attr == "ATTACK" then
-		return (self.wielder and self.wielder.combat_atk or 0).." attack, "..(self.wielder and self.wielder.combat_apr or 0).." apr"..(self.wielder and self.wielder.combat_dam or 0).." dam"
+		return (self.wielder and self.wielder.combat_atk or 0).." attack, "..(self.wielder and self.wielder.combat_apr or 0).." apr"..(self.wielder and self.wielder.combat_dam or 0).." power"
 	elseif attr == "MONEY" then
 		return ("worth %0.2f"):format(self.money_value / 10)
 	end
@@ -179,13 +179,13 @@ function _M:getDesc()
 		for stat, i in pairs(self.combat.dammod or {}) do
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
-		desc[#desc+1] = ("%d Damage [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
+		desc[#desc+1] = ("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
 		if self.combat.range then desc[#desc+1] = "Firing range: "..self.combat.range end
 		desc[#desc+1] = ""
 	end
 
 	local w = self.wielder or {}
-	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical damage %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
+	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
 	if w.combat_armor or w.combat_def then desc[#desc+1] = ("Armor %d, Defense %d"):format(w.combat_armor or 0, w.combat_def or 0) end
 	if w.fatigue then desc[#desc+1] = ("Fatigue %d%%"):format(w.fatigue) end
 

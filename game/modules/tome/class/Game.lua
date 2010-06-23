@@ -396,14 +396,6 @@ function _M:display()
 			self.target.target.x, self.target.target.y = tmx, tmy
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
---[[ too slow
-		if self.test_path and self.key.status[self.key._LSHIFT] then
-			for i, c in ipairs(self.test_path) do
-				local lx, ly = c.x, c.y
-				self.test_sprite:toScreen(self.level.map.display_x + (lx - game.level.map.mx) * self.level.map.tile_w, self.level.map.display_y + (ly - game.level.map.my) * self.level.map.tile_h)
-			end
-		end
-]]
 
 		if self.minimap_mode == 2 then
 			self.level.map:minimapDisplay(self.w - 200, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 0.6)

@@ -33,7 +33,7 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 20, 290))
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 5, dam, 3))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
@@ -42,7 +42,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
-		The damage will increase with the Magic stat]]):format((20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)) / 5, 20 + self:combatSpellpower(0.8) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 290) / 5, self:combatTalentSpellDamage(t, 20, 290))
 	end,
 }
 
@@ -102,7 +102,7 @@ newTalent{
 		for i, actor in ipairs(targets) do
 			local tgr = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t, x=sx, y=sy}
 			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
-			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.8) * self:getTalentLevel(t)), 5))
+			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 10, 200)), 5))
 			game.level.map:particleEmitter(sx, sy, math.max(math.abs(actor.x-sx), math.abs(actor.y-sy)), "lightning", {tx=actor.x-sx, ty=actor.y-sy})
 			sx, sy = actor.x, actor.y
 		end
@@ -116,7 +116,7 @@ newTalent{
 		It can hit up to %d targets and will never hit the same one twice, neither will it hit the caster.
 		The damage will increase with the Magic stat]]):
 		format(
-			20 + self:combatSpellpower(0.8) * self:getTalentLevel(t),
+			self:combatTalentSpellDamage(t, 10, 200),
 			3 + self:getTalentLevelRaw(t)
 		)
 	end,
@@ -194,7 +194,7 @@ newTalent{
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), 3))
+			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 15, 80)), 3))
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
 			game:playSoundNear(self, "talents/lightning")
 		end
@@ -215,6 +215,6 @@ newTalent{
 		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
 		This powerful spell will continuously drain mana while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 20 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 15, 80))
 	end,
 }

@@ -83,9 +83,9 @@ function _M:init(t, no_default)
 	t.rank = t.rank or 2
 
 	t.life_rating = t.life_rating or 10
-	t.mana_rating = t.mana_rating or 10
-	t.stamina_rating = t.stamina_rating or 4
-	t.positive_negative_rating = t.positive_negative_rating or 4
+	t.mana_rating = t.mana_rating or 4
+	t.stamina_rating = t.stamina_rating or 3
+	t.positive_negative_rating = t.positive_negative_rating or 3
 
 	t.esp = t.esp or {range=10}
 
@@ -1070,16 +1070,18 @@ function _M:addedToLevel(level, x, y)
 	if self.make_escort then
 		for _, filter in ipairs(self.make_escort) do
 			for i = 1, filter.number do
-				-- Find space
-				local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[Map.ACTOR]=true})
-				if not x then break end
+				if not filter.chance or rng.percent(filter.chance) then
+					-- Find space
+					local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[Map.ACTOR]=true})
+					if not x then break end
 
-				-- Find an actor with that filter
-				local m = game.zone:makeEntity(game.level, "actor", filter)
-				if m and m:canMove(x, y) then
-					if filter.no_subescort then m.make_escort = nil end
+					-- Find an actor with that filter
+					local m = game.zone:makeEntity(game.level, "actor", filter)
+					if m and m:canMove(x, y) then
+						if filter.no_subescort then m.make_escort = nil end
 					game.zone:addEntity(game.level, m, "actor", x, y)
-				elseif m then m:removed() end
+					elseif m then m:removed() end
+				end
 			end
 		end
 		self.make_escort = nil

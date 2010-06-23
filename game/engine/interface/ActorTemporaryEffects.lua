@@ -65,7 +65,6 @@ end
 function _M:timedEffects()
 	local todel = {}
 	for eff, p in pairs(self.tmp) do
-		p.dur = p.dur - 1
 		if p.dur <= 0 then
 			todel[#todel+1] = eff
 		else
@@ -75,6 +74,7 @@ function _M:timedEffects()
 				end
 			end
 		end
+		p.dur = p.dur - 1
 	end
 
 	while #todel > 0 do

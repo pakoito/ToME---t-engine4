@@ -453,20 +453,23 @@ function _M:combatDamage(weapon)
 	local sub_con_to_str = false
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_con_to_str = true end
 
-	local add = 0
+	local totstat = 0
 	if weapon.dammod then
 		for stat, mod in pairs(weapon.dammod) do
 			if sub_con_to_str and stat == "str" then stat = "cun" end
-			add = add + (self:getStat(stat) - 10) * 0.7 * mod
+			totstat = totstat + self:getStat(stat) * mod
 		end
 	end
 
+	local add = 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
 		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9
 	end
 
-	local talented_mod = self:combatCheckTraining(weapon)
-	return self.combat_dam + (weapon.dam or 1) * (1 + talented_mod / 4) + add
+	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
+	local power = self.combat_dam + (weapon.dam or 1) + add
+	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
+	return totstat / 1.5 * power * talented_mod
 end
 
 --- Gets spellpower
@@ -479,7 +482,15 @@ function _M:combatSpellpower(mod)
 	if self:knowTalent(self.T_SHADOW_CUNNING) then
 		add = (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 3) * self:getCun() / 100
 	end
-	return (self.combat_spellpower + add + self:getMag() * 0.7) * mod
+	return (self.combat_spellpower + add + self:getMag()) * mod
+end
+
+--- Gets damage based on talent
+function _M:combatTalentSpellDamage(t, base, max)
+	-- Compute at "max"
+	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
+	-- Compute real
+	return (base + self:combatSpellpower()) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
 end
 
 --- Gets spellcrit
