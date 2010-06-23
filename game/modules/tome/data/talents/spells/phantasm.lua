@@ -53,7 +53,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		local power = 4 + self:combatSpellpower(0.04) * self:getTalentLevel(t)
+		local power = self:combatTalentSpellDamage(t, 4, 30)
 		game:playSoundNear(self, "talents/heal")
 		return {
 			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
@@ -67,7 +67,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The caster's image blurs, making them harder to hit, granting %d bonus to defense.
-		The bonus will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.04) * self:getTalentLevel(t))
+		The bonus will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30))
 	end,
 }
 
@@ -83,7 +83,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		local power = 10 + self:combatSpellpower(0.06) * self:getTalentLevel(t)
+		local power = self:combatTalentSpellDamage(t, 10, 170)
 		game:playSoundNear(self, "talents/heal")
 		return {
 			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
@@ -97,7 +97,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The caster surrounds themselves with a phantasmal shield. If hit in melee the shield will deal %d arcane damage to the attacker.
-		The damage will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 170))
 	end,
 }
 
@@ -113,7 +113,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		local power = 4 + self:combatSpellpower(0.04) * self:getTalentLevel(t)
+		local power = self:combatTalentSpellDamage(t, 10, 30)
 		game:playSoundNear(self, "talents/heal")
 		return {
 			invisible = self:addTemporaryValue("invisible", power),
@@ -129,6 +129,6 @@ newTalent{
 		return ([[The caster fades from sight, granting %d bonus to invisibility.
 		Beware, you should take off your light, otherwise you will still be easily spotted.
 		This powerful spell constantly drains your mana while active.
-		The bonus will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.04) * self:getTalentLevel(t))
+		The bonus will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 30))
 	end,
 }

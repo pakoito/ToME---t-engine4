@@ -25,8 +25,9 @@ newTalent{
 	sustain_mana = 50,
 	points = 5,
 	cooldown = 30,
+	spellpower_increase = { 5, 9, 13, 16, 18 },
 	activate = function(self, t)
-		local power = 5 * self:getTalentLevelRaw(t)
+		local power = t.spellpower_increase[self:getTalentLevelRaw(t)]
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			power = self:addTemporaryValue("combat_spellpower", power),
@@ -39,7 +40,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your mastery of magic allows you to enter a deep concentration state, increasing your spellpower by %d.]]):format(5 * self:getTalentLevelRaw(t))
+		return ([[Your mastery of magic allows you to enter a deep concentration state, increasing your spellpower by %d.]]):format(t.spellpower_increase[self:getTalentLevelRaw(t)])
 	end,
 }
 
@@ -60,7 +61,7 @@ newTalent{
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t)), nil)
+		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(self:combatTalentSpellDamage(t, 20, 230)), nil)
 		local _ _, x, y = self:canProject(tg, x, y)
 		if tg.type == "beam" then
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
@@ -73,7 +74,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage.
 		At level 3 it becomes a beam.
-		The damage will increase with the Magic stat]]):format(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 230))
 	end,
 }
 
@@ -89,14 +90,14 @@ newTalent{
 	},
 	action = function(self, t)
 		if not self:hasEffect(self.EFF_MANAFLOW) then
-			self:setEffect(self.EFF_MANAFLOW, 10, {power=5+self:combatSpellpower(0.06) * self:getTalentLevel(t)})
+			self:setEffect(self.EFF_MANAFLOW, 10, {power=self:combatTalentSpellDamage(t, 10, 20)})
 			game:playSoundNear(self, "talents/arcane")
 		end
 		return true
 	end,
 	info = function(self, t)
 		return ([[Engulf yourself in a surge of mana, quickly restoring %d mana every turns for 10 turns.
-		The mana restored will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
+		The mana restored will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 20))
 	end,
 }
 

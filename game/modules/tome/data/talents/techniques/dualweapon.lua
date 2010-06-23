@@ -122,7 +122,7 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		-- First attack with offhand
-		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, 1.2 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, self:combatTalentWeaponDamage(t, 0.7, 1.7))
 
 		-- Second attack with mainhand
 		if hit then
@@ -133,13 +133,13 @@ newTalent{
 			end
 
 			-- Attack after the stun, to benefit from backstabs
-			self:attackTargetWith(target, weapon.combat, nil, 1.2 + self:getTalentLevel(t) / 10)
+			self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.7, 1.7))
 		end
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit with your offhand weapon for %d%% damage, if the attack hits, the target is stunned and you hit it with your mainhand weapon.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
+		return ([[Hit with your offhand weapon for %d%% damage, if the attack hits, the target is stunned and you hit it with your mainhand weapon.]]):format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.7))
 	end,
 }
 
@@ -161,14 +161,14 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
-		self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
-		self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
+		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1.4), true)
+		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1.4), true)
+		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1.4), true)
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lashes out a flurry of blows, hitting your target three times with each weapon for %d%% damage.]]):format(100 * (0.8 + self:getTalentLevel(t) / 10))
+		return ([[Lashes out a flurry of blows, hitting your target three times with each weapon for %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1.4))
 	end,
 }
 
@@ -197,16 +197,16 @@ newTalent{
 		local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
 		local hit
-		hit = self:attackTarget(target, nil, 1.2 + self:getTalentLevel(t) / 10, true)
+		hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1, 1.7), true)
 		if hit and target:canBe("cut") then target:setEffect(target.EFF_CUT, 3 + self:getTalentLevel(t), {power=self:getDex() * 0.5, src=self}) end
 
 		if lt then
-			hit = self:attackTarget(lt, nil, 1.2 + self:getTalentLevel(t) / 10, true)
+			hit = self:attackTarget(lt, nil, self:combatTalentWeaponDamage(t, 1, 1.7), true)
 			if hit and lt:canBe("cut") then lt:setEffect(lt.EFF_CUT, 3 + self:getTalentLevel(t), {power=self:getDex() * 0.5, src=self}) end
 		end
 
 		if rt then
-			hit = self:attackTarget(rt, nil, 1.2 + self:getTalentLevel(t) / 10, true)
+			hit = self:attackTarget(rt, nil, self:combatTalentWeaponDamage(t, 1, 1.7), true)
 			if hit and rt:canBe("cut") then rt:setEffect(rt.EFF_CUT, 3 + self:getTalentLevel(t), {power=self:getDex() * 0.5, src=self}) end
 		end
 		print(x,y,target)
@@ -217,7 +217,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Attack your foes in a frontal arc doing %d%% weapon damage and making your targets bleed for %d each turn for %d turns.]]):
-		format(100 * (1.2 + self:getTalentLevel(t) / 10), self:getDex() * 0.5, 3 + self:getTalentLevel(t))
+		format(100 * self:combatTalentWeaponDamage(t, 1, 1.7), self:getDex() * 0.5, 3 + self:getTalentLevel(t))
 	end,
 }
 
@@ -239,13 +239,13 @@ newTalent{
 			local x, y = self.x + i, self.y + j
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
-				self:attackTarget(target, nil, 1.4 + self:getTalentLevel(t) / 10, true)
+				self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1.2, 1.9), true)
 			end
 		end end
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spin around, damaging all targets around with both weapons for %d%%.]]):format(100 * (1.4 + self:getTalentLevel(t) / 10))
+		return ([[Spin around, damaging all targets around with both weapons for %d%%.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.9))
 	end,
 }

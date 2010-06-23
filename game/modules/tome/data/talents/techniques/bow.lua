@@ -40,12 +40,12 @@ newTalent{
 	action = function(self, t)
 		local energy = self.energy.value
 		self.combat_apr = self.combat_apr + 1000
-		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 7, nil, {type="beam"}, {one_shot=true})
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.5), nil, {type="beam"}, {one_shot=true})
 		self.combat_apr = self.combat_apr - 1000
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire an arrow that cuts right through anything, piercing multiple targets if possible with nigh infinite armor penetration, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 7))
+		return ([[You fire an arrow that cuts right through anything, piercing multiple targets if possible with nigh infinite armor penetration, doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 
@@ -60,11 +60,11 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, nil, {type="ball", radius=1}, {limit_shots=2})
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1.2, 1.7), nil, {type="ball", radius=1}, {limit_shots=2})
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire two arrows at your target, hitting it and a nearby foe if possible, doing %d%% damage.]]):format(100 * (1.2 + self:getTalentLevel(t) / 5))
+		return ([[You fire two arrows at your target, hitting it and a nearby foe if possible, doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.7))
 	end,
 }
 
@@ -79,10 +79,10 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 0.7 + self:getTalentLevel(t) / 5, nil, {type="ball", radius=2 + self:getTalentLevel(t)/3, firendlyfire=false})
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 0.6, 1.3), nil, {type="ball", radius=2 + self:getTalentLevel(t)/3, firendlyfire=false})
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire multiple arrows at the area, doing %d%% damage.]]):format(100 * (0.7 + self:getTalentLevel(t) / 5))
+		return ([[You fire multiple arrows at the area, doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.6, 1.3))
 	end,
 }

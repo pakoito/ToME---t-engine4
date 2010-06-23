@@ -41,7 +41,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, 0.8 + self:getTalentLevel(t) / 10, true)
+		local hitted = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.4), true)
 
 		if hitted then
 			local dur = 5 + math.ceil(self:getTalentLevel(t))
@@ -54,7 +54,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You hit your target doing %d%% damage. If your attack hits, you gain %d armour penetration for %d turns.
 		The APR will increase with Cunning.]]):
-		format(100 * (0.8 + self:getTalentLevel(t) / 10), 4 + (self:getTalentLevel(t) * self:getCun()) / 20, 5 + math.ceil(self:getTalentLevel(t)))
+		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.4), 4 + (self:getTalentLevel(t) * self:getCun()) / 20, 5 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
 

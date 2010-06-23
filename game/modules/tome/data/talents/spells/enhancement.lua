@@ -31,8 +31,8 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
 		return {
-			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.08)}),
-			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.05)}),
+			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = self:combatTalentSpellDamage(t, 5, 20)}),
+			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = self:combatTalentSpellDamage(t, 5, 14)}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -42,7 +42,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %d fire damage per melee attack and increasing all fire damage by %d%%.]]):
-		format(5 + self:getTalentLevel(t) * self:combatSpellpower(0.08), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.05))
+		format(self:combatTalentSpellDamage(t, 5, 20), self:combatTalentSpellDamage(t, 5, 14))
 	end,
 }
 
@@ -56,11 +56,11 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		self:setEffect(self.EFF_EARTHEN_BARRIER, 10, {power=10 + self:getTalentLevel(t) * self:combatSpellpower(0.08)})
+		self:setEffect(self.EFF_EARTHEN_BARRIER, 10, {power=self:combatTalentSpellDamage(t, 10, 60)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%%.]]):format(10 + self:getTalentLevel(t) * self:combatSpellpower(0.08))
+		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%%.]]):format(self:combatTalentSpellDamage(t, 10, 60))
 	end,
 }
 
@@ -78,8 +78,8 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 		return {
-			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = 3 + self:getTalentLevel(t) * self:combatSpellpower(0.05)}),
-			per = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = 4 + self:getTalentLevel(t) * self:combatSpellpower(0.04)}),
+			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = self:combatTalentSpellDamage(t, 3, 15)}),
+			per = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = self:combatTalentSpellDamage(t, 5, 14)}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -89,7 +89,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.]]):
-		format(3 + self:getTalentLevel(t) * self:combatSpellpower(0.05), 4 + self:getTalentLevel(t) * self:combatSpellpower(0.04))
+		format(self:combatTalentSpellDamage(t, 3, 15), self:combatTalentSpellDamage(t, 5, 14))
 	end,
 }
 
@@ -106,7 +106,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = math.floor(2 + self:getTalentLevel(t) * self:combatSpellpower(0.06))
+		local power = math.floor(self:combatTalentSpellDamage(t, 2, 18))
 		return {
 			stats = self:addTemporaryValue("inc_stats", {
 				[self.STAT_STR] = power,
@@ -124,6 +124,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You concentrate on your inner self, increasing your stats each by %d.]]):
-		format(2 + self:getTalentLevel(t) * self:combatSpellpower(0.06))
+		format(self:combatTalentSpellDamage(t, 2, 18))
 	end,
 }

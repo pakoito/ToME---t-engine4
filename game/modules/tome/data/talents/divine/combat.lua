@@ -98,7 +98,7 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			self:attackTarget(target, nil, 1.1 + self:getTalentLevel(t) / 7, true)
+			self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1.1, 1.9), true)
 		else
 			return
 		end
@@ -107,7 +107,7 @@ newTalent{
 	info = function(self, t)
 		return ([[In a pure display of power you project a melee attack up to a range of %d, doing %d%% damage.
 		The range will increase with the Strength stat]]):
-		format(self:getTalentRange(t), 100 * (1.1 + self:getTalentLevel(t) / 7))
+		format(self:getTalentRange(t), 100 * self:combatTalentWeaponDamage(t, 1.1, 1.9))
 	end,
 }
 
@@ -127,11 +127,11 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, DamageType.LIGHT, 1.1 + self:getTalentLevel(t) / 7, true)
+		self:attackTarget(target, DamageType.LIGHT, self:combatTalentWeaponDamage(t, 1.1, 1.9), true)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Concentrate the power of the sun in a single blow doing %d%% light damage.]]):
-		format(100 * (1.1 + self:getTalentLevel(t) / 7))
+		format(100 * self:combatTalentWeaponDamage(t, 1.1, 1.9))
 	end,
 }

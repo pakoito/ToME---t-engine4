@@ -28,13 +28,13 @@ newTalent{
 		HEAL = 10,
 	},
 	action = function(self, t)
-		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:combatSpellpower(0.07) * self:getTalentLevel(t)})
+		self:setEffect(self.EFF_REGENERATION, 10, {power=self:combatTalentSpellDamage(t, 5, 25)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Call upon the forces of nature to regenerate your body for %d life every turn for 10 turns.
-		The life healed will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.07) * self:getTalentLevel(t))
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 25))
 	end,
 }
 
@@ -49,13 +49,13 @@ newTalent{
 		HEAL = 10,
 	},
 	action = function(self, t)
-		self:heal(self:spellCrit(10 + self:combatSpellpower(0.5) * self:getTalentLevel(t)), self)
+		self:heal(self:spellCrit(self:combatTalentSpellDamage(t, 40, 220)), self)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Call upon the forces of nature to heal your body for %d life.
-		The life healed will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.5) * self:getTalentLevel(t))
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 40, 220))
 	end,
 }
 

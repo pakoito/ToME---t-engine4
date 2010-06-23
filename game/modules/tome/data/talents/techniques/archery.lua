@@ -47,12 +47,12 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5)
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1.1, 2.2))
 		print(energy , self.energy.value, energy ~= self.energy.value)
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[A steady shot, doing %d%% damage.]]):format((1.2 + self:getTalentLevel(t) / 5) * 100)
+		return ([[A steady shot, doing %d%% damage.]]):format(self:combatTalentWeaponDamage(t, 1.1, 2.2) * 100)
 	end,
 }
 
@@ -144,12 +144,12 @@ newTalent{
 	action = function(self, t)
 		local energy = self.energy.value
 		self.combat_physcrit = self.combat_physcrit + 1000
-		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 4)
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1.2, 2))
 		self.combat_physcrit = self.combat_physcrit - 1000
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You concentrate on your aim to produce a guaranted critical hit (with a base damage of %d%%).]]):format((1.2 + self:getTalentLevel(t) / 4) * 100)
+		return ([[You concentrate on your aim to produce a guaranted critical hit (with a base damage of %d%%).]]):format(self:combatTalentWeaponDamage(t, 1.2, 2) * 100)
 	end,
 }
 
@@ -202,7 +202,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 1 + self:getTalentLevel(t) / 6, function(target, x, y)
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.5), function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
 				target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4)})
 			else
@@ -212,7 +212,7 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire a crippling shot, doing %d%% damage and reducing your target's speed by %0.2f for 7 turns.]]):format((1 + self:getTalentLevel(t) / 6) * 100, util.bound((5 + 5 * self:getTalentLevel(t)) / 100, 0.1, 0.4))
+		return ([[You fire a crippling shot, doing %d%% damage and reducing your target's speed by %0.2f for 7 turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.5) * 100, util.bound((5 + 5 * self:getTalentLevel(t)) / 100, 0.1, 0.4))
 	end,
 }
 
@@ -227,7 +227,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 1 + self:getTalentLevel(t) / 6, function(target, x, y)
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.4), function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
 				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {})
 			else
@@ -237,7 +237,7 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.]]):format((1 + self:getTalentLevel(t) / 6) * 100, 2 + self:getTalentLevelRaw(t))
+		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100, 2 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -252,7 +252,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 1 + self:getTalentLevel(t) / 6, function(target, x, y)
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 0.5, 1.5), function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
 				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {})
 			else
@@ -262,6 +262,6 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format((0.5 + self:getTalentLevel(t) / 6) * 100, 2 + self:getTalentLevelRaw(t))
+		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5), 2 + self:getTalentLevelRaw(t))
 	end,
 }

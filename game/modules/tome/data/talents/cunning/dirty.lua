@@ -31,7 +31,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, 0.2 + self:getTalentLevel(t) / 12, true)
+		local hitted = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.2, 0.7), true)
 
 		if hitted then
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
@@ -45,7 +45,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.]]):
-		format(100 * (0.2 + self:getTalentLevel(t) / 12), 3 + math.ceil(self:getTalentLevel(t)))
+		format(100 * self:combatTalentWeaponDamage(t, 0.2, 0.7), 3 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
 
@@ -107,7 +107,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, 0.9 + self:getTalentLevel(t) / 9, true)
+		local hitted = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.9, 1.4), true)
 
 		if hitted then
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
@@ -128,6 +128,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% attack and %d%% damage.]]):
-		format(100 * (0.9 + self:getTalentLevel(t) / 9), 3 + math.ceil(self:getTalentLevel(t)), 10 + self:getTalentLevel(t) * 3, 10 + self:getTalentLevel(t) * 4)
+		format(100 * self:combatTalentWeaponDamage(t, 0.9, 1.4), 3 + math.ceil(self:getTalentLevel(t)), 10 + self:getTalentLevel(t) * 3, 10 + self:getTalentLevel(t) * 4)
 	end,
 }

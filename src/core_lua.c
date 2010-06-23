@@ -1040,7 +1040,8 @@ static int sdl_texture_outline(lua_State *L)
 	glTexCoord2f(0,1); glVertex3f(0, h, 0);
 	glEnd();
 
-
+	// Unbind texture from FBO and then unbind FBO
+	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
 	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
 	// Restore viewport
 	CHECKGL(glPopAttrib());

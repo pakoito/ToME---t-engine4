@@ -77,7 +77,7 @@ newTalent{
 	cooldown = 20,
 	positive = -10,
 	action = function(self, t)
-		local dam = 15 + self:combatSpellpower(0.37) * self:getTalentLevel(t)
+		local dam = self:combatTalentSpellDamage(t, 20, 150)
 		local trap = Trap.new{
 			name = "glyph of explosion",
 			type = "elemental", id_by_type=true, unided_name = "trap",
@@ -116,7 +116,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You bind light in a glyph on the floor, the first target passing by will be hit by a blast of light doing %0.2f damage.
 		The glyph lasts for %d turns.
-		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.37) * self:getTalentLevel(t), 2 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 150), 2 + self:getTalentLevel(t))
 	end,
 }
 

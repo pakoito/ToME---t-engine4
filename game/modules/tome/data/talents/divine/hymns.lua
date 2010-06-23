@@ -43,8 +43,8 @@ newTalent{
 	range = 20,
 	activate = function(self, t)
 		cancelHymns(self)
-		local power = 10 + self:getTalentLevel(t) * self:combatSpellpower(0.10)
-		local dam = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07)
+		local power = self:combatTalentSpellDamage(t, 10, 50)
+		local dam = self:combatTalentSpellDamage(t, 5, 25)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.DARKNESS]=dam}),
@@ -63,7 +63,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you %d%% more darkness damage.
 		In addition it surrounds you with a shield of shadows, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
-		The damage will increase with the Magic stat]]):format(10 + self:getTalentLevel(t) * self:combatSpellpower(0.10), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50), self:combatTalentSpellDamage(t, 5, 25))
 	end,
 }
 
@@ -81,8 +81,10 @@ newTalent{
 	range = 20,
 	activate = function(self, t)
 		cancelHymns(self)
+		local dam = self:combatTalentSpellDamage(t, 5, 25)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.DARKNESS]=dam}),
 			infravision = self:addTemporaryValue("infravision", math.floor(5 + self:getTalentLevel(t))),
 			particle = self:addParticles(Particles.new("darkness_shield", 1))
 		}
@@ -90,14 +92,15 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("infravision", p.infravision)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the moon, granting you infravision up to %d grids.
-		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f light damage.
+		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
-		The resistance and damage will increase with the Magic stat]]):format(math.floor(5 + self:getTalentLevel(t)), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
+		The resistance and damage will increase with the Magic stat]]):format(math.floor(5 + self:getTalentLevel(t)), self:combatTalentSpellDamage(t, 5, 25))
 	end,
 }
 
@@ -115,8 +118,7 @@ newTalent{
 	range = 20,
 	activate = function(self, t)
 		cancelHymns(self)
-		local power = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.08)
-		local dam = 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07)
+		local dam = self:combatTalentSpellDamage(t, 5, 25)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.DARKNESS]=dam}),
@@ -139,7 +141,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you %d%% stun, blindness and confusion resistances.
 		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Hymn active at once.
-		The damage will increase with the Magic stat]]):format(100 * (0.2 + self:getTalentLevel(t) / 10), 5 + self:getTalentLevel(t) * self:combatSpellpower(0.07))
+		The damage will increase with the Magic stat]]):format(100 * (0.2 + self:getTalentLevel(t) / 10), self:combatTalentSpellDamage(t, 5, 25))
 	end,
 }
 
@@ -180,7 +182,7 @@ newTalent{
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self:project(tg, a.x, a.y, DamageType.DARKNESS, rng.avg(1, self:spellCrit(20 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), 3))
+			self:project(tg, a.x, a.y, DamageType.DARKNESS, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 7, 80)), 3))
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "shadow_beam", {tx=a.x-self.x, ty=a.y-self.y})
 			game:playSoundNear(self, "talents/spell_generic")
 		end
@@ -202,6 +204,6 @@ newTalent{
 		return ([[Conjures a shroud of dancing shadows with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random shadow beam will hit up to %d of your foes for 1 to %0.2f damage.
 		This powerful spell will continuously drain negative energy while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 20 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 7, 80))
 	end,
 }

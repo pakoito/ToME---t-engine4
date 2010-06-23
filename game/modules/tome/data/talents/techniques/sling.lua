@@ -39,7 +39,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, function(target, x, y)
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.5), function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
 				target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {})
 			else
@@ -49,7 +49,7 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire a shot to your target's eyes, blinding it for %d turns and doing %d%% damage.]]):format(2 + self:getTalentLevelRaw(t), 100 * (1.2 + self:getTalentLevel(t) / 5))
+		return ([[You fire a shot to your target's eyes, blinding it for %d turns and doing %d%% damage.]]):format(2 + self:getTalentLevelRaw(t), 100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 
@@ -64,7 +64,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 1.2 + self:getTalentLevel(t) / 5, function(target, x, y)
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.5), function(target, x, y)
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(self.x, self.y, 4)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -75,7 +75,7 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire a mighty shot at your target doing %d%% damage and knocking it back.]]):format(100 * (1.2 + self:getTalentLevel(t) / 5))
+		return ([[You fire a mighty shot at your target doing %d%% damage and knocking it back.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 
@@ -90,10 +90,10 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local energy = self.energy.value
-		self:archeryShoot(nil, 0.7 + self:getTalentLevel(t) / 5, nil, nil, {multishots=2+self:getTalentLevelRaw(t)/2})
+		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 0.3, 0.7), nil, nil, {multishots=2+self:getTalentLevelRaw(t)/2})
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire %d shots at your target, doing %d%% damage with each shot.]]):format(2+self:getTalentLevelRaw(t)/2, 100 * (0.7 + self:getTalentLevel(t) / 5))
+		return ([[You fire %d shots at your target, doing %d%% damage with each shot.]]):format(2+self:getTalentLevelRaw(t)/2, 100 * self:combatTalentWeaponDamage(t, 0.3, 0.7))
 	end,
 }

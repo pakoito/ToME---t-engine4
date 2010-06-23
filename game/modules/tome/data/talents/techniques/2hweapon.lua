@@ -71,14 +71,14 @@ newTalent{
 			local x, y = self.x + i, self.y + j
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
-				self:attackTargetWith(target, weapon.combat, nil, 1.4 + self:getTalentLevel(t) / 8)
+				self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.4, 2.1))
 			end
 		end end
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
+		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.4, 2.1))
 	end,
 }
 
@@ -142,7 +142,7 @@ newTalent{
 		end
 		self.combat_physcrit = self.combat_physcrit + 100
 
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.4 + self:getTalentLevel(t) / 6)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3))
 
 		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam - inc
@@ -164,7 +164,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Tries to perform a killing blow doing %d%% weapon damage, granting an automatic critical hit. If the target ends up with low enough life it might be instantly killed.
-		At level 4 it drains all remaining stamina and uses it to increase the blow damage.]]):format(100 * (1.4 + self:getTalentLevel(t) / 6))
+		At level 4 it drains all remaining stamina and uses it to increase the blow damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3))
 	end,
 }
 
@@ -189,7 +189,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.2 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.5))
 
 		-- Try to stun !
 		if hit then
@@ -203,7 +203,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * (1.2 + self:getTalentLevel(t) / 10))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 
@@ -225,7 +225,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.5))
 
 		-- Try to stun !
 		if hit then
@@ -239,7 +239,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's armour is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 5*self:getTalentLevel(t))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's armour is reduced by %d.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 5*self:getTalentLevel(t))
 	end,
 }
 
@@ -261,7 +261,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.5 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.5))
 
 		-- Try to stun !
 		if hit then
@@ -275,7 +275,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's attack power is reduced by %d.]]):format(100 * (1.5 + self:getTalentLevel(t) / 10), 3*self:getTalentLevel(t))
+		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's attack power is reduced by %d.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 3*self:getTalentLevel(t))
 	end,
 }
 
@@ -297,7 +297,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1.4 + self:getTalentLevel(t) / 10)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.4))
 
 		-- Try to stun !
 		if hit then
@@ -311,6 +311,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage, if the attack hits, the target is unable to move for %d turns.]]):format(100 * (1.4 + self:getTalentLevel(t) / 10), 2+self:getTalentLevel(t))
+		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage, if the attack hits, the target is unable to move for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), 2+self:getTalentLevel(t))
 	end,
 }

@@ -32,7 +32,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
-		local power = 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t)
+		local power = self:combatTalentSpellDamage(t, 10, 20)
 		return {
 			armor = self:addTemporaryValue("combat_armor", power),
 			particle = self:addParticles(Particles.new("stone_skin", 1)),
@@ -45,7 +45,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The caster's skin grows as hard as stone, granting %d bonus to armor.
-		The bonus to armor will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
+		The bonus to armor will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 20))
 	end,
 }
 
@@ -88,7 +88,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(8 + self:combatSpellpower(0.15) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(self:combatTalentSpellDamage(t, 8, 170)))
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,

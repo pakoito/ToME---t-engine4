@@ -127,7 +127,7 @@ newTalent{
 		if not tx or not ty or not target then return nil end
 
 		local dur = util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25)
-		local power = 50 + self:combatSpellpower(0.4) * self:getTalentLevel(t)
+		local power = self:combatTalentSpellDamage(t, 20, 210)
 		local chance = 20 + self:getTalentLevel(t) * 5
 		self:setEffect(self.EFF_DISPLACEMENT_SHIELD, dur, {power=power, target=target, chance=chance})
 		game:playSoundNear(self, "talents/teleport")
@@ -137,7 +137,7 @@ newTalent{
 		return ([[This intricate spell erects a space distortion around the caster that is linked to another one around a target.
 		Any time the caster should take damage there is a %d%% chance that it will instead be warped by the shield and hit the designated target.
 		Once the maximum damage (%d) is absorbed, the time runs out (%d turns), or the target dies, the shield will crumble.
-		The duration and max absorption will increase with the Magic stat]]):format(20 + self:getTalentLevel(t) * 5, 50 + self:combatSpellpower(0.4) * self:getTalentLevel(t), util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25))
+		The duration and max absorption will increase with the Magic stat]]):format(20 + self:getTalentLevel(t) * 5, self:combatTalentSpellDamage(t, 20, 210), util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25))
 	end,
 }
 

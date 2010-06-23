@@ -33,13 +33,13 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.LIGHT, self:spellCrit(6 + self:combatSpellpower(0.3) * self:getTalentLevel(t)), {type="light"})
+		self:project(tg, x, y, DamageType.LIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 6, 160)), {type="light"})
 
 		local _ _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, 4,
-			DamageType.LIGHT, 6 + self:combatSpellpower(0.3) * self:getTalentLevel(t),
+			DamageType.LIGHT, self:combatTalentSpellDamage(t, 6, 80),
 			0,
 			5, nil,
 			{type="light_zone"},
@@ -51,7 +51,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Calls the power of the Sun into a searing light doing %0.2f damage and leaving a spot on the ground for 4 turns doing %0.2f damage.
-		The damage will increase with the Magic stat]]):format(6 + self:combatSpellpower(0.3) * self:getTalentLevel(t), 6 + self:combatSpellpower(0.3) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 6, 160), self:combatTalentSpellDamage(t, 6, 80))
 	end,
 }
 
@@ -72,7 +72,7 @@ newTalent{
 		tg.friendlyfire = false
 		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
 		if self:getTalentLevel(t) then
-			self:project(tg, self.x, self.y, DamageType.LIGHT, 4 + self:combatSpellpower(0.15) * self:getTalentLevel(t))
+			self:project(tg, self.x, self.y, DamageType.LIGHT, self:combatTalentSpellDamage(t, 4, 80))
 		end
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y, max_alpha=80})
 		game:playSoundNear(self, "talents/flame")
@@ -83,7 +83,7 @@ newTalent{
 		At level 3 it will start dealing %0.2f light damage.
 		The damage will increase with the Magic stat]]):
 		format(
-			4 + self:combatSpellpower(0.15) * self:getTalentLevel(t)
+			self:combatTalentSpellDamage(t, 4, 80)
 		)
 	end,
 }
@@ -103,7 +103,7 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(10 + self:combatSpellpower(0.4) * self:getTalentLevel(t)))
+		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(self:combatTalentSpellDamage(t, 10, 200)))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "light_beam", {tx=x-self.x, ty=y-self.y})
 
@@ -113,7 +113,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Fire a beam of sun flames at your foes, burning all those in line for %0.2f fire damage.
 		The damage will increase with the Magic stat]]):
-		format(10 + self:combatSpellpower(0.4) * self:getTalentLevel(t))
+		format(self:combatTalentSpellDamage(t, 10, 200))
 	end,
 }
 
@@ -130,7 +130,7 @@ newTalent{
 	range = 3,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=3, friendlyfire=false, talent=t}
-		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.27) * self:getTalentLevel(t)))
+		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 10, 160)))
 
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 
@@ -139,6 +139,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures a furious burst of sunlight, dealing %0.2f light damage to all those around you in a radius of 4.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), 10 + self:combatSpellpower(0.27) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 160))
 	end,
 }

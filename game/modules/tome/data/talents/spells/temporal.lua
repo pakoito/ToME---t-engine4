@@ -109,7 +109,7 @@ newTalent{
 	range = 20,
 	action = function(self, t)
 		local dur = util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15)
-		local power = 50 + self:combatSpellpower(0.5) * self:getTalentLevel(t)
+		local power = self:combatTalentSpellDamage(t, 50, 170)
 		self:setEffect(self.EFF_TIME_SHIELD, dur, {power=power})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -117,6 +117,6 @@ newTalent{
 	info = function(self, t)
 		return ([[This intricate spell erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
 		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (5 turns).
-		The duration and max absorption will increase with the Magic stat]]):format(50 + self:combatSpellpower(0.5) * self:getTalentLevel(t), util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15))
+		The duration and max absorption will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 50, 170), util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15))
 	end,
 }

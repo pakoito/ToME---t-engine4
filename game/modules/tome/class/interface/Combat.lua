@@ -493,6 +493,13 @@ function _M:combatTalentSpellDamage(t, base, max)
 	return (base + self:combatSpellpower()) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
 end
 
+--- Gets weapon damage mult based on talent
+function _M:combatTalentWeaponDamage(t, base, max, t2)
+	if t2 then t2 = t2 / 2 else t2 = 0 end
+	local diff = max - base
+	return base + diff * math.sqrt((self:getTalentLevel(t) + t2) / 5)
+end
+
 --- Gets spellcrit
 function _M:combatSpellCrit()
 	return self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1

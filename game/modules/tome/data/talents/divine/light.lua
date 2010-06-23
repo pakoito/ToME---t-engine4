@@ -28,13 +28,13 @@ newTalent{
 		HEAL = 10,
 	},
 	action = function(self, t)
-		self:heal(self:spellCrit(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t)), self)
+		self:heal(self:spellCrit(self:combatTalentSpellDamage(t, 20, 240)), self)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		return ([[An invigorating ray of sun shines on you, healing your body for %d life.
-		The life healed will increase with the Magic stat]]):format(20 + self:combatSpellpower(0.5) * self:getTalentLevel(t))
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 240))
 	end,
 }
 
@@ -51,7 +51,7 @@ newTalent{
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
-		local dam = 5 + self:combatSpellpower(0.20) * self:getTalentLevel(t)
+		local dam = self:combatTalentSpellDamage(t, 4, 20)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -67,7 +67,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A magical zone of sunlight appears around you, healing all that stand within.
-		The life healed will increase with the Magic stat]]):format(5 + self:combatSpellpower(0.20) * self:getTalentLevel(t))
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 20))
 	end,
 }
 
@@ -79,12 +79,12 @@ newTalent{
 	positive = -20,
 	cooldown = 60,
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=(10 + self:getMag(30)) * self:getTalentLevel(t)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=self:combatTalentSpellDamage(t, 30, 170)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A protective shield forms around you, negating %d damage.]]):format((10 + self:getMag(30)) * self:getTalentLevel(t))
+		return ([[A protective shield forms around you, negating %d damage.]]):format(self:combatTalentSpellDamage(t, 30, 170))
 	end,
 }
 
