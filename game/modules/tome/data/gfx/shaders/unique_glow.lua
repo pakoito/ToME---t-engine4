@@ -21,8 +21,9 @@ return {
 	frag = "unique_glow",
 	vert = nil,
 	args = {
-		color = color or {1,1,1,1},
-		texSize = size or {32, 32},
+		noisevol = { texture = 1 },
+		color = color or {1,0,1,1},
+--		texSize = size or {32, 32},
 	},
 	clone = false,
 }

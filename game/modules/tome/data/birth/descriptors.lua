@@ -43,6 +43,8 @@ newBirthDescriptor{
 	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, HANDS = 1, FEET = 1, TOOL = 1, QUIVER = 1 },
 
 	copy = {
+		shader = "unique_glow", textures = { function() local n = core.noise.new(3); return n:makeTexture3D(64, 64, 64, 0, 0, 0), true end },
+
 		-- Mages are unheard of at first, nobody but them regenerates mana
 		mana_rating = 6,
 		mana_regen = 0,

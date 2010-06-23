@@ -220,8 +220,8 @@ static float noise3d(noise_t *n, float x, float y, float z)
 	float p[3];
 	p[0] = x;
 	p[1] = y;
-	p[2] = y;
-	return TCOD_noise_simplex(n->noise, p);
+	p[2] = z;
+	return (TCOD_noise_simplex(n->noise, p) + 1) / 2;
 }
 
 // Source: http://web.archive.org/web/20070706003038/http://www.cs.cmu.edu/~mzucker/code/perlin-noise-math-faq.html
@@ -244,13 +244,12 @@ static float tilablenoise3d(noise_t *n, double ix, double iy, double iz, double 
 static int noise_texture3d(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	int w = luaL_checknumber(L, 3);
-	int h = luaL_checknumber(L, 4);
-	int d = luaL_checknumber(L, 5);
-	float zoom = luaL_checknumber(L, 6);
-	float x = luaL_checknumber(L, 7);
-	float y = luaL_checknumber(L, 8);
-	float z = luaL_checknumber(L, 9);
+	int w = luaL_checknumber(L, 2);
+	int h = luaL_checknumber(L, 3);
+	int d = luaL_checknumber(L, 4);
+	float x = luaL_checknumber(L, 5);
+	float y = luaL_checknumber(L, 6);
+	float z = luaL_checknumber(L, 7);
 	GLubyte *map = malloc(w * h * d * 3 * sizeof(GLubyte));
 
 	int i, j, k;
@@ -260,7 +259,7 @@ static int noise_texture3d(lua_State *L)
 		{
 			for (k = 0; k < d; k++)
 			{
-				float v = tilablenoise3d(n, i+x, j+y, k+z, w, h, d);
+				float v = tilablenoise3d(n, i+x, j+y, k+z, w, h, d) * 255;
 				map[TEXEL3(i, j, k)] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+1] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+2] = (GLubyte)v;

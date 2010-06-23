@@ -1,10 +1,11 @@
-uniform vec2 texSize;
+//uniform vec2 texSize;
 uniform sampler2D tex;
-uniform sampler3D noiseVol;
+uniform sampler3D noisevol;
 uniform vec4 color;
 uniform float tick;
 
-int blursize = 2;
+int blursize = 5;
+vec2 texSize = vec2(32,32);
 
 void main(void)
 {
@@ -25,13 +26,11 @@ void main(void)
 		}
 	}
 
-	// keycolor trick
 	float a = 1.0-center.a;
-	// float a = 1.0-center.r;
 
 	float delta = sample.a;
 	// float delta = max(max(sample.r,sample.g),sample.b)/factor;
-	float noise = texture3D(noiseVol, vec3(gl_TexCoord[0].xy,fTime0_1)).r;
+	float noise = texture3D(noisevol, vec3(gl_TexCoord[0].xy,fTime0_1)).r*2;
 	gl_FragColor = mix(center,delta*color*noise,a);
 
 	/*
