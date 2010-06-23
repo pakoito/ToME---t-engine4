@@ -28,13 +28,13 @@ newTalent{ short_name = "FIRE_IMP_BOLT",
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(8 + self:combatSpellpower(0.2) * self:getTalentLevel(t)), {type="flame"})
+		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(self:combatTalentSpellDamage(t, 8, 120)), {type="flame"})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire doing %0.2f fire damage.
-		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.2) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 8, 120))
 	end,
 }
 
