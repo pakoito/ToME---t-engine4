@@ -4,12 +4,12 @@ uniform sampler3D noisevol;
 uniform vec4 color;
 uniform float tick;
 
-int blursize = 5;
+int blursize = 7;
 vec2 texSize = vec2(32,32);
 
 void main(void)
 {
-	float fTime0_1 = tick / 1000;
+	float fTime0_1 = tick / 5000;
 	vec2 offset = 1.0/texSize;
 
 	// Center Pixel
@@ -25,6 +25,7 @@ void main(void)
 			sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 		}
 	}
+	sample /= float((blursize*2) * (blursize*2));
 
 	float a = 1.0-center.a;
 

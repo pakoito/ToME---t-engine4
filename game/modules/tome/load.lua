@@ -41,6 +41,9 @@ local Quest = require "engine.Quest"
 config.settings.tome = config.settings.tome or {}
 profile.mod.allow_build = profile.mod.allow_build or {}
 
+-- Create some noise textures
+local n = core.noise.new(3)
+_3DNoise = n:makeTexture3D(64, 64, 64, 0, 0, 0)
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")

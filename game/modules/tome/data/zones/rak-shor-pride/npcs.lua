@@ -32,6 +32,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	max_life = 150, life_rating = 16, fixed_rating = true,
 	infravision = 20,
 	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
+	move_others=true,
 
 	combat_armor = 10, combat_def = 10,
 

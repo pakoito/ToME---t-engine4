@@ -19,58 +19,49 @@
 
 local Autolevel = require "engine.Autolevel"
 
-local function learnStats(self, statorder)
-	self.auto_stat_cnt = self.auto_stat_cnt or 1
-	while self.unused_stats > 0 do
-		self:incStat(statorder[self.auto_stat_cnt], 1)
-		self.auto_stat_cnt = util.boundWrap(self.auto_stat_cnt + 1, 1, #statorder)
-		self.unused_stats = self.unused_stats - 1
-	end
-end
-
 Autolevel:registerScheme{ name = "none", levelup = function(self)
 end}
 
 Autolevel:registerScheme{ name = "warrior", levelup = function(self)
-	learnStats(self, { self.STAT_STR, self.STAT_STR, self.STAT_DEX })
+	self:learnStats{ self.STAT_STR, self.STAT_STR, self.STAT_DEX }
 end}
 
 Autolevel:registerScheme{ name = "ghoul", levelup = function(self)
-	learnStats(self, { self.STAT_STR, self.STAT_CON })
+	self:learnStats{ self.STAT_STR, self.STAT_CON }
 end}
 
 Autolevel:registerScheme{ name = "tank", levelup = function(self)
-	learnStats(self, { self.STAT_STR, self.STAT_CON, self.STAT_CON })
+	self:learnStats{ self.STAT_STR, self.STAT_CON, self.STAT_CON }
 end}
 
 Autolevel:registerScheme{ name = "rogue", levelup = function(self)
-	learnStats(self, { self.STAT_DEX, self.STAT_CUN, self.STAT_CUN })
+	self:learnStats{ self.STAT_DEX, self.STAT_CUN, self.STAT_CUN }
 end}
 
 Autolevel:registerScheme{ name = "slinger", levelup = function(self)
-	learnStats(self, { self.STAT_DEX, self.STAT_DEX, self.STAT_CUN })
+	self:learnStats{ self.STAT_DEX, self.STAT_DEX, self.STAT_CUN }
 end}
 
 Autolevel:registerScheme{ name = "archer", levelup = function(self)
-	learnStats(self, { self.STAT_DEX, self.STAT_DEX, self.STAT_STR })
+	self:learnStats{ self.STAT_DEX, self.STAT_DEX, self.STAT_STR }
 end}
 
 Autolevel:registerScheme{ name = "caster", levelup = function(self)
-	learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_WIL })
+	self:learnStats{ self.STAT_MAG, self.STAT_MAG, self.STAT_WIL }
 end}
 
 Autolevel:registerScheme{ name = "warriormage", levelup = function(self)
-	learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_WIL, self.STAT_STR, self.STAT_STR, self.STAT_DEX })
+	self:learnStats{ self.STAT_MAG, self.STAT_MAG, self.STAT_WIL, self.STAT_STR, self.STAT_STR, self.STAT_DEX }
 end}
 
 Autolevel:registerScheme{ name = "dexmage", levelup = function(self)
-	learnStats(self, { self.STAT_MAG, self.STAT_MAG, self.STAT_DEX, self.STAT_DEX })
+	self:learnStats{ self.STAT_MAG, self.STAT_MAG, self.STAT_DEX, self.STAT_DEX }
 end}
 
 Autolevel:registerScheme{ name = "snake", levelup = function(self)
-	learnStats(self, { self.STAT_CUN, self.STAT_DEX, self.STAT_CON, self.STAT_CUN, self.STAT_DEX, self.STAT_STR })
+	self:learnStats{ self.STAT_CUN, self.STAT_DEX, self.STAT_CON, self.STAT_CUN, self.STAT_DEX, self.STAT_STR }
 end}
 
 Autolevel:registerScheme{ name = "spider", levelup = function(self)
-	learnStats(self, { self.STAT_CUN, self.STAT_WIL, self.STAT_MAG, self.STAT_DEX, self.STAT_DEX })
+	self:learnStats{ self.STAT_CUN, self.STAT_WIL, self.STAT_MAG, self.STAT_DEX, self.STAT_DEX }
 end}

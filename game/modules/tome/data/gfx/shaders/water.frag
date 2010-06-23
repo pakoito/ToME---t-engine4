@@ -1,6 +1,7 @@
 uniform float tick;
 uniform sampler3D noisevol;
 uniform vec2 mapCoord;
+uniform vec4 displayColor;
 uniform vec4 color1;
 uniform vec4 color2;
 
@@ -15,5 +16,5 @@ void main(void)
 
 	float bump = 1.0-abs((2.0 * noise)-1.0);
 	bump *= bump - 0.3;
-	gl_FragColor = mix(color1, color2, bump);
+	gl_FragColor = mix(color1, color2, bump) * displayColor;
 }

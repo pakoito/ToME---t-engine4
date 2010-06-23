@@ -47,7 +47,7 @@ newBirthDescriptor{
 		"A good Fighter is able to withstand terrible attacks from all sides, protected by their shield, and when the time comes they lash out at their foes with incredible strength.",
 		"Their most important stats are: Strength and Dexterity",
 	},
-	stats = { str=3, con=2, dex=1, },
+	stats = { str=7, con=2, dex=3, },
 	talents_types = {
 		["technique/shield-offense"]={true, 0.3},
 		["technique/shield-defense"]={true, 0.3},
@@ -62,9 +62,9 @@ newBirthDescriptor{
 		["cunning/dirty"]={false, 0},
 	},
 	talents = {
-		[ActorTalents.T_SHIELD_PUMMEL] = 1,
+		[ActorTalents.T_SHIELD_PUMMEL] = 2,
 		[ActorTalents.T_SHIELD_WALL] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 2,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
@@ -84,7 +84,7 @@ newBirthDescriptor{
 		"A Berserker usually forfeits all ideas of self-defense to concentrate on what they do best: killing things.",
 		"Their most important stats are: Strength and Constitution",
 	},
-	stats = { str=3, con=2, dex=1, },
+	stats = { str=7, con=4, dex=1, },
 	talents_types = {
 		["technique/shield-offense"]={false, -0.1},
 		["technique/shield-defense"]={false, -0.1},
@@ -100,8 +100,8 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_BERSERKER] = 1,
-		[ActorTalents.T_STUNNING_BLOW] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_STUNNING_BLOW] = 2,
+		[ActorTalents.T_WEAPON_COMBAT] = 2,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
@@ -122,7 +122,7 @@ newBirthDescriptor{
 		"They are adept at two-handed weapons, for the sheer destruction they can bring.",
 		"Their most important stats are: Strength, Dexterity and Magic",
 	},
-	stats = { mag=2, str=2, dex=2},
+	stats = { mag=4, str=4, dex=4},
 	talents_types = {
 		["spell/fire"]={true, 0.1},
 		["spell/air"]={true, 0.1},
@@ -139,8 +139,9 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_ARCANE_COMBAT] = 1,
 		[ActorTalents.T_FLAME] = 1,
+		[ActorTalents.T_FIERY_HANDS] = 1,
 		[ActorTalents.T_STUNNING_BLOW] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 2,
 	},
 	copy = {
 		max_life = 100,

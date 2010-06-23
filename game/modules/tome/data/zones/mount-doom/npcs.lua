@@ -268,6 +268,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 	max_life = resolvers.rngavg(300,400), life_rating = 20, fixed_rating = true,
 	combat_armor = 0, combat_def = 20,
 	on_melee_hit = { [DamageType.FIRE] = resolvers.mbonus(30, 10), },
+	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1 },
 

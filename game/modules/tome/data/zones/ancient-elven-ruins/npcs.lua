@@ -39,6 +39,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	rank = 4,
 	size_category = 2,
 	open_door = true,
+	move_others=true,
 	infravision = 20,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },

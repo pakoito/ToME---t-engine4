@@ -259,7 +259,7 @@ static int noise_texture3d(lua_State *L)
 		{
 			for (k = 0; k < d; k++)
 			{
-				float v = tilablenoise3d(n, i+x, j+y, k+z, w, h, d) * 255;
+				float v = tilablenoise3d(n, i*4, j*4, k*4, w*4, h*4, d*4) * 255;
 				map[TEXEL3(i, j, k)] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+1] = (GLubyte)v;
 				map[TEXEL3(i, j, k)+2] = (GLubyte)v;

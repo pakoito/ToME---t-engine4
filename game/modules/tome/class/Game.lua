@@ -132,10 +132,8 @@ function _M:newGame()
 		Map:setViewerFaction(self.player.faction)
 		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
-		self.player:playerLevelup(function()
-			self.player:grantQuest(self.player.starting_quest)
-			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))
-		end)
+		self.player:grantQuest(self.player.starting_quest)
+		self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))
 	end)
 	self:registerDialog(birth)
 end

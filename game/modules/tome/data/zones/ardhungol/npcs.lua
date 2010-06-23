@@ -29,6 +29,7 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	stats = { str=25, dex=10, cun=47, mag=10, con=20 },
 	rank = 4,
 	size_category = 4,
+	move_others=true,
 	infravision = 20,
 
 	combat_armor = 17, combat_def = 17,

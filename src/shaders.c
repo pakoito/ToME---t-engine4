@@ -31,12 +31,17 @@
 
 bool shaders_active = TRUE;
 
-void useShader(GLuint p, int x, int y, float a)
+void useShader(GLuint p, int x, int y, float r, float g, float b, float a)
 {
 	CHECKGL(glUseProgramObjectARB(p));
 	GLfloat t = SDL_GetTicks();
 	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, "tick"), 1, &t));
-	t = a; CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, "alpha"), 1, &t));
+	GLfloat d[4];
+	d[0] = r;
+	d[1] = g;
+	d[2] = b;
+	d[3] = a;
+	CHECKGL(glUniform4fvARB(glGetUniformLocationARB(p, "displayColor"), 1, d));
 
 	GLfloat c[2];
 	c[0] = x;

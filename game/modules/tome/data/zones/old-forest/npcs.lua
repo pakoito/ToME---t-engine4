@@ -45,6 +45,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	rank = 4,
 	size_category = 5,
 	infravision = 20,
+	move_others=true,
 
 	resists = { [DamageType.FIRE] = -50 },
 

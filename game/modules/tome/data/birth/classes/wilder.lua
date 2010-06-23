@@ -45,7 +45,7 @@ newBirthDescriptor{
 		"Summons can range from a combat hound to a fire drake.",
 		"Their most important stats are: Willpower and Cunning",
 	},
-	stats = { wil=3, cun=2, con=1, },
+	stats = { wil=7, cun=4, con=1, },
 	talents_types = {
 		["wild-gift/call"]={true, 0.2},
 		["wild-gift/summon-melee"]={true, 0.3},
@@ -58,10 +58,11 @@ newBirthDescriptor{
 		["technique/combat-training"]={false, 0},
 	},
 	talents = {
-		[ActorTalents.T_WAR_HOUND] = 1,
+		[ActorTalents.T_WAR_HOUND] = 2,
 		[ActorTalents.T_FIRE_IMP] = 1,
 		[ActorTalents.T_MEDITATION] = 1,
 		[ActorTalents.T_TRAP_DETECTION] = 1,
+		[ActorTalents.T_RAGE] = 1,
 	},
 	copy = {
 		max_life = 90,
@@ -81,7 +82,7 @@ newBirthDescriptor{
 		"They have access to talents normally belonging to the various kind of drakes.",
 		"Their most important stats are: Strength and Willpower",
 	},
-	stats = { str=3, wil=2, dex=1, },
+	stats = { str=7, wil=4, dex=1, },
 	talents_types = {
 		["wild-gift/call"]={true, 0.2},
 		["wild-gift/sand-drake"]={true, 0.3},
@@ -95,10 +96,11 @@ newBirthDescriptor{
 		["technique/combat-training"]={true, 0},
 	},
 	talents = {
-		[ActorTalents.T_ICE_CLAW] = 1,
+		[ActorTalents.T_ICE_CLAW] = 2,
 		[ActorTalents.T_BELLOWING_ROAR] = 1,
 		[ActorTalents.T_MEDITATION] = 1,
 		[ActorTalents.T_AXE_MASTERY] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
 		max_life = 110,

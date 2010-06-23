@@ -39,6 +39,7 @@ newEntity{ define_as = "THE_MASTER",
 	size_category = 3,
 	infravision = 20,
 	stats = { str=19, dex=19, cun=34, mag=25, con=16 },
+	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },
 	equipment = resolvers.equip{

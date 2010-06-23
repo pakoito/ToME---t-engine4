@@ -57,8 +57,8 @@ function _M:init(t, no_default)
 
 	if t.fixed_rating == nil then t.fixed_rating = true end
 
-	t.unused_stats = 6
-	t.unused_talents = 2
+	t.unused_stats = 0
+	t.unused_talents = 0
 	t.move_others=true
 
 	t.lite = t.lite or 0

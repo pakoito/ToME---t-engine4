@@ -29,20 +29,16 @@ quickEntity('t', {show_tooltip=true, name='forest', display='#', color=colors.LI
 quickEntity('l', {show_tooltip=true, name='Lorien', display='#', color=colors.GOLD, back_color=colors.DARK_GREEN, image="terrain/lorien.png", block_move=true})
 quickEntity('v', {show_tooltip=true, name='old forest', display='#', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/tree_dark1.png", block_move=true})
 quickEntity('i', {show_tooltip=true, name='iron mountains', display='^', color=colors.SLATE, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
-
-quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true,
-	shader = "water", textures = { function() local n = core.noise.new(3); return n:makeTexture3D(128, 128, 128, 0, 0, 0), true end },
-})
-
+quickEntity('=', {show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, shader = "water", textures = { function() return _3DNoise, true end }, })
 quickEntity('.', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
 quickEntity('g', {show_tooltip=true, name='Forodwaith, the cold lands', display='.', color=colors.LIGHT_BLUE, back_color=colors.BLUE, can_encounter=true, equilibrium_level=-10})
 quickEntity('q', {show_tooltip=true, name='Icebay of Forochel', display=';', color=colors.LIGHT_BLUE, back_color=colors.BLUE, can_encounter=true, equilibrium_level=-10})
 quickEntity('w', {show_tooltip=true, name='ash', display='.', color=colors.WHITE, back_color=colors.LIGHT_DARK, image="terrain/ash1.png", can_encounter=true})
 quickEntity('&', {show_tooltip=true, name='hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
 quickEntity('h', {show_tooltip=true, name='low hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
-quickEntity(' ', {show_tooltip=true, name='sea of Rhun', display='~', color=colors.BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true})
-quickEntity('_', {show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter=true, equilibrium_level=-10})
-quickEntity('~', {show_tooltip=true, name='Anduin river', display='~', color={r=0, g=30, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter=true, equilibrium_level=-10})
+quickEntity(' ', {show_tooltip=true, name='sea of Rhun', display='~', color=colors.BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity('_', {show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter=true, equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity('~', {show_tooltip=true, name='Anduin river', display='~', color={r=0, g=30, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter=true, equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
 quickEntity('-', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
 quickEntity('|', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
 quickEntity('x', {show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})

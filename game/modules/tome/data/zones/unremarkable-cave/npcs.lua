@@ -38,6 +38,7 @@ newEntity{ define_as = "FILLAREL",
 	size_category = 3,
 	infravision = 20,
 	stats = { str=10, dex=22, cun=25, mag=20, con=12 },
+	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
@@ -89,6 +90,7 @@ newEntity{ define_as = "CORRUPTOR",
 	rank = 4,
 	size_category = 3,
 	stats = { str=10, dex=22, cun=25, mag=20, con=12 },
+	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{

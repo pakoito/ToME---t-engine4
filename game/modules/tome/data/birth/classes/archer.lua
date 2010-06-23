@@ -45,7 +45,7 @@ newBirthDescriptor{
 		"Archer",
 		"Their most important stats are: Dexterity and Strength",
 	},
-	stats = { dex=3, str=2, con=1, },
+	stats = { dex=7, str=4, con=1, },
 	talents_types = {
 		["technique/archery-training"]={true, 0.3},
 		["technique/archery-utility"]={true, 0.3},
@@ -59,8 +59,9 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
+		[ActorTalents.T_AMMO_CREATION] = 1,
 		[ActorTalents.T_STEADY_SHOT] = 1,
-		[ActorTalents.T_BOW_MASTERY] = 1,
+		[ActorTalents.T_BOW_MASTERY] = 2,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
@@ -78,7 +79,7 @@ newBirthDescriptor{
 		"Slinger",
 		"Their most important stats are: Dexterity and Cunning",
 	},
-	stats = { dex=3, str=2, con=1, },
+	stats = { dex=7, str=4, con=1, },
 	talents_types = {
 		["technique/archery-training"]={true, 0.3},
 		["technique/archery-utility"]={true, 0.3},
@@ -92,8 +93,9 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
+		[ActorTalents.T_AMMO_CREATION] = 1,
 		[ActorTalents.T_STEADY_SHOT] = 1,
-		[ActorTalents.T_SLING_MASTERY] = 1,
+		[ActorTalents.T_SLING_MASTERY] = 2,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {

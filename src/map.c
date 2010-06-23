@@ -31,7 +31,7 @@
 //#include "shaders.h"
 
 extern bool shaders_active;
-extern void useShader(GLuint p, int x, int y, float a);
+extern void useShader(GLuint p, int x, int y, float r, float g, float b, float a);
 
 static int map_object_new(lua_State *L)
 {
@@ -406,22 +406,32 @@ static int map_set_scroll(lua_State *L)
 inline void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure) ALWAYS_INLINE;
 void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure)
 {
+	float r, g, b;
 	if (!obscure)
 	{
 		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-			glColor4f((map->shown_r + m->tint_r)/2, (map->shown_g + m->tint_g)/2, (map->shown_b + m->tint_b)/2, a);
+		{
+			r = (map->shown_r + m->tint_r)/2; g = (map->shown_g + m->tint_g)/2; b = (map->shown_b + m->tint_b)/2;
+		}
 		else
-			glColor4f(map->shown_r, map->shown_g, map->shown_b, a);
+		{
+			r = map->shown_r; g = map->shown_g; b = map->shown_b;
+		}
 	}
 	else
 	{
 		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-			glColor4f((map->obscure_r + m->tint_r)/2, (map->obscure_g + m->tint_g)/2, (map->obscure_b + m->tint_b)/2, a);
+		{
+			r = (map->obscure_r + m->tint_r)/2; g = (map->obscure_g + m->tint_g)/2; b = (map->obscure_b + m->tint_b)/2;
+		}
 		else
-			glColor4f(map->obscure_r, map->obscure_g, map->obscure_b, a);
+		{
+			r = map->obscure_r; g = map->obscure_g; b = map->obscure_b;
+		}
 	}
+	glColor4f(r, g, b, a);
 	int z;
-	if (m->shader) useShader(m->shader, i, j, a);
+	if (m->shader) useShader(m->shader, i, j, r, g, b, a);
 	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 	{
 		if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);

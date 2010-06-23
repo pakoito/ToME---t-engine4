@@ -39,6 +39,7 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 	size_category = 5,
 	combat_armor = 17, combat_def = 14,
 	infravision = 20,
+	move_others=true,
 
 	resists = { [DamageType.FIRE] = -20, [DamageType.COLD] = 100 },
 

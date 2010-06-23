@@ -43,6 +43,7 @@ newEntity{ define_as = "TROLL_BILL",
 	rank = 4,
 	size_category = 4,
 	infravision = 20,
+	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{ {type="weapon", subtype="greatmaul", defined="GREATMAUL_BILL_TRUNK", autoreq=true}, },

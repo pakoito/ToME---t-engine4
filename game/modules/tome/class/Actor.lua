@@ -540,6 +540,15 @@ function _M:die(src)
 	return true
 end
 
+function _M:learnStats(statorder)
+	self.auto_stat_cnt = self.auto_stat_cnt or 1
+	while self.unused_stats > 0 do
+		self:incStat(statorder[self.auto_stat_cnt], 1)
+		self.auto_stat_cnt = util.boundWrap(self.auto_stat_cnt + 1, 1, #statorder)
+		self.unused_stats = self.unused_stats - 1
+	end
+end
+
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
 	self.unused_talents = self.unused_talents + 2

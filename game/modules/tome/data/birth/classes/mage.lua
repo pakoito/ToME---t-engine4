@@ -54,7 +54,7 @@ newBirthDescriptor{
 		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
 		"Their most important stats are: Magic and Willpower",
 	},
-	stats = { mag=3, wil=2, cun=1, },
+	stats = { mag=7, wil=4, cun=1, },
 	talents_types = {
 		["spell/arcane"]={true, 0.3},
 		["spell/fire"]={true, 0.3},
@@ -71,9 +71,10 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_ARCANE_POWER] = 1,
-		[ActorTalents.T_FLAME] = 1,
+		[ActorTalents.T_FLAME] = 2,
 		[ActorTalents.T_LIGHTNING] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
+		[ActorTalents.T_CORROSIVE_VAPOUR] = 1,
 	},
 	copy = {
 		max_life = 90,

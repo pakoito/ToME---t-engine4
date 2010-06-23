@@ -40,6 +40,7 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	size_category = 3,
 	infravision = 20,
 	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
+	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_ANGMAR", autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
