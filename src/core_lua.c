@@ -1166,6 +1166,7 @@ static int gl_fbo_use(lua_State *L)
 		// Reset The View
 		glLoadIdentity();
 
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	else
