@@ -48,13 +48,11 @@ function _M:init(actor, object, item, inven, onuse)
 		EXIT = function() game:unregisterDialog(self) end,
 	})
 	self:mouseZones{
-		{ x=2, y=45, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=0, y=0, w=350, h=self.ih, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.changed = true
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			if button == "left" then self:learn(true)
-			elseif button == "right" then self:learn(false)
+			if button == "left" then self:use()
 			end
-			self.changed = true
 		end },
 	}
 end
