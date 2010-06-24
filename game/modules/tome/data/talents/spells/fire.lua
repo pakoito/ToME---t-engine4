@@ -83,7 +83,7 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local grids = self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 28, 200)))
+		local grids = self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 28, 240)))
 
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, grids=grids, tx=x, ty=y})
@@ -93,7 +93,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 200), 1 + self:getTalentLevelRaw(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 240), 1 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -102,7 +102,7 @@ newTalent{
 	type = {"spell/fire",4},
 	require = spells_req4,
 	points = 5,
-	mana = 200,
+	mana = 100,
 	cooldown = 30,
 	tactical = {
 		ATTACKAREA = 40,

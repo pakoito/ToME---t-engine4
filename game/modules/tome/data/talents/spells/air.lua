@@ -51,7 +51,7 @@ newTalent{
 	type = {"spell/air", 2},
 	require = spells_req2,
 	points = 5,
-	mana = 20,
+	mana = 40,
 	cooldown = 8,
 	tactical = {
 		ATTACK = 10,
@@ -129,7 +129,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	cooldown = 10,
-	sustain_mana = 100,
+	sustain_mana = 50,
 	tactical = {
 		MOVEMENT = 10,
 	},
@@ -163,7 +163,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mode = "sustained",
-	sustain_mana = 250,
+	sustain_mana = 170,
 	cooldown = 15,
 	tactical = {
 		ATTACKAREA = 10,

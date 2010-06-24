@@ -121,7 +121,7 @@ newTalent{
 	type = {"spell/water",4},
 	require = spells_req4,
 	points = 5,
-	mana = 100,
+	mana = 40,
 	cooldown = 30,
 	tactical = {
 		ATTACKAREA = 20,
