@@ -64,6 +64,7 @@ function _M:init(t, no_default)
 	t.lite = t.lite or 0
 
 	t.rank = t.rank or 3
+	t.old_life = 0
 
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
@@ -133,6 +134,13 @@ function _M:act()
 			return true
 		end
 	end
+
+	-- Set shader HP warning
+	if game.fbo_shader and self.life ~= self.old_life then
+		if self.life < self.max_life / 2 then game.fbo_shader:setUniform("hp_warning", 1 - (self.life / self.max_life))
+		else game.fbo_shader:setUniform("hp_warning", 0) end
+	end
+	self.old_life = self.life
 
 	-- Clean log flasher
 	game.flash:empty()

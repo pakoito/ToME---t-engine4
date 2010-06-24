@@ -31,6 +31,7 @@ local Level = require "engine.Level"
 local Birther = require "engine.Birther"
 local Astar = require "engine.Astar"
 local DirectPath = require "engine.DirectPath"
+local Shader = require "engine.Shader"
 
 local Store = require "mod.class.Store"
 local Trap = require "mod.class.Trap"
@@ -213,6 +214,10 @@ function _M:setupDisplayMode()
 	end
 	self:setupMiniMap()
 	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
+
+	-- Create the framebuffer
+	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
 end
 
 function _M:setupMiniMap()
@@ -387,17 +392,26 @@ function _M:display()
 			self.player:playerFOV()
 		end
 
-		self.level.map:display()
+		-- Display using Framebuffer, sotaht we can use shaders and all
+		if self.fbo then
+			self.fbo:use(true)
+			self.level.map:display(0, 0)
+			self.target:display(0, 0)
+			self.fbo:use(false)
+			self.fbo:toScreen(
+				self.level.map.display_x, self.level.map.display_y,
+				self.level.map.viewport.width, self.level.map.viewport.height,
+				self.fbo_shader.shad
+			)
 
-		-- Display the targetting system if active
-		self.target:display()
+		-- Basic display
+		else
+			self.level.map:display()
+			self.target:display()
+		end
 
 		-- Display a tooltip if available
-		if self.tooltip_x then
-			local mx, my = self.tooltip_x , self.tooltip_y
-			local tmx, tmy = self.level.map:getMouseTile(mx, my)
-			self.tooltip:displayAtMap(tmx, tmy)
-		end
+		if self.tooltip_x then self.tooltip:displayAtMap(self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)) end
 
 		-- Move target around
 		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then

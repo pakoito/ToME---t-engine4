@@ -40,7 +40,7 @@ OBJECT = 1000
 searchOrder = { TERRAIN, TRAP, OBJECT, ACTOR }
 
 color_shown   = { 1, 1, 1, 1 }
-color_obscure = { 0.6, 0.6, 0.6, 1 }
+color_obscure = { 1, 1, 1, 0.6 }
 
 -- The minimap data
 MM_FLOOR = 1
@@ -434,7 +434,10 @@ end
 
 --- Displays the map on a surface
 -- @return a surface containing the drawn map
-function _M:display()
+function _M:display(x, y)
+	local ox, oy = self.display_x, self.display_y
+	self.display_x, self.display_y = x or self.display_x, y or self.display_y
+
 	self._map:toScreen(self.display_x, self.display_y)
 
 	-- Tactical display
@@ -468,6 +471,8 @@ function _M:display()
 	self:displayParticles()
 	self:displayEffects()
 	self:displayEmotes()
+
+	self.display_x, self.display_y = ox, oy
 
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return end

@@ -52,7 +52,7 @@ function _M:init(map, source_actor)
 --	setmetatable(self.target, {__mode='v'})
 end
 
-function _M:display()
+function _M:display(dispx, dispy)
 	-- Entity tracking, if possible and if visible
 	if self.target.entity and self.target.entity.x and self.target.entity.y and game.level.map.seens(self.target.entity.x, self.target.entity.y) then
 		self.target.x, self.target.y = self.target.entity.x, self.target.entity.y
@@ -62,6 +62,9 @@ function _M:display()
 
 	-- Do not display if not requested
 	if not self.active then return end
+
+	local ox, oy = self.display_x, self.display_y
+	self.display_x, self.display_y = dispx or self.display_x, dispy or self.display_y
 
 	local s = self.sb
 	local l = line.new(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
@@ -94,6 +97,8 @@ function _M:display()
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
 		end, function()end, nil)
 	end
+
+	self.display_x, self.display_y = ox, oy
 end
 
 --- Returns data for the given target type

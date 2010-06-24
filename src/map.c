@@ -31,7 +31,7 @@
 //#include "shaders.h"
 
 extern bool shaders_active;
-extern void useShader(GLuint p, int x, int y, float r, float g, float b, float a);
+extern void useShader(GLuint p, int x, int y, int w, int h, float r, float g, float b, float a);
 
 static int map_object_new(lua_State *L)
 {
@@ -431,7 +431,7 @@ void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j
 	}
 	glColor4f(r, g, b, a);
 	int z;
-	if (m->shader) useShader(m->shader, i, j, r, g, b, a);
+	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
 	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 	{
 		if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);

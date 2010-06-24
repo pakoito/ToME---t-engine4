@@ -1,11 +1,10 @@
-//uniform vec2 texSize;
+uniform vec2 texSize;
 uniform sampler2D tex;
 uniform sampler3D noisevol;
 uniform vec4 color;
 uniform float tick;
 
 int blursize = 7;
-vec2 texSize = vec2(32,32);
 
 void main(void)
 {

@@ -1053,6 +1053,7 @@ static int sdl_texture_outline(lua_State *L)
 	glMatrixMode(GL_PROJECTION);
 	CHECKGL(glPopMatrix());
 	glMatrixMode( GL_MODELVIEW );
+
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 	return 1;
@@ -1084,6 +1085,141 @@ static int sdl_redraw_screen(lua_State *L)
 	return 0;
 }
 
+
+/**************************************************************
+ * Framebuffer Objects
+ **************************************************************/
+typedef struct
+{
+	GLuint fbo;
+	GLuint texture;
+	int w, h;
+} lua_fbo;
+
+
+static int gl_new_fbo(lua_State *L)
+{
+	if (!fbo_active) return 0;
+
+	int w = luaL_checknumber(L, 1);
+	int h = luaL_checknumber(L, 2);
+
+	lua_fbo *fbo = (lua_fbo*)lua_newuserdata(L, sizeof(lua_fbo));
+	auxiliar_setclass(L, "gl{fbo}", -1);
+	fbo->w = w;
+	fbo->h = h;
+
+	CHECKGL(glGenFramebuffersEXT(1, &(fbo->fbo)));
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo));
+
+	// Now setup a texture to render to
+	CHECKGL(glGenTextures(1, &(fbo->texture)));
+	CHECKGL(glBindTexture(GL_TEXTURE_2D, fbo->texture));
+	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, fbo->texture, 0));
+
+	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if(status != GL_FRAMEBUFFER_COMPLETE_EXT) return 0;
+
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+
+	return 1;
+}
+
+static int gl_free_fbo(lua_State *L)
+{
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo));
+	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+
+	CHECKGL(glDeleteTextures(1, &(fbo->texture)));
+	CHECKGL(glDeleteFramebuffersEXT(1, &(fbo->fbo)));
+
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int gl_fbo_use(lua_State *L)
+{
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+	bool active = lua_toboolean(L, 2);
+
+	if (active)
+	{
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo);
+
+		// Set the viewport and save the old one
+		glPushAttrib(GL_VIEWPORT_BIT);
+
+		glViewport(0, 0, fbo->w, fbo->h);
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glOrtho(0, fbo->w, fbo->h, 0, -100, 100);
+		glMatrixMode(GL_MODELVIEW);
+
+		// Reset The View
+		glLoadIdentity();
+
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+	else
+	{
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+
+		// Restore viewport
+		glPopAttrib();
+
+		// Unbind texture from FBO and then unbind FBO
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+	}
+	return 0;
+}
+
+static int gl_fbo_toscreen(lua_State *L)
+{
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	int w = luaL_checknumber(L, 4);
+	int h = luaL_checknumber(L, 5);
+	float r = 1, g = 1, b = 1, a = 1;
+	if (lua_isnumber(L, 7))
+	{
+		r = luaL_checknumber(L, 7);
+		g = luaL_checknumber(L, 8);
+		b = luaL_checknumber(L, 9);
+		a = luaL_checknumber(L, 10);
+		glColor4f(r, g, b, a);
+	}
+	if (lua_isuserdata(L, 6))
+	{
+		GLuint *s = (GLuint*)auxiliar_checkclass(L, "gl{program}", 6);
+		useShader(*s, 0, 0, w, h, r, g, b, a);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, fbo->texture);
+	glBegin( GL_QUADS );                 /* Draw A Quad              */
+	glTexCoord2f(0,1); glVertex2f(0  + x, 0  + y);
+	glTexCoord2f(0,0); glVertex2f(0  + x, h + y);
+	glTexCoord2f(1,0); glVertex2f(w + x, h + y);
+	glTexCoord2f(1,1); glVertex2f(w + x, 0  + y);
+	glEnd( );                            /* Done Drawing The Quad    */
+
+	if (lua_isuserdata(L, 6)) glUseProgramObjectARB(0);
+	if (lua_isnumber(L, 7)) glColor4f(1, 1, 1, 1);
+	return 0;
+}
+
+
 static const struct luaL_reg displaylib[] =
 {
 	{"forceRedraw", sdl_redraw_screen},
@@ -1092,6 +1228,7 @@ static const struct luaL_reg displaylib[] =
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
+	{"newFBO", gl_new_fbo},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
 	{"loadImage", sdl_load_image},
@@ -1133,6 +1270,14 @@ static const struct luaL_reg sdl_font_reg[] =
 	{"size", sdl_font_size},
 	{"height", sdl_font_height},
 	{"lineSkip", sdl_font_lineskip},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg gl_fbo_reg[] =
+{
+	{"__gc", gl_free_fbo},
+	{"toScreen", gl_fbo_toscreen},
+	{"use", gl_fbo_use},
 	{NULL, NULL},
 };
 
@@ -1810,6 +1955,7 @@ int luaopen_core(lua_State *L)
 	auxiliar_newclass(L, "fov{core}", fov_reg);
 	auxiliar_newclass(L, "fov{cache}", fovcache_reg);
 	auxiliar_newclass(L, "gl{texture}", sdl_texture_reg);
+	auxiliar_newclass(L, "gl{fbo}", gl_fbo_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
 	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);
 	luaL_openlib(L, "core.fov", fovlib, 0);

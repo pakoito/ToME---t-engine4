@@ -31,7 +31,7 @@ return {
 	ambiant_music = "elven_town.ogg",
 	-- Apply a bluish tint to all the map
 	color_shown = {0.5, 1, 0.8, 1},
-	color_obscure = {0.5*0.6, 1*0.6, 0.8*0.6, 1},
+	color_obscure = {0.5*0.6, 1*0.6, 0.8*0.6, 0.6},
 	generator =  {
 		map = {
 			class = "engine.generator.map.Cavern",

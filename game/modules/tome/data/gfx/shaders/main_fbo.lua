@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 return {
-	frag = "unique_glow",
+	frag = "main_fbo",
 	vert = nil,
 	args = {
-		noisevol = { texture = 1 },
-		color = color or {1,1,1,1},
+		tex = { texture = 0 },
+		noiseVol = { texture = 1 },
 	},
 	clone = false,
 }

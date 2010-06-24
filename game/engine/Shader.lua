@@ -109,6 +109,7 @@ function _M:loaded()
 	if _M.progs[self.totalname] then
 		self.shad = _M.progs[self.totalname]
 		print("[SHADER] using cached shader "..self.totalname)
+		self.shad = _M.progs[self.totalname]
 	else
 		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
 		local f, err = loadfile("/data/gfx/shaders/"..self.name..".lua")
@@ -117,27 +118,31 @@ function _M:loaded()
 		local def = f()
 		_M.progs[self.totalname] = self:createProgram(def)
 
+		self.shad = _M.progs[self.totalname]
+
 		for k, v in pairs(def.args) do
-			if type(v) == "number" then
-				print("[SHADER] setting param", k, v)
-				_M.progs[self.totalname]:paramNumber(k, v)
-			elseif type(v) == "table" then
-				if v.texture then
-					print("[SHADER] setting texture param", k, v.texture)
-					_M.progs[self.totalname]:paramTexture(k, v.texture, v.is3d)
-				elseif #v == 2 then
-					print("[SHADER] setting vec2 param", k, v[1], v[2])
-					_M.progs[self.totalname]:paramNumber2(k, v[1], v[2])
-				elseif #v == 3 then
-					print("[SHADER] setting vec3 param", k, v[1], v[2], v[3])
-					_M.progs[self.totalname]:paramNumber3(k, v[1], v[2], v[3])
-				elseif #v == 4 then
-					print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
-					_M.progs[self.totalname]:paramNumber4(k, v[1], v[2], v[3], v[4])
-				end
-			end
+			self:setUniform(k, v)
 		end
 	end
+end
 
-	self.shad = _M.progs[self.totalname]
+function _M:setUniform(k, v)
+	if type(v) == "number" then
+		print("[SHADER] setting param", k, v)
+		self.shad:paramNumber(k, v)
+	elseif type(v) == "table" then
+		if v.texture then
+			print("[SHADER] setting texture param", k, v.texture)
+			self.shad:paramTexture(k, v.texture, v.is3d)
+		elseif #v == 2 then
+			print("[SHADER] setting vec2 param", k, v[1], v[2])
+			self.shad:paramNumber2(k, v[1], v[2])
+		elseif #v == 3 then
+			print("[SHADER] setting vec3 param", k, v[1], v[2], v[3])
+			self.shad:paramNumber3(k, v[1], v[2], v[3])
+		elseif #v == 4 then
+			print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
+			self.shad:paramNumber4(k, v[1], v[2], v[3], v[4])
+		end
+	end
 end
