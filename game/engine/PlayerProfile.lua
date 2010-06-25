@@ -77,7 +77,7 @@ function _M:init(name)
 
 	self.auth = false
 
-	if self.generic.online then
+	if self.generic.online and self.generic.online.login and self.generic.online.pass then
 		self.login = self.generic.online.login
 		self.pass = self.generic.online.pass
 		self:tryAuth()
@@ -137,7 +137,7 @@ function _M:loadModuleProfile(short_name)
 end
 
 --- Saves a profile data
-function _M:saveGenericProfile(name, data)
+function _M:saveGenericProfile(name, data, nosync)
 	data = serialize(data)
 
 	-- Check for readability
@@ -154,12 +154,13 @@ function _M:saveGenericProfile(name, data)
 	f:close()
 	if restore then fs.setWritePath(restore) end
 
-	self:setConfigs("generic", name, data)
+	if not nosync then self:setConfigs("generic", name, data) end
 end
 
 --- Saves a module profile data
-function _M:saveModuleProfile(name, data)
+function _M:saveModuleProfile(name, data, module, nosync)
 	data = serialize(data)
+	module = module or self.mod_name
 
 	-- Check for readability
 	local f, err = loadstring(data)
@@ -170,13 +171,13 @@ function _M:saveModuleProfile(name, data)
 	local restore = fs.getWritePath()
 	fs.setWritePath(engine.homepath)
 	fs.mkdir("/profiles/"..self.name.."/modules/")
-	fs.mkdir("/profiles/"..self.name.."/modules/"..self.mod_name.."/")
-	local f = fs.open("/profiles/"..self.name.."/modules/"..self.mod_name.."/"..name..".profile", "w")
+	fs.mkdir("/profiles/"..self.name.."/modules/"..module.."/")
+	local f = fs.open("/profiles/"..self.name.."/modules/"..module.."/"..name..".profile", "w")
 	f:write(data)
 	f:close()
 	if restore then fs.setWritePath(restore) end
 
-	self:setConfigs(self.mod_name, name, data)
+	if not nosync then self:setConfigs(module, name, data) end
 end
 
 
@@ -193,13 +194,13 @@ end
 function _M:tryAuth()
 	local data = self:rpc{action="TryAuth", login=self.login, pass=self.pass}
 	if not data then print("[ONLINE PROFILE] not auth") return end
-	print("[ONLINE PROFILE] auth as ", data.name)
+	print("[ONLINE PROFILE] auth as ", data.name, data.hash)
 	self.auth = data
 end
 
 function _M:getConfigs(module)
 	if not self.auth then return end
-	local data = self:rpc{action="GetConfigs", login=self.login, pass=self.pass, module=module}
+	local data = self:rpc{action="GetConfigs", login=self.login, hash=self.auth.hash, module=module}
 	if not data then print("[ONLINE PROFILE] get configs") return end
 	for name, val in pairs(data) do
 		print("[ONLINE PROFILE] config ", name)
@@ -210,10 +211,12 @@ function _M:getConfigs(module)
 		if module == "generic" then
 			self.generic[field] = self.generic[field] or {}
 			self:loadData(f, self.generic[field])
+			self:saveGenericProfile(field, self.generic[field], nosync)
 		else
 			self.modules[module] = self.modules[module] or {}
 			self.modules[module][field] = self.modules[module][field] or {}
 			self:loadData(f, self.modules[module][field])
+			self:saveModuleProfile(field, self.modules[module][field], module, nosync)
 		end
 	end
 end
@@ -223,7 +226,7 @@ function _M:setConfigs(module, name, val)
 
 	if type(val) ~= "string" then val = serialize(val) end
 
-	local data = self:rpc{action="SetConfigs", login=self.login, pass=self.pass, module=module, data={[name] = val}}
+	local data = self:rpc{action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data={[name] = val}}
 	if not data then return end
 	print("[ONLINE PROFILE] saved ", module, name, val)
 end
@@ -237,7 +240,14 @@ function _M:syncOnline(module)
 	local data = {}
 	for k, v in pairs(sync) do if k ~= "online" then data[k] = serialize(v) end end
 
-	local data = self:rpc{action="SetConfigs", login=self.login, pass=self.pass, module=module, data=data}
+	local data = self:rpc{action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data=data}
 	if not data then return end
 	print("[ONLINE PROFILE] saved ", module)
 end
+
+function _M:newProfile()
+	local data = self:rpc{action="NewProfile", login=tostring(os.time()), email=os.time().."te4@mailcatch.com", name=os.time().."member", pass="test"}
+	if not data then print("[ONLINE PROFILE] could not create") return end
+	print("[ONLINE PROFILE] profile id ", data.id)
+end
+

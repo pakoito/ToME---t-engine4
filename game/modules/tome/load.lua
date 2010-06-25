@@ -158,7 +158,4 @@ for i, t in ipairs(stype_tot) do
 end
 ------------------------------------------------------------------------
 
--- Import old settings, this line should disappear in a future version
-if config.settings.tome.allow_build then for k, e in pairs(config.settings.tome.allow_build) do require("mod.class.Game"):setAllowedBuild(k, false) end end
-
 return {require "mod.class.Game", require "mod.class.World"}
