@@ -21,14 +21,14 @@ newChat{ id="welcome",
 	text = [[Please save me! I will make it worth your ti..
 *#LIGHT_GREEN#The assasin lord hits him in the mouth.#WHITE#*Shut up!]],
 	answers = {
-		{"Sorry I have to go!"},
+		{"Sorry I have to go!", action = function(npc, player) npc.can_talk = nil end},
 	}
 }
 
 newChat{ id="welcome2",
 	text = [[Please get me out of here!]],
 	answers = {
-		{"Come, there is a way out!"},
+		{"Come, there is a way out!", action = function(npc, player) npc.can_talk = nil end},
 	}
 }
 

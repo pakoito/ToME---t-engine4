@@ -42,7 +42,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="heal some life", use = function(self, who)
 		who:heal(40 + who:getMag())
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="heal a good part of your life", use = function(self, who)
 		who:heal(140 + who:getMag())
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -70,7 +70,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="heal a lot", use = function(self, who)
 		who:heal(240 + who:getMag())
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -84,7 +84,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="fully heal", use = function(self, who)
 		who:heal(1000000)
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="restore some mana", use = function(self, who)
 		who:incMana(40 + who:getMag())
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -115,7 +115,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="restore a good part of your mana", use = function(self, who)
 		who:incMana(140 + who:getMag())
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -129,7 +129,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="restore a lot of mana", use = function(self, who)
 		who:incMana(240 + who:getMag())
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -143,7 +143,7 @@ newEntity{ base = "BASE_POTION",
 
 	use_simple = { name="fully restore mana", use = function(self, who)
 		who:incMana(1000000)
-		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s quaffs a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -181,7 +181,7 @@ newEntity{ base = "BASE_POTION",
 			end
 		end
 		if known then
-			game.logSeen(who, "%s cure %s from poisons!", self:getName():capitalize(), who.name)
+			game.logSeen(who, "%s cure %s from poisons!", self:getName{no_count=true}:capitalize(), who.name)
 		end
 		return "destroy", known
 	end}
@@ -217,7 +217,7 @@ newEntity{ base = "BASE_POTION",
 			end
 		end
 		if known then
-			game.logSeen(who, "%s cure %s from diseases!", self:getName():capitalize(), who.name)
+			game.logSeen(who, "%s cure %s from diseases!", self:getName{no_count=true}:capitalize(), who.name)
 		end
 		return "destroy", known
 	end}

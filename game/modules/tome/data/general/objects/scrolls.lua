@@ -38,7 +38,7 @@ newEntity{ base = "BASE_SCROLL",
 
 	use_simple = { name="light up the surrounding area", use = function(self, who)
 		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_SCROLL",
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, 15)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -93,7 +93,7 @@ newEntity{ base = "BASE_SCROLL",
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, 200)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -106,7 +106,7 @@ newEntity{ base = "BASE_SCROLL",
 
 	use_simple = { name="map the area directly around you", use = function(self, who)
 		who:magicMap(20)
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -123,7 +123,7 @@ newEntity{ base = "BASE_SCROLL",
 			range = rad,
 			actor = 1,
 		})
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -137,7 +137,7 @@ newEntity{ base = "BASE_SCROLL",
 	use_simple = { name="create a temporary shield that absorbs damage", use = function(self, who)
 		local power = 60 + who:getMag(100)
 		who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=power})
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName())
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
