@@ -22,6 +22,7 @@ newTalentType{ type="technique/other", name = "other", hide = true, description 
 newTalentType{ type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="wild-gift/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ type="undead/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 
 -- Multiply!!!
 newTalent{
@@ -505,6 +506,29 @@ newTalent{
 	info = function(self, t)
 		return ([[Spit poison at your target doing %0.2f poison damage.
 		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.8)
+	end,
+}
+
+newTalent{
+	name = "Throw Bones",
+	type = {"undead/other", 1},
+	points = 5,
+	cooldown = 6,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	action = function(self, t)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.BLEED, 20 + (self:getStr() * self:getTalentLevel(t)) * 0.8, {type="archery"})
+		game:playSoundNear(self, "talents/earth")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Throws a pack of bones at your target doing %0.2f physical damage as bleeding.
+		The damage will increase with the Strength stat]]):format(20 + (self:getStr() * self:getTalentLevel(t)) * 0.8)
 	end,
 }
 

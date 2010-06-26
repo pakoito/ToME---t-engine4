@@ -86,7 +86,6 @@ newTalent{
 	tactical = {
 		DEFEND = 20,
 	},
-	range = 1,
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=(8 + self:getDex(20)) * self:getTalentLevel(t)})
 		return true
@@ -107,7 +106,16 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	tactical = {
 		DEFEND = 10,
 	},
-	range=1,
+	on_learn = function(self, t)
+		if self:getTalentLevelRaw(t) == 5 then
+			self:attr("self_resurrect", 1)
+		end
+	end,
+	on_unlearn = function(self, t)
+		if self:getTalentLevelRaw(t) == 4 then
+			self:attr("self_resurrect", -1)
+		end
+	end,
 	action = function(self, t)
 		self:heal(self:getTalentLevel(t) * self.level / 2, self)
 		game:playSoundNear(self, "talents/heal")
