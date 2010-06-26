@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newTalent{
+newSkill{
 	name = "Ghoul",
 	type = {"undead/ghoul", 1},
 	mode = "passive",
@@ -36,7 +36,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Ghoulish Leap",
 	type = {"undead/ghoul", 2},
 	require = undeads_req2,
@@ -76,7 +76,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Gnaw",
 	type = {"undead/ghoul", 3},
 	require = undeads_req3,
@@ -109,7 +109,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Retch",
 	type = {"undead/ghoul",4},
 	require = undeads_req4,

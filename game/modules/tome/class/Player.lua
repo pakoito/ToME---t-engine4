@@ -273,7 +273,8 @@ function _M:levelup()
 	game.log("#00ffff#Welcome to level %d.", self.level)
 	if self.unused_stats > 0 then game.log("You have %d stat point(s) to spend. Press G to use them.", self.unused_stats) end
 	if self.unused_talents > 0 then game.log("You have %d talent point(s) to spend. Press G to use them.", self.unused_talents) end
-	if self.unused_talents_types > 0 then game.log("You have %d talent category point(s) to spend. Press G to use them.", self.unused_talents_types) end
+	if self.unused_skills > 0 then game.log("You have %d skill point(s) to spend. Press G to use them.", self.unused_skills) end
+	if self.unused_talents_types > 0 then game.log("You have %d category point(s) to spend. Press G to use them.", self.unused_talents_types) end
 
 	if self.level == 10 then world:gainAchievement("LEVEL_10", self) end
 	if self.level == 20 then world:gainAchievement("LEVEL_20", self) end

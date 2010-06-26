@@ -34,7 +34,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 20, 290))
-		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 5, dam, 3))
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/lightning")
@@ -42,7 +42,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 290) / 5, self:combatTalentSpellDamage(t, 20, 290))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 290) / 3, self:combatTalentSpellDamage(t, 20, 290))
 	end,
 }
 
@@ -102,7 +102,8 @@ newTalent{
 		for i, actor in ipairs(targets) do
 			local tgr = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t, x=sx, y=sy}
 			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
-			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 10, 200)), 5))
+			local dam = self:spellCrit(self:combatTalentSpellDamage(t, 10, 200))
+			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(rng.avg(dam / 3, dam, 3), dam, 5))
 			game.level.map:particleEmitter(sx, sy, math.max(math.abs(actor.x-sx), math.abs(actor.y-sy)), "lightning", {tx=actor.x-sx, ty=actor.y-sy})
 			sx, sy = actor.x, actor.y
 		end
@@ -112,10 +113,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Invokes a forking beam of lightning doing 1 to %0.2f damage and forking to an other target.
+		return ([[Invokes a forking beam of lightning doing %0.2f to %0.2f damage and forking to an other target.
 		It can hit up to %d targets and will never hit the same one twice, neither will it hit the caster.
 		The damage will increase with the Magic stat]]):
 		format(
+			self:combatTalentSpellDamage(t, 10, 200) / 3,
 			self:combatTalentSpellDamage(t, 10, 200),
 			3 + self:getTalentLevelRaw(t)
 		)

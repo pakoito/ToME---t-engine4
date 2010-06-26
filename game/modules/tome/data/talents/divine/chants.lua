@@ -29,7 +29,7 @@ local function cancelChants(self)
 	end
 end
 
-newTalent{
+newSkill{
 	name = "Chant of Fortitude",
 	type = {"divine/chants", 1},
 	mode = "sustained",
@@ -69,7 +69,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Chant of Fortress",
 	type = {"divine/chants", 2},
 	mode = "sustained",
@@ -107,7 +107,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Chant of Resistance",
 	type = {"divine/chants",3},
 	mode = "sustained",
@@ -150,7 +150,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Chant of Light",
 	type = {"divine/chants", 4},
 	mode = "sustained",

@@ -75,6 +75,7 @@ function _M:init(t, no_default)
 
 	self.unused_stats = self.unused_stats or 0
 	self.unused_talents =  self.unused_talents or 0
+	self.unused_skills =  self.unused_skills or 0
 	self.unused_talents_types = self.unused_talents_types or 0
 
 	t.lite = t.lite or 0
@@ -556,7 +557,9 @@ end
 
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
-	self.unused_talents = self.unused_talents + 2
+	if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
+	self.unused_talents = self.unused_talents + 1
+	self.unused_skills = self.unused_skills + 1
 	-- At levels 10, 20 and 30 we gain a new talent type
 	if self.level == 10 or  self.level == 20 or  self.level == 30 then
 		self.unused_talents_types = self.unused_talents_types + 1

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newTalent{
+newSkill{
 	name = "Rituals Capacity",
 	type = {"rituals/rituals", 1},
 	points = 5,
@@ -28,7 +28,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Rituals Study",
 	type = {"rituals/rituals", 1},
 	points = 5,

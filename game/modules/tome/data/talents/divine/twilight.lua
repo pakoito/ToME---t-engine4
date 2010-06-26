@@ -72,7 +72,7 @@ newTalent{
 	name = "Jumpgate",
 	type = {"divine/twilight", 2},
 	require = divi_req2,
-	mode = "sustained",
+	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	cooldown = 20,
 	negative_sustain = 20,

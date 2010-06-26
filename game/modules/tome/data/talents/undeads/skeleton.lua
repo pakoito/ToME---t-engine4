@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newTalent{
+newSkill{
 	name = "Skeleton",
 	type = {"undead/skeleton", 1},
 	mode = "passive",
@@ -36,7 +36,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Sharp Bones",
 	type = {"undead/skeleton", 2},
 	require = undeads_req2,
@@ -77,7 +77,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newSkill{
 	name = "Bone Armour",
 	type = {"undead/skeleton", 3},
 	require = undeads_req3,
@@ -97,7 +97,7 @@ newTalent{
 	end,
 }
 
-newTalent{ short_name = "SKELETON_REASSEMBLE",
+newSkill{ short_name = "SKELETON_REASSEMBLE",
 	name = "Re-assemble",
 	type = {"undead/skeleton",4},
 	require = undeads_req4,

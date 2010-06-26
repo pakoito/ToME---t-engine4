@@ -26,6 +26,7 @@ module(..., package.seeall, class.inherit(engine.Dialog))
 function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor_dup = actor:clone()
+	self.unused_stats = self.actor.unused_stats
 	engine.Dialog.init(self, "Stats Levelup: "..actor.name, 500, 300)
 
 	self.sel = 1
@@ -39,8 +40,10 @@ function _M:init(actor, on_finish)
 		EXIT = function()
 			game:unregisterDialog(self)
 
+			self:finish()
+
 			-- if talents to spend, do it now
-			if self.actor.unused_talents > 0 or self.actor.unused_talents_types > 0 then
+			if self.actor.unused_skills > 0 or self.actor.unused_talents > 0 or self.actor.unused_talents_types > 0 then
 				local dt = LevelupTalentsDialog.new(self.actor, on_finish)
 				game:registerDialog(dt)
 			end
@@ -55,6 +58,29 @@ function _M:init(actor, on_finish)
 			end
 		end },
 	}
+end
+
+function _M:finish()
+	if self.actor.unused_stats == self.unused_stats then return end
+	local reset = {}
+	for tid, act in pairs(self.actor.sustain_talents) do
+		if act then
+			local t = self.actor:getTalentFromId(tid)
+			if t.no_sustain_autoreset then
+				game.logPlayer(self.actor, "#LIGHT_BLUE#Warning: You have increased some of your statistics, talent %s is actually sustained, if it is dependant on one of the stats you changed you need to re-use it for the changes to take effect.")
+			else
+				reset[#reset+1] = tid
+			end
+		end
+	end
+	for i, tid in ipairs(reset) do
+		local old = self.actor.energy.value
+		self.actor:useTalent(tid)
+		self.actor.energy.value = old
+		self.actor.talents_cd[tid] = nil
+		self.actor:useTalent(tid)
+		self.actor.energy.value = old
+	end
 end
 
 function _M:incStat(v)

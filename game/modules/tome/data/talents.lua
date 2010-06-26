@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+newSkill = function(t) t.skill = true return newTalent(t) end
+
 load("/data/talents/misc/misc.lua")
 load("/data/talents/techniques/techniques.lua")
 load("/data/talents/cunning/cunning.lua")

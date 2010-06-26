@@ -104,7 +104,7 @@ newTalent{
 newTalent{
 	name = "Disruption Shield",
 	type = {"spell/arcane",4},
-	require = spells_req4,
+	require = spells_req4, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 150,

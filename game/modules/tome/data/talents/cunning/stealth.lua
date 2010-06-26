@@ -21,7 +21,7 @@ newTalent{
 	name = "Stealth",
 	type = {"cunning/stealth", 1},
 	require = cuns_req1,
-	mode = "sustained",
+	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	cooldown = 10,
 	activate = function(self, t)
