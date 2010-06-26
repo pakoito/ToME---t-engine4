@@ -35,7 +35,7 @@ return {
 			building_chance = 70,
 			max_building_w = 8, max_building_h = 8,
 			edge_entrances = {6,4},
-			floor = "SAND",
+			floor = "FLOOR",
 			external_floor = "SAND",
 			wall = "WALL",
 			up = "UP",

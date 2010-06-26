@@ -62,7 +62,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 }
 
 newEntity{ base = "BASE_NPC_SANDWORM",
-	name = "sand-drake",
+	name = "sand-drake", display = 'D',
 	color={r=204,g=255,b=95},
 	desc = [[This unholy creature looks like a wingless dragon in shape, but resembles a sandworm in color.]],
 	rarity = 8,
