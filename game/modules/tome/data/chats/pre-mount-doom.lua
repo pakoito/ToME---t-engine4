@@ -1,0 +1,38 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+newChat{ id="welcome",
+	text = [[*#LIGHT_GREEN#Suddently a voice appears in your head.#WHITE#*
+@playername@, this is High Sun Paladin Aeryn of the Sunwall, I am communicating with you thanks to the power of the anorithil.
+I have some urgent information for you: the staff you were looking for has been located.]],
+	answers = {
+		{"Where?!", jump="where"},
+	}
+}
+
+newChat{ id="where",
+	text = [[One of our patrols noticed some strange orc movements around in the sourthern part of the contient, inside the desert of Erúan.
+A groupd of orcs where guarding something that looks like the staff you talked about.
+You should go there and investigate, this might be your only chance.]],
+	answers = {
+		{"I will, right now!"},
+	}
+}
+
+return "welcome"

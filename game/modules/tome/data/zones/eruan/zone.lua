@@ -18,48 +18,53 @@
 -- darkgod@te4.org
 
 return {
-	name = "Rak'shor Pride",
+	name = "Erúan",
 	level_range = {30, 35},
 	level_scheme = "player",
 	max_level = 5,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
---	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	ambiant_music = "Bazaar of Tal-Mashad.ogg",
+	persistant = "zone",
+	ambiant_music = "Rainy Day.ogg",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Town",
-			building_chance = 70,
-			max_building_w = 8, max_building_h = 8,
-			edge_entrances = {6,4},
+			class = "engine.generator.map.Forest",
+			edge_entrances = {8,2},
+			zoom = 6,
+			sqrt_percent = 40,
+			noise = "fbm_perlin",
 			floor = "SAND",
-			external_floor = "SAND",
-			wall = "WALL",
+			wall = "PALMTREE",
 			up = "UP",
 			down = "DOWN",
-			door = "DOOR",
+			do_ponds =  {
+				nb = {0, 2},
+				size = {w=25, h=25},
+				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
+			},
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
-			guardian = "RAK_SHOR",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {3, 6},
+			nb_object = {6, 9},
+			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
+		},
+		trap = {
+			class = "engine.generator.trap.Random",
+			nb_trap = {6, 9},
 		},
 	},
-	post_process = function(level)
-		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
-	end,
 	levels =
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS_FAR_EAST",
+				up = "UP_WILDERNESS",
 			}, },
 		},
 	},

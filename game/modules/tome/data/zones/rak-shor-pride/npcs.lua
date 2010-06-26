@@ -51,19 +51,20 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	},
 
 	summon = {
-		{type="undead", subtype="skeleton", number=3, hasxp=false},
-		{type="humanoid", subtype="ghoul", number=3, hasxp=false},
+		{type="undead", number=2, hasxp=false},
 	},
 	make_escort = {
-		{type="undead", subtype="ghoul", no_subescort=true, number=resolvers.mbonus(4, 4)},
-		{type="undead", subtype="skeleton", no_subescort=true, number=resolvers.mbonus(4, 4)},
+		{type="undead", no_subescort=true, number=resolvers.mbonus(4, 4)},
 	},
 
 	resolvers.talents{
---		[Talents.T_]=2,
+		[Talents.T_SUMMON]=1,
 	},
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "rak-shor")
+		if not game.player:hasQuest("pre-mount-doom") then
+			game.player:grantQuest("pre-mount-doom")
+		end
 	end,
 }

@@ -80,9 +80,9 @@ return [[
 ========                ~~~~~~~~tttttt~~mmmmmmmmttt                     =========
 =======              ~~~~      ~~~~~~~~ttmmmmmmmtttt                   ==========
 ======            ~~~~             tttttttmmmmmmtttt                   ==========
-=====           ~~~                ttttttmmmmmmttttt                  ===========
-=====        ~~~~                    ttttmmmmttttttt               w  ===========
-====~~~~~~~~~~                         mmmmtttttttt               www============
+=====           ~~~                ttttttmmmmmmmmttt                  ===========
+=====        ~~~~                    ttttmmmmtmmmmtt               w  ===========
+====~~~~~~~~~~                         mmmmtttttmmt               www============
 =====                                  mmtttttttt                 www============
 =====                                                             www============
 =====                                                             www============

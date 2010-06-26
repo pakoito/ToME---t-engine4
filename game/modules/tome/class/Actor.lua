@@ -542,10 +542,15 @@ end
 
 function _M:learnStats(statorder)
 	self.auto_stat_cnt = self.auto_stat_cnt or 1
+	local nb = 0
 	while self.unused_stats > 0 do
-		self:incStat(statorder[self.auto_stat_cnt], 1)
+		if self:getStat(statorder[self.auto_stat_cnt]) < 60 then
+			self:incStat(statorder[self.auto_stat_cnt], 1)
+			self.unused_stats = self.unused_stats - 1
+		end
 		self.auto_stat_cnt = util.boundWrap(self.auto_stat_cnt + 1, 1, #statorder)
-		self.unused_stats = self.unused_stats - 1
+		nb = nb + 1
+		if nb >= #statorder then break end
 	end
 end
 
