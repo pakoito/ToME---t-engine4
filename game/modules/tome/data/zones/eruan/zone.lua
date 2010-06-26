@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
-	ambiant_music = "Rainy Day.ogg",
+	ambiant_music = "Bazaar of Tal-Mashad.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",
@@ -65,6 +65,12 @@ return {
 		[1] = {
 			generator = { map = {
 				up = "UP_WILDERNESS",
+			}, },
+		},
+		[5] = {
+			generator = { map = {
+				class = "engine.generator.map.Static",
+				map = "zones/eruan-last",
 			}, },
 		},
 	},

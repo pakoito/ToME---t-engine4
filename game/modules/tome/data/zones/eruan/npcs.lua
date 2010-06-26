@@ -21,3 +21,44 @@ load("/data/general/npcs/sandworm.lua")
 load("/data/general/npcs/orc.lua")
 
 local Talents = require("engine.interface.ActorTalents")
+
+newEntity{ define_as = "SUN_PALADIN_GUREN",
+	type = "humanoid", subtype = "human",
+	display = "p",
+	faction = "sunwall",
+	name = "Sun Paladin Guren", color=colors.GOLD, unique = true,
+	desc = [[A human warrior, clad in a shining plate armour. Power radiates from him.]],
+	level_range = {50, 50}, exp_worth = 2,
+	life_regen = 10,
+	rank = 3,
+	size_category = 3,
+	female = true,
+	max_life = 150, life_rating = 27, fixed_rating = true,
+	infravision = 20,
+	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
+	move_others=true,
+
+	open_door = true,
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+
+	resolvers.equip{
+		{type="weapon", subtype="mace", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="massive", autoreq=true},
+	},
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_CHANT_OF_LIGHT]=5,
+		[Talents.T_SEARING_LIGHT]=5,
+		[Talents.T_MARTYRDOM]=5,
+		[Talents.T_BARRIER]=5,
+		[Talents.T_WEAPON_OF_LIGHT]=5,
+	},
+
+	can_talk = "pre-mount-doom-eruan",
+}

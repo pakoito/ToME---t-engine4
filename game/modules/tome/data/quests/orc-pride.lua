@@ -50,18 +50,16 @@ desc = function(self, who)
 	return table.concat(desc, "\n")
 end
 
---[[
 on_grant = function(self, who)
-	-- Reveal moria entrance
+	-- Reveal entrances
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
-		name="A gate into the mines of Moria",
+		name="Entrance to Rak'shor Pride bastion",
 		display='>', color=colors.UMBER,
 		notice = true,
-		change_level=1, change_zone="moria"
+		change_level=1, change_zone="rak-shor-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 44, 28)
-	game.logPlayer(game.player, "The elder points the mines on your map, to the north on the western side of the misty mountains.")
+	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 38, 49)
+	game.logPlayer(game.player, "Aeryn points the known locations on your map.")
 end
-]]

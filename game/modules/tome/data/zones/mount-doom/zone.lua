@@ -63,8 +63,8 @@ return {
 		game.level.turn_counter = game.level.turn_counter - 1
 		game.player.changed = true
 		if game.level.turn_counter < 0 then
-			game.player:hasQuest("mount-doom"):start_fyrk()
 			game.player:hasQuest("mount-doom"):setStatus(engine.Quest.COMPLETED, "not-stopped")
+			game.player:hasQuest("mount-doom"):start_fyrk()
 		end
 	end,
 }

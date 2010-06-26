@@ -22,10 +22,10 @@ name = "The Doom of the World!"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "You were sent to Mount Doom, in the ancient land of Mordor, where the One Ring was once forged by Sauron and destroyed by Frodo Baggins."
-	desc[#desc+1] = "This place is still full of the power of the ring and the Blue Wizard intend to absorb this power using the Staff of Absorption!"
+	desc[#desc+1] = "This place is still full of the power of the ring and the orcs intend to absorb this power using the Staff of Absorption!"
 	desc[#desc+1] = "Whatever their plan may be, they must be stopped at all cost."
 	desc[#desc+1] = "The volcano is attacked by orcs, a few Sun Paladins made it there with you, they will hold the line at the cost of their lives to buy you some time."
-	desc[#desc+1] = "Honor their sacrifice, do not let the Blue Wizards finish their work!"
+	desc[#desc+1] = "Honor their sacrifice, do not let the orcs finish their work!"
 	if self:isCompleted("not-stopped") then
 		desc[#desc+1] = ""
 		desc[#desc+1] = "You arrived too late, the place has been drained of its power and the blue wizards have left."
@@ -57,6 +57,10 @@ start_fyrk = function(self)
 	local fyrk = game.zone:makeEntityByName(game.level, "actor", "FYRK")
 	game.zone:addEntity(game.level, fyrk, "actor", 6, 455)
 
-	game.logPlayer(game.player, "#VIOLET#The Blue Wizards flee through a portal, as you prepare to follow them a huge faeros appears to block the way.")
-	game.player:setQuestStatus("mount-doom", engine.Quest.DONE)
+	if self:isCompleted("not-stopped")
+		game.logPlayer(game.player, "#VIOLET#A portal activates in the distance, you hear the orcs shout 'The Blue Wizards have departed, follow them!'")
+	else
+		game.logPlayer(game.player, "#VIOLET#The Blue Wizards flee through a portal, as you prepare to follow them a huge faeros appears to block the way.")
+	end
+	game.player:setQuestStatus("mount-doom", engine.Quest.COMPLETED)
 end

@@ -21,7 +21,8 @@ newChat{ id="welcome",
 	text = [[Thanks for your help. What may I do for you?]],
 	answers = {
 		{"Tell me more about the Gates of Morning.", jump="explain-gates"},
-		{"I need help to hunt for clue about the staff.", jump="clues"},
+		{"I need help to hunt for clue about the staff.", jump="clues", cond=function(npc, player) return not player:hasQuest("orc-pride") end},
+		{"I am back from Mount Doom, where the orcs took the staff.", jump="mount-doom", cond=function(npc, player) return player:hasQuest("mount-doom") and player:hasQuest("mount-doom"):isCompleted() end},
 		{"Sorry I have to go!"},
 	}
 }
@@ -56,5 +57,34 @@ The known bastions of the Pride are:
 		end},
 	},
 }
+
+newChat{ id="mount-doom",
+	text = [[I have heard about that, some good men lost their life for this, I hope it was worth it.]],
+	answers = {
+		{"Yes my lady, they delayed the orcs so that I could get to the heart of the volcano. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="mount-doom-success",
+			cond=function(npc, player) return player:isQuestStatus("mount-doom", engine.Quest.COMPLETED, "stopped") end,
+		},
+		{"I am afraid I was too late, but still I have some precious informations. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="mount-doom-fail",
+			cond=function(npc, player) return player:isQuestStatus("mount-doom", engine.Quest.COMPLETED, "not-stopped") end,
+		},
+	},
+}
+
+newChat{ id="mount-doom-success",
+	text = [[Blue Wizards ? I have never heard of them, there were rumours about a new master of the Pride, it seems they got two.
+Thanks for all, you must continue your hunt, now you know what to look for.]],
+	answers = {
+		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("mount-doom", engine.Quest.DONE) end}
+	},
+}
+
+newChat{ id="mount-doom-fail",
+	text = [[Blue Wizards ? I have never heard of them, there were rumours about a new master of the Pride, it seems they got two.
+I am afraid with the power they gained today they will be even harder to stop, but we do not have a choice.]],
+	answers = {
+		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("mount-doom", engine.Quest.DONE) end}
+	},
+}
+
 
 return "welcome"
