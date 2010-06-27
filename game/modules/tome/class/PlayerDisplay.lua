@@ -27,16 +27,19 @@ function _M:init(x, y, w, h, bgcolor)
 	self.w, self.h = w, h
 	self.bgcolor = bgcolor
 	self.font = core.display.newFont("/data/font/VeraMono.ttf", 14)
-	self.font_h = self.font:lineSkip()
 	self.surface = core.display.newSurface(w, h)
+	self:resize(x, y, w, h)
 end
 
 --- Resize the display area
 function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = x, y
 	self.w, self.h = w, h
+	self.font_h = self.font:lineSkip()
+	self.font_w = self.font:size(" ")
+	self.bars_x = self.font_w * 9
+	self.bars_w = self.w - self.bars_x - 5
 	self.surface = core.display.newSurface(w, h)
-	self.changed = true
 end
 
 -- Displays the stats
@@ -67,21 +70,33 @@ function _M:display()
 		h = h + self.font_h
 	end
 
-	self.surface:drawColorStringBlended(self.font, ("#c00000#Life:    #00ff00#%d/%d"):format(game.player.life, game.player.max_life), 0, h, 255, 255, 255) h = h + self.font_h
+	self.surface:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, self.bars_x, h, self.bars_w, self.font_h)
+	self.surface:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, self.bars_x, h, self.bars_w * game.player.life / game.player.max_life, self.font_h)
+	self.surface:drawColorStringBlended(self.font, ("#c00000#Life:    #ffffff#%d/%d"):format(game.player.life, game.player.max_life), 0, h, 255, 255, 255) h = h + self.font_h
 	if game.player:knowTalent(game.player.T_STAMINA_POOL) then
-		self.surface:drawColorStringBlended(self.font, ("#ffcc80#Stamina: #00ff00#%d/%d"):format(game.player:getStamina(), game.player.max_stamina), 0, h, 255, 255, 255) h = h + self.font_h
+		self.surface:erase(0xff / 6, 0xcc / 6, 0x80 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
+		self.surface:erase(0xff / 3, 0xcc / 3, 0x80 / 3, 255, self.bars_x, h, self.bars_w * game.player:getStamina() / game.player.max_stamina, self.font_h)
+		self.surface:drawColorStringBlended(self.font, ("#ffcc80#Stamina: #ffffff#%d/%d"):format(game.player:getStamina(), game.player.max_stamina), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_MANA_POOL) then
-		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Mana:    #00ff00#%d/%d"):format(game.player:getMana(), game.player.max_mana), 0, h, 255, 255, 255) h = h + self.font_h
+		self.surface:erase(0x7f / 5, 0xff / 5, 0xd4 / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
+		self.surface:erase(0x7f / 2, 0xff / 2, 0xd4 / 2, 255, self.bars_x, h, self.bars_w * game.player:getMana() / game.player.max_mana, self.font_h)
+		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Mana:    #ffffff#%d/%d"):format(game.player:getMana(), game.player.max_mana), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_EQUILIBRIUM_POOL) then
-		self.surface:drawColorStringBlended(self.font, ("#00ff74#Equi:    #00ff00#%d"):format(game.player:getEquilibrium()), 0, h, 255, 255, 255) h = h + self.font_h
+		self.surface:erase(0x00 / 5, 0xff / 5, 0x74 / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
+		self.surface:erase(0x00 / 2, 0xff / 2, 0x74 / 2, 255, self.bars_x, h, self.bars_w * math.min(1, math.log(1 + game.player:getEquilibrium() / 100)), self.font_h)
+		self.surface:drawColorStringBlended(self.font, ("#00ff74#Equi:    #ffffff#%d"):format(game.player:getEquilibrium()), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_POSITIVE_POOL) then
-		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Positive:#GOLD#%d/%d"):format(game.player:getPositive(), game.player.max_positive), 0, h, 255, 255, 255) h = h + self.font_h
+		self.surface:erase(colors.GOLD.r / 5, colors.GOLD.g / 5, colors.GOLD.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
+		self.surface:erase(colors.GOLD.r / 2, colors.GOLD.g / 2, colors.GOLD.b / 2, 255, self.bars_x, h, self.bars_w * game.player:getPositive() / game.player.max_positive, self.font_h)
+		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Positive:#ffffff#%d/%d"):format(game.player:getPositive(), game.player.max_positive), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_NEGATIVE_POOL) then
-		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Negative:#GREY#%d/%d"):format(game.player:getNegative(), game.player.max_negative), 0, h, 255, 255, 255) h = h + self.font_h
+		self.surface:erase(colors.GREY.r / 5, colors.GREY.g / 5, colors.GREY.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
+		self.surface:erase(colors.GREY.r / 2, colors.GREY.g / 2, colors.GREY.b / 2, 255, self.bars_x, h, self.bars_w * game.player:getNegative() / game.player.max_negative, self.font_h)
+		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Negative:#ffffff#%d/%d"):format(game.player:getNegative(), game.player.max_negative), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 
 	h = h + self.font_h
