@@ -59,15 +59,19 @@ function _M:init(title, x, y, filter, action)
 	}
 end
 
-function _M:use()
-	if self.list[self.sel] then
-		self.action(self.list[self.sel].object, self.list[self.sel].item)
-	end
+function _M:used()
 	self:generateList()
 	if #self.list == 0 then
 		game:unregisterDialog(self)
 		return false
 	end
+end
+
+function _M:use()
+	if self.list[self.sel] then
+		self.action(self.list[self.sel].object, self.list[self.sel].item)
+	end
+	self:used()
 	return true
 end
 
@@ -87,6 +91,7 @@ function _M:generateList()
 	end
 	self.list = list
 	self.sel = 1
+	self.changed = true
 end
 
 function _M:drawDialog(s)

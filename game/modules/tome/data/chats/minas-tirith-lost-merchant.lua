@@ -34,7 +34,7 @@ newChat{ id="closed",
 
 newChat{ id="welcome",
 	text = [[Ah my good friend @playername@!
-Thansk to you I made it safely to this great city, I am to open my shop soon, but I owe you a bit so I could maybe open early for you if you are in need of some rare goods.]],
+Thanks to you I made it safely to this great city, I am to open my shop soon, but I owe you a bit so I could maybe open early for you if you are in need of some rare goods.]],
 	answers = {
 		{"Yes please, let me see your wares.", action=function(npc, player)
 			npc.store:loadup(game.level, game.zone)

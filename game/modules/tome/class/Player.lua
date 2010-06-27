@@ -413,6 +413,7 @@ function _M:playerPickup()
 			self:sortInven()
 			self.changed = true
 			d.title = titleupdator()
+			d:used()
 		end)
 	else
 		self:pickupFloor(1, true)
