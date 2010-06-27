@@ -275,6 +275,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 	resolvers.equip{
 		{type="jewelry", subtype="amulet", defined="FIERY_CHOKER"},
 	},
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
 		[Talents.T_FLAME]=4,
