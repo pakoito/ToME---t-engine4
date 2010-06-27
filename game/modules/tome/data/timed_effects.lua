@@ -662,32 +662,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.power)
-	end,
-	-- Lost of CON
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = eff.con})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("inc_stats", eff.tmpid)
-	end,
-}
-
-newEffect{
-	name = "ROTTING_DISEASE",
-	desc = "Rotting Disease",
-	type = "disease",
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is afflicted by a rotting disease!" end,
-	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
-	-- Damage each turn
-	on_timeout = function(self, eff)
 		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam)
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = -eff.con})
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = eff.con})
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_stats", eff.tmpid)

@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/sandworm.lua")
+load("/data/general/npcs/ritch.lua")
 load("/data/general/npcs/orc.lua")
 
 local Talents = require("engine.interface.ActorTalents")
@@ -39,6 +40,7 @@ newEntity{ define_as = "SUN_PALADIN_GUREN",
 	move_others=true,
 
 	open_door = true,
+	invulnerable = 1,
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
