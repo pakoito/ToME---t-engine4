@@ -39,6 +39,15 @@ function _M:init(t, no_default)
 	Entity.init(self, t, no_default)
 
 	self.compute_vals = {n=0}
+	self.can_see_cache = {}
+	self:loaded()
+end
+
+
+--- Called when loaded
+-- Will setup the metatable on can_see_cache to be weak keys
+function _M:loaded()
+	setmetatable(self.can_see_cache, {__mode='k'})
 end
 
 --- Called when it is time to act
@@ -259,8 +268,11 @@ end
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- By default this returns true, but a module can override it to check for telepathy, invisibility, stealth, ...
 -- @param actor the target actor to check
+-- @param def the default
+-- @param def_pct the default percent chance
+-- @param nocache if true does not save value in the cache (not used, it's up to the module to use the cache)
 -- @return true or false and a number from 0 to 100 representing the "chance" to be seen
-function _M:canSee(actor)
+function _M:canSee(actor, def, def_pct, nocache)
 	return true, 100
 end
 

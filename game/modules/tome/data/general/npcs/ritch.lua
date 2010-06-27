@@ -56,8 +56,8 @@ newEntity{ base = "BASE_NPC_RITCH",
 
 	resolvers.talents{
 		[Talents.T_ROTTING_DISEASE]=3,
+		[Talents.T_SHRIEK]=1,
 	},
-
 }
 
 newEntity{ base = "BASE_NPC_RITCH",
@@ -74,6 +74,7 @@ newEntity{ base = "BASE_NPC_RITCH",
 		[Talents.T_ROTTING_DISEASE]=4,
 		[Talents.T_RUSH]=5,
 		[Talents.T_FLAME]=5,
+		[Talents.T_SHRIEK]=3,
 	},
 
 }
@@ -100,6 +101,7 @@ newEntity{ base = "BASE_NPC_RITCH",
 		[Talents.T_ROTTING_DISEASE]=5,
 		[Talents.T_FLAME]=5,
 		[Talents.T_SUMMON]=1,
+		[Talents.T_SHRIEK]=4,
 	},
 
 }
