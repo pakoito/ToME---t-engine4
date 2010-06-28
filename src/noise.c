@@ -247,9 +247,6 @@ static int noise_texture3d(lua_State *L)
 	int w = luaL_checknumber(L, 2);
 	int h = luaL_checknumber(L, 3);
 	int d = luaL_checknumber(L, 4);
-	float x = luaL_checknumber(L, 5);
-	float y = luaL_checknumber(L, 6);
-	float z = luaL_checknumber(L, 7);
 	GLubyte *map = malloc(w * h * d * 3 * sizeof(GLubyte));
 
 	int i, j, k;
