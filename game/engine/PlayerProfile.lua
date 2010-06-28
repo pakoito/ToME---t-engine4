@@ -104,6 +104,7 @@ function _M:loadGenericProfile()
 			local field = file:gsub(".profile$", "")
 			self.generic[field] = self.generic[field] or {}
 			self:loadData(f, self.generic[field])
+			if not self.generic[field].__uuid then self.generic[field].__uuid = util.uuid() end
 		end
 	end
 
@@ -124,6 +125,7 @@ function _M:loadModuleProfile(short_name)
 			local field = file:gsub(".profile$", "")
 			self.modules[short_name][field] = self.modules[short_name][field] or {}
 			self:loadData(f, self.modules[short_name][field])
+			if not self.modules[short_name][field].__uuid then self.modules[short_name][field].__uuid = util.uuid() end
 		end
 	end
 

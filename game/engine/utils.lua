@@ -533,3 +533,11 @@ function util.show_backtrace()
 		level = level + 1
 	end
 end
+
+function util.uuid()
+	local x = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'}
+	local y = {'8', '9', 'a', 'b'}
+	local tpl = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+	local uuid = tpl:gsub("[xy]", function(c) if c=='y' then return rng.table(y) else return rng.table(x) end end)
+	return uuid
+end

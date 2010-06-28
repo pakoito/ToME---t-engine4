@@ -25,11 +25,11 @@ module(..., package.seeall, class.make)
 _M.quest_class = "engine.Quest"
 
 --- Grants a quest to an actor from the given quest definition
-function _M:grantQuest(quest)
+function _M:grantQuest(quest, args)
 	if type(quest) == "string" then
 		local f, err = loadfile("/data/quests/"..quest..".lua")
 		if not f and err then error(err) end
-		local ret = {}
+		local ret = args or {}
 		setfenv(f, setmetatable(ret, {__index=_G}))
 		f()
 		ret.id = ret.id or quest
