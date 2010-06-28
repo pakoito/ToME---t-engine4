@@ -30,6 +30,8 @@
 #include "libtcod.h"
 #include "noise.h"
 
+extern bool shaders_active;
+
 typedef struct
 {
 	TCOD_noise_t noise;
@@ -243,6 +245,8 @@ static float tilablenoise3d(noise_t *n, double ix, double iy, double iz, double 
 
 static int noise_texture3d(lua_State *L)
 {
+	if (!shaders_active) return 0;
+
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
 	int w = luaL_checknumber(L, 2);
 	int h = luaL_checknumber(L, 3);

@@ -603,7 +603,12 @@ int main(int argc, char *argv[])
 	shaders_active = GLEW_ARB_shader_objects;
 	fbo_active = GLEW_EXT_framebuffer_object || GLEW_ARB_framebuffer_object;
 	if (!multitexture_active) shaders_active = FALSE;
-	if (!GLEW_VERSION_2_1) fbo_active = FALSE;
+	if (!GLEW_VERSION_2_1)
+	{
+		multitexture_active = FALSE;
+		shaders_active = FALSE;
+		fbo_active = FALSE;
+	}
 
 	boot_lua(2, FALSE, argc, argv);
 
