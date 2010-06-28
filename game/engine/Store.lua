@@ -80,7 +80,7 @@ function _M:interact(who)
 				q.qty = o:getNumber()
 				game:registerDialog(q)
 			else
-				self:doBuy(who, o, item, 1)
+				self:doBuy(who, o, item, 1, d)
 			end
 		else
 			if o:getNumber() > 1 then
@@ -89,7 +89,7 @@ function _M:interact(who)
 				q.qty = o:getNumber()
 				game:registerDialog(q)
 			else
-				self:doSell(who, o, item, 1)
+				self:doSell(who, o, item, 1, d)
 			end
 		end
 	end, function(what, o)

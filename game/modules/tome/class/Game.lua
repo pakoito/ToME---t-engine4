@@ -145,6 +145,7 @@ function _M:newGame()
 		print("[PLAYER BIRTH] resolved!")
 		self.player:grantQuest(self.player.starting_quest)
 		self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))
+		self.player:resetToFull()
 	end, quickbirth)
 	self:registerDialog(birth)
 end

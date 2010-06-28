@@ -27,6 +27,7 @@ newEntity{
 	define_as = "TREE",
 	name = "tree", image = "terrain/tree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+--	shader = "forest", textures = { {"image","terrain/tree_test2.png"}, function() return _3DNoise, true end },
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,

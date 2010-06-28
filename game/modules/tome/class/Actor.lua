@@ -555,6 +555,13 @@ function _M:learnStats(statorder)
 	end
 end
 
+function _M:resetToFull()
+	self.life = self.max_life
+	self.mana = self.max_mana
+	self.stamina = self.max_stamina
+	self.equilibrium = 0
+end
+
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
 	if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
@@ -582,11 +589,8 @@ function _M:levelup()
 	self:incMaxStamina(self.stamina_rating)
 	self:incMaxPositive(self.positive_negative_rating)
 	self:incMaxNegative(self.positive_negative_rating)
-	-- Healp up on new level
-	self.life = self.max_life
-	self.mana = self.max_mana
-	self.stamina = self.max_stamina
-	self.equilibrium = 0
+	-- Heal up on new level
+	self:resetToFull()
 
 	-- Auto levelup ?
 	if self.autolevel then
@@ -960,11 +964,8 @@ end
 --- Can the actor see the target actor
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
-function _M:canSee(actor, def, def_pct, nocache)
+function _M:canSee(actor, def, def_pct)
 	if not actor then return false, 0 end
-	if not nocache and self.can_see_cache[actor] and self.can_see_cache[actor].turn >= game.turn then
-		return self.can_see_cache[actor].seen, self.can_see_cache[actor].chance
-	end
 
 	-- ESP, see all, or only types/subtypes
 	if self:attr("esp") then
@@ -974,24 +975,20 @@ function _M:canSee(actor, def, def_pct, nocache)
 			if game.level then
 				game.level.map.seens(actor.x, actor.y, 1)
 			end
-			if not nocache then self.can_see_cache[actor] = {turn=game.turn, seen=true, chance=100} end
 			return true, 100
 		end
 
 		-- Type based ESP
 		if esp[actor.type] and esp[actor.type] > 0 then
-			if not nocache then self.can_see_cache[actor] = {turn=game.turn, seen=true, chance=100} end
 			return true, 100
 		end
 		if esp[actor.type.."/"..actor.subtype] and esp[actor.type.."/"..actor.subtype] > 0 then
-			if not nocache then self.can_see_cache[actor] = {turn=game.turn, seen=true, chance=100} end
 			return true, 100
 		end
 	end
 
 	-- Blindness means can't see anything
 	if self:attr("blind") then
-		if not nocache then self.can_see_cache[actor] = {turn=game.turn, seen=false, chance=0} end
 		return false, 0
 	end
 
@@ -1000,7 +997,6 @@ function _M:canSee(actor, def, def_pct, nocache)
 		local def = self.level / 2 + self:getCun(25)
 		local hit, chance = self:checkHit(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
-			if not nocache then self.can_see_cache[actor] = {turn=game.turn+100, seen=false, chance=chance} end
 			return false, chance
 		end
 	end
@@ -1011,15 +1007,12 @@ function _M:canSee(actor, def, def_pct, nocache)
 		if not self:attr("see_invisible") then return false, 0 end
 		local hit, chance = self:checkHit(self:attr("see_invisible"), actor:attr("invisible"), 0, 100)
 		if not hit then
-			if not nocache then self.can_see_cache[actor] = {turn=game.turn+100, seen=false, chance=chance} end
 			return false, chance
 		end
 	end
 	if def ~= nil then
-		if not nocache then self.can_see_cache[actor] = {turn=game.turn+100, seen=def, chance=def_pct} end
 		return def, def_pct
 	else
-		if not nocache then self.can_see_cache[actor] = {turn=game.turn+100, seen=true, chance=100} end
 		return true, 100
 	end
 end

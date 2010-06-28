@@ -599,10 +599,11 @@ int main(int argc, char *argv[])
 	resizeWindow(WIDTH, HEIGHT);
 
 	// Get OpenGL capabilities
-	multitexture_active = glewIsSupported("GL_ARB_multitexture");
-	shaders_active = glewIsSupported("GL_ARB_shader_objects");
-	fbo_active = glewIsSupported("GL_EXT_framebuffer_object") || glewIsSupported("GL_ARB_framebuffer_object");
+	multitexture_active = GLEW_ARB_multitexture;
+	shaders_active = GLEW_ARB_shader_objects;
+	fbo_active = GLEW_EXT_framebuffer_object || GLEW_ARB_framebuffer_object;
 	if (!multitexture_active) shaders_active = FALSE;
+	if (!GLEW_VERSION_2_1) fbo_active = FALSE;
 
 	boot_lua(2, FALSE, argc, argv);
 

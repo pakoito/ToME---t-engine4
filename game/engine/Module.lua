@@ -138,6 +138,7 @@ function _M:setupWrite(mod)
 	-- Create module directory
 	fs.setWritePath(engine.homepath)
 	fs.mkdir(mod.short_name)
+	fs.mkdir(mod.short_name.."/save")
 
 	-- Enter module directory
 	local base = engine.homepath .. fs.getPathSeparator() .. mod.short_name

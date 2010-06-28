@@ -117,6 +117,7 @@ access_angolwen = function(self, player)
 
 	game:setAllowedBuild("mage", true)
 	world:gainAchievement("THE_SECRET_CITY", player)
+	player:setQuestStatus(self, self.DONE)
 end
 
 ring_gift = function(self, player)
@@ -127,4 +128,5 @@ ring_gift = function(self, player)
 		game.zone:addEntity(game.level, o, "object")
 		game.logPlayer(player, "You receive: %s", o:getName{do_color=true})
 	end
+	player:setQuestStatus(self, self.DONE)
 end
