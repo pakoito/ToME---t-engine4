@@ -76,3 +76,28 @@ function _M:tooltip()
 	end
 end
 
+
+--- Generate sub entities to make nice trees
+function _M:makeTrees(base)
+	local function makeTree(nb, z, base)
+		nb = 4 - nb
+		return engine.Entity.new{
+			z = z,
+			display_scale = rng.float(0.5 + nb / 6, 1.3),
+			display_x = rng.range(-engine.Map.tile_w / 3 * nb / 3, engine.Map.tile_w / 3 * nb / 3),
+			display_y = rng.range(-engine.Map.tile_h / 3 * nb / 3, engine.Map.tile_h / 3 * nb / 3),
+			display_on_seen = true,
+			display_on_remember = true,
+			image = (base or "terrain/tree_alpha")..rng.range(1,3)..".png",
+		}
+	end
+
+	local v = rng.range(0, 100)
+	if v < 15 then
+		return { makeTree(3, 8), makeTree(3, 9), makeTree(3, 10), }
+	elseif v < 56 then
+		return { makeTree(2, 8), makeTree(2, 9), }
+	else
+		return { makeTree(1, 8), }
+	end
+end

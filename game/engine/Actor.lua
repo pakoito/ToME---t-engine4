@@ -24,6 +24,10 @@ local Faction = require "engine.Faction"
 
 module(..., package.seeall, class.inherit(Entity))
 
+_M.display_on_seen = true
+_M.display_on_remember = false
+_M.display_on_unknown = false
+
 function _M:init(t, no_default)
 	t = t or {}
 

@@ -25,6 +25,10 @@ module(..., package.seeall, class.inherit(Entity))
 -- When used on the map, do not draw alpha channel
 _M._noalpha = true
 
+_M.display_on_seen = true
+_M.display_on_remember = true
+_M.display_on_unknown = false
+
 function _M:init(t, no_default)
 	t = t or {}
 	self.name = t.name

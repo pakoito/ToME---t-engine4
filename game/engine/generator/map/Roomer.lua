@@ -75,12 +75,21 @@ end
 function _M:resolve(c)
 	local res = self.data[c]
 	if type(res) == "function" then
-		return res()
+		res = res()
 	elseif type(res) == "table" then
-		return res[rng.range(1, #res)]
+		res = res[rng.range(1, #res)]
 	else
-		return res
+		res = res
 	end
+	if not res then return end
+	res = self.grid_list[res]
+	if not res then return end
+	if res.force_clone then
+		res = res:clone()
+	end
+	res:resolve()
+	res:resolve(nil, true)
+	return res
 end
 
 --- Make up a room
@@ -118,9 +127,9 @@ function _M:roomAlloc(room, id, lev, old_lev)
 						if c == '!' then
 							self.map.room_map[i-1+x][j-1+y].room = nil
 							self.map.room_map[i-1+x][j-1+y].can_open = true
-							self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve('#')])
+							self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve('#'))
 						else
-							self.map(i-1+x, j-1+y, Map.TERRAIN, self.grid_list[self:resolve(c)])
+							self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve(c))
 						end
 						if is_lit then self.map.lites(i-1+x, j-1+y, true) end
 					end
@@ -252,9 +261,9 @@ function _M:tunnel(x1, y1, x2, y2, id)
 	for _, t in ipairs(tun) do
 		local nx, ny = t[1], t[2]
 		if t[3] and self.data.door and rng.percent(self.data.door_chance) then
-			self.map(nx, ny, Map.TERRAIN, self.grid_list[self:resolve("door")])
+			self.map(nx, ny, Map.TERRAIN, self:resolve("door"))
 		else
-			self.map(nx, ny, Map.TERRAIN, self.grid_list[self:resolve('.')])
+			self.map(nx, ny, Map.TERRAIN, self:resolve('.'))
 		end
 	end
 end
@@ -267,7 +276,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 		while true do
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -279,7 +288,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 	while true do
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end
@@ -303,7 +312,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 			if not self.map.room_map[dx][dy].special then
 				local i = rng.range(1, #rooms)
 				self:tunnel(dx, dy, rooms[i].cx, rooms[i].cy, rooms[i].id)
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -322,7 +331,7 @@ function _M:makeStairsSides(lev, old_lev, sides, rooms, spots)
 		if not self.map.room_map[ux][uy].special then
 			local i = rng.range(1, #rooms)
 			self:tunnel(ux, uy, rooms[i].cx, rooms[i].cy, rooms[i].id)
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end
@@ -334,7 +343,7 @@ end
 --- Make rooms and connect them with tunnels
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
+		self.map(i, j, Map.TERRAIN, self:resolve("#"))
 	end end
 
 	local nb_room = self.data.nb_rooms or 10

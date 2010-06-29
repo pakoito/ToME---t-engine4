@@ -27,6 +27,9 @@ local DamageType = require "engine.DamageType"
 --- Represents a level map, handles display and various low level map work
 module(..., package.seeall, class.make)
 
+--- The map vertical depth storage
+zdepth = 10
+
 --- The place of a terrain entity in a map grid
 TERRAIN = 1
 --- The place of a terrain entity in a map grid
@@ -211,7 +214,7 @@ function _M:save()
 end
 
 function _M:makeCMap()
-	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.multidisplay)
+	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.zdepth)
 	self._map:setObscure(unpack(self.color_obscure))
 	self._map:setShown(unpack(self.color_shown))
 	self._map:setupMiniMap(
@@ -342,6 +345,7 @@ function _M:updateMap(x, y)
 
 	-- Update minimap if any
 	local mm = MM_FLOOR
+	local mos = {}
 
 	if g then
 		-- Update path caches from path strings
@@ -352,19 +356,19 @@ function _M:updateMap(x, y)
 
 		mm = mm + (g:check("block_move") and MM_BLOCK or 0)
 		mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
-		g = g:makeMapObject(self.tiles)
+		g:getMapObjects(self.tiles, mos, 1)
 	end
 	if t then
 		-- Handles invisibility and telepathy and other such things
 		if not self.actor_player or t:knownBy(self.actor_player) then
-			t = t:makeMapObject(self.tiles)
+			t:getMapObjects(self.tiles, mos, 3)
 			mm = mm + MM_TRAP
 		else
 			t = nil
 		end
 	end
 	if o then
-		o = o:makeMapObject(self.tiles)
+		o:getMapObjects(self.tiles, mos, 5)
 		mm = mm + MM_OBJECT
 	end
 	if a then
@@ -372,14 +376,12 @@ function _M:updateMap(x, y)
 		if not self.actor_player or self.actor_player:canSee(a) then
 			local r = self.actor_player:reactionToward(a)
 			mm = mm + (r > 0 and MM_FRIEND or (r == 0 and MM_NEUTRAL or MM_HOSTILE))
-			a = a:makeMapObject(self.tiles)
-		else
-			a = nil
+			a:getMapObjects(self.tiles, mos, 7)
 		end
 	end
 
 	-- Cache the map objects in the C map
-	self._map:setGrid(x, y, g, t, o, a, mm)
+	self._map:setGrid(x, y, mm, mos)
 
 	-- Update FOV caches
 	if self:checkAllEntities(x, y, "block_sight", self.actor_player) then self._fovcache.block_sight:set(x, y, true)

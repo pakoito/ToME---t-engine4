@@ -270,7 +270,7 @@ void on_redraw()
 	static int Frames = 0;
 	static int T0     = 0;
 
-	glClear( GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	if (current_game != LUA_NOREF)
@@ -378,13 +378,11 @@ int initGL()
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 	/* Depth buffer setup */
-//	glClearDepth( 1.0f );
-
-	/* Enables Depth Testing */
-//	glEnable( GL_DEPTH_TEST );
+	glClearDepth( 1.0f );
 
 	/* The Type Of Depth Test To Do */
-//	glDepthFunc( GL_LEQUAL );
+	glDepthFunc(GL_LEQUAL);
+//	glDepthFunc(GL_LESS);
 
 	/* Really Nice Perspective Calculations */
 	//	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
@@ -424,7 +422,7 @@ int resizeWindow(int width, int height)
 
 	/* Set our perspective */
 	//gluPerspective( 45.0f, ratio, 0.1f, 100.0f );
-	glOrtho(0, width, height, 0, -100, 100);
+	glOrtho(0, width, height, 0, -101, 101);
 
 	/* Make sure we're chaning the model view and not the projection */
 	glMatrixMode( GL_MODELVIEW );

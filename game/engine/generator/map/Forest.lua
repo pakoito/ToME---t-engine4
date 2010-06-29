@@ -45,12 +45,21 @@ end
 function _M:resolve(c)
 	local res = self.data[c]
 	if type(res) == "function" then
-		return res()
+		res = res()
 	elseif type(res) == "table" then
-		return res[rng.range(1, #res)]
+		res = res[rng.range(1, #res)]
 	else
-		return res
+		res = res
 	end
+	if not res then return end
+	res = self.grid_list[res]
+	if not res then return end
+	if res.force_clone then
+		res = res:clone()
+	end
+	res:resolve()
+	res:resolve(nil, true)
+	return res
 end
 
 function _M:addPond(x, y, spots)
@@ -108,7 +117,7 @@ end
 
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("floor")])
+		self.map(i, j, Map.TERRAIN, self:resolve("floor"))
 	end end
 
 	-- make the noise
@@ -117,9 +126,9 @@ function _M:generate(lev, old_lev)
 		for j = 1, self.map.h do
 			local v = math.floor((noise[self.noise](noise, self.zoom * i / self.map.w, self.zoom * j / self.map.h, self.octave) / 2 + 0.5) * self.max_percent)
 			if (v >= self.sqrt_percent and rng.percent(v)) or (v < self.sqrt_percent and rng.percent(math.sqrt(v))) then
-				self.map(i-1, j-1, Map.TERRAIN, self.grid_list[self:resolve("wall")])
+				self.map(i-1, j-1, Map.TERRAIN, self:resolve("wall"))
 			else
-				self.map(i-1, j-1, Map.TERRAIN, self.grid_list[self:resolve("floor")])
+				self.map(i-1, j-1, Map.TERRAIN, self:resolve("floor"))
 			end
 		end
 	end
@@ -150,7 +159,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 		while true do
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -162,7 +171,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 	while true do
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end
@@ -184,7 +193,7 @@ function _M:makeStairsSides(lev, old_lev, sides, spots)
 			end
 
 			if not self.map.room_map[dx][dy].special then
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -201,7 +210,7 @@ function _M:makeStairsSides(lev, old_lev, sides, spots)
 		end
 
 		if not self.map.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end

@@ -1012,7 +1012,7 @@ static int sdl_texture_outline(lua_State *L)
 	glMatrixMode(GL_PROJECTION);
 	CHECKGL(glPushMatrix());
 	glLoadIdentity();
-	glOrtho(0, w, 0, h, -100, 100);
+	glOrtho(0, w, 0, h, -101, 101);
 	glMatrixMode( GL_MODELVIEW );
 
 	/* Reset The View */
@@ -1160,7 +1160,7 @@ static int gl_fbo_use(lua_State *L)
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
-		glOrtho(0, fbo->w, fbo->h, 0, -100, 100);
+		glOrtho(0, fbo->w, fbo->h, 0, -101, 101);
 		glMatrixMode(GL_MODELVIEW);
 
 		// Reset The View

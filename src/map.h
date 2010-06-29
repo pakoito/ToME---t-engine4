@@ -28,17 +28,18 @@ typedef struct {
 	GLuint *textures;
 	bool *textures_is3d;
 	GLuint shader;
+	float dx, dy, scale;
 	float tint_r;
 	float tint_g;
 	float tint_b;
+	bool on_seen;
+	bool on_remember;
+	bool on_unknown;
 	bool valid;
 } map_object;
 
 typedef struct {
-	map_object* **grids_terrain;
-	map_object* **grids_actor;
-	map_object* **grids_object;
-	map_object* **grids_trap;
+	map_object* ***grids;
 	float **grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;
@@ -47,8 +48,6 @@ typedef struct {
 
 	int minimap_gridsize;
 
-	bool multidisplay;
-
 	// Map parameters
 	float obscure_r, obscure_g, obscure_b, obscure_a;
 	float shown_r, shown_g, shown_b, shown_a;
@@ -56,6 +55,7 @@ typedef struct {
 	// Map size
 	int w;
 	int h;
+	int zdepth;
 	int tile_w, tile_h;
 
 	// Scrolling

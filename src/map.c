@@ -44,7 +44,14 @@ static int map_object_new(lua_State *L)
 	obj->textures_is3d = calloc(nb_textures, sizeof(bool));
 	obj->nb_textures = nb_textures;
 
+	obj->on_seen = lua_toboolean(L, 2);
+	obj->on_remember = lua_toboolean(L, 3);
+	obj->on_unknown = lua_toboolean(L, 4);
+
 	obj->valid = TRUE;
+	obj->dx = luaL_checknumber(L, 5);
+	obj->dy = luaL_checknumber(L, 6);
+	obj->scale = luaL_checknumber(L, 7);
 	obj->shader = 0;
 	obj->tint_r = obj->tint_g = obj->tint_b = 1;
 	for (i = 0; i < nb_textures; i++)
@@ -136,7 +143,7 @@ static int map_new(lua_State *L)
 	int mheight = luaL_checknumber(L, 6);
 	int tile_w = luaL_checknumber(L, 7);
 	int tile_h = luaL_checknumber(L, 8);
-	bool multidisplay = lua_toboolean(L, 9);
+	int zdepth = luaL_checknumber(L, 9);
 
 	map_type *map = (map_type*)lua_newuserdata(L, sizeof(map_type));
 	auxiliar_setclass(L, "core{map}", -1);
@@ -149,51 +156,32 @@ static int map_new(lua_State *L)
 	map->mm_floor = map->mm_block = map->mm_object = map->mm_trap = map->mm_friend = map->mm_neutral = map->mm_hostile = map->mm_level_change = 0;
 	map->minimap_gridsize = 4;
 
-	map->multidisplay = multidisplay;
 	map->w = w;
 	map->h = h;
+	map->zdepth = zdepth;
 	map->tile_w = tile_w;
 	map->tile_h = tile_h;
 	map->mx = mx;
 	map->my = my;
 	map->mwidth = mwidth;
 	map->mheight = mheight;
-	map->grids_terrain = calloc(w, sizeof(map_object**));
-	map->grids_actor = calloc(w, sizeof(map_object**));
-	map->grids_trap = calloc(w, sizeof(map_object**));
-	map->grids_object = calloc(w, sizeof(map_object**));
+	map->grids= calloc(w, sizeof(map_object***));
 	map->grids_seens = calloc(w, sizeof(float*));
 	map->grids_remembers = calloc(w, sizeof(bool*));
 	map->grids_lites = calloc(w, sizeof(bool*));
 	map->minimap = calloc(w, sizeof(unsigned char*));
 	printf("C Map size %d:%d :: %d\n", mwidth, mheight,mwidth * mheight);
 
-	int i;
+	int i, j;
 	for (i = 0; i < w; i++)
 	{
-		map->grids_terrain[i] = calloc(h, sizeof(map_object*));
-		map->grids_actor[i] = calloc(h, sizeof(map_object*));
-		map->grids_object[i] = calloc(h, sizeof(map_object*));
-		map->grids_trap[i] = calloc(h, sizeof(map_object*));
+		map->grids[i] = calloc(h, sizeof(map_object**));
+		for (j = 0; j < h; j++) map->grids[i][j] = calloc(zdepth, sizeof(map_object*));
 		map->grids_seens[i] = calloc(h, sizeof(float));
 		map->grids_remembers[i] = calloc(h, sizeof(bool));
 		map->grids_lites[i] = calloc(h, sizeof(bool));
 		map->minimap[i] = calloc(h, sizeof(unsigned char));
 	}
-
-
-	/* New compiled box display list */
-	/*
-	map->dlist = glGenLists(1);
-	glNewList(map->dlist, GL_COMPILE);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0,0); glVertex2f(0  , 0  );
-		glTexCoord2f(0,1); glVertex2f(0  , 16 );
-		glTexCoord2f(1,1); glVertex2f(16 , 16 );
-		glTexCoord2f(1,0); glVertex2f(16 , 0  );
-		glEnd();
-	glEndList();
-	*/
 
 	return 1;
 }
@@ -201,23 +189,18 @@ static int map_new(lua_State *L)
 static int map_free(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
-	int i;
+	int i, j;
 
 	for (i = 0; i < map->w; i++)
 	{
-		free(map->grids_terrain[i]);
-		free(map->grids_actor[i]);
-		free(map->grids_trap[i]);
-		free(map->grids_object[i]);
+		for (j = 0; j < map->h; j++) free(map->grids[i][j]);
+		free(map->grids[i]);
 		free(map->grids_seens[i]);
 		free(map->grids_remembers[i]);
 		free(map->grids_lites[i]);
 		free(map->minimap[i]);
 	}
-	free(map->grids_terrain);
-	free(map->grids_actor);
-	free(map->grids_object);
-	free(map->grids_trap);
+	free(map->grids);
 	free(map->grids_seens);
 	free(map->grids_remembers);
 	free(map->grids_lites);
@@ -305,19 +288,17 @@ static int map_set_grid(lua_State *L)
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
-
-	map_object *g = lua_isnil(L, 4) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 4);
-	map_object *t = lua_isnil(L, 5) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 5);
-	map_object *o = lua_isnil(L, 6) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 6);
-	map_object *a = lua_isnil(L, 7) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", 7);
-	unsigned char mm = lua_tonumber(L, 8);
-
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
+	unsigned char mm = lua_tonumber(L, 4);
 
-	map->grids_terrain[x][y] = g ? g : 0;
-	map->grids_trap[x][y] = t ? t : 0;
-	map->grids_actor[x][y] = a ? a : 0;
-	map->grids_object[x][y] = o ? o : 0;
+	int i;
+	for (i = 0; i < map->zdepth; i++)
+	{
+		lua_pushnumber(L, i + 1);
+		lua_gettable(L, -2);
+		map->grids[x][y][i] = lua_isnoneornil(L, -1) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", -1);
+		lua_pop(L, 1);
+	}
 
 	map->minimap[x][y] = mm;
 	return 0;
@@ -403,8 +384,17 @@ static int map_set_scroll(lua_State *L)
 	return 0;
 }
 
-inline void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure) ALWAYS_INLINE;
-void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j, float a, bool obscure)
+#define DO_QUAD(dx, dy, dz, zoom) {\
+		glBegin(GL_QUADS); \
+		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz)); \
+		glTexCoord2f(1,0); glVertex3f(map->tile_w * (zoom) + (dx), (dy),			(dz)); \
+		glTexCoord2f(1,1); glVertex3f(map->tile_w * (zoom) + (dx), map->tile_h * (zoom) + (dy),	(dz)); \
+		glTexCoord2f(0,1); glVertex3f((dx), map->tile_h * (zoom) + (dy),			(dz)); \
+		glEnd(); }
+
+
+inline void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure) ALWAYS_INLINE;
+void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure)
 {
 	float r, g, b;
 	if (!obscure)
@@ -430,6 +420,7 @@ void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j
 		}
 	}
 	glColor4f(r, g, b, a);
+
 	int z;
 	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
 	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
@@ -437,12 +428,8 @@ void display_map_quad(map_type *map, int dx, int dy, map_object *m, int i, int j
 		if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
 		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 	}
-	glBegin(GL_QUADS);
-	glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-99);
-	glTexCoord2f(1,0); glVertex3f(map->tile_w +dx, 0  +dy,-99);
-	glTexCoord2f(1,1); glVertex3f(map->tile_w +dx, map->tile_h +dy,-99);
-	glTexCoord2f(0,1); glVertex3f(0  +dx, map->tile_h +dy,-99);
-	glEnd();
+	DO_QUAD(dx + m->dx, dy + m->dy, z, m->scale);
+
 	if (m->shader) glUseProgramObjectARB(0);
 }
 
@@ -451,56 +438,34 @@ static int map_to_screen(lua_State *L)
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
-	int i = 0, j = 0;
-	float a;
+	int i = 0, j = 0, z = 0;
 
-	for (i = map->mx; i < map->mx + map->mwidth; i++)
+	/* Enables Depth Testing */
+	glEnable(GL_DEPTH_TEST);
+
+	for (z = 0; z < map->zdepth; z++)
 	{
-		for (j = map->my; j < map->my + map->mheight; j++)
+		for (i = map->mx; i < map->mx + map->mwidth; i++)
 		{
-			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
-
-			int dx = x + (i - map->mx) * map->tile_w;
-			int dy = y + (j - map->my) * map->tile_h;
-
-			if (map->grids_seens[i][j] || map->grids_remembers[i][j])
+			for (j = map->my; j < map->my + map->mheight; j++)
 			{
-				if (map->grids_seens[i][j])
+				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
+
+				int dx = x + (i - map->mx) * map->tile_w;
+				int dy = y + (j - map->my) * map->tile_h;
+				map_object *mo = map->grids[i][j][z];
+				if (!mo) continue;
+
+				if ((mo->on_seen && map->grids_seens[i][j]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
 				{
-					a = map->shown_a * map->grids_seens[i][j];
-					if (map->multidisplay)
+					if (map->grids_seens[i][j])
 					{
-						if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, FALSE);
-						if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, FALSE);
-						if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, FALSE);
-						if (map->grids_actor[i][j]) display_map_quad(map, dx, dy, map->grids_actor[i][j], i, j, a, FALSE);
+						display_map_quad(map, dx, dy, z, mo, i, j, map->shown_a * map->grids_seens[i][j], FALSE);
 					}
 					else
 					{
-						if (map->grids_actor[i][j]) display_map_quad(map, dx, dy, map->grids_actor[i][j], i, j, a, FALSE);
-						else if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, FALSE);
-						else if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, FALSE);
-						else if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, FALSE);
+						display_map_quad(map, dx, dy, z, mo, i, j, map->obscure_a, TRUE);
 					}
-				}
-				else
-				{
-					a = map->obscure_a;
-					if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, TRUE);
-					/*
-					a = map->obscure_a;
-					if (map->multidisplay)
-					{
-						if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, TRUE);
-						if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, TRUE);
-						if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, TRUE);
-					}
-					else
-					{
-						if (map->grids_object[i][j]) display_map_quad(map, dx, dy, map->grids_object[i][j], i, j, a, TRUE);
-						else if (map->grids_trap[i][j]) display_map_quad(map, dx, dy, map->grids_trap[i][j], i, j, a, TRUE);
-						else if (map->grids_terrain[i][j]) display_map_quad(map, dx, dy, map->grids_terrain[i][j], i, j, a, TRUE);
-					}*/
 				}
 			}
 		}
@@ -508,11 +473,17 @@ static int map_to_screen(lua_State *L)
 
 	// Restore normal display
 	glColor4f(1, 1, 1, 1);
+
+	/* Disables Depth Testing, we do not need it for the rest of the display */
+	glDisable(GL_DEPTH_TEST);
+
 	return 0;
 }
 
 static int minimap_to_screen(lua_State *L)
 {
+	return 0;
+#if 0
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
@@ -659,6 +630,7 @@ static int minimap_to_screen(lua_State *L)
 	// Restore normal display
 	glColor4f(1, 1, 1, 1);
 	return 0;
+#endif
 }
 
 static const struct luaL_reg maplib[] =

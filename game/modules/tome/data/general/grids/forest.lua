@@ -25,9 +25,11 @@ newEntity{
 
 newEntity{
 	define_as = "TREE",
-	name = "tree", image = "terrain/tree.png",
+	name = "tree",
+	image = "terrain/grass.png",
+	force_clone = true,
+	add_displays = resolvers.generic(function(e) return e:makeTrees("terrain/tree_alpha") end),
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
---	shader = "forest", textures = { {"image","terrain/tree_test2.png"}, function() return _3DNoise, true end },
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
@@ -43,7 +45,9 @@ newEntity{
 
 newEntity{
 	define_as = "TREE_DARK1",
-	name = "tree", image = "terrain/tree_dark1.png",
+	name = "tree", image = "terrain/grass_dark1.png",
+	force_clone = true,
+	add_displays = resolvers.generic(function(e) return e:makeTrees("terrain/tree_alpha") end),
 	display = '#', color=colors.GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
 	can_pass = {pass_tree=1},

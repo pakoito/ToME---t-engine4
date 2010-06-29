@@ -154,11 +154,25 @@ end
 -- Do not touch unless you *KNOW* what you are doing.<br/>
 -- You do *NOT* need this, this is used by the engine.Map class automatically.<br/>
 -- *DO NOT TOUCH!!!*
-function _M:makeMapObject(tiles)
-	if self._mo and self._mo:isValid() then return self._mo end
+function _M:makeMapObject(tiles, idx)
+	if idx > 1 and not tiles.use_images then return nil end
+	if idx > 1 then
+		if not self.add_displays or not self.add_displays[idx] then return end
+		return self.add_displays[idx]:makeMapObject(tiles, 1)
+	else
+		if self._mo and self._mo:isValid() then return self._mo, self.z end
+	end
 
 	-- Create the map object with 1 + additional textures
-	self._mo = core.map.newObject(1 + (tiles.use_images and self.textures and #self.textures or 0))
+	self._mo = core.map.newObject(
+		1 + (tiles.use_images and self.textures and #self.textures or 0),
+		self:check("display_on_seen"),
+		self:check("display_on_remember"),
+		self:check("display_on_unknown"),
+		self:check("display_x") or 0,
+		self:check("display_y") or 0,
+		self:check("display_scale") or 1
+	)
 	_M.__mo_repo[#_M.__mo_repo+1] = self._mo
 
 	-- Setup tint
@@ -171,7 +185,7 @@ function _M:makeMapObject(tiles)
 	if tiles.use_images and self.textures then
 		for i = 1, #self.textures do
 			local t = self.textures[i]
-			if type(t) == "function" then local tex, is3d = t(self, tiles); self._mo:texture(i, tex, is3d) tiles.texture_store[tex] = true
+			if type(t) == "function" then local tex, is3d = t(self, tiles); if tex then self._mo:texture(i, tex, is3d) tiles.texture_store[tex] = true end
 			elseif type(t) == "table" then
 				if t[1] == "image" then local tex = tiles:get('', 0, 0, 0, 0, 0, 0, t[2]); self._mo:texture(i, tex, false) tiles.texture_store[tex] = true
 				end
@@ -184,7 +198,21 @@ function _M:makeMapObject(tiles)
 		self._mo:shader(Shader.new(self.shader, self.shader_args).shad)
 	end
 
-	return self._mo
+	return self._mo, self.z
+end
+
+--- Get all "map objects" representing this entity
+-- Do not touch unless you *KNOW* what you are doing.<br/>
+-- You do *NOT* need this, this is used by the engine.Map class automatically.<br/>
+-- *DO NOT TOUCH!!!*
+function _M:getMapObjects(tiles, mos, z)
+	local i = -1
+	local mo, dz
+	repeat
+		i = i + 1
+		mo, dz = self:makeMapObject(tiles, 1+i)
+		mos[dz or z+i] = mo
+	until not mo
 end
 
 --- Resolves an entity
