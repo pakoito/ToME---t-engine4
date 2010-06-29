@@ -28,7 +28,7 @@ local DamageType = require "engine.DamageType"
 module(..., package.seeall, class.make)
 
 --- The map vertical depth storage
-zdepth = 10
+zdepth = 18
 
 --- The place of a terrain entity in a map grid
 TERRAIN = 1
@@ -361,14 +361,14 @@ function _M:updateMap(x, y)
 	if t then
 		-- Handles invisibility and telepathy and other such things
 		if not self.actor_player or t:knownBy(self.actor_player) then
-			t:getMapObjects(self.tiles, mos, 3)
+			t:getMapObjects(self.tiles, mos, 4)
 			mm = mm + MM_TRAP
 		else
 			t = nil
 		end
 	end
 	if o then
-		o:getMapObjects(self.tiles, mos, 5)
+		o:getMapObjects(self.tiles, mos, 7)
 		mm = mm + MM_OBJECT
 	end
 	if a then
@@ -376,7 +376,7 @@ function _M:updateMap(x, y)
 		if not self.actor_player or self.actor_player:canSee(a) then
 			local r = self.actor_player:reactionToward(a)
 			mm = mm + (r > 0 and MM_FRIEND or (r == 0 and MM_NEUTRAL or MM_HOSTILE))
-			a:getMapObjects(self.tiles, mos, 7)
+			a:getMapObjects(self.tiles, mos, 10)
 		end
 	end
 

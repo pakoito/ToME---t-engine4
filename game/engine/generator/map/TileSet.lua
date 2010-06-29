@@ -271,17 +271,6 @@ function _M:findMatchingTiles(st, dir, type)
 	return m, type
 end
 
-function _M:resolve(c)
-	local res = self.data[c]
-	if type(res) == "function" then
-		return res()
-	elseif type(res) == "table" then
-		return res[rng.range(1, #res)]
-	else
-		return res
-	end
-end
-
 function _M:buildTile(tile, bx, by, rid)
 	local bw, bh = tile.sizew, tile.sizeh
 
@@ -317,7 +306,7 @@ function _M:createMap()
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
 		local c = self.map.room_map[i][j].symbol
 		if self.raw.filler then c = self.raw.filler(c, i, j, self.map.room_map, self.data) end
-		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve(c)])
+		self.map(i, j, Map.TERRAIN, self:resolve(c))
 	end end
 end
 
@@ -329,7 +318,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 		while true do
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -341,7 +330,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 	while true do
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end
@@ -365,7 +354,7 @@ end
 
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
+		self.map(i, j, Map.TERRAIN, self:resolve("#"))
 	end end
 
 	local process = {}

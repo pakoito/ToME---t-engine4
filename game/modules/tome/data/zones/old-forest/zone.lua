@@ -36,7 +36,7 @@ return {
 			edge_entrances = {6,4},
 			rooms = {"forest_clearing"},
 			['.'] = "GRASS_DARK1",
-			['#'] = "TREE_DARK1",
+			['#'] = {"TREE_DARK1","TREE_DARK2","TREE_DARK3","TREE_DARK4","TREE_DARK5","TREE_DARK6","TREE_DARK7","TREE_DARK8","TREE_DARK9","TREE_DARK10","TREE_DARK11","TREE_DARK12","TREE_DARK13","TREE_DARK14","TREE_DARK15","TREE_DARK16","TREE_DARK17","TREE_DARK18","TREE_DARK19","TREE_DARK20",},
 			up = "UP",
 			down = "DOWN",
 			door = "GRASS_DARK1",

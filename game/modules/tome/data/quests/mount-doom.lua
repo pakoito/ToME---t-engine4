@@ -57,7 +57,7 @@ start_fyrk = function(self)
 	local fyrk = game.zone:makeEntityByName(game.level, "actor", "FYRK")
 	game.zone:addEntity(game.level, fyrk, "actor", 6, 455)
 
-	if self:isCompleted("not-stopped")
+	if self:isCompleted("not-stopped") then
 		game.logPlayer(game.player, "#VIOLET#A portal activates in the distance, you hear the orcs shout 'The Blue Wizards have departed, follow them!'")
 	else
 		game.logPlayer(game.player, "#VIOLET#The Blue Wizards flee through a portal, as you prepare to follow them a huge faeros appears to block the way.")

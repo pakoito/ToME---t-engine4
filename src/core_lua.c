@@ -965,10 +965,17 @@ static bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
     }
     return TRUE;
 }
+
+//#define _DEBUG
+#ifdef _DEBUG
 #define CHECKGL( GLcall )                               		\
     GLcall;                                             		\
     if(!_CheckGL_Error( #GLcall, __FILE__, __LINE__))     		\
     exit(-1);
+#else
+#define CHECKGL( GLcall)        \
+    GLcall;
+#endif
 
 static int sdl_texture_outline(lua_State *L)
 {

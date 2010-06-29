@@ -42,26 +42,6 @@ function _M:init(zone, map, level, data)
 	end
 end
 
-function _M:resolve(c)
-	local res = self.data[c]
-	if type(res) == "function" then
-		res = res()
-	elseif type(res) == "table" then
-		res = res[rng.range(1, #res)]
-	else
-		res = res
-	end
-	if not res then return end
-	res = self.grid_list[res]
-	if not res then return end
-	if res.force_clone then
-		res = res:clone()
-	end
-	res:resolve()
-	res:resolve(nil, true)
-	return res
-end
-
 function _M:addPond(x, y, spots)
 	local noise = core.noise.new(2, self.do_ponds.size.w, self.do_ponds.size.h)
 	local nmap = {}
@@ -93,7 +73,7 @@ function _M:addPond(x, y, spots)
 			local stop = true
 			for _ = 1, #self.do_ponds.pond do
 				if nmap[lx][ly] < split * self.do_ponds.pond[_][1] then
-					self.map(lx-1+x, ly-1+y, Map.TERRAIN, self.grid_list[self.do_ponds.pond[_][2]])
+					self.map(lx-1+x, ly-1+y, Map.TERRAIN, self:resolve(self.do_ponds.pond[_][2], self.grid_list, true))
 					stop = false
 					break
 				end

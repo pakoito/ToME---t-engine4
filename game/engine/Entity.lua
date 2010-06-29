@@ -157,8 +157,8 @@ end
 function _M:makeMapObject(tiles, idx)
 	if idx > 1 and not tiles.use_images then return nil end
 	if idx > 1 then
-		if not self.add_displays or not self.add_displays[idx] then return end
-		return self.add_displays[idx]:makeMapObject(tiles, 1)
+		if not self.add_displays or not self.add_displays[idx-1] then return nil end
+		return self.add_displays[idx-1]:makeMapObject(tiles, 1)
 	else
 		if self._mo and self._mo:isValid() then return self._mo, self.z end
 	end
@@ -211,7 +211,9 @@ function _M:getMapObjects(tiles, mos, z)
 	repeat
 		i = i + 1
 		mo, dz = self:makeMapObject(tiles, 1+i)
-		mos[dz or z+i] = mo
+		if mo then
+			mos[dz or z+i] = mo
+		end
 	until not mo
 end
 
@@ -315,6 +317,7 @@ function _M:loadList(file, no_default, res, mod)
 	if err then error(err) end
 
 	setfenv(f, setmetatable({
+		class = self,
 		resolvers = resolvers,
 		DamageType = require "engine.DamageType",
 		newEntity = function(t)

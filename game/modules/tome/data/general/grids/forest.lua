@@ -23,12 +23,12 @@ newEntity{
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 }
 
+for i = 1, 20 do
 newEntity{
-	define_as = "TREE",
+	define_as = "TREE"..(i > 1 and i or ""),
 	name = "tree",
 	image = "terrain/grass.png",
-	force_clone = true,
-	add_displays = resolvers.generic(function(e) return e:makeTrees("terrain/tree_alpha") end),
+	add_displays = class:makeTrees("terrain/tree_alpha"),
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
 	can_pass = {pass_tree=1},
@@ -36,6 +36,7 @@ newEntity{
 	block_sight = true,
 	dig = "GRASS",
 }
+end
 
 newEntity{
 	define_as = "GRASS_DARK1",
@@ -43,11 +44,12 @@ newEntity{
 	display = '.', color=colors.GREEN, back_color={r=44,g=95,b=43},
 }
 
+for i = 1, 20 do
 newEntity{
-	define_as = "TREE_DARK1",
+	define_as = "TREE_DARK"..i,
 	name = "tree", image = "terrain/grass_dark1.png",
 	force_clone = true,
-	add_displays = resolvers.generic(function(e) return e:makeTrees("terrain/tree_alpha") end),
+	add_displays = class:makeTrees("terrain/tree_alpha"),
 	display = '#', color=colors.GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
 	can_pass = {pass_tree=1},
@@ -55,6 +57,7 @@ newEntity{
 	block_sight = true,
 	dig = "GRASS_DARK1",
 }
+end
 
 newEntity{
 	define_as = "FLOWER",

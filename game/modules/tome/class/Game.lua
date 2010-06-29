@@ -551,8 +551,8 @@ function _M:setupCommands()
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
 				self.player:forceLevelup(50)
---				self:changeLevel(1, "eruan")
-				self.player:grantQuest("escort-duty")
+				self:changeLevel(1, "flooded-cave")
+--				self.player:grantQuest("escort-duty")
 			end
 		end,
 	}

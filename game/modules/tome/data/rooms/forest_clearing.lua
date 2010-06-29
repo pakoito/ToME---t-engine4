@@ -31,10 +31,10 @@ return function(gen, id)
 			for j = 1, self.h do
 				if hm.hmap[i][j] >= Heightmap.max * 5 / 6 then
 --					gen.map.room_map[i-1+x][j-1+y].can_open = true
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('#')])
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('#'))
 				else
 					gen.map.room_map[i-1+x][j-1+y].room = id
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('.')])
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('.'))
 				end
 				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
 			end

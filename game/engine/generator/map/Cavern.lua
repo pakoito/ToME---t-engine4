@@ -34,17 +34,6 @@ function _M:init(zone, map, level, data)
 	self.noise = data.noise or "simplex"
 end
 
-function _M:resolve(c)
-	local res = self.data[c]
-	if type(res) == "function" then
-		return res()
-	elseif type(res) == "table" then
-		return res[rng.range(1, #res)]
-	else
-		return res
-	end
-end
-
 function _M:generate(lev, old_lev)
 	print("Generating cavern")
 	local noise = core.noise.new(2, self.hurst, self.lacunarity)
@@ -55,11 +44,11 @@ function _M:generate(lev, old_lev)
 		opens[i] = {}
 		for j = 0, self.map.h - 1 do
 			if noise[self.noise](noise, self.zoom * i / self.map.w, self.zoom * j / self.map.h, self.octave) > 0 then
-				self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("floor")])
+				self.map(i, j, Map.TERRAIN, self:resolve("floor"))
 				opens[i][j] = #list+1
 				list[#list+1] = {x=i, y=j}
 			else
-				self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("wall")])
+				self.map(i, j, Map.TERRAIN, self:resolve("wall"))
 			end
 		end
 	end
@@ -106,7 +95,7 @@ function _M:generate(lev, old_lev)
 		for i = 1, #groups-1 do
 			for j = 1, #groups[i].list do
 				local jn = groups[i].list[j]
-				self.map(jn.x, jn.y, Map.TERRAIN, self.grid_list[self:resolve("wall")])
+				self.map(jn.x, jn.y, Map.TERRAIN, self:resolve("wall"))
 			end
 		end
 	else
@@ -124,7 +113,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 		while true do
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -136,7 +125,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 	while true do
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end

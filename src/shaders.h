@@ -102,13 +102,19 @@ bool _CheckGLSLProgramValid(GLuint program)
 	return TRUE;
 }
 
-#define _DEBUG
+//#define _DEBUG
 #ifdef _DEBUG
 
 #define CHECKGL( GLcall )                               		\
     GLcall;                                             		\
     if(!_CheckGL_Error( #GLcall, __FILE__, __LINE__))     		\
     exit(-1);
+
+#else
+
+#define CHECKGL( GLcall)        \
+    GLcall;
+#endif
 
 #define CHECKGLSLCOMPILE( Shader, file )						\
 	if(!_CheckGLSLShaderCompile( Shader , file))				\
@@ -122,19 +128,6 @@ bool _CheckGLSLProgramValid(GLuint program)
 	glValidateProgramARB( Program );								\
 	if(!_CheckGLSLProgramValid( Program ))						\
 	exit(-1);
-
-#else
-
-#define CHECKGL( GLcall)        \
-    GLcall;
-
-#define CHECKGLSLCOMPILE( Shader, file )
-
-#define CHECKGLSLLINK( Program )
-
-#define CHECKGLSLVALID( Program )
-
-#endif
 
 
 

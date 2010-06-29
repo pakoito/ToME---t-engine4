@@ -80,10 +80,10 @@ end
 --- Generate sub entities to make nice trees
 function _M:makeTrees(base)
 	local function makeTree(nb, z, base)
-		nb = 4 - nb
+		local inb = 4 - nb
 		return engine.Entity.new{
 			z = z,
-			display_scale = rng.float(0.5 + nb / 6, 1.3),
+			display_scale = rng.float(0.5 + inb / 6, 1.3),
 			display_x = rng.range(-engine.Map.tile_w / 3 * nb / 3, engine.Map.tile_w / 3 * nb / 3),
 			display_y = rng.range(-engine.Map.tile_h / 3 * nb / 3, engine.Map.tile_h / 3 * nb / 3),
 			display_on_seen = true,
@@ -93,11 +93,22 @@ function _M:makeTrees(base)
 	end
 
 	local v = rng.range(0, 100)
-	if v < 15 then
-		return { makeTree(3, 8), makeTree(3, 9), makeTree(3, 10), }
-	elseif v < 56 then
-		return { makeTree(2, 8), makeTree(2, 9), }
+	if v < 33 then
+		return { makeTree(3, 16), makeTree(3, 17), makeTree(3, 18), }
+	elseif v < 66 then
+		return { makeTree(2, 16), makeTree(2, 17), }
 	else
-		return { makeTree(1, 8), }
+		return { makeTree(1, 16), }
 	end
+end
+
+--- Generate sub entities to make translucent water
+function _M:makeWater(z)
+	return { engine.Entity.new{
+		z = z and 16 or 9,
+		image = "terrain/water_floor_alpha.png",
+		shader = "water", textures = { function() return _3DNoise, true end },
+		display_on_seen = true,
+		display_on_remember = true,
+	} }
 end

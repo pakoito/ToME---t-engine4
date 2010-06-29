@@ -40,3 +40,23 @@ end
 
 function _M:generate()
 end
+
+function _M:resolve(c, list, force)
+	local res = force and c or self.data[c]
+	if type(res) == "function" then
+		res = res()
+	elseif type(res) == "table" then
+		res = res[rng.range(1, #res)]
+	else
+		res = res
+	end
+	if not res then return end
+	res = (list or self.grid_list)[res]
+	if not res then return end
+	if res.force_clone then
+		res = res:clone()
+	end
+	res:resolve()
+	res:resolve(nil, true)
+	return res
+end

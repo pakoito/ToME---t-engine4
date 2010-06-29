@@ -35,17 +35,6 @@ function _M:init(zone, map, level, data)
 	self.yard_chance = data.yard_chance or 30
 end
 
-function _M:resolve(c)
-	local res = self.data[c]
-	if type(res) == "function" then
-		return res()
-	elseif type(res) == "table" then
-		return res[rng.range(1, #res)]
-	else
-		return res
-	end
-end
-
 function _M:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
 	if #inner_grids == 0 then return end
 	local door_grids = {}
@@ -58,27 +47,27 @@ function _M:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
 	print("room", dx1, dx2, "::", dy1, dy2)
 
 	if dx2 > dx1 and dy2 > dy1 then
-		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for i = point.x+1, x2 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = point.x+1, x2 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
 	elseif dx1 > dx2 and dy2 > dy1 then
-		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for i = x1, point.x-1 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = x1, point.x-1 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
 	elseif dx1 > dx2 and dy1 > dy2 then
-		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for i = x1, point.x-1 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = x1, point.x-1 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
 	elseif dx2 > dx1 and dy1 > dy2 then
-		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self.grid_list[self:resolve("wall")]) end
-		for i = point.x+1, x2 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")]) end end end
+		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = point.x+1, x2 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
 	end
 
 	-- Door
 	if #door_grids > 0 then
 		local door = rng.table(door_grids)
-		self.map(door.x, door.y, Map.TERRAIN, self.grid_list[self:resolve("door")])
+		self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
 	end
 end
 
@@ -91,10 +80,10 @@ function _M:building(leaf, spots)
 
 	for i = x1, x2 do for j = y1, y2 do
 		if i == x1 or i == x2 or j == y1 or j == y2 then
-			self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("wall")])
+			self.map(i, j, Map.TERRAIN, self:resolve("wall"))
 			door_grids[#door_grids+1] = {x=i,y=j}
 		else
-			self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("floor")])
+			self.map(i, j, Map.TERRAIN, self:resolve("floor"))
 			if i >= ix1 and i <= ix2 and j >= iy1 and j <= iy2 then
 				inner_grids[#inner_grids+1] = {x=i,y=j}
 			end
@@ -103,7 +92,7 @@ function _M:building(leaf, spots)
 
 	-- Door
 	local door = rng.table(door_grids)
-	self.map(door.x, door.y, Map.TERRAIN, self.grid_list[self:resolve("door")])
+	self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
 	-- Eliminate inner grids that face the door
 	for i = #inner_grids, 1, -1 do
 		local g = inner_grids[i]
@@ -123,7 +112,7 @@ end
 
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("external_floor")])
+		self.map(i, j, Map.TERRAIN, self:resolve("external_floor"))
 	end end
 
 	local bsp = BSP.new(self.map.w, self.map.h, self.max_building_w, self.max_building_h)
@@ -155,7 +144,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 		while true do
 			dx, dy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 			if not self.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") and not self.map.room_map[dx][dy].special then
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -167,7 +156,7 @@ function _M:makeStairsInside(lev, old_lev, spots)
 	while true do
 		ux, uy = rng.range(1, self.map.w - 1), rng.range(1, self.map.h - 1)
 		if not self.map:checkEntity(ux, uy, Map.TERRAIN, "block_move") and not self.map.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end
@@ -189,7 +178,7 @@ function _M:makeStairsSides(lev, old_lev, sides, spots)
 			end
 
 			if not self.map.room_map[dx][dy].special then
-				self.map(dx, dy, Map.TERRAIN, self.grid_list[self:resolve("down")])
+				self.map(dx, dy, Map.TERRAIN, self:resolve("down"))
 				self.map.room_map[dx][dy].special = "exit"
 				break
 			end
@@ -206,7 +195,7 @@ function _M:makeStairsSides(lev, old_lev, sides, spots)
 		end
 
 		if not self.map.room_map[ux][uy].special then
-			self.map(ux, uy, Map.TERRAIN, self.grid_list[self:resolve("up")])
+			self.map(ux, uy, Map.TERRAIN, self:resolve("up"))
 			self.map.room_map[ux][uy].special = "exit"
 			break
 		end

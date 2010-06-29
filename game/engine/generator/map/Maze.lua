@@ -25,11 +25,11 @@ module(..., package.seeall, class.inherit(engine.Generator))
 function _M:init(zone, map, grid_list, data)
 	engine.Generator.init(self, zone, map, level)
 	self.data = data
-	local grid_list = zone.grid_list
-	self.floor = grid_list[data.floor]
-	self.wall = grid_list[data.wall]
-	self.up = grid_list[data.up]
-	self.down = grid_list[data.down]
+	self.grid_list = zone.grid_list
+	self.floor = self:resolve("floor")
+	self.wall = self:resolve("wall")
+	self.up = self:resolve("up")
+	self.down = self:resolve("down")
 end
 
 function _M:generate(lev, old_lev)

@@ -72,26 +72,6 @@ function _M:loadRoom(file)
 	return t
 end
 
-function _M:resolve(c)
-	local res = self.data[c]
-	if type(res) == "function" then
-		res = res()
-	elseif type(res) == "table" then
-		res = res[rng.range(1, #res)]
-	else
-		res = res
-	end
-	if not res then return end
-	res = self.grid_list[res]
-	if not res then return end
-	if res.force_clone then
-		res = res:clone()
-	end
-	res:resolve()
-	res:resolve(nil, true)
-	return res
-end
-
 --- Make up a room
 function _M:roomAlloc(room, id, lev, old_lev)
 	if type(room) == 'function' then

@@ -25,10 +25,10 @@ return function(gen, id)
 			for j = 1, self.h do
 				if i == 1 or i == self.w or j == 1 or j == self.h then
 					gen.map.room_map[i-1+x][j-1+y].can_open = true
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('#')])
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('#'))
 				else
 					gen.map.room_map[i-1+x][j-1+y].room = id
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('.')])
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('.'))
 
 					-- Add money
 					local e = gen.zone:makeEntity(gen.level, "object", {type="money"})

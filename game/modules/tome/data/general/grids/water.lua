@@ -21,6 +21,7 @@ newEntity{
 	define_as = "WATER_FLOOR",
 	name = "underwater", image = "terrain/water_floor.png",
 	display = '.', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
+	add_displays = class:makeWater(true),
 	air_level = -5, air_condition="water",
 }
 
@@ -28,6 +29,7 @@ newEntity{
 	define_as = "WATER_WALL",
 	name = "wall", image = "terrain/water_wall.png",
 	display = '#', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
+	add_displays = class:makeWater(true),
 	always_remember = true,
 	can_pass = {pass_wall=1},
 	does_block_move = true,
@@ -39,7 +41,7 @@ newEntity{
 	define_as = "SHALLOW_WATER",
 	name = "shallow water", image = "terrain/water_floor.png",
 	display = '~', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
-	shader = "water", textures = { function() return _3DNoise, true end },
+	add_displays = class:makeWater(false),
 	always_remember = true,
 }
 
@@ -47,7 +49,7 @@ newEntity{
 	define_as = "DEEP_WATER",
 	name = "deep water", image = "terrain/water_floor.png",
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
-	shader = "water", textures = { function() return _3DNoise, true end },
+	add_displays = class:makeWater(true),
 	always_remember = true,
 	air_level = -5, air_condition="water",
 }

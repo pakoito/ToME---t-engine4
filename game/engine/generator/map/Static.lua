@@ -55,8 +55,6 @@ function _M:loadMap(file)
 		quickEntity = function(char, e)
 			if type(e) == "table" then
 				local e = self.zone.grid_class.new(e)
-				e:resolve()
-				e:resolve(nil, true)
 				t[char] = {grid=e}
 			else
 				t[char] = t[e]
@@ -128,7 +126,13 @@ function _M:generate(lev, old_lev)
 
 	for i = 1, self.gen_map.w do for j = 1, self.gen_map.h do
 		local c = self.gen_map[i][j]
-		self.map(i-1, j-1, Map.TERRAIN, self:resolve("grid", c))
+		local g = self:resolve("grid", c)
+		if g then
+			g = g:clone()
+			g:resolve()
+			g:resolve(nil, true)
+			self.map(i-1, j-1, Map.TERRAIN, g)
+		end
 
 		local actor = self.tiles[c] and self.tiles[c].actor
 		local trap = self.tiles[c] and self.tiles[c].trap

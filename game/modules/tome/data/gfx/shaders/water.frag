@@ -17,4 +17,5 @@ void main(void)
 	float bump = 1.0-abs((2.0 * noise)-1.0);
 	bump *= bump - 0.3;
 	gl_FragColor = mix(color1, color2, bump) * displayColor;
+	gl_FragColor.a = 0.6;
 }
