@@ -605,6 +605,8 @@ function _M:onStatChange(stat, v)
 	elseif stat == self.STAT_WIL then
 		self:incMaxMana(5 * v)
 		self:incMaxStamina(2 * v)
+	elseif stat == self.STAT_STR then
+		self:checkEncumbrance()
 	end
 end
 
