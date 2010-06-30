@@ -26,7 +26,7 @@ void main(void)
 				sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 			}
 		}
-		sample /= float((blursize*2) * (blursize*2));
+		sample /= float((blursize*2.0) * (blursize*2.0));
 		gl_FragColor = sample;
 	}
 
@@ -38,7 +38,7 @@ void main(void)
 
 	if (hp_warning > 0.0)
 	{
-		vec4 hp_warning_color = vec4(hp_warning / 1.5, 0, 0, hp_warning / 1.5);
+		vec4 hp_warning_color = vec4(hp_warning / 1.5, 0.0, 0.0, hp_warning / 1.5);
 		float dist = length(gl_TexCoord[0].xy - vec2(0.5)) / 2.0;
 		gl_FragColor = mix(gl_FragColor, hp_warning_color, dist);
 	}
