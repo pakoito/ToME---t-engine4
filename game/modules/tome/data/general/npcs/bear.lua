@@ -38,7 +38,7 @@ newEntity{
 	size_category = 4,
 
 	combat_armor = 1, combat_def = 1,
-	combat = { dam=resolvers.rngavg(12,25), atk=10, apr=3, physspeed=2 },
+	combat = { dam=resolvers.rngavg(12,25), atk=10, apr=3, physspeed=2, dammod={str=0.8} },
 	life_rating = 12,
 	resolvers.tmasteries{ ["technique/other"]=0.25 },
 
@@ -49,7 +49,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	name = "brown bear", color=colors.UMBER,
 	desc = [[The weakest of bears, covered in brown shaggy fur.]],
 	level_range = {5, nil}, exp_worth = 1,
-	rarity = 7,
+	rarity = 1,
 	max_life = resolvers.rngavg(80,90),
 	combat_armor = 7, combat_def = 3,
 	resolvers.talents{ [Talents.T_STUN]=1 },

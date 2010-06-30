@@ -110,7 +110,7 @@ newBirthDescriptor{
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="stagg", name="elm staff", autoreq=true},
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="robe", autoreq=true},
 		},
 	},

@@ -455,11 +455,10 @@ function _M:combatDamage(weapon)
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_con_to_str = true end
 
 	local totstat = 0
-	if weapon.dammod then
-		for stat, mod in pairs(weapon.dammod) do
-			if sub_con_to_str and stat == "str" then stat = "cun" end
-			totstat = totstat + self:getStat(stat) * mod
-		end
+	local dammod = weapon.dammod or {str=0.6}
+	for stat, mod in pairs(dammod) do
+		if sub_con_to_str and stat == "str" then stat = "cun" end
+		totstat = totstat + self:getStat(stat) * mod
 	end
 
 	local add = 0
@@ -470,6 +469,7 @@ function _M:combatDamage(weapon)
 	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
 	local power = self.combat_dam + (weapon.dam or 1) + add
 	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
+	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
 	return totstat / 1.5 * power * talented_mod
 end
 
