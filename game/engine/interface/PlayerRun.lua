@@ -135,6 +135,7 @@ function _M:runStep()
 			if isEdge(self, self.running.dir) then self:runStop()
 			else self:moveDir(self.running.dir) end
 		end
+		self:runMoved()
 
 		-- Did not move ? no use in running
 		if self.x == oldx and self.y == oldy then self:runStop() end
@@ -229,4 +230,8 @@ function _M:runScan(fct)
 		local x, y = self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y
 		fct(x, y)
 	end
+end
+
+--- Called after running a step
+function _M:runMoved()
 end

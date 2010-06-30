@@ -362,9 +362,12 @@ function _M:runCheck()
 	end)
 	if noticed then return false, noticed end
 
-	self:playerFOV()
-
 	return engine.interface.PlayerRun.runCheck(self)
+end
+
+--- Called after running a step
+function _M:runMoved()
+	self:playerFOV()
 end
 
 function _M:doDrop(inven, item)
