@@ -71,12 +71,12 @@ function _M:getFragment(name)
 	local f = fs.open("/data/gfx/shaders/"..name..".frag", "r")
 	local code = {}
 	while true do
-		local l = f:read()
+		local l = f:read(1)
 		if not l then break end
 		code[#code+1] = l
 	end
 	f:close()
-	self.frags[name] = core.shader.newShader(table.concat(code, "\n"))
+	self.frags[name] = core.shader.newShader(table.concat(code))
 	print("[SHADER] created fragment shader from /data/gfx/shaders/"..name..".frag")
 	return self.frags[name]
 end
@@ -87,12 +87,12 @@ function _M:getVertex(name)
 	local f = fs.open("/data/gfx/shaders/"..name..".vert", "r")
 	local code = {}
 	while true do
-		local l = f:read()
+		local l = f:read(1)
 		if not l then break end
 		code[#code+1] = l
 	end
 	f:close()
-	self.verts[name] = core.shader.newShader(table.concat(code, "\n"), true)
+	self.verts[name] = core.shader.newShader(table.concat(code), true)
 	print("[SHADER] created vertex shader from /data/gfx/shaders/"..name..".vert")
 	return self.verts[name]
 end
