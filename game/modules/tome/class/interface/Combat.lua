@@ -158,6 +158,9 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 	if not x or not y then return nil end
 	self:project(tg, x, y, function(tx, ty)
 		for i = 1, params.multishots or 1 do
+			local target = game.level.map(tx, ty, game.level.map.ACTOR)
+			if not target then return end
+
 			local ammo = ammo
 			if not params.one_shot then
 				ammo = self:removeObject(self:getInven("QUIVER"), 1)
@@ -165,8 +168,6 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 			end
 			if params.limit_shots then if params.limit_shots <= 0 then return end end
 
-			local target = game.level.map(tx, ty, game.level.map.ACTOR)
-			if not target then return end
 			ret.firsttarget = ret.firsttarget or target
 			ammo = ammo.combat
 

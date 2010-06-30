@@ -93,13 +93,16 @@ function _M:makeTrees(base, max)
 	end
 
 	local v = rng.range(0, 100)
+	local tbl
 	if v < 33 then
-		return { makeTree(3, 16), makeTree(3, 17), makeTree(3, 18), }
+		tbl = { makeTree(3, 16), makeTree(3, 17), makeTree(3, 18), }
 	elseif v < 66 then
-		return { makeTree(2, 16), makeTree(2, 17), }
+		tbl = { makeTree(2, 16), makeTree(2, 17), }
 	else
-		return { makeTree(1, 16), }
+		tbl = { makeTree(1, 16), }
 	end
+	table.sort(tbl, function(a,b) return a.display_y < b.display_y end)
+	return tbl
 end
 
 --- Generate sub entities to make translucent water

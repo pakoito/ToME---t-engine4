@@ -28,20 +28,9 @@ function _M:init(zone, map, level, data)
 	self.grid_list = zone.grid_list
 end
 
-function _M:resolve(c)
-	local res = self.data[c]
-	if type(res) == "function" then
-		return res()
-	elseif type(res) == "table" then
-		return res[rng.range(1, #res)]
-	else
-		return res
-	end
-end
-
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		self.map(i, j, Map.TERRAIN, self.grid_list[self:resolve("#")])
+		self.map(i, j, Map.TERRAIN, self:resolve("#"))
 	end end
 
 	local ln = 0
@@ -53,7 +42,7 @@ function _M:generate(lev, old_lev)
 	for j = 0, self.map.h - 1 do
 		local wd = widness:fbm_perlin(20 * j / self.map.h, 4)
 		wd = math.ceil(((wd + 1) / 2) * 4)
-		for ii = i - wd, i + wd do if self.map:isBound(ii, j) then self.map(ii, j, Map.TERRAIN, self.grid_list[self:resolve(".")]) end end
+		for ii = i - wd, i + wd do if self.map:isBound(ii, j) then self.map(ii, j, Map.TERRAIN, self:resolve(".")) end end
 
 		if j < self.map.h - 10 then
 			local n = path:fbm_perlin(150 * j / self.map.h, 4)
