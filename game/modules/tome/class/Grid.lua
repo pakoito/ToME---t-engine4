@@ -78,8 +78,8 @@ end
 
 
 --- Generate sub entities to make nice trees
-function _M:makeTrees(base)
-	local function makeTree(nb, z, base)
+function _M:makeTrees(base, max)
+	local function makeTree(nb, z)
 		local inb = 4 - nb
 		return engine.Entity.new{
 			z = z,
@@ -88,7 +88,7 @@ function _M:makeTrees(base)
 			display_y = rng.range(-engine.Map.tile_h / 3 * nb / 3, engine.Map.tile_h / 3 * nb / 3),
 			display_on_seen = true,
 			display_on_remember = true,
-			image = (base or "terrain/tree_alpha")..rng.range(1,3)..".png",
+			image = (base or "terrain/tree_alpha")..rng.range(1,max or 5)..".png",
 		}
 	end
 
