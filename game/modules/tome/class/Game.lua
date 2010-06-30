@@ -218,8 +218,8 @@ function _M:setupDisplayMode()
 	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
 
 	-- Create the framebuffer
-	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
+--	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+--	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
 end
 
 function _M:setupMiniMap()

@@ -482,8 +482,6 @@ static int map_to_screen(lua_State *L)
 
 static int minimap_to_screen(lua_State *L)
 {
-	return 0;
-#if 0
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
@@ -630,7 +628,6 @@ static int minimap_to_screen(lua_State *L)
 	// Restore normal display
 	glColor4f(1, 1, 1, 1);
 	return 0;
-#endif
 }
 
 static const struct luaL_reg maplib[] =
