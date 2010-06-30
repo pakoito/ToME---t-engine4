@@ -7,7 +7,7 @@ uniform vec4 color2;
 
 void main(void)
 {
-	float fTime0_X = tick / 100000;
+	float fTime0_X = tick / 100000.0;
 	vec2 coord = mapCoord+gl_TexCoord[0].xy;
 	float noisy = texture3D(noisevol,vec3(coord,fTime0_X)).r;
 	float noisy2 = texture3D(noisevol,vec3(coord/5.0,fTime0_X)).r;

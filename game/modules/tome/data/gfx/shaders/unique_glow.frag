@@ -8,7 +8,7 @@ int blursize = 7;
 
 void main(void)
 {
-	float fTime0_1 = tick / 5000;
+	float fTime0_1 = tick / 5000.0;
 	vec2 offset = 1.0/texSize;
 
 	// Center Pixel

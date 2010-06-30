@@ -9,7 +9,7 @@ const float PI = 3.14159265;
 
 void main()
 {
-	float fTime0_X = tick / 1000;
+	float fTime0_X = tick / 1000.0;
 	float count = fTime0_X/2.0;
 	vec4 col1;
 	vec4 col2;
