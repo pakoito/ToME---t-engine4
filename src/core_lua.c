@@ -1214,6 +1214,7 @@ static int gl_fbo_toscreen(lua_State *L)
 		useShader(*s, 0, 0, w, h, r, g, b, a);
 	}
 
+	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, fbo->texture);
 	glBegin( GL_QUADS );                 /* Draw A Quad              */
 	glTexCoord2f(0,1); glVertex2f(0  + x, 0  + y);
@@ -1224,6 +1225,7 @@ static int gl_fbo_toscreen(lua_State *L)
 
 	if (lua_isuserdata(L, 6)) glUseProgramObjectARB(0);
 	if (lua_isnumber(L, 7)) glColor4f(1, 1, 1, 1);
+	glEnable(GL_BLEND);
 	return 0;
 }
 

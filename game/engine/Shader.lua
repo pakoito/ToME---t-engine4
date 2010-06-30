@@ -128,20 +128,20 @@ end
 
 function _M:setUniform(k, v)
 	if type(v) == "number" then
-		print("[SHADER] setting param", k, v)
+--		print("[SHADER] setting param", k, v)
 		self.shad:paramNumber(k, v)
 	elseif type(v) == "table" then
 		if v.texture then
-			print("[SHADER] setting texture param", k, v.texture)
+--			print("[SHADER] setting texture param", k, v.texture)
 			self.shad:paramTexture(k, v.texture, v.is3d)
 		elseif #v == 2 then
-			print("[SHADER] setting vec2 param", k, v[1], v[2])
+--			print("[SHADER] setting vec2 param", k, v[1], v[2])
 			self.shad:paramNumber2(k, v[1], v[2])
 		elseif #v == 3 then
-			print("[SHADER] setting vec3 param", k, v[1], v[2], v[3])
+--			print("[SHADER] setting vec3 param", k, v[1], v[2], v[3])
 			self.shad:paramNumber3(k, v[1], v[2], v[3])
 		elseif #v == 4 then
-			print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
+--			print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
 			self.shad:paramNumber4(k, v[1], v[2], v[3], v[4])
 		end
 	end
