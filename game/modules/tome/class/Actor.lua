@@ -684,10 +684,10 @@ function _M:learnTalent(t_id, force, nb)
 
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
-	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) then self:learnTalent(self.T_MANA_POOL, true) end
-	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) then self:learnTalent(self.T_EQUILIBRIUM_POOL, true) end
-	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) then self:learnTalent(self.T_STAMINA_POOL, true) end
-	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) then self:learnTalent(self.T_VIM_POOL, true) end
+	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and t.mana or t.sustain_mana then self:learnTalent(self.T_MANA_POOL, true) end
+	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) and t.equilibrium or t.sustain_equilibrium then self:learnTalent(self.T_EQUILIBRIUM_POOL, true) end
+	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) and t.stamina or t.sustain_stamina then self:learnTalent(self.T_STAMINA_POOL, true) end
+	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and t.vim or t.sustain_vim then self:learnTalent(self.T_VIM_POOL, true) end
 	if t.type[1]:find("^divine/") and (t.positive or t.sustain_positive) and not self:knowTalent(self.T_POSITIVE_POOL) then self:learnTalent(self.T_POSITIVE_POOL, true) end
 	if t.type[1]:find("^divine/") and (t.negative or t.sustain_negative) and not self:knowTalent(self.T_NEGATIVE_POOL) then self:learnTalent(self.T_NEGATIVE_POOL, true) end
 
