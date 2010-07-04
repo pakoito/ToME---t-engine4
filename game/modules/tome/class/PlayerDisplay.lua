@@ -51,9 +51,6 @@ function _M:display()
 	local cur_exp, max_exp = game.player.exp, game.player:getExpChart(game.player.level+1)
 
 	local h = 0
-	self.surface:drawStringBlended(self.font, game.player.name, 0, h, 0, 200, 255) h = h + self.font_h
-	self.surface:drawStringBlended(self.font, game.player.descriptor.subrace or "", 0, h, 0, 200, 255) h = h + self.font_h
-	h = h + self.font_h
 	self.surface:drawColorStringBlended(self.font, "Level: #00ff00#"..game.player.level, 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorStringBlended(self.font, ("Exp:  #00ff00#%2d%%"):format(100 * cur_exp / max_exp), 0, h, 255, 255, 255) h = h + self.font_h
 	self.surface:drawColorStringBlended(self.font, ("Gold: #00ff00#%0.2f"):format(game.player.money or 0), 0, h, 255, 255, 255) h = h + self.font_h
@@ -97,22 +94,6 @@ function _M:display()
 		self.surface:erase(colors.GREY.r / 5, colors.GREY.g / 5, colors.GREY.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
 		self.surface:erase(colors.GREY.r / 2, colors.GREY.g / 2, colors.GREY.b / 2, 255, self.bars_x, h, self.bars_w * game.player:getNegative() / game.player.max_negative, self.font_h)
 		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Negative:#ffffff#%d/%d"):format(game.player:getNegative(), game.player.max_negative), 0, h, 255, 255, 255) h = h + self.font_h
-	end
-
-	h = h + self.font_h
-	self.surface:drawColorStringBlended(self.font, ("STR: #00ff00#%3d"):format(game.player:getStr()), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawColorStringBlended(self.font, ("DEX: #00ff00#%3d"):format(game.player:getDex()), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawColorStringBlended(self.font, ("MAG: #00ff00#%3d"):format(game.player:getMag()), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawColorStringBlended(self.font, ("WIL: #00ff00#%3d"):format(game.player:getWil()), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawColorStringBlended(self.font, ("CUN: #00ff00#%3d"):format(game.player:getCun()), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawColorStringBlended(self.font, ("CON: #00ff00#%3d"):format(game.player:getCon()), 0, h, 255, 255, 255) h = h + self.font_h
-	h = h + self.font_h
-	self.surface:drawStringBlended(self.font, ("Fatigue %3d%%"):format(game.player.fatigue), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawStringBlended(self.font, ("Armor   %3d"):format(game.player:combatArmor()), 0, h, 255, 255, 255) h = h + self.font_h
-	self.surface:drawStringBlended(self.font, ("Defense %3d"):format(game.player:combatDefense()), 0, h, 255, 255, 255) h = h + self.font_h
-
-	if game.zone and game.level then
-		self.surface:drawStringBlended(self.font, ("%s (%d)"):format(game.zone.name, game.level.level), 0, self.h - self.font_h, 0, 255, 255) h = h + self.font_h
 	end
 
 	return self.surface

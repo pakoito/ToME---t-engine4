@@ -196,6 +196,8 @@ function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, colo
 			else lines = {v} end
 			for j = 1, #lines do
 				if sel == i then
+					local sx, sy = self.font:size(lines[j])
+--					s:erase(selcolor[1]/3, selcolor[2]/3, selcolor[3]/3, 1, x, y, sx, sy)
 					s:drawColorStringBlended(self.font, lines[j], x, y, selcolor[1], selcolor[2], selcolor[3])
 				else
 					local r, g, b = color[1], color[2], color[3]

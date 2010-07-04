@@ -564,9 +564,10 @@ end
 
 function _M:levelup()
 	self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
-	if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
 	self.unused_talents = self.unused_talents + 1
 	self.unused_skills = self.unused_skills + 1
+	if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
+	if self.level % 5 == 0 then self.unused_skills = self.unused_skills - 1 end
 	-- At levels 10, 20 and 30 we gain a new talent type
 	if self.level == 10 or  self.level == 20 or  self.level == 30 then
 		self.unused_talents_types = self.unused_talents_types + 1

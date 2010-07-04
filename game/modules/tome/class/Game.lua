@@ -80,7 +80,7 @@ end
 function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
-	self.player_display = PlayerDisplay.new(0, 20, 200, self.h * 0.8 - 20, {30,30,0})
+	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
@@ -169,7 +169,7 @@ function _M:onResolutionChange()
 	self:setupDisplayMode()
 	self.flash:resize(0, 0, self.w, 20)
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
-	self.player_display:resize(0, 20, 200, self.h * 0.8 - 20)
+	self.player_display:resize(0, 220, 200, self.h * 0.8 - 220)
 	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 end
 
@@ -342,6 +342,7 @@ function _M:changeLevel(lev, zone)
 	for uid, e in pairs(self.level.entities) do
 		self.level.map:addPathString(e:getPathString())
 	end
+	self.zone_name_s = nil
 	self.level.map:redisplay()
 end
 
@@ -413,6 +414,15 @@ function _M:display()
 			self.target:display()
 		end
 
+		if not self.zone_name_s then
+			self.zone_name_s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, self.level.level), 0, 255, 255)
+		end
+		local znsx, znsy = self.zone_name_s:getSize()
+		self.zone_name_s:toScreen(
+			self.level.map.display_x + self.level.map.viewport.width - znsx,
+			self.level.map.display_y + self.level.map.viewport.height - znsy
+		)
+
 		-- Display a tooltip if available
 		if self.tooltip_x then self.tooltip:displayAtMap(self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)) end
 
@@ -422,9 +432,9 @@ function _M:display()
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
 
-		if self.minimap_mode == 2 then
-			self.level.map:minimapDisplay(self.w - 200, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 0.6)
-		elseif self.minimap_mode == 3 then
+		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
+--[[
+		if self.minimap_mode == 3 then
 			local mx, my = 0, 0
 			local mw, mh = math.floor((self.w - 200) / 8), math.floor(self.h * .80 / 8)
 
@@ -436,6 +446,7 @@ function _M:display()
 
 			self.level.map:minimapDisplay(200, 20, mx, my, mw, mh, 0.9)
 		end
+]]
 	end
 
 	engine.GameTurnBased.display(self)
