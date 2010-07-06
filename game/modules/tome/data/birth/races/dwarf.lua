@@ -32,12 +32,12 @@ newBirthDescriptor{
 	{
 		subrace =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Dwarf = "allow",
 		},
 		sex =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Male = "allow",
 		},
 	},

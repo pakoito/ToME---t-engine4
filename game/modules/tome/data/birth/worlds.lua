@@ -33,26 +33,62 @@ newBirthDescriptor{
 	{
 		race =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Human = "allow",
 			Elf = "allow",
 			Dwarf = "allow",
 			Hobbit = "allow",
-			Orc = function() return profile.mod.allow_build.orc and "allow" or "never" end,
-			Troll = function() return profile.mod.allow_build.troll and "allow" or "never" end,
-			Undead = function() return profile.mod.allow_build.undead and "allow" or "never" end,
+			Orc = function() return profile.mod.allow_build.orc and "allow" or "disallow" end,
+			Troll = function() return profile.mod.allow_build.troll and "allow" or "disallow" end,
+			Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
 		},
 
 		class =
 		{
 			__ALL__ = "allow",
-			Mage = function() return profile.mod.allow_build.mage and "allow" or "never" end,
-			Divine = function() return profile.mod.allow_build.divine and "allow" or "never" end,
+			Mage = function() return profile.mod.allow_build.mage and "allow" or "disallow" end,
+			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
 			Wilder = function() return (
 				profile.mod.allow_build.wilder_summoner or
 				profile.mod.allow_build.wilder_wyrmic
-				) and "allow" or "never"
+				) and "allow" or "disallow"
 			end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Tutorial",
+	desc =
+	{
+		"The tutorial will explain the basics of the game to get you started.",
+	},
+	on_select = function()
+		setAuto("subclass", false)
+		setAuto("subrace", false)
+	end,
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "forbid",
+			Human = "allow",
+		},
+		subrace =
+		{
+			__ALL__ = "forbid",
+			["Dúnadan"] = "allow",
+		},
+		class =
+		{
+			__ALL__ = "forbid",
+			Warrior = "allow",
+		},
+		subclass =
+		{
+			__ALL__ = "forbid",
+			Fighter = "allow",
 		},
 	},
 }
@@ -70,9 +106,9 @@ newBirthDescriptor{
 	{
 		race =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Human = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "never" end,
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
 		},
 	},
 }

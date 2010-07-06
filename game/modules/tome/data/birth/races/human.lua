@@ -34,7 +34,7 @@ newBirthDescriptor{
 			["Dúnadan"] = "allow",
 			Rohirrim = "allow",
 			Beorning = "allow",
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 		},
 		subclass =
 		{

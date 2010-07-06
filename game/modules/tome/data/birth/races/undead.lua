@@ -31,15 +31,15 @@ newBirthDescriptor{
 	{
 		subrace =
 		{
-			__ALL__ = "never",
-			Ghoul = function() return profile.mod.allow_build.undead_ghoul and "allow" or "never" end,
-			Skeleton = function() return profile.mod.allow_build.undead_skeleton and "allow" or "never" end,
-			Vampire = function() return profile.mod.allow_build.undead_vampire and "allow" or "never" end,
-			Wight = function() return profile.mod.allow_build.undead_wight and "allow" or "never" end,
+			__ALL__ = "disallow",
+			Ghoul = function() return profile.mod.allow_build.undead_ghoul and "allow" or "disallow" end,
+			Skeleton = function() return profile.mod.allow_build.undead_skeleton and "allow" or "disallow" end,
+			Vampire = function() return profile.mod.allow_build.undead_vampire and "allow" or "disallow" end,
+			Wight = function() return profile.mod.allow_build.undead_wight and "allow" or "disallow" end,
 		},
 		class =
 		{
-			Divine = "never",
+			Divine = "disallow",
 		},
 	},
 	copy = {
@@ -66,7 +66,7 @@ newBirthDescriptor
 	{
 		sex =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Male = "allow",
 		},
 	},
@@ -111,7 +111,7 @@ newBirthDescriptor
 	{
 		sex =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Male = "allow",
 		},
 	},

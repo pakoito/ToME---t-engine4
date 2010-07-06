@@ -32,17 +32,17 @@ newBirthDescriptor{
 	{
 		subrace =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Orc = "allow",
 		},
 		sex =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Male = "allow",
 		},
 		class =
 		{
-			Mage = "never",
+			Mage = "disallow",
 		},
 	},
 	stats = { str=4, con=1, wil=2, mag=-2, dex=-2 },

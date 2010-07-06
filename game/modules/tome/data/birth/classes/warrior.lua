@@ -27,7 +27,7 @@ newBirthDescriptor{
 	{
 		subclass =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Fighter = "allow",
 			Berserker = "allow",
 			["Arcane Blade"] = "allow",

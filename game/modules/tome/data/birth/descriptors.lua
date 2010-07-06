@@ -29,13 +29,14 @@ newBirthDescriptor{
 	{
 		world =
 		{
+			Tutorial = "disallow",
 			Arda = "allow",
-			["Spydrë"] = function() return profile.mod.allow_build.world_spydre and "allow" or "never" end,
+			["Spydrë"] = function() return profile.mod.allow_build.world_spydre and "allow" or "disallow" end,
 		},
 		subclass =
 		{
 			-- Nobdoy can be a sun paladin but humans & elves
-			['Sun Paladin'] = "never",
+			['Sun Paladin'] = "disallow",
 		},
 	},
 	talents = {},
@@ -68,13 +69,21 @@ newBirthDescriptor{
 --------------- Difficulties
 newBirthDescriptor{
 	type = "difficulty",
-	name = "Easy",
+	name = "Tutorial",
 	desc =
 	{
-		"Easy game setting",
+		"Tutorial mode, start with a simplified character and discover the game in a simple quest.",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",
 		"No achievements possible.",
+	},
+	descriptor_choices =
+	{
+		world =
+		{
+			__ALL__ = "disallow",
+			Tutorial = "allow",
+		}
 	},
 	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end) },
 }

@@ -34,7 +34,7 @@ newBirthDescriptor{
 		{
 			Nandor = "allow",
 			Avari = "allow",
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 		},
 		subclass =
 		{

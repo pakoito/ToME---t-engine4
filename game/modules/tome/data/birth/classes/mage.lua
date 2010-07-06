@@ -28,7 +28,7 @@ newBirthDescriptor{
 	{
 		subclass =
 		{
-			__ALL__ = "never",
+			__ALL__ = "disallow",
 			Archmage = "allow",
 --			Necromancer = "allow",
 		},

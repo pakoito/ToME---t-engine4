@@ -130,14 +130,19 @@ function _M:selectType(type)
 	print("[BIRTHER] selecting type", type)
 	for i, d in ipairs(self.birth_descriptor_def[type]) do
 		local allowed = true
+		print("[BIRTHER] checking allowance for ", d.name)
 		for j, od in ipairs(self.descriptors) do
 			if od.descriptor_choices[type] then
 				local what = util.getval(od.descriptor_choices[type][d.name]) or util.getval(od.descriptor_choices[type].__ALL__)
 				if what and what == "allow" then
 					allowed = true
-				elseif what and what == "never" then
+				elseif what and (what == "never" or what == "disallow") then
 					allowed = false
+				elseif what and what == "forbid" then
+					allowed = nil
 				end
+				print("[BIRTHER] test against ", od.name, "=>", what, allowed)
+				if allowed == nil then break end
 			end
 		end
 

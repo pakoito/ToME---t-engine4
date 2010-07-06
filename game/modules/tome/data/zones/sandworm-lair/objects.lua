@@ -31,9 +31,11 @@ newEntity{
 	use_simple = { name="consume the heart", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You consume the heart and feel the knowledge of this very old creature fills you!")
 		who.unused_stats = who.unused_stats + 3
-		who.unused_talents = who.unused_talents + 2
+		who.unused_talents = who.unused_talents + 1
+		who.unused_skills = who.unused_skills + 1
 		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)
 		game.logPlayer(who, "You have %d talent point(s) to spend. Press G to use them.", who.unused_talents)
+		game.logPlayer(who, "You have %d skill point(s) to spend. Press G to use them.", who.unused_skills)
 
 		who:learnTalentType("wild-gift/sand-drake", false)
 		game.logPlayer(who, "You are transformed by the heart of the Queen!.")

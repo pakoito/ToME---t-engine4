@@ -28,9 +28,9 @@ newBirthDescriptor{
 	{
 		subclass =
 		{
-			__ALL__ = "never",
-			['Sun Paladin'] = function() return profile.mod.allow_build.divine_sun_paladin and "allow" or "never" end,
-			Anorithil = function() return profile.mod.allow_build.divine_anorithil and "allow" or "never" end,
+			__ALL__ = "disallow",
+			['Sun Paladin'] = function() return profile.mod.allow_build.divine_sun_paladin and "allow" or "disallow" end,
+			Anorithil = function() return profile.mod.allow_build.divine_anorithil and "allow" or "disallow" end,
 		},
 	},
 	copy = {
