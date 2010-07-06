@@ -281,37 +281,36 @@ newTalent{
 }
 
 newTalent{
-	name = "Crush",
+	name = "Blood Frenzy",
 	type = {"technique/2hweapon-cripple", 4},
 	require = techs_req4,
 	points = 5,
-	cooldown = 6,
-	stamina = 12,
-	action = function(self, t)
+	mode = "sustained",
+	cooldown = 15,
+	sustain_stamina = 100,
+	do_turn = function(self, t)
+		if self.blood_frenzy > 0 then
+			self.blood_frenzy = self.blood_frenzy - 2
+		end
+	end,
+	activate = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Crush without a two-handed weapon!")
+			game.logPlayer(self, "You cannot use Berserker without a two-handed weapon!")
 			return nil
 		end
-
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.4))
-
-		-- Try to stun !
-		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {})
-			else
-				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
-			end
-		end
-
+		self.blood_frenzy = 0
+		return {
+			regen = self:addTemporaryValue("stamina_regen", -4),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self.blood_frenzy = nil
+		self:removeTemporaryValue("stamina_regen", p.regen)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage, if the attack hits, the target is unable to move for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), 2+self:getTalentLevel(t))
+		return ([[Enter a blood frenzy, draining stamina quickly. Each time you kill a foe while in blood frenzy you gain a cumulative bonus to weapon power of %d.
+		Each turn the bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
 	end,
 }

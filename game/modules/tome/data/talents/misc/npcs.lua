@@ -692,3 +692,39 @@ newTalent{
 		return ([[Shriek to call your allies.]])
 	end,
 }
+
+newTalent{
+	name = "Crush",
+	type = {"technique/other", 1},
+	require = techs_req1,
+	points = 5,
+	cooldown = 6,
+	stamina = 12,
+	action = function(self, t)
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
+			game.logPlayer(self, "You cannot use Crush without a two-handed weapon!")
+			return nil
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.4))
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {})
+			else
+				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage, if the attack hits, the target is unable to move for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), 2+self:getTalentLevel(t))
+	end,
+}

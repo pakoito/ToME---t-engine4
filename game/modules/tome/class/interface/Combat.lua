@@ -465,6 +465,9 @@ function _M:combatDamage(weapon)
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
 		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9
 	end
+	if self:isTalentActive(Talents.T_BLOOD_FRENZY) then
+		add = add + self.blood_frenzy
+	end
 
 	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
 	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)

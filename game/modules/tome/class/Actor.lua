@@ -172,6 +172,10 @@ function _M:act()
 		local t = self:getTalentFromId(self.T_HYMN_OF_MOONLIGHT)
 		t.do_beams(self, t)
 	end
+	if self:isTalentActive(self.T_BLOOD_FRENZY) then
+		local t = self:getTalentFromId(self.T_BLOOD_FRENZY)
+		t.do_turn(self, t)
+	end
 
 	if self:attr("stunned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
@@ -523,6 +527,11 @@ function _M:die(src)
 	-- Give stamina back
 	if src and src.knowTalent and src:knowTalent(src.T_UNENDING_FRENZY) then
 		src:incStamina(src:getTalentLevel(src.T_UNENDING_FRENZY) * 2)
+	end
+
+	-- Increases blood frenzy
+	if src and src.knowTalent and src:knowTalent(src.T_BLOOD_FRENZY) and src:isTalentActive(src.T_BLOOD_FRENZY) then
+		src.blood_frenzy = src.blood_frenzy + src:getTalentLevel(src.T_BLOOD_FRENZY) * 2
 	end
 
 	if src and src.resolveSource and src:resolveSource().player then
