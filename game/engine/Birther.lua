@@ -175,6 +175,7 @@ function _M:next()
 	self.changed = true
 	if self.list then
 		table.insert(self.descriptors, self.list[self.sel])
+		if self.list[self.sel].on_select then self.list[self.sel]:on_select() end
 
 		self.cur_order = self.cur_order + 1
 		if not self.order[self.cur_order] then

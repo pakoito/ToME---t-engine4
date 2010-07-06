@@ -50,8 +50,9 @@ end
 -- @param id the achivement to gain
 -- @param src who did it
 function _M:gainAchievement(id, src, ...)
+	local a = self.achiev_defs[id]
 	-- Do not unlock things in easy mode
-	if game.difficulty == game.DIFFICULTY_EASY then return end
+	if not a or (game.difficulty == game.DIFFICULTY_EASY and not a.tutorial) then return end
 
 	engine.interface.WorldAchievements.gainAchievement(self, id, src, ...)
 end

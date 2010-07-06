@@ -64,7 +64,7 @@ newBirthDescriptor{
 	{
 		"The tutorial will explain the basics of the game to get you started.",
 	},
-	on_select = function()
+	on_select = function(what)
 		setAuto("subclass", false)
 		setAuto("subrace", false)
 	end,
@@ -73,22 +73,22 @@ newBirthDescriptor{
 		race =
 		{
 			__ALL__ = "forbid",
-			Human = "allow",
+			["Tutorial Human"] = "allow",
 		},
 		subrace =
 		{
 			__ALL__ = "forbid",
-			["Dúnadan"] = "allow",
+			["Tutorial Human"] = "allow",
 		},
 		class =
 		{
 			__ALL__ = "forbid",
-			Warrior = "allow",
+			["Tutorial Adventurer"] = "allow",
 		},
 		subclass =
 		{
 			__ALL__ = "forbid",
-			Fighter = "allow",
+			["Tutorial Adventurer"] = "allow",
 		},
 	},
 }

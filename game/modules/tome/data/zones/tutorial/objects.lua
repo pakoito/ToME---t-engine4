@@ -17,31 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---------------- Tutorial objectives
-newAchievement{
-	name = "Baby steps",
-	desc = [[Completed ToME4 tutorial mode.]],
-	tutorial = true,
-}
+load("/data/general/objects/objects.lua")
 
---------------- Main objectives
-newAchievement{
-	name = "Vampire crusher",
-	desc = [[Destroyed the Master in its lair of Tol Falas.]],
-}
-newAchievement{
-	name = "A dangerous secret",
-	desc = [[Found the mysterious staff and told Minas Tirith about it.]],
-}
-newAchievement{
-	name = "The secret city",
-	desc = [[Discovered the truth about mages.]],
-}
-newAchievement{
-	name = "Sliders",
-	desc = [[Activated a portal using the Orb of Many Ways.]],
-}
-newAchievement{
-	name = "Destroyer's bane", id = "DESTROYER_BANE",
-	desc = [[Killed Golbug the Destroyer.]],
+-- Artifact, droped (and used!) by Bill the Stone Troll
+
+newEntity{ base = "BASE_SHIELD",
+	define_as = "OLD_MAN_WILLOW_SHIELD",
+	name = "Old Man's Willow Barkwood", unique=true,
+	desc = [[The barkwood of the Old Man's Willow, made into roughtly the shape of a shield.]],
+	require = { stat = { str=25 }, },
+	cost = 20,
+
+	special_combat = {
+		dam = resolvers.rngavg(20,30),
+		physcrit = 2,
+		dammod = {str=1.5},
+	},
+	wielder = {
+		combat_armor = 5,
+		combat_def = 9,
+		fatigue = 14,
+		resists = {
+			[DamageType.FIRE] = -20,
+			[DamageType.COLD] = 20,
+			[DamageType.NATURE] = 20,
+		},
+	},
 }

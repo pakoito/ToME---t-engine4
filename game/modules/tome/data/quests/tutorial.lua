@@ -17,31 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---------------- Tutorial objectives
-newAchievement{
-	name = "Baby steps",
-	desc = [[Completed ToME4 tutorial mode.]],
-	tutorial = true,
-}
-
---------------- Main objectives
-newAchievement{
-	name = "Vampire crusher",
-	desc = [[Destroyed the Master in its lair of Tol Falas.]],
-}
-newAchievement{
-	name = "A dangerous secret",
-	desc = [[Found the mysterious staff and told Minas Tirith about it.]],
-}
-newAchievement{
-	name = "The secret city",
-	desc = [[Discovered the truth about mages.]],
-}
-newAchievement{
-	name = "Sliders",
-	desc = [[Activated a portal using the Orb of Many Ways.]],
-}
-newAchievement{
-	name = "Destroyer's bane", id = "DESTROYER_BANE",
-	desc = [[Killed Golbug the Destroyer.]],
-}
+name = "Tutorial"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "You must venture in the heart of the forest and kill the Lone Wolf, who randomly attacks villagers."
+	return table.concat(desc, "\n")
+end

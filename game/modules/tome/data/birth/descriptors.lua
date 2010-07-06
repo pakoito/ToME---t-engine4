@@ -17,9 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-setAuto("subclass", false)
-setAuto("subrace", false)
-
 newBirthDescriptor{
 	type = "base",
 	name = "base",
@@ -128,6 +125,7 @@ newBirthDescriptor{
 load("/data/birth/worlds.lua")
 
 -- Races
+load("/data/birth/races/tutorial.lua")
 load("/data/birth/races/human.lua")
 load("/data/birth/races/elf.lua")
 load("/data/birth/races/hobbit.lua")
@@ -141,6 +139,7 @@ load("/data/birth/races/undead.lua")
 load("/data/birth/sexes.lua")
 
 -- Classes
+load("/data/birth/classes/tutorial.lua")
 load("/data/birth/classes/warrior.lua")
 load("/data/birth/classes/archer.lua")
 load("/data/birth/classes/rogue.lua")

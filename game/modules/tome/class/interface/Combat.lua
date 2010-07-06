@@ -467,7 +467,7 @@ function _M:combatDamage(weapon)
 	end
 
 	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
-	local power = math.min(self.combat_dam + (weapon.dam or 1) + add, 1)
+	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)
 	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
 	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
 	return totstat / 1.5 * power * talented_mod
