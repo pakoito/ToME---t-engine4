@@ -149,21 +149,9 @@ function _M:getName(t)
 	end
 end
 
---- Gets the full desc of the object
-function _M:getDesc()
-	local _, c = self:getDisplayColor()
-	local desc
-	if not self:isIdentified() then
-		desc = { c..self:getName().."#FFFFFF#" }
-	else
-		desc = { c..self:getName().."#FFFFFF#", self.desc }
-	end
-
-	local reqs = self:getRequirementDesc(game.player)
-	if reqs then
-		desc[#desc+1] = reqs
-	end
-
+--- Gets the full textual desc of the object without the name and requirements
+function _M:getTextualDesc()
+	local desc = {}
 	if self.encumber then
 		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance."):format(self.encumber)
 	end
@@ -287,7 +275,27 @@ function _M:getDesc()
 	local use_desc = self:getUseDesc()
 	if use_desc then desc[#desc+1] = use_desc end
 
-	return table.concat(desc, "\n")
+	return table.concat(desc, "\n	 ")
+end
+
+--- Gets the full desc of the object
+function _M:getDesc()
+	local _, c = self:getDisplayColor()
+	local desc
+	if not self:isIdentified() then
+		desc = { c..self:getName().."#FFFFFF#" }
+	else
+		desc = { c..self:getName().."#FFFFFF#", self.desc }
+	end
+
+	local reqs = self:getRequirementDesc(game.player)
+	if reqs then
+		desc[#desc+1] = reqs
+	end
+
+	local textdesc = self:getTextualDesc()
+
+	return table.concat(desc, "\n").."\n"..textdesc
 end
 
 local type_sort = {

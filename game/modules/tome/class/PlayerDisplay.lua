@@ -96,5 +96,18 @@ function _M:display()
 		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Negative:#ffffff#%d/%d"):format(game.player:getNegative(), game.player.max_negative), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 
+	h = h + self.font_h
+	for tid, act in pairs(game.player.sustain_talents) do
+		if act then self.surface:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(game.player:getTalentFromId(tid).name), 0, h, 255, 255, 255) h = h + self.font_h end
+	end
+	for eff_id, p in pairs(game.player.tmp) do
+		local e = game.player.tempeffect_def[eff_id]
+		if e.status == "detrimental" then
+			self.surface:drawColorStringBlended(self.font, ("#LIGHT_RED#%s"):format(e.desc), 0, h, 255, 255, 255) h = h + self.font_h
+		else
+			self.surface:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(e.desc), 0, h, 255, 255, 255) h = h + self.font_h
+		end
+	end
+
 	return self.surface
 end

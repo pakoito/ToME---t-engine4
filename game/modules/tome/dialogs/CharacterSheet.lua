@@ -164,54 +164,82 @@ function _M:dump()
 	fs.mkdir("/character-dumps")
 	local file = "/character-dumps/"..(game.player.name:gsub("[^a-zA-Z0-9_-.]", "_")).."-"..os.date("%Y%m%d-%H%M%S")..".txt"
 	local fff = fs.open(file, "w")
+	local labelwidth = 17
 	local nl = function(s) fff:write(s or "") fff:write("\n") end
 	local nnl = function(s) fff:write(s or "") end
+	--prepare label and value
+	local makelabel = function(s,r) while s:len() < labelwidth do s = s.." " end return ("%s: %s"):format(s, r) end
 
-	nl("Sex:   "..game.player.descriptor.sex)
-	nl("Race:  "..game.player.descriptor.subrace)
-	nl("Class: "..game.player.descriptor.subclass)
-	nl("Level: "..game.player.level)
-
-	nl()
 	local cur_exp, max_exp = game.player.exp, game.player:getExpChart(game.player.level+1)
-	nl(("Exp:  %2d%%"):format(100 * cur_exp / max_exp))
-	nl(("Gold: %0.2f"):format(game.player.money))
-
+	nl("  [Tome 4.00 @ www.te4.org Character Dump]")
 	nl()
-	nl(("Life:    %d/%d"):format(game.player.life, game.player.max_life))
-	if game.player:knowTalent(game.player.T_STAMINA_POOL) then
-		nl(("Stamina: %d/%d"):format(game.player:getStamina(), game.player.max_stamina))
-	end
-	if game.player:knowTalent(game.player.T_MANA_POOL) then
-		nl(("Mana:    %d/%d"):format(game.player:getMana(), game.player.max_mana))
-	end
-	if game.player:knowTalent(game.player.T_SOUL_POOL) then
-		nl(("Soul:    %d/%d"):format(game.player:getSoul(), game.player.max_soul))
-	end
-	if game.player:knowTalent(game.player.T_EQUILIBRIUM_POOL) then
-		nl(("Equi:    %d"):format(game.player:getEquilibrium()))
-	end
 
-	nl()
-	nl(("STR: %3d"):format(game.player:getStr()))
-	nl(("DEX: %3d"):format(game.player:getDex()))
-	nl(("MAG: %3d"):format(game.player:getMag()))
-	nl(("WIL: %3d"):format(game.player:getWil()))
-	nl(("CUN: %3d"):format(game.player:getCun()))
-	nl(("CON: %3d"):format(game.player:getCon()))
+	nnl(("%-32s"):format(makelabel("Sex", game.player.descriptor.sex)))
+	nl(("STR:  %d"):format(game.player:getStr()))
 
-	-- All weapons in main hands
+	nnl(("%-32s"):format(makelabel("Race", game.player.descriptor.subrace)))
+	nl(("DEX:  %d"):format(game.player:getDex()))
+
+	nnl(("%-32s"):format(makelabel("Class", game.player.descriptor.subclass)))
+	nl(("MAG:  %d"):format(game.player:getMag()))
+
+	nnl(("%-32s"):format(makelabel("Level", ("%d"):format(game.player.level))))
+	nl(("WIL:  %d"):format(game.player:getWil()))
+
+	nnl(("%-32s"):format(makelabel("Exp", ("%d%%"):format(100 * cur_exp / max_exp))))
+	nl(("CUN:  %d"):format(game.player:getCun()))
+
+	 nnl(("%-32s"):format(makelabel("Gold", ("%.2f"):format(game.player.money))))
+	nl(("CON:  %d"):format(game.player:getCon()))
+
+	 -- All weapons in main hands
+
+	local strings = {}
+	for i = 1, 5 do strings[i]="" end
 	if self.actor:getInven(self.actor.INVEN_MAINHAND) then
 		for i, o in ipairs(self.actor:getInven(self.actor.INVEN_MAINHAND)) do
 			if o.combat then
-				nl()
-				nl(("Attack(Main Hand): %3d"):format(game.player:combatAttack(o.combat)))
-				nl(("Damage(Main Hand): %3d"):format(game.player:combatDamage(o.combat)))
-				nl(("APR   (Main Hand): %3d"):format(game.player:combatAPR(o.combat)))
-				nl(("Crit  (Main Hand): %3d%%"):format(game.player:combatCrit(o.combat)))
-				nl(("Speed (Main Hand): %0.2f"):format(game.player:combatSpeed(o.combat)))
+				strings[1] = ("Attack(Main Hand): %3d"):format(game.player:combatAttack(o.combat))
+				strings[2] = ("Damage(Main Hand): %3d"):format(game.player:combatDamage(o.combat))
+				strings[3] = ("APR	(Main Hand): %3d"):format(game.player:combatAPR(o.combat))
+				strings[4] = ("Crit  (Main Hand): %3d%%"):format(game.player:combatCrit(o.combat))
+				strings[5] = ("Speed (Main Hand): %0.2f"):format(game.player:combatSpeed(o.combat))
 			end
 		end
+	end
+
+	local enc, max = game.player:getEncumbrance(), game.player:getMaxEncumbrance()
+
+	nl()
+	nnl(("%-32s"):format(strings[1]))
+	nnl(("%-32s"):format(makelabel("Life", ("    %d/%d"):format(game.player.life, game.player.max_life))))
+	nl(makelabel("Encumbrance", enc .. "/" .. max))
+
+	nnl(("%-32s"):format(strings[2]))
+	if game.player:knowTalent(game.player.T_STAMINA_POOL) then
+		nnl(("%-32s"):format(makelabel("Stamina", ("    %d/%d"):format(game.player:getStamina(), game.player.max_stamina))))
+	else
+		 nnl(("%-32s"):format(" "))
+	end
+	nl(makelabel("Difficulty", game.player.descriptor.difficulty))
+
+	nnl(("%-32s"):format(strings[3]))
+	if game.player:knowTalent(game.player.T_MANA_POOL) then
+		nl(makelabel("Mana", ("    %d/%d"):format(game.player:getMana(), game.player.max_mana)))
+	else
+		nl()
+	end
+	nnl(("%-32s"):format(strings[4]))
+	if game.player:knowTalent(game.player.T_SOUL_POOL) then
+		nl(makelabel("Soul", ("    %d/%d"):format(game.player:getSoul(), game.player.max_soul)))
+	 else
+		nl()
+	end
+	nnl(("%-32s"):format(strings[5]))
+	if game.player:knowTalent(game.player.T_EQUILIBRIUM_POOL) then
+		nl((makelabel("Equilibrium", ("    %d"):format(game.player:getEquilibrium()))))
+	else
+		nl()
 	end
 
 	-- All wpeaons in off hands
@@ -226,35 +254,34 @@ function _M:dump()
 				nl()
 				nl(("Attack (Off Hand): %3d"):format(game.player:combatAttack(o.combat)))
 				nl(("Damage (Off Hand): %3d"):format(game.player:combatDamage(o.combat) * offmult))
-				nl(("APR    (Off Hand): %3d"):format(game.player:combatAPR(o.combat)))
-				nl(("Crit   (Off Hand): %3d%%"):format(game.player:combatCrit(o.combat)))
+				nl(("APR	 (Off Hand): %3d"):format(game.player:combatAPR(o.combat)))
+				nl(("Crit	(Off Hand): %3d%%"):format(game.player:combatCrit(o.combat)))
 				nl(("Speed  (Off Hand): %0.2f"):format(game.player:combatSpeed(o.combat)))
 			end
 		end
 	end
 
 	nl()
-	nl(("Spellpower:  %3d"):format(game.player:combatSpellpower()))
-	nl(("Spell Crit:  %3d%%"):format(game.player:combatSpellCrit()))
-	nl(("Spell Speed: %3d"):format(game.player:combatSpellSpeed()))
+	nnl(("%-32s"):format(makelabel("Fatigue", game.player.fatigue .. "%")))
+	nl(makelabel("Spellpower", game.player:combatSpellpower() ..""))
+	nnl(("%-32s"):format(makelabel("Armor", game.player:combatArmor() .. "")))
+	nl(makelabel("Spell Crit", game.player:combatSpellCrit() .."%"))
+	nnl(("%-32s"):format(makelabel("Class", game.player:combatDefense() .. "")))
+	nl(makelabel("Spell Speed", game.player:combatSpellSpeed() ..""))
+	nnl(("%-32s"):format(makelabel("Class", game.player:combatDefenseRanged() .. "")))
+	nl()
 
 	nl()
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.actor.inc_damage[DamageType[t.type]] and self.actor.inc_damage[DamageType[t.type]] ~= 0 then
-			nl(("%s damage: %3d%%"):format(t.name:capitalize(), self.actor.inc_damage[DamageType[t.type]]))
+			nl(makelabel(t.name:capitalize().." damage", self.actor.inc_damage[DamageType[t.type]].."%"))
 		end
 	end
 
 	nl()
-	nl(("Fatigue:        %3d%%"):format(game.player.fatigue))
-	nl(("Armor:          %3d"):format(game.player:combatArmor()))
-	nl(("Defense:        %3d"):format(game.player:combatDefense()))
-	nl(("Ranged Defense: %3d"):format(game.player:combatDefenseRanged()))
-
-	nl()
-	nl(("Physical Resist: %3d"):format(game.player:combatPhysicalResist()))
-	nl(("Spell Resist:    %3d"):format(game.player:combatSpellResist()))
-	nl(("Mental Resist:   %3d"):format(game.player:combatMentalResist()))
+	nl(makelabel("Physical Resist",game.player:combatPhysicalResist() ..""))
+	nl(makelabel("Spell Resist",game.player:combatSpellResist() ..""))
+	nl(makelabel("Mental Resist",game.player:combatMentalResist() ..""))
 
 	nl()
 	for i, t in ipairs(DamageType.dam_def) do
@@ -272,6 +299,112 @@ function _M:dump()
 	end
 	nl(("Number of NPC killed: %s"):format(total_kill))
 	nl(("Most killed NPC: %s (%d)"):format(most_kill, most_kill_max))
+
+	--Talents and skills
+	nl()
+	nl("  [Talents/Skills Chart]")
+	nl()
+
+	for i, tt in ipairs(self.actor.talents_types_def) do
+		 local ttknown = self.actor:knowTalentType(tt.type)
+		if not (self.actor.talents_types[tt.type] == nil) and ttknown then
+			local cat = tt.type:gsub("/.*", "")
+			local catname = ("%s / %s"):format(cat:capitalize(), tt.name:capitalize())
+			nl((" - %-35s(mastery %.02f)"):format(catname, self.actor:getTalentTypeMastery(tt.type)))
+
+			-- Find all talents of this school
+			if (ttknown) then
+				for j, t in ipairs(tt.talents) do
+					if not t.hide then
+						local typename = "talent"
+						if t.skill then typename = "skill" end
+						local skillname = ("    %s (%s)"):format(t.name, typename)
+						nl(("%-37s %d/%d"):format(skillname, self.actor:getTalentLevelRaw(t.id), t.points))
+					end
+				end
+			end
+		end
+	end
+
+	 -- Current Effects
+
+	 nl()
+	 nl("  [Current Effects]")
+	 nl()
+
+	for tid, act in pairs(game.player.sustain_talents) do
+		if act then nl("- "..game.player:getTalentFromId(tid).name)	end
+	end
+	for eff_id, p in pairs(game.player.tmp) do
+		local e = game.player.tempeffect_def[eff_id]
+		if e.status == "detrimental" then
+			 nl("+ "..e.desc)
+		else
+			 nl("- "..e.desc)
+		end
+	end
+
+	-- Quests, Active and Completed
+
+	local first = true
+	for id, q in pairs(self.actor.quests or {}) do
+		if q:isEnded() then
+			 if first then
+					 nl()
+					 nl("  [Completed Quests]")
+					 nl()
+					 first=false
+			 end
+			  nl(" -- ".. q.name)
+			  nl(q:desc(self.actor):gsub("#.-#", "   "))
+		end
+	end
+
+	 first=true
+	for id, q in pairs(self.actor.quests or {}) do
+		if not q:isEnded() then
+			if first then
+					 first=false
+					 nl()
+					nl("  [Active Quests]")
+					 nl()
+				end
+			  nl(" -- ".. q.name)
+			  nl(q:desc(self.actor):gsub("#.-#", "   "))
+		end
+	end
+
+
+	--All Equipment
+	nl()
+	nl("  [Character Equipment]")
+	nl()
+	local index = 0
+	for inven_id =  1, #self.actor.inven_def do
+		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
+			nl((" %s"):format(self.actor.inven_def[inven_id].name))
+
+			for item, o in ipairs(self.actor.inven[inven_id]) do
+				if not self.filter or self.filter(o) then
+					local char = string.char(string.byte('a') + index)
+					nl(("%s) %s"):format(char, o:getName{force_id=true}))
+					nl(("   %s"):format(o:getTextualDesc()))
+					index = index + 1
+				end
+			end
+		end
+	end
+
+	nl()
+	nl("  [Character Inventory]")
+	nl()
+	for item, o in ipairs(self.actor:getInven("INVEN")) do
+		if not self.filter or self.filter(o) then
+			local char = string.char(string.byte('a') + item - 1)
+			nl(("%s) %s"):format(char, o:getName{force_id=true}))
+			nl(("   %s"):format(o:getTextualDesc()))
+		end
+	end
 
 	fff:close()
 
