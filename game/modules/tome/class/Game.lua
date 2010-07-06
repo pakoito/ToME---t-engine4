@@ -834,7 +834,7 @@ function _M:setupMouse()
 		end
 
 		-- Move
-		if button == "left" and not core.key.modState("shift") and not moving_around then
+		if button == "left" and not core.key.modState("shift") and not moving_around and not xrel and not yrel then
 			if self.key == self.normal_key then self.player:mouseMove(tmx, tmy) end
 
 		-- Move map around
