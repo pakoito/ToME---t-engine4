@@ -17,10 +17,40 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+
 newTalent{
-	name = "Berserker",
+	name = "Death Dance",
 	type = {"technique/2hweapon-offense", 1},
 	require = techs_req1,
+	points = 5,
+	cooldown = 10,
+	stamina = 30,
+	action = function(self, t)
+		local weapon = self:hasTwoHandedWeapon()
+		if not weapon then
+			game.logPlayer(self, "You cannot use Death Dance without a two-handed weapon!")
+			return nil
+		end
+
+		for i = -1, 1 do for j = -1, 1 do
+			local x, y = self.x + i, self.y + j
+			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
+				local target = game.level.map(x, y, Map.ACTOR)
+				self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.4, 2.1))
+			end
+		end end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.4, 2.1))
+	end,
+}
+
+newTalent{
+	name = "Berserker",
+	type = {"technique/2hweapon-offense", 2},
+	require = techs_req2,
 	points = 5,
 	mode = "sustained",
 	cooldown = 30,
@@ -50,35 +80,6 @@ newTalent{
 	info = function(self, t)
 		return ([[Enters an aggressive battle stance, increasing attack by %d and damage by %d at the cost of %d defense and %d armor.]]):
 		format(5 + self:getDex(7) * self:getTalentLevel(t), 5 + self:getStr(7) * self:getTalentLevel(t), -5 - 2 * (self:getTalentLevelRaw(t)-1), -5 - 2 * (self:getTalentLevelRaw(t)-1))
-	end,
-}
-
-newTalent{
-	name = "Death Dance",
-	type = {"technique/2hweapon-offense", 2},
-	require = techs_req2,
-	points = 5,
-	cooldown = 10,
-	stamina = 30,
-	action = function(self, t)
-		local weapon = self:hasTwoHandedWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use Death Dance without a two-handed weapon!")
-			return nil
-		end
-
-		for i = -1, 1 do for j = -1, 1 do
-			local x, y = self.x + i, self.y + j
-			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
-				local target = game.level.map(x, y, Map.ACTOR)
-				self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.4, 2.1))
-			end
-		end end
-
-		return true
-	end,
-	info = function(self, t)
-		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.4, 2.1))
 	end,
 }
 

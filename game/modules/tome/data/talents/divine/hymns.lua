@@ -29,7 +29,7 @@ local function cancelHymns(self)
 	end
 end
 
-newSkill{
+newTalent{
 	name = "Hymn of Shadows",
 	type = {"divine/hymns", 1},
 	mode = "sustained",
@@ -67,7 +67,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Hymn of Detection",
 	type = {"divine/hymns", 2},
 	mode = "sustained",
@@ -104,7 +104,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Hymn of Perseverance",
 	type = {"divine/hymns",3},
 	mode = "sustained",
@@ -145,7 +145,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Hymn of Moonlight",
 	type = {"divine/hymns",4},
 	mode = "sustained",

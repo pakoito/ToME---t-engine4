@@ -28,7 +28,7 @@ tiles = engine.Tiles.new(16, 16)
 function _M:init(fontname, fontsize, color, bgcolor)
 	self.color = color or {255,255,255}
 	self.bgcolor = bgcolor or {0,0,0}
-	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 10)
+	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
 	self.max = max or 400
 	self.changed = true

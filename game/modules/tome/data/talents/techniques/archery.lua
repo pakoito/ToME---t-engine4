@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 -- Default archery attack
-newSkill{
+newTalent{
 	name = "Shoot",
 	type = {"technique/archery-base", 1},
 	no_energy = true,

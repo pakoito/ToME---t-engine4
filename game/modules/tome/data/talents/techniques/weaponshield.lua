@@ -156,56 +156,9 @@ newTalent{
 -- Defense
 ----------------------------------------------------------------------
 newTalent{
-	name = "Shield Wall",
+	name = "Repulsion",
 	type = {"technique/shield-defense", 1},
 	require = techs_req1,
-	mode = "sustained",
-	points = 5,
-	cooldown = 30,
-	sustain_stamina = 50,
-	activate = function(self, t)
-		local shield = self:hasShield()
-		if not shield then
-			game.logPlayer(self, "You cannot use Shield Wall without a shield!")
-			return nil
-		end
-
-		local stun, knock
-		if self:getTalentLevel(t) >= 5 then
-			stun = self:addTemporaryValue("stun_immune", 1)
-			knock = self:addTemporaryValue("knockback_immune", 1)
-		end
-		return {
-			atk = self:addTemporaryValue("combat_dam", -10),
-			dam = self:addTemporaryValue("combat_atk", -10),
-			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
-			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
-			stun = stun,
-			knock = knock
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_def", p.def)
-		self:removeTemporaryValue("combat_armor", p.armor)
-		self:removeTemporaryValue("combat_atk", p.atk)
-		self:removeTemporaryValue("combat_dam", p.dam)
-		if p.stun then self:removeTemporaryValue("stun_immune", p.stun) end
-		if p.knock then self:removeTemporaryValue("knockback_immune", p.knock) end
-		return true
-	end,
-	info = function(self, t)
-		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
-		At level 5 it also makes you immune to stunning and knockback.]]):format(
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
-		)
-	end,
-}
-
-newTalent{
-	name = "Repulsion",
-	type = {"technique/shield-defense", 2},
-	require = techs_req2,
 	points = 5,
 	cooldown = 10,
 	stamina = 30,
@@ -232,6 +185,53 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Let all your foes pile up on your shield then put all your strength in one mighty thrust and repel them all away.]])
+	end,
+}
+
+newTalent{
+	name = "Shield Wall",
+	type = {"technique/shield-defense", 2},
+	require = techs_req2,
+	mode = "sustained",
+	points = 5,
+	cooldown = 30,
+	sustain_stamina = 50,
+	activate = function(self, t)
+		local shield = self:hasShield()
+		if not shield then
+			game.logPlayer(self, "You cannot use Shield Wall without a shield!")
+			return nil
+		end
+
+		local stun, knock
+		if self:getTalentLevel(t) >= 5 then
+			stun = self:addTemporaryValue("stun_immune", 1)
+			knock = self:addTemporaryValue("knockback_immune", 1)
+		end
+		return {
+			atk = self:addTemporaryValue("combat_atk", -10),
+			dam = self:addTemporaryValue("combat_dam", -10),
+			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
+			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
+			stun = stun,
+			knock = knock
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_def", p.def)
+		self:removeTemporaryValue("combat_armor", p.armor)
+		self:removeTemporaryValue("combat_atk", p.atk)
+		self:removeTemporaryValue("combat_dam", p.dam)
+		if p.stun then self:removeTemporaryValue("stun_immune", p.stun) end
+		if p.knock then self:removeTemporaryValue("knockback_immune", p.knock) end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage.
+		At level 5 it also makes you immune to stunning and knockback.]]):format(
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
+		)
 	end,
 }
 

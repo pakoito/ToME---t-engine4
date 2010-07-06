@@ -23,10 +23,10 @@ newTalentType{ type="spell/fire", name = "fire", description = "Harness the powe
 newTalentType{ type="spell/earth", name = "earth", description = "Harness the power of the earth to protect and destroy." }
 newTalentType{ type="spell/water", name = "water", description = "Harness the power of water to drown your foes." }
 newTalentType{ type="spell/air", name = "air", description = "Harness the power of the air to fry your foes." }
-newTalentType{ type="spell/conveyance", name = "conveyance", description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
-newTalentType{ type="spell/nature", name = "nature", description = "Summons the power of nature to rejuvenate yourself and the world." }
+newTalentType{ type="spell/conveyance", name = "conveyance", generic = true, description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
+newTalentType{ type="spell/nature", name = "nature", generic = true, description = "Summons the power of nature to rejuvenate yourself and the world." }
 newTalentType{ type="spell/meta", name = "meta", description = "Meta spells alter the working of magic itself." }
-newTalentType{ type="spell/divination", name = "divination", description = "Divination allows the caster to sense its surroundings, find hidden things." }
+newTalentType{ type="spell/divination", name = "divination", generic = true, description = "Divination allows the caster to sense its surroundings, find hidden things." }
 newTalentType{ type="spell/temporal", name = "temporal", description = "The school of time manipulation." }
 newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
 newTalentType{ type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }

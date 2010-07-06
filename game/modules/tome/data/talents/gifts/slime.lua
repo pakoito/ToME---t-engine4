@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newSkill{
+newTalent{
 	name = "Poisonous Spores",
 	type = {"wild-gift/slime", 1},
 	require = gifts_req1,
@@ -45,7 +45,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Acidic Skin",
 	type = {"wild-gift/slime", 2},
 	require = gifts_req2,
@@ -74,7 +74,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Slime Spit",
 	type = {"wild-gift/slime", 3},
 	require = gifts_req3,
@@ -99,7 +99,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Slime Roots",
 	type = {"wild-gift/slime", 4},
 	require = gifts_req4,

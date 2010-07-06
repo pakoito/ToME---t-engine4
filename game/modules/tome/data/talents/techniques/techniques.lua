@@ -31,7 +31,7 @@ newTalentType{ type="technique/archery-training", name = "archery - common", des
 newTalentType{ type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
 newTalentType{ type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-techniques-passive", name = "combat techniques", description = "Generic combat oriented techniques." }
-newTalentType{ type="technique/combat-training", name = "combat training", description = "Teaches to use various armors and improves health." }
+newTalentType{ type="technique/combat-training", name = "combat training", generic = true, description = "Teaches to use various armors and improves health." }
 newTalentType{ type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
 
 -- Generic requires for techs based on talent level

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newSkill{
+newTalent{
 	name = "Trap Detection",
 	type = {"cunning/survival", 1},
 	require = cuns_req1,
@@ -29,7 +29,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Heightened Senses",
 	type = {"cunning/survival", 2},
 	require = cuns_req2,
@@ -52,7 +52,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Trap Disarm",
 	type = {"cunning/survival", 3},
 	require = cuns_req3,
@@ -64,7 +64,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Evasion",
 	type = {"cunning/survival", 4},
 	points = 5,

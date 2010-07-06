@@ -49,7 +49,7 @@ newBirthDescriptor{
 		"Competent in both weapon and shield combat and magic they usually burn their foes from afar before engaging in melee.",
 		"Their most important stats are: Strength and Magic",
 	},
-	stats = { mag=5, str=7, },
+	stats = { mag=4, str=5, },
 	talents_types = {
 		["technique/shield-offense"]={true, 0.1},
 		["technique/combat-techniques-active"]={false, 0.1},
@@ -63,8 +63,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SEARING_LIGHT] = 1,
-		[ActorTalents.T_WEAPON_OF_LIGHT] = 2,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_WEAPON_OF_LIGHT] = 1,
 		[ActorTalents.T_CHANT_OF_FORTITUDE] = 1,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
 	},
@@ -89,7 +88,7 @@ newBirthDescriptor{
 		"Masters of sun and moon magic they usually burn their foes with sun rays before calling the fury of the stars.",
 		"Their most important stats are: Magic and Cunning",
 	},
-	stats = { mag=8, cun=4, },
+	stats = { mag=6, cun=3, },
 	talents_types = {
 		["cunning/survival"]={false, 0.1},
 		["divine/sun"]={true, 0.3},
@@ -103,8 +102,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_SEARING_LIGHT] = 1,
 		[ActorTalents.T_MOONLIGHT_RAY] = 1,
-		[ActorTalents.T_HYMN_OF_SHADOWS] = 2,
-		[ActorTalents.T_CHANT_OF_FORTITUDE] = 1,
+		[ActorTalents.T_HYMN_OF_SHADOWS] = 1,
 		[ActorTalents.T_TWILIGHT] = 1,
 	},
 	copy = {

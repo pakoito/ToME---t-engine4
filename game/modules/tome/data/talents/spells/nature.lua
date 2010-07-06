@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newSkill{
+newTalent{
 	name = "Regeneration",
 	type = {"spell/nature", 1},
 	require = spells_req1,
@@ -38,7 +38,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Heal",
 	type = {"spell/nature", 2},
 	require = spells_req2,
@@ -59,7 +59,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Restoration",
 	type = {"spell/nature", 3},
 	require = spells_req3,
@@ -95,7 +95,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Nature's Call",
 	type = {"spell/nature", 4},
 	require = spells_req4,

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newSkill{
+newTalent{
 	name = "Phase Door",
 	type = {"spell/conveyance",1},
 	require = spells_req1,
@@ -63,7 +63,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Teleport",
 	type = {"spell/conveyance",2},
 	require = spells_req2,
@@ -110,7 +110,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Displacement Shield",
 	type = {"spell/conveyance", 3},
 	require = spells_req3,
@@ -141,7 +141,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Probability Travel",
 	type = {"spell/conveyance",4},
 	mode = "sustained",

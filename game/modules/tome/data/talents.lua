@@ -17,7 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newSkill = function(t) t.skill = true return newTalent(t) end
+local oldNewTalent = newTalent
+newTalent = function(t)
+	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
+	return oldNewTalent(t)
+end
 
 load("/data/talents/misc/misc.lua")
 load("/data/talents/techniques/techniques.lua")

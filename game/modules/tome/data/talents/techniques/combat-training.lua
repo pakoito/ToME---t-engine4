@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newSkill{
+newTalent{
 	name = "Heavy Armour Training",
 	type = {"technique/combat-training", 1},
 	mode = "passive",
@@ -29,7 +29,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Massive Armour Training",
 	type = {"technique/combat-training", 2},
 	mode = "passive",
@@ -41,7 +41,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Health",
 	type = {"technique/combat-training", 1},
 	mode = "passive",
@@ -58,7 +58,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Weapon Combat",
 	type = {"technique/combat-training", 1},
 	points = 10,
@@ -69,7 +69,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Sword Mastery",
 	type = {"technique/combat-training", 1},
 	points = 10,
@@ -80,7 +80,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Axe Mastery",
 	type = {"technique/combat-training", 1},
 	points = 10,
@@ -91,7 +91,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Mace Mastery",
 	type = {"technique/combat-training", 1},
 	points = 10,
@@ -102,7 +102,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Knife Mastery",
 	type = {"technique/combat-training", 1},
 	points = 10,

@@ -43,7 +43,7 @@ function _M:init(actor, on_finish)
 			self:finish()
 
 			-- if talents to spend, do it now
-			if self.actor.unused_skills > 0 or self.actor.unused_talents > 0 or self.actor.unused_talents_types > 0 then
+			if self.actor.unused_generics > 0 or self.actor.unused_talents > 0 or self.actor.unused_talents_types > 0 then
 				local dt = LevelupTalentsDialog.new(self.actor, on_finish)
 				game:registerDialog(dt)
 			end

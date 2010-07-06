@@ -71,7 +71,7 @@ newEntity{
 	name = "tree", image = "terrain/sand.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
 --	add_displays = class:makeTrees("terrain/palmtree_alpha", 1),
-	add_displays = {class.new{image="terrain/palmtree_alpha1.png", dislpay_on_seen=true, display_on_remember=true}},
+	add_displays = {class.new{image="terrain/palmtree_alpha1.png"}},
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,

@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 -- Undead talents
-newTalentType{ type="undead/ghoul", name = "ghoul", description = "Ghouls' innate abilities." }
-newTalentType{ type="undead/skeleton", name = "skeleton", description = "Skeletons' innate abilities." }
-newTalentType{ type="undead/vampire", name = "vampire", description = "Vampires' innate abilities." }
-newTalentType{ type="undead/lich", name = "lich", description = "Liches' innate abilities." }
+newTalentType{ type="undead/ghoul", name = "ghoul", generic = true, description = "Ghouls' innate abilities." }
+newTalentType{ type="undead/skeleton", name = "skeleton", generic = true, description = "Skeletons' innate abilities." }
+newTalentType{ type="undead/vampire", name = "vampire", generic = true, description = "Vampires' innate abilities." }
+newTalentType{ type="undead/lich", name = "lich", generic = true, description = "Liches' innate abilities." }
 
 -- Generic requires for undeads based on talent level
 undeads_req1 = {

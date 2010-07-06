@@ -20,7 +20,7 @@
 ----------------------------------------------------
 -- Active techniques
 ----------------------------------------------------
-newSkill{
+newTalent{
 	name = "Precise Strikes",
 	type = {"technique/combat-techniques-active", 1},
 	mode = "sustained",
@@ -47,7 +47,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Rush",
 	type = {"technique/combat-techniques-active", 2},
 	message = "@Source@ rushes out!",
@@ -89,7 +89,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Perfect Strike",
 	type = {"technique/combat-techniques-active", 3},
 	points = 5,
@@ -105,7 +105,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Blinding Speed",
 	type = {"technique/combat-techniques-active", 4},
 	points = 5,
@@ -124,7 +124,7 @@ newSkill{
 ----------------------------------------------------
 -- Passive techniques
 ----------------------------------------------------
-newSkill{
+newTalent{
 	name = "Quick Recovery",
 	type = {"technique/combat-techniques-passive", 1},
 	require = techs_strdex_req1,
@@ -141,7 +141,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Fast Metabolism",
 	type = {"technique/combat-techniques-passive", 2},
 	require = techs_strdex_req2,
@@ -158,7 +158,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Spell Shield",
 	type = {"technique/combat-techniques-passive", 3},
 	require = techs_strdex_req3,
@@ -175,7 +175,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Unending Frenzy",
 	type = {"technique/combat-techniques-passive", 4},
 	require = techs_strdex_req4,

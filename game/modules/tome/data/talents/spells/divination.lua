@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newSkill{
+newTalent{
 	name = "Sense",
 	type = {"spell/divination", 1},
 	require = spells_req1,
@@ -46,7 +46,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Identify",
 	type = {"spell/divination", 2},
 	require = spells_req2,
@@ -94,7 +94,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Vision",
 	type = {"spell/divination", 3},
 	require = spells_req3,
@@ -111,7 +111,7 @@ newSkill{
 	end,
 }
 
-newSkill{
+newTalent{
 	name = "Telepathy",
 	type = {"spell/divination", 4},
 	mode = "sustained",

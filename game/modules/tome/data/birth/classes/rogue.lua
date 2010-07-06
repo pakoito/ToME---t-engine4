@@ -51,12 +51,12 @@ newBirthDescriptor{
 		"Rogues usually prefer to dual-wield daggers. They can also become trapping experts, from detecting and disarming traps to setting them.",
 		"Their most important stats are: Dexterity and Cunning",
 	},
-	stats = { dex=4, str=1, cun=7, },
+	stats = { dex=3, str=1, cun=5, },
 	talents_types = {
 		["technique/dualweapon-attack"]={true, 0.3},
 		["technique/dualweapon-training"]={true, 0.3},
-		["technique/combat-techniques-active"]={true, 0.3},
-		["technique/combat-techniques-passive"]={true, 0.3},
+		["technique/combat-techniques-active"]={false, 0.3},
+		["technique/combat-techniques-passive"]={false, 0.3},
 		["technique/combat-training"]={true, 0.3},
 		["cunning/stealth"]={true, 0.3},
 		["cunning/traps"]={false, 0.3},
@@ -65,11 +65,10 @@ newBirthDescriptor{
 		["cunning/survival"]={true, 0.3},
 	},
 	talents = {
-		[ActorTalents.T_STEALTH] = 2,
+		[ActorTalents.T_STEALTH] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
-		[ActorTalents.T_DUAL_WEAPON_TRAINING] = 1,
 	},
 }
 
@@ -82,7 +81,7 @@ newBirthDescriptor{
 		"They use the schools of Phantasm, Temporal, Divination and Conveyance magic to enhance their arts.",
 		"Their most important stats are: Dexterity, Cunning and Magic",
 	},
-	stats = { dex=4, mag=4, cun=4, },
+	stats = { dex=3, mag=3, cun=3, },
 	talents_types = {
 		["spell/phantasm"]={true, 0},
 		["spell/temporal"]={false, 0},
@@ -91,7 +90,7 @@ newBirthDescriptor{
 		["technique/dualweapon-attack"]={true, 0.2},
 		["technique/dualweapon-training"]={true, 0.2},
 		["technique/combat-techniques-active"]={true, 0.3},
-		["technique/combat-techniques-passive"]={true, 0.3},
+		["technique/combat-techniques-passive"]={false, 0.3},
 		["technique/combat-training"]={true, 0.2},
 		["cunning/stealth"]={false, 0.3},
 		["cunning/survival"]={true, 0.1},
@@ -100,9 +99,8 @@ newBirthDescriptor{
 		["cunning/shadow-magic"]={true, 0.3},
 	},
 	talents = {
-		[ActorTalents.T_DUAL_STRIKE] = 2,
+		[ActorTalents.T_DUAL_STRIKE] = 1,
 		[ActorTalents.T_SHADOW_COMBAT] = 1,
-		[ActorTalents.T_KNIFE_MASTERY] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
 	},

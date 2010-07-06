@@ -96,8 +96,8 @@ function _M:generateList()
 			if (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type]) then
 				for j, t in ipairs(tt.talents) do
 					if not t.hide then
-						local typename = "talent"
-						if t.skill then typename = "skill" end
+						local typename = "class"
+						if t.generic then typename = "generic" end
 						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id, color=not ttknown and {128,128,128} }
 						if self.actor:getTalentLevelRaw(t.id) == t.points then
 							known[#known+1] = {name="known", color=ttknown and {0,255,0} or {128,128,128}}
@@ -160,10 +160,10 @@ end
 
 function _M:learnTalent(t_id, v)
 	local t = self.actor:getTalentFromId(t_id)
-	if not t.skill then
+	if not t.generic then
 		if v then
 			if self.actor.unused_talents < 1 then
-				self:simplePopup("Not enough talent points", "You have no talent points left!")
+				self:simplePopup("Not enough class talent points", "You have no class talent points left!")
 				return
 			end
 			if not self.actor:canLearnTalent(t) then
@@ -198,36 +198,36 @@ function _M:learnTalent(t_id, v)
 		end
 	else
 		if v then
-			if self.actor.unused_skills < 1 then
-				self:simplePopup("Not enough skill points", "You have no skill points left!")
+			if self.actor.unused_generics < 1 then
+				self:simplePopup("Not enough generic talent points", "You have no generic talent points left!")
 				return
 			end
 			if not self.actor:canLearnTalent(t) then
-				self:simplePopup("Cannot learn skill", "Prerequisites not met!")
+				self:simplePopup("Cannot learn talent", "Prerequisites not met!")
 				return
 			end
 			if self.actor:getTalentLevelRaw(t_id) >= t.points then
-				self:simplePopup("Already known", "You already fully know this skill!")
+				self:simplePopup("Already known", "You already fully know this talent!")
 				return
 			end
 			self.actor:learnTalent(t_id)
-			self.actor.unused_skills = self.actor.unused_skills - 1
+			self.actor.unused_generics = self.actor.unused_generics - 1
 			self.talents_changed[t_id] = true
 		else
 			if not self.actor:knowTalent(t_id) then
-				self:simplePopup("Impossible", "You do not know this skill!")
+				self:simplePopup("Impossible", "You do not know this talent!")
 				return
 			end
 			if self.actor_dup:getTalentLevelRaw(t_id) == self.actor:getTalentLevelRaw(t_id) then
-				self:simplePopup("Impossible", "You cannot unlearn skills!")
+				self:simplePopup("Impossible", "You cannot unlearn talents!")
 				return
 			end
 			self.actor:unlearnTalent(t_id)
 			local ok, dep_miss = self:checkDeps()
 			if ok then
-				self.actor.unused_skills = self.actor.unused_skills + 1
+				self.actor.unused_generics = self.actor.unused_generics + 1
 			else
-				self:simplePopup("Impossible", "You can not unlearn this skill because of skill: "..dep_miss)
+				self:simplePopup("Impossible", "You can not unlearn this talent because of talent: "..dep_miss)
 				self.actor:learnTalent(t_id)
 				return
 			end
@@ -290,14 +290,14 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	else
 		local str = ""
 		local what
-		if self.list[self.sel].skill then
-			what = "skill"
-			str = str .. "#00FFFF#Skill\n"
-			str = str .. "#00FFFF#A skill allows you to perform various utility actions and improve your character. You gain one skill point every level. You may also find trainers or artifacts that allow you to learn more.\n\n"
+		if self.list[self.sel].generic then
+			what = "generic talent"
+			str = str .. "#00FFFF#Generic Talent\n"
+			str = str .. "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It reprents talents anybody can learn (should they find a trainer for it). You gain one point every levels except every 5 levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
 		else
-			what = "talent"
-			str = str .. "#00FFFF#Talent\n"
-			str = str .. "#00FFFF#A talent allows you to perform new combat moves, cast spells, and improve your character. You gain one talent point every level and two every 5 levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
+			what = "class talent"
+			str = str .. "#00FFFF#Class talent\n"
+			str = str .. "#00FFFF#A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5 levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
 		end
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
@@ -358,8 +358,8 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 
 	-- Talents
 	s:drawColorStringBlended(self.font, "Categories points left: #00FF00#"..self.actor.unused_talents_types, 2, 2)
-	s:drawColorStringBlended(self.font, "Talents points left: #00FF00#"..self.actor.unused_talents, 2, 2 + self.font_h)
-	s:drawColorStringBlended(self.font, "Skills points left: #00FF00#"..self.actor.unused_skills, 2, 2 + self.font_h * 2)
+	s:drawColorStringBlended(self.font, "Class Talents points left: #00FF00#"..self.actor.unused_talents, 2, 2 + self.font_h)
+	s:drawColorStringBlended(self.font, "Generic Talents points left: #00FF00#"..self.actor.unused_generics, 2, 2 + self.font_h * 2)
 	self:drawWBorder(s, 2, 60, 200)
 
 	self:drawSelectionList(s, 2, 65, self.font_h, self.list, self.sel, "name"     , self.scroll, self.max)

@@ -57,8 +57,6 @@ function _M:init(t, no_default)
 
 	if t.fixed_rating == nil then t.fixed_rating = true end
 
-	t.unused_stats = 0
-	t.unused_talents = 0
 	t.move_others=true
 
 	t.lite = t.lite or 0
@@ -272,8 +270,8 @@ function _M:levelup()
 	game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
 	game.log("#00ffff#Welcome to level %d.", self.level)
 	if self.unused_stats > 0 then game.log("You have %d stat point(s) to spend. Press G to use them.", self.unused_stats) end
-	if self.unused_talents > 0 then game.log("You have %d talent point(s) to spend. Press G to use them.", self.unused_talents) end
-	if self.unused_skills > 0 then game.log("You have %d skill point(s) to spend. Press G to use them.", self.unused_skills) end
+	if self.unused_talents > 0 then game.log("You have %d class talent point(s) to spend. Press G to use them.", self.unused_talents) end
+	if self.unused_generics > 0 then game.log("You have %d generic talent point(s) to spend. Press G to use them.", self.unused_generics) end
 	if self.unused_talents_types > 0 then game.log("You have %d category point(s) to spend. Press G to use them.", self.unused_talents_types) end
 
 	if self.level == 10 then world:gainAchievement("LEVEL_10", self) end

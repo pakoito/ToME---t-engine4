@@ -300,9 +300,9 @@ function _M:dump()
 	nl(("Number of NPC killed: %s"):format(total_kill))
 	nl(("Most killed NPC: %s (%d)"):format(most_kill, most_kill_max))
 
-	--Talents and skills
+	-- Talents
 	nl()
-	nl("  [Talents/Skills Chart]")
+	nl("  [Talents Chart]")
 	nl()
 
 	for i, tt in ipairs(self.actor.talents_types_def) do
@@ -316,8 +316,8 @@ function _M:dump()
 			if (ttknown) then
 				for j, t in ipairs(tt.talents) do
 					if not t.hide then
-						local typename = "talent"
-						if t.skill then typename = "skill" end
+						local typename = "class"
+						if t.skill then typename = "generic" end
 						local skillname = ("    %s (%s)"):format(t.name, typename)
 						nl(("%-37s %d/%d"):format(skillname, self.actor:getTalentLevelRaw(t.id), t.points))
 					end

@@ -45,6 +45,7 @@ end
 --- Sets the initial reaction
 -- Static method
 function _M:setInitialReaction(f1, f2, reaction, mutual)
+	print("[FACTION] initial", f1, f2, reaction, mutual)
 	-- Faction always like itself
 	if f1 == f2 then return end
 	if not self.factions[f1] then return end

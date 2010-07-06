@@ -61,7 +61,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SHIELD_PUMMEL] = 2,
-		[ActorTalents.T_SHIELD_WALL] = 2,
+		[ActorTalents.T_REPULSION] = 2,
 		[ActorTalents.T_WEAPON_COMBAT] = 2,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 2,
 		[ActorTalents.T_FLAME] = 2,

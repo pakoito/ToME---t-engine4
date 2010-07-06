@@ -18,15 +18,14 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ type="divine/chants", name = "chants", description = "Chant the glory of the sun." }
+newTalentType{ type="divine/chants", name = "chants", generic = true, description = "Chant the glory of the sun." }
 newTalentType{ type="divine/light", name = "light", description = "Invoke the power of light to heal and mend." }
 newTalentType{ type="divine/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
 newTalentType{ type="divine/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
 newTalentType{ type="divine/glyphs", name = "glyphs", description = "Bind the holy powers into glyphs to trap your foes." }
-
 newTalentType{ type="divine/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
 newTalentType{ type="divine/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
-newTalentType{ type="divine/hymns", name = "hymns", description = "Chant the glory of the moon." }
+newTalentType{ type="divine/hymns", name = "hymns", generic = true, description = "Chant the glory of the moon." }
 
 newTalentType{ type="divine/other", name = "other", description = "Various divine talents." }
 
