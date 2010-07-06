@@ -101,7 +101,7 @@ end
 function _M:doBuy(who, o, item, nb, store_dialog)
 	local max_nb = o:getNumber()
 	nb = math.min(nb, max_nb)
-	nb = self:onBuy(who, o, item, nb)
+	nb = self:tryBuy(who, o, item, nb)
 	if nb then
 		Dialog:yesnoPopup("Buy", ("Buy %d %s"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
 			local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
@@ -114,6 +114,7 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 			self.changed = true
 			who.changed = true
 			if store_dialog then store_dialog:updateStore() end
+			self:onBuy(who, o, item, nb)
 		end end)
 	end
 end
@@ -121,7 +122,7 @@ end
 function _M:doSell(who, o, item, nb, store_dialog)
 	local max_nb = o:getNumber()
 	nb = math.min(nb, max_nb)
-	nb = self:onSell(who, o, item, nb)
+	nb = self:trySell(who, o, item, nb)
 	if nb then
 		Dialog:yesnoPopup("Sell", ("Sell %d %s"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
 			local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
@@ -134,18 +135,38 @@ function _M:doSell(who, o, item, nb, store_dialog)
 			self.changed = true
 			who.changed = true
 			if store_dialog then store_dialog:updateStore() end
+			self:onSell(who, o, item, nb)
 		end end)
 	end
 end
+
+--- Called on object purchase try
+-- @param who the actor buying
+-- @param o the object trying to be purchased
+-- @param item the index in the inventory
+-- @param nb number of items (if stacked) to buy
+-- @return a number (or nil) if allowed to buy, giving the number of objects to buy
+function _M:tryBuy(who, o, item, nb)
+	return nb
+end
+
+--- Called on object sale try
+-- @param who the actor selling
+-- @param o the object trying to be sold
+-- @param item the index in the inventory
+-- @param nb number of items (if stacked) to sell
+-- @return a number (or nil) if allowed to sell, giving the number of objects to sell
+function _M:trySell(who, o, item, nb)
+	return nb
+end
+
 
 --- Called on object purchase
 -- @param who the actor buying
 -- @param o the object trying to be purchased
 -- @param item the index in the inventory
 -- @param nb number of items (if stacked) to buy
--- @return a number (or nil) if allowed to buy, giving the number of objects to buy
 function _M:onBuy(who, o, item, nb)
-	return nb
 end
 
 --- Called on object sale
@@ -153,9 +174,7 @@ end
 -- @param o the object trying to be sold
 -- @param item the index in the inventory
 -- @param nb number of items (if stacked) to sell
--- @return a number (or nil) if allowed to sell, giving the number of objects to sell
 function _M:onSell(who, o, item, nb)
-	return nb
 end
 
 --- Called to describe an object, being to sell or to buy

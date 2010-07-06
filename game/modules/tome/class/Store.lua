@@ -37,6 +37,33 @@ function _M:init(t, no_default)
 	if self.store and self.store.restock_after then self.store.restock_after = self.store.restock_after * 10 end
 end
 
+--- Called on object purchase try
+-- @param who the actor buying
+-- @param o the object trying to be purchased
+-- @param item the index in the inventory
+-- @param nb number of items (if stacked) to buy
+-- @return true if allowed to buy
+function _M:tryBuy(who, o, item, nb)
+	local price = o:getPrice() * self.sell_percent / 100
+	if who.money >= price * nb then
+		return nb
+	else
+		Dialog:simplePopup("Not enough gold", "You do not have enough gold!")
+	end
+end
+
+--- Called on object sale try
+-- @param who the actor selling
+-- @param o the object trying to be sold
+-- @param item the index in the inventory
+-- @param nb number of items (if stacked) to sell
+-- @return true if allowed to sell
+function _M:trySell(who, o, item, nb)
+	local price = o:getPrice() * self.buy_percent / 100
+	if price <= 0 or nb <= 0 then return end
+	return nb
+end
+
 --- Called on object purchase
 -- @param who the actor buying
 -- @param o the object trying to be purchased
@@ -47,9 +74,6 @@ function _M:onBuy(who, o, item, nb)
 	local price = o:getPrice() * self.sell_percent / 100
 	if who.money >= price * nb then
 		who.money = who.money - price * nb
-		return nb
-	else
-		Dialog:simplePopup("Not enough gold", "You do not have enough gold!")
 	end
 end
 
@@ -64,7 +88,6 @@ function _M:onSell(who, o, item, nb)
 	if price <= 0 or nb <= 0 then return end
 	who.money = who.money + price * nb
 	o:identify(true)
-	return nb
 end
 
 --- Called to describe an object, being to sell or to buy

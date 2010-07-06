@@ -70,6 +70,7 @@ newBirthDescriptor{
 	desc =
 	{
 		"Tutorial mode, start with a simplified character and discover the game in a simple quest.",
+		"You will be guided by a helpful spirit while learning.",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",
 		"No achievements possible.",
@@ -93,6 +94,11 @@ newBirthDescriptor{
 		"Normal game setting",
 		"No changes to the rules.",
 	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
+	},
 	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_NORMAL end) },
 }
 newBirthDescriptor{
@@ -103,6 +109,11 @@ newBirthDescriptor{
 		"Hard game setting",
 		"All damage done to the player increased by 20%",
 		"All healing for the player decreased by 10%",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
 	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_NIGHTMARE end) },
 }
@@ -116,6 +127,11 @@ newBirthDescriptor{
 		"All damage done by the player decreased by 20%",
 		"All healing for the player decreased by 20%",
 		"Player rank is normal instead of elite",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
 	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_INSANE end), rank=2 },
 }

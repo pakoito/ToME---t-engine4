@@ -289,7 +289,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# vanishes from sight.", "+Invis" end,
-	on_lose = function(self, err) return "#Target# is not more invisible.", "-Invis" end,
+	on_lose = function(self, err) return "#Target# is not longer invisible.", "-Invis" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("invisible", eff.power)
 	end,

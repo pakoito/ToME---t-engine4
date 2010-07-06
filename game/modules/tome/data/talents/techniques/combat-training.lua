@@ -65,7 +65,7 @@ newSkill{
 	require = { level=function(level) return (level - 1) * 2 end },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases chance to hit with melee and ranged weapons.]]
+		return ([[Increases chance to hit with melee and ranged weapons by %d.]]):format(self:getTalentLevel(t) * 5)
 	end,
 }
 
@@ -76,7 +76,7 @@ newSkill{
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage done with swords.]]
+		return ([[Increases damage done with swords by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }
 
@@ -87,7 +87,7 @@ newSkill{
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage done with axes.]]
+		return ([[Increases damage done with axes by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }
 
@@ -98,7 +98,7 @@ newSkill{
 	require = { stat = { str=function(level) return 14 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage done with maces.]]
+		return ([[Increases damage done with maces by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }
 
@@ -109,6 +109,6 @@ newSkill{
 	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage done with knives.]]
+		return ([[Increases damage done with knives by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }
