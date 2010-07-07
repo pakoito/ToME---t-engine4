@@ -22,18 +22,16 @@ newBirthDescriptor{
 	name = "Mage",
 	desc = {
 		"Mages are the wielders of the arcane powers, able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
-		"All mages have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 	},
 	descriptor_choices =
 	{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			Archmage = "allow",
---			Necromancer = "allow",
+			Archmage = function() return profile.mod.allow_build.mage and "allow" or "disallow" end,
+			Alchemist = "allow",
 		},
 	},
-	talents = { [ActorTalents.T_TELEPORT_ANGOLWEN]=1 },
 	copy = {
 		-- All mages are of angolwen faction
 		faction = "angolwen",
@@ -52,6 +50,7 @@ newBirthDescriptor{
 		"An Archmage devotes their whole life to the study of magic above anything else.",
 		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
 		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
+		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
 	},
 	stats = { mag=5, wil=3, cun=1, },
@@ -75,6 +74,44 @@ newBirthDescriptor{
 		[ActorTalents.T_FLAME] = 1,
 		[ActorTalents.T_LIGHTNING] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
+		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
+	},
+	copy = {
+		max_life = 90,
+		life_rating = 10,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="robe", autoreq=true}
+			{type="alchemist-gem", subtype="black", autoreq=true},
+		},
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Alchemist",
+	desc = {
+		"An Alchemist is a dabbler in magic, while 'true' magic is thought to have been lost with the departure of Gandalf and the fall of Saruman.",
+		"Alchemists have an empirical knowledge of magic, which they can not use directly but through focuses.",
+		"A focus is usualy a gem which they can imbue with power to throw at their foes, exploding in fires, acid, ...",
+		"Alchemists are also known for their golem craft and are usualy accompagnied by such a construct which acts as a body guard.",
+		"Their most important stats are: Magic and Willpower",
+	},
+	stats = { mag=5, wil=3, cun=1, },
+	talents_types = {
+		["spell/alchemy"]={true, 0.3},
+		["spell/infusion"]={true, 0.3},
+		["spell/golemancy"]={true, 0.3},
+		["spell/advanced-golemancy"]={true, 0.3},
+		["spell/gemology"]={true, 0.3},
+		["spell/herbalism"]={true, 0.3},
+		["cunning/survival"]={false, -0.1},
+	},
+	talents = {
 	},
 	copy = {
 		max_life = 90,

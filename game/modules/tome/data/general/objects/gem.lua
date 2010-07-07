@@ -27,36 +27,47 @@ newEntity{
 	desc = [[Gems can be sold for money or used in arcane rituals.]],
 }
 
-local function newGem(name, cost, rarity, color, min_level, max_level)
-	newEntity{ base = "BASE_GEM",
+local function newGem(name, cost, rarity, color, min_level, max_level, tier, power)
+	-- Gems, randomly lootable
+	newEntity{ base = "BASE_GEM", define_as = "GEM_"..name:upper(),
 		name = name:lower(), subtype = color,
 		color = colors[color:upper()],
 		level_range = {min_level, max_level},
 		rarity = rarity, cost = cost,
+		material_level = tier,
+	}
+	-- Alchemist gems, not lootable, only created by talents
+	newEntity{ base = "BASE_GEM", define_as = "GEM_ALCHEMIST_"..name:upper(),
+		name = name:lower(), type='alchemist-gem', subtype = color,
+		slot = "QUIVER",
+		color = colors[color:upper()],
+		cost = 0,
+		material_level = tier,
+		alchemist_power = power,
 	}
 end
 
-newGem("Diamond",5,18,"white",40,50)
-newGem("Pearl",5,18,"white",40,50)
-newGem("Moonstone",5,18,"white",40,50)
-newGem("Fire Opal",5,18,"red",40,50)
-newGem("Bloodstone",5,18,"red",40,50)
-newGem("Ruby",4,16,"red",30,40)
-newGem("Amber",4,16,"yellow",30,40)
-newGem("Turquoise",4,16,"green",30,40)
-newGem("Jade",4,16,"green",30,40)
-newGem("Sapphire",4,16,"blue",30,40)
-newGem("Quartz",3,12,"white",20,30)
-newGem("Emerald",3,12,"green",20,30)
-newGem("Lapis Lazuli",3,12,"blue",20,30)
-newGem("Garnets",3,12,"red",20,30)
-newGem("Onyx",3,12,"black",20,30)
-newGem("Amethyst",2,10,"violet",10,20)
-newGem("Opal",2,10,"blue",10,20)
-newGem("Topaz",2,10,"blue",10,20)
-newGem("Aquamarine",2,10,"blue",10,20)
-newGem("Ametrine",1,8,"yellow",1,10)
-newGem("Zircon",1,8,"yellow",1,10)
-newGem("Spinel",1,8,"green",1,10)
-newGem("Citrine",1,8,"yellow",1,10)
-newGem("Agate",1,8,"black",1,10)
+newGem("Diamond",	5,	18,	"white",	40,	50, 5, 70)
+newGem("Pearl",		5,	18,	"white",	40,	50, 5, 70)
+newGem("Moonstone",	5,	18,	"white",	40,	50, 5, 70)
+newGem("Fire Opal",	5,	18,	"red",		40,	50, 5, 70)
+newGem("Bloodstone",	5,	18,	"red",		40,	50, 5, 70)
+newGem("Ruby",		4,	16,	"red",		30,	40, 4, 65)
+newGem("Amber",		4,	16,	"yellow",	30,	40, 4, 65)
+newGem("Turquoise",	4,	16,	"green",	30,	40, 4, 65)
+newGem("Jade",		4,	16,	"green",	30,	40, 4, 65)
+newGem("Sapphire",	4,	16,	"blue",		30,	40, 4, 65)
+newGem("Quartz",	3,	12,	"white",	20,	30, 3, 50)
+newGem("Emerald",	3,	12,	"green",	20,	30, 3, 50)
+newGem("Lapis Lazuli",	3,	12,	"blue",		20,	30, 3, 50)
+newGem("Garnets",	3,	12,	"red",		20,	30, 3, 50)
+newGem("Onyx",		3,	12,	"black",	20,	30, 3, 50)
+newGem("Amethyst",	2,	10,	"violet",	10,	20, 2, 35)
+newGem("Opal",		2,	10,	"blue",		10,	20, 2, 35)
+newGem("Topaz",		2,	10,	"blue",		10,	20, 2, 35)
+newGem("Aquamarine",	2,	10,	"blue",		10,	20, 2, 35)
+newGem("Ametrine",	1,	8,	"yellow",	1,	10, 1, 20)
+newGem("Zircon",	1,	8,	"yellow",	1,	10, 1, 20)
+newGem("Spinel",	1,	8,	"green",	1,	10, 1, 20)
+newGem("Citrine",	1,	8,	"yellow",	1,	10, 1, 20)
+newGem("Agate",		1,	8,	"black",	1,	10, 1, 20)

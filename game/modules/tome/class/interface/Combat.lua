@@ -490,11 +490,11 @@ function _M:combatSpellpower(mod)
 end
 
 --- Gets damage based on talent
-function _M:combatTalentSpellDamage(t, base, max)
+function _M:combatTalentSpellDamage(t, base, max, spellpower_override)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return (base + self:combatSpellpower()) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
+	return (base + (spellpower_override or self:combatSpellpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
 end
 
 --- Gets weapon damage mult based on talent
@@ -570,7 +570,6 @@ function _M:combatMentalResist()
 	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.25
 end
 
-
 --- Check if the actor has a bow or sling and corresponding ammo
 function _M:hasArcheryWeapon()
 	if not self:getInven("MAINHAND") then return nil, "no shooter" end
@@ -584,6 +583,16 @@ function _M:hasArcheryWeapon()
 		return nil, "bad or no ammo"
 	end
 	return weapon, ammo
+end
+
+--- Check if the actor has a gem bomb in quiver
+function _M:hasAlchemistWeapon()
+	if not self:getInven("QUIVER") then return nil, "no ammo" end
+	local ammo = self:getInven("QUIVER")[1]
+	if not ammo or not ammo.alchemist_power then
+		return nil, "bad or no ammo"
+	end
+	return ammo
 end
 
 --- Check if the actor has a two handed weapon

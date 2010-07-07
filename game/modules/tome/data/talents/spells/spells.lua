@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Spells
+-- Archmage spells
 newTalentType{ type="spell/arcane", name = "arcane", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
 newTalentType{ type="spell/fire", name = "fire", description = "Harness the power of fire to burn your foes to ashes." }
 newTalentType{ type="spell/earth", name = "earth", description = "Harness the power of the earth to protect and destroy." }
@@ -30,6 +30,14 @@ newTalentType{ type="spell/divination", name = "divination", generic = true, des
 newTalentType{ type="spell/temporal", name = "temporal", description = "The school of time manipulation." }
 newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
 newTalentType{ type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
+
+-- Alchemist spells
+newTalentType{ type="spell/alchemy", name = "alchemy", description = "Manipulate gems to turn them into explosive magical bombs." }
+newTalentType{ type="spell/infusion", name = "infusion", description = "Infusion your gem bombs with the powers of the elements." }
+newTalentType{ type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }
+newTalentType{ type="spell/advanced-golemancy", name = "advanced-golemancy", description = "Advanced golem operations." }
+newTalentType{ type="spell/gemology", name = "gemology", generic = true, description = "Manipulate gems, imbue their powers into other objects." }
+newTalentType{ type="spell/herbalism", name = "herbalism", generic = true, description = "Herbs lore." }
 
 -- Generic requires for spells based on talent level
 spells_req1 = {
@@ -65,3 +73,5 @@ load("/data/talents/spells/divination.lua")
 load("/data/talents/spells/temporal.lua")
 load("/data/talents/spells/phantasm.lua")
 load("/data/talents/spells/enhancement.lua")
+
+load("/data/talents/spells/alchemy.lua")
