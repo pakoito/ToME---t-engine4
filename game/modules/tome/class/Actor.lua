@@ -34,6 +34,7 @@ require "engine.interface.ActorFOV"
 require "mod.class.interface.Combat"
 local Faction = require "engine.Faction"
 local Map = require "engine.Map"
+local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(
 	-- a ToME actor is a complex beast it uses may inetrfaces
@@ -333,6 +334,16 @@ function _M:getRankLifeAdjust()
 	end
 end
 
+function _M:getRankResistAdjust()
+	if self.rank == 1 then return 0.4, 0.9
+	elseif self.rank == 2 then return 0.5, 1.5
+	elseif self.rank == 3 then return 0.8, 1.5
+	elseif self.rank == 4 then return 0.9, 1.5
+	elseif self.rank >= 5 then return 0.9, 1.5
+	else return 0
+	end
+end
+
 function _M:TextRank()
 	local rank, color = "normal", "#ANTIQUE_WHITE#"
 	if self.rank == 1 then rank, color = "critter", "#C0C0C0#"
@@ -377,12 +388,18 @@ function _M:tooltip()
 		end
 	end
 
+	local resists = {}
+	for t, v in pairs(self.resists) do
+		resists[#resists+1] = string.format("%d%% %s", v, DamageType:get(t).name)
+	end
+
 	return ([[%s%s
 Rank: %s%s
 #00ffff#Level: %d
 Exp: %d/%d
 #ff0000#HP: %d (%d%%)
 Stats: %d /  %d / %d / %d / %d / %d
+Resists: %s
 Size: #ANTIQUE_WHITE#%s
 %s
 Faction: %s%s (%s)
@@ -399,6 +416,7 @@ Faction: %s%s (%s)
 	self:getWil(),
 	self:getCun(),
 	self:getCon(),
+	table.concat(resists, ','),
 	self:TextSizeCategory(),
 	self.desc or "",
 	factcolor, Faction.factions[self.faction].name, factstate,
@@ -438,7 +456,7 @@ function _M:onTakeHit(value, src)
 			-- Explode!
 			game.logSeen(self, "%s disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
 			local tg = {type="ball", radius=5}
-			self:project(tg, self.x, self.y, engine.DamageType.ARCANE, dam, {type="manathrust"})
+			self:project(tg, self.x, self.y, DamageType.ARCANE, dam, {type="manathrust"})
 		end
 	end
 
@@ -580,6 +598,29 @@ function _M:levelup()
 	-- At levels 10, 20 and 30 we gain a new talent type
 	if self.level == 10 or  self.level == 20 or  self.level == 30 then
 		self.unused_talents_types = self.unused_talents_types + 1
+	end
+
+	-- Gain some basic resistances
+	if not self.no_auto_resists then
+		-- Make up a random list of resists the first time
+		if not self.auto_resists_list then
+			local list = {
+				DamageType.PHYSICAL,
+				DamageType.FIRE, DamageType.COLD, DamageType.ACID, DamageType.LIGHTNING,
+				DamageType.LIGHT, DamageType.DARKNESS,
+				DamageType.NATURE, DamageType.BLIGHT,
+			}
+			self.auto_resists_list = {}
+			for i = 1, rng.range(1, self.auto_resists_nb or 2) do
+				local t = rng.tableRemove(list)
+				-- Double the chance so that resist is more likely to happen
+				if rng.percent(30) then self.auto_resists_list[#self.auto_resists_list+1] = t end
+				self.auto_resists_list[#self.auto_resists_list+1] = t
+			end
+		end
+		-- Provide one of our resists
+		local t = rng.table(self.auto_resists_list)
+		self.resists[t] = (self.resists[t] or 0) + rng.float(self:getRankResistAdjust())
 	end
 
 	-- Gain life and resources

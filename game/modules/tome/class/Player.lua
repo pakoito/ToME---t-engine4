@@ -57,7 +57,8 @@ function _M:init(t, no_default)
 
 	if t.fixed_rating == nil then t.fixed_rating = true end
 
-	t.move_others=true
+	t.move_others = true
+	t.no_auto_resists = true
 
 	t.lite = t.lite or 0
 
