@@ -31,7 +31,7 @@ newTalent{
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
-		local dam = self:combatTalentSpellDamage(t, 4, 70)
+		local dam = self:combatTalentSpellDamage(t, 4, 50)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -50,7 +50,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Corrosive fumes rises from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 70), self:getTalentLevel(t) + 2)
+		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 50), self:getTalentLevel(t) + 2)
 	end,
 }
 

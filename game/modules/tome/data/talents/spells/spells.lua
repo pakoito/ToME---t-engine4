@@ -76,3 +76,4 @@ load("/data/talents/spells/phantasm.lua")
 load("/data/talents/spells/enhancement.lua")
 
 load("/data/talents/spells/alchemy.lua")
+load("/data/talents/spells/infusion.lua")

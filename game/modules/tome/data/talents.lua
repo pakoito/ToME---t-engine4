@@ -19,6 +19,7 @@
 
 local oldNewTalent = newTalent
 newTalent = function(t)
+	assert(engine.interface.ActorTalents.talents_types_def[t.type[1]], "No talent category "..tostring(t.type[1]).." for talent "..t.name)
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
 	return oldNewTalent(t)
 end

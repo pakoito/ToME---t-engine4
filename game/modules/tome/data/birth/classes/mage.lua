@@ -111,6 +111,9 @@ newBirthDescriptor{
 		["cunning/survival"]={false, -0.1},
 	},
 	talents = {
+		[ActorTalents.T_CREATE_ALCHEMIST_GEMS] = 1,
+		[ActorTalents.T_THROW_BOMB] = 1,
+		[ActorTalents.T_FIRE_INFUSION] = 1,
 	},
 	copy = {
 		max_life = 90,

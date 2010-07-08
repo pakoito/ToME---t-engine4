@@ -104,10 +104,10 @@ ActorLevel:defineMaxLevel(nil)
 ActorLevel.exp_chart = function(level)
 	local exp = 10
 	local mult = 8
-	local min = 2
+	local min = 3
 	for i = 2, level do
 		exp = exp + level * mult
-		mult = util.bound(mult - 0.5, min, mult)
+		mult = util.bound(mult - 0.2, min, mult)
 	end
 	return math.ceil(exp)
 end
@@ -121,7 +121,8 @@ for i = 2, 50 do
 	print("level", i, "::", ActorLevel.exp_chart(i), "must kill", nb, "actors of same level; which is about ", znb, "zone levels")
 end
 print("total", tnb, "::", tznb)
-]]
+os.exit()
+--]]
 
 -- Factions
 dofile("/data/factions.lua")

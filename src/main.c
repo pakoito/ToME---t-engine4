@@ -628,7 +628,7 @@ int main(int argc, char *argv[])
 			switch(event.type)
 			{
 			case SDL_ACTIVEEVENT:
-				if ((event.active.state & SDL_APPACTIVE) || (event.active.state & SDL_APPINPUTFOCUS))
+/*				if ((event.active.state & SDL_APPACTIVE) || (event.active.state & SDL_APPINPUTFOCUS))
 				{
 					if (event.active.gain == 0)
 						isActive = FALSE;
@@ -636,7 +636,7 @@ int main(int argc, char *argv[])
 						isActive = TRUE;
 				}
 				printf("SDL Activity %d\n", isActive);
-				break;
+*/				break;
 
 			case SDL_VIDEORESIZE:
 				printf("resize %d x %d\n", event.resize.w, event.resize.h);
