@@ -18,6 +18,41 @@
 -- darkgod@te4.org
 
 newTalent{
+	name = "Create Alchemist Gems",
+	type = {"spell/alchemy-base", 1},
+	require = spells_req1,
+	points = 1,
+	range = function(self, t)
+		return math.ceil(5 + self:getDex(12))
+	end,
+	action = function(self, t)
+		local nb = rng.range(40, 80, 3)
+
+		self:showEquipInven("Use which gem?", function(o) return o.type == "gem" end, function(o, inven, item)
+			local gem = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_" .. o.define_as)
+
+			local s = {}
+			while nb > 0 do
+				s[#s+1] = gem:clone()
+				nb = nb - 1
+			end
+			for i = 1, #s do gem:stack(s[i]) end
+
+			self:addObject(self.INVEN_INVEN, gem)
+			game.logPlayer(self, "You create: %s", gem:getName{do_color=true, do_count=true})
+			self:removeObject(self.INVEN_INVEN, item)
+			return true
+		end)
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Carve %d to %d alchemist gems out of natural gems.
+		Alchemists gems are used for lots of other spells.]]):format(40, 80)
+	end,
+}
+
+newTalent{
 	name = "Throw Bomb",
 	type = {"spell/alchemy", 1},
 	require = spells_req1,
@@ -32,7 +67,8 @@ newTalent{
 			return
 		end
 
-		local tg = {type="ball", range=self:getTalentRange(t), radius=0, talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), talent=t}
+		if tg.radius == 0 then tg.type = "hit" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -58,33 +94,10 @@ newTalent{
 	name = "Explosion Expert",
 	type = {"spell/alchemy", 2},
 	require = spells_req2,
+	type = "passive",
 	points = 5,
-	mana = 10,
-	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
-	range = 20,
-	reflectable = true,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
-		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(self:combatTalentSpellDamage(t, 20, 230)), nil)
-		local _ _, x, y = self:canProject(tg, x, y)
-		if tg.type == "beam" then
-			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
-		else
-			game.level.map:particleEmitter(x, y, 1, "manathrust")
-		end
-		game:playSoundNear(self, "talents/arcane")
-		return true
-	end,
 	info = function(self, t)
-		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage.
-		At level 3 it becomes a beam.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 230))
+		return ([[Your alchemist bombs now affect a radius of %d around them.]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -92,53 +105,25 @@ newTalent{
 	name = "Alchemist Protection",
 	type = {"spell/alchemy", 3},
 	require = spells_req3,
+	type = "passive",
 	points = 5,
-	mana = 0,
-	cooldown = 300,
-	tactical = {
-		MANA = 20,
-	},
-	action = function(self, t)
-		if not self:hasEffect(self.EFF_MANAFLOW) then
-			self:setEffect(self.EFF_MANAFLOW, 10, {power=self:combatTalentSpellDamage(t, 10, 20)})
-			game:playSoundNear(self, "talents/arcane")
-		end
-		return true
-	end,
 	info = function(self, t)
-		return ([[Engulf yourself in a surge of mana, quickly restoring %d mana every turns for 10 turns.
-		The mana restored will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 20))
+		return ([[Improves your resistance against your own bombs elemental damage by %d%% and against external one byt %d%%.]]):
+		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
 	end,
 }
 
 newTalent{
 	name = "Create Complex Bomb",
 	type = {"spell/alchemy",4},
-	require = spells_req4, no_sustain_autoreset = true,
+	require = spells_req4,
 	points = 5,
-	mode = "sustained",
-	sustain_mana = 150,
-	tactical = {
-		DEFEND = 10,
-	},
-	activate = function(self, t)
-		local power = math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
-		self.disruption_shield_absorb = 0
+	action = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
-		return {
-			shield = self:addTemporaryValue("disruption_shield", power),
-			particle = self:addParticles(Particles.new("disruption_shield", 1)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeParticles(p.particle)
-		self:removeTemporaryValue("disruption_shield", p.shield)
-		self.disruption_shield_absorb = nil
 		return true
 	end,
 	info = function(self, t)
-		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage point taken.
-		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane explosion of the amount of damage absorbed.
-		The damage to mana ratio increases with the Magic stat]]):format(math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280))
+		return ([[Carve %d to %d alchemist gems out of muliple natural gems, combining their powers.
+		Alchemists gems are used for lots of other spells.]]):format(40, 80)
 	end,
 }

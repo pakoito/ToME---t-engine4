@@ -20,7 +20,7 @@
 newChat{ id="welcome",
 	text = [[@playername@, I am part of a group of Sun Paladins sent by Aeryn, we arrived here tracking the orcs.
 They have gone through that portal, a few of my friends were pulled in with them.
-Earlier we captured an orc, he revealed the staff you seek is to be used to absord the power of a remote place for some dark rituals.
+Earlier we captured an orc, he revealed the staff you seek is to be used to absorb the power of a remote place for some dark rituals.
 You must traverse this portal, if you have any means to, and stop the orcs.]],
 	answers = {
 		{"I think I can use the portal, do not worry!"},

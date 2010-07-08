@@ -32,6 +32,7 @@ newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control 
 newTalentType{ type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
 
 -- Alchemist spells
+newTalentType{ type="spell/alchemy-base", name = "alchemy", hide = true, description = "Manipulate gems to turn them into explosive magical bombs." }
 newTalentType{ type="spell/alchemy", name = "alchemy", description = "Manipulate gems to turn them into explosive magical bombs." }
 newTalentType{ type="spell/infusion", name = "infusion", description = "Infusion your gem bombs with the powers of the elements." }
 newTalentType{ type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }

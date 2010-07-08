@@ -37,8 +37,8 @@ local function newGem(name, cost, rarity, color, min_level, max_level, tier, pow
 		material_level = tier,
 	}
 	-- Alchemist gems, not lootable, only created by talents
-	newEntity{ base = "BASE_GEM", define_as = "GEM_ALCHEMIST_"..name:upper(),
-		name = name:lower(), type='alchemist-gem', subtype = color,
+	newEntity{ base = "BASE_GEM", define_as = "ALCHEMIST_GEM_"..name:upper(),
+		name = "alchemist "..name:lower(), type='alchemist-gem', subtype = color,
 		slot = "QUIVER",
 		color = colors[color:upper()],
 		cost = 0,
