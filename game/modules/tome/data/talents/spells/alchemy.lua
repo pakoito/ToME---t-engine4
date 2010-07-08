@@ -25,6 +25,7 @@ newTalent{
 	range = function(self, t)
 		return math.ceil(5 + self:getDex(12))
 	end,
+	mana = 30,
 	action = function(self, t)
 		local nb = rng.range(40, 80)
 
@@ -57,6 +58,7 @@ newTalent{
 	type = {"spell/alchemy", 1},
 	require = spells_req1,
 	points = 5,
+	mana = 5,
 	range = function(self, t)
 		return math.ceil(5 + self:getDex(12))
 	end,

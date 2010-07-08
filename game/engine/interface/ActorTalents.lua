@@ -433,7 +433,9 @@ end
 -- @param t the talent to cooldown
 function _M:startTalentCooldown(t)
 	if not t.cooldown then return end
-	self.talents_cd[t.id] = t.cooldown
+	local cd = t.cooldown
+	if type(cd) == "function" then cd = cd(self, t) end
+	self.talents_cd[t.id] = cd
 	self.changed = true
 end
 

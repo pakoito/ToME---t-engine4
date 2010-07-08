@@ -112,8 +112,10 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_CREATE_ALCHEMIST_GEMS] = 1,
+		[ActorTalents.T_REFIT_GOLEM] = 1,
 		[ActorTalents.T_THROW_BOMB] = 1,
 		[ActorTalents.T_FIRE_INFUSION] = 1,
+		[ActorTalents.T_GOLEM_TAUNT] = 1,
 	},
 	copy = {
 		max_life = 90,
@@ -129,5 +131,9 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
+		resolvers.generic(function(self)
+			local t = self:getTalentFromId(self.T_REFIT_GOLEM)
+			t.action(self, t)
+		end),
 	},
 }

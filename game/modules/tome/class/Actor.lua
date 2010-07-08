@@ -248,7 +248,7 @@ function _M:getPathString()
 		ps = ps .. what.."="..check..","
 	end
 	ps = ps.."}}"
-	print("[PATH STRING] for", self.name, " :=: ", ps)
+--	print("[PATH STRING] for", self.name, " :=: ", ps)
 	return ps
 end
 
@@ -647,6 +647,9 @@ function _M:levelup()
 	if self.autolevel then
 		engine.Autolevel:autoLevel(self)
 	end
+
+	-- Force levelup of the golem
+	if self.alchemy_golem then self.alchemy_golem:forceLevelup(self.level) end
 end
 
 --- Notifies a change of stat value
@@ -966,7 +969,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
 	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
 	end
-	if t.cooldown then d[#d+1] = "#6fff83#Cooldown: #FFFFFF#"..t.cooldown end
+	if t.cooldown then d[#d+1] = "#6fff83#Cooldown: #FFFFFF#"..util.getval(t.cooldown, self, t) end
 
 	local ret = table.concat(d, "\n").."\n#6fff83#Description: #FFFFFF#"..t.info(self, t)
 

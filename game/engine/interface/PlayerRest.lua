@@ -24,15 +24,20 @@ local Dialog = require "engine.Dialog"
 module(..., package.seeall, class.make)
 
 --- Initializes resting
-function _M:restInit()
+function _M:restInit(turns, what, past, on_end)
+	what = what or "resting"
+	past = past or "rested"
 	self.resting = {
+		rest_turns = turns,
+		past = past,
+		on_end = on_end,
 		cnt = 1,
-		dialog = Dialog:simplePopup("Resting...", "You are resting, press any key to stop.", function()
+		dialog = Dialog:simplePopup(what:capitalize().."...", "You are "..what..", press any key to stop.", function()
 			self:restStop()
 		end),
 	}
 	self:useEnergy()
-	game.log("Resting starts...")
+	game.log(what:capitalize().." starts...")
 end
 
 --- Rest a turn
@@ -45,6 +50,7 @@ function _M:restStep()
 	if not self.resting then return false end
 
 	local ret, msg = self:restCheck()
+	if ret and self.resting and self.resting.rest_turns and self.resting.cnt > self.resting.rest_turns then ret = false msg = nil end
 	if not ret then
 		self:restStop(msg)
 		return false
@@ -69,11 +75,12 @@ function _M:restStop(msg)
 	game:unregisterDialog(self.resting.dialog)
 
 	if msg then
-		game.log("Rested for %d turns (stop reason: %s).", self.resting.cnt, msg)
+		game.log(self.resting.past:capitalize().." for %d turns (stop reason: %s).", self.resting.cnt, msg)
 	else
-		game.log("Rested for %d turns.", self.resting.cnt)
+		game.log(self.resting.past:capitalize().." for %d turns.", self.resting.cnt)
 	end
 
+	if self.resting.on_end then self.resting.on_end(self.resting.cnt, self.resting.rest_turns) end
 	self.resting = nil
 	return true
 end

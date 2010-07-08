@@ -45,7 +45,7 @@ newTalent{
 	type = {"spell/infusion", 2},
 	mode = "sustained",
 	require = spells_req2,
-	sustain_mana = 50,
+	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
 	activate = function(self, t)
@@ -69,7 +69,7 @@ newTalent{
 	type = {"spell/infusion", 2},
 	mode = "sustained",
 	require = spells_req2,
-	sustain_mana = 50,
+	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
 	activate = function(self, t)
@@ -93,7 +93,7 @@ newTalent{
 	type = {"spell/infusion", 2},
 	mode = "sustained",
 	require = spells_req2,
-	sustain_mana = 50,
+	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
 	activate = function(self, t)

@@ -46,20 +46,38 @@ end
 
 newTalent{
 	name = "Refit Golem",
-	type = {"spell/golemancy", 1},
+	type = {"spell/golemancy-base", 1},
 	require = spells_req1,
 	points = 1,
+	cooldown = 20,
+	mana = 10,
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction
+			self.alchemy_golem.name = "golem (servant of "..self.name..")"
 			self.alchemy_golem.summoner = self
 			self.alchemy_golem.summoner_gain_exp = true
+		else
+			local co = coroutine.running()
+			local ok = false
+			self:restInit(20, "refitting", "refitted", function(cnt, max)
+				if cnt > max then ok = true end
+				coroutine.resume(co)
+			end)
+			coroutine.yield()
+			if not ok then
+				game.logPlayer(self, "You have been interrupted!")
+				return
+			end
 		end
 
 		if game.level:hasEntity(self.alchemy_golem) then
 		else
+			self.alchemy_golem.dead = nil
+			if self.alchemy_golem.life < 0 then self.alchemy_golem.life = self.alchemy_golem.max_life / 3 end
+
 			-- Find space
 			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 			if not x then
@@ -73,70 +91,41 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Carve %d to %d alchemist gems out of natural gems.
-		Alchemists gems are used for lots of other spells.]]):format(40, 80)
+		return ([[Interract with your golem, reviving it if it is dead, healing it, ...]])
 	end,
 }
 
 newTalent{
-	name = "Golem: Taunt",
+	name = "Golem: Taunt", short_name = "GOLEM_TAUNT",
 	type = {"spell/golemancy", 1},
 	require = spells_req1,
 	points = 5,
-	range = function(self, t)
-		return math.ceil(5 + self:getDex(12))
+	cooldown = function(self, t)
+		return 20 - self:getTalentLevelRaw(t) * 2
 	end,
-	computeDamage = function(self, t, ammo)
-		local inc_dam = 0
-		local damtype = DamageType.FIRE
-		local particle = "ball_fire"
-		if self:isTalentActive(self.T_ACID_INFUSION) then inc_dam = self:getTalentLevel(self.T_ACID_INFUSION) * 0.05; damtype = DamageType.ACID; particle = "ball_acid"
-		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = self:getTalentLevel(self.T_LIGHTNING_INFUSION) * 0.05; damtype = DamageType.LIGHTNING; particle = "ball_lightning"
-		elseif self:isTalentActive(self.T_FROST_INFUSION) then inc_dam = self:getTalentLevel(self.T_FROST_INFUSION) * 0.05; damtype = DamageType.ICE; particle = "ball_ice"
-		else inc_dam = self:getTalentLevel(self.T_FIRE_INFUSION) * 0.05
-		end
-		local dam = self:combatTalentSpellDamage(t, 15, 150, (ammo.alchemist_power + self:combatSpellpower()) / 2)
-		dam = dam * (1 + inc_dam)
-		return dam, damtype, particle
-	end,
+	range = 10,
+	mana = 5,
 	action = function(self, t)
-		local ammo = self:hasAlchemistWeapon()
-		if not ammo then
-			game.logPlayer(self, "You need to ready alchemist gems in your quiver.")
+		if not game.level:hasEntity(self.alchemy_golem) then
+			game.logPlayer(self, "Your golem is currently inactive.")
 			return
 		end
 
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), talent=t}
-		if tg.radius == 0 then tg.type = "hit" end
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		game.target.source_actor = self.alchemy_golem
+		local x, y, target = self:getTarget(tg)
+		game.target.source_actor = self
+		if not x or not y or not target then print(1) return nil end
+		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > self:getTalentRange(t) then return nil end
 
-		ammo = self:removeObject(self:getInven("QUIVER"), 1)
-		if not ammo then return end
+		self.alchemy_golem:setTarget(target)
+		target:setTarget(self.alchemy_golem)
+		game.logPlayer(self, "Your golem provokes %s to attack it.", target.name:capitalize())
 
-		local dam, damtype, particle = t.computeDamage(self, t, ammo)
-		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 0.2
-
-		local grids = self:project(tg, x, y, function(tx, ty)
-			-- Protect yourself
-			local d = dam
-			if tx == self.x and ty == self.y then d = dam * (1 - prot) end
-			DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d))
-		end)
-
-		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
-
-		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		local ammo = self:hasAlchemistWeapon()
-		local dam, damtype = 1, DamageType.FIRE
-		if ammo then dam, damtype = t.computeDamage(self, t, ammo) end
-		return ([[Imbue an alchemist gem with an explosive charge of mana and throw it.
-		The gem will explode for %0.2f %s damage.
-		The damage will improve with better gems and Magic stat and the range with your dexterity.]]):format(dam, DamageType:get(damtype).name)
+		return ([[Orders your golem to taunt a target, forcing it to attack the golem.]]):format()
 	end,
 }
 
@@ -144,10 +133,54 @@ newTalent{
 	name = "Golem: Knockback",
 	type = {"spell/golemancy", 2},
 	require = spells_req2,
-	mode = "passive",
 	points = 5,
+	cooldown = 10,
+	range = 10,
+	mana = 5,
+	action = function(self, t)
+		if not game.level:hasEntity(self.alchemy_golem) then
+			game.logPlayer(self, "Your golem is currently inactive.")
+			return
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		game.target.source_actor = self.alchemy_golem
+		local x, y, target = self:getTarget(tg)
+		game.target.source_actor = self
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > self:getTalentRange(t) then return nil end
+
+		self.alchemy_golem:setTarget(target)
+
+		local l = line.new(self.alchemy_golem.x, self.alchemy_golem.y, x, y)
+		local lx, ly = l()
+		local tx, ty = self.alchemy_golem.x, self.alchemy_golem.y
+		lx, ly = l()
+		while lx and ly do
+			if game.level.map:checkAllEntities(lx, ly, "block_move", self.alchemy_golem) then break end
+			tx, ty = lx, ly
+			lx, ly = l()
+		end
+
+		self.alchemy_golem:move(tx, ty, true)
+
+		-- Attack ?
+		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > 1 then return true end
+		local hit = self.alchemy_golem:attackTarget(target, nil, self.alchemy_golem:combatTalentWeaponDamage(t, 0.8, 1.6), true)
+
+		-- Try to knockback !
+		if hit then
+			if target:checkHit(self.alchemy_golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self.alchemy_golem:getTalentLevel(t) / 2) and target:canBe("knockback") then
+				target:knockback(self.alchemy_golem.x, self.alchemy_golem.y, 3)
+			else
+				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
 	info = function(self, t)
-		return ([[Your alchemist bombs now affect a radius of %d around them.]]):format(self:getTalentLevelRaw(t))
+		return ([[Your golem rushes to the target, knocking it back and doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6))
 	end,
 }
 
@@ -155,23 +188,54 @@ newTalent{
 	name = "Golem: Crush",
 	type = {"spell/golemancy", 3},
 	require = spells_req3,
-	mode = "passive",
 	points = 5,
-	on_learn = function(self, t)
-		self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 3
-		self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 3
-		self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 3
-		self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 3
-	end,
-	on_unlearn = function(self, t)
-		self.resists[DamageType.FIRE] = self.resists[DamageType.FIRE] - 3
-		self.resists[DamageType.COLD] = self.resists[DamageType.COLD] - 3
-		self.resists[DamageType.LIGHTNING] = self.resists[DamageType.LIGHTNING] - 3
-		self.resists[DamageType.ACID] = self.resists[DamageType.ACID] - 3
+	cooldown = 10,
+	range = 10,
+	mana = 5,
+	action = function(self, t)
+		if not game.level:hasEntity(self.alchemy_golem) then
+			game.logPlayer(self, "Your golem is currently inactive.")
+			return
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		game.target.source_actor = self.alchemy_golem
+		local x, y, target = self:getTarget(tg)
+		game.target.source_actor = self
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > self:getTalentRange(t) then return nil end
+
+		self.alchemy_golem:setTarget(target)
+
+		local l = line.new(self.alchemy_golem.x, self.alchemy_golem.y, x, y)
+		local lx, ly = l()
+		local tx, ty = self.alchemy_golem.x, self.alchemy_golem.y
+		lx, ly = l()
+		while lx and ly do
+			if game.level.map:checkAllEntities(lx, ly, "block_move", self.alchemy_golem) then break end
+			tx, ty = lx, ly
+			lx, ly = l()
+		end
+
+		self.alchemy_golem:move(tx, ty, true)
+
+		-- Attack ?
+		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > 1 then return true end
+		local hit = self.alchemy_golem:attackTarget(target, nil, self.alchemy_golem:combatTalentWeaponDamage(t, 0.8, 1.6), true)
+
+		-- Try to knockback !
+		if hit then
+			if target:checkHit(self.alchemy_golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self.alchemy_golem:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_PINNED, 2 + self.alchemy_golem:getTalentLevel(t), {})
+			else
+				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
+			end
+		end
+
+		return true
 	end,
 	info = function(self, t)
-		return ([[Improves your resistance against your own bombs elemental damage by %d%% and against external one byt %d%%.]]):
-		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
+		return ([[Your golem rushes to the target, crushing and doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6))
 	end,
 }
 
@@ -180,12 +244,13 @@ newTalent{
 	type = {"spell/golemancy",4},
 	require = spells_req4,
 	points = 5,
+	mana = 10,
+	cooldown = 20,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Carve %d to %d alchemist gems out of muliple natural gems, combining their powers.
-		Alchemists gems are used for lots of other spells.]]):format(40, 80)
+		return ([[Imbue an alchemist gem with an explosive charge of mana and throw it.]]):format()
 	end,
 }
