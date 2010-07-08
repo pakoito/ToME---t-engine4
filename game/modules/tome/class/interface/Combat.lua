@@ -177,7 +177,7 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 			if params.limit_shots then params.limit_shots = params.limit_shots - 1 end
 
 			-- Does the blow connect? yes .. complex :/
-			local atk, def = self:combatAttack(weapon), target:combatDefense()
+			local atk, def = self:combatAttack(weapon), target:combatDefenseRanged()
 			local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
 			print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 			if not self:canSee(target) then atk = atk / 3 end
@@ -261,7 +261,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	mult = mult or 1
 
 	-- Does the blow connect? yes .. complex :/
-	local atk, def = self:combatAttack(weapon), target:combatDefenseRanged()
+	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	if not self:canSee(target) then atk = atk / 3 end
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
