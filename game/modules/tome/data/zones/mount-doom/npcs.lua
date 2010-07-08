@@ -271,6 +271,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1 },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 
 	resolvers.equip{
 		{type="jewelry", subtype="amulet", defined="FIERY_CHOKER"},
