@@ -596,8 +596,8 @@ function _M:hasAlchemistWeapon()
 	return ammo
 end
 
---- Check if the actor has a two handed weapon
-function _M:hasTwoStaffWeapon()
+--- Check if the actor has a staff weapon
+function _M:hasStaffWeapon()
 	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or weapon.subtype ~= "staff" then

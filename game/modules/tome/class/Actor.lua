@@ -393,7 +393,7 @@ function _M:tooltip()
 
 	local resists = {}
 	for t, v in pairs(self.resists) do
-		resists[#resists+1] = string.format("%d%% %s", v, DamageType:get(t).name)
+		resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
 	end
 
 	return ([[%s%s
@@ -624,6 +624,11 @@ function _M:levelup()
 		-- Provide one of our resists
 		local t = rng.table(self.auto_resists_list)
 		self.resists[t] = (self.resists[t] or 0) + rng.float(self:getRankResistAdjust())
+
+		-- Bosses have a right to get a general damage reduction
+		if self.rank >= 4 then
+			self.resists.all = (self.resists.all or 0) + rng.float(self:getRankResistAdjust()) / (self.rank == 4 and 3 or 2.5)
+		end
 	end
 
 	-- Gain life and resources

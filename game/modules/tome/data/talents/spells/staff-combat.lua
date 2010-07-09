@@ -29,7 +29,7 @@ newTalent{
 	range = 10,
 	reflectable = true,
 	action = function(self, t)
-		local weapon = self:hasTwoStaffWeapon()
+		local weapon = self:hasStaffWeapon()
 		if not weapon then
 			game.logPlayer(self, "You need a staff to use this spell.")
 			return
@@ -73,50 +73,65 @@ newTalent{
 		DEFEND = 20,
 	},
 	activate = function(self, t)
+		local weapon = self:hasStaffWeapon()
+		if not weapon then
+			game.logPlayer(self, "You need a staff to use this spell.")
+			return
+		end
+
 		local power = self:combatTalentSpellDamage(t, 10, 20)
 		game:playSoundNear(self, "talents/arcane")
 		return {
-			power = self:addTemporaryValue("combat_def", power),
+			dam = self:addTemporaryValue("combat_def", -power / 2),
+			def = self:addTemporaryValue("combat_def", power),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_def", p.power)
+		self:removeTemporaryValue("combat_dam", p.dam)
+		self:removeTemporaryValue("combat_def", p.def)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Adopt a defensive posture, reducing your staff attack power by %d and increasing your defense by %d.
-		The mana restored will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 230))
+		The mana restored will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 230) / 2, self:combatTalentSpellDamage(t, 20, 230))
 	end,
 }
 
 newTalent{
-	name = "Disruption Shield",
+	name = "Blunt Thrust",
 	type = {"spell/staff-combat",4},
-	require = spells_req4, no_sustain_autoreset = true,
+	require = spells_req4,
 	points = 5,
-	mode = "sustained",
-	sustain_mana = 150,
+	mana = 30,
 	tactical = {
-		DEFEND = 10,
+		ATTACK = 10,
 	},
-	activate = function(self, t)
-		local power = math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280)
-		self.disruption_shield_absorb = 0
-		game:playSoundNear(self, "talents/arcane")
-		return {
-			shield = self:addTemporaryValue("disruption_shield", power),
-			particle = self:addParticles(Particles.new("disruption_shield", 1)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeParticles(p.particle)
-		self:removeTemporaryValue("disruption_shield", p.shield)
-		self.disruption_shield_absorb = nil
+	actiion = function(self, t)
+		local weapon = self:hasStaffWeapon()
+		if not weapon then
+			game.logPlayer(self, "You cannot use Stunning Blow without a two-handed weapon!")
+			return nil
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.5))
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
+			else
+				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
+			end
+		end
+
 		return true
 	end,
 	info = function(self, t)
-		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage point taken.
-		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane explosion of the amount of damage absorbed.
-		The damage to mana ratio increases with the Magic stat]]):format(math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280))
+		return ([[Hit a target for %d%% melee damage and daze it for %d turns.]]):format(
+		)
 	end,
 }
