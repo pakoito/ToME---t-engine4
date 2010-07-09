@@ -41,7 +41,7 @@ end
 function _M:generateOne()
 	local f = nil
 	if self.filters then f = self.filters[rng.range(1, #self.filters)] end
-	local o = self.zone:makeEntity(self.level, "object", f)
+	local o = self.zone:makeEntity(self.level, "object", f, nil, true)
 	if o then
 		local x, y = rng.range(0, self.map.w-1), rng.range(0, self.map.h-1)
 		local tries = 0

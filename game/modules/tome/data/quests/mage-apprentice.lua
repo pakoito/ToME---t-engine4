@@ -121,7 +121,7 @@ access_angolwen = function(self, player)
 end
 
 ring_gift = function(self, player)
-	local o = game.zone:makeEntity(game.level, "object", {type="jewelry", subtype="ring", force_ego={"RING_ARCANE_POWER","RING_BURNING","RING_FREEZING","RING_SHOCK","RING_MAGIC"}}, player.level + 3)
+	local o = game.zone:makeEntity(game.level, "object", {type="jewelry", subtype="ring", force_ego={"RING_ARCANE_POWER","RING_BURNING","RING_FREEZING","RING_SHOCK","RING_MAGIC"}}, player.level + 3, true)
 	if o then
 		o:identify(true)
 		player:addObject(player.INVEN_INVEN, o)

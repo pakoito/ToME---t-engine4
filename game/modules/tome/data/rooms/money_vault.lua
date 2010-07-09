@@ -31,7 +31,7 @@ return function(gen, id)
 					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('.'))
 
 					-- Add money
-					local e = gen.zone:makeEntity(gen.level, "object", {type="money"})
+					local e = gen.zone:makeEntity(gen.level, "object", {type="money"}, nil, true)
 					if e then
 						gen.zone:addEntity(gen.level, e, "object", i-1+x, j-1+y)
 					end

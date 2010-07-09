@@ -140,8 +140,6 @@ function _M:checkFilter(e, filter)
 	if not filter then return true end
 	if filter.ignore and self:checkFilter(e, filter.ignore) then return false end
 
-	print("Filtering", filter.type, filter.subtype)
-
 	if filter.type and filter.type ~= e.type then return false end
 	if filter.subtype and filter.subtype ~= e.subtype then return false end
 	if filter.name and filter.name ~= e.name then return false end
@@ -180,21 +178,45 @@ function _M:getEgosList(level, type, group, class)
 end
 
 --- Picks and resolve an entity
+-- @param level a Level object to generate for
+-- @param type one of "object" "terrain" "actor" "trap"
+-- @param filter a filter table
+-- @param force_level if not nil forces the current level for resolvers to this one
+-- @param prob_filter if true a new probability list based on this filter will be generated, ensuring to find objects better but at a slightly slower cost (maybe)
 -- @return the fully resolved entity, ready to be used on a level. Or nil if a filter was given an nothing found
-function _M:makeEntity(level, type, filter, force_level)
+function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	resolvers.current_level = self.base_level + level.level - 1
 	if force_level then resolvers.current_level = force_level end
 
-	local list = level:getEntitiesList(type)
 	local e
-	local tries = filter and filter.nb_tries or 500
-	-- CRUDE ! Brute force ! Make me smarter !
-	while tries > 0 do
+	-- No probability list, use the default one and apply filter
+	if not prob_filter then
+		local list = level:getEntitiesList(type)
+		local tries = filter and filter.nb_tries or 500
+		-- CRUDE ! Brute force ! Make me smarter !
+		while tries > 0 do
+			e = self:pickEntity(list)
+			if e and self:checkFilter(e, filter) then break end
+			tries = tries - 1
+		end
+		if tries == 0 then return nil end
+	-- Generate a specific probability list, slower to generate but no need to "try and be lucky"
+	elseif filter then
+		local base_list = nil
+		if type == "actor" then base_list = self.npc_list
+		elseif type == "object" then base_list = self.object_list
+		elseif type == "trap" then base_list = self.trap_list
+		else return nil end
+		local list = self:computeRarities(type, base_list, level, function(e) return self:checkFilter(e, filter) end)
 		e = self:pickEntity(list)
-		if e and self:checkFilter(e, filter) then break end
-		tries = tries - 1
+		print("[MAKE ENTITY] prob list generation", e and e.name, "from list size", #list)
+		if not e then return nil end
+	-- No filter
+	else
+		local list = level:getEntitiesList(type)
+		e = self:pickEntity(list)
+		if not e then return nil end
 	end
-	if tries == 0 then return nil end
 
 	if filter then e.force_ego = filter.force_ego end
 

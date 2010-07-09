@@ -29,7 +29,7 @@ function resolvers.calc.equip(t, e)
 		print("Equipment resolver", e.name, filter.type, filter.subtype)
 		local o
 		if not filter.defined then
-			o = game.zone:makeEntity(game.level, "object", filter)
+			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
 		else
 			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
 		end
@@ -73,7 +73,7 @@ function resolvers.calc.inventory(t, e)
 		print("Inventory resolver", e.name, filter.type, filter.subtype)
 		local o
 		if not filter.defined then
-			o = game.zone:makeEntity(game.level, "object", filter)
+			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
 		else
 			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
 		end
@@ -105,7 +105,7 @@ function resolvers.calc.drops(t, e)
 		print("Drops resolver", e.name, filter.type, filter.subtype, filter.defined)
 		local o
 		if not filter.defined then
-			o = game.zone:makeEntity(game.level, "object", filter)
+			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
 		else
 			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
 		end

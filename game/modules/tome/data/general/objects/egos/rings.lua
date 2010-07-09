@@ -33,13 +33,15 @@ newEntity{
 
 newEntity{
 	name = " of invisibility", suffix=true,
-	desc = [[Allows the wearer to become invisible to normal sight
+	desc = [[Allows the wearer to become invisible to normal sight.
+Such a power comes at a huge cost though...
 Beware, you should take off your light, otherwise you will still be easily spotted.]],
 	level_range = {30, 40},
 	rarity = 4,
 	cost = 16,
 	wielder = {
 		invisible = resolvers.mbonus_material(10, 5, function(e, v) return v * 1 end),
+		life_regen = -11,
 	},
 }
 

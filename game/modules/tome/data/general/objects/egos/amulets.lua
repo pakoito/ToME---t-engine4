@@ -98,6 +98,7 @@ newEntity{
 	rarity = 15,
 	cost = 25,
 	wielder = {
+		life_regen = -3,
 		esp = {all=1},
 	},
 }

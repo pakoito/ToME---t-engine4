@@ -1162,7 +1162,7 @@ function _M:addedToLevel(level, x, y)
 					if not x then break end
 
 					-- Find an actor with that filter
-					local m = game.zone:makeEntity(game.level, "actor", filter)
+					local m = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 					if m and m:canMove(x, y) then
 						if filter.no_subescort then m.make_escort = nil end
 					game.zone:addEntity(game.level, m, "actor", x, y)

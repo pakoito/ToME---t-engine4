@@ -174,7 +174,7 @@ newTalent{
 		local st = "arrow"
 		if weapon.archery == "sling" then st = "shot" end
 
-		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st})
+		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st}, nil, true)
 		if o and rng.percent(10 + self:getTalentLevel(t) * 10) then
 			o:identify(true)
 			o:forAllStack(function(so) so.cost = 0 end)

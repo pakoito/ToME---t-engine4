@@ -274,7 +274,7 @@ newTalent{
 			end
 
 			-- Find an actor with that filter
-			local m = game.zone:makeEntity(game.level, "actor", filter)
+			local m = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 			if m then
 				if not filter.hasxp then m.exp_worth = 0 end
 				m:resolve()
