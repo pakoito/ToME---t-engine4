@@ -106,7 +106,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = math.floor(self:combatTalentSpellDamage(t, 2, 18))
+		local power = math.min(math.floor(self:combatTalentSpellDamage(t, 2, 10)), 11)
 		return {
 			stats = self:addTemporaryValue("inc_stats", {
 				[self.STAT_STR] = power,
@@ -124,6 +124,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You concentrate on your inner self, increasing your stats each by %d.]]):
-		format(self:combatTalentSpellDamage(t, 2, 18))
+		format(math.min(math.floor(self:combatTalentSpellDamage(t, 2, 10)), 11))
 	end,
 }

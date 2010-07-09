@@ -364,8 +364,9 @@ local weapon_talents = {
 	axe =   Talents.T_AXE_MASTERY,
 	mace =  Talents.T_MACE_MASTERY,
 	knife = Talents.T_KNIFE_MASTERY,
-	bow = Talents.T_BOW_MASTERY,
+	bow =   Talents.T_BOW_MASTERY,
 	sling = Talents.T_SLING_MASTERY,
+	staff = Talents.T_STAFF_MASTERY,
 }
 
 --- Checks weapon training
@@ -593,6 +594,16 @@ function _M:hasAlchemistWeapon()
 		return nil, "bad or no ammo"
 	end
 	return ammo
+end
+
+--- Check if the actor has a two handed weapon
+function _M:hasTwoStaffWeapon()
+	if not self:getInven("MAINHAND") then return end
+	local weapon = self:getInven("MAINHAND")[1]
+	if not weapon or weapon.subtype ~= "staff" then
+		return nil
+	end
+	return weapon
 end
 
 --- Check if the actor has a two handed weapon

@@ -22,10 +22,16 @@ newEntity{
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",
-	add_name = " (#COMBAT#)",
+	add_name = " (#COMBAT_DAMTYPE#)",
 	display = "\\", color=colors.LIGHT_RED,
 	encumber = 5,
 	rarity = 4,
+	combat = {
+		talented = "staff",
+		damrange = 1.2,
+		sound = "actions/melee", sound_miss = "actions/melee_miss",
+		damtype = resolvers.rngtable{DamageType.FIRE, DamageType.COLD, DamageType.ACID, DamageType.LIGHTNING, DamageType.LIGHT, DamageType.DARKNESS, DamageType.NATURE, DamageType.BLIGHT},
+	},
 	desc = [[Staves designed for wielders of magic, by the greats of the art.]],
 	egos = "/data/general/objects/egos/staves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }

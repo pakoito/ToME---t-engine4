@@ -653,6 +653,22 @@ newEffect{
 }
 
 newEffect{
+	name = "MIGHTY_BLOWS",
+	desc = "Migth Blows",
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# looks menacing." end,
+	on_lose = function(self, err) return "#Target# looks less menacing." end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_dam", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_dam", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "ROTTING_DISEASE",
 	desc = "Rotting Disease",
 	type = "disease",

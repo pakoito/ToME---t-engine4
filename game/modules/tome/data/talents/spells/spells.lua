@@ -40,6 +40,7 @@ newTalentType{ type="spell/golemancy", name = "golemancy", description = "Learn 
 newTalentType{ type="spell/advanced-golemancy", name = "advanced-golemancy", description = "Advanced golem operations." }
 newTalentType{ type="spell/gemology", name = "gemology", generic = true, description = "Manipulate gems, imbue their powers into other objects." }
 newTalentType{ type="spell/herbalism", name = "herbalism", generic = true, description = "Herbs lore." }
+newTalentType{ type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
 
 -- Generic requires for spells based on talent level
 spells_req1 = {
@@ -79,3 +80,4 @@ load("/data/talents/spells/enhancement.lua")
 load("/data/talents/spells/alchemy.lua")
 load("/data/talents/spells/infusion.lua")
 load("/data/talents/spells/golemancy.lua")
+load("/data/talents/spells/staff-combat.lua")

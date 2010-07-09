@@ -36,6 +36,14 @@ function resolvers.calc.rngavg(t)
 	return rng.avg(t[1], t[2])
 end
 
+--- Random table element
+function resolvers.rngtable(t)
+	return {__resolver="rngtable", t}
+end
+function resolvers.calc.rngtable(t)
+	return rng.table(t[1])
+end
+
 --- Random bonus based on level
 resolvers.current_level = 1
 resolvers.mbonus_max_level = 50

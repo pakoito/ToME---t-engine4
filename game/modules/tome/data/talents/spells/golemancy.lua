@@ -39,6 +39,8 @@ local function makeGolem()
 		open_door = true,
 		blind_immune = 1,
 		fear_immune = 1,
+		poison_immune = 1,
+		disease_immune = 1,
 		see_invisible = 2,
 		no_breath = 1,
 	}
@@ -81,7 +83,7 @@ newTalent{
 			-- Find space
 			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 			if not x then
-				game.logPlayer(self, "Not enough space to summon!")
+				game.logPlayer(self, "Not enough space to refit!")
 				return
 			end
 			game.zone:addEntity(game.level, self.alchemy_golem, "actor", x, y)
@@ -247,10 +249,24 @@ newTalent{
 	mana = 10,
 	cooldown = 20,
 	action = function(self, t)
+		if not game.level:hasEntity(self.alchemy_golem) then
+			game.logPlayer(self, "Your golem is currently inactive.")
+			return
+		end
+
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to invoke!")
+			return
+		end
+
+		self.alchemy_golem:setEffect(self.alchemy_golem.EFF_MIGHTY_BLOWS, 5, {power=self:combatTalentSpellDamage(t, 15, 50)})
+		self.alchemy_golem:move(x, y, true)
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Imbue an alchemist gem with an explosive charge of mana and throw it.]]):format()
+		return ([[You invoke your golem to your side, granting it a temporary melee power increase of %d for 5 turns.]]):format(self:combatTalentSpellDamage(t, 15, 50))
 	end,
 }

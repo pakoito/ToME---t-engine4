@@ -100,6 +100,9 @@ function _M:descAttribute(attr)
 	elseif attr == "COMBAT" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr"
+	elseif attr == "COMBAT_DAMTYPE" then
+		local c = self.combat
+		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr, "..DamageType:get(c.damtype).name.." damage"
 	elseif attr == "ARMOR" then
 		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armor"
 	elseif attr == "ATTACK" then
@@ -161,13 +164,13 @@ function _M:getTextualDesc()
 	-- Stop here if unided
 	if not self:isIdentified() then return table.concat(desc, "\n") end
 
-
 	if self.combat then
 		local dm = {}
 		for stat, i in pairs(self.combat.dammod or {}) do
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
 		desc[#desc+1] = ("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
+		desc[#desc+1] = "Damage type: "..DamageType:get(self.combat.damtype or DamageType.PHYSICAL).name
 		if self.combat.range then desc[#desc+1] = "Firing range: "..self.combat.range end
 		desc[#desc+1] = ""
 	end
@@ -275,7 +278,7 @@ function _M:getTextualDesc()
 	local use_desc = self:getUseDesc()
 	if use_desc then desc[#desc+1] = use_desc end
 
-	return table.concat(desc, "\n	 ")
+	return desc
 end
 
 --- Gets the full desc of the object
@@ -293,7 +296,7 @@ function _M:getDesc()
 		desc[#desc+1] = reqs
 	end
 
-	local textdesc = self:getTextualDesc()
+	local textdesc = table.concat(self:getTextualDesc(), "\n")
 
 	return table.concat(desc, "\n").."\n"..textdesc
 end

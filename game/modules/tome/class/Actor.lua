@@ -194,6 +194,9 @@ function _M:act()
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
 
+	-- Still not dead ?
+	if self.dead then return false end
+
 	return true
 end
 
