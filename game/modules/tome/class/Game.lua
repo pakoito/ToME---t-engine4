@@ -173,6 +173,8 @@ function _M:onResolutionChange()
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.player_display:resize(0, 220, 200, self.h * 0.8 - 220)
 	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	-- Reset mouse bindings to account for new size
+	self:setupMouse(reset)
 end
 
 function _M:setupDisplayMode()
@@ -772,45 +774,16 @@ function _M:setupCommands()
 		end,
 	}
 
---[[
-	self.key:addCommands
-	{
-		-- Targeting movement
-		[{"_LEFT","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
-		[{"_RIGHT","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,
-		[{"_UP","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y - 1 end,
-		[{"_DOWN","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP4","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 end,
-		[{"_KP6","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 end,
-		[{"_KP8","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y - 1 end,
-		[{"_KP2","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP1","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP3","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y + 1 end,
-		[{"_KP7","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x - 1 self.target.target.y = self.target.target.y - 1 end,
-		[{"_KP9","ctrl","shift"}] = function() self.target.target.entity=nil self.target.target.x = self.target.target.x + 1 self.target.target.y = self.target.target.y - 1 end,
-		[{"_LEFT","ctrl"}] = function() self.target:scan(4) end,
-		[{"_RIGHT","ctrl"}] = function() self.target:scan(6) end,
-		[{"_UP","ctrl"}] = function() self.target:scan(8) end,
-		[{"_DOWN","ctrl"}] = function() self.target:scan(2) end,
-		[{"_KP4","ctrl"}] = function() self.target:scan(4) end,
-		[{"_KP6","ctrl"}] = function() self.target:scan(6) end,
-		[{"_KP8","ctrl"}] = function() self.target:scan(8) end,
-		[{"_KP2","ctrl"}] = function() self.target:scan(2) end,
-		[{"_KP1","ctrl"}] = function() self.target:scan(1) end,
-		[{"_KP3","ctrl"}] = function() self.target:scan(3) end,
-		[{"_KP7","ctrl"}] = function() self.target:scan(7) end,
-		[{"_KP9","ctrl"}] = function() self.target:scan(9) end,
-	}
---]]
 	self.key:setCurrent()
 end
 
-function _M:setupMouse()
+function _M:setupMouse(reset)
 	-- Those 2 locals will be "absorbed" into the mouse event handler function, this is a closure
 	local derivx, derivy = 0, 0
 	local zoom = 1
 	local moving_around = false
 
+	if reset then self.mouse:reset() end
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
 		-- Move tooltip
 		self.tooltip_x, self.tooltip_y = mx, my
@@ -888,7 +861,7 @@ function _M:setupMouse()
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel)
 		self.hotkeys_display:onMouse(button, mx, my, not xrel)
 	end)
-	self.mouse:setCurrent()
+	if not reset then self.mouse:setCurrent() end
 end
 
 --- Ask if we realy want to close, if so, save the game first

@@ -75,3 +75,7 @@ function _M:unregisterZone(fct)
 		if m.fct == fct then table.remove(self.areas, i) break end
 	end
 end
+
+function _M:reset()
+	self.areas = {}
+end

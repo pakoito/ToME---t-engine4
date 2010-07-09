@@ -71,7 +71,7 @@ newTalent{
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		tg.friendlyfire = false
 		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
-		if self:getTalentLevel(t) then
+		if self:getTalentLevel(t) >= 3 then
 			self:project(tg, self.x, self.y, DamageType.LIGHT, self:combatTalentSpellDamage(t, 4, 80))
 		end
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y, max_alpha=80})
