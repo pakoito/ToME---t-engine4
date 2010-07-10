@@ -465,6 +465,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 end
 
 function _M:getGenerator(what, level, spots)
+	print("[GENERATOR] requiring", what, level.data.generator and level.data.generator[what] and level.data.generator[what].class)
 	return require(level.data.generator[what].class).new(
 			self,
 			level.map,
@@ -508,19 +509,19 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	level.spots = spots
 
 	-- Generate objects
-	if level_data.generator.object then
+	if level_data.generator.object and level_data.generator.object.class then
 		local generator = self:getGenerator("object", level, spots)
 		generator:generate()
 	end
 
 	-- Generate traps
-	if level_data.generator.trap then
+	if level_data.generator.trap and level_data.generator.trap.class then
 		local generator = self:getGenerator("trap", level, spots)
 		generator:generate()
 	end
 
 	-- Generate actors
-	if level_data.generator.actor then
+	if level_data.generator.actor and level_data.generator.actor.class then
 		local generator = self:getGenerator("actor", level, spots)
 		generator:generate()
 	end

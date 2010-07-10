@@ -79,6 +79,8 @@ function _M:roomAlloc(room, id, lev, old_lev)
 		room = room(self, id, lev, old_lev)
 	end
 	print("alloc", room.name)
+	-- Sanity check
+	if self.map.w - 2 - room.w < 2 or self.map.h - 2 - room.h < 2 then return false end
 
 	local tries = 100
 	while tries > 0 do
@@ -164,11 +166,12 @@ end
 
 --- Tunnel from x1,y1 to x2,y2
 function _M:tunnel(x1, y1, x2, y2, id)
+	if x1 == x2 and y1 == y2 then return end
 	-- Disable the many prints of tunnelling
 	local print = function()end
 
 	local xdir, ydir = self:tunnelDir(x1, y1, x2, y2)
-	print("tunneling from",x1, y1, "to", x2, y2, "initial dir", xdir, ydir)
+--	print("tunneling from",x1, y1, "to", x2, y2, "initial dir", xdir, ydir)
 
 	local startx, starty = x1, y1
 	local tun = {}
