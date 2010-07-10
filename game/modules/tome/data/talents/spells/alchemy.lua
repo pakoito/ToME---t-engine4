@@ -26,22 +26,25 @@ newTalent{
 		return math.ceil(5 + self:getDex(12))
 	end,
 	mana = 30,
-	action = function(self, t)
+	make_gem = function(self, t, base_define)
 		local nb = rng.range(40, 80)
+		local gem = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_" .. base_define)
 
+		local s = {}
+		while nb > 0 do
+			s[#s+1] = gem:clone()
+			nb = nb - 1
+		end
+		for i = 1, #s do gem:stack(s[i]) end
+
+		return gem
+	end,
+	action = function(self, t)
 		self:showEquipInven("Use which gem?", function(o) return o.type == "gem" end, function(o, inven, item)
-			local gem = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_" .. o.define_as)
-
-			local s = {}
-			while nb > 0 do
-				s[#s+1] = gem:clone()
-				nb = nb - 1
-			end
-			for i = 1, #s do gem:stack(s[i]) end
-
+			local gem = t.make_gem(self, t, o.define_as)
 			self:addObject(self.INVEN_INVEN, gem)
+			self:removeObject(inven, item)
 			game.logPlayer(self, "You create: %s", gem:getName{do_color=true, do_count=true})
-			self:removeObject(self.INVEN_INVEN, item)
 			return true
 		end)
 		game:playSoundNear(self, "talents/arcane")
@@ -59,6 +62,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	mana = 5,
+	cooldown = 8,
 	range = function(self, t)
 		return math.ceil(5 + self:getDex(12))
 	end,
@@ -82,8 +86,7 @@ newTalent{
 			return
 		end
 
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), talent=t}
-		if tg.radius == 0 then tg.type = "hit" end
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1+self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -101,7 +104,20 @@ newTalent{
 		end)
 
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
+		-- Lightning ball gets a special treatment to make it look neat
+		if particle == "ball_lightning" then
+			local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
+			local nb_forks = 16
+			local angle_diff = 360 / nb_forks
+			for i = 0, nb_forks - 1 do
+				local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
+				local tx = x + math.floor(math.cos(a) * tg.radius)
+				local ty = y + math.floor(math.sin(a) * tg.radius)
+				game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
+			end
+		else
+			game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
+		end
 
 		game:playSoundNear(self, "talents/arcane")
 		return true

@@ -60,7 +60,7 @@ return { generator = function()
 	local r = rng.range(1, f.size)
 
 	return {
-		life = 4,
+		life = life or 4,
 		size = f.thick, sizev = 0, sizea = 0,
 
 		x = r * math.cos(a) + 3 * math.cos(ra) + f.bx, xv = 0, xa = 0,
@@ -80,4 +80,4 @@ function(self)
 		self.ps:emit(230*tiles)
 	end
 end,
-4*230*tiles
+4*(nb_particles or 230)*tiles

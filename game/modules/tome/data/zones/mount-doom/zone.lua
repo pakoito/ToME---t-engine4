@@ -29,6 +29,7 @@ return {
 	all_lited = true,
 	persistant = "zone",
 	no_level_connectivity = true,
+	no_worldport = true,
 	ambiant_music = "Hold the Line.ogg",
 	generator =  {
 		map = {

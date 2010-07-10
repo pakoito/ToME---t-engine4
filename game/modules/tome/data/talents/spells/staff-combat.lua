@@ -36,10 +36,13 @@ newTalent{
 		end
 
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local dam = self:combatDamage(weapon) * self:combatTalentWeaponDamage(t, 0.4, 1.1)
-		self:project(tg, x, y, weapon.combat.damtype or DamageType.ARCANE, self:spellCrit(dam), {type="manathrust"})
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		self.combat_apr = self.combat_apr + 10000
+		self.combat_atk = self.combat_atk + 10000
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.4, 1.1))
+		self.combat_atk = self.combat_atk - 10000
+		self.combat_apr = self.combat_apr - 10000
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
@@ -82,7 +85,7 @@ newTalent{
 		local power = self:combatTalentSpellDamage(t, 10, 20)
 		game:playSoundNear(self, "talents/arcane")
 		return {
-			dam = self:addTemporaryValue("combat_def", -power / 2),
+			dam = self:addTemporaryValue("combat_dam", -power / 2),
 			def = self:addTemporaryValue("combat_def", power),
 		}
 	end,
@@ -92,8 +95,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Adopt a defensive posture, reducing your staff attack power by %d and increasing your defense by %d.
-		The mana restored will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 230) / 2, self:combatTalentSpellDamage(t, 20, 230))
+		return ([[Adopt a defensive posture, reducing your staff attack power by %d and increasing your defense by %d.]]):
+		format(self:combatTalentSpellDamage(t, 20, 230) / 2, self:combatTalentSpellDamage(t, 20, 230))
 	end,
 }
 
@@ -106,7 +109,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	actiion = function(self, t)
+	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
 			game.logPlayer(self, "You cannot use Stunning Blow without a two-handed weapon!")
@@ -122,16 +125,15 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
+				target:setEffect(target.EFF_DAZED, 4 + self:getTalentLevel(t), {})
 			else
-				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
+				game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
 			end
 		end
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit a target for %d%% melee damage and daze it for %d turns.]]):format(
-		)
+		return ([[Hit a target for %d%% melee damage and daze it for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 4 + self:getTalentLevel(t))
 	end,
 }

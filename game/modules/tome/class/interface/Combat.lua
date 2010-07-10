@@ -420,6 +420,12 @@ function _M:combatAttackDex(weapon)
 	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getDex(100) - 10) + (self:getLck() - 50) * 0.4
 end
 
+--- Gets the attack using only magic
+function _M:combatAttackDex(weapon)
+	weapon = weapon or self.combat
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getMag(100) - 10) + (self:getLck() - 50) * 0.4
+end
+
 --- Gets the armor penetration
 function _M:combatAPR(weapon)
 	weapon = weapon or self.combat

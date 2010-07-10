@@ -81,7 +81,7 @@ newBirthDescriptor{
 		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="robe", autoreq=true},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
@@ -98,9 +98,9 @@ newBirthDescriptor{
 		"Alchemists have an empirical knowledge of magic, which they can not use directly but through focuses.",
 		"A focus is usualy a gem which they can imbue with power to throw at their foes, exploding in fires, acid, ...",
 		"Alchemists are also known for their golem craft and are usualy accompagnied by such a construct which acts as a body guard.",
-		"Their most important stats are: Magic and Willpower",
+		"Their most important stats are: Magic and Dexterity",
 	},
-	stats = { mag=5, wil=3, cun=1, },
+	stats = { mag=5, dex=3, wil=1, },
 	talents_types = {
 		["spell/alchemy"]={true, 0.3},
 		["spell/infusion"]={true, 0.3},
@@ -108,6 +108,7 @@ newBirthDescriptor{
 		["spell/advanced-golemancy"]={true, 0.3},
 		["spell/gemology"]={true, 0.3},
 		["spell/herbalism"]={true, 0.3},
+		["spell/staff-combat"]={true, 0.3},
 		["cunning/survival"]={false, -0.1},
 	},
 	talents = {
@@ -115,14 +116,14 @@ newBirthDescriptor{
 		[ActorTalents.T_REFIT_GOLEM] = 1,
 		[ActorTalents.T_THROW_BOMB] = 1,
 		[ActorTalents.T_FIRE_INFUSION] = 1,
-		[ActorTalents.T_GOLEM_TAUNT] = 1,
+		[ActorTalents.T_CHANNEL_STAFF] = 1,
 	},
 	copy = {
 		max_life = 90,
 		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="robe", autoreq=true}
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true}
 		},
 		resolvers.inventory{ id=true,
 			{type="gem",},
@@ -132,8 +133,15 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
 		resolvers.generic(function(self)
+			-- Invoke the golem
 			local t = self:getTalentFromId(self.T_REFIT_GOLEM)
 			t.action(self, t)
+
+			-- Make and wield some alchemist gems
+			local t = self:getTalentFromId(self.T_CREATE_ALCHEMIST_GEMS)
+			local gem = t.make_gem(self, t, "GEM_AGATE")
+			self:wearObject(gem, true, true)
+			self:sortInven()
 		end),
 	},
 }
