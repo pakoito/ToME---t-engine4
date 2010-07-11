@@ -794,11 +794,14 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		if self:removeObject(self.INVEN_MOUNT, 1, true) then
-			-- Find space
-			local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[engine.Map.ACTOR]=true})
-			if x then
-				eff.mount.mount.actor:move(x, y, true)
-				game.level:addEntity(eff.mount.mount.actor)
+			-- Only unmount if dead
+			if not eff.mount.mount.actor.dead then
+				-- Find space
+				local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[engine.Map.ACTOR]=true})
+				if x then
+					eff.mount.mount.actor:move(x, y, true)
+					game.level:addEntity(eff.mount.mount.actor)
+				end
 			end
 		end
 	end,

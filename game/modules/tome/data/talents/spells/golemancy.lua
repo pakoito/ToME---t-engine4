@@ -18,6 +18,14 @@
 -- darkgod@te4.org
 local Chat = require "engine.Chat"
 
+function getGolem(self)
+	if game.level:hasEntity(self.alchemy_golem) then
+		return self.alchemy_golem, self.alchemy_golem
+	elseif self:hasEffect(self.EFF_GOLEM_MOUNT) then
+		return self, self.alchemy_golem
+	end
+end
+
 local function makeGolem()
 	return require("mod.class.NPC").new{
 		type = "construct", subtype = "golem",
@@ -106,7 +114,7 @@ newTalent{
 				return
 			end
 			for i = 1, 2 do self:removeObject(self:getInven("QUIVER"), 1) end
-			self.alchemy_golem:heal(self:combatTalentSpellDamage(t, 15, 150, (ammo.alchemist_power + self:combatSpellpower()) / 2))
+			self.alchemy_golem:heal(self:combatTalentSpellDamage(t, 15, 350, (ammo.alchemist_power + self:combatSpellpower()) / 2))
 
 		-- resurrect the golem
 		else
@@ -154,20 +162,21 @@ newTalent{
 	range = 10,
 	mana = 5,
 	action = function(self, t)
-		if not game.level:hasEntity(self.alchemy_golem) then
+		local mover, golem = getGolem(self)
+		if not golem then
 			game.logPlayer(self, "Your golem is currently inactive.")
 			return
 		end
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
-		game.target.source_actor = self.alchemy_golem
+		game.target.source_actor = mover
 		local x, y, target = self:getTarget(tg)
 		game.target.source_actor = self
-		if not x or not y or not target then print(1) return nil end
-		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > self:getTalentRange(t) then return nil end
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > self:getTalentRange(t) then return nil end
 
-		self.alchemy_golem:setTarget(target)
-		target:setTarget(self.alchemy_golem)
+		mover:setTarget(target)
+		target:setTarget(mover)
 		game.logPlayer(self, "Your golem provokes %s to attack it.", target.name:capitalize())
 
 		return true
@@ -186,40 +195,41 @@ newTalent{
 	range = 10,
 	mana = 5,
 	action = function(self, t)
-		if not game.level:hasEntity(self.alchemy_golem) then
+		local mover, golem = getGolem(self)
+		if not golem then
 			game.logPlayer(self, "Your golem is currently inactive.")
 			return
 		end
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
-		game.target.source_actor = self.alchemy_golem
+		game.target.source_actor = mover
 		local x, y, target = self:getTarget(tg)
 		game.target.source_actor = self
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > self:getTalentRange(t) then return nil end
+		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > self:getTalentRange(t) then return nil end
 
-		self.alchemy_golem:setTarget(target)
+		mover:setTarget(target)
 
-		local l = line.new(self.alchemy_golem.x, self.alchemy_golem.y, x, y)
+		local l = line.new(mover.x, mover.y, x, y)
 		local lx, ly = l()
-		local tx, ty = self.alchemy_golem.x, self.alchemy_golem.y
+		local tx, ty = mover.x, mover.y
 		lx, ly = l()
 		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self.alchemy_golem) then break end
+			if game.level.map:checkAllEntities(lx, ly, "block_move", mover) then break end
 			tx, ty = lx, ly
 			lx, ly = l()
 		end
 
-		self.alchemy_golem:move(tx, ty, true)
+		mover:move(tx, ty, true)
 
 		-- Attack ?
-		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > 1 then return true end
-		local hit = self.alchemy_golem:attackTarget(target, nil, self.alchemy_golem:combatTalentWeaponDamage(t, 0.8, 1.6), true)
+		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > 1 then return true end
+		local hit = golem:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.6), true)
 
 		-- Try to knockback !
 		if hit then
-			if target:checkHit(self.alchemy_golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self.alchemy_golem:getTalentLevel(t) / 2) and target:canBe("knockback") then
-				target:knockback(self.alchemy_golem.x, self.alchemy_golem.y, 3)
+			if target:checkHit(golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+				target:knockback(mover.x, mover.y, 3)
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 			end
@@ -241,40 +251,41 @@ newTalent{
 	range = 10,
 	mana = 5,
 	action = function(self, t)
-		if not game.level:hasEntity(self.alchemy_golem) then
+		local mover, golem = getGolem(self)
+		if not golem then
 			game.logPlayer(self, "Your golem is currently inactive.")
 			return
 		end
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
-		game.target.source_actor = self.alchemy_golem
+		game.target.source_actor = mover
 		local x, y, target = self:getTarget(tg)
 		game.target.source_actor = self
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > self:getTalentRange(t) then return nil end
+		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > self:getTalentRange(t) then return nil end
 
-		self.alchemy_golem:setTarget(target)
+		mover:setTarget(target)
 
-		local l = line.new(self.alchemy_golem.x, self.alchemy_golem.y, x, y)
+		local l = line.new(mover.x, mover.y, x, y)
 		local lx, ly = l()
-		local tx, ty = self.alchemy_golem.x, self.alchemy_golem.y
+		local tx, ty = mover.x, mover.y
 		lx, ly = l()
 		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self.alchemy_golem) then break end
+			if game.level.map:checkAllEntities(lx, ly, "block_move", mover) then break end
 			tx, ty = lx, ly
 			lx, ly = l()
 		end
 
-		self.alchemy_golem:move(tx, ty, true)
+		mover:move(tx, ty, true)
 
 		-- Attack ?
-		if math.floor(core.fov.distance(self.alchemy_golem.x, self.alchemy_golem.y, x, y)) > 1 then return true end
-		local hit = self.alchemy_golem:attackTarget(target, nil, self.alchemy_golem:combatTalentWeaponDamage(t, 0.8, 1.6), true)
+		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > 1 then return true end
+		local hit = golem:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.6), true)
 
 		-- Try to knockback !
 		if hit then
-			if target:checkHit(self.alchemy_golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self.alchemy_golem:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_PINNED, 2 + self.alchemy_golem:getTalentLevel(t), {})
+			if target:checkHit(golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
 			end
@@ -295,7 +306,8 @@ newTalent{
 	mana = 10,
 	cooldown = 20,
 	action = function(self, t)
-		if not game.level:hasEntity(self.alchemy_golem) then
+		local mover, golem = getGolem(self)
+		if not golem then
 			game.logPlayer(self, "Your golem is currently inactive.")
 			return
 		end
@@ -307,8 +319,10 @@ newTalent{
 			return
 		end
 
-		self.alchemy_golem:setEffect(self.alchemy_golem.EFF_MIGHTY_BLOWS, 5, {power=self:combatTalentSpellDamage(t, 15, 50)})
-		self.alchemy_golem:move(x, y, true)
+		golem:setEffect(golem.EFF_MIGHTY_BLOWS, 5, {power=self:combatTalentSpellDamage(t, 15, 50)})
+		if golem == mover then
+			golem:move(x, y, true)
+		end
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

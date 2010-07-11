@@ -650,12 +650,6 @@ function _M:levelup()
 		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
 	end
 	self.max_life = self.max_life + math.max(rating + self:getRankLifeAdjust(), 1)
-		+ (self:knowTalent(self.T_IMPROVED_HEALTH_I) and 1 or 0)
-		+ (self:knowTalent(self.T_IMPROVED_HEALTH_II) and 1 or 0)
-		+ (self:knowTalent(self.T_IMPROVED_HEALTH_III) and 1 or 0)
-		- (self:knowTalent(self.T_DECREASED_HEALTH_I) and 1 or 0)
-		- (self:knowTalent(self.T_DECREASED_HEALTH_II) and 1 or 0)
-		- (self:knowTalent(self.T_DECREASED_HEALTH_III) and 1 or 0)
 
 	self:incMaxMana(self.mana_rating)
 	self:incMaxStamina(self.stamina_rating)

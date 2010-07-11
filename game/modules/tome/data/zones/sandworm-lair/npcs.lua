@@ -41,6 +41,7 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	invulnerable = 1,
 	move_body = 1,
 	size_category = 5,
+	no_breath = 1,
 
 	autolevel = "warrior",
 	ai = "sandworm_tunneler", ai_state = {},
