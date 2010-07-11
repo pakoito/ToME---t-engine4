@@ -19,7 +19,7 @@
 
 return {
 	name = "Gates of Morning",
-	level_range = {1, 1},
+	level_range = {33, 33},
 	max_level = 1,
 	width = 196, height = 80,
 	persistant = "zone",

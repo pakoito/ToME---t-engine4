@@ -28,6 +28,7 @@ newEntity{
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	encumber = 3,
 	rarity = 7,
+	metallic = true,
 	desc = [[Heavy boots, with metal strips at the toes, heels and other vulnerable parts, to better protect the wearer's feet from harm.]],
 }
 

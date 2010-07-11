@@ -28,6 +28,7 @@ newEntity{
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	encumber = 17,
 	rarity = 5,
+	metallic = true,
 	desc = [[A suit of armour made of mail.]],
 	egos = "/data/general/objects/egos/armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }

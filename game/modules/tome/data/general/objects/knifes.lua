@@ -25,6 +25,7 @@ newEntity{
 	display = "/", color=colors.WHITE,
 	encumber = 1,
 	rarity = 5,
+	metallic = true,
 	combat = { talented = "knife", damrange = 1.3, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Sharp, long, and deadly.]],
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },

@@ -28,6 +28,7 @@ newEntity{
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	encumber = 3,
 	rarity = 7,
+	metallic = true,
 	desc = [[A large helmet that can protect the entire head. Ventilation and bad vision can be a problem, however.]],
 }
 

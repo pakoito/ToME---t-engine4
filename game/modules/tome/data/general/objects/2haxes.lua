@@ -26,6 +26,7 @@ newEntity{
 	display = "/", color=colors.SLATE,
 	encumber = 3,
 	rarity = 5,
+	metallic = true,
 	combat = { talented = "axe", damrange = 1.5, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Massive two-handed battleaxes.]],
 	twohanded = true,

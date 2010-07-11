@@ -117,6 +117,7 @@ function _M:drawDialog(s)
 	s:drawColorStringBlended(self.font, ("Spell Speed: #00ff00#%3d"):format(game.player:combatSpellSpeed()), w, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
+	if self.actor.inc_damage.all then s:drawColorStringBlended(self.font, ("All damage: #00ff00#%3d%%"):format(self.actor.inc_damage.all), w, h, 255, 255, 255) h = h + self.font_h end
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.actor.inc_damage[DamageType[t.type]] and self.actor.inc_damage[DamageType[t.type]] ~= 0 then
 			s:drawColorStringBlended(self.font, ("%s damage: #00ff00#%3d%%"):format(t.name:capitalize(), self.actor.inc_damage[DamageType[t.type]]), w, h, 255, 255, 255) h = h + self.font_h
@@ -136,6 +137,7 @@ function _M:drawDialog(s)
 	s:drawColorStringBlended(self.font, ("Mental Resist:   #00ff00#%3d"):format(game.player:combatMentalResist()), w, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
+	if self.actor.resists.all then s:drawColorStringBlended(self.font, ("All Resists: #00ff00#%3d%%"):format(self.actor.resists.all), w, h, 255, 255, 255) h = h + self.font_h end
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.actor.resists[DamageType[t.type]] and self.actor.resists[DamageType[t.type]] ~= 0 then
 			s:drawColorStringBlended(self.font, ("%s Resist: #00ff00#%3d%%"):format(t.name:capitalize(), self.actor.resists[DamageType[t.type]]), w, h, 255, 255, 255) h = h + self.font_h
@@ -272,6 +274,7 @@ function _M:dump()
 	nl()
 
 	nl()
+	if self.actor.inc_damage.all then nl(makelabel("All damage", self.actor.inc_damage.all.."%")) end
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.actor.inc_damage[DamageType[t.type]] and self.actor.inc_damage[DamageType[t.type]] ~= 0 then
 			nl(makelabel(t.name:capitalize().." damage", self.actor.inc_damage[DamageType[t.type]].."%"))
@@ -284,6 +287,7 @@ function _M:dump()
 	nl(makelabel("Mental Resist",game.player:combatMentalResist() ..""))
 
 	nl()
+	if self.actor.resists.all then nl(("All Resists: %3d%%"):format(self.actor.resists.all)) end
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.actor.resists[DamageType[t.type]] and self.actor.resists[DamageType[t.type]] ~= 0 then
 			nl(("%s Resist: %3d%%"):format(t.name:capitalize(), self.actor.resists[DamageType[t.type]]))

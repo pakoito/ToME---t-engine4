@@ -740,6 +740,7 @@ function _M:setupCommands()
 		-- Toggle monster list
 		TOGGLE_NPC_LIST = function()
 			self.show_npc_list = not self.show_npc_list
+			self.player.changed = true
 		end,
 
 		EXIT = function()

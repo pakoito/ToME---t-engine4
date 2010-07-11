@@ -207,7 +207,7 @@ function _M:getTextualDesc()
 	if w.resists then
 		local rs = {}
 		for res, i in pairs(w.resists) do
-			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
+			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
 		end
 		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
 	end
@@ -215,7 +215,7 @@ function _M:getTextualDesc()
 	if w.inc_damage then
 		local rs = {}
 		for res, i in pairs(w.inc_damage) do
-			rs[#rs+1] = ("%d%% %s"):format(i, DamageType.dam_def[res].name)
+			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
 		end
 		desc[#desc+1] = ("Increases damage type: %s."):format(table.concat(rs, ','))
 	end

@@ -29,6 +29,7 @@ newEntity{
 	combat = { talented = "sword", damrange = 1.6, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Massive two-handed swords.]],
 	twohanded = true,
+	metallic = true,
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

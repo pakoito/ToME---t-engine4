@@ -26,6 +26,7 @@ newEntity{
 	display = "\\", color=colors.SLATE,
 	encumber = 5,
 	rarity = 5,
+	metallic = true,
 	combat = { talented = "mace", damrange = 1.5, physspeed=1.2, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Massive two-handed maul.]],
 	twohanded = true,
