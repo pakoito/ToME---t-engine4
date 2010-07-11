@@ -49,7 +49,7 @@ _3DNoise = n:makeTexture3D(64, 64, 64, 0, 0, 0)
 WorldAchievements:loadDefinition("/data/achievements/")
 
 -- Usefull keybinds
-KeyBind:load("move,hotkeys,inventory,actions,debug")
+KeyBind:load("move,hotkeys,inventory,actions,tome,debug")
 
 -- Additional entities resolvers
 dofile("/mod/resolvers.lua")
@@ -70,6 +70,7 @@ ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be
 ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.")
 ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.")
 ActorInventory:defineInventory("QUIVER", "Quiver", true, "Your readied ammo.")
+ActorInventory:defineInventory("MOUNT", "Mount", false, "Your mount.")
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")

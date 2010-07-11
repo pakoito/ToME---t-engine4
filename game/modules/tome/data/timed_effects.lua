@@ -780,3 +780,26 @@ newEffect{
 		self:removeTemporaryValue("martyrdom", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "GOLEM_MOUNT",
+	desc = "Golem Mount",
+	type = "physical",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		self:wearObject(eff.mount, true, true)
+		game.level:removeEntity(eff.mount.mount.actor)
+		eff.mount.mount.effect = self.EFF_GOLEM_MOUNT
+	end,
+	deactivate = function(self, eff)
+		if self:removeObject(self.INVEN_MOUNT, 1, true) then
+			-- Find space
+			local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[engine.Map.ACTOR]=true})
+			if x then
+				eff.mount.mount.actor:move(x, y, true)
+				game.level:addEntity(eff.mount.mount.actor)
+			end
+		end
+	end,
+}

@@ -60,6 +60,9 @@ load("/data/general/objects/leather-boots.lua")
 load("/data/general/objects/heavy-boots.lua")
 --load("/data/general/objects/gloves.lua")
 
+-- Mounts
+load("/data/general/objects/mounts.lua")
+
 -- Artifacts
 load("/data/general/objects/world-artifacts.lua")
 load("/data/general/objects/quest-artifacts.lua")

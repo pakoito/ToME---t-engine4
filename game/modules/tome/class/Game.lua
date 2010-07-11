@@ -47,6 +47,7 @@ local NPC = require "mod.class.NPC"
 local PlayerDisplay = require "mod.class.PlayerDisplay"
 
 local HotkeysDisplay = require "engine.HotkeysDisplay"
+local ActorsSeenDisplay = require "engine.ActorsSeenDisplay"
 local LogDisplay = require "engine.LogDisplay"
 local LogFlasher = require "engine.LogFlasher"
 local DebugConsole = require "engine.DebugConsole"
@@ -70,6 +71,8 @@ function _M:init()
 	engine.interface.GameMusic.init(self)
 	engine.interface.GameSound.init(self)
 
+	self.persistant_actors = {}
+
 	-- Pause at birth
 	self.paused = true
 
@@ -82,6 +85,7 @@ function _M:run()
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
+	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
@@ -101,6 +105,7 @@ function _M:run()
 	if not self.player then self:newGame() end
 
 	self.hotkeys_display.actor = self.player
+	self.npcs_display.actor = self.player
 
 	self.target = Target.new(Map, self.player)
 	self.target.target.entity = self.player
@@ -173,6 +178,7 @@ function _M:onResolutionChange()
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.player_display:resize(0, 220, 200, self.h * 0.8 - 220)
 	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	-- Reset mouse bindings to account for new size
 	self:setupMouse(reset)
 end
@@ -227,22 +233,11 @@ function _M:setupDisplayMode()
 end
 
 function _M:setupMiniMap()
-	print("[MINIMAP MODE]", self.minimap_mode)
-	self.minimap_mode = self.minimap_mode or (config.settings.tome and config.settings.tome.minimap_mode) or 2
-	if self.minimap_mode == 1 then
-		print("[MINIMAP MODE] disabled")
-	elseif self.minimap_mode == 2 then
-		if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(4) end
-		print("[MINIMAP MODE] small")
-	elseif self.minimap_mode == 3 then
-		if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(8) end
-		print("[MINIMAP MODE] full")
-	end
-	self:saveSettings("tome.minimap_mode", ("tome.minimap_mode = %d\n"):format(self.minimap_mode))
+	if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(4) end
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{difficulty=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, persistant_actors=true}, true)
 end
 
 function _M:getSaveDescription()
@@ -263,6 +258,7 @@ function _M:getStore(def)
 end
 
 function _M:leaveLevel(level, lev, old_lev)
+	self.to_re_add_actors = {}
 	if level:hasEntity(self.player) then
 		level.exited = level.exited or {}
 		if lev > old_lev then
@@ -271,6 +267,12 @@ function _M:leaveLevel(level, lev, old_lev)
 			level.exited.up = {x=self.player.x, y=self.player.y}
 		end
 		level.last_turn = game.turn
+		for act, _ in pairs(self.persistant_actors) do
+			if level:hasEntity(act) then
+				level:removeEntity(act)
+				self.to_re_add_actors[act] = true
+			end
+		end
 		level:removeEntity(self.player)
 	end
 end
@@ -324,8 +326,18 @@ function _M:changeLevel(lev, zone)
 			self.player:move(self.level.downs[1].x, self.level.downs[1].y, true)
 		end
 	end
-	self.level:addEntity(self.player)
 	self.player.changed = true
+	if self.to_re_add_actors then for act, _ in pairs(self.to_re_add_actors) do
+		local x, y = util.findFreeGrid(self.player.x, self.player.y, 20, true, {[Map.ACTOR]=true})
+		if x then act:move(x, y, true) end
+	end end
+
+	-- Re add entities
+	self.level:addEntity(self.player)
+	if self.to_re_add_actors then for act, _ in pairs(self.to_re_add_actors) do
+		self.level:addEntity(act)
+		act:setTarget(nil)
+	end end
 
 	if self.zone.on_enter then
 		self.zone.on_enter(lev, old_lev, zone)
@@ -386,13 +398,6 @@ function _M:onTurn()
 end
 
 function _M:display()
-	-- We display the player's interface
-	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
-	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
-	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
-	self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
-	if self.player then self.player.changed = false end
-
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display the map and compute FOV for the player if needed
@@ -436,22 +441,20 @@ function _M:display()
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
 
+		-- Minimap display
 		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
---[[
-		if self.minimap_mode == 3 then
-			local mx, my = 0, 0
-			local mw, mh = math.floor((self.w - 200) / 8), math.floor(self.h * .80 / 8)
-
-			mx = self.player.x - math.floor(mw / 2)
-			my = self.player.y - math.floor(mh / 2)
-
-			if self.level.map.w < mw then mx = math.floor((self.level.map.w - mw) / 2) end
-			if self.level.map.h < mh then my = math.floor((self.level.map.h - mh) / 2) end
-
-			self.level.map:minimapDisplay(200, 20, mx, my, mw, mh, 0.9)
-		end
-]]
 	end
+
+	-- We display the player's interface
+	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
+	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
+	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
+	if self.show_npc_list then
+		self.npcs_display:display():toScreen(self.npcs_display.display_x, self.npcs_display.display_y)
+	else
+		self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
+	end
+	if self.player then self.player.changed = false end
 
 	engine.GameTurnBased.display(self)
 end
@@ -734,11 +737,9 @@ function _M:setupCommands()
 			self:setupDisplayMode()
 		end,
 
-		-- Toggle mini map
-		TOGGLE_MINIMAP = function()
-			self.minimap_mode = self.minimap_mode or 1
-			self.minimap_mode = util.boundWrap(self.minimap_mode + 1, 1, 3)
-			self:setupMiniMap()
+		-- Toggle monster list
+		TOGGLE_NPC_LIST = function()
+			self.show_npc_list = not self.show_npc_list
 		end,
 
 		EXIT = function()

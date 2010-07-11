@@ -38,7 +38,7 @@ newBirthDescriptor{
 	},
 	talents = {},
 	experience = 1.0,
-	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, HANDS = 1, FEET = 1, TOOL = 1, QUIVER = 1 },
+	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, HANDS = 1, FEET = 1, TOOL = 1, QUIVER = 1, MOUNT = 1 },
 
 	copy = {
 		-- Mages are unheard of at first, nobody but them regenerates mana

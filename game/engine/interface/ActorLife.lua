@@ -70,7 +70,7 @@ end
 
 --- Called when died
 function _M:die(src)
-	game.level:removeEntity(self)
+	if game.level:hasEntity(self) then game.level:removeEntity(self) end
 	self.dead = true
 	self.changed = true
 

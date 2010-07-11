@@ -35,7 +35,7 @@ end
 --- Adds an entity to the level
 -- Only entities that need to act need to be added. Terrain features do not need this usualy
 function _M:addEntity(e)
-	if self.entities[e.uid] then error("Entity "..e.uid.." already present on the level") end
+	if self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") already present on the level") end
 	self.entities[e.uid] = e
 	table.insert(self.e_array, e)
 	game:addEntity(e)
@@ -43,7 +43,7 @@ end
 
 --- Removes an entity from the level
 function _M:removeEntity(e)
-	if not self.entities[e.uid] then error("Entity "..e.uid.." not present on the level") end
+	if not self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") not present on the level") end
 	self.entities[e.uid] = nil
 	for i = 1, #self.e_array do
 		if self.e_array[i] == e then

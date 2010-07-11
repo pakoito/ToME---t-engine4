@@ -162,7 +162,7 @@ function _M:getTextualDesc()
 	desc[#desc+1] = ("Type: %s / %s"):format(self.type, self.subtype)
 
 	-- Stop here if unided
-	if not self:isIdentified() then return table.concat(desc, "\n") end
+	if not self:isIdentified() then return desc end
 
 	if self.combat then
 		local dm = {}

@@ -507,6 +507,17 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
+	-- Mount takes some damage ?
+	local mount = self:hasMount()
+	if mount and mount.mount.share_damage then
+		mount.mount.actor:takeHit(value * mount.mount.share_damage / 100, src)
+		value = value * (100 - mount.mount.share_damage) / 100
+		-- Remove the dead mount
+		if mount.mount.actor.dead and mount.mount.effect then
+			self:removeEffect(mount.mount.effect)
+		end
+	end
+
 	-- Achievements
 	if src and src.resolveSource and src:resolveSource().player and value >= 600 then
 		world:gainAchievement("SIZE_MATTERS", src:resolveSource())
@@ -534,16 +545,18 @@ function _M:die(src)
 	if rng.percent(33) then self:bloodyDeath() end
 
 	-- Drop stuff
-	if not self.no_drops then
-		for inven_id, inven in pairs(self.inven) do
-			for i, o in ipairs(inven) do
-				if not o.no_drop then
-					game.level.map:addObject(self.x, self.y, o)
+	if not self.keep_inven_on_death then
+		if not self.no_drops then
+			for inven_id, inven in pairs(self.inven) do
+				for i, o in ipairs(inven) do
+					if not o.no_drop then
+						game.level.map:addObject(self.x, self.y, o)
+					end
 				end
 			end
 		end
+		self.inven = {}
 	end
-	self.inven = {}
 
 	-- Give stamina back
 	if src and src.knowTalent and src:knowTalent(src.T_UNENDING_FRENZY) then
@@ -1017,12 +1030,13 @@ end
 
 --- Suffocate a bit, lose air
 function _M:suffocate(value, src)
-	if self:attr("no_breath") then return end
+	if self:attr("no_breath") then return false, false end
 	self.air = self.air - value
 	if self.air <= 0 then
 		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())
-		return self:die(src)
+		return self:die(src), true
 	end
+	return false, true
 end
 
 --- Can the actor see the target actor

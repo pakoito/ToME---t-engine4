@@ -250,6 +250,16 @@ function _M:die(src)
 	end
 end
 
+--- Suffocate a bit, lose air
+function _M:suffocate(value, src)
+	local dead, affected = mod.class.Actor.suffocate(self, value, src)
+	if affected then
+		self:runStop("suffocating")
+		self:restStop("suffocating")
+	end
+	return dead, affected
+end
+
 function _M:setName(name)
 	self.name = name
 	game.save_name = name

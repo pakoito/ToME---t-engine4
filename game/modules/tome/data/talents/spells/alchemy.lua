@@ -62,7 +62,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	mana = 5,
-	cooldown = 8,
+	cooldown = 4,
 	range = function(self, t)
 		return math.ceil(5 + self:getDex(12))
 	end,

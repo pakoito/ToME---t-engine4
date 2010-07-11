@@ -16,12 +16,14 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+local Chat = require "engine.Chat"
 
 local function makeGolem()
 	return require("mod.class.NPC").new{
 		type = "construct", subtype = "golem",
 		display = 'g', color=colors.WHITE,
 		level_range = {1, 50},
+		life_rating = 13,
 
 		combat = { dam=10, atk=10, apr=0, dammod={str=1} },
 
@@ -30,12 +32,24 @@ local function makeGolem()
 		rank = 3,
 		size_category = 4,
 
-		autolevel = "warrior",
+		resolvers.talents{
+			[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
+			[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
+			[Talents.T_WEAPON_COMBAT]=2,
+		},
+
+		resolvers.equip{
+			{type="weapon", subtype="battleaxe", autoreq=true},
+			{type="armor", subtype="heavy", autoreq=true}
+		},
+
+		autolevel = "alchemy-golem",
 		ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
 		energy = { mod=1 },
 		stats = { str=14, dex=12, mag=10, con=12 },
 
-		no_auto_resists = true,
+		keep_inven_on_death = true,
+--		no_auto_resists = true,
 		open_door = true,
 		blind_immune = 1,
 		fear_immune = 1,
@@ -56,12 +70,15 @@ newTalent{
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
+			game.persistant_actors[self.alchemy_golem] = 1
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction
 			self.alchemy_golem.name = "golem (servant of "..self.name..")"
 			self.alchemy_golem.summoner = self
 			self.alchemy_golem.summoner_gain_exp = true
-		else
+		end
+
+		local wait = function()
 			local co = coroutine.running()
 			local ok = false
 			self:restInit(20, "refitting", "refitted", function(cnt, max)
@@ -75,8 +92,31 @@ newTalent{
 			end
 		end
 
-		if game.level:hasEntity(self.alchemy_golem) then
+		local ammo = self:hasAlchemistWeapon()
+
+		-- talk to the golem
+		if game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem.life >= self.alchemy_golem.max_life then
+			local chat = Chat.new("alchemist-golem", self.alchemy_golem, self)
+			chat:invoke()
+
+		-- heal the golem
+		elseif game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem.life < self.alchemy_golem.max_life then
+			if not ammo or ammo:getNumber() < 2 then
+				game.logPlayer(self, "You need to ready 2 alchemist gems in your quiver to heal your golem.")
+				return
+			end
+			for i = 1, 2 do self:removeObject(self:getInven("QUIVER"), 1) end
+			self.alchemy_golem:heal(self:combatTalentSpellDamage(t, 15, 150, (ammo.alchemist_power + self:combatSpellpower()) / 2))
+
+		-- resurrect the golem
 		else
+			if not ammo or ammo:getNumber() < 15 then
+				game.logPlayer(self, "You need to ready 15 alchemist gems in your quiver to heal your golem.")
+				return
+			end
+			wait()
+			for i = 1, 15 do self:removeObject(self:getInven("QUIVER"), 1) end
+
 			self.alchemy_golem.dead = nil
 			if self.alchemy_golem.life < 0 then self.alchemy_golem.life = self.alchemy_golem.max_life / 3 end
 
@@ -93,7 +133,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Interract with your golem, reviving it if it is dead, healing it, ...]])
+		local ammo = self:hasAlchemistWeapon()
+		local heal = 0
+		if ammo then self:combatTalentSpellDamage(t, 15, 150, (ammo.alchemist_power + self:combatSpellpower()) / 2) end
+		return ([[Interract with your golem
+		- If it is destroyed you will take some time to reconstruct it (takes 15 alchemist gems).
+		- If it is alive you will be able to talk to it, change its weapon and armour or heal it (%d; takes 2 alchemist gems)]]):
+		format(heal)
 	end,
 }
 

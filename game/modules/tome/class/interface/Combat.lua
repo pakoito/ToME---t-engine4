@@ -123,6 +123,12 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		elseif not hit and not sound_miss then sound_miss = self.combat.sound_miss end
 	end
 
+	-- Mount attack ?
+	local mount = self:hasMount()
+	if mount and mount.mount.attack_with_rider and math.floor(core.fov.distance(self.x, self.y, target.x, target.y)) <= 1 then
+		mount.mount.actor:attackTarget(target, nil, nil, nil)
+	end
+
 	-- We use up our own energy
 	if speed and not noenergy then
 		self:useEnergy(game.energy_to_act * speed)
@@ -661,4 +667,14 @@ function _M:hasMassiveArmor()
 		return nil
 	end
 	return armor
+end
+
+--- Check if the actor has a mount
+function _M:hasMount()
+	if not self:getInven("MOUNT") then return end
+	local mount = self:getInven("MOUNT")[1]
+	if not mount or mount.type ~= "mount" then
+		return nil
+	end
+	return mount
 end

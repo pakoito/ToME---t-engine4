@@ -135,9 +135,11 @@ end
 function _M:removeObject(inven, item, no_unstack)
 	if type(inven) == "number" then inven = self.inven[inven] end
 
+	if not inven[item] then return false, true end
+
 	local o, finish = inven[item], true
 
-	if o:check("on_preremoveobject", self, inven) then return false end
+	if o:check("on_preremoveobject", self, inven) then return false, true end
 
 	if not no_unstack then
 		o, finish = o:unstack()
