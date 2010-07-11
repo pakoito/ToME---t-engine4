@@ -266,9 +266,9 @@ function _M:dump()
 	nl(makelabel("Spellpower", game.player:combatSpellpower() ..""))
 	nnl(("%-32s"):format(makelabel("Armor", game.player:combatArmor() .. "")))
 	nl(makelabel("Spell Crit", game.player:combatSpellCrit() .."%"))
-	nnl(("%-32s"):format(makelabel("Class", game.player:combatDefense() .. "")))
+	nnl(("%-32s"):format(makelabel("Defense", game.player:combatDefense() .. "")))
 	nl(makelabel("Spell Speed", game.player:combatSpellSpeed() ..""))
-	nnl(("%-32s"):format(makelabel("Class", game.player:combatDefenseRanged() .. "")))
+	nnl(("%-32s"):format(makelabel("Ranged Defense", game.player:combatDefenseRanged() .. "")))
 	nl()
 
 	nl()
@@ -405,6 +405,12 @@ function _M:dump()
 			nl(("   %s"):format(table.concat(o:getTextualDesc(), "\n    ")))
 		end
 	end
+
+	nl()
+	nl("  [Last Messages]")
+	nl()
+
+	nl(table.concat(game.logdisplay:getLines(40), "\r"):gsub("#.-#", "   "))
 
 	fff:close()
 

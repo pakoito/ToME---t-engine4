@@ -18,45 +18,6 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Create Alchemist Gems",
-	type = {"spell/alchemy-base", 1},
-	require = spells_req1,
-	points = 1,
-	range = function(self, t)
-		return math.ceil(5 + self:getDex(12))
-	end,
-	mana = 30,
-	make_gem = function(self, t, base_define)
-		local nb = rng.range(40, 80)
-		local gem = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_" .. base_define)
-
-		local s = {}
-		while nb > 0 do
-			s[#s+1] = gem:clone()
-			nb = nb - 1
-		end
-		for i = 1, #s do gem:stack(s[i]) end
-
-		return gem
-	end,
-	action = function(self, t)
-		self:showEquipInven("Use which gem?", function(o) return o.type == "gem" end, function(o, inven, item)
-			local gem = t.make_gem(self, t, o.define_as)
-			self:addObject(self.INVEN_INVEN, gem)
-			self:removeObject(inven, item)
-			game.logPlayer(self, "You create: %s", gem:getName{do_color=true, do_count=true})
-			return true
-		end)
-		game:playSoundNear(self, "talents/arcane")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Carve %d to %d alchemist gems out of natural gems.
-		Alchemists gems are used for lots of other spells.]]):format(40, 80)
-	end,
-}
-
-newTalent{
 	name = "Throw Bomb",
 	type = {"spell/alchemy", 1},
 	require = spells_req1,

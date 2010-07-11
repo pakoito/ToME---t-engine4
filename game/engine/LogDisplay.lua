@@ -68,6 +68,18 @@ function _M:empty()
 	self.changed = true
 end
 
+--- Get Last Lines From Log
+-- @param number number of lines to retrieve
+function _M:getLines(number)
+	local from = number
+	if from > #self.log then from = #self.log end
+	local lines = { }
+	for i = from, 1, -1 do
+		lines[#lines+1] = self.log[i]
+	end
+	return lines
+end
+
 function _M:display()
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return self.surface end

@@ -96,7 +96,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Adopt a defensive posture, reducing your staff attack power by %d and increasing your defense by %d.]]):
-		format(self:combatTalentSpellDamage(t, 20, 230) / 2, self:combatTalentSpellDamage(t, 20, 230))
+		format(self:combatTalentSpellDamage(t, 10, 20) / 2, self:combatTalentSpellDamage(t, 10, 20))
 	end,
 }
 

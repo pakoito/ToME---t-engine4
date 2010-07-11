@@ -32,12 +32,12 @@ newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control 
 newTalentType{ type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
 
 -- Alchemist spells
-newTalentType{ type="spell/alchemy-base", name = "alchemy", hide = true, description = "Manipulate gems to turn them into explosive magical bombs." }
 newTalentType{ type="spell/alchemy", name = "alchemy", description = "Manipulate gems to turn them into explosive magical bombs." }
 newTalentType{ type="spell/infusion", name = "infusion", description = "Infusion your gem bombs with the powers of the elements." }
 newTalentType{ type="spell/golemancy-base", name = "golemancy", hide = true, description = "Learn to craft and upgrade your golem." }
 newTalentType{ type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }
 newTalentType{ type="spell/advanced-golemancy", name = "advanced-golemancy", description = "Advanced golem operations." }
+newTalentType{ type="spell/gemology-base", name = "gemology", hide = true, description = "Manipulate gems, imbue their powers into other objects." }
 newTalentType{ type="spell/gemology", name = "gemology", generic = true, description = "Manipulate gems, imbue their powers into other objects." }
 newTalentType{ type="spell/herbalism", name = "herbalism", generic = true, description = "Herbs lore." }
 newTalentType{ type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
