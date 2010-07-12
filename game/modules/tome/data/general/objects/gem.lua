@@ -113,7 +113,7 @@ newGem("Onyx",		3,	12,	"black",	20,	30, 3, 50,
 )
 newGem("Amethyst",	2,	10,	"violet",	10,	20, 2, 35,
 	{ inc_damage = {all=4} },
-	{ splash={type="ARCANE", dam=10}}
+	{ splash={type="ARCANE", dam=25}}
 )
 newGem("Opal",		2,	10,	"blue",		10,	20, 2, 35,
 	{ inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_DEX] = 2, [Stats.STAT_MAG] = 2, [Stats.STAT_WIL] = 2, [Stats.STAT_CUN] = 2, [Stats.STAT_CUN] = 2, } },
@@ -121,7 +121,7 @@ newGem("Opal",		2,	10,	"blue",		10,	20, 2, 35,
 )
 newGem("Topaz",		2,	10,	"blue",		10,	20, 2, 35,
 	{ combat_def=4 },
-	{}
+	{ range=3 }
 )
 newGem("Aquamarine",	2,	10,	"blue",		10,	20, 2, 35,
 	{ resists = {all=4} },
@@ -129,7 +129,7 @@ newGem("Aquamarine",	2,	10,	"blue",		10,	20, 2, 35,
 )
 newGem("Ametrine",	1,	8,	"yellow",	1,	10, 1, 20,
 	{ inc_damage = {all=2} },
-	{}
+	{ splash={type="LITE", dam=1} }
 )
 newGem("Zircon",	1,	8,	"yellow",	1,	10, 1, 20,
 	{ resists = {all=2} },

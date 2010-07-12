@@ -175,7 +175,7 @@ function _M:getTextualDesc()
 		desc[#desc+1] = ""
 	end
 
-	local w = self.wielder or {}
+	local desc_wielder = function(w)
 	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
 	if w.combat_armor or w.combat_def then desc[#desc+1] = ("Armor %d, Defense %d"):format(w.combat_armor or 0, w.combat_def or 0) end
 	if w.fatigue then desc[#desc+1] = ("Fatigue %d%%"):format(w.fatigue) end
@@ -274,6 +274,26 @@ function _M:getTextualDesc()
 
 	if w.see_invisible then desc[#desc+1] = ("See invisible: %d"):format(w.see_invisible) end
 	if w.invisible then desc[#desc+1] = ("Invisibility: %d"):format(w.invisible) end
+	end
+
+	desc_wielder(self.wielder or {})
+
+	if self.imbue_powers then
+		desc[#desc+1] = "When used to imbue an armour:"
+		desc_wielder(self.imbue_powers)
+	end
+
+	if self.alchemist_bomb then
+		local a = self.alchemist_bomb
+		desc[#desc+1] = "When used as an alchemist bomb:"
+		if a.power then desc[#desc+1] = ("Bomb damage +%d%%"):format(a.power) end
+		if a.range then desc[#desc+1] = ("Bomb thrown range +%d"):format(a.range) end
+		if a.mana then desc[#desc+1] = ("Mana regain %d"):format(a.mana) end
+		if a.daze then desc[#desc+1] = ("%d%% chance to daze for %d turns"):format(a.daze.chance, a.daze.dur) end
+		if a.stun then desc[#desc+1] = ("%d%% chance to stun for %d turns"):format(a.stun.chance, a.stun.dur) end
+		if a.splash then desc[#desc+1] = ("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name) end
+		if a.leech then desc[#desc+1] = ("Life regen %d%% of max life"):format(a.leech) end
+	end
 
 	local use_desc = self:getUseDesc()
 	if use_desc then desc[#desc+1] = use_desc end

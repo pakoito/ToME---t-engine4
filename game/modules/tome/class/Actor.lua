@@ -571,7 +571,7 @@ function _M:die(src)
 	if src and src.resolveSource and src:resolveSource().player then
 		-- Achievements
 		local p = src:resolveSource()
-		if math.floor(p.life) <= 1 then world:gainAchievement("THAT_WAS_CLOSE", p) end
+		if math.floor(p.life) <= 1 and not p.dead then world:gainAchievement("THAT_WAS_CLOSE", p) end
 		world:gainAchievement("EXTERMINATOR", p, self)
 		world:gainAchievement("PEST_CONTROL", p, self)
 

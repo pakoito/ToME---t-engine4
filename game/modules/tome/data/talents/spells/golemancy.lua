@@ -84,6 +84,15 @@ newTalent{
 			self.alchemy_golem.name = "golem (servant of "..self.name..")"
 			self.alchemy_golem.summoner = self
 			self.alchemy_golem.summoner_gain_exp = true
+
+			-- Find space
+			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to refit!")
+				return
+			end
+			game.zone:addEntity(game.level, self.alchemy_golem, "actor", x, y)
+			return
 		end
 
 		local wait = function()
