@@ -29,9 +29,7 @@
 #include "main.h"
 #include "script.h"
 //#include "shaders.h"
-
-extern bool shaders_active;
-extern void useShader(GLuint p, int x, int y, int w, int h, float r, float g, float b, float a);
+#include "useshader.h"
 
 static int map_object_new(lua_State *L)
 {

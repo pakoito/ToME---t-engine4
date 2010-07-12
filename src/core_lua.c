@@ -32,6 +32,7 @@
 #include "SFMT.h"
 #include "mzip.h"
 #include "main.h"
+#include "useshader.h"
 #include <math.h>
 #include <time.h>
 
@@ -601,7 +602,6 @@ static int sdl_new_tile(lua_State *L)
 	int alpha = luaL_checknumber(L, 13);
 
 	SDL_Color color = {r,g,b};
-	SDL_Color bcolor = {0,0,0};
 	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
 
 	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
