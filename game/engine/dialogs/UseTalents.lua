@@ -132,7 +132,7 @@ function _M:generateList()
 			if self.actor:knowTalent(t.id) and t.mode ~= "passive" then
 				local typename = "talent"
 				if t.type[1]:find("^spell/") then typename = "spell" end
-				list[#list+1] = { name=self:makeKey(letter)..")    "..t.name.." ("..typename..")", talent=t.id }
+				list[#list+1] = { name=self:makeKey(letter)..")    "..t.name.." ("..typename..")"..(self.actor:isTalentActive(t.id) and " <sustaining>" or ""), talent=t.id }
 				keybind[self:makeKey(letter)] = #list + 1
 				if not self.sel then self.sel = #list + 1 end
 				letter = letter + 1
