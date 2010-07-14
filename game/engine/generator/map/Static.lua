@@ -50,7 +50,7 @@ function _M:loadMap(file)
 			self.subgen[#self.subgen+1] = g
 		end,
 		defineTile = function(char, grid, obj, actor, trap, status)
-			t[char] = {grid=grid, obj=obj, actor=actor, trap=trap, status=status}
+			t[char] = {grid=grid, object=obj, actor=actor, trap=trap, status=status}
 		end,
 		quickEntity = function(char, e)
 			if type(e) == "table" then

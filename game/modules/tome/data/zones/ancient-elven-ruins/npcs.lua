@@ -65,6 +65,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 		[Talents.T_ROTTING_DISEASE]=3,
 	},
 
+	instakill_immune = 1,
 	blind_immune = 1,
 	see_invisible = 4,
 	undead = 1,

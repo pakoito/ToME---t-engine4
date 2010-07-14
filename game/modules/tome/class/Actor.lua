@@ -179,6 +179,7 @@ function _M:act()
 	end
 
 	if self:attr("stunned") then self.energy.value = 0 end
+	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
 
 	-- Suffocate ?
@@ -521,6 +522,13 @@ function _M:onTakeHit(value, src)
 	-- Achievements
 	if src and src.resolveSource and src:resolveSource().player and value >= 600 then
 		world:gainAchievement("SIZE_MATTERS", src:resolveSource())
+	end
+
+	-- Stoned ? SHATTER !
+	if self:attr("stoned") and value >= self.max_life * 0.3 then
+		-- Make the damage high enough to kill it
+		value = self.max_life + 1
+		game.logSeen(self, "%s shatters into pieces!", self.name:capitalize())
 	end
 
 	return value
@@ -1099,6 +1107,7 @@ function _M:canBe(what)
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
+	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	if what == "worldport" and game.zone.no_worldport then return false end
 	return true

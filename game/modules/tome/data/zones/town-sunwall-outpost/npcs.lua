@@ -35,6 +35,7 @@ newEntity{ define_as = "SUN_PALADIN_TORNUK",
 	max_life = 150, life_rating = 14, fixed_rating = true,
 	infravision = 20,
 	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
+	instakill_immune = 1,
 	move_others=true,
 
 	open_door = true,

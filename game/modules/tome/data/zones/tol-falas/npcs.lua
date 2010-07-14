@@ -54,6 +54,7 @@ newEntity{ define_as = "THE_MASTER",
 		{type="undead", number=2, hasxp=true},
 	},
 
+	instakill_immune = 1,
 	blind_immune = 1,
 	stun_immune = 0.7,
 	see_invisible = 20,

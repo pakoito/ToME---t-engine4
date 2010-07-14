@@ -38,6 +38,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	can_breath={water=1},
 	infravision = 20,
 	move_others=true,
+	instakill_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },

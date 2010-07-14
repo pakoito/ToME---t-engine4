@@ -145,16 +145,36 @@ newTalent{
 }
 
 newTalent{
-	name = "Create Complex Bomb",
+	name = "Stone Touch",
 	type = {"spell/alchemy",4},
 	require = spells_req4,
 	points = 5,
+	mana = 80,
+	range = function(self, t)
+		if self:getTalentLevel(t) < 3 then return 1
+		else return math.floor(self:getTalentLevel(t)) end
+	end,
 	action = function(self, t)
-		game:playSoundNear(self, "talents/arcane")
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if not target then return end
+
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stone") and target:canBe("instakill") then
+				target:setEffect(target.EFF_STONED, math.floor((3 + self:getTalentLevel(t)) / 1.5), {})
+				game.level.map:particleEmitter(tx, ty, 1, "archery")
+			end
+		end)
+		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Carve %d to %d alchemist gems out of muliple natural gems, combining their powers.
-		Alchemists gems are used for lots of other spells.]]):format(40, 80)
+		return ([[Touch your foe and turn it into stone for %d turns.
+		Stoned creatures are unable to act or regen life and are very brittle.
+		If a stoned creature if hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
+		At level 3 it will become a beam.]]):format(math.floor((3 + self:getTalentLevel(t)) / 1.5))
 	end,
 }

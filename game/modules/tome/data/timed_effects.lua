@@ -121,6 +121,23 @@ newEffect{
 }
 
 newEffect{
+	name = "STONED",
+	desc = "Stoned",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# turns to stone!", "+Stoned" end,
+	on_lose = function(self, err) return "#Target# is not stoned anymore.", "-Stoned" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("stoned", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "stun")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stoned", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "BURNING_SHOCK",
 	desc = "Burning Shock",
 	type = "magical",

@@ -35,6 +35,7 @@ newEntity{ define_as = "GOLBUG",
 	rank = 5,
 	size_category = 3,
 	infravision = 20,
+	instakill_immune = 1,
 	stats = { str=22, dex=19, cun=34, mag=10, con=16 },
 	move_others=true,
 

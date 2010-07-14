@@ -34,6 +34,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	infravision = 20,
 	move_others=true,
 
+	instakill_immune = 1,
 	stun_immune = 1,
 	blind_immune = 1,
 	combat_spellresist = 70,

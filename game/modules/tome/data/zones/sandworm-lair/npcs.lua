@@ -61,6 +61,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
 	move_others=true,
 
+	instakill_immune = 1,
 	stun_immune = 1,
 	no_breath = 1,
 	rank = 4,

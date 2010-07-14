@@ -49,6 +49,7 @@ newEntity{
 	no_breath = 1,
 	confusion_immune = 1,
 	poison_immune = 1,
+	stone_immune = 1,
 }
 
 newEntity{ base = "BASE_NPC_XORN",
