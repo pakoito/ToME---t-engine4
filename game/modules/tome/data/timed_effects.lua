@@ -130,10 +130,16 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stoned anymore.", "-Stoned" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stoned", 1)
+		eff.resistsid = self:addTemporaryValue("resists", {
+			[DamageType.PHYSICAL]=20,
+			[DamageType.FIRE]=80,
+			[DamageType.LIGHTNING]=50,
+		})
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stoned", eff.tmpid)
+		self:removeTemporaryValue("resists", eff.resistsid)
 	end,
 }
 

@@ -118,16 +118,16 @@ bool _CheckGLSLProgramValid(GLuint program)
 
 #define CHECKGLSLCOMPILE( Shader, file )						\
 	if(!_CheckGLSLShaderCompile( Shader , file))				\
-	exit(-1);
+	return(0);
 
 #define CHECKGLSLLINK( Program )								\
 	if(!_CheckGLSLProgramLink( Program ))						\
-	exit(-1);
+	return(0);
 
 #define CHECKGLSLVALID( Program )								\
 	glValidateProgramARB( Program );								\
 	if(!_CheckGLSLProgramValid( Program ))						\
-	exit(-1);
+	return(0);
 
 
 
