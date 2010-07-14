@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{
-	name = " of fire resistance", suffix=true,
+	name = " of fire resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 4,
@@ -27,7 +27,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of cold resistance", suffix=true,
+	name = " of cold resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 4,
@@ -36,7 +36,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of acid resistance", suffix=true,
+	name = " of acid resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 4,
@@ -45,7 +45,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of lightning resistance", suffix=true,
+	name = " of lightning resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 4,
@@ -54,7 +54,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of nature resistance", suffix=true,
+	name = " of nature resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 4,
@@ -65,7 +65,7 @@ newEntity{
 
 
 newEntity{
-	name = "flaming ", prefix=true,
+	name = "flaming ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
 	cost = 8,
@@ -74,7 +74,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "icy ", prefix=true,
+	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
 	cost = 10,
@@ -83,7 +83,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "acidic ", prefix=true,
+	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
 	cost = 8,
@@ -92,7 +92,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "shocking ", prefix=true,
+	name = "shocking ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
 	cost = 8,
@@ -102,7 +102,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of deflection", suffix=true,
+	name = " of deflection", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 15,
 	cost = 20,
@@ -112,7 +112,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of resilience", suffix=true,
+	name = " of resilience", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 15,
 	cost = 20,

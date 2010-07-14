@@ -288,6 +288,9 @@ function _M:finishEntity(level, type, e, ego_chance)
 				else newname = e.name .. ego.name end
 				print("applying ego", ego.name, "to ", e.name, "::", newname)
 				ego.unided_name = nil
+				-- The ego requested instant resolving before merge ?
+				if ego.instant_resolve then ego:resolve(nil, nil, e) end
+				ego.instant_resolve = nil
 				-- Merge additively but with array appending, so that nameless resolvers are not lost
 				table.mergeAddAppendArray(e, ego, true)
 				e.name = newname

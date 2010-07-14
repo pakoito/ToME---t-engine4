@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{
-	name = " of fire resistance", suffix=true,
+	name = " of fire resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -27,7 +27,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of cold resistance", suffix=true,
+	name = " of cold resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -36,7 +36,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of acid resistance", suffix=true,
+	name = " of acid resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -45,7 +45,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of lightning resistance", suffix=true,
+	name = " of lightning resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -54,7 +54,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of nature resistance", suffix=true,
+	name = " of nature resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -64,7 +64,7 @@ newEntity{
 }
 
 newEntity{
-	name = "shimmering ", prefix=true,
+	name = "shimmering ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 7,
 	cost = 6,
@@ -74,7 +74,7 @@ newEntity{
 }
 
 newEntity{
-	name = "slimy ", prefix=true,
+	name = "slimy ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 7,
 	cost = 6,
@@ -84,9 +84,9 @@ newEntity{
 }
 
 newEntity{
-	name = " of power", suffix=true,
+	name = " of power", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	rarity = 15,
+	rarity = 18,
 	cost = 15,
 	wielder = {
 		inc_damage = {

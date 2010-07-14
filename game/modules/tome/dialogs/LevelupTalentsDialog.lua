@@ -125,7 +125,7 @@ function _M:finish()
 			local t = self.actor:getTalentFromId(tid)
 			if self.actor:getTalentLevelRaw(tid) ~= self.actor_dup:getTalentLevelRaw(tid) then
 				if t.no_sustain_autoreset then
-					game.logPlayer(self.actor, "#LIGHT_BLUE#Warning: You have increased your level in %s, but it cannot be auto-reactivated. The new level will only be used when you re-use it.")
+					game.logPlayer(self.actor, "#LIGHT_BLUE#Warning: You have increased your level in %s, but it cannot be auto-reactivated. The new level will only be used when you re-use it.", t.name)
 				else
 					reset[#reset+1] = tid
 				end

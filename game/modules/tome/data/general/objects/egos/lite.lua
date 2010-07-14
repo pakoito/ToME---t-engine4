@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{
-	name = "bright ", prefix=true,
+	name = "bright ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 1,
@@ -28,7 +28,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of clear sight", suffix=true,
+	name = " of clear sight", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
 	cost = 1,

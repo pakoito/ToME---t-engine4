@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{
-	name = "flaming ", prefix=true,
+	name = "flaming ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -26,7 +26,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "icy ", prefix=true,
+	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 5,
 	wielder = {
@@ -34,7 +34,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "acidic ", prefix=true,
+	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -42,7 +42,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "shocking ", prefix=true,
+	name = "shocking ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -50,7 +50,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "poisonous ", prefix=true,
+	name = "poisonous ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -59,7 +59,7 @@ newEntity{
 }
 
 newEntity{
-	name = "slime-covered ", prefix=true,
+	name = "slime-covered ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
 	wielder = {
@@ -68,7 +68,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of accuracy", suffix=true,
+	name = " of accuracy", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
@@ -76,7 +76,7 @@ newEntity{
 }
 
 newEntity{
-	name = "kinetic ", prefix=true,
+	name = "phase ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 6,
@@ -84,7 +84,7 @@ newEntity{
 }
 
 newEntity{
-	name = "elemental ", prefix=true,
+	name = "elemental ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
 	rarity = 25,
 	cost = 35,
@@ -99,7 +99,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of massacre", suffix=true,
+	name = " of massacre", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,

@@ -20,7 +20,7 @@
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{
-	name = " of power", suffix=true,
+	name = " of power", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 8,
@@ -30,7 +30,7 @@ newEntity{
 }
 
 newEntity{
-	name = "shimmering ", prefix=true,
+	name = "shimmering ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 8,
@@ -40,7 +40,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of might", suffix=true,
+	name = " of might", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 8,
@@ -50,9 +50,9 @@ newEntity{
 }
 
 newEntity{
-	name = " of wizardry", suffix=true,
+	name = " of wizardry", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	rarity = 12,
+	rarity = 18,
 	cost = 45,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(30, 3, function(e, v) return v * 0.6 end),
@@ -62,7 +62,7 @@ newEntity{
 }
 
 newEntity{
-	name = "magma ", prefix=true,
+	name = "magma ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -72,7 +72,7 @@ newEntity{
 }
 
 newEntity{
-	name = "icy ", prefix=true,
+	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -82,7 +82,7 @@ newEntity{
 }
 
 newEntity{
-	name = "acidic ", prefix=true,
+	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -92,7 +92,7 @@ newEntity{
 }
 
 newEntity{
-	name = "crackling ", prefix=true,
+	name = "crackling ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -102,7 +102,7 @@ newEntity{
 }
 
 newEntity{
-	name = "naturalist ", prefix=true,
+	name = "naturalist ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -112,7 +112,7 @@ newEntity{
 }
 
 newEntity{
-	name = "blighted ", prefix=true,
+	name = "blighted ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
