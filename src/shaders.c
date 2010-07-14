@@ -140,7 +140,8 @@ static int program_compile(lua_State *L)
 		}
 	}
 #endif
-	return 0;
+	lua_pushboolean(L, TRUE);
+	return 1;
 }
 
 static int program_attach(lua_State *L)

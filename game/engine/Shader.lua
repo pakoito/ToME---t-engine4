@@ -101,7 +101,7 @@ function _M:createProgram(def)
 	local shad = core.shader.newProgram()
 	if def.vert then shad:attach(self:getVertex(def.vert)) end
 	if def.frag then shad:attach(self:getFragment(def.frag)) end
-	shad:compile()
+	if not shad:compile() then return nil end
 	return shad
 end
 
@@ -119,9 +119,10 @@ function _M:loaded()
 		_M.progs[self.totalname] = self:createProgram(def)
 
 		self.shad = _M.progs[self.totalname]
-
-		for k, v in pairs(def.args) do
-			self:setUniform(k, v)
+		if self.shad then
+			for k, v in pairs(def.args) do
+				self:setUniform(k, v)
+			end
 		end
 	end
 end

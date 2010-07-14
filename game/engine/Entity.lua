@@ -195,7 +195,8 @@ function _M:makeMapObject(tiles, idx)
 
 	-- Setup shader
 	if tiles.use_images and core.shader.active() and self.shader then
-		self._mo:shader(Shader.new(self.shader, self.shader_args).shad)
+		local shad = Shader.new(self.shader, self.shader_args)
+		if shad.shad then self._mo:shader(shad.shad) end
 	end
 
 	return self._mo, self.z
