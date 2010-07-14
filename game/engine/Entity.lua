@@ -226,13 +226,14 @@ function _M:resolve(t, last, on_entity)
 	t = t or self
 	for k, e in pairs(t) do
 		if type(e) == "table" and e.__resolver and (not e.__resolve_last or last) then
-			t[k] = resolvers.calc[e.__resolver](on_entity or e, self, e)
+			t[k] = resolvers.calc[e.__resolver](e, on_entity or self, self)
 		elseif type(e) == "table" and not e.__CLASSNAME then
 			self:resolve(e, last, on_entity)
 		end
 	end
 
 	-- Finish resolving stuff
+	if on_entity then return end
 	if t == self then
 		if last then
 			if self.resolveLevel then self:resolveLevel() end

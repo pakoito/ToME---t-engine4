@@ -38,8 +38,8 @@ end
 
 --- Resolves the object
 -- This will call the entities resolver and then add to the game entities list
-function _M:resolve(t, last)
-	engine.Entity.resolve(self, t, last)
+function _M:resolve(t, last, on_entity)
+	engine.Entity.resolve(self, t, last, on_entity)
 
 	if not t and last then
 		-- Stackable property is the name by default

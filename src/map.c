@@ -417,7 +417,7 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 			r = map->obscure_r; g = map->obscure_g; b = map->obscure_b;
 		}
 	}
-	glColor4f(r, g, b, a);
+	glColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
 
 	int z;
 	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);

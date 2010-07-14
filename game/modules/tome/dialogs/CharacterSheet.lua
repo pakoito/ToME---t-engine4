@@ -414,7 +414,7 @@ function _M:dump()
 	nl("  [Last Messages]")
 	nl()
 
-	nl(table.concat(game.logdisplay:getLines(40), "\r"):gsub("#.-#", "   "))
+	nl(table.concat(game.logdisplay:getLines(40), "\n"):gsub("#.-#", "   "))
 
 	fff:close()
 
