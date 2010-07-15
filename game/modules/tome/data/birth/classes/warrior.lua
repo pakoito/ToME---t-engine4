@@ -49,7 +49,7 @@ newBirthDescriptor{
 	},
 	stats = { str=5, con=2, dex=2, },
 	talents_types = {
-		["technique/archery-training"]={false, 0.9},
+		["technique/archery-training"]={false, 0.1},
 		["technique/shield-offense"]={true, 0.3},
 		["technique/shield-defense"]={true, 0.3},
 		["technique/2hweapon-offense"]={false, -0.1},
@@ -84,7 +84,7 @@ newBirthDescriptor{
 	},
 	stats = { str=5, con=3, dex=1, },
 	talents_types = {
-		["technique/archery-training"]={false, 0.9},
+		["technique/archery-training"]={false, 0.1},
 		["technique/shield-defense"]={false, -0.1},
 		["technique/2hweapon-offense"]={true, 0.3},
 		["technique/2hweapon-cripple"]={true, 0.3},

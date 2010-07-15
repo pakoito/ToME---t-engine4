@@ -262,6 +262,6 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5), 2 + self:getTalentLevelRaw(t))
+		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5), 2 + self:getTalentLevelRaw(t) * 100)
 	end,
 }

@@ -38,6 +38,10 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		target = game.level.map(x, y, Map.ACTOR)
+		if not x or not y or not target then return nil end
+
 		self.combat_apr = self.combat_apr + 10000
 		self.combat_atk = self.combat_atk + 10000
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.4, 1.1))

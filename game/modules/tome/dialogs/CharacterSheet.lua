@@ -400,6 +400,14 @@ function _M:dump()
 	end
 
 	nl()
+	nl("  [Player Achievments]")
+	nl()
+	for id, data in pairs(self.actor.achievements) do
+		local a = world:getAchievementFromId(id)
+		nl(("%s Was Achieved for %s At %s"):format(a.name,a.desc,data.when))
+	end
+
+	nl()
 	nl("  [Character Inventory]")
 	nl()
 	for item, o in ipairs(self.actor:getInven("INVEN")) do

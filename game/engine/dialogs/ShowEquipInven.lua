@@ -26,6 +26,7 @@ function _M:init(title, actor, filter, action)
 	self.action = action
 	self.filter = filter
 	self.actor = actor
+
 	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
 
 	self:generateList()

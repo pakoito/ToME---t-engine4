@@ -94,3 +94,81 @@ If used near a portal it could probably activate it.]],
 		end
 	end,
 }
+
+-------------------- The four orbs of command
+
+-- Rak'shor Pride
+newEntity{ define_as = "ORB_UNDEATH",
+	unique = true, quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "orb of command",
+	name = "Orb of Undeath (Orb of Command)",
+	level_range = {50, 50},
+	display = "*", color=colors.VIOLET,
+	encumber = 1,
+	desc = [[Dark visions fill you mind as you lift the orb. It is cold to the touch.]],
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}
+
+-- Gorbat Pride
+newEntity{ define_as = "ORB_DRAGON",
+	unique = true, quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "orb of command",
+	name = "Dragon Orb (Orb of Command)",
+	level_range = {50, 50},
+	display = "*", color=colors.VIOLET,
+	encumber = 1,
+	desc = [[This orb is warm to the touch.]],
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}
+
+-- Vor Pride
+newEntity{ define_as = "ORB_ELEMENTS",
+	unique = true, quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "orb of command",
+	name = "Elemental Orb (Orb of Command)",
+	level_range = {50, 50},
+	display = "*", color=colors.VIOLET,
+	encumber = 1,
+	desc = [[Flames swirl on the icy surface of this orb.]],
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}
+
+-- Grushnak Pride
+newEntity{ define_as = "ORB_DESTRUCTION",
+	unique = true, quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "orb of command",
+	name = "Orb of Destruction (Orb of Command)",
+	level_range = {50, 50},
+	display = "*", color=colors.VIOLET,
+	encumber = 1,
+	desc = [[Visions of death and destruction fill your mind as you lift this orb.]],
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}

@@ -50,6 +50,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 		{type="weapon", subtype="staff", ego_change=100, autoreq=true},
 		{type="armor", subtype="cloth", defined="BLACK_ROBE", autoreq=true},
 	},
+	resolvers.drops{chance=100, nb=1, {defined="ORB_UNDEATH"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	summon = {

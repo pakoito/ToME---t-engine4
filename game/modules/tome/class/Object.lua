@@ -154,10 +154,7 @@ end
 
 --- Gets the full textual desc of the object without the name and requirements
 function _M:getTextualDesc()
-	local desc = {}
-	if self.encumber then
-		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance."):format(self.encumber)
-	end
+	local desc = {}	
 
 	desc[#desc+1] = ("Type: %s / %s"):format(self.type, self.subtype)
 
@@ -314,6 +311,10 @@ function _M:getDesc()
 	local reqs = self:getRequirementDesc(game.player)
 	if reqs then
 		desc[#desc+1] = reqs
+	end
+	
+	if self.encumber then
+		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance."):format(self.encumber)
 	end
 
 	local textdesc = table.concat(self:getTextualDesc(), "\n")

@@ -56,6 +56,7 @@ end
 
 function _M:loadAchievements()
 	self.achieved = {}
+	self.playerachieved = {}
 
 	for k, e in pairs(profile.mod) do
 		if k:find('^achievement%.') then
@@ -71,13 +72,33 @@ function _M:getAchievementFromId(id)
 	return self.achiev_defs[id]
 end
 
+
+--- Gain Personal achievement for player only
+-- @
+-- @param id the achivement to gain
+-- @param src who did it
+function _M:gainPersonalAchievement(silent, id, src, ...)
+	local a = self.achiev_defs[id]
+	if src.resolveSource then src = src:resolveSource() end
+
+	src.achievements = src.achievements or {}
+	if src.achievements[id] then return end
+
+	src.achievements[id] = {turn=game.turn, when=os.date("%Y-%m-%d %H:%M:%S")}
+	if not silent then
+		game.log("#LIGHT_GREEN#Personal New Achievement: %s!", a.name)
+		Dialog:simplePopup("Personal New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
+	end
+end
+
 --- Gain an achievement
 -- @param id the achivement to gain
 -- @param src who did it
 function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]
 	if not a then error("Unknown achievement "..id) return end
-	if self.achieved[id] then return end
+
+	if self.achieved[id] and self.playerachieved[id] then return end
 
 	if a.can_gain then
 		local data = nil
@@ -97,9 +118,11 @@ function _M:gainAchievement(id, src, ...)
 		if not a.can_gain(data, src, ...) then return end
 	end
 
+	if self.achieved[id] then self:gainPersonalAchievement(false, id, src, ...) return end
+	self:gainPersonalAchievement(true, id, src, ...)
+
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
 	profile:saveModuleProfile("achievement."..id, self.achieved[id])
-
 	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
 	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
 end
