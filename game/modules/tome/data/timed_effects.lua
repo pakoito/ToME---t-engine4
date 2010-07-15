@@ -28,6 +28,15 @@ newEffect{
 	parameters = { power=1 },
 	on_gain = function(self, err) return "#Target# starts to bleed.", "+Bleeds" end,
 	on_lose = function(self, err) return "#Target# stops bleeding.", "-Bleeds" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 	end,
@@ -73,6 +82,15 @@ newEffect{
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is on fire!", "+Burn" end,
 	on_lose = function(self, err) return "#Target# stops burning.", "-Burn" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
 	end,
@@ -86,6 +104,15 @@ newEffect{
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is poisoned!", "+Poison" end,
 	on_lose = function(self, err) return "#Target# stops being poisoned.", "-Poison" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the poison
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 	end,

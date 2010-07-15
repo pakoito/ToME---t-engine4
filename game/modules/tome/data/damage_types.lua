@@ -42,9 +42,12 @@ setDefaultProjector(function(src, x, y, type, dam)
 
 		-- Reduce damage with resistance
 		if target.resists then
+			local pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0)
 			local res = (target.resists.all or 0) + (target.resists[type] or 0)
+			res = res * (100 - pen) / 100
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 			if res >= 100 then dam = 0
+			elseif res <= 0 then dam = dam
 			else dam = dam * ((100 - res) / 100)
 			end
 		end
@@ -210,12 +213,16 @@ newDamageType{
 newDamageType{
 	name = "fireburn", type = "FIREBURN",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam / 2)
+		local dur = 3
+		local perc = 50
+		if _G.type(dam) == "table" then dam, dur, perc = dam.dam, dam.dur, (dam.initial or perc) end
+		local init_dam = dam * perc / 100
+		if init_dam > 0 then DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, init_dam) end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
-			dam = dam / 2
-			target:setEffect(target.EFF_BURNING, 3, {src=src, power=dam / 3})
+			dam = dam - init_dam
+			target:setEffect(target.EFF_BURNING, dur, {src=src, power=dam / dur})
 		end
 	end,
 }

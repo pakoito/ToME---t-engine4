@@ -91,8 +91,17 @@ function _M:setEffect(eff_id, dur, p, silent)
 	-- Beware, setting to 0 means removing
 	if dur <= 0 then return self:removeEffect(eff_id) end
 
-	-- If we already have it, we remove it and re-add it
-	if self:hasEffect(eff_id) then self:removeEffect(eff_id, true) end
+	-- If we already have it, we check if it knows how to "merge", or else we remove it and re-add it
+	if self:hasEffect(eff_id) then
+		if _M.tempeffect_def[eff_id].on_merge then
+			p.dur = dur
+			self.tmp[eff_id] = _M.tempeffect_def[eff_id].on_merge(self, self.tmp[eff_id], p)
+			self.changed = true
+			return
+		else
+			self:removeEffect(eff_id, true)
+		end
+	end
 
 	for k, e in pairs(_M.tempeffect_def[eff_id].parameters) do
 		if not p[k] then p[k] = e end
