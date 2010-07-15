@@ -18,7 +18,8 @@
 -- darkgod@te4.org
 
 local change_weapon = function(npc, player)
-	player:showEquipInven("Select a two handed weapon for your golem.", function(o) return o.type == "weapon" and o.twohanded end, function(o, inven, item)
+	local inven = player:getInven("INVEN")
+	player:showInventory("Select a two handed weapon for your golem.", inven, function(o) return o.type == "weapon" and o.twohanded end, function(o, item)
 		player:removeObject(inven, item, true)
 		local ro = npc:wearObject(o, true, true)
 		if ro then
@@ -35,7 +36,8 @@ local change_weapon = function(npc, player)
 end
 
 local change_armour = function(npc, player)
-	player:showEquipInven("Select a two handed armour for your golem.", function(o) return o.type == "armor" and o.slot == "BODY" end, function(o, inven, item)
+	local inven = player:getInven("INVEN")
+	player:showInventory("Select a two handed armour for your golem.", inven, function(o) return o.type == "armor" and o.slot == "BODY" end, function(o, item)
 		player:removeObject(inven, item, true)
 		local ro = npc:wearObject(o, true, true)
 		if ro then

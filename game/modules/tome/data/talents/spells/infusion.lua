@@ -66,9 +66,9 @@ newTalent{
 
 newTalent{
 	name = "Lightning Infusion",
-	type = {"spell/infusion", 2},
+	type = {"spell/infusion", 3},
 	mode = "sustained",
-	require = spells_req2,
+	require = spells_req3,
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
@@ -84,15 +84,15 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive acid, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		return ([[When you throw your alchemist bombs you infuse them with lightning, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
 	end,
 }
 
 newTalent{
 	name = "Frost Infusion",
-	type = {"spell/infusion", 2},
+	type = {"spell/infusion", 4},
 	mode = "sustained",
-	require = spells_req2,
+	require = spells_req4,
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
@@ -108,6 +108,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive acid, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		return ([[When you throw your alchemist bombs you infuse them with frost, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
 	end,
 }

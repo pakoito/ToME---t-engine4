@@ -512,7 +512,13 @@ function _M:targetMode(v, msg, co, typ)
 
 			if self.target.target.entity and self.level.map.seens(self.target.target.entity.x, self.target.target.entity.y) and self.player ~= self.target.target.entity then
 			else
-				self.target:scan(5, nil, self.player.x, self.player.y)
+				local filter = nil
+				if type(typ) == "table" and typ.first_target and typ.first_target == "friend" then
+					filter = function(a) return self.player:reactionToward(a) >= 0 end
+				else
+					filter = function(a) return self.player:reactionToward(a) < 0 end
+				end
+				self.target:scan(5, nil, self.player.x, self.player.y, filter)
 			end
 		end
 		if self.target.target.x then
@@ -572,7 +578,7 @@ function _M:setupCommands()
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
 				self.player:forceLevelup(50)
-				self:changeLevel(9, "tol-falas")
+				self:changeLevel(1, "vor-pride")
 --				self.player:grantQuest("escort-duty")
 			end
 		end,

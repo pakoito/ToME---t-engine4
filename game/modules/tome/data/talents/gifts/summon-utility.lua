@@ -349,7 +349,7 @@ newTalent{
 	cooldown = 10,
 	range = 20,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target then print("1") return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)

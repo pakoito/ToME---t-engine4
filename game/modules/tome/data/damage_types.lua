@@ -301,6 +301,24 @@ newDamageType{
 	end,
 }
 
+-- Fireburn damage + repulsion; checks for spell power against physical resistance
+newDamageType{
+	name = "fireknockback", type = "FIREKNOCKBACK",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not tmp[target] then
+			tmp[target] = true
+			DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam.dam)
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, dam.dist)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the punch!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
 	name = "spellknockback", type = "SPELLKNOCKBACK",

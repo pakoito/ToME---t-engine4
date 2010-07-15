@@ -35,12 +35,12 @@ Good day to you fellow traveller!]],
 		-- Reward for non-mages: access to Angolwen
 		{"So you have enough staves now?",
 			jump="thanks",
-			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.descriptor.class ~= "Mage" end,
+			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.faction ~= "angolwen" end,
 		},
 		-- Reward for mages: upgrade a talent mastery
 		{"So you have enough items now?",
 			jump="thanks_mage",
-			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.descriptor.class == "Mage" end,
+			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.faction == "angolwen" end,
 		},
 --		{"Do you have any items to sell?", jump="store"},
 		{"Sorry I have to go!"},
@@ -58,8 +58,8 @@ newChat{ id="quest2",
 	text = [[Well if you insist...
 I am a novice mage, as you might have noticed, and my goal is to be accepted by the elves of Angolwen to be taught the secrets of the arcane.]],
 	answers = {
-		{"Who are the elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.descriptor.class ~= "Mage" end,},
-		{"Ah yes Angolwen, this place I called home for many years...", jump="quest3_mage", cond=function(npc, player) return player.descriptor.class == "Mage" end,},
+		{"Who are the elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
+		{"Ah yes Angolwen, this place I called home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
 		{"Well good luck, bye!"},
 	}
 }

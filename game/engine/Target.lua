@@ -152,7 +152,7 @@ function _M:setSpot(x, y)
 	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
 end
 
-function _M:scan(dir, radius, sx, sy)
+function _M:scan(dir, radius, sx, sy, filter)
 	sx = sx or self.target.x
 	sy = sy or self.target.y
 	radius = radius or 20
@@ -162,7 +162,7 @@ function _M:scan(dir, radius, sx, sy)
 		if game.level.map.seens(x, y) and game.level.map(x, y, engine.Map.ACTOR) then
 			local a = game.level.map(x, y, engine.Map.ACTOR)
 
-			if not self.source_actor or self.source_actor:canSee(a) then
+			if (not self.source_actor or self.source_actor:canSee(a)) and (not filter or filter(a)) then
 				table.insert(actors, {
 					a = a,
 					dist = math.abs(sx - x)*math.abs(sx - x) + math.abs(sy - y)*math.abs(sy - y)

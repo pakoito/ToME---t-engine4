@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 15,
 	range = 20,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self then return nil end
 		target:setEffect(target.EFF_ALL_STAT, 5, {power=2+math.floor(self:getTalentLevel(t) * 2)})
@@ -47,7 +47,7 @@ newTalent{
 	cooldown = 25,
 	range = 20,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self then return nil end
 

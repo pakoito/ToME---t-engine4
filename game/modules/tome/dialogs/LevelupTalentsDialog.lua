@@ -288,9 +288,11 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		lines = self.actor:getTalentTypeFrom(self.list[self.sel].type).description:splitLines(self.iw / 2 - 10, self.font)
 	else
+		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
+
 		local str = ""
 		local what
-		if self.list[self.sel].generic then
+		if t.generic then
 			what = "generic talent"
 			str = str .. "#00FFFF#Generic Talent\n"
 			str = str .. "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It reprents talents anybody can learn (should they find a trainer for it). You gain one point every levels except every 5 levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
@@ -300,7 +302,6 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 			str = str .. "#00FFFF#A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5 levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
 		end
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
-		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
 
 		if self.actor:getTalentLevelRaw(t.id) > 0 then
 			lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)

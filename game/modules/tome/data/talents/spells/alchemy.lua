@@ -56,12 +56,16 @@ newTalent{
 
 		local dam, damtype, particle = t.computeDamage(self, t, ammo)
 		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 0.2
+		local golem = game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem or nil
 		local dam_done = 0
 
 		local grids = self:project(tg, x, y, function(tx, ty)
-			-- Protect yourself
 			local d = dam
+			-- Protect yourself
 			if tx == self.x and ty == self.y then d = dam * (1 - prot) end
+			-- Protect the golem
+			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
+
 			DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d))
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
@@ -139,7 +143,7 @@ newTalent{
 		self.resists[DamageType.ACID] = self.resists[DamageType.ACID] - 3
 	end,
 	info = function(self, t)
-		return ([[Improves your resistance against your own bombs elemental damage by %d%% and against external one byt %d%%.]]):
+		return ([[Improves your resistance against your own bombs elemental damage by %d%% and against external one by %d%%.]]):
 		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
 	end,
 }
@@ -150,6 +154,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mana = 80,
+	cooldown = 15,
 	range = function(self, t)
 		if self:getTalentLevel(t) < 3 then return 1
 		else return math.floor(self:getTalentLevel(t)) end

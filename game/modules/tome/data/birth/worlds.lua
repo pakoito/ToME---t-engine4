@@ -64,10 +64,10 @@ newBirthDescriptor{
 	{
 		"The tutorial will explain the basics of the game to get you started.",
 	},
-	on_select = function(what)
-		setAuto("subclass", false)
-		setAuto("subrace", false)
-	end,
+--	on_select = function(what)
+--		setAuto("subclass", false)
+--		setAuto("subrace", false)
+--	end,
 	descriptor_choices =
 	{
 		race =

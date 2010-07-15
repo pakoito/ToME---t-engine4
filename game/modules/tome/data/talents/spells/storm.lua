@@ -18,33 +18,30 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Blastwave",
-	type = {"spell/wildfire",1},
+	name = "Nova",
+	type = {"spell/storm",1},
 	require = spells_req1,
 	points = 5,
 	mana = 12,
 	cooldown = 3,
 	tactical = {
-		ATTACKAREA = 10,
-		DEFEND = 4,
+		ATTACK = 10,
 	},
-	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	range = 20,
+	reflectable = true,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
-		local grids = self:project(tg, self.x, self.y, DamageType.FIREKNOCKBACK, {dist=3, dam=self:spellCrit(self:combatTalentSpellDamage(t, 28, 150))})
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A wave of fire emanates from you, knocking back anything caught inside and setting them ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 250))
+		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
 	end,
 }
 
 newTalent{
-	name = "Dancing Fires",
-	type = {"spell/wildfire",2},
+	name = "???",
+	type = {"spell/storm",2},
 	require = spells_req2,
 	points = 5,
 	mana = 12,
@@ -55,7 +52,7 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	action = function(self, t)
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
@@ -65,8 +62,8 @@ newTalent{
 }
 
 newTalent{
-	name = "Combust",
-	type = {"spell/wildfire",3},
+	name = "???",
+	type = {"spell/storm",3},
 	require = spells_req3,
 	points = 5,
 	mana = 12,
@@ -77,7 +74,7 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	action = function(self, t)
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
@@ -87,8 +84,8 @@ newTalent{
 }
 
 newTalent{
-	name = "Wildfire",
-	type = {"spell/wildfire",4},
+	name = "Tempest",
+	type = {"spell/storm",4},
 	require = spells_req4,
 	points = 5,
 	mana = 12,
@@ -99,7 +96,7 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	action = function(self, t)
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
