@@ -30,7 +30,7 @@ local function makeGolem()
 	return require("mod.class.NPC").new{
 		type = "construct", subtype = "golem",
 		display = 'g', color=colors.WHITE,
-		level_range = {1, 50},
+		level_range = {1, 50}, exp_worth=0,
 		life_rating = 13,
 
 		combat = { dam=10, atk=10, apr=0, dammod={str=1} },

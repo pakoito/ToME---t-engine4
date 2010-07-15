@@ -30,12 +30,17 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	action = function(self, t)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.ICE, self:spellCrit(self:combatTalentSpellDamage(t, 18, 200)))
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "ice_shards", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 200))
 	end,
 }
 
@@ -88,19 +93,25 @@ newTalent{
 	type = {"spell/ice",4},
 	require = spells_req4,
 	points = 5,
-	mana = 12,
-	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
-	range = 20,
-	reflectable = true,
-	action = function(self, t)
+	mode = "sustained",
+	sustain_mana = 80,
+	cooldown = 30,
+	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
+		return {
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = self:getTalentLevelRaw(t) * 2}),
+			resist = self:addTemporaryValue("resists_pen", {[DamageType.COLD] = self:getTalentLevelRaw(t) * 10}),
+			particle = self:addParticles(Particles.new("uttercold", 1)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		self:removeTemporaryValue("inc_damage", p.dam)
+		self:removeTemporaryValue("resists_pen", p.resist)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		return ([[Surround yourself with Wildfire, increasing all your fire damage by %d%% and ignoring %d%% fire resistance of your targets.]])
+		:format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 10)
 	end,
 }
