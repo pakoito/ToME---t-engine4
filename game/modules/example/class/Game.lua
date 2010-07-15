@@ -116,6 +116,8 @@ function _M:onResolutionChange()
 	self:setupDisplayMode()
 	self.flash:resize(0, 0, self.w, 20)
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	-- Reset mouse bindings to account for new size
+	self:setupMouse(reset)
 end
 
 function _M:setupDisplayMode()
@@ -450,21 +452,42 @@ function _M:setupCommands()
 	self.key:setCurrent()
 end
 
-function _M:setupMouse()
+function _M:setupMouse(reset)
 	-- Those 2 locals will be "absorbed" into the mosue event handler function, this is a closure
 	local derivx, derivy = 0, 0
+	local moving_around = false
 
+	if reset then self.mouse:reset() end
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
 		-- Move tooltip
 		self.tooltip_x, self.tooltip_y = mx, my
 		local tmx, tmy = self.level.map:getMouseTile(mx, my)
 
-		-- Target stuff
-		if button == "right" then
-			self.player:mouseMove(tmx, tmy)
+		if self.key == self.targetmode_key then
+			-- Target with mouse
+			if button == "none" and xrel and yrel then
+				self.target:setSpot(tmx, tmy)
+			-- Cancel target
+			elseif button ~= "left" and not xrel and not yrel then
+				self:targetMode(false, false)
+				self.tooltip_x, self.tooltip_y = nil, nil
+			-- Accept target
+			elseif not xrel and not yrel then
+				self.target.target.entity = nil
+				self.target.target.x = nil
+				self.target.target.y = nil
+				self:targetMode(false, false)
+				self.tooltip_x, self.tooltip_y = nil, nil
+			end
+			return
+		end
+
+		-- Move
+		if button == "left" and not core.key.modState("shift") and not moving_around and not xrel and not yrel then
+			if self.key == self.normal_key then self.player:mouseMove(tmx, tmy) end
 
 		-- Move map around
-		elseif button == "left" and xrel and yrel then
+		elseif button == "left" and xrel and yrel and core.key.modState("shift") then
 			derivx = derivx + xrel
 			derivy = derivy + yrel
 			game.level.map.changed = true
@@ -483,7 +506,19 @@ function _M:setupMouse()
 				derivy = derivy + game.level.map.tile_h
 			end
 			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
+			moving_around = true
+		elseif button ~= "none" and not xrel and not yrel then
+			self.key:receiveKey(
+				button,
+				core.key.modState("ctrl") and true or false,
+				core.key.modState("shift") and true or false,
+				core.key.modState("alt") and true or false,
+				core.key.modState("meta") and true or false,
+				nil, false, true
+			)
 		end
+
+		if not xrel and not yrel then moving_around = false end
 	end)
 	-- Scroll message log
 	self.mouse:registerZone(self.logdisplay.display_x, self.logdisplay.display_y, self.w, self.h, function(button)

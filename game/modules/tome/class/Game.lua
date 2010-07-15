@@ -432,15 +432,6 @@ function _M:display()
 			self.level.map.display_y + self.level.map.viewport.height - znsy
 		)
 
-		-- Display a tooltip if available
-		if self.tooltip_x then self.tooltip:displayAtMap(self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)) end
-
-		-- Move target around
-		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
-			self.target.target.x, self.target.target.y = tmx, tmy
-		end
-		self.old_tmx, self.old_tmy = tmx, tmy
-
 		-- Minimap display
 		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
 	end
@@ -455,6 +446,18 @@ function _M:display()
 		self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
 	end
 	if self.player then self.player.changed = false end
+
+	-- Tooltip is displayed over all else
+	if self.level and self.level.map and self.level.map.finished then
+		-- Display a tooltip if available
+		if self.tooltip_x then self.tooltip:displayAtMap(self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)) end
+
+		-- Move target around
+		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
+			self.target.target.x, self.target.target.y = tmx, tmy
+		end
+		self.old_tmx, self.old_tmy = tmx, tmy
+	end
 
 	engine.GameTurnBased.display(self)
 end
