@@ -17,50 +17,56 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/bone-giant.lua")
-load("/data/general/npcs/ghoul.lua", function(e) if e.rarity then e.rarity = e.rarity * 3 end end)
-load("/data/general/npcs/skeleton.lua", function(e) if e.rarity then e.rarity = e.rarity * 3 end end)
 load("/data/general/npcs/orc.lua", function(e) if e.rarity then e.rarity = e.rarity * 3 end e.make_escort = nil end)
-load("/data/general/npcs/orc-rak-shor.lua")
+load("/data/general/npcs/orc-vor.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
-	name = "Rak'shor, Grand Necromancer of the Pride", color=colors.VIOLET, unique = true,
-	desc = [[An old orc, wearing black robes. He commands his undead armies to destroy you.]],
-	level_range = {35, 50}, exp_worth = 2,
+newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
+	name = "Vor, Grand Geomancer of the Pride", color=colors.VIOLET, unique = true,
+	desc = [[An old orc, wearing multi-colored robes. Ice shards fly around him, leaving a trail of fire and lightning bursts.]],
+	level_range = {40, 50}, exp_worth = 2,
 	rank = 4,
-	max_life = 150, life_rating = 16, fixed_rating = true,
+	max_life = 250, life_rating = 19, fixed_rating = true,
 	infravision = 20,
-	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
+	stats = { str=12, dex=10, cun=12, mag=21, con=14 },
 	move_others=true,
 
-	instakill_immune = 1,
 	combat_armor = 10, combat_def = 10,
 
 	open_door = true,
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
 	resolvers.equip{
 		{type="weapon", subtype="staff", ego_change=100, autoreq=true},
-		{type="armor", subtype="cloth", defined="BLACK_ROBE", autoreq=true},
+		{type="armor", subtype="cloth", ego_change=100, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=1, {defined="ORB_UNDEATH"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
-	summon = {
-		{type="undead", number=2, hasxp=false},
-	},
-	make_escort = {
-		{type="undead", no_subescort=true, number=resolvers.mbonus(4, 4)},
-	},
-
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
+		[Talents.T_FLAME]=5,
+		[Talents.T_FLAMESHOCK]=5,
+		[Talents.T_FIREFLASH]=5,
+		[Talents.T_INFERNO]=5,
+		[Talents.T_BLASTWAVE]=5,
+		[Talents.T_DANCING_FIRES]=5,
+		[Talents.T_COMBUST]=5,
+
+		[Talents.T_FREEZE]=5,
+		[Talents.T_ICE_STORM]=5,
+		[Talents.T_TIDAL_WAVE]=5,
+		[Talents.T_ICE_SHARDS]=5,
+		[Talents.T_FROZEN_GROUND]=5,
+
+		[Talents.T_LIGHTNING]=5,
+		[Talents.T_CHAIN_LIGHTNING]=5,
+
+		[Talents.T_SPELL_SHAPING]=5,
+		[Talents.T_ESSENCE_OF_SPEED]=1,
 	},
 
 	on_die = function(self, who)

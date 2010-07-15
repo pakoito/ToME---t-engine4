@@ -19,10 +19,17 @@
 
 -- Archmage spells
 newTalentType{ type="spell/arcane", name = "arcane", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+
+-- Elemental spells
 newTalentType{ type="spell/fire", name = "fire", description = "Harness the power of fire to burn your foes to ashes." }
+newTalentType{ type="spell/wildfire", name = "wildfire", description = "Harness the power of wildfire to burn your foes to ashes." }
 newTalentType{ type="spell/earth", name = "earth", description = "Harness the power of the earth to protect and destroy." }
 newTalentType{ type="spell/water", name = "water", description = "Harness the power of water to drown your foes." }
+newTalentType{ type="spell/ice", name = "ice", description = "Harness the power of ice to freeze and shatter your foes." }
 newTalentType{ type="spell/air", name = "air", description = "Harness the power of the air to fry your foes." }
+newTalentType{ type="spell/storm", name = "storm", description = "Harness the power of the storm to incinerate your foes." }
+
+-- Various other magic schools
 newTalentType{ type="spell/conveyance", name = "conveyance", generic = true, description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
 newTalentType{ type="spell/nature", name = "nature", generic = true, description = "Summons the power of nature to rejuvenate yourself and the world." }
 newTalentType{ type="spell/meta", name = "meta", description = "Meta spells alter the working of magic itself." }
@@ -66,9 +73,12 @@ spells_req5 = {
 
 load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/fire.lua")
+load("/data/talents/spells/wildfire.lua")
 load("/data/talents/spells/earth.lua")
 load("/data/talents/spells/water.lua")
+load("/data/talents/spells/ice.lua")
 load("/data/talents/spells/air.lua")
+load("/data/talents/spells/storm.lua")
 load("/data/talents/spells/conveyance.lua")
 load("/data/talents/spells/nature.lua")
 load("/data/talents/spells/meta.lua")
