@@ -53,12 +53,23 @@ local change_armour = function(npc, player)
 	end)
 end
 
+local change_name = function(npc, player)
+	local d = require("engine.dialogs.GetText").new("Change your golem name", "Name", 2, 25, function(name)
+		if name then
+			npc.name = name.." (servant of "..player.name..")"
+			npc.changed = true
+		end
+	end)
+	game:registerDialog(d)
+end
+
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*The golem talks in a monotonous voice*#WHITE#
 Yes master.]],
 	answers = {
 		{"I want to change your weapon.", action=change_weapon},
 		{"I want to change your armour.", action=change_armour},
+		{"I want to change your name.", action=change_name},
 		{"Nothing, let's go."},
 	}
 }
