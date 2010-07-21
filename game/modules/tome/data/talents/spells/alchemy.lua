@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Throw Bomb",
-	type = {"spell/alchemy", 1},
+	type = {"spell/explosives", 1},
 	require = spells_req1,
 	points = 5,
 	mana = 5,
@@ -115,7 +115,7 @@ newTalent{
 
 newTalent{
 	name = "Explosion Expert",
-	type = {"spell/alchemy", 2},
+	type = {"spell/explosives", 2},
 	require = spells_req2,
 	mode = "passive",
 	points = 5,
@@ -126,7 +126,7 @@ newTalent{
 
 newTalent{
 	name = "Alchemist Protection",
-	type = {"spell/alchemy", 3},
+	type = {"spell/explosives", 3},
 	require = spells_req3,
 	mode = "passive",
 	points = 5,
@@ -150,7 +150,7 @@ newTalent{
 
 newTalent{
 	name = "Stone Touch",
-	type = {"spell/alchemy",4},
+	type = {"spell/explosives",4},
 	require = spells_req4,
 	points = 5,
 	mana = 80,

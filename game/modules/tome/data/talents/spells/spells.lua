@@ -39,14 +39,14 @@ newTalentType{ type="spell/phantasm", name = "phantasm", description = "Control 
 newTalentType{ type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
 
 -- Alchemist spells
-newTalentType{ type="spell/alchemy", name = "alchemy", description = "Manipulate gems to turn them into explosive magical bombs." }
+newTalentType{ type="spell/explosives", name = "explosive admixtures", description = "Manipulate gems to turn them into explosive magical bombs." }
 newTalentType{ type="spell/infusion", name = "infusion", description = "Infusion your gem bombs with the powers of the elements." }
 newTalentType{ type="spell/golemancy-base", name = "golemancy", hide = true, description = "Learn to craft and upgrade your golem." }
 newTalentType{ type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }
 newTalentType{ type="spell/advanced-golemancy", name = "advanced-golemancy", description = "Advanced golem operations." }
-newTalentType{ type="spell/gemology-base", name = "gemology", hide = true, description = "Manipulate gems, imbue their powers into other objects." }
-newTalentType{ type="spell/gemology", name = "gemology", generic = true, description = "Manipulate gems, imbue their powers into other objects." }
-newTalentType{ type="spell/herbalism", name = "herbalism", generic = true, description = "Herbs lore." }
+newTalentType{ type="spell/fire-alchemy", name = "fire alchemy", description = "Alchemical control over fire.é" }
+newTalentType{ type="spell/stone-alchemy-base", name = "stone alchemy", hide = true, description = "Manipulate gems, imbue their powers into other objects." }
+newTalentType{ type="spell/stone-alchemy", name = "stone alchemy", generic = true, description = "Alchemical control over stone and gems." }
 newTalentType{ type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
 
 -- Generic requires for spells based on talent level
@@ -87,9 +87,10 @@ load("/data/talents/spells/temporal.lua")
 load("/data/talents/spells/phantasm.lua")
 load("/data/talents/spells/enhancement.lua")
 
-load("/data/talents/spells/alchemy.lua")
+load("/data/talents/spells/explosives.lua")
 load("/data/talents/spells/infusion.lua")
 load("/data/talents/spells/golemancy.lua")
 load("/data/talents/spells/advanced-golemancy.lua")
 load("/data/talents/spells/staff-combat.lua")
-load("/data/talents/spells/gemology.lua")
+load("/data/talents/spells/fire-alchemy.lua")
+load("/data/talents/spells/stone-alchemy.lua")
