@@ -160,9 +160,11 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 
 	local tg = tg or {type="bolt"}
 	if not tg.range then tg.range=weapon.range or 10 end
+	tg.display = tg.display or {display='/'}
+	tg.speed = tg.speed or 20
 	local x, y = self:getTarget(tg)
 	if not x or not y then return nil end
-	self:project(tg, x, y, function(tx, ty)
+	self:projectile(tg, x, y, function(tx, ty)
 		for i = 1, params.multishots or 1 do
 			local target = game.level.map(tx, ty, game.level.map.ACTOR)
 			if not target then return end
@@ -280,7 +282,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
 	elseif self:checkHit(atk, def) then
 		print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
-		local dam = math.max(0, dam - math.max(0, armor - apr))
+		dam = math.max(0, dam - math.max(0, armor - apr))
 		local damrange = self:combatDamageRange(weapon)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK] after range", dam)
@@ -349,6 +351,31 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		end
 	end
 
+	-- Shattering Impact
+	if hitted and self:attr("shattering_impact") then
+		local dam = dam * self.shattering_impact
+		self:project({type="ball", radius=1}, target.x, target.y, DamageType.PHYSICAL, dam)
+		self:incStamina(-15)
+	end
+
+	-- Onslaught
+	if hitted and self:attr("onslaught") then
+		local dir = util.getDir(target.x, target.y, self.x, self.y)
+		local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
+		local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir].right)
+		local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
+
+		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("knockback") then
+			target:knockback(self.x, self.y, self:attr("onslaught"))
+		end
+		if lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, 95, 10) and lt:canBe("knockback") then
+			lt:knockback(self.x, self.y, self:attr("onslaught"))
+		end
+		if rt:checkHit(self:combatAttack(weapon), rt:combatPhysicalResist(), 0, 95, 10) and r+t:canBe("knockback") then
+			rt:knockback(self.x, self.y, self:attr("onslaught"))
+		end
+	end
+	
 	-- Reactive target on hit damage
 	if hitted then for typ, dam in pairs(target.on_melee_hit) do
 		if dam > 0 then

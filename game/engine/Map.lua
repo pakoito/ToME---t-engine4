@@ -36,6 +36,8 @@ TERRAIN = 1
 TRAP = 50
 --- The place of an actor entity in a map grid
 ACTOR = 100
+--- The place of a projectile entity in a map grid
+PROJECTILE = 500
 --- The place of an object entity in a map grid
 OBJECT = 1000
 
@@ -342,6 +344,7 @@ function _M:updateMap(x, y)
 	local o = self(x, y, OBJECT)
 	local a = self(x, y, ACTOR)
 	local t = self(x, y, TRAP)
+	local p = self(x, y, PROJECTILE)
 
 	-- Update minimap if any
 	local mm = MM_FLOOR
@@ -378,6 +381,9 @@ function _M:updateMap(x, y)
 			mm = mm + (r > 0 and MM_FRIEND or (r == 0 and MM_NEUTRAL or MM_HOSTILE))
 			a:getMapObjects(self.tiles, mos, 10)
 		end
+	end
+	if p then
+		p:getMapObjects(self.tiles, mos, 13)
 	end
 
 	-- Cache the map objects in the C map

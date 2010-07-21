@@ -110,6 +110,7 @@ function _M:displayAtMap(tmx, tmy, mx, my)
 		local tt = {}
 		local seen = game.level.map.seens(tmx, tmy)
 		local remember = game.level.map.remembers(tmx, tmy)
+		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.PROJECTILE, "tooltip")
 		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip")
 		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip")
 		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip")

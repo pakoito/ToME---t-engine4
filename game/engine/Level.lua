@@ -34,10 +34,22 @@ end
 
 --- Adds an entity to the level
 -- Only entities that need to act need to be added. Terrain features do not need this usualy
-function _M:addEntity(e)
+function _M:addEntity(e, after)
 	if self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") already present on the level") end
 	self.entities[e.uid] = e
+	if not after or not self:hasEntity(after) then
 	table.insert(self.e_array, e)
+	else
+		print("Adding entity", e.uid, "after", after.uid)
+		local pos = nil
+		for i = 1, #self.e_array do
+			if self.e_array[i] == after then
+				pos = i
+				break
+			end
+		end
+		table.insert(self.e_array, pos+1, e)
+	end
 	game:addEntity(e)
 end
 

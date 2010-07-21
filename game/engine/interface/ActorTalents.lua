@@ -452,6 +452,13 @@ function _M:getTalentRange(t)
 	return t.range
 end
 
+--- Returns the projectile speed of a talent
+function _M:getTalentProjectileSpeed(t)
+	if not t.proj_speed then return nil end
+	if type(t.proj_speed) == "function" then return t.proj_speed(self, t) end
+	return t.proj_speed
+end
+
 --- Cooldown all talents by one
 -- This should be called in your actors "act()" method
 function _M:cooldownTalents()

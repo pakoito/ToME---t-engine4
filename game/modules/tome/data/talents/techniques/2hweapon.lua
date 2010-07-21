@@ -296,7 +296,7 @@ newTalent{
 	activate = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Berserker without a two-handed weapon!")
+			game.logPlayer(self, "You cannot use Blood Frenzy without a two-handed weapon!")
 			return nil
 		end
 		self.blood_frenzy = 0

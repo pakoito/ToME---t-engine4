@@ -51,19 +51,21 @@ newTalent{
 	mana = 20,
 	cooldown = 30,
 	tactical = {
-		BUFF = 10,
+		ATTACK = 10,
 	},
 	reflectable = true,
+	proj_speed = 1,
+	range = 10,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + self:getTalentLevel(t) * 0.07), {type="manathrust"})
+		self:projectile(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + self:getTalentLevel(t) * 0.07), {type="manathrust"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Decreases the target's global speed by %d%% for 7 turns.
+		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.
 		The speed decrease improves with the Magic stat]]):format(self:getTalentLevel(t) * 7)
 	end,
 }

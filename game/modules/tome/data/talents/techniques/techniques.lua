@@ -29,6 +29,8 @@ newTalentType{ type="technique/archery-bow", name = "archery - bows", descriptio
 newTalentType{ type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
 newTalentType{ type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
 newTalentType{ type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
+newTalentType{ type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
+newTalentType{ type="technique/warcries", name = "warcries", description = "Master the warcries to improve yourself and weaken others." }
 newTalentType{ type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-techniques-passive", name = "combat techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-training", name = "combat training", generic = true, description = "Teaches to use various armors and improves health." }
@@ -55,6 +57,26 @@ techs_req4 = function(self, t) local stat = "str"; return {
 techs_req5 = function(self, t) local stat = "str"; return {
 	stat = { [stat]=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
+} end
+techs_req_high1 = function(self, t) local stat = "str"; return {
+	stat = { [stat]=function(level) return 22 + (level-1) * 2 end },
+	level = function(level) return 10 + (level-1)  end,
+} end
+techs_req_high2 = function(self, t) local stat = "str"; return {
+	stat = { [stat]=function(level) return 30 + (level-1) * 2 end },
+	level = function(level) return 14 + (level-1)  end,
+} end
+techs_req_high3 = function(self, t) local stat = "str"; return {
+	stat = { [stat]=function(level) return 38 + (level-1) * 2 end },
+	level = function(level) return 18 + (level-1)  end,
+} end
+techs_req_high4 = function(self, t) local stat = "str"; return {
+	stat = { [stat]=function(level) return 46 + (level-1) * 2 end },
+	level = function(level) return 22 + (level-1)  end,
+} end
+techs_req_high5 = function(self, t) local stat = "str"; return {
+	stat = { [stat]=function(level) return 54 + (level-1) * 2 end },
+	level = function(level) return 26 + (level-1)  end,
 } end
 
 -- Generic requires for techs_dex based on talent level
@@ -104,6 +126,8 @@ techs_strdex_req5 = function(self, t) local stat = self:getStr() >= self:getDex(
 load("/data/talents/techniques/2hweapon.lua")
 load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")
+load("/data/talents/techniques/superiority.lua")
+load("/data/talents/techniques/warcries.lua")
 load("/data/talents/techniques/combat-techniques.lua")
 load("/data/talents/techniques/combat-training.lua")
 load("/data/talents/techniques/bow.lua")

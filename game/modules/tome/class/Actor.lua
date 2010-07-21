@@ -994,6 +994,10 @@ function _M:getTalentFullDescription(t, addlevel)
 	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
 	end
 	if t.cooldown then d[#d+1] = "#6fff83#Cooldown: #FFFFFF#"..util.getval(t.cooldown, self, t) end
+	local speed = self:getTalentProjectileSpeed(t)
+	if speed then d[#d+1] = "#6fff83#Travel Speed: #FFFFFF#"..(speed * 100).."% of base"
+	else d[#d+1] = "#6fff83#Travel Speed: #FFFFFF#instantaneous"
+	end
 
 	local ret = table.concat(d, "\n").."\n#6fff83#Description: #FFFFFF#"..t.info(self, t)
 
@@ -1110,6 +1114,7 @@ function _M:canBe(what)
 	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
 	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
+	if what == "teleport" and rng.percent(100 * (self:attr("teleport_immune") or 0)) then return false end
 	if what == "worldport" and game.zone.no_worldport then return false end
 	return true
 end

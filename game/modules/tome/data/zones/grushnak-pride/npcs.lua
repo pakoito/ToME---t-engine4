@@ -1,0 +1,83 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+load("/data/general/npcs/orc.lua", function(e) if e.rarity then e.rarity = e.rarity * 3 end e.make_escort = nil end)
+load("/data/general/npcs/orc-grushnak.lua")
+
+local Talents = require("engine.interface.ActorTalents")
+
+newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
+	name = "Grushnak, Battlemaster of the Pride", color=colors.VIOLET, unique = true,
+	desc = [[An old orc, covered in battle scars, he looks fierce and very, very, dangerous.]],
+	level_range = {45, 55}, exp_worth = 2,
+	rank = 4,
+	max_life = 700, life_rating = 25, fixed_rating = true,
+	infravision = 20,
+	stats = { str=15, dex=10, cun=12, wil=45, mag=16, con=14 },
+	move_others=true,
+
+	instakill_immune = 1,
+	stun_immune = 1,
+	combat_armor = 10, combat_def = 10,
+
+	open_door = true,
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
+	
+	resolvers.equip{
+		{type="weapon", subtype="waraxe", ego_change=100, autoreq=true},
+		{type="armor", subtype="shield", ego_change=100, autoreq=true},
+		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
+		{type="armor", subtype="head", ego_chance=100, autoreq=true},
+		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+
+	make_escort = {
+		{type="orc", no_subescort=true, number=resolvers.mbonus(6, 5)},
+	},
+
+	resolvers.talents{
+		[Talents.T_WEAPON_COMBAT]=10,
+		[Talents.T_AXE_MASTERY]=10,
+		[Talents.T_RUSH]=5,
+		[Talents.T_BATTLE_CALL]=5,
+		[Talents.T_SHIELD_PUMMEL]=4,
+		[Talents.T_OVERPOWER]=5,
+		[Talents.T_ASSAULT]=3,
+		[Talents.T_SHIELD_EXPERTISE]=5,
+		[Talents.T_BATTLE_SHOUT]=3,
+		[Talents.T_SHIELD_WALL]=5,
+		[Talents.T_SHATTERING_SHOUT]=5,
+		[Talents.T_BATTLE_CRY]=5,
+		[Talents.T_ONSLAUGHT]=5,
+		[Talents.T_SECOND_WIND]=5,
+		[Talents.T_JUGGERNAUT]=5,
+	},
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "grushnak")
+		if not game.player:hasQuest("pre-mount-doom") then
+			game.player:grantQuest("pre-mount-doom")
+		end
+	end,
+}

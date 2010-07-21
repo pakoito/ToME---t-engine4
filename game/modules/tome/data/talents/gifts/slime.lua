@@ -85,11 +85,12 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	proj_speed = 8,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SLIME, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3, {type="slime"})
+		self:projecticle(tg, x, y, DamageType.SLIME, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3, {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,

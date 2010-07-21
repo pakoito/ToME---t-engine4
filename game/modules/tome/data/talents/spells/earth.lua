@@ -84,11 +84,12 @@ newTalent{
 	},
 	range = 20,
 	reflectable = true,
+	proj_speed = 6,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(self:combatTalentSpellDamage(t, 8, 170)))
+		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(self:combatTalentSpellDamage(t, 8, 170)))
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,

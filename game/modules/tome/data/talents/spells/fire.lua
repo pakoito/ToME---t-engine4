@@ -29,11 +29,12 @@ newTalent{
 	},
 	range = 20,
 	reflectable = true,
+	proj_speed = 20,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)), {type="flame"})
+		self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)), {type="flame"})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
@@ -79,21 +80,20 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 15,
+	proj_speed = 4,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local grids = self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 28, 240)))
-
-		local _ _, x, y = self:canProject(tg, x, y)
+		self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 28, 280)), function(self, tg, x, y, grids)
 		game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, grids=grids, tx=x, ty=y})
-
+		end)
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 240), 1 + self:getTalentLevelRaw(t))
+		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 280), 1 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -126,8 +126,6 @@ newTalent{
 			nil, self:spellFriendlyFire()
 		)
 
---		self:project(tg, x, y, function(dx, dy) end, nil, {type="inferno"})
---		game.level.map:particleEmitter(x, y, 1, "inferno", {})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,

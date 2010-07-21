@@ -626,6 +626,40 @@ newEffect{
 }
 
 newEffect{
+	name = "BATTLE_SHOUT",
+	desc = "Battle Shout",
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.life = self:addTemporaryValue("max_life", self.max_life * eff.power / 100)
+		eff.stamina = self:addTemporaryValue("max_stamina", self.max_stamina * eff.power / 100)
+		self:heal(self.max_life * eff.power / 100)
+		self:incStamina(self.max_stamina * eff.power / 100)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("max_life", eff.life)
+		self:removeTemporaryValue("max_stamina", eff.stamina)
+	end,
+}
+
+newEffect{
+	name = "BATTLE_CRY",
+	desc = "Battle Cry",
+	type = "physical",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target#'s will is shattered.", "+Battle Cry" end,
+	on_lose = function(self, err) return "#Target# regains some of its will.", "-Battle Cry" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_def", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_def", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "SUNDER_ARMOUR",
 	desc = "Sunder Armour",
 	type = "physical",

@@ -339,6 +339,14 @@ function _M:addEntity(level, e, typ, x, y)
 			local newlevel = self:actor_adjust_level(level, e)
 			e:forceLevelup(newlevel)
 		end
+	elseif typ == "projectile" then
+		-- We are additing it, this means there is no old position
+		e.x = nil
+		e.y = nil
+		if x and y then e:move(x, y, true) end
+		if e.src then level:addEntity(e, e.src)
+		else level:addEntity(e) end
+		e:added()
 	elseif typ == "object" then
 		if x and y then level.map:addObject(x, y, e) end
 		e:added()
