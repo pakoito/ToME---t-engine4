@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Create Alchemist Gems",
-	type = {"spell/gemology-base", 1},
+	type = {"spell/stone-alchemy-base", 1},
 	require = spells_req1,
 	points = 1,
 	range = function(self, t)
@@ -58,7 +58,7 @@ newTalent{
 
 newTalent{
 	name = "Extract Gems",
-	type = {"spell/gemology", 1},
+	type = {"spell/stone-alchemy", 1},
 	require = spells_req1,
 	points = 5,
 	mana = 5,
@@ -84,7 +84,7 @@ newTalent{
 
 newTalent{
 	name = "Imbue Item",
-	type = {"spell/gemology", 2},
+	type = {"spell/stone-alchemy", 2},
 	require = spells_req2,
 	points = 5,
 	mana = 80,
@@ -106,39 +106,10 @@ newTalent{
 		You can only imbue items once, and it is permanent.]])
 	end,
 }
-
-newTalent{
-	name = "Gem Vision",
-	type = {"spell/gemology", 3},
-	require = spells_req3,
-	cooldown = 10,
-	mana = 15,
-	points = 5,
-	action = function(self, t)
-		local ammo = self:hasAlchemistWeapon()
-		if not ammo or ammo:getNumber() < 2 then
-			game.logPlayer(self, "You need to ready 2 alchemist gems in your quiver.")
-			return
-		end
-
-		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, range=100, radius=3 + self:getTalentLevel(t)}
-		if not x then return nil end
-
-		for i = 1, 2 do self:removeObject(self:getInven("QUIVER"), 1) end
-		self:magicMap(3 + self:getTalentLevel(t), x, y)
-		game:playSoundNear(self, "talents/spell_generic2")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Consumes two alchemist gems to see remote areas in a radius of %d.]]):
-		format(3 + self:getTalentLevel(t))
-	end,
-}
-
 newTalent{
 	name = "Gem Portal",
-	type = {"spell/gemology",4},
-	require = spells_req4,
+	type = {"spell/stone-alchemy",3},
+	require = spells_req3,
 	cooldown = 20,
 	mana = 20,
 	points = 5,
@@ -165,5 +136,42 @@ newTalent{
 		return ([[Crush 5 alchemists gems into dust to mark an impassable terrain, you immediately enter it and appear on the other side of the obstacle.
 		Works up to %d grids away.]]):
 		format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
+	end,
+}
+
+newTalent{
+	name = "Stone Touch",
+	type = {"spell/stone-alchemy",4},
+	require = spells_req4,
+	points = 5,
+	mana = 80,
+	cooldown = 15,
+	range = function(self, t)
+		if self:getTalentLevel(t) < 3 then return 1
+		else return math.floor(self:getTalentLevel(t)) end
+	end,
+	action = function(self, t)
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if not target then return end
+
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stone") and target:canBe("instakill") then
+				target:setEffect(target.EFF_STONED, math.floor((3 + self:getTalentLevel(t)) / 1.5), {})
+				game.level.map:particleEmitter(tx, ty, 1, "archery")
+			end
+		end)
+		game:playSoundNear(self, "talents/earth")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Touch your foe and turn it into stone for %d turns.
+		Stoned creatures are unable to act or regen life and are very brittle.
+		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
+		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
+		At level 3 it will become a beam.]]):format(math.floor((3 + self:getTalentLevel(t)) / 1.5))
 	end,
 }

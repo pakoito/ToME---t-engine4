@@ -42,7 +42,8 @@ setDefaultProjector(function(src, x, y, type, dam)
 
 		-- Reduce damage with resistance
 		if target.resists then
-			local pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0)
+			local pen = 0
+			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
 			local res = (target.resists.all or 0) + (target.resists[type] or 0)
 			res = res * (100 - pen) / 100
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)

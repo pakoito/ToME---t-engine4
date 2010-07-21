@@ -109,6 +109,7 @@ newTalent{
 		if ammo then dam, damtype = t.computeDamage(self, t, ammo) end
 		return ([[Imbue an alchemist gem with an explosive charge of mana and throw it.
 		The gem will explode for %0.2f %s damage.
+		Each kind of gem will also provide a specific effect.
 		The damage will improve with better gems and Magic stat and the range with your dexterity.]]):format(dam, DamageType:get(damtype).name)
 	end,
 }
@@ -149,38 +150,82 @@ newTalent{
 }
 
 newTalent{
-	name = "Stone Touch",
+	name = "Shockwave Bomb",
 	type = {"spell/explosives",4},
 	require = spells_req4,
 	points = 5,
-	mana = 80,
-	cooldown = 15,
+	mana = 40,
+	cooldown = 10,
 	range = function(self, t)
-		if self:getTalentLevel(t) < 3 then return 1
-		else return math.floor(self:getTalentLevel(t)) end
+		return math.ceil(5 + self:getDex(12))
+	end,
+	computeDamage = function(self, t, ammo)
+		local inc_dam = 0
+		local damtype = DamageType.SPELLKNOCKBACK
+		local particle = "ball_fire"
+		inc_dam = self:getTalentLevel(self.T_FIRE_INFUSION) * 0.05 + (ammo.alchemist_bomb.power or 0) / 100
+		local dam = self:combatTalentSpellDamage(t, 15, 120, (ammo.alchemist_power + self:combatSpellpower()) / 2)
+		dam = dam * (1 + inc_dam)
+		return dam, damtype, particle
 	end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
-		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
+		local ammo = self:hasAlchemistWeapon()
+		if not ammo or ammo:getNumber() < 2 then
+			game.logPlayer(self, "You need to ready at least two alchemist gems in your quiver.")
+			return
+		end
+
+		local tg = {type="ball", range=self:getTalentRange(t)+(ammo.alchemist_bomb.range or 0), radius=2, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, function(tx, ty)
+
+		ammo = self:removeObject(self:getInven("QUIVER"), 1)
+		if not ammo then return end
+
+		local dam, damtype, particle = t.computeDamage(self, t, ammo)
+		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 0.2
+		local golem = game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem or nil
+		local dam_done = 0
+
+		local tmp = {}
+		local grids = self:project(tg, x, y, function(tx, ty)
+			local d = dam
+			-- Protect yourself
+			if tx == self.x and ty == self.y then d = dam * (1 - prot) end
+			-- Protect the golem
+			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
+
+			DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
-
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stone") and target:canBe("instakill") then
-				target:setEffect(target.EFF_STONED, math.floor((3 + self:getTalentLevel(t)) / 1.5), {})
-				game.level.map:particleEmitter(tx, ty, 1, "archery")
+			if ammo.alchemist_bomb.splash then
+				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
+			end
+			if ammo.alchemist_bomb.stun and rng.percent(ammo.alchemist_bomb.stun.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, ammo.alchemist_bomb.stun.dur, {})
+			end
+			if ammo.alchemist_bomb.daze and rng.percent(ammo.alchemist_bomb.daze.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, ammo.alchemist_bomb.daze.dur, {})
 			end
 		end)
-		game:playSoundNear(self, "talents/earth")
+
+		if ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done)) end
+
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
+
+		if ammo.alchemist_bomb.mana then self:incMana(ammo.alchemist_bomb.mana) end
+
+		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch your foe and turn it into stone for %d turns.
-		Stoned creatures are unable to act or regen life and are very brittle.
-		If a stoned creature if hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
-		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
-		At level 3 it will become a beam.]]):format(math.floor((3 + self:getTalentLevel(t)) / 1.5))
+		local ammo = self:hasAlchemistWeapon()
+		local dam, damtype = 1
+		if ammo then dam = t.computeDamage(self, t, ammo) end
+		return ([[Crush together two alchemmist gems, this makes them extremely unstable.
+		You then throw them to a target area, they explode on impact dealing %0.2f physical damage and knocking back any creatures in the blast radius.
+		Each kind of gem will also provide a specific effect.
+		The damage will improve with better gems and Magic stat and the range with your dexterity.]]):format(dam)
 	end,
 }

@@ -270,6 +270,22 @@ function _M:canSee(actor, def, def_pct)
 	return true, 100
 end
 
+--- Does the actor have LOS to the target
+function _M:hasLOS(x, y)
+	local l = line.new(self.x, self.y, x, y)
+	local lx, ly = l()
+	while lx and ly do
+		if game.level.map:checkAllEntities(lx, ly, "block_sight") then break end
+
+		lx, ly = l()
+	end
+	-- Ok if we are at the end reset lx and ly for the next code
+	if not lx and not ly then lx, ly = x, y end
+
+	if lx == x and ly == y then return true, lx, ly end
+	return false, lx, ly
+end
+
 local function gettable(base, name)
 	for w in name:gmatch("[^.]+") do
 		base = base[w]
