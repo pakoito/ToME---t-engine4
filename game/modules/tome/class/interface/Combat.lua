@@ -299,14 +299,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Melee project
-	if hitted then for typ, dam in pairs(self.melee_project) do
+	if hitted and not target.dead then for typ, dam in pairs(self.melee_project) do
 		if dam > 0 then
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam)
 		end
 	end end
 
 	-- Weapon of light cast
-	if hitted and self:knowTalent(self.T_WEAPON_OF_LIGHT) and self:isTalentActive(self.T_WEAPON_OF_LIGHT) then
+	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_OF_LIGHT) and self:isTalentActive(self.T_WEAPON_OF_LIGHT) then
 		local dam = 7 + self:getTalentLevel(self.T_WEAPON_OF_LIGHT) * self:combatSpellpower(0.092)
 		DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, dam)
 		self:incPositive(-3)
@@ -319,7 +319,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Shadow cast
-	if hitted and self:knowTalent(self.T_SHADOW_COMBAT) and self:isTalentActive(self.T_SHADOW_COMBAT) and self:getMana() > 0 then
+	if hitted and not target.dead and self:knowTalent(self.T_SHADOW_COMBAT) and self:isTalentActive(self.T_SHADOW_COMBAT) and self:getMana() > 0 then
 		local dam = 3 + self:getTalentLevel(self.T_SHADOW_COMBAT) * 2
 		local mana = 1 + self:getTalentLevelRaw(t) / 1.5
 		DamageType:get(DamageType.DARKNESS).projector(self, target.x, target.y, DamageType.DARKNESS, dam)
@@ -327,7 +327,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Autospell cast
-	if hitted and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) and rng.percent(20 + self:getTalentLevel(self.T_ARCANE_COMBAT) * (1 + self:getDex(9, true))) then
+	if hitted and not target.dead and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) and rng.percent(20 + self:getTalentLevel(self.T_ARCANE_COMBAT) * (1 + self:getDex(9, true))) then
 		local spells = {}
 		if self:knowTalent(self.T_FLAME) then spells[#spells+1] = self.T_FLAME end
 		if self:knowTalent(self.T_FLAMESHOCK) then spells[#spells+1] = self.T_FLAMESHOCK end
@@ -375,7 +375,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 			rt:knockback(self.x, self.y, self:attr("onslaught"))
 		end
 	end
-	
+
 	-- Reactive target on hit damage
 	if hitted then for typ, dam in pairs(target.on_melee_hit) do
 		if dam > 0 then
