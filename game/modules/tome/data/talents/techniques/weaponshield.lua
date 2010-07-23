@@ -26,6 +26,7 @@ newTalent{
 	type = {"technique/shield-offense", 1},
 	require = techs_req1,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 6,
 	stamina = 8,
 	action = function(self, t)
@@ -75,6 +76,7 @@ newTalent{
 	type = {"technique/shield-offense", 3},
 	require = techs_req3,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 8,
 	stamina = 22,
 	action = function(self, t)
@@ -118,6 +120,7 @@ newTalent{
 	type = {"technique/shield-offense", 4},
 	require = techs_req4,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 6,
 	stamina = 16,
 	action = function(self, t)
@@ -160,6 +163,7 @@ newTalent{
 	type = {"technique/shield-defense", 1},
 	require = techs_req1,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
 	action = function(self, t)

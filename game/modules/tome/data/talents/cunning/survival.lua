@@ -69,6 +69,7 @@ newTalent{
 	type = {"cunning/survival", 4},
 	points = 5,
 	require = cuns_req4,
+	random_ego = "defensive",
 	stamina = 35,
 	cooldown = 30,
 	action = function(self, t)

@@ -22,6 +22,7 @@ newTalent{
 	type = {"spell/nature", 1},
 	require = spells_req1,
 	points = 5,
+	random_ego = "defensive",
 	mana = 30,
 	cooldown = 10,
 	tactical = {
@@ -43,6 +44,7 @@ newTalent{
 	type = {"spell/nature", 2},
 	require = spells_req2,
 	points = 5,
+	random_ego = "defensive",
 	mana = 60,
 	cooldown = 10,
 	tactical = {
@@ -64,6 +66,7 @@ newTalent{
 	type = {"spell/nature", 3},
 	require = spells_req3,
 	points = 5,
+	random_ego = "defensive",
 	mana = 30,
 	cooldown = 15,
 	action = function(self, t)
@@ -100,6 +103,7 @@ newTalent{
 	type = {"spell/nature", 4},
 	require = spells_req4,
 	points = 5,
+	random_ego = "attack",
 	mana = 60,
 	cooldown = 100,
 	tactical = {

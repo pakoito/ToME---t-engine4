@@ -119,6 +119,7 @@ newTalent{
 	type = {"divine/twilight",3},
 	require = divi_req3,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 15,
 	negative = 15,
 	tactical = {
@@ -144,6 +145,7 @@ newTalent{
 	name = "Shadow Simulacrum",
 	type = {"divine/twilight", 4},
 	require = divi_req4,
+	random_ego = "attack",
 	points = 5,
 	cooldown = 30,
 	negative = 10,

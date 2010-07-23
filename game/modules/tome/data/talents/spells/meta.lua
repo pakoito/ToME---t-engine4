@@ -22,6 +22,7 @@ newTalent{
 	type = {"spell/meta",1},
 	require = spells_req1,
 	points = 5,
+	random_ego = "utility",
 	mana = 40,
 	cooldown = 7,
 	action = function(self, t)

@@ -22,6 +22,7 @@ newTalent{
 	type = {"divine/light", 1},
 	require = spells_req1,
 	points = 5,
+	random_ego = "defensive",
 	cooldown = 40,
 	positive = -10,
 	tactical = {
@@ -42,6 +43,7 @@ newTalent{
 	name = "Bathe in Light",
 	type = {"divine/light", 2},
 	require = spells_req2,
+	random_ego = "defensive",
 	points = 5,
 	cooldown = 10,
 	positive = -20,
@@ -76,6 +78,7 @@ newTalent{
 	type = {"divine/light", 3},
 	require = spells_req3,
 	points = 5,
+	random_ego = "defensive",
 	positive = -20,
 	cooldown = 60,
 	action = function(self, t)

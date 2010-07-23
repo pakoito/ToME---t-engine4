@@ -23,6 +23,7 @@ newTalent{
 	type = {"technique/2hweapon-offense", 1},
 	require = techs_req1,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
 	action = function(self, t)
@@ -88,6 +89,7 @@ newTalent{
 	type = {"technique/2hweapon-offense",3},
 	require = techs_req3,
 	points = 5,
+	random_ego = "attack",
 	stamina = 30,
 	cooldown = 18,
 	tactical = {
@@ -123,6 +125,7 @@ newTalent{
 	type = {"technique/2hweapon-offense", 4},
 	require = techs_req4,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 30,
 	stamina = 30,
 	action = function(self, t)
@@ -177,6 +180,7 @@ newTalent{
 	type = {"technique/2hweapon-cripple", 1},
 	require = techs_req1,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 6,
 	stamina = 8,
 	action = function(self, t)
@@ -213,6 +217,7 @@ newTalent{
 	type = {"technique/2hweapon-cripple", 2},
 	require = techs_req2,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 6,
 	stamina = 12,
 	action = function(self, t)
@@ -249,6 +254,7 @@ newTalent{
 	type = {"technique/2hweapon-cripple", 3},
 	require = techs_req3,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 6,
 	stamina = 12,
 	action = function(self, t)

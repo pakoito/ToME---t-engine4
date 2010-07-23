@@ -22,6 +22,7 @@ newTalent{
 	type = {"spell/temporal", 1},
 	require = spells_req1,
 	points = 5,
+	random_ego = "utility",
 	mana = 30,
 	cooldown = 30,
 	tactical = {
@@ -48,6 +49,7 @@ newTalent{
 	type = {"spell/temporal",2},
 	require = spells_req2,
 	points = 5,
+	random_ego = "utility",
 	mana = 20,
 	cooldown = 30,
 	tactical = {

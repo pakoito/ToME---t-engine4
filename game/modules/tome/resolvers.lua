@@ -187,3 +187,22 @@ end
 function resolvers.calc.genericlast(t, e)
 	return t[1](e)
 end
+
+--- Charges resolver, gives a random use talent
+function resolvers.random_use_talent(types, power)
+	types = table.reverse(types)
+	return {__resolver="random_use_talent", __resolve_last=true, types, power}
+end
+function resolvers.calc.random_use_talent(tt, e)
+	local ml = e.material_level or 1
+	local ts = {}
+	for i, t in ipairs(engine.interface.ActorTalents.talents_def) do
+		if t.random_ego and tt[1][t.random_ego] and t.type[2] < ml then ts[#ts+1]=t.id end
+	end
+	local tid = rng.table(ts) or engine.interface.ActorTalents.T_SENSE
+	local t = engine.interface.ActorTalents.talents_def[tid]
+	local level = util.bound(math.ceil(rng.mbonus(5, resolvers.current_level, resolvers.mbonus_max_level) * ml / 5), 1, 5)
+	e.cost = e.cost + t.type[2] * 3
+	e.cost = e.cost + level * 2
+	return { id=tid, level=level, power=tt[2] }
+end

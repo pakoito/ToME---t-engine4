@@ -20,6 +20,10 @@
 local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
+load("/data/general/objects/egos/charged-attack.lua")
+load("/data/general/objects/egos/charged-defensive.lua")
+load("/data/general/objects/egos/charged-utility.lua")
+
 newEntity{
 	name = " of see invisible", suffix=true,
 	level_range = {1, 20},

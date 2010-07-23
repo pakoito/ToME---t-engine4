@@ -22,6 +22,7 @@ newTalent{
 	type = {"divine/star-fury", 1},
 	require = divi_req1,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 3,
 	negative = 10,
 	tactical = {
@@ -50,6 +51,7 @@ newTalent{
 	type = {"divine/star-fury", 2},
 	require = divi_req2,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 10,
 	negative = 15,
 	tactical = {
@@ -96,6 +98,7 @@ newTalent{
 	type = {"divine/star-fury",3},
 	require = divi_req3,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 7,
 	negative = -20,
 	positive = -10,
@@ -129,6 +132,7 @@ newTalent{
 	type = {"divine/star-fury", 4},
 	require = divi_req4,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 12,
 	negative = 20,
 	tactical = {

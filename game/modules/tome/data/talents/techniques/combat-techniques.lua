@@ -53,6 +53,7 @@ newTalent{
 	message = "@Source@ rushes out!",
 	require = techs_strdex_req2,
 	points = 5,
+	random_ego = "attack",
 	stamina = 45,
 	cooldown = 50,
 	tactical = {
@@ -93,6 +94,7 @@ newTalent{
 	name = "Perfect Strike",
 	type = {"technique/combat-techniques-active", 3},
 	points = 5,
+	random_ego = "attack",
 	cooldown = 55,
 	stamina = 25,
 	require = techs_strdex_req3,
@@ -109,6 +111,7 @@ newTalent{
 	name = "Blinding Speed",
 	type = {"technique/combat-techniques-active", 4},
 	points = 5,
+	random_ego = "utility",
 	cooldown = 55,
 	stamina = 25,
 	require = techs_strdex_req4,

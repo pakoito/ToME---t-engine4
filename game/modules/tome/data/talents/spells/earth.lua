@@ -54,6 +54,7 @@ newTalent{
 	type = {"spell/earth",2},
 	require = spells_req2,
 	points = 5,
+	random_ego = "utility",
 	mana = 40,
 	range = 20,
 	reflectable = true,
@@ -77,6 +78,7 @@ newTalent{
 	type = {"spell/earth",3},
 	require = spells_req3,
 	points = 5,
+	random_ego = "attack",
 	mana = 18,
 	cooldown = 6,
 	tactical = {

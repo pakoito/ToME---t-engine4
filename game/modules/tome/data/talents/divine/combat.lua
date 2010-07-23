@@ -50,6 +50,7 @@ newTalent{
 	type = {"divine/combat", 2},
 	require = divi_req2,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 22,
 	positive = 25,
 	tactical = {
@@ -85,6 +86,7 @@ newTalent{
 	type = {"divine/combat",3},
 	require = divi_req3,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 6,
 	positive = 10,
 	tactical = {
@@ -115,6 +117,7 @@ newTalent{
 	name = "Crusade",
 	type = {"divine/combat", 4},
 	require = divi_req4,
+	random_ego = "attack",
 	points = 5,
 	cooldown = 10,
 	positive = 10,

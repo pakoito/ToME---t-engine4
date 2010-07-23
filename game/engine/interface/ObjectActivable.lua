@@ -20,6 +20,7 @@
 require "engine.class"
 
 --- Handles activable objects, much more simple than actor's resource
+-- It can define simple activations, complex ones that use power and it can also activate talent (ActorTalents interface must also be used on the Object class in this case)
 module(..., package.seeall, class.make)
 
 function _M:init(t)
@@ -32,11 +33,11 @@ end
 
 --- Regen resources, shout be called in your actor's act() method
 function _M:regenPower()
-	self.power = util.bound(self.power + self.power_regen, 0, self.max_power)
+	if self.power_regen then self.power = util.bound(self.power + self.power_regen, 0, self.max_power) end
 end
 
 function _M:canUseObject()
-	if self.use_simple or self.use_power then
+	if self.use_simple or self.use_power or self.use_talent then
 		return true
 	end
 end
@@ -46,6 +47,12 @@ function _M:getUseDesc()
 		return ("It can be used to %s, costing %d power out of %d/%d."):format(self.use_power.name, self.use_power.power, self.power, self.max_power)
 	elseif self.use_simple then
 		return ("It can be used to %s."):format(self.use_simple.name)
+	elseif self.use_talent then
+		if not self.use_talent.power then                                                                        print(self:getTalentFromId(self.use_talent.id),self.use_talent.id)
+			return ("It can be used to activate talent: %s (level %d)."):format(self:getTalentFromId(self.use_talent.id).name, self.use_talent.level)
+		else
+			return ("It can be used to activate talent: %s (level %d), costing %d power out of %d/%d."):format(self:getTalentFromId(self.use_talent.id).name, self.use_talent.level, self.use_talent.power, self.power, self.max_power)
+		end
 	end
 end
 
@@ -69,5 +76,15 @@ function _M:useObject(who)
 		local ok, ret = coroutine.resume(co)
 		if not ok and ret then print(debug.traceback(co)) error(ret) end
 		return ret
+	elseif self.use_talent then
+		if not self.use_talent.power or self.power >= self.use_talent.power then
+			return self:useTalent(self.use_talent.id, who, self.use_talent.level)
+		else
+			if self.power_regen and self.power_regen ~= 0 then
+				game.logPlayer(who, "%s is still recharging.", self:getName{no_count=true})
+			else
+				game.logPlayer(who, "%s can not be used anymore.", self:getName{no_count=true})
+			end
+		end
 	end
 end

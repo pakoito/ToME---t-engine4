@@ -22,6 +22,7 @@ newTalent{
 	type = {"spell/water",1},
 	require = spells_req1,
 	points = 5,
+	random_ego = "attack",
 	mana = 25,
 	cooldown = 8,
 	tactical = {
@@ -59,6 +60,7 @@ newTalent{
 	type = {"spell/water", 2},
 	require = spells_req2,
 	points = 5,
+	random_ego = "attack",
 	mana = 14,
 	cooldown = 5,
 	tactical = {
@@ -86,6 +88,7 @@ newTalent{
 	type = {"spell/water",3},
 	require = spells_req3,
 	points = 5,
+	random_ego = "attack",
 	mana = 55,
 	cooldown = 8,
 	tactical = {
@@ -121,6 +124,7 @@ newTalent{
 	type = {"spell/water",4},
 	require = spells_req4,
 	points = 5,
+	random_ego = "attack",
 	mana = 40,
 	cooldown = 30,
 	tactical = {

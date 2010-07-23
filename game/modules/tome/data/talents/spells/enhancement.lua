@@ -50,6 +50,7 @@ newTalent{
 	name = "Earthen Barrier",
 	type = {"spell/enhancement", 2},
 	points = 5,
+	random_ego = "utility",
 	cooldown = 25,
 	mana = 45,
 	require = spells_req2,

@@ -21,6 +21,7 @@ newTalent{
 	name = "Poisonous Spores",
 	type = {"wild-gift/slime", 1},
 	require = gifts_req1,
+	random_ego = "attack",
 	points = 5,
 	message = "@Source@ releases poisonous spores at @target@.",
 	equilibrium = 2,
@@ -79,6 +80,7 @@ newTalent{
 	type = {"wild-gift/slime", 3},
 	require = gifts_req3,
 	points = 5,
+	random_ego = "attack",
 	equilibrium = 4,
 	cooldown = 30,
 	tactical = {
@@ -105,6 +107,7 @@ newTalent{
 	type = {"wild-gift/slime", 4},
 	require = gifts_req4,
 	points = 5,
+	random_ego = "utility",
 	equilibrium = 5,
 	cooldown = 20,
 	tactical = {

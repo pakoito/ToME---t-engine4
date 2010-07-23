@@ -29,7 +29,8 @@ local DamageType = require("engine.DamageType")
 module(..., package.seeall, class.inherit(
 	engine.Object,
 	engine.interface.ObjectActivable,
-	engine.interface.ObjectIdentify
+	engine.interface.ObjectIdentify,
+	engine.interface.ActorTalents
 ))
 
 function _M:init(t, no_default)
@@ -38,12 +39,13 @@ function _M:init(t, no_default)
 	engine.Object.init(self, t, no_default)
 	engine.interface.ObjectActivable.init(self, t)
 	engine.interface.ObjectIdentify.init(self, t)
+	engine.interface.ActorTalents.init(self, t)
 end
 
 --- Can this object act at all
 -- Most object will want to anwser false, only recharging and stuff needs them
 function _M:canAct()
-	if self.power_regen then return true end
+	if self.power_regen or self.use_talent then return true end
 	return false
 end
 
@@ -52,6 +54,7 @@ end
 -- By default, does nothing at all
 function _M:act()
 	self:regenPower()
+	self:cooldownTalents()
 	self:useEnergy()
 end
 
@@ -109,6 +112,8 @@ function _M:descAttribute(attr)
 		return (self.wielder and self.wielder.combat_atk or 0).." attack, "..(self.wielder and self.wielder.combat_apr or 0).." apr"..(self.wielder and self.wielder.combat_dam or 0).." power"
 	elseif attr == "MONEY" then
 		return ("worth %0.2f"):format(self.money_value / 10)
+	elseif attr == "USE_TALENT" then
+		return self:getTalentFromId(self.use_talent.id).name
 	end
 end
 

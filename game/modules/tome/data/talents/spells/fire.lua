@@ -22,6 +22,7 @@ newTalent{
 	type = {"spell/fire",1},
 	require = spells_req1,
 	points = 5,
+	random_ego = "attack",
 	mana = 12,
 	cooldown = 3,
 	tactical = {
@@ -49,6 +50,7 @@ newTalent{
 	type = {"spell/fire",2},
 	require = spells_req2,
 	points = 5,
+	random_ego = "attack",
 	mana = 30,
 	cooldown = 18,
 	tactical = {
@@ -74,6 +76,7 @@ newTalent{
 	type = {"spell/fire",3},
 	require = spells_req3,
 	points = 5,
+	random_ego = "attack",
 	mana = 40,
 	cooldown = 8,
 	tactical = {
@@ -102,6 +105,7 @@ newTalent{
 	type = {"spell/fire",4},
 	require = spells_req4,
 	points = 5,
+	random_ego = "attack",
 	mana = 100,
 	cooldown = 30,
 	tactical = {

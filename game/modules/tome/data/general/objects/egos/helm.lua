@@ -19,6 +19,10 @@
 local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
+load("/data/general/objects/egos/charged-attack.lua")
+load("/data/general/objects/egos/charged-defensive.lua")
+load("/data/general/objects/egos/charged-utility.lua")
+
 newEntity{
 	name = " of rage", suffix=true, instant_resolve=true,
 	level_range = {20, 50},

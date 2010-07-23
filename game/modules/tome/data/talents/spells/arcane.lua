@@ -49,6 +49,7 @@ newTalent{
 	type = {"spell/arcane", 2},
 	require = spells_req2,
 	points = 5,
+	random_ego = "attack",
 	mana = 10,
 	cooldown = 3,
 	tactical = {
@@ -83,6 +84,7 @@ newTalent{
 	type = {"spell/arcane", 3},
 	require = spells_req3,
 	points = 5,
+	random_ego = "utility",
 	mana = 0,
 	cooldown = 300,
 	tactical = {

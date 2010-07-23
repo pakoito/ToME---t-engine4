@@ -17,25 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/egos/charged-utility.lua")
-
-
 newEntity{
-	name = "bright ", prefix=true, instant_resolve=true,
+	name = "charged(#USE_TALENT#) ", prefix=true,
 	level_range = {1, 50},
-	rarity = 5,
+	rarity = 15,
 	cost = 1,
-	wielder = {
-		lite=1,
-	},
-}
-
-newEntity{
-	name = " of clear sight", suffix=true, instant_resolve=true,
-	level_range = {10, 50},
-	rarity = 5,
-	cost = 1,
-	wielder = {
-		blind_immune=0.5,
-	},
+	use_talent = resolvers.random_use_talent({"defensive"}, 1),
+	max_power = resolvers.mbonus_material(6, 2, function(e, v) return v * 1 end),
 }

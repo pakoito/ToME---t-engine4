@@ -22,6 +22,7 @@ newTalent{
 	type = {"spell/conveyance",1},
 	require = spells_req1,
 	points = 5,
+	random_ego = "utility",
 	mana = 10,
 	cooldown = 8,
 	tactical = {
@@ -68,6 +69,7 @@ newTalent{
 	type = {"spell/conveyance",2},
 	require = spells_req2,
 	points = 5,
+	random_ego = "utility",
 	mana = 20,
 	cooldown = 30,
 	tactical = {

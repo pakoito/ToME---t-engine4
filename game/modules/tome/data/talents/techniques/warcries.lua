@@ -23,6 +23,7 @@ newTalent{
 	type = {"technique/warcries", 1},
 	require = techs_req_high1,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 7,
 	stamina = 20,
 	range = 4,
@@ -44,6 +45,7 @@ newTalent{
 	type = {"technique/warcries", 2},
 	require = techs_req_high2,
 	points = 5,
+	random_ego = "utility",
 	cooldown = 150,
 	action = function(self, t)
 		self:incStamina(20 + self:getTalentLevel(t) * 12)
@@ -60,6 +62,7 @@ newTalent{
 	type = {"technique/warcries", 3},
 	require = techs_req_high3,
 	points = 5,
+	random_ego = "defensive",
 	cooldown = 30,
 	stamina = 40,
 	action = function(self, t)
@@ -76,6 +79,7 @@ newTalent{
 	type = {"technique/warcries", 4},
 	require = techs_req_high4,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 30,
 	stamina = 40,
 	range = 4,

@@ -21,6 +21,7 @@ newTalent{
 	name = "Searing Light",
 	type = {"divine/sun", 1},
 	require = divi_req1,
+	random_ego = "attack",
 	points = 5,
 	cooldown = 6,
 	positive = -16,
@@ -60,6 +61,7 @@ newTalent{
 	type = {"divine/sun", 2},
 	require = divi_req2,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 22,
 	positive = -15,
 	tactical = {
@@ -93,6 +95,7 @@ newTalent{
 	type = {"divine/sun",3},
 	require = divi_req3,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 7,
 	positive = -20,
 	tactical = {
@@ -122,6 +125,7 @@ newTalent{
 	type = {"divine/sun", 4},
 	require = divi_req4,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 15,
 	positive = -20,
 	tactical = {

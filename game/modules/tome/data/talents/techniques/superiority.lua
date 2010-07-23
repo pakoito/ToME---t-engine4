@@ -23,6 +23,7 @@ newTalent{
 	type = {"technique/superiority", 1},
 	require = techs_req_high1,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 40,
 	stamina = 60,
 	action = function(self, t)
@@ -67,6 +68,7 @@ newTalent{
 	type = {"technique/superiority", 3},
 	require = techs_req_high3,
 	points = 5,
+	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
 	action = function(self, t)

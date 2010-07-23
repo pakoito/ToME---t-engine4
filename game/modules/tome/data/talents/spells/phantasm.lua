@@ -21,6 +21,7 @@ newTalent{
 	name = "Illuminate",
 	type = {"spell/phantasm",1},
 	require = spells_req1,
+	random_ego = "utility",
 	points = 5,
 	mana = 5,
 	cooldown = 14,

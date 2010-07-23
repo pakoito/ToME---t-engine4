@@ -96,19 +96,23 @@ function _M:init(t)
 end
 
 --- Make the actor use the talent
-function _M:useTalent(id)
+function _M:useTalent(id, who, force_level)
+	who = who or self
 	local ab = _M.talents_def[id]
 	assert(ab, "trying to cast talent "..tostring(id).." but it is not defined")
 
 	if ab.mode == "activated" and ab.action then
 		if self:isTalentCoolingDown(ab) then
-			game.logPlayer(self, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
+			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
 		if not self:preUseTalent(ab) then return end
 		local co = coroutine.create(function()
 			print("USING", ab, ab.name)
-			local ret = ab.action(self, ab)
+			local old_level
+			if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
+			local ret = ab.action(who, ab)
+			if force_level then who.talents[id] = old_level end
 
 			if not self:postUseTalent(ab, ret) then return end
 
@@ -119,19 +123,25 @@ function _M:useTalent(id)
 		if not ok and err then print(debug.traceback(co)) error(err) end
 	elseif ab.mode == "sustained" and ab.activate and ab.deactivate then
 		if self:isTalentCoolingDown(ab) then
-			game.logPlayer(self, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
+			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
 		if not self:preUseTalent(ab) then return end
 		local co = coroutine.create(function()
 			if not self.sustain_talents[id] then
-				local ret = ab.activate(self, ab)
+				local old_level
+				if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
+				local ret = ab.activate(who, ab)
+				if force_level then who.talents[id] = old_level end
 
 				if not self:postUseTalent(ab, ret) then return end
 
 				self.sustain_talents[id] = ret
 			else
-				local ret = ab.deactivate(self, ab, self.sustain_talents[id])
+				local old_level
+				if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
+				local ret = ab.deactivate(who, ab, self.sustain_talents[id])
+				if force_level then who.talents[id] = old_level end
 
 				if not self:postUseTalent(ab, ret) then return end
 
@@ -361,7 +371,7 @@ end
 --- Do we know this talent
 function _M:knowTalent(id)
 	if type(id) == "table" then id = id.id end
-	return self.talents[id] and true or false
+	return (self:getTalentLevelRaw(id) > 0) and true or false
 end
 
 --- Talent level, 0 if not known
@@ -380,7 +390,7 @@ function _M:getTalentLevel(id)
 	else
 		t = _M.talents_def[id]
 	end
-	return (self.talents[id] or 0) * (self.talents_types_mastery[t.type[1]] or 1)
+	return (self:getTalentLevelRaw(id)) * (self.talents_types_mastery[t.type[1]] or 1)
 end
 
 --- Talent type level, sum of all raw levels of talents inside
