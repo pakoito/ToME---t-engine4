@@ -26,6 +26,7 @@ newEntity{
 	encumber = 2,
 	rarity = 6,
 	desc = [[A cap made of leather.]],
+	egos = "/data/general/objects/egos/helm.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 newEntity{ base = "BASE_LEATHER_CAP",

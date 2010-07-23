@@ -25,7 +25,7 @@ newEntity{
 	display = "]", color=colors.BLUE,
 	encumber = 2,
 	rarity = 6,
-	desc = [[A pointy cloth hat, very wizardy...]],
+	desc = [[A pointy cloth hat, very wizardly...]],
 	egos = "/data/general/objects/egos/wizard-hat.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

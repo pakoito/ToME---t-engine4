@@ -61,7 +61,7 @@ newEntity{
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_CUN = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
+		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
 	},
 }
 newEntity{
@@ -90,5 +90,14 @@ newEntity{
 	cost = 4,
 	wielder = {
 		max_mana = resolvers.mbonus_material(100, 10, function(e, v) return v * 0.2 end),
+	},
+}
+newEntity{
+	name = "of seeing ", prefix=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		blind_immune = 0.5,
 	},
 }

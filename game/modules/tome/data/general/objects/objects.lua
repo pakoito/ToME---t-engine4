@@ -56,6 +56,7 @@ load("/data/general/objects/massive-armors.lua")
 -- Head, feet, hands, ...
 load("/data/general/objects/leather-caps.lua")
 load("/data/general/objects/helms.lua")
+load("/data/general/objects/wizard-hat.lua")
 load("/data/general/objects/leather-boots.lua")
 load("/data/general/objects/heavy-boots.lua")
 --load("/data/general/objects/gloves.lua")

@@ -56,6 +56,15 @@ newEntity{
 	},
 }
 newEntity{
+	name = " of dexterity (#STATBONUS#)", suffix=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 4,
+	wielder = {
+		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
+	},
+}
+newEntity{
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
 	rarity = 120,
