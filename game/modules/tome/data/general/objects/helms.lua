@@ -30,6 +30,7 @@ newEntity{
 	rarity = 7,
 	metallic = true,
 	desc = [[A large helmet that can protect the entire head. Ventilation and bad vision can be a problem, however.]],
+	egos = "/data/general/objects/egos/helm.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 newEntity{ base = "BASE_HELM",

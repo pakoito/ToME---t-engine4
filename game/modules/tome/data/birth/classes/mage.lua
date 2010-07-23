@@ -161,7 +161,7 @@ newBirthDescriptor{
 		["spell/arcane"]={true, 0.2},
 		["spell/fire"]={true, 0.3},
 		["spell/wildfire"]={true, 0.4},
-		["spell/air"]={true, 0.2},
+		["spell/earth"]={true, 0.2},
 		["spell/phantasm"]={true, 0.3},
 		["spell/temporal"]={false, 0.3},
 		["spell/meta"]={false, 0.3},

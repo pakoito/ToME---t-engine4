@@ -35,6 +35,7 @@ function _M:init(actions)
 		__TEXTINPUT = function(c)
 			if c:find("^[a-z]$") then
 				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
+				self.changed = true
 				self:use()
 			end
 		end,

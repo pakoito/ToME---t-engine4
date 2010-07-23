@@ -26,7 +26,7 @@ quickEntity('C', {name='dark pit', display='#', color=colors.LIGHT_DARK, block_m
 quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha1.png"}}})
 quickEntity(' ', {name='forest', display='#', color=colors.GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha1.png"}}})
 quickEntity('V', {name='river', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png"})
-quickEntity('O', {name='cooblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
+quickEntity('O', {name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
 quickEntity('.', {name='road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
 quickEntity(',', {name='dirt', display='.', color=colors.LIGHT_UMBER, image="terrain/sand.png"})
 quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})

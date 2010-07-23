@@ -27,7 +27,7 @@ quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true,
 quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha2.png"}}})
 quickEntity('P', {name='palm tree', display='#', color=colors.LIGHT_GREEN, back_color={r=163,g=149,b=42}, image="terrain/palmtree.png", block_move=true})
 quickEntity('~', {name='river', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", add_displays = mod.class.Grid:makeWater(true)})
-quickEntity('O', {name='cooblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
+quickEntity('O', {name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
 quickEntity(':', {name='sand', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", can_encounter="desert", equilibrium_level=-10})
 quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
 quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true})

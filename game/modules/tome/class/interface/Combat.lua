@@ -213,6 +213,13 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 				game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
 			end
 
+			-- Ranged project
+			if hitted and not target.dead then for typ, dam in pairs(self.ranged_project) do
+				if dam > 0 then
+					DamageType:get(typ).projector(self, target.x, target.y, typ, dam)
+				end
+			end end
+
 			ret.speed = self:combatSpeed(weapon)
 			ret.hitted = hitted
 		end

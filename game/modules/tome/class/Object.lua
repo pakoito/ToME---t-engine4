@@ -154,7 +154,7 @@ end
 
 --- Gets the full textual desc of the object without the name and requirements
 function _M:getTextualDesc()
-	local desc = {}	
+	local desc = {}
 
 	desc[#desc+1] = ("Type: %s / %s"):format(self.type, self.subtype)
 
@@ -190,7 +190,15 @@ function _M:getTextualDesc()
 		for typ, dam in pairs(w.melee_project) do
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
-		desc[#desc+1] = ("Damage on hit: %s."):format(table.concat(rs, ','))
+		desc[#desc+1] = ("Damage on hit(melee): %s."):format(table.concat(rs, ','))
+	end
+
+	if w.ranged_project then
+		local rs = {}
+		for typ, dam in pairs(w.ranged_project) do
+			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
+		end
+		desc[#desc+1] = ("Damage on hit(ranged): %s."):format(table.concat(rs, ','))
 	end
 
 	if w.on_melee_hit then
@@ -243,6 +251,14 @@ function _M:getTextualDesc()
 			tms[#tms+1] = ("%0.2f %s"):format(i, name)
 		end
 		desc[#desc+1] = ("Increases talent masteries: %s."):format(table.concat(tms, ','))
+	end
+
+	if w.talent_cd_reduction then
+		local tcds = {}
+		for tid, cd in pairs(w.talent_cd_reduction) do
+			tcds[#tcds+1] = ("%s (%d)"):format(Talents.talents_def[tid].name, cd)
+		end
+		desc[#desc+1] = ("Reduces talent cooldowns: %s."):format(table.concat(tcds, ','))
 	end
 
 	if w.combat_physresist then desc[#desc+1] = ("Increases physical resistance: %s."):format(w.combat_physresist) end
@@ -312,7 +328,7 @@ function _M:getDesc()
 	if reqs then
 		desc[#desc+1] = reqs
 	end
-	
+
 	if self.encumber then
 		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance."):format(self.encumber)
 	end

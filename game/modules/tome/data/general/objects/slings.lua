@@ -27,6 +27,7 @@ newEntity{
 	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },
 	archery = "sling",
 	desc = [[Slings are used to shoot pebbles at your foes.]],
+	egos = "/data/general/objects/egos/sling.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 newEntity{ base = "BASE_SLING",
@@ -103,6 +104,7 @@ newEntity{
 	archery_ammo = "sling",
 	desc = [[Shots are used with slings to pummel your foes to death.]],
 	generate_stack = resolvers.rngavg(100,200),
+	egos = "/data/general/objects/egos/ammo.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 	stacking = true,
 }
 

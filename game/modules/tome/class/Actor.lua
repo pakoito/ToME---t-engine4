@@ -91,8 +91,11 @@ function _M:init(t, no_default)
 
 	t.esp = t.esp or {range=10}
 
+	t.talent_cd_reduction = t.talent_cd_reduction or {}
+
 	t.on_melee_hit = t.on_melee_hit or {}
 	t.melee_project = t.melee_project or {}
+	t.ranged_project = t.ranged_project or {}
 	t.can_pass = t.can_pass or {}
 	t.move_project = t.move_project or {}
 	t.can_breath = t.can_breath or {}
@@ -1010,10 +1013,12 @@ end
 -- @param t the talent to cooldown
 function _M:startTalentCooldown(t)
 	if not t.cooldown then return end
+	local cd = t.cooldown
+	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
 	if t.type[1]:find("^spell/") then
-		self.talents_cd[t.id] = math.ceil(t.cooldown * (1 - self.spell_cooldown_reduction or 0))
+		self.talents_cd[t.id] = math.ceil(cd * (1 - self.spell_cooldown_reduction or 0))
 	else
-		self.talents_cd[t.id] = t.cooldown
+		self.talents_cd[t.id] = cd
 	end
 	self.changed = true
 end

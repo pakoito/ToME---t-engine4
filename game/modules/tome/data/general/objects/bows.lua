@@ -28,6 +28,7 @@ newEntity{
 	combat = { talented = "bow", damrange = 1.4, sound = "actions/arrow", sound_miss = "actions/arrow",},
 	archery = "bow",
 	desc = [[Longbows are used to shoot arrows at your foes.]],
+	egos = "/data/general/objects/egos/bow.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 newEntity{ base = "BASE_LONGBOW",
@@ -104,6 +105,7 @@ newEntity{
 	archery_ammo = "bow",
 	desc = [[Arrows are used with bows to pierce your foes to death.]],
 	generate_stack = resolvers.rngavg(100,200),
+	egos = "/data/general/objects/egos/ammo.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 	stacking = true,
 }
 

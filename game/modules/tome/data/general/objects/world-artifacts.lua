@@ -219,3 +219,23 @@ newEntity{
 		return "destroy", true
 	end},
 }
+
+newEntity{ base = "BASE_LONGBOW",
+	name = "Gondor-Tree Longbow", unided_name = "glowing elven-wood longbow", unique=true,
+	level_range = {40, 50},
+	rarity = 200
+	require = { stat = { dex=36 }, },
+	cost = 800,
+	material_level = 5,
+	combat = {
+		range = 18,
+		physspeed = 0.7,
+		apr = 12,
+	},
+	wielder = {
+		inc_damage={ [DamageType.PHYSICAL] = 12, },
+		lite = 1,
+		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_WIL] = 4,  },
+		ranged_project={[DamageType.LIGHT] = 30},
+	},
+}

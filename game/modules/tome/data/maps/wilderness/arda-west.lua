@@ -55,7 +55,7 @@ quickEntity('G', {show_tooltip=true, name="Passageway into Carn Dûm",display='>
 quickEntity('H', {show_tooltip=true, name='Mount Doom (Orodruin)', display='>', color=colors.RED, back_color=colors.LIGHT_DARK, image="terrain/volcano1.png", notice = true, change_level=1, change_zone="mount-doom"})
 
 quickEntity('1', {show_tooltip=true, name="Bree (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-bree"})
-quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Captical city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
+quickEntity('2', {show_tooltip=true, name="Minas Tirith (Town)", desc="Capital city of the Reunited-Kingdom and Gondor ruled by High King Eldarion", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-minas-tirith"})
 
 -- Angolwen is only know from the start to mages
 if game.player.descriptor.class == "Mage" then

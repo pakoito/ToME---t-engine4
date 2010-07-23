@@ -179,6 +179,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
+		self:removeObject(self:getInven("QUIVER"), 1)
 		ammo = self:removeObject(self:getInven("QUIVER"), 1)
 		if not ammo then return end
 
