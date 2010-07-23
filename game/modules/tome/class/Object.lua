@@ -275,7 +275,12 @@ function _M:getTextualDesc()
 	if w.instakill_immune then desc[#desc+1] = ("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100) end
 
 	if w.life_regen then desc[#desc+1] = ("Regenerates %0.2f hitpoints each turn."):format(w.life_regen) end
+	if w.stamina_regen then desc[#desc+1] = ("Regenerates %0.2f stamina each turn."):format(w.stamina_regen) end
 	if w.mana_regen then desc[#desc+1] = ("Regenerates %0.2f mana each turn."):format(w.mana_regen) end
+
+	if w.stamina_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f stamina when hit."):format(w.stamina_regen_on_hit) end
+	if w.mana_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f mana when hit."):format(w.mana_regen_on_hit) end
+	if w.equilibrium_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f equilibrium when hit."):format(w.equilibriumregen_on_hit) end
 
 	if w.max_life then desc[#desc+1] = ("Maximum life %d"):format(w.max_life) end
 	if w.max_mana then desc[#desc+1] = ("Maximum mana %d"):format(w.max_mana) end

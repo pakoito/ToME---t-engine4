@@ -48,7 +48,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of dexterity", suffix=true, instant_resolve=true,
+	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 7,
 	cost = 7,

@@ -20,12 +20,12 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 newEntity{
-	name = " of rage", suffix=true, instant_resolve=true,
+	name = " of amplification", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 10, v end),
+		mana_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 10, v end),
 	},
 }
 newEntity{
@@ -38,21 +38,30 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of strength (#STATBONUS#)", suffix=true,
+	name = " of magic (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
+		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
 	},
 }
 newEntity{
-	name = " of constitution (#STATBONUS#)", suffix=true,
+	name = " of willpower (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
+		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
+	},
+}
+newEntity{
+	name = " of cunning (#STATBONUS#)", suffix=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 4,
+	wielder = {
+		inc_stats = { [Stats.STAT_CUN = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
 	},
 }
 newEntity{
@@ -75,13 +84,11 @@ newEntity{
 	},
 }
 newEntity{
-	name = "gondorian ", prefix=true, instant_resolve=true,
-	level_range = {25, 50},
+	name = "shimmering ", prefix=true,
+	level_range = {1, 50},
 	rarity = 10,
-	cost = 10,
+	cost = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(2, 1, function(e, v) return v * 3 end) },
-		disease_immune = 0.3,
-		stun_immune = 0.2,
+		max_mana = resolvers.mbonus_material(100, 10, function(e, v) return v * 0.2 end),
 	},
 }

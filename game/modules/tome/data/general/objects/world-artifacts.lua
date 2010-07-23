@@ -222,6 +222,7 @@ newEntity{
 
 newEntity{ base = "BASE_LONGBOW",
 	name = "Gondor-Tree Longbow", unided_name = "glowing elven-wood longbow", unique=true,
+	desc = [[In the aftermath of the wars against Sauron, the strength of the Trees of Gondor faded and one of the trees died despite the efforts of the men of the city to save it. Its wood was fashioned into a bow to be wielded against the darkness that poisoned Gondor's tree.]],
 	level_range = {40, 50},
 	rarity = 200
 	require = { stat = { dex=36 }, },
