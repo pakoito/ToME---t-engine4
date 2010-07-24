@@ -22,7 +22,7 @@ newEntity{
 	slot = "FEET",
 	type = "armor", subtype="feet",
 	add_name = " (#ARMOR#)",
-	display = "]", color=colors.UMBER,
+	display = "]", color=colors.UMBER, image = resolvers.image_material("boots", "leather"),
 	encumber = 2,
 	rarity = 6,
 	desc = [[A pair of boots made of leather.]],

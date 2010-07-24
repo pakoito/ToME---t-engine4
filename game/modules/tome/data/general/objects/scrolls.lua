@@ -21,7 +21,7 @@ newEntity{
 	define_as = "BASE_SCROLL",
 	type = "scroll", subtype="scroll",
 	unided_name = "scroll", id_by_type = true,
-	display = "?", color=colors.WHITE, image="object/scroll-0x0.png",
+	display = "?", color=colors.WHITE, image="object/scroll.png",
 	encumber = 0.1,
 	stacking = true,
 	use_sound = "actions/read",

@@ -21,7 +21,7 @@ newEntity{
 	define_as = "BASE_BATTLEAXE",
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
-	type = "weapon", subtype="battleaxe",
+	type = "weapon", subtype="battleaxe", image = resolvers.image_material("2haxe", "metal"),
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE,
 	encumber = 3,
@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "iron battleaxe", image = "object/2haxe_iron.png",
+	name = "iron battleaxe",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "steel battleaxe", image = "object/2haxe_steel.png",
+	name = "steel battleaxe",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "dwarven-steel battleaxe", image = "object/2haxe_dsteel.png",
+	name = "dwarven-steel battleaxe",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "galvorn battleaxe", image = "object/2haxe_galvorn.png",
+	name = "galvorn battleaxe",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "mithril battleaxe", image = "object/2haxe_mithril.png",
+	name = "mithril battleaxe",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

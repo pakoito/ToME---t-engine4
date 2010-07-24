@@ -23,7 +23,7 @@ newEntity{
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="greatsword",
 	add_name = " (#COMBAT#)",
-	display = "/", color=colors.SLATE,
+	display = "/", color=colors.SLATE, image = resolvers.image_material("2hsword", "metal"),
 	encumber = 3,
 	rarity = 5,
 	combat = { talented = "sword", damrange = 1.6, sound = "actions/melee", sound_miss = "actions/melee_miss", },
@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "iron greatsword", image = "object/2hsword_iron.png",
+	name = "iron greatsword",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -47,7 +47,7 @@ newEntity{ base = "BASE_GREATSWORD",
 	},
 }
 
-newEntity{ base = "BASE_GREATSWORD", image = "object/2hsword_dsteel.png",
+newEntity{ base = "BASE_GREATSWORD",
 	name = "steel greatsword",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_GREATSWORD", image = "object/2hsword_dsteel.png",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "dwarven-steel greatsword", image = "object/2hsword_dsteel.png",
+	name = "dwarven-steel greatsword",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "galvorn greatsword", image = "object/2hsword_galvorn.png",
+	name = "galvorn greatsword",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "mithril greatsword", image = "object/2hsword_mithril.png",
+	name = "mithril greatsword",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

@@ -22,7 +22,7 @@ newEntity{
 	slot = "HEAD",
 	type = "armor", subtype="head",
 	add_name = " (#ARMOR#)",
-	display = "]", color=colors.UMBER,
+	display = "]", color=colors.UMBER, image = resolvers.image_material("cap", "leather"),
 	encumber = 2,
 	rarity = 6,
 	desc = [[A cap made of leather.]],

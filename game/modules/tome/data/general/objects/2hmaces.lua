@@ -23,7 +23,7 @@ newEntity{
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="greatmaul",
 	add_name = " (#COMBAT#)",
-	display = "\\", color=colors.SLATE,
+	display = "\\", color=colors.SLATE, image = resolvers.image_material("2hmace", "metal"),
 	encumber = 5,
 	rarity = 5,
 	metallic = true,
@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "iron greatmaul", image = "object/2hmace_iron.png",
+	name = "iron greatmaul",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "steel greatmaul", image = "object/2hmace_steel.png",
+	name = "steel greatmaul",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "dwarven-steel greatmaul", image = "object/2hmace_dsteel.png",
+	name = "dwarven-steel greatmaul",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "galvorn greatmaul", image = "object/2hmace_galvorn.png",
+	name = "galvorn greatmaul",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "mithril greatmaul", image = "object/2hmace_mithril.png",
+	name = "mithril greatmaul",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

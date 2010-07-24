@@ -20,7 +20,7 @@
 newEntity{
 	define_as = "BASE_RING",
 	slot = "FINGER",
-	type = "jewelry", subtype="ring",
+	type = "jewelry", subtype="ring", image = resolvers.image_material("ring", {"copper", "steel", "gold", "galvorn", "mithril"}),
 	display = "=",
 	encumber = 0.1,
 	rarity = 6,
@@ -31,7 +31,7 @@ newEntity{
 newEntity{
 	define_as = "BASE_AMULET",
 	slot = "NECK",
-	type = "jewelry", subtype="amulet",
+	type = "jewelry", subtype="amulet", image = resolvers.image_material("amulet", {"copper", "steel", "gold", "galvorn", "mithril"}),
 	display = '"',
 	encumber = 0.1,
 	rarity = 8,

@@ -20,7 +20,7 @@
 newEntity{
 	define_as = "BASE_LITE",
 	slot = "LITE",
-	type = "lite", subtype="lite",
+	type = "lite", subtype="lite", image = resolvers.image_material("lite", {"brass","","dwarven","","faenorian"}),
 	display = "~",
 	desc = [[Lite up the dark places of the world!]],
 	egos = "/data/general/objects/egos/lite.lua", egos_chance = { prefix=resolvers.mbonus(15, 3), suffix=resolvers.mbonus(15, 3) },

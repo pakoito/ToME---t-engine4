@@ -22,7 +22,7 @@ newEntity{
 	slot = "OFFHAND",
 	type = "armor", subtype="shield",
 	add_name = " (#ARMOR#)",
-	display = ")", color=colors.UMBER,
+	display = ")", color=colors.UMBER, image = resolvers.image_material("shield", "metal"),
 	rarity = 5,
 	encumber = 7,
 	metallic = true,

@@ -24,7 +24,7 @@ newEntity{
 	slot = "HEAD",
 	type = "armor", subtype="head",
 	add_name = " (#ARMOR#)",
-	display = "]", color=colors.SLATE,
+	display = "]", color=colors.SLATE, image = resolvers.image_material("helm", "metal"),
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	encumber = 3,
 	rarity = 7,

@@ -23,7 +23,7 @@ newEntity{
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",
 	add_name = " (#COMBAT_DAMTYPE#)",
-	display = "\\", color=colors.LIGHT_RED,
+	display = "\\", color=colors.LIGHT_RED, image = resolvers.image_material("staff", "wood"),
 	encumber = 5,
 	rarity = 4,
 	combat = {

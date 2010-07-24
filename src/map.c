@@ -31,6 +31,14 @@
 //#include "shaders.h"
 #include "useshader.h"
 
+#define DO_QUAD(dx, dy, dz, zoom) {\
+		glBegin(GL_QUADS); \
+		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz)); \
+		glTexCoord2f(1,0); glVertex3f(map->tile_w * (zoom) + (dx), (dy),			(dz)); \
+		glTexCoord2f(1,1); glVertex3f(map->tile_w * (zoom) + (dx), map->tile_h * (zoom) + (dy),	(dz)); \
+		glTexCoord2f(0,1); glVertex3f((dx), map->tile_h * (zoom) + (dy),			(dz)); \
+		glEnd(); }
+
 static int map_object_new(lua_State *L)
 {
 	int nb_textures = luaL_checknumber(L, 1);
@@ -118,6 +126,41 @@ static int map_object_is_valid(lua_State *L)
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	lua_pushboolean(L, obj->valid);
 	return 1;
+}
+
+static int map_object_display(lua_State *L)
+{
+	map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 2);
+	int dx = luaL_checknumber(L, 3);
+	int dy = luaL_checknumber(L, 4);
+	int w = luaL_checknumber(L, 5);
+	int h = luaL_checknumber(L, 6);
+	float r = luaL_checknumber(L, 7);
+	float g = luaL_checknumber(L, 8);
+	float b = luaL_checknumber(L, 9);
+	float a = luaL_checknumber(L, 10);
+
+	glColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
+
+	int z;
+	if (m->shader) useShader(m->shader, 1, 1, 1,1, r, g, b, a);
+	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
+	{
+		if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
+		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+	}
+
+	int dz = 99;
+	glBegin(GL_QUADS);
+	glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz));
+	glTexCoord2f(1,0); glVertex3f(w + (dx), (dy),			(dz));
+	glTexCoord2f(1,1); glVertex3f(w + (dx), h + (dy),	(dz));
+	glTexCoord2f(0,1); glVertex3f((dx), h + (dy),			(dz));
+	glEnd();
+
+	if (m->shader) glUseProgramObjectARB(0);
+	return 0;
 }
 
 
@@ -381,14 +424,6 @@ static int map_set_scroll(lua_State *L)
 	map->my = y;
 	return 0;
 }
-
-#define DO_QUAD(dx, dy, dz, zoom) {\
-		glBegin(GL_QUADS); \
-		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz)); \
-		glTexCoord2f(1,0); glVertex3f(map->tile_w * (zoom) + (dx), (dy),			(dz)); \
-		glTexCoord2f(1,1); glVertex3f(map->tile_w * (zoom) + (dx), map->tile_h * (zoom) + (dy),	(dz)); \
-		glTexCoord2f(0,1); glVertex3f((dx), map->tile_h * (zoom) + (dy),			(dz)); \
-		glEnd(); }
 
 
 inline void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure) ALWAYS_INLINE;
@@ -665,6 +700,7 @@ static const struct luaL_reg map_object_reg[] =
 	{"shader", map_object_shader},
 	{"invalidate", map_object_invalid},
 	{"isValid", map_object_is_valid},
+	{"display", map_object_display},
 	{NULL, NULL},
 };
 

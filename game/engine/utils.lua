@@ -160,11 +160,15 @@ function string.splitLine(str, max_width, font)
 		-- Ignore the size of color markers
 		local _, _, color1 = v:find("(#%x%x%x%x%x%x#)")
 		local _, _, color2 = v:find("(#[A-Z_]+#)")
+		local _, _, uid = v:find("(#UID:[0-9]+:[0-9]#)")
 		if color1 then
 			local color_w = font:size(color1)
 			w = w - color_w
 		elseif color2 then
 			local color_w = font:size(color2)
+			w = w - color_w
+		elseif uid then
+			local color_w = font:size(uid)
 			w = w - color_w
 		end
 
@@ -277,18 +281,22 @@ getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, 
 end
 
 getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y, r, g, b)
+	local Puid = "UID:" * lpeg.R"09"^1 * ":" * lpeg.R"09"
+	local Puid_cap = "UID:" * lpeg.C(lpeg.R"09"^1) * ":" * lpeg.C(lpeg.R"09")
 	local Pcolorname = (lpeg.R"AZ" + "_")^3
 	local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
 	local Pcolorcode = Pcode * Pcode
 
-	local list = str:split("#" * ((Pcolorcode * Pcolorcode * Pcolorcode) + Pcolorname) * "#", true)
+	local list = str:split("#" * (Puid + (Pcolorcode * Pcolorcode * Pcolorcode) + Pcolorname) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
 	local oldr, oldg, oldb = r, g, b
+	local max_h = 0
 	for i, v in ipairs(list) do
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
+		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
 		if nr and ng and nb then
 			oldr, oldg, oldb = r, g, b
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
@@ -299,13 +307,29 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 				oldr, oldg, oldb = r, g, b
 				r, g, b = colors[col].r, colors[col].g, colors[col].b
 			end
+		elseif uid and mo then
+			os.exit("FINISH UID DISPLAY IN STRING")
+			uid = tonumber(uid)
+			mo = tonumber(mo)
+			local e = __uids[uid]
+			if e then
+				local surfs = e:getEntitySurfaces(game.level.map.tilesSDL)
+				local w, h = nil, nil
+				for i = 1, #surfs do
+					if not w then w, h = surfs[i]:getSize() end
+					s:merge(surfs[i], x, y)
+				end
+				if h > max_h then max_h = h end
+				x = x + (w or 0)
+			end
 		else
 			local w, h = font:size(v)
+			if h > max_h then max_h = h end
 			s:drawStringBlended(font, v, x, y, r, g, b)
 			x = x + w
 		end
 	end
-	return r, g, b
+	return r, g, b, max_h
 end
 
 getmetatable(tmps).__index.drawColorStringBlendedCentered = function(s, font, str, dx, dy, dw, dh, r, g, b)

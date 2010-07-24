@@ -1229,6 +1229,12 @@ static int gl_fbo_toscreen(lua_State *L)
 	return 0;
 }
 
+static int gl_fbo_is_active(lua_State *L)
+{
+	lua_pushboolean(L, fbo_active);
+	return 1;
+}
+
 
 static const struct luaL_reg displaylib[] =
 {
@@ -1239,6 +1245,7 @@ static const struct luaL_reg displaylib[] =
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
 	{"newFBO", gl_new_fbo},
+	{"FBOActive", gl_fbo_is_active},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
 	{"loadImage", sdl_load_image},

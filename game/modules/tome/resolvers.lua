@@ -206,3 +206,16 @@ function resolvers.calc.random_use_talent(tt, e)
 	e.cost = e.cost + level * 2
 	return { id=tid, level=level, power=tt[2] }
 end
+
+--- Image based on material level
+function resolvers.image_material(image, values)
+	return {__resolver="image_material", image, values}
+end
+function resolvers.calc.image_material(t, e)
+	if not t[2] or (type(t[2]) == "string" and t[2] == "metal") then t[2] = {"iron", "steel", "dsteel", "galvorn", "mithril"} end
+	if type(t[2]) == "string" and t[2] == "leather" then t[2] = {"rough", "cured", "hardened", "reinforced", "drakeskin"} end
+	if type(t[2]) == "string" and t[2] == "wood" then t[2] = {"elm","ash","yew","elvenwood","dragonbone"} end
+	if type(t[2]) == "string" and t[2] == "cloth" then t[2] = {"linen","woolen","cashmere","silk","elvensilk"} end
+	local ml = e.material_level or 1
+	return "object/"..t[1].."_"..t[2][ml]..".png"
+end

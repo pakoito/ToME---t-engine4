@@ -24,7 +24,7 @@ newEntity{
 	slot = "BODY",
 	type = "armor", subtype="massive",
 	add_name = " (#ARMOR#)",
-	display = "[", color=colors.SLATE,
+	display = "[", color=colors.SLATE, image = resolvers.image_material("plate", "metal"),
 	require = { talent = { Talents.T_MASSIVE_ARMOUR_TRAINING }, },
 	encumber = 17,
 	rarity = 5,
@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "iron plate armour", image = "object/plate_iron.png",
+	name = "iron plate armour",
 	level_range = {1, 10},
 	require = { stat = { str=22 }, },
 	cost = 20,
@@ -47,7 +47,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "steel plate armour", image = "object/plate_steel.png",
+	name = "steel plate armour",
 	level_range = {10, 20},
 	require = { stat = { str=28 }, },
 	cost = 25,
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "dwarven-steel plate armour", image = "object/plate_dsteel.png",
+	name = "dwarven-steel plate armour",
 	level_range = {20, 30},
 	require = { stat = { str=35 }, },
 	cost = 30,
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "galvorn plate armour", image = "object/plate_galvorn.png",
+	name = "galvorn plate armour",
 	level_range = {30, 40},
 	cost = 40,
 	material_level = 4,
@@ -86,7 +86,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "mithril plate armour", image = "object/plate_mithril.png",
+	name = "mithril plate armour",
 	level_range = {40, 50},
 	require = { stat = { str=60 }, },
 	cost = 50,

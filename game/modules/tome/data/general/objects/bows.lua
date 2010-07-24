@@ -22,7 +22,7 @@ newEntity{
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="longbow",
-	display = "}", color=colors.UMBER,
+	display = "}", color=colors.UMBER, image = resolvers.image_material("longbow", "wood"),
 	encumber = 4,
 	rarity = 5,
 	combat = { talented = "bow", damrange = 1.4, sound = "actions/arrow", sound_miss = "actions/arrow",},
@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "elm longbow", image = "object/longbow_elm.png",
+	name = "elm longbow",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 5,
@@ -44,7 +44,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "ash longbow", image = "object/longbow_ash.png",
+	name = "ash longbow",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 10,
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "yew longbow", image = "object/longbow_yew.png",
+	name = "yew longbow",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 15,
@@ -68,7 +68,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "elven-wood longbow", image = "object/longbow_elvenyew.png",
+	name = "elven-wood longbow",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 25,
@@ -80,7 +80,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "dragonbone longbow", image = "object/longbow_dragonbone.png",
+	name = "dragonbone longbow",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 35,
@@ -98,7 +98,7 @@ newEntity{
 	slot = "QUIVER",
 	type = "ammo", subtype="arrow",
 	add_name = " (#COMBAT#)",
-	display = "{", color=colors.UMBER,
+	display = "{", color=colors.UMBER, image = resolvers.image_material("arrow", "wood"),
 	encumber = 0.03,
 	rarity = 5,
 	combat = { talented = "bow", damrange = 1.4},
@@ -110,7 +110,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "elm arrow", image = "object/arrow_elm.png",
+	name = "elm arrow",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 0.05,
@@ -124,7 +124,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "ash arrow", image = "object/arrow_ash.png",
+	name = "ash arrow",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 0.1,
@@ -138,7 +138,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "yew arrow", image = "object/arrow_yew.png",
+	name = "yew arrow",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 0.15,
@@ -152,7 +152,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "elven-wood arrow", image = "object/arrow_elvenyew.png",
+	name = "elven-wood arrow",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 0.25,
@@ -166,7 +166,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "dragonbone arrow", image = "object/arrow_dragonbone.png",
+	name = "dragonbone arrow",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 0.35,

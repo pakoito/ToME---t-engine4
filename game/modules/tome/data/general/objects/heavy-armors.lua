@@ -22,7 +22,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{
 	define_as = "BASE_HEAVY_ARMOR",
 	slot = "BODY",
-	type = "armor", subtype="heavy",
+	type = "armor", subtype="heavy", image = resolvers.image_material("mail", "metal"),
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "iron mail armour", image = "object/mail_iron.png",
+	name = "iron mail armour",
 	level_range = {1, 10},
 	require = { stat = { str=14 }, },
 	cost = 20,
@@ -47,7 +47,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "steel mail armour", image = "object/mail_steel.png",
+	name = "steel mail armour",
 	level_range = {10, 20},
 	require = { stat = { str=20 }, },
 	cost = 25,
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "dwarven-steel mail armour", image = "object/mail_dsteel.png",
+	name = "dwarven-steel mail armour",
 	level_range = {20, 30},
 	require = { stat = { str=28 }, },
 	cost = 30,
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "galvorn mail armour", image = "object/mail_galvorn.png",
+	name = "galvorn mail armour",
 	level_range = {30, 40},
 	cost = 40,
 	material_level = 4,
@@ -86,7 +86,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "mithril mail armour", image = "object/mail_mithril.png",
+	name = "mithril mail armour",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 50,

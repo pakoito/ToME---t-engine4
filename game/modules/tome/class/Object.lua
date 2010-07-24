@@ -151,8 +151,9 @@ function _M:getName(t)
 		end
 	else
 		local _, c = self:getDisplayColor()
+		local ds = self:getDisplayString()
 		if qty == 1 or t.no_count then return c..name.."#LAST#"
-		else return c..qty.." "..name.."#LAST#"
+		else return c..qty.." "..ds..name.."#LAST#"
 		end
 	end
 end
@@ -340,7 +341,7 @@ function _M:getDesc()
 	end
 
 	if self.encumber then
-		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance."):format(self.encumber)
+		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance.#LAST#"):format(self.encumber)
 	end
 
 	local textdesc = table.concat(self:getTextualDesc(), "\n")

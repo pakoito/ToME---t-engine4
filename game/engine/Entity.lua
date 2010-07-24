@@ -218,6 +218,14 @@ function _M:getMapObjects(tiles, mos, z)
 	until not mo
 end
 
+function _M:getDisplayString(mo)
+	if core.display.FBOActive() then
+		return "#UID:"..self.uid..":"..(mo or 0).."#"
+	else
+		return ""
+	end
+end
+
 --- Resolves an entity
 -- This is called when generatingthe final clones of an entity for use in a level.<br/>
 -- This can be used to make random enchants on objects, random properties on actors, ...<br/>

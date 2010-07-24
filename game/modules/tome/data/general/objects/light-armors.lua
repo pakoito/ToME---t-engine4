@@ -22,7 +22,7 @@ newEntity{
 	slot = "BODY",
 	type = "armor", subtype="light",
 	add_name = " (#ARMOR#)",
-	display = "[", color=colors.SLATE,
+	display = "[", color=colors.SLATE, image = resolvers.image_material("leather", "leather"),
 	encumber = 17,
 	rarity = 5,
 	desc = [[A suit of armour made of leather.]],

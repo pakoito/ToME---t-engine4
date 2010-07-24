@@ -83,13 +83,17 @@ function _M:display()
 	end
 
 	local i = 1
+	local y = 0
+	local r, g, b, max_h = self.color[1], self.color[2], self.color[3], nil
 	for ii, l in ipairs(self.text) do
 		if self.text[i] == "---" then
-			self:drawWBorder(self.surface, 4, 4 + (i-1 + 0.5) * self.font_h, self.w - 8)
+			self:drawWBorder(self.surface, 4, 4 + y + 0.5 * self.font_h, self.w - 8)
 			i = i + 1
+			y = y + self.font_h
 		else
-			self.surface:drawColorString(self.font, self.text[i], 4, 4 + (i-1) * self.font_h, self.color[1], self.color[2], self.color[3])
+			r, g, b, max_h = self.surface:drawColorStringBlended(self.font, self.text[i], 4, 4 + y, r, g, b)
 			i = i + 1
+			y = y + max_h
 		end
 	end
 	self.texture = self.surface:glTexture()

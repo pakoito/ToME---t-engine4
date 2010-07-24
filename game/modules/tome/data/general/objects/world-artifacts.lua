@@ -29,6 +29,7 @@ newEntity{ base = "BASE_STAFF",
 	rarity = 100,
 	desc = [[This unique looking staff is carved with runes of destruction.]],
 	cost = 500,
+	material_level = 3,
 
 	require = { stat = { mag=24 }, },
 	combat = {
@@ -54,6 +55,7 @@ newEntity{ base = "BASE_RING",
 	level_range = {10, 20},
 	rarity = 150,
 	cost = 500,
+	material_level = 2,
 
 	max_power = 60, power_regen = 1,
 	use_power = { name = "summon a tidal wave", power = 60,
@@ -95,6 +97,7 @@ newEntity{ base = "BASE_RING",
 	level_range = {15, 30},
 	rarity = 150,
 	cost = 500,
+	material_level = 3,
 
 	wielder = {
 		inc_stats = { [Stats.STAT_CUN] = 3, },

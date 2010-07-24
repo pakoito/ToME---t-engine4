@@ -22,7 +22,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{
 	define_as = "BASE_HEAVY_BOOTS",
 	slot = "FEET",
-	type = "armor", subtype="feet",
+	type = "armor", subtype="feet", image = resolvers.image_material("hboots", "metal"),
 	add_name = " (#ARMOR#)",
 	display = "]", color=colors.SLATE,
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },

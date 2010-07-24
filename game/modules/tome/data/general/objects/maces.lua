@@ -22,7 +22,7 @@ newEntity{
 	slot = "MAINHAND",
 	type = "weapon", subtype="mace",
 	add_name = " (#COMBAT#)",
-	display = "/", color=colors.SLATE,
+	display = "/", color=colors.SLATE, image = resolvers.image_material("mace", "metal"),
 	encumber = 3,
 	rarity = 5,
 	metallic = true,

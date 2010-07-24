@@ -22,7 +22,7 @@ newEntity{
 	slot = "MAINHAND", offslot = "OFFHAND",
 	type = "weapon", subtype="dagger",
 	add_name = " (#COMBAT#)",
-	display = "/", color=colors.WHITE,
+	display = "/", color=colors.WHITE, image = resolvers.image_material("knife", "metal"),
 	encumber = 1,
 	rarity = 5,
 	metallic = true,
