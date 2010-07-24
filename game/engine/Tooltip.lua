@@ -91,7 +91,7 @@ function _M:display()
 			i = i + 1
 			y = y + self.font_h
 		else
-			r, g, b, max_h = self.surface:drawColorStringBlended(self.font, self.text[i], 4, 4 + y, r, g, b)
+			r, g, b, max_h = self.surface:drawColorStringBlended(self.font, self.text[i], 4, 4 + y, self.color[1], self.color[2], self.color[3])
 			i = i + 1
 			y = y + max_h
 		end

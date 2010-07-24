@@ -16,30 +16,29 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+local Object = require "engine.Object"
 
 newTalent{
 	name = "Heat",
 	type = {"spell/fire-alchemy", 1},
 	require = spells_req1,
 	points = 5,
-	mana = 5,
-	cooldown = 20,
+	mana = 10,
+	cooldown = 5,
+	random_ego = "attack",
+	refectable = true,
+	proj_speed = 20,
 	action = function(self, t)
-		self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
-			self:removeObject(inven, item)
-
-			local level = o.material_level or 1
-			local gem = game.zone:makeEntity(game.level, "object", {type="gem", special=function(e) return e.material_level == level end}, nil, true)
-			if gem then
-				self:addObject(self.INVEN_INVEN, gem)
-				game.logPlayer(self, "You extract: %s", gem:getName{do_color=true, do_count=true})
-			end
-			return true
-		end)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.FIREBURN, {dur=5, initial=0, dam=self:spellCrit(self:combatTalentSpellDamage(t, 25, 220))}, {type="flame"})
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Extract magical gems from metal weapons and armours, the higher your skill the higher level items you can work with.]])
+		return ([[Turn part of your target into fire, burning the rest for %0.2f fire damage over 5 turns.
+		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 25, 220))
 	end,
 }
 
@@ -49,22 +48,39 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	mana = 80,
-	cooldown = 100,
+	cooldown = 34,
+	range = 10,
 	action = function(self, t)
-		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
-			self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)
-				self:removeObject(self:getInven("INVEN"), gem_item)
-				o.wielder = o.wielder or {}
-				table.mergeAdd(o.wielder, gem.imbue_powers)
-				o.been_imbued = true
-				game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
-			end)
-		end)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			local e = Object.new{
+				block_sight=true,
+				temporary = 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t),
+				x = px, y = py,
+				canAct = false,
+				act = function(self)
+					self:useEnergy()
+					self.temporary = self.temporary - 1
+					if self.temporary <= 0 then
+						game.level.map:remove(self.x, self.y, Map.TERRAIN+2)
+						game.level:removeEntity(self)
+						game.level.map:redisplay()
+					end
+				end,
+				summoner_gain_exp = true,
+				summoner = self,
+			}
+			game.level:addEntity(e)
+			game.level.map(px, py, Map.TERRAIN+2, e)
+		end, nil, {type="dark"})
+		self:teleportRandom(self.x, self.y, 5)
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Imbue an body armour with a gem, granting it additional powers.
-		You can only imbue items once, and it is permanent.]])
+		return ([[Throw a smoke bomb, blocking line of sight. The smoke dissipates after %d turns.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }
 newTalent{
@@ -94,8 +110,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Crush 5 alchemists gems into dust to mark an impassable terrain, you immediately enter it and appear on the other side of the obstacle.
-		Works up to %d grids away.]]):
+		return ([[Turn your body into pure flame, increasing your fire resistance, burning any creatures attacking you for %0.2f fire damage and projecting randomly fire bolts at targets in sight.
+		The damage will increase with Magic stat.]]):
 		format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
 	end,
 }
