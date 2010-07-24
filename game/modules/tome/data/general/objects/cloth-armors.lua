@@ -30,21 +30,21 @@ newEntity{
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	name = "linen robe",
+	name = "linen robe", image = "object/robe_linen.png",
 	level_range = {1, 10},
 	cost = 0.5,
 	material_level = 1,
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	name = "woollen robe",
+	name = "woollen robe", image = "object/robe_woolen.png",
 	level_range = {10, 20},
 	cost = 1.5,
 	material_level = 2,
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	name = "cashmere robe",
+	name = "cashmere robe", image = "object/robe_cashmere.png",
 	level_range = {20, 30},
 	cost = 2.5,
 	material_level = 3,
@@ -52,7 +52,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	name = "silk robe",
+	name = "silk robe", image = "object/robe_silk.png",
 	level_range = {30, 40},
 	cost = 3.5,
 	material_level = 4,
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	name = "elven-silk robe",
+	name = "elven-silk robe", image = "object/robe_elvensilk.png",
 	level_range = {40, 50},
 	cost = 5.5,
 	material_level = 5,

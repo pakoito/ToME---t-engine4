@@ -39,7 +39,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
-	name = "midge swarm", color=colors.UMBER,
+	name = "midge swarm", color=colors.UMBER, image="npc/midge_swarm.png",
 	desc = "A swarm of midges, they want blood.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 4,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
-	name = "bee swarm", color=colors.GOLD,
+	name = "bee swarm", color=colors.GOLD, image="npc/bee_swarm.png",
 	desc = "They buzz at you threateningly, as you have gotten too close to their hive.",
 	level_range = {2, 25}, exp_worth = 1,
 	rarity = 4,
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
-	name = "hornet swarm", color=colors.YELLOW,
+	name = "hornet swarm", color=colors.YELLOW, image="npc/hornet_swarm.png",
 	desc = "You have intruded on their grounds, they will defend it at all costs.",
 	level_range = {3, 25}, exp_worth = 1,
 	rarity = 7,
@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
-	name = "hummerhorn", color=colors.YELLOW,
+	name = "hummerhorn", color=colors.YELLOW, image="npc/hommerhorn.png",
 	desc = "A giant buzzing wasp, its stinger drips venom. ",
 	level_range = {16, nil}, exp_worth = 1,
 	rarity = 7,

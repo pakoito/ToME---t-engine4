@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "iron greatmaul",
+	name = "iron greatmaul", image = "object/2hmace_iron.png",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "steel greatmaul",
+	name = "steel greatmaul", image = "object/2hmace_steel.png",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "dwarven-steel greatmaul",
+	name = "dwarven-steel greatmaul", image = "object/2hmace_dsteel.png",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "galvorn greatmaul",
+	name = "galvorn greatmaul", image = "object/2hmace_galvorn.png",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "mithril greatmaul",
+	name = "mithril greatmaul", image = "object/2hmace_mithril.png",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

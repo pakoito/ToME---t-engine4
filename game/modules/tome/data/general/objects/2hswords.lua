@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "iron greatsword",
+	name = "iron greatsword", image = "object/2hsword_iron.png",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -47,7 +47,7 @@ newEntity{ base = "BASE_GREATSWORD",
 	},
 }
 
-newEntity{ base = "BASE_GREATSWORD",
+newEntity{ base = "BASE_GREATSWORD", image = "object/2hsword_dsteel.png",
 	name = "steel greatsword",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "dwarven-steel greatsword",
+	name = "dwarven-steel greatsword", image = "object/2hsword_dsteel.png",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "galvorn greatsword",
+	name = "galvorn greatsword", image = "object/2hsword_galvorn.png",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "mithril greatsword",
+	name = "mithril greatsword", image = "object/2hsword_mithril.png",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

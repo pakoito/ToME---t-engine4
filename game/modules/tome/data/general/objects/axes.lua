@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_WARAXE",
-	name = "iron waraxe",
+	name = "iron waraxe", image = "object/axe_iron.png",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -46,7 +46,7 @@ newEntity{ base = "BASE_WARAXE",
 }
 
 newEntity{ base = "BASE_WARAXE",
-	name = "steel waraxe",
+	name = "steel waraxe", image = "object/axe_steel.png",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_WARAXE",
 }
 
 newEntity{ base = "BASE_WARAXE",
-	name = "dwarven-steel waraxe",
+	name = "dwarven-steel waraxe", image = "object/axe_dsteel.png",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -74,7 +74,7 @@ newEntity{ base = "BASE_WARAXE",
 }
 
 newEntity{ base = "BASE_WARAXE",
-	name = "galvorn waraxe",
+	name = "galvorn waraxe", image = "object/axe_galvorn.png",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_WARAXE",
 }
 
 newEntity{ base = "BASE_WARAXE",
-	name = "mithril waraxe",
+	name = "mithril waraxe", image = "object/axe_mithril.png",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

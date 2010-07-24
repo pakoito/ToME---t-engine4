@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "iron battleaxe",
+	name = "iron battleaxe", image = "object/2haxe_iron.png",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "steel battleaxe",
+	name = "steel battleaxe", image = "object/2haxe_steel.png",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "dwarven-steel battleaxe",
+	name = "dwarven-steel battleaxe", image = "object/2haxe_dsteel.png",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "galvorn battleaxe",
+	name = "galvorn battleaxe", image = "object/2haxe_galvorn.png",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "mithril battleaxe",
+	name = "mithril battleaxe", image = "object/2haxe_mithril.png",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

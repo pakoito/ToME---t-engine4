@@ -39,21 +39,21 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant white ant", color=colors.WHITE,
+	name = "giant white ant", color=colors.WHITE, image="npc/white_ant.png",
 	desc = "It's a large white ant.",
 	level_range = {1, 15}, exp_worth = 1,
 	rarity = 4,
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant brown ant", color=colors.UMBER,
+	name = "giant brown ant", color=colors.UMBER, image="npc/brown_ant.png",
 	desc = "It's a large brown ant.",
 	level_range = {1, 15}, exp_worth = 1,
 	rarity = 4,
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant carpenter ant", color=colors.BLACK,
+	name = "giant carpenter ant", color=colors.BLACK, image="npc/carpenter_ant.png",
 	desc = "It's a large black ant with huge mandibles.",
 	level_range = {2, 25}, exp_worth = 1,
 	rarity = 4,
@@ -61,7 +61,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant green ant", color=colors.GREEN,
+	name = "giant green ant", color=colors.GREEN, image="npc/green_ant.png",
 	desc = "It's a large green ant.",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 4,
@@ -69,7 +69,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant red ant", color=colors.RED,
+	name = "giant red ant", color=colors.RED, image="npc/red_ant.png",
 	desc = "It's a large red ant.",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 4,
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant blue ant", color=colors.BLUE,
+	name = "giant blue ant", color=colors.BLUE, image="npc/blue_ant.png",
 	desc = "It's a large blue ant.",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 4,
@@ -85,7 +85,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant yellow ant", color=colors.YELLOW,
+	name = "giant yellow ant", color=colors.YELLOW, image="npc/yellow_ant.png",
 	desc = "It's a large yellow ant.",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 4,
@@ -93,7 +93,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant black ant", color=colors.BLACK,
+	name = "giant black ant", color=colors.BLACK, image="npc/black_ant.png",
 	desc = "It's a large black ant.",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 4,
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant fire ant", color=colors.RED,
+	name = "giant fire ant", color=colors.RED, image="npc/fire_ant.png",
 	desc = "It's a large red ant, wreathed in flames.",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 4,
@@ -112,7 +112,7 @@ newEntity{ base = "BASE_NPC_ANT",
 	}
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant ice ant", color=colors.WHITE,
+	name = "giant ice ant", color=colors.WHITE, image="npc/ice_ant.png",
 	desc = "It's a large white ant. The air is frigid around this ant.",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 4,
@@ -123,7 +123,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant lightning ant", color=colors.YELLOW,
+	name = "giant lightning ant", color=colors.YELLOW, image="npc/lightning_ant.png",
 	desc = "It's a large yellow ant with sparks arcing across its body.",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 4,
@@ -134,7 +134,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant acid ant", color=colors.DARK_GREY,
+	name = "giant acid ant", color=colors.DARK_GREY, image="npc/acid_ant.png",
 	desc = "It's a large black ant.  Its porous skin oozes acid.",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 4,
@@ -145,7 +145,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "giant army ant", color=colors.ORANGE,
+	name = "giant army ant", color=colors.ORANGE, image="npc/army_ant.png",
 	desc = "It's a large ant with a heavy exoskeleton, geared for war.",
 	level_range = {18, nil}, exp_worth = 1,
 	rarity = 4,
