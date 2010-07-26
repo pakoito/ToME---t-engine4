@@ -36,3 +36,26 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 		combat_def = 6,
 	},
 }
+
+-- Artifact, randomly dropped in Vor Pride, and only there
+newEntity{ base = "BASE_SCROLL", subtype="tome",
+	name = "Tome of Flames", unided_name = "burning book", unique=true,
+	color = colors.VIOLET,
+	level_range = {35, 45},
+	rarity = 200,
+	cost = 100,
+
+	use_simple = { name="learn the ancient secrets", use = function(self, who)
+		if not who:knowTalent(who.T_FLAME) then
+			who:learnTalent(who.T_FLAME, true, 3)
+			game.logPlayer(who, "#00FFFF#You read the tome and learn about ancient forgotten fire magic!")
+		else
+			who.talents_types_mastery["spell/fire"] = (who.talents_types_mastery["spell/fire"] or 1) + 0.1
+			game.logPlayer(who, "#00FFFF#You read the tome and perfect your mastery of fire magic!")
+		end
+
+		game:setAllowedBuild("mage_pyromancer", true)
+
+		return "destroy", true
+	end}
+}
