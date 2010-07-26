@@ -337,6 +337,12 @@ function _M:restCheck()
 	local spotted = spotHostiles(self)
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
+	-- Resting improves regen
+	local perc = math.min(self.resting.cnt / 10, 4)
+	self:heal(self.life_regen * perc)
+	self:incStamina(self.stamina_regen * perc)
+	self:incMana(self.mana_regen * perc)
+
 	-- Check ressources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then
 		if self.air_regen < 0 then return false, "loosing breath!" end

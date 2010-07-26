@@ -34,7 +34,7 @@ function _M:init()
 	self.profile_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
 	engine.Game.init(self, engine.KeyBind.new())
 
-	self.background = core.display.loadImage("/data/gfx/mainmenu/background.jpg")
+	self.background = core.display.loadImage("/data/gfx/mainmenu/background.png")
 end
 
 function _M:run()
