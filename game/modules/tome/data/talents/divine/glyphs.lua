@@ -28,6 +28,13 @@ newTalent{
 	cooldown = 20,
 	positive = -10,
 	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local trap = game.level.map(tx, ty, Map.TRAP)
+		if trap then return end
+
 		local dam = -1 + 1 / (1 + (self:getTalentLevel(t) * 0.07 + 0.2))
 		local trap = Trap.new{
 			name = "glyph of fatigue",
@@ -43,7 +50,7 @@ newTalent{
 				return true
 			end,
 			temporary = 5 + self:getTalentLevel(t),
-			x = self.x, y = self.y,
+			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
 			act = function(self)
@@ -60,7 +67,7 @@ newTalent{
 		game.level:addEntity(trap)
 		trap:identify(true)
 		trap:setKnown(self, true)
-		game.zone:addEntity(game.level, trap, "trap", self.x, self.y)
+		game.zone:addEntity(game.level, trap, "trap", tx, ty)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
@@ -79,6 +86,13 @@ newTalent{
 	cooldown = 20,
 	positive = -10,
 	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local trap = game.level.map(tx, ty, Map.TRAP)
+		if trap then return end
+
 		local dam = self:combatTalentSpellDamage(t, 20, 150)
 		local trap = Trap.new{
 			name = "glyph of explosion",
@@ -94,7 +108,7 @@ newTalent{
 				return true, true
 			end,
 			temporary = 2 + self:getTalentLevel(t),
-			x = self.x, y = self.y,
+			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
 			act = function(self)
@@ -111,7 +125,7 @@ newTalent{
 		game.level:addEntity(trap)
 		trap:identify(true)
 		trap:setKnown(self, true)
-		game.zone:addEntity(game.level, trap, "trap", self.x, self.y)
+		game.zone:addEntity(game.level, trap, "trap", tx, ty)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
@@ -132,6 +146,13 @@ newTalent{
 	positive = -10,
 	cooldown = 20,
 	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local trap = game.level.map(tx, ty, Map.TRAP)
+		if trap then return end
+
 		local dam = 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t)
 		local sp = self:combatSpellpower()
 		local trap = Trap.new{
@@ -152,7 +173,7 @@ newTalent{
 				return true
 			end,
 			temporary = 5 + self:getTalentLevel(t),
-			x = self.x, y = self.y,
+			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
 			combatSpellpower = function(self) return self.sp end, sp = sp,
@@ -170,7 +191,7 @@ newTalent{
 		game.level:addEntity(trap)
 		trap:identify(true)
 		trap:setKnown(self, true)
-		game.zone:addEntity(game.level, trap, "trap", self.x, self.y)
+		game.zone:addEntity(game.level, trap, "trap", tx, ty)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
@@ -190,6 +211,13 @@ newTalent{
 	cooldown = 20,
 	positive = -10,
 	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local trap = game.level.map(tx, ty, Map.TRAP)
+		if trap then return end
+
 		local dam = 2 + self:getTalentLevelRaw(t)
 		local trap = Trap.new{
 			name = "glyph of paralysis",
@@ -205,7 +233,7 @@ newTalent{
 				return true
 			end,
 			temporary = 5 + self:getTalentLevel(t),
-			x = self.x, y = self.y,
+			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
 			act = function(self)
@@ -222,7 +250,7 @@ newTalent{
 		game.level:addEntity(trap)
 		trap:identify(true)
 		trap:setKnown(self, true)
-		game.zone:addEntity(game.level, trap, "trap", self.x, self.y)
+		game.zone:addEntity(game.level, trap, "trap", tx, ty)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
