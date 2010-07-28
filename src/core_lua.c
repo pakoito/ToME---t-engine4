@@ -669,8 +669,34 @@ static int sdl_new_surface(lua_State *L)
 		rmask, gmask, bmask, amask
 		);
 
-        if (s == NULL)
-          printf("ERROR : SDL_CreateRGBSurface : %s\n",SDL_GetError());
+	if (s == NULL)
+		printf("ERROR : SDL_CreateRGBSurface : %s\n",SDL_GetError());
+
+	return 1;
+}
+
+static int gl_texture_to_sdl(lua_State *L)
+{
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+
+	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
+	auxiliar_setclass(L, "sdl{surface}", -1);
+
+	// Bind the texture to read
+	glBindTexture(GL_TEXTURE_2D, *t);
+
+	// Get texture size
+	GLint w, h;
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+//	printf("Making surface from texture %dx%d\n", w, h);
+	// Get texture data
+	GLubyte *tmp = calloc(w*h*4, sizeof(GLubyte));
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, tmp);
+
+	// Make sdl surface from it
+	*s = SDL_CreateRGBSurfaceFrom(tmp, w, h, 32, w*4, 0,0,0,0);
+//	SDL_SaveBMP(*s, "/tmp/foo.bmp");
 
 	return 1;
 }
@@ -1092,7 +1118,6 @@ static int sdl_redraw_screen(lua_State *L)
 	return 0;
 }
 
-
 /**************************************************************
  * Framebuffer Objects
  **************************************************************/
@@ -1277,6 +1302,7 @@ static const struct luaL_reg sdl_texture_reg[] =
 	{"close", sdl_free_texture},
 	{"toScreen", sdl_texture_toscreen},
 	{"makeOutline", sdl_texture_outline},
+	{"toSurface", gl_texture_to_sdl},
 	{NULL, NULL},
 };
 

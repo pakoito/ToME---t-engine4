@@ -29,10 +29,12 @@ local next_uid = 1
 local entities_load_functions = {}
 
 _M.__mo_repo = {}
+_M.__mo_final_repo = {}
 
 -- Setup the uids & MO repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
 setmetatable(__uids, {__mode="v"})
 setmetatable(_M.__mo_repo, {__mode="v"})
+setmetatable(_M.__mo_final_repo, {__mode="k"})
 
 --- Invalidates the whole MO repository
 function _M:invalidateAllMO()
@@ -41,6 +43,7 @@ function _M:invalidateAllMO()
 	end
 	_M.__mo_repo = {}
 	setmetatable(_M.__mo_repo, {__mode="v"})
+	setmetatable(_M.__mo_final_repo, {__mode="k"})
 end
 
 local function copy_recurs(dst, src, deep)
@@ -218,9 +221,33 @@ function _M:getMapObjects(tiles, mos, z)
 	until not mo
 end
 
-function _M:getDisplayString(mo)
+--- Get the entity image as an sdl surface and texture for the given tiles and size
+-- @param tiles a Tiles instance that will handle the tiles (usualy pass it the current Map.tiles)
+-- @param w the width
+-- @param h the height
+-- @return the sdl surface and the texture
+function _M:getEntityFinalSurface(tiles, w, h)
+	local id = w.."x"..h
+	if _M.__mo_final_repo[self] and _M.__mo_final_repo[self][id] then return _M.__mo_final_repo[self][id].surface, _M.__mo_final_repo[self][id].tex end
+
+	local Map = require "engine.Map"
+
+	local mos = {}
+	local list = {}
+	self:getMapObjects(tiles, mos, 1)
+	for i = 1, Map.zdepth do
+		if mos[i] then list[#list+1] = mos[i] end
+	end
+	local tex = core.map.mapObjectsToTexture(w, h, unpack(list))
+	_M.__mo_final_repo[self] = _M.__mo_final_repo[self] or {}
+	_M.__mo_final_repo[self][id] = {surface=tex:toSurface(), tex=tex}
+	return _M.__mo_final_repo[self][id].surface, _M.__mo_final_repo[self][id].tex
+end
+
+--- Get a string that will display in text the texture of this entity
+function _M:getDisplayString()
 	if core.display.FBOActive() then
-		return "#UID:"..self.uid..":"..(mo or 0).."#"
+		return "#UID:"..self.uid..":0#"
 	else
 		return ""
 	end

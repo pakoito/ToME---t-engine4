@@ -128,39 +128,130 @@ static int map_object_is_valid(lua_State *L)
 	return 1;
 }
 
-static int map_object_display(lua_State *L)
+static bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
 {
-	map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
-	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 2);
-	int dx = luaL_checknumber(L, 3);
-	int dy = luaL_checknumber(L, 4);
-	int w = luaL_checknumber(L, 5);
-	int h = luaL_checknumber(L, 6);
-	float r = luaL_checknumber(L, 7);
-	float g = luaL_checknumber(L, 8);
-	float b = luaL_checknumber(L, 9);
-	float a = luaL_checknumber(L, 10);
+    GLenum errCode;
+    if((errCode = glGetError())!=GL_NO_ERROR)
+    {
+		printf("OPENGL ERROR #%i: (%s) in file %s on line %i\n",errCode,gluErrorString(errCode), file, line);
+        printf("OPENGL Call: %s\n",GLcall);
+        return FALSE;
+    }
+    return TRUE;
+}
 
-	glColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
+//#define _DEBUG
+#ifdef _DEBUG
+#define CHECKGL( GLcall )                               		\
+    GLcall;                                             		\
+    if(!_CheckGL_Error( #GLcall, __FILE__, __LINE__))     		\
+    exit(-1);
+#else
+#define CHECKGL( GLcall)        \
+    GLcall;
+#endif
+static int map_objects_display(lua_State *L)
+{
+	if (!fbo_active) return 0;
 
-	int z;
-	if (m->shader) useShader(m->shader, 1, 1, 1,1, r, g, b, a);
-	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
+	int w = luaL_checknumber(L, 1);
+	int h = luaL_checknumber(L, 2);
+
+	// Setup our FBO
+	// WARNING: this is a static, only one FBO is ever made, and never deleted, for some reasons
+	// deleting it makes the game crash when doing a chain lightning spell under luajit1 ... (yeah I know .. weird)
+	static GLuint fbo = 0;
+	if (!fbo) CHECKGL(glGenFramebuffersEXT(1, &fbo));
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo));
+
+	// Now setup a texture to render to
+	GLuint img;
+	CHECKGL(glGenTextures(1, &img));
+	CHECKGL(glBindTexture(GL_TEXTURE_2D, img));
+	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, img, 0));
+
+	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if(status != GL_FRAMEBUFFER_COMPLETE_EXT) return 0;
+
+	// Set the viewport and save the old one
+	CHECKGL(glPushAttrib(GL_VIEWPORT_BIT));
+
+	CHECKGL(glViewport(0, 0, w, h));
+	glMatrixMode(GL_PROJECTION);
+	CHECKGL(glPushMatrix());
+	glLoadIdentity();
+	glOrtho(0, w, 0, h, -101, 101);
+	glMatrixMode( GL_MODELVIEW );
+
+	/* Reset The View */
+	glLoadIdentity( );
+
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
+	CHECKGL(glLoadIdentity());
+
+	/***************************************************
+	 * Render to buffer
+	 ***************************************************/
+	int moid = 3;
+	while (lua_isuserdata(L, moid))
 	{
-		if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
-		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
+
+		glColor4f(1, 1, 1, 1);
+
+		int z;
+		if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
+		for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
+		{
+			if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
+			glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+		}
+
+		int dx = 0, dy = 0;
+		int dz = moid;
+		glBegin(GL_QUADS);
+		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz));
+		glTexCoord2f(1,0); glVertex3f(w + (dx), (dy),			(dz));
+		glTexCoord2f(1,1); glVertex3f(w + (dx), h + (dy),	(dz));
+		glTexCoord2f(0,1); glVertex3f((dx), h + (dy),			(dz));
+		glEnd();
+
+		if (m->shader) glUseProgramObjectARB(0);
+
+		moid++;
 	}
+	/***************************************************
+	 ***************************************************/
 
-	int dz = 99;
-	glBegin(GL_QUADS);
-	glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz));
-	glTexCoord2f(1,0); glVertex3f(w + (dx), (dy),			(dz));
-	glTexCoord2f(1,1); glVertex3f(w + (dx), h + (dy),	(dz));
-	glTexCoord2f(0,1); glVertex3f((dx), h + (dy),			(dz));
-	glEnd();
 
-	if (m->shader) glUseProgramObjectARB(0);
-	return 0;
+	// Unbind texture from FBO and then unbind FBO
+	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	// Restore viewport
+	CHECKGL(glPopAttrib());
+
+	// Cleanup
+	// No, dot not it's a static, see upwards
+//	CHECKGL(glDeleteFramebuffersEXT(1, &fbo));
+
+	glMatrixMode(GL_PROJECTION);
+	CHECKGL(glPopMatrix());
+	glMatrixMode( GL_MODELVIEW );
+
+	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+
+
+	// Now register the texture to lua
+	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+	*t = img;
+
+	return 1;
 }
 
 
@@ -667,6 +758,7 @@ static const struct luaL_reg maplib[] =
 {
 	{"newMap", map_new},
 	{"newObject", map_object_new},
+	{"mapObjectsToTexture", map_objects_display},
 	{NULL, NULL},
 };
 
@@ -700,7 +792,6 @@ static const struct luaL_reg map_object_reg[] =
 	{"shader", map_object_shader},
 	{"invalidate", map_object_invalid},
 	{"isValid", map_object_is_valid},
-	{"display", map_object_display},
 	{NULL, NULL},
 };
 

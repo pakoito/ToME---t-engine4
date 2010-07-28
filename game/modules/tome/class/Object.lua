@@ -74,7 +74,7 @@ end
 
 --- Returns a tooltip for the object
 function _M:tooltip()
-	return self:getDesc()
+	return self:getDesc{do_color=true}
 end
 
 --- Describes an attribute, to expand object name
@@ -152,7 +152,7 @@ function _M:getName(t)
 	else
 		local _, c = self:getDisplayColor()
 		local ds = self:getDisplayString()
-		if qty == 1 or t.no_count then return c..name.."#LAST#"
+		if qty == 1 or t.no_count then return c..ds..name.."#LAST#"
 		else return c..qty.." "..ds..name.."#LAST#"
 		end
 	end
@@ -326,13 +326,13 @@ function _M:getTextualDesc()
 end
 
 --- Gets the full desc of the object
-function _M:getDesc()
+function _M:getDesc(name_param)
 	local _, c = self:getDisplayColor()
 	local desc
 	if not self:isIdentified() then
-		desc = { c..self:getName().."#FFFFFF#" }
+		desc = { c..self:getName(name_param).."#FFFFFF#" }
 	else
-		desc = { c..self:getName().."#FFFFFF#", self.desc }
+		desc = { c..self:getName(name_param).."#FFFFFF#", self.desc }
 	end
 
 	local reqs = self:getRequirementDesc(game.player)

@@ -44,7 +44,7 @@ end
 --- Returns a tooltip for the trap
 function _M:tooltip()
 	if self:knownBy(game.player) then
-		return self:getName()
+		return self:getDisplayString()..self:getName()
 	end
 end
 

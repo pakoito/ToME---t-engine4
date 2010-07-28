@@ -143,6 +143,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures a furious burst of sunlight, dealing %0.2f light damage to all those around you in a radius of 4.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 160))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 160))
 	end,
 }

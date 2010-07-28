@@ -67,12 +67,12 @@ function _M:tooltip()
 	if self.show_tooltip then
 		local name = ((self.show_tooltip == true) and self.name or self.show_tooltip)
 		if self.desc then
-			return name.."\n"..self.desc
+			return self:getDisplayString()..name.."\n"..self.desc
 		else
-			return name
+			return self:getDisplayString()..name
 		end
 	else
-		return self.name
+		return self:getDisplayString()..self.name
 	end
 end
 

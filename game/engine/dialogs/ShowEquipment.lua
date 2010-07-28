@@ -77,7 +77,7 @@ function _M:generateList()
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = string.char(string.byte('a') + i)
-					list[#list+1] = { name=char..") "..o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item }
+					list[#list+1] = { name=char..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item }
 					chars[char] = #list
 					i = i + 1
 				end

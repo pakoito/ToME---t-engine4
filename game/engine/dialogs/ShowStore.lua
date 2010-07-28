@@ -95,7 +95,7 @@ function _M:generateList()
 	local i = 0
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getName(), color=o:getDisplayColor(), object=o, item=item }
+			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item }
 			i = i + 1
 		end
 	end
@@ -106,7 +106,7 @@ function _M:generateList()
 	local i = 0
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getName(), color=o:getDisplayColor(), object=o, item=item }
+			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item }
 			i = i + 1
 		end
 	end

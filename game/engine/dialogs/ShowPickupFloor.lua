@@ -84,7 +84,7 @@ function _M:generateList()
 		local o = game.level.map:getObject(self.x, self.y, idx)
 		if not o then break end
 		if not self.filter or self.filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i - 1)..") "..o:getName(), color=o:getDisplayColor(), object=o, item=idx }
+			list[#list+1] = { name=string.char(string.byte('a') + i - 1)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=idx }
 			i = i + 1
 		end
 		idx = idx + 1

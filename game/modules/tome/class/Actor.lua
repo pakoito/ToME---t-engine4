@@ -401,7 +401,7 @@ function _M:tooltip()
 		resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
 	end
 
-	return ([[%s%s
+	return ([[%s%s%s
 Rank: %s%s
 #00ffff#Level: %d
 Exp: %d/%d
@@ -412,7 +412,7 @@ Size: #ANTIQUE_WHITE#%s
 %s
 Faction: %s%s (%s)
 %s]]):format(
-	rank_color, self.name,
+	self:getDisplayString(), rank_color, self.name,
 	rank_color, rank,
 	self.level,
 	self.exp,
