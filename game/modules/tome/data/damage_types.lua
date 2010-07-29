@@ -272,6 +272,20 @@ newDamageType{
 	end,
 }
 
+-- Cold damage + freeze ground
+newDamageType{
+	name = "coldnevermove", type = "COLDNEVERMOVE",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam.dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
+				target:setEffect(target.EFF_FROZEN_FEET, dam.dur, {})
+			end
+		end
+	end,
+}
+
 -- Freezes target, chcks for spellresistance
 newDamageType{
 	name = "freeze", type = "FREEZE",

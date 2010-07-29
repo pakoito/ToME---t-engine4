@@ -25,10 +25,9 @@ newTalent{
 	mana = 12,
 	cooldown = 3,
 	tactical = {
-		ATTACK = 10,
+		ATTACKAREA = 10,
 	},
 	range = 20,
-	reflectable = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
 		local x, y = self:getTarget(tg)
@@ -56,20 +55,23 @@ newTalent{
 	type = {"spell/ice",2},
 	require = spells_req2,
 	points = 5,
-	mana = 12,
-	cooldown = 3,
+	mana = 25,
+	cooldown = 10,
 	tactical = {
-		ATTACK = 10,
+		ATTACKAREA = 10,
 	},
-	range = 20,
-	reflectable = true,
+	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {dur=4, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 180))})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_ice", {radius=tg.radius})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		return ([[Blast a wave of cold all around you, doing %0.2f cold damage and freezing creatures on the ground for %d turns.
+		Affected creatures can still act but not move.
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 180), 4)
 	end,
 }
 
@@ -78,20 +80,50 @@ newTalent{
 	type = {"spell/ice",3},
 	require = spells_req3,
 	points = 5,
-	mana = 12,
-	cooldown = 3,
+	mana = 35,
+	cooldown = 15,
 	tactical = {
-		ATTACK = 10,
+		ATTACKAREA = 10,
 	},
 	range = 20,
-	reflectable = true,
 	action = function(self, t)
+		local max = math.ceil(self:getTalentLevel(t) + 2)
+		for i, act in ipairs(self.fov.actors_dist) do
+			if self:reactionToward(act) < 0 then
+				if not act:attr("frozen") then break end
+
+				-- Instakill critters
+				if act.rank <= 1 then
+					if act:canBe("instakill") then
+						game.logSeen(act, "%s shatters!", act.name:capitalize())
+						act:takeHit(100000, self)
+					end
+				end
+
+				if not act.dead then
+					local add_crit = 0
+					if act.rank == 2 then add_crit = 50
+					elseif act.rank == 3 then add_crit = 10 end
+					local tg = {type="hit", friendlyfire=false, talent=t}
+					local grids = self:project(tg, act.x, act.y, DamageType.COLD, {dur=8, initial=0, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 180), add_crit)})
+					game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_fire", {radius=1})
+				end
+
+				max = max - 1
+				if max <= 0 then break end
+			end
+		end
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		return ([[Shatter all frozen targets in your line of sight, doing %0.2f cold damage.
+		Depending on the target rank it will also have an additional effect:
+		* Critters will be instantly killed
+		* Normal rank will get +50%% critical chance
+		* Elites will get +10%% critical chance
+		At most it will affect %d foes.
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 180), math.ceil(self:getTalentLevel(t) + 2))
 	end,
 }
 
@@ -118,7 +150,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Surround yourself with Wildfire, increasing all your fire damage by %d%% and ignoring %d%% fire resistance of your targets.]])
+		return ([[Surround yourself with Uttercold, increasing all your cold damage by %d%% and ignoring %d%% cold resistance of your targets.]])
 		:format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 10)
 	end,
 }

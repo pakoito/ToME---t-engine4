@@ -591,12 +591,12 @@ function _M:physicalCrit(dam, weapon, target)
 end
 
 --- Computes spell crit for a damage
-function _M:spellCrit(dam)
+function _M:spellCrit(dam, add_chance)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
 		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
 	end
 
-	local chance = self:combatSpellCrit()
+	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
 
 	print("[SPELL CRIT %]", chance)

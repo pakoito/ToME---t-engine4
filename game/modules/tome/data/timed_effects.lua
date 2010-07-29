@@ -137,13 +137,34 @@ newEffect{
 		game.level.map:updateMap(self.x, self.y)
 
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.frozid = self:addTemporaryValue("frozen", 1)
 		eff.dur = self:updateEffectDuration(eff.dur, "freeze")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
+		self:removeTemporaryValue("frozen", eff.frozid)
 		self.color_r = eff.old_r
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b
+	end,
+}
+
+newEffect{
+	name = "FROZEN_FEET",
+	desc = "Frozen Feet",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is frozen to the ground!", "+Frozen" end,
+	on_lose = function(self, err) return "#Target# warms up.", "-Frozen" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("never_move", 1)
+		eff.frozid = self:addTemporaryValue("frozen", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "pin")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("never_move", eff.tmpid)
+		self:removeTemporaryValue("frozen", eff.frozid)
 	end,
 }
 

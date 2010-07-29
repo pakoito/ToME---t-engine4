@@ -53,7 +53,6 @@ newTalent{
 		ATTACKAREA = 40,
 	},
 	range = 20,
-	reflectable = true,
 	action = function(self, t)
 		local max = math.ceil(self:getTalentLevel(t) + 2)
 		for i, act in ipairs(self.fov.actors_dist) do
@@ -87,7 +86,6 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 14,
-	reflectable = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2, friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
