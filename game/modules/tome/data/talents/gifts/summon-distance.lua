@@ -49,9 +49,9 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 4,
+	range = 5,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=5, friendlyfire=false, talent=t}
+		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ACID, 30 + self:getWil(50) * self:getTalentLevel(t), {type="acid"})
@@ -75,9 +75,9 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 4,
+	range = 5,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=5, friendlyfire=false, talent=t}
+		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.range(1, 30 + self:getWil(80) * self:getTalentLevel(t)), {type="lightning_explosion"})
@@ -101,9 +101,9 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 4,
+	range = 5,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=5, friendlyfire=false, talent=t}
+		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.POISON, 30 + self:getWil(70) * self:getTalentLevel(t), {type="slime"})

@@ -132,9 +132,9 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 4,
+	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
+		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ICE, 30 + self:getStr(50) * self:getTalentLevel(t), {type="freeze"})

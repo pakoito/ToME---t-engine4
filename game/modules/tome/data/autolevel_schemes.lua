@@ -69,3 +69,7 @@ end}
 Autolevel:registerScheme{ name = "alchemy-golem", levelup = function(self)
 	self:learnStats{ self.STAT_STR, self.STAT_STR, self.STAT_DEX, self.STAT_CON }
 end}
+
+Autolevel:registerScheme{ name = "drake", levelup = function(self)
+	self:learnStats{ self.STAT_STR, self.STAT_WIL, self.STAT_DEX }
+end}
