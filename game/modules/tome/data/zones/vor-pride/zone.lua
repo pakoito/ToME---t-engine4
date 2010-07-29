@@ -28,7 +28,7 @@ return {
 	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	ambiant_music = "Bazaar of Tal-Mashad.ogg",
+	ambiant_music = "Breaking the siege.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Town",
@@ -36,7 +36,7 @@ return {
 			max_building_w = 8, max_building_h = 8,
 			edge_entrances = {6,4},
 			floor = "FLOOR",
-			external_floor = "SAND",
+			external_floor = "FLOOR",
 			wall = "WALL",
 			up = "UP",
 			down = "DOWN",

@@ -41,12 +41,14 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1 },
 
 	resolvers.equip{
 		{type="weapon", subtype="staff", ego_change=100, autoreq=true},
 		{type="armor", subtype="cloth", ego_change=100, autoreq=true},
+		{type="armor", subtype="head", defined="CROWN_ELEMENTS", autoreq=true},
 	},
+	resolvers.drops{chance=100, nb=1, {defined="ORB_ELEMENTS"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
@@ -72,7 +74,7 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	},
 
 	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "rak-shor")
+		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "vor")
 		if not game.player:hasQuest("pre-mount-doom") then
 			game.player:grantQuest("pre-mount-doom")
 		end

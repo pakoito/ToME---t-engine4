@@ -28,7 +28,7 @@ return {
 	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	ambiant_music = "Bazaar of Tal-Mashad.ogg",
+	ambiant_music = "Thrall's Theme.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Town",

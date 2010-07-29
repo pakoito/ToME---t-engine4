@@ -21,19 +21,31 @@ load("/data/general/objects/objects.lua")
 
 local Stats = require"engine.interface.ActorStats"
 
-newEntity{ base = "BASE_CLOTH_ARMOR",
-	define_as = "BLACK_ROBE", rarity=false,
-	name = "Black Robe", unique=true,
-	unided_name = "black robe", color=colors.DARK_GREY,
-	desc = [[A silk robe, darker than the darkest night sky, it radiates power.]],
+
+newEntity{ base = "BASE_LEATHER_CAP",
+	define_as = "CROWN_ELEMENTS", rarity=false,
+	name = "Crown of the Elements", unique=true,
+	unided_name = "jeweled crown", color=colors.DARK_GREY,
+	desc = [[Jeweled crown]],
 	cost = 500,
+	material_level = 5,
 	wielder = {
-		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
-		see_invisible = 10,
-		blind_immune = 1,
-		combat_spellpower = 10,
-		combat_dam = 10,
-		combat_def = 6,
+		inc_stats = { [Stats.STAT_CON] = 5, [Stats.STAT_WIL] = 3, },
+		resists={
+			[DamageType.FIRE] = 15,
+			[DamageType.COLD] = 15,
+			[DamageType.ACID] = 15,
+			[DamageType.LIGHTNING] = 15,
+		},
+		melee_project={
+			[DamageType.FIRE] = 10,
+			[DamageType.COLD] = 10,
+			[DamageType.ACID] = 10,
+			[DamageType.LIGHTNING] = 10,
+		},
+		see_invisible = 15,
+		combat_armor = 5,
+		fatigue = 5,
 	},
 }
 
