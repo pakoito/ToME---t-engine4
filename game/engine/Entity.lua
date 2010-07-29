@@ -326,7 +326,7 @@ end
 -- @param res the table to load into, defaults to a new one
 -- @param mod an optional function to which will be passed each entity as they are created. Can be used to adjust some values on the fly
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
-function _M:loadList(file, no_default, res, mod)
+function _M:loadList(file, no_default, res, mod, loaded)
 	if type(file) == "table" then
 		res = res or {}
 		for i, f in ipairs(file) do
@@ -353,10 +353,15 @@ function _M:loadList(file, no_default, res, mod)
 	end
 	if err then error(err) end
 
+	loaded = loaded or {}
+	loaded[f] = true
+
 	setfenv(f, setmetatable({
 		class = self,
+		loaded = loaded,
 		resolvers = resolvers,
 		DamageType = require "engine.DamageType",
+		entity_mod = mod,
 		newEntity = function(t)
 			-- Do we inherit things ?
 			if t.base then
@@ -389,10 +394,10 @@ function _M:loadList(file, no_default, res, mod)
 			if t.define_as then res[t.define_as] = e end
 		end,
 		load = function(f, new_mod)
-			self:loadList(f, no_default, res, new_mod or mod)
+			self:loadList(f, no_default, res, new_mod or mod, loaded)
 		end,
 		loadList = function(f, new_mod)
-			return self:loadList(f, no_default, nil, new_mod or mod)
+			return self:loadList(f, no_default, nil, new_mod or mod, loaded)
 		end,
 	}, {__index=_G}))
 	f()

@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/sunwall-town.lua")
-load("/data/general/npcs/.lua", function(e) e.faction = "sunwall" end)
+--load("/data/general/npcs/.lua", function(e) e.faction = "sunwall" end)
 
 local Talents = require("engine.interface.ActorTalents")
 

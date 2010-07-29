@@ -23,6 +23,8 @@ load("/data/general/npcs/molds.lua")
 load("/data/general/npcs/skeleton.lua")
 load("/data/general/npcs/snake.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 10 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "FILLAREL",

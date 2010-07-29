@@ -23,6 +23,8 @@ load("/data/general/npcs/ooze.lua", function(e) if e.rarity then e.rarity = e.ra
 load("/data/general/npcs/jelly.lua", function(e) if e.rarity then e.rarity = e.rarity * 6 end end)
 load("/data/general/npcs/sandworm.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 -- They make the tunnels, temporarily

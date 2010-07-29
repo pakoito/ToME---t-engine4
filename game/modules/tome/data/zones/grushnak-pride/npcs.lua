@@ -20,6 +20,8 @@
 load("/data/general/npcs/orc.lua", function(e) if e.rarity then e.rarity = e.rarity * 3 end e.make_escort = nil end)
 load("/data/general/npcs/orc-grushnak.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
@@ -42,7 +44,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
-	
+
 	resolvers.equip{
 		{type="weapon", subtype="waraxe", ego_change=100, autoreq=true},
 		{type="armor", subtype="shield", ego_change=100, autoreq=true},

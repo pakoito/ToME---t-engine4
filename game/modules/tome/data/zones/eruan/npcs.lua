@@ -21,6 +21,8 @@ load("/data/general/npcs/sandworm.lua")
 load("/data/general/npcs/ritch.lua")
 load("/data/general/npcs/orc.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "SUN_PALADIN_GUREN",

@@ -22,6 +22,8 @@ load("/data/general/npcs/canine.lua", function(e) if e.rarity then e.rarity = e.
 load("/data/general/npcs/snow-giant.lua")
 load("/data/general/npcs/cold-drake.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated

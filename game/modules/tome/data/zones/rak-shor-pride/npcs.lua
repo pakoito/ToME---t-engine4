@@ -23,6 +23,8 @@ load("/data/general/npcs/skeleton.lua", function(e) if e.rarity then e.rarity = 
 load("/data/general/npcs/orc.lua", function(e) if e.rarity then e.rarity = e.rarity * 3 end e.make_escort = nil end)
 load("/data/general/npcs/orc-rak-shor.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",

@@ -26,6 +26,8 @@ load("/data/general/npcs/plant.lua")
 load("/data/general/npcs/swarm.lua")
 load("/data/general/npcs/bear.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated

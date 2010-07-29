@@ -202,8 +202,8 @@ function resolvers.calc.random_use_talent(tt, e)
 	local tid = rng.table(ts) or engine.interface.ActorTalents.T_SENSE
 	local t = engine.interface.ActorTalents.talents_def[tid]
 	local level = util.bound(math.ceil(rng.mbonus(5, resolvers.current_level, resolvers.mbonus_max_level) * ml / 5), 1, 5)
-	e.cost = e.cost + t.type[2] * 3
-	e.cost = e.cost + level * 2
+	e.cost = e.cost + t.type[2] * 3 * level
+	e.recharge_cost = t.type[2] * 3 * level
 	return { id=tid, level=level, power=tt[2] }
 end
 

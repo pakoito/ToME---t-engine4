@@ -22,6 +22,8 @@ load("/data/general/npcs/ghoul.lua")
 load("/data/general/npcs/wight.lua")
 load("/data/general/npcs/vampire.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of Tol Falas, no "rarity" field means it will not be randomly generated

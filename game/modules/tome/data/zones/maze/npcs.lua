@@ -27,6 +27,8 @@ load("/data/general/npcs/ant.lua")
 load("/data/general/npcs/thieve.lua")
 load("/data/general/npcs/minotaur.lua")
 
+load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of the maze, no "rarity" field means it will not be randomly generated
