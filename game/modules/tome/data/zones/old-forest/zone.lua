@@ -35,6 +35,7 @@ return {
 			nb_rooms = 10,
 			edge_entrances = {6,4},
 			rooms = {"forest_clearing"},
+			rooms_config = {forest_clearing={pit_chance=5, filters={{type="insect", subtype="ant"}, {type="insect"}, {type="animal", subtype="snake"}, {type="animal", subtype="canine"}}}},
 			['.'] = "GRASS_DARK1",
 			['#'] = {"TREE_DARK1","TREE_DARK2","TREE_DARK3","TREE_DARK4","TREE_DARK5","TREE_DARK6","TREE_DARK7","TREE_DARK8","TREE_DARK9","TREE_DARK10","TREE_DARK11","TREE_DARK12","TREE_DARK13","TREE_DARK14","TREE_DARK15","TREE_DARK16","TREE_DARK17","TREE_DARK18","TREE_DARK19","TREE_DARK20",},
 			up = "UP",

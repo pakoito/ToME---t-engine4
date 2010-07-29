@@ -35,6 +35,7 @@ return {
 			nb_rooms = 10,
 			edge_entrances = {2,8},
 			rooms = {"forest_clearing","rocky_snowy_trees"},
+			rooms_config = {forest_clearing={pit_chance=5, filters={{}}},
 			['.'] = "ROCKY_GROUND",
 			['T'] = "ROCKY_SNOWY_TREE",
 			['#'] = "MOUNTAIN_WALL",

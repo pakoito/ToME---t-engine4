@@ -17,37 +17,42 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Heightmap = require "engine.Heightmap"
-
 return function(gen, id)
-	local w = rng.range(6, 10)
-	local h = rng.range(6, 10)
-	return { name="forest_clearing"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
-		-- make the fractal heightmap
-		local hm = Heightmap.new(self.w, self.h, 2, {middle=Heightmap.min, up_left=Heightmap.max, down_left=Heightmap.max, up_right=Heightmap.max, down_right=Heightmap.max})
-		hm:generate()
+	local w = rng.range(7, 12)
+	local h = rng.range(7, 12)
+	return { name="pit"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
+		local filter = rng.table(gen.data.rooms_config.pit.filters)
 
-		local ispit = gen.data.rooms_config and gen.data.rooms_config.forest_clearing and rng.percent(gen.data.rooms_config.forest_clearing.pit_chance)
-		if ispit then ispit = rng.table(gen.data.rooms_config.forest_clearing.filters) end
-
+		-- Draw the room
 		for i = 1, self.w do
 			for j = 1, self.h do
-				if hm.hmap[i][j] >= Heightmap.max * 5 / 6 then
---					gen.map.room_map[i-1+x][j-1+y].can_open = true
+				if i == 1 or i == self.w or j == 1 or j == self.h then
+					gen.map.room_map[i-1+x][j-1+y].can_open = true
 					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('#'))
 				else
 					gen.map.room_map[i-1+x][j-1+y].room = id
 					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('.'))
-
-					if ispit then
-						local e = gen.zone:makeEntity(gen.level, "actor", ispit, nil, true)
-						if e then
-							gen.zone:addEntity(gen.level, e, "actor", i-1+x, j-1+y)
-						end
-					end
 				end
 				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
 			end
 		end
+
+		-- Draw the inner room and populate it
+		local doors = {}
+		for i = 3, self.w - 2 do
+			for j = 3, self.h - 2 do
+				if i == 3 or i == self.w - 2 or j == 3 or j == self.h - 2 then
+					gen.map.room_map[i-1+x][j-1+y].can_open = false
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('#'))
+					doors[#doors+1] = {i-1+x, j-1+y}
+				else
+						local e = gen.zone:makeEntity(gen.level, "actor", filter, nil, true)
+						if e then gen.zone:addEntity(gen.level, e, "actor", i-1+x, j-1+y) end
+				end
+				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
+			end
+		end
+		local door = rng.table(doors)
+		gen.map(door[1], door[2], Map.TERRAIN, gen:resolve('+'))
 	end}
 end

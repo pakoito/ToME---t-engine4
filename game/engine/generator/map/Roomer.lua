@@ -42,7 +42,8 @@ function _M:init(zone, map, level, data)
 end
 
 function _M:loadRoom(file)
-	local f = loadfile("/data/rooms/"..file..".lua")
+	local f, err = loadfile("/data/rooms/"..file..".lua")
+	if not f and err then error(err) end
 	setfenv(f, setmetatable({
 		Map = require("engine.Map"),
 	}, {__index=_G}))
