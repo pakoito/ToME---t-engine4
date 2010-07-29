@@ -103,8 +103,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	resists = { [DamageType.PHYSICAL] = 40, [DamageType.FIRE] = 40, [DamageType.COLD] = 40, [DamageType.ACID] = 40, [DamageType.LIGHTNING] = 40, },
 
 	summon = {
-		{type="dragon", subtype="multihued", number=2, hasxp=false},
-		{type="dragon", subtype="multihued", number=3, hasxp=false},
+		{type="dragon", number=2, hasxp=false},
 	},
 
 	resolvers.talents{

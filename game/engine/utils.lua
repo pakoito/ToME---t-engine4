@@ -150,27 +150,27 @@ function string.bookCapitalize(str)
 	return table.concat(words, " ")
 end
 
+function string.lpegSub(s, patt, repl)
+	patt = lpeg.P(patt)
+	patt = lpeg.Cs((patt / repl + 1)^0)
+	return lpeg.match(patt, s)
+end
+
+-- Those matching patterns are used both by splitLine and drawColorString*
+local Puid = "UID:" * lpeg.R"09"^1 * ":" * lpeg.R"09"
+local Puid_cap = "UID:" * lpeg.C(lpeg.R"09"^1) * ":" * lpeg.C(lpeg.R"09")
+local Pcolorname = (lpeg.R"AZ" + "_")^3
+local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
+local Pcolorcode = Pcode * Pcode
+local Pcolorcodefull = Pcolorcode * Pcolorcode * Pcolorcode
+
 function string.splitLine(str, max_width, font)
 	local space_w = font:size(" ")
 	local lines = {}
 	local cur_line, cur_size = "", 0
 	for _, v in ipairs(str:split(lpeg.S"\n ")) do
-		local w, h = font:size(v)
-
-		-- Ignore the size of color markers
-		local _, _, color1 = v:find("(#%x%x%x%x%x%x#)")
-		local _, _, color2 = v:find("(#[A-Z_]+#)")
-		local _, _, uid = v:find("(#UID:[0-9]+:[0-9]#)")
-		if color1 then
-			local color_w = font:size(color1)
-			w = w - color_w
-		elseif color2 then
-			local color_w = font:size(color2)
-			w = w - color_w
-		elseif uid then
-			local color_w = font:size(uid)
-			w = w - color_w
-		end
+		local shortv = v:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", "")
+		local w, h = font:size(shortv)
 
 		if cur_size + space_w + w < max_width then
 			cur_line = cur_line..(cur_size==0 and "" or " ")..v
@@ -243,13 +243,7 @@ end
 
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
-	local Puid = "UID:" * lpeg.R"09"^1 * ":" * lpeg.R"09"
-	local Puid_cap = "UID:" * lpeg.C(lpeg.R"09"^1) * ":" * lpeg.C(lpeg.R"09")
-	local Pcolorname = (lpeg.R"AZ" + "_")^3
-	local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
-	local Pcolorcode = Pcode * Pcode
-
-	local list = str:split("#" * (Puid + (Pcolorcode * Pcolorcode * Pcolorcode) + Pcolorname) * "#", true)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
@@ -298,13 +292,7 @@ end
 
 
 getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y, r, g, b)
-	local Puid = "UID:" * lpeg.R"09"^1 * ":" * lpeg.R"09"
-	local Puid_cap = "UID:" * lpeg.C(lpeg.R"09"^1) * ":" * lpeg.C(lpeg.R"09")
-	local Pcolorname = (lpeg.R"AZ" + "_")^3
-	local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
-	local Pcolorcode = Pcode * Pcode
-
-	local list = str:split("#" * (Puid + (Pcolorcode * Pcolorcode * Pcolorcode) + Pcolorname) * "#", true)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255

@@ -113,8 +113,8 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 			who:sortInven(inven)
 			self.changed = true
 			who.changed = true
-			if store_dialog then store_dialog:updateStore() end
 			self:onBuy(who, o, item, nb)
+			if store_dialog then store_dialog:updateStore() end
 		end end)
 	end
 end
@@ -134,8 +134,8 @@ function _M:doSell(who, o, item, nb, store_dialog)
 			who:sortInven(inven)
 			self.changed = true
 			who.changed = true
-			if store_dialog then store_dialog:updateStore() end
 			self:onSell(who, o, item, nb)
+			if store_dialog then store_dialog:updateStore() end
 		end end)
 	end
 end

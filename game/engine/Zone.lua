@@ -291,6 +291,8 @@ function _M:finishEntity(level, type, e, ego_chance)
 				-- The ego requested instant resolving before merge ?
 				if ego.instant_resolve then ego:resolve(nil, nil, e) end
 				ego.instant_resolve = nil
+				-- Void the uid, we dont want to erase the base entity's one
+				ego.uid = nil
 				-- Merge additively but with array appending, so that nameless resolvers are not lost
 				table.mergeAddAppendArray(e, ego, true)
 				e.name = newname
