@@ -60,6 +60,11 @@ end
 
 --- Use the object (quaff, read, ...)
 function _M:use(who, typ)
+	if self.use_no_blind and who:attr("blind") then
+		game.logPlayer(who, "You can not see!")
+		return
+	end
+
 	local types = {}
 	if self:canUseObject() then types[#types+1] = "use" end
 

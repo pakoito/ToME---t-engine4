@@ -39,7 +39,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 
 -- Artifact, randomly dropped in Vor Pride, and only there
 newEntity{ base = "BASE_SCROLL", subtype="tome",
-	name = "Tome of Flames", unided_name = "burning book", unique=true,
+	name = "Tome of Wildfire", unided_name = "burning book", unique=true,
 	color = colors.VIOLET,
 	level_range = {35, 45},
 	rarity = 200,
@@ -51,10 +51,35 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 			game.logPlayer(who, "#00FFFF#You read the tome and learn about ancient forgotten fire magic!")
 		else
 			who.talents_types_mastery["spell/fire"] = (who.talents_types_mastery["spell/fire"] or 1) + 0.1
+			who.talents_types_mastery["spell/wildfire"] = (who.talents_types_mastery["spell/wildfire"] or 1) + 0.1
 			game.logPlayer(who, "#00FFFF#You read the tome and perfect your mastery of fire magic!")
 		end
 
 		game:setAllowedBuild("mage_pyromancer", true)
+
+		return "destroy", true
+	end}
+}
+
+-- Artifact, randomly dropped in Vor Pride, and only there
+newEntity{ base = "BASE_SCROLL", subtype="tome",
+	name = "Tome of Uttercold", unided_name = "frozen book", unique=true,
+	color = colors.VIOLET,
+	level_range = {35, 45},
+	rarity = 1,
+	cost = 100,
+
+	use_simple = { name="learn the ancient secrets", use = function(self, who)
+		if not who:knowTalent(who.T_ICE_STORM) then
+			who:learnTalent(who.T_ICE_STORM, true, 3)
+			game.logPlayer(who, "#00FFFF#You read the tome and learn about ancient forgotten ice magic!")
+		else
+			who.talents_types_mastery["spell/water"] = (who.talents_types_mastery["spell/water"] or 1) + 0.1
+			who.talents_types_mastery["spell/ice"] = (who.talents_types_mastery["spell/ice"] or 1) + 0.1
+			game.logPlayer(who, "#00FFFF#You read the tome and perfect your mastery of ice magic!")
+		end
+
+		game:setAllowedBuild("mage_cryomancer", true)
 
 		return "destroy", true
 	end}
