@@ -117,7 +117,7 @@ newDamageType{
 	end,
 }
 newDamageType{
-	name = "cold", type = "COLD", text_color = "#BLUE#",
+	name = "cold", type = "COLD", text_color = "#1133F3#",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
