@@ -88,16 +88,6 @@ newEntity{ base = "BASE_NPC_RODENT",
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
-	name = "cute little bunny", color=colors.SALMON,
-	desc = [[It looks at you with cute little eyes before jumping at you with razor sharp teeth.]],
-	level_range = {1, 15}, exp_worth = 3,
-	rarity = 200,
-	max_life = resolvers.rngavg(15,20),
-	combat = { dam=50, atk=15, apr=10 },
-	combat_armor = 1, combat_def = 20,
-}
-
-newEntity{ base = "BASE_NPC_RODENT",
 	name = "giant grey mouse", color=colors.SLATE,
 	level_range = {1, 3}, exp_worth = 1,
 	rarity = 6,
