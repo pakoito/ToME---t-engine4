@@ -179,16 +179,19 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 
-	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
+	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x = t.x or self.x, start_y = t.y or self.y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
 	game.zone:addEntity(game.level, proj, "projectile", self.x, self.y)
 end
 
-function _M:projectDoMove(typ, x, y, srcx, srcy)
+function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 	-- Stop at range or on block
-	local lx, ly = x, y
-	local l = line.new(srcx, srcy, x, y)
-	lx, ly = l()
-	local initial_dir = lx and coord_to_dir[lx - srcx][ly - srcy] or 5
+	local l = line.new(srcx, srcy, tgtx, tgty)
+	local lx, ly = srcx, srcy
+	-- Look for our current position
+	while lx and ly and not (lx == x and ly == y) do lx, ly = l() end
+	-- Now get the next position
+	if lx and ly then lx, ly = l() end
+
 	if lx and ly then
 		if not typ.no_restrict then
 			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return lx, ly, false, true
@@ -200,7 +203,7 @@ function _M:projectDoMove(typ, x, y, srcx, srcy)
 		if typ.line then return lx, ly, true, false end
 	end
 	-- Ok if we are at the end
-	if (not lx and not ly) or (lx == x and ly == y) then return lx, ly, false, true end
+	if (not lx and not ly) then return lx, ly, false, true end
 	return lx, ly, false, false
 end
 
@@ -249,6 +252,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
 		end, function()end, nil)
 		addGrid(lx, ly)
 	elseif typ.cone then
+		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
 		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)

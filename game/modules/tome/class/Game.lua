@@ -580,7 +580,7 @@ function _M:setupCommands()
 				self.player:forceLevelup(50)
 				self.player.esp.all = 1
 				self.player.esp.range = 50
-				self:changeLevel(1, "tol-falas")
+				self:changeLevel(1, "vor-pride")
 --				self.player:grantQuest("escort-duty")
 			end
 		end,

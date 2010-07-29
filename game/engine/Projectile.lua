@@ -87,7 +87,7 @@ function _M:move(x, y, force)
 		self:addParticles(Particles.new(self.travel_particle, 1, nil))
 		self.travel_particle = nil
 	end
-	
+
 	-- Update particle emitters attached to that actor
 	local del = {}
 	for e, _ in pairs(self.__particles) do
@@ -137,20 +137,20 @@ end
 --- Called by the engine when the projectile can move
 function _M:act()
 	if self.dead then return false end
-	
+
 	while self:enoughEnergy() and not self.dead do
 		if self.project then
-			local x, y, act, stop = self.src:projectDoMove(self.project.def.typ, self.project.def.x, self.project.def.y, self.x, self.y)
+			local x, y, act, stop = self.src:projectDoMove(self.project.def.typ, self.project.def.x, self.project.def.y, self.x, self.y, self.project.def.start_x, self.project.def.start_y)
 			if x and y then self:move(x, y) end
 			if act then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
-			if stop then 
-				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) 
-				game.level:removeEntity(self) 
+			if stop then
+				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj)
+				game.level:removeEntity(self)
 				self.dead = true
 			end
 		end
 	end
-	
+
 	return true
 end
 
