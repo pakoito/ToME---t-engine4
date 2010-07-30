@@ -40,6 +40,8 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 
+	resolvers.sustains_at_birth(),
+
 	open_door = true,
 
 	autolevel = "rogue",
@@ -68,7 +70,6 @@ newEntity{ base = "BASE_NPC_THIEF",
 	rarity = 5,
 	combat_armor = 2, combat_def = 5,
 	resolvers.talents{ [Talents.T_STEALTH]=1,  },
-	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -79,7 +80,6 @@ newEntity{ base = "BASE_NPC_THIEF",
 	rarity = 5,
 	combat_armor = 3, combat_def = 5,
 	resolvers.talents{ [Talents.T_STEALTH]=2,  },
-	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -90,7 +90,6 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_BANDIT",
 	rarity = 7,
 	combat_armor = 4, combat_def = 6,
 	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_LETHALITY]=2, },
-	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(80,100),
 }
 
@@ -114,7 +113,6 @@ newEntity{ base = "BASE_NPC_THIEF",
 		{type="humanoid", subtype="human", name="rogue", number=2, hasxp=false},
 	},
 	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
-	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 }
 
 newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
@@ -124,6 +122,5 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
 	rarity = 12,
 	combat_armor = 3, combat_def = 10,
 	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_PRECISION]=3, [Talents.T_DUAL_WEAPON_TRAINING]=2, [Talents.T_DUAL_WEAPON_DEFENSE]=2, [Talents.T_DUAL_STRIKE]=1, [Talents.T_SWEEP]=1, [Talents.T_SHADOWSTRIKE]=2, [Talents.T_LETHALITY]=5, },
-	on_added = function(self) self.energy.value = game.energy_to_act self:useTalent(self.T_STEALTH) end,
 	max_life = resolvers.rngavg(70,90),
 }

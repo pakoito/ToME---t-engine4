@@ -59,6 +59,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		[Talents.T_BARRIER]=5,
 		[Talents.T_WEAPON_OF_LIGHT]=5,
 	},
+	resolvers.sustains_at_birth(),
 
 	can_talk = "gates-of-morning-welcome",
 }

@@ -17,6 +17,23 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/underground.lua")
-load("/data/general/grids/water.lua")
+newEntity{
+	define_as = "UNDERGROUND_FLOOR",
+	name = "floor", image = "terrain/underground_floor.png",
+	display = '.', color=colors.LIGHT_UMBER, back_color=colors.UMBER,
+}
+
+for i = 1, 20 do
+newEntity{
+	define_as = "UNDERGROUND_TREE"..(i > 1 and i or ""),
+	name = "tree",
+	image = "terrain/underground_floor.png",
+	add_displays = class:makeTrees("terrain/underground_tree_alpha", 7),
+	display = '#', color=colors.PURPLE, back_color=colors.UMBER,
+	always_remember = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
+	block_sight = true,
+	dig = "UNDERGROUND_FLOOR",
+}
+end

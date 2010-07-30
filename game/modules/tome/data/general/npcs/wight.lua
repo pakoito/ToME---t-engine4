@@ -49,6 +49,7 @@ newEntity{
 	open_door = true,
 
 	resolvers.tmasteries{ ["technique/other"]=0.3, ["spell/air"]=0.3, ["spell/fire"]=0.3 },
+	resolvers.sustains_at_birth(),
 
 	resists = { [DamageType.COLD] = 80, [DamageType.FIRE] = 20, [DamageType.LIGHTNING] = 40, [DamageType.PHYSICAL] = 35, [DamageType.LIGHT] = -50, },
 	poison_immune = 1,

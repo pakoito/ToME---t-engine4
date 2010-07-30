@@ -219,3 +219,19 @@ function resolvers.calc.image_material(t, e)
 	local ml = e.material_level or 1
 	return "object/"..t[1].."_"..t[2][ml]..".png"
 end
+
+--- Activates all sustains at birth
+function resolvers.sustains_at_birth()
+	return {__resolver="sustains_at_birth", __resolve_last=true}
+end
+function resolvers.calc.sustains_at_birth(_, e)
+	e.on_added = function(self)
+		for tid, _ in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if t and t.mode == "sustained" then
+				self.energy.value = game.energy_to_act
+				self:useTalent(tid)
+			end
+		end
+	end
+end

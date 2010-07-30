@@ -39,6 +39,7 @@ newEntity{
 	stats = { str=15, dex=15, mag=8, con=10 },
 
 	resolvers.tmasteries{ ["technique/other"]=0.3 },
+	resolvers.sustains_at_birth(),
 
 	poison_immune = 0.9,
 	resists = { [DamageType.NATURE] = 20, [DamageType.LIGHT] = -20 },

@@ -76,6 +76,7 @@ newEntity{ define_as = "GOLBUG",
 		[Talents.T_ICY_SKIN]=4,
 		[Talents.T_ICE_BREATH]=4,
 	},
+	resolvers.sustains_at_birth(),
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },

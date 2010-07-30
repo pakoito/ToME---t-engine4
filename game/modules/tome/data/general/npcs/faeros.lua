@@ -72,6 +72,7 @@ newEntity{ base = "BASE_NPC_FAEROS",
 		[Talents.T_FLAME]=4,
 		[Talents.T_FIERY_HANDS]=3,
 	},
+	resolvers.sustains_at_birth(),
 }
 
 newEntity{ base = "BASE_NPC_FAEROS",
@@ -90,4 +91,5 @@ newEntity{ base = "BASE_NPC_FAEROS",
 		[Talents.T_FLAMESHOCK]=3,
 		[Talents.T_INFERNO]=3,
 	},
+	resolvers.sustains_at_birth(),
 }

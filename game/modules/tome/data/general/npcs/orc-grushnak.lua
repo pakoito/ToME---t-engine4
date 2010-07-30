@@ -38,6 +38,7 @@ newEntity{
 	size_category = 3,
 
 	open_door = true,
+	resolvers.sustains_at_birth(),
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },

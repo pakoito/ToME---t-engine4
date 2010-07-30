@@ -60,6 +60,7 @@ newEntity{ define_as = "SUN_PALADIN_TORNUK",
 		[Talents.T_BARRIER]=3,
 		[Talents.T_WEAPON_OF_LIGHT]=2,
 	},
+	resolvers.sustains_at_birth(),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("start-orc", engine.Quest.COMPLETED, "sunwall-outpost")

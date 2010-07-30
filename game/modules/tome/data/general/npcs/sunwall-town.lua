@@ -86,6 +86,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 		[Talents.T_CHANT_OF_FORTITUDE]=2,
 		[Talents.T_SEARING_LIGHT]=2,
 	},
+	resolvers.sustains_at_birth(),
 }
 
 newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
@@ -104,4 +105,5 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 		[Talents.T_SEARING_LIGHT]=3,
 		[Talents.T_FIREBEAM]=2,
 	},
+	resolvers.sustains_at_birth(),
 }

@@ -379,10 +379,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, self:attr("onslaught"))
 		end
-		if lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, 95, 10) and lt:canBe("knockback") then
+		if lt and lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, 95, 10) and lt:canBe("knockback") then
 			lt:knockback(self.x, self.y, self:attr("onslaught"))
 		end
-		if rt:checkHit(self:combatAttack(weapon), rt:combatPhysicalResist(), 0, 95, 10) and r+t:canBe("knockback") then
+		if rt and rt:checkHit(self:combatAttack(weapon), rt:combatPhysicalResist(), 0, 95, 10) and r+t:canBe("knockback") then
 			rt:knockback(self.x, self.y, self:attr("onslaught"))
 		end
 	end

@@ -332,12 +332,13 @@ function _M:getRankLevelAdjust()
 	end
 end
 
-function _M:getRankLifeAdjust()
-	if self.rank == 1 then return -2
-	elseif self.rank == 2 then return -0.5
-	elseif self.rank == 3 then return 1
-	elseif self.rank == 4 then return 2
-	elseif self.rank >= 5 then return 3
+function _M:getRankLifeAdjust(value)
+	local level_adjust = 1 + self.level / 40
+	if self.rank == 1 then return value * (level_adjust - 0.2)
+	elseif self.rank == 2 then return value * (level_adjust - 0.1)
+	elseif self.rank == 3 then return value * (level_adjust + 0.1)
+	elseif self.rank == 4 then return value * (level_adjust + 0.3)
+	elseif self.rank >= 5 then return value * (level_adjust + 0.5)
 	else return 0
 	end
 end
@@ -661,7 +662,7 @@ function _M:levelup()
 	if not self.fixed_rating then
 		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
 	end
-	self.max_life = self.max_life + math.max(rating + self:getRankLifeAdjust(), 1)
+	self.max_life = self.max_life + math.max(self:getRankLifeAdjust(rating), 1)
 
 	self:incMaxMana(self.mana_rating)
 	self:incMaxStamina(self.stamina_rating)

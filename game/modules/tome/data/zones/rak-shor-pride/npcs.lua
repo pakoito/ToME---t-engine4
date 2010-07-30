@@ -64,6 +64,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 	},
+	resolvers.sustains_at_birth(),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "rak-shor")

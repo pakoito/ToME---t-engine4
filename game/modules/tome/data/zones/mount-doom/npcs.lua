@@ -199,6 +199,7 @@ newEntity{
 		[Talents.T_PHASE_DOOR]=5,
 		[Talents.T_ESSENCE_OF_SPEED]=5,
 	},
+	resolvers.sustains_at_birth(),
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
@@ -254,6 +255,7 @@ newEntity{
 		[Talents.T_PHASE_DOOR]=5,
 		[Talents.T_ESSENCE_OF_SPEED]=5,
 	},
+	resolvers.sustains_at_birth(),
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
@@ -286,6 +288,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 		[Talents.T_KNOCKBACK]=5,
 		[Talents.T_STUN]=2,
 	},
+	resolvers.sustains_at_birth(),
 
 	blind_immune = 1,
 	stun_immune = 1,

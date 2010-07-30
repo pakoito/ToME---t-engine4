@@ -61,6 +61,7 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 		[Talents.T_ICY_SKIN]=3,
 		[Talents.T_ICE_BREATH]=4,
 	},
+	resolvers.sustains_at_birth(),
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },

@@ -63,6 +63,7 @@ newEntity{ define_as = "SUN_PALADIN_GUREN",
 		[Talents.T_BARRIER]=5,
 		[Talents.T_WEAPON_OF_LIGHT]=5,
 	},
+	resolvers.sustains_at_birth(),
 
 	can_talk = "pre-mount-doom-eruan",
 }

@@ -75,6 +75,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 		[Talents.T_SECOND_WIND]=5,
 		[Talents.T_JUGGERNAUT]=5,
 	},
+	resolvers.sustains_at_birth(),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "grushnak")

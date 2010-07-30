@@ -81,6 +81,7 @@ newEntity{ define_as = "THE_MASTER",
 			[Talents.T_BLINDING_SPEED]=4,
 			[Talents.T_PERFECT_STRIKE]=3,
 	},
+	resolvers.sustains_at_birth(),
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },

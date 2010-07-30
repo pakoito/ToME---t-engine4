@@ -72,6 +72,7 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 		[Talents.T_SPELL_SHAPING]=5,
 		[Talents.T_ESSENCE_OF_SPEED]=1,
 	},
+	resolvers.sustains_at_birth(),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "vor")

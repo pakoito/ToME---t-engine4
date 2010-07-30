@@ -54,7 +54,7 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 		[Talents.T_CORROSIVE_VAPOUR]=5,
 		[Talents.T_PHANTASMAL_SHIELD]=5,
 	},
-
+	resolvers.sustains_at_birth(),
 
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
