@@ -518,8 +518,8 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	for i = 1, #spots do print("[NEW LEVEL] spot", spots[i].x, spots[i].y, spots[i].type, spots[i].subtype) end
 
-	level.ups = {{x=ux, y=uy}}
-	level.downs = {{x=dx, y=dy}}
+	level.default_up = {x=ux, y=uy}
+	level.default_down = {x=dx, y=dy}
 	level.spots = spots
 
 	-- Generate objects

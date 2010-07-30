@@ -47,8 +47,8 @@ function _M:generate()
 	end
 
 	-- Always add one near the stairs
-	self:placeWorm(self.level.ups[1])
-	self:placeWorm(self.level.downs[1])
+	self:placeWorm(self.level.default_up)
+	self:placeWorm(self.level.default_down)
 end
 
 function _M:placeWorm(s)

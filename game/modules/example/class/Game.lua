@@ -167,9 +167,9 @@ function _M:changeLevel(lev, zone)
 	self.zone:getLevel(self, lev, old_lev)
 
 	if lev > old_lev then
-		self.player:move(self.level.ups[1].x, self.level.ups[1].y, true)
+		self.player:move(self.level.default_up.x, self.level.default_up.y, true)
 	else
-		self.player:move(self.level.downs[1].x, self.level.downs[1].y, true)
+		self.player:move(self.level.default_down.x, self.level.default_down.y, true)
 	end
 	self.level:addEntity(self.player)
 end

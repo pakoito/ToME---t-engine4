@@ -109,8 +109,8 @@ newEntity{
 					x = sx,
 					y = sy,
 				}
-				level.downs = level.ups
-				level.ups = {{x=sx, y=sy}}
+				level.default_down = level.default_up
+				level.default_up = {x=sx, y=sy}
 			end,
 		})
 		game.player:runStop()
