@@ -29,7 +29,7 @@ local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local Birther = require "engine.Birther"
 
 -- Usefull keybinds
-KeyBind:load("move,hotkeys,inventory,actions,debug")
+KeyBind:load("move,hotkeys,inventory,actions,interface,debug")
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")

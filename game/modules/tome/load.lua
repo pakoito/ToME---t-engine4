@@ -49,7 +49,7 @@ _3DNoise = n:makeTexture3D(64, 64, 64, 0, 0, 0)
 WorldAchievements:loadDefinition("/data/achievements/")
 
 -- Usefull keybinds
-KeyBind:load("move,hotkeys,inventory,actions,tome,debug")
+KeyBind:load("move,hotkeys,inventory,actions,interface,debug")
 
 -- Additional entities resolvers
 dofile("/mod/resolvers.lua")

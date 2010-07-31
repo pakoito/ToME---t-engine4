@@ -33,6 +33,8 @@ local Actor = require "mod.class.Actor"
 local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
+local HotkeysDisplay = require "engine.HotkeysDisplay"
+local ActorsSeenDisplay = require "engine.ActorsSeenDisplay"
 local LogDisplay = require "engine.LogDisplay"
 local LogFlasher = require "engine.LogFlasher"
 local DebugConsole = require "engine.DebugConsole"
@@ -56,6 +58,8 @@ end
 function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
+	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
+	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
@@ -72,6 +76,9 @@ function _M:run()
 
 	-- Starting from here we create a new game
 	if not self.player then self:newGame() end
+
+	self.hotkeys_display.actor = self.player
+	self.npcs_display.actor = self.player
 
 	-- Setup the targetting system
 	engine.interface.GameTargeting.init(self)
@@ -112,6 +119,8 @@ function _M:onResolutionChange()
 	print("[RESOLUTION] changed to ", self.w, self.h)
 	self:setupDisplayMode()
 	self.flash:resize(0, 0, self.w, 20)
+	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	-- Reset mouse bindings to account for new size
 	self:setupMouse(reset)
@@ -199,11 +208,6 @@ function _M:onTurn()
 end
 
 function _M:display()
-	-- We display the player's interface
-	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
-	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
-	if self.player then self.player.changed = false end
-
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display the map and compute FOV for the player if needed
@@ -219,6 +223,16 @@ function _M:display()
 		-- And the minimap
 		self.level.map:minimapDisplay(self.w - 200, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 0.6)
 	end
+
+	-- We display the player's interface
+	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
+	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
+	if self.show_npc_list then
+		self.npcs_display:display():toScreen(self.npcs_display.display_x, self.npcs_display.display_y)
+	else
+		self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
+	end
+	if self.player then self.player.changed = false end
 
 	-- Tooltip is displayed over all else
 	self:targetDisplayTooltip()
@@ -337,6 +351,12 @@ function _M:setupCommands()
 			self:registerDialog(menu)
 		end,
 
+		-- Toggle monster list
+		TOGGLE_NPC_LIST = function()
+			self.show_npc_list = not self.show_npc_list
+			self.player.changed = true
+		end,
+
 		TACTICAL_DISPLAY = function()
 			if Map.view_faction then
 				self.always_target = nil
@@ -372,6 +392,10 @@ function _M:setupMouse(reset)
 		if button == "wheelup" then self.logdisplay:scrollUp(1) end
 		if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
 	end, {button=true})
+	-- Use hotkeys with mouse
+	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel)
+		self.hotkeys_display:onMouse(button, mx, my, not xrel)
+	end)
 	self.mouse:setCurrent()
 end
 
