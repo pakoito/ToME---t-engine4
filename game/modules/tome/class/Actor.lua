@@ -53,6 +53,9 @@ module(..., package.seeall, class.inherit(
 	mod.class.interface.Combat
 ))
 
+-- Dont save the can_see_cache
+_M._no_save_fields.can_see_cache = true
+
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.combat_def = 0
@@ -140,6 +143,8 @@ function _M:init(t, no_default)
 	engine.interface.ActorStats.init(self, t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorFOV.init(self, t)
+
+	self:resetCanSeeCache()
 end
 
 function _M:act()
@@ -201,6 +206,9 @@ function _M:act()
 
 	-- Still not dead ?
 	if self.dead then return false end
+
+	-- Ok reset the seen cache
+	self:resetCanSeeCache()
 
 	return true
 end
@@ -376,7 +384,8 @@ function _M:TextSizeCategory()
 	return sizecat
 end
 
-function _M:tooltip()
+function _M:tooltip(x, y, seen_by)
+	if seen_by and not seen_by:canSee(self) then return end
 	local factcolor, factstate = "#ANTIQUE_WHITE#", "neutral"
 	if self:reactionToward(game.player) < 0 then factcolor, factstate = "#LIGHT_RED#", "hostile"
 	elseif self:reactionToward(game.player) > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
@@ -1055,7 +1064,7 @@ end
 --- Can the actor see the target actor
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
-function _M:canSee(actor, def, def_pct)
+function _M:canSeeNoCache(actor, def, def_pct)
 	if not actor then return false, 0 end
 
 	-- ESP, see all, or only types/subtypes
@@ -1106,6 +1115,30 @@ function _M:canSee(actor, def, def_pct)
 	else
 		return true, 100
 	end
+end
+
+function _M:canSee(actor, def, def_pct)
+	if not actor then return false, 0 end
+
+	self.can_see_cache = self.can_see_cache or {}
+	local s = tostring(def).."/"..tostring(def_pct)
+
+	if self.can_see_cache[actor] and self.can_see_cache[actor][s] then return self.can_see_cache[actor][s][1], self.can_see_cache[actor][s][2] end
+	self.can_see_cache[actor] = self.can_see_cache[actor] or {}
+	self.can_see_cache[actor][s] = self.can_see_cache[actor][s] or {}
+
+	local res, chance = self:canSeeNoCache(actor, def, def_pct)
+	self.can_see_cache[actor][s] = {res,chance}
+
+	-- Make sure the display updates
+	if self.player and type(def) == "nil" and actor._mo then actor._mo:onSeen(res) end
+
+	return res, chance
+end
+
+function _M:resetCanSeeCache()
+	self.can_see_cache = {}
+	setmetatable(self.can_see_cache, {__mode="k"})
 end
 
 --- Can the target be applied some effects

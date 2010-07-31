@@ -117,8 +117,9 @@ function _M:die(src)
 	return mod.class.Actor.die(self, src)
 end
 
-function _M:tooltip()
-	local str = mod.class.Actor.tooltip(self)
+function _M:tooltip(x, y, seen_by)
+	local str = mod.class.Actor.tooltip(self, x, y, seen_by)
+	if not str then return end
 	return str..([[
 
 Target: %s

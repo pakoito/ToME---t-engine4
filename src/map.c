@@ -80,6 +80,17 @@ static int map_object_free(lua_State *L)
 	return 1;
 }
 
+static int map_object_on_seen(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	if (lua_isboolean(L, 2))
+	{
+		obj->on_seen = lua_toboolean(L, 2);
+	}
+	lua_pushboolean(L, obj->on_seen);
+	return 1;
+}
+
 static int map_object_texture(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
@@ -792,6 +803,7 @@ static const struct luaL_reg map_object_reg[] =
 	{"shader", map_object_shader},
 	{"invalidate", map_object_invalid},
 	{"isValid", map_object_is_valid},
+	{"onSeen", map_object_on_seen},
 	{NULL, NULL},
 };
 

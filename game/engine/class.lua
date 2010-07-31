@@ -185,8 +185,10 @@ end
 
 function _M:save(filter, allow, savefile)
 	filter = filter or {}
+	if self._no_save_fields then table.merge(filter, self._no_save_fields) end
 	if not allow then
 		filter.new = true
+		filter._no_save_fields = true
 		filter._mo = true
 		filter._mo_final = true
 	else
