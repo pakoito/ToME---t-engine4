@@ -139,3 +139,77 @@ newEntity{ base = "BASE_NPC_ORC",
 		[Talents.T_ICE_BREATH]=2,
 	},
 }
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "orc assassin", color_r=0, color_g=0, color_b=resolvers.rngrange(175, 195),
+	desc = [[An orc trained in the secret ways of assasination, as stealthy as deadly.]],
+	level_range = {5, nil}, exp_worth = 1,
+	rarity = 3,
+	infravision = 10,
+	combat_armor = 2, combat_def = 12,
+	resolvers.equip{
+		{type="weapon", subtype="dagger", autoreq=true},
+		{type="weapon", subtype="dagger", autoreq=true},
+		{type="armor", subtype="light", autoreq=true}
+	},
+	resolvers.talents{
+		[Talents.T_STEALTH]=5,
+		[Talents.T_LETHALITY]=4,
+		[Talents.T_SHADOWSTRIKE]=3,
+	},
+	max_life = resolvers.rngavg(80,100),
+
+	resolvers.sustains_at_birth(),
+	autolevel = "rogue",
+}
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "orc master assassin", color_r=0, color_g=70, color_b=resolvers.rngrange(175, 195),
+	desc = [[An orc trained in the secret ways of assasination, as stealthy as deadly.]],
+	level_range = {15, nil}, exp_worth = 1,
+	rarity = 4,
+	rank = 3,
+	infravision = 10,
+	combat_armor = 2, combat_def = 18,
+	resolvers.equip{
+		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
+		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
+		{type="armor", subtype="light", autoreq=true}
+	},
+	resolvers.talents{
+		[Talents.T_STEALTH]=5,
+		[Talents.T_LETHALITY]=4,
+		[Talents.T_SHADOWSTRIKE]=5,
+		[Talents.T_HIDE_IN_PLAIN_SIGHT]=2,
+	},
+	max_life = resolvers.rngavg(80,100),
+
+	resolvers.sustains_at_birth(),
+	autolevel = "rogue",
+}
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "orc master assassin", color_r=0, color_g=70, color_b=resolvers.rngrange(175, 195),
+	desc = [[An orc trained in the secret ways of assasination, as stealthy as deadly.]],
+	level_range = {15, nil}, exp_worth = 1,
+	rarity = 5,
+	rank = 3,
+	infravision = 10,
+	combat_armor = 2, combat_def = 18,
+	resolvers.equip{
+		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
+		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
+		{type="armor", subtype="light", autoreq=true}
+	},
+	resolvers.talents{
+		[Talents.T_STEALTH]=5,
+		[Talents.T_LETHALITY]=4,
+		[Talents.T_SHADOWSTRIKE]=5,
+		[Talents.T_HIDE_IN_PLAIN_SIGHT]=3,
+		[Talents.T_UNSEEN_ACTIONS]=3,
+	},
+	max_life = resolvers.rngavg(80,100),
+
+	resolvers.sustains_at_birth(),
+	autolevel = "rogue",
+}

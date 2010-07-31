@@ -123,4 +123,7 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
 	combat_armor = 3, combat_def = 10,
 	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_PRECISION]=3, [Talents.T_DUAL_WEAPON_TRAINING]=2, [Talents.T_DUAL_WEAPON_DEFENSE]=2, [Talents.T_DUAL_STRIKE]=1, [Talents.T_SWEEP]=1, [Talents.T_SHADOWSTRIKE]=2, [Talents.T_LETHALITY]=5, },
 	max_life = resolvers.rngavg(70,90),
+
+	resolvers.sustains_at_birth(),
+	autolevel = "rogue",
 }

@@ -47,10 +47,33 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
+	name = "uruk-hai figther", color=colors.UMBER,
+	desc = [[An orc clad in a massive armour, wielding a shield and a deadly axe.]],
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 1,
+	max_life = resolvers.rngavg(110,120), life_rating = 14,
+	resolvers.equip{
+		{type="weapon", subtype="waraxe", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="massive", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 5,
+
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
+		[Talents.T_WEAPON_COMBAT]=4,
+		[Talents.T_AXE_MASTERY]=4,
+		[Talents.T_RUSH]=3,
+		[Talents.T_SHIELD_PUMMEL]=3,
+		[Talents.T_OVERPOWER]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	name = "uruk-hai elite figther", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a shield and a deadly axe.]],
 	level_range = {35, nil}, exp_worth = 1,
-	rarity = 1,
+	rarity = 3,
 	rank = 3,
 	max_life = resolvers.rngavg(170,180), life_rating = 14,
 	resolvers.equip{
@@ -75,10 +98,33 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai elite berserker", color=colors.UMBER,
+	name = "uruk-hai berserker", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a huge axe.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 1,
+	max_life = resolvers.rngavg(110,120), life_rating = 14,
+	resolvers.equip{
+		{type="weapon", subtype="waraxe", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="massive", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 5,
+
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
+		[Talents.T_WEAPON_COMBAT]=4,
+		[Talents.T_AXE_MASTERY]=4,
+		[Talents.T_RUSH]=3,
+		[Talents.T_STUNNING_BLOW]=3,
+		[Talents.T_BERSERKER]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
+	name = "uruk-hai elite berserker", color=colors.UMBER,
+	desc = [[An orc clad in a massive armour, wielding a huge axe.]],
+	level_range = {35, nil}, exp_worth = 1,
+	rarity = 3,
 	rank = 3,
 	max_life = resolvers.rngavg(170,180), life_rating = 14,
 	resolvers.equip{
