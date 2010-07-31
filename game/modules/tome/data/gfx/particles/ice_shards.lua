@@ -17,15 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Make the ray
-local ray = {}
-local tiles = math.ceil(math.sqrt(tx*tx+ty*ty))
-local tx = tx * engine.Map.tile_w
-local ty = ty * engine.Map.tile_h
-local breakdir = math.rad(rng.range(-8, 8))
-ray.dir = math.atan2(ty, tx)
-ray.size = math.sqrt(tx*tx+ty*ty)
-
 local starts = {}
 for i = 1, 4 do
 	starts[#starts+1] = { a = math.rad(rng.range(0, 360)), r = rng.range(6, 20) }
@@ -33,20 +24,19 @@ end
 
 -- Populate the beam based on the forks
 return { generator = function()
-	local a = ray.dir
 	local rad = rng.range(-3,3)
 	local s = rng.table(starts)
 	local ra = s.a
 	local r = s.r
 
 	return {
-		life = 10,
+		life = 4,
 		size = rng.range(4, 6), sizev = -0.1, sizea = 0,
 
-		x = r * math.cos(a) + 2 * math.cos(ra), xv = 0, xa = 0,
-		y = r * math.sin(a) + 2 * math.sin(ra), yv = 0, ya = 0,
-		dir = a, dirv = 0, dira = 0,
-		vel = ray.size / 10, velv = 0, vela = 0,
+		x = 2 * math.cos(ra), xv = 0, xa = 0,
+		y = 2 * math.sin(ra), yv = 0, ya = 0,
+		dir = 0, dirv = 0, dira = 0,
+		vel = 0, velv = 0, vela = 0,
 
 		r = 0,   rv = 0, ra = 0,
 		g = rng.range(170, 210)/255,   gv = 0, ga = 0,
@@ -55,9 +45,6 @@ return { generator = function()
 	}
 end, },
 function(self)
-	self.nb = (self.nb or 0) + 1
-	if self.nb < 3 then
-		self.ps:emit(30 * 4)
-	end
+	self.ps:emit(30 * 4)
 end,
-10*30*4*2
+4*30*4

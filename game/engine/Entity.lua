@@ -355,7 +355,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 	if err then error(err) end
 
 	loaded = loaded or {}
-	loaded[f] = true
+	loaded[file] = true
 
 	setfenv(f, setmetatable({
 		class = self,

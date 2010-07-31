@@ -58,7 +58,8 @@ setDefaultProjector(function(src, x, y, type, dam)
 		if target == game.player then flash = game.flash.BAD end
 		if src == game.player then flash = game.flash.GOOD end
 
-		game.logSeen(target, flash, "%s hits %s for %s%0.2f %s damage#LAST#.", src.name:capitalize(), target.name, DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name)
+		local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
+		game.logSeen(target, flash, "%s hits %s for %s%0.2f %s damage#LAST#.", srcname, target.name, DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name)
 		local sx, sy = game.level.map:getTileToScreen(x, y)
 		if target:takeHit(dam, src) then
 			if src == game.player or target == game.player then

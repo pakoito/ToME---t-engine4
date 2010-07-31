@@ -210,7 +210,8 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 
 				if on_hit then on_hit(target, target.x, target.y) end
 			else
-				game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
+				local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
+				game.logSeen(target, "%s misses %s.", srcname, target.name)
 			end
 
 			-- Ranged project
@@ -306,7 +307,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
 	else
-		game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name)
+		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
+		game.logSeen(target, "%s misses %s.", srcname, target.name)
 	end
 
 	-- Melee project

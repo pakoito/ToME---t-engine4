@@ -47,10 +47,10 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai elite figher", color=colors.UMBER,
+	name = "uruk-hai elite figther", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a shield and a deadly axe.]],
 	level_range = {35, nil}, exp_worth = 1,
-	rarity = 4,
+	rarity = 6,
 	rank = 3,
 	max_life = resolvers.rngavg(170,180), life_rating = 14,
 	resolvers.equip{
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	name = "uruk-hai elite berserker", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a huge axe.]],
 	level_range = {35, nil}, exp_worth = 1,
-	rarity = 4,
+	rarity = 6,
 	rank = 3,
 	max_life = resolvers.rngavg(170,180), life_rating = 14,
 	resolvers.equip{

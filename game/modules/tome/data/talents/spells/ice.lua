@@ -28,6 +28,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 20,
+	proj_speed = 3,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
 		local x, y = self:getTarget(tg)
@@ -35,8 +36,8 @@ newTalent{
 		local grids = self:project(tg, x, y, function(px, py)
 			local actor = game.level.map(px, py, Map.ACTOR)
 			if actor and actor ~= self then
-				DamageType:get(DamageType.ICE).projector(self, actor.x, actor.y, DamageType.ICE, self:spellCrit(self:combatTalentSpellDamage(t, 18, 200)))
-				game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(actor.x-self.x), math.abs(actor.y-self.y)), "ice_shards", {tx=actor.x-self.x, ty=actor.y-self.y})
+				local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="ice_shards"}}
+				self:projectile(tg2, px, py, DamageType.ICE, self:spellCrit(self:combatTalentSpellDamage(t, 18, 200)), {type="freeze"})
 			end
 		end)
 
@@ -44,7 +45,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
+		return ([[Invoke ice shards at the targets in the selected area, each shard travels slowly and does %0.2f ice damage on impact.
 		This spell will never hit the caster.
 		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 200))
 	end,
