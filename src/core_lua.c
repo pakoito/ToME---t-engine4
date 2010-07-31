@@ -415,11 +415,17 @@ static int lua_reboot_lua(lua_State *L)
 	reboot_lua = TRUE;
 	return 0;
 }
+static int lua_get_time(lua_State *L)
+{
+	lua_pushnumber(L, SDL_GetTicks());
+	return 1;
+}
 static const struct luaL_reg gamelib[] =
 {
 	{"reboot", lua_reboot_lua},
 	{"set_current_game", lua_set_current_game},
 	{"exit_engine", lua_exit_engine},
+	{"getTime", lua_get_time},
 	{NULL, NULL},
 };
 

@@ -157,24 +157,27 @@ function _M:playerFOV()
 	game.level.map:cleanFOV()
 	-- Compute ESP FOV, using cache
 	if not game.zone.wilderness then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true) end
-	-- Compute both the normal and the lite FOV, using cache
-	if game.zone.wilderness_see_radius then
-		self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
-			game.level.map:apply(x, y, math.max((20 - math.sqrt(sqdist)) / 14, 0.6))
-		end, true, false, true)
-		self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
-	else
-		self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
-			game.level.map:apply(x, y, math.max((20 - math.sqrt(sqdist)) / 14, 0.6))
-		end, true, false, true)
-		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
-		else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
-	end
 
-	-- Handle infravision/heightened_senses which allow to see outside of lite radius but with LOS
-	if self:attr("infravision") or self:attr("heightened_senses") then
-		local rad = (self.heightened_senses or 0) + (self.infravision or 0)
-		self:computeFOV(rad, "block_sight", function(x, y) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, 1) end end, true, true, true)
+	if not self:attr("blind") then
+		-- Compute both the normal and the lite FOV, using cache
+		if game.zone.wilderness_see_radius then
+			self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
+				game.level.map:apply(x, y, math.max((20 - math.sqrt(sqdist)) / 14, 0.6))
+			end, true, false, true)
+			self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
+		else
+			self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
+				game.level.map:apply(x, y, math.max((20 - math.sqrt(sqdist)) / 14, 0.6))
+			end, true, false, true)
+			if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
+			else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
+		end
+
+		-- Handle infravision/heightened_senses which allow to see outside of lite radius but with LOS
+		if self:attr("infravision") or self:attr("heightened_senses") then
+			local rad = (self.heightened_senses or 0) + (self.infravision or 0)
+			self:computeFOV(rad, "block_sight", function(x, y) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, 1) end end, true, true, true)
+		end
 	end
 
 	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing

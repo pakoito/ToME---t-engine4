@@ -396,11 +396,9 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("blind", 1)
 		eff.dur = self:updateEffectDuration(eff.dur, "blind")
-		if self.player then game.level.map:redisplay() end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("blind", eff.tmpid)
-		if self.player then game.level.map:redisplay() end
 	end,
 }
 
