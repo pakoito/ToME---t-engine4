@@ -466,7 +466,9 @@ function _M:setupCommands()
 				self.player:forceLevelup(50)
 				self.player.esp.all = 1
 				self.player.esp.range = 50
-				self:changeLevel(5, "grushnak-pride")
+				self.player.inc_damage.all = 100000
+				self:changeLevel(1, "wilderness-arda-fareast") game.memory_levels["wilderness-arda-fareast-1"] = game.level
+				self.player:grantQuest("orc-pride")
 --				self.player:grantQuest("escort-duty")
 			end
 		end,

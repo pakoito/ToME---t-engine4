@@ -78,7 +78,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 	name = "Tome of Uttercold", unided_name = "frozen book", unique=true,
 	color = colors.VIOLET,
 	level_range = {35, 45},
-	rarity = 1,
+	rarity = 200,
 	cost = 100,
 
 	use_simple = { name="learn the ancient secrets", use = function(self, who)

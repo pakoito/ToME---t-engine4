@@ -25,27 +25,27 @@ desc = function(self, who)
 	if self:isCompleted("rak-shor") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Rak'shor.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Rak'shor Pride, in the south west of the High Peek#WHITE#"
+		desc[#desc+1] = "#SLATE#* Rak'shor Pride, in the south west of the High Peek.#WHITE#"
 	end
 	if self:isCompleted("eastport") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have killed the master of Easport.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* A group of corrupted humans live in Eastport on the southern costline, they have contact with the Pride#WHITE#"
+		desc[#desc+1] = "#SLATE#* A group of corrupted humans live in Eastport on the southern costline, they have contact with the Pride.#WHITE#"
 	end
 	if self:isCompleted("vor") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Vor.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Vor Pride, in the north east#WHITE#"
+		desc[#desc+1] = "#SLATE#* Vor Pride, in the north east.#WHITE#"
 	end
 	if self:isCompleted("grushnak") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Grushnak.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Grushnak Pride, whose location remains unknown#WHITE#"
+		desc[#desc+1] = "#SLATE#* Grushnak Pride, whose location remains unknown.#WHITE#"
 	end
 	if self:isCompleted("gorbat") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Gorbat.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Gorbat Pride, in the southern desert#WHITE#"
+		desc[#desc+1] = "#SLATE#* Gorbat Pride, in the southern desert.#WHITE#"
 	end
 	return table.concat(desc, "\n")
 end
@@ -61,5 +61,28 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 38, 49)
+
+	-- Reveal entrances
+	local g = mod.class.Grid.new{
+		show_tooltip=true,
+		name="Entrance to Vor Pride bastion",
+		display='>', color=colors.UMBER,
+		notice = true,
+		change_level=1, change_zone="vor-pride"
+	}
+	g:resolve() g:resolve(nil, true)
+	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 63, 14)
+
+	-- Reveal entrances
+	local g = mod.class.Grid.new{
+		show_tooltip=true,
+		name="Entrance to Gorbat Pride bastion",
+		display='>', color=colors.UMBER,
+		notice = true,
+		change_level=1, change_zone="gorbat-pride"
+	}
+	g:resolve() g:resolve(nil, true)
+	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 63, 51)
+
 	game.logPlayer(game.player, "Aeryn points the known locations on your map.")
 end

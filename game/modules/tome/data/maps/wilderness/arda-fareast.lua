@@ -30,8 +30,7 @@ quickEntity('m', {always_remember = true, show_tooltip=true, name='mountains', d
 quickEntity('h', {always_remember = true, show_tooltip=true, name='low hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter="plain", equilibrium_level=-10})
 
 quickEntity('A', {always_remember = true, show_tooltip=true, name="Sun Wall Outpost (Town)", display='*', color=colors.GOLD, notice = true, change_level=1, change_zone="town-sunwall-outpost"})
-quickEntity('B', {always_remember = true, show_tooltip=true, name="Rak'shor Pride", display='>', color=colors.YELLOW, notice = true, change_level=1, change_zone="rakshor-pride"})
-quickEntity('C', {always_remember = true, show_tooltip=true, name="Gorbat Pride", display='>', color=colors.YELLOW, notice = true, change_level=1, change_zone="gorbat-pride"})
+quickEntity('B', {always_remember = true, show_tooltip=true, name="High Peek", display='>', color=colors.VIOLET, notice = true, change_level=1, change_zone="high_peek"})
 
 quickEntity('1', {always_remember = true, show_tooltip=true, name="Gates of Morning", desc="A massive hole in the Sun Wall", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
 
@@ -77,7 +76,7 @@ return [[
 ==========   hhhh        ~~ttttttttttttmmmmmmmmttttt        hhhhh         =======
 =========    hhh          ~~ttttttttttmmmmmmmmmmtttt        hhh           =======
 =========                  ~ttttttttttmmmmmmmmmmttt                      ========
-========                ~~~~~~~~tttttt~~mmmmmmmmttt                     =========
+========                ~~~~~~~~tttttt~~mmmBmmmmttt                     =========
 =======              ~~~~      ~~~~~~~~ttmmmmmmmtttt                   ==========
 ======            ~~~~             tttttttmmmmmmtttt                   ==========
 =====           ~~~                ttttttmmmmmmmmttt                  ===========
