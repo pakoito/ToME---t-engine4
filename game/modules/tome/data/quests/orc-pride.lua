@@ -74,6 +74,7 @@ on_grant = function(self, who)
 	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 63, 14)
 
 	-- Reveal entrances
+--[[
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
 		name="Entrance to Gorbat Pride bastion",
@@ -83,6 +84,17 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 63, 51)
+]]
+	-- Reveal entrances
+	local g = mod.class.Grid.new{
+		show_tooltip=true,
+		name="Entrance to Grushnak Pride caverns",
+		display='>', color=colors.UMBER,
+		notice = true,
+		change_level=1, change_zone="grushnak-pride"
+	}
+	g:resolve() g:resolve(nil, true)
+	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 50, 21)
 
 	game.logPlayer(game.player, "Aeryn points the known locations on your map.")
 end

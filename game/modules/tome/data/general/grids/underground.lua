@@ -26,7 +26,7 @@ newEntity{
 for i = 1, 20 do
 newEntity{
 	define_as = "UNDERGROUND_TREE"..(i > 1 and i or ""),
-	name = "tree",
+	name = "underground thick vegetation",
 	image = "terrain/underground_floor.png",
 	add_displays = class:makeTrees("terrain/underground_tree_alpha", 7),
 	display = '#', color=colors.PURPLE, back_color=colors.UMBER,
