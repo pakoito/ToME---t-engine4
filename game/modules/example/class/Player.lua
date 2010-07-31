@@ -21,6 +21,7 @@ require "engine.class"
 require "mod.class.Actor"
 require "engine.interface.PlayerRest"
 require "engine.interface.PlayerRun"
+require "engine.interface.PlayerMouse"
 require "engine.interface.PlayerHotkeys"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
@@ -36,6 +37,7 @@ module(..., package.seeall, class.inherit(
 	mod.class.Actor,
 	engine.interface.PlayerRest,
 	engine.interface.PlayerRun,
+	engine.interface.PlayerMouse,
 	engine.interface.PlayerHotkeys
 ))
 
@@ -134,30 +136,13 @@ function _M:levelup()
 end
 
 --- Tries to get a target from the user
--- *WARNING* If used inside a coroutine it will yield and resume it later when a target is found.
--- This is usualy just what you want so dont think too much about it :)
 function _M:getTarget(typ)
-	if coroutine.running() then
-		local msg
-		if type(typ) == "string" then msg, typ = typ, nil
-		elseif type(typ) == "table" then
-			if typ.default_target then game.target.target.entity = typ.default_target end
-			msg = typ.msg
-		end
-		game:targetMode("exclusive", msg, coroutine.running(), typ)
-		if typ.nolock then
-			game.target_style = "free"
-		end
-		return coroutine.yield()
-	end
-	return game.target.target.x, game.target.target.y, game.target.target.entity
+	return game:targetGetForPlayer(typ)
 end
 
 --- Sets the current target
 function _M:setTarget(target)
-	game.target.target.entity = target
-	game.target.target.x = target.x
-	game.target.target.y = target.y
+	return game:targetSetForPlayer(target)
 end
 
 local function spotHostiles(self)
@@ -201,40 +186,8 @@ function _M:runCheck()
 	return engine.interface.PlayerRun.runCheck(self)
 end
 
-
---- Runs to the clicked mouse spot
--- if no monsters in sight it will try to make an A* path, if it fails it will do a direct path
--- if there are monsters in sight it will move one stop in the direct path direction
+--- Move with the mouse
+-- We just feed our spotHostile to the interface mouseMove
 function _M:mouseMove(tmx, tmy)
-	if config.settings.tome.cheat and game.key.status[game.key._LSHIFT] and game.key.status[game.key._LCTRL] then
-		game.log("[CHEAT] teleport to %dx%d", tmx, tmy)
-		self:move(tmx, tmy, true)
-	else
-		-- If hostiles, attack!
-		if spotHostiles(self) or math.floor(core.fov.distance(self.x, self.y, tmx, tmy)) == 1 then
-			local l = line.new(self.x, self.y, tmx, tmy)
-			local nx, ny = l()
-			self:move(nx or self.x, ny or self.y)
-			return
-		end
-
-		local a = Astar.new(game.level.map, self)
-		local path = a:calc(self.x, self.y, tmx, tmy, true)
-		-- No Astar path ? jsut be dumb and try direct line
-		if not path then
-			local d = DirectPath.new(game.level.map, self)
-			path = d:calc(self.x, self.y, tmx, tmy, true)
-		end
-
-		if path then
-			-- Should we just try to move in the direction, aka: attack!
-			if path[1] and game.level.map:checkAllEntities(path[1].x, path[1].y, "block_move", self) then self:move(path[1].x, path[1].y) return end
-
-			 -- Insert the player coords, running needs to find the player
-			table.insert(path, 1, {x=self.x, y=self.y})
-
-			-- Move along the projected A* path
-			self:runFollow(path)
-		end
-	end
+	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles)
 end

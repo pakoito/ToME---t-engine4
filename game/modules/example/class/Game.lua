@@ -19,12 +19,12 @@
 
 require "engine.class"
 require "engine.GameTurnBased"
+require "engine.interface.GameTargeting"
 require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local DamageType = require "engine.DamageType"
 local Zone = require "engine.Zone"
 local Map = require "engine.Map"
-local Target = require "engine.Target"
 local Level = require "engine.Level"
 local Birther = require "engine.Birther"
 
@@ -41,7 +41,7 @@ local Tooltip = require "engine.Tooltip"
 
 local QuitDialog = require "mod.dialogs.Quit"
 
-module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound))
+module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameTargeting))
 
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
@@ -74,10 +74,7 @@ function _M:run()
 	if not self.player then self:newGame() end
 
 	-- Setup the targetting system
-	self.target = Target.new(Map, self.player)
-	self.target.target.entity = self.player
-	self.old_tmx, self.old_tmy = 0, 0
-	self.target_style = "lock"
+	engine.interface.GameTargeting.init(self)
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
@@ -180,7 +177,7 @@ end
 
 function _M:tick()
 	if self.level then
-		if self.target.target.entity and not self.level:hasEntity(self.target.target.entity) then self.target.target.entity = false end
+		self:targetOnTick()
 
 		engine.GameTurnBased.tick(self)
 		-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
@@ -219,112 +216,21 @@ function _M:display()
 		-- Display the targetting system if active
 		self.target:display()
 
-		-- Display a tooltip if available
-		if self.tooltip_x then
-			local mx, my = self.tooltip_x , self.tooltip_y
-			local tmx, tmy = self.level.map:getMouseTile(mx, my)
-			self.tooltip:displayAtMap(tmx, tmy, mx, my)
-		end
-
-		-- Move target around
-		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
-			self.target.target.x, self.target.target.y = tmx, tmy
-		end
-		self.old_tmx, self.old_tmy = tmx, tmy
-
 		-- And the minimap
 		self.level.map:minimapDisplay(self.w - 200, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 0.6)
 	end
 
+	-- Tooltip is displayed over all else
+	self:targetDisplayTooltip()
+
 	engine.GameTurnBased.display(self)
-end
-
---- Targeting mode
--- Now before this is an hard piece of code. You probably wont need to change it much.<br/>
--- This uses a coroutine to allow a talent to request a target without interruption, yet while preserving the realtime-ness of the engine
-function _M:targetMode(v, msg, co, typ)
-	local old = self.target_mode
-	self.target_mode = v
-
-	if not v then
-		Map:setViewerFaction(self.always_target and "players" or nil)
-		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press shift+'t' or right mouse click to enable.") end
-		self.level.map.changed = true
-		self.target:setActive(false)
-
-		if tostring(old) == "exclusive" then
-			self.key = self.normal_key
-			self.key:setCurrent()
-			if self.target_co then
-				local co = self.target_co
-				self.target_co = nil
-				local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y, self.target.target.entity)
-				if not ok and err then print(debug.traceback(co)) error(err) end
-			end
-		end
-	else
-		Map:setViewerFaction("players")
-		if msg then self.log(type(msg) == "string" and msg or "Tactical display enabled. Press shift+'t' to disable.") end
-		self.level.map.changed = true
-		self.target:setActive(true, typ)
-		self.target_style = "lock"
-
-		-- Exclusive mode means we disable the current key handler and use a specific one
-		-- that only allows targetting and resumes talent coroutine when done
-		if tostring(v) == "exclusive" then
-			self.target_co = co
-			self.key = self.targetmode_key
-			self.key:setCurrent()
-
-			if self.target.target.entity and self.level.map.seens(self.target.target.entity.x, self.target.target.entity.y) and self.player ~= self.target.target.entity then
-			else
-				self.target:scan(5, nil, self.player.x, self.player.y)
-			end
-		end
-		self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y)
-	end
 end
 
 --- Setup the keybinds
 function _M:setupCommands()
-	-- One key handler for targeting
-	self.targetmode_key = engine.KeyBind.new()
-	self.targetmode_key:addCommands{ _SPACE=function() self:targetMode(false, false) end, }
-	self.targetmode_key:addBinds
-	{
-		TACTICAL_DISPLAY = function() self:targetMode(false, false) end,
-		ACCEPT = function()
-			self:targetMode(false, false)
-			self.tooltip_x, self.tooltip_y = nil, nil
-		end,
-		EXIT = function()
-			self.target.target.entity = nil
-			self.target.target.x = nil
-			self.target.target.y = nil
-			self:targetMode(false, false)
-			self.tooltip_x, self.tooltip_y = nil, nil
-		end,
-		-- Targeting movement
-		RUN_LEFT = function() self.target:freemove(4) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		RUN_RIGHT = function() self.target:freemove(6) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		RUN_UP = function() self.target:freemove(8) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		RUN_DOWN = function() self.target:freemove(2) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		RUN_LEFT_DOWN = function() self.target:freemove(1) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		RUN_RIGHT_DOWN = function() self.target:freemove(3) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		RUN_LEFT_UP = function() self.target:freemove(7) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		RUN_RIGHT_UP = function() self.target:freemove(9) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-
-		MOVE_LEFT = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_UP = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_DOWN = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_LEFT_DOWN = function() if self.target_style == "lock" then self.target:scan(1) else self.target:freemove(1) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_RIGHT_DOWN = function() if self.target_style == "lock" then self.target:scan(3) else self.target:freemove(3) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_LEFT_UP = function() if self.target_style == "lock" then self.target:scan(7) else self.target:freemove(7) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_RIGHT_UP = function() if self.target_style == "lock" then self.target:scan(9) else self.target:freemove(9) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-	}
-
+	-- Make targeting work
 	self.normal_key = self.key
+	self:targetSetupKey()
 
 	-- One key handled for normal function
 	self.key:addBinds
@@ -453,72 +359,13 @@ function _M:setupCommands()
 end
 
 function _M:setupMouse(reset)
-	-- Those 2 locals will be "absorbed" into the mosue event handler function, this is a closure
-	local derivx, derivy = 0, 0
-	local moving_around = false
-
 	if reset then self.mouse:reset() end
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
-		-- Move tooltip
-		self.tooltip_x, self.tooltip_y = mx, my
-		local tmx, tmy = self.level.map:getMouseTile(mx, my)
+		-- Handle targeting
+		if self:targetMouse(button, mx, my, xrel, yrel) then return end
 
-		if self.key == self.targetmode_key then
-			-- Target with mouse
-			if button == "none" and xrel and yrel then
-				self.target:setSpot(tmx, tmy)
-			-- Cancel target
-			elseif button ~= "left" and not xrel and not yrel then
-				self:targetMode(false, false)
-				self.tooltip_x, self.tooltip_y = nil, nil
-			-- Accept target
-			elseif not xrel and not yrel then
-				self.target.target.entity = nil
-				self.target.target.x = nil
-				self.target.target.y = nil
-				self:targetMode(false, false)
-				self.tooltip_x, self.tooltip_y = nil, nil
-			end
-			return
-		end
-
-		-- Move
-		if button == "left" and not core.key.modState("shift") and not moving_around and not xrel and not yrel then
-			if self.key == self.normal_key then self.player:mouseMove(tmx, tmy) end
-
-		-- Move map around
-		elseif button == "left" and xrel and yrel and core.key.modState("shift") then
-			derivx = derivx + xrel
-			derivy = derivy + yrel
-			game.level.map.changed = true
-			if derivx >= game.level.map.tile_w then
-				game.level.map.mx = game.level.map.mx - 1
-				derivx = derivx - game.level.map.tile_w
-			elseif derivx <= -game.level.map.tile_w then
-				game.level.map.mx = game.level.map.mx + 1
-				derivx = derivx + game.level.map.tile_w
-			end
-			if derivy >= game.level.map.tile_h then
-				game.level.map.my = game.level.map.my - 1
-				derivy = derivy - game.level.map.tile_h
-			elseif derivy <= -game.level.map.tile_h then
-				game.level.map.my = game.level.map.my + 1
-				derivy = derivy + game.level.map.tile_h
-			end
-			game.level.map._map:setScroll(game.level.map.mx, game.level.map.my)
-			moving_around = true
-		elseif button ~= "none" and not xrel and not yrel then
-			self.key:receiveKey(
-				button,
-				core.key.modState("ctrl") and true or false,
-				core.key.modState("shift") and true or false,
-				core.key.modState("alt") and true or false,
-				core.key.modState("meta") and true or false,
-				nil, false, true
-			)
-		end
-
-		if not xrel and not yrel then moving_around = false end
+		-- Handle the mouse movement/scrolling
+		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel)
 	end)
 	-- Scroll message log
 	self.mouse:registerZone(self.logdisplay.display_x, self.logdisplay.display_y, self.w, self.h, function(button)
