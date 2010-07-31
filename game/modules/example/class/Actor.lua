@@ -96,11 +96,12 @@ function _M:move(x, y, force)
 end
 
 function _M:tooltip()
-	return ([[%s
+	return ([[%s%s
 #00ffff#Level: %d
 #ff0000#HP: %d (%d%%)
 Stats: %d /  %d / %d
 %s]]):format(
+	self:getDisplayString(),
 	self.name,
 	self.level,
 	self.life, self.life * 100 / self.max_life,
