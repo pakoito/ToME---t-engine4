@@ -17,10 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/faeros.lua")
-load("/data/general/npcs/fire_elemental.lua")
-load("/data/general/npcs/molten_golem.lua")
-load("/data/general/npcs/fire-drake.lua")
+load("/data/general/npcs/faeros.lua", rarity(0))
+load("/data/general/npcs/fire_elemental.lua", rarity(0))
+load("/data/general/npcs/molten_golem.lua", rarity(0))
+load("/data/general/npcs/fire-drake.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 

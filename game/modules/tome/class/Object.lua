@@ -114,7 +114,7 @@ function _M:descAttribute(attr)
 	elseif attr == "ARMOR" then
 		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armor"
 	elseif attr == "ATTACK" then
-		return (self.wielder and self.wielder.combat_atk or 0).." attack, "..(self.wielder and self.wielder.combat_apr or 0).." apr"..(self.wielder and self.wielder.combat_dam or 0).." power"
+		return (self.wielder and self.wielder.combat_atk or 0).." attack, "..(self.wielder and self.wielder.combat_apr or 0).." apr, "..(self.wielder and self.wielder.combat_dam or 0).." power"
 	elseif attr == "MONEY" then
 		return ("worth %0.2f"):format(self.money_value / 10)
 	elseif attr == "USE_TALENT" then
@@ -291,7 +291,7 @@ function _M:getTextualDesc()
 
 	if w.stamina_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f stamina when hit."):format(w.stamina_regen_on_hit) end
 	if w.mana_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f mana when hit."):format(w.mana_regen_on_hit) end
-	if w.equilibrium_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f equilibrium when hit."):format(w.equilibriumregen_on_hit) end
+	if w.equilibrium_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f equilibrium when hit."):format(w.equilibrium_regen_on_hit) end
 
 	if w.max_life then desc[#desc+1] = ("Maximum life %d"):format(w.max_life) end
 	if w.max_mana then desc[#desc+1] = ("Maximum mana %d"):format(w.max_mana) end

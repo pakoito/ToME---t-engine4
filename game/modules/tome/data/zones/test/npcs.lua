@@ -17,4 +17,4 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/spider.lua")
+load("/data/general/npcs/spider.lua", rarity(0))

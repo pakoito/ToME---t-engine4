@@ -49,7 +49,7 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	name = "orc necromancer", color=colors.DARK_GREY,
 	desc = [[An orc dressed in black robes. He mumbles is a harsh tongue.]],
 	level_range = {25, nil}, exp_worth = 1,
-	rarity = 4,
+	rarity = 1,
 	max_life = resolvers.rngavg(70,80), life_rating = 7,
 	resolvers.equip{
 		{type="weapon", subtype="staff", autoreq=true},

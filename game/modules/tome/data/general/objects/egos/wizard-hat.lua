@@ -97,7 +97,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "of seeing ", prefix=true,
+	name = "of seeing ", suffix=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,

@@ -154,6 +154,15 @@ function _M:act()
 	return true
 end
 
+--- Something moved in the same spot as us, hit ?
+function _M:on_move(x, y, target)
+	if self.project and self.project.def.typ.stop_block then
+		self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj)
+		game.level:removeEntity(self)
+		self.dead = true
+	end
+end
+
 --- Generate a projectile for a project() call
 function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 	display = display or {display='*'}

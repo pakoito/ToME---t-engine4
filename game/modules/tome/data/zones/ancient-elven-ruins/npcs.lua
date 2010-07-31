@@ -17,13 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/rodent.lua")
-load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/molds.lua")
-load("/data/general/npcs/mummy.lua")
-load("/data/general/npcs/skeleton.lua")
+load("/data/general/npcs/rodent.lua", rarity(4))
+load("/data/general/npcs/vermin.lua", rarity(4))
+load("/data/general/npcs/molds.lua", rarity(3))
+load("/data/general/npcs/mummy.lua", rarity(0))
+load("/data/general/npcs/skeleton.lua", rarity(3))
 
-load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+load("/data/general/npcs/all.lua", rarity(4, 20))
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -81,7 +81,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	name = "ancient elven mummy", color=colors.ANTIQUE_WHITE,
 	desc = [[An animated corpse in mummy wrappings.]],
 	level_range = {7, 50}, exp_worth = 1,
-	rarity = 2,
+	rarity = 1,
 	max_life = resolvers.rngavg(120,140),
 	ai_state = { talent_in=4, },
 	stats = { mag=25, wil=20, },
@@ -103,7 +103,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	name = "animated mummy wrappings", color=colors.SLATE, display='[',
 	desc = [[An animated mummy wrappings, without a corpse inside... It seems like it can not move.]],
 	level_range = {7, 50}, exp_worth = 1,
-	rarity = 7,
+	rarity = 4,
 	max_life = resolvers.rngavg(20,40), life_rating=4,
 	ai_state = { talent_in=2, },
 	never_move = 1,
@@ -125,7 +125,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	name = "rotting mummy", color=colors.TAN,
 	desc = [[An rotting animated corpse in mummy wrappings.]],
 	level_range = {7, 50}, exp_worth = 1,
-	rarity = 3,
+	rarity = 2,
 	max_life = resolvers.rngavg(60,80), life_rating=7,
 	ai_state = { talent_in=4, },
 	infravision = 20,

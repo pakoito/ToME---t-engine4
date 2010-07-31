@@ -17,12 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/skeleton.lua")
-load("/data/general/npcs/ghoul.lua")
-load("/data/general/npcs/wight.lua")
-load("/data/general/npcs/vampire.lua")
+load("/data/general/npcs/skeleton.lua", rarity(0))
+load("/data/general/npcs/ghoul.lua", rarity(1))
+load("/data/general/npcs/wight.lua", rarity(3))
+load("/data/general/npcs/vampire.lua", rarity(3))
 
-load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+load("/data/general/npcs/all.lua", rarity(4, 20))
 
 local Talents = require("engine.interface.ActorTalents")
 

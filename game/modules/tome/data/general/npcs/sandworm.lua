@@ -23,7 +23,7 @@ newEntity{
 	define_as = "BASE_NPC_SANDWORM",
 	type = "vermin", subtype = "sandworm",
 	display = "w", color=colors.YELLOW,
-	level_range = {15, nil},
+	level_range = {7, nil},
 	body = { INVEN = 10 },
 
 	infravision = 20,
@@ -45,14 +45,14 @@ newEntity{
 newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "sandworm",
 	desc = [[A huge worm coloured as the sand it inhabits. It seems quite unhappy about you being in its lair..]],
-	rarity = 4,
+	rarity = 1,
 }
 
 newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "sandworm destroyer",
 	color={r=169,g=168,b=52},
 	desc = [[A huge worm coloured as the sand it inhabits. This particular sandworm seems to have been bred for one purpose only, the eradication of everything that is non-sandworm, such as ... you.]],
-	rarity = 6,
+	rarity = 3,
 
 	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1,
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "sand-drake", display = 'D',
 	color={r=204,g=255,b=95},
 	desc = [[This unholy creature looks like a wingless dragon in shape, but resembles a sandworm in color.]],
-	rarity = 8,
+	rarity = 5,
 	rank = 3,
 	size_category = 5,
 

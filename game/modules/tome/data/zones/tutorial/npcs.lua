@@ -17,13 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/bear.lua")
-load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/canine.lua")
-load("/data/general/npcs/snake.lua")
-load("/data/general/npcs/swarm.lua")
-load("/data/general/npcs/plant.lua")
-load("/data/general/npcs/ant.lua")
+load("/data/general/npcs/bear.lua", rarity(0))
+load("/data/general/npcs/vermin.lua", rarity(0))
+load("/data/general/npcs/canine.lua", rarity(0))
+load("/data/general/npcs/snake.lua", rarity(0))
+load("/data/general/npcs/swarm.lua", rarity(0))
+load("/data/general/npcs/plant.lua", rarity(0))
+load("/data/general/npcs/ant.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 

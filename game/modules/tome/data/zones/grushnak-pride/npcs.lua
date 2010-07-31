@@ -17,10 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/orc.lua", function(e) if e.rarity then e.rarity = e.rarity * 3 end e.make_escort = nil end)
-load("/data/general/npcs/orc-grushnak.lua")
+load("/data/general/npcs/orc.lua", rarity(3))
+load("/data/general/npcs/orc-grushnak.lua", rarity(0))
 
-load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+load("/data/general/npcs/all.lua", rarity(4, 20))
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -43,7 +43,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1, FINGER=2, NECK=1 },
 
 	resolvers.equip{
 		{type="weapon", subtype="waraxe", ego_change=100, autoreq=true},
@@ -51,6 +51,9 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
 		{type="armor", subtype="head", ego_chance=100, autoreq=true},
 		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
+		{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true},
+		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
+		{type="jewelry", subtype="ring", defined="PRIDE_GLORY", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
@@ -60,6 +63,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]=10,
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=10,
 		[Talents.T_AXE_MASTERY]=10,
 		[Talents.T_RUSH]=5,
 		[Talents.T_BATTLE_CALL]=5,

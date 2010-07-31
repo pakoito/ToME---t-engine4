@@ -17,16 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/rodent.lua")
-load("/data/general/npcs/vermin.lua")
-load("/data/general/npcs/canine.lua")
-load("/data/general/npcs/troll.lua")
-load("/data/general/npcs/snake.lua")
-load("/data/general/npcs/plant.lua")
-load("/data/general/npcs/swarm.lua")
-load("/data/general/npcs/bear.lua")
+load("/data/general/npcs/rodent.lua", rarity(5))
+load("/data/general/npcs/vermin.lua", rarity(2))
+load("/data/general/npcs/canine.lua", rarity(0))
+load("/data/general/npcs/troll.lua", rarity(0))
+load("/data/general/npcs/snake.lua", rarity(3))
+load("/data/general/npcs/plant.lua", rarity(0))
+load("/data/general/npcs/swarm.lua", rarity(3))
+load("/data/general/npcs/bear.lua", rarity(2))
 
-load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+load("/data/general/npcs/all.lua", rarity(4, 20))
 
 local Talents = require("engine.interface.ActorTalents")
 

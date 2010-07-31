@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/orc.lua")
+load("/data/general/npcs/orc.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 

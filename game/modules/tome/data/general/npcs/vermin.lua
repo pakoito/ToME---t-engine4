@@ -39,7 +39,7 @@ newEntity{
 newEntity{ base = "BASE_NPC_WORM",
 	name = "white worm mass", color=colors.WHITE,
 	level_range = {1, 15}, exp_worth = 1,
-	rarity = 4,
+	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=1, atk=15, apr=100 },
 
@@ -49,7 +49,7 @@ newEntity{ base = "BASE_NPC_WORM",
 newEntity{ base = "BASE_NPC_WORM",
 	name = "green worm mass", color=colors.GREEN,
 	level_range = {2, 15}, exp_worth = 1,
-	rarity = 5,
+	rarity = 2,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=1, atk=15, apr=100 },
 

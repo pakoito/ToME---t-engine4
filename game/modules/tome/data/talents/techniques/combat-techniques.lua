@@ -55,7 +55,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	stamina = 45,
-	cooldown = 50,
+	cooldown = 40,
 	tactical = {
 		ATTACK = 4,
 	},

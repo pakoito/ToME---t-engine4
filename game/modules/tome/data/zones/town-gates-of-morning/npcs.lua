@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/sunwall-town.lua")
+load("/data/general/npcs/sunwall-town.lua", rarity(0))
 --load("/data/general/npcs/.lua", function(e) e.faction = "sunwall" end)
 
 local Talents = require("engine.interface.ActorTalents")

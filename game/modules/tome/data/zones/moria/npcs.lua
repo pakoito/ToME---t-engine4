@@ -17,10 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/orc.lua")
-load("/data/general/npcs/troll.lua")
+load("/data/general/npcs/orc.lua", rarity(0))
+load("/data/general/npcs/troll.lua", rarity(0))
 
-load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+load("/data/general/npcs/all.lua", rarity(4, 20))
 
 local Talents = require("engine.interface.ActorTalents")
 

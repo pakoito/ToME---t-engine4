@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 -- Load some various npc types but up their rarity to make some sandworms are the norm
-load("/data/general/npcs/vermin.lua", function(e) if e.rarity then e.rarity = e.rarity * 6 end end)
-load("/data/general/npcs/ooze.lua", function(e) if e.rarity then e.rarity = e.rarity * 6 end end)
-load("/data/general/npcs/jelly.lua", function(e) if e.rarity then e.rarity = e.rarity * 6 end end)
-load("/data/general/npcs/sandworm.lua")
+load("/data/general/npcs/vermin.lua", rarity(7))
+load("/data/general/npcs/ooze.lua", rarity(5))
+load("/data/general/npcs/jelly.lua", rarity(7))
+load("/data/general/npcs/sandworm.lua", rarity(0))
 
-load("/data/general/npcs/all.lua", function(e) if e.rarity then e.rarity = e.rarity * 20 end end)
+--load("/data/general/npcs/all.lua", rarity(4, 20))
 
 local Talents = require("engine.interface.ActorTalents")
 
