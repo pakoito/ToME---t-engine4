@@ -20,9 +20,9 @@
 -- The far east on Arda
 
 quickEntity('w', {always_remember = true, show_tooltip=true, name='Sun Wall', display='^', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/mountain.png", tint=colors.GOLD, block_move=true})
-quickEntity('=', {always_remember = true, show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity('=', {always_remember = true, show_tooltip=true, name='the great sea', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", shader = "water", textures = { function() return _3DNoise, true end }, })
 quickEntity(' ', {always_remember = true, show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter="plain", equilibrium_level=-10})
-quickEntity('~', {always_remember = true, show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter="plain", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity('~', {always_remember = true, show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter="plain", equilibrium_level=-10, can_encounter="water", shader = "water", textures = { function() return _3DNoise, true end }, })
 quickEntity('s', {always_remember = true, show_tooltip=true, name='desert', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", can_encounter="desert", equilibrium_level=-10})
 quickEntity('t', {always_remember = true, show_tooltip=true, name='forest', display='#', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha1.png"}}, block_move=true})
 quickEntity('p', {always_remember = true, show_tooltip=true, name='oasis', display='#', color=colors.LIGHT_GREEN, back_color={r=163,g=149,b=42}, image="terrain/sand.png", add_displays = {mod.class.Grid.new{image="terrain/palmtree_alpha1.png"}}, block_move=true})

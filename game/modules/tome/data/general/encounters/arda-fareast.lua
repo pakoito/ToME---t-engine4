@@ -53,6 +53,32 @@ newEntity{
 	end,
 }
 
+newEntity{
+	name = "Underwater Cave",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {30, 40},
+	rarity = 1,
+	coords = {{ x=0, y=0, w=100, h=100}},
+	special_filter = function(self)
+		return self:findSpotGeneric(game.player, function(map, x, y) local enc = map:checkAllEntities(x, y, "can_encounter") return enc and enc == "water" end) and true or false
+	end,
+	on_encounter = function(self, who)
+		local x, y = self:findSpotGeneric(who, function(map, x, y) local enc = map:checkAllEntities(x, y, "can_encounter") return enc and enc == "water" end)
+		if not x then return end
+
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Entrance to an underwater cave",
+			display='>', color=colors.AQUAMARINE,
+			notice = true,
+			change_level=1, change_zone="flooded-cave"
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to an underwater cave.")
+		return true
+	end,
+}
 ---------------------------- Hostiles -----------------------------
 
 -- Ambushed!
@@ -61,7 +87,7 @@ newEntity{
 	name = "Orcs",
 	type = "hostile", subtype = "ambush",
 	level_range = {1, 50},
-	rarity = 8,
+	rarity = 11118,
 	coords = {{ x=0, y=0, w=100, h=100}},
 	special_filter = function(self)
 		return game.player:reactionToward{faction="orc-pride"} < 0 and true or false

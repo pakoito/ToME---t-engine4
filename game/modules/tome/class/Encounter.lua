@@ -65,6 +65,19 @@ function _M:checkFilter(filter)
 	return true
 end
 
+function _M:findSpotGeneric(who, fct)
+	local spots = {}
+	for i = -1, 1 do for j = -1, 1 do if i ~= 0 or j ~= 0 then
+		if fct(game.level.map, who.x + i, who.y + j) then
+			spots[#spots+1] = {who.x + i, who.y + j}
+		end
+	end end end
+	if #spots > 0 then
+		local s = rng.table(spots)
+		return s[1], s[2]
+	end
+end
+
 function _M:findSpot(who, what)
 	what = what or "block_move"
 	local spots = {}
