@@ -37,6 +37,11 @@ newTalent{
 			end
 		end
 
+		if target ~= self and (not target:canBe("teleport") or not self:checkHit(self:combatSpellpower(), target:combatSpellResist())) then
+			game.logSeen(target, "The spell fizzles!")
+			return true
+		end
+
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
 			local tg = {type="ball", nolock=true, no_restrict=true, nowarning=true, range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevel(t)}
@@ -83,6 +88,11 @@ newTalent{
 			if tx and ty then
 				target = game.level.map(tx, ty, Map.ACTOR) or self
 			end
+		end
+
+		if target ~= self and (not target:canBe("teleport") or not self:checkHit(self:combatSpellpower(), target:combatSpellResist())) then
+			game.logSeen(target, "The spell fizzles!")
+			return true
 		end
 
 		local x, y = self.x, self.y

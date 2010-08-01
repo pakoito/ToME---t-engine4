@@ -54,7 +54,6 @@ end
 
 --- Gets the chat with the given id
 function _M:get(id)
-	print("[CHAT] get", id)
 	return self.chats[id]
 end
 

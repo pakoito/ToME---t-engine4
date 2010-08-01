@@ -140,14 +140,23 @@ function _M:generate(lev, old_lev)
 		local status = self.tiles[c] and self.tiles[c].status
 
 		if object then
-			local o = type(object) == "string" and self.zone:makeEntityByName(self.level, "object", object) or self.zone:finishEntity(self.level, "object", object)
+			local o
+			if type(object) == "string" then o = self.zone:makeEntityByName(self.level, "object", object)
+			elseif type(object) == "table" and object.random_filter then o = self.zone:makeEntity(self.level, "object", object.random_filter, nil, true)
+			else o = self.zone:finishEntity(self.level, "object", object)
+			end
+
 			if o then
 				self.zone:addEntity(self.level, o, "object", i-1, j-1)
 			end
 		end
 
 		if trap then
-			local t = type(trap) == "string" and self.zone:makeEntityByName(self.level, "trap", trap) or self.zone:finishEntity(self.level, "trap", trap)
+			local t
+			if type(trap) == "string" then t = self.zone:makeEntityByName(self.level, "trap", trap)
+			elseif type(trap) == "table" and trap.random_filter then t = self.zone:makeEntity(self.level, "trap", trap.random_filter, nil, true)
+			else t = self.zone:finishEntity(self.level, "trap", trap)
+			end
 			if t then
 				self.zone:addEntity(self.level, t, "trap", i-1, j-1)
 			end
@@ -155,10 +164,9 @@ function _M:generate(lev, old_lev)
 
 		if actor then
 			local m
-			if type(actor) == "string" then
-				m = self.zone:makeEntityByName(self.level, "actor", actor)
-			else
-				m = self.zone:finishEntity(self.level, "actor", actor)
+			if type(actor) == "string" then m = self.zone:makeEntityByName(self.level, "actor", actor)
+			elseif type(actor) == "table" and actor.random_filter then m = self.zone:makeEntity(self.level, "actor", actor.random_filter, nil, true)
+			else m = self.zone:finishEntity(self.level, "actor", actor)
 			end
 			if m then
 				self.zone:addEntity(self.level, m, "actor", i-1, j-1)

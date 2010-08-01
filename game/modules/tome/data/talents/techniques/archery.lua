@@ -175,8 +175,9 @@ newTalent{
 
 		local st = "arrow"
 		if weapon.archery == "sling" then st = "shot" end
+		local ego = math.ceil(5 + (self:getTalentLevel(t) * 5))
 
-		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st}, nil, true)
+		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st, ego_chance=ego}, nil, true)
 		if o and rng.percent(10 + self:getTalentLevel(t) * 10) then
 			o:identify(true)
 			o:forAllStack(function(so) so.cost = 0 end)
@@ -189,7 +190,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Forage in your immediate environment to try to make ammo for your current weapon.]])
+		return ([[Forage in your immediate environment to try to make ammo for your current weapon.
+		There is an additional %d%% chance to get exceptional ammo.]]):format(math.ceil(5 + (self:getTalentLevel(t) * 5)))
 	end,
 }
 
@@ -267,6 +269,6 @@ newTalent{
 		return energy ~= self.energy.value
 	end,
 	info = function(self, t)
-		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5), 2 + self:getTalentLevelRaw(t) * 100)
+		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 2 + self:getTalentLevelRaw(t))
 	end,
 }

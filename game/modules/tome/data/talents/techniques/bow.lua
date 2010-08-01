@@ -24,7 +24,7 @@ newTalent{
 	require = { stat = { dex=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return [[Increases damage with bows.]]
+		return ([[Increases damage done with bows by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }
 

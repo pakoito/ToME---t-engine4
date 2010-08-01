@@ -242,6 +242,10 @@ function _M:archeryShoot(damtype, mult, on_hit, tg, params)
 	if sound then game:playSoundNear(ret.firsttarget or self, sound)
 	elseif sound_miss then game:playSoundNear(ret.firsttarget or self, sound_miss) end
 
+	if ammo:getNumber() < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25 then
+		game.logPlayer(self, "You only have %d %s left!", ammo:getNumber(), ammo.name)
+	end
+
 	return ret.hitted
 end
 

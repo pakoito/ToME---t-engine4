@@ -54,7 +54,6 @@ newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 	resists={[DamageType.COLD] = resolvers.mbonus(12, 5)},
 
 	resolvers.talents{ [Talents.T_WATER_BOLT]=3, [Talents.T_PHASE_DOOR]=2, },
-	drops = resolvers.drops{chance=100, nb=4, {ego_chance=100} },
 }
 
 newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
@@ -72,5 +71,4 @@ newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 	resists={[DamageType.COLD] = resolvers.mbonus(50, 30)},
 
 	resolvers.talents{ [Talents.T_TIDAL_WAVE]=4, [Talents.T_FREEZE]=5 },
-	drops = resolvers.drops{chance=100, nb=4, {ego_chance=100} },
 }

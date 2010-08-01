@@ -464,11 +464,13 @@ function _M:setupCommands()
 		[{"_d","ctrl"}] = function()
 			if config.settings.tome.cheat then
 				self.player:forceLevelup(50)
+				self.player.no_breath = 1
 				self.player.esp.all = 1
 				self.player.esp.range = 50
 				self.player.inc_damage.all = 100000
-				self:changeLevel(1, "wilderness-arda-fareast") game.memory_levels["wilderness-arda-fareast-1"] = game.level
-				self.player:grantQuest("orc-pride")
+				self:changeLevel(2, "flooded-cave")
+--				game.memory_levels["wilderness-arda-fareast-1"] = game.level
+--				self.player:grantQuest("orc-pride")
 --				self.player:grantQuest("escort-duty")
 			end
 		end,

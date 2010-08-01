@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+------------------------------------------------------------
+-- For inside the sea
+------------------------------------------------------------
+
 newEntity{
 	define_as = "WATER_FLOOR",
 	name = "underwater", image = "terrain/water_floor.png",
@@ -27,15 +31,40 @@ newEntity{
 
 newEntity{
 	define_as = "WATER_WALL",
-	name = "wall", image = "terrain/water_wall.png",
+	name = "coral wall", image = "terrain/water_wall.png",
 	display = '#', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	add_displays = class:makeWater(true),
 	always_remember = true,
 	can_pass = {pass_wall=1},
 	does_block_move = true,
 	block_sight = true,
-	air_level = -20,
+	air_level = -5,
 }
+newEntity{
+	define_as = "WATER_DOOR",
+	name = "coral door", image = "terrain/granite_door1.png",
+	display = '+', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
+	add_displays = class:makeWater(true),
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	door_opened = "WATER_DOOR_OPEN",
+	dig = "WATER_DOOR_OPEN",
+	air_level = -5, air_condition="water",
+}
+newEntity{
+	define_as = "WATER_DOOR_OPEN",
+	name = "open coral door", image = "terrain/granite_door1_open.png",
+	display = "'", color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
+	add_displays = class:makeWater(true),
+	always_remember = true,
+	door_closed = "WATER_DOOR",
+	air_level = -5, air_condition="water",
+}
+
+------------------------------------------------------------
+-- For outside
+------------------------------------------------------------
 
 newEntity{
 	define_as = "SHALLOW_WATER",

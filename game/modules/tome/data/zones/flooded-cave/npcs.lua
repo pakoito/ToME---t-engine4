@@ -25,11 +25,11 @@ local Talents = require("engine.interface.ActorTalents")
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "UKLLMSWWIK",
 	type = "dragon", subtype = "water", unique = true,
-	name = "Ukllmswwik the wise",
+	name = "Ukllmswwik the Wise",
 	faction="water-lair",
 	display = "D", color=colors.VIOLET,
 	desc = [[It looks like a cross between a shark and a dragon, only nastier.]],
-	level_range = {3, 40}, exp_worth = 2,
+	level_range = {30, 50}, exp_worth = 4,
 	max_life = 250, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	stats = { str=25, dex=10, cun=8, mag=10, con=20 },
@@ -38,6 +38,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	can_breath={water=1},
 	infravision = 20,
 	move_others=true,
+
 	instakill_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
@@ -49,6 +50,10 @@ newEntity{ define_as = "UKLLMSWWIK",
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("maglor", engine.Quest.COMPLETED, "kill-drake")
+	end,
 
 	can_talk = "ukllmswwik",
 }

@@ -154,7 +154,7 @@ newBirthDescriptor{
 	name = "Pyromancer",
 	desc = {
 		"A Pyromancer is an archmage specialized in fire magic.",
-		"They can even learn to pierce through fire resistance and immunity."
+		"They can even learn to pierce through fire resistance and immunity.",
 		"They gain access to the special Wildfire talents whose main purpose is to make things burn and burn more.",
 		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
 		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
@@ -201,7 +201,7 @@ newBirthDescriptor{
 	desc = {
 		"A Cryomancer is an archmage specialized in ice magic.",
 		"They gain access to the special Ice talents whose main purpose is to make things shatter under extreme cold.",
-		"They can even learn to pierce through cold resistance and immunity."
+		"They can even learn to pierce through cold resistance and immunity.",
 		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
 		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
 		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",

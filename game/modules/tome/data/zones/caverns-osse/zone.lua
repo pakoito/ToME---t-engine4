@@ -18,15 +18,15 @@
 -- darkgod@te4.org
 
 return {
-	name = "Flooded Cave",
+	name = "Caverns of Ossë",
 	level_range = {30, 40},
 	level_scheme = "player",
-	max_level = 2,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 70, height = 70,
 --	all_remembered = true,
-	all_lited = true,
+--	all_lited = true,
 	persistant = "zone",
 	ambiant_music = "elven_town.ogg",
 	-- Apply a bluish tint to all the map
@@ -46,11 +46,9 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {30, 40},
---			guardian = "UKLLMSWWIK",
 		},
 		object = {
 			class = "engine.generator.object.Random",
---			nb_object = {6, 9},
 			nb_object = {0, 0},
 		},
 		trap = {
@@ -61,21 +59,36 @@ return {
 	levels =
 	{
 		[1] = {
-			generator = { map = {
-				up = "UP_WILDERNESS",
-			}, },
-		},
-		[2] = {
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",
-					map = "zones/flooded-cave-last",
+					map = "zones/caverns-osse-first",
+				},
+				actor = {
+					nb_npc = {10, 10},
+				},
+			},
+			no_level_connectivity = true,
+		},
+		[3] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/caverns-osse-last",
 				},
 				actor = {
 					nb_npc = {7, 7},
-					post_generation = function(e) e.faction="water-lair" end,
 				},
 			},
+			no_level_connectivity = true,
 		},
 	},
+
+	on_enter = function(lev, old_lev, newzone)
+		if newzone then
+			game.logPlayer(game.player, "#AQUAMARINE#You arrive deep under water, at the sea floor, as you look upwards you only see a glimpse of light coming through.")
+			game.logPlayer(game.player, "#AQUAMARINE#You should be crushed by the pressure but strangely you feel no disconfort.")
+			game.logPlayer(game.player, "#AQUAMARINE#All around you there is only water as far as you can see, except to your left, a giant coral structure. This is probably the sanctuary of Maglor.")
+		end
+	end,
 }

@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.KeyBind"
+local Dialog = require "engine.Dialog"
 local Map = require "engine.Map"
 local Target = require "engine.Target"
 
