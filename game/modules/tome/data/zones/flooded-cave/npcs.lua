@@ -29,10 +29,11 @@ newEntity{ define_as = "UKLLMSWWIK",
 	faction="water-lair",
 	display = "D", color=colors.VIOLET,
 	desc = [[It looks like a cross between a shark and a dragon, only nastier.]],
+	energy = {mod = 1.4},
 	level_range = {30, 50}, exp_worth = 4,
-	max_life = 250, life_rating = 17, fixed_rating = true,
+	max_life = 250, life_rating = 27, fixed_rating = true,
 	max_stamina = 85,
-	stats = { str=25, dex=10, cun=8, mag=10, con=20 },
+	stats = { str=25, dex=10, cun=48, wil=50, mag=50, con=20 },
 	rank = 4,
 	size_category = 4,
 	can_breath={water=1},
@@ -40,16 +41,36 @@ newEntity{ define_as = "UKLLMSWWIK",
 	move_others=true,
 
 	instakill_immune = 1,
+	teleport_immune = 1,
+	confusion_immune= 1,
+	combat_spellresist = 25,
+	combat_mentalresist = 25,
+	combat_physresist = 30,
+
+	resists = { [DamageType.COLD] = 60, [DamageType.LIGHTNING] = 20, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {type="weapon", subtype="greatmaul", defined="TRIDENT_TIDES", autoreq=true} },
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=10, {type="money"} },
 
 	resolvers.talents{
-		[Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,
+		[Talents.T_WEAPON_COMBAT]=5,
+		[Talents.T_KNOCKBACK]=3,
+
+		[Talents.T_ICE_STORM]=4,
+		[Talents.T_FREEZE]=3,
+
+		[Talents.T_ICE_CLAW]=5,
+		[Talents.T_ICY_SKIN]=5,
+		[Talents.T_ICE_BREATH]=5,
+		[Talents.T_LIGHTNING_BREATH]=5,
+		[Talents.T_POISON_BREATH]=5,
 	},
+	resolvers.sustains_at_birth(),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("maglor", engine.Quest.COMPLETED, "kill-drake")

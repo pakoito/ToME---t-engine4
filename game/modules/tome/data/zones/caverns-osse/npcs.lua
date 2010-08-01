@@ -42,11 +42,13 @@ He wears a mace and a shield.]],
 	move_others=true,
 
 	instakill_immune = 1,
-	instakill_teleport = 1,
-	instakill_confusion = 1,
+	teleport_immune = 1,
+	confusion_immune= 1,
 	combat_spellresist = 25,
 	combat_mentalresist = 25,
 	combat_physresist = 30,
+
+	resists = { [DamageType.COLD] = 60, [DamageType.ACID] = 20, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, LITE=1 },
 	equipment = resolvers.equip{
@@ -85,6 +87,7 @@ He wears a mace and a shield.]],
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("maglor", engine.Quest.COMPLETED, "kill-maglor")
+		game.player:resolveSource():hasQuest("maglor"):portal_back()
 	end,
 
 	can_talk = "maglor",

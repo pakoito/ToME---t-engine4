@@ -17,24 +17,42 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+local Stats = require "engine.interface.ActorStats"
+local DamageType = require "engine.DamageType"
+
 load("/data/general/objects/objects.lua")
 
 -- Artifact, droped (and used!) by Bill the Stone Troll
 
-newEntity{ base = "BASE_GREATMAUL",
-	define_as = "GREATMAUL_BILL_TRUNK",
-	name = "Bill's Tree Trunk", unique=true,
-	desc = [[This ia big nasty looking tree trunk that Bill was using as a weapon. It could still serve this purpose, should you be strong enough to wield it!]],
-	require = { stat = { str=25 }, },
-	cost = 5,
+newEntity{ base = "BASE_BATTLEAXE",
+	define_as = "TRIDENT_TIDES",
+	name = "Trident of the Tides", unique=true,
+	desc = [[As you wield this trident you can feel the power of the tides rushing through your arms.
+The trident counts as an axe for purpose of weapon combat talents.]],
+	require = { stat = { str=35 }, },
+	cost = 300,
+	material_level = 4,
 	combat = {
-		dam = 30,
-		apr = 7,
-		physcrit = 1.5,
+		dam = 50,
+		atk = 10,
+		apr = 4,
+		physcrit = 15,
 		dammod = {str=1.3},
-		damrange = 1.7,
+		damrange = 1.4,
 	},
 
 	wielder = {
+		combat_spellresist = 18,
+		see_invisible = 2,
+		resists={[DamageType.COLD] = 25},
+		inc_damage = { [DamageType.COLD] = 20 },
+		melee_project={
+			[DamageType.COLD] = 15,
+			[DamageType.NATURE] = 20,
+		},
 	},
+
+	max_power = 150, power_regen = 1,
+	use_talent = { id = Talents.T_WATER_BOLT, level=3, power = 60 },
 }

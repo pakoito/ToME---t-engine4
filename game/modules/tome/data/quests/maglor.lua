@@ -35,6 +35,12 @@ desc = function(self, who)
 	return table.concat(desc, "\n")
 end
 
+on_status_change = function(self, who, status, sub)
+	if sub and (sub == "kill-maglor" or sub == "kill-drake") then
+		who:setQuestStatus(self.id, engine.Quest.DONE)
+	end
+end
+
 on_grant = function(self, who)
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
@@ -50,6 +56,10 @@ on_grant = function(self, who)
 end
 
 portal_back = function(self, who)
+	if self:isCompleted("portal-back") then return end
+	-- Do it on the quets object directly to not trigger a message to the player
+	self:setStatus(engine.Quest.COMPLETED, "portal-back", who)
+
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
 		name="Portal to the Flooded Cave",
