@@ -24,7 +24,7 @@ newEntity{
 	slot = "BODY",
 	type = "armor", subtype="mummy",
 	add_name = " (#ARMOR#)",
-	display = "[", color=colors.ANTIQUE_WHITE, image="object/mummy_wrappings.png"
+	display = "[", color=colors.ANTIQUE_WHITE, image="object/mummy_wrappings.png",
 	encumber = 6,
 	rarity = 5,
 	desc = [[Decaying mummy wrappings.]],
