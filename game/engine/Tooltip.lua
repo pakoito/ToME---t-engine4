@@ -33,6 +33,7 @@ function _M:init(fontname, fontsize, color, bgcolor)
 	self.max = max or 400
 	self.changed = true
 	self.old_tmx, self.old_tmy = -1,-1
+	self.old_turn = -1
 end
 
 --- Set the tooltip text
@@ -109,8 +110,9 @@ function _M:displayAtMap(tmx, tmy, mx, my)
 		mx, my = game.level.map:getTileToScreen(tmx, tmy)
 	end
 
-	if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
+	if self.old_tmx ~= tmx or self.old_tmy ~= tmy or (game.paused and self.old_turn ~= game.turn) then
 		self.old_tmx, self.old_tmy = tmx, tmy
+		self.old_turn = game.turn
 		local tt = {}
 		local seen = game.level.map.seens(tmx, tmy)
 		local remember = game.level.map.remembers(tmx, tmy)
