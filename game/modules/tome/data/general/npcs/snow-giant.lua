@@ -24,7 +24,7 @@ newEntity{
 	type = "giant", subtype = "ice",
 	display = "P", color=colors.WHITE,
 
-	combat = { dam=resolvers.rngavg(15,20), atk=15, apr=15, dammod={str=0.8} },
+	combat = { dam=resolvers.mbonus(50, 10), atk=15, apr=15, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {type="money"} },

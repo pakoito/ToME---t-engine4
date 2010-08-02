@@ -42,7 +42,7 @@ newEntity{
 	display = "V", color=colors.WHITE,
 	desc = [[These ancient cursed beings often take upon the form of a bat and attack its prey.]],
 
-	combat = { dam=resolvers.rngavg(9,13), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
+	combat = { dam=resolvers.mbonus(30, 10), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	drops = resolvers.drops{chance=20, nb=1, {} },

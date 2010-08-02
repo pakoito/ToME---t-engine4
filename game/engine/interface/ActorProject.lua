@@ -199,6 +199,9 @@ function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 			if typ.range and math.sqrt((srcx-lx)^2 + (srcy-ly)^2) > typ.range then return lx, ly, false, true end
 		end
 
+		-- End of the map
+		if lx < 0 or lx >= game.level.map.w or ly < 0 or ly >= game.level.map.h then return lx, ly, false, true end
+
 		-- Deam damage: beam
 		if typ.line then return lx, ly, true, false end
 	end

@@ -17,8 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/aquatic_critter.lua", rarity(0))
-load("/data/general/npcs/aquatic_demon.lua", rarity(0))
+load("/data/general/npcs/aquatic_critter.lua", rarity(5))
+load("/data/general/npcs/aquatic_demon.lua", rarity(7))
+load("/data/general/npcs/naga.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 

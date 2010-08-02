@@ -26,6 +26,8 @@ newEntity{
 	level_range = {7, nil},
 	body = { INVEN = 10 },
 
+	combat = { dam=resolvers.mbonus(25, 15), atk=15, apr=0, dammod={str=0.7} },
+
 	infravision = 20,
 	max_life = 40, life_rating = 5,
 	max_stamina = 85,

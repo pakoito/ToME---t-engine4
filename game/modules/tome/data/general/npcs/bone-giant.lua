@@ -24,7 +24,7 @@ newEntity{
 	type = "undead", subtype = "giant",
 	display = "K", color=colors.WHITE,
 
-	combat = { dam=resolvers.rngavg(35,40), atk=15, apr=10, dammod={str=0.8} },
+	combat = { dam=resolvers.mbonus(45, 20), atk=15, apr=10, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

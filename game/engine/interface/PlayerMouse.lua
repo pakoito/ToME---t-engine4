@@ -33,6 +33,9 @@ module(..., package.seeall, class.make)
 -- @param tmy the coords clicked
 -- @param spotHostiles a function taking only the player as a parameter that must return true if hostiles are in sight
 function _M:mouseMove(tmx, tmy, spotHostiles)
+	tmx = util.bound(tmx, 0, game.level.map.w - 1)
+	tmy = util.bound(tmy, 0, game.level.map.h - 1)
+
 	if config.settings.tome.cheat and core.key.modState("ctrl") then
 		game.log("[CHEAT] teleport to %dx%d", tmx, tmy)
 		self:move(tmx, tmy, true)

@@ -51,15 +51,17 @@ function _M:display()
 
 	-- initialize the array
 	for i, act in ipairs(a.fov.actors_dist) do
-		local n = act.name:capitalize()
-		list[n] = list[n] or { name=n, nb=0, dist={} }
-		list[n].nb = list[n].nb + 1
-		list[n].dist[#list[n].dist+1] = math.floor(math.sqrt(a.fov.actors[act].sqdist))
+		if a:canSee(act) then
+			local n = act.name:capitalize()
+			list[n] = list[n] or { name=n, nb=0, dist={} }
+			list[n].nb = list[n].nb + 1
+			list[n].dist[#list[n].dist+1] = math.floor(math.sqrt(a.fov.actors[act].sqdist))
 
-		local r = a:reactionToward(act)
-		if r > 0 then list[n].color={0,255,0}
-		elseif r == 0 then list[n].color={176,196,222}
-		elseif r < 0 then list[n].color={255,0,0} end
+			local r = a:reactionToward(act)
+			if r > 0 then list[n].color={0,255,0}
+			elseif r == 0 then list[n].color={176,196,222}
+			elseif r < 0 then list[n].color={255,0,0} end
+		end
 	end
 	local l = {}
 	for _, a in pairs(list) do l[#l+1] = a end

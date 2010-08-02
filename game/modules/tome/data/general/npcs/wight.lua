@@ -33,7 +33,7 @@ newEntity{
 	display = "W", color=colors.WHITE,
 	desc = [[These be white wights.]],
 
-	combat = { dam=resolvers.rngavg(9,13), atk=10, apr=9, damtype=DamageType.DRAINEXP },
+	combat = { dam=resolvers.mbonus(30, 10), atk=10, apr=9, damtype=DamageType.DRAINEXP },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {ego_chance=20} },
