@@ -179,6 +179,12 @@ function _M:selectStepMain()
 	}, self.w * 0.3, self.h * 0.2, self.w * 0.4, self.h * 0.3)
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
+	self.step.key:addBinds{
+		-- Lua console
+		LUA_CONSOLE = function()
+print("plop")			self:registerDialog(require("engine.DebugConsole").new())
+		end,
+	}
 end
 
 function _M:selectStepNew()

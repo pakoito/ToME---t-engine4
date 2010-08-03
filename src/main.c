@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include "sqlite3.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -37,6 +38,7 @@
 #include "core_lua.h"
 #include "getself.h"
 #include "music.h"
+#include "sqlite_physfs_vfs.h"
 #include "main.h"
 
 #define WIDTH 800
@@ -67,6 +69,7 @@ int luaopen_sound(lua_State *L);
 int luaopen_lanes(lua_State *L);
 int luaopen_shaders(lua_State *L);
 int luaopen_noise(lua_State *L);
+int luaopen_sqlite3(lua_State * L);
 
 static int traceback (lua_State *L) {
 	lua_Debug ar;
@@ -495,6 +498,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_sound(L);
 		luaopen_noise(L);
 		luaopen_shaders(L);
+		luaopen_sqlite3(L);
 
 		// Make the uids repository
 		lua_newtable(L);
@@ -559,6 +563,9 @@ int main(int argc, char *argv[])
 {
 	// RNG init
 	init_gen_rand(time(NULL));
+
+	// Tell sqlite3 to use physfs to open files
+	sqlite3_register_physfs_vfs(TRUE);
 
 	boot_lua(1, FALSE, argc, argv);
 
