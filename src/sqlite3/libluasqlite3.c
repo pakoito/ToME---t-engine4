@@ -742,7 +742,7 @@ FUNC( l_sqlite3_last_insert_rowid )
 FUNC( l_sqlite3_open )
 {
   sqlite3 * sqlite3 	= 0;
-  int error 		= sqlite3_open_v2(checkstr(L, 1), &sqlite3, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, "physfs");
+  int error 		= sqlite3_open_v2(checkstr(L, 1), &sqlite3, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
 
   lua_pushnumber(L, error);
 
@@ -1625,18 +1625,31 @@ d_entry auth_entries[] = {
 };
 
 
+static const struct luaL_reg sqllib[] =
+{
+	{NULL, NULL},
+};
 
 
 int luaopen_sqlite3(lua_State * L)
 {
-	luaL_openlib(L, "core.sqlite3", api_entries, 0);
+	luaL_register(L, "core.sqlite3", sqllib);
+
+	lua_pushstring(L, "api");
 	f(L, api_entries);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "error");
 	d(L, error_entries);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "type");
 	d(L, type_entries);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "auth");
 	d(L, auth_entries);
+	lua_rawset(L, -3);
 
-	return 4;	/* api, error codes, type codes, auth requests */
+	return 1;
 }
-
-
-

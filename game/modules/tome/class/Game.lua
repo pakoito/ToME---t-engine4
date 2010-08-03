@@ -81,6 +81,9 @@ function _M:init()
 end
 
 function _M:run()
+self:setAllowedBuild("wilder_summoner", true)
+os.exit()
+
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
 	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
@@ -726,12 +729,14 @@ end
 function _M:setAllowedBuild(what, notify)
 	-- Do not unlock things in easy mode
 	--if game.difficulty == game.DIFFICULTY_EASY then return end
+	print(profile.mod.db_stms.setAllowBuild:bind(what):exec())
 
 	profile.mod.allow_build = profile.mod.allow_build or {}
 	if profile.mod.allow_build[what] then return end
 	profile.mod.allow_build[what] = true
 
-	profile:saveModuleProfile("allow_build", profile.mod.allow_build)
+	-- Save in the database
+	print(profile.mod.db_stms.setAllowBuild:bind(what):exec())
 
 	if notify then
 		self:registerDialog(require("mod.dialogs.UnlockDialog").new(what))

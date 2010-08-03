@@ -564,9 +564,6 @@ int main(int argc, char *argv[])
 	// RNG init
 	init_gen_rand(time(NULL));
 
-	// Tell sqlite3 to use physfs to open files
-	sqlite3_register_physfs_vfs(TRUE);
-
 	boot_lua(1, FALSE, argc, argv);
 
 	// initialize engine and set up resolution and depth

@@ -406,7 +406,7 @@ static sqlite3_vfs physfs_sqlite3_vfs =
 
 void sqlite3_register_physfs_vfs(int makeDefault)
 {
-	sqlite3_vfs_register(&physfs_sqlite3_vfs, makeDefault);
+//	sqlite3_vfs_register(&physfs_sqlite3_vfs, makeDefault);
 }
 
 void sqlite3_unregister_physfs_vfs()

@@ -5,7 +5,7 @@
 
     Copyright (c) 2004, 2005 Michael Roth <mroth@nessie.de>
 
-    Permission is hereby granted, free of charge, to any person 
+    Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
     files (the "Software"), to deal in the Software without restriction,
     including without limitation the rights to use, copy, modify, merge,
@@ -13,7 +13,7 @@
     and to permit persons to whom the Software is furnished to do so,
     subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be 
+    The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -42,11 +42,11 @@ TODO:
 
 
 
+module(..., package.seeall)
 
+local _ccode = require "core.sqlite3"
 
-require "libluasqlite3-loader"
-
-local api, ERR, TYPE, AUTH = load_libluasqlite3()
+local api, ERR, TYPE, AUTH = _ccode.api, _ccode.error, _ccode.type, _ccode.auth
 
 local db_class = { }
 local stmt_class = { }
@@ -155,25 +155,26 @@ end
 
 sqlite3 = { }
 
-function sqlite3.open(filename)
+function sqlite3.open(path, filename)
   check_string(filename, "Filename as string expected")
-  
-  local status, handle = api.open(filename)
-  
+
+  path = fs.getRealPath(path)
+  local status, handle = api.open(path..filename)
+
   if is_error(status) then
     local errmsg = errmsg(handle)
     api.close(handle)
     return nil, errmsg
   end
-  
+
   local db = object()
-  
+
   db.__gc	= db_class.close
   db.__index	= db_class
   db.filename	= filename
   db.handle 	= handle
   db.stmts	= create_registry()
-  
+
   return db
 end
 
@@ -190,36 +191,36 @@ end
 
 function db_class.close(db)
   check_db(db)
-  
+
   for _, obj in ipairs(db.stmts) do
     if type(obj) == "table" then
       obj:close()
     end
   end
-  
+
   local status = api.close(db.handle)
-  
+
   if is_error(status) then
     return nil, errmsg(db.handle)
   end
-  
+
   db.handle = nil
   db.stmts  = nil
   db.__gc   = nil
-  
+
   return db
 end
 
 
 function db_class.interrupt(db)
   check_db(db)
-  
+
   local status = api.interrupt(db.handle)
-  
+
   if is_error(status) then
     return nil, errmsg(db.handle)
   end
-  
+
   return db
 end
 
@@ -245,13 +246,13 @@ end
 function db_class.exec(db, sql)
   check_db(db)
   check_string(sql)
-  
+
   local status = api.exec(db.handle, sql)
-  
+
   if is_error(status) then
     return nil, errmsg(db.handle)
   end
-  
+
   return db
 end
 
@@ -294,20 +295,20 @@ end
 
 function db_class.prepare(db, paranames, sql)
   check_db(db)
-  
+
   if sql == nil then
     sql = paranames
     paranames = nil
   end
-  
+
   check_string(sql, "db:prepare: SQL statement as string expected")
-  
+
   local function cleanup(handles)
     for _, handle in ipairs(handles) do
       api.finalize(handle)
     end
   end
-  
+
   local function count_parameters(handles)
     local parameter_count = 0
     for _, handle in ipairs(handles) do
@@ -315,27 +316,27 @@ function db_class.prepare(db, paranames, sql)
     end
     return parameter_count
   end
-  
+
   local function build_handles(sql)
     local status, handle
     local remaining = sql
     local handles = { }
-    
+
     while remaining do
       status, handle, remaining = api.prepare(db.handle, remaining)
-      
+
       if is_error(status) then
         local errmsg = errmsg(db.handle)
         cleanup(handles)
         return nil, errmsg
       end
-      
+
       table.insert(handles, handle)
     end
-    
+
     return handles
   end
-  
+
   local function anonymous_parameters(handles)
     for _, handle in ipairs(handles) do
       for i = 1, api.bind_parameter_count(handle) do
@@ -346,7 +347,7 @@ function db_class.prepare(db, paranames, sql)
     end
     return true
   end
-  
+
   local function named_parameters(handles)
     for _, handle in ipairs(handles) do
       for i = 1, api.bind_parameter_count(handle) do
@@ -357,16 +358,16 @@ function db_class.prepare(db, paranames, sql)
     end
     return true
   end
-  
+
   local function create_mapping(handles, paranames)
     local invers = { }
-    
+
     for index, name in ipairs(paranames) do
       invers[name] = index
     end
-    
+
     local mapping = { }
-    
+
     for _, handle in ipairs(handles) do
       for index = 1, api.bind_parameter_count(handle) do
         local parameter_name = api.bind_parameter_name_x(handle, index)
@@ -378,14 +379,14 @@ function db_class.prepare(db, paranames, sql)
         table.insert(mapping, pos)
       end
     end
-    
+
     return mapping
   end
-  
+
   local function collect_parameter_names(handles)
     local seen = { }
     local names = { }
-    
+
     for _, handle in ipairs(handles) do
       for index = 1, api.bind_parameter_count(handle) do
         local parameter_name = api.bind_parameter_name_x(handle, index)
@@ -395,10 +396,10 @@ function db_class.prepare(db, paranames, sql)
         end
       end
     end
-    
+
     return names
   end
-  
+
   local function fix_parameter_names(unfixed_parameters)
     local fixed_parameters = { }
     for _, unfixed_name in ipairs(unfixed_parameters) do
@@ -410,7 +411,7 @@ function db_class.prepare(db, paranames, sql)
     end
     return fixed_parameters
   end
-  
+
   local function create_stmt(db, handles, parameter_count)
     local stmt = object()
     stmt.__gc		= stmt_class.close
@@ -421,65 +422,65 @@ function db_class.prepare(db, paranames, sql)
     stmt.parameter_count= parameter_count
     return stmt
   end
-  
+
   local handles, errmsg = build_handles(sql)
-  
+
   if errmsg then
     return nil, errmsg
   end
-  
+
   local parameter_count = count_parameters(handles)
-  
+
   if parameter_count == 0 then			-- No parameters at all
     return create_stmt(db, handles, 0)
   else
     if anonymous_parameters(handles) then	-- All parameters are anonymous ("?")
-      
+
       return create_stmt(db, handles, parameter_count)
-      
+
     elseif named_parameters(handles) then	-- All parameters are named (":foobar" & "$foobar")
-      
+
       if paranames then				-- Fixed mapping of parameter names
-        
+
         check_table(paranames, "db:prepare: Names of parameters expected as strings")
-        
+
         local fixed_parameter_names, errmsg = fix_parameter_names(paranames)
-        
+
         if errmsg then
           cleanup(handles)
           return nil, errmgs
         end
-        
+
         local mapping, errmsg = create_mapping(handles, fixed_parameter_names)
-        
+
         if errmsg then
           cleanup(handles)
           return nil, errmsg
         end
-        
+
         local stmt = create_stmt(db, handles, table.getn(fixed_parameter_names))
         stmt.mapping = mapping
         stmt.paranames = fixed_parameter_names
-        
+
         return stmt
-        
+
       else					-- Automatic mapping of paramter names
-        
+
         local parameter_names = collect_parameter_names(handles)
         local mapping = create_mapping(handles, parameter_names)
         local stmt = create_stmt(db, handles, table.getn(parameter_names))
         stmt.mapping = mapping
         stmt.paranames = parameter_names
-        
+
         return stmt
-        
+
       end
-      
+
     else 					-- Mixed paramters are not allowed
-      
+
       cleanup(handles)
       return nil, "db:prepare: Mixed anonymous and named parameters are not allowed."
-      
+
     end
   end
 end
@@ -492,10 +493,10 @@ local function call_user_func(context, func, num_values, values)
     arg[index] = api.value(values, index-1)
   end
   -- Make lua-5.0.2 unpack() happy
-  arg.n = num_values
+--  arg.n = num_values
   -- lua-5.1 unpack() style / lua-5.0.2 ignores additional arguments
-  local ok, result = pcall(func, unpack(arg, 1, num_values))	
-  
+  local ok, result = pcall(func, unpack(arg, 1, num_values))
+
   if not ok then
     api.result_error(context, tostring(result))
   else
@@ -506,33 +507,33 @@ end
 
 function db_class.set_function(db, name, num_args, func)
   check_db(db)
-  
+
   local function xfunc(context, num_values, values)
     call_user_func(context, func, num_values, values)
   end
-  
+
   local status = api.create_function(db.handle, name, num_args, xfunc, nil, nil)
-  
+
   if is_error(status) then
     return nil, errmsg(db.handle)
   end
-  
+
   return db
 end
 
 
 function db_class.set_aggregate(db, name, num_args, create_funcs)
   check_db(db)
-  
+
   local step, final
-  
+
   local function xstep(context, num_values, values)
     if not step and not final then
       step, final = create_funcs()
     end
     call_user_func(context, step, num_values, values)
   end
-  
+
   local function xfinal(context)
     local ok, result = pcall(final, api.aggregate_count(context))
     if not ok then
@@ -541,13 +542,13 @@ function db_class.set_aggregate(db, name, num_args, create_funcs)
       api.result(context, result)
     end
   end
-  
+
   local status = api.create_function(db.handle, name, num_args, nil, xstep, xfinal)
-  
+
   if is_error(status) then
     return nil, errmsg(db.handle)
   end
-  
+
   return db
 end
 
@@ -582,6 +583,18 @@ function db_class.set_busy_handler(db, func)
 end
 
 
+function db_class.create_table(db, name, def)
+	check_db(db)
+
+	if db:first_irow("PRAGMA table_info('"..name.."')") then return end
+
+	print("Creating table", def)
+	print(db:exec(def))
+
+	return db
+end
+
+
 
 
 
@@ -590,7 +603,7 @@ end
 ---------------------
 
 function stmt_class.bind(stmt, ...)
-  
+
   local function bind_with_mapping(parameters)
     local mapping = stmt.mapping
     local map_index = 1
@@ -604,7 +617,7 @@ function stmt_class.bind(stmt, ...)
       end
     end
   end
-  
+
   local function bind_without_mapping(parameters)
     local parameter_index = 1
     for _, handle in ipairs(stmt.handles) do
@@ -617,7 +630,7 @@ function stmt_class.bind(stmt, ...)
       end
     end
   end
-  
+
   local function bind_by_names(parameters)
     local parameter_names = stmt.paranames
     local mapping = stmt.mapping
@@ -630,23 +643,24 @@ function stmt_class.bind(stmt, ...)
       end
     end
   end
-  
+
   check_stmt(stmt)
   if stmt.parameter_count == 0 then error("stmt:bind: statement contains no parameters.") end
-  
-  if type(arg[1]) == "table" and arg.n == 1 and stmt.mapping and stmt.paranames then
+
+  local arg = {...}
+  if type(arg[1]) == "table" and #arg == 1 and stmt.mapping and stmt.paranames then
     bind_by_names(arg[1])
   else
-    if arg.n < stmt.parameter_count then error("stmt:bind: to few parameters.") end
-    if arg.n > stmt.parameter_count then error("stmt:bind: to many parameters.") end
-    
+    if #arg < stmt.parameter_count then error("stmt:bind: to few parameters.") end
+    if #arg > stmt.parameter_count then error("stmt:bind: to many parameters.") end
+
     if stmt.mapping then
       bind_with_mapping(arg)
     else
       bind_without_mapping(arg)
     end
   end
-  
+
   return stmt
 end
 
@@ -662,18 +676,18 @@ end
 
 function stmt_class.close(stmt)
   check_stmt(stmt)
-  
+
   for _, handle in ipairs(stmt.handles) do
     api.finalize(handle)
   end
-  
+
   unregister(stmt.db.stmts, stmt.reg_id)
-  
+
   stmt.db	= nil
   stmt.handles	= nil
   stmt.mapping	= nil
   stmt.__gc	= nil
-  
+
   return stmt
 end
 
@@ -719,13 +733,13 @@ function stmt_class.exec(stmt)
   for _, handle in ipairs(stmt.handles) do
     while true do
       local status = api.step(handle)
-      
+
       if is_error(status) then
         local errmsg = errmsg(stmt.db.handle)
         api.reset(handle)
         return nil, errmsg
       end
-      
+
       if is_done(status) then
         break
       end
@@ -739,7 +753,7 @@ end
 local function stmt_rows(stmt, get_row_func, tab, autoclose)
   local handle = check_single_stmt(stmt)
   api.reset(handle)
-  
+
   local function check_autoclose()
     if autoclose == true then
       stmt:close()
@@ -747,28 +761,28 @@ local function stmt_rows(stmt, get_row_func, tab, autoclose)
       api.reset(handle)
     end
   end
-  
+
   local iterator = function()
     local status = api.step(handle)
-    
+
     if is_error(status) then
       local errmsg = errmsg(stmt.db.handle)
       check_autoclose()
       return nil, errmsg
     end
-    
+
     if is_row(status) then
       return get_row_func(handle, tab)
     end
-    
+
     if is_done(status) then
       check_autoclose()
       return nil
     end
-    
+
     return nil, "stmt:rows: Internal error!"
   end
-  
+
   return iterator
 end
 
@@ -788,7 +802,7 @@ end
 local function first_row(stmt, get_row_func, tab, autoclose)
   local handle = check_single_stmt(stmt)
   api.reset(handle)
-  
+
   local function check_autoclose()
     if autoclose == true then
       stmt:close()
@@ -796,28 +810,28 @@ local function first_row(stmt, get_row_func, tab, autoclose)
       api.reset(handle)
     end
   end
-  
+
   local status = api.step(handle)
-  
+
   if is_error(status) then
     local errmsg = errmsg(stmt.db.handle)
     check_autoclose()
     return nil, errmsg
   end
-  
+
   if is_row(status) then
     local row = get_row_func(handle, tab)
     check_autoclose()
     return row
   end
-  
+
   if is_done(status) then
     check_autoclose()
     return nil, "No row returned."
   end
-  
+
   return nil, "stmt:first_row: Internal error!"
-  
+
 end
 
 function stmt_class.first_irow(stmt, tab, autoclose)
@@ -834,10 +848,11 @@ function stmt_class.first_cols(stmt, autoclose)
   if errmsg then
     return nil, errmsg
   else
-    row.n = count			-- Make lua-5.0.2 unpack() happy
+--    row.n = count			-- Make lua-5.0.2 unpack() happy
     return unpack(row, 1, count)	-- lua-5.1 style / lua-5.0.2 ignores additional arguments
   end
 end
 
 
 
+return sqlite3
