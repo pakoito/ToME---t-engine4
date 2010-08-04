@@ -68,21 +68,19 @@ end
 local function constructTableQuery(name, def)
 	local fields, keys = {}, {}
 	for fname, fdef in pairs(def) do
-		if fname ~= "__options" then
-			fields[#fields+1] = {position=fdef.position, sql=fname.." "..fdef.type}
-			if fdef.primary_key then keys[#keys+1] = {position=fdef.position, sql="PRIMARY KEY ("..fname..")"} end
-		end
+		fields[#fields+1] = {position=fdef.position, sql=fname.." "..fdef.type}
+		if fdef.primary_key then keys[#keys+1] = {position=fdef.position, sql="PRIMARY KEY ("..fname..")"} end
 	end
 	table.sort(fields, function(a, b) return a.position < b.position end)
 	table.sort(keys, function(a, b) return a.position < b.position end)
 
 	-- Make the statement
-	local fs = {}
+	local fs = { "uuid CHAR(36) NOT NULL" }
 	-- Add fields
 	for i = 1, #fields do fs[#fs+1] = fields[i].sql end
 	-- Add keys
 	for i = 1, #keys do fs[#fs+1] = keys[i].sql end
-	return "CREATE TABLE "..name.." ("..table.concat(fs, ",")..")"
+	return "CREATE TABLE "..name.." ("..table.concat(fs, ", ")..")"
 end
 
 ------------------------------------------------------------

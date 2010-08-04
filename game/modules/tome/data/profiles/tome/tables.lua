@@ -9,7 +9,7 @@ return {
 		},
 		statements =
 		{
-			setAllowBuild = [[REPLACE INTO allow_build VALUES (:what, 1)]],
+			setAllowBuild = [[REPLACE INTO allow_build (what, allowed) VALUES (:what, 1)]],
 		},
 	},
 
