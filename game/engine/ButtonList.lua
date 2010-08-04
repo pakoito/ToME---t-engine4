@@ -156,7 +156,7 @@ function _M:makeButton(name, font, w, h, sel)
 	end
 
 	local sw, sh = font:size(name)
-	s:drawColorString(font, name, (w - sw) / 2, (h - sh) / 2)
+	s:drawColorStringBlended(font, name, (w - sw) / 2, (h - sh) / 2)
 
 	return s
 end

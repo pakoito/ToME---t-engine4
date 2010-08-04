@@ -74,7 +74,7 @@ end
 
 
 --- Gain Personal achievement for player only
--- @
+-- @param silent suppress the message to the player
 -- @param id the achivement to gain
 -- @param src who did it
 function _M:gainPersonalAchievement(silent, id, src, ...)
@@ -98,7 +98,7 @@ function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]
 	if not a then error("Unknown achievement "..id) return end
 
-	if self.achieved[id] and self.playerachieved[id] then return end
+	if self.achieved[id] and src.achievements and src.achievements[id] then return end
 
 	if a.can_gain then
 		local data = nil

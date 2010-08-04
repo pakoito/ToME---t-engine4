@@ -203,7 +203,7 @@ function _M:dump()
 			if o.combat then
 				strings[1] = ("Attack(Main Hand): %3d"):format(game.player:combatAttack(o.combat))
 				strings[2] = ("Damage(Main Hand): %3d"):format(game.player:combatDamage(o.combat))
-				strings[3] = ("APR	(Main Hand): %3d"):format(game.player:combatAPR(o.combat))
+				strings[3] = ("APR   (Main Hand): %3d"):format(game.player:combatAPR(o.combat))
 				strings[4] = ("Crit  (Main Hand): %3d%%"):format(game.player:combatCrit(o.combat))
 				strings[5] = ("Speed (Main Hand): %0.2f"):format(game.player:combatSpeed(o.combat))
 			end
@@ -256,8 +256,8 @@ function _M:dump()
 				nl()
 				nl(("Attack (Off Hand): %3d"):format(game.player:combatAttack(o.combat)))
 				nl(("Damage (Off Hand): %3d"):format(game.player:combatDamage(o.combat) * offmult))
-				nl(("APR	 (Off Hand): %3d"):format(game.player:combatAPR(o.combat)))
-				nl(("Crit	(Off Hand): %3d%%"):format(game.player:combatCrit(o.combat)))
+				nl(("APR    (Off Hand): %3d"):format(game.player:combatAPR(o.combat)))
+				nl(("Crit   (Off Hand): %3d%%"):format(game.player:combatCrit(o.combat)))
 				nl(("Speed  (Off Hand): %0.2f"):format(game.player:combatSpeed(o.combat)))
 			end
 		end
@@ -393,6 +393,9 @@ function _M:dump()
 					local char = string.char(string.byte('a') + index)
 					nl(("%s) %s"):format(char, o:getName{force_id=true}))
 					nl(("   %s"):format(table.concat(o:getTextualDesc(), "\n    ")))
+					if o.droppedBy then 
+						nl(("   Dropped by %s"):format(o.droppedBy))
+					end
 					index = index + 1
 				end
 			end
@@ -402,7 +405,7 @@ function _M:dump()
 	nl()
 	nl("  [Player Achievments]")
 	nl()
-	for id, data in pairs(self.actor.achievements) do
+	for id, data in pairs(self.actor.achievements or {}) do
 		local a = world:getAchievementFromId(id)
 		nl(("%s Was Achieved for %s At %s"):format(a.name,a.desc,data.when))
 	end
@@ -415,6 +418,9 @@ function _M:dump()
 			local char = string.char(string.byte('a') + item - 1)
 			nl(("%s) %s"):format(char, o:getName{force_id=true}))
 			nl(("   %s"):format(table.concat(o:getTextualDesc(), "\n    ")))
+			if o.droppedBy then 
+				nl(("   Dropped by %s"):format(o.droppedBy))
+			end
 		end
 	end
 

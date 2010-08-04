@@ -56,8 +56,8 @@ function _M:drawDialog(s)
 		end
 	end
 
-	s:drawString(self.font, "From: "..self.url, 2, 2, 255, 255, 255)
-	s:drawString(self.font, "Received: "..self.received, 2, 25, 255, 255, 255)
+	s:drawStringBlended(self.font, "From: "..self.url, 2, 2, 255, 255, 255)
+	s:drawStringBlended(self.font, "Received: "..self.received, 2, 25, 255, 255, 255)
 end
 
 function _M:startDownload()

@@ -24,6 +24,7 @@ require "engine.interface.PlayerRun"
 require "engine.interface.PlayerHotkeys"
 require "engine.interface.PlayerSlide"
 require "engine.interface.PlayerMouse"
+require "mod.class.interface.PlayerStats"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -40,7 +41,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerRun,
 	engine.interface.PlayerHotkeys,
 	engine.interface.PlayerMouse,
-	engine.interface.PlayerSlide
+	engine.interface.PlayerSlide,
+	mod.class.interface.PlayerStats
 ))
 
 function _M:init(t, no_default)
@@ -239,6 +241,8 @@ function _M:die(src)
 		engine.interface.ActorLife.die(self, src)
 		game.paused = true
 		self.energy.value = game.energy_to_act
+		self.killedBy = src
+		self:registerDeath(self.killedBy)
 		game:registerDialog(DeathDialog.new(self))
 	else
 		mod.class.Actor.die(self, src)

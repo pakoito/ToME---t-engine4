@@ -79,10 +79,10 @@ function _M:drawDialog(s, w, h)
 	local i, dh = 1, 0
 	while dh < self.h do
 		if not self.history[self.scroll + i] then break end
-		s:drawString(self.font, self.history[self.scroll + i], 0, self.ih - (i + 1) * self.font:lineSkip(), 255, 255, 255)
+		s:drawStringBlended(self.font, self.history[self.scroll + i], 0, self.ih - (i + 1) * self.font:lineSkip(), 255, 255, 255)
 		i = i + 1
 		dh = dh + self.font:lineSkip()
 	end
 
-	s:drawString(self.font, self.line, 0, self.ih - self.font:lineSkip(), 255, 255, 255)
+	s:drawStringBlended(self.font, self.line, 0, self.ih - self.font:lineSkip(), 255, 255, 255)
 end

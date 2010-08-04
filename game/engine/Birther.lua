@@ -254,17 +254,17 @@ function _M:drawDialog(s)
 Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go back.
 ]]):splitLines(self.iw / 2 - 10, self.font)
 	for i = 1, #birthhelp do
-		s:drawColorString(self.font, birthhelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
+		s:drawColorStringBlended(self.font, birthhelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
 	end
 
 	local lines = self.list[self.sel].desc:splitLines(self.iw / 2 - 10, self.font)
 	local r, g, b
 	for i = 1, #lines do
-		r, g, b = s:drawColorString(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #birthhelp + 1) * self.font:lineSkip(), r, g, b)
+		r, g, b = s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #birthhelp + 1) * self.font:lineSkip(), r, g, b)
 	end
 
 	-- Stats
-	s:drawColorString(self.font, "Selecting: "..self.current_type:capitalize(), 2, 2)
+	s:drawColorStringBlended(self.font, "Selecting: "..self.current_type:capitalize(), 2, 2)
 	self:drawWBorder(s, 2, 20, 200)
 
 	self:drawSelectionList(s, 2, 25, self.font_h, self.list, self.sel, "name")

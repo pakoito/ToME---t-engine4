@@ -105,6 +105,10 @@ function _M:commandLineArgs(args)
 	if req_mod then
 		local mod = self.mod_list[req_mod]
 		if mod then
+			profile.generic.modules_loaded = profile.generic.modules_loaded or {}
+			profile.generic.modules_loaded[req_mod] = (profile.generic.modules_loaded[req_mod] or 0) + 1
+			profile:saveGenericProfile("modules_loaded", profile.generic.modules_loaded)
+
 			local M, W = mod.load()
 			_G.game = M.new()
 
@@ -138,6 +142,21 @@ end
 --- Ask if we realy want to close, if so, save the game first
 function _M:onQuit()
 	os.exit()
+end
+
+function _M:checkFirstTime()
+	if not profile.generic.firstrun then
+		profile:checkFirstRun()
+		Dialog:yesnoPopup("First run profile notification", "Do you want to create or login to an Online profile?", function(ret)
+			if ret then
+				self:selectStepOnlineProfile()
+			else
+				self:selectStepMain()
+			end
+		end)
+	else
+		self:selectStepMain()
+	end
 end
 
 function _M:selectStepMain()
@@ -177,6 +196,14 @@ function _M:selectStepMain()
 			end,
 		},
 	}, self.w * 0.3, self.h * 0.2, self.w * 0.4, self.h * 0.3)
+
+	if not self.firstrunchecked then
+		-- Check first time run for online profile
+		self.firstrunchecked = true
+		self:checkFirstTime()
+		return
+	end
+
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
 end
@@ -201,7 +228,7 @@ function _M:selectStepNew()
 		local lines = game.mod_list[game.step.selected].description:splitLines(self.w - 8, self.font)
 		local r, g, b
 		for i = 1, #lines do
-			r, g, b = s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
+			r, g, b = s:drawColorStringBlended(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
 		end
 	end
 	self:registerDialog(display_module)
@@ -264,7 +291,7 @@ function _M:selectStepLoad()
 		local lines = list[game.step.selected].description:splitLines(self.w - 8, self.font)
 		local r, g, b
 		for i = 1, #lines do
-			r, g, b = s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
+			r, g, b = s:drawColorStringBlended(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
 		end
 	end
 	self:registerDialog(display_module)
@@ -331,7 +358,7 @@ function _M:selectStepInstall()
 		local lines = dllist[game.step.selected].description:splitLines(self.w - 8, self.font)
 		local r, g, b
 		for i = 1, #lines do
-			r, g, b = s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
+			r, g, b = s:drawColorStringBlended(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
 		end
 	end
 	self:registerDialog(display_module)
@@ -342,68 +369,75 @@ function _M:selectStepInstall()
 	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
 end
 
-function _M:selectStepProfile()
-	local linda, th = Module:loadRemoteList()
-	local rawdllist = linda:receive("moduleslist")
-	th:join()
-
-	local dllist = {}
-	for i, mod in ipairs(rawdllist) do
-		if not self.mod_list[mod.short_name] then
-			dllist[#dllist+1] = mod
+function _M:createProfile(loginItem)
+	if self.justlogin then
+		profile:performlogin(loginItem.login, loginItem.pass)
+		if profile.auth then
+			Dialog:simplePopup("Profile logged in!", "Your online profile is active now...", function() self:checkLogged() self:selectStepProfile() end )
 		else
-			local lmod = self.mod_list[mod.short_name]
-			if mod.version[1] * 1000000 + mod.version[2] * 1000 + mod.version[3] > lmod.version[1] * 1000000 + lmod.version[2] * 1000 + lmod.version[3] then
-				dllist[#dllist+1] = mod
-			end
+			Dialog:simplePopup("Log in rejected", "Couldn't log you...", function() self:selectStepProfile() end )
 		end
-	end
-
-	if #dllist == 0 then
-		Dialog:simplePopup("No modules available", "There are no modules to install or upgrade.")
 		return
 	end
-
-	local display_module = Dialog.new("", self.w * 0.73, self.h, self.w * 0.26, 0, 255)
-
-	for i, mod in ipairs(dllist) do
-		mod.fct = function()
-			local d = DownloadDialog.new("Downloading: "..mod.long_name, mod.download, function(di, data)
-				fs.mkdir("/modules")
-				local f = fs.open("/modules/"..mod.short_name..".team", "w")
-				for i, v in ipairs(data) do f:write(v) end
-				f:close()
-
-				-- Relist modules and savefiles
-				self.mod_list = Module:listModules()
-				self.save_list = Module:listSavefiles()
-
-				if self.mod_list[mod.short_name] then
-					Dialog:simplePopup("Success!", "Your new game is now installed, you can play!", function() self:unregisterDialog(display_module) self:selectStepMain() end)
-				else
-					Dialog:simplePopup("Error!", "The downloaded game does not seem to respond to the test. Please contact contact@te4.org")
-				end
-			end)
-			self:registerDialog(d)
-			d:startDownload()
-		end
-		mod.onSelect = function()
-			display_module.title = mod.long_name
-			display_module.changed = true
-		end
+	profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
+	if (profile.auth) then
+		Dialog:simplePopup("Profile created!", "Your online profile is active now...", function() self:checkLogged() self:selectStepProfile() end )
+	else
+		Dialog:simplePopup("Profile Failed to authenticate!", "Try logging in in a few moments", function() self:selectStepProfile() end )
 	end
 
-	display_module.drawDialog = function(self, s)
-		local lines = dllist[game.step.selected].description:splitLines(self.w - 8, self.font)
-		local r, g, b
-		for i = 1, #lines do
-			r, g, b = s:drawColorString(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
-		end
-	end
-	self:registerDialog(display_module)
+end
 
-	self.step = ButtonList.new(dllist, 10, 10, self.w * 0.24, (5 + 35) * #dllist, nil, 5)
+function _M:selectStepProfile()
+	self.step = ButtonList.new({
+		{
+			name = "Online Profile",
+			fct = function()
+				self:selectStepOnlineProfile()
+			end,
+		},
+		{
+			name = "Browse Generic Profile",
+			fct = function()
+				self:selectGenericProfile()
+			end,
+		},
+		{
+			name = "Browse Module Profiles",
+			fct = function()
+				self:selectModuleProfile()
+			end,
+		},
+		{
+			name = "Exit",
+			fct = function()
+				game:unregisterDialog(self)
+				self:selectStepMain()
+			end,
+		},
+	}, self.w * 0.3, self.h * 0.2, self.w * 0.4, self.h * 0.3)
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
 	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
+end
+
+function _M:selectStepOnlineProfile()
+	if (profile.auth) then
+		Dialog:yesnoPopup("You are logged in", "Do you want to log out?", function(ret)
+			if ret then
+				profile:logOut()
+				self:checkLogged()
+			end
+		end)
+	else
+	local dialogdef = { }
+	dialogdef.name = "Profile login";
+	dialogdef.short = "Login";
+	dialogdef.fct = function(login) self:setPlayerLogin(login) end
+	Dialog:yesnoPopup("You are not registered", "Do you want to login to an existing profile?", function(ret)
+			self.justlogin = ret
+			dialogdef.justlogin = ret
+			self:registerDialog(require('special.mainmenu.dialogs.ProfileLogin').new(dialogdef))
+		end)
+	end
 end

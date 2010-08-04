@@ -572,6 +572,7 @@ function _M:die(src)
 			for inven_id, inven in pairs(self.inven) do
 				for i, o in ipairs(inven) do
 					if not o.no_drop then
+						o.droppedBy = self.name
 						game.level.map:addObject(self.x, self.y, o)
 					end
 				end
@@ -596,6 +597,10 @@ function _M:die(src)
 		if math.floor(p.life) <= 1 and not p.dead then world:gainAchievement("THAT_WAS_CLOSE", p) end
 		world:gainAchievement("EXTERMINATOR", p, self)
 		world:gainAchievement("PEST_CONTROL", p, self)
+
+		if self.unique then
+			p:registerUniqueKilled(self)
+		end
 
 		-- Record kills
 		p.all_kills = p.all_kills or {}
@@ -756,6 +761,9 @@ function _M:onAddObject(o)
 
 	-- Achievement checks
 	if self.player then
+		if o.unique then
+			self:resolveSource():registerArtifactsPicked(o)
+		end
 		world:gainAchievement("DEUS_EX_MACHINA", self, o)
 	end
 end

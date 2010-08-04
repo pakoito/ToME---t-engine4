@@ -72,7 +72,6 @@ function _M:init()
 	engine.interface.GameSound.init(self)
 
 	self.persistant_actors = {}
-
 	-- Pause at birth
 	self.paused = true
 
@@ -143,12 +142,14 @@ function _M:newGame()
 		self.player.energy.value = self.energy_to_act
 		self.always_target = true
 		Map:setViewerFaction(self.player.faction)
+
 		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
 		self.player:playerLevelup(function()
 			self.player:grantQuest(self.player.starting_quest)
 			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))
 			self.player:resetToFull()
+			self.player:registerCharacterPlayed()
 		end)
 	end, quickbirth)
 	self:registerDialog(birth)

@@ -66,7 +66,7 @@ end
 ------------------------------------------------------------
 
 
---- Handles the player profile, possible online
+--- Handles the player profile, possibly online
 module(..., package.seeall, class.make)
 
 function _M:init(name)
@@ -96,8 +96,8 @@ end
 function _M:loadGenericProfile()
 	local d = "/profiles/"..self.name.."/generic/"
 	fs.mount(engine.homepath, "/")
-
 	for i, file in ipairs(fs.list(d)) do
+
 		if file:find(".profile$") then
 			local f, err = loadfile(d..file)
 			if not f and err then error(err) end
@@ -115,9 +115,8 @@ end
 function _M:loadModuleProfile(short_name)
 	local d = "/profiles/"..self.name.."/modules/"..short_name.."/"
 	fs.mount(engine.homepath, "/")
-
+	print("[Module Profile] ", engine.homepath.."/"..d)
 	self.modules[short_name] = self.modules[short_name] or {}
-
 	for i, file in ipairs(fs.list(d)) do
 		if file:find(".profile$") then
 			local f, err = loadfile(d..file)
@@ -195,6 +194,7 @@ function _M:rpc(data)
 end
 
 function _M:tryAuth()
+	print("[ONLINE PROFILE] auth")
 	local data = self:rpc{action="TryAuth", login=self.login, pass=self.pass}
 	if not data then print("[ONLINE PROFILE] not auth") return end
 	print("[ONLINE PROFILE] auth as ", data.name, data.hash)
@@ -232,7 +232,6 @@ function _M:setConfigs(module, name, val)
 	local data = self:rpc{action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data={[name] = val}}
 	if not data then return end
 	print("[ONLINE PROFILE] saved ", module, name, val)
-	util.show_backtrace()
 end
 
 function _M:syncOnline(module)
@@ -249,9 +248,40 @@ function _M:syncOnline(module)
 	print("[ONLINE PROFILE] saved ", module)
 end
 
-function _M:newProfile()
-	local data = self:rpc{action="NewProfile", login=tostring(os.time()), email=os.time().."te4@mailcatch.com", name=os.time().."member", pass="test"}
+function _M:newProfile(Login, Name, Password, Email)
+	print("[ONLINE PROFILE] profile options ", Login, Email, Name, Password)
+	local data = self:rpc{action="NewProfile", login=Login, email=Email, name=Name, pass=Password}
 	if not data then print("[ONLINE PROFILE] could not create") return end
 	print("[ONLINE PROFILE] profile id ", data.id)
+	self:performlogin(Login, Password, Name, Email)
 end
 
+function _M:performlogin(login, pass, name, email)
+	self.login=login
+	self.pass=pass
+	print("[ONLINE PROFILE] attempting log in ", self.login, self.pass)
+	self:tryAuth()
+	if (profile.auth) then
+		self.generic.online = { login=login, pass=pass,name=name or "", email=email or "" }
+		self:saveGenericProfile("online", self.generic.online)
+		self:getConfigs("generic")
+		self:syncOnline("generic")
+	end
+end
+
+function _M:logOut()
+	profile.generic.online = nil
+	profile.auth = nil
+	local d = "/profiles/"..self.name.."/generic/"
+	fs.mount(engine.homepath, "/")
+	fs.delete(d.."online.profile")
+end
+
+function _M:checkFirstRun()
+	local result = self.generic.firstrun
+	if not result then
+		firstrun = { When=os.time() }
+		self:saveGenericProfile("firstrun", firstrun, false)
+	end
+	return result
+end
