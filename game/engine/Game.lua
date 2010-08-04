@@ -42,6 +42,8 @@ function _M:init(keyhandler)
 	self.mouse:setCurrent()
 
 	self.uniques = {}
+
+	self.__threads = {}
 end
 
 function _M:loaded()
@@ -207,4 +209,28 @@ end
 
 --- Requests the game to save
 function _M:saveGame()
+end
+
+--- Save a thread into the thread pool
+-- Threads will be auto join'ed when the module exits or when it can<br/>
+-- ALL THREADS registered *MUST* return true when they exit
+function _M:registerThread(th, linda)
+	print("[THREAD] registering", th, linda, #self.__threads+1)
+	self.__threads[#self.__threads+1] = {th=th, linda=linda}
+	return #self.__threads
+end
+
+--- Try to join all registered threads
+-- @param timeout the time in seconds to wait for each thread
+function _M:joinThreads(timeout)
+	for i = #self.__threads, 1, -1 do
+		local th = self.__threads[i].th
+		print("[THREAD] Thread join", i, th)
+		local v, err = th:join(timeout)
+		if err then print("[THREAD] error", th) error(err) end
+		if v then
+			print("[THREAD] Thread result", i, th, "=>", v)
+			table.remove(self.__threads, i)
+		end
+	end
 end

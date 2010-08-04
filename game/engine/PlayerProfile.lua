@@ -21,6 +21,7 @@ require "engine.class"
 local http = require "socket.http"
 local url = require "socket.url"
 local ltn12 = require "ltn12"
+local lanes = require "lanes"
 require "Json2"
 
 ------------------------------------------------------------
@@ -187,10 +188,33 @@ end
 -----------------------------------------------------------------------
 
 function _M:rpc(data)
-	print("[ONLINE PROFILE] rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
-	local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
-	if not body then return end
-	return json.decode(body)
+	-- We can work in asynchronous mode, to not delay the main game execution
+	if data.async and game and type(game) == "table" and not game.refuse_threads then
+		data.async = nil
+		local l = lanes.linda()
+
+		function handler(data)
+			local http = require "socket.http"
+			local url = require "socket.url"
+			require "Json2"
+
+			print("[ONLINE PROFILE] async rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
+			local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
+			if not body then l:send("final", nil)
+			else l:send("final", json.decode(body))
+			end
+			return true
+		end
+
+		local th = lanes.gen("*", handler)(data)
+		-- Tell the game to monitor this thread and end it when it's done
+		game:registerThread(th, l)
+	else
+		print("[ONLINE PROFILE] rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
+		local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
+		if not body then return end
+		return json.decode(body)
+	end
 end
 
 function _M:tryAuth()
@@ -229,7 +253,7 @@ function _M:setConfigs(module, name, val)
 
 	if type(val) ~= "string" then val = serialize(val) end
 
-	local data = self:rpc{action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data={[name] = val}}
+	local data = self:rpc{async=true, action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data={[name] = val}}
 	if not data then return end
 	print("[ONLINE PROFILE] saved ", module, name, val)
 end
@@ -243,7 +267,7 @@ function _M:syncOnline(module)
 	local data = {}
 	for k, v in pairs(sync) do if k ~= "online" then data[k] = serialize(v) end end
 
-	local data = self:rpc{action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data=data}
+	local data = self:rpc{async=true, action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data=data}
 	if not data then return end
 	print("[ONLINE PROFILE] saved ", module)
 end

@@ -35,6 +35,7 @@ function _M:init()
 	engine.Game.init(self, engine.KeyBind.new())
 
 	self.background = core.display.loadImage("/data/gfx/mainmenu/background.png")
+	self.refuse_threads = true
 end
 
 function _M:run()

@@ -95,6 +95,8 @@ function _M:loadDefinition(dir, team)
 			end
 			profile:loadModuleProfile(mod.short_name)
 			local m = require(mod.starter)
+			m[1].__session_time_played_start = os.time()
+			m[1].__mod_info = mod
 			print("[MODULE LOADER] loading module", mod.long_name, "["..mod.starter.."]", "::", m[1] and m[1].__CLASSNAME, m[2] and m[2].__CLASSNAME)
 			return m[1], m[2]
 		end
