@@ -32,6 +32,10 @@ function _M:init(runmod)
 			if self.name:len() >= 2 then
 				game:unregisterDialog(self)
 
+				profile.generic.modules_loaded = profile.generic.modules_loaded or {}
+				profile.generic.modules_loaded[self.runmod.short_name] = (profile.generic.modules_loaded[self.runmod.short_name] or 0) + 1
+				profile:saveGenericProfile("modules_loaded", profile.generic.modules_loaded)
+
 				-- Ok run the module
 				local M, W = self.runmod.load()
 				_G.game = M.new()
