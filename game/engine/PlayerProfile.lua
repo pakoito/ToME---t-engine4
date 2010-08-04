@@ -21,8 +21,7 @@ require "engine.class"
 local http = require "socket.http"
 local url = require "socket.url"
 local ltn12 = require "ltn12"
-local Json2 = require "Json2"
-local sqlite3 = require "sqlite3"
+require "Json2"
 
 ------------------------------------------------------------
 -- some simple serialization stuff
@@ -64,25 +63,6 @@ local function serialize(data)
 	end
 	return table.concat(tbl)
 end
-
-local function constructTableQuery(name, def)
-	local fields, keys = {}, {}
-	for fname, fdef in pairs(def) do
-		fields[#fields+1] = {position=fdef.position, sql=fname.." "..fdef.type}
-		if fdef.primary_key then keys[#keys+1] = {position=fdef.position, sql="PRIMARY KEY ("..fname..")"} end
-	end
-	table.sort(fields, function(a, b) return a.position < b.position end)
-	table.sort(keys, function(a, b) return a.position < b.position end)
-
-	-- Make the statement
-	local fs = { "uuid CHAR(36) NOT NULL" }
-	-- Add fields
-	for i = 1, #fields do fs[#fs+1] = fields[i].sql end
-	-- Add keys
-	for i = 1, #keys do fs[#fs+1] = keys[i].sql end
-	return "CREATE TABLE "..name.." ("..table.concat(fs, ", ")..")"
-end
-
 ------------------------------------------------------------
 
 
@@ -106,52 +86,6 @@ function _M:init(name)
 	end
 end
 
-function _M:getDatabase(mod, autoclose)
-	mod = mod or self.mod_name
-
-	local d = "/profiles/"..self.name.."/"
-	fs.mount(engine.homepath, "/")
-
-	local f, err = loadfile("/data/profiles/"..mod.."/tables.lua")
-	if err then return end
-	setfenv(f, setmetatable(env or {}, {__index=_G}))
-	local tables = f()
-
-	-- Open the database
-	local db = sqlite3.open(d, mod..".sqlite3")
-	if not db then return nil end
-
-	local stms = {}
-
-	-- Create tables
-	for name, def in pairs(tables or {}) do
-		print("Checking SQL table", name)
-		db:create_table(name, constructTableQuery(name, def.definition))
-
-		if def.options and def.options.autoload then
-			print("Autoloading", name)
-			if def.options.only_field then
-				for k, v in db:cols(("SELECT %s, %s FROM %s GROUP BY %s"):format(def.options.autoload, def.options.only_field, name, def.options.autoload)) do
-					print(" * ", k, v)
-				end
-			else
-			end
-		end
-
-		-- Precompile statements
-		if def.statements and not autoclose then
-			for k, v in pairs(def.statements) do
-				print("Preparing statement", k, v)
-				print(db:prepare(v))
-				stms[k] = db:prepare(v)
-			end
-		end
-	end
-
-	if not autoclose then return db, stms
-	else db:close() end
-end
-
 function _M:loadData(f, where)
 	setfenv(f, where)
 	local ok, err = pcall(f)
@@ -162,8 +96,6 @@ end
 function _M:loadGenericProfile()
 	local d = "/profiles/"..self.name.."/generic/"
 	fs.mount(engine.homepath, "/")
-
-	self:getDatabase("generic", true)
 
 	for i, file in ipairs(fs.list(d)) do
 		if file:find(".profile$") then
@@ -185,8 +117,6 @@ function _M:loadModuleProfile(short_name)
 	fs.mount(engine.homepath, "/")
 
 	self.modules[short_name] = self.modules[short_name] or {}
-
-	self.modules[short_name].db, self.modules[short_name].db_stms = self:getDatabase(short_name)
 
 	for i, file in ipairs(fs.list(d)) do
 		if file:find(".profile$") then

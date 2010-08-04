@@ -43,7 +43,7 @@ fs.mkdir(fs.getHomePath())
 fs.mkdir(fs.getHomePath().."/4.0/")
 fs.mkdir(fs.getHomePath().."/4.0/profiles/")
 fs.mkdir(fs.getHomePath().."/4.0/settings/")
-fs.setWritePath(engine.homepath)
+fs.setWritePath(fs.getHomePath())
 
 -- Loads default config & user config
 fs.mount(engine.homepath, "/")

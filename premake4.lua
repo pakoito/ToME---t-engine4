@@ -22,7 +22,6 @@ solution "TEngine"
 		"src/luasocket",
 		"src/fov",
 		"src/libtcod_import",
-		"src/sqlite3",
 		"src/physfs",
 		"src/physfs/zlib123",
 		"/usr/include/SDL",
@@ -65,7 +64,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "sqlite_amalgation" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -206,10 +205,3 @@ project "tcodimport"
 	targetname "tcodimport"
 
 	files { "src/libtcod_import/*.c", }
-
-project "sqlite_amalgation"
-	kind "StaticLib"
-	language "C"
-	targetname "sqlite_amalgation"
-
-	files { "src/sqlite3/*.c", }
