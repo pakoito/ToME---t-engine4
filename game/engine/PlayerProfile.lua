@@ -188,6 +188,7 @@ end
 -----------------------------------------------------------------------
 
 function _M:rpc(data)
+	print("[ONLINE PROFILE] rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
 	local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
 	if not body then return end
 	return json.decode(body)
@@ -213,12 +214,12 @@ function _M:getConfigs(module)
 		if module == "generic" then
 			self.generic[field] = self.generic[field] or {}
 			self:loadData(f, self.generic[field])
-			self:saveGenericProfile(field, self.generic[field], nosync)
+			self:saveGenericProfile(field, self.generic[field], true)
 		else
 			self.modules[module] = self.modules[module] or {}
 			self.modules[module][field] = self.modules[module][field] or {}
 			self:loadData(f, self.modules[module][field])
-			self:saveModuleProfile(field, self.modules[module][field], module, nosync)
+			self:saveModuleProfile(field, self.modules[module][field], module, true)
 		end
 	end
 end
@@ -231,6 +232,7 @@ function _M:setConfigs(module, name, val)
 	local data = self:rpc{action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data={[name] = val}}
 	if not data then return end
 	print("[ONLINE PROFILE] saved ", module, name, val)
+	util.show_backtrace()
 end
 
 function _M:syncOnline(module)
