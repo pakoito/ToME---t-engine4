@@ -52,6 +52,8 @@ function _M:loaded()
 	self.key = engine.Key.current
 	self.mouse = engine.Mouse.new()
 	self.mouse:setCurrent()
+
+	self.__threads = self.__threads or {}
 end
 
 --- Defines the default fields to be saved by the savefile code

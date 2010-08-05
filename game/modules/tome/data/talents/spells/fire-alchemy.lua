@@ -83,43 +83,11 @@ newTalent{
 		return ([[Throw a smoke bomb, blocking line of sight. The smoke dissipates after %d turns.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }
-newTalent{
-	name = "Body of Fire",
-	type = {"spell/fire-alchemy",3},
-	require = spells_req3,
-	cooldown = 20,
-	mana = 20,
-	points = 5,
-	range = 1,
-	action = function(self, t)
-		local ammo = self:hasAlchemistWeapon()
-		if not ammo or ammo:getNumber() < 5 then
-			game.logPlayer(self, "You need to ready 2 alchemist gems in your quiver.")
-			return
-		end
-
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
-
-		for i = 1, 5 do self:removeObject(self:getInven("QUIVER"), 1) end
-		local power = math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
-		self:probabilityTravel(x, y, power)
-		game:playSoundNear(self, "talents/arcane")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Turn your body into pure flame, increasing your fire resistance, burning any creatures attacking you for %0.2f fire damage and projecting randomly fire bolts at targets in sight.
-		The damage will increase with Magic stat.]]):
-		format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
-	end,
-}
 
 newTalent{
 	name = "Magma Pool",
-	type = {"spell/fire-alchemy",4},
-	require = spells_req4,
+	type = {"spell/fire-alchemy",3},
+	require = spells_req3,
 	points = 5,
 	mana = 80,
 	cooldown = 15,
@@ -150,5 +118,75 @@ newTalent{
 		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
 		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
 		At level 3 it will become a beam.]]):format(math.floor((3 + self:getTalentLevel(t)) / 1.5))
+	end,
+}
+
+newTalent{
+	name = "Body of Fire",
+	type = {"spell/fire-alchemy",4},
+	require = spells_req4,
+	mode = "sustained",
+	cooldown = 40,
+	sustain_mana = 250,
+	points = 5,
+	range = 1,
+	proj_speed = 2,
+	do_fire = function(self, t)
+		if self:getMana() <= 0 then
+			local old = self.energy.value
+			self.energy.value = 100000
+			self:useTalent(self.T_BODY_OF_FIRE)
+			self.energy.value = old
+			return
+		end
+
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and self:reactionToward(a) < 0 then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}}
+		for i = 1, math.floor(self:getTalentLevel(t)) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+
+			self:projectile(tg, a.x, a.y, DamageType.FIRE, self:spellCrit(self:combatTalentSpellDamage(t, 15, 70)), {type="flame"})
+			game:playSoundNear(self, "talents/fire")
+		end
+	end,
+	activate = function(self, t)
+		local res = self:combatTalentSpellDamage(t, 5, 45)
+		local dam = self:combatTalentSpellDamage(t, 5, 25)
+
+		game:playSoundNear(self, "talents/fireflash")
+		game.logSeen(self, "#FF8000#%s turns into pure flame!", self.name:capitalize())
+		return {
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.FIRE]=dam}),
+			res = self:addTemporaryValue("resists", {[DamageType.FIRE] = res}),
+			drain = self:addTemporaryValue("mana_regen", -0.4 * self:getTalentLevelRaw(t)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		game.logSeen(self, "#FF8000#The raging fire around %s calms down and disappears.", self.name)
+		self:removeTemporaryValue("onhit", p.onhit)
+		self:removeTemporaryValue("resists", p.res)
+		self:removeTemporaryValue("mana_regen", p.drain)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage and projecting randomly slow moving fire bolts at targets in sight doing %0.2f fire damage.
+		This powerful spell drains mana while active.
+		The damage will increase with Magic stat.]]):
+		format(
+			self:combatTalentSpellDamage(t, 5, 45),
+			self:combatTalentSpellDamage(t, 5, 25),
+			self:combatTalentSpellDamage(t, 15, 70)
+		)
 	end,
 }

@@ -178,6 +178,10 @@ function _M:act()
 		local t = self:getTalentFromId(self.T_THUNDERSTORM)
 		t.do_storm(self, t)
 	end
+	if self:isTalentActive(self.T_BODY_OF_FIRE) then
+		local t = self:getTalentFromId(self.T_BODY_OF_FIRE)
+		t.do_fire(self, t)
+	end
 	if self:isTalentActive(self.T_HYMN_OF_MOONLIGHT) then
 		local t = self:getTalentFromId(self.T_HYMN_OF_MOONLIGHT)
 		t.do_beams(self, t)
