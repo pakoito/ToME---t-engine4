@@ -135,6 +135,7 @@ function _M:display()
 end
 
 function _M:toScreen(x, y)
+	-- Draw with only the texture
 	self.texture:toScreenFull(x, y, self.w, self.h, self.texture_w, self.texture_h)
 end
 

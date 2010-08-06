@@ -180,7 +180,6 @@ function _M:archeryShoot(targets, talent, tg, params)
 	for i = 1, #targets do
 		local tg = table.clone(tg)
 		tg.archery.ammo = targets[i].ammo
-		print("******........ firing target", targets[i].x, targets[i].y, "from", self.x, self.y)
 		self:projectile(tg, targets[i].x, targets[i].y, archery_projectile)
 	end
 end
