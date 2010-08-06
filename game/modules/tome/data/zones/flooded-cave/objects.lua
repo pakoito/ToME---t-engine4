@@ -22,10 +22,11 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 load("/data/general/objects/objects.lua")
+load("/data/general/objects/2htridents.lua")
 
 -- Artifact, droped (and used!) by Bill the Stone Troll
 
-newEntity{ base = "BASE_BATTLEAXE",
+newEntity{ base = "BASE_TRIDENT",
 	define_as = "TRIDENT_TIDES",
 	name = "Trident of the Tides", unique=true,
 	desc = [[As you wield this trident you can feel the power of the tides rushing through your arms.
