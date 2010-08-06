@@ -27,9 +27,10 @@ newTalent{
 	range = 20,
 	message = "@Source@ shoots!",
 	action = function(self, t)
-		local energy = self.energy.value
-		self:archeryShoot()
-		return energy ~= self.energy.value
+		local targets = self:archeryAcquireTargets()
+		if not targets then return end
+		self:archeryShoot(targets, t)
+		return true
 	end,
 	info = function(self, t)
 		return ([[Shoot your bow or sling!]])
@@ -47,10 +48,10 @@ newTalent{
 	require = techs_dex_req1,
 	range = 20,
 	action = function(self, t)
-		local energy = self.energy.value
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1.1, 2.2))
-		print(energy , self.energy.value, energy ~= self.energy.value)
-		return energy ~= self.energy.value
+		local targets = self:archeryAcquireTargets()
+		if not targets then return end
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.1, 2.2)})
+		return true
 	end,
 	info = function(self, t)
 		return ([[A steady shot, doing %d%% damage.]]):format(self:combatTalentWeaponDamage(t, 1.1, 2.2) * 100)
@@ -144,11 +145,10 @@ newTalent{
 	require = techs_dex_req4,
 	range = 20,
 	action = function(self, t)
-		local energy = self.energy.value
-		self.combat_physcrit = self.combat_physcrit + 1000
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1.2, 2))
-		self.combat_physcrit = self.combat_physcrit - 1000
-		return energy ~= self.energy.value
+		local targets = self:archeryAcquireTargets()
+		if not targets then return end
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.2, 2), crit_chance=1000})
+		return true
 	end,
 	info = function(self, t)
 		return ([[You concentrate on your aim to produce a guaranted critical hit (with a base damage of %d%%).]]):format(self:combatTalentWeaponDamage(t, 1.2, 2) * 100)
@@ -205,16 +205,18 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req2,
 	range = 20,
+	archery_onhit = function(self, t, target, x, y)
+		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
+			target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4)})
+		else
+			game.logSeen(target, "%s resists!", target.name:capitalize())
+		end
+	end,
 	action = function(self, t)
-		local energy = self.energy.value
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.5), function(target, x, y)
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
-				target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4)})
-			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-			end
-		end)
-		return energy ~= self.energy.value
+		local targets = self:archeryAcquireTargets()
+		if not targets then return end
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1, 1.5)})
+		return true
 	end,
 	info = function(self, t)
 		return ([[You fire a crippling shot, doing %d%% damage and reducing your target's speed by %0.2f for 7 turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.5) * 100, util.bound((5 + 5 * self:getTalentLevel(t)) / 100, 0.1, 0.4))
@@ -231,16 +233,18 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req3,
 	range = 20,
+	archery_onhit = function(self, t, target, x, y)
+		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
+			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {})
+		else
+			game.logSeen(target, "%s resists!", target.name:capitalize())
+		end
+	end,
 	action = function(self, t)
-		local energy = self.energy.value
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.4), function(target, x, y)
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
-				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {})
-			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-			end
-		end)
-		return energy ~= self.energy.value
+		local targets = self:archeryAcquireTargets()
+		if not targets then return end
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1, 1.4)})
+		return true
 	end,
 	info = function(self, t)
 		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100, 2 + self:getTalentLevelRaw(t))
@@ -257,16 +261,19 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req4,
 	range = 20,
+	archery_onhit = function(self, t, target, x, y)
+		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
+			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {})
+		else
+			game.logSeen(target, "%s resists!", target.name:capitalize())
+		end
+	end,
 	action = function(self, t)
-		local energy = self.energy.value
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 0.5, 1.5), function(target, x, y)
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {})
-			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-			end
-		end, {type="ball", radius=1 + self:getTalentLevel(t) / 3})
-		return energy ~= self.energy.value
+		local tg = {type="ball", radius=1 + self:getTalentLevel(t) / 3}
+		local targets = self:archeryAcquireTargets(tg, {one_shot=true})
+		if not targets then return end
+		self:archeryShoot(targets, t, tg, {mult=self:combatTalentWeaponDamage(t, 0.5, 1.5)})
+		return true
 	end,
 	info = function(self, t)
 		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 2 + self:getTalentLevelRaw(t))

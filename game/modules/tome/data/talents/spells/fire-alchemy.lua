@@ -130,7 +130,8 @@ newTalent{
 	sustain_mana = 250,
 	points = 5,
 	range = 1,
-	proj_speed = 2,
+	proj_speed = 1.3,
+	range = 12,
 	do_fire = function(self, t)
 		if self:getMana() <= 0 then
 			local old = self.energy.value
@@ -174,7 +175,7 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		game.logSeen(self, "#FF8000#The raging fire around %s calms down and disappears.", self.name)
-		self:removeTemporaryValue("onhit", p.onhit)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("resists", p.res)
 		self:removeTemporaryValue("mana_regen", p.drain)
 		return true

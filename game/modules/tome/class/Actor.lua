@@ -32,6 +32,7 @@ require "engine.interface.ActorQuest"
 require "engine.interface.BloodyDeath"
 require "engine.interface.ActorFOV"
 require "mod.class.interface.Combat"
+require "mod.class.interface.Archery"
 local Faction = require "engine.Faction"
 local Map = require "engine.Map"
 local DamageType = require "engine.DamageType"
@@ -50,7 +51,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorQuest,
 	engine.interface.BloodyDeath,
 	engine.interface.ActorFOV,
-	mod.class.interface.Combat
+	mod.class.interface.Combat,
+	mod.class.interface.Archery
 ))
 
 -- Dont save the can_see_cache

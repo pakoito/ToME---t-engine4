@@ -102,7 +102,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 				if particles then
 					game.level.map:particleEmitter(px, py, 1, particles.type)
 				end
-				if damtype(px, py) then stop=true break end
+				if damtype(px, py, tg, self) then stop=true break end
 			end
 			if stop then break end
 		end
@@ -217,7 +217,7 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 		if particles and type(particles) == "table" then
 			game.level.map:particleEmitter(px, py, 1, particles.type)
 		end
-		if damtype(px, py) then return true end
+		if damtype(px, py, tg, self) then return true end
 		return false
 	else
 		-- Call the projected method of the target grid if possible

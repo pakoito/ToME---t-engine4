@@ -38,11 +38,10 @@ newTalent{
 	require = techs_dex_req2,
 	range = 20,
 	action = function(self, t)
-		local energy = self.energy.value
-		self.combat_apr = self.combat_apr + 1000
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1, 1.5), nil, {type="beam"}, {one_shot=true})
-		self.combat_apr = self.combat_apr - 1000
-		return energy ~= self.energy.value
+		local targets = self:archeryAcquireTargets({type="beam"}, {one_shot=true})
+		if not targets then return end
+		self:archeryShoot(targets, t, {type="beam"}, {mult=self:combatTalentWeaponDamage(t, 1, 1.5), apr=1000})
+		return true
 	end,
 	info = function(self, t)
 		return ([[You fire an arrow that cuts right through anything, piercing multiple targets if possible with nigh infinite armor penetration, doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
@@ -59,9 +58,11 @@ newTalent{
 	require = techs_dex_req3,
 	range = 20,
 	action = function(self, t)
-		local energy = self.energy.value
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 1.2, 1.7), nil, {type="ball", radius=1}, {limit_shots=2})
-		return energy ~= self.energy.value
+		local tg = {type="ball", radius=1}
+		local targets = self:archeryAcquireTargets(tg, {limit_shots=2})
+		if not targets then return end
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.2, 1.7)})
+		return true
 	end,
 	info = function(self, t)
 		return ([[You fire two arrows at your target, hitting it and a nearby foe if possible, doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.7))
@@ -78,9 +79,11 @@ newTalent{
 	require = techs_dex_req4,
 	range = 20,
 	action = function(self, t)
-		local energy = self.energy.value
-		self:archeryShoot(nil, self:combatTalentWeaponDamage(t, 0.6, 1.3), nil, {type="ball", radius=2 + self:getTalentLevel(t)/3, firendlyfire=false})
-		return energy ~= self.energy.value
+		local tg = {type="ball", radius=2 + self:getTalentLevel(t)/3, friendlyfire=false}
+		local targets = self:archeryAcquireTargets(tg)
+		if not targets then return end
+		self:archeryShoot(targets, t, {type="bolt",friendlyfire=false}, {mult=self:combatTalentWeaponDamage(t, 0.6, 1.3)})
+		return true
 	end,
 	info = function(self, t)
 		return ([[You fire multiple arrows at the area, doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.6, 1.3))
