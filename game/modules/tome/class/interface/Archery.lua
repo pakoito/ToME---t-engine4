@@ -1,0 +1,201 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+require "engine.class"
+local DamageType = require "engine.DamageType"
+local Map = require "engine.Map"
+local Chat = require "engine.Chat"
+local Target = require "engine.Target"
+local Talents = require "engine.interface.ActorTalents"
+
+--- Interface to add ToME archery combat system
+module(..., package.seeall, class.make)
+
+--- Look for possible archery targets
+-- Take care of removing enough ammo
+function _M:archeryAcquireTargets(tg, params)
+	local weapon, ammo = self:hasArcheryWeapon()
+	if not weapon then
+		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
+		return nil
+	end
+	params = params or {}
+
+	print("[ARCHERY AQUIRE TARGETS WITH]", weapon.name, ammo.name)
+	local realweapon = weapon
+	weapon = weapon.combat
+
+	local tg = tg or {type="bolt"}
+
+	if not tg.range then tg.range=weapon.range or 10 end
+	tg.display = tg.display or {display='/'}
+	tg.speed = tg.speed or 20
+	local x, y = self:getTarget(tg)
+	if not x or not y then return nil end
+
+	-- Find targets to know how many ammo we use
+	local targets = {}
+	if params.one_shot then
+		local ammo = self:removeObject(self:getInven("QUIVER"), 1)
+		if ammo then
+			targets = {{x=x, y=y, ammo=ammo.combat}}
+		end
+	else
+		local limit_shots = params.limit_shots
+
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, game.level.map.ACTOR)
+			if not target then return end
+			if tx == self.x and ty == self.y then return end
+
+			if limit_shots then
+				if limit_shots <= 0 then return end
+				limit_shots = limit_shots - 1
+			end
+
+			for i = 1, params.multishots or 1 do
+				local ammo = self:removeObject(self:getInven("QUIVER"), 1)
+				if ammo then targets[#targets+1] = {x=tx, y=ty, ammo=ammo.combat}
+				else break end
+			end
+		end)
+	end
+
+	if #targets > 0 then
+		local sound = weapon.sound
+
+		local speed = self:combatSpeed(weapon)
+		print("[SHOOT] speed", speed or 1, "=>", game.energy_to_act * (speed or 1))
+		self:useEnergy(game.energy_to_act * (speed or 1))
+
+		if sound then game:playSoundNear(targets[1], sound) end
+
+		if ammo:getNumber() < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25 then
+			game.logPlayer(self, "You only have %d %s left!", ammo:getNumber(), ammo.name)
+		end
+
+		return targets
+	else
+		return nil
+	end
+end
+
+--- Archery projectile code
+local function archery_projectile(tx, ty, tg, self)
+	local weapon, ammo = tg.archery.weapon, tg.archery.ammo
+
+	local target = game.level.map(tx, ty, game.level.map.ACTOR)
+	if not target then return end
+
+	local talent = self:getTalentFromId(tg.talent_id)
+
+	local damtype = tg.archery.damtype or ammo.damtype or DamageType.PHYSICAL
+	local mult = tg.archery.mult or 1
+
+	-- Does the blow connect? yes .. complex :/
+	local atk, def = self:combatAttack(weapon), target:combatDefenseRanged()
+	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
+	print("[ATTACK ARCHERY] to ", target.name, " :: ", dam, apr, armor, "::", mult)
+	if not self:canSee(target) then atk = atk / 3 end
+
+	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
+	local hitted = false
+	if self:checkHit(atk, def) then
+		apr = apr + (tg.archery.apr or 0)
+		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
+
+		local dam = math.max(0, dam - math.max(0, armor - apr))
+		local damrange = self:combatDamageRange(ammo)
+		dam = rng.range(dam, dam * damrange)
+		print("[ATTACK ARCHERY] after range", dam)
+
+		local crit
+		if tg.archery.crit_chance then self.combat_physcrit = self.combat_physcrit + tg.archery.crit_chance end
+		dam, crit = self:physicalCrit(dam, ammo, target)
+		if tg.archery.crit_chance then self.combat_physcrit = self.combat_physcrit - tg.archery.crit_chance end
+		print("[ATTACK ARCHERY] after crit", dam)
+
+		dam = dam * mult
+		print("[ATTACK ARCHERY] after mult", dam)
+
+		if crit then game.logSeen(self, "%s performs a critical strike!", self.name:capitalize()) end
+		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
+		hitted = true
+
+		if talent.archery_onhit then talent.archery_onhit(self, talent, target, target.x, target.y) end
+	else
+		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
+		game.logSeen(target, "%s misses %s.", srcname, target.name)
+	end
+
+	-- Ranged project
+	if hitted and not target.dead then for typ, dam in pairs(self.ranged_project) do
+		if dam > 0 then
+			DamageType:get(typ).projector(self, target.x, target.y, typ, dam)
+		end
+	end end
+
+	-- Regen on being hit
+	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
+	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
+end
+
+--- Shoot at one target
+function _M:archeryShoot(targets, talent, tg, params)
+	local weapon, ammo = self:hasArcheryWeapon()
+	if not weapon then
+		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
+		return nil
+	end
+
+	print("[SHOOT WITH]", weapon.name, ammo.name)
+	local realweapon = weapon
+	weapon = weapon.combat
+
+	local tg = tg or {type="bolt"}
+	tg.talent = tg.talent or talent
+
+	if not tg.range then tg.range=weapon.range or 10 end
+	tg.display = tg.display or {display='/'}
+	tg.speed = tg.speed or 20
+	tg.archery = params or {}
+	tg.archery.weapon = weapon
+	for i = 1, #targets do
+		local tg = table.clone(tg)
+		tg.archery.ammo = targets[i].ammo
+		print("******........ firing target", targets[i].x, targets[i].y, "from", self.x, self.y)
+		self:projectile(tg, targets[i].x, targets[i].y, archery_projectile)
+	end
+end
+
+--- Check if the actor has a bow or sling and corresponding ammo
+function _M:hasArcheryWeapon()
+	if not self:getInven("MAINHAND") then return nil, "no shooter" end
+	if not self:getInven("QUIVER") then return nil, "no ammo" end
+	local weapon = self:getInven("MAINHAND")[1]
+	local ammo = self:getInven("QUIVER")[1]
+	if not weapon or not weapon.archery then
+		return nil, "no shooter"
+	end
+	if not ammo or not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
+		return nil, "bad or no ammo"
+	end
+	return weapon, ammo
+end

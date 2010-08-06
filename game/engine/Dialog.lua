@@ -96,7 +96,7 @@ function _M:init(title, w, h, x, y, alpha, font)
 	self.iw, self.ih = w - 2 * 5, h - 8 - 16 - 3
 	self.internal_surface = core.display.newSurface(self.iw, self.ih)
 	self.surface:alpha(alpha or 220)
-	self.texture = self.surface:glTexture()
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	self.changed = true
 end
 
@@ -123,35 +123,42 @@ function _M:display()
 
 	local tw, th = self.font:size(self.title)
 	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
-	
+
 	self.internal_surface:erase()
 	self:drawDialog(self.internal_surface)
 	s:merge(self.internal_surface, 5, 20 + 3)
 
+	-- Update texture
+	self.surface:updateTexture(self.texture)
+
 	return self.surface
 end
 
-function _M:addControl(control)			
+function _M:toScreen(x, y)
+	self.texture:toScreenFull(x, y, self.w, self.h, self.texture_w, self.texture_h)
+end
+
+function _M:addControl(control)
 	control.tabindex = self.tabindex
-	self.tabindex = self.tabindex + 1	
-	self.controls[control.name] = control	
+	self.tabindex = self.tabindex + 1
+	self.controls[control.name] = control
 	table.sort(self.controls, function(a,b) return a.tabindex<b.tabindex end)
 end
 
 function _M:changeFocus(up)
-    local add = 1
+	local add = 1
 	if not up then add = -1 end
 	self.currenttabindex = self.currenttabindex + add
-	if (self.currenttabindex==self.tabindex) then self.currenttabindex = 0 end	
+	if (self.currenttabindex==self.tabindex) then self.currenttabindex = 0 end
 	if self.currenttabindex==-1 then self.currenttabindex=self.tabindex-1 end
 	local name = ""
 	for i, cntrl in pairs(self.controls) do
-		if cntrl.tabindex==self.currenttabindex then 
+		if cntrl.tabindex==self.currenttabindex then
 			if self.controls[self.state] and self.controls[self.state].unFocus then self.controls[self.state]:unFocus() end
-			cntrl.focused=true 
-			name=i 
+			cntrl.focused=true
+			name=i
 		end
-	end	
+	end
 	return name
 end
 
@@ -161,29 +168,25 @@ function _M:focusControl(focusOn)
 	for i, cntrl in pairs(self.controls) do
 		if i==focusOn then cntrl.focused=true self.state=i self.currenttabindex=cntrl.tabindex end
 		if i==oldstate and cntrl.unFocus then cntrl:unFocus() end
-	end		
+	end
 end
 
 
 function _M:databind()
-	local result = { } 
-	for i, cntrl in pairs(self.controls or { }) do		
+	local result = { }
+	for i, cntrl in pairs(self.controls or { }) do
 	    if cntrl.type and cntrl.type=="TextBox" then
 			result[cntrl.name] = cntrl.text
 		end
-	end		
+	end
 	return result
 end
 
 
-function _M:drawControls(s)	
-	for i, cntrl in pairs(self.controls or { }) do		
+function _M:drawControls(s)
+	for i, cntrl in pairs(self.controls or { }) do
 	    cntrl:drawControl(s)
-	end	
-end
-
-function _M:toScreen(x,y)
-	self.surface:toScreenWithTexture(self.texture,x,y)
+	end
 end
 
 function _M:drawDialog(s)

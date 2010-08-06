@@ -820,7 +820,7 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 
 // allocate memory for a texture without copying pixels in
 // caller binds texture
-static void make_texture_for_surface(SDL_Surface *s) {
+static void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
 	// Paramétrage de la texture.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -837,6 +837,8 @@ static void make_texture_for_surface(SDL_Surface *s) {
 	while (realw < s->w) realw *= 2;
 	while (realh < s->h) realh *= 2;
 
+	if (fw) *fw = realw;
+	if (fh) *fh = realh;
 	//printf("request size (%d,%d), producing size (%d,%d)\n",s->w,s->h,realw,realh);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, realw, realh, 0, texture_format, GL_UNSIGNED_BYTE, NULL);
@@ -877,7 +879,7 @@ static int sdl_surface_toscreen(lua_State *L)
 	glGenTextures(1, &t);
 	glBindTexture(GL_TEXTURE_2D, t);
 
-	make_texture_for_surface(*s);
+	make_texture_for_surface(*s, NULL, NULL);
 	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
 
@@ -913,6 +915,17 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 	return 0;
 }
 
+static int sdl_surface_update_texture(lua_State *L)
+{
+	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 2);
+
+	glBindTexture(GL_TEXTURE_2D, *t);
+	copy_surface_to_texture(*s);
+
+	return 0;
+}
+
 static int sdl_surface_to_texture(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
@@ -923,10 +936,14 @@ static int sdl_surface_to_texture(lua_State *L)
 	glGenTextures(1, t);
 	glBindTexture(GL_TEXTURE_2D, *t);
 
-	make_texture_for_surface(*s);
+	int fw, fh;
+	make_texture_for_surface(*s, &fw, &fh);
 	copy_surface_to_texture(*s);
 
-	return 1;
+	lua_pushnumber(L, fw);
+	lua_pushnumber(L, fh);
+
+	return 3;
 }
 
 static int sdl_surface_merge(lua_State *L)
@@ -983,6 +1000,39 @@ static int sdl_texture_toscreen(lua_State *L)
 	glEnd( );                            /* Done Drawing The Quad    */
 
 	if (lua_isnumber(L, 6)) glColor4f(1, 1, 1, 1);
+	return 0;
+}
+
+static int sdl_texture_toscreen_full(lua_State *L)
+{
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	int w = luaL_checknumber(L, 4);
+	int h = luaL_checknumber(L, 5);
+	int rw = luaL_checknumber(L, 6);
+	int rh = luaL_checknumber(L, 7);
+	if (lua_isnumber(L, 8))
+	{
+		float r = luaL_checknumber(L, 9);
+		float g = luaL_checknumber(L, 10);
+		float b = luaL_checknumber(L, 11);
+		float a = luaL_checknumber(L, 12);
+		glColor4f(r, g, b, a);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, *t);
+	GLfloat texw = (GLfloat)w/rw;
+	GLfloat texh = (GLfloat)h/rh;
+
+	glBegin( GL_QUADS );
+	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
+	glTexCoord2f(0,texh); glVertex2f(0  + x, h + y);
+	glTexCoord2f(texw,texh); glVertex2f(w + x, h + y);
+	glTexCoord2f(texw,0); glVertex2f(w + x, 0  + y);
+	glEnd( );
+
+	if (lua_isnumber(L, 8)) glColor4f(1, 1, 1, 1);
 	return 0;
 }
 
@@ -1294,6 +1344,7 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{"merge", sdl_surface_merge},
 	{"toScreen", sdl_surface_toscreen},
 	{"toScreenWithTexture", sdl_surface_toscreen_with_texture},
+	{"updateTexture", sdl_surface_update_texture},
 	{"putChar", lua_display_char},
 	{"drawString", sdl_surface_drawstring},
 	{"drawStringBlended", sdl_surface_drawstring_aa},
@@ -1307,6 +1358,7 @@ static const struct luaL_reg sdl_texture_reg[] =
 	{"__gc", sdl_free_texture},
 	{"close", sdl_free_texture},
 	{"toScreen", sdl_texture_toscreen},
+	{"toScreenFull", sdl_texture_toscreen_full},
 	{"makeOutline", sdl_texture_outline},
 	{"toSurface", gl_texture_to_sdl},
 	{NULL, NULL},
