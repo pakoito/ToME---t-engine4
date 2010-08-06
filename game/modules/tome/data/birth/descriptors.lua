@@ -17,8 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-setAuto("subclass", true)
-setAuto("subrace", true)
+setAuto("subclass", false)
+setAuto("subrace", false)
 
 newBirthDescriptor{
 	type = "base",
