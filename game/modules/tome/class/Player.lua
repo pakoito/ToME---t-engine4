@@ -84,7 +84,6 @@ function _M:move(x, y, force)
 		while obj do
 			if obj.auto_pickup then
 				self:pickupFloor(i, true)
-				self:sortInven()
 			else
 				nb = nb + 1
 				i = i + 1
@@ -428,7 +427,6 @@ function _M:playerPickup()
 		local titleupdator = self:getEncumberTitleUpdator("Pickup")
 		local d d = self:showPickupFloor(titleupdator(), nil, function(o, item)
 			self:pickupFloor(item, true)
-			self:sortInven()
 			self.changed = true
 			d.title = titleupdator()
 			d:used()

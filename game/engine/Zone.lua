@@ -485,6 +485,8 @@ function _M:getLevel(game, lev, old_lev, no_close)
 end
 
 function _M:getGenerator(what, level, spots)
+	assert(level.data.generator[what], "requested zone generator of type "..tostring(what).." but it is not defined")
+	assert(level.data.generator[what].class, "requested zone generator of type "..tostring(what).." but it has no class field")
 	print("[GENERATOR] requiring", what, level.data.generator and level.data.generator[what] and level.data.generator[what].class)
 	return require(level.data.generator[what].class).new(
 			self,

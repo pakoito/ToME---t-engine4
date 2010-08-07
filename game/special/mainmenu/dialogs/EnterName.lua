@@ -75,6 +75,7 @@ function _M:init(runmod)
 	},{
 		EXIT = function()
 			game:unregisterDialog(self)
+			game:bindKeysToStep()
 		end
 	})
 end

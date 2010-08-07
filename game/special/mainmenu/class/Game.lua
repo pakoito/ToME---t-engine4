@@ -234,10 +234,15 @@ function _M:selectStepNew()
 	end
 	self:registerDialog(display_module)
 
-	self.step = ButtonList.new(self.mod_list, 10, 10, self.w * 0.24, (5 + 35) * #self.mod_list, nil, 5)
+	self.step = ButtonList.new(self.mod_list, 10, 10, self.w * 0.24, (5 + 35) * #self.mod_list, nil, 5)	
+	self.step.dialog = display_module
+	self:bindKeysToStep()
+end
+
+function _M:bindKeysToStep()
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
-	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
+	self.step.key:addBind("EXIT", function() self:unregisterDialog(self.step.dialog) self:selectStepMain() end)
 end
 
 function _M:selectStepLoad()

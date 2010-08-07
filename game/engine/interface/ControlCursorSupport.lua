@@ -24,8 +24,8 @@ local Dialog = require "engine.Dialog"
 
 tiles = engine.Tiles.new(16, 16)
 
---- Handles player running
--- This should work for running inside tunnel, alongside walls, in open spaces.<br/>
+--- Handles control Cursor
+-- This should work for anything that has a surface and x,y,w,h,font properties.
 module(..., package.seeall, class.make)
 
 function _M:startCursor()	

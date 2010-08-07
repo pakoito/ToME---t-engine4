@@ -147,7 +147,7 @@ function _M:forAllStack(fct)
 	fct(self)
 	if not self.stacked then return end
 	for i, so in ipairs(self.stacked) do
-		fct(so)
+		if fct(so, i) then break end
 	end
 end
 

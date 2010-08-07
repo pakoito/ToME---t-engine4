@@ -109,16 +109,33 @@ end
 function _M:onAddObject(o)
 end
 
+--- Rerturns the position of an item in the given inventory, or nil
+function _M:itemPosition(inven, o)
+	inven = self:getInven(inven)
+	for i, p in ipairs(inven) do
+		local found = nil
+		o:forAllStack(function(so)
+			if p.name == so.name then found = i return true end
+		end)
+		if found then return found end
+	end
+	return nil
+end
+
 --- Picks an object from the floor
-function _M:pickupFloor(i, vocal)
+function _M:pickupFloor(i, vocal, no_sort)
 	local o = game.level.map:getObject(self.x, self.y, i)
 	if o then
 		local prepickup = o:check("on_prepickup", self, i)
 		if not prepickup and self:addObject(self.INVEN_INVEN, o) then
 			game.level.map:removeObject(self.x, self.y, i)
-			o:check("on_pickup", self)
+			if not no_sort then self:sortInven(self.INVEN_INVEN) end
 
-			if vocal then game.logSeen(self, "%s picks up: %s.", self.name:capitalize(), o:getName{do_color=true}) end
+			o:check("on_pickup", self)
+			self:check("on_pickup_object", o)
+
+			local letter = string.char(string.byte('a') + (self:itemPosition(self.INVEN_INVEN, o) - 1 or 0))
+			if vocal then game.logSeen(self, "%s picks up (%s.): %s.", self.name:capitalize(), letter, o:getName{do_color=true}) end
 		elseif not prepickup then
 			if vocal then game.logSeen(self, "%s has no room for: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		end
@@ -337,6 +354,7 @@ end
 --- Re-order inventory, sorting and stacking it
 function _M:sortInven(inven)
 	if not inven then inven = self.inven[self.INVEN_INVEN] end
+	inven = self:getInven(inven)
 
 	-- Stack objects first, from bottom
 	for i = #inven, 1, -1 do
