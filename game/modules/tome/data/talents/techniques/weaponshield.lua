@@ -254,7 +254,7 @@ newTalent{
 		self.combat_spellresist = self.combat_spellresist + 2
 	end,
 	info = function(self, t)
-		return ([[Improves your damage with shield attacks and increases your spell and physical resistance.]]):format()
+		return ([[Improves your damage with shield attacks and increases your spell and physical save.]]):format()
 	end,
 }
 

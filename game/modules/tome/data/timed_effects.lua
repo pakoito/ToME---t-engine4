@@ -249,6 +249,23 @@ newEffect{
 }
 
 newEffect{
+	name = "SILENCED",
+	desc = "Silenced",
+	type = "mental",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is silenced!", "+Silenced" end,
+	on_lose = function(self, err) return "#Target# is not silenced anymore.", "-Silenced" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("silence", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "silence")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("silence", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "CONSTRICTED",
 	desc = "Constricted",
 	type = "physical",

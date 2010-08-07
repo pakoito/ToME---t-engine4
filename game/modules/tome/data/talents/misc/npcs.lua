@@ -19,7 +19,7 @@
 
 -- race & classes
 newTalentType{ type="technique/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
-newTalentType{ type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ no_silence=true, type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="wild-gift/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="undead/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
@@ -431,6 +431,31 @@ newTalent{
 }
 
 newTalent{
+	name = "Water Jet",
+	type = {"spell/other", },
+	points = 5,
+	mana = 10,
+	cooldown = 8,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 20,
+	reflectable = true,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.COLDSTUN, self:spellCrit(12 + self:combatSpellpower(0.20) * self:getTalentLevel(t)), {type="freeze"})
+		game:playSoundNear(self, "talents/ice")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Condenses ambient water on a target, damaging it for %0.2f and stunning it for 4 turns.
+		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.20) * self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
 	name = "Grab",
 	type = {"technique/other", 1},
 	points = 5,
@@ -726,5 +751,67 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage, if the attack hits, the target is unable to move for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), 2+self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
+	name = "Mind Sear",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	cooldown = 2,
+	equilibrium = 5,
+	range = 15,
+	action = function(self, t)
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.MIND, self:spellCrit(self:combatTalentMindDamage(t, 10, 370)), {type="mind"})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self)
+		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
+		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 370))
+	end,
+}
+
+newTalent{
+	name = "Silence",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	cooldown = 10,
+	equilibrium = 5,
+	range = 15,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.SILENCE, math.floor(4 + self:getTalentLevel(t)), {type="mind"})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self)
+		return ([[Sends a telepathic attack, silencing the target for %d turns.]]):format(math.floor(4 + self:getTalentLevel(t)))
+	end,
+}
+
+newTalent{
+	name = "Telekinetic Blast",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	cooldown = 2,
+	equilibrium = 5,
+	range = 15,
+	action = function(self, t)
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:spellCrit(self:combatTalentMindDamage(t, 10, 170)), {type="mind"})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self)
+		return ([[Sends a telekinetic attack, knocking back the target and doing %0.2f physical damage.
+		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 170))
 	end,
 }

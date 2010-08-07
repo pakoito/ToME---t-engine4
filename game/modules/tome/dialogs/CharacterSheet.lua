@@ -132,9 +132,9 @@ function _M:drawDialog(s)
 	s:drawColorStringBlended(self.font, ("Ranged Defense: #00ff00#%3d"):format(game.player:combatDefenseRanged()), w, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
-	s:drawColorStringBlended(self.font, ("Physical Resist: #00ff00#%3d"):format(game.player:combatPhysicalResist()), w, h, 255, 255, 255) h = h + self.font_h
-	s:drawColorStringBlended(self.font, ("Spell Resist:    #00ff00#%3d"):format(game.player:combatSpellResist()), w, h, 255, 255, 255) h = h + self.font_h
-	s:drawColorStringBlended(self.font, ("Mental Resist:   #00ff00#%3d"):format(game.player:combatMentalResist()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorStringBlended(self.font, ("Physical Save: #00ff00#%3d"):format(game.player:combatPhysicalResist()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorStringBlended(self.font, ("Spell Save:    #00ff00#%3d"):format(game.player:combatSpellResist()), w, h, 255, 255, 255) h = h + self.font_h
+	s:drawColorStringBlended(self.font, ("Mental Save:   #00ff00#%3d"):format(game.player:combatMentalResist()), w, h, 255, 255, 255) h = h + self.font_h
 
 	h = h + self.font_h
 	if self.actor.resists.all then s:drawColorStringBlended(self.font, ("All Resists: #00ff00#%3d%%"):format(self.actor.resists.all), w, h, 255, 255, 255) h = h + self.font_h end
@@ -282,9 +282,9 @@ function _M:dump()
 	end
 
 	nl()
-	nl(makelabel("Physical Resist",game.player:combatPhysicalResist() ..""))
-	nl(makelabel("Spell Resist",game.player:combatSpellResist() ..""))
-	nl(makelabel("Mental Resist",game.player:combatMentalResist() ..""))
+	nl(makelabel("Physical Save",game.player:combatPhysicalResist() ..""))
+	nl(makelabel("Spell Save",game.player:combatSpellResist() ..""))
+	nl(makelabel("Mental Save",game.player:combatMentalResist() ..""))
 
 	nl()
 	if self.actor.resists.all then nl(("All Resists: %3d%%"):format(self.actor.resists.all)) end
@@ -393,7 +393,7 @@ function _M:dump()
 					local char = string.char(string.byte('a') + index)
 					nl(("%s) %s"):format(char, o:getName{force_id=true}))
 					nl(("   %s"):format(table.concat(o:getTextualDesc(), "\n    ")))
-					if o.droppedBy then 
+					if o.droppedBy then
 						nl(("   Dropped by %s"):format(o.droppedBy))
 					end
 					index = index + 1
@@ -418,7 +418,7 @@ function _M:dump()
 			local char = string.char(string.byte('a') + item - 1)
 			nl(("%s) %s"):format(char, o:getName{force_id=true}))
 			nl(("   %s"):format(table.concat(o:getTextualDesc(), "\n    ")))
-			if o.droppedBy then 
+			if o.droppedBy then
 				nl(("   Dropped by %s"):format(o.droppedBy))
 			end
 		end

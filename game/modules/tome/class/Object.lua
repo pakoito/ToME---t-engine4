@@ -64,6 +64,10 @@ function _M:use(who, typ)
 		game.logPlayer(who, "You can not see!")
 		return
 	end
+	if self.use_no_silence and who:attr("silence") then
+		game.logPlayer(who, "You are silenced!")
+		return
+	end
 
 	local types = {}
 	if self:canUseObject() then types[#types+1] = "use" end
@@ -272,9 +276,9 @@ function _M:getTextualDesc()
 		desc[#desc+1] = ("Reduces talent cooldowns: %s."):format(table.concat(tcds, ','))
 	end
 
-	if w.combat_physresist then desc[#desc+1] = ("Increases physical resistance: %s."):format(w.combat_physresist) end
-	if w.combat_spellresist then desc[#desc+1] = ("Increases spell resistance: %s."):format(w.combat_spellresist) end
-	if w.combat_mentalresist then desc[#desc+1] = ("Increases mental resistance: %s."):format(w.combat_mentalresist) end
+	if w.combat_physresist then desc[#desc+1] = ("Increases physical save: %s."):format(w.combat_physresist) end
+	if w.combat_spellresist then desc[#desc+1] = ("Increases spell save: %s."):format(w.combat_spellresist) end
+	if w.combat_mentalresist then desc[#desc+1] = ("Increases mental save: %s."):format(w.combat_mentalresist) end
 
 	if w.blind_immune then desc[#desc+1] = ("Increases blindness immunity: %d%%."):format(w.blind_immune * 100) end
 	if w.poison_immune then desc[#desc+1] = ("Increases poison immunity: %d%%."):format(w.poison_immune * 100) end

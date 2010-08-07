@@ -184,6 +184,37 @@ newDamageType{
 	name = "darkness", type = "DARKNESS", text_color = "#DARK_GREY#",
 }
 
+-- Mind damage
+newDamageType{
+	name = "mind", type = "MIND", text_color = "#YELLOW#",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatMindpower() * 0.7, target:combatMentalResist(), 0, 95, 15) then
+				return DamageType.defaultProjector(src, x, y, type, dam)
+			else
+				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
+				return 0
+			end
+		end
+	end,
+}
+
+-- Silence
+newDamageType{
+	name = "SILENCE", type = "SILENCE",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatMindpower() * 0.7, target:combatMentalResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_SILENCED, math.ceil(dam), {})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Blinds
 newDamageType{
 	name = "blindness", type = "BLIND",
@@ -242,6 +273,22 @@ newDamageType{
 				target:setEffect(target.EFF_STUNNED, 4, {})
 			else
 				game.logSeen(target, "%s resists the darkness!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Cold + Stun
+newDamageType{
+	name = "coldstun", type = "COLDSTUN",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 4, {})
+			else
+				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
 		end
 	end,
@@ -361,7 +408,25 @@ newDamageType{
 	end,
 }
 
--- Physical damage + repulsion; checks for spell power against physical resistance
+-- Physical damage + repulsion; checks for mind power against physical resistance
+newDamageType{
+	name = "mindknockback", type = "MINDKNOCKBACK",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not tmp[target] then
+			tmp[target] = true
+			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+			if target:checkHit(src:combatMindpower() * 0.8, target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, 3)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the punch!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Physical damage + repulsion; checks for attack power against physical resistance
 newDamageType{
 	name = "physknockback", type = "PHYSKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)

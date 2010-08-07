@@ -17,19 +17,32 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local oldNewTalent = newTalent
-newTalent = function(t)
-	assert(engine.interface.ActorTalents.talents_types_def[t.type[1]], "No talent category "..tostring(t.type[1]).." for talent "..t.name)
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].no_silence then t.no_silence = true end
-	return oldNewTalent(t)
-end
+return { generator = function()
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = math.rad(ad + 90)
+	local r = rng.range(15, 20)
 
-load("/data/talents/misc/misc.lua")
-load("/data/talents/techniques/techniques.lua")
-load("/data/talents/cunning/cunning.lua")
-load("/data/talents/spells/spells.lua")
-load("/data/talents/gifts/gifts.lua")
-load("/data/talents/divine/divine.lua")
-load("/data/talents/corruptions/corruptions.lua")
-load("/data/talents/undeads/undeads.lua")
+	return {
+		trail = 1,
+		life = 6,
+		size = 4, sizev = -0.1, sizea = 0,
+
+		x = r * math.cos(a), xv = 0, xa = 0,
+		y = r * math.sin(a), yv = 0, ya = 0,
+		dir = dir, dirv = 1, dira = 0,
+		vel = 1, velv = 0, vela = 0,
+
+		r = rng.float(0.4, 0.5), rv = 0, ra = 0,
+		g = rng.float(0.4, 0.5), gv = 0, ga = 0,
+		b = rng.float(0.4, 0.5), bv = 0, ba = 0,
+		a = rng.float(0.7, 1),   av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 6 then
+		self.ps:emit(30)
+	end
+end,
+30*6*6

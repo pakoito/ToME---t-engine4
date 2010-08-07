@@ -513,6 +513,21 @@ function _M:spellFriendlyFire()
 	return not rng.percent(self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
 end
 
+--- Gets mindpower
+function _M:combatMindpower(mod)
+	mod = mod or 1
+	local add = 0
+	return (self.combat_mindpower + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
+end
+
+--- Gets damage based on talent
+function _M:combatTalentMindDamage(t, base, max)
+	-- Compute at "max"
+	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
+	-- Compute real
+	return (base + (self:combatMindpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
+end
+
 --- Computes physical resistance
 function _M:combatPhysicalResist()
 	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.25

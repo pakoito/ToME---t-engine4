@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ type="corruption/ritual", name = "blighted rituals", description = "Learn how to control the dark powers." }
-newTalentType{ type="corruption/blight-magic", name = "blight magic", description = "Control the corruptions to form dark spells." }
-newTalentType{ type="corruption/blighted-combat", name = "blighted combat", description = "Control the corruptions to enhance melee combat." }
-newTalentType{ type="corruption/diseases", name = "diseases", description = "The subtle art of diseases and rotting." }
-newTalentType{ type="corruption/blood-magic", name = "blood magic", description = "Allows control of the blood, both yours or of your foes." }
-newTalentType{ type="corruption/necromancy", name = "necromancy", description = "The dark art of raising undeads." }
+newTalentType{ no_silence=true, type="corruption/ritual", name = "blighted rituals", description = "Learn how to control the dark powers." }
+newTalentType{ no_silence=true, type="corruption/blight-magic", name = "blight magic", description = "Control the corruptions to form dark spells." }
+newTalentType{ no_silence=true, type="corruption/blighted-combat", name = "blighted combat", description = "Control the corruptions to enhance melee combat." }
+newTalentType{ no_silence=true, type="corruption/diseases", name = "diseases", description = "The subtle art of diseases and rotting." }
+newTalentType{ no_silence=true, type="corruption/blood-magic", name = "blood magic", description = "Allows control of the blood, both yours or of your foes." }
+newTalentType{ no_silence=true, type="corruption/necromancy", name = "necromancy", description = "The dark art of raising undeads." }
 
 -- Generic requires for corruptions based on talent level
 corrs_req1 = {

@@ -25,7 +25,7 @@ module(..., package.seeall, class.make)
 _M.dam_def = {}
 
 -- Default damage projector
-function _M.defaultProject(x, y, type, dam)
+function _M.defaultProject(src, x, y, type, dam)
 	print("implement a projector!")
 end
 

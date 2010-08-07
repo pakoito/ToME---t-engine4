@@ -70,6 +70,7 @@ function _M:init(t, no_default)
 	self.combat_spellspeed = 0
 	self.combat_spellcrit = 0
 	self.combat_spellpower = 0
+	self.combat_mindpower = 0
 
 	self.combat_physresist = 0
 	self.combat_spellresist = 0
@@ -819,6 +820,10 @@ function _M:preUseTalent(ab, silent)
 		game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name)
 		return false
 	end
+	if ab.no_silence and self:attr("silence") then
+		game.logSeen(self, "%s silenced and can not use %s.", self.name:capitalize(), ab.name)
+		return false
+	end
 
 	if not self:enoughEnergy() then print("fail energy") return false end
 
@@ -1162,6 +1167,7 @@ function _M:canBe(what)
 	if what == "cut" and rng.percent(100 * (self:attr("cut_immune") or 0)) then return false end
 	if what == "confusion" and rng.percent(100 * (self:attr("confusion_immune") or 0)) then return false end
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
+	if what == "silence" and rng.percent(100 * (self:attr("silence_immune") or 0)) then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
@@ -1193,6 +1199,9 @@ function _M:updateEffectDuration(dur, what)
 		local p = self:combatSpellResist(), rankmod * (util.bound(self:combatSpellResist() * 3, 40, 115) / 100)
 		dur = dur - math.ceil(dur * (p) / 100)
 	elseif what == "blind" then
+		local p = self:combatMentalResist(), rankmod * (util.bound(self:combatMentalResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	elseif what == "silence" then
 		local p = self:combatMentalResist(), rankmod * (util.bound(self:combatMentalResist() * 3, 40, 115) / 100)
 		dur = dur - math.ceil(dur * (p) / 100)
 	elseif what == "slow" then
