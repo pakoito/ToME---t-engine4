@@ -25,9 +25,14 @@ desc = function(self, who)
 	if self:isCompleted("ambush") then
 		desc[#desc+1] = "On your way out of Tol Falas you were ambushed by a band of orcs."
 		desc[#desc+1] = "They asked about the staff."
-	elseif self:isCompleted("ambush-finished") then
+	elseif self:isCompleted("ambush-finished") and not self:isCompleted("survived-ukruk") then
 		desc[#desc+1] = "On your way out of Tol Falas you were ambushed by a band of orcs and left for dead."
 		desc[#desc+1] = "They asked about the staff and stole it from you."
+		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Minas Tirith to report those events!"
+	elseif self:isCompleted("ambush-finished") and self:isCompleted("survived-ukruk") then
+		desc[#desc+1] = "On your way out of Tol Falas you were ambushed by a band of orcs."
+		desc[#desc+1] = "They asked about the staff and stole it from you."
+		desc[#desc+1] = "You told them nothing and vanquished them."
 		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Minas Tirith to report those events!"
 	else
 		desc[#desc+1] = "In its remains, you found a strange staff. It radiates power and danger and you dare not use it yourself."

@@ -227,9 +227,9 @@ function _M:heal(value, src)
 	if game.difficulty == game.DIFFICULTY_EASY then
 		value = value * 1.1
 	elseif game.difficulty == game.DIFFICULTY_NIGHTMARE then
-		value = value * 0.9
-	elseif game.difficulty == game.DIFFICULTY_INSANE then
 		value = value * 0.8
+	elseif game.difficulty == game.DIFFICULTY_INSANE then
+		value = value * 0.6
 	end
 
 	mod.class.Actor.heal(self, value, src)

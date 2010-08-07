@@ -112,8 +112,9 @@ newBirthDescriptor{
 	desc =
 	{
 		"Hard game setting",
-		"All damage done to the player increased by 20%",
-		"All healing for the player decreased by 10%",
+		"All damage done to the player increased by 30%",
+		"All damage done by the player decreased by 30%",
+		"All healing for the player decreased by 20%",
 	},
 	descriptor_choices =
 	{
@@ -128,9 +129,9 @@ newBirthDescriptor{
 	desc =
 	{
 		"Absolutely unfair game setting",
-		"All damage done to the player increased by 20%",
-		"All damage done by the player decreased by 20%",
-		"All healing for the player decreased by 20%",
+		"All damage done to the player increased by 50%",
+		"All damage done by the player decreased by 50%",
+		"All healing for the player decreased by 40%",
 		"Player rank is normal instead of elite",
 	},
 	descriptor_choices =

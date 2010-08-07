@@ -109,15 +109,15 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 
-		[Talents.T_ICE_CLAW]=5,
+		[Talents.T_ICE_CLAW]=8,
 		[Talents.T_WING_BUFFET]=5,
-		[Talents.T_DEVOURING_FLAME]=3,
+		[Talents.T_DEVOURING_FLAME]=8,
 
-		[Talents.T_FIRE_BREATH]=8,
-		[Talents.T_ICE_BREATH]=8,
-		[Talents.T_SAND_BREATH]=8,
-		[Talents.T_POISON_BREATH]=8,
-		[Talents.T_LIGHTNING_BREATH]=8,
-		[Talents.T_ACID_BREATH]=8,
+		[Talents.T_FIRE_BREATH]=13,
+		[Talents.T_ICE_BREATH]=13,
+		[Talents.T_SAND_BREATH]=13,
+		[Talents.T_POISON_BREATH]=13,
+		[Talents.T_LIGHTNING_BREATH]=13,
+		[Talents.T_ACID_BREATH]=13,
 	},
 }

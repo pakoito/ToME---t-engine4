@@ -93,10 +93,47 @@ newEntity{ define_as = "GOLBUG",
 
 	on_die = function(self, who)
 		world:gainAchievement("DESTROYER_BANE", game.player:resolveSource())
-		game.player.winner = true
 		game.player:setQuestStatus("orc-hunt", engine.Quest.DONE)
 		game.player:grantQuest("wild-wild-east")
-		local D = require "engine.Dialog"
-		D:simplePopup("Winner!", "#VIOLET#Congratulations, you have won the game! At least for now... The quest has only started!")
+
+		-- Add the herald
+		local harno = game.zone:makeEntityByName(game.level, "actor", "HARNO")
+		game.zone:addEntity(game.level, harno, "actor", 0, 13)
+	end,
+}
+
+-- The messager sent by minas tirith
+newEntity{ define_as = "HARNO",
+	type = "humanoid", subtype = "human", unique = true,
+	faction = "reunited-kingdom",
+	name = "Harno, Herald of Minas Tirith",
+	display = "@", color=colors.LIGHT_BLUE,
+	desc = [[This is one of the heralds of Minas Tirith, he seems to be looking for you.]],
+	energy = {mod=2},
+	level_range = {40, 40}, exp_worth = 0,
+	max_life = 150, life_rating = 12,
+	rank = 3,
+	infravision = 20,
+	stats = { str=10, dex=29, cun=43, mag=10, con=10 },
+	move_others=true,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, HEAD=1, },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="knife", autoreq=true},
+		{type="weapon", subtype="knife", autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=1, {type="scroll", subtype="scroll", defined="NOTE_FROM_MINAS_TIRITH"} },
+
+	stun_immune = 1,
+	see_invisible = 100,
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player", ai_move="move_astar", },
+
+	can_talk = "message-minas-tirith",
+
+	on_die = function(self, who)
+		game.logPlayer(game.player, "#LIGHT_RED#You hear a death cry. '%s I have a messag... ARG!'", game.player.name:capitalize())
+		game.player:setQuestStatus("orc-hunt", engine.Quest.DONE, "herald-died")
 	end,
 }

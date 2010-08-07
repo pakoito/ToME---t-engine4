@@ -18,3 +18,11 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_MINAS_TIRITH",
+	name = "Sealed Scroll of Minas Tirith", identified=true, unique=true,
+
+	use_simple = { name="open the seal and read the message", use = function(self, who)
+		game:registerDialog(require("engine.dialogs.ShowText").new(self:getName{do_color=true}, "message-minas-tirith", {playername=who.name}, game.w * 0.6))
+	end}
+}

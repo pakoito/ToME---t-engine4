@@ -54,7 +54,7 @@ function _M:call(str, ...)
 	local lines = str:format(...):splitLines(self.w - 4, self.font)
 	for i = 1, #lines do
 		print("[LOG]", lines[i])
-		table.insert(self.log, 1, lines[i])
+		table.insert(self.log, 1, {lines[i], reset=(i==#lines)})
 	end
 	while #self.log > self.max do
 		table.remove(self.log)
@@ -75,7 +75,7 @@ function _M:getLines(number)
 	if from > #self.log then from = #self.log end
 	local lines = { }
 	for i = from, 1, -1 do
-		lines[#lines+1] = self.log[i]
+		lines[#lines+1] = self.log[i][1]
 	end
 	return lines
 end
@@ -88,11 +88,12 @@ function _M:display()
 	-- Erase and the display the map
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 	local i, dh = 1, 0
-	while dh < self.h do
-		if not self.log[self.scroll + i] then break end
-		self.surface:drawColorStringBlended(self.font, self.log[self.scroll + i], 0, self.h - (i) * self.font_h, self.color[1], self.color[2], self.color[3])
-		i = i + 1
-		dh = dh + self.font_h
+	local r, g, b = self.color[1], self.color[2], self.color[3]
+	for i = math.floor(self.h / self.font_h), 1, -1 do
+		if self.log[self.scroll + i] then
+			r, g, b = self.surface:drawColorStringBlended(self.font, self.log[self.scroll + i][1], 0, self.h - (i) * self.font_h, r, g, b)
+			if self.log[self.scroll + i].reset then r, g, b = self.color[1], self.color[2], self.color[3] end
+		end
 	end
 	return self.surface
 end
