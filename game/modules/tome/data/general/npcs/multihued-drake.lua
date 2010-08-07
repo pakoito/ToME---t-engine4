@@ -109,6 +109,8 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 
+		[Talents.T_SILENCE]=3,
+		[Talents.T_DISARM]=3,
 		[Talents.T_ICE_CLAW]=8,
 		[Talents.T_WING_BUFFET]=5,
 		[Talents.T_DEVOURING_FLAME]=8,

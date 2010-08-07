@@ -86,7 +86,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 3,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 12, combat_def = 4,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=3, [Talents.T_RUSH]=3, },
+	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=3, [Talents.T_RUSH]=3, [Talents.T_DISARM]=3, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",

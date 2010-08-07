@@ -66,6 +66,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 		[Talents.T_RUSH]=3,
 		[Talents.T_SHIELD_PUMMEL]=3,
 		[Talents.T_OVERPOWER]=3,
+		[Talents.T_DISARM]=3,
 	},
 }
 

@@ -266,6 +266,23 @@ newEffect{
 }
 
 newEffect{
+	name = "DISARMED",
+	desc = "Disarmed",
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is disarmed!", "+Disarmed" end,
+	on_lose = function(self, err) return "#Target# rearms.", "-Disarmed" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("disarmed", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "disarmed")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("disarmed", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "CONSTRICTED",
 	desc = "Constricted",
 	type = "physical",

@@ -81,34 +81,36 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		game.logPlayer(self, "%s notices you at the last moment!", target.name:capitalize())
 	end
 
-	-- All weaponsin main hands
-	if self:getInven(self.INVEN_MAINHAND) then
-		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
-			if o.combat then
-				print("[ATTACK] attacking with", o.name)
-				local s, h = self:attackTargetWith(target, o.combat, damtype, mult)
-				speed = math.max(speed or 0, s)
-				hit = hit or h
-				if hit and not sound then sound = o.combat.sound
-				elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
+	if not self:attr("disarmed") then
+		-- All weapons in main hands
+		if self:getInven(self.INVEN_MAINHAND) then
+			for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
+				if o.combat then
+					print("[ATTACK] attacking with", o.name)
+					local s, h = self:attackTargetWith(target, o.combat, damtype, mult)
+					speed = math.max(speed or 0, s)
+					hit = hit or h
+					if hit and not sound then sound = o.combat.sound
+					elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
+				end
 			end
 		end
-	end
-	-- All wpeaons in off hands
-	-- Offhand atatcks are with a damage penality, taht can be reduced by talents
-	if self:getInven(self.INVEN_OFFHAND) then
-		local offmult = (mult or 1) / 2
-		if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
-			offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
-		end
-		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
-			if o.combat then
-				print("[ATTACK] attacking with", o.name)
-				local s, h = self:attackTargetWith(target, o.combat, damtype, offmult)
-				speed = math.max(speed or 0, s)
-				hit = hit or h
-				if hit and not sound then sound = o.combat.sound
-				elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
+		-- All wpeaons in off hands
+		-- Offhand atatcks are with a damage penality, taht can be reduced by talents
+		if self:getInven(self.INVEN_OFFHAND) then
+			local offmult = (mult or 1) / 2
+			if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
+				offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
+			end
+			for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
+				if o.combat then
+					print("[ATTACK] attacking with", o.name)
+					local s, h = self:attackTargetWith(target, o.combat, damtype, offmult)
+					speed = math.max(speed or 0, s)
+					hit = hit or h
+					if hit and not sound then sound = o.combat.sound
+					elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
+				end
 			end
 		end
 	end
@@ -555,6 +557,10 @@ end
 
 --- Check if the actor has a staff weapon
 function _M:hasStaffWeapon()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
 	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or weapon.subtype ~= "staff" then
@@ -565,6 +571,10 @@ end
 
 --- Check if the actor has a two handed weapon
 function _M:hasTwoHandedWeapon()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
 	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or not weapon.twohanded then
@@ -575,6 +585,10 @@ end
 
 --- Check if the actor has a shield
 function _M:hasShield()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
 	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
 	local shield = self:getInven("OFFHAND")[1]
 	if not shield or not shield.special_combat then
@@ -585,6 +599,10 @@ end
 
 --- Check if the actor dual wields
 function _M:hasDualWeapon()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
 	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	local offweapon = self:getInven("OFFHAND")[1]

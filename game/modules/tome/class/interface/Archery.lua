@@ -164,6 +164,10 @@ function _M:archeryShoot(targets, talent, tg, params)
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
 	end
+	if self:attr("disarmed") then
+		game.logPlayer(self, "You are disarmed!")
+		return nil
+	end
 
 	print("[SHOOT WITH]", weapon.name, ammo.name)
 	local realweapon = weapon
@@ -186,6 +190,10 @@ end
 
 --- Check if the actor has a bow or sling and corresponding ammo
 function _M:hasArcheryWeapon()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
 	if not self:getInven("MAINHAND") then return nil, "no shooter" end
 	if not self:getInven("QUIVER") then return nil, "no ammo" end
 	local weapon = self:getInven("MAINHAND")[1]

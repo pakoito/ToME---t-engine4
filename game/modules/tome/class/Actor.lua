@@ -1168,6 +1168,7 @@ function _M:canBe(what)
 	if what == "confusion" and rng.percent(100 * (self:attr("confusion_immune") or 0)) then return false end
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
 	if what == "silence" and rng.percent(100 * (self:attr("silence_immune") or 0)) then return false end
+	if what == "disarm" and rng.percent(100 * (self:attr("disarm_immune") or 0)) then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
@@ -1193,6 +1194,9 @@ function _M:updateEffectDuration(dur, what)
 		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
 		dur = dur - math.ceil(dur * (p) / 100)
 	elseif what == "pin" then
+		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
+		dur = dur - math.ceil(dur * (p) / 100)
+	elseif what == "disarm" then
 		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
 		dur = dur - math.ceil(dur * (p) / 100)
 	elseif what == "frozen" then
