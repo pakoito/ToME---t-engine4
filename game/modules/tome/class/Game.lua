@@ -474,7 +474,7 @@ function _M:setupCommands()
 				self.player.esp.all = 1
 				self.player.esp.range = 50
 				self.player.inc_damage.all = 100000
-				self:changeLevel(2, "test")
+				self:changeLevel(15, "high-peak")
 --				self:changeLevel(1, "wilderness-arda-fareast")
 --				game.memory_levels["wilderness-arda-fareast-1"] = game.level
 --				self.player:grantQuest("orc-pride")
