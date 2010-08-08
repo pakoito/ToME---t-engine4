@@ -41,11 +41,14 @@ function _M:targetOnTick()
 end
 
 --- Display the tooltip, if any
-function _M:targetDisplayTooltip()
+function _M:targetDisplayTooltip(dx, dy)
 	-- Tooltip is displayed over all else
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display a tooltip if available
-		if self.tooltip_x then self.tooltip:displayAtMap(self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)) end
+		if self.tooltip_x then
+			local tmx, tmy = self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)
+			self.tooltip:displayAtMap(tmx, tmy, dx, dy)
+		end
 
 		-- Move target around
 		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then

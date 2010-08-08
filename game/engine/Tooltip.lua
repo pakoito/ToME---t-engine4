@@ -134,6 +134,8 @@ function _M:displayAtMap(tmx, tmy, mx, my)
 		my = my - self.h
 		if mx < 0 then mx = 0 end
 		if my < 0 then my = 0 end
+		if mx > game.w - self.w then mx = game.w - self.w end
+		if my > game.h - self.h then my = game.h - self.h end
 		self.surface:toScreenWithTexture(self.texture, mx, my)
 	end
 end

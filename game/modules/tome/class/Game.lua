@@ -450,7 +450,7 @@ function _M:display()
 	if self.player then self.player.changed = false end
 
 	-- Tooltip is displayed over all else
-	self:targetDisplayTooltip()
+	self:targetDisplayTooltip(game.w, game.h)
 
 	engine.GameTurnBased.display(self)
 end
