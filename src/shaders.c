@@ -233,6 +233,25 @@ static int program_set_uniform_texture(lua_State *L)
 	return 0;
 }
 
+static int program_use(lua_State *L)
+{
+	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	bool active = lua_toboolean(L, 2);
+
+	if (active)
+	{
+		CHECKGL(glUseProgramObjectARB(*p));
+		GLfloat t = SDL_GetTicks();
+		CHECKGL(glUniform1fvARB(glGetUniformLocationARB(*p, "tick"), 1, &t));
+	}
+	else
+	{
+		CHECKGL(glUseProgramObjectARB(0));
+	}
+
+	return 0;
+}
+
 static int shader_is_active(lua_State *L)
 {
 	lua_pushboolean(L, shaders_active);
@@ -258,6 +277,7 @@ static const struct luaL_reg program_reg[] =
 	{"paramNumber3", program_set_uniform_number3},
 	{"paramNumber4", program_set_uniform_number4},
 	{"paramTexture", program_set_uniform_texture},
+	{"use", program_use},
 	{NULL, NULL},
 };
 

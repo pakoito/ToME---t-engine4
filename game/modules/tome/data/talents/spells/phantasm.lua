@@ -84,7 +84,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	activate = function(self, t)
-		local power = self:combatTalentSpellDamage(t, 10, 170)
+		local power = self:combatTalentSpellDamage(t, 10, 50)
 		game:playSoundNear(self, "talents/heal")
 		return {
 			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
@@ -98,7 +98,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The caster surrounds themselves with a phantasmal shield. If hit in melee the shield will deal %d arcane damage to the attacker.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 170))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50))
 	end,
 }
 

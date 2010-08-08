@@ -76,13 +76,20 @@ newTalent{
 		end
 
 		if self:getTalentLevel(t) >= 4 then
-			local idx = 1
-			while true do
-				local o = game.level.map:getObject(self.x, self.y, idx)
-				if not o then break end
-				o:identify(true)
-				idx = idx + 1
+			local idfloor = function(x, y)
+				local idx = 1
+				while true do
+					local o = game.level.map:getObject(x, y, idx)
+					if not o then break end
+					o:identify(true)
+					idx = idx + 1
+				end
 			end
+			local rad = math.floor(0 + (self:getTalentLevel(t) - 4))
+			if rad == 0 then idfloor(self.x, self.y)
+			else self:project({type="ball", radius=rad}, self.x, self.y, idfloor)
+			end
+
 			game.logPlayer(who, "You identify everything around you.")
 		end
 

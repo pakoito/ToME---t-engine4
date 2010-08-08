@@ -17,5 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/void.lua")
+------------------------------------------------------------
+-- For inside the sea
+------------------------------------------------------------
+
+newEntity{
+	define_as = "VOID",
+	name = "void",
+	display = ' ',
+	_noalpha = false,
+}

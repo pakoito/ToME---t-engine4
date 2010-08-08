@@ -402,6 +402,11 @@ function _M:display()
 			self.player:playerFOV()
 		end
 
+		-- Level background
+		if self.level.data.background then
+			self.level.data.background(self.level)
+		end
+
 		-- Display using Framebuffer, sotaht we can use shaders and all
 		if self.fbo then
 			self.fbo:use(true)

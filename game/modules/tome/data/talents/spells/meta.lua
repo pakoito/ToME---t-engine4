@@ -100,7 +100,7 @@ newTalent{
 	},
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = util.bound(self:getTalentLevel(t) / 15, 0.05, 0.3)
+		local power = util.bound(self:getTalentLevelRaw(t) / 15, 0.05, 0.3)
 		return {
 			cd = self:addTemporaryValue("spell_cooldown_reduction", power),
 		}
@@ -111,7 +111,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Reduces the cooldown of all spells by %d%%.
-		The reduction increases with the Magic stat]]):format(util.bound(self:getTalentLevel(t) / 15, 0.05, 0.3) * 100)
+		The reduction increases with the Magic stat]]):format(util.bound(self:getTalentLevelRaw(t) / 15, 0.05, 0.3) * 100)
 	end,
 }
 

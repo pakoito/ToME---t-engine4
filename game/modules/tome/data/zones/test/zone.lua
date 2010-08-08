@@ -31,8 +31,8 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",
-			floor = "GRASS",
-			wall = "TREE",
+			floor = "",
+			wall = "",
 			up = "UP",
 			down = "DOWN",
 			do_ponds =  {
@@ -64,4 +64,15 @@ return {
 			}, },
 		},
 	},
+
+	post_process = function(level)
+		local Map = require "engine.Map"
+		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+	end,
+
+	background = function(level)
+		local Map = require "engine.Map"
+		level.background_particle:update()
+		level.background_particle.ps:toScreen(Map.display_x, Map.display_y, true, 1)
+	end,
 }
