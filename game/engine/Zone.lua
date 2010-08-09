@@ -84,13 +84,13 @@ end
 --- Parses the npc/objects list and compute rarities for random generation
 -- ONLY entities with a rarity properties will be considered.<br/>
 -- This means that to get a never-random entity you simply do not put a rarity property on it.
-function _M:computeRarities(type, list, level, filter)
+function _M:computeRarities(type, list, level, filter, add_level)
 	local r = { total=0 }
 	print("******************", level.level)
 	for i, e in ipairs(list) do
 		if e.rarity and e.level_range and (not filter or filter(e)) then
 --			print("computing rarity of", e.name)
-			local lev = self.base_level + (level.level - 1)
+			local lev = self.base_level + (level.level - 1) + (add_level or 0)
 
 			local max = 10000
 			if lev < e.level_range[1] then max = 10000 / (3 * (e.level_range[1] - lev))
@@ -214,7 +214,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 		elseif type == "object" then base_list = self.object_list
 		elseif type == "trap" then base_list = self.trap_list
 		else return nil end
-		local list = self:computeRarities(type, base_list, level, function(e) return self:checkFilter(e, filter) end)
+		local list = self:computeRarities(type, base_list, level, function(e) return self:checkFilter(e, filter) end, filter.add_levels)
 		e = self:pickEntity(list)
 		print("[MAKE ENTITY] prob list generation", e and e.name, "from list size", #list)
 		if not e then return nil end

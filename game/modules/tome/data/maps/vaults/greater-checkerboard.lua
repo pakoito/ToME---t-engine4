@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+defineTile('.', "FLOOR")
+defineTile('#', "WALL")
+defineTile('X', "WALL")
+defineTile('8', "FLOOR", {random_filter={add_levels=14}}, {random_filter={add_levels=20}})
 
 return {
 [[.......................................]],

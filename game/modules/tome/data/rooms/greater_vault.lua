@@ -17,34 +17,47 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return function(gen, id)
-	local w = 5
-	local h = 5
-	return { name="greater_vault"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
-		for i = 1, self.w do
-			for j = 1, self.h do
-				if i == 1 or i == self.w or j == 1 or j == self.h then
-					gen.map.room_map[i-1+x][j-1+y].can_open = true
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('#'))
-				else
-					gen.map.room_map[i-1+x][j-1+y].room = id
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('.'))
+local max_w, max_h = 50, 50
+local list = {
+	"greater-checkerboard",
+}
 
-					-- Add money
-					local e = gen.zone:makeEntity(gen.level, "object", {type="money"}, nil, true)
-					if e then
-						gen.zone:addEntity(gen.level, e, "object", i-1+x, j-1+y)
-					end
-					-- Add guardians
-					if rng.percent(50) then
-						e = gen.zone:makeEntity(gen.level, "actor")
-						if e then
-							gen.zone:addEntity(gen.level, e, "actor", i-1+x, j-1+y)
-						end
-					end
-				end
-				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
-			end
+return function(gen, id, lev, old_lev)
+	local vaultid = rng.table(list)
+
+	local vault_map = engine.Map.new(max_w, max_h)
+	local Static = require("engine.generator.map.Static")
+	local data = table.clone(gen.data)
+	data.map = "vaults/"..vaultid
+	local vault = Static.new(gen.zone, vault_map, gen.level, data)
+
+	local w = map.w
+	local h = map.h
+	return { name="greater_vault"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
+		gen.map:import(vault_map, x, y)
+		map:close()
+		-- Make it a room, and make it special so that we do not tunnel through
+		for i = x, x + w - 1 do for j = y, y + h - 1 do
+			gen.map.room_map[i][j].special = true
+			gen.map.room_map[i][j].room = id
+		end end
+
+		-- Mark the outer walls are piercable
+		for i = x, x + w - 1 do
+			gen.map.room_map[i][y].special = false
+			gen.map.room_map[i][y].room = nil
+			gen.map.room_map[i][y].can_open = true
+			gen.map.room_map[i][y+h-1].special = false
+			gen.map.room_map[i][y+h-1].room = nil
+			gen.map.room_map[i][y+h-1].can_open = true
+		end
+		for j = y, y + h - 1 do
+			gen.map.room_map[x][j].special = false
+			gen.map.room_map[x][j].room = nil
+			gen.map.room_map[x][j].can_open = true
+			gen.map.room_map[x+w-1][j].special = false
+			gen.map.room_map[x+w-1][j].room = nil
+			gen.map.room_map[x+w-1][j].can_open = true
 		end
 	end}
 end
