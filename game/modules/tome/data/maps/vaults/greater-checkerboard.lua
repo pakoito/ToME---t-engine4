@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 defineTile('.', "FLOOR")
-defineTile('#', "WALL")
+defineTile('#', "FLOOR")
 defineTile('X', "WALL")
-defineTile('8', "FLOOR", {random_filter={add_levels=14}}, {random_filter={add_levels=20}})
+defineTile('8', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_levels=20}})
 
 return {
 [[.......................................]],

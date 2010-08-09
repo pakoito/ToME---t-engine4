@@ -21,6 +21,7 @@ require "engine.class"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Astar = require "engine.Astar"
+local print = function() end
 
 --- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
 module(..., package.seeall, class.make)
@@ -155,6 +156,15 @@ function _M:checkFilter(e, filter)
 	if e.unique then print("accepted unique", e.name, e.__CLASSNAME.."/"..e.unique) end
 
 	return true
+end
+
+--- Return a string describing the filter
+function _M:filterToString(filter)
+	local ps = ""
+	for what, check in pairs(filter) do
+		ps = ps .. what.."="..check..","
+	end
+	return ps
 end
 
 --- Picks an entity from a computed probability list

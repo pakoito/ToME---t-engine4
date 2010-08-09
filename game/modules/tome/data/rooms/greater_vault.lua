@@ -24,18 +24,21 @@ local list = {
 
 return function(gen, id, lev, old_lev)
 	local vaultid = rng.table(list)
-
 	local vault_map = engine.Map.new(max_w, max_h)
 	local Static = require("engine.generator.map.Static")
 	local data = table.clone(gen.data)
 	data.map = "vaults/"..vaultid
+	local old_map = gen.level.map
+	gen.level.map = vault_map
 	local vault = Static.new(gen.zone, vault_map, gen.level, data)
+	vault:generate(lev, old_lev)
+	gen.level.map = old_map
 
-	local w = map.w
-	local h = map.h
+	local w = vault_map.w
+	local h = vault_map.h
 	return { name="greater_vault"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
 		gen.map:import(vault_map, x, y)
-		map:close()
+		vault_map:close()
 		-- Make it a room, and make it special so that we do not tunnel through
 		for i = x, x + w - 1 do for j = y, y + h - 1 do
 			gen.map.room_map[i][j].special = true

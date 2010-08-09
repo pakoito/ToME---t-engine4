@@ -667,6 +667,9 @@ function _M:import(map, dx, dy, sx, sy, sw, sh)
 	for i = sx, sx + sw - 1 do for j = sy, sy + sh - 1 do
 		local x, y = dx + i, dy + j
 		self.map[x + y * self.w] = map.map[i + j * map.w]
+		for z, e in pairs(self.map[x + y * self.w]) do
+			if e.move then e:move(x, y, true) end
+		end
 
 		self.remembers(x, y, map.remembers(i, j))
 		self.seens(x, y, map.seens(i, j))
