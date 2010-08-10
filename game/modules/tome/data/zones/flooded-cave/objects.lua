@@ -21,8 +21,8 @@ local Talents = require "engine.interface.ActorTalents"
 local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
+load("/data/general/objects/2htridents.lua", function(e) e.rarity = e.trident_rarity end)
 load("/data/general/objects/objects.lua")
-load("/data/general/objects/2htridents.lua")
 
 -- Artifact, droped (and used!) by Bill the Stone Troll
 

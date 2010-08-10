@@ -25,7 +25,7 @@ newEntity{
 	add_name = " (#COMBAT#)",
 	display = "|", color=colors.AQUAMARINE,
 	encumber = 3,
-	rarity = 5,
+	trident_rarity = 5, -- Special rarity field, converted to "rarity" when needed
 	metallic = true,
 	no_rust = true,
 	combat = { talented = "axe", damrange = 1.6, sound = "actions/melee", sound_miss = "actions/melee_miss", },

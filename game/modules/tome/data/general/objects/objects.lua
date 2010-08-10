@@ -17,53 +17,60 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local loadIfNot = function(f)
+	if loaded[f] then return end
+	load(f, entity_mod)
+end
+
 -- Misc
-load("/data/general/objects/money.lua")
-load("/data/general/objects/gem.lua")
-load("/data/general/objects/lites.lua")
+loadIfNot("/data/general/objects/money.lua")
+loadIfNot("/data/general/objects/gem.lua")
+loadIfNot("/data/general/objects/lites.lua")
 
 -- Usable stuff
-load("/data/general/objects/potions.lua")
-load("/data/general/objects/scrolls.lua")
-load("/data/general/objects/wands.lua")
+loadIfNot("/data/general/objects/potions.lua")
+loadIfNot("/data/general/objects/scrolls.lua")
+loadIfNot("/data/general/objects/wands.lua")
 
 -- Jewelry stuff
-load("/data/general/objects/jewelry.lua")
+loadIfNot("/data/general/objects/jewelry.lua")
 
 -- Weapons
-load("/data/general/objects/staves.lua")
-load("/data/general/objects/knifes.lua")
+loadIfNot("/data/general/objects/staves.lua")
+loadIfNot("/data/general/objects/knifes.lua")
 
-load("/data/general/objects/swords.lua")
-load("/data/general/objects/2hswords.lua")
+loadIfNot("/data/general/objects/swords.lua")
+loadIfNot("/data/general/objects/2hswords.lua")
 
-load("/data/general/objects/maces.lua")
-load("/data/general/objects/2hmaces.lua")
+loadIfNot("/data/general/objects/maces.lua")
+loadIfNot("/data/general/objects/2hmaces.lua")
 
-load("/data/general/objects/axes.lua")
-load("/data/general/objects/2haxes.lua")
+loadIfNot("/data/general/objects/axes.lua")
+loadIfNot("/data/general/objects/2haxes.lua")
 
-load("/data/general/objects/bows.lua")
-load("/data/general/objects/slings.lua")
+loadIfNot("/data/general/objects/2htridents.lua")
+
+loadIfNot("/data/general/objects/bows.lua")
+loadIfNot("/data/general/objects/slings.lua")
 
 -- Armours
-load("/data/general/objects/shields.lua")
-load("/data/general/objects/cloth-armors.lua")
-load("/data/general/objects/light-armors.lua")
-load("/data/general/objects/heavy-armors.lua")
-load("/data/general/objects/massive-armors.lua")
+loadIfNot("/data/general/objects/shields.lua")
+loadIfNot("/data/general/objects/cloth-armors.lua")
+loadIfNot("/data/general/objects/light-armors.lua")
+loadIfNot("/data/general/objects/heavy-armors.lua")
+loadIfNot("/data/general/objects/massive-armors.lua")
 
 -- Head, feet, hands, ...
-load("/data/general/objects/leather-caps.lua")
-load("/data/general/objects/helms.lua")
-load("/data/general/objects/wizard-hat.lua")
-load("/data/general/objects/leather-boots.lua")
-load("/data/general/objects/heavy-boots.lua")
---load("/data/general/objects/gloves.lua")
+loadIfNot("/data/general/objects/leather-caps.lua")
+loadIfNot("/data/general/objects/helms.lua")
+loadIfNot("/data/general/objects/wizard-hat.lua")
+loadIfNot("/data/general/objects/leather-boots.lua")
+loadIfNot("/data/general/objects/heavy-boots.lua")
+--loadIfNot("/data/general/objects/gloves.lua")
 
 -- Mounts
-load("/data/general/objects/mounts.lua")
+loadIfNot("/data/general/objects/mounts.lua")
 
 -- Artifacts
-load("/data/general/objects/world-artifacts.lua")
-load("/data/general/objects/quest-artifacts.lua")
+loadIfNot("/data/general/objects/world-artifacts.lua")
+loadIfNot("/data/general/objects/quest-artifacts.lua")
