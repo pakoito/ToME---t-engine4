@@ -45,6 +45,14 @@ collect_staff = function(self, who, dialog)
 	who:showEquipInven("Offer which item?",
 		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_ANGMAR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
 		function(o, inven, item)
+			-- Special handling for the staff of absorption
+			if o.define_as ans o.define_as == "STAFF_ABSORPTION" then
+				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to consume, flames bursting out of his mouth, life seems to be drained away from him and in an instant he collapses in a lifeless husk.")
+				who:setQuestStatus(self, self.FAILED)
+				game:unregisterDialog(dialog)
+				return true
+			end
+
 			self.nb_collect = self.nb_collect + 1
 			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
 			who:removeObject(who:getInven(inven), item)

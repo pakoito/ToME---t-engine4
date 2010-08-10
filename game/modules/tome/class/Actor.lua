@@ -1016,12 +1016,12 @@ function _M:getTalentFullDescription(t, addlevel)
 	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activated"
 	end
 
-	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.mana or t.sustain_mana) end
-	if t.stamina or t.sustain_stamina then d[#d+1] = "#6fff83#Stamina cost: #ffcc80#"..(t.stamina or t.sustain_stamina) end
+	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.sustain_mana or t.mana * (100 + self.fatigue) / 100) end
+	if t.stamina or t.sustain_stamina then d[#d+1] = "#6fff83#Stamina cost: #ffcc80#"..(t.sustain_stamina or t.stamina * (100 + self.fatigue) / 100) end
 	if t.equilibrium or t.sustain_equilibrium then d[#d+1] = "#6fff83#Equilibrium cost: #00ff74#"..(t.equilibrium or t.sustain_equilibrium) end
-	if t.vim or t.sustain_vim then d[#d+1] = "#6fff83#Vim cost: #888888#"..(t.vim or t.sustain_vim) end
-	if t.positive or t.sustain_positive then d[#d+1] = "#6fff83#Positive energy cost: #GOLD#"..(t.positive or t.sustain_positive) end
-	if t.negative or t.sustain_negative then d[#d+1] = "#6fff83#Negative energy cost: #GREY#"..(t.negative or t.sustain_negative) end
+	if t.vim or t.sustain_vim then d[#d+1] = "#6fff83#Vim cost: #888888#"..(t.sustain_vim or t.vim * (100 + self.fatigue) / 100) end
+	if t.positive or t.sustain_positive then d[#d+1] = "#6fff83#Positive energy cost: #GOLD#"..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100) end
+	if t.negative or t.sustain_negative then d[#d+1] = "#6fff83#Negative energy cost: #GREY#"..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100) end
 	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
 	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
 	end
