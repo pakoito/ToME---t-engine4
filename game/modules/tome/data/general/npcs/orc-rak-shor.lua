@@ -39,8 +39,8 @@ newEntity{
 
 	open_door = true,
 
-	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 }
@@ -67,6 +67,28 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
---		[Talents.T_]=3,
+		[Talents.T_SOUL_ROT]=5,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
+	name = "orc blood mage", color=colors.CRIMSON,
+	desc = [[An orc dressed in black robes. He mumbles is a harsh tongue.]],
+	level_range = {27, nil}, exp_worth = 1,
+	rarity = 2,
+	max_life = resolvers.rngavg(110,120), life_rating = 12,
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloth", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 5,
+
+	-- Nullify their cooldowns
+	talent_cd_reduction={[Talents.T_SOUL_ROT]=2, [Talents.T_BLOOD_GRASP]=4, },
+
+	resolvers.talents{
+		[Talents.T_SOUL_ROT]=5,
+		[Talents.T_BLOOD_GRASP]=5,
+		[Talents.T_CURSE_OF_VULNERABILITY]=5,
 	},
 }

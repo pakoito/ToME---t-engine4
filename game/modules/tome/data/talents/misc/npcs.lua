@@ -20,6 +20,7 @@
 -- race & classes
 newTalentType{ type="technique/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ no_silence=true, type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ no_silence=true, type="corruption/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="wild-gift/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="undead/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
@@ -841,5 +842,76 @@ newTalent{
 	info = function(self)
 		return ([[Sends a telekinetic attack, knocking back the target and doing %0.2f physical damage.
 		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 170))
+	end,
+}
+
+newTalent{
+	name = "Soul Rot",
+	type = {"corruption/other", 1},
+	points = 5,
+	cooldown = 3,
+	vim = 10,
+	range = 20,
+	proj_speed = 10,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.BLIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 20, 250)), {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self)
+		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
+		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 20, 250))
+	end,
+}
+
+newTalent{
+	name = "Blood Grasp",
+	type = {"corruption/other", 1},
+	points = 5,
+	cooldown = 5,
+	vim = 20,
+	range = 20,
+	proj_speed = 20,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_blood"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.DRAINLIFE, {dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 220)), healfactor=0.5}, {type="blood"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self)
+		return ([[Projects a bolt of corrupted blood doing %0.2f blight damage and healing the caster for half the damage done.
+		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 220))
+	end,
+}
+
+newTalent{
+	name = "Curse of Vulnerability",
+	type = {"corruption/other", 1},
+	points = 5,
+	cooldown = 20,
+	vim = 20,
+	range = 20,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if not target then return end
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_CURSE_VULNERABILITY, 10, {power=self:combatTalentSpellDamage(t, 10, 85)})
+			end
+		end)
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self)
+		return ([[Curses your target,
+		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 85))
 	end,
 }

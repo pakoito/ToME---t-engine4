@@ -943,3 +943,21 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "CURSE_VULNERABILITY",
+	desc = "Curse of Vulnerability",
+	type = "curse",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is cursed.", "+Curse" end,
+	on_lose = function(self, err) return "#Target# is no longer cursed.", "-Curse" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {
+			all = -eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
