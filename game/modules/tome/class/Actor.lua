@@ -393,9 +393,9 @@ end
 
 function _M:tooltip(x, y, seen_by)
 	if seen_by and not seen_by:canSee(self) then return end
-	local factcolor, factstate = "#ANTIQUE_WHITE#", "neutral"
-	if self:reactionToward(game.player) < 0 then factcolor, factstate = "#LIGHT_RED#", "hostile"
-	elseif self:reactionToward(game.player) > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
+	local factcolor, factstate, factlevel = "#ANTIQUE_WHITE#", "neutral", self:reactionToward(game.player)
+	if factlevel < 0 then factcolor, factstate = "#LIGHT_RED#", "hostile"
+	elseif factlevel > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
 	end
 
 	local rank, rank_color = self:TextRank()
@@ -427,7 +427,7 @@ Stats: %d /  %d / %d / %d / %d / %d
 Resists: %s
 Size: #ANTIQUE_WHITE#%s
 %s
-Faction: %s%s (%s)
+Faction: %s%s (%s, %d)
 %s]]):format(
 	self:getDisplayString(), rank_color, self.name,
 	rank_color, rank,
@@ -444,7 +444,7 @@ Faction: %s%s (%s)
 	table.concat(resists, ','),
 	self:TextSizeCategory(),
 	self.desc or "",
-	factcolor, Faction.factions[self.faction].name, factstate,
+	factcolor, Faction.factions[self.faction].name, factstate, factlevel,
 	table.concat(effs, "\n")
 	)
 end

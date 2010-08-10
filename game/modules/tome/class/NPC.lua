@@ -60,14 +60,18 @@ function _M:onTakeHit(value, src)
 	end
 
 	if Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
-		Faction:setFactionReaction(self.faction, src.faction, -100, true)
+		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 5, true)
 	end
 
 	return mod.class.Actor.onTakeHit(self, value, src)
 end
 
 function _M:die(src)
-	-- Sefl resurrect, mouhaha!
+	if Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
+		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 15, true)
+	end
+
+	-- Self resurrect, mouhaha!
 	if self:attr("self_resurrect") then
 		self:attr("self_resurrect", -1)
 		game.logSeen(src, "#LIGHT_RED#%s raises from the dead!", self.name:capitalize()) -- src, not self as the source, to make sure the player knows his doom ;>

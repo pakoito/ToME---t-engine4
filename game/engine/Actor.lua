@@ -189,7 +189,8 @@ function _M:teleportRandom(x, y, dist, min_dist)
 			if game.level.map:isBound(i, j) and
 			   core.fov.distance(x, y, i, j) <= dist and
 			   core.fov.distance(x, y, i, j) >= min_dist and
-			   self:canMove(i, j) then
+			   self:canMove(i, j) and
+			   not game.level.map.attrs(i, j, "no_teleport") then
 				poss[#poss+1] = {i,j}
 			end
 		end

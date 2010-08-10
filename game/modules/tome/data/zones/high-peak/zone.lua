@@ -55,6 +55,9 @@ return {
 			nb_trap = {15, 20},
 		},
 	},
+	post_process = function(level)
+		for uid, e in pairs(level.entities) do e.faction="blue-wizards" end
+	end,
 	levels =
 	{
 		[1] = {

@@ -17,38 +17,39 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-defineTile(' ', "FLOOR")
-quickEntity('M', {always_remember = true, show_tooltip=true, name='Sun Wall', display='^', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/mountain.png", tint=colors.GOLD, block_move=true})
-quickEntity('<', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness-arda-fareast"})
-quickEntity('S', {name='brick roof top', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('s', {name='brick roof', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('t', {name='brick roof chimney', display='#', color=colors.LIGHT_RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha2.png"}}})
-quickEntity('P', {name='palm tree', display='#', color=colors.LIGHT_GREEN, back_color={r=163,g=149,b=42}, image="terrain/palmtree.png", block_move=true})
-quickEntity('~', {name='river', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", add_displays = mod.class.Grid:makeWater(true)})
-quickEntity('O', {name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
-quickEntity(':', {name='sand', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", can_encounter="desert", equilibrium_level=-10})
+defineTile(' ', "FLOOR", nil, nil, nil, {no_teleport=true})
+quickEntity('M', {always_remember = true, show_tooltip=true, name='Sun Wall', display='^', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/mountain.png", tint=colors.GOLD, block_move=true}, {no_teleport=true})
+quickEntity('<', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness-arda-fareast"}, {no_teleport=true})
+quickEntity('S', {name='brick roof top', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
+quickEntity('s', {name='brick roof', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
+quickEntity('t', {name='brick roof chimney', display='#', color=colors.LIGHT_RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
+quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
+quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha2.png"}}}, {no_teleport=true})
+quickEntity('P', {name='palm tree', display='#', color=colors.LIGHT_GREEN, back_color={r=163,g=149,b=42}, image="terrain/palmtree.png", block_move=true}, {no_teleport=true})
+quickEntity('~', {name='river', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", add_displays = mod.class.Grid:makeWater(true)}, {no_teleport=true})
+quickEntity('O', {name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"}, {no_teleport=true})
+quickEntity(':', {name='sand', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", can_encounter="desert", equilibrium_level=-10}, {no_teleport=true})
+quickEntity('"', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"}, {no_teleport=true})
 quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
-quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true})
+quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true}, {no_teleport=true})
 
 defineTile('@', "GRASS", nil, "HIGH_SUN_PALADIN_AERYN")
 
-quickEntity('1', {show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"})
-quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), image="terrain/wood_store_weapon.png"})
-quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
-quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), resolvers.chatfeature("magic-store"), image="terrain/wood_store_book.png"})
-quickEntity('6', {show_tooltip=true, name="Closed store", display='6', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('7', {show_tooltip=true, name="Closed store", display='7', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('8', {show_tooltip=true, name="Closed store", display='8', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('9', {show_tooltip=true, name="Closed store", display='9', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('0', {show_tooltip=true, name="Closed store", display='0', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('a', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('b', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('e', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('1', {show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"}, {no_teleport=true})
+quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), image="terrain/wood_store_weapon.png"}, {no_teleport=true})
+quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"}, {no_teleport=true})
+quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), resolvers.chatfeature("magic-store"), image="terrain/wood_store_book.png"}, {no_teleport=true})
+quickEntity('6', {show_tooltip=true, name="Closed store", display='6', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('7', {show_tooltip=true, name="Closed store", display='7', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('8', {show_tooltip=true, name="Closed store", display='8', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('9', {show_tooltip=true, name="Closed store", display='9', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('0', {show_tooltip=true, name="Closed store", display='0', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('a', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('b', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('e', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
 
 startx = 0
 starty = 27
@@ -91,18 +92,18 @@ MMMMMM         O            OO                 MMM
 MMM                       O                    MMM
 MMM                      OO                   MMMM
 MMM          TTTTT       O                   MMMMM
-MMM       TTTT-----------O-------            MMMMM
-MMMM     TT-----~~~----------------------    MMMMM
-MMMMMM  TT-----~~~~~------------------::----MMMMMM
-MMMMMMMMM------~~~~~-------TT-------::P:::::MMMMMM
-MMMMMMMMM-------~~~-----TT-T------::::::::::MMMMMM
-MMMMMMMMM-------~~------TTTT-----::::::::P:::MMMMM
-MMMMMMMMM-----TT~-------TT------:::::P:::::MMMMMMM
-MMMMMMMMM---TTTT~--------------::::::::::::MMMMMMM
-MMMMMMMMMM--TTT~~------------::::P::::::::::MMMMMM
-MMMMMMMMMMM-TT~~-------------::::::::::::P::::MMMM
-MMMMMMMMMMMMMM~MMMMMMMMMM----::::P:::P::::::::MMMM
-MMMMMMMMMMMMM~~MMMMMMMMMMM--::::::P::::::::::::MMM
+MMM       TTTT"""""""""""O"""""""            MMMMM
+MMMM     TT"""""~~~""""""""""""""""""""""    MMMMM
+MMMMMM  TT"""""~~~~~""""""""""""""""""::""""MMMMMM
+MMMMMMMMM""""""~~~~~"""""""TT"""""""::P:::::MMMMMM
+MMMMMMMMM"""""""~~~"""""TT"T""""""::::::::::MMMMMM
+MMMMMMMMM"""""""~~""""""TTTT"""""::::::::P:::MMMMM
+MMMMMMMMM"""""TT~"""""""TT"""""":::::P:::::MMMMMMM
+MMMMMMMMM"""TTTT~""""""""""""""::::::::::::MMMMMMM
+MMMMMMMMMM""TTT~~""""""""""""::::P::::::::::MMMMMM
+MMMMMMMMMMM"TT~~"""""""""""""::::::::::::P::::MMMM
+MMMMMMMMMMMMMM~MMMMMMMMMM""""::::P:::P::::::::MMMM
+MMMMMMMMMMMMM~~MMMMMMMMMMM""::::::P::::::::::::MMM
 MMMMMMMM~~~~~~MMMMMMMMMMMMMM:::::::::::::::::MMMMM
 MMMMMMM~~MMMMMMMMMMMMMMMMMMMMMM::::MMMMMMMMMMMMMMM
 MMMMMMM~MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM]]

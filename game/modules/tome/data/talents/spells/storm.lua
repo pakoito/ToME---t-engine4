@@ -40,7 +40,7 @@ newTalent{
 }
 
 newTalent{
-	name = "???",
+	name = "???1",
 	type = {"spell/storm",2},
 	require = spells_req2,
 	points = 5,
@@ -62,7 +62,7 @@ newTalent{
 }
 
 newTalent{
-	name = "???",
+	name = "???2",
 	type = {"spell/storm",3},
 	require = spells_req3,
 	points = 5,

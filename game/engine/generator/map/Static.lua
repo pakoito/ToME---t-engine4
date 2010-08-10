@@ -52,10 +52,10 @@ function _M:loadMap(file)
 		defineTile = function(char, grid, obj, actor, trap, status)
 			t[char] = {grid=grid, object=obj, actor=actor, trap=trap, status=status}
 		end,
-		quickEntity = function(char, e)
+		quickEntity = function(char, e, status)
 			if type(e) == "table" then
 				local e = self.zone.grid_class.new(e)
-				t[char] = {grid=e}
+				t[char] = {grid=e, status=status}
 			else
 				t[char] = t[e]
 			end
@@ -174,8 +174,9 @@ function _M:generate(lev, old_lev)
 		end
 
 		if status then
-			if status.lite then self.level.map.lites(i-1, j-1, true) end
-			if status.remember then self.level.map.remembers(i-1, j-1, true) end
+			if status.lite then self.level.map.lites(i-1, j-1, true) status.lite = nil end
+			if status.remember then self.level.map.remembers(i-1, j-1, true) status.remember = nil end
+			if pairs(status) then for k, v in pairs(status) do self.level.map.attrs(i-1, j-1, k, v) end end
 		end
 	end end
 

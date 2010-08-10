@@ -193,6 +193,7 @@ function _M:init(w, h)
 	self.my = 0
 	self.w, self.h = w, h
 	self.map = {}
+	self.attrs = {}
 	self.lites = {}
 	self.seens = {}
 	self.has_seens = {}
@@ -292,12 +293,21 @@ function _M:loaded()
 		end
 		return t[x + y * self.w]
 	end
+	local mapattrs = function(t, x, y, k, v)
+		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if v ~= nil then
+			if not t[x + y * self.w] then t[x + y * self.w] = {} end
+			t[x + y * self.w][k] = v
+		end
+		return t[x + y * self.w] and t[x + y * self.w][k]
+	end
 
 	getmetatable(self).__call = _M.call
 	setmetatable(self.lites, {__call = maplite})
 	setmetatable(self.seens, {__call = mapseen})
 	setmetatable(self.has_seens, {__call = maphasseen})
 	setmetatable(self.remembers, {__call = mapremember})
+	setmetatable(self.attrs, {__call = mapattrs})
 
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
 	self.changed = true

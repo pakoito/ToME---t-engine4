@@ -79,6 +79,7 @@ function _M:newTalent(t)
 
 	table.insert(self.talents_def, t)
 	t.id = #self.talents_def
+	assert(not self["T_"..t.short_name], "talent already exists with id T_"..t.short_name)
 	self["T_"..t.short_name] = #self.talents_def
 	print("[TALENT]", t.name, t.short_name, #self.talents_def)
 
