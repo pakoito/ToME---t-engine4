@@ -16,8 +16,7 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
-load("/data/general/npcs/naga.lua", rarity(6))
---[[
+
 -- Orcs & trolls
 load("/data/general/npcs/orc-grushnak.lua", rarity(0))
 load("/data/general/npcs/orc-vor.lua", rarity(0))
@@ -41,7 +40,7 @@ load("/data/general/npcs/ghoul.lua", rarity(2))
 load("/data/general/npcs/skeleton.lua", rarity(3))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
-]]
+
 local Talents = require("engine.interface.ActorTalents")
 
 -- Alatar & Palando, the final bosses
