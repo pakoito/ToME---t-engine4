@@ -92,6 +92,7 @@ function _M:init(t, no_default)
 
 	t.life_rating = t.life_rating or 10
 	t.mana_rating = t.mana_rating or 4
+	t.vim_rating = t.vim_rating or 4
 	t.stamina_rating = t.stamina_rating or 3
 	t.positive_negative_rating = t.positive_negative_rating or 3
 
@@ -119,6 +120,7 @@ function _M:init(t, no_default)
 	t.stamina_regen = t.stamina_regen or 0.3 -- Stamina regens slower than mana
 	t.life_regen = t.life_regen or 0.25 -- Life regen real slow
 	t.equilibrium_regen = t.equilibrium_regen or 0 -- Equilibrium does not regen
+	t.vim_regen = t.vim_regen or 0 -- Vim does not regen
 	t.positive_regen = t.positive_regen or -0.2 -- Positive energy slowly decays
 	t.negative_regen = t.negative_regen or -0.2 -- Positive energy slowly decays
 
@@ -525,8 +527,15 @@ function _M:onTakeHit(value, src)
 			game.logSeen(self, "The displacement shield teleports the damage to %s!", self.displacement_shield_target.name)
 			self.displacement_shield = self.displacement_shield - value
 			self.displacement_shield_target:takeHit(value, src)
+			self:removeEffect(self.EFF_BONE_SHIELD)
 			value = 0
 		end
+	end
+
+	if self:isTalentActive(self.T_BONE_SHIELD) then
+		local t = self:getTalentFromId(self.T_BONE_SHIELD)
+		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
+		value = 0
 	end
 
 	-- Mount takes some damage ?
@@ -640,6 +649,7 @@ end
 function _M:resetToFull()
 	self.life = self.max_life
 	self.mana = self.max_mana
+	self.vim = self.max_vim
 	self.stamina = self.max_stamina
 	self.equilibrium = 0
 end
@@ -690,6 +700,7 @@ function _M:levelup()
 	end
 	self.max_life = self.max_life + math.max(self:getRankLifeAdjust(rating), 1)
 
+	self:incMaxVim(self.vim_rating)
 	self:incMaxMana(self.mana_rating)
 	self:incMaxStamina(self.stamina_rating)
 	self:incMaxPositive(self.positive_negative_rating)

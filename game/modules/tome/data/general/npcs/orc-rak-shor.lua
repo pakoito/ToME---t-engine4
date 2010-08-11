@@ -113,7 +113,7 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 		[Talents.T_BLOOD_GRASP]=5,
 		[Talents.T_CURSE_OF_VULNERABILITY]=5,
 		[Talents.T_BLIGHTZONE]=3,
---		[Talents.T_BONE_SHIELD]=5,
+		[Talents.T_BONE_SHIELD]=5,
 		[Talents.T_BLOOD_SPRAY]=4,
 	},
 }
