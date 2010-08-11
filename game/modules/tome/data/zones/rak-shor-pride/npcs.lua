@@ -20,7 +20,7 @@
 load("/data/general/npcs/bone-giant.lua", rarity(0))
 load("/data/general/npcs/ghoul.lua", rarity(5))
 load("/data/general/npcs/skeleton.lua", rarity(5))
-load("/data/general/npcs/orc.lua", rarity(2))
+load("/data/general/npcs/orc.lua", rarity(3))
 load("/data/general/npcs/orc-rak-shor.lua", rarity(0))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
@@ -38,12 +38,14 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	move_others=true,
 
 	instakill_immune = 1,
+	disease_immune = 1,
+	confusion_immune = 1,
 	combat_armor = 10, combat_def = 10,
 
 	open_door = true,
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -61,8 +63,17 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 		{type="undead", no_subescort=true, number=resolvers.mbonus(4, 4)},
 	},
 
+	inc_damage = { [DamageType.BLIGHT] = 30 },
+	talent_cd_reduction={[Talents.T_SOUL_ROT]=1, [Talents.T_BLOOD_GRASP]=3, },
+
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
+
+		[Talents.T_SOUL_ROT]=5,
+		[Talents.T_BLOOD_GRASP]=5,
+		[Talents.T_CURSE_OF_VULNERABILITY]=5,
+		[Talents.T_BONE_SHIELD]=8,
+		[Talents.T_BLOOD_SPRAY]=5,
 	},
 	resolvers.sustains_at_birth(),
 

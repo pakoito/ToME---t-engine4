@@ -31,6 +31,8 @@
 
 #define rng(x, y) (x + rand_div(1 + y - x))
 
+#define PARTICLE_ETERNAL 999999
+
 static void getinitfield(lua_State *L, const char *key, int *min, int *max)
 {
 	lua_pushstring(L, key);
@@ -322,7 +324,7 @@ static int particles_to_screen(lua_State *L)
 				glEnd();
 			}
 
-			p->life--;
+			if (p->life != PARTICLE_ETERNAL) p->life--;
 
 			p->ox = p->x;
 			p->oy = p->y;
@@ -382,5 +384,8 @@ int luaopen_particles(lua_State *L)
 {
 	auxiliar_newclass(L, "core{particles}", particles_reg);
 	luaL_openlib(L, "core.particles", particleslib, 0);
+	lua_pushstring(L, "ETERNAL");
+	lua_pushnumber(L, PARTICLE_ETERNAL);
+	lua_settable(L, -3);
 	return 1;
 }

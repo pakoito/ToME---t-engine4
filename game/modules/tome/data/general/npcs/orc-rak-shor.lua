@@ -91,13 +91,14 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 		[Talents.T_BLOOD_GRASP]=5,
 		[Talents.T_CURSE_OF_VULNERABILITY]=5,
 	},
+	resolvers.sustains_at_birth(),
 }
 
 newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	name = "orc corruptor", color=colors.GREY,
 	desc = [[An orc dressed in black robes. He mumbles is a harsh tongue.]],
 	level_range = {27, nil}, exp_worth = 1,
-	rarity = 1,
+	rarity = 4,
 	rank = 3,
 	max_life = resolvers.rngavg(160,180), life_rating = 15,
 	resolvers.equip{

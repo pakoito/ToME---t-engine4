@@ -19,17 +19,24 @@
 
 local ad = rng.range(0, 360)
 local a = math.rad(ad)
+local dir = math.rad(ad + 90)
 local r = 18
+local speed = rng.range(33, 99)
+local dirv = math.pi * 2 / speed
+local vel = math.pi * 2 * r / speed
+local first = true
 
 return { generator = function()
+	local dr = rng.range(0, 2)
+	local da = math.rad(rng.range(0, 360))
 	return {
-		life = 20,
-		size = 4, sizev = 0, sizea = 0,
+		life = core.particles.ETERNAL,
+		size = rng.range(3,8), sizev = 0, sizea = 0,
 
-		x = r * math.cos(a), xv = 0, xa = 0,
-		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = 0, dirv = 0, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		x = r * math.cos(a) + dr * math.cos(da), xv = 0, xa = 0,
+		y = r * math.sin(a) + dr * math.cos(da), yv = 0, ya = 0,
+		dir = dir, dirv = dirv, dira = 0,
+		vel = vel, velv = 0, vela = 0,
 
 		r = rng.range(220, 255)/255,   rv = 0, ra = 0,
 		g = rng.range(220, 255)/255,   gv = 0, ga = 0,
@@ -38,6 +45,6 @@ return { generator = function()
 	}
 end, },
 function(self)
-	self.ps:emit(1)
+	if first then self.ps:emit(10) first = false end
 end,
-1
+10
