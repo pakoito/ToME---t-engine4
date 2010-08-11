@@ -41,14 +41,14 @@ newEntity{
 }
 
 newEntity{ base = "BASE_MONEY", define_as = "MONEY_SMALL",
-	name = "gold pieces",
+	name = "gold pieces", image = "object/money_small.png",
 	add_name = " (#MONEY#)",
 	level_range = {1, 50},
 	money_value = resolvers.rngavg(1, 5),
 }
 
 newEntity{ base = "BASE_MONEY", define_as = "MONEY_BIG",
-	name = "huge pile of gold pieces",
+	name = "huge pile of gold pieces", image = "object/money_large.png",
 	add_name = " (#MONEY#)",
 	level_range = {30, 50},
 	color=colors.GOLD,

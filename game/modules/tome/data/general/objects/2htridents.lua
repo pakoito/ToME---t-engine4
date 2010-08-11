@@ -21,7 +21,7 @@ newEntity{
 	define_as = "BASE_TRIDENT",
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
-	type = "weapon", subtype="trident", image = resolvers.image_material("2htrident", "sea-metal"),
+	type = "weapon", subtype="trident", image = resolvers.image_material("trident", "sea-metal"),
 	add_name = " (#COMBAT#)",
 	display = "|", color=colors.AQUAMARINE,
 	encumber = 3,

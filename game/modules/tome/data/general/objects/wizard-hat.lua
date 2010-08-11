@@ -22,7 +22,7 @@ newEntity{
 	slot = "HEAD",
 	type = "armor", subtype="head",
 	add_name = " (#ARMOR#)",
-	display = "]", color=colors.BLUE,
+	display = "]", color=colors.BLUE, image = resolvers.image_material("wizardhat", "cloth"),
 	encumber = 2,
 	rarity = 6,
 	desc = [[A pointy cloth hat, very wizardly...]],

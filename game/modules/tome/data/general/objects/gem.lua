@@ -75,35 +75,35 @@ newGem("Ruby",		"object/ruby.png",	4,	16,	"red",		30,	40, 4, 65,
 	{ inc_stats = { [Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 4, [Stats.STAT_CUN] = 4, } },
 	{ power=20 }
 )
-newGem("Amber",		"object/.png",	4,	16,	"yellow",	30,	40, 4, 65,
+newGem("Amber",		"object/amber.png",	4,	16,	"yellow",	30,	40, 4, 65,
 	{ inc_damage = {all=8} },
 	{ stun={chance=10, dur=2} }
 )
-newGem("Turquoise",	"object/.png",4,	16,	"green",	30,	40, 4, 65,
+newGem("Turquoise",	"object/turquoise.png",4,	16,	"green",	30,	40, 4, 65,
 	{ see_invisible=10 },
 	{ splash={type="ACID", dam=30} }
 )
-newGem("Jade",		"object/.png",	4,	16,	"green",	30,	40, 4, 65,
+newGem("Jade",		"object/jade.png",	4,	16,	"green",	30,	40, 4, 65,
 	{ resists = {all=8} },
 	{ splash={type="SLOW", dam=-1 + 1 / (1 + 0.20)} }
 )
-newGem("Sapphire",	"object/.png",4,	16,	"blue",		30,	40, 4, 65,
+newGem("Sapphire",	"object/garnet.png",4,	16,	"blue",		30,	40, 4, 65,
 	{ combat_def=8 },
 	{ splash={type="ICE", dam=30} }
 )
-newGem("Quartz",	"object/.png",3,	12,	"white",	20,	30, 3, 50,
+newGem("Quartz",	"object/quartz.png",3,	12,	"white",	20,	30, 3, 50,
 	{ stun_immune=0.3 },
 	{ splash={type="SPELLKNOCKBACK", dam=10} }
 )
-newGem("Emerald",	"object/.png",3,	12,	"green",	20,	30, 3, 50,
+newGem("Emerald",	"object/emerald.png",3,	12,	"green",	20,	30, 3, 50,
 	{ resists = {all=6} },
 	{ splash={type="POISON", dam=50} }
 )
-newGem("Lapis Lazuli",	"object/.png",3,	12,	"blue",		20,	30, 3, 50,
+newGem("Lapis Lazuli",	"object/lapis_lazuli.png",3,	12,	"blue",		20,	30, 3, 50,
 	{ combat_def=6 },
 	{ mana=30 }
 )
-newGem("Garnets",	"object/.png",3,	12,	"red",		20,	30, 3, 50,
+newGem("Garnets",	"object/garnet.png",3,	12,	"red",		20,	30, 3, 50,
 	{ inc_damage = {all=6} },
 	{ leech=5 }
 )
