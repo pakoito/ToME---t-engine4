@@ -621,8 +621,13 @@ end
 function _M:learnStats(statorder)
 	self.auto_stat_cnt = self.auto_stat_cnt or 1
 	local nb = 0
+	local max = 60
+
+	-- Allow to go over a natural 60, up to 80 at level 50
+	if not self.no_auto_high_stats then max = 60 + (self.level * 20 / 50) end
+
 	while self.unused_stats > 0 do
-		if self:getStat(statorder[self.auto_stat_cnt]) < 60 then
+		if self:getStat(statorder[self.auto_stat_cnt]) < max then
 			self:incStat(statorder[self.auto_stat_cnt], 1)
 			self.unused_stats = self.unused_stats - 1
 		end

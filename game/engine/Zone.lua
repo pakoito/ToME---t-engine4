@@ -21,7 +21,7 @@ require "engine.class"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 local Astar = require "engine.Astar"
---local print = function() end
+local print = function() end
 
 --- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
 module(..., package.seeall, class.make)

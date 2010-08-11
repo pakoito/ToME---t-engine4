@@ -92,3 +92,28 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 		[Talents.T_CURSE_OF_VULNERABILITY]=5,
 	},
 }
+
+newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
+	name = "orc corruptor", color=colors.GREY,
+	desc = [[An orc dressed in black robes. He mumbles is a harsh tongue.]],
+	level_range = {27, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 3,
+	max_life = resolvers.rngavg(160,180), life_rating = 15,
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloth", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 5,
+
+	inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus(20, 10) },
+
+	resolvers.talents{
+		[Talents.T_SOUL_ROT]=5,
+		[Talents.T_BLOOD_GRASP]=5,
+		[Talents.T_CURSE_OF_VULNERABILITY]=5,
+		[Talents.T_BLIGHTZONE]=3,
+--		[Talents.T_BONE_SHIELD]=5,
+		[Talents.T_BLOOD_SPRAY]=4,
+	},
+}

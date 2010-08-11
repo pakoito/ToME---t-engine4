@@ -819,7 +819,7 @@ newEffect{
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = eff.con})
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = -eff.con})
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_stats", eff.tmpid)

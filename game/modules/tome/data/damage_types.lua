@@ -648,3 +648,17 @@ newDamageType{
 		end
 	end,
 }
+
+-- Corrupted blood, blight damage + potential diseases
+newDamageType{
+	name = "corrupted blood", type = "CORRUPTED_BLOOD",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam} end
+		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:canBe("disease") then
+			local eff = rng.table{{target.EFF_ROTTING_DISEASE, "con"}, {target.EFF_DECREPITUDE_DISEASE, "dex"}, {target.EFF_WEAKNESS_DISEASE, "str"}}
+			target:setEffect(eff[1], dam.dur or 5, { src = src, [eff[2]] = dam.disease_power, dam = dam.disease_dam or (dam.dam / 5) })
+		end
+	end,
+}
