@@ -1598,6 +1598,40 @@ static int rng_normal(lua_State *L)
 	return 1;
 }
 
+/*
+ * Generate a random floating-point number of NORMAL distribution
+ *
+ * Uses the Box-Muller transform.
+ *
+ */
+static int rng_normal_float(lua_State *L)
+{
+	static const double TWOPI = 6.2831853071795862;
+	static bool stored = FALSE;
+	static double z0;
+	static double z1;
+	double mean = luaL_checknumber(L, 1);
+	double std = luaL_checknumber(L, 2);
+	double u1;
+	double u2;
+	if (stored == FALSE)
+	{
+		u1 = genrand_real1();
+		u2 = genrand_real1();
+		u1 = sqrt(-2 * log(u1));
+		z0 = u1 * cos(TWOPI * u2);
+		z1 = u1 * sin(TWOPI * u2);
+		lua_pushnumber(L, (z0*std)+mean);
+		stored = TRUE;
+	}
+	else
+	{
+		lua_pushnumber(L, (z1*std)+mean);
+		stored = FALSE;
+	}
+	return 1;
+}
+
 static const struct luaL_reg rnglib[] =
 {
 	{"__call", rng_call},
@@ -1608,6 +1642,7 @@ static const struct luaL_reg rnglib[] =
 	{"chance", rng_chance},
 	{"percent", rng_percent},
 	{"normal", rng_normal},
+	{"normalFloat", rng_normal_float},
 	{"float", rng_float},
 	{NULL, NULL},
 };
