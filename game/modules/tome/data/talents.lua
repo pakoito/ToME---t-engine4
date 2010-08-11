@@ -22,6 +22,19 @@ newTalent = function(t)
 	assert(engine.interface.ActorTalents.talents_types_def[t.type[1]], "No talent category "..tostring(t.type[1]).." for talent "..t.name)
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].no_silence then t.no_silence = true end
+
+	if t.image then
+		if type(t.image) == "boolean" then
+			local name = t.name:gsub(" ", ""):lower()
+			t.image = core.display.loadImage("data/gfx/talents/"..name..".png")
+			assert(t.image, "talent auto image requested by not found for: "..t.name)
+		else
+			t.image = core.display.loadImage("data/gfx/talents/"..t.image..".png")
+			assert(t.image, "talent image requested by not found for: "..t.name)
+		end
+		t.image_texture = t.image:glTexture()
+	end
+
 	return oldNewTalent(t)
 end
 
