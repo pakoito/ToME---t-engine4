@@ -76,7 +76,6 @@ function _M:tooltip()
 	end
 end
 
-
 --- Generate sub entities to make nice trees
 function _M:makeTrees(base, max)
 	local function makeTree(nb, z)
@@ -105,6 +104,34 @@ function _M:makeTrees(base, max)
 	return tbl
 end
 
+--- Generate sub entities to make nice shells
+function _M:makeShells(base, max)
+	local function makeShell(nb, z)
+		local inb = 4 - nb
+		return engine.Entity.new{
+			z = z,
+			display_scale = rng.float(0.1 + inb / 6, 0.2),
+			display_x = rng.range(-engine.Map.tile_w / 3 * nb / 3, engine.Map.tile_w / 3 * nb / 3),
+			display_y = rng.range(-engine.Map.tile_h / 3 * nb / 3, engine.Map.tile_h / 3 * nb / 3),
+			display_on_seen = true,
+			display_on_remember = true,
+			image = (base or "terrain/tree_alpha")..rng.range(1,max or 5)..".png",
+		}
+	end
+
+	local v = rng.range(0, 100)
+	local tbl
+	if v < 33 then
+		return nil
+	elseif v < 66 then
+		tbl = { makeShell(2, 2), makeShell(2, 3), }
+	else
+		tbl = { makeShell(1, 2), }
+	end
+	table.sort(tbl, function(a,b) return a.display_y < b.display_y end)
+	return tbl
+end
+
 --- Generate sub entities to make translucent water
 function _M:makeWater(z)
 	return { engine.Entity.new{
@@ -114,4 +141,15 @@ function _M:makeWater(z)
 		display_on_seen = true,
 		display_on_remember = true,
 	} }
+end
+
+--- Merge sub entities
+function _M:mergeSubEntities(...)
+	local tbl = {}
+	for i, t in ipairs{...} do if t then
+		for j, e in ipairs(t) do
+			tbl[#tbl+1] = e
+		end
+	end end
+	return tbl
 end

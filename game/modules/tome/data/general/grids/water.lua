@@ -28,6 +28,15 @@ newEntity{
 	add_displays = class:makeWater(true),
 	air_level = -5, air_condition="water",
 }
+for i = 2, 20 do
+newEntity{
+	define_as = "WATER_FLOOR"..i,
+	name = "underwater", image = "terrain/water_floor.png",
+	display = '.', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
+	add_displays = class:mergeSubEntities(class:makeWater(true), class:makeShells("terrain/shell")),
+	air_level = -5, air_condition="water",
+}
+end
 
 newEntity{
 	define_as = "WATER_WALL",
