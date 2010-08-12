@@ -97,7 +97,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
-		The damage will increase with the Magic stat]]):format(8 + self:combatSpellpower(0.15) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 8, 170))
 	end,
 }
 

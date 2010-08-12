@@ -831,7 +831,7 @@ end
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
-function _M:preUseTalent(ab, silent)
+function _M:preUseTalent(ab, silent, fake)
 	if self:attr("feared") then
 		game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name)
 		return false
@@ -881,11 +881,11 @@ function _M:preUseTalent(ab, silent)
 
 	-- Equilibrium is special, it has no max, but the higher it is the higher the chance of failure (and loss of the turn)
 	-- But it is not affected by fatigue
-	if ab.equilibrium or ab.sustain_equilibrium then
+	if ab.equilibrium or ab.sustain_equilibrium and not fake then
 		local eq = ab.equilibrium or ab.sustain_equilibrium
 		local chance = math.sqrt(eq + self:getEquilibrium()) / 60
 		-- Fail ? lose energy and 1/10 more equilibrium
-		print("[Equilibrium] Use chance: ", 100 - chance * 100)
+		print("[Equilibrium] Use chance: ", 100 - chance * 100, "::", self:getEquilibrium())
 		if not rng.percent(100 - chance * 100) then
 			game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name)
 			self:incEquilibrium(eq / 10)

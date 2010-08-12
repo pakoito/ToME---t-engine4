@@ -39,7 +39,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newTalent{ short_name = "NATURE_TOUCH",
 	name = "Nature's Touch",
 	type = {"wild-gift/call", 2},
 	require = gifts_req2,

@@ -56,10 +56,10 @@ newTalent{
 		ATTACK = 10,
 	},
 	reflectable = true,
-	proj_speed = 1,
+	proj_speed = 2,
 	range = 10,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + self:getTalentLevel(t) * 0.07), {type="manathrust"})

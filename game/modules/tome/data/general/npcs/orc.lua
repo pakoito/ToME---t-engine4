@@ -189,7 +189,7 @@ newEntity{ base = "BASE_NPC_ORC",
 }
 
 newEntity{ base = "BASE_NPC_ORC",
-	name = "orc master assassin", color_r=0, color_g=70, color_b=resolvers.rngrange(175, 195),
+	name = "orc grand master assassin", color_r=0, color_g=70, color_b=resolvers.rngrange(175, 195),
 	desc = [[An orc trained in the secret ways of assasination, as stealthy as deadly.]],
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 5,
