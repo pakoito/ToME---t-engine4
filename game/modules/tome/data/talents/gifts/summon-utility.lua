@@ -80,7 +80,7 @@ newTalent{ short_name="SPIDER_WEB",
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if target and target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 7) then
+			if target and target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 7) and target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, 3 + self:getTalentLevel(t), {})
 			end
 		end)

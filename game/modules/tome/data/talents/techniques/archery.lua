@@ -234,7 +234,7 @@ newTalent{
 	require = techs_dex_req3,
 	range = 20,
 	archery_onhit = function(self, t, target, x, y)
-		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
+		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("pin") then
 			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())

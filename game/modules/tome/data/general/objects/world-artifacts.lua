@@ -96,7 +96,7 @@ newEntity{ base = "BASE_RING",
 	unided_name = "multi-hued ring",
 	desc = [[This ring shines with many colors.]],
 	level_range = {15, 30},
-	rarity = 150,
+	rarity = 200,
 	cost = 500,
 	material_level = 3,
 
@@ -415,4 +415,100 @@ newEntity{
 			game:playSoundNear(who, "talents/slime")
 		end
 	end },
+}
+
+newEntity{ base = "BASE_HELM",
+	unique = true,
+	name = "Star of Earendil",
+	unided_name = "shining helm",
+	desc = [[A headband with a glowing gem set in it, made in likeness of the silmaril that Earendil wore, and imbued with some of its light.]],
+	level_range = {20, 28},
+	rarity = 240,
+	cost = 700,
+	material_level = 4,
+	wielder = {
+		lite = 1,
+		combat_armor = 6,
+		fatigue = 4,
+		blind_immune = 0.3,
+		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_MAG] = 4, },
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_SUN_FLARE, level = 3, power = 30 },
+}
+
+newEntity{ base = "BASE_KNIFE",
+	unique = true,
+	name = "Sting, Bilbo's Small Sword",
+	unided_name = "shining dagger",
+	desc = [["I will give you a name, and I shall call you Sting."
+The perfect size for Bilbo, and stamped forever by the courage he found in Mirkwood, this sturdy little blade grants the wearer combat prowess and survivalabilities they did not know they had.]],
+	level_range = {40, 50},
+	rarity = 300,
+	require = { stat = { dex=44 }, },
+	cost = 550,
+	material_level = 5,
+	combat = {
+		dam = 45,
+		apr = 11,
+		physcrit = 18,
+		dammod = {dex=0.55,str=0.35},
+	},
+	wielder = {
+		lite = 1,
+		inc_damage={
+			[DamageType.PHYSICAL] = 10,
+			[DamageType.LIGHT] = 8,
+		},
+		pin_immune = 0.5,
+		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_CUN] = 4, },
+		esp = {["humanoid/orc"]=1},
+	},
+}
+
+newEntity{ base = "BASE_RING",
+	unique = true,
+	name = "Ring of the War Master", color = colors.DARK_GREY,
+	unided_name = "blade-edged ring",
+	desc = [[Elrond was told of the way to fashion a fourth ring by Celebrimbor, one he did not make out of fear it would also fall under the influence of the Ruling Ring.
+After Frodo destroyed it, Elrond passed the knowledge to Aragorn the King of Men to use against any remaining forces which once followed Sauron.]],
+	level_range = {15, 30},
+	rarity = 200,
+	cost = 500,
+	material_level = 5,
+
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_CON] = 3, },
+		talents_types_mastery = {
+			["technique/2hweapon-cripple"] = 0.1,
+			["technique/2hweapon-offense"] = 0.1,
+			["technique/archery-bow"] = 0.1,
+			["technique/archery-sling"] = 0.1,
+			["technique/archery-training"] = 0.1,
+			["technique/archery-utility"] = 0.1,
+			["technique/combat-techniques-active"] = 0.1,
+			["technique/combat-techniques-passive"] = 0.1,
+			["technique/combat-training"] = 0.1,
+			["technique/dualweapon-attack"] = 0.1,
+			["technique/dualweapon-training"] = 0.1,
+			["technique/shield-defense"] = 0.1,
+			["technique/shield-offense"] = 0.1,
+		},
+	},
+}
+
+newEntity{
+	unique = true,
+	type = "jewelry", subtype="anhk",
+	unided_name = "glowing anhk",
+	name = "Anchoring Anhk",
+	desc = [[As you lift the anhk you feel stable. The world around you feels stable.]],
+	level_range = {15, 50},
+	rarity = 400,
+	display = "*", color=colors.YELLOW, image = "object/fireopal.png",
+	encumber = 2,
+
+	carrier = {
+
+	},
 }

@@ -114,6 +114,10 @@ newEntity{ define_as = "ORB_UNDEATH",
 			return true
 		end
 	end,
+
+	carrier = {
+		inc_stats = { [Stats.STAT_DEX] = 6, },
+	},
 }
 
 -- Gorbat Pride
@@ -133,6 +137,10 @@ newEntity{ define_as = "ORB_DRAGON",
 			return true
 		end
 	end,
+
+	carrier = {
+		inc_stats = { [Stats.STAT_CUN] = 6, },
+	},
 }
 
 -- Vor Pride
@@ -152,6 +160,10 @@ newEntity{ define_as = "ORB_ELEMENTS",
 			return true
 		end
 	end,
+
+	carrier = {
+		inc_stats = { [Stats.STAT_MAG] = 6, },
+	},
 }
 
 -- Grushnak Pride
@@ -171,4 +183,8 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 			return true
 		end
 	end,
+
+	carrier = {
+		inc_stats = { [Stats.STAT_STR] = 6, },
+	},
 }

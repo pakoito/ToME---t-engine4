@@ -611,7 +611,7 @@ newTalent{
 				return mod.class.Trap.canTrigger(self, x, y, who)
 			end,
 			triggered = function(self, x, y, who)
-				if who:checkHit(self.disarm_power + 5, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("stun") then
+				if who:checkHit(self.disarm_power + 5, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("stun") and who:canBe("pin") then
 					who:setEffect(who.EFF_PINNED, dur, {})
 				else
 					game.logSeen(who, "%s resists!", who.name:capitalize())

@@ -68,6 +68,10 @@ function _M:use(who, typ)
 		game.logPlayer(who, "You are silenced!")
 		return
 	end
+	if self:wornInven() and not self.wielded and not self.use_no_wear then
+		game.logPlayer(who, "You must wear this object to use it!")
+		return
+	end
 
 	local types = {}
 	if self:canUseObject() then types[#types+1] = "use" end
@@ -286,6 +290,7 @@ function _M:getTextualDesc()
 	if w.silence_immune then desc[#desc+1] = ("Increases silence immunity: %d%%."):format(w.silence_immune * 100) end
 	if w.disarm_immune then desc[#desc+1] = ("Increases disarm immunity: %d%%."):format(w.disarm_immune * 100) end
 	if w.confusion_immune then desc[#desc+1] = ("Increases confusion immunity: %d%%."):format(w.confusion_immune * 100) end
+	if w.pin_immune then desc[#desc+1] = ("Increases pinning immunity: %d%%."):format(w.pin_immune * 100) end
 	if w.stun_immune then desc[#desc+1] = ("Increases stun immunity: %d%%."):format(w.stun_immune * 100) end
 	if w.fear_immune then desc[#desc+1] = ("Increases fear immunity: %d%%."):format(w.fear_immune * 100) end
 	if w.knockback_immune then desc[#desc+1] = ("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100) end

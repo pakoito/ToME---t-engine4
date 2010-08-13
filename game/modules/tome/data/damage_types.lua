@@ -328,7 +328,7 @@ newDamageType{
 		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("pin") and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
 				target:setEffect(target.EFF_FROZEN_FEET, dam.dur, {})
 			end
 		end
@@ -584,7 +584,7 @@ newDamageType{
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) then
+			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, dam.dur, {})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())

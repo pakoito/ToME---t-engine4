@@ -292,6 +292,18 @@ function _M:probabilityTravel(x, y, dist)
 	return true
 end
 
+--- Teleports randomly to a passable grid
+-- This simply calls the default actor teleportRandom but first checks for space-time stability
+-- @param x the coord of the teleporatation
+-- @param y the coord of the teleporatation
+-- @param dist the radius of the random effect, if set to 0 it is a precise teleport
+-- @param min_dist the minimun radius of of the effect, will never teleport closer. Defaults to 0 if not set
+-- @return true if the teleport worked
+function _M:teleportRandom(x, y, dist, min_dist)
+
+	return engine.Actor.teleportRandom(x, y, dist, min_dist)
+end
+
 --- Quake a zone
 -- Moves randomly each grid to an other grid
 function _M:doQuake(tg, x, y)
@@ -1185,6 +1197,7 @@ function _M:canBe(what)
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
 	if what == "silence" and rng.percent(100 * (self:attr("silence_immune") or 0)) then return false end
 	if what == "disarm" and rng.percent(100 * (self:attr("disarm_immune") or 0)) then return false end
+	if what == "pin" and rng.percent(100 * (self:attr("pin_immune") or 0)) then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end

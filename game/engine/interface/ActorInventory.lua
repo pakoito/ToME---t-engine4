@@ -174,11 +174,13 @@ end
 
 --- Called upon adding an object
 function _M:onAddObject(o)
-	-- Apply carrier properties
-	if o.carrier then
+	if self.__allow_carrier then
+		-- Apply carrier properties
 		o.carried = {}
-		for k, e in pairs(o.carrier) do
-			o.carried[k] = self:addTemporaryValue(k, e)
+		if o.carrier then
+			for k, e in pairs(o.carrier) do
+				o.carried[k] = self:addTemporaryValue(k, e)
+			end
 		end
 	end
 end
@@ -346,8 +348,8 @@ end
 --- Call when an object is worn
 function _M:onWear(o)
 	-- Apply wielder properties
+	o.wielded = {}
 	if o.wielder then
-		o.wielded = {}
 		for k, e in pairs(o.wielder) do
 			o.wielded[k] = self:addTemporaryValue(k, e)
 		end

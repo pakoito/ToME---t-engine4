@@ -27,6 +27,8 @@ module(..., package.seeall, class.inherit(Entity))
 _M.display_on_seen = true
 _M.display_on_remember = false
 _M.display_on_unknown = false
+-- Allow actors to act as object carriers, if the interface is loaded
+_M.__allow_carrier = true
 
 function _M:init(t, no_default)
 	t = t or {}
