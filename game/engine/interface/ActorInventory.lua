@@ -105,10 +105,6 @@ function _M:addObject(inven_id, o)
 	return true
 end
 
---- Called upon adding an object
-function _M:onAddObject(o)
-end
-
 --- Rerturns the position of an item in the given inventory, or nil
 function _M:itemPosition(inven, o)
 	inven = self:getInven(inven)
@@ -176,8 +172,25 @@ function _M:removeObject(inven, item, no_unstack)
 	return o, finish
 end
 
+--- Called upon adding an object
+function _M:onAddObject(o)
+	-- Apply carrier properties
+	if o.carrier then
+		o.carried = {}
+		for k, e in pairs(o.carrier) do
+			o.carried[k] = self:addTemporaryValue(k, e)
+		end
+	end
+end
+
 --- Called upon removing an object
 function _M:onRemoveObject(o)
+	if o.carried then
+		for k, id in pairs(o.carried) do
+			self:removeTemporaryValue(k, id)
+		end
+	end
+	o.carried = nil
 end
 
 --- Drop an object on the floor

@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 -- This file describes artifacts not bound to a special location, they can be found anywhere
 newEntity{ base = "BASE_STAFF",
@@ -244,6 +245,27 @@ newEntity{ base = "BASE_LONGBOW",
 	},
 }
 
+newEntity{ base = "BASE_SLING",
+	unique = true,
+	name = "Gift to the Shire",
+	unided_name = "well-made sling",
+	desc = [[A sling with an inscription on its handle 'Given in honour of the Friendship between the King of Men and the Mayor of the Shire, and token of the alliance shared thencefrom.']],
+	level_range = {15, 25},
+	rarity = 200,
+	require = { stat = { dex=26 }, },
+	cost = 350,
+	material_level = 3,
+	combat = {
+		range = 18,
+		physspeed = 0.7,
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_DEX] = 4, [Stats.STAT_CUN] = 3,  },
+		inc_damage={ [DamageType.PHYSICAL] = 15 },
+		talent_cd_reduction={[Talents.T_STEADY_SHOT]=1, [Talents.T_EYE_SHOT]=2},
+	},
+}
+
 newEntity{ base = "BASE_LONGSWORD",
 	unique = true,
 	name = "Glamdring, the Long Sword 'Foe-Hammer'",
@@ -274,4 +296,123 @@ newEntity{ base = "BASE_LONGSWORD",
 		inc_stats = { [Stats.STAT_MAG] = 4, [Stats.STAT_STR] = 4, },
 		esp = {["humanoid/orc"]=1},
 	},
+}
+
+newEntity{ base = "BASE_LEATHER_BOOT",
+	unique = true,
+	name = "Boots of Tom Bombadil",
+	uided_name = "pair of yellow boots",
+	desc = [[Old Tom Bombadil is a merry fellow.
+Bright blue his jacket is, and his boots are yellow.]],
+	color = colors.YELLOW,
+	level_range = {1, 20},
+	rarity = 200,
+	cost = 100,
+	material_level = 2,
+	wielder = {
+		combat_armor = 1,
+		combat_def = 2,
+		fatigue = 2,
+		talents_types_mastery = { ["cunning/survival"] = 0.2 },
+		inc_stats = { [Stats.STAT_CUN] = 3, },
+	},
+
+	max_power = 50, power_regen = 1,
+	use_power = { name = "speed boost", power = 50,
+		use = function(self, who)
+			who:setEffect(who.EFF_SPEED, 8, {power=0.20 + who:getCun() / 80})
+			game.logSeen(who, "%s speeds up!", who.name:capitalize())
+		end
+	},
+}
+
+newEntity{ base = "BASE_SHIELD",
+	unique = true,
+	name = "Dragon Shield of Smaug",
+	unided_name = "dragon shield",
+	desc = [[This large shield was made using scales of the dragon Smaug, killed in the Third Age by Bard I of Esgaroth.]],
+	color = colors.LIGHT_RED,
+	metallic = false,
+	level_range = {27, 35},
+	rarity = 300,
+	require = { stat = { str=28 }, },
+	cost = 350,
+	material_level = 5,
+	special_combat = {
+		dam = 58,
+		physcrit = 4.5,
+		dammod = {str=1},
+		damtype = DamageType.FIRE,
+	},
+	wielder = {
+		resists={[DamageType.FIRE] = 35},
+		on_melee_hit={[DamageType.FIRE] = 17},
+		combat_armor = 4,
+		combat_def = 16,
+		combat_def_ranged = 15,
+		fatigue = 20,
+	},
+}
+
+newEntity{ base = "BASE_LIGHT_ARMOR",
+	unique = true,
+	name = "Leather Armour of Eowen Nazgul-bane",
+	unided_name = "blackened leather armour",
+	level_range = {25, 40},
+	rarity = 270,
+	cost = 200,
+	require = { stat = { str=22 }, },
+	material_level = 4,
+	wielder = {
+		combat_def = 6,
+		combat_armor = 7,
+		fatigue = 7,
+		stun_immune = 0.7,
+		knockback_immune = 0.7,
+		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_CON] = 4, },
+		resists={[DamageType.BLIGHT] = 35},
+	},
+}
+
+newEntity{
+	unique = true,
+	type = "misc", subtype="egg",
+	unided_name = "dark egg",
+	name = "Mummified Egg-sac of Ungoliant",
+	level_range = {20, 35},
+	rarity = 190,
+	display = "*", color=colors.DARK_GREY, image = "object/bloodstone.png",
+	encumber = 2,
+	desc = [[By what strange fate this survived, you cannot imagine. Dry and dusty to the touch, it still seems to retain some of its foul mother's unending hunger.]],
+
+	carrier = {
+		lite = -2,
+	},
+	max_power = 100, power_regen = 1,
+	use_power = { name = "summon spiders", power = 80, use = function(self, who)
+		local NPC = require "mod.class.NPC"
+		local list = NPC:loadList("/data/general/npcs/spider.lua")
+
+		for i = 1, 2 do
+			-- Find space
+			local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.ACTOR]=true})
+			if not x then break end
+
+			local e
+			repeat e = rng.tableRemove(list)
+			until not e.unique and e.rarity
+
+			local spider = game.zone:finishEntity(game.level, "actor", e)
+			spider.faction = who.faction
+			spider.ai = "summoned"
+			spider.ai_real = "dumb_talented_simple"
+			spider.summoner = who
+			spider.summon_time = 10
+
+			game.zone:addEntity(game.level, spider, "actor", x, y)
+			game.level.map:particleEmitter(x, y, 1, "slime")
+
+			game:playSoundNear(who, "talents/slime")
+		end
+	end },
 }

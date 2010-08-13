@@ -26,6 +26,7 @@ newEntity{ base = "BASE_GREATMAUL",
 	name = "Bill's Tree Trunk", unique=true,
 	desc = [[This is a big nasty looking tree trunk that Bill was using as a weapon. It could still serve this purpose, should you be strong enough to wield it!]],
 	require = { stat = { str=25 }, },
+	rarity = false,
 	cost = 5,
 	combat = {
 		dam = 30,

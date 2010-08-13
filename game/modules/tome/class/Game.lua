@@ -483,6 +483,18 @@ function _M:setupCommands()
 --				self.player:grantQuest("escort-duty")
 			end
 		end,
+		[{"_f","ctrl"}] = function()
+			if config.settings.tome.cheat then
+				for i, e in ipairs(self.zone.object_list) do
+					if e.unique and e.rarity then
+						local a = self.zone:finishEntity(self.level, "object", e)
+						a:identify(true)
+						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)
+					end
+				end
+				self.logPlayer(self.player, "All world artifacts created.")
+			end
+		end,
 	}
 	self.key:addBinds
 	{
@@ -555,8 +567,8 @@ function _M:setupCommands()
 				if self.player:attr("never_move") then self.log("You can not currently leave the level.") return end
 
 				local stop = {}
-				for eff_id, p in pairs(game.player.tmp) do
-					local e = game.player.tempeffect_def[eff_id]
+				for eff_id, p in pairs(self.player.tmp) do
+					local e = self.player.tempeffect_def[eff_id]
 					if e.status == "detrimental" then stop[#stop+1] = e.desc end
 				end
 
