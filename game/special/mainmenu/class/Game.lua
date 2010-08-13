@@ -145,10 +145,23 @@ function _M:onQuit()
 	os.exit()
 end
 
+profile_help_text = [[#LIGHT_GREEN#T-Engine4#LAST# allows you to sync you player profile with the website #LIGHT_BLUE#http://te4.org/#LAST#
+
+This allows you to:
+* Play from several computers without having to copy unlocks and achievements.
+* Keep track of your modules progression, kill count, ...
+* Cool statistics for each module to help sharpen your gameplay style
+* Help the game developers balance and refine the game
+
+Later on you will have an online profile page you can show to people to brag.
+This is all optional, you are not forced to use this feature at all, but the developers would thank you if you did as it will
+make balancing easier.
+Online profile requires an internet connection, if not available it will wait and sync when it finds one.]]
+
 function _M:checkFirstTime()
 	if not profile.generic.firstrun then
 		profile:checkFirstRun()
-		Dialog:yesnoPopup("First run profile notification", "Do you want to create or login to an Online profile?", function(ret)
+		Dialog:yesnoLongPopup("First run profile notification", profile_help_text, 400, function(ret)
 			if ret then
 				self:selectStepOnlineProfile()
 			else
@@ -234,7 +247,7 @@ function _M:selectStepNew()
 	end
 	self:registerDialog(display_module)
 
-	self.step = ButtonList.new(self.mod_list, 10, 10, self.w * 0.24, (5 + 35) * #self.mod_list, nil, 5)	
+	self.step = ButtonList.new(self.mod_list, 10, 10, self.w * 0.24, (5 + 35) * #self.mod_list, nil, 5)
 	self.step.dialog = display_module
 	self:bindKeysToStep()
 end
@@ -402,6 +415,7 @@ function _M:selectStepProfile()
 				self:selectStepOnlineProfile()
 			end,
 		},
+--[[
 		{
 			name = "Browse Generic Profile",
 			fct = function()
@@ -414,6 +428,7 @@ function _M:selectStepProfile()
 				self:selectModuleProfile()
 			end,
 		},
+]]
 		{
 			name = "Exit",
 			fct = function()
@@ -437,13 +452,14 @@ function _M:selectStepOnlineProfile()
 		end)
 	else
 	local dialogdef = { }
-	dialogdef.name = "Profile login";
 	dialogdef.short = "Login";
 	dialogdef.fct = function(login) self:setPlayerLogin(login) end
-	Dialog:yesnoPopup("You are not registered", "Do you want to login to an existing profile?", function(ret)
+	Dialog:yesnoLongPopup("You are not registered", "You have no active online profile.\nDo you want to #LIGHT_GREEN#login#LAST# to an existing profile or #LIGHT_GREEN#create#LAST# a new one?", 400, function(ret)
+			ret = not ret
 			self.justlogin = ret
+			dialogdef.name = ret and "login" or "creation"
 			dialogdef.justlogin = ret
-			self:registerDialog(require('special.mainmenu.dialogs.ProfileLogin').new(dialogdef))
-		end)
+			self:registerDialog(require('special.mainmenu.dialogs.ProfileLogin').new(dialogdef, profile_help_text))
+		end, "Create", "Login")
 	end
 end

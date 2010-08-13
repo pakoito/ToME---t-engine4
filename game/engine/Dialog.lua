@@ -46,7 +46,7 @@ function _M:simplePopup(title, text, fct, no_leave)
 end
 
 --- Requests a simple yes-no dialog
-function _M:yesnoPopup(title, text, fct)
+function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 	local font = core.display.newFont("/data/font/Vera.ttf", 12)
 	local w, h = font:size(text)
 	local tw, th = font:size(title)
@@ -68,12 +68,52 @@ function _M:yesnoPopup(title, text, fct)
 	d.drawDialog = function(self, s)
 		s:drawColorStringCentered(self.font, text, 2, 2, self.iw - 2, 25 - 2)
 		if d.sel == 0 then
-			s:drawColorStringCentered(self.font, "Yes", 2, 25, self.iw / 2 - 2, 50 - 2, 0, 255, 255)
-			s:drawColorStringCentered(self.font, "No", 2 + self.iw / 2, 25, self.iw / 2 - 2, 50 - 2, 255, 255, 255)
+			s:drawColorStringCentered(self.font, yes_text or "Yes", 2, 25, self.iw / 2 - 2, 50 - 2, 0, 255, 255)
+			s:drawColorStringCentered(self.font, no_text or "No", 2 + self.iw / 2, 25, self.iw / 2 - 2, 50 - 2, 255, 255, 255)
 		else
-			s:drawColorStringCentered(self.font, "Yes", 2, 25, self.iw / 2 - 2, 50 - 2, 255, 255, 255)
-			s:drawColorStringCentered(self.font, "No", 2 + self.iw / 2, 25, self.iw / 2 - 2, 50 - 2, 0, 255, 255)
+			s:drawColorStringCentered(self.font, yes_text or "Yes", 2, 25, self.iw / 2 - 2, 50 - 2, 255, 255, 255)
+			s:drawColorStringCentered(self.font, no_text or "No", 2 + self.iw / 2, 25, self.iw / 2 - 2, 50 - 2, 0, 255, 255)
 		end
+	end
+	game:registerDialog(d)
+	return d
+end
+
+--- Requests a long yes-no dialog
+function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
+	local font = core.display.newFont("/data/font/Vera.ttf", 12)
+	local list = text:splitLines(w - 10, font)
+
+	local th = font:lineSkip()
+	local d = new(title, w + 8, th * #list + 75, nil, nil, nil, font)
+	d.sel = 0
+	d:keyCommands({},
+	{
+		ACCEPT = function() game:unregisterDialog(d) if fct then fct(d.sel == 0) end end,
+		MOVE_LEFT = "MOVE_UP",
+		MOVE_RIGHT = "MOVE_DOWN",
+		MOVE_UP = function() d.sel = 0 d.changed = true end,
+		MOVE_DOWN = function() d.sel = 1 d.changed = true end,
+	})
+	d:mouseZones{{x=2, y=0, w=d.iw, h=d.ih, fct=function(b, _, _, _, _, x, y)
+		d.sel = (x < d.iw / 2) and 0 or 1
+		d.changed = true
+		if b ~= "none" then game:unregisterDialog(d) if fct then fct(d.sel == 0) end end
+	end}}
+	d.drawDialog = function(self, s)
+		local h = 4
+		for i = 1, #list do
+			s:drawColorStringBlended(self.font, list[i], 5, h) h = h + th
+		end
+
+		if d.sel == 0 then
+			s:drawColorStringCentered(self.font, yes_text or "Yes", 2, 10 + h, self.iw / 2 - 2, 50 - 2, 0, 255, 255)
+			s:drawColorStringCentered(self.font, no_text or "No", 2 + self.iw / 2, 10 + h, self.iw / 2 - 2, 50 - 2, 255, 255, 255)
+		else
+			s:drawColorStringCentered(self.font, yes_text or "Yes", 2, 10 + h, self.iw / 2 - 2, 50 - 2, 255, 255, 255)
+			s:drawColorStringCentered(self.font, no_text or "No", 2 + self.iw / 2, 10 + h, self.iw / 2 - 2, 50 - 2, 0, 255, 255)
+		end
+		self.changed = false
 	end
 	game:registerDialog(d)
 	return d
