@@ -496,7 +496,7 @@ After Frodo destroyed it, Elrond passed the knowledge to Aragorn the King of Men
 		},
 	},
 }
-
+--[=[
 newEntity{
 	unique = true,
 	type = "jewelry", subtype="anhk",
@@ -512,3 +512,4 @@ newEntity{
 
 	},
 }
+]=]
