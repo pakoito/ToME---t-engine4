@@ -252,15 +252,25 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 			local old_cd = self:isTalentCoolingDown(self:getTalentFromId(tid))
 			local old = self.energy.value
 			self.energy.value = 100000
-			self.getTarget = function() return target.x, target.y, target end
-			self:useTalent(tid)
-			self.getTarget = nil
+			self:useTalent(tid, nil, nil, nil, target)
 			self.energy.value = old
 			-- Do not setup a cooldown
 			if not old_cd then
 				self.talents_cd[tid] = nil
 			end
 			self.changed = true
+		end
+	end
+
+	-- On hit talent
+	if hitted and not target.dead and weapon.talent_on_hit and next(weapon.talent_on_hit) then
+		for tid, data in pairs(weapon.talent_on_hit) do
+			if rng.percent(data.chance) then
+				local old = self.energy.value
+				self.energy.value = 100000
+				self:useTalent(tid, nil, data.level, true, target)
+				self.energy.value = old
+			end
 		end
 	end
 

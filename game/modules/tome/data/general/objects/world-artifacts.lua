@@ -496,6 +496,32 @@ After Frodo destroyed it, Elrond passed the knowledge to Aragorn the King of Men
 		},
 	},
 }
+
+newEntity{ base = "BASE_GREATMAUL",
+	unique = true,
+	name = "Mithril Hammer of Khaza'dûm", color = colors.LIGHT_RED,
+	unided_name = "flame scorched mithril hammer",
+	desc = [[The legendary hammer of the dwarven master smiths of Khaza'dûm. For ages it was used to forge powerful weapons with searing heat until it became of high power by intself.]],
+	level_range = {38, 50},
+	rarity = 250,
+	require = { stat = { str=48 }, },
+	cost = 650,
+	material_level = 5,
+	combat = {
+		dam = 82,
+		apr = 7,
+		physcrit = 4,
+		dammod = {str=1.2},
+		talent_on_hit = { [Talents.T_FLAMESHOCK] = {level=3, chance=10} },
+	},
+	wielder = {
+		inc_damage={
+			[DamageType.PHYSICAL] = 15,
+		},
+		melee_project={[DamageType.FIRE] = 30},
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,

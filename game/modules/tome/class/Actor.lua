@@ -301,7 +301,7 @@ end
 -- @return true if the teleport worked
 function _M:teleportRandom(x, y, dist, min_dist)
 
-	return engine.Actor.teleportRandom(x, y, dist, min_dist)
+	return engine.Actor.teleportRandom(self, x, y, dist, min_dist)
 end
 
 --- Quake a zone

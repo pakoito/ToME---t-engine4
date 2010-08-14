@@ -212,6 +212,13 @@ function _M:getTextualDesc()
 		desc[#desc+1] = ("Damage on hit(melee): %s."):format(table.concat(rs, ','))
 	end
 
+	if self.combat and self.combat.talent_on_hit then
+		local rs = {}
+		for tid, data in pairs(self.combat.talent_on_hit) do
+			desc[#desc+1] = ("Talent on hit(melee): %d%% chance %s (level %d)."):format(data.chance, self:getTalentFromId(tid).name, data.level)
+		end
+	end
+
 	if w.ranged_project then
 		local rs = {}
 		for typ, dam in pairs(w.ranged_project) do

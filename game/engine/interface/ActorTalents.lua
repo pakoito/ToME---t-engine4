@@ -97,13 +97,13 @@ function _M:init(t)
 end
 
 --- Make the actor use the talent
-function _M:useTalent(id, who, force_level)
+function _M:useTalent(id, who, force_level, ignore_cd, force_target)
 	who = who or self
 	local ab = _M.talents_def[id]
 	assert(ab, "trying to cast talent "..tostring(id).." but it is not defined")
 
 	if ab.mode == "activated" and ab.action then
-		if self:isTalentCoolingDown(ab) then
+		if self:isTalentCoolingDown(ab) and not ignore_cd then
 			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
@@ -111,19 +111,22 @@ function _M:useTalent(id, who, force_level)
 		local co = coroutine.create(function()
 			print("USING", ab, ab.name)
 			local old_level
+			local old_target
 			if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
+			if force_target then old_target = rawget(who, "getTarget"); who.getTarget = function() return force_target.x, force_target.y, force_target end end
 			local ret = ab.action(who, ab)
+			if force_target then who.getTarget = old_target end
 			if force_level then who.talents[id] = old_level end
 
 			if not self:postUseTalent(ab, ret) then return end
 
 			-- Everything went ok? then start cooldown if any
-			self:startTalentCooldown(ab)
+			if not ignore_cd then self:startTalentCooldown(ab) end
 		end)
 		local ok, err = coroutine.resume(co)
 		if not ok and err then print(debug.traceback(co)) error(err) end
 	elseif ab.mode == "sustained" and ab.activate and ab.deactivate then
-		if self:isTalentCoolingDown(ab) then
+		if self:isTalentCoolingDown(ab) and not ignore_cd then
 			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
@@ -147,7 +150,7 @@ function _M:useTalent(id, who, force_level)
 				if not self:postUseTalent(ab, ret) then return end
 
 				-- Everything went ok? then start cooldown if any
-				self:startTalentCooldown(ab)
+				if not ignore_cd then self:startTalentCooldown(ab) end
 				self.sustain_talents[id] = nil
 			end
 		end)
