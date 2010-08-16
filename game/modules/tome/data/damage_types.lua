@@ -374,9 +374,11 @@ newDamageType{
 
 -- Fireburn damage + repulsion; checks for spell power against physical resistance
 newDamageType{
-	name = "fireknockback", type = "FIREKNOCKBACK",
+	name = "fire knockback", type = "FIREKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
+		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
+		tmp = tmp or {}
 		if target and not tmp[target] then
 			tmp[target] = true
 			DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam.dam)

@@ -39,6 +39,8 @@ loadIfNot("/data/general/objects/jewelry.lua")
 loadIfNot("/data/general/objects/staves.lua")
 loadIfNot("/data/general/objects/knifes.lua")
 
+loadIfNot("/data/general/objects/whips.lua")
+
 loadIfNot("/data/general/objects/swords.lua")
 loadIfNot("/data/general/objects/2hswords.lua")
 

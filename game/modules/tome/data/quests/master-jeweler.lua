@@ -60,7 +60,7 @@ start_search = function(self, who)
 		name="Cavern leading to the valley of the moon",
 		display='>', color=colors.GREY,
 		notice = true,
-		change_level=1, change_zone="valley-moon"
+		change_level=1, change_zone="valley-moon-caverns"
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 48, 53)

@@ -274,7 +274,7 @@ function _M:leaveLevel(level, lev, old_lev)
 	end
 end
 
-function _M:changeLevel(lev, zone)
+function _M:changeLevel(lev, zone, keep_old_lev)
 	if not self.player.game_ender then
 		game.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
 		return
@@ -287,6 +287,7 @@ function _M:changeLevel(lev, zone)
 	end
 
 	local old_lev = (self.level and not zone) and self.level.level or -1000
+	if keep_old_lev then old_lev = self.level.level end
 	if zone then
 		if self.zone then
 			self.zone:leaveLevel(false, lev, old_lev)
@@ -578,7 +579,7 @@ function _M:setupCommands()
 					self.log("You can not go into the wilds with the following effects: %s", table.concat(stop, ", "))
 				else
 					-- Do not unpause, the player is allowed first move on next level
-					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone)
+					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev)
 				end
 			else
 				self.log("There is no way out of this level here.")

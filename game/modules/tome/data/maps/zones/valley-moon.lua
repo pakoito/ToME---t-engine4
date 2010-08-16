@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-quickEntity('>', {always_remember = true, show_tooltip=true, name="Passage to the caverns", desc="A dark hole in the mountain", display='>', color=colors.GREY, notice = true, change_level=2, change_zone="valley-moon-caverns"})
+quickEntity('>', {always_remember = true, show_tooltip=true, name="Passage to the caverns", desc="A dark hole in the mountain", display='>', color=colors.GREY, notice = true, change_level=2, change_zone="valley-moon-caverns", keep_old_lev=true})
 defineTile('.', "GRASS")
 defineTile('~', "POISON_DEEP_WATER")
 defineTile('"', "GRASS", nil, nil, nil, {summon_limmir=true})

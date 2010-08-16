@@ -36,21 +36,28 @@ newEntity{ define_as = "CORRUPTED_BALROG",
 	instakill_immune = 1,
 	no_breath = 1,
 	move_others=true,
+	demon = 1,
+
+	on_melee_hit = { [DamageType.FIRE] = 50, [DamageType.LIGHT] = 30, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="light", autoreq=true},
+		{type="weapon", subtype="whip", defined="WHIP_GOTHMOG", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
-		[Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
-		[Talents.T_SWORD_MASTERY]=3, [Talents.T_STUNNING_BLOW]=1,
+		[Talents.T_FIREBEAM]=5,
+		[Talents.T_DARKNESS]=3,
+		[Talents.T_FLAME]=5,
+		[Talents.T_POISON_BREATH]=5,
+		[Talents.T_FIRE_BREATH]=5,
+		[Talents.T_RUSH]=5,
+		[Talents.T_WEAPON_COMBAT]=10,
 	},
 
-	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	autolevel = "dexmage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
 
 	on_die = function(self, who)
 	end,
