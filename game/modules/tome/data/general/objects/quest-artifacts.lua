@@ -193,10 +193,12 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 
 ---------------------------- Various quest starters
 
+-- This one starts a quest it has a level and rarity so it can drop randomly, but there are palces where it is more likely to appear
 newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome",
 	unique = true, quest=true,
 	unided_name = "ancient tome",
 	name = "Ancient Tome titled 'Gems and their uses'",
+	level_range = {30, 40}, rarity = 120,
 	color = colors.VIOLET,
 	fire_proof = true,
 
