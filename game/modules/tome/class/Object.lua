@@ -189,6 +189,12 @@ function _M:getTextualDesc()
 		desc[#desc+1] = "Damage type: "..DamageType:get(self.combat.damtype or DamageType.PHYSICAL).name
 		if self.combat.range then desc[#desc+1] = "Firing range: "..self.combat.range end
 		desc[#desc+1] = ""
+
+		if self.combat.talent_on_hit then
+			for tid, data in pairs(self.combat.talent_on_hit) do
+				desc[#desc+1] = ("Talent on hit(melee): %d%% chance %s (level %d)."):format(data.chance, self:getTalentFromId(tid).name, data.level)
+			end
+		end
 	end
 
 	local desc_wielder = function(w)
@@ -210,13 +216,6 @@ function _M:getTextualDesc()
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
 		desc[#desc+1] = ("Damage on hit(melee): %s."):format(table.concat(rs, ','))
-	end
-
-	if self.combat and self.combat.talent_on_hit then
-		local rs = {}
-		for tid, data in pairs(self.combat.talent_on_hit) do
-			desc[#desc+1] = ("Talent on hit(melee): %d%% chance %s (level %d)."):format(data.chance, self:getTalentFromId(tid).name, data.level)
-		end
 	end
 
 	if w.ranged_project then
@@ -323,16 +322,24 @@ function _M:getTextualDesc()
 	if w.invisible then desc[#desc+1] = ("Invisibility: %d"):format(w.invisible) end
 	end
 
-	desc_wielder(self.wielder or {})
+	if self.wielder then
+		desc[#desc+1] = "#YELLOW#When wielded/worn:#LAST#"
+		desc_wielder(self.wielder)
+	end
+
+	if self.carrier then
+		desc[#desc+1] = "#YELLOW#When carried:#LAST#"
+		desc_wielder(self.carrier)
+	end
 
 	if self.imbue_powers then
-		desc[#desc+1] = "When used to imbue an armour:"
+		desc[#desc+1] = "#YELLOW#When used to imbue an armour:#LAST#"
 		desc_wielder(self.imbue_powers)
 	end
 
 	if self.alchemist_bomb then
 		local a = self.alchemist_bomb
-		desc[#desc+1] = "When used as an alchemist bomb:"
+		desc[#desc+1] = "#YELLOW#When used as an alchemist bomb:#LAST#"
 		if a.power then desc[#desc+1] = ("Bomb damage +%d%%"):format(a.power) end
 		if a.range then desc[#desc+1] = ("Bomb thrown range +%d"):format(a.range) end
 		if a.mana then desc[#desc+1] = ("Mana regain %d"):format(a.mana) end

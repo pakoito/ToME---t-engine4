@@ -34,6 +34,16 @@ quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="te
 quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true}, {no_teleport=true})
 
 defineTile('@', "GRASS", nil, "HIGH_SUN_PALADIN_AERYN")
+defineTile('j', "GRASS", nil, mod.class.NPC.new{
+	type = "humanoid", subtype = "elf",
+	display = "p", color=colors.RED,
+	name = "Limmir, Expert Jeweler",
+	size_category = 3, rank = 3,
+	ai = "simple",
+	faction = "sunwall",
+	can_talk = "jewelry-store",
+	can_quest = true,
+})
 
 quickEntity('1', {show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
 quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"}, {no_teleport=true})
@@ -96,7 +106,7 @@ MMM       TTTT"""""""""""O"""""""            MMMMM
 MMMM     TT"""""~~~""""""""""""""""""""""    MMMMM
 MMMMMM  TT"""""~~~~~""""""""""""""""""::""""MMMMMM
 MMMMMMMMM""""""~~~~~"""""""TT"""""""::P:::::MMMMMM
-MMMMMMMMM"""""""~~~"""""TT"T""""""::::::::::MMMMMM
+MMMMMMMMM"""j"""~~~"""""TT"T""""""::::::::::MMMMMM
 MMMMMMMMM"""""""~~""""""TTTT"""""::::::::P:::MMMMM
 MMMMMMMMM"""""TT~"""""""TT"""""":::::P:::::MMMMMMM
 MMMMMMMMM"""TTTT~""""""""""""""::::::::::::MMMMMMM

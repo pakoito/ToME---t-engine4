@@ -638,6 +638,19 @@ newDamageType{
 	end,
 }
 
+-- Holy light, damage demon/undead; heal ohers
+newDamageType{
+	name = "holy light", type = "HOLY_LIGHT",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target.undead and not target.demon then
+			target:heal(dam / 2)
+		elseif target then
+			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
+		end
+	end,
+}
+
 -- Heals
 newDamageType{
 	name = "healing", type = "HEAL",

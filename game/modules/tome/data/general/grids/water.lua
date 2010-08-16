@@ -91,3 +91,20 @@ newEntity{
 	always_remember = true,
 	air_level = -5, air_condition="water",
 }
+
+newEntity{
+	define_as = "POISON_SHALLOW_WATER",
+	name = "poisoned shallow water", image = "terrain/water_floor.png",
+	display = '~', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN,
+	add_displays = class:makeWater(false, "poison_"),
+	always_remember = true,
+}
+
+newEntity{
+	define_as = "POISON_DEEP_WATER",
+	name = "poisoned deep water", image = "terrain/water_floor.png",
+	display = '~', color=colors.YELLOW_GREEN, back_color=colors.DARK_GREEN,
+	add_displays = class:makeWater(true, "poison_"),
+	always_remember = true,
+	air_level = -5, air_condition="water",
+}

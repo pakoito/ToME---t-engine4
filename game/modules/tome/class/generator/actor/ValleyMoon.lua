@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Map = require "engine.Map"
+local DamageType = require "engine.DamageType"
 require "engine.Generator"
 
 module(..., package.seeall, class.inherit(engine.Generator))
@@ -30,11 +31,15 @@ function _M:init(zone, map, level, spots)
 	self.rate = self.data.rate
 	self.max_rate = 5
 	self.turn_scale = game.energy_per_tick / game.energy_to_act
+
+	if not _M.limmir then
+		for i, e in pairs(level.entities) do
+			if e.define_as and e.define_as == "LIMMIR" then _M.limmir = e break end
+		end
+	end
 end
 
 function _M:tick()
-	if self.level.nb_attackers >= self.data.max_attackers then return end
-
 	local val = rng.float(0,1)
 	for i = 1,self.max_rate - 1 do
 		if val < rng.poissonProcess(i, self.turn_scale, self.rate) then
@@ -43,19 +48,42 @@ function _M:tick()
 			break
 		end
 	end
+
+	-- Fire a light AOE, healing allies damaging demons
+	if _M.limmir and not _M.limmir.dead and game.turn % 100 == 0 then
+		game.logSeen(_M.limmir, "Limmir summons a blast of holy light!")
+		local rad = math.ceil(2 + (500 - self.level.turn_counter / 10) / 20)
+		local dam = 50 + (500 - self.level.turn_counter / 10) / 7
+		local grids = _M.limmir:project({type="ball", radius=rad}, _M.limmir.x, _M.limmir.y, DamageType.HOLY_LIGHT, dam)
+		game.level.map:particleEmitter(_M.limmir.x, _M.limmir.y, rad, "sunburst", {radius=rad, grids=grids, tx=_M.limmir.x, ty=_M.limmir.y})
+	end
 end
 
 function _M:generateOne()
-	local m = self.zone:makeEntityByName(self.level, "actor", "URUK-HAI_ATTACK")
+	local m
+	if not self.level.balroged and self.level.turn_counter < 50 * 10 then
+		m = self.zone:makeEntityByName(self.level, "actor", "CORRUPTED_BALROG")
+		self.level.balroged = true
+	else
+		m = self.zone:makeEntity(self.level, "actor", {type="demon"}, nil, true)
+	end
+
 	if m then
-		local x = rng.range(3, 8)
-		local y = 0
+		local spot = self.level:pickSpot{type="portal", subtype="demon"}
+		local x = spot.x
+		local y = spot.y
 		local tries = 0
 		while (not m:canMove(x, y)) and tries < 10 do
-			x = rng.range(3, 8)
+			spot = self.level:pickSpot{type="portal", subtype="demon"}
+			x = spot.x y = spot.y
 			tries = tries + 1
 		end
 		if tries < 10 then
+			if _M.limmir and not _M.limmir.dead then
+				m:setTarget(_M.limmir)
+			else
+				m:setTarget(game.player)
+			end
 			self.zone:addEntity(self.level, m, "actor", x, y)
 		end
 	end

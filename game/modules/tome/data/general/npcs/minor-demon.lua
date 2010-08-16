@@ -22,9 +22,9 @@
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "BASE_NPC_AQUATIC_DEMON",
-	type = "aquatic", subtype = "demon",
-	display = "U", color=colors.WHITE,
+	define_as = "BASE_NPC_DEMON",
+	type = "demon", subtype = "minor",
+	display = "u", color=colors.WHITE,
 	body = { INVEN = 10 },
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
@@ -34,42 +34,53 @@ newEntity{
 	combat = { dam=resolvers.mbonus(46, 20), atk=15, apr=7, dammod={str=0.7} },
 	max_life = resolvers.rngavg(100,120),
 	infravision = 20,
-	demon = 1,
 	open_door = true,
 	rank = 2,
 	size_category = 3,
-	can_breath={water=1},
+	no_breath = 1,
+	demon = 1,
 }
 
-newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
-	name = "water imp", color=colors.YELLOW_GREEN, unique=true,
-	desc = "A small water demon, lobbing spells at you.",
+newEntity{ base = "BASE_NPC_DEMON",
+	name = "fire imp", color=colors.CRIMSON,
+	desc = "A small demon, lobbing spells at you.",
 	level_range = {10, nil}, exp_worth = 1,
+	rarity = 3,
+	rank = 2,
+	size_category = 1,
+	autolevel = "caster",
+	combat_armor = 1, combat_def = 0,
+	combat = {damtype=DamageType.FIRE},
+
+	resists={[DamageType.FIRE] = resolvers.mbonus(12, 5)},
+
+	resolvers.talents{
+		[Talents.T_FIRE_IMP_BOLT]=4,
+		[Talents.T_PHASE_DOOR]=2,
+	},
+}
+
+newEntity{ base = "BASE_NPC_DEMON",
+	name = "quasit", color=colors.LIGHT_GREY,
+	desc = "A small, heavily armoured demon, rushing toward you.",
+	level_range = {20, nil}, exp_worth = 1,
 	rarity = 1,
 	rank = 2,
 	size_category = 1,
 	autolevel = "caster",
 	combat_armor = 1, combat_def = 0,
-	combat = {damtype=DamageType.ICE},
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
-	resists={[DamageType.COLD] = resolvers.mbonus(12, 5)},
-
-	resolvers.talents{ [Talents.T_WATER_BOLT]=3, [Talents.T_PHASE_DOOR]=2, },
-}
-
-newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
-	name = "Walrog", color=colors.DARK_SEA_GREEN, unique=true,
-	desc = "Walrog, the lord of Water",
-	level_range = {20, 30}, exp_worth = 1,
-	rarity = 50,
-	rank = 4,
-	life_rating = 16,
-	autolevel = "warriormage",
-	combat_armor = 45, combat_def = 0,
-	combat_dam = 55,
-	combat = {damtype=DamageType.ICE},
-
-	resists={[DamageType.COLD] = resolvers.mbonus(50, 30)},
-
-	resolvers.talents{ [Talents.T_TIDAL_WAVE]=4, [Talents.T_FREEZE]=5 },
+	resolvers.talents{
+		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
+		[Talents.T_SHIELD_PUMMEL]=2,
+		[Talents.T_RIPOSTE]=3,
+		[Talents.T_OVERPOWER]=1,
+		[Talents.T_RUSH]=6,
+	},
+	resolvers.equip{
+		{type="weapon", subtype="longsword", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="heavy", autoreq=true}
+	},
 }

@@ -46,7 +46,7 @@ collect_staff = function(self, who, dialog)
 		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_ANGMAR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
 		function(o, inven, item)
 			-- Special handling for the staff of absorption
-			if o.define_as ans o.define_as == "STAFF_ABSORPTION" then
+			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
 				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to consume, flames bursting out of his mouth, life seems to be drained away from him and in an instant he collapses in a lifeless husk.")
 				who:setQuestStatus(self, self.FAILED)
 				game:unregisterDialog(dialog)

@@ -74,3 +74,5 @@ newAI("simple", function(self)
 	end
 	return false
 end)
+
+newAI("none", function(self) end)

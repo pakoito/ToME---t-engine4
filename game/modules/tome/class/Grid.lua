@@ -133,11 +133,12 @@ function _M:makeShells(base, max)
 end
 
 --- Generate sub entities to make translucent water
-function _M:makeWater(z)
+function _M:makeWater(z, prefix)
+	prefix = prefix or ""
 	return { engine.Entity.new{
 		z = z and 16 or 9,
-		image = "terrain/water_floor_alpha.png",
-		shader = "water", textures = { function() return _3DNoise, true end },
+		image = "terrain/"..prefix.."water_floor_alpha.png",
+		shader = prefix.."water", textures = { function() return _3DNoise, true end },
 		display_on_seen = true,
 		display_on_remember = true,
 	} }

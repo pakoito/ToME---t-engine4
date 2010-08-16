@@ -190,3 +190,32 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 		inc_stats = { [Stats.STAT_STR] = 6, },
 	},
 }
+
+---------------------------- Various quest starters
+
+newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome",
+	unique = true, quest=true,
+	unided_name = "ancient tome",
+	name = "Ancient Tome titled 'Gems and their uses'",
+	color = colors.VIOLET,
+	fire_proof = true,
+
+	on_pickup = function(self, who)
+		if who == game.player then
+			self:identify(true)
+			who:grantQuest("master-jeweler")
+		end
+	end,
+}
+
+newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome",
+	unique = true, quest=true, identified=true,
+	name = "Scroll of Summoning (Limmir the Jeweler)",
+	color = colors.VIOLET,
+	fire_proof = true,
+
+	max_power = 1, power_regen = 1,
+	use_power = { name = "summon Limmir the jeweler at the center of the lake of the moon", power = 1,
+		use = function(self, who) who:hasQuest("master-jeweler"):summon_limmir(who) end
+	},
+}
