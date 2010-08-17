@@ -89,7 +89,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "uruivellas", color=colors.LIGHT_RED, -- Hot strength
 	desc = [[This demon would look like a minautor, if minautors had a fiery aura surrounding them and horns all over the body.
 Oh and it is twice as big too.]],
-	level_range = {30, nil}, exp_worth = 1,
+	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,
 	energy = {mod=1.4},
@@ -105,6 +105,7 @@ Oh and it is twice as big too.]],
 	stun_immune = 1,
 
 	resolvers.talents{
+		[Talents.T_DISARM]=3,
 		[Talents.T_RUSH]=5,
 		[Talents.T_BATTLE_CALL]=5,
 		[Talents.T_WEAPON_COMBAT]=8,
@@ -113,3 +114,32 @@ Oh and it is twice as big too.]],
 	},
 }
 
+newEntity{ base = "BASE_NPC_MAJOR_DEMON",
+	name = "thaurhereg", color=colors.RED, -- Terrible blood
+	desc = [[This demon would look like a minautor, if minautors had a fiery aura surrounding them and horns all over the body.
+Oh and it is twice as big too.]],
+	level_range = {35, nil}, exp_worth = 1,
+	rarity = 4,
+	rank = 3,
+	energy = {mod=1.2},
+	size_category = 3,
+	autolevel = "caster",
+	life_rating = 6,
+	combat_armor = 0, combat_def = 10,
+
+	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true}, },
+
+	silence_immune = 1,
+	blind_immune = 1,
+
+	resolvers.talents{
+		[Talents.T_MANATHRUST]=5,
+		[Talents.T_ICE_STORM]=5,
+		[Talents.T_BLOOD_GRASP]=5,
+		[Talents.T_SOUL_ROT]=5,
+		[Talents.T_SHRIEK]=5,
+		[Talents.T_SILENCE]=2,
+		[Talents.T_BONE_SHIELD]=4,
+	},
+	resolvers.sustains_at_birth(),
+}
