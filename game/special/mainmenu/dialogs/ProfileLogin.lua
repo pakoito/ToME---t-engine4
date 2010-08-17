@@ -89,7 +89,7 @@ function _M:init(dialogdef, profile_help_text)
 	local basey = #self.lines * self.font:lineSkip() + 25
 
 	self:addControl(TextBox.new({name="login",title="Login:",min=2, max=25, x=30, y=basey + 5, w=350, h=30}, self, self.font, "login name"))
-	self:addControl(TextBox.new({name="pass",title ="Password:",min=2, max=25, x=30, y=basey + 45, w=350, h=30}, self, self.font, "password"))
+	self:addControl(TextBox.new({name="pass",title ="Password:",min=2, max=25, x=30, y=basey + 45, w=350, h=30, private=true}, self, self.font, "password"))
 	if not self.justlogin then
 		self:addControl(TextBox.new({name="email",title="Email Address:",min=2, max=25, x=30, y=basey + 85, w=350, h=30}, self, self.font, "email address"))
 		self:addControl(TextBox.new({name="name",title="Name:",min=2, max=25, x=30, y=basey + 125, w=350, h=30}, self, self.font, "name"))

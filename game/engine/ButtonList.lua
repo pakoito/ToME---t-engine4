@@ -106,7 +106,6 @@ function _M:select(i, offset)
 	end
 	if self.selected > #self.list then self.selected = 1 end
 	if self.selected < 1 then self.selected = #self.list end
-	print(self.list,self.selected)
 	if old ~= self.selected and self.list[self.selected].onSelect then self.list[self.selected].onSelect() end
 	self.changed = true
 end

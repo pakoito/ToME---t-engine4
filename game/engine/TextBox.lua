@@ -28,8 +28,8 @@ module(..., package.seeall, class.inherit(
 
 tiles = engine.Tiles.new(16, 16)
 
-function _M:init(dialogdef, owner, font, mask, fct)	        
-	--name, title, min, max, x, y, w, height	
+function _M:init(dialogdef, owner, font, mask, fct)
+	--name, title, min, max, x, y, w, height
 	self.type = "TextBox"
 	self.name = dialogdef.name
 	self.title = dialogdef.title
@@ -37,23 +37,24 @@ function _M:init(dialogdef, owner, font, mask, fct)
 	self.max = dialogdef.max or 25
 	self.h = dialogdef.h or 30
 	self.font = font
-	self.w = dialogdef.w or 200	
+	self.w = dialogdef.w or 200
 	self.x = dialogdef.x
 	self.y = dialogdef.y
+	self.private = dialogdef.private
 	self.text = ""
-	self.owner = owner	
-	self.btn = 	{ 		
+	self.owner = owner
+	self.btn = 	{
 		h = dialogdef.h,
-		mouse_over= function(button)							
-						if self.owner.state ~= self.name then self.focused=true self.owner:focusControl(self.name) end						
+		mouse_over= function(button)
+						if self.owner.state ~= self.name then self.focused=true self.owner:focusControl(self.name) end
 						if button == "right" then
-							self.text=""							
+							self.text=""
 							self.ownwer.changed=true
 						end
 					end
 				}
-	self.owner.mouse:registerZone(self.owner.display_x + self.x, self.owner.display_y + self.y + self.h, self.w, self.h, self.btn.mouse_over)		
-	self:startCursor()	
+	self.owner.mouse:registerZone(self.owner.display_x + self.x, self.owner.display_y + self.y + self.h, self.w, self.h, self.btn.mouse_over)
+	self:startCursor()
 end
 
 function _M:delete()
@@ -62,11 +63,11 @@ function _M:delete()
 	if self.cursorPosition < self.maximumCurosrPosition - 1 then temptext = temptext..self.text:sub(self.cursorPosition + 2, self.text:len()) end
 	self.text =  temptext
 	self.maximumCurosrPosition = self.maximumCurosrPosition - 1
-end	
+end
 
 function _M:backSpace()
 	if (self.cursorPosition==0) then return end
-	local temptext = self.text:sub(1, self.cursorPosition - 1)	
+	local temptext = self.text:sub(1, self.cursorPosition - 1)
 	if self.cursorPosition < self.maximumCurosrPosition then temptext = temptext..self.text:sub(self.cursorPosition + 1, self.text:len()) end
 	self.text =  temptext
 	self.maximumCurosrPosition = self.maximumCurosrPosition - 1
@@ -80,9 +81,7 @@ function _M:textInput(c)
 		self.text = self.text:sub(1,self.cursorPosition) .. c
 		if temp then self.text=self.text..temp end
 		self.owner.changed = true
-		print("[Cursor] before ", c, self.cursorPosition, self.maximumCurosrPosition)
-		self:moveRight(1, true)		
-		print("[Cursor] after ", c, self.cursorPosition, self.maximumCurosrPosition)
+		self:moveRight(1, true)
 	end
 end
 
@@ -91,8 +90,8 @@ function _M:unFocus()
 end
 
 
-function _M:drawControl(s)    
-	
+function _M:drawControl(s)
+
 	local r, g, b
 	local w = self.w
 	local h = self.h
@@ -102,8 +101,8 @@ function _M:drawControl(s)
 	if self.owner.state==self.name then
 		title = title.."*"
 	end
-	r, g, b = s:drawColorStringBlended(self.font, title, self.x, self.y + ((h - th) / 2), r, g, b)	
-		
+	r, g, b = s:drawColorStringBlended(self.font, title, self.x, self.y + ((h - th) / 2), r, g, b)
+
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_7"..(sel and "_sel" or "")..".png"), self.x + tw, self.y)
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_9"..(sel and "_sel" or "")..".png"), w + self.x - 8, self.y)
 	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_1"..(sel and "_sel" or "")..".png"), self.x + tw, self.y + h - 8)
@@ -119,10 +118,11 @@ function _M:drawControl(s)
 
 	local text = self.text
 	if text=="" then text=self.mask or "" end
+	if self.private then text = text:gsub('.', '*') end
 	local sw, sh = self.font:size(text)
-	
+
 	local baseX = self.x + tw + 10
-	
+
 	s:drawColorStringBlended(self.font, text, baseX, self.y + h - sh - 8)
 	self:drawCursor(s, baseX, text)
 end

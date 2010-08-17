@@ -217,6 +217,14 @@ function _M:rpc(data)
 	end
 end
 
+function _M:getNews()
+	print("[ONLINE PROFILE] get news")
+	local data = self:rpc{action="GetNews"}
+	if not data then print("[ONLINE PROFILE] no news") return end
+	print("[ONLINE PROFILE] news ", data[1] and data[1].title)
+	return data
+end
+
 function _M:tryAuth()
 	print("[ONLINE PROFILE] auth")
 	local data = self:rpc{action="TryAuth", login=self.login, pass=self.pass}
@@ -250,6 +258,7 @@ end
 
 function _M:setConfigs(module, name, val)
 	if not self.auth then return end
+	if name == "online" then return end
 
 	if type(val) ~= "string" then val = serialize(val) end
 

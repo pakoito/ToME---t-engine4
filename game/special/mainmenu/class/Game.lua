@@ -24,6 +24,7 @@ require "engine.interface.GameMusic"
 local Module = require "engine.Module"
 local Savefile = require "engine.Savefile"
 local Dialog = require "engine.Dialog"
+local Tooltip = require "engine.Tooltip"
 local ButtonList = require "engine.ButtonList"
 local DownloadDialog = require "engine.dialogs.DownloadDialog"
 
@@ -33,6 +34,8 @@ function _M:init()
 	engine.interface.GameMusic.init(self)
 	self.profile_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
 	engine.Game.init(self, engine.KeyBind.new())
+
+	self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 400)
 
 	self.background = core.display.loadImage("/data/gfx/mainmenu/background.png")
 	self.refuse_threads = true
@@ -78,6 +81,11 @@ function _M:display()
 	if self.s_log then
 		local w, h = self.s_log:getSize()
 		self.s_log:toScreen(self.w - w, self.h - h)
+	end
+
+	if self.step.do_tooltip then
+		self.tooltip:display()
+		self.tooltip:toScreen(5, 5)
 	end
 
 	engine.Game.display(self)
@@ -209,7 +217,21 @@ function _M:selectStepMain()
 				core.game.exit_engine()
 			end,
 		},
-	}, self.w * 0.3, self.h * 0.2, self.w * 0.4, self.h * 0.3)
+	}, 400, self.h * 0.2, self.w * 0.4, self.h * 0.3)
+
+	if not self.news then
+		self.news = profile:getNews()
+		if not self.news or not self.news[1] then
+			self.nesw = {
+				title = 'Welcome to T-Engine and the Tales of Middle-earth',
+				text = [[From this interface you can create new characters for the game modules you want to play.
+T-Engine comes by default with the "Tales of Middle-earth" module, you can also install more by selecting "Install a game module" or by going to http://te4.org/
+]]
+			}
+		end
+		self.tooltip:set("%s\n---\n%s", self.news[1].title, self.news[1].text)
+	end
+	self.step.do_tooltip = true
 
 	if not self.firstrunchecked then
 		-- Check first time run for online profile

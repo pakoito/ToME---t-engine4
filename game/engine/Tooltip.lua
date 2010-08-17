@@ -25,12 +25,12 @@ module(..., package.seeall, class.make)
 
 tiles = engine.Tiles.new(16, 16)
 
-function _M:init(fontname, fontsize, color, bgcolor)
+function _M:init(fontname, fontsize, color, bgcolor, max)
 	self.color = color or {255,255,255}
 	self.bgcolor = bgcolor or {0,0,0}
 	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
-	self.max = max or 400
+	self.max = max or 300
 	self.changed = true
 	self.old_tmx, self.old_tmy = -1,-1
 	self.old_turn = -1
@@ -38,7 +38,7 @@ end
 
 --- Set the tooltip text
 function _M:set(str, ...)
-	self.text = str:format(...):splitLines(300, self.font)
+	self.text = str:format(...):splitLines(self.max, self.font)
 	self.w, self.h = 0, 0
 	for i, l in ipairs(self.text) do
 		local w, h = self.font:size(l)
@@ -98,6 +98,12 @@ function _M:display()
 		end
 	end
 	self.texture = self.surface:glTexture()
+end
+
+function _M:toScreen(x, y)
+	if self.surface then
+		self.surface:toScreenWithTexture(self.texture, x, y)
+	end
 end
 
 --- Displays the tooltip at the given map coordinates
