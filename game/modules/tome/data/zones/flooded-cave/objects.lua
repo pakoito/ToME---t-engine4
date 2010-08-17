@@ -30,7 +30,7 @@ newEntity{ base = "BASE_TRIDENT",
 	define_as = "TRIDENT_TIDES",
 	name = "Trident of the Tides", unique=true,
 	desc = [[As you wield this trident you can feel the power of the tides rushing through your arms.
-The trident counts as an axe for purpose of weapon combat talents.]],
+Tridents require the exotic weapons mastery talent to correctly use.]],
 	require = { stat = { str=35 }, },
 	cost = 300,
 	material_level = 4,

@@ -642,7 +642,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
-			local g = engine.Entity.new{block_sight=true, always_remember=false, unlit=self:getTalentLevel(t) * 10}
+			local g = engine.Entity.new{name="darkness", show_tooltip=true, block_sight=true, always_remember=false, unlit=self:getTalentLevel(t) * 10}
 			game.level.map(px, py, Map.TERRAIN+1, g)
 			game.level.map.remembers(px, py, false)
 			game.level.map.lites(px, py, false)

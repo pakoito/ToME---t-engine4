@@ -85,41 +85,43 @@ newTalent{
 }
 
 newTalent{
-	name = "Magma Pool",
+	name = "Fire Storm",
 	type = {"spell/fire-alchemy",3},
-	require = spells_req3,
+	require = spells_req4,
 	points = 5,
-	mana = 80,
-	cooldown = 15,
-	range = function(self, t)
-		if self:getTalentLevel(t) < 3 then return 1
-		else return math.floor(self:getTalentLevel(t)) end
-	end,
+	random_ego = "attack",
+	mana = 40,
+	cooldown = 30,
+	tactical = {
+		ATTACKAREA = 20,
+	},
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
-		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
-
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stone") and target:canBe("instakill") then
-				target:setEffect(target.EFF_STONED, math.floor((3 + self:getTalentLevel(t)) / 1.5), {})
-				game.level.map:particleEmitter(tx, ty, 1, "archery")
-			end
-		end)
-		game:playSoundNear(self, "talents/earth")
+		local duration = 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t)
+		local radius = 3
+		local dam = self:combatTalentSpellDamage(t, 5, 90)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			DamageType.FIRE, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=30},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			false
+		)
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch your foe and turn it into stone for %d turns.
-		Stoned creatures are unable to act or regen life and are very brittle.
-		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
-		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
-		At level 3 it will become a beam.]]):format(math.floor((3 + self:getTalentLevel(t)) / 1.5))
+		return ([[A furious fire storm rages around the caster doing %0.2f fire damage in a radius of 3 each turn for %d turns.
+		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 90), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
 	end,
 }
+
 
 newTalent{
 	name = "Body of Fire",

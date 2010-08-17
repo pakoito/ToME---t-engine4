@@ -355,11 +355,12 @@ newDamageType{
 	end,
 }
 
--- Cold damage + repulsion; checks for spell power against physical resistance
+-- Cold/physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
 	name = "wave", type = "WAVE",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam / 2)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then

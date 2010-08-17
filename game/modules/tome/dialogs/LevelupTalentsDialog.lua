@@ -79,6 +79,8 @@ function _M:init(actor, on_finish)
 end
 
 function _M:generateList()
+	self.actor.__show_special_talents = self.actor.__show_special_talents or {}
+
 	-- Makes up the list
 	local list, known = {}, {}
 	for i, tt in ipairs(self.actor.talents_types_def) do
@@ -95,7 +97,7 @@ function _M:generateList()
 			-- Find all talents of this school
 			if (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type]) then
 				for j, t in ipairs(tt.talents) do
-					if not t.hide then
+					if not t.hide or self.actor.__show_special_talents[t.id] then
 						local typename = "class"
 						if t.generic then typename = "generic" end
 						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id, color=not ttknown and {128,128,128} }

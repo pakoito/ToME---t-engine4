@@ -269,6 +269,11 @@ function _M:suffocate(value, src)
 	return dead, affected
 end
 
+function _M:onChat()
+	self:runStop("chat started")
+	self:restStop("chat started")
+end
+
 function _M:setName(name)
 	self.name = name
 	game.save_name = name

@@ -18,4 +18,5 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/minor-demon.lua", rarity(0))
-load("/data/general/npcs/all.lua", rarity(4, 35))
+load("/data/general/npcs/major-demon.lua", rarity(3))
+load("/data/general/npcs/all.lua", rarity(4, 65))

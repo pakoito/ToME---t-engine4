@@ -28,9 +28,9 @@ newEntity{
 	trident_rarity = 5, -- Special rarity field, converted to "rarity" when needed
 	metallic = true,
 	no_rust = true,
-	combat = { talented = "axe", damrange = 1.6, sound = "actions/melee", sound_miss = "actions/melee_miss", },
+	combat = { talented = "trident", damrange = 1.6, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[A two handed massive trident.
-The trident counts as an axe for purpose of weapon combat talents.]],
+Tridents require the exotic weapons mastery talent to correctly use.]],
 	twohanded = true,
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }

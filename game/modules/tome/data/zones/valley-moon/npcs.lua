@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/minor-demon.lua", rarity(0))
+load("/data/general/npcs/major-demon.lua", rarity(3))
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -37,6 +38,7 @@ newEntity{ define_as = "CORRUPTED_BALROG",
 	no_breath = 1,
 	move_others=true,
 	demon = 1,
+	invisible = 40,
 
 	on_melee_hit = { [DamageType.FIRE] = 50, [DamageType.LIGHT] = 30, },
 
@@ -54,6 +56,7 @@ newEntity{ define_as = "CORRUPTED_BALROG",
 		[Talents.T_FIRE_BREATH]=5,
 		[Talents.T_RUSH]=5,
 		[Talents.T_WEAPON_COMBAT]=10,
+		[Talents.T_EXOTIC_WEAPONS_MASTERY]=7,
 	},
 
 	autolevel = "dexmage",

@@ -61,7 +61,7 @@ Myrmidons are the most devoted warriors, following the orders of Maglor whatever
 		[Talents.T_STUNNING_BLOW]=3,
 		[Talents.T_RUSH]=8,
 		[Talents.T_WEAPON_COMBAT]=6,
-		[Talents.T_AXE_MASTERY]=6,
+		[Talents.T_EXOTIC_WEAPONS_MASTERY]=6,
 	},
 }
 
