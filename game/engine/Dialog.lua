@@ -126,12 +126,17 @@ function _M:init(title, w, h, x, y, alpha, font)
 	self.tabindex = 0
 	self.state = ""
 	self.currenttabindex = 0
-	self.w, self.h = math.floor(w), math.floor(h)
-	self.display_x = math.floor(x or (game.w - self.w) / 2)
-	self.display_y = math.floor(y or (game.h - self.h) / 2)
 	self.font = font
 	if not font then self.font = core.display.newFont("/data/font/Vera.ttf", 12) end
 	self.font_h = self.font:lineSkip()
+
+	self:resize(w, h, x, y, alpha)
+end
+
+function _M:resize(w, h, x, y, alpha)
+	self.w, self.h = math.floor(w), math.floor(h)
+	self.display_x = math.floor(x or (game.w - self.w) / 2)
+	self.display_y = math.floor(y or (game.h - self.h) / 2)
 	self.surface = core.display.newSurface(w, h)
 	self.iw, self.ih = w - 2 * 5, h - 8 - 16 - 3
 	self.internal_surface = core.display.newSurface(self.iw, self.ih)

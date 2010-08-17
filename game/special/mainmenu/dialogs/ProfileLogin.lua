@@ -95,9 +95,11 @@ function _M:init(dialogdef, profile_help_text)
 		self:addControl(TextBox.new({name="name",title="Name:",min=2, max=25, x=30, y=basey + 125, w=350, h=30}, self, self.font, "name"))
 		self:addControl(Button.new("ok", "Ok", 50, basey + 165, 50, 30, self, self.font, function() self:okclick() end))
 		self:addControl(Button.new("cancel", "Canel", 400, basey + 165, 50, 30, self, self.font, function() self:cancelclick() end))
+		self:resize(500, basey + 225)
 	else
 		self:addControl(Button.new("ok", "Ok", 50, basey + 85, 50, 30, self, self.font, function() self:okclick() end))
 		self:addControl(Button.new("cancel", "Canel", 400, basey + 85, 50, 30, self, self.font, function() self:cancelclick() end))
+		self:resize(500, basey + 145)
 	end
 	self:focusControl("login")
 end

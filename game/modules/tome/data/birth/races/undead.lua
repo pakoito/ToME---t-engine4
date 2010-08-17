@@ -105,7 +105,6 @@ newBirthDescriptor
 		"- fear immunity",
 		"- no need to breathe",
 		"- special skeleton talents: sharp bones, bone amour, re-assemble",
-		"The rotting body of ghouls also forces them to act a bit slower than most creatures.",
 	},
 	descriptor_choices =
 	{
