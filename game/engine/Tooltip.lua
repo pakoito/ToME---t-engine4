@@ -45,7 +45,7 @@ function _M:set(str, ...)
 		if w > self.w then self.w = w end
 		self.h = self.h + self.font_h
 	end
-	self.w = self.w + 8
+	self.w = math.min(self.w, self.max) + 8
 	self.h = self.h + 8
 	self.changed = true
 end

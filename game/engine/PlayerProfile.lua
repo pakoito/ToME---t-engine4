@@ -221,7 +221,7 @@ function _M:getNews()
 	print("[ONLINE PROFILE] get news")
 	local data = self:rpc{action="GetNews"}
 	if not data then print("[ONLINE PROFILE] no news") return end
-	print("[ONLINE PROFILE] news ", data[1] and data[1].title)
+	print("[ONLINE PROFILE] news ", data.title)
 	return data
 end
 

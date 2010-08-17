@@ -217,19 +217,25 @@ function _M:selectStepMain()
 				core.game.exit_engine()
 			end,
 		},
-	}, 400, self.h * 0.2, self.w * 0.4, self.h * 0.3)
+	}, 400 + 8 + 10, self.h * 0.2, self.w * 0.4, self.h * 0.3)
 
 	if not self.news then
 		self.news = profile:getNews()
-		if not self.news or not self.news[1] then
-			self.nesw = {
+		if not self.news then
+			self.news = {
 				title = 'Welcome to T-Engine and the Tales of Middle-earth',
 				text = [[From this interface you can create new characters for the game modules you want to play.
-T-Engine comes by default with the "Tales of Middle-earth" module, you can also install more by selecting "Install a game module" or by going to http://te4.org/
-]]
+
+#GOLD#"Tales of Middle-earth"#WHITE# is the default game module, you can also install more by selecting "Install a game module" or by going to http://te4.org/
+
+When inside a module remember you can press Escape to bring up a menu to change keybindings, resolution and other module specific options.
+
+Remember that in most roguelikes death is usualy permanent so be careful!
+
+Now go and have some fun!]]
 			}
 		end
-		self.tooltip:set("%s\n---\n%s", self.news[1].title, self.news[1].text)
+		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
 	end
 	self.step.do_tooltip = true
 
