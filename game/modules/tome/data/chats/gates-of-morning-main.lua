@@ -22,6 +22,7 @@ newChat{ id="welcome",
 	answers = {
 		{"Tell me more about the Gates of Morning.", jump="explain-gates"},
 		{"I need help to hunt for clue about the staff.", jump="clues", cond=function(npc, player) return not player:hasQuest("orc-pride") end},
+		{"The Prides are no more, their masters lay dead.", jump="prides-dead", cond=function(npc, player) return player:hasQuest("orc-pride") and player:hasQuest("orc-pride"):isCompleted() end},
 		{"I am back from Mount Doom, where the orcs took the staff.", jump="mount-doom", cond=function(npc, player) return player:hasQuest("mount-doom") and player:hasQuest("mount-doom"):isCompleted() end},
 		{"Sorry I have to go!"},
 	}
@@ -38,12 +39,28 @@ The name comes from the earliest days of the world when the world was flat and t
 	},
 }
 
+newChat{ id="prides-dead",
+	text = [[The news has indeed reached me, I could not believe it, for so long have we been at war with the Pride.
+Now they are dead? At the hands of just one @playerdescriptor.race@? Truly I am amazed by your power.
+While you were busy bringing their end to the orcs we managed to discover some parts of truth from a captive orc.
+He talked about the shield protecting the High Peak, it seems to be controlled by "orbs of command" which the masters of the Prides had in their possession.
+Look for them if you have not yet found them.
+He also said the only way to enter the peak and de-activate the shield is through the "slime tunnels", located somewhere in one of the Prides, probably Grushnak.
+]],
+	answers = {
+		{"Thanks my lady I will look for the tunnel and venture inside the Peak.", action=function(npc, player)
+			player:setQuestStatus("orc-pride", engine.Quest.DONE)
+			player:grantQuest("high-peak")
+		end},
+	},
+}
+
 newChat{ id="clues",
-	text = [[I much as I would like to help our forces are already spread too thin, we can not provide you direct power.
+	text = [[I much as I would like to help our forces are already spread too thin, we can not provide you with direct power.
 But I might be able to help you by explaining how the Pride is organised, we could help each others.
-Recently we have heard the pride speaking about a new master, or masters. They might be the ones behind the staff mystery of yours.
-We suppose their main place of power is the High Peek in the center of the continent but it is innaccessible and covered by some kind of shield.
-You must investigate the bastions of the Pride, maybe you will find more information about the High Peek, and any orcs you kill is one less that will attack us.
+Recently we have heard the pride speaking about a new master, or masters. They might be the ones behind that staff mystery of yours.
+We suppose their main place of power is the High Peak in the center of the continent but it is innaccessible and covered by some kind of shield.
+You must investigate the bastions of the Pride, maybe you will find more information about the High Peak, and any orcs you kill is one less that will attack us.
 The known bastions of the Pride are:
 - Rak'shor Pride, in the south west of the High Peak
 - Gorbat Pride, in the southern desert

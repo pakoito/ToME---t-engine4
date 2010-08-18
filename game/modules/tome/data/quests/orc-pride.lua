@@ -49,6 +49,12 @@ desc = function(self, who)
 	else
 		desc[#desc+1] = "#SLATE#* Gorbat Pride, in the southern desert.#WHITE#"
 	end
+
+	if self:isCompleted() then
+		desc[#desc+1] = ""
+		desc[#desc+1] = "#LIGHT_GREEN#* All prides lie in ruins, their masters destroyed. High Sun Paladin Aeryn would surely be glad of the news!#WHITE#"
+	end
+
 	return table.concat(desc, "\n")
 end
 
@@ -98,4 +104,12 @@ on_grant = function(self, who)
 	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 50, 21)
 
 	game.logPlayer(game.player, "Aeryn points the known locations on your map.")
+end
+
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted("rak-shor") and self:isCompleted("vor") and self:isCompleted("grushnak") and self:isCompleted("gorbat") then
+			who:setQuestStatus(self.id, engine.Quest.COMPLETED)
+		end
+	end
 end

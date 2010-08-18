@@ -480,7 +480,10 @@ function _M:setupCommands()
 --				self:changeLevel(1, "town-gates-of-morning")
 				self:changeLevel(1, "wilderness-arda-fareast")
 				game.memory_levels["wilderness-arda-fareast-1"] = game.level
+				self.player:grantQuest("spydric-infestation")
+				self.player:setQuestStatus("spydric-infestation", engine.Quest.COMPLETED)
 				self.player:grantQuest("orc-pride")
+				self.player:setQuestStatus("orc-pride", engine.Quest.COMPLETED)
 --				self.player:grantQuest("escort-duty")
 			end
 		end,

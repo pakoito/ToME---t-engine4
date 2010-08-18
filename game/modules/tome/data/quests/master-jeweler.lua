@@ -103,7 +103,7 @@ ritual_end = function(self)
 	end
 
 	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "limmir-survived")
-	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED)
+	game.player:setQuestStatus(self.id, engine.Quest.DONE)
 
 	for i = #game.level.e_array, 1, -1 do
 		local e = game.level.e_array[i]

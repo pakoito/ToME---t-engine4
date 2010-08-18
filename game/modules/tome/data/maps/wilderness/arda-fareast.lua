@@ -30,7 +30,7 @@ quickEntity('m', {always_remember = true, show_tooltip=true, name='mountains', d
 quickEntity('h', {always_remember = true, show_tooltip=true, name='low hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter="plain", equilibrium_level=-10})
 
 quickEntity('A', {always_remember = true, show_tooltip=true, name="Sun Wall Outpost (Town)", display='*', color=colors.GOLD, notice = true, change_level=1, change_zone="town-sunwall-outpost"})
-quickEntity('B', {always_remember = true, show_tooltip=true, name="High Peek", display='>', color=colors.VIOLET, notice = true, change_level=1, change_zone="high_peek"})
+quickEntity('B', {always_remember = true, show_tooltip=true, name="High Peak", display='>', color=colors.VIOLET, notice = true, change_level=1, change_zone="high-peak"})
 
 quickEntity('1', {always_remember = true, show_tooltip=true, name="Gates of Morning", desc="A massive hole in the Sun Wall", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
 
