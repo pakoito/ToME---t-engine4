@@ -55,7 +55,7 @@ This one seems to go to the Misty Mountains in the West.]],
 		change_level = 1,
 		change_zone = "wilderness",
 		change_wilderness = {
-			x = 9, y = 5,
+			x = 41, y = 33,
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the slopes of the Misty Mountains, with no trace of the portal...",
 		on_use = function(self, who)
@@ -112,4 +112,18 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+}
+
+newEntity{
+	define_as = "PORTAL_BOSS",
+	name = "Portal: The Sanctum",
+	display = '&', color=colors.LIGHT_BLUE, back_color=colors.PURPLE,
+	notice = true,
+	always_remember = true,
+	show_tooltip = true,
+	desc = [[This portal seems to connect to an other part of this level.]],
+	orb_portal = {
+		teleport_level = {x=25, y=8},
+		message = "#VIOLET#You enter the swirling portal and appear in a large room with other portals and the two wizards.",
+	},
 }

@@ -38,6 +38,9 @@ on_status_change = function(self, who, status, sub)
 end
 
 open_high_peak = function(self, who)
+	local wild = game.memory_levels["wilderness-arda-fareast-1"]
+	wild.map:removeParticleEmitter(wild.data.istari_shield)
+
 	local g = game.zone:makeEntityByName(game.level, "terrain", "PEAK_STAIR")
 	for j = 11, 18 do
 		game.level.map(249, j, engine.Map.TERRAIN, g)

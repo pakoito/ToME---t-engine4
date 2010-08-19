@@ -503,7 +503,8 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "slime-tunnels")
+				self:changeLevel(15, "high-peak")
+				self.player:grantQuest("high-peak")
 			end
 		end,
 	}
@@ -601,9 +602,9 @@ function _M:setupCommands()
 		PICKUP_FLOOR = not_wild(function()
 			self.player:playerPickup()
 		end),
-		DROP_FLOOR = not_wild(function()
+		DROP_FLOOR = function()
 			self.player:playerDrop()
-		end),
+		end,
 		SHOW_INVENTORY = function()
 			local d
 			local titleupdator = self.player:getEncumberTitleUpdator("Inventory")

@@ -393,7 +393,18 @@ function _M:runMoved()
 end
 
 function _M:doDrop(inven, item)
-	if game.zone.wilderness then game.logPlayer(self, "You can not drop on the world map.") return end
+	if game.zone.wilderness then
+		Dialog:yesnoLongPopup("Warning", "You can not drop items on the world map.\nIf you drop it it will be lost forever.", 300, function(ret)
+			-- The test is reversed because the buttons are reversed, to prevent mistakes
+			if not ret then
+				local o = self:removeObject(inven, item, true)
+				game.logPlayer(self, "You destroy %s.", o:getName{do_colour=true, do_count=true})
+				self:sortInven()
+				self:useEnergy()
+			end
+		end, "Cancel", "Destroy")
+		return
+	end
 	self:dropFloor(inven, item, true, true)
 	self:sortInven()
 	self:useEnergy()
@@ -545,12 +556,18 @@ end
 
 --- Use a portal with the orb of many ways
 function _M:useOrbPortal(portal)
-	if portal.change_wilderness then
-		self.current_wilderness = portal.change_wilderness.name
-		self.wild_x = portal.change_wilderness.x or 0
-		self.wild_y = portal.change_wilderness.y or 0
+	if portal.teleport_level then
+		local x, y = util.findFreeGrid(portal.teleport_level.x, portal.teleport_level.y, 2, true, {[Map.ACTOR]=true})
+		if x and y then self:move(x, y, true) end
+	else
+		if portal.change_wilderness then
+			self.current_wilderness = portal.change_wilderness.name
+			self.wild_x = portal.change_wilderness.x or 0
+			self.wild_y = portal.change_wilderness.y or 0
+		end
+		game:changeLevel(portal.change_level, portal.change_zone)
 	end
-	game:changeLevel(portal.change_level, portal.change_zone)
+
 	if portal.message then game.logPlayer(self, portal.message) end
 	if portal.on_use then portal:on_use(self) end
 end

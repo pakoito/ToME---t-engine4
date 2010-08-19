@@ -18,28 +18,28 @@
 -- darkgod@te4.org
 
 return {
-	name = "Taragoëol, the High Peak",
+	name = "Taragoël, the High Peak",
 	level_range = {55, 80},
 	level_scheme = "player",
 	max_level = 15,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 50, height = 50,
+	width = 50, height = 75,
 	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
+	no_worldport = true,
 	ambiant_music = "Through the Dark Portal.ogg",
-	no_level_connectivity = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			rooms = {"simple", "pilar", {"pit",6}},
-			rooms_config = {pit={filters={{type="orc"}, {type="undead"}, {type="naga"}}}},
-			lite_room_chance = 100,
+			rooms_config = {pit={filters={{type="orc"}, {type="naga"}, {type="dragon"}, {type="demon"}}}},
+			lite_room_chance = 10,
 			['.'] = "FLOOR",
 			['#'] = "WALL",
-			up = "UP",
+			up = "FLOOR",
 			down = "DOWN",
 			door = "DOOR",
 		},
@@ -61,18 +61,16 @@ return {
 	end,
 	levels =
 	{
-		[1] = {
-			generator = { map = {
-				up = "UP_WILDERNESS_FAR_EAST",
-			}, },
-		},
 		[15] = {
 			generator = {
 			map = {
 				class = "engine.generator.map.Static",
 				map = "zones/high-peak-last",
 			},
-			actor = { nb_npc = {0, 0}, },
+			actor = {
+				nb_npc = {30, 40},
+				area = {x1=0, x2=49, y1=23, y2=23+50},
+			},
 			},
 		},
 	},
