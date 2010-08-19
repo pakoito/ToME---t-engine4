@@ -555,6 +555,20 @@ function _M:useOrbPortal(portal)
 	if portal.on_use then portal:on_use(self) end
 end
 
+--- Use the orbs of command
+function _M:useCommandOrb(o)
+	local g = game.level.map(self.x, self.y, Map.TERRAIN)
+	if not g then return end
+	if not g.define_as or not o.define_as or o.define_as ~= g.define_as then
+		game.logPlayer(self, "This does not seem to have any effect.")
+		return
+	end
+
+	game.logPlayer(self, "You use the %s on the pedestral. There is a distant 'clonk' sound.", o:getName{do_colour=true})
+	self:grantQuest("orb-command")
+	self:setQuestStatus("orb-command", engine.Quest.COMPLETED, o.define_as)
+end
+
 --- Tell us when we are targetted
 function _M:on_targeted(act)
 	if self:attr("invisible") or self:attr("stealth") then

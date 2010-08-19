@@ -72,7 +72,7 @@ newTalent{
 	cooldown = 10,
 	stamina = 30,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=true, radius=2 + self:getTalentLevel(t), talent=t}
+		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t), talent=t}
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -84,7 +84,7 @@ newTalent{
 		end)
 		return true
 	end,
-	info = function(self, t)	
+	info = function(self, t)
 		return ([[Call all foes in a radius of %d around you into battle, getting them into melee range in an instant.]]):format(2+self:getTalentLevel(t))
 	end,
 }

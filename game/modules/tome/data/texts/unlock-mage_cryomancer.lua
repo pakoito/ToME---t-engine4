@@ -26,7 +26,7 @@ This place is Angolwen, the City of Magic, and for over one hundred years has ta
 
 You have uncovered the secrets of the ice magic and can now create new characters with the #LIGHT_GREEN#Cryomancer class#WHITE#.
 
-Pyromancers are specialized archmages, attuned to the magical properties of ice.
+Cryomancers are specialized archmages, attuned to the magical properties of ice.
 Class features:#YELLOW#
 - Cast potent ice spells to freeze your foes.
 - Freeze your foes and make them shatter into pieces.

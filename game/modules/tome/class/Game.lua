@@ -501,6 +501,11 @@ function _M:setupCommands()
 				self.logPlayer(self.player, "All world artifacts created.")
 			end
 		end,
+		[{"_g","ctrl"}] = function()
+			if config.settings.tome.cheat then
+				self:changeLevel(1, "slime-tunnels")
+			end
+		end,
 	}
 	self.key:addBinds
 	{

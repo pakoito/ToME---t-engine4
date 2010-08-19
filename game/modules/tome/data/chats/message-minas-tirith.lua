@@ -25,10 +25,12 @@ But enough talk, take this message, now I must go.
 	answers = {
 		{"Thank you for your courrage.", action=function(npc, player)
 			local o, item, inven_id = npc:findInAllInventories("Sealed Scroll of Minas Tirith")
-			npc:removeObject(inven_id, item, true)
-			player:addObject(player.INVEN_INVEN, o)
-			player:sortInven()
-			game.logPlayer(player, "The herald gives you %s.", o:getName{do_color=true})
+			if o then
+				npc:removeObject(inven_id, item, true)
+				player:addObject(player.INVEN_INVEN, o)
+				player:sortInven()
+				game.logPlayer(player, "The herald gives you %s.", o:getName{do_color=true})
+			end
 
 			if game.level:hasEntity(npc) then game.level:removeEntity(npc) end
 		end},

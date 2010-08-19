@@ -36,10 +36,12 @@ newEntity{
 	size_category = 3,
 	infravision = 20,
 
+	clone_on_hit = {min_dam_pct=15, chance=30},
+
 	resolvers.drops{chance=90, nb=1, {} },
 	resolvers.drops{chance=60, nb=1, {type="money"} },
 
-	resists = { [DamageType.LIGHT] = -50 },
+	resists = { [DamageType.LIGHT] = -50, [DamageType.COLD] = -50 },
 	fear_immune = 1,
 }
 
@@ -104,6 +106,69 @@ Through its transparent jelly structure you can see treasures it has engulfed, a
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,100),
-	combat = { dam=7, atk=15, apr=6, damtype=DamageType.ACID },
+	combat = { dam=resolvers.mbonus(80, 15), atk=15, apr=6, damtype=DamageType.ACID },
 	drops = resolvers.drops{chance=90, nb=3, {} },
 }
+
+newEntity{ base = "BASE_NPC_OOZE",
+	name = "crimson ooze", color=colors.CRIMSON,
+	desc = "It's reddish and it's oozing.",
+	level_range = {25, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	max_life = resolvers.rngavg(80,90), life_rating = 11,
+	combat = { dam=resolvers.mbonus(110, 15), atk=15, apr=5, damtype=DamageType.FIREBURN },
+	clone_on_hit = {min_dam_pct=15, chance=50},
+}
+
+newEntity{ base = "BASE_NPC_OOZE",
+	name = "brittle clear ooze", color=colors.WHITE,
+	desc = "It's translucent and it's oozing.",
+	level_range = {25, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	max_life = resolvers.rngavg(80,90), life_rating = 8,
+	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=5, },
+	clone_on_hit = {min_dam_pct=1, chance=50},
+}
+
+newEntity{ base = "BASE_NPC_OOZE",
+	name = "slimy ooze", color=colors.GREEN,
+	desc = "It's very slimy and it's oozing.",
+	level_range = {25, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	max_life = resolvers.rngavg(80,90), life_rating = 11,
+	combat = { dam=resolvers.mbonus(110, 15), atk=15, apr=5, damtype=DamageType.SLIME },
+	clone_on_hit = {min_dam_pct=15, chance=50},
+
+	resolvers.talents{ [Talents.T_SLIME_SPIT]=5 },
+}
+
+newEntity{ base = "BASE_NPC_OOZE",
+	name = "poison ooze", color=colors.LIGHT_GREEN,
+	desc = "It's very slimy and it's oozing.",
+	level_range = {25, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	max_life = resolvers.rngavg(80,90), life_rating = 11,
+	combat = { dam=resolvers.mbonus(110, 15), atk=15, apr=5, damtype=DamageType.POISON },
+	clone_on_hit = {min_dam_pct=15, chance=50},
+
+	resolvers.talents{ [Talents.T_POISONOUS_SPORES]=5 },
+}
+
+--[[
+newEntity{ base = "BASE_NPC_OOZE",
+	name = "morphic ooze", color=colors.GREY,
+	desc = "Its shape change every few seconds.",
+	level_range = {25, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 3,
+	max_life = resolvers.rngavg(140,170), life_rating = 11,
+	combat = { dam=resolvers.mbonus(110, 15), atk=15, apr=5, damtype=DamageType.ACID },
+	clone_on_hit = {min_dam_pct=40, chance=100},
+
+	resolvers.talents{ [Talents.T_OOZE_MERGE]=5 },
+}
+]]

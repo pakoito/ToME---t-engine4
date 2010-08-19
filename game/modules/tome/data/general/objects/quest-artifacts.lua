@@ -117,6 +117,11 @@ newEntity{ define_as = "ORB_UNDEATH",
 		end
 	end,
 
+	max_power = 1, power_regen = 1,
+	use_power = { name = "use the orb", power = 1,
+		use = function(self, who) who:useCommandOrb(self) end
+	},
+
 	carrier = {
 		inc_stats = { [Stats.STAT_DEX] = 6, },
 	},
@@ -139,6 +144,11 @@ newEntity{ define_as = "ORB_DRAGON",
 			return true
 		end
 	end,
+
+	max_power = 1, power_regen = 1,
+	use_power = { name = "use the orb", power = 1,
+		use = function(self, who) who:useCommandOrb(self) end
+	},
 
 	carrier = {
 		inc_stats = { [Stats.STAT_CUN] = 6, },
@@ -163,6 +173,11 @@ newEntity{ define_as = "ORB_ELEMENTS",
 		end
 	end,
 
+	max_power = 1, power_regen = 1,
+	use_power = { name = "use the orb", power = 1,
+		use = function(self, who) who:useCommandOrb(self) end
+	},
+
 	carrier = {
 		inc_stats = { [Stats.STAT_MAG] = 6, },
 	},
@@ -185,6 +200,11 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 			return true
 		end
 	end,
+
+	max_power = 1, power_regen = 1,
+	use_power = { name = "use the orb", power = 1,
+		use = function(self, who) who:useCommandOrb(self) end
+	},
 
 	carrier = {
 		inc_stats = { [Stats.STAT_STR] = 6, },

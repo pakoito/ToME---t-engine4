@@ -20,7 +20,27 @@
 name = "The Orbs of Command"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have found an orb of command that seems to be used to open the shield protecting the High Peek."
+	desc[#desc+1] = "You have found an orb of command that seems to be used to open the shield protecting the High Peak."
 	desc[#desc+1] = "There seems to be a total of four of them, the more you have the weaker the shield will be."
 	return table.concat(desc, "\n")
+end
+
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted("ORB_DESTRUCTION") and
+		   self:isCompleted("ORB_UNDEATH") and
+		   self:isCompleted("ORB_DRAGON") and
+		   self:isCompleted("ORB_ELEMENTS") then
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+			self:open_high_peak(who)
+		end
+	end
+end
+
+open_high_peak = function(self, who)
+	local g = game.zone:makeEntityByName(game.level, "terrain", "PEAK_STAIR")
+	for j = 11, 18 do
+		game.level.map(249, j, engine.Map.TERRAIN, g)
+	end
+	game.logPlayer(who, "#LIGHT_BLUE#There is a loud crack. The way is open.")
 end
