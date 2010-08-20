@@ -57,7 +57,16 @@ return {
 		},
 	},
 	post_process = function(level)
+		game.player:grantQuest("high-peak")
 		for uid, e in pairs(level.entities) do e.faction="blue-wizards" end
+
+		-- if we failed at mount doom (or did not do it at all) the gate of morning is destroyed and Aeryn turned to the service of the istari
+		if level.level == 15 then
+			local mtdm = game.player:hasQuest("mount-doom")
+			if not mtdm or mtdm:isCompleted("not-stopped") then
+				game.player:hasQuest("high-peak"):failed_mount_doom(level)
+			end
+		end
 	end,
 	levels =
 	{

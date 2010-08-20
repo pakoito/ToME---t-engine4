@@ -22,7 +22,7 @@ defineTile(',', "FLOOR")
 defineTile('.', "FLOOR", nil, nil, nil, {lite=true})
 defineTile('+', "DOOR")
 defineTile('#', "WALL", nil, nil, nil, {lite=true})
-defineTile('*', "WALL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('*', "HARDWALL", nil, nil, nil, {lite=true, no_teleport=true})
 
 -- Portals
 defineTile('&', "FAR_EAST_PORTAL", nil, nil, nil, {lite=true})
@@ -51,6 +51,7 @@ subGenerator{
 		force_last_stair = true,
 	},
 	define_up = true,
+	define_down = true,
 }
 
 addSpot({16, 4}, "portal", "destruction")

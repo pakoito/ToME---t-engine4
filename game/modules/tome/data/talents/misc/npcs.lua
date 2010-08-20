@@ -956,6 +956,7 @@ newTalent{
 	cooldown = 20,
 	vim = 20,
 	range = 20,
+	random_ego = "utility",
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

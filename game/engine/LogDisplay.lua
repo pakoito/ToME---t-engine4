@@ -89,9 +89,10 @@ function _M:display()
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 	local i, dh = 1, 0
 	local r, g, b = self.color[1], self.color[2], self.color[3]
+	local buffer = (self.h % self.font_h) / 2
 	for i = math.floor(self.h / self.font_h), 1, -1 do
 		if self.log[self.scroll + i] then
-			r, g, b = self.surface:drawColorStringBlended(self.font, self.log[self.scroll + i][1], 0, self.h - (i) * self.font_h, r, g, b)
+			r, g, b = self.surface:drawColorStringBlended(self.font, self.log[self.scroll + i][1], 0, self.h - buffer - (i) * self.font_h, r, g, b)
 			if self.log[self.scroll + i].reset then r, g, b = self.color[1], self.color[2], self.color[3] end
 		end
 	end

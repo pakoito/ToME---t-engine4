@@ -61,6 +61,7 @@ newEntity{
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
 	mana_regen = 10,
+	negative_regen = 10,
 	rank = 5,
 	size_category = 3,
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
@@ -90,6 +91,11 @@ newEntity{
 		[Talents.T_METAFLOW]=5,
 		[Talents.T_PHASE_DOOR]=5,
 		[Talents.T_ESSENCE_OF_SPEED]=5,
+
+		[Talents.T_HYMN_OF_SHADOWS]=5,
+		[Talents.T_MOONLIGHT_RAY]=5,
+		[Talents.T_STARFALL]=5,
+		[Talents.T_TWILIGHT_SURGE]=5,
 	},
 	resolvers.sustains_at_birth(),
 
@@ -145,11 +151,75 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 }
 
-newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
+-- Aeryn trying to kill the player if mount doom quest failed
+newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	type = "humanoid", subtype = "human",
 	display = "p",
 	faction = "blue-wizards",
 	name = "Fallen Sun Paladin Aeryn", color=colors.VIOLET, unique = true,
+	desc = [[A beautiful woman, clad in a shining plate armour. Power radiates from her.]],
+	level_range = {56, 56}, exp_worth = 2,
+	rank = 5,
+	size_category = 3,
+	female = true,
+	max_life = 250, life_rating = 30, fixed_rating = true,
+	infravision = 20,
+	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
+	instakill_immune = 1,
+	move_others=true,
+
+	open_door = true,
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
+	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+
+	resolvers.equip{
+		{type="weapon", subtype="mace", ego_chance=100, autoreq=true},
+		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
+		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
+		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
+		{type="armor", subtype="head", ego_chance=100, autoreq=true},
+	},
+
+	die = function(self, src)
+		self.die = function() end
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("fallen-aeryn", self, game.player)
+		chat:invoke()
+	end,
+
+	positive_regen = 15,
+
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_WEAPON_COMBAT]=10,
+		[Talents.T_MACE_MASTERY]=10,
+		[Talents.T_RUSH]=3,
+
+		[Talents.T_CHANT_OF_FORTITUDE]=5,
+		[Talents.T_SEARING_LIGHT]=5,
+		[Talents.T_MARTYRDOM]=5,
+		[Talents.T_BARRIER]=5,
+		[Talents.T_WEAPON_OF_LIGHT]=5,
+		[Talents.T_MARTYRDOM]=5,
+		[Talents.T_HEALING_LIGHT]=5,
+		[Talents.T_CRUSADE]=8,
+		[Talents.T_SUN_FLARE]=5,
+		[Talents.T_FIREBEAM]=7,
+		[Talents.T_SUNBURST]=8,
+	},
+	resolvers.sustains_at_birth(),
+}
+
+-- Aeryn coming back to help the player in the fight with the Istari
+newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
+	type = "humanoid", subtype = "human",
+	display = "p",
+	faction = "sunwall",
+	name = "High Sun Paladin Aeryn", color=colors.VIOLET, unique = true,
 	desc = [[A beautiful woman, clad in a shining plate armour. Power radiates from her.]],
 	level_range = {56, 56}, exp_worth = 2,
 	rank = 5,
@@ -183,13 +253,13 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
 		[Talents.T_WEAPON_COMBAT]=10,
 		[Talents.T_MACE_MASTERY]=10,
+		[Talents.T_RUSH]=3,
 
 		[Talents.T_CHANT_OF_FORTITUDE]=5,
 		[Talents.T_SEARING_LIGHT]=5,
 		[Talents.T_MARTYRDOM]=5,
 		[Talents.T_BARRIER]=5,
 		[Talents.T_WEAPON_OF_LIGHT]=5,
-		[Talents.T_MARTYRDOM]=5,
 		[Talents.T_HEALING_LIGHT]=5,
 		[Talents.T_CRUSADE]=8,
 		[Talents.T_SUN_FLARE]=5,
@@ -197,4 +267,8 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		[Talents.T_SUNBURST]=8,
 	},
 	resolvers.sustains_at_birth(),
+	-- She starts at 60% life
+	resolvers.genericlast(function(e)
+		e.life = e.max_life * 0.6
+	end),
 }

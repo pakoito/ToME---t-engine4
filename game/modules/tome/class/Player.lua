@@ -556,6 +556,22 @@ end
 
 --- Use a portal with the orb of many ways
 function _M:useOrbPortal(portal)
+	local wait = function()
+		local co = coroutine.running()
+		local ok = false
+		self:restInit(20, "using the portal", "used the poral", function(cnt, max)
+			if cnt > max then ok = true end
+			coroutine.resume(co)
+		end)
+		coroutine.yield()
+		if not ok then
+			game.logPlayer(self, "You have been interrupted!")
+			return false
+		end
+		return true
+	end
+	if not wait() then return end
+
 	if portal.teleport_level then
 		local x, y = util.findFreeGrid(portal.teleport_level.x, portal.teleport_level.y, 2, true, {[Map.ACTOR]=true})
 		if x and y then self:move(x, y, true) end
@@ -570,6 +586,7 @@ function _M:useOrbPortal(portal)
 
 	if portal.message then game.logPlayer(self, portal.message) end
 	if portal.on_use then portal:on_use(self) end
+	self.energy = self.energy + game.energy_to_act
 end
 
 --- Use the orbs of command

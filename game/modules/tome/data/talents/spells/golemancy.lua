@@ -105,8 +105,9 @@ newTalent{
 			coroutine.yield()
 			if not ok then
 				game.logPlayer(self, "You have been interrupted!")
-				return
+				return false
 			end
+			return true
 		end
 
 		local ammo = self:hasAlchemistWeapon()
@@ -131,7 +132,7 @@ newTalent{
 				game.logPlayer(self, "You need to ready 15 alchemist gems in your quiver to heal your golem.")
 				return
 			end
-			wait()
+			if not wait() then return end
 			for i = 1, 15 do self:removeObject(self:getInven("QUIVER"), 1) end
 
 			self.alchemy_golem.dead = nil

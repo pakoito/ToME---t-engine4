@@ -713,7 +713,9 @@ function _M:levelup()
 		end
 		-- Provide one of our resists
 		local t = rng.table(self.auto_resists_list)
-		self.resists[t] = (self.resists[t] or 0) + rng.float(self:getRankResistAdjust())
+		if (self.resists[t] or 0) < 50 then
+			self.resists[t] = (self.resists[t] or 0) + rng.float(self:getRankResistAdjust())
+		end
 
 		-- Bosses have a right to get a general damage reduction
 		if self.rank >= 4 then
