@@ -49,7 +49,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 	cooldown = 20,
 	range = 1,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = {default_target=self, type="hit", nowarning=true, range=self:getTalentRange(t), first_target="friend"}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
@@ -62,7 +62,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 	info = function(self, t)
 		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d.
 		The effect will increase with your Willpower stat.]]):
-		format(20 + self:getWil(25) * self:getTalentLevel(t))
+		format(20 + self:getWil(50) * self:getTalentLevel(t))
 	end,
 }
 
@@ -76,7 +76,7 @@ newTalent{
 	cooldown = 10,
 	range = 100,
 	action = function(self, t)
-		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, range=100, radius=3 + self:getTalentLevel(t)}
+		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=3 + self:getTalentLevel(t)}
 		if not x then return nil end
 
 		self:magicMap(3 + self:getTalentLevel(t), x, y)
