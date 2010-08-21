@@ -68,6 +68,10 @@ return {
 			end
 		end
 	end,
+	on_turn = function(self)
+		if not game.level.allow_portals then return end
+		require("mod.class.generator.actor.HighPeakFinal").new(self, game.level.map, game.level, {}):tick()
+	end,
 	levels =
 	{
 		[15] = {

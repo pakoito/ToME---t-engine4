@@ -69,6 +69,7 @@ function start_end_combat(self)
 		game.level.map.lites(i, j, true)
 		game.level.map.attrs(i, j, "no_teleport", false)
 	end end
+	game.level.allow_portals = true
 end
 
 function end_end_combat(self)
@@ -78,6 +79,19 @@ function end_end_combat(self)
 	end
 	for i = 36, 41 do
 		game.level.map(i, 11, engine.Map.TERRAIN, floor)
+	end
+	game.level.allow_portals = false
+
+	local nb_portal = 0
+	if self:isCompleted("closed-portal-demon") then nb_portal = nb_portal + 1 end
+	if self:isCompleted("closed-portal-dragon") then nb_portal = nb_portal + 1 end
+	if self:isCompleted("closed-portal-elemental") then nb_portal = nb_portal + 1 end
+	if self:isCompleted("closed-portal-undead") then nb_portal = nb_portal + 1 end
+	if nb_portal == 0 then world:gainAchievement("ISTARI_NO_PORTAL", game.player)
+	elseif nb_portal == 1 then world:gainAchievement("ISTARI_ONE_PORTAL", game.player)
+	elseif nb_portal == 2 then world:gainAchievement("ISTARI_TWO_PORTAL", game.player)
+	elseif nb_portal == 3 then world:gainAchievement("ISTARI_THREE_PORTAL", game.player)
+	elseif nb_portal == 4 then world:gainAchievement("ISTARI_FOUR_PORTAL", game.player)
 	end
 end
 

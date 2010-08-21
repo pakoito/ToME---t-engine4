@@ -556,6 +556,8 @@ end
 
 --- Use a portal with the orb of many ways
 function _M:useOrbPortal(portal)
+	if portal.special then portal:special(self) return end
+
 	local wait = function()
 		local co = coroutine.running()
 		local ok = false

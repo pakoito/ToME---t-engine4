@@ -21,7 +21,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_XORN",
-	type = "giant", subtype = "xorn",
+	type = "elemental", subtype = "xorn",
 	display = "X", color=colors.UMBER,
 
 	combat = { dam=resolvers.mbonus(46, 15), atk=15, apr=15, dammod={str=0.8} },

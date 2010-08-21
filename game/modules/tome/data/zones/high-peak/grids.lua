@@ -74,6 +74,16 @@ newEntity{
 This one seems to go to an unknown place, seemingly out of this world. You dare not use it.]],
 }
 
+local invocation_close = function(self, who)
+	game.logPlayer(who, "#LIGHT_BLUE#You use the orb on the portal, shutting it down easily.")
+	-- Remove the level spot
+	local spot = game.level:pickSpot{type="portal", subtype=self.summon}
+	for i = 1, #game.level.spots do if game.level.spots[i] == spot then table.remove(game.level.spots, i) break end end
+	local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
+	g.name = g.name .. " (disabled)"
+	who:setQuestStatus("high-peak", engine.Quest.COMPLETED, "closed-portal-"..self.summon)
+end
+
 newEntity{
 	define_as = "PORTAL_UNDEAD",
 	name = "Invocation Portal: Undeath",
@@ -82,6 +92,10 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	orb_portal = {
+		summon = "undead",
+		special = invocation_close,
+	},
 }
 
 newEntity{
@@ -92,6 +106,10 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	orb_portal = {
+		summon = "elemental",
+		special = invocation_close,
+	},
 }
 
 newEntity{
@@ -102,6 +120,10 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	orb_portal = {
+		summon = "dragon",
+		special = invocation_close,
+	},
 }
 
 newEntity{
@@ -112,6 +134,10 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	orb_portal = {
+		summon = "demon",
+		special = invocation_close,
+	},
 }
 
 newEntity{

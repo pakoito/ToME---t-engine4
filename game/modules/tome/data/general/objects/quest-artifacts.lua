@@ -76,8 +76,8 @@ newEntity{ define_as = "ORB_MANY_WAYS",
 	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
 If used near a portal it could probably activate it.]],
 
-	max_power = 50, power_regen = 1,
-	use_power = { name = "activate a portal", power = 25,
+	max_power = 30, power_regen = 1,
+	use_power = { name = "activate a portal", power = 10,
 		use = function(self, who)
 			local g = game.level.map(who.x, who.y, game.level.map.TERRAIN)
 			if g and g.orb_portal then
