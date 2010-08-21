@@ -19,29 +19,50 @@
 
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped (and used!) by the Shade of Angmar
-newEntity{ base = "BASE_STAFF",
-	define_as = "STAFF_ANGMAR", rarity=false,
-	name = "Angmar's Fall", unique=true,
-	desc = [[Made from the bones of of many creatures this staff glows with power. You can feel its evilness as you touch it.]],
-	require = { stat = { mag=25 }, },
-	cost = 5,
+local Stats = require "engine.interface.ActorStats"
+
+-- The staff of absorption, the reason the game exists!
+newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
+	unique = true,
+	name = "Awakened Staff of Absorption", identified=true,
+	display = "\\", color=colors.VIOLET, image = "object/staff_dragonbone.png",
+	encumber = 7,
+	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
+Light around it seems to dim and you can feel its tremendous power simply by touching it.
+The Istari seem to have awakened its power.]],
+
+	require = { stat = { mag=60 }, },
 	combat = {
-		dam = 10,
-		apr = 0,
-		physcrit = 1.5,
-		dammod = {mag=1.1},
+		dam = 50,
+		apr = 4,
+		atk = 20,
+		dammod = {mag=1},
 	},
 	wielder = {
-		see_invisible = 2,
-		combat_spellpower = 7,
-		combat_spellcrit = 8,
-		inc_damage={
-			[DamageType.FIRE] = 4,
-			[DamageType.COLD] = 4,
-			[DamageType.ACID] = 4,
-			[DamageType.LIGHTNING] = 4,
-			[DamageType.BLIGHT] = 4,
-		},
+		combat_spellpower = 34,
+		combat_spellcrit = 10,
+		max_mana = 50,
+		max_positive = 50,
+		max_negative = 50,
+		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 6 },
+	},
+
+	max_power = 1000, power_regen = 1,
+	use_power = { name = "absorb energies", power = 1000,
+		use = function(self, who)
+			local tg = {type="hit", range=8}
+			local x, y = who:getTarget(tg)
+			if not x or not y then return nil end
+			local _ _, x, y = who:canProject(tg, x, y)
+			local target = game.level.map(x, y, engine.Map.ACTOR)
+			if not target then return nil end
+			if target.staff_drained then
+				game.logPlayer(who, "This foe has already been drained.")
+			end
+
+			game.logPlayer(who, "You brandish the staff, draining your foe.")
+			who:setEffect(who.EFF_POWER_OVERLOAD, 7, {power=20})
+			target:takeHit(target.life * 0.2, who)
+		end
 	},
 }

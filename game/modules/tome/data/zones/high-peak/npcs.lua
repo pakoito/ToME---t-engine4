@@ -66,32 +66,35 @@ newEntity{
 	size_category = 3,
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", defined="STAFF_ABSORPTION_AWAKENED", autoreq=true},
 		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+		{type="armor", subtype="head", ego_chance=100, autoreq=true},
+		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=10, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
+		[Talents.T_STONE_SKIN]=5,
+		[Talents.T_QUICKEN_SPELLS]=5,
+		[Talents.T_SPELL_SHAPING]=5,
+		[Talents.T_ARCANE_POWER]=5,
+		[Talents.T_ESSENCE_OF_SPEED]=5,
+		[Talents.T_HYMN_OF_SHADOWS]=5,
+
 		[Talents.T_FLAME]=5,
 		[Talents.T_FREEZE]=5,
 		[Talents.T_LIGHTNING]=5,
 		[Talents.T_MANATHRUST]=5,
 		[Talents.T_FLAMESHOCK]=5,
-		[Talents.T_STONE_SKIN]=5,
 		[Talents.T_STRIKE]=5,
 		[Talents.T_HEAL]=5,
 		[Talents.T_REGENERATION]=5,
 		[Talents.T_ILLUMINATE]=5,
-		[Talents.T_QUICKEN_SPELLS]=5,
-		[Talents.T_SPELL_SHAPING]=5,
-		[Talents.T_ARCANE_POWER]=5,
 		[Talents.T_METAFLOW]=5,
 		[Talents.T_PHASE_DOOR]=5,
-		[Talents.T_ESSENCE_OF_SPEED]=5,
 
-		[Talents.T_HYMN_OF_SHADOWS]=5,
 		[Talents.T_MOONLIGHT_RAY]=5,
 		[Talents.T_STARFALL]=5,
 		[Talents.T_TWILIGHT_SURGE]=5,
@@ -127,7 +130,7 @@ newEntity{
 		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
 		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=10, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
 		[Talents.T_FLAME]=5,
