@@ -25,9 +25,11 @@ local Map = require "engine.Map"
 -- When an other actor moves it can update the fov of seen actors
 module(..., package.seeall, class.make)
 
+_M.__do_distance_map = false
+
 --- Initialises stats with default values if needed
 function _M:init(t)
---	self.distance_map = {}
+	self.distance_map = {}
 	self.fov = {actors={}, actors_dist={}}
 	self.fov_computed = false
 	self.fov_last_x = -1
@@ -70,7 +72,7 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 		end, function(_, x, y, dx, dy, sqdist)
 			if apply then apply(x, y, dx, dy, sqdist) end
 
---			if dist_map then self:distanceMap(x, y, math.floor(game.turn + math.sqrt(sqdist))) end
+			if self.__do_distance_map then self:distanceMap(x, y, game.turn + radius - math.sqrt(sqdist)) end
 
 			-- Note actors
 			local a = map(x, y, Map.ACTOR)
