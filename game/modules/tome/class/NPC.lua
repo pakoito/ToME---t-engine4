@@ -52,6 +52,16 @@ function _M:act()
 	if not self.energy.used then self:useEnergy() end
 end
 
+--- Give target to others
+function _M:seen_by(who)
+	if self.ai_target.actor then return end
+	if not who.ai_target then return end
+	if not who.ai_target.actor then return end
+	if self:reactionToward(who) < 0 then return end
+	if not who:canSee(who.ai_target.actor) then return end
+	self:setTarget(who.ai_target.actor)
+end
+
 --- Called by ActorLife interface
 -- We use it to pass aggression values to the AIs
 function _M:onTakeHit(value, src)

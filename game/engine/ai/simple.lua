@@ -35,7 +35,7 @@ newAI("move_dmap", function(self)
 		if self:hasLOS(a.x, a.y) then return self:runAI("move_simple") end
 
 		local c = a:distanceMap(self.x, self.y)
-		if not c then return end
+		if not c then return self:runAI("move_simple") end
 		local dir = 5
 		for i = 1, 9 do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)

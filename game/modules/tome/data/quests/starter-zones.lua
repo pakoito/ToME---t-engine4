@@ -24,7 +24,7 @@ desc = function(self, who)
 	desc[#desc+1] = "It is time to explore some new places dark, forgotten and dangerous ones."
 	desc[#desc+1] = "The Old Forest is just south-west of the town of Bree."
 	desc[#desc+1] = "The Maze is west of Bree."
-	desc[#desc+1] = "The Sandworm is to the far west of Bree, near the sea."
+	desc[#desc+1] = "The Sandworm Lair is to the far west of Bree, near the sea."
 	desc[#desc+1] = "Carn Dûm is to the north of Amon Sûl."
 	if self:isCompleted("old-forest") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Old Forest and vanquished the Old Man Willow.#WHITE#"
