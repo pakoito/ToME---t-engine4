@@ -50,7 +50,8 @@ The Istari seem to have awakened its power.]],
 	max_power = 1000, power_regen = 1,
 	use_power = { name = "absorb energies", power = 1000,
 		use = function(self, who)
-			local tg = {type="hit", range=8}
+			local tg = {type="hit", range=8
+			}
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
 			local _ _, x, y = who:canProject(tg, x, y)
@@ -64,5 +65,23 @@ The Istari seem to have awakened its power.]],
 			who:setEffect(who.EFF_POWER_OVERLOAD, 7, {power=20})
 			target:takeHit(target.life * 0.2, who)
 		end
+	},
+}
+
+newEntity{ define_as = "PEARL_LIFE_DEATH",
+	unique = true,
+	type = "gem", subtype="white",
+	unided_name = "shining pearl",
+	name = "Pearl of Life and Death",
+	display = "*", color=colors.WHITE, image = "object/pearl.png",
+	encumber = 2,
+	desc = [[A pearl, three times a normal sized one, that glitters in infinite colours, with slight patterns ever shitting away.]],
+
+	carrier = {
+		lite = 1,
+		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5, [Stats.STAT_LCK] = 10 },
+		inc_damage = {all = 7},
+		resists = {all = 7},
+		stun_immune = 1,
 	},
 }

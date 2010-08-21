@@ -113,7 +113,7 @@ newEntity{
 	define_as = "PALLANDO",
 	type = "humanoid", subtype = "istari",
 	name = "Pallando the Blue",
-	display = "@", color=colors.LIGHT_BLUE,
+	display = "@", color=colors.ROYAL_BLUE,
 	faction = "blue-wizards",
 
 	desc = [[Lost to the memory of the West, the Blue Wizards have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
@@ -130,6 +130,7 @@ newEntity{
 		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
 		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
 	},
+	resolvers.drops{chance=100, nb=1, {defined="PEARL_LIFE_DEATH"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
