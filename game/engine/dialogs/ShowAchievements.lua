@@ -23,7 +23,11 @@ require "engine.Dialog"
 module(..., package.seeall, class.inherit(engine.Dialog))
 
 function _M:init(title)
-	engine.Dialog.init(self, title or "Achievements", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	local total = #world.achiev_defs
+	local nb = 0
+	for id, data in pairs(world.achieved) do nb = nb + 1 end
+
+	engine.Dialog.init(self, (title or "Achievements").." ("..nb.."/"..total..")", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
 
 	self:generateList()
 

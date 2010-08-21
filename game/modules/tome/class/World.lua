@@ -19,10 +19,10 @@
 
 require "engine.class"
 require "engine.World"
-require "engine.interface.WorldAchievements"
+require "mod.class.interface.WorldAchievements"
 local Savefile = require "engine.Savefile"
 
-module(..., package.seeall, class.inherit(engine.World, engine.interface.WorldAchievements))
+module(..., package.seeall, class.inherit(engine.World, mod.class.interface.WorldAchievements))
 
 function _M:init()
 	engine.World.init(self)
@@ -54,5 +54,8 @@ function _M:gainAchievement(id, src, ...)
 	-- Do not unlock things in easy mode
 	if not a or (game.difficulty == game.DIFFICULTY_EASY and not a.tutorial) then return end
 
-	engine.interface.WorldAchievements.gainAchievement(self, id, src, ...)
+	if game.difficulty == game.DIFFICULTY_NIGHTMARE then id = "NIGHTMARE_"..id end
+	if game.difficulty == game.DIFFICULTY_INSANE then id = "INSANE_"..id end
+
+	mod.class.interface.WorldAchievements.gainAchievement(self, id, src, ...)
 end
