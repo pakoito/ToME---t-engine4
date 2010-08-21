@@ -33,7 +33,7 @@ newEntity{
 	infravision = 20,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	energy = { mod=1.1 },
 	stats = { str=10, dex=17, mag=3, con=7 },
 	combat = { dammod={str=0.6} },

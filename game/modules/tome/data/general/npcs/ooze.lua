@@ -28,7 +28,7 @@ newEntity{
 	desc = "It's colorful and it's oozing.",
 	body = { INVEN = 10 },
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	stats = { str=10, dex=15, mag=3, con=10 },
 	energy = { mod=0.7 },
 	combat_armor = 1, combat_def = 1,

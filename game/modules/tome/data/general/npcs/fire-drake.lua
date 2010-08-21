@@ -35,7 +35,7 @@ newEntity{
 	size_category = 5,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=20, dex=20, mag=30, con=16 },
 

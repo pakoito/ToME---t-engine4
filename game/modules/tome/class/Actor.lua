@@ -58,6 +58,9 @@ module(..., package.seeall, class.inherit(
 -- Dont save the can_see_cache
 _M._no_save_fields.can_see_cache = true
 
+-- Use distance maps
+_M.__do_distance_map = true
+
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.combat_def = 0

@@ -28,7 +28,7 @@ newEntity{ --rodent base
 	infravision = 20,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	energy = { mod=1 },
 	stats = { str=8, dex=15, mag=3, con=5 },
 	combat_armor = 1, combat_def = 1,

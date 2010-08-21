@@ -48,7 +48,7 @@ newEntity{
 	drops = resolvers.drops{chance=20, nb=1, {} },
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=9, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=9, },
 	energy = { mod=1 },
 	stats = { str=12, dex=12, mag=12, con=12 },
 	infravision = 20,

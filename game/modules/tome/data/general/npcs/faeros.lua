@@ -34,7 +34,7 @@ newEntity{
 	size_category = 3,
 
 	autolevel = "dexmage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=10, dex=8, mag=6, con=16 },
 

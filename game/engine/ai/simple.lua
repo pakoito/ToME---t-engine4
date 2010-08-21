@@ -32,15 +32,16 @@ end)
 newAI("move_dmap", function(self)
 	if self.ai_target.actor then
 		local a = self.ai_target.actor
-		if self:hasLOS(a) then return self:runAI("move_simple") end
+		if self:hasLOS(a.x, a.y) then return self:runAI("move_simple") end
 
 		local c = a:distanceMap(self.x, self.y)
 		if not c then return end
 		local dir = 5
 		for i = 1, 9 do
-			local cd = a:distanceMap(util.coordAddDir(self.x, self.y, i))
-			print("looking for dmap", dir, i, "::", c, cd)
-			if cd and cd > c then c = cd; dir = i end
+			local sx, sy = util.coordAddDir(self.x, self.y, i)
+			local cd = a:distanceMap(sx, sy)
+--			print("looking for dmap", dir, i, "::", c, cd)
+			if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
 		end
 
 		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
@@ -50,15 +51,15 @@ end)
 newAI("flee_dmap", function(self)
 	if self.ai_target.actor then
 		local a = self.ai_target.actor
-		if self:hasLOS(a) then return self:runAI("move_simple") end
 
 		local c = a:distanceMap(self.x, self.y)
 		if not c then return end
 		local dir = 5
 		for i = 1, 9 do
-			local cd = a:distanceMap(util.coordAddDir(self.x, self.y, i))
-			print("looking for dmap", dir, i, "::", c, cd)
-			if cd and cd > c then c = cd; dir = i end
+			local sx, sy = util.coordAddDir(self.x, self.y, i)
+			local cd = a:distanceMap(sx, sy)
+--			print("looking for dmap", dir, i, "::", c, cd)
+			if not cd or (cd < c and self:canMove(sx, sy)) then c = cd; dir = i end
 		end
 
 		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))

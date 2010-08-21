@@ -40,7 +40,7 @@ newEntity{
 	open_door = true,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 }

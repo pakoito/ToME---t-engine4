@@ -35,7 +35,7 @@ Vicous predators they inject corrupting diseases in their foes and they sharp cl
 	rank = 2,
 
 	autolevel = "slinger",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	energy = { mod=1.2 },
 	stats = { str=15, dex=15, mag=8, con=10 },
 

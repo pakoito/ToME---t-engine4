@@ -34,7 +34,7 @@ newEntity{
 	rank = 1,
 
 	autolevel = "spider",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
 	energy = { mod=1.2 },
 	stats = { str=15, dex=15, mag=8, con=10 },
 

@@ -27,7 +27,7 @@ newEntity{
 	display = "u", color=colors.WHITE,
 	body = { INVEN = 10 },
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	stats = { str=12, dex=10, mag=3, con=13 },
 	energy = { mod=1 },
 	life_rating = 7,

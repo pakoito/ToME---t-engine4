@@ -39,7 +39,7 @@ newEntity{
 	drops = resolvers.drops{chance=20, nb=1, {type="potion"}, {type="scroll"} },
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	stats = { str=15, dex=7, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,
 }
