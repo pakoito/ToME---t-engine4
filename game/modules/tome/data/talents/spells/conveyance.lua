@@ -41,6 +41,8 @@ newTalent{
 			game.logSeen(target, "The spell fizzles!")
 			return true
 		end
+		-- Annoy them!
+		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
@@ -94,6 +96,8 @@ newTalent{
 			game.logSeen(target, "The spell fizzles!")
 			return true
 		end
+		-- Annoy them!
+		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then

@@ -279,14 +279,17 @@ end
 
 --- Blink through walls
 function _M:probabilityTravel(x, y, dist)
+	if game.zone.wilderness then return true end
+
 	local dirx, diry = x - self.x, y - self.y
 	local tx, ty = x, y
 	while game.level.map:isBound(tx, ty) and game.level.map:checkAllEntities(tx, ty, "block_move", self) and dist > 0 do
+		if game.level.map.attrs(tx, ty, "no_teleport") then break end
 		tx = tx + dirx
 		ty = ty + diry
 		dist = dist - 1
 	end
-	if game.level.map:isBound(tx, ty) and not game.level.map:checkAllEntities(tx, ty, "block_move", self) then
+	if game.level.map:isBound(tx, ty) and not game.level.map:checkAllEntities(tx, ty, "block_move", self) and not game.level.map.attrs(tx, ty, "no_teleport") then
 		return engine.Actor.move(self, tx, ty, false)
 	end
 	return true
