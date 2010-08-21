@@ -23,7 +23,7 @@ require "engine.Dialog"
 module(..., package.seeall, class.inherit(engine.Dialog))
 
 -- Globals to all instances of the console
-scroll = 0
+offset = 0
 history = {}
 line = ""
 com_sel = 0
@@ -33,31 +33,56 @@ function _M:init()
 	engine.Dialog.init(self, "Lua Console", core.display.size())
 	self:keyCommands{
 		_RETURN = function()
-			self.commands[#self.commands+1] = self.line
-			table.insert(self.history, 1, self.line)
-			if self.line:match("^=") then self.line = "return "..self.line:sub(2) end
-			local f, err = loadstring(self.line)
-			if err then
-				table.insert(self.history, 1, err)
+			table.insert(self.commands, self.line)
+			self.com_sel = #self.commands + 1
+			table.insert(self.history, self.line)
+			-- Handle printing a table
+			if self.line:match("^==") then
+				self.line = self.line:sub(3)
+				local current_table = _G
+				local found = true
+				for next_key in string.gmatch(self.line, "[^.]+") do
+					if current_table[next_key] then
+						current_table = current_table[next_key]
+					else
+						found = false
+						break
+					end
+				end
+				if found then 
+					for k, v in pairs( current_table ) do
+						table.insert(self.history, "    "..tostring(k).." :=: "..tostring(v) )
+					end
+				else
+					table.insert(self.history, self.line.." not found.")
+				end
 			else
-				local res = {pcall(f)}
-				for i, v in ipairs(res) do
-					if i > 1 then
-						table.insert(self.history, 1, (i-1).." :=: "..tostring(v))
+			-- Handle assignment and simple printing
+				if self.line:match("^=") then self.line = "return "..self.line:sub(2) end
+				local f, err = loadstring(self.line)
+				if err then
+					table.insert(self.history, err)
+				else
+					local res = {pcall(f)}
+					for i, v in ipairs(res) do
+						if i > 1 then
+							table.insert(self.history, "    "..(i-1).." :=: "..tostring(v))
+						end
 					end
 				end
 			end
 			self.line = ""
+			self.offset = 0
 			self.changed = true
 		end,
 		_UP = function()
-			self.com_sel = util.bound(self.com_sel + 1, 1, #self.commands)
+			self.com_sel = util.bound(self.com_sel - 1, 1, #self.commands)
 			if self.commands[self.com_sel] then
 				self.line = self.commands[self.com_sel]
 			end
 		end,
 		_DOWN = function()
-			self.com_sel = util.bound(self.com_sel - 1, 1, #self.commands)
+			self.com_sel = util.bound(self.com_sel + 1, 1, #self.commands)
 			if self.commands[self.com_sel] then
 				self.line = self.commands[self.com_sel]
 			end
@@ -73,16 +98,35 @@ function _M:init()
 			self.changed = true
 		end,
 	}
+	-- Scroll message log
+	game.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(button)
+		if button == "wheelup" then self:scrollUp(1) end
+		if button == "wheeldown" then self:scrollUp(-1) end
+	end, {button=true})
 end
 
 function _M:drawDialog(s, w, h)
-	local i, dh = 1, 0
-	while dh < self.h do
-		if not self.history[self.scroll + i] then break end
-		s:drawStringBlended(self.font, self.history[self.scroll + i], 0, self.ih - (i + 1) * self.font:lineSkip(), 255, 255, 255)
-		i = i + 1
-		dh = dh + self.font:lineSkip()
+	local buffer = (self.ih % self.font_h) / 2
+	local i, dh = #self.history - self.offset, self.ih - buffer - self.font:lineSkip()
+	-- Start at the bottom and work up
+	-- Draw the current command
+	s:drawStringBlended(self.font, self.line, 0, dh, 255, 255, 255)
+	dh = dh - self.font:lineSkip()
+	-- Now draw the history with any ofset
+	while dh > buffer do
+		if not self.history[i] then break end
+		s:drawStringBlended(self.font, self.history[i], 0, dh, 255, 255, 255)
+		i = i - 1
+		dh = dh - self.font:lineSkip()
 	end
 
-	s:drawStringBlended(self.font, self.line, 0, self.ih - self.font:lineSkip(), 255, 255, 255)
+end
+
+--- Scroll the zone
+-- @param i number representing how many lines to scroll
+function _M:scrollUp(i)
+	self.offset = self.offset + i
+	if self.offset > #self.history - 1 then self.offset = #self.history - 1 end
+	if self.offset < 0 then self.offset = 0 end
+	self.changed = true
 end
