@@ -62,5 +62,11 @@ return {
 				up = "UP_WILDERNESS_FAR_EAST",
 			}, },
 		},
+		[5] = {
+			generator = { map = {
+				down = "SLIME_TUNNELS",
+				force_last_stair = true,
+			}, },
+		},
 	},
 }

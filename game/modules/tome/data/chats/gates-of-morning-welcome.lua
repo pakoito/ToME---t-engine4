@@ -63,6 +63,7 @@ newChat{ id="access",
 You may now enter the Gates of Morning.]],
 	answers = {
 		{"Thank you my Lady.", action=function(npc, player)
+			world:gainAchievement("SPYDRIC_INFESTATION", game.player)
 			player:setQuestStatus("spydric-infestation", engine.Quest.DONE)
 			npc:move(47, 27, true)
 			npc.can_talk = "gates-of-morning-main"

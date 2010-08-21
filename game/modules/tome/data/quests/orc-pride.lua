@@ -110,6 +110,7 @@ on_status_change = function(self, who, status, sub)
 	if sub then
 		if self:isCompleted("rak-shor") and self:isCompleted("vor") and self:isCompleted("grushnak") and self:isCompleted("gorbat") then
 			who:setQuestStatus(self.id, engine.Quest.COMPLETED)
+			world:gainAchievement("ORC_PRIDE", game.player)
 		end
 	end
 end

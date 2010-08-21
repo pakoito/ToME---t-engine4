@@ -20,3 +20,13 @@
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/underground.lua")
 load("/data/general/grids/water.lua")
+
+newEntity{
+	define_as = "SLIME_TUNNELS",
+	name = "entrance to a slimy pit",
+	display = '>', color=colors.LIGHT_GREEN,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "slime-tunnels",
+}

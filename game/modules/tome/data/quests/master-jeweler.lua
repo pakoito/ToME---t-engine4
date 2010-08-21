@@ -104,6 +104,7 @@ ritual_end = function(self)
 
 	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "limmir-survived")
 	game.player:setQuestStatus(self.id, engine.Quest.DONE)
+	world:gainAchievement("MASTER_JEWELER", game.player)
 
 	for i = #game.level.e_array, 1, -1 do
 		local e = game.level.e_array[i]

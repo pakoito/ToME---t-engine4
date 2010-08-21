@@ -36,7 +36,6 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
---			area = {x1=0, x2=11, y1=30, y2=410},
 			nb_npc = {20, 30},
 		},
 		trap = {

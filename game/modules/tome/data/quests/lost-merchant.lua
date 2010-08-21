@@ -50,6 +50,7 @@ leave_zone = function(self, who)
 		who.money = who.money + 8
 		who.changed = true
 		who:setQuestStatus(self.id, engine.Quest.COMPLETED, "saved")
+		world:gainAchievement("LOST_MERCHANT_RESCUE", game.player)
 	end
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED)
 end

@@ -61,6 +61,7 @@ start_fyrk = function(self)
 		game.logPlayer(game.player, "#VIOLET#A portal activates in the distance, you hear the orcs shout 'The Blue Wizards have departed, follow them!'")
 	else
 		game.logPlayer(game.player, "#VIOLET#The Blue Wizards flee through a portal, as you prepare to follow them a huge faeros appears to block the way.")
+		world:gainAchievement("MOUNT_DOOM_SUCCESS", game.player)
 	end
 	game.player:setQuestStatus("mount-doom", engine.Quest.COMPLETED)
 end

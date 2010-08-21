@@ -153,7 +153,7 @@ function _M:onQuit()
 	os.exit()
 end
 
-profile_help_text = [[#LIGHT_GREEN#T-Engine4#LAST# allows you to sync you player profile with the website #LIGHT_BLUE#http://te4.org/#LAST#
+profile_help_text = [[#LIGHT_GREEN#T-Engine4#LAST# allows you to sync your player profile with the website #LIGHT_BLUE#http://te4.org/#LAST#
 
 This allows you to:
 * Play from several computers without having to copy unlocks and achievements.

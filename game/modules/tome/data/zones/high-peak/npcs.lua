@@ -78,7 +78,6 @@ newEntity{
 		[Talents.T_FREEZE]=5,
 		[Talents.T_LIGHTNING]=5,
 		[Talents.T_MANATHRUST]=5,
-		[Talents.T_INFERNO]=5,
 		[Talents.T_FLAMESHOCK]=5,
 		[Talents.T_STONE_SKIN]=5,
 		[Talents.T_STRIKE]=5,
@@ -101,6 +100,10 @@ newEntity{
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "alatar-dead")
+	end,
 }
 
 newEntity{
@@ -149,6 +152,10 @@ newEntity{
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "pallando-dead")
+	end,
 }
 
 -- Aeryn trying to kill the player if mount doom quest failed

@@ -39,6 +39,24 @@ end
 on_grant = function(self, who)
 end
 
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted("alatar-dead") and self:isCompleted("pallando-dead") then
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+
+			-- Remove all remaining hostiles
+			for i = #game.level.e_array, 1, -1 do
+				local e = game.level.e_array[i]
+				if game.player:reactionToward(e) < 0 then game.level:removeEntity(e) end
+			end
+
+			local Chat = require"engine.Chat"
+			local chat = Chat.new("istari-end", {name="Endgame"}, game.player)
+			chat:invoke()
+		end
+	end
+end
+
 function failed_mount_doom(self, level)
 	local aeryn = game.zone:makeEntityByName(level, "actor", "FALLEN_SUN_PALADIN_AERYN")
 	game.zone:addEntity(level, aeryn, "actor", level.default_down.x, level.default_down.y)
@@ -48,4 +66,17 @@ function failed_mount_doom(self, level)
 	local wild = game.memory_levels["wilderness-arda-fareast-1"].map(66, 35, engine.Map.TERRAIN)
 	wild.name = "Ruins of the Gates of Morning"
 	wild.desc = "The sunwall was destroyed while you were trapped in the High Peak."
+	wild.change_level = nil
+	wild.change_zone = nil
+	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "gates-of-morning-destroyed")
+end
+
+function win(self, how)
+	if how == "full" then world:gainAchievement("WIN_FULL", game.player)
+	elseif how == "aeryn-sacrifice" then world:gainAchievement("WIN_AERYN", game.player)
+	elseif how == "self-sacrifice" then world:gainAchievement("WIN_DEAD", game.player)
+	end
+
+	game.player.winner = how
+	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=game.player.name, how=how}, game.w * 0.6))
 end

@@ -38,6 +38,8 @@ end
 on_status_change = function(self, who, status, sub)
 	if sub and (sub == "kill-maglor" or sub == "kill-drake") then
 		who:setQuestStatus(self.id, engine.Quest.DONE)
+		if sub == "kill-maglor" then world:gainAchievement("MAGLOR_DEAD", game.player)
+		elseif sub == "kill-drake" then world:gainAchievement("UKLLMSWWIK_DEAD", game.player) end
 	end
 end
 

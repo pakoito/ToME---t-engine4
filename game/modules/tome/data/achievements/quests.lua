@@ -45,3 +45,47 @@ newAchievement{
 	name = "Destroyer's bane", id = "DESTROYER_BANE",
 	desc = [[Killed Golbug the Destroyer.]],
 }
+newAchievement{
+	name = "Race through fire", id = "MOUNT_DOOM_SUCCESS",
+	desc = [[Raced through the fires of Mount Doom to stop the Blue Wizards.]],
+}
+newAchievement{
+	name = "Arachnophobia", id = "SPYDRIC_INFESTATION",
+	desc = [[Destroyed the spydric menace.]],
+}
+newAchievement{
+	name = "Orcrist", id = "ORC_PRIDE",
+	desc = [[Killed the leaders of the Orc Pride.]],
+}
+
+--------------- Wins
+newAchievement{
+	name = "Evil denied", id = "WIN_FULL",
+	desc = [[Won ToME by preventing the Void portal to open.]],
+}
+newAchievement{
+	name = "The High Lady's destiny", id = "WIN_AERYN",
+	desc = [[Won ToME by closing the Void portal using Aeryn as a sacrifice.]],
+}
+newAchievement{
+	name = "Selfless", id = "WIN_SACRIFICE",
+	desc = [[Won ToME by closing the Void portal using yourself as a sacrifice.]],
+}
+
+-------------- Other quests
+newAchievement{
+	name = "Rescuer of the lost", id = "LOST_MERCHANT_RESCUE",
+	desc = [[Rescued the merchant from the assassin lord.]],
+}
+newAchievement{
+	name = "Fëanor's bane", id = "MAGLOR_DEAD",
+	desc = [[Killed Maglor, Last Son of Fëanor the Maker.]],
+}
+newAchievement{
+	name = "Flooder", id = "UKLLMSWWIK_DEAD",
+	desc = [[Defeated Ukllmswwik while doing his own quest.]],
+}
+newAchievement{
+	name = "Gem of the Moon", id = "MASTER_JEWELER",
+	desc = [[Completed the Master Jeweler quest with Limmir.]],
+}
