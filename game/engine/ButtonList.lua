@@ -40,6 +40,7 @@ function _M:init(list, x, y, w, h, font, separator)
 	self.texture = self.surface:glTexture()
 	self.surface:erase()
 
+	self.old_selected = 0
 	self.selected = 0
 	self:select(1)
 
@@ -97,22 +98,21 @@ function _M:setMouseHandling()
 end
 
 function _M:select(i, offset)
-	self.old_selected = self.selected
-
 	if offset then
 		self.selected = self.selected + i
 	else
 		self.selected = i
 	end
-	if self.selected > #self.list then self.selected = 1 end
-	if self.selected < 1 then self.selected = #self.list end
-	if old ~= self.selected and self.list[self.selected].onSelect then self.list[self.selected].onSelect() end
+	if self.selected > #self.list then self.selected = 1 self.old_selected = 0 end
+	if self.selected < 1 then self.selected = #self.list self.old_selected = #self.list + 1 end
+	if (not self.old_selected or self.old_selected ~= self.selected) and self.list[self.selected].onSelect then self.list[self.selected].onSelect() end
+	self.old_selected = self.selected
 	self.changed = true
 end
 
 function _M:skipSelected()
-	if self.old_selected < self.selected then self:select(-1, true)
-	elseif self.old_selected > self.selected then self:select(1, true) end
+	if self.old_selected < self.selected then self:select(1, true)
+	elseif self.old_selected > self.selected then self:select(-1, true) end
 end
 
 function _M:click(i)
