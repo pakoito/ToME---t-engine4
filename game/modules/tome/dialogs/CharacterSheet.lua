@@ -403,7 +403,7 @@ function _M:dump()
 	end
 
 	nl()
-	nl("  [Player Achievments]")
+	nl("  [Player Achievements]")
 	nl()
 	for id, data in pairs(self.actor.achievements or {}) do
 		local a = world:getAchievementFromId(id)

@@ -31,8 +31,13 @@ desc = function(self, who)
 		desc[#desc+1] = "You have won the game!"
 	end
 
-	if self:isCompleted("killed-aeryn") then desc[#desc+1] = "* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and killed her." end
-	if self:isCompleted("spared-aeryn") then desc[#desc+1] = "* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and spared her." end
+	if self:isCompleted("killed-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and killed her.#LAST#" end
+	if self:isCompleted("spared-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and spared her.#LAST#" end
+
+	if game.winner and game.winner == "full" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the blue wizards before the Void portal could open.#LAST#" end
+	if game.winner and game.winner == "aeryn-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the blue wizards and Aeryn sacrified herself to close the Void portal.#LAST#" end
+	if game.winner and game.winner == "self-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the blue wizards and sacrified yourself to close the Void portal.#LAST#" end
+
 	return table.concat(desc, "\n")
 end
 
@@ -74,7 +79,7 @@ end
 function win(self, how)
 	if how == "full" then world:gainAchievement("WIN_FULL", game.player)
 	elseif how == "aeryn-sacrifice" then world:gainAchievement("WIN_AERYN", game.player)
-	elseif how == "self-sacrifice" then world:gainAchievement("WIN_DEAD", game.player)
+	elseif how == "self-sacrifice" then world:gainAchievement("WIN_SACRIFICE", game.player)
 	end
 
 	game.player.winner = how

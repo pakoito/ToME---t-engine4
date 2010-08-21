@@ -274,8 +274,4 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		[Talents.T_SUNBURST]=8,
 	},
 	resolvers.sustains_at_birth(),
-	-- She starts at 60% life
-	resolvers.genericlast(function(e)
-		e.life = e.max_life * 0.6
-	end),
 }

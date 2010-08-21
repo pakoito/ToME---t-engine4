@@ -38,6 +38,9 @@ local function aeryn_comes(npc, player)
 	game.player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "aeryn-helps")
 	game.logPlayer(player, "High Sun Paladin Aeryn appears next to you!")
 
+	-- She starts at 60% life
+	aeryn.life = aeryn.max_life * 0.6
+
 	-- The istari focus her first
 	for uid, e in pairs(game.level.entities) do
 		if e.define_as and (e.define_as == "ALATAR" or e.define_as == "PALLANDO") then
