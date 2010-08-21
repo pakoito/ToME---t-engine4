@@ -129,6 +129,7 @@ newEntity{
 			local Chat = require "engine.Chat"
 			local chat = Chat.new("istari-fight", {name="Alatar, the Blue"}, game.player)
 			chat:invoke()
+			game.player:hasQuest("high-peak"):start_end_combat()
 		end,
 	},
 }

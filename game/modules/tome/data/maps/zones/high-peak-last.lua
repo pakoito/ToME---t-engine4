@@ -19,23 +19,22 @@
 
 defineTile('<', "UP")
 defineTile(',', "FLOOR")
-defineTile('.', "FLOOR", nil, nil, nil, {lite=true})
-defineTile('+', "DOOR")
+defineTile('.', "FLOOR", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('#', "WALL", nil, nil, nil, {lite=true})
 defineTile('*', "HARDWALL", nil, nil, nil, {lite=true, no_teleport=true})
 
 -- Portals
-defineTile('&', "FAR_EAST_PORTAL", nil, nil, nil, {lite=true})
-defineTile('"', "WEST_PORTAL", nil, nil, nil, {lite=true})
-defineTile('V', "VOID_PORTAL", nil, nil, nil, {lite=true})
-defineTile('d', "PORTAL_DESTRUCTION", nil, nil, nil, {lite=true})
-defineTile('D', "PORTAL_DRAGON", nil, nil, nil, {lite=true})
-defineTile('E', "PORTAL_ELEMENTS", nil, nil, nil, {lite=true})
-defineTile('U', "PORTAL_UNDEAD", nil, nil, nil, {lite=true})
+defineTile('&', "FAR_EAST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('"', "WEST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('V', "VOID_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('d', "PORTAL_DESTRUCTION", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('D', "PORTAL_DRAGON", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('E', "PORTAL_ELEMENTS", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('U', "PORTAL_UNDEAD", nil, nil, nil, {lite=true, no_teleport=true})
 
 -- Bosses
-defineTile('A', "FLOOR", nil, "ALATAR", nil, {lite=true})
-defineTile('P', "FLOOR", nil, "PALLANDO", nil, {lite=true})
+defineTile('A', "FLOOR", nil, "ALATAR", nil, {lite=true, no_teleport=true})
+defineTile('P', "FLOOR", nil, "PALLANDO", nil, {lite=true, no_teleport=true})
 
 subGenerator{
 	x = 0, y = 23, w = 50, h = 52,

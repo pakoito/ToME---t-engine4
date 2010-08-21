@@ -55,10 +55,29 @@ on_status_change = function(self, who, status, sub)
 				if game.player:reactionToward(e) < 0 then game.level:removeEntity(e) end
 			end
 
+			self:end_end_combat()
+
 			local Chat = require"engine.Chat"
 			local chat = Chat.new("istari-end", {name="Endgame"}, game.player)
 			chat:invoke()
 		end
+	end
+end
+
+function start_end_combat(self)
+	for i = 11, 38 do for j = 1, 21 do
+		game.level.map.lites(i, j, true)
+		game.level.map.attrs(i, j, "no_teleport", false)
+	end end
+end
+
+function end_end_combat(self)
+	local floor = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
+	for i = 8, 13 do
+		game.level.map(i, 11, engine.Map.TERRAIN, floor)
+	end
+	for i = 36, 41 do
+		game.level.map(i, 11, engine.Map.TERRAIN, floor)
 	end
 end
 
