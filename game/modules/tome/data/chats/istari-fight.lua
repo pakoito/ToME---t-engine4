@@ -34,17 +34,16 @@ local function aeryn_dead(npc, player) return not aeryn_alive(npc, player) end
 local function aeryn_comes(npc, player)
 	local x, y = util.findFreeGrid(player.x, player.y, 1, true, {[engine.Map.ACTOR]=true})
 	local aeryn = game.zone:makeEntityByName(game.level, "actor", "HIGH_SUN_PALADIN_AERYN")
-	game.zone:addEntity(game.level, aeryn, "actor", x, y)
-	game.player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "aeryn-helps")
-	game.logPlayer(player, "High Sun Paladin Aeryn appears next to you!")
+	if aeryn then
+		game.zone:addEntity(game.level, aeryn, "actor", x, y)
+		game.player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "aeryn-helps")
+		game.logPlayer(player, "High Sun Paladin Aeryn appears next to you!")
 
-	-- She starts at 60% life
-	aeryn.life = aeryn.max_life * 0.6
-
-	-- The istari focus her first
-	for uid, e in pairs(game.level.entities) do
-		if e.define_as and (e.define_as == "ALATAR" or e.define_as == "PALLANDO") then
-			e:setTarget(aeryn)
+		-- The istari focus her first
+		for uid, e in pairs(game.level.entities) do
+			if e.define_as and (e.define_as == "ALATAR" or e.define_as == "PALLANDO") then
+				e:setTarget(aeryn)
+			end
 		end
 	end
 end

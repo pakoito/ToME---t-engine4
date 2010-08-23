@@ -25,9 +25,10 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 250, height = 30,
-	all_remembered = true,
-	all_lited = true,
+--	all_remembered = true,
+--	all_lited = true,
 	persistant = "zone",
+	ambiant_music = "Thrall's Theme.ogg",
 	no_level_connectivity = true,
 	generator =  {
 		map = {
