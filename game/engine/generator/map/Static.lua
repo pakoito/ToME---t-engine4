@@ -181,6 +181,7 @@ function _M:generate(lev, old_lev)
 		end
 
 		if define_spot then
+			define_spot = table.clone(define_spot)
 			assert(define_spot.type, "defineTile auto spot without type field")
 			assert(define_spot.subtype, "defineTile auto spot without subtype field")
 			define_spot.x = i-1
