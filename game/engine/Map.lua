@@ -554,6 +554,8 @@ function _M:applyESP(x, y, v)
 end
 
 --- Check all entities of the grid for a property until it finds one/returns one
+-- This will stop at the first entity with the given property (or if the property is a function, the return of the function that is not false/nil).
+-- No guaranty is given about the iteration order
 -- @param x position
 -- @param y position
 -- @param what property to check
@@ -568,6 +570,8 @@ function _M:checkAllEntities(x, y, what, ...)
 end
 
 --- Check all entities of the grid for a property, discarding the results
+-- This will iterate over all entities without stoping.
+-- No guaranty is given about the iteration order
 -- @param x position
 -- @param y position
 -- @param what property to check
