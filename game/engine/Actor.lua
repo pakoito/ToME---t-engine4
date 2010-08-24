@@ -169,6 +169,13 @@ function _M:canMove(x, y, terrain_only)
 	end
 end
 
+--- Remove the actor from the level, marking it as dead but not using the death functions
+function _M:disappear(src)
+	if game.level:hasEntity(self) then game.level:removeEntity(self) end
+	self.dead = true
+	self.changed = true
+end
+
 --- Get the "path string" for this actor
 -- See Map:addPathString() for more info
 function _M:getPathString()

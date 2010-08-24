@@ -487,6 +487,17 @@ function _M:setupCommands()
 --				self.player:grantQuest("escort-duty")
 			end
 		end,
+		[{"_z","ctrl"}] = function()
+			if config.settings.tome.cheat then
+				self.player:forceLevelup(50)
+				self.player.no_breath = 1
+				self.player.invulnerable = 1
+				self.player.esp.all = 1
+				self.player.esp.range = 50
+				self.player.inc_damage.all = 100000
+				self.player:grantQuest("escort-duty")
+			end
+		end,
 		[{"_f","ctrl"}] = function()
 			if config.settings.tome.cheat then
 				self.player:incStat("str", 100) self.player:incStat("dex", 100) self.player:incStat("mag", 100) self.player:incStat("wil", 100) self.player:incStat("cun", 100) self.player:incStat("con", 100)
