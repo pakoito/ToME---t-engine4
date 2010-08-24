@@ -103,6 +103,7 @@ function _M:saveWorld(world)
 	fs.mkdir(self.save_dir)
 
 	local popup = Dialog:simplePopup("Saving world", "Please wait while saving the world...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir.."world.teaw")
@@ -147,6 +148,7 @@ function _M:saveGame(game)
 	fs.mkdir(self.save_dir)
 
 	local popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir.."game.teag")
@@ -168,6 +170,7 @@ function _M:saveZone(zone)
 	fs.mkdir(self.save_dir)
 
 	local popup = Dialog:simplePopup("Saving zone", "Please wait while saving the zone...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..("zone-%s.teaz"):format(zone.short_name))
@@ -182,6 +185,7 @@ function _M:saveLevel(level)
 	fs.mkdir(self.save_dir)
 
 	local popup = Dialog:simplePopup("Saving level", "Please wait while saving the level...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..("level-%s-%d.teal"):format(level.data.short_name, level.level))
@@ -233,6 +237,7 @@ function _M:loadWorld()
 	fs.mount(path, self.load_dir)
 
 	local popup = Dialog:simplePopup("Loading world", "Please wait while loading the world...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local loadedWorld = self:loadReal("main")
@@ -258,6 +263,7 @@ function _M:loadGame()
 	fs.mount(path, self.load_dir)
 
 	local popup = Dialog:simplePopup("Loading game", "Please wait while loading the game...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local loadedGame = self:loadReal("main")
@@ -283,6 +289,7 @@ function _M:loadZone(zone)
 	fs.mount(path, self.load_dir)
 
 	local popup = Dialog:simplePopup("Loading zone", "Please wait while loading the zone...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local loadedZone = self:loadReal("main")
@@ -307,6 +314,7 @@ function _M:loadLevel(zone, level)
 	fs.mount(path, self.load_dir)
 
 	local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	local loadedLevel = self:loadReal("main")

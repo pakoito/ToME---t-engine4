@@ -120,7 +120,7 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
 end
 
 --- Create a Dialog
-function _M:init(title, w, h, x, y, alpha, font)
+function _M:init(title, w, h, x, y, alpha, font, showup)
 	self.title = title
 	self.controls = { }
 	self.tabindex = 0
@@ -131,6 +131,11 @@ function _M:init(title, w, h, x, y, alpha, font)
 	self.font_h = self.font:lineSkip()
 
 	self:resize(w, h, x, y, alpha)
+	if showup ~= nil then
+		self.__showup = showup
+	else
+		self.__showup = 2
+	end
 end
 
 function _M:resize(w, h, x, y, alpha)
@@ -181,7 +186,14 @@ end
 
 function _M:toScreen(x, y)
 	-- Draw with only the texture
-	self.texture:toScreenFull(x, y, self.w, self.h, self.texture_w, self.texture_h)
+	if self.__showup then
+		local zoom = self.__showup / 7
+		self.texture:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.texture_w * zoom, self.texture_h * zoom)
+		self.__showup = self.__showup + 1
+		if self.__showup >= 7 then self.__showup = nil end
+	else
+		self.texture:toScreenFull(x, y, self.w, self.h, self.texture_w, self.texture_h)
+	end
 end
 
 function _M:addControl(control)

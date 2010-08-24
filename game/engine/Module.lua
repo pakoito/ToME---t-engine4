@@ -142,6 +142,7 @@ end
 -- @param new_game true if the game must be created (aka new character)
 function _M:instanciate(mod, name, new_game)
 	local popup = Dialog:simplePopup("Loading module", "Please wait while loading the game module...")
+	popup.__showup = nil
 	core.display.forceRedraw()
 
 	profile.generic.modules_loaded = profile.generic.modules_loaded or {}
