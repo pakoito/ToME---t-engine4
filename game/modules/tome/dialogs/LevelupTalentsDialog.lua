@@ -28,6 +28,7 @@ function _M:init(actor, on_finish)
 	engine.Dialog.init(self, "Talents Levelup: "..actor.name, math.max(game.w * 0.85, 800), math.max(game.h * 0.85, 600))
 
 	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}
+	self.actor.__increased_talent_types = self.actor.__increased_talent_types or {}
 
 	self:generateList()
 
@@ -240,33 +241,49 @@ end
 
 function _M:learnType(tt, v)
 	if v then
-		if self.actor:knowTalentType(tt) then
-			self:simplePopup("Impossible", "You do already know this category!")
+		if self.actor:knowTalentType(tt) and self.actor.__increased_talent_types[tt] and self.actor.__increased_talent_types[tt] >= 2 then
+			self:simplePopup("Impossible", "You can only improve a category mastery twice!")
 			return
 		end
 		if self.actor.unused_talents_types == 0 then
 			self:simplePopup("Not enough talent category points", "You have no category points left!")
 			return
 		end
-		self.actor:learnTalentType(tt)
+		if not self.actor:knowTalentType(tt) then
+			self.actor:learnTalentType(tt)
+		else
+			self.actor.__increased_talent_types[tt] = (self.actor.__increased_talent_types[tt] or 0) + 1
+			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) + 0.1)
+		end
 		self.actor.unused_talents_types = self.actor.unused_talents_types - 1
 	else
-		if self.actor_dup:knowTalentType(tt) == true and self.actor:knowTalentType(tt) == true then
+		if self.actor_dup:knowTalentType(tt) == true and self.actor:knowTalentType(tt) == true and (self.actor_dup.__increased_talent_types[tt] or 0) >= (self.actor.__increased_talent_types[tt] or 0) then
 			self:simplePopup("Impossible", "You cannot take out more points!")
+			return
+		end
+		if self.actor_dup:knowTalentType(tt) == true and self.actor:knowTalentType(tt) == true and (self.actor.__increased_talent_types[tt] or 0) == 0 then
+			self:simplePopup("Impossible", "You cannot unlearn this category!")
 			return
 		end
 		if not self.actor:knowTalentType(tt) then
 			self:simplePopup("Impossible", "You do not know this category!")
 			return
 		end
-		self.actor:unlearnTalentType(tt)
-		local ok, dep_miss = self:checkDeps()
-		if ok then
+
+		if (self.actor.__increased_talent_types[tt] or 0) > 0 then
+			self.actor.__increased_talent_types[tt] = (self.actor.__increased_talent_types[tt] or 0) - 1
+			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) - 0.1)
 			self.actor.unused_talents_types = self.actor.unused_talents_types + 1
 		else
-			self:simplePopup("Impossible", "You can not unlearn this category because of: "..dep_miss)
-			self.actor:learnTalentType(tt)
-			return
+			self.actor:unlearnTalentType(tt)
+			local ok, dep_miss = self:checkDeps()
+			if ok then
+				self.actor.unused_talents_types = self.actor.unused_talents_types + 1
+			else
+				self:simplePopup("Impossible", "You can not unlearn this category because of: "..dep_miss)
+				self.actor:learnTalentType(tt)
+				return
+			end
 		end
 	end
 
@@ -286,7 +303,7 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	if self.list[self.sel].type then
 		local str = ""
 		str = str .. "#00FFFF#Talent Category\n"
-		str = str .. "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point every few levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
+		str = str .. "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.\n\n"
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 		lines = self.actor:getTalentTypeFrom(self.list[self.sel].type).description:splitLines(self.iw / 2 - 10, self.font)
 	else

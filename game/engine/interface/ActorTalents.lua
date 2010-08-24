@@ -407,9 +407,14 @@ function _M:getTalentTypeLevelRaw(tt)
 	return nb
 end
 
---- Return talent definition from id
+--- Return talent type mastery
 function _M:getTalentTypeMastery(tt)
 	return self.talents_types_mastery[tt] or 1
+end
+
+--- Sets talent type mastery
+function _M:setTalentTypeMastery(tt, v)
+	self.talents_types_mastery[tt] = v
 end
 
 --- Return talent definition from id
