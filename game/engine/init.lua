@@ -34,7 +34,7 @@ require "engine.PlayerProfile"
 engine.Tiles.prefix = "/data/gfx/"
 
 -- Engine Version
-engine.version = {1,0,0}
+engine.version = {0,9,10}
 
 -- Setup the user directory
 engine.homepath = fs.getUserPath()..fs.getPathSeparator()..fs.getHomePath()..fs.getPathSeparator().."4.0"

@@ -49,6 +49,7 @@ function _M:run()
 	self:selectStepMain()
 
 	self:checkLogged()
+	self:engineVersion()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
@@ -60,10 +61,14 @@ end
 
 function _M:checkLogged()
 	if profile.auth then
-		self.s_log = core.display.drawStringNewSurface(self.profile_font, "Online Profile: "..profile.auth.name.."[http://te4.org/players/"..profile.auth.page.."]", 255, 255, 0)
+		self.s_log = core.display.drawStringBlendedNewSurface(self.profile_font, "Online Profile: "..profile.auth.name.."[http://te4.org/players/"..profile.auth.page.."]", 255, 255, 0)
 	else
 		self.s_log = nil
 	end
+end
+
+function _M:engineVersion()
+	self.s_version = core.display.drawStringBlendedNewSurface(self.profile_font, ("T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3]), 185, 225, 0)
 end
 
 function _M:tick()
@@ -82,6 +87,8 @@ function _M:display()
 		local w, h = self.s_log:getSize()
 		self.s_log:toScreen(self.w - w, self.h - h)
 	end
+	local w, h = self.s_version:getSize()
+	self.s_version:toScreen(0, self.h - h)
 
 	if self.step.do_tooltip then
 		self.tooltip:display()

@@ -553,7 +553,7 @@ function _M:applyESP(x, y, v)
 	end
 end
 
---- Check all entities of the grid for a property
+--- Check all entities of the grid for a property until it finds one/returns one
 -- @param x position
 -- @param y position
 -- @param what property to check
@@ -563,6 +563,19 @@ function _M:checkAllEntities(x, y, what, ...)
 		for _, e in pairs(self.map[x + y * self.w]) do
 			local p = e:check(what, x, y, ...)
 			if p then return p end
+		end
+	end
+end
+
+--- Check all entities of the grid for a property, discarding the results
+-- @param x position
+-- @param y position
+-- @param what property to check
+function _M:checkAllEntitiesNoStop(x, y, what, ...)
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if self.map[x + y * self.w] then
+		for _, e in pairs(self.map[x + y * self.w]) do
+			e:check(what, x, y, ...)
 		end
 	end
 end
