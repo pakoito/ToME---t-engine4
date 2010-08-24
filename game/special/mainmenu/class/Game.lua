@@ -210,7 +210,7 @@ function _M:selectStepMain()
 
 When inside a module remember you can press Escape to bring up a menu to change keybindings, resolution and other module specific options.
 
-Remember that in most roguelikes death is usualy permanent so be careful!
+Remember that in most roguelikes death is usually permanent so be careful!
 
 Now go and have some fun!]]
 			}
