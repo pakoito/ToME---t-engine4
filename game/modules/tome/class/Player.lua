@@ -25,6 +25,7 @@ require "engine.interface.PlayerHotkeys"
 require "engine.interface.PlayerSlide"
 require "engine.interface.PlayerMouse"
 require "mod.class.interface.PlayerStats"
+require "mod.class.interface.PlayerLore"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -42,7 +43,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerHotkeys,
 	engine.interface.PlayerMouse,
 	engine.interface.PlayerSlide,
-	mod.class.interface.PlayerStats
+	mod.class.interface.PlayerStats,
+	mod.class.interface.PlayerLore
 ))
 
 function _M:init(t, no_default)
@@ -72,6 +74,7 @@ function _M:init(t, no_default)
 
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
+	mod.class.interface.PlayerLore.init(self, t)
 
 	self.descriptor = {}
 end

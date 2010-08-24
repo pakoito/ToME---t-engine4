@@ -39,3 +39,13 @@ newEntity{ base = "BASE_GREATMAUL",
 	wielder = {
 	},
 }
+
+for i = 1, 5 do
+newEntity{ base = "BASE_SCROLL",
+	define_as = "NOTE"..i,unique=1,
+	name = "tattered paper scrap", lore="trollshaws-note-"..i,
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	encumberance = 0,
+}
+end

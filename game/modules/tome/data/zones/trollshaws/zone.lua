@@ -61,6 +61,10 @@ return {
 			nb_trap = {6, 9},
 		},
 	},
+	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+	end,
 	levels =
 	{
 		[1] = {

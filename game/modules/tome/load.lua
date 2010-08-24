@@ -36,6 +36,7 @@ local ActorLevel = require "engine.interface.ActorLevel"
 local Birther = require "engine.Birther"
 local Store = require "mod.class.Store"
 local WorldAchievements = require "mod.class.interface.WorldAchievements"
+local PlayerLore = require "mod.class.interface.PlayerLore"
 local Quest = require "engine.Quest"
 
 config.settings.tome = config.settings.tome or {}
@@ -47,6 +48,9 @@ _3DNoise = n:makeTexture3D(64, 64, 64, 0, 0, 0)
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")
+
+-- Lore
+PlayerLore:loadDefinition("/data/lore/lore.lua")
 
 -- Usefull keybinds
 KeyBind:load("move,hotkeys,inventory,actions,interface,debug")

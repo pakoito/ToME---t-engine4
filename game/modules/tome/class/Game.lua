@@ -683,6 +683,7 @@ function _M:setupCommands()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",
 				"achievements",
+				{ "Show known Lore", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Middle-earth Lore", self.player)) end },
 				"keybinds",
 				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
 				"resolution",
@@ -776,5 +777,24 @@ end
 function _M:playSoundNear(who, ...)
 	if who and self.level.map.seens(who.x, who.y) then
 		self:playSound(...)
+	end
+end
+
+--- Create a random lore object and place it
+function _M:placeRandomLoreObject(define)
+	if type(define) == "table" then define = rng.table(define) end
+	local o = self.zone:makeEntityByName(self.level, "object", define)
+	if not o then return end
+
+	local x, y = rng.range(0, self.level.map.w-1), rng.range(0, self.level.map.h-1)
+	local tries = 0
+	while (self.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") or self.level.map(x, y, Map.OBJECT) or self.level.map.room_map[x][y].special) and tries < 100 do
+		x, y = rng.range(0, self.level.map.w-1), rng.range(0, self.level.map.h-1)
+		tries = tries + 1
+	end
+	if tries < 100 then
+		self.zone:addEntity(self.level, o, "object", x, y)
+		print("Placed lore", o.name, x, y)
+		o:identify(true)
 	end
 end

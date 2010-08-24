@@ -45,6 +45,30 @@ function _M:simplePopup(title, text, fct, no_leave)
 	return d
 end
 
+--- Requests a simple, press any key, dialog
+function _M:simpleLongPopup(title, text, w, fct, no_leave)
+	local font = core.display.newFont("/data/font/Vera.ttf", 12)
+	local list = text:splitLines(w - 10, font)
+
+	local th = font:lineSkip()
+	local d = new(title, w + 8, th * #list + 35, nil, nil, nil, font)
+	if no_leave then
+		d:keyCommands{}
+	else
+		d:keyCommands{__DEFAULT=function() game:unregisterDialog(d) if fct then fct() end end}
+		d:mouseZones{{x=0, y=0, w=game.w, h=game.h, fct=function(b) if b ~= "none" then game:unregisterDialog(d) if fct then fct() end end end, norestrict=true}}
+	end
+	d.drawDialog = function(self, s)
+		local h = 4
+		local r, g, b
+		for i = 1, #list do
+			r, g, b = s:drawColorStringBlended(self.font, list[i], 5, h, r, g, b) h = h + th
+		end
+	end
+	game:registerDialog(d)
+	return d
+end
+
 --- Requests a simple yes-no dialog
 function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 	local font = core.display.newFont("/data/font/Vera.ttf", 12)
@@ -102,8 +126,9 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
 	end}}
 	d.drawDialog = function(self, s)
 		local h = 4
+		local r, g, b
 		for i = 1, #list do
-			s:drawColorStringBlended(self.font, list[i], 5, h) h = h + th
+			r, g, b = s:drawColorStringBlended(self.font, list[i], 5, h, r, g, b) h = h + th
 		end
 
 		if d.sel == 0 then

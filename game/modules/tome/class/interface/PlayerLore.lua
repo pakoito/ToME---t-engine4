@@ -1,0 +1,68 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+require "engine.class"
+local Dialog = require "engine.Dialog"
+
+module(..., package.seeall, class.make)
+
+_M.lore_defs = {}
+
+--- Loads achievements
+function _M:loadDefinition(file)
+	local f, err = loadfile(file)
+	if not f and err then error(err) end
+	setfenv(f, setmetatable({
+		newLore = function(t) self:newLore(t) end,
+	}, {__index=_G}))
+	f()
+end
+
+--- Make a new achivement with a name and desc
+function _M:newLore(t)
+	assert(t.id, "no lore name")
+	assert(t.category, "no lore category")
+	assert(t.name, "no lore name")
+	assert(t.lore, "no lore lore")
+
+	t.order = #self.lore_defs+1
+
+	self.lore_defs[t.id] = t
+	self.lore_defs[#self.lore_defs+1] = t
+	print("[LORE] defined", t.order, t.id)
+end
+
+function _M:init(t)
+	self.lore_known = self.lore_known or {}
+end
+
+function _M:getLore(lore)
+	assert(self.lore_defs[lore], "bad lore id "..lore)
+	return self.lore_defs[lore]
+end
+
+function _M:learnLore(lore)
+	if not self.lore_known[lore] then
+		local l = self:getLore(lore)
+		Dialog:simpleLongPopup("Lore found: #0080FF#"..l.name, "#ANTIQUE_WHITE#"..l.lore, 400)
+	end
+
+	self.lore_known[lore] = true
+	print("[LORE] learnt", lore)
+end

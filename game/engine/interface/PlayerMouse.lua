@@ -40,6 +40,9 @@ function _M:mouseMove(tmx, tmy, spotHostiles)
 		game.log("[CHEAT] teleport to %dx%d", tmx, tmy)
 		self:move(tmx, tmy, true)
 	else
+		-- Just spend a turn
+		if self.x == tmx and self.y == ny then self:move(self.x, self.y) end
+
 		-- If hostiles, attack!
 		if (spotHostiles and spotHostiles(self)) or math.floor(core.fov.distance(self.x, self.y, tmx, tmy)) == 1 then
 			local l = line.new(self.x, self.y, tmx, tmy)

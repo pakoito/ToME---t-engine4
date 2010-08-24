@@ -133,7 +133,8 @@ end
 --- Gets the color in which to display the object in lists
 function _M:getDisplayColor()
 	if not self:isIdentified() then return {180, 180, 180}, "#B4B4B4#" end
-	if self.egoed then return {0, 255, 128}, "#00FF80#"
+	if self.lore then return {0, 128, 255}, "#0080FF#"
+	elseif self.egoed then return {0, 255, 128}, "#00FF80#"
 	elseif self.unique then return {255, 255, 0}, "#FFFF00#"
 	else return {255, 255, 255}, "#FFFFFF#"
 	end
@@ -406,4 +407,13 @@ end
 --- Get item cost
 function _M:getPrice()
 	return self.cost or 0
+end
+
+--- Called when trying to pickup
+function _M:on_prepickup(who, idx)
+	if self.lore then
+		game.level.map:removeObject(who.x, who.y, idx)
+		who:learnLore(self.lore)
+		return true
+	end
 end
