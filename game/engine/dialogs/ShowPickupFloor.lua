@@ -65,14 +65,14 @@ function _M:used()
 		game:unregisterDialog(self)
 		return false
 	end
+	return true
 end
 
 function _M:use()
 	if self.list[self.sel] then
 		self.action(self.list[self.sel].object, self.list[self.sel].item)
 	end
-	self:used()
-	return true
+	return self:used()
 end
 
 function _M:generateList()

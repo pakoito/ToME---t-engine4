@@ -79,6 +79,7 @@ function _M:runInit(dir)
 			self:runStop()
 		end),
 	}
+	self.running.dialog.__showup = nil
 
 	self:runStep()
 end

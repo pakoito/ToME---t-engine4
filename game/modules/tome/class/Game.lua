@@ -738,9 +738,10 @@ end
 
 --- Ask if we realy want to close, if so, save the game first
 function _M:onQuit()
-	self.player:restStop()
+	self.player:runStop("quitting")
+	self.player:restStop("quitting")
 
-	if not self.quit_dialog then
+	if not self.quit_dialog and not self.player.dead then
 		self.quit_dialog = QuitDialog.new()
 		self:registerDialog(self.quit_dialog)
 	end

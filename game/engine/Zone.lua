@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Savefile = require "engine.Savefile"
+local Dialog = require "engine.Dialog"
 local Map = require "engine.Map"
 local Astar = require "engine.Astar"
 local print = function() end
@@ -486,7 +487,13 @@ function _M:getLevel(game, lev, old_lev, no_close)
 
 	-- In any cases, make one if none was found
 	if not level then
+		local popup = Dialog:simplePopup("Generating level", "Please wait while generating the level...")
+		popup.__showup = nil
+		core.display.forceRedraw()
+
 		level = self:newLevel(level_data, lev, old_lev, game)
+
+		game:unregisterDialog(popup)
 	end
 
 	-- Clean up things
