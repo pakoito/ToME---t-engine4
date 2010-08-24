@@ -23,7 +23,7 @@ I followed in the trail of bodies you left, you sure are impressive. We are luck
 But enough talk, take this message, now I must go.
 #LIGHT_GREEN#He gives you a sealed scroll and vanishes in the shadows.#LAST#]],
 	answers = {
-		{"Thank you for your courrage.", action=function(npc, player)
+		{"Thank you for your courage.", action=function(npc, player)
 			local o, item, inven_id = npc:findInAllInventories("Sealed Scroll of Minas Tirith")
 			if o then
 				npc:removeObject(inven_id, item, true)

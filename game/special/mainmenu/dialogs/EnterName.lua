@@ -18,8 +18,8 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
-local Savefile = require "engine.Savefile"
+local Module = require "engine.Module"
+local Dialog = require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
@@ -31,34 +31,7 @@ function _M:init(runmod)
 		_RETURN = function()
 			if self.name:len() >= 2 then
 				game:unregisterDialog(self)
-
-				profile.generic.modules_loaded = profile.generic.modules_loaded or {}
-				profile.generic.modules_loaded[self.runmod.short_name] = (profile.generic.modules_loaded[self.runmod.short_name] or 0) + 1
-				profile:saveGenericProfile("modules_loaded", profile.generic.modules_loaded)
-
-				-- Ok run the module
-				local M, W = self.runmod.load()
-				_G.game = M.new()
-				_G.game:setPlayerName(self.name)
-
-				-- Load the world, or make a new one
-				if W then
-					local save = Savefile.new("")
-					_G.world = save:loadWorld()
-					save:close()
-					if not _G.world then
-						_G.world = W.new()
-					end
-					_G.world:run()
-				end
-
-				-- Delete the corresponding savefile if any
-				local save = engine.Savefile.new(_G.game.save_name)
-				save:delete()
-				save:close()
-
-				-- And now run it!
-				_G.game:run()
+				Module:instanciate(self.runmod, self.name, true)
 			else
 				engine.Dialog:simplePopup("Error", "Character name must be between 2 and 25 characters.")
 			end

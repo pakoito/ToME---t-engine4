@@ -19,6 +19,8 @@
 
 require "engine.class"
 local lanes = require "lanes"
+local Dialog = require "engine.Dialog"
+local Savefile = require "engine.Savefile"
 
 --- Handles dialog windows
 module(..., package.seeall, class.make)
@@ -132,6 +134,47 @@ function _M:listSavefiles()
 --	fs.umount(engine.homepath)
 
 	return mods
+end
+
+--- Instanciate the given module, loading it and creating a new game / loading an existing one
+-- @param mod the module definition as given by Module:loadDefinition()
+-- @param name the savefile name
+-- @param new_game true if the game must be created (aka new character)
+function _M:instanciate(mod, name, new_game)
+	local popup = Dialog:simplePopup("Loading module", "Please wait while loading the game module...")
+	core.display.forceRedraw()
+
+	profile.generic.modules_loaded = profile.generic.modules_loaded or {}
+	profile.generic.modules_loaded[mod.short_name] = (profile.generic.modules_loaded[mod.short_name] or 0) + 1
+	profile:saveGenericProfile("modules_loaded", profile.generic.modules_loaded)
+
+	-- Ok run the module
+	local M, W = mod.load()
+	_G.game = M.new()
+	_G.game:setPlayerName(name)
+
+	-- Load the world, or make a new one
+	if W then
+		local save = Savefile.new("")
+		_G.world = save:loadWorld()
+		save:close()
+		if not _G.world then
+			_G.world = W.new()
+		end
+		_G.world:run()
+	end
+
+	-- Load the savefile if it exists, or create a new one if not (or if requested)
+	local save = engine.Savefile.new(_G.game.save_name)
+	if save:check() and not new_game then
+		_G.game = save:loadGame()
+	else
+		save:delete()
+	end
+	save:close()
+
+	-- And now run it!
+	_G.game:run()
 end
 
 --- Setup write dir for a module

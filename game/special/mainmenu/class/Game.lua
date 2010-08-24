@@ -121,34 +121,7 @@ function _M:commandLineArgs(args)
 	if req_mod then
 		local mod = self.mod_list[req_mod]
 		if mod then
-			profile.generic.modules_loaded = profile.generic.modules_loaded or {}
-			profile.generic.modules_loaded[req_mod] = (profile.generic.modules_loaded[req_mod] or 0) + 1
-			profile:saveGenericProfile("modules_loaded", profile.generic.modules_loaded)
-
-			local M, W = mod.load()
-			_G.game = M.new()
-
-			-- Load the world, or make a new one
-			if W then
-				local save = Savefile.new("")
-				_G.world = save:loadWorld()
-				save:close()
-				if not _G.world then
-					_G.world = W.new()
-				end
-				_G.world:run()
-			end
-
-			-- Delete the corresponding savefile if any
-			if req_save then _G.game:setPlayerName(req_save) end
-			local save = engine.Savefile.new(_G.game.save_name)
-			if save:check() and not req_new then
-				_G.game = save:loadGame()
-			else
-				save:delete()
-			end
-			save:close()
-			_G.game:run()
+			Module:instanciate(mod, req_save or "player", req_new)
 		else
 			print("Error: module "..req_mod.." not found!")
 		end
@@ -310,23 +283,7 @@ function _M:selectStepLoad()
 
 		for j, save in ipairs(mod.savefiles) do
 			save.fct = function()
-				local M, W = mod.load()
-
-				-- Load the world, or make a new one
-				if W then
-					local save = Savefile.new("")
-					_G.world = save:loadWorld()
-					save:close()
-					if not _G.world then
-						_G.world = W.new()
-					end
-					_G.world:run()
-				end
-
-				local save = Savefile.new(save.short_name)
-				_G.game = save:loadGame()
-				save:close()
-				_G.game:run()
+				Module:instanciate(mod, save.name, false)
 			end
 			save.onSelect = function()
 				display_module.title = save.name
