@@ -130,8 +130,10 @@ function resolvers.calc.store(t, e)
 	t = t[1]
 
 	e.on_move = function(self, x, y, who)
-		self.store:loadup(game.level, game.zone)
-		self.store:interact(who)
+		if who.player then
+			self.store:loadup(game.level, game.zone)
+			self.store:interact(who)
+		end
 	end
 	e.store = game:getStore(t)
 	print("[STORE] created for entity", t, e, e.name)
@@ -149,9 +151,11 @@ function resolvers.calc.chatfeature(t, e)
 	t = t[1]
 
 	e.on_move = function(self, x, y, who)
-		local Chat = require("engine.Chat")
-		local chat = Chat.new(self.chat, self, who)
-		chat:invoke()
+		if who.player then
+			local Chat = require("engine.Chat")
+			local chat = Chat.new(self.chat, self, who)
+			chat:invoke()
+		end
 	end
 	e.chat = t
 

@@ -37,7 +37,7 @@ end
 
 local change_armour = function(npc, player)
 	local inven = player:getInven("INVEN")
-	player:showInventory("Select a two handed armour for your golem.", inven, function(o) return o.type == "armor" and o.slot == "BODY" end, function(o, item)
+	player:showInventory("Select an armour (of any kind) for your golem.", inven, function(o) return o.type == "armor" and o.slot == "BODY" end, function(o, item)
 		player:removeObject(inven, item, true)
 		local ro = npc:wearObject(o, true, true)
 		if ro then

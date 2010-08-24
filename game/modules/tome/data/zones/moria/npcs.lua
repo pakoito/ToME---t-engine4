@@ -131,6 +131,7 @@ newEntity{ define_as = "HARNO",
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player", ai_move="move_astar", },
 
 	can_talk = "message-minas-tirith",
+	can_talk_only_once = true,
 
 	on_die = function(self, who)
 		game.logPlayer(game.player, "#LIGHT_RED#You hear a death cry. '%s I have a messag... ARG!'", game.player.name:capitalize())
