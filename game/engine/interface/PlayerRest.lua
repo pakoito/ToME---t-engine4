@@ -36,6 +36,7 @@ function _M:restInit(turns, what, past, on_end)
 			self:restStop()
 		end),
 	}
+	self.resting.dialog.__showup = nil
 	self:useEnergy()
 	game.log(what:capitalize().." starts...")
 end
