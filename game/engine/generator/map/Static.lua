@@ -183,9 +183,9 @@ function _M:generate(lev, old_lev)
 		if define_spot then
 			assert(define_spot.type, "defineTile auto spot without type field")
 			assert(define_spot.subtype, "defineTile auto spot without subtype field")
-			define_tile.x = i-1
-			define_tile.y = j-1
-			self.spots[#self.spots+1] = define_tile
+			define_spot.x = i-1
+			define_spot.y = j-1
+			self.spots[#self.spots+1] = define_spot
 		end
 	end end
 
