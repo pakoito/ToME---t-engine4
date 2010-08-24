@@ -49,8 +49,8 @@ function _M:loadMap(file)
 		subGenerator = function(g)
 			self.subgen[#self.subgen+1] = g
 		end,
-		defineTile = function(char, grid, obj, actor, trap, status)
-			t[char] = {grid=grid, object=obj, actor=actor, trap=trap, status=status}
+		defineTile = function(char, grid, obj, actor, trap, status, spot)
+			t[char] = {grid=grid, object=obj, actor=actor, trap=trap, status=status, define_spot=spot}
 		end,
 		quickEntity = function(char, e, status)
 			if type(e) == "table" then
@@ -138,6 +138,7 @@ function _M:generate(lev, old_lev)
 		local trap = self.tiles[c] and self.tiles[c].trap
 		local object = self.tiles[c] and self.tiles[c].object
 		local status = self.tiles[c] and self.tiles[c].status
+		local define_spot = self.tiles[c] and self.tiles[c].define_spot
 
 		if object then
 			local o
@@ -177,6 +178,14 @@ function _M:generate(lev, old_lev)
 			if status.lite then self.level.map.lites(i-1, j-1, true) status.lite = nil end
 			if status.remember then self.level.map.remembers(i-1, j-1, true) status.remember = nil end
 			if pairs(status) then for k, v in pairs(status) do self.level.map.attrs(i-1, j-1, k, v) end end
+		end
+
+		if define_spot then
+			assert(define_spot.type, "defineTile auto spot without type field")
+			assert(define_spot.subtype, "defineTile auto spot without subtype field")
+			define_tile.x = i-1
+			define_tile.y = j-1
+			self.spots[#self.spots+1] = define_tile
 		end
 	end end
 
