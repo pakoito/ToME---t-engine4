@@ -19,7 +19,7 @@
 
 newEntity{
 	define_as = "BASE_WARAXE",
-	slot = "MAINHAND",
+	slot = "MAINHAND", dual_wieldable = true,
 	type = "weapon", subtype="waraxe",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE, image = resolvers.image_material("axe", "metal"),

@@ -19,7 +19,7 @@
 
 newEntity{
 	define_as = "BASE_LONGSWORD",
-	slot = "MAINHAND",
+	slot = "MAINHAND", dual_wieldable = true,
 	type = "weapon", subtype="longsword",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE, image = resolvers.image_material("sword", "metal"),

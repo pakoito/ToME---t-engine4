@@ -834,6 +834,15 @@ function _M:onRemoveObject(o)
 	self:checkEncumbrance()
 end
 
+--- Returns the possible offslot
+function _M:getObjectOffslot(o)
+	if o.dual_wieldable and self:knowTalent(self.T_DUAL_WEAPON_WIELD) then
+		return self.INVEN_OFFHAND
+	else
+		return o.offslot
+	end
+end
+
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise

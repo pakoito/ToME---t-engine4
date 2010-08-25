@@ -53,6 +53,7 @@ newBirthDescriptor{
 				profile.mod.allow_build.wilder_wyrmic
 				) and "allow" or "disallow"
 			end,
+			Corrupted = function() return profile.mod.allow_build.corrupted and "allow" or "disallow" end,
 		},
 	},
 }
