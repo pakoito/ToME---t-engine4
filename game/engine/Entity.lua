@@ -378,10 +378,10 @@ function _M:loadList(file, no_default, res, mod, loaded)
 
 				for k, e in pairs(res[t.base]) do
 					if k ~= "define_as" and type(k) ~= "number" then
-						if type(t[k]) == "nil" then
-							t[k] = e
-						elseif type(t[k]) == "table" and type(e) == "table" then
+						if type(t[k]) == "table" and type(e) == "table" then
 							copy_recurs(t[k], e)
+						elseif not t[k] and type(t[k]) ~= "boolean" then
+							t[k] = e
 						end
 					end
 				end

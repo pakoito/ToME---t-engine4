@@ -310,6 +310,7 @@ function _M:wearObject(o, replace, vocal)
 		return false
 	end
 	if o:check("on_canwear", self, inven) then return false end
+	local offslot = self:getObjectOffslot(o)
 
 	if self:addObject(inven, o) then
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
