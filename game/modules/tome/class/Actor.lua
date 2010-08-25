@@ -1063,6 +1063,7 @@ function _M:getTalentFullDescription(t, addlevel)
 
 	local d = {}
 
+	d[#d+1] = ("#6fff83#Effective talent level: #00FF00#%.1f"):format(self:getTalentLevel(t))
 	if t.mode == "passive" then d[#d+1] = "#6fff83#Use mode: #00FF00#Passive"
 	elseif t.mode == "sustained" then d[#d+1] = "#6fff83#Use mode: #00FF00#Sustained"
 	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activated"
