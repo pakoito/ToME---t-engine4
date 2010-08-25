@@ -290,7 +290,11 @@ function _M:canLearnTalent(t, offset)
 		if req.talent then
 			for _, tid in ipairs(req.talent) do
 				if type(tid) == "table" then
-					if self:getTalentLevelRaw(tid[1]) < tid[2] then return nil, "missing dependency" end
+					if type(tid[2]) == "boolean" and tid[2] == false then
+						if self:knowTalent(tid[1]) then return nil, "missing dependency" end
+					else
+						if self:getTalentLevelRaw(tid[1]) < tid[2] then return nil, "missing dependency" end
+					end
 				else
 					if not self:knowTalent(tid) then return nil, "missing dependency" end
 				end
@@ -349,8 +353,13 @@ function _M:getTalentReqDesc(t_id, levmod)
 	if req.talent then
 		for _, tid in ipairs(req.talent) do
 			if type(tid) == "table" then
-				local c = (self:getTalentLevelRaw(tid[1]) >= tid[2]) and "#00ff00#" or "#ff0000#"
-				str = str .. ("- %sTalent %s (%d)\n"):format(c, self:getTalentFromId(tid[1]).name, tid[2])
+				if type(tid[2]) == "boolean" and tid[2] == false then
+					local c = (not self:knowTalent(tid[1])) and "#00ff00#" or "#ff0000#"
+					str = str .. ("- %sTalent %s (not known)\n"):format(c, self:getTalentFromId(tid[1]).name)
+				else
+					local c = (self:getTalentLevelRaw(tid[1]) >= tid[2]) and "#00ff00#" or "#ff0000#"
+					str = str .. ("- %sTalent %s (%d)\n"):format(c, self:getTalentFromId(tid[1]).name, tid[2])
+				end
 			else
 				local c = self:knowTalent(tid) and "#00ff00#" or "#ff0000#"
 				str = str .. ("- %sTalent %s\n"):format(c, self:getTalentFromId(tid).name)
