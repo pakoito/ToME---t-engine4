@@ -296,6 +296,11 @@ function _M:canWearObject(o, try_slot)
 	return true
 end
 
+--- Returns the possible offslot
+function _M:getObjectOffslot(o)
+	return o.offslot
+end
+
 --- Wear/wield an item
 function _M:wearObject(o, replace, vocal)
 	local inven = o:wornInven()
@@ -315,10 +320,10 @@ function _M:wearObject(o, replace, vocal)
 	if self:addObject(inven, o) then
 		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		return true
-	elseif o.offslot and self:getInven(o.offslot) and #(self:getInven(o.offslot)) < self:getInven(o.offslot).max and self:canWearObject(o, o.offslot) then
+	elseif offslot and self:getInven(offslot) and #(self:getInven(offslot)) < self:getInven(offslot).max and self:canWearObject(o, offslot) then
 		if vocal then game.logSeen(self, "%s wears(offslot): %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		-- Warning: assume there is now space
-		self:addObject(self:getInven(o.offslot), o)
+		self:addObject(self:getInven(offslot), o)
 		return true
 	elseif replace then
 		local ro = self:removeObject(inven, 1, true)
