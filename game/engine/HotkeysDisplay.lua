@@ -118,6 +118,9 @@ function _M:onMouse(button, mx, my, click)
 		if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
 			if button == "left" and click then
 				self.actor:activateHotkey(i)
+			elseif button == "right" and click then
+				self.actor.hotkey[i] = nil
+				self.actor.changed = true
 			else
 				self.actor.changed = true
 				self.cur_sel = i
