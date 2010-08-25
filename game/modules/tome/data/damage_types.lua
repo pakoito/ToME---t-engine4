@@ -49,7 +49,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 			res = res * (100 - pen) / 100
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 			if res >= 100 then dam = 0
-			elseif res <= 0 then dam = dam
+			elseif res <= -100 then dam = dam * 2
 			else dam = dam * ((100 - res) / 100)
 			end
 		end

@@ -56,11 +56,11 @@ He also said the only way to enter the peak and de-activate the shield is throug
 }
 
 newChat{ id="clues",
-	text = [[I much as I would like to help our forces are already spread too thin, we can not provide you with direct power.
+	text = [[As much as I would like to help our forces are already spread too thin, we can not provide you with direct power.
 But I might be able to help you by explaining how the Pride is organised, we could help each others.
 Recently we have heard the pride speaking about a new master, or masters. They might be the ones behind that staff mystery of yours.
-We suppose their main place of power is the High Peak in the center of the continent but it is innaccessible and covered by some kind of shield.
-You must investigate the bastions of the Pride, maybe you will find more information about the High Peak, and any orcs you kill is one less that will attack us.
+We suppose their main place of power is the High Peak in the center of the continent but it is inaccessible and covered by some kind of shield.
+You must investigate the bastions of the Pride, maybe you will find more information about the High Peak, and any orc you kill is one less that will attack us.
 The known bastions of the Pride are:
 - Rak'shor Pride, in the west of the southern deset
 - Gorbat Pride, in a mountain range in the the southern desert
