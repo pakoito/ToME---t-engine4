@@ -717,7 +717,7 @@ function _M:setupCommands()
 
 		LOOK_AROUND = function()
 			self.flash:empty(true)
-			self.flash(self.flash.GOOD, "Looking around... (direction keys to select interresting things, shift+direction keys to move freely)")
+			self.flash(self.flash.GOOD, "Looking around... (direction keys to select interesting things, shift+direction keys to move freely)")
 			local co = coroutine.create(function() self.player:getTarget{type="hit", no_restrict=true, range=2000} end)
 			local ok, err = coroutine.resume(co)
 			if not ok and err then print(debug.traceback(co)) error(err) end

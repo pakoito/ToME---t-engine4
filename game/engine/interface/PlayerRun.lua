@@ -108,6 +108,7 @@ function _M:runFollow(path)
 			self:runStop()
 		end),
 	}
+	self.running.dialog.__showup = nil
 
 	self:runStep()
 end

@@ -34,6 +34,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	never_move = 1,
 	rank = 2,
+	blind_immune = 1,
 	size_category = 3,
 	infravision = 20,
 

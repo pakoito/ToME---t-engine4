@@ -25,7 +25,7 @@ desc = function(self, who)
 	if self:isCompleted("rak-shor") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Rak'shor.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Rak'shor Pride, in the south west of the High Peek.#WHITE#"
+		desc[#desc+1] = "#SLATE#* Rak'shor Pride, in the west of the southern desert.#WHITE#"
 	end
 --[[
 	if self:isCompleted("eastport") then
@@ -42,12 +42,12 @@ desc = function(self, who)
 	if self:isCompleted("grushnak") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Grushnak.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Grushnak Pride, whose location remains unknown.#WHITE#"
+		desc[#desc+1] = "#SLATE#* Grushnak Pride, on the eastern slope of the High Peak.#WHITE#"
 	end
 	if self:isCompleted("gorbat") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Gorbat.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Gorbat Pride, in the southern desert.#WHITE#"
+		desc[#desc+1] = "#SLATE#* Gorbat Pride, in a mountain range in the southern desert.#WHITE#"
 	end
 
 	if self:isCompleted() then

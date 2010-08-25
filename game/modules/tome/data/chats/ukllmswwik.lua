@@ -43,7 +43,7 @@ But they found they could no longer bear to wield them, they burned their flesh 
 Maedhros thrust himself in a fiery chasm along with his Silmaril and Maglor threw his into the depths of the ocean, wandering the shores endlessly.
 However after a while he regreted his act and dived to recover it, he had no chance of success yet he prevailed.
 Ossë helped him, granting him the ability to live under the ocean to guard the Silmaril. There he remained for all the ages of the world.
-But something happened recently, Maglor turned mad and now he looks upon all intelligent water live as a threat, which includes myself.
+But something happened recently, Maglor turned mad and now he looks upon all intelligent water life as a threat, which includes myself.
 I can not leave this sanctuary but maybe you could help me?
 After all this would be a gesture of kindness to end his madness and the Silmaril would gain a new, powerful, guardian.]],
 	answers = {

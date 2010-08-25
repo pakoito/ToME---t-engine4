@@ -29,6 +29,7 @@ newEntity{
 	max_stamina = 110,
 	rank = 2,
 	size_category = 2,
+	blind_immune = 1,
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_snake" },

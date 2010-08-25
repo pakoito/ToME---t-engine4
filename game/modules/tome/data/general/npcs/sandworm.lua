@@ -35,6 +35,7 @@ newEntity{
 	resists = { [DamageType.FIRE] = 30, [DamageType.COLD] = -30 },
 	rank = 2,
 	size_category = 2,
+	blind_immune = 1,
 
 	drops = resolvers.drops{chance=20, nb=1, {type="potion"}, {type="scroll"} },
 

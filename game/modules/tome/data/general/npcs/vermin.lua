@@ -34,6 +34,7 @@ newEntity{
 	infravision = 20,
 	rank = 1,
 	size_category = 1,
+	blind_immune = 1,
 }
 
 newEntity{ base = "BASE_NPC_WORM",
