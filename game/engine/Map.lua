@@ -832,6 +832,13 @@ function _M:getObject(x, y, i)
 	return self(x, y, i)
 end
 
+function _M:getObjectTotal(x, y)
+	-- Compute the map stack position
+	local i = 1
+	while self(x, y, i) do i = i + 1 end
+	return i - 1
+end
+
 function _M:removeObject(x, y, i)
 	-- Compute the map stack position
 	i = i - 1 + self.OBJECT
