@@ -19,7 +19,7 @@
 
 newChat{ id="welcome",
 	text = [[*#LIGHT_GREEN#Suddently a voice appears in your head.#WHITE#*
-@playername@, this is High Sun Paladin Aeryn of the Sunwall, I am communicating with you thanks to the power of the anorithil.
+@playername@, this is High Sun Paladin Aeryn of the Sunwall. I am communicating with you thanks to the power of the anorithil.
 I have some urgent information for you: the staff you were looking for has been located.]],
 	answers = {
 		{"Where?!", jump="where"},
@@ -27,12 +27,11 @@ I have some urgent information for you: the staff you were looking for has been 
 }
 
 newChat{ id="where",
-	text = [[One of our patrols noticed some strange orc movements around in the sourthern part of the contient, inside the desert of Erúan.
-A groupd of orcs where guarding something that looks like the staff you talked about.
+	text = [[One of our patrols noticed some strange orc movements in the southern part of the contient, inside the desert of ErÃºan.
+A group of orcs were guarding something that looks like the staff you talked about.
 You should go there and investigate, this might be your only chance.]],
 	answers = {
 		{"I will, right now!"},
 	}
 }
-
 return "welcome"
