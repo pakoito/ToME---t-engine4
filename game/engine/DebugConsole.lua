@@ -36,37 +36,21 @@ function _M:init()
 			table.insert(self.commands, self.line)
 			self.com_sel = #self.commands + 1
 			table.insert(self.history, self.line)
-			-- Handle printing a table
-			if self.line:match("^==") then
-				self.line = self.line:sub(3)
-				local current_table = _G
-				local found = true
-				for next_key in string.gmatch(self.line, "[^.]+") do
-					if current_table[next_key] then
-						current_table = current_table[next_key]
-					else
-						found = false
-						break
-					end
-				end
-				if found then 
-					for k, v in pairs( current_table ) do
-						table.insert(self.history, "    "..tostring(k).." :=: "..tostring(v) )
-					end
-				else
-					table.insert(self.history, self.line.." not found.")
-				end
-			else
 			-- Handle assignment and simple printing
-				if self.line:match("^=") then self.line = "return "..self.line:sub(2) end
-				local f, err = loadstring(self.line)
-				if err then
-					table.insert(self.history, err)
-				else
-					local res = {pcall(f)}
-					for i, v in ipairs(res) do
-						if i > 1 then
-							table.insert(self.history, "    "..(i-1).." :=: "..tostring(v))
+			if self.line:match("^=") then self.line = "return "..self.line:sub(2) end
+			local f, err = loadstring(self.line)
+			if err then
+				table.insert(self.history, err)
+			else
+				local res = {pcall(f)}
+				for i, v in ipairs(res) do
+					if i > 1 then
+						table.insert(self.history, "    "..(i-1).." :=: "..tostring(v))
+						-- Handle printing a table
+						if type(v) == "table" then
+							for k, vv in pairs(v) do
+								table.insert(self.history, "        "..tostring(k).." :=: "..tostring(vv) )
+							end
 						end
 					end
 				end
