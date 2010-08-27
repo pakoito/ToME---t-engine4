@@ -33,7 +33,7 @@ local reward_types = {
 			[Talents.T_EXOTIC_WEAPONS_MASTERY] = 1,
 		},
 		stats = {
-			[Stats.STAT_STR] = 1,
+			[Stats.STAT_STR] = 2,
 			[Stats.STAT_CON] = 1,
 		},
 	},
@@ -47,7 +47,7 @@ local reward_types = {
 			[Talents.T_VISION] = 1,
 		},
 		stats = {
-			[Stats.STAT_MAG] = 1,
+			[Stats.STAT_MAG] = 2,
 			[Stats.STAT_WIL] = 1,
 		},
 	},
@@ -63,7 +63,7 @@ local reward_types = {
 			[Talents.T_IMBUE_ITEM] = 1,
 		},
 		stats = {
-			[Stats.STAT_MAG] = 1,
+			[Stats.STAT_MAG] = 2,
 			[Stats.STAT_DEX] = 1,
 		},
 	},
@@ -77,7 +77,7 @@ local reward_types = {
 			[Talents.T_TRAP_DISARM] = 1,
 		},
 		stats = {
-			[Stats.STAT_DEX] = 1,
+			[Stats.STAT_DEX] = 2,
 			[Stats.STAT_CUN] = 1,
 		},
 	},
@@ -90,7 +90,7 @@ local reward_types = {
 			[Talents.T_CHANT_OF_FORTRESS] = 1,
 		},
 		stats = {
-			[Stats.STAT_STR] = 1,
+			[Stats.STAT_STR] = 2,
 			[Stats.STAT_MAG] = 1,
 		},
 	},
@@ -103,7 +103,7 @@ local reward_types = {
 			[Talents.T_HYMN_OF_PERSEVERANCE] = 1,
 		},
 		stats = {
-			[Stats.STAT_CUN] = 1,
+			[Stats.STAT_CUN] = 2,
 			[Stats.STAT_MAG] = 1,
 		},
 	},
@@ -173,7 +173,5 @@ newChat{ id="done",
 		{"Thank you."},
 	},
 }
-
-print(plop)
 
 return "welcome"

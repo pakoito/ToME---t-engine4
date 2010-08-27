@@ -45,6 +45,7 @@ local name_rules = {
 
 local possible_types = {
 	{ name="lost warrior", random="male", chance=70,
+		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I thought too many battles, I fear I will not make it. Would you help me?]],
 		actor = {
 			type = "humanoid", subtype = "human",
 			display = "@", color=colors.UMBER,
@@ -70,6 +71,7 @@ local possible_types = {
 		},
 	},
 	{ name="injured seer", random="female", chance=70,
+		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I will not be able to continue the road alone. Would you help me?]],
 		actor = {
 			name = "%s, the injured seer",
 			type = "humanoid", subtype = "elf", female=true,
@@ -95,6 +97,7 @@ local possible_types = {
 		},
 	},
 	{ name="repented thief", random="male", chance=70,
+		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I thought too many battles, I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the repented thief",
 			type = "humanoid", subtype = "hobbit",
@@ -120,6 +123,7 @@ local possible_types = {
 		},
 	},
 	{ name="lone alchemist", random="male", chance=70,
+		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I thought too many battles, I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lone alchemist",
 			type = "humanoid", subtype = "human",
@@ -145,6 +149,7 @@ local possible_types = {
 		},
 	},
 	{ name="lost sun paladin", random="female", chance=70,
+		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I thought too many battles, I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lost sun paladin",
 			type = "humanoid", subtype = "human", female=true,
@@ -170,6 +175,7 @@ local possible_types = {
 		},
 	},
 	{ name="lost anorithil", random="female", chance=70,
+		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I thought too many battles, I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lost anorithil",
 			type = "humanoid", subtype = "human", female=true,
@@ -195,6 +201,7 @@ local possible_types = {
 		},
 	},
 	{ name="worried loremaster", random="female", chance=30,
+		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I thought too many battles, I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the worried loremaster",
 			type = "humanoid", subtype = "human", female=true,
@@ -318,4 +325,7 @@ on_grant = function(self, who)
 	-- Setup quest
 	self.level_name = game.level.level.." of "..game.zone.name
 	self.name = "Escort: "..self.kind.name.." (level "..self.level_name..")"
+
+	local Chat = require "engine.Chat"
+	Chat.new("escort-quest-start", npc, game.player, {text=self.kind.text}):invoke()
 end
