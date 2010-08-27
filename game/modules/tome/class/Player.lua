@@ -575,7 +575,7 @@ function _M:useOrbPortal(portal)
 		end
 		return true
 	end
-	if not wait() then return end
+--	if not wait() then return end
 
 	if portal.teleport_level then
 		local x, y = util.findFreeGrid(portal.teleport_level.x, portal.teleport_level.y, 2, true, {[Map.ACTOR]=true})
@@ -591,7 +591,7 @@ function _M:useOrbPortal(portal)
 
 	if portal.message then game.logPlayer(self, portal.message) end
 	if portal.on_use then portal:on_use(self) end
-	self.energy = self.energy + game.energy_to_act
+	self.energy.value = self.energy.value + game.energy_to_act
 end
 
 --- Use the orbs of command
