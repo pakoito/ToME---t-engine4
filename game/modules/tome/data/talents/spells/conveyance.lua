@@ -31,7 +31,9 @@ newTalent{
 	action = function(self, t)
 		local target = self
 		if self:getTalentLevel(t) >= 5 then
-			local tx, ty = self:getTarget{default_target=self, type="hit", nowarning=true, range=10, first_target="friend"}
+			local tg = {default_target=self, type="hit", nowarning=true, range=10, first_target="friend"}
+			local tx, ty = self:getTarget(tg)
+			local _ _, tx, ty = self:canProject(tg, tx, ty)
 			if tx and ty then
 				target = game.level.map(tx, ty, Map.ACTOR) or self
 			end
@@ -86,7 +88,9 @@ newTalent{
 		local target = self
 
 		if self:getTalentLevel(t) >= 5 then
-			local tx, ty = self:getTarget{default_target=self, nowarning=true, type="hit", range=10, first_target="friend"}
+			local tg = {default_target=self, type="hit", nowarning=true, range=10, first_target="friend"}
+			local tx, ty = self:getTarget(tg)
+			local _ _, tx, ty = self:canProject(tg, tx, ty)
 			if tx and ty then
 				target = game.level.map(tx, ty, Map.ACTOR) or self
 			end
