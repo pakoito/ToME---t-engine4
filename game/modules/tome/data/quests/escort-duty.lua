@@ -44,7 +44,7 @@ local name_rules = {
 }
 
 local possible_types = {
-	{ name="lost warrior", random="male",
+	{ name="lost warrior", random="male", chance=70,
 		actor = {
 			type = "humanoid", subtype = "human",
 			display = "@", color=colors.UMBER,
@@ -69,7 +69,7 @@ local possible_types = {
 			reward_type = "warrior",
 		},
 	},
-	{ name="injured seer", random="female",
+	{ name="injured seer", random="female", chance=70,
 		actor = {
 			name = "%s, the injured seer",
 			type = "humanoid", subtype = "elf", female=true,
@@ -94,18 +94,18 @@ local possible_types = {
 			reward_type = "divination",
 		},
 	},
-	{ name="repented thief", random="male",
+	{ name="repented thief", random="male", chance=70,
 		actor = {
 			name = "%s, the repented thief",
 			type = "humanoid", subtype = "hobbit",
 			display = "@", color=colors.BLUE,
-			desc = [[She looks tired and wounded.]],
+			desc = [[He looks tired and wounded.]],
 			autolevel = "rogue",
 			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=8, dex=7, mag=18, con=12 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-			resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+			resolvers.equip{ {type="weapon", subtype="dagger", autoreq=true}, {type="weapon", subtype="dagger", autoreq=true} },
 			resolvers.talents{ [Talents.T_DIRTY_FIGHTING]=1, },
 			lite = 4,
 			rank = 2,
@@ -117,6 +117,106 @@ local possible_types = {
 			inc_damage = {all=-50},
 
 			reward_type = "survival",
+		},
+	},
+	{ name="lone alchemist", random="male", chance=70,
+		actor = {
+			name = "%s, the lone alchemist",
+			type = "humanoid", subtype = "human",
+			display = "@", color=colors.AQUAMARINE,
+			desc = [[He looks tired and wounded.]],
+			autolevel = "rogue",
+			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			stats = { str=8, dex=7, mag=18, con=12 },
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+			resolvers.talents{ [Talents.T_HEAT]=1, },
+			lite = 4,
+			rank = 2,
+			exp_worth = 0,
+
+			max_life = 50, life_regen = 0,
+			life_rating = 6,
+			combat_armor = 3, combat_def = 3,
+			inc_damage = {all=-50},
+
+			reward_type = "alchemy",
+		},
+	},
+	{ name="lost sun paladin", random="female", chance=70,
+		actor = {
+			name = "%s, the lost sun paladin",
+			type = "humanoid", subtype = "human", female=true,
+			display = "@", color=colors.GOLD,
+			desc = [[She looks tired and wounded.]],
+			autolevel = "warriormage",
+			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			stats = { str=18, dex=7, mag=18, con=12 },
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			resolvers.equip{ {type="weapon", subtype="mace", autoreq=true} },
+			resolvers.talents{ [Talents.T_CHANT_OF_FORTRESS]=1, },
+			lite = 4,
+			rank = 2,
+			exp_worth = 0,
+
+			max_life = 50, life_regen = 0,
+			life_rating = 6,
+			combat_armor = 3, combat_def = 3,
+			inc_damage = {all=-50},
+
+			reward_type = "sun_paladin",
+		},
+	},
+	{ name="lost anorithil", random="female", chance=70,
+		actor = {
+			name = "%s, the lost anorithil",
+			type = "humanoid", subtype = "human", female=true,
+			display = "@", color=colors.YELLOW,
+			desc = [[She looks tired and wounded.]],
+			autolevel = "caster",
+			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			stats = { str=8, dex=7, mag=18, con=12 },
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+			resolvers.talents{ [Talents.T_HYMN_OF_PERSEVERANCE]=1, },
+			lite = 4,
+			rank = 2,
+			exp_worth = 0,
+
+			max_life = 50, life_regen = 0,
+			life_rating = 6,
+			combat_armor = 3, combat_def = 3,
+			inc_damage = {all=-50},
+
+			reward_type = "anorithil",
+		},
+	},
+	{ name="worried loremaster", random="female", chance=30,
+		actor = {
+			name = "%s, the worried loremaster",
+			type = "humanoid", subtype = "human", female=true,
+			display = "@", color=colors.LIGHT_GREEN,
+			desc = [[She looks tired and wounded.]],
+			autolevel = "wildcaster",
+			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			stats = { str=8, dex=7, mag=18, con=12 },
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+			resolvers.talents{ [Talents.T_MIND_SEAR]=1, },
+			lite = 4,
+			rank = 2,
+			exp_worth = 0,
+
+			max_life = 50, life_regen = 0,
+			life_rating = 5,
+			combat_armor = 3, combat_def = 3,
+			inc_damage = {all=-50},
+
+			reward_type = "exotic",
 		},
 	},
 }
@@ -168,7 +268,10 @@ end
 on_grant = function(self, who)
 	self.on_grant = nil
 
-	self.kind = rng.table(possible_types)
+	while true do
+		self.kind = rng.table(possible_types)
+		if rng.percent(self.kind.chance) then break end
+	end
 
 	local ng = NameGenerator.new(name_rules[self.kind.random])
 
@@ -192,8 +295,7 @@ on_grant = function(self, who)
 	self.kind.actor = nil
 
 	-- Spawn the portal, far enough from the escort
---	local gx, gy = getPortalSpot(npc, 150, (game.level.map.w + game.level.map.h) / 2 / 2)
-	local gx, gy = x+1, y
+	local gx, gy = getPortalSpot(npc, 150, (game.level.map.w + game.level.map.h) / 2 / 2)
 	if not gx then return end
 	local g = mod.class.Grid.new{
 		show_tooltip=true,

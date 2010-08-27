@@ -127,7 +127,7 @@ function _M:newGame()
 	local quickbirth = save:loadQuickBirth()
 	save:close()
 
-	local birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
+	local birth; birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		-- Save for quick birth
 		local save = Savefile.new(self.save_name)
 		save:saveQuickBirth(self.player.descriptor)
@@ -150,6 +150,7 @@ function _M:newGame()
 			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))
 			self.player:resetToFull()
 			self.player:registerCharacterPlayed()
+			self.player:onBirth(birth)
 		end)
 	end, quickbirth)
 	self:registerDialog(birth)
@@ -340,6 +341,8 @@ function _M:changeLevel(lev, zone, keep_old_lev)
 	if self.zone.on_enter then
 		self.zone.on_enter(lev, old_lev, zone)
 	end
+
+	self.player:onEnterLevel(self.zone, self.level)
 
 	if self.level.data.ambiant_music then
 		if self.level.data.ambiant_music ~= "last" then

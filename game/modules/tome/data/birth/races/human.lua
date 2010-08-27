@@ -47,6 +47,7 @@ newBirthDescriptor{
 		faction = "reunited-kingdom",
 		type = "humanoid", subtype="human",
 	},
+	random_escort_possibilities = { {"trollshaws", 1, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
 }
 
 ---------------------------------------------------------

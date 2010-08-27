@@ -79,6 +79,29 @@ function _M:init(t, no_default)
 	self.descriptor = {}
 end
 
+function _M:onBirth(birther)
+	-- Make a list of random escort levels
+	local race_def = birther.birth_descriptor_def.race[self.descriptor.race]
+	if race_def.random_escort_possibilities then
+		local zones = {}
+		for i, zd in ipairs(race_def.random_escort_possibilities) do for j = zd[2], zd[3] do zones[#zones+1] = {zd[1], j} end end
+		self.random_escort_levels = {}
+		for i = 1, 9 do
+			local z = rng.tableRemove(zones)
+			print("Random escort on", z[1], z[2])
+			self.random_escort_levels[z[1]] = self.random_escort_levels[z[1]] or {}
+			self.random_escort_levels[z[1]][z[2]] = true
+		end
+	end
+end
+
+function _M:onEnterLevel(zone, level)
+	-- Fire random escort quest
+	if self.random_escort_levels and self.random_escort_levels[zone.short_name] and self.random_escort_levels[zone.short_name][level.level] then
+		self:grantQuest("escort-duty")
+	end
+end
+
 function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
