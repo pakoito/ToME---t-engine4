@@ -25,7 +25,7 @@ return {
 	persistant = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	persistent = "zone",
+	persistant = "zone",
 	ambiant_music = "Dreaming of Flying.ogg",
 	generator =  {
 		map = {
