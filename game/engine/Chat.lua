@@ -23,16 +23,17 @@ require "engine.dialogs.Chat"
 --- Handle chats between the player and NPCs
 module(..., package.seeall, class.make)
 
-function _M:init(name, npc, player)
+function _M:init(name, npc, player, data)
 	self.chats = {}
 	self.npc = npc
 	self.player = player
+	data = setmetatable(data or {}, {__index=_G})
 
 	local f, err = loadfile("/data/chats/"..name..".lua")
 	if not f and err then error(err) end
 	setfenv(f, setmetatable({
 		newChat = function(c) self:addChat(c) end,
-	}, {__index=_G}))
+	}, {__index=data}))
 	self.default_id = f()
 end
 

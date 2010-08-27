@@ -26,29 +26,25 @@ local Astar = require("engine.Astar")
 -- Quest data
 --------------------------------------------------------------------------------
 local name_rules = {
-	phonemesVocals = "a, e, i, o, u, y",
-	phonemesConsonants = "b, c, ch, ck, cz, d, dh, f, g, gh, h, j, k, kh, l, m, n, p, ph, q, r, rh, s, sh, t, th, ts, tz, v, w, x, z, zh",
-	syllablesStart = "Aer, Al, Am, An, Ar, Arm, Arth, B, Bal, Bar, Be, Bel, Ber, Bok, Bor, Bran, Breg, Bren, Brod, Cam, Chal, Cham, Ch, Cuth, Dag, Daim, Dair, Del, Dr, Dur, Duv, Ear, Elen, Er, Erel, Erem, Fal, Ful, Gal, G, Get, Gil, Gor, Grin, Gun, H, Hal, Han, Har, Hath, Hett, Hur, Iss, Khel, K, Kor, Lel, Lor, M, Mal, Man, Mard, N, Ol, Radh, Rag, Relg, Rh, Run, Sam, Tarr, T, Tor, Tul, Tur, Ul, Ulf, Unr, Ur, Urth, Yar, Z, Zan, Zer",
-	syllablesMiddle = "de, do, dra, du, duna, ga, go, hara, kaltho, la, latha, le, ma, nari, ra, re, rego, ro, rodda, romi, rui, sa, to, ya, zila",
-	syllablesEnd = "bar, bers, blek, chak, chik, dan, dar, das, dig, dil, din, dir, dor, dur, fang, fast, gar, gas, gen, gorn, grim, gund, had, hek, hell, hir, hor, kan, kath, khad, kor, lach, lar, ldil, ldir, leg, len, lin, mas, mnir, ndil, ndur, neg, nik, ntir, rab, rach, rain, rak, ran, rand, rath, rek, rig, rim, rin, rion, sin, sta, stir, sus, tar, thad, thel, tir, von, vor, yon, zor",
-	rules = "$s$v$35m$10m$e",
+	male = {
+		phonemesVocals = "a, e, i, o, u, y",
+		phonemesConsonants = "b, c, ch, ck, cz, d, dh, f, g, gh, h, j, k, kh, l, m, n, p, ph, q, r, rh, s, sh, t, th, ts, tz, v, w, x, z, zh",
+		syllablesStart = "Aer, Al, Am, An, Ar, Arm, Arth, B, Bal, Bar, Be, Bel, Ber, Bok, Bor, Bran, Breg, Bren, Brod, Cam, Chal, Cham, Ch, Cuth, Dag, Daim, Dair, Del, Dr, Dur, Duv, Ear, Elen, Er, Erel, Erem, Fal, Ful, Gal, G, Get, Gil, Gor, Grin, Gun, H, Hal, Han, Har, Hath, Hett, Hur, Iss, Khel, K, Kor, Lel, Lor, M, Mal, Man, Mard, N, Ol, Radh, Rag, Relg, Rh, Run, Sam, Tarr, T, Tor, Tul, Tur, Ul, Ulf, Unr, Ur, Urth, Yar, Z, Zan, Zer",
+		syllablesMiddle = "de, do, dra, du, duna, ga, go, hara, kaltho, la, latha, le, ma, nari, ra, re, rego, ro, rodda, romi, rui, sa, to, ya, zila",
+		syllablesEnd = "bar, bers, blek, chak, chik, dan, dar, das, dig, dil, din, dir, dor, dur, fang, fast, gar, gas, gen, gorn, grim, gund, had, hek, hell, hir, hor, kan, kath, khad, kor, lach, lar, ldil, ldir, leg, len, lin, mas, mnir, ndil, ndur, neg, nik, ntir, rab, rach, rain, rak, ran, rand, rath, rek, rig, rim, rin, rion, sin, sta, stir, sus, tar, thad, thel, tir, von, vor, yon, zor",
+		rules = "$s$v$35m$10m$e",
+	},
+	female = {
+		phonemesVocals = "a, e, i, o, u, y",
+		syllablesStart = "Ad, Aer, Ar, Bel, Bet, Beth, Ce'N, Cyr, Eilin, El, Em, Emel, G, Gl, Glor, Is, Isl, Iv, Lay, Lis, May, Ner, Pol, Por, Sal, Sil, Vel, Vor, X, Xan, Xer, Yv, Zub",
+		syllablesMiddle = "bre, da, dhe, ga, lda, le, lra, mi, ra, ri, ria, re, se, ya",
+		syllablesEnd = "ba, beth, da, kira, laith, lle, ma, mina, mira, na, nn, nne, nor, ra, rin, ssra, ta, th, tha, thra, tira, tta, vea, vena, we, wen, wyn",
+		rules = "$s$v$35m$10m$e",
+	},
 }
 
 local possible_types = {
-	{ name="lost warrior",
-		types = {
-			["technique/combat-training"] = 0.7,
-			["technique/combat-techniques-active"] = 0.7,
-			["technique/combat-techniques-passive"] = 0.7,
-		},
-		talents = {
-			[Talents.T_RUSH] = 1,
-		},
-		stats = {
-			[Stats.STAT_STR] = 2,
-			[Stats.STAT_DEX] = 1,
-			[Stats.STAT_CON] = 2,
-		},
+	{ name="lost warrior", random="male",
 		actor = {
 			type = "humanoid", subtype = "human",
 			display = "@", color=colors.UMBER,
@@ -66,9 +62,61 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 5,
+			life_rating = 7,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
+
+			reward_type = "warrior",
+		},
+	},
+	{ name="injured seer", random="female",
+		actor = {
+			name = "%s, the injured seer",
+			type = "humanoid", subtype = "elf", female=true,
+			display = "@", color=colors.LIGHT_BLUE,
+			desc = [[She looks tired and wounded.]],
+			autolevel = "caster",
+			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			stats = { str=8, dex=7, mag=18, con=12 },
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+			resolvers.talents{ [Talents.T_MANATHRUST]=1, },
+			lite = 4,
+			rank = 2,
+			exp_worth = 0,
+
+			max_life = 50, life_regen = 0,
+			life_rating = 6,
+			combat_armor = 3, combat_def = 3,
+			inc_damage = {all=-50},
+
+			reward_type = "divination",
+		},
+	},
+	{ name="repented thief", random="male",
+		actor = {
+			name = "%s, the repented thief",
+			type = "humanoid", subtype = "hobbit",
+			display = "@", color=colors.BLUE,
+			desc = [[She looks tired and wounded.]],
+			autolevel = "rogue",
+			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			stats = { str=8, dex=7, mag=18, con=12 },
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+			resolvers.talents{ [Talents.T_DIRTY_FIGHTING]=1, },
+			lite = 4,
+			rank = 2,
+			exp_worth = 0,
+
+			max_life = 50, life_regen = 0,
+			life_rating = 6,
+			combat_armor = 3, combat_def = 3,
+			inc_damage = {all=-50},
+
+			reward_type = "survival",
 		},
 	},
 }
@@ -120,9 +168,10 @@ end
 on_grant = function(self, who)
 	self.on_grant = nil
 
-	local ng = NameGenerator.new(name_rules)
-
 	self.kind = rng.table(possible_types)
+
+	local ng = NameGenerator.new(name_rules[self.kind.random])
+
 	self.kind.actor.level_range = {game.level.level, game.level.level}
 	self.kind.actor.name = self.kind.actor.name:format(ng:generate())
 	self.kind.actor.faction = who.faction
@@ -143,7 +192,8 @@ on_grant = function(self, who)
 	self.kind.actor = nil
 
 	-- Spawn the portal, far enough from the escort
-	local gx, gy = getPortalSpot(npc, 150, (game.level.map.w + game.level.map.h) / 2 / 2)
+--	local gx, gy = getPortalSpot(npc, 150, (game.level.map.w + game.level.map.h) / 2 / 2)
+	local gx, gy = x+1, y
 	if not gx then return end
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
@@ -153,9 +203,10 @@ on_grant = function(self, who)
 		on_move = function(self, x, y, who)
 			if not who.escort_quest then return end
 			game.player:setQuestStatus(who.quest_id, engine.Quest.DONE)
-			npc:disappear()
+			who:disappear()
+			who:removed()
 			local Chat = require "engine.Chat"
-			Chat.new("escort-quest", who, game.player):invoke()
+			Chat.new("escort-quest", who, game.player, {npc=who}):invoke()
 		end,
 	}
 	g:resolve() g:resolve(nil, true)

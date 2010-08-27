@@ -25,6 +25,9 @@ newTalentType{ type="wild-gift/other", name = "other", hide = true, description 
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="undead/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 
+local oldTalent = newTalent
+local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
+
 -- Multiply!!!
 newTalent{
 	name = "Multiply",
