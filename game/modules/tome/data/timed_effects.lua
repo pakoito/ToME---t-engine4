@@ -524,6 +524,22 @@ newEffect{
 }
 
 newEffect{
+	name = "LIFE_TAP",
+	desc = "Life Tap",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is overloaded with power.", "+Life Tap" end,
+	on_lose = function(self, err) return "#Target# seems less dangerous.", "-Life Tap" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("inc_damage", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.pid)
+	end,
+}
+
+newEffect{
 	name = "SHELL_SHIELD",
 	desc = "Shell Shield",
 	type = "physical",

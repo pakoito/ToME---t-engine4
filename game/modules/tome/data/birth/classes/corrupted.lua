@@ -19,16 +19,16 @@
 
 newBirthDescriptor{
 	type = "class",
-	name = "Corrupted",
+	name = "Corrupter",
 	desc = {
-		"Corrupteds are touched by the mark of evil, they are a blight on the world. Working to promote the cause of evil, they serve their masters, or themselves become masters.",
+		"Corrupters are touched by the mark of evil, they are a blight on the world. Working to promote the cause of evil, they serve their masters, or themselves become masters.",
 	},
 	descriptor_choices =
 	{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			Reaver = function() return profile.mod.allow_build.corrupted_reaver and "allow" or "disallow" end,
+			Reaver = function() return profile.mod.allow_build.corrupter_reaver and "allow" or "disallow" end,
 		},
 	},
 	copy = {
@@ -48,11 +48,20 @@ newBirthDescriptor{
 	stats = { str=5, mag=3, dex=1, },
 	talents_types = {
 		["technique/combat-training"]={true, 0.3},
+		["corruption/sanguisuge"]={true, 0.3},
+		["corruption/reaving-combat"]={true, 0.3},
+		["corruption/scourge"]={true, 0.3},
+		["corruption/plague"]={true, 0.3},
+		["corruption/hexes"]={true, 0.3},
+		["corruption/curses"]={true, 0.3},
+		["corruption/bone"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_DUAL_WEAPON_WIELD] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
+		[ActorTalents.T_BLOOD_SACRIFICE] = 1,
+		[ActorTalents.T_REND] = 1,
 	},
 	copy = {
 		resolvers.equip{ id=true,

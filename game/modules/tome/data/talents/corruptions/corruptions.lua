@@ -18,12 +18,13 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ no_silence=true, type="corruption/ritual", name = "blighted rituals", description = "Learn how to control the dark powers." }
-newTalentType{ no_silence=true, type="corruption/blight-magic", name = "blight magic", description = "Control the corruptions to form dark spells." }
-newTalentType{ no_silence=true, type="corruption/blighted-combat", name = "blighted combat", description = "Control the corruptions to enhance melee combat." }
-newTalentType{ no_silence=true, type="corruption/diseases", name = "diseases", description = "The subtle art of diseases and rotting." }
-newTalentType{ no_silence=true, type="corruption/blood-magic", name = "blood magic", description = "Allows control of the blood, both yours or of your foes." }
-newTalentType{ no_silence=true, type="corruption/necromancy", name = "necromancy", description = "The dark art of raising undeads." }
+newTalentType{ no_silence=true, type="corruption/sanguisuge", name = "sanguisuge", generic = true, description = "Manipulate the life force to power your own dark powers." }
+newTalentType{ no_silence=true, type="corruption/bone", name = "bone", description = "Harness the power of bones." }
+newTalentType{ no_silence=true, type="corruption/hexes", name = "hexes", description = "Hex your foes, hindering and crippling them." }
+newTalentType{ no_silence=true, type="corruption/curses", name = "curses", description = "Curse your foes, hindering and crippling them." }
+newTalentType{ no_silence=true, type="corruption/plague", name = "plage", description = "Spread diseases to your foes." }
+newTalentType{ no_silence=true, type="corruption/scourge", name = "scourge", description = "Bring pain and destruction to the world." }
+newTalentType{ no_silence=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
 
 -- Generic requires for corruptions based on talent level
 corrs_req1 = {
@@ -47,4 +48,5 @@ corrs_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
-load("/data/talents/corruptions/rituals.lua")
+load("/data/talents/corruptions/sanguisuge.lua")
+load("/data/talents/corruptions/scourge.lua")

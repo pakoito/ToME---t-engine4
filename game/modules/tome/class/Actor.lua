@@ -641,6 +641,9 @@ function _M:die(src)
 		src.blood_frenzy = src.blood_frenzy + src:getTalentLevel(src.T_BLOOD_FRENZY) * 2
 	end
 
+	-- Increase vim
+	if src and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
+
 	if src and src.resolveSource and src:resolveSource().player then
 		-- Achievements
 		local p = src:resolveSource()
@@ -897,6 +900,10 @@ function _M:preUseTalent(ab, silent, fake)
 			game.logPlayer(self, "You do not have enough stamina to activate %s.", ab.name)
 			return false
 		end
+		if ab.sustain_vim and self.max_vim < ab.sustain_vim and not self:isTalentActive(ab.id) then
+			game.logPlayer(self, "You do not have enough vim to activate %s.", ab.name)
+			return false
+		end
 		if ab.sustain_positive and self.max_positive < ab.sustain_positive and not self:isTalentActive(ab.id) then
 			game.logPlayer(self, "You do not have enough positive energy to activate %s.", ab.name)
 			return false
@@ -912,6 +919,10 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 		if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
 			game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
+			return false
+		end
+		if ab.vim and self:getVim() < ab.vim then
+			game.logPlayer(self, "You do not have enough vim to use %s.", ab.name)
 			return false
 		end
 		if ab.positive and self:getPositive() < ab.positive * (100 + self.fatigue) / 100 then
@@ -993,6 +1004,9 @@ function _M:postUseTalent(ab, ret)
 			if ab.sustain_stamina then
 				self.max_stamina = self.max_stamina - ab.sustain_stamina
 			end
+			if ab.sustain_vim then
+				self.max_vim = self.max_vim - ab.sustain_vim
+			end
 			if ab.sustain_equilibrium then
 				self:incEquilibrium(ab.sustain_equilibrium)
 			end
@@ -1008,6 +1022,9 @@ function _M:postUseTalent(ab, ret)
 			end
 			if ab.sustain_stamina then
 				self.max_stamina = self.max_stamina + ab.sustain_stamina
+			end
+			if ab.sustain_vim then
+				self.max_vim = self.max_vim + ab.sustain_vim
 			end
 			if ab.sustain_equilibrium then
 				self:incEquilibrium(-ab.sustain_equilibrium)
@@ -1025,6 +1042,10 @@ function _M:postUseTalent(ab, ret)
 		end
 		if ab.stamina then
 			self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
+		end
+		-- Vim is not affected by fatigue
+		if ab.vim then
+			self:incVim(-ab.vim)
 		end
 		if ab.positive then
 			self:incPositive(-ab.positive * (100 + self.fatigue) / 100)
@@ -1081,7 +1102,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.sustain_mana or t.mana * (100 + self.fatigue) / 100) end
 	if t.stamina or t.sustain_stamina then d[#d+1] = "#6fff83#Stamina cost: #ffcc80#"..(t.sustain_stamina or t.stamina * (100 + self.fatigue) / 100) end
 	if t.equilibrium or t.sustain_equilibrium then d[#d+1] = "#6fff83#Equilibrium cost: #00ff74#"..(t.equilibrium or t.sustain_equilibrium) end
-	if t.vim or t.sustain_vim then d[#d+1] = "#6fff83#Vim cost: #888888#"..(t.sustain_vim or t.vim * (100 + self.fatigue) / 100) end
+	if t.vim or t.sustain_vim then d[#d+1] = "#6fff83#Vim cost: #888888#"..(t.sustain_vim or t.vim) end
 	if t.positive or t.sustain_positive then d[#d+1] = "#6fff83#Positive energy cost: #GOLD#"..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100) end
 	if t.negative or t.sustain_negative then d[#d+1] = "#6fff83#Negative energy cost: #GREY#"..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100) end
 	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
@@ -1134,6 +1155,7 @@ end
 --- Suffocate a bit, lose air
 function _M:suffocate(value, src)
 	if self:attr("no_breath") then return false, false end
+	if self:attr("invulnerable") then return false, false end
 	self.air = self.air - value
 	if self.air <= 0 then
 		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())

@@ -628,6 +628,16 @@ newDamageType{
 	end,
 }
 
+-- Drain Vim
+newDamageType{
+	name = "drain vim", type = "DRAIN_VIM",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, vim=0.2} end
+		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
+		src:incVim(realdam * dam.vim)
+	end,
+}
+
 -- Retch: heal undead; damage living
 newDamageType{
 	name = "retch", type = "RETCH",
