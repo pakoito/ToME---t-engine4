@@ -86,12 +86,12 @@ function _M:display(dispx, dispy)
 
 	if s == self.b then stopx, stopy = self.target.x, self.target.y end
 
-	if self.target_type.ball then
+	if self.target_type.ball and self.target_type.ball > 0 then
 		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(_, lx, ly)
 			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
 		end, function()end, nil)
-	elseif self.target_type.cone then
+	elseif self.target_type.cone and self.target_type.cone > 0 then
 		core.fov.calc_beam(stopx, stopy, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, lx, ly)
 			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
