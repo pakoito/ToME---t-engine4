@@ -589,7 +589,6 @@ function _M:useOrbPortal(portal)
 		local ok = false
 		self:restInit(20, "using the portal", "used the poral", function(cnt, max)
 			if cnt > max then ok = true end
-			print("*********** portaling one turn", ok)
 			coroutine.resume(co)
 		end)
 		coroutine.yield()
