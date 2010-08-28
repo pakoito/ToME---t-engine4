@@ -157,16 +157,18 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 			end
 
 			local k, v = next(value)
+			local tk
+			local fieldname
 			while k do
 --				print(allow, k , filter[k], v, "will dump", (not allow and not filter[k]) or (allow and filter[k]))
 				if (not allow and not filter[k]) or (allow and filter[k]) then
-					local fieldname
 					-- Special case to handle index by objects
-					if type(k) == "table" and k.__CLASSNAME then
+					tk = type(k)
+					if tk == "table" and k.__CLASSNAME then
 						savefile:addToProcess(k)
 						fieldname = string.format("%s[loadObject('%s')]", name, savefile:getFileName(k))
 					else
-						fieldname = string.format("%s[%s]", name, basicSerialize(k))
+						fieldname = string.format("%s[%s]", name, basicSerialize(k, tk))
 					end
 					serialize_data(outf, fieldname, v, saved, {new=true}, false, savefile, false)
 				end
