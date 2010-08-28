@@ -121,6 +121,14 @@ function _M:getType(t)
 		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius}
 	elseif t.type == "cone" then
 		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius, cone_angle=t.cone_angle or 55}
+	elseif t.type == "ballbolt" then
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius, stop_block=true}
+	elseif t.type == "conebolt" then
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius, cone_angle=t.cone_angle or 55, stop_block=true}
+	elseif t.type == "ballbeam" then
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius, line=true}
+	elseif t.type == "conebeam" then
+		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius, cone_angle=t.cone_angle or 55, line=true}
 	else
 		return {}
 	end
