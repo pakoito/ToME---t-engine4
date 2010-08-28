@@ -520,7 +520,7 @@ end
 -- Used by FOV code
 function _M:opaque(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
-	local e = self(x, y, TERRAIN)
+	local e = self.map[x + y * self.w][TERRAIN]
 	if e and e:check("block_sight") then return true end
 end
 
@@ -528,7 +528,7 @@ end
 -- Used by FOV ESP code
 function _M:opaqueESP(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
-	local e = self(x, y, TERRAIN)
+	local e = self.map[x + y * self.w][TERRAIN]
 	if e and e:check("block_esp") then return true end
 end
 
@@ -563,7 +563,7 @@ end
 function _M:applyESP(x, y, v)
 	if not self.actor_player then return end
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
-	local a = self(x, y, ACTOR)
+	local a = self.map[x + y * self.w][ACTOR]
 	if a and self.actor_player:canSee(a, false, 0, true) then
 		self.seens[x + y * self.w] = v or 1
 		self._map:setSeen(x, y, v or 1)
