@@ -125,10 +125,10 @@ end
 -- LOAD & SAVE
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
-local function basicSerialize(o)
-	if type(o) == "number" or type(o) == "boolean" then
+local function basicSerialize(o, t)
+	if t == "number" or t == "boolean" then
 		return tostring(o)
-	elseif type(o) == "function" then
+	elseif t == "function" then
 		return string.format("loadstring(%q)", string.dump(o))
 	else   -- assume it is a string
 		return string.format("%q", o)
@@ -138,9 +138,10 @@ end
 local function serialize_data(outf, name, value, saved, filter, allow, savefile, force)
 	saved = saved or {}       -- initial value
 	outf(name, " = ")
-	if type(value) == "number" or type(value) == "string" or type(value) == "boolean" or type(value) == "function" then
-		outf(basicSerialize(value), "\n")
-	elseif type(value) == "table" then
+	local tvalue = type(value)
+	if tvalue == "number" or tvalue == "string" or tvalue == "boolean" or tvalue == "function" then
+		outf(basicSerialize(value, tvalue), "\n")
+	elseif tvalue == "table" then
 		if not force and value.__CLASSNAME then
 			savefile:addToProcess(value)
 			outf("loadObject('", savefile:getFileName(value), "')\n")
@@ -155,7 +156,8 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 				outf('setLoaded("'..savefile:getFileName(value)..'", data)\n')
 			end
 
-			for k,v in pairs(value) do      -- save its fields
+			local k, v = next(value)
+			while k do
 --				print(allow, k , filter[k], v, "will dump", (not allow and not filter[k]) or (allow and filter[k]))
 				if (not allow and not filter[k]) or (allow and filter[k]) then
 					local fieldname
@@ -168,16 +170,17 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 					end
 					serialize_data(outf, fieldname, v, saved, {new=true}, false, savefile, false)
 				end
+				k, v = next(value, k)
 			end
 		end
 	else
-		error("cannot save a " .. type(value) .. " ("..name..")")
+		error("cannot save a " .. tvalue .. " ("..name..")")
 	end
 end
 
 local function serialize(data, filter, allow, savefile)
 	local tbl = {}
-	local outf = function(...) for i,str in ipairs{...} do table.insert(tbl, str) end end
+	local outf = function(...) local args={...} for i = 1, #args do tbl[#tbl+1] = args[i] end end
 	serialize_data(outf, "data", data, nil, filter, allow, savefile, true)
 	table.insert(tbl, "return data\n")
 	return tbl
