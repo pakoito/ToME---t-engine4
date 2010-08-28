@@ -211,6 +211,8 @@ end
 --- Serialization
 function _M:save()
 	return class.save(self, {
+		_check_entities = true,
+		_check_entities_store = true,
 		_map = true,
 		_fovcache = true,
 		surface = true,
@@ -309,6 +311,9 @@ function _M:loaded()
 	setmetatable(self.remembers, {__call = mapremember})
 	setmetatable(self.attrs, {__call = mapattrs})
 
+	self._check_entities = {}
+	self._check_entities_store = {}
+
 	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
 	self.changed = true
 	self.finished = true
@@ -396,6 +401,18 @@ function _M:updateMap(x, y)
 	if p then
 		p:getMapObjects(self.tiles, mos, 13)
 	end
+
+	-- Update entities checker for this spot
+	-- This is to improve speed, we create a function for each spot that checks entities it knows are there
+	-- This avoid a costly for iteration over a pairs() and this allows luajit to compile only code that is needed
+	local ce = {}
+	local fstr = [[p = m[%s]:check(what, x, y, ...) if p then return p end ]]
+	ce[#ce+1] = [[return function(self, x, y, what, ...) local p local m = self.map[x + y * self.w] ]]
+	for idx, e in pairs(self.map[x + y * self.w]) do ce[#ce+1] = fstr:format(idx) end
+	ce[#ce+1] = [[end]]
+	local ce = table.concat(ce)
+	self._check_entities[x + y * self.w] = self._check_entities_store[ce] or loadstring(ce)()
+	self._check_entities_store[ce] = self._check_entities[x + y * self.w]
 
 	-- Cache the map objects in the C map
 	self._map:setGrid(x, y, mm, mos)
@@ -562,10 +579,7 @@ end
 function _M:checkAllEntities(x, y, what, ...)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.map[x + y * self.w] then
-		for _, e in pairs(self.map[x + y * self.w]) do
-			local p = e:check(what, x, y, ...)
-			if p then return p end
-		end
+		return self._check_entities[x + y * self.w](self, x, y, what, ...)
 	end
 end
 

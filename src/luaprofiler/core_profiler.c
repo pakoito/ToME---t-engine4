@@ -79,7 +79,7 @@ static void formats(char *s) {
 
 
 /* computes new stack and new timer */
-void lprofP_callhookIN(lprofP_STATE* S, char *func_name, char *file, int linedefined, int currentline) {	
+void lprofP_callhookIN(lprofP_STATE* S, char *func_name, char *file, int linedefined, int currentline) {
   S->stack_level++;
   lprofM_enter_function(S, file, func_name, linedefined, currentline);
 }
@@ -103,8 +103,8 @@ int lprofP_callhookOUT(lprofP_STATE* S) {
   info->total_time += function_call_time;
   formats(info->file_defined);
   formats(info->function_name);
-  output("%d\t%s\t%s\t%d\t%d\t%f\t%f\n", S->stack_level, info->file_defined,
-	 info->function_name, 
+  output("%d\t%s\t%s:%d:%s\t%d\t%d\t%f\t%f\n", S->stack_level, info->file_defined,
+	 info->function_name, info->line_defined, info->file_defined,
 	 info->line_defined, info->current_line,
 	 info->local_time, info->total_time);
   /* ... now it's ok to resume the timer */
@@ -128,7 +128,7 @@ lprofP_STATE* lprofP_init_core_profiler(const char *_out_filename, int isto_prin
 
   function_call_time = _function_call_time;
   out_filename = (_out_filename) ? (_out_filename):(OUT_FILENAME);
-        
+
   /* the random string to build the logname is extracted */
   /* from 'tmpnam()' (the '/tmp/' part is deleted)     */
   randstr = tmpnam(NULL);
@@ -155,7 +155,7 @@ lprofP_STATE* lprofP_init_core_profiler(const char *_out_filename, int isto_prin
     fclose(outf);
     return 0;
   }
-    
+
   return S;
 }
 
@@ -174,7 +174,7 @@ lprofP_STATE* lprofP_create_profiler(float _function_call_time) {
   if(!S) {
     return 0;
   }
-    
+
   return S;
 }
 

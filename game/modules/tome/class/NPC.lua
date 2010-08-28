@@ -39,7 +39,12 @@ function _M:act()
 --	print("lite", self.name, self.lite)
 --		self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true)
 --	end
-	self:computeFOV(self.sight or 20)
+	-- If the actor has no special vision we can use the default cache
+	if not self.special_vision then
+		self:computeFOV(self.sight or 20, "block_sight", nil, nil, nil, true)
+	else
+		self:computeFOV(self.sight or 20, "block_sight")
+	end
 
 	-- Let the AI think .... beware of Shub !
 	-- If AI did nothing, use energy anyway

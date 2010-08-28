@@ -80,14 +80,16 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 				local t = {x=x,y=y, dx=dx, dy=dy, sqdist=sqdist}
 				fov.actors[a] = t
 				fov.actors_dist[#fov.actors_dist+1] = a
+				a.__sqdist = sqdist
 				a:check("seen_by", self)
 				a:updateFOV(self, t.sqdist)
 			end
 		end, cache and game.level.map._fovcache[block])
 
 		-- Sort actors by distance (squared but we do not care)
-		table.sort(fov.actors_dist, function(a, b) return fov.actors[a].sqdist < fov.actors[b].sqdist end)
-		for i = 1, #fov.actors_dist do fov.actors_dist[i].i = i end
+		table.sort(fov.actors_dist, "__sqdist")
+--		table.sort(fov.actors_dist, function(a, b) return a.__sqdist < b.__sqdist end)
+--		for i = 1, #fov.actors_dist do fov.actors_dist[i].i = i end
 --		print("Computed FOV for", self.uid, self.name, ":: seen ", #fov.actors_dist, "actors closeby")
 
 		self.fov = fov

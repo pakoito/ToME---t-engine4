@@ -170,14 +170,14 @@ static int lua_fov_calc_circle(lua_State *L)
 	}
 	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-//	int i= SDL_GetTicks();
+
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
 	fov_circle(&(fov.fov_settings), &fov, NULL, x, y, radius+1);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
 	fov_settings_free(&(fov.fov_settings));
-//	printf("map display ticks %d\n",SDL_GetTicks()-i);
+
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
 	if (fov.cache_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, fov.cache_ref);

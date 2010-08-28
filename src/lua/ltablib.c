@@ -169,6 +169,27 @@ static int tconcat (lua_State *L) {
 **  Addison-Wesley, 1993.)
 */
 
+static void stackDump (lua_State *L) {
+	int i=lua_gettop(L);
+	printf(" ----------------  Stack Dump ----------------\n" );
+	while(  i   ) {
+		int t = lua_type(L, i);
+		switch (t) {
+		case LUA_TSTRING:
+			printf("%d:`%s'\n", i, lua_tostring(L, i));
+			break;
+		case LUA_TBOOLEAN:
+			printf("%d: %s\n",i,lua_toboolean(L, i) ? "true" : "false");
+			break;
+		case LUA_TNUMBER:
+			printf("%d: %g\n",  i, lua_tonumber(L, i));
+			break;
+		default: printf("%d: %s\n", i, lua_typename(L, t)); break;
+		}
+		i--;
+	}
+	printf("--------------- Stack Dump Finished ---------------\n" );
+}
 
 static void set2 (lua_State *L, int i, int j) {
   lua_rawseti(L, 1, i);
@@ -176,7 +197,7 @@ static void set2 (lua_State *L, int i, int j) {
 }
 
 static int sort_comp (lua_State *L, int a, int b) {
-  if (!lua_isnil(L, 2)) {  /* function? */
+  if (lua_isfunction(L, 2)) {  /* function? */
     int res;
     lua_pushvalue(L, 2);
     lua_pushvalue(L, a-1);  /* -1 to compensate function */
@@ -184,6 +205,17 @@ static int sort_comp (lua_State *L, int a, int b) {
     lua_call(L, 2, 1);
     res = lua_toboolean(L, -1);
     lua_pop(L, 1);
+    return res;
+  }
+  else if (!lua_isnil(L, 2)) {  /* index? */
+    int res;
+    lua_pushvalue(L, 2);
+    lua_gettable(L, a-1);
+
+    lua_pushvalue(L, 2);
+    lua_gettable(L, b-2);
+    res = lua_lessthan(L, -2, -1);
+    lua_pop(L, 2);
     return res;
   }
   else  /* a < b? */
@@ -257,7 +289,9 @@ static int sort (lua_State *L) {
   int n = aux_getn(L, 1);
   luaL_checkstack(L, 40, "");  /* assume array is smaller than 2^40 */
   if (!lua_isnoneornil(L, 2))  /* is there a 2nd argument? */
-    luaL_checktype(L, 2, LUA_TFUNCTION);
+  {
+//    if (luaL_checktype(L, 2, LUA_TFUNCTION);
+  }
   lua_settop(L, 2);  /* make sure there is two arguments */
   auxsort(L, 1, n);
   return 0;

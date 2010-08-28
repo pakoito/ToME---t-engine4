@@ -42,7 +42,7 @@ static void callhook(lua_State *L, lua_Debug *ar) {
     lua_getinfo(L, "l", &previous_ar);
     currentline = previous_ar.currentline;
   }
-      
+
   lua_getinfo(L, "nS", ar);
 
   if (!ar->event) {
@@ -90,7 +90,7 @@ static int coroutine_create(lua_State *L) {
   lua_pushlightuserdata(L, S);
   lua_settable(L, LUA_REGISTRYINDEX);
   lua_sethook(NL, (lua_Hook)callhook, LUA_MASKCALL | LUA_MASKRET, 0);
-  return 1;	
+  return 1;
 }
 #endif
 
@@ -134,7 +134,7 @@ static int profiler_init(lua_State *L) {
   lua_pushlightuserdata(L, &profstate_id);
   lua_pushlightuserdata(L, S);
   lua_settable(L, LUA_REGISTRYINDEX);
-	
+
   /* use our own exit function instead */
   lua_getglobal(L, "os");
   lua_pushlightuserdata(L, &exit_id);
@@ -158,7 +158,7 @@ static int profiler_init(lua_State *L) {
   /* as a library.                                                     */
 
   lprofP_callhookIN(S, "profiler_init", "(C)", -1, -1);
-	
+
   lua_pushboolean(L, 1);
   return 1;
 }
