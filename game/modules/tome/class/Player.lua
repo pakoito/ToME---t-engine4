@@ -182,7 +182,7 @@ function _M:act()
 	end
 end
 
--- Precompute FOV form
+-- Precompute FOV form, for speed
 local fovdist = {}
 for i = 0, 30 * 30 do
 	fovdist[i] = math.max((20 - math.sqrt(i)) / 14, 0.6)
