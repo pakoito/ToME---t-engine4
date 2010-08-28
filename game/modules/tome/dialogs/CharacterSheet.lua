@@ -64,8 +64,14 @@ function _M:drawDialog(s)
 	if game.player:knowTalent(game.player.T_MANA_POOL) then
 		s:drawColorStringBlended(self.font, ("#7fffd4#Mana:    #00ff00#%d/%d"):format(game.player:getMana(), game.player.max_mana), w, h, 255, 255, 255) h = h + self.font_h
 	end
-	if game.player:knowTalent(game.player.T_SOUL_POOL) then
-		s:drawColorStringBlended(self.font, ("#777777#Soul:    #00ff00#%d/%d"):format(game.player:getSoul(), game.player.max_soul), w, h, 255, 255, 255) h = h + self.font_h
+	if game.player:knowTalent(game.player.T_POSITIVE_POOL) then
+		s:drawColorStringBlended(self.font, ("#7fffd4#Positive:#00ff00#%d/%d"):format(game.player:getPositive(), game.player.max_positive), w, h, 255, 255, 255) h = h + self.font_h
+	end
+	if game.player:knowTalent(game.player.T_NEGATIVE_POOL) then
+		s:drawColorStringBlended(self.font, ("#7fffd4#Negative:#00ff00#%d/%d"):format(game.player:getNegative(), game.player.max_negative), w, h, 255, 255, 255) h = h + self.font_h
+	end
+	if game.player:knowTalent(game.player.T_VIM_POOL) then
+		s:drawColorStringBlended(self.font, ("#904010#Vim:     #00ff00#%d/%d"):format(game.player:getVim(), game.player.max_vim), w, h, 255, 255, 255) h = h + self.font_h
 	end
 	if game.player:knowTalent(game.player.T_EQUILIBRIUM_POOL) then
 		s:drawColorStringBlended(self.font, ("#00ff74#Equi:    #00ff00#%d"):format(game.player:getEquilibrium()), w, h, 255, 255, 255) h = h + self.font_h
@@ -144,6 +150,20 @@ function _M:drawDialog(s)
 		end
 	end
 
+	immune_type = "poison_immune" immune_name = "Poison Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "cut_immune" immune_name = "Bleed Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "confusion_immune" immune_name = "Confusion Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "blind_immune" immune_name = "Blind Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "silence_immune" immune_name = "Silence Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "disarm_immune" immune_name = "Disarm Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "pin_immune" immune_name = "Pinning Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "stun_immune" immune_name = "Stun Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "fear_immune" immune_name = "Fear Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "knockback_immune" immune_name = "Knockback Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "stone_immune" immune_name = "Stoning Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "instakill_immune" immune_name = "Instadeath Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+	immune_type = "teleport_immune" immune_name = "Teleport Resistance" if self.actor:attr(immune_type) then s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255) h = h + self.font_h end
+
 	h = 0
 	w = 600
 	s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Current effects:", w, h, 255, 255, 255) h = h + self.font_h
@@ -167,8 +187,8 @@ function _M:dump()
 	local file = "/character-dumps/"..(game.player.name:gsub("[^a-zA-Z0-9_-.]", "_")).."-"..os.date("%Y%m%d-%H%M%S")..".txt"
 	local fff = fs.open(file, "w")
 	local labelwidth = 17
-	local nl = function(s) fff:write(s or "") fff:write("\n") end
-	local nnl = function(s) fff:write(s or "") end
+	local nl = function(s) s = s or "" fff:write(s:removeColorCodes()) fff:write("\n") end
+	local nnl = function(s) s = s or "" fff:write(s:removeColorCodes()) end
 	--prepare label and value
 	local makelabel = function(s,r) while s:len() < labelwidth do s = s.." " end return ("%s: %s"):format(s, r) end
 
@@ -191,7 +211,7 @@ function _M:dump()
 	nnl(("%-32s"):format(makelabel("Exp", ("%d%%"):format(100 * cur_exp / max_exp))))
 	nl(("CUN:  %d"):format(game.player:getCun()))
 
-	 nnl(("%-32s"):format(makelabel("Gold", ("%.2f"):format(game.player.money))))
+	nnl(("%-32s"):format(makelabel("Gold", ("%.2f"):format(game.player.money))))
 	nl(("CON:  %d"):format(game.player:getCon()))
 
 	 -- All weapons in main hands
@@ -232,9 +252,21 @@ function _M:dump()
 		nl()
 	end
 	nnl(("%-32s"):format(strings[4]))
-	if game.player:knowTalent(game.player.T_SOUL_POOL) then
-		nl(makelabel("Soul", ("    %d/%d"):format(game.player:getSoul(), game.player.max_soul)))
-	 else
+	if game.player:knowTalent(game.player.T_POSITIVE_POOL) then
+		nl(makelabel("Positive", ("    %d/%d"):format(game.player:getPositive(), game.player.max_positive)))
+	else
+		nl()
+	end
+	nnl(("%-32s"):format(strings[4]))
+	if game.player:knowTalent(game.player.T_NEGATIVE_POOL) then
+		nl(makelabel("Negative", ("    %d/%d"):format(game.player:getNegative(), game.player.max_negative)))
+	else
+		nl()
+	end
+	nnl(("%-32s"):format(strings[4]))
+	if game.player:knowTalent(game.player.T_VIM_POOL) then
+		nl(makelabel("Vim", ("    %d/%d"):format(game.player:getVim(), game.player.max_vim)))
+	else
 		nl()
 	end
 	nnl(("%-32s"):format(strings[5]))
@@ -294,6 +326,20 @@ function _M:dump()
 		end
 	end
 
+	immune_type = "poison_immune" immune_name = "Poison Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "cut_immune" immune_name = "Bleed Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "confusion_immune" immune_name = "Confusion Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "blind_immune" immune_name = "Blind Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "silence_immune" immune_name = "Silence Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "disarm_immune" immune_name = "Disarm Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "pin_immune" immune_name = "Pinning Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "stun_immune" immune_name = "Stun Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "fear_immune" immune_name = "Fear Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "knockback_immune" immune_name = "Knockback Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "stone_immune" immune_name = "Stoning Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "instakill_immune" immune_name = "Instadeath Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "teleport_immune" immune_name = "Teleport Resistance" if self.actor:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(self.actor:attr(immune_type) * 100, 0, 100))) end
+
 	nl()
 	local most_kill, most_kill_max = "none", 0
 	local total_kill = 0
@@ -303,6 +349,15 @@ function _M:dump()
 	end
 	nl(("Number of NPC killed: %s"):format(total_kill))
 	nl(("Most killed NPC: %s (%d)"):format(most_kill, most_kill_max))
+
+	if self.actor.winner then
+		nl()
+		nl("  [Winner!]")
+		nl()
+		for i, line in ipairs(self.actor.winner_text) do
+			nl(("%s"):format(line:removeColorCodes()))
+		end
+	end
 
 	-- Talents
 	nl()
@@ -321,7 +376,7 @@ function _M:dump()
 				for j, t in ipairs(tt.talents) do
 					if not t.hide then
 						local typename = "class"
-						if t.skill then typename = "generic" end
+						if t.generic then typename = "generic" end
 						local skillname = ("    %s (%s)"):format(t.name, typename)
 						nl(("%-37s %d/%d"):format(skillname, self.actor:getTalentLevelRaw(t.id), t.points))
 					end
@@ -353,14 +408,14 @@ function _M:dump()
 	local first = true
 	for id, q in pairs(self.actor.quests or {}) do
 		if q:isEnded() then
-			 if first then
-					 nl()
-					 nl("  [Completed Quests]")
-					 nl()
-					 first=false
-			 end
-			  nl(" -- ".. q.name)
-			  nl(q:desc(self.actor):gsub("#.-#", "   "))
+			if first then
+					nl()
+					nl("  [Completed Quests]")
+					nl()
+					first=false
+			end
+			nl(" -- ".. q.name)
+			nl(q:desc(self.actor):gsub("#.-#", "   "))
 		end
 	end
 
@@ -368,13 +423,13 @@ function _M:dump()
 	for id, q in pairs(self.actor.quests or {}) do
 		if not q:isEnded() then
 			if first then
-					 first=false
-					 nl()
+					first=false
+					nl()
 					nl("  [Active Quests]")
-					 nl()
+					nl()
 				end
-			  nl(" -- ".. q.name)
-			  nl(q:desc(self.actor):gsub("#.-#", "   "))
+			nl(" -- ".. q.name)
+			nl(q:desc(self.actor):gsub("#.-#", "   "))
 		end
 	end
 
@@ -405,9 +460,15 @@ function _M:dump()
 	nl()
 	nl("  [Player Achievements]")
 	nl()
+	local achs = {}
 	for id, data in pairs(self.actor.achievements or {}) do
 		local a = world:getAchievementFromId(id)
-		nl(("%s Was Achieved for %s At %s"):format(a.name,a.desc,data.when))
+		achs[#achs+1] = {id=id, data=data, name=a.name}
+	end
+	table.sort(achs, function(a, b) return a.name < b.name end)
+	for i, d in ipairs(achs) do
+		local a = world:getAchievementFromId(d.id)
+		nl(("'%s' was wchieved for %s At %s"):format(a.name, a.desc, d.data.when))
 	end
 
 	nl()

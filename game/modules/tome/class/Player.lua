@@ -589,6 +589,7 @@ function _M:useOrbPortal(portal)
 		local ok = false
 		self:restInit(20, "using the portal", "used the poral", function(cnt, max)
 			if cnt > max then ok = true end
+			print("*********** portaling one turn", ok)
 			coroutine.resume(co)
 		end)
 		coroutine.yield()
@@ -598,7 +599,7 @@ function _M:useOrbPortal(portal)
 		end
 		return true
 	end
---	if not wait() then return end
+	if not wait() then return end
 
 	if portal.teleport_level then
 		local x, y = util.findFreeGrid(portal.teleport_level.x, portal.teleport_level.y, 2, true, {[Map.ACTOR]=true})

@@ -75,6 +75,7 @@ This one seems to go to an unknown place, seemingly out of this world. You dare 
 }
 
 local invocation_close = function(self, who)
+	if not who:hasQuest("high-peak") or who:hasQuest("high-peak"):isCompleted() then return end
 	game.logPlayer(who, "#LIGHT_BLUE#You use the orb on the portal, shutting it down easily.")
 	-- Remove the level spot
 	local spot = game.level:pickSpot{type="portal", subtype=self.summon}

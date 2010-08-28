@@ -642,7 +642,7 @@ function _M:die(src)
 	end
 
 	-- Increase vim
-	if src and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
+	if src and src.attr and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
 
 	if src and src.resolveSource and src:resolveSource().player then
 		-- Achievements

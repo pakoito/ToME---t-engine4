@@ -104,8 +104,8 @@ function _M:display()
 		self.surface:drawColorStringBlended(self.font, ("#7fffd4#Negative:#ffffff#%d/%d"):format(player:getNegative(), player.max_negative), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_VIM_POOL) then
-		self.surface:erase(0xff / 6, 0xcc / 6, 0x80 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
-		self.surface:erase(0xff / 3, 0xcc / 3, 0x80 / 3, 255, self.bars_x, h, self.bars_w * player:getVim() / player.max_vim, self.font_h)
+		self.surface:erase(0x90 / 6, 0x40 / 6, 0x10 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
+		self.surface:erase(0x90 / 3, 0x40 / 3, 0x10 / 3, 255, self.bars_x, h, self.bars_w * player:getVim() / player.max_vim, self.font_h)
 		self.surface:drawColorStringBlended(self.font, ("#904010#Vim:     #ffffff#%d/%d"):format(player:getVim(), player.max_vim), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 

@@ -164,6 +164,10 @@ local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
 local Pcolorcode = Pcode * Pcode
 local Pcolorcodefull = Pcolorcode * Pcolorcode * Pcolorcode
 
+function string.removeColorCodes(str)
+	return str:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", "")
+end
+
 function string.splitLine(str, max_width, font)
 	local space_w = font:size(" ")
 	local lines = {}
@@ -263,7 +267,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 				oldr, oldg, oldb = r, g, b
 				r, g, b = colors[col].r, colors[col].g, colors[col].b
 			end
-		elseif uid and mo then
+		elseif uid and mo and game.level then
 			uid = tonumber(uid)
 			mo = tonumber(mo)
 			local e = __uids[uid]
@@ -312,7 +316,7 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 				oldr, oldg, oldb = r, g, b
 				r, g, b = colors[col].r, colors[col].g, colors[col].b
 			end
-		elseif uid and mo then
+		elseif uid and mo and game.level then
 			uid = tonumber(uid)
 			mo = tonumber(mo)
 			local e = __uids[uid]
