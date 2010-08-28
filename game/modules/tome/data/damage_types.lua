@@ -21,6 +21,9 @@
 setDefaultProjector(function(src, x, y, type, dam)
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
+		local rsrc = src.resolveSource and src:resolveSource() or src
+		local rtarget = target.resolveSource and target:resolveSource() or target
+
 		print("[PROJECTOR] starting dam", dam)
 
 		-- Difficulty settings
@@ -61,15 +64,16 @@ setDefaultProjector(function(src, x, y, type, dam)
 
 		local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
 		game.logSeen(target, flash, "%s hits %s for %s%0.2f %s damage#LAST#.", srcname, target.name, DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name)
+
 		local sx, sy = game.level.map:getTileToScreen(x, y)
 		if target:takeHit(dam, src) then
-			if src == game.player or target == game.player then
+			if rsrc == game.player or rtarget == game.player then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Kill!", {255,0,255})
 			end
 		else
-			if src == game.player then
+			if rsrc == game.player then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {0,255,0})
-			elseif target == game.player then
+			elseif rtarget == game.player then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {255,0,0})
 			end
 		end

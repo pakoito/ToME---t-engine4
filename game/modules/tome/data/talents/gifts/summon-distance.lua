@@ -80,13 +80,14 @@ newTalent{
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.LIGHTNING, rng.range(1, 30 + self:getWil(80) * self:getTalentLevel(t)), {type="lightning_explosion"})
+		local dam = 30 + self:getWil(80) * self:getTalentLevel(t)
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3), {type="lightning_explosion"})
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Breathe lightning on your foes, doing 1 to %d damage.
-		The damage will increase with the Willpower stat]]):format(30 + self:getWil(70) * self:getTalentLevel(t))
+		return ([[Breathe lightning on your foes, doing %d to %d damage.
+		The damage will increase with the Willpower stat]]):format((30 + self:getWil(70) * self:getTalentLevel(t)) / 3, 30 + self:getWil(70) * self:getTalentLevel(t))
 	end,
 }
 

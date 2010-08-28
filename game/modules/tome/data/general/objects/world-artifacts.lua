@@ -213,13 +213,13 @@ newEntity{
 	cost = 1000,
 
 	use_simple = { name = "quaff the Blood of Life", use = function(self, who)
+		game.logSeen(who, "%s quaffs the %s!", who.name:capitalize(), self:getName())
 		if not who:attr("undead") then
 			who.blood_life = true
 			game.logPlayer(who, "#LIGHT_RED#You feel the Blood of Life rushing through your veins.")
 		else
 			game.logPlayer(who, "The Blood of Life seems to have no effect on you.")
 		end
-		game.logSeen(who, "%s quaffs the %s!", who.name:capitalize(), self:getName())
 		return "destroy", true
 	end},
 }
