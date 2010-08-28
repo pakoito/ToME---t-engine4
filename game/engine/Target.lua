@@ -72,13 +72,13 @@ function _M:display(dispx, dispy)
 	local initial_dir = lx and coord_to_dir[lx - self.source_actor.x][ly - self.source_actor.y] or 5
 	local stopx, stopy = self.source_actor.x, self.source_actor.y
 	while lx and ly do
+		if s == self.sb then stopx, stopy = lx, ly end
 		if not self.target_type.no_restrict then
 			if not game.level.map.seens(lx, ly) then s = self.sr end
 			if self.target_type.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then s = self.sr
 			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then s = self.sr end
 		end
 		if self.target_type.range and math.sqrt((self.source_actor.x-lx)^2 + (self.source_actor.y-ly)^2) > self.target_type.range then s = self.sr end
-		if s == self.sb then stopx, stopy = lx, ly end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 		lx, ly = l()
 	end
