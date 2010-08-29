@@ -351,6 +351,11 @@ function _M:setupCommands()
 			self:registerDialog(menu)
 		end,
 
+		-- Lua console, you probably want to disable it for releases
+		LUA_CONSOLE = function()
+			self:registerDialog(DebugConsole.new())
+		end,
+
 		-- Toggle monster list
 		TOGGLE_NPC_LIST = function()
 			self.show_npc_list = not self.show_npc_list

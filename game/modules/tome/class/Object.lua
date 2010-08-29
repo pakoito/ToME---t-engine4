@@ -258,7 +258,7 @@ function _M:getTextualDesc()
 			elseif type == "range" then rs[#rs+1] = "increase range by "..i
 			else
 				local _, _, t, st = type:find("^([^/]+)/?(.*)$")
-				if st then
+				if st and st ~= "" then
 					rs[#rs+1] = st
 				else
 					rs[#rs+1] = t

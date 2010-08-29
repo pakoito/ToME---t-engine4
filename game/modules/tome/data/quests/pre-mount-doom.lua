@@ -20,7 +20,8 @@
 name = "Important news"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = ""
+	desc[#desc+1] = "Orcs were spotted with the staff you seek in an arid waste in the southern desert."
+	desc[#desc+1] = "You should go investigate what is happenning there."
 	return table.concat(desc, "\n")
 end
 
@@ -39,5 +40,5 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 56, 51)
-	game.logPlayer(game.player, "Aeryn explained where the cave is located.")
+	game.logPlayer(game.player, "Aeryn explained where the orcs were spotted.")
 end
