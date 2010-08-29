@@ -144,6 +144,7 @@ function _M:saveGenericProfile(name, data, nosync)
 
 	-- Check for readability
 	local f, err = loadstring(data)
+	setfenv(f, {})
 	if not f then print("[PROFILES] cannot save generic data ", name, data, "it does not parse:") error(err) end
 	local ok, err = pcall(f)
 	if not ok and err then print("[PROFILES] cannot save generic data", name, data, "it does not parse") error(err) end
@@ -166,6 +167,7 @@ function _M:saveModuleProfile(name, data, module, nosync)
 
 	-- Check for readability
 	local f, err = loadstring(data)
+	setfenv(f, {})
 	if not f then print("[PROFILES] cannot save module data ", name, data, "it does not parse:") error(err) end
 	local ok, err = pcall(f)
 	if not ok and err then print("[PROFILES] cannot save module data", name, data, "it does not parse") error(err) end

@@ -76,13 +76,6 @@ function _M:init(t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
 	mod.class.interface.PlayerLore.init(self, t)
 
-	local mt = getmetatable(self)
-	mt.__newindex = function(t, k, v)
-		rawset(t, k, v)
-		print("===set===", k, v)
-		util.show_backtrace()
-	end
-
 	self.descriptor = {}
 end
 
