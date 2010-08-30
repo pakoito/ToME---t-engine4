@@ -52,10 +52,10 @@ function _M:loadMap(file)
 		defineTile = function(char, grid, obj, actor, trap, status, spot)
 			t[char] = {grid=grid, object=obj, actor=actor, trap=trap, status=status, define_spot=spot}
 		end,
-		quickEntity = function(char, e, status)
+		quickEntity = function(char, e, status, spot)
 			if type(e) == "table" then
 				local e = self.zone.grid_class.new(e)
-				t[char] = {grid=e, status=status}
+				t[char] = {grid=e, status=status, define_spot=spot}
 			else
 				t[char] = t[e]
 			end

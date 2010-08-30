@@ -40,5 +40,10 @@ return {
 			class = "engine.generator.object.Random",
 			nb_object = {0, 0},
 		},
-	}
+	},
+	on_enter = function(lev, old_lev, zone)
+		-- Update the stairs
+		local spot = game.level:pickSpot{type="portal", subtype="back"}
+		if spot then game.level.map(spot.x, spot.y, engine.Map.TERRAIN).change_zone = game.player.last_wilderness end
+	end,
 }
