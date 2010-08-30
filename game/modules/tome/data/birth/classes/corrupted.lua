@@ -59,7 +59,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_DUAL_WEAPON_WIELD] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
+		[ActorTalents.T_VIRULENT_DISEASE] = 1,
 		[ActorTalents.T_BLOOD_SACRIFICE] = 1,
 		[ActorTalents.T_REND] = 1,
 	},
