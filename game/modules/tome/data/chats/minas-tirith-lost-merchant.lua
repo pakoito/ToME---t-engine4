@@ -26,7 +26,7 @@ newChat{ id="start",
 }
 
 newChat{ id="closed",
-	text = [[*This store seems to not be open yet*]],
+	text = [[*This store does not appear to be open yet*]],
 	answers = {
 		{"[leave]"},
 	}
@@ -34,7 +34,7 @@ newChat{ id="closed",
 
 newChat{ id="welcome",
 	text = [[Ah my good friend @playername@!
-Thanks to you I made it safely to this great city, I am to open my shop soon, but I owe you a bit so I could maybe open early for you if you are in need of some rare goods.]],
+Thanks to you I made it safely to this great city! I am planning to open my shop soon, but since I am in your debt, perhaps I could open early for you if you are in need of rare goods.]],
 	answers = {
 		{"Yes please, let me see your wares.", action=function(npc, player)
 			npc.store:loadup(game.level, game.zone)

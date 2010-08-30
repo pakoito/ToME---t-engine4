@@ -54,7 +54,7 @@ local change_armour = function(npc, player)
 end
 
 local change_name = function(npc, player)
-	local d = require("engine.dialogs.GetText").new("Change your golem name", "Name", 2, 25, function(name)
+	local d = require("engine.dialogs.GetText").new("Change your golem's name", "Name", 2, 25, function(name)
 		if name then
 			npc.name = name.." (servant of "..player.name..")"
 			npc.changed = true

@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Please save me! I will make it worth your ti..
-*#LIGHT_GREEN#The assasin lord hits him in the mouth.#WHITE#*Shut up!]],
+	text = [[Please save me! I will make it worth your whi..
+*#LIGHT_GREEN#The assasin lord hits him in the face.#WHITE#*Shut up!]],
 	answers = {
-		{"Sorry I have to go!", action = function(npc, player) npc.can_talk = nil end},
+		{"Sorry, I have to go!", action = function(npc, player) npc.can_talk = nil end},
 	}
 }
 

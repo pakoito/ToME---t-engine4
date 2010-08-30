@@ -18,51 +18,51 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*Before you stands a beautiful woman clad in massive golden armour*#WHITE#
-Stop! you are obviously a stranger, where do you come from? The Gates of Morning are the last bastion of freedom in those lands, so who are you? A spy?]],
+	text = [[#LIGHT_GREEN#*Before you stands a beautiful woman clad in shining golden armour*#WHITE#
+Stop! You are clearly a stranger! Where do you come from? The Gates of Morning are the last bastion of freedom in these lands, so who are you? A spy?]],
 	answers = {
-		{"My Lady I am indeed a stranger in those lands, more than you think. I come from the west, from middle-earth.", jump="from",
+		{"My lady, I am indeed a stranger in those lands. I come from the west, from Middle-earth.", jump="from",
 		  cond=function(npc, player) return not player:hasQuest("spydric-infestation") end},
-		{"The spiders will not cause you any more problems my Lady.", jump="access",
+		{"The spiders will not cause you any more problems, my lady.", jump="access",
 		  cond=function(npc, player) return player:hasQuest("spydric-infestation") and player:hasQuest("spydric-infestation"):isCompleted() end},
-		{"Sorry I have to go!"},
+		{"Sorry, I have to go!"},
 	}
 }
 
 newChat{ id="from",
-	text = [[Middle-earth! We Sun Paladins have not heard from there for thousands of years, maybe the Anorithil would know more...
-But anyway, what is your purpose here?]],
+	text = [[Middle-earth! We Sun Paladins have not heard from there for thousands of years...perhaps the Anorithil know more...
+In any event, what is your purpose here?]],
 	answers = {
-		{"It seems I am stranded on those unfamiliar lands. #LIGHT_GREEN#*Tell her about your hunt for orcs*#WHITE#", jump="orcs"},
+		{"It seems that I am stranded in these unfamiliar lands. #LIGHT_GREEN#*Tell her about your hunt for orcs.*#WHITE#", jump="orcs"},
 		{"Sun Paladins? What do you mean? We know of no such thing where I come from.", jump="sun-paladins", cond=function() return profile.mod.allow_build.divine_sun_paladin end},
 	}
 }
 
 newChat{ id="orcs",
-	text = [[Orcs! Ah! Well then this is your lucky day, this whole continent is filled with Orcs. They have united themselves as the Orc Pride and rumours speak of some powerful masters.
+	text = [[Orcs! Ah! Well then this is your lucky day, this whole continent is swarming with Orcs. They have united as the Orc Pride and, according to rumor, their masters are powerful.
 They roam the lands freely, ever assaulting us.
-@playername@ you are welcome to the Gates of Morning, should you prove to be trustful.
+@playername@ you are welcome in the Gates of Morning, should you prove to be trustworthy.
 There is a cavern full of spiders just to the north, we can not stand against both them and the Orc Pride.
 Please go there and destroy the source of infestation.]],
 	answers = {
-		{"I will my Lady.", action=function(npc, player) player:grantQuest("spydric-infestation") end},
-		{"Ahh .. if I must.", action=function(npc, player) player:grantQuest("spydric-infestation") end},
+		{"I will, my lady.", action=function(npc, player) player:grantQuest("spydric-infestation") end},
+		{"Ahh .. if I must, I must.", action=function(npc, player) player:grantQuest("spydric-infestation") end},
 	}
 }
 
 newChat{ id="sun-paladins",
-	text = [[We are the armed force of the Sunwall, channeling the Sun power and merging it with martial training.
-For thousands of years we stood between the Orc Pride and the free people, our numbers are disminishing but always we stand firm, until our last breath.]],
+	text = [[We are the mighty warriors of the Sunwall, channeling the power of the sun and merging it with martial training.
+For thousands of years, we stood between the Orc Pride and the free people. Our numbers are disminishing, but we will stand firm until our last breath.]],
 	answers = {
-		{"You have noble ideals my Lady.", jump="from"},
+		{"You have a noble spirit, my lady.", jump="from"},
 	}
 }
 
 newChat{ id="access",
-	text = [[So I have heard. You have helped us in a great way, consider yourself of friend of the Sunwall.
+	text = [[So I have heard. You have helped us enormously; consider yourself of friend of the Sunwall.
 You may now enter the Gates of Morning.]],
 	answers = {
-		{"Thank you my Lady.", action=function(npc, player)
+		{"Thank you, my lady.", action=function(npc, player)
 			world:gainAchievement("SPYDRIC_INFESTATION", game.player)
 			player:setQuestStatus("spydric-infestation", engine.Quest.DONE)
 			npc:move(47, 27, true)

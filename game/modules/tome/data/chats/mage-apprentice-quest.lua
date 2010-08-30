@@ -19,26 +19,26 @@
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a young man, a novice mage by his looks*#WHITE#
-Good day to you fellow traveller!]],
+Good day to you fellow traveler!]],
 	answers = {
-		{"What brings an apprentice mage in the wilds?", jump="quest", cond=function(npc, player) return not player:hasQuest("mage-apprentice") end},
+		{"What brings an apprentice mage out into the wilds?", jump="quest", cond=function(npc, player) return not player:hasQuest("mage-apprentice") end},
 		{"I have something for you!",
 			jump="welcome",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(player, dialog) end
 		},
-		{"I have found this staff, it looks powerful maybe it would be enough?",
+		{"I found this staff; it looks powerful, maybe it would be enough?",
 			jump="angmar_fall",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_angmar(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_angmar(player, dialog) end
 		},
 		-- Reward for non-mages: access to Angolwen
-		{"So you have enough staves now?",
+		{"So you have enough magical items now?",
 			jump="thanks",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.faction ~= "angolwen" end,
 		},
 		-- Reward for mages: upgrade a talent mastery
-		{"So you have enough items now?",
+		{"So you have enough magical items now?",
 			jump="thanks_mage",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):isCompleted() and player.faction == "angolwen" end,
 		},
@@ -48,54 +48,54 @@ Good day to you fellow traveller!]],
 }
 
 newChat{ id="quest",
-	text = [[Ahh, that is my sad story ... but I would not bother you with it my friend.]],
+	text = [[Ahh, my story is a sad one ... I should not trouble you with it, my friend..]],
 	answers = {
-		{"Please you do not.", jump="quest2"},
+		{"It is no trouble at all! Please tell me!", jump="quest2"},
 		{"Ok, bye then!"},
 	}
 }
 newChat{ id="quest2",
-	text = [[Well if you insist...
-I am a novice mage, as you might have noticed, and my goal is to be accepted by the elves of Angolwen to be taught the secrets of the arcane.]],
+	text = [[Well, if you insist...
+I am a novice mage, as you might have noticed, and my goal is to be accepted by the elves of Angolwen and be taught the secrets of the arcane.]],
 	answers = {
 		{"Who are the elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
-		{"Ah yes Angolwen, this place I called home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
-		{"Well good luck, bye!"},
+		{"Ah yes Angolwen, I have called it home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
+		{"Well, good luck, bye!"},
 	}
 }
 newChat{ id="quest3",
-	text = [[The keepers of ar... err I do not think I am supposed to talk about them sorry my friend...
-Anyway, I must collect 15 magic staves, rings or amulets and I have yet to find one. If you could bring me some should you find any, I would be grateful]],
+	text = [[The keepers of ar... err, I do not think I am supposed to talk about them ... sorry, my friend...
+In any case, I must collect 15 magic staves, rings or amulets, and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
 	answers = {
-		{"I will keep that in mind", action=function(npc, player) player:grantQuest("mage-apprentice") end},
+		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
 	}
 }
 newChat{ id="quest3_mage",
 	text = [[I hope I will too ...
-Anyway, I must collect 15 magic staves, rings or amulets and I have yet to find one. If you could bring me some should you find any, I would be grateful]],
+In any case, I must collect 15 magic staves, rings or amulets and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
 	answers = {
-		{"I will keep that in mind", action=function(npc, player) player:grantQuest("mage-apprentice") end},
+		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
 	}
 }
 
 newChat{ id="angmar_fall",
 	text = [[Let me examine it.
-Oh yes my friend this is indeed a powerful staff, I think that alone should suffice to complete my quest! Many thanks!]],
+Oh yes, my friend, this is indeed a powerful staff! I think that it alone should suffice to complete my quest! Many thanks!]],
 	answers = {
-		{"Well I can not use it anyway.", jump="welcome"},
+		{"Well, I can not use it anyway.", jump="welcome"},
 	}
 }
 
 newChat{ id="thanks",
-	text = [[Ah yes! I am so glad! I will be able to go back to Angolw...err. Oh well I guess I can tell you, you deserve it for helping me.
-During the late years of Sauron, more than one hundred years ago, Gandalf the Grey worried that magic could disappear with him and would be lost to mortals should they need it again.
-So he set a secret plan into action and taught a small group of elves and men its usage with a specific task: to build a secret place where magic would be kept alive.
+	text = [[Ah yes! I am so glad! I will be able to go back to Angolw...err... Oh well, I guess I can tell you; you deserve it for helping me.
+During the dark years of Sauron's reign, more than one hundred years ago, Gandalf the Grey worried that magic might disappear with him and be lost to mortals should they need it again.
+So he set a secret plan into action and taught a small group of elves and men its usage in order to carry out a specific task: to build a secret place where magic would be kept alive.
 His plan worked and the group built a town called Angolwen in the Blue Mountains. #LIGHT_GREEN#*He marks it on your map, along with a portal to access it*#WHITE#
 Not many people are accepted there but I will arrange for you to be allowed inside.]],
 	answers = {
-		{"Oh! How could such a place be kept secret for so long... This is interesting indeed, thank you for your trust.",
+		{"Oh! How could such a place be kept secret for so long... This is interesting indeed, thank you for your trust!",
 			action = function(npc, player)
 				player:hasQuest("mage-apprentice"):access_angolwen(player)
 				npc:die()
@@ -105,10 +105,10 @@ Not many people are accepted there but I will arrange for you to be allowed insi
 }
 
 newChat{ id="thanks_mage",
-	text = [[Ah yes! I am so glad! I will be able to go back to Angolwen now, maybe we will meet there.
-Oh and take this ring, it has served me well.]],
+	text = [[Ah yes! I am so glad! I will be able to go back to Angolwen now, and perhaps we will meet there.
+Please take this ring; it has served me well.]],
 	answers = {
-		{"Thanks, and best luck on your studies!",
+		{"Thanks, and best luck in your studies!",
 			action = function(npc, player)
 				player:hasQuest("mage-apprentice"):ring_gift(player)
 				npc:die()

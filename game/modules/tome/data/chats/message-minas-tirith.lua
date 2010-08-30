@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Well met, @playername@. I was sent with a message from King Eldarion in Minas Tirith.
-I followed in the trail of bodies you left, you sure are impressive. We are lucky to have you on our side.
-But enough talk, take this message, now I must go.
-#LIGHT_GREEN#He gives you a sealed scroll and vanishes in the shadows.#LAST#]],
+	text = [[Well met, @playername@. I was sent with a message from King Eldarion of Minas Tirith.
+I followed in the trail of bodies that you left - very impressive! We are lucky to have you on our side.
+But enough talk, take this message.  I must go now.
+#LIGHT_GREEN#He gives you a sealed scroll and vanishes into the shadows.#LAST#]],
 	answers = {
 		{"Thank you for your courage.", action=function(npc, player)
 			local o, item, inven_id = npc:findInAllInventories("Sealed Scroll of Minas Tirith")
