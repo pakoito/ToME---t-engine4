@@ -527,7 +527,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		}
 
 		// And run the lua engine pre init scripts
-		luaL_loadfile(L, "/engine/pre-init.lua");
+		luaL_loadfile(L, "/loader/pre-init.lua");
 		docall(L, 0, 0);
 	}
 	else if (state == 2)
@@ -538,7 +538,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_lanes(L);
 
 		// And run the lua engine scripts
-		luaL_loadfile(L, "/engine/init.lua");
+		luaL_loadfile(L, "/loader/init.lua");
 		docall(L, 0, 0);
 	}
 }
