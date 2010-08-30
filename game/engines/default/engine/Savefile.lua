@@ -93,6 +93,7 @@ function _M:saveObject(obj, zip)
 		self.tables[tbl] = self:getFileName(tbl)
 		zip:add(self:getFileName(tbl), tbl:save())
 		-- If run from a coroutine, we pause every object
+--[[
 		if coroutine.running() then
 			local coret = coroutine.yield()
 			if coret and type(coret) == "string" and coret == "cancel" then
@@ -100,6 +101,7 @@ function _M:saveObject(obj, zip)
 				break
 			end
 		end
+]]
 	end
 	return self.tables[obj]
 end
@@ -112,7 +114,7 @@ function _M:saveWorld(world, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving world", "Please wait while saving the world...")
+		popup = Dialog:simplePopup("Saving world", "Please wait while saving the world...", nil, true)
 		popup.__showup = nil
 	end
 	core.display.forceRedraw()
@@ -160,7 +162,7 @@ function _M:saveGame(game, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
+		popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...", nil, true)
 		popup.__showup = nil
 	end
 	core.display.forceRedraw()
@@ -185,7 +187,7 @@ function _M:saveZone(zone, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving zone", "Please wait while saving the zone...")
+		popup = Dialog:simplePopup("Saving zone", "Please wait while saving the zone...", nil, true)
 		popup.__showup = nil
 	end
 	core.display.forceRedraw()
@@ -203,7 +205,7 @@ function _M:saveLevel(level, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving level", "Please wait while saving the level...")
+		popup = Dialog:simplePopup("Saving level", "Please wait while saving the level...", nil, true)
 		popup.__showup = nil
 	end
 	core.display.forceRedraw()
