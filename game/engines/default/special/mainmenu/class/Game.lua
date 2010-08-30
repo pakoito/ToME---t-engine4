@@ -237,7 +237,7 @@ Now go and have some fun!]]
 	end
 	self.step.do_tooltip = true
 
-	self:installNewEngine()
+--	self:installNewEngine()
 
 	if not self.firstrunchecked then
 		-- Check first time run for online profile
