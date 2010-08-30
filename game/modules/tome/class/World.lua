@@ -33,9 +33,9 @@ function _M:run()
 end
 
 --- Requests the world to save
-function _M:saveWorld()
+function _M:saveWorld(no_dialog)
 	local save = Savefile.new("")
-	save:saveWorld(self)
+	save:saveWorld(self, no_dialog)
 	save:close()
 	game.log("Saved world.")
 end

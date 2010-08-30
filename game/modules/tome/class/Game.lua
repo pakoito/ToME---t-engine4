@@ -376,7 +376,7 @@ function _M:tick()
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
-	if game.paused then return true end
+	if self.paused and not self.saving then return true end
 end
 
 --- Called every game turns

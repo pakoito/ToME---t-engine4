@@ -54,6 +54,7 @@ function _M:loaded()
 	self.mouse:setCurrent()
 
 	self.__threads = self.__threads or {}
+	self.__coroutines = self.__coroutines or {}
 end
 
 --- Defines the default fields to be saved by the savefile code
@@ -113,6 +114,25 @@ end
 
 --- This is the "main game loop", do something here
 function _M:tick()
+	local stop = {}
+	local id, co = next(self.__coroutines)
+	while id do
+		local ok, err = coroutine.resume(co)
+		if not ok then
+			print(debug.traceback(co))
+			print("[COROUTINE] error", err)
+		end
+		if coroutine.status(co) == "dead" then
+			stop[#stop+1] = id
+		end
+		id, co = next(self.__coroutines, id)
+	end
+	if #stop > 0 then
+		for i = 1, #stop do
+			self.__coroutines[stop[i]] = nil
+			print("[COROUTINE] dead", stop[i])
+		end
+	end
 end
 
 --- Called when a zone leaves a level
@@ -211,6 +231,35 @@ end
 
 --- Requests the game to save
 function _M:saveGame()
+end
+
+--- Add a coroutine to the pool
+-- Coroutines registered will be run each game tick
+function _M:registerCoroutine(id, co)
+	print("[COROUTINE] registering", id, co)
+	self.__coroutines[id] = co
+end
+
+--- Get the coroutine corresponding to the id
+function _M:getCoroutine(id)
+	return self.__coroutines[id]
+end
+
+--- Ask a registered coroutine to cancel
+-- The coroutine must accept a "cancel" action
+function _M:cancelCoroutine(id)
+	local co = self.__coroutines[id]
+	if not co then return end
+	local ok, err = coroutine.resume(co, "cancel")
+	if not ok then
+		print(debug.traceback(co))
+		print("[COROUTINE] error", err)
+	end
+	if coroutine.status(co) == "dead" then
+		self.__coroutines[id] = nil
+	else
+		error("Told coroutine "..id.." to cancel, but it is not dead!")
+	end
 end
 
 --- Save a thread into the thread pool

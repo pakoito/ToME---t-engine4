@@ -74,14 +74,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly then lx, ly = x, y end
 
-	if typ.ball then
+	if typ.ball and typ.ball > 0 then
 		core.fov.calc_circle(lx, ly, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
 			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
-	elseif typ.cone then
+	elseif typ.cone and typ.cone > 0 then
 		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
@@ -247,14 +247,14 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
 		grids[x][y] = true
 	end
 
-	if typ.ball then
+	if typ.ball and typ.ball > 0 then
 		core.fov.calc_circle(lx, ly, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
 			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
-	elseif typ.cone then
+	elseif typ.cone and typ.cone > 0 then
 		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
 		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone

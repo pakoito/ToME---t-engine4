@@ -108,6 +108,34 @@ function _M:clone(t)
 	return n
 end
 
+
+local function clonerecursfull(clonetable, d)
+	local n = {}
+	clonetable[d] = n
+
+	for k, e in pairs(d) do
+		local nk, ne = k, e
+
+		if clonetable[k] then nk = clonetable[k]
+		elseif type(k) == "table" then nk = clonerecursfull(clonetable, k)
+		end
+
+		if clonetable[e] then ne = clonetable[e]
+		elseif type(e) == "table" then ne = clonerecursfull(clonetable, e)
+		end
+		n[nk] = ne
+	end
+	setmetatable(n, getmetatable(d))
+	return n
+end
+
+--- Clones the object, all subobjects without cloning twice a subobject
+function _M:cloneFull()
+	local clonetable = {}
+	local n = clonerecursfull(clonetable, self)
+	return n
+end
+
 --- Replaces the object with an other, by copying (not deeply)
 function _M:replaceWith(t)
 	-- Delete fields

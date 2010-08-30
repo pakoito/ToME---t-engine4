@@ -109,6 +109,8 @@ function _M:display()
 		self.surface:drawColorStringBlended(self.font, ("#904010#Vim:     #ffffff#%d/%d"):format(player:getVim(), player.max_vim), 0, h, 255, 255, 255) h = h + self.font_h
 	end
 
+	if game.saving then h = h + self.font_h self.surface:drawColorStringBlended(self.font, "#YELLOW#Saving...", 0, h, 255, 255, 255) h = h + self.font_h end
+
 	h = h + self.font_h
 	for tid, act in pairs(player.sustain_talents) do
 		if act then self.surface:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(player:getTalentFromId(tid).name), 0, h, 255, 255, 255) h = h + self.font_h end

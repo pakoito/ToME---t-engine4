@@ -92,25 +92,36 @@ function _M:saveObject(obj, zip)
 		local tbl = table.remove(self.process)
 		self.tables[tbl] = self:getFileName(tbl)
 		zip:add(self:getFileName(tbl), tbl:save())
+		-- If run from a coroutine, we pause every object
+		if coroutine.running() then
+			local coret = coroutine.yield()
+			if coret and type(coret) == "string" and coret == "cancel" then
+				print("[SAVE] abording")
+				break
+			end
+		end
 	end
 	return self.tables[obj]
 end
 
 --- Save the given world
-function _M:saveWorld(world)
+function _M:saveWorld(world, no_dialog)
 	collectgarbage("collect")
 
 	fs.mkdir(self.save_dir)
 
-	local popup = Dialog:simplePopup("Saving world", "Please wait while saving the world...")
-	popup.__showup = nil
+	local popup
+	if not no_dialog then
+		popup = Dialog:simplePopup("Saving world", "Please wait while saving the world...")
+		popup.__showup = nil
+	end
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir.."world.teaw")
 	self:saveObject(world, zip)
 	zip:close()
 
-	game:unregisterDialog(popup)
+	if not no_dialog then game:unregisterDialog(popup) end
 end
 
 --- Save the given birth descriptors, used for quick start
@@ -142,13 +153,16 @@ function _M:loadQuickBirth()
 end
 
 --- Save the given game
-function _M:saveGame(game)
+function _M:saveGame(game, no_dialog)
 	collectgarbage("collect")
 
 	fs.mkdir(self.save_dir)
 
-	local popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
-	popup.__showup = nil
+	local popup
+	if not no_dialog then
+		popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...")
+		popup.__showup = nil
+	end
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir.."game.teag")
@@ -162,37 +176,43 @@ function _M:saveGame(game)
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
 
-	game:unregisterDialog(popup)
+	if not no_dialog then game:unregisterDialog(popup) end
 end
 
 --- Save a zone
-function _M:saveZone(zone)
+function _M:saveZone(zone, no_dialog)
 	fs.mkdir(self.save_dir)
 
-	local popup = Dialog:simplePopup("Saving zone", "Please wait while saving the zone...")
-	popup.__showup = nil
+	local popup
+	if not no_dialog then
+		popup = Dialog:simplePopup("Saving zone", "Please wait while saving the zone...")
+		popup.__showup = nil
+	end
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..("zone-%s.teaz"):format(zone.short_name))
 	self:saveObject(zone, zip)
 	zip:close()
 
-	game:unregisterDialog(popup)
+	if not no_dialog then game:unregisterDialog(popup) end
 end
 
 --- Save a level
-function _M:saveLevel(level)
+function _M:saveLevel(level, no_dialog)
 	fs.mkdir(self.save_dir)
 
-	local popup = Dialog:simplePopup("Saving level", "Please wait while saving the level...")
-	popup.__showup = nil
+	local popup
+	if not no_dialog then
+		popup = Dialog:simplePopup("Saving level", "Please wait while saving the level...")
+		popup.__showup = nil
+	end
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..("level-%s-%d.teal"):format(level.data.short_name, level.level))
 	self:saveObject(level, zip)
 	zip:close()
 
-	game:unregisterDialog(popup)
+	if not no_dialog then game:unregisterDialog(popup) end
 end
 
 local function resolveSelf(o, base, allow_object)

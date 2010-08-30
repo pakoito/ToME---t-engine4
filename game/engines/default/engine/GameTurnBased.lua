@@ -37,7 +37,7 @@ end
 function _M:tick()
 	if self.paused then
 		-- Auto unpause if the player has no energy to act
-		if game:getPlayer() and not game:getPlayer():enoughEnergy() then game.paused = false end
+		if self:getPlayer() and not self:getPlayer():enoughEnergy() then self.paused = false end
 
 		-- If we are paused do not get energy, but still process frames if needed
 		engine.Game.tick(self)
