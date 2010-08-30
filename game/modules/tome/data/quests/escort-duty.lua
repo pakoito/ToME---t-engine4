@@ -63,7 +63,7 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 7,
+			life_rating = 12,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
 
@@ -89,7 +89,7 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 6,
+			life_rating = 11,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
 
@@ -115,7 +115,7 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 6,
+			life_rating = 11,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
 
@@ -141,7 +141,7 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 6,
+			life_rating = 11,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
 
@@ -167,7 +167,7 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 6,
+			life_rating = 12,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
 
@@ -193,7 +193,7 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 6,
+			life_rating = 11,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
 
@@ -219,7 +219,7 @@ local possible_types = {
 			exp_worth = 0,
 
 			max_life = 50, life_regen = 0,
-			life_rating = 5,
+			life_rating = 10,
 			combat_armor = 3, combat_def = 3,
 			inc_damage = {all=-50},
 
