@@ -847,7 +847,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -868,7 +868,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the decrepitude disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -889,7 +889,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the weakness disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -897,6 +897,26 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "EPIDEMIC",
+	desc = "Epidemic",
+	type = "disease",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is afflicted by epidemic!" end,
+	on_lose = function(self, err) return "#Target# is free from the epidemic." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("diseases_spread_on_blight", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("diseases_spread_on_blight", eff.tmpid)
 	end,
 }
 

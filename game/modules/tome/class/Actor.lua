@@ -1248,6 +1248,7 @@ end
 -- @param what a string describing what is being tried
 function _M:canBe(what)
 	if what == "poison" and rng.percent(100 * (self:attr("poison_immune") or 0)) then return false end
+	if what == "disease" and rng.percent(100 * (self:attr("disease_immune") or 0)) then return false end
 	if what == "cut" and rng.percent(100 * (self:attr("cut_immune") or 0)) then return false end
 	if what == "confusion" and rng.percent(100 * (self:attr("confusion_immune") or 0)) then return false end
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end

@@ -120,6 +120,7 @@ newDamageType{
 		if realdam > 0 and target and not target:attr("fire_proof") then
 			tryDestroy(target, target:getInven("INVEN"), realdam, "fire_destroy", "fire_proof", "The burst of heat destroys your %s!")
 		end
+		return realdam
 	end,
 }
 newDamageType{
@@ -130,17 +131,9 @@ newDamageType{
 		if realdam > 0 and target and not target:attr("cold_proof") then
 			tryDestroy(target, target:getInven("INVEN"), realdam, "cold_destroy", "cold_proof", "The intense cold destroys your %s!")
 		end
+		return realdam
 	end,
 }
-
--- Nature & Blight: Opposing damage types
-newDamageType{
-	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
-}
-newDamageType{
-	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
-}
-
 newDamageType{
 	name = "lightning", type = "LIGHTNING", text_color = "#ROYAL_BLUE#",
 	projector = function(src, x, y, type, dam)
@@ -149,6 +142,7 @@ newDamageType{
 		if realdam > 0 and target and not target:attr("elec_proof") then
 			tryDestroy(target, target:getInven("INVEN"), realdam, "elec_destroy", "elec_proof", "The burst of lightning destroys your %s!")
 		end
+		return realdam
 	end,
 }
 -- Acid detroys potions
@@ -160,21 +154,27 @@ newDamageType{
 		if realdam > 0 and target and not target:attr("acid_proof") then
 			tryDestroy(target, target:getInven("INVEN"), realdam, "acid_destroy", "acid_proof", "The splash of acid destroys your %s!")
 		end
+		return realdam
 	end,
 }
 
--- Lite up the room
+-- Nature & Blight: Opposing damage types
 newDamageType{
-	name = "lite", type = "LITE", text_color = "#YELLOW#",
-	projector = function(src, x, y, type, dam)
-		-- Dont lit magically unlit grids
-		local g = game.level.map(x, y, Map.TERRAIN+1)
-		if g and g.unlit then
-			if g.unlit <= dam then game.level.map:remove(x, y, Map.TERRAIN+1)
-			else return end
+	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
+}
+newDamageType{
+	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
+	projector = function(src, x, y, type, dam, extra)
+		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		-- Spread diseases if possible
+		if realdam > 0 and target and target:attr("diseases_spread_on_blight") and (not extra or not extra.from_disease) then
+			if rng.percent(20 + math.sqrt(realdam) * 5) then
+				local t = src:getTalentFromId(src.T_EPIDEMIC)
+				t.do_spread(src, t, target)
+			end
 		end
-
-		game.level.map.lites(x, y, true)
+		return realdam
 	end,
 }
 
@@ -203,6 +203,22 @@ newDamageType{
 		end
 	end,
 }
+
+-- Lite up the room
+newDamageType{
+	name = "lite", type = "LITE", text_color = "#YELLOW#",
+	projector = function(src, x, y, type, dam)
+		-- Dont lit magically unlit grids
+		local g = game.level.map(x, y, Map.TERRAIN+1)
+		if g and g.unlit then
+			if g.unlit <= dam then game.level.map:remove(x, y, Map.TERRAIN+1)
+			else return end
+		end
+
+		game.level.map.lites(x, y, true)
+	end,
+}
+
 
 -- Silence
 newDamageType{

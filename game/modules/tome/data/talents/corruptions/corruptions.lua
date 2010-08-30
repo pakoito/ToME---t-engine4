@@ -50,3 +50,4 @@ corrs_req5 = {
 
 load("/data/talents/corruptions/sanguisuge.lua")
 load("/data/talents/corruptions/scourge.lua")
+load("/data/talents/corruptions/plague.lua")
