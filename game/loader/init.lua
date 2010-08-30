@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- Setup the user directory
+local homepath = fs.getUserPath()..fs.getPathSeparator()..fs.getHomePath()..fs.getPathSeparator().."4.0"
+fs.mount(homepath, "/")
+
 -- Look for the required engine and load it
 local args = {...}
 local req_engine = args[1] or "te4"
@@ -95,6 +99,8 @@ elseif use_engine.load_dir then
 	print("[ENGINE LOADER] using directory engine:", use_engine.load_dir)
 	fs.mount(fs.getRealPath(use_engine.load_dir), "/")
 end
+
+fs.umount(homepath)
 
 -- RUN engine RUN !!
 dofile("/engine/init.lua")

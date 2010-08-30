@@ -201,6 +201,23 @@ function _M:selectStepMain()
 
 	if not self.news then
 		self.news = profile:getNews()
+
+		if self.news then
+			local f = loadstring(self.news.text)
+			if f then
+				local env = {}
+				setfenv(f, env)
+				pcall(f)
+				if env.text and env.version then
+					self.news.text = env.text
+					print("Latest engine version available: ", env.version[4], env.version[1], env.version[2], env.version[3])
+					self.latest_engine_version = env.version
+				else
+					self.news = nil
+				end
+			end
+		end
+
 		if not self.news then
 			self.news = {
 				title = 'Welcome to T-Engine and the Tales of Middle-earth',
@@ -215,9 +232,12 @@ Remember that in most roguelikes death is usually permanent so be careful!
 Now go and have some fun!]]
 			}
 		end
+
 		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
 	end
 	self.step.do_tooltip = true
+
+	self:installNewEngine()
 
 	if not self.firstrunchecked then
 		-- Check first time run for online profile
@@ -453,5 +473,22 @@ function _M:selectStepOnlineProfile()
 			dialogdef.justlogin = ret
 			self:registerDialog(require('special.mainmenu.dialogs.ProfileLogin').new(dialogdef, profile_help_text))
 		end, "Create", "Login")
+	end
+end
+
+function _M:installNewEngine()
+	if not self.latest_engine_version then return end
+	if engine.version_check(self.latest_engine_version) == "newer" then
+		local url = ("http://te4.org/dl/engines/%s-%d.%d.%d.teae"):format(self.latest_engine_version[4], self.latest_engine_version[1], self.latest_engine_version[2], self.latest_engine_version[3])
+		local d = DownloadDialog.new(("Downloading: T-Engine 4 %d.%d.%d"):format(self.latest_engine_version[1], self.latest_engine_version[2], self.latest_engine_version[3]), url, function(di, data)
+			fs.mkdir("/engines")
+			local f = fs.open(("/engines/%s-%d.%d.%d.teae"):format(self.latest_engine_version[4], self.latest_engine_version[1], self.latest_engine_version[2], self.latest_engine_version[3]), "w")
+			for i, v in ipairs(data) do f:write(v) end
+			f:close()
+
+			Dialog:simplePopup("Success!", "The new engine is installed, it will now restart using it.", function() util.showMainMenu() end)
+		end)
+		self:registerDialog(d)
+		d:startDownload()
 	end
 end

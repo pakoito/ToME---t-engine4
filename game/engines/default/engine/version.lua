@@ -18,5 +18,15 @@
 -- darkgod@te4.org
 
 -- Engine Version
-engine.version = {0,9,10,"te4"}
-engine.version_id = "te4-0.9.10"
+engine.version = {0,9,9,"te4"}
+engine.version_id = "te4-0.9.9"
+
+function engine.version_check(v)
+	local ev = engine.version
+	if v[4] ~= ev[4] then return "different engine" end
+	if v[1] > ev[1] then return "newer" end
+	if v[1] == ev[1] and v[2] > ev[2] then return "newer" end
+	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
+	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
+	return "lower"
+end
