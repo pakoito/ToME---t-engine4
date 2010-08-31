@@ -26,29 +26,34 @@ local args = {...}
 local req_engine = args[1] or "te4"
 local req_version = args[2] or "LATEST"
 
--- List all available engines
 local engines = {}
+
+local function tryLoadEngine(ff, dir, teae)
+	local env = {engine={}}
+	setfenv(ff, env)
+	pcall(ff)
+	if env.engine.version and env.engine.require_c_core == core.game.VERSION then
+		print("[ENGINE LOADER] available from "..(dir and "dir" or "teae")..": ", env.engine.version[4], env.engine.version[1], env.engine.version[2], env.engine.version[3])
+
+		local name = env.engine.version[4]
+		engines[name] = engines[name] or {}
+		engines[name][#engines[name]+1] = {env.engine.version[1], env.engine.version[2], env.engine.version[3], name, load_dir=dir, load_teae=teae}
+	end
+end
+
+-- List all available engines
 for i, f in ipairs(fs.list("/engines/")) do
 	if fs.exists("/engines/"..f.."/engine/version.lua") then
 		local ff, err = loadfile("/engines/"..f.."/engine/version.lua")
-		if ff and not err then
-			local env = {engine={}}
-			setfenv(ff, env)
-			pcall(ff)
-			if env.engine.version then
-				print("[ENGINE LOADER] available from directory: ", env.engine.version[4], env.engine.version[1], env.engine.version[2], env.engine.version[3])
-
-				local name = env.engine.version[4]
-				engines[name] = engines[name] or {}
-				engines[name][#engines[name]+1] = {env.engine.version[1], env.engine.version[2], env.engine.version[3], name, load_dir="/engines/"..f.."/"}
-			end
-		end
+		if ff and not err then tryLoadEngine(ff, "/engines/"..f.."/", nil) end
 	else
-		local _, _, name, vM, vm, vp = f:find("^([a-z0-9-]+)%-(%d+)%.(%d+)%.(%d+).teae$")
+		local _, _, name, cv, vM, vm, vp = f:find("^([a-z0-9-]+)%-(%d+)_(%d+)%.(%d+)%.(%d+).teae$")
 		if name then
-			print("[ENGINE LOADER] available from teae: ", name, vM, vm, vp)
-			engines[name] = engines[name] or {}
-			engines[name][#engines[name]+1] = {tonumber(vM), tonumber(vm), tonumber(vp), name, load_teae="/engines/"..f}
+			local eng_path = fs.getRealPath("/engines/"..f)
+			fs.mount(eng_path, "/tmp")
+			local ff, err = loadfile("/tmp/engine/version.lua")
+			if ff and not err then tryLoadEngine(ff, nil, "/engines/"..f) end
+			fs.umount(eng_path)
 		end
 	end
 end

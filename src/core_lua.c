@@ -2098,7 +2098,12 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "core.display", displaylib, 0);
 	luaL_openlib(L, "core.mouse", mouselib, 0);
 	luaL_openlib(L, "core.key", keylib, 0);
+
 	luaL_openlib(L, "core.game", gamelib, 0);
+	lua_pushstring(L, "VERSION");
+	lua_pushnumber(L, 1);
+	lua_settable(L, -3);
+
 	luaL_openlib(L, "rng", rnglib, 0);
 	luaL_openlib(L, "line", linelib, 0);
 	luaL_openlib(L, "fs", fslib, 0);
