@@ -76,16 +76,16 @@ newTalent{
 	cooldown = 10,
 	range = 100,
 	action = function(self, t)
-		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=3 + self:getTalentLevel(t)}
+		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=math.ceil(3 + self:getTalentLevel(t))}
 		if not x then return nil end
 
-		self:magicMap(3 + self:getTalentLevel(t), x, y)
+		self:magicMap(math.ceil(3 + self:getTalentLevel(t)), x, y)
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Using your connection to Nature you can see remote areas in a radius of %d.]]):
-		format(3 + self:getTalentLevel(t))
+		format(math.ceil(3 + self:getTalentLevel(t)))
 	end,
 }
 

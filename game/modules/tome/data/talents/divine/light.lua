@@ -53,7 +53,7 @@ newTalent{
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
-		local dam = self:combatTalentSpellDamage(t, 4, 20)
+		local dam = self:combatTalentSpellDamage(t, 4, 30)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -62,14 +62,14 @@ newTalent{
 			radius,
 			5, nil,
 			{type="healing_vapour"},
-			nil, false
+			nil, true
 		)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		return ([[A magical zone of sunlight appears around you, healing all that stand within.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 20))
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30))
 	end,
 }
 

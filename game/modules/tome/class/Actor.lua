@@ -339,12 +339,16 @@ function _M:magicMap(radius, x, y)
 	x = x or self.x
 	y = y or self.y
 	radius = math.floor(radius)
-	for i = x - radius, x + radius do for j = y - radius, y + radius do
-		if game.level.map:isBound(i, j) and core.fov.distance(x, y, i, j) < radius then
+	core.fov.calc_circle(x, y, radius, function(_, i, j)
+		if game.level.map:isBound(i, j) then
 			game.level.map.remembers(i, j, true)
 			game.level.map.has_seens(i, j, true)
 		end
-	end end
+	end, function()end, nil)
+	if game.level.map:isBound(x, y) then
+		game.level.map.remembers(x, y, true)
+		game.level.map.has_seens(x, y, true)
+	end
 end
 
 function _M:getRankStatAdjust()
