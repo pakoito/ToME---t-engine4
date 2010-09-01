@@ -21,34 +21,39 @@ newLore{
 	id = "trollshaws-note-1",
 	category = "trollshaws",
 	name = "tattered paper scrap (trollshaws)",
-	lore = [[...is a gorgeous glade, but I could swear that looked like a half of a human femur.]],
+	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
+"...is a gorgeous glade, but I could swear that looked like a half of a human femur."]],
 }
 
 newLore{
 	id = "trollshaws-note-2",
 	category = "trollshaws",
 	name = "tattered paper scrap (trollshaws)",
-	lore = [[11th of Yestarë
-Saw an absolutely gigantic troll, but fortunately I threw him off my scent.]],
+	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
+"11th of Yestarë
+Saw an absolutely gigantic troll, but fortunately I threw him off my scent."]],
 }
 
 newLore{
 	id = "trollshaws-note-3",
 	category = "trollshaws",
 	name = "tattered paper scrap (trollshaws)",
-	lore = [[...ack again, but he's just a stupid old troll. It'll be easy to not let him get wind of me.]],
+	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
+"...ack again, but he's just a stupid old troll. It'll be easy to not let him get wind of me."]],
 }
 
 newLore{
 	id = "trollshaws-note-4",
 	category = "trollshaws",
 	name = "tattered paper scrap (trollshaws)",
-	lore = [[...initely found his treasure stash further on, but had to turn back. If you get this, HELP!]],
+	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
+"...initely found his treasure stash further on, but had to turn back. If you get this, HELP!"]],
 }
 
 newLore{
 	id = "trollshaws-note-5",
 	category = "trollshaws",
 	name = "tattered paper scrap (trollshaws)",
-	lore = [[...writing this in a tree and he's at the bottom of it. Waiting. His club is the size of a tall dwarf. Don't think I'm going to make it.]],
+	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
+"...writing this in a tree and he's at the bottom of it. Waiting. His club is the size of a tall dwarf. Don't think I'm going to make it."]],
 }
