@@ -109,7 +109,7 @@ function _M:clone(t)
 end
 
 
-local function clonerecursfull(clonetable, d)
+local function clonerecursfull(clonetable, d, allow_cloned)
 	local n = {}
 	clonetable[d] = n
 
@@ -126,13 +126,14 @@ local function clonerecursfull(clonetable, d)
 		n[nk] = ne
 	end
 	setmetatable(n, getmetatable(d))
+	if n.cloned then n:cloned(d) end
 	return n
 end
 
 --- Clones the object, all subobjects without cloning twice a subobject
-function _M:cloneFull()
+function _M:cloneFull(allow_cloned)
 	local clonetable = {}
-	local n = clonerecursfull(clonetable, self)
+	local n = clonerecursfull(clonetable, self, allow_cloned)
 	return n
 end
 
