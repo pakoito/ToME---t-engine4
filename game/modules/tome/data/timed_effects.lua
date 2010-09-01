@@ -1013,3 +1013,31 @@ newEffect{
 		self:removeTemporaryValue("resists", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "CONTINUUM_DESTABILIZATION",
+	desc = "Continuum Destabilization",
+	type = "other", -- Type "other" so that nothing can dispel it
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# looks a little pale around the edges.", "+Destabilized" end,
+	on_lose = function(self, err) return "#Target# is firmly planted in reality.", "-Destabilized" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the continuum_destabilization
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		-- Need to remove and re-add the continuum_destabilization
+		self:removeTemporaryValue("continuum_destabilization", old_eff.effid)
+		old_eff.effid = self:addTemporaryValue("continuum_destabilization", old_eff.power)
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.effid = self:addTemporaryValue("continuum_destabilization", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("continuum_destabilization", eff.effid)
+	end,
+}

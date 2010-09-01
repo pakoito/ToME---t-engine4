@@ -40,11 +40,15 @@ newTalent{
 				end
 			end
 		end
-
-		if target ~= self and (not target:canBe("teleport") or not self:checkHit(self:combatSpellpower(), target:combatSpellResist())) then
-			game.logSeen(target, "The spell fizzles!")
-			return true
+		if target ~= self and target:canBe("teleport") then
+			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+			if not hit then
+				game.logSeen(target, "The spell fizzles!")
+				return true
+			end
+			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
 		end
+
 		-- Annoy them!
 		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
@@ -100,10 +104,15 @@ newTalent{
 			end
 		end
 
-		if target ~= self and (not target:canBe("teleport") or not self:checkHit(self:combatSpellpower(), target:combatSpellResist())) then
-			game.logSeen(target, "The spell fizzles!")
-			return true
+		if target ~= self and target:canBe("teleport") then
+			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+			if not hit then
+				game.logSeen(target, "The spell fizzles!")
+				return true
+			end
+			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
 		end
+
 		-- Annoy them!
 		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
