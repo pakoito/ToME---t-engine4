@@ -103,6 +103,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 			local offmult = (mult or 1) / 2
 			if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
 				offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
+			elseif self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
+				offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH) / 9))
 			end
 			for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 				if o.combat then
@@ -213,6 +215,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
 	end
 
+	-- Spread diseases
+	if hitted and self:knowTalent(self.T_CARRIER) and rng.percent(4 * self:getTalentLevelRaw(self.T_CARRIER)) then
+		-- Use epidemic talent spreading
+		local t = self:getTalentFromId(self.T_EPIDEMIC)
+		t.do_spread(self, t, target)
+	end
+
 	-- Melee project
 	if hitted and not target.dead then for typ, dam in pairs(self.melee_project) do
 		if dam > 0 then
@@ -307,6 +316,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 			DamageType:get(typ).projector(target, self.x, self.y, typ, dam)
 		end
 	end end
+
+	-- Acid splash
+	if hitted and target:knowTalent(target.T_ACID_BLOOD) then
+		local t = target:getTalentFromId(target.T_ACID_BLOOD)
+		t.do_splash(target, t, self)
+	end
 
 	-- Regen on being hit
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
@@ -453,10 +468,13 @@ function _M:combatSpellpower(mod)
 	mod = mod or 1
 	local add = 0
 	if self:knowTalent(self.T_ARCANE_DEXTERITY) then
-		add = (15 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 5) * self:getDex() / 100
+		add = add + (15 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 5) * self:getDex() / 100
 	end
 	if self:knowTalent(self.T_SHADOW_CUNNING) then
-		add = (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 3) * self:getCun() / 100
+		add = add + (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 3) * self:getCun() / 100
+	end
+	if self:hasEffect(self.EFF_BLOODLUST) then
+		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
 	end
 	return (self.combat_spellpower + add + self:getMag()) * mod
 end

@@ -124,15 +124,3 @@ newTalent{
 		return ([[Increases damage done with exotic weapons(whips, tridents, ...) by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }
-
-newTalent{
-	name = "Dual Weapon Wield",
-	type = {"technique/combat-training", 1},
-	hide = true,
-	points = 1,
-	require = { stat = { str=function(level) return 10 + level * 3 end }, },
-	mode = "passive",
-	info = function(self, t)
-		return ([[Allows you to use two one handed weapons of any kind.]])
-	end,
-}

@@ -110,7 +110,7 @@ function _M:loaded()
 	engine.GameEnergyBased.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", }
 	Map:setViewerActor(self.player)
-	self:setupDisplayMode()
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
 	self.key = engine.KeyBind.new()
 end
 

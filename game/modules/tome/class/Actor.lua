@@ -599,6 +599,11 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
+	-- Bloodlust!
+	if src and src.knowTalent and src:knowTalent(src.T_BLOODLUST) then
+		src:setEffect(src.EFF_BLOODLUST, 1, {})
+	end
+
 	return value
 end
 
@@ -799,7 +804,7 @@ function _M:getEncumbrance()
 			o:forAllStack(function(so) enc = enc + so.encumber end)
 		end
 	end
-	print("Total encumbrance", enc)
+--	print("Total encumbrance", enc)
 	return enc
 end
 
@@ -843,7 +848,7 @@ end
 
 --- Returns the possible offslot
 function _M:getObjectOffslot(o)
-	if o.dual_wieldable and self:knowTalent(self.T_DUAL_WEAPON_WIELD) then
+	if o.dual_wieldable and self:attr("allow_any_dual_weapons") then
 		return self.INVEN_OFFHAND
 	else
 		return o.offslot

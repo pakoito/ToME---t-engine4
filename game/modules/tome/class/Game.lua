@@ -162,7 +162,7 @@ function _M:loaded()
 	engine.interface.GameSound.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap"}
 	Map:setViewerActor(self.player)
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 20, true)
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
 	if self.player then self.player.changed = true end
 	self.key = engine.KeyBind.new()
 

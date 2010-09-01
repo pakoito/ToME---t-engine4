@@ -47,7 +47,29 @@ corrs_req5 = {
 	stat = { mag=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 }
+str_corrs_req1 = {
+	stat = { str=function(level) return 12 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+}
+str_corrs_req2 = {
+	stat = { str=function(level) return 20 + (level-1) * 2 end },
+	level = function(level) return 4 + (level-1)  end,
+}
+str_corrs_req3 = {
+	stat = { str=function(level) return 28 + (level-1) * 2 end },
+	level = function(level) return 8 + (level-1)  end,
+}
+str_corrs_req4 = {
+	stat = { str=function(level) return 36 + (level-1) * 2 end },
+	level = function(level) return 12 + (level-1)  end,
+}
+str_corrs_req5 = {
+	stat = { str=function(level) return 44 + (level-1) * 2 end },
+	level = function(level) return 16 + (level-1)  end,
+}
 
 load("/data/talents/corruptions/sanguisuge.lua")
 load("/data/talents/corruptions/scourge.lua")
 load("/data/talents/corruptions/plague.lua")
+load("/data/talents/corruptions/reaving-combat.lua")
+load("/data/talents/corruptions/bone.lua")

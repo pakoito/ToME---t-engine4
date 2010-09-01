@@ -1,0 +1,91 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+newTalent{
+	name = "Corrupted Strength",
+	type = {"corruption/reaving-combat", 1},
+	mode = "passive",
+	points = 5,
+	require = str_corrs_req1,
+	on_learn = function(self, t)
+		self:attr("allow_any_dual_weapons", 1)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("allow_any_dual_weapons", -1)
+	end,
+	info = function(self, t)
+		return ([[Allows you to dual wield any type of one handed weapons and increaase the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - self:getTalentLevel(t) / 9))
+	end,
+}
+
+newTalent{
+	name = "Bloodlust",
+	type = {"corruption/reaving-combat", 2},
+	mode = "passive",
+	require = str_corrs_req2,
+	points = 5,
+	info = function(self, t)
+		return ([[When you damage one of your foes you enter a bloodlust, increasing your spell power by 1 for each target, up to a maximun of %d per turn.
+		The maximun reachable is +%d spell power.
+		The bonus decreases by one per turn.]]):
+		format(math.floor(self:getTalentLevel(t)), math.floor(6 * self:getTalentLevel(t)))
+	end,
+}
+
+newTalent{
+	name = "Carrier",
+	type = {"corruption/reaving-combat", 3},
+	mode = "passive",
+	require = str_corrs_req3,
+	points = 5,
+	on_learn = function(self, t)
+		self:attr("disease_immune", 0.2 * self:getTalentLevelRaw(t))
+	end,
+	on_unlearn = function(self, t)
+		self:attr("disease_immune", -0.2 * self:getTalentLevelRaw(t))
+	end,
+	info = function(self, t)
+		return ([[You gain a %d%% resistance to diseases and have a %d%% chance on melee attacks to spread any existing diseases on your target.]]):
+		format(20 * self:getTalentLevelRaw(t), 4 * self:getTalentLevelRaw(t))
+	end,
+}
+
+newTalent{
+	name = "Acid Blood",
+	type = {"corruption/reaving-combat", 4},
+	mode = "passive",
+	require = str_corrs_req4,
+	points = 5,
+	do_splash = function(self, t, target)
+		local dam = self:combatTalentSpellDamage(t, 5, 30)
+		local atk = self:combatTalentSpellDamage(t, 15, 35)
+		local armor = self:combatTalentSpellDamage(t, 15, 40)
+		if self:getTalentLevel(t) >= 3 then
+			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=dam, atk=atk, armor=armor})
+		else
+			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=dam, atk=atk})
+		end
+	end,
+	info = function(self, t)
+		return ([[Your blood turns into an acidic mixture, when you get hit the attacker is splashed with acid.
+		This deals %0.2f acid damage each turn for 5 turns and reduces the attacker attack by %d.
+		At level 3 it will also reduce armour by %d.]]):
+		format(self:combatTalentSpellDamage(t, 5, 30), self:combatTalentSpellDamage(t, 15, 35), self:combatTalentSpellDamage(t, 15, 40))
+	end,
+}

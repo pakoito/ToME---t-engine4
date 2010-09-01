@@ -1061,3 +1061,51 @@ newEffect{
 		self:removeTemporaryValue("pin_immune", eff.pin)
 	end,
 }
+
+newEffect{
+	name = "BLOODLUST",
+	desc = "Bloodlust",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=1 },
+	on_merge = function(self, old_eff, new_eff)
+		local dur = new_eff.dur
+		local max = math.floor(6 * self:getTalentLevel(self.T_BLOODLUST))
+		local max_turn = math.floor(self:getTalentLevel(self.T_BLOODLUST))
+
+		if old_eff.last_turn < game.turn then old_eff.used_this_turn = 0 end
+		if old_eff.used_this_turn > max_turn then dur = 0 end
+
+		old_eff.dur = math.min(old_eff.dur + dur, max)
+		old_eff.last_turn = game.turn
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.last_turn = game.turn
+		eff.used_this_turn = 0
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ACID_SPLASH",
+	desc = "Acid Splash",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is covered in acid!" end,
+	on_lose = function(self, err) return "#Target# is free from the acid." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.ACID).projector(eff.src, self.x, self.y, DamageType.ACID, eff.dam)
+	end,
+	activate = function(self, eff)
+		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
+		if eff.armor then eff.armorid = self:addTemporaryValue("combat_armor", -eff.armor) end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.atkid)
+		if eff.armorid then self:removeTemporaryValue("combat_armor", eff.armorid) end
+	end,
+}
