@@ -147,7 +147,11 @@ function _M:instanciate(mod, name, new_game)
 
 	profile.generic.modules_loaded = profile.generic.modules_loaded or {}
 	profile.generic.modules_loaded[mod.short_name] = (profile.generic.modules_loaded[mod.short_name] or 0) + 1
+
 	profile:saveGenericProfile("modules_loaded", profile.generic.modules_loaded)
+
+	-- Turn based by default
+	core.game.setRealtime(0)
 
 	-- Ok run the module
 	local M, W = mod.load()

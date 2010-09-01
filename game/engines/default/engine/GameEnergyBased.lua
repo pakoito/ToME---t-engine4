@@ -33,6 +33,7 @@ function _M:init(keyhandler, energy_to_act, energy_per_tick)
 	self.energy_to_act, self.energy_per_tick = energy_to_act or 1000, energy_per_tick or 100
 	engine.Game.init(self, keyhandler)
 
+	self.turn = 0
 	self.entities = {}
 	self:loaded()
 end
@@ -89,6 +90,19 @@ function _M:tick()
 			end
 		end
 	end
+
+	self.turn = self.turn + 1
+	self:onTurn()
+
+	-- Try to join threads if any, every hundred turns
+	if self.turn % 100 == 0 then
+		self:joinThreads(0)
+	end
+end
+
+--- Called every game turns
+-- Does nothing, you can override it
+function _M:onTurn()
 end
 
 --- Adds an entity to the game

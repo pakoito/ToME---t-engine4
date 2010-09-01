@@ -51,6 +51,7 @@ bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
 bool tickPaused = FALSE;
+SDL_TimerID realtime_timer_id = NULL;
 
 /* OpenGL capabilities */
 extern bool shaders_active;
@@ -348,6 +349,32 @@ Uint32 redraw_timer(Uint32 interval, void *param)
 	return(interval);
 }
 
+int realtime_pending = 0;
+
+Uint32 realtime_timer(Uint32 interval, void *param)
+{
+	SDL_Event event;
+	SDL_UserEvent userevent;
+
+	/* In this example, our callback pushes an SDL_USEREVENT event
+	 into the queue, and causes ourself to be called again at the
+	 same interval: */
+
+	userevent.type = SDL_USEREVENT;
+	userevent.code = 2;
+	userevent.data1 = NULL;
+	userevent.data2 = NULL;
+
+	event.type = SDL_USEREVENT;
+	event.user = userevent;
+
+	if (!realtime_pending && isActive) {
+		SDL_PushEvent(&event);
+//		realtime_pending = 1;
+	}
+	return(interval);
+}
+
 // Calls the lua music callback
 void on_music_stop()
 {
@@ -367,6 +394,21 @@ void on_music_stop()
 	}
 }
 
+// Setup realtime
+void setupRealtime(float freq)
+{
+	if (!freq)
+	{
+		if (realtime_timer_id) SDL_RemoveTimer(realtime_timer_id);
+		printf("[ENGINE] Switching to turn based\n");
+	}
+	else
+	{
+		float interval = 1000 / freq;
+		realtime_timer_id = SDL_AddTimer((int)interval, realtime_timer, NULL);
+		printf("[ENGINE] Switching to realtime, interval %d ms\n", (int)interval);
+	}
+}
 
 /* general OpenGL initialization function */
 int initGL()
@@ -672,6 +714,10 @@ int main(int argc, char *argv[])
 					on_redraw();
 					redraw_pending = 0;
 				}
+				else if (event.user.code == 2 && isActive) {
+					on_tick();
+					realtime_pending = 0;
+				}
 				else if (event.user.code == 1) {
 					on_music_stop();
 				}
@@ -682,7 +728,7 @@ int main(int argc, char *argv[])
 		}
 
 		/* draw the scene */
-		if (isActive && !tickPaused) on_tick();
+		if (!realtime_timer_id && isActive && !tickPaused) on_tick();
 
 		/* Reboot the lua engine */
 		if (reboot_lua)

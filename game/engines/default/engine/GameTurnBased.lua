@@ -29,7 +29,6 @@ module(..., package.seeall, class.inherit(engine.GameEnergyBased))
 
 --- See engine.GameEnergyBased
 function _M:init(keyhandler, energy_to_act, energy_per_tick)
-	self.turn = 0
 	self.paused = false
 	engine.GameEnergyBased.init(self, keyhandler, energy_to_act, energy_per_tick)
 end
@@ -43,17 +42,5 @@ function _M:tick()
 		engine.Game.tick(self)
 	else
 		engine.GameEnergyBased.tick(self)
-		self.turn = self.turn + 1
-		self:onTurn()
-
-		-- Try to join threads if any, every hundred turns
-		if self.turn % 100 == 0 then
-			self:joinThreads(0)
-		end
 	end
-end
-
---- Called every game turns
--- Does nothing, you can override it
-function _M:onTurn()
 end

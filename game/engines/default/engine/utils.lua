@@ -467,12 +467,13 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 	local gs = {}
 	for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 		local ok = true
+		if not game.level.map:isBound(x, y) then ok = false end
 		for w, _ in pairs(what) do
---			print("findFreeGrid test", x, y, w, ":=>", game.level.map(x, y, w))
+			print("findFreeGrid test", x, y, w, ":=>", game.level.map(x, y, w))
 			if game.level.map(x, y, w) then ok = false end
 		end
 		if game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then ok = false end
---		print("findFreeGrid", x, y, "from", sx,sy,"=>", ok)
+		print("findFreeGrid", x, y, "from", sx,sy,"=>", ok)
 		if ok then
 			gs[#gs+1] = {x, y, math.floor(core.fov.distance(sx, sy, x, y)), rng.range(1, 1000)}
 		end
@@ -488,11 +489,14 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 		end
 	end)
 
---	print("findFreeGrid using", gs[1][1], gs[1][2])
+	print("findFreeGrid using", gs[1][1], gs[1][2])
 	return gs[1][1], gs[1][2]
 end
 
 function util.showMainMenu(no_reboot)
+	-- Turn based by default
+	core.game.setRealtime(0)
+
 	-- Save any remaining files
 	savefile_pipe:forceWait()
 
