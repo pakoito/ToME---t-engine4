@@ -32,9 +32,8 @@ function _M:init()
 		end,
 	}, {
 		ACCEPT = function()
-			local save = Savefile.new(game.save_name)
-			save:saveGame(game)
-			save:close()
+			-- savefile_pipe is created as a global by the engine
+			savefile_pipe:push(game.save_name, "game", game)
 			util.showMainMenu()
 		end,
 	})

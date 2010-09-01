@@ -416,8 +416,7 @@ end
 
 --- Requests the game to save
 function _M:saveGame()
-	local save = Savefile.new(self.save_name)
-	save:saveGame(self)
-	save:close()
-	self.log("Saved game.")
+	-- savefile_pipe is created as a global by the engine
+	savefile_pipe:push(self.save_name, "game", self)
+	self.log("Saving game...")
 end
