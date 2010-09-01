@@ -34,10 +34,8 @@ end
 
 --- Requests the world to save
 function _M:saveWorld(no_dialog)
-	local save = Savefile.new("")
-	save:saveWorld(self, no_dialog)
-	save:close()
-	game.log("Saved world.")
+	-- savefile_pipe is created as a global by the engine
+	savefile_pipe:push("", "world", self)
 end
 
 --- Format an achievement source

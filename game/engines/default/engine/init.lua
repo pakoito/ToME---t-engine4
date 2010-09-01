@@ -30,6 +30,7 @@ require "engine.version"
 require "engine.interface.GameMusic"
 require "engine.KeyBind"
 require "engine.Savefile"
+require "engine.SavefilePipe"
 require "engine.Tiles"
 require "engine.PlayerProfile"
 engine.Tiles.prefix = "/data/gfx/"
@@ -82,5 +83,8 @@ core.sound.activateMusicCallback()
 
 -- Load profile configs
 profile = engine.PlayerProfile.new()
+
+-- Create a savefile pipe
+savefile_pipe = engine.SavefilePipe.new()
 
 util.showMainMenu(true)

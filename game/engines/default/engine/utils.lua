@@ -493,6 +493,9 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 end
 
 function util.showMainMenu(no_reboot)
+	-- Save any remaining files
+	savefile_pipe:forceWait()
+
 	if game and type(game) == "table" and game.__session_time_played_start then
 		profile.generic.modules_played = profile.generic.modules_played or {}
 		profile.generic.modules_played[game.__mod_info.short_name] = (profile.generic.modules_played[game.__mod_info.short_name] or 0) + (os.time() - game.__session_time_played_start)

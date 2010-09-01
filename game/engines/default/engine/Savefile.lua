@@ -34,17 +34,26 @@ _M.current_save = false
 
 --- Init a savefile
 -- @param savefile the name of the savefile, usually the player's name. It will be sanitized so dont bother doing it
-function _M:init(savefile)
+-- @param coroutine if true the saveing will yield sometimes to let other code run
+function _M:init(savefile, coroutine)
 	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
 	self.save_dir = "/save/"..self.short_name.."/"
 	self.quickbirth_file = "/save/"..self.short_name..".quickbirth"
 	self.load_dir = "/tmp/loadsave/"
 
+	self.coroutine = coroutine
 	self.tables = {}
 	self.process = {}
 	self.loaded = {}
 	self.delayLoad = {}
 	_M.current_save = self
+end
+
+function _M:getCurrent()
+	return _M.current_save
+end
+function _M:setCurrent(save)
+	_M.current_save = save
 end
 
 --- Finishes up a savefile
@@ -93,17 +102,24 @@ function _M:saveObject(obj, zip)
 		self.tables[tbl] = self:getFileName(tbl)
 		zip:add(self:getFileName(tbl), tbl:save())
 		-- If run from a coroutine, we pause every object
---[[
-		if coroutine.running() then
+		if self.coroutine then
 			local coret = coroutine.yield()
 			if coret and type(coret) == "string" and coret == "cancel" then
 				print("[SAVE] abording")
 				break
 			end
 		end
-]]
 	end
 	return self.tables[obj]
+end
+
+--- Get a savename for a world
+function _M:nameSaveWorld(world)
+	return "world.teaw"
+end
+--- Get a savename for a world
+function _M:nameLoadWorld()
+	return "world.teaw"
 end
 
 --- Save the given world
@@ -119,7 +135,7 @@ function _M:saveWorld(world, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir.."world.teaw")
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveWorld(world))
 	self:saveObject(world, zip)
 	zip:close()
 
@@ -154,6 +170,15 @@ function _M:loadQuickBirth()
 	return nil
 end
 
+--- Get a savename for a game
+function _M:nameSaveGame(game)
+	return "game.teag"
+end
+--- Get a savename for a game
+function _M:nameLoadGame()
+	return "game.teag"
+end
+
 --- Save the given game
 function _M:saveGame(game, no_dialog)
 	collectgarbage("collect")
@@ -167,7 +192,7 @@ function _M:saveGame(game, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir.."game.teag")
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveGame(game))
 	self:saveObject(game, zip)
 	zip:close()
 
@@ -181,6 +206,15 @@ function _M:saveGame(game, no_dialog)
 	if not no_dialog then game:unregisterDialog(popup) end
 end
 
+--- Get a savename for a zone
+function _M:nameSaveZone(zone)
+	return ("zone-%s.teaz"):format(zone.short_name)
+end
+--- Get a savename for a zone
+function _M:nameLoadZone(zone)
+	return ("zone-%s.teaz"):format(zone)
+end
+
 --- Save a zone
 function _M:saveZone(zone, no_dialog)
 	fs.mkdir(self.save_dir)
@@ -192,11 +226,20 @@ function _M:saveZone(zone, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..("zone-%s.teaz"):format(zone.short_name))
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveZone(zone))
 	self:saveObject(zone, zip)
 	zip:close()
 
 	if not no_dialog then game:unregisterDialog(popup) end
+end
+
+--- Get a savename for a level
+function _M:nameSaveLevel(level)
+	return ("level-%s-%d.teal"):format(level.data.short_name, level.level)
+end
+--- Get a savename for a level
+function _M:nameLoadLevel(zone, level)
+	return ("level-%s-%d.teal"):format(zone, level)
 end
 
 --- Save a level
@@ -210,7 +253,7 @@ function _M:saveLevel(level, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..("level-%s-%d.teal"):format(level.data.short_name, level.level))
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveLevel(level))
 	self:saveObject(level, zip)
 	zip:close()
 
@@ -253,7 +296,7 @@ end
 
 --- Loads a world
 function _M:loadWorld()
-	local path = fs.getRealPath(self.save_dir.."world.teaw")
+	local path = fs.getRealPath(self.save_dir..self:nameLoadWorld())
 	if not path or path == "" then return nil, "no savefile" end
 
 	fs.mount(path, self.load_dir)
@@ -279,7 +322,7 @@ end
 
 --- Loads a game
 function _M:loadGame()
-	local path = fs.getRealPath(self.save_dir.."game.teag")
+	local path = fs.getRealPath(self.save_dir..self:nameLoadGame())
 	if not path or path == "" then return nil, "no savefile" end
 
 	fs.mount(path, self.load_dir)
@@ -305,7 +348,7 @@ end
 
 --- Loads a zone
 function _M:loadZone(zone)
-	local path = fs.getRealPath(self.save_dir..("zone-%s.teaz"):format(zone))
+	local path = fs.getRealPath(self.save_dir..self:nameLoadZone(zone))
 	if not path or path == "" then return false end
 
 	fs.mount(path, self.load_dir)
@@ -330,7 +373,7 @@ end
 
 --- Loads a level
 function _M:loadLevel(zone, level)
-	local path = fs.getRealPath(self.save_dir..("level-%s-%d.teal"):format(zone, level))
+	local path = fs.getRealPath(self.save_dir..self:nameLoadLevel(zone, level))
 	if not path or path == "" then return false end
 
 	fs.mount(path, self.load_dir)
@@ -355,5 +398,5 @@ end
 
 --- Checks for existence
 function _M:check()
-	return fs.exists(self.save_dir.."game.teag")
+	return fs.exists(self.save_dir..self:nameLoadGame())
 end

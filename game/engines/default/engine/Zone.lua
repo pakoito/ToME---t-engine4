@@ -76,9 +76,10 @@ end
 -- Saves the zone to a .teaz file if requested with persistant="zone" flag
 function _M:leave()
 	if type(self.persistant) == "string" and self.persistant == "zone" then
-		local save = Savefile.new(game.save_name)
-		save:saveZone(self)
-		save:close()
+		savefile_pipe:push(game.save_name, "zone", self)
+--		local save = Savefile.new(game.save_name)
+--		save:saveZone(self)
+--		save:close()
 	end
 	game.level = nil
 end
@@ -383,9 +384,10 @@ end
 function _M:load(dynamic)
 	local ret = true
 	-- Try to load from a savefile
-	local save = Savefile.new(game.save_name)
-	local data = save:loadZone(self.short_name)
-	save:close()
+	local data = savefile_pipe:doLoad(game.save_name, "zone", nil, self.short_name)
+--	local save = Savefile.new(game.save_name)
+--	local data = save:loadZone(self.short_name)
+--	save:close()
 
 	if not data and not dynamic then
 		local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
@@ -431,9 +433,10 @@ function _M:leaveLevel(no_close, lev, old_lev)
 			game.memory_levels[game.level.id] = game.level
 		elseif game.level.data.persistant then
 			print("[LEVEL] persisting to disk file", game.level.id)
-			local save = Savefile.new(game.save_name)
-			save:saveLevel(game.level)
-			save:close()
+			savefile_pipe:push(game.save_name, "level", game.level)
+--			local save = Savefile.new(game.save_name)
+--			save:saveLevel(game.level)
+--			save:close()
 		else
 			game.level:removed()
 		end
@@ -475,9 +478,11 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			level.map:recreate()
 		end
 	elseif level_data.persistant then
-		local save = Savefile.new(game.save_name)
-		level = save:loadLevel(self.short_name, lev)
-		save:close()
+		-- Try to load from a savefile
+		level = savefile_pipe:doLoad(game.save_name, "level", nil, self.short_name, lev)
+--		local save = Savefile.new(game.save_name)
+--		level = save:loadLevel(self.short_name, lev)
+--		save:close()
 
 		if level then
 			-- Setup the level in the game

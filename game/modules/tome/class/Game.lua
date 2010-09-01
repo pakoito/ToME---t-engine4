@@ -376,7 +376,7 @@ function _M:tick()
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
-	if self.paused and not self.saving then return true end
+	if self.paused and not savefile_pipe.saving then return true end
 end
 
 --- Called every game turns
@@ -764,11 +764,10 @@ end
 
 --- Requests the game to save
 function _M:saveGame()
-	local save = Savefile.new(self.save_name)
-	save:saveGame(self)
-	save:close()
+	-- savefile_pipe is created as a global by the engine
+	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
-	self.log("Saved game.")
+	self.log("Saving game...")
 end
 
 function _M:setAllowedBuild(what, notify)
