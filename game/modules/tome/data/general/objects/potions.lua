@@ -284,3 +284,16 @@ newEntity{ base = "BASE_POTION",
 		return "destroy", true
 	end}
 }
+
+newEntity{ base = "BASE_POTION",
+	name = "potion of free action",
+	color = colors.YELLOW,
+	level_range = {15, 50},
+	rarity = 6,
+	cost = 7,
+
+	use_simple = { name="resist stuns, dazes and pinning", use = function(self, who)
+		who:setEffect(who.EFF_FREE_ACTION, 4 + math.floor(who:getMag(3)), {power=1})
+		return "destroy", true
+	end}
+}

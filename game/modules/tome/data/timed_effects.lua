@@ -1041,3 +1041,23 @@ newEffect{
 		self:removeTemporaryValue("continuum_destabilization", eff.effid)
 	end,
 }
+
+newEffect{
+	name = "FREE_ACTION",
+	desc = "Free Action",
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=1 },
+	on_gain = function(self, err) return "#Target# is moving freely .", "+Free Action" end,
+	on_lose = function(self, err) return "#Target# is moving less freely.", "-Free Action" end,
+	activate = function(self, eff)
+		eff.stun = self:addTemporaryValue("stun_immune", eff.power)
+		eff.daze = self:addTemporaryValue("daze_immune", eff.power)
+		eff.pin = self:addTemporaryValue("pin_immune", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stun_immune", eff.stun)
+		self:removeTemporaryValue("daze_immune", eff.daze)
+		self:removeTemporaryValue("pin_immune", eff.pin)
+	end,
+}
