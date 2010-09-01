@@ -194,7 +194,7 @@ function _M:tick()
 		-- engine.GameEnergyBased.tick(self)
 	end
 	-- When paused (waiting for player input) we return true: this means we wont be called again until an event wakes us
-	if game.paused then return true end
+	if self.paused and not savefile_pipe.saving then return true end
 end
 
 --- Called every game turns
