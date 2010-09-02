@@ -1015,6 +1015,66 @@ newEffect{
 }
 
 newEffect{
+	name = "CURSE_IMPOTENCE",
+	desc = "Curse of Impotence",
+	type = "curse",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is cursed.", "+Curse" end,
+	on_lose = function(self, err) return "#Target# is no longer cursed.", "-Curse" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_damage", {
+			all = -eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "CURSE_DEFENSELESSNESS",
+	desc = "Curse of Defenselessness",
+	type = "curse",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is cursed.", "+Curse" end,
+	on_lose = function(self, err) return "#Target# is no longer cursed.", "-Curse" end,
+	activate = function(self, eff)
+		eff.def = self:addTemporaryValue("combat_def", eff.power)
+		eff.mental = self:addTemporaryValue("combat_mentalresist", eff.power)
+		eff.spell = self:addTemporaryValue("combat_spellresist", eff.power)
+		eff.physical = self:addTemporaryValue("combat_physresist", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_def", eff.def)
+		self:removeTemporaryValue("combat_mentalresist", eff.mental)
+		self:removeTemporaryValue("combat_spellresist", eff.spell)
+		self:removeTemporaryValue("combat_physresist", eff.physical)
+	end,
+}
+
+newEffect{
+	name = "CURSE_DEATH",
+	desc = "Curse of Death",
+	type = "curse",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is cursed.", "+Curse" end,
+	on_lose = function(self, err) return "#Target# is no longer cursed.", "-Curse" end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.DARKNESS).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("life_regen", -self.life_regen)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("life_regen", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "CONTINUUM_DESTABILIZATION",
 	desc = "Continuum Destabilization",
 	type = "other", -- Type "other" so that nothing can dispel it

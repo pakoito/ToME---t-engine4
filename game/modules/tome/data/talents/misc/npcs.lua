@@ -951,31 +951,3 @@ newTalent{
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 170), 20 + self:getTalentLevel(t) * 10, self:combatTalentSpellDamage(t, 10, 220))
 	end,
 }
-
-newTalent{
-	name = "Curse of Vulnerability",
-	type = {"corruption/other", 1},
-	points = 5,
-	cooldown = 20,
-	vim = 20,
-	range = 20,
-	random_ego = "utility",
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_CURSE_VULNERABILITY, 10, {power=self:combatTalentSpellDamage(t, 10, 85)})
-			end
-		end)
-		game:playSoundNear(self, "talents/slime")
-		return true
-	end,
-	info = function(self)
-		return ([[Curses your target,
-		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 85))
-	end,
-}

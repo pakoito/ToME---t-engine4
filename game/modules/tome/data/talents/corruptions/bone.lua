@@ -25,6 +25,7 @@ newTalent{
 	vim = 13,
 	cooldown = 4,
 	range = 20,
+	random_ego = "attack",
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -89,6 +90,7 @@ newTalent{
 	points = 5,
 	vim = 25,
 	cooldown = 12,
+	random_ego = "attack",
 	range = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="ball", radius=self:getTalentRange(t), friendlyfire=false}

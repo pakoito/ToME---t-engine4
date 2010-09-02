@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	vim = 8,
 	cooldown = 3,
+	random_ego = "attack",
 	range = function(self, t) return 5 + math.floor(self:getTalentLevel(t) * 1.3) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}

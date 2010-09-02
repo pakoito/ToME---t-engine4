@@ -36,8 +36,6 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
-		-- All mages are of angolwen faction
-		faction = "angolwen",
 		mana_regen = 0.5,
 		mana_rating = 7,
 		resolvers.generic(function(e)
@@ -79,6 +77,8 @@ newBirthDescriptor{
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
 	copy = {
+		-- All mages are of angolwen faction
+		faction = "angolwen",
 		max_life = 90,
 		life_rating = 10,
 		resolvers.equip{ id=true,
@@ -182,6 +182,8 @@ newBirthDescriptor{
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
 	copy = {
+		-- All mages are of angolwen faction
+		faction = "angolwen",
 		max_life = 90,
 		life_rating = 10,
 		resolvers.equip{ id=true,
@@ -227,6 +229,8 @@ newBirthDescriptor{
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
 	copy = {
+		-- All mages are of angolwen faction
+		faction = "angolwen",
 		max_life = 90,
 		life_rating = 10,
 		resolvers.equip{ id=true,
@@ -268,6 +272,8 @@ newBirthDescriptor{
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
 	copy = {
+		-- All mages are of angolwen faction
+		faction = "angolwen",
 		max_life = 90,
 		life_rating = 10,
 		resolvers.equip{ id=true,
