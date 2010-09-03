@@ -36,7 +36,7 @@ end
 function _M:tick()
 	local val = rng.float(0,1)
 	for i = 1,self.max_rate - 1 do
-		if val < rng.poissonProcess(i, self.turn_scale, 0.25) then
+		if val < rng.poissonProcess(i, self.turn_scale, 0.1) then
 			self:generateOne()
 		else
 			break

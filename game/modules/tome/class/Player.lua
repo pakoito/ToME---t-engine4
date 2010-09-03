@@ -590,21 +590,7 @@ end
 function _M:useOrbPortal(portal)
 	if portal.special then portal:special(self) return end
 
-	local wait = function()
-		local co = coroutine.running()
-		local ok = false
-		self:restInit(20, "using the portal", "used the poral", function(cnt, max)
-			if cnt > max then ok = true end
-			coroutine.resume(co)
-		end)
-		coroutine.yield()
-		if not ok then
-			game.logPlayer(self, "You have been interrupted!")
-			return false
-		end
-		return true
-	end
-	if not wait() then return end
+	if spotHostiles(self) then game.logPlayer(self, "You can not use the Orb with foes in sight.") end
 
 	if portal.teleport_level then
 		local x, y = util.findFreeGrid(portal.teleport_level.x, portal.teleport_level.y, 2, true, {[Map.ACTOR]=true})
