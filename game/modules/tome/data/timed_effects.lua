@@ -1169,3 +1169,63 @@ newEffect{
 		if eff.armorid then self:removeTemporaryValue("combat_armor", eff.armorid) end
 	end,
 }
+
+newEffect{
+	name = "PACIFICATION_HEX",
+	desc = "Pacification Hex",
+	type = "hex",
+	status = "detrimental",
+	parameters = {chance=10},
+	on_gain = function(self, err) return "#Target# is hexed!", "+Pacification Hex" end,
+	on_lose = function(self, err) return "#Target# is free from the hex.", "-Pacification Hex" end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		if not self:hasEffect(self.EFF_DAZED) and rng.percent(eff.chance) then self:setEffect(self.EFF_DAZED, 3, {}) end
+	end,
+	activate = function(self, eff)
+		self:setEffect(self.EFF_DAZED, 3, {})
+	end,
+}
+
+newEffect{
+	name = "BURNING_HEX",
+	desc = "Burning Hex",
+	type = "hex",
+	status = "detrimental",
+	parameters = {dam=10},
+	on_gain = function(self, err) return "#Target# is hexed!", "+Burning Hex" end,
+	on_lose = function(self, err) return "#Target# is free from the hex.", "-Burning Hex" end,
+}
+
+newEffect{
+	name = "EMPATHIC_HEX",
+	desc = "Empathic Hex",
+	type = "hex",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is hexed.", "+Empathic Hex" end,
+	on_lose = function(self, err) return "#Target# is free from the hex.", "-Empathic hex" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("martyrdom", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("martyrdom", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "DOMINATION_HEX",
+	desc = "Domination Hex",
+	type = "hex",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is hexed.", "+Domination Hex" end,
+	on_lose = function(self, err) return "#Target# is free from the hex.", "-Domination hex" end,
+	activate = function(self, eff)
+		eff.olf_faction = self.faction
+		self.faction = eff.faction
+	end,
+	deactivate = function(self, eff)
+		self.faction = eff.olf_faction
+	end,
+}

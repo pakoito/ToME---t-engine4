@@ -23,8 +23,8 @@ newTalent{
 	require = corrs_req1,
 	points = 5,
 	cooldown = 20,
-	vim = 20,
-	range = 20,
+	vim = 30,
+	range = 30,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -33,15 +33,15 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_CURSE_DEFENSELESSNESS, 10, {power=self:combatTalentSpellDamage(t, 30, 60)})
+				target:setEffect(target.EFF_PACIFICATION_HEX, 20, {chance=self:combatTalentSpellDamage(t, 30, 50)})
 			end
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, decreasing its defense and saves by %d.
-		The defense and saves will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 30))
+		return ([[Hexes your target, dazing it for 3 turns and giving %d%% chance to daze it again each turn.
+		The chance will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 30, 50))
 	end,
 }
 
@@ -51,8 +51,8 @@ newTalent{
 	require = corrs_req2,
 	points = 5,
 	cooldown = 20,
-	vim = 20,
-	range = 20,
+	vim = 30,
+	range = 30,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -61,15 +61,15 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_CURSE_IMPOTENCE, 10, {power=self:combatTalentSpellDamage(t, 10, 30)})
+				target:setEffect(target.EFF_BURNING_HEX, 20, {src=self, dam=self:combatTalentSpellDamage(t, 4, 90)})
 			end
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, decreasing all damage done by %d%%.
-		The damage will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 30))
+		return ([[Hexes your target, each time it uses a ressource(stamina, mana, vim, ...) it takes %0.2f fire damage.
+		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 4, 90))
 	end,
 }
 
@@ -79,8 +79,8 @@ newTalent{
 	require = corrs_req3,
 	points = 5,
 	cooldown = 20,
-	vim = 20,
-	range = 20,
+	vim = 30,
+	range = 30,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -89,15 +89,15 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_CURSE_DEATH, 10, {src=self, dam=self:combatTalentSpellDamage(t, 10, 70)})
+				target:setEffect(target.EFF_EMPATHIC_HEX, 20, {power=self:combatTalentSpellDamage(t, 4, 20)})
 			end
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, stopping any natural healing and dealing %0.2f darkness damage each turn.
-		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 70))
+		return ([[Hexes your target, each time it does damage it takes %d%% of the same damage.
+		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 4, 20))
 	end,
 }
 
@@ -107,8 +107,8 @@ newTalent{
 	require = corrs_req4,
 	points = 5,
 	cooldown = 20,
-	vim = 20,
-	range = 20,
+	vim = 30,
+	range = 30,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -116,15 +116,14 @@ newTalent{
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_CURSE_VULNERABILITY, 10, {power=self:combatTalentSpellDamage(t, 10, 60)})
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 25) then
+				target:setEffect(target.EFF_DOMINATION_HEX, 2 + self:getTalentLevel(t), {faction=self.faction})
 			end
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, decreasing all its resistances by %d%%.
-		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 60))
+		return ([[Hexes your target, forcing it to be your thrall for %d turns.]]):format(2 + self:getTalentLevel(t))
 	end,
 }

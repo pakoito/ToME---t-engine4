@@ -1005,62 +1005,63 @@ function _M:postUseTalent(ab, ret)
 		end
 	end
 
+	local trigger = false
 	if ab.mode == "sustained" then
 		if not self:isTalentActive(ab.id) then
 			if ab.sustain_mana then
-				self.max_mana = self.max_mana - ab.sustain_mana
+				trigger = true; self.max_mana = self.max_mana - ab.sustain_mana
 			end
 			if ab.sustain_stamina then
-				self.max_stamina = self.max_stamina - ab.sustain_stamina
+				trigger = true; self.max_stamina = self.max_stamina - ab.sustain_stamina
 			end
 			if ab.sustain_vim then
-				self.max_vim = self.max_vim - ab.sustain_vim
+				trigger = true; self.max_vim = self.max_vim - ab.sustain_vim
 			end
 			if ab.sustain_equilibrium then
 				self:incEquilibrium(ab.sustain_equilibrium)
 			end
 			if ab.sustain_positive then
-				self.max_positive = self.max_positive - ab.sustain_positive
+				trigger = true; self.max_positive = self.max_positive - ab.sustain_positive
 			end
 			if ab.sustain_negative then
-				self.max_negative = self.max_negative - ab.sustain_negative
+				trigger = true; self.max_negative = self.max_negative - ab.sustain_negative
 			end
 		else
 			if ab.sustain_mana then
-				self.max_mana = self.max_mana + ab.sustain_mana
+				trigger = true; self.max_mana = self.max_mana + ab.sustain_mana
 			end
 			if ab.sustain_stamina then
-				self.max_stamina = self.max_stamina + ab.sustain_stamina
+				trigger = true; self.max_stamina = self.max_stamina + ab.sustain_stamina
 			end
 			if ab.sustain_vim then
-				self.max_vim = self.max_vim + ab.sustain_vim
+				trigger = true; self.max_vim = self.max_vim + ab.sustain_vim
 			end
 			if ab.sustain_equilibrium then
 				self:incEquilibrium(-ab.sustain_equilibrium)
 			end
 			if ab.sustain_positive then
-				self.max_positive = self.max_positive + ab.sustain_positive
+				trigger = true; self.max_positive = self.max_positive + ab.sustain_positive
 			end
 			if ab.sustain_negative then
-				self.max_negative = self.max_negative + ab.sustain_negative
+				trigger = true; self.max_negative = self.max_negative + ab.sustain_negative
 			end
 		end
 	else
 		if ab.mana then
-			self:incMana(-ab.mana * (100 + self.fatigue) / 100)
+			trigger = true; self:incMana(-ab.mana * (100 + self.fatigue) / 100)
 		end
 		if ab.stamina then
-			self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
+			trigger = true; self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
 		end
 		-- Vim is not affected by fatigue
 		if ab.vim then
-			self:incVim(-ab.vim)
+			trigger = true; self:incVim(-ab.vim)
 		end
 		if ab.positive then
-			self:incPositive(-ab.positive * (100 + self.fatigue) / 100)
+			trigger = true; self:incPositive(-ab.positive * (100 + self.fatigue) / 100)
 		end
 		if ab.negative then
-			self:incNegative(-ab.negative * (100 + self.fatigue) / 100)
+			trigger = true; self:incNegative(-ab.negative * (100 + self.fatigue) / 100)
 		end
 		-- Equilibrium is not affected by fatigue
 		if ab.equilibrium then
@@ -1068,6 +1069,10 @@ function _M:postUseTalent(ab, ret)
 		end
 	end
 
+	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
+		local p = self:hasEffect(self.EFF_BURNING_HEX)
+		DamageType:get(DamageType.FIRE).projector(p.src, self.x, self.y, DamageType.FIRE, p.dam)
+	end
 
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT then self:breakStealth() end
