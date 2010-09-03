@@ -161,6 +161,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Entombs yourself in a wall of stone for %d turns.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
+		return ([[Entombs yourself in a wall of stone for %d turns.
+		At level 4 it becomes targettable.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }
