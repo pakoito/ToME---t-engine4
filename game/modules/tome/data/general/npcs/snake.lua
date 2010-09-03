@@ -39,7 +39,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
-	name = "large brown snake", color=colors.UMBER,
+	name = "large brown snake", color=colors.UMBER, image="npc/umber-snake.png",
 	desc = [[This large snake hisses at you, angry at being disturbed.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -49,7 +49,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
-	name = "large white snake", color=colors.WHITE,
+	name = "large white snake", color=colors.WHITE, image="npc/white-snake.png",
 	desc = [[This large snake hisses at you, angry at being disturbed.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
-	name = "copperhead snake", color=colors.SALMON,
+	name = "copperhead snake", color=colors.SALMON, image="npc/salmon-snake.png",
 	desc = [[It has a copper head and sharp venomous fangs.]],
 	level_range = {2, nil}, exp_worth = 1,
 	rarity = 1,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
-	name = "rattlesnake", color=colors.FIREBRICK,
+	name = "rattlesnake", color=colors.FIREBRICK, image="npc/firebrick-snake.png",
 	desc = [[As you approach, the snake coils up and rattles its tail threateningly.]],
 	level_range = {4, nil}, exp_worth = 1,
 	rarity = 1,
@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
-	name = "king cobra", color=colors.GREEN,
+	name = "king cobra", color=colors.GREEN, image="npc/green-snake.png",
 	desc = [[It is a large snake with a hooded face.]],
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 4,
@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
-	name = "black mamba", color=colors.DARK_GREY,
+	name = "black mamba", color=colors.DARK_GREY, image="npc/darkgrey-snake.png",
 	desc = [[It has glistening black skin, a sleek body, and highly venomous fangs.]],
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 4,
@@ -107,7 +107,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
-	name = "anaconda", color=colors.YELLOW_GREEN,
+	name = "anaconda", color=colors.YELLOW_GREEN, image="npc/yellow-green-snake.png",
 	desc = [[You recoil in fear as you notice this huge, 10 meter long snake.  It seeks to crush the life out of you.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 5,
