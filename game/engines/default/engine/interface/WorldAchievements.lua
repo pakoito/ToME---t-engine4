@@ -89,6 +89,7 @@ function _M:gainPersonalAchievement(silent, id, src, ...)
 		game.log("#LIGHT_GREEN#Personal New Achievement: %s!", a.name)
 		Dialog:simplePopup("Personal New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
 	end
+	if a.on_gain then a:on_gain(src, true) end
 end
 
 --- Gain an achievement
@@ -125,6 +126,8 @@ function _M:gainAchievement(id, src, ...)
 	profile:saveModuleProfile("achievement."..id, self.achieved[id])
 	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
 	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
+
+	if a.on_gain then a:on_gain(src) end
 end
 
 --- Format an achievement source

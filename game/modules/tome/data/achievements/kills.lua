@@ -46,3 +46,18 @@ newAchievement{
 		end
 	end
 }
+newAchievement{
+	name = "Reaver",
+	desc = [[Killed 1000 humanoids]],
+	mode = "player",
+	can_gain = function(self, who, target)
+		if target.type == "humanoid" then
+			self.nb = (self.nb or 0) + 500
+			if self.nb >= 1000 then return true end
+		end
+	end,
+	on_gain = function(_, src, personal)
+		game:setAllowedBuild("corrupter")
+		game:setAllowedBuild("corrupter_reaver", true)
+	end,
+}

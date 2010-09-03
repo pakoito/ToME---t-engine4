@@ -659,6 +659,7 @@ function _M:die(src)
 		if math.floor(p.life) <= 1 and not p.dead then world:gainAchievement("THAT_WAS_CLOSE", p) end
 		world:gainAchievement("EXTERMINATOR", p, self)
 		world:gainAchievement("PEST_CONTROL", p, self)
+		world:gainAchievement("REAVER", p, self)
 
 		if self.unique then
 			p:registerUniqueKilled(self)

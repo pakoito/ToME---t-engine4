@@ -42,10 +42,10 @@ newBirthDescriptor{
 	name = "Reaver",
 	desc = {
 		"A Reaver is a terrible foe, wielding two weapons while charging his foes.",
-		"They can harness the blight of evil, infecting their foes with terrible contagious diseases while crushing their skulls.",
+		"They can harness the blight of evil, infecting their foes with terrible contagious diseases while crushing their skulls with devastating combat techniques.",
 		"Their most important stats are: Strength and Magic",
 	},
-	stats = { str=5, mag=3, dex=1, },
+	stats = { str=4, mag=4, dex=1, },
 	talents_types = {
 		["technique/combat-training"]={true, 0.3},
 		["cunning/survival"]={false, 0.1},

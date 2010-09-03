@@ -30,6 +30,20 @@ newTalent{
 			game.logPlayer(self, "Doing this would kill you.")
 			return
 		end
+
+		local seen = false
+		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
+		core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+			local actor = game.level.map(x, y, game.level.map.ACTOR)
+			if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then
+				seen = {x=x,y=y,actor=actor}
+			end
+		end, nil)
+		if not seen then
+			game.logPlayer(self, "There is no foes in sight.")
+			return
+		end
+
 		self:incVim(self:combatTalentSpellDamage(t, 5, 200))
 		self:takeHit(self.max_life * 0.2, self)
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -37,6 +51,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Sacrifices 20%% of your life to restore %d vim.
+		This only works if there is at least one foe in sight.
 		The effect will increase with your Magic stat.]]):
 		format(self:combatTalentSpellDamage(t, 5, 200))
 	end,
