@@ -203,7 +203,7 @@ function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 		if lx < 0 or lx >= game.level.map.w or ly < 0 or ly >= game.level.map.h then return lx, ly, false, true end
 
 		-- Deam damage: beam
-		if typ.line then return lx, ly, true, false end
+		if typ.line and (lx ~= tgtx or ly ~= tgty) then return lx, ly, true, false end
 	end
 	-- Ok if we are at the end
 	if (not lx and not ly) then return lx, ly, false, true end
