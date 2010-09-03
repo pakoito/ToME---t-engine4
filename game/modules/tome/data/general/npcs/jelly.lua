@@ -44,7 +44,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
-	name = "green jelly", color=colors.GREEN,
+	name = "green jelly", color=colors.GREEN, image="npc/jelly-green.png",
 	desc = "A strange green blob on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
@@ -53,7 +53,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
-	name = "red jelly", color=colors.RED,
+	name = "red jelly", color=colors.RED, image="npc/jelly-red.png",
 	desc = "A strange red blob on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
-	name = "blue jelly", color=colors.BLUE,
+	name = "blue jelly", color=colors.BLUE, image="npc/jelly-blue.png",
 	desc = "A strange blue blob on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
-	name = "white jelly", color=colors.WHITE,
+	name = "white jelly", color=colors.WHITE, image="npc/jelly-white.png",
 	desc = "A strange white blob on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
@@ -80,7 +80,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
-	name = "yellow jelly", color=colors.YELLOW,
+	name = "yellow jelly", color=colors.YELLOW, image="npc/jelly-yellow.png",
 	desc = "A strange yellow blob on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
@@ -89,7 +89,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
-	name = "black jelly", color=colors.DARK_GREY,
+	name = "black jelly", color=colors.DARK_GREY, image="npc/jelly-darkgrey.png",
 	desc = "A strange black blob on the dungeon floor.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,

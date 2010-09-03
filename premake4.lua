@@ -7,6 +7,11 @@ newoption {
 		{ "jitx86",	"LuaJIT x86" }
 	}
 }
+newoption {
+	trigger     = "force32bits",
+	value       = "VM_Type",
+	description = "Forces compilation in 32bits mode, allowing to use the lua jit",
+}
 
 _OPTIONS.lua = _OPTIONS.lua or "default"
 
@@ -14,6 +19,7 @@ solution "TEngine"
 	configurations { "Debug", "Release" }
 	objdir "obj"
 	defines {"GLEW_STATIC"}
+	if _OPTIONS.force32bits then buildoptions{"-m32"} linkoptions{"-m32"} libdirs{"/usr/lib32"} end
 
 	includedirs {
 		"src",
