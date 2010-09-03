@@ -27,7 +27,7 @@ end
 if not game.player:isQuestStatus("maglor", engine.Quest.COMPLETED, "maglor-story") then
 
 newChat{ id="welcome",
-	text = [[What is this? Why do you come in my sanctuary and slay its guardians?
+	text = [[What is this? Why have you entered my sanctuary and slain its guardians?
 Speak or die, for I am Maglor, son of Fëanor and I shall guard the Silmaril for all of eternity!]],
 	answers = {
 		{"[attack]", action=attack("So be it... Die now!")},
@@ -37,30 +37,30 @@ Speak or die, for I am Maglor, son of Fëanor and I shall guard the Silmaril for
 }
 
 newChat{ id="quest",
-	text = [[I see, so the dragon sent you. He told you I am insane I assume?
-But then who is evil, me that fullfills a sacred oath, secluded in this sanctuary, or you that comes in to kill me, destroying my friends and planning to take the Silmaril?
+	text = [[I see, so the dragon sent you. He told you I am insane, I assume?
+But which of us is truely evil?  Myself, fulfilling a sacred oath, secluded in this sanctuary, or you, who comes here to kill me, destroying my friends and planning to take the Silmaril?
 Who is the insane one?]],
 	answers = {
-		{"Your feeble attemp to sway me away from the side of good will not work. Pay for you sins!", action=attack("If you refuse to see reason, you leave me no choice!")},
-		{"Your words are... disturbing. Why should I spare you?", jump="givequest"},
+		{"Your feeble attemp to sway me from the side of good will not work. Pay for you sins!", action=attack("If you refuse to see reason, you leave me no choice!")},
+		{"Your words are ... disturbing. Why should I spare you?", jump="givequest"},
 	}
 }
 
 newChat{ id="givequest",
 	text = [[Spare me?#LIGHT_GREEN#*He laugths.*#WHITE#
-Do not presume of your power so hastily!
-Yet you may want to hear my story. As I was drowning Ossë came to me, he told me nobody should ever see the Silmaril again, but he did not want to destroy it for it held the last shininh light of the first age.
-So he made a pact with me, he would save me and provide me with a way to fullfil my oath, by being its guardian, at the bottom of the sea, for all eternity.
-Recently that water dragon that sent you started sending "agents" to retrieve the jewel, I can only imagine his goals, but they are clearly not peaceful.
+Do not be so hasty to assume YOU are in a position to offer mercy to ME!
+Yet I shall tell you my storyç. As I was drowning, Ossë came to me. He told me that nobody should ever see the Silmaril again, but he did not want to destroy it for it held the last shining light of the First Age.
+So he made a pact with me: he would save me and allow to fullfil my oath by being its guardian, at the bottom of the sea, for all eternity.
+Recently, that water dragon that sent you here started sending "agents" to retrieve the jewel. I can only imagine his goals, but they are clearly not peaceful.
 The Silmaril shall never leave this sanctuary!]],
 	answers = {
-		{"You do not sound mad to me, could Ukllmswwik have lied?", jump="portal_back", action=function(npc, player) player:setQuestStatus("maglor", engine.Quest.COMPLETED, "maglor-story") end},
-		{"I will not be deceived by your lies, I will make your pay for your victims!", action=attack("As you wish, it did not have to come to it...")},
+		{"You do not sound mad to me ... could Ukllmswwik have lied?", jump="portal_back", action=function(npc, player) player:setQuestStatus("maglor", engine.Quest.COMPLETED, "maglor-story") end},
+		{"I will not be deceived by your lies! I will make your pay for your victims!", action=attack("As you wish. It did not have to come to it...")},
 	}
 }
 
 newChat{ id="portal_back",
-	text = [[Use this portal, it will bring you back to his cave, ask him the truth.]],
+	text = [[Use this portal, it will bring you back to his cave; ask him the truth.]],
 	answers = {
 		{"I will make him pay for his treachery.", action=function(npc, player) player:hasQuest("maglor"):portal_back() end},
 	}
@@ -71,7 +71,7 @@ newChat{ id="portal_back",
 -----------------------------------------------------------------------
 else
 newChat{ id="welcome",
-	text = [[Thanks for listening to me.]],
+	text = [[Thank you for listening to me.]],
 	answers = {
 		{"[attack]", action=attack("So be it... Die now!")},
 		{"I want the Silmaril!", action=attack("The Oath shall be fullfilled once more...")},

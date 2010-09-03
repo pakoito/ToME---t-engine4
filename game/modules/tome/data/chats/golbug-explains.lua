@@ -19,10 +19,10 @@
 
 newChat{ id="welcome",
 	text = [[#VIOLET#*As you open the door you notice a huge orc in the distance, covered in both flames and ice.*#LAST#
-@playerdescriptor.race@! You should never have come, your doom awaits!
-The Orc Pride will never yield to anybody, they have their precious and there is nothing you can do.]],
+@playerdescriptor.race@! You should never have come! Your doom awaits!
+The Orc Pride will never yield to anybody! They have their precious and there is nothing you can do.]],
 	answers = {
-		{"The Orc Pride obeys to a master? Yes .. 'pride' indeed!", jump="mock"},
+		{"The Orc Pride obeys a master? I see ... 'pride' indeed!", jump="mock"},
 		{"#LIGHT_GREEN#[Attack]"},
 	}
 }

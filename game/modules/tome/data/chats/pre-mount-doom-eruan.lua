@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[@playername@, I am part of a group of Sun Paladins sent by Aeryn, we arrived here tracking the orcs.
-They have gone through that portal, a few of my friends were pulled in with them.
-Earlier we captured an orc, he revealed the staff you seek is to be used to absorb the power of a remote place for some dark rituals.
+	text = [[@playername@, I am one of a party of Sun Paladins sent by Aeryn. We arrived here tracking the orcs.
+They have gone through the portal, and a few of my friends were pulled in with them.
+We captured an orc earlier.  He revealed that the staff you seek is to be used to absorb the power of a remote place for dark rituals.
 You must traverse this portal, if you have any means to, and stop the orcs.]],
 	answers = {
 		{"I think I can use the portal, do not worry!"},

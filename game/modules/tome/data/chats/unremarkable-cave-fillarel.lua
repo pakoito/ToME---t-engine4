@@ -18,18 +18,18 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Thanks @playername@, I hate to admit it, but you saved my life.]],
+	text = [[Thank you @playername@, I hate to admit it, but you saved my life.]],
 	answers = {
-		{"At your service. But may I ask what where you doing in this dark place?", jump="what"},
-		{"It was only natural my lady."},
+		{"At your service. But may I ask what you were doing in this dark place?", jump="what"},
+		{"It was only natural, my lady."},
 	}
 }
 
 newChat{ id="what",
-	text = [[I am an Anorithil, a mage of the Sun and Moon, we fight all that is evil. I was there with a group of sun paladins, we came from the Gates of Morning to the east.
-They got ... slaughtered by orcs and I nearly died too, thank you again for your help.]],
+	text = [[I am an Anorithil, a mage of the Sun and Moon; we fight all that is evil. I was with a group of sun paladins; we came from the Gates of Morning to the east.
+My companions were ... were slaughtered by orcs, and I nearly died as well. Thank you again for your help.]],
 	answers = {
-		{"It was only natural my lady.", action=function(npc, player) game:setAllowedBuild("divine") game:setAllowedBuild("divine_anorithil", true) end},
+		{"It was only natural, my lady.", action=function(npc, player) game:setAllowedBuild("divine") game:setAllowedBuild("divine_anorithil", true) end},
 	}
 }
 

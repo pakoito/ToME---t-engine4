@@ -39,7 +39,7 @@ newChat{ id="welcome",
 			npc.store:interact(player)
 		end},
 		{"I want to recharge some of my equipment.", action=recharge},
-		{"Sorry I have to go!"},
+		{"Sorry, I have to go!"},
 	}
 }
 

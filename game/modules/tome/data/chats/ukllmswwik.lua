@@ -30,31 +30,31 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*@npcname@ deep voice booms through the level.*#WHITE#
 This is my domain, and I do not take kindly to intruders. What is your purpose here?]],
 	answers = {
-		{"I am here to kill you and take your treasures! Die bastard fish!", action=attack("DIE!")},
+		{"I am here to kill you and take your treasures! Die, damned fish!", action=attack("DIE!")},
 		{"I did not mean to intrude, I shall leave now.", jump="quest"},
 	}
 }
 
 newChat{ id="quest",
-	text = [[Wait! You seem powerful, let me tell you a story first.
-A very long time ago, at the very end of the first age of the world, the Silmarils where recoverd from the grasp of Morgoth in the War of the Wrath.
-Soon after they were stolen by the two remaining sons of Fëanor, Maedhros and Maglor, therefore fullfilling their oath.
-But they found they could no longer bear to wield them, they burned their flesh for their sins.
-Maedhros thrust himself in a fiery chasm along with his Silmaril and Maglor threw his into the depths of the ocean, wandering the shores endlessly.
-However after a while he regreted his act and dived to recover it, he had no chance of success yet he prevailed.
-Ossë helped him, granting him the ability to live under the ocean to guard the Silmaril. There he remained for all the ages of the world.
-But something happened recently, Maglor turned mad and now he looks upon all intelligent water life as a threat, which includes myself.
-I can not leave this sanctuary but maybe you could help me?
-After all this would be a gesture of kindness to end his madness and the Silmaril would gain a new, powerful, guardian.]],
+	text = [[Wait! You seem to worthy, so let me tell you a story.
+A very long time ago, at the very end of the First Age of the world, the Silmarils were recoverd from the grasp of Morgoth in the War of Wrath.
+Soon afterwards, they were stolen by the two remaining sons of Fëanor, Maedhros and Maglor, in order to fulfill their oath.
+But they found they could no longer bear to wield them; the jewels burned their flesh for their sins.
+Maedhros thrust himself in a fiery chasm along with his Silmaril and Maglor threw his into the depths of the ocean while wandering the shores endlessly.
+However, after a while, he regreted his act and dived in to recover it. It seemed an impossible task, yet he managed to recover it.
+Ossë helped him, granting him the ability to live under the ocean in order to guard the Silmaril. There he remained for all the ages of the world.
+But something happened recently: Maglor has gone mad and now he looks upon all intelligent water life as a threat, and that includes myself.
+I can not leave this sanctuary, but perhaps you could help me?
+After all, it would be an act of mercy to end his madness and the Silmaril would gain a new, powerful guardian.]],
 	answers = {
-		{"I still rather kill you and take your treasure!", action=attack("DIE!")},
+		{"I would still rather kill you and take your treasure!", action=attack("DIE!")},
 		{"I shall do as you say, but how do I find him?", jump="givequest"},
-		{"This seems... unwise, I must refuse sorry.", action=function(npc, player) player:grantQuest("maglor") player:setQuestStatus("maglor", engine.Quest.COMPLETED, "drake-story") player:setQuestStatus("maglor", engine.Quest.FAILED) end},
+		{"That seems ... unwise. My apologies, but I must refuse.", action=function(npc, player) player:grantQuest("maglor") player:setQuestStatus("maglor", engine.Quest.COMPLETED, "drake-story") player:setQuestStatus("maglor", engine.Quest.FAILED) end},
 	}
 }
 
 newChat{ id="givequest",
-	text = [[I can open a portal to his lair, far into the western sea, but be warned, this is one way only, I can not get you back you will have to find your own way.]],
+	text = [[I can open a portal to his lair, far away in the western sea, but be warned: this is one-way only. I can not bring you back. You will have to find your own way.]],
 	answers = {
 		{"I will.", action=function(npc, player) player:grantQuest("maglor") player:setQuestStatus("maglor", engine.Quest.COMPLETED, "drake-story") end},
 		{"This is a death trap! Goodbye.", action=function(npc, player) player:grantQuest("maglor") player:setQuestStatus("maglor", engine.Quest.COMPLETED, "drake-story") player:setQuestStatus("maglor", engine.Quest.FAILED) end},
@@ -70,9 +70,9 @@ newChat{ id="welcome",
 	text = [[Yes?]],
 	answers = {
 		{"[attack]", action=attack("TREACHERY!")},
-		{"I want your treasures, water beast!", action=attack("Oh, is it so? Well, EARN IT !")},
+		{"I want your treasures, water beast!", action=attack("Oh, is that so? Well, COME GET IT !")},
 		{"I spoke with Maglor, he did not seem hostile, or mad.", jump="maglor_friend", cond=function(npc, player) return player:isQuestStatus("maglor", engine.Quest.COMPLETED, "maglor-story") and not player:isQuestStatus("maglor", engine.Quest.COMPLETED, "kill-maglor") end},
-		{"Farewell, Dragon."},
+		{"Farewell, dragon."},
 	}
 }
 
@@ -80,13 +80,13 @@ newChat{ id="maglor_friend",
 	text = [[#LIGHT_GREEN#*@npcname@ roars!*#WHITE# You listen to the lies of this mad elf!
 You are corrupted! TAINTED!]],
 	answers = {
-		{"[attack]", action=attack("DO NOT MESS IN THE AFFAIRS OF DRAGONS!")},
-		{"#LIGHT_GREEN#*Shake your head.*#LAST#He swayed my mind! Please I am not your ennemy.", jump="last_chance", cond=function(npc, player) return rng.percent(30 + player:getLck()) end},
+		{"[attack]", action=attack("DO NOT MEDDLE IN THE AFFAIRS OF DRAGONS!")},
+		{"#LIGHT_GREEN#*Shake your head.*#LAST#He swayed my mind! Please, I am not your ennemy.", jump="last_chance", cond=function(npc, player) return rng.percent(30 + player:getLck()) end},
 	}
 }
 
 newChat{ id="last_chance",
-	text = [[#LIGHT_GREEN#*@npcname@ calms down!*#WHITE# Very well, he is a trickster, now go finish your task, or do not come back.]],
+	text = [[#LIGHT_GREEN#*@npcname@ calms down!*#WHITE# Very well, he is indeed a trickster.  Now go finish your task, or do not come back!]],
 	answers = {
 		{"Thank you, mighty one."},
 	}

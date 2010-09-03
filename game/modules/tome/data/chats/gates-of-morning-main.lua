@@ -18,24 +18,23 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Thanks for your help. What may I do for you?]],
+	text = [[Thank you for your help. What may I do for you?]],
 	answers = {
 		{"Tell me more about the Gates of Morning.", jump="explain-gates"},
-		{"I need help to hunt for clue about the staff.", jump="clues", cond=function(npc, player) return not player:hasQuest("orc-pride") end},
-		{"The Prides are no more, their masters lay dead.", jump="prides-dead", cond=function(npc, player) return player:hasQuest("orc-pride") and player:hasQuest("orc-pride"):isCompleted() end},
+		{"I need help in my hunt for clues about the staff.", jump="clues", cond=function(npc, player) return not player:hasQuest("orc-pride") end},
 		{"I am back from Mount Doom, where the orcs took the staff.", jump="mount-doom", cond=function(npc, player) return player:hasQuest("mount-doom") and player:hasQuest("mount-doom"):isCompleted() end},
-		{"Sorry I have to go!"},
+		{"Sorry, I have to go!"},
 	}
 }
 
 newChat{ id="explain-gates",
-	text = [[There are two main group of people here, humans and elves.
-Humans came here in the second age, our ancestors were part of an expedition from Numenor to explore the world. Their ship was torn apart and the survivors landed on this continent.
+	text = [[There are two main group in the population here, humans and elves.
+Humans came here in the second age. Our ancestors were part of an expedition from Numenor to explore the world. Their ship was wrecked and the survivors landed on this continent.
 They came across a group of elves fighting against the orc pride and helped them.
 The elves invited them to stay with them in the Gates of Morning, in the Sunwall mountains.
-The name comes from the earliest days of the world when the world was flat and the Sun came out of a gigantic cavern in the Sunwall.]],
+Their name comes from the earliest days of the world, when the world was flat and the Sun came out of a gigantic cavern in the Sunwall.]],
 	answers = {
-		{"Thanks my lady.", jump="welcome"},
+		{"Thank my lady.", jump="welcome"},
 	},
 }
 
@@ -56,11 +55,11 @@ He also said the only way to enter the peak and de-activate the shield is throug
 }
 
 newChat{ id="clues",
-	text = [[As much as I would like to help our forces are already spread too thin, we can not provide you with direct power.
-But I might be able to help you by explaining how the Pride is organised, we could help each others.
-Recently we have heard the pride speaking about a new master, or masters. They might be the ones behind that staff mystery of yours.
-We suppose their main place of power is the High Peak in the center of the continent but it is inaccessible and covered by some kind of shield.
-You must investigate the bastions of the Pride, maybe you will find more information about the High Peak, and any orc you kill is one less that will attack us.
+	text = [[As much as I would like to help, our forces are already spread too thin; we can not provide you with direct assistance.
+But I might be able to help you by explaining how the Pride is organised.
+Recently we have heard the Pride speaking about a new master, or masters. They might be the ones behind that mysterious staff of yours.
+We believe that the heart of their power is the High Peek, in the center of the continent. But it is innaccessible and covered by some kind of shield.
+You must investigate the bastions of the Pride. Perhaps you will find more information about the High Peek, and any orc you kill is one less that will attack us.
 The known bastions of the Pride are:
 - Rak'shor Pride, in the west of the southern deset
 - Gorbat Pride, in a mountain range in the the southern desert
@@ -76,27 +75,27 @@ The known bastions of the Pride are:
 }
 
 newChat{ id="mount-doom",
-	text = [[I have heard about that, some good men lost their life for this, I hope it was worth it.]],
+	text = [[I have heard about that; good men lost their lives for this. I hope it was worth it.]],
 	answers = {
 		{"Yes my lady, they delayed the orcs so that I could get to the heart of the volcano. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="mount-doom-success",
 			cond=function(npc, player) return player:isQuestStatus("mount-doom", engine.Quest.COMPLETED, "stopped") end,
 		},
-		{"I am afraid I was too late, but still I have some precious informations. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="mount-doom-fail",
+		{"I am afraid I was too late, but I still have some valuable information. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="mount-doom-fail",
 			cond=function(npc, player) return player:isQuestStatus("mount-doom", engine.Quest.COMPLETED, "not-stopped") end,
 		},
 	},
 }
 
 newChat{ id="mount-doom-success",
-	text = [[Blue Wizards ? I have never heard of them, there were rumours about a new master of the Pride, it seems they got two.
-Thanks for all, you must continue your hunt, now you know what to look for.]],
+	text = [[Blue Wizards ? I have never heard of them. There were rumours about a new master of the Pride, but it seems they got two.
+Thank you for everything. You must continue your hunt now that you know what to look for.]],
 	answers = {
 		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("mount-doom", engine.Quest.DONE) end}
 	},
 }
 
 newChat{ id="mount-doom-fail",
-	text = [[Blue Wizards ? I have never heard of them, there were rumours about a new master of the Pride, it seems they got two.
+	text = [[Blue Wizards ? I have never heard of them, there were rumours about a new master of the Pride, but it seems they got two.
 I am afraid with the power they gained today they will be even harder to stop, but we do not have a choice.]],
 	answers = {
 		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("mount-doom", engine.Quest.DONE) end}
