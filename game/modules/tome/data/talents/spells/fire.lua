@@ -32,7 +32,7 @@ newTalent{
 	reflectable = true,
 	proj_speed = 20,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)), {type="flame"})
