@@ -589,13 +589,16 @@ end
 -- @param x position
 -- @param y position
 -- @param what property to check
+-- @return a table containing all return values, indexed by the entities
 function _M:checkAllEntitiesNoStop(x, y, what, ...)
-	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return {} end
+	local ret = {}
 	if self.map[x + y * self.w] then
 		for _, e in pairs(self.map[x + y * self.w]) do
-			e:check(what, x, y, ...)
+			ret[e] = e:check(what, x, y, ...)
 		end
 	end
+	return ret
 end
 
 --- Check specified entity position of the grid for a property
