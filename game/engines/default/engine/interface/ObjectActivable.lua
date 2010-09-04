@@ -59,9 +59,7 @@ end
 function _M:useObject(who)
 	if self.use_power then
 		if self.power >= self.use_power.power then
-			local co = coroutine.create(function() return self.use_power.use(self, who) end)
-			local ok, ret, no_power = coroutine.resume(co)
-			if not ok and ret then print(debug.traceback(co)) error(ret) end
+			local ret, no_power = self.use_power.use(self, who)
 			if not no_power then self.power = self.power - self.use_power.power end
 			return ret
 		else
@@ -72,9 +70,7 @@ function _M:useObject(who)
 			end
 		end
 	elseif self.use_simple then
-		local co = coroutine.create(function() return self.use_simple.use(self, who) end)
-		local ok, ret = coroutine.resume(co)
-		if not ok and ret then print(debug.traceback(co)) error(ret) end
+		local ret = self.use_simple.use(self, who)
 		return ret
 	elseif self.use_talent then
 		if not self.use_talent.power or self.power >= self.use_talent.power then

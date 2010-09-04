@@ -519,27 +519,33 @@ function _M:playerUseItem(object, item, inven)
 	if game.zone.wilderness then game.logPlayer(self, "You can not use items on the world map.") return end
 
 	local use_fct = function(o, inven, item)
-		self.changed = true
-		local ret, no_id = o:use(self)
-		if not no_id then
-			o:identify(true)
-		end
-		if ret and ret == "destroy" then
-			if o.multicharge and o.multicharge > 1 then
-				o.multicharge = o.multicharge - 1
-			else
-				local _, del = self:removeObject(self:getInven(inven), item)
-				if del then
-					game.log("You have no more %s.", o:getName{no_count=true, do_color=true})
-				else
-					game.log("You have %s.", o:getName{do_color=true})
-				end
-				self:sortInven(self:getInven(inven))
+		local co = coroutine.create(function()
+			self.changed = true
+			local ret, no_id = o:use(self)
+			print(ret,no_id)
+			if not no_id then
+				o:identify(true)
 			end
-			return true
-		end
-		self:breakStealth()
-		self.changed = true
+			if ret and ret == "destroy" then
+				if o.multicharge and o.multicharge > 1 then
+					o.multicharge = o.multicharge - 1
+				else
+					local _, del = self:removeObject(self:getInven(inven), item)
+					if del then
+						game.log("You have no more %s.", o:getName{no_count=true, do_color=true})
+					else
+						game.log("You have %s.", o:getName{do_color=true})
+					end
+					self:sortInven(self:getInven(inven))
+				end
+				return true
+			end
+			self:breakStealth()
+			self.changed = true
+		end)
+		local ok, ret = coroutine.resume(co)
+		if not ok and ret then print(debug.traceback(co)) error(ret) end
+		return true
 	end
 
 	if object and item then return use_fct(object, inven, item) end
