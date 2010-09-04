@@ -239,13 +239,14 @@ function _M:save()
 end
 
 function _M:getSaveDescription()
+	local player = self.player:resolveSource()
 	return {
-		name = self.player.name,
+		name = player.name,
 		description = ([[%s the level %d %s %s.
 Difficulty: %s
 Exploring level %d of %s.]]):format(
-		self.player.name, self.player.level, self.player.descriptor.subrace, self.player.descriptor.subclass,
-		self.player.descriptor.difficulty,
+		player.name, player.level, player.descriptor.subrace, player.descriptor.subclass,
+		player.descriptor.difficulty,
 		self.level.level, self.zone.name
 		),
 	}

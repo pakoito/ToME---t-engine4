@@ -25,7 +25,7 @@ newTalent{ short_name = "FIRE_IMP_BOLT",
 	range = 20,
 	reflectable = true,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(self:combatTalentSpellDamage(t, 8, 120)), {type="flame"})

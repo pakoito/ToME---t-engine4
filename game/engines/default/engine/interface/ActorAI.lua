@@ -121,6 +121,7 @@ end
 --- Main entry point for AIs
 function _M:doAI()
 	if not self.ai then return end
+	if self.dead then return end
 --	if self.x < game.player.x - 10 or self.x > game.player.x + 10 or self.y < game.player.y - 10 or self.y > game.player.y + 10 then return end
 
 	-- If we have a target but it is dead (it was not yet garbage collected but it'll come)

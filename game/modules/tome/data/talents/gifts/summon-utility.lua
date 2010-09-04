@@ -354,11 +354,11 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty or not target then print("1") return nil end
+		if not tx or not ty or not target then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		target = game.level.map(tx, ty, Map.ACTOR)
-		if target == self then print("2") return nil end
-		if not target.summoner == game.player then print("3") return nil end
+		if not target or target == self then return nil end
+		if not target.summoner == game.player then return nil end
 
 		local ot = target
 		target = mod.class.Player.new(target)

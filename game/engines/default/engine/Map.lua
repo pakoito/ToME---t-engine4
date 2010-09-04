@@ -406,9 +406,9 @@ function _M:updateMap(x, y)
 	-- This is to improve speed, we create a function for each spot that checks entities it knows are there
 	-- This avoid a costly for iteration over a pairs() and this allows luajit to compile only code that is needed
 	local ce = {}
-	local fstr = [[p = m[%s]:check(what, x, y, ...) if p then return p end ]]
+	local fstr = [[if m[%s] then p = m[%s]:check(what, x, y, ...) if p then return p end end ]]
 	ce[#ce+1] = [[return function(self, x, y, what, ...) local p local m = self.map[x + y * self.w] ]]
-	for idx, e in pairs(self.map[x + y * self.w]) do ce[#ce+1] = fstr:format(idx) end
+	for idx, e in pairs(self.map[x + y * self.w]) do ce[#ce+1] = fstr:format(idx, idx) end
 	ce[#ce+1] = [[end]]
 	local ce = table.concat(ce)
 	self._check_entities[x + y * self.w] = self._check_entities_store[ce] or loadstring(ce)()

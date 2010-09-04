@@ -52,7 +52,7 @@ newAchievement{
 	mode = "player",
 	can_gain = function(self, who, target)
 		if target.type == "humanoid" then
-			self.nb = (self.nb or 0) + 500
+			self.nb = (self.nb or 0) + 1
 			if self.nb >= 1000 then return true end
 		end
 	end,

@@ -312,10 +312,10 @@ on_grant = function(self, who)
 		on_move = function(self, x, y, who)
 			if not who.escort_quest then return end
 			game.player:setQuestStatus(who.quest_id, engine.Quest.DONE)
-			who:disappear()
-			who:removed()
 			local Chat = require "engine.Chat"
 			Chat.new("escort-quest", who, game.player, {npc=who}):invoke()
+			who:disappear()
+			who:removed()
 		end,
 	}
 	g:resolve() g:resolve(nil, true)
