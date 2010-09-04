@@ -28,7 +28,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty or not target or not target.summoner or not target.summoner == self then return nil end
+		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon then return nil end
 		target:setEffect(target.EFF_ALL_STAT, 5, {power=2+math.floor(self:getTalentLevel(t) * 2)})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -49,7 +49,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty or not target or not target.summoner or not target.summoner == self then return nil end
+		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon then return nil end
 
 		if target.name == "fire imp" then
 			local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), talent=t}
@@ -107,7 +107,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty or not target or not target.summoner or not target.summoner == self then return nil end
+		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon then return nil end
 
 		local dur = 1 + self:getTalentLevel(t)
 		self:setEffect(self.EFF_EVASION, dur, {chance=50})

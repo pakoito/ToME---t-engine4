@@ -61,7 +61,7 @@ newTalent{
 			combat_armor = 2, combat_def = 4,
 			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -127,7 +127,7 @@ newTalent{
 
 			combat = { dam=8, atk=15, apr=5, damtype=DamageType.ACID, dammod={str=0.7} },
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -198,7 +198,7 @@ newTalent{
 			resolvers.talents{ [Talents.T_WARSHOUT]=3, [Talents.T_STUNNING_BLOW]=3, [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_SUNDER_ARMS]=2, },
 
 			faction = self.faction,
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -270,7 +270,7 @@ newTalent{
 			poison_immune=1, cut_immune=1, fear_immune=1, blind_immune=1,
 
 			faction = self.faction,
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}

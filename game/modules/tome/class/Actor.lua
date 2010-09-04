@@ -323,15 +323,20 @@ function _M:doQuake(tg, x, y)
 	while #locs > 0 do
 		local l = rng.tableRemove(locs)
 		local m = rng.tableRemove(ms)
-		game.level.map.map[l.x + l.y * game.level.map.w] = m
 		for k, e in pairs(m) do
-			if e.x and e.y and e.move then e:move(l.x, l.y, true)
-			elseif e.x and e.y then e.x, e.ly = l.x, l.y end
+			-- Update it manually
+			if not e.x and not e.y then
+				game.level.map(l.x, l.y, k, e)
+				if e.x and e.y then e.x, e.ly = l.x, l.y end
+			-- If it can move, move it
+			elseif e.x and e.y and e.move then
+				e:move(l.x, l.y, true)
+			end
 		end
 	end
 	game.level.map:cleanFOV()
 	game.level.map.changed = true
-	game.level.map:redisplay()
+--	game.level.map:redisplay()
 end
 
 --- Reveals location surrounding the actor

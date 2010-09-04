@@ -62,7 +62,7 @@ load("/data/talents/gifts/cold-drake.lua")
 function checkMaxSummon(self)
 	local nb = 0
 	for _, e in pairs(game.level.entities) do
-		if e.summoner and e.summoner == self then nb = nb + 1 end
+		if e.summoner and e.summoner == self and e.wild_gift_summon then nb = nb + 1 end
 	end
 
 	local max = math.max(1, math.floor(self:getCun() / 10))

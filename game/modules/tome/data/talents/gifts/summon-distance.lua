@@ -166,7 +166,7 @@ newTalent{
 				[self.T_FIRE_IMP_BOLT]=self:getTalentLevelRaw(t),
 			},
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -236,7 +236,7 @@ newTalent{
 				[self.T_POISON_BREATH]=self:getTalentLevelRaw(t),
 			},
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -307,7 +307,7 @@ newTalent{
 				[self.T_PHASE_DOOR]=self:getTalentLevelRaw(t),
 			},
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -379,7 +379,7 @@ newTalent{
 				[self.T_DEVOURING_FLAME]=self:getTalentLevelRaw(t),
 			},
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}

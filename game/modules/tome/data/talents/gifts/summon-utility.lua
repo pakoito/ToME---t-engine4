@@ -188,7 +188,7 @@ newTalent{
 				[self.T_SHELL_SHIELD]=self:getTalentLevelRaw(t),
 			},
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -256,7 +256,7 @@ newTalent{
 				[self.T_SPIT_POISON]=self:getTalentLevelRaw(t),
 			},
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -324,7 +324,7 @@ newTalent{
 				[self.T_REGENERATE_OTHER]=self:getTalentLevelRaw(t),
 			},
 
-			summoner = self, summoner_gain_exp=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
@@ -358,7 +358,7 @@ newTalent{
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		target = game.level.map(tx, ty, Map.ACTOR)
 		if not target or target == self then return nil end
-		if not target.summoner == game.player then return nil end
+		if not target.summoner or target.summoner ~= game.player or not target.wild_gift_summon then return nil end
 
 		local ot = target
 		target = mod.class.Player.new(target)
