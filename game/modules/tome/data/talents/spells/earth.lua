@@ -59,7 +59,7 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		for i = 1, self:getTalentLevelRaw(t) do
@@ -88,7 +88,7 @@ newTalent{
 	reflectable = true,
 	proj_speed = 6,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth"}}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(self:combatTalentSpellDamage(t, 8, 170)))
