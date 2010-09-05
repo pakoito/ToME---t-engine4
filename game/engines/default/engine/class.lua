@@ -115,18 +115,17 @@ local function clonerecursfull(clonetable, d, allow_cloned)
 
 	for k, e in pairs(d) do
 		local nk, ne = k, e
-
 		if clonetable[k] then nk = clonetable[k]
 		elseif type(k) == "table" then nk = clonerecursfull(clonetable, k)
 		end
 
 		if clonetable[e] then ne = clonetable[e]
-		elseif type(e) == "table" then ne = clonerecursfull(clonetable, e)
+		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne = clonerecursfull(clonetable, e)
 		end
 		n[nk] = ne
 	end
 	setmetatable(n, getmetatable(d))
-	if n.cloned then n:cloned(d) end
+	if n.cloned and n.__CLASSNAME then n:cloned(d) end
 	return n
 end
 
