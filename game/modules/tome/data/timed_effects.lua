@@ -1229,3 +1229,19 @@ newEffect{
 		self.faction = eff.olf_faction
 	end,
 }
+
+newEffect{
+	name = "BURROW",
+	desc = "Burrow",
+	type = "physical",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		eff.pass = self:addTemporaryValue("can_pass", {pass_wall=1})
+		eff.dig = self:addTemporaryValue("move_project", {[DamageType.DIG]=1})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("can_pass", eff.pass)
+		self:removeTemporaryValue("move_project", eff.dig)
+	end,
+}

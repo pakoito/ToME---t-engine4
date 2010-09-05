@@ -18,37 +18,9 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Burrow",
+	name = "Swallow",
 	type = {"wild-gift/sand-drake", 1},
 	require = gifts_req1,
-	points = 5,
-	mode = "sustained",
-	sustain_equilibrium = 30,
-	cooldown = 30,
-	range = 20,
-	activate = function(self, t)
-		return {
-			pass = self:addTemporaryValue("can_pass", {pass_wall=1}),
-			dig = self:addTemporaryValue("move_project", {[DamageType.DIG]=1}),
-			drain = self:addTemporaryValue("equilibrium_regen", 8 - self:getTalentLevelRaw(t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("equilibrium_regen", p.drain)
-		self:removeTemporaryValue("move_project", p.dig)
-		self:removeTemporaryValue("can_pass", p.pass)
-		return true
-	end,
-	info = function(self, t)
-		return ([[Allows to burrow into walls, increasing equilibrium quickly.
-		Higher talent levels reduce equilibrium cost per turn.]])
-	end,
-}
-
-newTalent{
-	name = "Swallow",
-	type = {"wild-gift/sand-drake", 2},
-	require = gifts_req2,
 	points = 5,
 	equilibrium = 10,
 	cooldown = 20,
@@ -84,8 +56,8 @@ newTalent{
 
 newTalent{
 	name = "Quake",
-	type = {"wild-gift/sand-drake", 3},
-	require = gifts_req3,
+	type = {"wild-gift/sand-drake", 2},
+	require = gifts_req2,
 	points = 5,
 	random_ego = "attack",
 	message = "@Source@ shakes the ground!",
@@ -104,6 +76,23 @@ newTalent{
 	info = function(self, t)
 		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damage and knocking back your foes.
 		The damage will increase with the Strength stat]]):format(2 + self:getTalentLevel(t) / 2)
+	end,
+}
+
+newTalent{
+	name = "Burrow",
+	type = {"wild-gift/sand-drake", 3},
+	require = gifts_req3,
+	points = 5,
+	equilibrium = 50,
+	cooldown = 30,
+	range = 20,
+	action = function(self, t)
+		self:setEffect(self.EFF_BURROW, 5 + self:getTalentLevel(t) * 3, {})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Allows to burrow into walls for %d turns.]]):format(5 + self:getTalentLevel(t) * 3)
 	end,
 }
 
