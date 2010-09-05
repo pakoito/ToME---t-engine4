@@ -133,6 +133,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)

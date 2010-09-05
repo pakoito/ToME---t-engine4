@@ -29,6 +29,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -58,6 +59,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 6,
+	direct_hit = true,
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
@@ -106,6 +108,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 2,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), talent=t, friendlyfire=false}
 		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)))
@@ -139,6 +142,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 10,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + math.floor(self:getTalentLevelRaw(t) / 3), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)

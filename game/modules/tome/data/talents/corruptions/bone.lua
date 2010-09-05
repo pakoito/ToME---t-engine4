@@ -26,6 +26,7 @@ newTalent{
 	cooldown = 4,
 	range = 20,
 	random_ego = "attack",
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -115,6 +116,7 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	direct_hit = true,
 	absorb = function(self, t, p)
 		game.logPlayer(self, "Your bone shield absorbs the damage!")
 		self:removeParticles(table.remove(p.particles))

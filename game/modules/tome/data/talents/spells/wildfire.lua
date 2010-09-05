@@ -28,6 +28,7 @@ newTalent{
 		ATTACKAREA = 10,
 		DEFEND = 4,
 	},
+	direct_hit = true,
 	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}

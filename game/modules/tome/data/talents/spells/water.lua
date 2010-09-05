@@ -29,6 +29,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 15,
+	direct_hit = true,
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
@@ -67,6 +68,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -94,6 +96,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
+	direct_hit = true,
 	action = function(self, t)
 		local duration = 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t)
 		local radius = 1

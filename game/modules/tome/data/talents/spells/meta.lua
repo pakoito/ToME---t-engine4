@@ -25,6 +25,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 40,
 	cooldown = 7,
+	direct_hit = true,
 	action = function(self, t)
 		local target = self
 

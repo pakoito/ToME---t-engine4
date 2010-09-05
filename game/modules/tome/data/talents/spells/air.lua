@@ -29,6 +29,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -59,6 +60,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
@@ -173,6 +175,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 5,
+	direct_hit = true,
 	do_storm = function(self, t)
 		if self:getMana() <= 0 then
 			local old = self.energy.value

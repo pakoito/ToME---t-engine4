@@ -49,6 +49,7 @@ newTalent{
 	equilibrium = 7,
 	cooldown = 10,
 	range = 5,
+	direct_hit = true,
 	tactical = {
 		DEFEND = 10,
 	},
@@ -77,6 +78,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local duration = 2 + self:getTalentLevelRaw(t)
 		local radius = 2
@@ -116,6 +118,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)

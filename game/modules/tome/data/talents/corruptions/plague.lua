@@ -122,6 +122,7 @@ newTalent{
 	vim = 35,
 	cooldown = 15,
 	range = 10,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
 		local x, y = self:getTarget(tg)

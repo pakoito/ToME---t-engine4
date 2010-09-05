@@ -292,6 +292,7 @@ newTalent{
 	type = {"other/other", 1},
 	cooldown = 4,
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local filters = self.summon or {{type=self.type, subtype=self.subtype, number=1, hasxp=true, lastfor=20}}
 		if #filters == 0 then return end
@@ -425,6 +426,7 @@ newTalent{
 	cooldown = 10,
 	mana = 16,
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -472,6 +474,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -529,6 +532,7 @@ newTalent{
 		DEFEND = 5,
 	},
 	range = 4,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -575,6 +579,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
 		local x, y = self:getTarget(tg)
@@ -640,6 +645,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -670,6 +676,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
 		local x, y = self:getTarget(tg)
@@ -695,6 +702,7 @@ newTalent{
 	},
 	message = "@Source@ howls",
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local rad = self:getTalentLevel(t) + 5
 		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
@@ -728,6 +736,7 @@ newTalent{
 	},
 	message = "@Source@ shrieks.",
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local rad = self:getTalentLevel(t) + 5
 		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
@@ -793,6 +802,7 @@ newTalent{
 	cooldown = 2,
 	equilibrium = 5,
 	range = 15,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -814,6 +824,7 @@ newTalent{
 	cooldown = 10,
 	equilibrium = 5,
 	range = 15,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -834,6 +845,7 @@ newTalent{
 	cooldown = 2,
 	equilibrium = 5,
 	range = 15,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -877,6 +889,7 @@ newTalent{
 	cooldown = 13,
 	vim = 27,
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 4
@@ -931,6 +944,7 @@ newTalent{
 	cooldown = 7,
 	vim = 24,
 	range = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

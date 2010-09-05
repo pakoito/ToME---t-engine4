@@ -84,6 +84,7 @@ newTalent{
 	},
 	range = 15,
 	proj_speed = 4,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
@@ -112,6 +113,7 @@ newTalent{
 		ATTACKAREA = 40,
 	},
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
 		local radius = 5

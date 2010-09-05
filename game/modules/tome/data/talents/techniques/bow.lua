@@ -78,6 +78,7 @@ newTalent{
 	stamina = 35,
 	require = techs_dex_req4,
 	range = 20,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", radius=2 + self:getTalentLevel(t)/3, friendlyfire=false}
 		local targets = self:archeryAcquireTargets(tg)

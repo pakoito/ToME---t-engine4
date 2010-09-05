@@ -126,6 +126,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 3,
+	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), talent=t, friendlyfire=false}
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {

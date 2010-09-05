@@ -87,6 +87,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	direct_hit = true,
 	proj_speed = 8,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
