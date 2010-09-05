@@ -330,6 +330,7 @@ function _M:doQuake(tg, x, y)
 				if e.x and e.y then e.x, e.ly = l.x, l.y end
 			-- If it can move, move it
 			elseif e.x and e.y and e.move then
+				e.x = nil e.y = nil
 				e:move(l.x, l.y, true)
 			end
 		end
