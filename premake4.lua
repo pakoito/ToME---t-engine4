@@ -12,6 +12,11 @@ newoption {
 	value       = "VM_Type",
 	description = "Forces compilation in 32bits mode, allowing to use the lua jit",
 }
+newoption {
+	trigger     = "relpath",
+	value       = "VM_Type",
+	description = "Links libraries relative to the application path for redistribution",
+}
 
 _OPTIONS.lua = _OPTIONS.lua or "default"
 
@@ -20,6 +25,7 @@ solution "TEngine"
 	objdir "obj"
 	defines {"GLEW_STATIC"}
 	if _OPTIONS.force32bits then buildoptions{"-m32"} linkoptions{"-m32"} libdirs{"/usr/lib32"} end
+	if _OPTIONS.relpath then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end
 
 	includedirs {
 		"src",
