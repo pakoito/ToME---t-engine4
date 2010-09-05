@@ -212,10 +212,22 @@ end
 function _M:toScreen(x, y)
 	-- Draw with only the texture
 	if self.__showup then
-		local zoom = self.__showup / 7
-		self.texture:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.texture_w * zoom, self.texture_h * zoom)
-		self.__showup = self.__showup + 1
-		if self.__showup >= 7 then self.__showup = nil end
+		local eff = self.__showup_effect or "pop"
+		if eff == "overpop" then
+			local zoom = self.__showup / 7
+			if self.__showup >= 9 then
+				zoom = (9 - (self.__showup - 9)) / 7 - 1
+				zoom = 1 + zoom * 0.5
+			end
+			self.texture:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.texture_w * zoom, self.texture_h * zoom)
+			self.__showup = self.__showup + 1
+			if self.__showup >= 11 then self.__showup = nil end
+		else
+			local zoom = self.__showup / 7
+			self.texture:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.texture_w * zoom, self.texture_h * zoom)
+			self.__showup = self.__showup + 1
+			if self.__showup >= 7 then self.__showup = nil end
+		end
 	else
 		self.texture:toScreenFull(x, y, self.w, self.h, self.texture_w, self.texture_h)
 	end
