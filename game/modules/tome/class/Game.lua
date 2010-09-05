@@ -135,7 +135,7 @@ function _M:newGame()
 
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
-		self:changeLevel(1, self.player.starting_zone)
+		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone)
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
 		self.player:resolve(nil, true)
@@ -518,8 +518,8 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(15, "high-peak")
-				self.player:grantQuest("high-peak")
+				self:changeLevel(1, "test")
+--				self.player:grantQuest("test")
 			end
 		end,
 	}

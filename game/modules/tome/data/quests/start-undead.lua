@@ -1,4 +1,4 @@
--- TE4 - T-Engine 4
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Engine Version
-engine.version = {0,9,10,"te4",2}
-engine.require_c_core = engine.version[5]
-engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
+name = "The rotting stench of the dead"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "\n"
+	return table.concat(desc, "\n")
+end
 
-function engine.version_check(v)
-	local ev = engine.version
-	if v[5] ~= core.game.VERSION then return "bad C core" end
-	if v[4] ~= ev[4] then return "different engine" end
-	if v[1] > ev[1] then return "newer" end
-	if v[1] == ev[1] and v[2] > ev[2] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
-	return "lower"
+on_status_change = function(self, who, status, sub)
+	if self:isCompleted() then
+		who:setQuestStatus(self.id, engine.Quest.DONE)
+		who:grantQuest("starter-zones")
+	end
 end

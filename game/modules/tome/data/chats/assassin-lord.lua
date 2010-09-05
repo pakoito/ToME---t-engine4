@@ -39,7 +39,7 @@ newChat{ id="what",
 	text = [[Oh, so this is the part where I tell you my plan before you attack me ? GET THIS INTRUDER!]],
 	answers = {
 		{"[attack]", action=function(npc, player) engine.Faction:setFactionReaction(player.faction, npc.faction, -100, true) end},
-		{"Wait! Maybe we could work out some kind of arrangement, you seem to be a pratical men.", jump="offer"},
+		{"Wait! Maybe we could work out some kind of arrangement, you seem to be a practical men.", jump="offer"},
 	}
 }
 newChat{ id="greed",

@@ -17,26 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local dir = rng.range(0, 360)
+local side = rng.table{4,6,2,8}
 local blur = blur or 0
 local first = true
-local life = (width + height) / 2
-local sides
-if dir >= 0 and dir < 90 then sides = {8,6}
-elseif dir >= 90 and dir < 180 then sides = {8,4}
-elseif dir >= 180 and dir < 270 then sides = {2,4}
-else sides = {2,6}
+local life
+if side == 2 then dir = 90      life = height
+elseif side == 8 then dir = 270 life = height
+elseif side == 4 then dir = 180 life = width
+elseif side == 6 then dir = 0   life = width
 end
 
 dir = math.rad(dir)
 
+local first = true
+
 return { generator = function()
-	local side = rng.table(sides)
 	local x, y
-	if side == 2 then x = rng.range(0, width) y = height
-	elseif side == 8 then x = rng.range(0, width) y = 0
-	elseif side == 6 then x = 0 y = rng.range(0, height)
-	else x = width y = rng.range(0, height)
+	if first then
+		x = rng.range(0, width) y = rng.range(0, height)
+	else
+		if side == 2 then x = rng.range(0, width) y = 0
+		elseif side == 8 then x = rng.range(0, width) y = height
+		elseif side == 6 then x = 0 y = rng.range(0, height)
+		else x = width y = rng.range(0, height)
+		end
 	end
 	local vel = rng.float(0.3, 2)
 
@@ -56,6 +60,11 @@ return { generator = function()
 	}
 end, },
 function(self)
-	self.ps:emit(1)
+	if first then
+		self.ps:emit(700)
+	else
+		self.ps:emit(1)
+	end
+	first = false
 end,
 1000

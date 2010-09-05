@@ -167,7 +167,7 @@ newTalent{
 
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
-			type = "animal", subtype = "turle",
+			type = "animal", subtype = "turtle",
 			display = "R", color=colors.GREEN,
 			name = "turtle", faction = self.faction,
 			desc = [[]],

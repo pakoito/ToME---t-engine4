@@ -68,7 +68,7 @@ function _M:drawDialog(s)
 
 	local h = 2
 	if self.list[self.sel] then
-		local str = ("#GOLD#Catefory:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(self.list[self.sel].cat, self.list[self.sel].name, self.list[self.sel].desc)
+		local str = ("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(self.list[self.sel].cat, self.list[self.sel].name, self.list[self.sel].desc)
 		lines = str:splitLines(self.iw / 2 - 10, self.font)
 	else
 		lines = {}

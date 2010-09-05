@@ -44,6 +44,10 @@ newBirthDescriptor{
 	},
 	copy = {
 		faction = "undead",
+		default_wilderness = {34, 49},
+		starting_zone = "paths-of-the-dead",
+		starting_level = 8,
+		starting_quest = "start-undead",
 		undead = 1,
 	}
 }
@@ -79,9 +83,6 @@ newBirthDescriptor
 	},
 	copy = {
 		type = "undead", subtype="ghoul",
-		default_wilderness = {43, 18},
-		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
 		starting_intro = "ghoul",
 		life_rating=14,
 		poison_immune = 0.8,
@@ -124,8 +125,6 @@ newBirthDescriptor
 	copy = {
 		type = "undead", subtype="skeleton",
 		default_wilderness = {43, 18},
-		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
 		starting_intro = "skeleton",
 		life_rating=12,
 		poison_immune = 1,

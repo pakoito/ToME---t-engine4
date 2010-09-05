@@ -27,3 +27,13 @@ newEntity{
 	display = ' ',
 	_noalpha = false,
 }
+
+newEntity{
+	define_as = "SPACE_TURBULENCE",
+	name = "space turbulence",
+	display = '#', color=colors.WHITE,
+	shader = "space_turbulence", textures = { function() return _3DNoise, true end },
+	always_remember = true,
+	does_block_move = true,
+	_noalpha = false,
+}

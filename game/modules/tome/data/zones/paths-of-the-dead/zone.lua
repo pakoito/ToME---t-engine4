@@ -18,61 +18,50 @@
 -- darkgod@te4.org
 
 return {
-	name = "TestZone!",
-	level_range = {1, 50},
+	name = "Paths of the Dead",
+	level_range = {1, 8},
 	level_scheme = "player",
-	max_level = 4,
+	max_level = 5,
 	decay = {300, 800},
-	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 90, height = 90,
-	all_remembered = true,
-	all_lited = true,
---	persistant = "zone",
+	actor_adjust_level = function(zone, level, e) return 1 + zone.max_level - (zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2)) end,
+	width = 50, height = 50,
+--	all_remembered = true,
+--	all_lited = true,
+	persistant = "zone",
+	ambiant_music = "Dark Secrets.ogg",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Forest",
-			floor = "VOID",
-			wall = "SPACE_TURBULENCE",
+			class = "engine.generator.map.Roomer",
+			nb_rooms = 10,
+			rooms = {"simple", "pilar", {"money_vault",5}},
+			lite_room_chance = 100,
+			['.'] = "FLOOR",
+			['#'] = "WALL",
 			up = "UP",
 			down = "DOWN",
-			do_ponds =  {
-				nb = {0, 3},
-				size = {w=25, h=25},
-				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
-			},
+			door = "DOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {40, 50},
+			nb_npc = {20, 30},
+--			guardian = "SHADE_OF_ANGMAR", -- The gardian is set in the static map
 		},
---[[
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {12, 16},
+			nb_object = {6, 9},
+			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {20, 30},
+			nb_trap = {6, 9},
 		},
-]]
 	},
 	levels =
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS_FAR_EAST",
+				up = "UP_WILDERNESS",
 			}, },
 		},
 	},
-
-	post_process = function(level)
-		local Map = require "engine.Map"
-		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
-	end,
-
-	background = function(level)
-		local Map = require "engine.Map"
-		level.background_particle:update()
-		level.background_particle.ps:toScreen(Map.display_x, Map.display_y, true, 1)
-	end,
 }

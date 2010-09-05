@@ -332,7 +332,7 @@ static int particles_to_screen(lua_State *L)
 			p->x += p->xv;
 			p->y += p->yv;
 
-			if (p->dir && p->vel)
+			if (p->vel)
 			{
 				p->x += cos(p->dir) * p->vel;
 				p->y += sin(p->dir) * p->vel;
