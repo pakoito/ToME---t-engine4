@@ -29,7 +29,7 @@ function _M:init(title, file, replace, w, h)
 	self.iw = w - 2 * 5 -- Cheat, this is normaly done by Dialog:init but we need it to generate the list and we needto generate it before init
 	self.font = core.display.newFont("/data/font/Vera.ttf", 12)
 	self:generateList(file, replace)
-	h = math.min(4 + (#self.list) * self.font:lineSkip(), h)
+	h = math.min(4 + 30 + (#self.list) * self.font:lineSkip(), h)
 
 	engine.Dialog.init(self, title or "Text", w, h, nil, nil, nil, self.font)
 

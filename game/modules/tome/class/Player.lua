@@ -596,7 +596,7 @@ end
 function _M:useOrbPortal(portal)
 	if portal.special then portal:special(self) return end
 
-	if spotHostiles(self) then game.logPlayer(self, "You can not use the Orb with foes in sight.") end
+	if spotHostiles(self) then game.logPlayer(self, "You can not use the Orb with foes in sight.") return end
 
 	if portal.teleport_level then
 		local x, y = util.findFreeGrid(portal.teleport_level.x, portal.teleport_level.y, 2, true, {[Map.ACTOR]=true})
