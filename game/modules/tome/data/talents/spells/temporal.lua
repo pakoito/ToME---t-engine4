@@ -69,8 +69,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.
-		The speed decrease improves with the Magic stat]]):format(self:getTalentLevel(t) * 7)
+		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.]]):format(self:getTalentLevel(t) * 7)
 	end,
 }
 
@@ -97,8 +96,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Increases the caster's global speed by %d%%.
-		The speed increase improves with the Magic stat]]):format(self:getTalentLevel(t) * 7)
+		return ([[Increases the caster's global speed by %d%%.]]):format(self:getTalentLevel(t) * 7)
 	end,
 }
 
