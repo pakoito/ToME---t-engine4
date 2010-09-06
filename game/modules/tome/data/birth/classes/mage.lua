@@ -99,7 +99,7 @@ newBirthDescriptor{
 		"An Alchemist is a dabbler in magic, while 'true' magic is thought to have been lost with the departure of Gandalf and the fall of Saruman.",
 		"Alchemists have an empirical knowledge of magic, which they can not use directly but through focuses.",
 		"A focus is usualy a gem which they can imbue with power to throw at their foes, exploding in fires, acid, ...",
-		"Alchemists are also known for their golem craft and are usualy accompagnied by such a construct which acts as a body guard.",
+		"Alchemists are also known for their golem craft and are usually accompanied by such a construct which acts as a bodyguard.",
 		"Their most important stats are: Magic and Dexterity",
 	},
 	stats = { mag=5, dex=3, wil=1, },

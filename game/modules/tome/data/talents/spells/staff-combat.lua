@@ -52,7 +52,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Channel raw mana through your staff, projecting a bolt of your staff damage type doing %d%% staff damage.
-		This attack always has a 95% chance to hit and ignores target armour.]]):
+		This attack always has a 95%% chance to hit and ignores target armour.]]):
 		format(self:combatTalentWeaponDamage(t, 0.4, 1.1) * 100)
 	end,
 }

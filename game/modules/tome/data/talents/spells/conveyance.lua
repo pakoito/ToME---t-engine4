@@ -46,7 +46,6 @@ newTalent{
 				game.logSeen(target, "The spell fizzles!")
 				return true
 			end
-			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
 		end
 
 		-- Annoy them!
@@ -68,6 +67,11 @@ newTalent{
 			target:teleportRandom(x, y, 10 + self:combatSpellpower(0.1))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
+
+		if target ~= self then
+			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
+		end
+
 		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
@@ -110,7 +114,6 @@ newTalent{
 				game.logSeen(target, "The spell fizzles!")
 				return true
 			end
-			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
 		end
 
 		-- Annoy them!
@@ -132,6 +135,11 @@ newTalent{
 			target:teleportRandom(x, y, 100 + self:combatSpellpower(0.1), 15)
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
+
+		if target ~= self then
+			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
+		end
+
 		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
