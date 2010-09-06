@@ -378,6 +378,7 @@ function _M:restCheck()
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
+		if self.alchemy_golem and game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem.life_regen > 0 and not self.alchemy_golem.dead and self.alchemy_golem.life < self.alchemy_golem.max_life then return true end
 	else
 		return true
 	end

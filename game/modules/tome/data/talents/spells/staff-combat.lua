@@ -28,31 +28,46 @@ newTalent{
 	},
 	range = 10,
 	reflectable = true,
+	proj_speed = 20,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
 			game.logPlayer(self, "You need a staff to use this spell.")
 			return
 		end
+		local combat = weapon.combat
 
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
-		target = game.level.map(x, y, Map.ACTOR)
-		if not x or not y or not target then return nil end
+		local trail = "firetrail"
+		local particle = "bolt_fire"
+		local explosion = "flame"
 
-		self.combat_apr = self.combat_apr + 10000
-		self.combat_atk = self.combat_atk + 10000
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.4, 1.1))
-		self.combat_atk = self.combat_atk - 10000
-		self.combat_apr = self.combat_apr - 10000
+		if     combat.damtype == DamageType.COLD then      explosion = "freeze"              particle = "ice_shards"     trail = "icetrail"
+		elseif combat.damtype == DamageType.ACID then      explosion = "acid"                particle = "bolt_acid"      trail = "acidtrail"
+		elseif combat.damtype == DamageType.LIGHTNING then explosion = "lightning_explosion" particle = "bolt_lightning" trail = "lightningtrail"
+		elseif combat.damtype == DamageType.LIGHT then     explosion = "light"               particle = "bolt_light"     trail = "lighttrail"
+		elseif combat.damtype == DamageType.DARKNESS then  explosion = "dark"                particle = "bolt_dark"      trail = "darktrail"
+		elseif combat.damtype == DamageType.NATURE then    explosion = "slime"               particle = "bolt_slime"     trail = "slimetrail"
+		elseif combat.damtype == DamageType.BLIGHT then    explosion = "slime"               particle = "bolt_slime"     trail = "slimetrail"
+		end
+
+		-- Compute damage
+		local dam = self:combatDamage(combat)
+		local damrange = self:combatDamageRange(combat)
+		dam = rng.range(dam, dam * damrange)
+		dam = self:spellCrit(dam)
+		dam = dam * self:combatTalentWeaponDamage(t, 0.4, 1.1)
+
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, combat.damtype, dam, {type=explosion})
+
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Channel raw mana through your staff, projecting a bolt of your staff damage type doing %d%% staff damage.
-		This attack always has a 95%% chance to hit and ignores target armour.]]):
+		This attack always has a 100%% chance to hit and ignores target armour.]]):
 		format(self:combatTalentWeaponDamage(t, 0.4, 1.1) * 100)
 	end,
 }
