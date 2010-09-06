@@ -19,29 +19,31 @@
 
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped (and used!) by the Shade of Angmar
-newEntity{ base = "BASE_STAFF",
-	define_as = "STAFF_ANGMAR", rarity=false,
-	name = "Angmar's Fall", unique=true,
-	desc = [[Made from the bones of of many creatures this staff glows with power. You can feel its evilness as you touch it.]],
-	require = { stat = { mag=25 }, },
-	cost = 5,
-	combat = {
-		dam = 10,
-		apr = 0,
-		physcrit = 1.5,
-		dammod = {mag=1.1},
-	},
+-- Allows undeads to pass as normal humans
+newEntity{ define_as = "CLOAK_DECEPTION",
+	unique = true, quest=true,
+	slot = "CLOAK",
+	type = "armor", subtype="cloak",
+	unided_name = "black cloak",
+	name = "Cloak of Deception",
+	display = ")", color=colors.DARk_GREY,
+	encumber = 1,
+	desc = [[A black cloak, with subtle illusion enchantments woven in its very fabric.]],
+
 	wielder = {
-		see_invisible = 2,
-		combat_spellpower = 7,
-		combat_spellcrit = 8,
-		inc_damage={
-			[DamageType.FIRE] = 4,
-			[DamageType.COLD] = 4,
-			[DamageType.ACID] = 4,
-			[DamageType.LIGHTNING] = 4,
-			[DamageType.BLIGHT] = 4,
-		},
+		combat_spellpower = 5,
+		combat_dam = 5,
 	},
+
+	on_wear = function(self, who)
+		who.old_faction_cloak = who.faction
+		who.faction = "reunited-kingdom"
+		if who.player then engine.Map:setViewerFaction(who.faction) end
+		game.logPlayer(who, "#LIGHT_BLUE#An illusion appears around %s, making it appear human.", who.name:capitalize())
+	end,
+	on_takeoff = function(self, who)
+		who.faction = who.old_faction_cloak
+		if who.player then engine.Map:setViewerFaction(who.faction) end
+		game.logPlayer(who, "#LIGHT_BLUE#The illusion covering %s disappears", who.name:capitalize())
+	end,
 }

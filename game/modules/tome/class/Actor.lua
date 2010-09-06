@@ -449,6 +449,7 @@ function _M:tooltip(x, y, seen_by)
 	end
 
 	return ([[%s%s%s
+%s / %s
 Rank: %s%s
 #00ffff#Level: %d
 Exp: %d/%d
@@ -460,6 +461,7 @@ Size: #ANTIQUE_WHITE#%s
 Faction: %s%s (%s, %d)
 %s]]):format(
 	self:getDisplayString(), rank_color, self.name,
+	self.type:capitalize(), self.subtype:capitalize(),
 	rank_color, rank,
 	self.level,
 	self.exp,

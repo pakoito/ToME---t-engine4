@@ -175,9 +175,11 @@ function _M:generate(lev, old_lev)
 		end
 
 		if status then
-			if status.lite then self.level.map.lites(i-1, j-1, true) status.lite = nil end
-			if status.remember then self.level.map.remembers(i-1, j-1, true) status.remember = nil end
-			if pairs(status) then for k, v in pairs(status) do self.level.map.attrs(i-1, j-1, k, v) end end
+			local s = table.clone(status)
+			if s.lite then self.level.map.lites(i-1, j-1, true) s.lite = nil end
+			if s.remember then self.level.map.remembers(i-1, j-1, true) s.remember = nil end
+			if s.special then self.map.room_map[i-1][j-1].special = s.special end
+			if pairs(s) then for k, v in pairs(s) do self.level.map.attrs(i-1, j-1, k, v) end end
 		end
 
 		if define_spot then

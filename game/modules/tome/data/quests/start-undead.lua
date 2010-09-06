@@ -30,3 +30,15 @@ on_status_change = function(self, who, status, sub)
 		who:grantQuest("starter-zones")
 	end
 end
+
+on_grant = function(self, who)
+	local npc
+	for uid, e in pairs(game.level.entities) do
+		if e.define_as and e.define_as == "NECROMANCER" then npc = e break end
+	end
+
+	local Chat = require"engine.Chat"
+	local chat = Chat.new("undead-start-game", npc, who)
+	chat:invoke()
+	self:setStatus(engine.Quest.COMPLETED, "talked-start")
+end

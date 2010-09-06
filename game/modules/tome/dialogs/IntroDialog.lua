@@ -22,7 +22,7 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(actor)
+function _M:init(actor, on_exit)
 	self.actor = actor
 	engine.Dialog.init(self, "Welcome to ToME", 500, 400)
 
@@ -30,6 +30,7 @@ function _M:init(actor)
 		ACCEPT = "EXIT",
 		EXIT = function()
 			game:unregisterDialog(self)
+			on_exit()
 		end,
 	})
 end

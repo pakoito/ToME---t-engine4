@@ -27,38 +27,46 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
-newEntity{ define_as = "SHADE_OF_ANGMAR",
-	type = "undead", subtype = "skeleton", unique = true,
-	name = "The Shade of Angmar",
-	display = "s", color=colors.VIOLET,
-	shader = "unique_glow",
-	desc = [[This skeleton looks nasty. There is red flames in its empty eye sockets. It wield a nasty sword and towers toward you, throwing spells.]],
-	level_range = {7, 20}, exp_worth = 2,
-	max_life = 150, life_rating = 15, fixed_rating = true,
-	max_mana = 85,
-	max_stamina = 85,
-	rank = 4,
-	size_category = 3,
+newEntity{
+	define_as = "NECROMANCER",
+	type = "humanoid", subtype = "human",
+	display = "p", color=colors.DARK_GREY,
+	name = "Necromancer", color=colors.DARK_GREY,
+	desc = [[An human dressed in black robes. He mumbles is a harsh tongue. He seems to think you are his slave.]],
+	level_range = {1, nil}, exp_worth = 1,
+
+	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, CLOAK=1, QUIVER=1 },
+	resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=10, nb=1, {type="money"} },
 	infravision = 20,
-	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
-	instakill_immune = 1,
-	blind_immune = 1,
-	move_others=true,
+	lite = 2,
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_ANGMAR", autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	rank = 2,
+	size_category = 2,
 
-	resolvers.talents{
-		[Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
-		[Talents.T_STAMINA_POOL]=1, [Talents.T_SWORD_MASTERY]=3, [Talents.T_STUNNING_BLOW]=1,
+	open_door = true,
+
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	energy = { mod=1 },
+	stats = { str=10, dex=8, mag=16, con=6 },
+
+	max_life = resolvers.rngavg(70,80), life_rating = 7,
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloak", defined="CLOAK_DECEPTION", autoreq=true},
 	},
 
-	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
+	resolvers.talents{
+		[Talents.T_SOUL_ROT]=1,
+	},
 
-	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
+	die = function(self, src)
+		self.die = function() end
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("undead-start-kill", self, game.player)
+		chat:invoke()
 	end,
 }

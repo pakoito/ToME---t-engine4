@@ -135,7 +135,7 @@ function _M:newGame()
 
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
-		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone)
+		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
 		self.player:resolve(nil, true)
@@ -146,11 +146,12 @@ function _M:newGame()
 		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
 		self.player:playerLevelup(function()
-			self.player:grantQuest(self.player.starting_quest)
-			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player))
-			self.player:resetToFull()
-			self.player:registerCharacterPlayed()
-			self.player:onBirth(birth)
+			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player, function()
+				self.player:resetToFull()
+				self.player:registerCharacterPlayed()
+				self.player:grantQuest(self.player.starting_quest)
+				self.player:onBirth(birth)
+			end))
 		end)
 	end, quickbirth)
 	self:registerDialog(birth)
@@ -276,7 +277,7 @@ function _M:leaveLevel(level, lev, old_lev)
 	end
 end
 
-function _M:changeLevel(lev, zone, keep_old_lev)
+function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if not self.player.game_ender then
 		game.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
 		return
@@ -320,7 +321,7 @@ function _M:changeLevel(lev, zone, keep_old_lev)
 		self.player:move(self.player.wild_x, self.player.wild_y, true)
 		self.player.last_wilderness = self.zone.short_name
 	else
-		if lev > old_lev then
+		if lev > old_lev and not force_down then
 			self.player:move(self.level.default_up.x, self.level.default_up.y, true)
 		else
 			self.player:move(self.level.default_down.x, self.level.default_down.y, true)

@@ -21,7 +21,7 @@ return {
 	name = "Paths of the Dead",
 	level_range = {1, 8},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 8,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return 1 + zone.max_level - (zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2)) end,
 	width = 50, height = 50,
@@ -29,9 +29,11 @@ return {
 --	all_lited = true,
 	persistant = "zone",
 	ambiant_music = "Dark Secrets.ogg",
+	no_level_connectivity = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
+			force_last_stair = true,
 			nb_rooms = 10,
 			rooms = {"simple", "pilar", {"money_vault",5}},
 			lite_room_chance = 100,
@@ -44,7 +46,6 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
---			guardian = "SHADE_OF_ANGMAR", -- The gardian is set in the static map
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -61,6 +62,12 @@ return {
 		[1] = {
 			generator = { map = {
 				up = "UP_WILDERNESS",
+			}, },
+		},
+		[8] = {
+			generator = { map = {
+				class = "engine.generator.map.Static",
+				map = "zones/paths-of-the-dead-last",
 			}, },
 		},
 	},

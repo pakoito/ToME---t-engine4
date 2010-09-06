@@ -46,7 +46,7 @@ newBirthDescriptor{
 		faction = "undead",
 		default_wilderness = {34, 49},
 		starting_zone = "paths-of-the-dead",
-		starting_level = 8,
+		starting_level = 8, starting_level_force_down = true,
 		starting_quest = "start-undead",
 		undead = 1,
 	}

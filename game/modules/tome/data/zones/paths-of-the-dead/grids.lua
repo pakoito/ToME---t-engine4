@@ -18,3 +18,11 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+
+newEntity{
+	define_as = "SUMMON_CIRCLE",
+	name = "unholy circle", image = "terrain/summon-glyph.png",
+	display = ';', color=colors.GOLD, back_color=colors.GREY,
+	always_remember = true,
+	does_block_move = true,
+}
