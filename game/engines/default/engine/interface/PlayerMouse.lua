@@ -41,7 +41,7 @@ function _M:mouseMove(tmx, tmy, spotHostiles)
 		self:move(tmx, tmy, true)
 	else
 		-- Just spend a turn
-		if self.x == tmx and self.y == ny then self:move(self.x, self.y) end
+		if self.x == tmx and self.y == tmy then self:move(self.x, self.y) return end
 
 		-- If hostiles, attack!
 		if (spotHostiles and spotHostiles(self)) or math.floor(core.fov.distance(self.x, self.y, tmx, tmy)) == 1 then
