@@ -46,7 +46,7 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
-			gardian = "HALF_BONE_GIANT", guardian_level = 1,
+			guardian = "HALF_BONE_GIANT", guardian_level = 1,
 		},
 		object = {
 			class = "engine.generator.object.Random",

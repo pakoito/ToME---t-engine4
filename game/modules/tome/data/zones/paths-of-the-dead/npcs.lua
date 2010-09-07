@@ -114,12 +114,12 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HALF_BONE_GIANT",
-	name = "Half-Finished Bone Giant", color=colors.LIGHT_UMBER, unique=true,
+	name = "Half-Finished Bone Giant", color=colors.VIOLET, unique=true,
 	desc = [[A towering creature, made from the bones of hundreds of dead bodies. It is covered by an unholy aura.
 This specimen look like it was hastily assembled and is not really complete yet.]],
 	level_range = {7, nil}, exp_worth = 1,
 	rank = 4,
-	max_life = resolvers.rngavg(100,120),
+	max_life = resolvers.rngavg(100,120), life_rating = 14,
 	combat_armor = 20, combat_def = 0,
 	on_melee_hit = {[DamageType.BLIGHT]=resolvers.mbonus(5, 2)},
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(5, 2)},

@@ -523,6 +523,8 @@ function _M:physicalCrit(dam, weapon, target)
 		chance = chance - target:getTalentLevel(target.T_MASSIVE_ARMOUR_TRAINING) * 1.5
 	end
 
+	chance = util.bound(chance, 0, 100)
+
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
 		dam = dam * 1.5
