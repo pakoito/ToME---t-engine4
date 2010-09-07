@@ -45,11 +45,11 @@ function _M:run()
 	self.mod_list = Module:listModules()
 	self.save_list = Module:listSavefiles()
 
-	-- Setup display
-	self:selectStepMain()
-
 	self:checkLogged()
 	self:engineVersion()
+
+	-- Setup display
+	self:selectStepMain()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
@@ -61,8 +61,15 @@ end
 
 function _M:checkLogged()
 	if profile.auth then
-		self.s_log = core.display.drawStringBlendedNewSurface(self.profile_font, "Online Profile: "..profile.auth.name.."[http://te4.org/players/"..profile.auth.page.."]", 255, 255, 0)
+		self.logged_url = "http://te4.org/players/"..profile.auth.page
+		local str = "Online Profile: "..profile.auth.name.."[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
+		local plain = str:removeColorCodes()
+		local w, h = self.profile_font:size(plain)
+		self.s_log = core.display.newSurface(w, h)
+		self.s_log:erase(0, 0, 0)
+		self.s_log:drawColorStringBlended(self.profile_font, str, 0, 0, 255, 255, 0)
 	else
+		self.logged_url = nil
 		self.s_log = nil
 	end
 end
@@ -212,6 +219,7 @@ function _M:selectStepMain()
 					self.news.text = env.text
 					print("Latest engine version available: ", env.version[4], env.version[1], env.version[2], env.version[3])
 					self.latest_engine_version = env.version
+					if env.link then self.news.link = env.link end
 				else
 					self.news = nil
 				end
@@ -233,7 +241,11 @@ Now go and have some fun!]]
 			}
 		end
 
-		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
+		if self.news.link then
+			self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
+		else
+			self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
+		end
 	end
 	self.step.do_tooltip = true
 
@@ -248,6 +260,19 @@ Now go and have some fun!]]
 
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
+
+	if self.s_log then
+		local w, h = self.s_log:getSize()
+		self.mouse:registerZone(self.w - w, self.h - h, w, h, function(button)
+			if button == "left" then util.browserOpenUrl(self.logged_url) end
+		end, {button=true})
+	end
+
+	if self.news.link then
+		self.mouse:registerZone(5, self.tooltip.h - 30, self.tooltip.w, 30, function(button)
+			if button == "left" then util.browserOpenUrl(self.news.link) end
+		end, {button=true})
+	end
 end
 
 function _M:selectStepNew()

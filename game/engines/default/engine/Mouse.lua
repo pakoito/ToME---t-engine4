@@ -60,8 +60,8 @@ function _M:setCurrent()
 end
 
 --- Registers a click zone that when clicked will call the object's "onClick" method
-function _M:registerZone(x, y, w, h, fct, mode)
-	table.insert(self.areas, 1, {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode})
+function _M:registerZone(x, y, w, h, fct, mode, name)
+	table.insert(self.areas, 1, {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode, name=name})
 end
 
 function _M:registerZones(t)

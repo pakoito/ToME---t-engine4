@@ -103,7 +103,7 @@ function table.reverse(t)
 end
 function table.listify(t)
 	local tt = {}
-	for k, e in pairs(t) do tt[#tt+1] = {k, e} print("listify", #tt, k, e) end
+	for k, e in pairs(t) do tt[#tt+1] = {k, e} end
 	return tt
 end
 
@@ -162,10 +162,12 @@ local Puid_cap = "UID:" * lpeg.C(lpeg.R"09"^1) * ":" * lpeg.C(lpeg.R"09")
 local Pcolorname = (lpeg.R"AZ" + "_")^3
 local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
 local Pcolorcode = Pcode * Pcode
+local Pfontstyle = "{" * (lpeg.P"bold" + lpeg.P"italic" + lpeg.P"underline" + lpeg.P"normal") * "}"
+local Pfontstyle_cap = "{" * lpeg.C(lpeg.P"bold" + lpeg.P"italic" + lpeg.P"underline" + lpeg.P"normal") * "}"
 local Pcolorcodefull = Pcolorcode * Pcolorcode * Pcolorcode
 
 function string.removeColorCodes(str)
-	return str:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", "")
+	return str:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", "")
 end
 
 function string.splitLine(str, max_width, font)
@@ -173,7 +175,7 @@ function string.splitLine(str, max_width, font)
 	local lines = {}
 	local cur_line, cur_size = "", 0
 	for _, v in ipairs(str:split(lpeg.S"\n ")) do
-		local shortv = v:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", "")
+		local shortv = v:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", "")
 		local w, h = font:size(shortv)
 
 		if cur_size + space_w + w < max_width then
@@ -247,7 +249,7 @@ end
 
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
-	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", true)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
@@ -257,6 +259,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
+		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
 		if nr and ng and nb then
 			oldr, oldg, oldb = r, g, b
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
@@ -278,6 +281,8 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 				if h > max_h then max_h = h end
 				x = x + (w or 0)
 			end
+		elseif fontstyle then
+			font:setStyle(fontstyle)
 		else
 			local w, h = font:size(v)
 			if h > max_h then max_h = h end
@@ -296,7 +301,7 @@ end
 
 
 getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y, r, g, b)
-	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname) * "#", true)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
@@ -306,6 +311,7 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
+		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
 		if nr and ng and nb then
 			oldr, oldg, oldb = r, g, b
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
@@ -327,6 +333,8 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 				if h > max_h then max_h = h end
 				x = x + (w or 0)
 			end
+		elseif fontstyle then
+			font:setStyle(fontstyle)
 		else
 			local w, h = font:size(v)
 			if h > max_h then max_h = h end
@@ -585,4 +593,23 @@ function util.uuid()
 	local tpl = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
 	local uuid = tpl:gsub("[xy]", function(c) if c=='y' then return rng.table(y) else return rng.table(x) end end)
 	return uuid
+end
+
+function util.browserOpenUrl(url)
+	local tries = {
+		"rundll32 url.dll,FileProtocolHandler %s",  -- Windows
+		"open %s",  -- OSX
+		"xdg-open %s",  -- Linux - portable way
+		"gnome-open %s",  -- Linux - Gnome
+		"kde-open %s",  -- Linux - Kde
+		"firefox %s",  -- Linux - try to find something
+		"mozilla-firefox %s",  -- Linux - try to find something
+	}
+	while #tries > 0 do
+		local urlbase = table.remove(tries, 1)
+		urlbase = urlbase:format(url)
+		print("Trying to run URL with command: ", urlbase)
+		if os.execute(urlbase) == 0 then return true end
+	end
+	return false
 end

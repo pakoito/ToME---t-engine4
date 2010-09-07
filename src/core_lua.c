@@ -505,6 +505,18 @@ static int sdl_font_lineskip(lua_State *L)
 	return 1;
 }
 
+static int sdl_font_style(lua_State *L)
+{
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	const char *style = luaL_checkstring(L, 2);
+
+	if (!strcmp(style, "normal")) TTF_SetFontStyle(*f, 0);
+	else if (!strcmp(style, "bold")) TTF_SetFontStyle(*f, TTF_STYLE_BOLD);
+	else if (!strcmp(style, "italic")) TTF_SetFontStyle(*f, TTF_STYLE_ITALIC);
+	else if (!strcmp(style, "underline")) TTF_SetFontStyle(*f, TTF_STYLE_UNDERLINE);
+	return 0;
+}
+
 static int sdl_surface_drawstring(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
@@ -1378,6 +1390,7 @@ static const struct luaL_reg sdl_font_reg[] =
 	{"size", sdl_font_size},
 	{"height", sdl_font_height},
 	{"lineSkip", sdl_font_lineskip},
+	{"setStyle", sdl_font_style},
 	{NULL, NULL},
 };
 
