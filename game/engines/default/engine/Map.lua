@@ -593,9 +593,19 @@ end
 function _M:checkAllEntitiesNoStop(x, y, what, ...)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return {} end
 	local ret = {}
-	if self.map[x + y * self.w] then
-		for _, e in pairs(self.map[x + y * self.w]) do
-			ret[e] = e:check(what, x, y, ...)
+	local tile = self.map[x + y * self.w]
+	if tile then
+		-- Collect the keys so we can modify the table while iterating
+		local keys = {}
+		for k, _ in pairs(tile) do
+			table.insert(keys, k)
+		end
+		-- Now iterate over the stored keys, checking if the entry exists
+		for i = 1, #keys do
+			local e = tile[keys[i]]
+			if e then
+				ret[e] = e:check(what, x, y, ...)
+			end
 		end
 	end
 	return ret

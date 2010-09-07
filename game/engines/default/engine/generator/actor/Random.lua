@@ -35,15 +35,17 @@ function _M:init(zone, map, level, spots)
 	self.nb_npc = data.nb_npc or {10, 20}
 	self.area = data.area or {x1=0, x2=self.map.w-1, y1=0, y2=self.map.h-1}
 	self.guardian = data.guardian
+	self.guardian_level = data.guardian_level
 	self.post_generation = data.post_generation
 end
 
 function _M:generate()
 	self:regenFrom(1)
 
-	if self.level.level < self.zone.max_level then return end
+	local glevel = self.zone.max_level
+	if self.guardian_level then glevel = self.guardian_level end
 
-	if self.guardian then
+	if self.guardian and self.level.level == glevel then
 		local m = self.zone:makeEntityByName(self.level, "actor", self.guardian)
 		if m then
 			local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
