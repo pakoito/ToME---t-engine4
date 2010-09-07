@@ -374,10 +374,10 @@ end
 function _M:combatArmor()
 	local add = 0
 	if self:hasHeavyArmor() and self:knowTalent(self.T_HEAVY_ARMOUR_TRAINING) then
-		add = add + self:getTalentLevel(self.T_HEAVY_ARMOUR_TRAINING)
+		add = add + self:getTalentLevel(self.T_HEAVY_ARMOUR_TRAINING) * 1.4
 	end
 	if self:hasMassiveArmor() and self:knowTalent(self.T_MASSIVE_ARMOUR_TRAINING) then
-		add = add + self:getTalentLevel(self.T_MASSIVE_ARMOUR_TRAINING)
+		add = add + self:getTalentLevel(self.T_MASSIVE_ARMOUR_TRAINING) * 1.6
 	end
 	return self.combat_armor + add
 end
@@ -515,6 +515,13 @@ function _M:physicalCrit(dam, weapon, target)
 	local chance = self:combatCrit(weapon)
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
+
+	if target:hasHeavyArmor() and target:knowTalent(target.T_HEAVY_ARMOUR_TRAINING) then
+		chance = chance - target:getTalentLevel(target.T_HEAVY_ARMOUR_TRAINING) * 1.9
+	end
+	if target:hasMassiveArmor() and target:knowTalent(target.T_MASSIVE_ARMOUR_TRAINING) then
+		chance = chance - target:getTalentLevel(target.T_MASSIVE_ARMOUR_TRAINING) * 1.5
+	end
 
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
