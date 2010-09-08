@@ -20,7 +20,11 @@
 name = "The rotting stench of the dead"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "\n"
+	desc[#desc+1] = "You have been ressurected as an undead by some dark powers."
+	desc[#desc+1] = "However the ritual failed in some way and you retain your own mind, you need to get out of this dark place and try to carve a place for yourself in the world."
+	if self:isCompleted("black-cloak") then
+		desc[#desc+1] = "You have found a very special cloak that will help you walk among the living without trouble."
+	end
 	return table.concat(desc, "\n")
 end
 

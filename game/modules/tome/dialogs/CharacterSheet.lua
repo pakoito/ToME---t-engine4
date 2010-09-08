@@ -471,7 +471,7 @@ function _M:dump()
 	table.sort(achs, function(a, b) return a.name < b.name end)
 	for i, d in ipairs(achs) do
 		local a = world:getAchievementFromId(d.id)
-		nl(("'%s' was wchieved for %s At %s"):format(a.name, a.desc, d.data.when))
+		nl(("'%s' was achieved for %s At %s"):format(a.name, a.desc, d.data.when))
 	end
 
 	nl()

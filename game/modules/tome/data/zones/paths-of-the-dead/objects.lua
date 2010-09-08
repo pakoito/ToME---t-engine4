@@ -46,4 +46,22 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 		if who.player then engine.Map:setViewerFaction(who.faction) end
 		game.logPlayer(who, "#LIGHT_BLUE#The illusion covering %s disappears", who.name:capitalize())
 	end,
+	on_pickup = function(self, who)
+		who:setQuestStatus("start-undead", engine.Quest.COMPLETED, "black-cloak")
+	end,
+}
+
+newEntity{ base = "BASE_LITE", define_as = "UNDEATH_PHIAL",
+	unided_name = "phial filled with darkness", unique = true,
+	name = "Phial of Undead", color=colors.DARK_GREY,
+	desc = [[This phial seems filled with darkness, yet it cleanses your thoughts.]],
+	rarity = false,
+	encumber = 2,
+	cost = 50,
+	material_level = 2,
+
+	wielder = {
+		lite = 1,
+		infravision = 6,
+	},
 }

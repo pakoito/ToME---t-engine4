@@ -120,13 +120,15 @@ This specimen look like it was hastily assembled and is not really complete yet.
 	level_range = {7, nil}, exp_worth = 1,
 	rank = 4,
 	max_life = resolvers.rngavg(100,120), life_rating = 14,
-	combat_armor = 20, combat_def = 0,
+	combat_armor = 7, combat_def = 7,
 	on_melee_hit = {[DamageType.BLIGHT]=resolvers.mbonus(5, 2)},
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(5, 2)},
 	resolvers.talents{ [Talents.T_BONE_ARMOUR]=3, [Talents.T_THROW_BONES]=1, [Talents.T_STUN]=1, },
 	resolvers.sustains_at_birth(),
 
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {defined="UNDEATH_PHIAL"} },
+
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
 
 	on_die = function(self, who)

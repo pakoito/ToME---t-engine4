@@ -318,6 +318,8 @@ function _M:getTextualDesc()
 	if w.combat_spellpower or w.combat_spellcrit then desc[#desc+1] = ("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0) end
 
 	if w.lite then desc[#desc+1] = ("Light radius %d"):format(w.lite) end
+	if w.infravision then desc[#desc+1] = ("Infravision radius %d"):format(w.infravision) end
+	if w.heightened_senses then desc[#desc+1] = ("Heightened senses radius %d"):format(w.heightened_senses) end
 
 	if w.see_invisible then desc[#desc+1] = ("See invisible: %d"):format(w.see_invisible) end
 	if w.invisible then desc[#desc+1] = ("Invisibility: %d"):format(w.invisible) end
