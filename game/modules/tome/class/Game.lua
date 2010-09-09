@@ -359,7 +359,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	-- Tell the map to use path strings to speed up path calculations
 	for uid, e in pairs(self.level.entities) do
-		self.level.map:addPathString(e:getPathString())
+		if e.getPathString then
+			self.level.map:addPathString(e:getPathString())
+		end
 	end
 	self.zone_name_s = nil
 	self.level.map:redisplay()

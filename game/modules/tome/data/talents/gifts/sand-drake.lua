@@ -49,7 +49,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When your target is below %d life you can try to swallow it, killing it automatically and regaining life and equilibrium.]]):
+		return ([[When your target is below %d%% life you can try to swallow it, killing it automatically and regaining life and equilibrium.]]):
 		format(10 + 3 * self:getTalentLevel(t))
 	end,
 }

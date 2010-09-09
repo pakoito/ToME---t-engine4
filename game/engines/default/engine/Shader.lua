@@ -32,7 +32,7 @@ function _M:init(name, args)
 	self.args = args or {}
 	self.name = name
 	self.totalname = self:makeTotalName()
-	print("[SHADER] making shader from", name, " into ", self.totalname)
+--	print("[SHADER] making shader from", name, " into ", self.totalname)
 
 	if core.shader.active() then self:loaded() end
 end
@@ -108,7 +108,7 @@ end
 function _M:loaded()
 	if _M.progs[self.totalname] then
 		self.shad = _M.progs[self.totalname]
-		print("[SHADER] using cached shader "..self.totalname)
+--		print("[SHADER] using cached shader "..self.totalname)
 		self.shad = _M.progs[self.totalname]
 	else
 		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")

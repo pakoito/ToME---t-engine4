@@ -1149,6 +1149,7 @@ end
 function _M:startTalentCooldown(t)
 	if not t.cooldown then return end
 	local cd = t.cooldown
+	if type(cd) == "function" then cd = cd(self, t) end
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
 	if t.type[1]:find("^spell/") then
 		self.talents_cd[t.id] = math.ceil(cd * (1 - self.spell_cooldown_reduction or 0))
