@@ -50,6 +50,7 @@ newBirthDescriptor{
 		starting_quest = "start-undead",
 		undead = 1,
 	}
+	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
 }
 
 newBirthDescriptor
