@@ -435,13 +435,14 @@ function _M:display()
 
 		if not self.zone_name_s then
 			local s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, self.level.level), 0, 255, 255)
-			self.zone_name_s = s:glTexture()
 			self.zone_name_w, self.zone_name_h = s:getSize()
+			self.zone_name_s, self.zone_name_tw, self.zone_name_th = s:glTexture()
 		end
-		self.zone_name_s:toScreen(
+		self.zone_name_s:toScreenFull(
 			self.level.map.display_x + self.level.map.viewport.width - self.zone_name_w,
 			self.level.map.display_y + self.level.map.viewport.height - self.zone_name_h,
-			self.zone_name_w, self.zone_name_h
+			self.zone_name_w, self.zone_name_h,
+			self.zone_name_tw, self.zone_name_th
 		)
 
 		-- Minimap display

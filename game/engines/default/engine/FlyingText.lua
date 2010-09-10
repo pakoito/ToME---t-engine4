@@ -35,13 +35,17 @@ function _M:add(x, y, duration, xvel, yvel, str, color, bigfont)
 	color = color or {255,255,255}
 	local s = core.display.drawStringBlendedNewSurface(bigfont and self.bigfont or self.font, str, color[1], color[2], color[3])
 	if not s then return end
+	local w, h = s:getSize()
+	local t, tw, th = s:glTexture()
 	local f = {
 		x=x,
 		y=y,
+		w=w, h=h,
+		tw=tw, th=th,
 		duration=duration or 10,
 		xvel = xvel or 0,
 		yvel = yvel or 0,
-		s = s
+		t = t,
 	}
 	self.flyers[f] = true
 	return f
@@ -57,7 +61,7 @@ function _M:display()
 	local dels = {}
 
 	for fl, _ in pairs(self.flyers) do
-		fl.s:toScreen(fl.x, fl.y)
+		fl.t:toScreenFull(fl.x, fl.y, fl.w, fl.h, fl.tw, fl.th)
 		fl.x = fl.x + fl.xvel
 		fl.y = fl.y + fl.yvel
 		fl.duration = fl.duration - 1

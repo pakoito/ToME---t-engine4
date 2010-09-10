@@ -45,10 +45,15 @@ newAI("move_escort", function(self)
 
 		local tx, ty = self.escort_target.x, self.escort_target.y
 		local a = Astar.new(game.level.map, self)
-		local path = a:calc(self.x, self.y, tx, ty)
+		local path = self.escort_path
+		if not path or #path == 0 then path = a:calc(self.x, self.y, tx, ty) end
 		if not path then
 			return self:runAI("move_simple")
 		else
+			self.escort_path = {}
+			for i = 1, 3 do
+				if path[i+1] then self.escort_path[i] = path[i+1] end
+			end
 			return self:move(path[1].x, path[1].y)
 		end
 	end
