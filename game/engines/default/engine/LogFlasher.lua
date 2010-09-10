@@ -58,11 +58,14 @@ function _M:call(style, str, ...)
 	if self.flashing == 0 and #self.log > 0 then self.log = {} end
 
 	local base = ""
-	if #self.log > 0 then base = table.remove(self.log) end
+	if #self.log > 0 then base = table.remove(self.log)[1] end
 
 	local lines = (base .. " " .. str:format(...)):splitLines(self.w - 4, self.font)
 	for i = 1, #lines do
-		table.insert(self.log, lines[i])
+		self.surface:erase(0,0,0,255)
+		self.surface:drawColorStringBlended(self.font, lines[i], 0, 0, self.color[1], self.color[2], self.color[3])
+		local t = self.surface:glTexture()
+		table.insert(self.log, {lines[i],t})
 	end
 	self.flashing_style = style
 	self.flashing = 20
@@ -79,23 +82,20 @@ function _M:empty(force)
 end
 
 function _M:display()
-	-- If nothing changed, return the same surface as before
-	if not self.changed then return self.surface end
 	self.changed = false
 
 	-- Erase and the display the map
 	if self.flashing_style == BAD then
-		self.surface:erase(self.bgcolor[1] + self.flashing * 10, self.bgcolor[2], self.bgcolor[3])
+		core.display.drawQuad(self.display_x, self.display_y, self.w, self.h, self.bgcolor[1] + self.flashing * 10, self.bgcolor[2], self.bgcolor[3], 255)
 	elseif self.flashing_style == NEUTRAL then
-		self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3] + self.flashing * 10)
+		core.display.drawQuad(self.display_x, self.display_y, self.w, self.h, self.bgcolor[1], self.bgcolor[2], self.bgcolor[3] + self.flashing * 10, 255)
 	else
-		self.surface:erase(self.bgcolor[1], self.bgcolor[2] + self.flashing * 10, self.bgcolor[3])
-        end
-	self.surface:drawColorStringBlended(self.font, self.log[1] or "", 0, 0, self.color[1], self.color[2], self.color[3])
+		core.display.drawQuad(self.display_x, self.display_y, self.w, self.h, self.bgcolor[1], self.bgcolor[2] + self.flashing * 10, self.bgcolor[3], 255)
+	end
+
+--	if self.log[1] then self.log[1][2]:toScreen(self.display_x, self.display_y, self.w, self.h) end
 
 	self.flashing = self.flashing - 1
-	if self.flashing > 0 then self.changed = true
+	if self.flashing > 0 then
 	else table.remove(self.log, 1) end
-
-	return self.surface
 end

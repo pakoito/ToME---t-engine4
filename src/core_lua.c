@@ -726,6 +726,38 @@ static int gl_texture_to_sdl(lua_State *L)
 	return 1;
 }
 
+static int gl_draw_quad(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+	float r = luaL_checknumber(L, 5) / 255;
+	float g = luaL_checknumber(L, 6) / 255;
+	float b = luaL_checknumber(L, 7) / 255;
+	float a = luaL_checknumber(L, 8) / 255;
+
+	if (lua_isuserdata(L, 9))
+	{
+		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 9);
+		glBindTexture(GL_TEXTURE_2D, *t);
+	}
+	else
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+	glColor4f(r, g, b, a);
+	glBegin( GL_QUADS );                 /* Draw A Quad              */
+	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
+	glTexCoord2f(0,1); glVertex2f(0  + x, h + y);
+	glTexCoord2f(1,1); glVertex2f(w + x, h + y);
+	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
+	glEnd( );                            /* Done Drawing The Quad    */
+
+	glColor4f(1, 1, 1, 1);
+	return 0;
+}
+
+
 static int sdl_load_image(lua_State *L)
 {
 	const char *name = luaL_checkstring(L, 1);
@@ -1345,6 +1377,7 @@ static const struct luaL_reg displaylib[] =
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
 	{"newFBO", gl_new_fbo},
+	{"drawQuad", gl_draw_quad},
 	{"FBOActive", gl_fbo_is_active},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
