@@ -64,18 +64,20 @@ function _M:init()
 			if self.commands[self.com_sel] then
 				self.line = self.commands[self.com_sel]
 			end
+			self.changed = true
 		end,
 		_DOWN = function()
 			self.com_sel = util.bound(self.com_sel + 1, 1, #self.commands)
 			if self.commands[self.com_sel] then
 				self.line = self.commands[self.com_sel]
 			end
+			self.changed = true
 		end,
 		_ESCAPE = function()
 			game:unregisterDialog(self)
 		end,
 		_BACKSPACE = function()
-			self.line = self.line:sub(1, self.line:len() - 1)
+			self.line = self.line:sub(1, self.line:len() - 1) self.changed = true
 		end,
 		__TEXTINPUT = function(c)
 			self.line = self.line .. c
@@ -103,7 +105,7 @@ function _M:drawDialog(s, w, h)
 		i = i - 1
 		dh = dh - self.font:lineSkip()
 	end
-
+	self.changed = false
 end
 
 --- Scroll the zone

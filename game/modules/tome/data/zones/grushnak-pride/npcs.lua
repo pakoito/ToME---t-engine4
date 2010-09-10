@@ -56,6 +56,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 --		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
 		{type="jewelry", subtype="ring", defined="PRIDE_GLORY", autoreq=true},
 	},
+	resolvers.drops{chance=100, nb=1, {defined="ORB_DESTRUCTION"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	make_escort = {
