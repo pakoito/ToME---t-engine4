@@ -34,7 +34,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ define_as = "TROLL_BILL",
 	type = "giant", subtype = "troll", unique = true,
 	name = "Bill the Stone Troll",
-	display = "T", color=colors.VIOLET,
+	display = "T", color=colors.VIOLET, image="npc/troll_bill.png",
 	desc = [[Big, brawny, powerful and with a taste for hobbit. He has friends called Bert and Tom.
 	He is wielding a small tree trunk and towering toward you.
 	He should have turned to stone long ago, how could he still walk?!]],

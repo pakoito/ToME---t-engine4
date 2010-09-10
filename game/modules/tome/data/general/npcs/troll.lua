@@ -51,7 +51,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
-	name = "forest troll", color=colors.YELLOW_GREEN,
+	name = "forest troll", color=colors.YELLOW_GREEN, image="npc/troll_f.png",
 	desc = [[Green-skinned and ugly, this massive humanoid glares at you, clenching wart-covered green fists.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
-	name = "stone troll", color=colors.DARK_SLATE_GRAY,
+	name = "stone troll", color=colors.DARK_SLATE_GRAY, image="npc/troll_s.png",
 	desc = [[A giant troll with scabrous black skin. With a shudder, you notice the belt of dwarf skulls around his massive waist.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 1,
@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
-	name = "cave troll", color=colors.SLATE,
+	name = "cave troll", color=colors.SLATE, image="npc/troll_c.png",
 	desc = [[This huge troll wields a massive spear and has a disturbingly intelligent look in its piggy eyes.]],
 	level_range = {7, nil}, exp_worth = 1,
 	rarity = 2,
@@ -80,7 +80,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
-	name = "mountain troll", color=colors.UMBER,
+	name = "mountain troll", color=colors.UMBER, image="npc/troll_m.png",
 	desc = [[A large and athletic troll with an extremely tough and warty hide.]],
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 3,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
-	name = "mountain troll thunderer", color=colors.AQUAMARINE,
+	name = "mountain troll thunderer", color=colors.AQUAMARINE, image="npc/troll_mt.png",
 	desc = [[A large and athletic troll with an extremely tough and warty hide.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 5,

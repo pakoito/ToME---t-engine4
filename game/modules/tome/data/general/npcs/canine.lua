@@ -41,7 +41,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "wolf", color=colors.UMBER,
+	name = "wolf", color=colors.UMBER, image="npc/canine_w.png",
 	desc = [[Lean, mean, and shaggy, it stares at you with hungry eyes.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "great wolf", color=colors.UMBER,
+	name = "great wolf", color=colors.UMBER, image="npc/canine_gw.png",
 	desc = [[Larger than a normal wolf, it prowls and snaps at you.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 3,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "dire wolf", color=colors.DARK_UMBER,
+	name = "dire wolf", color=colors.DARK_UMBER, image="npc/canine_dw.png",
 	desc = [[Easily as big as a horse, this wolf menaces you with its claws and fangs.]],
 	level_range = {4, nil}, exp_worth = 1,
 	rarity = 3,
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "white wolf", color=colors.WHITE,
+	name = "white wolf", color=colors.WHITE, image="npc/canine_ww.png",
 	desc = [[A large and muscled wolf from the northern wastes. Its breath is cold and icy and its fur coated in frost.]],
 	level_range = {4, nil}, exp_worth = 1,
 	rarity = 3,
@@ -86,7 +86,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "warg", color=colors.BLACK,
+	name = "warg", color=colors.BLACK, image="npc/canine_warg.png",
 	desc = [[It is a large wolf with eyes full of cunning.]],
 	level_range = {6, nil}, exp_worth = 1,
 	rarity = 4,
@@ -97,7 +97,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "fox", color=colors.RED,
+	name = "fox", color=colors.RED, image="npc/canine_fox.png",
 	desc = [[The quick brown fox jumps over the lazy dog.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
@@ -107,7 +107,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "Rungof the Warg Titan", color=colors.VIOLET, unique=true,
+	name = "Rungof the Warg Titan", color=colors.VIOLET, unique=true, image="npc/canine_rungof.png",
 	desc = [[It is a large wolf with eyes full of cunning, only 3 times bigger than a normal warg.]],
 	level_range = {20, nil}, exp_worth = 2,
 	rank = 4,
