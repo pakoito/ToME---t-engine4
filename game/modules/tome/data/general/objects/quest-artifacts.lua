@@ -221,6 +221,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome",
 	level_range = {30, 40}, rarity = 120,
 	color = colors.VIOLET,
 	fire_proof = true,
+	not_in_stores = true,
 
 	on_pickup = function(self, who)
 		if who == game.player then

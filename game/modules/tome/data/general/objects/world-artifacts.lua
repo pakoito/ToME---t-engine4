@@ -493,6 +493,8 @@ After Frodo destroyed it, Elrond passed the knowledge to Aragorn the King of Men
 			["technique/dualweapon-training"] = 0.1,
 			["technique/shield-defense"] = 0.1,
 			["technique/shield-offense"] = 0.1,
+			["technique/warcries"] = 0.1,
+			["technique/superiority"] = 0.1,
 		},
 	},
 }
@@ -520,6 +522,46 @@ newEntity{ base = "BASE_GREATMAUL",
 		},
 		melee_project={[DamageType.FIRE] = 30},
 	},
+}
+
+newEntity{ base = "BASE_CLOTH_ARMOR",
+	unique = true,
+	name = "Spider-Silk Robe of Torech Ungo", color = colors.DARK_GREEN,
+	unided_name = "spider-silk robe",
+	desc = [[After the fall of Mordor, teams of orcs looking for plunder found the thread of Shelob's own thick webs. They sewed the incredibly strong webbing together into a robe that was given to the head of a Pride before it was lost in a war.]],
+	level_range = {20, 30},
+	rarity = 190,
+	cost = 250,
+	material_level = 3,
+	wielder = {
+		combat_def = 10,
+		combat_armor = 10,
+		inc_stats = { [Stats.STAT_CON] = 4, [Stats.STAT_WIL] = -2, },
+		combat_spellresist = 10,
+		combat_physresist = 10,
+		resists={[DamageType.NATURE] = 30},
+		on_melee_hit={[DamageType.POISON] = 20},
+	},
+}
+
+newEntity{ base = "BASE_HELM",
+	unique = true,
+	name = "Dragon-helm of Dor-lómin",
+	unided_name = "dragon-helm",
+	desc = [[A visored steel helm, embossed and embellished with gold, that bears as its crest the head of Glaurung the Dragon.]],
+	require = { talent = { Talents.T_MASSIVE_ARMOUR_TRAINING }, stat = { str=35 }, },
+	level_range = {37, 45},
+	rarity = 280,
+	cost = 400,
+	material_level = 5,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_CON] = 5, [Stats.STAT_LCK] = -4, },
+		combat_def = 5,
+		combat_armor = 9,
+		fatigue = 10,
+	},
+	max_power = 45, power_regen = 1,
+	use_talent = { id = Talents.T_WARSHOUT, level = 2, power = 80 },
 }
 
 --[=[

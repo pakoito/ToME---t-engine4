@@ -58,7 +58,7 @@ function _M:loadup(level, zone)
 	for i = 1, rng.range(s.min_fill, s.max_fill) - #inven do
 		local filter = rng.table(s.filters)
 		local e = zone:makeEntity(level, "object", filter, nil, true)
-		if e then
+		if e and not e.not_in_stores then
 			if filter.id then e:identify(filter.id) end
 			self:addObject(inven, e)
 			zone:addEntity(level, e, "object")

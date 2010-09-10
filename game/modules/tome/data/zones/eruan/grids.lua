@@ -34,7 +34,14 @@ This one seems to go to the west, to Mount Doom, in the land of Mordor...]],
 	orb_portal = {
 		change_level = 1,
 		change_zone = "mount-doom",
-		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on hellish land, the heart of a volcano...",
+		message = "#VIOLET#You enter the swirling portal while it fades away and in the blink of an eye you set foot on hellish land, the heart of a volcano...",
+		on_preuse = function(self, who)
+			-- Find all portals and deactivate them
+			for i = -4, 4 do for j = -4, 4 do if game.level.map:isBound(who.x + i, who.y + j) then
+				local g = game.level.map(who.x + i, who.y + j, engine.Map.TERRAIN)
+				if g.define_as and g.define_as == "MOUNT_DOOM_PORTAL" then g.orb_portal = nil end
+			end end end
+		end,
 		on_use = function(self, who)
 			who:setQuestStatus("pre-mount-doom", engine.Quest.DONE)
 		end,
