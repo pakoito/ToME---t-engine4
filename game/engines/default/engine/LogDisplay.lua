@@ -31,6 +31,7 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
 	self.surface = core.display.newSurface(w, h)
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	self.log = {}
 	getmetatable(self).__call = _M.call
 	self.max = max or 4000
@@ -43,6 +44,7 @@ function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.surface = core.display.newSurface(w, h)
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	self.changed = true
 end
 
@@ -96,7 +98,13 @@ function _M:display()
 			if self.log[self.scroll + i].reset then r, g, b = self.color[1], self.color[2], self.color[3] end
 		end
 	end
+	self.surface:updateTexture(self.texture)
 	return self.surface
+end
+
+function _M:toScreen()
+	self:display()
+	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
 end
 
 --- Scroll the zone

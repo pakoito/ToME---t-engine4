@@ -403,10 +403,8 @@ function _M:onTurn()
 end
 
 function _M:display()
-	local st = core.game.getTime()
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
-print("=====display01", core.game.getTime()-st)
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
 			self.player:playerFOV()
@@ -417,7 +415,6 @@ print("=====display01", core.game.getTime()-st)
 			self.level.data.background(self.level)
 		end
 
-print("=====display02", core.game.getTime()-st)
 		-- Display using Framebuffer, sotaht we can use shaders and all
 		if self.fbo then
 			self.fbo:use(true)
@@ -436,8 +433,6 @@ print("=====display02", core.game.getTime()-st)
 			self.target:display()
 		end
 
-print("=====display03", core.game.getTime()-st)
-
 		if not self.zone_name_s then
 			local s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, self.level.level), 0, 255, 255)
 			self.zone_name_s = s:glTexture()
@@ -448,34 +443,26 @@ print("=====display03", core.game.getTime()-st)
 			self.level.map.display_y + self.level.map.viewport.height - self.zone_name_h,
 			self.zone_name_w, self.zone_name_h
 		)
-print("=====display04", core.game.getTime()-st)
 
 		-- Minimap display
 		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
-print("=====display05", core.game.getTime()-st)
 	end
 
 	-- We display the player's interface
-	self.flash:display()
-print("=====display06", core.game.getTime()-st)
-	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
-print("=====display07", core.game.getTime()-st)
-	self.player_display:display():toScreen(self.player_display.display_x, self.player_display.display_y)
-print("=====display08", core.game.getTime()-st)
+	self.flash:toScreen()
+	self.logdisplay:toScreen()
+	self.player_display:toScreen()
 	if self.show_npc_list then
-		self.npcs_display:display():toScreen(self.npcs_display.display_x, self.npcs_display.display_y)
+		self.npcs_display:toScreen()
 	else
-		self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
+		self.hotkeys_display:toScreen()
 	end
 	if self.player then self.player.changed = false end
-print("=====display09", core.game.getTime()-st)
 
 	-- Tooltip is displayed over all else
 	self:targetDisplayTooltip(game.w, game.h)
-print("=====display10", core.game.getTime()-st)
 
 	engine.GameTurnBased.display(self)
-print("=====display11", core.game.getTime()-st)
 end
 
 function _M:setupCommands()

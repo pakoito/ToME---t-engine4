@@ -248,7 +248,7 @@ function string.parseHex(str)
 end
 
 local tmps = core.display.newSurface(1, 1)
-getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b)
+getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b, alpha_from_texture)
 	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
 	r = r or 255
 	g = g or 255
@@ -286,21 +286,21 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 		else
 			local w, h = font:size(v)
 			if h > max_h then max_h = h end
-			s:drawString(font, v, x, y, r, g, b)
+			s:drawString(font, v, x, y, r, g, b, alpha_from_texture)
 			x = x + w
 		end
 	end
 	return r, g, b, max_h
 end
 
-getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, dy, dw, dh, r, g, b)
+getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, dy, dw, dh, r, g, b, alpha_from_texture)
 	local w, h = font:size(str)
 	local x, y = dx + (dw - w) / 2, dy + (dh - h) / 2
-	s:drawColorString(font, str, x, y, r, g, b)
+	s:drawColorString(font, str, x, y, r, g, b, alpha_from_texture)
 end
 
 
-getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y, r, g, b)
+getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y, r, g, b, alpha_from_texture)
 	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
 	r = r or 255
 	g = g or 255
@@ -338,17 +338,17 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 		else
 			local w, h = font:size(v)
 			if h > max_h then max_h = h end
-			s:drawStringBlended(font, v, x, y, r, g, b)
+			s:drawStringBlended(font, v, x, y, r, g, b, alpha_from_texture)
 			x = x + w
 		end
 	end
 	return r, g, b, max_h
 end
 
-getmetatable(tmps).__index.drawColorStringBlendedCentered = function(s, font, str, dx, dy, dw, dh, r, g, b)
+getmetatable(tmps).__index.drawColorStringBlendedCentered = function(s, font, str, dx, dy, dw, dh, r, g, b, alpha_from_texture)
 	local w, h = font:size(str)
 	local x, y = dx + (dw - w) / 2, dy + (dh - h) / 2
-	s:drawColorStringBlended(font, str, x, y, r, g, b)
+	s:drawColorStringBlended(font, str, x, y, r, g, b, alpha_from_texture)
 end
 
 dir_to_coord = {

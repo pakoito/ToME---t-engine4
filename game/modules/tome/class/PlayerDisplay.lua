@@ -27,7 +27,6 @@ function _M:init(x, y, w, h, bgcolor)
 	self.w, self.h = w, h
 	self.bgcolor = bgcolor
 	self.font = core.display.newFont("/data/font/VeraMono.ttf", 14)
-	self.surface = core.display.newSurface(w, h)
 	self:resize(x, y, w, h)
 end
 
@@ -40,6 +39,7 @@ function _M:resize(x, y, w, h)
 	self.bars_x = self.font_w * 9
 	self.bars_w = self.w - self.bars_x - 5
 	self.surface = core.display.newSurface(w, h)
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 end
 
 -- Displays the stats
@@ -124,5 +124,11 @@ function _M:display()
 		end
 	end
 
+	self.surface:updateTexture(self.texture)
 	return self.surface
+end
+
+function _M:toScreen()
+	self:display()
+	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
 end

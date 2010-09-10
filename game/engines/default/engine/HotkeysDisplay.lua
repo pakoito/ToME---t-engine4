@@ -35,6 +35,7 @@ function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.surface = core.display.newSurface(w, h)
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	if self.actor then self.actor.changed = true end
 
 	local cw, ch = self.font:size(" ")
@@ -107,7 +108,13 @@ function _M:display()
 		end
 	end
 
+	self.surface:updateTexture(self.texture)
 	return self.surface
+end
+
+function _M:toScreen()
+	self:display()
+	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
 end
 
 --- Call when a mouse event arrives in this zone

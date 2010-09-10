@@ -527,11 +527,13 @@ static int sdl_surface_drawstring(lua_State *L)
 	int r = luaL_checknumber(L, 6);
 	int g = luaL_checknumber(L, 7);
 	int b = luaL_checknumber(L, 8);
+	bool alpha_from_texture = lua_toboolean(L, 9);
 
 	SDL_Color color = {r,g,b};
 	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
 	if (txt)
 	{
+		if (alpha_from_texture) SDL_SetAlpha(txt, 0, 0);
 		sdlDrawImage(*s, txt, x, y);
 		SDL_FreeSurface(txt);
 	}
@@ -549,11 +551,13 @@ static int sdl_surface_drawstring_aa(lua_State *L)
 	int r = luaL_checknumber(L, 6);
 	int g = luaL_checknumber(L, 7);
 	int b = luaL_checknumber(L, 8);
+	bool alpha_from_texture = lua_toboolean(L, 9);
 
 	SDL_Color color = {r,g,b};
 	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
 	if (txt)
 	{
+		if (alpha_from_texture) SDL_SetAlpha(txt, 0, 0);
 		sdlDrawImage(*s, txt, x, y);
 		SDL_FreeSurface(txt);
 	}

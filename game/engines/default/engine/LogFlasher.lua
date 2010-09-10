@@ -35,6 +35,7 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 16)
 	self.font_h = self.font:lineSkip()
 	self.surface = core.display.newSurface(w, h)
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	self.log = {}
 	getmetatable(self).__call = _M.call
 	self.flashing_style = NEUTRAL
@@ -47,6 +48,7 @@ function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.surface = core.display.newSurface(w, h)
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	self.changed = true
 end
 
@@ -58,17 +60,27 @@ function _M:call(style, str, ...)
 	if self.flashing == 0 and #self.log > 0 then self.log = {} end
 
 	local base = ""
-	if #self.log > 0 then base = table.remove(self.log)[1] end
+	if #self.log > 0 then base = table.remove(self.log) end
 
 	local lines = (base .. " " .. str:format(...)):splitLines(self.w - 4, self.font)
 	for i = 1, #lines do
-		self.surface:erase(0,0,0,255)
-		self.surface:drawColorStringBlended(self.font, lines[i], 0, 0, self.color[1], self.color[2], self.color[3])
-		local t = self.surface:glTexture()
-		table.insert(self.log, {lines[i],t})
+		table.insert(self.log, lines[i])
 	end
 	self.flashing_style = style
 	self.flashing = 20
+
+	self:getNext()
+end
+
+function _M:getNext(remove)
+	if remove then table.remove(self.log, 1) end
+	local line = self.log[1]
+
+	self.surface:erase(0,0,0,0)
+	if line then
+		self.surface:drawColorStringBlended(self.font, line, 0, 0, self.color[1], self.color[2], self.color[3], true)
+	end
+	self.surface:updateTexture(self.texture)
 	self.changed = true
 end
 
@@ -81,7 +93,7 @@ function _M:empty(force)
 	end
 end
 
-function _M:display()
+function _M:toScreen()
 	self.changed = false
 
 	-- Erase and the display the map
@@ -92,10 +104,8 @@ function _M:display()
 	else
 		core.display.drawQuad(self.display_x, self.display_y, self.w, self.h, self.bgcolor[1], self.bgcolor[2] + self.flashing * 10, self.bgcolor[3], 255)
 	end
+	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
 
---	if self.log[1] then self.log[1][2]:toScreen(self.display_x, self.display_y, self.w, self.h) end
-
-	self.flashing = self.flashing - 1
-	if self.flashing > 0 then
-	else table.remove(self.log, 1) end
+	if self.flashing > 0 then self.flashing = self.flashing - 1
+	elseif self.changed then self:getNext(true) end
 end

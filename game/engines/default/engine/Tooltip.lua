@@ -58,6 +58,7 @@ end
 
 function _M:erase()
 	self.surface = nil
+	self.texture = nil
 end
 
 function _M:display()
@@ -97,12 +98,12 @@ function _M:display()
 			y = y + self.font_h
 		end
 	end
-	self.texture = self.surface:glTexture()
+	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 end
 
 function _M:toScreen(x, y)
-	if self.surface then
-		self.surface:toScreenWithTexture(self.texture, x, y)
+	if self.texture then
+		self.texture:toScreenFull(x, y, self.w, self.h, self.texture_w, self.texture_h)
 	end
 end
 
@@ -135,13 +136,13 @@ function _M:displayAtMap(tmx, tmy, mx, my)
 		end
 	end
 
-	if self.surface then
+	if self.texture then
 		mx = mx - self.w / 2 + game.level.map.tile_w / 2
 		my = my - self.h
 		if mx < 0 then mx = 0 end
 		if my < 0 then my = 0 end
 		if mx > game.w - self.w then mx = game.w - self.w end
 		if my > game.h - self.h then my = game.h - self.h end
-		self.surface:toScreenWithTexture(self.texture, mx, my)
+		self.texture:toScreenFull(mx, my, self.w, self.h, self.texture_w, self.texture_h)
 	end
 end

@@ -225,12 +225,12 @@ function _M:display()
 	end
 
 	-- We display the player's interface
-	self.flash:display():toScreen(self.flash.display_x, self.flash.display_y)
-	self.logdisplay:display():toScreen(self.logdisplay.display_x, self.logdisplay.display_y)
+	self.flash:toScreen()
+	self.logdisplay:toScreen()
 	if self.show_npc_list then
-		self.npcs_display:display():toScreen(self.npcs_display.display_x, self.npcs_display.display_y)
+		self.npcs_display:toScreen()
 	else
-		self.hotkeys_display:display():toScreen(self.hotkeys_display.display_x, self.hotkeys_display.display_y)
+		self.hotkeys_display:toScreen()
 	end
 	if self.player then self.player.changed = false end
 
