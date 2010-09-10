@@ -28,7 +28,7 @@ newAI("escort_quest", function(self)
 			self:runAI("dumb_talented")
 		end
 		if not self.energy.used then
-			if self:reactionToward(self.ai_target.actor) < 0 then
+			if self:reactionToward(self.ai_target.actor) < 0 and not self:hasLOS(self.escort_target.x, self.escort_target.y, "block_move") then
 				self:runAI("move_dmap")
 			else
 				self:runAI("move_escort")

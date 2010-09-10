@@ -281,11 +281,12 @@ function _M:canSee(actor, def, def_pct)
 end
 
 --- Does the actor have LOS to the target
-function _M:hasLOS(x, y)
+function _M:hasLOS(x, y, what)
+	what = what or "block_sight"
 	local l = line.new(self.x, self.y, x, y)
 	local lx, ly = l()
 	while lx and ly do
-		if game.level.map:checkAllEntities(lx, ly, "block_sight") then break end
+		if game.level.map:checkAllEntities(lx, ly, what) then break end
 
 		lx, ly = l()
 	end
