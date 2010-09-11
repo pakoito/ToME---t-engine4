@@ -98,14 +98,17 @@ newEntity{ base = "BASE_NPC_JELLY",
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
+	unique = true,
 	name = "Malevolent Dimentional Jelly", color=colors.VIOLET, image="npc/jelly-darkgrey.png",
 	desc = "A strange black blob on the dungeon floor, through it you seem to be able to see other times and places. As you stare you see things moving out of it.",
-	level_range = {1, 25}, exp_worth = 1,
-	rarity = 1,
-	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=5, damtype=DamageType.ACID },
+	level_range = {25, nil}, exp_worth = 1,
+	rarity = 50,
+	max_life = resolvers.rngavg(50,90), life_rating = 5,
+	combat = { dam=5, atk=15, apr=5, damtype=DamageType.DARKNESS },
 	summon = {
 		{number=1, hasexp=false},
 	},
+	-- Nullify their cooldowns
+	talent_cd_reduction={[Talents.T_SUMMON]=4,},
 	resolvers.talents{ [Talents.T_SUMMON]=1,},
 }
