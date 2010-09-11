@@ -287,6 +287,14 @@ function _M:getTextualDesc()
 		desc[#desc+1] = ("Reduces talent cooldowns: %s."):format(table.concat(tcds, ','))
 	end
 
+	if w.can_breath then
+		local ts = {}
+		for what, _ in pairs(w.can_breath) do
+			ts[#ts+1] = what
+		end
+		desc[#desc+1] = ("Allows you to breathe in: %s."):format(table.concat(ts, ','))
+	end
+
 	if w.combat_physresist then desc[#desc+1] = ("Increases physical save: %s."):format(w.combat_physresist) end
 	if w.combat_spellresist then desc[#desc+1] = ("Increases spell save: %s."):format(w.combat_spellresist) end
 	if w.combat_mentalresist then desc[#desc+1] = ("Increases mental save: %s."):format(w.combat_mentalresist) end
