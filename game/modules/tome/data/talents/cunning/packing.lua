@@ -63,9 +63,15 @@ newTalent{
 	require = cuns_req3,
 	mode = "passive",
 	points = 5,
+	on_learn = function(self, t)
+		self:checkEncumbrance()
+	end,
+	on_unlearn = function(self, t)
+		self:checkEncumbrance()
+	end,
 	info = function(self, t)
-		return ([[You have learnt to disarm traps (%d disarm power).]]):
-		format(self:getTalentLevel(t) * self:getCun(25))
+		return ([[Learn to manage heavy burden using cunning balance, increasing your maximun encumberance by %d.]]):
+		format(20 + self:getTalentLevel(t) * 15)
 	end,
 }
 

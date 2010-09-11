@@ -814,7 +814,11 @@ function _M:attack(target)
 end
 
 function _M:getMaxEncumbrance()
-	return math.floor(40 + self:getStr() * 1.8) + (self.max_encumber or 0)
+	local add = 0
+	if self:knowTalent(self.T_BURDEN_MANAGEMENT) then
+		add = add + 20 + self:getTalentLevel(self.T_BURDEN_MANAGEMENT) * 15
+	end
+	return math.floor(40 + self:getStr() * 1.8) + (self.max_encumber or 0) + add
 end
 
 function _M:getEncumbrance()
@@ -1386,6 +1390,15 @@ end
 --- Called when we have been projected upon and the DamageType is about to be called
 function _M:projected(tx, ty, who, t, x, y, damtype, dam, particles)
 	return false
+end
+
+--- Called when we are targetted by a projectile
+function _M:on_projectile_target(x, y, p)
+	if self:attr("slow_projectiles") then
+		print("Projectile slowing down from", p.energy.mod)
+		p.energy.mod = p.energy.mod * self.slow_projectiles / 100
+		print("Projectile slowing down to", p.energy.mod)
+	end
 end
 
 --- Call when added to a level

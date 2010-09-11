@@ -368,6 +368,10 @@ newTalent{
 		target.talents[self.T_SUMMON_END] = 1
 		target.hotkey[10] = {"talent",self.T_SUMMON_END}
 		target.summon_time = target.summon_time + 2 + self:getTalentLevel(t) * 3
+		target.unused_stats = 0
+		target.unused_talents = 0
+		target.unused_generics = 0
+		target.unused_talents_types = 0
 		ot:replaceWith(target)
 		game.player.player = nil
 		game.paused = false

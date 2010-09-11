@@ -527,7 +527,7 @@ function _M:playerUseItem(object, item, inven)
 				o:identify(true)
 			end
 			if ret and ret == "destroy" then
-				if self:doesPackRat() then
+				if not o.unique and self:doesPackRat() then
 					game.logPlayer(self, "Pack Rat!")
 				else
 					if o.multicharge and o.multicharge > 1 then

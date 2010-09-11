@@ -180,7 +180,8 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		def.tg.talent_id = def.tg.talent.id
 		def.tg.talent = nil
 	end
-	return _M.new{
+	speed = speed or 10
+	local p =_M.new{
 		name = name,
 		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,
 		travel_particle = display.particle,
@@ -188,7 +189,11 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		src = src,
 		src_x = src.x, src_y = src.y,
 		project = {def=def},
-		energy = {mod=speed or 10},
+		energy = {mod=speed},
 		tmp_proj = {},
 	}
+
+	game.level.map:checkAllEntities(def.x, def.y, "on_projectile_target", p)
+
+	return p
 end
