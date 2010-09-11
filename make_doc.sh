@@ -1,5 +1,6 @@
 #!/bin/sh
-cd game
-luadoc --nofiles -d ../doc `find engine -name '*lua'`
-cd ..
+rm -rf doc
+cd game/engines/default/
+luadoc --nofiles -d ../../../doc `find engine -name '*lua'`
+cd -
 
