@@ -34,7 +34,7 @@ newChat{ id="training",
 	answers = {
 		{"Please train me in generic weapons and armour usage.", action=function(npc, player)
 			game.logPlayer(player, "The smith spends some time with you, teaching you the basics of armour and weapon usage.")
-			player.money = player.money - 50
+			player:incMoney(-50)
 			player:learnTalentType("technique/combat-training", true)
 			player.changed = true
 		end, cond=function(npc, player)
@@ -44,7 +44,7 @@ newChat{ id="training",
 		end},
 		{"Please train me in the basic usage of bows and slings.", action=function(npc, player)
 			game.logPlayer(player, "The smith spends some time with you, teaching you the basics of bows and slings.")
-			player.money = player.money - 8
+			player:incMoney(-8)
 			player:learnTalent(player.T_SHOOT, true)
 			player.changed = true
 		end, cond=function(npc, player)

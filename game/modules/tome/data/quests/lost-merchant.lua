@@ -47,7 +47,7 @@ leave_zone = function(self, who)
 	end
 	if merchant_alive then
 		game.logPlayer(who, "#LIGHT_BLUE#The merchant thanks you for saving his life. He gives you 8 gold and asks you to meet him again in Minas Tirith.")
-		who.money = who.money + 8
+		player:incMoney(8)
 		who.changed = true
 		who:setQuestStatus(self.id, engine.Quest.COMPLETED, "saved")
 		world:gainAchievement("LOST_MERCHANT_RESCUE", game.player)

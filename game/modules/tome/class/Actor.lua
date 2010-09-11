@@ -357,6 +357,18 @@ function _M:magicMap(radius, x, y)
 	end
 end
 
+function _M:incMoney(v)
+	self.money = self.money + v
+	if self.money < 0 then self.money = 0 end
+	self.changed = true
+
+	if self.player then
+		world:gainAchievement("TREASURE_HUNTER", self)
+		world:gainAchievement("TREASURE_HOARDER", self)
+		world:gainAchievement("DRAGON_GREED", self)
+	end
+end
+
 function _M:getRankStatAdjust()
 	if self.rank == 1 then return -1
 	elseif self.rank == 2 then return -0.5

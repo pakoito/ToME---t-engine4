@@ -23,7 +23,7 @@ local function recharge(npc, player)
 		if cost > player.money then require("engine.Dialog"):simplePopup("Not enough money", "This costs "..cost.." gold.") return true end
 		require("engine.Dialog"):yesnoPopup("Recharge?", "This will cost you "..cost.." gold.", function(ok) if ok then
 			o.power = o.max_power
-			player.money = player.money - cost
+			player:incMoney(-cost)
 			player.changed = true
 		end end)
 		return true

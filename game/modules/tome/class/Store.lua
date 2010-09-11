@@ -73,7 +73,7 @@ end
 function _M:onBuy(who, o, item, nb)
 	local price = o:getPrice() * self.sell_percent / 100
 	if who.money >= price * nb then
-		who.money = who.money - price * nb
+		who:incMoney(- price * nb)
 	end
 end
 
@@ -86,7 +86,7 @@ end
 function _M:onSell(who, o, item, nb)
 	local price = o:getPrice() * self.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
-	who.money = who.money + price * nb
+	who:incMoney(price * nb)
 	o:identify(true)
 end
 

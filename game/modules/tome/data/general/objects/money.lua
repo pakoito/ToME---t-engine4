@@ -26,15 +26,10 @@ newEntity{
 	identified = true,
 	desc = [[All that glitters is not gold, all that is gold does not glitter.]],
 	on_prepickup = function(self, who, id)
-		who.money = who.money + self.money_value / 10
+		who:incMoney(self.money_value / 10)
 		game.logPlayer(who, "You pickup %0.2f gold pieces.", self.money_value / 10)
 		-- Remove from the map
 		game.level.map:removeObject(who.x, who.y, id)
-		if who.player then
-			world:gainAchievement("TREASURE_HUNTER", who)
-			world:gainAchievement("TREASURE_HOARDER", who)
-			world:gainAchievement("DRAGON_GREED", who)
-		end
 		return true
 	end,
 	auto_pickup = true,

@@ -24,7 +24,7 @@ local imbue_ring = function(npc, player)
 			if price > player.money then require("engine.Dialog"):simplePopup("Not enough money", "This costs "..price.." gold, you need more gold.") return end
 
 			require("engine.Dialog"):yesnoPopup("Imbue cost", "This will cost you "..price.." gold, do you accept?", function(ret) if ret then
-				player.money = player.money - price
+				player:incMoney(-price)
 				player:removeObject(player:getInven("INVEN"), gem_item)
 				ring.wielder = ring.wielder or {}
 				table.mergeAdd(ring.wielder, gem.imbue_powers, true)
@@ -45,7 +45,7 @@ local artifact_imbue_ring = function(npc, player)
 				if price > player.money then require("engine.Dialog"):simplePopup("Not enough money", "Limmir needs more gold for the magical plating.") return end
 
 				require("engine.Dialog"):yesnoPopup("Imbue cost", "You need to use "..price.." gold for the plating, do you accept?", function(ret) if ret then
-					player.money = player.money - price
+					player:incMoney(-price)
 					local gem3 = game.zone:makeEntity(game.level, "object", {type="gem"}, nil, true)
 					print("Imbue third gem", gem3.name)
 
