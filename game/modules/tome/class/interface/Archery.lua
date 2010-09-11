@@ -52,7 +52,12 @@ function _M:archeryAcquireTargets(tg, params)
 	-- Find targets to know how many ammo we use
 	local targets = {}
 	if params.one_shot then
-		local ammo = self:removeObject(self:getInven("QUIVER"), 1)
+		local ammo
+		if self:doesPackRat() then
+			ammo = self:getInven("QUIVER")[1]
+		else
+			ammo = self:removeObject(self:getInven("QUIVER"), 1)
+		end
 		if ammo then
 			targets = {{x=x, y=y, ammo=ammo.combat}}
 		end
@@ -70,7 +75,13 @@ function _M:archeryAcquireTargets(tg, params)
 			end
 
 			for i = 1, params.multishots or 1 do
-				local ammo = self:removeObject(self:getInven("QUIVER"), 1)
+				local ammo
+				if self:doesPackRat() then
+					game.logPlayer(self, "Pack Rat!")
+					ammo = self:getInven("QUIVER")[1]
+				else
+					ammo = self:removeObject(self:getInven("QUIVER"), 1)
+				end
 				if ammo then targets[#targets+1] = {x=tx, y=ty, ammo=ammo.combat}
 				else break end
 			end

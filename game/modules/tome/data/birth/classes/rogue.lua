@@ -63,6 +63,7 @@ newBirthDescriptor{
 		["cunning/dirty"]={true, 0.3},
 		["cunning/lethality"]={true, 0.3},
 		["cunning/survival"]={true, 0.3},
+		["cunning/packing"]={false, 0.1},
 	},
 	talents = {
 		[ActorTalents.T_STEALTH] = 1,

@@ -317,7 +317,7 @@ newEntity{ base = "BASE_LONGSWORD",
 newEntity{ base = "BASE_LEATHER_BOOT",
 	unique = true,
 	name = "Boots of Tom Bombadil",
-	uided_name = "pair of yellow boots",
+	unided_name = "pair of yellow boots",
 	desc = [[Old Tom Bombadil is a merry fellow.
 Bright blue his jacket is, and his boots are yellow.]],
 	color = colors.YELLOW,

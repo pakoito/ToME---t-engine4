@@ -153,8 +153,9 @@ function _M:checkFilter(e, filter)
 	if filter.type and filter.type ~= e.type then return false end
 	if filter.subtype and filter.subtype ~= e.subtype then return false end
 	if filter.name and filter.name ~= e.name then return false end
-	if e.checkFilter and not e:checkFilter(filter) then return end
-	if filter.special and not filter.special(e) then return end
+	if e.checkFilter and not e:checkFilter(filter) then return false end
+	if filter.special and not filter.special(e) then return false end
+	if filter.max_ood and resolvers.current_level and e.level_range and resolvers.current_level + filter.max_ood < e.level_range[1] then print("Refused max_ood", e.name, e.level_range[1]) return false end
 
 	if e.unique then print("accepted unique", e.name, e.__CLASSNAME.."/"..e.unique) end
 

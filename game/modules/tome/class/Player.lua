@@ -523,21 +523,24 @@ function _M:playerUseItem(object, item, inven)
 		local co = coroutine.create(function()
 			self.changed = true
 			local ret, no_id = o:use(self)
-			print(ret,no_id)
 			if not no_id then
 				o:identify(true)
 			end
 			if ret and ret == "destroy" then
-				if o.multicharge and o.multicharge > 1 then
-					o.multicharge = o.multicharge - 1
+				if self:doesPackRat() then
+					game.logPlayer(self, "Pack Rat!")
 				else
-					local _, del = self:removeObject(self:getInven(inven), item)
-					if del then
-						game.log("You have no more %s.", o:getName{no_count=true, do_color=true})
+					if o.multicharge and o.multicharge > 1 then
+						o.multicharge = o.multicharge - 1
 					else
-						game.log("You have %s.", o:getName{do_color=true})
+						local _, del = self:removeObject(self:getInven(inven), item)
+						if del then
+							game.log("You have no more %s.", o:getName{no_count=true, do_color=true})
+						else
+							game.log("You have %s.", o:getName{do_color=true})
+						end
+						self:sortInven(self:getInven(inven))
 					end
-					self:sortInven(self:getInven(inven))
 				end
 				return true
 			end

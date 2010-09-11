@@ -41,7 +41,8 @@
 
 static int map_object_new(lua_State *L)
 {
-	int nb_textures = luaL_checknumber(L, 1);
+	long uid = luaL_checknumber(L, 1);
+	int nb_textures = luaL_checknumber(L, 2);
 	int i;
 
 	map_object *obj = (map_object*)lua_newuserdata(L, sizeof(map_object));
@@ -49,15 +50,16 @@ static int map_object_new(lua_State *L)
 	obj->textures = calloc(nb_textures, sizeof(GLuint));
 	obj->textures_is3d = calloc(nb_textures, sizeof(bool));
 	obj->nb_textures = nb_textures;
+	obj->uid = uid;
 
-	obj->on_seen = lua_toboolean(L, 2);
-	obj->on_remember = lua_toboolean(L, 3);
-	obj->on_unknown = lua_toboolean(L, 4);
+	obj->on_seen = lua_toboolean(L, 3);
+	obj->on_remember = lua_toboolean(L, 4);
+	obj->on_unknown = lua_toboolean(L, 5);
 
 	obj->valid = TRUE;
-	obj->dx = luaL_checknumber(L, 5);
-	obj->dy = luaL_checknumber(L, 6);
-	obj->scale = luaL_checknumber(L, 7);
+	obj->dx = luaL_checknumber(L, 6);
+	obj->dy = luaL_checknumber(L, 7);
+	obj->scale = luaL_checknumber(L, 8);
 	obj->shader = 0;
 	obj->tint_r = obj->tint_g = obj->tint_b = 1;
 	for (i = 0; i < nb_textures; i++)
@@ -554,6 +556,9 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 			r = map->obscure_r; g = map->obscure_g; b = map->obscure_b;
 		}
 	}
+
+	glLoadName(m->uid);
+
 	glColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
 
 	int z;

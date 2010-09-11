@@ -168,7 +168,7 @@ function _M:makeMapObject(tiles, idx)
 	end
 
 	-- Create the map object with 1 + additional textures
-	self._mo = core.map.newObject(
+	self._mo = core.map.newObject(self.uid,
 		1 + (tiles.use_images and self.textures and #self.textures or 0),
 		self:check("display_on_seen"),
 		self:check("display_on_remember"),

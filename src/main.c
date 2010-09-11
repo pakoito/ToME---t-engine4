@@ -266,14 +266,8 @@ void on_tick()
 	}
 }
 
-void on_redraw()
+void call_draw()
 {
-	static int Frames = 0;
-	static int T0     = 0;
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
 	if (current_game != LUA_NOREF)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
@@ -283,6 +277,17 @@ void on_redraw()
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		docall(L, 1, 0);
 	}
+}
+
+void on_redraw()
+{
+	static int Frames = 0;
+	static int T0     = 0;
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	call_draw();
 
 	SDL_GL_SwapBuffers();
 
@@ -299,6 +304,137 @@ void on_redraw()
 		}
 	}
 }
+
+void gl_selall(GLint hits, GLuint *buff)
+{
+	GLuint *p;
+	int i;
+
+	call_draw();
+
+	p = buff;
+	for (i = 0; i < 6 * 4; i++)
+	{
+		printf("Slot %d: - Value: %d\n", i, p[i]);
+	}
+
+	printf("Buff size: %x\n", (GLbyte)buff[0]);
+}
+
+void list_hits(GLint hits, GLuint *names)
+{
+	int i;
+
+	/*
+	 For each hit in the buffer are allocated 4 bytes:
+	 1. Number of hits selected (always one,
+	 beacuse when we draw each object
+	 we use glLoadName, so we replace the
+	 prevous name in the stack)
+	 2. Min Z
+	 3. Max Z
+	 4. Name of the hit (glLoadName)
+	 */
+
+	printf("%d hits:\n", hits);
+
+	for (i = 0; i < hits; i++)
+		printf(	"Number: %d\n"
+			"Min Z: %d\n"
+			"Max Z: %d\n"
+			"Name on stack: %d\n",
+			(GLubyte)names[i * 4],
+			(GLubyte)names[i * 4 + 1],
+			(GLubyte)names[i * 4 + 2],
+			(GLubyte)names[i * 4 + 3]
+			);
+
+	printf("\n");
+}
+
+void gl_select(int x, int y)
+{
+	GLuint buff[64] = {0};
+	GLint hits, view[4];
+	int id;
+
+	/*
+	 This choose the buffer where store the values for the selection data
+	 */
+	glSelectBuffer(64, buff);
+
+	/*
+	 This retrieve info about the viewport
+	 */
+	glGetIntegerv(GL_VIEWPORT, view);
+
+	/*
+	 Switching in selecton mode
+	 */
+	glRenderMode(GL_SELECT);
+
+	/*
+	 Clearing the name's stack
+	 This stack contains all the info about the objects
+	 */
+	glInitNames();
+
+	/*
+	 Now fill the stack with one element (or glLoadName will generate an error)
+	 */
+	glPushName(0);
+
+	/*
+	 Now modify the vieving volume, restricting selection area around the cursor
+	 */
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	/*
+	 restrict the draw to an area around the cursor
+	 */
+	gluPickMatrix(x, y, 1.0, 1.0, view);
+//	gluPerspective(60, 1.0, 0.0001, 1000.0);
+	glOrtho(0, screen->w, screen->h, 0, -101, 101);
+
+	/*
+	 Draw the objects onto the screen
+	 */
+	glMatrixMode(GL_MODELVIEW);
+
+	/*
+	 draw only the names in the stack, and fill the array
+	 */
+	call_draw();
+	SDL_GL_SwapBuffers();
+
+	/*
+	 Do you remeber? We do pushMatrix in PROJECTION mode
+	 */
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	/*
+	 get number of objects drawed in that area
+	 and return to render mode
+	 */
+	hits = glRenderMode(GL_RENDER);
+
+	/*
+	 Print a list of the objects
+	 */
+	list_hits(hits, buff);
+
+	/*
+	 uncomment this to show the whole buffer
+	 * /
+	 gl_selall(hits, buff);
+	 */
+
+	glMatrixMode(GL_MODELVIEW);
+}
+
 
 void pass_command_args(int argc, char *argv[])
 {
@@ -696,9 +832,10 @@ int main(int argc, char *argv[])
 
 				break;
 
-			case SDL_MOUSEMOTION:
-			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
+//				gl_select(event.button.x, event.button.y);
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEMOTION:
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
 				/* handle key presses */

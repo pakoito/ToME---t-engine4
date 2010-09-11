@@ -818,11 +818,24 @@ function _M:getMaxEncumbrance()
 end
 
 function _M:getEncumbrance()
-	-- Compute encumbrance
 	local enc = 0
+
+	local fct = function(so) enc = enc + so.encumber end
+	if self:knowTalent(self.T_EFFICIENT_PACKING) then
+		local reduction = 1 - self:getTalentLevel(self.T_EFFICIENT_PACKING) * 0.1
+		fct = function(so)
+			if so.encumber <= 1 then
+				enc = enc + so.encumber * reduction
+			else
+				enc = enc + so.encumber
+			end
+		end
+	end
+
+	-- Compute encumbrance
 	for inven_id, inven in pairs(self.inven) do
 		for item, o in ipairs(inven) do
-			o:forAllStack(function(so) enc = enc + so.encumber end)
+			o:forAllStack(fct)
 		end
 	end
 --	print("Total encumbrance", enc)
@@ -1118,6 +1131,15 @@ function _M:breakStealth()
 		self.energy.value = old
 		self.changed = true
 	end
+end
+
+--- Pack Rat chance
+function _M:doesPackRat()
+	if self:knowTalent(self.T_PACK_RAT) then
+		local chance = 10 + self:getTalentLevel(self.T_PACK_RAT) * 7
+		if rng.percent(chance) then return true end
+	end
+	return false
 end
 
 --- Return the full description of a talent

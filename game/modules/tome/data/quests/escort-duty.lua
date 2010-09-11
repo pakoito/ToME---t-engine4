@@ -256,6 +256,7 @@ local function getPortalSpot(npc, dist, min_dist)
 			if game.level.map:isBound(i, j) and
 			   core.fov.distance(npc.x, npc.y, i, j) <= dist and
 			   core.fov.distance(npc.x, npc.y, i, j) >= min_dist and
+			   game.level.map(i, j, engine.Map.TERRAIN) and not game.level.map(i, j, engine.Map.TERRAIN).change_level and
 			   npc:canMove(i, j) then
 				poss[#poss+1] = {i,j}
 			end

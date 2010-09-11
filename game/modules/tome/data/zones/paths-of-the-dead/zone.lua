@@ -46,12 +46,13 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
+			filters = { {max_ood=2}, },
 			guardian = "HALF_BONE_GIANT", guardian_level = 1,
 		},
 		object = {
 			class = "engine.generator.object.Random",
 			nb_object = {6, 9},
-			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
+			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {max_ood=7}, {max_ood=7} }
 		},
 		trap = {
 			class = "engine.generator.trap.Random",

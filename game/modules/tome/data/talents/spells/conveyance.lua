@@ -77,9 +77,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Teleports you randomly with a small range (%d).
-		At level 4 it allows one to choose the target area.
+		At level 4 it allows one to choose the target area (radius %d).
 		At level 5 it allows one to specify the exact target.
-		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1))
+		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1), 7 - self:getTalentLevel(t))
 	end,
 }
 
@@ -145,9 +145,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Teleports you randomly with a large range (%d), with a minimum range of 15.
-		At level 4 it allows one to choose the target area.
+		At level 4 it allows one to choose the target area (radius %d).
 		At level 5 it allows one to specify the exact target.
-		The range will increase with the Magic stat]]):format(100 + self:combatSpellpower(0.1))
+		The range will increase with the Magic stat]]):format(100 + self:combatSpellpower(0.1), 20 - self:getTalentLevel(t))
 	end,
 }
 

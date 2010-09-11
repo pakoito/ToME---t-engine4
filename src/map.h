@@ -36,6 +36,7 @@ typedef struct {
 	bool on_remember;
 	bool on_unknown;
 	bool valid;
+	long uid;
 } map_object;
 
 typedef struct {
