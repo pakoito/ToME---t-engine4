@@ -41,8 +41,11 @@ function _M:grantQuest(quest, args)
 	assert(quest.name, "no quest name")
 	assert(quest.desc, "no quest desc")
 
+	local q = require(_M.quest_class).new(quest, self)
+	if q.do_not_gain then return end
+
 	self.quests = self.quests or {}
-	self.quests[quest.id] = require(_M.quest_class).new(quest, self)
+	self.quests[quest.id] = q
 	self.quests[quest.id].gained_turn = game.turn
 	print("[QUEST] given to", self, quest.id)
 	self:check("on_quest_grant", quest)

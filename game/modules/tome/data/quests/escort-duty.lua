@@ -273,6 +273,9 @@ end
 
 
 on_grant = function(self, who)
+	local x, y = util.findFreeGrid(who.x, who.y, 10, true, {[engine.Map.ACTOR]=true})
+	if not x then return true end
+
 	self.on_grant = nil
 
 	while true do
@@ -294,8 +297,6 @@ on_grant = function(self, who)
 	end
 
 	-- Spawn actor
-	local x, y = util.findFreeGrid(who.x, who.y, 10, true, {[engine.Map.ACTOR]=true})
-	if not x then return end
 	local npc = mod.class.NPC.new(self.kind.actor)
 	npc:resolve() npc:resolve(nil, true)
 	game.zone:addEntity(game.level, npc, "actor", x, y)
@@ -303,7 +304,7 @@ on_grant = function(self, who)
 
 	-- Spawn the portal, far enough from the escort
 	local gx, gy = getPortalSpot(npc, 150, (game.level.map.w + game.level.map.h) / 2 / 2)
-	if not gx then return end
+	if not gx then return true end
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
 		name="Recall Portal: "..npc.name,

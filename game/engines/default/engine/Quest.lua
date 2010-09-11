@@ -33,7 +33,7 @@ function _M:init(q, who)
 	end
 	self.status = PENDING
 	self.objectives = {}
-	self:check("on_grant", who)
+	if self:check("on_grant", who) then self.do_not_gain = true end
 end
 
 --- Checks if the quest (or sub-objective) is complete
