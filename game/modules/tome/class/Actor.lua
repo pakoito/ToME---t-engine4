@@ -719,6 +719,7 @@ function _M:resetToFull()
 	self.vim = self.max_vim
 	self.stamina = self.max_stamina
 	self.equilibrium = 0
+	self.air = self.max_air
 end
 
 function _M:levelup()

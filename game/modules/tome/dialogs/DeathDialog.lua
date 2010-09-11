@@ -50,18 +50,18 @@ function _M:init(actor)
 end
 
 --- Clean the actor from debuffs/buffs
-function _M:cleanActor()
+function _M:cleanActor(actor)
 	local effs = {}
 
 	-- Go through all spell effects
-	for eff_id, p in pairs(self.actor.tmp) do
+	for eff_id, p in pairs(actor.tmp) do
 
-		local e = self.actor.tempeffect_def[eff_id]
+		local e = actor.tempeffect_def[eff_id]
 		effs[#effs+1] = {"effect", eff_id}
 	end
 
 	-- Go through all sustained spells
-	for tid, act in pairs(self.actor.sustain_talents) do
+	for tid, act in pairs(actor.sustain_talents) do
 		if act then
 			effs[#effs+1] = {"talent", tid}
 		end
@@ -71,43 +71,39 @@ function _M:cleanActor()
 		local eff = rng.tableRemove(effs)
 
 		if eff[1] == "effect" then
-			self.actor:removeEffect(eff[2])
+			actor:removeEffect(eff[2])
 		else
-			local old = self.actor.energy.value
-			self.actor:useTalent(eff[2])
+			local old = actor.energy.value
+			actor:useTalent(eff[2])
 			-- Prevent using energy
-			self.actor.energy.value = old
+			actor.energy.value = old
 		end
 	end
 end
 
 --- Restore ressources
-function _M:restoreRessources()
-	self.actor.life = self.actor.max_life
-	self.actor.mana = self.actor.max_mana
-	self.actor.stamina = self.actor.max_stamina
-	self.actor.equilibrium = 0
-	self.actor.air = self.actor.max_air
+function _M:restoreRessources(actor)
+	actor:resetToFull()
 
-	self.actor.energy.value = game.energy_to_act
+	actor.energy.value = game.energy_to_act
 end
 
 --- Basic resurection
-function _M:resurrectBasic()
-	self.actor.dead = false
-	self.actor.died = (self.actor.died or 0) + 1
+function _M:resurrectBasic(actor)
+	actor.dead = false
+	actor.died = (actor.died or 0) + 1
 
-	local x, y = util.findFreeGrid(self.actor.x, self.actor.y, 20, true, {[Map.ACTOR]=true})
-	if not x then x, y = self.actor.x, self.actor.y end
-	self.actor.x, self.actor.y = nil, nil
+	local x, y = util.findFreeGrid(actor.x, actor.y, 20, true, {[Map.ACTOR]=true})
+	if not x then x, y = actor.x, actor.y end
+	actor.x, actor.y = nil, nil
 
-	self.actor:move(x, y, true)
-	game.level:addEntity(self.actor)
+	actor:move(x, y, true)
+	game.level:addEntity(actor)
 	game:unregisterDialog(self)
 	game.level.map:redisplay()
-	self.actor.changed = true
+	actor.changed = true
 
-	world:gainAchievement("UNSTOPPABLE", self.actor)
+	world:gainAchievement("UNSTOPPABLE", actor)
 end
 
 function _M:use()
@@ -124,23 +120,35 @@ function _M:use()
 	elseif act == "cheat" then
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER !")
 
-		self:cleanActor()
-		self:restoreRessources()
-		self:resurrectBasic()
+		self:cleanActor(self.actor)
+		self:restoreRessources(self.actor)
+		self:resurrectBasic(self.actor)
 	elseif act == "blood_life" then
 		self.actor.blood_life = false
 		game.logPlayer(self.actor, "#LIGHT_RED#The Blood of Life rushes through your dead body. You come back to life!")
 
-		self:cleanActor()
-		self:restoreRessources()
-		self:resurrectBasic()
+		self:cleanActor(self.actor)
+		self:restoreRessources(self.actor)
+		self:resurrectBasic(self.actor)
+	elseif act == "easy_mode" then
+		self.actor:attr("easy_mode_lifes", -1)
+		game.logPlayer(self.actor, "#LIGHT_RED#You resurrect!")
+
+		self.actor.x = self.actor.entered_level.x
+		self.actor.y = self.actor.entered_level.y
+		self:cleanActor(self.actor)
+		self:resurrectBasic(self.actor)
+
+		for uid, e in pairs(game.level.entities) do
+			self:restoreRessources(e)
+		end
 	elseif act == "skeleton" then
 		self.actor:attr("re-assembled", 1)
 		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish out pain to your foes!")
 
-		self:cleanActor()
-		self:restoreRessources()
-		self:resurrectBasic()
+		self:cleanActor(self.actor)
+		self:restoreRessources(self.actor)
+		self:resurrectBasic(self.actor)
 	elseif act:find("^consume") then
 		local inven, item, o = self.list[self.sel].inven, self.list[self.sel].item, self.list[self.sel].object
 		self.actor:removeObject(inven, item)
@@ -156,6 +164,7 @@ function _M:generateList()
 	local list = {}
 
 	if config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
+	if self.actor:attr("easy_mode_lifes") then list[#list+1] = {name=("Resurrect with easy mode (%d left)"):format(self.actor.easy_mode_lifes), action="easy_mode"} end
 	if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
 	if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones and resurrect (Skeleton ability)", action="skeleton"} end
 

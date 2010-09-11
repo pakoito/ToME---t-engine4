@@ -92,6 +92,25 @@ newBirthDescriptor{
 ]]
 newBirthDescriptor{
 	type = "difficulty",
+	name = "Easy",
+	selection_default = true,
+	desc =
+	{
+		"Easy game setting",
+		"All damage done to the player decreased by 30%",
+		"All healing for the player increased by 10%",
+		"Each five levels get one more 'life' that allows to resurrect at the start of the level.",
+		"Achievements are not granted.",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
+	},
+	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end), easy_mode_lifes = 1 },
+}
+newBirthDescriptor{
+	type = "difficulty",
 	name = "Normal",
 	selection_default = true,
 	desc =

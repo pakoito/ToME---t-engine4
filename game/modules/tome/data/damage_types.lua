@@ -28,9 +28,9 @@ setDefaultProjector(function(src, x, y, type, dam)
 
 		-- Difficulty settings
 		if game.difficulty == game.DIFFICULTY_EASY and target:resolveSource().player then
-			dam = dam * 0.8
+			dam = dam * 0.7
 		elseif game.difficulty == game.DIFFICULTY_NIGHTMARE then
-			if target:resolveSource().player then dam = dam * 1.7
+			if target:resolveSource().player then dam = dam * 1.3
 			elseif src:resolveSource().player then dam = dam * 0.7 end
 		elseif game.difficulty == game.DIFFICULTY_INSANE then
 			if target:resolveSource().player then dam = dam * 1.5

@@ -96,6 +96,9 @@ function _M:onBirth(birther)
 end
 
 function _M:onEnterLevel(zone, level)
+	-- Save where we enterred
+	self.entered_level = {x=self.x, y=self.y}
+
 	-- Fire random escort quest
 	if self.random_escort_levels and self.random_escort_levels[zone.short_name] and self.random_escort_levels[zone.short_name][level.level] then
 		self:grantQuest("escort-duty")
@@ -276,6 +279,7 @@ function _M:die(src)
 		game.paused = true
 		self.energy.value = game.energy_to_act
 		self.killedBy = src
+		self.died_times = (self.died_times or 0) + 1
 		self:registerDeath(self.killedBy)
 		game:registerDialog(DeathDialog.new(self))
 	else
@@ -336,6 +340,10 @@ function _M:levelup()
 	if self.level == 30 then world:gainAchievement("LEVEL_30", self) end
 	if self.level == 40 then world:gainAchievement("LEVEL_40", self) end
 	if self.level == 50 then world:gainAchievement("LEVEL_50", self) end
+
+	if game.difficulty == game.DIFFICULTY_EASY and self.level % 5 == 0 then
+		self.easy_mode_lifes = (self.easy_mode_lifes or 0) + 1
+	end
 end
 
 --- Tries to get a target from the user
