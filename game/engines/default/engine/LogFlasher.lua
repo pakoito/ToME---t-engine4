@@ -93,6 +93,11 @@ function _M:empty(force)
 	end
 end
 
+function _M:display()
+	self:toScreen()
+	return self.surface
+end
+
 function _M:toScreen()
 	self.changed = false
 
