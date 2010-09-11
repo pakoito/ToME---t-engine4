@@ -59,7 +59,7 @@ end
 function _M:initBody()
 	if self.body then
 		for inven, max in pairs(self.body) do
-			self.inven[self["INVEN_"..inven]] = {max=max, worn=self.inven_def[self["INVEN_"..inven]].is_worn}
+			self.inven[self["INVEN_"..inven]] = {max=max, worn=self.inven_def[self["INVEN_"..inven]].is_worn, id=self["INVEN_"..inven]}
 		end
 		self.body = nil
 	end
@@ -424,5 +424,23 @@ function _M:findInAllInventories(name, getname)
 	for inven_id, inven in pairs(self.inven) do
 		local o, item = self:findInInventory(inven, name, getname)
 		if o and item then return o, item, inven_id end
+	end
+end
+
+--- Applies fct over all items
+-- @param inven the inventory to look into
+-- @param fct the function to be called. It will receive three parameters: inven, item, object
+function _M:inventoryApply(inven, fct)
+	for item, o in ipairs(inven) do
+		fct(inven, item, o)
+	end
+end
+
+--- Applies fct over all items in all inventories
+-- @param inven the inventory to look into
+-- @param fct the function to be called. It will receive three parameters: inven, item, object
+function _M:inventoryApplyAll(fct)
+	for inven_id, inven in pairs(self.inven) do
+		self:inventoryApply(inven, fct)
 	end
 end

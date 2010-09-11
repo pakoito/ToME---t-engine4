@@ -92,6 +92,22 @@ newEntity{ base = "BASE_RING",
 
 newEntity{ base = "BASE_RING",
 	unique = true,
+	name = "Ring of Mandos", color = colors.DARK_GREY,
+	unided_name = "dull black ring",
+	desc = [[This dull black ring is completely featureless.]],
+	level_range = {35, 42},
+	rarity = 250,
+	cost = 500,
+	material_level = 4,
+
+	wielder = {
+		inc_stats = { [Stats.STAT_LCK] = 10, },
+	},
+	one_shot_life_saving = true,
+}
+
+newEntity{ base = "BASE_RING",
+	unique = true,
 	name = "Elemental Fury", color = colors.PURPLE,
 	unided_name = "multi-hued ring",
 	desc = [[This ring shines with many colors.]],

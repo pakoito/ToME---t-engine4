@@ -141,6 +141,14 @@ function _M:use()
 		self:cleanActor()
 		self:restoreRessources()
 		self:resurrectBasic()
+	elseif act:find("^consume") then
+		local inven, item, o = self.list[self.sel].inven, self.list[self.sel].item, self.list[self.sel].object
+		self.actor:removeObject(inven, item)
+		game.logPlayer(self.actor, "#YELLOW#Your %s consumes and disappears! You come back to life!", o:getName{do_colour=true})
+
+		self:cleanActor()
+		self:restoreRessources()
+		self:resurrectBasic()
 	end
 end
 
@@ -150,6 +158,14 @@ function _M:generateList()
 	if config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
 	if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones and resurrect (Skeleton ability)", action="skeleton"} end
+
+	local consumenb = 1
+	self.actor:inventoryApplyAll(function(inven, item, o)
+		if o.one_shot_life_saving and (not o.slot or inven.worn) then
+			list[#list+1] = {name="Resurrect by consuming "..o:getName{do_colour=true}, action="consume"..consumenb, inven=inven, item=item, object=o}
+			consumenb = consumenb + 1
+		end
+	end)
 
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Exit to main menu", action="exit"}
