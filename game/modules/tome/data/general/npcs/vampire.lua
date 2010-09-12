@@ -38,7 +38,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_VAMPIRE",
-	type = "undead", subtype = "vampires",
+	type = "undead", subtype = "vampire",
 	display = "V", color=colors.WHITE,
 	desc = [[These ancient cursed beings often take upon the form of a bat and attack its prey.]],
 

@@ -23,7 +23,7 @@ local list = {
 }
 
 return function(gen, id, lev, old_lev)
-	local vaultid = rng.table(list)
+	local vaultid = rng.table(gen.data.vaults_list or list)
 	local vault_map = engine.Map.new(max_w, max_h)
 	local Static = require("engine.generator.map.Static")
 	local data = table.clone(gen.data)
@@ -44,23 +44,8 @@ return function(gen, id, lev, old_lev)
 			gen.map.room_map[i][j].special = true
 			gen.map.room_map[i][j].room = id
 		end end
-
-		-- Mark the outer walls are piercable
-		for i = x, x + w - 1 do
-			gen.map.room_map[i][y].special = false
-			gen.map.room_map[i][y].room = nil
-			gen.map.room_map[i][y].can_open = true
-			gen.map.room_map[i][y+h-1].special = false
-			gen.map.room_map[i][y+h-1].room = nil
-			gen.map.room_map[i][y+h-1].can_open = true
-		end
-		for j = y, y + h - 1 do
-			gen.map.room_map[x][j].special = false
-			gen.map.room_map[x][j].room = nil
-			gen.map.room_map[x][j].can_open = true
-			gen.map.room_map[x+w-1][j].special = false
-			gen.map.room_map[x+w-1][j].room = nil
-			gen.map.room_map[x+w-1][j].can_open = true
+		if vault.gen_map.startx and vault.gen_map.starty then
+			return vault.gen_map.startx + x, vault.gen_map.starty + y
 		end
 	end}
 end

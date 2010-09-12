@@ -18,8 +18,8 @@
 -- darkgod@te4.org
 
 defineTile('.', "FLOOR")
-defineTile('#', "FLOOR")
-defineTile('X', "WALL")
+defineTile('#', "WALL")
+defineTile('X', "HARDWALL")
 defineTile('8', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_levels=20}})
 
 return {

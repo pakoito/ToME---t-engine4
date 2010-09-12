@@ -100,8 +100,9 @@ function _M:roomAlloc(room, id, lev, old_lev)
 			local is_lit = rng.percent(self.data.lite_room_chance)
 
 			-- ok alloc it using the default generator or a specific one
+			local cx, cy
 			if room.generator then
-				room:generator(x, y, is_lit)
+				cx, cy = room:generator(x, y, is_lit)
 			else
 				for i = 1, room.w do
 					for j = 1, room.h do
@@ -119,7 +120,9 @@ function _M:roomAlloc(room, id, lev, old_lev)
 				end
 			end
 			print("room allocated at", x, y,"with center",math.floor(x+(room.w-1)/2), math.floor(y+(room.h-1)/2))
-			return { id=id, x=x, y=y, cx=math.floor(x+(room.w-1)/2), cy=math.floor(y+(room.h-1)/2), room=room }
+			cx = cx or math.floor(x+(room.w-1)/2)
+			cy = cy or math.floor(y+(room.h-1)/2)
+			return { id=id, x=x, y=y, cx=cx, cy=cy, room=room }
 		end
 		tries = tries - 1
 	end
@@ -200,7 +203,7 @@ function _M:tunnel(x1, y1, x2, y2, id)
 		if self.map.room_map[nx][ny].special then
 			print(feat, "refuse special")
 		elseif self.map.room_map[nx][ny].room then
-			tun[#tun+1] = {nx,ny}
+			tun[#tun+1] = {nx,ny,false,true}
 			x1, y1 = nx, ny
 			print(feat, "accept room")
 		elseif self.map.room_map[nx][ny].can_open ~= nil then
@@ -246,7 +249,7 @@ function _M:tunnel(x1, y1, x2, y2, id)
 		local nx, ny = t[1], t[2]
 		if t[3] and self.data.door and rng.percent(self.data.door_chance) then
 			self.map(nx, ny, Map.TERRAIN, self:resolve("door"))
-		else
+		elseif not t[4] then
 			self.map(nx, ny, Map.TERRAIN, self:resolve('.'))
 		end
 	end

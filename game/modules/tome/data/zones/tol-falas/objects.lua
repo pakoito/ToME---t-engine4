@@ -43,7 +43,7 @@ newEntity{ base = "BASE_AMULET",
 
 		local NPC = require "mod.class.NPC"
 		local vampire = NPC.new{
-			type = "undead", subtype = "vampires",
+			type = "undead", subtype = "vampire",
 			display = "V",
 			name = "elder vampire", color=colors.RED,
 			desc=[[A terrible robed undead figure, this creature has existed in its unlife for many centuries by stealing the life of others. It can

@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.Grid"
+local Dialog = require "engine.Dialog"
 local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(engine.Grid))
@@ -36,7 +37,15 @@ function _M:block_move(x, y, e, act, couldpass)
 
 	-- Open doors
 	if self.door_opened and e.open_door and act then
-		game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
+		if self.door_player_check then
+			if e.player then
+				Dialog:yesnoPopup(self.name, self.door_player_check, function(ret)
+					if ret then game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened]) end
+				end, "Open", "Leave")
+			end
+		else
+			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
+		end
 		return true
 	elseif self.door_opened and not couldpass then
 		return true

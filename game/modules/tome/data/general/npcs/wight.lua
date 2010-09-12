@@ -29,7 +29,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_WIGHT",
-	type = "undead", subtype = "wights",
+	type = "undead", subtype = "wight",
 	display = "W", color=colors.WHITE,
 	desc = [[These be white wights.]],
 
@@ -110,7 +110,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	max_mana = resolvers.rngavg(300,350),
 	combat_armor = 12, combat_def = 10,
 	make_escort = {
-		{type="undead", subtype="wights", number=resolvers.mbonus(2, 2)},
+		{type="undead", subtype="wight", number=resolvers.mbonus(2, 2)},
 	},
 	resolvers.talents{ [Talents.T_MANA_POOL]=3, [Talents.T_FLAMESHOCK]=3, [Talents.T_LIGHTNING]=4, [Talents.T_CORROSIVE_VAPOUR]=3, [Talents.T_THUNDERSTORM]=2,
 		[Talents.T_MIND_DISRUPTION]=4,

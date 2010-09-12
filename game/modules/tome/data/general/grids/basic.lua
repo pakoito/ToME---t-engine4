@@ -78,6 +78,8 @@ newEntity{
 	always_remember = true,
 	does_block_move = true,
 	block_sight = true,
+	block_sense = true,
+	block_esp = true,
 	air_level = -20,
 }
 
@@ -88,6 +90,20 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	block_sight = true,
+	door_opened = "DOOR_OPEN",
+	dig = "DOOR_OPEN",
+}
+
+newEntity{
+	define_as = "DOOR_VAULT",
+	name = "sealed door", image = "terrain/granite_door1.png",
+	display = '+', color_r=238, color_g=154, color_b=77, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+	door_player_check = "This door seems to have been sealed off, you think you can open it.",
 	door_opened = "DOOR_OPEN",
 	dig = "DOOR_OPEN",
 }

@@ -1417,7 +1417,7 @@ function _M:addedToLevel(level, x, y)
 					local m = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 					if m and m:canMove(x, y) then
 						if filter.no_subescort then m.make_escort = nil end
-					game.zone:addEntity(game.level, m, "actor", x, y)
+						game.zone:addEntity(game.level, m, "actor", x, y)
 					elseif m then m:removed() end
 				end
 			end

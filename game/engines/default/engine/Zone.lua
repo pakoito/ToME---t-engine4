@@ -242,6 +242,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	if filter then e.force_ego = filter.force_ego end
 
 	e = self:finishEntity(level, type, e, filter and filter.ego_chance)
+	e.__forced_level = filter and filter.add_levels
 
 	return e
 end
@@ -270,7 +271,6 @@ end
 function _M:finishEntity(level, type, e, ego_chance)
 	e = e:clone()
 	e:resolve()
-
 	-- Add "ego" properties, sometimes
 	if not e.unique and e.egos and (e.force_ego or e.egos_chance) then
 		local egos_list = {}
@@ -359,7 +359,7 @@ function _M:addEntity(level, e, typ, x, y)
 		-- Levelup ?
 		if self.actor_adjust_level and e.forceLevelup then
 			local newlevel = self:actor_adjust_level(level, e)
-			e:forceLevelup(newlevel)
+			e:forceLevelup(newlevel + (e.__forced_level or 0))
 		end
 	elseif typ == "projectile" then
 		-- We are additing it, this means there is no old position
