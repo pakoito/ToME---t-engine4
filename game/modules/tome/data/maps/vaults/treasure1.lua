@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setStatusAll{no_teleport=true}
+
 defineTile(';', "FLOOR", nil, nil, nil, {room_map={special=false, room=false, can_open=true}})
 defineTile('.', "FLOOR")
 defineTile('#', "HARDWALL")
@@ -24,6 +26,8 @@ defineTile('!', "DOOR_VAULT")
 defineTile('+', "DOOR")
 defineTile('X', "FLOOR", nil, {random_filter={add_levels=15}})
 defineTile('$', "FLOOR", {random_filter={add_levels=10}})
+
+rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 return {
 [[;;;;;;;;;;;;;;;;;;;;]],

@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setStatusAll{no_teleport=true}
+
 defineTile(' ', "FLOOR")
 defineTile('!', "DOOR_VAULT", nil, nil, nil, {room_map={special=false, room=false, can_open=true}})
 defineTile('+', "DOOR")
@@ -28,6 +30,8 @@ defineTile('o', "FLOOR", nil, "HILL_ORC_ARCHER")
 
 startx = 22
 starty = 7
+
+rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 return {
 [[XXXXXXXXXXXXXXXXXXXXXX]],

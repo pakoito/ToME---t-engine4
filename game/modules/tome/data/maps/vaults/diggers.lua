@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setStatusAll{no_teleport=true}
+
 defineTile(';', "FLOOR", nil, nil, nil, {room_map={special=false, room=false, can_open=true}})
 defineTile('.', "FLOOR")
 defineTile('^', "FLOOR", nil, nil, {random_filter={}})
@@ -30,6 +32,8 @@ defineTile('4', "FLOOR", nil, {random_filter={}})
 defineTile('3', "FLOOR", {random_filter={add_levels=5}}, {random_filter={add_levels=15}})
 defineTile('2', "FLOOR", {random_filter={add_levels=20}}, {random_filter={add_levels=30}})
 defineTile('1', "FLOOR", nil, {random_filter={add_levels=30}})
+
+rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 return {
 [[;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;]],

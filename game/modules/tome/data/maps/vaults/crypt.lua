@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setStatusAll{no_teleport=true}
+
 defineTile(' ', "FLOOR")
 defineTile('!', "DOOR_VAULT", nil, nil, nil, {room_map={special=false, room=false, can_open=true}})
 defineTile('+', "DOOR")
@@ -31,6 +33,8 @@ defineTile('W', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_le
 
 startx = 0
 starty = 6
+
+rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 return {
 [[XXXXXXXXXXXXXXXXXXXXXXXXXXXXX]],

@@ -64,6 +64,7 @@ function _M:loadMap(file)
 			local list = require(class):loadList(file)
 			self.level:setEntitiesList(type, list)
 		end,
+		setStatusAll = function(s) self.status_all = s end,
 		addData = function(t)
 			table.merge(self.level.data, t, true)
 		end,
@@ -161,6 +162,15 @@ function _M:generate(lev, old_lev)
 			g:resolve()
 			g:resolve(nil, true)
 			self.map(i-1, j-1, Map.TERRAIN, g)
+		end
+
+		if self.status_all then
+			local s = table.clone(self.status_all)
+			if s.lite then self.level.map.lites(i-1, j-1, true) s.lite = nil end
+			if s.remember then self.level.map.remembers(i-1, j-1, true) s.remember = nil end
+			if s.special then self.map.room_map[i-1][j-1].special = s.special s.special = nil end
+			if s.room_map then for k, v in pairs(s.room_map) do self.map.room_map[i-1][j-1][k] = v end s.room_map = nil end
+			if pairs(s) then for k, v in pairs(s) do self.level.map.attrs(i-1, j-1, k, v) end end
 		end
 	end end
 

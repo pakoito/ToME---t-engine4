@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setStatusAll{no_teleport=true}
+
 defineTile('!', "ROCK_VAULT_DARK", nil, nil, nil, {room_map={special=false, room=false, can_open=true}})
 defineTile(' ', "GRASS_DARK1")
 defineTile('+', "DOOR")
@@ -28,6 +30,8 @@ defineTile('Q', "GRASS_DARK1", {random_filter={add_levels=20}}, {random_filter={
 
 startx = 2
 starty = 10
+
+rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 return {
 [[XXXXXXXXXX]],
