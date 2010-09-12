@@ -83,6 +83,11 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		game.logPlayer(self, "%s notices you at the last moment!", target.name:capitalize())
 	end
 
+	if target and target:hasEffect(self.EFF_DOMINATED) and target.dominatedSource and target.dominatedSource == self then
+		-- target is being dominated by self
+		mult = (mult or 1) * (target.dominatedDamMult or 1)
+	end
+
 	if not self:attr("disarmed") then
 		-- All weapons in main hands
 		if self:getInven(self.INVEN_MAINHAND) then
@@ -143,6 +148,12 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	if sound then game:playSoundNear(self, sound)
 	elseif sound_miss then game:playSoundNear(self, sound_miss) end
+
+	-- cleave second attack
+	if self:knowTalent(self.T_CLEAVE) then
+		local t = self:getTalentFromId(self.T_CLEAVE)
+		t.on_attackTarget(self, t, target, multiplier)
+	end
 
 	-- Cancel stealth!
 	self:breakStealth()
@@ -512,6 +523,13 @@ function _M:physicalCrit(dam, weapon, target)
 		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
 	end
 
+	if target.stalker and target.stalker == self and self:knowTalent(self.T_STALK) then
+		local t = self:getTalentFromId(self.T_STALK)
+		if rng.percent(math.min(100, 40 + self:getTalentLevel(t) * 12)) then
+			return dam * 1.5, true
+		end
+	end
+
 	local chance = self:combatCrit(weapon)
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
@@ -605,6 +623,20 @@ function _M:hasStaffWeapon()
 	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or weapon.subtype ~= "staff" then
+		return nil
+	end
+	return weapon
+end
+
+--- Check if the actor has an axe weapon
+function _M:hasAxeWeapon()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
+	if not self:getInven("MAINHAND") then return end
+	local weapon = self:getInven("MAINHAND")[1]
+	if not weapon or (weapon.subtype ~= "battleaxe" and weapon.subtype ~= "waraxe") then
 		return nil
 	end
 	return weapon

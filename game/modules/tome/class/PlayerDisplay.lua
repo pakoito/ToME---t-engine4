@@ -108,6 +108,11 @@ function _M:display()
 		self.surface:erase(0x90 / 3, 0x40 / 3, 0x10 / 3, 255, self.bars_x, h, self.bars_w * player:getVim() / player.max_vim, self.font_h)
 		self.surface:drawColorStringBlended(self.font, ("#904010#Vim:     #ffffff#%d/%d"):format(player:getVim(), player.max_vim), 0, h, 255, 255, 255) h = h + self.font_h
 	end
+	if player:knowTalent(player.T_HATE_POOL) then
+		self.surface:erase(colors.GREY.r / 5, colors.GREY.g / 5, colors.GREY.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
+		self.surface:erase(colors.GREY.r / 2, colors.GREY.g / 2, colors.GREY.b / 2, 255, self.bars_x, h, self.bars_w * player:getHate() / 10, self.font_h)
+		self.surface:drawColorStringBlended(self.font, ("#F53CBE#Hate:    #ffffff#%.1f/%d"):format(player:getHate(), 10), 0, h, 255, 255, 255) h = h + self.font_h
+	end
 
 	if savefile_pipe.saving then h = h + self.font_h self.surface:drawColorStringBlended(self.font, "#YELLOW#Saving...", 0, h, 255, 255, 255) h = h + self.font_h end
 

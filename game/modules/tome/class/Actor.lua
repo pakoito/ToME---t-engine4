@@ -132,6 +132,13 @@ function _M:init(t, no_default)
 	t.positive = t.positive or 0
 	t.negative = t.negative or 0
 
+	t.hate_rating = t.hate_rating or 0.2
+	t.hate_regen = t.hate_regen or -0.035
+	t.max_hate = t.max_hate or 10
+	t.absolute_max_hate = t.absolute_max_hate or 15
+	t.hate = t.hate or 10
+	t.hate_per_kill = t.hate_per_kill or 0.8
+
 	-- Equilibrium has a default very high max, as bad effects happen even before reaching it
 	t.max_equilibrium = t.max_equilibrium or 100000
 	t.equilibrium = t.equilibrium or 0
@@ -177,6 +184,10 @@ function _M:act()
 	self:cooldownTalents()
 	-- Regen resources
 	self:regenLife()
+	if self:knowTalent(self.T_UNNATURAL_BODY) then
+		local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
+		t.do_regenLife(self, t)
+	end
 	self:regenResources()
 	-- Compute timed effects
 	self:timedEffects()
@@ -197,6 +208,11 @@ function _M:act()
 	if self:isTalentActive(self.T_BLOOD_FRENZY) then
 		local t = self:getTalentFromId(self.T_BLOOD_FRENZY)
 		t.do_turn(self, t)
+	end
+	-- this handles cursed gloom turn based effects
+	if self:isTalentActive(self.T_GLOOM) then
+	    local t = self:getTalentFromId(self.T_GLOOM)
+		t.do_gloom(self, t)
 	end
 
 	if self:attr("stunned") then self.energy.value = 0 end
@@ -500,6 +516,12 @@ function _M:onTakeHit(value, src)
 		self:removeEffect(self.EFF_DAZED)
 	end
 
+	-- remove stalking if there is an interaction
+	if self.stalker and src and self.stalker == src then
+		self.stalker:removeEffect(self.EFF_STALKER)
+		self:removeEffect(self.EFF_STALKED)
+	end
+
 	if self:attr("invulnerable") then
 		return 0
 	end
@@ -589,6 +611,11 @@ function _M:onTakeHit(value, src)
 		if mount.mount.actor.dead and mount.mount.effect then
 			self:removeEffect(mount.mount.effect)
 		end
+	end
+
+	-- Adds hate
+	if src and src.max_hate and src.max_hate > 0 then
+		src.hate = math.min(src.max_hate, src.hate + src.hate_per_kill)
 	end
 
 	-- Achievements
@@ -775,6 +802,10 @@ function _M:levelup()
 	self:incMaxStamina(self.stamina_rating)
 	self:incMaxPositive(self.positive_negative_rating)
 	self:incMaxNegative(self.positive_negative_rating)
+	if self.max_hate < self.absolute_max_hate then
+		local amount = math.min(self.hate_rating, self.absolute_max_hate - self.max_hate)
+		self:incMaxHate(amount)
+	end
 	-- Heal up on new level
 	self:resetToFull()
 
@@ -908,6 +939,7 @@ function _M:learnTalent(t_id, force, nb)
 	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and t.vim or t.sustain_vim then self:learnTalent(self.T_VIM_POOL, true) end
 	if t.type[1]:find("^divine/") and (t.positive or t.sustain_positive) and not self:knowTalent(self.T_POSITIVE_POOL) then self:learnTalent(self.T_POSITIVE_POOL, true) end
 	if t.type[1]:find("^divine/") and (t.negative or t.sustain_negative) and not self:knowTalent(self.T_NEGATIVE_POOL) then self:learnTalent(self.T_NEGATIVE_POOL, true) end
+	if t.type[1]:find("^cursed/") and not self:knowTalent(self.T_HATE_POOL) then self:learnTalent(self.T_HATE_POOL, true) end
 
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then self:learnTalent(self.T_SHOOT, true) end
@@ -960,6 +992,10 @@ function _M:preUseTalent(ab, silent, fake)
 			game.logPlayer(self, "You do not have enough negative energy to activate %s.", ab.name)
 			return false
 		end
+		if ab.sustain_hate and self.max_hate < ab.sustain_hate and not self:isTalentActive(ab.id) then
+			game.logPlayer(self, "You do not have enough hate to activate %s.", ab.name)
+			return false
+		end
 	else
 		if ab.mana and self:getMana() < ab.mana * (100 + self.fatigue) / 100 then
 			game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
@@ -979,6 +1015,10 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 		if ab.negative and self:getNegative() < ab.negative * (100 + self.fatigue) / 100 then
 			game.logPlayer(self, "You do not have enough negative energy to use %s.", ab.name)
+			return false
+		end
+		if ab.hate and self:getHate() < ab.hate * (100 + self.fatigue) / 100 then
+			game.logPlayer(self, "You do not have enough hate to use %s.", ab.name)
 			return false
 		end
 	end
@@ -1065,6 +1105,9 @@ function _M:postUseTalent(ab, ret)
 			if ab.sustain_negative then
 				trigger = true; self.max_negative = self.max_negative - ab.sustain_negative
 			end
+			if ab.sustain_hate then
+				trigger = true; self.max_hate = self.max_hate - ab.sustain_hate
+			end
 		else
 			if ab.sustain_mana then
 				trigger = true; self.max_mana = self.max_mana + ab.sustain_mana
@@ -1084,6 +1127,9 @@ function _M:postUseTalent(ab, ret)
 			if ab.sustain_negative then
 				trigger = true; self.max_negative = self.max_negative + ab.sustain_negative
 			end
+			if ab.sustain_hate then
+				trigger = true; self.max_hate = self.max_hate + ab.sustain_hate
+			end
 		end
 	else
 		if ab.mana then
@@ -1101,6 +1147,9 @@ function _M:postUseTalent(ab, ret)
 		end
 		if ab.negative then
 			trigger = true; self:incNegative(-ab.negative * (100 + self.fatigue) / 100)
+		end
+		if ab.hate then
+			trigger = true; self:incHate(-ab.hate * (100 + self.fatigue) / 100)
 		end
 		-- Equilibrium is not affected by fatigue
 		if ab.equilibrium then
@@ -1167,6 +1216,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	if t.vim or t.sustain_vim then d[#d+1] = "#6fff83#Vim cost: #888888#"..(t.sustain_vim or t.vim) end
 	if t.positive or t.sustain_positive then d[#d+1] = "#6fff83#Positive energy cost: #GOLD#"..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100) end
 	if t.negative or t.sustain_negative then d[#d+1] = "#6fff83#Negative energy cost: #GREY#"..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100) end
+	if t.hate or t.sustain_hate then d[#d+1] = "#6fff83#Hate cost: #GREY#"..(t.hate or t.sustain_hate) end
 	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
 	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
 	end
@@ -1264,6 +1314,13 @@ function _M:canSeeNoCache(actor, def, def_pct)
 		local hit, chance = self:checkHit(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
 			return false, chance
+		end
+	end
+
+	-- check if the actor is stalking you
+	if self.stalker then
+		if self.stalker == actor then
+			return false, 0
 		end
 	end
 

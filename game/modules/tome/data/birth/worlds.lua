@@ -54,6 +54,7 @@ newBirthDescriptor{
 				) and "allow" or "disallow"
 			end,
 			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
+			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
 		},
 	},
 }

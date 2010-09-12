@@ -1245,3 +1245,162 @@ newEffect{
 		self:removeTemporaryValue("move_project", eff.dig)
 	end,
 }
+
+newEffect{
+	name = "GLOOM_WEAKNESS",
+	desc = "Gloom Weakness",
+	type = "physical",
+	status = "detrimental",
+	parameters = { atk=10, dam=10 },
+	on_gain = function(self, err) return "#F53CBE##Target# is weakened by your gloom." end,
+	on_lose = function(self, err) return "#F53CBE##Target# is no longer weakened." end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("gloom_weakness", 1))
+		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
+		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("combat_atk", eff.atkid)
+		self:removeTemporaryValue("combat_dam", eff.damid)
+	end,
+}
+
+newEffect{
+	name = "GLOOM_SLOW",
+	desc = "Slowed by the gloom",
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#F53CBE##Target# moves reluctantly!", "+Slow" end,
+	on_lose = function(self, err) return "#Target# overcomes the gloom.", "-Slow" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
+		eff.tmpid = self:addTemporaryValue("energy", {mod=-eff.power})
+		eff.dur = self:updateEffectDuration(eff.dur, "slow")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "GLOOM_STUNNED",
+	desc = "Stunned by the gloom",
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed with fear!", "+Stunned" end,
+	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Stunned" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "stun")
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("stunned", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "GLOOM_CONFUSED",
+	desc = "Confused by the gloom",
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#F53CBE##Target# is lost in dispair!", "+Confused" end,
+	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Confused" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
+		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("confused", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "STALKER",
+	desc = "Stalking",
+	type = "physical",
+	status = "beneficial",
+	parameters = {},
+	activate = function(self, eff)
+		if not self.stalkee then
+			self.stalkee = eff.target
+			game.logSeen(self, "#F53CBE#%s is being stalked by %s!", eff.target.name:capitalize(), self.name)
+		end
+	end,
+	deactivate = function(self, eff)
+		self.stalkee = nil
+		game.logSeen(self, "#F53CBE#%s is no longer being stalked by %s.", eff.target.name:capitalize(), self.name)
+	end,
+}
+
+newEffect{
+	name = "STALKED",
+	desc = "Being Stalked",
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	activate = function(self, eff)
+		if not self.stalker then
+			eff.particle = self:addParticles(Particles.new("stalked", 1))
+			self.stalker = eff.target
+		end
+	end,
+	deactivate = function(self, eff)
+		self.stalker = nil
+		if eff.particle then self:removeParticles(eff.particle) end
+	end,
+}
+
+newEffect{
+	name = "INCREASED_LIFE",
+	desc = "Increased Life",
+	type = "physical",
+	status = "beneficial",
+	on_gain = function(self, err) return "#Target# gains extra life.", "+Life" end,
+	on_lose = function(self, err) return "#Target# loases extra life.", "-Life" end,
+	parameters = { life = 50 },
+	activate = function(self, eff)
+		self.max_life = self.max_life + eff.life
+		self.life = self.life + eff.life
+		self.changed = true
+	end,
+	deactivate = function(self, eff)
+		self.max_life = self.max_life - eff.life
+		self.life = self.life - eff.life
+		self.changed = true
+		if self.life <= 0 then
+			game.logSeen(self, "%s died when the effects of increased life wore off.", self.name:capitalize())
+			self:die(self)
+		end
+	end,
+}
+
+newEffect{
+	name = "DOMINATED",
+	desc = "Dominated",
+	type = "physical",
+	status = "detrimental",
+	on_gain = function(self, err) return "#F53CBE##Target# has been dominated!", "+Dominated" end,
+	on_lose = function(self, err) return "#F53CBE##Target# is no longer dominated.", "-Dominated" end,
+	parameters = { dominatedDamMult = 1.3 },
+	activate = function(self, eff)
+		if not self.dominatedSource then
+			self.dominatedSource = eff.dominatedSource
+			self.dominatedDamMult = 1.3 or eff.dominatedDamMult
+			eff.particle = self:addParticles(Particles.new("dominated", 1))
+		end
+	end,
+	deactivate = function(self, eff)
+		self.dominatedSource = nil
+		self.dominatedDamMult = nil
+		self:removeParticles(eff.particle)
+	end,
+}

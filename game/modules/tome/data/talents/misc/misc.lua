@@ -68,6 +68,13 @@ newTalent{
 	mode = "passive",
 	hide = true,
 }
+newTalent{
+	name = "Hate Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a hate pool.",
+	mode = "passive",
+	hide = true,
+}
 
 newTalent{
 	name = "Improved Health I",

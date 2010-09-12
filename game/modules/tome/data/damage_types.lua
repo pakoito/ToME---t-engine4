@@ -62,15 +62,17 @@ setDefaultProjector(function(src, x, y, type, dam)
 		if target == game.player then flash = game.flash.BAD end
 		if src == game.player then flash = game.flash.GOOD end
 
-		local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
-		game.logSeen(target, flash, "%s hits %s for %s%0.2f %s damage#LAST#.", srcname, target.name, DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name)
+		if not DamageType:get(type).hideMessage then
+			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
+			game.logSeen(target, flash, "%s hits %s for %s%0.2f %s damage#LAST#.", srcname, target.name, DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name)
+		end
 
 		local sx, sy = game.level.map:getTileToScreen(x, y)
 		if target:takeHit(dam, src) then
 			if rsrc == game.player or rtarget == game.player then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Kill!", {255,0,255})
 			end
-		else
+		elseif not DamageType:get(type).hideFlyer then
 			if rsrc == game.player then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {0,255,0})
 			elseif rtarget == game.player then
@@ -713,4 +715,13 @@ newDamageType{
 			target:setEffect(eff[1], dam.dur or 5, { src = src, [eff[2]] = dam.disease_power, dam = dam.disease_dam or (dam.dam / 5) })
 		end
 	end,
+}
+
+-- life leech (used cursed gloom skill)
+newDamageType{
+	name = "life leech",
+	type = "LIFE_LEECH",
+	text_color = "#F53CBE#",
+	hideMessage=true,
+	hideFlyer=true
 }

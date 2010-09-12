@@ -236,6 +236,18 @@ function _M:playerFOV()
 			end
 		end, true, true, true)
 	end
+
+
+	-- Handle Preternatural Senses talent, a simple FOV, using cache.
+	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then
+		local t = self:getTalentFromId(self.T_PRETERNATURAL_SENSES)
+		local range = self:getTalentRange(t)
+		self:computeFOV(range, "block_sense", function(x, y)
+			if game.level.map(x, y, game.level.map.ACTOR) then
+				game.level.map.seens(x, y, 1)
+			end
+		end, true, true, true)
+	end
 end
 
 --- Called before taking a hit, overload mod.class.Actor:onTakeHit() to stop resting and running
