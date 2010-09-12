@@ -361,16 +361,11 @@ function _M:magicMap(radius, x, y)
 	x = x or self.x
 	y = y or self.y
 	radius = math.floor(radius)
-	core.fov.calc_circle(x, y, radius, function(_, i, j)
-		if game.level.map:isBound(i, j) then
-			game.level.map.remembers(i, j, true)
-			game.level.map.has_seens(i, j, true)
-		end
-	end, function()end, nil)
-	if game.level.map:isBound(x, y) then
+
+	self:computeFOV(radius, "block_sense", function(x, y)
 		game.level.map.remembers(x, y, true)
 		game.level.map.has_seens(x, y, true)
-	end
+	end, true, true, true)
 end
 
 function _M:incMoney(v)
