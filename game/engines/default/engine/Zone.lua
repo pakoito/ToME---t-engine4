@@ -355,7 +355,6 @@ function _M:addEntity(level, e, typ, x, y)
 		if x and y then e:move(x, y, true) end
 		level:addEntity(e)
 		e:added()
-
 		-- Levelup ?
 		if self.actor_adjust_level and e.forceLevelup then
 			local newlevel = self:actor_adjust_level(level, e)
@@ -571,6 +570,16 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		local generator = self:getGenerator("actor", level, spots)
 		generator:generate()
 	end
+
+	-- Add the entities we are told to
+	for i = 0, map.w - 1 do for j = 0, map.h - 1 do
+		if map.room_map[i][j].add_entities then
+			for z = 1, #map.room_map[i][j].add_entities do
+				local ae = map.room_map[i][j].add_entities[z]
+				self:addEntity(level, ae[2], ae[1], i, j)
+			end
+		end
+	end end
 
 	-- Adjust shown & obscure colors
 	if level_data.color_shown then map:setShown(unpack(level_data.color_shown)) end

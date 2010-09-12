@@ -19,7 +19,7 @@
 
 local max_w, max_h = 50, 50
 local list = {
-	"greater-checkerboard",
+	"double-t", "crypt",
 }
 
 return function(gen, id, lev, old_lev)
@@ -28,10 +28,14 @@ return function(gen, id, lev, old_lev)
 	local Static = require("engine.generator.map.Static")
 	local data = table.clone(gen.data)
 	data.map = "vaults/"..vaultid
+
 	local old_map = gen.level.map
+	local old_game_level = game.level
+	game.level = gen.level
 	gen.level.map = vault_map
 	local vault = Static.new(gen.zone, vault_map, gen.level, data)
 	vault:generate(lev, old_lev)
+	game.level = old_game_level
 	gen.level.map = old_map
 
 	local w = vault_map.w

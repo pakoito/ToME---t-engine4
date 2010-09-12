@@ -145,6 +145,40 @@ newEntity{
 	end,
 }
 
+newEntity{
+	name = "Cursed Village",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {5, 15},
+	rarity = 8,
+	coords = {{ x=51, y=40, likelymap={
+		[[    11111111   ]],
+		[[ 1111111111111 ]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[111111111111111]],
+		[[ 1111111111111 ]],
+		[[   111111111   ]],
+	}}},
+	on_encounter = function(self, who)
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("lumberjack-quest", {name="Half-dead lumberjack"}, who)
+		chat:invoke()
+		return true
+	end,
+}
+
 ---------------------------- Hostiles -----------------------------
 
 -- Ambushed!

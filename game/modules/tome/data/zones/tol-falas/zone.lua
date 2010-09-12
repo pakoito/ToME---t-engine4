@@ -25,8 +25,8 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
---	all_remembered = true,
---	all_lited = true,
+	all_remembered = true,
+	all_lited = true,
 	persistant = "zone",
 	ambiant_music = "Dark Secrets.ogg",
 	generator =  {
@@ -46,7 +46,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {0, 0},
 			guardian = "THE_MASTER",
 		},
 		object = {

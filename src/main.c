@@ -738,6 +738,9 @@ int main(int argc, char *argv[])
 	// RNG init
 	init_gen_rand(time(NULL));
 
+	// Change to line buffering
+	setvbuf(stdout, (char *) NULL, _IOLBF, 0);
+
 	boot_lua(1, FALSE, argc, argv);
 
 	// initialize engine and set up resolution and depth

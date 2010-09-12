@@ -81,3 +81,7 @@ end}
 Autolevel:registerScheme{ name = "wyrmic", levelup = function(self)
 	self:learnStats{ self.STAT_STR, self.STAT_WIL, self.STAT_DEX, self.STAT_CUN }
 end}
+
+Autolevel:registerScheme{ name = "warriorwill", levelup = function(self)
+	self:learnStats{ self.STAT_STR, self.STAT_WIL, self.STAT_STR, self.STAT_WIL, self.STAT_DEX, }
+end}

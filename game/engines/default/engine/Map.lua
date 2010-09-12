@@ -720,15 +720,18 @@ function _M:import(map, dx, dy, sx, sy, sw, sh)
 
 	for i = sx, sx + sw - 1 do for j = sy, sy + sh - 1 do
 		local x, y = dx + i, dy + j
+
 		self.map[x + y * self.w] = map.map[i + j * map.w]
+		for z, e in pairs(self.map[x + y * self.w]) do
+			if e.move then
+				e.x = nil e.y = nil e:move(x, y, true)
+			end
+		end
+
 		if self.room_map then
 			self.room_map[x] = self.room_map[x] or {}
 			self.room_map[x][y] = map.room_map[i][j]
 		end
-		for z, e in pairs(self.map[x + y * self.w]) do
-			if e.move then e:move(x, y, true) end
-		end
-
 		self.remembers(x, y, map.remembers(i, j))
 		self.seens(x, y, map.seens(i, j))
 		self.lites(x, y, map.lites(i, j))

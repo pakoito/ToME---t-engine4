@@ -1252,7 +1252,7 @@ newEffect{
 	type = "physical",
 	status = "detrimental",
 	parameters = { atk=10, dam=10 },
-	on_gain = function(self, err) return "#F53CBE##Target# is weakened by your gloom." end,
+	on_gain = function(self, err) return "#F53CBE##Target# is weakened by the gloom." end,
 	on_lose = function(self, err) return "#F53CBE##Target# is no longer weakened." end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_weakness", 1))

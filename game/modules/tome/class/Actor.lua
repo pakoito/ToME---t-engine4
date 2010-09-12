@@ -1265,6 +1265,7 @@ function _M:suffocate(value, src)
 	if self:attr("no_breath") then return false, false end
 	if self:attr("invulnerable") then return false, false end
 	self.air = self.air - value
+	local ae = game.level.map(self.x, self.y, Map.ACTOR)
 	if self.air <= 0 then
 		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())
 		return self:die(src), true

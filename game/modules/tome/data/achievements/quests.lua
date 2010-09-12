@@ -109,3 +109,7 @@ newAchievement{
 	name = "Gem of the Moon", id = "MASTER_JEWELER",
 	desc = [[Completed the Master Jeweler quest with Limmir.]],
 }
+newAchievement{
+	name = "Curse Lifter", id = "CURSE_ERASER",
+	desc = [[Killed Ben Cruthdar the Cursed.]],
+}
