@@ -20,7 +20,8 @@
 require "engine.class"
 local Map = require "engine.Map"
 require "engine.Generator"
-module(..., package.seeall, class.inherit(engine.Generator))
+local RoomsLoader = require "engine.generator.map.RoomsLoader"
+module(..., package.seeall, class.inherit(engine.Generator, RoomsLoader))
 
 function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
@@ -40,6 +41,8 @@ function _M:init(zone, map, level, data)
 		self.do_ponds.hurst = self.do_ponds.hurst or nil
 		self.do_ponds.lacunarity = self.do_ponds.lacunarity or nil
 	end
+
+	RoomsLoader.init(self, data)
 end
 
 function _M:addPond(x, y, spots)
@@ -114,11 +117,30 @@ function _M:generate(lev, old_lev)
 	end
 
 	local spots = {}
+	self.spots = spots
 
 	if self.do_ponds then
 		for i = 1, rng.range(self.do_ponds.nb[1], self.do_ponds.nb[2]) do
 			self:addPond(rng.range(self.do_ponds.size.w, self.map.w - self.do_ponds.size.w), rng.range(self.do_ponds.size.h, self.map.h - self.do_ponds.size.h), spots)
 		end
+	end
+
+	local nb_room = util.getval(self.data.nb_rooms or 0)
+	local rooms = {}
+	while nb_room > 0 do
+		local rroom
+		while true do
+			rroom = self.rooms[rng.range(1, #self.rooms)]
+			if type(rroom) == "table" and rroom.chance_room then
+				if rng.percent(rroom.chance_room) then rroom = rroom[1] break end
+			else
+				break
+			end
+		end
+
+		local r = self:roomAlloc(rroom, #rooms+1, lev, old_lev)
+		if r then rooms[#rooms+1] = r end
+		nb_room = nb_room - 1
 	end
 
 	local ux, uy, dx, dy

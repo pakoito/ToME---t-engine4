@@ -45,6 +45,11 @@ return {
 				size = {w=25, h=25},
 				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
 			},
+
+			nb_rooms = {0,0,0,0,1},
+			rooms = {"lesser_vault"},
+			greater_vaults_list = {"honey_tree"},
+			lite_room_chance = 100,
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

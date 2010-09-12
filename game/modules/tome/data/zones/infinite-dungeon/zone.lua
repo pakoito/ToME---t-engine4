@@ -36,7 +36,7 @@ return {
 --			rooms = {"simple", "pilar", {"money_vault",5}},
 			rooms = {"simple", "greater_vault"},
 			rooms_config = {pit={filters={{type="undead"}}}},
-			vaults_list = {"double-t","crypt","treasure1","diggers"},
+			greater_vaults_list = {"double-t","crypt","treasure1","diggers"},
 			lite_room_chance = 50,
 			['.'] = "FLOOR",
 			['#'] = "WALL",

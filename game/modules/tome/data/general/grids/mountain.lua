@@ -45,3 +45,15 @@ newEntity{
 	block_sight = true,
 	dig = "ROCKY_GROUND",
 }
+
+newEntity{
+	define_as = "HARDMOUNTAIN_WALL",
+	name = "hard rocky mountain", image = "terrain/rocky_mountain.png",
+	display = '#', color=colors.UMBER, back_color=colors.LIGHT_UMBER,
+	always_remember = true,
+	does_block_move = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+	air_level = -20,
+}

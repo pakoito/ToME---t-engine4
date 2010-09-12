@@ -19,11 +19,11 @@
 
 local max_w, max_h = 50, 50
 local list = {
-	"double-t", "crypt", "treasure1", "diggers",
+	"honey_glade",
 }
 
 return function(gen, id, lev, old_lev)
-	local vaultid = rng.table(gen.data.greater_vaults_list or list)
+	local vaultid = rng.table(gen.data.lesser_vaults_list or list)
 	local vault_map = engine.Map.new(max_w, max_h)
 	local Static = require("engine.generator.map.Static")
 	local data = table.clone(gen.data)
@@ -40,7 +40,7 @@ return function(gen, id, lev, old_lev)
 
 	local w = vault_map.w
 	local h = vault_map.h
-	return { name="greater_vault-"..vaultid.."-"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
+	return { name="lesser_vault-"..vaultid.."-"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
 		gen.map:import(vault_map, x, y)
 		vault_map:close()
 		-- Make it a room, and make it special so that we do not tunnel through
@@ -49,7 +49,7 @@ return function(gen, id, lev, old_lev)
 			gen.map.room_map[i][j].room = id
 		end end
 		if vault.gen_map.startx and vault.gen_map.starty then
-			gen.spots[#gen.spots+1] = {x=vault.gen_map.startx + x, y=vault.gen_map.starty + y, check_connectivity="entrance", type="vault", subtype="greater"}
+			gen.spots[#gen.spots+1] = {x=vault.gen_map.startx + x, y=vault.gen_map.starty + y, check_connectivity="entrance", type="vault", subtype="lesser"}
 			return vault.gen_map.startx + x, vault.gen_map.starty + y
 		end
 	end}

@@ -38,6 +38,21 @@ newEntity{
 }
 end
 
+for i = 1, 20 do
+newEntity{
+	define_as = "HARDTREE"..(i > 1 and i or ""),
+	name = "tall thick tree",
+	image = "terrain/grass.png",
+	add_displays = class:makeTrees("terrain/tree_alpha"),
+	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	does_block_move = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+}
+end
+
 newEntity{
 	define_as = "GRASS_DARK1",
 	name = "grass", image = "terrain/grass_dark1.png",
@@ -59,8 +74,51 @@ newEntity{
 }
 end
 
+for i = 1, 20 do
+newEntity{
+	define_as = "HARDTREE_DARK"..i,
+	name = "tall thick tree", image = "terrain/grass_dark1.png",
+	force_clone = true,
+	add_displays = class:makeTrees("terrain/tree_alpha"),
+	display = '#', color=colors.GREEN, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	does_block_move = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+}
+end
+
 newEntity{
 	define_as = "FLOWER",
 	name = "flower", image = "terrain/grass_flower3.png",
 	display = ';', color=colors.YELLOW, back_color={r=44,g=95,b=43},
+}
+
+newEntity{
+	define_as = "ROCK_VAULT",
+	name = "huge lose rock", image = "terrain/rock_grass.png",
+	display = '+', color=colors.GREY, back_color={r=44,g=95,b=43},
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+	door_player_check = "This rock is loose, you think you can move it away.",
+	door_opened = "GRASS",
+	dig = "GRASS",
+}
+
+newEntity{
+	define_as = "ROCK_VAULT_DARK",
+	name = "huge lose rock", image = "terrain/rock_grass_dark.png",
+	display = '+', color=colors.GREY, back_color={r=44,g=95,b=43},
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+	door_player_check = "This rock is loose, you think you can move it away.",
+	door_opened = "GRASS_DARK1",
+	dig = "GRASS_DARK1",
 }

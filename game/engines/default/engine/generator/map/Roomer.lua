@@ -20,7 +20,8 @@
 require "engine.class"
 local Map = require "engine.Map"
 require "engine.Generator"
-module(..., package.seeall, class.inherit(engine.Generator))
+local RoomsLoader = require "engine.generator.map.RoomsLoader"
+module(..., package.seeall, class.inherit(engine.Generator, RoomsLoader))
 
 function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
@@ -31,102 +32,7 @@ function _M:init(zone, map, level, data)
 	self.data.lite_room_chance = self.data.lite_room_chance or 25
 	self.grid_list = zone.grid_list
 
-	self.rooms = {}
-	for i, file in ipairs(data.rooms) do
-		if type(file) == "table" then
-			table.insert(self.rooms, {self:loadRoom(file[1]), chance_room=file[2]})
-		else
-			table.insert(self.rooms, self:loadRoom(file))
-		end
-	end
-end
-
-function _M:loadRoom(file)
-	local f, err = loadfile("/data/rooms/"..file..".lua")
-	if not f and err then error(err) end
-	setfenv(f, setmetatable({
-		Map = require("engine.Map"),
-	}, {__index=_G}))
-	local ret, err = f()
-	if not ret and err then error(err) end
-
-	-- We got a room generator function, save it for later
-	if type(ret) == "function" then
-		print("loaded room generator",file,ret)
-		return ret
-	end
-
-	-- Init the room with name and size
-	local t = { name=file, w=ret[1]:len(), h=#ret }
-
-	-- Read the room map
-	for j, line in ipairs(ret) do
-		local i = 1
-		for c in line:gmatch(".") do
-			t[i] = t[i] or {}
-			t[i][j] = c
-			i = i + 1
-		end
-	end
-	print("loaded room",file,t.w,t.h)
-
-	return t
-end
-
---- Make up a room
-function _M:roomAlloc(room, id, lev, old_lev)
-	if type(room) == 'function' then
-		print("room generator", room, "is making a room")
-		room = room(self, id, lev, old_lev)
-	end
-	print("alloc", room.name)
-	-- Sanity check
-	if self.map.w - 2 - room.w < 2 or self.map.h - 2 - room.h < 2 then return false end
-
-	local tries = 100
-	while tries > 0 do
-		local ok = true
-		local x, y = rng.range(1, self.map.w - 2 - room.w), rng.range(1, self.map.h - 2 - room.h)
-
-		-- Do we stomp ?
-		for i = 1, room.w do
-			for j = 1, room.h do
-				if self.map.room_map[i-1+x][j-1+y].room then ok = false break end
-			end
-			if not ok then break end
-		end
-
-		if ok then
-			local is_lit = rng.percent(self.data.lite_room_chance)
-
-			-- ok alloc it using the default generator or a specific one
-			local cx, cy
-			if room.generator then
-				cx, cy = room:generator(x, y, is_lit)
-			else
-				for i = 1, room.w do
-					for j = 1, room.h do
-						self.map.room_map[i-1+x][j-1+y].room = id
-						local c = room[i][j]
-						if c == '!' then
-							self.map.room_map[i-1+x][j-1+y].room = nil
-							self.map.room_map[i-1+x][j-1+y].can_open = true
-							self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve('#'))
-						else
-							self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve(c))
-						end
-						if is_lit then self.map.lites(i-1+x, j-1+y, true) end
-					end
-				end
-			end
-			print("room allocated at", x, y,"with center",math.floor(x+(room.w-1)/2), math.floor(y+(room.h-1)/2))
-			cx = cx or math.floor(x+(room.w-1)/2)
-			cy = cy or math.floor(y+(room.h-1)/2)
-			return { id=id, x=x, y=y, cx=cx, cy=cy, room=room }
-		end
-		tries = tries - 1
-	end
-	return false
+	RoomsLoader.init(self, data)
 end
 
 --- Random tunnel dir
@@ -336,17 +242,14 @@ function _M:generate(lev, old_lev)
 	local spots = {}
 	self.spots = spots
 
-	local nb_room = self.data.nb_rooms or 10
+	local nb_room = util.getval(self.data.nb_rooms or 10)
 	local rooms = {}
 	while nb_room > 0 do
 		local rroom
 		while true do
 			rroom = self.rooms[rng.range(1, #self.rooms)]
 			if type(rroom) == "table" and rroom.chance_room then
-				if rng.percent(rroom.chance_room) then
-					rroom = rroom[1]
-					break
-				end
+				if rng.percent(rroom.chance_room) then rroom = rroom[1] break end
 			else
 				break
 			end

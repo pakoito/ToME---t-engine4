@@ -85,11 +85,21 @@ function _M:loadMap(file)
 	local m = { w=ret[1]:len(), h=#ret }
 
 	-- Read the map
+	local rotate = util.getval(g.rotates or "default")
 	for j, line in ipairs(ret) do
 		local i = 1
 		for c in line:gmatch(".") do
-			m[i] = m[i] or {}
-			m[i][j] = c
+			local ii, jj = i, j
+
+			if rotate == "flipx" then ii, jj = m.w - i + 1, j
+			elseif rotate == "flipy" then ii, jj = i, m.h - j + 1
+			elseif rotate == "90" then ii, jj = j, m.w - i + 1
+			elseif rotate == "180" then ii, jj = m.w - i + 1, m.h - j + 1
+			elseif rotate == "270" then ii, jj = m.h - j + 1, i
+			end
+
+			m[ii] = m[ii] or {}
+			m[ii][jj] = c
 			i = i + 1
 		end
 	end
@@ -98,6 +108,25 @@ function _M:loadMap(file)
 	m.starty = g.starty or math.floor(m.h / 2)
 	m.endx = g.endx or math.floor(m.w / 2)
 	m.endy = g.endy or math.floor(m.h / 2)
+
+	if rotate == "flipx" then
+		m.startx = m.w - m.startx + 1
+		m.endx   = m.w - m.endx   + 1
+	elseif rotate == "flipy" then
+		m.starty = m.h - m.starty + 1
+		m.endy   = m.h - m.endy   + 1
+	elseif rotate == "90" then
+		m.startx, m.starty = m.starty, m.w - m.startx + 1
+		m.endx,   m.endy   = m.endy,   m.w - m.endx   + 1
+		m.w, m.h = m.h, m.w
+	elseif rotate == "180" then
+		m.startx, m.starty = m.w - m.startx + 1, m.h - m.starty + 1
+		m.endx,   m.endy   = m.w - m.endx   + 1, m.h - m.endy   + 1
+	elseif rotate == "270" then
+		m.startx, m.starty = m.h - m.starty + 1, m.startx
+		m.endx,   m.endy   = m.h - m.endy   + 1, m.endx
+		m.w, m.h = m.h, m.w
+	end
 
 	self.gen_map = m
 	self.tiles = t

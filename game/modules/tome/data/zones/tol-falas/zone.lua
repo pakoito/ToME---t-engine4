@@ -35,7 +35,7 @@ return {
 			nb_rooms = 10,
 			rooms = {"simple", "pilar", {"money_vault",5}, {"pit",7}, {"greater_vault",8}},
 			rooms_config = {pit={filters={{type="undead"}}}},
-			vaults_list = {"double-t","crypt","treasure1","diggers"},
+			greater_vaults_list = {"double-t","crypt","treasure1","diggers"},
 			lite_room_chance = 100,
 			['.'] = "FLOOR",
 			['#'] = "WALL",
@@ -45,7 +45,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
+			nb_npc = {20, 30},
 			guardian = "THE_MASTER",
 		},
 		object = {
