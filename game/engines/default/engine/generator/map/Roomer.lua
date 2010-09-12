@@ -333,6 +333,9 @@ function _M:generate(lev, old_lev)
 		self.map(i, j, Map.TERRAIN, self:resolve("#"))
 	end end
 
+	local spots = {}
+	self.spots = spots
+
 	local nb_room = self.data.nb_rooms or 10
 	local rooms = {}
 	while nb_room > 0 do
@@ -386,7 +389,6 @@ function _M:generate(lev, old_lev)
 	end
 
 	-- Find out "interresting" spots
-	local spots = {}
 	for i, r in ipairs(rooms) do
 		spots[#spots+1] = {x=rooms[i].cx, y=rooms[i].cy, type="room", subtype=rooms[i].room.name}
 	end

@@ -46,8 +46,8 @@ return function(gen, id)
 					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('#'))
 					doors[#doors+1] = {i-1+x, j-1+y}
 				else
-						local e = gen.zone:makeEntity(gen.level, "actor", filter, nil, true)
-						if e then gen.zone:addEntity(gen.level, e, "actor", i-1+x, j-1+y) end
+					local e = gen.zone:makeEntity(gen.level, "actor", filter, nil, true)
+					if e then gen.zone:addEntity(gen.level, e, "actor", i-1+x, j-1+y) end
 				end
 				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
 			end
