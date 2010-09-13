@@ -25,7 +25,7 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
-	all_remembered = true,
+--	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
 	ambiant_music = "Rainy Day.ogg",
@@ -46,9 +46,9 @@ return {
 				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
 			},
 
-			nb_rooms = {1},
+			nb_rooms = {0,0,0,0,1},
 			rooms = {"lesser_vault"},
-			greater_vaults_list = {"honey_tree"},
+			lesser_vaults_list = {"honey_glade"},
 			lite_room_chance = 100,
 		},
 		actor = {

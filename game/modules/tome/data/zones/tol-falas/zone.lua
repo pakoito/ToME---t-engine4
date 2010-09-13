@@ -37,6 +37,7 @@ return {
 			rooms_config = {pit={filters={{type="undead"}}}},
 			greater_vaults_list = {"double-t","crypt","treasure1","diggers"},
 			lite_room_chance = 100,
+			['+'] = "DOOR",
 			['.'] = "FLOOR",
 			['#'] = "WALL",
 			up = "UP",
