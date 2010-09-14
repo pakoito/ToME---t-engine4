@@ -43,6 +43,8 @@ function _M:init(keyhandler)
 
 	self.uniques = {}
 
+	self.__savefile_version_tokens = {}
+
 	self.__threads = {}
 end
 
@@ -64,6 +66,7 @@ function _M:defaultSavedFields(t)
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
 		always_target=true, gfxmode=true, uniques=true, object_known_types=true,
 		current_music=true, memory_levels=true, achievement_data=true, factions=true,
+		__savefile_version_tokens = true,
 	}
 	table.merge(def, t)
 	return def
@@ -110,6 +113,17 @@ end
 -- the engine adjusting stuff to the player or if you have many players or whatever
 function _M:getPlayer()
 	return nil
+end
+
+--- Gets/increment the savefile version
+-- @param token if "new" this will create a new allowed save token and return it. Otherwise this checks the token against the allowed ones and returns true if it is allowed
+function _M:saveVersion(token)
+	if token == "new" then
+		token = util.uuid()
+		self.__savefile_version_tokens[token] = true
+		return token
+	end
+	return self.__savefile_version_tokens[token]
 end
 
 --- This is the "main game loop", do something here

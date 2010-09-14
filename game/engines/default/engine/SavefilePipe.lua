@@ -51,7 +51,7 @@ function _M:push(savename, type, object, class)
 	local Savefile = require(class)
 	local id = Savefile["nameSave"..type:lower():capitalize()](Savefile, object)
 
-	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=object:cloneFull(), baseobject=object, class=class}
+	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=object:cloneFull(), baseobject=object, class=class, saveversion=game:saveVersion("new")}
 	if not self.co or coroutine.status(self.co) == "dead" then
 		self.co = coroutine.create(function() return self:doThread() end)
 		game:registerCoroutine("savefilepipe", self.co)
@@ -79,6 +79,7 @@ function _M:doThread()
 		print("[SAVEFILE PIPE] new save running in the pipe:", p.savename, p.type, "::", p.id, "::", p.baseobject, "=>", p.object)
 
 		local save = Savefile.new(p.savename, true)
+		o.__saved_saveversion = p.saveversion
 		save["save"..p.type:lower():capitalize()](save, o, true)
 		save:close()
 
@@ -131,5 +132,14 @@ function _M:doLoad(savename, type, class, ...)
 	local ret = save["load"..type:lower():capitalize()](save, ...)
 	save:close()
 	Savefile:setCurrent(cur)
+
+	-- Check for validity
+	if _G.type(ret) == "table" and type ~= "game" and type ~= "world" then
+		if not game:saveVersion(ret.__saved_saveversion) then
+			print("Loading savefile", savename, type, class," with id", ret.__saved_saveversion, "but current game does not know this token => ignoring")
+			return nil
+		end
+	end
+
 	return ret
 end
