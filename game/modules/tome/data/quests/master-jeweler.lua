@@ -82,12 +82,10 @@ summon_limmir = function(self, who)
 	if not o then game.logPlayer(who, "You do not have the summoning scroll!") return end
 	who:removeObject(inven, item)
 
-	game.level.turn_counter = 300 * 10
-	who.changed = true
-
 	local limmir = game.zone:makeEntityByName(game.level, "actor", "LIMMIR")
-	game.zone:addEntity(game.level, limmir, "actor", 25, 24)
-	limmir:doEmote("This place is corrupted! I will cleanse it, protect me while I do it!", 120)
+	limmir.limmir_target = {x=42, y=11}
+	limmir.limmir_target2 = {x=24, y=25}
+	game.zone:addEntity(game.level, limmir, "actor", 45, 1)
 end
 
 ritual_end = function(self)

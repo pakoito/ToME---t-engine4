@@ -28,7 +28,7 @@ return {
 	all_lited = true,
 	persistant = "zone",
 	ambiant_music = "The Ancients.ogg",
-	no_connectivity_check = true,
+	no_level_connectivity = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
@@ -37,7 +37,7 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {0, 0},
-			rate = 0.15,
+			rate = 0.55,
 		},
 	},
 

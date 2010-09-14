@@ -85,7 +85,7 @@ newEntity{ define_as = "LIMMIR",
 	open_door = true,
 
 	autolevel = "caster",
-	ai = "none", ai_state = { },
+	ai = "move_quest_limmir", ai_state = { },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
