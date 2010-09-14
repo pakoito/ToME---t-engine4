@@ -36,7 +36,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive fire, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		return ([[When you throw your alchemist bombs you infuse them with explosive fire, increasing damage by %d%% setting foes ablaze.]]):format(self:getTalentLevel(t) * 7)
 	end,
 }
 
@@ -60,7 +60,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive acid, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		return ([[When you throw your alchemist bombs you infuse them with explosive acid that can blind, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
 	end,
 }
 
@@ -84,7 +84,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with lightning, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		return ([[When you throw your alchemist bombs you infuse them with lightning that can daze, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
 	end,
 }
 
@@ -108,6 +108,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with frost, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		return ([[When you throw your alchemist bombs you infuse them with frost that can freeze, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
 	end,
 }

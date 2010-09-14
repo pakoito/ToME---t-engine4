@@ -524,8 +524,8 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(3, "valley-moon")
-				self.player:grantQuest("master-jeweler")
+				self:changeLevel(1, "rak-shor-pride")
+--				self.player:grantQuest("master-jeweler")
 			end
 		end,
 	}

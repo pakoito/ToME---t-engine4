@@ -21,7 +21,8 @@ require "engine.class"
 local Map = require "engine.Map"
 local BSP = require "engine.BSP"
 require "engine.Generator"
-module(..., package.seeall, class.inherit(engine.Generator))
+local RoomsLoader = require "engine.generator.map.RoomsLoader"
+module(..., package.seeall, class.inherit(engine.Generator, RoomsLoader))
 
 function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
@@ -33,6 +34,8 @@ function _M:init(zone, map, level, data)
 	self.lshape_chance = data.lshape_chance or 50
 	self.double_lshape_chance = data.double_lshape_chance or 40
 	self.yard_chance = data.yard_chance or 30
+
+	RoomsLoader.init(self, data)
 end
 
 function _M:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
@@ -78,6 +81,11 @@ function _M:building(leaf, spots)
 	local inner_grids = {}
 	local door_grids = {}
 
+	for i = leaf.rx, leaf.rx + leaf.w do for j = leaf.ry, leaf.ry + leaf.h do
+		-- Abort if there is something already
+		if self.map:isBound(i, j) and self.map.room_map[i][j].room then return end
+	end end
+
 	for i = x1, x2 do for j = y1, y2 do
 		if i == x1 or i == x2 or j == y1 or j == y2 then
 			self.map(i, j, Map.TERRAIN, self:resolve("wall"))
@@ -115,11 +123,31 @@ function _M:generate(lev, old_lev)
 		self.map(i, j, Map.TERRAIN, self:resolve("external_floor"))
 	end end
 
+	local spots = {}
+	self.spots = spots
+
+	local nb_room = util.getval(self.data.nb_rooms or 0)
+	local rooms = {}
+	while nb_room > 0 do
+		local rroom
+		while true do
+			rroom = self.rooms[rng.range(1, #self.rooms)]
+			if type(rroom) == "table" and rroom.chance_room then
+				if rng.percent(rroom.chance_room) then rroom = rroom[1] break end
+			else
+				break
+			end
+		end
+
+		local r = self:roomAlloc(rroom, #rooms+1, lev, old_lev)
+		if r then rooms[#rooms+1] = r end
+		nb_room = nb_room - 1
+	end
+
 	local bsp = BSP.new(self.map.w, self.map.h, self.max_building_w, self.max_building_h)
 	bsp:partition()
 
 	print("Town gen made ", #bsp.leafs, "BSP leafs")
-	local spots = {}
 	for z, leaf in ipairs(bsp.leafs) do
 		if rng.percent(self.building_chance) then
 			self:building(leaf, spots)

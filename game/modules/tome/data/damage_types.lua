@@ -383,6 +383,38 @@ newDamageType{
 	end,
 }
 
+-- Acid damage + blind chance
+newDamageType{
+	name = "acid blind", type = "ACID_BLIND",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(25) then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, 3, {src=src})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Lightning damage + daze chance
+newDamageType{
+	name = "lightning daze", type = "LIGHTNING_DAZE",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(25) then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, 3, {src=src})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Cold/physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
 	name = "wave", type = "WAVE",

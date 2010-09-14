@@ -32,10 +32,10 @@ newTalent{
 		local inc_dam = 0
 		local damtype = DamageType.FIRE
 		local particle = "ball_fire"
-		if self:isTalentActive(self.T_ACID_INFUSION) then inc_dam = self:getTalentLevel(self.T_ACID_INFUSION) * 0.05; damtype = DamageType.ACID; particle = "ball_acid"
-		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = self:getTalentLevel(self.T_LIGHTNING_INFUSION) * 0.05; damtype = DamageType.LIGHTNING; particle = "ball_lightning"
+		if self:isTalentActive(self.T_ACID_INFUSION) then inc_dam = self:getTalentLevel(self.T_ACID_INFUSION) * 0.05; damtype = DamageType.ACID_BLIND; particle = "ball_acid"
+		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = self:getTalentLevel(self.T_LIGHTNING_INFUSION) * 0.05; damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning"
 		elseif self:isTalentActive(self.T_FROST_INFUSION) then inc_dam = self:getTalentLevel(self.T_FROST_INFUSION) * 0.05; damtype = DamageType.ICE; particle = "ball_ice"
-		else inc_dam = self:getTalentLevel(self.T_FIRE_INFUSION) * 0.05 + (ammo.alchemist_bomb.power or 0) / 100
+		else inc_dam = self:getTalentLevel(self.T_FIRE_INFUSION) * 0.07 + (ammo.alchemist_bomb.power or 0) / 100; damtype = self:knowTalent(self.T_FIRE_INFUSION) and DamageType.FIREBURN or DamageType.FIRE
 		end
 		local dam = self:combatTalentSpellDamage(t, 15, 150, (ammo.alchemist_power + self:combatSpellpower()) / 2)
 		dam = dam * (1 + inc_dam)

@@ -19,7 +19,7 @@
 
 local max_w, max_h = 50, 50
 local list = {
-	"double-t", "crypt", "treasure1", "diggers",
+	"double-t", "crypt", "treasure1", "diggers", "hillbert_curve",
 }
 
 return function(gen, id, lev, old_lev)

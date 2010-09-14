@@ -69,15 +69,54 @@ function _M:loadRoom(file)
 	return t
 end
 
---- Make up a room
-function _M:roomAlloc(room, id, lev, old_lev)
+--- Generates a room
+function _M:roomGen(room, id, lev, old_lev)
 	if type(room) == 'function' then
 		print("room generator", room, "is making a room")
 		room = room(self, id, lev, old_lev)
 	end
 	print("alloc", room.name)
+
 	-- Sanity check
 	if self.map.w - 2 - room.w < 2 or self.map.h - 2 - room.h < 2 then return false end
+
+	return room
+end
+
+--- Place a room
+function _M:roomPlace(room, id, x, y)
+	local is_lit = rng.percent(self.data.lite_room_chance)
+
+	-- ok alloc it using the default generator or a specific one
+	local cx, cy
+	if room.generator then
+		cx, cy = room:generator(x, y, is_lit)
+	else
+		for i = 1, room.w do
+			for j = 1, room.h do
+				self.map.room_map[i-1+x][j-1+y].room = id
+				local c = room[i][j]
+				if c == '!' then
+					self.map.room_map[i-1+x][j-1+y].room = nil
+					self.map.room_map[i-1+x][j-1+y].can_open = true
+					self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve('#'))
+				else
+					self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve(c))
+				end
+				if is_lit then self.map.lites(i-1+x, j-1+y, true) end
+			end
+		end
+	end
+	print("room allocated at", x, y,"with center",math.floor(x+(room.w-1)/2), math.floor(y+(room.h-1)/2))
+	cx = cx or math.floor(x+(room.w-1)/2)
+	cy = cy or math.floor(y+(room.h-1)/2)
+	return { id=id, x=x, y=y, cx=cx, cy=cy, room=room }
+end
+
+--- Make up a room
+function _M:roomAlloc(room, id, lev, old_lev)
+	room = self:roomGen(room, id, lev, old_lev)
+	if not room then return end
 
 	local tries = 100
 	while tries > 0 do
@@ -93,32 +132,8 @@ function _M:roomAlloc(room, id, lev, old_lev)
 		end
 
 		if ok then
-			local is_lit = rng.percent(self.data.lite_room_chance)
-
-			-- ok alloc it using the default generator or a specific one
-			local cx, cy
-			if room.generator then
-				cx, cy = room:generator(x, y, is_lit)
-			else
-				for i = 1, room.w do
-					for j = 1, room.h do
-						self.map.room_map[i-1+x][j-1+y].room = id
-						local c = room[i][j]
-						if c == '!' then
-							self.map.room_map[i-1+x][j-1+y].room = nil
-							self.map.room_map[i-1+x][j-1+y].can_open = true
-							self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve('#'))
-						else
-							self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve(c))
-						end
-						if is_lit then self.map.lites(i-1+x, j-1+y, true) end
-					end
-				end
-			end
-			print("room allocated at", x, y,"with center",math.floor(x+(room.w-1)/2), math.floor(y+(room.h-1)/2))
-			cx = cx or math.floor(x+(room.w-1)/2)
-			cy = cy or math.floor(y+(room.h-1)/2)
-			return { id=id, x=x, y=y, cx=cx, cy=cy, room=room }
+			local res = self:roomPlace(room, id, x, y)
+			if res then return res end
 		end
 		tries = tries - 1
 	end
