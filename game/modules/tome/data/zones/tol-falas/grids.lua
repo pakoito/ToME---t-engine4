@@ -18,3 +18,14 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+
+newEntity{
+	define_as = "LORE_NOTE",
+	name = "sign post with a note", image = "terrain/marble_floor.png",
+	display = '_', color=colors.GREEN, back_color=colors.DARK_GREY,
+	add_displays = {class.new{image="terrain/signpost.png"}},
+	always_remember = true,
+	on_move = function(self, x, y, who)
+		if who.player then who:learnLore(self.lore) end
+	end,
+}

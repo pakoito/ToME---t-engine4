@@ -60,6 +60,22 @@ return {
 	},
 	post_process = function(level)
 		for uid, e in pairs(level.entities) do e.faction="tol-falas" end
+
+		-- Put lore near the up stairs
+		if game.zone.created_lore and game.zone.created_lore[level.level] then
+			local post = game.zone:makeEntityByName(level, "terrain", "LORE_NOTE")
+			post.lore = "tol-falas-note-"..game.zone.created_lore[level.level]
+
+			local x, y = rng.range(0, level.map.w-1), rng.range(0, level.map.h-1)
+			local tries = 0
+			while (level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") or level.map:checkEntity(x, y, engine.Map.TERRAIN, "change_level") or (level.map.room_map[x][y] and level.map.room_map[x][y].special)) and tries < 100 do
+				x, y = rng.range(0, level.map.w-1), rng.range(0, level.map.h-1)
+				tries = tries + 1
+			end
+			if tries < 100 then
+				game.zone:addEntity(level, post, "terrain", x, y)
+			end
+		end
 	end,
 	levels =
 	{
@@ -69,6 +85,17 @@ return {
 			}, },
 		},
 	},
+	on_enter = function(_, _, newzone)
+		if newzone and not game.zone.created_lore then
+			local levels = {2,3,4,5,6,7,8}
+			game.zone.created_lore = {}
+			for i = 1, 5 do
+				local lev = rng.tableRemove(levels)
+				game.zone.created_lore[lev] = i
+				print("Lore "..i.." on level "..lev)
+			end
+		end
+	end,
 	on_leave = function(lev, old_lev, newzone)
 		if not newzone then return end
 		-- Ambushed!
