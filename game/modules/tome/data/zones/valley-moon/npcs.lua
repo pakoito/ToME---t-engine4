@@ -80,6 +80,7 @@ newEntity{ define_as = "LIMMIR",
 	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
 	move_others=true,
 	knockback_immune = 1,
+	teleport_immune = 1,
 
 	open_door = true,
 

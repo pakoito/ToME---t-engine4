@@ -71,17 +71,17 @@ newTalent{
 	mode = "sustained",
 	require = corrs_req2,
 	points = 5,
-	vim = 40,
+	sustain_vim = 40,
 	cooldown = 30,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local ret = {
-			per = self:addTemporaryValue("inc_damage", {[DamageType.BLIGHT] = self:combatTalentSpellDamage(t, 15, 40)}),
+			per = self:addTemporaryValue("melee_project", {[DamageType.BLIGHT] = self:combatTalentSpellDamage(t, 15, 40)}),
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("inc_damage", p.per)
+		self:removeTemporaryValue("melee_project", p.per)
 		return true
 	end,
 	info = function(self, t)

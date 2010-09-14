@@ -86,8 +86,29 @@ newEntity{ base = "BASE_SCROLL",
 }
 
 newEntity{ base = "BASE_SCROLL",
+	name = "scroll of controlled phase door",
+	level_range = {30, 50},
+	rarity = 7,
+	cost = 3,
+
+	use_simple = { name="teleport you randomly over a short distance into a targeted area", use = function(self, who)
+		local tg = {type="ball", nolock=true, no_restrict=true, nowarning=true, range=10 + who:getMag(10), radius=3}
+		x, y = who:getTarget(tg)
+		if not x then return nil end
+		-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+		-- but we cant ...
+		local _ _, x, y = who:canProject(tg, x, y)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		who:teleportRandom(x, y, 3)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
+		return "destroy", true
+	end}
+}
+
+newEntity{ base = "BASE_SCROLL",
 	name = "scroll of teleportation",
-	level_range = {10, 40},
+	level_range = {10, 50},
 	rarity = 8,
 	cost = 4,
 
