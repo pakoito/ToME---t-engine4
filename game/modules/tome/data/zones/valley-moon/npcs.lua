@@ -84,6 +84,8 @@ newEntity{ define_as = "LIMMIR",
 
 	open_door = true,
 
+	resists = { all = 40 },
+
 	autolevel = "caster",
 	ai = "move_quest_limmir", ai_state = { },
 

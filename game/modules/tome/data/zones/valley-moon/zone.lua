@@ -37,7 +37,7 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {0, 0},
-			rate = 0.55,
+			rate = 0.27,
 		},
 	},
 
