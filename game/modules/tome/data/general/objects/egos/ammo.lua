@@ -73,10 +73,10 @@ newEntity{
 	cost = 35,
 	wielder = {
 		ranged_project={
-			[DamageType.FIRE] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 end),
-			[DamageType.ICE] = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.1 * 0.7 end),
-			[DamageType.ACID] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 end),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
+			[DamageType.ICE] = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
+			[DamageType.ACID] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
 		},
 	},
 }

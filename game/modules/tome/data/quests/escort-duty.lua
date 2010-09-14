@@ -241,7 +241,16 @@ kind = {}
 name = ""
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "Escort the "..self.kind.name.." to the recall portal on level "..self.level_name.."."
+	if self:isStatus(engine.Quest.DONE) then
+		desc[#desc+1] = "You successfully escorted the "..self.kind.name.." to the recall portal on level "..self.level_name.."."
+		if self.reward_message then
+			desc[#desc+1] = ("As a reward you %s."):format(self.reward_message)
+		end
+	elseif self:isStatus(engine.Quest.FAILED) then
+		desc[#desc+1] = "You failed to protect the "..self.kind.name.." from death by "..self.killing_npc.."."
+	else
+		desc[#desc+1] = "Escort the "..self.kind.name.." to the recall portal on level "..self.level_name.."."
+	end
 	return table.concat(desc, "\n")
 end
 
@@ -295,6 +304,7 @@ on_grant = function(self, who)
 	self.kind.actor.on_die = function(self, who)
 		game.logPlayer(game.player, "#LIGHT_RED#%s is dead, quest failed!", self.name:capitalize())
 		game.player:setQuestStatus(self.quest_id, engine.Quest.FAILED)
+		game.player:hasQuest(self.quest_id).killing_npc = who and who.name or "something"
 	end
 
 	-- Spawn actor

@@ -77,11 +77,11 @@ function _M:newTalent(t)
 	local info = t.info
 	t.info = function(self, t) return info(self, t):gsub("\n\t+", "\n") end
 
-	table.insert(self.talents_def, t)
-	t.id = #self.talents_def
-	assert(not self["T_"..t.short_name], "talent already exists with id T_"..t.short_name)
-	self["T_"..t.short_name] = #self.talents_def
-	print("[TALENT]", t.name, t.short_name, #self.talents_def)
+	t.id = "T_"..t.short_name
+	self.talents_def[t.id] = t
+	assert(not self[t.id], "talent already exists with id T_"..t.short_name)
+	self[t.id] = t.id
+	print("[TALENT]", t.name, t.short_name, t.id)
 
 	-- Register in the type
 	table.insert(self.talents_types_def[t.type[1]].talents, t)

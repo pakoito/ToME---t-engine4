@@ -69,7 +69,7 @@ newTalent{
 		end
 
 		if target ~= self then
-			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
+			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		end
 
 		game:playSoundNear(self, "talents/teleport")
@@ -137,7 +137,7 @@ newTalent{
 		end
 
 		if target ~= self then
-			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100 , {power=20 - self:getTalentLevel(t)})
+			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		end
 
 		game:playSoundNear(self, "talents/teleport")
