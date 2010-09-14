@@ -62,7 +62,7 @@ static char *getUserNameByUID(void)
         if (retval != NULL)
             strcpy(retval, pw->pw_name);
     } /* if */
-    
+
     return(retval);
 } /* getUserNameByUID */
 
@@ -80,7 +80,7 @@ static char *getUserDirByUID(void)
         if (retval != NULL)
             strcpy(retval, pw->pw_dir);
     } /* if */
-    
+
     return(retval);
 } /* getUserDirByUID */
 
@@ -232,6 +232,11 @@ int __PHYSFS_platformMkDir(const char *path)
     BAIL_IF_MACRO(rc == -1, strerror(errno), 0);
     return(1);
 } /* __PHYSFS_platformMkDir */
+
+int __PHYSFS_platformRename(const char *filename1, const char *filename2)
+{
+    return (!rename(filename1, filename2));
+} /* __PHYSFS_platformRename */
 
 
 static void *doOpen(const char *filename, int mode)

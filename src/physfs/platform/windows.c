@@ -139,7 +139,7 @@ static HANDLE (WINAPI *pCreateFileW)
  * Fallbacks for missing Unicode functions on Win95/98/ME. These are filled
  *  into the function pointers if looking up the real Unicode entry points
  *  in the system DLLs fails, so they're never used on WinNT/XP/Vista/etc.
- * They make an earnest effort to convert to/from UTF-8 and UCS-2 to 
+ * They make an earnest effort to convert to/from UTF-8 and UCS-2 to
  *  the user's current codepage.
  */
 
@@ -216,7 +216,7 @@ static BOOL WINAPI fallbackRemoveDirectoryW(LPCWSTR dname)
     return(retval);
 } /* fallbackRemoveDirectoryW */
 
-static BOOL WINAPI fallbackCreateDirectoryW(LPCWSTR dname, 
+static BOOL WINAPI fallbackCreateDirectoryW(LPCWSTR dname,
                                             LPSECURITY_ATTRIBUTES attr)
 {
     BOOL retval = 0;
@@ -239,7 +239,7 @@ static BOOL WINAPI fallbackDeleteFileW(LPCWSTR fname)
     return(retval);
 } /* fallbackDeleteFileW */
 
-static HANDLE WINAPI fallbackCreateFileW(LPCWSTR fname, 
+static HANDLE WINAPI fallbackCreateFileW(LPCWSTR fname,
                 DWORD dwDesiredAccess, DWORD dwShareMode,
                 LPSECURITY_ATTRIBUTES lpSecurityAttrs,
                 DWORD dwCreationDisposition,
@@ -459,7 +459,7 @@ static int determineUserDir(void)
              * Should fail. Will write the size of the profile path in
              *  psize. Also note that the second parameter can't be
              *  NULL or the function fails.
-             */	
+             */
     		rc = pGetUserProfileDirectoryW(accessToken, &dummy, &psize);
             assert(!rc);  /* !!! FIXME: handle this gracefully. */
 
@@ -495,7 +495,7 @@ static BOOL mediaInDrive(const char *drive)
 
     /* Prevent windows warning message appearing when checking media size */
     oldErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
-    
+
     /* If this function succeeds, there's media in the drive */
     retval = GetVolumeInformationA(drive, NULL, 0, NULL, NULL, &tmp, NULL, 0);
 
@@ -534,7 +534,7 @@ char *__PHYSFS_platformGetUserName(void)
 {
     DWORD bufsize = 0;
     char *retval = NULL;
-    
+
     if (pGetUserNameW(NULL, &bufsize) == 0)  /* This SHOULD fail. */
     {
         LPWSTR wbuf = (LPWSTR) __PHYSFS_smallAlloc(bufsize * sizeof (WCHAR));
@@ -590,7 +590,7 @@ int __PHYSFS_platformExists(const char *fname)
 
 static int isSymlinkAttrs(const DWORD attr, const DWORD tag)
 {
-    return ( (attr & FILE_ATTRIBUTE_REPARSE_POINT) && 
+    return ( (attr & FILE_ATTRIBUTE_REPARSE_POINT) &&
              (tag == PHYSFS_IO_REPARSE_TAG_SYMLINK) );
 } /* isSymlinkAttrs */
 
@@ -790,8 +790,8 @@ char *__PHYSFS_platformCurrentDir(void)
         wbuf[buflen-1] = '\0';  /* just in case... */
     else
     {
-        wbuf[buflen - 1] = '\\'; 
-        wbuf[buflen] = '\0'; 
+        wbuf[buflen - 1] = '\\';
+        wbuf[buflen] = '\0';
     } /* else */
 
     retval = unicodeToUtf8Heap(wbuf);
@@ -980,6 +980,10 @@ int __PHYSFS_platformDeinit(void)
     return(1); /* It's all good */
 } /* __PHYSFS_platformDeinit */
 
+int __PHYSFS_platformRename(const char *filename1, const char *filename2)
+{
+    return MoveFile(filename1, filename2);
+} /* __PHYSFS_platformRename */
 
 static void *doOpen(const char *fname, DWORD mode, DWORD creation, int rdonly)
 {
@@ -1125,7 +1129,7 @@ int __PHYSFS_platformSeek(void *opaque, PHYSFS_uint64 pos)
     {
         BAIL_MACRO(winApiStrError(), 0);
     } /* if */
-    
+
     return(1);  /* No error occured */
 } /* __PHYSFS_platformSeek */
 

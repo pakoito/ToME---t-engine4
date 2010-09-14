@@ -2059,6 +2059,14 @@ static int lua_fs_set_write_dir(lua_State *L)
 	return 0;
 }
 
+static int lua_fs_rename(lua_State *L)
+{
+	const char *src = luaL_checkstring(L, 1);
+	const char *dst = luaL_checkstring(L, 2);
+	PHYSFS_rename(src, dst);
+	return 0;
+}
+
 static int lua_fs_get_write_dir(lua_State *L)
 {
 	lua_pushstring(L, PHYSFS_getWriteDir());
@@ -2108,6 +2116,7 @@ static const struct luaL_reg fslib[] =
 	{"open", lua_fs_open},
 	{"zipOpen", lua_fs_zipopen},
 	{"exists", lua_fs_exists},
+	{"rename", lua_fs_rename},
 	{"mkdir", lua_fs_mkdir},
 	{"delete", lua_fs_delete},
 	{"list", lua_fs_list},

@@ -439,7 +439,7 @@ static PHYSFS_sint64 zip_find_end_of_central_dir(void *in, PHYSFS_sint64 *len)
                 (buf[i + 3] == 0x06) )
             {
                 found = 1;  /* that's the signature! */
-                break;  
+                break;
             } /* if */
         } /* for */
 
@@ -508,7 +508,7 @@ static void zip_free_entries(ZIPentry *entries, PHYSFS_uint32 max)
 
 /*
  * This will find the ZIPentry associated with a path in platform-independent
- *  notation. Directories don't have ZIPentries associated with them, but 
+ *  notation. Directories don't have ZIPentries associated with them, but
  *  (*isDir) will be set to non-zero if a dir was hit.
  */
 static ZIPentry *zip_find_entry(ZIPinfo *info, const char *path, int *isDir)
@@ -677,7 +677,7 @@ static int zip_resolve_symlink(void *in, ZIPinfo *info, ZIPentry *entry)
 
     path = (char *) allocator.Malloc(size + 1);
     BAIL_IF_MACRO(path == NULL, ERR_OUT_OF_MEMORY, 0);
-    
+
     if (entry->compression_method == COMPMETH_NONE)
         rc = (__PHYSFS_platformRead(in, path, size, 1) == 1);
 
@@ -1099,7 +1099,7 @@ static void *ZIP_openArchive(const char *name, int forWriting)
 
     if ((in = __PHYSFS_platformOpenRead(name)) == NULL)
         goto zip_openarchive_failed;
-    
+
     if ((info = zip_create_zipinfo(name)) == NULL)
         goto zip_openarchive_failed;
 
@@ -1156,7 +1156,7 @@ static PHYSFS_sint32 zip_find_start_of_dir(ZIPinfo *info, const char *path,
                 rc = -1;
             else if ('/' > ch)
                 rc = 1;
-            else 
+            else
             {
                 if (stop_on_first_find) /* Just checking dir's existance? */
                     return(middle);
@@ -1245,7 +1245,7 @@ static void ZIP_enumerateFiles(dvoid *opaque, const char *dname,
 
 static int ZIP_exists(dvoid *opaque, const char *name)
 {
-    int isDir;    
+    int isDir;
     ZIPinfo *info = (ZIPinfo *) opaque;
     ZIPentry *entry = zip_find_entry(info, name, &isDir);
     return((entry != NULL) || (isDir));
@@ -1410,6 +1410,11 @@ static int ZIP_mkdir(dvoid *opaque, const char *name)
     BAIL_MACRO(ERR_NOT_SUPPORTED, 0);
 } /* ZIP_mkdir */
 
+static int ZIP_rename(dvoid *opaque, const char *src, const char *dst)
+{
+    BAIL_MACRO(ERR_NOT_SUPPORTED, 0);
+} /* ZIP_rename */
+
 
 const PHYSFS_ArchiveInfo __PHYSFS_ArchiveInfo_ZIP =
 {
@@ -1434,6 +1439,7 @@ const PHYSFS_Archiver __PHYSFS_Archiver_ZIP =
     ZIP_openWrite,          /* openWrite() method      */
     ZIP_openAppend,         /* openAppend() method     */
     ZIP_remove,             /* remove() method         */
+    ZIP_rename,             /* rename() method         */
     ZIP_mkdir,              /* mkdir() method          */
     ZIP_dirClose,           /* dirClose() method       */
     ZIP_read,               /* read() method           */

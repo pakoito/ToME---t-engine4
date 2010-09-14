@@ -237,6 +237,21 @@ static int DIR_mkdir(dvoid *opaque, const char *name)
 } /* DIR_mkdir */
 
 
+static int DIR_rename(dvoid *opaque, const char *src, const char *dst)
+{
+    char *fsrc = __PHYSFS_platformCvtToDependent((char *) opaque, src, NULL);
+    char *fdst = __PHYSFS_platformCvtToDependent((char *) opaque, dst, NULL);
+    int retval;
+
+    BAIL_IF_MACRO(fsrc == NULL, NULL, 0);
+    BAIL_IF_MACRO(fdst == NULL, NULL, 0);
+    retval = __PHYSFS_platformRename(fsrc, fdst);
+    allocator.Free(fsrc);
+    allocator.Free(fdst);
+    return(retval);
+} /* DIR_mkdir */
+
+
 static void DIR_dirClose(dvoid *opaque)
 {
     allocator.Free(opaque);
@@ -268,6 +283,7 @@ const PHYSFS_Archiver __PHYSFS_Archiver_DIR =
     DIR_openWrite,          /* openWrite() method      */
     DIR_openAppend,         /* openAppend() method     */
     DIR_remove,             /* remove() method         */
+    DIR_rename,             /* rename() method         */
     DIR_mkdir,              /* mkdir() method          */
     DIR_dirClose,           /* dirClose() method       */
     DIR_read,               /* read() method           */

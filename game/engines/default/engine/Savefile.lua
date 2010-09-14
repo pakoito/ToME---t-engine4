@@ -135,9 +135,10 @@ function _M:saveWorld(world, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveWorld(world))
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveWorld(world)..".tmp")
 	self:saveObject(world, zip)
 	zip:close()
+	fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
 
 	if not no_dialog then game:unregisterDialog(popup) end
 end
@@ -192,9 +193,10 @@ function _M:saveGame(game, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveGame(game))
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveGame(game)..".tmp")
 	self:saveObject(game, zip)
 	zip:close()
+	fs.rename(self.save_dir..self:nameSaveGame(game)..".tmp", self.save_dir..self:nameSaveGame(game))
 
 	local desc = game:getSaveDescription()
 	local f = fs.open(self.save_dir.."desc.lua", "w")
@@ -226,9 +228,10 @@ function _M:saveZone(zone, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveZone(zone))
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveZone(zone)..".tmp")
 	self:saveObject(zone, zip)
 	zip:close()
+	fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
 
 	if not no_dialog then game:unregisterDialog(popup) end
 end
@@ -253,9 +256,10 @@ function _M:saveLevel(level, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveLevel(level))
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveLevel(level)..".tmp")
 	self:saveObject(level, zip)
 	zip:close()
+	fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
 
 	if not no_dialog then game:unregisterDialog(popup) end
 end

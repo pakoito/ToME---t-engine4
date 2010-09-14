@@ -881,6 +881,18 @@ __EXPORT__ int PHYSFS_setSaneConfig(const char *organization,
                                     int includeCdRoms,
                                     int archivesFirst);
 
+/**
+ * \fn int PHYSFS_rename(const char *src, const char *dst)
+ * \brief Rename/move a file/directory
+ *
+ * This is specified in platform-independent notation in relation to the
+ *  write dir.
+ *
+ *  \return nonzero on success, zero on error. Specifics of the error can be
+ *          gleaned from PHYSFS_getLastError().
+ */
+__EXPORT__ int PHYSFS_rename(const char *src, const char *dst);
+
 
 /* Directory management stuff ... */
 

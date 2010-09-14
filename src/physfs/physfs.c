@@ -1398,6 +1398,41 @@ int PHYSFS_mkdir(const char *_dname)
     return(retval);
 } /* PHYSFS_mkdir */
 
+int PHYSFS_rename(const char *_src, const char *_dst)
+{
+    int retval = 0;
+    char *src, *dst;
+    size_t len_src, len_dst;
+    DirHandle *h;
+
+    BAIL_IF_MACRO(_src == NULL, ERR_INVALID_ARGUMENT, 0);
+    len_src = strlen(_src) + 1;
+    src = (char *) __PHYSFS_smallAlloc(len_src);
+    BAIL_IF_MACRO(src == NULL, ERR_OUT_OF_MEMORY, 0);
+    retval = doMkdir(_src, src);
+
+    BAIL_IF_MACRO(_dst == NULL, ERR_INVALID_ARGUMENT, 0);
+    len_dst = strlen(_dst) + 1;
+    dst = (char *) __PHYSFS_smallAlloc(len_dst);
+    BAIL_IF_MACRO(dst == NULL, ERR_OUT_OF_MEMORY, 0);
+
+    BAIL_IF_MACRO(!sanitizePlatformIndependentPath(_src, src), NULL, 0);
+    BAIL_IF_MACRO(!sanitizePlatformIndependentPath(_dst, dst), NULL, 0);
+
+    __PHYSFS_platformGrabMutex(stateLock);
+    BAIL_IF_MACRO_MUTEX(writeDir == NULL, ERR_NO_WRITE_DIR, stateLock, 0);
+    h = writeDir;
+    BAIL_IF_MACRO_MUTEX(!verifyPath(h, &src, 1), NULL, stateLock, 0);
+    BAIL_IF_MACRO_MUTEX(!verifyPath(h, &dst, 1), NULL, stateLock, 0);
+
+    retval = h->funcs->rename(h->opaque, src, dst);
+
+    __PHYSFS_platformReleaseMutex(stateLock);
+
+    __PHYSFS_smallFree(src);
+    __PHYSFS_smallFree(dst);
+    return(retval);
+}
 
 static int doDelete(const char *_fname, char *fname)
 {
