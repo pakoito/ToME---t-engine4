@@ -23,6 +23,7 @@ rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 defineTile(' ', "FLOOR")
 defineTile('+', "DOOR")
+defineTile('!', "DOOR_VAULT")
 defineTile('X', "WALL")
 defineTile('$', "FLOOR", {random_filter={add_levels=10}})
 defineTile('~', "FLOOR", {random_filter={add_levels=5}}, nil, {random_filter={add_levels=5}})
@@ -43,7 +44,7 @@ return {
 [[X   X X ooX XXX~~$X$$XXXX   X]],
 [[XO ^X X ooXo OX$$~X$o      oX]],
 [[XO ^+ XXXXXXXXXXXXXXXXXXXXXXX]],
-[[XO ^X                      ^+]],
+[[XO ^X                      ^!]],
 [[XXXXX+XXX+XXXXX+XXX+XXXXX+XXX]],
 [[X~XX   XO  +$X   Xo  +$X   XX]],
 [[X$XX   X O XXXO oX  oXXX o XX]],

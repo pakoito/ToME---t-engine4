@@ -36,11 +36,16 @@ return {
 			max_building_w = 8, max_building_h = 8,
 			edge_entrances = {6,4},
 			floor = "FLOOR",
-			external_floor = "FLOOR",
+			external_floor = "SAND",
 			wall = "WALL",
 			up = "UP",
 			down = "DOWN",
 			door = "DOOR",
+
+			nb_rooms = {3},
+			rooms = {"lesser_vault"},
+			lesser_vaults_list = {"orc-armoury", "double-t", "dragon_lair", "hostel"},
+			lite_room_chance = 100,
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

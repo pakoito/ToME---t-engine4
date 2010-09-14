@@ -41,6 +41,11 @@ return {
 			up = "UP",
 			down = "DOWN",
 			door = "DOOR",
+
+			nb_rooms = {0,0,0,1},
+			rooms = {"lesser_vault"},
+			lesser_vaults_list = {"orc-armoury", "double-t", "circle", "hostel"},
+			lite_room_chance = 100,
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

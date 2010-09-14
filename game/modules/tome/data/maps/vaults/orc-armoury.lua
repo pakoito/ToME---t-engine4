@@ -27,6 +27,7 @@ starty = 5
 defineTile(' ', "FLOOR")
 defineTile('^', "FLOOR", nil, nil, {random_filter={add_levels=5}})
 defineTile('+', "DOOR")
+defineTile('!', "DOOR_VAULT")
 defineTile('#', "HARDWALL")
 
 defineTile('a', 'FLOOR', nil, {random_filter={name='hill orc archer', add_levels=15}})
@@ -64,7 +65,7 @@ return {
 [[##  #oOo#xx###bb+ f #nNn#]],
 [[##  #oOo#XXXX#bb#   #knk#]],
 [[##^^##+###########+###+##]],
-[[+ ^^                   ^#]],
+[[! ^^                   ^#]],
 [[##^^##+###########+###+##]],
 [[##  #OoO#SSSS#ww#   #TtT#]],
 [[##  #ooo#ss###ww+ i #ttt#]],

@@ -63,7 +63,8 @@ local function makeGolem()
 		fear_immune = 1,
 		poison_immune = 1,
 		disease_immune = 1,
-		see_invisible = 2,
+		stone_immune = 1,
+		see_invisible = 30,
 		no_breath = 1,
 	}
 end
