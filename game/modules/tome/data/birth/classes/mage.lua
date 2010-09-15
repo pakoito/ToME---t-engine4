@@ -32,7 +32,7 @@ newBirthDescriptor{
 			Alchemist = "allow",
 			Pyromancer = function() return profile.mod.allow_build.mage_pyromancer and "allow" or "disallow" end,
 			Cryomancer = function() return profile.mod.allow_build.mage_cryomancer and "allow" or "disallow" end,
-			Shocker = function() return profile.mod.allow_build.mage_shocker and "allow" or "disallow" end,
+			Tempest = function() return profile.mod.allow_build.mage_tempest and "allow" or "disallow" end,
 		},
 	},
 	copy = {
@@ -246,7 +246,7 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "subclass",
-	name = "Shocker",
+	name = "Tempest",
 	desc = {
 		"Bzzzzt!",
 		"Their most important stats are: Magic and Willpower",
