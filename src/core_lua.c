@@ -1017,8 +1017,15 @@ static int sdl_surface_merge(lua_State *L)
 static int sdl_surface_alpha(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
-	int a = luaL_checknumber(L, 2);
-	SDL_SetAlpha(*s, SDL_SRCALPHA | SDL_RLEACCEL, (a < 0) ? 0 : (a > 255) ? 255 : a);
+	if (lua_isnumber(L, 2))
+	{
+		int a = luaL_checknumber(L, 2);
+		SDL_SetAlpha(*s, SDL_SRCALPHA | SDL_RLEACCEL, (a < 0) ? 0 : (a > 255) ? 255 : a);
+	}
+	else
+	{
+		SDL_SetAlpha(*s, 0, 0);
+	}
 	return 0;
 }
 

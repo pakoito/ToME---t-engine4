@@ -25,18 +25,21 @@ module(..., package.seeall, class.make)
 --- Creates the log zone
 function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.color = color or {255,255,255}
-	self.bgcolor = bgcolor or {0,0,0}
-	self.display_x, self.display_y = math.floor(x), math.floor(y)
-	self.w, self.h = math.floor(w), math.floor(h)
+	if type(bgcolor) ~= "string" then
+		self.bgcolor = bgcolor or {0,0,0}
+	else
+		self.bgcolor = {0,0,0}
+		self.bg_image = bgcolor
+	end
 	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
-	self.surface = core.display.newSurface(w, h)
-	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	self.log = {}
 	getmetatable(self).__call = _M.call
 	self.max = max or 4000
 	self.scroll = 0
 	self.changed = true
+
+	self:resize(x, y, w, h)
 end
 
 --- Resize the display area
@@ -46,6 +49,16 @@ function _M:resize(x, y, w, h)
 	self.surface = core.display.newSurface(w, h)
 	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	self.changed = true
+
+	if self.bg_image then
+		local fill = core.display.loadImage(self.bg_image)
+		local fw, fh = fill:getSize()
+		self.bg_surface = core.display.newSurface(w, h)
+		self.bg_surface:erase(0, 0, 0)
+		for i = 0, w, fw do for j = 0, h, fh do
+			self.bg_surface:merge(fill, i, j)
+		end end
+	end
 end
 
 --- Appends text to the log
@@ -89,6 +102,7 @@ function _M:display()
 
 	-- Erase and the display the map
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
+	if self.bg_surface then self.surface:merge(self.bg_surface, 0, 0) end
 	local i, dh = 1, 0
 	local r, g, b = self.color[1], self.color[2], self.color[3]
 	local buffer = (self.h % self.font_h) / 2

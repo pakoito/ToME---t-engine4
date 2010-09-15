@@ -23,7 +23,12 @@ module(..., package.seeall, class.make)
 
 function _M:init(actor, x, y, w, h, bgcolor)
 	self.actor = actor
-	self.bgcolor = bgcolor
+	if type(bgcolor) ~= "string" then
+		self.bgcolor = bgcolor or {0,0,0}
+	else
+		self.bgcolor = {0,0,0}
+		self.bg_image = bgcolor
+	end
 	self.font = core.display.newFont("/data/font/VeraMono.ttf", 10)
 	self.font_h = self.font:lineSkip()
 	self:resize(x, y, w, h)
@@ -39,6 +44,16 @@ function _M:resize(x, y, w, h)
 
 	local cw, ch = self.font:size(" ")
 	self.font_w = cw
+
+	if self.bg_image then
+		local fill = core.display.loadImage(self.bg_image)
+		local fw, fh = fill:getSize()
+		self.bg_surface = core.display.newSurface(w, h)
+		self.bg_surface:erase(0, 0, 0)
+		for i = 0, w, fw do for j = 0, h, fh do
+			self.bg_surface:merge(fill, i, j)
+		end end
+	end
 end
 
 -- Displays the hotkeys, keybinds & cooldowns
@@ -47,6 +62,7 @@ function _M:display()
 	if not a or not a.changed then return self.surface end
 
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
+	if self.bg_surface then self.surface:merge(self.bg_surface, 0, 0) end
 
 	local list = {}
 

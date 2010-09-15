@@ -81,14 +81,16 @@ end
 
 function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
-	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
+	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
 	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
-	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
-	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
+	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
+	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
 	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
+	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
+	self:createSeparators()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
 	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
@@ -170,6 +172,12 @@ function _M:loaded()
 	if self.always_target then Map:setViewerFaction(self.player.faction) end
 end
 
+function _M:createSeparators()
+	self.bottom_separator, self.bottom_separator_w, self.bottom_separator_h = self:createVisualSeparator("horizontal", self.w)
+	self.split_separator, self.split_separator_w, self.split_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.2))
+	self.player_separator, self.player_separator_w, self.player_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.8) - 20)
+end
+
 function _M:onResolutionChange()
 	engine.Game.onResolutionChange(self)
 	print("[RESOLUTION] changed to ", self.w, self.h)
@@ -181,6 +189,8 @@ function _M:onResolutionChange()
 	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	-- Reset mouse bindings to account for new size
 	self:setupMouse(reset)
+
+	self:createSeparators()
 end
 
 function _M:setupDisplayMode()
@@ -266,7 +276,7 @@ function _M:leaveLevel(level, lev, old_lev)
 		else
 			level.exited.up = {x=self.player.x, y=self.player.y}
 		end
-		level.last_turn = game.turn
+		level.last_turn = self.turn
 		for act, _ in pairs(self.persistant_actors) do
 			if level:hasEntity(act) then
 				level:removeEntity(act)
@@ -279,7 +289,7 @@ end
 
 function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if not self.player.game_ender then
-		game.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
+		self.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
 		return
 	end
 
@@ -305,9 +315,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	self.zone:getLevel(self, lev, old_lev)
 
 	-- Decay level ?
-	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < game.turn then
-		local nb_actor, remain_actor = self.level:decay(Map.ACTOR, function(e) return not e.unique and not e.lore and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < game.turn * 10 end)
-		local nb_object, remain_object = self.level:decay(Map.OBJECT, function(e) return not e.unique and not e.lore and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < game.turn * 10 end)
+	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < self.turn then
+		local nb_actor, remain_actor = self.level:decay(Map.ACTOR, function(e) return not e.unique and not e.lore and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < self.turn * 10 end)
+		local nb_object, remain_object = self.level:decay(Map.OBJECT, function(e) return not e.unique and not e.lore and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < self.turn * 10 end)
 
 		local gen = self.zone:getGenerator("actor", self.level)
 		if gen.regenFrom then gen:regenFrom(remain_actor) end
@@ -446,6 +456,7 @@ function _M:display()
 		)
 
 		-- Minimap display
+		self.minimap_bg:toScreenFull(0, 20, 200, 200, self.minimap_bg_w, self.minimap_bg_h)
 		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
 	end
 
@@ -460,8 +471,13 @@ function _M:display()
 	end
 	if self.player then self.player.changed = false end
 
+	-- Separators
+	self.bottom_separator:toScreenFull(0, self.h * 0.8 - 3, self.w, 6, self.bottom_separator_w, self.bottom_separator_h)
+	self.split_separator:toScreenFull(self.w * 0.5 - 3, self.h * 0.8, 6, self.h * 0.2, self.split_separator_w, self.split_separator_h)
+	self.player_separator:toScreenFull(200 - 3, 20, 6, self.h * 0.8 - 20, self.player_separator_w, self.player_separator_h)
+
 	-- Tooltip is displayed over all else
-	self:targetDisplayTooltip(game.w, game.h)
+	self:targetDisplayTooltip(self.w, self.h)
 
 	engine.GameTurnBased.display(self)
 end
@@ -489,7 +505,7 @@ function _M:setupCommands()
 --				self:changeLevel(5, "gorbat-pride")
 --				self:changeLevel(1, "town-gates-of-morning")
 				self:changeLevel(1, "wilderness-arda-fareast")
-				game.memory_levels["wilderness-arda-fareast-1"] = game.level
+				self.memory_levels["wilderness-arda-fareast-1"] = self.level
 				self.player:grantQuest("spydric-infestation")
 				self.player:setQuestStatus("spydric-infestation", engine.Quest.COMPLETED)
 				self.player:grantQuest("orc-pride")
@@ -780,7 +796,7 @@ end
 
 function _M:setAllowedBuild(what, notify)
 	-- Do not unlock things in easy mode
-	--if game.difficulty == game.DIFFICULTY_EASY then return end
+	--if self.difficulty == self.DIFFICULTY_EASY then return end
 
 	profile.mod.allow_build = profile.mod.allow_build or {}
 	if profile.mod.allow_build[what] then return end
@@ -817,5 +833,30 @@ function _M:placeRandomLoreObject(define)
 		self.zone:addEntity(self.level, o, "object", x, y)
 		print("Placed lore", o.name, x, y)
 		o:identify(true)
+	end
+end
+
+--- Create a visual separator
+local _sep_left = core.display.loadImage("/data/gfx/ui/separator-left.png") _sep_left:alpha()
+local _sep_right = core.display.loadImage("/data/gfx/ui/separator-right.png") _sep_right:alpha()
+local _sep_horiz = core.display.loadImage("/data/gfx/ui/separator-hori.png") _sep_horiz:alpha()
+local _sep_top = core.display.loadImage("/data/gfx/ui/separator-top.png") _sep_top:alpha()
+local _sep_bottom = core.display.loadImage("/data/gfx/ui/separator-bottom.png") _sep_bottom:alpha()
+local _sep_vert = core.display.loadImage("/data/gfx/ui/separator-vert.png") _sep_vert:alpha()
+function _M:createVisualSeparator(dir, size)
+	if dir == "horizontal" then
+		local sep = core.display.newSurface(size, 6)
+		sep:erase(0, 0, 0)
+		sep:merge(_sep_left, 0, 0)
+		for i = 7, size - 7, 9 do sep:merge(_sep_horiz, i, 0) end
+		sep:merge(_sep_right, size - 6, 0)
+		return sep:glTexture()
+	else
+		local sep = core.display.newSurface(6, size)
+		sep:erase(0, 0, 0)
+		sep:merge(_sep_top, 0, 0)
+		for i = 7, size - 7, 9 do sep:merge(_sep_vert, 0, i) end
+		sep:merge(_sep_bottom, 0, size - 6)
+		return sep:glTexture()
 	end
 end
