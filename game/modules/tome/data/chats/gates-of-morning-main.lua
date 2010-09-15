@@ -62,8 +62,8 @@ Recently we have heard the Pride speaking about a new master, or masters. They m
 We believe that the heart of their power is the High Peek, in the center of the continent. But it is innaccessible and covered by some kind of shield.
 You must investigate the bastions of the Pride. Perhaps you will find more information about the High Peek, and any orc you kill is one less that will attack us.
 The known bastions of the Pride are:
-- Rak'shor Pride, in the west of the southern deset
-- Gorbat Pride, in a mountain range in the the southern desert
+- Rak'shor Pride, in the west of the southern desert
+- Gorbat Pride, in a mountain range in the southern desert
 - Vor Pride, in the north east
 - Grushnak Pride, on the eastern slope of the High Peak]],
 -- - A group of corrupted humans live in Eastport on the southen costline, they have contact wit the Pride
