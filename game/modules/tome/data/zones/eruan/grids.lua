@@ -23,6 +23,7 @@ load("/data/general/grids/forest.lua")
 load("/data/general/grids/sand.lua")
 load("/data/general/grids/mountain.lua")
 
+
 newEntity{
 	define_as = "MOUNT_DOOM_PORTAL",
 	name = "Farportal: Mount Doom",
