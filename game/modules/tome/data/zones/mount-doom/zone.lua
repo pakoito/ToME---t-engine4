@@ -47,6 +47,10 @@ return {
 			class = "engine.generator.trap.Random",
 			nb_trap = {6, 9},
 		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_trap = {0, 0},
+		},
 	},
 
 	post_process = function(level)

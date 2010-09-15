@@ -541,7 +541,7 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "rak-shor-pride")
+				self:changeLevel(1, "slime-tunnels")
 --				self.player:grantQuest("master-jeweler")
 			end
 		end,

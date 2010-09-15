@@ -43,6 +43,10 @@ return {
 			class = "engine.generator.trap.Random",
 			nb_trap = {0, 0},
 		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_trap = {4, 10},
+		},
 	},
 	levels =
 	{

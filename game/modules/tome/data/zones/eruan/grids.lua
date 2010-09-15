@@ -31,7 +31,7 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use. You have no idea if it is even two-way.
-This one seems to go to the west, to Mount Doom, in the land of Mordor...]],
+This one seems to go to the west, to Mount Doom, in the land of Mordor. A fiery volcano that can only spell death...]],
 
 	orb_portal = {
 		change_level = 1,
