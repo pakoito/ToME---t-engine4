@@ -49,7 +49,7 @@ newAchievement{
 newAchievement{
 	name = "Reaver",
 	desc = [[Killed 1000 humanoids]],
-	mode = "player",
+	mode = "world",
 	can_gain = function(self, who, target)
 		if target.type == "humanoid" then
 			self.nb = (self.nb or 0) + 1
