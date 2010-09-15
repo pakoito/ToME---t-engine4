@@ -750,7 +750,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("engines/default/engine/data/gfx/te4-icon.png"), TRUE), NULL);
+	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE), NULL);
 
 //	screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_RESIZABLE);
 //	glewInit();
