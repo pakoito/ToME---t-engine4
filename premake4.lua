@@ -4,7 +4,8 @@ newoption {
 	description = "Virtual Machine to use for Lua, either the default one or a JIT",
 	allowed = {
 		{ "default",	"Default Lua Virtual Machine" },
-		{ "jitx86",	"LuaJIT x86" }
+		{ "jitx86",	"LuaJIT x86" },
+		{ "jit2",	"LuaJIT2" },
 	}
 }
 newoption {
@@ -29,8 +30,6 @@ solution "TEngine"
 
 	includedirs {
 		"src",
-		"src/dynasm",
-		_OPTIONS.lua == "default" and "src/lua" or "src/luajit",
 		"src/luasocket",
 		"src/fov",
 		"src/libtcod_import",
@@ -39,6 +38,10 @@ solution "TEngine"
 		"/usr/include/SDL",
 		"/usr/include/GL",
 	}
+	if _OPTIONS.lua == "default" then includedirs{"src/lua"}
+	elseif _OPTIONS.lua == "jitx86" then includedirs{"src/luajit", "src/dynasm",}
+	elseif _OPTIONS.lua == "jit2" then includedirs{"src/luajit2/src", "src/luajit2/dynasm",}
+	end
 
 	libdirs {
 	}
@@ -143,6 +146,15 @@ elseif _OPTIONS.lua == "jitx86" then
 		files { "src/luajit/*.c", }
 		configuration "linux"
 			defines { "LUA_USE_POSIX" }
+elseif _OPTIONS.lua == "jit2" then
+	project "luajit2"
+		kind "StaticLib"
+		language "C"
+		targetname "lua"
+
+		files { "src/luajit2/src/*.c", "src/luajit2/src/*.s", }
+--		configuration "linux"
+--			defines { "LUA_USE_POSIX" }
 end
 
 project "luasocket"
