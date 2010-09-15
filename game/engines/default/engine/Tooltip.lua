@@ -123,7 +123,6 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 		if text ~= self.old_text then
 			self:set("%s", text)
 			self:display()
-			print("set", text)
 			self.old_text = text
 		end
 	else

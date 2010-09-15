@@ -135,18 +135,30 @@ end
 
 --- Call when a mouse event arrives in this zone
 -- This is optional, only if you need mouse support
-function _M:onMouse(button, mx, my, click)
+function _M:onMouse(button, mx, my, click, on_over)
+	local a = self.actor
 	mx, my = mx - self.display_x, my - self.display_y
 	for i, zone in pairs(self.clics) do
 		if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
 			if button == "left" and click then
-				self.actor:activateHotkey(i)
+				a:activateHotkey(i)
 			elseif button == "right" and click then
-				self.actor.hotkey[i] = nil
-				self.actor.changed = true
+				a.hotkey[i] = nil
+				a.changed = true
 			else
-				self.actor.changed = true
+				a.changed = true
 				self.cur_sel = i
+				if on_over then
+					local text = ""
+					if a.hotkey[i] and a.hotkey[i][1] == "talent" then
+						local t = self.actor:getTalentFromId(a.hotkey[i][2])
+						text = "#GOLD#"..t.name.."#LAST#\n"..self.actor:getTalentFullDescription(t)
+					elseif a.hotkey[i] and a.hotkey[i][1] == "inventory" then
+						local o = a:findInAllInventories(a.hotkey[i][2])
+						text = o:getDesc()
+					end
+					on_over(text)
+				end
 			end
 			return
 		end

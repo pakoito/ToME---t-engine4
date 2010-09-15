@@ -777,7 +777,7 @@ function _M:setupMouse(reset)
 	end, {button=true})
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel)
-		self.hotkeys_display:onMouse(button, mx, my, not xrel)
+		self.hotkeys_display:onMouse(button, mx, my, not xrel, function(text) self.tooltip:displayAtMap(nil, nil, self.w, self.h, text) end)
 	end)
 	-- Use icons
 	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
