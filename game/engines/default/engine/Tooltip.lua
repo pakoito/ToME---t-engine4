@@ -32,6 +32,7 @@ function _M:init(fontname, fontsize, color, bgcolor, max)
 	self.font_h = self.font:lineSkip()
 	self.max = max or 300
 	self.changed = true
+	self.old_text = ""
 	self.old_tmx, self.old_tmy = -1,-1
 	self.old_turn = -1
 end
@@ -112,27 +113,38 @@ end
 -- @param tmy the map coordinate to get tooltip from
 -- @param mx the screen coordinate to display at, if nil it will be computed from tmx
 -- @param my the screen coordinate to display at, if nil it will be computed from tmy
-function _M:displayAtMap(tmx, tmy, mx, my)
+-- @param text a text to display, if nil it will interrogate the map under the mouse using the "tooltip" property
+function _M:displayAtMap(tmx, tmy, mx, my, text)
 	if not mx then
 		mx, my = game.level.map:getTileToScreen(tmx, tmy)
 	end
 
-	if self.old_tmx ~= tmx or self.old_tmy ~= tmy or (game.paused and self.old_turn ~= game.turn) then
-		self.old_tmx, self.old_tmy = tmx, tmy
-		self.old_turn = game.turn
-		local tt = {}
-		local seen = game.level.map.seens(tmx, tmy)
-		local remember = game.level.map.remembers(tmx, tmy)
-		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.PROJECTILE, "tooltip", game.level.map.actor_player) or nil
-		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip", game.level.map.actor_player) or nil
-		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip", game.level.map.actor_player) or nil
-		tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip", game.level.map.actor_player) or nil
-		tt[#tt+1] = remember and game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip", game.level.map.actor_player) or nil
-		if #tt > 0 then
-			self:set("%s", table.concat(tt, "\n---\n"))
+	if text then
+		if text ~= self.old_text then
+			self:set("%s", text)
 			self:display()
-		else
-			self:erase()
+			print("set", text)
+			self.old_text = text
+		end
+	else
+		if self.old_tmx ~= tmx or self.old_tmy ~= tmy or (game.paused and self.old_turn ~= game.turn) then
+			self.old_text = ""
+			self.old_tmx, self.old_tmy = tmx, tmy
+			self.old_turn = game.turn
+			local tt = {}
+			local seen = game.level.map.seens(tmx, tmy)
+			local remember = game.level.map.remembers(tmx, tmy)
+			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.PROJECTILE, "tooltip", game.level.map.actor_player) or nil
+			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip", game.level.map.actor_player) or nil
+			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip", game.level.map.actor_player) or nil
+			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip", game.level.map.actor_player) or nil
+			tt[#tt+1] = remember and game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip", game.level.map.actor_player) or nil
+			if #tt > 0 then
+				self:set("%s", table.concat(tt, "\n---\n"))
+				self:display()
+			else
+				self:erase()
+			end
 		end
 	end
 

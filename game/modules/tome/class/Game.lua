@@ -81,7 +81,7 @@ end
 
 function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
-	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
+	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5 - 18, self.h * 0.2, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
 	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
 	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
@@ -90,6 +90,7 @@ function _M:run()
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
 	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
+	self.icons = { display_x = game.w * 0.5 - 14, display_y = game.h * 0.8 + 3, w = 12, h = game.h * 0.2}
 	self:createSeparators()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
@@ -183,10 +184,11 @@ function _M:onResolutionChange()
 	print("[RESOLUTION] changed to ", self.w, self.h)
 	self:setupDisplayMode()
 	self.flash:resize(0, 0, self.w, 20)
-	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5 - 18, self.h * 0.2)
 	self.player_display:resize(0, 220, 200, self.h * 0.8 - 220)
 	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
+	self.icons = { display_x = game.w * 0.5 - 14, display_y = game.h * 0.8 + 3, w = 12, h = game.h * 0.2}
 	-- Reset mouse bindings to account for new size
 	self:setupMouse(reset)
 
@@ -474,8 +476,12 @@ function _M:display()
 	-- Separators
 	self.bottom_separator:toScreenFull(0, 20 - 3, self.w, 6, self.bottom_separator_w, self.bottom_separator_h)
 	self.bottom_separator:toScreenFull(0, self.h * 0.8 - 3, self.w, 6, self.bottom_separator_w, self.bottom_separator_h)
+	self.split_separator:toScreenFull(self.w * 0.5 - 3 - 15, self.h * 0.8, 6, self.h * 0.2, self.split_separator_w, self.split_separator_h)
 	self.split_separator:toScreenFull(self.w * 0.5 - 3, self.h * 0.8, 6, self.h * 0.2, self.split_separator_w, self.split_separator_h)
 	self.player_separator:toScreenFull(200 - 3, 20, 6, self.h * 0.8 - 20, self.player_separator_w, self.player_separator_h)
+
+	-- Icons
+	self:displayUIIcons()
 
 	-- Tooltip is displayed over all else
 	self:targetDisplayTooltip(self.w, self.h)
@@ -773,6 +779,11 @@ function _M:setupMouse(reset)
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel)
 		self.hotkeys_display:onMouse(button, mx, my, not xrel)
 	end)
+	-- Use icons
+	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
+		self:mouseIcon(bx, by)
+		if button == "left" then self:clickIcon(bx, by) end
+	end)
 	if not reset then self.mouse:setCurrent() end
 end
 
@@ -837,6 +848,11 @@ function _M:placeRandomLoreObject(define)
 	end
 end
 
+
+--------------------------------------------------------------
+-- UI stuff
+--------------------------------------------------------------
+
 --- Create a visual separator
 local _sep_left = core.display.loadImage("/data/gfx/ui/separator-left.png") _sep_left:alpha()
 local _sep_right = core.display.loadImage("/data/gfx/ui/separator-right.png") _sep_right:alpha()
@@ -859,5 +875,38 @@ function _M:createVisualSeparator(dir, size)
 		for i = 7, size - 7, 9 do sep:merge(_sep_vert, 0, i) end
 		sep:merge(_sep_bottom, 0, size - 6)
 		return sep:glTexture()
+	end
+end
+
+local _talents_icon, _talents_icon_w, _talents_icon_h = core.display.loadImage("/data/gfx/ui/talents-icon.png"):glTexture()
+local _actors_icon, _actors_icon_w, _actors_icon_h = core.display.loadImage("/data/gfx/ui/actors-icon.png"):glTexture()
+local _main_menu_icon, _main_menu_icon_w, _main_menu_icon_h = core.display.loadImage("/data/gfx/ui/main-menu-icon.png"):glTexture()
+
+function _M:displayUIIcons()
+	local x, y = self.icons.display_x, self.icons.display_y
+	_talents_icon:toScreenFull(x, y, 12, 12, _talents_icon_w, _talents_icon_h) y = y + 12
+	_actors_icon:toScreenFull(x, y, 12, 12, _actors_icon_w, _actors_icon_h) y = y + 12
+	_main_menu_icon:toScreenFull(x, y, 12, 12, _main_menu_icon_w, _main_menu_icon_h) y = y + 12
+end
+
+function _M:clickIcon(bx, by)
+	if by < 12 then
+		self.show_npc_list = false
+		self.player.changed = true
+	elseif by < 24 then
+		self.show_npc_list = true
+		self.player.changed = true
+	elseif by < 36 then
+		self.key:triggerVirtual("EXIT")
+	end
+end
+
+function _M:mouseIcon(bx, by)
+	if by < 12 then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display talents")
+	elseif by < 24 then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display creatures")
+	elseif by < 36 then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Main menu")
 	end
 end

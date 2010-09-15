@@ -208,6 +208,12 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 	engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
 end
 
+--- Force a key to trigger
+function _M:triggerVirtual(virtual)
+	if not self.virtuals[virtual] then return end
+	self.virtuals[virtual]()
+end
+
 --- Adds a key/command combinaison
 -- @param sym the key to handle
 -- @param mods a table with the mod keys needed, i.e: {"ctrl", "alt"}

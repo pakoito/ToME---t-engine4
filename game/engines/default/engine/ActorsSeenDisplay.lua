@@ -85,7 +85,7 @@ function _M:display()
 	table.sort(l, function(a, b) return a.name < b.name end)
 
 	for i, a in ipairs(l) do
-		self.surface:drawColorStringBlended(self.font, ("%s (%d)#WHITE#; distance [%s]"):format(a.name, a.nb, table.concat(a.dist, ",")), 0, (i - 1) * self.font_h, a.color[1], a.color[2], a.color[3])
+		self.surface:drawColorStringBlended(self.font, ("%s (%d)#WHITE#; distance [%s]"):format(a.name, a.nb, table.concat(a.dist, ",")), 3, 3 + (i - 1) * self.font_h, a.color[1], a.color[2], a.color[3])
 	end
 
 	self.surface:updateTexture(self.texture)
