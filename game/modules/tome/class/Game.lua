@@ -881,11 +881,15 @@ end
 local _talents_icon, _talents_icon_w, _talents_icon_h = core.display.loadImage("/data/gfx/ui/talents-icon.png"):glTexture()
 local _actors_icon, _actors_icon_w, _actors_icon_h = core.display.loadImage("/data/gfx/ui/actors-icon.png"):glTexture()
 local _main_menu_icon, _main_menu_icon_w, _main_menu_icon_h = core.display.loadImage("/data/gfx/ui/main-menu-icon.png"):glTexture()
+local _inventory_icon, _inventory_icon_w, _inventory_icon_h = core.display.loadImage("/data/gfx/ui/inventory-icon.png"):glTexture()
+local _charsheet_icon, _charsheet_icon_w, _charsheet_icon_h = core.display.loadImage("/data/gfx/ui/charsheet-icon.png"):glTexture()
 
 function _M:displayUIIcons()
 	local x, y = self.icons.display_x, self.icons.display_y
 	_talents_icon:toScreenFull(x, y, 12, 12, _talents_icon_w, _talents_icon_h) y = y + 12
 	_actors_icon:toScreenFull(x, y, 12, 12, _actors_icon_w, _actors_icon_h) y = y + 12
+	_inventory_icon:toScreenFull(x, y, 12, 12, _inventory_icon_w, _inventory_icon_h) y = y + 12
+	_charsheet_icon:toScreenFull(x, y, 12, 12, _charsheet_icon_w, _charsheet_icon_h) y = y + 12
 	_main_menu_icon:toScreenFull(x, y, 12, 12, _main_menu_icon_w, _main_menu_icon_h) y = y + 12
 end
 
@@ -897,6 +901,10 @@ function _M:clickIcon(bx, by)
 		self.show_npc_list = true
 		self.player.changed = true
 	elseif by < 36 then
+		self.key:triggerVirtual("SHOW_INVENTORY")
+	elseif by < 48 then
+		self.key:triggerVirtual("SHOW_CHARACTER_SHEET")
+	elseif by < 50 then
 		self.key:triggerVirtual("EXIT")
 	end
 end
@@ -907,6 +915,10 @@ function _M:mouseIcon(bx, by)
 	elseif by < 24 then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display creatures")
 	elseif by < 36 then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Inventory")
+	elseif by < 48 then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Character Sheet")
+	elseif by < 50 then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Main menu")
 	end
 end
