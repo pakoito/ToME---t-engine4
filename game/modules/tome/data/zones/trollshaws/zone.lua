@@ -46,9 +46,9 @@ return {
 				pond = {{0.6, "DEEP_WATER"}, {0.8, "SHALLOW_WATER"}},
 			},
 
-			nb_rooms = {0,0,0,0,1},
+			nb_rooms = {6},
 			rooms = {"lesser_vault"},
-			lesser_vaults_list = {"honey_glade"},
+			lesser_vaults_list = {"honey_glade", "forest-ruined-building1", "forest-ruined-building2", "forest-ruined-building3"},
 			lite_room_chance = 100,
 		},
 		actor = {
