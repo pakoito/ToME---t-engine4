@@ -42,7 +42,7 @@ return {
 			down = "DOWN",
 			door = "DOOR",
 
-			nb_rooms = {3},
+			nb_rooms = {0,0,0,1},
 			rooms = {"lesser_vault"},
 			lesser_vaults_list = {"orc-armoury", "double-t", "dragon_lair", "hostel"},
 			lite_room_chance = 100,

@@ -310,6 +310,7 @@ on_grant = function(self, who)
 	-- Spawn actor
 	local npc = mod.class.NPC.new(self.kind.actor)
 	npc:resolve() npc:resolve(nil, true)
+	npc.x, npc.y = x, y
 	self.kind.actor = nil
 
 	-- Spawn the portal, far enough from the escort
@@ -332,6 +333,7 @@ on_grant = function(self, who)
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", gx, gy)
 	npc.escort_target = {x=gx, y=gy}
+	npc.x, npc.y = nil, nil
 	game.zone:addEntity(game.level, npc, "actor", x, y)
 
 	-- Setup quest

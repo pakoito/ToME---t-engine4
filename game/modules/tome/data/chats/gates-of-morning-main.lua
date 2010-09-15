@@ -22,6 +22,7 @@ newChat{ id="welcome",
 	answers = {
 		{"Tell me more about the Gates of Morning.", jump="explain-gates"},
 		{"I need help in my hunt for clues about the staff.", jump="clues", cond=function(npc, player) return not player:hasQuest("orc-pride") end},
+		{"I have destroyed the leaders of all the Orc Prides.", jump="prides-dead", cond=function(npc, player) return player:isQuestStatus("orc-pride", engine.Quest.COMPLETED) end},
 		{"I am back from Mount Doom, where the orcs took the staff.", jump="mount-doom", cond=function(npc, player) return player:hasQuest("mount-doom") and player:hasQuest("mount-doom"):isCompleted() end},
 		{"Sorry, I have to go!"},
 	}
