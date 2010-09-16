@@ -39,12 +39,12 @@ The Istari seem to have awakened its power.]],
 		dammod = {mag=1},
 	},
 	wielder = {
-		combat_spellpower = 34,
-		combat_spellcrit = 10,
-		max_mana = 50,
+		combat_spellpower = 48,
+		combat_spellcrit = 15,
+		max_mana = 100,
 		max_positive = 50,
 		max_negative = 50,
-		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 6 },
+		inc_stats = { [Stats.STAT_MAG] = 10, [Stats.STAT_WIL] = 10 },
 	},
 
 	max_power = 1000, power_regen = 1,
@@ -62,8 +62,8 @@ The Istari seem to have awakened its power.]],
 			end
 
 			game.logPlayer(who, "You brandish the staff, draining your foe.")
-			who:setEffect(who.EFF_POWER_OVERLOAD, 7, {power=20})
-			target:takeHit(target.life * 0.2, who)
+			who:setEffect(who.EFF_POWER_OVERLOAD, 7, {power=30})
+			target:takeHit(target.life * 0.3, who)
 		end
 	},
 }

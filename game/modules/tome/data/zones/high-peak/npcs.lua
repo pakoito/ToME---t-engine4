@@ -66,6 +66,10 @@ newEntity{
 	size_category = 3,
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
 
+	instakill_immune = 1,
+	stun_immune = 0.5,
+	blind_immune = 1
+
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
 		{type="weapon", subtype="staff", defined="STAFF_ABSORPTION_AWAKENED", autoreq=true},
@@ -125,6 +129,10 @@ newEntity{
 	rank = 5,
 	size_category = 3,
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
+
+	instakill_immune = 1,
+	stun_immune = 0.5,
+	blind_immune = 1
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
