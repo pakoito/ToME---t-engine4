@@ -904,7 +904,7 @@ function _M:clickIcon(bx, by)
 		self.key:triggerVirtual("SHOW_INVENTORY")
 	elseif by < 48 then
 		self.key:triggerVirtual("SHOW_CHARACTER_SHEET")
-	elseif by < 50 then
+	elseif by < 60 then
 		self.key:triggerVirtual("EXIT")
 	end
 end
@@ -918,7 +918,7 @@ function _M:mouseIcon(bx, by)
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Inventory")
 	elseif by < 48 then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Character Sheet")
-	elseif by < 50 then
+	elseif by < 60 then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Main menu")
 	end
 end
