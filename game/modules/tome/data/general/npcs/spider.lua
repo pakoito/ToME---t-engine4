@@ -25,7 +25,7 @@ newEntity{
 	display = "S", color=colors.WHITE,
 	desc = [[Arachnophobia...]],
 
-	combat = { dam=resolvers.mbonus(40, 10), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
+	combat = { dam=resolvers.mbonus(40, 70), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
