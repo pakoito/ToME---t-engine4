@@ -276,10 +276,12 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 			local e = __uids[uid]
 			if e then
 				local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
-				local w, h = surf:getSize()
-				s:merge(surf, x, y)
-				if h > max_h then max_h = h end
-				x = x + (w or 0)
+				if surf then
+					local w, h = surf:getSize()
+					s:merge(surf, x, y)
+					if h > max_h then max_h = h end
+					x = x + (w or 0)
+				end
 			end
 		elseif fontstyle then
 			font:setStyle(fontstyle)
@@ -328,10 +330,12 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 			local e = __uids[uid]
 			if e then
 				local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
-				local w, h = surf:getSize()
-				s:merge(surf, x, y)
-				if h > max_h then max_h = h end
-				x = x + (w or 0)
+				if surf then
+					local w, h = surf:getSize()
+					s:merge(surf, x, y)
+					if h > max_h then max_h = h end
+					x = x + (w or 0)
+				end
 			end
 		elseif fontstyle then
 			font:setStyle(fontstyle)

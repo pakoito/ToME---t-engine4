@@ -322,7 +322,9 @@ end
 -- @param min_dist the minimun radius of of the effect, will never teleport closer. Defaults to 0 if not set
 -- @return true if the teleport worked
 function _M:teleportRandom(x, y, dist, min_dist)
-
+	if game.level.data.no_teleport_south and y + dist > self.y then
+		y = self.y - dist
+	end
 	return engine.Actor.teleportRandom(self, x, y, dist, min_dist)
 end
 

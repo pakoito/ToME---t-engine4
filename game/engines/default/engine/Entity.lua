@@ -1,3 +1,4 @@
+
 -- TE4 - T-Engine 4
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
@@ -240,6 +241,7 @@ function _M:getEntityFinalSurface(tiles, w, h)
 		if mos[i] then list[#list+1] = mos[i] end
 	end
 	local tex = core.map.mapObjectsToTexture(w, h, unpack(list))
+	if not tex then return nil end
 	_M.__mo_final_repo[self] = _M.__mo_final_repo[self] or {}
 	_M.__mo_final_repo[self][id] = {surface=tex:toSurface(), tex=tex}
 	return _M.__mo_final_repo[self][id].surface, _M.__mo_final_repo[self][id].tex

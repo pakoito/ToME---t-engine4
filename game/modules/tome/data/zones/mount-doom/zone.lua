@@ -30,6 +30,7 @@ return {
 	persistant = "zone",
 	no_level_connectivity = true,
 	no_worldport = true,
+	no_teleport_south = true,
 	ambiant_music = "Hold the Line.ogg",
 	generator =  {
 		map = {
@@ -54,7 +55,7 @@ return {
 	},
 
 	post_process = function(level)
-		level.turn_counter = 700 * 10
+		level.turn_counter = 640 * 10
 	end,
 
 	on_enter = function(lev, old_lev, newzone)
