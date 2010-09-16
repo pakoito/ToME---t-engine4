@@ -106,7 +106,7 @@ newTalent{
 	type = {"spell/earth",4},
 	require = spells_req4,
 	points = 5,
-	cooldown = 12,
+	cooldown = 50,
 	mana = 70,
 	range = 20,
 	reflectable = true,
@@ -132,7 +132,7 @@ newTalent{
 					can_pass = {pass_wall=1},
 					block_move = true,
 					block_sight = true,
-					temporary = 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t),
+					temporary = 2 + self:combatTalentSpellDamage(t, 5, 12),
 					x = x + i, y = y + j,
 					canAct = false,
 					act = function(self)
