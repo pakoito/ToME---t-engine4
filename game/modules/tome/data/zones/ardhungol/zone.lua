@@ -44,7 +44,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {30, 40},
+			nb_npc = {70, 80},
 			guardian = "UNGOLE",
 		},
 		object = {

@@ -123,7 +123,7 @@ function _M:onResolutionChange()
 	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	-- Reset mouse bindings to account for new size
-	self:setupMouse(reset)
+	self:setupMouse(true)
 end
 
 function _M:setupDisplayMode()

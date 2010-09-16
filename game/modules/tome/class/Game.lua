@@ -190,7 +190,7 @@ function _M:onResolutionChange()
 	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
 	self.icons = { display_x = game.w * 0.5 - 14, display_y = game.h * 0.8 + 3, w = 12, h = game.h * 0.2}
 	-- Reset mouse bindings to account for new size
-	self:setupMouse(reset)
+	self:setupMouse(true)
 
 	self:createSeparators()
 end
@@ -241,6 +241,8 @@ function _M:setupDisplayMode()
 	-- Create the framebuffer
 --	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 --	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
+--	game.fbo_shader:setUniform("blur", 3)
+--	game.fbo_shader:setUniform("colorize", {1,0.3,0})
 end
 
 function _M:setupMiniMap()
@@ -852,6 +854,13 @@ end
 --------------------------------------------------------------
 -- UI stuff
 --------------------------------------------------------------
+
+--function _M:onPickUI(hits)
+--	for i, uid in ipairs(hits) do
+--		local e = __uids[uid]
+--		if e then print(i, e.uid, e.name) end
+--	end
+--end
 
 --- Create a visual separator
 local _sep_left = core.display.loadImage("/data/gfx/ui/separator-left.png") _sep_left:alpha()

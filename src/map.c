@@ -571,6 +571,8 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 	DO_QUAD(dx + m->dx, dy + m->dy, z, m->scale);
 
 	if (m->shader) glUseProgramObjectARB(0);
+
+//	glLoadName(0);
 }
 
 static int map_to_screen(lua_State *L)

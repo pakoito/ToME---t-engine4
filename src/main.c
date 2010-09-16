@@ -350,6 +350,25 @@ void list_hits(GLint hits, GLuint *names)
 			);
 
 	printf("\n");
+
+	if (current_game != LUA_NOREF)
+	{
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		lua_pushstring(L, "onPickUI");
+		lua_gettable(L, -2);
+		lua_remove(L, -2);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+		lua_newtable(L);
+
+		for (i = 0; i < hits; i++)
+		{
+			lua_pushnumber(L, i+1);
+			lua_pushnumber(L, names[i * 4 + 3]);
+			lua_settable(L, -3);
+		}
+		docall(L, 2, 0);
+	}
+
 }
 
 void gl_select(int x, int y)
@@ -394,7 +413,9 @@ void gl_select(int x, int y)
 	/*
 	 restrict the draw to an area around the cursor
 	 */
-	gluPickMatrix(x, y, 1.0, 1.0, view);
+	gluPickMatrix(x, y, 5.0, 5.0, view);
+	printf("view %d %d %d %d\n", view[0], view[1], view[2], view[3]);
+	printf("pick %d %d\n", x,y);
 //	gluPerspective(60, 1.0, 0.0001, 1000.0);
 	glOrtho(0, screen->w, screen->h, 0, -101, 101);
 
@@ -407,7 +428,7 @@ void gl_select(int x, int y)
 	 draw only the names in the stack, and fill the array
 	 */
 	call_draw();
-	SDL_GL_SwapBuffers();
+//	SDL_GL_SwapBuffers();
 
 	/*
 	 Do you remeber? We do pushMatrix in PROJECTION mode
