@@ -43,6 +43,7 @@ load("/data/general/npcs/bone-giant.lua", rarity(10))
 load("/data/general/npcs/vampire.lua", rarity(10))
 load("/data/general/npcs/ghoul.lua", rarity(10))
 load("/data/general/npcs/skeleton.lua", rarity(10))
+load("/data/general/npcs/ghost.lua", rarity(4))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
 

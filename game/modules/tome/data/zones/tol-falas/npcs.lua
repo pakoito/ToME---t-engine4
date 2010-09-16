@@ -21,6 +21,7 @@ load("/data/general/npcs/skeleton.lua", rarity(0))
 load("/data/general/npcs/ghoul.lua", rarity(1))
 load("/data/general/npcs/wight.lua", rarity(3))
 load("/data/general/npcs/vampire.lua", rarity(3))
+load("/data/general/npcs/ghost.lua", rarity(3))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
 
