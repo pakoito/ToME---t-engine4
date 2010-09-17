@@ -40,6 +40,7 @@ function _M:simplePopup(title, text, fct, no_leave)
 	end
 	d.drawDialog = function(self, s)
 		s:drawColorStringCentered(self.font, text, 2, 2, self.iw - 2, self.ih - 2)
+		self.changed = false
 	end
 	game:registerDialog(d)
 	return d
@@ -64,6 +65,7 @@ function _M:simpleLongPopup(title, text, w, fct, no_leave)
 		for i = 1, #list do
 			r, g, b = s:drawColorStringBlended(self.font, list[i], 5, h, r, g, b) h = h + th
 		end
+		self.changed = false
 	end
 	game:registerDialog(d)
 	return d
@@ -98,6 +100,7 @@ function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 			s:drawColorStringCentered(self.font, yes_text or "Yes", 2, 25, self.iw / 2 - 2, 50 - 2, 255, 255, 255)
 			s:drawColorStringCentered(self.font, no_text or "No", 2 + self.iw / 2, 25, self.iw / 2 - 2, 50 - 2, 0, 255, 255)
 		end
+		self.changed = false
 	end
 	game:registerDialog(d)
 	return d
@@ -197,7 +200,7 @@ function _M:display()
 	end
 
 	self.font:setStyle("bold")
-	local tw, th = self.font:size(self.title)
+	local tw, th = self.font:size(self.title:removeColorCodes())
 	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
 	self.font:setStyle("normal")
 

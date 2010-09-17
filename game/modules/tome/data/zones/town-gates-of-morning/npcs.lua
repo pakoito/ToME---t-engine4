@@ -36,6 +36,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	infravision = 20,
 	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
 	instakill_immune = 1,
+	teleport_immune = 1,
 	move_others=true,
 
 	open_door = true,

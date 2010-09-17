@@ -37,7 +37,7 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			area = {x1=0, x2=85, y1=0, y2=49},
-			nb_npc = {10, 30},
+			nb_npc = {50, 60},
 		},
 		object = {
 			class = "engine.generator.object.Random",
