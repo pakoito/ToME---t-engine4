@@ -71,6 +71,7 @@ function _M:use()
 	elseif act == "quests" then game.key:triggerVirtual("SHOW_QUESTS")
 	elseif act == "levelup" then game.key:triggerVirtual("LEVELUP")
 	elseif act == "inventory" then game.key:triggerVirtual("SHOW_INVENTORY")
+	elseif act == "rest" then game.key:triggerVirtual("REST")
 	elseif act == "talent" then
 		local d = self.list[self.sel]
 		if d.set_target then
@@ -96,6 +97,7 @@ function _M:generateList()
 	if g and g.change_level and self.on_player then list[#list+1] = {name="Change level", action="change_level", color=colors.simple(colors.VIOLET)} end
 	if o and self.on_player then list[#list+1] = {name="Pickup item", action="pickup", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if g and not self.on_player then list[#list+1] = {name="Move to", action="move_to", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Character Sheet", action="character_sheet", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Quest Log", action="quests", color=colors.simple(colors.ANTIQUE_WHITE)} end

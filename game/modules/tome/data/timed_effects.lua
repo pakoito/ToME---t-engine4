@@ -492,6 +492,24 @@ newEffect{
 }
 
 newEffect{
+	name = "NOLDOR_WRATH",
+	desc = "Wrath of the Eldar",
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# radiates power." end,
+	on_lose = function(self, err) return "#Target# aura of power vanishes." end,
+	activate = function(self, eff)
+		eff.pid1 = self:addTemporaryValue("inc_damage", {all=eff.power})
+		eff.pid2 = self:addTemporaryValue("resists", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.pid1)
+		self:removeTemporaryValue("resists", eff.pid2)
+	end,
+}
+
+newEffect{
 	name = "ORC_FURY",
 	desc = "Orcish Fury",
 	type = "physical",

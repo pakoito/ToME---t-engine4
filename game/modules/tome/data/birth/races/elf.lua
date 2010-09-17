@@ -33,7 +33,7 @@ newBirthDescriptor{
 		subrace =
 		{
 			Nandor = "allow",
-			Avari = "allow",
+			Noldor = "allow",
 			__ALL__ = "disallow",
 		},
 		subclass =
@@ -73,6 +73,24 @@ newBirthDescriptor
 	talents = { [ActorTalents.T_NANDOR_SPEED]=1 },
 	copy = {
 		life_rating = 9,
+	},
+}
+
+newBirthDescriptor
+{
+	type = "subrace",
+	name = "Noldor",
+	desc = {
+		"Originally the Second Clan of the elves in both order and size, Noldor were exiled in Middle-Earth by the Valar after the first kinslaying.",
+		"Most of the Noldor sailed back to Aman at the end of the First Age; but some, like Galadriel or Celebrimbor, refused the pardon of the Valar and remained.",
+		"In the Third Age, the Noldor dwindled, and by the end of the Third Age the only ones remaining in Middle-Earth were in Rivendell and in Lothlórien.",
+		"They possess the Wrath of the Eldar talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
+	},
+	stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
+	experience = 1.3,
+	talents = { [ActorTalents.T_NOLDOR_WRATH]=1 },
+	copy = {
+		life_rating = 11,
 	},
 }
 --[[

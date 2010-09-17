@@ -221,6 +221,22 @@ newTalent{
 	end,
 }
 
+-- Noldor's power: temporary damage increase and damage reduction
+newTalent{
+	short_name = "NOLDOR_WRATH",
+	name = "Wrath of the Eldar",
+	type = {"base/race", 1},
+	cooldown = 50,
+	action = function(self, t)
+		self:setEffect(self.EFF_NOLDOR_WRATH, 5, {power=7 + self:getWil(10)})
+		return true
+	end,
+	info = function(self)
+		return ([[Call upon the power of the ancient Noldor, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
+		The bonus will increase with the Willpower stat]]):format(7 + self:getWil(10), 7 + self:getWil(10))
+	end,
+}
+
 -- Orc's power: temporary damage increase
 newTalent{
 	short_name = "ORC_FURY",
@@ -232,7 +248,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Summons your lust for blood and destruction, increasing all damage by %d for 5 turns.
+		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
 		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
 	end,
 }
