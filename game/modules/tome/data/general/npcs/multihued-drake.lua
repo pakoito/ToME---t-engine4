@@ -52,7 +52,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	max_life = resolvers.rngavg(60,80),
 	combat_armor = 5, combat_def = 0,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(7, 3), [DamageType.COLD]=resolvers.mbonus(7, 3)},
-	combat = { dam=resolvers.rngavg(25,35), atk=15, apr=5, dammod={str=0.6} },
+	combat = { dam=resolvers.rngavg(25,80), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 
 	resists = { [DamageType.PHYSICAL] = 20, [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.ACID] = 20, [DamageType.LIGHTNING] = 20, },
 
@@ -72,11 +72,17 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	max_life = resolvers.rngavg(150,170),
 	combat_armor = 12, combat_def = 0,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(10, 5), [DamageType.COLD]=resolvers.mbonus(10, 5)},
-	combat = { dam=resolvers.rngavg(35,45), atk=15, apr=25, dammod={str=1} },
+	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,100), apr=25, dammod={str=1.1} },
 
 	resists = { [DamageType.PHYSICAL] = 30, [DamageType.FIRE] = 30, [DamageType.COLD] = 30, [DamageType.ACID] = 30, [DamageType.LIGHTNING] = 30, },
 
+	summon = {
+		{type="dragon", name="multi-hued drake hatchling", number=3, hasxp=false},
+		{type="dragon", name="multi-hued drake", number=1, hasxp=false},
+	},
+
 	resolvers.talents{
+		[Talents.T_SUMMON]=1,
 		[Talents.T_ICE_CLAW]=3,
 		[Talents.T_WING_BUFFET]=3,
 
@@ -98,12 +104,13 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	max_life = resolvers.rngavg(220,250),
 	combat_armor = 30, combat_def = 30,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(10, 5), [DamageType.COLD]=resolvers.mbonus(10, 5), [DamageType.LIGHTNING]=resolvers.mbonus(10, 5), [DamageType.ACID]=resolvers.mbonus(10, 5)},
-	combat = { dam=resolvers.rngavg(50,70), atk=25, apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.rngavg(25,150), atk=resolvers.rngavg(25,130), apr=25, dammod={str=1.1} },
 
 	resists = { [DamageType.PHYSICAL] = 40, [DamageType.FIRE] = 40, [DamageType.COLD] = 40, [DamageType.ACID] = 40, [DamageType.LIGHTNING] = 40, },
 
 	summon = {
-		{type="dragon", number=2, hasxp=false},
+		{type="dragon", name="multi-hued drake", number=3, hasxp=false},
+		{type="dragon", name="greater multi-hued wyrm", number=1, hasxp=false},
 	},
 
 	resolvers.talents{

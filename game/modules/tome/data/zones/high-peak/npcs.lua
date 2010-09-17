@@ -67,6 +67,7 @@ newEntity{
 	size_category = 3,
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
 
+	see_invisible = 100,
 	instakill_immune = 1,
 	stun_immune = 0.5,
 	blind_immune = 1
@@ -131,6 +132,7 @@ newEntity{
 	size_category = 3,
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
 
+	see_invisible = 100,
 	instakill_immune = 1,
 	stun_immune = 0.5,
 	blind_immune = 1

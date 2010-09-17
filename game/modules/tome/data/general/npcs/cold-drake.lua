@@ -24,8 +24,6 @@ newEntity{
 	type = "dragon", subtype = "cold",
 	display = "D", color=colors.WHITE,
 
-	combat = { dam=resolvers.rngavg(25,30), atk=15, apr=25, dammod={str=1} },
-
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {type="money"} },
 
@@ -53,6 +51,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	rank = 1, size_category = 2,
 	max_life = resolvers.rngavg(40,60),
 	combat_armor = 5, combat_def = 0,
+	combat = { dam=resolvers.rngavg(25,40), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(7, 2)},
 	combat = { dam=resolvers.rngavg(10,15), atk=15, apr=5, dammod={str=0.6} },
 
@@ -68,9 +67,16 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	rarity = 3,
 	max_life = resolvers.rngavg(100,110),
 	combat_armor = 12, combat_def = 0,
+	combat = { dam=resolvers.rngavg(25,70), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
 
+	summon = {
+		{type="dragon", name="cold drake hatchling", number=3, hasxp=false},
+		{type="dragon", name="cold drake", number=1, hasxp=false},
+	},
+
 	resolvers.talents{
+		[Talents.T_SUMMON]=1,
 		[Talents.T_ICE_CLAW]=2,
 		[Talents.T_ICE_BREATH]=3,
 	},
@@ -84,10 +90,17 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	rank = 3,
 	max_life = resolvers.rngavg(170,190),
 	combat_armor = 30, combat_def = 0,
+	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(25, 10)},
 	combat = { dam=resolvers.rngavg(25,40), atk=25, apr=25, dammod={str=1.1} },
 
+	summon = {
+		{type="dragon", name="cold drake", number=3, hasxp=false},
+		{type="dragon", name="ice wyrm", number=1, hasxp=false},
+	},
+
 	resolvers.talents{
+		[Talents.T_SUMMON]=1,
 		[Talents.T_ICE_CLAW]=5,
 		[Talents.T_FREEZE]=5,
 		[Talents.T_ICE_BREATH]=5,
