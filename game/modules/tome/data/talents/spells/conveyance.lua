@@ -28,6 +28,7 @@ newTalent{
 	tactical = {
 		ESCAPE = 4,
 	},
+	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	action = function(self, t)
 		local target = self
 		if self:getTalentLevel(t) >= 5 then
@@ -94,6 +95,7 @@ newTalent{
 	tactical = {
 		ESCAPE = 8,
 	},
+	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	action = function(self, t)
 		local target = self
 
@@ -162,6 +164,7 @@ newTalent{
 		DEFENSE = 10,
 	},
 	range = 10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)

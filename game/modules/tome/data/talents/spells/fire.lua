@@ -31,6 +31,7 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	proj_speed = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
@@ -57,6 +58,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -85,6 +87,7 @@ newTalent{
 	range = 15,
 	proj_speed = 4,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
@@ -114,6 +117,7 @@ newTalent{
 	},
 	range = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
 		local radius = 5

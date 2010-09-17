@@ -29,6 +29,7 @@ newTalent{
 	refectable = true,
 	proj_speed = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -52,6 +53,7 @@ newTalent{
 	cooldown = 34,
 	range = 10,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
 		local x, y = self:getTarget(tg)

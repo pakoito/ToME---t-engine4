@@ -29,6 +29,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 8,
+	requires_target = true,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -79,6 +80,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 8,
 	stamina = 22,
+	requires_target = true,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -123,6 +125,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 16,
+	requires_target = true,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then

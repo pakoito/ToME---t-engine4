@@ -58,6 +58,7 @@ newTalent{
 	mana = 40,
 	range = 20,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
@@ -87,6 +88,7 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	proj_speed = 6,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
@@ -110,6 +112,7 @@ newTalent{
 	mana = 70,
 	range = 20,
 	reflectable = true,
+	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	action = function(self, t)
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then

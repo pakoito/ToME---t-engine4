@@ -956,64 +956,64 @@ end
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab, silent, fake)
 	if self:attr("feared") then
-		game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name)
+		if not silent then game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
 	if ab.no_silence and self:attr("silence") then
-		game.logSeen(self, "%s silenced and can not use %s.", self.name:capitalize(), ab.name)
+		if not silent then game.logSeen(self, "%s silenced and can not use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
 
-	if not self:enoughEnergy() then print("fail energy") return false end
+	if not self:enoughEnergy() then return false end
 
 	if ab.mode == "sustained" then
 		if ab.sustain_mana and self.max_mana < ab.sustain_mana and not self:isTalentActive(ab.id) then
-			game.logPlayer(self, "You do not have enough mana to activate %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough mana to activate %s.", ab.name) end
 			return false
 		end
 		if ab.sustain_stamina and self.max_stamina < ab.sustain_stamina and not self:isTalentActive(ab.id) then
-			game.logPlayer(self, "You do not have enough stamina to activate %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough stamina to activate %s.", ab.name) end
 			return false
 		end
 		if ab.sustain_vim and self.max_vim < ab.sustain_vim and not self:isTalentActive(ab.id) then
-			game.logPlayer(self, "You do not have enough vim to activate %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough vim to activate %s.", ab.name) end
 			return false
 		end
 		if ab.sustain_positive and self.max_positive < ab.sustain_positive and not self:isTalentActive(ab.id) then
-			game.logPlayer(self, "You do not have enough positive energy to activate %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough positive energy to activate %s.", ab.name) end
 			return false
 		end
 		if ab.sustain_negative and self.max_negative < ab.sustain_negative and not self:isTalentActive(ab.id) then
-			game.logPlayer(self, "You do not have enough negative energy to activate %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough negative energy to activate %s.", ab.name) end
 			return false
 		end
 		if ab.sustain_hate and self.max_hate < ab.sustain_hate and not self:isTalentActive(ab.id) then
-			game.logPlayer(self, "You do not have enough hate to activate %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough hate to activate %s.", ab.name) end
 			return false
 		end
 	else
 		if ab.mana and self:getMana() < ab.mana * (100 + self.fatigue) / 100 then
-			game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
 		end
 		if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
-			game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
 		end
 		if ab.vim and self:getVim() < ab.vim then
-			game.logPlayer(self, "You do not have enough vim to use %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough vim to use %s.", ab.name) end
 			return false
 		end
 		if ab.positive and self:getPositive() < ab.positive * (100 + self.fatigue) / 100 then
-			game.logPlayer(self, "You do not have enough positive energy to use %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough positive energy to use %s.", ab.name) end
 			return false
 		end
 		if ab.negative and self:getNegative() < ab.negative * (100 + self.fatigue) / 100 then
-			game.logPlayer(self, "You do not have enough negative energy to use %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough negative energy to use %s.", ab.name) end
 			return false
 		end
 		if ab.hate and self:getHate() < ab.hate * (100 + self.fatigue) / 100 then
-			game.logPlayer(self, "You do not have enough hate to use %s.", ab.name)
+			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
 			return false
 		end
 	end
@@ -1026,7 +1026,7 @@ function _M:preUseTalent(ab, silent, fake)
 		-- Fail ? lose energy and 1/10 more equilibrium
 		print("[Equilibrium] Use chance: ", 100 - chance * 100, "::", self:getEquilibrium())
 		if not rng.percent(100 - chance * 100) then
-			game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name)
+			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
 			self:incEquilibrium(eq / 10)
 			self:useEnergy()
 			return false
@@ -1034,9 +1034,9 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Confused ? lose a turn!
-	if self:attr("confused") then
+	if self:attr("confused") and not fake then
 		if rng.percent(self:attr("confused")) then
-			game.logSeen(self, "%s is confused and fails to use %s.", self.name:capitalize(), ab.name)
+			if not silent then game.logSeen(self, "%s is confused and fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
 			return false
 		end

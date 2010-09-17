@@ -69,6 +69,7 @@ newTalent{
 	cooldown = 15,
 	range = 10,
 	mana = 5,
+	requires_target = true,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then

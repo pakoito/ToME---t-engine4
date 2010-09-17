@@ -58,6 +58,7 @@ newTalent{
 	range = 20,
 	direct_hit = true,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end

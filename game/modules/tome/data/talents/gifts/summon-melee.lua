@@ -27,6 +27,7 @@ newTalent{
 	equilibrium = 3,
 	cooldown = 15,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -90,6 +91,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -156,6 +158,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 15,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -227,6 +230,7 @@ newTalent{
 	equilibrium = 15,
 	cooldown = 20,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}

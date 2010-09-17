@@ -25,6 +25,7 @@ newTalent{
 	vim = 8,
 	cooldown = 3,
 	random_ego = "attack",
+	requires_target = true,
 	range = function(self, t) return 5 + math.floor(self:getTalentLevel(t) * 1.3) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -64,6 +65,7 @@ newTalent{
 	vim = 18,
 	cooldown = 9,
 	range = 15,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -123,6 +125,7 @@ newTalent{
 	cooldown = 15,
 	range = 10,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
 		local x, y = self:getTarget(tg)
@@ -174,6 +177,7 @@ newTalent{
 	vim = 20,
 	cooldown = 13,
 	range = 10,
+	requires_target = true,
 	do_spread = function(self, t, carrier)
 		-- List all diseas
 		local diseases = {}

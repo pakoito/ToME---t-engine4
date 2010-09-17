@@ -59,6 +59,7 @@ newTalent{
 	tactical = {
 		ATTACK = 4,
 	},
+	requires_target = true,
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}

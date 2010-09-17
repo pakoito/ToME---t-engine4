@@ -23,6 +23,8 @@ function defineColor(name, r, g, b, br, bg, bb)
 	colors[name] = {r=r, g=g, b=b, br=br, bg=bg, bb=bb}
 end
 
+function colors.simple(c) return {c.r, c.g, c.b} end
+
 defineColor('WHITE', 0xFF, 0xFF, 0xFF)
 defineColor('SLATE', 0x8C, 0x8C, 0x8C)
 defineColor('ORANGE', 0xFF, 0x77, 0x00)

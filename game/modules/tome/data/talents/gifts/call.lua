@@ -48,6 +48,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 	equilibrium = 10,
 	cooldown = 20,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {default_target=self, type="hit", nowarning=true, range=self:getTalentRange(t), first_target="friend"}
 		local x, y, target = self:getTarget(tg)
@@ -75,6 +76,7 @@ newTalent{
 	equilibrium = 3,
 	cooldown = 10,
 	range = 100,
+	requires_target = true,
 	action = function(self, t)
 		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=math.ceil(3 + self:getTalentLevel(t))}
 		if not x then return nil end

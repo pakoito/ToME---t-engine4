@@ -27,6 +27,7 @@ newTalent{
 	range = 20,
 	random_ego = "attack",
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -50,6 +51,7 @@ newTalent{
 	vim = 28,
 	cooldown = 15,
 	range = 15,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)

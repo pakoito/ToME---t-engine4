@@ -66,6 +66,7 @@ newTalent{
 	cooldown = 9,
 	reflectable = true,
 	proj_speed = 15,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)

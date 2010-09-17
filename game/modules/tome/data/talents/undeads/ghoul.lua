@@ -47,6 +47,7 @@ newTalent{
 	},
 	direct_hit = true,
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t) * 1.2) end,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -87,6 +88,7 @@ newTalent{
 		ATTACK = 20,
 	},
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

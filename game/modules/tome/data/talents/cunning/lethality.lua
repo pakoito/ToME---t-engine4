@@ -37,6 +37,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 15,
 	require = cuns_req2,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

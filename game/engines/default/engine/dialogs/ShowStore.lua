@@ -54,6 +54,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		EXIT = function() game:unregisterDialog(self) end,
 	})
 	self:mouseZones{
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
 		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
 			if tx < self.iw / 2 then
 				self.list = self.store_list

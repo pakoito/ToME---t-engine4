@@ -48,6 +48,7 @@ function _M:init(mx, my, tmx, tmy)
 		EXIT = function() game:unregisterDialog(self) end,
 	})
 	self:mouseZones{
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
 		{ x=0, y=0, w=350, h=self.ih, fct=function(button, x, y, xrel, yrel, tx, ty)
 			self.changed = true
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
@@ -67,23 +68,64 @@ function _M:use()
 	elseif act == "change_level" then game.key:triggerVirtual("CHANGE_LEVEL")
 	elseif act == "pickup" then game.key:triggerVirtual("PICKUP_FLOOR")
 	elseif act == "character_sheet" then game.key:triggerVirtual("SHOW_CHARACTER_SHEET")
+	elseif act == "quests" then game.key:triggerVirtual("SHOW_QUESTS")
+	elseif act == "levelup" then game.key:triggerVirtual("LEVELUP")
 	elseif act == "inventory" then game.key:triggerVirtual("SHOW_INVENTORY")
+	elseif act == "talent" then
+		local d = self.list[self.sel]
+		if d.set_target then
+			local a = game.level.map(self.tmx, self.tmy, Map.ACTOR)
+			if not a then a = {x=self.tmx, y=self.tmy, __no_self=true} end
+			game.player:useTalent(d.talent.id, nil, nil, nil, a)
+		else
+			game.player:useTalent(d.talent.id)
+		end
 	end
 end
 
 function _M:generateList()
 	local list = {}
+	local player = game.player
 
 	local g = game.level.map(self.tmx, self.tmy, Map.TERRAIN)
 	local t = game.level.map(self.tmx, self.tmy, Map.TRAP)
 	local o = game.level.map(self.tmx, self.tmy, Map.OBJECT)
 	local a = game.level.map(self.tmx, self.tmy, Map.ACTOR)
 
-	if g and g.change_level and self.on_player then list[#list+1] = {name="Change level", action="change_level"} end
-	if o and self.on_player then list[#list+1] = {name="Pickup item", action="pickup"} end
-	if g and not self.on_player then list[#list+1] = {name="Move to", action="move_to"} end
-	if self.on_player then list[#list+1] = {name="Inventory", action="inventory"} end
-	if self.on_player then list[#list+1] = {name="Character Sheet", action="character_sheet"} end
+	-- Generic actions
+	if g and g.change_level and self.on_player then list[#list+1] = {name="Change level", action="change_level", color=colors.simple(colors.VIOLET)} end
+	if o and self.on_player then list[#list+1] = {name="Pickup item", action="pickup", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if g and not self.on_player then list[#list+1] = {name="Move to", action="move_to", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if self.on_player then list[#list+1] = {name="Character Sheet", action="character_sheet", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if self.on_player then list[#list+1] = {name="Quest Log", action="quests", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if self.on_player and (player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0) then list[#list+1] = {name="Levelup!", action="levelup", color=colors.simple(colors.YELLOW)} end
+
+	-- Talents
+	local tals = {}
+	for tid, _ in pairs(player.talents) do
+		local t = player:getTalentFromId(tid)
+		if t.mode ~= "passive" and player:preUseTalent(t, true, true) and not player:isTalentCoolingDown(t) then
+			local rt = util.getval(t.requires_target, player, t)
+			if self.on_player and not rt then
+				tals[#tals+1] = {name=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}
+			elseif not self.on_player and rt then
+				tals[#tals+1] = {name=t.name, talent=t, action="talent", set_target=true, color=colors.simple(colors.GOLD)}
+			end
+		end
+	end
+	table.sort(tals, function(a, b)
+		local ha, hb
+		for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == a.talent.id then ha = i end end
+		for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == b.talent.id then hb = i end end
+
+		if ha and hb then return ha < hb
+		elseif ha and not hb then return ha < 999999
+		elseif hb and not ha then return hb > 999999
+		else return a.talent.name < b.talent.name
+		end
+	end)
+	for i = 1, #tals do list[#list+1] = tals[i] end
 
 	self.max = 0
 	self.maxh = 0

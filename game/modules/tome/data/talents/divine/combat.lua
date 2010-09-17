@@ -58,6 +58,7 @@ newTalent{
 	},
 	range = 6,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -92,6 +93,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	requires_target = true,
 	range = function(self, t) return 2 + self:getStr(12) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
@@ -125,6 +127,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 3,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

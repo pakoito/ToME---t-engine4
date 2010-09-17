@@ -28,6 +28,7 @@ newTalent{
 		return math.ceil(5 + self:getDex(12))
 	end,
 	direct_hit = true,
+	requires_target = true,
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.FIRE
@@ -161,6 +162,7 @@ newTalent{
 		return math.ceil(5 + self:getDex(12))
 	end,
 	direct_hit = true,
+	requires_target = true,
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.SPELLKNOCKBACK

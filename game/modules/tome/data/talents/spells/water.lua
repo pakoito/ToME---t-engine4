@@ -30,6 +30,7 @@ newTalent{
 	},
 	range = 15,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 3
@@ -70,6 +71,7 @@ newTalent{
 	range = 20,
 	direct_hit = true,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

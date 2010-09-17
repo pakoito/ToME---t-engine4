@@ -30,6 +30,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -114,6 +115,7 @@ newTalent{
 	tactical = {
 		MOVEMENT = 10,
 	},
+	requires_target = true,
 	range = 20,
 	action = function(self, t)
 		local x, y = self:getTarget{type="ball", range=20 + self:getTalentLevel(t), radius=math.min(0, 5 - self:getTalentLevel(t))}

@@ -96,6 +96,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -128,6 +129,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 30,
 	stamina = 30,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -183,6 +185,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 8,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -220,6 +223,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 12,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -257,6 +261,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 12,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then

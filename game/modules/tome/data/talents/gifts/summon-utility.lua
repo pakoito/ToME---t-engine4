@@ -74,6 +74,7 @@ newTalent{ short_name="SPIDER_WEB",
 	equilibrium = 5,
 	cooldown = 3,
 	range=10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -98,6 +99,7 @@ newTalent{ short_name="HEAL_OTHER",
 	equilibrium = 5,
 	cooldown = 4,
 	range=14,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -122,6 +124,7 @@ newTalent{ short_name="REGENERATE_OTHER",
 	equilibrium = 5,
 	cooldown = 10,
 	range=14,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -149,6 +152,7 @@ newTalent{
 	equilibrium = 2,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -217,6 +221,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -285,6 +290,7 @@ newTalent{
 	equilibrium = 8,
 	cooldown = 18,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -351,6 +357,7 @@ newTalent{
 	equilibrium = 2,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)

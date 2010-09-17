@@ -89,6 +89,7 @@ function _M:init(title, actor, filter, action)
 		EXIT = function() game:unregisterDialog(self) end,
 	})
 	self:mouseZones{
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
 		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
 			if tx < self.iw / 2 then
 				self.list = self.equip_list

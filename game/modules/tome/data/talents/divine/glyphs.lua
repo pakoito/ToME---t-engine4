@@ -27,6 +27,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = -10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -85,6 +86,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = -10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -145,6 +147,7 @@ newTalent{
 --	mana = 30,
 	positive = -10,
 	cooldown = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -210,6 +213,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = -10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)

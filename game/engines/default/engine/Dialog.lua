@@ -36,7 +36,7 @@ function _M:simplePopup(title, text, fct, no_leave)
 		d:keyCommands{}
 	else
 		d:keyCommands{__DEFAULT=function() game:unregisterDialog(d) if fct then fct() end end}
-		d:mouseZones{{x=0, y=0, w=game.w, h=game.h, fct=function(b) if b ~= "none" then game:unregisterDialog(d) if fct then fct() end end end, norestrict=true}}
+		d:mouseZones{{x=0, y=0, w=game.w, h=game.h, norestrict=true, fct=function(b) if b ~= "none" then game:unregisterDialog(d) if fct then fct() end end end, norestrict=true}}
 	end
 	d.drawDialog = function(self, s)
 		s:drawColorStringCentered(self.font, text, 2, 2, self.iw - 2, self.ih - 2)
@@ -57,7 +57,7 @@ function _M:simpleLongPopup(title, text, w, fct, no_leave)
 		d:keyCommands{}
 	else
 		d:keyCommands{__DEFAULT=function() game:unregisterDialog(d) if fct then fct() end end}
-		d:mouseZones{{x=0, y=0, w=game.w, h=game.h, fct=function(b) if b ~= "none" then game:unregisterDialog(d) if fct then fct() end end end, norestrict=true}}
+		d:mouseZones{{x=0, y=0, w=game.w, h=game.h, norestrict=true, fct=function(b) if b ~= "none" then game:unregisterDialog(d) if fct then fct() end end end, norestrict=true}}
 	end
 	d.drawDialog = function(self, s)
 		local h = 4
@@ -302,8 +302,10 @@ function _M:mouseZones(t)
 	-- Offset the x and y with the window position and window title
 	if not t.norestrict then
 		for i, z in ipairs(t) do
-			z.x = z.x + self.display_x + 5
-			z.y = z.y + self.display_y + 20 + 3
+			if not z.norestrict then
+				z.x = z.x + self.display_x + 5
+				z.y = z.y + self.display_y + 20 + 3
+			end
 		end
 	end
 

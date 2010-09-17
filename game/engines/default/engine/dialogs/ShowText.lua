@@ -44,6 +44,7 @@ function _M:init(title, file, replace, w, h)
 		EXIT = "ACCEPT",
 	})
 	self:mouseZones{
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
 		{ x=0, y=0, w=self.w, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
 		end },
 	}

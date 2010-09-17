@@ -46,6 +46,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 25,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
@@ -104,6 +105,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 25,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)

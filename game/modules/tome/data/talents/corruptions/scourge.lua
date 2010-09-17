@@ -25,6 +25,7 @@ newTalent{
 	vim = 9,
 	cooldown = 6,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
@@ -99,6 +100,7 @@ newTalent{
 	vim = 18,
 	cooldown = 12,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
@@ -137,6 +139,7 @@ newTalent{
 	vim = 14,
 	cooldown = 8,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then

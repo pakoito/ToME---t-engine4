@@ -68,6 +68,7 @@ newTalent{
 	message = "@Source@ crawls poison onto @target@.",
 	cooldown = 5,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -90,6 +91,7 @@ newTalent{
 	message = "@Source@ crawls acid onto @target@.",
 	cooldown = 2,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -112,6 +114,7 @@ newTalent{
 	message = "@Source@ releases blinding spores at @target@.",
 	cooldown = 2,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -135,6 +138,7 @@ newTalent{
 	message = "@Source@ releases poisonous spores at @target@.",
 	cooldown = 2,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -156,6 +160,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -186,6 +191,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -214,6 +220,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -244,6 +251,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -275,6 +283,7 @@ newTalent{
 	message = "@Source@ bites poison into @target@.",
 	cooldown = 5,
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -338,6 +347,7 @@ newTalent{
 	points = 5,
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -367,6 +377,7 @@ newTalent{
 	points = 5,
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -396,6 +407,7 @@ newTalent{
 	points = 5,
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -427,6 +439,7 @@ newTalent{
 	mana = 16,
 	range = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -450,6 +463,7 @@ newTalent{
 	},
 	range = 20,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -476,6 +490,7 @@ newTalent{
 	range = 20,
 	direct_hit = true,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -497,6 +512,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -533,6 +549,7 @@ newTalent{
 	},
 	range = 4,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -556,6 +573,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -580,6 +598,7 @@ newTalent{
 	},
 	range = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
 		local x, y = self:getTarget(tg)
@@ -605,6 +624,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local dur = 2 + self:getTalentLevel(t)
 		local trap = mod.class.Trap.new{
@@ -646,6 +666,7 @@ newTalent{
 	},
 	range = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -677,6 +698,7 @@ newTalent{
 	},
 	range = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
 		local x, y = self:getTarget(tg)
@@ -766,6 +788,7 @@ newTalent{
 	points = 5,
 	cooldown = 6,
 	stamina = 12,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -803,6 +826,7 @@ newTalent{
 	equilibrium = 5,
 	range = 15,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -825,6 +849,7 @@ newTalent{
 	equilibrium = 5,
 	range = 15,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -846,6 +871,7 @@ newTalent{
 	equilibrium = 5,
 	range = 15,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -868,6 +894,7 @@ newTalent{
 	vim = 10,
 	range = 20,
 	proj_speed = 10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)
@@ -890,6 +917,7 @@ newTalent{
 	vim = 27,
 	range = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 4
@@ -924,6 +952,7 @@ newTalent{
 	vim = 20,
 	range = 20,
 	proj_speed = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_blood"}}
 		local x, y = self:getTarget(tg)
@@ -945,6 +974,7 @@ newTalent{
 	vim = 24,
 	range = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

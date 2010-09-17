@@ -87,6 +87,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 14,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2, friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)

@@ -29,6 +29,7 @@ newTalent{
 	},
 	range = 20,
 	proj_speed = 3,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
 		local x, y = self:getTarget(tg)

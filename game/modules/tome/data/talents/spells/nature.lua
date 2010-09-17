@@ -1,3 +1,4 @@
+
 -- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
@@ -109,6 +110,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	requires_target = true,
 	action = function(self, t)
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})

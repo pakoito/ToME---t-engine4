@@ -47,6 +47,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	hate = 0.1,
+	requires_target = true,
 	action = function(self, t)
 		local target = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(target)
@@ -96,6 +97,7 @@ newTalent{
 	cooldown = 10,
 	hate = 0.1,
 	range = 10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -134,6 +136,7 @@ newTalent{
 	cooldown = 25,
 	hate = 0.1,
 	range = 10,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)

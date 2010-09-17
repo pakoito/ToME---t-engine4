@@ -31,6 +31,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -105,6 +106,7 @@ newTalent{
 	},
 	range = 10,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

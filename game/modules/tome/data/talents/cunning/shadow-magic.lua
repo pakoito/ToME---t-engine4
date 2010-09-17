@@ -77,6 +77,7 @@ newTalent{
 	require = cuns_req4,
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

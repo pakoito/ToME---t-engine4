@@ -27,6 +27,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 20,
 	range = 7,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -69,6 +70,7 @@ newTalent{
 	random_ego = "defensive",
 	cooldown = 15,
 	stamina = 30,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

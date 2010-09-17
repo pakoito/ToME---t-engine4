@@ -26,6 +26,7 @@ newTalent{
 	points = 1,
 	range = 20,
 	message = "@Source@ shoots!",
+	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
 		if not targets then return end
@@ -47,6 +48,7 @@ newTalent{
 	stamina = 8,
 	require = techs_dex_req1,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
 		if not targets then return end
@@ -144,6 +146,7 @@ newTalent{
 	stamina = 35,
 	require = techs_dex_req4,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
 		if not targets then return end
@@ -205,6 +208,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req2,
 	range = 20,
+	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
 			target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4)})
@@ -233,6 +237,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req3,
 	range = 20,
+	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("pin") then
 			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {})
@@ -261,6 +266,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req4,
 	range = 20,
+	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
 			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {})

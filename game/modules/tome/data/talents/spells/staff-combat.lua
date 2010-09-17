@@ -29,6 +29,7 @@ newTalent{
 	range = 10,
 	reflectable = true,
 	proj_speed = 20,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
@@ -129,6 +130,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then

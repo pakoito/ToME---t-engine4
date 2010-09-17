@@ -37,6 +37,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req2,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets({type="beam"}, {one_shot=true})
 		if not targets then return end
@@ -57,6 +58,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req3,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", radius=1}
 		local targets = self:archeryAcquireTargets(tg, {limit_shots=2})
@@ -79,6 +81,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = 20,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", radius=2 + self:getTalentLevel(t)/3, friendlyfire=false}
 		local targets = self:archeryAcquireTargets(tg)

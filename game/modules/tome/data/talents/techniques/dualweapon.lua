@@ -110,6 +110,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 15,
 	require = techs_dex_req1,
+	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
@@ -152,6 +153,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 15,
 	require = techs_dex_req2,
+	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
@@ -182,6 +184,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 30,
 	require = techs_dex_req3,
+	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then

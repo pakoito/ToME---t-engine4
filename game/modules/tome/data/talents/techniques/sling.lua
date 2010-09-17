@@ -37,6 +37,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req2,
 	range = 20,
+	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
 			target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {})
@@ -64,6 +65,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req3,
 	range = 20,
+	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, 4)
@@ -92,6 +94,7 @@ newTalent{
 	stamina = 35,
 	require = techs_dex_req4,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets(nil, {multishots=2+self:getTalentLevelRaw(t)/2})
 		if not targets then return end

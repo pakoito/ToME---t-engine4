@@ -33,6 +33,9 @@ function _M:init(actor, on_exit)
 			on_exit()
 		end,
 	})
+	self:mouseZones{
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then self.key:triggerVirtual("EXIT") end end},
+	}
 end
 
 function _M:drawDialog(s)

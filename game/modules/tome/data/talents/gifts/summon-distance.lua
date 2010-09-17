@@ -24,6 +24,7 @@ newTalent{ short_name = "FIRE_IMP_BOLT",
 	mana = 10,
 	range = 20,
 	reflectable = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -50,6 +51,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 5,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -76,6 +78,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 5,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -103,6 +106,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 5,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -127,6 +131,7 @@ newTalent{
 	equilibrium = 2,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -195,6 +200,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -265,6 +271,7 @@ newTalent{
 	equilibrium = 8,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -336,6 +343,7 @@ newTalent{
 	equilibrium = 15,
 	cooldown = 10,
 	range = 20,
+	requires_target = true,
 	action = function(self, t)
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}

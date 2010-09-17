@@ -29,6 +29,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -110,6 +111,7 @@ newTalent{
 	},
 	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)

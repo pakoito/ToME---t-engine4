@@ -29,6 +29,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	hate = 0.1,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasAxeWeapon()
 		if not weapon then
@@ -106,6 +107,7 @@ newTalent{
 	cooldown = 20,
 	hate = 0.1,
 	range = 4,
+	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasAxeWeapon()
 		if not weapon then

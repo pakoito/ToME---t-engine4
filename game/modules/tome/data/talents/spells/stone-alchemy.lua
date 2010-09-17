@@ -150,6 +150,7 @@ newTalent{
 		if self:getTalentLevel(t) < 3 then return 1
 		else return math.floor(self:getTalentLevel(t)) end
 	end,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end

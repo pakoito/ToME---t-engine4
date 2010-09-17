@@ -27,6 +27,7 @@ newTalent{
 	cooldown = 7,
 	stamina = 20,
 	range = 4,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
 		local x, y = self:getTarget(tg)
@@ -69,7 +70,7 @@ newTalent{
 		self:setEffect(self.EFF_BATTLE_SHOUT, 5 + self:getTalentLevelRaw(t) * 2, {power=10+self:getTalentLevelRaw(t)})
 		return true
 	end,
-	info = function(self, t)	
+	info = function(self, t)
 		return ([[Boost your life and stamina by %d%% for %d turns by uttering your battle shout.]]):format(5 + self:getTalentLevelRaw(t) * 2, 10 + self:getTalentLevelRaw(t))
 	end,
 }
@@ -83,6 +84,7 @@ newTalent{
 	cooldown = 30,
 	stamina = 40,
 	range = 4,
+	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
 		local x, y = self:getTarget(tg)
