@@ -331,25 +331,23 @@ end
 --- Quake a zone
 -- Moves randomly each grid to an other grid
 function _M:doQuake(tg, x, y)
+	local w = game.level.map.w
 	local locs = {}
 	local ms = {}
 	self:project(tg, x, y, function(tx, ty)
 		locs[#locs+1] = {x=tx,y=ty}
-		ms[#ms+1] = game.level.map.map[tx + ty * game.level.map.w]
+		ms[#ms+1] = {map=game.level.map.map[tx + ty * w], attrs=game.level.map.attrs[tx + ty * w]}
 	end)
 
 	while #locs > 0 do
 		local l = rng.tableRemove(locs)
 		local m = rng.tableRemove(ms)
-		for k, e in pairs(m) do
-			-- Update it manually
-			if not e.x and not e.y then
-				game.level.map(l.x, l.y, k, e)
-				if e.x and e.y then e.x, e.ly = l.x, l.y end
-			-- If it can move, move it
-			elseif e.x and e.y and e.move then
-				e.x = nil e.y = nil
-				e:move(l.x, l.y, true)
+
+		game.level.map.map[l.x + l.y * w] = m.map
+		game.level.map.attrs[l.x + l.y * w] = m.attrs
+		for z, e in pairs(m.map) do
+			if e.move then
+				e.x = nil e.y = nil e:move(l.x, l.y, true)
 			end
 		end
 	end
