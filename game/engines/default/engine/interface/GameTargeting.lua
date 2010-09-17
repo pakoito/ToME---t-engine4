@@ -180,11 +180,11 @@ function _M:targetMouse(button, mx, my, xrel, yrel)
 		-- Target with mouse
 		if button == "none" and xrel and yrel then
 			self.target:setSpot(tmx, tmy)
-		-- Cancel target
-		elseif button ~= "left" and not xrel and not yrel then
+		-- Accept target
+		elseif button == "left" and not xrel and not yrel then
 			self:targetMode(false, false)
 			self.tooltip_x, self.tooltip_y = nil, nil
-		-- Accept target
+		-- Cancel target
 		elseif not xrel and not yrel then
 			self.target.target.entity = nil
 			self.target.target.x = nil

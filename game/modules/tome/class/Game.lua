@@ -57,6 +57,7 @@ local Calendar = require "engine.Calendar"
 
 local Dialog = require "engine.Dialog"
 local QuitDialog = require "mod.dialogs.Quit"
+local MapMenu = require "mod.dialogs.MapMenu"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound, engine.interface.GameTargeting))
 
@@ -769,6 +770,9 @@ function _M:setupMouse(reset)
 		-- Handle targeting
 		if self:targetMouse(button, mx, my, xrel, yrel) then return end
 
+		-- Handle Use menu
+		if button == "right" and not xrel and not yrel then self:mouseRightClick(mx, my) return end
+
 		-- Handle the mouse movement/scrolling
 		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel)
 	end)
@@ -787,6 +791,12 @@ function _M:setupMouse(reset)
 		if button == "left" then self:clickIcon(bx, by) end
 	end)
 	if not reset then self.mouse:setCurrent() end
+end
+
+--- Right mouse click on the map
+function _M:mouseRightClick(mx, my)
+	local tmx, tmy = self.level.map:getMouseTile(mx, my)
+	self:registerDialog(MapMenu.new(mx, my, tmx, tmy))
 end
 
 --- Ask if we realy want to close, if so, save the game first
