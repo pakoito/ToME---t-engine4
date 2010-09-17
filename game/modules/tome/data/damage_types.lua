@@ -600,8 +600,9 @@ newDamageType{
 		if target then
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 20) then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0), 0, 95, 20) then
 				target:setEffect(target.EFF_TIME_PRISON, dam, {})
+				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=src:combatSpellpower(0.3)})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
