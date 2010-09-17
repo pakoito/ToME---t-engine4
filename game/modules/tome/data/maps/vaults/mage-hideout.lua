@@ -17,6 +17,27 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
+setStatusAll{no_teleport=true}
+
+rotates = {"default", "90", "180", "270", "flipx", "flipy"}
+
+defineTile(',', "GRASS")
+defineTile('#', "WALL")
+defineTile('X', "TREE")
+defineTile('+', "DOOR")
+defineTile('s', "GRASS", nil, {random_filter={name="skeleton mage", add_levels=6}})
+defineTile('$', "FLOOR", {random_filter={type="scroll"}}, nil)
+
+startx = 1
+starty = 7
+
+return {
+[[XXXXXXXXXXX]],
+[[X,,X,,,X,X,]],
+[[X,X,,,,,,XX]],
+[[X,X,,s####X]],
+[[X,X,,,#$$#X]],
+[[X,XX,,+$$#X]],
+[[X,,XX,####X]],
+[[X,,,XXXXXXX]],
+}

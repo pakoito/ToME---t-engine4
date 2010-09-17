@@ -196,8 +196,10 @@ function _M:display()
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_4.png"), self.w - 3, i)
 	end
 
+	self.font:setStyle("bold")
 	local tw, th = self.font:size(self.title)
 	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
+	self.font:setStyle("normal")
 
 	self.internal_surface:erase()
 	self:drawDialog(self.internal_surface)
