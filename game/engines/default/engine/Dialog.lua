@@ -330,7 +330,7 @@ function _M:drawHBorder(s, x, y, h)
 	end
 end
 
-function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, color, selcolor, max_size)
+function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, color, selcolor, max_size, cutoff_size)
 	selcolor = selcolor or {0,255,255}
 	color = color or {255,255,255}
 	max = max or 99999
@@ -352,11 +352,11 @@ function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, colo
 				if sel == i then
 					local sx, sy = self.font:size(lines[j])
 --					s:erase(selcolor[1]/3, selcolor[2]/3, selcolor[3]/3, 1, x, y, sx, sy)
-					s:drawColorStringBlended(self.font, lines[j], x, y, selcolor[1], selcolor[2], selcolor[3])
+					s:drawColorStringBlended(self.font, lines[j], x, y, selcolor[1], selcolor[2], selcolor[3], nil, cutoff_size)
 				else
 					local r, g, b = color[1], color[2], color[3]
 					if vc then r, g, b = vc[1], vc[2], vc[3] end
-					s:drawColorStringBlended(self.font, lines[j], x, y, r, g, b)
+					s:drawColorStringBlended(self.font, lines[j], x, y, r, g, b, nil, cutoff_size)
 				end
 				y = y + hskip
 			end

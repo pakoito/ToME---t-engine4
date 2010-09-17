@@ -183,6 +183,8 @@ function _M:generate(lev, old_lev)
 		local status = self.tiles[c] and self.tiles[c].status
 		local define_spot = self.tiles[c] and self.tiles[c].define_spot
 
+		self.map.room_map[i-1] = self.map.room_map[i-1] or {}
+		self.map.room_map[i-1][j-1] = self.map.room_map[i-1][j-1] or {}
 		self.map.room_map[i-1][j-1].add_entities = self.map.room_map[i-1][j-1].add_entities or {}
 		local rm = self.map.room_map[i-1][j-1].add_entities
 

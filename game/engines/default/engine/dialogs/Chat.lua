@@ -49,7 +49,7 @@ function _M:init(chat, id)
 	})
 	self:mouseZones{
 		{ x=0, y=0, w=self.w, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
-			if y >= self.start_answer_y then
+			if self.start_answer_y and y >= self.start_answer_y then
 				ty = ty - self.start_answer_y
 				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 				self.changed = true

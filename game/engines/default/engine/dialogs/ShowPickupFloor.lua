@@ -122,6 +122,6 @@ Mouse: #00FF00#Left click#FFFFFF# to pickup.
 	end
 
 	-- Talents
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
+	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5)
 	self.changed = false
 end

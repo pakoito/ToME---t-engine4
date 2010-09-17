@@ -21,7 +21,7 @@ return {
 	name = "Angolwen",
 	level_range = {20, 20},
 	max_level = 1,
-	width = 80, height = 80,
+	width = 90, height = 90,
 	persistant = "zone",
 --	all_remembered = true,
 	all_lited = true,

@@ -185,8 +185,8 @@ function _M:drawDialog(s)
 		h = h + self.font:lineSkip()
 	end
 
-	self:drawSelectionList(s, 2, 5, self.font_h, self.equip_list, self.list == self.equip_list and self.sel or -1, "name", self.scroll, self.max)
+	self:drawSelectionList(s, 2, 5, self.font_h, self.equip_list, self.list == self.equip_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5)
 	self:drawHBorder(s, self.iw / 2, 2, sh - 4)
-	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.inven_list, self.list == self.inven_list and self.sel or -1, "name", self.scroll, self.max)
+	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.inven_list, self.list == self.inven_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5)
 	self.changed = false
 end
