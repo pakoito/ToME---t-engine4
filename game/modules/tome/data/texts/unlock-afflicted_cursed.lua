@@ -32,6 +32,6 @@ Class features:#YELLOW#
 - Hunt your prey, tracking them and marking their death
 - Powerful two-handed melee combatant#WHITE#
 
-Cursed uses hate, a ressources that grows as you kill your foes and decreases while standing idle.
+Cursed uses hate, a resource that grows as you kill your foes and decreases while standing idle.
 Most of their talents are more effective with high hate.
 ]]

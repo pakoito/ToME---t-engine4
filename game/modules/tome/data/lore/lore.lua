@@ -100,7 +100,7 @@ newLore{
 	name = "note from the Master",
 	lore = [[MINIONS: You are foolish sods. Have you heard of the great Sauron? Perhaps not because you know very little and he died long before you were so stupid as to be born. However, he was great and had the chance to be greater still. Sauron let himself be cooped into a small hellhole and was destroyed when the right hero invaded it and destroyed his plaything.
 
-I shall not make this mistake. Be ready for soon we shall march out upon the lands. Soon we shall conquer as even the great Sauron could not. Pity the fool who thinks he can keep my stuck in even the grandest of pits, Tol Falas.]],
+I shall not make this mistake. Be ready for soon we shall march out upon the lands. Soon we shall conquer as even the great Sauron could not. Pity the fool who thinks he can keep me stuck in even the grandest of pits, Tol Falas.]],
 }
 
 newLore{

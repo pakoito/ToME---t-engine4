@@ -20,7 +20,7 @@
 return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
 You are a hobbit of the Shire. Most hobbits never leave the borders of their beloved Shire, even in this time of peace. Few know about the distant lands and fewer yet are willing to venture there.
 
-You are one of those rare few, inpired by the stories of dragons, gold, and the treasures of Bilbo nearly two hundred years before. You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
+You are one of those rare few, inspired by the stories of dragons, gold, and the treasures of Bilbo nearly two hundred years before. You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 
 You have come to a land called Rhudaur, east of the Shire, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
 To the east lies another dangerous place: the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead.

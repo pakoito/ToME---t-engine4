@@ -81,9 +81,8 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Noldor",
 	desc = {
-		"Originally the Second Clan of the elves in both order and size, Noldor were exiled in Middle-Earth by the Valar after the first kinslaying.",
-		"Most of the Noldor sailed back to Aman at the end of the First Age; but some, like Galadriel or Celebrimbor, refused the pardon of the Valar and remained.",
-		"In the Third Age, the Noldor dwindled, and by the end of the Third Age the only ones remaining in Middle-Earth were in Rivendell and in Lothlórien.",
+		"The Noldor were the High Elves most enamoured of knowledge and the making of things. After the theft of the Silmarils, many Noldor forsook the blessed land and returned to Middle Earth, but for their sins en-route they were placed under the Doom of the Valar. After the Doom was lifted, most of the Noldor sailed west, but a few still remain in Middle Earth.",
+		"They are implacable foes of the servants of Morgoth, wherever they may be found.",
 		"They possess the Wrath of the Eldar talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
 	},
 	stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
