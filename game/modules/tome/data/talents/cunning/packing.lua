@@ -52,7 +52,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Arrange your items in better way, protecting those can can easily be destroyed reducing their chance to be destroyed by %d%%.]]):
+		return ([[Arrange your items in better way, protecting those that can easily be destroyed reducing their chance to be destroyed by %d%%.]]):
 		format(self:getTalentLevel(t) * 14)
 	end,
 }

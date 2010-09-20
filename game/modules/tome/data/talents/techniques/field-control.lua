@@ -92,7 +92,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A mighty kick that pushes your target away %d grids.
-		If an other creature is in the way it will also be pushed away.]]):format(math.floor(2 + self:getTalentLevel(t)))
+		If another creature is in the way it will also be pushed away.]]):format(math.floor(2 + self:getTalentLevel(t)))
 	end,
 }
 

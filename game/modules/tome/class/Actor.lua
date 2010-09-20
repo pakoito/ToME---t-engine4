@@ -250,6 +250,7 @@ end
 
 function _M:move(x, y, force)
 	local moved = false
+	print("actor move", self.uid, self.name, "::", self.x, self.y, "=>", x, y)
 	if force or self:enoughEnergy() then
 		-- Confused ?
 		if not force and self:attr("confused") then

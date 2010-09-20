@@ -487,7 +487,7 @@ function _M:combatSpellpower(mod)
 	if self:hasEffect(self.EFF_BLOODLUST) then
 		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
 	end
-	
+
 	return (self.combat_spellpower + add + self:getMag()) * mod
 end
 
@@ -534,7 +534,7 @@ function _M:physicalCrit(dam, weapon, target)
 	local chance = self:combatCrit(weapon)
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
-	
+
 	if target:attr("combat_critical") then
 		chance = chance + target:attr("combat_critical")
 	end
@@ -569,6 +569,7 @@ function _M:spellCrit(dam, add_chance)
 	if rng.percent(chance) then
 		dam = dam * 1.5
 		crit = true
+		game.logSeen(self, "%s's spell looks more powerful!", self.name:capitalize())
 	end
 	return dam, crit
 end

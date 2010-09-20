@@ -51,10 +51,11 @@ newAI("move_escort", function(self)
 			return self:runAI("move_simple")
 		else
 			self.escort_path = {}
-			for i = 1, 3 do
-				if path[i+1] then self.escort_path[i] = path[i+1] end
+			local ret = self:move(path[1].x, path[1].y)
+			if self.x == path[1].x and self.y == path[1].y then
+				for i = 1, 3 do if path[i+1] then self.escort_path[i] = path[i+1] end end
 			end
-			return self:move(path[1].x, path[1].y)
+			return ret
 		end
 	end
 end)
