@@ -38,11 +38,13 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 	on_wear = function(self, who)
 		who.old_faction_cloak = who.faction
 		who.faction = "reunited-kingdom"
+		if who.alchemy_golem then who.alchemy_golem.faction = who.faction end
 		if who.player then engine.Map:setViewerFaction(who.faction) end
 		game.logPlayer(who, "#LIGHT_BLUE#An illusion appears around %s, making it appear human.", who.name:capitalize())
 	end,
 	on_takeoff = function(self, who)
 		who.faction = who.old_faction_cloak
+		if who.alchemy_golem then who.alchemy_golem.faction = who.faction end
 		if who.player then engine.Map:setViewerFaction(who.faction) end
 		game.logPlayer(who, "#LIGHT_BLUE#The illusion covering %s disappears", who.name:capitalize())
 	end,
