@@ -42,7 +42,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
-	name = "water imp", color=colors.YELLOW_GREEN, unique=true,
+	name = "water imp", color=colors.YELLOW_GREEN,
 	desc = "A small water demon, lobbing spells at you.",
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 1,
