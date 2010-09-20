@@ -104,30 +104,32 @@ function _M:generateList()
 	if self.on_player and (player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0) then list[#list+1] = {name="Levelup!", action="levelup", color=colors.simple(colors.YELLOW)} end
 
 	-- Talents
-	local tals = {}
-	for tid, _ in pairs(player.talents) do
-		local t = player:getTalentFromId(tid)
-		if t.mode ~= "passive" and player:preUseTalent(t, true, true) and not player:isTalentCoolingDown(t) then
-			local rt = util.getval(t.requires_target, player, t)
-			if self.on_player and not rt then
-				tals[#tals+1] = {name=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}
-			elseif not self.on_player and rt then
-				tals[#tals+1] = {name=t.name, talent=t, action="talent", set_target=true, color=colors.simple(colors.GOLD)}
+	if self.zone and not self.zone.wilderness then
+	       local tals = {}
+		for tid, _ in pairs(player.talents) do
+			local t = player:getTalentFromId(tid)
+			if t.mode ~= "passive" and player:preUseTalent(t, true, true) and not player:isTalentCoolingDown(t) then
+				local rt = util.getval(t.requires_target, player, t)
+				if self.on_player and not rt then
+					tals[#tals+1] = {name=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}
+				elseif not self.on_player and rt then
+					tals[#tals+1] = {name=t.name, talent=t, action="talent", set_target=true, color=colors.simple(colors.GOLD)}
+				end
 			end
 		end
-	end
-	table.sort(tals, function(a, b)
-		local ha, hb
-		for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == a.talent.id then ha = i end end
-		for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == b.talent.id then hb = i end end
+		table.sort(tals, function(a, b)
+			local ha, hb
+			for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == a.talent.id then ha = i end end
+			for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == b.talent.id then hb = i end end
 
-		if ha and hb then return ha < hb
-		elseif ha and not hb then return ha < 999999
-		elseif hb and not ha then return hb > 999999
-		else return a.talent.name < b.talent.name
-		end
-	end)
-	for i = 1, #tals do list[#list+1] = tals[i] end
+			if ha and hb then return ha < hb
+			elseif ha and not hb then return ha < 999999
+			elseif hb and not ha then return hb > 999999
+			else return a.talent.name < b.talent.name
+			end
+		end)
+		for i = 1, #tals do list[#list+1] = tals[i] end
+	end
 
 	self.max = 0
 	self.maxh = 0

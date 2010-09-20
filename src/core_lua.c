@@ -1034,6 +1034,7 @@ static int sdl_free_texture(lua_State *L)
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
 	glDeleteTextures(1, t);
 	lua_pushnumber(L, 1);
+//	printf("freeing texture %d\n", *t);
 	return 1;
 }
 

@@ -48,6 +48,7 @@ static int map_object_new(lua_State *L)
 	map_object *obj = (map_object*)lua_newuserdata(L, sizeof(map_object));
 	auxiliar_setclass(L, "core{mapobj}", -1);
 	obj->textures = calloc(nb_textures, sizeof(GLuint));
+	obj->textures_ref = calloc(nb_textures, sizeof(int));
 	obj->textures_is3d = calloc(nb_textures, sizeof(bool));
 	obj->nb_textures = nb_textures;
 	obj->uid = uid;
@@ -66,6 +67,7 @@ static int map_object_new(lua_State *L)
 	{
 		obj->textures[i] = 0;
 		obj->textures_is3d[i] = FALSE;
+		obj->textures_ref[i] = LUA_NOREF;
 	}
 
 	return 1;
@@ -74,8 +76,14 @@ static int map_object_new(lua_State *L)
 static int map_object_free(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	int i;
+
+	for (i = 0; i < obj->nb_textures; i++)
+		if (obj->textures_ref[i] != LUA_NOREF)
+			luaL_unref(L, LUA_REGISTRYINDEX, obj->textures_ref[i]);
 
 	free(obj->textures);
+	free(obj->textures_ref);
 	free(obj->textures_is3d);
 
 	lua_pushnumber(L, 1);
@@ -101,7 +109,11 @@ static int map_object_texture(lua_State *L)
 	bool is3d = lua_toboolean(L, 4);
 	if (i < 0 || i >= obj->nb_textures) return 0;
 
-//	printf("C Map Object setting texture %d = %d\n", i, *t);
+	if (obj->textures_ref[i] != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, obj->textures_ref[i]);
+
+	lua_pushvalue(L, 3); // Get the texture
+	obj->textures_ref[i] = luaL_ref(L, LUA_REGISTRYINDEX); // Ref the texture
+//	printf("C Map Object setting texture %d = %d (ref %x)\n", i, *t, obj->textures_ref[i]);
 	obj->textures[i] = *t;
 	obj->textures_is3d[i] = is3d;
 	return 0;
@@ -124,6 +136,13 @@ static int map_object_tint(lua_State *L)
 	obj->tint_r = r;
 	obj->tint_g = g;
 	obj->tint_b = b;
+	return 0;
+}
+
+static int map_object_print(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	printf("Map object texture 0: %d\n", obj->textures[0]);
 	return 0;
 }
 
@@ -808,6 +827,7 @@ static const struct luaL_reg map_object_reg[] =
 	{"texture", map_object_texture},
 	{"tint", map_object_tint},
 	{"shader", map_object_shader},
+	{"print", map_object_print},
 	{"invalidate", map_object_invalid},
 	{"isValid", map_object_is_valid},
 	{"onSeen", map_object_on_seen},

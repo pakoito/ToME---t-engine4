@@ -35,16 +35,16 @@ _M._no_save_fields = {}
 
 -- Setup the uids & MO repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
 setmetatable(__uids, {__mode="v"})
-setmetatable(_M.__mo_repo, {__mode="v"})
+setmetatable(_M.__mo_repo, {__mode="k"})
 setmetatable(_M.__mo_final_repo, {__mode="k"})
 
 --- Invalidates the whole MO repository
 function _M:invalidateAllMO()
-	for i, mo in ipairs(_M.__mo_repo) do
+	for mo, _ in pairs(_M.__mo_repo) do
 		mo:invalidate()
 	end
 	_M.__mo_repo = {}
-	setmetatable(_M.__mo_repo, {__mode="v"})
+	setmetatable(_M.__mo_repo, {__mode="k"})
 	setmetatable(_M.__mo_final_repo, {__mode="k"})
 end
 
@@ -178,7 +178,7 @@ function _M:makeMapObject(tiles, idx)
 		self:check("display_y") or 0,
 		self:check("display_scale") or 1
 	)
-	_M.__mo_repo[#_M.__mo_repo+1] = self._mo
+	_M.__mo_repo[self._mo] = true
 
 	-- Setup tint
 	self._mo:tint(self.tint_r, self.tint_g, self.tint_b)

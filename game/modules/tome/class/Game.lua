@@ -550,7 +550,7 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "slime-tunnels")
+				self:changeLevel(1, "test")
 --				self.player:grantQuest("master-jeweler")
 			end
 		end

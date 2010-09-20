@@ -158,7 +158,7 @@ function _M:generate(lev, old_lev)
 		local c = self.gen_map[i][j]
 		local g = self:resolve("grid", c)
 		if g then
-			g = g:clone()
+			if g.force_clone then g = g:clone() end
 			g:resolve()
 			g:resolve(nil, true)
 			self.map(i-1, j-1, Map.TERRAIN, g)

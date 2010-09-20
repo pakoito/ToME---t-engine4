@@ -25,6 +25,7 @@
 
 typedef struct {
 	int nb_textures;
+	int *textures_ref;
 	GLuint *textures;
 	bool *textures_is3d;
 	GLuint shader;

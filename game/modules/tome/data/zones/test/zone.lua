@@ -31,14 +31,14 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",
-			floor = "VOID",
-			wall = "SPACE_TURBULENCE",
-			up = "UP",
-			down = "DOWN",
+			floor = "FLOOR",
+			wall = "FLOOR",
+			up = "FLOOR",
+			down = "FLOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {40, 50},
+			nb_npc = {0, 0},
 		},
 --[[
 		object = {
