@@ -104,8 +104,8 @@ function _M:generateList()
 	if self.on_player and (player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0) then list[#list+1] = {name="Levelup!", action="levelup", color=colors.simple(colors.YELLOW)} end
 
 	-- Talents
-	if self.zone and not self.zone.wilderness then
-	       local tals = {}
+	if game.zone and not game.zone.wilderness then
+		local tals = {}
 		for tid, _ in pairs(player.talents) do
 			local t = player:getTalentFromId(tid)
 			if t.mode ~= "passive" and player:preUseTalent(t, true, true) and not player:isTalentCoolingDown(t) then
