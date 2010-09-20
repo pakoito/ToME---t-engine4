@@ -138,6 +138,7 @@ function _M:saveWorld(world, no_dialog)
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveWorld(world)..".tmp")
 	self:saveObject(world, zip)
 	zip:close()
+	fs.delete(self.save_dir..self:nameSaveLevel(level))
 	fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
 
 	if not no_dialog then game:unregisterDialog(popup) end
@@ -196,6 +197,7 @@ function _M:saveGame(game, no_dialog)
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveGame(game)..".tmp")
 	self:saveObject(game, zip)
 	zip:close()
+	fs.delete(self.save_dir..self:nameSaveLevel(level))
 	fs.rename(self.save_dir..self:nameSaveGame(game)..".tmp", self.save_dir..self:nameSaveGame(game))
 
 	local desc = game:getSaveDescription()
@@ -231,6 +233,7 @@ function _M:saveZone(zone, no_dialog)
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveZone(zone)..".tmp")
 	self:saveObject(zone, zip)
 	zip:close()
+	fs.delete(self.save_dir..self:nameSaveLevel(level))
 	fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
 
 	if not no_dialog then game:unregisterDialog(popup) end
@@ -259,6 +262,7 @@ function _M:saveLevel(level, no_dialog)
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveLevel(level)..".tmp")
 	self:saveObject(level, zip)
 	zip:close()
+	fs.delete(self.save_dir..self:nameSaveLevel(level))
 	fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
 
 	if not no_dialog then game:unregisterDialog(popup) end
