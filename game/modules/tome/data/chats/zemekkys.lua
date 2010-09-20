@@ -1,0 +1,73 @@
+-- ToME - Tales of Middle-Earth
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*A slot in the door opens and a pair of wild eyes peer out.*#WHITE#
+What do you want, @playerdescriptor.race@?]],
+	answers = {
+		{"Paladin Aeryn told me that you could help me. I need to get to Middle Earth.", jump="help"},
+		{"Sorry, I have to go!"},
+	}
+}
+
+newChat{ id="help",
+	text = [[Pfaugh! Her goal in life is to waste my time! Middle Earth? Why not Narnia or Chicago? Just as easy to send you someplace entirely fictional as Middle Earth. Go away.
+#LIGHT_GREEN#*Slot slams shut.*#WHITE#]],
+	answers = {
+		{"I got here from Middle Earth, didn't I? I have this magic Orb I looted from a dead orc, see, and...", jump="offer"},
+	}
+}
+
+newChat{ id="offer",
+	text = [[#LIGHT_GREEN#*Slot opens.*#WHITE#
+Orb, you say? That you used to travel here from Middle Earth? Surely you don't possess the Orb of Many Ways! It's been lost for ages!]],
+	answers = {
+		{"[Hold up the orb]", jump="offer2"},
+	}
+}
+newChat{ id="offer2",
+	text = [[#LIGHT_GREEN#*His eyes widen.*#WHITE#
+Great Socks of Feanor! It IS the Orb! Maybe we can get you home after all. Or maybe we can get you embedded in magma a thousand leagues straight down.]],
+	answers = {
+		{"Can I come in?", jump="offer3"},
+	}
+}
+
+newChat{ id="offer3",
+	text = [[You think I'm letting some filthy @playerdescriptor.race@ in my house with the Orb of Many Ways?
+I blow myself up quite enough already without that thing in the house, thank you.
+Besides, I still can't help you unless you have a Blood-Runed Athame to etch a portal.
+Er, and that portal must be etched on a piece of prepared Resonating Marble.
+The Gates of the Morning has a slab of Marble that once could have served, but a number of, uh, incidents have taken their toll.
+It'll require a Resonating Diamond to get it properly prepared. Oh, and I want 200 gold.]],
+	answers = {
+		{"Where can I find all that?", jump="quest"},
+	}
+}
+
+newChat{ id="quest",
+	text = [[Try your purse for the 200 gold. As for an Athame and a Resonating Diamond, I assume the orcs have some if they're cooking up portals to use that Orb on. Try the Vor Armory. It so happens that I know a back way in. Never mind why.]],
+	answers = {
+		{"Thank you.", action=function(npc, player)
+			player:grantQuest("west-portal")
+		end},
+	}
+}
+
+return "welcome"

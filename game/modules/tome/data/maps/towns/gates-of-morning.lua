@@ -59,7 +59,7 @@ quickEntity('a', {show_tooltip=true, name="Closed store", display='*', color=col
 quickEntity('b', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
 quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
 quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('e', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
+quickEntity('e', {show_tooltip=true, name="Zemekkys Home", display='+', color=colors.LIGHT_UMBER, resolvers.chatfeature("zemekkys"), image="terrain/wood_store_closed.png"}, {no_teleport=true})
 
 startx = 0
 starty = 27
@@ -79,13 +79,13 @@ MMMMMM                          O            MMMMM
 MMMMMM                          O             MMMM
 MMMMMM     #####                O             MMMM
 MMMMMM    ######                O            MMMMM
-MMMMM     #####3OOO            OO           MMMMMM
-MMMMM     ######  OOOO         O            MMMMMM
-MMMMM      #####     OOOOO     O            MMMMMM
-MMMMM                    OOOO  O            MMMMMM
-MMMMM                       OOOO             MMMMM
-MMMM          ###             O               MMMM
-MMMM       #########          O              MMMMM
+MMMMM     #####3OOO            OO    ###    MMMMMM
+MMMMM     ######  OOOO         O     ###    MMMMMM
+MMMMM      #####     OOOOO     O     #e#    MMMMMM
+MMMMM                    OOOO  O      O     MMMMMM
+MMMMM                       OOOO      O      MMMMM
+MMMM          ###             O      OO       MMMM
+MMMM       #########          O      O       MMMMM
 MMM        #########          OOOOOOOOOOOOOOOOMMMM
 MMM        ####2####         OO                MMM
 MMMMM          O             O                 MMM

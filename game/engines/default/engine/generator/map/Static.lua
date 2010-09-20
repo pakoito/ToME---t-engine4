@@ -160,7 +160,7 @@ function _M:generate(lev, old_lev)
 		if g then
 			if g.force_clone then g = g:clone() end
 			g:resolve()
-			g:resolve(nil, true)
+			g:resolve(nil, true) print(i-1, j-1, g.name)
 			self.map(i-1, j-1, Map.TERRAIN, g)
 		end
 
