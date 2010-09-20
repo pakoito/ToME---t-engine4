@@ -55,7 +55,7 @@ newTalent{
 
 newTalent{
 	name = "Frenzy",
-	type = {"cursed/slaughter", 1},
+	type = {"cursed/slaughter", 2},
 	require = cursed_str_req2,
 	points = 5,
 	random_ego = "attack",

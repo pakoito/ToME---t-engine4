@@ -1267,7 +1267,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_WEAKNESS",
 	desc = "Gloom Weakness",
-	type = "physical",
+	type = "mental",
 	status = "detrimental",
 	parameters = { atk=10, dam=10 },
 	on_gain = function(self, err) return "#F53CBE##Target# is weakened by the gloom." end,
@@ -1287,7 +1287,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_SLOW",
 	desc = "Slowed by the gloom",
-	type = "magical",
+	type = "mental",
 	status = "detrimental",
 	parameters = { power=0.1 },
 	on_gain = function(self, err) return "#F53CBE##Target# moves reluctantly!", "+Slow" end,
@@ -1306,7 +1306,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_STUNNED",
 	desc = "Stunned by the gloom",
-	type = "physical",
+	type = "mental",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed with fear!", "+Stunned" end,
@@ -1325,7 +1325,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_CONFUSED",
 	desc = "Confused by the gloom",
-	type = "magical",
+	type = "mental",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#F53CBE##Target# is lost in dispair!", "+Confused" end,
@@ -1344,7 +1344,7 @@ newEffect{
 newEffect{
 	name = "STALKER",
 	desc = "Stalking",
-	type = "physical",
+	type = "mental",
 	status = "beneficial",
 	parameters = {},
 	activate = function(self, eff)
@@ -1362,7 +1362,7 @@ newEffect{
 newEffect{
 	name = "STALKED",
 	desc = "Being Stalked",
-	type = "physical",
+	type = "mental",
 	status = "detrimental",
 	parameters = {},
 	activate = function(self, eff)
@@ -1404,7 +1404,7 @@ newEffect{
 newEffect{
 	name = "DOMINATED",
 	desc = "Dominated",
-	type = "physical",
+	type = "mental",
 	status = "detrimental",
 	on_gain = function(self, err) return "#F53CBE##Target# has been dominated!", "+Dominated" end,
 	on_lose = function(self, err) return "#F53CBE##Target# is no longer dominated.", "-Dominated" end,
@@ -1420,5 +1420,100 @@ newEffect{
 		self.dominatedSource = nil
 		self.dominatedDamMult = nil
 		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "RAMPAGE",
+	desc = "Rampaging",
+	type = "physical",
+	status = "beneficial",
+	parameters = { hateLoss = 0, critical = 0, damage = 0, speed = 0, attack = 0, evasion = 0 }, -- use percentages not fractions
+	on_gain = function(self, err) return "#F53CBE##Target# begins rampaging!", "+Rampage" end,
+	on_lose = function(self, err) return "#F53CBE##Target# is no longer rampaging.", "-Rampage" end,
+	activate = function(self, eff)	
+		if eff.hateLoss or 0 > 0 then eff.hateLossId = self:addTemporaryValue("hate_regen", -eff.hateLoss) end
+		if eff.critical or 0 > 0 then eff.criticalId = self:addTemporaryValue("combat_physcrit", eff.critical) end
+		if eff.damage or 0 > 0 then eff.damageId = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=eff.damage}) end
+		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("energy", {mod=eff.speed * 0.01}) end
+		if eff.attack or 0 > 0 then eff.attackId = self:addTemporaryValue("combat_atk", self.combat_atk * eff.attack * 0.01) end
+		if eff.evasion or 0 > 0 then eff.evasionId = self:addTemporaryValue("evasion", eff.evasion) end
+		
+		eff.particle = self:addParticles(Particles.new("rampage", 1))
+	end,
+	deactivate = function(self, eff)
+		if eff.hateLossId then self:removeTemporaryValue("hate_regen", eff.hateLossId) end
+		if eff.criticalId then self:removeTemporaryValue("combat_physcrit", eff.criticalId) end
+		if eff.damageId then self:removeTemporaryValue("inc_damage", eff.damageId) end
+		if eff.speedId then self:removeTemporaryValue("energy", eff.speedId) end
+		if eff.attackId then self:removeTemporaryValue("combat_atk", eff.attackId) end
+		if eff.evasionId then self:removeTemporaryValue("evasion", eff.evasionId) end
+		
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "RADIANT_FEAR",
+	desc = "Radiating Fear",
+	type = "mental",
+	status = "beneficial",
+	parameters = { knockback = 1, radius = 3 },
+	on_gain = function(self, err) return "#F53CBE##Target# is surrounded by fear!", "+Radiant Fear" end,
+	on_lose = function(self, err) return "#F53CBE##Target# is no longer surrounded by fear.", "-Radiant Fear" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("radiant_fear", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+	end,
+	on_timeout = function(self, eff)
+		self:project({type="ball", radius=eff.radius, friendlyfire=false}, self.x, self.y, function(xx, yy)
+			local target = game.level.map(xx, yy, game.level.map.ACTOR)
+			if target and target ~= self and target ~= eff.source and target:canBe("knockback") then
+				-- attempt to move target away from self
+				local currentDistance = core.fov.distance(self.x, self.y, xx, yy)
+				local bestDistance, bestX, bestY
+				for i = 0, 8 do
+					local x = xx + (i % 3) - 1
+					local y = yy + math.floor((i % 9) / 3) - 1
+					if x ~= xx or y ~= yy then
+						local distance = core.fov.distance(self.x, self.y, x, y)
+						if distance > currentDistance and (not bestDistance or distance > maxDistance) then
+							-- this is a move away, see if it works
+							if game.level.map:isBound(x, y) and not game.level.map:checkAllEntities(x, y, "block_move", target) then
+								bestDistance, bestX, bestY = distance, x, y
+								break
+							end
+						end
+					end
+				end
+				
+				if bestDistance then
+					target:move(bestX, bestY, true)
+					if not target.did_energy then target:useEnergy() end
+				end
+			end
+		end)
+	end,
+}
+
+newEffect{
+	name = "INVIGORATED",
+	desc = "Invigorated",
+	type = "mental",
+	status = "beneficial",
+	parameters = { speed = 30, duration = 3 },
+	on_gain = function(self, err) return nil, "+Invigorated" end,
+	on_lose = function(self, err) return nil, "-Invigorated" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("energy", {mod=eff.speed * 0.01})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("energy", eff.tmpid)
+	end,
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = math.min(old_eff.dur + new_eff.dur, 15)
+		return old_eff
 	end,
 }

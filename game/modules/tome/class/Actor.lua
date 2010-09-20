@@ -189,6 +189,13 @@ function _M:act()
 		t.do_regenLife(self, t)
 	end
 	self:regenResources()
+	--if self.hate and self.hate > 0 then
+	--	-- hate goes down more based on time since last kill
+	--	self.hate_time_since_kill = math.min((self.hate_time_since_kill or 0) + 1, 130)
+	--	if self.hate_time_since_kill > 30 then
+	--		self.hate = math.max(self.hate - (0.015 * (self.hate_time_since_kill - 30) / 100), 0)
+	--	end
+	--end
 	-- Compute timed effects
 	self:timedEffects()
 
@@ -646,6 +653,11 @@ function _M:onTakeHit(value, src)
 		src:setEffect(src.EFF_BLOODLUST, 1, {})
 	end
 
+	if self:knowTalent(self.T_RAMPAGE) then
+		local t = self:getTalentFromId(self.T_RAMPAGE)
+		t:onTakeHit(self, value / self.max_life)
+	end
+
 	return value
 end
 
@@ -690,6 +702,11 @@ function _M:die(src)
 	-- Increases blood frenzy
 	if src and src.knowTalent and src:knowTalent(src.T_BLOOD_FRENZY) and src:isTalentActive(src.T_BLOOD_FRENZY) then
 		src.blood_frenzy = src.blood_frenzy + src:getTalentLevel(src.T_BLOOD_FRENZY) * 2
+	end
+
+	if src and src.knowTalent and src:knowTalent(src.T_CRUEL_VIGOR) then
+		local t = src:getTalentFromId(src.T_CRUEL_VIGOR)
+		t.on_kill(src, t)
 	end
 
 	-- Increase vim
@@ -1068,7 +1085,6 @@ end
 -- @return true to continue, false to stop
 function _M:postUseTalent(ab, ret)
 	if not ret then return end
-
 	if not ab.no_energy then
 		if ab.type[1]:find("^spell/") then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
@@ -1151,7 +1167,6 @@ function _M:postUseTalent(ab, ret)
 			self:incEquilibrium(ab.equilibrium)
 		end
 	end
-
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
 		local p = self:hasEffect(self.EFF_BURNING_HEX)
 		DamageType:get(DamageType.FIRE).projector(p.src, self.x, self.y, DamageType.FIRE, p.dam)
@@ -1159,7 +1174,6 @@ function _M:postUseTalent(ab, ret)
 
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT then self:breakStealth() end
-
 	return true
 end
 
@@ -1329,6 +1343,16 @@ function _M:canSeeNoCache(actor, def, def_pct)
 			return false, chance
 		end
 	end
+
+	-- check cursed pity talent
+	if actor:knowTalent(self.T_PITY) then
+		local t = actor:getTalentFromId(self.T_PITY)
+		if math.floor(core.fov.distance(self.x, self.y, actor.x, actor.y)) >= actor:getTalentRange(t) then
+			print("* pity: ", math.floor(core.fov.distance(self.x, self.y, actor.x, actor.y)), actor:getTalentRange(t))
+			return false, 0
+		end
+	end
+
 	if def ~= nil then
 		return def, def_pct
 	else

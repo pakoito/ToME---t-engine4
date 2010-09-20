@@ -553,7 +553,7 @@ function _M:setupCommands()
 				self:changeLevel(1, "slime-tunnels")
 --				self.player:grantQuest("master-jeweler")
 			end
-		end,
+		end
 	}
 	self.key:addBinds
 	{

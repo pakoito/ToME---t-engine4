@@ -53,7 +53,9 @@ newBirthDescriptor{
 		["cursed/endless-hunt"]={true, 0.0},
 		["cursed/cursed-form"]={true, 0.0},
 		["technique/combat-training"]={true, 0.3},
-		["cunning/survival"]={false, 0.0}
+		["cunning/survival"]={false, 0.0},
+		["cursed/rampage"]={false, 0.0},
+		["cursed/dark-figure"]={false, 0.0},
 	},
 	talents = {
 		[ActorTalents.T_UNNATURAL_BODY] = 1,

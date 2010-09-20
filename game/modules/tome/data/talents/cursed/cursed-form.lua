@@ -83,13 +83,13 @@ newTalent{
 		return true
 	end,
 	do_regenLife  = function(self, t)
-		heal = math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.003
+		heal = math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.0027
 		if heal > 0 then
 			self:heal(heal)
 		end
 	end,
 	info = function(self, t)
-		heal = math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.003
+		heal = math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.0027
 		local level = self:getTalentLevelRaw(t)
 		if level == 1 then
 			return ([[The curse has twisted your body into an unnatural form.
@@ -185,7 +185,7 @@ newTalent{
 	cooldown = 400,
 	action = function(self, t)
 		local increase = 2 + self:getTalentLevel(t) * 0.9
-		hate = math.min(self.max_hate, self.hate + increase)
+		self.hate = math.min(self.max_hate, self.hate + increase)
 		self:incHate(hate)
 
 		local damage = self.max_life * 0.25

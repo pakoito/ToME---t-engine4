@@ -22,7 +22,8 @@ newTalentType{ type="cursed/cursed-form", name = "cursed form", description = "Y
 newTalentType{ type="cursed/slaughter", name = "slaughter", description = "Your axe yearns for its next victim." }
 newTalentType{ type="cursed/endless-hunt", name = "endless hunt", description = "Each day you lift your weary body and begin the unending hunt." }
 newTalentType{ type="cursed/gloom", name = "gloom", description = "All those in your sight must share your despair." }
-
+newTalentType{ type="cursed/rampage", name = "rampage", generic = true, description = "Let loose the hate that has grown within." }
+newTalentType{ type="cursed/dark-figure", name = "dark figure", generic = true, description = "Life as an outcast has given you time to reflect on your misfortunes." }
 
 -- Generic requires for corruptions based on talent level
 cursed_wil_req1 = {
@@ -71,3 +72,5 @@ load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/slaughter.lua")
 load("/data/talents/cursed/endless-hunt.lua")
 load("/data/talents/cursed/gloom.lua")
+load("/data/talents/cursed/rampage.lua")
+load("/data/talents/cursed/dark-figure.lua")
