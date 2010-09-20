@@ -138,7 +138,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Let out a mental cry that shatters the will of your targets, confusion them for %d turns.]]):
+		return ([[Let out a mental cry that shatters the will of your targets, confusing them for %d turns.]]):
 		format(2 + self:getTalentLevelRaw(t))
 	end,
 }

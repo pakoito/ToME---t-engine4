@@ -89,7 +89,7 @@ function _M:die(src)
 	-- Self resurrect, mouhaha!
 	if self:attr("self_resurrect") then
 		self:attr("self_resurrect", -1)
-		game.logSeen(src, "#LIGHT_RED#%s raises from the dead!", self.name:capitalize()) -- src, not self as the source, to make sure the player knows his doom ;>
+		game.logSeen(src, "#LIGHT_RED#%s rises from the dead!", self.name:capitalize()) -- src, not self as the source, to make sure the player knows his doom ;>
 		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 		game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "RESURRECT!", {255,120,0})
 

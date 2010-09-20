@@ -57,7 +57,7 @@ newEntity{
 	display = "@", color=colors.AQUAMARINE,
 	faction = "blue-wizards",
 
-	desc = [[Lost to the memory of the West, the Blue Wizards have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	desc = [[Lost to the memory of the West, the Blue Wizards have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {75, 75}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
@@ -122,7 +122,7 @@ newEntity{
 	display = "@", color=colors.ROYAL_BLUE,
 	faction = "blue-wizards",
 
-	desc = [[Lost to the memory of the West, the Blue Wizards have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	desc = [[Lost to the memory of the West, the Blue Wizards have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {75, 75}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,

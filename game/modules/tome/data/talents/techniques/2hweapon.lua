@@ -44,7 +44,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spin around, extending your weapon and damaging all targets around for %d%% weapon damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.4, 2.1))
+		return ([[Spin around, extending your weapon and damaging all targets around you for %d%% weapon damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.4, 2.1))
 	end,
 }
 
@@ -116,7 +116,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Shout your warcry in a frontal cone, any targets caught inside will be confused for %d turns.]]):
+		return ([[Shout your warcry in a frontal cone. Any targets caught inside will be confused for %d turns.]]):
 		format(3 + self:getTalentLevelRaw(t))
 	end,
 }
@@ -211,7 +211,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
+		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target is stunned.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 
@@ -249,7 +249,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's armour is reduced by %d.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 5*self:getTalentLevel(t))
+		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's armour is reduced by %d.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 5*self:getTalentLevel(t))
 	end,
 }
 
@@ -287,7 +287,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target's attack power is reduced by %d.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 3*self:getTalentLevel(t))
+		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's attack power is reduced by %d.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 3*self:getTalentLevel(t))
 	end,
 }
 

@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Thank you @playername@, I hate to admit it, but you saved my life.]],
+	text = [[Thank you, @playername@. I hate to admit it, but you saved my life.]],
 	answers = {
 		{"At your service. But may I ask what you were doing in this dark place?", jump="what"},
 		{"It was only natural, my lady."},

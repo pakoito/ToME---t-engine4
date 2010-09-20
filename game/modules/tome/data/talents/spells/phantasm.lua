@@ -67,7 +67,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[The caster's image blurs, making them harder to hit, granting %d bonus to defense.
+		return ([[The caster's image blurs, granting %d bonus to defense.
 		The bonus will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30))
 	end,
 }
@@ -97,7 +97,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[The caster surrounds themselves with a phantasmal shield. If hit in melee the shield will deal %d arcane damage to the attacker.
+		return ([[The caster is surrounded by a phantasmal shield. If hit in melee, the shield will deal %d arcane damage to the attacker.
 		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50))
 	end,
 }

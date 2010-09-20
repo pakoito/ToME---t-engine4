@@ -110,7 +110,7 @@ function resolvers.calc.drops(t, e)
 			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
 		end
 		if o then
-			print("Zone made us an drop according to filter!", o:getName())
+			print("Zone made us a drop according to filter!", o:getName())
 			e:addObject(e.INVEN_INVEN, o)
 			game.zone:addEntity(game.level, o, "object")
 

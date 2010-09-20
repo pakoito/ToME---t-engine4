@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target, each time it uses a ressource(stamina, mana, vim, ...) it takes %0.2f fire damage.
+		return ([[Hexes your target. Each time it uses a resource (stamina, mana, vim, ...) it takes %0.2f fire damage.
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 4, 90))
 	end,
 }
@@ -102,7 +102,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target, each time it does damage it takes %d%% of the same damage.
+		return ([[Hexes your target. Each time it does damage it takes %d%% of the same damage.
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 4, 20))
 	end,
 }

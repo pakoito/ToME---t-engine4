@@ -146,7 +146,7 @@ newTalent{
 		self.resists[DamageType.ACID] = self.resists[DamageType.ACID] - 3
 	end,
 	info = function(self, t)
-		return ([[Improves your resistance against your own bombs elemental damage by %d%% and against external one by %d%%.]]):
+		return ([[Improves your resistance against the elemental damage of your own bombs by %d%%, and against external ones by %d%%.]]):
 		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
 	end,
 }
@@ -228,9 +228,9 @@ newTalent{
 		local ammo = self:hasAlchemistWeapon()
 		local dam, damtype = 1
 		if ammo then dam = t.computeDamage(self, t, ammo) end
-		return ([[Crush together two alchemmist gems, this makes them extremely unstable.
-		You then throw them to a target area, they explode on impact dealing %0.2f physical damage and knocking back any creatures in the blast radius.
+		return ([[Crush together two alchemist gems, making them extremely unstable.
+		You then throw them to a target area, where they explode on impact dealing %0.2f physical damage and knocking back any creatures in the blast radius.
 		Each kind of gem will also provide a specific effect.
-		The damage will improve with better gems and Magic stat and the range with your dexterity.]]):format(dam)
+		The damage will improve with better gems and Magic stat, and the range with your dexterity.]]):format(dam)
 	end,
 }

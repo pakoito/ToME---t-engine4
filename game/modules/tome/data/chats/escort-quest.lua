@@ -168,7 +168,7 @@ local function generate_rewards()
 end
 
 newChat{ id="welcome",
-	text = [[Thank you my friend, I do not think I would have survived without you.
+	text = [[Thank you, my friend. I do not think I would have survived without you.
 Please let me reward you:]],
 	answers = generate_rewards(),
 }

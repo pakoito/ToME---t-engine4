@@ -43,11 +43,11 @@ end
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A beautiful elven woman in golden robes stands before you, facing an orc clad in mail.*#WHITE#
-Fillarel: "Abandon this fight, orc! You can not win: I stand with the power of the sun and the shadows of the moon."
+Fillarel: "Abandon this fight, orc! You cannot win: I stand with the power of the sun and the shadows of the moon."
 Krogar: "Ha! It's only been one hour and you already look tired, my 'lady'."
 #LIGHT_GREEN#*As you enter the room they notice you.*#WHITE#
 Fillarel: "You! @playerdescriptor.race@! help me defeat this monster or be gone with you!"
-Krogar: "Ah looking for help? Bah. @playerdescriptor.race@, kill this wench for me and I shall reward you!"]],
+Krogar: "Ah, looking for help? Bah. @playerdescriptor.race@, kill this wench for me and I shall reward you!"]],
 	answers = {
 		{"[attack Krogar]", action=attack_krogar},
 		{"[attack Fillarel]", action=attack_fillarel},

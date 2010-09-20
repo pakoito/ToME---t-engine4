@@ -215,7 +215,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Minotaur to attack your foes. Minotaurs can not stay summoned for long, but they deal a lot of damage.
+		return ([[Summon a Minotaur to attack your foes. Minotaurs cannot stay summoned for long, but they deal a lot of damage.
 		It will get %d strength and %d constitution.]]):format(25 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }

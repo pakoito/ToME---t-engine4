@@ -73,7 +73,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You bind light in a glyph on the floor, the all targets passing by will be slowed by %d%%.
+		return ([[You bind light in a glyph on the floor. All targets passing by will be slowed by %d%%.
 		The glyph lasts for %d turns.]]):format(self:getTalentLevel(t) * 7 + 20, 5 + self:getTalentLevel(t))
 	end,
 }
@@ -132,7 +132,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You bind light in a glyph on the floor, the first target passing by will be hit by a blast of light doing %0.2f damage.
+		return ([[You bind light in a glyph on the floor. The first target passing by will be hit by a blast of light doing %0.2f damage.
 		The glyph lasts for %d turns.
 		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 150), 2 + self:getTalentLevel(t))
 	end,
@@ -199,7 +199,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You bind light in a glyph on the floor, the all targets passing by will be hit by a blast of light doing %0.2f damage and knocked back.
+		return ([[You bind light in a glyph on the floor. All targets passing by will be hit by a blast of light doing %0.2f damage and knocked back.
 		The glyph lasts for %d turns.
 		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.12) * self:getTalentLevel(t), 2 + self:getTalentLevel(t))
 	end,
@@ -259,7 +259,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You bind light in a glyph on the floor, the all targets passing by will be dazed for %d turns.
+		return ([[You bind light in a glyph on the floor. All targets passing by will be dazed for %d turns.
 		The glyph lasts for %d turns.]]):format(3 + self:getTalentLevelRaw(t), 5 + self:getTalentLevel(t))
 	end,
 }

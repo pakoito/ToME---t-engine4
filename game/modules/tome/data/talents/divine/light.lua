@@ -34,7 +34,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[An invigorating ray of sun shines on you, healing your body for %d life.
+		return ([[An invigorating ray of Sunlight shines on you, healing your body for %d life.
 		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 240))
 	end,
 }
@@ -68,7 +68,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A magical zone of sunlight appears around you, healing all that stand within.
+		return ([[A magical zone of Sunlight appears around you, healing all that stand within.
 		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30))
 	end,
 }

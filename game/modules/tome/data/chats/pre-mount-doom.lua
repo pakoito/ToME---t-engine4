@@ -27,9 +27,9 @@ I have some urgent information for you: the staff you were looking for has been 
 }
 
 newChat{ id="where",
-	text = [[One of our patrols noticed some strange orc movements around in the sourthern part of the contient, in the desert of Erúan.
+	text = [[One of our patrols noticed some strange orc movements around the southern part of the continent, in the desert of Erúan.
 A group of orcs were guarding something that looked like the staff you asked about.
-You should go there to investigate, this might be your only chance.]],
+You should go there to investigate. This might be your only chance.]],
 	answers = {
 		{"I will, right now!"},
 	}

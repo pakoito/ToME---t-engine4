@@ -129,7 +129,7 @@ function _M:finish()
 			local t = self.actor:getTalentFromId(tid)
 			if self.actor:getTalentLevelRaw(tid) ~= self.actor_dup:getTalentLevelRaw(tid) then
 				if t.no_sustain_autoreset then
-					game.logPlayer(self.actor, "#LIGHT_BLUE#Warning: You have increased your level in %s, but it cannot be auto-reactivated. The new level will only be used when you re-use it.", t.name)
+					game.logPlayer(self.actor, "#LIGHT_BLUE#Warning: You have increased your level in %s, but it cannot be auto-reactivated. The new level will only take effect when you re-use it.", t.name)
 				else
 					reset[#reset+1] = tid
 				end
@@ -315,11 +315,11 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		if t.generic then
 			what = "generic talent"
 			str = str .. "#00FFFF#Generic Talent\n"
-			str = str .. "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It reprents talents anybody can learn (should they find a trainer for it). You gain one point every levels except every 5 levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
+			str = str .. "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It reprents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.\n\n"
 		else
 			what = "class talent"
 			str = str .. "#00FFFF#Class talent\n"
-			str = str .. "#00FFFF#A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5 levels. You may also find trainers or artifacts that allow you to learn more.\n\n"
+			str = str .. "#00FFFF#A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.\n\n"
 		end
 		helplines = str:splitLines(self.iw / 2 - 10, self.font)
 

@@ -50,15 +50,15 @@ end
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*The two istari stands before you, shining like the sun.*#WHITE#
-Ah our guest is finaly here. I take it you found the peak entertaining?]],
+Ah! Our guest is finally here. I take it you found the peak entertaining?]],
 	answers = {
-		{"Spare me the small talk, I am here to stop you!", jump="explain"},
+		{"Spare me the small talk. I am here to stop you!", jump="explain"},
 		{"Why are you doing all that? You were supposed to help people!", jump="explain"},
 	}
 }
 
 newChat{ id="explain",
-	text = [[Oh but all we want is to help people. We have come to the self evident conclusion that common people are just fit to govern themselves, always bickering, arguing.
+	text = [[Oh, but all we want is to help people. We have come to the self-evident conclusion that common people are just unfit to govern themselves, always bickering, arguing...
 Since the fall of Sauron there is no threat to unite them!]],
 	answers = {
 		{"So you have decided to become the threat yourselves?", jump="explain2"},
@@ -76,8 +76,8 @@ if void_portal_open(nil, game.player) then
 newChat{ id="explain3",
 	text = [[Isn't it obvious? The greatest of them, the black foe of the world. Melkor the great, whom you may know as Morgoth!
 The staff has allowed us to drain enough energy from this world to open the portal to the Void and summon him through!
-We will bring forth the Last Battle, Dagor Dagorath as was prophetized to happen when the world was made.
-It is already too late, He is coming through as we speak, it is only a matter of hours!]],
+We will bring forth the Last Battle, Dagor Dagorath, as was prophesied to happen when the world was made.
+It is already too late. He is coming through as we speak -- it is only a matter of hours!]],
 	answers = {
 		{"I *WILL* stop you! The world will not end today!", jump="aeryn", action=aeryn_comes, cond=aeryn_alive},
 		{"I *WILL* stop you! The world will not end today!", cond=aeryn_dead},
@@ -87,8 +87,8 @@ else
 newChat{ id="explain3",
 	text = [[Isn't it obvious? The greatest of them, the black foe of the world. Melkor the great, whom you may know as Morgoth!
 The staff will allow us to drain enough energy from this world to open the portal to the Void and summon him through!
-We will bring forth the Last Battle, Dagor Dagorath as was prophetized to happen when the world was made.
-You can not stop us so close!]],
+We will bring forth the Last Battle, Dagor Dagorath, as was prophesied to happen when the world was made.
+You cannot stop us now!]],
 	answers = {
 		{"I *WILL* stop you! The world will not end today!", jump="aeryn", action=aeryn_comes, cond=aeryn_alive},
 		{"I *WILL* stop you! The world will not end today!", cond=aeryn_dead},
@@ -100,7 +100,7 @@ newChat{ id="aeryn",
 	text = [[#LIGHT_GREEN#*The air whirls at your side and suddently High Sun Paladin Aeryn appears!*#WHITE#
 Then you shall not fight alone! Together we shall stop them, or die trying!]],
 	answers = {
-		{"I am glad to have you at my side my Lady. Let's hunt some wizards!"},
+		{"I am glad to have you at my side, my Lady. Let's hunt some wizards!"},
 	}
 }
 

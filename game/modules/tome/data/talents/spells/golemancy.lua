@@ -308,7 +308,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your golem rushes to the target, crushing and doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6))
+		return ([[Your golem rushes to the target, crushing it and doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6))
 	end,
 }
 

@@ -57,7 +57,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Take an offensive stance, as you walk through your foes you knock them all back in an frontal arc (up to %d grids).
+		return ([[Take an offensive stance. As you walk through your foes, you knock them all back in an frontal arc (up to %d grids).
 		This consumes stamina rapidly.]]):
 		format(self:getTalentLevel(t))
 	end,
@@ -108,7 +108,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Put all your strength into your weapon blows, creating shattering impact that deal %d%% weapon damage to all nearby foes.
+		return ([[Put all your strength into your weapon blows, creating shattering impacts that deal %d%% weapon damage to all nearby foes.
 		The impact damage will also affect you.
 		Each blow will drain 15 stamina.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.1, 0.45))

@@ -60,7 +60,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit the target with both weapons doing %d%% damage, for each hit the target will bleed for %0.2f damage each turn for 5 turns.
+		return ([[Hit the target with both weapons doing %d%% damage. For each hit the target will bleed for %0.2f damage each turn for 5 turns.
 		The bleeding effect will increase with your Magic stat.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6), self:combatTalentSpellDamage(t, 5, 40))
 	end,
@@ -86,7 +86,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate on the corruption you bring, increasing each of your melee strikes with %0.2f blight damage.
+		return ([[Concentrate on the corruption you bring, enhancing each of your melee strikes with %0.2f blight damage.
 		The damage will increase with your Magic stat.]]):
 		format(self:combatTalentSpellDamage(t, 15, 40))
 	end,

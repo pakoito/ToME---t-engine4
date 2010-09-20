@@ -138,7 +138,7 @@ newTalent{
 			if actor and actor ~= self then seen = true end
 		end, nil)
 		if seen then
-			game.log("There are creatures that could be watching you, you can not take the risk.")
+			game.log("There are creatures that could be watching you; you cannot take the risk.")
 			return
 		end
 

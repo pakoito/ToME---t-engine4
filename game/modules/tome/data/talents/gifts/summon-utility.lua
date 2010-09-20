@@ -26,7 +26,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Cancels the control of your summon, this will return your will into your body and destroy the summon.]])
+		return ([[Cancels the control of your summon, returning your will into your body and destroying the summon.]])
 	end,
 }
 
@@ -206,7 +206,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Turtle to distract your foes. Turtles are resilient, but not very powerful. However they will periodically force any foes to attack them and can protect themselves with their shell.
+		return ([[Summon a Turtle to distract your foes. Turtles are resilient, but not very powerful. However, they will periodically force any foes to attack them and can protect themselves with their shell.
 		It will get %d constitution and %d dexterity.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }

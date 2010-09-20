@@ -109,7 +109,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Make your target's diseases burst, doing %0.2f blight damage for each diseases it is infected with.
+		return ([[Make your target's diseases burst, doing %0.2f blight damage for each disease it is infected with.
 		This will also spread the diseases to any nearby foes in a radius of 1.
 		The damage will increase with your Magic stat.]]):
 		format(self:combatTalentSpellDamage(t, 15, 85))
@@ -164,7 +164,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[All your foes infected with a disease enter a catalepsy, stunning them for %d turns and dealing all the diseases remaining damage instantly.]]):
+		return ([[All your foes infected with a disease enter a catalepsy, stunning them for %d turns and dealing all remaining disease damage instantly.]]):
 		format(math.floor(2 + self:getTalentLevel(t) / 2))
 	end,
 }
@@ -220,7 +220,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Infects the target with a very contagious disease doing %0.2f damage per turn for 6 turns.
-		If any blight damage from non-diseases hit the target the epidemic will activate and spread diseases to nearby targets.]]):
+		If any blight damage from non-diseases hits the target, the epidemic will activate and spread diseases to nearby targets.]]):
 		format(self:combatTalentSpellDamage(t, 15, 50))
 	end,
 }

@@ -119,8 +119,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Invokes a forking beam of lightning doing %0.2f to %0.2f damage and forking to an other target.
-		It can hit up to %d targets and will never hit the same one twice, neither will it hit the caster.
+		return ([[Invokes a forking beam of lightning doing %0.2f to %0.2f damage and forking to another target.
+		It can hit up to %d targets and will never hit the same one twice; nor will it hit the caster.
 		The damage will increase with the Magic stat]]):
 		format(
 			self:combatTalentSpellDamage(t, 10, 200) / 3,

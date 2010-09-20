@@ -191,7 +191,7 @@ newTalent{
 		else
 			size = "Small"
 		end
-		return ([[Charge through your opponents attacking anyone near your path for %d%% to %d%% rage-based damage. %s opponents may be knocked from your path.]]):format(multiplier * 30, multiplier * 100, size)
+		return ([[Charge through your opponents, attacking anyone near your path for %d%% to %d%% rage-based damage. %s opponents may be knocked from your path.]]):format(multiplier * 30, multiplier * 100, size)
 	end,
 }
 

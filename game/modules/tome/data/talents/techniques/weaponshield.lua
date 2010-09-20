@@ -68,7 +68,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic, melee attack against your foe.]]):format(util.bound(self:getTalentLevel(t) * self:getDex(40), 10, 60))
+		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic melee attack against your foe.]]):format(util.bound(self:getTalentLevel(t) * self:getDex(40), 10, 60))
 	end,
 }
 
@@ -289,7 +289,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but makes you unable to move.]]):
+		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move.]]):
 		format(5 + self:getDex(4) * self:getTalentLevel(t), 10 * self:getTalentLevel(t))
 	end,
 }

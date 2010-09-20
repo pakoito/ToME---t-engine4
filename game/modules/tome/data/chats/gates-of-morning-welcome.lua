@@ -30,7 +30,7 @@ Stop! You are clearly a stranger! Where do you come from? The Gates of Morning a
 }
 
 newChat{ id="from",
-	text = [[Middle-earth! We Sun Paladins have not heard from there for thousands of years...perhaps the Anorithil know more...
+	text = [[Middle-earth! We Sun Paladins have not heard from there for thousands of years... perhaps the Anorithil know more...
 In any event, what is your purpose here?]],
 	answers = {
 		{"It seems that I am stranded in these unfamiliar lands. #LIGHT_GREEN#*Tell her about your hunt for orcs.*#WHITE#", jump="orcs"},
@@ -39,10 +39,10 @@ In any event, what is your purpose here?]],
 }
 
 newChat{ id="orcs",
-	text = [[Orcs! Ah! Well then this is your lucky day, this whole continent is swarming with Orcs. They have united as the Orc Pride and, according to rumor, their masters are powerful.
+	text = [[Orcs! Ah! Well then this is your lucky day. This whole continent is swarming with Orcs. They have united as the Orc Pride and, according to rumor, their masters are powerful.
 They roam the lands freely, ever assaulting us.
-@playername@ you are welcome in the Gates of Morning, should you prove to be trustworthy.
-There is a cavern full of spiders just to the north, we can not stand against both them and the Orc Pride.
+@playername@, you are welcome in the Gates of Morning, should you prove to be trustworthy.
+There is a cavern full of spiders just to the north. We cannot stand against both them and the Orc Pride.
 Please go there and destroy the source of infestation.]],
 	answers = {
 		{"I will, my lady.", action=function(npc, player) player:grantQuest("spydric-infestation") end},
@@ -52,14 +52,14 @@ Please go there and destroy the source of infestation.]],
 
 newChat{ id="sun-paladins",
 	text = [[We are the mighty warriors of the Sunwall, channeling the power of the sun and merging it with martial training.
-For thousands of years, we stood between the Orc Pride and the free people. Our numbers are disminishing, but we will stand firm until our last breath.]],
+For thousands of years, we stood between the Orc Pride and the free people. Our numbers are diminishing, but we will stand firm until our last breath.]],
 	answers = {
 		{"You have a noble spirit, my lady.", jump="from"},
 	}
 }
 
 newChat{ id="access",
-	text = [[So I have heard. You have helped us enormously; consider yourself of friend of the Sunwall.
+	text = [[So I have heard. You have helped us enormously; consider yourself a friend of the Sunwall.
 You may now enter the Gates of Morning.]],
 	answers = {
 		{"Thank you, my lady.", action=function(npc, player)

@@ -68,7 +68,7 @@ function _M:finish()
 		if act then
 			local t = self.actor:getTalentFromId(tid)
 			if t.no_sustain_autoreset then
-				game.logPlayer(self.actor, "#LIGHT_BLUE#Warning: You have increased some of your statistics, talent %s is actually sustained, if it is dependant on one of the stats you changed you need to re-use it for the changes to take effect.", t.name)
+				game.logPlayer(self.actor, "#LIGHT_BLUE#Warning: You have increased some of your statistics. Talent %s is actually sustained; if it is dependent on one of the stats you changed, you need to re-use it for the changes to take effect.", t.name)
 			else
 				reset[#reset+1] = tid
 			end

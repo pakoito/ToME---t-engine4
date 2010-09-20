@@ -52,7 +52,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Corrosive fumes rises from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
+		return ([[Corrosive fumes rise from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
 		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 50), self:getTalentLevel(t) + 2)
 	end,
 }

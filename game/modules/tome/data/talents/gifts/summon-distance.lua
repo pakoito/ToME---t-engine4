@@ -294,7 +294,7 @@ newTalent{
 			type = "demon", subtype = "lesser",
 			display = "u", color=colors.BLUE,
 			name = "warper", faction = self.faction,
-			desc = [[It looks like a hole in reality, the Warper disrupts the normal flow of space and time.]],
+			desc = [[It looks like a hole in reality. The Warper disrupts the normal flow of space and time.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
 			stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=10 + self:getTalentLevel(t) * 2, con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
@@ -402,6 +402,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Fire Drake to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
-		It will get %d strengh and %d constitution.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		It will get %d strength and %d constitution.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
 	end,
 }

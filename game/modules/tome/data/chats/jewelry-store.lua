@@ -79,7 +79,7 @@ newChat{ id="welcome",
 		end, cond=function(npc, player) return npc.store and true or false end},
 		{"I am looking for special jewelry.", jump="jewelry"},
 		{"So you can make better rings in this place?", jump="artifact_jewelry", cond=function(npc, player) return npc.can_craft and player:hasQuest("master-jeweler") and player:isQuestStatus("master-jeweler", engine.Quest.COMPLETED, "limmir-survived") end},
-		{"I have found this tome, this looked important.", jump="quest", cond=function(npc, player) return npc.can_quest and player:hasQuest("master-jeweler") and player:hasQuest("master-jeweler"):has_tome(player) end},
+		{"I have found this tome; it looked important.", jump="quest", cond=function(npc, player) return npc.can_quest and player:hasQuest("master-jeweler") and player:hasQuest("master-jeweler"):has_tome(player) end},
 		{"Sorry I have to go!"},
 	}
 }
@@ -87,7 +87,7 @@ newChat{ id="welcome",
 newChat{ id="jewelry",
 	text = [[Then you are at the right place, for I am an expert jeweler.
 If you bring me a gem and a non-magical ring I can imbue the gem inside the ring for you.
-There is a small fee dependant on the level of the ring and you need a quality ring to use a quality gem.]],
+There is a small fee dependent on the level of the ring, and you need a quality ring to use a quality gem.]],
 	answers = {
 		{"I need your services.", action=imbue_ring},
 		{"Not now thanks."},
@@ -97,7 +97,7 @@ There is a small fee dependant on the level of the ring and you need a quality r
 newChat{ id="artifact_jewelry",
 	text = [[Yes! Thank to you this place is now free from the corruption. I will stay on this island to study the magical aura, and as promised I can make you better rings.
 Bring me a non-magical ring and two gems and I will turn them into a powerful ring.
-I will not make you pay a fee for it since you helped me so much, but I am afraid the ritual requires a gold plating, this should equal to about 390 gold pieces.]],
+I will not make you pay a fee for it since you helped me so much, but I am afraid the ritual requires a gold plating. This should be equal to about 390 gold pieces.]],
 	answers = {
 		{"I need your services.", action=artifact_imbue_ring},
 		{"Not now thanks."},
@@ -106,8 +106,8 @@ I will not make you pay a fee for it since you helped me so much, but I am afrai
 
 newChat{ id="quest",
 	text = [[#LIGHT_GREEN#*He quickly looks at the tome and looks amazed.*#WHITE# This is an amazing find! Truly amazing!
-With this knowledge I could create much more potent rings. However this requires a special place of power to craft such items.
-There are rumours about a site of power in the southern mountains. Old legends tell about a place where a part of the moon melted when it got to close to the sun and fell from the sky.
+With this knowledge I could create much more potent rings. However, this requires a special place of power to craft such items.
+There are rumours about a site of power in the southern mountains. Old legends tell about a place where a part of the moon melted when it got too close to the sun and fell from the sky.
 A lake formed in the crater of the crash. The water of this lake, soaked in intense moonlight for eons, should be sufficient to forge powerful artifacts!
 Go to the lake and then summon me with this scroll. I will retire to study the tome, awaiting your summon.]],
 	answers = {

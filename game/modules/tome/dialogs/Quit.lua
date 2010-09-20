@@ -47,6 +47,6 @@ function _M:init()
 end
 
 function _M:drawDialog(s, w, h)
-	s:drawColorStringBlendedCentered(self.font, "Press enter to quit, any other keys to stay", 2, 2, self.iw - 2, self.ih - 2)
+	s:drawColorStringBlendedCentered(self.font, "Press enter to quit, or any other key to stay", 2, 2, self.iw - 2, self.ih - 2)
 	self.changed = false
 end

@@ -152,7 +152,7 @@ function _M:use()
 	elseif act:find("^consume") then
 		local inven, item, o = self.list[self.sel].inven, self.list[self.sel].item, self.list[self.sel].object
 		self.actor:removeObject(inven, item)
-		game.logPlayer(self.actor, "#YELLOW#Your %s consumes and disappears! You come back to life!", o:getName{do_colour=true})
+		game.logPlayer(self.actor, "#YELLOW#Your %s is consumed and disappears! You come back to life!", o:getName{do_colour=true})
 
 		self:cleanActor()
 		self:restoreRessources()

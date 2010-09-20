@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hits you for %d acid damage.]]):format(10 + 5 * self:getTalentLevel(t))
+		return ([[Your skin drips with acid, damaging all that hit you for %d acid damage.]]):format(10 + 5 * self:getTalentLevel(t))
 	end,
 }
 

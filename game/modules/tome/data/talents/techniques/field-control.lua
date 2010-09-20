@@ -116,7 +116,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your great dexterity allows you to see incomming projectiles (spells, arrows, ...), slowing them down by %d%%.]]):
+		return ([[Your great dexterity allows you to see incoming projectiles (spells, arrows, ...), slowing them down by %d%%.]]):
 		format(15 + self:getDex(10) * self:getTalentLevel(t))
 	end,
 }

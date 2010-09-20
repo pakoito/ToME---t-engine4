@@ -68,7 +68,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be stunned over %d turns.
+		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be stunned for %d turns.
 		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 120), self:getTalentLevelRaw(t) + 2)
 	end,
 }

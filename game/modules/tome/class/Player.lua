@@ -123,7 +123,7 @@ function _M:move(x, y, force)
 			obj = game.level.map:getObject(self.x, self.y, i)
 		end
 		if nb >= 2 then
-			game.logSeen(self, "There is more than one objects lying here.")
+			game.logSeen(self, "There is more than one object lying here.")
 		elseif nb == 1 then
 			game.logSeen(self, "There is an item here: %s", game.level.map:getObject(self.x, self.y, 1):getName{do_color=true})
 		end
@@ -412,7 +412,7 @@ function _M:runCheck()
 	local spotted = spotHostiles(self)
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
-	if self.air_regen < 0 then return false, "loosing breath!" end
+	if self.air_regen < 0 then return false, "losing breath!" end
 
 	-- Notice any noticable terrain
 	local noticed = false
@@ -447,7 +447,7 @@ end
 
 function _M:doDrop(inven, item)
 	if game.zone.wilderness then
-		Dialog:yesnoLongPopup("Warning", "You can not drop items on the world map.\nIf you drop it it will be lost forever.", 300, function(ret)
+		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
 			-- The test is reversed because the buttons are reversed, to prevent mistakes
 			if not ret then
 				local o = self:removeObject(inven, item, true)
@@ -537,7 +537,7 @@ function _M:playerTakeoff()
 end
 
 function _M:playerUseItem(object, item, inven)
-	if game.zone.wilderness then game.logPlayer(self, "You can not use items on the world map.") return end
+	if game.zone.wilderness then game.logPlayer(self, "You cannot use items on the world map.") return end
 
 	local use_fct = function(o, inven, item)
 		local co = coroutine.create(function()

@@ -28,7 +28,7 @@ The Orc Pride will never yield to anybody! They have their precious and there is
 }
 
 newChat{ id="mock",
-	text = [[The Pride chooses its allies, it has no master! ATTACK!]],
+	text = [[The Pride chooses its allies. It has no master! ATTACK!]],
 	answers = {
 		{"#LIGHT_GREEN#[Attack]"},
 	}

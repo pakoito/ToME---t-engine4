@@ -25,12 +25,12 @@ newChat{ id="welcome",
 			npc.store:interact(player)
 		end},
 		{"I am looking for martial training.", jump="training"},
-		{"Sorry I have to go!"},
+		{"Sorry, I have to go!"},
 	}
 }
 
 newChat{ id="training",
-	text = [[I can indeed offer some martial training (talent type Technique/Combat-training) for a fee of 50 gold pieces or the basic usage of bows and slings (Shoot talent) for 8 gold pieces.]],
+	text = [[I can indeed offer some martial training (talent category Technique/Combat-training) for a fee of 50 gold pieces or the basic usage of bows and slings (Shoot talent) for 8 gold pieces.]],
 	answers = {
 		{"Please train me in generic weapons and armour usage.", action=function(npc, player)
 			game.logPlayer(player, "The smith spends some time with you, teaching you the basics of armour and weapon usage.")

@@ -125,7 +125,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Tap on your life force to provide a furious boost, increasing all your damage by %d%% for 7 turns.]]):
+		return ([[Tap your life force to provide a furious boost, increasing all your damage by %d%% for 7 turns.]]):
 		format(math.ceil(6 + self:getTalentLevel(t) * 2))
 	end,
 }

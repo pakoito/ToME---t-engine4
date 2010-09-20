@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*Before you stands an human clothed in black robes. He seems to be ignoring you.*#WHITE#
+	text = [[#LIGHT_GREEN#*Before you stands a human clothed in black robes. He seems to be ignoring you.*#WHITE#
 #LIGHT_GREEN#*You stand inside some kind of summoning circle, which prevents you from moving.*#WHITE#
 Oh yes! YES one more for my collection. My collection yes. A powerful one indeed!]],
 	answers = {
@@ -27,7 +27,7 @@ Oh yes! YES one more for my collection. My collection yes. A powerful one indeed
 }
 
 newChat{ id="welcome2",
-	text = [[A powerful tool aginst my ennemies. Yes yes. They all hate me, but I will show them my power!
+	text = [[A powerful tool aginst my enemies. Yes yes. They all hate me, but I will show them my power!
 I will show them! SHOW THEM!]],
 	answers = {
 		{"I am not a tool! RELEASE ME!", jump="welcome3"},
@@ -35,9 +35,9 @@ I will show them! SHOW THEM!]],
 }
 
 newChat{ id="welcome3",
-	text = [[You can not talk. You can not talk! You are a slave, a tool!
+	text = [[You cannot talk. You cannot talk! You are a slave, a tool!
 You are mine! Be quiet!
-#LIGHT_GREEN#*As his mind drifts off you notice part of the summoning circle is fading, you can probably escape!*#WHITE#
+#LIGHT_GREEN#*As his mind drifts off you notice part of the summoning circle is fading. You can probably escape!*#WHITE#
 ]],
 	answers = {
 		{"[attack]", action=function(npc, player)

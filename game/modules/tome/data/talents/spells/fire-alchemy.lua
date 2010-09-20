@@ -187,7 +187,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage and projecting randomly slow moving fire bolts at targets in sight doing %0.2f fire damage.
+		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage and projecting random slow-moving fire bolts at targets in sight doing %0.2f fire damage.
 		This powerful spell drains mana while active.
 		The damage will increase with Magic stat.]]):
 		format(

@@ -897,7 +897,7 @@ function _M:checkEncumbrance()
 
 	-- We are pinned to the ground if we carry too much
 	if not self.encumbered and enc > max then
-		game.logPlayer(self, "#FF0000#You carry too much, you are encumbered!")
+		game.logPlayer(self, "#FF0000#You carry too much--you are encumbered!")
 		game.logPlayer(self, "#FF0000#Drop some of your items.")
 		self.encumbered = self:addTemporaryValue("never_move", 1)
 	elseif self.encumbered and enc <= max then
@@ -978,7 +978,7 @@ function _M:preUseTalent(ab, silent, fake)
 		return false
 	end
 	if ab.no_silence and self:attr("silence") then
-		if not silent then game.logSeen(self, "%s silenced and can not use %s.", self.name:capitalize(), ab.name) end
+		if not silent then game.logSeen(self, "%s is silenced and cannot use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
 

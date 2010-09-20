@@ -32,7 +32,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Channel raw magical energy with your melee attacks, each doing %d damage and costing %.2f mana.]]):
+		return ([[Channel raw magical energy into your melee attacks, each doing %d damage and costing %.2f mana.]]):
 		format(3 + self:getTalentLevel(t) * 2, 1 + self:getTalentLevelRaw(t) / 1.5)
 	end,
 }
@@ -107,7 +107,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Steps through the shadows to your target, dazing it for %d turns.
+		return ([[Step through the shadows to your target, dazing it for %d turns.
 		Dazed targets can not act, but any damage will free them.]]):
 		format(2 + self:getTalentLevel(t))
 	end,

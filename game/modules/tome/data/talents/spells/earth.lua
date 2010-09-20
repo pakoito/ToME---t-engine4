@@ -70,7 +70,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Digs up to %d grids into walls/trees/...]]):format(self:getTalentLevelRaw(t))
+		return ([[Digs up to %d grids into walls, trees or other impassable terrain]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -164,7 +164,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Entombs yourself in a wall of stone for %d turns.
+		return ([[Entomb yourself in a wall of stone for %d turns.
 		At level 4 it becomes targettable.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
 	end,
 }

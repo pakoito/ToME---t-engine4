@@ -32,11 +32,11 @@ end
 if void_portal_open(nil, game.player) then
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*The two istari stand dead before you.*#WHITE#
-#LIGHT_GREEN#*Their body vanishes in small cloud of mist, quickly fading away.*#WHITE#
-But the portal to the Void is already open, it must be closed before Morgoth can come through or all will have been in vain!
-After searching the remains of the Istari you find a note explaining that the portal can only be closed with a sentient being sacrifice.]],
+#LIGHT_GREEN#*Their bodies vanish in small cloud of mist, quickly fading away.*#WHITE#
+But the portal to the Void is already open. It must be closed before Morgoth can come through or all will have been in vain!
+After searching the remains of the Istari you find a note explaining that the portal can only be closed with a sentient being's sacrifice.]],
 	answers = {
-		{"Aeryn, I am sorry but one of us needs to be sacrified for the world to go on. #LIGHT_GREEN#[sacrifice Aeryn for the sake of the world]", jump="aeryn-sacrifice", cond=aeryn_alive},
+		{"Aeryn, I am sorry but one of us needs to be sacrificed for the world to go on. #LIGHT_GREEN#[sacrifice Aeryn for the sake of the world]", jump="aeryn-sacrifice", cond=aeryn_alive},
 		{"I will close it #LIGHT_GREEN#[sacrifice yourself for the sake of the world]", action=function(npc, player)
 			player:die(player)
 			player:hasQuest("high-peak"):win("self-sacrifice")
@@ -45,7 +45,7 @@ After searching the remains of the Istari you find a note explaining that the po
 }
 
 newChat{ id="aeryn-sacrifice",
-	text = [[I can not believe we succeeded, I was prepared to die and it seems I will die, but at least I will do so knowing my sacrifice is not in vain.
+	text = [[I cannot believe we succeeded. I was prepared to die and it seems I will die, but at least I will do so knowing my sacrifice is not in vain.
 Please, make sure the world is safe.]],
 	answers = {
 		{"You will never be forgotten.", action=function(npc, player)
@@ -60,18 +60,18 @@ Please, make sure the world is safe.]],
 else
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*The two istari stand dead before you.*#WHITE#
-#LIGHT_GREEN#*Their body vanishes in some immaterial mist.*#WHITE#
+#LIGHT_GREEN#*Their bodies vanish in some immaterial mist.*#WHITE#
 You have won the game!
 Both Middle-earth and the Far East are safe from the return of Morgoth.]],
 	answers = {
-		{"Aeryn, are you alright?", jump="aeryn-ok", cond=aeryn_alive},
+		{"Aeryn, are you well?", jump="aeryn-ok", cond=aeryn_alive},
 		{"[leave]", action=function(npc, player) player:hasQuest("high-peak"):win("full") end},
 	}
 }
 
 newChat{ id="aeryn-ok",
-	text = [[I can not believe we succceeded, I was prepared to die and yet I live.
-I might have underestimanted you, you did more than we could have hoped for!]],
+	text = [[I cannot believe we succceeded. I was prepared to die and yet I live.
+I might have underestimated you. You did more than we could have hoped for!]],
 	answers = {
 		{"We both did.", action=function(npc, player) player:hasQuest("high-peak"):win("full") end},
 	}

@@ -215,7 +215,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local life = 50 + self:getTalentLevel(t) * 50
-		return ([[In a burst of rage you become an even more fearsome opponent gaining %d extra life for 20 turns.]]):format(life)
+		return ([[In a burst of rage you become an even more fearsome opponent, gaining %d extra life for 20 turns.]]):format(life)
 	end,
 }
 

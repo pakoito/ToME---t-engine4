@@ -19,7 +19,7 @@
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*He falls to his knees.*#WHITE#
-Please spare me! I am pitiful I will not stop you. Let me leave!]],
+Please spare me! I am pitiful. I will not stop you. Let me leave!]],
 	answers = {
 		{"No!", jump="welcome2"},
 	}
@@ -27,8 +27,8 @@ Please spare me! I am pitiful I will not stop you. Let me leave!]],
 
 newChat{ id="welcome2",
 	text = [[But but you were my.. you..
-You need me! What do you think you will do on the surface? Everythin you will meet will try to destroy you.
-You are strong but you can not resist them all!]],
+You need me! What do you think you will do on the surface? Everything you will meet will try to destroy you.
+You are strong but you cannot resist them all!]],
 	answers = {
 		{"So what do you propose?", jump="what"},
 		{"[kill him]", action=function(npc, player)
@@ -44,7 +44,7 @@ newChat{ id="what",
 With it all people will see when they look at you is a normal average human. You can go about your business.
 Please!]],
 	answers = {
-		{"Thanks for the information, now you may die. [kill him]", action=function(npc, player)
+		{"Thanks for the information. Now you may die. [kill him]", action=function(npc, player)
 			npc.die = nil
 			npc:doEmote("ARRGGggg... You are alone! You will be destroyed!", 60)
 			npc:die(player)

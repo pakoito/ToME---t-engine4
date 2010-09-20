@@ -30,7 +30,7 @@ newTalent{
 		self:checkEncumbrance()
 	end,
 	info = function(self, t)
-		return ([[Arrange your small items (of one or less encumberance value) to gain space, reducing their encumberance by %d%%.]]):
+		return ([[Arrange your small items (of one or less encumbrance value) to gain space, reducing their encumbrance by %d%%.]]):
 		format(self:getTalentLevel(t) * 10)
 	end,
 }
@@ -42,7 +42,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[Arrange your items in better way, protecting those that can easily be destroyed reducing their chance to be destroyed by %d%%.]]):
+		return ([[Arrange your items in better way, protecting those that can easily be destroyed, reducing their chance to be destroyed by %d%%.]]):
 		format(self:getTalentLevel(t) * 14)
 	end,
 }
@@ -60,7 +60,7 @@ newTalent{
 		self:checkEncumbrance()
 	end,
 	info = function(self, t)
-		return ([[Learn to manage heavy burden using cunning balance, increasing your maximun encumberance by %d.]]):
+		return ([[Learn to manage heavy burdens using cunning balance, increasing your maximun encumbrance by %d.]]):
 		format(20 + self:getTalentLevel(t) * 15)
 	end,
 }
@@ -72,7 +72,7 @@ newTalent{
 	require = cuns_req4,
 	mode = "passive",
 	info = function(self, t)
-		return ([[Your pack is bigger than you remember, when you use a scroll/potion/ammo you have %d%% to find a new one in your pack.]]):
+		return ([[Your pack is bigger than you remember. When you use a scroll/potion/ammo you have a %d%% chance to find a new one in your pack.]]):
 		format(10 + self:getTalentLevel(t) * 7)
 	end,
 }

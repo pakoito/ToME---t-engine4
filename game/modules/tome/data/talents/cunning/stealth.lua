@@ -60,7 +60,7 @@ newTalent{
 		return ([[Enters stealth mode, making you harder to detect.
 		Stealth cannot work with heavy or massive armours.
 		While in stealth mode, light radius is reduced to 0.
-		There needs to be no foes in sight in a radius of %d around you to enter stealth.]]):format(math.floor(10 - self:getTalentLevel(t) * 1.1))
+		There must be no foes in sight in a radius of %d around you to enter stealth.]]):format(math.floor(10 - self:getTalentLevel(t) * 1.1))
 	end,
 }
 

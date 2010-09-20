@@ -126,7 +126,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Barehanded ?
 	if not speed and self.combat then
-		print("[ATTACK] attacking with inate combat")
+		print("[ATTACK] attacking with innate combat")
 		local s, h = self:attackTargetWith(target, self.combat, damtype, mult)
 		speed = math.max(speed or 0, s)
 		hit = hit or h

@@ -30,7 +30,7 @@ newTalent{
 		self:attr("allow_any_dual_weapons", -1)
 	end,
 	info = function(self, t)
-		return ([[Allows you to dual wield any type of one handed weapons and increaase the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - self:getTalentLevel(t) / 9))
+		return ([[Allows you to dual wield any type of one handed weapons and increases the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - self:getTalentLevel(t) / 9))
 	end,
 }
 
@@ -41,8 +41,8 @@ newTalent{
 	require = str_corrs_req2,
 	points = 5,
 	info = function(self, t)
-		return ([[When you damage one of your foes you enter a bloodlust, increasing your spell power by 1 for each target, up to a maximun of %d per turn.
-		The maximun reachable is +%d spell power.
+		return ([[When you damage one of your foes you enter a bloodlust, increasing your spell power by 1 for each target, up to a maximum of %d per turn.
+		The maximum reachable is +%d spell power.
 		The bonus decreases by one per turn.]]):
 		format(math.floor(self:getTalentLevel(t)), math.floor(6 * self:getTalentLevel(t)))
 	end,
@@ -83,7 +83,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Your blood turns into an acidic mixture, when you get hit the attacker is splashed with acid.
+		return ([[Your blood turns into an acidic mixture. When you get hit the attacker is splashed with acid.
 		This deals %0.2f acid damage each turn for 5 turns and reduces the attacker attack by %d.
 		At level 3 it will also reduce armour by %d.]]):
 		format(self:combatTalentSpellDamage(t, 5, 30), self:combatTalentSpellDamage(t, 15, 35), self:combatTalentSpellDamage(t, 15, 40))

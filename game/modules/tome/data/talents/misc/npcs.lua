@@ -180,7 +180,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the attack hits, the target is stunned.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is stunned.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -209,7 +209,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage and try to disarm the target.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage and trying to disarm the target.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -240,7 +240,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the attack hits, the target is constricted.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is constricted.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -271,7 +271,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage, if the attack hits, the target is knocked back.]]):format(100 * self:combatTalentWeaponDamage(t, 1.5, 2))
+		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target is knocked back.]]):format(100 * self:combatTalentWeaponDamage(t, 1.5, 2))
 	end,
 }
 
@@ -367,7 +367,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -397,7 +397,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -427,7 +427,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage, if the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -651,7 +651,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay an invisible web under you trapping all non-spiderkin that passes.]]):format()
+		return ([[Lay an invisible web under you, trapping all non-spiderkin that pass.]]):format()
 	end,
 }
 
@@ -682,7 +682,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Weave darkness, blocking all light but the most powerful and teleport your a short range.
+		return ([[Weave darkness, blocking all light but the most powerful and teleporting you a short range.
 		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.3)
 	end,
 }
@@ -743,7 +743,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Howl a call to your hunting pack.]])
+		return ([[Howl to call your hunting pack.]])
 	end,
 }
 
@@ -814,7 +814,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage, if the attack hits, the target is unable to move for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), 2+self:getTalentLevel(t))
+		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage. If the attack hits, the target is unable to move for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), 2+self:getTalentLevel(t))
 	end,
 }
 

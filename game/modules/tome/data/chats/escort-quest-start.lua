@@ -21,8 +21,8 @@ newChat{ id="welcome",
 	text = text,
 	answers =
 	{
-		{"Lead on, I will protect you."},
-		{"Go away, I do not care for the weak.", action=function(npc, player)
+		{"Lead on; I will protect you."},
+		{"Go away; I do not care for the weak.", action=function(npc, player)
 			npc:disappear()
 			npc:removed()
 			player:setQuestStatus(npc.quest_id, engine.Quest.FAILED)

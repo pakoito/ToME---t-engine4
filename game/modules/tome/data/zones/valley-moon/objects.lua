@@ -24,7 +24,7 @@ newEntity{ base = "BASE_WHIP",
 	unided_name = "fiery whip",
 	name = "Whip of Gothmog, High Captain of the Balrogs", color=colors.PURPLE, unique = true,
 	desc = [[With this unbearably bright whip of flame, the Balrog Gothmog has become known for never having lost in combat.
-But nothing lasts forever and he was finaly defeated by Echtelion in the First Age. His whip must have been by the other balrogs from its corpse.]],
+But nothing lasts forever and he was finally defeated by Echtelion in the First Age. His whip must have been taken by the other balrogs from his corpse.]],
 	require = { stat = { dex=48 }, },
 	cost = 250,
 	material_level = 5,

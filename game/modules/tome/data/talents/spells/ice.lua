@@ -46,7 +46,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Invoke ice shards at the targets in the selected area, each shard travels slowly and does %0.2f ice damage on impact.
+		return ([[Invoke ice shards at the targets in the selected area. Each shard travels slowly and does %0.2f ice damage on impact.
 		This spell will never hit the caster.
 		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 200))
 	end,
@@ -71,7 +71,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Blast a wave of cold all around you, doing %0.2f cold damage and freezing creatures on the ground for %d turns.
+		return ([[Blast a wave of cold all around you, doing %0.2f cold damage and freezing creatures to the ground for %d turns.
 		Affected creatures can still act but not move.
 		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 180), 4)
 	end,

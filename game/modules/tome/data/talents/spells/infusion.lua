@@ -36,7 +36,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive fire, increasing damage by %d%% setting foes ablaze.]]):format(self:getTalentLevel(t) * 7)
+		return ([[When you throw your alchemist bombs you infuse them with explosive fire, increasing damage by %d%%, and setting foes ablaze.]]):format(self:getTalentLevel(t) * 7)
 	end,
 }
 

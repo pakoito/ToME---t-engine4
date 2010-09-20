@@ -115,7 +115,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Disrupts all fires in a radius, all targets that where burning will combust, doing all the remaining burn damage instantly.
+		return ([[Disrupts all fires in a radius. All targets that were burning will combust, doing all the remaining burn damage instantly.
 		The combustion effect will deal %d%% of the normal burn damage.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100)
 	end,
 }

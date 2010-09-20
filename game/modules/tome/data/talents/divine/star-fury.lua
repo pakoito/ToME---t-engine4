@@ -87,7 +87,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field that does %0.2f darkness damage per turn for %d turns..
+		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field that does %0.2f darkness damage per turn for %d turns.
 		The damage will increase with the Magic stat]]):
 		format(
 			self:combatTalentSpellDamage(t, 5, 120),
@@ -121,7 +121,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A surge of twilight pulses from your, doing %0.2f light and %0.2f darkness damage in a radius of %d.
+		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage in a radius of %d.
 		It also regenerates both your negative and positive energies.
 		The damage will increase with the Magic stat]]):
 		format(

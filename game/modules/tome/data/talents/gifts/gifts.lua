@@ -67,7 +67,7 @@ function checkMaxSummon(self)
 
 	local max = math.max(1, math.floor(self:getCun() / 10))
 	if nb >= max then
-		game.logPlayer(self, "#PINK#You can not summon any more, you have too many summons already (%d). You can increase the limit with higher Cunning.", nb)
+		game.logPlayer(self, "#PINK#You can not summon any more; you have too many summons already (%d). You can increase the limit with higher Cunning.", nb)
 		return true
 	else
 		return false

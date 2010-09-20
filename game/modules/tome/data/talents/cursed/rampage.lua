@@ -83,7 +83,7 @@ newTalent{
 		end
 		local hateLoss = t.getHateLoss(self, t)
 		local critical = t.getCritical(self, t)
-		return ([[You enter into a terrible rampage for %d turns destroying everything in your path. There is a small chance you will rampage when you take significant damage.
+		return ([[You enter into a terrible rampage for %d turns, destroying everything in your path. There is a small chance you will rampage when you take significant damage.
 		(%0.1f hate loss, +%d%% to %d%% hate-based critical chance)]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
 	end,
 }
@@ -130,7 +130,7 @@ newTalent{
 		local cooldown = t.getCooldown(self, t)
 		local speed = t.getSpeed(self, t)
 		return ([[Add reflexes to your rampage.
-		(Rampage cooldow is %d turns, +%d%% to %d%% speed)]]):format(cooldown, speed * 0.1, speed * 1.0)
+		(Rampage cooldown is %d turns, +%d%% to %d%% speed)]]):format(cooldown, speed * 0.1, speed * 1.0)
 	end,
 }
 

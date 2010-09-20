@@ -68,7 +68,7 @@ newTalent{
 	getPercent = function(self, t) return 15 + math.floor(self:getTalentLevel(t) * 10) end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[The time you have spent supressing the curse has taught you self control. The duration of most non-magical effects (physical, mental, poisons, diseases, hexes and curses) are reduced by %d%%.]]):format(percent)
+		return ([[The time you have spent suppressing the curse has taught you self control. The duration of most non-magical effects (physical, mental, poisons, diseases, hexes and curses) are reduced by %d%%.]]):format(percent)
 	end,
 }
 
@@ -113,7 +113,7 @@ newTalent{
 --		end
 --	end,
 --	info = function(self, t)
---		return ([[Your obsessions have lead you to a greater knowlege of the tools of death allowing you to identify weapons and armor that you pick up. You can identify more powerful items as you increase your skill.]])
+--		return ([[Your obsessions have lead you to a greater knowledge of the tools of death, allowing you to identify weapons and armor that you pick up. You can identify more powerful items as you increase your skill.]])
 --	end,
 --}
 

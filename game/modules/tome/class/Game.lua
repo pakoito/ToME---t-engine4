@@ -501,7 +501,7 @@ function _M:setupCommands()
 	self.key:setupProfiler()
 
 	-- Helper function to not allow some actions on the wilderness map
-	local not_wild = function(f) return function() if self.zone and not self.zone.wilderness then f() else self.logPlayer(self.player, "You can not do that on the world map.") end end end
+	local not_wild = function(f) return function() if self.zone and not self.zone.wilderness then f() else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
@@ -623,7 +623,7 @@ function _M:setupCommands()
 		CHANGE_LEVEL = function()
 			local e = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
 			if self.player:enoughEnergy() and e.change_level then
-				if self.player:attr("never_move") then self.log("You can not currently leave the level.") return end
+				if self.player:attr("never_move") then self.log("You cannot currently leave the level.") return end
 
 				local stop = {}
 				for eff_id, p in pairs(self.player.tmp) do
@@ -632,7 +632,7 @@ function _M:setupCommands()
 				end
 
 				if e.change_zone and #stop > 0 and e.change_zone:find("^wilderness") then
-					self.log("You can not go into the wilds with the following effects: %s", table.concat(stop, ", "))
+					self.log("You cannot go into the wilds with the following effects: %s", table.concat(stop, ", "))
 				else
 					-- Do not unpause, the player is allowed first move on next level
 					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev)

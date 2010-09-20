@@ -35,7 +35,7 @@ newTalent{
 	points = 5,
 	require = techs_dex_req2,
 	info = function(self, t)
-		return ([[You have learned to block incomming blows with your weapons increasing your defense by %d.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 12)
+		return ([[You have learned to block incoming blows with your weapons, increasing your defense by %d.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 12)
 	end,
 }
 
@@ -141,7 +141,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit with your offhand weapon for %d%% damage, if the attack hits, the target is stunned and you hit it with your mainhand weapon.]]):format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.7))
+		return ([[Hit with your offhand weapon for %d%% damage. If the attack hits, the target is stunned and you hit it with your mainhand weapon.]]):format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.7))
 	end,
 }
 
@@ -172,7 +172,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lashes out a flurry of blows, hitting your target three times with each weapon for %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1.4))
+		return ([[Lashes out with a flurry of blows, hitting your target three times with each weapon for %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1.4))
 	end,
 }
 
@@ -253,6 +253,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spin around, damaging all targets around with both weapons for %d%%.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.9))
+		return ([[Spin around, damaging all targets around you with both weapons for %d%%.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.9))
 	end,
 }

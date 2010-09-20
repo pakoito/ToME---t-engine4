@@ -75,7 +75,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damage and knocking back your foes.
+		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damaging and knocking back your foes.
 		The damage will increase with the Strength stat]]):format(2 + self:getTalentLevel(t) / 2)
 	end,
 }
@@ -93,7 +93,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows to burrow into walls for %d turns.]]):format(5 + self:getTalentLevel(t) * 3)
+		return ([[Allows you to burrow into walls for %d turns.]]):format(5 + self:getTalentLevel(t) * 3)
 	end,
 }
 
@@ -121,7 +121,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You breathe sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded over %d turns.
+		return ([[You breathe sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded for %d turns.
 		The damage will increase with the Strength stat]]):format(10 + self:getStr() * 0.3 * self:getTalentLevel(t), 2+self:getTalentLevelRaw(t))
 	end,
 }

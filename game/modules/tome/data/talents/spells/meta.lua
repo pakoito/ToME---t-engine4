@@ -71,7 +71,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Removes up to %d magical effects (both good or bad) from the target.
+		return ([[Removes up to %d magical effects (both good and bad) from the target.
 		At level 3 it can be targetted.
 		]]):format(self:getTalentLevel(t))
 	end,
@@ -84,7 +84,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		return ([[You learn to shape your area spells, allowing you to carve a hole in them to not get hit with a chance of %d%%.]]):
+		return ([[You learn to shape your area spells, allowing you to carve a hole in them to avoid damaging yourself.  The chance of success is %d%%.]]):
 		format(self:getTalentLevelRaw(t) * 20)
 	end,
 }

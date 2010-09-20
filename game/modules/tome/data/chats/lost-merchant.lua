@@ -19,7 +19,7 @@
 
 newChat{ id="welcome",
 	text = [[Please save me! I will make it worth your whi..
-*#LIGHT_GREEN#The assasin lord hits him in the face.#WHITE#*Shut up!]],
+*#LIGHT_GREEN#The assassin lord hits him in the face.#WHITE#*Shut up!]],
 	answers = {
 		{"Sorry, I have to go!", action = function(npc, player) npc.can_talk = nil end},
 	}

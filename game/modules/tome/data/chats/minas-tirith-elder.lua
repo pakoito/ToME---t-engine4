@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Welcome @playername@ to Minas Tirith traveler, please be quick as my time is precious.]],
+	text = [[Welcome @playername@ to Minas Tirith. Traveler, please be quick as my time is precious.]],
 	answers = {
-		{"I have found a strange staff in my travels(#LIGHT_GREEN#*describe it in detail*#LAST#)  It looked very old and very powerful. I dared not use it.", jump="found_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.PENDING) end},
+		{"I have found a strange staff in my travels (#LIGHT_GREEN#*describe it in detail*#LAST#)  It looked very old and very powerful. I dared not use it.", jump="found_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.PENDING) end},
 		{"Nothing, excuse me. Bye!"},
 	}
 }
@@ -38,7 +38,7 @@ The staff you describe reminds me of an artifact of great power from ancient tim
 
 newChat{ id="given_staff",
 	text = [[I am truly astonished by your strength; surviving that encounter was an epic feat. Please take this as a token of my gratitude for your services.
-As for the orcs, it is deeply troubling.  We have not seen any for eighty years...could they have come from the far east?
+As for the orcs, it is deeply troubling.  We have not seen any for eighty years... could they have come from the far east?
 Anyway, thank you again, @playername@, for your help.]],
 	answers = {
 		{"Thank you, my lord.", action=function(npc, player)

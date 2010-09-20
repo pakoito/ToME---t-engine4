@@ -61,7 +61,7 @@ end
 --- Use the object (quaff, read, ...)
 function _M:use(who, typ)
 	if self.use_no_blind and who:attr("blind") then
-		game.logPlayer(who, "You can not see!")
+		game.logPlayer(who, "You cannot see!")
 		return
 	end
 	if self.use_no_silence and who:attr("silence") then

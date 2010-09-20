@@ -121,6 +121,6 @@ newTalent{
 	require = { stat = { str=function(level) return 10 + level * 3 end, dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return ([[Increases damage done with exotic weapons(whips, tridents, ...) by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
+		return ([[Increases damage done with exotic weapons (whips, tridents, ...) by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }

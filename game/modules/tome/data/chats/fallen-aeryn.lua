@@ -35,18 +35,18 @@ newChat{ id="welcome",
 So, now you will kill me and complete the cycle of destruction?]],
 	answers = {
 		{"What are you talking about? Why did you attack me?", jump="what"},
-		{"Speak and I might spare you, why did you attack me?", jump="what"},
+		{"Speak and I might spare you. Why did you attack me?", jump="what"},
 		{"[kill her]", action=kill},
 	}
 }
 
 newChat{ id="what",
 	text = [[You.. you do not know?
-A few hours after you entered this place a raid of orcs fell upon us, they were not alone, demons walked among them. We were overwhelmed! Utterly destroyed!
+A few hours after you entered this place a raid of orcs fell upon us. They were not alone -- demons walked among them. We were overwhelmed! Utterly destroyed!
 My land is no more! All because you could not stop them at Mount Doom! You failed us! People died to protect you and you failed!
 #LIGHT_GREEN#*She starts to weep...*#WHITE#]],
 	answers = {
-		{"I know my mistakes and I intend to correct them, please let me pass. I can not save your people but I can make their death mean something!", action=spare},
+		{"I know my mistakes and I intend to correct them. Please let me pass. I cannot save your people but I can make their death mean something!", action=spare},
 		{"[kill her]", action=kill},
 	}
 }

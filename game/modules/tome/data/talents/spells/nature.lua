@@ -95,7 +95,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the forces of nature to cure your body of %d poisons and diseases(at level 3).]]):format(math.floor(self:getTalentLevel(t)))
+		return ([[Call upon the forces of nature to cure your body of %d poisons and diseases (at level 3).]]):format(math.floor(self:getTalentLevel(t)))
 	end,
 }
 

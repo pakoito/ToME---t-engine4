@@ -19,7 +19,7 @@
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a young man, a novice mage by his looks*#WHITE#
-Good day to you fellow traveler!]],
+Good day to you, fellow traveler!]],
 	answers = {
 		{"What brings an apprentice mage out into the wilds?", jump="quest", cond=function(npc, player) return not player:hasQuest("mage-apprentice") end},
 		{"I have something for you!",
@@ -27,7 +27,7 @@ Good day to you fellow traveler!]],
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(player, dialog) end
 		},
-		{"I found this staff; it looks powerful, maybe it would be enough?",
+		{"I found this staff; it looks powerful. Maybe it would be enough?",
 			jump="angmar_fall",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_angmar(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_angmar(player, dialog) end
@@ -48,7 +48,7 @@ Good day to you fellow traveler!]],
 }
 
 newChat{ id="quest",
-	text = [[Ahh, my story is a sad one ... I should not trouble you with it, my friend..]],
+	text = [[Ahh, my story is a sad one ... I should not trouble you with it, my friend.]],
 	answers = {
 		{"It is no trouble at all! Please tell me!", jump="quest2"},
 		{"Ok, bye then!"},
@@ -59,7 +59,7 @@ newChat{ id="quest2",
 I am a novice mage, as you might have noticed, and my goal is to be accepted by the elves of Angolwen and be taught the secrets of the arcane.]],
 	answers = {
 		{"Who are the elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
-		{"Ah yes Angolwen, I have called it home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
+		{"Ah yes, Angolwen, I have called it home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
 		{"Well, good luck, bye!"},
 	}
 }

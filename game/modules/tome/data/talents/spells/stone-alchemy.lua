@@ -78,7 +78,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Extract magical gems from metal weapons and armours, the higher your skill the higher level items you can work with.]])
+		return ([[Extract magical gems from metal weapons and armours. The higher your skill the higher level items you can work with.]])
 	end,
 }
 
@@ -133,7 +133,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Crush 5 alchemists gems into dust to mark an impassable terrain, you immediately enter it and appear on the other side of the obstacle.
+		return ([[Crush 5 alchemists gems into dust to mark an impassable terrain. You immediately enter it and appear on the other side of the obstacle.
 		Works up to %d grids away.]]):
 		format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
 	end,
@@ -169,7 +169,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch your foe and turn it into stone for %d turns.
+		return ([[Touch your foe and turn it to stone for %d turns.
 		Stoned creatures are unable to act or regen life and are very brittle.
 		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
 		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.

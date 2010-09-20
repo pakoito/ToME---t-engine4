@@ -38,19 +38,19 @@ Speak or die, for I am Maglor, son of Fëanor and I shall guard the Silmaril for
 
 newChat{ id="quest",
 	text = [[I see, so the dragon sent you. He told you I am insane, I assume?
-But which of us is truely evil?  Myself, fulfilling a sacred oath, secluded in this sanctuary, or you, who comes here to kill me, destroying my friends and planning to take the Silmaril?
+But which of us is truly evil?  Myself, fulfilling a sacred oath, secluded in this sanctuary, or you, who comes here to kill me, destroying my friends and planning to take the Silmaril?
 Who is the insane one?]],
 	answers = {
-		{"Your feeble attemp to sway me from the side of good will not work. Pay for you sins!", action=attack("If you refuse to see reason, you leave me no choice!")},
+		{"Your feeble attempt to sway me from the side of good will not work. Pay for you sins!", action=attack("If you refuse to see reason, you leave me no choice!")},
 		{"Your words are ... disturbing. Why should I spare you?", jump="givequest"},
 	}
 }
 
 newChat{ id="givequest",
-	text = [[Spare me?#LIGHT_GREEN#*He laugths.*#WHITE#
+	text = [[Spare me?#LIGHT_GREEN#*He laughs.*#WHITE#
 Do not be so hasty to assume YOU are in a position to offer mercy to ME!
-Yet I shall tell you my storyç. As I was drowning, Ossë came to me. He told me that nobody should ever see the Silmaril again, but he did not want to destroy it for it held the last shining light of the First Age.
-So he made a pact with me: he would save me and allow to fullfil my oath by being its guardian, at the bottom of the sea, for all eternity.
+Yet I shall tell you my story. As I was drowning, Ossë came to me. He told me that nobody should ever see the Silmaril again, but he did not want to destroy it for it held the last shining light of the First Age.
+So he made a pact with me: he would save me and allow me to fullfil my oath by being its guardian, at the bottom of the sea, for all eternity.
 Recently, that water dragon that sent you here started sending "agents" to retrieve the jewel. I can only imagine his goals, but they are clearly not peaceful.
 The Silmaril shall never leave this sanctuary!]],
 	answers = {

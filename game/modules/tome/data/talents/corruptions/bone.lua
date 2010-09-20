@@ -79,7 +79,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Grab a target and teleport it to your side, pinning it there with a bone raising from the ground for %d turns.
+		return ([[Grab a target and teleport it to your side, pinning it there with a bone rising from the ground for %d turns.
 		The bone will also deal %0.2f physical damage.
 		The damage will increase with your Magic stat.]]):
 		format(math.floor(3 + self:getTalentLevel(t)), self:combatTalentSpellDamage(t, 5, 140))
@@ -145,7 +145,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Bone shields start circling around you, they will each absorb fully one attack.
+		return ([[Bone shields start circling around you. They will each absorb fully one attack.
 		%d shield(s) will be generated.]]):
 		format(math.floor(self:getTalentLevel(t)))
 	end,

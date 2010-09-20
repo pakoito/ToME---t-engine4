@@ -47,7 +47,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You notice the small things others do not notice, allowing you to "see" creatures in a %d radius even outside of light radius.
-		This is not telepathy though and is still limited to line of sight.]]):
+		This is not telepathy though, and is still limited to line of sight.]]):
 		format(4 + math.ceil(self:getTalentLevel(t)))
 	end,
 }

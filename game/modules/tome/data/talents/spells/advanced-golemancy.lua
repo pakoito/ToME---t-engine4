@@ -143,7 +143,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Mount inside your golem, directly controlling it and splitting the damage between both it and you for %d turns.]]):
+		return ([[Mount inside your golem, directly controlling it and splitting the damage between it and yourself for %d turns.]]):
 		format(5 + math.ceil(self:getTalentLevel(t) * 4))
 	end,
 }
