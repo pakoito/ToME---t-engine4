@@ -39,7 +39,7 @@ function _M:receiveMouse(button, x, y, isup)
 
 	for i, m in ipairs(self.areas) do
 		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) then
-			m.fct(button, x, y, nil, nil, x-m.x1, y-m.y1)
+			m.fct(button, x, y, nil, nil, x-m.x1, y-m.y1, "button")
 			break
 		end
 	end
@@ -48,7 +48,7 @@ end
 function _M:receiveMouseMotion(button, x, y, xrel, yrel)
 	for i, m in ipairs(self.areas) do
 		if (not m.mode or m.mode.move) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) then
-			m.fct(button, x, y, xrel, yrel, x-m.x1, y-m.y1)
+			m.fct(button, x, y, xrel, yrel, x-m.x1, y-m.y1, "motion")
 			break
 		end
 	end

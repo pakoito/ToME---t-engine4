@@ -108,15 +108,15 @@ end
 -- </ul>
 -- @param key the Key object to which to pass the event if not treated, this should be your game default key handler probably
 -- @param allow_move true if this will allow player movement (you should use it to check that you are not in targetting mode)
-function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel)
+function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel, event)
 	local tmx, tmy = game.level.map:getMouseTile(mx, my)
 
 	-- Move
-	if button == "left" and not core.key.modState("shift") and not moving_around and not xrel and not yrel then
+	if button == "left" and not core.key.modState("shift") and not moving_around and not xrel and not yrel and event == "button" then
 		if allow_move then self:mouseMove(tmx, tmy) end
 
 	-- Move map around
-	elseif button == "left" and xrel and yrel and core.key.modState("shift") then
+	elseif button == "left" and xrel and yrel and core.key.modState("shift") and event == "motion" then
 		self:mouseScrollMap(game.level.map, xrel, yrel)
 		moving_around = true
 	-- Zoom map
@@ -125,7 +125,7 @@ function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel)
 --	elseif button == "wheeldown" then
 --		game.level.map:setZoom(-0.1, tmx, tmy)
 	-- Pass any other buttons to the keybinder
-	elseif button ~= "none" and not xrel and not yrel then
+	elseif button ~= "none" and not xrel and not yrel and event == "button" then
 		key:receiveKey(button, core.key.modState("ctrl") and true or false, core.key.modState("shift") and true or false, core.key.modState("alt") and true or false, core.key.modState("meta") and true or false, nil, false, true)
 	end
 
