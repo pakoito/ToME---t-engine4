@@ -43,6 +43,10 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of cure disease", ego_chance=-1000},
+			{type="potion", subtype="potion", name="potion of cure disease", ego_chance=-1000},
+		},
 		faction = "undead",
 		default_wilderness = {34, 49},
 		starting_zone = "paths-of-the-dead",

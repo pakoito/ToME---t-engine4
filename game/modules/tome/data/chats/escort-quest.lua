@@ -155,12 +155,12 @@ local function generate_rewards()
 	if reward.types then
 		for tt, mastery in pairs(reward.types) do if not game.player:knowTalentType(tt) then
 			local tt_def = npc:getTalentTypeFrom(tt)
+			local cat = tt_def.type:gsub("/.*", "")
 			local doit = function(npc, player)
 				player:learnTalentType(tt, false)
 				player:setTalentTypeMastery(tt, mastery)
 				player:hasQuest(npc.quest_id).reward_message = ("gained talent category %s (at mastery %0.2f)"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery)
 			end
-			local cat = tt_def.type:gsub("/.*", "")
 			answers[#answers+1] = {("[Allow training of talent category %s (at mastery %0.2f)]"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery), jump="done", action=doit}
 		end end
 	end

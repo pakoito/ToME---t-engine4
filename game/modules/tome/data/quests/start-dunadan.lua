@@ -21,7 +21,7 @@
 name = "Of trolls and damp caves"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "Explore the caves below the tower of Amon Sûl and the trollshaws in search of treasure and glory!\n"
+	desc[#desc+1] = "Explore the caves below the tower of Amon Sûl and the Trollshaws in search of treasures and glory!\n"
 	if self:isCompleted("amon-sul") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored Amon Sûl and vanquished the Shade of Angmar.#WHITE#"
 	else

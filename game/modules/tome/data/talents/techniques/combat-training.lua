@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	require = { stat = { str=18 }, },
 	info = function(self, t)
-		return ([[Teaches the usage of heavy mail armours. Increases armour value by %d and reducing chance to be criticaly hit by %d%% when wearing a heavy mail armour.]]):
+		return ([[Teaches the usage of heavy mail armours. Increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour.]]):
 		format(self:getTalentLevel(t) * 1.4, self:getTalentLevel(t) * 1.9)
 	end,
 }
@@ -36,7 +36,7 @@ newTalent{
 	points = 5,
 	require = { stat = { str=22 }, talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	info = function(self, t)
-		return ([[Teaches the usage of massive plate armours. Increases armour value by %dand reducing chance to be criticaly hit by %d%%  when wearing a massive plate armour.]]):
+		return ([[Teaches the usage of massive plate armours. Increases armour value by %d and reduces chance to be critically hit by %d%%  when wearing a massive plate armour.]]):
 		format(self:getTalentLevel(t) * 1.6, self:getTalentLevel(t) * 1.5)
 	end,
 }

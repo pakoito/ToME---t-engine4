@@ -55,7 +55,7 @@ newTalent{
 		game.zone:addEntity(game.level, a, "actor", x, y)
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Multiply yourself!]])
 	end,
 }
@@ -78,7 +78,7 @@ newTalent{
 		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Crawl onto the target, convering it in poison.]])
 	end,
 }
@@ -101,7 +101,7 @@ newTalent{
 		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Crawl onto the target, convering it in acid.]])
 	end,
 }
@@ -125,7 +125,7 @@ newTalent{
 		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Releases blinding spores at the target.]])
 	end,
 }
@@ -148,7 +148,7 @@ newTalent{
 		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Releases poisonous spores at the target.]])
 	end,
 }
@@ -291,7 +291,7 @@ newTalent{
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Bites the target, infecting it with poison.]])
 	end,
 }
@@ -336,7 +336,7 @@ newTalent{
 		end
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Summon allies.]])
 	end,
 }
@@ -447,7 +447,7 @@ newTalent{
 		self:project(tg, x, y, DamageType.CONFUSION, {dur=2+self:getTalentLevel(t), dam=50+self:getTalentLevelRaw(t)*10}, {type="manathrust"})
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Try to confuse the target's mind for a while.]])
 	end,
 }
@@ -835,7 +835,7 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
 		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 370))
 	end,
@@ -858,7 +858,7 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Sends a telepathic attack, silencing the target for %d turns.]]):format(math.floor(4 + self:getTalentLevel(t)))
 	end,
 }
@@ -880,7 +880,7 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Sends a telekinetic attack, knocking back the target and doing %0.2f physical damage.
 		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 170))
 	end,
@@ -903,7 +903,7 @@ newTalent{
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 20, 250))
 	end,
@@ -938,7 +938,7 @@ newTalent{
 		game:playSoundNear(self, "talents/cloud")
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Corrupted vapour rises at the target location doing %0.2f blight damage every turn for %d turns.
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 5, 65), self:getTalentLevel(t) + 2)
 	end,
@@ -961,7 +961,7 @@ newTalent{
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Projects a bolt of corrupted blood doing %0.2f blight damage and healing the caster for half the damage done.
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 220))
 	end,
@@ -989,7 +989,7 @@ newTalent{
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[You extract corrupted blood from your own body, hitting everything in a frontal cone for %0.2f blight damage.
 		Each affected creature has a %d%% chance of being infected by a random disease doing %0.2f blight damage over 6 turns.
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 170), 20 + self:getTalentLevel(t) * 10, self:combatTalentSpellDamage(t, 10, 220))

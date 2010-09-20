@@ -295,7 +295,7 @@ on_grant = function(self, who)
 
 	local ng = NameGenerator.new(name_rules[self.kind.random])
 
-	self.kind.actor.level_range = {game.level.level, game.level.level}
+	self.kind.actor.level_range = {game.player.level, game.player.level}
 	self.kind.actor.name = self.kind.actor.name:format(ng:generate())
 	self.kind.actor.faction = who.faction
 	self.kind.actor.summoner = who
