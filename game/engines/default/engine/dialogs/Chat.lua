@@ -48,13 +48,13 @@ function _M:init(chat, id)
 		ACCEPT = function() self:use() end,
 	})
 	self:mouseZones{
-		{ x=0, y=0, w=self.w, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=0, y=0, w=self.w, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			if self.start_answer_y and y >= self.start_answer_y then
 				ty = ty - self.start_answer_y
 				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 				self.changed = true
-				if button == "left" then self:use()
-				elseif button == "right" then
+				if button == "left" and event == "button" then self:use()
+				elseif button == "right" and event == "button" then
 				end
 			end
 		end },

@@ -40,10 +40,10 @@ function _M:init(actor)
 		ACCEPT = function() self:use() end,
 	})
 	self:mouseZones{
-		{ x=2, y=10 + self.font:lineSkip()*6, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=2, y=10 + self.font:lineSkip()*6, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			self.changed = true
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			if button == "left" then self:use()
+			if button == "left" and event == "button" then self:use()
 			end
 		end },
 	}

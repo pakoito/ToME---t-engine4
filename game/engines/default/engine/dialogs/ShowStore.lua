@@ -55,7 +55,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	})
 	self:mouseZones{
 		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			if tx < self.iw / 2 then
 				self.list = self.store_list
 			else
@@ -63,8 +63,8 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			end
 			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
 			self.changed = true
-			if button == "left" then self:use()
-			elseif button == "right" then
+			if button == "left" and event == "button" then self:use()
+			elseif button == "right" and event == "button" then
 			end
 		end },
 	}

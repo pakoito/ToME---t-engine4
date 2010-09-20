@@ -171,21 +171,21 @@ end
 
 --- Handle mouse event for targeting
 -- @return true if the event was handled
-function _M:targetMouse(button, mx, my, xrel, yrel)
+function _M:targetMouse(button, mx, my, xrel, yrel, event)
 	-- Move tooltip
 	self.tooltip_x, self.tooltip_y = mx, my
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 
 	if self.key == self.targetmode_key then
 		-- Target with mouse
-		if button == "none" and xrel and yrel then
+		if button == "none" and xrel and yrel and event == "motion" then
 			self.target:setSpot(tmx, tmy)
 		-- Accept target
-		elseif button == "left" and not xrel and not yrel then
+		elseif button == "left" and not xrel and not yrel and event == "button" then
 			self:targetMode(false, false)
 			self.tooltip_x, self.tooltip_y = nil, nil
 		-- Cancel target
-		elseif not xrel and not yrel then
+		elseif not xrel and not yrel and event == "button" then
 			self.target.target.entity = nil
 			self.target.target.x = nil
 			self.target.target.y = nil

@@ -768,7 +768,7 @@ function _M:setupMouse(reset)
 	if reset then self.mouse:reset() end
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event)
 		-- Handle targeting
-		if self:targetMouse(button, mx, my, xrel, yrel) then return end
+		if self:targetMouse(button, mx, my, xrel, yrel, event) then return end
 
 		-- Handle Use menu
 		if button == "right" and not xrel and not yrel and event == "button" then self:mouseRightClick(mx, my) return end

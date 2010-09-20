@@ -385,12 +385,12 @@ end
 
 function _M:setupMouse(reset)
 	if reset then self.mouse:reset() end
-	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel)
+	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event)
 		-- Handle targeting
-		if self:targetMouse(button, mx, my, xrel, yrel) then return end
+		if self:targetMouse(button, mx, my, xrel, yrel, event) then return end
 
 		-- Handle the mouse movement/scrolling
-		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel)
+		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel, event)
 	end)
 	-- Scroll message log
 	self.mouse:registerZone(self.logdisplay.display_x, self.logdisplay.display_y, self.w, self.h, function(button)
@@ -398,8 +398,8 @@ function _M:setupMouse(reset)
 		if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
 	end, {button=true})
 	-- Use hotkeys with mouse
-	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel)
-		self.hotkeys_display:onMouse(button, mx, my, not xrel)
+	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
+		self.hotkeys_display:onMouse(button, mx, my, event == "button", function(text) self.tooltip:displayAtMap(nil, nil, self.w, self.h, text) end)
 	end)
 	self.mouse:setCurrent()
 end
