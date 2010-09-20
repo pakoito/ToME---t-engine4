@@ -17,17 +17,34 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/underground.lua")
-load("/data/general/grids/lava.lua")
-load("/data/general/grids/water.lua")
+setStatusAll{no_teleport=true}
 
-newEntity{
-	define_as = "SLIME_TUNNELS",
-	name = "entrance to a slimy pit",
-	display = '>', color=colors.LIGHT_GREEN,
-	always_remember = true,
-	notice = true,
-	change_level = 1,
-	change_zone = "slime-tunnels",
+rotates = {"default", "90", "180", "270", "flipx", "flipy"}
+
+startx = 7
+starty = 0
+
+defineTile('.', "FLOOR")
+defineTile('~', "LAVA_FLOOR")
+defineTile('#', "HARDWALL")
+defineTile('+', "DOOR")
+defineTile('X', "DOOR_VAULT")
+defineTile('I', "FLOOR", nil, {random_filter={add_levels=10,name="fire imp"}})
+defineTile('D', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_levels=15,name="fire wyrm"}})
+
+return {
+[[#######X#######]],
+[[###D+D+.#...###]],
+[[#######.##..D##]],
+[[###~~~...###+##]],
+[[#.##~..#..~#..#]],
+[[#.D#~.###.~#D.#]],
+[[#..+...#..~#+##]],
+[[##+#~~...~~~.~#]],
+[[#..###I~~###+##]],
+[[#....#####...~#]],
+[[#~##.+..+...~~#]],
+[[#~~~~#..####~~#]],
+[[##~I~##D#~~~I##]],
+[[###############]],
 }

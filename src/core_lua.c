@@ -2175,7 +2175,7 @@ int luaopen_core(lua_State *L)
 
 	luaL_openlib(L, "core.game", gamelib, 0);
 	lua_pushstring(L, "VERSION");
-	lua_pushnumber(L, 2);
+	lua_pushnumber(L, 3);
 	lua_settable(L, -3);
 
 	luaL_openlib(L, "rng", rnglib, 0);

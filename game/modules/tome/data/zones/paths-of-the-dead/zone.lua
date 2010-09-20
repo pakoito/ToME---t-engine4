@@ -29,6 +29,7 @@ return {
 --	all_lited = true,
 	persistant = "zone",
 	ambiant_music = "Dark Secrets.ogg",
+	no_worldport = true,
 	no_level_connectivity = true,
 	generator =  {
 		map = {
