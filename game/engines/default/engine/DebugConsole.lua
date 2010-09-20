@@ -85,10 +85,13 @@ function _M:init()
 		end,
 	}
 	-- Scroll message log
-	game.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(button)
-		if button == "wheelup" then self:scrollUp(1) end
-		if button == "wheeldown" then self:scrollUp(-1) end
-	end, {button=true})
+	self:mouseZones{
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
+		{ x=0, y=0, w=self.iw, h=self.ih, mode={button=true}, fct=function(button, x, y, xrel, yrel, tx, ty)
+			if button == "wheelup" then self:scrollUp(1) end
+			if button == "wheeldown" then self:scrollUp(-1) end
+		end },
+	}
 end
 
 function _M:drawDialog(s, w, h)
