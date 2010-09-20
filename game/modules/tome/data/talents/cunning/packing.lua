@@ -41,16 +41,6 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	on_learn = function(self, t)
-		self.heightened_senses = 4 + math.ceil(self:getTalentLevel(t))
-	end,
-	on_unlearn = function(self, t)
-		if self:knowTalent(t) then
-			self.heightened_senses = 4 + math.ceil(self:getTalentLevel(t))
-		else
-			self.heightened_senses = nil
-		end
-	end,
 	info = function(self, t)
 		return ([[Arrange your items in better way, protecting those that can easily be destroyed reducing their chance to be destroyed by %d%%.]]):
 		format(self:getTalentLevel(t) * 14)

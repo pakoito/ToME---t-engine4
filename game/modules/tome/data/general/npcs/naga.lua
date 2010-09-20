@@ -45,7 +45,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_NAGA",
-	name = "naga myrmidon", color=colors.DARK_UMBER,
+	name = "naga myrmidon", color=colors.DARK_UMBER, image="npc/naga_myrmidon.png",
 	desc = [[A naga warrior, wielding a menacing trident.
 Myrmidons are the most devoted warriors, following the orders of Maglor whatever they may be.]],
 	level_range = {30, nil}, exp_worth = 1,
@@ -66,7 +66,7 @@ Myrmidons are the most devoted warriors, following the orders of Maglor whatever
 }
 
 newEntity{ base = "BASE_NPC_NAGA",
-	name = "naga tide huntress", color=colors.RED,
+	name = "naga tide huntress", color=colors.RED, image="npc/naga_tide_huntress.png",
 	desc = [[A naga hunter, wielding a long bow.
 Tide huntress wield both magic and hunting skills, making them terrible foes.]],
 	level_range = {34, nil}, exp_worth = 1,
@@ -91,7 +91,7 @@ Tide huntress wield both magic and hunting skills, making them terrible foes.]],
 }
 
 newEntity{ base = "BASE_NPC_NAGA",
-	name = "naga psyren", color=colors.YELLOW,
+	name = "naga psyren", color=colors.YELLOW, image="npc/naga_psyren.png",
 	desc = [[A naga psyren, she looks at you with great intensity.
 Psyrens are dangerous naga that can directly assault your mind.]],
 	level_range = {36, nil}, exp_worth = 1,
