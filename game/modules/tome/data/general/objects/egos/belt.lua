@@ -49,8 +49,8 @@ newEntity{
 
 newEntity{
 	name = "slotted ", prefix=true, instant_resolve=true,
-	level_range = {1, 50},
-	rarity = 1,
+	level_range = {10, 50},
+	rarity = 8,
 	cost = 6,
 	belt_slots = resolvers.mbonus_material(6, 3, function(e, v) return v * 1 end),
 	on_wear = function(self, who)
@@ -65,4 +65,34 @@ newEntity{
 	on_takeoff = function(self, who)
 		who.inven[who.INVEN_INBELT] = nil
 	end,
+}
+
+newEntity{
+	name = " of the mystic", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(10, 2, function(e, v) return v * 1 end),
+	},
+}
+
+newEntity{
+	name = " of the titan", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(10, 2, function(e, v) return v * 1 end),
+	},
+}
+
+newEntity{
+	name = " of life", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 8,
+	cost = 6,
+	wielder = {
+		life_regen = resolvers.mbonus_material(10, 2, function(e, v) return v * 1, v/10 end),
+	},
 }
