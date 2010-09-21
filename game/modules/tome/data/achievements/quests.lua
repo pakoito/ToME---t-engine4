@@ -113,3 +113,7 @@ newAchievement{
 	name = "Curse Lifter", id = "CURSE_ERASER",
 	desc = [[Killed Ben Cruthdar the Cursed.]],
 }
+newAchievement{
+	name = "There and back again", id = "WEST_PORTAL",
+	desc = [[Opened a portal to Middle-earth from the Far East.]],
+}

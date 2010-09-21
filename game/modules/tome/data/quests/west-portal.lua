@@ -116,14 +116,8 @@ This one seems to go near the town of Minas Tirith in the West.]],
 
 	game.zone:addEntity(game.level, zemekkys, "actor", 41, 17)
 	game.zone:addEntity(game.level, g, "terrain", 41, 16)
-	game.player:move(40, 16, true)
-end
+	player:move(40, 16, true)
 
-on_status_change = function(self, who, status, sub)
-	if sub then
---		if self:isCompleted() then
---			who:setQuestStatus(self.id, engine.Quest.COMPLETED)
---			world:gainAchievement("ORC_PRIDE", game.player)
---		end
-	end
+	player:setQuestStatus(self.id, engine.Quest.DONE)
+	world:gainAchievement("WEST_PORTAL", game.player)
 end
