@@ -71,6 +71,53 @@ wyrm_lair = function(self, who)
 	game.logPlayer(game.player, "Zemekkys points the location of Briagh lair on your map.")
 end
 
+create_portal = function (npc, player)
+	-- Farportal
+	local g = mod.class.Grid.new{
+		name = "Farportal: Minas Tirith",
+		display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+		notice = true,
+		always_remember = true,
+		show_tooltip = true,
+		desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use.
+This one seems to go near the town of Minas Tirith in the West.]],
+
+		orb_portal = {
+			change_level = 1,
+			change_zone = "wilderness",
+			change_wilderness = {
+				x = 60, y = 54,
+			},
+			message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the outskirts of Minas Tirith, with no trace of the portal...",
+			on_use = function(self, who)
+			end,
+		},
+	}
+	g:resolve() g:resolve(nil, true)
+
+	game.logPlayer(game.player, "#VIOLET#Zemekkys starts to draw runes on the floor using the athame and gem dust.")
+	game.logPlayer(game.player, "#VIOLET#The whole area starts to shake!")
+	game.logPlayer(game.player, "#VIOLET#Zemekkys says: 'The portal is done!'")
+
+	-- Zemekkys is not in his home anymore
+	npc.on_move = nil
+
+	-- Add Zemekkys near the portal
+	local zemekkys = mod.class.NPC.new{
+		type = "humanoid", subtype = "elf",
+		display = "p", color=colors.AQUAMARINE,
+		name = "High Chronomancer Zemekkys",
+		size_category = 3, rank = 3,
+		ai = "none",
+		faction = "sunwall",
+		can_talk = "zemekkys-done",
+	}
+	zemekkys:resolve() zemekkys:resolve(nil, true)
+
+	game.zone:addEntity(game.level, zemekkys, "actor", 41, 17)
+	game.zone:addEntity(game.level, g, "terrain", 41, 16)
+end
+
 on_status_change = function(self, who, status, sub)
 	if sub then
 --		if self:isCompleted() then

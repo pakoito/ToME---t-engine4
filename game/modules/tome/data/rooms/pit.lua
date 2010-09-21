@@ -34,6 +34,7 @@ return function(gen, id)
 					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('.'))
 				end
 				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
+				gen.map.attrs(i-1+x, j-1+y, "no_decay", true)
 			end
 		end
 

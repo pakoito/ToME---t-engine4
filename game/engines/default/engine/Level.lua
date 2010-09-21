@@ -119,31 +119,33 @@ end
 function _M:decay(what, check)
 	local total, nb = 0, 0
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
-		if what == self.map.OBJECT then
-			for z = self.map:getObjectTotal(i, j), 1, -1 do
-				local e = self.map:getObject(i, j, z)
+		if not self.map.attrs(i, j, "no_decay") then
+			if what == self.map.OBJECT then
+				for z = self.map:getObjectTotal(i, j), 1, -1 do
+					local e = self.map:getObject(i, j, z)
+					if e and not e.no_decay and util.getval(check, e, i, j) then
+						print("[DECAY] decaying", e.uid, e.name)
+						self.map:removeObject(i, j, z)
+						e:removed()
+						nb = nb + 1
+					elseif e then
+						total = total + 1
+					end
+				end
+			else
+				local e = self.map(i, j, what)
 				if e and not e.no_decay and util.getval(check, e, i, j) then
 					print("[DECAY] decaying", e.uid, e.name)
-					self.map:removeObject(i, j, z)
+					if self:hasEntity(e) then
+						self:removeEntity(e)
+					else
+						self.map:remove(i, j, what)
+					end
 					e:removed()
 					nb = nb + 1
 				elseif e then
 					total = total + 1
 				end
-			end
-		else
-			local e = self.map(i, j, what)
-			if e and not e.no_decay and util.getval(check, e, i, j) then
-				print("[DECAY] decaying", e.uid, e.name)
-				if self:hasEntity(e) then
-					self:removeEntity(e)
-				else
-					self.map:remove(i, j, what)
-				end
-				e:removed()
-				nb = nb + 1
-			elseif e then
-				total = total + 1
 			end
 		end
 	end end

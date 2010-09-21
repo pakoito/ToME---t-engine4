@@ -17,16 +17,36 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local function remove_materials(npc, player)
+	local gem_o, gem_item, gem_inven_id = player:findInAllInventories("Resonating Diamond")
+	player:removeObject(gem_inven_id, gem_item, true)
+	gem_o:removed()
+
+	local athame_o, athame_item, athame_inven_id = player:findInAllInventories("Blood-Runed Athame")
+	player:removeObject(athame_inven_id, athame_item, true)
+	athame_o:removed()
+end
+
+local function check_materials(npc, player)
+	local gem_o, gem_item, gem_inven_id = player:findInAllInventories("Resonating Diamond")
+	local athame_o, athame_item, athame_inven_id = player:findInAllInventories("Blood-Runed Athame")
+	return gem_o and athame_o and player.money >= 200
+end
+
+-----------------------------------------------------------------
+-- Main dialog
+-----------------------------------------------------------------
+
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A slot in the door opens and a pair of wild eyes peer out.*#WHITE#
 What do you want, @playerdescriptor.race@?]],
 	answers = {
 		{"Paladin Aeryn told me that you could help me. I need to get to Middle Earth.", jump="help", cond=function(npc, player) return not player:hasQuest("west-portal") end},
 		{"I found the Blood-Runed Athame, but there was no Resonating Diamond.", jump="athame", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("athame") end},
+		{"I have a Resonating Diamond.", jump="complete", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("gem") end},
 		{"Sorry, I have to go!"},
 	}
 }
-
 
 -----------------------------------------------------------------
 -- Give quest
@@ -101,13 +121,19 @@ newChat{ id="athame3",
 -----------------------------------------------------------------
 -- Return gem
 -----------------------------------------------------------------
-newChat{ id="help",
-	text = [[Pfaugh! Her goal in life is to waste my time! Middle Earth? Why not Narnia or Chicago? Just as easy to send you someplace entirely fictional as Middle Earth. Go away.
-#LIGHT_GREEN#*Slot slams shut.*#WHITE#]],
+newChat{ id="complete",
+	text = [[[Yes? You got the athame, the gem and 200 gold?]],
 	answers = {
-		{"I got here from Middle Earth, didn't I? I have this magic Orb I looted from a dead orc, see, and...", jump="offer"},
+		{"[Give him the gem, the athame and 200 gold]", jump="complete2", cond=check_materials, action=remove_materials},
+		{"Sorry it seems I miss some stuff. I will be back."},
 	}
 }
-
+newChat{ id="complete2",
+	text = [[#LIGHT_GREEN#*The door opens and a shabby elf emerges.*#WHITE#
+Off we go to prepare the portal!]],
+	answers = {
+		{"[follow him]", action=function(npc, player) player:hasQuest("west-portal"):create_portal(npc, player) end},
+	}
+}
 
 return "welcome"

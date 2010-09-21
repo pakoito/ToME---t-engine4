@@ -47,6 +47,7 @@ return function(gen, id, lev, old_lev)
 		for i = x, x + w - 1 do for j = y, y + h - 1 do
 			gen.map.room_map[i][j].special = true
 			gen.map.room_map[i][j].room = id
+			gen.map.attrs(i, j, "no_decay", true)
 		end end
 		if vault.gen_map.startx and vault.gen_map.starty then
 			gen.spots[#gen.spots+1] = {x=vault.gen_map.startx + x, y=vault.gen_map.starty + y, check_connectivity="entrance", type="vault", subtype="greater"}

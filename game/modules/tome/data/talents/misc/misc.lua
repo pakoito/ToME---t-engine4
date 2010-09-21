@@ -217,7 +217,7 @@ newTalent{
 	end,
 	info = function(self)
 		return ([[Call upon the luck and cunning of the Little Folk to increase your physical and spell critical strike chance by %d%% for 5 turns.
-		The bonus will increase with the Cunning stat]]):format(10 + self:getCon() / 5, 10 + self:getCon() / 5)
+		The bonus will increase with the Cunning stat]]):format(10 + self:getCun() / 5, 10 + self:getCun() / 5)
 	end,
 }
 

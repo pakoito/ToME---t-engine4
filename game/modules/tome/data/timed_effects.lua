@@ -498,7 +498,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# radiates power." end,
-	on_lose = function(self, err) return "#Target# aura of power vanishes." end,
+	on_lose = function(self, err) return "#Target#'s aura of power vanishes." end,
 	activate = function(self, eff)
 		eff.pid1 = self:addTemporaryValue("inc_damage", {all=eff.power})
 		eff.pid2 = self:addTemporaryValue("resists", {all=eff.power})
@@ -1431,14 +1431,14 @@ newEffect{
 	parameters = { hateLoss = 0, critical = 0, damage = 0, speed = 0, attack = 0, evasion = 0 }, -- use percentages not fractions
 	on_gain = function(self, err) return "#F53CBE##Target# begins rampaging!", "+Rampage" end,
 	on_lose = function(self, err) return "#F53CBE##Target# is no longer rampaging.", "-Rampage" end,
-	activate = function(self, eff)	
+	activate = function(self, eff)
 		if eff.hateLoss or 0 > 0 then eff.hateLossId = self:addTemporaryValue("hate_regen", -eff.hateLoss) end
 		if eff.critical or 0 > 0 then eff.criticalId = self:addTemporaryValue("combat_physcrit", eff.critical) end
 		if eff.damage or 0 > 0 then eff.damageId = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=eff.damage}) end
 		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("energy", {mod=eff.speed * 0.01}) end
 		if eff.attack or 0 > 0 then eff.attackId = self:addTemporaryValue("combat_atk", self.combat_atk * eff.attack * 0.01) end
 		if eff.evasion or 0 > 0 then eff.evasionId = self:addTemporaryValue("evasion", eff.evasion) end
-		
+
 		eff.particle = self:addParticles(Particles.new("rampage", 1))
 	end,
 	deactivate = function(self, eff)
@@ -1448,7 +1448,7 @@ newEffect{
 		if eff.speedId then self:removeTemporaryValue("energy", eff.speedId) end
 		if eff.attackId then self:removeTemporaryValue("combat_atk", eff.attackId) end
 		if eff.evasionId then self:removeTemporaryValue("evasion", eff.evasionId) end
-		
+
 		self:removeParticles(eff.particle)
 	end,
 }
@@ -1488,7 +1488,7 @@ newEffect{
 						end
 					end
 				end
-				
+
 				if bestDistance then
 					target:move(bestX, bestY, true)
 					if not target.did_energy then target:useEnergy() end

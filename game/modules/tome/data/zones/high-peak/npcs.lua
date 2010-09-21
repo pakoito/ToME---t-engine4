@@ -70,7 +70,7 @@ newEntity{
 	see_invisible = 100,
 	instakill_immune = 1,
 	stun_immune = 0.5,
-	blind_immune = 1
+	blind_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
@@ -135,7 +135,7 @@ newEntity{
 	see_invisible = 100,
 	instakill_immune = 1,
 	stun_immune = 0.5,
-	blind_immune = 1
+	blind_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
