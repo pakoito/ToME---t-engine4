@@ -59,7 +59,9 @@ function _M:act()
 end
 
 --- Use the object (quaff, read, ...)
-function _M:use(who, typ)
+function _M:use(who, typ, inven, item)
+	inven = who:getInven(inven)
+
 	if self.use_no_blind and who:attr("blind") then
 		game.logPlayer(who, "You cannot see!")
 		return
@@ -79,7 +81,7 @@ function _M:use(who, typ)
 	if not typ and #types == 1 then typ = types[1] end
 
 	if typ == "use" then
-		who:useEnergy()
+		who:useEnergy(game.energy_to_act * (inven.use_speed or 1))
 		if self.use_sound then game:playSoundNear(who, self.use_sound) end
 		return self:useObject(who)
 	end

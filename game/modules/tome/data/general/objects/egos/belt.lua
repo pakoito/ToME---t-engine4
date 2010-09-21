@@ -54,12 +54,12 @@ newEntity{
 	cost = 6,
 	belt_slots = resolvers.mbonus_material(6, 3, function(e, v) return v * 1 end),
 	on_wear = function(self, who)
-		who.inven[who.INVEN_INBELT] = {max=self.belt_slots, worn=false, id=who.INVEN_INBELT}
+		who.inven[who.INVEN_INBELT] = {max=self.belt_slots, worn=false, use_speed=0.6, id=who.INVEN_INBELT}
 	end,
 	on_cantakeoff = function(self, who)
 		if #who:getInven(who.INVEN_INBELT) > 0 then
 			game.logPlayer(who, "You can not remove %s while it still carries items.", self:getName{do_color=true})
-			return false
+			return true
 		end
 	end,
 	on_takeoff = function(self, who)

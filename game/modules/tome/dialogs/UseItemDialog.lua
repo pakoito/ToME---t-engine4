@@ -78,7 +78,7 @@ function _M:generateList()
 	local list = {}
 
 	if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end
-	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Wield/Wear", action="wear"} end
+	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
 

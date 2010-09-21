@@ -19,7 +19,7 @@
 
 newEntity{
 	define_as = "BASE_POTION",
-	slot = "INBELT",
+	slot = "INBELT", use_no_wear=true,
 	type = "potion", subtype="potion",
 	unided_name = "potion", id_by_type = true,
 	display = "!", color=colors.WHITE, image="object/potion-0x0.png",

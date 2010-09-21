@@ -445,6 +445,27 @@ function _M:runMoved()
 	self:playerFOV()
 end
 
+--- Activates a hotkey with a type "inventory"
+function _M:hotkeyInventory(name)
+	local find = function(name)
+		local os = {}
+		for inven_id, inven in pairs(self.inven) do
+			local o, item = self:findInInventory(inven, name, getname)
+			if o and item then os[#os+1] = {o, item, inven_id, inven} end
+		end
+		if #os == 0 then return end
+		table.sort(os, function(a, b) return (a[4].use_speed or 1) < (b[4].use_speed or 1) end)
+		return os[1][1], os[1][2], os[1][3]
+	end
+
+	local o, item, inven = find(name)
+	if not o then
+		Dialog:simplePopup("Item not found", "You do not have any "..name..".")
+	else
+		self:playerUseItem(o, item, inven)
+	end
+end
+
 function _M:doDrop(inven, item)
 	if game.zone.wilderness then
 		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
@@ -523,7 +544,7 @@ function _M:playerWear()
 	local inven = self:getInven(self.INVEN_INVEN)
 	local titleupdator = self:getEncumberTitleUpdator("Wield/wear object")
 	self:showInventory(titleupdator(), inven, function(o)
-		return o:wornInven() and true or false
+		return o:wornInven() and self:getInven(o:wornInven())  and true or false
 	end, function(o, item)
 		self:doWear(inven, item, o)
 	end)
@@ -542,7 +563,7 @@ function _M:playerUseItem(object, item, inven)
 	local use_fct = function(o, inven, item)
 		local co = coroutine.create(function()
 			self.changed = true
-			local ret, no_id = o:use(self)
+			local ret, no_id = o:use(self, nil, inven, item)
 			if not no_id then
 				o:identify(true)
 			end
