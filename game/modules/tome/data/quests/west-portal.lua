@@ -71,7 +71,7 @@ wyrm_lair = function(self, who)
 	game.logPlayer(game.player, "Zemekkys points the location of Briagh lair on your map.")
 end
 
-create_portal = function (npc, player)
+create_portal = function(self, npc, player)
 	-- Farportal
 	local g = mod.class.Grid.new{
 		name = "Farportal: Minas Tirith",
@@ -116,6 +116,9 @@ This one seems to go near the town of Minas Tirith in the West.]],
 
 	game.zone:addEntity(game.level, zemekkys, "actor", 41, 17)
 	game.zone:addEntity(game.level, g, "terrain", 41, 16)
+	game.level.map:particleEmitter(41, 16, 3, "farportal_lightning")
+	game.level.map:particleEmitter(41, 16, 3, "farportal_lightning")
+	game.level.map:particleEmitter(41, 16, 3, "farportal_lightning")
 	player:move(40, 16, true)
 
 	player:setQuestStatus(self.id, engine.Quest.DONE)

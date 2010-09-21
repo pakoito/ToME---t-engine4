@@ -17,9 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/spider.lua", rarity(0))
-
-load("/data/general/npcs/all.lua", rarity(4, 35))
+load("/data/general/npcs/sandworm.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 

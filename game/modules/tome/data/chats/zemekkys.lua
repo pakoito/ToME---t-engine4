@@ -42,7 +42,7 @@ newChat{ id="welcome",
 What do you want, @playerdescriptor.race@?]],
 	answers = {
 		{"Paladin Aeryn told me that you could help me. I need to get to Middle Earth.", jump="help", cond=function(npc, player) return not player:hasQuest("west-portal") end},
-		{"I found the Blood-Runed Athame, but there was no Resonating Diamond.", jump="athame", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("athame") end},
+		{"I found the Blood-Runed Athame, but there was no Resonating Diamond.", jump="athame", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("athame") and not player:hasQuest("west-portal"):isCompleted("gem") end},
 		{"I have a Resonating Diamond.", jump="complete", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("gem") end},
 		{"Sorry, I have to go!"},
 	}

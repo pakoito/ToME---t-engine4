@@ -550,6 +550,7 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
+--				self.level.map:particleEmitter(self.player.x, self.player.y, 3, "farportal_lightning")
 				self:changeLevel(1, "grushnak-pride")
 --				self.player:grantQuest("master-jeweler")
 			end
