@@ -20,7 +20,7 @@
 local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
-	define_as = "BASE_GLOVE",
+	define_as = "BASE_GLOVES",
 	slot = "HANDS",
 	type = "armor", subtype="hands",
 	add_name = " (#ARMOR#)",
@@ -33,7 +33,7 @@ newEntity{
 	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
-newEntity{ base = "BASE_GLOVE",
+newEntity{ base = "BASE_GLOVES",
 	name = "rough leather gloves",
 	level_range = {1, 20},
 	cost = 5,
@@ -43,7 +43,7 @@ newEntity{ base = "BASE_GLOVE",
 	},
 }
 
-newEntity{ base = "BASE_GLOVE",
+newEntity{ base = "BASE_GLOVES",
 	name = "hardened leather gloves",
 	level_range = {20, 40},
 	cost = 7,
@@ -53,7 +53,7 @@ newEntity{ base = "BASE_GLOVE",
 	},
 }
 
-newEntity{ base = "BASE_GLOVE",
+newEntity{ base = "BASE_GLOVES",
 	name = "drakeskin leather gloves",
 	level_range = {40, 50},
 	cost = 10,

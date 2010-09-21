@@ -136,7 +136,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.PYSICAL] = resolvers.mbonus_material(8, 3, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(8, 3, function(e, v) return v * 0.8 end), },
 	},
 }
 

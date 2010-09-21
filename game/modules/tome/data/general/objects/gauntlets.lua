@@ -20,7 +20,7 @@
 local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
-	define_as = "BASE_GAUNTLET",
+	define_as = "BASE_GAUNTLETS",
 	slot = "HANDS",
 	type = "armor", subtype="hands",
 	add_name = " (#ARMOR#)",
@@ -34,7 +34,7 @@ newEntity{
 	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
-newEntity{ base = "BASE_GAUNTLET",
+newEntity{ base = "BASE_GAUNTLETS",
 	name = "iron gauntlets",
 	level_range = {1, 20},
 	cost = 5,
@@ -44,7 +44,7 @@ newEntity{ base = "BASE_GAUNTLET",
 	},
 }
 
-newEntity{ base = "BASE_GAUNTLET",
+newEntity{ base = "BASE_GAUNTLETS",
 	name = "dwarven-steel gauntlets",
 	level_range = {20, 40},
 	cost = 7,
@@ -54,7 +54,7 @@ newEntity{ base = "BASE_GAUNTLET",
 	},
 }
 
-newEntity{ base = "BASE_GAUNTLET",
+newEntity{ base = "BASE_GAUNTLETS",
 	name = "mithril gauntlets",
 	level_range = {40, 50},
 	cost = 10,
