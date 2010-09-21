@@ -68,7 +68,8 @@ loadIfNot("/data/general/objects/helms.lua")
 loadIfNot("/data/general/objects/wizard-hat.lua")
 loadIfNot("/data/general/objects/leather-boots.lua")
 loadIfNot("/data/general/objects/heavy-boots.lua")
---loadIfNot("/data/general/objects/gloves.lua")
+loadIfNot("/data/general/objects/gloves.lua")
+loadIfNot("/data/general/objects/gauntlets.lua")
 
 -- Mounts
 loadIfNot("/data/general/objects/mounts.lua")

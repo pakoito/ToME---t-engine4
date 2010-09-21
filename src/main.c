@@ -567,6 +567,45 @@ void setupRealtime(float freq)
 	}
 }
 
+void create_mode_list()
+{
+	SDL_PixelFormat format;
+	SDL_Rect **modes;
+	int loops = 0;
+	int bpp = 0;
+	do
+	{
+		//format.BitsPerPixel seems to get zeroed out on my windows box
+		switch(loops)
+		{
+			case 0://32 bpp
+				format.BitsPerPixel = 32;
+				bpp = 32;
+				break;
+			case 1://24 bpp
+				format.BitsPerPixel = 24;
+				bpp = 24;
+				break;
+			case 2://16 bpp
+				format.BitsPerPixel = 16;
+				bpp = 16;
+				break;
+		}
+
+		//get available fullscreen/hardware modes
+		modes = SDL_ListModes(&format, SDL_FULLSCREEN);
+		if (modes)
+		{
+			int i;
+			for(i=0; modes[i]; ++i)
+			{
+				printf("Available resolutions: %dx%dx%d\n", modes[i]->w, modes[i]->h, bpp/*format.BitsPerPixel*/);
+			}
+		}
+	}while(++loops != 3);
+//	return mode_list;
+}
+
 /* general OpenGL initialization function */
 int initGL()
 {
@@ -770,6 +809,8 @@ int main(int argc, char *argv[])
 		printf("cannot initialize SDL: %s\n", SDL_GetError ());
 		return -1;
 	}
+
+	create_mode_list();
 
 	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE), NULL);
 

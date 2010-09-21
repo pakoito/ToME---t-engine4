@@ -616,11 +616,6 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	-- Adds hate
-	if src and src.max_hate and src.max_hate > 0 then
-		src.hate = math.min(src.max_hate, src.hate + src.hate_per_kill)
-	end
-
 	-- Achievements
 	if src and src.resolveSource and src:resolveSource().player and value >= 600 then
 		world:gainAchievement("SIZE_MATTERS", src:resolveSource())
@@ -708,6 +703,11 @@ function _M:die(src)
 	if src and src.knowTalent and src:knowTalent(src.T_CRUEL_VIGOR) then
 		local t = src:getTalentFromId(src.T_CRUEL_VIGOR)
 		t.on_kill(src, t)
+	end
+
+	-- Adds hate
+	if src and src.max_hate and src.max_hate > 0 then
+		src.hate = math.min(src.max_hate, src.hate + src.hate_per_kill)
 	end
 
 	-- Increase vim
@@ -1089,7 +1089,7 @@ function _M:postUseTalent(ab, ret)
 	if not ab.no_energy then
 		if ab.type[1]:find("^spell/") then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
-		elseif ab.type[1]:find("^physical/") then
+		elseif ab.type[1]:find("^technique/") then
 			self:useEnergy(game.energy_to_act * self:combatSpeed())
 		else
 			self:useEnergy()

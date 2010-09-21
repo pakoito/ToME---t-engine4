@@ -550,7 +550,7 @@ function _M:physicalCrit(dam, weapon, target)
 
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * 1.5
+		dam = dam * (1.5 + (self.combat_critical_power or 0))
 		crit = true
 	end
 	return dam, crit

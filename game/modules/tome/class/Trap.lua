@@ -54,7 +54,7 @@ function _M:canDisarm(x, y, who)
 
 	-- do we know how to disarm?
 	if who:knowTalent(who.T_TRAP_DISARM) then
-		local power = who:getTalentLevel(who.T_TRAP_DISARM) * who:getCun(25)
+		local power = who:getTalentLevel(who.T_TRAP_DISARM) * who:getCun(25) + (who:attr("disarm_bonus") or 0)
 		if who:checkHit(power, self.disarm_power) then
 			return true
 		end
