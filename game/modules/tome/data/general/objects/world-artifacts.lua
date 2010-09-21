@@ -590,7 +590,7 @@ newEntity{ base = "BASE_GLOVES",
 	cost = 150,
 	material_level = 3,
 	wielder = {
-		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end) },
+		inc_stats = { [Stats.STAT_CON] = 4 },
 		disarm_immune=0.3,
 		knockback_immune=0.3,
 		stun_immune=0.3,
@@ -614,6 +614,28 @@ newEntity{ base = "BASE_CLOAK",
 	},
 	max_power = 60, power_regen = 1,
 	use_talent = { id = Talents.T_PHASE_DOOR, level = 2, power = 30 },
+}
+
+newEntity{ base = "BASE_CLOTH_ARMOR",
+	unique = true,
+	name = "Robe of the Archmage", color = colors.RED,
+	unided_name = "glitering robe",
+	desc = [[A plain elven-silk robe. It would be unremarkable if not the for sheer power it radiates.]],
+	level_range = {30, 40},
+	rarity = 290,
+	cost = 350,
+	material_level = 5,
+	wielder = {
+		lite = 1,
+		inc_damage = {all=5},
+		combat_def = 10,
+		combat_armor = 10,
+		inc_stats = { [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 2, },
+		combat_spellresist = 18,
+		combat_mentalresist = 15,
+		resists={[DamageType.FIRE] = 10, [DamageType.COLD] = 10},
+		on_melee_hit={[DamageType.LIGHT] = 10},
+	},
 }
 
 --[=[

@@ -298,6 +298,7 @@ function _M:getTextualDesc()
 	if w.combat_critical_power then desc[#desc+1] = ("Increases critical damage modifier: +%d%%."):format(w.combat_critical_power) end
 
 	if w.disarm_bonus then desc[#desc+1] = ("Increases trap disarming bonus: %d."):format(w.disarm_bonus) end
+	if w.inc_stealth then desc[#desc+1] = ("Increases stealth bonus: %d."):format(w.inc_stealth) end
 
 	if w.combat_physresist then desc[#desc+1] = ("Increases physical save: %s."):format(w.combat_physresist) end
 	if w.combat_spellresist then desc[#desc+1] = ("Increases spell save: %s."):format(w.combat_spellresist) end
