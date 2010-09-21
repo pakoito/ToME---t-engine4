@@ -58,7 +58,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Sense foes around you in a radius of %d for %d turns.
-		The radius will increase with the Cunning stat]]):format(10 + self:getDex(10) * self:getTalentLevel(t), 3 + self:getTalentLevel(t))
+		The radius will increase with the Cunning stat]]):format(10 + self:getCun(10) * self:getTalentLevel(t), 3 + self:getTalentLevel(t))
 	end,
 }
 
