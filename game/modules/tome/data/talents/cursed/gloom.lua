@@ -138,9 +138,8 @@ newTalent{
 							local turns = 3 + math.ceil(self:getTalentLevel(tWeakness))
 
 							local weapon = target:getInven("MAINHAND")
-							if weapon then
-								weapon = weapon[1] and weapon[1].combat
-							end
+							if weapon then weapon = weapon[1] and weapon[1].combat end
+							if not weapon or type(weapon) ~= "table" then weapon = nil end
 							weapon = weapon or target.combat
 							local attack = target:combatAttack(weapon) * (2 + self:getTalentLevel(tWeakness)) * 3.5 / 100
 							local damage = target:combatDamage(weapon) * (2 + self:getTalentLevel(tWeakness)) * 3.5 / 100
