@@ -18,59 +18,46 @@
 -- darkgod@te4.org
 
 return {
-	name = "Vor Armoury",
+	name = "Briagh's Lair",
 	level_range = {35, 50},
 	level_scheme = "player",
-	max_level = 2,
+	max_level = 1,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 30, height = 30,
-	persistant = "zone",
+	width = 140, height = 140,
 --	all_remembered = true,
 --	all_lited = true,
-	ambiant_music = "Breaking the siege.ogg",
+	persistant = "zone",
 	generator =  {
 		map = {
-			class = "engine.generator.map.TileSet",
-			tileset = {"3x3/base", "3x3/tunnel", "3x3/windy_tunnel"},
-			tunnel_chance = 100,
-			['.'] = "FLOOR",
-			['#'] = "WALL",
-			['+'] = "DOOR",
-			["'"] = "DOOR",
+			class = "engine.generator.map.Cavern",
+			zoom = 16,
+			min_floor = 1200,
+			floor = "SAND",
+			wall = "SANDWALL_STABLE",
 			up = "UP",
 			down = "DOWN",
+			door = "SAND",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {120, 140},
+			guardian = "BRIAGH",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {0, 0},
+			nb_object = {6, 9},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
 			nb_object = {0, 0},
 		},
 	},
-	post_process = function(level)
-		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
-	end,
 	levels =
 	{
 		[1] = {
 			generator = { map = {
 				up = "UP_WILDERNESS_FAR_EAST",
-			},
-			trap = {nb_object = {20, 20},},
-			},
-		},
-		[2] = {
-			width = 40, height = 40,
-			generator = { map = {
-				class = "engine.generator.map.Static",
-				map = "zones/vor-armoury-last",
 			}, },
 		},
 	},

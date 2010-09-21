@@ -56,6 +56,21 @@ on_grant = function(self, who)
 	game.logPlayer(game.player, "Zemekkys points the location of Vor Armoury on your map.")
 end
 
+wyrm_lair = function(self, who)
+	-- Reveal entrances
+	local g = mod.class.Grid.new{
+		show_tooltip=true,
+		name="Entrance into the sandpit of Briagh",
+		display='>', color=colors.YELLOW,
+		notice = true,
+		change_level=1, change_zone="briagh-lair"
+	}
+	g:resolve() g:resolve(nil, true)
+	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 67, 49)
+
+	game.logPlayer(game.player, "Zemekkys points the location of Briagh lair on your map.")
+end
+
 on_status_change = function(self, who, status, sub)
 	if sub then
 --		if self:isCompleted() then

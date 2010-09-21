@@ -21,11 +21,16 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A slot in the door opens and a pair of wild eyes peer out.*#WHITE#
 What do you want, @playerdescriptor.race@?]],
 	answers = {
-		{"Paladin Aeryn told me that you could help me. I need to get to Middle Earth.", jump="help"},
+		{"Paladin Aeryn told me that you could help me. I need to get to Middle Earth.", jump="help", cond=function(npc, player) return not player:hasQuest("west-portal") end},
+		{"I found the Blood-Runed Athame, but there was no Resonating Diamond.", jump="athame", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("athame") end},
 		{"Sorry, I have to go!"},
 	}
 }
 
+
+-----------------------------------------------------------------
+-- Give quest
+-----------------------------------------------------------------
 newChat{ id="help",
 	text = [[Pfaugh! Her goal in life is to waste my time! Middle Earth? Why not Narnia or Chicago? Just as easy to send you someplace entirely fictional as Middle Earth. Go away.
 #LIGHT_GREEN#*Slot slams shut.*#WHITE#]],
@@ -69,5 +74,40 @@ newChat{ id="quest",
 		end},
 	}
 }
+
+
+-----------------------------------------------------------------
+-- Return athame
+-----------------------------------------------------------------
+newChat{ id="athame",
+	text = [[Of course there was no Resonating Diamond. What makes you think Briagh would let one loose for even a second?]],
+	answers = {
+		{"Briagh?", jump="athame2"},
+	}
+}
+newChat{ id="athame2",
+	text = [[Briagh the Great Sand Wyrm. Where do you think Resonating Diamonds come from? They're just regular diamonds until they get stuck between Briagh's scales for a few centuries and get infused with his life rhythms. He sleeps on a hoard of precious gems and metals, you see.]],
+	answers = {
+		{"Where might I find Briagh's lair??", jump="athame3"},
+	}
+}
+newChat{ id="athame3",
+	text = [[Well south of the Sunwall. I'll mark it for you on your map.]],
+	answers = {
+		{"I'll be back with a Resonating Diamond.", action=function(npc, player) player:hasQuest("west-portal"):wyrm_lair(player) end},
+	}
+}
+
+-----------------------------------------------------------------
+-- Return gem
+-----------------------------------------------------------------
+newChat{ id="help",
+	text = [[Pfaugh! Her goal in life is to waste my time! Middle Earth? Why not Narnia or Chicago? Just as easy to send you someplace entirely fictional as Middle Earth. Go away.
+#LIGHT_GREEN#*Slot slams shut.*#WHITE#]],
+	answers = {
+		{"I got here from Middle Earth, didn't I? I have this magic Orb I looted from a dead orc, see, and...", jump="offer"},
+	}
+}
+
 
 return "welcome"

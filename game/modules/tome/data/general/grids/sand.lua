@@ -67,6 +67,18 @@ newEntity{
 }
 
 newEntity{
+	define_as = "SANDWALL_STABLE",
+	name = "sandwall", image = "terrain/sandwall.png",
+	display = '#', color={r=203,g=189,b=72}, back_color={r=93,g=79,b=22},
+	always_remember = true,
+	can_pass = {pass_wall=1},
+	does_block_move = true,
+	block_sight = true,
+	air_level = -10,
+	dig = "SAND",
+}
+
+newEntity{
 	define_as = "PALMTREE",
 	name = "tree", image = "terrain/sand.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
