@@ -334,7 +334,7 @@ Bright blue his jacket is, and his boots are yellow.]],
 	},
 
 	max_power = 50, power_regen = 1,
-	use_power = { name = "speed boost", power = 50,
+	use_power = { name = "boost speed", power = 50,
 		use = function(self, who)
 			who:setEffect(who.EFF_SPEED, 8, {power=0.20 + who:getCun() / 80})
 			game.logSeen(who, "%s speeds up!", who.name:capitalize())
