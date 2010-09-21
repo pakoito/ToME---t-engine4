@@ -580,6 +580,42 @@ newEntity{ base = "BASE_HELM",
 	use_talent = { id = Talents.T_WARSHOUT, level = 2, power = 80 },
 }
 
+newEntity{ base = "BASE_GLOVES",
+	unique = true,
+	name = "Gloves of the Firm Hand",
+	unided_name = "heavy gloves",
+	desc = [[These gloves make you feel rock steady! These magical gloves feel really soft on the touch from the inside. On the outside magical stones create a rough surface that is constantly shifting. When you brace yourself a magical ray of earth energy seems to automatically bind them to the ground, granting you increased stability.]],
+	level_range = {17, 27},
+	rarity = 210,
+	cost = 150,
+	material_level = 3,
+	wielder = {
+		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end) },
+		disarm_immune=0.3,
+		knockback_immune=0.3,
+		stun_immune=0.3,
+	},
+}
+
+newEntity{ base = "BASE_CLOAK",
+	unique = true,
+	name = "Cloak of Grima",
+	unided_name = "tattered cloak",
+	desc = [[Worn by the Wormtongue when feigning to be a councilor to Theoden while carrying intelligence back to Saruman.]],
+	level_range = {20, 29},
+	rarity = 240,
+	cost = 200,
+	material_level = 3,
+	wielder = {
+		combat_def = 10,
+		inc_stats = { [Stats.STAT_CUN] = 4, [Stats.STAT_CUN] = 3, },
+		talents_types_mastery = { ["cunning/stealth"] = 0.1, },
+
+	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_PHASE_DOOR, level = 2, power = 30 },
+}
+
 --[=[
 newEntity{
 	unique = true,

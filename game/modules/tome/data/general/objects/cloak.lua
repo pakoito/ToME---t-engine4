@@ -17,49 +17,44 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Talents = require "engine.interface.ActorTalents"
-
 newEntity{
-	define_as = "BASE_GAUNTLET",
-	slot = "HANDS",
-	type = "armor", subtype="hands",
+	define_as = "BASE_CLOAK",
+	slot = "BACK",
+	type = "armor", subtype="cloak",
 	add_name = " (#ARMOR#)",
-	display = "[", color=colors.SLATE,
-	image = resolvers.image_material("gauntlets", "metal"),
-	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
-	encumber = 1.5,
-	rarity = 9,
-	metallic = true,
-	desc = [[Metal gloves protecting the hands up to the middle of the lower arm.]],
-	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
+	display = "(", color=colors.UMBER, image = resolvers.image_material("cloak", "cloth"),
+	encumber = 2,
+	rarity = 6,
+	desc = [[A cloth coat typically worn as a loose outer garment. It is spacious enough to be worn even over bulky metal armour.]],
+	egos = "/data/general/objects/egos/cloak.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
-newEntity{ base = "BASE_GAUNTLET",
-	name = "iron gauntlets",
+newEntity{ base = "BASE_CLOAK",
+	name = "linen cloak",
 	level_range = {1, 20},
-	cost = 5,
+	cost = 2,
 	material_level = 1,
 	wielder = {
-		combat_armor = 1,
+		combat_def = 1,
 	},
 }
 
-newEntity{ base = "BASE_GAUNTLET",
-	name = "dwarven-steel gauntlets",
+newEntity{ base = "BASE_CLOAK",
+	name = "cashmere cloak",
 	level_range = {20, 40},
-	cost = 7,
+	cost = 4,
 	material_level = 3,
 	wielder = {
-		combat_armor = 2,
+		combat_def = 2,
 	},
 }
 
-newEntity{ base = "BASE_GAUNTLET",
-	name = "mithril gauntlets",
+newEntity{ base = "BASE_CLOAK",
+	name = "elven-silk cloak",
 	level_range = {40, 50},
-	cost = 10,
+	cost = 7,
 	material_level = 5,
 	wielder = {
-		combat_armor = 3,
+		combat_def = 3,
 	},
 }
