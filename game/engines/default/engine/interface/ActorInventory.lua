@@ -308,7 +308,11 @@ function _M:wearObject(o, replace, vocal)
 		if vocal then game.logSeen(self, "%s is not wearable.", o:getName{do_color=true}) end
 		return false
 	end
-	print("wear slot", inven)
+	if not self.inven[inven] then
+		if vocal then game.logSeen(self, "%s can not wear %s.", self.name, o:getName{do_color=true}) end
+		return false
+	end
+
 	local ok, err = self:canWearObject(o)
 	if not ok then
 		if vocal then game.logSeen(self, "%s can not wear: %s (%s).", self.name:capitalize(), o:getName{do_color=true}, err) end

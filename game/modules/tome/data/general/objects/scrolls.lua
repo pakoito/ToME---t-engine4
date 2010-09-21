@@ -19,6 +19,7 @@
 
 newEntity{
 	define_as = "BASE_SCROLL",
+	slot = "INBELT",
 	type = "scroll", subtype="scroll",
 	unided_name = "scroll", id_by_type = true,
 	display = "?", color=colors.WHITE, image="object/scroll.png",
