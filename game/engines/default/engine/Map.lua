@@ -456,9 +456,11 @@ end
 -- @param pos what kind of entity to set(Map.TERRAIN, Map.OBJECT, Map.ACTOR)
 function _M:remove(x, y, pos)
 	if self.map[x + y * self.w] then
-		self.map[x + y * self.w][pos] = nil
+		local e = self.map[x + y * self.w][pos]
+		self.map[x + y * self.w][pos]= nil
 		self:updateMap(x, y)
 		self.changed = true
+		return e
 	end
 end
 
@@ -881,15 +883,11 @@ function _M:removeObject(x, y, i)
 	if not self(x, y, i) then return false end
 	-- Remove it
 	self:remove(x, y, i)
-	-- Move the last one to its position, to never get a "hole"
-	local j = i + 1
-	while self(x, y, j) do j = j + 1 end
-	j = j - 1
-	-- If the removed one was not the last
-	if j > i then
-		local o = self(x, y, j)
-		self:remove(x, y, j)
-		self(x, y, i, o)
+
+	i = i + 1
+	while self(x, y, i) do
+		self(x, y, i - 1, self:remove(x, y, i))
+		i = i + 1
 	end
 
 	return true
