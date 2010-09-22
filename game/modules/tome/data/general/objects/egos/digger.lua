@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Stats = require "engine.interface.ActorStats"
+
 newEntity{
 	name = " of the badger", suffix=true,
 	level_range = {1, 50},

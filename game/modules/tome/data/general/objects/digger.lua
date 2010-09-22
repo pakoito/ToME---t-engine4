@@ -50,7 +50,7 @@ newEntity{
 		if wait() then
 			who:project(tg, x, y, DamageType.DIG, 1)
 		end
-	end}
+	end},
 
 	egos = "/data/general/objects/egos/digger.lua", egos_chance = resolvers.mbonus(10, 5),
 }
