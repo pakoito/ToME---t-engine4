@@ -72,7 +72,9 @@ function _M:init(t, no_default)
 	t.rank = t.rank or 3
 	t.old_life = 0
 
-	t.easy_mode_lifes = 1
+	if game.difficulty == game.DIFFICULTY_EASY then
+		t.easy_mode_lifes = 1
+	end
 
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)

@@ -34,7 +34,7 @@ function _M:init(title, actor, filter, action)
 	self.list = self.inven_list
 	self.sel = 1
 	self.scroll = 1
-	self.max = math.floor((self.ih * 0.8 - 5) / self.font_h) - 1
+--	self.max = math.floor((self.ih * 0.8 - 5) / self.font_h) - 1
 
 	self:keyCommands({
 		__TEXTINPUT = function(c)
@@ -96,11 +96,15 @@ function _M:init(title, actor, filter, action)
 			else
 				self.list = self.inven_list
 			end
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			if button ~= "wheelup" and button ~= "wheeldown" then
+				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			end
 			self.changed = true
 
 			if button == "left" and event == "button" then self:use()
 			elseif button == "right" and event == "button" then
+			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
+			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
 			end
 		end },
 	}
@@ -127,14 +131,17 @@ function _M:generateList()
 	local list = {}
 	local chars = {}
 	local i = 0
+	self.max_h = 0
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
 			list[#list+1] = { name=self.actor.inven_def[inven_id].name, color={0x90, 0x90, 0x90}, inven=inven_id }
+			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = string.char(string.byte('a') + i)
 					list[#list+1] = { name=char..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item }
+					self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 					chars[char] = #list
 					i = i + 1
 				end
@@ -152,6 +159,7 @@ function _M:generateList()
 		if not self.filter or self.filter(o) then
 			local char = string.char(string.byte('a') + i)
 			list[#list+1] = { name=char..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item }
+			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			chars[char] = #list
 			i = i + 1
 		end
@@ -163,6 +171,7 @@ function _M:generateList()
 	self.list = self.inven_list
 	self.sel = 1
 	self.scroll = 1
+	self.max = math.floor((self.ih - 5) / self.font_h) - self.max_h
 end
 
 function _M:on_recover_focus()
@@ -178,7 +187,7 @@ function _M:drawDialog(s)
 		lines = {}
 	end
 
-	local sh = self.ih - 4 - #lines * self.font:lineSkip()
+	local sh = self.ih - 4 - self.max_h * self.font:lineSkip()
 	h = sh
 	self:drawWBorder(s, 3, sh, self.iw - 6)
 	for i = 1, #lines do

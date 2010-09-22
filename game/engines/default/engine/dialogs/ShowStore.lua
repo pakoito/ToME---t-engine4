@@ -36,7 +36,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.list = self.store_list
 	self.sel = 1
 	self.scroll = 1
-	self.max = math.floor((self.ih * 0.8 - 5) / self.font_h) - 1
+--	self.max = math.floor((self.ih * 0.8 - 5) / self.font_h) - 1
 
 	self:keyCommands({
 		__TEXTINPUT = function(c)
@@ -94,9 +94,11 @@ function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	local i = 0
+	self.max_h = 0
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
 			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item }
+			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			i = i + 1
 		end
 	end
@@ -108,10 +110,12 @@ function _M:generateList()
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
 			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item }
+			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			i = i + 1
 		end
 	end
 	self.actor_list = list
+	self.max = math.floor((self.ih - 5) / self.font_h) - self.max_h
 end
 
 function _M:drawDialog(s)
@@ -121,7 +125,7 @@ function _M:drawDialog(s)
 		lines = {}
 	end
 
-	local sh = self.ih - 4 - #lines * self.font:lineSkip()
+	local sh = self.ih - 4 - self.max_h * self.font:lineSkip()
 	h = sh
 	self:drawWBorder(s, 3, sh, self.iw - 6)
 	for i = 1, #lines do

@@ -27,6 +27,16 @@ newTalent{
 	cooldown = 150,
 	range = 20,
 	action = function(self, t)
+		local seen = false
+		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
+		core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+			local actor = game.level.map(x, y, game.level.map.ACTOR)
+			if actor and actor ~= self then seen = true end
+		end, nil)
+		if seen then
+			game.log("There's too much going on for you to use Meditation right now!")
+			return
+		end
 		self:setEffect(self.EFF_STUNNED, 17 - self:getTalentLevel(t), {})
 		self:incEquilibrium(-10 - self:getWil(50) * self:getTalentLevel(t))
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -34,6 +44,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Meditate on your link with Nature. You are considered stunned for %d turns and regenerate %d equilibrium.
+		Meditating require peace and quiet and may not be cast with hostile creatures in sight.
 		The effect will increase with your Willpower stat.]]):
 		format(17 - self:getTalentLevel(t), 10 + self:getWil(50) * self:getTalentLevel(t))
 	end,
