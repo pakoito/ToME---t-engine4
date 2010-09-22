@@ -56,7 +56,6 @@ local Tooltip = require "engine.Tooltip"
 local Calendar = require "engine.Calendar"
 
 local Dialog = require "engine.Dialog"
-local QuitDialog = require "mod.dialogs.Quit"
 local MapMenu = require "mod.dialogs.MapMenu"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound, engine.interface.GameTargeting))
@@ -240,9 +239,9 @@ function _M:setupDisplayMode()
 	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
 
 	-- Create the framebuffer
---	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
---	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
---	game.fbo_shader:setUniform("blur", 3)
+	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
+--	game.fbo_shader:setUniform("blur", 1)
 --	game.fbo_shader:setUniform("colorize", {1,0.3,0})
 end
 
@@ -806,8 +805,18 @@ function _M:onQuit()
 	self.player:restStop("quitting")
 
 	if not self.quit_dialog and not self.player.dead then
-		self.quit_dialog = QuitDialog.new()
-		self:registerDialog(self.quit_dialog)
+		self.quit_dialog = Dialog:yesnoPopup("    Save and exit?    ", "Save and exit?", function(ok)
+			if ok then
+				local d = engine.Dialog:simplePopup("Quitting...", "Quitting...")
+				d.__show_popup = false
+				core.display.forceRedraw()
+
+				-- savefile_pipe is created as a global by the engine
+				savefile_pipe:push(self.save_name, "game", self)
+				util.showMainMenu()
+			end
+			self.quit_dialog = nil
+		end)
 	end
 end
 
