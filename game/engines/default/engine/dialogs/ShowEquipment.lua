@@ -51,9 +51,13 @@ function _M:init(title, actor, filter, action)
 		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
 		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			self.changed = true
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			if button ~= "wheelup" and button ~= "wheeldown" then
+				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			end
 			if button == "left" and event == "button" then self:use()
 			elseif button == "right" and event == "button" then
+			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
+			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
 			end
 		end },
 	}
@@ -119,6 +123,6 @@ Mouse: #00FF00#Left click#FFFFFF# to use.
 	end
 
 	-- Talents
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5)
+	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
 	self.changed = false
 end

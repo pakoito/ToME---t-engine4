@@ -49,17 +49,22 @@ function _M:init(key_source)
 		end,
 	})
 	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=600, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
+		{ x=2, y=5, w=600, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			if tx < 430 then
 				self.selcol = 1
 			else
 				self.selcol = 2
 			end
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			if button ~= "wheelup" and button ~= "wheeldown" then
+				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			end
 			self.changed = true
-			if button == "left" then self:use()
-			elseif button == "right" then
+
+			if button == "left" and event == "button" then self:use()
+			elseif button == "right" and event == "button" then
+			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
+			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
 			end
 		end },
 	}
@@ -167,5 +172,5 @@ function _M:drawDialog(s)
 
 	self:drawSelectionList(s, 2,   5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
 	self:drawSelectionList(s, 230, 5, self.font_h, self.list, self.sel, "b1", self.scroll, self.max, col, self.selcol == 1 and selcol or col)
-	self:drawSelectionList(s, 430, 5, self.font_h, self.list, self.sel, "b2", self.scroll, self.max, col, self.selcol == 2 and selcol or col)
+	self:drawSelectionList(s, 430, 5, self.font_h, self.list, self.sel, "b2", self.scroll, self.max, col, self.selcol == 2 and selcol or col, nil, self.iw - 430, true)
 end

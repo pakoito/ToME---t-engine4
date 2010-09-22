@@ -89,7 +89,7 @@ function _M:init(title, actor, filter, action)
 		EXIT = function() game:unregisterDialog(self) end,
 	})
 	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
 		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			if tx < self.iw / 2 then
 				self.list = self.equip_list
@@ -195,8 +195,8 @@ function _M:drawDialog(s)
 		h = h + self.font:lineSkip()
 	end
 
-	self:drawSelectionList(s, 2, 5, self.font_h, self.equip_list, self.list == self.equip_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5)
+	self:drawSelectionList(s, 2, 5, self.font_h, self.equip_list, self.list == self.equip_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
 	self:drawHBorder(s, self.iw / 2, 2, sh - 4)
-	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.inven_list, self.list == self.inven_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5)
+	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.inven_list, self.list == self.inven_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
 	self.changed = false
 end

@@ -42,8 +42,12 @@ function _M:init(actor)
 	self:mouseZones{
 		{ x=2, y=10 + self.font:lineSkip()*6, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			self.changed = true
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			if button ~= "wheelup" and button ~= "wheeldown" then
+				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
+			end
 			if button == "left" and event == "button" then self:use()
+			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
+			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
 			end
 		end },
 	}

@@ -50,12 +50,16 @@ function _M:init(actor, on_finish)
 		end,
 	})
 	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then self.key:triggerVirtual("EXIT") end end},
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then self.key:triggerVirtual("EXIT") end end},
 		{ x=2, y=25, w=130, h=self.font_h*6, fct=function(button, x, y, xrel, yrel, tx, ty, event)
 			self.changed = true
-			self.sel = 1 + math.floor(ty / self.font_h)
+			if button ~= "wheelup" and button ~= "wheeldown" then
+				self.sel = 1 + math.floor(ty / self.font_h)
+			end
 			if button == "left" and event == "button" then self:incStat(1)
 			elseif button == "right" and event == "button" then self:incStat(-1)
+			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
+			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
 			end
 		end },
 	}

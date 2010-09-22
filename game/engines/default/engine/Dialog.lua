@@ -337,12 +337,18 @@ function _M:drawHBorder(s, x, y, h)
 	end
 end
 
-function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, color, selcolor, max_size, cutoff_size)
+function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, color, selcolor, max_size, cutoff_size, scrollbar)
 	selcolor = selcolor or {0,255,255}
 	color = color or {255,255,255}
 	max = max or 99999
 	scroll = util.bound(scroll or 1, 1, #list)
 
+	if scrollbar then
+		if max_size then max_size = max_size - 6 end
+		if cutoff_size then cutoff_size = cutoff_size - 6 end
+	end
+
+	local by = y
 	for i = scroll, math.min(#list, scroll + max - 1) do
 		local v = list[i]
 		local vc = nil
@@ -369,4 +375,11 @@ function _M:drawSelectionList(s, x, y, hskip, list, sel, prop, scroll, max, colo
 			end
 		end
 	end
+
+	if not scrollbar or sel < 1 then return end
+	local size = y - 4 - by
+	for j = by, y - 4 do
+		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_4.png"), x + cutoff_size - 4, j)
+	end
+	self:drawWBorder(s, x + cutoff_size - 3, by + sel * size / #list, 6)
 end
