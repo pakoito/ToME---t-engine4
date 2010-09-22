@@ -52,7 +52,6 @@ newBirthDescriptor{
 		money = 10,
 		resolvers.equip{ id=true,
 			{type="lite", subtype="lite", name="brass lantern"},
-			{type="tool", subtype="digger", name="iron pickaxe"},
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser healing", ego_chance=-1000},
@@ -100,7 +99,7 @@ newBirthDescriptor{
 		"Easy game setting",
 		"All damage done to the player decreased by 30%",
 		"All healing for the player increased by 10%",
-		"Each five levels get one more 'life' that allows to resurrect at the start of the level.",
+		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
 		"Achievements are not granted.",
 	},
 	descriptor_choices =
