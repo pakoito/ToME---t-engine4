@@ -298,7 +298,7 @@ function _M:keyCommands(t, b)
 	if b then self.key:addBinds(b) end
 end
 
-function _M:mouseZones(t)
+function _M:mouseZones(t, no_new)
 	-- Offset the x and y with the window position and window title
 	if not t.norestrict then
 		for i, z in ipairs(t) do
@@ -309,7 +309,7 @@ function _M:mouseZones(t)
 		end
 	end
 
-	self.mouse = engine.Mouse.new()
+	if not no_new then self.mouse = engine.Mouse.new() end
 	self.mouse:registerZones(t)
 end
 

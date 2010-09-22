@@ -257,6 +257,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 	local oldr, oldg, oldb = r, g, b
 	local max_h = 0
 	local sw = 0
+	local bx, by = x, y
 	for i, v in ipairs(list) do
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
@@ -305,7 +306,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 			if stop then break end
 		end
 	end
-	return r, g, b, max_h
+	return r, g, b, sw, max_h, bx, by
 end
 
 getmetatable(tmps).__index.drawColorStringCentered = function(s, font, str, dx, dy, dw, dh, r, g, b, alpha_from_texture, limit_w)
@@ -324,6 +325,7 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 	local oldr, oldg, oldb = r, g, b
 	local max_h = 0
 	local sw = 0
+	local bx, by = x, y
 	for i, v in ipairs(list) do
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
@@ -372,7 +374,7 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 			if stop then break end
 		end
 	end
-	return r, g, b, max_h
+	return r, g, b, sw, max_h, bx, by
 end
 
 getmetatable(tmps).__index.drawColorStringBlendedCentered = function(s, font, str, dx, dy, dw, dh, r, g, b, alpha_from_texture, limit_w)
