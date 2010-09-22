@@ -87,7 +87,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Rushes toward your target with incredible speed. If the target is reached you get a free attack doing 120% weapon damage.]])
+		return ([[Rushes toward your target with incredible speed. If the target is reached you get a free attack doing 120% weapon damage.
+		You must rush from at least 2 tiles away.]])
 	end,
 }
 

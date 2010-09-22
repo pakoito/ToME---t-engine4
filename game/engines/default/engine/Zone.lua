@@ -94,7 +94,12 @@ function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 	for i, e in ipairs(list) do
 		if e[rarity_field] and e.level_range and (not filter or filter(e)) then
 --			print("computing rarity of", e.name)
-			local lev = self.base_level + (level.level - 1) + (add_level or 0)
+			local lev
+			if self.level_adjust_level then
+				lev = self:level_adjust_level(level)
+			else
+				lev = self.base_level + (level.level - 1) + (add_level or 0)
+			end
 
 			local max = 10000
 			if lev < e.level_range[1] then max = 10000 / (3 * (e.level_range[1] - lev))
