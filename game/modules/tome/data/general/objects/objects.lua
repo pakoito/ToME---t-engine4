@@ -32,6 +32,9 @@ loadIfNot("/data/general/objects/potions.lua")
 loadIfNot("/data/general/objects/scrolls.lua")
 loadIfNot("/data/general/objects/wands.lua")
 
+-- Tools
+loadIfNot("/data/general/objects/digger.lua")
+
 -- Jewelry stuff
 loadIfNot("/data/general/objects/jewelry.lua")
 

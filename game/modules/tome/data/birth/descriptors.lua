@@ -52,6 +52,7 @@ newBirthDescriptor{
 		money = 10,
 		resolvers.equip{ id=true,
 			{type="lite", subtype="lite", name="brass lantern"},
+			{type="tool", subtype="digger", name="iron pickaxe"},
 		},
 		resolvers.inventory{ id=true,
 			{type="potion", subtype="potion", name="potion of lesser healing", ego_chance=-1000},

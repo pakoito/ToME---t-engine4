@@ -72,6 +72,8 @@ function _M:init(t, no_default)
 	t.rank = t.rank or 3
 	t.old_life = 0
 
+	t.easy_mode_lifes = 1
+
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
 	mod.class.interface.PlayerLore.init(self, t)
@@ -353,7 +355,18 @@ function _M:levelup()
 	if self.level == 40 then world:gainAchievement("LEVEL_40", self) end
 	if self.level == 50 then world:gainAchievement("LEVEL_50", self) end
 
-	if game.difficulty == game.DIFFICULTY_EASY and self.level % 5 == 0 then
+	if game.difficulty == game.DIFFICULTY_EASY and (
+		self.level == 2 or
+		self.level == 3 or
+		self.level == 5 or
+		self.level == 7 or
+		self.level == 10 or
+		self.level == 14 or
+		self.level == 18 or
+		self.level == 24 or
+		self.level == 30 or
+		self.level == 40
+		) then
 		self.easy_mode_lifes = (self.easy_mode_lifes or 0) + 1
 	end
 end

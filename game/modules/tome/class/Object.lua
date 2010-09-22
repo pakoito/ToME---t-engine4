@@ -129,6 +129,8 @@ function _M:descAttribute(attr)
 		return ("worth %0.2f"):format(self.money_value / 10)
 	elseif attr == "USE_TALENT" then
 		return self:getTalentFromId(self.use_talent.id).name:lower()
+	elseif attr == "DIGSPEED" then
+		return ("dig speed %d turns"):format(self.digspeed)
 	end
 end
 
