@@ -28,13 +28,13 @@ tiles = engine.Tiles.new(16, 16)
 -- This should work for anything that has a surface and x,y,w,h,font properties.
 module(..., package.seeall, class.make)
 
-function _M:startCursor()	
+function _M:startCursor()
 	self.cursorPosition = 0
 	self.maximumCurosrPosition = 0
 	self.focused = false
 end
 
-function _M:moveRight(x, add)	
+function _M:moveRight(x, add)
 	if add and self.cursorPosition + x > self.maximumCurosrPosition then self.maximumCurosrPosition = self.cursorPosition + x end
 	if self.cursorPosition + x <= self.maximumCurosrPosition then
 		self.cursorPosition = self.cursorPosition + x
@@ -49,8 +49,9 @@ end
 
 -- @param s surface to draw on
 function _M:drawCursor(s, baseX, text)
-	local sw, sh = self.font:size(text:sub(1, self.cursorPosition))	
-	local t = os.time() % 2	
+	local sw, sh = self.font:size(text:sub(1, self.cursorPosition))
+--	local t = os.time() % 2
+	local t = 0
 	if t < 1 and self.focused then
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "cursor.png"), sw + baseX, self.y + self.h - sh - 2)
 		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "cursor.png"), sw + baseX, self.y + self.h - sh - 10)

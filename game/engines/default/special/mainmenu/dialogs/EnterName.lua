@@ -34,15 +34,19 @@ function _M:init(runmod)
 			if self.controls[self.state] and self.controls[self.state].delete then
 				self.controls[self.state]:delete()
 			end
+			self.changed = true
 		end,
 		_TAB = function()
 			self.state = self:changeFocus(true)
+			self.changed = true
 		end,
 		_DOWN = function()
 			self.state = self:changeFocus(true)
+			self.changed = true
 		end,
 		_UP = function()
 			self.state = self:changeFocus(false)
+			self.changed = true
 		end,
 		_RIGHT = function()
 			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveRight then
@@ -50,6 +54,7 @@ function _M:init(runmod)
 			else
 				self.state = self:changeFocus(true)
 			end
+			self.changed = true
 		end,
 		_LEFT = function()
 			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveLeft then
@@ -57,16 +62,19 @@ function _M:init(runmod)
 			else
 				self.state = self:changeFocus(false)
 			end
+			self.changed = true
 		end,
 		_BACKSPACE = function()
 			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
 				self.controls[self.state]:backSpace()
 			end
+			self.changed = true
 		end,
 		__TEXTINPUT = function(c)
 			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
 				self.controls[self.state]:textInput(c)
 			end
+			self.changed = true
 		end,
 		_RETURN = function()
 			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="Button" then
@@ -74,6 +82,7 @@ function _M:init(runmod)
 			elseif self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
 				self:okclick()
 			end
+			self.changed = true
 		end,
 	}, {
 		EXIT = function()
@@ -105,7 +114,6 @@ function _M:cancelclick()
 end
 
 function _M:drawDialog(s, w, h)
---	s:drawColorStringCentered(self.font, "Enter your characters name:", 2, 2, self.iw - 2, self.ih - 2 - self.font:lineSkip())
---	s:drawColorStringCentered(self.font, self.name, 2, 2 + self.font:lineSkip(), self.iw - 2, self.ih - 2 - self.font:lineSkip())
 	self:drawControls(s)
+	self.changed = false
 end

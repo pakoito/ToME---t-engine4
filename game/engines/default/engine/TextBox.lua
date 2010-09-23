@@ -23,8 +23,7 @@ require "engine.Mouse"
 require "engine.KeyBind"
 require "engine.interface.ControlCursorSupport"
 --- Handles textbox input control
-module(..., package.seeall, class.inherit(
-		engine.interface.ControlCursorSupport))
+module(..., package.seeall, class.inherit(engine.interface.ControlCursorSupport))
 
 tiles = engine.Tiles.new(16, 16)
 
