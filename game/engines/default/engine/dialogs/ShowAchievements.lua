@@ -61,7 +61,7 @@ function _M:generateList()
 		list[#list+1] = { name=a.name,  desc=a.desc, when=data.when, who=data.who, order=a.order }
 		i = i + 1
 	end
-	table.sort(list, function(a, b) return a.order < b.order end)
+	table.sort(list, function(a, b) return a.name < b.name end)
 	self.list = list
 end
 

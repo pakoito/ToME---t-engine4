@@ -56,21 +56,6 @@ newBirthDescriptor{
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Bree-man",
-	desc = {
-		"Humans hailing from the northen town of Bree. A common kind of man, unremarkable in all respects.",
-	},
-	copy = {
-		default_wilderness = {43, 18},
-		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
-		starting_intro = "bree-man",
-	},
-}
-
-newBirthDescriptor
-{
-	type = "subrace",
 	name = "Dúnadan",
 	desc = {
 		"The greatest of the Edain, humans in all respects but stronger, smarter, and wiser.",
@@ -89,6 +74,23 @@ newBirthDescriptor
 		starting_intro = "dunadan",
 	},
 }
+
+newBirthDescriptor
+{
+	type = "subrace",
+	name = "Bree-man",
+	desc = {
+		"Humans hailing from the northen town of Bree. A common kind of man, unremarkable in all respects.",
+	},
+	copy = {
+		default_wilderness = {43, 18},
+		starting_zone = "trollshaws",
+		starting_quest = "start-dunadan",
+		starting_intro = "bree-man",
+	},
+}
+
+
 --[[
 newBirthDescriptor
 {
