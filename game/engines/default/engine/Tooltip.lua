@@ -135,8 +135,8 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 			local remember = game.level.map.remembers(tmx, tmy)
 			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.PROJECTILE, "tooltip", game.level.map.actor_player) or nil
 			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip", game.level.map.actor_player) or nil
-			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip", game.level.map.actor_player) or nil
-			tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip", game.level.map.actor_player) or nil
+			tt[#tt+1] = remember and game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip", game.level.map.actor_player) or nil
+			tt[#tt+1] = remember and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip", game.level.map.actor_player) or nil
 			tt[#tt+1] = remember and game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip", game.level.map.actor_player) or nil
 			if #tt > 0 then
 				self:set("%s", table.concat(tt, "\n---\n"))
