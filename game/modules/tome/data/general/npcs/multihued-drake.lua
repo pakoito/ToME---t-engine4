@@ -77,8 +77,8 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	resists = { [DamageType.PHYSICAL] = 30, [DamageType.FIRE] = 30, [DamageType.COLD] = 30, [DamageType.ACID] = 30, [DamageType.LIGHTNING] = 30, },
 
 	summon = {
-		{type="dragon", name="multi-hued drake hatchling", number=3, hasxp=false},
-		{type="dragon", name="multi-hued drake", number=1, hasxp=false},
+		{type="dragon", name="multi-hued drake hatchling", number=1, hasxp=false},
+--		{type="dragon", name="multi-hued drake", number=1, hasxp=false},
 	},
 
 	resolvers.talents{
@@ -110,7 +110,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 
 	summon = {
 		{type="dragon", name="multi-hued drake", number=3, hasxp=false},
-		{type="dragon", name="greater multi-hued wyrm", number=1, hasxp=false},
+--		{type="dragon", name="greater multi-hued wyrm", number=1, hasxp=false},
 	},
 
 	resolvers.talents{

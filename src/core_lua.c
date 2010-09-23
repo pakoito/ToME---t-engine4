@@ -426,12 +426,19 @@ static int lua_set_realtime(lua_State *L)
 	setupRealtime(freq);
 	return 0;
 }
+static int lua_sleep(lua_State *L)
+{
+	int ms = luaL_checknumber(L, 1);
+	SDL_Delay(ms);
+	return 0;
+}
 static const struct luaL_reg gamelib[] =
 {
 	{"reboot", lua_reboot_lua},
 	{"set_current_game", lua_set_current_game},
 	{"exit_engine", lua_exit_engine},
 	{"getTime", lua_get_time},
+	{"sleep", lua_sleep},
 	{"setRealtime", lua_set_realtime},
 	{NULL, NULL},
 };

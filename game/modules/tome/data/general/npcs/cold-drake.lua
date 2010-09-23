@@ -71,8 +71,8 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
 
 	summon = {
-		{type="dragon", name="cold drake hatchling", number=3, hasxp=false},
-		{type="dragon", name="cold drake", number=1, hasxp=false},
+		{type="dragon", name="cold drake hatchling", number=1, hasxp=false},
+--		{type="dragon", name="cold drake", number=1, hasxp=false},
 	},
 
 	resolvers.talents{
@@ -96,7 +96,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 
 	summon = {
 		{type="dragon", name="cold drake", number=3, hasxp=false},
-		{type="dragon", name="ice wyrm", number=1, hasxp=false},
+--		{type="dragon", name="ice wyrm", number=1, hasxp=false},
 	},
 
 	resolvers.talents{

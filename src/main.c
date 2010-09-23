@@ -37,6 +37,7 @@
 #include "core_lua.h"
 #include "getself.h"
 #include "music.h"
+#include "te4-xmpp.h"
 #include "main.h"
 
 #define WIDTH 800
@@ -82,7 +83,7 @@ static int traceback (lua_State *L) {
 	return 1;
 }
 
-static int docall (lua_State *L, int narg, int nret)
+int docall (lua_State *L, int narg, int nret)
 {
 	int status;
 	int base = lua_gettop(L) - narg;  /* function index */
@@ -854,6 +855,8 @@ int main(int argc, char *argv[])
 	}
 
 	boot_lua(2, FALSE, argc, argv);
+
+//	start_xmpp_thread();
 
 	pass_command_args(argc, argv);
 

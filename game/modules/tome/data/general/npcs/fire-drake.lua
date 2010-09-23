@@ -71,8 +71,8 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(15, 10)},
 
 	summon = {
-		{type="dragon", name="fire drake hatchling", number=3, hasxp=false},
-		{type="dragon", name="fire drake", number=1, hasxp=false},
+		{type="dragon", name="fire drake hatchling", number=1, hasxp=false},
+--		{type="dragon", name="fire drake", number=1, hasxp=false},
 	},
 
 	resolvers.talents{
@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 
 	summon = {
 		{type="dragon", name="fire drake", number=3, hasxp=false},
-		{type="dragon", name="fire wyrm", number=1, hasxp=false},
+--		{type="dragon", name="fire wyrm", number=1, hasxp=false},
 	},
 
 	resolvers.talents{
