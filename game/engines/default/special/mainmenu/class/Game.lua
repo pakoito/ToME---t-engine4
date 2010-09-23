@@ -261,6 +261,15 @@ Now go and have some fun!]]
 	self.step:setKeyHandling()
 	self.step:setMouseHandling()
 
+	self.step.key:addBinds{
+		-- Lua console
+		LUA_CONSOLE = function()
+			if config.settings.tome.cheat then
+				self:registerDialog(require("engine.DebugConsole").new())
+			end
+		end,
+	}
+
 	if self.s_log then
 		local w, h = self.s_log:getSize()
 		self.mouse:registerZone(self.w - w, self.h - h, w, h, function(button)

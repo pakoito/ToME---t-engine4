@@ -58,7 +58,7 @@ for i, file in ipairs(fs.list("/settings/")) do
 end
 
 -- Load default keys
-engine.KeyBind:load("move,actions")
+engine.KeyBind:load("move,actions,debug")
 
 -- Load remaps
 if fs.exists("/keybinds.cfg") then

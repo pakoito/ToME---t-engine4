@@ -32,6 +32,8 @@ solution "TEngine"
 		"src",
 		"src/luasocket",
 		"src/fov",
+		"src/expat",
+		"src/lxp",
 		"src/libtcod_import",
 		"src/physfs",
 		"src/physfs/zlib123",
@@ -79,7 +81,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -229,3 +231,18 @@ project "tcodimport"
 	targetname "tcodimport"
 
 	files { "src/libtcod_import/*.c", }
+
+project "expatstatic"
+	kind "StaticLib"
+	language "C"
+	targetname "expatstatic"
+	defines{ "HAVE_MEMMOVE" }
+
+	files { "src/expat/*.c", }
+
+project "lxp"
+	kind "StaticLib"
+	language "C"
+	targetname "lxp"
+
+	files { "src/lxp/*.c", }
