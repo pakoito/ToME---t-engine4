@@ -78,7 +78,7 @@ function _M:init(dialogdef, profile_help_text)
 				self.controls[self.state]:fct()
 			end
 		end,
-					}, {
+	}, {
 		EXIT = function()
 			game:unregisterDialog(self)
 			game:selectStepProfile()
