@@ -170,6 +170,7 @@ function _M:registerDialog(d)
 	if d.key then d.key:setCurrent() end
 	if d.mouse then d.mouse:setCurrent() end
 	if d.on_register then d:on_register() end
+	if self.onRegisterDialog then self:onRegisterDialog(d) end
 end
 
 --- Undisplay a dialog, removing its own keyhandler if needed
@@ -185,6 +186,7 @@ function _M:unregisterDialog(d)
 	if last.key then last.key:setCurrent() end
 	if last.mouse then last.mouse:setCurrent() end
 	if last.on_recover_focus then last:on_recover_focus() end
+	if self.onUnregisterDialog then self:onUnregisterDialog(d) end
 end
 
 --- The C core gives us command line arguments

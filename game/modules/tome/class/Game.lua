@@ -485,10 +485,16 @@ function _M:display()
 	-- Icons
 	self:displayUIIcons()
 
-	-- Tooltip is displayed over all else
-	self:targetDisplayTooltip(self.w, self.h)
-
 	engine.GameTurnBased.display(self)
+
+	-- Tooltip is displayed over all else, even dialogs
+	self:targetDisplayTooltip(self.w, self.h)
+end
+
+--- Caleld when a dialog is registered to appear on screen
+function _M:onRegisterDialog(d)
+	-- Clean up tooltip
+	self.tooltip_x, self.tooltip_y = nil, nil
 end
 
 function _M:setupCommands()
@@ -789,6 +795,10 @@ function _M:setupMouse(reset)
 	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
 		self:mouseIcon(bx, by)
 		if button == "left" then self:clickIcon(bx, by) end
+	end)
+	-- Tooltip over the player pane
+	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h, function(button, mx, my, xrel, yrel, bx, by, event)
+		self.player_display.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
 	end)
 	if not reset then self.mouse:setCurrent() end
 end

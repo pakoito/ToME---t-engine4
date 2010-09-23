@@ -54,6 +54,18 @@ function _M:receiveMouseMotion(button, x, y, xrel, yrel)
 	end
 end
 
+--- Delegate an event from an other mouse handler
+-- if self.delegate_offset_x and self.delegate_offset_y are set hey will be used to change the actual coordinates
+function _M:delegate(button, mx, my, xrel, yrel, bx, by, event)
+	local ox, oy = (self.delegate_offset_x or 0), (self.delegate_offset_y or 0)
+	mx = mx - ox
+	my = my - oy
+
+	if event == "button" then self:receiveMouse(button, mx, my, true)
+	elseif event == "motion" then self:receiveMouseMotion(button, mx, my, xrel, yrel)
+	end
+end
+
 --- Setups as the current game keyhandler
 function _M:setCurrent()
 	core.mouse.set_current_handler(self)
