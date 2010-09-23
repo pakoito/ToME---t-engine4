@@ -40,15 +40,9 @@ newBirthDescriptor{
 			Corrupter = "disallow",
 		},
 	},
-	stats = { str=-3, dex=3, con=1, cun=3, lck=5, },
-	experience = 1.1,
-	talents = {
-		[ActorTalents.T_HOBBIT_LUCK]=1,
-	},
 	copy = {
 		faction = "shire",
 		type = "humanoid", subtype="hobbit",
-		life_rating = 12,
 		default_wilderness = {43, 18},
 		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",
@@ -68,5 +62,17 @@ newBirthDescriptor
 		"Hobbits, or halflings, are a race of very short stature, rarely exceeding four feet in height.",
 		"Most of them are happy to live a quiet life of farming and gardening, but a few have an adventurous heart.",
 		"Hobbits are agile, lucky, and resilient but lacking in strength.",
+		"They possess the #GOLD#Luck of the Little Folk#WHITE# which allows them to increase their critical strike chance for a few turns.",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# -3 Strength, +3 Dexterity, +3 Cunning, +1 Constitution, +5 Luck",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
+	},
+	stats = { str=-3, dex=3, con=1, cun=3, lck=5, },
+	experience = 1.1,
+	talents = {
+		[ActorTalents.T_HOBBIT_LUCK]=1,
+	},
+	copy = {
+		life_rating = 12,
 	},
 }

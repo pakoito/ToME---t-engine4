@@ -42,7 +42,6 @@ newBirthDescriptor{
 		},
 	},
 	talents = {},
-	experience = 1.0,
 	copy = {
 		faction = "reunited-kingdom",
 		type = "humanoid", subtype="human",
@@ -59,15 +58,18 @@ newBirthDescriptor
 	name = "Dúnadan",
 	desc = {
 		"The greatest of the Edain, humans in all respects but stronger, smarter, and wiser.",
-		"They possess the Gift of Kings which allows them to regenerate their wounds once in a while.",
+		"They possess the #GOLD#Gift of Kings#WHITE# which allows them to regenerate their wounds once in a while.",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# +1 Strength, +1 Cunning, +1 Dexterity, +1 Willpower",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 15%",
 	},
 	stats = { str=1, cun=1, dex=1, wil=1 },
-	experience = 1.25,
+	experience = 1.15,
 	talents = {
-		[ActorTalents.T_IMPROVED_HEALTH_I]=1,
 		[ActorTalents.T_DUNADAN_HEAL]=1,
 	},
 	copy = {
+		lite_rating = 11,
 		default_wilderness = {43, 18},
 		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",
@@ -81,8 +83,14 @@ newBirthDescriptor
 	name = "Bree-man",
 	desc = {
 		"Humans hailing from the northen town of Bree. A common kind of man, unremarkable in all respects.",
+		"Humans are an inherently very adaptable race and as such they gain a #GOLD#talent category point#WHITE# at birth(others only gain one at level 10, 20 and 30).",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# none",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 10",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 0%",
 	},
+	experience = 1.0,
 	copy = {
+		unused_talents_types = 1,
 		default_wilderness = {43, 18},
 		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",

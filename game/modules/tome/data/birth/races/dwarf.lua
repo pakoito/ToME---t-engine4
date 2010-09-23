@@ -41,10 +41,6 @@ newBirthDescriptor{
 			Male = "allow",
 		},
 	},
-	stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
-	talents = {
-		[ActorTalents.T_DWARF_RESILIENCE]=1,
-	},
 	copy = {
 		faction = "lonely-mountain",
 		type = "humanoid", subtype="dwarf",
@@ -52,9 +48,7 @@ newBirthDescriptor{
 		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",
 		starting_intro = "dwarf",
-		life_rating=12,
 	},
-	experience = 1.1,
 	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
 }
 
@@ -68,5 +62,17 @@ newBirthDescriptor
 	desc = {
 		"The children of Aule, a strong but small race.",
 		"Miners and fighters of legend.",
+		"They possess the #GOLD#Resilience of the Dwarves#WHITE# which allows them to increase their armour, physical and spell saves for a few turns.",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# +4 Strength, +3 Constitution, +3 Willpower, -2 Magic, -2 Dexterity",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
 	},
+	stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
+	talents = {
+		[ActorTalents.T_DWARF_RESILIENCE]=1,
+	},
+	copy = {
+		life_rating=12,
+	},
+	experience = 1.1,
 }

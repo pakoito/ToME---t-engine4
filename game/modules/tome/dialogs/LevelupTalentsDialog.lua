@@ -24,11 +24,11 @@ module(..., package.seeall, class.inherit(engine.Dialog))
 
 function _M:init(actor, on_finish)
 	self.actor = actor
-	self.actor_dup = actor:clone()
-	engine.Dialog.init(self, "Talents Levelup: "..actor.name, math.max(game.w * 0.85, 800), math.max(game.h * 0.85, 600))
-
 	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}
 	self.actor.__increased_talent_types = self.actor.__increased_talent_types or {}
+
+	self.actor_dup = actor:clone()
+	engine.Dialog.init(self, "Talents Levelup: "..actor.name, math.max(game.w * 0.85, 800), math.max(game.h * 0.85, 600))
 
 	self:generateList()
 

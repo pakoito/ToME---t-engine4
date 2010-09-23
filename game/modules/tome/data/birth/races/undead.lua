@@ -63,13 +63,17 @@ newBirthDescriptor
 	name = "Ghoul",
 	desc = {
 		"Ghouls are dumb, but resilient, rotting undead creatures, making good fighters.",
-		"They have access to special ghoul talents and a wide range of undead abilities:",
+		"They have access to #GOLD#special ghoul talents#WHITE# and a wide range of undead abilities:",
 		"- great poison resistance",
 		"- bleeding immunity",
 		"- stun resistance",
 		"- fear immunity",
 		"- special ghoul talents: ghoulish leap, gnaw and retch",
 		"The rotting body of ghouls also forces them to act a bit slower than most creatures.",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# +3 Strength, +5 Constitution, +1 Dexterity, -2 Cunning, -2 Willpower",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 14",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 100%",
+		"#GOLD#Speed penality:#LIGHT_BLUE# -20%",
 	},
 	descriptor_choices =
 	{
@@ -79,7 +83,7 @@ newBirthDescriptor
 			Male = "allow",
 		},
 	},
-	stats = { str=3, con=5, wil=-2, mag=0, dex=1, cun=2 },
+	stats = { str=3, con=5, wil=-2, mag=0, dex=1, cun=-2 },
 	talents_types = {
 		["undead/ghoul"]={true, 0.1},
 	},
@@ -105,12 +109,15 @@ newBirthDescriptor
 	name = "Skeleton",
 	desc = {
 		"Skeletons are animated bones, undead creatures both strong and dextrous.",
-		"They have access to special skeleton talents and a wide range of undead abilities:",
+		"They have access to #GOLD#special skeleton talents#WHITE# and a wide range of undead abilities:",
 		"- poison immunity",
 		"- bleeding immunity",
 		"- fear immunity",
 		"- no need to breathe",
 		"- special skeleton talents: sharp bones, bone amour, re-assemble",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# +3 Strength, +4 Dexterity",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 100%",
 	},
 	descriptor_choices =
 	{

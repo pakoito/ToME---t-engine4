@@ -52,7 +52,6 @@ newBirthDescriptor{
 		starting_quest = "start-dunadan",
 		starting_intro = "elf",
 	},
-	experience = 1.05,
 	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
 }
 
@@ -66,7 +65,10 @@ newBirthDescriptor
 	desc = {
 		"Elves who turned aside from the Great Journey in the early days and settled in th east of the Misty Mountains.",
 		"Both the Wood-Elves of Mirkwood and the Elves of Lórien are Nandor.",
-		"They posses the Grace of the Eldar talent which allows them a boost of speed every once in a while.",
+		"They posses the #GOLD#Grace of the Eldar#WHITE# talent which allows them a boost of speed every once in a while.",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# +2 Magic, +3 Willpower, +1 Cunning, +1 Dexterity, -2 Strength",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 9",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
 	},
 	stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
 	experience = 1.3,
@@ -74,6 +76,7 @@ newBirthDescriptor
 	copy = {
 		life_rating = 9,
 	},
+	experience = 1.1,
 }
 
 newBirthDescriptor
@@ -83,7 +86,10 @@ newBirthDescriptor
 	desc = {
 		"The Noldor were the High Elves most enamoured of knowledge and the making of things. After the theft of the Silmarils, many Noldor forsook the blessed land and returned to Middle Earth, but for their sins en-route they were placed under the Doom of the Valar. After the Doom was lifted, most of the Noldor sailed west, but a few still remain in Middle Earth.",
 		"They are implacable foes of the servants of Morgoth, wherever they may be found.",
-		"They possess the Wrath of the Eldar talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
+		"They possess the #GOLD#Wrath of the Eldar#WHITE# talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
+		"#GOLD#Stats modifiers:#LIGHT_BLUE# +2 Strength, +3 Dexterity, +1 Willpower, +1 Constitution, -2 Magic",
+		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
 	},
 	stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
 	experience = 1.3,
@@ -91,6 +97,7 @@ newBirthDescriptor
 	copy = {
 		life_rating = 11,
 	},
+	experience = 1.1,
 }
 --[[
 newBirthDescriptor
