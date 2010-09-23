@@ -46,13 +46,13 @@ function _M:init(dialogdef, owner, font, mask, fct)
 	self.btn = 	{
 		h = dialogdef.h,
 		mouse_over= function(button)
-						if self.owner.state ~= self.name then self.focused=true self.owner:focusControl(self.name) end
-						if button == "right" then
-							self.text=0
-							self.ownwer.changed=true
-						end
-					end
-				}
+			if self.owner.state ~= self.name then self.focused=true self.owner:focusControl(self.name) end
+			if button == "right" then
+				self.text=0
+			end
+			self.owner.changed=true
+		end
+	}
 	self.owner.mouse:registerZone(self.owner.display_x + self.x, self.owner.display_y + self.y + self.h, self.w, self.h, self.btn.mouse_over)
 	self:startCursor()
 	self:moveRight(1, true)

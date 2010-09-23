@@ -26,32 +26,33 @@ local ButtonList = require "engine.ButtonList"
 --- Handles dialog windows
 module(..., package.seeall, class.make)
 
-function _M:init(name, text, x, y, w, height, owner, font, fct)	
+function _M:init(name, text, x, y, w, height, owner, font, fct)
 	self.type = "Button"
 	self.owner = owner
-	self.name = name	
+	self.name = name
 	self.fct = fct
-	self.font = font	
+	self.font = font
 	self.x = x
 	self.y = y
-	self.btn = 	{ 
+	self.btn = 	{
 		susel = ButtonList:makeButton(text, self.font, w, height, false),
 		sel = ButtonList:makeButton(text, self.font, 50, height, true),
 		h = height,
-		mouse_over= function(button)							
-						if self.owner.state ~= self.name then self.owner:focusControl(self.name) end						
-						if button == "left" then
-							self:fct()
-						end
-					end
-					}
-	self.owner.mouse:registerZone(owner.display_x + self.x, owner.display_y + self.y + height, w, height, self.btn.mouse_over)	
+		mouse_over= function(button)
+			if self.owner.state ~= self.name then self.owner:focusControl(self.name) end
+			if button == "left" then
+				self:fct()
+			end
+			self.owner.changed = true
+		end
+	}
+	self.owner.mouse:registerZone(owner.display_x + self.x, owner.display_y + self.y + height, w, height, self.btn.mouse_over)
 end
 
-function _M:drawControl(s)	
+function _M:drawControl(s)
 	if (self.owner.state == self.name) then
-		s:merge(self.btn.sel, self.x, self.y)		
+		s:merge(self.btn.sel, self.x, self.y)
 	else
-		s:merge(self.btn.susel, self.x, self.y)				
-	end	
+		s:merge(self.btn.susel, self.x, self.y)
+	end
 end

@@ -86,7 +86,7 @@ function _M:init(title, prompt, default, act)
 		end
 	})
 	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
+--		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
 	}
 
 	self:addControl(NumberBox.new({name="qty",title="",min=self.min, max=self.max, default=default, x=10, y=5, w=290, h=30}, self, self.font, "qty"))
