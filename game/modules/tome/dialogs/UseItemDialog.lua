@@ -35,7 +35,7 @@ function _M:init(actor, object, item, inven, onuse)
 	self:generateList()
 	local name = object:getName()
 	local nw, nh = self.font:size(name)
-	engine.Dialog.init(self, name, math.max(nw, self.max) + 10, self.maxh + 10 + 25, nil, nil, nil, self.font)
+	engine.Dialog.init(self, "    "..name.."    ", math.max(nw, self.max) + 10, self.maxh + 10 + 25, nil, nil, nil, self.font)
 
 	self.sel = 1
 	self.scroll = 1
