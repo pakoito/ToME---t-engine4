@@ -51,6 +51,7 @@ end
 
 --- Heal some
 function _M:heal(value, src)
+	if self.onHeal then value = self:onHeal(value, src) end
 	self.life = util.bound(self.life + value, 0, self.max_life)
 	self.changed = true
 end

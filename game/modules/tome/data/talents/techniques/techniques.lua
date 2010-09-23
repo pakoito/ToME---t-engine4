@@ -31,6 +31,7 @@ newTalentType{ type="technique/archery-training", name = "archery - common", des
 newTalentType{ type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
 newTalentType{ type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
 newTalentType{ type="technique/warcries", name = "warcries", description = "Master the warcries to improve yourself and weaken others." }
+newTalentType{ type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
 newTalentType{ type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
 newTalentType{ type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
 newTalentType{ type="technique/combat-techniques-passive", name = "combat techniques", description = "Generic combat oriented techniques." }
@@ -129,6 +130,7 @@ load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")
 load("/data/talents/techniques/superiority.lua")
 load("/data/talents/techniques/warcries.lua")
+load("/data/talents/techniques/bloodthirst.lua")
 load("/data/talents/techniques/field-control.lua")
 load("/data/talents/techniques/combat-techniques.lua")
 load("/data/talents/techniques/combat-training.lua")

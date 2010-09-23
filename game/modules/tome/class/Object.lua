@@ -74,6 +74,10 @@ function _M:use(who, typ, inven, item)
 		game.logPlayer(who, "You must wear this object to use it!")
 		return
 	end
+	if who:hasEffect(self.EFF_UNSTOPPABLE) then
+		game.logPlayer(who, "You can not use items during a battle frenzy!")
+		return
+	end
 
 	local types = {}
 	if self:canUseObject() then types[#types+1] = "use" end

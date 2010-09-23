@@ -512,6 +512,14 @@ Faction: %s%s (%s, %d)
 	)
 end
 
+--- Called before healing
+function _M:onHeal(value, src)
+	if self:hasEffect(self.EFF_UNSTOPPABLE) then
+		return 0
+	end
+	return value
+end
+
 --- Called before taking a hit, it's the chance to check for shields
 function _M:onTakeHit(value, src)
 	-- Un-daze
@@ -654,6 +662,10 @@ function _M:onTakeHit(value, src)
 		t:onTakeHit(self, value / self.max_life)
 	end
 
+	if self:hasEffect(self.EFF_UNSTOPPABLE) then
+		if value > self.life then value = self.life - 1 end
+	end
+
 	return value
 end
 
@@ -703,6 +715,16 @@ function _M:die(src)
 	if src and src.knowTalent and src:knowTalent(src.T_CRUEL_VIGOR) then
 		local t = src:getTalentFromId(src.T_CRUEL_VIGOR)
 		t.on_kill(src, t)
+	end
+
+	if src and src.knowTalent and src:knowTalent(src.T_BLOODRAGE) then
+		local t = src:getTalentFromId(src.T_BLOODRAGE)
+		t.on_kill(src, t)
+	end
+
+	if src and src.hasEffect and src:hasEffect(self.EFF_UNSTOPPABLE) then
+		local p = src:hasEffect(self.EFF_UNSTOPPABLE)
+		p.kills = p.kills + 1
 	end
 
 	-- Adds hate

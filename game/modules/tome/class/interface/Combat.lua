@@ -203,6 +203,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
+	local crit = false
 	local evaded = false
 	if self:checkEvasion(target) then
 		evaded = true
@@ -213,7 +214,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		local damrange = self:combatDamageRange(weapon)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK] after range", dam)
-		local crit
 		dam, crit = self:physicalCrit(dam, weapon, target)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
@@ -332,6 +332,18 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and target:knowTalent(target.T_ACID_BLOOD) then
 		local t = target:getTalentFromId(target.T_ACID_BLOOD)
 		t.do_splash(target, t, self)
+	end
+
+	-- Bloodbath
+	if hitted and crit and self:knowTalent(self.T_BLOODBATH) then
+		local t = self:getTalentFromId(self.T_BLOODBATH)
+		t.do_bloodbath(self, t)
+	end
+
+	-- Mortal Terror
+	if hitted and not target.dead and self:knowTalent(self.T_MORTAL_TERROR) then
+		local t = self:getTalentFromId(self.T_MORTAL_TERROR)
+		t.do_terror(self, t, target, dam)
 	end
 
 	-- Regen on being hit

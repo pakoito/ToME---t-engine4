@@ -97,6 +97,7 @@ newBirthDescriptor{
 		["technique/superiority"]={false, 0.3},
 		["technique/warcries"]={false, 0.3},
 		["technique/field-control"]={false, 0},
+		["technique/bloodthirst"]={false, 0.2},
 		["cunning/survival"]={true, 0},
 		["cunning/dirty"]={false, 0},
 	},

@@ -1517,3 +1517,62 @@ newEffect{
 		return old_eff
 	end,
 }
+
+newEffect{
+	name = "BLOODBATH",
+	desc = "Bloodbath",
+	type = "physical",
+	status = "beneficial",
+	parameters = { hp=10, regen=10 },
+	on_gain = function(self, err) return nil, "+Bloodbath" end,
+	on_lose = function(self, err) return nil, "-Bloodbath" end,
+	activate = function(self, eff)
+		local v = eff.hp * self.max_life / 100
+		eff.life_id = self:addTemporaryValue("max_life", v)
+		self:heal(v)
+		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen * self.life_regen / 100)
+		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen * self.stamina_regen / 100)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("max_life", eff.life_id)
+		self:removeTemporaryValue("life_regen", eff.life_regen_id)
+		self:removeTemporaryValue("stamina_regen", eff.stamina_regen_id)
+	end,
+}
+
+newEffect{
+	name = "BLOODRAGE",
+	desc = "Bloodrage",
+	type = "physical",
+	status = "beneficial",
+	parameters = { inc=1, max=10 },
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("inc_stats", old_eff.tmpid)
+		old_eff.cur_inc = math.min(old_eff.cur_inc + new_eff.inc, new_eff.max)
+		old_eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_STR] = old_eff.cur_inc})
+
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.cur_inc = eff.inc
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_STR] = eff.inc})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "UNSTOPPABLE",
+	desc = "Unstoppable",
+	type = "physical",
+	status = "beneficial",
+	parameters = { hp_per_kill=2 },
+	activate = function(self, eff)
+		eff.kills = 0
+	end,
+	deactivate = function(self, eff)
+		self:heal(eff.kills * eff.hp_per_kill * self.max_life / 100)
+	end,
+}
