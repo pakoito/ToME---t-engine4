@@ -275,7 +275,7 @@ end
 function _M:databind()
 	local result = { }
 	for i, cntrl in pairs(self.controls or { }) do
-		if cntrl.type and cntrl.type=="TextBox" then
+		if cntrl.type and (cntrl.type=="TextBox" or cntrl.type=="NumberBox") then
 			result[cntrl.name] = cntrl.text
 		end
 	end
@@ -285,7 +285,7 @@ end
 
 function _M:drawControls(s)
 	for i, cntrl in pairs(self.controls or { }) do
-	    cntrl:drawControl(s)
+		cntrl:drawControl(s)
 	end
 end
 

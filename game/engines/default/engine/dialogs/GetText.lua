@@ -90,12 +90,13 @@ function _M:init(title, text, min, max, action)
 	}, {
 		EXIT = function()
 			game:unregisterDialog(self)
-			game:bindKeysToStep()
 		end
 	})
-	self:mouseZones{}
+	self:mouseZones{
+		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
+	}
 
-	self:addControl(TextBox.new({name="name",title="Name:",min=self.min, max=self.max, x=10, y=5, w=290, h=30}, self, self.font, "name"))
+	self:addControl(TextBox.new({name="name",title="",min=self.min, max=self.max, x=10, y=5, w=290, h=30}, self, self.font, "name"))
 	self:addControl(Button.new("ok", "Ok", 50, 45, 50, 30, self, self.font, function() self:okclick() end))
 	self:addControl(Button.new("cancel", "Cancel", 220, 45, 50, 30, self, self.font, function() self:cancelclick() end))
 	self:focusControl("name")

@@ -18,53 +18,95 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Module = require "engine.Module"
+local Dialog = require "engine.Dialog"
+local Button = require "engine.Button"
+local NumberBox = require "engine.NumberBox"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(title, prompt, act)
-	engine.Dialog.init(self, title or "Quantity?", 300, 100)
+function _M:init(title, prompt, default, act)
+	engine.Dialog.init(self, title or "Quantity?", 320, 110)
 	self.prompt = prompt
 	self.act = act
-	self.qty = 0
+	self.qty = default
 	self.first = true
-	self:keyCommands{
-		_ESCAPE = function()
-			game:unregisterDialog(self)
+	self:keyCommands({
+		_TAB = function()
+			self.state = self:changeFocus(true)
+			self.changed = true
 		end,
-		_RETURN = function()
-			game:unregisterDialog(self)
-			act(self.qty)
+		_DOWN = function()
+			self.state = self:changeFocus(true)
+			self.changed = true
+		end,
+		_UP = function()
+			self.state = self:changeFocus(false)
+			self.changed = true
+		end,
+		_RIGHT = function()
+			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveRight then
+--				self.controls[self.state]:moveRight(1)
+			else
+				self.state = self:changeFocus(true)
+			end
+			self.changed = true
+		end,
+		_LEFT = function()
+			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveLeft then
+--				self.controls[self.state]:moveLeft(1)
+			else
+				self.state = self:changeFocus(false)
+			end
+			self.changed = true
 		end,
 		_BACKSPACE = function()
-			local b = tostring(self.qty)
-			b = b:sub(1, b:len() - 1)
-			if b == '' then self.qty = 0
-			else self.qty = tonumber(b)
+			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="NumberBox" then
+				self.controls[self.state]:backSpace()
 			end
 			self.changed = true
 		end,
 		__TEXTINPUT = function(c)
-			if not (c == '0' or c == '1' or c == '2' or c == '3' or c == '4' or c == '5' or c == '6' or c == '7' or c == '8' or c == '9') then return end
-			if self.qty >= 10000000 then return end
-			local b = tostring(self.qty)
-			if self.qty == 0 then b = "" end
-			if self.first then
-				self.qty = tonumber(c)
-				self.first = false
-			else
-				self.qty = tonumber(b .. c)
+			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="NumberBox" then
+				self.controls[self.state]:textInput(c)
 			end
 			self.changed = true
 		end,
-	}
+		_RETURN = function()
+			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="Button" then
+				self.controls[self.state]:fct()
+			elseif self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="NumberBox" then
+				self:okclick()
+			end
+			self.changed = true
+		end,
+	}, {
+		EXIT = function()
+			game:unregisterDialog(self)
+		end
+	})
 	self:mouseZones{
 		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
 	}
+
+	self:addControl(NumberBox.new({name="qty",title="",min=self.min, max=self.max, default=default, x=10, y=5, w=290, h=30}, self, self.font, "qty"))
+	self:addControl(Button.new("ok", "Ok", 50, 45, 50, 30, self, self.font, function() self:okclick() end))
+	self:addControl(Button.new("cancel", "Cancel", 220, 45, 50, 30, self, self.font, function() self:cancelclick() end))
+	self:focusControl("qty")
+end
+
+function _M:okclick()
+	local results = self:databind()
+	self.qty = results.qty
+	self.act(self.qty)
+	game:unregisterDialog(self)
+end
+
+function _M:cancelclick()
+	self.key:triggerVirtual("EXIT")
 end
 
 function _M:drawDialog(s, w, h)
-	s:drawColorStringBlendedCentered(self.font, self.prompt or "Quantity:", 2, 2, self.iw - 2, self.ih - 2 - self.font:lineSkip())
-	s:drawColorStringBlendedCentered(self.font, tostring(self.qty), 2, 2 + self.font:lineSkip(), self.iw - 2, self.ih - 2 - self.font:lineSkip())
+	self:drawControls(s)
 	self.changed = false
 end
