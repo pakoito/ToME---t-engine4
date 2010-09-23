@@ -127,6 +127,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if realdam > 0 and target and not target:attr("fire_proof") then
 			tryDestroy(target, target:getInven("INVEN"), realdam, "fire_destroy", "fire_proof", "The burst of heat destroys your %s!")
+			if src.player then world:gainAchievement("PYROMANCER", src, realdam) end
 		end
 		return realdam
 	end,
@@ -138,6 +139,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if realdam > 0 and target and not target:attr("cold_proof") then
 			tryDestroy(target, target:getInven("INVEN"), realdam, "cold_destroy", "cold_proof", "The intense cold destroys your %s!")
+			if src.player then world:gainAchievement("CRYOMANCER", src, realdam) end
 		end
 		return realdam
 	end,

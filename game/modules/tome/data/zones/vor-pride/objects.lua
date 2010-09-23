@@ -67,7 +67,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 			game.logPlayer(who, "#00FFFF#You read the tome and perfect your mastery of fire magic!")
 		end
 
-		game:setAllowedBuild("mage_pyromancer", true)
+--		game:setAllowedBuild("mage_pyromancer", true)
 
 		return "destroy", true
 	end}
@@ -91,7 +91,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 			game.logPlayer(who, "#00FFFF#You read the tome and perfect your mastery of ice magic!")
 		end
 
-		game:setAllowedBuild("mage_cryomancer", true)
+--		game:setAllowedBuild("mage_cryomancer", true)
 
 		return "destroy", true
 	end}
