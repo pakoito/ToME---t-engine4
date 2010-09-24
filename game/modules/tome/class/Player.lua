@@ -203,6 +203,11 @@ function _M:updateMainShader()
 		else game.fbo_shader:setUniform("colorize", {0,0,0}) -- Disable
 		end
 
+		-- Blur shader
+		if self:attr("confused") then game.fbo_shader:setUniform("blur", 2)
+		else game.fbo_shader:setUniform("blur", 0) -- Disable
+		end
+
 		-- Moving Blur shader
 		if self:attr("invisible") then game.fbo_shader:setUniform("motionblur", 3)
 		else game.fbo_shader:setUniform("motionblur", 0) -- Disable

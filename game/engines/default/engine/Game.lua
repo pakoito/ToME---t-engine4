@@ -230,11 +230,18 @@ available_resolutions =
 	["1600x1200 Fullscreen"] = {1600, 1200, true},
 }
 --- Change screen resolution
-function _M:setResolution(res)
-	if not available_resolutions[res] then return false, "unknown resolution" end
+function _M:setResolution(res, force)
+	local r = available_resolutions[res]
+	if force and not r then
+		local _, _, w, h = res:find("([0-9][0-9][0-9]+)x([0-9][0-9][0-9]+)")
+		w = tonumber(w)
+		h = tonumber(h)
+		if w and h then r = {w, h, false} end
+	end
+	if not r then return false, "unknown resolution" end
 
 	local old_w, old_h = self.w, self.h
-	core.display.setWindowSize(available_resolutions[res][1], available_resolutions[res][2], available_resolutions[res][3])
+	core.display.setWindowSize(r[1], r[2], r[3])
 	self.w, self.h = core.display.size()
 
 	if self.w ~= old_w or self.h ~= old_h then
@@ -247,6 +254,7 @@ end
 --- Called when screen resolution changes
 function _M:onResolutionChange()
 	self.w, self.h = core.display.size()
+	self:saveSettings("resolution", ("window.size = %dx%d\n"):format(self.w, self.h))
 end
 
 --- Requests the game to save
