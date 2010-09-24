@@ -1,6 +1,8 @@
 uniform float hp_warning;
+uniform float motionblur;
 uniform float blur;
-uniform sampler3D noiseVol;
+uniform float tick;
+uniform sampler3D noisevol;
 uniform vec2 texSize;
 uniform sampler2D tex;
 uniform vec3 colorize;
@@ -9,7 +11,68 @@ void main(void)
 {
 	gl_FragColor = texture2D(tex, gl_TexCoord[0].xy);
 
-	if (blur > 0.0)
+	if (motionblur > 0.0)
+	{
+		int blursize = int(motionblur);
+		vec2 offset = 1.0/texSize;
+
+		float fTime0_X = tick / 40000.0;
+		vec2 coord = gl_TexCoord[0].xy;
+		float noisy = texture3D(noisevol,vec3(coord,fTime0_X)).r;
+		float noisy2 = texture3D(noisevol,vec3(coord/5.0,fTime0_X)).r;
+		float noisy3 = texture3D(noisevol,vec3(coord/7.0,fTime0_X)).r;
+		float noise = (noisy+noisy2+noisy3)/3.0;
+
+		// Center Pixel
+		vec4 sample = vec4(0.0,0.0,0.0,0.0);
+		float factor = ((float(blursize)*2.0)+1.0);
+		factor = factor*factor;
+
+		if (noisy < 0.25)
+		{
+			for(int i = -blursize; i <= 0; i++)
+			{
+				for(int j = -blursize; j <= 0; j++)
+				{
+					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+				}
+			}
+		}
+		else if (noisy < 0.50)
+		{
+			for(int i = 0; i <= blursize; i++)
+			{
+				for(int j = 0; j <= blursize; j++)
+				{
+					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+				}
+			}
+		}
+		else if (noisy < 0.75)
+		{
+			for(int i = 0; i <= blursize; i++)
+			{
+				for(int j = -blursize; j <= 0; j++)
+				{
+					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+				}
+			}
+		}
+		else
+		{
+			for(int i = -blursize; i <= 0; i++)
+			{
+				for(int j = 0; j <= blursize; j++)
+				{
+					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+				}
+			}
+		}
+		sample /= float((blursize*1.5) * (blursize*0.5));
+//		gl_FragColor = sample * (0.3 + noise * 0.7);
+		gl_FragColor = sample;
+	}
+	else if (blur > 0.0)
 	{
 		int blursize = int(blur);
 		vec2 offset = 1.0/texSize;
@@ -26,7 +89,7 @@ void main(void)
 				sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 			}
 		}
-		sample /= float((blursize*2.0) * (blursize*2.0));
+		sample /= float((blur*2.0) * (blur*2.0));
 		gl_FragColor = sample;
 	}
 

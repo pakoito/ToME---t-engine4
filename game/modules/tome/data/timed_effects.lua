@@ -1571,8 +1571,10 @@ newEffect{
 	parameters = { hp_per_kill=2 },
 	activate = function(self, eff)
 		eff.kills = 0
+		eff.tmpid = self:addTemporaryValue("unstoppable", 1)
 	end,
 	deactivate = function(self, eff)
 		self:heal(eff.kills * eff.hp_per_kill * self.max_life / 100)
+		self:removeTemporaryValue("unstoppable", eff.tmpid)
 	end,
 }

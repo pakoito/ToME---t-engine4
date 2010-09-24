@@ -22,7 +22,7 @@ return {
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		noiseVol = { texture = 1 },
+		noisevol = { texture = 1 },
 	},
 	clone = false,
 }

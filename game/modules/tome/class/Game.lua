@@ -241,8 +241,7 @@ function _M:setupDisplayMode()
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
---	game.fbo_shader:setUniform("blur", 1)
---	game.fbo_shader:setUniform("colorize", {1,0.3,0})
+	if self.player then self.player:updateMainShader() end
 end
 
 function _M:setupMiniMap()
@@ -435,6 +434,7 @@ function _M:display()
 			self.level.map:display(0, 0)
 			self.target:display(0, 0)
 			self.fbo:use(false)
+			_3DNoise:bind(1, true)
 			self.fbo:toScreen(
 				self.level.map.display_x, self.level.map.display_y,
 				self.level.map.viewport.width, self.level.map.viewport.height,

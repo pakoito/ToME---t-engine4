@@ -171,11 +171,9 @@ function _M:act()
 		end
 	end
 
-	-- Set shader HP warning
-	if game.fbo_shader and self.life ~= self.old_life then
-		if self.life < self.max_life / 2 then game.fbo_shader:setUniform("hp_warning", 1 - (self.life / self.max_life))
-		else game.fbo_shader:setUniform("hp_warning", 0) end
-	end
+	-- Funky shader things !
+	self:updateMainShader()
+
 	self.old_life = self.life
 
 	-- Clean log flasher
@@ -186,6 +184,29 @@ function _M:act()
 		game.paused = true
 	elseif not self.player then
 		self:useEnergy()
+	end
+end
+
+--- Funky shader stuff
+function _M:updateMainShader()
+	if game.fbo_shader then
+		-- Set shader HP warning
+		if self.life ~= self.old_life then
+			if self.life < self.max_life / 2 then game.fbo_shader:setUniform("hp_warning", 1 - (self.life / self.max_life))
+			else game.fbo_shader:setUniform("hp_warning", 0) end
+		end
+
+		-- Colorize shader
+		if self:attr("stealth") then game.fbo_shader:setUniform("colorize", {0.7,0.7,0.7})
+		elseif self:attr("invisible") then game.fbo_shader:setUniform("colorize", {0.4,0.5,0.7})
+		elseif self:attr("unstoppable") then game.fbo_shader:setUniform("colorize", {1,0.2,0})
+		else game.fbo_shader:setUniform("colorize", {0,0,0}) -- Disable
+		end
+
+		-- Moving Blur shader
+		if self:attr("invisible") then game.fbo_shader:setUniform("motionblur", 3)
+		else game.fbo_shader:setUniform("motionblur", 0) -- Disable
+		end
 	end
 end
 

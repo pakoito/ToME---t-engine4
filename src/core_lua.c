@@ -1106,6 +1106,29 @@ static int sdl_texture_toscreen_full(lua_State *L)
 	return 0;
 }
 
+static int sdl_texture_bind(lua_State *L)
+{
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	int i = luaL_checknumber(L, 2);
+	bool is3d = lua_toboolean(L, 3);
+
+	if (i > 0)
+	{
+		if (multitexture_active && shaders_active)
+		{
+			glActiveTexture(GL_TEXTURE0+i);
+			glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t);
+			glActiveTexture(GL_TEXTURE0);
+		}
+	}
+	else
+	{
+		glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t);
+	}
+
+	return 0;
+}
+
 static bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
 {
     GLenum errCode;
@@ -1432,6 +1455,7 @@ static const struct luaL_reg sdl_texture_reg[] =
 	{"toScreenFull", sdl_texture_toscreen_full},
 	{"makeOutline", sdl_texture_outline},
 	{"toSurface", gl_texture_to_sdl},
+	{"bind", sdl_texture_bind},
 	{NULL, NULL},
 };
 
