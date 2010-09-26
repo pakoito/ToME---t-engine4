@@ -116,7 +116,7 @@ local function archery_projectile(tx, ty, tg, self)
 
 	local talent = self:getTalentFromId(tg.talent_id)
 
-	local damtype = tg.archery.damtype or ammo.damtype or DamageType.PHYSICAL
+	local damtype = tg.archery.damtype or ammo.damtype or engine.DamageType.PHYSICAL
 	local mult = tg.archery.mult or 1
 
 	-- Does the blow connect? yes .. complex :/
