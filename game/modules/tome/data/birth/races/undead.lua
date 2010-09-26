@@ -47,7 +47,8 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of cure disease", ego_chance=-1000},
 			{type="potion", subtype="potion", name="potion of cure disease", ego_chance=-1000},
 		},
-		faction = "undead",
+		-- Force undead faction to undead
+		resolvers.genericlast(function(e) e.faction = "undead" end),
 		default_wilderness = {34, 49},
 		starting_zone = "paths-of-the-dead",
 		starting_level = 8, starting_level_force_down = true,

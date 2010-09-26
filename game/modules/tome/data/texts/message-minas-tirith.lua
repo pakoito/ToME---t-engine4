@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local delivered_staff = game.player:resolveSource():setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk")
+local delivered_staff = game.player:resolveSource():isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk")
 
 if delivered_staff then
 return [[@playername@, this message is of utmost importance.

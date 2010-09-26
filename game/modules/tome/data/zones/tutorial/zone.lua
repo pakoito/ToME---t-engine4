@@ -29,38 +29,29 @@ return {
 	all_lited = true,
 	persistant = "zone",
 	ambiant_music = "Woods of Eremae.ogg",
+	no_level_connectivity = true,
 	generator =  {
 		map = {
-			class = "engine.generator.map.Roomer",
-			nb_rooms = 10,
-			edge_entrances = {6,4},
-			rooms = {"forest_clearing"},
-			['.'] = "GRASS",
-			['#'] = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
-			up = "UP",
-			down = "DOWN",
-			door = "GRASS1",
+			class = "engine.generator.map.Static",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {0, 0},
 			guardian = "LONE_WOLF",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
+			nb_object = {0, 0},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {5, 8},
+			nb_trap = {0, 0},
 		},
 	},
 	levels =
 	{
 		[1] = {
-			generator = { map = {
-				up = "UP_WILDERNESS",
-			}, },
+			generator = { map = { map = "tutorial/tutorial1" }, },
 		},
 	},
 }

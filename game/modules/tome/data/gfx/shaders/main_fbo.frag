@@ -19,9 +19,9 @@ void main(void)
 		float fTime0_X = tick / 40000.0;
 		vec2 coord = gl_TexCoord[0].xy;
 		float noisy = texture3D(noisevol,vec3(coord,fTime0_X)).r;
-		float noisy2 = texture3D(noisevol,vec3(coord/5.0,fTime0_X)).r;
-		float noisy3 = texture3D(noisevol,vec3(coord/7.0,fTime0_X)).r;
-		float noise = (noisy+noisy2+noisy3)/3.0;
+//		float noisy2 = texture3D(noisevol,vec3(coord/5.0,fTime0_X)).r;
+//		float noisy3 = texture3D(noisevol,vec3(coord/7.0,fTime0_X)).r;
+//		float noise = (noisy+noisy2+noisy3)/3.0;
 
 		// Center Pixel
 		vec4 sample = vec4(0.0,0.0,0.0,0.0);

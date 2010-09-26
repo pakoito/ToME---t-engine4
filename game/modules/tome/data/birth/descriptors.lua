@@ -67,7 +67,7 @@ newBirthDescriptor{
 }
 
 --------------- Difficulties
---[[
+-- [[
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Tutorial",
@@ -89,7 +89,7 @@ newBirthDescriptor{
 	},
 	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end) },
 }
-]]
+--]]
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Easy",

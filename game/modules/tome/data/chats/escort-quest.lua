@@ -132,6 +132,7 @@ local function generate_rewards()
 		for i = 1, #npc.stats_def do if reward.stats[i] then
 			local doit = function(npc, player)
 				player.inc_stats[i] = (player.inc_stats[i] or 0) + reward.stats[i]
+				player:onStatChange(i, reward.stats[i])
 				player.changed = true
 				player:hasQuest(npc.quest_id).reward_message = ("improved %s by +%d"):format(npc.stats_def[i].name, reward.stats[i])
 			end

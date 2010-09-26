@@ -370,10 +370,15 @@ function _M:magicMap(radius, x, y)
 	y = y or self.y
 	radius = math.floor(radius)
 
+	local ox, oy
+
+	self.x, self.y, ox, oy = x, y, self.x, self.y
 	self:computeFOV(radius, "block_sense", function(x, y)
 		game.level.map.remembers(x, y, true)
 		game.level.map.has_seens(x, y, true)
 	end, true, true, true)
+
+	self.x, self.y = ox, oy
 end
 
 function _M:incMoney(v)

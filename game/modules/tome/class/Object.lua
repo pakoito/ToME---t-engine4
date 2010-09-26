@@ -358,7 +358,7 @@ function _M:getTextualDesc()
 	end
 
 	if self.imbue_powers then
-		desc[#desc+1] = "#YELLOW#When used to imbue an armour:#LAST#"
+		desc[#desc+1] = "#YELLOW#When used to imbue an object:#LAST#"
 		desc_wielder(self.imbue_powers)
 	end
 

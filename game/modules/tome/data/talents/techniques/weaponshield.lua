@@ -191,7 +191,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Let all your foes pile up on your shield then put all your strength in one mighty thrust and repel them all away.]])
+		return ([[Let all your foes pile up on your shield, then put all your strength in one mighty thrust and repel them all away %d grids.]]):format(math.floor(1 + self:getTalentLevel(t)))
 	end,
 }
 
