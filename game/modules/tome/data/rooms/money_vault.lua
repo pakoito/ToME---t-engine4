@@ -32,15 +32,11 @@ return function(gen, id)
 
 					-- Add money
 					local e = gen.zone:makeEntity(gen.level, "object", {type="money"}, nil, true)
-					if e then
-						gen.zone:addEntity(gen.level, e, "object", i-1+x, j-1+y)
-					end
+					if e then gen:roomMapAddEntity(i-1+x, j-1+y, "object", e) end
 					-- Add guardians
 					if rng.percent(50) then
 						e = gen.zone:makeEntity(gen.level, "actor")
-						if e then
-							gen.zone:addEntity(gen.level, e, "actor", i-1+x, j-1+y)
-						end
+						if e then gen:roomMapAddEntity(i-1+x, j-1+y, "actor", e) end
 					end
 				end
 				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end

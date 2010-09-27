@@ -42,7 +42,7 @@ return function(gen, id)
 					if ispit then
 						local e = gen.zone:makeEntity(gen.level, "actor", ispit, nil, true)
 						if e then
-							gen.zone:addEntity(gen.level, e, "actor", i-1+x, j-1+y)
+							if e then gen:roomMapAddEntity(i-1+x, j-1+y, "actor", e) end
 							gen.map.attrs(i-1+x, j-1+y, "no_decay", true)
 						end
 					end

@@ -60,3 +60,11 @@ function _M:resolve(c, list, force)
 	res:resolve(nil, true)
 	return res
 end
+
+function _M:roomMapAddEntity(i, j, type, e)
+	self.map.room_map[i] = self.map.room_map[i] or {}
+	self.map.room_map[i][j] = self.map.room_map[i][j] or {}
+	self.map.room_map[i][j].add_entities = self.map.room_map[i][j].add_entities or {}
+	local rm = self.map.room_map[i][j].add_entities
+	rm[#rm+1] = {type, e}
+end

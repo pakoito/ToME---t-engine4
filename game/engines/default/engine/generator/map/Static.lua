@@ -183,11 +183,6 @@ function _M:generate(lev, old_lev)
 		local status = self.tiles[c] and self.tiles[c].status
 		local define_spot = self.tiles[c] and self.tiles[c].define_spot
 
-		self.map.room_map[i-1] = self.map.room_map[i-1] or {}
-		self.map.room_map[i-1][j-1] = self.map.room_map[i-1][j-1] or {}
-		self.map.room_map[i-1][j-1].add_entities = self.map.room_map[i-1][j-1].add_entities or {}
-		local rm = self.map.room_map[i-1][j-1].add_entities
-
 		if object then
 			local o
 			if type(object) == "string" then o = self.zone:makeEntityByName(self.level, "object", object)
@@ -195,7 +190,7 @@ function _M:generate(lev, old_lev)
 			else o = self.zone:finishEntity(self.level, "object", object)
 			end
 
-			if o then rm[#rm+1] = {"object", o} end
+			if o then self:roomMapAddEntity(i-1, j-1, "object", o) end
 		end
 
 		if trap then
@@ -204,7 +199,7 @@ function _M:generate(lev, old_lev)
 			elseif type(trap) == "table" and trap.random_filter then t = self.zone:makeEntity(self.level, "trap", trap.random_filter, nil, true)
 			else t = self.zone:finishEntity(self.level, "trap", trap)
 			end
-			if t then rm[#rm+1] = {"trap", t} end
+			if t then self:roomMapAddEntity(i-1, j-1, "trap", t) end
 		end
 
 		if actor then
@@ -213,7 +208,7 @@ function _M:generate(lev, old_lev)
 			elseif type(actor) == "table" and actor.random_filter then m = self.zone:makeEntity(self.level, "actor", actor.random_filter, nil, true)
 			else m = self.zone:finishEntity(self.level, "actor", actor)
 			end
-			if m then rm[#rm+1] = {"actor", m} end
+			if m then self:roomMapAddEntity(i-1, j-1, "actor", m) end
 		end
 
 		if status then
