@@ -46,7 +46,7 @@ newBirthDescriptor{
 	desc = {
 		"Adventurers have a generic talents-set to teach to young ones.",
 	},
-	stats = { str=10, con=5, dex=5, mag=10, wil=5, cun=5 },
+	stats = { str=10, con=5, dex=8, mag=10, wil=5, cun=5 },
 	talents_types = {
 		["technique/combat-training"]={true, 0.3},
 		["technique/shield-offense"]={true, 0.3},

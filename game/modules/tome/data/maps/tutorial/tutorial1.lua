@@ -21,10 +21,13 @@ startx = 49
 starty = 24
 
 defineTile("&", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"}, nil, nil, nil)
+defineTile(")", "GRASS", {random_filter={name="ash longbow"}}, nil, nil)
 defineTile("s", "GRASS", nil, "TUTORIAL_NPC_MAGE", nil)
 defineTile(",", "GRASS", nil, nil, nil)
 defineTile("S", "GRASS", nil, {random_filter={type="animal", subtype="snake", max_ood=2}}, nil)
+defineTile("T", "GRASS", nil, {random_filter={type="giant", subtype="troll", max_ood=2}}, nil)
 defineTile("1", "GRASS", nil, nil, "TUTORIAL_MELEE")
+defineTile("|", "GRASS", {random_filter={name="elm arrow"}}, nil, nil)
 defineTile("2", "GRASS", {random_filter={name="potion of lesser healing"}}, nil, "TUTORIAL_OBJECTS")
 defineTile("3", "GRASS", nil, nil, "TUTORIAL_TALENTS")
 defineTile("4", "GRASS", nil, nil, "TUTORIAL_LEVELUP")
@@ -32,6 +35,7 @@ defineTile("~", "DEEP_WATER", nil, nil, nil)
 defineTile("5", "DEEP_WATER", nil, nil, "TUTORIAL_TERRAIN")
 defineTile("6", "GRASS", nil, nil, "TUTORIAL_TACTICS1")
 defineTile("7", "GRASS", nil, nil, "TUTORIAL_TACTICS2")
+defineTile("8", "GRASS", nil, nil, "TUTORIAL_RANGED")
 defineTile("?", nil, nil, nil, nil)
 defineTile("j", "GRASS", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
 defineTile(" ", "DEEP_WATER", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
@@ -40,23 +44,23 @@ defineTile('"', "DEEP_WATER", nil, {random_filter={type="immovable", subtype="je
 defineTile("#", "DEEP_WATER", {random_filter={name="potion of lesser healing"}}, nil, nil)
 
 return [[
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&s&,,&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,,,&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,,,,!&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,,,,&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,,,,&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,,,,,,,7,,,&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,&&&&&&&,,,,&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~~&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~~&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~~&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~~&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~~~,,,&&&&&&&&
+&&&&&&&&&,,,,,&&&&&&&&&&&&&&&&&&~~&&~~~&&,,,&&&&&&
+&&&&&&&&,T,,,,,,,,,,,,&&&&&&&&&&~~~~~~~&&&&,&&&&&&
+&&&&&&&&!T,,,,,,,,,,,,,&&&&&&&&&~~~~~~&&&&&,&&&&&&
+&&&&&&&&!T,,T,,,,,,,,,,&&&&&&&&&~~~&~~&&&&&,&&&&&&
+&&&&&&&,,,,,T,,,,,,,,,,,&&&&&&&&&~~~~&&&s&,,&&&&&&
+&&&&&&&,!T,,T,,,,,,,,,,,,,,&&&&&,~&~~&&&,,,,&&&&&&
+&&&&&&&&!T,,,,,,,,,,,,,,,&,&&&,,,~~~~&&,,,,,!&&&&&
+&&&&&&&&,T,,,,,,,,,,,,,,&&,|)8,&&&~~&&&&,,,,,&&&&&
+&&&&&&&&,,,,,,,,,,,,,,,&&&&&&&&&&&&&&&&&,,,,,&&&&&
+&&&&&&&&&,,,,,,,,,,,,,&&&&&&&&&&,,,,,,,,7,,,&&&&&&
+&&&&&&&&&&&&&&,,,,,&&&&&&&&&&&&,,&&&&&&&,,,,&&&&&&
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,&&&&&&&&,,,&&&&&&&
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&,,&&&&&&&&&&&&&&&&&&&
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&,&&&&&&&&&&&&&&&&&&&&

@@ -30,5 +30,7 @@ return [[Moving in ToME4 can be done using either the keyboard, the mouse or bot
 - If there is an hostile creature in sight you will only move one grid per click, to prevent stupid deaths
 - Clicking on yourself will make you stay put for a turn (doing nothing)
 
+You can also scroll the map by shift+dragging with your mouse, this is very useful if you have a small resolution, seeing far away can prevent many deaths.
+
 Now close this dialog and go to the west (left) until you arrive in a bigger area.
 ]]
