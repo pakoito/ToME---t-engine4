@@ -65,7 +65,7 @@ newBirthDescriptor
 		"They possess the #GOLD#Resilience of the Dwarves#WHITE# which allows them to increase their armour, physical and spell saves for a few turns.",
 		"#GOLD#Stats modifiers:#LIGHT_BLUE# +4 Strength, +3 Constitution, +3 Willpower, -2 Magic, -2 Dexterity",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 25%",
 	},
 	stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
 	talents = {
@@ -74,5 +74,5 @@ newBirthDescriptor
 	copy = {
 		life_rating=12,
 	},
-	experience = 1.1,
+	experience = 1.25,
 }

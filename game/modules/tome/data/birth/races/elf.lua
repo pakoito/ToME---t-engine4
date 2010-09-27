@@ -68,7 +68,7 @@ newBirthDescriptor
 		"They posses the #GOLD#Grace of the Eldar#WHITE# talent which allows them a boost of speed every once in a while.",
 		"#GOLD#Stats modifiers:#LIGHT_BLUE# +2 Magic, +3 Willpower, +1 Cunning, +1 Dexterity, -2 Strength",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 9",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 35%",
 	},
 	stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
 	experience = 1.3,
@@ -76,7 +76,7 @@ newBirthDescriptor
 	copy = {
 		life_rating = 9,
 	},
-	experience = 1.1,
+	experience = 1.35,
 }
 
 newBirthDescriptor
@@ -89,7 +89,7 @@ newBirthDescriptor
 		"They possess the #GOLD#Wrath of the Eldar#WHITE# talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
 		"#GOLD#Stats modifiers:#LIGHT_BLUE# +2 Strength, +3 Dexterity, +1 Willpower, +1 Constitution, -2 Magic",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 35%",
 	},
 	stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
 	experience = 1.3,
@@ -97,7 +97,7 @@ newBirthDescriptor
 	copy = {
 		life_rating = 11,
 	},
-	experience = 1.1,
+	experience = 1.35,
 }
 --[[
 newBirthDescriptor

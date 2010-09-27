@@ -65,10 +65,10 @@ newBirthDescriptor
 		"They possess the #GOLD#Luck of the Little Folk#WHITE# which allows them to increase their critical strike chance for a few turns.",
 		"#GOLD#Stats modifiers:#LIGHT_BLUE# -3 Strength, +3 Dexterity, +3 Cunning, +1 Constitution, +5 Luck",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 10%",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 15%",
 	},
 	stats = { str=-3, dex=3, con=1, cun=3, lck=5, },
-	experience = 1.1,
+	experience = 1.15,
 	talents = {
 		[ActorTalents.T_HOBBIT_LUCK]=1,
 	},
