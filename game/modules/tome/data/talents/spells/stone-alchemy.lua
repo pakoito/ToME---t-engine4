@@ -94,7 +94,7 @@ newTalent{
 			self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)
 				self:removeObject(self:getInven("INVEN"), gem_item)
 				o.wielder = o.wielder or {}
-				table.mergeAdd(o.wielder, gem.imbue_powers)
+				table.mergeAdd(o.wielder, gem.imbue_powers, true)
 				o.been_imbued = true
 				game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
 			end)
