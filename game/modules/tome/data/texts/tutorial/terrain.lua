@@ -17,21 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/all.lua", rarity(0))
+return [[During your adventures you will encounter a variety of terrains you can pass on: grass, sand, water, lava, ...
 
-local Talents = require("engine.interface.ActorTalents")
+Some of those terrains have inate penalities or tricks, you will have to learn them and how to deal with them.
 
-newEntity{ base = "BASE_NPC_SKELETON", define_as="TUTORIAL_NPC_MAGE",
-	name = "skeleton mage", color=colors.LIGHT_RED,
-	level_range = {1, nil}, exp_worth = 1,
-	max_life = resolvers.rngavg(50,60),
-	max_mana = resolvers.rngavg(70,80),
-	combat_armor = 3, combat_def = 1,
-	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
-	resolvers.talents{ [Talents.T_MANATHRUST]=3 },
+You are about to enter a pond of water, you will not be able to breath inside. When you are in an area where you can not breathe an "Air" counter will appear on the left side of the screen. Do not let it reach zero or you will die.
 
-	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
-
-	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
-}
+Now go to the other side of the pond.
+]]

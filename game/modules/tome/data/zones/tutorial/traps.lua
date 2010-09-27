@@ -26,8 +26,11 @@ newEntity{ define_as = "TRAP_TUTORIAL",
 	display = ' ', color=colors.WHITE,
 	message = false,
 	triggered = function(self, x, y, who)
-		local d = require("engine.dialogs.ShowText").new("Tutorial: "..self.name, "tutorial/"..self.text)
-		game:registerDialog(d)
+		if who.player then
+			game.player:runStop()
+			local d = require("engine.dialogs.ShowText").new("Tutorial: "..self.name, "tutorial/"..self.text)
+			game:registerDialog(d)
+		end
 		return false, false
 	end
 }
@@ -55,4 +58,19 @@ newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_TALENTS",
 newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_LEVELUP",
 	name = "Experience and Levels",
 	text = "levelup",
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_TERRAIN",
+	name = "Different terrains",
+	text = "terrain",
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_TACTICS1",
+	name = "Basic tactic: Do not get surrounded",
+	text = "tactics1",
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_TACTICS2",
+	name = "Basic tactic: Take cover",
+	text = "tactics2",
 }

@@ -17,21 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/all.lua", rarity(0))
+return [[You have found a nest of snakes!
+As you fought the previous ones you know they are not very strong individualy but if you let them surround you you might be in trouble!
+A basic tactic in ToME4 is to try to never get surrounded, do not hesitate to backtrack a bit to get into a safer spot.
+#GOLD#Always control the fight.#WHITE#
 
-local Talents = require("engine.interface.ActorTalents")
-
-newEntity{ base = "BASE_NPC_SKELETON", define_as="TUTORIAL_NPC_MAGE",
-	name = "skeleton mage", color=colors.LIGHT_RED,
-	level_range = {1, nil}, exp_worth = 1,
-	max_life = resolvers.rngavg(50,60),
-	max_mana = resolvers.rngavg(70,80),
-	combat_armor = 3, combat_def = 1,
-	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
-	resolvers.talents{ [Talents.T_MANATHRUST]=3 },
-
-	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
-
-	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
-}
+Now take a few steps backwards to only have to fight one snake at a time and you should survive. Remember to use your talents and maybe a potion of healing if need be.
+]]

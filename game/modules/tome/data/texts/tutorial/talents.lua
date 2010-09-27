@@ -17,8 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-game.player:learnTalent(game.player.T_SHIELD_PUMMEL, true, 1)
-game.player:learnTalent(game.player.T_SHIELD_WALL, true, 1)
+if not game.player.tutored_levels then
+	game.player:learnTalent(game.player.T_SHIELD_PUMMEL, true, 1)
+	game.player:learnTalent(game.player.T_SHIELD_WALL, true, 1)
+	game.player.tutored_levels = true
+end
 
 return [[You now possess the Shield Pummel and Shield Wall talents.
 Talents show up in the lower right part of the screen with their assigned hotkey.

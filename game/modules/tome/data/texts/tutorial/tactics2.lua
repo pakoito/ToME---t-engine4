@@ -17,21 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/all.lua", rarity(0))
+return [[A skeleton mage just fired a spell at you.
+While the fireworks look nice you do not want to let them repeat the operation too much.
+When under the fire of archers or spell casters always try to break line of sight with them, they will be forced to come to you. (Unless they are smart)
+#GOLD#Take cover: Never let them get a clean shot!#WHITE#
 
-local Talents = require("engine.interface.ActorTalents")
-
-newEntity{ base = "BASE_NPC_SKELETON", define_as="TUTORIAL_NPC_MAGE",
-	name = "skeleton mage", color=colors.LIGHT_RED,
-	level_range = {1, nil}, exp_worth = 1,
-	max_life = resolvers.rngavg(50,60),
-	max_mana = resolvers.rngavg(70,80),
-	combat_armor = 3, combat_def = 1,
-	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
-	resolvers.talents{ [Talents.T_MANATHRUST]=3 },
-
-	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
-
-	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
-}
+Now take cover and wait for the skeleton.
+]]

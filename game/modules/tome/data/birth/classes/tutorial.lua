@@ -32,14 +32,11 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
-		max_life = 120,
+		max_life = 100,
 		life_rating = 12,
 		mana_regen = 0.2,
 		life_regen = 1,
 		mana_rating = 7,
-		resolvers.generic(function(e)
-			e.hotkey[10] = {"inventory", "potion of lesser mana"}
-		end),
 	},
 }
 
@@ -65,11 +62,7 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true},
 			{type="armor", subtype="shield", name="iron shield", autoreq=true},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
-		},
-		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+--			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
 		},
 	},
 }

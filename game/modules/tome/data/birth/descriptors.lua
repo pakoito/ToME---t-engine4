@@ -70,6 +70,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Tutorial",
+	selection_default = not profile.mod.allow_build.tutorial_done,
 	desc =
 	{
 		"Tutorial mode, start with a simplified character and discover the game in a simple quest.",
@@ -95,7 +96,6 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Easy",
-	selection_default = true,
 	desc =
 	{
 		"Easy game setting",
