@@ -156,7 +156,7 @@ function _M:newGame()
 				self.player:onBirth(birth)
 			end))
 		end)
-	end, quickbirth)
+	end, quickbirth, 720, 500)
 	self:registerDialog(birth)
 end
 

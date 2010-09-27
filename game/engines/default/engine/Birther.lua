@@ -60,13 +60,13 @@ end
 
 
 --- Instanciates a birther for the given actor
-function _M:init(actor, order, at_end, quickbirth)
+function _M:init(actor, order, at_end, quickbirth, w, h)
 	self.quickbirth = quickbirth
 	self.actor = actor
 	self.order = order
 	self.at_end = at_end
 
-	engine.Dialog.init(self, "Character Creation: "..actor.name, 600, 400)
+	engine.Dialog.init(self, "Character Creation: "..actor.name, w or 600, h or 400)
 
 	self.descriptors = {}
 

@@ -59,7 +59,9 @@ newBirthDescriptor
 	desc = {
 		"The greatest of the Edain, humans in all respects but stronger, smarter, and wiser.",
 		"They possess the #GOLD#Gift of Kings#WHITE# which allows them to regenerate their wounds once in a while.",
-		"#GOLD#Stats modifiers:#LIGHT_BLUE# +1 Strength, +1 Cunning, +1 Dexterity, +1 Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +1 Strength, +1 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +1 Willpower, +1 Cunning",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
 		"#GOLD#Experience penality:#LIGHT_BLUE# 15%",
 	},
@@ -84,7 +86,9 @@ newBirthDescriptor
 	desc = {
 		"Humans hailing from the northen town of Bree. A common kind of man, unremarkable in all respects.",
 		"Humans are an inherently very adaptable race and as such they gain a #GOLD#talent category point#WHITE# at birth(others only gain one at level 10, 20 and 30).",
-		"#GOLD#Stats modifiers:#LIGHT_BLUE# none",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 10",
 		"#GOLD#Experience penality:#LIGHT_BLUE# 0%",
 	},

@@ -441,3 +441,10 @@ function _M:on_prepickup(who, idx)
 		return true
 	end
 end
+
+--- Can it stacks with others of its kind ?
+function _M:canStack(o)
+	-- Can only stack known things
+	if not self:isIdentified() or not o:isIdentified() then return false end
+	return engine.Object.canStack(self, o)
+end
