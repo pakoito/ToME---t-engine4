@@ -67,7 +67,6 @@ newBirthDescriptor{
 }
 
 --------------- Difficulties
--- [[
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Tutorial",
@@ -87,9 +86,12 @@ newBirthDescriptor{
 			Tutorial = "allow",
 		}
 	},
-	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end) },
+	copy = {
+		no_birth_levelup = true,
+		easy_mode_lifes = 99999,
+		resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end)
+	},
 }
---]]
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Easy",
@@ -107,12 +109,15 @@ newBirthDescriptor{
 		race = { ["Tutorial Human"] = "forbid", },
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
-	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end), easy_mode_lifes = 1 },
+	copy = {
+		resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end),
+		easy_mode_lifes = 1,
+	},
 }
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Normal",
-	selection_default = true,
+	selection_default = profile.mod.allow_build.tutorial_done,
 	desc =
 	{
 		"Normal game setting",

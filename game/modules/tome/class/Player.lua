@@ -72,10 +72,6 @@ function _M:init(t, no_default)
 	t.rank = t.rank or 3
 	t.old_life = 0
 
-	if game.difficulty == game.DIFFICULTY_EASY then
-		t.easy_mode_lifes = 1
-	end
-
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
 	mod.class.interface.PlayerLore.init(self, t)
@@ -96,6 +92,11 @@ function _M:onBirth(birther)
 			self.random_escort_levels[z[1]] = self.random_escort_levels[z[1]] or {}
 			self.random_escort_levels[z[1]][z[2]] = true
 		end
+	end
+
+	if self.descriptor.world == "Tutorial" then
+		local d = require("engine.dialogs.ShowText").new("Tutorial: Movement", "tutorial/move")
+		game:registerDialog(d)
 	end
 end
 

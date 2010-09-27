@@ -18,3 +18,41 @@
 -- darkgod@te4.org
 
 load("/data/general/traps/natural_forest.lua")
+
+newEntity{ define_as = "TRAP_TUTORIAL",
+	type = "tutorial", subtype="tutorial", id_by_type=true, unided_name = "tutorial",
+	detect_power = 999999, disarm_power = 999999,
+	desc = [[A tutorial]],
+	display = ' ', color=colors.WHITE,
+	message = false,
+	triggered = function(self, x, y, who)
+		local d = require("engine.dialogs.ShowText").new("Tutorial: "..self.name, "tutorial/"..self.text)
+		game:registerDialog(d)
+		return false, false
+	end
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_MOVE",
+	name = "Movement",
+	text = "move",
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_MELEE",
+	name = "Melee Combat",
+	text = "melee",
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_OBJECTS",
+	name = "Objects",
+	text = "objects",
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_TALENTS",
+	name = "Talents",
+	text = "talents",
+}
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_LEVELUP",
+	name = "Experience and Levels",
+	text = "levelup",
+}

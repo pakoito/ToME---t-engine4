@@ -21,7 +21,7 @@ return {
 	name = "Tutorial",
 	level_range = {1, 1},
 	level_scheme = "player",
-	max_level = 6,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() end,
 	width = 50, height = 50,
@@ -37,7 +37,7 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {0, 0},
-			guardian = "LONE_WOLF",
+--			guardian = "LONE_WOLF",
 		},
 		object = {
 			class = "engine.generator.object.Random",

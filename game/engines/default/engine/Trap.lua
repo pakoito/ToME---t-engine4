@@ -117,8 +117,10 @@ function _M:trigger(x, y, who)
 
 	if not self:canTrigger(x, y, who) then return end
 
-	if not self.message then
+	if self.message == nil then
 		game.logSeen(who, "%s triggers a trap (%s)!", who.name:capitalize(), self:getName())
+	elseif self.message == false then
+		-- Nothing
 	else
 		local tname = who.name
 		local str =self.message

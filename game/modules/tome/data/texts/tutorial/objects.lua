@@ -17,17 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
-#LIGHT_GREEN#Welcome to ToME 4!#LAST#
+return [[During your adventures in the world you will find items.
+You can only carry a certain amount of items, depending on your Strength: this is your maximum encumberance.
+You can see your inventory by pressing 'i' or by right-clicking on yourself.
+You can pickup items from the ground by pressing ',' or right clicking on yourself while you are over items.
 
-This tutorial will present you with a short quest to familiarise yourself with the game.
-You are a human adventurer sent into the forest by the local village to dispose of the "Lone Wolf".
+Your inventory is split in two zones: your equiped items and your backpack.
 
-This tutorial character is more powerful than a normal starting character and has infinite lifes.
-A normal character normaly only has one life, once you die, you die (unless you found or accomplished things that allow you to resurrect).
-
-During this tutorial you will be guided by dialog boxes such as this one, explaining you how things work.
-Dialog boxes such as this one can be dismissed by either pressing Escape or clicking outside of their zone (or on the title).
-
-Now close this dialog to proceed.
+Now pickup the potion you have found and move on to the west.
 ]]

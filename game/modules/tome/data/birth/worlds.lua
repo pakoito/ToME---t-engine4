@@ -93,9 +93,6 @@ newBirthDescriptor{
 			["Tutorial Adventurer"] = "allow",
 		},
 	},
-	copy = {
-		no_birth_levelup = true,
-	},
 }
 
 newBirthDescriptor{
