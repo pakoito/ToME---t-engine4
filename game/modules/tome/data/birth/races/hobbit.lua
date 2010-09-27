@@ -68,10 +68,10 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +3 Cunning",
 		"#LIGHT_BLUE# * +5 Luck",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 15%",
+		"#GOLD#Experience penality:#LIGHT_BLUE# 20%",
 	},
 	stats = { str=-3, dex=3, con=1, cun=3, lck=5, },
-	experience = 1.15,
+	experience = 1.20,
 	talents = {
 		[ActorTalents.T_HOBBIT_LUCK]=1,
 	},

@@ -20,7 +20,7 @@
 startx = 49
 starty = 24
 
-defineTile(""", "DEEP_WATER", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
+defineTile("'", "DEEP_WATER", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
 defineTile("#", "DEEP_WATER", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
 defineTile("$", "DEEP_WATER", {random_filter={name="potion of lesser healing"}}, nil, nil)
 defineTile("&", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"}, nil, nil, nil)
@@ -28,7 +28,7 @@ defineTile("j", "GRASS", nil, {random_filter={type="immovable", subtype="jelly",
 defineTile("~", "DEEP_WATER", nil, nil, nil)
 defineTile(",", "GRASS", nil, nil, nil)
 defineTile("?", nil, nil, nil, nil)
-defineTile("S", "GRASS", nil, {random_filter={type="animal", subtype=snake", max_ood=2}}, nil)
+defineTile("S", "GRASS", nil, {random_filter={type="animal", subtype="snake", max_ood=2}}, nil)
 defineTile(" ", "DEEP_WATER", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
 defineTile("!", "GRASS", {random_filter={name="potion of lesser healing"}}, nil, nil)
 
@@ -82,5 +82,4 @@ return [[
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~&&&&&&
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~&&&&&&
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-]]
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&]]

@@ -148,14 +148,17 @@ function _M:newGame()
 
 		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
-		self.player:playerLevelup(function()
+		local birthend = function()
 			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player, function()
 				self.player:resetToFull()
 				self.player:registerCharacterPlayed()
 				self.player:grantQuest(self.player.starting_quest)
 				self.player:onBirth(birth)
 			end))
-		end)
+		end
+
+		if self.player.no_birth_levelup then birthend()
+		else self.player:playerLevelup(birthend) end
 	end, quickbirth, 720, 500)
 	self:registerDialog(birth)
 end
@@ -559,7 +562,7 @@ function _M:setupCommands()
 				self:changeLevel(1, "grushnak-pride")
 --				self.player:grantQuest("master-jeweler")
 			end
-		end
+		end,
 	}
 	self.key:addBinds
 	{
@@ -733,6 +736,7 @@ function _M:setupCommands()
 			self.player.changed = true
 		end,
 
+		HELP = "EXIT",
 		EXIT = function()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",
