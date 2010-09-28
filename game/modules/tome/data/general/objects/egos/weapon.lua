@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/egos/charged-attack.lua")
+--load("/data/general/objects/egos/charged-attack.lua")
 
 newEntity{
 	name = "flaming ", prefix=true, instant_resolve=true,

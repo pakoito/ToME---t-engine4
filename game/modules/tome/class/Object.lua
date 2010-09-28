@@ -345,6 +345,9 @@ function _M:getTextualDesc()
 
 	if w.see_invisible then desc[#desc+1] = ("See invisible: %d"):format(w.see_invisible) end
 	if w.invisible then desc[#desc+1] = ("Invisibility: %d"):format(w.invisible) end
+
+	if w.movement_speed then desc[#desc+1] = ("Movement speed: %d%%"):format((1 - w.movement_speed) * 100) end
+
 	end
 
 	if self.wielder then

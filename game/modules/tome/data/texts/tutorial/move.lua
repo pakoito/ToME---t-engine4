@@ -21,6 +21,7 @@ return [[Moving in ToME4 can be done using either the keyboard, the mouse or bot
 
 #GOLD#Keyboard:#WHITE#
 - Press the arrow keys or the keypad to move the in the given direction.
+- Press shift + the arrow keys or the keypad to run the in the given direction.
 - Press 5 on the keypad to stay put for a turn (doing nothing)
 
 #GOLD#Mouse:#WHITE#

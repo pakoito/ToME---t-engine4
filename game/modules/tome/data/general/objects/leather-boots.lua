@@ -26,6 +26,7 @@ newEntity{
 	encumber = 2,
 	rarity = 6,
 	desc = [[A pair of boots made of leather.]],
+	egos = "/data/general/objects/egos/boots.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 newEntity{ base = "BASE_LEATHER_BOOT",

@@ -17,8 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/egos/charged-utility.lua")
-
+--load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
 	name = "bright ", prefix=true, instant_resolve=true,

@@ -622,6 +622,11 @@ function _M:combatMentalResist()
 	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.25
 end
 
+--- Computes movement speed
+function _M:combatMovementSpeed()
+	return self.movement_speed or 1
+end
+
 --- Check if the actor has a gem bomb in quiver
 function _M:hasAlchemistWeapon()
 	if not self:getInven("QUIVER") then return nil, "no ammo" end

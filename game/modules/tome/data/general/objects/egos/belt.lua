@@ -19,7 +19,7 @@
 local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
-load("/data/general/objects/egos/charged-defensive.lua")
+--load("/data/general/objects/egos/charged-defensive.lua")
 
 newEntity{
 	name = " of carrying", suffix=true, instant_resolve=true,

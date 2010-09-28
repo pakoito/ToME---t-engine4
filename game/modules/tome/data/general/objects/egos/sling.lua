@@ -19,7 +19,7 @@
 local Talents = require("engine.interface.ActorTalents")
 local Stats = require("engine.interface.ActorStats")
 
-load("/data/general/objects/egos/charged-attack.lua")
+--load("/data/general/objects/egos/charged-attack.lua")
 
 newEntity{
 	name = " of power", suffix=true, instant_resolve=true,
