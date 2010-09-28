@@ -30,6 +30,7 @@ newEntity{
 	rarity = 7,
 	metallic = true,
 	desc = [[Heavy boots, with metal strips at the toes, heels and other vulnerable parts, to better protect the wearer's feet from harm.]],
+	egos = "/data/general/objects/egos/boots.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 newEntity{ base = "BASE_HEAVY_BOOTS",
