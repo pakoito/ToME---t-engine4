@@ -48,18 +48,18 @@ function _M:cloned()
 end
 
 function _M:loaded()
-	local def, fct, max, gl
+	local def, fct, max, gl, no_stop
 	if type(self.def) == "string" then
 		if _M.particles_def[self.def] then
 			setfenv(_M.particles_def[self.def], setmetatable(self.args or {}, {__index=_G}))
-			def, fct, max, gl = _M.particles_def[self.def]()
+			def, fct, max, gl, no_stop = _M.particles_def[self.def]()
 		else
 			local odef = self.def
 			print("[PARTICLE] Loading from /data/gfx/particles/"..self.def..".lua")
 			local f, err = loadfile("/data/gfx/particles/"..self.def..".lua")
 			if not f and err then error(err) end
 			setfenv(f, setmetatable(self.args or {}, {__index=_G}))
-			def, fct, max, gl = f()
+			def, fct, max, gl, no_stop = f()
 			_M.particles_def[odef] = f
 		end
 	else error("unsupported particle type: "..type(self.def))
@@ -70,5 +70,5 @@ function _M:loaded()
 	gl = self.__particles_gl[gl]
 
 	self.update = fct
-	self.ps = core.particles.newEmitter(max or 1000, def, gl)
+	self.ps = core.particles.newEmitter(max or 1000, no_stop, def, gl)
 end

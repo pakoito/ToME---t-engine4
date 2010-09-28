@@ -116,4 +116,4 @@ function(self)
 	elseif self.nb == 32 then pause = false self.nb = 0
 	end
 end,
-4*(230)*tiles
+4*(230)*tiles, nil, true

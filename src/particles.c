@@ -65,7 +65,8 @@ static void getparticulefield(lua_State *L, const char *k, float *v)
 static int particles_new(lua_State *L)
 {
 	int nb = luaL_checknumber(L, 1);
-	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 3);
+	bool no_stop = lua_toboolean(L, 2);
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
 	int t_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	int p_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
@@ -75,6 +76,7 @@ static int particles_new(lua_State *L)
 	ps->nb = nb;
 	ps->texture = *t;
 	ps->texture_ref = t_ref;
+	ps->no_stop = no_stop;
 
 	ps->particles = calloc(nb, sizeof(particle_type));
 
@@ -361,7 +363,7 @@ static int particles_to_screen(lua_State *L)
 	// Restore normal display
 	glColor4f(1, 1, 1, 1);
 
-	lua_pushboolean(L, alive);
+	lua_pushboolean(L, alive || ps->no_stop);
 	return 1;
 }
 

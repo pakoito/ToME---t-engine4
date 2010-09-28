@@ -39,6 +39,7 @@ typedef struct {
 	int nb;
 	int texture_ref;
 	int generator_ref;
+	bool no_stop;
 
 	int base;
 
