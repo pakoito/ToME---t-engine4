@@ -16,8 +16,9 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+
 local Stats = require "engine.interface.ActorStats"
-local DamageType = require "engine.DamageType"
+local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
 	name = " of phasing", suffix=true, instant_resolve=true,

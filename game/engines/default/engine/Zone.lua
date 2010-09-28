@@ -337,7 +337,7 @@ function _M:finishEntity(level, type, e, ego_chance)
 			s[#s+1] = e:clone()
 			e.generate_stack = e.generate_stack - 1
 		end
-		for i = 1, #s do e:stack(s[i]) end
+		for i = 1, #s do e:stack(s[i], true) end
 	end
 
 	e:resolve(nil, true)

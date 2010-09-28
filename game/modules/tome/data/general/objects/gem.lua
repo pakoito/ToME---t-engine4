@@ -72,7 +72,7 @@ newGem("Bloodstone",	"object/bloodstone.png",5,	18,	"red",		40,	50, 5, 70,
 	{ leech=10 }
 )
 newGem("Ruby",		"object/ruby.png",	4,	16,	"red",		30,	40, 4, 65,
-	{ inc_stats = { [Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 4, [Stats.STAT_CUN] = 4, } },
+	{ inc_stats = { [Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 4, [Stats.STAT_CON] = 4, } },
 	{ power=20 }
 )
 newGem("Amber",		"object/amber.png",	4,	16,	"yellow",	30,	40, 4, 65,
@@ -108,7 +108,7 @@ newGem("Garnets",	"object/garnet.png",3,	12,	"red",		20,	30, 3, 50,
 	{ leech=5 }
 )
 newGem("Onyx",		"object/.png",	3,	12,	"black",	20,	30, 3, 50,
-	{ inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_MAG] = 3, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 3, [Stats.STAT_CUN] = 3, } },
+	{ inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_MAG] = 3, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 3, [Stats.STAT_CON] = 3, } },
 	{ power=15 }
 )
 newGem("Amethyst",	"object/.png",2,	10,	"violet",	10,	20, 2, 35,
@@ -116,7 +116,7 @@ newGem("Amethyst",	"object/.png",2,	10,	"violet",	10,	20, 2, 35,
 	{ splash={type="ARCANE", dam=25}}
 )
 newGem("Opal",		"object/.png",	2,	10,	"blue",		10,	20, 2, 35,
-	{ inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_DEX] = 2, [Stats.STAT_MAG] = 2, [Stats.STAT_WIL] = 2, [Stats.STAT_CUN] = 2, [Stats.STAT_CUN] = 2, } },
+	{ inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_DEX] = 2, [Stats.STAT_MAG] = 2, [Stats.STAT_WIL] = 2, [Stats.STAT_CUN] = 2, [Stats.STAT_CON] = 2, } },
 	{ power=10 }
 )
 newGem("Topaz",		"object/.png",	2,	10,	"blue",		10,	20, 2, 35,
@@ -144,6 +144,6 @@ newGem("Citrine",	"object/.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ range=1 }
 )
 newGem("Agate",		"object/.png",	1,	8,	"black",	1,	10, 1, 20,
-	{ inc_stats = { [Stats.STAT_STR] = 1, [Stats.STAT_DEX] = 1, [Stats.STAT_MAG] = 1, [Stats.STAT_WIL] = 1, [Stats.STAT_CUN] = 1, [Stats.STAT_CUN] = 1, } },
+	{ inc_stats = { [Stats.STAT_STR] = 1, [Stats.STAT_DEX] = 1, [Stats.STAT_MAG] = 1, [Stats.STAT_WIL] = 1, [Stats.STAT_CUN] = 1, [Stats.STAT_CON] = 1, } },
 	{ power=5 }
 )

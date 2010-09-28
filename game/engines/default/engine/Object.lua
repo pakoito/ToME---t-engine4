@@ -118,8 +118,8 @@ end
 
 --- Adds object to the stack
 -- @return true if stacking worked, false if not
-function _M:stack(o)
-	if not self:canStack(o) then return false end
+function _M:stack(o, force)
+	if not force and not self:canStack(o) then return false end
 	self.stacked = self.stacked or {}
 	self.stacked[#self.stacked+1] = o
 

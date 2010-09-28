@@ -89,7 +89,7 @@ function _M:init(t, no_default)
 	self.unused_talents_types = self.unused_talents_types or 0
 
 	t.resource_pool_refs = t.resource_pool_refs or {}
-	
+
 	t.lite = t.lite or 0
 
 	t.size_category = t.size_category or 3
@@ -977,37 +977,37 @@ function _M:learnTalent(t_id, force, nb)
 	local t = _M.talents_def[t_id]
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and t.mana or t.sustain_mana then
 		self:learnTalent(self.T_MANA_POOL, true)
-		self.resource_pool_refs[self.T_MANA_POOL] = self.resource_pool_refs[self.T_MANA_POOL] + 1
+		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1
 	end
 	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) and t.equilibrium or t.sustain_equilibrium then
 		self:learnTalent(self.T_EQUILIBRIUM_POOL, true)
-		self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] = self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] + 1
+		self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] = (self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] or 0) + 1
 	end
 	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) and t.stamina or t.sustain_stamina then
 		self:learnTalent(self.T_STAMINA_POOL, true)
-		self.resource_pool_refs[self.T_STAMINA_POOL] = self.resource_pool_refs[self.T_STAMINA_POOL] + 1
+		self.resource_pool_refs[self.T_STAMINA_POOL] = (self.resource_pool_refs[self.T_STAMINA_POOL] or 0) + 1
 	end
 	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and t.vim or t.sustain_vim then
 		self:learnTalent(self.T_VIM_POOL, true)
-		self.resource_pool_refs[self.T_VIM_POOL] = self.resource_pool_refs[self.T_VIM_POOL] + 1
+		self.resource_pool_refs[self.T_VIM_POOL] = (self.resource_pool_refs[self.T_VIM_POOL] or 0) + 1
 	end
 	if t.type[1]:find("^divine/") and (t.positive or t.sustain_positive) and not self:knowTalent(self.T_POSITIVE_POOL) then
 		self:learnTalent(self.T_POSITIVE_POOL, true)
-		self.resource_pool_refs[self.T_POSITIVE_POOL] = self.resource_pool_refs[self.T_POSITIVE_POOL] + 1
+		self.resource_pool_refs[self.T_POSITIVE_POOL] = (self.resource_pool_refs[self.T_POSITIVE_POOL] or 0) + 1
 	end
 	if t.type[1]:find("^divine/") and (t.negative or t.sustain_negative) and not self:knowTalent(self.T_NEGATIVE_POOL) then
 		self:learnTalent(self.T_NEGATIVE_POOL, true)
-		self.resource_pool_refs[self.T_NEGATIVE_POOL] = self.resource_pool_refs[self.T_NEGATIVE_POOL] + 1
+		self.resource_pool_refs[self.T_NEGATIVE_POOL] = (self.resource_pool_refs[self.T_NEGATIVE_POOL] or 0) + 1
 	end
 	if t.type[1]:find("^cursed/") and not self:knowTalent(self.T_HATE_POOL) then
 		self:learnTalent(self.T_HATE_POOL, true)
-		self.resource_pool_refs[self.T_HATE_POOL] = self.resource_pool_refs[self.T_HATE_POOL] + 1
+		self.resource_pool_refs[self.T_HATE_POOL] = (self.resource_pool_refs[self.T_HATE_POOL] or 0) + 1
 	end
 
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
 		self:learnTalent(self.T_SHOOT, true)
-		self.resource_pool_refs[self.T_SHOOT] = self.resource_pool_refs[self.T_SHOOT] + 1
+		self.resource_pool_refs[self.T_SHOOT] = (self.resource_pool_refs[self.T_SHOOT] or 0) + 1
 	end
 
 	return true
