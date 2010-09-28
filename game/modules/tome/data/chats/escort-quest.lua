@@ -110,7 +110,7 @@ local reward_types = {
 	exotic = {
 		talents = {
 			[Talents.T_DISARM] = 1,
-			[Talents.T_WATER_JET] = 1,
+--			[Talents.T_WATER_JET] = 1,
 			[Talents.T_SPIT_POISON] = 1,
 			[Talents.T_MIND_SEAR] = 1,
 		},

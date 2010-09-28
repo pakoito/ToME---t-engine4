@@ -50,7 +50,7 @@ newEntity{ define_as = "BRIAGH",
 	body = { INVEN = 10, BODY=1 },
 
 	resolvers.drops{chance=100, nb=1, {defined="RESONATING_DIAMOND"}, },
-	resolvers.drops{chance=100, nb=10, {type="gem"} },
+	resolvers.drops{chance=100, nb=5, {type="gem"} },
 
 	resolvers.talents{
 		[Talents.T_PROBABILITY_TRAVEL]=10,
