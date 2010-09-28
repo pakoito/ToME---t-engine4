@@ -93,7 +93,8 @@ function _M:generateList()
 		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
 			local cat = tt.type:gsub("/.*", "")
 			local ttknown = self.actor:knowTalentType(tt.type)
-			list[#list+1] = { name=cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), type=tt.type, color=ttknown and {0,200,0} or {128,128,128} }
+			local tshown = (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type])
+			list[#list+1] = { name='['..(tshown and '-' or '+')..'] '..cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), type=tt.type, color=ttknown and {0,200,0} or {128,128,128} }
 			if ttknown then
 				known[#known+1] = {name="known", color={0,200,0}}
 			else
@@ -101,7 +102,7 @@ function _M:generateList()
 			end
 
 			-- Find all talents of this school
-			if (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type]) then
+			if tshown then
 				for j, t in ipairs(tt.talents) do
 					if not t.hide or self.actor.__show_special_talents[t.id] then
 						local typename = "class"

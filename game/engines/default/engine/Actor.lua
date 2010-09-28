@@ -108,6 +108,9 @@ function _M:move(x, y, force)
 	if self.dead then return true end
 	local map = game.level.map
 
+	x = math.floor(x)
+	y = math.floor(y)
+
 	if x < 0 then x = 0 end
 	if x >= map.w then x = map.w - 1 end
 	if y < 0 then y = 0 end
