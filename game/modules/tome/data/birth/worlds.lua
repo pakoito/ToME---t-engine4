@@ -17,48 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Player worlds
-newBirthDescriptor{
-	type = "world",
-	name = "Arda",
-	desc =
-	{
-		"Arda, the World.",
-		"It was shaped into being ages ago by the Music of the Ainur.",
-		"It is home of elves, men, dwarves and hobbits, but also evil orcs, trolls and dragons.",
-		"Since the downfall of Sauron, the lands have known relative peace.",
-		"Until recently it was the only world known to exist.",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
-			Elf = "allow",
-			Dwarf = "allow",
-			Hobbit = "allow",
-			Orc = function() return profile.mod.allow_build.orc and "allow" or "disallow" end,
-			Troll = function() return profile.mod.allow_build.troll and "allow" or "disallow" end,
-			Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
-		},
-
-		class =
-		{
-			__ALL__ = "allow",
-			Mage = "allow",
-			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
-			Wilder = function() return (
-				profile.mod.allow_build.wilder_summoner or
-				profile.mod.allow_build.wilder_wyrmic
-				) and "allow" or "disallow"
-			end,
-			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
-			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
-		},
-	},
-}
-
 newBirthDescriptor{
 	type = "world",
 	name = "Tutorial",
@@ -95,14 +53,179 @@ newBirthDescriptor{
 	},
 }
 
+
+-- Player worlds/campaigns
 newBirthDescriptor{
 	type = "world",
-	name = "Spydrë",
+	name = "Arda",
+	display_name = "Free People: The Fourth Age",
+	desc =
+	{
+--[[
+		"Arda, the World.",
+		"It was shaped into being ages ago by the Music of the Ainur.",
+		"It is home of elves, men, dwarves and hobbits, but also evil orcs, trolls and dragons.",
+		"Since the downfall of Sauron, the lands have known relative peace.",
+		"Until recently it was the only world known to exist.",
+]]
+		"The Free People of Middle-earth: Humans, Hobbits, Elves and Dwarves.",
+		"The West has been at relative peace for over one hundred year and people are prospering again.",
+		"You are an adventurer, setting out to find lost treasure and glory.",
+		"But what lurks in the shadow of the world?",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Human = "allow",
+			Elf = "allow",
+			Dwarf = "allow",
+			Hobbit = "allow",
+			Orc = function() return profile.mod.allow_build.orc and "allow" or "disallow" end,
+			Troll = function() return profile.mod.allow_build.troll and "allow" or "disallow" end,
+			Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
+		},
+
+		class =
+		{
+			__ALL__ = "allow",
+			Mage = "allow",
+			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
+			Wilder = function() return (
+				profile.mod.allow_build.wilder_summoner or
+				profile.mod.allow_build.wilder_wyrmic
+				) and "allow" or "disallow"
+			end,
+			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
+			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Orcs",
+	display_name = "Orcs: The Rise to Power",
+	desc =
+	{
+		"Baston!",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Orc = "allow",
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Spydre",
+	display_name = "Spydrë: Legacy of Ungoliant",
 	desc =
 	{
 		"Spydrë is home to the essence of spiders. The mighty Ungoliant of Arda actually originating from this world.",
 		"It is home to uncounted numbers of spider races, all fighting for supremacy of all the lands.",
 		"Some humanoids also live there, but they are usually the prey, not the hunter.",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Human = "allow",
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Ents",
+	display_name = "Ents: The March of the Entwifes",
+	desc =
+	{
+		"",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Human = "allow",
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Trolls",
+	display_name = "Trolls: Terror of the Woods",
+	desc =
+	{
+		"",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Human = "allow",
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Nagas",
+	display_name = "Nagas: Guardians of the Tide",
+	desc =
+	{
+		"",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Human = "allow",
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Faeros",
+	display_name = "Urthalath: Treason or the High Guards",
+	desc =
+	{
+		"",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Human = "allow",
+--			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Undeads",
+	display_name = "Broken Oath: The Curse of Undeath",
+	desc =
+	{
+		"",
 	},
 	descriptor_choices =
 	{

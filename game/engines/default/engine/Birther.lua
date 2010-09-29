@@ -24,6 +24,7 @@ module(..., package.seeall, class.inherit(engine.Dialog))
 
 _M.birth_descriptor_def = {}
 _M.birth_auto = {}
+_M.step_names = {}
 
 --- Defines birth descriptors
 -- Static!
@@ -34,6 +35,7 @@ function _M:loadDefinition(file)
 		ActorTalents = require("engine.interface.ActorTalents"),
 		newBirthDescriptor = function(t) self:newBirthDescriptor(t) end,
 		setAuto = function(type, v) self.birth_auto[type] = v end,
+		setStepNames = function(names) self.step_names = names end,
 		load = function(f) self:loadDefinition(f) end
 	}, {__index=_G}))
 	f()
@@ -46,6 +48,7 @@ function _M:newBirthDescriptor(t)
 	assert(t.type, "no birth type")
 	t.short_name = t.short_name or t.name
 	t.short_name = t.short_name:upper():gsub("[ ]", "_")
+	t.display_name = t.display_name or t.name
 	assert(t.desc, "no birth description")
 	if type(t.desc) == "table" then t.desc = table.concat(t.desc, "\n") end
 	t.desc = t.desc:gsub("\n\t+", "\n")
@@ -264,9 +267,9 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 	end
 
 	-- Stats
-	s:drawColorStringBlended(self.font, "Selecting: "..self.current_type:capitalize(), 2, 2)
+	s:drawColorStringBlended(self.font, "Selecting: "..(self.step_names[self.current_type] or self.current_type:capitalize()), 2, 2)
 	self:drawWBorder(s, 2, 20, 200)
 
-	self:drawSelectionList(s, 2, 25, self.font_h, self.list, self.sel, "name")
+	self:drawSelectionList(s, 2, 25, self.font_h, self.list, self.sel, "display_name")
 	self.changed = false
 end

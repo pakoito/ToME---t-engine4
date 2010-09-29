@@ -20,6 +20,14 @@
 setAuto("subclass", false)
 setAuto("subrace", false)
 
+setStepNames{
+	world = "Campaign",
+	race = "Race Category",
+	subrace = "Race",
+	class = "Class Category",
+	subclass = "Class",
+}
+
 newBirthDescriptor{
 	type = "base",
 	name = "base",
@@ -31,7 +39,13 @@ newBirthDescriptor{
 		{
 			Tutorial = "disallow",
 			Arda = "allow",
-			["Spydrë"] = function() return profile.mod.allow_build.world_spydre and "allow" or "disallow" end,
+			Ents = "disallow",
+			Spydre = "disallow",
+			Orcs = "disallow",
+			Trolls = "disallow",
+			Nagas = "disallow",
+			Undeads = "disallow",
+			Faeros = "disallow",
 		},
 		subclass =
 		{
