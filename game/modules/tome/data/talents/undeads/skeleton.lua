@@ -73,7 +73,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay down some sharpened bones to make a simple trap that will cause anyone stepping on it to bleed for %d damage.]]):
-		format((10 + self:getStr(20)) * self:getTalentLevel(t))
+		format(damDesc(self, DamageType.PHYSICAL, (10 + self:getStr(20)) * self:getTalentLevel(t)))
 	end,
 }
 

@@ -77,7 +77,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage.
 		At level 3 it becomes a beam.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 230))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.ARCANE, self:combatTalentSpellDamage(t, 20, 230)))
 	end,
 }
 

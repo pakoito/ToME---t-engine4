@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hit you for %d acid damage.]]):format(10 + 5 * self:getTalentLevel(t))
+		return ([[Your skin drips with acid, damaging all that hit you for %d acid damage.]]):format(damDesc(self, DamageType.ACID, 10 + 5 * self:getTalentLevel(t)))
 	end,
 }
 
@@ -100,7 +100,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down for 3 turns.
-		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.3)
+		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3))
 	end,
 }
 

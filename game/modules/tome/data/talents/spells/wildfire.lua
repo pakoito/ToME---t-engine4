@@ -39,7 +39,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A wave of fire emanates from you, knocking back anything caught inside and setting them ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 180))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 28, 180)))
 	end,
 }
 
@@ -72,7 +72,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Surround yourself in flames, setting all those in your line of sight ablaze and doing %0.2f fire damage over 8 turns.
 		At most it will affect %d foes.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 240), math.ceil(self:getTalentLevel(t) + 2))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 10, 240)), math.ceil(self:getTalentLevel(t) + 2))
 	end,
 }
 

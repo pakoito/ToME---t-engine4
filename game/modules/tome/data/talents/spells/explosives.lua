@@ -109,6 +109,7 @@ newTalent{
 		local ammo = self:hasAlchemistWeapon()
 		local dam, damtype = 1, DamageType.FIRE
 		if ammo then dam, damtype = t.computeDamage(self, t, ammo) end
+		dam = damDesc(self, damtype, dam)
 		return ([[Imbue an alchemist gem with an explosive charge of mana and throw it.
 		The gem will explode for %0.2f %s damage.
 		Each kind of gem will also provide a specific effect.
@@ -228,6 +229,7 @@ newTalent{
 		local ammo = self:hasAlchemistWeapon()
 		local dam, damtype = 1
 		if ammo then dam = t.computeDamage(self, t, ammo) end
+		dam = damDesc(self, DamageType.PHYSICAL, dam)
 		return ([[Crush together two alchemist gems, making them extremely unstable.
 		You then throw them to a target area, where they explode on impact dealing %0.2f physical damage and knocking back any creatures in the blast radius.
 		Each kind of gem will also provide a specific effect.

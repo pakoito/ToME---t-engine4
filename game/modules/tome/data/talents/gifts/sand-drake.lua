@@ -122,6 +122,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded for %d turns.
-		The damage will increase with the Strength stat]]):format(10 + self:getStr() * 0.3 * self:getTalentLevel(t), 2+self:getTalentLevelRaw(t))
+		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.PHYSICAL, 10 + self:getStr() * 0.3 * self:getTalentLevel(t)), 2+self:getTalentLevelRaw(t))
 	end,
 }

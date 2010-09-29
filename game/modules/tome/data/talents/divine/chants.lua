@@ -65,7 +65,7 @@ newTalent{
 		return ([[Chant the glory of the sun, granting you %d physical and spell save.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 70), self:combatTalentSpellDamage(t, 5, 25))
+		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 70), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -103,7 +103,7 @@ newTalent{
 		return ([[Chant the glory of the sun, granting you %d%% physical damage resistance.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 35), self:combatTalentSpellDamage(t, 5, 25))
+		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 35), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -146,7 +146,7 @@ newTalent{
 		return ([[Chant the glory of the sun, granting you %d%% elemental resistances.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 35), self:combatTalentSpellDamage(t, 5, 25))
+		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 35), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -184,6 +184,6 @@ newTalent{
 		return ([[Chant the glory of the sun, granting you %d%% more light damage.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50), self:combatTalentSpellDamage(t, 5, 25))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }

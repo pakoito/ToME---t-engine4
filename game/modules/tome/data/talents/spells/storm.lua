@@ -35,7 +35,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 25, 290)))
 	end,
 }
 
@@ -57,7 +57,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 25, 290)))
 	end,
 }
 
@@ -79,7 +79,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 25, 290)))
 	end,
 }
 
@@ -101,6 +101,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 25, 290)))
 	end,
 }

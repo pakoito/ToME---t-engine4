@@ -86,6 +86,6 @@ newTalent{
 		return ([[Your blood turns into an acidic mixture. When you get hit the attacker is splashed with acid.
 		This deals %0.2f acid damage each turn for 5 turns and reduces the attacker attack by %d.
 		At level 3 it will also reduce armour by %d.]]):
-		format(self:combatTalentSpellDamage(t, 5, 30), self:combatTalentSpellDamage(t, 15, 35), self:combatTalentSpellDamage(t, 15, 40))
+		format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 5, 30)), self:combatTalentSpellDamage(t, 15, 35), self:combatTalentSpellDamage(t, 15, 40))
 	end,
 }

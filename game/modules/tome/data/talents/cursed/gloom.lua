@@ -215,7 +215,7 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	info = function(self, t)
-		local baseDamage = 30 + self:getWil() * 0.4 * self:getTalentLevel(t)
+		local baseDamage = damDesc(self, DamageType.BLIGHT, 30 + self:getWil() * 0.4 * self:getTalentLevel(t))
 		local attackStrength = 0.3 + self:getTalentLevel(t) * 0.12
 		local effectiveness = getWillFailureEffectiveness(self, 30, 95, attackStrength)
 		return ([[Your rage builds within you for 20 turns, then unleashes itself for %d to %d hate-based blight damage on the first one to enter your gloom. (%d effectiveness)]]):format(baseDamage * .5, baseDamage * 1.5, effectiveness)

@@ -103,7 +103,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Curses your target, stopping any natural healing and dealing %0.2f darkness damage each turn.
-		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 70))
+		The resistances will decrease with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 70)))
 	end,
 }
 

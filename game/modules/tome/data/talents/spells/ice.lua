@@ -48,7 +48,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Invoke ice shards at the targets in the selected area. Each shard travels slowly and does %0.2f ice damage on impact.
 		This spell will never hit the caster.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 200))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 25, 200)))
 	end,
 }
 
@@ -73,7 +73,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Blast a wave of cold all around you, doing %0.2f cold damage and freezing creatures to the ground for %d turns.
 		Affected creatures can still act but not move.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 180), 4)
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 10, 180)), 4)
 	end,
 }
 
@@ -125,7 +125,7 @@ newTalent{
 		* Normal rank will get +50%% critical chance
 		* Elites will get +10%% critical chance
 		At most it will affect %d foes.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 180), math.ceil(self:getTalentLevel(t) + 2))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 10, 180)), math.ceil(self:getTalentLevel(t) + 2))
 	end,
 }
 

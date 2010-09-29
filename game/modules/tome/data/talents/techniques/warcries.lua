@@ -37,7 +37,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A powerful shout, doing %0.2f physical damage in a radius %d cone in front of you.
-		The damage increases with Strength.]]):format((50 + self:getTalentLevel(t) * self:getStr()) / 2.3, 3 + self:getTalentLevelRaw(t))
+		The damage increases with Strength.]]):format(damDesc(self, DamageType.PHYSICAL, (50 + self:getTalentLevel(t) * self:getStr()) / 2.3), 3 + self:getTalentLevelRaw(t))
 	end,
 }
 

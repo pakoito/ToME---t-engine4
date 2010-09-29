@@ -69,7 +69,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin forms icy scales, damaging all that hit you for %d cold damage and increasing your armor by %d.]]):format(5 * self:getTalentLevel(t), 4 * self:getTalentLevel(t))
+		return ([[Your skin forms icy scales, damaging all that hit you for %d cold damage and increasing your armor by %d.]]):format(damDesc(self, DamageType.C, 5 * self:getTalentLevel(t)), 4 * self:getTalentLevel(t))
 	end,
 }
 
@@ -147,6 +147,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe ice in a frontal cone. Any target caught in the area will take %0.2f cold damage and can be frozen for a few turns.
-		The damage will increase with the Strength stat]]):format(30 + self:getStr(50) * self:getTalentLevel(t), 2+self:getTalentLevelRaw(t))
+		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.COLD, 30 + self:getStr(50) * self:getTalentLevel(t)), 2+self:getTalentLevelRaw(t))
 	end,
 }

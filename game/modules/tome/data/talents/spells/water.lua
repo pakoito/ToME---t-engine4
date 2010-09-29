@@ -53,7 +53,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Corrosive fumes rise from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 50), self:getTalentLevel(t) + 2)
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 4, 50)), self:getTalentLevel(t) + 2)
 	end,
 }
 
@@ -83,7 +83,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Condenses ambient water on a target, freezing it for a short while and damaging it for %0.2f.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 12, 160))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 12, 160)))
 	end,
 }
 
@@ -120,7 +120,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A wall of water rushes out from the caster doing %0.2f cold damage and knocking back targets each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 90), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 90)), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
 	end,
 }
 
@@ -159,6 +159,6 @@ newTalent{
 	info = function(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		It has 25%% chance to freeze damaged targets.
-		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 90), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 90)), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
 	end,
 }

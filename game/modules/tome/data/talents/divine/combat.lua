@@ -41,7 +41,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Infuse your weapon of the power of the Sun, doing %0.2f light damage with each hit.
 		Each hit will drain 3 positive energy. The spell ends when energy reaches 0.
-		The damage will increase with the Magic stat]]):format(7 + self:combatSpellpower(0.092) * self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHT, 7 + self:combatSpellpower(0.092) * self:getTalentLevel(t)))
 	end,
 }
 

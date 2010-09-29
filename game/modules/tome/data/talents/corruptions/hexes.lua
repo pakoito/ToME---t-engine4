@@ -73,7 +73,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hexes your target. Each time it uses a resource (stamina, mana, vim, ...) it takes %0.2f fire damage.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 4, 90))
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 4, 90)))
 	end,
 }
 

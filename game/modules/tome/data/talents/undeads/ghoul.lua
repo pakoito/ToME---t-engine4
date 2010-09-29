@@ -142,6 +142,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Vomit on the ground around you, healing any undead in the area and damaging others.
-		Lasts %d turns and deals %d blight damage.]]):format(self:getTalentLevel(t) / 2 + 4, (2 + self:getCon(8)) * self:getTalentLevel(t))
+		Lasts %d turns and deals %d blight damage.]]):format(self:getTalentLevel(t) / 2 + 4, damDesc(self, DamageType.BLIGHT, (2 + self:getCon(8)) * self:getTalentLevel(t)))
 	end,
 }

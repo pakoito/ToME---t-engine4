@@ -76,9 +76,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fires a bolt of blight, doing %0.2f damage and replenishing 20%% of it as vim energy.
+		return ([[Fires a bolt of blight, doing %0.2f blight damage and replenishing 20%% of it as vim energy.
 		The effect will increase with your Magic stat.]]):
-		format(self:combatTalentSpellDamage(t, 15, 200))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 200)))
 	end,
 }
 

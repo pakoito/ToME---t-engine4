@@ -42,7 +42,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 25, 290))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 25, 290)))
 	end,
 }
 
@@ -69,7 +69,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be stunned for %d turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 120), self:getTalentLevelRaw(t) + 2)
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 10, 120)), self:getTalentLevelRaw(t) + 2)
 	end,
 }
 
@@ -100,7 +100,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 280), 1 + self:getTalentLevelRaw(t))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 28, 280)), 1 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -141,6 +141,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of 5 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 15, 80), 5 + self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 15, 80)), 5 + self:getTalentLevel(t))
 	end,
 }

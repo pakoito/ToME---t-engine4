@@ -134,7 +134,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You bind light in a glyph on the floor. The first target passing by will be hit by a blast of light doing %0.2f damage.
 		The glyph lasts for %d turns.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 150), 2 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150)), 2 + self:getTalentLevel(t))
 	end,
 }
 

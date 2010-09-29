@@ -44,7 +44,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Calls the power of the Moon into a beam of shadows doing %0.2f damage.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 14, 230))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 14, 230)))
 	end,
 }
 
@@ -90,8 +90,8 @@ newTalent{
 		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field that does %0.2f darkness damage per turn for %d turns.
 		The damage will increase with the Magic stat]]):
 		format(
-			self:combatTalentSpellDamage(t, 5, 120),
-			self:combatTalentSpellDamage(t, 4, 50),
+			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 120)),
+			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 4, 50)),
 			self:getTalentLevel(t) + 2
 		)
 	end,
@@ -125,8 +125,8 @@ newTalent{
 		It also regenerates both your negative and positive energies.
 		The damage will increase with the Magic stat]]):
 		format(
-			self:combatTalentSpellDamage(t, 10, 100),
-			self:combatTalentSpellDamage(t, 10, 100),
+			damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 10, 100)),
+			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 10, 100)),
 			self:getTalentRange(t)
 		)
 	end,
@@ -159,6 +159,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A star falls onto the target, stunning all and doing %0.2f darkness damage.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 28, 170))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 28, 170)))
 	end,
 }

@@ -40,7 +40,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Turn part of your target into fire, burning the rest for %0.2f fire damage over 5 turns.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 25, 220))
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 25, 220)))
 	end,
 }
 
@@ -122,7 +122,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A furious fire storm rages around the caster doing %0.2f fire damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 90), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 90)), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
 	end,
 }
 
@@ -192,8 +192,8 @@ newTalent{
 		The damage will increase with Magic stat.]]):
 		format(
 			self:combatTalentSpellDamage(t, 5, 45),
-			self:combatTalentSpellDamage(t, 5, 25),
-			self:combatTalentSpellDamage(t, 15, 70)
+			damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 25)),
+			damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 15, 70))
 		)
 	end,
 }

@@ -38,6 +38,22 @@ newTalent = function(t)
 	return oldNewTalent(t)
 end
 
+damDesc = function(self, type, dam)
+	-- Difficulty settings
+	if game.difficulty == game.DIFFICULTY_NIGHTMARE then
+		if self:resolveSource().player then dam = dam * 0.7 end
+	elseif game.difficulty == game.DIFFICULTY_INSANE then
+		if self:resolveSource().player then dam = dam * 0.5 end
+	end
+
+	-- Increases damage
+	if self.inc_damage then
+		local inc = (self.inc_damage.all or 0) + (self.inc_damage[type] or 0)
+		dam = dam + (dam * inc / 100)
+	end
+	return dam
+end
+
 load("/data/talents/misc/misc.lua")
 load("/data/talents/techniques/techniques.lua")
 load("/data/talents/cunning/cunning.lua")

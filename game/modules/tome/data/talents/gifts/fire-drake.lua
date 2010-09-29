@@ -103,7 +103,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Spit a cloud of flames doing %0.2f fire damage in a radius of 2 each turn for %d turns.
-		The damage will increase with the Willpower stat]]):format(10 + self:getWil() * 0.2 * self:getTalentLevel(t), 2 + self:getTalentLevelRaw(t))
+		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.FIRE, 10 + self:getWil() * 0.2 * self:getTalentLevel(t)), 2 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -132,6 +132,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe fire in a frontal cone. Any target caught in the area will take %0.2f fire damage over 3 turns.
-		The damage will increase with the Strength stat]]):format(30 + self:getStr(65) * self:getTalentLevel(t))
+		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.FIRE, 30 + self:getStr(65) * self:getTalentLevel(t)))
 	end,
 }

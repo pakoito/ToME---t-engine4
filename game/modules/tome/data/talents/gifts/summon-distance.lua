@@ -35,7 +35,7 @@ newTalent{ short_name = "FIRE_IMP_BOLT",
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire doing %0.2f fire damage.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 8, 120))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 8, 120)))
 	end,
 }
 
@@ -62,7 +62,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Breathe acid on your foes, doing %d damage.
-		The damage will increase with the Willpower stat]]):format(30 + self:getWil(50) * self:getTalentLevel(t))
+		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.ACID, 30 + self:getWil(50) * self:getTalentLevel(t)))
 	end,
 }
 
@@ -90,7 +90,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Breathe lightning on your foes, doing %d to %d damage.
-		The damage will increase with the Willpower stat]]):format((30 + self:getWil(70) * self:getTalentLevel(t)) / 3, 30 + self:getWil(70) * self:getTalentLevel(t))
+		The damage will increase with the Willpower stat]]):
+		format(
+			damDesc(self, DamageType.LIGHTNING, (30 + self:getWil(70) * self:getTalentLevel(t)) / 3),
+			damDesc(self, DamageType.LIGHTNING, 30 + self:getWil(70) * self:getTalentLevel(t))
+		)
 	end,
 }
 
@@ -117,7 +121,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Breathe poison on your foes, doing %d damage over a few turns.
-		The damage will increase with the Willpower stat]]):format(10 + self:getWil(70) * self:getTalentLevel(t))
+		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.NATURE, 10 + self:getWil(70) * self:getTalentLevel(t)))
 	end,
 }
 

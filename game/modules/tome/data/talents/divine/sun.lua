@@ -54,7 +54,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Calls the power of the Sun into a searing lance doing %0.2f damage and leaving a spot on the ground for 4 turns doing %0.2f damage.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 6, 160), self:combatTalentSpellDamage(t, 6, 80))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 6, 160)), self:combatTalentSpellDamage(t, 6, 80))
 	end,
 }
 
@@ -88,7 +88,7 @@ newTalent{
 		At level 3 it will start dealing %0.2f light damage.
 		The damage will increase with the Magic stat]]):
 		format(
-			self:combatTalentSpellDamage(t, 4, 80)
+			damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 4, 80))
 		)
 	end,
 }
@@ -121,7 +121,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Fire a beam of Sun flames at your foes, burning all those in line for %0.2f fire damage.
 		The damage will increase with the Magic stat]]):
-		format(self:combatTalentSpellDamage(t, 10, 200))
+		format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 10, 200)))
 	end,
 }
 
@@ -149,6 +149,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures a furious burst of Sunlight, dealing %0.2f light damage to all those around you in a radius of 4.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 160))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 10, 160)))
 	end,
 }

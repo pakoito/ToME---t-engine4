@@ -42,7 +42,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %d fire damage per melee attack and increasing all fire damage by %d%%.]]):
-		format(self:combatTalentSpellDamage(t, 5, 20), self:combatTalentSpellDamage(t, 5, 14))
+		format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 20)), self:combatTalentSpellDamage(t, 5, 14))
 	end,
 }
 
@@ -90,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.]]):
-		format(self:combatTalentSpellDamage(t, 3, 15), self:combatTalentSpellDamage(t, 5, 14))
+		format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 3, 15)), self:combatTalentSpellDamage(t, 5, 14))
 	end,
 }
 

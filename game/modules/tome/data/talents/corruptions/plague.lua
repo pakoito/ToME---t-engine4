@@ -53,7 +53,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Fires a bolt of pure filth, diseasing your target with a random disease doing %0.2f blight damage per turns for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d.
 		The effect will increase with your Magic stat.]]):
-		format(self:combatTalentSpellDamage(t, 5, 45), self:combatTalentSpellDamage(t, 5, 25))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 5, 45)), self:combatTalentSpellDamage(t, 5, 25))
 	end,
 }
 
@@ -112,7 +112,7 @@ newTalent{
 		return ([[Make your target's diseases burst, doing %0.2f blight damage for each disease it is infected with.
 		This will also spread the diseases to any nearby foes in a radius of 1.
 		The damage will increase with your Magic stat.]]):
-		format(self:combatTalentSpellDamage(t, 15, 85))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 85)))
 	end,
 }
 
@@ -221,6 +221,6 @@ newTalent{
 	info = function(self, t)
 		return ([[Infects the target with a very contagious disease doing %0.2f damage per turn for 6 turns.
 		If any blight damage from non-diseases hits the target, the epidemic will activate and spread diseases to nearby targets.]]):
-		format(self:combatTalentSpellDamage(t, 15, 50))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 50)))
 	end,
 }

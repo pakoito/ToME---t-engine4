@@ -88,7 +88,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Concentrate on the corruption you bring, enhancing each of your melee strikes with %0.2f blight damage.
 		The damage will increase with your Magic stat.]]):
-		format(self:combatTalentSpellDamage(t, 15, 40))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 40)))
 	end,
 }
 
@@ -127,7 +127,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Strike with each of your weapons, doing %d%% acid weapon damage. If at least one of the strikes hits an acid splash is generated doing %0.2f acid damage.
 		The splash damage will increase with your Magic stat.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6), self:combatTalentSpellDamage(t, 10, 130))
+		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6), damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 130)))
 	end,
 }
 

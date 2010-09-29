@@ -45,7 +45,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 290) / 3, self:combatTalentSpellDamage(t, 20, 290))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 20, 290) / 3), damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 20, 290)))
 	end,
 }
 
@@ -123,8 +123,8 @@ newTalent{
 		It can hit up to %d targets and will never hit the same one twice; nor will it hit the caster.
 		The damage will increase with the Magic stat]]):
 		format(
-			self:combatTalentSpellDamage(t, 10, 200) / 3,
-			self:combatTalentSpellDamage(t, 10, 200),
+			damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 10, 200) / 3),
+			damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 10, 200)),
 			3 + self:getTalentLevelRaw(t)
 		)
 	end,
@@ -224,6 +224,6 @@ newTalent{
 		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
 		This powerful spell will continuously drain mana while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 15, 80))
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 15, 80)))
 	end,
 }

@@ -32,8 +32,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Channel raw magical energy into your melee attacks, each doing %d damage and costing %.2f mana.]]):
-		format(3 + self:getTalentLevel(t) * 2, 1 + self:getTalentLevelRaw(t) / 1.5)
+		return ([[Channel raw magical energy into your melee attacks, each doing %d darkness damage and costing %.2f mana.]]):
+		format(damDesc(self, DamageType.DARKNESS, 3 + self:getTalentLevel(t) * 2), 1 + self:getTalentLevelRaw(t) / 1.5)
 	end,
 }
 

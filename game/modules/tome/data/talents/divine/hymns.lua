@@ -63,7 +63,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you %d%% more darkness damage.
 		In addition it surrounds you with a shield of shadows, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50), self:combatTalentSpellDamage(t, 5, 25))
+		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -100,7 +100,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you infravision up to %d grids.
 		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
-		The resistance and damage will increase with the Magic stat]]):format(math.floor(5 + self:getTalentLevel(t)), self:combatTalentSpellDamage(t, 5, 25))
+		The resistance and damage will increase with the Magic stat]]):format(math.floor(5 + self:getTalentLevel(t)), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -141,7 +141,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you %d%% stun, blindness and confusion resistances.
 		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Hymn active at once.
-		The damage will increase with the Magic stat]]):format(100 * (0.2 + self:getTalentLevel(t) / 10), self:combatTalentSpellDamage(t, 5, 25))
+		The damage will increase with the Magic stat]]):format(100 * (0.2 + self:getTalentLevel(t) / 10), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -204,6 +204,6 @@ newTalent{
 		return ([[Conjures a shroud of dancing shadows with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random shadow beam will hit up to %d of your foes for 1 to %0.2f damage.
 		This powerful spell will continuously drain negative energy while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 7, 80))
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 7, 80)))
 	end,
 }

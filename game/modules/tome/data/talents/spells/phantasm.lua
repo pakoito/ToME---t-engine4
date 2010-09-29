@@ -98,7 +98,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The caster is surrounded by a phantasmal shield. If hit in melee, the shield will deal %d arcane damage to the attacker.
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.ARCANE, self:combatTalentSpellDamage(t, 10, 50)))
 	end,
 }
 
