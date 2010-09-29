@@ -26,7 +26,7 @@ defineTile('#', "WALL")
 defineTile('X', "TREE")
 defineTile('+', "DOOR")
 defineTile('s', "GRASS", nil, {random_filter={name="skeleton mage", add_levels=6}})
-defineTile('$', "FLOOR", {random_filter={type="scroll"}}, nil)
+defineTile('$', "FLOOR", {random_filter={type="scroll", ego_chance=25}}, nil)
 
 startx = 1
 starty = 7

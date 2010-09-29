@@ -28,9 +28,9 @@ defineTile('#', "HARDWALL")
 defineTile('X', "TREE_DARK1")
 defineTile('+', "DOOR")
 
-defineTile('T', "FLOOR", {random_filter={type="potion"}}, {random_filter={name="forest troll",add_levels=10}})
+defineTile('T', "FLOOR", {random_filter={type="potion", ego_chance=25}}, {random_filter={name="forest troll",add_levels=10}})
 defineTile('t', "FLOOR", nil, {random_filter={name="forest troll"}})
-defineTile('$', "FLOOR", {random_filter={type="potion"}}, nil)
+defineTile('$', "FLOOR", {random_filter={type="potion", ego_chance=25}}, nil)
 
 return {
 [[,,,,,,,,,,,,,,,,,,,,,,]],

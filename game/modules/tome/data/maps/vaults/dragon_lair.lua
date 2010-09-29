@@ -25,8 +25,8 @@ starty = 6
 defineTile('!', "ROCK_VAULT", nil, nil, nil, {room_map={special=false, room=false, can_open=true}})
 defineTile(' ', "SAND")
 defineTile('X', "HARDMOUNTAIN_WALL")
-defineTile('$', "SAND", {random_filter={add_levels=15}})
-defineTile('D', "SAND", {random_filter={add_levels=20}}, {random_filter={name="greater multi-hued wyrm", add_levels=50}})
+defineTile('$', "SAND", {random_filter={add_levels=15, ego_chance=25}})
+defineTile('D', "SAND", {random_filter={add_levels=20, ego_chance=25}}, {random_filter={name="greater multi-hued wyrm", add_levels=50}})
 defineTile('d', "SAND", nil, {random_filter={name="multi-hued drake hatchling", add_levels=20}})
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}

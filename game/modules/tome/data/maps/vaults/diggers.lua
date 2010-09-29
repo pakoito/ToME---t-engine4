@@ -27,10 +27,10 @@ defineTile('!', "DOOR_VAULT")
 defineTile('+', "DOOR")
 defineTile('o', "FLOOR", nil, {random_filter={add_levels=5}})
 defineTile('O', "FLOOR", nil, {random_filter={add_levels=10}})
-defineTile('5', "FLOOR", {random_filter={add_levels=10}}, {random_filter={}})
+defineTile('5', "FLOOR", {random_filter={add_levels=10, ego_chance=25}}, {random_filter={}})
 defineTile('4', "FLOOR", nil, {random_filter={}})
-defineTile('3', "FLOOR", {random_filter={add_levels=5}}, {random_filter={add_levels=15}})
-defineTile('2', "FLOOR", {random_filter={add_levels=20}}, {random_filter={add_levels=30}})
+defineTile('3', "FLOOR", {random_filter={add_levels=5, ego_chance=25}}, {random_filter={add_levels=15}})
+defineTile('2', "FLOOR", {random_filter={add_levels=20, ego_chance=25}}, {random_filter={add_levels=30}})
 defineTile('1', "FLOOR", nil, {random_filter={add_levels=30}})
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}

@@ -26,10 +26,10 @@ defineTile('X', "HARDWALL")
 defineTile('^', "FLOOR", {random_filter={add_levels=5}}, {random_filter={type="undead"}}, {random_filter={add_levels=5}})
 defineTile('u', "FLOOR", {random_filter={}}, {random_filter={type="undead", subtype="vampire", name="lesser vampire"}})
 defineTile('v', "FLOOR", {random_filter={add_levels=5}}, {random_filter={add_levels=5, type="undead", subtype="vampire", name="vampire"}})
-defineTile('U', "FLOOR", {random_filter={add_levels=10}}, {random_filter={add_levels=10, type="undead", subtype="vampire", name="master vampire"}})
-defineTile('V', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_levels=15, type="undead", subtype="vampire", name="elder vampire"}})
-defineTile('L', "FLOOR", {random_filter={add_levels=20}}, {random_filter={add_levels=20, type="undead", subtype="vampire", name="vampire lord"}})
-defineTile('W', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_levels=15, type="undead", subtype="wight", name="grave wight"}})
+defineTile('U', "FLOOR", {random_filter={add_levels=10, ego_chance=25}}, {random_filter={add_levels=10, type="undead", subtype="vampire", name="master vampire"}})
+defineTile('V', "FLOOR", {random_filter={add_levels=15, ego_chance=25}}, {random_filter={add_levels=15, type="undead", subtype="vampire", name="elder vampire"}})
+defineTile('L', "FLOOR", {random_filter={add_levels=20, ego_chance=25}}, {random_filter={add_levels=20, type="undead", subtype="vampire", name="vampire lord"}})
+defineTile('W', "FLOOR", {random_filter={add_levels=15, ego_chance=25}}, {random_filter={add_levels=15, type="undead", subtype="wight", name="grave wight"}})
 
 startx = 0
 starty = 6

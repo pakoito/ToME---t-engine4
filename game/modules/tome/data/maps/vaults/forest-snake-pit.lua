@@ -27,7 +27,7 @@ defineTile('#', "WALL")
 defineTile('X', "TREE")
 defineTile('x', "DOOR_VAULT")
 
-defineTile('s', "FLOOR", {random_filter={type="potion"}}, {random_filter={name="rattlesnake"}})
+defineTile('s', "FLOOR", {random_filter={type="potion", ego_chance=25}}, {random_filter={name="rattlesnake"}})
 
 return {
 [[,,,,,,,,,]],

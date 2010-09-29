@@ -22,7 +22,7 @@ setStatusAll{no_teleport=true}
 defineTile('.', "FLOOR")
 defineTile('#', "WALL")
 defineTile('X', "HARDWALL")
-defineTile('8', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_levels=20}})
+defineTile('8', "FLOOR", {random_filter={add_levels=15, ego_chance=25}}, {random_filter={add_levels=20}})
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 

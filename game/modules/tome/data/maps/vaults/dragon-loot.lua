@@ -30,7 +30,7 @@ defineTile('#', "HARDWALL")
 defineTile('+', "DOOR")
 defineTile('X', "DOOR_VAULT")
 defineTile('I', "FLOOR", nil, {random_filter={add_levels=10,name="fire imp"}})
-defineTile('D', "FLOOR", {random_filter={add_levels=15}}, {random_filter={add_levels=15,name="fire wyrm"}})
+defineTile('D', "FLOOR", {random_filter={add_levels=15, ego_chance=25}}, {random_filter={add_levels=15,name="fire wyrm"}})
 
 return {
 [[#######X#######]],
