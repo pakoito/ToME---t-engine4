@@ -21,7 +21,7 @@ load("/data/general/npcs/all.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ base = "BASE_NPC_SKELETON", define_as="TUTORIAL_NPC_MAGE",
+newEntity{ base = "BASE_NPC_SKELETON", define_as = "TUTORIAL_NPC_MAGE",
 	name = "skeleton mage", color=colors.LIGHT_RED,
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),
@@ -34,4 +34,41 @@ newEntity{ base = "BASE_NPC_SKELETON", define_as="TUTORIAL_NPC_MAGE",
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+}
+
+newEntity{ base = "BASE_NPC_TROLL", defined_as = "TUTORIAL_NPC_TROLL",
+	name = "half-dead forest troll", color=colors.YELLOW_GREEN, image="npc/troll_f.png",
+	desc = [[Green-skinned and ugly, this massive humanoid glares at you, clenching wart-covered green fists.
+He looks hurt.]],
+	level_range = {1, nil}, exp_worth = 1,
+	max_life = resolvers.rngavg(10,20),
+	combat_armor = 3, combat_def = 0,
+}
+
+newEntity{ base = "BASE_NPC_CANINE", defined_as = "TUTORIAL_NPC_LONE_WOLF",
+	name = "Lone Wolf", color=colors.VIOLET, unique=true, image="npc/canine_rungof.png",
+	desc = [[It is a large wolf with eyes full of cunning, only 3 times bigger than a normal wolf. It looks hungry. You look tasty!]],
+	level_range = {3, nil}, exp_worth = 2,
+	rank = 4,
+	size_category = 4,
+	max_life = 220,
+	combat_armor = 8, combat_def = 0,
+	combat = { dam=20, atk=15, apr=4 },
+
+	stats = { str=25, dex=20, cun=15, mag=10, con=15 },
+
+	resolvers.talents{
+		[Talents.T_GLOOM]=1,
+		[Talents.T_RUSH]=1,
+		[Talents.T_CRIPPLE]=1,
+	},
+	resolvers.sustains_at_birth(),
+
+	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("tutorial", engine.Quest.COMPLETED)
+		local d = require("engine.dialogs.ShowText").new("Tutorial: "..self.name, "tutorial/"..self.text)
+		game:registerDialog(d)
+	end,
 }

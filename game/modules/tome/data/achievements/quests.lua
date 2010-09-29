@@ -19,9 +19,13 @@
 
 --------------- Tutorial objectives
 newAchievement{
-	name = "Baby steps",
+	name = "Baby steps", id = "TUTORIAL_DONE",
 	desc = [[Completed ToME4 tutorial mode.]],
 	tutorial = true,
+	no_difficulty_duplicate = true,
+	on_gain = function(_, src, personal)
+		game:setAllowedBuild("tutorial_done")
+	end,
 }
 
 --------------- Main objectives

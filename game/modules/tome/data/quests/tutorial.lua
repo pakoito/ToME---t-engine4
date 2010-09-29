@@ -23,3 +23,10 @@ desc = function(self, who)
 	desc[#desc+1] = "You must venture in the heart of the forest and kill the Lone Wolf, who randomly attacks villagers."
 	return table.concat(desc, "\n")
 end
+
+on_status_change = function(self, who, status, sub)
+	if self:isCompleted() then
+		who:setQuestStatus(self.id, engine.Quest.DONE)
+		world:gainAchievement("TUTORIAL_DONE", game.player)
+	end
+end

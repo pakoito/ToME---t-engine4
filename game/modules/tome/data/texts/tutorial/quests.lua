@@ -17,29 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-require "engine.class"
-local WA = require "engine.interface.WorldAchievements"
-local table = table
+return [[During your adventures in the world you will find quests.
+A quest can come either automatically from an action, from finding an item, from speaking to somebody, ...
 
---- Handles archievements in a world
-module(..., package.seeall, class.inherit({}, WA))
+You can view your current quests either by pressing Control+Q or right-clicking on yourself.
 
---- Make a new achivement with a name and desc
-function _M:newAchievement(t)
-	t.id = t.id or t.name
-	t.id = t.id:upper():gsub("[ ]", "_")
+Once a quest is finished or failed it will disappear from the quest log. A lot of quests in ToME are optional, if you do not think you can survive one, do not do it.
 
-	WA.newAchievement(self, t)
-
-	if not t.no_difficulty_duplicate then
-		local t2 = table.clone(t)
-		t2.id = "NIGHTMARE_"..t2.id
-		t2.name = t2.name.." (Nightmare difficulty)"
-		WA.newAchievement(self, t2)
-
-		local t2 = table.clone(t)
-		t2.id = "INSANE_"..t2.id
-		t2.name = t2.name.." (Insane difficulty)"
-		WA.newAchievement(self, t2)
-	end
-end
+When this tutorial started you where tasked to kill the Lone Wolf, you are nearing its position.
+#GOLD#Beware and fight with honour!#WHITE#
+]]

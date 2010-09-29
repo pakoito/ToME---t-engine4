@@ -79,3 +79,8 @@ newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_RANGED",
 	name = "Ranged Combat",
 	text = "ranged",
 }
+
+newEntity{ base = "TRAP_TUTORIAL", define_as = "TUTORIAL_QUESTS",
+	name = "Quests",
+	text = "quests",
+}
