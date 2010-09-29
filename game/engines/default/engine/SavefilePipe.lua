@@ -69,7 +69,7 @@ end
 function _M:doThread()
 	self.saving = true
 	collectgarbage("collect")
-	collectgarbage("stop")
+--	collectgarbage("stop")
 	if game:getPlayer() then game:getPlayer().changed = true end
 	while #self.pipe > 0 do
 		local p = self.pipe[1]
@@ -86,7 +86,7 @@ function _M:doThread()
 		table.remove(self.pipe, 1)
 	end
 	if game.log then game.log("Saving done.") end
-	collectgarbage("restart")
+--	collectgarbage("restart")
 	self.saving = false
 	if game:getPlayer() then game:getPlayer().changed = true end
 end
