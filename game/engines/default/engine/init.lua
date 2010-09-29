@@ -75,7 +75,7 @@ key:setCurrent()
 game = false
 
 -- Setup resolution
-engine.Game:setResolution(config.settings.window.size)
+engine.Game:setResolution(config.settings.window.size, true)
 
 -- Setup musics
 engine.interface.GameMusic:soundSystemStatus(config.settings.sound.enabled, true)

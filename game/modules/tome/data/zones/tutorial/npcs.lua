@@ -36,7 +36,7 @@ newEntity{ base = "BASE_NPC_SKELETON", define_as = "TUTORIAL_NPC_MAGE",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
 }
 
-newEntity{ base = "BASE_NPC_TROLL", defined_as = "TUTORIAL_NPC_TROLL",
+newEntity{ base = "BASE_NPC_TROLL", define_as = "TUTORIAL_NPC_TROLL",
 	name = "half-dead forest troll", color=colors.YELLOW_GREEN, image="npc/troll_f.png",
 	desc = [[Green-skinned and ugly, this massive humanoid glares at you, clenching wart-covered green fists.
 He looks hurt.]],
@@ -45,7 +45,7 @@ He looks hurt.]],
 	combat_armor = 3, combat_def = 0,
 }
 
-newEntity{ base = "BASE_NPC_CANINE", defined_as = "TUTORIAL_NPC_LONE_WOLF",
+newEntity{ base = "BASE_NPC_CANINE", define_as = "TUTORIAL_NPC_LONE_WOLF",
 	name = "Lone Wolf", color=colors.VIOLET, unique=true, image="npc/canine_rungof.png",
 	desc = [[It is a large wolf with eyes full of cunning, only 3 times bigger than a normal wolf. It looks hungry. You look tasty!]],
 	level_range = {3, nil}, exp_worth = 2,
@@ -68,7 +68,7 @@ newEntity{ base = "BASE_NPC_CANINE", defined_as = "TUTORIAL_NPC_LONE_WOLF",
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("tutorial", engine.Quest.COMPLETED)
-		local d = require("engine.dialogs.ShowText").new("Tutorial: "..self.name, "tutorial/"..self.text)
+		local d = require("engine.dialogs.ShowText").new("Tutorial: Finish", "tutorial/done")
 		game:registerDialog(d)
 	end,
 }

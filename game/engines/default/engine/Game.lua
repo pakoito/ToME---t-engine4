@@ -254,7 +254,7 @@ end
 --- Called when screen resolution changes
 function _M:onResolutionChange()
 	self.w, self.h = core.display.size()
-	self:saveSettings("resolution", ("window.size = %dx%d\n"):format(self.w, self.h))
+	self:saveSettings("resolution", ("window.size = '%dx%d'\n"):format(self.w, self.h))
 end
 
 --- Requests the game to save
