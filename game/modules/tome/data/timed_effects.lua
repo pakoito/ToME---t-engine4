@@ -1578,3 +1578,20 @@ newEffect{
 		self:removeTemporaryValue("unstoppable", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "DIM_VISION",
+	desc = "Reduced Vision",
+	type = "physical",
+	status = "detrimental",
+	parameters = { sight=5 },
+	activate = function(self, eff)
+		if self.sight - eff.sight < 1 then eff.sight = self.sight - 1 end
+		eff.tmpid = self:addTemporaryValue("sight", -eff.sight)
+		self:doFOV()
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("sight", eff.tmpid)
+		self:doFOV()
+	end,
+}

@@ -88,6 +88,8 @@ function _M:init(t, no_default)
 	self.unused_generics =  self.unused_generics or 1
 	self.unused_talents_types = self.unused_talents_types or 0
 
+	t.sight = t.sight or 20
+
 	t.resource_pool_refs = t.resource_pool_refs or {}
 
 	t.lite = t.lite or 0
