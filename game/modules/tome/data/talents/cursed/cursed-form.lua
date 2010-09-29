@@ -28,85 +28,46 @@ newTalent{
 	require = cursed_str_req1,
 	points = 5,
 	on_learn = function(self, t)
-		-- assume on only learning one point at a time (true when this was written)
-		local level = self:getTalentLevelRaw(t)
-		if level == 1 then
-			-- baseline
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 25
-			self.combat_spellresist = self.combat_spellresist - 10
-			self.max_life = self.max_life + 15
-		elseif level == 2 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 5
-			self.combat_spellresist = self.combat_spellresist + 2
-			self.max_life = self.max_life + 15
-		elseif level == 3 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 5
-			self.combat_spellresist = self.combat_spellresist + 2
-			self.max_life = self.max_life + 15
-		elseif level == 4 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 5
-			self.combat_spellresist = self.combat_spellresist + 2
-			self.max_life = self.max_life + 15
-		elseif level == 5 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 5
-			self.combat_spellresist = self.combat_spellresist + 2
-			self.max_life = self.max_life + 15
-		end
 		return true
 	end,
 	on_unlearn = function(self, t)
-		-- assume on only learning one point at a time (true when this was written)
-		local level = self:getTalentLevelRaw(t)
-		if not level or level == 0 then
-			-- baseline
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 25
-			self.combat_spellresist = self.combat_spellresist + 10
-			self.max_life = self.max_life - 15
-		elseif level == 1 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 5
-			self.combat_spellresist = self.combat_spellresist - 2
-			self.max_life = self.max_life - 15
-		elseif level == 2 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 5
-			self.combat_spellresist = self.combat_spellresist - 2
-			self.max_life = self.max_life - 15
-		elseif level == 3 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 5
-			self.combat_spellresist = self.combat_spellresist - 2
-			self.max_life = self.max_life - 15
-		elseif level == 4 then
-			self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 5
-			self.combat_spellresist = self.combat_spellresist - 2
-			self.max_life = self.max_life - 15
-		end
-
 		return true
 	end,
+	getHealPerKill = function(self, t)
+		return math.sqrt(self:getTalentLevel(t)) * 10
+	end,
+	getRegenRate = function(self, t)
+		return math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.004
+	end,
 	do_regenLife  = function(self, t)
-		heal = math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.0027
-		if heal > 0 then
+		-- heal
+		local maxHeal = self.unnatural_body_heal or 0
+		if maxHeal > 0 then
+			local heal = math.min(t.getRegenRate(self, t), maxHeal)
 			self:heal(heal)
+		
+			self.unnatural_body_heal = math.max(0, (self.unnatural_body_heal or 0) - heal)
+		end
+		
+		-- update resists as well
+		local oldResist = self.unnatural_body_resist or 0
+		local newResist = -15 + (15 * getHateMultiplier(self, 0, 1))
+		self.resists.all = (self.resists.all or 0) - oldResist + newResist
+		self.unnatural_body_resist = newResist
+	end,
+	on_kill = function(self, t, target)
+		if target and target.max_life then
+			heal = t.getHealPerKill(self, t) * 0.01 * target.max_life
+			if heal > 0 then
+				self.unnatural_body_heal = math.min(self.life, (self.unnatural_body_heal or 0) + heal)
+			end
 		end
 	end,
 	info = function(self, t)
-		heal = math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.0027
-		local level = self:getTalentLevelRaw(t)
-		if level == 1 then
-			return ([[The curse has twisted your body into an unnatural form.
-			(-25%% fire resistance, -10 spell save, +15 maximum life, +%0.1f life per turn).]]):format(heal)
-		elseif level == 2 then
-			return ([[The curse has twisted your body into an unnatural form.
-			(-20%% fire resistance, -8 spell save, +15 maximum life, +%0.1f life per turn).]]):format(heal)
-		elseif level == 3 then
-			return ([[The curse has twisted your body into an unnatural form.
-			(-15%% fire resistance, -6 spell save, +15 maximum life, +%0.1f life per turn).]]):format(heal)
-		elseif level == 4 then
-			return ([[The curse has twisted your body into an unnatural form.
-			(-10%% fire resistance, -4 spell save, +15 maximum life, +%0.1f life per turn).]]):format(heal)
-		else
-			return ([[The curse has twisted your body into an unnatural form.
-			(-5%% fire resistance, -2 spell save, +15 maximum life, +%0.1f life per turn).]]):format(heal)
-		end
+		local healPerKill = t.getHealPerKill(self, t)
+		local regenRate = t.getRegenRate(self, t)
+		
+		return ([[Your body is now fed by your hatred. With each kill, you regenerate %d%% of your victim's life at a rate of %0.1f life per turn. As your hate fades your body weakens taking up to 15%% extra damage.]]):format(healPerKill, regenRate)
 	end,
 }
 
@@ -158,17 +119,17 @@ newTalent{
 	require = cursed_str_req2,
 	points = 5,
 	on_learn = function(self, t)
-		self.fear_immune = self.stun_immune or 0 + 0.15
-		self.confusion_immune = self.stun_immune or 0 + 0.15
-		self.knockback_immune = self.knockback_immune or 0 + 0.15
-		self.stun_immune = self.stun_immune or 0 + 0.15
+		self:attr("fear_immune", 0.15)
+		self:attr("confusion_immune", 0.15)
+		self:attr("knockback_immune", 0.15)
+		self:attr("stun_immune", 0.15)
 		return true
 	end,
 	on_unlearn = function(self, t)
-		self.fear_immune = self.stun_immune or 0 + 0.15
-		self.confusion_immune = self.stun_immune or 0 + 0.15
-		self.knockback_immune = self.knockback_immune or 0 + 0.15
-		self.stun_immune = self.stun_immune or 0 + 0.15
+		self:attr("fear_immune", -0.15)
+		self:attr("confusion_immune", -0.15)
+		self:attr("knockback_immune", -0.15)
+		self:attr("stun_immune", -0.15)
 		return true
 	end,
 	info = function(self, t)
@@ -184,13 +145,11 @@ newTalent{
 	points = 5,
 	cooldown = 400,
 	action = function(self, t)
-		local increase = 2 + self:getTalentLevel(t) * 0.9
-		self.hate = math.min(self.max_hate, self.hate + increase)
-		self:incHate(hate)
+		self:incHate(2 + self:getTalentLevel(t) * 0.9)
 
 		local damage = self.max_life * 0.25
-		self:project({type="hit"}, self.x, self.y, DamageType.BLIGHT, damage)
-		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=5, tx=self.x, ty=self.y})
+		self:takeHit(damage, self)
+		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=2, tx=self.x, ty=self.y})
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,

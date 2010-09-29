@@ -35,7 +35,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then
 			game.logPlayer(self, "You are too far to from the target!")
 			return nil
@@ -43,9 +43,9 @@ newTalent{
 
 		local radius = t.getRadius(self, t)
 		local duration = t.getDuration(self, t)
-		
+
 		target:setEffect(target.EFF_RADIANT_FEAR, duration, { radius = radius, knockback = 1, source = self })
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -68,7 +68,7 @@ newTalent{
 	getPercent = function(self, t) return 15 + math.floor(self:getTalentLevel(t) * 10) end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[The time you have spent suppressing the curse has taught you self control. The duration of most non-magical effects (physical, mental, poisons, diseases, hexes and curses) are reduced by %d%%.]]):format(percent)
+		return ([[The time you have spent supressing the curse has taught you self control. The duration of most non-magical effects are reduced by %d%%.]]):format(percent)
 	end,
 }
 
@@ -127,7 +127,7 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	range = function(self, t) return 16 - math.floor(self:getTalentLevel(t) * 2) end,
+	range = function(self, t) return 18 - math.floor(self:getTalentLevel(t) * 2) end,
 	info = function(self, t)
 		local range = t.range(self, t)
 		return ([[You hide your terrible nature behind a pitiful figure. Those that see you from a distance of %d will ignore you.]]):format(range)

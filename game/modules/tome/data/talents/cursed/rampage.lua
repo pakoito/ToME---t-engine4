@@ -26,7 +26,7 @@ newTalent{
 	type = {"cursed/rampage", 1},
 	require = cursed_str_req1,
 	points = 5,
-	cooldown = 475,
+	cooldown = 150,
 	hate = 0.1,
 	action = function(self, t, hateLoss)
 		local hateLoss = 0
@@ -65,8 +65,8 @@ newTalent{
 
 		return true
 	end,
-	getHateLoss = function(self, t) return 0.5 - 0.1 * self:getTalentLevelRaw(t) end,
-	getCritical = function(self, t) return 8 * self:getTalentLevel(t) end,
+	getHateLoss = function(self, t) return 0.25 - 0.05 * self:getTalentLevelRaw(t) end,
+	getCritical = function(self, t) return 10 + 8 * self:getTalentLevel(t) end,
 	onTakeHit = function(t, self, percentDamage)
 		if percentDamage < 10 then return false end
 		if self:hasEffect(self.EFF_RAMPAGE) then return false end
@@ -84,7 +84,7 @@ newTalent{
 		local hateLoss = t.getHateLoss(self, t)
 		local critical = t.getCritical(self, t)
 		return ([[You enter into a terrible rampage for %d turns, destroying everything in your path. There is a small chance you will rampage when you take significant damage.
-		(%0.1f hate loss, +%d%% to %d%% hate-based critical chance)]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
+		(%0.1f hate loss per turn, +%d%% to %d%% hate-based critical chance)]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
 	end,
 }
 
@@ -99,7 +99,7 @@ newTalent{
 	on_unlearn = function(self, t)
 	end,
 	getDuration = function(self, t) return 5 + math.floor(2 * self:getTalentLevel(t)) end,
-	getDamage = function(self, t) return 10 + 10 * self:getTalentLevel(t) end,
+	getDamage = function(self, t) return 20 + 10 * self:getTalentLevel(t) end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
@@ -117,15 +117,13 @@ newTalent{
 	on_learn = function(self, t)
 		local tRampage = self:getTalentFromId(self.T_RAMPAGE)
 		tRampage.cooldown = tRampage.cooldown - 25
-		print("* cooldown:", tRampage.cooldown)
 	end,
 	on_unlearn = function(self, t)
 		local tRampage = self:getTalentFromId(self.T_RAMPAGE)
 		tRampage.cooldown = tRampage.cooldown + 25
-		print("* cooldown:", tRampage.cooldown)
 	end,
-	getCooldown = function(self, t) return 475 - math.floor(25 * self:getTalentLevelRaw(t)) end,
-	getSpeed = function(self, t) return 15 + 15 * self:getTalentLevel(t) end,
+	getCooldown = function(self, t) return 150 - math.floor(10 * self:getTalentLevelRaw(t)) end,
+	getSpeed = function(self, t) return 15 * self:getTalentLevel(t) end,
 	info = function(self, t)
 		local cooldown = t.getCooldown(self, t)
 		local speed = t.getSpeed(self, t)
@@ -144,7 +142,7 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	getAttack = function(self, t) return 10 + 10 * self:getTalentLevel(t) end,
+	getAttack = function(self, t) return 20 + 10 * self:getTalentLevel(t) end,
 	getEvasion = function(self, t) return 6 * self:getTalentLevel(t) end,
 	info = function(self, t)
 		local attack = t.getAttack(self, t)

@@ -73,8 +73,8 @@ newTalent{
 		-- all gloom effects are handled here
 		local tWeakness = self:getTalentFromId(self.T_WEAKNESS)
 		local tTorment = self:getTalentFromId(self.T_TORMENT)
-		local tAbsorbLife = self:getTalentFromId(self.T_ABSORB_LIFE)
-		local lifeAbsorbed = 0
+		local tLifeLeech = self:getTalentFromId(self.T_LIFE_LEECH)
+		local lifeLeeched = 0
 		local attackStrength = 0.3 + self:getTalentLevel(tGloom) * 0.12
 		local tormentHit = false
 
@@ -162,13 +162,12 @@ newTalent{
 						end
 					end
 
-					-- Absorb Life
-					if tAbsorbLife and self:getTalentLevelRaw(tAbsorbLife) > 0 then
-						local fraction = self:getTalentLevel(tAbsorbLife) * 0.002
+					-- Life Leech
+					if tLifeLeech and self:getTalentLevelRaw(tLifeLeech) > 0 then
+						local fraction = self:getTalentLevel(tLifeLeech) * 0.002
 						local damage = math.min(target.max_life * fraction, self.max_life * fraction * 2)
-						local actualDamage = DamageType:get(DamageType.ABSORB_LIFE).projector(self, target.x, target.y, DamageType.ABSORB_LIFE, damage)
-						lifeAbsorbed = lifeAbsorbed + actualDamage
-						--game.logSeen(target, "#F53CBE#You absorb %.2f life from %s!", actualDamage, target.name:capitalize())
+						local actualDamage = DamageType:get(DamageType.LIFE_LEECH).projector(self, target.x, target.y, DamageType.LIFE_LEECH, damage)
+						lifeLeeched = lifeLeeched + actualDamage
 					end
 				end
 			end
@@ -178,10 +177,10 @@ newTalent{
 			self.torment_turns = 20
 		end
 
-		-- absorb life
-		if lifeAbsorbed > 0 then
-			self:heal(lifeAbsorbed)
-			game.logPlayer(self, "#F53CBE#You absorb %0.1f life from your foes.", lifeAbsorbed)
+		-- life leech
+		if lifeLeeched > 0 then
+			self:heal(lifeLeeched)
+			game.logPlayer(self, "#F53CBE#You leech %0.1f life from your foes.", lifeLeeched)
 		end
 	end,
 	info = function(self, t)

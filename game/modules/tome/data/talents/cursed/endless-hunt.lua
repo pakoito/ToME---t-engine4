@@ -56,7 +56,7 @@ newTalent{
 
 		-- attempt domination
 		if checkWillFailure(self, target, 15, 85, 1) then
-			local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.4)
+			local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.5)
 			target:setEffect(target.EFF_DOMINATED, 4, { dominatedSource = self, dominatedDamMult = damMult })
 		else
 			game.logSeen(target, "%s resists the domination!", target.name:capitalize())
@@ -68,7 +68,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local damMult = self:combatTalentWeaponDamage(t, 0.1, 0.4)
+		local damMult = self:combatTalentWeaponDamage(t, 0.1, 0.5)
 		return ([[Combine strength and will to overpower your opponent. A failed save versus will will add %d%% melee damage to your attacks for 4 turns.]]):format(damMult * 100)
 	end,
 }

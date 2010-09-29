@@ -42,13 +42,13 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
-		local multiplier = 1 + (0.15 + .2 * self:getTalentLevel(t)) * getHateMultiplier(self, 0, 1)
+		local multiplier = 1 + (0.17 + .23 * self:getTalentLevel(t)) * getHateMultiplier(self, 0, 1)
 		local hit = self:attackTarget(target, nil, multiplier, true)
 
 		return true
 	end,
 	info = function(self, t)
-		local multiplier = (0.15 + .2 * self:getTalentLevel(t))
+		local multiplier = (0.17 + .23 * self:getTalentLevel(t))
 		return ([[Slashes wildly at your target adding up to %d%% hate-based damage.]]):format(multiplier * 100)
 	end,
 }
