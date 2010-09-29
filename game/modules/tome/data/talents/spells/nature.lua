@@ -136,6 +136,8 @@ newTalent{
 			max_stamina = 100,
 			infravision = 20,
 
+			inc_damage = table.clone(self.inc_damage, true),
+
 			resists = { [DamageType.COLD] = 20, [DamageType.NATURE] = 20 },
 			level_range = {self.level, self.level}, exp_worth = 0,
 

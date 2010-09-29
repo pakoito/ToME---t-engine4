@@ -62,6 +62,8 @@ newEntity{ base = "BASE_AMULET",
 			rank = 3,
 			infravision = 20,
 
+			inc_damage = table.clone(who.inc_damage, true),
+
 			resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
 
 			resists = { [engine.DamageType.COLD] = 80, [engine.DamageType.NATURE] = 80, [engine.DamageType.LIGHT] = -50,  },

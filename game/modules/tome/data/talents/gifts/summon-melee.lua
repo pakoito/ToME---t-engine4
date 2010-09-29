@@ -62,6 +62,8 @@ newTalent{
 			combat_armor = 2, combat_def = 4,
 			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
 
+			inc_damage = table.clone(self.inc_damage, true),
+
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
@@ -126,6 +128,8 @@ newTalent{
 
 			combat_armor = 1, combat_def = 1,
 			never_move = 1,
+
+			inc_damage = table.clone(self.inc_damage, true),
 
 			combat = { dam=8, atk=15, apr=5, damtype=DamageType.ACID, dammod={str=0.7} },
 
@@ -200,6 +204,8 @@ newTalent{
 			combat_armor = 13, combat_def = 8,
 			resolvers.talents{ [Talents.T_WARSHOUT]=3, [Talents.T_STUNNING_BLOW]=3, [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_SUNDER_ARMS]=2, },
 
+			inc_damage = table.clone(self.inc_damage, true),
+
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
@@ -270,6 +276,8 @@ newTalent{
 			combat_armor = 25, combat_def = -20,
 			combat = { dam=resolvers.rngavg(25,50), atk=20, apr=5, dammod={str=0.9} },
 			resolvers.talents{ [Talents.T_QUAKE]=3, [Talents.T_STUN]=3, },
+
+			inc_damage = table.clone(self.inc_damage, true),
 
 			poison_immune=1, cut_immune=1, fear_immune=1, blind_immune=1,
 
