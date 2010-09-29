@@ -547,7 +547,7 @@ function _M:setupCommands()
 				self.player:incStat("str", 100) self.player:incStat("dex", 100) self.player:incStat("mag", 100) self.player:incStat("wil", 100) self.player:incStat("cun", 100) self.player:incStat("con", 100)
 				self.player:learnTalent(self.player.T_HEAVY_ARMOUR_TRAINING, true) self.player:learnTalent(self.player.T_MASSIVE_ARMOUR_TRAINING, true)
 				for i, e in ipairs(self.zone.object_list) do
-					if e.unique then -- and e.rarity then
+					if e.unique and e.define_as ~= "VOICE_SARUMAN" then -- and e.rarity then
 						local a = self.zone:finishEntity(self.level, "object", e)
 						a:identify(true)
 						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)

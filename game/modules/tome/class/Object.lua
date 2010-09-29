@@ -87,7 +87,7 @@ function _M:use(who, typ, inven, item)
 	if typ == "use" then
 		who:useEnergy(game.energy_to_act * (inven.use_speed or 1))
 		if self.use_sound then game:playSoundNear(who, self.use_sound) end
-		return self:useObject(who)
+		return self:useObject(who, inven, item)
 	end
 end
 

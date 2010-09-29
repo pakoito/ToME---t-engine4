@@ -638,6 +638,78 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	},
 }
 
+newEntity{ base = "BASE_GEM",
+	unique = true,
+	unided_name = "scintillating white crystal",
+	name = "Saruman's Staff Crystal", subtype = "multi-hued",
+	color = colors.WHITE, image="object/diamond.png",
+	level_range = {35, 45},
+	desc = [[A closer look at this pure white crystal reveals that it is really a plethora of colors swirling and scintillating]],
+	rarity = 240,
+	cost = 200,
+	material_level = 5,
+	carrier = {
+		confusion_immune = 0.8,
+		fear_immune = 0.7,
+		resists={[DamageType.MIND] = 35,},
+	},
+	imbue_powers = {
+		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CUN] = 5, },
+		lite = 2,
+	},
+
+	max_power = 1, power_regen = 1,
+	use_power = { name = "combine with a staff", power = 1, use = function(self, who, gem_inven, gem_item)
+		who:showInventory("Fuse with which staff?", who:getInven("INVEN"), function(o) return o.type == "weapon" and o.subtype == "staff" and not o.egoed and not o.unique end, function(o, item)
+			local voice = game.zone:makeEntityByName(game.level, "object", "VOICE_SARUMAN")
+			if voice then
+				local oldname = o:getName{do_color=true}
+
+				-- Remove the gem
+				who:removeObject(gem_inven, gem_item)
+				who:sortInven(gem_inven)
+
+				-- Change the staff
+				voice.combat = o.combat
+				voice.combat.dam = voice.combat.dam * 1.4
+				voice.combat.damtype = engine.DamageType.ARCANE
+				voice:identify(true)
+				o:replaceWith(voice)
+				who:sortInven()
+
+				who.changed = true
+				game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
+			else
+				game.logPlayer(who, "The fusing fails!")
+			end
+		end)
+	end },
+}
+
+-- The staff that goes with the crystal above, it will not be generated randomly it is created by the crystal
+newEntity{ base = "BASE_STAFF", define_as = "VOICE_SARUMAN",
+	unique = true,
+	name = "Voice of Saruman",
+	unided_name = "scintillating white staff",
+	color = colors.VIOLET,
+	rarity = false,
+	desc = [[A closer look at this pure white staff reveals that it is really a plethora of colors swirling and scintillating. Although Saruman's power was weakened at the end of the third age, this staff still is a force to be reckoned with.]],
+	cost = 500,
+	material_level = 5,
+
+	require = { stat = { mag=45 }, },
+	-- This is replaced by the creation process
+	combat = { dam = 1, },
+	wielder = {
+		combat_spellpower = 30,
+		max_mana = 100,
+		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4 },
+		lite = 1,
+
+		inc_damage = { all=7 },
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,

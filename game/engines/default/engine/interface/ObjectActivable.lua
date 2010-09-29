@@ -56,10 +56,10 @@ function _M:getUseDesc()
 	end
 end
 
-function _M:useObject(who)
+function _M:useObject(who, ...)
 	if self.use_power then
 		if self.power >= self.use_power.power then
-			local ret, no_power = self.use_power.use(self, who)
+			local ret, no_power = self.use_power.use(self, who, ...)
 			if not no_power then self.power = self.power - self.use_power.power end
 			return ret
 		else
@@ -70,7 +70,7 @@ function _M:useObject(who)
 			end
 		end
 	elseif self.use_simple then
-		local ret = self.use_simple.use(self, who)
+		local ret = self.use_simple.use(self, who, ...)
 		return ret
 	elseif self.use_talent then
 		if not self.use_talent.power or self.power >= self.use_talent.power then
