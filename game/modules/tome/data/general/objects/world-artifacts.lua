@@ -191,6 +191,7 @@ newEntity{
 		use = function(self, who)
 			who:heal(150 + who:getMag())
 			game.logSeen(who, "%s quaffs an %s!", who.name:capitalize(), self:getName())
+			return nil, true
 		end
 	},
 }
@@ -212,6 +213,7 @@ newEntity{
 		use = function(self, who)
 			who:incMana(150 + who:getMag())
 			game.logSeen(who, "%s quaffs an %s!", who.name:capitalize(), self:getName())
+			return nil, true
 		end
 	},
 }

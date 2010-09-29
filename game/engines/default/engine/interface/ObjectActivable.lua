@@ -59,9 +59,10 @@ end
 function _M:useObject(who, ...)
 	if self.use_power then
 		if self.power >= self.use_power.power then
-			local ret, no_power = self.use_power.use(self, who, ...)
+			local rets = { self.use_power.use(self, who, ...) }
+			local no_power = rets[3]
 			if not no_power then self.power = self.power - self.use_power.power end
-			return ret
+			return unpack(rets)
 		else
 			if self.power_regen and self.power_regen ~= 0 then
 				game.logPlayer(who, "%s is still recharging.", self:getName{no_count=true})
@@ -70,8 +71,7 @@ function _M:useObject(who, ...)
 			end
 		end
 	elseif self.use_simple then
-		local ret = self.use_simple.use(self, who, ...)
-		return ret
+		return self.use_simple.use(self, who, ...)
 	elseif self.use_talent then
 		if not self.use_talent.power or self.power >= self.use_talent.power then
 			self.power = self.power - self.use_talent.power

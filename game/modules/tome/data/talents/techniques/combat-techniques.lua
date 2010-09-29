@@ -30,7 +30,7 @@ newTalent{
 	sustain_stamina = 30,
 	activate = function(self, t)
 		return {
-			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed() - 1 / (1 + self:getTalentLevel(t) * 0.08)),
+			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed() - 1 / (1 + 0.08 * 1.3)),
 			atk = self:addTemporaryValue("combat_atk", 4 + (self:getTalentLevel(t) * self:getDex()) / 15),
 			crit = self:addTemporaryValue("combat_physcrit", 4 + (self:getTalentLevel(t) * self:getDex()) / 25),
 		}
@@ -43,7 +43,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your attack by %d and critical chance by %d%%.]]):
-		format((self:getTalentLevel(t) * 8), 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
+		format((1.3 * 8), 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
 	end,
 }
 

@@ -609,8 +609,8 @@ function _M:playerUseItem(object, item, inven)
 	local use_fct = function(o, inven, item)
 		local co = coroutine.create(function()
 			self.changed = true
-			local ret, no_id = o:use(self, nil, inven, item)
-			if not no_id then
+			local ret, id = o:use(self, nil, inven, item)
+			if id then
 				o:identify(true)
 			end
 			if ret and ret == "destroy" then

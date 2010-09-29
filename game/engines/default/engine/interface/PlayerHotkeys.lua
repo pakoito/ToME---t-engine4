@@ -36,7 +36,7 @@ function _M:activateHotkey(id)
 	if self.hotkey[id] then
 		self["hotkey"..self.hotkey[id][1]:capitalize()](self, self.hotkey[id][2])
 	else
-		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the inscructions there.")
+		Dialog:simplePopup("Hotkey not defined", "You may define a hotkey by pressing 'm' and following the instructions there.")
 	end
 end
 
