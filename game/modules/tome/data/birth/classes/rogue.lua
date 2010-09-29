@@ -50,6 +50,9 @@ newBirthDescriptor{
 		"Rogues are masters of tricks. A rogue can get behind you unnoticed and stab you in the back for tremendous damage.",
 		"Rogues usually prefer to dual-wield daggers. They can also become trapping experts, from detecting and disarming traps to setting them.",
 		"Their most important stats are: Dexterity and Cunning",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +1 Strength, +3 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +5 Cunning",
 	},
 	stats = { dex=3, str=1, cun=5, },
 	talents_types = {
@@ -82,6 +85,9 @@ newBirthDescriptor{
 		"Their use of magic is innate and not really studied; as such they do not naturally regenerate mana and must use external means of recharging.",
 		"They use the schools of Phantasm, Temporal, Divination and Conveyance magic to enhance their arts.",
 		"Their most important stats are: Dexterity, Cunning and Magic",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +3 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +3 Magic, +0 Willpower, +3 Cunning",
 	},
 	stats = { dex=3, mag=3, cun=3, },
 	talents_types = {

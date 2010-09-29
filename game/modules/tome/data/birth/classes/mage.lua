@@ -53,6 +53,9 @@ newBirthDescriptor{
 		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
 		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
 	},
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
@@ -101,6 +104,9 @@ newBirthDescriptor{
 		"A focus is usualy a gem which they can imbue with power to throw at their foes, exploding in fires, acid, ...",
 		"Alchemists are also known for their golem craft and are usually accompanied by such a construct which acts as a bodyguard.",
 		"Their most important stats are: Magic and Dexterity",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +3 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +1 Willpower, +0 Cunning",
 	},
 	stats = { mag=5, dex=3, wil=1, },
 	talents_types = {
@@ -160,6 +166,9 @@ newBirthDescriptor{
 		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
 		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
 	},
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
@@ -208,6 +217,9 @@ newBirthDescriptor{
 		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
 		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
 	},
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
@@ -250,6 +262,9 @@ newBirthDescriptor{
 	desc = {
 		"Bzzzzt!",
 		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
 	},
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {

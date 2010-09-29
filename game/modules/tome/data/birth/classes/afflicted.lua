@@ -45,6 +45,9 @@ newBirthDescriptor{
 		"Drawing strength from the death of all they encounter, the cursed become terrifying combatants.",
 		"Worse, any who approach the cursed can be driven mad by their terrible aura.",
 		"Their most important stats are: Strength and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +0 Cunning",
 	},
 	stats = { wil=4, str=5, },
 	talents_types = {

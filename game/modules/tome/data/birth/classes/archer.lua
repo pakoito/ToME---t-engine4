@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Archer",
 	desc = {
-		"Archers.",
+		"Archers are dextrous ranged fighters, able to pin their targets to the ground and rain down a carpet of arrows on their foes.",
 	},
 	descriptor_choices =
 	{
@@ -42,8 +42,12 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Archer",
 	desc = {
-		"Archer",
+		"Archers are dextrous ranged fighters, able to pin their targets to the ground and rain down a carpet of arrows on their foes.",
+		"A skilled archer can fire special shots that pierce, cripple or pin their foes.",
 		"Their most important stats are: Dexterity and Strength",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +3 Strength, +5 Dexterity, +1 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 	},
 	stats = { dex=5, str=3, con=1, },
 	talents_types = {
@@ -78,10 +82,14 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Slinger",
 	desc = {
-		"Slinger",
+		"Slingers are cunning ranged fighters, able to pin their targets to the ground and incapacitate their foes in various ways.",
+		"A skilled slinger can fire special shots that knockback, blinds or pin their foes.",
 		"Their most important stats are: Dexterity and Cunning",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +5 Dexterity, +1 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +3 Cunning",
 	},
-	stats = { dex=5, str=3, con=1, },
+	stats = { dex=5, cun=3, con=1, },
 	talents_types = {
 		["technique/archery-training"]={true, 0.3},
 		["technique/archery-utility"]={true, 0.3},

@@ -44,6 +44,9 @@ newBirthDescriptor{
 		"A Reaver is a terrible foe, wielding two weapons while charging his foes.",
 		"They can harness the blight of evil, infecting their foes with terrible contagious diseases while crushing their skulls with devastating combat techniques.",
 		"Their most important stats are: Strength and Magic",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +4 Strength, +1 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +4 Magic, +0 Willpower, +0 Cunning",
 	},
 	stats = { str=4, mag=4, dex=1, },
 	talents_types = {

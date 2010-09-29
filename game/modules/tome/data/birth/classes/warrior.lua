@@ -46,6 +46,9 @@ newBirthDescriptor{
 		"A Fighter specializes in weapon and shield combat, rarely leaving the cover of their many protective techniques.",
 		"A good Fighter is able to withstand terrible attacks from all sides, protected by their shield, and when the time comes they lash out at their foes with incredible strength.",
 		"Their most important stats are: Strength and Dexterity",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +5 Strength, +2 Dexterity, +2 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 	},
 	stats = { str=5, con=2, dex=2, },
 	talents_types = {
@@ -84,6 +87,9 @@ newBirthDescriptor{
 		"A Berserker wields huge two-handed weapons of destruction, bringing pain and death to their foes as they cleaves them in two.",
 		"A Berserker usually forfeits all ideas of self-defense to concentrate on what they do best: killing things.",
 		"Their most important stats are: Strength and Constitution",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +5 Strength, +1 Dexterity, +3 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 	},
 	stats = { str=5, con=3, dex=1, },
 	talents_types = {
@@ -124,6 +130,9 @@ newBirthDescriptor{
 		"They can cast spells from a limited selection but have the unique capacity to 'channel' their attack spells through their melee attacks.",
 		"They are adept at two-handed weapons, for the sheer destruction they can bring.",
 		"Their most important stats are: Strength, Dexterity and Magic",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +3 Strength, +3 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +3 Magic, +0 Willpower, +0 Cunning",
 	},
 	stats = { mag=3, str=3, dex=3},
 	talents_types = {

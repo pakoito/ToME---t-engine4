@@ -44,6 +44,9 @@ newBirthDescriptor{
 		"Summoners never fight alone, they are always ready to summon one of their many minions to fight at their side.",
 		"Summons can range from a combat hound to a fire drake.",
 		"Their most important stats are: Willpower and Cunning",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +1 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +3 Cunning",
 	},
 	stats = { wil=5, cun=3, con=1, },
 	talents_types = {
@@ -80,6 +83,9 @@ newBirthDescriptor{
 		"Wyrmics are fighters who have learnt how to mimic some of the aspects of the dragons.",
 		"They have access to talents normally belonging to the various kind of drakes.",
 		"Their most important stats are: Strength and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +5 Strength, +1 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +3 Willpower, +0 Cunning",
 	},
 	stats = { str=5, wil=3, dex=1, },
 	talents_types = {

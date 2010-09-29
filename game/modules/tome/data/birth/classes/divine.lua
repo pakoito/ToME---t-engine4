@@ -48,6 +48,9 @@ newBirthDescriptor{
 		"They can channel the power of the Sun to smite all who seek to destroy the Sunwall.",
 		"Competent in both weapon and shield combat and magic they usually burn their foes from afar before engaging in melee.",
 		"Their most important stats are: Strength and Magic",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +4 Magic, +0 Willpower, +0 Cunning",
 	},
 	stats = { mag=4, str=5, },
 	talents_types = {
@@ -87,6 +90,9 @@ newBirthDescriptor{
 		"They can channel the power of the Sun and the Moon to burn and tear apart all who seek to destroy the Sunwall.",
 		"Masters of sun and moon magic they usually burn their foes with sun rays before calling the fury of the stars.",
 		"Their most important stats are: Magic and Cunning",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +6 Magic, +0 Willpower, +3 Cunning",
 	},
 	stats = { mag=6, cun=3, },
 	talents_types = {
