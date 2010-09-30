@@ -30,7 +30,7 @@ newTalentType{ type="technique/archery-sling", name = "archery - slings", descri
 newTalentType{ type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
 newTalentType{ type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
 newTalentType{ type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
-newTalentType{ type="technique/warcries", name = "warcries", description = "Master the warcries to improve yourself and weaken others." }
+newTalentType{ type="technique/warcries", name = "warcries", no_silence = true, description = "Master the warcries to improve yourself and weaken others." }
 newTalentType{ type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
 newTalentType{ type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
 newTalentType{ type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
