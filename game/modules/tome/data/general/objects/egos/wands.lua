@@ -17,8 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
+
+newEntity{
+	name = "solid ", prefix=true,
+	level_range = {1, 50},
+	rarity = 4,
+	cost = 5,
+	elec_proof = true,
+}
 
 --[[
 *detection

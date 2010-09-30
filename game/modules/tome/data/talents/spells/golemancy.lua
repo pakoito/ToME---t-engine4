@@ -119,7 +119,7 @@ newTalent{
 			chat:invoke()
 
 		-- heal the golem
-		elseif game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem.life < self.alchemy_golem.max_life then
+		elseif (game.level:hasEntity(self.alchemy_golem) or self:hasEffect(self.EFF_GOLEM_MOUNT)) and self.alchemy_golem.life < self.alchemy_golem.max_life then
 			if not ammo or ammo:getNumber() < 2 then
 				game.logPlayer(self, "You need to ready 2 alchemist gems in your quiver to heal your golem.")
 				return
@@ -128,7 +128,7 @@ newTalent{
 			self.alchemy_golem:heal(self:combatTalentSpellDamage(t, 15, 350, (ammo.alchemist_power + self:combatSpellpower()) / 2))
 
 		-- resurrect the golem
-		else
+		elseif not self:hasEffect(self.EFF_GOLEM_MOUNT) then
 			if not ammo or ammo:getNumber() < 15 then
 				game.logPlayer(self, "You need to ready 15 alchemist gems in your quiver to heal your golem.")
 				return
