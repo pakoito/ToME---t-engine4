@@ -77,7 +77,7 @@ newTalent{
 			return
 		end
 
-		local tg = {type="ball", radius=2, range=self:getTalentRange(t)}
+		local tg = {type="ball", radius=2, friendlyfire=false, range=self:getTalentRange(t)}
 		game.target.source_actor = mover
 		local x, y, target = self:getTarget(tg)
 		game.target.source_actor = self
