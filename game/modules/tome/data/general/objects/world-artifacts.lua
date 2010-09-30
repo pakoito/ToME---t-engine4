@@ -712,6 +712,25 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_SARUMAN",
 	},
 }
 
+newEntity{ base = "BASE_WAND",
+	unided_name = "glowing wand",
+	name = "Gwai's Burninator", color=colors.LIGHT_RED, unique=true,
+	cost = 50,
+	rarity = 220,
+	level_range = {15, 30},
+	elec_proof = true,
+
+	max_power = 75, power_regen = 1,
+	use_power = { name = "shoot a cone of fire", power = 30,
+		use = function(self, who)
+			local tg = {type="cone", range=0, radius=4, talent=t}
+			local x, y = who:getTarget(tg)
+			if not x or not y then return nil end
+			who:project(tg, x, y, engine.DamageType.FIRE, 80 + who:getMag(), {type="flame"})
+		end
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,

@@ -211,6 +211,17 @@ function resolvers.calc.random_use_talent(tt, e)
 	return { id=tid, level=level, power=tt[2] }
 end
 
+--- Charges resolver
+function resolvers.charges(min, max, cost)
+	return {__resolver="charges", __resolve_last=true, min, max, cost}
+end
+function resolvers.calc.charges(tt, e)
+--	e.cost = e.cost + t.type[2] * 3 * level
+--	e.recharge_cost = t.type[2] * 3 * level
+	e.max_power = rng.range(tt[1], tt[2])
+	return
+end
+
 --- Image based on material level
 function resolvers.image_material(image, values)
 	return {__resolver="image_material", image, values}

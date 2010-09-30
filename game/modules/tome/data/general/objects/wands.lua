@@ -21,10 +21,56 @@ newEntity{
 	define_as = "BASE_WAND",
 	type = "wand", subtype="wand",
 	unided_name = "wand", id_by_type = true,
-	display = "_", color=colors.WHITE,
-	encumber = 0.7,
+	display = "-", color=colors.WHITE,
+	encumber = 2,
+	rarity = 18,
 	use_sound = "talents/spell_generic",
-	elec_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
-	desc = [[Magical wands are made by powerful alchemists to store spells. Anybody can use them to release the spells.]],
---	egos = "/data/general/objects/egos/wands.lua", egos_chance = resolvers.mbonus(10, 5),
+	elec_destroy = {{20,1}, {30,2}, {60,5}, {90,10}, {170,20}},
+	desc = [[Magical wands are made by powerful alchemists and archmages to store spells. Anybody can use them to release the spells.]],
+	egos = "/data/general/objects/egos/wands.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=100 },
+}
+
+newEntity{ base = "BASE_WAND",
+	name = "elm wand",
+	color = colors.UMBER,
+	level_range = {1, 10},
+	cost = 10,
+	material_level = 1,
+	resolvers.charges(10, 30),
+}
+
+newEntity{ base = "BASE_WAND",
+	name = "ash wand",
+	color = colors.UMBER,
+	level_range = {10, 20},
+	cost = 20,
+	material_level = 2,
+	resolvers.charges(25, 45),
+}
+
+newEntity{ base = "BASE_WAND",
+	name = "yew wand",
+	color = colors.UMBER,
+	level_range = {20, 30},
+	cost = 30,
+	material_level = 3,
+	resolvers.charges(40, 60),
+}
+
+newEntity{ base = "BASE_WAND",
+	name = "elven-wood wand",
+	color = colors.UMBER,
+	level_range = {30, 40},
+	cost = 40,
+	material_level = 4,
+	resolvers.charges(55, 75),
+}
+
+newEntity{ base = "BASE_WAND",
+	name = "dragonbone wand",
+	color = colors.UMBER,
+	level_range = {40, 50},
+	cost = 50,
+	material_level = 5,
+	resolvers.charges(70, 90),
 }

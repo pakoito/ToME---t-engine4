@@ -268,6 +268,35 @@ function _M:saveLevel(level, no_dialog)
 	if not no_dialog then game:unregisterDialog(popup) end
 end
 
+--- Get a savename for an entity
+function _M:nameSaveEntity(e)
+	return ("entity-%s.teae"):format(e.name:gsub("[^a-zA-Z0-9_-.]", "_"):lower())
+end
+--- Get a savename for an entity
+function _M:nameLoadEntity(name)
+	return ("entity-%s.teae"):format(name:gsub("[^a-zA-Z0-9_-.]", "_"):lower())
+end
+
+--- Save an entity
+function _M:saveEntity(e, no_dialog)
+	fs.mkdir(self.save_dir)
+
+	local popup
+	if not no_dialog then
+		popup = Dialog:simplePopup("Saving entity", "Please wait while saving the entity...", nil, true)
+		popup.__showup = nil
+	end
+	core.display.forceRedraw()
+
+	local zip = fs.zipOpen(self.save_dir..self:nameSaveEntity(e)..".tmp")
+	self:saveObject(e, zip)
+	zip:close()
+	fs.delete(self.save_dir..self:nameSaveEntity(e))
+	fs.rename(self.save_dir..self:nameSaveEntity(e)..".tmp", self.save_dir..self:nameSaveEntity(e))
+
+	if not no_dialog then game:unregisterDialog(popup) end
+end
+
 local function resolveSelf(o, base, allow_object)
 	if o.__CLASSNAME and not allow_object then return end
 
@@ -402,6 +431,31 @@ function _M:loadLevel(zone, level)
 
 	fs.umount(path)
 	return loadedLevel
+end
+
+--- Loads an entity
+function _M:loadEntity(name)
+	local path = fs.getRealPath(self.save_dir..self:nameLoadEntity(name))
+	if not path or path == "" then return false end
+
+	fs.mount(path, self.load_dir)
+
+	local popup = Dialog:simplePopup("Loading entity", "Please wait while loading the entity...")
+	popup.__showup = nil
+	core.display.forceRedraw()
+
+	local loadedEntity = self:loadReal("main")
+
+	-- Delay loaded must run
+	for i, o in ipairs(self.delayLoad) do
+--		print("loader executed for class", o, o.__CLASSNAME)
+		o:loaded()
+	end
+
+	game:unregisterDialog(popup)
+
+	fs.umount(path)
+	return loadedEntity
 end
 
 --- Checks for existence
