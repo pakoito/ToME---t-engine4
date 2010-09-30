@@ -24,6 +24,7 @@ newEntity{
 	display = "-", color=colors.WHITE,
 	encumber = 2,
 	rarity = 18,
+	add_name = "#CHARGES#",
 	use_sound = "talents/spell_generic",
 	elec_destroy = {{20,1}, {30,2}, {60,5}, {90,10}, {170,20}},
 	desc = [[Magical wands are made by powerful alchemists and archmages to store spells. Anybody can use them to release the spells.]],

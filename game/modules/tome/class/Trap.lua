@@ -53,7 +53,7 @@ function _M:canDisarm(x, y, who)
 	if not engine.Trap.canDisarm(self, x, y, who) then return false end
 
 	-- do we know how to disarm?
-	if who:knowTalent(who.T_TRAP_DISARM) then
+	if who:knowTalent(who.T_TRAP_DISARM) or who:attr("can_disarm") then
 		local power = who:getTalentLevel(who.T_TRAP_DISARM) * who:getCun(25) + (who:attr("disarm_bonus") or 0)
 		if who:checkHit(power, self.disarm_power) then
 			return true

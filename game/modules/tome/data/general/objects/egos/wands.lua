@@ -21,13 +21,16 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 --[[
-detection
-teleportation
-trap destruction
-flame
-lightning
+*detection
+*identify
+*light
+*teleportation
+*trap destruction
+*flame
+*lightning
 digging (very rare)
 healing
+
 ]]
 
 newEntity{
@@ -36,10 +39,78 @@ newEntity{
 	rarity = 8,
 	cost_per_charge = 1,
 
-	use_power = { name = "teleport randomly", power = 6, use = function(self, who)
-		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		who:teleportRandom(who.x, who.y, 100)
-		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+	use_power = { name = "detect the presence of creatures around you", power = 6, use = function(self, who)
+		local rad = 15 + who:getMag(20)
+		who:setEffect(who.EFF_SENSE, 2, {
+			range = rad,
+			actor = 1,
+		})
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
+	name = " of illumination", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 8,
+	cost_per_charge = 0.4,
+
+	use_power = { name = "light the area", power = 3, use = function(self, who)
+		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
+	name = " of identify", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 8,
+	cost_per_charge = 0.5,
+
+	use_power = { name = "identify objects", power = 4, use = function(self, who)
+		if who:getMag() < 28 then
+			who:showEquipInven("Identify object", function(o) return not o:isIdentified() end, function(o)
+				o:identify(true)
+				game.logPlayer(who, "You identify: %s", o:getName{do_color=true})
+				return true
+			end)
+		else
+			for inven_id, inven in pairs(who.inven) do
+				for i, o in ipairs(inven) do
+					o:identify(true)
+				end
+			end
+			game.logPlayer(who, "You identify all your inventory.")
+		end
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
+	name = " of trap destruction", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 14,
+	cost_per_charge = 1,
+
+	use_power = { name = "try to disarm any known traps", power = 6, use = function(self, who)
+		local tg = {type="beam", range=2 + who:getMag(2)}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		who:project(tg, x, y, function(px, py)
+			local trap = game.level.map(px, py, engine.Map.TRAP)
+			if not trap then return end
+			local inc = self.material_level * 5 + who:getMag(30)
+			who:attr("can_disarm", 1)
+			who:attr("disarm_bonus", inc)
+
+			trap:disarm(px, py, who)
+
+			who:attr("disarm_bonus", -inc)
+			who:attr("can_disarm", -1)
+		end)
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
 	end}
@@ -55,6 +126,62 @@ newEntity{
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, 100)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
+	name = " of lightning", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 10,
+	cost_per_charge = 1,
+
+	use_power = { name = "fire a beam of lightning", power = 6, use = function(self, who)
+		local tg = {type="beam", range=6 + who:getMag(4)}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = (40 + who:getMag(20)) * self.material_level
+		who:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+		local _ _, x, y = who:canProject(tg, x, y)
+		game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(x-who.x), math.abs(y-who.y)), "lightning", {tx=x-who.x, ty=y-who.y})
+		game:playSoundNear(who, "talents/lightning")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
+	name = " of flames", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 10,
+	cost_per_charge = 1,
+
+	use_power = { name = "fire a beam of fire", power = 6, use = function(self, who)
+		local tg = {type="beam", range=6 + who:getMag(4)}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = (35 + who:getMag(20)) * self.material_level
+		who:project(tg, x, y, DamageType.FIRE, dam, {type="flame"})
+		game:playSoundNear(who, "talents/fire")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
+	name = " of healing", suffix=true, instant_resolve=true,
+	level_range = {25, 50},
+	rarity = 10,
+	cost_per_charge = 2,
+
+	use_power = { name = "heal", power = 7, use = function(self, who)
+		local tg = {default_target=who, type="hit", nowarning=true, range=6 + who:getMag(4), first_target="friend"}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = (80 + who:getMag(50)) * self.material_level
+		who:project(tg, x, y, DamageType.HEAL, dam)
+		game:playSoundNear(who, "talents/heal")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
 	end}

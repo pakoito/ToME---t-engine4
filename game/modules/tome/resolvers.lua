@@ -216,9 +216,12 @@ function resolvers.charges(min, max, cost)
 	return {__resolver="charges", __resolve_last=true, min, max, cost}
 end
 function resolvers.calc.charges(tt, e)
---	e.cost = e.cost + t.type[2] * 3 * level
---	e.recharge_cost = t.type[2] * 3 * level
 	e.max_power = rng.range(tt[1], tt[2])
+	e.power = e.max_power
+	print("creatin wand", e.name, e.egoed, e.max_power, e.cost_per_charge)
+	e.recharge_cost = (e.cost_per_charge or 0) * 4
+	e.cost = e.cost + (e.cost_per_charge or 0) * e.max_power
+	e.show_charges = true
 	return
 end
 

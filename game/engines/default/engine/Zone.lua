@@ -579,7 +579,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	-- Add the entities we are told to
 	for i = 0, map.w - 1 do for j = 0, map.h - 1 do
-		if map.room_map[i][j] and map.room_map[i][j].add_entities then
+		if map.room_map[i] and map.room_map[i][j] and map.room_map[i][j].add_entities then
 			for z = 1, #map.room_map[i][j].add_entities do
 				local ae = map.room_map[i][j].add_entities[z]
 				self:addEntity(level, ae[2], ae[1], i, j)

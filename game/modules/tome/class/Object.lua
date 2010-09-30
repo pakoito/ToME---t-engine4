@@ -135,6 +135,12 @@ function _M:descAttribute(attr)
 		return self:getTalentFromId(self.use_talent.id).name:lower()
 	elseif attr == "DIGSPEED" then
 		return ("dig speed %d turns"):format(self.digspeed)
+	elseif attr == "CHARGES" then
+		if self.use_power then
+			return (" (%d/%d)"):format(math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power))
+		else
+			return ""
+		end
 	end
 end
 

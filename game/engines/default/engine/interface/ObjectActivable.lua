@@ -44,7 +44,11 @@ end
 
 function _M:getUseDesc()
 	if self.use_power then
-		return ("It can be used to %s, costing %d power out of %d/%d."):format(self.use_power.name, self.use_power.power, self.power, self.max_power)
+		if self.show_charges then
+			return ("It can be used to %s, with %d charges out of %d."):format(self.use_power.name, math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power))
+		else
+			return ("It can be used to %s, costing %d power out of %d/%d."):format(self.use_power.name, self.use_power.power, self.power, self.max_power)
+		end
 	elseif self.use_simple then
 		return ("It can be used to %s."):format(self.use_simple.name)
 	elseif self.use_talent then
