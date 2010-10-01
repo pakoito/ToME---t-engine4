@@ -21,11 +21,12 @@ require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
 
---- A generic UI list
+--- A generic UI multi columns list
 module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
 	self.list = assert(t.list, "no list list")
+	self.columns = assert(t.columns, "no list columns")
 	self.w = assert(t.width, "no list width")
 	self.h = assert(t.height, "no list height")
 	self.fct = t.fct
@@ -46,12 +47,39 @@ function _M:generate()
 	local m, m_w, m_h = self:getImage("ui/selection-middle.png")
 	local r, r_w, r_h = self:getImage("ui/selection-right.png")
 
-	-- Draw the list items
+	local cls, cls_w, cls_h = self:getImage("ui/selection-left-column-sel.png")
+	local cms, cms_w, cms_h = self:getImage("ui/selection-middle-column-sel.png")
+	local crs, crs_w, crs_h = self:getImage("ui/selection-right-column-sel.png")
+	local cl, cl_w, cl_h = self:getImage("ui/selection-left-column.png")
+	local cm, cm_w, cm_h = self:getImage("ui/selection-middle-column.png")
+	local cr, cr_w, cr_h = self:getImage("ui/selection-right-column.png")
+
 	local fw, fh = self.w, ls_h
 	self.fw, self.fh = fw, fh
 
-	self.max_display = math.floor(self.h / fh)
+	self.max_display = math.floor(self.h / fh) - 1
 
+	-- Draw the list columns
+	for i, col in ipairs(self.columns) do
+		local text = col.name
+		local ss = core.display.newSurface(fw, fh)
+		local s = core.display.newSurface(fw, fh)
+
+		ss:merge(cls, 0, 0)
+		for i = cls_w, fw - crs_w do ss:merge(cms, i, 0) end
+		ss:merge(crs, fw - crs_w, 0)
+		ss:drawColorStringBlended(self.font, text, cls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - cls_w - crs_w)
+
+		s:merge(cl, 0, 0)
+		for i = cl_w, fw - cr_w do s:merge(cm, i, 0) end
+		s:merge(cr, fw - cr_w, 0)
+		s:drawColorStringBlended(self.font, text, cl_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - cl_w - cr_w)
+
+		col._tex, col._tex_w, col._tex_h = s:glTexture()
+		col._stex = ss:glTexture()
+	end
+
+	-- Draw the list items
 	for i, item in ipairs(self.list) do
 		local text = item[self.display_prop]
 		local ss = core.display.newSurface(fw, fh)
@@ -98,18 +126,27 @@ function _M:onUse()
 	else self.fct(item) end
 end
 
+function _M:selectColumn(i)
+	local col = self.columns[i]
+	self.cur_col = i
+end
+
 function _M:display(x, y)
-	for i = 1, self.max do
-		local item = self.list[i]
-		if self.sel == i then
-			if self.focused then
-				item._stex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+	for j = 1, #self.columns do
+		local y = y
+		local max = math.min(self.scroll + self.max_display - 1, self.max)
+		for i = self.scroll, max do
+			local item = self.list[i]
+			if self.sel == i then
+				if self.focused then
+					item._stex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+				else
+					item._sustex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+				end
 			else
-				item._sustex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+				item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
 			end
-		else
-			item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+			y = y + self.fh
 		end
-		y = y + self.fh
 	end
 end

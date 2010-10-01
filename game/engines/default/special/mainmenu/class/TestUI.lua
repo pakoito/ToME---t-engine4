@@ -41,8 +41,20 @@ function _M:init()
 	local b1 = Button.new{text="Ok", fct=function() print"OK" end}
 	local b2 = Button.new{text="Cancel", fct=function() print"KO" end}
 	local list = ListColumns.new{width=200, height=200, columns={
-		{"Name", 150}, {"Encumber", 50},
+		{name="Name", width=150}, {name="Encumber", width=50},
 	}, list={
+		{name="toto", encumberance="20"},
+		{name="tutu", encumberance="50"},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
+		{name="MOUHAHAHAHAH!", encumberance="20"},
+		{name="toto", encumberance="20"},
+		{name="tutu", encumberance="50"},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
+		{name="MOUHAHAHAHAH!", encumberance="20"},
+		{name="toto", encumberance="20"},
+		{name="tutu", encumberance="50"},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
+		{name="MOUHAHAHAHAH!", encumberance="20"},
 		{name="toto", encumberance="20"},
 		{name="tutu", encumberance="50"},
 		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
