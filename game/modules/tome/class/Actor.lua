@@ -1099,7 +1099,7 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Equilibrium is special, it has no max, but the higher it is the higher the chance of failure (and loss of the turn)
 	-- But it is not affected by fatigue
-	if ab.equilibrium or ab.sustain_equilibrium and not fake then
+	if (ab.equilibrium or ab.sustain_equilibrium) and not fake then
 		local eq = ab.equilibrium or ab.sustain_equilibrium
 		local chance = math.sqrt(eq + self:getEquilibrium()) / 60
 		-- Fail ? lose energy and 1/10 more equilibrium

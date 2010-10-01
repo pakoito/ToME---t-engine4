@@ -24,17 +24,18 @@ module(..., package.seeall, class.make)
 
 _M.lore_defs = {}
 
---- Loads achievements
-function _M:loadDefinition(file)
+--- Loads lore
+function _M:loadDefinition(file, env)
 	local f, err = loadfile(file)
 	if not f and err then error(err) end
-	setfenv(f, setmetatable({
+	setfenv(f, setmetatable(env or {
 		newLore = function(t) self:newLore(t) end,
+		load = function(f) self:loadDefinition(f, getfenv(2)) end
 	}, {__index=_G}))
 	f()
 end
 
---- Make a new achivement with a name and desc
+--- Make a new lore with a name and desc
 function _M:newLore(t)
 	assert(t.id, "no lore name")
 	assert(t.category, "no lore category")

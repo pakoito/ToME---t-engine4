@@ -183,7 +183,7 @@ function _M:pickEntity(list)
 	local r = rng.range(1, list.total)
 	for i = 1, #list do
 --		print("test", r, ":=:", list[i].genprob)
-		if r < list[i].genprob then
+		if r <= list[i].genprob then
 --			print(" * select", list[i].e.name)
 			return list[i].e
 		end
