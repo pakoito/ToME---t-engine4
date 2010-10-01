@@ -196,16 +196,16 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then
 		if isup and not _M.binds_def[self.binds[ks]].updown then return end
 		self.virtuals[self.binds[ks]](sym, ctrl, shift, alt, meta, unicode, isup)
-		return
+		return true
 	elseif us and self.binds[us] and self.virtuals[self.binds[us]] then
 		if isup and not _M.binds_def[self.binds[us]].updown then return end
 		self.virtuals[self.binds[us]](sym, ctrl, shift, alt, meta, unicode, isup)
-		return
+		return true
 	end
 
 	if isup then return end
 
-	engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
+	return engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
 end
 
 --- Force a key to trigger

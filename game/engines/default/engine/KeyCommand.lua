@@ -57,8 +57,10 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 	-- Convert locale
 	sym = self.locale_convert[sym] or sym
 
+	local handled = false
+
 	if not self.commands[sym] and not self.commands[self.__DEFAULT] then
-		if self.on_input and unicode then self.on_input(unicode) end
+		if self.on_input and unicode then self.on_input(unicode) handled = true end
 	elseif self.commands[sym] and (ctrl or shift or alt or meta) and not self.commands[sym].anymod then
 		local mods = {}
 		if alt then mods[#mods+1] = "alt" end
@@ -68,14 +70,18 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 		mods = table.concat(mods,',')
 		if self.commands[sym][mods] then
 			self.commands[sym][mods](sym, ctrl, shift, alt, meta, unicode)
+			handled = true
 		end
 	elseif self.commands[sym] and self.commands[sym].plain then
 		self.commands[sym].plain(sym, ctrl, shift, alt, meta, unicode)
+		handled = true
 	elseif self.commands[self.__DEFAULT] and self.commands[self.__DEFAULT].plain then
 		self.commands[self.__DEFAULT].plain(sym, ctrl, shift, alt, meta, unicode)
+		handled = true
 	end
 
-	if self.atLast then self.atLast(sym, ctrl, shift, alt, meta, unicode) end
+	if self.atLast then self.atLast(sym, ctrl, shift, alt, meta, unicode) handled = true  end
+	return handled
 end
 
 --- Adds a key/command combinaison

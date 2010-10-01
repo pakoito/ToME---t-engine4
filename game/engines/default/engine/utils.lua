@@ -550,7 +550,8 @@ function util.showMainMenu(no_reboot)
 	if game and type(game) == "table" then game:joinThreads(30) end
 
 	if no_reboot then
-		local Menu = require("special.mainmenu.class.Game")
+--		local Menu = require("special.mainmenu.class.Game")
+		local Menu = require("special.mainmenu.class.TestUI")
 		game = Menu.new()
 		game:run()
 	else
