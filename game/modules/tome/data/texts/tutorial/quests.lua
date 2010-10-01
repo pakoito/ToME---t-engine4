@@ -20,7 +20,7 @@
 return [[During your adventures in the world you will find quests.
 A quest can come either automatically from an action, from finding an item, from speaking to somebody, ...
 
-You can view your current quests either by pressing Control+Q or right-clicking on yourself.
+You can view your current quests either by pressing 'j' or right-clicking on yourself.
 
 Once a quest is finished or failed it will disappear from the quest log. A lot of quests in ToME are optional, if you do not think you can survive one, do not do it.
 
