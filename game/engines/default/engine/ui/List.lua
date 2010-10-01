@@ -25,51 +25,80 @@ local Focusable = require "engine.ui.Focusable"
 module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
-	self.text = assert(t.text, "no button text")
-	self.fct = assert(t.fct, "no button fct")
+	self.list = assert(t.list, "no list list")
+	self.w = assert(t.width, "no list width")
+	self.h = assert(t.height, "no list height")
+	self.fct = t.fct
+	self.display_prop = t.display_prop or "name"
 
 	Base.init(self, t)
 end
 
 function _M:generate()
-	local ls, ls_w, ls_h = self:getImage("ui/button-left-sel.png")
-	local ms, ms_w, ms_h = self:getImage("ui/button-middle-sel.png")
-	local rs, rs_w, rs_h = self:getImage("ui/button-right-sel.png")
-	local l, l_w, l_h = self:getImage("ui/button-left.png")
-	local m, m_w, m_h = self:getImage("ui/button-middle.png")
-	local r, r_w, r_h = self:getImage("ui/button-right.png")
+	self.sel = 1
+	self.scroll = 1
+	self.max = #self.list
 
-	-- Draw UI
-	self.font:setStyle("bold")
-	local w, h = self.font:size(self.text:removeColorCodes())
-	local fw, fh = w + ls_w + rs_w, ls_h
-	local ss = core.display.newSurface(fw, fh)
-	local s = core.display.newSurface(fw, fh)
+	local ls, ls_w, ls_h = self:getImage("ui/selection-left-sel.png")
+	local ms, ms_w, ms_h = self:getImage("ui/selection-middle-sel.png")
+	local rs, rs_w, rs_h = self:getImage("ui/selection-right-sel.png")
+--	local l, l_w, l_h = self:getImage("ui/button-left.png")
+--	local m, m_w, m_h = self:getImage("ui/button-middle.png")
+--	local r, r_w, r_h = self:getImage("ui/button-right.png")
 
-	ss:merge(ls, 0, 0)
-	for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
-	ss:merge(rs, fw - rs_w, 0)
-	ss:drawColorStringBlended(self.font, self.text, ls_w, (fh - h) / 2, 255, 255, 255)
+	-- Draw the list items
+	local fw, fh = self.w, ls_h
+	self.fw, self.fh = fw, fh
 
-	s:merge(l, 0, 0)
-	for i = l_w, fw - r_w do s:merge(m, i, 0) end
-	s:merge(r, fw - r_w, 0)
-	s:drawColorStringBlended(self.font, self.text, ls_w, (fh - h) / 2, 255, 255, 255)
-	self.font:setStyle("normal")
+	self.max_display = math.floor(self.h / fh)
+
+	for i, item in ipairs(self.list) do
+		local text = item[self.display_prop]
+		local ss = core.display.newSurface(fw, fh)
+		local s = core.display.newSurface(fw, fh)
+
+		ss:merge(ls, 0, 0)
+		for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
+		ss:merge(rs, fw - rs_w, 0)
+		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+
+		s:erase(0, 0, 0)
+--		s:merge(l, 0, 0)
+--		for i = l_w, fw - r_w do s:merge(m, i, 0) end
+--		s:merge(r, fw - r_w, 0)
+		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+
+		item._tex, item._tex_w, item._tex_h = s:glTexture()
+		item._stex = ss:glTexture()
+	end
 
 	-- Add UI controls
-	self.mouse:registerZone(0, 0, fw, fh, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then self.fct() end end)
-	self.key:addBind("ACCEPT", function() self.fct() end)
+	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
+		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
+		if button == "left" and event == "button" then self:onUse() end
+	end)
+	self.key:addBinds{
+		ACCEPT = function() self:onUse() end,
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
+	}
+end
 
-	self.tex, self.tex_w, self.tex_h = s:glTexture()
-	self.stex = ss:glTexture()
-	self.w, self.h = fw, fh
+function _M:onUse()
+	local item = self.list[self.sel]
+	if not item then return end
+	if item.fct then item:fct()
+	else self.fct(item) end
 end
 
 function _M:display(x, y)
-	if self.focused then
-		self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
-	else
-		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+	for i = 1, self.max do
+		local item = self.list[i]
+		if self.sel == i then
+			item._stex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+		else
+			item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+		end
+		y = y + self.fh
 	end
 end

@@ -47,7 +47,8 @@ function _M:resize(w, h, x, y, alpha)
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.display_x = math.floor(x or (gamew - self.w) / 2)
 	self.display_y = math.floor(y or (gameh - self.h) / 2)
-	self.iw, self.ih = w - 2 * 5, h - 8 - 16 - 3
+	self.ix, self.iy = 5, 22 + 3
+	self.iw, self.ih = w - 2 * 5, h - 8 - 22 - 3
 	self:generate()
 end
 
@@ -105,11 +106,11 @@ function _M:loadUI(t)
 	for i, ui in ipairs(t) do
 		self.uis[#self.uis+1] = ui
 
-		local ux, uy = 0, 0
+		local ux, uy = self.ix, self.iy
 		if ui.top then uy = uy + ui.top
-		elseif ui.bottom then uy = uy + self.h - ui.bottom - ui.ui.h end
+		elseif ui.bottom then uy = uy + self.ih - ui.bottom - ui.ui.h end
 		if ui.left then ux = ux + ui.left
-		elseif ui.right then ux = ux + self.w - ui.right - ui.ui.w end
+		elseif ui.right then ux = ux + self.iw - ui.right - ui.ui.w end
 		ui.x = ux
 		ui.y = uy
 		ui.ui.mouse.delegate_offset_x = ux

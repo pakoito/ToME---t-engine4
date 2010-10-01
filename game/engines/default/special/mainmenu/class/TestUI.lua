@@ -27,6 +27,7 @@ local Tooltip = require "engine.Tooltip"
 local ButtonList = require "engine.ButtonList"
 local DownloadDialog = require "engine.dialogs.DownloadDialog"
 
+local List = require "engine.ui.List"
 local Button = require "engine.ui.Button"
 local Dialog = require "engine.ui.Dialog"
 
@@ -39,9 +40,16 @@ function _M:init()
 
 	local b1 = Button.new{text="Ok", fct=function() print"OK" end}
 	local b2 = Button.new{text="Cancel", fct=function() print"KO" end}
+	local list = List.new{width=200, height=200, list={
+		{name="toto"},
+		{name="tutu"},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!"},
+		{name="MOUHAHAHAHAH!"},
+	}, fct=function(item) print(item.name) end}
 
-	local d = Dialog.new("plop", 400, 300)
+	local d = Dialog.new("Test UI", 400, 300)
 	d:loadUI{
+		{left=0, top=0, ui=list},
 		{left=10, bottom=10, ui=b1},
 		{right=10, bottom=10, ui=b2},
 	}
