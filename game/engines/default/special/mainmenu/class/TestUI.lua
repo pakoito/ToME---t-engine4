@@ -27,7 +27,7 @@ local Tooltip = require "engine.Tooltip"
 local ButtonList = require "engine.ButtonList"
 local DownloadDialog = require "engine.dialogs.DownloadDialog"
 
-local List = require "engine.ui.List"
+local ListColumns = require "engine.ui.ListColumns"
 local Button = require "engine.ui.Button"
 local Dialog = require "engine.ui.Dialog"
 
@@ -40,7 +40,7 @@ function _M:init()
 
 	local b1 = Button.new{text="Ok", fct=function() print"OK" end}
 	local b2 = Button.new{text="Cancel", fct=function() print"KO" end}
-	local list = List.new{width=200, height=200, columns={
+	local list = ListColumns.new{width=200, height=200, columns={
 		{"Name", 150}, {"Encumber", 50},
 	}, list={
 		{name="toto", encumberance="20"},
