@@ -38,7 +38,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:113:true:false:false:false" },
+	default = { "uni:j", "sym:113:true:false:false:false" },
 	type = "SHOW_QUESTS",
 	group = "actions",
 	name = "Show quests",
