@@ -78,7 +78,7 @@ function _M:generate()
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
-		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
+		if button ~= "wheelup" and button ~= "wheeldown" then self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max) end
 		if button == "left" and event == "button" then self:onUse()
 		elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
 		elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")

@@ -29,6 +29,8 @@ local DownloadDialog = require "engine.dialogs.DownloadDialog"
 
 local ListColumns = require "engine.ui.ListColumns"
 local Button = require "engine.ui.Button"
+local Textzone = require "engine.ui.Textzone"
+local Textbox = require "engine.ui.Textbox"
 local Dialog = require "engine.ui.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Game, engine.interface.GameMusic))
@@ -38,34 +40,78 @@ function _M:init()
 
 	self.refuse_threads = true
 
+	local text = Textzone.new{width=390, height=200, scrollbar=true, text=[[Pplopppo
+zejkfzejkfh #RED#zmkfhzekhfkjfhkjqerhfgq#LAST# jfh qjzfh qzejfh #BLUE#qjzfh
+flkzerjflm qzfj #WHITE#zeklfj qlfjkql ql
+zf ze
+fze fqefqzfjhjqzkef
+fqzef
+
+
+zef qzekjfhqjkzfh
+
+ze fzef zejkhzfekjh ze
+fze
+ fze
+  zefze fze zef
+
+  ze fzef zefz e
+zlfjklhzqfjkqhzefkhqzefjkqh z
+
+
+zef qzekjfhqjkzfh
+
+ze fzef zejkhzfekjh ze
+fze
+ fze
+  zefze fze zef
+
+  ze fzef zefz e
+zlfjklhzqfjkqhzefkhqzefjkqh z
+
+
+zef qzekjfhqjkzfh
+
+ze fzef zejkhzfekjh ze
+fze
+ fze
+  zefze fze zef
+
+  ze fzef zefz e
+zlfjklhzqfjkqhzefkhqzefjkqh z
+]]}
+	local box = Textbox.new{title="Name: ", text="", chars=10, max_len=30, fct=function(text) print("got", text) end}
 	local b1 = Button.new{text="Ok", fct=function() print"OK" end}
 	local b2 = Button.new{text="Cancel", fct=function() print"KO" end}
-	local list = ListColumns.new{width=200, height=200, columns={
-		{name="Name", width=150}, {name="Encumber", width=50},
+	local list = ListColumns.new{width=390, height=200, sortable=true, scrollbar=true, columns={
+		{name="Name", width=90, display_prop="name", sort="name"},
+		{name="Encumber", width=10, display_prop="encumberance", sort="encumberance"},
 	}, list={
-		{name="toto", encumberance="20"},
-		{name="tutu", encumberance="50"},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
-		{name="MOUHAHAHAHAH!", encumberance="20"},
-		{name="toto", encumberance="20"},
-		{name="tutu", encumberance="50"},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
-		{name="MOUHAHAHAHAH!", encumberance="20"},
-		{name="toto", encumberance="20"},
-		{name="tutu", encumberance="50"},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
-		{name="MOUHAHAHAHAH!", encumberance="20"},
-		{name="toto", encumberance="20"},
-		{name="tutu", encumberance="50"},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance="20"},
-		{name="MOUHAHAHAHAH!", encumberance="20"},
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
 	}, fct=function(item) print(item.name) end}
 
-	local d = Dialog.new("Test UI", 400, 300)
+	local d = Dialog.new("Test UI", 800, 300)
 	d:loadUI{
 		{left=0, top=0, ui=list},
-		{left=10, bottom=10, ui=b1},
-		{right=10, bottom=10, ui=b2},
+		{left=400, top=0, ui=text},
+		{left=5, bottom=10 + b1.h, ui=box},
+		{left=5, bottom=5, ui=b1},
+		{right=5, bottom=5, ui=b2},
 	}
 	self:registerDialog(d)
 end

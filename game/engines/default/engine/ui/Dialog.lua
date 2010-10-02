@@ -88,7 +88,7 @@ function _M:generate()
 	self.mouse:registerZone(0, 0, gamew, gameh, function() self.key:triggerVirtual("EXIT") end)
 	self.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(...) self:mouseEvent(...) end)
 	self.key.receiveKey = function(_, ...) self:keyEvent(...) end
-	self.key:addCommand("__TAB", function(...) self.key:triggerVirtual("MOVE_DOWN") end)
+	self.key:addCommand("_TAB", function(...) self.key:triggerVirtual("MOVE_DOWN") end)
 	self.key:addBinds{
 		MOVE_UP = function() self:setFocus(util.boundWrap(self.focus_ui_id - 1, 1, #self.uis)) end,
 		MOVE_DOWN = function() self:setFocus(util.boundWrap(self.focus_ui_id + 1, 1, #self.uis)) end,

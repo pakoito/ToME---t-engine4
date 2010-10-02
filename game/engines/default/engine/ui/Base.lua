@@ -30,6 +30,9 @@ local cache = {}
 -- Default font
 _M.font = core.display.newFont("/data/font/Vera.ttf", 12)
 _M.font_h = _M.font:lineSkip()
+_M.font_mono = core.display.newFont("/data/font/VeraMono.ttf", 12)
+_M.font_mono_w = _M.font_mono:size(" ")
+_M.font_mono_h = _M.font_mono:lineSkip()
 
 function _M:init(t, no_gen)
 	self.mouse = Mouse.new()
