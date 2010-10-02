@@ -53,7 +53,7 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 		{name="Cunning", val=self.actor:getCun(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_CUN].description}},
 		{name="Constitution", val=self.actor:getCon(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_CON].description}},
 	}, fct=function(item, _, v)
-		self:incStat(v and 1 or -1)
+		self:incStat(v == "left" and 1 or -1)
 	end, select=function(item, sel) self.sel = sel if self.uis[2] then self.uis[2].ui = item.zone end end}
 
 	self:loadUI{
