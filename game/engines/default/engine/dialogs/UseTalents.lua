@@ -157,7 +157,7 @@ function _M:generateList()
 
 		if added then
 			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=tt.description}
-			table.insert(list, where+1, { zone=zone, char="", name=cat:capitalize().." / "..tt.name:capitalize(), type=tt.type, color={0x80, 0x80, 0x80}, status="" })
+			table.insert(list, where+1, { zone=zone, char="", name="#{bold}#"..cat:capitalize().." / "..tt.name:capitalize().."#{normal}#", type=tt.type, color={0x80, 0x80, 0x80}, status="" })
 		end
 	end
 	for i = 1, #list do list[i].id = i end

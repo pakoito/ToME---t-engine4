@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a Dúnedain, one of the last descendants of the proud men of Númenor.
 Hailing from a great line of greater men, you have decided to prove your worth by venturing into the old and wild places of the world, looking for ancient treasures and glory.
 

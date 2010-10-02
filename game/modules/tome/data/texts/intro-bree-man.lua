@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a native of the town of Bree, a multicultural town that both men and hobbits call home.
 Humans are the most common race of the land, and you are one of them. In an attempt to prove your worth, you have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 

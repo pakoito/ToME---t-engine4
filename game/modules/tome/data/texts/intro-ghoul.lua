@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You have died ages ago, but that did not stop you, you were raised as an undead ghoul.
 
 After wandering aimlessly for eons you found a goal: to become a force to be reckoned with in this world.

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a member of the proud race of the Dwarves.
 Hailing from the dwarven kingdom under the Lonely Mountain you have decided to take to the road and start a new life of adventuring.
 

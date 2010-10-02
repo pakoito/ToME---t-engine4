@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a hobbit of the Shire. Most hobbits never leave the borders of their beloved Shire, even in this time of peace. Few know about the distant lands and fewer yet are willing to venture there.
 
 You are one of those rare few, inspired by the stories of dragons, gold, and the treasures of Bilbo nearly two hundred years before. You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.

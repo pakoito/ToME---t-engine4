@@ -149,12 +149,12 @@ function _M:newGame()
 		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
 		local birthend = function()
-			self:registerDialog(require("mod.dialogs.IntroDialog").new(self.player, function()
+			self:registerDialog(require("engine.dialogs.ShowText").new("Welcome to ToME", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
 				self.player:resetToFull()
 				self.player:registerCharacterPlayed()
 				self.player:grantQuest(self.player.starting_quest)
 				self.player:onBirth(birth)
-			end))
+			end, true))
 		end
 
 		if self.player.no_birth_levelup then birthend()

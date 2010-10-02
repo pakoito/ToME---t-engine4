@@ -23,7 +23,7 @@ local Textzone = require "engine.ui.Textzone"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, file, replace, w, h)
+function _M:init(title, file, replace, w, h, on_exit, accept_key)
 	local rw, rh = w, h
 	w = math.floor(w or game.w * 0.6)
 	h = math.floor(h or game.h * 0.8)
@@ -40,7 +40,11 @@ function _M:init(title, file, replace, w, h)
 	self:setupUI(not rw, not rh)
 
 	self.key:addBinds{
-		EXIT = function() game:unregisterDialog(self) end,
+		ACCEPT = accept_key and "EXIT",
+		EXIT = function()
+			game:unregisterDialog(self)
+			if on_exit then on_exit() end
+		end,
 	}
 end
 

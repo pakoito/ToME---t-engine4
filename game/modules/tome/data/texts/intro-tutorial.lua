@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Welcome #LIGHT_GREEN#]]..name..[[#WHITE#.
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 #LIGHT_GREEN#Welcome to ToME 4!#LAST#
 
 This tutorial will present you with a short quest to familiarise yourself with the game.
