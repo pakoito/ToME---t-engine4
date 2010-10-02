@@ -27,6 +27,7 @@ local Tooltip = require "engine.Tooltip"
 local ButtonList = require "engine.ButtonList"
 local DownloadDialog = require "engine.dialogs.DownloadDialog"
 
+local List = require "engine.ui.List"
 local ListColumns = require "engine.ui.ListColumns"
 local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
@@ -83,7 +84,7 @@ zlfjklhzqfjkqhzefkhqzefjkqh z
 	local box = Textbox.new{title="Name: ", text="", chars=10, max_len=30, fct=function(text) print("got", text) end}
 	local b1 = Button.new{text="Ok", fct=function() print"OK" end}
 	local b2 = Button.new{text="Cancel", fct=function() print"KO" end}
-	local list = ListColumns.new{width=390, height=200, sortable=true, scrollbar=true, columns={
+	local listc = ListColumns.new{width=390, height=200, sortable=true, scrollbar=true, columns={
 		{name="Name", width=90, display_prop="name", sort="name"},
 		{name="Encumber", width=10, display_prop="encumberance", sort="encumberance"},
 	}, list={
@@ -104,12 +105,31 @@ zlfjklhzqfjkqhzefkhqzefjkqh z
 		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
 		{name="MOUHAHAHAHAH!", encumberance=20},
 	}, fct=function(item) print(item.name) end}
+	local list = List.new{width=200, height=200, scrollbar=true, list={
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
+		{name="toto", encumberance=20},
+		{name="tutu", encumberance=50},
+		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
+		{name="MOUHAHAHAHAH!", encumberance=20},
+	}, fct=function(item) print(item.name) end}
 
-	local d = Dialog.new("Test UI", 800, 300)
+	local d = Dialog.new("Test UI", 800, 500)
 	d:loadUI{
-		{left=0, top=0, ui=list},
+		{left=0, top=0, ui=listc},
 		{left=400, top=0, ui=text},
 		{left=5, bottom=10 + b1.h, ui=box},
+		{left=box.w + 10, bottom=10 + b1.h, ui=list},
 		{left=5, bottom=5, ui=b1},
 		{right=5, bottom=5, ui=b2},
 	}

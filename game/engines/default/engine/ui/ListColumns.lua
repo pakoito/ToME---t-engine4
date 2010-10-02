@@ -76,7 +76,6 @@ function _M:generate()
 		self.scrollbar = { bar = {}, sel = {} }
 		self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
 		local s = core.display.newSurface(sb_w, self.h - fh)
-		s:erase(200,0,0)
 		for i = 0, self.h - fh do s:merge(sb, 0, i) end
 		self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h - fh, s:glTexture()
 	end
