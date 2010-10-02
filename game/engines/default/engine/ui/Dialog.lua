@@ -24,9 +24,80 @@ local Base = require "engine.ui.Base"
 --- A generic UI button
 module(..., package.seeall, class.inherit(Base))
 
+--- Requests a simple, press any key, dialog
+function _M:simplePopup(title, text, fct, no_leave)
+	local w, h = self.font:size(text)
+	local tw, th = self.font:size(title)
+	local d = new(title, math.max(w, tw) + 20, h + 75)
+	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}}}
+	if not no_leave then
+		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
+		local close = require("engine.ui.Button").new{text="Close", fct=function() d.key:triggerVirtual("EXIT") end}
+		d:loadUI{no_reset=true, {hcenter = -close.w / 2, bottom = 3, ui=close}}
+		d:setFocus(close)
+	end
+	game:registerDialog(d)
+	return d
+end
+
+--- Requests a simple, press any key, dialog
+function _M:simpleLongPopup(title, text, w, fct, no_leave)
+	local list = text:splitLines(w - 10, self.font)
+	local d = new(title, w + 20, #list * self.font_h + 75)
+	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=self.font_h * #list, text=text}}}
+	if not no_leave then
+		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
+		local close = require("engine.ui.Button").new{text="Close", fct=function() d.key:triggerVirtual("EXIT") end}
+		d:loadUI{no_reset=true, {hcenter = -close.w / 2, bottom = 3, ui=close}}
+		d:setFocus(close)
+	end
+	game:registerDialog(d)
+	return d
+end
+
+--- Requests a simple yes-no dialog
+function _M:yesnoPopup(title, text, fct, yes_text, no_text)
+	local w, h = self.font:size(text)
+	local tw, th = self.font:size(title)
+	local d = new(title, math.max(w, tw) + 35, h + 75)
+
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
+	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
+	local cancel = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false) end}
+	d:loadUI{
+		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=h+5, text=text}},
+		{left = 3, bottom = 3, ui=ok},
+		{right = 3, bottom = 3, ui=cancel},
+	}
+	d:setFocus(ok)
+
+	game:registerDialog(d)
+	return d
+end
+
+--- Requests a long yes-no dialog
+function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
+	local list = text:splitLines(w - 10, font)
+	local d = new(title, w + 20, #list * self.font_h + 75)
+
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
+	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
+	local cancel = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false) end}
+	d:loadUI{
+		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=self.font_h * #list, text=text}}}
+		{left = 3, bottom = 3, ui=ok},
+		{right = 3, bottom = 3, ui=cancel},
+	}
+	d:setFocus(ok)
+
+	game:registerDialog(d)
+	return d
+end
+
+
 function _M:init(title, w, h, x, y, alpha, font, showup)
 	self.title = assert(title, "no dialog title")
-	self.alpha = self.alpha or 200
+	self.alpha = self.alpha or 255
 	if showup ~= nil then
 		self.__showup = showup
 	else
@@ -85,7 +156,7 @@ function _M:generate()
 	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
 	self.font:setStyle("normal")
 
-	self.mouse:registerZone(0, 0, gamew, gameh, function() self.key:triggerVirtual("EXIT") end)
+	self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then  self.key:triggerVirtual("EXIT") end end)
 	self.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(...) self:mouseEvent(...) end)
 	self.key.receiveKey = function(_, ...) self:keyEvent(...) end
 	self.key:addCommand("_TAB", function(...) self.key:triggerVirtual("MOVE_DOWN") end)
@@ -100,17 +171,24 @@ function _M:generate()
 end
 
 function _M:loadUI(t)
-	self.uis = {}
-	self.focus_ui = nil
-	self.focus_ui_id = 0
+	if not t.no_reset then
+		self.uis = {}
+		self.focus_ui = nil
+		self.focus_ui_id = 0
+	end
 	for i, ui in ipairs(t) do
 		self.uis[#self.uis+1] = ui
 
 		local ux, uy = self.ix, self.iy
+
 		if ui.top then uy = uy + ui.top
-		elseif ui.bottom then uy = uy + self.ih - ui.bottom - ui.ui.h end
+		elseif ui.bottom then uy = uy + self.ih - ui.bottom - ui.ui.h
+		elseif ui.vcenter then uy = uy + math.floor(self.ih / 2) + ui.vcenter end
+
 		if ui.left then ux = ux + ui.left
-		elseif ui.right then ux = ux + self.iw - ui.right - ui.ui.w end
+		elseif ui.right then ux = ux + self.iw - ui.right - ui.ui.w
+		elseif ui.hcenter then ux = ux + math.floor(self.iw / 2) + ui.hcenter end
+
 		ui.x = ux
 		ui.y = uy
 		ui.ui.mouse.delegate_offset_x = ux
@@ -118,14 +196,21 @@ function _M:loadUI(t)
 
 		if not self.focus_ui and ui.ui.can_focus then
 			self:setFocus(i)
-		else
-		ui.ui:setFocus(false)
+		elseif ui.ui.can_focus then
+			ui.ui:setFocus(false)
 		end
 	end
 end
 
 function _M:setFocus(id)
 	if self.focus_ui then self.focus_ui.ui:setFocus(false) end
+
+	if type(id) == "table" then
+		for i = 1, #self.uis do
+			if self.uis[i].ui == id then id = i break end
+		end
+		if type(id) == "table" then return end
+	end
 
 	local ui = self.uis[id]
 	self.focus_ui = ui
@@ -154,6 +239,9 @@ function _M:keyEvent(...)
 end
 
 function _M:display() end
+
+function _M:unload()
+end
 
 function _M:toScreen(x, y)
 	-- Draw with only the texture

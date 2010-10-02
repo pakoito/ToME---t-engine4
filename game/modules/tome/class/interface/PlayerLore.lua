@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 
 module(..., package.seeall, class.make)
 

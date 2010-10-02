@@ -314,16 +314,6 @@ function _M:mouseZones(t, no_new)
 end
 
 function _M:unload()
---[[
-	if self.old_key then
-		game.key = self.old_key
-		game.key:setCurrent()
-	end
-	if self.old_mouse then
-		game.mouse = self.old_mouse
-		game.mouse:setCurrent()
-	end
-]]
 end
 
 function _M:drawWBorder(s, x, y, w)

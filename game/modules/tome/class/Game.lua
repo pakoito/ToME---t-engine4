@@ -55,7 +55,7 @@ local FlyingText = require "engine.FlyingText"
 local Tooltip = require "engine.Tooltip"
 local Calendar = require "engine.Calendar"
 
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 local MapMenu = require "mod.dialogs.MapMenu"
 
 module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound, engine.interface.GameTargeting))
@@ -830,9 +830,9 @@ function _M:onQuit()
 	self.player:restStop("quitting")
 
 	if not self.quit_dialog and not self.player.dead then
-		self.quit_dialog = Dialog:yesnoPopup("    Save and exit?    ", "Save and exit?", function(ok)
+		self.quit_dialog = Dialog:yesnoPopup("Save and exit?", "Save and exit?", function(ok)
 			if ok then
-				local d = engine.Dialog:simplePopup("Quitting...", "Quitting...")
+				local d = engine.Dialog:simplePopup("Quitting...", "Quitting...", nil, true)
 				d.__show_popup = false
 				core.display.forceRedraw()
 

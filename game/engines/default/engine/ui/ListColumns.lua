@@ -175,7 +175,7 @@ function _M:onUse()
 	local item = self.list[self.sel]
 	if not item then return end
 	if item.fct then item:fct()
-	else self.fct(item) end
+	else self.fct(item, self.sel) end
 end
 
 function _M:selectColumn(i, force)
@@ -190,10 +190,12 @@ function _M:selectColumn(i, force)
 		self.sort_reverse = not self.sort_reverse
 	end
 
-	local fct = col.sort
-	if type(fct) == "string" then fct = function(a, b) return a[col.sort] < b[col.sort] end end
-	if self.sort_reverse then local old=fct fct = function(a, b) return old(b, a) end end
-	table.sort(self.list, fct)
+	if self.sortable and not force then
+		local fct = col.sort
+		if type(fct) == "string" then fct = function(a, b) return a[col.sort] < b[col.sort] end end
+		if self.sort_reverse then local old=fct fct = function(a, b) return old(b, a) end end
+		table.sort(self.list, fct)
+	end
 end
 
 function _M:display(x, y)

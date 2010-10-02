@@ -18,32 +18,51 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Textzone = require "engine.ui.Textzone"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, actor, filter, action)
 	self.action = action
 	self.filter = filter
 	self.actor = actor
 
-	engine.Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
 	self:generateList()
 
-	self.list = self.inven_list
-	self.sel = 1
-	self.scroll = 1
---	self.max = math.floor((self.ih * 0.8 - 5) / self.font_h) - 1
+	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h - 10, sortable=true, scrollbar=true, columns={
+		{name="", width=7, display_prop="id", sort="id"},
+		{name="", width=4, display_prop="char", sort="char"},
+		{name="Inventory", width=61, display_prop="name", sort="name"},
+		{name="Category", width=20, display_prop="cat", sort="cat"},
+		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
+	}, list=self.inven_list, fct=function(item, sel) self:use(item) end}
 
-	self:keyCommands({
+	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h - 10, scrollbar=true, columns={
+		{name="", width=4, display_prop="char", sort="char"},
+		{name="Equipment", width=68, display_prop="name"},
+		{name="Category", width=20, display_prop="cat"},
+		{name="Enc.", width=8, display_prop="encumberance"},
+	}, list=self.equip_list, fct=function(item) self:use(item) end}
+
+	self:loadUI{
+		{left=0, top=0, ui=self.c_equip},
+		{right=0, top=0, ui=self.c_inven},
+	}
+
+
+	self.key:addCommands{
 		__TEXTINPUT = function(c)
 			if self.list.chars[c] then
 				self.sel = self.list.chars[c]
 				self:use()
 			end
 		end,
-	},{
+	}
+	self.key:addBinds{
 		HOTKEY_1 = function() self:defineHotkey(1) end,
 		HOTKEY_2 = function() self:defineHotkey(2) end,
 		HOTKEY_3 = function() self:defineHotkey(3) end,
@@ -80,47 +99,32 @@ function _M:init(title, actor, filter, action)
 		HOTKEY_THIRD_10 = function() self:defineHotkey(34) end,
 		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,
 		HOTKEY_THIRD_12 = function() self:defineHotkey(36) end,
-
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_LEFT = function() self.list = self.equip_list self.sel = util.bound(self.sel, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_RIGHT = function() self.list = self.inven_list self.sel = util.bound(self.sel, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		ACCEPT = function() self:use() end,
+		ACCEPT = function()
+			if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.list[self.c_inven.sel])
+			elseif self.focus_ui and self.focus_ui.ui == self.c_equip then self:use(self.c_equip.list[self.c_equip.sel])
+			end
+		end,
 		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			if tx < self.iw / 2 then
-				self.list = self.equip_list
-			else
-				self.list = self.inven_list
-			end
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			self.changed = true
-
-			if button == "left" and event == "button" then self:use()
-			elseif button == "right" and event == "button" then
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
 	}
 end
 
 function _M:defineHotkey(id)
 	if not self.actor or not self.actor.hotkey then return end
 
-	self.actor.hotkey[id] = {"inventory", self.list[self.sel].object:getName{no_count=true}}
-	self:simplePopup("Hotkey "..id.." assigned", self.list[self.sel].object:getName{no_count=true}:capitalize().." assigned to hotkey "..id)
+	local item = nil
+	if self.focus_ui and self.focus_ui.ui == self.c_inven then item = self.c_inven.list[self.c_inven.sel]
+	elseif self.focus_ui and self.focus_ui.ui == self.c_equip then item = self.c_equip.list[self.c_equip.sel]
+	end
+	if not item or not item.object then return end
+
+	self.actor.hotkey[id] = {"inventory", item.object:getName{no_count=true}}
+	self:simplePopup("Hotkey "..id.." assigned", item.object:getName{no_count=true}:capitalize().." assigned to hotkey "..id)
 	self.actor.changed = true
 end
 
-function _M:use()
-	if self.list[self.sel] and self.list[self.sel].item then
-		if self.action(self.list[self.sel].object, self.list[self.sel].inven, self.list[self.sel].item) then
+function _M:use(item)
+	if item then
+		if self.action(item.object, item.inven, item.item) then
 			game:unregisterDialog(self)
 		end
 	end
@@ -128,19 +132,20 @@ end
 
 function _M:generateList()
 	-- Makes up the list
-	local list = {}
+	self.equip_list = {}
+	local list = self.equip_list
 	local chars = {}
 	local i = 0
 	self.max_h = 0
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
-			list[#list+1] = { name=self.actor.inven_def[inven_id].name, color={0x90, 0x90, 0x90}, inven=inven_id }
+			list[#list+1] = { id=#list+1, char="", name=self.actor.inven_def[inven_id].name, color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="" }
 			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = string.char(string.byte('a') + i)
-					list[#list+1] = { name=char..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item }
+					list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item, cat=o.type.."/"..o.subtype, encumberance=o.encumber }
 					self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 					chars[char] = #list
 					i = i + 1
@@ -152,26 +157,20 @@ function _M:generateList()
 	self.equip_list = list
 
 	-- Makes up the list
-	local list = {}
+	self.inven_list = {}
+	local list = self.inven_list
 	local chars = {}
 	local i = 0
 	for item, o in ipairs(self.actor:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
 			local char = string.char(string.byte('a') + i)
-			list[#list+1] = { name=char..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item }
+			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.type.."/"..o.subtype, encumberance=o.encumber }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			chars[char] = #list
 			i = i + 1
 		end
 	end
 	list.chars = chars
-	self.inven_list = list
-	self.changed = true
-
-	self.list = self.inven_list
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - self.max_h
 end
 
 function _M:on_recover_focus()
