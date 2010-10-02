@@ -230,7 +230,7 @@ function _M:addBinds(t)
 	local later = {}
 	for virtual, fct in pairs(t) do
 		if type(fct) == "function" then
-		print("bind", virtual, fct)
+--			print("bind", virtual, fct)
 			self:addBind(virtual, fct)
 		else
 			later[virtual] = fct

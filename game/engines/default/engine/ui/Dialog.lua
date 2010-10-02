@@ -84,7 +84,7 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
 	local cancel = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false) end}
 	d:loadUI{
-		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=self.font_h * #list, text=text}}}
+		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=self.font_h * #list, text=text}},
 		{left = 3, bottom = 3, ui=ok},
 		{right = 3, bottom = 3, ui=cancel},
 	}

@@ -32,6 +32,7 @@ function _M:init(t)
 	self.sortable = t.sortable
 	self.scrollbar = t.scrollbar
 	self.fct = t.fct
+	self.select = t.select
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -144,31 +145,43 @@ function _M:generate()
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
+		self:onSelect()
 		if button == "left" and event == "button" then self:onUse() end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
 	}
 	self.key:addCommands{
 		_HOME = function()
 			self.sel = 1
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 		_END = function()
 			self.sel = self.max
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 		_PAGEUP = function()
 			self.sel = util.bound(self.sel - self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 		_PAGEDOWN = function()
 			self.sel = util.bound(self.sel + self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 	}
+end
+
+function _M:onSelect()
+	local item = self.list[self.sel]
+	if not item then return end
+
+	if self.select then self.select(item, self.sel) end
 end
 
 function _M:onUse()

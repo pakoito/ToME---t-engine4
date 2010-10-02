@@ -31,28 +31,15 @@ function _M:init(title, actor, filter, action)
 
 	Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
-	self:generateList()
+	self:generateList(true)
 
-	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h - 10, sortable=true, scrollbar=true, columns={
-		{name="", width=7, display_prop="id", sort="id"},
-		{name="", width=4, display_prop="char", sort="char"},
-		{name="Inventory", width=61, display_prop="name", sort="name"},
-		{name="Category", width=20, display_prop="cat", sort="cat"},
-		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
-	}, list=self.inven_list, fct=function(item, sel) self:use(item) end}
-
-	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h - 10, scrollbar=true, columns={
-		{name="", width=4, display_prop="char", sort="char"},
-		{name="Equipment", width=68, display_prop="name"},
-		{name="Category", width=20, display_prop="cat"},
-		{name="Enc.", width=8, display_prop="encumberance"},
-	}, list=self.equip_list, fct=function(item) self:use(item) end}
+	self.c_desc = Textzone.new{width=self.iw, height=self.max_h*self.font_h, text=""}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_equip},
 		{right=0, top=0, ui=self.c_inven},
+		{left=3, bottom=3, ui=self.c_desc},
 	}
-
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
@@ -122,6 +109,12 @@ function _M:defineHotkey(id)
 	self.actor.changed = true
 end
 
+function _M:select(item)
+	if item then
+		self.uis[3].ui = item.zone
+	end
+end
+
 function _M:use(item)
 	if item then
 		if self.action(item.object, item.inven, item.item) then
@@ -130,7 +123,7 @@ function _M:use(item)
 	end
 end
 
-function _M:generateList()
+function _M:generateList(first)
 	-- Makes up the list
 	self.equip_list = {}
 	local list = self.equip_list
@@ -139,13 +132,15 @@ function _M:generateList()
 	self.max_h = 0
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
-			list[#list+1] = { id=#list+1, char="", name=self.actor.inven_def[inven_id].name, color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="" }
+			local zone = Textzone.new{width=self.iw, height=self.ih, text=self.actor.inven_def[inven_id].description}
+			list[#list+1] = { zone=zone, id=#list+1, char="", name=self.actor.inven_def[inven_id].name, color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="" }
 			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = string.char(string.byte('a') + i)
-					list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item, cat=o.type.."/"..o.subtype, encumberance=o.encumber }
+					local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+					list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber }
 					self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 					chars[char] = #list
 					i = i + 1
@@ -164,38 +159,36 @@ function _M:generateList()
 	for item, o in ipairs(self.actor:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
 			local char = string.char(string.byte('a') + i)
-			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.type.."/"..o.subtype, encumberance=o.encumber }
+			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			chars[char] = #list
 			i = i + 1
 		end
 	end
 	list.chars = chars
+
+	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
+		{name="", width=7, display_prop="id", sort="id"},
+		{name="", width=4, display_prop="char", sort="char"},
+		{name="Inventory", width=61, display_prop="name", sort="name"},
+		{name="Category", width=20, display_prop="cat", sort="cat"},
+		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
+	}, list=self.inven_list, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
+		{name="", width=4, display_prop="char", sort="char"},
+		{name="Equipment", width=68, display_prop="name"},
+		{name="Category", width=20, display_prop="cat"},
+		{name="Enc.", width=8, display_prop="encumberance"},
+	}, list=self.equip_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	if not first then
+		self.uis[1].ui = self.c_equip
+		self.uis[2].ui = self.c_inven
+	end
 end
 
 function _M:on_recover_focus()
 	self:generateList()
-end
-
-function _M:drawDialog(s)
-	if self.list[self.sel] and not self.list[self.sel].item then
-		lines = self.actor.inven_def[self.list[self.sel].inven].description:splitLines(self.iw / 2 - 10, self.font)
-	elseif self.list[self.sel] and self.list[self.sel] and self.list[self.sel].object then
-		lines = self.list[self.sel].object:getDesc():splitLines(self.iw - 10, self.font)
-	else
-		lines = {}
-	end
-
-	local sh = self.ih - 4 - self.max_h * self.font:lineSkip()
-	h = sh
-	self:drawWBorder(s, 3, sh, self.iw - 6)
-	for i = 1, #lines do
-		s:drawColorStringBlended(self.font, lines[i], 5, 2 + h)
-		h = h + self.font:lineSkip()
-	end
-
-	self:drawSelectionList(s, 2, 5, self.font_h, self.equip_list, self.list == self.equip_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self:drawHBorder(s, self.iw / 2, 2, sh - 4)
-	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.inven_list, self.list == self.inven_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self.changed = false
 end
