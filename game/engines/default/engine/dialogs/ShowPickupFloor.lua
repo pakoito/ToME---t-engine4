@@ -18,50 +18,55 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Button = require "engine.ui.Button"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, x, y, filter, action)
 	self.x, self.y = x, y
 	self.filter = filter
 	self.action = action
-	engine.Dialog.init(self, title or "Pickup", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	Dialog.init(self, title or "Pickup", game.w * 0.8, game.h * 0.8)
+
+	local takeall = Button.new{text="(*) Take all", width=self.iw - 40, fct=function() self:takeAll() end}
+
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - takeall.h, no_color_bleed=true, text=""}
 
 	self:generateList()
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10 - takeall.h, scrollbar=true, columns={
+		{name="", width=4, display_prop="char"},
+		{name="Item", width=68, display_prop="name"},
+		{name="Category", width=20, display_prop="cat"},
+		{name="Enc.", width=8, display_prop="encumberance"},
+	}, list=self.list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
 
-	self:keyCommands({
-		_ASTERISK = function() while self:use() do end end,
+	self:loadUI{
+		{left=0, top=takeall.h, ui=self.c_list},
+		{right=0, top=takeall.h, ui=self.c_desc},
+		{hcenter=0, top=0, ui=takeall},
+		{hcenter=0, top=takeall.h + 5, ui=Separator.new{dir="horizontal", size=self.ih - takeall.h - 10}},
+	}
+	self:setFocus(self.c_list)
+	self:setupUI()
+
+	self.key:addCommands{
+		_ASTERISK = function() self:takeAll() end,
 		__TEXTINPUT = function(c)
-			if c:find("^[a-z]$") then
-				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
-				self:use()
+			if self.list and self.list.chars[c] then
+				self:use(self.list[self.list.chars[c]])
 			end
 		end,
-	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		ACCEPT = function() self:use() end,
+	}
+	self.key:addBinds{
+		ACCEPT = function()
+			self:use(self.c_list.list[self.c_list.sel])
+		end,
 		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			self.changed = true
-
-			if button == "left" and event == "button" then self:use()
-			elseif button == "right" and event == "button" then
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
 	}
 end
 
@@ -74,9 +79,20 @@ function _M:used()
 	return true
 end
 
-function _M:use()
-	if self.list[self.sel] then
-		self.action(self.list[self.sel].object, self.list[self.sel].item)
+function _M:select(item)
+	if item then
+		self.uis[2].ui = item.zone
+	end
+end
+
+function _M:takeAll()
+	for i = #self.list, 1, -1 do self.action(self.list[i].object, self.list[i].item) end
+	game:unregisterDialog(self)
+end
+
+function _M:use(item)
+	if item and item.object then
+		self.action(item.object, item.item)
 	end
 	return self:used()
 end
@@ -84,20 +100,27 @@ end
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
+	list.chars = {}
 	local idx = 1
 	local i = 1
 	while true do
 		local o = game.level.map:getObject(self.x, self.y, idx)
 		if not o then break end
 		if not self.filter or self.filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i - 1)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=idx }
+			local char = string.char(string.byte('a') + i)
+			list.chars[char] = i
+			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=o:getDesc()}
+			list[#list+1] = { char=char, zone=zone, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=o.encumber }
 			i = i + 1
 		end
 		idx = idx + 1
 	end
 	self.list = list
-	self.sel = 1
-	self.changed = true
+
+	if self.c_list then
+		self.c_list.list = self.list
+		self.c_list:generate()
+	end
 end
 
 function _M:drawDialog(s)

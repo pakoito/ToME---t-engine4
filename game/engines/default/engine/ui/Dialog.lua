@@ -230,11 +230,11 @@ function _M:setupUI(resizex, resizey, on_resize)
 
 		if ui.top then uy = uy + ui.top
 		elseif ui.bottom then uy = uy + self.ih - ui.bottom - ui.ui.h
-		elseif ui.vcenter then uy = uy + math.floor(self.ih / 2) + ui.vcenter end
+		elseif ui.vcenter then uy = uy + math.floor(self.ih / 2) + ui.vcenter - ui.ui.h / 2 end
 
 		if ui.left then ux = ux + ui.left
 		elseif ui.right then ux = ux + self.iw - ui.right - ui.ui.w
-		elseif ui.hcenter then ux = ux + math.floor(self.iw / 2) + ui.hcenter end
+		elseif ui.hcenter then ux = ux + math.floor(self.iw / 2) + ui.hcenter - ui.ui.w / 2 end
 
 		ui.x = ux
 		ui.y = uy
