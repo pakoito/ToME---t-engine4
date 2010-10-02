@@ -113,7 +113,7 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 			who.changed = true
 			self:onBuy(who, o, item, nb)
 			if store_dialog then store_dialog:updateStore() end
-		end end)
+		end end, "Buy", "Cancel")
 	end
 end
 
@@ -134,7 +134,7 @@ function _M:doSell(who, o, item, nb, store_dialog)
 			who.changed = true
 			self:onSell(who, o, item, nb)
 			if store_dialog then store_dialog:updateStore() end
-		end end)
+		end end, "Sell", "Cancel")
 	end
 end
 

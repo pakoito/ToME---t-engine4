@@ -18,46 +18,31 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local List = require "engine.ui.List"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init()
 	self:generateList()
 
-	engine.Dialog.init(self, "Switch Resolution", 300, #self.list * 30 + 20)
+	Dialog.init(self, "Switch Resolution", 300, 20)
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
 
-	self:keyCommands({
-		__TEXTINPUT = function(c)
-			if c:find("^[a-z]$") then
-				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
-				self:use()
-			end
-		end,
-	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		ACCEPT = function() self:use() end,
+	self:loadUI{
+		{left=0, top=0, ui=self.c_list},
+	}
+	self:setFocus(self.c_list)
+	self:setupUI(false, true)
+
+	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			self.changed = true
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			if button == "left" and event == "button" then self:use()
-			elseif button == "right" and event == "button" then
-			end
-		end },
 	}
 end
 
-function _M:use()
-	game:setResolution(self.list[self.sel].r)
+function _M:use(item)
+	game:setResolution(item.r)
 	game:unregisterDialog(self)
 end
 
@@ -84,9 +69,4 @@ function _M:generateList()
 		i = i + 1
 	end
 	self.list = list
-end
-
-function _M:drawDialog(s)
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
-	self.chanegd = false
 end

@@ -18,35 +18,29 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local Textzone = require "engine.ui.Textzone"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, file, replace, w, h)
+	local rw, rh = w, h
 	w = math.floor(w or game.w * 0.6)
 	h = math.floor(h or game.h * 0.8)
 
-	self.iw = w - 2 * 5 -- Cheat, this is normaly done by Dialog:init but we need it to generate the list and we needto generate it before init
-	self.font = core.display.newFont("/data/font/Vera.ttf", 12)
+	Dialog.init(self, title or "Text", w, h)
+
 	self:generateList(file, replace)
-	h = math.min(4 + 30 + (#self.list) * self.font:lineSkip(), h)
 
-	engine.Dialog.init(self, title or "Text", w, h, nil, nil, nil, self.font)
+	self.c_desc = Textzone.new{width=math.floor(self.iw - 10), height=self.ih, no_color_bleed=true, auto_height=true, text=self.text}
 
-	self.sel = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self:loadUI{
+		{left=0, top=0, ui=self.c_desc},
+	}
+	self:setupUI(not rw, not rh)
 
-	self:keyCommands({
-	},{
---		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.changed = true end,
---		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.changed = true end,
-		ACCEPT = function() game:unregisterDialog(self) end,
-		EXIT = "ACCEPT",
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button ~= "none" then game:unregisterDialog(self) end end},
-		{ x=0, y=0, w=self.w, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
-		end },
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
 	}
 end
 
@@ -61,15 +55,6 @@ function _M:generateList(file, replace)
 		return util.getval(replace[what])
 	end)
 
-	self.list = str:splitLines(self.iw - 10, self.font)
+	self.text = str
 	return true
-end
-
-function _M:drawDialog(s)
-	for ii = self.sel, #self.list do
-		local i = ii - self.sel + 1
-		if not self.list[i] or 4 + (i) * self.font:lineSkip() >= self.ih then break end
-		s:drawColorStringBlended(self.font, self.list[i], 5, 4 + (i-1) * self.font:lineSkip())
-	end
-	self.changed = false
 end

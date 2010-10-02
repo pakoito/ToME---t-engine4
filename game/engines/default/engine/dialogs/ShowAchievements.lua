@@ -18,38 +18,47 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title)
 	local total = #world.achiev_defs
 	local nb = 0
 	for id, data in pairs(world.achieved) do nb = nb + 1 end
 
-	engine.Dialog.init(self, (title or "Achievements").." ("..nb.."/"..total..")", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	Dialog.init(self, (title or "Achievements").." ("..nb.."/"..total..")", game.w * 0.8, game.h * 0.8)
+
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
 
 	self:generateList()
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, sortable=true, columns={
+		{name="Achievement", width=60, display_prop="name", sort="name"},
+		{name="When", width=20, display_prop="when", sort="when"},
+		{name="Who", width=20, display_prop="who", sort="who"},
+	}, list=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
-	self:keyCommands({},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
-			self.changed = true
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			if button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
+	self:loadUI{
+		{left=0, top=0, ui=self.c_list},
+		{right=0, top=0, ui=self.c_desc},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
+	self:setFocus(self.c_list)
+	self:setupUI()
+
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
+	}
+end
+
+function _M:select(item)
+	if item then
+		self.uis[2].ui = item.zone
+	end
 end
 
 function _M:generateList()
@@ -58,30 +67,10 @@ function _M:generateList()
 	local i = 0
 	for id, data in pairs(world.achieved) do
 		local a = world:getAchievementFromId(id)
-		list[#list+1] = { name=a.name,  desc=a.desc, when=data.when, who=data.who, order=a.order }
+		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n\n#GOLD#Description:#LAST# %s"):format(data.when, data.who, a.desc)}
+		list[#list+1] = { zone=zone, name=a.name,  desc=a.desc, when=data.when, who=data.who, order=a.order }
 		i = i + 1
 	end
 	table.sort(list, function(a, b) return a.name < b.name end)
 	self.list = list
-end
-
-function _M:drawDialog(s)
-	-- Description part
-	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
-
-	local h = 2
-	if self.list[self.sel] then
-		local str = ("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n\n#GOLD#Description:#LAST# %s"):format(self.list[self.sel].when, self.list[self.sel].who, self.list[self.sel].desc)
-		lines = str:splitLines(self.iw / 2 - 10, self.font)
-	else
-		lines = {}
-	end
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-	for i = 1, #lines do
-		s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h)
-		h = h + self.font:lineSkip()
-	end
-
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self.changed = false
 end

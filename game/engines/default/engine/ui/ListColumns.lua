@@ -189,7 +189,7 @@ function _M:onSelect()
 	local item = self.list[self.sel]
 	if not item then return end
 
-	if self.select then self.select(item, self.sel) end
+	if rawget(self, "select") then self.select(item, self.sel) end
 end
 
 function _M:onUse()

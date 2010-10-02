@@ -18,53 +18,60 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(actor)
 	self.actor = actor
-	actor.hotkey = actor.hotkey or {}
-	engine.Dialog.init(self, "Quest Log for "..actor.name, game.w, game.h)
+	Dialog.init(self, "Quest Log for "..actor.name, game.w, game.h)
+
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
 
 	self:generateList()
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, sortable=true, columns={
+		{name="Quest", width=70, display_prop="name", sort="name"},
+		{name="Status", width=30, display_prop="status", sort="status_order"},
+	}, list=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
-	self:keyCommands({
-		_t = function()
-			self.sel = 1
-			self.scroll = 1
-			self.show_ended = not self.show_ended
-			self:generateList()
-			self.changed = true        print("plop")
-		end,
-	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			self.changed = true
-			self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-
-			if button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
+	self:loadUI{
+		{left=0, top=0, ui=self.c_list},
+		{right=0, top=0, ui=self.c_desc},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
+	self:setFocus(self.c_list)
+	self:setupUI()
+	self:select(self.list[1])
+	self.c_list:selectColumn(2)
+
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
+	}
+end
+
+function _M:select(item)
+	if item then
+		self.uis[2].ui = item.zone
+	end
 end
 
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	for id, q in pairs(self.actor.quests or {}) do
-		if not q:isEnded() or self.show_ended then
-			list[#list+1] = { name=q.name, quest=q, color = q:isCompleted() and {0,255,0} or nil }
+		if true then
+			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=q:desc(self.actor)}
+			local color = nil
+			if q:isStatus(q.COMPLETED) then color = colors.simple(colors.LIGHT_GREEN)
+			elseif q:isStatus(q.DONE) then color = colors.simple(colors.GREEN)
+			elseif q:isStatus(q.FAILED) then color = colors.simple(colors.RED)
+			end
+
+			list[#list+1] = { zone=zone, name=q.name, quest=q, color = color, status=q.status_text[q.status], status_order=q.status }
 		end
 	end
 	if game.turn then
@@ -73,36 +80,4 @@ function _M:generateList()
 		table.sort(list, function(a, b) return a.quest.name < b.quest.name end)
 	end
 	self.list = list
-end
-
-function _M:drawDialog(s)
-	-- Description part
-	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
-
-	local r, g, b
-	local help = [[Keyboard: #00FF00#up key/down key#FFFFFF# to select a quest; #00FF00#t#FFFFFF# to toggle finished quests.
-]]
-	local talentshelp = help:splitLines(self.iw / 2 - 10, self.font)
-
-	local lines = {}
-	if self.list[self.sel] then
-		lines = self.list[self.sel].quest:desc(self.actor):splitLines(self.iw / 2 - 10, self.font)
-	end
-
-	local h = 2
-	for i = 1, #talentshelp do
-		s:drawColorStringBlended(self.font, talentshelp[i], self.iw / 2 + 5, h)
-		h = h + self.font:lineSkip()
-	end
-
-	h = h + self.font:lineSkip()
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-	for i = 1, #lines do
-		r, g, b = s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h, r, g, b)
-		h = h + self.font:lineSkip()
-	end
-
-	-- Talents
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self.changed = false
 end

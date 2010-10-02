@@ -36,11 +36,11 @@ function _M:init(title, inven, filter, action, actor)
 
 	self:generateList()
 
-	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
-		{name="", width=4, display_prop="char"},
-		{name="Inventory", width=68, display_prop="name"},
-		{name="Category", width=20, display_prop="cat"},
-		{name="Enc.", width=8, display_prop="encumberance"},
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, sortable=true, scrollbar=true, columns={
+		{name="", width=4, display_prop="char", sort="id"},
+		{name="Inventory", width=68, display_prop="name", sort="name"},
+		{name="Category", width=20, display_prop="cat", sort="cat"},
+		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
 	}, list=self.list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
 
 	self:loadUI{
@@ -59,9 +59,6 @@ function _M:init(title, inven, filter, action, actor)
 		end,
 	}
 	self.key:addBinds{
-		ACCEPT = function()
-			self:use(self.c_list.list[self.c_list.sel])
-		end,
 		EXIT = function() game:unregisterDialog(self) end,
 	}
 end

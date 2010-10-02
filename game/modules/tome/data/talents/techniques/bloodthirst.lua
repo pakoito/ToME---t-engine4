@@ -94,7 +94,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You enter a battle frenzy for %d turns. During the time you can not use items, healing has no effect and your health can not drop below 1.
-		At the end of the frenzy you regain %d%% of your health per foes slain during thr frenzy.]]):
+		At the end of the frenzy you regain %d%% of your health per foes slain during the frenzy.]]):
 		format(2 + self:getTalentLevelRaw(t), math.floor(self:getTalentLevel(t) * 3.5))
 	end,
 }

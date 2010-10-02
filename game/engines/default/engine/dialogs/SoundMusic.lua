@@ -59,9 +59,7 @@ function _M:init()
 end
 
 function _M:changeVol(v)
-	print("vv", v, self.list[self.sel].act)
 	if self.list[self.sel].act == "music_volume" then
-		print("v<<v", v)
 		game:volumeMusic(game:volumeMusic() + v)
 		self:generateList()
 	elseif self.list[self.sel].act == "sound_volume" then

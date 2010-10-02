@@ -122,35 +122,3 @@ function _M:generateList()
 		self.c_list:generate()
 	end
 end
-
-function _M:drawDialog(s)
-	-- Description part
-	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
-
-	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select an object; #00FF00#enter#FFFFFF# to use.
-Mouse: #00FF00#Left click#FFFFFF# to pickup.
-]]):splitLines(self.iw / 2 - 10, self.font)
-
-	local lines = {}
-	local h = 2
-	for i = 1, #talentshelp do
-		s:drawColorStringBlended(self.font, talentshelp[i], self.iw / 2 + 5, h)
-		h = h + self.font:lineSkip()
-	end
-
-	h = h + self.font:lineSkip()
-	if self.list[self.sel] then
-		lines = self.list[self.sel].object:getDesc():splitLines(self.iw / 2 - 10, self.font)
-	else
-		lines = {}
-	end
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-	for i = 1, #lines do
-		s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h)
-		h = h + self.font:lineSkip()
-	end
-
-	-- Talents
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self.changed = false
-end

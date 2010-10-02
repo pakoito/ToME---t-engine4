@@ -64,7 +64,7 @@ newBirthDescriptor
 		"Hobbits are agile, lucky, and resilient but lacking in strength.",
 		"They possess the #GOLD#Luck of the Little Folk#WHITE# which allows them to increase their critical strike chance for a few turns.",
 		"#GOLD#Stats modifiers:",
-		"#LIGHT_BLUE# * -3 Strength, +3 Dexterity, +10 Constitution",
+		"#LIGHT_BLUE# * -3 Strength, +3 Dexterity, +1 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +3 Cunning",
 		"#LIGHT_BLUE# * +5 Luck",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 12",

@@ -244,7 +244,7 @@ function _M:setupUI(resizex, resizey, on_resize)
 end
 
 function _M:setFocus(id)
-	if self.focus_ui then self.focus_ui.ui:setFocus(false) end
+	if self.focus_ui and self.focus_ui.ui.can_focus then self.focus_ui.ui:setFocus(false) end
 
 	if type(id) == "table" then
 		for i = 1, #self.uis do
@@ -254,6 +254,7 @@ function _M:setFocus(id)
 	end
 
 	local ui = self.uis[id]
+	if not ui.ui.can_focus then return end
 	self.focus_ui = ui
 	self.focus_ui_id = id
 	ui.ui:setFocus(true)

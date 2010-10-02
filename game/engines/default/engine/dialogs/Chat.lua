@@ -18,51 +18,47 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local VariableList = require "engine.ui.VariableList"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(chat, id)
 	self.cur_id = id
 	self.chat = chat
 	self.npc = chat.npc
 	self.player = chat.player
-	engine.Dialog.init(self, self.npc.name, 500, 400)
+	Dialog.init(self, self.npc.name, 500, 400)
 
 	self:generateList()
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self.c_desc = Textzone.new{width=self.iw - 10, height=1, auto_height=true, no_color_bleed=true, text=self.text.."\n"}
 
-	self:keyCommands({
+	self:generateList()
+
+	self.c_list = VariableList.new{width=self.iw - 10, list=self.list, fct=function(item) self:use(item) end}
+
+	self:loadUI{
+		{left=0, top=0, ui=self.c_desc},
+		{left=0, bottom=0, ui=self.c_list},
+		{left=5, top=self.c_desc.h - 10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+	}
+	self:setFocus(self.c_list)
+	self:setupUI(false, true)
+
+	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if c:find("^[a-z]$") then
-				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
-				self:use()
+			if self.list and self.list.chars[c] then
+				self:use(self.list[self.list.chars[c]])
 			end
 		end,
-	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		ACCEPT = function() self:use() end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=self.w, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			if self.start_answer_y and y >= self.start_answer_y then
-				ty = ty - self.start_answer_y
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-				self.changed = true
-				if button == "left" and event == "button" then self:use()
-				elseif button == "right" and event == "button" then
-				end
-			end
-		end },
 	}
 end
 
-function _M:use(a)
-	a = a or self.chat:get(self.cur_id).answers[self.list[self.sel].answer]
+function _M:use(item, a)
+	a = a or self.chat:get(self.cur_id).answers[item.answer]
 	if not a then return end
 
 	self.changed = true
@@ -86,17 +82,17 @@ function _M:use(a)
 end
 
 function _M:regen()
-	self.changed = true
-	self:generateList()
-	self.sel = 1
-	self.scroll = 1
+	game:unregisterDialog(self)
+	local d = new(self.chat, self.cur_id)
+	d.__showup = false
+	game:registerDialog(d)
 end
 
 function _M:resolveAuto()
 	if not self.chat:get(self.cur_id).auto then return end
 	for i, a in ipairs(self.chat:get(self.cur_id).answers) do
 		if not a.cond or a.cond(self.npc, self.player) then
-			if not self:use(a) then return
+			if not self:use(nil, a) then return
 			else return self:resolveAuto()
 			end
 		end
@@ -107,31 +103,18 @@ function _M:generateList()
 	self:resolveAuto()
 
 	-- Makes up the list
-	local list = {}
+	local list = { chars={} }
 	local nb = 1
 	for i, a in ipairs(self.chat:get(self.cur_id).answers) do
 		if not a.cond or a.cond(self.npc, self.player) then
 			list[#list+1] = { name=string.char(string.byte('a')+nb-1)..") "..a[1], answer=i, color=a.color}
+			list.chars[string.char(string.byte('a')+nb-1)] = #list
 			nb = nb + 1
 		end
 	end
 	self.list = list
+
+	self.text = self.chat:replace(self.chat:get(self.cur_id).text)
+
 	return true
-end
-
-function _M:drawDialog(s)
-	local h = 5
-	local lines = self.chat:replace(self.chat:get(self.cur_id).text):splitLines(self.iw - 10, self.font)
-	local r, g, b
-	for i = 1, #lines do
-		r, g, b = s:drawColorStringBlended(self.font, lines[i], 5, 2 + h, r, g, b)
-		h = h + self.font:lineSkip()
-	end
-
-	self:drawWBorder(s, 5, h + 0.5 * self.font:lineSkip(), self.iw - 10)
-
-	-- Answers
-	self.start_answer_y = h + 1.5 * self.font:lineSkip()
-	self:drawSelectionList(s, 5, h + 1.5 * self.font:lineSkip(), self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, self.iw - 10)
-	self.changed = false
 end

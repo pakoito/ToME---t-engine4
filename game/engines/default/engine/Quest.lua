@@ -27,6 +27,13 @@ COMPLETED = 1
 DONE = 100
 FAILED = 101
 
+status_text = {
+	[PENDING] = "active",
+	[COMPLETED] = "completed",
+	[DONE] = "done",
+	[FAILED] = "failed",
+}
+
 function _M:init(q, who)
 	for k, e in pairs(q) do
 		self[k] = e

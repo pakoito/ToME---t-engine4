@@ -18,9 +18,12 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc)
 	self.action = action
@@ -29,67 +32,69 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.actor_inven = actor_inven
 	self.store_filter = store_filter
 	self.actor_filter = actor_filter
-	engine.Dialog.init(self, title or "Store", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	Dialog.init(self, title or "Store", game.w * 0.8, game.h * 0.8)
 
 	self:generateList()
 
-	self.list = self.store_list
-	self.sel = 1
-	self.scroll = 1
---	self.max = math.floor((self.ih * 0.8 - 5) / self.font_h) - 1
+	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
+		{name="", width=4, display_prop="char", sort="id"},
+		{name="Inventory", width=68, display_prop="name", sort="name"},
+		{name="Category", width=20, display_prop="cat", sort="cat"},
+		{name="Price", width=8, display_prop="cost", sort="cost"},
+	}, list=self.actor_list, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
 
-	self:keyCommands({
+	self.c_store = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
+		{name="", width=4, display_prop="char", sort="id"},
+		{name="Store", width=68, display_prop="name"},
+		{name="Category", width=20, display_prop="cat"},
+		{name="Price", width=8, display_prop="cost", sort="cost"},
+	}, list=self.store_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	self.c_desc = Textzone.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true, text=""}
+
+	self:loadUI{
+		{left=0, top=0, ui=self.c_store},
+		{right=0, top=0, ui=self.c_inven},
+		{left=0, bottom=0, ui=self.c_desc},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - self.c_desc.h - 10}},
+		{left=5, bottom=self.c_desc.h, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+	}
+	self:setFocus(self.c_inven)
+	self:setupUI()
+
+	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if c:find("^[a-z]$") then
-				self.sel = util.bound(1 + string.byte(c) - string.byte('a'), 1, #self.list)
-				self:use()
+			local list
+			if self.focus_ui and self.focus_ui.ui == self.c_inven then list = self.c_inven.list
+			elseif self.focus_ui and self.focus_ui.ui == self.c_equip then list = self.c_equip.list
+			end
+			if list and list.chars[c] then
+				self:use(list[list.chars[c]])
 			end
 		end,
-	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_LEFT = function() self.list = self.store_list self.sel = util.bound(self.sel, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_RIGHT = function() self.list = self.actor_list self.sel = util.bound(self.sel, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		ACCEPT = function() self:use() end,
+	}
+	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=self.iw, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			if tx < self.iw / 2 then
-				self.list = self.store_list
-			else
-				self.list = self.actor_list
-			end
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			self.changed = true
-
-			if button == "left" and event == "button" then self:use()
-			elseif button == "right" and event == "button" then
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
 	}
 end
 
 function _M:updateStore()
 	self:generateList()
-	self.list = #self.store_list > 0 and self.store_list or self.actor_list
-	self.sel = util.bound(self.sel, 1, #self.list)
-	self.scroll = util.scroll(self.sel, self.scroll, self.max)
-	self.changed = true
 end
 
-function _M:use()
-	if self.list[self.sel] then
-		if self.list == self.store_list then
-			self.action("buy", self.list[self.sel].object, self.list[self.sel].item)
+function _M:select(item)
+	if item then
+		self.uis[3].ui = item.zone
+	end
+end
+
+function _M:use(item)
+	if item and item.object then
+		if self.focus_ui and self.focus_ui.ui == self.c_store then
+			self.action("buy", item.object, item.item)
 			self:updateStore()
 		else
-			self.action("sell", self.list[self.sel].object, self.list[self.sel].item)
+			self.action("sell", item.object, item.item)
 			self:updateStore()
 		end
 	end
@@ -98,12 +103,16 @@ end
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
+	list.chars = {}
 	local i = 0
 	self.max_h = 0
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item }
+			local char = string.char(string.byte('a') + i)
+			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
+			list.chars[char] = #list
 			i = i + 1
 		end
 	end
@@ -111,35 +120,24 @@ function _M:generateList()
 
 	-- Makes up the list
 	local list = {}
+	list.chars = {}
 	local i = 0
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
-			list[#list+1] = { name=string.char(string.byte('a') + i)..") "..o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item }
+			local char = string.char(string.byte('a') + i)
+			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
+			list.chars[char] = #list
 			i = i + 1
 		end
 	end
 	self.actor_list = list
-	self.max = math.floor((self.ih - 5) / self.font_h) - self.max_h
-end
 
-function _M:drawDialog(s)
-	if self.list[self.sel] then
-		lines = self.desc(self.list == self.store_list and "buy" or "sell", self.list[self.sel].object):splitLines(self.iw - 10, self.font)
-	else
-		lines = {}
+	if self.c_inven then
+		self.c_inven.list = self.actor_list
+		self.c_store.list = self.store_list
+		self.c_inven:generate()
+		self.c_store:generate()
 	end
-
-	local sh = self.ih - 4 - self.max_h * self.font:lineSkip()
-	h = sh
-	self:drawWBorder(s, 3, sh, self.iw - 6)
-	for i = 1, #lines do
-		s:drawColorStringBlended(self.font, lines[i], 5, 2 + h)
-		h = h + self.font:lineSkip()
-	end
-
-	self:drawSelectionList(s, 2, 5, self.font_h, self.store_list, self.list == self.store_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self:drawHBorder(s, self.iw / 2, 2, sh - 4)
-	self:drawSelectionList(s, self.iw / 2 + 5, 5, self.font_h, self.actor_list, self.list == self.actor_list and self.sel or -1, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self.changed = false
 end

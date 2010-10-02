@@ -30,6 +30,7 @@ function _M:init(t)
 	self.h = assert(t.height, "no list height")
 	self.scrollbar = t.scrollbar
 	self.no_color_bleed = t.no_color_bleed
+	self.auto_height = t.auto_height
 
 	Base.init(self, t)
 end
@@ -41,11 +42,14 @@ function _M:generate()
 	local list = self.text:splitLines(self.w - 10, self.font)
 	self.scroll = 1
 	self.max = #list
-	self.max_display = math.floor(self.h / self.font_h)
-	self.can_focus = self.scrollbar and (self.max_display < self.max)
 
 	local fw, fh = self.w, self.font_h
 	self.fw, self.fh = fw, fh
+
+	if self.auto_height then self.h = self.fh * #list end
+
+	self.max_display = math.floor(self.h / self.fh)
+	self.can_focus = self.scrollbar and (self.max_display < self.max)
 
 	-- Draw the list items
 	self.list = {}
