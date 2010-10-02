@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 
 --- Savefile code
 -- Creates a savefile pipe, savefiles requests can be pushed into it, it will execute them

@@ -27,7 +27,9 @@ module(..., package.seeall, class.inherit(Base, Focusable))
 function _M:init(t)
 	self.list = assert(t.list, "no list list")
 	self.w = assert(t.width, "no list width")
-	self.h = assert(t.height, "no list height")
+	self.h = t.height
+	self.nb_items = t.nb_items
+	assert(self.h or self.nb_items, "no list height/nb_items")
 	self.fct = t.fct
 	self.display_prop = t.display_prop or "name"
 	self.scrollbar = t.scrollbar
@@ -36,6 +38,9 @@ function _M:init(t)
 end
 
 function _M:generate()
+	self.mouse:reset()
+	self.key:reset()
+
 	self.sel = 1
 	self.scroll = 1
 	self.max = #self.list
@@ -49,6 +54,8 @@ function _M:generate()
 
 	local fw, fh = self.w, ls_h
 	self.fw, self.fh = fw, fh
+
+	if not self.h then self.h = self.nb_items * fh end
 
 	self.max_display = math.floor(self.h / fh)
 
@@ -135,6 +142,7 @@ function _M:display(x, y)
 	local max = math.min(self.scroll + self.max_display - 1, self.max)
 	for i = self.scroll, max do
 		local item = self.list[i]
+		if not item then break end
 		if self.sel == i then
 			if self.focused then
 				item._stex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)

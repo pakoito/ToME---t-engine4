@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 
 --- Handles player running
 -- This should work for running inside tunnel, alongside walls, in open spaces.<br/>

@@ -84,6 +84,12 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 	return handled
 end
 
+--- Reset all binds
+function _M:reset()
+	self.commands = {}
+	self.on_input = false
+end
+
 --- Adds a key/command combinaison
 -- @param sym the key to handle
 -- @param mods a table with the mod keys needed, i.e: {"ctrl", "alt"}

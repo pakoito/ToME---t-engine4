@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -31,21 +32,42 @@ function _M:init(title, actor, filter, action)
 
 	Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
-	self:generateList(true)
+	self:generateList()
 
-	self.c_desc = Textzone.new{width=self.iw, height=self.max_h*self.font_h, text=""}
+	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
+		{name="", width=4, display_prop="char", sort="id"},
+		{name="Inventory", width=68, display_prop="name", sort="name"},
+		{name="Category", width=20, display_prop="cat", sort="cat"},
+		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
+	}, list=self.inven_list, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
+		{name="", width=4, display_prop="char"},
+		{name="Equipment", width=68, display_prop="name"},
+		{name="Category", width=20, display_prop="cat"},
+		{name="Enc.", width=8, display_prop="encumberance"},
+	}, list=self.equip_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	self.c_desc = Textzone.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true, text=""}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_equip},
 		{right=0, top=0, ui=self.c_inven},
-		{left=3, bottom=3, ui=self.c_desc},
+		{left=0, bottom=0, ui=self.c_desc},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - self.c_desc.h - 10}},
+		{left=5, bottom=self.c_desc.h, ui=Separator.new{dir="vertical", size=self.iw - 10}},
 	}
+	self:setFocus(self.c_inven)
+	self:setupUI()
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if self.list.chars[c] then
-				self.sel = self.list.chars[c]
-				self:use()
+			local list
+			if self.focus_ui and self.focus_ui.ui == self.c_inven then list = self.c_inven.list
+			elseif self.focus_ui and self.focus_ui.ui == self.c_equip then list = self.c_equip.list
+			end
+			if list and list.chars[c] then
+				self:use(list[list.chars[c]])
 			end
 		end,
 	}
@@ -123,7 +145,7 @@ function _M:use(item)
 	end
 end
 
-function _M:generateList(first)
+function _M:generateList()
 	-- Makes up the list
 	self.equip_list = {}
 	local list = self.equip_list
@@ -133,7 +155,7 @@ function _M:generateList(first)
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
 			local zone = Textzone.new{width=self.iw, height=self.ih, text=self.actor.inven_def[inven_id].description}
-			list[#list+1] = { zone=zone, id=#list+1, char="", name=self.actor.inven_def[inven_id].name, color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="" }
+			list[#list+1] = { zone=zone, id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="" }
 			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
@@ -168,24 +190,11 @@ function _M:generateList(first)
 	end
 	list.chars = chars
 
-	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
-		{name="", width=7, display_prop="id", sort="id"},
-		{name="", width=4, display_prop="char", sort="char"},
-		{name="Inventory", width=61, display_prop="name", sort="name"},
-		{name="Category", width=20, display_prop="cat", sort="cat"},
-		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
-	}, list=self.inven_list, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
-
-	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
-		{name="", width=4, display_prop="char", sort="char"},
-		{name="Equipment", width=68, display_prop="name"},
-		{name="Category", width=20, display_prop="cat"},
-		{name="Enc.", width=8, display_prop="encumberance"},
-	}, list=self.equip_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
-
-	if not first then
-		self.uis[1].ui = self.c_equip
-		self.uis[2].ui = self.c_inven
+	if self.c_inven then
+		self.c_inven.list = self.inven_list
+		self.c_equip.list = self.equip_list
+		self.c_inven:generate()
+		self.c_equip:generate()
 	end
 end
 

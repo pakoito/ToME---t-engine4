@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 
 --- Savefile code
 -- T-Engine4 savefiles are direct serialization of in game objects<br/>

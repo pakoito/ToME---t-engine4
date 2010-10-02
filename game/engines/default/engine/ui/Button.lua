@@ -32,6 +32,9 @@ function _M:init(t)
 end
 
 function _M:generate()
+	self.mouse:reset()
+	self.key:reset()
+
 	local ls, ls_w, ls_h = self:getImage("ui/button-left-sel.png")
 	local ms, ms_w, ms_h = self:getImage("ui/button-middle-sel.png")
 	local rs, rs_w, rs_h = self:getImage("ui/button-right-sel.png")

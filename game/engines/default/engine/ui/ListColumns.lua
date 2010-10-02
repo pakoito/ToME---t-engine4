@@ -28,7 +28,9 @@ function _M:init(t)
 	self.list = assert(t.list, "no list list")
 	self.columns = assert(t.columns, "no list columns")
 	self.w = assert(t.width, "no list width")
-	self.h = assert(t.height, "no list height")
+	self.h = t.height
+	self.nb_items = t.nb_items
+	assert(self.h or self.nb_items, "no list height/nb_items")
 	self.sortable = t.sortable
 	self.scrollbar = t.scrollbar
 	self.fct = t.fct
@@ -44,6 +46,9 @@ function _M:init(t)
 end
 
 function _M:generate()
+	self.mouse:reset()
+	self.key:reset()
+
 	self.sel = 1
 	self.scroll = 1
 	self.max = #self.list
@@ -66,6 +71,8 @@ function _M:generate()
 
 	local fh = ls_h
 	self.fh = fh
+
+	if not self.h then self.h = self.nb_items * fh end
 
 	self.max_display = math.floor(self.h / fh) - 1
 
@@ -108,6 +115,7 @@ function _M:generate()
 		-- Draw the list items
 		for i, item in ipairs(self.list) do
 			local text = tostring(item[col.display_prop or col.sort])
+			local color = item.color or {255,255,255}
 			local ss = core.display.newSurface(fw, fh)
 			local sus = core.display.newSurface(fw, fh)
 			local s = core.display.newSurface(fw, fh)
@@ -115,15 +123,15 @@ function _M:generate()
 			ss:merge(ls, 0, 0)
 			for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
 			ss:merge(rs, fw - rs_w, 0)
-			ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+			ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
 
 			s:erase(0, 0, 0)
-			s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+			s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
 
 			sus:merge(l, 0, 0)
 			for i = l_w, fw - r_w do sus:merge(m, i, 0) end
 			sus:merge(r, fw - r_w, 0)
-			sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+			sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
 
 			item._tex = item._tex or {}
 			item._stex = item._stex or {}
@@ -226,6 +234,7 @@ function _M:display(x, y)
 		local max = math.min(self.scroll + self.max_display - 1, self.max)
 		for i = self.scroll, max do
 			local item = self.list[i]
+			if not item then break end
 			if self.sel == i then
 				if self.focused then
 					item._stex[j][1]:toScreenFull(x, y, col.fw, self.fh, item._stex[j][2], item._stex[j][3])

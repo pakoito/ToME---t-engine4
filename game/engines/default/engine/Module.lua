@@ -19,7 +19,7 @@
 
 require "engine.class"
 local lanes = require "lanes"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 local Savefile = require "engine.Savefile"
 
 --- Handles dialog windows
@@ -141,7 +141,7 @@ end
 -- @param name the savefile name
 -- @param new_game true if the game must be created (aka new character)
 function _M:instanciate(mod, name, new_game)
-	local popup = Dialog:simplePopup("Loading module", "Please wait while loading the game module...")
+	local popup = Dialog:simplePopup("Loading module", "Please wait while loading the game module...", nil, true)
 	popup.__showup = nil
 	core.display.forceRedraw()
 

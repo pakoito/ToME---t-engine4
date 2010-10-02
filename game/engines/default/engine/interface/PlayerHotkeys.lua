@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 
 --- Handles player hotkey interface
 -- This provides methods to bind and manage hotkeys as well as using them<br/>

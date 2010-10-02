@@ -50,7 +50,7 @@ on_status_change = function(self, who, status, sub)
 		local money = math.max(0, (20 - self.lumberjacks_died) * 1.2)
 		if money > 0 then
 			who:incMoney(money)
-			require("engine.Dialog"):simplePopup("Thanks", ("The remaining lumberjacks collect some gold to thanks you (%0.2f)."):format(money))
+			require("engine.ui.Dialog"):simplePopup("Thanks", ("The remaining lumberjacks collect some gold to thanks you (%0.2f)."):format(money))
 		end
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		game:setAllowedBuild("afflicted")

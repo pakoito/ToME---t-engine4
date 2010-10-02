@@ -208,6 +208,12 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 	return engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
 end
 
+--- Reset all binds
+function _M:reset()
+	self.virtuals = {}
+	engine.KeyCommand.reset(self)
+end
+
 --- Force a key to trigger
 function _M:triggerVirtual(virtual)
 	if not self.virtuals[virtual] then return end

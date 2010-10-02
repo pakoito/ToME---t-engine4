@@ -143,7 +143,7 @@ newEntity{
 		game.player.energy.value = game.energy_to_act
 		game.paused = true
 		game:changeLevel(1, zone)
-		engine.Dialog:simplePopup("Ambush!", "You have been ambushed by a patrol of orcs!")
+		engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed by a patrol of orcs!")
 		return true
 	end,
 }

@@ -36,6 +36,7 @@ function _M:simplePopup(title, text, fct, no_leave)
 		d:loadUI{no_reset=true, {hcenter = -close.w / 2, bottom = 3, ui=close}}
 		d:setFocus(close)
 	end
+	d:setupUI()
 	game:registerDialog(d)
 	return d
 end
@@ -51,6 +52,7 @@ function _M:simpleLongPopup(title, text, w, fct, no_leave)
 		d:loadUI{no_reset=true, {hcenter = -close.w / 2, bottom = 3, ui=close}}
 		d:setFocus(close)
 	end
+	d:setupUI()
 	game:registerDialog(d)
 	return d
 end
@@ -70,6 +72,7 @@ function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 		{right = 3, bottom = 3, ui=cancel},
 	}
 	d:setFocus(ok)
+	d:setupUI()
 
 	game:registerDialog(d)
 	return d
@@ -89,6 +92,7 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
 		{right = 3, bottom = 3, ui=cancel},
 	}
 	d:setFocus(ok)
+	d:setupUI()
 
 	game:registerDialog(d)
 	return d
@@ -108,19 +112,23 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 	self.focus_ui = nil
 	self.focus_ui_id = 0
 
+	self.force_x = x
+	self.force_y = y
+
 	Base.init(self, {}, true)
 
-	self:resize(w, h, x, y, alpha)
+	self:resize(w, h, true)
 end
 
-function _M:resize(w, h, x, y, alpha)
+function _M:resize(w, h, nogen)
 	local gamew, gameh = core.display.size()
 	self.w, self.h = math.floor(w), math.floor(h)
-	self.display_x = math.floor(x or (gamew - self.w) / 2)
-	self.display_y = math.floor(y or (gameh - self.h) / 2)
+	self.display_x = math.floor(self.force_x or (gamew - self.w) / 2)
+	self.display_y = math.floor(self.force_x or (gameh - self.h) / 2)
 	self.ix, self.iy = 5, 22 + 3
 	self.iw, self.ih = w - 2 * 5, h - 8 - 22 - 3
-	self:generate()
+
+	if not nogen then self:generate() end
 end
 
 function _M:generate()
@@ -179,6 +187,43 @@ function _M:loadUI(t)
 	for i, ui in ipairs(t) do
 		self.uis[#self.uis+1] = ui
 
+		if not self.focus_ui and ui.ui.can_focus then
+			self:setFocus(i)
+		elseif ui.ui.can_focus then
+			ui.ui:setFocus(false)
+		end
+	end
+end
+
+function _M:setupUI(resizex, resizey)
+	local mw, mh = nil, nil
+
+--	resizex, resizey = true, true
+	if resizex or resizey then
+		mw, mh = 0, 0
+		local addw, addh = 0, 0
+
+		for i, ui in ipairs(self.uis) do
+			if ui.top then mh = math.max(mh, ui.top + ui.ui.h)
+			elseif ui.bottom then addh = math.max(addh, ui.bottom + ui.ui.h)
+			end
+
+--		print("ui", ui.left, ui.right, ui.ui.w)
+			if ui.left then mw = math.max(mw, ui.left + ui.ui.w)
+			elseif ui.right then addw = math.max(addw, ui.right + ui.ui.w)
+			end
+		end
+--		print("===", mw, addw)
+		mw = mw + addw + 5 * 2
+		mh = mh + addh + 5 + 22 + 3
+--		print("===", mw, addw)
+
+		self:resize(resizex and mw or self.w, resizey and mh or self.h)
+	else
+		self:resize(self.w, self.h)
+	end
+
+	for i, ui in ipairs(self.uis) do
 		local ux, uy = self.ix, self.iy
 
 		if ui.top then uy = uy + ui.top
@@ -193,12 +238,6 @@ function _M:loadUI(t)
 		ui.y = uy
 		ui.ui.mouse.delegate_offset_x = ux
 		ui.ui.mouse.delegate_offset_y = uy
-
-		if not self.focus_ui and ui.ui.can_focus then
-			self:setFocus(i)
-		elseif ui.ui.can_focus then
-			ui.ui:setFocus(false)
-		end
 	end
 end
 
@@ -245,7 +284,6 @@ end
 
 function _M:toScreen(x, y)
 	-- Draw with only the texture
---[[
 	if self.__showup then
 		local eff = self.__showup_effect or "pop"
 		if eff == "overpop" then
@@ -254,21 +292,20 @@ function _M:toScreen(x, y)
 				zoom = (9 - (self.__showup - 9)) / 7 - 1
 				zoom = 1 + zoom * 0.5
 			end
-			self.texture:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.texture_w * zoom, self.texture_h * zoom)
+			self.tex:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.tex_w * zoom, self.tex_h * zoom)
 			self.__showup = self.__showup + 1
 			if self.__showup >= 11 then self.__showup = nil end
 		else
 			local zoom = self.__showup / 7
-			self.texture:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.texture_w * zoom, self.texture_h * zoom)
+			self.tex:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.tex_w * zoom, self.tex_h * zoom)
 			self.__showup = self.__showup + 1
 			if self.__showup >= 7 then self.__showup = nil end
 		end
 	else
-]]
 		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
 		for i = 1, #self.uis do
 			local ui = self.uis[i]
 			ui.ui:display(x + ui.x, y + ui.y)
 		end
---	end
+	end
 end

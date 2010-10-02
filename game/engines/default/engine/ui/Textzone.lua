@@ -29,11 +29,15 @@ function _M:init(t)
 	self.w = assert(t.width, "no list width")
 	self.h = assert(t.height, "no list height")
 	self.scrollbar = t.scrollbar
+	self.no_color_bleed = t.no_color_bleed
 
 	Base.init(self, t)
 end
 
 function _M:generate()
+	self.mouse:reset()
+	self.key:reset()
+
 	local list = self.text:splitLines(self.w - 10, self.font)
 	self.scroll = 1
 	self.max = #list
@@ -49,6 +53,7 @@ function _M:generate()
 	for i, l in ipairs(list) do
 		local s = core.display.newSurface(fw, fh)
 		r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
+		if self.no_color_bleed then r, g, b = 255, 255, 255 end
 
 		local item = {}
 		item._tex, item._tex_w, item._tex_h = s:glTexture()
@@ -86,6 +91,7 @@ function _M:display(x, y)
 	local max = math.min(self.scroll + self.max_display - 1, self.max)
 	for i = self.scroll, max do
 		local item = self.list[i]
+		if not item then break end
 		item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
 		y = y + self.fh
 	end

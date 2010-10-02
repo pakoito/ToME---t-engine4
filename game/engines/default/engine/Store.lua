@@ -19,7 +19,7 @@
 
 require "engine.class"
 local Entity = require "engine.Entity"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 local Inventory = require "engine.interface.ActorInventory"
 local ShowStore = require "engine.dialogs.ShowStore"
 local GetQuantity = require "engine.dialogs.GetQuantity"

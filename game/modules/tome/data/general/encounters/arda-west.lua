@@ -61,7 +61,7 @@ newEntity{
 	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)
 		who:runStop()
-		engine.Dialog:yesnoPopup("Encounter", "You find an hidden trap door, and hear cries for help from within... Enter ?", function(ok)
+		engine.ui.Dialog:yesnoPopup("Encounter", "You find an hidden trap door, and hear cries for help from within...", function(ok)
 			if not ok then
 				game.logPlayer(who, "#LIGHT_BLUE#You carefully get away without making a sound.")
 			else
@@ -116,7 +116,7 @@ newEntity{
 				game.logPlayer(who, "#LIGHT_RED#As you enter you notice the trap door has no visible handle on the inside. You are stuck here!")
 				who:grantQuest("lost-merchant")
 			end
-		end)
+		end, "Enter then tunnels", "Leave carefully")
 		return true
 	end,
 }
@@ -215,7 +215,7 @@ newEntity{
 			trap_list = {},
 		})
 		game:changeLevel(1, zone)
-		engine.Dialog:simplePopup("Ambush!", "You have been ambushed by bears!")
+		engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed by bears!")
 		return true
 	end,
 }
@@ -252,7 +252,7 @@ newEntity{
 			trap_list = {},
 		})
 		game:changeLevel(1, zone)
-		engine.Dialog:simplePopup("Ambush!", "You have been ambushed by a party of bandits!")
+		engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed by a party of bandits!")
 		return true
 	end,
 }
@@ -289,7 +289,7 @@ newEntity{
 			trap_list = {},
 		})
 		game:changeLevel(1, zone)
-		engine.Dialog:simplePopup("Ambush!", "You setp in a nest of snakes!")
+		engine.ui.Dialog:simplePopup("Ambush!", "You setp in a nest of snakes!")
 		return true
 	end,
 }
@@ -327,7 +327,7 @@ newEntity{
 			trap_list = {},
 		})
 		game:changeLevel(1, zone)
-		engine.Dialog:simplePopup("Ambush!", "You step in a nest of ants!")
+		engine.ui.Dialog:simplePopup("Ambush!", "You step in a nest of ants!")
 		return true
 	end,
 }
