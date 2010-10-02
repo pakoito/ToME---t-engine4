@@ -18,28 +18,58 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
+
 local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor_dup = actor:clone()
 	self.unused_stats = self.actor.unused_stats
-	engine.Dialog.init(self, "Stats Levelup: "..actor.name, 500, 300)
+	Dialog.init(self, "Stats Levelup: "..actor.name, 500, 300)
 
 	self.sel = 1
 
-	self:keyCommands(nil, {
-		MOVE_UP = function() self.changed = true; self.sel = util.boundWrap(self.sel - 1, 1, 6) end,
-		MOVE_DOWN = function() self.changed = true; self.sel = util.boundWrap(self.sel + 1, 1, 6) end,
-		MOVE_LEFT = function() self.changed = true; self:incStat(-1) end,
-		MOVE_RIGHT = function() self.changed = true; self:incStat(1) end,
-		ACCEPT = "EXIT",
+	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
+Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to increase stat; #00FF00#left key#FFFFFF# to decrease a stat.
+Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF# to decrease a stat.
+]]}
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
+
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, columns={
+		{name="Stat", width=70, display_prop="name"},
+		{name="Value", width=30, display_prop="val"},
+	}, list={
+		{name="Strength", val=self.actor:getStr(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_STR].description}},
+		{name="Dexterity", val=self.actor:getDex(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_DEX].description}},
+		{name="Magic", val=self.actor:getMag(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_MAG].description}},
+		{name="Willpower", val=self.actor:getWil(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_WIL].description}},
+		{name="Cunning", val=self.actor:getCun(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_CUN].description}},
+		{name="Constitution", val=self.actor:getCon(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_CON].description}},
+	}, fct=function(item, _, v)
+		self:incStat(v and 1 or -1)
+	end, select=function(item, sel) self.sel = sel if self.uis[2] then self.uis[2].ui = item.zone end end}
+
+	self:loadUI{
+		{left=0, top=0, ui=self.c_list},
+		{right=0, top=self.c_tut.h + 20, ui=self.c_desc},
+		{right=0, top=0, ui=self.c_tut},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+	}
+	self:setFocus(self.c_list)
+	self:setupUI()
+
+	self:update()
+
+	self.key:addBinds{
 		EXIT = function()
 			game:unregisterDialog(self)
-
 			self:finish()
 
 			-- if talents to spend, do it now
@@ -48,20 +78,6 @@ function _M:init(actor, on_finish)
 				game:registerDialog(dt)
 			end
 		end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then self.key:triggerVirtual("EXIT") end end},
-		{ x=2, y=25, w=130, h=self.font_h*6, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			self.changed = true
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = 1 + math.floor(ty / self.font_h)
-			end
-			if button == "left" and event == "button" then self:incStat(1)
-			elseif button == "right" and event == "button" then self:incStat(-1)
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
 	}
 end
 
@@ -109,8 +125,22 @@ function _M:incStat(v)
 		end
 	end
 
-	self.actor:incStat(self.sel, v)
+	local sel = self.sel
+	self.actor:incStat(sel, v)
 	self.actor.unused_stats = self.actor.unused_stats - v
+	self.c_list.list[sel].val = self.actor:getStat(sel)
+	self.c_list:generate()
+	self.c_list.sel = sel
+	self.c_list:onSelect()
+	self:update()
+end
+
+function _M:update()
+	self.c_list.key:addBinds{
+		ACCEPT = function() self.key:triggerVirtual("EXIT") end,
+		MOVE_LEFT = function() self:incStat(-1) end,
+		MOVE_RIGHT = function() self:incStat(1) end,
+	}
 end
 
 function _M:drawDialog(s)

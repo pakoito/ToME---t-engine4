@@ -33,6 +33,7 @@ function _M:init(t)
 	self.fct = t.fct
 	self.display_prop = t.display_prop or "name"
 	self.scrollbar = t.scrollbar
+	self.all_clicks = t.all_clicks
 
 	Base.init(self, t)
 end
@@ -103,7 +104,7 @@ function _M:generate()
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
-		if button == "left" and event == "button" then self:onUse() end
+		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button) end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
@@ -130,11 +131,11 @@ function _M:generate()
 	}
 end
 
-function _M:onUse()
+function _M:onUse(...)
 	local item = self.list[self.sel]
 	if not item then return end
 	if item.fct then item:fct()
-	else self.fct(item, self.sel) end
+	else self.fct(item, self.sel, ...) end
 end
 
 function _M:display(x, y)

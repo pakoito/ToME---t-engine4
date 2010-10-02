@@ -35,6 +35,7 @@ function _M:init(t)
 	self.scrollbar = t.scrollbar
 	self.fct = t.fct
 	self.select = t.select
+	self.all_clicks = t.all_clicks
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -154,7 +155,7 @@ function _M:generate()
 
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
 		self:onSelect()
-		if button == "left" and event == "button" then self:onUse() end
+		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button) end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
@@ -183,6 +184,8 @@ function _M:generate()
 			self:onSelect()
 		end,
 	}
+
+	self:onSelect()
 end
 
 function _M:onSelect()
