@@ -73,6 +73,7 @@ function _M:generate()
 
 	-- Draw the list items
 	for i, item in ipairs(self.list) do
+		local color = item.color or {255,255,255}
 		local text = item[self.display_prop]
 		local ss = core.display.newSurface(fw, fh)
 		local sus = core.display.newSurface(fw, fh)
@@ -81,15 +82,15 @@ function _M:generate()
 		ss:merge(ls, 0, 0)
 		for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
 		ss:merge(rs, fw - rs_w, 0)
-		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
 
 		s:erase(0, 0, 0)
-		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
 
 		sus:merge(l, 0, 0)
 		for i = l_w, fw - r_w do sus:merge(m, i, 0) end
 		sus:merge(r, fw - r_w, 0)
-		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - ls_w - rs_w)
+		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
 
 		item._tex, item._tex_w, item._tex_h = s:glTexture()
 		item._stex = ss:glTexture()

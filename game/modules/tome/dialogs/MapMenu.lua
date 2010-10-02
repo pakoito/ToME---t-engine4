@@ -18,57 +18,42 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
-local Savefile = require "engine.Savefile"
+require "engine.ui.Dialog"
+local List = require "engine.ui.List"
 local Map = require "engine.Map"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(engine.ui.Dialog))
 
 function _M:init(mx, my, tmx, tmy)
 	self.tmx, self.tmy = util.bound(tmx, 0, game.level.map.w - 1), util.bound(tmy, 0, game.level.map.h - 1)
 	if tmx == game.player.x and tmy == game.player.y then self.on_player = true end
 
-	self.font = core.display.newFont("/data/font/Vera.ttf", 12)
 	self:generateList()
 	self.__showup = false
 
-	mx = mx - (self.max + 20) / 2
-	my = my - 30
+	local name = "Actions"
+	local w = self.font_bold:size(name)
+	engine.ui.Dialog.init(self, name, 1, 100, mx, my)
 
-	engine.Dialog.init(self, "Actions", self.max + 20, self.maxh + 10 + 25, mx, my, nil, self.font)
+	local list = List.new{width=math.max(w, self.max) + 10, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 45) / self.font_h) - 1
-
-	self:keyCommands(nil, {
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		ACCEPT = function() self:use() end,
-		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=0, y=0, w=350, h=self.ih, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			self.changed = true
-
-			if button == "left" and event == "button" then self:use()
-			elseif button == "right" and event == "button" then
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
+	self:loadUI{
+		{left=0, top=0, ui=list},
 	}
+
+	self:setupUI(true, true, function(w, h)
+		self.force_x = mx - w / 2
+		self.force_y = my - (self.h - self.ih + list.fh / 3)
+	end)
+
+	self.key:addBinds{ EXIT = function() game:unregisterDialog(self) end, }
 end
 
-function _M:use()
-	if not self.list[self.sel] then return end
+function _M:use(item)
+	if not item then return end
 	game:unregisterDialog(self)
 
-	local act = self.list[self.sel].action
+	local act = item.action
 
 	if act == "move_to" then game.player:mouseMove(self.tmx, self.tmy)
 	elseif act == "change_level" then game.key:triggerVirtual("CHANGE_LEVEL")
@@ -79,7 +64,7 @@ function _M:use()
 	elseif act == "inventory" then game.key:triggerVirtual("SHOW_INVENTORY")
 	elseif act == "rest" then game.key:triggerVirtual("REST")
 	elseif act == "talent" then
-		local d = self.list[self.sel]
+		local d = item
 		if d.set_target then
 			local a = game.level.map(self.tmx, self.tmy, Map.ACTOR)
 			if not a then a = {x=self.tmx, y=self.tmy, __no_self=true} end
@@ -146,12 +131,4 @@ function _M:generateList()
 	end
 
 	self.list = list
-end
-
-function _M:drawDialog(s)
-	if #self.list == 0 then game:unregisterDialog(self) return end
-
-	local h = 2
-	self:drawSelectionList(s, 2, h, self.font_h, self.list, self.sel, "name")
-	self.changed = false
 end

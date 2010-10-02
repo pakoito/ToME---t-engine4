@@ -124,7 +124,7 @@ function _M:resize(w, h, nogen)
 	local gamew, gameh = core.display.size()
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.display_x = math.floor(self.force_x or (gamew - self.w) / 2)
-	self.display_y = math.floor(self.force_x or (gameh - self.h) / 2)
+	self.display_y = math.floor(self.force_y or (gameh - self.h) / 2)
 	self.ix, self.iy = 5, 22 + 3
 	self.iw, self.ih = w - 2 * 5, h - 8 - 22 - 3
 
@@ -195,7 +195,7 @@ function _M:loadUI(t)
 	end
 end
 
-function _M:setupUI(resizex, resizey)
+function _M:setupUI(resizex, resizey, on_resize)
 	local mw, mh = nil, nil
 
 --	resizex, resizey = true, true
@@ -218,8 +218,10 @@ function _M:setupUI(resizex, resizey)
 		mh = mh + addh + 5 + 22 + 3
 --		print("===", mw, addw)
 
+		if on_resize then on_resize(resizex and mw or self.w, resizey and mh or self.h) end
 		self:resize(resizex and mw or self.w, resizey and mh or self.h)
 	else
+		if on_resize then on_resize(self.w, self.h) end
 		self:resize(self.w, self.h)
 	end
 
