@@ -19,105 +19,47 @@
 
 require "engine.class"
 local Module = require "engine.Module"
-local Dialog = require "engine.Dialog"
-local Button = require "engine.Button"
-local TextBox = require "engine.TextBox"
+local Dialog = require "engine.ui.Dialog"
+local Button = require "engine.ui.Button"
+local Textbox = require "engine.ui.Textbox"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, text, min, max, action)
-	engine.Dialog.init(self, title, 320, 110)
-	self.text = text
+	self.action = action
 	self.min = min or 2
 	self.max = max or 25
-	self.action = action
-	self.name = ""
-	self:keyCommands({
-		_DELETE = function()
-			if self.controls[self.state] and self.controls[self.state].delete then
-				self.controls[self.state]:delete()
-			end
-			self.changed = true
-		end,
-		_TAB = function()
-			self.state = self:changeFocus(true)
-			self.changed = true
-		end,
-		_DOWN = function()
-			self.state = self:changeFocus(true)
-			self.changed = true
-		end,
-		_UP = function()
-			self.state = self:changeFocus(false)
-			self.changed = true
-		end,
-		_RIGHT = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveRight then
-				self.controls[self.state]:moveRight(1)
-			else
-				self.state = self:changeFocus(true)
-			end
-			self.changed = true
-		end,
-		_LEFT = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveLeft then
-				self.controls[self.state]:moveLeft(1)
-			else
-				self.state = self:changeFocus(false)
-			end
-			self.changed = true
-		end,
-		_BACKSPACE = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
-				self.controls[self.state]:backSpace()
-			end
-			self.changed = true
-		end,
-		__TEXTINPUT = function(c)
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
-				self.controls[self.state]:textInput(c)
-			end
-			self.changed = true
-		end,
-		_RETURN = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="Button" then
-				self.controls[self.state]:fct()
-			elseif self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
-				self:okclick()
-			end
-			self.changed = true
-		end,
-	}, {
-		EXIT = function()
-			game:unregisterDialog(self)
-		end
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-	}
 
-	self:addControl(TextBox.new({name="name",title="",min=self.min, max=self.max, x=10, y=5, w=290, h=30}, self, self.font, "name"))
-	self:addControl(Button.new("ok", "Ok", 50, 45, 50, 30, self, self.font, function() self:okclick() end))
-	self:addControl(Button.new("cancel", "Cancel", 220, 45, 50, 30, self, self.font, function() self:cancelclick() end))
-	self:focusControl("name")
+	Dialog.init(self, title, 320, 110)
+
+	local c_box = Textbox.new{title=text..": ", text="", chars=30, max_len=max, fct=function(text) self:okclick() end}
+	self.c_box = c_box
+	local ok = require("engine.ui.Button").new{text="Accept", fct=function() self:okclick() end}
+	local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}
+
+	self:loadUI{
+		{left=0, top=0, padding_h=10, ui=c_box},
+		{left=0, bottom=0, ui=ok},
+		{right=0, bottom=0, ui=cancel},
+	}
+	self:setFocus(c_box)
+	self:setupUI(true, true)
+
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
+	}
 end
 
 function _M:okclick()
-	local results = self:databind()
-	self.name = results.name
+	self.name = self.c_box.text
 	if self.name:len() >= self.min then
 		game:unregisterDialog(self)
 		self.action(self.name)
 	else
-		engine.Dialog:simplePopup("Error", "Must be between 2 and 25 characters.")
+		Dialog:simplePopup("Error", "Must be between 2 and 25 characters.")
 	end
 end
 
 function _M:cancelclick()
 	self.key:triggerVirtual("EXIT")
-end
-
-function _M:drawDialog(s, w, h)
-	self:drawControls(s)
-	self.changed = false
 end

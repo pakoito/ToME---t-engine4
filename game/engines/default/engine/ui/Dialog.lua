@@ -204,13 +204,13 @@ function _M:setupUI(resizex, resizey, on_resize)
 		local addw, addh = 0, 0
 
 		for i, ui in ipairs(self.uis) do
-			if ui.top then mh = math.max(mh, ui.top + ui.ui.h)
-			elseif ui.bottom then addh = math.max(addh, ui.bottom + ui.ui.h)
+			if ui.top then mh = math.max(mh, ui.top + ui.ui.h + (ui.padding_h or 0))
+			elseif ui.bottom then addh = math.max(addh, ui.bottom + ui.ui.h + (ui.padding_h or 0))
 			end
 
 --		print("ui", ui.left, ui.right, ui.ui.w)
-			if ui.left then mw = math.max(mw, ui.left + ui.ui.w)
-			elseif ui.right then addw = math.max(addw, ui.right + ui.ui.w)
+			if ui.left then mw = math.max(mw, ui.left + ui.ui.w + (ui.padding_w or 0))
+			elseif ui.right then addw = math.max(addw, ui.right + ui.ui.w + (ui.padding_w or 0))
 			end
 		end
 --		print("===", mw, addw)

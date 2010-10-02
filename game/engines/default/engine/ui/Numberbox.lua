@@ -25,15 +25,16 @@ local Focusable = require "engine.ui.Focusable"
 module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
-	self.title = assert(t.title, "no textbox title")
-	self.text = t.text or ""
-	self.hide = t.hide
-	self.max_len = t.max_len or 999
-	self.fct = assert(t.fct, "no textbox fct")
-	self.chars = assert(t.chars, "no textbox chars")
+	self.title = assert(t.title, "no numberbox title")
+	self.number = t.number or 0
+	self.min = t.min or 0
+	self.max = t.max or 9999999
+	self.fct = assert(t.fct, "no numberbox fct")
+	self.chars = assert(t.chars, "no numberbox chars")
 
 	self.tmp = {}
-	for i = 1, #self.text do self.tmp[#self.tmp+1] = self.text:sub(i, i) end
+	local text = tostring(self.number)
+	for i = 1, #text do self.tmp[#self.tmp+1] = text:sub(i, i) end
 	self.cursor = #self.tmp + 1
 	self.scroll = 1
 
@@ -92,6 +93,8 @@ function _M:generate()
 		end
 	end)
 	self.key:addBind("ACCEPT", function() self.fct(self.text) end)
+	self.key:addBind("MOVE_UP", function() self:updateText(1) end)
+	self.key:addBind("MOVE_DOWN", function() self:updateText(-1) end)
 	self.key:addBind("MOVE_LEFT", function() self.cursor = util.bound(self.cursor - 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
 	self.key:addBind("MOVE_RIGHT", function() self.cursor = util.bound(self.cursor + 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
 	self.key:addCommands{
@@ -120,7 +123,7 @@ function _M:generate()
 			self:updateText()
 		end,
 		__TEXTINPUT = function(c)
-			if #self.tmp < self.max_len then
+			if #self.tmp and (c == '0' or c == '1' or c == '2' or c == '3' or c == '4' or c == '5' or c == '6' or c == '7' or c == '8' or c == '9') then
 				table.insert(self.tmp, self.cursor, c)
 				self.cursor = self.cursor + 1
 				self.scroll = util.scroll(self.cursor, self.scroll, self.max_display)
@@ -133,13 +136,20 @@ function _M:generate()
 	self.stex = ss:glTexture()
 end
 
-function _M:updateText()
-	self.text = table.concat(self.tmp)
+function _M:updateText(v)
 	local text = ""
-	for i = self.scroll, self.scroll + self.max_display - 1 do
-		if not self.tmp[i] then break end
-		if not self.hide then text = text .. self.tmp[i]
-		else text = text .. "*" end
+	if not v then
+		self.number = tonumber(table.concat(self.tmp))
+		for i = self.scroll, self.scroll + self.max_display - 1 do
+			if not self.tmp[i] then break end
+			text = text .. self.tmp[i]
+		end
+	else
+		self.number = util.bound(self.number + v, self.min, self.max)
+		text = tostring(self.number)
+		self.tmp = {}
+		for i = 1, #text do self.tmp[#self.tmp+1] = text:sub(i, i) end
+		self.cursor = #self.tmp + 1
 	end
 
 	self.text_surf:erase(0, 0, 0, 0)
