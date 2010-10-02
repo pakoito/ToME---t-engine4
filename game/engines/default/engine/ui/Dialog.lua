@@ -33,10 +33,10 @@ function _M:simplePopup(title, text, fct, no_leave)
 	if not no_leave then
 		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
 		local close = require("engine.ui.Button").new{text="Close", fct=function() d.key:triggerVirtual("EXIT") end}
-		d:loadUI{no_reset=true, {hcenter = -close.w / 2, bottom = 3, ui=close}}
+		d:loadUI{no_reset=true, {hcenter = 0, bottom = 3, ui=close}}
 		d:setFocus(close)
 	end
-	d:setupUI()
+	d:setupUI(true, true)
 	game:registerDialog(d)
 	return d
 end
@@ -49,10 +49,10 @@ function _M:simpleLongPopup(title, text, w, fct, no_leave)
 	if not no_leave then
 		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
 		local close = require("engine.ui.Button").new{text="Close", fct=function() d.key:triggerVirtual("EXIT") end}
-		d:loadUI{no_reset=true, {hcenter = -close.w / 2, bottom = 3, ui=close}}
+		d:loadUI{no_reset=true, {hcenter = 0, bottom = 3, ui=close}}
 		d:setFocus(close)
 	end
-	d:setupUI()
+	d:setupUI(true, true)
 	game:registerDialog(d)
 	return d
 end
@@ -72,7 +72,7 @@ function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 		{right = 3, bottom = 3, ui=cancel},
 	}
 	d:setFocus(ok)
-	d:setupUI()
+	d:setupUI(true, true)
 
 	game:registerDialog(d)
 	return d
@@ -92,7 +92,7 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
 		{right = 3, bottom = 3, ui=cancel},
 	}
 	d:setFocus(ok)
-	d:setupUI()
+	d:setupUI(true, true)
 
 	game:registerDialog(d)
 	return d

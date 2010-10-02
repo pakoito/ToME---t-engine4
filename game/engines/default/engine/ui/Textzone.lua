@@ -39,7 +39,7 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local list = self.text:splitLines(self.w - 10, self.font)
+	local list = self.text:splitLines(self.w, self.font)
 	self.scroll = 1
 	self.max = #list
 

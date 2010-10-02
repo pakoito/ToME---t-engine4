@@ -66,7 +66,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		__TEXTINPUT = function(c)
 			local list
 			if self.focus_ui and self.focus_ui.ui == self.c_inven then list = self.c_inven.list
-			elseif self.focus_ui and self.focus_ui.ui == self.c_equip then list = self.c_equip.list
+			elseif self.focus_ui and self.focus_ui.ui == self.c_store then list = self.c_store.list
 			end
 			if list and list.chars[c] then
 				self:use(list[list.chars[c]])

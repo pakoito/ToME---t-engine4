@@ -145,6 +145,7 @@ function _M:updateText(v)
 			text = text .. self.tmp[i]
 		end
 	else
+		self.number = self.number or 0
 		self.number = util.bound(self.number + v, self.min, self.max)
 		text = tostring(self.number)
 		self.tmp = {}
