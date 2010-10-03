@@ -73,7 +73,10 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 			end
 		end,
 	}
+	self.c_tree.key:addBind("ACCEPT", function() self.key:triggerVirtual("EXIT") end)
 	self.key:addBinds{
+		MOVE_LEFT = function() local item=self.c_tree.list[self.c_tree.sel] self:treeSelect(item, self.c_tree.sel, "right") end,
+		MOVE_RIGHT = function() local item=self.c_tree.list[self.c_tree.sel] self:treeSelect(item, self.c_tree.sel, "left") end,
 		ACCEPT = "EXIT",
 		EXIT = function() game:unregisterDialog(self)
 			-- Achievements checks
@@ -86,22 +89,54 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	}
 end
 
+function _M:computeDeps(t)
+	local d = {}
+	self.talents_deps[t.id] = d
+
+	-- Check prerequisites
+	if rawget(t, "require") then
+		local req = t.require
+		if type(req) == "function" then req = req(self, t) end
+
+		if req.talent then
+			for _, tid in ipairs(req.talent) do
+				if type(tid) == "table" then
+					d[tid[1]] = true
+					print("Talent deps: ", t.id, "depends on", tid[1])
+				else
+					d[tid] = true
+					print("Talent deps: ", t.id, "depends on", tid)
+				end
+			end
+		end
+	end
+
+	-- Check number of talents
+	for id, nt in pairs(self.actor.talents_def) do
+		if nt.type[1] == t.type[1] then
+			d[id] = true
+			print("Talent deps: ", t.id, "same category as", id)
+		end
+	end
+end
+
 function _M:generateList()
 	self.actor.__show_special_talents = self.actor.__show_special_talents or {}
 
 	-- Makes up the list
 	local tree = {}
+	self.talents_deps = {}
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
 			local cat = tt.type:gsub("/.*", "")
 			local ttknown = self.actor:knowTalentType(tt.type)
 			local tshown = (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type])
 			local node = {
-				name="#{bold}#"..cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)).."#{normal}#",
+				name=function(item) return "#{bold}#"..cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)).."#{normal}#" end,
 				type=tt.type,
-				color=ttknown and {0,200,0} or {128,128,128},
+				color=function(item) return self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175} end,
 				shown = tshown,
-				status = ttknown and "#00C800#known#WHITE#" or "#00C800#0/1#WHITE#",
+				status = function(item) return self.actor:knowTalentType(item.type) and "#00C800#known#WHITE#" or "#00C800#0/1#WHITE#" end,
 				nodes = {},
 			}
 			tree[#tree+1] = node
@@ -111,24 +146,32 @@ function _M:generateList()
 			-- Find all talents of this school
 			for j, t in ipairs(tt.talents) do
 				if not t.hide or self.actor.__show_special_talents[t.id] then
+					self:computeDeps(t)
+
 					local typename = "class"
 					if t.generic then typename = "generic" end
 					list[#list+1] = {
+						__id=t.id,
 						name=t.name.." ("..typename..")",
 						talent=t.id,
-						color=not ttknown and {128,128,128},
+						_type=tt.type,
+						color=function(item) return self.actor:knowTalentType(item._type) and {255,255,255} or {175,175,175} end,
 					}
-					if self.actor:getTalentLevelRaw(t.id) == t.points then
-						if ttknown then
-							list[#list].status = "#LIGHT_GREEN#known#WHITE#"
+					list[#list].status = function(item)
+						local t = self.actor:getTalentFromId(item.talent)
+						local ttknown = self.actor:knowTalentType(item._type)
+						if self.actor:getTalentLevelRaw(t.id) == t.points then
+							if ttknown then
+								return "#LIGHT_GREEN#known#WHITE#"
+							else
+								return "#808080#known#WHITE#"
+							end
 						else
-							list[#list].status = "#808080#known#WHITE#"
-						end
-					else
-						if not self.actor:canLearnTalent(t) then
-							list[#list].status = (ttknown and "#FF0000#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
-						else
-							list[#list].status = (ttknown and "#WHITE#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
+							if not self.actor:canLearnTalent(t) then
+								return (ttknown and "#FF0000#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
+							else
+								return (ttknown and "#WHITE#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
+							end
 						end
 					end
 				end
@@ -164,13 +207,24 @@ function _M:finish()
 end
 
 function _M:treeSelect(item, sel, v)
+	if not item then return end
 	self:learn(v == "left" and true)
+	if item.nodes then
+		item.shown = (self.actor.__hidden_talent_types[item.type] == nil and self.actor:knowTalentType(item.type)) or (self.actor.__hidden_talent_types[item.type] ~= nil and not self.actor.__hidden_talent_types[item.type])
+		self.c_tree:drawItem(item)
+		for i, n in ipairs(item.nodes) do self.c_tree:drawItem(n) end
+	elseif item.talent then
+		for tid, _ in pairs(self.talents_deps[item.talent] or {}) do
+			local it = self.c_tree.items_by_key[tid]
+			if it then self.c_tree:drawItem(it) end
+		end
+	end
+	self.c_tree:outputList()
 end
 
 function _M:learn(v)
 	local item = self.c_tree.list[self.c_tree.sel]
 	if not item then return end
-	print("===learn", item.name, v)
 	if item.type then
 		self:learnType(item.type, v)
 	else
@@ -261,7 +315,6 @@ function _M:learnTalent(t_id, v)
 			end
 		end
 	end
-	self:generateList()
 end
 
 function _M:learnType(tt, v)
@@ -311,8 +364,6 @@ function _M:learnType(tt, v)
 			end
 		end
 	end
-
-	self:generateList()
 end
 
 function _M:drawDialog(s)

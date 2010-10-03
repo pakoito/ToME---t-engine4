@@ -33,16 +33,18 @@ function _M:init(t)
 	assert(self.h or self.nb_items, "no tree height/nb_items")
 	self.fct = t.fct
 	self.on_expand = t.on_expand
-	self.display_prop = t.display_prop or "name"
 	self.scrollbar = t.scrollbar
 	self.all_clicks = t.all_clicks
 	self.level_offset = t.level_offset or 12
+	self.key_prop = t.key_prop or "__id"
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
 	for j, col in ipairs(self.columns) do
 		col.width = w * col.width / 100
 	end
+
+	self.items_by_key = {}
 
 	Base.init(self, t)
 end
@@ -60,8 +62,8 @@ function _M:drawItem(item)
 	item.cols = {}
 	for i, col in ipairs(self.columns) do
 		local level = item.level
-		local color = item.color or {255,255,255}
-		local text = tostring(item[col.display_prop])
+		local color = util.getval(item.color, item) or {255,255,255}
+		local text = tostring(util.getval(item[col.display_prop], item))
 		local ss = core.display.newSurface(col.width, self.fh)
 		local sus = core.display.newSurface(col.width, self.fh)
 		local s = core.display.newSurface(col.width, self.fh)
@@ -96,6 +98,18 @@ function _M:drawItem(item)
 	end
 end
 
+function _M:drawTree()
+	local recurs recurs = function(list, level)
+		for i, item in ipairs(list) do
+			item.level = level
+			if item[self.key_prop] then self.items_by_key[item[self.key_prop]] = item end
+			self:drawItem(item)
+			if item.nodes then recurs(item.nodes, level+1) end
+		end
+	end
+	recurs(self.tree, 0)
+end
+
 function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
@@ -120,14 +134,7 @@ function _M:generate()
 	end
 
 	-- Draw the tree items
-	local recurs recurs = function(list, level)
-		for i, item in ipairs(list) do
-			item.level = level
-			self:drawItem(item)
-			if item.nodes then recurs(item.nodes, level+1) end
-		end
-	end
-	recurs(self.tree, 0)
+	self:drawTree()
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
@@ -142,7 +149,7 @@ function _M:generate()
 		end
 	end)
 	self.key:addBinds{
-		ACCEPT = function() self:onUse() end,
+		ACCEPT = function() self:onUse("left") end,
 		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
 		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
 	}
@@ -201,8 +208,8 @@ end
 function _M:onUse(...)
 	local item = self.list[self.sel]
 	if not item then return end
-	if item.fct then item.fct(self, item, self.sel, ...)
-	else self.fct(self, item, self.sel, ...) end
+	if item.fct then item.fct(item, self.sel, ...)
+	else self.fct(item, self.sel, ...) end
 end
 
 function _M:display(x, y)
