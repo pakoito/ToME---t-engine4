@@ -150,9 +150,9 @@ end
 function _M:display(x, y)
 	if self.focused then
 		self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+		self.cursor_tex:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.text_y, self.cursor_w, self.cursor_h, self.cursor_tex_w, self.cursor_tex_h)
 	else
 		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
 	end
 	self.text_tex:toScreenFull(x + self.text_x, y + self.text_y, self.fw, self.fh, self.text_tex_w, self.text_tex_h)
-	self.cursor_tex:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.text_y, self.cursor_w, self.cursor_h, self.cursor_tex_w, self.cursor_tex_h)
 end

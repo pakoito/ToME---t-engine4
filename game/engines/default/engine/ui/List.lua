@@ -134,7 +134,7 @@ end
 function _M:onUse(...)
 	local item = self.list[self.sel]
 	if not item then return end
-	if item.fct then item:fct()
+	if item.fct then item:fct(item, self.sel, ...)
 	else self.fct(item, self.sel, ...) end
 end
 

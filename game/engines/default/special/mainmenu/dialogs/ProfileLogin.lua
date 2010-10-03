@@ -18,103 +18,71 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
-local ButtonList = require "engine.ButtonList"
-local Button = require "engine.Button"
-local TextBox = require "engine.TextBox"
+local Dialog = require "engine.ui.Dialog"
+local Button = require "engine.ui.Button"
+local Textbox = require "engine.ui.Textbox"
+local Textzone = require "engine.ui.Textzone"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(dialogdef, profile_help_text)
-	engine.Dialog.init(self, "Online profile "..dialogdef.name, 500, dialogdef.justlogin and 450 or 550)
+	Dialog.init(self, "Online profile "..dialogdef.name, 500, 400)
 	self.profile_help_text = profile_help_text
 	self.dialogdef = dialogdef
 	self.alpha = 230
 	self.justlogin = dialogdef.justlogin
 
-	self.lines = self.profile_help_text:splitLines(self.iw - 60, self.font)
+	self.c_desc = Textzone.new{width=math.floor(self.iw - 10), auto_height=true, text=self.profile_help_text}
 
-	self:keyCommands({
-		_DELETE = function()
-			if self.controls[self.state] and self.controls[self.state].delete then
-				self.controls[self.state]:delete()
-			end
-		end,
-		_TAB = function()
-			self.state = self:changeFocus(true)
-		end,
-		_DOWN = function()
-			self.state = self:changeFocus(true)
-		end,
-		_UP = function()
-			self.state = self:changeFocus(false)
-		end,
-		_RIGHT = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveRight then
-				self.controls[self.state]:moveRight(1)
-			else
-				self.state = self:changeFocus(true)
-			end
-		end,
-		_LEFT = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].moveLeft then
-				self.controls[self.state]:moveLeft(1)
-			else
-				self.state = self:changeFocus(false)
-			end
-		end,
-		_BACKSPACE = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
-				self.controls[self.state]:backSpace()
-			end
-		end,
-		__TEXTINPUT = function(c)
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="TextBox" then
-				self.controls[self.state]:textInput(c)
-			end
-		end,
-		_RETURN = function()
-			if self.state ~= "" and self.controls[self.state] and self.controls[self.state].type=="Button" then
-				self.controls[self.state]:fct()
-			end
-		end,
-	}, {
-		EXIT = function()
-			game:unregisterDialog(self)
-			game:selectStepProfile()
-		end
-	})
-	self:setMouseHandling()
+	if self.justlogin then
+		self.c_login = Textbox.new{title="Login: ", text="", chars=30, max_len=20, fct=function(text) self:okclick() end}
+		self.c_pass = Textbox.new{title="Password: ", text="", chars=30, max_len=20, hide=true, fct=function(text) self:okclick() end}
+		local ok = require("engine.ui.Button").new{text="Login", fct=function() self:okclick() end}
+		local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}
 
-	local basey = #self.lines * self.font:lineSkip() + 25
-
-	self:addControl(TextBox.new({name="login",title="Login:",min=2, max=25, x=30, y=basey + 5, w=350, h=30}, self, self.font, "login name"))
-	self:addControl(TextBox.new({name="pass",title ="Password:",min=2, max=25, x=30, y=basey + 45, w=350, h=30, private=true}, self, self.font, "password"))
-	if not self.justlogin then
-		self:addControl(TextBox.new({name="email",title="Email Address:",min=2, max=25, x=30, y=basey + 85, w=350, h=30}, self, self.font, "email address"))
-		self:addControl(TextBox.new({name="name",title="Name:",min=2, max=25, x=30, y=basey + 125, w=350, h=30}, self, self.font, "name"))
-		self:addControl(Button.new("ok", "Ok", 50, basey + 165, 50, 30, self, self.font, function() self:okclick() end))
-		self:addControl(Button.new("cancel", "Cancel", 400, basey + 165, 50, 30, self, self.font, function() self:cancelclick() end))
-		self:resize(500, basey + 225)
+		self:loadUI{
+			{left=0, top=0, ui=self.c_desc},
+			{left=0, top=self.c_desc.h, ui=self.c_login},
+			{left=0, top=self.c_desc.h+self.c_login.h+5, ui=self.c_pass},
+			{left=0, bottom=0, ui=ok},
+			{right=0, bottom=0, ui=cancel},
+		}
+		self:setFocus(self.c_login)
 	else
-		self:addControl(Button.new("ok", "Ok", 50, basey + 85, 50, 30, self, self.font, function() self:okclick() end))
-		self:addControl(Button.new("cancel", "Cancel", 400, basey + 85, 50, 30, self, self.font, function() self:cancelclick() end))
-		self:resize(500, basey + 145)
+		self.c_login = Textbox.new{title="Login: ", text="", chars=30, max_len=20, fct=function(text) self:okclick() end}
+		self.c_pass = Textbox.new{title="Password: ", text="", chars=30, max_len=20, hide=true, fct=function(text) self:okclick() end}
+		self.c_email = Textbox.new{title="Email: ", text="", chars=30, max_len=60, fct=function(text) self:okclick() end}
+		self.c_name = Textbox.new{title="Name: ", text="", chars=30, max_len=60, fct=function(text) self:okclick() end}
+		local ok = require("engine.ui.Button").new{text="Create", fct=function() self:okclick() end}
+		local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}
+
+		self:loadUI{
+			{left=0, top=0, ui=self.c_desc},
+			{left=0, top=self.c_desc.h, ui=self.c_login},
+			{left=0, top=self.c_desc.h+self.c_login.h+5, ui=self.c_pass},
+			{left=0, top=self.c_desc.h+self.c_login.h+self.c_pass.h+10, ui=self.c_email},
+			{left=0, top=self.c_desc.h+self.c_login.h+self.c_pass.h+self.c_email.h+15, ui=self.c_name},
+			{left=0, bottom=0, ui=ok},
+			{right=0, bottom=0, ui=cancel},
+		}
+		self:setFocus(self.c_login)
 	end
-	self:focusControl("login")
+	self:setupUI(true, true)
+
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
+	}
 end
 
 
 function _M:okclick()
 	game:unregisterDialog(self)
-	local results = self:databind()
 	game:selectStepProfile()
-	game:createProfile(results)
+	game:createProfile({login=self.c_login.text, pass=self.c_pass.text, email=self.c_email and self.c_email.text, name=self.c_name and self.c_name.text})
 end
 
 function _M:cancelclick()
-	game:unregisterDialog(self)
-	game:selectStepProfile()
+	self.key:triggerVirtual("EXIT")
 end
 
 function _M:setMouseHandling()

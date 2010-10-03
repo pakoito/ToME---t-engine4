@@ -54,7 +54,7 @@ function _M:init(actor)
 end
 
 function _M:select(item)
-	if item then
+	if item and self.uis[2] then
 		self.uis[2].ui = item.zone
 	end
 end

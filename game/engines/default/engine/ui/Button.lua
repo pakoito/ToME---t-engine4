@@ -68,13 +68,14 @@ function _M:generate()
 
 	self.tex, self.tex_w, self.tex_h = s:glTexture()
 	self.stex = ss:glTexture()
-	self.w, self.h = fw, fh
+	self.rw, self.rh = fw, fh
+	self.w, self.h = fw+10, fh+10
 end
 
 function _M:display(x, y)
 	if self.focused then
-		self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+		self.stex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h)
 	else
-		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+		self.tex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h)
 	end
 end

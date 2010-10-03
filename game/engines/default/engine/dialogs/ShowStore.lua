@@ -83,7 +83,7 @@ function _M:updateStore()
 end
 
 function _M:select(item)
-	if item then
+	if item and self.uis[3] then
 		self.uis[3].ui = item.zone
 	end
 end

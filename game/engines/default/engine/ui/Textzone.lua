@@ -50,7 +50,11 @@ function _M:generate()
 	if self.auto_height then self.h = self.fh * #list end
 
 	self.max_display = math.floor(self.h / self.fh)
-	self.can_focus = self.scrollbar and (self.max_display < self.max)
+	self.can_focus = false
+	if self.scrollbar and (self.max_display < self.max) then
+		self.can_focus = true
+		print("====", self.can_focus, self.scrollbar, self.max_display, self.max)
+	end
 
 	-- Draw the list items
 	self.list = {}

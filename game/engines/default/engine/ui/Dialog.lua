@@ -169,8 +169,8 @@ function _M:generate()
 	self.key.receiveKey = function(_, ...) self:keyEvent(...) end
 	self.key:addCommand("_TAB", function(...) self.key:triggerVirtual("MOVE_DOWN") end)
 	self.key:addBinds{
-		MOVE_UP = function() self:setFocus(util.boundWrap(self.focus_ui_id - 1, 1, #self.uis)) end,
-		MOVE_DOWN = function() self:setFocus(util.boundWrap(self.focus_ui_id + 1, 1, #self.uis)) end,
+		MOVE_UP = function() self:moveFocus(-1) end,
+		MOVE_DOWN = function() self:moveFocus(1) end,
 		MOVE_LEFT = "MOVE_UP",
 		MOVE_RIGHT = "MOVE_DOWN",
 	}
@@ -258,6 +258,19 @@ function _M:setFocus(id)
 	self.focus_ui = ui
 	self.focus_ui_id = id
 	ui.ui:setFocus(true)
+end
+
+function _M:moveFocus(v)
+	local id = self.focus_ui_id
+	local start = id
+	id = util.boundWrap(id + v, 1, #self.uis)
+	while start ~= id do
+		if self.uis[id].ui.can_focus then
+			self:setFocus(id)
+			break
+		end
+		id = util.boundWrap(id + v, 1, #self.uis)
+	end
 end
 
 function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
