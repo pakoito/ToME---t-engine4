@@ -32,6 +32,7 @@ function _M:init(t)
 	self.nb_items = t.nb_items
 	assert(self.h or self.nb_items, "no tree height/nb_items")
 	self.fct = t.fct
+	self.on_expand = t.on_expand
 	self.display_prop = t.display_prop or "name"
 	self.scrollbar = t.scrollbar
 	self.all_clicks = t.all_clicks
@@ -134,7 +135,11 @@ function _M:generate()
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
-		if (self.all_clicks or button == "left") and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then self:onUse(button) end
+		if self.list[self.sel] and self.list[self.sel].nodes and bx <= plus_w and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then
+			self:treeExpand(nil)
+		else
+			if (self.all_clicks or button == "left") and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then self:onUse(button) end
+		end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
@@ -180,10 +185,23 @@ function _M:outputList()
 	self.scroll = self.scroll or 1
 end
 
+function _M:treeExpand(v)
+	local item = self.list[self.sel]
+	if not item then return end
+	if v == nil then
+		item.shown = not item.shown
+	else
+		item.shown = v
+	end
+	if self.on_expand then self.on_expand(item) end
+	self:drawItem(item)
+	self:outputList()
+end
+
 function _M:onUse(...)
 	local item = self.list[self.sel]
 	if not item then return end
-	if item.fct then item:fct()
+	if item.fct then item.fct(self, item, self.sel, ...)
 	else self.fct(self, item, self.sel, ...) end
 end
 

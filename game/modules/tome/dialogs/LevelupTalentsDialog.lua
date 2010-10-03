@@ -18,9 +18,12 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local TreeList = require "engine.ui.TreeList"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(actor, on_finish)
 	self.actor = actor
@@ -28,35 +31,49 @@ function _M:init(actor, on_finish)
 	self.actor.__increased_talent_types = self.actor.__increased_talent_types or {}
 
 	self.actor_dup = actor:clone()
-	engine.Dialog.init(self, "Talents Levelup: "..actor.name, math.max(game.w * 0.85, 800), math.max(game.h * 0.85, 600))
+	Dialog.init(self, "Talents Levelup: "..actor.name, math.max(game.w * 0.85, 800), math.max(game.h * 0.85, 600))
+
+	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
+Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn; #00FF00#+#FFFFFF# to expand a category; #00FF00#-#FFFFFF# to reduce a category.
+Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
+]]}
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
 
 	self:generateList()
 
+	self.c_tree = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, scrollbar=true, columns={
+		{name="Talent", width=80, display_prop="name"},
+		{name="Status", width=20, display_prop="status"},
+	}, tree=self.tree,
+		fct=function(item, sel, v) self:treeSelect(item, sel, v) end,
+		select=function(item, sel) self:select(item) end,
+		on_expand=function(item) self.actor.__hidden_talent_types[item.type] = item.shown end,
+	}
+
+	self:loadUI{
+		{left=0, top=0, ui=self.c_tree},
+		{right=0, top=self.c_tut.h + 20, ui=self.c_desc},
+		{right=0, top=0, ui=self.c_tut},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+	}
+	self:setFocus(self.c_tree)
+	self:setupUI()
+
 	self.talents_changed = {}
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 65) / self.font_h) - 1
-
-	self:keyCommands({
+	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if not self.list[self.sel] or not self.list[self.sel].type then return end
+			local item = self.c_tree.list[self.c_tree.sel]
+			if not item or not item.type then return end
 			if c == "+" then
-				self.actor.__hidden_talent_types[self.list[self.sel].type] = false
-				self:generateList()
-				self.changed = true
+				self.c_tree:treeExpand(true)
 			end
 			if c == "-" then
-				self.actor.__hidden_talent_types[self.list[self.sel].type] = true
-				self:generateList()
-				self.changed = true
+				self.c_tree:treeExpand(false)
 			end
 		end,
-	}, {
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_LEFT = function() self:learn(false) self.changed = true end,
-		MOVE_RIGHT = function() self:learn(true) self.changed = true end,
+	}
+	self.key:addBinds{
 		ACCEPT = "EXIT",
 		EXIT = function() game:unregisterDialog(self)
 			-- Achievements checks
@@ -66,21 +83,6 @@ function _M:init(actor, on_finish)
 			self:finish()
 			if on_finish then on_finish() end
 		end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then self.key:triggerVirtual("EXIT") end end},
-		{ x=2, y=65, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			self.changed = true
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			if button == "left" and event == "button" then self:learn(true)
-			elseif button == "right" and event == "button" then self:learn(false)
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-			self.changed = true
-		end },
 	}
 end
 
@@ -88,42 +90,52 @@ function _M:generateList()
 	self.actor.__show_special_talents = self.actor.__show_special_talents or {}
 
 	-- Makes up the list
-	local list, known = {}, {}
+	local tree = {}
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
 			local cat = tt.type:gsub("/.*", "")
 			local ttknown = self.actor:knowTalentType(tt.type)
 			local tshown = (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type])
-			list[#list+1] = { name='['..(tshown and '-' or '+')..'] '..cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), type=tt.type, color=ttknown and {0,200,0} or {128,128,128} }
-			if ttknown then
-				known[#known+1] = {name="known", color={0,200,0}}
-			else
-				known[#known+1] = {name="0/1", color={128,128,128}}
-			end
+			local node = {
+				name="#{bold}#"..cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)).."#{normal}#",
+				type=tt.type,
+				color=ttknown and {0,200,0} or {128,128,128},
+				shown = tshown,
+				status = ttknown and "#00C800#known#WHITE#" or "#00C800#0/1#WHITE#",
+				nodes = {},
+			}
+			tree[#tree+1] = node
+
+			local list = node.nodes
 
 			-- Find all talents of this school
-			if tshown then
-				for j, t in ipairs(tt.talents) do
-					if not t.hide or self.actor.__show_special_talents[t.id] then
-						local typename = "class"
-						if t.generic then typename = "generic" end
-						list[#list+1] = { name="    "..t.name.." ("..typename..")", talent=t.id, color=not ttknown and {128,128,128} }
-						if self.actor:getTalentLevelRaw(t.id) == t.points then
-							known[#known+1] = {name="known", color=ttknown and {0,255,0} or {128,128,128}}
+			for j, t in ipairs(tt.talents) do
+				if not t.hide or self.actor.__show_special_talents[t.id] then
+					local typename = "class"
+					if t.generic then typename = "generic" end
+					list[#list+1] = {
+						name=t.name.." ("..typename..")",
+						talent=t.id,
+						color=not ttknown and {128,128,128},
+					}
+					if self.actor:getTalentLevelRaw(t.id) == t.points then
+						if ttknown then
+							list[#list].status = "#LIGHT_GREEN#known#WHITE#"
 						else
-							if not self.actor:canLearnTalent(t) then
-								known[#known+1] = {name=self.actor:getTalentLevelRaw(t.id).."/"..t.points, color=ttknown and {255,0,0} or {128,128,128}}
-							else
-								known[#known+1] = {name=self.actor:getTalentLevelRaw(t.id).."/"..t.points, color = not ttknown and {128,128,128}}
-							end
+							list[#list].status = "#808080#known#WHITE#"
+						end
+					else
+						if not self.actor:canLearnTalent(t) then
+							list[#list].status = (ttknown and "#FF0000#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
+						else
+							list[#list].status = (ttknown and "#WHITE#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
 						end
 					end
 				end
 			end
 		end
 	end
-	self.list = list
-	self.list_known = known
+	self.tree = tree
 end
 
 function _M:finish()
@@ -151,11 +163,18 @@ function _M:finish()
 	end
 end
 
+function _M:treeSelect(item, sel, v)
+	self:learn(v == "left" and true)
+end
+
 function _M:learn(v)
-	if self.list[self.sel].type then
-		self:learnType(self.list[self.sel].type, v)
+	local item = self.c_tree.list[self.c_tree.sel]
+	if not item then return end
+	print("===learn", item.name, v)
+	if item.type then
+		self:learnType(item.type, v)
 	else
-		self:learnTalent(self.list[self.sel].talent, v)
+		self:learnTalent(item.talent, v)
 	end
 end
 
