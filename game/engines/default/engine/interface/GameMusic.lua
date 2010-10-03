@@ -63,7 +63,7 @@ function _M:volumeMusic(vol)
 	if vol then
 		self:saveSettings("music", ("music.volume = %q\n"):format(vol))
 	end
-	return core.sound.musicVolume(vol)
+	return core.sound.musicVolume(vol) or 0
 end
 
 --- Called by the C core when the current music stops

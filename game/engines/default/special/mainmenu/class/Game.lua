@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Game"
 require "engine.KeyBind"
+require "engine.interface.GameSound"
 require "engine.interface.GameMusic"
 local Module = require "engine.Module"
 local Savefile = require "engine.Savefile"
@@ -27,10 +28,11 @@ local Dialog = require "engine.ui.Dialog"
 local Tooltip = require "engine.Tooltip"
 local MainMenu = require "special.mainmenu.dialogs.MainMenu"
 
-module(..., package.seeall, class.inherit(engine.Game, engine.interface.GameMusic))
+module(..., package.seeall, class.inherit(engine.Game, engine.interface.GameMusic, engine.interface.GameSound))
 
 function _M:init()
 	engine.interface.GameMusic.init(self)
+	engine.interface.GameSound.init(self)
 	self.profile_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
 	engine.Game.init(self, engine.KeyBind.new())
 
