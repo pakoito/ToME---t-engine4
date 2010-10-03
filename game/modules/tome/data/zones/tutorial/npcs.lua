@@ -21,7 +21,7 @@ load("/data/general/npcs/all.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ base = "BASE_NPC_SKELETON", define_as = "TUTORIAL_NPC_MAGE",
+newEntity{ base = "BASE_NPC_SKELETON", define_as = "TUTORIAL_NPC_MAGE", image="npc/skeleton_mage.png",
 	name = "skeleton mage", color=colors.LIGHT_RED,
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),

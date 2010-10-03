@@ -1536,7 +1536,7 @@ end
 function _M:on_projectile_target(x, y, p)
 	if self:attr("slow_projectiles") then
 		print("Projectile slowing down from", p.energy.mod)
-		p.energy.mod = p.energy.mod * self.slow_projectiles / 100
+		p.energy.mod = p.energy.mod * (100 - self.slow_projectiles) / 100
 		print("Projectile slowing down to", p.energy.mod)
 	end
 end

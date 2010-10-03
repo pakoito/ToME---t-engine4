@@ -108,7 +108,7 @@ function _M:computeDeps(t)
 	-- Check prerequisites
 	if rawget(t, "require") then
 		local req = t.require
-		if type(req) == "function" then req = req(self, t) end
+		if type(req) == "function" then req = req(self.actor, t) end
 
 		if req.talent then
 			for _, tid in ipairs(req.talent) do
