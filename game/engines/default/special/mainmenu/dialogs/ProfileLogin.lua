@@ -77,33 +77,9 @@ end
 
 function _M:okclick()
 	game:unregisterDialog(self)
-	game:selectStepProfile()
 	game:createProfile({login=self.c_login.text, pass=self.c_pass.text, email=self.c_email and self.c_email.text, name=self.c_name and self.c_name.text})
 end
 
 function _M:cancelclick()
 	self.key:triggerVirtual("EXIT")
-end
-
-function _M:setMouseHandling()
-	self.old_mouse = engine.Mouse.current
-	self.mouse = engine.Mouse.new()
-	self.mouse:setCurrent()
-	game.mouse = self.mouse
-end
-
-
-function _M:drawDialog(s, w, h)
-	local y = 5
-	local x = 30
-	local r, g, b
-	for i = 1, #self.lines do
-		r, g, b = s:drawColorStringBlended(self.font, self.lines[i], x, y + i * self.font:lineSkip(), r, g, b)
-	end
-	self:drawControls(s)
-end
-
-function _M:close()
-	if self.old_key then self.old_key:setCurrent() end
-	if self.old_mouse then self.old_mouse:setCurrent() end
 end

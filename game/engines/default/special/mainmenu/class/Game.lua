@@ -25,8 +25,7 @@ local Module = require "engine.Module"
 local Savefile = require "engine.Savefile"
 local Dialog = require "engine.ui.Dialog"
 local Tooltip = require "engine.Tooltip"
-local ButtonList = require "engine.ButtonList"
-local DownloadDialog = require "engine.dialogs.DownloadDialog"
+local MainMenu = require "special.mainmenu.dialogs.MainMenu"
 
 module(..., package.seeall, class.inherit(engine.Game, engine.interface.GameMusic))
 
@@ -39,6 +38,7 @@ function _M:init()
 
 	self.background = core.display.loadImage("/data/gfx/mainmenu/background.png")
 	self.refuse_threads = true
+	self.normal_key = self.key
 end
 
 function _M:run()
@@ -49,7 +49,7 @@ function _M:run()
 	self:engineVersion()
 
 	-- Setup display
-	self:selectStepMain()
+	self:registerDialog(MainMenu.new())
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
@@ -57,155 +57,8 @@ function _M:run()
 	-- Run the current music if any
 	self:volumeMusic(config.settings.music.volume)
 	self:playMusic("The saga begins.ogg")
-end
 
-function _M:checkLogged()
-	if profile.auth then
-		self.logged_url = "http://te4.org/players/"..profile.auth.page
-		local str = "Online Profile: "..profile.auth.name.."[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
-		local plain = str:removeColorCodes()
-		local w, h = self.profile_font:size(plain)
-		self.s_log = core.display.newSurface(w, h)
-		self.s_log:erase(0, 0, 0)
-		self.s_log:drawColorStringBlended(self.profile_font, str, 0, 0, 255, 255, 0)
-	else
-		self.logged_url = nil
-		self.s_log = nil
-	end
-end
-
-function _M:engineVersion()
-	self.s_version = core.display.drawStringBlendedNewSurface(self.profile_font, ("T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3]), 185, 225, 0)
-end
-
-function _M:tick()
-	return true
-end
-
-function _M:display()
-	if self.background then
-		local bw, bh = self.background:getSize()
-		self.background:toScreen((self.w - bw) / 2, (self.h - bh) / 2)
-	end
-	self.step:display()
-	self.step:toScreen(self.step.display_x, self.step.display_y)
-
-	if self.s_log then
-		local w, h = self.s_log:getSize()
-		self.s_log:toScreen(self.w - w, self.h - h)
-	end
-	local w, h = self.s_version:getSize()
-	self.s_version:toScreen(0, self.h - h)
-
-	if self.step.do_tooltip then
-		self.tooltip:display()
-		self.tooltip:toScreen(5, 5)
-	end
-
-	engine.Game.display(self)
-end
-
---- Skip to a module directly ?
-function _M:commandLineArgs(args)
-	local req_mod = nil
-	local req_save = nil
-	local req_new = false
-	for i, arg in ipairs(args) do
-		if arg:find("^%-M") then
-			-- Force module loading
-			req_mod = arg:sub(3)
-		end
-		if arg:find("^%-u") then
-			-- Force save loading
-			req_save = arg:sub(3)
-		end
-		if arg:find("^%-n") then
-			-- Force save loading
-			req_new = true
-		end
-	end
-
-	if req_mod then
-		local mod = self.mod_list[req_mod]
-		if mod then
-			Module:instanciate(mod, req_save or "player", req_new)
-		else
-			print("Error: module "..req_mod.." not found!")
-		end
-	end
-end
-
---- Ask if we realy want to close, if so, save the game first
-function _M:onQuit()
-	os.exit()
-end
-
-profile_help_text = [[#LIGHT_GREEN#T-Engine4#LAST# allows you to sync your player profile with the website #LIGHT_BLUE#http://te4.org/#LAST#
-
-This allows you to:
-* Play from several computers without having to copy unlocks and achievements.
-* Keep track of your modules progression, kill count, ...
-* Cool statistics for each module to help sharpen your gameplay style
-* Help the game developers balance and refine the game
-
-Later on you will have an online profile page you can show to people to brag.
-This is all optional, you are not forced to use this feature at all, but the developers would thank you if you did as it will
-make balancing easier.
-Online profile requires an internet connection, if not available it will wait and sync when it finds one.]]
-
-function _M:checkFirstTime()
-	if not profile.generic.firstrun then
-		profile:checkFirstRun()
-		Dialog:yesnoLongPopup("First run profile notification", profile_help_text, 400, function(ret)
-			if ret then
-				self:selectStepOnlineProfile()
-			else
-				self:selectStepMain()
-			end
-		end)
-	else
-		self:selectStepMain()
-	end
-end
-
-function _M:selectStepMain()
-	if self.step and self.step.close then self.step:close() end
-
-	self.step = ButtonList.new({
-		{
-			name = "Play a new game",
-			fct = function()
-				self:selectStepNew()
-			end,
-		},
-		{
-			name = "Load a saved game",
-			fct = function()
-				self:selectStepLoad()
-			end,
-		},
-		{
-			name = "Player Profile",
-			fct = function()
-				self:selectStepProfile()
-			end,
-		},
--- [[
-		{
-			name = "Install a game module",
-			fct = function()
-				self:selectStepInstall()
-			end,
-		},
---]]
-		{
-			name = "Exit",
-			fct = function()
-				core.game.exit_engine()
-			end,
-		},
-	}, 400 + 8 + 10, self.h * 0.2, self.w * 0.4, self.h * 0.3)
-
+	-- Get news
 	if not self.news then
 		self.news = profile:getNews()
 
@@ -247,7 +100,6 @@ Now go and have some fun!]]
 			self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
 		end
 	end
-	self.step.do_tooltip = true
 
 --	self:installNewEngine()
 
@@ -255,20 +107,7 @@ Now go and have some fun!]]
 		-- Check first time run for online profile
 		self.firstrunchecked = true
 		self:checkFirstTime()
-		return
 	end
-
-	self.step:setKeyHandling()
-	self.step:setMouseHandling()
-
-	self.step.key:addBinds{
-		-- Lua console
-		LUA_CONSOLE = function()
-			if config.settings.tome.cheat then
-				self:registerDialog(require("engine.DebugConsole").new())
-			end
-		end,
-	}
 
 	if self.s_log then
 		local w, h = self.s_log:getSize()
@@ -284,90 +123,112 @@ Now go and have some fun!]]
 	end
 end
 
-function _M:selectStepNew()
-	if self.step and self.step.close then self.step:close() end
-
-	local display_module = Dialog.new("", self.w * 0.73, self.h, self.w * 0.26, 0, 255)
-
-	for i, mod in ipairs(self.mod_list) do
-		mod.fct = function()
-			self:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
-				Module:instanciate(mod, text, true)
-			end))
-		end
-		mod.onSelect = function()
-			display_module.title = mod.long_name
-			display_module.changed = true
-		end
+function _M:checkLogged()
+	if profile.auth then
+		self.logged_url = "http://te4.org/players/"..profile.auth.page
+		local str = "Online Profile: "..profile.auth.name.."[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
+		local plain = str:removeColorCodes()
+		local w, h = self.profile_font:size(plain)
+		self.s_log = core.display.newSurface(w, h)
+		self.s_log:erase(0, 0, 0)
+		self.s_log:drawColorStringBlended(self.profile_font, str, 0, 0, 255, 255, 0)
+	else
+		self.logged_url = nil
+		self.s_log = nil
 	end
-
-	display_module.drawDialog = function(self, s)
-		if not game.step and not game.mod_list then return end
-		local lines = game.mod_list[game.step.selected].description:splitLines(self.w - 8, self.font)
-		local r, g, b
-		for i = 1, #lines do
-			r, g, b = s:drawColorStringBlended(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
-		end
-	end
-	self:registerDialog(display_module)
-
-	self.step = ButtonList.new(self.mod_list, 10, 10, self.w * 0.24, (5 + 35) * #self.mod_list, nil, 5)
-	self.step.dialog = display_module
-	self:bindKeysToStep()
 end
 
-function _M:bindKeysToStep()
-	self.step:setKeyHandling()
-	self.step:setMouseHandling()
-	self.step.key:addBind("EXIT", function() self:unregisterDialog(self.step.dialog) self:selectStepMain() end)
+function _M:engineVersion()
+	self.s_version = core.display.drawStringBlendedNewSurface(self.profile_font, ("T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3]), 185, 225, 0)
 end
 
-function _M:selectStepLoad()
-	local found = false
-	for i, mod in ipairs(self.save_list) do for j, save in ipairs(mod.savefiles) do found = true break end end
-	if not found then
-		Dialog:simplePopup("No savefiles", "You do not have any savefiles for any of the installed modules. Play a new game!")
-		return
+function _M:tick()
+	return true
+end
+
+function _M:display()
+	if self.background then
+		local bw, bh = self.background:getSize()
+		self.background:toScreen((self.w - bw) / 2, (self.h - bh) / 2)
 	end
 
-	local display_module = Dialog.new("", self.w * 0.73, self.h, self.w * 0.26, 0, 255)
+	if self.s_log then
+		local w, h = self.s_log:getSize()
+		self.s_log:toScreen(self.w - w, self.h - h)
+	end
+	local w, h = self.s_version:getSize()
+	self.s_version:toScreen(0, self.h - h)
 
-	local mod_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
-	local list = {}
-	for i, mod in ipairs(self.save_list) do
-		table.insert(list, { name=mod.name, font=mod_font, description="", fct=function() end, onSelect=function() self.step:skipSelected() end})
+--	if self.step.do_tooltip then
+		self.tooltip:display()
+		self.tooltip:toScreen(5, 5)
+--	end
 
-		for j, save in ipairs(mod.savefiles) do
-			save.fct = function()
-				Module:instanciate(mod, save.name, false)
-			end
-			save.onSelect = function()
-				display_module.title = save.name
-				display_module.changed = true
-			end
-			table.insert(list, save)
-			found = true
+	engine.Game.display(self)
+end
+
+--- Skip to a module directly ?
+function _M:commandLineArgs(args)
+	local req_mod = nil
+	local req_save = nil
+	local req_new = false
+	for i, arg in ipairs(args) do
+		if arg:find("^%-M") then
+			-- Force module loading
+			req_mod = arg:sub(3)
+		end
+		if arg:find("^%-u") then
+			-- Force save loading
+			req_save = arg:sub(3)
+		end
+		if arg:find("^%-n") then
+			-- Force save loading
+			req_new = true
 		end
 	end
 
-	-- Ok some saves to see, proceed
-	if self.step and self.step.close then self.step:close() end
-
-	display_module.drawDialog = function(self, s)
-		if not game.step and not game.mod_list then return end
-		local lines = list[game.step.selected].description:splitLines(self.w - 8, self.font)
-		local r, g, b
-		for i = 1, #lines do
-			r, g, b = s:drawColorStringBlended(self.font, lines[i], 0, i * self.font:lineSkip(), r, g, b)
+	if req_mod then
+		local mod = self.mod_list[req_mod]
+		if mod then
+			Module:instanciate(mod, req_save or "player", req_new)
+		else
+			print("Error: module "..req_mod.." not found!")
 		end
 	end
-	self:registerDialog(display_module)
+end
 
-	self.step = ButtonList.new(list, 10, 10, self.w * 0.24, (5 + 25) * #list, nil, 5)
-	self.step:select(2)
-	self.step:setKeyHandling()
-	self.step:setMouseHandling()
-	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
+--- Ask if we realy want to close, if so, save the game first
+function _M:onQuit()
+	if self.is_quitting then return end
+	self.is_quitting = Dialog:yesnoPopup("Quit", "Really exit T-Engine/ToME?", function(ok)
+		self.is_quitting = false
+		if ok then os.exit() end
+	end, "Quit", "Contiue")
+end
+
+profile_help_text = [[#LIGHT_GREEN#T-Engine4#LAST# allows you to sync your player profile with the website #LIGHT_BLUE#http://te4.org/#LAST#
+
+This allows you to:
+* Play from several computers without having to copy unlocks and achievements.
+* Keep track of your modules progression, kill count, ...
+* Cool statistics for each module to help sharpen your gameplay style
+* Help the game developers balance and refine the game
+
+Later on you will have an online profile page you can show to people to brag.
+This is all optional, you are not forced to use this feature at all, but the developers would thank you if you did as it will
+make balancing easier.
+Online profile requires an internet connection, if not available it will wait and sync when it finds one.]]
+
+function _M:checkFirstTime()
+	if not profile.generic.firstrun then
+		profile:checkFirstRun()
+		local text = "Thanks for downloading T-Engine/ToME.\n\n"..profile_help_text
+		Dialog:yesnoLongPopup("Welcome to T-Engine", text, 400, function(ret)
+			if ret then
+				self:registerDialog(require("special.mainmenu.dialogs.Profile").new())
+			end
+		end, "Register now", "Maybe later")
+	end
 end
 
 function _M:selectStepInstall()
@@ -448,68 +309,11 @@ function _M:createProfile(loginItem)
 	end
 	profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
 	if (profile.auth) then
-		Dialog:simplePopup("Profile created!", "Your online profile is active now...", function() self:checkLogged() self:selectStepProfile() end )
+		Dialog:simplePopup("Profile created!", "Your online profile is active now...", function() self:checkLogged() end )
 	else
-		Dialog:simplePopup("Profile Failed to authenticate!", "Try logging in in a few moments", function() self:selectStepProfile() end )
+		Dialog:simplePopup("Profile Failed to authenticate!", "Try logging in in a few moments", function() end )
 	end
 
-end
-
-function _M:selectStepProfile()
-	self.step = ButtonList.new({
-		{
-			name = "Online Profile",
-			fct = function()
-				self:selectStepOnlineProfile()
-			end,
-		},
---[[
-		{
-			name = "Browse Generic Profile",
-			fct = function()
-				self:selectGenericProfile()
-			end,
-		},
-		{
-			name = "Browse Module Profiles",
-			fct = function()
-				self:selectModuleProfile()
-			end,
-		},
-]]
-		{
-			name = "Exit",
-			fct = function()
-				game:unregisterDialog(self)
-				self:selectStepMain()
-			end,
-		},
-	}, self.w * 0.3, self.h * 0.2, self.w * 0.4, self.h * 0.3)
-	self.step:setKeyHandling()
-	self.step:setMouseHandling()
-	self.step.key:addBind("EXIT", function() self:unregisterDialog(display_module) self:selectStepMain() end)
-end
-
-function _M:selectStepOnlineProfile()
-	if (profile.auth) then
-		Dialog:yesnoPopup("You are logged in", "Do you want to log out?", function(ret)
-			if ret then
-				profile:logOut()
-				self:checkLogged()
-			end
-		end)
-	else
-	local dialogdef = { }
-	dialogdef.short = "Login";
-	dialogdef.fct = function(login) self:setPlayerLogin(login) end
-	Dialog:yesnoLongPopup("You are not registered", "You have no active online profile.\nDo you want to #LIGHT_GREEN#login#LAST# to an existing profile or #LIGHT_GREEN#create#LAST# a new one?", 400, function(ret)
-			ret = not ret
-			self.justlogin = ret
-			dialogdef.name = ret and "login" or "creation"
-			dialogdef.justlogin = ret
-			self:registerDialog(require('special.mainmenu.dialogs.ProfileLogin').new(dialogdef, profile_help_text))
-		end, "Create", "Login")
-	end
 end
 
 function _M:installNewEngine()
