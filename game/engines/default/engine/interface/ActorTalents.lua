@@ -270,7 +270,7 @@ end
 -- @param offset the level offset to check, defaults to 1
 function _M:canLearnTalent(t, offset)
 	-- Check prerequisites
-	if t.require then
+	if rawget(t, "require") then
 		local req = t.require
 		if type(req) == "function" then req = req(self, t) end
 		local tlev = self:getTalentLevelRaw(t) + (offset or 1)

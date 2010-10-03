@@ -25,6 +25,11 @@ local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
+local _points_left = [[
+Categories points left: #00FF00#%d#WHITE#
+Class Talents points left: #00FF00#%d#WHITE#
+Generic Talents points left: #00FF00#%d#WHITE#]]
+
 function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}
@@ -37,29 +42,36 @@ function _M:init(actor, on_finish)
 Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn; #00FF00#+#FFFFFF# to expand a category; #00FF00#-#FFFFFF# to reduce a category.
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]}
+	self.c_points = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=_points_left:format(self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
 
 	self:generateList()
 
-	self.c_tree = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, scrollbar=true, columns={
-		{name="Talent", width=80, display_prop="name"},
-		{name="Status", width=20, display_prop="status"},
+	self.c_tree = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 15 - self.c_points.h, all_clicks=true, scrollbar=true, columns={
+		{width=80, display_prop="name"},
+		{width=20, display_prop="status"},
 	}, tree=self.tree,
 		fct=function(item, sel, v) self:treeSelect(item, sel, v) end,
 		select=function(item, sel) self:select(item) end,
-		on_expand=function(item) self.actor.__hidden_talent_types[item.type] = item.shown end,
+		on_expand=function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
+		on_drawitem=function(item) if self.running then self:onDrawItem(item) end end,
 	}
 
 	self:loadUI{
-		{left=0, top=0, ui=self.c_tree},
+		{left=0, top=0, ui=self.c_points},
+		{left=5, top=self.c_points.h+5, ui=Separator.new{dir="vertical", size=math.floor(self.iw / 2) - 10}},
+		{left=0, top=self.c_points.h+15, ui=self.c_tree},
+
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+
 		{right=0, top=self.c_tut.h + 20, ui=self.c_desc},
 		{right=0, top=0, ui=self.c_tut},
-		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_tree)
 	self:setupUI()
 
 	self.talents_changed = {}
+	self.running = true
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
@@ -102,10 +114,10 @@ function _M:computeDeps(t)
 			for _, tid in ipairs(req.talent) do
 				if type(tid) == "table" then
 					d[tid[1]] = true
-					print("Talent deps: ", t.id, "depends on", tid[1])
+--					print("Talent deps: ", t.id, "depends on", tid[1])
 				else
 					d[tid] = true
-					print("Talent deps: ", t.id, "depends on", tid)
+--					print("Talent deps: ", t.id, "depends on", tid)
 				end
 			end
 		end
@@ -115,7 +127,7 @@ function _M:computeDeps(t)
 	for id, nt in pairs(self.actor.talents_def) do
 		if nt.type[1] == t.type[1] then
 			d[id] = true
-			print("Talent deps: ", t.id, "same category as", id)
+--			print("Talent deps: ", t.id, "same category as", id)
 		end
 	end
 end
@@ -206,6 +218,61 @@ function _M:finish()
 	end
 end
 
+function _M:onDrawItem(item)
+	if not item then return end
+
+	local text = {}
+
+	text[#text+1] = util.getval(item.name, item)
+	text[#text+1] = ""
+
+	if item.type then
+		text[#text+1] = "#00FFFF#Talent Category"
+		text[#text+1] = "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.\n"
+	else
+		local t = self.actor:getTalentFromId(item.talent)
+
+		local what
+		if t.generic then
+			what = "generic talent"
+			text[#text+1] = "#00FFFF#Generic Talent"
+			text[#text+1] = "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It reprents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.\n"
+		else
+			what = "class talent"
+			text[#text+1] = "#00FFFF#Class talent"
+			text[#text+1] = "#00FFFF#A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.\n"
+		end
+
+		if self.actor:getTalentLevelRaw(t.id) > 0 then
+			local req = self.actor:getTalentReqDesc(item.talent, 0)
+			req = "Current "..what.." level: "..self.actor:getTalentLevelRaw(t.id).."\n"..req
+			text[#text+1] = req
+			text[#text+1] = self.actor:getTalentFullDescription(t)
+		end
+
+		if self.actor:getTalentLevelRaw(t.id) < t.points then
+			local req2 = self.actor:getTalentReqDesc(item.talent, 1)
+			req2 = "Next "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)+1).."\n"..req2
+			text[#text+1] = req2
+			text[#text+1] = self.actor:getTalentFullDescription(t, 1)
+		end
+	end
+
+	if not item.zone_desc then
+		item.zone_desc = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=table.concat(text, "\n")}
+	else
+		item.zone_desc.text = table.concat(text, "\n")
+		item.zone_desc:generate()
+	end
+end
+
+function _M:select(item)
+	if not item or not self.uis or not self.uis[5] then return end
+
+	if self.running and not item.zone_desc then self:onDrawItem(item) end
+	self.uis[5].ui = item.zone_desc
+end
+
 function _M:treeSelect(item, sel, v)
 	if not item then return end
 	self:learn(v == "left" and true)
@@ -220,6 +287,9 @@ function _M:treeSelect(item, sel, v)
 		end
 	end
 	self.c_tree:outputList()
+
+	self.c_points.text = _points_left:format(self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)
+	self.c_points:generate()
 end
 
 function _M:learn(v)
@@ -364,102 +434,4 @@ function _M:learnType(tt, v)
 			end
 		end
 	end
-end
-
-function _M:drawDialog(s)
-	-- Description part
-	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
-
-	local talentshelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn; #00FF00#+#FFFFFF# to expand a category; #00FF00#-#FFFFFF# to reduce a category.
-Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
-]]):splitLines(self.iw / 2 - 10, self.font)
-
-	local lines, helplines, reqlines = nil, {}, nil
-	local lines2, reqlines2 = nil, nil
-	if self.list[self.sel].type then
-		local str = ""
-		str = str .. "#00FFFF#Talent Category\n"
-		str = str .. "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.\n\n"
-		helplines = str:splitLines(self.iw / 2 - 10, self.font)
-		lines = self.actor:getTalentTypeFrom(self.list[self.sel].type).description:splitLines(self.iw / 2 - 10, self.font)
-	else
-		local t = self.actor:getTalentFromId(self.list[self.sel].talent)
-
-		local str = ""
-		local what
-		if t.generic then
-			what = "generic talent"
-			str = str .. "#00FFFF#Generic Talent\n"
-			str = str .. "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It reprents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.\n\n"
-		else
-			what = "class talent"
-			str = str .. "#00FFFF#Class talent\n"
-			str = str .. "#00FFFF#A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.\n\n"
-		end
-		helplines = str:splitLines(self.iw / 2 - 10, self.font)
-
-		if self.actor:getTalentLevelRaw(t.id) > 0 then
-			lines = self.actor:getTalentFullDescription(t):splitLines(self.iw / 2 - 10, self.font)
-			local req = self.actor:getTalentReqDesc(self.list[self.sel].talent, 0)
-			req = "Current "..what.." level: "..self.actor:getTalentLevelRaw(t.id).."\n"..req
-			reqlines = req:splitLines(self.iw / 2 - 10, self.font)
-		end
-
-		if self.actor:getTalentLevelRaw(t.id) < t.points then
-			local req2 = self.actor:getTalentReqDesc(self.list[self.sel].talent, 1)
-			req2 = "Next "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)+1).."\n"..req2
-			reqlines2 = req2:splitLines(self.iw / 2 - 10, self.font)
-			lines2 = self.actor:getTalentFullDescription(t, 1):splitLines(self.iw / 2 - 10, self.font)
-		end
-	end
-	local h = 2
-	for i = 1, #talentshelp do
-		s:drawColorStringBlended(self.font, talentshelp[i], self.iw / 2 + 5, h)
-		h = h + self.font:lineSkip()
-	end
-
-	h = h + self.font:lineSkip()
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-	for i = 1, #helplines do
-		s:drawColorStringBlended(self.font, helplines[i], self.iw / 2 + 5, h)
-		h = h + self.font:lineSkip()
-	end
-
-	if reqlines2 and lines2 then
-		self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-		for i = 1, #reqlines2 do
-			s:drawColorStringBlended(self.font, reqlines2[i], self.iw / 2 + 5, h)
-			h = h + self.font:lineSkip()
-		end
-
-		for i = 1, #lines2 do
-			s:drawColorStringBlended(self.font, lines2[i], self.iw / 2 + 5, 2 + h)
-			h = h + self.font:lineSkip()
-		end
-	end
-
-	if reqlines and lines then
-		h = h + self.font:lineSkip()
-		self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-		for i = 1, #reqlines do
-			s:drawColorStringBlended(self.font, reqlines[i], self.iw / 2 + 5, h)
-			h = h + self.font:lineSkip()
-		end
-
-		for i = 1, #lines do
-			s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h)
-			h = h + self.font:lineSkip()
-		end
-	end
-
-	-- Talents
-	s:drawColorStringBlended(self.font, "Categories points left: #00FF00#"..self.actor.unused_talents_types, 2, 2)
-	s:drawColorStringBlended(self.font, "Class Talents points left: #00FF00#"..self.actor.unused_talents, 2, 2 + self.font_h)
-	s:drawColorStringBlended(self.font, "Generic Talents points left: #00FF00#"..self.actor.unused_generics, 2, 2 + self.font_h * 2)
-	self:drawWBorder(s, 2, 60, 200)
-
-	self:drawSelectionList(s, 2, 65, self.font_h, self.list, self.sel, "name"     , self.scroll, self.max)
-	self:drawSelectionList(s, self.iw / 2 - 70, 65, self.font_h, self.list_known, self.sel, "name", self.scroll, self.max)
-
-	self.changed = false
 end

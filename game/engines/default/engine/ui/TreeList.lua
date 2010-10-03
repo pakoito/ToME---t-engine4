@@ -33,6 +33,8 @@ function _M:init(t)
 	assert(self.h or self.nb_items, "no tree height/nb_items")
 	self.fct = t.fct
 	self.on_expand = t.on_expand
+	self.on_drawitem = t.on_drawitem
+	self.select = t.select
 	self.scrollbar = t.scrollbar
 	self.all_clicks = t.all_clicks
 	self.level_offset = t.level_offset or 12
@@ -96,6 +98,7 @@ function _M:drawItem(item)
 		item.cols[i]._stex = ss:glTexture()
 		item.cols[i]._sustex = sus:glTexture()
 	end
+	if self.on_drawitem then self.on_drawitem(item) end
 end
 
 function _M:drawTree()
@@ -142,6 +145,7 @@ function _M:generate()
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
+		self:onSelect()
 		if self.list[self.sel] and self.list[self.sel].nodes and bx <= plus_w and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then
 			self:treeExpand(nil)
 		else
@@ -150,29 +154,34 @@ function _M:generate()
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse("left") end,
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) end,
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
 	}
 	self.key:addCommands{
 		_HOME = function()
 			self.sel = 1
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 		_END = function()
 			self.sel = self.max
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 		_PAGEUP = function()
 			self.sel = util.bound(self.sel - self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 		_PAGEDOWN = function()
 			self.sel = util.bound(self.sel + self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self:onSelect()
 		end,
 	}
 
 	self:outputList()
+	self:onSelect()
 end
 
 function _M:outputList()
@@ -203,6 +212,13 @@ function _M:treeExpand(v)
 	if self.on_expand then self.on_expand(item) end
 	self:drawItem(item)
 	self:outputList()
+end
+
+function _M:onSelect()
+	local item = self.list[self.sel]
+	if not item then return end
+
+	if rawget(self, "select") then self.select(item, self.sel) end
 end
 
 function _M:onUse(...)
