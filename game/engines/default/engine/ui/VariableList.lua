@@ -82,14 +82,16 @@ function _M:generate()
 		item.fh = fh
 		item._tex, item._tex_w, item._tex_h = s:glTexture()
 		item._stex = ss:glTexture()
+
+		self.mouse:registerZone(0, self.h, self.w, fh, function(button, x, y, xrel, yrel, bx, by, event)
+			self.sel = i
+			if button == "left" and event == "button" then self:onUse() end
+		end)
+
 		self.h = self.h + fh
 	end
 
 	-- Add UI controls
-	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
---		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
-		if button == "left" and event == "button" then self:onUse() end
-	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
 		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) end,

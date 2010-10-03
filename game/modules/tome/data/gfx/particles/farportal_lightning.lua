@@ -105,15 +105,10 @@ return { generator = function()
 	end
 end, },
 function(self)
-	self.nb = (self.nb or 0) + 1
-
 	-- Create a lightning
-	if self.nb == 1 then pause = false make_forks(rng.range(-2,2), rng.range(-2,2)) end
-
-	if self.nb < 4 then
-		self.ps:emit(200*tiles)
-	elseif self.nb == 6 then pause = true self.ps:emit(1)
-	elseif self.nb == 32 then pause = false self.nb = 0
+	if rng.percent(1) then
+		make_forks(rng.range(-2,2), rng.range(-2,2))
+		self.ps:emit(400)
 	end
 end,
 4*(230)*tiles, nil, true

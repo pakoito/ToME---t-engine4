@@ -52,7 +52,7 @@ newEntity{ base = "TRAP_ANNOY",
 	message = "@Target@ triggers a burning curse!",
 	dam = resolvers.mbonus(80, 5),
 	triggered = function(self, x, y, who)
-		who:setEffect(who.EFF_BURNING_HEX, 7, {dam=self.dam})
+		who:setEffect(who.EFF_BURNING_HEX, 7, {src=self, dam=self.dam})
 		return true, true
 	end
 }
