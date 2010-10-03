@@ -183,7 +183,7 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	game.zone:addEntity(game.level, proj, "projectile", self.x, self.y)
 end
 
-function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
+function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy, projectile)
 	-- Stop at range or on block
 	local l = line.new(srcx, srcy, tgtx, tgty)
 	local lx, ly = srcx, srcy
@@ -194,8 +194,8 @@ function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 
 	if lx and ly then
 		if not typ.no_restrict then
-			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return lx, ly, false, true
-			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return lx, ly, false, true end
+			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move", projectile, true) then return lx, ly, false, true
+			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move", projectile, true) then return lx, ly, false, true end
 			if typ.range and math.sqrt((srcx-lx)^2 + (srcy-ly)^2) > typ.range then return lx, ly, false, true end
 		end
 
