@@ -32,6 +32,7 @@ local ListColumns = require "engine.ui.ListColumns"
 local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
 local Textbox = require "engine.ui.Textbox"
+local TreeList = require "engine.ui.TreeList"
 local Dialog = require "engine.ui.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Game, engine.interface.GameMusic))
@@ -41,98 +42,50 @@ function _M:init()
 
 	self.refuse_threads = true
 
-	local text = Textzone.new{width=390, height=200, scrollbar=true, text=[[Pplopppo
-zejkfzejkfh #RED#zmkfhzekhfkjfhkjqerhfgq#LAST# jfh qjzfh qzejfh #BLUE#qjzfh
-flkzerjflm qzfj #WHITE#zeklfj qlfjkql ql
-zf ze
-fze fqefqzfjhjqzkef
-fqzef
-
-
-zef qzekjfhqjkzfh
-
-ze fzef zejkhzfekjh ze
-fze
- fze
-  zefze fze zef
-
-  ze fzef zefz e
-zlfjklhzqfjkqhzefkhqzefjkqh z
-
-
-zef qzekjfhqjkzfh
-
-ze fzef zejkhzfekjh ze
-fze
- fze
-  zefze fze zef
-
-  ze fzef zefz e
-zlfjklhzqfjkqhzefkhqzefjkqh z
-
-
-zef qzekjfhqjkzfh
-
-ze fzef zejkhzfekjh ze
-fze
- fze
-  zefze fze zef
-
-  ze fzef zefz e
-zlfjklhzqfjkqhzefkhqzefjkqh z
-]]}
-	local box = Textbox.new{title="Name: ", text="", chars=10, max_len=30, fct=function(text) print("got", text) end}
-	local b1 = Button.new{text="Ok", fct=function() print"OK" end}
-	local b2 = Button.new{text="Cancel", fct=function() print"KO" end}
-	local listc = ListColumns.new{width=390, height=200, sortable=true, scrollbar=true, columns={
-		{name="Name", width=90, display_prop="name", sort="name"},
-		{name="Encumber", width=10, display_prop="encumberance", sort="encumberance"},
-	}, list={
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-	}, fct=function(item) print(item.name) end}
-	local list = List.new{width=200, height=200, scrollbar=true, list={
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-		{name="toto", encumberance=20},
-		{name="tutu", encumberance=50},
-		{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", encumberance=20},
-		{name="MOUHAHAHAHAH!", encumberance=20},
-	}, fct=function(item) print(item.name) end}
+	local tree = TreeList.new{width=390, height=200, sortable=true, scrollbar=true, all_clicks=true, columns={
+		{width=90, display_prop="name", sort="name"},
+		{width=10, display_prop="val", sort="val"},
+	}, tree={
+		{name="#{bold}#Node 1#{normal}#", val="plop", shown=true, nodes={
+			{name="toto", val=20},
+			{name="tutu", val=50},
+			{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", val=20},
+			{name="MOUHAHAHAHAH!", val=20},
+		}},
+		{name="#{bold}#Node 2#{normal}#", val="plop", shown=false, nodes={
+			{name="toto", val=20},
+			{name="tutu", val=50},
+			{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", val=20},
+		}},
+		{name="#{bold}#Node 3#{normal}#", val="plop", shown=true, nodes={
+			{name="MOUHAHAHAHAH!", val=20},
+			{name="toto", val=20},
+			{name="tutu", val=50},
+			{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", val=20},
+			{name="MOUHAHAHAHAH!", val=20},
+			{name="toto", val=20},
+		}},
+		{name="#{bold}#Node 4#{normal}#", val="plop", shown=true, nodes={
+			{name="tutu", val=50},
+			{name="plopzor #GOLD#Robe of the Archmage#WHITE#!", val=20},
+			{name="MOUHAHAHAHAH!", val=20},
+		}},
+	}, fct=function(self, item, sel, v)
+		if item.nodes then
+			item.shown = not item.shown
+			self:drawItem(item)
+			self:outputList()
+		else
+			item.val = item.val + (v == "left" and 1 or -1)
+			self:drawItem(item)
+		end
+	end}
 
 	local d = Dialog.new("Test UI", 800, 500)
 	d:loadUI{
-		{left=0, top=0, ui=listc},
-		{left=400, top=0, ui=text},
-		{left=5, bottom=10 + b1.h, ui=box},
-		{left=box.w + 10, bottom=10 + b1.h, ui=list},
-		{left=5, bottom=5, ui=b1},
-		{right=5, bottom=5, ui=b2},
+		{left=0, top=0, ui=tree},
 	}
+	d:setupUI()
 	self:registerDialog(d)
 end
 

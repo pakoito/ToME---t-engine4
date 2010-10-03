@@ -291,7 +291,9 @@ function _M:selectStepNew()
 
 	for i, mod in ipairs(self.mod_list) do
 		mod.fct = function()
-			self:registerDialog(require('special.mainmenu.dialogs.EnterName').new(mod))
+			self:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
+				Module:instanciate(mod, text, true)
+			end))
 		end
 		mod.onSelect = function()
 			display_module.title = mod.long_name
