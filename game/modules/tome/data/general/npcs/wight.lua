@@ -61,7 +61,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_WIGHT",
-	name = "forest wight", color=colors.GREEN,
+	name = "forest wight", color=colors.GREEN, image="npc/forest_wight.png",
 	desc=[[It is a ghostly apparition with a humanoid form.]],
 	level_range = {16, nil}, exp_worth = 1,
 	rarity = 1,
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 }
 
 newEntity{ base = "BASE_NPC_WIGHT",
-	name = "grave wight", color=colors.SLATE,
+	name = "grave wight", color=colors.SLATE, image="npc/grave_wight.png",
 	desc=[[It is a ghostly form with eyes that haunt you.]],
 	level_range = {22, nil}, exp_worth = 1,
 	rarity = 1,
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 }
 
 newEntity{ base = "BASE_NPC_WIGHT",
-	name = "barrow wight", color=colors.LIGHT_RED,
+	name = "barrow wight", color=colors.LIGHT_RED, image="npc/barrow_wight.png",
 	desc=[[It is a ghostly nightmare of an entity.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 2,
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 }
 
 newEntity{ base = "BASE_NPC_WIGHT",
-	name = "emperor wight", color=colors.RED,
+	name = "emperor wight", color=colors.RED, image="npc/emperor_wight.png",
 	desc=[[Your life force is torn from your body as this powerful unearthly being approaches.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 5,
