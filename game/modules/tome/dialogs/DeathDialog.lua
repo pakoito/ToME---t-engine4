@@ -18,38 +18,37 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
+local List = require "engine.ui.List"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(actor)
 	self.actor = actor
-	engine.Dialog.init(self, "Death!", 500, 300)
+	Dialog.init(self, "Death!", 500, 300)
 
 	self:generateList()
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 45) / self.font_h) - 1
+	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=[[You have #LIGHT_RED#died#LAST#!
+Death in T.o.M.E. is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
+You can dump your character data to a file to remember her/him forever, or you can exit and try once again to survive in the wilds!
+]]}
+	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
 
-	self:keyCommands(nil, {
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		ACCEPT = function() self:use() end,
-	})
-	self:mouseZones{
-		{ x=2, y=10 + self.font:lineSkip()*6, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			self.changed = true
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			if button == "left" and event == "button" then self:use()
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
+	self:loadUI{
+		{left=0, top=0, ui=self.c_desc},
+		{left=5, top=self.c_desc.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+		{left=0, bottom=0, ui=self.c_list},
+	}
+	self:setFocus(self.c_list)
+	self:setupUI(false, true)
+
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
 	}
 end
 
@@ -110,9 +109,9 @@ function _M:resurrectBasic(actor)
 	world:gainAchievement("UNSTOPPABLE", actor)
 end
 
-function _M:use()
-	if not self.list[self.sel] then return end
-	local act = self.list[self.sel].action
+function _M:use(item)
+	if not item then return end
+	local act = item.action
 
 	if act == "exit" then
 		local save = Savefile.new(game.save_name)
@@ -154,7 +153,7 @@ function _M:use()
 		self:restoreRessources(self.actor)
 		self:resurrectBasic(self.actor)
 	elseif act:find("^consume") then
-		local inven, item, o = self.list[self.sel].inven, self.list[self.sel].item, self.list[self.sel].object
+		local inven, item, o = item.inven, item.item, item.object
 		self.actor:removeObject(inven, item)
 		game.logPlayer(self.actor, "#YELLOW#Your %s is consumed and disappears! You come back to life!", o:getName{do_colour=true})
 
@@ -184,24 +183,4 @@ function _M:generateList()
 	list[#list+1] = {name="Exit to main menu", action="exit"}
 
 	self.list = list
-end
-
-function _M:drawDialog(s)
-	local help = ([[You have #LIGHT_RED#died#LAST#!
-Death in T.o.M.E. is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
-You can dump your character data to a file to remember her/him forever, or you can exit and try once again to survive in the wilds!
-]]):splitLines(self.iw - 10, self.font)
-
-	local h = 2
-	local r, g, b
-	for i = 1, #help do
-		r, g, b = s:drawColorStringBlended(self.font, help[i], 5, h, r, g, b)
-		h = h + self.font:lineSkip()
-	end
-	h = h + self.font:lineSkip()
-
-	self:drawWBorder(s, 2, h - 0.5 * self.font:lineSkip(), self.iw - 4)
-
-	self:drawSelectionList(s, 2, h, self.font_h, self.list, self.sel, "name")
-	self.changed = false
 end

@@ -18,9 +18,10 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local Textzone = require "engine.ui.Textzone"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(what)
 	self.what = what
@@ -32,24 +33,20 @@ function _M:init(what)
 
 	game.logPlayer(game.player, "#VIOLET#Option unlocked: "..self.name)
 
-	engine.Dialog.init(self, "Option unlocked: "..self.name, 600, 400)
+	Dialog.init(self, "Option unlocked: "..self.name, 600, 400)
 
-	self:keyCommands(nil, {
-		ACCEPT = "EXIT",
+	self.c_desc = Textzone.new{width=math.floor(self.iw - 10), height=self.ih, no_color_bleed=true, auto_height=true, text=self.str}
+
+	self:loadUI{
+		{left=0, top=0, ui=self.c_desc},
+	}
+	self:setupUI(not rw, not rh)
+
+	self.key:addBinds{
+		ACCEPT = accept_key and "EXIT",
 		EXIT = function()
 			game:unregisterDialog(self)
+			if on_exit then on_exit() end
 		end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
 	}
-end
-
-function _M:drawDialog(s)
-	local lines = self.str:splitLines(self.iw - 10, self.font)
-	local r, g, b
-	for i = 1, #lines do
-		r, g, b = s:drawColorStringBlended(self.font, lines[i], 5, 4 + i * self.font:lineSkip(), r, g, b)
-	end
-	self.changed = false
 end
