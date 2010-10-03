@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function getHateMultiplier(self, min, max)
-	return (min + ((max - min) * self.hate / 10))
+	return (min + ((max - min) * math.min(self.hate, 10) / 10))
 end
 
 local function getWillDamage(self, t, base, max)
@@ -154,7 +154,8 @@ newTalent{
 						local attackStrength = 0.3 + self:getTalentLevel(tTorment) * 0.12
 						if checkWillFailure(self, target, 30, 95, attackStrength) then
 							local tg = {type="hit", friendlyfire=false, talent=tTorment}
-							local grids = self:project(tg, target.x, target.y, DamageType.BLIGHT, 30 + self:getWil() * 0.4 * self:getTalentLevel(tTorment), {type="slime"})
+							local damage = (30 + self:getWil() * 0.4 * self:getTalentLevel(tTorment)) * getHateMultiplier(self, 0.5, 1.5)
+							local grids = self:project(tg, target.x, target.y, DamageType.DARKNESS, damage, {type="slime"})
 							--game:playSoundNear(self, "talents/spell_generic")
 							doTorment = false
 						else
@@ -215,10 +216,10 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	info = function(self, t)
-		local baseDamage = damDesc(self, DamageType.BLIGHT, 30 + self:getWil() * 0.4 * self:getTalentLevel(t))
+		local baseDamage = 30 + self:getWil() * 0.4 * self:getTalentLevel(t)
 		local attackStrength = 0.3 + self:getTalentLevel(t) * 0.12
 		local effectiveness = getWillFailureEffectiveness(self, 30, 95, attackStrength)
-		return ([[Your rage builds within you for 20 turns, then unleashes itself for %d to %d hate-based blight damage on the first one to enter your gloom. (%d effectiveness)]]):format(baseDamage * .5, baseDamage * 1.5, effectiveness)
+		return ([[Your rage builds within you for 20 turns, then unleashes itself for %d to %d hate-based darkness damage on the first one to enter your gloom. (%d effectiveness)]]):format(baseDamage * .5, baseDamage * 1.5, effectiveness)
 	end,
 }
 

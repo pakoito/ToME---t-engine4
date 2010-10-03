@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function getHateMultiplier(self, min, max)
-	return (min + ((max - min) * self.hate / 10))
+	return (min + ((max - min) * math.min(self.hate, 10) / 10))
 end
 
 newTalent{
@@ -37,7 +37,7 @@ newTalent{
 		return math.sqrt(self:getTalentLevel(t)) * 10
 	end,
 	getRegenRate = function(self, t)
-		return math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.004
+		return math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.008
 	end,
 	do_regenLife  = function(self, t)
 		-- heal

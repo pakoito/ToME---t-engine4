@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function getHateMultiplier(self, min, max)
-	return (min + ((max - min) * self.hate / 10))
+	return (min + ((max - min) * math.min(self.hate, 10) / 10))
 end
 
 local function checkWillFailure(self, target, minChance, maxChance, attackStrength)

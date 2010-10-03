@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function getHateMultiplier(self, min, max)
-	return (min + ((max - min) * self.hate / 10))
+	return (min + ((max - min) * math.min(self.hate, 10) / 10))
 end
 
 newTalent{
@@ -123,7 +123,7 @@ newTalent{
 		local lineFunction = line.new(self.x, self.y, targetX, targetY)
 		local nextX, nextY = lineFunction()
 		local currentX, currentY = self.x, self.y
-		local blocked = false
+		
 		while nextX and nextY do
 			local blockingTarget = game.level.map(nextX, nextY, Map.ACTOR)
 			if blockingTarget and self:reactionToward(blockingTarget) < 0 then
@@ -135,7 +135,8 @@ newTalent{
 				elseif level >= 3 then
 					maxSize = 3
 				end
-
+		
+				local blocked = true
 				if blockingTarget.size_category <= maxSize then
 					if blockingTarget:checkHit(self:combatAttackStr(), blockingTarget:combatPhysicalResist(), 0, 95, 15) and blockingTarget:canBe("knockback") then
 						-- determine where to move the target (any adjacent square that isn't next to the attacker)
@@ -147,10 +148,16 @@ newTalent{
 									and game.level.map:isBound(x, y)
 									and not game.level.map:checkAllEntities(x, y, "block_move", self) then
 								blockingTarget:move(x, y, true)
+								game.logSeen(self, "%s knocks back %s!", self.name:capitalize(), blockingTarget.name)
+								blocked = false
 								break
 							end
 						end
 					end
+				end
+				
+				if blocked then
+					game.logSeen(self, "%s blocks %s!", blockingTarget.name:capitalize(), self.name)
 				end
 			end
 

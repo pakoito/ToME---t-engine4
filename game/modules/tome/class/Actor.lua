@@ -660,6 +660,48 @@ function _M:onTakeHit(value, src)
 			game.logSeen(self, "%s is split in two!", self.name:capitalize())
 		end
 	end
+	
+	-- Adds hate
+	if self:knowTalent(self.T_HATE_POOL) then
+		local hateGain = 0
+		local hateMessage
+	
+		if value / self.max_life >= 0.15 then
+			-- you take a big hit..adds 0.2 + 0.2 for each 5% over 15%
+			hateGain = hateGain + 0.2 + (((value / self.max_life) - 0.15) * 10 * 0.5)
+			hateMessage = "#F53CBE#You fight through the pain!"
+		end
+		
+		if value / self.max_life >= 0.05 and (self.life - value) / self.max_life < 0.25 then
+			-- you take a hit with low health
+			hateGain = hateGain + 0.4
+			hateMessage = "#F53CBE#Your rage grows even as your life fades!"
+		end
+		
+		if hateGain >= 0.1 then
+			self.hate = math.min(self.max_hate, self.hate + hateGain)
+			if hateMessage then
+				game.logSeen(self, hateMessage.." (+%0.1f hate)", hateGain)
+			end
+		end
+	end
+	if src and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
+		local hateGain = 0
+		local hateMessage
+		
+		if value / src.max_life > 0.33 then
+			-- you deliver a big hit
+			hateGain = hateGain + 0.4
+			hateMessage = "#F53CBE#Your powerful attack feeds your madness!"
+		end
+		
+		if hateGain >= 0.1 then
+			src.hate = math.min(src.max_hate, src.hate + hateGain)
+			if hateMessage then
+				game.logSeen(src, hateMessage.." (+%0.1f hate)", hateGain)
+			end
+		end
+	end
 
 	-- Bloodlust!
 	if src and src.knowTalent and src:knowTalent(src.T_BLOODLUST) then
@@ -721,6 +763,39 @@ function _M:die(src)
 		src.blood_frenzy = src.blood_frenzy + src:getTalentLevel(src.T_BLOOD_FRENZY) * 2
 	end
 
+	-- Adds hate
+	if src and src:knowTalent(self.T_HATE_POOL) then
+		local hateGain = src.hate_per_kill
+		local hateMessage
+		
+		if self.level - 2 > src.level then
+			-- level bonus
+			hateGain = hateGain + (self.level - 2 - src.level) * 0.2
+			hateMessage = "#F53CBE#You have taken the life of an experienced foe!"
+		end
+		
+		if self.rank == 3 then
+			-- elite bonus
+			hateGain = hateGain * 2
+			hateMessage = "#F53CBE#An elite foe has fallen to your hate!"
+		elseif self.rank >= 4 then
+			-- boss bonus
+			hateGain = hateGain * 4
+			hateMessage = "#F53CBE#Your hate has conquered a great adversary!"
+		end
+		hateGain = math.min(hateGain, 10)
+		
+		src.hate = math.min(src.max_hate, src.hate + hateGain)
+		if hateMessage then
+			game.logSeen(src, hateMessage.." (+%0.1f hate)", hateGain - src.hate_per_kill)
+		end
+	end
+	
+	if src and src.knowTalent and src:knowTalent(src.T_UNNATURAL_BODY) then
+		local t = src:getTalentFromId(src.T_UNNATURAL_BODY)
+		t.on_kill(src, t, self)
+	end
+
 	if src and src.knowTalent and src:knowTalent(src.T_CRUEL_VIGOR) then
 		local t = src:getTalentFromId(src.T_CRUEL_VIGOR)
 		t.on_kill(src, t)
@@ -734,11 +809,6 @@ function _M:die(src)
 	if src and src.hasEffect and src:hasEffect(self.EFF_UNSTOPPABLE) then
 		local p = src:hasEffect(self.EFF_UNSTOPPABLE)
 		p.kills = p.kills + 1
-	end
-
-	-- Adds hate
-	if src and src.max_hate and src.max_hate > 0 then
-		src.hate = math.min(src.max_hate, src.hate + src.hate_per_kill)
 	end
 
 	-- Increase vim
