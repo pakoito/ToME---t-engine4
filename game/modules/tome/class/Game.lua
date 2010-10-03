@@ -109,7 +109,7 @@ function _M:run()
 	self.hotkeys_display.actor = self.player
 	self.npcs_display.actor = self.player
 
-	engine.interface.GameTargeting.init(self)
+	self:initTargeting()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
@@ -235,7 +235,7 @@ function _M:setupDisplayMode()
 	end
 	if self.level then
 		self.level.map:recreate()
-		engine.interface.GameTargeting.init(self)
+		self:initTargeting()
 		self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
 	end
 	self:setupMiniMap()
@@ -246,6 +246,14 @@ function _M:setupDisplayMode()
 	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
 	if self.player then self.player:updateMainShader() end
 end
+
+function _M:initTargeting()
+	engine.interface.GameTargeting.init(self)
+	self.target.on_set_target = function(self)
+		if game.key == game.targetmode_key then game.level.map:moveViewSurround(self.target.x, self.target.y, 8, 8) end
+	end
+end
+
 
 function _M:setupMiniMap()
 	if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(4) end
@@ -754,6 +762,8 @@ function _M:setupCommands()
 				"resume",
 				"achievements",
 				{ "Show known Lore", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Middle-earth Lore", self.player)) end },
+				{ "Inventory", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_INVENTORY") end },
+				{ "Character Sheet", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },
 				"keybinds",
 				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
 				"resolution",

@@ -152,12 +152,14 @@ function _M:freemove(dir)
 	self.target.x = self.target.x + d[1]
 	self.target.y = self.target.y + d[2]
 	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
+	if self.on_set_target then self:on_set_target() end
 end
 
 function _M:setSpot(x, y)
 	self.target.x = x
 	self.target.y = y
 	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
+	if self.on_set_target then self:on_set_target() end
 end
 
 function _M:scan(dir, radius, sx, sy, filter)
@@ -194,6 +196,7 @@ function _M:scan(dir, radius, sx, sy, filter)
 		self.target.entity = actors[1].a
 		self.target.x = self.target.entity.x
 		self.target.y = self.target.entity.y
+		if self.on_set_target then self:on_set_target() end
 	end
 end
 
