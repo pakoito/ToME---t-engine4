@@ -36,6 +36,7 @@ function _M:init(t)
 	self.fct = t.fct
 	self.select = t.select
 	self.all_clicks = t.all_clicks
+	self.hide_columns = t.hide_columns
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -149,7 +150,7 @@ function _M:generate()
 	end
 
 	-- Add UI controls
-	self.mouse:registerZone(0, self.fh, self.w, self.h - self.fh, function(button, x, y, xrel, yrel, bx, by, event)
+	self.mouse:registerZone(0, self.fh, self.w, self.h - (self.hide_columns and 0 or self.fh), function(button, x, y, xrel, yrel, bx, by, event)
 		if button == "wheelup" and event == "button" then self.scroll = util.bound(self.scroll - 1, 1, self.max - self.max_display + 1)
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
@@ -227,13 +228,16 @@ function _M:display(x, y)
 
 	for j = 1, #self.columns do
 		local col = self.columns[j]
-		if self.cur_col == j then
-			col._stex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
-		else
-			col._tex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
+		local y = y
+		if not self.hide_columns then
+			if self.cur_col == j then
+				col._stex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
+			else
+				col._tex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
+			end
+			y = y + self.fh
 		end
 
-		local y = y + self.fh
 		local max = math.min(self.scroll + self.max_display - 1, self.max)
 		for i = self.scroll, max do
 			local item = self.list[i]

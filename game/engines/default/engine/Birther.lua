@@ -18,9 +18,12 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 _M.birth_descriptor_def = {}
 _M.birth_auto = {}
@@ -69,30 +72,49 @@ function _M:init(actor, order, at_end, quickbirth, w, h)
 	self.order = order
 	self.at_end = at_end
 
-	engine.Dialog.init(self, "Character Creation: "..actor.name, w or 600, h or 400)
+	Dialog.init(self, "Character Creation: "..actor.name, w or 600, h or 400)
 
 	self.descriptors = {}
 
+	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
+Keyboard: #00FF00#up key/down key#FFFFFF# to select an option; #00FF00#Enter#FFFFFF# to accept; #00FF00#Backspace#FFFFFF# to go back.
+Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go back.
+]]}
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
+
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
+		{name="", width=8, display_prop="char"},
+		{name="", width=92, display_prop="display_name"},
+	}, list={}, fct=function(item, sel)
+		self.sel = sel
+		self:next()
+	end, select=function(item, sel) self.sel = sel self:select(item) end}
+
 	self.cur_order = 1
+	self.sel = 1
 	self:next()
 
-	self:keyCommands({
+	self:loadUI{
+		{left=0, top=0, ui=self.c_list},
+
+		{right=0, top=self.c_tut.h + 20, ui=self.c_desc},
+		{right=0, top=0, ui=self.c_tut},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+	}
+	self:setFocus(self.c_list)
+	self:setupUI()
+	self:select(self.list[self.c_list.sel])
+--	self.c_list:selectColumn(2)
+
+	self.key:addCommands{
 		_BACKSPACE = function() self:prev() end,
-	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list); self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list); self.changed = true end,
-		ACCEPT = function() self:next() end,
-	})
-	self:mouseZones{
-		{ x=2, y=25, w=350, h=self.h, fct=function(button, x, y, xrel, yrel, tx, ty)
-			self.changed = true
-			if ty < self.font_h*#self.list then
-				self.sel = 1 + math.floor(ty / self.font_h)
-				if button == "left" then self:next()
-				elseif button == "right" then self:prev()
-				end
+		__TEXTINPUT = function(c)
+			if self.list and self.list.chars[c] then
+				self.c_list.sel = self.list.chars[c]
+				self.sel = self.list.chars[c]
+				self:next()
 			end
-		end },
+		end,
 	}
 end
 
@@ -103,7 +125,7 @@ function _M:on_register()
 				self.do_quickbirth = true
 				self:quickBirth()
 			end
-		end)
+		end, "Recreate", "New character")
 	end
 end
 
@@ -155,8 +177,29 @@ function _M:selectType(type)
 			if d.selection_default then default = #self.list end
 		end
 	end
-	self.sel = default
 	self.current_type = type
+	self:updateList()
+	self.c_list.sel = default
+end
+
+function _M:makeKey(letter)
+	if letter >= 26 then
+		return string.char(string.byte('A') + letter - 26)
+	else
+		return string.char(string.byte('a') + letter)
+	end
+end
+
+function _M:updateList()
+	self.list.chars = {}
+	for i, item in ipairs(self.list) do
+		item.zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=item.desc}
+		item.char = self:makeKey(i-1)
+		self.list.chars[item.char] = i
+	end
+	self.c_list.list = self.list
+	self.c_list.columns[2].name = (self.step_names[self.current_type] or self.current_type:capitalize())
+	self.c_list:generate()
 end
 
 function _M:prev()
@@ -178,7 +221,7 @@ function _M:next()
 	self.changed = true
 	if self.list then
 		table.insert(self.descriptors, self.list[self.sel])
-		if self.list[self.sel].on_select then self.list[self.sel]:on_select() end
+		if self.list[self.sel] and self.list[self.sel].on_select then self.list[self.sel]:on_select() end
 
 		self.cur_order = self.cur_order + 1
 		if not self.order[self.cur_order] then
@@ -194,6 +237,12 @@ function _M:next()
 
 	if #self.list == 1 and self.birth_auto[self.current_type] ~= false then
 		self:next()
+	end
+end
+
+function _M:select(item)
+	if item and self.uis and self.uis[2] then
+		self.uis[2].ui = item.zone
 	end
 end
 
@@ -246,30 +295,4 @@ function _M:apply()
 			self.actor:initBody()
 		end
 	end
-end
-
-function _M:drawDialog(s)
-	if not self.list or not self.list[self.sel] then return end
-
-	-- Description part
-	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
-	local birthhelp = ([[Keyboard: #00FF00#up key/down key#FFFFFF# to select an option; #00FF00#Enter#FFFFFF# to accept; #00FF00#Backspace#FFFFFF# to go back.
-Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go back.
-]]):splitLines(self.iw / 2 - 10, self.font)
-	for i = 1, #birthhelp do
-		s:drawColorStringBlended(self.font, birthhelp[i], self.iw / 2 + 5, 2 + (i-1) * self.font:lineSkip())
-	end
-
-	local lines = self.list[self.sel].desc:splitLines(self.iw / 2 - 10, self.font)
-	local r, g, b
-	for i = 1, #lines do
-		r, g, b = s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + (i + #birthhelp + 1) * self.font:lineSkip(), r, g, b)
-	end
-
-	-- Stats
-	s:drawColorStringBlended(self.font, "Selecting: "..(self.step_names[self.current_type] or self.current_type:capitalize()), 2, 2)
-	self:drawWBorder(s, 2, 20, 200)
-
-	self:drawSelectionList(s, 2, 25, self.font_h, self.list, self.sel, "display_name")
-	self.changed = false
 end

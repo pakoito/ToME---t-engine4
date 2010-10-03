@@ -27,6 +27,7 @@ module(..., package.seeall, class.inherit(Base, Focusable))
 function _M:init(t)
 	self.text = assert(t.text, "no textzone text")
 	self.w = assert(t.width, "no list width")
+	if t.auto_height then t.height = 1 end
 	self.h = assert(t.height, "no list height")
 	self.scrollbar = t.scrollbar
 	self.no_color_bleed = t.no_color_bleed
