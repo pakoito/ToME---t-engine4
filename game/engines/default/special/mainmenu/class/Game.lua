@@ -205,7 +205,7 @@ function _M:onQuit()
 	self.is_quitting = Dialog:yesnoPopup("Quit", "Really exit T-Engine/ToME?", function(ok)
 		self.is_quitting = false
 		if ok then os.exit() end
-	end, "Quit", "Contiue")
+	end, "Quit", "Continue")
 end
 
 profile_help_text = [[#LIGHT_GREEN#T-Engine4#LAST# allows you to sync your player profile with the website #LIGHT_BLUE#http://te4.org/#LAST#

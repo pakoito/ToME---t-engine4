@@ -49,7 +49,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
-	name = "degenerated skeleton warrior", color=colors.WHITE,
+	name = "degenerated skeleton warrior", color=colors.WHITE, image="npc/degenerated_skeleton_warrior.png",
 	level_range = {1, 18}, exp_worth = 1,
 	rarity = 1,
 	resolvers.equip{ {type="weapon", subtype="greatsword", autoreq=true} },
@@ -58,7 +58,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
-	name = "skeleton warrior", color=colors.SLATE,
+	name = "skeleton warrior", color=colors.SLATE, image="npc/skeleton_warrior.png",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(90,100),
@@ -69,7 +69,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
-	name = "skeleton mage", color=colors.LIGHT_RED,
+	name = "skeleton mage", color=colors.LIGHT_RED, image="npc/skeleton_mage.png",
 	level_range = {4, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),
@@ -85,7 +85,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
-	name = "skeleton archer", color=colors.UMBER,
+	name = "skeleton archer", color=colors.UMBER, image="npc/skeleton_archer.png",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(70,80),
@@ -98,7 +98,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
-	name = "skeleton master archer", color=colors.LIGHT_UMBER,
+	name = "skeleton master archer", color=colors.LIGHT_UMBER, image="npc/master_skeleton_archer.png",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 5,
 	max_life = resolvers.rngavg(70,80),
