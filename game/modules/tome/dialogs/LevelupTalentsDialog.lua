@@ -236,7 +236,7 @@ function _M:onDrawItem(item)
 		if t.generic then
 			what = "generic talent"
 			text[#text+1] = "#00FFFF#Generic Talent"
-			text[#text+1] = "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It reprents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.\n"
+			text[#text+1] = "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.\n"
 		else
 			what = "class talent"
 			text[#text+1] = "#00FFFF#Class talent"

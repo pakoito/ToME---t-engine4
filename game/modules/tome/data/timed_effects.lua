@@ -1595,3 +1595,38 @@ newEffect{
 		self:doFOV()
 	end,
 }
+
+newEffect{
+	name = "PHOENIX_EGG",
+	desc = "reviving phoenix",
+	type = "magical",
+	status = "beneficial",
+	parameters = { life_regen = 25, mana_regen = -9.75, never_move = 1, silence = 1 },
+	on_gain = function(self, err) return "#Target# is consumed in a burst of flame, all that remains is a fiery egg.", "+Phoenix" end,
+	on_lose = function(self, err) return "#Target# bursts out from the egg.", "-Phoenix" end,
+	activate = function(self, eff)
+		self.display = "O"						             -- change the display of the phoenix to an egg, maybe later make it a fiery orb image
+		if self._mo then
+			self._mo:invalidate()
+			game.level.map:updateMap(self.x, self.y)
+		end
+		eff.life_regen = self:addTemporaryValue("life_regen", 25)	         -- gives it a 10 life regen, should I increase this?
+		eff.mana_regen = self:addTemporaryValue("mana_regen", -9.75)          -- makes the mana regen realistic
+		eff.never_move = self:addTemporaryValue("never_move", 1)	 -- egg form shouldnt move
+		eff.silence = self:addTemporaryValue("silence", 1)		          -- egg shouldnt cast spells
+		eff.combat = self.combat
+		self.combat = nil						               -- egg shouldn't melee
+	end,
+	deactivate = function(self, eff)
+		self.display = "B"
+		if self._mo then
+			self._mo:invalidate()
+			game.level.map:updateMap(self.x, self.y)
+		end
+		eff.life_regen = self:removeTemporaryValue("life_regen", eff.life_regen)
+		eff.mana_regen = self:removeTemporaryValue("mana_regen", eff.mana_regen)
+		eff.never_move = self:removeTemporaryValue("never_move", eff.never_move)
+		eff.silence = self:removeTemporaryValue("silence", eff.silence)
+		self.combat = eff.combat
+	end,
+}

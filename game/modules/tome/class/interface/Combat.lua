@@ -407,43 +407,43 @@ end
 
 --- Gets the attack
 function _M:combatAttack(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5) + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the attack using only strength
 function _M:combatAttackStr(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(100) - 10) + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the attack using only dexterity
 function _M:combatAttackDex(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getDex(100) - 10) + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the attack using only magic
 function _M:combatAttackDex(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getMag(100) - 10) + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the armor penetration
 function _M:combatAPR(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	return self.combat_apr + (weapon.apr or 0)
 end
 
 --- Gets the weapon speed
 function _M:combatSpeed(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	return self.combat_physspeed + (weapon.physspeed or 1)
 end
 
 --- Gets the crit rate
 function _M:combatCrit(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	local addcrit = 0
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then
 		addcrit = 1 + self:getTalentLevel(Talents.T_LETHALITY) * 1.3
@@ -453,13 +453,13 @@ end
 
 --- Gets the damage range
 function _M:combatDamageRange(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 	return (self.combat_damrange or 0) + (weapon.damrange or 1.1)
 end
 
 --- Gets the damage
 function _M:combatDamage(weapon)
-	weapon = weapon or self.combat
+	weapon = weapon or self.combat or {}
 
 	local sub_con_to_str = false
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_con_to_str = true end
