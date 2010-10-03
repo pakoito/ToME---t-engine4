@@ -19,6 +19,7 @@
 
 load("/data/general/npcs/bone-giant.lua", rarity(0))
 load("/data/general/npcs/ghoul.lua", rarity(5))
+load("/data/general/npcs/ghost.lua", rarity(5))
 load("/data/general/npcs/skeleton.lua", rarity(5))
 load("/data/general/npcs/orc.lua", rarity(3))
 load("/data/general/npcs/orc-rak-shor.lua", rarity(0))
