@@ -20,6 +20,7 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
+local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
 
@@ -80,9 +81,11 @@ function _M:init(actor, order, at_end, quickbirth, w, h)
 Keyboard: #00FF00#up key/down key#FFFFFF# to select an option; #00FF00#Enter#FFFFFF# to accept; #00FF00#Backspace#FFFFFF# to go back.
 Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go back.
 ]]}
+
+	self.c_random = Button.new{text="Random", width=math.floor(self.iw / 2 - 40), fct=function() self:randomSelect() end}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
 
-	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10 - self.c_random.h, scrollbar=true, columns={
 		{name="", width=8, display_prop="char"},
 		{name="", width=92, display_prop="display_name"},
 	}, list={}, fct=function(item, sel)
@@ -99,6 +102,8 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 
 		{right=0, top=self.c_tut.h + 20, ui=self.c_desc},
 		{right=0, top=0, ui=self.c_tut},
+
+		{left=0, bottom=0, ui=self.c_random},
 		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_list)
@@ -238,6 +243,11 @@ function _M:next()
 	if #self.list == 1 and self.birth_auto[self.current_type] ~= false then
 		self:next()
 	end
+end
+
+function _M:randomSelect()
+	self.sel = rng.range(1, #self.list)
+	self:next()
 end
 
 function _M:select(item)
