@@ -17,23 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
-load("/data/general/objects/lore-sunwall.lua")
-
-local Stats = require"engine.interface.ActorStats"
-
-newEntity{ base = "BASE_CLOTH_ARMOR",
-	define_as = "BLACK_ROBE", rarity=false,
-	name = "Black Robe", unique=true,
-	unided_name = "black robe", color=colors.DARK_GREY,
-	desc = [[A silk robe, darker than the darkest night sky, it radiates power.]],
-	cost = 500,
-	wielder = {
-		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
-		see_invisible = 10,
-		blind_immune = 1,
-		combat_spellpower = 10,
-		combat_dam = 10,
-		combat_def = 6,
-	},
+for i = 1, 2 do
+newEntity{ base = "BASE_SCROLL",
+	define_as = "SUNWALL_LORE_NOTE"..i,
+	name = "Loremaster Verutir's note", lore="sunwall-note-"..i, unique="Loremaster Verutir's note "..i,
+	desc = [[A paper scrap containing some lore.]],
+	rarity = 50,
+	encumberance = 0,
 }
+end

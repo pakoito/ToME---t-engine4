@@ -18,9 +18,12 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local ListColumns = require "engine.ui.ListColumns"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, actor)
 	self.actor = actor
@@ -28,32 +31,29 @@ function _M:init(title, actor)
 	local nb = 0
 	for id, data in pairs(actor.lore_known) do nb = nb + 1 end
 
-	engine.Dialog.init(self, (title or "Lore").." ("..nb.."/"..total..")", game.w * 0.8, game.h * 0.8, nil, nil, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	Dialog.init(self, (title or "Lore").." ("..nb.."/"..total..")", game.w * 0.8, game.h * 0.8)
+
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
 
 	self:generateList()
 
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, sortable=true, columns={
+		{name="", width=10, display_prop="order", sort="order"},
+		{name="Lore", width=60, display_prop="name", sort="name"},
+		{name="Category", width=30, display_prop="cat", sort="cat"},
+	}, list=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
-	self:keyCommands({},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
+	self:loadUI{
+		{left=0, top=0, ui=self.c_list},
+		{right=0, top=0, ui=self.c_desc},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+	}
+	self:setFocus(self.c_list)
+	self:setupUI()
+	self:select(self.list[1])
+
+	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=350, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty)
-			self.changed = true
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			self.changed = true
-
-			if button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
 	}
 end
 
@@ -70,23 +70,9 @@ function _M:generateList()
 	self.list = list
 end
 
-function _M:drawDialog(s)
-	-- Description part
-	self:drawHBorder(s, self.iw / 2, 2, self.ih - 4)
-
-	local h = 2
-	if self.list[self.sel] then
-		local str = ("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(self.list[self.sel].cat, self.list[self.sel].name, self.list[self.sel].desc)
-		lines = str:splitLines(self.iw / 2 - 10, self.font)
-	else
-		lines = {}
+function _M:select(item)
+	if item and self.uis[2] then
+		if not item.zone then item.zone = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(item.cat, item.name, item.desc)} end
+		self.uis[2].ui = item.zone
 	end
-	self:drawWBorder(s, self.iw / 2 + self.iw / 6, h - 0.5 * self.font:lineSkip(), self.iw / 6)
-	for i = 1, #lines do
-		s:drawColorStringBlended(self.font, lines[i], self.iw / 2 + 5, 2 + h)
-		h = h + self.font:lineSkip()
-	end
-
-	self:drawSelectionList(s, 2, 5, self.font_h, self.list, self.sel, "name", self.scroll, self.max, nil, nil, nil, self.iw / 2 - 5, true)
-	self.changed = false
 end
