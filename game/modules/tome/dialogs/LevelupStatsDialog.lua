@@ -7,7 +7,7 @@
 -- (at your option) any later version.
 --
 -- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- but WITHOUT ANY WARRANTY; without even th+e implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
@@ -28,6 +28,8 @@ local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
 
 module(..., package.seeall, class.inherit(Dialog))
 
+local _points_text = "Stats points left: #00FF00#%d#WHITE#"
+
 function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor_dup = actor:clone()
@@ -36,11 +38,12 @@ function _M:init(actor, on_finish)
 
 	self.sel = 1
 
-	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
+	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), auto_height=true, no_color_bleed=true, text=[[
 Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to increase stat; #00FF00#left key#FFFFFF# to decrease a stat.
 Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF# to decrease a stat.
 ]]}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
+	self.c_points = Textzone.new{width=math.floor(self.iw / 2 - 10), auto_height=true, no_color_bleed=true, text=_points_text:format(self.actor.unused_stats)}
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, columns={
 		{name="Stat", width=70, display_prop="name"},
@@ -54,13 +57,17 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 		{name="Constitution", val=self.actor:getCon(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_CON].description}},
 	}, fct=function(item, _, v)
 		self:incStat(v == "left" and 1 or -1)
-	end, select=function(item, sel) self.sel = sel if self.uis[2] then self.uis[2].ui = item.zone end end}
+	end, select=function(item, sel) self.sel = sel if self.uis[5] then self.uis[5].ui = item.zone end end}
 
 	self:loadUI{
-		{left=0, top=0, ui=self.c_list},
+		{left=0, top=0, ui=self.c_points},
+		{left=5, top=self.c_points.h+5, ui=Separator.new{dir="vertical", size=math.floor(self.iw / 2) - 10}},
+		{left=0, top=self.c_points.h+15, ui=self.c_list},
+
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+
 		{right=0, top=self.c_tut.h + 20, ui=self.c_desc},
 		{right=0, top=0, ui=self.c_tut},
-		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()
@@ -132,6 +139,8 @@ function _M:incStat(v)
 	self.c_list:generate()
 	self.c_list.sel = sel
 	self.c_list:onSelect()
+	self.c_points.text = _points_text:format(self.actor.unused_stats)
+	self.c_points:generate()
 	self:update()
 end
 
