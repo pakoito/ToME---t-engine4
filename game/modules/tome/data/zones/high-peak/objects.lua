@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+load("/data/general/objects/lore-sunwall.lua")
 
 local Stats = require "engine.interface.ActorStats"
 
