@@ -277,19 +277,19 @@ function _M:dump()
 	else
 		nl()
 	end
-	nnl(("%-32s"):format(strings[4]))
+	nnl(("%-32s"):format(strings[5]))
 	if player:knowTalent(player.T_NEGATIVE_POOL) then
 		nl(makelabel("Negative", ("    %d/%d"):format(player:getNegative(), player.max_negative)))
 	else
 		nl()
 	end
-	nnl(("%-32s"):format(strings[4]))
+	nnl(("%-32s"):format(""))
 	if player:knowTalent(player.T_VIM_POOL) then
 		nl(makelabel("Vim", ("    %d/%d"):format(player:getVim(), player.max_vim)))
 	else
 		nl()
 	end
-	nnl(("%-32s"):format(strings[5]))
+	nnl(("%-32s"):format(""))
 	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
 		nl((makelabel("Equilibrium", ("    %d"):format(player:getEquilibrium()))))
 	else
