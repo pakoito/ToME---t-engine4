@@ -146,7 +146,7 @@ function _M:act()
 
 	while self:enoughEnergy() and not self.dead do
 		if self.project then
-			local x, y, act, stop = self.src:projectDoMove(self.project.def.typ, self.project.def.x, self.project.def.y, self.x, self.y, self.project.def.start_x, self.project.def.start_y, self)
+			local x, y, act, stop = self.src:projectDoMove(self.project.def.typ, self.project.def.x, self.project.def.y, self.x, self.y, self.project.def.start_x, self.project.def.start_y)
 			if x and y then self:move(x, y) end
 			if act then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
 			if stop then

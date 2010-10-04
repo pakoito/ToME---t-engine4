@@ -183,7 +183,7 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	game.zone:addEntity(game.level, proj, "projectile", self.x, self.y)
 end
 
-function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy, projectile)
+function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 	-- Stop at range or on block
 	local l = line.new(srcx, srcy, tgtx, tgty)
 	local lx, ly = srcx, srcy
