@@ -45,8 +45,8 @@ profile.mod.allow_build = profile.mod.allow_build or {}
 -- Create some noise textures
 local n = core.noise.new(3)
 _3DNoise = n:makeTexture3D(64, 64, 64)
-local n = core.noise.new(2)
-_2DNoise = n:makeTexture2D(64, 64)
+local n = core.noise.new(3)
+_2DNoise = n:makeTexture2DStack(64, 64, 64)
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")

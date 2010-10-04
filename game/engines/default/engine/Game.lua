@@ -188,8 +188,8 @@ function _M:replaceDialog(src, dest)
 
 	-- Give focus
 	if id == #self.dialogs then
-		if d.key then d.key:setCurrent() end
-		if d.mouse then d.mouse:setCurrent() end
+		if dest.key then dest.key:setCurrent() end
+		if dest.mouse then dest.mouse:setCurrent() end
 	end
 	if dest.on_register then dest:on_register(src) end
 	if self.onRegisterDialog then self:onRegisterDialog(dest, src) end
