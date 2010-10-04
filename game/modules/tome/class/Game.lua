@@ -243,7 +243,10 @@ function _M:setupDisplayMode()
 
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-	if self.fbo then self.fbo_shader = Shader.new("main_fbo") end
+	if self.fbo then
+		self.fbo_shader = Shader.new("main_fbo")
+		if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end
+	end
 	if self.player then self.player:updateMainShader() end
 end
 
