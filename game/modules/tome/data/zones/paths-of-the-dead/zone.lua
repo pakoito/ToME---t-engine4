@@ -31,7 +31,6 @@ return {
 	persistant = "zone",
 	ambiant_music = "Dark Secrets.ogg",
 	no_worldport = true,
-	no_level_connectivity = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -70,6 +69,7 @@ return {
 			}, },
 		},
 		[8] = {
+			no_level_connectivity = true,
 			generator = { map = {
 				class = "engine.generator.map.Static",
 				map = "zones/paths-of-the-dead-last",
