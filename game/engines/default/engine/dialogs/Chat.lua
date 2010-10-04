@@ -82,10 +82,9 @@ function _M:use(item, a)
 end
 
 function _M:regen()
-	game:unregisterDialog(self)
 	local d = new(self.chat, self.cur_id)
 	d.__showup = false
-	game:registerDialog(d)
+	game:replaceDialog(self, d)
 end
 
 function _M:resolveAuto()

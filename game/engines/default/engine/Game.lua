@@ -167,10 +167,32 @@ end
 function _M:registerDialog(d)
 	table.insert(self.dialogs, d)
 	self.dialogs[d] = #self.dialogs
+	d.__stack_id = #self.dialogs
 	if d.key then d.key:setCurrent() end
 	if d.mouse then d.mouse:setCurrent() end
 	if d.on_register then d:on_register() end
 	if self.onRegisterDialog then self:onRegisterDialog(d) end
+end
+
+--- Replaces a dialog to display with an other
+function _M:replaceDialog(src, dest)
+	local id = src.__stack_id
+
+	-- Remove old one
+	self.dialogs[src] = nil
+
+	-- Update
+	self.dialogs[id] = dest
+	self.dialogs[dest] = id
+	dest.__stack_id = id
+
+	-- Give focus
+	if id == #self.dialogs then
+		if d.key then d.key:setCurrent() end
+		if d.mouse then d.mouse:setCurrent() end
+	end
+	if dest.on_register then dest:on_register(src) end
+	if self.onRegisterDialog then self:onRegisterDialog(dest, src) end
 end
 
 --- Undisplay a dialog, removing its own keyhandler if needed
