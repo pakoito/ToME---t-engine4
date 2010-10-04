@@ -194,6 +194,7 @@ function _M:setupWrite(mod)
 	local base = engine.homepath .. fs.getPathSeparator() .. mod.short_name
 	fs.setWritePath(base)
 	fs.mount(base, "/", false)
+	return base
 end
 
 --- Get a savefile description from the savefile desc.lua file

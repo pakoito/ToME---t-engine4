@@ -21,8 +21,10 @@ require "engine.class"
 local Module = require "engine.Module"
 local Dialog = require "engine.ui.Dialog"
 local TreeList = require "engine.ui.TreeList"
+local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
+local Savefile = require "engine.Savefile"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -31,7 +33,8 @@ function _M:init()
 
 	local list = table.clone(game.save_list, true)
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih, text=""}
+	self.c_delete = Button.new{text="Delete", fct=function(text) self:deleteSave() end}
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih - self.c_delete.h - 10, text=""}
 
 	self.tree = {}
 	local found = false
@@ -42,6 +45,7 @@ function _M:init()
 			save.fct = function()
 				Module:instanciate(mod, save.name, false)
 			end
+			save.mod = mod
 			save.zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="#{bold}##GOLD#"..mod.long_name..": "..save.name.."#WHITE##{normal}#\n\n"..save.description}
 			table.insert(nodes, save)
 			found = true
@@ -68,6 +72,7 @@ function _M:init()
 	self:loadUI{
 		{left=0, top=0, ui=self.c_tree},
 		{right=0, top=0, ui=self.c_desc},
+		{right=0, bottom=0, ui=self.c_delete},
 		{left=self.c_tree.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_tree)
@@ -81,5 +86,26 @@ end
 function _M:select(item)
 	if item and self.uis[2] then
 		self.uis[2].ui = item.zone
+		self.cur_sel = item
 	end
+end
+
+function _M:deleteSave()
+	if not self.cur_sel then return end
+
+	Dialog:yesnoPopup("Delete savefile", "Really delete #{bold}##GOLD#"..self.cur_sel.name.."#WHITE##{normal}#", function(ret)
+		if ret then
+			local base = Module:setupWrite(self.cur_sel.mod)
+			local save = Savefile.new(self.cur_sel.name)
+			save:delete()
+			save:close()
+			fs.umount(base)
+
+			game.save_list = Module:listSavefiles()
+
+			local d = new()
+			d.__showup = false
+			game:replaceDialog(self, d)
+		end
+	end, "Delete", "Cancel")
 end
