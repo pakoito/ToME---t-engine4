@@ -46,10 +46,6 @@ You can dump your character data to a file to remember her/him forever, or you c
 	}
 	self:setFocus(self.c_list)
 	self:setupUI(false, true)
-
-	self.key:addBinds{
-		EXIT = function() game:unregisterDialog(self) end,
-	}
 end
 
 --- Clean the actor from debuffs/buffs
