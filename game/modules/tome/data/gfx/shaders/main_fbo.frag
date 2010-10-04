@@ -2,7 +2,7 @@ uniform float hp_warning;
 uniform float motionblur;
 uniform float blur;
 uniform float tick;
-uniform sampler3D noisevol;
+uniform sampler2D noisevol;
 uniform vec2 texSize;
 uniform sampler2D tex;
 uniform vec3 colorize;
@@ -14,14 +14,14 @@ void main(void)
 	if (motionblur > 0.0)
 	{
 		int blursize = int(motionblur);
-		vec2 offset = 1.0/texSize;
+		vec2 offset = 0.8/texSize;
 
-		float fTime0_X = tick / 40000.0;
-		vec2 coord = gl_TexCoord[0].xy;
-		float noisy = texture3D(noisevol,vec3(coord,fTime0_X)).r;
-//		float noisy2 = texture3D(noisevol,vec3(coord/5.0,fTime0_X)).r;
-//		float noisy3 = texture3D(noisevol,vec3(coord/7.0,fTime0_X)).r;
-//		float noise = (noisy+noisy2+noisy3)/3.0;
+		float fTime0_X = tick / 20000.0;
+		float coord = gl_TexCoord[0].x + gl_TexCoord[0].y * texSize[0];
+		float noisy1 = texture2D(noisevol,vec2(coord,fTime0_X)).r;
+		float noisy2 = texture2D(noisevol,vec2(coord/5.0,fTime0_X/1.5)).r;
+		float noisy3 = texture2D(noisevol,vec2(coord/7.0,fTime0_X/2)).r;
+		float noisy = (noisy1+noisy2+noisy3)/3.0;
 
 		// Center Pixel
 		vec4 sample = vec4(0.0,0.0,0.0,0.0);

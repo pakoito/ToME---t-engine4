@@ -448,9 +448,7 @@ function _M:display()
 			self.level.map:display(0, 0)
 			self.target:display(0, 0)
 			self.fbo:use(false)
---			local time = 1 + math.floor(core.game.getTime() / 50) % 500
---			_2DNoise[time]:bind(1, false)
-			_3DNoise:bind(1, true)
+			_2DNoise:bind(1, false)
 			self.fbo:toScreen(
 				self.level.map.display_x, self.level.map.display_y,
 				self.level.map.viewport.width, self.level.map.viewport.height,
