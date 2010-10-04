@@ -194,8 +194,8 @@ function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy, projectile)
 
 	if lx and ly then
 		if not typ.no_restrict then
-			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move", projectile, true) then return lx, ly, false, true
-			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move", projectile, true) then return lx, ly, false, true end
+			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return lx, ly, false, true
+			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return lx, ly, false, true end
 			if typ.range and math.sqrt((srcx-lx)^2 + (srcy-ly)^2) > typ.range then return lx, ly, false, true end
 		end
 
