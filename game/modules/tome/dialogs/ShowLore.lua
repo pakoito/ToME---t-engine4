@@ -38,9 +38,9 @@ function _M:init(title, actor)
 	self:generateList()
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, sortable=true, columns={
-		{name="", width=10, display_prop="order", sort="order"},
+		{name="", width={40,"fixed"}, display_prop="order", sort="order"},
 		{name="Lore", width=60, display_prop="name", sort="name"},
-		{name="Category", width=30, display_prop="cat", sort="cat"},
+		{name="Category", width=40, display_prop="cat", sort="cat"},
 	}, list=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
 	self:loadUI{

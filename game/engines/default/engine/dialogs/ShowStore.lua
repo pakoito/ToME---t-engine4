@@ -37,15 +37,15 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self:generateList()
 
 	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
-		{name="", width=4, display_prop="char", sort="id"},
-		{name="Inventory", width=68, display_prop="name", sort="name"},
+		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
+		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Price", width=8, display_prop="cost", sort="cost"},
 	}, list=self.actor_list, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
 
 	self.c_store = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
-		{name="", width=4, display_prop="char", sort="id"},
-		{name="Store", width=68, display_prop="name"},
+		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
+		{name="Store", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Price", width=8, display_prop="cost", sort="cost"},
 	}, list=self.store_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}

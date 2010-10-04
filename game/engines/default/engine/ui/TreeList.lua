@@ -43,7 +43,20 @@ function _M:init(t)
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
 	for j, col in ipairs(self.columns) do
-		col.width = w * col.width / 100
+		if type(col.width) == "table" then
+			if col.width[2] == "fixed" then
+				w = w - col.width[1]
+			end
+		end
+	end
+	for j, col in ipairs(self.columns) do
+		if type(col.width) == "table" then
+			if col.width[2] == "fixed" then
+				col.width = col.width[1]
+			end
+		else
+			col.width = w * col.width / 100
+		end
 	end
 
 	self.items_by_key = {}

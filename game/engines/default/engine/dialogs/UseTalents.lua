@@ -39,9 +39,9 @@ Check out the keybinding screen in the game menu to bind hotkeys to a key (defau
 	self:generateList()
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, sortable=true, scrollbar=true, columns={
-		{name="", width=4, display_prop="char", sort="id"},
+		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="Talent", width=80, display_prop="name", sort="name"},
-		{name="Status", width=16, display_prop="status", sort="status"},
+		{name="Status", width=20, display_prop="status", sort="status"},
 	}, list=self.list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
 
 	self:loadUI{

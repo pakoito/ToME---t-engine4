@@ -36,8 +36,8 @@ function _M:init(title, actor, filter, action)
 	self:generateList()
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
-		{name="", width=4, display_prop="char"},
-		{name="Equipment", width=68, display_prop="name"},
+		{name="", width={20,"fixed"}, display_prop="char"},
+		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
 	}, list=self.list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}

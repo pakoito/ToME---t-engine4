@@ -35,15 +35,15 @@ function _M:init(title, actor, filter, action)
 	self:generateList()
 
 	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
-		{name="", width=4, display_prop="char", sort="id"},
-		{name="Inventory", width=68, display_prop="name", sort="name"},
+		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
+		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
 	}, list=self.inven_list, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
 
 	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
-		{name="", width=4, display_prop="char"},
-		{name="Equipment", width=68, display_prop="name"},
+		{name="", width={20,"fixed"}, display_prop="char"},
+		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
 	}, list=self.equip_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}

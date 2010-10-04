@@ -43,6 +43,13 @@ function _M:init(t)
 	for j, col in ipairs(self.columns) do
 		if type(col.width) == "table" then
 			if col.width[2] == "fixed" then
+				w = w - col.width[1]
+			end
+		end
+	end
+	for j, col in ipairs(self.columns) do
+		if type(col.width) == "table" then
+			if col.width[2] == "fixed" then
 				col.width = col.width[1]
 			end
 		else
