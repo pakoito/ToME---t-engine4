@@ -55,7 +55,8 @@ end
 
 function _M:use(item)
 	local t = item
-	local curcol = self.c_tree.cur_col
+	local curcol = self.c_tree.cur_col - 1
+	if not item or item.nodes or curcol < 1 or curcol > 2 then return end
 
 	--
 	-- Make a dialog to ask for the key
@@ -74,17 +75,16 @@ function _M:use(item)
 		end
 
 		if sym == KeyBind._BACKSPACE then
-			t["bind"..curcol] = nil
 			KeyBind.binds_remap[t.type] = KeyBind.binds_remap[t.type] or t.k.default
 			KeyBind.binds_remap[t.type][curcol] = nil
 		elseif sym ~= KeyBind._ESCAPE then
 			local ks = KeyBind:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
-			print("Binding", t.name, "to", ks)
-			t["bind"..curcol] = ks
+			print("Binding", t.name, "to", ks, "::", curcol)
 
 			KeyBind.binds_remap[t.type] = KeyBind.binds_remap[t.type] or t.k.default
 			KeyBind.binds_remap[t.type][curcol] = ks
 		end
+		self.c_tree:drawItem(item)
 		game:unregisterDialog(d)
 	end}
 
@@ -101,10 +101,10 @@ function _M:use(item)
 				core.key.modState("meta") and true or false
 			)
 			print("Binding", t.name, "to", ks)
-			t["bind"..curcol] = ks
 
 			KeyBind.binds_remap[t.type] = KeyBind.binds_remap[t.type] or t.k.default
 			KeyBind.binds_remap[t.type][curcol] = ks
+			self.c_tree:drawItem(item)
 			game:unregisterDialog(d)
 		end },
 	}
