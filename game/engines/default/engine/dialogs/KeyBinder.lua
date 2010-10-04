@@ -23,10 +23,10 @@ local KeyBind = require "engine.KeyBind"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(key_source)
+function _M:init(key_source, force_all)
 	engine.Dialog.init(self, "Key bindings", 600, game.h / 1.2)
 
-	self:generateList(key_source)
+	self:generateList(key_source, force_all)
 
 	self.key_source = key_source
 
@@ -131,11 +131,11 @@ function _M:use()
 	game:registerDialog(d)
 end
 
-function _M:generateList(key_source)
+function _M:generateList(key_source, force_all)
 	local l = {}
 
 	for virtual, t in pairs(KeyBind.binds_def) do
-		if key_source.virtuals[virtual] then
+		if key_source.virtuals[virtual] or force_all then
 			l[#l+1] = t
 		end
 	end

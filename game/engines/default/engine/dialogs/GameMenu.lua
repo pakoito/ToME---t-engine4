@@ -53,6 +53,11 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key)
 			game:registerDialog(menu)
 		end },
+		keybinds_all = { "Key Bindings", function()
+			game:unregisterDialog(self)
+			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key, true)
+			game:registerDialog(menu)
+		end },
 		resolution = { "Display Resolution", function()
 			game:unregisterDialog(self)
 			local menu = require("engine.dialogs.DisplayResolution").new()

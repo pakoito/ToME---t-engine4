@@ -34,7 +34,7 @@ function _M:init()
 		{name="Options", fct=function()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",
-				"keybinds",
+				"keybinds_all",
 				"resolution",
 				"sound",
 			}
