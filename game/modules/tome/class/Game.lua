@@ -130,6 +130,8 @@ function _M:newGame()
 	local quickbirth = save:loadQuickBirth()
 	save:close()
 
+	self.always_target = true
+
 	local birth; birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		-- Save for quick birth
 		local save = Savefile.new(self.save_name)
@@ -143,7 +145,6 @@ function _M:newGame()
 		self.player:resolve()
 		self.player:resolve(nil, true)
 		self.player.energy.value = self.energy_to_act
-		self.always_target = true
 		Map:setViewerFaction(self.player.faction)
 
 		self.paused = true
@@ -154,12 +155,43 @@ function _M:newGame()
 				self.player:registerCharacterPlayed()
 				self.player:grantQuest(self.player.starting_quest)
 				self.player:onBirth(birth)
+				-- For quickbirth
+				savefile_pipe:push("", "entity", self.player)
 			end, true))
 		end
 
 		if self.player.no_birth_levelup then birthend()
 		else self.player:playerLevelup(birthend) end
 	end, quickbirth, 720, 500)
+
+	-- Load a full player instead of a simpler quickbirthing, if possible
+	birth.quickBirth = function(b)
+		birth.quickBirth = nil
+		if not birth.do_quickbirth then return end
+
+		-- Ignore savefile tokens, as we load an "older" player
+		savefile_pipe:ignoreSaveToken(true)
+		local qb = savefile_pipe:doLoad("", "entity", nil, self.save_name)
+		savefile_pipe:ignoreSaveToken(false)
+
+		-- If we got the player, use it, otherwise quickbirth as normal
+		if qb then
+			-- Disable quickbirth
+			birth.do_quickbirth = false
+			self:unregisterDialog(b)
+
+			-- Load the player directly
+			self.player:replaceWith(qb)
+			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
+			Map:setViewerFaction(self.player.faction)
+			self.player:removeQuest(self.player.starting_quest)
+			self.player:grantQuest(self.player.starting_quest)
+		else
+			-- Continue as normal
+			return Birther.quickBirth(b)
+		end
+	end
+
 	self:registerDialog(birth)
 end
 

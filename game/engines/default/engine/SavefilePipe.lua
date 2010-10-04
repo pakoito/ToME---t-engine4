@@ -106,6 +106,11 @@ function _M:forceWait()
 	game:unregisterDialog(popup)
 end
 
+--- Allow to ignore saveversion token
+function _M:ignoreSaveToken(v)
+	self.ignore_save_token = v
+end
+
 --- Load a savefile
 -- @param savename the name of the savefile to handle
 -- @param type the Savefile method to use. I.e: "game", "level", "zone". This will cann the Savefile:saveGame, Savefile:saveLevel, Savefile:saveZone methods
@@ -134,7 +139,7 @@ function _M:doLoad(savename, type, class, ...)
 	Savefile:setCurrent(cur)
 
 	-- Check for validity
-	if _G.type(ret) == "table" and type ~= "game" and type ~= "world" then
+	if _G.type(ret) == "table" and type ~= "game" and type ~= "world" and not self.ignore_save_token then
 		if not game:saveVersion(ret.__saved_saveversion) then
 			print("Loading savefile", savename, type, class," with id", ret.__saved_saveversion, "but current game does not know this token => ignoring")
 			return nil
