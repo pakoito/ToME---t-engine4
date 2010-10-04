@@ -18,60 +18,44 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
+local TreeList = require "engine.ui.TreeList"
+local Textzone = require "engine.ui.Textzone"
+local Separator = require "engine.ui.Separator"
 local KeyBind = require "engine.KeyBind"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(key_source, force_all)
-	engine.Dialog.init(self, "Key bindings", 600, game.h / 1.2)
+	Dialog.init(self, "Key bindings", 800, game.h)
 
 	self:generateList(key_source, force_all)
 
-	self.key_source = key_source
+	self.c_tree = TreeList.new{width=self.iw, height=self.ih, sel_by_col=true, scrollbar=true, columns={
+		{width=40, display_prop="name"},
+		{width=30, display_prop="b1"},
+		{width=30, display_prop="b2"},
+	}, tree=self.tree,
+		fct=function(item, sel, v) self:use(item, sel, v) end,
+	}
 
-	self.selcol = 1
-	self.sel = 1
-	self.scroll = 1
-	self.max = math.floor((self.ih - 5) / self.font_h) - 1
+	self:loadUI{
+		{left=0, top=0, ui=self.c_tree},
+	}
+	self:setupUI()
 
-	self:keyCommands({
-	},{
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, #self.list) self.scroll = util.scroll(self.sel, self.scroll, self.max) self.changed = true end,
-		MOVE_LEFT = function() self.selcol = util.boundWrap(self.selcol - 1, 1, 2) self.changed = true end,
-		MOVE_RIGHT = function() self.selcol = util.boundWrap(self.selcol + 1, 1, 2) self.changed = true end,
-		ACCEPT = function() self:use() end,
+	self.key:addBinds{
 		EXIT = function()
 			game:unregisterDialog(self)
-			self.key_source:bindKeys()
+			key_source:bindKeys()
 			KeyBind:saveRemap()
 		end,
-	})
-	self:mouseZones{
-		{ x=0, y=0, w=game.w, h=game.h, mode={button=true}, norestrict=true, fct=function(button) if button == "left" then game:unregisterDialog(self) end end},
-		{ x=2, y=5, w=600, h=self.font_h*self.max, fct=function(button, x, y, xrel, yrel, tx, ty, event)
-			if tx < 430 then
-				self.selcol = 1
-			else
-				self.selcol = 2
-			end
-			if button ~= "wheelup" and button ~= "wheeldown" then
-				self.sel = util.bound(self.scroll + math.floor(ty / self.font_h), 1, #self.list)
-			end
-			self.changed = true
-
-			if button == "left" and event == "button" then self:use()
-			elseif button == "right" and event == "button" then
-			elseif button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
-			elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-			end
-		end },
 	}
 end
 
-function _M:use()
-	local t = self.list[self.sel]
+function _M:use(item)
+	local t = item
+	local curcol = self.c_tree.cur_col
 
 	--
 	-- Make a dialog to ask for the key
@@ -90,16 +74,16 @@ function _M:use()
 		end
 
 		if sym == KeyBind._BACKSPACE then
-			t["bind"..self.selcol] = nil
+			t["bind"..curcol] = nil
 			KeyBind.binds_remap[t.type] = KeyBind.binds_remap[t.type] or t.k.default
-			KeyBind.binds_remap[t.type][self.selcol] = nil
+			KeyBind.binds_remap[t.type][curcol] = nil
 		elseif sym ~= KeyBind._ESCAPE then
 			local ks = KeyBind:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 			print("Binding", t.name, "to", ks)
-			t["bind"..self.selcol] = ks
+			t["bind"..curcol] = ks
 
 			KeyBind.binds_remap[t.type] = KeyBind.binds_remap[t.type] or t.k.default
-			KeyBind.binds_remap[t.type][self.selcol] = ks
+			KeyBind.binds_remap[t.type][curcol] = ks
 		end
 		game:unregisterDialog(d)
 	end}
@@ -117,16 +101,16 @@ function _M:use()
 				core.key.modState("meta") and true or false
 			)
 			print("Binding", t.name, "to", ks)
-			t["bind"..self.selcol] = ks
+			t["bind"..curcol] = ks
 
 			KeyBind.binds_remap[t.type] = KeyBind.binds_remap[t.type] or t.k.default
-			KeyBind.binds_remap[t.type][self.selcol] = ks
+			KeyBind.binds_remap[t.type][curcol] = ks
 			game:unregisterDialog(d)
 		end },
 	}
 
 	d.drawDialog = function(self, s)
-		s:drawColorStringBlendedCentered(self.font, self.selcol == 1 and "Bind key" or "Bind alternate key", 2, 2, self.iw - 2, self.ih - 2)
+		s:drawColorStringBlendedCentered(self.font, curcol == 1 and "Bind key" or "Bind alternate key", 2, 2, self.iw - 2, self.ih - 2)
 	end
 	game:registerDialog(d)
 end
@@ -135,7 +119,7 @@ function _M:generateList(key_source, force_all)
 	local l = {}
 
 	for virtual, t in pairs(KeyBind.binds_def) do
-		if key_source.virtuals[virtual] or force_all then
+		if (force_all or key_source.virtuals[virtual]) and t.group ~= "debug" then
 			l[#l+1] = t
 		end
 	end
@@ -148,29 +132,31 @@ function _M:generateList(key_source, force_all)
 	end)
 
 	-- Makes up the list
-	local list = {}
-	local i = 0
+	local tree = {}
+	local groups = {}
 	for _, k in ipairs(l) do
-		local binds = KeyBind:getBindTable(k)
-		list[#list+1] = {
+		local item = {
 			k = k,
-			name = k.name,
+			name = "#{italic}##AQUAMARINE#"..k.name.."#{normal}##WHITE#",
 			type = k.type,
-			bind1 = binds[1],
-			bind2 = binds[2],
-			b1 = function(v) return KeyBind:formatKeyString(v.bind1) end,
-			b2 = function(v) return KeyBind:formatKeyString(v.bind2) end,
+			bind1 = function(item) return KeyBind:getBindTable(k)[1] end,
+			bind2 = function(item) return KeyBind:getBindTable(k)[2] end,
+			b1 = function(item) return KeyBind:formatKeyString(util.getval(item.bind1, item)) end,
+			b2 = function(item) return KeyBind:formatKeyString(util.getval(item.bind2, item)) end,
 		}
-		i = i + 1
+		groups[k.group] = groups[k.group] or {}
+		table.insert(groups[k.group], item)
 	end
-	self.list = list
-end
 
-function _M:drawDialog(s)
-	local col = {155,155,0}
-	local selcol = {255,255,0}
+	for group, data in pairs(groups) do
+		tree[#tree+1] = {
+			name = "#{bold}##GOLD#"..group:capitalize().."#WHITE##{normal}#",
+			b1 = "", b2 = "",
+			shown = true,
+			nodes = data,
+		}
+	end
+	table.sort(tree, function(a, b) return a.name < b.name end)
 
-	self:drawSelectionList(s, 2,   5, self.font_h, self.list, self.sel, "name", self.scroll, self.max)
-	self:drawSelectionList(s, 230, 5, self.font_h, self.list, self.sel, "b1", self.scroll, self.max, col, self.selcol == 1 and selcol or col)
-	self:drawSelectionList(s, 430, 5, self.font_h, self.list, self.sel, "b2", self.scroll, self.max, col, self.selcol == 2 and selcol or col, nil, self.iw - 430, true)
+	self.tree = tree
 end

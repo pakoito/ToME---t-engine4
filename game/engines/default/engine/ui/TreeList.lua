@@ -39,9 +39,11 @@ function _M:init(t)
 	self.all_clicks = t.all_clicks
 	self.level_offset = t.level_offset or 12
 	self.key_prop = t.key_prop or "__id"
+	self.sel_by_col = t.sel_by_col and {} or nil
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
+	local colw = 0
 	for j, col in ipairs(self.columns) do
 		if type(col.width) == "table" then
 			if col.width[2] == "fixed" then
@@ -56,6 +58,10 @@ function _M:init(t)
 			end
 		else
 			col.width = w * col.width / 100
+		end
+		if self.sel_by_col then
+			colw = colw + col.width
+			self.sel_by_col[j] = colw
 		end
 	end
 
@@ -158,6 +164,12 @@ function _M:generate()
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
+		if self.sel_by_col then
+			for i = 1, #self.sel_by_col do if bx > (self.sel_by_col[i-1] or 0) and bx <= self.sel_by_col[i] then
+				self.cur_col = i
+				break
+			end end
+		end
 		self:onSelect()
 		if self.list[self.sel] and self.list[self.sel].nodes and bx <= plus_w and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then
 			self:treeExpand(nil)
@@ -212,6 +224,7 @@ function _M:outputList()
 	self.max = #self.list
 	self.sel = util.bound(self.sel or 1, 1, self.max)
 	self.scroll = self.scroll or 1
+	self.cur_col = self.cur_col or 1
 end
 
 function _M:treeExpand(v)
@@ -251,7 +264,7 @@ function _M:display(x, y)
 			local col = self.columns[j]
 			local item = self.list[i]
 			if not item then break end
-			if self.sel == i then
+			if self.sel == i and (not self.sel_by_col or self.cur_col == j) then
 				if self.focused then
 					item.cols[j]._stex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
 				else
