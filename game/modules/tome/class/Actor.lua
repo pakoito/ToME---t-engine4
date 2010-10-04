@@ -645,22 +645,6 @@ function _M:onTakeHit(value, src)
 		game.logSeen(self, "%s shatters into pieces!", self.name:capitalize())
 	end
 
-	-- Split ?
-	if self.clone_on_hit and value >= self.clone_on_hit.min_dam_pct * self.max_life / 100 and rng.percent(self.clone_on_hit.chance) then
-		-- Find space
-		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
-		if x then
-			-- Find a place around to clone
-			local a = self:clone()
-			a.energy.val = 0
-			a.exp_worth = 0.1
-			a.inven = {}
-			a.x, a.y = nil, nil
-			game.zone:addEntity(game.level, a, "actor", x, y)
-			game.logSeen(self, "%s is split in two!", self.name:capitalize())
-		end
-	end
-
 	-- Adds hate
 	if self:knowTalent(self.T_HATE_POOL) then
 		local hateGain = 0
@@ -715,6 +699,24 @@ function _M:onTakeHit(value, src)
 
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then
 		if value > self.life then value = self.life - 1 end
+	end
+
+	-- Split ?
+	if self.clone_on_hit and value >= self.clone_on_hit.min_dam_pct * self.max_life / 100 and rng.percent(self.clone_on_hit.chance) then
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
+		if x then
+			-- Find a place around to clone
+			local a = self:clone()
+			a.life = math.max(1, a.life - value / 2)
+			a.energy.val = 0
+			a.exp_worth = 0.1
+			a.inven = {}
+			a.x, a.y = nil, nil
+			game.zone:addEntity(game.level, a, "actor", x, y)
+			game.logSeen(self, "%s is split in two!", self.name:capitalize())
+			value = value / 2
+		end
 	end
 
 	return value
