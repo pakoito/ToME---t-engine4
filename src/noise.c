@@ -174,15 +174,15 @@ static int noise_turbulence_wavelet(lua_State *L)
 #define TEXEL2(s, t)	(BYTES_PER_TEXEL * (s * w + t))
 // 3->1 dimension mapping function
 #define TEXEL3(s, t, r)	(TEXEL2(s, t) + LAYER(r))
-
+/*
 static int noise_texture2d(lua_State *L)
 {
 	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
-	int w = luaL_checknumber(L, 3);
-	int h = luaL_checknumber(L, 4);
-	float zoom = luaL_checknumber(L, 5);
-	float x = luaL_checknumber(L, 6);
-	float y = luaL_checknumber(L, 7);
+	int w = luaL_checknumber(L, 2);
+	int h = luaL_checknumber(L, 3);
+	float zoom = luaL_checknumber(L, 4);
+	float x = luaL_checknumber(L, 5);
+	float y = luaL_checknumber(L, 6);
 	GLubyte *map = malloc(w * h * 3 * sizeof(GLubyte));
 
 	float p[2];
@@ -215,7 +215,7 @@ static int noise_texture2d(lua_State *L)
 
 	return 1;
 }
-
+*/
 inline static float noise3d(noise_t *n, float x, float y, float z) ALWAYS_INLINE;
 static float noise3d(noise_t *n, float x, float y, float z)
 {
@@ -284,6 +284,41 @@ static int noise_texture3d(lua_State *L)
 	return 1;
 }
 
+static int noise_texture2d(lua_State *L)
+{
+	if (!shaders_active) return 0;
+
+	noise_t *n = (noise_t*)auxiliar_checkclass(L, "noise{core}", 1);
+	int w = luaL_checknumber(L, 2);
+	int h = luaL_checknumber(L, 3);
+	GLubyte *map = malloc(w * h * 3 * sizeof(GLubyte));
+
+	int i, j;
+	for (i = 0; i < w; i++)
+	{
+		for (j = 0; j < h; j++)
+		{
+			float v = tilablenoise3d(n, i*4, j*4, 0*4, w*4, h*4, 1*4) * 255;
+			map[TEXEL2(i, j)] = (GLubyte)v;
+			map[TEXEL2(i, j)+1] = (GLubyte)v;
+			map[TEXEL2(i, j)+2] = (GLubyte)v;
+		}
+	}
+
+	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+
+	glGenTextures(1, t);
+	glBindTexture(GL_TEXTURE_2D, *t);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, map);
+
+	free(map);
+	return 1;
+}
 static const struct luaL_reg noiselib[] =
 {
 	{"new", noise_new},
