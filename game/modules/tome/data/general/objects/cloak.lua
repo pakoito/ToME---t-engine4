@@ -19,7 +19,7 @@
 
 newEntity{
 	define_as = "BASE_CLOAK",
-	slot = "BACK",
+	slot = "CLOAK",
 	type = "armor", subtype="cloak",
 	add_name = " (#ARMOR#)",
 	display = "(", color=colors.UMBER, image = resolvers.image_material("cloak", "cloth"),

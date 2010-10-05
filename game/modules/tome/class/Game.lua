@@ -805,6 +805,7 @@ function _M:setupCommands()
 				{ "Character Sheet", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },
 				"keybinds",
 				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
+				"video",
 				"resolution",
 				"sound",
 				"save",
