@@ -16,21 +16,8 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
-
-newChat{ id="start",
-	auto = true, text="",
-	answers = {
-		{cond=function(npc, player) local q = player:hasQuest("lost-merchant"); return q and q:isStatus(q.COMPLETED, "saved") end, jump="welcome"},
-		{jump="closed"},
-	},
-}
-
-newChat{ id="closed",
-	text = [[*This store does not appear to be open yet*]],
-	answers = {
-		{"[leave]"},
-	}
-}
+local q = game.player:hasQuest("lost-merchant")
+if q and q:isStatus(q.COMPLETED, "saved") then
 
 newChat{ id="welcome",
 	text = [[Ah my good friend @playername@!
@@ -44,4 +31,15 @@ Thanks to you I made it safely to this great city! I am planning to open my shop
 	}
 }
 
-return "start"
+else
+
+newChat{ id="welcome",
+	text = [[*This store does not appear to be open yet*]],
+	answers = {
+		{"[leave]"},
+	}
+}
+
+end
+
+return "welcome"
