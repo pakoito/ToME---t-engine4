@@ -1,4 +1,4 @@
--- TE4 - T-Engine 4
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Engine Version
-engine.version = {0,9,13,"te4",4}
-engine.require_c_core = engine.version[5]
-engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
+return { generator = function()
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = math.rad(ad + 90)
+	local r = rng.range(12, 20)
+	local dirv = math.rad(1)
 
-function engine.version_check(v)
-	local ev = engine.version
-	if v[5] ~= core.game.VERSION then return "bad C core" end
-	if v[4] ~= ev[4] then return "different engine" end
-	if v[1] > ev[1] then return "newer" end
-	if v[1] == ev[1] and v[2] > ev[2] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
-	return "lower"
-end
+	return {
+		trail = 1,
+		life = 10,
+		size = 4, sizev = -0.1, sizea = 0,
+
+		x = r * math.cos(a), xv = 0, xa = 0,
+		y = r * math.sin(a), yv = 0, ya = 0,
+		dir = dir, dirv = dirv, dira = 0,
+		vel = rng.percent(50) and -1 or 1, velv = 0, vela = 0,
+
+		r = rng.range(220, 255)/255,  rv = 0, ra = 0,
+		g = rng.range(200, 230)/255,  gv = 0, ga = 0,
+		b = 0,                        bv = 0, ba = 0,
+		a = rng.range(25, 220)/255,   av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.ps:emit(10)
+end,
+100

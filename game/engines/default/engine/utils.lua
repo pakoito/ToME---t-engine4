@@ -533,7 +533,7 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 	return gs[1][1], gs[1][2]
 end
 
-function util.showMainMenu(no_reboot)
+function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, reboot_module, reboot_name, reboot_new)
 	-- Turn based by default
 	core.game.setRealtime(0)
 
@@ -550,14 +550,13 @@ function util.showMainMenu(no_reboot)
 	if game and type(game) == "table" then game:joinThreads(30) end
 
 	if no_reboot then
-		local Menu = require("special.mainmenu.class.Game")
---		local Menu = require("special.mainmenu.class.TestUI")
-		game = Menu.new()
-		game:run()
+		local Module = require("engine.Module")
+		local mod = Module:createModule(__load_module)
+		Module:instanciate(mod, __player_name, __player_new, true)
 	else
 		-- Tell the C engine to discard the current lua state and make a new one
-		print("[MAIN] rebooting lua state")
-		core.game.reboot()
+		print("[MAIN] rebooting lua state: ", reboot_engine, reboot_engine_version, reboot_module, reboot_name, reboot_new)
+		core.game.reboot(reboot_engine or "te4", reboot_engine_version or "LATEST", reboot_module or "boot", reboot_name or "player", reboot_new)
 	end
 end
 

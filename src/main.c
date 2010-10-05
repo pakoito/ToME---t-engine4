@@ -48,7 +48,8 @@ lua_State *L = NULL;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
-bool reboot_lua = FALSE;
+bool reboot_lua = FALSE, reboot_new = FALSE;
+char *reboot_engine = NULL, *reboot_engine_version = NULL, *reboot_module = NULL, *reboot_name = NULL;
 bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
@@ -547,6 +548,7 @@ void setupRealtime(float freq)
 	if (!freq)
 	{
 		if (realtime_timer_id) SDL_RemoveTimer(realtime_timer_id);
+		realtime_timer_id = NULL;
 		printf("[ENGINE] Switching to turn based\n");
 	}
 	else
@@ -691,6 +693,9 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		/* When rebooting we destroy the lua state to free memory and we reset physfs */
 		if (rebooting)
 		{
+			current_mousehandler = LUA_NOREF;
+			current_keyhandler = LUA_NOREF;
+			current_game = LUA_NOREF;
 			lua_close(L);
 			PHYSFS_deinit();
 		}
@@ -768,7 +773,12 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 
 		// And run the lua engine scripts
 		luaL_loadfile(L, "/loader/init.lua");
-		docall(L, 0, 0);
+		if (reboot_engine) lua_pushstring(L, reboot_engine); else lua_pushnil(L);
+		if (reboot_engine_version) lua_pushstring(L, reboot_engine_version); else lua_pushnil(L);
+		if (reboot_module) lua_pushstring(L, reboot_module); else lua_pushnil(L);
+		if (reboot_name) lua_pushstring(L, reboot_name); else lua_pushnil(L);
+		lua_pushboolean(L, reboot_new);
+		docall(L, 5, 0);
 	}
 }
 
@@ -791,6 +801,16 @@ int main(int argc, char *argv[])
 
 	// Change to line buffering
 	setvbuf(stdout, (char *) NULL, _IOLBF, 0);
+
+	// Parse arguments
+	int i;
+	for (i = 1; i < argc; i++)
+	{
+		char *arg = argv[i];
+		if (!strncmp(arg, "-M", 2)) reboot_module = strdup(arg+2);
+		if (!strncmp(arg, "-u", 2)) reboot_name = strdup(arg+2);
+		if (!strncmp(arg, "-n", 2)) reboot_new = TRUE;
+	}
 
 	boot_lua(1, FALSE, argc, argv);
 
@@ -928,6 +948,8 @@ int main(int argc, char *argv[])
 		/* Reboot the lua engine */
 		if (reboot_lua)
 		{
+			tickPaused = FALSE;
+			setupRealtime(0);
 			boot_lua(1, TRUE, argc, argv);
 			boot_lua(2, TRUE, argc, argv);
 		}

@@ -713,7 +713,7 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_SARUMAN",
 }
 
 newEntity{ base = "BASE_WAND",
-	unided_name = "glowing wand",
+	unided_name = "glowing rod",
 	name = "Gwai's Burninator", color=colors.LIGHT_RED, unique=true,
 	cost = 50,
 	rarity = 220,

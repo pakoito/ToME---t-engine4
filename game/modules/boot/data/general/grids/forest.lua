@@ -1,4 +1,4 @@
--- TE4 - T-Engine 4
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Engine Version
-engine.version = {0,9,13,"te4",4}
-engine.require_c_core = engine.version[5]
-engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
+newEntity{
+	define_as = "GRASS",
+	name = "grass", image = "terrain/grass.png",
+	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+}
 
-function engine.version_check(v)
-	local ev = engine.version
-	if v[5] ~= core.game.VERSION then return "bad C core" end
-	if v[4] ~= ev[4] then return "different engine" end
-	if v[1] > ev[1] then return "newer" end
-	if v[1] == ev[1] and v[2] > ev[2] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
-	return "lower"
+for i = 1, 20 do
+newEntity{
+	define_as = "TREE"..(i > 1 and i or ""),
+	name = "tree",
+	image = "terrain/grass.png",
+	add_displays = class:makeTrees("terrain/tree_alpha"),
+	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
+	block_sight = true,
+	dig = "GRASS",
+}
 end
+
+newEntity{
+	define_as = "FLOWER",
+	name = "flower", image = "terrain/grass_flower3.png",
+	display = ';', color=colors.YELLOW, back_color={r=44,g=95,b=43},
+}
+

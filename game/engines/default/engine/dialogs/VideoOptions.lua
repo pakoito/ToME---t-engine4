@@ -69,6 +69,15 @@ function _M:generateList()
 		game:registerDialog(menu)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Controls the particle effects density.\nThis option allows to change the density of the many particle effects in the game.\nIf the game is slow when displaying spell effects try to lower this setting.#WHITE#"}
+	list[#list+1] = { zone=zone, name="Particle effects density", status=function(item)
+		return tostring(config.settings.particles_density and "enabled" or "disabled")
+	end, fct=function(item)
+
+		game:saveSettings("particles_density", ("particles_density = %s\n"):format(tostring(config.settings.particles_density)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates antialiased texts.\nTexts will look nicer but it can be slower on some computers.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
 	list[#list+1] = { zone=zone, name="Antialiased texts", status=function(item)
 		return tostring(core.display.getTextBlended() and "enabled" or "disabled")

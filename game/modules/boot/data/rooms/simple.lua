@@ -1,4 +1,4 @@
--- TE4 - T-Engine 4
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Engine Version
-engine.version = {0,9,13,"te4",4}
-engine.require_c_core = engine.version[5]
-engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
-
-function engine.version_check(v)
-	local ev = engine.version
-	if v[5] ~= core.game.VERSION then return "bad C core" end
-	if v[4] ~= ev[4] then return "different engine" end
-	if v[1] > ev[1] then return "newer" end
-	if v[1] == ev[1] and v[2] > ev[2] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
-	return "lower"
+return function(gen, id)
+	local w = rng.range(5, 12)
+	local h = rng.range(5, 12)
+	return { name="simple"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
+		for i = 1, self.w do
+			for j = 1, self.h do
+				if i == 1 or i == self.w or j == 1 or j == self.h then
+					gen.map.room_map[i-1+x][j-1+y].can_open = true
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('#')])
+				else
+					gen.map.room_map[i-1+x][j-1+y].room = id
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('.')])
+				end
+				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
+			end
+		end
+	end}
 end

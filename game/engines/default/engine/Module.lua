@@ -33,24 +33,12 @@ function _M:listModules()
 --	print("Search Path: ") for k,e in ipairs(fs.getSearchPath()) do print("*",k,e) end
 
 	for i, short_name in ipairs(fs.list("/modules/")) do
---print("!!", short_name)
-		local dir = "/modules/"..short_name
-		if fs.exists(dir.."/init.lua") then
-			local mod = self:loadDefinition(dir)
+		if short_name ~= "boot" then
+			local mod = self:createModule(short_name)
 			if mod then
 				table.insert(ms, mod)
 				ms[mod.short_name] = mod
 			end
-		elseif short_name:find(".team$") then
-			fs.mount(fs.getRealPath(dir), "/testload", false)
-			if fs.exists("/testload/mod/init.lua") then
-				local mod = self:loadDefinition("/testload", dir)
-				if mod then
-					table.insert(ms, mod)
-					ms[mod.short_name] = mod
-				end
-			end
-			fs.umount(fs.getRealPath(dir))
 		end
 	end
 
@@ -63,6 +51,26 @@ function _M:listModules()
 --	fs.umount(engine.homepath)
 
 	return ms
+end
+
+function _M:createModule(short_name)
+	local dir = "/modules/"..short_name
+	if fs.exists(dir.."/init.lua") then
+		local mod = self:loadDefinition(dir)
+		if mod and mod.short_name then
+			return mod
+		end
+	elseif short_name:find(".team$") then
+		fs.mount(fs.getRealPath(dir), "/testload", false)
+		if fs.exists("/testload/mod/init.lua") then
+			local mod = self:loadDefinition("/testload", dir)
+			if mod then
+				table.insert(ms, mod)
+			end
+		end
+		fs.umount(fs.getRealPath(dir))
+		if mod and mod.short_name then return mod end
+	end
 end
 
 --- Get a module definition from the module init.lua file
@@ -140,10 +148,15 @@ end
 -- @param mod the module definition as given by Module:loadDefinition()
 -- @param name the savefile name
 -- @param new_game true if the game must be created (aka new character)
-function _M:instanciate(mod, name, new_game)
-	local popup = Dialog:simplePopup("Loading module", "Please wait while loading the game module...", nil, true)
-	popup.__showup = nil
-	core.display.forceRedraw()
+function _M:instanciate(mod, name, new_game, no_reboot)
+	if not no_reboot then
+		local popup = Dialog:simplePopup("Loading module", "Please wait while loading "..mod.long_name.."...", nil, true)
+		popup.__showup = nil
+		core.display.forceRedraw()
+
+		util.showMainMenu(false, "te4", "LATEST", mod.short_name, name, new_game)
+		return
+	end
 
 	profile.generic.modules_loaded = profile.generic.modules_loaded or {}
 	profile.generic.modules_loaded[mod.short_name] = (profile.generic.modules_loaded[mod.short_name] or 0) + 1

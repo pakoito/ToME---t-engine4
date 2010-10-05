@@ -98,13 +98,13 @@ end
 --- Displays the screen
 -- Called by the engine core to redraw the screen every frame
 function _M:display()
+	if self.flyers then
+		self.flyers:display()
+	end
+
 	for i, d in ipairs(self.dialogs) do
 		d:display()
 		d:toScreen(d.display_x, d.display_y)
-	end
-
-	if self.flyers then
-		self.flyers:display()
 	end
 end
 

@@ -1,4 +1,4 @@
--- TE4 - T-Engine 4
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,22 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Engine Version
-engine.version = {0,9,13,"te4",4}
-engine.require_c_core = engine.version[5]
-engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
+return {
+	base = 1000,
 
-function engine.version_check(v)
-	local ev = engine.version
-	if v[5] ~= core.game.VERSION then return "bad C core" end
-	if v[4] ~= ev[4] then return "different engine" end
-	if v[1] > ev[1] then return "newer" end
-	if v[1] == ev[1] and v[2] > ev[2] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
-	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
-	return "lower"
+	angle = { 0, 360 }, anglev = { 2000, 4000 }, anglea = { 200, 600 },
+
+	life = { 5, 10 },
+	size = { 3, 6 }, sizev = {0, 0}, sizea = {0, 0},
+
+	r = {200, 255}, rv = {0, 0}, ra = {0, 0},
+	g = {120, 170}, gv = {0, 0}, ga = {0, 0},
+	b = {0, 0}, bv = {0, 0}, ba = {0, 0},
+	a = {255, 255}, av = {0, 0}, aa = {0, 0},
+
+}, function(self)
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 4 then
+		self.ps:emit(100)
+	end
 end
