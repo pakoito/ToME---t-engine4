@@ -344,7 +344,7 @@ function _M:setupCommands()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",
 				"keybinds",
-				"resolution",
+				"video",
 				"save",
 				"quit"
 			}
