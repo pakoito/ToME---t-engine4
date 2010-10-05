@@ -257,12 +257,18 @@ static int shader_is_active(lua_State *L)
 	lua_pushboolean(L, shaders_active);
 	return 1;
 }
+static int shader_disable(lua_State *L)
+{
+	shaders_active = FALSE;
+	return 0;
+}
 
 static const struct luaL_reg shaderlib[] =
 {
 	{"newShader", shader_new},
 	{"newProgram", program_new},
 	{"active", shader_is_active},
+	{"disable", shader_disable},
 	{NULL, NULL},
 };
 

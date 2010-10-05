@@ -50,6 +50,9 @@ config.loadString[[
 window.size = "800x600"
 sound.enabled = true
 music.volume = 60
+aa_text = true
+fbo_active = true
+shaders_active = true
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then
@@ -76,6 +79,9 @@ game = false
 
 -- Setup resolution
 engine.Game:setResolution(config.settings.window.size, true)
+core.display.setTextBlended(config.settings.aa_text)
+if not config.settings.fbo_active then core.display.disableFBO() print("Disabling FBO") end
+if not config.settings.shaders_active then core.shader.disable() print("Disabling Shaders") end
 
 -- Setup musics
 engine.interface.GameMusic:soundSystemStatus(config.settings.sound.enabled, true)

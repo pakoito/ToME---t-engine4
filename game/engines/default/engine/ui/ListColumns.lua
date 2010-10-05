@@ -129,7 +129,7 @@ function _M:generate()
 
 		-- Draw the list items
 		for i, item in ipairs(self.list) do
-			local text = tostring(item[col.display_prop or col.sort])
+			local text = tostring(util.getval(item[col.display_prop or col.sort], item))
 			local color = item.color or {255,255,255}
 			local ss = core.display.newSurface(fw, fh)
 			local sus = core.display.newSurface(fw, fh)

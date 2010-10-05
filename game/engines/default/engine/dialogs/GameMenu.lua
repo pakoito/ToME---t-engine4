@@ -58,6 +58,11 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key, true)
 			game:registerDialog(menu)
 		end },
+		video = { "Video Options", function()
+			game:unregisterDialog(self)
+			local menu = require("engine.dialogs.VideoOptions").new()
+			game:registerDialog(menu)
+		end },
 		resolution = { "Display Resolution", function()
 			game:unregisterDialog(self)
 			local menu = require("engine.dialogs.DisplayResolution").new()

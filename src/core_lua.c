@@ -448,6 +448,7 @@ static const struct luaL_reg gamelib[] =
  *                           Display                              *
  ******************************************************************
  ******************************************************************/
+static bool no_text_aa = FALSE;
 
 static int sdl_fullscreen(lua_State *L)
 {
@@ -550,6 +551,7 @@ static int sdl_surface_drawstring(lua_State *L)
 
 static int sdl_surface_drawstring_aa(lua_State *L)
 {
+	if (no_text_aa) return sdl_surface_drawstring(L);
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
 	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 2);
 	const char *str = luaL_checkstring(L, 3);
@@ -598,6 +600,7 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 
 static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 {
+	if (no_text_aa) return sdl_surface_drawstring_newsurface(L);
 	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
 	const char *str = luaL_checkstring(L, 2);
 	int r = luaL_checknumber(L, 3);
@@ -1409,9 +1412,29 @@ static int gl_fbo_is_active(lua_State *L)
 	return 1;
 }
 
+static int gl_fbo_disable(lua_State *L)
+{
+	fbo_active = FALSE;
+	return 0;
+}
+
+static int set_text_aa(lua_State *L)
+{
+	bool active = !lua_toboolean(L, 1);
+	no_text_aa = active;
+	return 0;
+}
+
+static int get_text_aa(lua_State *L)
+{
+	lua_pushboolean(L, !no_text_aa);
+	return 1;
+}
 
 static const struct luaL_reg displaylib[] =
 {
+	{"setTextBlended", set_text_aa},
+	{"getTextBlended", get_text_aa},
 	{"forceRedraw", sdl_redraw_screen},
 	{"fullscreen", sdl_fullscreen},
 	{"size", sdl_screen_size},
@@ -1421,6 +1444,7 @@ static const struct luaL_reg displaylib[] =
 	{"newFBO", gl_new_fbo},
 	{"drawQuad", gl_draw_quad},
 	{"FBOActive", gl_fbo_is_active},
+	{"disableFBO", gl_fbo_disable},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
 	{"loadImage", sdl_load_image},
@@ -2206,7 +2230,7 @@ int luaopen_core(lua_State *L)
 
 	luaL_openlib(L, "core.game", gamelib, 0);
 	lua_pushstring(L, "VERSION");
-	lua_pushnumber(L, 3);
+	lua_pushnumber(L, 4);
 	lua_settable(L, -3);
 
 	luaL_openlib(L, "rng", rnglib, 0);

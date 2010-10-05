@@ -35,6 +35,7 @@ function _M:init()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",
 				"keybinds_all",
+				"video",
 				"resolution",
 				"sound",
 			}
