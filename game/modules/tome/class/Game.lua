@@ -494,7 +494,9 @@ function _M:display()
 		end
 
 		if not self.zone_name_s then
-			local s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, self.level.level), 0, 255, 255)
+			self.player_display.font:setStyle("bold")
+			local s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, self.level.level), unpack(colors.simple(colors.GOLD)))
+			self.player_display.font:setStyle("normal")
 			self.zone_name_w, self.zone_name_h = s:getSize()
 			self.zone_name_s, self.zone_name_tw, self.zone_name_th = s:glTexture()
 		end
@@ -806,7 +808,6 @@ function _M:setupCommands()
 				"keybinds",
 				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
 				"video",
-				"resolution",
 				"sound",
 				"save",
 				"quit"

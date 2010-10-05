@@ -36,7 +36,6 @@ function _M:init()
 				"resume",
 				"keybinds_all",
 				"video",
-				"resolution",
 				"sound",
 			}
 			game:registerDialog(menu)

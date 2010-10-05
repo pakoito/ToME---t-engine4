@@ -23,7 +23,8 @@ local List = require "engine.ui.List"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init()
+function _M:init(on_change)
+	self.on_change = on_change
 	self:generateList()
 
 	Dialog.init(self, "Switch Resolution", 300, 20)
@@ -44,6 +45,7 @@ end
 function _M:use(item)
 	game:setResolution(item.r)
 	game:unregisterDialog(self)
+	if self.on_change then self.on_change(item.r) end
 end
 
 function _M:generateList()

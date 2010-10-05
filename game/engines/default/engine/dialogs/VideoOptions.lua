@@ -33,8 +33,8 @@ function _M:init()
 	self:generateList()
 
 	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
-		{width=40, display_prop="name"},
-		{width=20, display_prop="status"},
+		{width=60, display_prop="name"},
+		{width=40, display_prop="status"},
 	}, tree=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
 	self:loadUI{
@@ -60,6 +60,14 @@ function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	local i = 0
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Display resolution."}
+	list[#list+1] = { zone=zone, name="Resolution", status=function(item)
+		return config.settings.window.size
+	end, fct=function(item)
+		local menu = require("engine.dialogs.DisplayResolution").new(function() self.c_list:drawItem(item) end)
+		game:registerDialog(menu)
+	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates antialiased texts.\nTexts will look nicer but it can be slower on some computers.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
 	list[#list+1] = { zone=zone, name="Antialiased texts", status=function(item)
