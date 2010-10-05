@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		28133EF911C9094A00A7FDAC /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EF811C9094900A7FDAC /* glew.c */; };
 		28133EFD11C9096E00A7FDAC /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EFC11C9096E00A7FDAC /* shaders.c */; };
+		282AC02B125B15C100F7C346 /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 282AC023125B15C100F7C346 /* xmlparse.c */; };
+		282AC02C125B15C100F7C346 /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 282AC024125B15C100F7C346 /* xmlrole.c */; };
+		282AC02D125B15C100F7C346 /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 282AC026125B15C100F7C346 /* xmltok.c */; };
+		282AC02E125B15C100F7C346 /* xmltok_impl.c in Sources */ = {isa = PBXBuildFile; fileRef = 282AC028125B15C100F7C346 /* xmltok_impl.c */; };
+		282AC02F125B15C100F7C346 /* xmltok_ns.c in Sources */ = {isa = PBXBuildFile; fileRef = 282AC02A125B15C100F7C346 /* xmltok_ns.c */; };
+		282AC033125B15D400F7C346 /* lxplib.c in Sources */ = {isa = PBXBuildFile; fileRef = 282AC031125B15D400F7C346 /* lxplib.c */; };
+		282AC036125B15E100F7C346 /* te4-xmpp.c in Sources */ = {isa = PBXBuildFile; fileRef = 282AC034125B15E100F7C346 /* te4-xmpp.c */; };
 		285E4C5011B3B41C00E7CAD8 /* noise_c.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C4F11B3B41C00E7CAD8 /* noise_c.c */; };
 		285E4C5211B3B42700E7CAD8 /* noise.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C5111B3B42700E7CAD8 /* noise.c */; };
 		289E379711D86DC00065B265 /* sdnoise1234.c in Sources */ = {isa = PBXBuildFile; fileRef = 289E379611D86DC00065B265 /* sdnoise1234.c */; };
@@ -142,6 +149,30 @@
 		28133EFB11C9095500A7FDAC /* glxew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glxew.h; path = ../../src/glxew.h; sourceTree = SOURCE_ROOT; };
 		28133EFC11C9096E00A7FDAC /* shaders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shaders.c; path = ../../src/shaders.c; sourceTree = SOURCE_ROOT; };
 		28133EFE11C9097600A7FDAC /* wglew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wglew.h; path = ../../src/wglew.h; sourceTree = SOURCE_ROOT; };
+		282AC017125B15C100F7C346 /* amigaconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amigaconfig.h; sourceTree = "<group>"; };
+		282AC018125B15C100F7C346 /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
+		282AC019125B15C100F7C346 /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
+		282AC01A125B15C100F7C346 /* expat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat.h; sourceTree = "<group>"; };
+		282AC01B125B15C100F7C346 /* expat_external.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat_external.h; sourceTree = "<group>"; };
+		282AC01C125B15C100F7C346 /* iasciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iasciitab.h; sourceTree = "<group>"; };
+		282AC01D125B15C100F7C346 /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internal.h; sourceTree = "<group>"; };
+		282AC01E125B15C100F7C346 /* latin1tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = latin1tab.h; sourceTree = "<group>"; };
+		282AC01F125B15C100F7C346 /* macconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macconfig.h; sourceTree = "<group>"; };
+		282AC020125B15C100F7C346 /* nametab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nametab.h; sourceTree = "<group>"; };
+		282AC021125B15C100F7C346 /* utf8tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8tab.h; sourceTree = "<group>"; };
+		282AC022125B15C100F7C346 /* winconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = winconfig.h; sourceTree = "<group>"; };
+		282AC023125B15C100F7C346 /* xmlparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlparse.c; sourceTree = "<group>"; };
+		282AC024125B15C100F7C346 /* xmlrole.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlrole.c; sourceTree = "<group>"; };
+		282AC025125B15C100F7C346 /* xmlrole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlrole.h; sourceTree = "<group>"; };
+		282AC026125B15C100F7C346 /* xmltok.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok.c; sourceTree = "<group>"; };
+		282AC027125B15C100F7C346 /* xmltok.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok.h; sourceTree = "<group>"; };
+		282AC028125B15C100F7C346 /* xmltok_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_impl.c; sourceTree = "<group>"; };
+		282AC029125B15C100F7C346 /* xmltok_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok_impl.h; sourceTree = "<group>"; };
+		282AC02A125B15C100F7C346 /* xmltok_ns.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_ns.c; sourceTree = "<group>"; };
+		282AC031125B15D400F7C346 /* lxplib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lxplib.c; sourceTree = "<group>"; };
+		282AC032125B15D400F7C346 /* lxplib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lxplib.h; sourceTree = "<group>"; };
+		282AC034125B15E100F7C346 /* te4-xmpp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "te4-xmpp.c"; path = "../../src/te4-xmpp.c"; sourceTree = SOURCE_ROOT; };
+		282AC035125B15E100F7C346 /* te4-xmpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "te4-xmpp.h"; path = "../../src/te4-xmpp.h"; sourceTree = SOURCE_ROOT; };
 		285E4C4D11B3B41C00E7CAD8 /* libtcod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libtcod.h; sourceTree = "<group>"; };
 		285E4C4E11B3B41C00E7CAD8 /* noise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = noise.h; sourceTree = "<group>"; };
 		285E4C4F11B3B41C00E7CAD8 /* noise_c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = noise_c.c; sourceTree = "<group>"; };
@@ -378,6 +409,44 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		282AC016125B15C100F7C346 /* expat */ = {
+			isa = PBXGroup;
+			children = (
+				282AC017125B15C100F7C346 /* amigaconfig.h */,
+				282AC018125B15C100F7C346 /* ascii.h */,
+				282AC019125B15C100F7C346 /* asciitab.h */,
+				282AC01A125B15C100F7C346 /* expat.h */,
+				282AC01B125B15C100F7C346 /* expat_external.h */,
+				282AC01C125B15C100F7C346 /* iasciitab.h */,
+				282AC01D125B15C100F7C346 /* internal.h */,
+				282AC01E125B15C100F7C346 /* latin1tab.h */,
+				282AC01F125B15C100F7C346 /* macconfig.h */,
+				282AC020125B15C100F7C346 /* nametab.h */,
+				282AC021125B15C100F7C346 /* utf8tab.h */,
+				282AC022125B15C100F7C346 /* winconfig.h */,
+				282AC023125B15C100F7C346 /* xmlparse.c */,
+				282AC024125B15C100F7C346 /* xmlrole.c */,
+				282AC025125B15C100F7C346 /* xmlrole.h */,
+				282AC026125B15C100F7C346 /* xmltok.c */,
+				282AC027125B15C100F7C346 /* xmltok.h */,
+				282AC028125B15C100F7C346 /* xmltok_impl.c */,
+				282AC029125B15C100F7C346 /* xmltok_impl.h */,
+				282AC02A125B15C100F7C346 /* xmltok_ns.c */,
+			);
+			name = expat;
+			path = ../../src/expat;
+			sourceTree = SOURCE_ROOT;
+		};
+		282AC030125B15D400F7C346 /* lxp */ = {
+			isa = PBXGroup;
+			children = (
+				282AC031125B15D400F7C346 /* lxplib.c */,
+				282AC032125B15D400F7C346 /* lxplib.h */,
+			);
+			name = lxp;
+			path = ../../src/lxp;
+			sourceTree = SOURCE_ROOT;
 		};
 		285E4C4C11B3B41C00E7CAD8 /* libtcod_import */ = {
 			isa = PBXGroup;
@@ -661,6 +730,7 @@
 				28B4260E119F520F00562F94 /* SFMT-params.h */,
 				28B4260F119F520F00562F94 /* SFMT-params19937.h */,
 				28B42610119F520F00562F94 /* SFMT.h */,
+				282AC035125B15E100F7C346 /* te4-xmpp.h */,
 				28B42611119F520F00562F94 /* types.h */,
 				28133EFE11C9097600A7FDAC /* wglew.h */,
 				28B42613119F520F00562F94 /* core_lua.c */,
@@ -675,10 +745,13 @@
 				28B4261A119F520F00562F94 /* SFMT.c */,
 				28133EFC11C9096E00A7FDAC /* shaders.c */,
 				28B4261B119F520F00562F94 /* struct.c */,
+				282AC034125B15E100F7C346 /* te4-xmpp.c */,
 				28B424F7119F51A600562F94 /* dynasm */,
+				282AC016125B15C100F7C346 /* expat */,
 				28B424FC119F51A600562F94 /* fov */,
 				285E4C4C11B3B41C00E7CAD8 /* libtcod_import */,
 				28B424FF119F51A600562F94 /* lpeg */,
+				282AC030125B15D400F7C346 /* lxp */,
 				28B42501119F51A600562F94 /* lua */,
 				28B42538119F51A600562F94 /* lualanes */,
 				28B4253F119F51A600562F94 /* luaprofiler */,
@@ -886,6 +959,13 @@
 				28133EF911C9094A00A7FDAC /* glew.c in Sources */,
 				28133EFD11C9096E00A7FDAC /* shaders.c in Sources */,
 				289E379711D86DC00065B265 /* sdnoise1234.c in Sources */,
+				282AC02B125B15C100F7C346 /* xmlparse.c in Sources */,
+				282AC02C125B15C100F7C346 /* xmlrole.c in Sources */,
+				282AC02D125B15C100F7C346 /* xmltok.c in Sources */,
+				282AC02E125B15C100F7C346 /* xmltok_impl.c in Sources */,
+				282AC02F125B15C100F7C346 /* xmltok_ns.c in Sources */,
+				282AC033125B15D400F7C346 /* lxplib.c in Sources */,
+				282AC036125B15E100F7C346 /* te4-xmpp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
