@@ -103,7 +103,7 @@ end
 
 function _M:defineHotkey(id)
 	if not self.actor.hotkey then return end
-	local item = self.list[self.sel]
+	local item = self.list[self.c_list.sel]
 	if not item or not item.talent then return end
 
 	self.actor.hotkey[id] = {"talent", item.talent}
