@@ -22,9 +22,11 @@
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
+#include "core_lua.h"
 #include "tSDL.h"
 #include "types.h"
 #include "te4-xmpp.h"
+#include "lua_externs.h"
 
 extern int docall (lua_State *L, int narg, int nret);
 
