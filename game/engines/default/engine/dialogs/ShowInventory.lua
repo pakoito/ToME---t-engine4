@@ -79,11 +79,10 @@ function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	list.chars = {}
-	local i = 0
 	for item, o in ipairs(self.inven) do
 		if not self.filter or self.filter(o) then
-			local char = string.char(string.byte('a') + i)
-			list.chars[char] = i
+			local char = self:makeKeyChar(item)
+			list.chars[char] = item
 			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=o:getDesc()}
 			list[#list+1] = { char=char, zone=zone, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber }
 			i = i + 1

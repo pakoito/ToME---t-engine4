@@ -107,7 +107,7 @@ function _M:generateList()
 		local o = game.level.map:getObject(self.x, self.y, idx)
 		if not o then break end
 		if not self.filter or self.filter(o) then
-			local char = string.char(string.byte('a') + i)
+			local char = self:makeKeyChar(i)
 			list.chars[char] = i
 			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=o:getDesc()}
 			list[#list+1] = { char=char, zone=zone, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=o.encumber }

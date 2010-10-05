@@ -104,11 +104,11 @@ function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	list.chars = {}
-	local i = 0
+	local i = 1
 	self.max_h = 0
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
-			local char = string.char(string.byte('a') + i)
+			local char = self:makeKeyChar(i)
 			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
 			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
@@ -121,10 +121,10 @@ function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	list.chars = {}
-	local i = 0
+	local i = 1
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
-			local char = string.char(string.byte('a') + i)
+			local char = self:makeKeyChar(i)
 			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
 			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))

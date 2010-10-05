@@ -298,6 +298,20 @@ function _M:display() end
 function _M:unload()
 end
 
+function _M:makeKeyChar(i)
+	i = i - 1
+	if i <= 26 then
+		return string.char(string.byte('a') + i)
+	elseif i <= 52 then
+		return string.char(string.byte('A') + i)
+	elseif i <= 62 then
+		return string.char(string.byte('0') + i)
+	else
+		-- Invalid
+		return "  "
+	end
+end
+
 function _M:toScreen(x, y)
 	-- Draw with only the texture
 	if self.__showup then

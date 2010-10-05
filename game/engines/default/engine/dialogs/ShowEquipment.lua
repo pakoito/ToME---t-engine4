@@ -82,7 +82,7 @@ function _M:generateList()
 	local list = {}
 	local chars = {}
 	list.chars = chars
-	local i = 0
+	local i = 1
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
 			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=self.actor.inven_def[inven_id].description}
@@ -90,7 +90,7 @@ function _M:generateList()
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
-					local char = string.char(string.byte('a') + i)
+					local char = self:makeKeyChar(i)
 					local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=o:getDesc()}
 					list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber }
 					chars[char] = #list

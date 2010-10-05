@@ -150,7 +150,7 @@ function _M:generateList()
 	self.equip_list = {}
 	local list = self.equip_list
 	local chars = {}
-	local i = 0
+	local i = 1
 	self.max_h = 0
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
@@ -160,7 +160,7 @@ function _M:generateList()
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
-					local char = string.char(string.byte('a') + i)
+					local char = self:makeKeyChar(i)
 					local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
 					list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber }
 					self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
@@ -177,10 +177,10 @@ function _M:generateList()
 	self.inven_list = {}
 	local list = self.inven_list
 	local chars = {}
-	local i = 0
+	local i = 1
 	for item, o in ipairs(self.actor:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
-			local char = string.char(string.byte('a') + i)
+			local char = self:makeKeyChar(i)
 			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
 			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
