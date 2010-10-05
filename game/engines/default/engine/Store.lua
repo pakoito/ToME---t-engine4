@@ -84,7 +84,7 @@ function _M:interact(who)
 		else
 			if o:getNumber() > 1 then
 				local q
-				q = GetQuantity.new(nil, nil, o:getNumber(), function(qty) self:doSell(who, o, item, qty, d) end)
+				q = GetQuantity.new(nil, nil, o:getNumber(), function(qty) print("plop", qty) self:doSell(who, o, item, qty, d) end)
 				game:registerDialog(q)
 			else
 				self:doSell(who, o, item, 1, d)

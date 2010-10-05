@@ -61,6 +61,8 @@ end
 function _M:trySell(who, o, item, nb)
 	local price = o:getPrice() * self.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
+	-- Id all
+	o:identify(true)
 	return nb
 end
 
