@@ -76,7 +76,7 @@ function _M:interact(who)
 	local d; d = ShowStore.new("Store: "..self.name, store, inven, nil, nil, function(what, o, item)
 		if what == "buy" then
 			if o:getNumber() > 1 then
-				local q = GetQuantity.new(nil, nil, o:getNumber(), function(qty) self:doBuy(who, o, item, qty, d) end)
+				local q = GetQuantity.new(nil, nil, o:getNumber(), o:getNumber(), function(qty) self:doBuy(who, o, item, qty, d) end)
 				game:registerDialog(q)
 			else
 				self:doBuy(who, o, item, 1, d)
@@ -84,7 +84,7 @@ function _M:interact(who)
 		else
 			if o:getNumber() > 1 then
 				local q
-				q = GetQuantity.new(nil, nil, o:getNumber(), function(qty) print("plop", qty) self:doSell(who, o, item, qty, d) end)
+				q = GetQuantity.new(nil, nil, o:getNumber(), o:getNumber(), function(qty) print("plop", qty) self:doSell(who, o, item, qty, d) end)
 				game:registerDialog(q)
 			else
 				self:doSell(who, o, item, 1, d)

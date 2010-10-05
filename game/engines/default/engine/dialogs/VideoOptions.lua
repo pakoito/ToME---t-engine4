@@ -22,6 +22,7 @@ local Dialog = require "engine.ui.Dialog"
 local TreeList = require "engine.ui.TreeList"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
+local GetQuantity = require "engine.dialogs.GetQuantity"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -62,7 +63,7 @@ function _M:generateList()
 	local i = 0
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Display resolution."}
-	list[#list+1] = { zone=zone, name="Resolution", status=function(item)
+	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Resolution#WHITE##{normal}#", status=function(item)
 		return config.settings.window.size
 	end, fct=function(item)
 		local menu = require("engine.dialogs.DisplayResolution").new(function() self.c_list:drawItem(item) end)
@@ -70,16 +71,18 @@ function _M:generateList()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Controls the particle effects density.\nThis option allows to change the density of the many particle effects in the game.\nIf the game is slow when displaying spell effects try to lower this setting.#WHITE#"}
-	list[#list+1] = { zone=zone, name="Particle effects density", status=function(item)
-		return tostring(config.settings.particles_density and "enabled" or "disabled")
+	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Particle effects density#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.particles_density)
 	end, fct=function(item)
-
-		game:saveSettings("particles_density", ("particles_density = %s\n"):format(tostring(config.settings.particles_density)))
-		self.c_list:drawItem(item)
+		game:registerDialog(GetQuantity.new("Enter density", "From 0 to 100", config.settings.particles_density, 100, function(qty)
+			game:saveSettings("particles_density", ("particles_density = %d\n"):format(qty))
+			config.settings.particles_density = qty
+			self.c_list:drawItem(item)
+		end))
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates antialiased texts.\nTexts will look nicer but it can be slower on some computers.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
-	list[#list+1] = { zone=zone, name="Antialiased texts", status=function(item)
+	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Antialiased texts#WHITE##{normal}#", status=function(item)
 		return tostring(core.display.getTextBlended() and "enabled" or "disabled")
 	end, fct=function(item)
 		local state = not core.display.getTextBlended()
@@ -89,7 +92,7 @@ function _M:generateList()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates framebuffers.\nThis option allows for some special graphical effects.\nIf you encounter weird graphical glitches try to disable it.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
-	list[#list+1] = { zone=zone, name="Framebuffers", status=function(item)
+	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Framebuffers#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.fbo_active and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.fbo_active = not config.settings.fbo_active
@@ -98,7 +101,7 @@ function _M:generateList()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates OpenGL Shaders.\nThis option allows for some special graphical effects.\nIf you encounter weird graphical glitches try to disable it.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
-	list[#list+1] = { zone=zone, name="OpenGL Shaders", status=function(item)
+	list[#list+1] = { zone=zone, name="#GOLD##{bold}#OpenGL Shaders#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.shaders_active and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.shaders_active = not config.settings.shaders_active

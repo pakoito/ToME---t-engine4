@@ -25,12 +25,12 @@ local Numberbox = require "engine.ui.Numberbox"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, prompt, default, action)
+function _M:init(title, prompt, default, max, action)
 	self.action = action
 
 	Dialog.init(self, title or "Quantity", 320, 110)
 
-	local c_box = Numberbox.new{title=prompt and (prompt..": ") or "", number=default or 0, chars=10, fct=function(text) self:okclick() end}
+	local c_box = Numberbox.new{title=prompt and (prompt..": ") or "", number=default or 0, max=max, chars=10, fct=function(text) self:okclick() end}
 	self.c_box = c_box
 	local ok = require("engine.ui.Button").new{text="Accept", fct=function() self:okclick() end}
 	local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}

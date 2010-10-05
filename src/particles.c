@@ -66,13 +66,17 @@ static int particles_new(lua_State *L)
 {
 	int nb = luaL_checknumber(L, 1);
 	bool no_stop = lua_toboolean(L, 2);
-	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
+	int density = luaL_checknumber(L, 3);
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
 	int t_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	int p_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	particles_type *ps = (particles_type*)lua_newuserdata(L, sizeof(particles_type));
 	auxiliar_setclass(L, "core{particles}", -1);
 
+	ps->density = density;
+	nb = (nb * ps->density) / 100;
+	if (!nb) nb = 1;
 	ps->nb = nb;
 	ps->texture = *t;
 	ps->texture_ref = t_ref;
@@ -151,6 +155,9 @@ static int particles_emit(lua_State *L)
 {
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
 	int nb = luaL_checknumber(L, 2);
+
+	nb = (nb * ps->density) / 100;
+	if (!nb) nb = 1;
 
 	int i;
 	for (i = 0; i < ps->nb; i++)

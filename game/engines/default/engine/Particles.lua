@@ -70,5 +70,5 @@ function _M:loaded()
 	gl = self.__particles_gl[gl]
 
 	self.update = fct
-	self.ps = core.particles.newEmitter(max or 1000, no_stop, def, gl)
+	self.ps = core.particles.newEmitter(max or 1000, no_stop, config.settings.particles_density or 100, def, gl)
 end

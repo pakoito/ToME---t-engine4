@@ -53,6 +53,7 @@ music.volume = 60
 aa_text = true
 fbo_active = true
 shaders_active = true
+particles_density = 100
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then
