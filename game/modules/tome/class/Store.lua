@@ -108,3 +108,10 @@ function _M:descObject(who, what, o)
 		return desc
 	end
 end
+
+--- Actor interacts with the store
+-- @param who the actor who interracts
+function _M:interact(who)
+	who:sortInven()
+	Store.interact(self, who)
+end
