@@ -51,7 +51,7 @@ newEntity{
 	rarity = 20,
 	cost = 60,
 	wielder = {
-		movement_speed = 0.8,
+		movement_speed = -0.2,
 	},
 }
 
