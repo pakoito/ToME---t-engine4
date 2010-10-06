@@ -26,3 +26,5 @@ if jit then
 else
 	print("LuaVM:", _VERSION)
 end
+
+math.randomseed(os.time())

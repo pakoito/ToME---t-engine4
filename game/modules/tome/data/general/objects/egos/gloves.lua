@@ -169,3 +169,14 @@ newEntity{
 		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end) },
 	},
 }
+
+newEntity{
+	name = " of iron grip", suffix=true,
+	level_range = {20, 50},
+	rarity = 9,
+	cost = 15,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end) },
+		disarm_immune = 0.7,,
+	},
+}
