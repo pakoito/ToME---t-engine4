@@ -61,10 +61,7 @@ newTalent{
 			if eff[1] == "effect" then
 				target:removeEffect(eff[2])
 			else
-				local old = target.energy.value
-				target:useTalent(eff[2])
-				-- Prevent using energy
-				target.energy.value = old
+				target:forceUseTalent(eff[2], {ignore_energy=true})
 			end
 		end
 		game:playSoundNear(self, "talents/spell_generic")

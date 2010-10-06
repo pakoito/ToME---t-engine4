@@ -72,10 +72,7 @@ function _M:cleanActor(actor)
 		if eff[1] == "effect" then
 			actor:removeEffect(eff[2])
 		else
-			local old = actor.energy.value
-			actor:useTalent(eff[2])
-			-- Prevent using energy
-			actor.energy.value = old
+			actor:forceUseTalent(eff[2], {ignore_energy=true})
 		end
 	end
 end

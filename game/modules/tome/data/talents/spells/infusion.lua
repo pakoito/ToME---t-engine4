@@ -21,10 +21,7 @@ local function cancelInfusions(self)
 	local chants = {self.T_ACID_INFUSION, self.T_LIGHTNING_INFUSION, self.T_FROST_INFUSION}
 	for i, t in ipairs(chants) do
 		if self:isTalentActive(t) then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(t)
-			self.energy.value = old
+			self:forceUseTalent(t, {ignore_energy=true})
 		end
 	end
 end

@@ -180,10 +180,7 @@ newTalent{
 	direct_hit = true,
 	do_storm = function(self, t)
 		if self:getMana() <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(self.T_THUNDERSTORM)
-			self.energy.value = old
+			self:forceUseTalent(t.id, {ignore_energy=true})
 			return
 		end
 

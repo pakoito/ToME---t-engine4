@@ -176,10 +176,7 @@ function _M:act()
 		for tid, _ in pairs(self.sustain_talents) do
 			local t = self:getTalentFromId(tid)
 			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) then
-				local old = self.energy.value
-				self.energy.value = 100000
-				self:useTalent(tid)
-				self.energy.value = old
+				self:forceUseTalent(tid, {ignore_energy=true})
 			end
 		end
 	end
@@ -559,10 +556,7 @@ function _M:onTakeHit(value, src)
 			local dam = self.disruption_shield_absorb
 
 			-- Deactivate without loosing energy
-			local old = self.energy.value
-			self.energy.value = 10000
-			self:useTalent(self.T_DISRUPTION_SHIELD)
-			self.energy.value = old
+			self:forceUseTalent(t.T_DISRUPTION_SHIELD, {ignore_energy=true})
 
 			-- Explode!
 			game.logSeen(self, "%s disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
@@ -1311,6 +1305,20 @@ function _M:postUseTalent(ab, ret)
 	return true
 end
 
+--- Force a talent to activate without using energy or such
+function _M:forceUseTalent(t, def)
+	local oldpause = game.paused
+	local oldenergy = self.energy.value
+	if def.ignore_energy then self.energy.value = 10000 end
+
+	self:useTalent(t, nil, def.force_level, def.ignore_cd, def.force_target)
+
+	if def.ignore_energy then
+		game.paused = oldpause
+		self.energy.value = oldenergy
+	end
+end
+
 --- Breaks stealth if active
 function _M:breakStealth()
 	if self:isTalentActive(self.T_STEALTH) then
@@ -1322,10 +1330,7 @@ function _M:breakStealth()
 		-- Do not break stealth
 		if rng.percent(chance) then return end
 
-		local old = self.energy.value
-		self.energy.value = 100000
-		self:useTalent(self.T_STEALTH)
-		self.energy.value = old
+		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
 		self.changed = true
 	end
 end

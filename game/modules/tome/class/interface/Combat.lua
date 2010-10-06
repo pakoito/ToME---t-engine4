@@ -246,10 +246,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, dam)
 		self:incPositive(-3)
 		if self:getPositive() <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(self.T_WEAPON_OF_LIGHT)
-			self.energy.value = old
+			self:forceUseTalent(self.T_WEAPON_OF_LIGHT, {ignore_energy=true})
 		end
 	end
 
@@ -272,10 +269,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		if tid then
 			print("[ARCANE COMBAT] autocast ",self:getTalentFromId(tid).name)
 			local old_cd = self:isTalentCoolingDown(self:getTalentFromId(tid))
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(tid, nil, nil, nil, target)
-			self.energy.value = old
+			self:forceUseTalent(tid, {ignore_energy=true, force_target=target})
 			-- Do not setup a cooldown
 			if not old_cd then
 				self.talents_cd[tid] = nil
@@ -288,10 +282,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and not target.dead and weapon.talent_on_hit and next(weapon.talent_on_hit) then
 		for tid, data in pairs(weapon.talent_on_hit) do
 			if rng.percent(data.chance) then
-				local old = self.energy.value
-				self.energy.value = 100000
-				self:useTalent(tid, nil, data.level, true, target)
-				self.energy.value = old
+				self:forceUseTalent(tid, {ignore_energy=true, force_target=target, force_level=data.level})
 			end
 		end
 	end

@@ -210,12 +210,8 @@ function _M:finish()
 		end
 	end
 	for i, tid in ipairs(reset) do
-		local old = self.actor.energy.value
-		self.actor:useTalent(tid)
-		self.actor.energy.value = old
-		self.actor.talents_cd[tid] = nil
-		self.actor:useTalent(tid)
-		self.actor.energy.value = old
+		self.actor:forceUseTalent(tid, {ignore_energy=true, ingore_cd=true})
+		self.actor:forceUseTalent(tid, {ignore_energy=true, ingore_cd=true})
 	end
 end
 

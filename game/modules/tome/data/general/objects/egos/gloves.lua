@@ -177,6 +177,6 @@ newEntity{
 	cost = 15,
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end) },
-		disarm_immune = 0.7,,
+		disarm_immune = 0.7,
 	},
 }

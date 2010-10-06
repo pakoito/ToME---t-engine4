@@ -140,10 +140,7 @@ newTalent{
 	range = 12,
 	do_fire = function(self, t)
 		if self:getMana() <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(self.T_BODY_OF_FIRE)
-			self.energy.value = old
+			self:forceUseTalent(t.id, {ignore_energy=true})
 			return
 		end
 

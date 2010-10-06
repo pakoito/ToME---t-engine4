@@ -123,10 +123,7 @@ newTalent{
 		game.logPlayer(self, "Your bone shield absorbs the damage!")
 		self:removeParticles(table.remove(p.particles))
 		if #p.particles <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(t.id)
-			self.energy.value = old
+			self:forceUseTalent(t.id, {ignore_energy=true})
 		end
 	end,
 	activate = function(self, t)

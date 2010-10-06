@@ -21,10 +21,7 @@ local function cancelChants(self)
 	local chants = {self.T_CHANT_OF_FORTITUDE, self.T_CHANT_OF_FORTRESS, self.T_CHANT_OF_RESISTANCE, self.T_CHANT_OF_LIGHT}
 	for i, t in ipairs(chants) do
 		if self:isTalentActive(t) then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(t)
-			self.energy.value = old
+			self:forceUseTalent(t, {ignore_energy=true})
 		end
 	end
 end

@@ -118,10 +118,7 @@ function _M:die(src)
 			if eff[1] == "effect" then
 				self:removeEffect(eff[2])
 			else
-				local old = self.energy.value
-				self:useTalent(eff[2])
-				-- Prevent using energy
-				self.energy.value = old
+				self:forceUseTalent(eff[2], {ignore_energy=true})
 			end
 		end
 		self.life = self.max_life
