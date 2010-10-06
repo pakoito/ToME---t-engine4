@@ -960,7 +960,7 @@ function _M:getMaxEncumbrance()
 	if self:knowTalent(self.T_BURDEN_MANAGEMENT) then
 		add = add + 20 + self:getTalentLevel(self.T_BURDEN_MANAGEMENT) * 15
 	end
-	return math.floor(40 + self:getStr() * 1.8) + (self.max_encumber or 0) + add
+	return math.floor(40 + self:getStr() * 1.8 + (self.max_encumber or 0) + add)
 end
 
 function _M:getEncumbrance()
@@ -985,7 +985,7 @@ function _M:getEncumbrance()
 		end
 	end
 --	print("Total encumbrance", enc)
-	return enc
+	return math.floor(enc)
 end
 
 function _M:checkEncumbrance()

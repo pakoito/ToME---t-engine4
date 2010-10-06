@@ -226,6 +226,8 @@ function _M:setupDisplayMode(reboot)
 		util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
 	end
 
+	-- Show a count for stacked objects
+	Map.object_stack_count = true
 	if self.gfxmode == 1 then
 		print("[DISPLAY MODE] 32x32 GFX")
 		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)

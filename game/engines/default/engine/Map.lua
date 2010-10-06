@@ -165,7 +165,6 @@ end
 function _M:resetTiles()
 	Entity:invalidateAllMO()
 	self.tiles = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, self.allow_backcolor)
-	self.tilesSDL = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, false, self.allow_backcolor)
 	self.tilesTactic = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, false)
 	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, true)
 end
@@ -388,6 +387,10 @@ function _M:updateMap(x, y)
 	end
 	if o then
 		o:getMapObjects(self.tiles, mos, 7)
+		if self.object_stack_count then
+			local mo = o:getMapStackMO(self, x, y)
+			if mo then mos[9] = mo end
+		end
 		mm = mm + MM_OBJECT
 	end
 	if a then

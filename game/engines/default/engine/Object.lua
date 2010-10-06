@@ -195,3 +195,24 @@ function _M:getRequirementDesc(who)
 	end
 	return str
 end
+
+--- Returns a map object that represents how many are in the stack
+local stackmo = {}
+function _M:getMapStackMO(map, x, y)
+	local nb = map:getObjectTotal(x, y)
+	if nb < 2 then return end
+	if nb > 9 then nb = "many" end
+	if stackmo[nb] then return stackmo[nb] end
+
+	local s = core.display.loadImage("/data/gfx/objstack"..nb..".png")
+	if not s then return end
+	local tex = s:glTexture()
+
+	-- Create the map object with 1 + additional textures
+	local _mo = core.map.newObject(0, 1, self:check("display_on_seen"), self:check("display_on_remember"), self:check("display_on_unknown"), 0, 0, 1)
+	_mo:texture(0, tex)
+
+	stackmo[nb] = _mo
+
+	return _mo
+end
