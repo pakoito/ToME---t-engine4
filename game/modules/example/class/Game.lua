@@ -94,6 +94,7 @@ function _M:newGame()
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
 
+	self.creating_player = true
 	local birth = Birther.new(self.player, {"base", "role" }, function()
 		self:changeLevel(1, "dungeon")
 		print("[PLAYER BIRTH] resolve...")
@@ -101,6 +102,7 @@ function _M:newGame()
 		self.player:resolve(nil, true)
 		self.player.energy.value = self.energy_to_act
 		self.paused = true
+		self.creating_player = false
 		print("[PLAYER BIRTH] resolved!")
 	end)
 	self:registerDialog(birth)
@@ -112,22 +114,6 @@ function _M:loaded()
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
 	self.key = engine.KeyBind.new()
-end
-
-function _M:onResolutionChange()
-	local oldw, oldh = self.w, self.h
-	engine.Game.onResolutionChange(self)
-	print("[RESOLUTION] changed to ", self.w, self.h)
-	if not self.change_res_dialog then
-		self.change_res_dialog = Dialog:yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
-			self.change_res_dialog = nil
-			if ret then
-				util.showMainMenu(false, nil, nil, "boot", "boot", false)
-			else
-				self:setResolution(oldw.."x"..oldh, true)
-			end
-		end, "Accept", "Revert")
-	end
 end
 
 function _M:setupDisplayMode()

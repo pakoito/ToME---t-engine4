@@ -132,6 +132,7 @@ function _M:newGame()
 
 	self.always_target = true
 
+	self.creating_player = true
 	local birth; birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		-- Save for quick birth
 		local save = Savefile.new(self.save_name)
@@ -157,6 +158,7 @@ function _M:newGame()
 				self.player:onBirth(birth)
 				-- For quickbirth
 				savefile_pipe:push("", "entity", self.player)
+				self.creating_player = false
 			end, true))
 		end
 
@@ -212,23 +214,6 @@ function _M:createSeparators()
 	self.bottom_separator, self.bottom_separator_w, self.bottom_separator_h = self:createVisualSeparator("horizontal", self.w)
 	self.split_separator, self.split_separator_w, self.split_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.2))
 	self.player_separator, self.player_separator_w, self.player_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.8) - 20)
-end
-
-function _M:onResolutionChange()
-	local oldw, oldh = self.w, self.h
-	engine.Game.onResolutionChange(self)
-	print("[RESOLUTION] changed to ", self.w, self.h)
-
-	if self.change_res_dialog and type(self.change_res_dialog) == "table" then self:unregisterDialog(self.change_res_dialog) end
-	self.change_res_dialog = Dialog:yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
-		if ret then
-			self:saveGame()
-			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
-		else
-			self.change_res_dialog = nil
-			self:setResolution(oldw.."x"..oldh, true)
-		end
-	end, "Accept", "Revert")
 end
 
 function _M:setupDisplayMode(reboot)

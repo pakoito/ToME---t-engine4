@@ -63,7 +63,7 @@ function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 	local tw, th = self.font:size(title:removeColorCodes())
 	local d = new(title, math.max(w, tw) + 35, h + 75)
 
-	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
+--	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
 	local cancel = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false) end}
 	d:loadUI{
@@ -83,7 +83,7 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
 	local list = text:splitLines(w - 10, font)
 	local d = new(title, w + 20, #list * self.font_h + 75)
 
-	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
+--	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
 	local cancel = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false) end}
 	d:loadUI{

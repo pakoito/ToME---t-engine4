@@ -275,9 +275,34 @@ end
 
 --- Called when screen resolution changes
 function _M:onResolutionChange()
+	if game and not self.change_res_dialog_oldw then
+		self.change_res_dialog_oldw, self.change_res_dialog_oldh = self.w, self.h
+	end
+
 	self.w, self.h = core.display.size()
 	config.settings.window.size = ("%dx%d"):format(self.w, self.h)
 	self:saveSettings("resolution", ("window.size = '%s'\n"):format(config.settings.window.size))
+	print("[RESOLUTION] changed to ", self.w, self.h)
+
+	-- We do not even have a game yet
+	if not game then return end
+
+	-- Do not repop if we just revert back
+	if self.change_res_dialog and type(self.change_res_dialog) == "string" and self.change_res_dialog == "revert" then return end
+	-- Unregister old dialog if there was one
+	if self.change_res_dialog and type(self.change_res_dialog) == "table" then self:unregisterDialog(self.change_res_dialog) end
+	-- Ask if we want to switch
+	self.change_res_dialog = require("engine.ui.Dialog"):yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
+		if ret then
+			if not self.creating_player then self:saveGame() end
+			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
+		else
+			self.change_res_dialog = "revert"
+			self:setResolution(self.change_res_dialog_oldw.."x"..self.change_res_dialog_oldh, true)
+			self.change_res_dialog = nil
+			self.change_res_dialog_oldw, self.change_res_dialog_oldh = nil, nil
+		end
+	end, "Accept", "Revert")
 end
 
 --- Requests the game to save
