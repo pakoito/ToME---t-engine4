@@ -174,10 +174,10 @@ function _M:generate()
 
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
 		self:onSelect()
-		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button) end
+		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button, event) end
 	end)
 	self.key:addBinds{
-		ACCEPT = function() self:onUse() end,
+		ACCEPT = function() self:onUse("left", "key") end,
 		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
 		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
 	}

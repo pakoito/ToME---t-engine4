@@ -34,14 +34,14 @@ function _M:init(title, actor, filter, action)
 
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true}
 
-	self:generateList()
-
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
 		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
-	}, list=self.list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+	}, list={}, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	self:generateList()
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
@@ -99,4 +99,5 @@ function _M:generateList()
 		end
 	end
 	self.list = list
+	self.c_list:setList(list)
 end

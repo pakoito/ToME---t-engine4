@@ -722,9 +722,9 @@ function _M:setupCommands()
 		SHOW_INVENTORY = function()
 			local d
 			local titleupdator = self.player:getEncumberTitleUpdator("Inventory")
-			d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item)
+			d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
 				if not o then return end
-				local ud = require("mod.dialogs.UseItemDialog").new(self.player, o, item, inven, function(_, _, _, stop)
+				local ud = require("mod.dialogs.UseItemDialog").new(event == "button", self.player, o, item, inven, function(_, _, _, stop)
 					d:generateList()
 					d.title = titleupdator()
 					if stop then self:unregisterDialog(d) end

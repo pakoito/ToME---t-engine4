@@ -35,14 +35,14 @@ function _M:init(title, inven, filter, action, actor)
 
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true}
 
-	self:generateList()
-
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
-	}, list=self.list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+	}, list={}, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	self:generateList()
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
@@ -80,12 +80,15 @@ function _M:generateList()
 	-- Makes up the list
 	local list = {}
 	list.chars = {}
+	local i = 1
 	for item, o in ipairs(self.inven) do
 		if not self.filter or self.filter(o) then
-			local char = self:makeKeyChar(item)
-			list.chars[char] = item
-			list[#list+1] = { char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+			local char = self:makeKeyChar(i)
+			list[#list+1] = { id=i, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+			list.chars[char] = #list
+			i = i + 1
 		end
 	end
 	self.list = list
+	self.c_list:setList(list)
 end

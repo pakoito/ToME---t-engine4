@@ -33,7 +33,7 @@ function _M:init(title, actor, filter, action)
 
 	Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
-	self:generateList()
+	self:maxH()
 
 	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
 
@@ -42,14 +42,16 @@ function _M:init(title, actor, filter, action)
 		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
-	}, list=self.inven_list, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
+	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end}
 
 	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
 		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
-	}, list=self.equip_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end}
+
+	self:generateList()
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_equip},
@@ -138,9 +140,9 @@ function _M:select(item)
 	end
 end
 
-function _M:use(item)
+function _M:use(item, button, event)
 	if item then
-		if self.action(item.object, item.inven, item.item) then
+		if self.action(item.object, item.inven, item.item, button, event) then
 			game:unregisterDialog(self)
 		end
 	end
@@ -188,11 +190,22 @@ function _M:generateList()
 	end
 	list.chars = chars
 
-	if self.c_inven then
-		self.c_inven.list = self.inven_list
-		self.c_equip.list = self.equip_list
-		self.c_inven:generate()
-		self.c_equip:generate()
+	self.c_inven:setList(self.inven_list)
+	self.c_equip:setList(self.equip_list)
+end
+
+function _M:maxH()
+	self.max_h = 0
+	for inven_id =  1, #self.actor.inven_def do
+		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
+			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
+		end
+	end
+	local i = 1
+	for item, o in ipairs(self.actor:getInven("INVEN")) do
+		if not self.filter or self.filter(o) then
+			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
+		end
 	end
 end
 

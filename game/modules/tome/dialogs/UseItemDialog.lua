@@ -25,7 +25,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(engine.ui.Dialog))
 
-function _M:init(actor, object, item, inven, onuse)
+function _M:init(center_mouse, actor, object, item, inven, onuse)
 	self.actor = actor
 	self.object = object
 	self.inven = inven
@@ -42,7 +42,13 @@ function _M:init(actor, object, item, inven, onuse)
 	self:loadUI{
 		{left=0, top=0, ui=list},
 	}
-	self:setupUI(true, true)
+	self:setupUI(true, true, function(w, h)
+		if center_mouse then
+			local mx, my = core.mouse.get()
+			self.force_x = mx - w / 2
+			self.force_y = my - (self.h - self.ih + list.fh / 3)
+		end
+	end)
 
 	self.key:addBinds{ EXIT = function() game:unregisterDialog(self) end, }
 end

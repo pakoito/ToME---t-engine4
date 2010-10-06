@@ -37,14 +37,14 @@ function _M:init(title, x, y, filter, action)
 
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - takeall.h, no_color_bleed=true}
 
-	self:generateList()
-
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10 - takeall.h, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
 		{name="Item", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
-	}, list=self.list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+	}, list={}, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
+
+	self:generateList()
 
 	self:loadUI{
 		{left=0, top=takeall.h, ui=self.c_list},
@@ -117,8 +117,5 @@ function _M:generateList()
 	end
 	self.list = list
 
-	if self.c_list then
-		self.c_list.list = self.list
-		self.c_list:generate()
-	end
+	self.c_list:setList(self.list)
 end
