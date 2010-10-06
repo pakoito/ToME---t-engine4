@@ -139,7 +139,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Chant the glory of the moon, granting you %d%% stun, blindness and confusion resistances.
-		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f light damage.
+		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
 		The damage will increase with the Magic stat]]):format(100 * (0.2 + self:getTalentLevel(t) / 10), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
 	end,

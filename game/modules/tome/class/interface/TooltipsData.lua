@@ -130,7 +130,7 @@ It is improved by Cunning.
 ]]
 TOOLTIP_COMBAT_SPEED = [[#GOLD#Attack speed#LAST#
 Attack speed represents how fast your attacks are compared to a normal turn.
-The lowest it is the fastest your attacks are.
+The lowest it is the faster your attacks are.
 ]]
 
 -------------------------------------------------------------
@@ -178,7 +178,7 @@ It is improved by Cunning.
 ]]
 TOOLTIP_SPELL_SPEED = [[#GOLD#Spellcasting speed#LAST#
 Spellcasting speed represents how fast your spellcasting is compared to a normal turn.
-The lowest it is the fastest it is.
+The lowest it is the faster it is.
 ]]
 
 -------------------------------------------------------------

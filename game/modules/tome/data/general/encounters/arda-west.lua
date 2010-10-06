@@ -116,7 +116,7 @@ newEntity{
 				game.logPlayer(who, "#LIGHT_RED#As you enter you notice the trap door has no visible handle on the inside. You are stuck here!")
 				who:grantQuest("lost-merchant")
 			end
-		end, "Enter then tunnels", "Leave carefully")
+		end, "Enter the tunnels", "Leave carefully")
 		return true
 	end,
 }

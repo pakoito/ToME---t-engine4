@@ -25,7 +25,7 @@ Melee combat depends on various stats:
 * #GOLD#Attack#WHITE#: Your chance to hit
 * #GOLD#Defense#WHITE#: Your chance to avoid attacks
 * #GOLD#Armour#WHITE#: Flat reduction to damage done
-* #GOLD#Damage#WHITE#: You much damage you do per blow
+* #GOLD#Damage#WHITE#: How much damage you do per blow
 * #GOLD#Armour Penetration#WHITE#: How much of the target's armour you can ignore
 
 You can see those stats, along many others, in the character sheet.
