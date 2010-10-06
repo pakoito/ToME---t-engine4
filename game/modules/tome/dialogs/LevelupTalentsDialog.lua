@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local TreeList = require "engine.ui.TreeList"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -43,7 +44,7 @@ Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FF
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]}
 	self.c_points = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=_points_left:format(self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)}
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true}
 
 	self:generateList()
 
@@ -258,19 +259,16 @@ function _M:onDrawItem(item)
 		end
 	end
 
-	if not item.zone_desc then
-		item.zone_desc = self.c_desc:spawn{text=table.concat(text, "\n")}
-	else
-		item.zone_desc.text = table.concat(text, "\n")
-		item.zone_desc:generate()
-	end
+	self.c_desc:createItem(item, table.concat(text, "\n"))
 end
 
 function _M:select(item)
 	if not item or not self.uis or not self.uis[5] then return end
 
-	if self.running and not item.zone_desc then self:onDrawItem(item) end
-	self.uis[5].ui = item.zone_desc
+	if not self.c_desc:switchItem(item) then
+		self:onDrawItem(item)
+		self.c_desc:switchItem(item)
+	end
 end
 
 function _M:treeSelect(item, sel, v)
@@ -286,6 +284,7 @@ function _M:treeSelect(item, sel, v)
 			if it then self.c_tree:drawItem(it) end
 		end
 	end
+	self.c_desc:switchItem(item)
 	self.c_tree:outputList()
 
 	self.c_points.text = _points_left:format(self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)
