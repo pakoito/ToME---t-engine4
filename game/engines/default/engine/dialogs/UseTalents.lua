@@ -57,7 +57,7 @@ Check out the keybinding screen in the game menu to bind hotkeys to a key (defau
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
 			if self.list and self.list.chars[c] then
-				self:use(self.list[self.list.chars[c]])
+				self:use(self.list.chars[c])
 			end
 		end,
 	}
@@ -119,23 +119,17 @@ function _M:select(item)
 end
 
 function _M:use(item)
+	if not item or not item.talent then return end
+
 	game:unregisterDialog(self)
 	self.actor:useTalent(item.talent)
-end
-
-function _M:makeKey(letter)
-	if letter >= 26 then
-		return string.char(string.byte('A') + letter - 26)
-	else
-		return string.char(string.byte('a') + letter)
-	end
 end
 
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
-	local keybind = {}
-	local letter = 0
+	list.chars = {}
+	local letter = 1
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		local cat = tt.type:gsub("/.*", "")
 		local where = #list
@@ -147,9 +141,9 @@ function _M:generateList()
 				local typename = "talent"
 				local status = "#LIGHT_GREEN#Active#WHITE#"
 				if t.mode == "sustained" then status = self.actor:isTalentActive(t.id) and "#YELLOW#Sustaining#WHITE#" or "#LIGHT_GREEN#Sustain#WHITE#" end
-				list[#list+1] = { zone=zone, char=self:makeKey(letter), name=t.name.." ("..typename..")", status=status, talent=t.id }
+				list[#list+1] = { zone=zone, char=self:makeKeyChar(letter), name=t.name.." ("..typename..")", status=status, talent=t.id }
+				list.chars[self:makeKeyChar(letter)] = list[#list]
 				self.c_desc:createItem(list[#list], self.actor:getTalentFullDescription(t))
-				keybind[self:makeKey(letter)] = #list + 1
 				if not self.sel then self.sel = #list + 1 end
 				letter = letter + 1
 				added = true
@@ -163,5 +157,4 @@ function _M:generateList()
 	end
 	for i = 1, #list do list[i].id = i end
 	self.list = list
-	self.keybind = keybind
 end
