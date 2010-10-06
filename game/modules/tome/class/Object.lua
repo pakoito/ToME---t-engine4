@@ -214,7 +214,7 @@ function _M:getTextualDesc()
 
 	local desc_wielder = function(w)
 	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
-	if w.combat_armor or w.combat_def then desc[#desc+1] = ("Armor %d, Defense %d"):format(w.combat_armor or 0, w.combat_def or 0) end
+	if w.combat_armor or w.combat_def or w.combat_def_ranged then desc[#desc+1] = ("Armor %d, Defense %d, Ranged Defense %d"):format(w.combat_armor or 0, w.combat_def or 0, w.combat_def_ranged or 0) end
 	if w.fatigue then desc[#desc+1] = ("Fatigue %d%%"):format(w.fatigue) end
 
 	if w.inc_stats then
