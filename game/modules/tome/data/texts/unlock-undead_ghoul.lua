@@ -20,7 +20,7 @@
 return "New Race: #LIGHT_GREEN#Ghoul (Undead)",
 [[
 Ghouls are evil undead creatures. Usually raised by necromancers to serve as mindless servants, some however manage to keep their sentience and roam the world in a blazing path of destruction.
-While you have died at the hands of such a creature, you can now create a new character with the  #LIGHT_GREEN#Ghoul race#WHITE#.
+While you have killed the Master, a malevolent undead creature. You can now create a new character with the #LIGHT_GREEN#Ghoul race#WHITE#.
 
 Race features:#YELLOW#
 - great poison resistance

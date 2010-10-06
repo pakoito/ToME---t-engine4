@@ -91,5 +91,12 @@ newEntity{ define_as = "THE_MASTER",
 		world:gainAchievement("VAMPIRE_CRUSHER", game.player:resolveSource())
 		game.player:resolveSource():grantQuest("tol-falas")
 		game.player:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
+
+		local ud = {}
+		if not profile.mod.allow_build.undead_skeleton then ud[#ud+1] = "undead_skeleton" end
+		if not profile.mod.allow_build.undead_ghoul then ud[#ud+1] = "undead_ghoul" end
+		if #ud == 0 then return end
+		game:setAllowedBuild("undead")
+		game:setAllowedBuild(rng.table(ud), true)
 	end,
 }

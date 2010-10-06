@@ -112,7 +112,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
-	name = "armoured skeleton warrior", color=colors.STEEL_BLUE,
+	name = "armoured skeleton warrior", color=colors.STEEL_BLUE, image="npc/armored_skeleton_warrior.png",
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 5,
 	max_life = resolvers.rngavg(90,100),
