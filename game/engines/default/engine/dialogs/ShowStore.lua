@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -50,7 +51,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		{name="Price", width=8, display_prop="cost", sort="cost"},
 	}, list=self.store_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
 
-	self.c_desc = Textzone.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true, text=""}
+	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_store},
@@ -83,8 +84,8 @@ function _M:updateStore()
 end
 
 function _M:select(item)
-	if item and self.uis[3] then
-		self.uis[3].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 
@@ -109,8 +110,7 @@ function _M:generateList()
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
 			local char = self:makeKeyChar(i)
-			local zone = self.c_desc:spawn{text=o:getDesc()}
-			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
+			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost, desc=o:getDesc() }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			list.chars[char] = #list
 			i = i + 1
@@ -125,8 +125,7 @@ function _M:generateList()
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
 			local char = self:makeKeyChar(i)
-			local zone = self.c_desc:spawn{text=o:getDesc()}
-			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
+			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost, desc=o:getDesc() }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			list.chars[char] = #list
 			i = i + 1

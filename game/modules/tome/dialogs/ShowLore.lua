@@ -20,7 +20,7 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
-local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -33,7 +33,7 @@ function _M:init(title, actor)
 
 	Dialog.init(self, (title or "Lore").." ("..nb.."/"..total..")", game.w * 0.8, game.h * 0.8)
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih}
 
 	self:generateList()
 
@@ -71,8 +71,7 @@ function _M:generateList()
 end
 
 function _M:select(item)
-	if item and self.uis[2] then
-		if not item.zone then item.zone = self.c_desc:spawn{text=("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(item.cat, item.name, item.desc)} end
-		self.uis[2].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item, ("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(item.cat, item.name, item.desc))
 	end
 end

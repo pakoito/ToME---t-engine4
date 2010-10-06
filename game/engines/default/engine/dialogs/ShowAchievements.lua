@@ -20,7 +20,7 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
-local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -32,7 +32,7 @@ function _M:init(title)
 
 	Dialog.init(self, (title or "Achievements").." ("..nb.."/"..total..")", game.w * 0.8, game.h * 0.8)
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih}
 
 	self:generateList()
 
@@ -56,8 +56,8 @@ function _M:init(title)
 end
 
 function _M:select(item)
-	if item and self.uis[2] then
-		self.uis[2].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item, ("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n\n#GOLD#Description:#LAST# %s"):format(item.when, item.who, item.desc))
 	end
 end
 
@@ -67,8 +67,7 @@ function _M:generateList()
 	local i = 0
 	for id, data in pairs(world.achieved) do
 		local a = world:getAchievementFromId(id)
-		local zone = self.c_desc:spawn{text=("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n\n#GOLD#Description:#LAST# %s"):format(data.when, data.who, a.desc)}
-		list[#list+1] = { zone=zone, name=a.name,  desc=a.desc, when=data.when, who=data.who, order=a.order }
+		list[#list+1] = { name=a.name,  desc=a.desc, when=data.when, who=data.who, order=a.order }
 		i = i + 1
 	end
 	table.sort(list, function(a, b) return a.name < b.name end)

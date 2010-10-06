@@ -99,8 +99,9 @@ function _M:createItem(item, text)
 	}
 end
 
-function _M:switchItem(item)
+function _M:switchItem(item, create_if_needed)
 	self.cur_item = item
+	if create_if_needed then if not self.items[item] then self:createItem(item, create_if_needed) end end
 	if not self.items[item] then self.list = nil return false end
 	local d = self.items[item]
 

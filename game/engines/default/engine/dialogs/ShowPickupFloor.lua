@@ -22,6 +22,7 @@ local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -34,7 +35,7 @@ function _M:init(title, x, y, filter, action)
 
 	local takeall = Button.new{text="(*) Take all", width=self.iw - 40, fct=function() self:takeAll() end}
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - takeall.h, no_color_bleed=true, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - takeall.h, no_color_bleed=true}
 
 	self:generateList()
 
@@ -80,8 +81,8 @@ function _M:used()
 end
 
 function _M:select(item)
-	if item and self.uis[2] then
-		self.uis[2].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 
@@ -109,8 +110,7 @@ function _M:generateList()
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
 			list.chars[char] = i
-			local zone = self.c_desc:spawn{text=o:getDesc()}
-			list[#list+1] = { char=char, zone=zone, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=o.encumber }
+			list[#list+1] = { char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 			i = i + 1
 		end
 		idx = idx + 1

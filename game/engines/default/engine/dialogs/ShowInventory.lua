@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -32,7 +33,7 @@ function _M:init(title, inven, filter, action, actor)
 	self.actor = actor
 	Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true}
 
 	self:generateList()
 
@@ -64,8 +65,8 @@ function _M:init(title, inven, filter, action, actor)
 end
 
 function _M:select(item)
-	if item and self.uis[2] then
-		self.uis[2].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 function _M:use(item)
@@ -83,9 +84,7 @@ function _M:generateList()
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(item)
 			list.chars[char] = item
-			local zone = self.c_desc:spawn{text=o:getDesc()}
-			list[#list+1] = { char=char, zone=zone, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber }
-			i = i + 1
+			list[#list+1] = { char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 		end
 	end
 	self.list = list

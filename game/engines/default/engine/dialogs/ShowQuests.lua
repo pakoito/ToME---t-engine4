@@ -20,7 +20,7 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
-local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -29,7 +29,7 @@ function _M:init(actor)
 	self.actor = actor
 	Dialog.init(self, "Quest Log for "..actor.name, game.w, game.h)
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih}
 
 	self:generateList()
 
@@ -54,8 +54,8 @@ function _M:init(actor)
 end
 
 function _M:select(item)
-	if item and self.uis[2] then
-		self.uis[2].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 
@@ -64,14 +64,13 @@ function _M:generateList()
 	local list = {}
 	for id, q in pairs(self.actor.quests or {}) do
 		if true then
-			local zone = self.c_desc:spawn{text=q:desc(self.actor)}
 			local color = nil
 			if q:isStatus(q.COMPLETED) then color = colors.simple(colors.LIGHT_GREEN)
 			elseif q:isStatus(q.DONE) then color = colors.simple(colors.GREEN)
 			elseif q:isStatus(q.FAILED) then color = colors.simple(colors.RED)
 			end
 
-			list[#list+1] = { zone=zone, name=q.name, quest=q, color = color, status=q.status_text[q.status], status_order=q.status }
+			list[#list+1] = {  name=q.name, quest=q, color = color, status=q.status_text[q.status], status_order=q.status, desc=q:desc(self.actor) }
 		end
 	end
 	if game.turn then

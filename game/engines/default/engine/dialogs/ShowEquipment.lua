@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -31,7 +32,7 @@ function _M:init(title, actor, filter, action)
 	self.action = action
 	Dialog.init(self, title or "Equipment", game.w * 0.8, game.h * 0.8)
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true}
 
 	self:generateList()
 
@@ -67,7 +68,7 @@ end
 
 function _M:select(item)
 	if item and self.uis[2] then
-		self.uis[2].ui = item.zone
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 function _M:use(item)
@@ -85,14 +86,12 @@ function _M:generateList()
 	local i = 1
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
-			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=self.actor.inven_def[inven_id].description}
-			list[#list+1] = { zone=zone, id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="" }
+			list[#list+1] = { id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="", desc=self.actor.inven_def[inven_id].description }
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = self:makeKeyChar(i)
-					local zone = self.c_desc:spawn{text=o:getDesc()}
-					list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber }
+					list[#list+1] = { id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 					chars[char] = #list
 					i = i + 1
 				end

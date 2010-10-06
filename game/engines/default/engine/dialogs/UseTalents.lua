@@ -114,7 +114,7 @@ end
 
 function _M:select(item)
 	if item then
-		self.c_desc:switchItem(item)
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 
@@ -141,9 +141,8 @@ function _M:generateList()
 				local typename = "talent"
 				local status = "#LIGHT_GREEN#Active#WHITE#"
 				if t.mode == "sustained" then status = self.actor:isTalentActive(t.id) and "#YELLOW#Sustaining#WHITE#" or "#LIGHT_GREEN#Sustain#WHITE#" end
-				list[#list+1] = { zone=zone, char=self:makeKeyChar(letter), name=t.name.." ("..typename..")", status=status, talent=t.id }
+				list[#list+1] = { char=self:makeKeyChar(letter), name=t.name.." ("..typename..")", status=status, talent=t.id, desc=self.actor:getTalentFullDescription(t) }
 				list.chars[self:makeKeyChar(letter)] = list[#list]
-				self.c_desc:createItem(list[#list], self.actor:getTalentFullDescription(t))
 				if not self.sel then self.sel = #list + 1 end
 				letter = letter + 1
 				added = true
@@ -151,8 +150,7 @@ function _M:generateList()
 		end
 
 		if added then
-			table.insert(list, where+1, { zone=zone, char="", name="#{bold}#"..cat:capitalize().." / "..tt.name:capitalize().."#{normal}#", type=tt.type, color={0x80, 0x80, 0x80}, status="" })
-			self.c_desc:createItem(list[where+1], tt.description)
+			table.insert(list, where+1, { char="", name="#{bold}#"..cat:capitalize().." / "..tt.name:capitalize().."#{normal}#", type=tt.type, color={0x80, 0x80, 0x80}, status="", desc=tt.description })
 		end
 	end
 	for i = 1, #list do list[i].id = i end

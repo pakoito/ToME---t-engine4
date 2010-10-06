@@ -22,6 +22,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
@@ -42,22 +43,22 @@ function _M:init(actor, on_finish)
 Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to increase stat; #00FF00#left key#FFFFFF# to decrease a stat.
 Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF# to decrease a stat.
 ]]}
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true}
 	self.c_points = Textzone.new{width=math.floor(self.iw / 2 - 10), auto_height=true, no_color_bleed=true, text=_points_text:format(self.actor.unused_stats)}
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, columns={
 		{name="Stat", width=70, display_prop="name"},
 		{name="Value", width=30, display_prop="val"},
 	}, list={
-		{name="Strength", val=self.actor:getStr(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_STR].description}},
-		{name="Dexterity", val=self.actor:getDex(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_DEX].description}},
-		{name="Magic", val=self.actor:getMag(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_MAG].description}},
-		{name="Willpower", val=self.actor:getWil(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_WIL].description}},
-		{name="Cunning", val=self.actor:getCun(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_CUN].description}},
-		{name="Constitution", val=self.actor:getCon(), zone=Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=self.actor.stats_def[self.actor.STAT_CON].description}},
+		{name="Strength", val=self.actor:getStr(), stat_id=self.actor.STAT_STR},
+		{name="Dexterity", val=self.actor:getDex(), stat_id=self.actor.STAT_DEX},
+		{name="Magic", val=self.actor:getMag(), stat_id=self.actor.STAT_MAG},
+		{name="Willpower", val=self.actor:getWil(), stat_id=self.actor.STAT_WIL},
+		{name="Cunning", val=self.actor:getCun(), stat_id=self.actor.STAT_CUN},
+		{name="Constitution", val=self.actor:getCon(), stat_id=self.actor.STAT_CON},
 	}, fct=function(item, _, v)
 		self:incStat(v == "left" and 1 or -1)
-	end, select=function(item, sel) self.sel = sel if self.uis[5] then self.uis[5].ui = item.zone end end}
+	end, select=function(item, sel) self.sel = sel self.c_desc:switchItem(item, self.actor.stats_def[item.stat_id].description) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_points},

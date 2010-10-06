@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -33,6 +34,8 @@ function _M:init(title, actor, filter, action)
 	Dialog.init(self, title or "Inventory", game.w * 0.8, game.h * 0.8)
 
 	self:generateList()
+
+	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
 
 	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
@@ -47,8 +50,6 @@ function _M:init(title, actor, filter, action)
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
 	}, list=self.equip_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
-
-	self.c_desc = Textzone.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true, text=""}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_equip},
@@ -132,8 +133,8 @@ function _M:defineHotkey(id)
 end
 
 function _M:select(item)
-	if item and self.uis[3] then
-		self.uis[3].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 
@@ -154,15 +155,13 @@ function _M:generateList()
 	self.max_h = 0
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
-			local zone = Textzone.new{width=self.iw, height=self.ih, text=self.actor.inven_def[inven_id].description}
-			list[#list+1] = { zone=zone, id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="" }
+			list[#list+1] = { id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="", desc=self.actor.inven_def[inven_id].description }
 			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = self:makeKeyChar(i)
-					local zone = self.c_desc:spawn{text=o:getDesc()}
-					list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber }
+					list[#list+1] = { id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 					self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 					chars[char] = #list
 					i = i + 1
@@ -181,8 +180,7 @@ function _M:generateList()
 	for item, o in ipairs(self.actor:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
-			local zone = self.c_desc:spawn{text=o:getDesc()}
-			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber }
+			list[#list+1] = { id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			chars[char] = #list
 			i = i + 1
