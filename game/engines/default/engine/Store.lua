@@ -102,6 +102,7 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 	nb = self:tryBuy(who, o, item, nb)
 	if nb then
 		Dialog:yesnoPopup("Buy", ("Buy %d %s"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
+			self:onBuy(who, o, item, nb, true)
 			local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
 			for i = 1, nb do
 				local o = self:removeObject(store, item)
@@ -111,7 +112,7 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 			who:sortInven(inven)
 			self.changed = true
 			who.changed = true
-			self:onBuy(who, o, item, nb)
+			self:onBuy(who, o, item, nb, false)
 			if store_dialog then store_dialog:updateStore() end
 		end end, "Buy", "Cancel")
 	end
@@ -123,6 +124,7 @@ function _M:doSell(who, o, item, nb, store_dialog)
 	nb = self:trySell(who, o, item, nb)
 	if nb then
 		Dialog:yesnoPopup("Sell", ("Sell %d %s"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
+			self:onSell(who, o, item, nb, true)
 			local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
 			for i = 1, nb do
 				local o = who:removeObject(inven, item)
@@ -132,7 +134,7 @@ function _M:doSell(who, o, item, nb, store_dialog)
 			who:sortInven(inven)
 			self.changed = true
 			who.changed = true
-			self:onSell(who, o, item, nb)
+			self:onSell(who, o, item, nb, false)
 			if store_dialog then store_dialog:updateStore() end
 		end end, "Sell", "Cancel")
 	end
@@ -164,7 +166,8 @@ end
 -- @param o the object trying to be purchased
 -- @param item the index in the inventory
 -- @param nb number of items (if stacked) to buy
-function _M:onBuy(who, o, item, nb)
+-- @param before true if this happens before removing the item
+function _M:onBuy(who, o, item, nb, before)
 end
 
 --- Called on object sale
@@ -172,7 +175,8 @@ end
 -- @param o the object trying to be sold
 -- @param item the index in the inventory
 -- @param nb number of items (if stacked) to sell
-function _M:onSell(who, o, item, nb)
+-- @param before true if this happens before removing the item
+function _M:onSell(who, o, item, nb, before)
 end
 
 --- Called to describe an object, being to sell or to buy

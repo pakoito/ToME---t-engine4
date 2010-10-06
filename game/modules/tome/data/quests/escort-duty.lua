@@ -247,7 +247,11 @@ desc = function(self, who)
 			desc[#desc+1] = ("As a reward you %s."):format(self.reward_message)
 		end
 	elseif self:isStatus(engine.Quest.FAILED) then
-		desc[#desc+1] = "You failed to protect the "..self.kind.name.." from death by "..self.killing_npc.."."
+		if self.abandoned then
+			desc[#desc+1] = "You abandonned "..self.kind.name.." to death."
+		else
+			desc[#desc+1] = "You failed to protect the "..self.kind.name.." from death by "..self.killing_npc.."."
+		end
 	else
 		desc[#desc+1] = "Escort the "..self.kind.name.." to the recall portal on level "..self.level_name.."."
 	end

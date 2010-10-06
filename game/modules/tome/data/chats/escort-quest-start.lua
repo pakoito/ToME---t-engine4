@@ -25,6 +25,7 @@ newChat{ id="welcome",
 		{"Go away; I do not care for the weak.", action=function(npc, player)
 			npc:disappear()
 			npc:removed()
+			player:hasQuest(npc.quest_id).abandoned = true
 			player:setQuestStatus(npc.quest_id, engine.Quest.FAILED)
 		end},
 	},

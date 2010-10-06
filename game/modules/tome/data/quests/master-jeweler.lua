@@ -69,7 +69,7 @@ start_search = function(self, who)
 	game.logPlayer(game.player, "Limmir points the entrance to a cave on your map, this is supposed to be the way to the valley.")
 
 	local o = game.zone:makeEntityByName(game.level, "object", "JEWELER_SUMMON")
-	who:addObject(who:getInven("INVEN"), o)
+	if o then who:addObject(who:getInven("INVEN"), o) end
 end
 
 summon_limmir = function(self, who)

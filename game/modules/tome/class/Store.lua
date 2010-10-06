@@ -61,8 +61,6 @@ end
 function _M:trySell(who, o, item, nb)
 	local price = o:getPrice() * self.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
-	-- Id all
-	o:identify(true)
 	return nb
 end
 
@@ -71,8 +69,10 @@ end
 -- @param o the object trying to be purchased
 -- @param item the index in the inventory
 -- @param nb number of items (if stacked) to buy
+-- @param before true if this happens before removing the item
 -- @return true if allowed to buy
-function _M:onBuy(who, o, item, nb)
+function _M:onBuy(who, o, item, nb, before)
+	if before then return end
 	local price = o:getPrice() * self.sell_percent / 100
 	if who.money >= price * nb then
 		who:incMoney(- price * nb)
@@ -84,12 +84,14 @@ end
 -- @param o the object trying to be sold
 -- @param item the index in the inventory
 -- @param nb number of items (if stacked) to sell
+-- @param before true if this happens before removing the item
 -- @return true if allowed to sell
-function _M:onSell(who, o, item, nb)
+function _M:onSell(who, o, item, nb, before)
+	if before then o:identify(true) return end
+
 	local price = o:getPrice() * self.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
 	who:incMoney(price * nb)
-	o:identify(true)
 end
 
 --- Called to describe an object, being to sell or to buy
