@@ -60,6 +60,52 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
+local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
+local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
+local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
+local l, l_w, l_h = _M:getImage("ui/selection-left.png")
+local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
+local r, r_w, r_h = _M:getImage("ui/selection-right.png")
+
+local cls, cls_w, cls_h = _M:getImage("ui/selection-left-column-sel.png")
+local cms, cms_w, cms_h = _M:getImage("ui/selection-middle-column-sel.png")
+local crs, crs_w, crs_h = _M:getImage("ui/selection-right-column-sel.png")
+local cl, cl_w, cl_h = _M:getImage("ui/selection-left-column.png")
+local cm, cm_w, cm_h = _M:getImage("ui/selection-middle-column.png")
+local cr, cr_w, cr_h = _M:getImage("ui/selection-right-column.png")
+
+function _M:drawItem(item)
+	for j, col in ipairs(self.columns) do
+		local fw, fh = col.fw, self.fh
+
+		local text = tostring(util.getval(item[col.display_prop or col.sort], item))
+		local color = item.color or {255,255,255}
+		local ss = core.display.newSurface(fw, fh)
+		local sus = core.display.newSurface(fw, fh)
+		local s = core.display.newSurface(fw, fh)
+
+		ss:merge(ls, 0, 0)
+		for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
+		ss:merge(rs, fw - rs_w, 0)
+		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
+
+		s:erase(0, 0, 0)
+		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
+
+		sus:merge(l, 0, 0)
+		for i = l_w, fw - r_w do sus:merge(m, i, 0) end
+		sus:merge(r, fw - r_w, 0)
+		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
+
+		item._tex = item._tex or {}
+		item._stex = item._stex or {}
+		item._sustex = item._sustex or {}
+		item._tex[j] = {s:glTexture()}
+		item._stex[j] = {ss:glTexture()}
+		item._sustex[j] = {sus:glTexture()}
+	end
+end
+
 function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
@@ -68,21 +114,6 @@ function _M:generate()
 	self.scroll = 1
 	self.max = #self.list
 	self:selectColumn(1, true)
-
-	local ls, ls_w, ls_h = self:getImage("ui/selection-left-sel.png")
-	local ms, ms_w, ms_h = self:getImage("ui/selection-middle-sel.png")
-	local rs, rs_w, rs_h = self:getImage("ui/selection-right-sel.png")
-	local l, l_w, l_h = self:getImage("ui/selection-left.png")
-	local m, m_w, m_h = self:getImage("ui/selection-middle.png")
-	local r, r_w, r_h = self:getImage("ui/selection-right.png")
-
-	local cls, cls_w, cls_h = self:getImage("ui/selection-left-column-sel.png")
-	local cms, cms_w, cms_h = self:getImage("ui/selection-middle-column-sel.png")
-	local crs, crs_w, crs_h = self:getImage("ui/selection-right-column-sel.png")
-	local cl, cl_w, cl_h = self:getImage("ui/selection-left-column.png")
-	local cm, cm_w, cm_h = self:getImage("ui/selection-middle-column.png")
-	local cr, cr_w, cr_h = self:getImage("ui/selection-right-column.png")
-
 
 	local fh = ls_h
 	self.fh = fh
@@ -127,40 +158,14 @@ function _M:generate()
 		col._tex, col._tex_w, col._tex_h = s:glTexture()
 		col._stex = ss:glTexture()
 
-		-- Draw the list items
-		for i, item in ipairs(self.list) do
-			local text = tostring(util.getval(item[col.display_prop or col.sort], item))
-			local color = item.color or {255,255,255}
-			local ss = core.display.newSurface(fw, fh)
-			local sus = core.display.newSurface(fw, fh)
-			local s = core.display.newSurface(fw, fh)
-
-			ss:merge(ls, 0, 0)
-			for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
-			ss:merge(rs, fw - rs_w, 0)
-			ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-			s:erase(0, 0, 0)
-			s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-			sus:merge(l, 0, 0)
-			for i = l_w, fw - r_w do sus:merge(m, i, 0) end
-			sus:merge(r, fw - r_w, 0)
-			sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-			item._tex = item._tex or {}
-			item._stex = item._stex or {}
-			item._sustex = item._sustex or {}
-			item._tex[j] = {s:glTexture()}
-			item._stex[j] = {ss:glTexture()}
-			item._sustex[j] = {sus:glTexture()}
-		end
-
 		self.mouse:registerZone(colx, 0, col.width, self.fh, function(button, x, y, xrel, yrel, bx, by, event)
 			if button == "left" and event == "button" then self:selectColumn(j) end
 		end)
 		colx = colx + col.width
 	end
+
+	-- Draw the list items
+	for i, item in ipairs(self.list) do self:drawItem(item) end
 
 	-- Add UI controls
 	self.mouse:registerZone(0, self.fh, self.w, self.h - (self.hide_columns and 0 or self.fh), function(button, x, y, xrel, yrel, bx, by, event)
@@ -202,6 +207,17 @@ function _M:generate()
 	self:onSelect()
 end
 
+function _M:setList(list)
+	self.list = list
+	self.max = #self.list
+	self.sel = util.bound(self.sel, 1, self.max)
+	self.scroll = util.bound(self.scroll, 1, self.max)
+	self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+	self:selectColumn(1, true)
+
+	for i, item in ipairs(self.list) do self:drawItem(item) end
+end
+
 function _M:onSelect()
 	local item = self.list[self.sel]
 	if not item then return end
@@ -238,7 +254,6 @@ end
 
 function _M:display(x, y)
 	local bx, by = x, y
-
 	for j = 1, #self.columns do
 		local col = self.columns[j]
 		local y = y
