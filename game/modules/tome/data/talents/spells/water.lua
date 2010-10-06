@@ -76,14 +76,14 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.COLD, self:spellCrit(self:combatTalentSpellDamage(t, 12, 160)), {type="freeze"})
-		self:project(tg, x, y, DamageType.FREEZE, 3 + math.floor(self:getTalentLevel(t) / 3))
+		self:project(tg, x, y, DamageType.COLD, self:spellCrit(self:combatTalentSpellDamage(t, 12, 180)), {type="freeze"})
+		self:project(tg, x, y, DamageType.FREEZE, 3)
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Condenses ambient water on a target, freezing it for a short while and damaging it for %0.2f.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 12, 160)))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 12, 180)))
 	end,
 }
 
