@@ -352,7 +352,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
 
 	-- Riposte!
-	if not hitted and not target.dead and not evaded and target:knowTalent(target.T_RIPOSTE) and rng.percent(util.bound(target:getTalentLevel(target.T_RIPOSTE) * target:getDex(40), 10, 60)) then
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(util.bound(target:getTalentLevel(target.T_RIPOSTE) * target:getDex(40), 10, 60)) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
 	end
