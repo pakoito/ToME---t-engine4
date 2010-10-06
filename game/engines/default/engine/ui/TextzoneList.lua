@@ -25,13 +25,17 @@ local Focusable = require "engine.ui.Focusable"
 module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
-	self.text = assert(t.text, "no textzone text")
+	self.items = {}
+	self.cur_item = 0
 	self.w = assert(t.width, "no list width")
 	if t.auto_height then t.height = 1 end
 	self.h = assert(t.height, "no list height")
 	self.scrollbar = t.scrollbar
 	self.no_color_bleed = t.no_color_bleed
-	self.auto_height = t.auto_height
+
+	if self.scrollbar then
+		self.can_focus = true
+	end
 
 	Base.init(self, t)
 end
@@ -40,33 +44,8 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local list = self.text:splitLines(self.w, self.font)
-	self.scroll = 1
-	self.max = #list
-
 	local fw, fh = self.w, self.font_h
 	self.fw, self.fh = fw, fh
-
-	if self.auto_height then self.h = self.fh * #list end
-
-	self.max_display = math.floor(self.h / self.fh)
-	self.can_focus = false
-	if self.scrollbar and (self.max_display < self.max) then
-		self.can_focus = true
-	end
-
-	-- Draw the list items
-	self.list = {}
-	local r, g, b = 255, 255, 255
-	for i, l in ipairs(list) do
-		local s = core.display.newSurface(fw, fh)
-		r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
-		if self.no_color_bleed then r, g, b = 255, 255, 255 end
-
-		local item = {}
-		item._tex, item._tex_w, item._tex_h = s:glTexture()
-		self.list[#self.list+1] = item
-	end
 
 	-- Draw the scrollbar
 	if self.scrollbar then
@@ -93,14 +72,49 @@ function _M:generate()
 	}
 end
 
-function _M:spawn(t)
-	local n = self:cloneFull()
-	for k, e in pairs(t) do n[k] = e end
-	n:generate()
-	return n
+function _M:createItem(item, text)
+	local list = text:splitLines(self.w, self.font)
+	local scroll = 1
+	local max = #list
+	local max_display = math.floor(self.h / self.fh)
+
+	-- Draw the list items
+	local gen = {}
+	local r, g, b = 255, 255, 255
+	for i, l in ipairs(list) do
+		local s = core.display.newSurface(self.fw, self.fh)
+		r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
+		if self.no_color_bleed then r, g, b = 255, 255, 255 end
+
+		local dat = {}
+		dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
+		gen[#gen+1] = dat
+	end
+
+	self.items[item] = {
+		list = gen,
+		scroll = scroll,
+		max = max,
+		max_display = max_display,
+	}
+end
+
+function _M:switchItem(item)
+	self.cur_item = item
+	if not self.items[item] then self.list = nil return false end
+	local d = self.items[item]
+
+	self.scroll = d.scroll
+	self.list = d.list
+	self.max = d.max
+	self.max_display = d.max_display
+	self.cur_item = item
+	return true
 end
 
 function _M:display(x, y)
+	if not self.list then return end
+
 	local bx, by = x, y
 	local max = math.min(self.scroll + self.max_display - 1, self.max)
 	for i = self.scroll, max do

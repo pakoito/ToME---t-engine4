@@ -67,7 +67,7 @@ function _M:generateList()
 	local i = 0
 	for id, data in pairs(world.achieved) do
 		local a = world:getAchievementFromId(id)
-		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n\n#GOLD#Description:#LAST# %s"):format(data.when, data.who, a.desc)}
+		local zone = self.c_desc:spawn{text=("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n\n#GOLD#Description:#LAST# %s"):format(data.when, data.who, a.desc)}
 		list[#list+1] = { zone=zone, name=a.name,  desc=a.desc, when=data.when, who=data.who, order=a.order }
 		i = i + 1
 	end

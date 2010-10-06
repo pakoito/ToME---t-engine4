@@ -64,7 +64,7 @@ function _M:generateList()
 	local list = {}
 	for id, q in pairs(self.actor.quests or {}) do
 		if true then
-			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=q:desc(self.actor)}
+			local zone = self.c_desc:spawn{text=q:desc(self.actor)}
 			local color = nil
 			if q:isStatus(q.COMPLETED) then color = colors.simple(colors.LIGHT_GREEN)
 			elseif q:isStatus(q.DONE) then color = colors.simple(colors.GREEN)

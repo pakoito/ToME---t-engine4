@@ -161,7 +161,7 @@ function _M:generateList()
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = self:makeKeyChar(i)
-					local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+					local zone = self.c_desc:spawn{text=o:getDesc()}
 					list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber }
 					self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 					chars[char] = #list
@@ -181,7 +181,7 @@ function _M:generateList()
 	for item, o in ipairs(self.actor:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
-			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+			local zone = self.c_desc:spawn{text=o:getDesc()}
 			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			chars[char] = #list

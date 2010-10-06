@@ -109,7 +109,7 @@ function _M:generateList()
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
 			local char = self:makeKeyChar(i)
-			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+			local zone = self.c_desc:spawn{text=o:getDesc()}
 			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			list.chars[char] = #list
@@ -125,7 +125,7 @@ function _M:generateList()
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
 			local char = self:makeKeyChar(i)
-			local zone = Textzone.new{width=self.iw, height=self.ih, text=o:getDesc()}
+			local zone = self.c_desc:spawn{text=o:getDesc()}
 			list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost }
 			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			list.chars[char] = #list

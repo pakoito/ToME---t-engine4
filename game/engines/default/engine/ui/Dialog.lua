@@ -241,6 +241,8 @@ function _M:setupUI(resizex, resizey, on_resize)
 		ui.ui.mouse.delegate_offset_x = ux
 		ui.ui.mouse.delegate_offset_y = uy
 	end
+
+	self.setuped = true
 end
 
 function _M:setFocus(id)

@@ -249,8 +249,11 @@ end
 function _M:onSelect()
 	local item = self.list[self.sel]
 	if not item then return end
+	if self.old_sel and self.sel == self.old_sel then return end
 
 	if rawget(self, "select") then self.select(item, self.sel) end
+
+	self.old_sel = self.sel
 end
 
 function _M:onUse(...)

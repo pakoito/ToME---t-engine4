@@ -83,7 +83,7 @@ function _M:generateList()
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(item)
 			list.chars[char] = item
-			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=o:getDesc()}
+			local zone = self.c_desc:spawn{text=o:getDesc()}
 			list[#list+1] = { char=char, zone=zone, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber }
 			i = i + 1
 		end

@@ -72,7 +72,7 @@ end
 
 function _M:select(item)
 	if item and self.uis[2] then
-		if not item.zone then item.zone = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(item.cat, item.name, item.desc)} end
+		if not item.zone then item.zone = self.c_desc:spawn{text=("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(item.cat, item.name, item.desc)} end
 		self.uis[2].ui = item.zone
 	end
 end

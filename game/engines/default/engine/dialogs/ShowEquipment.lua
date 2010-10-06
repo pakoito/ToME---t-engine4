@@ -91,7 +91,7 @@ function _M:generateList()
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = self:makeKeyChar(i)
-					local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=o:getDesc()}
+					local zone = self.c_desc:spawn{text=o:getDesc()}
 					list[#list+1] = { zone=zone, id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber }
 					chars[char] = #list
 					i = i + 1

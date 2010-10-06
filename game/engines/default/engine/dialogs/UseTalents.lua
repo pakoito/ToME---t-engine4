@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -34,7 +35,7 @@ function _M:init(actor)
 You can bind a talent to a hotkey be pressing the corresponding hotkey while selecting a talent.
 Check out the keybinding screen in the game menu to bind hotkeys to a key (default is 1-0 plus control or shift).
 ]]}
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true}
 
 	self:generateList()
 
@@ -112,8 +113,8 @@ function _M:defineHotkey(id)
 end
 
 function _M:select(item)
-	if item and self.uis[2] then
-		self.uis[2].ui = item.zone
+	if item then
+		self.c_desc:switchItem(item)
 	end
 end
 
@@ -144,10 +145,10 @@ function _M:generateList()
 		for j, t in ipairs(tt.talents) do
 			if self.actor:knowTalent(t.id) and t.mode ~= "passive" then
 				local typename = "talent"
-				local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=self.actor:getTalentFullDescription(t)}
 				local status = "#LIGHT_GREEN#Active#WHITE#"
 				if t.mode == "sustained" then status = self.actor:isTalentActive(t.id) and "#YELLOW#Sustaining#WHITE#" or "#LIGHT_GREEN#Sustain#WHITE#" end
 				list[#list+1] = { zone=zone, char=self:makeKey(letter), name=t.name.." ("..typename..")", status=status, talent=t.id }
+				self.c_desc:createItem(list[#list], self.actor:getTalentFullDescription(t))
 				keybind[self:makeKey(letter)] = #list + 1
 				if not self.sel then self.sel = #list + 1 end
 				letter = letter + 1
@@ -156,8 +157,8 @@ function _M:generateList()
 		end
 
 		if added then
-			local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=tt.description}
 			table.insert(list, where+1, { zone=zone, char="", name="#{bold}#"..cat:capitalize().." / "..tt.name:capitalize().."#{normal}#", type=tt.type, color={0x80, 0x80, 0x80}, status="" })
+			self.c_desc:createItem(list[where+1], tt.description)
 		end
 	end
 	for i = 1, #list do list[i].id = i end

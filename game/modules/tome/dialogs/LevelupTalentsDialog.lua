@@ -43,7 +43,7 @@ Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FF
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]}
 	self.c_points = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=_points_left:format(self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)}
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true, text=""}
 
 	self:generateList()
 
@@ -259,7 +259,7 @@ function _M:onDrawItem(item)
 	end
 
 	if not item.zone_desc then
-		item.zone_desc = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, no_color_bleed=true, text=table.concat(text, "\n")}
+		item.zone_desc = self.c_desc:spawn{text=table.concat(text, "\n")}
 	else
 		item.zone_desc.text = table.concat(text, "\n")
 		item.zone_desc:generate()
