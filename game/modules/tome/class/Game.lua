@@ -215,23 +215,32 @@ function _M:createSeparators()
 end
 
 function _M:onResolutionChange()
+	local oldw, oldh = self.w, self.h
 	engine.Game.onResolutionChange(self)
 	print("[RESOLUTION] changed to ", self.w, self.h)
-	self:setupDisplayMode()
-	self.flash:resize(0, 0, self.w, 20)
-	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5 - 18, self.h * 0.2)
-	self.player_display:resize(0, 220, 200, self.h * 0.8 - 220)
-	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
-	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
-	self.icons = { display_x = game.w * 0.5 - 14, display_y = game.h * 0.8 + 3, w = 12, h = game.h * 0.2}
-	-- Reset mouse bindings to account for new size
-	self:setupMouse(true)
 
-	self:createSeparators()
+	if self.change_res_dialog and type(self.change_res_dialog) == "table" then self:unregisterDialog(self.change_res_dialog) end
+	self.change_res_dialog = Dialog:yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
+		if ret then
+			self:saveGame()
+			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
+		else
+			self.change_res_dialog = nil
+			self:setResolution(oldw.."x"..oldh, true)
+		end
+	end, "Accept", "Revert")
 end
 
-function _M:setupDisplayMode()
+function _M:setupDisplayMode(reboot)
 	self.gfxmode = self.gfxmode or (config.settings.tome and config.settings.tome.gfxmode) or 1
+	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
+
+	if reboot then
+		self.change_res_dialog = true
+		self:saveGame()
+		util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
+	end
+
 	if self.gfxmode == 1 then
 		print("[DISPLAY MODE] 32x32 GFX")
 		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
@@ -271,7 +280,6 @@ function _M:setupDisplayMode()
 		self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
 	end
 	self:setupMiniMap()
-	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
 
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
@@ -462,6 +470,9 @@ function _M:onTurn()
 end
 
 function _M:display()
+	-- If switching resolution, blank everything but the dialog
+	if self.change_res_dialog then engine.GameTurnBased.display(self) return end
+
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display the map and compute FOV for the player if needed
@@ -788,7 +799,7 @@ function _M:setupCommands()
 		SWITCH_GFX = function()
 			self.gfxmode = self.gfxmode or 1
 			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 6)
-			self:setupDisplayMode()
+			self:setupDisplayMode(true)
 		end,
 
 		-- Toggle monster list
@@ -889,7 +900,7 @@ function _M:onQuit()
 				core.display.forceRedraw()
 
 				-- savefile_pipe is created as a global by the engine
-				savefile_pipe:push(self.save_name, "game", self)
+				self:saveGame()
 				util.showMainMenu()
 			end
 			self.quit_dialog = nil

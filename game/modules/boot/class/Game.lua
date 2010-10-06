@@ -186,9 +186,19 @@ function _M:newGame()
 end
 
 function _M:onResolutionChange()
+	local oldw, oldh = self.w, self.h
 	engine.Game.onResolutionChange(self)
 	print("[RESOLUTION] changed to ", self.w, self.h)
-	self:setupDisplayMode()
+	if not self.change_res_dialog then
+		self.change_res_dialog = Dialog:yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
+			self.change_res_dialog = nil
+			if ret then
+				util.showMainMenu(false, nil, nil, "boot", "boot", false)
+			else
+				self:setResolution(oldw.."x"..oldh, true)
+			end
+		end, "Accept", "Revert")
+	end
 end
 
 function _M:setupDisplayMode()
@@ -256,6 +266,9 @@ function _M:onTurn()
 end
 
 function _M:display()
+	-- If switching resolution, blank everything but the dialog
+	if self.change_res_dialog then engine.GameEnergyBased.display(self) return end
+
 	-- Display using Framebuffer, so that we can use shaders and all
 	if self.fbo then self.fbo:use(true) end
 

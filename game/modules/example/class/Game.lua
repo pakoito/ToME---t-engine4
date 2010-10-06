@@ -115,15 +115,19 @@ function _M:loaded()
 end
 
 function _M:onResolutionChange()
+	local oldw, oldh = self.w, self.h
 	engine.Game.onResolutionChange(self)
 	print("[RESOLUTION] changed to ", self.w, self.h)
-	self:setupDisplayMode()
-	self.flash:resize(0, 0, self.w, 20)
-	self.hotkeys_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
-	self.npcs_display:resize(self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2)
-	self.logdisplay:resize(0, self.h * 0.8, self.w * 0.5, self.h * 0.2)
-	-- Reset mouse bindings to account for new size
-	self:setupMouse(true)
+	if not self.change_res_dialog then
+		self.change_res_dialog = Dialog:yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
+			self.change_res_dialog = nil
+			if ret then
+				util.showMainMenu(false, nil, nil, "boot", "boot", false)
+			else
+				self:setResolution(oldw.."x"..oldh, true)
+			end
+		end, "Accept", "Revert")
+	end
 end
 
 function _M:setupDisplayMode()
@@ -208,6 +212,9 @@ function _M:onTurn()
 end
 
 function _M:display()
+	-- If switching resolution, blank everything but the dialog
+	if self.change_res_dialog then engine.GameTurnBased.display(self) return end
+
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display the map and compute FOV for the player if needed
