@@ -37,6 +37,8 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 
 	self:generateList()
 
+	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
+
 	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="Inventory", width=72, display_prop="name", sort="name"},
@@ -50,8 +52,6 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		{name="Category", width=20, display_prop="cat"},
 		{name="Price", width=8, display_prop="cost", sort="cost"},
 	}, list=self.store_list, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
-
-	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_store},
