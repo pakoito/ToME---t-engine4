@@ -31,6 +31,7 @@ function _M:init(t)
 	self.max = t.max or 9999999
 	self.fct = assert(t.fct, "no numberbox fct")
 	self.chars = assert(t.chars, "no numberbox chars")
+	self.first = true
 
 	self.tmp = {}
 	local text = tostring(self.number)
@@ -92,19 +93,21 @@ function _M:generate()
 			self:updateText()
 		end
 	end)
-	self.key:addBind("ACCEPT", function() self.fct(self.text) end)
-	self.key:addBind("MOVE_UP", function() self:updateText(1) end)
-	self.key:addBind("MOVE_DOWN", function() self:updateText(-1) end)
-	self.key:addBind("MOVE_LEFT", function() self.cursor = util.bound(self.cursor - 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
-	self.key:addBind("MOVE_RIGHT", function() self.cursor = util.bound(self.cursor + 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
+	self.key:addBind("ACCEPT", function() self.first = false self.fct(self.text) end)
+	self.key:addBind("MOVE_UP", function() self.first = false self:updateText(1) end)
+	self.key:addBind("MOVE_DOWN", function() self.first = false self:updateText(-1) end)
+	self.key:addBind("MOVE_LEFT", function() self.first = false self.cursor = util.bound(self.cursor - 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
+	self.key:addBind("MOVE_RIGHT", function() self.first = false self.cursor = util.bound(self.cursor + 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
 	self.key:addCommands{
 		_DELETE = function()
+			if self.first then self.first = false self.tmp = {} self:updateText() end
 			if self.cursor <= #self.tmp then
 				table.remove(self.tmp, self.cursor)
 				self:updateText()
 			end
 		end,
 		_BACKSPACE = function()
+			if self.first then self.first = false self.tmp = {} self:updateText() end
 			if self.cursor > 1 then
 				table.remove(self.tmp, self.cursor - 1)
 				self.cursor = self.cursor - 1
@@ -113,16 +116,19 @@ function _M:generate()
 			end
 		end,
 		_HOME = function()
+			self.first = false
 			self.cursor = 1
 			self.scroll = util.scroll(self.cursor, self.scroll, self.max_display)
 			self:updateText()
 		end,
 		_END = function()
+			self.first = false
 			self.cursor = #self.tmp + 1
 			self.scroll = util.scroll(self.cursor, self.scroll, self.max_display)
 			self:updateText()
 		end,
 		__TEXTINPUT = function(c)
+			if self.first then self.first = false self.tmp = {} self.cursor = 1 end
 			if #self.tmp and (c == '0' or c == '1' or c == '2' or c == '3' or c == '4' or c == '5' or c == '6' or c == '7' or c == '8' or c == '9') then
 				table.insert(self.tmp, self.cursor, c)
 				self.cursor = self.cursor + 1
@@ -139,7 +145,8 @@ end
 function _M:updateText(v)
 	local text = ""
 	if not v then
-		self.number = tonumber(table.concat(self.tmp))
+		self.number = tonumber(table.concat(self.tmp)) or 0
+		self.number = util.bound(self.number, self.min, self.max)
 		for i = self.scroll, self.scroll + self.max_display - 1 do
 			if not self.tmp[i] then break end
 			text = text .. self.tmp[i]
