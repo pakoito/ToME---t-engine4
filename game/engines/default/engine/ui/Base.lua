@@ -41,8 +41,13 @@ function _M:init(t, no_gen)
 	self.key = KeyBind.new()
 
 	if t.font then
-		self.font = core.display.newFont(t.font[1], t.font[2])
-		self.font_h = self.font:lineSkip()
+		if type(t.font) == "table" then
+			self.font = core.display.newFont(t.font[1], t.font[2])
+			self.font_h = self.font:lineSkip()
+		else
+			self.font = t.font
+			self.font_h = self.font:lineSkip()
+		end
 	end
 
 	if not no_gen then self:generate() end

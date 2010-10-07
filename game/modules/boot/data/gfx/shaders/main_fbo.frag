@@ -68,7 +68,7 @@ void main(void)
 				}
 			}
 		}
-		sample /= float((motionblur*1.5) * ((motionblur*0.5));
+		sample /= (motionblur*1.5) * (motionblur*0.5);
 //		gl_FragColor = sample * (0.3 + noise * 0.7);
 		gl_FragColor = sample;
 	}

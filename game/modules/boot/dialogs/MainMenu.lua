@@ -47,7 +47,7 @@ function _M:init()
 	}
 
 	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", width=150, fct=function() self:switchBackground() end}
-	self.c_version = Textzone.new{auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
+	self.c_version = Textzone.new{font=self.font_bold, auto_width=true, auto_height=true, text=("#B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
 
 	if profile.auth then
 		self.logged_url = "http://te4.org/players/"..profile.auth.page

@@ -89,7 +89,7 @@ void main(void)
 				sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 			}
 		}
-		sample /= float((blur*2.0) * (blur*2.0));
+		sample /= (blur*2.0) * (blur*2.0);
 		gl_FragColor = sample;
 	}
 
