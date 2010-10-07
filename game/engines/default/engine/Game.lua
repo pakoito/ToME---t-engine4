@@ -295,7 +295,6 @@ function _M:onResolutionChange()
 	self.change_res_dialog = require("engine.ui.Dialog"):yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
 		if ret then
 			if not self.creating_player then self:saveGame() end
-			print("====",self.creating_player)
 			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
 		else
 			self.change_res_dialog = "revert"

@@ -445,13 +445,14 @@ function _M:createProfile(loginItem)
 end
 
 function _M:installNewEngine()
-	if not self.latest_engine_version then return end
-	print("te4.org told us latest engine is", self.latest_engine_version[4], self.latest_engine_version[5], self.latest_engine_version[1], self.latest_engine_version[2], self.latest_engine_version[3])
-	if engine.version_check(self.latest_engine_version) == "newer" then
-		local url = ("http://te4.org/dl/engines/%s_%d:%d.%d.%d.teae"):format(self.latest_engine_version[4], self.latest_engine_version[5], self.latest_engine_version[1], self.latest_engine_version[2], self.latest_engine_version[3])
-		local d = DownloadDialog.new(("Downloading: T-Engine 4 %d.%d.%d"):format(self.latest_engine_version[1], self.latest_engine_version[2], self.latest_engine_version[3]), url, function(di, data)
+	local eversion = self.latest_engine_version
+	if not eversion then return end
+	print("te4.org told us latest engine is", eversion[4], eversion[5], eversion[1], eversion[2], eversion[3])
+	if engine.version_check(eversion) == "newer" then
+		local url = ("http://te4.org/dl/engines/%s_%d:%d.%d.%d.teae"):format(eversion[4], eversion[5], eversion[1], eversion[2], eversion[3])
+		local d = DownloadDialog.new(("Downloading: T-Engine 4 %d.%d.%d"):format(eversion[1], eversion[2], eversion[3]), url, function(di, data)
 			fs.mkdir("/engines")
-			local f = fs.open(("/engines/%s-%d_%d.%d.%d.teae"):format(self.latest_engine_version[4], self.latest_engine_version[5], self.latest_engine_version[1], self.latest_engine_version[2], self.latest_engine_version[3]), "w")
+			local f = fs.open(("/engines/%s-%d_%d.%d.%d.teae"):format(eversion[4], eversion[5], eversion[1], eversion[2], eversion[3]), "w")
 			for i, v in ipairs(data) do f:write(v) end
 			f:close()
 
