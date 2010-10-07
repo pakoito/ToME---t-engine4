@@ -20,7 +20,7 @@ void main(void)
 		float coord = gl_TexCoord[0].x + gl_TexCoord[0].y * texSize[0];
 		float noisy1 = texture2D(noisevol,vec2(coord,fTime0_X)).r;
 		float noisy2 = texture2D(noisevol,vec2(coord/5.0,fTime0_X/1.5)).r;
-		float noisy3 = texture2D(noisevol,vec2(coord/7.0,fTime0_X/2)).r;
+		float noisy3 = texture2D(noisevol,vec2(coord/7.0,fTime0_X/2.0)).r;
 		float noisy = (noisy1+noisy2+noisy3)/3.0;
 
 		// Center Pixel
@@ -68,7 +68,7 @@ void main(void)
 				}
 			}
 		}
-		sample /= float((blursize*1.5) * (blursize*0.5));
+		sample /= float((motionblur*1.5) * (float(motionblur*0.5));
 //		gl_FragColor = sample * (0.3 + noise * 0.7);
 		gl_FragColor = sample;
 	}
