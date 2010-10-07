@@ -154,7 +154,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		popup.__showup = nil
 		core.display.forceRedraw()
 
-		util.showMainMenu(false, "te4", "LATEST", mod.short_name, name, new_game)
+		util.showMainMenu(false, mod.engine[4] or "te4", ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]), mod.short_name, name, new_game)
 		return
 	end
 

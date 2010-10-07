@@ -188,6 +188,7 @@ function _M:newGame()
 			Map:setViewerFaction(self.player.faction)
 			self.player:removeQuest(self.player.starting_quest)
 			self.player:grantQuest(self.player.starting_quest)
+			self.creating_player = false
 		else
 			-- Continue as normal
 			return Birther.quickBirth(b)
