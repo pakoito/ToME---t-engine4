@@ -52,7 +52,7 @@ local function newGem(name, image, cost, rarity, color, min_level, max_level, ti
 end
 
 newGem("Diamond",	"object/diamond.png",5,	18,	"white",	40,	50, 5, 70,
-	{ inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CUN] = 5, } },
+	{ inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5, } },
 	{ power=25 }
 )
 newGem("Pearl",	"object/pearl.png",	5,	18,	"white",	40,	50, 5, 70,
