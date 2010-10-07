@@ -45,7 +45,7 @@ function _M:generate()
 
 	-- Draw UI
 	self.font:setStyle("bold")
-	local w, h = self.font:size(self.text:removeColorCodes())
+	local w, h = self.font:size(self.text)
 	if self.force_w then w = self.force_w end
 	local fw, fh = w + ls_w + rs_w, ls_h
 	local ss = core.display.newSurface(fw, fh)

@@ -200,7 +200,7 @@ function _M:display()
 	end
 
 	self.font:setStyle("bold")
-	local tw, th = self.font:size(self.title:removeColorCodes())
+	local tw, th = self.font:size(self.title)
 	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
 	self.font:setStyle("normal")
 

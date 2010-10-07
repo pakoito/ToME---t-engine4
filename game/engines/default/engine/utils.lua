@@ -383,6 +383,33 @@ getmetatable(tmps).__index.drawColorStringBlendedCentered = function(s, font, st
 	s:drawColorStringBlended(font, str, x, y, r, g, b, alpha_from_texture, limit_w)
 end
 
+local tmps = core.display.newFont("/data/font/Vera.ttf", 12)
+local fontoldsize = getmetatable(tmps).__index.size
+getmetatable(tmps).__index.size = function(font, str)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
+	local mw, mh = 0, 0
+	for i, v in ipairs(list) do
+		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
+		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
+		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
+		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
+		if nr and ng and nb then
+			-- Ignore
+		elseif col then
+			-- Ignore
+		elseif uid and mo and game.level then
+			-- Ignore
+		elseif fontstyle then
+			font:setStyle(fontstyle)
+		else
+			local w, h = fontoldsize(font, v)
+			if h > mh then mh = h end
+			mw = mw + w
+		end
+	end
+	return mw, mh
+end
+
 dir_to_coord = {
 	[1] = {-1, 1},
 	[2] = { 0, 1},

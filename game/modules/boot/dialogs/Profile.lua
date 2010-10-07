@@ -37,7 +37,6 @@ function _M:init()
 			Dialog:yesnoPopup("You are logged in", "Do you want to log out?", function(ret)
 				if ret then
 					profile:logOut()
-					game:checkLogged()
 				end
 			end, "Log out", "Cancel")
 		end}

@@ -47,7 +47,7 @@ function _M:generate()
 		list = self.text:splitLines(self.w, self.font)
 	else
 		list = {self.text}
-		self.w = self.font:size(self.text:removeColorCodes())
+		self.w = self.font:size(self.text)
 	end
 	self.scroll = 1
 	self.max = #list

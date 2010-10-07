@@ -26,8 +26,8 @@ module(..., package.seeall, class.inherit(Base))
 
 --- Requests a simple, press any key, dialog
 function _M:simplePopup(title, text, fct, no_leave)
-	local w, h = self.font:size(text:removeColorCodes())
-	local tw, th = self.font_bold:size(title:removeColorCodes())
+	local w, h = self.font:size(text)
+	local tw, th = self.font_bold:size(title)
 	local d = new(title, math.max(w, tw) + 20, h + 75)
 	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}}}
 	if not no_leave then
@@ -59,8 +59,8 @@ end
 
 --- Requests a simple yes-no dialog
 function _M:yesnoPopup(title, text, fct, yes_text, no_text)
-	local w, h = self.font:size(text:removeColorCodes())
-	local tw, th = self.font_bold:size(title:removeColorCodes())
+	local w, h = self.font:size(text)
+	local tw, th = self.font_bold:size(title)
 	local d = new(title, math.max(w, tw) + 35, h + 75)
 
 --	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
@@ -160,7 +160,7 @@ function _M:generate()
 	end
 
 	self.font:setStyle("bold")
-	local tw, th = self.font:size(self.title:removeColorCodes())
+	local tw, th = self.font:size(self.title)
 	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
 	self.font:setStyle("normal")
 

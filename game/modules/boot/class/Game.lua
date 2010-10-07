@@ -151,21 +151,6 @@ Now go and have some fun!]]
 	end
 end
 
-function _M:checkLogged()
-	if profile.auth then
-		self.logged_url = "http://te4.org/players/"..profile.auth.page
-		local str = "Online Profile: "..profile.auth.name.."[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
-		local plain = str:removeColorCodes()
-		local w, h = self.profile_font:size(plain)
-		self.s_log = core.display.newSurface(w, h)
-		self.s_log:erase(0, 0, 0)
-		self.s_log:drawColorStringBlended(self.profile_font, str, 0, 0, 255, 255, 0)
-	else
-		self.logged_url = nil
-		self.s_log = nil
-	end
-end
-
 function _M:newGame()
 	self.player = Player.new{name=self.player_name, game_ender=true}
 	Map:setViewerActor(self.player)
@@ -452,7 +437,7 @@ function _M:createProfile(loginItem)
 	end
 	profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
 	if (profile.auth) then
-		Dialog:simplePopup("Profile created!", "Your online profile is active now...", function() self:checkLogged() end )
+		Dialog:simplePopup("Profile created!", "Your online profile is active now...", function() end )
 	else
 		Dialog:simplePopup("Profile Failed to authenticate!", "Try logging in in a few moments", function() end )
 	end

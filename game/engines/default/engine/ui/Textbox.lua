@@ -55,7 +55,7 @@ function _M:generate()
 	self.h = r_h
 
 	-- Draw UI
-	local title_w = self.font:size(self.title:removeColorCodes())
+	local title_w = self.font:size(self.title)
 	self.w = title_w + self.chars * self.font_mono_w + ls_w + rs_w
 	local w, h = self.w, r_h
 	local fw, fh = w - title_w - ls_w - rs_w, self.font_h
