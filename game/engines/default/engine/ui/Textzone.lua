@@ -26,12 +26,14 @@ module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
 	self.text = assert(t.text, "no textzone text")
+	if t.auto_width then t.width = 1 end
 	self.w = assert(t.width, "no list width")
 	if t.auto_height then t.height = 1 end
 	self.h = assert(t.height, "no list height")
 	self.scrollbar = t.scrollbar
 	self.no_color_bleed = t.no_color_bleed
 	self.auto_height = t.auto_height
+	self.auto_width = t.auto_width
 
 	Base.init(self, t)
 end
@@ -40,7 +42,13 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local list = self.text:splitLines(self.w, self.font)
+	local list
+	if not self.auto_width then
+		list = self.text:splitLines(self.w, self.font)
+	else
+		list = {self.text}
+		self.w = self.font:size(self.text:removeColorCodes())
+	end
 	self.scroll = 1
 	self.max = #list
 

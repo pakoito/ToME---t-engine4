@@ -52,6 +52,7 @@ function _M:init()
 
 	self.refuse_threads = true
 	self.normal_key = self.key
+	self.stopped = config.settings.boot_menu_background
 
 	self:loaded()
 end
@@ -77,9 +78,6 @@ function _M:run()
 
 	self.mod_list = Module:listModules()
 	self.save_list = Module:listSavefiles()
-
-	self:checkLogged()
-	self:engineVersion()
 
 	-- Setup display
 	self:registerDialog(MainMenu.new())
@@ -168,10 +166,6 @@ function _M:checkLogged()
 	end
 end
 
-function _M:engineVersion()
-	self.s_version = core.display.drawStringBlendedNewSurface(self.profile_font, ("T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3]), 185, 225, 0)
-end
-
 function _M:newGame()
 	self.player = Player.new{name=self.player_name, game_ender=true}
 	Map:setViewerActor(self.player)
@@ -246,6 +240,7 @@ function _M:getPlayer()
 end
 
 function _M:tick()
+	if self.stopped then return end
 	if self.level then
 		engine.GameEnergyBased.tick(self)
 		-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
@@ -268,6 +263,14 @@ end
 function _M:display()
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameEnergyBased.display(self) return end
+
+	-- If background anim is stopped, thigns are much simplied
+	if self.stopped then
+		self.tooltip:display()
+		self.tooltip:toScreen(5, 5)
+		engine.GameEnergyBased.display(self)
+		return
+	end
 
 	-- Display using Framebuffer, so that we can use shaders and all
 	if self.fbo then self.fbo:use(true) end
@@ -297,13 +300,6 @@ function _M:display()
 	else
 --		core.display.drawQuad(0, 0, game.w, game.h, 128, 128, 128, 128)
 	end
-
-	if self.s_log then
-		local w, h = self.s_log:getSize()
-		self.s_log:toScreen(self.w - w, self.h - h)
-	end
---	local w, h = self.s_version:getSize()
---	self.s_version:toScreen(0, self.h - h)
 
 	self.tooltip:display()
 	self.tooltip:toScreen(5, 5)

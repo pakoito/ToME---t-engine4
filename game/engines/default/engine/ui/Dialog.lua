@@ -27,7 +27,7 @@ module(..., package.seeall, class.inherit(Base))
 --- Requests a simple, press any key, dialog
 function _M:simplePopup(title, text, fct, no_leave)
 	local w, h = self.font:size(text:removeColorCodes())
-	local tw, th = self.font:size(title:removeColorCodes())
+	local tw, th = self.font_bold:size(title:removeColorCodes())
 	local d = new(title, math.max(w, tw) + 20, h + 75)
 	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}}}
 	if not no_leave then
@@ -60,7 +60,7 @@ end
 --- Requests a simple yes-no dialog
 function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 	local w, h = self.font:size(text:removeColorCodes())
-	local tw, th = self.font:size(title:removeColorCodes())
+	local tw, th = self.font_bold:size(title:removeColorCodes())
 	local d = new(title, math.max(w, tw) + 35, h + 75)
 
 --	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
@@ -164,8 +164,12 @@ function _M:generate()
 	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
 	self.font:setStyle("normal")
 
-	self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then  self.key:triggerVirtual("EXIT") end end)
-	self.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(...) self:mouseEvent(...) end)
+	if self.absolute then
+		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx - self.display_x, by - self.display_y, event) end)
+	else
+		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then  self.key:triggerVirtual("EXIT") end end)
+		self.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(...) self:mouseEvent(...) end)
+	end
 	self.key.receiveKey = function(_, ...) self:keyEvent(...) end
 	self.key:addCommand("_TAB", function(...) self.key:triggerVirtual("MOVE_DOWN") end)
 	self.key:addBinds{
@@ -204,13 +208,17 @@ function _M:setupUI(resizex, resizey, on_resize)
 		local addw, addh = 0, 0
 
 		for i, ui in ipairs(self.uis) do
-			if ui.top then mh = math.max(mh, ui.top + ui.ui.h + (ui.padding_h or 0))
-			elseif ui.bottom then addh = math.max(addh, ui.bottom + ui.ui.h + (ui.padding_h or 0))
+			if not ui.absolute then
+				if ui.top then mh = math.max(mh, ui.top + ui.ui.h + (ui.padding_h or 0))
+				elseif ui.bottom then addh = math.max(addh, ui.bottom + ui.ui.h + (ui.padding_h or 0))
+				end
 			end
 
 --		print("ui", ui.left, ui.right, ui.ui.w)
-			if ui.left then mw = math.max(mw, ui.left + ui.ui.w + (ui.padding_w or 0))
-			elseif ui.right then addw = math.max(addw, ui.right + ui.ui.w + (ui.padding_w or 0))
+			if not ui.absolute then
+				if ui.left then mw = math.max(mw, ui.left + ui.ui.w + (ui.padding_w or 0))
+				elseif ui.right then addw = math.max(addw, ui.right + ui.ui.w + (ui.padding_w or 0))
+				end
 			end
 		end
 --		print("===", mw, addw)
@@ -226,15 +234,32 @@ function _M:setupUI(resizex, resizey, on_resize)
 	end
 
 	for i, ui in ipairs(self.uis) do
-		local ux, uy = self.ix, self.iy
+		local ux, uy
 
-		if ui.top then uy = uy + ui.top
-		elseif ui.bottom then uy = uy + self.ih - ui.bottom - ui.ui.h
-		elseif ui.vcenter then uy = uy + math.floor(self.ih / 2) + ui.vcenter - ui.ui.h / 2 end
+		if not ui.absolute then
+			ux, uy = self.ix, self.iy
 
-		if ui.left then ux = ux + ui.left
-		elseif ui.right then ux = ux + self.iw - ui.right - ui.ui.w
-		elseif ui.hcenter then ux = ux + math.floor(self.iw / 2) + ui.hcenter - ui.ui.w / 2 end
+			if ui.top then uy = uy + ui.top
+			elseif ui.bottom then uy = uy + self.ih - ui.bottom - ui.ui.h
+			elseif ui.vcenter then uy = uy + math.floor(self.ih / 2) + ui.vcenter - ui.ui.h / 2 end
+
+			if ui.left then ux = ux + ui.left
+			elseif ui.right then ux = ux + self.iw - ui.right - ui.ui.w
+			elseif ui.hcenter then ux = ux + math.floor(self.iw / 2) + ui.hcenter - ui.ui.w / 2 end
+		else
+			ux, uy = 0, 0
+
+			if ui.top then uy = uy + ui.top
+			elseif ui.bottom then uy = uy + game.h - ui.bottom - ui.ui.h
+			elseif ui.vcenter then uy = uy + math.floor(game.h / 2) + ui.vcenter - ui.ui.h / 2 end
+
+			if ui.left then ux = ux + ui.left
+			elseif ui.right then ux = ux + game.w - ui.right - ui.ui.w
+			elseif ui.hcenter then ux = ux + math.floor(game.w / 2) + ui.hcenter - ui.ui.w / 2 end
+
+			ux = ux - self.display_x
+			uy = uy - self.display_y
+		end
 
 		ui.x = ux
 		ui.y = uy
