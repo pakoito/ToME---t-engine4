@@ -34,6 +34,7 @@ function _M:init()
 		{name="Load Game", fct=function() game:registerDialog(require("mod.dialogs.LoadGame").new()) end},
 		{name="Player Profile", fct=function() game:registerDialog(require("mod.dialogs.Profile").new()) end},
 --		{name="Install Module", fct=function() end},
+		{name="Update", fct=function() game:registerDialog(require("mod.dialogs.UpdateAll").new()) end},
 		{name="Options", fct=function()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",

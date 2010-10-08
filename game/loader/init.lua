@@ -64,6 +64,8 @@ local load load = function(...)
 		end
 	end
 
+	__available_engines = engines
+
 	local use_engine = nil
 	if req_version == "LATEST" then
 		-- Sort engines
