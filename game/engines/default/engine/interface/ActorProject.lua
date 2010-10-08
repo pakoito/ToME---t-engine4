@@ -60,11 +60,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 	lx, ly = l()
 	local initial_dir = lx and coord_to_dir[lx - srcx][ly - srcy] or 5
 	while lx and ly do
-		if not typ.no_restrict then
-			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
-			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
-			if typ.range and math.sqrt((srcx-lx)^2 + (srcy-ly)^2) > typ.range then break end
-		end
+		if typ.block_path and typ:block_path(lx, ly) then break end
 
 		-- Deam damage: beam
 		if typ.line then addGrid(lx, ly) end
@@ -78,14 +74,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 		core.fov.calc_circle(lx, ly, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
-			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
+			if typ.block_radius and not typ:block_radius(lx, ly) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	elseif typ.cone and typ.cone > 0 then
 		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
-			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
+			if typ.block_radius and not typ:block_radius(lx, ly) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	else
@@ -144,11 +140,7 @@ function _M:canProject(t, x, y)
 	local l = line.new(self.x, self.y, x, y)
 	lx, ly = l()
 	while lx and ly do
-		if not typ.no_restrict then
-			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then break
-			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then break end
-			if typ.range and math.sqrt((self.x-lx)^2 + (self.y-ly)^2) > typ.range then break end
-		end
+		if typ.block_path and typ:block_path(lx, ly) then break end
 
 		lx, ly = l()
 	end
@@ -193,11 +185,7 @@ function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 	if lx and ly then lx, ly = l() end
 
 	if lx and ly then
-		if not typ.no_restrict then
-			if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return lx, ly, false, true
-			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return lx, ly, false, true end
-			if typ.range and math.sqrt((srcx-lx)^2 + (srcy-ly)^2) > typ.range then return lx, ly, false, true end
-		end
+		if typ.block_path and typ:block_path(lx, ly) then return lx, ly, false, true end
 
 		-- End of the map
 		if lx < 0 or lx >= game.level.map.w or ly < 0 or ly >= game.level.map.h then return lx, ly, false, true end
@@ -251,7 +239,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
 		core.fov.calc_circle(lx, ly, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
-			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
+			if typ.block_radius and not typ:block_radius(lx, ly) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	elseif typ.cone and typ.cone > 0 then
@@ -259,7 +247,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
 		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
-			if not typ.no_restrict and game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return true end
+			if typ.block_radius and not typ:block_radius(lx, ly) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	else
