@@ -429,9 +429,9 @@ function _M:createProfile(loginItem)
 	if self.justlogin then
 		profile:performlogin(loginItem.login, loginItem.pass)
 		if profile.auth then
-			Dialog:simplePopup("Profile logged in!", "Your online profile is active now...", function() self:checkLogged() self:selectStepProfile() end )
+			Dialog:simplePopup("Profile logged in!", "Your online profile is active now...", function() end )
 		else
-			Dialog:simplePopup("Log in rejected", "Couldn't log you...", function() self:selectStepProfile() end )
+			Dialog:simplePopup("Log in rejected", "Couldn't log you...", function() end )
 		end
 		return
 	end

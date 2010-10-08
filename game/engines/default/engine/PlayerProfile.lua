@@ -307,9 +307,11 @@ end
 function _M:logOut()
 	profile.generic.online = nil
 	profile.auth = nil
-	local d = "/profiles/"..self.name.."/generic/"
-	fs.mount(engine.homepath, "/")
-	fs.delete(d.."online.profile")
+
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	fs.delete("/profiles/"..self.name.."/generic/online.profile")
+	if restore then fs.setWritePath(restore) end
 end
 
 function _M:checkFirstRun()
