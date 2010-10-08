@@ -19,6 +19,6 @@ mv boot-"$version".team ../../
 cd ..
 rm -rf modules
 
-zip -r -9 ../"$version".teae *
+zip -r -0 ../"$version".teae *
 cd ..
 rm -rf tmp

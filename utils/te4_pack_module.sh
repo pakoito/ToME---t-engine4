@@ -16,7 +16,7 @@ mkdir mod
 mv * mod
 mv mod/data .
 
-zip -r -9 ../"$mod"-"$version".team *
+zip -r -0 ../"$mod"-"$version".team *
 
 cd -
 rm -rf tmp
