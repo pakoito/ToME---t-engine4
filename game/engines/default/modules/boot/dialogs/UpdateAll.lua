@@ -148,6 +148,22 @@ function _M:updateAll()
 				game:registerDialog(d)
 				d:startDownload()
 			end)
+
+			fs.mkdir("/tmp-dl/engines")
+			local fname = ("/tmp-dl/engines/%s-%d_%d.%d.%d.teae"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
+			local f = fs.open(fname, "w")
+
+			local d = DownloadDialog.new(("Downloading engine: %s"):format(next.name), url, function(chunk)
+				f:write(chunk)
+			end, function(di, data)
+				f:close()
+				files[#files+1] = fname
+				do_next()
+			end, function(error)
+				Dialog:simplePopup("Error!", "There was an error while downloading:\n"..error)
+				game:unregisterDialog(self)
+			end)
+
 			game:registerDialog(d)
 			d:startDownload()
 		elseif next.mod then
@@ -155,14 +171,17 @@ function _M:updateAll()
 
 			fs.mkdir("/tmp-dl/modules")
 			local fname = ("/tmp-dl/modules/%s-%d.%d.%d.team"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
-			files[#files+1] = fname
---			local f = fs.open(fname, "w")
+			local f = fs.open(fname, "w")
 
 			local d = DownloadDialog.new("Downloading: "..next.name, mod.download, function(chunk)
---				f:write(chunk)
+				f:write(chunk)
 			end, function(di, data)
---				f:close()
+				f:close()
+				files[#files+1] = fname
 				do_next()
+			end, function(error)
+				Dialog:simplePopup("Error!", "There was an error while downloading:\n"..error)
+				game:unregisterDialog(self)
 			end)
 			game:registerDialog(d)
 			d:startDownload()

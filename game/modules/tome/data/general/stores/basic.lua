@@ -130,6 +130,8 @@ newEntity{
 		max_fill = 25,
 		filters = {
 			{type="weapon", subtype="staff", id=true},
+			{type="weapon", subtype="staff", id=true},
+			{type="weapon", subtype="staff", id=true},
 			{type="wand", subtype="wand", id=true},
 		},
 	},

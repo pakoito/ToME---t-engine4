@@ -22,11 +22,12 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(title, url, on_chunk, on_finish)
+function _M:init(title, url, on_chunk, on_finish, on_error)
 	self.url = url
 	self.received = 0
 	self.on_chunk = on_chunk
 	self.on_finish = on_finish
+	self.on_error = on_error
 
 	local font = core.display.newFont("/data/font/Vera.ttf", 12)
 	engine.Dialog.init(self, title or "Downloading...", math.max(400, font:size("From: "..url) + 10), 75, nil, nil, nil, font)
@@ -41,8 +42,13 @@ function _M:drawDialog(s)
 		local ck = self.linda:receive(0, "received")
 		while ck do
 			if ck then
-				self.received = ck.size
-				self.on_chunk(ck.chunk)
+				if not ck.error then
+					self.received = ck.size
+					self.on_chunk(ck.chunk)
+				else
+					self.on_error(ck.error)
+					break
+				end
 			end
 			ck = self.linda:receive(0, "received")
 		end
@@ -72,8 +78,11 @@ function _M:startDownload()
 		local ltn12 = require "ltn12"
 
 		local size = 0
+		http.TIMEOUT = 10
 		http.request{url = src, sink = function(chunk, err)
-			if err then error(err) end
+			if err then
+				l:send(0, "received", {error=err})
+			end
 			if chunk then
 				size = size + #chunk
 				l:send(0, "received", {size=size, chunk=chunk})
