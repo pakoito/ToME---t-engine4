@@ -87,7 +87,7 @@ newEntity{
 	name = "Orcs",
 	type = "hostile", subtype = "ambush",
 	level_range = {1, 50},
-	rarity = 11118,
+	rarity = 8,
 	coords = {{ x=0, y=0, w=100, h=100}},
 	special_filter = function(self)
 		return game.player:reactionToward{faction="orc-pride"} < 0 and true or false
