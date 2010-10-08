@@ -22,8 +22,8 @@ long_name = "Tales of Middle Earth: The Fourth Age"
 short_name = "tome"
 author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://tome.te4.org/"
-version = {3,9,13}
-engine = {0,9,13,"te4",5}
+version = {3,9,14}
+engine = {0,9,14,"te4"}
 description = [[
 Morgoth is banned to the Void. Sauron has been vanquished, the #ff0000#One Ring#ffffff# destroyed.
 The nations of Men, Dwarves, Elves and Hobbits are freed from the tyranny of the Rings.
