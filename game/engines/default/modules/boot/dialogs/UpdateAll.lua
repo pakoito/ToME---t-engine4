@@ -28,7 +28,7 @@ local DownloadDialog = require "engine.dialogs.DownloadDialog"
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init()
-	Dialog.init(self, "Update all modules", game.w / 3, game.h * 0.5)
+	Dialog.init(self, "Update all game modules", game.w / 3, game.h * 0.5)
 
 	self:generateList()
 
@@ -39,7 +39,7 @@ All those components will be updated:
 	self.c_list = ListColumns.new{width=self.iw, height=self.ih - self.c_desc.h, scrollbar=true, columns={
 		{name="Compoment", width=80, display_prop="name"},
 		{name="Version", width=20, display_prop="version_string"},
-	}, list=self.list, fct=function(item) end, select=function(item, sel) end}
+	}, list=self.list or {}, fct=function(item) end, select=function(item, sel) end}
 
 	self.c_ok = Button.new{width=self.iw - 20, text="Update All", fct=function() self:updateAll() end}
 
@@ -56,15 +56,21 @@ All those components will be updated:
 	}
 end
 
+function _M:display(...)
+	if not self.list then game:unregisterDialog(self) return end
+	return Dialog.display(self, ...)
+end
+
 function _M:generateList()
 	local linda, th = Module:loadRemoteList()
+	local mod_list = Module:listModules()
 	local rawdllist = linda:receive("moduleslist")
 	th:join()
 
 	local dllist = {}
 	for i, mod in ipairs(rawdllist) do
-		if game.mod_list[mod.short_name] then
-			local lmod = game.mod_list[mod.short_name]
+		if mod_list[mod.short_name] then
+			local lmod = mod_list[mod.short_name]
 			if mod.version[1] * 1000000 + mod.version[2] * 1000 + mod.version[3] > lmod.version[1] * 1000000 + lmod.version[2] * 1000 + lmod.version[3] then
 				dllist[#dllist+1] = mod
 			end
@@ -72,7 +78,7 @@ function _M:generateList()
 	end
 
 	if #dllist == 0 then
-		Dialog:simplePopup("No modules available", "There are no modules to install or upgrade.")
+		Dialog:simplePopup("Nothing to update", "All your game modules are up to date.")
 		return
 	end
 
