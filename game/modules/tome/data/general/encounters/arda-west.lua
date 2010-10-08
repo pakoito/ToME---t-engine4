@@ -61,7 +61,7 @@ newEntity{
 	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)
 		who:runStop()
-		engine.ui.Dialog:yesnoPopup("Encounter", "You find an hidden trap door, and hear cries for help from within...", function(ok)
+		engine.ui.Dialog:yesnoPopup("Encounter", "You find a hidden trap door, and hear cries for help from within...", function(ok)
 			if not ok then
 				game.logPlayer(who, "#LIGHT_BLUE#You carefully get away without making a sound.")
 			else

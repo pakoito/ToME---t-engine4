@@ -24,6 +24,13 @@ local Focusable = require "engine.ui.Focusable"
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
 
+local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
+local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
+local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
+local l, l_w, l_h = _M:getImage("ui/selection-left.png")
+local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
+local r, r_w, r_h = _M:getImage("ui/selection-right.png")
+
 function _M:init(t)
 	self.list = assert(t.list, "no list list")
 	self.w = assert(t.width, "no list width")
@@ -35,6 +42,23 @@ function _M:init(t)
 	self.scrollbar = t.scrollbar
 	self.all_clicks = t.all_clicks
 
+	self.fh = ls_h
+	self.default = {}
+	self.default.surface = core.display.newSurface(self.w, self.fh)
+	self.default.s = core.display.newSurface(self.w, self.fh)
+	self.default.ss = core.display.newSurface(self.w, self.fh)
+	self.default.sus = core.display.newSurface(self.w, self.fh)
+
+	self.default.ss:merge(ls, 0, 0)
+	for i = ls_w, self.w - rs_w, ms_w do self.default.ss:merge(ms, i, 0) end
+	self.default.ss:merge(rs, self.w - rs_w, 0)
+
+	self.default.s:erase(0, 0, 0)
+
+	self.default.sus:merge(l, 0, 0)
+	for i = l_w, self.w - r_w, m_w do self.default.sus:merge(m, i, 0) end
+	self.default.sus:merge(r, self.w - r_w, 0)
+
 	Base.init(self, t)
 end
 
@@ -45,13 +69,6 @@ function _M:generate()
 	self.sel = 1
 	self.scroll = 1
 	self.max = #self.list
-
-	local ls, ls_w, ls_h = self:getImage("ui/selection-left-sel.png")
-	local ms, ms_w, ms_h = self:getImage("ui/selection-middle-sel.png")
-	local rs, rs_w, rs_h = self:getImage("ui/selection-right-sel.png")
-	local l, l_w, l_h = self:getImage("ui/selection-left.png")
-	local m, m_w, m_h = self:getImage("ui/selection-middle.png")
-	local r, r_w, r_h = self:getImage("ui/selection-right.png")
 
 	local fw, fh = self.w, ls_h
 	self.fw, self.fh = fw, fh
@@ -76,25 +93,24 @@ function _M:generate()
 	for i, item in ipairs(self.list) do
 		local color = item.color or {255,255,255}
 		local text = item[self.display_prop]
-		local ss = core.display.newSurface(fw, fh)
-		local sus = core.display.newSurface(fw, fh)
-		local s = core.display.newSurface(fw, fh)
+		local src_ss = self.default.ss
+		local src_sus = self.default.sus
+		local src_s = self.default.s
+		local ss = self.default.surface
+		local sus = self.default.surface
+		local s = self.default.surface
 
-		ss:merge(ls, 0, 0)
-		for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
-		ss:merge(rs, fw - rs_w, 0)
+		ss:erase(0, 0, 0)
+		ss:merge(src_ss, 0, 0)
 		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-		s:erase(0, 0, 0)
-		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-		sus:merge(l, 0, 0)
-		for i = l_w, fw - r_w do sus:merge(m, i, 0) end
-		sus:merge(r, fw - r_w, 0)
-		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-		item._tex, item._tex_w, item._tex_h = s:glTexture()
 		item._stex = ss:glTexture()
+
+		s:merge(src_s, 0, 0)
+		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
+		item._tex, item._tex_w, item._tex_h = s:glTexture()
+
+		sus:merge(src_sus, 0, 0)
+		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
 		item._sustex = sus:glTexture()
 	end
 
