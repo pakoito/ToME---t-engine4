@@ -107,8 +107,8 @@ newTalent{
 					if act.rank == 2 then add_crit = 50
 					elseif act.rank == 3 then add_crit = 10 end
 					local tg = {type="hit", friendlyfire=false, talent=t}
-					local grids = self:project(tg, act.x, act.y, DamageType.COLD, {dur=8, initial=0, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 180), add_crit)})
-					game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_fire", {radius=1})
+					local grids = self:project(tg, act.x, act.y, DamageType.COLD, self:spellCrit(self:combatTalentSpellDamage(t, 10, 180), add_crit))
+					game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_ice", {radius=1})
 				end
 
 				max = max - 1
