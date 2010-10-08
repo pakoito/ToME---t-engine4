@@ -78,8 +78,8 @@ ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be
 ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.")
 ActorInventory:defineInventory("QUIVER", "Quiver", true, "Your readied ammo.")
 ActorInventory:defineInventory("MOUNT", "Mount", false, "Your mount.")
-ActorInventory:defineInventory("QS_MAINHAND", "Second weapon set: In main hand", true, "Weapon Set 2: Most weapons are wielded in the main hand. Press 'x' to switch weapon sets.")
-ActorInventory:defineInventory("QS_OFFHAND", "Second weapon set: In off hand", true, "Weapon Set 2: You can use shields or a second weapon in your off-hand, if you have the talents for it. Press 'x' to switch weapon sets.")
+ActorInventory:defineInventory("QS_MAINHAND", "Second weapon set: In main hand", false, "Weapon Set 2: Most weapons are wielded in the main hand. Press 'x' to switch weapon sets.", true)
+ActorInventory:defineInventory("QS_OFFHAND", "Second weapon set: In off hand", false, "Weapon Set 2: You can use shields or a second weapon in your off-hand, if you have the talents for it. Press 'x' to switch weapon sets.", true)
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")

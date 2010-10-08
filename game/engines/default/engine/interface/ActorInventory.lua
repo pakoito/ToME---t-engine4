@@ -31,7 +31,7 @@ _M.inven_def = {}
 
 --- Defines stats
 -- Static!
-function _M:defineInventory(short_name, name, is_worn, desc)
+function _M:defineInventory(short_name, name, is_worn, desc, show_equip)
 	assert(name, "no inventory slot name")
 	assert(short_name, "no inventory slot short_name")
 	assert(desc, "no inventory slot desc")
@@ -40,6 +40,7 @@ function _M:defineInventory(short_name, name, is_worn, desc)
 		short_name = short_name,
 		description = desc,
 		is_worn = is_worn,
+		is_shown_equip = show_equip,
 	})
 	self.inven_def[#self.inven_def].id = #self.inven_def
 	self.inven_def[short_name] = self.inven_def[#self.inven_def]

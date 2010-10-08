@@ -156,7 +156,7 @@ function _M:generateList()
 	local i = 1
 	self.max_h = 0
 	for inven_id =  1, #self.actor.inven_def do
-		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
+		if self.actor.inven[inven_id] and (self.actor.inven_def[inven_id].is_worn or self.actor.inven_def[inven_id].is_shown_equip) then
 			list[#list+1] = { id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="", desc=self.actor.inven_def[inven_id].description }
 			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
 

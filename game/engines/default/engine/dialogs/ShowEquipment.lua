@@ -85,7 +85,7 @@ function _M:generateList()
 	list.chars = chars
 	local i = 1
 	for inven_id =  1, #self.actor.inven_def do
-		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
+		if self.actor.inven[inven_id] and (self.actor.inven_def[inven_id].is_worn or self.actor.inven_def[inven_id].is_shown_equip) then
 			list[#list+1] = { id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="", desc=self.actor.inven_def[inven_id].description }
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
