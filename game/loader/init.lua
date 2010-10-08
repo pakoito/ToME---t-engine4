@@ -55,7 +55,7 @@ local load load = function(...)
 			local ff, err = loadfile("/engines/"..f.."/engine/version.lua")
 			if ff and not err then tryLoadEngine(ff, "/engines/"..f.."/", nil) end
 		else
-			local _, _, name, cv, vM, vm, vp = f:find("^([a-z0-9-]+)%-(%d+)_(%d+)%.(%d+)%.(%d+).teae$")
+			local _, _, name, vM, vm, vp = f:find("^([a-z0-9-]+)%-(%d+)%.(%d+)%.(%d+).teae$")
 			if name then
 				local eng_path = fs.getRealPath("/engines/"..f)
 				fs.mount(eng_path, "/tmp")

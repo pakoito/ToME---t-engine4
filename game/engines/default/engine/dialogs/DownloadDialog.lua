@@ -78,7 +78,7 @@ function _M:startDownload()
 		local ltn12 = require "ltn12"
 
 		local size = 0
-		http.TIMEOUT = 10
+		http.TIMEOUT = 1200
 		http.request{url = src, sink = function(chunk, err)
 			if err then
 				l:send(0, "received", {error=err})

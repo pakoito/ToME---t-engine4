@@ -123,42 +123,39 @@ function _M:updateAll()
 
 		if next.eng then
 			local eversion = next.eng
+
 			-- Download engine
-			local url = ("http://te4.org/dl/engines/%s-%d_%d.%d.%d.teae"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
-			local d = DownloadDialog.new(("Downloading engine: %s"):format(next.name), url, function(di, data)
-				fs.mkdir("/tmp-dl/engines")
-				local fname = ("/tmp-dl/engines/%s-%d_%d.%d.%d.teae"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
-				files[#files+1] = fname
-				local f = fs.open(fname, "w")
-				for i, v in ipairs(data) do f:write(v) end
-				f:close()
-
-				-- Download boot module
-				local url = ("http://te4.org/dl/engines/boot-%s-%d_%d.%d.%d.team"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
-				local d = DownloadDialog.new(("Downloading engine boot menu: %s"):format(next.name), url, function(di, data)
-					fs.mkdir("/tmp-dl/modules")
-					local fname = ("/tmp-dl/modules/boot.team"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
-					files[#files+1] = fname
-					local f = fs.open(fname, "w")
-					for i, v in ipairs(data) do f:write(v) end
-					f:close()
-
-					do_next()
-				end)
-				game:registerDialog(d)
-				d:startDownload()
-			end)
-
 			fs.mkdir("/tmp-dl/engines")
-			local fname = ("/tmp-dl/engines/%s-%d_%d.%d.%d.teae"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
+			local fname = ("/tmp-dl/engines/%s-%d.%d.%d.teae"):format(eversion[4], eversion[1], eversion[2], eversion[3])
 			local f = fs.open(fname, "w")
 
+			local url = ("http://te4.org/dl/engines/%s-%d.%d.%d.teae"):format(eversion[4], eversion[1], eversion[2], eversion[3])
 			local d = DownloadDialog.new(("Downloading engine: %s"):format(next.name), url, function(chunk)
 				f:write(chunk)
 			end, function(di, data)
 				f:close()
 				files[#files+1] = fname
-				do_next()
+
+				-- Download engine
+				fs.mkdir("/tmp-dl/modules")
+				local fname = ("/tmp-dl/modules/boot-%s-%d.%d.%d.team"):format(eversion[4], eversion[1], eversion[2], eversion[3])
+				local f = fs.open(fname, "w")
+
+				local url = ("http://te4.org/dl/engines/boot-%s-%d.%d.%d.team"):format(eversion[4], eversion[1], eversion[2], eversion[3])
+				local d = DownloadDialog.new(("Downloading engine boot menu: %s"):format(next.name), url, function(chunk)
+					f:write(chunk)
+				end, function(di, data)
+					f:close()
+					files[#files+1] = fname
+					do_next()
+				end, function(error)
+					Dialog:simplePopup("Error!", "There was an error while downloading:\n"..error)
+					game:unregisterDialog(self)
+				end)
+
+				game:registerDialog(d)
+				d:startDownload()
+
 			end, function(error)
 				Dialog:simplePopup("Error!", "There was an error while downloading:\n"..error)
 				game:unregisterDialog(self)

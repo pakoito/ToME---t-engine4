@@ -77,7 +77,7 @@ end
 
 function _M:createModule(short_name)
 	local dir = "/modules/"..short_name
---	print("Creating module", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as team)", short_name:find(".team$"), "")
+	print("Creating module", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as team)", short_name:find(".team$"), "")
 	if fs.exists(dir.."/init.lua") then
 		local mod = self:loadDefinition(dir)
 		if mod and mod.short_name then
