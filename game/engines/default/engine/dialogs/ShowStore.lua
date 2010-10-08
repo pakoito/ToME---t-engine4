@@ -34,7 +34,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.actor_inven = actor_inven
 	self.store_filter = store_filter
 	self.actor_filter = actor_filter
-	Dialog.init(self, title or "Store", game.w * 0.8, game.h * 0.8)
+	Dialog.init(self, title or "Store", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
 	self:maxH()
 

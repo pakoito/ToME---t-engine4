@@ -31,7 +31,7 @@ function _M:init(title, x, y, filter, action)
 	self.x, self.y = x, y
 	self.filter = filter
 	self.action = action
-	Dialog.init(self, title or "Pickup", game.w * 0.8, game.h * 0.8)
+	Dialog.init(self, title or "Pickup", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
 	local takeall = Button.new{text="(*) Take all", width=self.iw - 40, fct=function() self:takeAll() end}
 

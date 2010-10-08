@@ -30,7 +30,7 @@ function _M:init(title, actor, filter, action)
 	self.actor = actor
 	self.filter = filter
 	self.action = action
-	Dialog.init(self, title or "Equipment", game.w * 0.8, game.h * 0.8)
+	Dialog.init(self, title or "Equipment", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true}
 
