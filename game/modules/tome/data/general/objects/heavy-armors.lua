@@ -26,7 +26,7 @@ newEntity{
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
-	encumber = 17,
+	encumber = 14,
 	rarity = 5,
 	metallic = true,
 	desc = [[A suit of armour made of mail.]],

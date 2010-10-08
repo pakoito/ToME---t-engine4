@@ -23,7 +23,7 @@ newEntity{
 	type = "armor", subtype="light",
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE, image = resolvers.image_material("leather", "leather"),
-	encumber = 17,
+	encumber = 9,
 	rarity = 5,
 	desc = [[A suit of armour made of leather.]],
 	egos = "/data/general/objects/egos/armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
