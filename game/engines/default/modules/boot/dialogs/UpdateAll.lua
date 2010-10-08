@@ -117,6 +117,7 @@ function _M:updateAll()
 
 		if next.eng then
 			local eversion = next.eng
+			-- Download engine
 			local url = ("http://te4.org/dl/engines/%s-%d_%d.%d.%d.teae"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
 			local d = DownloadDialog.new(("Downloading engine: %s"):format(next.name), url, function(di, data)
 				fs.mkdir("/tmp-dl/engines")
@@ -126,7 +127,20 @@ function _M:updateAll()
 				for i, v in ipairs(data) do f:write(v) end
 				f:close()
 
-				do_next()
+				-- Download boot module
+				local url = ("http://te4.org/dl/engines/boot-%s-%d_%d.%d.%d.team"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
+				local d = DownloadDialog.new(("Downloading engine boot menu: %s"):format(next.name), url, function(di, data)
+					fs.mkdir("/tmp-dl/modules")
+					local fname = ("/tmp-dl/modules/boot.team"):format(eversion[4], eversion[5] or 5, eversion[1], eversion[2], eversion[3])
+					files[#files+1] = fname
+					local f = fs.open(fname, "w")
+					for i, v in ipairs(data) do f:write(v) end
+					f:close()
+
+					do_next()
+				end)
+				game:registerDialog(d)
+				d:startDownload()
 			end)
 			game:registerDialog(d)
 			d:startDownload()
@@ -134,7 +148,7 @@ function _M:updateAll()
 			local mod = next.mod
 			local d = DownloadDialog.new("Downloading game: "..next.name, mod.download, function(di, data)
 				fs.mkdir("/tmp-dl/modules")
-				local fname = ("/tmp-dl/modules/%s-%d.%d.%d.team"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
+				local fname = ("/tmp-dl/modules/%s.team"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
 				files[#files+1] = fname
 				local f = fs.open(fname, "w")
 				for i, v in ipairs(data) do f:write(v) end

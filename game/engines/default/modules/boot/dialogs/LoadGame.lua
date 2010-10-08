@@ -31,27 +31,39 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init()
 	Dialog.init(self, "Load Game", game.w, game.h)
 
-	local list = table.clone(game.save_list, true)
+	local list = Module:listSavefiles()
 
 	self.c_delete = Button.new{text="Delete", fct=function(text) self:deleteSave() end}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih - self.c_delete.h - 10, text=""}
 
 	self.tree = {}
 	local found = false
-	for i, mod in ipairs(list) do
+	for i = #list, 1, -1 do
+		local m = list[i]
+		if m.is_boot then table.remove(list, i) m.savefiles={} end
+
 		local nodes = {}
 
-		for j, save in ipairs(mod.savefiles) do
-			save.fct = function()
-				Module:instanciate(mod, save.name, false)
+		for j, save in ipairs(m.savefiles) do
+			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version[1], save.module_version[2], save.module_version[3])
+			local mod = list[mod_string]
+			if mod then
+				save.fct = function()
+					Module:instanciate(mod, save.name, false)
+				end
+				save.mod = mod
+				save.zone = Textzone.new{
+					width=self.c_desc.w,
+					height=self.c_desc.h,
+					text=("#{bold}##GOLD#%s: %s#WHITE##{normal}#\nGame version: %d.%d.%d\n\n%s"):format(mod.long_name, save.name, mod.version[1], mod.version[2], mod.version[3], save.description)
+				}
+				table.insert(nodes, save)
+				found = true
 			end
-			save.mod = mod
-			save.zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="#{bold}##GOLD#"..mod.long_name..": "..save.name.."#WHITE##{normal}#\n\n"..save.description}
-			table.insert(nodes, save)
-			found = true
 		end
 
 		if #nodes > 0 then
+			local mod = m.versions[1]
 			table.insert(self.tree, {
 				name="#{bold}##GOLD#"..mod.name.."#WHITE##{normal}#",
 				fct=function() end,

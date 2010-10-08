@@ -76,9 +76,6 @@ function _M:run()
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
 
-	self.mod_list = Module:listModules()
-	self.save_list = Module:listSavefiles()
-
 	-- Setup display
 	self:registerDialog(MainMenu.new())
 

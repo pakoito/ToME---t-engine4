@@ -29,19 +29,25 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init()
 	Dialog.init(self, "New Game", game.w, game.h)
 
-	self.list = table.clone(game.mod_list, true)
+	local list = Module:listModules()
 
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih, text=""}
 
-	for i, mod in ipairs(self.list) do
-		mod.name = "#{bold}##GOLD#"..mod.name.."#{normal}##WHITE#"
-		mod.fct = function(mod)
-			game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
+	self.list = {}
+	for i = #list, 1, -1 do
+		local mod = list[i].versions[1]
+		if not mod.is_boot then
+			mod.name = "#{bold}##GOLD#"..mod.name.."#{normal}##WHITE#"
+			mod.fct = function(mod)
+				game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
 				Module:instanciate(mod, text, true)
-			end))
+				end))
+			end
+			mod.version_txt = ("%d.%d.%d"):format(mod.version[1], mod.version[2], mod.version[3])
+			mod.zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="#{bold}##GOLD#"..mod.long_name.."#WHITE##{normal}#\n\n"..mod.description}
+
+			table.insert(self.list, 1, mod)
 		end
-		mod.version_txt = ("%d.%d.%d"):format(mod.version[1], mod.version[2], mod.version[3])
-		mod.zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="#{bold}##GOLD#"..mod.long_name.."#WHITE##{normal}#\n\n"..mod.description}
 	end
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 3 - 10), height=self.ih - 10, scrollbar=true, columns={

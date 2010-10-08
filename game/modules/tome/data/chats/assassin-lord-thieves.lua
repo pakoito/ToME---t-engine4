@@ -17,14 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "Realtime Example Module"
-long_name = "Realtime Example Module for T-Engine4"
-short_name = "example_realtime"
-author = { "DarkGod", "darkgod@te4.org" }
-homepage = "http://te4.org/modules:example"
-version = {1,0,0}
-engine = {0,9,13,"te4",5}
-description = [[
-This is *NOT* a game, just an example/template to make your own using the T-Engine4.
-]]
-starter = "mod.load"
+newChat{ id="welcome",
+	text = [[I ain't no chatting! Speak to the boss!]],
+	answers = {
+		{"[leave]"},
+	}
+}
+
+
+return "welcome"

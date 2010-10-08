@@ -578,7 +578,8 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 
 	if no_reboot then
 		local Module = require("engine.Module")
-		local mod = Module:createModule(__load_module)
+		local ms = Module:listModules()
+		local mod = ms[__load_module]
 		Module:instanciate(mod, __player_name, __player_new, true)
 	else
 		-- Tell the C engine to discard the current lua state and make a new one

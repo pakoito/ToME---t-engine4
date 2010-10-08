@@ -32,18 +32,20 @@ local load load = function(...)
 
 	print("Reboot using", req_engine, req_version, __load_module, __player_name, __player_new)
 
-	local engines = {}
+	local engines = { __byname={} }
 
 	local function tryLoadEngine(ff, dir, teae)
 		local env = {engine={}}
 		setfenv(ff, env)
 		pcall(ff)
 		if env.engine.version and env.engine.require_c_core == core.game.VERSION then
-			print("[ENGINE LOADER] available from "..(dir and "dir" or "teae")..": ", env.engine.version[4], env.engine.version[1], env.engine.version[2], env.engine.version[3])
-
 			local name = env.engine.version[4]
+			local vstr = ("%s-%d.%d.%d"):format(name, env.engine.version[1], env.engine.version[2], env.engine.version[3])
 			engines[name] = engines[name] or {}
-			engines[name][#engines[name]+1] = {env.engine.version[1], env.engine.version[2], env.engine.version[3], name, load_dir=dir, load_teae=teae}
+			engines.__byname[vstr] = true
+			engines[name][#engines[name]+1] = {env.engine.version[1], env.engine.version[2], env.engine.version[3], name, env.engine.version[5], load_dir=dir, load_teae=teae}
+
+			print("[ENGINE LOADER] available from "..(dir and "dir" or "teae")..": ", vstr)
 		end
 	end
 

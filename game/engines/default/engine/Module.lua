@@ -25,6 +25,12 @@ local Savefile = require "engine.Savefile"
 --- Handles dialog windows
 module(..., package.seeall, class.make)
 
+--- Create a version string for the module version
+-- Static
+function _M:versionString(mod)
+	return ("%s-%d.%d.%d"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
+end
+
 --- List all available modules
 -- Static
 function _M:listModules()
@@ -32,22 +38,38 @@ function _M:listModules()
 	fs.mount(engine.homepath, "/")
 --	print("Search Path: ") for k,e in ipairs(fs.getSearchPath()) do print("*",k,e) end
 
+	local knowns = {}
 	for i, short_name in ipairs(fs.list("/modules/")) do
-		if short_name ~= "boot" then
-			local mod = self:createModule(short_name)
-			if mod then
-				table.insert(ms, mod)
-				ms[mod.short_name] = mod
+		local mod = self:createModule(short_name)
+		if mod then
+			if not knowns[mod.short_name] then
+				table.insert(ms, {short_name=mod.short_name, name=mod.name, versions={}})
+				knowns[mod.short_name] = ms[#ms]
 			end
+			local v = knowns[mod.short_name].versions
+			v[#v+1] = mod
 		end
 	end
 
 	table.sort(ms, function(a, b)
+	print(a.short_name,b.short_name)
 		if a.short_name == "tome" then return 1
 		elseif b.short_name == "tome" then return nil
 		else return a.name < b.name
 		end
 	end)
+
+	for i, m in ipairs(ms) do
+		table.sort(m.versions, function(b, a)
+			return a.version[1] * 1000000 + a.version[2] * 1000 + a.version[3] * 1 < b.version[1] * 1000000 + b.version[2] * 1000 + b.version[3] * 1
+		end)
+		print("* Module: "..m.short_name)
+		for i, mod in ipairs(m.versions) do
+			print(" ** "..mod.version[1].."."..mod.version[2].."."..mod.version[3])
+			ms[mod.version_string] = mod
+		end
+		ms[m.short_name] = m.versions[1]
+	end
 --	fs.umount(engine.homepath)
 
 	return ms
@@ -55,6 +77,7 @@ end
 
 function _M:createModule(short_name)
 	local dir = "/modules/"..short_name
+--	print("Creating module", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as team)", short_name:find(".team$"), "")
 	if fs.exists(dir.."/init.lua") then
 		local mod = self:loadDefinition(dir)
 		if mod and mod.short_name then
@@ -62,11 +85,9 @@ function _M:createModule(short_name)
 		end
 	elseif short_name:find(".team$") then
 		fs.mount(fs.getRealPath(dir), "/testload", false)
+		local mod
 		if fs.exists("/testload/mod/init.lua") then
-			local mod = self:loadDefinition("/testload", dir)
-			if mod then
-				table.insert(ms, mod)
-			end
+			mod = self:loadDefinition("/testload", dir)
 		end
 		fs.umount(fs.getRealPath(dir))
 		if mod and mod.short_name then return mod end
@@ -76,17 +97,23 @@ end
 --- Get a module definition from the module init.lua file
 function _M:loadDefinition(dir, team)
 	local mod_def = loadfile(team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
+--	print("Loading module definition from", team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
 	if mod_def then
 		-- Call the file body inside its own private environment
 		local mod = {}
 		setfenv(mod_def, mod)
 		mod_def()
 
-		if not mod.long_name or not mod.name or not mod.short_name or not mod.version or not mod.starter then return end
+		if not mod.long_name or not mod.name or not mod.short_name or not mod.version or not mod.starter then
+			print("Bad module definition", mod.long_name, mod.name, mod.short_name, mod.version, mod.starter)
+			return
+		end
 
 		-- Test engine version
-		if mod.engine[1] * 1000000 + mod.engine[2] * 1000 + mod.engine[3] > engine.version[1] * 1000000 + engine.version[2] * 1000 + engine.version[3] then
-			print("Module mismatch engine version", mod.short_name, mod.engine[1] * 1000000 + mod.engine[2] * 1000 + mod.engine[3], engine.version[1] * 1000000 + engine.version[2] * 1000 + engine.version[3])
+		local eng_req = engine.version_string(mod.engine)
+		mod.version_string = self:versionString(mod)
+		if not __available_engines.__byname[eng_req] then
+			print("Module mismatch engine version "..mod.version_string.." using engine "..eng_req)
 			return
 		end
 
@@ -111,6 +138,7 @@ function _M:loadDefinition(dir, team)
 			return m[1], m[2]
 		end
 
+		print("Loaded module definition for "..mod.version_string.." using engine "..eng_req)
 		return mod
 	end
 end
@@ -154,7 +182,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		popup.__showup = nil
 		core.display.forceRedraw()
 
-		util.showMainMenu(false, mod.engine[4] or "te4", ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]), mod.short_name, name, new_game)
+		util.showMainMenu(false, mod.engine[4], ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]), mod.version_string, name, new_game)
 		return
 	end
 
