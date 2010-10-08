@@ -26,9 +26,10 @@ local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc)
+function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc, descprice)
 	self.action = action
 	self.desc = desc
+	self.descprice = descprice
 	self.store_inven = store_inven
 	self.actor_inven = actor_inven
 	self.store_filter = store_filter
@@ -43,14 +44,14 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
-		{name="Price", width=8, display_prop="cost", sort="cost"},
+		{name="Price", width=8, display_prop="desc_price", sort=function(a, b) return descprice("sell", a.object) <descprice("sell", b.object) end},
 	}, list={}, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
 
 	self.c_store = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="Store", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
-		{name="Price", width=8, display_prop="cost", sort="cost"},
+		{name="Price", width=8, display_prop="desc_price", sort=function(a, b) return descprice("buy", a.object) <descprice("buy", b.object) end},
 	}, list={}, fct=function(item) self:use(item) end, select=function(item, sel) self:select(item) end}
 
 	self:generateList()
@@ -125,7 +126,7 @@ function _M:generateList()
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
 			local char = self:makeKeyChar(i)
-			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost, desc=o:getDesc() }
+			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost, desc=o:getDesc(), desc_price=self.descprice("buy", o) }
 			list.chars[char] = #list
 			i = i + 1
 		end
@@ -139,7 +140,7 @@ function _M:generateList()
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
 			local char = self:makeKeyChar(i)
-			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost, desc=o:getDesc() }
+			list[#list+1] = { id=#list+1, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, cost=o.cost, desc=o:getDesc(), desc_price=self.descprice("sell", o) }
 			list.chars[char] = #list
 			i = i + 1
 		end

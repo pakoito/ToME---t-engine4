@@ -92,6 +92,8 @@ function _M:interact(who)
 		end
 	end, function(what, o)
 		return self:descObject(who, what, o)
+	end, function(what, o)
+		return self:descObjectPrice(who, what, o)
 	end)
 	game:registerDialog(d)
 end
@@ -184,6 +186,15 @@ end
 -- @param what either "sell" or "buy"
 -- @param o the object
 -- @return a string (possibly multiline) describing the object
-function _M:descObject(what, o)
+function _M:descObject(who, what, o)
 	return o:getDesc()
+end
+
+--- Called to describe an object's price, being to sell or to buy
+-- @param who the actor
+-- @param what either "sell" or "buy"
+-- @param o the object
+-- @return a string describing the price
+function _M:descObjectPrice(who, what, o)
+	return ""
 end

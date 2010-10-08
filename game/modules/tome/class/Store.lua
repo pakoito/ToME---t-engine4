@@ -111,6 +111,19 @@ function _M:descObject(who, what, o)
 	end
 end
 
+--- Called to describe an object's price, being to sell or to buy
+-- @param who the actor
+-- @param what either "sell" or "buy"
+-- @param o the object
+-- @return a string describing the price
+function _M:descObjectPrice(who, what, o)
+	if what == "buy" then
+		return o:getPrice() * self.sell_percent / 100, who.money
+	else
+		return o:getPrice() * self.buy_percent / 100, who.money
+	end
+end
+
 --- Actor interacts with the store
 -- @param who the actor who interracts
 function _M:interact(who)
