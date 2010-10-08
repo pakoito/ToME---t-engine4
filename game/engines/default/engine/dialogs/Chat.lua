@@ -38,7 +38,7 @@ function _M:init(chat, id)
 
 	self:generateList()
 
-	self.c_list = VariableList.new{width=self.iw - 10, list=self.list, fct=function(item) self:use(item) end}
+	self.c_list = VariableList.new{width=self.iw - 10, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_desc},
@@ -57,11 +57,18 @@ function _M:init(chat, id)
 	}
 end
 
+function _M:select(item)
+	local a = self.chat:get(self.cur_id).answers[item.answer]
+	if not a then return end
+
+	if a.on_select then
+		a.on_select(self.npc, self.player, self)
+	end
+end
+
 function _M:use(item, a)
 	a = a or self.chat:get(self.cur_id).answers[item.answer]
 	if not a then return end
-
-	self.changed = true
 
 	print("[CHAT] selected", a[1], a.action, a.jump)
 	if a.action then

@@ -22,9 +22,10 @@ require "engine.Dialog"
 
 module(..., package.seeall, class.inherit(engine.Dialog))
 
-function _M:init(title, url, on_finish)
+function _M:init(title, url, on_chunk, on_finish)
 	self.url = url
 	self.received = 0
+	self.on_chunk = on_chunk
 	self.on_finish = on_finish
 
 	local font = core.display.newFont("/data/font/Vera.ttf", 12)
@@ -37,12 +38,15 @@ end
 
 function _M:drawDialog(s)
 	if self.th then
-		local t = self.linda:receive(0, "final")
-		local len = self.linda:receive(0, "received")
-		while len do
-			len = self.linda:receive(0, "received")
-			if len then self.received = len end
+		local ck = self.linda:receive(0, "received")
+		while ck do
+			if ck then
+				self.received = ck.size
+				self.on_chunk(ck.chunk)
+			end
+			ck = self.linda:receive(0, "received")
 		end
+		local t = self.linda:receive(0, "final")
 
 		local v, err = self.th:join(0)
 		if err then error(err) end
@@ -52,7 +56,7 @@ function _M:drawDialog(s)
 			self.linda = nil
 			self.th = nil
 			game:unregisterDialog(self)
-			self:on_finish(t)
+			self:on_finish()
 		end
 	end
 
@@ -67,17 +71,16 @@ function _M:startDownload()
 		local http = require "socket.http"
 		local ltn12 = require "ltn12"
 
-		local t = {}
 		local size = 0
 		http.request{url = src, sink = function(chunk, err)
+			if err then error(err) end
 			if chunk then
 				size = size + #chunk
-				l:send(0, "received", size)
-				table.insert(t, chunk)
+				l:send(0, "received", {size=size, chunk=chunk})
 			end
 			return 1
 		end}
-		l:send("final", t)
+		l:send("final", true)
 	end
 
 	self.th = lanes.gen("*", list_handler)(self.url)

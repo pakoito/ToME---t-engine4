@@ -152,14 +152,16 @@ function _M:updateAll()
 			d:startDownload()
 		elseif next.mod then
 			local mod = next.mod
-			local d = DownloadDialog.new("Downloading game: "..next.name, mod.download, function(di, data)
-				fs.mkdir("/tmp-dl/modules")
-				local fname = ("/tmp-dl/modules/%s.team"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
-				files[#files+1] = fname
-				local f = fs.open(fname, "w")
-				for i, v in ipairs(data) do f:write(v) end
-				f:close()
 
+			fs.mkdir("/tmp-dl/modules")
+			local fname = ("/tmp-dl/modules/%s-%d.%d.%d.team"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
+			files[#files+1] = fname
+--			local f = fs.open(fname, "w")
+
+			local d = DownloadDialog.new("Downloading: "..next.name, mod.download, function(chunk)
+--				f:write(chunk)
+			end, function(di, data)
+--				f:close()
 				do_next()
 			end)
 			game:registerDialog(d)

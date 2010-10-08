@@ -136,7 +136,15 @@ local function generate_rewards()
 				player.changed = true
 				player:hasQuest(npc.quest_id).reward_message = ("improved %s by +%d"):format(npc.stats_def[i].name, reward.stats[i])
 			end
-			answers[#answers+1] = {("[Improve %s by +%d]"):format(npc.stats_def[i].name, reward.stats[i]), jump="done", action=doit}
+			answers[#answers+1] = {("[Improve %s by +%d]"):format(npc.stats_def[i].name, reward.stats[i]),
+				jump="done",
+				action=doit,
+				on_select=function(npc, player)
+					game.tooltip_x, game.tooltip_y = 1, 1
+					local TooltipsData = require("mod.class.interface.TooltipsData")
+					game.tooltip:displayAtMap(nil, nil, game.w, game.h, TooltipsData["TOOLTIP_"..npc.stats_def[i].short_name:upper()])
+				end,
+			}
 		end end
 	end
 	if reward.talents then
@@ -149,7 +157,15 @@ local function generate_rewards()
 					if t.hide then player.__show_special_talents[tid] = true end
 					player:hasQuest(npc.quest_id).reward_message = ("%s talent %s (+%d level(s))"):format(game.player:knowTalent(tid) and "improved" or "learnt", t.name, level)
 				end
-				answers[#answers+1] = {("[%s talent %s (+%d level(s))]"):format(game.player:knowTalent(tid) and "Improve" or "Learn", t.name, level), jump="done", action=doit}
+				answers[#answers+1] = {
+					("[%s talent %s (+%d level(s))]"):format(game.player:knowTalent(tid) and "Improve" or "Learn", t.name, level),
+						jump="done",
+						action=doit,
+						on_select=function(npc, player)
+							game.tooltip_x, game.tooltip_y = 1, 1
+							game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..t.name.."#LAST#\n"..player:getTalentFullDescription(t, 1))
+						end,
+					}
 			end
 		end
 	end
@@ -162,7 +178,14 @@ local function generate_rewards()
 				player:setTalentTypeMastery(tt, mastery)
 				player:hasQuest(npc.quest_id).reward_message = ("gained talent category %s (at mastery %0.2f)"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery)
 			end
-			answers[#answers+1] = {("[Allow training of talent category %s (at mastery %0.2f)]"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery), jump="done", action=doit}
+			answers[#answers+1] = {("[Allow training of talent category %s (at mastery %0.2f)]"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery),
+				jump="done",
+				action=doit,
+				on_select=function(npc, player)
+					game.tooltip_x, game.tooltip_y = 1, 1
+					game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..(cat:capitalize().." / "..tt_def.name:capitalize()).."#LAST#\n"..tt_def.description)
+				end,
+			}
 		end end
 	end
 	return answers

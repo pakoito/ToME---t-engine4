@@ -28,6 +28,7 @@ function _M:init(t)
 	self.list = assert(t.list, "no list list")
 	self.w = assert(t.width, "no list width")
 	self.fct = t.fct
+	self.select = t.select
 	self.display_prop = t.display_prop or "name"
 
 	Base.init(self, t)
@@ -85,6 +86,7 @@ function _M:generate()
 
 		self.mouse:registerZone(0, self.h, self.w, fh, function(button, x, y, xrel, yrel, bx, by, event)
 			self.sel = i
+			self:onSelect()
 			if button == "left" and event == "button" then self:onUse() end
 		end)
 
@@ -94,8 +96,8 @@ function _M:generate()
 	-- Add UI controls
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) end,
+		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self:onSelect() end,
+		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self:onSelect() end,
 	}
 end
 
@@ -104,6 +106,13 @@ function _M:onUse()
 	if not item then return end
 	if item.fct then item:fct()
 	else self.fct(item, self.sel) end
+end
+
+function _M:onSelect()
+	local item = self.list[self.sel]
+	if not item then return end
+
+	if rawget(self, "select") then self.select(item, self.sel) end
 end
 
 function _M:display(x, y)
