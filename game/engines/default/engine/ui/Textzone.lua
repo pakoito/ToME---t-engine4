@@ -66,8 +66,9 @@ function _M:generate()
 	-- Draw the list items
 	self.list = {}
 	local r, g, b = 255, 255, 255
+	local s = core.display.newSurface(fw, fh)
 	for i, l in ipairs(list) do
-		local s = core.display.newSurface(fw, fh)
+		s:erase()
 		r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
 		if self.no_color_bleed then r, g, b = 255, 255, 255 end
 

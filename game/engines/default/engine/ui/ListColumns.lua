@@ -24,6 +24,20 @@ local Focusable = require "engine.ui.Focusable"
 --- A generic UI multi columns list
 module(..., package.seeall, class.inherit(Base, Focusable))
 
+local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
+local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
+local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
+local l, l_w, l_h = _M:getImage("ui/selection-left.png")
+local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
+local r, r_w, r_h = _M:getImage("ui/selection-right.png")
+
+local cls, cls_w, cls_h = _M:getImage("ui/selection-left-column-sel.png")
+local cms, cms_w, cms_h = _M:getImage("ui/selection-middle-column-sel.png")
+local crs, crs_w, crs_h = _M:getImage("ui/selection-right-column-sel.png")
+local cl, cl_w, cl_h = _M:getImage("ui/selection-left-column.png")
+local cm, cm_w, cm_h = _M:getImage("ui/selection-middle-column.png")
+local cr, cr_w, cr_h = _M:getImage("ui/selection-right-column.png")
+
 function _M:init(t)
 	self.list = assert(t.list, "no list list")
 	self.columns = assert(t.columns, "no list columns")
@@ -37,6 +51,8 @@ function _M:init(t)
 	self.select = t.select
 	self.all_clicks = t.all_clicks
 	self.hide_columns = t.hide_columns
+
+	self.fh = ls_h
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -55,24 +71,25 @@ function _M:init(t)
 		else
 			col.width = w * col.width / 100
 		end
+
+		col.surface = core.display.newSurface(col.width, self.fh)
+		col.s = core.display.newSurface(col.width, self.fh)
+		col.ss = core.display.newSurface(col.width, self.fh)
+		col.sus = core.display.newSurface(col.width, self.fh)
+
+		col.ss:merge(ls, 0, 0)
+		for i = ls_w, col.width - rs_w, ms_w do col.ss:merge(ms, i, 0) end
+		col.ss:merge(rs, col.width - rs_w, 0)
+
+		col.s:erase(0, 0, 0)
+
+		col.sus:merge(l, 0, 0)
+		for i = l_w, col.width - r_w, m_w do col.sus:merge(m, i, 0) end
+		col.sus:merge(r, col.width - r_w, 0)
 	end
 
 	Base.init(self, t)
 end
-
-local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
-local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
-local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
-local l, l_w, l_h = _M:getImage("ui/selection-left.png")
-local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
-local r, r_w, r_h = _M:getImage("ui/selection-right.png")
-
-local cls, cls_w, cls_h = _M:getImage("ui/selection-left-column-sel.png")
-local cms, cms_w, cms_h = _M:getImage("ui/selection-middle-column-sel.png")
-local crs, crs_w, crs_h = _M:getImage("ui/selection-right-column-sel.png")
-local cl, cl_w, cl_h = _M:getImage("ui/selection-left-column.png")
-local cm, cm_w, cm_h = _M:getImage("ui/selection-middle-column.png")
-local cr, cr_w, cr_h = _M:getImage("ui/selection-right-column.png")
 
 function _M:drawItem(item)
 	for j, col in ipairs(self.columns) do
@@ -80,28 +97,27 @@ function _M:drawItem(item)
 
 		local text = tostring(util.getval(item[col.display_prop or col.sort], item))
 		local color = item.color or {255,255,255}
-		local ss = core.display.newSurface(fw, fh)
-		local sus = core.display.newSurface(fw, fh)
-		local s = core.display.newSurface(fw, fh)
+		local src_ss = col.ss
+		local src_sus = col.sus
+		local src_s = col.s
+		local ss = col.surface
+		local sus = col.surface
+		local s = col.surface
 
-		ss:merge(ls, 0, 0)
-		for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
-		ss:merge(rs, fw - rs_w, 0)
+		ss:erase(0, 0, 0)
+		ss:merge(src_ss, 0, 0)
 		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-		s:erase(0, 0, 0)
-		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-		sus:merge(l, 0, 0)
-		for i = l_w, fw - r_w do sus:merge(m, i, 0) end
-		sus:merge(r, fw - r_w, 0)
-		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-
-		item._tex = item._tex or {}
 		item._stex = item._stex or {}
-		item._sustex = item._sustex or {}
-		item._tex[j] = {s:glTexture()}
 		item._stex[j] = {ss:glTexture()}
+
+		s:merge(src_s, 0, 0)
+		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
+		item._tex = item._tex or {}
+		item._tex[j] = {s:glTexture()}
+
+		sus:merge(src_sus, 0, 0)
+		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
+		item._sustex = item._sustex or {}
 		item._sustex[j] = {sus:glTexture()}
 	end
 end

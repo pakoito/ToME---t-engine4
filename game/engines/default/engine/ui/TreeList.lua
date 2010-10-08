@@ -24,6 +24,15 @@ local Focusable = require "engine.ui.Focusable"
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
 
+local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
+local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
+local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
+local l, l_w, l_h = _M:getImage("ui/selection-left.png")
+local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
+local r, r_w, r_h = _M:getImage("ui/selection-right.png")
+local plus, plus_w, plus_h = _M:getImage("ui/plus.png")
+local minus, minus_w, minus_h = _M:getImage("ui/minus.png")
+
 function _M:init(t)
 	self.tree = assert(t.tree, "no tree tree")
 	self.columns = assert(t.columns, "no list columns")
@@ -40,6 +49,9 @@ function _M:init(t)
 	self.level_offset = t.level_offset or 12
 	self.key_prop = t.key_prop or "__id"
 	self.sel_by_col = t.sel_by_col and {} or nil
+
+
+	self.fh = ls_h
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -63,6 +75,21 @@ function _M:init(t)
 			colw = colw + col.width
 			self.sel_by_col[j] = colw
 		end
+
+		col.surface = core.display.newSurface(col.width, self.fh)
+		col.s = core.display.newSurface(col.width, self.fh)
+		col.ss = core.display.newSurface(col.width, self.fh)
+		col.sus = core.display.newSurface(col.width, self.fh)
+
+		col.ss:erase(0, 0, 0)
+		for i = 0, col.width - rs_w, ms_w do col.ss:merge(ms, i, 0) end
+		col.ss:merge(rs, col.width - rs_w, 0)
+
+		col.s:erase(0, 0, 0)
+
+		col.sus:erase(0, 0, 0)
+		for i = 0, col.width - r_w, m_w do col.sus:merge(m, i, 0) end
+		col.sus:merge(r, col.width - r_w, 0)
 	end
 
 	self.items_by_key = {}
@@ -70,24 +97,18 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
-local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
-local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
-local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
-local l, l_w, l_h = _M:getImage("ui/selection-left.png")
-local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
-local r, r_w, r_h = _M:getImage("ui/selection-right.png")
-local plus, plus_w, plus_h = _M:getImage("ui/plus.png")
-local minus, minus_w, minus_h = _M:getImage("ui/minus.png")
-
 function _M:drawItem(item)
 	item.cols = {}
 	for i, col in ipairs(self.columns) do
 		local level = item.level
 		local color = util.getval(item.color, item) or {255,255,255}
 		local text = tostring(util.getval(item[col.display_prop], item))
-		local ss = core.display.newSurface(col.width, self.fh)
-		local sus = core.display.newSurface(col.width, self.fh)
-		local s = core.display.newSurface(col.width, self.fh)
+		local src_ss = col.ss
+		local src_sus = col.sus
+		local src_s = col.s
+		local ss = col.surface
+		local sus = col.surface
+		local s = col.surface
 
 		local offset = 0
 		if i == 1 then
@@ -96,25 +117,26 @@ function _M:drawItem(item)
 		end
 		local startx = ls_w + offset
 
+		item.cols[i] = {}
+
+		ss:erase(0, 0, 0)
+		ss:merge(src_ss, 0, 0)
+		ss:erase(0, 0, 0, 255, 0, 0, offset, self.fh)
 		if i == 1 and item.nodes then ss:merge(item.shown and minus or plus, 0, 0) end
 		ss:merge(ls, offset, 0)
-		for i = startx, col.width - rs_w do ss:merge(ms, i, 0) end
-		ss:merge(rs, col.width - rs_w, 0)
 		ss:drawColorStringBlended(self.font, text, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3], nil, col.width - startx - rs_w)
+		item.cols[i]._stex = ss:glTexture()
 
-		s:erase(0, 0, 0)
+		s:merge(src_s, 0, 0)
 		if i == 1 and item.nodes then s:merge(item.shown and minus or plus, 0, 0) end
 		s:drawColorStringBlended(self.font, text, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3], nil, col.width - startx - rs_w)
+		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
 
+		sus:merge(src_sus, 0, 0)
+		sus:erase(0, 0, 0, 255, 0, 0, offset, self.fh)
 		if i == 1 and item.nodes then sus:merge(item.shown and minus or plus, 0, 0) end
 		sus:merge(l, offset, 0)
-		for i = startx, col.width - r_w do sus:merge(m, i, 0) end
-		sus:merge(r, col.width - r_w, 0)
 		sus:drawColorStringBlended(self.font, text, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3], nil, col.width - startx - rs_w)
-
-		item.cols[i] = {}
-		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
-		item.cols[i]._stex = ss:glTexture()
 		item.cols[i]._sustex = sus:glTexture()
 	end
 	if self.on_drawitem then self.on_drawitem(item) end

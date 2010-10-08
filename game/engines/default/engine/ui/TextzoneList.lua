@@ -81,8 +81,9 @@ function _M:createItem(item, text)
 	-- Draw the list items
 	local gen = {}
 	local r, g, b = 255, 255, 255
+	local s = core.display.newSurface(self.fw, self.fh)
 	for i, l in ipairs(list) do
-		local s = core.display.newSurface(self.fw, self.fh)
+		s:erase()
 		r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
 		if self.no_color_bleed then r, g, b = 255, 255, 255 end
 
