@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local DamageType = require "engine.DamageType"
-
 newEntity{
 	name = "solid ", prefix=true,
 	level_range = {1, 50},
@@ -64,7 +62,7 @@ newEntity{
 	cost_per_charge = 0.4,
 
 	use_power = { name = "light the area", power = 3, use = function(self, who)
-		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
+		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.engine.DamageType.LITE, 1)
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
 	end}
@@ -149,7 +147,7 @@ newEntity{
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = (40 + who:getMag(20)) * self.material_level
-		who:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+		who:project(tg, x, y, engine.DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 		local _ _, x, y = who:canProject(tg, x, y)
 		game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(x-who.x), math.abs(y-who.y)), "lightning", {tx=x-who.x, ty=y-who.y})
 		game:playSoundNear(who, "talents/lightning")
@@ -169,7 +167,7 @@ newEntity{
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = (35 + who:getMag(20)) * self.material_level
-		who:project(tg, x, y, DamageType.FIRE, dam, {type="flame"})
+		who:project(tg, x, y, engine.DamageType.FIRE, dam, {type="flame"})
 		game:playSoundNear(who, "talents/fire")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
@@ -187,7 +185,7 @@ newEntity{
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = (80 + who:getMag(50)) * self.material_level
-		who:project(tg, x, y, DamageType.HEAL, dam)
+		who:project(tg, x, y, engine.DamageType.HEAL, dam)
 		game:playSoundNear(who, "talents/heal")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true

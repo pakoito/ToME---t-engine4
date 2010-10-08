@@ -129,8 +129,8 @@ function _M:defineHotkey(id)
 	end
 	if not item or not item.object then return end
 
-	self.actor.hotkey[id] = {"inventory", item.object:getName{no_count=true}}
-	self:simplePopup("Hotkey "..id.." assigned", item.object:getName{no_count=true}:capitalize().." assigned to hotkey "..id)
+	self.actor.hotkey[id] = {"inventory", item.object:getName{no_add_name=true, no_count=true}}
+	self:simplePopup("Hotkey "..id.." assigned", item.object:getName{no_add_name=true, no_count=true}:capitalize().." assigned to hotkey "..id)
 	self.actor.changed = true
 end
 

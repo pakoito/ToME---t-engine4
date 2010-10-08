@@ -488,7 +488,7 @@ function _M:hotkeyInventory(name)
 	local find = function(name)
 		local os = {}
 		for inven_id, inven in pairs(self.inven) do
-			local o, item = self:findInInventory(inven, name, getname)
+			local o, item = self:findInInventory(inven, name, {no_count=true, force_id=true, no_add_name=true})
 			if o and item then os[#os+1] = {o, item, inven_id, inven} end
 		end
 		if #os == 0 then return end

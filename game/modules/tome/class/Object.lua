@@ -167,7 +167,7 @@ function _M:getName(t)
 		return self:descAttribute(attr)
 	end)
 
-	if self.add_name and self:isIdentified() then
+	if not t.no_add_name and self.add_name and self:isIdentified() then
 		name = name .. self.add_name:gsub("#([^#]+)#", function(attr)
 			return self:descAttribute(attr)
 		end)

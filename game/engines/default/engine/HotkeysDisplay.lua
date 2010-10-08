@@ -101,10 +101,10 @@ function _M:display()
 				color = {0,255,0}
 			end
 		elseif ts[3] == "inventory" then
-			local o = a:findInAllInventories(ts[1])
+			local o = a:findInAllInventories(ts[1], {no_add_name=true, force_id=true, no_count=true})
 			local cnt = 0
 			if o then cnt = o:getNumber() end
-			txt = ("%s (%d)"):format(ts[1], cnt)
+			txt = ("%s (%d)"):format(o:getName{no_count=true}, cnt)
 			if cnt == 0 then
 				color = {128,128,128}
 			end
