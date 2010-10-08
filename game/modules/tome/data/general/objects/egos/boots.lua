@@ -56,16 +56,6 @@ newEntity{
 }
 
 newEntity{
-	name = "stealthy ", prefix=true, instant_resolve=true,
-	level_range = {20, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		inc_stealth = resolvers.mbonus_material(10, 5, function(e, v) return v * 1, v end),
-	},
-}
-
-newEntity{
 	name = " of rushing", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,

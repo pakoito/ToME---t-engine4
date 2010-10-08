@@ -79,7 +79,6 @@ newTalent{
 			game.level:addEntity(e)
 			game.level.map(px, py, Map.TERRAIN+2, e)
 		end, nil, {type="dark"})
-		self:teleportRandom(self.x, self.y, 5)
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
