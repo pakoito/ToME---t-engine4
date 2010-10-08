@@ -47,7 +47,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai figther", color=colors.UMBER,
+	name = "uruk-hai fighter", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a shield and a deadly axe.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai elite figther", color=colors.UMBER,
+	name = "uruk-hai elite fighter", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a shield and a deadly axe.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 3,
@@ -105,8 +105,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	rarity = 1,
 	max_life = resolvers.rngavg(110,120), life_rating = 14,
 	resolvers.equip{
-		{type="weapon", subtype="waraxe", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
+		{type="weapon", subtype="battleaxe", autoreq=true},
 		{type="armor", subtype="massive", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
@@ -129,8 +128,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	rank = 3,
 	max_life = resolvers.rngavg(170,180), life_rating = 14,
 	resolvers.equip{
-		{type="weapon", subtype="waraxe", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
+		{type="weapon", subtype="battleaxe", autoreq=true},
 		{type="armor", subtype="massive", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
