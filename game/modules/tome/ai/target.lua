@@ -53,6 +53,8 @@ end)
 
 -- Target the player if within sense radius
 newAI("target_player_radius", function(self)
+	if self.ai_target.actor and not self.ai_target.actor.dead and rng.percent(90) then return true end
+
 	if core.fov.distance(self.x, self.y, game.player.x, game.player.y) < self.ai_state.sense_radius then
 		self.ai_target.actor = game.player
 		return true

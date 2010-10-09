@@ -75,7 +75,7 @@ function _M:runInit(dir)
 		block_left = block_left,
 		block_right = block_right,
 		cnt = 1,
-		dialog = Dialog:simplePopup("Running...", "You are running, press any key to stop.", function()
+		dialog = Dialog:simplePopup("Running...", "You are running, press Enter to stop.", function()
 			self:runStop()
 		end),
 	}
