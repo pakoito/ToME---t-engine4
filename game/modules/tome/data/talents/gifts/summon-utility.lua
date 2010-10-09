@@ -41,10 +41,7 @@ newTalent{
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local a = game.level.map(tx, ty, Map.ACTOR)
-			print("try taunt", a and a.name, a and self:reactionToward(a))
-		game.level.map:particleEmitter(tx, ty, 1, "summon")
 			if a and self:reactionToward(a) < 0 then
-			print("taunt", a.name)
 				a:setTarget(self)
 			end
 		end)

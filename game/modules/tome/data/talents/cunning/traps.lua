@@ -19,7 +19,7 @@
 
 local Map = require "engine.Map"
 
-local trap_range = function(self, t) return 1 + math.floor(self:getTalentLevel(self.T_TRAP_LAUNCHER) * 2.2) end
+local trap_range = function(self, t) return 0 + math.floor(self:getTalentLevel(self.T_TRAP_LAUNCHER) * 2.2) end
 
 ----------------------------------------------------------------
 -- Trapping
@@ -80,6 +80,7 @@ newTalent{
 	stamina = 15,
 	no_break_stealth = true,
 	require = cuns_req2,
+	range = function(self, t) return math.ceil(self:getTalentLevel(t) * 1.5 + 5) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -105,7 +106,7 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },
 			level_range = {1, 1}, exp_worth = 0,
 
-			max_life = 1,
+			max_life = self.level * 2,
 			life_rating = 0,
 			never_move = 1,
 
@@ -114,13 +115,13 @@ newTalent{
 			-- Hard to kill with spells
 			resists = {[DamageType.PHYSICAL] = -90, all = 90},
 
-			talent_cd_reduction={[Talents.T_TAUNT]=4, },
+			talent_cd_reduction={[Talents.T_TAUNT]=2, },
 			resolvers.talents{
 				[self.T_TAUNT]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true,
-			summon_time = 7,
+			summon_time = 5,
 		}
 
 		m:resolve() m:resolve(nil, true)
