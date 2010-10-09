@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 -- Afflictions
-newTalentType{ type="cursed/cursed-form", name = "cursed form", description = "You are wracked with the dark energies of the curse." }
+newTalentType{ type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
 newTalentType{ type="cursed/slaughter", name = "slaughter", description = "Your axe yearns for its next victim." }
 newTalentType{ type="cursed/endless-hunt", name = "endless hunt", description = "Each day you lift your weary body and begin the unending hunt." }
 newTalentType{ type="cursed/gloom", name = "gloom", description = "All those in your sight must share your despair." }
-newTalentType{ type="cursed/rampage", name = "rampage", generic = true, description = "Let loose the hate that has grown within." }
+newTalentType{ type="cursed/rampage", name = "rampage", description = "Let loose the hate that has grown within." }
 newTalentType{ type="cursed/dark-figure", name = "dark figure", generic = true, description = "Life as an outcast has given you time to reflect on your misfortunes." }
 
 -- Generic requires for corruptions based on talent level

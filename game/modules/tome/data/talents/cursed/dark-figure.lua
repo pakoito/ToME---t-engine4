@@ -127,7 +127,7 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	range = function(self, t) return 18 - math.floor(self:getTalentLevel(t) * 2) end,
+	range = function(self, t) return 18 - math.floor(self:getTalentLevel(t) * 1.4) end,
 	info = function(self, t)
 		local range = t.range(self, t)
 		return ([[You hide your terrible nature behind a pitiful figure. Those that see you from a distance of %d will ignore you.]]):format(range)

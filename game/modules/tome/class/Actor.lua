@@ -1487,8 +1487,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	if actor:knowTalent(self.T_PITY) then
 		local t = actor:getTalentFromId(self.T_PITY)
 		if math.floor(core.fov.distance(self.x, self.y, actor.x, actor.y)) >= actor:getTalentRange(t) then
-			print("* pity: ", math.floor(core.fov.distance(self.x, self.y, actor.x, actor.y)), actor:getTalentRange(t))
-			return false, 0
+			return false, 50 - actor:getTalentLevel(self.T_PITY) * 5
 		end
 	end
 
