@@ -72,6 +72,7 @@ end
 --- Called when triggered
 function _M:canTrigger(x, y, who)
 	if self.safe_levitation and who:attr("levitation") then return false end
+	if self.faction and who:reactionToward(self) >= 0 then return false end
 	return true
 end
 

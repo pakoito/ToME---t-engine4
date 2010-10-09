@@ -1585,9 +1585,12 @@ newEffect{
 	type = "physical",
 	status = "detrimental",
 	parameters = { sight=5 },
+	on_gain = function(self, err) return "#Target# is surrounded by a thick smoke.", "+Dim Vision" end,
+	on_lose = function(self, err) return "The smoke around #target# dissipate.", "-Dim Vision" end,
 	activate = function(self, eff)
 		if self.sight - eff.sight < 1 then eff.sight = self.sight - 1 end
 		eff.tmpid = self:addTemporaryValue("sight", -eff.sight)
+		self:setTarget(nil) -- Loose target!
 		self:doFOV()
 	end,
 	deactivate = function(self, eff)

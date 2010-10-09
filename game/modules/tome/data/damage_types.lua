@@ -385,6 +385,21 @@ newDamageType{
 	end,
 }
 
+-- Dim vision
+newDamageType{
+	name = "sticky smoke", type = "STICKY_SMOKE",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("blind") then
+				target:setEffect(target.EFF_DIM_VISION, 5, {sight=dam})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Acid damage + blind chance
 newDamageType{
 	name = "acid blind", type = "ACID_BLIND",

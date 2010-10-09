@@ -17,3 +17,397 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Map = require "engine.Map"
+
+local trap_range = function(self, t) return 1 + math.floor(self:getTalentLevel(self.T_TRAP_LAUNCHER) * 2.2) end
+
+----------------------------------------------------------------
+-- Trapping
+----------------------------------------------------------------
+
+newTalent{
+	name = "Trap Mastery",
+	type = {"cunning/trapping", 1},
+	points = 5,
+	mode = "passive",
+	require = cuns_req1,
+	on_learn = function(self, t)
+		local lev = self:getTalentLevelRaw(t)
+		if lev == 1 then
+			self:learnTalent(self.T_EXPLOSION_TRAP, true)
+		elseif lev == 2 then
+			self:learnTalent(self.T_BEAR_TRAP, true)
+		elseif lev == 3 then
+			self:learnTalent(self.T_CATAPULT_TRAP, true)
+		elseif lev == 4 then
+			self:learnTalent(self.T_DISARMING_TRAP, true)
+		elseif lev == 5 then
+			self:learnTalent(self.T_FREEZING_TRAP, true)
+		end
+	end,
+	on_unlearn = function(self, t)
+		local lev = self:getTalentLevelRaw(t)
+		if lev == 0 then
+			self:unlearnTalent(self.T_EXPLOSION_TRAP)
+		elseif lev == 1 then
+			self:unlearnTalent(self.T_BEAR_TRAP)
+		elseif lev == 2 then
+			self:unlearnTalent(self.T_CATAPULT_TRAP)
+		elseif lev == 3 then
+			self:unlearnTalent(self.T_DISARMING_TRAP)
+		elseif lev == 4 then
+			self:unlearnTalent(self.T_FREEZING_TRAP)
+		end
+	end,
+	info = function(self, t)
+		return ([[Learn how to setup traps. Each level you will learn a new kind of trap:
+		Level 1: Explosion Trap
+		Level 2: Bear Trap
+		Level 3: Catapult Trap
+		Level 4: Disarm Trap
+		Level 5: Freezing Trap
+		New traps can also be learned from special teachers in the world.
+		Also increases the effectiveness of your traps by %d%%. (The effect varies for each trap)]]):
+		format(self:getTalentLevel(t) * 20)
+	end,
+}
+
+newTalent{
+	name = "Distract",
+	type = {"cunning/trapping", 2},
+	points = 5,
+	cooldown = 20,
+	stamina = 15,
+	no_break_stealth = true,
+	require = cuns_req2,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		target = game.level.map(tx, ty, Map.ACTOR)
+		if target == self then target = nil end
+
+		-- Find space
+		local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			type = "construct", subtype = "lure",
+			display = "*", color=colors.UMBER,
+			name = "lure", faction = self.faction,
+			desc = [[A noisy lure.]],
+			autolevel = "none",
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
+			level_range = {1, 1}, exp_worth = 0,
+
+			max_life = 1,
+			life_rating = 0,
+			never_move = 1,
+
+			combat_armor = 10, combat_def = 0,
+
+			resolvers.talents{
+				[self.T_TAUNT]=self:getTalentLevelRaw(t),
+			},
+
+			summoner = self, summoner_gain_exp=true,
+			summon_time = 5,
+		}
+
+		m:resolve() m:resolve(nil, true)
+		m:forceLevelup(self.level)
+		game.zone:addEntity(game.level, m, "actor", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Project a noisy lure that attracts all creatures in a radius %d to it.
+		This can be used while stealthed.]]):format(3 + self:getTalentLevelRaw(t))
+	end,
+}
+newTalent{
+	name = "Sticky Smoke",
+	type = {"cunning/trapping", 3},
+	points = 5,
+	cooldown = 15,
+	stamina = 10,
+	require = cuns_req3,
+	no_break_stealth = true,
+	reflectable = true,
+	proj_speed = 10,
+	requires_target = true,
+	range = 20,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.STICKY_SMOKE, math.ceil(self:getTalentLevel(t) * 2.5), {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Throws a vial of sticky smoke that explodes on your foe, reducing its vision range by %d for 5 turns.
+		This can be used while stealthed.]]):
+		format(math.ceil(self:getTalentLevel(t) * 2.5))
+	end,
+}
+
+newTalent{
+	name = "Trap Launcher",
+	type = {"cunning/trapping", 4},
+	points = 5,
+	mode = "passive",
+	require = cuns_req4,
+	info = function(self, t)
+		return ([[Allows you to create self deploying traps that you can launch up to %d grids away.]]):format(trap_range(self, t))
+	end,
+}
+
+----------------------------------------------------------------
+-- Traps
+----------------------------------------------------------------
+
+newTalent{
+	name = "Explosion Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 8,
+	stamina = 15,
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+
+		local dam = 30 + self:getCun() * 0.8 * self:getTalentLevel(self.T_TRAP_MASTERY)
+
+		local Trap = require "mod.class.Trap"
+		local t = Trap.new{
+			type = "elemental", id_by_type=true, unided_name = "trap",
+			name = "explosion trap", color=colors.LIGHT_RED,
+			display = '^',
+			dam = dam,
+			faction = self.faction,
+			triggered = function(self, x, y, who)
+				self:project({type="ball", x=x,y=y, radius=2}, x, y, engine.DamageType.FIREBURN, self.dam)
+				game.level.map:particleEmitter(x, y, 2, "fireflash", {radius=2, tx=x, ty=y})
+				return true, true
+			end,
+			summoner = self, summoner_gain_exp = true,
+		}
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a simple yet effective trap that explodes on contact, doing %0.2f fire damage over a few turns in a radius of 2.]]):
+		format(damDesc(self, DamageType.FIRE, 30 + self:getCun() * 0.8 * self:getTalentLevel(self.T_TRAP_MASTERY)))
+	end,
+}
+
+newTalent{
+	name = "Bear Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 12,
+	stamina = 10,
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+
+		local dam = (40 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5
+
+		local Trap = require "mod.class.Trap"
+		local t = Trap.new{
+			type = "physical", id_by_type=true, unided_name = "trap",
+			name = "bear trap", color=colors.UMBER,
+			display = '^',
+			dam = dam,
+			faction = self.faction,
+			check_hit = self:combatAttackDex(),
+			triggered = function(self, x, y, who)
+				if who and who:canBe("cut") then who:setEffect(who.EFF_CUT, 5, {src=self.summoner, power=self.dam}) end
+				if who:checkHit(self.check_hit, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("pin") then
+					who:setEffect(who.EFF_PINNED, 5, {})
+				else
+					game.logSeen(who, "%s resists!", who.name:capitalize())
+				end
+				return true, true
+			end,
+			summoner = self, summoner_gain_exp = true,
+		}
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a bear trap. The first creature passing by will be caught in the trap, unable to move and bleeding for %0.2f physical damage each turn for 5 turns.]]):
+		format(damDesc(self, DamageType.PHYSICAL, (40 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5))
+	end,
+}
+
+newTalent{
+	name = "Catapult Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 10,
+	stamina = 15,
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+
+
+		local Trap = require "mod.class.Trap"
+		local t = Trap.new{
+			type = "physical", id_by_type=true, unided_name = "trap",
+			name = "catapult trap", color=colors.LIGHT_UMBER,
+			display = '^',
+			dist = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY)),
+			faction = self.faction,
+			check_hit = self:combatAttackDex(),
+			triggered = function(self, x, y, who)
+				if who:checkHit(self.check_hit, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("knockback") then
+					who:knockback(self.summoner.x, self.summoner.y, self.dist, true)
+					if who:canBe("stun") then who:setEffect(who.EFF_DAZED, 5, {}) end
+				else
+					game.logSeen(who, "%s resists!", who.name:capitalize())
+				end
+				return true, true
+			end,
+			summoner = self, summoner_gain_exp = true,
+		}
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a catapult trap that knocks back any creatures by %d grids away and dazes them.]]):
+		format(2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY)))
+	end,
+}
+
+newTalent{
+	name = "Disarming Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 25,
+	stamina = 25,
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+
+
+		local Trap = require "mod.class.Trap"
+		local t = Trap.new{
+			type = "physical", id_by_type=true, unided_name = "trap",
+			name = "disarming trap", color=colors.DARK_GREY,
+			display = '^',
+			dur = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2),
+			faction = self.faction,
+			check_hit = self:combatAttackDex(),
+			triggered = function(self, x, y, who)
+				if who:checkHit(self.check_hit, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("disarm") then
+					who:setEffect(who.EFF_DISARMED, self.dur, {})
+				else
+					game.logSeen(who, "%s resists!", who.name:capitalize())
+				end
+				return true, true
+			end,
+			summoner = self, summoner_gain_exp = true,
+		}
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a tricky trap that maims the arms of creatures passing by, disarming them for %d turns.]]):
+		format(2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2))
+	end,
+}
+
+newTalent{
+	name = "Freezing Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 8,
+	stamina = 15,
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+
+		local dam = 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)
+
+		local Trap = require "mod.class.Trap"
+		local t = Trap.new{
+			type = "elemental", id_by_type=true, unided_name = "trap",
+			name = "freeze trap", color=colors.LIGHT_BLUE,
+			display = '^',
+			dam = dam,
+			faction = self.faction,
+			check_hit = self:combatAttackDex(),
+			triggered = function(self, x, y, who)
+				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.COLD, self.dam, {type="freeze"})
+				if who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("stun") then
+					who:setEffect(who.EFF_FROZEN, 4, {src=self.summoner})
+				end
+				return true, true
+			end,
+			summoner = self, summoner_gain_exp = true,
+		}
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a freezing trap, doing %0.2f cold damage to a creature and freezing it for 4 turns.]]):
+		format(damDesc(self, DamageType.COLD, 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)))
+	end,
+}
