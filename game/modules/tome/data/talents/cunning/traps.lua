@@ -206,11 +206,24 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
+			temporary = 8 + self:getTalentLevel(t),
+			x = x, y = y,
+			canAct = false,
+			energy = {value=0},
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					game.level:removeEntity(self)
+				end
+			end,
 		}
 		t:identify(true)
 
 		t:resolve() t:resolve(nil, true)
 		t:setKnown(self, true)
+		game.level:addEntity(t)
 		game.zone:addEntity(game.level, t, "trap", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
@@ -256,6 +269,18 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
+			temporary = 8 + self:getTalentLevel(t),
+			x = x, y = y,
+			canAct = false,
+			energy = {value=0},
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					game.level:removeEntity(self)
+				end
+			end,
 		}
 		t:identify(true)
 
@@ -309,9 +334,21 @@ newTalent{
 					who:knockback(self.summoner.x, self.summoner.y, self.dist, can)
 					if who:canBe("stun") then who:setEffect(who.EFF_DAZED, 5, {}) end
 				end
-				return true, true
+				return true, rng.chance(25)
 			end,
 			summoner = self, summoner_gain_exp = true,
+			temporary = 8 + self:getTalentLevel(t),
+			x = x, y = y,
+			canAct = false,
+			energy = {value=0},
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					game.level:removeEntity(self)
+				end
+			end,
 		}
 		t:identify(true)
 
@@ -360,6 +397,18 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
+			temporary = 5 + self:getTalentLevel(t),
+			x = x, y = y,
+			canAct = false,
+			energy = {value=0},
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					game.level:removeEntity(self)
+				end
+			end,
 		}
 		t:identify(true)
 
@@ -408,6 +457,18 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
+			temporary = 5 + self:getTalentLevel(t),
+			x = x, y = y,
+			canAct = false,
+			energy = {value=0},
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					game.level:removeEntity(self)
+				end
+			end,
 		}
 		t:identify(true)
 
