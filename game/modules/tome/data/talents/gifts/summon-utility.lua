@@ -35,11 +35,16 @@ newTalent{
 	type = {"technique/other",1},
 	points = 1,
 	cooldown = 5,
+	requires_target = false,
+	range = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local a = game.level.map(tx, ty, Map.ACTOR)
+			print("try taunt", a and a.name, a and self:reactionToward(a))
+		game.level.map:particleEmitter(tx, ty, 1, "summon")
 			if a and self:reactionToward(a) < 0 then
+			print("taunt", a.name)
 				a:setTarget(self)
 			end
 		end)

@@ -102,21 +102,25 @@ newTalent{
 			name = "lure", faction = self.faction,
 			desc = [[A noisy lure.]],
 			autolevel = "none",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
+			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },
 			level_range = {1, 1}, exp_worth = 0,
 
 			max_life = 1,
 			life_rating = 0,
 			never_move = 1,
 
-			combat_armor = 10, combat_def = 0,
+			-- Hard to kill at range
+			combat_armor = 10, combat_def = 0, combat_def_ranged = self.level * 2.2,
+			-- Hard to kill with spells
+			resists = {[DamageType.PHYSICAL] = -90, all = 90},
 
+			talent_cd_reduction={[Talents.T_TAUNT]=4, },
 			resolvers.talents{
 				[self.T_TAUNT]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true,
-			summon_time = 5,
+			summon_time = 7,
 		}
 
 		m:resolve() m:resolve(nil, true)
@@ -291,11 +295,18 @@ newTalent{
 			faction = self.faction,
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
-				if who:checkHit(self.check_hit, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("knockback") then
-					who:knockback(self.summoner.x, self.summoner.y, self.dist, true)
+				-- Try to knockback !
+				local can = function(target)
+					if target:checkHit(self.check_hit, target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+						return true
+					else
+						game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+					end
+				end
+
+				if can(who) then
+					who:knockback(self.summoner.x, self.summoner.y, self.dist, can)
 					if who:canBe("stun") then who:setEffect(who.EFF_DAZED, 5, {}) end
-				else
-					game.logSeen(who, "%s resists!", who.name:capitalize())
 				end
 				return true, true
 			end,

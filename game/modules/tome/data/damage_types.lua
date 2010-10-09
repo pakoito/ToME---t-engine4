@@ -392,7 +392,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_DIM_VISION, 5, {sight=dam})
+				target:setEffect(target.EFF_DIM_VISION, 7, {sight=dam})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
