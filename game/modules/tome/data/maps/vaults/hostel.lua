@@ -24,7 +24,7 @@ rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 defineTile(' ', "FLOOR")
 defineTile('+', "DOOR")
 defineTile('!', "DOOR_VAULT")
-defineTile('X', "WALL")
+defineTile('X', "HARDWALL")
 defineTile('$', "FLOOR", {random_filter={add_levels=10, ego_chance=25}})
 defineTile('~', "FLOOR", {random_filter={add_levels=5}}, nil, {random_filter={add_levels=5}})
 defineTile('^', "FLOOR", nil, nil, {random_filter={add_levels=5}})
