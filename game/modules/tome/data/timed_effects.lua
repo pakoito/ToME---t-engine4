@@ -1626,10 +1626,38 @@ newEffect{
 			self._mo:invalidate()
 			game.level.map:updateMap(self.x, self.y)
 		end
-		eff.life_regen = self:removeTemporaryValue("life_regen", eff.life_regen)
-		eff.mana_regen = self:removeTemporaryValue("mana_regen", eff.mana_regen)
-		eff.never_move = self:removeTemporaryValue("never_move", eff.never_move)
-		eff.silence = self:removeTemporaryValue("silence", eff.silence)
+		self:removeTemporaryValue("life_regen", eff.life_regen)
+		self:removeTemporaryValue("mana_regen", eff.mana_regen)
+		self:removeTemporaryValue("never_move", eff.never_move)
+		self:removeTemporaryValue("silence", eff.silence)
 		self.combat = eff.combat
+	end,
+}
+
+newEffect{
+	name = "HURRICANE",
+	desc = "Hurricane",
+	type = "magical",
+	status = "detrimental",
+	parameters = { dam=10, radius=2 },
+	on_gain = function(self, err) return "#Target# is caught inside a Hurricane.", "+Hurricane" end,
+	on_lose = function(self, err) return "The Hurricane arround #Target# dissipates.", "-Hurricane" end,
+	on_timeout = function(self, eff)
+		local tg = {type="ball", range=0, radius=eff.radius, friendlyfire=false}
+		local dam = eff.dam
+		eff.src:project(tg, self.x, self.y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+		local x, y = self.x, self.y
+		-- Lightning ball gets a special treatment to make it look neat
+		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
+		local nb_forks = 16
+		local angle_diff = 360 / nb_forks
+		for i = 0, nb_forks - 1 do
+			local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
+			local tx = x + math.floor(math.cos(a) * tg.radius)
+			local ty = y + math.floor(math.sin(a) * tg.radius)
+			game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
+		end
+
+		game:playSoundNear(self, "talents/lightning")
 	end,
 }

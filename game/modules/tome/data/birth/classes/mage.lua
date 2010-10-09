@@ -260,7 +260,12 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Tempest",
 	desc = {
-		"Bzzzzt!",
+		"A Tempest is an archmage specialized in lightning magic.",
+		"They gain access to the special Storm talents whose main purpose is to make electrocute everything in sight.",
+		"They can even learn to pierce through lightning resistance and immunity.",
+		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
+		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
+		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",

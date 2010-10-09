@@ -32,7 +32,7 @@ function _M:restInit(turns, what, past, on_end)
 		past = past,
 		on_end = on_end,
 		cnt = 1,
-		dialog = Dialog:simplePopup(what:capitalize().."...", "You are "..what..", press any key to stop.", function()
+		dialog = Dialog:simplePopup(what:capitalize().."...", "You are "..what..", press Enter to stop.", function()
 			self:restStop()
 		end),
 	}

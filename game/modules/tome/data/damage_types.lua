@@ -420,11 +420,16 @@ newDamageType{
 newDamageType{
 	name = "lightning daze", type = "LIGHTNING_DAZE",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
+		DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(25) then
+		if target and rng.percent(dam.daze) then
 			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
 				target:setEffect(target.EFF_DAZED, 3, {src=src})
+				if src:isTalentActive(src.T_HURRICANE) then
+					local t = src:getTalentFromId(src.T_HURRICANE)
+					t.do_hurricane(src, t, target)
+				end
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
