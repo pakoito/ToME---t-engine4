@@ -118,6 +118,10 @@ newAchievement{
 	desc = [[Killed Ben Cruthdar the Cursed.]],
 }
 newAchievement{
+	name = "Eye of the storm", id = "EYE_OF_THE_STORM",
+	desc = [[Freed Bree from the onslaught of the mad Tempest, Urkis.]],
+}
+newAchievement{
 	name = "There and back again", id = "WEST_PORTAL",
 	desc = [[Opened a portal to Middle-earth from the Far East.]],
 }

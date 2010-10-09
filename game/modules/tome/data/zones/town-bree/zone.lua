@@ -20,6 +20,7 @@
 return {
 	name = "Bree",
 	level_range = {1, 1},
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	max_level = 1,
 	width = 196, height = 80,
 	persistant = "zone",
@@ -33,11 +34,19 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
+			nb_npc = {10, 10},
 		},
 		object = {
 			class = "engine.generator.object.Random",
 			nb_object = {0, 0},
 		},
-	}
+	},
+
+	on_enter = function(_, _, newzone)
+		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then
+			game.player:grantQuest("lightning-overload")
+		elseif game.player:hasQuest("lightning-overload") then
+			game.player:hasQuest("lightning-overload"):reenter_bree()
+		end
+	end
 }

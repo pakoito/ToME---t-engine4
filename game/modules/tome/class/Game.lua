@@ -613,13 +613,10 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				local npc = self.zone:makeEntityByName(self.level, "actor", "NPC_PHOENIX")
-				if npc then
-					self.zone:addEntity(self.level, npc, "actor", self.player.x, self.player.y+1)
-				end
---				self.level.map:particleEmitter(self.player.x, self.player.y, 3, "farportal_lightning")
---				self:changeLevel(1, "grushnak-pride")
---				self.player:grantQuest("master-jeweler")
+				self.player:grantQuest("lightning-overload")
+				self.player:setQuestStatus("lightning-overload", engine.Quest.COMPLETED, "saved-bree")
+				self.player:setQuestStatus("lightning-overload", engine.Quest.COMPLETED, "tempest-located")
+				self:changeLevel(1, "tempest-peak")
 			end
 		end,
 	}

@@ -1661,3 +1661,21 @@ newEffect{
 		game:playSoundNear(self, "talents/lightning")
 	end,
 }
+
+newEffect{
+	name = "RECALL",
+	desc = "Recalling",
+	type = "magical",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+		if self:canBe("worldport") then
+			game.logPlayer(self, "You are yanked out of this place!")
+			game:changeLevel(1, game.player.last_wilderness)
+		else
+			game.logPlayer(self, "Space restabilizes around you.")
+		end
+	end,
+}
