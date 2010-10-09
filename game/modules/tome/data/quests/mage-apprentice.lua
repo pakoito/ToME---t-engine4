@@ -92,7 +92,7 @@ end
 can_offer_angmar = function(self, who)
 	if self.nb_collect >= 15 then return end
 	-- Only works after mages are unlocked
-	if not profile.mod.allow_build.mage then return end
+--	if not profile.mod.allow_build.mage then return end
 
 	for inven_id, inven in pairs(who.inven) do
 		for item, o in ipairs(inven) do

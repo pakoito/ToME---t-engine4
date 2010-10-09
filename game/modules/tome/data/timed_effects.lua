@@ -1655,7 +1655,7 @@ newEffect{
 			local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
 			local tx = x + math.floor(math.cos(a) * tg.radius)
 			local ty = y + math.floor(math.sin(a) * tg.radius)
-			game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
+			game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=12, life=4})
 		end
 
 		game:playSoundNear(self, "talents/lightning")
