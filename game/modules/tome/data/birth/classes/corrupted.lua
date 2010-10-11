@@ -74,3 +74,40 @@ newBirthDescriptor{
 		},
 	},
 }
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Blood Mage",
+	desc = {
+		"A blood mage is a terrible foe, wielding dark magics that can sap the very soul of her targets.",
+		"They can harness the blight of evil, crushing their sould, stealing their life force to replenish themselves.",
+		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +2 Constitution",
+		"#LIGHT_BLUE# * +4 Magic, +3 Willpower, +0 Cunning",
+	},
+	stats = { mag=4, wil=3, con=2, },
+	talents_types = {
+		["cunning/survival"]={false, 0},
+		["corruption/sanguisuge"]={true, 0.3},
+		["corruption/hexes"]={false, 0.3},
+		["corruption/curses"]={false, 0.3},
+		["corruption/bone"]={true, 0.3},
+		["corruption/blood"]={true, 0.3},
+		["corruption/udun"]={true, 0.3},
+		["corruption/blood"]={true, 0.3},
+	},
+	talents = {
+		[ActorTalents.T_CORRUPTED_STRENGTH] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_BLOOD_SACRIFICE] = 1,
+		[ActorTalents.T_REND] = 1,
+	},
+	copy = {
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true},
+			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
+		},
+	},
+}

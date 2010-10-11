@@ -355,54 +355,58 @@ end
 --- Updates the map on the given spot
 -- This updates many things, from the C map object, the FOV caches, the minimap if it exists, ...
 function _M:updateMap(x, y)
-	local g = self(x, y, TERRAIN)
-	local o = self(x, y, OBJECT)
-	local a = self(x, y, ACTOR)
-	local t = self(x, y, TRAP)
-	local p = self(x, y, PROJECTILE)
-
 	-- Update minimap if any
 	local mm = MM_FLOOR
 	local mos = {}
 
-	if g then
-		-- Update path caches from path strings
-		for i = 1, #self.path_strings do
-			local ps = self.path_strings[i]
-			self._fovcache.path_caches[ps]:set(x, y, g:check("block_move", x, y, ps, false, true))
-		end
+	if not self.updateMapDisplay then
+		local g = self(x, y, TERRAIN)
+		local o = self(x, y, OBJECT)
+		local a = self(x, y, ACTOR)
+		local t = self(x, y, TRAP)
+		local p = self(x, y, PROJECTILE)
 
-		mm = mm + (g:check("block_move") and MM_BLOCK or 0)
-		mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
-		g:getMapObjects(self.tiles, mos, 1)
-	end
-	if t then
-		-- Handles invisibility and telepathy and other such things
-		if not self.actor_player or t:knownBy(self.actor_player) then
-			t:getMapObjects(self.tiles, mos, 4)
-			mm = mm + MM_TRAP
-		else
-			t = nil
+		if g then
+			-- Update path caches from path strings
+			for i = 1, #self.path_strings do
+				local ps = self.path_strings[i]
+				self._fovcache.path_caches[ps]:set(x, y, g:check("block_move", x, y, ps, false, true))
+			end
+
+			mm = mm + (g:check("block_move") and MM_BLOCK or 0)
+			mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
+			g:getMapObjects(self.tiles, mos, 1)
 		end
-	end
-	if o then
-		o:getMapObjects(self.tiles, mos, 7)
-		if self.object_stack_count then
-			local mo = o:getMapStackMO(self, x, y)
-			if mo then mos[9] = mo end
+		if t then
+			-- Handles trap being known
+			if not self.actor_player or t:knownBy(self.actor_player) then
+				t:getMapObjects(self.tiles, mos, 4)
+				mm = mm + MM_TRAP
+			else
+				t = nil
+			end
 		end
-		mm = mm + MM_OBJECT
-	end
-	if a then
-		-- Handles invisibility and telepathy and other such things
-		if not self.actor_player or self.actor_player:canSee(a) then
-			local r = self.actor_player:reactionToward(a)
-			mm = mm + (r > 0 and MM_FRIEND or (r == 0 and MM_NEUTRAL or MM_HOSTILE))
-			a:getMapObjects(self.tiles, mos, 10)
+		if o then
+			o:getMapObjects(self.tiles, mos, 7)
+			if self.object_stack_count then
+				local mo = o:getMapStackMO(self, x, y)
+				if mo then mos[9] = mo end
+			end
+			mm = mm + MM_OBJECT
 		end
-	end
-	if p then
-		p:getMapObjects(self.tiles, mos, 13)
+		if a then
+			-- Handles invisibility and telepathy and other such things
+			if not self.actor_player or self.actor_player:canSee(a) then
+				local r = self.actor_player:reactionToward(a)
+				mm = mm + (r > 0 and MM_FRIEND or (r == 0 and MM_NEUTRAL or MM_HOSTILE))
+				a:getMapObjects(self.tiles, mos, 10)
+			end
+		end
+		if p then
+			p:getMapObjects(self.tiles, mos, 13)
+		end
+	else
+		mm = self:updateMapDisplay(x, y, mos)
 	end
 
 	-- Update entities checker for this spot

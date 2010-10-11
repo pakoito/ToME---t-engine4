@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- Configure Map
+--dofile("/mod/map_config.lua")
+
 -- Entities that are ASCII are outline
 local Entity = require "engine.Entity"
 Entity.ascii_outline = {x=2, y=2, r=0, g=0, b=0, a=0.8}
