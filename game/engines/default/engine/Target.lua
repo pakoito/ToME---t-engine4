@@ -53,6 +53,10 @@ function _M:init(map, source_actor)
 end
 
 function _M:display(dispx, dispy)
+	-- Make sure we have a source
+	if not self.target_type.source_actor then
+		self.target_type.source_actor = self.source_actor
+	end
 	-- Entity tracking, if possible and if visible
 	if self.target.entity and self.target.entity.x and self.target.entity.y and game.level.map.seens(self.target.entity.x, self.target.entity.y) then
 		self.target.x, self.target.y = self.target.entity.x, self.target.entity.y
@@ -71,67 +75,92 @@ function _M:display(dispx, dispy)
 	local lx, ly = l()
 	local initial_dir = lx and coord_to_dir[lx - self.source_actor.x][ly - self.source_actor.y] or 5
 	local stopx, stopy = self.source_actor.x, self.source_actor.y
+	local stop_radius_x, stop_radius_y = stopx, stopy
 	while lx and ly do
-		if s == self.sb then stopx, stopy = lx, ly end
-		if not self.target_type.no_restrict then
-			if not game.level.map.seens(lx, ly) then s = self.sr end
-			if self.target_type.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then s = self.sr
-			elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then s = self.sr end
+		if s == self.sb then
+			stop_radius_x, stop_radius_y = stopx, stopy
+			stopx, stopy = lx, ly
 		end
-		if self.target_type.range and math.sqrt((self.source_actor.x-lx)^2 + (self.source_actor.y-ly)^2) > self.target_type.range then s = self.sr end
+		if self.target_type.block_path and self.target_type:block_path(lx, ly) then s = self.sr end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 		lx, ly = l()
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
-	if s == self.b then stopx, stopy = self.target.x, self.target.y end
+	-- If we reached the end without mishap then both the beam and radius effect should stop here
+	if s == self.sb then
+		stopx, stopy = self.target.x, self.target.y
+		stop_radius_x, stop_radius_y = stopx, stopy
+	end
 
 	if self.target_type.ball and self.target_type.ball > 0 then
-		core.fov.calc_circle(stopx, stopy, self.target_type.ball, function(_, lx, ly)
-			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
-			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
+		core.fov.calc_circle(stop_radius_x, stop_radius_y, self.target_type.ball, function(_, px, py)
+			self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
 		end, function()end, nil)
 	elseif self.target_type.cone and self.target_type.cone > 0 then
-		core.fov.calc_beam(stopx, stopy, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, lx, ly)
-			self.sg:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
-			if not self.target_type.no_restrict and game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") then return true end
+		core.fov.calc_beam(stop_radius_x, stop_radius_y, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, px, py)
+			self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
 		end, function()end, nil)
 	end
 
 	self.display_x, self.display_y = ox, oy
 end
 
---- Returns data for the given target type
+-- @return t The target table used by ActorProject, Projectile, GameTargeting, etc.
+-- @param t Target table used to generate the 
+-- @param t.type The engine-defined type, populates other more complex variables (see below)
 -- Hit: simple project in LOS<br/>
 -- Beam: hits everything in LOS<br/>
 -- Bolt: hits first thing in path<br/>
 -- Ball: hits everything in a ball aounrd the target<br/>
 -- Cone: hits everything in a cone in the direction<br/>
+-- @param t.radius The radius of the ball/cone AoE
+-- @param t.cone_angle The angle for the cone AoE (default 55°)
+-- @param t.no_restrict Boolean that removes all restrictions in the t.type defined block functions.
+-- @param t.stop_block Boolean that stops the target on the first tile that has an entity that blocks move.
+-- @param t.range The range the target can be from the origin.
+-- @param t.pass_terrain Boolean that allows the target to pass through terrain to remembered tiles on the other side.
+-- @param t.block_path(typ, lx, ly) Function called on each tile to determine if the targeting is blocked.  Automatically set when using t.typ, but the user can provide their own if they know what they are doing.
+-- @param t.block_radius(typ, lx, ly) Function called on each tile when projecting the radius to determine if the radius projection is blocked.  Automatically set when using t.typ, but the user can provide their own if they know what they are doing.
 function _M:getType(t)
-	if not t or not t.type then return {} end
-	t.range = t.range or 20
-	if t.friendlyfire == nil then t.friendlyfire = true end
-	if t.type == "hit" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict}
-	elseif t.type == "beam" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, line=true}
-	elseif t.type == "bolt" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, stop_block=true}
-	elseif t.type == "ball" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius}
-	elseif t.type == "cone" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius, cone_angle=t.cone_angle or 55}
-	elseif t.type == "ballbolt" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius, stop_block=true}
-	elseif t.type == "conebolt" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius, cone_angle=t.cone_angle or 55, stop_block=true}
-	elseif t.type == "ballbeam" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, ball=t.radius, line=true}
-	elseif t.type == "conebeam" then
-		return {range=t.range, friendlyfire=t.friendlyfire, no_restrict=t.no_restrict, cone=t.radius, cone_angle=t.cone_angle or 55, line=true}
-	else
-		return {}
+	if not t then return {} end
+	-- Add the default values
+	t = table.clone(t)
+	target_type = {
+		range=20,
+		friendlyfire=true,
+		block_path = function(typ, lx, ly)
+			if not typ.no_restrict then
+				if not game.level.map.remembers(lx, ly) then return true end
+				if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true
+				elseif not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+				if typ.range and typ.source_actor and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
+			end
+		end,
+		block_radius=function(typ, lx, ly)
+			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move")
+		end
+	}
+	table.update(t, target_type)
+	-- And now modify for the default types
+	if t.type then
+		if t.type:find("ball") then
+			target_type.ball = t.radius
+		end
+		if t.type:find("cone") then
+			target_type.cone = t.radius
+			target_type.cone_angle = t.cone_angle or 55
+		end
+		if t.type:find("bolt") then
+			target_type.stop_block = true
+		elseif t.type:find("beam") then
+			target_type.line = true
+		end
 	end
+	table.update(t, target_type)
+	return t
 end
 
 function _M:setActive(v, type)
