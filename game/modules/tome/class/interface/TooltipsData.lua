@@ -80,7 +80,7 @@ All afflicted talents are based on Hate, the higher hate is the more effective t
 TOOLTIP_LEVEL = [[#GOLD#Level and experience#LAST#
 Each time you kill a creature that is over your own level - 5 you gain some experience.
 When you reach enough experience you advance to the next level. There is a maximum of 50 levels you can gain.
-Each time you level you gain stats and talents points to use to improve your character.
+Each time you level you gain stat and talent points to use to improve your character.
 ]]
 
 -------------------------------------------------------------
@@ -111,7 +111,7 @@ TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---
 -- Melee
 -------------------------------------------------------------
 TOOLTIP_COMBAT_ATTACK = [[#GOLD#Attack chance#LAST#
-Your attack value represents your chance to hit your opponents, it is mesured directly against the target's defense rating.
+Your attack value represents your chance to hit your opponents, it is measured directly against the target's defense rating.
 It is improved by both Strength and Dexterity.
 ]]
 TOOLTIP_COMBAT_DAMAGE = [[#GOLD#Damage#LAST#
@@ -130,7 +130,7 @@ It is improved by Cunning.
 ]]
 TOOLTIP_COMBAT_SPEED = [[#GOLD#Attack speed#LAST#
 Attack speed represents how fast your attacks are compared to a normal turn.
-The lowest it is the faster your attacks are.
+The lower it is the faster your attacks are.
 ]]
 
 -------------------------------------------------------------
@@ -146,29 +146,29 @@ Armour value is a flat damage reduction substracted from every incoming melee an
 This is countered by armour penetration and is applied before all kinds of critical damage increase, talent multipliers and damage multiplier, thus making even small amounts have greater effects.
 ]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#
-Defense represents your chance to avoid being hit at all by a melee attack, it is mesured against the attacker's attack chance.
+Defense represents your chance to avoid being hit at all by a melee attack, it is measured against the attacker's attack chance.
 ]]
 TOOLTIP_RDEFENSE = [[#GOLD#Ranged Defense#LAST#
-Ranged defense represents your chance to avoid being hit at all by a ranged attack, it is mesured against the attacker's attack chance.
+Ranged defense represents your chance to avoid being hit at all by a ranged attack, it is measured against the attacker's attack chance.
 ]]
 TOOLTIP_PHYS_SAVE = [[#GOLD#Physical saving throw#LAST#
 This value represents your resistance against physical attacks induced special effects, like bleeding, stuns, knockbacks, ...
-It is mesured against your target's attack.
+It is measured against your target's attack.
 ]]
 TOOLTIP_SPELL_SAVE = [[#GOLD#Spell saving throw#LAST#
 This value represents your resistance against spell attacks induced special effects, like freezes, knockbacks, ...
-It is mesured against your target's spellpower.
+It is measured against your target's spellpower.
 ]]
 TOOLTIP_MENTAL_SAVE = [[#GOLD#Mental saving throw#LAST#
 This value represents your resistance against mental attacks induced special effects, like confusion, fear, ...
-It is mesured against your target's spellpower or mental power.
+It is measured against your target's spellpower or mental power.
 ]]
 
 -------------------------------------------------------------
 -- Spells
 -------------------------------------------------------------
 TOOLTIP_SPELL_POWER = [[#GOLD#Spellpower#LAST#
-Your spellpower value represents how
+Your spellpower value represents how effective/powerful your spells and magical effects are.
 It is improved by both Magic, some talents can change the stats that affect it.
 ]]
 TOOLTIP_SPELL_CRIT = [[#GOLD#Spell critical chance#LAST#
@@ -178,7 +178,7 @@ It is improved by Cunning.
 ]]
 TOOLTIP_SPELL_SPEED = [[#GOLD#Spellcasting speed#LAST#
 Spellcasting speed represents how fast your spellcasting is compared to a normal turn.
-The lowest it is the faster it is.
+The lower it is the faster it is.
 ]]
 
 -------------------------------------------------------------

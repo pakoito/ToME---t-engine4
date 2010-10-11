@@ -94,7 +94,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor peneration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.]]):
+		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10), 4 + self:getTalentLevel(t) * self:getDex(10),
 		3 + self:getTalentLevel(t) * self:getDex(10), 7 + self:getTalentLevel(t) * self:getDex(10),
 		self:getTalentLevelRaw(t) * 10)
@@ -154,7 +154,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You concentrate on your aim to produce a guaranted critical hit (with a base damage of %d%%).]]):format(self:combatTalentWeaponDamage(t, 1.2, 2) * 100)
+		return ([[You concentrate on your aim to produce a guaranteed critical hit (with a base damage of %d%%).]]):format(self:combatTalentWeaponDamage(t, 1.2, 2) * 100)
 	end,
 }
 

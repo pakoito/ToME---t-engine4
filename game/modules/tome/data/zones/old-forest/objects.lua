@@ -23,7 +23,7 @@ load("/data/general/objects/objects.lua")
 
 newEntity{ base = "BASE_SHIELD",
 	define_as = "OLD_MAN_WILLOW_SHIELD",
-	name = "Old Man's Willow Barkwood", unique=true,
+	name = "Old Man Willow's Barkwood", unique=true,
 	desc = [[The barkwood of the Old Man's Willow, made into roughly the shape of a shield.]],
 	require = { stat = { str=25 }, },
 	cost = 20,
