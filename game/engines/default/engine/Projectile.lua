@@ -150,7 +150,15 @@ function _M:act()
 			if x and y then self:move(x, y) end
 			if act then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
 			if stop then
-				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj)
+				-- Correct the explosion source position if we exploded on terrain
+				local radius_x, radius_y
+				if self.project.def.typ.block_path then
+					_, radius_x, radius_y = self.project.def.typ:block_path(self.x, self.y)
+				end
+				if not radius_x then
+					radius_x, radius_y = self.old_x, self.old_y
+				end
+				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, radius_x, radius_y, self.tmp_proj)
 				game.level:removeEntity(self)
 				self.dead = true
 			end

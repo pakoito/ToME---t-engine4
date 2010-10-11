@@ -57,10 +57,10 @@ function _M:project(t, x, y, damtype, dam, particles)
 
 	-- Stop at range or on block
 	local lx, ly = x, y
+	local stop_radius_x, stop_radius_y = srcx, srcy
 	local l = line.new(srcx, srcy, x, y)
 	lx, ly = l()
 	local initial_dir = lx and coord_to_dir[lx - srcx][ly - srcy] or 5
-	local stop_radius_x, stop_radius_y = lx, ly
 	while lx and ly do
 		if typ.block_path and typ:block_path(lx, ly) then break end
 		stop_radius_x, stop_radius_y = lx, ly
@@ -73,15 +73,23 @@ function _M:project(t, x, y, damtype, dam, particles)
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly then lx, ly = x, y end
 
+	-- Correct the explosion source position if we exploded on terrain
+	local radius_x, radius_y
+	if typ.block_path then
+		_, radius_x, radius_y = typ:block_path(lx, ly)
+	end
+	if not radius_x then
+		radius_x, radius_y = stop_radius_x, stop_radius_y
+	end
 	if typ.ball and typ.ball > 0 then
-		core.fov.calc_circle(stop_radius_x, stop_radius_y, typ.ball, function(_, px, py)
+		core.fov.calc_circle(radius_x, radius_y, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	elseif typ.cone and typ.cone > 0 then
-		core.fov.calc_beam(stop_radius_x, stop_radius_y, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
+		core.fov.calc_beam(radius_x, radius_y, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
@@ -180,6 +188,10 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	game.zone:addEntity(game.level, proj, "projectile", self.x, self.y)
 end
 
+-- @return lx x-coordinate the projectile travels to next
+-- @return ly y-coordinate the projectile travels to next
+-- @return act should we call projectDoAct (usually only for beam)
+-- @return stop is this the last (blocking) tile?
 function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 	-- Stop at range or on block
 	local l = line.new(srcx, srcy, tgtx, tgty)
@@ -244,7 +256,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
 		core.fov.calc_circle(lx, ly, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
-			if typ.block_radius and typ:block_radius(lx, ly) then return true end
+			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	elseif typ.cone and typ.cone > 0 then
@@ -252,7 +264,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
 		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
-			if typ.block_radius and typ:block_radius(lx, ly) then return true end
+			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	else

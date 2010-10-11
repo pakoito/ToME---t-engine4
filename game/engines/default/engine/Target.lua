@@ -87,19 +87,22 @@ function _M:display(dispx, dispy)
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
-	-- If we reached the end without mishap then both the beam and radius effect should stop here
-	if s == self.sb then
-		stopx, stopy = self.target.x, self.target.y
-		stop_radius_x, stop_radius_y = stopx, stopy
+	-- Correct the explosion source position if we exploded on terrain
+	local radius_x, radius_y
+	if self.target_type.block_path then
+		_, radius_x, radius_y = self.target_type:block_path(stopx, stopy)
 	end
-
+	if not radius_x then
+		radius_x, radius_y = stop_radius_x, stop_radius_y
+	end
+	
 	if self.target_type.ball and self.target_type.ball > 0 then
-		core.fov.calc_circle(stop_radius_x, stop_radius_y, self.target_type.ball, function(_, px, py)
+		core.fov.calc_circle(radius_x, radius_y, self.target_type.ball, function(_, px, py)
 			self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
 		end, function()end, nil)
 	elseif self.target_type.cone and self.target_type.cone > 0 then
-		core.fov.calc_beam(stop_radius_x, stop_radius_y, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, px, py)
+		core.fov.calc_beam(radius_x, radius_y, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, px, py)
 			self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
 		end, function()end, nil)
@@ -134,10 +137,13 @@ function _M:getType(t)
 		block_path = function(typ, lx, ly)
 			if not typ.no_restrict then
 				if not game.level.map.remembers(lx, ly) then return true end
-				if typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true
-				elseif not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
+				-- If we explode do to something other than terrain, then we should explode ON the tile, not before it
+				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
 				if typ.range and typ.source_actor and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
 			end
+			-- If we don't block the path, then the explode point should be here
+			return false, lx, ly
 		end,
 		block_radius=function(typ, lx, ly)
 			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move")
