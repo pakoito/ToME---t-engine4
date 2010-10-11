@@ -109,7 +109,7 @@ newTalent{
 							if effect == 1 then
 								-- confusion
 								if target:canBe("confusion") and not target:hasEffect(target.EFF_GLOOM_CONFUSED) then
-									target:setEffect(target.EFF_GLOOM_CONFUSED, 2, {power=0.75})
+									target:setEffect(target.EFF_GLOOM_CONFUSED, 2, {power=70})
 									--game:playSoundNear(self, "talents/fire")
 									hit = true
 								end

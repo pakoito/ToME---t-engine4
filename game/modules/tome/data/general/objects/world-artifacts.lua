@@ -724,10 +724,10 @@ newEntity{ base = "BASE_WAND",
 	max_power = 75, power_regen = 1,
 	use_power = { name = "shoot a cone of fire", power = 30,
 		use = function(self, who)
-			local tg = {type="cone", range=0, radius=4}
+			local tg = {type="cone", range=0, radius=5}
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
-			who:project(tg, x, y, engine.DamageType.FIRE, 80 + who:getMag(), {type="flame"})
+			who:project(tg, x, y, engine.DamageType.FIRE, 80 + who:getMag() * 1.2, {type="flame"})
 		end
 	},
 }

@@ -31,6 +31,7 @@ return {
 	-- Apply a greenish tint to all the map
 	color_shown = {0.3, 1, 0.5, 1},
 	color_obscure = {0.3*0.6, 1*0.6, 0.5*0.6, 1},
+	ambiant_music = "The Ancients.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Cavern",
