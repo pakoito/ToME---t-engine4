@@ -48,7 +48,7 @@ return {
 
 			nb_rooms = {0,0,0,0,1},
 			rooms = {"greater_vault"},
-			greater_vaults_list = {"dragon_lair"},
+			greater_vaults_list = {"dragon_lair", "lava_island"},
 			lite_room_chance = 100,
 		},
 		actor = {

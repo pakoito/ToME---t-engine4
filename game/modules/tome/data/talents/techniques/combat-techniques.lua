@@ -136,13 +136,13 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
-		self.stamina_regen = self.stamina_regen + 0.2
+		self.stamina_regen = self.stamina_regen + 0.5
 	end,
 	on_unlearn = function(self, t)
-		self.stamina_regen = self.stamina_regen - 0.2
+		self.stamina_regen = self.stamina_regen - 0.5
 	end,
 	info = function(self, t)
-		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevelRaw(t) / 5)
+		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevelRaw(t) / 2)
 	end,
 }
 
@@ -153,13 +153,13 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
-		self.life_regen = self.life_regen + 0.2
+		self.life_regen = self.life_regen + 1
 	end,
 	on_unlearn = function(self, t)
-		self.life_regen = self.life_regen - 0.2
+		self.life_regen = self.life_regen - 1
 	end,
 	info = function(self, t)
-		return ([[Your combat focus allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevelRaw(t) / 5)
+		return ([[Your combat focus allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -170,13 +170,13 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist + 4
+		self.combat_spellresist = self.combat_spellresist + 6
 	end,
 	on_unlearn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist - 4
+		self.combat_spellresist = self.combat_spellresist - 6
 	end,
 	info = function(self, t)
-		return ([[Rigorous training allows you to be more resistant to some spell effects. (+%d spell save).]]):format(self:getTalentLevelRaw(t) * 4)
+		return ([[Rigorous training allows you to be more resistant to some spell effects. (+%d spell save).]]):format(self:getTalentLevelRaw(t) * 6)
 	end,
 }
 
