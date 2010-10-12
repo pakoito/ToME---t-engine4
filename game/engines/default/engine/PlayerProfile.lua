@@ -202,8 +202,11 @@ function _M:rpc(data)
 
 			print("[ONLINE PROFILE] async rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
 			local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
-			if not body then l:send("final", nil)
-			else l:send("final", json.decode(body))
+			if not body then
+				l:send("final", nil)
+			else
+				local ok, ret = pcall(json.decode, body)
+				l:send("final", ok and ret or nil)
 			end
 			return true
 		end
@@ -215,7 +218,8 @@ function _M:rpc(data)
 		print("[ONLINE PROFILE] rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
 		local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
 		if not body then return end
-		return json.decode(body)
+		local ok, ret = pcall(json.decode, body)
+		return ok and ret or nil
 	end
 end
 
