@@ -61,7 +61,7 @@ function _M:use(item)
 	--
 	-- Make a dialog to ask for the key
 	--
-	local title = "Press a key (or escape) for: "..t.name
+	local title = "Press a key (or escape) for: "..tostring(t.name)
 	local font = self.font
 	local w, h = font:size(title)
 	local d = engine.Dialog.new(title, w + 8, h + 25, nil, nil, nil, font)
@@ -137,7 +137,8 @@ function _M:generateList(key_source, force_all)
 	for _, k in ipairs(l) do
 		local item = {
 			k = k,
-			name = "#{italic}##AQUAMARINE#"..k.name.."#{normal}##WHITE#",
+			name = tstring{{"font","italic"}, {"color","AQUAMARINE"}, k.name, {"font","normal"}},
+			sortname = k.name;
 			type = k.type,
 			bind1 = function(item) return KeyBind:getBindTable(k)[1] end,
 			bind2 = function(item) return KeyBind:getBindTable(k)[2] end,
@@ -150,13 +151,14 @@ function _M:generateList(key_source, force_all)
 
 	for group, data in pairs(groups) do
 		tree[#tree+1] = {
-			name = "#{bold}##GOLD#"..group:capitalize().."#WHITE##{normal}#",
+			name = tstring{{"font","bold"}, {"color","GOLD"}, group:capitalize(), {"font","normal"}},
+			sortname = group:capitalize(),
 			b1 = "", b2 = "",
 			shown = true,
 			nodes = data,
 		}
 	end
-	table.sort(tree, function(a, b) return a.name < b.name end)
+	table.sort(tree, function(a, b) return a.sortname < b.sortname end)
 
 	self.tree = tree
 end

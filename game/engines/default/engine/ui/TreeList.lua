@@ -64,6 +64,7 @@ function _M:init(t)
 		end
 	end
 	for j, col in ipairs(self.columns) do
+		col.id = j
 		if type(col.width) == "table" then
 			if col.width[2] == "fixed" then
 				col.width = col.width[1]
@@ -77,19 +78,8 @@ function _M:init(t)
 		end
 
 		col.surface = core.display.newSurface(col.width, self.fh)
-		col.s = core.display.newSurface(col.width, self.fh)
-		col.ss = core.display.newSurface(col.width, self.fh)
-		col.sus = core.display.newSurface(col.width, self.fh)
 
-		col.ss:erase(0, 0, 0)
-		for i = 0, col.width - rs_w, ms_w do col.ss:merge(ms, i, 0) end
-		col.ss:merge(rs, col.width - rs_w, 0)
-
-		col.s:erase(0, 0, 0)
-
-		col.sus:erase(0, 0, 0)
-		for i = 0, col.width - r_w, m_w do col.sus:merge(m, i, 0) end
-		col.sus:merge(r, col.width - r_w, 0)
+		col._backs = {}
 	end
 
 	self.items_by_key = {}
@@ -97,17 +87,56 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
+function _M:getColumnBackground(col, level, sign, shown)
+	if sign then sign = true else sign = false end
+	if shown then shown = true else shown = false end
+	level = (col.id == 1) and level or 0
+	if col._backs[level] and col._backs[level][sign] and col._backs[level][sign][shown] then return col._backs[level][sign][shown] end
+	local backs = {}
+	col._backs[level] = col._backs[level] or {}
+	col._backs[level][sign] = col._backs[level][sign] or {}
+	col._backs[level][sign][shown] = backs
+
+	local s = col.surface
+
+	local offset = 0
+	if col.id == 1 then
+		offset = level * self.level_offset
+		if sign then offset = offset + plus_w end
+	end
+	local startx = ls_w + offset
+
+	s:erase(0, 0, 0)
+	s:merge(ls, offset, 0)
+	for i = offset + ls_w, col.width - rs_w, ms_w do s:merge(ms, i, 0) end
+	s:merge(rs, col.width - rs_w, 0)
+	if col.id == 1 and sign then s:merge(shown and minus or plus, offset - plus_w, 0) end
+	backs._stex, backs._stex_w, backs._stex_h = s:glTexture()
+
+	s:erase(0, 0, 0)
+	if col.id == 1 and sign then s:merge(shown and minus or plus, offset - plus_w, 0) end
+	backs._tex, backs._tex_w, backs._tex_h = s:glTexture()
+
+	s:erase(0, 0, 0)
+	s:merge(l, offset, 0)
+	for i = offset + l_w, col.width - r_w, m_w do s:merge(m, i, 0) end
+	s:merge(r, col.width - r_w, 0)
+	if col.id == 1 and sign then s:merge(shown and minus or plus, offset - plus_w, 0) end
+	backs._sustex, backs._sustex_w, backs._sustex_h = s:glTexture()
+
+	return backs
+end
+
 function _M:drawItem(item)
 	item.cols = {}
 	for i, col in ipairs(self.columns) do
 		local level = item.level
 		local color = util.getval(item.color, item) or {255,255,255}
-		local text = tostring(util.getval(item[col.display_prop], item))
-		local src_ss = col.ss
-		local src_sus = col.sus
-		local src_s = col.s
-		local ss = col.surface
-		local sus = col.surface
+		local text = item[col.display_prop or col.sort]
+		if type(text) ~= "table" or not text.is_tstring then
+			text = util.getval(text, item)
+			if type(text) ~= "table" then text = tstring.from(tostring(text)) end
+		end
 		local s = col.surface
 
 		local offset = 0
@@ -119,6 +148,11 @@ function _M:drawItem(item)
 
 		item.cols[i] = {}
 
+		s:erase(0, 0, 0, 0)
+		text:drawOnSurface(s, col.width - startx - rs_w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
+
+--[[
 		ss:erase(0, 0, 0)
 		ss:merge(src_ss, 0, 0)
 		ss:erase(0, 0, 0, 255, 0, 0, offset, self.fh)
@@ -138,6 +172,7 @@ function _M:drawItem(item)
 		sus:merge(l, offset, 0)
 		sus:drawColorStringBlended(self.font, text, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3], nil, col.width - startx - rs_w)
 		item.cols[i]._sustex = sus:glTexture()
+]]
 	end
 	if self.on_drawitem then self.on_drawitem(item) end
 end
@@ -295,15 +330,17 @@ function _M:display(x, y)
 			local col = self.columns[j]
 			local item = self.list[i]
 			if not item then break end
+			local backs = self:getColumnBackground(col, item.level, item.nodes, item.shown)
 			if self.sel == i and (not self.sel_by_col or self.cur_col == j) then
 				if self.focused then
-					item.cols[j]._stex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
+					backs._stex:toScreenFull(x, y, col.width, self.fh, backs._stex_w, backs._stex_h)
 				else
-					item.cols[j]._sustex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
+					backs._sustex:toScreenFull(x, y, col.width, self.fh, backs._sustex_w, backs._sustex_h)
 				end
 			else
-				item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
+				backs._tex:toScreenFull(x, y, col.width, self.fh, backs._tex_w, backs._tex_h)
 			end
+			item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
 			x = x + col.width
 		end
 		y = y + self.fh

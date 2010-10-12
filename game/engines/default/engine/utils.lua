@@ -454,18 +454,21 @@ getmetatable(tmps).__index.size = function(font, str)
 end
 
 tstring = {}
+tstring.is_tstring = true
 
 function tstring:add(...)
 	local v = {...}
 	for i = 1, #v do
 		self[#self+1] = v[i]
 	end
+	return self
 end
 
 function tstring:merge(v)
 	for i = 1, #v do
 		self[#self+1] = v[i]
 	end
+	return self
 end
 
 function tstring:countLines()
@@ -476,6 +479,14 @@ function tstring:countLines()
 		if type(v) == "boolean" then nb = nb + 1 end
 	end
 	return nb
+end
+
+function tstring.from(str)
+	if type(str) ~= "table" then
+		return tstring{str}
+	else
+		return str
+	end
 end
 
 --- Tablestrings degrade "peacefully" into normal formated strings
@@ -491,6 +502,7 @@ function tstring:toString()
 			elseif v[1] == "color" and not v[3] then ret[#ret+1] = "#"..v[2].."#"
 			elseif v[1] == "color" then ret[#ret+1] = ("#%02x%02x%02x#"):format(v[2], v[3], v[4]):upper()
 			elseif v[1] == "font" then ret[#ret+1] = "#{"..v[2].."}#"
+			elseif v[1] == "uid" then ret[#ret+1] = "#UID:"..v[2]..":0#"
 			end
 		end
 	end
@@ -501,10 +513,11 @@ function tstring:splitLines(max_width, font)
 	local space_w = font:size(" ")
 	local ret = tstring{}
 	local cur_size =0
-	local v
+	local v, tv
 	for i = 1, #self do
 		v = self[i]
-		if type(v) == "string" then
+		tv = type(v)
+		if tv == "string" then
 			local ls = v:split(lpeg.S"\n ", true)
 			for i = 1, #ls do
 				local vv = ls[i]
@@ -523,10 +536,26 @@ function tstring:splitLines(max_width, font)
 					end
 				end
 			end
-		elseif type(v) == "table" and v[1] == "font" then
+		elseif tv == "table" and v[1] == "font" then
 			font:setStyle(v[2])
 			ret[#ret+1] = v
-		elseif type(v) == "boolean" then
+		elseif tv == "table" and v[1] == "uid" then
+			local e = __uids[v[2]]
+			if e then
+				local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
+				if surf then
+					local w, h = surf:getSize()
+					if cur_size + w < max_width then
+						cur_size = cur_size + w
+						ret[#ret+1] = vv
+					else
+						ret[#ret+1] = true
+						ret[#ret+1] = vv
+						cur_size = w
+					end
+				end
+			end
+		elseif tv == "boolean" then
 			cur_size = 0
 			ret[#ret+1] = v
 		else
@@ -538,20 +567,21 @@ end
 
 function tstring:makeLineTextures(max_width, font)
 	local list = self:splitLines(max_width, font)
-	local h = font:lineSkip()
-	local s = core.display.newSurface(max_width, h)
+	local fh = font:lineSkip()
+	local s = core.display.newSurface(max_width, fh)
 	s:erase(0, 0, 0, 0)
 	local texs = {}
 	local w = 0
 	local r, g, b = 255, 255, 255
 	local oldr, oldg, oldb = 255, 255, 255
-	local v
+	local v, tv
 	for i = 1, #list do
 		v = list[i]
-		if type(v) == "string" then
+		tv = type(v)
+		if tv == "string" then
 			s:drawStringBlended(font, v, w, 0, r, g, b, true)
 			w = w + fontoldsize(font, v)
-		elseif type(v) == "boolean" then
+		elseif tv == "boolean" then
 			w = 0
 			local dat = {}
 			dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
@@ -568,6 +598,15 @@ function tstring:makeLineTextures(max_width, font)
 				r, g, b = v[2], v[3], v[4]
 			elseif v[1] == "font" then
 				font:setStyle(v[2])
+			elseif v[1] == "uid" then
+				local e = __uids[v[2]]
+				if e then
+					local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
+					if surf then
+						local sw = surf:getSize()
+						w = w + sw
+					end
+				end
 			end
 		end
 	end
@@ -578,6 +617,41 @@ function tstring:makeLineTextures(max_width, font)
 	texs[#texs+1] = dat
 
 	return texs
+end
+
+function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b)
+	local list = self:splitLines(max_width, font)
+	max_lines = util.bound(max_lines or #list, 1, #list)
+	local fh = font:lineSkip()
+	local w, h = 0, 0
+	r, g, b = r or 255, g or 255, b or 255
+	local oldr, oldg, oldb = r, g, b
+	local v, tv
+	for i = 1, #list do
+		v = list[i]
+		tv = type(v)
+		if tv == "string" then
+			s:drawStringBlended(font, v, x + w, y + h, r, g, b, true)
+			w = w + fontoldsize(font, v)
+		elseif tv == "boolean" then
+			w = 0
+			h = h + fh
+			max_lines = max_lines - 1
+			if max_lines <= 0 then break end
+		else
+			if v[1] == "color" and v[2] == "LAST" then
+				r, g, b = oldr, oldg, oldb
+			elseif v[1] == "color" and not v[3] then
+				oldr, oldg, oldb = r, g, b
+				r, g, b = unpack(colors.simple(colors[v[2]] or {255,255,255}))
+			elseif v[1] == "color" then
+				oldr, oldg, oldb = r, g, b
+				r, g, b = v[2], v[3], v[4]
+			elseif v[1] == "font" then
+				font:setStyle(v[2])
+			end
+		end
+	end
 end
 
 setmetatable(tstring, {

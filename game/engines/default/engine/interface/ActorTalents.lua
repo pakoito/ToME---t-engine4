@@ -355,14 +355,14 @@ function _M:getTalentReqDesc(t_id, levmod)
 			if type(tid) == "table" then
 				if type(tid[2]) == "boolean" and tid[2] == false then
 					local c = (not self:knowTalent(tid[1])) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-					str:add("- ", c, ("Talent %s (not known)\n"):format(c, self:getTalentFromId(tid[1]).name), true)
+					str:add("- ", c, ("Talent %s (not known)\n"):format(self:getTalentFromId(tid[1]).name), true)
 				else
 					local c = (self:getTalentLevelRaw(tid[1]) >= tid[2]) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-					str:add("- ", c, ("Talent %s (%d)\n"):format(c, self:getTalentFromId(tid[1]).name, tid[2]), true)
+					str:add("- ", c, ("Talent %s (%d)\n"):format(self:getTalentFromId(tid[1]).name, tid[2]), true)
 				end
 			else
 				local c = self:knowTalent(tid) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-				str:add("- ", c, ("Talent %s\n"):format(c, self:getTalentFromId(tid).name), true)
+				str:add("- ", c, ("Talent %s\n"):format(self:getTalentFromId(tid).name), true)
 			end
 		end
 	end

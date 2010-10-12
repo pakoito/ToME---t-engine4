@@ -39,6 +39,7 @@ function _M:init(title, actor, filter, action)
 
 	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
+		{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
 		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
@@ -46,6 +47,7 @@ function _M:init(title, actor, filter, action)
 
 	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
+		{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
 		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
@@ -157,13 +159,13 @@ function _M:generateList()
 	self.max_h = 0
 	for inven_id =  1, #self.actor.inven_def do
 		if self.actor.inven[inven_id] and (self.actor.inven_def[inven_id].is_worn or self.actor.inven_def[inven_id].is_shown_equip) then
-			list[#list+1] = { id=#list+1, char="", name="#{bold}#"..self.actor.inven_def[inven_id].name.."#{normal}#", color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="", desc=self.actor.inven_def[inven_id].description }
+			list[#list+1] = { id=#list+1, char="", name=tstring{{"font", "bold"}, self.actor.inven_def[inven_id].name, {"font", "normal"}}, color={0x90, 0x90, 0x90}, inven=inven_id, cat="", encumberance="", desc=self.actor.inven_def[inven_id].description }
 			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
 
 			for item, o in ipairs(self.actor.inven[inven_id]) do
 				if not self.filter or self.filter(o) then
 					local char = self:makeKeyChar(i)
-					list[#list+1] = { id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+					list[#list+1] = { id=#list+1, char=char, name=o:getName(), color=o:getDisplayColor(), object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 					chars[char] = #list
 					i = i + 1
 				end
@@ -181,7 +183,7 @@ function _M:generateList()
 	for item, o in ipairs(self.actor:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
-			list[#list+1] = { id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+			list[#list+1] = { id=#list+1, char=char, name=o:getName(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 			chars[char] = #list
 			i = i + 1
 		end

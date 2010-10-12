@@ -182,6 +182,52 @@ static bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
 #define CHECKGL( GLcall)        \
     GLcall;
 #endif
+static int map_objects_toscreen(lua_State *L)
+{
+	if (!fbo_active) return 0;
+
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+
+	/***************************************************
+	 * Render
+	 ***************************************************/
+	int moid = 5;
+	while (lua_isuserdata(L, moid))
+	{
+		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
+
+		glColor4f(1, 1, 1, 1);
+
+		int z;
+		if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
+		for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
+		{
+			if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
+			glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+		}
+
+		int dx = x, dy = y;
+		int dz = moid;
+		glBegin(GL_QUADS);
+		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz));
+		glTexCoord2f(1,0); glVertex3f(w + (dx), (dy),			(dz));
+		glTexCoord2f(1,1); glVertex3f(w + (dx), h + (dy),	(dz));
+		glTexCoord2f(0,1); glVertex3f((dx), h + (dy),			(dz));
+		glEnd();
+
+		if (m->shader) glUseProgramObjectARB(0);
+
+		moid++;
+	}
+	/***************************************************
+	 ***************************************************/
+
+	return 0;
+}
+
 static int map_objects_display(lua_State *L)
 {
 	if (!fbo_active) return 0;
@@ -796,6 +842,7 @@ static const struct luaL_reg maplib[] =
 	{"newMap", map_new},
 	{"newObject", map_object_new},
 	{"mapObjectsToTexture", map_objects_display},
+	{"mapObjectsToScreen", map_objects_toscreen},
 	{NULL, NULL},
 };
 

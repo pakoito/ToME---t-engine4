@@ -248,12 +248,38 @@ function _M:getEntityFinalSurface(tiles, w, h)
 end
 
 --- Get a string that will display in text the texture of this entity
-function _M:getDisplayString()
-	if core.display.FBOActive() then
-		return "#UID:"..self.uid..":0#"
+function _M:getDisplayString(tstr)
+	if tstr then
+		if core.display.FBOActive() then
+			return tstring{{"uid", self.uid}}
+		else
+			return tstring{}
+		end
 	else
-		return ""
+		if core.display.FBOActive() then
+			return "#UID:"..self.uid..":0#"
+		else
+			return ""
+		end
 	end
+end
+
+--- Displays an entity somewhere on screen, outside the map
+-- @param tiles a Tiles instance that will handle the tiles (usualy pass it the current Map.tiles, it will if this is null)
+-- @param w the width
+-- @param h the height
+-- @return the sdl surface and the texture
+function _M:toScreen(tiles, x, y, w, h)
+	local Map = require "engine.Map"
+	tiles = tiles or Map.tiles
+
+	local mos = {}
+	local list = {}
+	self:getMapObjects(tiles, mos, 1)
+	for i = 1, Map.zdepth do
+		if mos[i] then list[#list+1] = mos[i] end
+	end
+	core.map.mapObjectsToScreen(x, y, w, h, unpack(list))
 end
 
 --- Resolves an entity

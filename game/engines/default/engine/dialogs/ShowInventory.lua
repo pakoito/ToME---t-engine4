@@ -37,6 +37,7 @@ function _M:init(title, inven, filter, action, actor)
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
+		{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) item.object:toScreen(nil, x+4, y, 16, 16) end},
 		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
@@ -84,7 +85,7 @@ function _M:generateList()
 	for item, o in ipairs(self.inven) do
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
-			list[#list+1] = { id=i, char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+			list[#list+1] = { id=i, char=char, name=o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 			list.chars[char] = #list
 			i = i + 1
 		end

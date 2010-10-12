@@ -39,6 +39,7 @@ function _M:init(title, x, y, filter, action)
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10 - takeall.h, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
+		{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) item.object:toScreen(nil, x+4, y, 16, 16) end},
 		{name="Item", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
@@ -112,7 +113,7 @@ function _M:generateList()
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
 			list.chars[char] = i
-			list[#list+1] = { char=char, name=o:getDisplayString()..o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+			list[#list+1] = { char=char, name=o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
 			i = i + 1
 		end
 		idx = idx + 1

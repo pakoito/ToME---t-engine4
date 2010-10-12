@@ -95,7 +95,7 @@ function _M:display(dispx, dispy)
 	if not radius_x then
 		radius_x, radius_y = stop_radius_x, stop_radius_y
 	end
-	
+
 	if self.target_type.ball and self.target_type.ball > 0 then
 		core.fov.calc_circle(radius_x, radius_y, self.target_type.ball, function(_, px, py)
 			self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
@@ -112,7 +112,7 @@ function _M:display(dispx, dispy)
 end
 
 -- @return t The target table used by ActorProject, Projectile, GameTargeting, etc.
--- @param t Target table used to generate the 
+-- @param t Target table used to generate the
 -- @param t.type The engine-defined type, populates other more complex variables (see below)
 -- Hit: simple project in LOS<br/>
 -- Beam: hits everything in LOS<br/>
@@ -140,7 +140,7 @@ function _M:getType(t)
 				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
 				-- If we explode do to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
-				if typ.range and typ.source_actor and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
+				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
 			end
 			-- If we don't block the path, then the explode point should be here
 			return false, lx, ly

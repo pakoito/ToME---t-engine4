@@ -86,6 +86,10 @@ function _M:init(t)
 		col.sus:merge(l, 0, 0)
 		for i = l_w, col.width - r_w, m_w do col.sus:merge(m, i, 0) end
 		col.sus:merge(r, col.width - r_w, 0)
+
+		col._istex = {col.ss:glTexture()}
+		col._itex = {col.s:glTexture()}
+		col._isustex = {col.sus:glTexture()}
 	end
 
 	Base.init(self, t)
@@ -93,32 +97,22 @@ end
 
 function _M:drawItem(item)
 	for j, col in ipairs(self.columns) do
-		local fw, fh = col.fw, self.fh
+		if not col.direct_draw then
+			local fw, fh = col.fw, self.fh
 
-		local text = tostring(util.getval(item[col.display_prop or col.sort], item))
-		local color = item.color or {255,255,255}
-		local src_ss = col.ss
-		local src_sus = col.sus
-		local src_s = col.s
-		local ss = col.surface
-		local sus = col.surface
-		local s = col.surface
+			local text = item[col.display_prop or col.sort]
+			if type(text) ~= "table" or not text.is_tstring then
+				text = util.getval(text, item)
+				if type(text) ~= "table" then text = tstring.from(tostring(text)) end
+			end
+			local color = item.color or {255,255,255}
+			local s = col.surface
 
-		ss:erase(0, 0, 0)
-		ss:merge(src_ss, 0, 0)
-		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-		item._stex = item._stex or {}
-		item._stex[j] = {ss:glTexture()}
-
-		s:merge(src_s, 0, 0)
-		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-		item._tex = item._tex or {}
-		item._tex[j] = {s:glTexture()}
-
-		sus:merge(src_sus, 0, 0)
-		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-		item._sustex = item._sustex or {}
-		item._sustex[j] = {sus:glTexture()}
+			s:erase(0, 0, 0, 0)
+			text:drawOnSurface(s, fw - ls_w - rs_w, 1, self.font, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3])
+			item._tex = item._tex or {}
+			item._tex[j] = {s:glTexture()}
+		end
 	end
 end
 
@@ -288,10 +282,15 @@ function _M:display(x, y)
 			if not item then break end
 			if self.sel == i then
 				if self.focused then
-					item._stex[j][1]:toScreenFull(x, y, col.fw, self.fh, item._stex[j][2], item._stex[j][3])
+					col._istex[1]:toScreenFull(x, y, col.fw, self.fh, col._istex[2], col._istex[3])
 				else
-					item._sustex[j][1]:toScreenFull(x, y, col.fw, self.fh, item._sustex[j][2], item._sustex[j][3])
+					col._isustex[1]:toScreenFull(x, y, col.fw, self.fh, col._isustex[2], col._isustex[3])
 				end
+			else
+				col._itex[1]:toScreenFull(x, y, col.fw, self.fh, col._itex[2], col._itex[3])
+			end
+			if col.direct_draw then
+				col.direct_draw(item, x, y, col.fw, self.fh)
 			else
 				item._tex[j][1]:toScreenFull(x, y, col.fw, self.fh, item._tex[j][2], item._tex[j][3])
 			end

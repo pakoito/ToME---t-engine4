@@ -145,12 +145,12 @@ function _M:generateList()
 			local ttknown = self.actor:knowTalentType(tt.type)
 			local tshown = (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type])
 			local node = {
-				name=function(item) return "#{bold}#"..cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)).."#{normal}#" end,
+				name=function(item) return tstring{{"font", "bold"}, cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), {"font", "normal"}} end,
 				rawname=function(item) return cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)) end,
 				type=tt.type,
 				color=function(item) return self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175} end,
 				shown = tshown,
-				status = function(item) return self.actor:knowTalentType(item.type) and "#00C800#known#WHITE#" or "#00C800#0/1#WHITE#" end,
+				status = function(item) return self.actor:knowTalentType(item.type) and tstring{{"color", 0x00, 0xC8, 0x00}, "known"} or tstring{{"color", 0x00, 0xC8, 0x00}, "0/1"} end,
 				nodes = {},
 			}
 			tree[#tree+1] = node
@@ -177,15 +177,15 @@ function _M:generateList()
 						local ttknown = self.actor:knowTalentType(item._type)
 						if self.actor:getTalentLevelRaw(t.id) == t.points then
 							if ttknown then
-								return "#LIGHT_GREEN#known#WHITE#"
+								return tstring{{"color", "LIGHT_GREEN"}, "known"}
 							else
-								return "#808080#known#WHITE#"
+								return tstring{{"color", 0x80, 0x80, 0x80}, "known"}
 							end
 						else
 							if not self.actor:canLearnTalent(t) then
-								return (ttknown and "#FF0000#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
+								return tstring{(ttknown and {"color", 0xFF, 0x00, 0x00} or {"color", 0x80, 0x80, 0x80}), self.actor:getTalentLevelRaw(t.id).."/"..t.points}
 							else
-								return (ttknown and "#WHITE#" or "#808080#")..self.actor:getTalentLevelRaw(t.id).."/"..t.points.."#WHITE#"
+								return tstring{(ttknown and {"color", "WHITE"} or {"color", 0x80, 0x80, 0x80}), self.actor:getTalentLevelRaw(t.id).."/"..t.points}
 							end
 						end
 					end
