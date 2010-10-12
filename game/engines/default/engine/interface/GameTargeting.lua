@@ -90,7 +90,7 @@ function _M:targetMode(v, msg, co, typ)
 				end
 			end
 			if self.target_warning and self.target.target.x == self.player.x and self.target.target.y == self.player.y then
-				Dialog:yesnoPopup("Target yourself?", "Are you sure you want to target yourself?", fct)
+				Dialog:yesnoPopup(self.target_warning or "Target yourself?", "Are you sure you want to target yourself?", fct)
 			else
 				fct(true)
 			end
@@ -102,6 +102,11 @@ function _M:targetMode(v, msg, co, typ)
 		self.target:setActive(true, typ)
 		self.target_style = "lock"
 		self.target_warning = true
+		if type(typ) == "table" and typ.talent then
+			self.target_warning = typ.talent.name
+		elseif type(typ) == "table" and typ.__name then
+			self.target_warning = typ.__name
+		end
 
 		-- Exclusive mode means we disable the current key handler and use a specific one
 		-- that only allows targetting and resumes talent coroutine when done
