@@ -68,7 +68,7 @@ function _M:generateList()
 		for j, mod in ipairs(list[i].versions) do
 			if not self.all_versions and j > 1 then break end
 			if not mod.is_boot then
-				mod.name = "#{bold}##GOLD#"..mod.name.."#{normal}##WHITE#"
+				mod.name = tstring{{"font","bold"}, {"color","GOLD"}, mod.name, {"font","normal"}}
 				mod.fct = function(mod)
 					game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
 					Module:instanciate(mod, text, true)

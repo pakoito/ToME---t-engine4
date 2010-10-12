@@ -65,7 +65,7 @@ function _M:init()
 		if #nodes > 0 then
 			local mod = m.versions[1]
 			table.insert(self.tree, {
-				name="#{bold}##GOLD#"..mod.name.."#WHITE##{normal}#",
+				name=tstring{{"font","bold"}, {"color","GOLD"}, mod.name, {"font","normal"}},
 				fct=function() end,
 				shown=true,
 				nodes=nodes,
