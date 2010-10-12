@@ -119,8 +119,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A wall of water rushes out from the caster doing %0.2f cold damage and knocking back targets each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 90)), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
+		return ([[A wall of water rushes out from the caster doing %0.2f cold damage and %0.2f physical damage as well as knocking back targets each turn for %d turns.
+	        The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 90)/2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 5, 90)/2), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
 	end,
 }
 

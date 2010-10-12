@@ -61,6 +61,7 @@ return {
 			}, },
 		},
 		[4] = {
+			decay = false,
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",

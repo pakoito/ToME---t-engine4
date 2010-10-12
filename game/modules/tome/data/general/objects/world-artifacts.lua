@@ -128,6 +128,33 @@ newEntity{ base = "BASE_RING",
 	},
 }
 
+newEntity{ base = "BASE_RING",
+	unique = true,
+	name = "Echo of Melkor", color = colors.DARK_GREY,
+	unided_name = "deep black amulet",
+	desc = [[This ancient charm still retains a distant echo of the earth-rending scream let forth by Morgoth when attacked by Ungoliant in the vale of Lammoth.]],
+	level_range = {30, 39},
+	rarity = 290,
+	cost = 500,
+	material_level = 4,
+
+	wielder = {
+		combat_armor = 4,
+		combat_def = 6,
+	},
+	max_power = 300, power_regen = 1,
+	use_power = { name = "destructive wail", power = 300,
+		use = function(self, who)
+			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
+			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
+			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
+			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
+			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.PHYSICAL, 100 + who:getMag() * 2)
+			game.logSeen(who, "%s uses the %s!", who.name:capitalize(), self:getName())
+		end
+	},
+}
+
 newEntity{ base = "BASE_LITE", define_as = "PHIAL_GALADRIEL",
 	unique = true,
 	name = "Phial of Galadriel",
@@ -369,6 +396,30 @@ newEntity{ base = "BASE_SHIELD",
 		combat_def = 16,
 		combat_def_ranged = 15,
 		fatigue = 20,
+	},
+}
+
+newEntity{ base = "BASE_SHIELD",
+	unique = true,
+	name = "Titanic",
+	unided_name = "huge shield",
+	desc = [[This huge shield made of the darkest galvorn is huge, heavy and very solid.]],
+	color = colors.GREY,
+	level_range = {20, 30},
+	rarity = 270,
+	require = { stat = { str=37 }, },
+	cost = 300,
+	material_level = 4,
+	special_combat = {
+		dam = 48,
+		physcrit = 4.5,
+		dammod = {str=1},
+	},
+	wielder = {
+		combat_armor = 18,
+		combat_def = 20,
+		combat_def_ranged = 10,
+		fatigue = 30,
 	},
 }
 
