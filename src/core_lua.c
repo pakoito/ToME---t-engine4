@@ -530,6 +530,19 @@ static int sdl_font_lineskip(lua_State *L)
 	return 1;
 }
 
+static int sdl_font_style_get(lua_State *L)
+{
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	int style = TTF_GetFontStyle(*f);
+
+	if (style & TTF_STYLE_BOLD) lua_pushstring(L, "bold");
+	else if (style & TTF_STYLE_ITALIC) lua_pushstring(L, "italic");
+	else if (style & TTF_STYLE_UNDERLINE) lua_pushstring(L, "underline");
+	else lua_pushstring(L, "normal");
+
+	return 1;
+}
+
 static int sdl_font_style(lua_State *L)
 {
 	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
@@ -1508,6 +1521,7 @@ static const struct luaL_reg sdl_font_reg[] =
 	{"height", sdl_font_height},
 	{"lineSkip", sdl_font_lineskip},
 	{"setStyle", sdl_font_style},
+	{"getStyle", sdl_font_style_get},
 	{NULL, NULL},
 };
 

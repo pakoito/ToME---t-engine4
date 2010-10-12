@@ -93,7 +93,7 @@ end
 
 --- Returns a tooltip for the object
 function _M:tooltip()
-	return self:getDesc{do_color=true}
+	return tostring(self:getDesc{do_color=true})
 end
 
 --- Describes an attribute, to expand object name
@@ -188,9 +188,9 @@ end
 
 --- Gets the full textual desc of the object without the name and requirements
 function _M:getTextualDesc()
-	local desc = {}
+	local desc = tstring{}
 
-	desc[#desc+1] = ("Type: %s / %s"):format(self.type, self.subtype)
+	desc:add(("Type: %s / %s"):format(self.type, self.subtype), true)
 
 	-- Stop here if unided
 	if not self:isIdentified() then return desc end
@@ -200,29 +200,29 @@ function _M:getTextualDesc()
 		for stat, i in pairs(self.combat.dammod or {}) do
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
-		desc[#desc+1] = ("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0)
-		desc[#desc+1] = "Damage type: "..DamageType:get(self.combat.damtype or DamageType.PHYSICAL).name
-		if self.combat.range then desc[#desc+1] = "Firing range: "..self.combat.range end
-		desc[#desc+1] = ""
+		desc:add(("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0), true)
+		desc:add("Damage type: "..DamageType:get(self.combat.damtype or DamageType.PHYSICAL).name, true)
+		if self.combat.range then desc:add("Firing range: "..self.combat.range, true) end
+		desc:add(true)
 
 		if self.combat.talent_on_hit then
 			for tid, data in pairs(self.combat.talent_on_hit) do
-				desc[#desc+1] = ("Talent on hit(melee): %d%% chance %s (level %d)."):format(data.chance, self:getTalentFromId(tid).name, data.level)
+				desc:add(("Talent on hit(melee): %d%% chance %s (level %d)."):format(data.chance, self:getTalentFromId(tid).name, data.level), true)
 			end
 		end
 	end
 
 	local desc_wielder = function(w)
-	if w.combat_atk or w.combat_dam or w.combat_apr then desc[#desc+1] = ("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0) end
-	if w.combat_armor or w.combat_def or w.combat_def_ranged then desc[#desc+1] = ("Armor %d, Defense %d, Ranged Defense %d"):format(w.combat_armor or 0, w.combat_def or 0, w.combat_def_ranged or 0) end
-	if w.fatigue then desc[#desc+1] = ("Fatigue %d%%"):format(w.fatigue) end
+	if w.combat_atk or w.combat_dam or w.combat_apr then desc:add(("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0), true) end
+	if w.combat_armor or w.combat_def or w.combat_def_ranged then desc:add(("Armor %d, Defense %d, Ranged Defense %d"):format(w.combat_armor or 0, w.combat_def or 0, w.combat_def_ranged or 0), true) end
+	if w.fatigue then desc:add(("Fatigue %d%%"):format(w.fatigue), true) end
 
 	if w.inc_stats then
 		local dm = {}
 		for stat, i in pairs(w.inc_stats) do
 			dm[#dm+1] = ("%d %s"):format(i, Stats.stats_def[stat].name)
 		end
-		desc[#desc+1] = ("Increases stats: %s."):format(table.concat(dm, ','))
+		desc:add(("Increases stats: %s."):format(table.concat(dm, ',')), true)
 	end
 
 	if w.melee_project then
@@ -230,7 +230,7 @@ function _M:getTextualDesc()
 		for typ, dam in pairs(w.melee_project) do
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
-		desc[#desc+1] = ("Damage on hit(melee): %s."):format(table.concat(rs, ','))
+		desc:add(("Damage on hit(melee): %s."):format(table.concat(rs, ',')), true)
 	end
 
 	if w.ranged_project then
@@ -238,7 +238,7 @@ function _M:getTextualDesc()
 		for typ, dam in pairs(w.ranged_project) do
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
-		desc[#desc+1] = ("Damage on hit(ranged): %s."):format(table.concat(rs, ','))
+		desc:add(("Damage on hit(ranged): %s."):format(table.concat(rs, ',')), true)
 	end
 
 	if w.on_melee_hit then
@@ -246,7 +246,7 @@ function _M:getTextualDesc()
 		for typ, dam in pairs(w.on_melee_hit) do
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
-		desc[#desc+1] = ("Damage when hit: %s."):format(table.concat(rs, ','))
+		desc:add(("Damage when hit: %s."):format(table.concat(rs, ',')), true)
 	end
 
 	if w.resists then
@@ -254,7 +254,7 @@ function _M:getTextualDesc()
 		for res, i in pairs(w.resists) do
 			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
 		end
-		desc[#desc+1] = ("Increases resistances: %s."):format(table.concat(rs, ','))
+		desc:add(("Increases resistances: %s."):format(table.concat(rs, ',')), true)
 	end
 
 	if w.inc_damage then
@@ -262,7 +262,7 @@ function _M:getTextualDesc()
 		for res, i in pairs(w.inc_damage) do
 			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
 		end
-		desc[#desc+1] = ("Increases damage type: %s."):format(table.concat(rs, ','))
+		desc:add(("Increases damage type: %s."):format(table.concat(rs, ',')), true)
 	end
 
 	if w.esp then
@@ -279,7 +279,7 @@ function _M:getTextualDesc()
 				end
 			end
 		end
-		desc[#desc+1] = ("Grants telepathy: %s."):format(table.concat(rs, ','))
+		desc:add(("Grants telepathy: %s."):format(table.concat(rs, ',')), true)
 	end
 
 	if w.talents_types_mastery then
@@ -290,7 +290,7 @@ function _M:getTextualDesc()
 			local name = cat:capitalize().." / "..tt.name:capitalize()
 			tms[#tms+1] = ("%0.2f %s"):format(i, name)
 		end
-		desc[#desc+1] = ("Increases talent masteries: %s."):format(table.concat(tms, ','))
+		desc:add(("Increases talent masteries: %s."):format(table.concat(tms, ',')), true)
 	end
 
 	if w.talent_cd_reduction then
@@ -298,7 +298,7 @@ function _M:getTextualDesc()
 		for tid, cd in pairs(w.talent_cd_reduction) do
 			tcds[#tcds+1] = ("%s (%d)"):format(Talents.talents_def[tid].name, cd)
 		end
-		desc[#desc+1] = ("Reduces talent cooldowns: %s."):format(table.concat(tcds, ','))
+		desc:add(("Reduces talent cooldowns: %s."):format(table.concat(tcds, ',')), true)
 	end
 
 	if w.can_breath then
@@ -306,111 +306,114 @@ function _M:getTextualDesc()
 		for what, _ in pairs(w.can_breath) do
 			ts[#ts+1] = what
 		end
-		desc[#desc+1] = ("Allows you to breathe in: %s."):format(table.concat(ts, ','))
+		desc:add(("Allows you to breathe in: %s."):format(table.concat(ts, ',')), true)
 	end
 
-	if w.combat_critical_power then desc[#desc+1] = ("Increases critical damage modifier: +%d%%."):format(w.combat_critical_power) end
+	if w.combat_critical_power then desc:add(("Increases critical damage modifier: +%d%%."):format(w.combat_critical_power), true) end
 
-	if w.disarm_bonus then desc[#desc+1] = ("Increases trap disarming bonus: %d."):format(w.disarm_bonus) end
-	if w.inc_stealth then desc[#desc+1] = ("Increases stealth bonus: %d."):format(w.inc_stealth) end
-	if w.max_encumber then desc[#desc+1] = ("Increases maximum encumberance: %d."):format(w.max_encumber) end
+	if w.disarm_bonus then desc:add(("Increases trap disarming bonus: %d."):format(w.disarm_bonus), true) end
+	if w.inc_stealth then desc:add(("Increases stealth bonus: %d."):format(w.inc_stealth), true) end
+	if w.max_encumber then desc:add(("Increases maximum encumberance: %d."):format(w.max_encumber), true) end
 
-	if w.combat_physresist then desc[#desc+1] = ("Increases physical save: %s."):format(w.combat_physresist) end
-	if w.combat_spellresist then desc[#desc+1] = ("Increases spell save: %s."):format(w.combat_spellresist) end
-	if w.combat_mentalresist then desc[#desc+1] = ("Increases mental save: %s."):format(w.combat_mentalresist) end
+	if w.combat_physresist then desc:add(("Increases physical save: %s."):format(w.combat_physresist), true) end
+	if w.combat_spellresist then desc:add(("Increases spell save: %s."):format(w.combat_spellresist), true) end
+	if w.combat_mentalresist then desc:add(("Increases mental save: %s."):format(w.combat_mentalresist), true) end
 
-	if w.blind_immune then desc[#desc+1] = ("Increases blindness immunity: %d%%."):format(w.blind_immune * 100) end
-	if w.poison_immune then desc[#desc+1] = ("Increases poison immunity: %d%%."):format(w.poison_immune * 100) end
-	if w.cut_immune then desc[#desc+1] = ("Increases cut immunity: %d%%."):format(w.cut_immune * 100) end
-	if w.silence_immune then desc[#desc+1] = ("Increases silence immunity: %d%%."):format(w.silence_immune * 100) end
-	if w.disarm_immune then desc[#desc+1] = ("Increases disarm immunity: %d%%."):format(w.disarm_immune * 100) end
-	if w.confusion_immune then desc[#desc+1] = ("Increases confusion immunity: %d%%."):format(w.confusion_immune * 100) end
-	if w.pin_immune then desc[#desc+1] = ("Increases pinning immunity: %d%%."):format(w.pin_immune * 100) end
-	if w.stun_immune then desc[#desc+1] = ("Increases stun immunity: %d%%."):format(w.stun_immune * 100) end
-	if w.fear_immune then desc[#desc+1] = ("Increases fear immunity: %d%%."):format(w.fear_immune * 100) end
-	if w.knockback_immune then desc[#desc+1] = ("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100) end
-	if w.instakill_immune then desc[#desc+1] = ("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100) end
+	if w.blind_immune then desc:add(("Increases blindness immunity: %d%%."):format(w.blind_immune * 100), true) end
+	if w.poison_immune then desc:add(("Increases poison immunity: %d%%."):format(w.poison_immune * 100), true) end
+	if w.cut_immune then desc:add(("Increases cut immunity: %d%%."):format(w.cut_immune * 100), true) end
+	if w.silence_immune then desc:add(("Increases silence immunity: %d%%."):format(w.silence_immune * 100), true) end
+	if w.disarm_immune then desc:add(("Increases disarm immunity: %d%%."):format(w.disarm_immune * 100), true) end
+	if w.confusion_immune then desc:add(("Increases confusion immunity: %d%%."):format(w.confusion_immune * 100), true) end
+	if w.pin_immune then desc:add(("Increases pinning immunity: %d%%."):format(w.pin_immune * 100), true) end
+	if w.stun_immune then desc:add(("Increases stun immunity: %d%%."):format(w.stun_immune * 100), true) end
+	if w.fear_immune then desc:add(("Increases fear immunity: %d%%."):format(w.fear_immune * 100), true) end
+	if w.knockback_immune then desc:add(("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100), true) end
+	if w.instakill_immune then desc:add(("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100), true) end
 
-	if w.life_regen then desc[#desc+1] = ("Regenerates %0.2f hitpoints each turn."):format(w.life_regen) end
-	if w.stamina_regen then desc[#desc+1] = ("Regenerates %0.2f stamina each turn."):format(w.stamina_regen) end
-	if w.mana_regen then desc[#desc+1] = ("Regenerates %0.2f mana each turn."):format(w.mana_regen) end
+	if w.life_regen then desc:add(("Regenerates %0.2f hitpoints each turn."):format(w.life_regen), true) end
+	if w.stamina_regen then desc:add(("Regenerates %0.2f stamina each turn."):format(w.stamina_regen), true) end
+	if w.mana_regen then desc:add(("Regenerates %0.2f mana each turn."):format(w.mana_regen), true) end
 
-	if w.stamina_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f stamina when hit."):format(w.stamina_regen_on_hit) end
-	if w.mana_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f mana when hit."):format(w.mana_regen_on_hit) end
-	if w.equilibrium_regen_on_hit then desc[#desc+1] = ("Regenerates %0.2f equilibrium when hit."):format(w.equilibrium_regen_on_hit) end
+	if w.stamina_regen_on_hit then desc:add(("Regenerates %0.2f stamina when hit."):format(w.stamina_regen_on_hit), true) end
+	if w.mana_regen_on_hit then desc:add(("Regenerates %0.2f mana when hit."):format(w.mana_regen_on_hit), true) end
+	if w.equilibrium_regen_on_hit then desc:add(("Regenerates %0.2f equilibrium when hit."):format(w.equilibrium_regen_on_hit), true) end
 
-	if w.max_life then desc[#desc+1] = ("Maximum life %d"):format(w.max_life) end
-	if w.max_mana then desc[#desc+1] = ("Maximum mana %d"):format(w.max_mana) end
-	if w.max_stamina then desc[#desc+1] = ("Maximum stamina %d"):format(w.max_stamina) end
+	if w.max_life then desc:add(("Maximum life %d"):format(w.max_life), true) end
+	if w.max_mana then desc:add(("Maximum mana %d"):format(w.max_mana), true) end
+	if w.max_stamina then desc:add(("Maximum stamina %d"):format(w.max_stamina), true) end
 
-	if w.combat_spellpower or w.combat_spellcrit then desc[#desc+1] = ("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0) end
+	if w.combat_spellpower or w.combat_spellcrit then desc:add(("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0), true) end
 
-	if w.lite then desc[#desc+1] = ("Light radius %d"):format(w.lite) end
-	if w.infravision then desc[#desc+1] = ("Infravision radius %d"):format(w.infravision) end
-	if w.heightened_senses then desc[#desc+1] = ("Heightened senses radius %d"):format(w.heightened_senses) end
+	if w.lite then desc:add(("Light radius %d"):format(w.lite), true) end
+	if w.infravision then desc:add(("Infravision radius %d"):format(w.infravision), true) end
+	if w.heightened_senses then desc:add(("Heightened senses radius %d"):format(w.heightened_senses), true) end
 
-	if w.see_invisible then desc[#desc+1] = ("See invisible: %d"):format(w.see_invisible) end
-	if w.invisible then desc[#desc+1] = ("Invisibility: %d"):format(w.invisible) end
+	if w.see_invisible then desc:add(("See invisible: %d"):format(w.see_invisible), true) end
+	if w.invisible then desc:add(("Invisibility: %d"):format(w.invisible), true) end
 
-	if w.movement_speed then desc[#desc+1] = ("Movement speed: %d%%"):format(w.movement_speed * 100) end
+	if w.movement_speed then desc:add(("Movement speed: %d%%"):format(w.movement_speed * 100), true) end
 
 	end
 
 	if self.wielder then
-		desc[#desc+1] = "#YELLOW#When wielded/worn:#LAST#"
+		desc:add({"color","YELLOW"}, "When wielded/worn:", {"color", "LAST"}, true)
 		desc_wielder(self.wielder)
 	end
 
 	if self.carrier then
-		desc[#desc+1] = "#YELLOW#When carried:#LAST#"
+		desc:add({"color","YELLOW"}, "When carried:", {"color", "LAST"}, true)
 		desc_wielder(self.carrier)
 	end
 
 	if self.imbue_powers then
-		desc[#desc+1] = "#YELLOW#When used to imbue an object:#LAST#"
+		desc:add({"color","YELLOW"}, "When used to imbue an object:", {"color", "LAST"}, true)
 		desc_wielder(self.imbue_powers)
 	end
 
 	if self.alchemist_bomb then
 		local a = self.alchemist_bomb
-		desc[#desc+1] = "#YELLOW#When used as an alchemist bomb:#LAST#"
-		if a.power then desc[#desc+1] = ("Bomb damage +%d%%"):format(a.power) end
-		if a.range then desc[#desc+1] = ("Bomb thrown range +%d"):format(a.range) end
-		if a.mana then desc[#desc+1] = ("Mana regain %d"):format(a.mana) end
-		if a.daze then desc[#desc+1] = ("%d%% chance to daze for %d turns"):format(a.daze.chance, a.daze.dur) end
-		if a.stun then desc[#desc+1] = ("%d%% chance to stun for %d turns"):format(a.stun.chance, a.stun.dur) end
-		if a.splash then desc[#desc+1] = ("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name) end
-		if a.leech then desc[#desc+1] = ("Life regen %d%% of max life"):format(a.leech) end
+		desc:add({"color","YELLOW"}, "When used as an alchemist bomb:", {"color", "LAST"}, true)
+		if a.power then desc:add(("Bomb damage +%d%%"):format(a.power), true) end
+		if a.range then desc:add(("Bomb thrown range +%d"):format(a.range), true) end
+		if a.mana then desc:add(("Mana regain %d"):format(a.mana), true) end
+		if a.daze then desc:add(("%d%% chance to daze for %d turns"):format(a.daze.chance, a.daze.dur), true) end
+		if a.stun then desc:add(("%d%% chance to stun for %d turns"):format(a.stun.chance, a.stun.dur), true) end
+		if a.splash then desc:add(("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name), true) end
+		if a.leech then desc:add(("Life regen %d%% of max life"):format(a.leech), true) end
 	end
 
 	local use_desc = self:getUseDesc()
-	if use_desc then desc[#desc+1] = use_desc end
+	if use_desc then desc:add(use_desc) end
 
 	return desc
 end
 
 --- Gets the full desc of the object
 function _M:getDesc(name_param)
-	local _, c = self:getDisplayColor()
-	local desc
+	local c, _ = self:getDisplayColor()
+	local desc = tstring{}
 	if not self:isIdentified() then
-		desc = { c..self:getName(name_param).."#FFFFFF#" }
+		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"})
 	else
-		desc = { c..self:getName(name_param).."#FFFFFF#", self.desc }
+		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
+		desc:merge(self.desc)
 	end
 
 	local reqs = self:getRequirementDesc(game.player)
 	if reqs then
-		desc[#desc+1] = reqs
+		desc:add(true)
+		desc:merge(reqs)
 	end
 
 	if self.encumber then
-		desc[#desc+1] = ("#67AD00#%0.2f Encumbrance.#LAST#"):format(self.encumber)
+		desc:add({"color",0x67,0xAD,0x00}, ("%0.2f Encumbrance."):format(self.encumber), {"color", "LAST"})
 	end
 
-	local textdesc = table.concat(self:getTextualDesc(), "\n")
+	desc:add(true, true)
+	desc:merge(self:getTextualDesc())
 
-	return table.concat(desc, "\n").."\n"..textdesc
+	return desc
 end
 
 local type_sort = {

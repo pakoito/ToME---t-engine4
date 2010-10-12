@@ -25,7 +25,7 @@ local Focusable = require "engine.ui.Focusable"
 module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
-	self.text = assert(t.text, "no textzone text")
+	self.text = tostring(assert(t.text, "no textzone text"))
 	if t.auto_width then t.width = 1 end
 	self.w = assert(t.width, "no list width")
 	if t.auto_height then t.height = 1 end

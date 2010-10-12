@@ -152,7 +152,8 @@ function _M:onMouse(button, mx, my, click, on_over)
 					local text = ""
 					if a.hotkey[i] and a.hotkey[i][1] == "talent" then
 						local t = self.actor:getTalentFromId(a.hotkey[i][2])
-						text = "#GOLD#"..t.name.."#LAST#\n"..self.actor:getTalentFullDescription(t)
+						text = tstring{{"color","GOLD"}, {"font", "bold"}, t.name, {"font", "normal"}, {"color", "LAST"}, true}
+						text:merge(self.actor:getTalentFullDescription(t))
 					elseif a.hotkey[i] and a.hotkey[i][1] == "inventory" then
 						local o = a:findInAllInventories(a.hotkey[i][2])
 						text = o:getDesc()

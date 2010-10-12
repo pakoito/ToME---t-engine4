@@ -45,7 +45,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "uni:R" },
+	default = { "uni:r", "uni:R" },
 	type = "REST",
 	group = "actions",
 	name = "Rest for a while",

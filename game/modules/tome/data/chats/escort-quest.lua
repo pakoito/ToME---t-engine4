@@ -163,7 +163,7 @@ local function generate_rewards()
 						action=doit,
 						on_select=function(npc, player)
 							game.tooltip_x, game.tooltip_y = 1, 1
-							game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..t.name.."#LAST#\n"..player:getTalentFullDescription(t, 1))
+							game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..t.name.."#LAST#\n"..tostring(player:getTalentFullDescription(t, 1)))
 						end,
 					}
 			end

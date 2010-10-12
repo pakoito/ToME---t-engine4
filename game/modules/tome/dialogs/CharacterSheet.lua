@@ -467,7 +467,7 @@ function _M:dump()
 				if not self.filter or self.filter(o) then
 					local char = string.char(string.byte('a') + index)
 					nl(("%s) %s"):format(char, o:getName{force_id=true}))
-					nl(("   %s"):format(table.concat(o:getTextualDesc(), "\n    ")))
+					nl(("   %s"):format(tostring(o:getTextualDesc())))
 					if o.droppedBy then
 						nl(("   Dropped by %s"):format(o.droppedBy))
 					end
@@ -498,7 +498,7 @@ function _M:dump()
 		if not self.filter or self.filter(o) then
 			local char = string.char(string.byte('a') + item - 1)
 			nl(("%s) %s"):format(char, o:getName{force_id=true}))
-			nl(("   %s"):format(table.concat(o:getTextualDesc(), "\n    ")))
+			nl(("   %s"):format(tostring(o:getTextualDesc())))
 			if o.droppedBy then
 				nl(("   Dropped by %s"):format(o.droppedBy))
 			end

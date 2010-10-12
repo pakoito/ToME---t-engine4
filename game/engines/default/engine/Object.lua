@@ -175,22 +175,22 @@ function _M:getRequirementDesc(who)
 	local req = rawget(self, "require")
 	if not req then return nil end
 
-	local str = "Requires:\n"
+	local str = tstring{"Requires:", true}
 
 	if req.stat then
 		for s, v in pairs(req.stat) do
-			local c = (who:getStat(s) >= v) and "#00ff00#" or "#ff0000#"
-			str = str .. ("- %s%s %d\n"):format(c, who.stats_def[s].name, v)
+			local c = (who:getStat(s) >= v) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+			str:add("- ", ("%s %d\n"):format(who.stats_def[s].name, v), true)
 		end
 	end
 	if req.level then
-		local c = (who.level >= req.level) and "#00ff00#" or "#ff0000#"
-		str = str .. ("- %sLevel %d\n"):format(c, req.level)
+		local c = (who.level >= req.level) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+		str:add("- ", ("Level %d\n"):format(req.level), true)
 	end
 	if req.talent then
 		for _, tid in ipairs(req.talent) do
-			local c = who:knowTalent(tid) and "#00ff00#" or "#ff0000#"
-			str = str .. ("- %sTalent %s\n"):format(c, who:getTalentFromId(tid).name)
+			local c = who:knowTalent(tid) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+			str:add("- ", ("Talent %s\n"):format(who:getTalentFromId(tid).name), true)
 		end
 	end
 	return str

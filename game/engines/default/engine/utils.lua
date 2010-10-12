@@ -187,7 +187,10 @@ function string.splitLine(str, max_width, font)
 	local space_w = font:size(" ")
 	local lines = {}
 	local cur_line, cur_size = "", 0
-	for _, v in ipairs(str:split(lpeg.S"\n ")) do
+	local v
+	local ls = str:split(lpeg.S"\n ")
+	for i = 1, #ls do
+		local v = ls[i]
 		local shortv = v:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", "")
 		local w, h = font:size(shortv)
 
@@ -206,7 +209,10 @@ end
 
 function string.splitLines(str, max_width, font)
 	local lines = {}
-	for _, v in ipairs(str:split(lpeg.S"\n")) do
+	local ls = str:split(lpeg.S"\n")
+	local v
+	for i = 1, #ls do
+		v = ls[i]
 		local ls = v:splitLine(max_width, font)
 		if #ls > 0 then
 			for i, l in ipairs(ls) do
@@ -227,6 +233,7 @@ function string.split(str, char, keep_separator)
 	local p = lpeg.Ct(elem * (char * elem)^0)
 	return lpeg.match(p, str)
 end
+
 
 local hex_to_dec = {
 	["0"] = 0,
@@ -396,12 +403,27 @@ getmetatable(tmps).__index.drawColorStringBlendedCentered = function(s, font, st
 	s:drawColorStringBlended(font, str, x, y, r, g, b, alpha_from_texture, limit_w)
 end
 
+local font_cache = {}
+local oldNewFont = core.display.newFont
+core.display.newFont = function(font, size)
+	if font_cache[font] and font_cache[font][size] then print("Using cached font", font, size) return font_cache[font][size] end
+	font_cache[font] = font_cache[font] or {}
+	font_cache[font][size] = oldNewFont(font, size)
+	return font_cache[font][size]
+end
+
 local tmps = core.display.newFont("/data/font/Vera.ttf", 12)
+local word_size_cache = {}
 local fontoldsize = getmetatable(tmps).__index.size
 getmetatable(tmps).__index.size = function(font, str)
 	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
 	local mw, mh = 0, 0
-	for i, v in ipairs(list) do
+	local fstyle = font:getStyle()
+	word_size_cache[font] = word_size_cache[font] or {}
+	word_size_cache[font][fstyle] = word_size_cache[font][fstyle] or {}
+	local v
+	for i = 1, #list do
+		v = list[i]
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
@@ -414,14 +436,159 @@ getmetatable(tmps).__index.size = function(font, str)
 			-- Ignore
 		elseif fontstyle then
 			font:setStyle(fontstyle)
+			fstyle = fontstyle
+			word_size_cache[font][fstyle] = word_size_cache[font][fstyle] or {}
 		else
-			local w, h = fontoldsize(font, v)
+			local w, h
+			if word_size_cache[font][fstyle][v] then
+				w, h = word_size_cache[font][fstyle][v][1], word_size_cache[font][fstyle][v][2]
+			else
+				w, h = fontoldsize(font, v)
+				word_size_cache[font][fstyle][v] = {w, h}
+			end
 			if h > mh then mh = h end
 			mw = mw + w
 		end
 	end
 	return mw, mh
 end
+
+tstring = {}
+
+function tstring:add(...)
+	local v = {...}
+	for i = 1, #v do
+		self[#self+1] = v[i]
+	end
+end
+
+function tstring:merge(v)
+	for i = 1, #v do
+		self[#self+1] = v[i]
+	end
+end
+
+function tstring:countLines()
+	local nb = 1
+	local v
+	for i = 1, #self do
+		v = self[i]
+		if type(v) == "boolean" then nb = nb + 1 end
+	end
+	return nb
+end
+
+--- Tablestrings degrade "peacefully" into normal formated strings
+function tstring:toString()
+	local ret = {}
+	local v
+	for i = 1, #self do
+		v = self[i]
+		if type(v) == "boolean" then ret[#ret+1] = "\n"
+		elseif type(v) == "string" then ret[#ret+1] = v
+		elseif type(v) == "table" then
+			if v[1] == "color" and v[2] == "LAST" then ret[#ret+1] = "#LAST#"
+			elseif v[1] == "color" and not v[3] then ret[#ret+1] = "#"..v[2].."#"
+			elseif v[1] == "color" then ret[#ret+1] = ("#%02x%02x%02x#"):format(v[2], v[3], v[4]):upper()
+			elseif v[1] == "font" then ret[#ret+1] = "#{"..v[2].."}#"
+			end
+		end
+	end
+	return table.concat(ret)
+end
+
+function tstring:splitLines(max_width, font)
+	local space_w = font:size(" ")
+	local ret = tstring{}
+	local cur_size =0
+	local v
+	for i = 1, #self do
+		v = self[i]
+		if type(v) == "string" then
+			local ls = v:split(lpeg.S"\n ", true)
+			for i = 1, #ls do
+				local vv = ls[i]
+				if vv == "\n" then
+					ret[#ret+1] = true
+					cur_size = 0
+				else
+					local w, h = fontoldsize(font, vv)
+					if cur_size + w < max_width then
+						cur_size = cur_size + w
+						ret[#ret+1] = vv
+					else
+						ret[#ret+1] = true
+						ret[#ret+1] = vv
+						cur_size = w
+					end
+				end
+			end
+		elseif type(v) == "table" and v[1] == "font" then
+			font:setStyle(v[2])
+			ret[#ret+1] = v
+		elseif type(v) == "boolean" then
+			cur_size = 0
+			ret[#ret+1] = v
+		else
+			ret[#ret+1] = v
+		end
+	end
+	return ret
+end
+
+function tstring:makeLineTextures(max_width, font)
+	local list = self:splitLines(max_width, font)
+	local h = font:lineSkip()
+	local s = core.display.newSurface(max_width, h)
+	s:erase(0, 0, 0, 0)
+	local texs = {}
+	local w = 0
+	local r, g, b = 255, 255, 255
+	local oldr, oldg, oldb = 255, 255, 255
+	local v
+	for i = 1, #list do
+		v = list[i]
+		if type(v) == "string" then
+			s:drawStringBlended(font, v, w, 0, r, g, b, true)
+			w = w + fontoldsize(font, v)
+		elseif type(v) == "boolean" then
+			w = 0
+			local dat = {}
+			dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
+			texs[#texs+1] = dat
+			s:erase(0, 0, 0, 0)
+		else
+			if v[1] == "color" and v[2] == "LAST" then
+				r, g, b = oldr, oldg, oldb
+			elseif v[1] == "color" and not v[3] then
+				oldr, oldg, oldb = r, g, b
+				r, g, b = unpack(colors.simple(colors[v[2]] or {255,255,255}))
+			elseif v[1] == "color" then
+				oldr, oldg, oldb = r, g, b
+				r, g, b = v[2], v[3], v[4]
+			elseif v[1] == "font" then
+				font:setStyle(v[2])
+			end
+		end
+	end
+
+	-- Last line
+	local dat = {}
+	dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
+	texs[#texs+1] = dat
+
+	return texs
+end
+
+setmetatable(tstring, {
+	__call = function(self, t)
+		setmetatable(t, getmetatable(self))
+		return t
+	end,
+	__index = tstring,
+	__tostring = tstring.toString,
+})
+
 
 dir_to_coord = {
 	[1] = {-1, 1},

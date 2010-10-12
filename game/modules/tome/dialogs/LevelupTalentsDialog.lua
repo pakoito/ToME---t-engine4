@@ -146,6 +146,7 @@ function _M:generateList()
 			local tshown = (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type])
 			local node = {
 				name=function(item) return "#{bold}#"..cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)).."#{normal}#" end,
+				rawname=function(item) return cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)) end,
 				type=tt.type,
 				color=function(item) return self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175} end,
 				shown = tshown,
@@ -166,6 +167,7 @@ function _M:generateList()
 					list[#list+1] = {
 						__id=t.id,
 						name=t.name.." ("..typename..")",
+						rawname=t.name.." ("..typename..")",
 						talent=t.id,
 						_type=tt.type,
 						color=function(item) return self.actor:knowTalentType(item._type) and {255,255,255} or {175,175,175} end,
@@ -217,45 +219,49 @@ end
 
 function _M:onDrawItem(item)
 	if not item then return end
+	local text = tstring{}
 
-	local text = {}
-
-	text[#text+1] = util.getval(item.name, item)
-	text[#text+1] = ""
+	text:add({"color", "GOLD"}, {"font", "bold"}, util.getval(item.rawname, item), {"color", "LAST"}, {"font", "normal"})
+	text:add(true, true)
 
 	if item.type then
-		text[#text+1] = "#00FFFF#Talent Category"
-		text[#text+1] = "#00FFFF#A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.\n"
+		text:add({"color",0x00,0xFF,0xFF}, "Talent Category", true)
+		text:add({"color",0x00,0xFF,0xFF}, "A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.", true, true, {"color", "WHITE"})
+		text:add(self.actor:getTalentTypeFrom(item.type).description)
 	else
 		local t = self.actor:getTalentFromId(item.talent)
 
 		local what
 		if t.generic then
 			what = "generic talent"
-			text[#text+1] = "#00FFFF#Generic Talent"
-			text[#text+1] = "#00FFFF#A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.\n"
+			text:add({"color",0x00,0xFF,0xFF}, "Generic Talent", true)
+			text:add({"color",0x00,0xFF,0xFF}, "A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
 		else
 			what = "class talent"
-			text[#text+1] = "#00FFFF#Class talent"
-			text[#text+1] = "#00FFFF#A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.\n"
+			text:add({"color",0x00,0xFF,0xFF}, "Class talent", true)
+			text:add({"color",0x00,0xFF,0xFF}, "A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
 		end
 
 		if self.actor:getTalentLevelRaw(t.id) > 0 then
 			local req = self.actor:getTalentReqDesc(item.talent, 0)
-			req = "Current "..what.." level: "..self.actor:getTalentLevelRaw(t.id).."\n"..req
-			text[#text+1] = req
-			text[#text+1] = self.actor:getTalentFullDescription(t)
+			text:add{"color","WHITE"}
+			text:add("Current "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)))
+			text:add(true)
+			text:merge(req)
+			text:merge(self.actor:getTalentFullDescription(t))
 		end
 
 		if self.actor:getTalentLevelRaw(t.id) < t.points then
 			local req2 = self.actor:getTalentReqDesc(item.talent, 1)
-			req2 = "Next "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)+1).."\n"..req2
-			text[#text+1] = req2
-			text[#text+1] = self.actor:getTalentFullDescription(t, 1)
+			text:add("Next "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)+1))
+			text:add(true)
+			text:merge(req2)
+			text:merge(self.actor:getTalentFullDescription(t, 1))
 		end
 	end
 
-	self.c_desc:createItem(item, table.concat(text, "\n"))
+	self.c_desc:createItem(item, text)
+
 end
 
 function _M:select(item)

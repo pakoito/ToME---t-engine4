@@ -73,31 +73,49 @@ function _M:generate()
 end
 
 function _M:createItem(item, text)
-	local list = text:splitLines(self.w, self.font)
-	local scroll = 1
-	local max = #list
-	local max_display = math.floor(self.h / self.fh)
+	-- Handle normal text
+	if type(text) == "string" then
+		local list = text:splitLines(self.w, self.font)
+		local scroll = 1
+		local max = #list
+		local max_display = math.floor(self.h / self.fh)
 
-	-- Draw the list items
-	local gen = {}
-	local r, g, b = 255, 255, 255
-	local s = core.display.newSurface(self.fw, self.fh)
-	for i, l in ipairs(list) do
-		s:erase()
-		r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
-		if self.no_color_bleed then r, g, b = 255, 255, 255 end
+		-- Draw the list items
+		local gen = {}
+		local r, g, b = 255, 255, 255
+		local s = core.display.newSurface(self.fw, self.fh)
+		for i, l in ipairs(list) do
+			s:erase()
+			r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
+			if self.no_color_bleed then r, g, b = 255, 255, 255 end
 
-		local dat = {}
-		dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
-		gen[#gen+1] = dat
+			local dat = {}
+			dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
+			gen[#gen+1] = dat
+		end
+
+		self.items[item] = {
+			list = gen,
+			scroll = scroll,
+			max = max,
+			max_display = max_display,
+		}
+	-- Handle "pre formated" text, as a table
+	else
+		-- Draw the list items
+		local gen = tstring.makeLineTextures(text, self.fw, self.font)
+
+		local scroll = 1
+		local max = #gen
+		local max_display = math.floor(self.h / self.fh)
+
+		self.items[item] = {
+			list = gen,
+			scroll = scroll,
+			max = max,
+			max_display = max_display,
+		}
 	end
-
-	self.items[item] = {
-		list = gen,
-		scroll = scroll,
-		max = max,
-		max_display = max_display,
-	}
 end
 
 function _M:switchItem(item, create_if_needed)

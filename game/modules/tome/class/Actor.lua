@@ -1350,35 +1350,35 @@ function _M:getTalentFullDescription(t, addlevel)
 	local old = self.talents[t.id]
 	self.talents[t.id] = (self.talents[t.id] or 0) + (addlevel or 0)
 
-	local d = {}
+	local d = tstring{}
 
-	d[#d+1] = ("#6fff83#Effective talent level: #00FF00#%.1f"):format(self:getTalentLevel(t))
-	if t.mode == "passive" then d[#d+1] = "#6fff83#Use mode: #00FF00#Passive"
-	elseif t.mode == "sustained" then d[#d+1] = "#6fff83#Use mode: #00FF00#Sustained"
-	else d[#d+1] = "#6fff83#Use mode: #00FF00#Activated"
+	d:add({"color",0x6f,0xff,0x83}, "Effective talent level: ", {"color",0x00,0xFF,0x00}, ("%.1f"):format(self:getTalentLevel(t)), true)
+	if t.mode == "passive" then d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Passive", true)
+	elseif t.mode == "sustained" then d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Sustained", true)
+	else d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Activated", true)
 	end
 
-	if t.mana or t.sustain_mana then d[#d+1] = "#6fff83#Mana cost: #7fffd4#"..(t.sustain_mana or t.mana * (100 + self.fatigue) / 100) end
-	if t.stamina or t.sustain_stamina then d[#d+1] = "#6fff83#Stamina cost: #ffcc80#"..(t.sustain_stamina or t.stamina * (100 + self.fatigue) / 100) end
-	if t.equilibrium or t.sustain_equilibrium then d[#d+1] = "#6fff83#Equilibrium cost: #00ff74#"..(t.equilibrium or t.sustain_equilibrium) end
-	if t.vim or t.sustain_vim then d[#d+1] = "#6fff83#Vim cost: #888888#"..(t.sustain_vim or t.vim) end
-	if t.positive or t.sustain_positive then d[#d+1] = "#6fff83#Positive energy cost: #GOLD#"..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100) end
-	if t.negative or t.sustain_negative then d[#d+1] = "#6fff83#Negative energy cost: #GREY#"..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100) end
-	if t.hate or t.sustain_hate then d[#d+1] = "#6fff83#Hate cost: #GREY#"..(t.hate or t.sustain_hate) end
-	if self:getTalentRange(t) > 1 then d[#d+1] = "#6fff83#Range: #FFFFFF#"..self:getTalentRange(t)
-	else d[#d+1] = "#6fff83#Range: #FFFFFF#melee/personal"
+	if t.mana or t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_mana or t.mana * (100 + self.fatigue) / 100), true) end
+	if t.stamina or t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina or t.stamina * (100 + self.fatigue) / 100), true) end
+	if t.equilibrium or t.sustain_equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(t.equilibrium or t.sustain_equilibrium), true) end
+	if t.vim or t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.sustain_vim or t.vim), true) end
+	if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: #GOLD#"..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100), true) end
+	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: #GREY#"..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100), true) end
+	if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost: #GREY#"..(t.hate or t.sustain_hate), true) end
+	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ""..self:getTalentRange(t), true)
+	else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)
 	end
-	if t.cooldown then d[#d+1] = "#6fff83#Cooldown: #FFFFFF#"..util.getval(t.cooldown, self, t) end
+	if t.cooldown then d:add({"color",0x6f,0xff,0x83}, "Cooldown: ", {"color",0xFF,0xFF,0xFF}, ""..util.getval(t.cooldown, self, t), true) end
 	local speed = self:getTalentProjectileSpeed(t)
-	if speed then d[#d+1] = "#6fff83#Travel Speed: #FFFFFF#"..(speed * 100).."% of base"
-	else d[#d+1] = "#6fff83#Travel Speed: #FFFFFF#instantaneous"
+	if speed then d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, ""..(speed * 100).."% of base", true)
+	else d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, "instantaneous", true)
 	end
 
-	local ret = table.concat(d, "\n").."\n#6fff83#Description: #FFFFFF#"..t.info(self, t)
+	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF}, t.info(self, t), true)
 
 	self.talents[t.id] = old
 
-	return ret
+	return d
 end
 
 --- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction

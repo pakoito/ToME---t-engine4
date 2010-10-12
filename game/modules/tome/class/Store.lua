@@ -101,12 +101,12 @@ end
 -- @return a string (possibly multiline) describing the object
 function _M:descObject(who, what, o)
 	if what == "buy" then
-		local desc = ("Buy for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice() * self.sell_percent / 100, who.money)
-		desc = desc .. o:getDesc()
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Buy for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.sell_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		desc:merge(o:getDesc())
 		return desc
 	else
-		local desc = ("Sell for: %0.2f gold (You have %0.2f gold)\n\n"):format(o:getPrice() * self.buy_percent / 100, who.money)
-		desc = desc .. o:getDesc()
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Sell for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.buy_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		desc:merge(o:getDesc())
 		return desc
 	end
 end

@@ -108,12 +108,12 @@ function _M:maxH()
 	self.max_h = 0
 	for item, o in ipairs(self.store_inven) do
 		if not self.store_filter or self.store_filter(o) then
-			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
+			self.max_h = math.max(self.max_h, o:getDesc():splitLines(self.iw - 10, self.font):countLines())
 		end
 	end
 	for item, o in ipairs(self.actor_inven) do
 		if not self.actor_filter or self.actor_filter(o) then
-			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
+			self.max_h = math.max(self.max_h, o:getDesc():splitLines(self.iw - 10, self.font):countLines())
 		end
 	end
 end

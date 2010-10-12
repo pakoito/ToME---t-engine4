@@ -325,44 +325,44 @@ function _M:getTalentReqDesc(t_id, levmod)
 
 	local tlev = self:getTalentLevelRaw(t_id) + (levmod or 0)
 
-	local str = ""
+	local str = tstring{}
 
 	if not t.type_no_req then
-		str = str .. (self:knowTalentType(t.type[1]) and "#00ff00#" or "#ff0000#") .. "- Talent category known\n"
+		str:add((self:knowTalentType(t.type[1]) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}), "- Talent category known", true)
 	end
 
 	if t.type[2] and t.type[2] > 1 then
 		local known = self:numberKnownTalent(t.type[1], t.id)
-		local c = (known >= t.type[2] - 1) and "#00ff00#" or "#ff0000#"
-		str = str .. ("- %sTalents of the same category: %d\n"):format(c, t.type[2] - 1)
+		local c = (known >= t.type[2] - 1) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+		str:add("- ", c, ("Talents of the same category: %d"):format(t.type[2] - 1), true)
 	end
 
 	-- Obviously this requires the ActorStats interface
 	if req.stat then
 		for s, v in pairs(req.stat) do
 			v = util.getval(v, tlev)
-			local c = (self:getStat(s) >= v) and "#00ff00#" or "#ff0000#"
-			str = str .. ("- %s%s %d\n"):format(c, self.stats_def[s].name, v)
+			local c = (self:getStat(s) >= v) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+			str:add("- ", c, ("%s %d"):format(self.stats_def[s].name, v), true)
 		end
 	end
 	if req.level then
 		local v = util.getval(req.level, tlev)
-		local c = (self.level >= v) and "#00ff00#" or "#ff0000#"
-		str = str .. ("- %sLevel %d\n"):format(c, v)
+		local c = (self.level >= v) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+		str:add("- ", c, ("Level %d\n"):format(v), true)
 	end
 	if req.talent then
 		for _, tid in ipairs(req.talent) do
 			if type(tid) == "table" then
 				if type(tid[2]) == "boolean" and tid[2] == false then
-					local c = (not self:knowTalent(tid[1])) and "#00ff00#" or "#ff0000#"
-					str = str .. ("- %sTalent %s (not known)\n"):format(c, self:getTalentFromId(tid[1]).name)
+					local c = (not self:knowTalent(tid[1])) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+					str:add("- ", c, ("Talent %s (not known)\n"):format(c, self:getTalentFromId(tid[1]).name), true)
 				else
-					local c = (self:getTalentLevelRaw(tid[1]) >= tid[2]) and "#00ff00#" or "#ff0000#"
-					str = str .. ("- %sTalent %s (%d)\n"):format(c, self:getTalentFromId(tid[1]).name, tid[2])
+					local c = (self:getTalentLevelRaw(tid[1]) >= tid[2]) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+					str:add("- ", c, ("Talent %s (%d)\n"):format(c, self:getTalentFromId(tid[1]).name, tid[2]), true)
 				end
 			else
-				local c = self:knowTalent(tid) and "#00ff00#" or "#ff0000#"
-				str = str .. ("- %sTalent %s\n"):format(c, self:getTalentFromId(tid).name)
+				local c = self:knowTalent(tid) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+				str:add("- ", c, ("Talent %s\n"):format(c, self:getTalentFromId(tid).name), true)
 			end
 		end
 	end
@@ -373,7 +373,7 @@ end
 --- Return the full description of a talent
 -- You may overload it to add more data (like power usage, ...)
 function _M:getTalentFullDescription(t)
-	return t.info(self, t)
+	return tstring{t.info(self, t), true}
 end
 
 --- Do we know this talent type

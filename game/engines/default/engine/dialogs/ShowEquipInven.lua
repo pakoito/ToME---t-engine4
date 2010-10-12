@@ -164,7 +164,6 @@ function _M:generateList()
 				if not self.filter or self.filter(o) then
 					local char = self:makeKeyChar(i)
 					list[#list+1] = { id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=inven_id, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
-					self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 					chars[char] = #list
 					i = i + 1
 				end
@@ -183,7 +182,6 @@ function _M:generateList()
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
 			list[#list+1] = { id=#list+1, char=char, name=o:getName{do_color=true}, object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
-			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
 			chars[char] = #list
 			i = i + 1
 		end
@@ -204,7 +202,7 @@ function _M:maxH()
 	local i = 1
 	for item, o in ipairs(self.actor:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
-			self.max_h = math.max(self.max_h, #o:getDesc():splitLines(self.iw - 10, self.font))
+			self.max_h = math.max(self.max_h, o:getDesc():splitLines(self.iw - 10, self.font):countLines())
 		end
 	end
 end
