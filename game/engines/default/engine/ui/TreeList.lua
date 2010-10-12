@@ -151,28 +151,6 @@ function _M:drawItem(item)
 		s:erase(0, 0, 0, 0)
 		text:drawOnSurface(s, col.width - startx - rs_w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
 		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
-
---[[
-		ss:erase(0, 0, 0)
-		ss:merge(src_ss, 0, 0)
-		ss:erase(0, 0, 0, 255, 0, 0, offset, self.fh)
-		if i == 1 and item.nodes then ss:merge(item.shown and minus or plus, 0, 0) end
-		ss:merge(ls, offset, 0)
-		ss:drawColorStringBlended(self.font, text, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3], nil, col.width - startx - rs_w)
-		item.cols[i]._stex = ss:glTexture()
-
-		s:merge(src_s, 0, 0)
-		if i == 1 and item.nodes then s:merge(item.shown and minus or plus, 0, 0) end
-		s:drawColorStringBlended(self.font, text, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3], nil, col.width - startx - rs_w)
-		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
-
-		sus:merge(src_sus, 0, 0)
-		sus:erase(0, 0, 0, 255, 0, 0, offset, self.fh)
-		if i == 1 and item.nodes then sus:merge(item.shown and minus or plus, 0, 0) end
-		sus:merge(l, offset, 0)
-		sus:drawColorStringBlended(self.font, text, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3], nil, col.width - startx - rs_w)
-		item.cols[i]._sustex = sus:glTexture()
-]]
 	end
 	if self.on_drawitem then self.on_drawitem(item) end
 end
