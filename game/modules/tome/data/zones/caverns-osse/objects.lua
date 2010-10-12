@@ -46,7 +46,7 @@ newEntity{ base = "BASE_LITE",
 			[Stats.STAT_WIL] = 4,
 			[Stats.STAT_CUN] = 4,
 			[Stats.STAT_CON] = 4,
-			[Stats.STAT_LCK] = -25,
+			[Stats.STAT_LCK] = -5,
 		},
 	},
 

@@ -889,7 +889,7 @@ function _M:onQuit()
 	if not self.quit_dialog and not self.player.dead then
 		self.quit_dialog = Dialog:yesnoPopup("Save and exit?", "Save and exit?", function(ok)
 			if ok then
-				local d = engine.Dialog:simplePopup("Quitting...", "Quitting...", nil, true)
+				local d = engine.ui.Dialog:simplePopup("Quitting...", "Quitting...", nil, true)
 				d.__show_popup = false
 				core.display.forceRedraw()
 

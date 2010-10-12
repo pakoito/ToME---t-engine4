@@ -19,7 +19,7 @@
 
 require "engine.class"
 local Store = require "engine.Store"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 
 module(..., package.seeall, class.inherit(Store))
 

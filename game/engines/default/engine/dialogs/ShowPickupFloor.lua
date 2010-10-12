@@ -72,6 +72,7 @@ function _M:init(title, x, y, filter, action)
 end
 
 function _M:used()
+	if self.taking_all then return end
 	self:generateList()
 	if #self.list == 0 then
 		game:unregisterDialog(self)
@@ -87,6 +88,7 @@ function _M:select(item)
 end
 
 function _M:takeAll()
+	self.taking_all = true
 	for i = #self.list, 1, -1 do self.action(self.list[i].object, self.list[i].item) end
 	game:unregisterDialog(self)
 end

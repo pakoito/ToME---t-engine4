@@ -19,7 +19,7 @@
 
 require "engine.class"
 require "engine.Grid"
-local Dialog = require "engine.Dialog"
+local Dialog = require "engine.ui.Dialog"
 local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(engine.Grid))
