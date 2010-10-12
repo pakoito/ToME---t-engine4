@@ -27,6 +27,7 @@ function _M:init(name, npc, player, data)
 	self.chats = {}
 	self.npc = npc
 	self.player = player
+	self.name = name
 	data = setmetatable(data or {}, {__index=_G})
 
 	local f, err = loadfile("/data/chats/"..name..".lua")

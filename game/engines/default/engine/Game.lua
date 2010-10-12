@@ -202,7 +202,7 @@ function _M:unregisterDialog(d)
 	self.dialogs[d] = nil
 	d:unload()
 	-- Update positions
-	for i, id in ipairs(self.dialogs) do self.dialogs[id] = i end
+	for i, id in ipairs(self.dialogs) do id.__stack_id = i self.dialogs[id] = i end
 
 	local last = self.dialogs[#self.dialogs] or self
 	if last.key then last.key:setCurrent() end

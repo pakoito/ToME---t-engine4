@@ -42,7 +42,7 @@ newTalent{
 		elseif lev == 4 then
 			self:learnTalent(self.T_DISARMING_TRAP, true)
 		elseif lev == 5 then
-			self:learnTalent(self.T_FREEZING_TRAP, true)
+			self:learnTalent(self.T_NIGHTSHADE_TRAP, true)
 		end
 	end,
 	on_unlearn = function(self, t)
@@ -56,7 +56,7 @@ newTalent{
 		elseif lev == 3 then
 			self:unlearnTalent(self.T_DISARMING_TRAP)
 		elseif lev == 4 then
-			self:unlearnTalent(self.T_FREEZING_TRAP)
+			self:unlearnTalent(self.T_NIGHTSHADE_TRAP)
 		end
 	end,
 	info = function(self, t)
@@ -426,7 +426,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Freezing Trap",
+	name = "Nightshade Trap",
 	type = {"cunning/traps", 1},
 	points = 1,
 	cooldown = 8,
@@ -444,15 +444,15 @@ newTalent{
 		local Trap = require "mod.class.Trap"
 		local t = Trap.new{
 			type = "elemental", id_by_type=true, unided_name = "trap",
-			name = "freeze trap", color=colors.LIGHT_BLUE,
+			name = "nightshade trap", color=colors.LIGHT_BLUE,
 			display = '^',
 			dam = dam,
 			faction = self.faction,
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
-				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.COLD, self.dam, {type="freeze"})
+				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.NATURE, self.dam, {type="slime"})
 				if who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("stun") then
-					who:setEffect(who.EFF_FROZEN, 4, {src=self.summoner})
+					who:setEffect(who.EFF_STUNNED, 4, {src=self.summoner})
 				end
 				return true, true
 			end,
@@ -480,7 +480,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay a freezing trap, doing %0.2f cold damage to a creature and freezing it for 4 turns.]]):
+		return ([[Lay a trap cotted with a potent venom, doing %0.2f nature damage to a creature and stunning it for 4 turns.]]):
 		format(damDesc(self, DamageType.COLD, 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)))
 	end,
 }

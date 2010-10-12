@@ -115,6 +115,8 @@ function failed_mount_doom(self, level)
 end
 
 function win(self, how)
+	game:playMusic("Lords of the Sky.ogg")
+
 	if how == "full" then world:gainAchievement("WIN_FULL", game.player)
 	elseif how == "aeryn-sacrifice" then world:gainAchievement("WIN_AERYN", game.player)
 	elseif how == "self-sacrifice" then world:gainAchievement("WIN_SACRIFICE", game.player)
@@ -123,3 +125,4 @@ function win(self, how)
 	game.player.winner = how
 	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=game.player.name, how=how}, game.w * 0.6))
 end
+

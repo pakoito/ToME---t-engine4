@@ -93,8 +93,8 @@ function _M:regen()
 	d.__showup = false
 	game:replaceDialog(self, d)
 end
-
 function _M:resolveAuto()
+--[[
 	if not self.chat:get(self.cur_id).auto then return end
 	for i, a in ipairs(self.chat:get(self.cur_id).answers) do
 		if not a.cond or a.cond(self.npc, self.player) then
@@ -103,6 +103,7 @@ function _M:resolveAuto()
 			end
 		end
 	end
+]]
 end
 
 function _M:generateList()

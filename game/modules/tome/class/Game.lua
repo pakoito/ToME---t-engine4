@@ -376,11 +376,20 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		self.player:move(self.player.wild_x, self.player.wild_y, true)
 		self.player.last_wilderness = self.zone.short_name
 	else
+		local x, y
 		if lev > old_lev and not force_down then
-			self.player:move(self.level.default_up.x, self.level.default_up.y, true)
+			x, y = self.level.default_up.x, self.level.default_up.y
 		else
-			self.player:move(self.level.default_down.x, self.level.default_down.y, true)
+			x, y = self.level.default_down.x, self.level.default_down.y
 		end
+		-- Check if there is already an actor at that location, if so move it
+		local blocking_actor = self.level.map(x, y, engine.Map.ACTOR)
+		if blocking_actor then
+			local newx, newy = util.findFreeGrid(x, y, 20, true, {[Map.ACTOR]=true})
+			if newx and newy then blocking_actor:move(newx, newy, true)
+			else blocking_actor:teleportRandom(x, y, 200) end
+		end
+		self.player:move(x, y, true)
 	end
 	self.player.changed = true
 	if self.to_re_add_actors then for act, _ in pairs(self.to_re_add_actors) do
