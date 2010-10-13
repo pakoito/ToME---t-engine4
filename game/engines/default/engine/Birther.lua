@@ -259,6 +259,7 @@ end
 --- Apply all birth options to the actor
 function _M:apply()
 	self.actor.descriptor = {}
+	local stats = {}
 	for i, d in ipairs(self.descriptors) do
 		print("[BIRTH] Applying descriptor "..d.name)
 		self.actor.descriptor[d.type] = d.name
@@ -276,7 +277,7 @@ function _M:apply()
 		-- Change stats
 		if d.stats then
 			for stat, inc in pairs(d.stats) do
-				self.actor:incStat(stat, inc)
+				stats[stat] = (stats[stat] or 0) + inc
 			end
 		end
 		if d.talents_types then
@@ -289,7 +290,6 @@ function _M:apply()
 				end
 				self.actor:learnTalentType(t, v)
 				self.actor.talents_types_mastery[t] = (self.actor.talents_types_mastery[t] or 1) + mastery
-				print(t)
 			end
 		end
 		if d.talents then
@@ -304,5 +304,10 @@ function _M:apply()
 			self.actor.body = d.body
 			self.actor:initBody()
 		end
+	end
+
+	-- Apply stats now to not be overridden by other things
+	for stat, inc in pairs(stats) do
+		self.actor:incStat(stat, inc)
 	end
 end
