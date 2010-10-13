@@ -82,3 +82,4 @@ loadIfNot("/data/general/objects/mounts.lua")
 -- Artifacts
 loadIfNot("/data/general/objects/world-artifacts.lua")
 loadIfNot("/data/general/objects/quest-artifacts.lua")
+loadIfNot("/data/general/objects/special-artifacts.lua")

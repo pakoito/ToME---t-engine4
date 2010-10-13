@@ -903,7 +903,7 @@ newEffect{
 newEffect{
 	name = "ROTTING_DISEASE",
 	desc = "Rotting Disease",
-	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its constitution by %d and doing %0.2f blight damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its constitution by %d and doing %0.2f blight damage per turn."):format(eff.con, eff.dam) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -925,7 +925,7 @@ newEffect{
 newEffect{
 	name = "DECREPITUDE_DISEASE",
 	desc = "Decrepitude Disease",
-	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its dexterity by %d and doing %0.2f blight damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its dexterity by %d and doing %0.2f blight damage per turn."):format(eff.dex, eff.dam) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -947,7 +947,7 @@ newEffect{
 newEffect{
 	name = "WEAKNESS_DISEASE",
 	desc = "Weakness Disease",
-	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its strength by %d and doing %0.2f blight damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its strength by %d and doing %0.2f blight damage per turn."):format(eff.str, eff.dam) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -969,7 +969,7 @@ newEffect{
 newEffect{
 	name = "EPIDEMIC",
 	desc = "Epidemic",
-	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn.\nEach non-disease blight damage done to it will spread the disease."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn.\nEach non-disease blight damage done to it will spread the disease."):format(eff.dam) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},

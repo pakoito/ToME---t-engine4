@@ -783,6 +783,37 @@ newEntity{ base = "BASE_WAND",
 	},
 }
 
+newEntity{ base = "BASE_BATTLEAXE",
+	unique = true,
+	unided_name = "crude iron battle axe",
+	name = "Crude Iron Battle Axe of Durin the Deathless", color = colors.GREY,
+	desc = [[Made in times before the dwarves learned beautiful craftsmanship from the noldor, the rough appearance of this axe belies its great power. Only dwarves may harness its true strength, however.]],
+	require = { stat = { str=50 }, },
+	rarity = 300,
+	material_level = 1,
+	combat = {
+		dam = 68,
+		apr = 7,
+		physcrit = 10,
+		dammod = {str=1.3},
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_CON] = 2, [Stats.STAT_DEX] = 2, },
+		combat_def = 6, combat_armor = 6,
+		inc_damage = { [DamageType.PHYSICAL]=10 },
+		stun_immune = 0.5,
+		knockback_immune = 0.5,
+	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Dwarf" then
+			self.wielded._special1 = who:addTemporaryValue("inc_stats", { [Stats.STAT_CON] = 4, [Stats.STAT_DEX] = 4, })
+			self.wielded._special2 = who:addTemporaryValue("stun_immune", 0.5)
+			self.wielded._special2 = who:addTemporaryValue("knockback_immune", 0.5)
+			game.logPlayer(who, "#LIGHT_BLUE#You feel as surge of power as you wield the axe of your ancestors!")
+		end
+	end,
+}
+
 --[=[
 newEntity{
 	unique = true,

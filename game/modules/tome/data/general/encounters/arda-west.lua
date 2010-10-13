@@ -127,7 +127,7 @@ newEntity{
 newEntity{
 	name = "Ancient Elven Ruins",
 	type = "harmless", subtype = "special", unique = true,
-	level_range = {20, 30},
+	level_range = {30, 40},
 	rarity = 8,
 	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)

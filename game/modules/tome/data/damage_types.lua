@@ -567,6 +567,18 @@ newDamageType{
 	end,
 }
 
+-- Physical damage + bleeding % of it
+newDamageType{
+	name = "physical + bleeding", type = "PHYSICALBLEED",
+	projector = function(src, x, y, type, dam)
+		local realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if realdam > 0 and target and target:canBe("cut") then
+			target:setEffect(target.EFF_CUT, 5, {src=src, power=dam * 0.1})
+		end
+	end,
+}
+
 -- Slime damage
 newDamageType{
 	name = "slime", type = "SLIME",

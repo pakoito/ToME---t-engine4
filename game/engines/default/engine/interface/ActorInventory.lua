@@ -97,8 +97,8 @@ function _M:addObject(inven_id, o)
 
 	-- Do whatever is needed when wearing this object
 	if inven.worn then
-		o:check("on_wear", self)
 		self:onWear(o)
+		o:check("on_wear", self)
 	end
 
 	self:onAddObject(o)
@@ -164,8 +164,8 @@ function _M:removeObject(inven, item, no_unstack)
 
 	-- Do whatever is needed when takingoff this object
 	if inven.worn then
-		o:check("on_takeoff", self)
 		self:onTakeoff(o)
+		o:check("on_takeoff", self)
 	end
 
 	self:onRemoveObject(o)
