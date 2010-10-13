@@ -136,7 +136,7 @@ function _M:getType(t)
 		friendlyfire=true,
 		block_path = function(typ, lx, ly)
 			if not typ.no_restrict then
-				if not game.level.map.remembers(lx, ly) then return true end
+				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then return true end
 				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
 				-- If we explode do to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
@@ -176,6 +176,8 @@ function _M:setActive(v, type)
 		self.active = v
 		if v and type then
 			self.target_type = self:getType(type)
+			-- Targeting will generally want to stop at unseen/remembered tiles
+			table.update(self.target_type, {requires_knowledge=true})
 		else
 			self.target_type = {}
 		end

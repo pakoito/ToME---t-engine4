@@ -114,7 +114,7 @@ function table.update(dst, src, deep)
 			table.update(dst[k], e, true)
 		elseif deep and not dst[k] and type(e) == "table" and not e.__CLASSNAME then
 			dst[k] = table.clone(e, true)
-		elseif not dst[k] then
+		elseif not dst[k] and type(dst[k]) ~= "boolean" then
 			dst[k] = e
 		end
 	end
