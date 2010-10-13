@@ -23,6 +23,7 @@ local Particles = require "engine.Particles"
 newEffect{
 	name = "CUT",
 	desc = "Bleeding",
+	long_desc = function(self, eff) return ("Huge cut that bleeds blood, doing %0.2f physical damage per turn."):format(eff.power) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { power=1 },
@@ -45,6 +46,7 @@ newEffect{
 newEffect{
 	name = "MANAFLOW",
 	desc = "Surging mana",
+	long_desc = function(self, eff) return ("The mana surge engulfs the target, regenerating %0.2f mana per turn."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -61,6 +63,7 @@ newEffect{
 newEffect{
 	name = "REGENERATION",
 	desc = "Regeneration",
+	long_desc = function(self, eff) return ("A flow of life spins around the target, regenerating %0.2f life per turn."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -77,6 +80,7 @@ newEffect{
 newEffect{
 	name = "BURNING",
 	desc = "Burning",
+	long_desc = function(self, eff) return ("The target is on fire, doing %0.2f fire damage per turn."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -99,6 +103,7 @@ newEffect{
 newEffect{
 	name = "POISONED",
 	desc = "Poisoned",
+	long_desc = function(self, eff) return ("The target is poisoned, doing %0.2f nature damage per turn."):format(eff.power) end,
 	type = "poison",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -121,6 +126,7 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
+	long_desc = function(self, eff) return "The target is on frozen in ice, completly unable to act." end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -152,6 +158,7 @@ newEffect{
 newEffect{
 	name = "FROZEN_FEET",
 	desc = "Frozen Feet",
+	long_desc = function(self, eff) return "The target is frozen on the ground, able to act freely but not move." end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -171,6 +178,7 @@ newEffect{
 newEffect{
 	name = "STONED",
 	desc = "Stoned",
+	long_desc = function(self, eff) return "The target is has been turned to stone, making it subject to shattering and improving physical(+20%), fire(+80%) and lightning(+50%) resistances." end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -194,6 +202,7 @@ newEffect{
 newEffect{
 	name = "BURNING_SHOCK",
 	desc = "Burning Shock",
+	long_desc = function(self, eff) return ("The target is on fire, doing %0.2f fire damage per turn and making it unable to act."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -214,6 +223,7 @@ newEffect{
 newEffect{
 	name = "SPYDRIC_POISON",
 	desc = "Spydric Poison",
+	long_desc = function(self, eff) return ("The target is poisoned, doing %0.2f nature damage per turn and preventing any movements (but can still act freely)."):format(eff.power) end,
 	type = "poison",
 	status = "detrimental",
 	parameters = {power=10},
@@ -234,6 +244,7 @@ newEffect{
 newEffect{
 	name = "STUNNED",
 	desc = "Stunned",
+	long_desc = function(self, eff) return "The target is stunned, preventing any actions." end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -251,6 +262,7 @@ newEffect{
 newEffect{
 	name = "SILENCED",
 	desc = "Silenced",
+	long_desc = function(self, eff) return "The target is silenced, preventing it from casting spells and using some vocal talents." end,
 	type = "mental",
 	status = "detrimental",
 	parameters = {},
@@ -268,6 +280,7 @@ newEffect{
 newEffect{
 	name = "DISARMED",
 	desc = "Disarmed",
+	long_desc = function(self, eff) return "The target is maimed, unable to correctly wield a weapon." end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -285,6 +298,7 @@ newEffect{
 newEffect{
 	name = "CONSTRICTED",
 	desc = "Constricted",
+	long_desc = function(self, eff) return ("The target is constricted, preventing movement and making it suffocate(looses %0.2f air per turn)."):format(eff.power) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -307,6 +321,7 @@ newEffect{
 newEffect{
 	name = "DAZED",
 	desc = "Dazed",
+	long_desc = function(self, eff) return "The target is dazed, redering it unable to act. Any damage will remove teh daze." end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -323,6 +338,7 @@ newEffect{
 newEffect{
 	name = "EVASION",
 	desc = "Evasion",
+	long_desc = function(self, eff) return ("The target has %d%% chances to evade melee attacks.."):format(eff.chance) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { chance=10 },
@@ -339,6 +355,7 @@ newEffect{
 newEffect{
 	name = "EARTHEN_BARRIER",
 	desc = "Earthen Barrier",
+	long_desc = function(self, eff) return ("Reduces physical damage received by %d%%."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -357,6 +374,7 @@ newEffect{
 newEffect{
 	name = "SPEED",
 	desc = "Speed",
+	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=0.1 },
@@ -373,6 +391,7 @@ newEffect{
 newEffect{
 	name = "SLOW",
 	desc = "Slow",
+	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { power=0.1 },
@@ -390,6 +409,7 @@ newEffect{
 newEffect{
 	name = "INVISIBILITY",
 	desc = "Invisibility",
+	long_desc = function(self, eff) return ("Improves/gives invisibility (power %d)."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -406,6 +426,7 @@ newEffect{
 newEffect{
 	name = "SEE_INVISIBLE",
 	desc = "See Invisible",
+	long_desc = function(self, eff) return ("Improves/gives the ability to see invisible creatures (power %d)."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -422,6 +443,7 @@ newEffect{
 newEffect{
 	name = "BLINDED",
 	desc = "Blinded",
+	long_desc = function(self, eff) return "The target is blinded, unable to see anything." end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -439,6 +461,7 @@ newEffect{
 newEffect{
 	name = "CONFUSED",
 	desc = "Confused",
+	long_desc = function(self, eff) return ("The target is confused, acting randomly (chance %d%%) and unable to perform complex actions."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -456,6 +479,7 @@ newEffect{
 newEffect{
 	name = "DWARVEN_RESILIENCE",
 	desc = "Dwarven Resilience",
+	long_desc = function(self, eff) return ("The target skin turns to stone, granting %d armour, %d physical save and %d spell save."):format(eff.armor, eff.physical, eff.spell) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { armor=10, spell=10, physical=10 },
@@ -476,6 +500,7 @@ newEffect{
 newEffect{
 	name = "HOBBIT_LUCK",
 	desc = "Hobbit's Luck",
+	long_desc = function(self, eff) return ("The target luck and cunning combine to grant it %d%% more combat critical chances and %d%% more spell critical chances."):format(eff.physical, eff.spell) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { spell=10, physical=10 },
@@ -494,6 +519,7 @@ newEffect{
 newEffect{
 	name = "NOLDOR_WRATH",
 	desc = "Wrath of the Eldar",
+	long_desc = function(self, eff) return ("The target calls upon its inner ressources, improving all damage by %d%% and reducing all damage taken by %d%%."):format(eff.power, eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -512,6 +538,7 @@ newEffect{
 newEffect{
 	name = "ORC_FURY",
 	desc = "Orcish Fury",
+	long_desc = function(self, eff) return ("The target enters a desctructive fury, increasing all damage done by %d%%."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -528,6 +555,7 @@ newEffect{
 newEffect{
 	name = "POWER_OVERLOAD",
 	desc = "Power Overload",
+	long_desc = function(self, eff) return ("The target radiates incredible power, increasing all damage done by %d%%."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -544,6 +572,7 @@ newEffect{
 newEffect{
 	name = "LIFE_TAP",
 	desc = "Life Tap",
+	long_desc = function(self, eff) return ("The target taps his blood hidden power, increasing all damage done by %d%%."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -560,6 +589,7 @@ newEffect{
 newEffect{
 	name = "SHELL_SHIELD",
 	desc = "Shell Shield",
+	long_desc = function(self, eff) return ("The target takes cover in its shell, reducing all damage taken by %d%%."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=50 },
@@ -576,6 +606,7 @@ newEffect{
 newEffect{
 	name = "TIME_PRISON",
 	desc = "Time Prison",
+	long_desc = function(self, eff) return "The target is removed from the normal time stream, unable to act but unable to take anydamage." end,
 	type = "other", -- Type "other" so that nothing can dispel it
 	status = "detrimental",
 	parameters = {},
@@ -598,6 +629,7 @@ newEffect{
 newEffect{
 	name = "SENSE",
 	desc = "Sensing",
+	long_desc = function(self, eff) return "Improved senses, allowing to detect unseen things." end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { range=10, actor=1, object=0, trap=0 },
@@ -619,6 +651,7 @@ newEffect{
 newEffect{
 	name = "ALL_STAT",
 	desc = "All stats increase",
+	long_desc = function(self, eff) return ("All primary stats of the target are increased by %d."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=1 },
@@ -641,6 +674,7 @@ newEffect{
 newEffect{
 	name = "DISPLACEMENT_SHIELD",
 	desc = "Displacement Shield",
+	long_desc = function(self, eff) return ("The target is surrounded by a space distortion that random sends (%d%% chance) incomming damage to an other target (%s)."):format(eff.chance, eff.target.name or "unknown") end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10, target=nil, chance=25 },
@@ -670,6 +704,7 @@ newEffect{
 newEffect{
 	name = "DAMAGE_SHIELD",
 	desc = "Damage Shield",
+	long_desc = function(self, eff) return ("The target is surrounded by a magical shield, absorbing %d damage before it crumbles."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=100 },
@@ -691,6 +726,7 @@ newEffect{
 newEffect{
 	name = "TIME_SHIELD",
 	desc = "Time Shield",
+	long_desc = function(self, eff) return ("The target is surrounded by a time distortion, absorbing %d damage and sending it forward in time."):format(eff.power) end,
 	type = "time", -- Type "time" so that very little should be able to dispel it
 	status = "beneficial",
 	parameters = { power=10 },
@@ -718,6 +754,7 @@ newEffect{
 newEffect{
 	name = "TIME_DOT",
 	desc = "Time Shield Backfire",
+	long_desc = function(self, eff) return ("The time distortion protecting the target has ended, all damage forwarded in time is now applied, doing %d%% arcane damage per turn."):format(eff.power) end,
 	type = "time",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -731,6 +768,7 @@ newEffect{
 newEffect{
 	name = "BATTLE_SHOUT",
 	desc = "Battle Shout",
+	long_desc = function(self, eff) return ("Increases maximun life and stamina by %d%%."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -749,6 +787,7 @@ newEffect{
 newEffect{
 	name = "BATTLE_CRY",
 	desc = "Battle Cry",
+	long_desc = function(self, eff) return ("The target's will to defend itself is shattered by the powerful battle cry, reducing defense by %d."):format(eff.power) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -765,6 +804,7 @@ newEffect{
 newEffect{
 	name = "SUNDER_ARMOUR",
 	desc = "Sunder Armour",
+	long_desc = function(self, eff) return ("The target's armour is broken, reducing it by %d."):format(eff.power) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -779,6 +819,7 @@ newEffect{
 newEffect{
 	name = "SUNDER_ARMS",
 	desc = "Sunder Arms",
+	long_desc = function(self, eff) return ("The target's combat ability is reduced, reducing it's attack by %d."):format(eff.power) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -793,6 +834,7 @@ newEffect{
 newEffect{
 	name = "PINNED",
 	desc = "Pinned to the ground",
+	long_desc = function(self, eff) return "The target is pinned to the ground, unable to move." end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -810,6 +852,7 @@ newEffect{
 newEffect{
 	name = "ATTACK",
 	desc = "Attack",
+	long_desc = function(self, eff) return ("The target's combat attack is improved by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -826,6 +869,7 @@ newEffect{
 newEffect{
 	name = "DEADLY_STRIKES",
 	desc = "Deadly Strikes",
+	long_desc = function(self, eff) return ("The target's armour penetration is increased by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -842,6 +886,7 @@ newEffect{
 newEffect{
 	name = "MIGHTY_BLOWS",
 	desc = "Migth Blows",
+	long_desc = function(self, eff) return ("The target's combat damage rating is improved by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -858,6 +903,7 @@ newEffect{
 newEffect{
 	name = "ROTTING_DISEASE",
 	desc = "Rotting Disease",
+	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its constitution by %d and doing %0.2f blight damage per turn."):format(eff.power) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -879,6 +925,7 @@ newEffect{
 newEffect{
 	name = "DECREPITUDE_DISEASE",
 	desc = "Decrepitude Disease",
+	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its dexterity by %d and doing %0.2f blight damage per turn."):format(eff.power) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -900,6 +947,7 @@ newEffect{
 newEffect{
 	name = "WEAKNESS_DISEASE",
 	desc = "Weakness Disease",
+	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its strength by %d and doing %0.2f blight damage per turn."):format(eff.power) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -921,6 +969,7 @@ newEffect{
 newEffect{
 	name = "EPIDEMIC",
 	desc = "Epidemic",
+	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn.\nEach non-disease blight damage done to it will spread the disease."):format(eff.power) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -941,6 +990,7 @@ newEffect{
 newEffect{
 	name = "CRIPPLE",
 	desc = "Cripple",
+	long_desc = function(self, eff) return ("The target is crippled, reducing attack by %d and damage rating by %d."):format(eff.atk, eff.dam) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { atk=10, dam=10 },
@@ -959,6 +1009,7 @@ newEffect{
 newEffect{
 	name = "WILLFUL_COMBAT",
 	desc = "Willful Combat",
+	long_desc = function(self, eff) return ("The target puts all its willpower in its blows, improving damage rating by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -975,6 +1026,7 @@ newEffect{
 newEffect{
 	name = "MARTYRDOM",
 	desc = "Martyrdom",
+	long_desc = function(self, eff) return ("All damage done by the target will also hurt it for %d%%."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -991,6 +1043,7 @@ newEffect{
 newEffect{
 	name = "GOLEM_MOUNT",
 	desc = "Golem Mount",
+	long_desc = function(self, eff) return "The target is inside his golem." end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { },
@@ -1017,6 +1070,7 @@ newEffect{
 newEffect{
 	name = "CURSE_VULNERABILITY",
 	desc = "Curse of Vulnerability",
+	long_desc = function(self, eff) return ("The target is cursed, reducing all resistances by %d%%."):format(eff.power) end,
 	type = "curse",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -1035,6 +1089,7 @@ newEffect{
 newEffect{
 	name = "CURSE_IMPOTENCE",
 	desc = "Curse of Impotence",
+	long_desc = function(self, eff) return ("The target is cursed, reducing all damage done by %d%%."):format(eff.power) end,
 	type = "curse",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -1053,6 +1108,7 @@ newEffect{
 newEffect{
 	name = "CURSE_DEFENSELESSNESS",
 	desc = "Curse of Defenselessness",
+	long_desc = function(self, eff) return ("The target is cursed, reducing defence and all saves by %d."):format(eff.power) end,
 	type = "curse",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -1075,6 +1131,7 @@ newEffect{
 newEffect{
 	name = "CURSE_DEATH",
 	desc = "Curse of Death",
+	long_desc = function(self, eff) return ("The target is cursed, taking %0.2f darkness damage per turn and preventing natural life regeneration."):format(eff.dam) end,
 	type = "curse",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -1095,6 +1152,7 @@ newEffect{
 newEffect{
 	name = "CONTINUUM_DESTABILIZATION",
 	desc = "Continuum Destabilization",
+	long_desc = function(self, eff) return ("The target has been affected by space or time manipulations and is becoming more resistant to them (+%d)."):format(eff.power) end,
 	type = "other", -- Type "other" so that nothing can dispel it
 	status = "beneficial",
 	parameters = { power=10 },
@@ -1123,6 +1181,7 @@ newEffect{
 newEffect{
 	name = "FREE_ACTION",
 	desc = "Free Action",
+	long_desc = function(self, eff) return ("The target gains %d%% stun, daze and pinning immunity."):format(eff.power * 100) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=1 },
@@ -1143,6 +1202,7 @@ newEffect{
 newEffect{
 	name = "BLOODLUST",
 	desc = "Bloodlust",
+	long_desc = function(self, eff) return ("The target is in a magical bloodlust, improving spellpower by %d."):format(eff.dur) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=1 },
@@ -1169,6 +1229,7 @@ newEffect{
 newEffect{
 	name = "ACID_SPLASH",
 	desc = "Acid Splash",
+	long_desc = function(self, eff) return ("The target has been splashed with acid, doing %0.2f acid damage per turn, reducing armour by %d and attack by %d."):format(eff.dam, eff.armour, eff.atk) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -1191,6 +1252,7 @@ newEffect{
 newEffect{
 	name = "PACIFICATION_HEX",
 	desc = "Pacification Hex",
+	long_desc = function(self, eff) return ("The target is hexed, granting it %d%% chances each turn to be dazed for 3 turns."):format(eff.chance) end,
 	type = "hex",
 	status = "detrimental",
 	parameters = {chance=10},
@@ -1208,6 +1270,7 @@ newEffect{
 newEffect{
 	name = "BURNING_HEX",
 	desc = "Burning Hex",
+	long_desc = function(self, eff) return ("The target is hexed, each time it uses an ability it takes %0.2f fire damage."):format(eff.dam) end,
 	type = "hex",
 	status = "detrimental",
 	parameters = {dam=10},
@@ -1218,6 +1281,7 @@ newEffect{
 newEffect{
 	name = "EMPATHIC_HEX",
 	desc = "Empathic Hex",
+	long_desc = function(self, eff) return ("The target is hexed, creating an empathic bond with its victims. It takes %d%% feedback damage of all damage done."):format(eff.power) end,
 	type = "hex",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -1234,6 +1298,7 @@ newEffect{
 newEffect{
 	name = "DOMINATION_HEX",
 	desc = "Domination Hex",
+	long_desc = function(self, eff) return ("The target is hexed, temporarily changing its faction to %s."):format(engine.Faction.factions[eff.faction].name) end,
 	type = "hex",
 	status = "detrimental",
 	parameters = {},
@@ -1251,6 +1316,7 @@ newEffect{
 newEffect{
 	name = "BURROW",
 	desc = "Burrow",
+	long_desc = function(self, eff) return "The target is able to burrow into walls." end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { },
@@ -1267,6 +1333,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_WEAKNESS",
 	desc = "Gloom Weakness",
+	long_desc = function(self, eff) return ("The gloom reduces the target's attack by %d and damage rating by %d."):format(eff.atk, eff.dam) end,
 	type = "mental",
 	status = "detrimental",
 	parameters = { atk=10, dam=10 },
@@ -1287,6 +1354,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_SLOW",
 	desc = "Slowed by the gloom",
+	long_desc = function(self, eff) return ("The gloom reduces the target's global speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
 	type = "mental",
 	status = "detrimental",
 	parameters = { power=0.1 },
@@ -1306,6 +1374,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_STUNNED",
 	desc = "Stunned by the gloom",
+	long_desc = function(self, eff) return "The gloom has stunned the target, redering it unable to act." end,
 	type = "mental",
 	status = "detrimental",
 	parameters = {},
@@ -1325,6 +1394,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_CONFUSED",
 	desc = "Confused by the gloom",
+	long_desc = function(self, eff) return ("The gloom has confused the target, making it act randomly (%d%% chance) and unable to perform complex actions."):format(eff.power) end,
 	type = "mental",
 	status = "detrimental",
 	parameters = {},
@@ -1344,6 +1414,7 @@ newEffect{
 newEffect{
 	name = "STALKER",
 	desc = "Stalking",
+	long_desc = function(self, eff) return ("Stalking %s."):format(eff.target.name) end,
 	type = "mental",
 	status = "beneficial",
 	parameters = {},
@@ -1362,6 +1433,7 @@ newEffect{
 newEffect{
 	name = "STALKED",
 	desc = "Being Stalked",
+	long_desc = function(self, eff) return "The target is being stalked." end,
 	type = "mental",
 	status = "detrimental",
 	parameters = {},
@@ -1380,6 +1452,7 @@ newEffect{
 newEffect{
 	name = "INCREASED_LIFE",
 	desc = "Increased Life",
+	long_desc = function(self, eff) return ("The target's maximun life is increased by %d."):format(eff.life) end,
 	type = "physical",
 	status = "beneficial",
 	on_gain = function(self, err) return "#Target# gains extra life.", "+Life" end,
@@ -1404,6 +1477,7 @@ newEffect{
 newEffect{
 	name = "DOMINATED",
 	desc = "Dominated",
+	long_desc = function(self, eff) return "The target is dominated, increasing damage done to it by its master." end,
 	type = "mental",
 	status = "detrimental",
 	on_gain = function(self, err) return "#F53CBE##Target# has been dominated!", "+Dominated" end,
@@ -1426,6 +1500,7 @@ newEffect{
 newEffect{
 	name = "RAMPAGE",
 	desc = "Rampaging",
+	long_desc = function(self, eff) return "The target is rampaging!" end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { hateLoss = 0, critical = 0, damage = 0, speed = 0, attack = 0, evasion = 0 }, -- use percentages not fractions
@@ -1456,6 +1531,7 @@ newEffect{
 newEffect{
 	name = "RADIANT_FEAR",
 	desc = "Radiating Fear",
+	long_desc = function(self, eff) return "The target is frightening, pushing away other creatures." end,
 	type = "mental",
 	status = "beneficial",
 	parameters = { knockback = 1, radius = 3 },
@@ -1501,6 +1577,7 @@ newEffect{
 newEffect{
 	name = "INVIGORATED",
 	desc = "Invigorated",
+	long_desc = function(self, eff) return ("The target invigorated by death, increasing global speed by %d%%."):format(eff.speed) end,
 	type = "mental",
 	status = "beneficial",
 	parameters = { speed = 30, duration = 3 },
@@ -1521,6 +1598,7 @@ newEffect{
 newEffect{
 	name = "BLOODBATH",
 	desc = "Bloodbath",
+	long_desc = function(self, eff) return ("The thrill of combat improves the target's maximun life by %d, life regeneration by %d%% and stamina regeneration by %d%%."):format(eff.hp, eff.regen, eff.regen) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { hp=10, regen=10 },
@@ -1543,6 +1621,7 @@ newEffect{
 newEffect{
 	name = "BLOODRAGE",
 	desc = "Bloodrage",
+	long_desc = function(self, eff) return ("The target's strength is increased by %d by the thrill of combat."):format(eff.inc) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { inc=1, max=10 },
@@ -1566,6 +1645,7 @@ newEffect{
 newEffect{
 	name = "UNSTOPPABLE",
 	desc = "Unstoppable",
+	long_desc = function(self, eff) return "The target is unstoppable! It refuses to die." end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { hp_per_kill=2 },
@@ -1582,6 +1662,7 @@ newEffect{
 newEffect{
 	name = "DIM_VISION",
 	desc = "Reduced Vision",
+	long_desc = function(self, eff) return ("The target's vision range is decreased by %d."):format(eff.sight) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { sight=5 },
@@ -1601,7 +1682,8 @@ newEffect{
 
 newEffect{
 	name = "PHOENIX_EGG",
-	desc = "reviving phoenix",
+	desc = "Reviving Phoenix",
+	long_desc = function(self, eff) return "Target is being brought back to life." end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { life_regen = 25, mana_regen = -9.75, never_move = 1, silence = 1 },
@@ -1637,6 +1719,7 @@ newEffect{
 newEffect{
 	name = "HURRICANE",
 	desc = "Hurricane",
+	long_desc = function(self, eff) return ("The target's is in the center of a lightning hurricane, doing %0.2f to %0.2f lightning damage to itself and others around every turn."):format(eff.dam / 3, eff.dam) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { dam=10, radius=2 },
@@ -1665,6 +1748,7 @@ newEffect{
 newEffect{
 	name = "RECALL",
 	desc = "Recalling",
+	long_desc = function(self, eff) return "The target is awaiting to be recalled back to the worldmap." end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { },

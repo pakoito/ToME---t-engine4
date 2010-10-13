@@ -151,14 +151,19 @@ function _M:display()
 
 	h = h + self.font_h
 	for tid, act in pairs(player.sustain_talents) do
-		if act then s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(player:getTalentFromId(tid).name), x, h, 255, 255, 255) h = h + self.font_h end
+		if act then
+			local t = player:getTalentFromId(tid)
+			local desc = "#GOLD##{bold}#"..t.name.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
+			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(t.name), x, h, 255, 255, 255)) h = h + self.font_h
+		end
 	end
 	for eff_id, p in pairs(player.tmp) do
 		local e = player.tempeffect_def[eff_id]
+		local desc = e.long_desc(player, p)
 		if e.status == "detrimental" then
-			s:drawColorStringBlended(self.font, ("#LIGHT_RED#%s"):format(e.desc), x, h, 255, 255, 255) h = h + self.font_h
+			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_RED#%s"):format(e.desc), x, h, 255, 255, 255)) h = h + self.font_h
 		else
-			s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(e.desc), x, h, 255, 255, 255) h = h + self.font_h
+			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(e.desc), x, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 
