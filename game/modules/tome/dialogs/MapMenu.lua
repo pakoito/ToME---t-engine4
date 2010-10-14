@@ -46,6 +46,9 @@ function _M:init(mx, my, tmx, tmy)
 		self.force_y = my - (self.h - self.ih + list.fh / 3)
 	end)
 
+	self.mouse:reset()
+	self.mouse:registerZone(0, 0, game.w, game.h, function(button, x, y, xrel, yrel, bx, by, event) if (button == "left" or button == "right") and event == "button" then self.key:triggerVirtual("EXIT") end end)
+	self.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event) if button == "right" and event == "button" then self.key:triggerVirtual("EXIT") else self:mouseEvent(button, x, y, xrel, yrel, bx, by, event) end end)
 	self.key:addBinds{ EXIT = function() game:unregisterDialog(self) end, }
 end
 
