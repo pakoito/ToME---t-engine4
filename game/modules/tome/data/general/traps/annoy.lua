@@ -32,7 +32,8 @@ newEntity{ base = "TRAP_ANNOY",
 	triggered = function(self, x, y, who)
 		local tids = {}
 		for tid, lev in pairs(who.talents) do
-			if not who.talents_cd[tid] then tids[#tids+1] = tid end
+			local t = who:getTalentFromId()
+			if not who.talents_cd[tid] and t.mode == "activated" then tids[#tids+1] = tid end
 		end
 		for i = 1, 3 do
 			local tid = rng.tableRemove(tids)
