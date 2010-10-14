@@ -182,6 +182,29 @@ newEntity{
 	end,
 }
 
+newEntity{
+	name = "Departing Elves",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {30, 50},
+	rarity = 1,
+	coords = {{ x=0, y=0, w=100, h=100}},
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.NPC.new{
+			name="Merwionna, Elven camp leader",
+			type="humanoid", subtype="elf", faction="eryn-lasgalen",
+			display='@', color=colors.LIGHT_BLUE,
+			can_talk = "ringil-exchange",
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "actor", x, y)
+		game.logPlayer(who, "#LIGHT_BLUE#You notice a small camp of travelling elves.")
+		return true
+	end,
+}
+
 ---------------------------- Hostiles -----------------------------
 
 -- Ambushed!
