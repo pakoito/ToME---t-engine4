@@ -17,8 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---load("/data/general/objects/egos/charged-defensive.lua")
---load("/data/general/objects/egos/charged-utility.lua")
+local Talents = require("engine.interface.ActorTalents")
+local Stats = require "engine.interface.ActorStats"
 
 newEntity{
 	name = " of fire resistance", suffix=true, instant_resolve=true,
@@ -74,5 +74,49 @@ newEntity{
 	wielder = {
 		stun_immune = 0.7,
 		knockback_immune = 0.7,
+	},
+}
+
+newEntity{
+	name = "prismatic ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 10,
+	cost = 7,
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = "searing ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 10,
+	cost = 7,
+	wielder = {
+		melee_project={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.7 end),
+			[DamageType.ACID] = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.7 end),
+		},
+	},
+}
+
+newEntity{
+	name = "radiant ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	rarity = 18,
+	cost = 15,
+	wielder = {
+		melee_project={[DamageType.LIGHT] = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.7 end),},
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 10, function(e, v) return v * 0.15 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(20, 10, function(e, v) return v * 0.15 end),
+		},
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1, function(e, v) return v * 3 end),
+			[Stats.STAT_LCK] = resolvers.mbonus_material(10, 1, function(e, v) return v * 3 end),
+		},
 	},
 }

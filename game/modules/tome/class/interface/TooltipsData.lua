@@ -83,6 +83,11 @@ When you reach enough experience you advance to the next level. There is a maxim
 Each time you level you gain stat and talent points to use to improve your character.
 ]]
 
+TOOLTIP_ENCUMBERED = [[#GOLD#Encumberance#LAST#
+Each object you carry has an encumberance value, your maximun carrying capacity is determined by your strength.
+You can not move while encumbered, drop some items.
+]]
+
 -------------------------------------------------------------
 -- Stats
 -------------------------------------------------------------

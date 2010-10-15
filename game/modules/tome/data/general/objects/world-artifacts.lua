@@ -969,6 +969,85 @@ newEntity{ base = "BASE_WHIP",
 	},
 }
 
+newEntity{ base = "BASE_LEATHER_BELT",
+	unique = true,
+	name = "Mighty Girdle of Bombur",
+	unided_name = "massive, stained girdle",
+	desc = [[The great girdle of Bombur, famed survivor of the  Quest of Erebor and the Battle of the Five Armies. Bombur claimed that Gandalf himself enchanted this girdle with mighty wards against expanding girth. Whatever the source of its wondrous strength, it will prove of great aid in the transport of awkward burdens.]],
+	color = colors.LIGHT_RED,
+	level_range = {1, 25},
+	rarity = 170,
+	cost = 350,
+	material_level = 5,
+	wielder = {
+		knockback_immune = 0.4,
+		max_encumber = 70,
+		combat_armor = 4,
+	},
+	belt_slots = 10,
+	on_wear = function(self, who)
+		who.inven[who.INVEN_INBELT] = {max=self.belt_slots, worn=false, use_speed=0.6, id=who.INVEN_INBELT}
+	end,
+	on_cantakeoff = function(self, who)
+		if #who:getInven(who.INVEN_INBELT) > 0 then
+			game.logPlayer(who, "You can not remove %s while it still carries items.", self:getName{do_color=true})
+			return true
+		end
+	end,
+	on_takeoff = function(self, who)
+		who.inven[who.INVEN_INBELT] = nil
+	end,
+}
+
+
+newEntity{ base = "BASE_LEATHER_BELT",
+	unique = true,
+	name = "Rope Belt of Radagast",
+	unided_name = "short length of rope",
+	desc = [[The simplest of belts, worn for centuries by Radagast the Brown as he tended the birds and beasts of Middle Earth. Some of the wisdom and power of the Istari has settled permanently into its fibers.]],
+	color = colors.LIGHT_RED,
+	level_range = {20, 30},
+	rarity = 200,
+	cost = 450,
+	material_level = 5,
+	wielder = {
+		inc_stats = { [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 3, },
+		combat_spellpower = 8,
+		talents_types_mastery = { ["spell/nature"] = 0.2 },
+	},
+}
+
+
+newEntity{ base = "BASE_LEATHER_BELT",
+	unique = true,
+	name = "Girdle of Preservation",
+	unided_name = "shimmering, flawless belt",
+	desc = [[A pristine belt of purest white leather with a runed mithril buckle. The ravages of neither time nor the elements have touched it.]],
+	color = colors.WHITE,
+	level_range = {45, 50},
+	rarity = 400,
+	cost = 750,
+	material_level = 5,
+	wielder = {
+		inc_stats = { [Stats.STAT_CON] = 5, [Stats.STAT_WIL] = 5,  },
+		resists = {
+			[DamageType.ACID] = 15,
+			[DamageType.LIGHTNING] = 15,
+			[DamageType.FIRE] = 15,
+			[DamageType.COLD] = 15,
+			[DamageType.LIGHT] = 15,
+			[DamageType.DARKNESS] = 15,
+			[DamageType.BLIGHT] = 15,
+			[DamageType.NATURE] = 15,
+			[DamageType.PHYSICAL] = 10,
+			[DamageType.ARCANE] = 10,
+		},
+		combat_physresist = 15,
+		combat_mentalresist = 15,
+		combat_spellresist = 15,
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,

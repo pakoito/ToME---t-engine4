@@ -98,3 +98,16 @@ newEntity{
 		stun_immune = 0.2,
 	},
 }
+
+newEntity{
+	name = "prismatic ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 10,
+	cost = 7,
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
+		},
+	},
+}

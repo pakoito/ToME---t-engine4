@@ -97,6 +97,11 @@ function _M:display()
 		h = h + self.font_h
 	end
 
+	if player:attr("encumbered") then
+		self:mouseTooltip(self.TOOLTIP_ENCUMBERED, s:drawColorStringBlended(self.font, "Encumbered!", x, h, 255, 0, 0)) h = h + self.font_h
+		h = h + self.font_h
+	end
+
 	self:mouseTooltip(self.TOOLTIP_STRDEXCON, s:drawColorStringBlended(self.font, ("Str/Dex/Con: #00ff00#%3d/%3d/%3d"):format(player:getStr(), player:getDex(), player:getCon()), x, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_MAGWILCUN, s:drawColorStringBlended(self.font, ("Mag/Wil/Cun: #00ff00#%3d/%3d/%3d"):format(player:getMag(), player:getWil(), player:getCun()), x, h, 255, 255, 255)) h = h + self.font_h
 	h = h + self.font_h
