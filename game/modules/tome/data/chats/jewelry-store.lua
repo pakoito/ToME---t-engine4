@@ -96,7 +96,7 @@ There is a small fee dependent on the level of the ring, and you need a quality 
 
 newChat{ id="artifact_jewelry",
 	text = [[Yes! Thank to you this place is now free from the corruption. I will stay on this island to study the magical aura, and as promised I can make you better rings.
-Bring me a non-magical ring and two gems and I will turn them into a powerful ring.
+Bring me a non-magical ring and two different gems and I will turn them into a powerful ring.
 I will not make you pay a fee for it since you helped me so much, but I am afraid the ritual requires a gold plating. This should be equal to about 390 gold pieces.]],
 	answers = {
 		{"I need your services.", action=artifact_imbue_ring},
