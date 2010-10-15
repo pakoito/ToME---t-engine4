@@ -535,6 +535,29 @@ The perfect size for Bilbo, and stamped forever by the courage he found in Mirkw
 	},
 }
 
+newEntity{ base = "BASE_KNIFE",
+	unique = true,
+	name = "Slient Blade",
+	unided_name = "shining dagger",
+	desc = [[A thin dark dagger that seems to meld seamlessly into the shadows.]],
+	level_range = {40, 50},
+	rarity = 200,
+	require = { stat = { cun=25 }, },
+	cost = 250,
+	material_level = 3,
+	combat = {
+		dam = 25,
+		apr = 10,
+		atk = 15,
+		physcrit = 8,
+		dammod = {dex=0.55,cun=0.35},
+		no_stealth_break = true,
+	},
+	wielder = {
+		melee_project={[DamageType.RANDOM_SILENCE] = 10},
+	},
+}
+
 newEntity{ base = "BASE_RING",
 	unique = true,
 	name = "Ring of the War Master", color = colors.DARK_GREY,

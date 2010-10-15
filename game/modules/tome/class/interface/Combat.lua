@@ -88,6 +88,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		mult = (mult or 1) * (target.dominatedDamMult or 1)
 	end
 
+	local dont_break_stealth = false
 	if not self:attr("disarmed") then
 		-- All weapons in main hands
 		if self:getInven(self.INVEN_MAINHAND) then
@@ -99,6 +100,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 					hit = hit or h
 					if hit and not sound then sound = o.combat.sound
 					elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
+					if o.combat.no_stealth_break then dont_break_stealth = true end
 				end
 			end
 		end
@@ -119,6 +121,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 					hit = hit or h
 					if hit and not sound then sound = o.combat.sound
 					elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
+					if o.combat.no_stealth_break then dont_break_stealth = true end
 				end
 			end
 		end
@@ -132,6 +135,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		hit = hit or h
 		if hit and not sound then sound = self.combat.sound
 		elseif not hit and not sound_miss then sound_miss = self.combat.sound_miss end
+		if self.combat.no_stealth_break then dont_break_stealth = true end
 	end
 
 	-- Mount attack ?
@@ -156,7 +160,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	end
 
 	-- Cancel stealth!
-	self:breakStealth()
+	if not dont_break_stealth then self:breakStealth() end
 	return hit
 end
 

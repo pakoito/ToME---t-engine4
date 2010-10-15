@@ -245,6 +245,21 @@ newDamageType{
 	end,
 }
 
+-- Silence
+newDamageType{
+	name = "% chance to silence target", type = "RANDOM_SILENCE",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+			if target:checkHit(src:combatAttackDex() * 0.7, target:combatPhysicalResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_SILENCED, 4, {})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Blinds
 newDamageType{
 	name = "blindness", type = "BLIND",
