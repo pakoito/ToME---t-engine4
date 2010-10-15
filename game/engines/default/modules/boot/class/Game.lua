@@ -47,6 +47,10 @@ function _M:init()
 	engine.interface.GameSound.init(self)
 	engine.GameEnergyBased.init(self, engine.KeyBind.new(), 100, 100)
 	self.profile_font = core.display.newFont("/data/font/VeraIt.ttf", 14)
+	self.background = core.display.loadImage("/data/gfx/background/back.jpg")
+	if self.background then
+		self.background, self.background_w, self.background_h = self.background:glTexture()
+	end
 
 	self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 400)
 
@@ -248,6 +252,7 @@ function _M:display()
 
 	-- If background anim is stopped, thigns are much simplied
 	if self.stopped then
+		if self.background then self.background:toScreenFull(0, 0, self.w, self.h, self.background_w, self.background_h) end
 		self.tooltip:display()
 		self.tooltip:toScreen(5, 5)
 		engine.GameEnergyBased.display(self)

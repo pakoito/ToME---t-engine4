@@ -666,6 +666,26 @@ newEntity{ base = "BASE_GREATMAUL",
 	},
 }
 
+newEntity{ base = "BASE_GREATMAUL",
+	unique = true,
+	name = "Unstoppable Mauler", color = colors.UMBER,
+	unided_name = "heavy maul",
+	desc = [[A huge greatmaul of incredible weight. Wielding it you feel utterly unstoppable.]],
+	level_range = {23, 30},
+	rarity = 270,
+	require = { stat = { str=40 }, },
+	cost = 250,
+	material_level = 3,
+	combat = {
+		dam = 40,
+		apr = 15,
+		atk = 20,
+		physcrit = 3,
+		dammod = {str=1.2},
+		talent_on_hit = { [Talents.T_SUNDER_ARMOUR] = {level=3, chance=25} },
+	},
+}
+
 newEntity{ base = "BASE_CLOTH_ARMOR",
 	unique = true,
 	name = "Spider-Silk Robe of Torech Ungo", color = colors.DARK_GREEN,
