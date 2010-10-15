@@ -540,7 +540,7 @@ newEntity{ base = "BASE_KNIFE",
 	name = "Slient Blade",
 	unided_name = "shining dagger",
 	desc = [[A thin dark dagger that seems to meld seamlessly into the shadows.]],
-	level_range = {40, 50},
+	level_range = {23, 28},
 	rarity = 200,
 	require = { stat = { cun=25 }, },
 	cost = 250,
@@ -555,6 +555,56 @@ newEntity{ base = "BASE_KNIFE",
 	},
 	wielder = {
 		melee_project={[DamageType.RANDOM_SILENCE] = 10},
+	},
+}
+
+newEntity{ base = "BASE_KNIFE",
+	unique = true,
+	name = "Moon",
+	unided_name = "crescent blade",
+	desc = [[A viciously curved blade that devours the light around it.]],
+	level_range = {20, 30},
+	rarity = 200,
+	require = { stat = { dex=28, cun=20 }, },
+	cost = 300,
+	material_level = 3,
+	combat = {
+		dam = 24,
+		apr = 15,
+		physcrit = 5,
+		dammod = {dex=0.45,str=0.45},
+	},
+	wielder = {
+		lite = -1,
+		inc_damage={
+			[DamageType.DARKNESS] = 5,
+		},
+		melee_project={[DamageType.DARKNESS] = 20},
+	},
+}
+
+newEntity{ base = "BASE_KNIFE",
+	unique = true,
+	name = "Star",
+	unided_name = "jagged blade",
+	desc = [[A bright blade with more teeth than the most savage troll.]],
+	level_range = {20, 30},
+	rarity = 200,
+	require = { stat = { dex=20, cun=28 }, },
+	cost = 300,
+	material_level = 3,
+	combat = {
+		dam = 22,
+		apr = 7,
+		physcrit = 13,
+		dammod = {dex=0.45,str=0.45},
+	},
+	wielder = {
+		lite = 1,
+		inc_damage={
+			[DamageType.LIGHT] = 5,
+		},
+		melee_project={[DamageType.LIGHT] = 20},
 	},
 }
 
@@ -835,6 +885,28 @@ newEntity{ base = "BASE_BATTLEAXE",
 			game.logPlayer(who, "#LIGHT_BLUE#You feel as surge of power as you wield the axe of your ancestors!")
 		end
 	end,
+}
+
+newEntity{ base = "BASE_WARAXE",
+	unique = true,
+	name = "Blood-Letter",
+	unided_name = "Glacial Hatchet",
+	desc = [[A hand axe carved out of the most frozen parts of the helcaraxe.]],
+	level_range = {25, 35},
+	rarity = 235,
+	require = { stat = { str=40, dex=24 }, },
+	cost = 330,
+	material_level = 4,
+	combat = {
+		dam = 33,
+		apr = 4.5,
+		physcrit = 7,
+		dammod = {str=1},
+	},
+	wielder = {
+		combat_atk = 15,
+		melee_project={[DamageType.COLD] = 25},
+	},
 }
 
 --[=[
