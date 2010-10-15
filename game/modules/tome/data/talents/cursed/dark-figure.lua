@@ -68,7 +68,7 @@ newTalent{
 	getPercent = function(self, t) return 15 + math.floor(self:getTalentLevel(t) * 10) end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[The time you have spent supressing the curse has taught you self control. The duration of most non-magical effects are reduced by %d%%.]]):format(percent)
+		return ([[The time you have spent suppressing the curse has taught you self control. The duration of most non-magical effects are reduced by %d%%.]]):format(percent)
 	end,
 }
 

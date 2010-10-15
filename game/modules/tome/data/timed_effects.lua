@@ -1398,7 +1398,7 @@ newEffect{
 	type = "mental",
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#F53CBE##Target# is lost in dispair!", "+Confused" end,
+	on_gain = function(self, err) return "#F53CBE##Target# is lost in despair!", "+Confused" end,
 	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Confused" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
