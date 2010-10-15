@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
-	name = "dúathedlen", color=colors.DARK_GREY, -- Darkness exiled
+	name = "dúathedlen", color=colors.GREY, -- Darkness exiled
 	desc = "Under a shroud of darkness you discern an evil shape.",
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
@@ -116,8 +116,7 @@ Oh and it is twice as big too.]],
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "thaurhereg", color=colors.RED, -- Terrible blood
-	desc = [[This demon would look like a minautor, if minautors had a fiery aura surrounding them and horns all over the body.
-Oh and it is twice as big too.]],
+	desc = [[This terrible demon is covered in blood, it flows *on* its skin in ever changing patterns that disturb you simply by looking at it.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,
