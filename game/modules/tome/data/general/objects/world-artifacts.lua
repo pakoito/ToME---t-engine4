@@ -686,6 +686,26 @@ newEntity{ base = "BASE_GREATMAUL",
 	},
 }
 
+newEntity{ base = "BASE_MACE",
+	unique = true,
+	name = "Crooked Club", color = colors.GREEN,
+	unided_name = "weird club",
+	desc = [[An oddly twisted club with a hefty weight on the end.]],
+	level_range = {3, 12},
+	rarity = 192,
+	require = { stat = { str=20, cun=19 }, },
+	cost = 250,
+	material_level = 2,
+	combat = {
+		dam = 18,
+		apr = 4,
+		atk = 12,
+		physcrit = 10,
+		dammod = {str=1},
+		melee_project={[DamageType.RANDOM_CONFUSION] = 14},
+	},
+}
+
 newEntity{ base = "BASE_CLOTH_ARMOR",
 	unique = true,
 	name = "Spider-Silk Robe of Torech Ungo", color = colors.DARK_GREEN,
@@ -926,6 +946,26 @@ newEntity{ base = "BASE_WARAXE",
 	wielder = {
 		combat_atk = 15,
 		melee_project={[DamageType.COLD] = 25},
+	},
+}
+
+newEntity{ base = "BASE_WHIP",
+	unided_name = "metal whip",
+	name = "Scorpion's Tail", color=colors.GREEN, unique = true,
+	desc = [[A long whip of linked metal joints finished with a viciously sharp barb leaking venomous poison.]],
+	require = { stat = { dex=28 }, },
+	cost = 150,
+	material_level = 3,
+	combat = {
+		dam = 28,
+		apr = 8,
+		atk = 10,
+		physcrit = 5,
+		dammod = {dex=1},
+	},
+	wielder = {
+		see_invisible = 9,
+		melee_project={[DamageType.POISON] = 22},
 	},
 }
 

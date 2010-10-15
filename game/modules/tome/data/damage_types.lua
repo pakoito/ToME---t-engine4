@@ -674,6 +674,21 @@ newDamageType{
 	end,
 }
 
+-- Confusion
+newDamageType{
+	name = "% chances to confuse", type = "RANDOM_CONFUSION",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) and target:canBe("confusion") then
+				target:setEffect(target.EFF_CONFUSED, dam, {power=75})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Physical + Blind
 newDamageType{
 	name = "sand", type = "SAND",
