@@ -25,8 +25,8 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 70, height = 70,
-	all_remembered = true,
-	all_lited = true,
+--	all_remembered = true,
+--	all_lited = true,
 	persistant = "zone",
 	-- Apply a darkish tint to all the map
 	color_shown = {0.7, 0.7, 0.7, 1},
