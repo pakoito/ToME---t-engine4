@@ -74,3 +74,14 @@ newEntity{
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 80 },
 }
+
+newEntity{
+	name = " of stability", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	rarity = 12,
+	cost = 12,
+	wielder = {
+		stun_immune = 0.2,
+		knockback_immune = 0.2,
+	},
+}
