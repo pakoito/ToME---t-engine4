@@ -31,7 +31,6 @@ newAchievement{
 	mode = "player",
 	can_gain = function(self, who)
 		self.nb = (self.nb or 0) + 1
-		print(self.nb, "***")
 		if self.nb >= 1000 then return true end
 	end
 }
@@ -59,5 +58,15 @@ newAchievement{
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("corrupter")
 		game:setAllowedBuild("corrupter_reaver", true)
+	end,
+}
+
+newAchievement{
+	name = "Backstabbing Traitor", id = "ESCORT_KILL",
+	desc = [[Killed 6 escorted adventurers while you were supposed to save them]],
+	mode = "player",
+	can_gain = function(self, who, target)
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 6 then return true end
 	end,
 }

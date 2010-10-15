@@ -73,7 +73,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Distract",
+	name = "Lure",
 	type = {"cunning/trapping", 2},
 	points = 5,
 	cooldown = 20,

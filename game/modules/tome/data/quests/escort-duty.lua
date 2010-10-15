@@ -309,6 +309,9 @@ on_grant = function(self, who)
 		game.logPlayer(game.player, "#LIGHT_RED#%s is dead, quest failed!", self.name:capitalize())
 		game.player:setQuestStatus(self.quest_id, engine.Quest.FAILED)
 		game.player:hasQuest(self.quest_id).killing_npc = who and who.name or "something"
+		if who.resolveSource and who:resolveSource().player then
+			world:gainAchievement("ESCORT_KILL", game.player)
+		end
 	end
 
 	-- Spawn actor
