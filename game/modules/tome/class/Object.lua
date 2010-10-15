@@ -203,12 +203,15 @@ function _M:getTextualDesc()
 		desc:add(("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0), true)
 		desc:add("Damage type: "..DamageType:get(self.combat.damtype or DamageType.PHYSICAL).name, true)
 		if self.combat.range then desc:add("Firing range: "..self.combat.range, true) end
-		desc:add(true)
 
 		if self.combat.talent_on_hit then
 			for tid, data in pairs(self.combat.talent_on_hit) do
 				desc:add(("Talent on hit(melee): %d%% chance %s (level %d)."):format(data.chance, self:getTalentFromId(tid).name, data.level), true)
 			end
+		end
+
+		if self.combat.no_stealth_break then
+			desc:add("When used from stealth a simple attack with it will not break stealth.", true)
 		end
 	end
 
