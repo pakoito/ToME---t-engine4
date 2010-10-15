@@ -682,7 +682,7 @@ newEntity{ base = "BASE_GREATMAUL",
 		atk = 20,
 		physcrit = 3,
 		dammod = {str=1.2},
-		talent_on_hit = { [Talents.T_SUNDER_ARMOUR] = {level=3, chance=25} },
+		talent_on_hit = { [Talents.T_SUNDER_ARMOUR] = {level=3, chance=15} },
 	},
 }
 
