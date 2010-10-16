@@ -23,6 +23,7 @@ newEntity{ base = "BASE_SCROLL",
 	name = "Loremaster Verutir's note", lore="sunwall-note-"..i, unique="Loremaster Verutir's note "..i,
 	desc = [[A paper scrap containing some lore.]],
 	rarity = 50,
+	is_magic_device = false,
 	encumberance = 0,
 }
 end

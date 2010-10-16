@@ -1095,6 +1095,13 @@ function _M:unlearnTalent(t_id)
 	return true
 end
 
+--- Equilibrium check
+function _M:equilibriumChance(eq)
+	local chance = math.sqrt((eq or 0) + self:getEquilibrium()) / 60
+	print("[Equilibrium] Use chance: ", 100 - chance * 100, "::", self:getEquilibrium())
+	return rng.percent(100 - chance * 100), 100 - chance * 100
+end
+
 --- Called before a talent is used
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)
@@ -1166,13 +1173,10 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Equilibrium is special, it has no max, but the higher it is the higher the chance of failure (and loss of the turn)
 	-- But it is not affected by fatigue
 	if (ab.equilibrium or ab.sustain_equilibrium) and not fake then
-		local eq = ab.equilibrium or ab.sustain_equilibrium
-		local chance = math.sqrt(eq + self:getEquilibrium()) / 60
 		-- Fail ? lose energy and 1/10 more equilibrium
-		print("[Equilibrium] Use chance: ", 100 - chance * 100, "::", self:getEquilibrium())
-		if not rng.percent(100 - chance * 100) then
+		if not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
-			self:incEquilibrium(eq / 10)
+			self:incEquilibrium((ab.equilibrium or ab.sustain_equilibrium) / 10)
 			self:useEnergy()
 			return false
 		end
@@ -1215,7 +1219,10 @@ function _M:postUseTalent(ab, ret)
 	if not ret then return end
 
 	-- Count talents that count as spells
-	if ab.is_spell then self:attr("casted_spells", 1) end
+	if ab.is_spell then
+		self:attr("casted_spells", 1)
+		self:antimagicBackslash(4 + self:getTalentLevelRaw(ab))
+	end
 
 	if not ab.no_energy then
 		if ab.is_spell then
@@ -1337,6 +1344,24 @@ function _M:breakStealth()
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
 		self.changed = true
 	end
+end
+
+--- Break antimagic for a while after using spells & magic devices
+function _M:antimagicBackslash(turns)
+	local done = false
+	for tid, _ in pairs(self.talents) do
+		local t = self:getTalentFromId(tid)
+		if t.type[1] == "wild-gift/antimagic" and t.mode ~= "passive" then
+			if t.mode == "activated" then
+				self.talents_cd[tid] = (self.talents_cd[tid] or 0) + turns
+			elseif t.mode == "sustained" then
+				self:forceUseTalent(tid, {ignore_energy=true})
+				self.talents_cd[tid] = (self.talents_cd[tid] or 0) + turns
+			end
+			done = true
+		end
+	end
+	if done then game.logPlayer(self, "#LIGHT_RED#Your antimagic abilities are disrupted!") end
 end
 
 --- Pack Rat chance

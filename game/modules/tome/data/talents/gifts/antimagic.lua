@@ -26,18 +26,25 @@ newTalent{
 	on_absorb = function(self, t, damtype)
 		if not DamageType:get(damtype).antimagic_resolve then return end
 
-		local equi = math.ceil(2 + self:getTalentLevel(t) * 1.5)
-		local stamina = math.ceil(3 + self:getTalentLevel(t) * 1.6)
-		self:incEquilibrium(-equi)
-		self:incStamina(stamina)
-		self:setEffect(self.EFF_RESOLVE, 7, {damtype=damtype, res=10 + self:getTalentLevel(t) * self:getWil() * 0.06})
+		if not self:isTalentActive(self.T_ANTIMAGIC_SHIELD) then
+			local equi = 1 + self:combatTalentMindDamage(t, 10, 5)
+			local stamina = 1 + self:combatTalentMindDamage(t, 10, 10)
+			self:incEquilibrium(-equi)
+			self:incStamina(stamina)
+		end
+		self:setEffect(self.EFF_RESOLVE, 7, {damtype=damtype, res=self:combatTalentMindDamage(t, 10, 40)})
 		game.logSeen(self, "%s is invigorated by the attack!", self.name:capitalize())
 	end,
 	info = function(self, t)
 		return ([[You stand in the way of magical damage. That which does not kill you makes you stronger.
 		Each time you are hit by a magical damage you get a %d%% resistance to this elemental for 7 turns.
-		You also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium by %d and increasing your stamina by %d.]]):
-		format(10 + self:getTalentLevel(t) * self:getWil() * 0.06, math.ceil(2 + self:getTalentLevel(t) * 1.5), math.ceil(3 + self:getTalentLevel(t) * 1.6))
+		If antimagic shiled is not active you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium by %d and increasing your stamina by %d.
+		The effect will increase with your Willpower stat.]]):
+		format(
+			self:combatTalentMindDamage(t, 10, 40),
+			1 + self:combatTalentMindDamage(t, 10, 5),
+			1 + self:combatTalentMindDamage(t, 10, 10)
+		)
 	end,
 }
 
@@ -69,24 +76,40 @@ newTalent{
 	points = 5,
 	sustain_equilibrium = 30,
 	cooldown = 20,
-	range = 20,
-	activate = function(self, t)
-		game.logPlayer(self, "===================MAKE ME!")
+	range = 25,
+	on_damage = function(self, t, damtype, dam)
+		if not DamageType:get(damtype).antimagic_resolve then return dam end
 
+		if dam <= self.antimagic_shield then
+			self:incEquilibrium(dam / 30)
+			dam = 0
+		else
+			self:incEquilibrium(self.antimagic_shield / 30)
+			dam = dam - self.antimagic_shield
+		end
+
+		if not self:equilibriumChance() then
+			self:forceUseTalent(self.T_ANTIMAGIC_SHIELD, {ignore_energy=true})
+			game.logSeen(self, "#GREEN#The antimagic shield of %s crumbles.", self.name)
+		end
+		return dam
+	end,
+	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local power = 10 + 5 * self:getTalentLevel(t)
 		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID]=power}),
+			am = self:addTemporaryValue("antimagic_shield", self:combatTalentMindDamage(t, 20, 80)),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("on_melee_hit", p.onhit)
+		self:removeTemporaryValue("antimagic_shield", p.am)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d.
+		return ([[Surround yourself with a shield that will absorb at most %d magical or elemental damage per attacks.
+		Each time damage is absorbed your equilibrium increases and a check is made, if it fails the shield will crumble.
 		The effect will increase with your Willpower stat.]]):
-		format(20 + self:getWil(50) * self:getTalentLevel(t))
+		format(self:combatTalentMindDamage(t, 20, 80))
 	end,
 }
 
@@ -106,7 +129,7 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 
-			local base = 20 + self:getTalentLevel(t) * self:getWil() / 2.4
+			local base = self:combatTalentMindDamage(t, 20, 130)
 			local mana = base * 2
 			local vim = base
 			local positive = base / 2
@@ -129,14 +152,15 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local base = 20 + self:getTalentLevel(t) * self:getWil() / 2.4
+		local base = self:combatTalentMindDamage(t, 20, 130)
 		local mana = base * 2
 		local vim = base
 		local positive = base / 2
 		local negative = base / 2
 
 		return ([[Drain %d mana, %d vim, %d positive and negative energies from your target, triggering a chain reaction that explodes in a burst of arcane damage.
-		The damage done is 130%% of the mana drained, 260%% of the vim drained, 530%% of the positive or negative enrgy drained, whichever is higher.]]):
+		The damage done is 130%% of the mana drained, 260%% of the vim drained, 530%% of the positive or negative enrgy drained, whichever is higher.
+		The effect will increase with your Willpower stat.]]):
 		format(mana, vim, positive, negative)
 	end,
 }

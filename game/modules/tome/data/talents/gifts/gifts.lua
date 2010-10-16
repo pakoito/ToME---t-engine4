@@ -19,7 +19,7 @@
 
 -- Wild Gifts
 newTalentType{ type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
-newTalentType{ type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it." }
+newTalentType{ type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it.\nUsing a magical device or a spell will put all antimagic talents on cooldown for a few turns." }
 newTalentType{ type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
 newTalentType{ type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
 newTalentType{ type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }

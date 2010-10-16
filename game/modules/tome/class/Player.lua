@@ -607,7 +607,10 @@ function _M:playerUseItem(object, item, inven)
 			end
 			if ret and ret == "destroy" then
 				-- Count magic devices
-				if o.is_magic_device then self:attr("used_magic_devices", 1) end
+				if o.is_magic_device then
+					self:attr("used_magic_devices", 1)
+					self:antimagicBackslash(4 + (o.material_level or 1))
+				end
 
 				if not o.unique and self:doesPackRat() then
 					game.logPlayer(self, "Pack Rat!")

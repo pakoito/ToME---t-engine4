@@ -56,6 +56,13 @@ setDefaultProjector(function(src, x, y, type, dam)
 			else dam = dam * ((100 - res) / 100)
 			end
 		end
+		print("[PROJECTOR] after resists dam", dam)
+
+		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
+			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
+			dam = t.on_damage(target, target.T_ANTIMAGIC_SHIELD, type, dam)
+		end
+
 		print("[PROJECTOR] final dam", dam)
 
 		local flash = game.flash.NEUTRAL

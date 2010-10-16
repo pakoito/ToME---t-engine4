@@ -46,6 +46,7 @@ newEntity{ base = "BASE_SCROLL",
 	name = "tattered paper scrap", lore="trollshaws-note-"..i,
 	desc = [[A paper scrap, left by an adventurer.]],
 	rarity = false,
+	is_magic_device = false,
 	encumberance = 0,
 }
 end

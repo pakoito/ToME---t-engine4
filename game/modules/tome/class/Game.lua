@@ -886,7 +886,7 @@ function _M:onQuit()
 	self.player:runStop("quitting")
 	self.player:restStop("quitting")
 
-	if not self.quit_dialog and not self.player.dead then
+	if not self.quit_dialog and not self.player.dead and not self:hasDialogUp() then
 		self.quit_dialog = Dialog:yesnoPopup("Save and exit?", "Save and exit?", function(ok)
 			if ok then
 				local d = engine.ui.Dialog:simplePopup("Quitting...", "Quitting...", nil, true)

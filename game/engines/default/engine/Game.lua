@@ -211,6 +211,11 @@ function _M:unregisterDialog(d)
 	if self.onUnregisterDialog then self:onUnregisterDialog(d) end
 end
 
+--- Do we have a dialog running
+function _M:hasDialogUp()
+	return #self.dialogs > 0
+end
+
 --- The C core gives us command line arguments
 function _M:commandLineArgs(args)
 	for i, a in ipairs(args) do

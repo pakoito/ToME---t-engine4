@@ -39,6 +39,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {1, 40},
 	rarity = 3,
 	cost = 1,
+	material_leve = 1,
 
 	use_simple = { name="light up the surrounding area", use = function(self, who)
 		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
@@ -52,6 +53,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 1,
+	material_leve = 1,
 
 	use_simple = { name="identify one object (or all with high magic stat)", use = function(self, who)
 		if who:getMag() < 28 then
@@ -77,6 +79,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {1, 30},
 	rarity = 4,
 	cost = 3,
+	material_leve = 2,
 
 	use_simple = { name="teleport you randomly over a short distance", use = function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
@@ -92,6 +95,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {30, 50},
 	rarity = 7,
 	cost = 3,
+	material_leve = 4,
 
 	use_simple = { name="teleport you randomly over a short distance into a targeted area", use = function(self, who)
 		local tg = {type="ball", nolock=true, no_restrict=true, nowarning=true, range=10 + who:getMag(10), radius=3}
@@ -113,6 +117,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {10, 50},
 	rarity = 8,
 	cost = 4,
+	material_leve = 3,
 
 	use_simple = { name="teleport you anywhere on the level, randomly", use = function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
@@ -128,6 +133,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 3,
+	material_leve = 2,
 
 	use_simple = { name="map the area directly around you", use = function(self, who)
 		who:magicMap(20)
@@ -141,6 +147,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {15, 35},
 	rarity = 4,
 	cost = 5,
+	material_leve = 1,
 
 	use_simple = { name="detect enemies within a certain range", use = function(self, who)
 		local rad = 15 + who:getMag(20)
@@ -158,6 +165,7 @@ newEntity{ base = "BASE_SCROLL",
 	level_range = {10, 50},
 	rarity = 9,
 	cost = 7,
+	material_leve = 3,
 
 	use_simple = { name="create a temporary shield that absorbs damage", use = function(self, who)
 		local power = 60 + who:getMag(100)
