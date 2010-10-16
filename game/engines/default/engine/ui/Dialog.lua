@@ -27,8 +27,7 @@ module(..., package.seeall, class.inherit(Base))
 --- Requests a simple, press any key, dialog
 function _M:simplePopup(title, text, fct, no_leave)
 	local w, h = self.font:size(text)
-	local tw, th = self.font_bold:size(title)
-	local d = new(title, math.max(w, tw) + 20, h + 75)
+	local d = new(title, 1, 1)
 	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}}}
 	if not no_leave then
 		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
@@ -44,7 +43,7 @@ end
 --- Requests a simple, press any key, dialog
 function _M:simpleLongPopup(title, text, w, fct, no_leave)
 	local list = text:splitLines(w - 10, self.font)
-	local d = new(title, w + 20, #list * self.font_h + 75)
+	local d = new(title, 1, 1)
 	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=self.font_h * #list, text=text}}}
 	if not no_leave then
 		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
@@ -60,8 +59,7 @@ end
 --- Requests a simple yes-no dialog
 function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 	local w, h = self.font:size(text)
-	local tw, th = self.font_bold:size(title)
-	local d = new(title, math.max(w, tw) + 35, h + 75)
+	local d = new(title, 1, 1)
 
 --	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
@@ -81,7 +79,7 @@ end
 --- Requests a long yes-no dialog
 function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
 	local list = text:splitLines(w - 10, font)
-	local d = new(title, w + 20, #list * self.font_h + 75)
+	local d = new(title, 1, 1)
 
 --	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
@@ -159,10 +157,8 @@ function _M:generate()
 		s:merge(b4, self.w - 3, i)
 	end
 
-	self.font:setStyle("bold")
-	local tw, th = self.font:size(self.title)
-	s:drawColorStringBlended(self.font, self.title, (self.w - tw) / 2, 4, 255,255,255)
-	self.font:setStyle("normal")
+	local tw, th = self.font_bold:size(self.title)
+	s:drawColorStringBlended(self.font_bold, self.title, (self.w - tw) / 2, 4, 255,255,255)
 
 	if self.absolute then
 		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx - self.display_x, by - self.display_y, event) end)
@@ -225,6 +221,9 @@ function _M:setupUI(resizex, resizey, on_resize)
 		mw = mw + addw + 5 * 2
 		mh = mh + addh + 5 + 22 + 3
 --		print("===", mw, addw)
+
+		local tw, th = self.font_bold:size(self.title)
+		mw = math.max(tw + 6, mw)
 
 		if on_resize then on_resize(resizex and mw or self.w, resizey and mh or self.h) end
 		self:resize(resizex and mw or self.w, resizey and mh or self.h)
