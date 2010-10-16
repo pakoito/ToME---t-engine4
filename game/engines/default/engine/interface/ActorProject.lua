@@ -64,7 +64,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 	while lx and ly do
 		if typ.block_path and typ:block_path(lx, ly) then break end
 		stop_radius_x, stop_radius_y = lx, ly
-		
+
 		-- Deam damage: beam
 		if typ.line then addGrid(lx, ly) end
 
@@ -120,7 +120,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 				if not game.level.map:checkAllEntities(x, y, "projected", self, t, x, y, damtype, dam, particles) then
 					-- Friendly fire ?
 					if px == self.x and py == self.y then
-						if t.friendlyfire then
+						if typ.friendlyfire then
 							DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp)
 							if particles then
 								game.level.map:particleEmitter(px, py, 1, particles.type)
@@ -229,7 +229,7 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 		if not game.level.map:checkAllEntities(px, py, "projected", self, typ, px, py, damtype, dam, particles) then
 			-- Friendly fire ?
 			if px == self.x and py == self.y then
-				if tg.friendlyfire then
+				if typ.friendlyfire then
 					DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp)
 					if particles and type(particles) == "table" then
 						game.level.map:particleEmitter(px, py, 1, particles.type)

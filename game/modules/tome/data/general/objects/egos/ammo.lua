@@ -66,6 +66,7 @@ newEntity{
 		ranged_project={[DamageType.SLIME] = resolvers.mbonus_material(45, 6, function(e, v) return v * 0.1 * 0.9 end)},
 	},
 }
+
 newEntity{
 	name = "elemental ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
@@ -79,5 +80,15 @@ newEntity{
 			[DamageType.ACID] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
 		},
+	},
+}
+
+newEntity{
+	name = " of the wind", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 7,
+	combat = {
+		travel_speed = 200,
+		atk = resolvers.mbonus_material(10, 3, function(e, v) return v * 0.1 * 0.5 end),
 	},
 }

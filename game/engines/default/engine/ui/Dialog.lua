@@ -289,13 +289,15 @@ end
 function _M:moveFocus(v)
 	local id = self.focus_ui_id
 	local start = id or 1
+	local cnt = 0
 	id = util.boundWrap((id or 1) + v, 1, #self.uis)
-	while start ~= id do
+	while start ~= id and cnt <= #self.uis do
 		if self.uis[id].ui.can_focus then
 			self:setFocus(id)
 			break
 		end
 		id = util.boundWrap(id + v, 1, #self.uis)
+		cnt = cnt + 1
 	end
 end
 
