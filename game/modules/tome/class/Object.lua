@@ -215,12 +215,16 @@ function _M:getTextualDesc()
 			end
 		end
 
+		if self.combat.special_on_hit then
+			desc:add("Special effect on hit: "..self.combat.special_on_hit.desc, true)
+		end
+
 		if self.combat.no_stealth_break then
 			desc:add("When used from stealth a simple attack with it will not break stealth.", true)
 		end
 
 		if self.combat.travel_speed then
-			desc:add("Increase travel speed by "..self.combat.tarvel_speed.."%", true)
+			desc:add("Increase travel speed by "..self.combat.travel_speed.."%", true)
 		end
 	end
 

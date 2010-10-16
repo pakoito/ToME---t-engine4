@@ -91,6 +91,16 @@ newEntity{
 }
 
 newEntity{
+	name = "spiked ", prefix=true, instant_resolve=true,
+	level_range = {5, 50},
+	rarity = 6,
+	cost = 7,
+	wielder = {
+		on_melee_hit={[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 3, function(e, v) return v * 0.6 end)},
+	},
+}
+
+newEntity{
 	name = "searing ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,
@@ -100,6 +110,16 @@ newEntity{
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.7 end),
 			[DamageType.ACID] = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.7 end),
 		},
+	},
+}
+
+newEntity{
+	name = "rejuvenating ", prefix=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 10,
+	cost = 15,
+	wielder = {
+		stamina_regen = 0.5,
 	},
 }
 

@@ -341,6 +341,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		t.do_terror(self, t, target, dam)
 	end
 
+	-- Special effect
+	if hitted and not target.dead and weapon.special_on_hit and weapon.special_on_hit.fct then
+		weapon.special_on_hit.fct(weapon, self, target)
+	end
+
 	-- Regen on being hit
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end

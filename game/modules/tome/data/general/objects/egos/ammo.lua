@@ -92,3 +92,31 @@ newEntity{
 		atk = resolvers.mbonus_material(10, 3, function(e, v) return v * 0.1 * 0.5 end),
 	},
 }
+
+newEntity{
+	name = " of annihilation", suffix=true,
+	level_range = {1, 50},
+	greater_ego = true,
+	rarity = 15,
+	combat = {
+		physcrit = 100,
+	},
+	-- Powerful but does not come in much quantity
+	resolvers.generic(function(e)
+		e.generate_stack = rng.range(5, 10)
+	end),
+}
+
+newEntity{
+	name = " of unerring flight", suffix=true,
+	level_range = {1, 50},
+	greater_ego = true,
+	rarity = 15,
+	combat = {
+		atk = 500,
+	},
+	-- Powerful but does not come in much quantity
+	resolvers.generic(function(e)
+		e.generate_stack = rng.range(5, 10)
+	end),
+}

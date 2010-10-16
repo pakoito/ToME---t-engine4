@@ -110,3 +110,28 @@ newEntity{
 		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
 	},
 }
+
+newEntity{
+	name = " of torment", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = true,
+	rarity = 1,
+	cost = 22,
+	combat = {
+		special_on_hit = {desc="10% chance to torment the target", fct=function(combat, who, target)
+			if not rng.percent(100) then return end
+			local eff = rng.table{"stun", "blind", "pin", "teleport", "stone", "confusion", "silence", "knockback"}
+			if not target:canBe(eff) then return end
+			if not target:checkHit(who:combatAttack(combat), target:combatPhysicalResist(), 15) then return end
+			if eff == "stun" then target:setEffect(target.EFF_STUNNED, 3, {})
+			elseif eff == "blind" then target:setEffect(target.EFF_BLINDED, 3, {})
+			elseif eff == "pin" then target:setEffect(target.EFF_PINNED, 3, {})
+			elseif eff == "stone" then target:setEffect(target.EFF_STONED, 3, {})
+			elseif eff == "confusion" then target:setEffect(target.EFF_CONFUSED, 3, {power=60})
+			elseif eff == "silence" then target:setEffect(target.EFF_SILENCED, 3, {})
+			elseif eff == "knockback" then target:knockback(who.x, who.y, 3)
+			elseif eff == "teleport" then target:teleportRandom(target.x, target.y, 10)
+			end
+		end},
+	},
+}

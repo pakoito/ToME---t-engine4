@@ -38,3 +38,26 @@ newEntity{
 		blind_immune=0.5,
 	},
 }
+
+newEntity{
+	name = " of Elbereth", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 9,
+	cost = 10,
+	wielder = {
+		blind_immune=0.5,
+		combat_spellresist = 15,
+		lite=1,
+	},
+}
+
+newEntity{
+	name = "scorching ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 5,
+	cost = 4,
+	wielder = {
+		on_melee_hit={[DamageType.FIRE] = resolvers.mbonus_material(11, 3, function(e, v) return v * 0.6 end)},
+	},
+}

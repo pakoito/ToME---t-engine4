@@ -46,3 +46,23 @@ newEntity{
 		talent_cd_reduction={[Talents.T_RUSH]=10},
 	},
 }
+
+newEntity{
+	name = "solid ", prefix=true, instant_resolve=true,
+	level_range = {10, 30},
+	rarity = 5,
+	cost = 4,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(4, 2, function(e, v) return v * 1 end),
+	},
+}
+
+newEntity{
+	name = "impenetrable ", prefix=true, instant_resolve=true,
+	level_range = {25, 50},
+	rarity = 9,
+	cost = 8,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(10, 5, function(e, v) return v * 1 end),
+	},
+}
