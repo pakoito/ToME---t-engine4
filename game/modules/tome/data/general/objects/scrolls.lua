@@ -116,7 +116,7 @@ newEntity{ base = "BASE_SCROLL",
 
 	use_simple = { name="teleport you anywhere on the level, randomly", use = function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		who:teleportRandom(who.x, who.y, 200)
+		who:teleportRandom(who.x, who.y, 200, 15)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
