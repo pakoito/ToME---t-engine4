@@ -56,6 +56,7 @@ newEntity{
 newEntity{
 	name = " of wizardry", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
+	greater_ego = true,
 	rarity = 18,
 	cost = 45,
 	wielder = {

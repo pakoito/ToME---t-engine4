@@ -89,6 +89,7 @@ newEntity{
 newEntity{
 	name = " of power", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
+	greater_ego = true,
 	rarity = 18,
 	cost = 15,
 	wielder = {

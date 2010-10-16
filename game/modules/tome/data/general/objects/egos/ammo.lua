@@ -69,6 +69,7 @@ newEntity{
 newEntity{
 	name = "elemental ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
+	greater_ego = true,
 	rarity = 25,
 	cost = 35,
 	wielder = {

@@ -43,6 +43,7 @@ newEntity{
 newEntity{
 	name = " of mighty criticals", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
+	greater_ego = true,
 	rarity = 12,
 	cost = 25,
 	wielder = {

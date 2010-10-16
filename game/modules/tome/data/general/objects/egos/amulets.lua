@@ -99,6 +99,7 @@ newEntity{
 newEntity{
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
+	greater_ego = true,
 	rarity = 120,
 	cost = 25,
 	wielder = {

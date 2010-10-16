@@ -41,6 +41,7 @@ newEntity{
 Such a power comes at a huge cost though...
 Beware, you should take off your light, otherwise you will still be easily spotted.]],
 	level_range = {30, 40},
+	greater_ego = true,
 	rarity = 4,
 	cost = 16,
 	wielder = {

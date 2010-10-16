@@ -71,7 +71,8 @@ newEntity{
 newEntity{
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
-	rarity = 120,
+	greater_ego = true,
+	rarity = 50,
 	cost = 25,
 	wielder = {
 		life_regen = -3,
@@ -90,6 +91,7 @@ newEntity{
 newEntity{
 	name = "gondorian ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
+	greater_ego = true,
 	rarity = 10,
 	cost = 10,
 	wielder = {

@@ -40,6 +40,7 @@ newEntity{
 newEntity{
 	name = " of delving", suffix=true,
 	level_range = {30, 50},
+	greater_ego = true,
 	rarity = 20,
 	cost = 20,
 	wielder = {

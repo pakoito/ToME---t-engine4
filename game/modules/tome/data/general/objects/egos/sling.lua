@@ -70,6 +70,7 @@ newEntity{
 newEntity{
 	name = " of great speed", suffix=true, instant_resolve=true,
 	level_range = {40, 50},
+	greater_ego = true,
 	rarity = 10,
 	cost = 60,
 	combat={physspeed = -0.2},
@@ -78,6 +79,7 @@ newEntity{
 newEntity{
 	name = "hobbit ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
+	greater_ego = true,
 	rarity = 24,
 	cost = 40,
 	wielder = {

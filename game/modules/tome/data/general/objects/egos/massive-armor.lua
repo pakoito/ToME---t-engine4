@@ -25,6 +25,7 @@ load("/data/general/objects/egos/armor.lua")
 newEntity{
 	name = " of the mumakil", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
+	greater_ego = true,
 	rarity = 20,
 	cost = 60,
 	wielder = {

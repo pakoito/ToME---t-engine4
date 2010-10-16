@@ -108,6 +108,7 @@ newEntity{
 newEntity{
 	name = " of deflection", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
+	greater_ego = true,
 	rarity = 15,
 	cost = 20,
 	wielder = {
@@ -118,6 +119,7 @@ newEntity{
 newEntity{
 	name = " of resilience", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
+	greater_ego = true,
 	rarity = 15,
 	cost = 20,
 	wielder = {

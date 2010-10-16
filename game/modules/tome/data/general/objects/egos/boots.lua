@@ -23,6 +23,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{
 	name = " of phasing", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
+	greater_ego = true,
 	rarity = 10,
 	cost = 40,
 	max_power = 60, power_regen = 1,
@@ -48,6 +49,7 @@ newEntity{
 newEntity{
 	name = " of speed", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
+	greater_ego = true,
 	rarity = 20,
 	cost = 60,
 	wielder = {
@@ -58,6 +60,7 @@ newEntity{
 newEntity{
 	name = " of rushing", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
+	greater_ego = true,
 	rarity = 10,
 	cost = 20,
 
@@ -68,6 +71,7 @@ newEntity{
 newEntity{
 	name = " of disengagement", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
+	greater_ego = true,
 	rarity = 10,
 	cost = 20,
 
