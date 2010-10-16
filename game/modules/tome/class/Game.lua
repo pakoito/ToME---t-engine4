@@ -159,6 +159,8 @@ function _M:newGame()
 				-- For quickbirth
 				savefile_pipe:push("", "entity", self.player)
 				self.creating_player = false
+
+				self.player:check("on_birth_done")
 			end, true))
 		end
 
@@ -189,6 +191,8 @@ function _M:newGame()
 			self.player:removeQuest(self.player.starting_quest)
 			self.player:grantQuest(self.player.starting_quest)
 			self.creating_player = false
+
+			self.player:check("on_birth_done")
 		else
 			-- Continue as normal
 			return Birther.quickBirth(b)

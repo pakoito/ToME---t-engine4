@@ -142,16 +142,18 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
 		resolvers.generic(function(self)
-			-- Invoke the golem
-			local t = self:getTalentFromId(self.T_REFIT_GOLEM)
-			t.action(self, t)
-
 			-- Make and wield some alchemist gems
 			local t = self:getTalentFromId(self.T_CREATE_ALCHEMIST_GEMS)
 			local gem = t.make_gem(self, t, "GEM_AGATE")
 			self:wearObject(gem, true, true)
 			self:sortInven()
 		end),
+
+		on_birth_done = function(self)
+			-- Invoke the golem
+			local t = self:getTalentFromId(self.T_REFIT_GOLEM)
+			t.action(self, t)
+		end,
 	},
 }
 
