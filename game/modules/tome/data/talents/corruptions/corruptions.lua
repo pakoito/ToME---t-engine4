@@ -18,13 +18,13 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ no_silence=true, type="corruption/sanguisuge", name = "sanguisuge", generic = true, description = "Manipulate the life force to power your own dark powers." }
-newTalentType{ no_silence=true, type="corruption/bone", name = "bone", description = "Harness the power of bones." }
-newTalentType{ no_silence=true, type="corruption/hexes", name = "hexes", description = "Hex your foes, hindering and crippling them." }
-newTalentType{ no_silence=true, type="corruption/curses", name = "curses", description = "Curse your foes, hindering and crippling them." }
-newTalentType{ no_silence=true, type="corruption/plague", name = "plage", description = "Spread diseases to your foes." }
-newTalentType{ no_silence=true, type="corruption/scourge", name = "scourge", description = "Bring pain and destruction to the world." }
-newTalentType{ no_silence=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/sanguisuge", name = "sanguisuge", generic = true, description = "Manipulate the life force to power your own dark powers." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/bone", name = "bone", description = "Harness the power of bones." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/hexes", name = "hexes", description = "Hex your foes, hindering and crippling them." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/curses", name = "curses", description = "Curse your foes, hindering and crippling them." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/plague", name = "plage", description = "Spread diseases to your foes." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/scourge", name = "scourge", description = "Bring pain and destruction to the world." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
 
 -- Generic requires for corruptions based on talent level
 corrs_req1 = {

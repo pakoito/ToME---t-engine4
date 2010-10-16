@@ -83,6 +83,9 @@ setDefaultProjector(function(src, x, y, type, dam)
 		if src.attr and src:attr("martyrdom") then
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100)
 		end
+
+		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
+
 		return dam
 	end
 	return 0
@@ -118,10 +121,12 @@ newDamageType{
 -- Arcane is basic (usualy) unresistable damage
 newDamageType{
 	name = "arcane", type = "ARCANE", text_color = "#PURPLE#",
+	antimagic_resolve = true,
 }
 -- The elemental damges
 newDamageType{
 	name = "fire", type = "FIRE", text_color = "#LIGHT_RED#",
+	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -134,6 +139,7 @@ newDamageType{
 }
 newDamageType{
 	name = "cold", type = "COLD", text_color = "#1133F3#",
+	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -146,6 +152,7 @@ newDamageType{
 }
 newDamageType{
 	name = "lightning", type = "LIGHTNING", text_color = "#ROYAL_BLUE#",
+	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -158,6 +165,7 @@ newDamageType{
 -- Acid detroys potions
 newDamageType{
 	name = "acid", type = "ACID", text_color = "#GREEN#",
+	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -171,9 +179,11 @@ newDamageType{
 -- Nature & Blight: Opposing damage types
 newDamageType{
 	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
+	antimagic_resolve = true,
 }
 newDamageType{
 	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
+	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam, extra)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -191,11 +201,13 @@ newDamageType{
 -- Light damage
 newDamageType{
 	name = "light", type = "LIGHT", text_color = "#YELLOW#",
+	antimagic_resolve = true,
 }
 
 -- Darkness damage
 newDamageType{
 	name = "darkness", type = "DARKNESS", text_color = "#DARK_GREY#",
+	antimagic_resolve = true,
 }
 
 -- Mind damage

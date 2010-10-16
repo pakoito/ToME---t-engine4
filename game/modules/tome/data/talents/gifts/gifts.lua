@@ -53,6 +53,8 @@ gifts_req5 = {
 
 load("/data/talents/gifts/call.lua")
 
+load("/data/talents/gifts/antimagic.lua")
+
 load("/data/talents/gifts/slime.lua")
 
 load("/data/talents/gifts/sand-drake.lua")

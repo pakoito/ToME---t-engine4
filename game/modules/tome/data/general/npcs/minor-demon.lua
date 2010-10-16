@@ -68,7 +68,7 @@ newEntity{ base = "BASE_NPC_DEMON",
 	rarity = 1,
 	rank = 2,
 	size_category = 1,
-	autolevel = "caster",
+	autolevel = "warrior",
 	combat_armor = 1, combat_def = 0,
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

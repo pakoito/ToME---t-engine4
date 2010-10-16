@@ -28,6 +28,7 @@ newEntity{
 	use_sound = "actions/read",
 	use_no_blind = true,
 	use_no_silence = true,
+	is_magic_device = true,
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
 	desc = [[Magical scrolls can have wildly different effects! Most of them function better with a high Magic score]],
 	egos = "/data/general/objects/egos/scrolls.lua", egos_chance = resolvers.mbonus(10, 5),

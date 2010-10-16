@@ -1763,3 +1763,20 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "RESOLVE",
+	desc = "Resolve",
+	long_desc = function(self, eff) return ("You gain %d%% resistance against %s."):format(eff.res, DamageType:get(eff.damtype).name) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { res=10, damtype=DamageType.ARCANE },
+	on_gain = function(self, err) return "#Target# attunes to the damage.", "+Resolve" end,
+	on_lose = function(self, err) return "#Target# is no longer attuned.", "-Resolve" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {[eff.damtype]=eff.res})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}

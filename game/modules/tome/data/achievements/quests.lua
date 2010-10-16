@@ -122,6 +122,10 @@ newAchievement{
 	desc = [[Freed Bree from the onslaught of the mad Tempest, Urkis.]],
 }
 newAchievement{
+	name = "Antimagic!", id = "ANTIMAGIC",
+	desc = [[Completed antimagic training in the Ziguranth camp.]],
+}
+newAchievement{
 	name = "There and back again", id = "WEST_PORTAL",
 	desc = [[Opened a portal to Middle-earth from the Far East.]],
 }

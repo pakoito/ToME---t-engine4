@@ -22,6 +22,7 @@ newTalent = function(t)
 	assert(engine.interface.ActorTalents.talents_types_def[t.type[1]], "No talent category "..tostring(t.type[1]).." for talent "..t.name)
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].no_silence then t.no_silence = true end
+	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_spell then t.is_spell = true end
 
 	if t.image then
 		if type(t.image) == "boolean" then

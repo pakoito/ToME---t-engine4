@@ -183,6 +183,29 @@ newEntity{
 }
 
 newEntity{
+	name = "Antimagic Quest",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {15, 25},
+	rarity = 7,
+	coords = {{ x=0, y=0, w=100, h=100}},
+	special_filter = function(self)
+		local p = game.player
+		if p.level < 15 then return false end
+		if p:attr("casted_spells") then return false end
+		if p:attr("used_magic_devices") then return false end
+		if p:knowTalent(p.T_TELEPORT_ANGOLWEN) then return false end
+		if p:attr("angolwen_access") then return false end
+		return true
+	end,
+	on_encounter = function(self, who)
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("antimagic-encounter", {name="Grim-looking fighter"}, who)
+		chat:invoke()
+		return true
+	end,
+}
+
+newEntity{
 	name = "Departing Elves",
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {30, 50},

@@ -1197,7 +1197,7 @@ function _M:preUseTalent(ab, silent, fake)
 			game.logSeen(self, "%s activates %s.", self.name:capitalize(), ab.name)
 		elseif ab.mode == "sustained" and self:isTalentActive(ab.id) then
 			game.logSeen(self, "%s deactivates %s.", self.name:capitalize(), ab.name)
-		elseif ab.type[1]:find("^spell/") then
+		elseif ab.is_spell then
 			game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
 		else
 			game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
@@ -1213,8 +1213,12 @@ end
 -- @return true to continue, false to stop
 function _M:postUseTalent(ab, ret)
 	if not ret then return end
+
+	-- Count talents that count as spells
+	if ab.is_spell then self:attr("casted_spells", 1) end
+
 	if not ab.no_energy then
-		if ab.type[1]:find("^spell/") then
+		if ab.is_spell then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
 		elseif ab.type[1]:find("^technique/") then
 			self:useEnergy(game.energy_to_act * self:combatSpeed())
@@ -1388,7 +1392,7 @@ function _M:startTalentCooldown(t)
 	local cd = t.cooldown
 	if type(cd) == "function" then cd = cd(self, t) end
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
-	if t.type[1]:find("^spell/") then
+	if t.is_spell then
 		self.talents_cd[t.id] = math.ceil(cd * (1 - self.spell_cooldown_reduction or 0))
 	else
 		self.talents_cd[t.id] = cd
@@ -1596,7 +1600,7 @@ function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)
 	end
 
 	-- Spell absorb
-	if self:attr("spell_absorb") and (t.talent and t.talent.type[1]:find("^spell/")) and rng.percent(self:attr("spell_absorb")) then
+	if self:attr("spell_absorb") and (t.talent and t.talent.is_spell) and rng.percent(self:attr("spell_absorb")) then
 		game.logSeen(self, "%s ignores the spell!", self.name:capitalize())
 		return true
 	end

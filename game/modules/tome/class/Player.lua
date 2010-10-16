@@ -606,6 +606,9 @@ function _M:playerUseItem(object, item, inven)
 				o:identify(true)
 			end
 			if ret and ret == "destroy" then
+				-- Count magic devices
+				if o.is_magic_device then self:attr("used_magic_devices", 1) end
+
 				if not o.unique and self:doesPackRat() then
 					game.logPlayer(self, "Pack Rat!")
 				else
@@ -623,6 +626,7 @@ function _M:playerUseItem(object, item, inven)
 				end
 				return true
 			end
+
 			self:breakStealth()
 			self.changed = true
 		end)

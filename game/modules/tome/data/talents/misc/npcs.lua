@@ -19,8 +19,8 @@
 
 -- race & classes
 newTalentType{ type="technique/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
-newTalentType{ no_silence=true, type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
-newTalentType{ no_silence=true, type="corruption/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ no_silence=true, is_spell=true, type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="wild-gift/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="undead/other", name = "other", hide = true, description = "Talents of the various entities of the world." }

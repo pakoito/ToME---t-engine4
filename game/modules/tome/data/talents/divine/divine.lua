@@ -18,16 +18,16 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ no_silence=true, type="divine/chants", name = "chants", generic = true, description = "Chant the glory of the sun." }
-newTalentType{ no_silence=true, type="divine/light", name = "light", description = "Invoke the power of light to heal and mend." }
-newTalentType{ no_silence=true, type="divine/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
-newTalentType{ no_silence=true, type="divine/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
-newTalentType{ no_silence=true, type="divine/glyphs", name = "glyphs", description = "Bind the holy powers into glyphs to trap your foes." }
-newTalentType{ no_silence=true, type="divine/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
-newTalentType{ no_silence=true, type="divine/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
-newTalentType{ no_silence=true, type="divine/hymns", name = "hymns", generic = true, description = "Chant the glory of the moon." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/chants", name = "chants", generic = true, description = "Chant the glory of the sun." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/light", name = "light", description = "Invoke the power of light to heal and mend." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/glyphs", name = "glyphs", description = "Bind the holy powers into glyphs to trap your foes." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/hymns", name = "hymns", generic = true, description = "Chant the glory of the moon." }
 
-newTalentType{ no_silence=true, type="divine/other", name = "other", description = "Various divine talents." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/other", name = "other", description = "Various divine talents." }
 
 -- Generic requires for corruptions based on talent level
 divi_req1 = {

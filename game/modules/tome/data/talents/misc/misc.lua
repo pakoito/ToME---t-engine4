@@ -20,7 +20,7 @@
 -- race & classes
 newTalentType{ type="base/class", name = "class", hide = true, description = "The basic talents defining a class." }
 newTalentType{ type="base/race", name = "race", hide = true, description = "The various racial bonuses a character can have." }
-newTalentType{ no_silence=true, type="rituals/rituals", name = "rituals", hide = true, description = "Rituals are not class abilities, you must find them or learn them from other people." }
+newTalentType{ no_silence=true, is_spell=true, type="rituals/rituals", name = "rituals", hide = true, description = "Rituals are not class abilities, you must find them or learn them from other people." }
 
 -- Load other misc things
 load("/data/talents/misc/npcs.lua")
@@ -125,6 +125,7 @@ newTalent{
 	name = "Teleport: Angolwen",
 	type = {"base/class", 1},
 	cooldown = 1000,
+	no_silence=true, is_spell=true,
 	action = function(self, t)
 		if not self:canBe("worldport") then
 			game.logPlayer(self, "The spell fizzles...")
