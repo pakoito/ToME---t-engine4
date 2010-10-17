@@ -1784,7 +1784,7 @@ newEffect{
 newEffect{
 	name = "LIGHTNING_SPEED",
 	desc = "Lightning Speed",
-	long_desc = function(self, eff) return ("Turn into pure lightning, moving %d%% faster."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Turn into pure lightning, moving %d%% faster. It also increases your lightning resistance by 100%% and your physical resistance by 30%%."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = {},
@@ -1793,11 +1793,18 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("lightning_speed", 1)
 		eff.moveid = self:addTemporaryValue("energy", {mod=self.energy.mod*eff.power/100})
+		eff.resistsid = self:addTemporaryValue("resists", {
+			[DamageType.PHYSICAL]=30,
+			[DamageType.LIGHTNING]=100,
+		})
+		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
 		eff.particle = self:addParticles(Particles.new("bolt_lightning", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("lightning_speed", eff.tmpid)
+		self:removeTemporaryValue("resists", eff.resistsid)
+		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
 		self:removeTemporaryValue("energy", eff.moveid)
 	end,
 }

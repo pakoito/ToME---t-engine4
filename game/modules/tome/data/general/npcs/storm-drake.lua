@@ -32,7 +32,7 @@ newEntity{
 	rank = 2,
 	size_category = 5,
 
-	autolevel = "warrior",
+	autolevel = "warriorwill",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=20, dex=20, mag=30, con=16 },
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
-		[Talents.T_TORNADO]=2,
+		[Talents.T_LIGHTNING_SPEED]=3,
 		[Talents.T_LIGHTNING_BREATH]=3,
 	},
 }

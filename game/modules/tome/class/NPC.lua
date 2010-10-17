@@ -31,21 +31,23 @@ function _M:init(t, no_default)
 end
 
 function _M:act()
-	-- Do basic actor stuff
-	if not mod.class.Actor.act(self) then return end
+	while self:enoughEnergy() and not self.dead do
+		-- Do basic actor stuff
+		if not mod.class.Actor.act(self) then return end
 
-	-- Compute FOV, if needed
-	self:doFOV()
+		-- Compute FOV, if needed
+		self:doFOV()
 
-	-- Let the AI think .... beware of Shub !
-	-- If AI did nothing, use energy anyway
-	self:doAI()
+		-- Let the AI think .... beware of Shub !
+		-- If AI did nothing, use energy anyway
+		self:doAI()
 
-	if self.emote_random and rng.percent(self.emote_random.chance) then
-		self:doEmote(rng.table(self.emote_random))
+		if self.emote_random and rng.percent(self.emote_random.chance) then
+			self:doEmote(rng.table(self.emote_random))
+		end
+
+		if not self.energy.used then self:useEnergy() end
 	end
-
-	if not self.energy.used then self:useEnergy() end
 end
 
 function _M:doFOV()
@@ -140,10 +142,13 @@ end
 function _M:tooltip(x, y, seen_by)
 	local str = mod.class.Actor.tooltip(self, x, y, seen_by)
 	if not str then return end
+	local killed = game.player.all_kills and (game.player.all_kills[self.name] or 0) or 0
 	return str..([[
+Killed by you: %d
 
 Target: %s
 UID: %d]]):format(
+	killed,
 	self.ai_target.actor and self.ai_target.actor.name or "none",
 	self.uid)
 end

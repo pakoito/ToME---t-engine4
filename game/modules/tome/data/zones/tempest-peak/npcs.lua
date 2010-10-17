@@ -20,7 +20,7 @@
 load("/data/general/npcs/gwelgoroth.lua", rarity(0))
 load("/data/general/npcs/xorn.lua", rarity(2))
 load("/data/general/npcs/snow-giant.lua", rarity(0))
-load("/data/general/npcs/storm-drake.lua", rarity(2))
+load("/data/general/npcs/storm-drake.lua", rarity(1))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
 

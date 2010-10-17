@@ -820,7 +820,7 @@ newEntity{ base = "BASE_GEM",
 		resists={[DamageType.MIND] = 35,},
 	},
 	imbue_powers = {
-		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CUN] = 5, },
+		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5, },
 		lite = 2,
 	},
 
