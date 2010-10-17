@@ -144,8 +144,8 @@ function _M:tooltip(x, y, seen_by)
 	if not str then return end
 	local killed = game.player.all_kills and (game.player.all_kills[self.name] or 0) or 0
 	return str..([[
-Killed by you: %d
 
+Killed by you: %d
 Target: %s
 UID: %d]]):format(
 	killed,
