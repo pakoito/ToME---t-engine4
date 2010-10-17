@@ -80,3 +80,31 @@ newEntity{
 		inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_CON] = 2, },
 	},
 }
+
+newEntity{
+	name = "oiled ", prefix=true, instant_resolve=true,
+	level_range = {1, 40},
+	rarity = 6,
+	cost = 7,
+	wielder = {
+		resists={[DamageType.ACID] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.15 end)},
+	},
+}
+
+newEntity{
+	name = " of fog", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 25,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 10, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHT] = resolvers.mbonus_material(15, 10, function(e, v) return v * 0.15 end),
+		},
+		confusion_immune = -0.2,
+		combat_def = resolvers.mbonus_material(6, 4, function(e, v) return v * 1 end),
+		lite = -1,
+		inc_stealth = resolvers.mbonus_material(10, 5, function(e, v) return v * 1, v end),
+	},
+}

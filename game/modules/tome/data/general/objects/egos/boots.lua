@@ -89,3 +89,14 @@ newEntity{
 		knockback_immune = 0.2,
 	},
 }
+
+newEntity{
+	name = " of tirelessness", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 7,
+	wielder = {
+		max_stamina = resolvers.mbonus_material(30, 10, function(e, v) return v * 0.1 end),
+		stamina_regen = resolvers.mbonus_material(10, 3, function(e, v) v=v/10 return v * 10, v end),
+	},
+}
