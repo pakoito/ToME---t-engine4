@@ -28,6 +28,7 @@ newTalentType{ type="wild-gift/slime", name = "slime aspect", generic = true, de
 newTalentType{ type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
 newTalentType{ type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
 newTalentType{ type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
+newTalentType{ type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {
@@ -60,6 +61,7 @@ load("/data/talents/gifts/slime.lua")
 load("/data/talents/gifts/sand-drake.lua")
 load("/data/talents/gifts/fire-drake.lua")
 load("/data/talents/gifts/cold-drake.lua")
+load("/data/talents/gifts/storm-drake.lua")
 
 function checkMaxSummon(self)
 	local nb = 0

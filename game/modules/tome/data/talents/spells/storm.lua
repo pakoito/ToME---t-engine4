@@ -74,7 +74,7 @@ newTalent{
 		if not x or not y then return nil end
 		local dam = self:combatTalentSpellDamage(t, 25, 200)
 		self:projectile(tg, x, y, DamageType.LIGHTNING_DAZE, {daze=100, dam=self:spellCrit(rng.avg(dam / 3, dam, 3))}, {type="lightning_explosion"})
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)

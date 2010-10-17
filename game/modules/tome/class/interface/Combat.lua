@@ -161,6 +161,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Cancel stealth!
 	if break_stealth then self:breakStealth() end
+	self:breakLightningSpeed()
 	return hit
 end
 

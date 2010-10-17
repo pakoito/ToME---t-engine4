@@ -139,6 +139,49 @@ function _M:tooltip()
 	return "Projectile: "..self.name
 end
 
+local coords = {
+	[1] = { 4, 2, 7, 3 },
+	[2] = { 1, 3, 4, 6 },
+	[3] = { 2, 6, 1, 9 },
+	[4] = { 7, 1, 8, 2 },
+	[5] = {},
+	[6] = { 9, 3, 8, 2 },
+	[7] = { 4, 8, 1, 9 },
+	[8] = { 7, 9, 4, 6 },
+	[9] = { 8, 6, 7, 3 },
+}
+
+--- Move one step to the given target if possible
+-- This tries the most direct route, if not available it checks sides and always tries to get closer
+function _M:moveDirection(x, y)
+	local l = line.new(self.x, self.y, x, y)
+	local lx, ly = l()
+	if lx and ly then
+		-- if we are blocked, try some other way
+		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+			local dirx = lx - self.x
+			local diry = ly - self.y
+			local dir = coord_to_dir[dirx][diry]
+
+			local list = coords[dir]
+			local l = {}
+			-- Find posiblities
+			for i = 1, #list do
+				local dx, dy = self.x + dir_to_coord[list[i]][1], self.y + dir_to_coord[list[i]][2]
+				if not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+					l[#l+1] = {dx,dy, (dx-x)^2 + (dy-y)^2}
+				end
+			end
+			-- Move to closest
+			if #l > 0 then
+				table.sort(l, function(a,b) return a[3]<b[3] end)
+				return self:move(l[1][1], l[1][2])
+			end
+		else
+			return self:move(lx, ly)
+		end
+	end
+end
 
 --- Called by the engine when the projectile can move
 function _M:act()
@@ -161,6 +204,16 @@ function _M:act()
 				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, radius_x, radius_y, self.tmp_proj)
 				game.level:removeEntity(self)
 				self.dead = true
+			end
+		elseif self.homing then
+			self:moveDirection(self.homing.target.x, self.homing.target.y)
+			self.homing.count = self.homing.count - 1
+			if (self.x == self.homing.target.x and self.y == self.homing.target.y) or self.homing.count <= 0 then
+				self.homing.on_hit(self, self.src, self.homing.target)
+				game.level:removeEntity(self)
+				self.dead = true
+			else
+				self.homing.on_move(self, self.src)
 			end
 		end
 	end
@@ -202,6 +255,28 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 	}
 
 	game.level.map:checkAllEntities(def.x, def.y, "on_projectile_target", p)
+
+	return p
+end
+
+--- Generate a projectile for an homing projectile
+function _M:makeHoming(src, display, def, target, count, on_move, on_hit)
+	display = display or {display='*'}
+	local speed = def.speed
+	local name = def.name
+	speed = speed or 10
+	local p =_M.new{
+		name = name,
+		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,
+		travel_particle = display.particle,
+		trail_particle = display.trail,
+		src = src,
+		def = def,
+		homing = {target=target, count=count, on_move=on_move, on_hit=on_hit},
+		energy = {mod=speed},
+	}
+
+	game.level.map:checkAllEntities(target.x, target.y, "on_projectile_target", p)
 
 	return p
 end

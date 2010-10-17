@@ -1780,3 +1780,24 @@ newEffect{
 		self:removeTemporaryValue("resists", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "LIGHTNING_SPEED",
+	desc = "Lightning Speed",
+	long_desc = function(self, eff) return ("Turn into pure lightning, moving %d%% faster."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# turn into pure lightning!.", "+Lightning Speed" end,
+	on_lose = function(self, err) return "#Target# is back to normal.", "-Lightning Speed" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("lightning_speed", 1)
+		eff.moveid = self:addTemporaryValue("energy", {mod=self.energy.mod*eff.power/100})
+		eff.particle = self:addParticles(Particles.new("bolt_lightning", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("lightning_speed", eff.tmpid)
+		self:removeTemporaryValue("energy", eff.moveid)
+	end,
+}

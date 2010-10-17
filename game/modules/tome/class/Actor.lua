@@ -1313,6 +1313,7 @@ function _M:postUseTalent(ab, ret)
 
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
+	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
 	return true
 end
 
@@ -1343,6 +1344,13 @@ function _M:breakStealth()
 
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
 		self.changed = true
+	end
+end
+
+--- Breaks lightning speed if active
+function _M:breakLightningSpeed()
+	if self:hasEffect(self.EFF_LIGHTNING_SPEED) then
+		self:removeEffect(self.EFF_LIGHTNING_SPEED)
 	end
 end
 

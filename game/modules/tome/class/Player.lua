@@ -201,6 +201,7 @@ function _M:updateMainShader()
 		if self:attr("stealth") then game.fbo_shader:setUniform("colorize", {0.7,0.7,0.7})
 		elseif self:attr("invisible") then game.fbo_shader:setUniform("colorize", {0.4,0.5,0.7})
 		elseif self:attr("unstoppable") then game.fbo_shader:setUniform("colorize", {1,0.2,0})
+		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("colorize", {0.2,0.3,1})
 		else game.fbo_shader:setUniform("colorize", {0,0,0}) -- Disable
 		end
 
@@ -211,6 +212,7 @@ function _M:updateMainShader()
 
 		-- Moving Blur shader
 		if self:attr("invisible") then game.fbo_shader:setUniform("motionblur", 3)
+		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("motionblur", 2)
 		else game.fbo_shader:setUniform("motionblur", 0) -- Disable
 		end
 	end
@@ -631,6 +633,7 @@ function _M:playerUseItem(object, item, inven)
 			end
 
 			self:breakStealth()
+			self:breakLightningSpeed()
 			self.changed = true
 		end)
 		local ok, ret = coroutine.resume(co)

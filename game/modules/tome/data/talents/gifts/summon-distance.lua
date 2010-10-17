@@ -67,7 +67,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Lightning Breath",
+	name = "Lightning Breath", short_name = "LIGHTNING_BREATH_HYDRA",
 	type = {"wild-gift/other",1},
 	require = gifts_req1,
 	points = 5,
@@ -242,7 +242,7 @@ newTalent{
 
 			max_mana = 150,
 			resolvers.talents{
-				[self.T_LIGHTNING_BREATH]=self:getTalentLevelRaw(t),
+				[self.T_LIGHTNING_BREATH_HYDRA]=self:getTalentLevelRaw(t),
 				[self.T_ACID_BREATH]=self:getTalentLevelRaw(t),
 				[self.T_POISON_BREATH]=self:getTalentLevelRaw(t),
 			},
