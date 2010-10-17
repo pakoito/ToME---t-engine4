@@ -97,3 +97,24 @@ newEntity{
 		life_regen = resolvers.mbonus_material(10, 2, function(e, v) return v * 1, v/10 end),
 	},
 }
+
+newEntity{
+	name = " of resilience", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		max_life = resolvers.mbonus_material(40, 30, function(e, v) return v * 0.2 end),
+	},
+}
+
+newEntity{
+	name = "blurring ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 9,
+	cost = 10,
+	wielder = {
+		combat_def_ranged = resolvers.mbonus_material(8, 2, function(e, v) return v * 1 end),
+		inc_stealth = resolvers.mbonus_material(10, 5, function(e, v) return v * 1, v end),
+	},
+}
