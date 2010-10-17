@@ -27,9 +27,7 @@ local reward_types = {
 		},
 		talents = {
 			[Talents.T_WEAPON_COMBAT] = 1,
-			[Talents.T_SWORD_MASTERY] = 1,
-			[Talents.T_AXE_MASTERY] = 1,
-			[Talents.T_MACE_MASTERY] = 1,
+			[Talents.T_WEAPONS_MASTERY] = 1,
 			[Talents.T_EXOTIC_WEAPONS_MASTERY] = 1,
 		},
 		stats = {

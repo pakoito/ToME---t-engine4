@@ -361,9 +361,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 end
 
 local weapon_talents = {
-	sword = Talents.T_SWORD_MASTERY,
-	axe =   Talents.T_AXE_MASTERY,
-	mace =  Talents.T_MACE_MASTERY,
+	sword = Talents.T_WEAPONS_MASTERY,
+	axe =   Talents.T_WEAPONS_MASTERY,
+	mace =  Talents.T_WEAPONS_MASTERY,
 	knife = Talents.T_KNIFE_MASTERY,
 	whip  = Talents.T_EXOTIC_WEAPONS_MASTERY,
 	trident=Talents.T_EXOTIC_WEAPONS_MASTERY,

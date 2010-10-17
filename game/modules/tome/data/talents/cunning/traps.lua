@@ -65,7 +65,7 @@ newTalent{
 		Level 2: Bear Trap
 		Level 3: Catapult Trap
 		Level 4: Disarm Trap
-		Level 5: Freezing Trap
+		Level 5: Nightshade Trap
 		New traps can also be learned from special teachers in the world.
 		Also increases the effectiveness of your traps by %d%%. (The effect varies for each trap)]]):
 		format(self:getTalentLevel(t) * 20)
@@ -286,6 +286,7 @@ newTalent{
 
 		t:resolve() t:resolve(nil, true)
 		t:setKnown(self, true)
+		game.level:addEntity(t)
 		game.zone:addEntity(game.level, t, "trap", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
@@ -354,6 +355,7 @@ newTalent{
 
 		t:resolve() t:resolve(nil, true)
 		t:setKnown(self, true)
+		game.level:addEntity(t)
 		game.zone:addEntity(game.level, t, "trap", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
@@ -414,6 +416,7 @@ newTalent{
 
 		t:resolve() t:resolve(nil, true)
 		t:setKnown(self, true)
+		game.level:addEntity(t)
 		game.zone:addEntity(game.level, t, "trap", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 
@@ -474,6 +477,7 @@ newTalent{
 
 		t:resolve() t:resolve(nil, true)
 		t:setKnown(self, true)
+		game.level:addEntity(t)
 		game.zone:addEntity(game.level, t, "trap", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
 

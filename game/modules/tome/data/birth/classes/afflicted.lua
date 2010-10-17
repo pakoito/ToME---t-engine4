@@ -64,7 +64,7 @@ newBirthDescriptor{
 		[ActorTalents.T_UNNATURAL_BODY] = 1,
 		[ActorTalents.T_GLOOM] = 1,
 		[ActorTalents.T_SLASH] = 1,
-		[ActorTalents.T_AXE_MASTERY] = 1
+		[ActorTalents.T_WEAPONS_MASTERY] = 1
 	},
 	copy = {
 		max_life = 110,

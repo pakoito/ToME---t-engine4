@@ -57,7 +57,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 		[Talents.T_ASSAULT]=4,
 		[Talents.T_OVERPOWER]=5,
 		[Talents.T_BLINDING_SPEED]=4,
-		[Talents.T_SWORD_MASTERY]=6,
+		[Talents.T_WEAPONS_MASTERY]=6,
 		[Talents.T_WEAPON_COMBAT]=8,
 
 		[Talents.T_FREEZE]=4,

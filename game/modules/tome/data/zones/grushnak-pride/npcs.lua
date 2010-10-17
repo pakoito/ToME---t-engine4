@@ -66,7 +66,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]=10,
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=10,
-		[Talents.T_AXE_MASTERY]=10,
+		[Talents.T_WEAPONS_MASTERY]=10,
 		[Talents.T_RUSH]=5,
 		[Talents.T_BATTLE_CALL]=5,
 		[Talents.T_SHIELD_PUMMEL]=4,

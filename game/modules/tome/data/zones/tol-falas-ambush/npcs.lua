@@ -47,7 +47,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	},
 
 	resolvers.talents{
-		[Talents.T_SWORD_MASTERY]=10, [Talents.T_ASSAULT]=5, [Talents.T_OVERPOWER]=5, [Talents.T_RUSH]=5,
+		[Talents.T_WEAPONS_MASTERY]=10, [Talents.T_ASSAULT]=5, [Talents.T_OVERPOWER]=5, [Talents.T_RUSH]=5,
 	},
 	combat_atk = 1000,
 

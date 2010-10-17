@@ -78,7 +78,7 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 
 		[Talents.T_DISARM]=5,
 		[Talents.T_WEAPON_COMBAT]=7,
-		[Talents.T_MACE_MASTERY]=5,
+		[Talents.T_WEAPONS_MASTERY]=5,
 
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
 	},

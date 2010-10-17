@@ -109,7 +109,7 @@ Oh and it is twice as big too.]],
 		[Talents.T_RUSH]=5,
 		[Talents.T_BATTLE_CALL]=5,
 		[Talents.T_WEAPON_COMBAT]=8,
-		[Talents.T_AXE_MASTERY]=10,
+		[Talents.T_WEAPONS_MASTERY]=10,
 		[Talents.T_FIRE_STORM]=5,
 	},
 }

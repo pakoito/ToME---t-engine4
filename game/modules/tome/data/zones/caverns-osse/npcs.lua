@@ -62,7 +62,7 @@ He wears a mace and a shield.]],
 
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]=6,
-		[Talents.T_MACE_MASTERY]=6,
+		[Talents.T_WEAPONS_MASTERY]=6,
 		[Talents.T_SHIELD_EXPERTISE]=3,
 		[Talents.T_SHIELD_PUMMEL]=2,
 		[Talents.T_RIPOSTE]=5,

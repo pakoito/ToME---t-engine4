@@ -25,15 +25,11 @@ newTalent{
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(self.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:learnTalent(self.T_SWORD_MASTERY, true)
-		self.alchemy_golem:learnTalent(self.T_MACE_MASTERY, true)
-		self.alchemy_golem:learnTalent(self.T_AXE_MASTERY, true)
+		self.alchemy_golem:learnTalent(self.T_WEAPONS_MASTERY, true)
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(self.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:unlearnTalent(self.T_SWORD_MASTERY, true)
-		self.alchemy_golem:unlearnTalent(self.T_MACE_MASTERY, true)
-		self.alchemy_golem:unlearnTalent(self.T_AXE_MASTERY, true)
+		self.alchemy_golem:unlearnTalent(self.T_WEAPONS_MASTERY, true)
 	end,
 	info = function(self, t)
 		return ([[Improves your golem proficiency with two handed weapons.]])

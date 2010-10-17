@@ -103,7 +103,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_ICE_CLAW] = 1,
 		[ActorTalents.T_MEDITATION] = 1,
-		[ActorTalents.T_AXE_MASTERY] = 1,
+		[ActorTalents.T_WEAPONS_MASTERY] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {

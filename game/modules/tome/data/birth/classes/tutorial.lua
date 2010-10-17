@@ -55,7 +55,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_WEAPON_COMBAT] = 2,
 		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 2,
-		[ActorTalents.T_SWORD_MASTERY] = 2,
+		[ActorTalents.T_WEAPONS_MASTERY] = 2,
 	},
 	copy = {
 		unused_stats = 0, unused_talents = 0, unused_generics = 0, unused_talents_types = 0,

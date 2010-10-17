@@ -52,7 +52,7 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 
 	resolvers.talents{
 		[Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
-		[Talents.T_STAMINA_POOL]=1, [Talents.T_SWORD_MASTERY]=3, [Talents.T_STUNNING_BLOW]=1,
+		[Talents.T_STAMINA_POOL]=1, [Talents.T_WEAPONS_MASTERY]=3, [Talents.T_STUNNING_BLOW]=1,
 	},
 
 	autolevel = "warriormage",

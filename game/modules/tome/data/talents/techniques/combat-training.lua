@@ -70,37 +70,16 @@ newTalent{
 }
 
 newTalent{
-	name = "Sword Mastery",
+	name = "Weapons Mastery",
 	type = {"technique/combat-training", 1},
 	points = 10,
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
 	info = function(self, t)
-		return ([[Increases damage done with swords by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
+		return ([[Increases damage done with swords, maces and axes by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
 	end,
 }
 
-newTalent{
-	name = "Axe Mastery",
-	type = {"technique/combat-training", 1},
-	points = 10,
-	require = { stat = { str=function(level) return 12 + level * 3 end }, },
-	mode = "passive",
-	info = function(self, t)
-		return ([[Increases damage done with axes by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
-	end,
-}
-
-newTalent{
-	name = "Mace Mastery",
-	type = {"technique/combat-training", 1},
-	points = 10,
-	require = { stat = { str=function(level) return 14 + level * 3 end }, },
-	mode = "passive",
-	info = function(self, t)
-		return ([[Increases damage done with maces by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
-	end,
-}
 
 newTalent{
 	name = "Knife Mastery",

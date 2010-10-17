@@ -168,8 +168,7 @@ newEntity{
 		[Talents.T_DRAIN]=5,
 
 		[Talents.T_WEAPON_COMBAT]=10,
-		[Talents.T_SWORD_MASTERY]=7,
-		[Talents.T_AXE_MASTERY]=7,
+		[Talents.T_WEAPONS_MASTERY]=7,
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
 	},
 	resolvers.sustains_at_birth(),
@@ -227,7 +226,7 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	resolvers.talents{
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
 		[Talents.T_WEAPON_COMBAT]=10,
-		[Talents.T_MACE_MASTERY]=10,
+		[Talents.T_WEAPONS_MASTERY]=10,
 		[Talents.T_RUSH]=3,
 
 		[Talents.T_CHANT_OF_FORTITUDE]=5,
@@ -284,7 +283,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	resolvers.talents{
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
 		[Talents.T_WEAPON_COMBAT]=10,
-		[Talents.T_MACE_MASTERY]=10,
+		[Talents.T_WEAPONS_MASTERY]=10,
 		[Talents.T_RUSH]=3,
 
 		[Talents.T_CHANT_OF_FORTITUDE]=5,
