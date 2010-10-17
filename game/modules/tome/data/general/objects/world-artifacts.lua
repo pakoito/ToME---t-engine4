@@ -29,7 +29,7 @@ newEntity{ base = "BASE_STAFF",
 	color=colors.VIOLET,
 	rarity = 100,
 	desc = [[This unique looking staff is carved with runes of destruction.]],
-	cost = 500,
+	cost = 200,
 	material_level = 3,
 
 	require = { stat = { mag=24 }, },
@@ -113,7 +113,7 @@ newEntity{ base = "BASE_RING",
 	desc = [[This ring shines with many colors.]],
 	level_range = {15, 30},
 	rarity = 200,
-	cost = 500,
+	cost = 200,
 	material_level = 3,
 
 	wielder = {

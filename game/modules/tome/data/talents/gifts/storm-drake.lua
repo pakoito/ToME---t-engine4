@@ -42,30 +42,37 @@ newTalent{
 }
 
 newTalent{
-	name = "???",
+	name = "Static Field",
 	type = {"wild-gift/storm-drake", 2},
 	require = gifts_req2,
-	mode = "sustained",
 	points = 5,
-	sustain_equilibrium = 30,
-	cooldown = 10,
-	range = 20,
+	equilibrium = 20,
+	cooldown = 20,
+	range = 1,
 	tactical = {
 		DEFEND = 10,
 	},
-	activate = function(self, t)
-		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.COLD]=5 * self:getTalentLevel(t)}),
-			armor = self:addTemporaryValue("combat_armor", 4 * self:getTalentLevel(t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("on_melee_hit", p.onhit)
-		self:removeTemporaryValue("combat_armor", p.armor)
+	requires_target = true,
+	action = function(self, t)
+		local tg = {type="ball", radius=1, friendlyfire=false, talent=t}
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			if not target:canBe("instakill") or not target:checkHit(self:combatMindpower(), target:combatPhysicalResist(), 10) then
+				game.logSeen(target, "%s resists the static field!", target.name:capitalize())
+				return
+			end
+			game.logSeen(target, "%s is caught in the static field!", target.name:capitalize())
+			local dam = target.life * self:combatTalentMindDamage(t, 10, 45) / 100
+			if target.life - dam < 0 then dam = target.life end
+			target:takeHit(dam, self)
+		end, nil, {type="lightning_explosion"})
+		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin forms icy scales, damaging all that hit you for %d cold damage and increasing your armor by %d.]]):format(damDesc(self, DamageType.C, 5 * self:getTalentLevel(t)), 4 * self:getTalentLevel(t))
+		return ([[Generate an electrical field around you in a radius of 1. Any foe caught inside will lose %d%% of its current life.
+		This effect can not kill creatures.]]):format(self:combatTalentMindDamage(t, 10, 45))
 	end,
 }
 
