@@ -115,7 +115,7 @@ newEntity{
 	name = " of torment", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	greater_ego = true,
-	rarity = 1,
+	rarity = 16,
 	cost = 22,
 	combat = {
 		special_on_hit = {desc="10% chance to torment the target", fct=function(combat, who, target)

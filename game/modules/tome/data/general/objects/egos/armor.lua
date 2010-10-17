@@ -141,3 +141,112 @@ newEntity{
 		},
 	},
 }
+
+newEntity{
+	name = "insulating ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+
+
+newEntity{
+	name = "grounding ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		stun_immune = 0.3,
+	},
+}
+
+
+newEntity{
+	name = "cleansing ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.POISON] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = "fortifying ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 35,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 2, function(e, v) return v * 3 end),
+		},
+		max_life=resolvers.mbonus_material(70, 30, function(e, v) return v * 0.1 end),
+	},
+}
+
+
+newEntity{
+	name = "hardened ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 29,
+	cost = 47,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+		},
+		combat_armor = resolvers.mbonus_material(5, 5, function(e, v) return v * 1 end),
+	},
+}
+
+
+
+newEntity{
+	name = " of resilience", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	wielder = {
+		max_life = resolvers.mbonus_material(40, 20, function(e, v) return v * 0.1 end),
+	},
+}
+
+
+
+newEntity{
+	name = " of the sky", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 35,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+		},
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 2, function(e, v) return v * 3 end),
+		},
+	},
+}

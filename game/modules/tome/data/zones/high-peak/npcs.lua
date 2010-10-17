@@ -72,6 +72,9 @@ newEntity{
 	stun_immune = 0.5,
 	blind_immune = 1,
 
+	combat_armor = 20,
+	combat_def = 20,
+
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
 		{type="weapon", subtype="staff", defined="STAFF_ABSORPTION_AWAKENED", autoreq=true},
@@ -137,11 +140,17 @@ newEntity{
 	stun_immune = 0.5,
 	blind_immune = 1,
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	combat_armor = 20,
+	combat_def = 20,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, FEET=1, HEAD=1, HANDS=1 },
 	resolvers.equip{
 		{type="weapon", subtype="sword", ego_chance=100, autoreq=true},
 		{type="weapon", subtype="waraxe", ego_chance=100, autoreq=true},
 		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
+		{type="armor", subtype="feet", name="pair of mithril boots",ego_chance=100, autoreq=true},
+		{type="armor", subtype="head", name="mithril helm",ego_chance=100, autoreq=true},
+		{type="armor", subtype="hands", name="mithril gauntlets",ego_chance=100, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="PEARL_LIFE_DEATH"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },

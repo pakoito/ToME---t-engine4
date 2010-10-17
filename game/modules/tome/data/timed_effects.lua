@@ -1115,10 +1115,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is cursed.", "+Curse" end,
 	on_lose = function(self, err) return "#Target# is no longer cursed.", "-Curse" end,
 	activate = function(self, eff)
-		eff.def = self:addTemporaryValue("combat_def", eff.power)
-		eff.mental = self:addTemporaryValue("combat_mentalresist", eff.power)
-		eff.spell = self:addTemporaryValue("combat_spellresist", eff.power)
-		eff.physical = self:addTemporaryValue("combat_physresist", eff.power)
+		eff.def = self:addTemporaryValue("combat_def", -eff.power)
+		eff.mental = self:addTemporaryValue("combat_mentalresist", -eff.power)
+		eff.spell = self:addTemporaryValue("combat_spellresist", -eff.power)
+		eff.physical = self:addTemporaryValue("combat_physresist", -eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_def", eff.def)
@@ -1229,7 +1229,7 @@ newEffect{
 newEffect{
 	name = "ACID_SPLASH",
 	desc = "Acid Splash",
-	long_desc = function(self, eff) return ("The target has been splashed with acid, doing %0.2f acid damage per turn, reducing armour by %d and attack by %d."):format(eff.dam, eff.armour, eff.atk) end,
+	long_desc = function(self, eff) return ("The target has been splashed with acid, doing %0.2f acid damage per turn, reducing armour by %d and attack by %d."):format(eff.dam, eff.armor or 0, eff.atk) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
