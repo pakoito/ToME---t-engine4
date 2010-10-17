@@ -103,6 +103,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 		[Talents.T_LIGHTNING_SPEED]=5,
 		[Talents.T_LIGHTNING]=5,
 		[Talents.T_LIGHTNING_BREATH]=5,
+		[Talents.T_STATIC_FIELD]=3,
 		[Talents.T_TORNADO]=5,
 	},
 }
