@@ -774,7 +774,7 @@ newEntity{ base = "BASE_CLOAK",
 	material_level = 3,
 	wielder = {
 		combat_def = 10,
-		inc_stats = { [Stats.STAT_CUN] = 4, [Stats.STAT_CUN] = 3, },
+		inc_stats = { [Stats.STAT_CUN] = 4, [Stats.STAT_CON] = 3, },
 		talents_types_mastery = { ["cunning/stealth"] = 0.1, },
 
 	},
