@@ -38,3 +38,34 @@ newEntity{ base = "BASE_HELM",
 		combat_spellresist = 7,
 	},
 }
+
+newEntity{ base = "BASE_SHIELD",
+	define_as = "LUNAR_SHIELD",
+	unique = true,
+	name = "Lunar Shield",
+	unided_name = "chitinous shield",
+	desc = [[A large section of chitin removed from Nimisil. It continues to give off a strange white glow.]],
+	color = colors.YELLOW,
+	metallic = false,
+	require = { stat = { str=35 }, },
+	cost = 350,
+	material_level = 5,
+	special_combat = {
+		dam = 45,
+		physcrit = 10,
+		dammod = {str=1},
+		damtype = DamageType.ARCANE,
+	},
+	wielder = {
+		resists={[DamageType.DARKNESS] = 25},
+		inc_damage={[DamageType.DARKNESS] = 15},
+
+		combat_armor = 7,
+		combat_def = 12,
+		combat_def_ranged = 5,
+		fatigue = 12,
+
+		lite = 1,
+		talents_types_mastery = {["divine/star-fury"]=0.2,["divine/twilight"]=0.1,},
+	},
+}

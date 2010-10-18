@@ -205,6 +205,7 @@ newEntity{
 	end,
 }
 
+--[[
 newEntity{
 	name = "Departing Elves",
 	type = "harmless", subtype = "special", unique = true,
@@ -227,7 +228,7 @@ newEntity{
 		return true
 	end,
 }
-
+]]
 ---------------------------- Hostiles -----------------------------
 
 -- Ambushed!

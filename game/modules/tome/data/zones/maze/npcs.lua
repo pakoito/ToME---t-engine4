@@ -48,11 +48,11 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	instakill_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
-	equipment = resolvers.equip{
+	resolvers.equip{
 		{type="weapon", subtype="battleaxe", autoreq=true},
 		{type="armor", subtype="head", defined="HELM_OF_HAMMERHAND", autoreq=true},
 	},
-	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
 		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
@@ -68,7 +68,44 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
+		game.state:activateBackupGuardian("NIMISIL", rng.range(1, 5), 40, "Have you hard about the patrol that disappeared in the maze in the west?")
 		game.player:resolveSource():grantQuest("starter-zones")
 		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "maze")
 	end,
+}
+
+newEntity{ base = "BASE_NPC_SPIDER", define_as = "NIMISIL",
+	name = "Nimisil", color=colors.VIOLET,
+	desc = [[Covered by eerie luminescent growths and protuberances, this spider now haunts the maze's silent passageways.]],
+	level_range = {43, nil}, exp_worth = 3,
+	max_life = 520, life_rating = 21, fixed_rating = true,
+	rank = 4,
+	negative_regen = 40,
+	positive_regen = 40,
+
+	move_others=true,
+	instakill_immune = 1,
+
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {defined="LUNAR_SHIELD"} },
+
+	combat_armor = 25, combat_def = 33,
+
+	combat = {dam=80, atk=30, apr=15, dammod={mag=1.1}, damtype="ARCANE"},
+
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	inc_damage = {all=40},
+
+	resolvers.talents{
+		[Talents.T_SPIDER_WEB]=5,
+		[Talents.T_LAY_WEB]=5,
+		[Talents.T_PHASE_DOOR]=5,
+
+		[Talents.T_HYMN_OF_MOONLIGHT]=4,
+		[Talents.T_MOONLIGHT_RAY]=5,
+		[Talents.T_SHADOW_BLAST]=5,
+
+		[Talents.T_SEARING_LIGHT]=4,
+	},
 }
