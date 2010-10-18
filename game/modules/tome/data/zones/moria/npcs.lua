@@ -92,6 +92,8 @@ newEntity{ define_as = "GOLBUG",
 	end,
 
 	on_die = function(self, who)
+		game.state:activateBackupGuardian("LITHFENGEL", 4, 40, "They say that after it has been confirmed orcs still inhabited the Moria, they found a mighty demon there.")
+
 		world:gainAchievement("DESTROYER_BANE", game.player:resolveSource())
 		game.player:setQuestStatus("orc-hunt", engine.Quest.DONE)
 		game.player:grantQuest("wild-wild-east")
@@ -136,5 +138,52 @@ newEntity{ define_as = "HARNO",
 	on_die = function(self, who)
 		game.logPlayer(game.player, "#LIGHT_RED#You hear a death cry. '%s I have a messag... ARG!'", game.player.name:capitalize())
 		game.player:setQuestStatus("orc-hunt", engine.Quest.DONE, "herald-died")
+	end,
+}
+
+newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
+	type = "demon", subtype = "major", unique = true,
+	name = "Lithfengel",
+	display = "U", color=colors.VIOLET,
+	desc = [[A terrible demon of decay and atrophy, drawn to the energy of the farportal.]],
+	level_range = {40, 75}, exp_worth = 3,
+	max_life = 500, life_rating = 30, fixed_rating = true,
+	rank = 4,
+	size_category = 5,
+	infravision = 30,
+	-- The artifact he wields drains life a little, so to compensate:
+	life_regen = 0.3,
+	stats = { str=20, dex=15, cun=25, mag=25, con=20 },
+	poison_immune = 1,
+	fear_immune = 1,
+	instakill_immune = 1,
+	no_breath = 1,
+	move_others=true,
+	demon = 1,
+
+	on_melee_hit = { [DamageType.BLIGHT] = 45, },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.equip{
+		{type="weapon", subtype="waraxe", defined="MALEDICTION", autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_ROTTING_DISEASE]=5,
+		[Talents.T_DECREPITUDE_DISEASE]=5,
+		[Talents.T_WEAKNESS_DISEASE]=5,
+		[Talents.T_CATALEPSY]=5,
+		[Talents.T_RUSH]=5,
+		[Talents.T_MORTAL_TERROR]=5,
+		[Talents.T_WEAPON_COMBAT]=10,
+		[Talents.T_WEAPONS_MASTERY]=6,
+	},
+	resolvers.sustains_at_birth(),
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
+
+	on_die = function(self, who)
 	end,
 }

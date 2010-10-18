@@ -33,6 +33,7 @@ local Astar = require "engine.Astar"
 local DirectPath = require "engine.DirectPath"
 local Shader = require "engine.Shader"
 
+local GameState = require "mod.class.GameState"
 local Store = require "mod.class.Store"
 local Trap = require "mod.class.Trap"
 local Grid = require "mod.class.Grid"
@@ -124,6 +125,9 @@ function _M:newGame()
 	self.player = Player.new{name=self.player_name, game_ender=true}
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
+
+	-- Create the entity to store various game state things
+	self.state = GameState.new{}
 
 	-- Load for quick birth
 	local save = Savefile.new(self.save_name)
@@ -362,6 +366,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		end
 	end
 	self.zone:getLevel(self, lev, old_lev)
+
+	-- Check if we need to switch the current guardian
+	self.state:zoneCheckBackupGuardian()
 
 	-- Decay level ?
 	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < self.turn then

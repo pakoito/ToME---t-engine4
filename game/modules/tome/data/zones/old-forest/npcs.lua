@@ -50,6 +50,8 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	instakill_immune = 1,
 	move_others=true,
 
+	combat = { dam=27, atk=10, apr=0, dammod={str=1.2} },
+
 	resists = { [DamageType.FIRE] = -50 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
@@ -69,6 +71,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
 
 	on_die = function(self, who)
+		game.state:activateBackupGuardian("SNAPROOT", 3, 50, "Have you heard, the old forest seems to have been claimed bya new evil!")
 		game.player:resolveSource():grantQuest("starter-zones")
 		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "old-forest")
 	end,
@@ -82,4 +85,38 @@ newEntity{ base = "BASE_NPC_RODENT",
 	max_life = resolvers.rngavg(15,20),
 	combat = { dam=50, atk=15, apr=10 },
 	combat_armor = 1, combat_def = 20,
+}
+
+newEntity{ define_as = "SNAPROOT", -- backup guardian
+	type = "giant", subtype = "ent", unique = true,
+	name = "Snaproot",
+	display = "#", color=VIOLET,
+	desc = [[This ancient Ent's bark is scorched almost black. It sees humanity as a scourge, to be purged.]],
+	level_range = {50, 75}, exp_worth = 3,
+
+	max_life = 1000, life_rating = 40, fixed_rating = true,
+	max_stamina = 200,
+
+	combat = { dam=100, atk=10, apr=0, dammod={str=1.2} },
+
+	stats = { str=40, dex=10, cun=15, mag=20, wil=38, con=45 },
+
+	rank = 4,
+	size_category = 5,
+	infravision = 20,
+	instakill_immune = 1,
+	stun_immune = 1,
+	move_others = true,
+
+	resists = { [DamageType.FIRE] = -20, [DamageType.PHYSICAL] = 50, [DamageType.COLD] = 50, [DamageType.NATURE] = 25 },
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.talents{
+		[Talents.T_STUN]=5,
+		[Talents.T_GRAB]=5,
+		[Talents.T_THROW_BOULDER]=5,
+		[Talents.T_CRUSH]=5,
+	},
+	autolevel = "warriorwill",
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
 }

@@ -88,3 +88,18 @@ newEntity{ base = "BASE_AMULET",
 		game:playSoundNear(who, "talents/spell_generic")
 	end },
 }
+
+newEntity{ define_as = "RUNED_SKULL",
+	unique = true,
+	type = "gem", subtype="red",
+	unided_name = "human skull",
+	name = "Runed Skull",
+	display = "*", color=colors.RED,
+	encumber = 3,
+	desc = [[Dull red runes are etched all over this blackened skull.]],
+
+	carrier = {
+		combat_spellpower = 7,
+		on_melee_hit = {[DamageType.FIREKNOCKBACK]=25},
+	},
+}

@@ -62,6 +62,60 @@ newEntity{ define_as = "TROLL_BILL",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
 
 	on_die = function(self, who)
+		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollshaws were safer now!")
 		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "trollshaws")
 	end,
+}
+
+newEntity{ define_as = "ALUIN",
+	type = "humanoid", subtype = "human", unique = true,
+	name = "Aluin the Fallen",
+	display = "p", color=colors.VIOLET,
+	desc = [[His once shining armour now dull and bloodstained, this sun paladin has given in to despair.]],
+	level_range = {35, 40}, exp_worth = 3,
+	max_life = 350, life_rating = 23, fixed_rating = true,
+	hate_regen = 10,
+	stats = { str=25, dex=10, cun=8, mag=10, con=20 },
+	rank = 4,
+	size_category = 3,
+	infravision = 20,
+	instakill_immune = 1,
+	blind_immune = 1,
+	see_invisible = 30,
+	move_others=true,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.equip{
+		{type="weapon", subtype="waraxe", ego_chance=100, autoreq=true},
+		{type="armor", subtype="shield", defined="SANGUINE_SHIELD", autoreq=true},
+		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_WEAPON_COMBAT]=6,
+		[Talents.T_WEAPONS_MASTERY]=6,
+		[Talents.T_RUSH]=4,
+
+		[Talents.T_ENRAGE]=3,
+		[Talents.T_SUPPRESSION]=4,
+		[Talents.T_BLINDSIDE]=4,
+		[Talents.T_GLOOM]=4,
+		[Talents.T_WEAKNESS]=4,
+		[Talents.T_TORMENT]=4,
+		[Talents.T_LIFE_LEECH]=4,
+
+		[Talents.T_CHANT_OF_LIGHT]=5,
+		[Talents.T_SEARING_LIGHT]=5,
+		[Talents.T_MARTYRDOM]=5,
+		[Talents.T_BARRIER]=5,
+		[Talents.T_WEAPON_OF_LIGHT]=5,
+		[Talents.T_CRUSADE]=8,
+		[Talents.T_FIREBEAM]=7,
+	},
+	resolvers.sustains_at_birth(),
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 }

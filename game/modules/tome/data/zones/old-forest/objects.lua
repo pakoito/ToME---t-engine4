@@ -19,6 +19,8 @@
 
 load("/data/general/objects/objects.lua")
 
+local Stats = require "engine.interface.ActorStats"
+
 -- Artifact, droped (and used!) by Bill the Stone Troll
 
 newEntity{ base = "BASE_SHIELD",
@@ -42,5 +44,21 @@ newEntity{ base = "BASE_SHIELD",
 			[DamageType.COLD] = 20,
 			[DamageType.NATURE] = 20,
 		},
+	},
+}
+
+newEntity{ base = "BASE_GEM",
+	unique = true,
+	unided_name = "burned piece of wood",
+	name = "Petrified Wood", subtype = "black",
+	color = colors.WHITE, image="object/bloodstone.png",
+	level_range = {35, 45},
+	desc = [[A piece of the scorched wood took from the remains of Snaproot.]],
+	rarity = false,
+	cost = 100,
+	material_level = 5,
+	imbue_powers = {
+		resists = { [DamageType.NATURE] = 25, [DamageType.FIRE] = -10, [DamageType.COLD] = 10 },
+		inc_stats = { [Stats.STAT_CON] = 10, },
 	},
 }

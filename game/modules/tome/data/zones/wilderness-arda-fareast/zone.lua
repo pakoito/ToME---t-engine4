@@ -33,5 +33,8 @@ return {
 			class = "engine.generator.map.Static",
 			map = "wilderness/arda-fareast",
 		},
-	}
+	},
+	on_enter = function()
+		game.state:goneEast()
+	end,
 }

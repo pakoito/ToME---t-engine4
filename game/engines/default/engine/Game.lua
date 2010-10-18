@@ -66,6 +66,7 @@ function _M:defaultSavedFields(t)
 		energy_to_act=true, energy_per_tick=true, turn=true, paused=true, save_name=true,
 		always_target=true, gfxmode=true, uniques=true, object_known_types=true,
 		current_music=true, memory_levels=true, achievement_data=true, factions=true,
+		state=true,
 		__savefile_version_tokens = true,
 	}
 	table.merge(def, t)

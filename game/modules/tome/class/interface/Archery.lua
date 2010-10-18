@@ -146,7 +146,7 @@ local function archery_projectile(tx, ty, tg, self)
 		print("[ATTACK ARCHERY] after mult", dam)
 
 		if crit then game.logSeen(self, "%s performs a critical strike!", self.name:capitalize()) end
-		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+		engine.DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 		hitted = true
 

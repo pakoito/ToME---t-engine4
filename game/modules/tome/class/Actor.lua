@@ -1399,9 +1399,9 @@ function _M:getTalentFullDescription(t, addlevel)
 	if t.stamina or t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina or t.stamina * (100 + self.fatigue) / 100), true) end
 	if t.equilibrium or t.sustain_equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(t.equilibrium or t.sustain_equilibrium), true) end
 	if t.vim or t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.sustain_vim or t.vim), true) end
-	if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: #GOLD#"..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100), true) end
-	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: #GREY#"..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100), true) end
-	if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost: #GREY#"..(t.hate or t.sustain_hate), true) end
+	if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100), true) end
+	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100), true) end
+	if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate), true) end
 	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ""..self:getTalentRange(t), true)
 	else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)
 	end

@@ -511,7 +511,7 @@ newDamageType{
 
 -- Physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
-	name = "spellknockback", type = "SPELLKNOCKBACK",
+	name = "spell knockback", type = "SPELLKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not tmp[target] then
@@ -529,7 +529,7 @@ newDamageType{
 
 -- Physical damage + repulsion; checks for mind power against physical resistance
 newDamageType{
-	name = "mindknockback", type = "MINDKNOCKBACK",
+	name = "mind knockback", type = "MINDKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not tmp[target] then

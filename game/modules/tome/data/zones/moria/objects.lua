@@ -27,3 +27,24 @@ newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_MINAS_TIRITH",
 		game:registerDialog(require("engine.dialogs.ShowText").new(self:getName{do_color=true}, "message-minas-tirith", {playername=who.name}, game.w * 0.6))
 	end}
 }
+
+newEntity{ base = "BASE_WARAXE",
+	define_as = "MALEDICTION", rarity=false,
+	unided_name = "pestilent waraxe",
+	name = "Malediction", unique=true,
+	desc = [[The land withers and crumbles wherever this cursed axe rests.]],
+	require = { stat = { str=55 }, },
+	cost = 375,
+	combat = {
+		dam = 55,
+		apr = 15,
+		physcrit = 10,
+		dammod = {str=1},
+		damrange = 1.2,
+	},
+	wielder = {
+		life_regen = -0.3,
+		inc_damage = { [DamageType.BLIGHT] = 20 },
+		melee_project={[DamageType.BLIGHT] = 20},
+	},
+}

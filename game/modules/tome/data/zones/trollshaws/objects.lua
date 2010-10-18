@@ -19,6 +19,8 @@
 
 load("/data/general/objects/objects.lua")
 
+local Stats = require "engine.interface.ActorStats"
+
 -- Artifact, droped (and used!) by Bill the Stone Troll
 
 newEntity{ base = "BASE_GREATMAUL",
@@ -50,3 +52,24 @@ newEntity{ base = "BASE_SCROLL",
 	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_SHIELD",
+	define_as = "SANGUINE_SHIELD",
+	unided_name = "bloody shield",
+	name = "Sanguine Shield", unique=true,
+	desc = [["Though tarnished and spattered with blood, the emblem of the sun still manages to shine through on this shield.]],
+	require = { stat = { str=39 }, },
+	cost = 120,
+
+	special_combat = {
+		dam = 40,
+		physcrit = 9,
+		dammod = {str=1.2},
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_CON] = 5, },
+		fatigue = 19,
+		resists = { [DamageType.BLIGHT] = 25, },
+		life_regen = 5,
+	},
+}
