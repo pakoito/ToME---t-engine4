@@ -44,3 +44,25 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 		inc_stats = { [Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, [Stats.STAT_CUN] = 4, },
 	},
 }
+
+newEntity{ base = "BASE_HELM",
+	define_as = "RUNED_SKULL",
+	name = "Dragonskull Helm", unique=true, unided_name="skull helm",
+	desc = [[Traces of a dragon's power still remain in this bleached and cracked skull.]],
+	require = { stat = { mag=24 }, },
+	cost = 200,
+
+	wielder = {
+		resists = {
+			[DamageType.FIRE] = 15,
+			[DamageType.COLD] = 15,
+			[DamageType.LIGHTNING] = 15,
+		},
+		esp = {dragon=1},
+		combat_armor = 2,
+		fatigue = 12,
+		combat_physresist = 12,
+		combat_mentalresist = 12,
+		combat_spellresist = 12,
+	},
+}

@@ -37,6 +37,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 	instakill_immune = 1,
 	stun_immune = 1,
 	combat_armor = 10, combat_def = 10,
+	stamina_regen = 40,
 
 	open_door = true,
 

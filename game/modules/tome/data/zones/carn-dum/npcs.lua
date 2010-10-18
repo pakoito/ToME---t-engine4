@@ -67,7 +67,60 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
+		game.state:activateBackupGuardian("MASSOK", 7, 43, "I have heard there is a dargon hunter in Carn Dûm that is unhappy about the wyrm being already dead.")
 		game.player:resolveSource():grantQuest("starter-zones")
 		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "carn-dum")
 	end,
+}
+
+newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
+	name = "Massok the Dragonslayer", color=colors.VIOLET, unique = true,
+	desc = [[A huge and heavily-scarred orc with a humungous sword. His helm is fashioned from a dragon skull.]],
+	level_range = {45, 55}, exp_worth = 3,
+	rank = 4,
+	max_life = 500, life_rating = 25, fixed_rating = true,
+	infravision = 20,
+	stats = { str=15, dex=10, cun=12, wil=45, mag=16, con=14 },
+	move_others=true,
+
+	instakill_immune = 1,
+	stun_immune = 1,
+	blind_immune = 1,
+	combat_armor = 10, combat_def = 10,
+	stamina_regen = 40,
+
+	open_door = true,
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1, FINGER=2, NECK=1 },
+
+	resists = { [DamageType.COLD] = 100 },
+
+	resolvers.equip{
+		{type="weapon", subtype="battleaxe", ego_change=100, autoreq=true},
+		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
+		{type="armor", subtype="head", defined="RUNED_SKULL", autoreq=true},
+		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_WEAPON_COMBAT]=7,
+		[Talents.T_HEAVY_ARMOUR_TRAINING]=7,
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=7,
+		[Talents.T_WEAPONS_MASTERY]=7,
+		[Talents.T_RUSH]=9,
+		[Talents.T_BATTLE_CALL]=5,
+		[Talents.T_STUNNING_BLOW]=4,
+		[Talents.T_JUGGERNAUT]=5,
+		[Talents.T_SHATTERING_IMPACT]=5,
+		[Talents.T_BATTLE_SHOUT]=5,
+		[Talents.T_BERSERKER]=5,
+		[Talents.T_UNSTOPPABLE]=5,
+		[Talents.T_MORTAL_TERROR]=5,
+		[Talents.T_BLOODBATH]=5,
+	},
+	resolvers.sustains_at_birth(),
 }
