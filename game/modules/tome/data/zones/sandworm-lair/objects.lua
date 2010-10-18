@@ -46,3 +46,29 @@ newEntity{
 		return "destroy", true
 	end}
 }
+
+newEntity{
+	define_as = "PUTRESCENT_POTION",
+	type = "corpse", subtype = "blood",
+	name = "Wyrm Bile", unique=true, unided_name="putrescent potion",
+	display = "*", color=colors.VIOLET,
+	desc = [[A vial of thick, lumpy fluid. Who knows what this will do to you if you drink it?]],
+	cost = 3000,
+
+	use_simple = { name="drink the vile blood", use = function(self, who)
+		game.logPlayer(who, "#00FFFF#You drink the wyrm bile and feel forever transformed!")
+		who.unused_talents_types = who.unused_talents_types + 1
+		game.log("You have %d category point(s) to spend. Press G to use them.", who.unused_talents_types)
+
+		local str, dex, con, mag, wil, cun = rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6)
+		who:incStat("str", str) if str >= 0 then str="+"..str end
+		who:incStat("dex", dex) if dex >= 0 then dex="+"..dex end
+		who:incStat("mag", mag) if mag >= 0 then mag="+"..mag end
+		who:incStat("wil", wil) if wil >= 0 then wil="+"..wil end
+		who:incStat("cun", cun) if cun >= 0 then cun="+"..cun end
+		who:incStat("con", con) if con >= 0 then con="+"..con end
+		game.logPlayer(who, "#00FF00#Your stats have changed! (Str %s, Dex %s, Mag %s, Wil %s, Cun %s, Con %s)", str, dex, mag, wil, cun, con)
+
+		return "destroy", true
+	end}
+}

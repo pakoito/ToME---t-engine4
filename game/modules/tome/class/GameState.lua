@@ -32,7 +32,7 @@ function _M:goneEast()
 	self.gone_east = true
 end
 
-function _M:activateBackupGuardian(guardian, on_level, zonelevel, rumor)
+function _M:activateBackupGuardian(guardian, on_level, zonelevel, rumor, action)
 	if self.gone_east then return end
 	print("Zone guardian dead, setting up backup guardian", guardian, zonelevel)
 	self.allow_backup_guardians[game.zone.short_name] =
@@ -42,6 +42,7 @@ function _M:activateBackupGuardian(guardian, on_level, zonelevel, rumor)
 		on_level = on_level,
 		new_level = zonelevel,
 		rumor = rumor,
+		action = action,
 	}
 end
 
@@ -52,6 +53,7 @@ function _M:zoneCheckBackupGuardian()
 	if self.allow_backup_guardians[game.zone.short_name] then
 		local data = self.allow_backup_guardians[game.zone.short_name]
 		game.zone.base_level = data.new_level
+		if data.action then data.action(false) end
 	end
 
 	-- Spawn the new guardian
@@ -75,6 +77,7 @@ function _M:zoneCheckBackupGuardian()
 			print("WARNING: Backup Guardian not found: ", data.guardian)
 		end
 
+		if data.action then data.action(true) end
 		self.allow_backup_guardians[game.zone.short_name] = nil
 	end
 end

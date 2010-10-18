@@ -93,7 +93,60 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	on_die = function(self, who)
+		game.state:activateBackupGuardian("CORRUPTED_SAND_WYRM", 1, 45, "Did you hear? Something seems to have devoured all the last sandworms!", function(gen)
+			if gen then return end
+			for i = #game.level.e_array, 1, -1 do
+				local e = game.level.e_array[i]
+				if not e.unique and not e.player then game.level:removeEntity(e) end
+			end
+		end)
 		game.player:resolveSource():grantQuest("starter-zones")
 		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "sandworm-lair")
 	end,
+}
+
+-- The boss of the sandworm lair, no "rarity" field means it will not be randomly generated
+newEntity{ define_as = "CORRUPTED_SAND_WYRM",
+	type = "dragon", subtype = "sand", unique = true,
+	name = "Corrupted Sand Wyrm",
+	display = "D", color=colors.VIOLET,
+	desc = [[The sandworms are gone, devoured by this shrieking, warped horror.]],
+	level_range = {47, nil}, exp_worth = 3,
+	max_life = 850, life_rating = 24, fixed_rating = true,
+	infravision = 20,
+	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
+	move_others=true,
+
+	instakill_immune = 1,
+	blind_immune = 1,
+	no_breath = 1,
+	rank = 4,
+	size_category = 5,
+
+	combat = { dam=140, atk=130, apr=25, dammod={str=1.2} },
+
+	resists = { [DamageType.BLIGHT] = 25, [DamageType.NATURE] = 50 },
+
+	body = { INVEN = 10, BODY=1 },
+
+	can_pass = {pass_wall=20},
+	move_project = {[DamageType.DIG]=1},
+
+	resolvers.drops{chance=100, nb=1, {defined="PUTRESCENT_POTION"}, },
+	resolvers.drops{chance=100, nb=5, {type="gem"} },
+
+	resolvers.talents{
+		[Talents.T_BLOOD_GRASP]=5,
+		[Talents.T_BLIGHTZONE]=5,
+		[Talents.T_SOUL_ROT]=5,
+		[Talents.T_RUSH]=5,
+		[Talents.T_SWALLOW]=3,
+		[Talents.T_SAND_BREATH]=9,
+		[Talents.T_STUN]=5,
+		[Talents.T_KNOCKBACK]=5,
+	},
+	resolvers.sustains_at_birth(),
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=1, },
 }
