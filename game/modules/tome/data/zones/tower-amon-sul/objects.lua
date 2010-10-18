@@ -45,3 +45,20 @@ newEntity{ base = "BASE_STAFF",
 		},
 	},
 }
+
+newEntity{ base = "BASE_AMULET",
+	define_as = "VOX", rarity=false,
+	name = "Vox", unique=true,
+	unided_name = "ringing amulet", color=colors.BLUE,
+	desc = [[No force can hope to silence the wearer of this amulet.]],
+	cost = 3000,
+	wielder = {
+		see_invisible = 20,
+		silence_immune = 0.8,
+		combat_spellpower = 9,
+		combat_spellcrit = 4,
+		mana = 50,
+		vim = 50,
+	},
+
+}

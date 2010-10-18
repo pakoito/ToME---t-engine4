@@ -59,6 +59,59 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
 
 	on_die = function(self, who)
+		game.state:activateBackupGuardian("ANGMAR_FURY", 5, 35, ".. yes I tell you! The old tower of Amon Sûl is still haunted!")
 		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
 	end,
+}
+
+-- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
+newEntity{ define_as = "ANGMAR_FURY",
+	type = "undead", subtype = "ghost", unique = true,
+	name = "Angmar's Fury",
+	display = "G", color=colors.VIOLET,
+	desc = [[The shade's colossal will keeps it anchored to this world, now as a vengeful, insane spirit.]],
+	level_range = {38, nil}, exp_worth = 3,
+	max_life = 250, life_rating = 20, fixed_rating = true,
+	rank = 4,
+	size_category = 3,
+	infravision = 20,
+	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
+
+	no_breath = 1,
+	stone_immune = 1,
+	confusion_immune = 1,
+	fear_immune = 1,
+	teleport_immune = 0.5,
+	disease_immune = 1,
+	poison_immune = 1,
+	stun_immune = 1,
+	blind_immune = 1,
+	see_invisible = 80,
+	move_others=true,
+
+	can_pass = {pass_wall=70},
+	resists = {all = 35, [DamageType.LIGHT] = -70, [DamageType.DARKNESS] = 65},
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1 },
+	resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="light", autoreq=true},
+		{type="jewelry", subtype="amulet", defined="VOX", autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_MANATHRUST]=5,
+		[Talents.T_FREEZE]=5,
+		[Talents.T_TIDAL_WAVE]=5,
+		[Talents.T_ICE_STORM]=5,
+		[Talents.T_BURNING_HEX]=5,
+		[Talents.T_EMPATHIC_HEX]=5,
+		[Talents.T_CURSE_OF_DEATH]=5,
+		[Talents.T_CURSE_OF_IMPOTENCE]=5,
+		[Talents.T_VIRULENT_DISEASE]=5,
+	},
+
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 }

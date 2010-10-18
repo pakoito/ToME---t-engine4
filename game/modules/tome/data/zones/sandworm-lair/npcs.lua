@@ -147,6 +147,6 @@ newEntity{ define_as = "CORRUPTED_SAND_WYRM",
 	},
 	resolvers.sustains_at_birth(),
 
-	autolevel = "warrior",
+	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=1, },
 }
