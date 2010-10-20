@@ -48,7 +48,7 @@ newEntity{
 			return true
 		end
 		if wait() then
-			who:project(tg, x, y, DamageType.DIG, 1)
+			who:project(tg, x, y, engine.DamageType.DIG, 1)
 		end
 	end},
 
