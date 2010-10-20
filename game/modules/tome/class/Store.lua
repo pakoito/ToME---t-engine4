@@ -30,6 +30,7 @@ function _M:loadStores(f)
 end
 
 function _M:init(t, no_default)
+	t.allow_sell = function() Dialog:simplePopup("Can not sell", "Do you really think I will buy your filthy wreckages found in the wilds? Ah!") end
 	t.buy_percent = t.buy_percent or 10
 	t.sell_percent = t.sell_percent or 100
 	Store.init(self, t, no_default)

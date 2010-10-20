@@ -27,6 +27,8 @@ local GetQuantity = require "engine.dialogs.GetQuantity"
 module(..., package.seeall, class.inherit(Entity, Inventory))
 
 function _M:init(t, no_default)
+	self.allow_sell = true
+	self.allow_buy = true
 	t = t or {}
 
 	t.body = {INVEN=10000}
@@ -94,7 +96,7 @@ function _M:interact(who)
 		return self:descObject(who, what, o)
 	end, function(what, o)
 		return self:descObjectPrice(who, what, o)
-	end)
+	end, self.allow_sell, self.allow_buy)
 	game:registerDialog(d)
 end
 

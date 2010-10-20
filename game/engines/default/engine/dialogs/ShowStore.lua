@@ -26,7 +26,8 @@ local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc, descprice)
+function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc, descprice, allow_sell, allow_buy)
+	self.allow_sell, self.allow_buy = allow_sell, allow_buy
 	self.action = action
 	self.desc = desc
 	self.descprice = descprice
@@ -97,11 +98,13 @@ end
 function _M:use(item)
 	if item and item.object then
 		if self.focus_ui and self.focus_ui.ui == self.c_store then
-			self.action("buy", item.object, item.item)
---			self:updateStore()
+			if util.getval(self.allow_buy, item.object, item.item) then
+				self.action("buy", item.object, item.item)
+			end
 		else
-			self.action("sell", item.object, item.item)
---			self:updateStore()
+			if util.getval(self.allow_sell, item.object, item.item) then
+				self.action("sell", item.object, item.item)
+			end
 		end
 	end
 end
