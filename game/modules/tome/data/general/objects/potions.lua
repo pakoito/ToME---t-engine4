@@ -298,3 +298,16 @@ newEntity{ base = "BASE_POTION",
 		return "destroy", true
 	end}
 }
+
+newEntity{ base = "BASE_POTION",
+	name = "dragon's blood",
+	color = colors.LIGHT_RED, image="object/potion-0x3.png",
+	level_range = {30, 50},
+	rarity = 9,
+	cost = 20,
+
+	use_simple = { name="brings out the dragon in you", use = function(self, who)
+		who:setEffect(who.EFF_DRAGONS_FIRE, who:getWil(10) + 15, {})
+		return "destroy", true
+	end}
+}

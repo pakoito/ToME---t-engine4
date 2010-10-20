@@ -1808,3 +1808,42 @@ newEffect{
 		self:removeTemporaryValue("energy", eff.moveid)
 	end,
 }
+
+newEffect{
+	name = "DRAGONS_FIRE",
+	desc = "Dragon's Fire",
+	long_desc = function(self, eff) return ("Dragon blood runs through your veins. You can breathe fire (or have it improved if you already could)."):format() end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {power=1},
+	on_gain = function(self, err) return "#Target#'s throat seems to be burning.", "+Dragon's fire" end,
+	on_lose = function(self, err) return "#Target#'s throat seems to cool down.", "-Dragon's fire" end,
+	activate = function(self, eff)
+		local t_id = self.T_FIRE_BREATH
+		if not self.talents[t_id] then
+			-- Auto assign to hotkey
+			if self.hotkey then
+				for i = 1, 36 do
+					if not self.hotkey[i] then
+						self.hotkey[i] = {"talent", t_id}
+						break
+					end
+				end
+			end
+		end
+
+		eff.tmpid = self:addTemporaryValue("talents", {[t_id] = eff.power})
+	end,
+	deactivate = function(self, eff)
+		local t_id = self.T_FIRE_BREATH
+		self:removeTemporaryValue("talents", eff.tmpid)
+		if self.talents[t_id] == 0 then
+			self.talents[t_id] = nil
+			if self.hotkey then
+				for i, known_t_id in pairs(self.hotkey) do
+					if known_t_id[1] == "talent" and known_t_id[2] == t_id then self.hotkey[i] = nil end
+				end
+			end
+		end
+	end,
+}
