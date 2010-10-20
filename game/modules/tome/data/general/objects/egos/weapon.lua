@@ -119,7 +119,7 @@ newEntity{
 	cost = 22,
 	combat = {
 		special_on_hit = {desc="10% chance to torment the target", fct=function(combat, who, target)
-			if not rng.percent(100) then return end
+			if not rng.percent(10) then return end
 			local eff = rng.table{"stun", "blind", "pin", "teleport", "stone", "confusion", "silence", "knockback"}
 			if not target:canBe(eff) then return end
 			if not target:checkHit(who:combatAttack(combat), target:combatPhysicalResist(), 15) then return end

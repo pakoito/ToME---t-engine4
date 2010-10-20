@@ -1154,6 +1154,38 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 	},
 }
 
+newEntity{ base = "BASE_GREATSWORD",
+	unique = true,
+	name = "Golden Three-Edged Sword 'The Truth' ",
+	unided_name = "three-edged sword",
+	desc = [[The wise ones say that truth is a three-edged sword. And sometimes, the truth hurts.]],
+	level_range = {25, 32},
+	require = { stat = { str=26, wil=26, cun=26 }, },
+	color = colors.GOLD,
+	encumberance = 12,
+	cost = 350,
+	rarity = 240,
+	material_level = 4,
+	combat = {
+		dam = 40,
+		apr = 1,
+		physcrit = 7,
+		dammod = {str=1.2},
+		special_on_hit = {desc="9% chance to stun or confuse the target", fct=function(combat, who, target)
+			if not rng.percent(9) then return end
+			local eff = rng.table{"stun", "confusion"}
+			if not target:canBe(eff) then return end
+			if not target:checkHit(who:combatAttack(combat), target:combatPhysicalResist(), 15) then return end
+			if eff == "stun" then target:setEffect(target.EFF_STUNNED, 3, {})
+			elseif eff == "confusion" then target:setEffect(target.EFF_CONFUSED, 3, {power=75})
+			end
+		end},
+	},
+	wielder = {
+		melee_project={[DamageType.LIGHT] = 40, [DamageType.DARKNESS] = 40},
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,
