@@ -363,91 +363,6 @@ void list_hits(GLint hits, GLuint *names)
 
 }
 
-void gl_select(int x, int y)
-{
-	GLuint buff[64] = {0};
-	GLint hits, view[4];
-
-	/*
-	 This choose the buffer where store the values for the selection data
-	 */
-	glSelectBuffer(64, buff);
-
-	/*
-	 This retrieve info about the viewport
-	 */
-	glGetIntegerv(GL_VIEWPORT, view);
-
-	/*
-	 Switching in selecton mode
-	 */
-	glRenderMode(GL_SELECT);
-
-	/*
-	 Clearing the name's stack
-	 This stack contains all the info about the objects
-	 */
-	glInitNames();
-
-	/*
-	 Now fill the stack with one element (or glLoadName will generate an error)
-	 */
-	glPushName(0);
-
-	/*
-	 Now modify the vieving volume, restricting selection area around the cursor
-	 */
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-
-	/*
-	 restrict the draw to an area around the cursor
-	 */
-	gluPickMatrix(x, y, 5.0, 5.0, view);
-	printf("view %d %d %d %d\n", view[0], view[1], view[2], view[3]);
-	printf("pick %d %d\n", x,y);
-//	gluPerspective(60, 1.0, 0.0001, 1000.0);
-	glOrtho(0, screen->w, screen->h, 0, -101, 101);
-
-	/*
-	 Draw the objects onto the screen
-	 */
-	glMatrixMode(GL_MODELVIEW);
-
-	/*
-	 draw only the names in the stack, and fill the array
-	 */
-	call_draw();
-//	SDL_GL_SwapBuffers();
-
-	/*
-	 Do you remeber? We do pushMatrix in PROJECTION mode
-	 */
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	/*
-	 get number of objects drawed in that area
-	 and return to render mode
-	 */
-	hits = glRenderMode(GL_RENDER);
-
-	/*
-	 Print a list of the objects
-	 */
-	list_hits(hits, buff);
-
-	/*
-	 uncomment this to show the whole buffer
-	 * /
-	 gl_selall(hits, buff);
-	 */
-
-	glMatrixMode(GL_MODELVIEW);
-}
-
-
 void pass_command_args(int argc, char *argv[])
 {
 	int i;
@@ -911,7 +826,6 @@ int main(int argc, char *argv[])
 				break;
 
 			case SDL_MOUSEBUTTONUP:
-//				gl_select(event.button.x, event.button.y);
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEMOTION:
 			case SDL_KEYDOWN:

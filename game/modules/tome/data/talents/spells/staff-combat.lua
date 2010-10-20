@@ -134,7 +134,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Stunning Blow without a two-handed weapon!")
+			game.logPlayer(self, "You cannot use Blunt Thrust without a two-handed weapon!")
 			return nil
 		end
 

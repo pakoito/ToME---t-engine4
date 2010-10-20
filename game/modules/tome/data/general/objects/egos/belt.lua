@@ -54,6 +54,12 @@ newEntity{
 	rarity = 8,
 	cost = 6,
 	belt_slots = resolvers.mbonus_material(6, 3, function(e, v) return v * 1 end),
+	on_canwear = function(self, who)
+		if who:getInven(who.INVEN_INBELT) and #who:getInven(who.INVEN_INBELT) > 0 then
+			game.logPlayer(who, "You already have a slotted belt equipped, remove your items from it then take it off.", self:getName{do_color=true})
+			return true
+		end
+	end,
 	on_wear = function(self, who)
 		who.inven[who.INVEN_INBELT] = {max=self.belt_slots, worn=false, use_speed=0.6, id=who.INVEN_INBELT}
 	end,
