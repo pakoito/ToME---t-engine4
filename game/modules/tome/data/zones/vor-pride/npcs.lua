@@ -19,6 +19,7 @@
 
 load("/data/general/npcs/orc.lua", rarity(3))
 load("/data/general/npcs/orc-vor.lua", rarity(0))
+load("/data/general/npcs/bone-giant.lua", function(e) if e.rarity then e.bonegiant_rarity = e.rarity; e.rarity = nil end end)
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
 

@@ -44,7 +44,7 @@ return {
 
 			nb_rooms = {0,0,0,1},
 			rooms = {"lesser_vault"},
-			lesser_vaults_list = {"orc-armoury", "double-t", "circle", "hostel"},
+			lesser_vaults_list = {"orc-armoury", "double-t", "circle", "hostel", "orc-necromancer"},
 			lite_room_chance = 100,
 		},
 		actor = {
