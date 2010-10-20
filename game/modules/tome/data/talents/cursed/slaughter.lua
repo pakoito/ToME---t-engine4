@@ -60,7 +60,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 15,
-	hate = 0.1,
+	hate = 0.2,
 	action = function(self, t)
 		local weapon = self:hasAxeWeapon()
 		if not weapon then
@@ -94,7 +94,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
-		return ([[Assault nearby foes with 4 fast attacks for %d%% to %d%% rage-based damage each.]]):format(multiplier * 50, multiplier * 100)
+		return ([[Assault nearby foes with 4 fast attacks for %d%% to %d%% hate-based damage each.]]):format(multiplier * 50, multiplier * 100)
 	end,
 }
 
@@ -105,7 +105,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 20,
-	hate = 0.1,
+	hate = 0.5,
 	range = 4,
 	requires_target = true,
 	action = function(self, t)
@@ -198,7 +198,7 @@ newTalent{
 		else
 			size = "Small"
 		end
-		return ([[Charge through your opponents, attacking anyone near your path for %d%% to %d%% rage-based damage. %s opponents may be knocked from your path.]]):format(multiplier * 30, multiplier * 100, size)
+		return ([[Charge through your opponents, attacking anyone near your path for %d%% to %d%% hate-based damage. %s opponents may be knocked from your path.]]):format(multiplier * 30, multiplier * 100, size)
 	end,
 }
 

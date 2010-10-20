@@ -95,7 +95,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
-	hate = 0.1,
+	hate = 0.3,
 	range = 10,
 	requires_target = true,
 	action = function(self, t)
@@ -113,7 +113,7 @@ newTalent{
 					and not game.level.map.attrs(x, y, "no_teleport") then
 				self:move(x, y, true)
 				game:playSoundNear(self, "talents/teleport")
-				local multiplier = self:combatTalentWeaponDamage(t, 0.9, 1.9) * getHateMultiplier(self, 0.3, 1.0)
+				local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9) * getHateMultiplier(self, 0.3, 1.0)
 				self:attackTarget(target, nil, multiplier, true)
 				return true
 			end
@@ -122,8 +122,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local multiplier = self:combatTalentWeaponDamage(t, 1.1, 1.9)
-		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% to %d%% rage-based damage.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100)
+		local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9)
+		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% to %d%% hate-based damage.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100)
 	end,
 }
 

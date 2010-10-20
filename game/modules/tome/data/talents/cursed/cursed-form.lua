@@ -34,10 +34,13 @@ newTalent{
 		return true
 	end,
 	getHealPerKill = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 10
+		return math.sqrt(self:getTalentLevel(t)) * 15
 	end,
 	getRegenRate = function(self, t)
 		return math.sqrt(self:getTalentLevel(t) * 2) * self.max_life * 0.008
+	end,
+	getResist = function(self, t)
+		return -18 + (self:getTalentLevel(t) * 3) + (18 * getHateMultiplier(self, 0, 1))
 	end,
 	do_regenLife  = function(self, t)
 		-- heal
@@ -51,7 +54,7 @@ newTalent{
 		
 		-- update resists as well
 		local oldResist = self.unnatural_body_resist or 0
-		local newResist = -15 + (15 * getHateMultiplier(self, 0, 1))
+		local newResist = t.getResist(self, t)
 		self.resists.all = (self.resists.all or 0) - oldResist + newResist
 		self.unnatural_body_resist = newResist
 	end,
@@ -66,8 +69,8 @@ newTalent{
 	info = function(self, t)
 		local healPerKill = t.getHealPerKill(self, t)
 		local regenRate = t.getRegenRate(self, t)
-		
-		return ([[Your body is now fed by your hatred. With each kill, you regenerate %d%% of your victim's life at a rate of %0.1f life per turn. As your hate fades your body weakens taking up to 15%% extra damage.]]):format(healPerKill, regenRate)
+		local resist = -18 + (self:getTalentLevel(t) * 3)
+		return ([[Your body is now fed by your hatred. With each kill, you regenerate %d%% of your victim's life at a rate of %0.1f life per turn. As your hate fades and grows the damage you sustain is adjusted by %d%% to %d%%.]]):format(healPerKill, regenRate, resist, resist + 18)
 	end,
 }
 
@@ -113,10 +116,33 @@ newTalent{
 --}
 
 newTalent{
-	name = "Relentless",
+	name = "Seethe",
 	type = {"cursed/cursed-form", 2},
-	mode = "passive",
+	random_ego = "utility",
 	require = cursed_str_req2,
+	points = 5,
+	cooldown = 400,
+	action = function(self, t)
+		self:incHate(2 + self:getTalentLevel(t) * 0.9)
+
+		local damage = self.max_life * 0.25
+		self:takeHit(damage, self)
+		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=2, tx=self.x, ty=self.y})
+		game:playSoundNear(self, "talents/fireflash")
+		return true
+	end,
+	info = function(self, t)
+		local increase = 2 + self:getTalentLevel(t) * 0.9
+		local damage = self.max_life * 0.25
+		return ([[Focus your rage gaining %0.1f hate at the cost of %d life.]]):format(increase, damage)
+	end,
+}
+
+newTalent{
+	name = "Relentless",
+	type = {"cursed/cursed-form", 3},
+	mode = "passive",
+	require = cursed_str_req3,
 	points = 5,
 	on_learn = function(self, t)
 		self:attr("fear_immune", 0.15)
@@ -134,29 +160,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your thirst for blood drives your movements. (+%d%% confusion, fear, knockback and stun immunity)]]):format(self:getTalentLevelRaw(t) * 15)
-	end,
-}
-
-newTalent{
-	name = "Seethe",
-	type = {"cursed/cursed-form", 3},
-	random_ego = "utility",
-	require = cursed_str_req3,
-	points = 5,
-	cooldown = 400,
-	action = function(self, t)
-		self:incHate(2 + self:getTalentLevel(t) * 0.9)
-
-		local damage = self.max_life * 0.25
-		self:takeHit(damage, self)
-		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=2, tx=self.x, ty=self.y})
-		game:playSoundNear(self, "talents/fireflash")
-		return true
-	end,
-	info = function(self, t)
-		local increase = 2 + self:getTalentLevel(t) * 0.9
-		local damage = self.max_life * 0.25
-		return ([[Focus your rage gaining %0.1f hate at the cost of %d life.]]):format(increase, damage)
 	end,
 }
 

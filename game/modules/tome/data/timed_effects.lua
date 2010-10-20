@@ -1546,7 +1546,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		self:project({type="ball", radius=eff.radius, friendlyfire=false}, self.x, self.y, function(xx, yy)
 			local target = game.level.map(xx, yy, game.level.map.ACTOR)
-			if target and target ~= self and target ~= eff.source and target:canBe("knockback") then
+			if target and target ~= self and target ~= eff.source and target:canBe("knockback") and (target.never_move or 0) ~= 1 then
 				-- attempt to move target away from self
 				local currentDistance = core.fov.distance(self.x, self.y, xx, yy)
 				local bestDistance, bestX, bestY

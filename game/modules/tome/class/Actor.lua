@@ -661,7 +661,7 @@ function _M:onTakeHit(value, src)
 		if hateGain >= 0.1 then
 			self.hate = math.min(self.max_hate, self.hate + hateGain)
 			if hateMessage then
-				game.logSeen(self, hateMessage.." (+%0.1f hate)", hateGain)
+				game.logPlayer(self, hateMessage.." (+%0.1f hate)", hateGain)
 			end
 		end
 	end
@@ -678,7 +678,7 @@ function _M:onTakeHit(value, src)
 		if hateGain >= 0.1 then
 			src.hate = math.min(src.max_hate, src.hate + hateGain)
 			if hateMessage then
-				game.logSeen(src, hateMessage.." (+%0.1f hate)", hateGain)
+				game.logPlayer(src, hateMessage.." (+%0.1f hate)", hateGain)
 			end
 		end
 	end
@@ -785,7 +785,7 @@ function _M:die(src)
 
 		src.hate = math.min(src.max_hate, src.hate + hateGain)
 		if hateMessage then
-			game.logSeen(src, hateMessage.." (+%0.1f hate)", hateGain - src.hate_per_kill)
+			game.logPlayer(src, hateMessage.." (+%0.1f hate)", hateGain - src.hate_per_kill)
 		end
 	end
 
