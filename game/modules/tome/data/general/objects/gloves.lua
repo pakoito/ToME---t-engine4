@@ -28,7 +28,6 @@ newEntity{
 	image = resolvers.image_material("gloves", "leather"),
 	encumber = 1,
 	rarity = 9,
-	metallic = true,
 	desc = [[Light gloves which do not seriously hinder finger movements, while still protecting the hands somewhat.]],
 	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }

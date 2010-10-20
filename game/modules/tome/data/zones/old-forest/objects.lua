@@ -29,6 +29,8 @@ newEntity{ base = "BASE_SHIELD",
 	desc = [[The barkwood of the Old Man's Willow, made into roughly the shape of a shield.]],
 	require = { stat = { str=25 }, },
 	cost = 20,
+	rarity = false,
+	metallic = false,
 
 	special_combat = {
 		dam = resolvers.rngavg(20,30),
