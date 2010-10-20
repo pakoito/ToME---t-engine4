@@ -38,7 +38,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You stand in the way of magical damage. That which does not kill you makes you stronger.
 		Each time you are hit by a magical damage you get a %d%% resistance to this elemental for 7 turns.
-		If antimagic shiled is not active you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium by %d and increasing your stamina by %d.
+		If antimagic shield is not active you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium by %d and increasing your stamina by %d.
 		The effect will increase with your Willpower stat.]]):
 		format(
 			self:combatTalentMindDamage(t, 10, 40),

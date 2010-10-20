@@ -36,7 +36,7 @@ newEntity{
 		local wait = function()
 			local co = coroutine.running()
 			local ok = false
-			who:restInit(self.digspeed, "digging", "digged", function(cnt, max)
+			who:restInit(self.digspeed, "digging", "dug", function(cnt, max)
 				if cnt > max then ok = true end
 				coroutine.resume(co)
 			end)
