@@ -129,3 +129,7 @@ newAchievement{
 	name = "There and back again", id = "WEST_PORTAL",
 	desc = [[Opened a portal to Middle-earth from the Far East.]],
 }
+newAchievement{
+	name = "Back and there again", id = "EAST_PORTAL",
+	desc = [[Opened a portal to the Far East from Middle-earth.]],
+}

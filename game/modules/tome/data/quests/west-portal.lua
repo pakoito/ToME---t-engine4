@@ -123,4 +123,5 @@ This one seems to go near the town of Minas Tirith in the West.]],
 
 	player:setQuestStatus(self.id, engine.Quest.DONE)
 	world:gainAchievement("WEST_PORTAL", game.player)
+	player:grantQuest("east-portal")
 end

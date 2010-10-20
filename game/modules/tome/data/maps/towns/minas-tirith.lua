@@ -28,6 +28,7 @@ quickEntity('O', {name='cobblestone road', display='.', color=colors.WHITE, imag
 quickEntity(' ', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
 quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
 quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
+quickEntity('*', {name="Tannen's Tower", display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
 quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true})
 quickEntity(',', {name='dirt', display='.', color=colors.LIGHT_UMBER, image="terrain/sand.png"})
 quickEntity('I', {name='tunneled wall', show_tooltip=true, display='#', color=colors.WHITE, image="terrain/wood_wall1.png"})
@@ -50,6 +51,7 @@ quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=col
 quickEntity('e', {show_tooltip=true, name="Rare goods", display='*', color=colors.AQUAMARINE, resolvers.store("LOST_MERCHANT"), resolvers.chatfeature("minas-tirith-lost-merchant"), image="terrain/wood_store_weapon.png"})
 
 quickEntity('E', {show_tooltip=true, name="The Elder", display='*', color=colors.VIOLET, resolvers.chatfeature("minas-tirith-elder"), image="terrain/wood_store_closed.png"})
+quickEntity('f', {show_tooltip=true, name="Tannen's Tower", display='*', color=colors.VIOLET, resolvers.chatfeature("tannen"), image="terrain/wood_store_closed.png"})
 
 startx = 95
 starty = 45
@@ -59,10 +61,10 @@ return {
 [[#^^########------------------                                                                   ]],
 [[#^^^------############----------             ^                                                  ]],
 [[#^^^----------###----#######-------         ^^^^^                                               ]],
-[[#^^----ssss-----###--------####------        ^^^^^^                                             ]],
-[[#^^^---StSS-------###--#ssss--###-------      ^^^^^^^^                                          ]],
-[[#^^----ssss----OO---##--#StSS---####------     ^^^^^^^^                                         ]],
-[[#^^----##a#-----OOO--##--#sssss----###------    ^^^^^^^^                                        ]],
+[[#^^-----**------###--------####------        ^^^^^^                                             ]],
+[[#^^^---****-------###--#ssss--###-------      ^^^^^^^^                                          ]],
+[[#^^----***f----OO---##--#StSS---####------     ^^^^^^^^                                         ]],
+[[#^^-----**------OOO--##--#sssss----###------    ^^^^^^^^                                        ]],
 [[#^ ---------------OO--###-###7#------###-----   ^^^^^^^^^^                                      ]],
 [[#^ StSSSS-----ss---OO---##-----OOOOO---###----   ^^^^^^^^^^^                                    ]],
 [[#^^ssssss----Ssss---OOO--##---OOOOOOOO---##----   ^^^^^^^^^                                     ]],

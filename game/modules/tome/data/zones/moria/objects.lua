@@ -48,3 +48,33 @@ newEntity{ base = "BASE_WARAXE",
 		melee_project={[DamageType.BLIGHT] = 20},
 	},
 }
+
+newEntity{ base = "BASE_GEM",
+	define_as = "RESONATING_DIAMOND_WEST",
+	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West", identified=true,
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}
+
+newEntity{ define_as = "ATHAME_WEST",
+	quest=true, unique="Blood-Runed Athame West", identified=true,
+	type = "misc", subtype="misc",
+	unided_name = "athame",
+	name = "Blood-Runed Athame",
+	level_range = {50, 50},
+	display = "|", color=colors.VIOLET,
+	encumber = 1,
+	desc = [[An athame, covered in blood runes. It radiates power.]],
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}

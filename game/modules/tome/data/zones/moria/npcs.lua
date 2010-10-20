@@ -92,7 +92,9 @@ newEntity{ define_as = "GOLBUG",
 	end,
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("LITHFENGEL", 4, 40, "They say that after it has been confirmed orcs still inhabited the Moria, they found a mighty demon there.")
+		game.state:activateBackupGuardian("LITHFENGEL", 4, 35, "They say that after it has been confirmed orcs still inhabited the Moria, they found a mighty demon there.", function(gen)
+			if gen then require("engine.ui.Dialog"):simpleLongPopup("Danger...", "When last you saw it, this cavern was littered with the corpses of orcs that you had slain. Now many, many more corpses carpet the floor, all charred and reeking of sulfur. An orange glow dimly illuminates the far reaches of the cavern to the east.", 400) end
+		end)
 
 		world:gainAchievement("DESTROYER_BANE", game.player:resolveSource())
 		game.player:setQuestStatus("orc-hunt", engine.Quest.DONE)
@@ -145,9 +147,9 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 	type = "demon", subtype = "major", unique = true,
 	name = "Lithfengel",
 	display = "U", color=colors.VIOLET,
-	desc = [[A terrible demon of decay and atrophy, drawn to the energy of the farportal.]],
-	level_range = {40, 75}, exp_worth = 3,
-	max_life = 500, life_rating = 30, fixed_rating = true,
+	desc = [[A terrible demon of decay and atrophy, drawn to the energy of the farportal. A Balrog of blight!]],
+	level_range = {35, 75}, exp_worth = 3,
+	max_life = 400, life_rating = 25, fixed_rating = true,
 	rank = 4,
 	size_category = 5,
 	infravision = 30,
@@ -168,6 +170,8 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 		{type="weapon", subtype="waraxe", defined="MALEDICTION", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {defined="ATHAME_WEST"} },
+	resolvers.drops{chance=100, nb=1, {defined="RESONATING_DIAMOND_WEST"} },
 
 	resolvers.talents{
 		[Talents.T_ROTTING_DISEASE]=5,
@@ -185,5 +189,8 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
 
 	on_die = function(self, who)
+		if who.resolveSource and who:resolveSource().player and who:resolveSource():hasQuest("east-portal") then
+			require("engine.ui.Dialog"):simpleLongPopup("Back and there again", "A careful examination of the balrog's body turns up a Blood-Runed Athame and a Resonating Diamond, both covered in soot and gore but otherwise in good condition.", 400)
+		end
 	end,
 }

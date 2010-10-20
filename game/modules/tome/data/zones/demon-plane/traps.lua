@@ -17,16 +17,4 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
-
-newEntity{ base = "BASE_GEM",
-	define_as = "RESONATING_DIAMOND",
-	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique=true, identified=true,
-
-	on_pickup = function(self, who)
-		if who == game.player then
-			who:setQuestStatus("west-portal", engine.Quest.COMPLETED, "gem")
-			return true
-		end
-	end,
-}
+load("/data/general/traps/natural_forest.lua")

@@ -79,10 +79,51 @@ If used near a portal it could probably activate it.]],
 	max_power = 30, power_regen = 1,
 	use_power = { name = "activate a portal", power = 10,
 		use = function(self, who)
+			self:identify(true)
 			local g = game.level.map(who.x, who.y, game.level.map.TERRAIN)
 			if g and g.orb_portal then
 				world:gainAchievement("SLIDERS", who:resolveSource())
 				who:useOrbPortal(g.orb_portal)
+			else
+				game.logPlayer(who, "There is no portal to activate here.")
+			end
+		end
+	},
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}
+
+-- The orb of many ways, allows usage of Farportals
+newEntity{ define_as = "ORB_MANY_WAYS_DEMON",
+	unique = "Orb of Many Ways Demon", quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "swirling orb", identified=true,
+	name = "Orb of Many Ways",
+	level_range = {30, 30},
+	display = "*", color=colors.VIOLET, image = "object/pearl.png",
+	encumber = 1,
+	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
+If used near a portal it could probably activate it.]],
+
+	max_power = 30, power_regen = 1,
+	use_power = { name = "activate a portal", power = 10,
+		use = function(self, who)
+			local g = game.level.map(who.x, who.y, game.level.map.TERRAIN)
+			if g and g.orb_portal then
+				world:gainAchievement("SLIDERS", who:resolveSource())
+				who:useOrbPortal{
+					change_level = 1,
+					change_zone = "demon-plane",
+					message = "#VIOLET#The world twists sickeningly around you and you find yourself someplace unexpected! It felt nothing like your previous uses of the Orb of Many Ways. Tannen must have switched the Orb out for a fake!",
+					on_use = function(self, who)
+						who:setQuestStatus("east-portal", engine.Quest.COMPLETED, "tricked-demon")
+					end,
+				}
 			else
 				game.logPlayer(who, "There is no portal to activate here.")
 			end

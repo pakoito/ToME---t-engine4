@@ -21,6 +21,7 @@ newChat{ id="welcome",
 	text = [[Welcome @playername@ to Minas Tirith. Traveler, please be quick as my time is precious.]],
 	answers = {
 		{"I have found a strange staff in my travels (#LIGHT_GREEN#*describe it in detail*#LAST#)  It looked very old and very powerful. I dared not use it.", jump="found_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.PENDING) end},
+		{"The hunt for the staff took me to a continent far to the east, accessible only by magic portal. I've recently returned by just such a portal, and I come bearing instructions on how to construct a similar portal here in Minas Tirith to make the return journey possible. I'm sure the elves there would welcome trade with the west.", jump="east_portal", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and not q:isCompleted("talked-elder") end},
 		{"Nothing, excuse me. Bye!"},
 	}
 }
@@ -70,6 +71,28 @@ I know you have been through a lot, but we need somebody to investigate and dete
 		{"I will check the mines.", action=function(npc, player)
 			player:grantQuest("orc-hunt")
 		end},
+	}
+}
+
+newChat{ id="east_portal",
+	text = [[That's extraordinary! I know a number of merchant princes who will salivate at the idea of new trade routes opening. But tell me, how fares your quest for the staff?]],
+	answers = {
+		{"The staff is recovered and the culprits slain. They will trouble us no more. [tell him the whole story]", jump="east_portal_winner", cond=function(npc, player) return player:isQuestStatus("high-peak", engine.Quest.DONE) end},
+		{"The hunt continues. The construction of this portal will be of great assistance in the staff's recovery.", jump="east_portal_hunt", cond=function(npc, player) return not player:isQuestStatus("high-peak", engine.Quest.DONE) end},
+	}
+}
+
+newChat{ id="east_portal_winner",
+	text = [[Excellent! Well then, concerning this fascinating portal. I'm afraid that men have largely forgotten whatever they once knew about the great magics of old. I know of only one man in Gondor who might be able to help you, a wise man and recent arrival to Minas Tirith named Tannen. He claims to hail from Angolwen, a supposed haven for practitioners of magic and mysticism. He arrived just months ago with fabulous wealth and has already constructed his own tower on the north edge of the city. I know little of him, but if he is to be believed, then he is your best hope.]],
+	answers = {
+		{"Thank you.", action=function(npc, player) player:setQuestStatus("east-portal", engine.Quest.COMPLETED, "talked-elder") end},
+	}
+}
+
+newChat{ id="east_portal_hunt",
+	text = [[In that case, let us proceed as quickly as possible. Now, concerning this fascinating portal. I'm afraid that men have largely forgotten whatever they once knew about the great magics of old. I know of only one man in Gondor who might be able to help you, a wise man and recent arrival to Minas Tirith named Tannen. He claims to hail from Angolwen, a supposed haven for practitioners of magic and mysticism. He arrived just months ago with fabulous wealth and has already constructed his own tower on the north edge of the city. I know little of him, but if he is to be believed, then he is your best hope.]],
+	answers = {
+		{"Thank you.", action=function(npc, player) player:setQuestStatus("east-portal", engine.Quest.COMPLETED, "talked-elder") end},
 	}
 }
 

@@ -612,7 +612,7 @@ function _M:setupCommands()
 				self.player:learnTalent(self.player.T_HEAVY_ARMOUR_TRAINING, true) self.player:learnTalent(self.player.T_MASSIVE_ARMOUR_TRAINING, true)
 -- [[
 				for i, e in ipairs(self.zone.object_list) do
-					if e.unique and e.define_as ~= "VOICE_SARUMAN" then
+					if e.unique and e.define_as ~= "VOICE_SARUMAN" and e.define_as ~= "ORB_MANY_WAYS_DEMON" then
 						local a = self.zone:finishEntity(self.level, "object", e)
 						a:identify(true)
 						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)
@@ -633,10 +633,8 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self.player:grantQuest("lightning-overload")
-				self.player:setQuestStatus("lightning-overload", engine.Quest.COMPLETED, "saved-bree")
-				self.player:setQuestStatus("lightning-overload", engine.Quest.COMPLETED, "tempest-located")
-				self:changeLevel(1, "tempest-peak")
+				self:changeLevel(1, "town-minas-tirith")
+				self.player:grantQuest("east-portal")
 			end
 		end,
 	}
