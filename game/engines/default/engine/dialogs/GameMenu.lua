@@ -78,8 +78,8 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.SoundMusic").new()
 			game:registerDialog(menu)
 		end },
-		save = { "Save Game", function() game:saveGame() end },
-		quit = { "Save and Exit", function() game:onQuit() end },
+		save = { "Save Game", function() game:unregisterDialog(self) game:saveGame() end },
+		quit = { "Save and Exit", function() game:unregisterDialog(self) game:onQuit() end },
 	}
 
 	-- Makes up the list
