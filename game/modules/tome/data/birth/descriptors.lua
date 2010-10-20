@@ -80,6 +80,7 @@ newBirthDescriptor{
 	},
 }
 
+
 --------------- Difficulties
 newBirthDescriptor{
 	type = "difficulty",
