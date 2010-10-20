@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 local DamageType = require "engine.DamageType"
 
 --load("/data/general/objects/egos/charged-attack.lua")
@@ -105,4 +106,20 @@ newEntity{
 	wielder = {
 		blind_immune = 0.5,
 	},
+}
+
+newEntity{
+	name = "arcanist's ", prefix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 20,
+	wielder = {
+		resists={
+			[DamageType.ARCANE] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+		},
+		combat_spellpower = resolvers.mbonus_material(5, 3, function(e, v) return v * 0.6 end),
+	},
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_MANAFLOW, level = 1, power = 80 },
 }

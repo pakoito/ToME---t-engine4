@@ -113,3 +113,16 @@ newEntity{
 		},
 	},
 }
+
+newEntity{
+	name = " of precognition", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 25,
+	wielder = {
+		combat_atk = resolvers.mbonus_material(4, 2, function(e, v) return v * 0.3 end),
+		combat_def = resolvers.mbonus_material(4, 2, function(e, v) return v * 0.3 end),
+		inc_stats = { [Stats.STAT_CUN] = 4, },
+	},
+}
