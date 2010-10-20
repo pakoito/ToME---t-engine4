@@ -139,8 +139,8 @@ function _M:generateList()
 		for j, t in ipairs(tt.talents) do
 			if self.actor:knowTalent(t.id) and t.mode ~= "passive" then
 				local typename = "talent"
-				local status = "#LIGHT_GREEN#Active#WHITE#"
-				if t.mode == "sustained" then status = self.actor:isTalentActive(t.id) and "#YELLOW#Sustaining#WHITE#" or "#LIGHT_GREEN#Sustain#WHITE#" end
+				local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
+				if t.mode == "sustained" then status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"} end
 				list[#list+1] = { char=self:makeKeyChar(letter), name=t.name.." ("..typename..")", status=status, talent=t.id, desc=self.actor:getTalentFullDescription(t) }
 				list.chars[self:makeKeyChar(letter)] = list[#list]
 				if not self.sel then self.sel = #list + 1 end
@@ -150,7 +150,7 @@ function _M:generateList()
 		end
 
 		if added then
-			table.insert(list, where+1, { char="", name="#{bold}#"..cat:capitalize().." / "..tt.name:capitalize().."#{normal}#", type=tt.type, color={0x80, 0x80, 0x80}, status="", desc=tt.description })
+			table.insert(list, where+1, { char="", name=tstring{{"font","bold"}, cat:capitalize().." / "..tt.name:capitalize(), {"font","normal"}}, type=tt.type, color={0x80, 0x80, 0x80}, status="", desc=tt.description })
 		end
 	end
 	for i = 1, #list do list[i].id = i end

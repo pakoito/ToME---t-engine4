@@ -80,6 +80,7 @@ function _M:init(t, no_default)
 	self.combat_mentalresist = 0
 
 	self.fatigue = 0
+	self.healing_factor = 1
 
 	self.spell_cooldown_reduction = 0
 
@@ -523,7 +524,7 @@ function _M:onHeal(value, src)
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then
 		return 0
 	end
-	return value
+	return value * self.healing_factor
 end
 
 --- Called before taking a hit, it's the chance to check for shields
