@@ -175,7 +175,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You breathe lightning in a frontal cone. Any target caught in the area will take %0.2f to %0.2f lightning damage and can be dazed for a few turns.
 		The damage will increase with the Strength stat]]):format(
-			damDesc(self, DamageType.LIGHTNING, 40 + self:getStr(80) * self:getTalentLevel(t)),
+			damDesc(self, DamageType.LIGHTNING, 40 + self:getStr(80) * self:getTalentLevel(t)) / 3,
 			damDesc(self, DamageType.LIGHTNING, 40 + self:getStr(80) * self:getTalentLevel(t))
 		)
 	end,

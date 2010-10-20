@@ -80,7 +80,6 @@ function _M:init(t, no_default)
 	self.combat_mentalresist = 0
 
 	self.fatigue = 0
-	self.healing_factor = 1
 
 	self.spell_cooldown_reduction = 0
 
@@ -88,6 +87,8 @@ function _M:init(t, no_default)
 	self.unused_talents =  self.unused_talents or 2
 	self.unused_generics =  self.unused_generics or 1
 	self.unused_talents_types = self.unused_talents_types or 0
+
+	t.healing_factor = t.healing_factor or 1
 
 	t.sight = t.sight or 20
 
@@ -524,7 +525,7 @@ function _M:onHeal(value, src)
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then
 		return 0
 	end
-	return value * self.healing_factor
+	return value * (self.healing_factor or 1)
 end
 
 --- Called before taking a hit, it's the chance to check for shields
