@@ -35,7 +35,9 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 120,
-		life_rating = 12,
+	},
+	copy_add = {
+		life_rating = 2,
 	},
 }
 
@@ -157,7 +159,6 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 100,
-		life_rating = 9,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true},

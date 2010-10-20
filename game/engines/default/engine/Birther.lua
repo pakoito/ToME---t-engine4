@@ -274,6 +274,16 @@ function _M:apply()
 			-- Copy normal data
 			table.merge(self.actor, copy, true)
 		end
+		if d.copy_add then
+			local copy = table.clone(d.copy_add, true)
+			-- Append array part
+			while #copy > 0 do
+				local f = table.remove(copy)
+				table.insert(self.actor, f)
+			end
+			-- Copy normal data
+			table.mergeAdd(self.actor, copy, true)
+		end
 		-- Change stats
 		if d.stats then
 			for stat, inc in pairs(d.stats) do

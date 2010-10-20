@@ -83,7 +83,6 @@ newBirthDescriptor{
 		-- All mages are of angolwen faction
 		faction = "angolwen",
 		max_life = 90,
-		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
@@ -129,7 +128,6 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 90,
-		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true}
@@ -196,7 +194,6 @@ newBirthDescriptor{
 		-- All mages are of angolwen faction
 		faction = "angolwen",
 		max_life = 90,
-		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
@@ -246,7 +243,6 @@ newBirthDescriptor{
 		-- All mages are of angolwen faction
 		faction = "angolwen",
 		max_life = 90,
-		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
@@ -297,7 +293,6 @@ newBirthDescriptor{
 		-- All mages are of angolwen faction
 		faction = "angolwen",
 		max_life = 90,
-		life_rating = 10,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},

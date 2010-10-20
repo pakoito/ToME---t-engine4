@@ -34,7 +34,6 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 110,
-		life_rating = 10,
 	},
 }
 

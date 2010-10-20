@@ -33,10 +33,12 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 100,
-		life_rating = 12,
 		mana_regen = 0.2,
 		life_regen = 1,
 		mana_rating = 7,
+	},
+	copy_add = {
+		life_rating = 2,
 	},
 }
 

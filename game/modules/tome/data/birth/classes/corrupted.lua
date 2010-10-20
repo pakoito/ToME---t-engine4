@@ -33,7 +33,6 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 120,
-		life_rating = 12,
 	},
 }
 
@@ -72,6 +71,9 @@ newBirthDescriptor{
 			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true},
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
 		},
+	},
+	copy_add = {
+		life_rating = 2,
 	},
 }
 

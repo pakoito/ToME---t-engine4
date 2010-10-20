@@ -72,12 +72,14 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 110,
-		life_rating = 12,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="mace", name="iron mace", autoreq=true},
 			{type="armor", subtype="shield", name="iron shield", autoreq=true},
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true},
 		},
+	},
+	copy_add = {
+		life_rating = 2,
 	},
 }
 
