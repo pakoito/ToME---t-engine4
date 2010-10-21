@@ -67,7 +67,7 @@ newTalent{
 	reflectable = true,
 	proj_speed = 15,
 	requires_target = true,
-	range = 15,
+	range = function(self, t) return 3 * self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)
