@@ -514,7 +514,9 @@ function _M:display()
 
 		if not self.zone_name_s then
 			self.player_display.font:setStyle("bold")
-			local s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, self.level.level), unpack(colors.simple(colors.GOLD)))
+			local lev = self.level.level
+			if self.level.data.reverse_level_display then lev = 1 + self.level.data.max_level - lev end
+			local s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, lev), unpack(colors.simple(colors.GOLD)))
 			self.player_display.font:setStyle("normal")
 			self.zone_name_w, self.zone_name_h = s:getSize()
 			self.zone_name_s, self.zone_name_tw, self.zone_name_th = s:glTexture()
@@ -632,7 +634,7 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(4, "tannen-tower")
+				self:changeLevel(1, "tannen-tower")
 --				self:changeLevel(1, "town-minas-tirith")
 --				self.player:grantQuest("east-portal")
 			end

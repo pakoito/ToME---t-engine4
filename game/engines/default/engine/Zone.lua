@@ -626,6 +626,5 @@ function _M:newLevel(level_data, lev, old_lev, game)
 			end
 		end
 	end
-
 	return level
 end

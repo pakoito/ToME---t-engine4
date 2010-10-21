@@ -24,7 +24,7 @@ I am Meranas, Herald of Angolwen, I have come here at the request of King Eldari
 It has been some time we watched Tannen, and you revealed his true nature - and stopped him. For this we are grateful, and I think we can pay you back.
 We have studied his portal research and if you give me the components I will create the portal for you, here and now!]],
 	answers = {
-		{"Yes Tannen was not exactly friendly. I thank you for your help, here are the components. [hand him the diamon and the athame]", action=function(npc, player) who:hasQuest("east-portal"):create_portal(npc, player) end},
+		{"Yes Tannen was not exactly friendly. I thank you for your help, here are the components. [hand him the diamon and the athame]", action=function(npc, player) player:hasQuest("east-portal"):create_portal(npc, player) end},
 	}
 }
 

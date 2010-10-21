@@ -79,7 +79,7 @@ This one seems to go near the Gates of Morning in the Far East.]],
 
 		orb_portal = {
 			change_level = 1,
-			change_zone = "wilderness-farest",
+			change_zone = "wilderness-arda-fareast",
 			change_wilderness = {
 				x = 65, y = 35,
 			},
@@ -156,7 +156,7 @@ ask_east = function(self, player)
 end
 
 tannen_tower = function(self, player)
-	game:changeLevel(4, "tannen-tower")
+	game:changeLevel(1, "tannen-tower")
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "trapped")
 end
 

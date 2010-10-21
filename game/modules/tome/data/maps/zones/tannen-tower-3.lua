@@ -20,7 +20,7 @@
 startx = 12
 starty = 12
 endx = 19
-endy = 14
+endy = 4
 
 -- defineTile section
 defineTile("X", "HARDWALL")

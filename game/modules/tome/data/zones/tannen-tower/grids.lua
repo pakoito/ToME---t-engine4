@@ -60,3 +60,22 @@ newEntity{
 		end
 	end,
 }
+
+-- Reversed!
+newEntity{
+	define_as = "UP",
+	name = "previous level",
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+
+newEntity{
+	define_as = "DOWN",
+	name = "next level",
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
