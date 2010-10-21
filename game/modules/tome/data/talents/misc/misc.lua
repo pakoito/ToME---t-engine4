@@ -143,12 +143,13 @@ newTalent{
 			return
 		end
 
-		game:changeLevel(1, "town-angolwen")
+		self:setEffect(self.EFF_TELEPORT_ANGOLWEN, 40, {})
 		return true
 	end,
 	info = [[Allows a mage to teleport to the secret town of Angolwen.
 	You have studied the magic arts there and have been granted a special portal spell to teleport there.
-	Nobody must learn about this spell and so it should never be used while seen by any creatures.]]
+	Nobody must learn about this spell and so it should never be used while seen by any creatures.
+	The spell will take time to activate, you must be out of sight of any creature when you cast it and when the teleportation takes effect.]]
 }
 
 -- Dunadan's power, a "weak" regeneration

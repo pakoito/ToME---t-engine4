@@ -1765,6 +1765,36 @@ newEffect{
 }
 
 newEffect{
+	name = "TELEPORT_ANGOLWEN",
+	desc = "Teleport: Angolwen",
+	long_desc = function(self, eff) return "The target is awaiting to be recalled back to Angolwen." end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+		local seen = false
+		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
+		core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+			local actor = game.level.map(x, y, game.level.map.ACTOR)
+			if actor and actor ~= self then seen = true end
+		end, nil)
+		if seen then
+			game.log("There are creatures that could be watching you; you cannot take the risk to teleport to Angolwen.")
+			return
+		end
+
+		if self:canBe("worldport") then
+			game.logPlayer(self, "You are yanked out of this place!")
+			game:changeLevel(1, "town-angolwen")
+		else
+			game.logPlayer(self, "Space restabilizes around you.")
+		end
+	end,
+}
+
+newEffect{
 	name = "RESOLVE",
 	desc = "Resolve",
 	long_desc = function(self, eff) return ("You gain %d%% resistance against %s."):format(eff.res, DamageType:get(eff.damtype).name) end,

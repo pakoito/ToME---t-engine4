@@ -112,7 +112,7 @@ remove_materials = function(self, player)
 end
 
 open_orthanc = function(self, player)
-	self:removeMaterials(player)
+	self:remove_materials(player)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
@@ -131,7 +131,7 @@ open_orthanc = function(self, player)
 end
 
 ask_east = function(self, player)
-	self:removeMaterials(player)
+	self:remove_materials(player)
 
 	-- Swap the orbs! Tricky bastard!
 	local orb_o, orb_item, orb_inven_id = player:findInAllInventories("Orb of Many Ways")
@@ -146,6 +146,6 @@ ask_east = function(self, player)
 end
 
 tannen_tower = function(self, player)
-	game:changeLevel(1, "tannen-tower")
+	game:changeLevel(4, "tannen-tower")
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "trapped")
 end

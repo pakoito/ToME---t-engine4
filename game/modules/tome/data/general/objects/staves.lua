@@ -22,6 +22,7 @@ newEntity{
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",
+	twohanded = true,
 	add_name = " (#COMBAT_DAMTYPE#)",
 	display = "\\", color=colors.LIGHT_RED, image = resolvers.image_material("staff", "wood"),
 	encumber = 5,

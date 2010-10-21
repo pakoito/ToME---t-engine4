@@ -49,7 +49,7 @@ newEntity{ define_as = "DRAEBOR",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
---	resolvers.drops{chance=100, nb=1, {defined="ATHAME_WEST"} },
+	resolvers.drops{chance=100, nb=1, {defined="BOOTS_OF_PHASING"} },
 
 	summon = {
 		{type="demon", number=1, hasxp=false},

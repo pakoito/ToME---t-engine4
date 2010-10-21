@@ -57,12 +57,12 @@ newEntity{
 	on_move = function(self, x, y, who)
 		if who == game.player then
 			require("engine.ui.Dialog"):yesnoPopup("Back and there again", "Enter the portal back to Middle-earth? (Warning loot Draebor first)", function(ret)
-				if ret then
+				if not ret then
 					who.wild_x, who.wild_y = 72, 23
 					game:changeLevel(1, "wilderness")
 					game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Middle-earth, on the eastern side of the Mirkwood forest.")
 				end
-			end, "Enter", "Stay")
+			end, "Stay", "Enter")
 		end
 	end,
 }

@@ -21,56 +21,30 @@ load("/data/general/objects/objects.lua")
 
 local Stats = require "engine.interface.ActorStats"
 
--- Artifact, droped (and used!) by Bill the Stone Troll
-
-newEntity{ base = "BASE_GREATMAUL",
-	define_as = "GREATMAUL_BILL_TRUNK",
-	name = "Bill's Tree Trunk", unique=true,
-	desc = [[This is a big nasty looking tree trunk that Bill was using as a weapon. It could still serve this purpose, should you be strong enough to wield it!]],
-	require = { stat = { str=25 }, },
+newEntity{ base = "BASE_LEATHER_BOOT",
+	define_as = "BOOTS_OF_PHASING",
+	unique = true,
+	name = "Shifting Boots",
+	unided_name = "pair of shifting boots",
+	desc = [[Those leather boots can make anybody as annoying as their former possessor, Draebor.]],
+	color = colors.BLUE,
 	rarity = false,
-	metallic = false,
-	cost = 5,
-	combat = {
-		dam = 30,
-		apr = 7,
-		physcrit = 1.5,
-		dammod = {str=1.3},
-		damrange = 1.7,
-	},
-
+	cost = 200,
+	material_level = 5,
 	wielder = {
+		combat_armor = 1,
+		combat_def = 7,
+		fatigue = 2,
+		talents_types_mastery = { ["spell/temporal"] = 0.1 },
+		inc_stats = { [Stats.STAT_CUN] = 8, [Stats.STAT_DEX] = 4, },
 	},
-}
 
-for i = 1, 5 do
-newEntity{ base = "BASE_SCROLL",
-	define_as = "NOTE"..i,
-	name = "tattered paper scrap", lore="trollshaws-note-"..i,
-	desc = [[A paper scrap, left by an adventurer.]],
-	rarity = false,
-	is_magic_device = false,
-	encumberance = 0,
-}
-end
-
-newEntity{ base = "BASE_SHIELD",
-	define_as = "SANGUINE_SHIELD",
-	unided_name = "bloody shield",
-	name = "Sanguine Shield", unique=true,
-	desc = [["Though tarnished and spattered with blood, the emblem of the sun still manages to shine through on this shield.]],
-	require = { stat = { str=39 }, },
-	cost = 120,
-
-	special_combat = {
-		dam = 40,
-		physcrit = 9,
-		dammod = {str=1.2},
-	},
-	wielder = {
-		inc_stats = { [Stats.STAT_CON] = 5, },
-		fatigue = 19,
-		resists = { [DamageType.BLIGHT] = 25, },
-		life_regen = 5,
-	},
+	max_power = 40, power_regen = 1,
+	use_power = { name = "blink to a nearby random location", power = 22, use = function(self, who)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		who:teleportRandom(who.x, who.y, 10 + who:getMag(5))
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
 }
