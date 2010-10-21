@@ -603,7 +603,6 @@ function _M:setupCommands()
 				self.player.esp.all = 1
 				self.player.esp.range = 50
 				self.player.inc_damage.all = 100000
-				self.player:grantQuest("escort-duty")
 			end
 		end,
 		[{"_f","ctrl"}] = function()
@@ -633,8 +632,9 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "town-minas-tirith")
-				self.player:grantQuest("east-portal")
+				self:changeLevel(1, "tannen-tower")
+--				self:changeLevel(1, "town-minas-tirith")
+--				self.player:grantQuest("east-portal")
 			end
 		end,
 	}

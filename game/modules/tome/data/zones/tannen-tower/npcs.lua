@@ -23,65 +23,123 @@ load("/data/general/npcs/ghost.lua", rarity(4))
 load("/data/general/npcs/bone-giant.lua", rarity(3))
 load("/data/general/npcs/faeros.lua", rarity(4))
 load("/data/general/npcs/gwelgoroth.lua", rarity(4))
+load("/data/general/npcs/aquatic_critter.lua", function(e) if e.rarity then e.aquatic_rarity, e.rarity = e.rarity, nil end end)
+load("/data/general/npcs/aquatic_demon.lua", function(e) if e.rarity then e.aquatic_rarity, e.rarity = e.rarity, nil end end)
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ define_as = "SHADE_OF_SARUMAN",
-	type = "undead", subtype = "ghost", unique = true,
-	name = "The Shade of Saruman",
-	display = "G", color=colors.VIOLET,
-	desc = [[Everybody though Saruman dead and his spirit destroyed, but it seems he still lingers in his old place of power.]],
-	level_range = {38, nil}, exp_worth = 3,
-	max_life = 250, life_rating = 22, fixed_rating = true,
+newEntity{ define_as = "TANNEN",
+	type = "humanoid", subtype = "human", unique = true,
+	name = "Tannen",
+	display = "p", color=colors.VIOLET,
+	desc = [[The traitor has been revealed, and he does not intend to let you escape to tell the tale.]],
+	level_range = {35, nil}, exp_worth = 2,
+	max_life = 250, life_rating = 16, fixed_rating = true,
+	max_mana = 850, mana_regen = 40,
+	mana_regen = 15,
 	rank = 4,
-	size_category = 3,
+	size_category = 2,
 	infravision = 20,
-	stats = { str=1, dex=14, cun=34, mag=25, con=10 },
+	stats = { str=10, dex=12, cun=14, mag=25, con=16 },
+	movement_speed = 1.4,
 
-	combat_def = 40, combat_armor = 30,
-
-	undead = 1,
-	no_breath = 1,
-	stone_immune = 1,
-	confusion_immune = 1,
-	fear_immune = 1,
-	teleport_immune = 0.5,
-	disease_immune = 1,
-	poison_immune = 1,
-	stun_immune = 1,
+	instakill_immune = 1,
 	blind_immune = 1,
-	see_invisible = 80,
-	move_others=true,
 
-	can_pass = {pass_wall=70},
-	resists = {all = 25, [DamageType.COLD] = 100, [DamageType.ACID] = 100},
-
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, },
-	resolvers.equip{
-		{type="weapon", subtype="staff", defined="SARUMAN_TOP_HALF", autoreq=true},
-		{type="weapon", subtype="staff", defined="SARUMAN_BOTTOM_HALF", autoreq=true},
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1, },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=2, {type="wand"} },
+	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {defined="ORB_MANY_WAYS2"} },
+	resolvers.drops{chance=100, nb=1, {defined="ATHAME_WEST2"} },
+
+	resists = { [DamageType.ACID] = 100, },
 
 	resolvers.talents{
-		[Talents.T_ICE_SHARDS]=5,
-		[Talents.T_FREEZE]=5,
-		[Talents.T_TIDAL_WAVE]=5,
-		[Talents.T_ICE_STORM]=5,
-		[Talents.T_UTTERCOLD]=8,
-		[Talents.T_FROZEN_GROUND]=5,
-		[Talents.T_SHATTER]=5,
-		[Talents.T_CORROSIVE_VAPOUR]=5,
-		[Talents.T_CURSE_OF_IMPOTENCE]=5,
-		[Talents.T_VIRULENT_DISEASE]=5,
+		[Talents.T_THROW_BOMB]=4,
+		[Talents.T_CHANNEL_STAFF]=5,
+		[Talents.T_STAFF_MASTERY]=5,
+		[Talents.T_ALCHEMIST_PROTECTION]=5,
+		[Talents.T_SHOCKWAVE_BOMB]=4,
+		[Talents.T_HEAT]=4,
+		[Talents.T_BODY_OF_FIRE]=3,
+		[Talents.T_ACID_INFUSION]=5,
+		[Talents.T_STONE_TOUCH]=3,
 	},
 
-	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	resolvers.generic(function(self)
+		-- Make and wield some alchemist gems
+		local t = self:getTalentFromId(self.T_CREATE_ALCHEMIST_GEMS)
+		local gem = t.make_gem(self, t, "GEM_BLOODSTONE")
+		self:wearObject(gem, true, false)
+	end),
+
+	autolevel = "dexmage",
+	ai = "dumb_talented_simple", ai_state = {ai_target="target_player_radius", sense_radius=400, talent_in=1, ai_move="move_astar" },
 
 	on_die = function(self, who)
-		require("engine.ui.Dialog"):simpleLongPopup("Back and there again", 'As the shade dissipates you see no sign of the text entitled "Inverted and Reverted Probabilistic Fields". You should go back to Tannen.', 400)
+		game.player:resolveSource():setQuestStatus("east-portal", engine.Quest.COMPLETED, "tannen-dead")
+	end,
+}
+
+newEntity{ define_as = "DROLEM",
+	type = "construct", subtype = "golem",
+	display = 'g', color=colors.GREEN,
+	desc = [[This is Tannen's construct, a #{bold}#HUGE#{normal}# golem in the rough shape of a dragon.
+It is so huge that it blocks sight beyond it.]],
+	level_range = {35, nil}, exp_worth=2,
+	max_life = 600, life_rating = 13, fixed_rating = true,
+
+	-- Special, the golem is HUGE and blocks LOS
+	block_sight = true,
+
+	combat = { dam=10, atk=10, apr=0, dammod={str=1} },
+
+	resists = { [DamageType.ACID] = 100, },
+
+	body = { INVEN = 50, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
+	instakill_immune = 1,
+	blind_immune = 1,
+	infravision = 20,
+	see_invisible = 100,
+	rank = 4,
+	size_category = 5,
+	move_others=true,
+
+	resolvers.talents{
+		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_HEAVY_ARMOUR_TRAINING]=5,
+		[Talents.T_WEAPON_COMBAT]=7,
+		[Talents.T_POISON_BREATH]=6,
+		[Talents.T_WEAPONS_MASTERY]=11,
+	},
+	resolvers.drops{chance=100, nb=1, {defined="RESONATING_DIAMOND_WEST2"} },
+
+	resolvers.equip{
+		{type="weapon", subtype="greatsword", ego_chance=100, autoreq=true},
+		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
+		{type="armor", subtype="head", ego_chance=100, autoreq=true},
+	},
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=4, },
+	energy = { mod=1 },
+	stats = { str=14, dex=12, mag=10, wil=67, con=12 },
+
+	open_door = true,
+	blind_immune = 1,
+	fear_immune = 1,
+	poison_immune = 1,
+	disease_immune = 1,
+	stone_immune = 1,
+	see_invisible = 30,
+	no_breath = 1,
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("east-portal", engine.Quest.COMPLETED, "drolem-dead")
 	end,
 }

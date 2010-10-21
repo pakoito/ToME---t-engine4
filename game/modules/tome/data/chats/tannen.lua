@@ -149,7 +149,7 @@ newChat{ id="no_orb_loan3",
 }
 
 newChat{ id="orb_loan",
-	text = [[Fear not. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Orthanc, which the Mystics of Gondor sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields," return with it and your odds of surviving our portal attempt will go up drastically.]],
+	text = [[Fear not. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Orthanc, which the Mystics of Gondor sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields", return with it and your odds of surviving our portal attempt will go up drastically.]],
 	answers = {
 		{"Thank you, and farewell.", action=function(npc, player) player:hasQuest("east-portal"):open_orthanc(player) end},
 	}

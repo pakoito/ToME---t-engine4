@@ -21,6 +21,7 @@ load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
 load("/data/general/grids/lava.lua")
+load("/data/general/grids/mountain.lua")
 
 newEntity{
 	define_as = "SEALED_DOOR",
@@ -38,4 +39,24 @@ newEntity{
 	display = '_', color=colors.WHITE, back_color=colors.DARK_UMBER,
 	notice = true,
 	always_remember = true,
+}
+
+newEntity{
+	define_as = "PORTAL_BACK",
+	name = "Portal to Minas Tirith",
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	notice = true,
+	always_remember = true,
+	show_tooltip = true,
+	desc = [[This portal seems to be connected with Minas Tirith, you could probably use it to go back.]],
+
+	on_move = function(self, x, y, who)
+		if who == game.player then
+			require("engine.ui.Dialog"):yesnoPopup("Back and there again", "Enter the portal back to Minas Tirith?", function(ret)
+				if not ret then
+					game.player:hasQuest("east-portal"):back_to_minas_tirith()
+				end
+			end, "Stay", "Enter")
+		end
+	end,
 }

@@ -56,7 +56,17 @@ desc = function(self, who)
 	return table.concat(desc, "\n")
 end
 
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted("orb-back") and self:isCompleted("diamon-back") and self:isCompleted("athame-back") then
+			self:tannen_exit(who)
+		end
+	end
+end
+
 create_portal = function(self, npc, player)
+	self:remove_materials(player)
+
 	-- Farportal
 	local g = mod.class.Grid.new{
 		name = "Farportal: Gates of Morning",
@@ -80,10 +90,10 @@ This one seems to go near the Gates of Morning in the Far East.]],
 	}
 	g:resolve() g:resolve(nil, true)
 
-	game.zone:addEntity(game.level, g, "terrain", 20, 36)
-	game.level.map:particleEmitter(20, 36, 3, "farportal_lightning")
-	game.level.map:particleEmitter(20, 36, 3, "farportal_lightning")
-	game.level.map:particleEmitter(20, 36, 3, "farportal_lightning")
+	game.zone:addEntity(game.level, g, "terrain", 13, 43)
+	game.level.map:particleEmitter(13, 43, 3, "farportal_lightning")
+	game.level.map:particleEmitter(13, 43, 3, "farportal_lightning")
+	game.level.map:particleEmitter(13, 43, 3, "farportal_lightning")
 
 	player:setQuestStatus(self.id, engine.Quest.DONE)
 	world:gainAchievement("EAST_PORTAL", game.player)
@@ -148,4 +158,34 @@ end
 tannen_tower = function(self, player)
 	game:changeLevel(4, "tannen-tower")
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "trapped")
+end
+
+tannen_exit = function(self, player)
+	require("engine.ui.Dialog"):simplePopup("Back and there again", "A portal appears in the center of the tower!")
+	local g = game.zone:makeEntityByName(game.level, "terrain", "PORTAL_BACK")
+	game.zone:addEntity(game.level, g, "terrain", 12, 12)
+end
+
+back_to_minas_tirith = function(self)
+	-- TP minas tirith
+	game:changeLevel(1, "town-minas-tirith")
+	-- Move to the portal spot
+	game.player:move(12, 43, true)
+	-- Remove tannen
+	game.level.map(10, 16, engine.Map.TERRAIN, game.level.map(10, 15, engine.Map.TERRAIN))
+
+	-- Add the mage
+	local g = mod.class.NPC.new{
+		name="Meranas, Herald of Angolwen",
+		type="humanoid", subtype="human", faction="angolwen",
+		display='@', color=colors.RED,
+	}
+	g:resolve() g:resolve(nil, true)
+	game.zone:addEntity(game.level, g, "actor", 12, 42)
+	game.level.map:particleEmitter(12, 42, 1, "teleport")
+
+	local Chat = require("engine.Chat")
+	local chat = Chat.new("east-portal-end", g, game.player)
+	chat:invoke()
+	game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Minas Tirith.")
 end

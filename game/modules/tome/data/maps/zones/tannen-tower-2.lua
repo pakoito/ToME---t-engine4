@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 startx = 19
-starty = 14
+starty = 4
 
 -- defineTile section
 defineTile("X", "HARDWALL")
-defineTile("~", "DEEP_WATER")
+defineTile("+", "DOOR")
 defineTile("<", "UP")
 defineTile(">", "DOWN")
 defineTile(".", "FLOOR")
@@ -32,27 +32,27 @@ defineTile(".", "FLOOR")
 -- ASCII map section
 return [[
 XXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXX~~~~~XXXXXXXXXX
-XXXXXXX~~~.XXX~~~~XXXXXXX
-XXXXX~~~XXXXXXXXX~~~XXXXX
-XXXX~~XXXXXXXXXXXXX<~XXXX
-XXX~~XXXXXXXXXXXXXXX~~XXX
-XXX~XX~~~~~~~~~~~~~XX~XXX
-XX~~XX~XXXXXXXXXXX~XX~~XX
-XX~XXX~X~~.~~~~~~X.XXX~XX
-XX~XXX~X~XXXXXXX~X~XXX~XX
-X~~XXX~X~X~~~~~X~X~XXX~~X
-X~XXXX~X~X~XXX~X~X~XXXX~X
-X~XXXX~X~X~~>X~X~X~XXXX~X
-X~XXXX~X~XXXXX~X~X~XXXX~X
-X~~XXX.X~~~~~~~X~X~XXX~~X
-XX~XXX~XXXXXXXXX~X~XXX~XX
-XX.XXX~~~~~~~~~~~X~XXX~XX
-XX~~XXXXXXXXXXXXXX~XX~.XX
-XXX~~~~~~~~~~~.~~~~XX~XXX
-XXX~~XXXXXXXXXXXXXXX~~XXX
-XXXX~~XXXXXXXXXXXXX~~XXXX
-XXXXX~~~XXXXXXXXX~~~XXXXX
-XXXXXXX~~~.XXX~~~~XXXXXXX
-XXXXXXXXXX~~~~~XXXXXXXXXX
+XXXXXXXXXX.....XXXXXXXXXX
+XXXXXXX....XXX....XXXXXXX
+XXXXX...XXXXXXXXX...XXXXX
+XXXX..XXX...X...XXX>.XXXX
+XXX..XX.....X.....XX..XXX
+XXX.XX......+......XX.XXX
+XX..X.......X.......X..XX
+XX.XX.......X.......XX.XX
+XX.X.......XXX.......X.XX
+X..X......+X.XX......X..X
+X.XX.....XX...XX.....XX.X
+X.XXXXXXXX..<..XXX+XXXX.X
+X.XX.....XX...XX.....XX.X
+X..X......XX.XX......X..X
+XX.X.......XXX.......X.XX
+XX.XX.......X.......XX.XX
+XX..+.......X.......X..XX
+XXX.XX......+......XX.XXX
+XXX..XX.....X.....XX..XXX
+XXXX..XXX...X...XXX..XXXX
+XXXXX...XXXXXXXXX...XXXXX
+XXXXXXX....XXX....XXXXXXX
+XXXXXXXXXX.....XXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXX]]

@@ -23,7 +23,7 @@ return {
 	level_scheme = "player",
 	max_level = 8,
 	decay = {300, 800},
-	actor_adjust_level = function(zone, level, e) return 1 + zone.max_level - (zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2)) end,
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + (zone.max_level - level.level) + rng.range(-1,2) end,
 	level_adjust_level = function(zone, level) return zone.base_level + (zone.max_level - level.level) end,
 	width = 50, height = 50,
 --	all_remembered = true,

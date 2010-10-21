@@ -58,7 +58,10 @@ newTalent{
 
 		local dam, damtype, particle = t.computeDamage(self, t, ammo)
 		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 0.2
-		local golem = game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem or nil
+		local golem
+		if self.alchemy_golem then
+			golem = game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem or nil
+		end
 		local dam_done = 0
 
 		local grids = self:project(tg, x, y, function(tx, ty)
@@ -190,7 +193,10 @@ newTalent{
 
 		local dam, damtype, particle = t.computeDamage(self, t, ammo)
 		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 0.2
-		local golem = game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem or nil
+		local golem
+		if self.alchemy_golem then
+			golem = game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem or nil
+		end
 		local dam_done = 0
 
 		local tmp = {}

@@ -23,7 +23,7 @@ return {
 	level_scheme = "player",
 	max_level = 4,
 	decay = {300, 800},
-	actor_adjust_level = function(zone, level, e) return 1 + zone.max_level - (zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2)) end,
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + (zone.max_level - level.level) + rng.range(-1,2) end,
 	level_adjust_level = function(zone, level) return zone.base_level + (zone.max_level - level.level) end,
 	width = 25, height = 25,
 	all_remembered = true,
@@ -57,8 +57,8 @@ return {
 	levels =
 	{
 		[1] = { generator = { map = { map = "zones/tannen-tower-1" }, }, },
-		[2] = { generator = { map = { map = "zones/tannen-tower-2" }, }, },
-		[3] = { generator = { map = { map = "zones/tannen-tower-3" }, }, },
+		[2] = { generator = { map = { map = "zones/tannen-tower-2" }, actor = { nb_npc = {22, 22}, }, trap = { nb_trap = {6, 6} }, }, },
+		[3] = { generator = { map = { map = "zones/tannen-tower-3" }, actor = { nb_npc = {22, 22}, filters={{special_rarity="aquatic_rarity"}} }, trap = { nb_trap = {6, 6} }, }, },
 		[4] = { generator = { map = { map = "zones/tannen-tower-4" }, }, },
 	},
 }

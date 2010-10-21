@@ -135,7 +135,7 @@ newTalent{
 	sustain_mana = 250,
 	points = 5,
 	range = 1,
-	proj_speed = 1.3,
+	proj_speed = 2.4,
 	range = 12,
 	do_fire = function(self, t)
 		if self:getMana() <= 0 then

@@ -21,43 +21,81 @@ load("/data/general/objects/objects.lua")
 
 local Stats = require "engine.interface.ActorStats"
 
-newEntity{ base = "BASE_STAFF",
-	define_as = "SARUMAN_TOP_HALF", rarity=false,
-	slot_forbid = false,
-	twohanded = false,
-	name = "Saruman's Staff Top Half", unique=true,
-	desc = [[The top part of Saruman's broken staff.]],
-	require = { stat = { mag=35 }, },
-	cost = 500,
-	combat = {
-		dam = 35,
-		apr = 0,
-		physcrit = 1.5,
-		dammod = {mag=1.0},
-	},
-	wielder = {
-		combat_spellpower = 25,
-		combat_spellcrit = 5,
-		combat_mentalresist = 8,
-		inc_stats = { [Stats.STAT_WIL] = 5, },
-	},
+newEntity{ base = "BASE_GEM",
+	define_as = "RESONATING_DIAMOND_WEST2",
+	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West2", identified=true,
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+	on_pickup = function(self, who)
+		if who == game.player then
+			game.player:resolveSource():setQuestStatus("east-portal", engine.Quest.COMPLETED, "diamon-back")
+		end
+	end,
 }
 
-newEntity{ base = "BASE_STAFF",
-	slot = "OFFHAND", slot_forbid = false,
-	twohanded = false, add_name=false,
-	define_as = "SARUMAN_BOTTOM_HALF", rarity=false,
-	name = "Saruman's Staff Bottom Half", unique=true,
-	desc = [[The bottom part of Saruman's broken staff.]],
-	require = { stat = { mag=35 }, },
-	cost = 500,
-	wielder = {
-		inc_stats = { [Stats.STAT_MAG] = 4, },
-		max_mana = 50,
-		combat_mentalresist = 8,
-		inc_damage={
-			[DamageType.COLD] = 20,
-			[DamageType.ACID] = 20,
-		},
+newEntity{ define_as = "ATHAME_WEST2",
+	quest=true, unique="Blood-Runed Athame West2", identified=true,
+	type = "misc", subtype="misc",
+	unided_name = "athame",
+	name = "Blood-Runed Athame",
+	level_range = {50, 50},
+	display = "|", color=colors.VIOLET,
+	encumber = 1,
+	desc = [[An athame, covered in blood runes. It radiates power.]],
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+	on_pickup = function(self, who)
+		if who == game.player then
+			game.player:resolveSource():setQuestStatus("east-portal", engine.Quest.COMPLETED, "athame-back")
+		end
+	end,
+}
+
+-- The orb of many ways, allows usage of Farportals
+newEntity{ define_as = "ORB_MANY_WAYS2",
+	unique = "Orb of Many Ways2", quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "swirling orb",
+	name = "Orb of Many Ways",
+	level_range = {30, 30},
+	display = "*", color=colors.VIOLET, image = "object/pearl.png",
+	encumber = 1,
+	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
+If used near a portal it could probably activate it.]],
+
+	max_power = 30, power_regen = 1,
+	use_power = { name = "activate a portal", power = 10,
+		use = function(self, who)
+			self:identify(true)
+			local g = game.level.map(who.x, who.y, game.level.map.TERRAIN)
+			if g and g.orb_portal then
+				world:gainAchievement("SLIDERS", who:resolveSource())
+				who:useOrbPortal(g.orb_portal)
+			else
+				game.logPlayer(who, "There is no portal to activate here.")
+			end
+		end
 	},
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+	on_pickup = function(self, who)
+		if who == game.player then
+			game.player:resolveSource():setQuestStatus("east-portal", engine.Quest.COMPLETED, "orb-back")
+		end
+	end,
 }
