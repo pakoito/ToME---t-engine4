@@ -36,9 +36,6 @@ newBirthDescriptor{
 	copy = {
 		max_life = 120,
 	},
-	copy_add = {
-		life_rating = 2,
-	},
 }
 
 newBirthDescriptor{
@@ -80,6 +77,9 @@ newBirthDescriptor{
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
 		},
 	},
+	copy_add = {
+		life_rating = 2,
+	},
 }
 
 newBirthDescriptor{
@@ -120,6 +120,9 @@ newBirthDescriptor{
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true},
 		},
+	},
+	copy_add = {
+		life_rating = 3,
 	},
 }
 
@@ -167,5 +170,8 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana"},
 			{type="potion", subtype="potion", name="potion of lesser mana"},
 		},
+	},
+	copy_add = {
+		life_rating = 2,
 	},
 }

@@ -45,7 +45,8 @@ function _M:init()
 		local nodes = {}
 
 		for j, save in ipairs(m.savefiles) do
-			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version[1], save.module_version[2], save.module_version[3])
+		print(m.short_name)
+			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
 			if mod then
 				save.fct = function()

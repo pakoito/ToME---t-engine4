@@ -92,6 +92,9 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
 	},
+	copy_add = {
+		life_rating = -4,
+	},
 }
 
 newBirthDescriptor{
@@ -153,6 +156,9 @@ newBirthDescriptor{
 			t.action(self, t)
 		end,
 	},
+	copy_add = {
+		life_rating = -1,
+	},
 }
 
 newBirthDescriptor{
@@ -203,6 +209,9 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
 	},
+	copy_add = {
+		life_rating = -4,
+	},
 }
 
 newBirthDescriptor{
@@ -251,6 +260,9 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
+	},
+	copy_add = {
+		life_rating = -4,
 	},
 }
 
@@ -301,5 +313,8 @@ newBirthDescriptor{
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
 		},
+	},
+	copy_add = {
+		life_rating = -4,
 	},
 }
