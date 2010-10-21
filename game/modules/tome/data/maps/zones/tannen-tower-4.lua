@@ -19,6 +19,8 @@
 
 startx = 5
 starty = 14
+endx = 12
+endy = 12
 
 -- defineTile section
 defineTile("U", "LAVA_FLOOR", nil, {random_filter={type="demon"}})

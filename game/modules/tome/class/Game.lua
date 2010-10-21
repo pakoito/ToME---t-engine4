@@ -632,7 +632,7 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
-				self:changeLevel(1, "tannen-tower")
+				self:changeLevel(4, "tannen-tower")
 --				self:changeLevel(1, "town-minas-tirith")
 --				self.player:grantQuest("east-portal")
 			end

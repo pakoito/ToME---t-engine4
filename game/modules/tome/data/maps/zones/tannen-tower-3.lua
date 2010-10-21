@@ -17,8 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-startx = 19
-starty = 14
+startx = 12
+starty = 12
+endx = 19
+endy = 14
 
 -- defineTile section
 defineTile("X", "HARDWALL")

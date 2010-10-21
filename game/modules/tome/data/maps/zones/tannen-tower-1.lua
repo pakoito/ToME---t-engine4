@@ -26,6 +26,8 @@ defineTile(">", "DOWN")
 defineTile(".", "FLOOR")
 
 -- addSpot section
+startx = 12
+starty = 12
 
 -- ASCII map section
 return [[
