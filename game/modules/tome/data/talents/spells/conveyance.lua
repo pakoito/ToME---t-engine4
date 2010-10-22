@@ -31,7 +31,7 @@ newTalent{
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	action = function(self, t)
 		local target = self
-		if self:getTalentLevel(t) >= 5 then
+		if self:getTalentLevel(t) >= 4 then
 			local tg = {default_target=self, type="hit", nowarning=true, range=10, first_target="friend"}
 			local tx, ty = self:getTarget(tg)
 			if tx then
@@ -53,21 +53,26 @@ newTalent{
 		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
 		local x, y = self.x, self.y
-		if self:getTalentLevel(t) >= 4 then
-			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevel(t), requires_knowledge=false}
+		local rad = 10 + self:combatSpellpower(0.1)
+		if self:getTalentLevel(t) >= 5 then
+			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevelRaw(t), requires_knowledge=false}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
 			local _ _, x, y = self:canProject(tg, x, y)
-			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, 7 - self:getTalentLevel(t))
-			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-		else
-			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, 10 + self:combatSpellpower(0.1))
-			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
+			rad = 7 - self:getTalentLevelRaw(t)
+
+			-- Check LOS
+			if not self:hasLOS(x, y) and rng.percent(35) then
+				game.logPlayer(self, "The spell fizzles!")
+				return true
+			end
 		end
+
+		game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
+		target:teleportRandom(x, y, rad)
+		game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 
 		if target ~= self then
 			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
@@ -78,9 +83,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Teleports you randomly with a small range (%d).
-		At level 4 it allows you to choose the target area (radius %d).
-		At level 5 it allows you to specify which creature to teleport.
-		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1), 7 - self:getTalentLevel(t))
+		At level 4 it allows you to specify which creature to teleport.
+		At level 5 it allows you to choose the target area (radius %d). If the target area is not in line of sight there is a chance the spell will fizzle.
+		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1), 7 - self:getTalentLevelRaw(t))
 	end,
 }
 

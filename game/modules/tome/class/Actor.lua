@@ -558,7 +558,7 @@ function _M:onTakeHit(value, src)
 			local dam = self.disruption_shield_absorb
 
 			-- Deactivate without loosing energy
-			self:forceUseTalent(t.T_DISRUPTION_SHIELD, {ignore_energy=true})
+			self:forceUseTalent(self.T_DISRUPTION_SHIELD, {ignore_energy=true})
 
 			-- Explode!
 			game.logSeen(self, "%s disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
