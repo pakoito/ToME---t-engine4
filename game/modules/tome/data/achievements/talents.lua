@@ -49,11 +49,11 @@ newAchievement{
 
 newAchievement{
 	name = "Pyromancer",
-	desc = [[Unlocked Archmage class and done over two million fire damage (with any item/talent/class).]],
+	desc = [[Unlocked Archmage class and done over one million fire damage (with any item/talent/class).]],
 	mode = "world",
 	can_gain = function(self, who, dam)
 		self.nb = (self.nb or 0) + dam
-		return self.nb > 2000000 and profile.mod.allow_build.mage
+		return self.nb > 1000000 and profile.mod.allow_build.mage
 	end,
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("mage_pyromancer", true)
@@ -61,11 +61,11 @@ newAchievement{
 }
 newAchievement{
 	name = "Cryomancer",
-	desc = [[Unlocked Archmage class and done over two million cold damage (with any item/talent/class).]],
+	desc = [[Unlocked Archmage class and done over one million cold damage (with any item/talent/class).]],
 	mode = "world",
 	can_gain = function(self, who, dam)
 		self.nb = (self.nb or 0) + dam
-		return self.nb > 2000000 and profile.mod.allow_build.mage
+		return self.nb > 1000000 and profile.mod.allow_build.mage
 	end,
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("mage_cryomancer", true)

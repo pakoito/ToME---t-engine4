@@ -110,6 +110,7 @@ function _M:use(item)
 		local save = Savefile.new(game.save_name)
 		save:delete()
 		save:close()
+		world:saveWorld()
 		util.showMainMenu()
 	elseif act == "dump" then
 		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
