@@ -455,15 +455,6 @@ end
 
 tstring = {}
 tstring.is_tstring = true
-local tsmeta = {__index=tstring}
-
-setmetatable(tstring, {
-	__call = function(self, t)
-		setmetatable(t, tsmeta)
-		return t
-	end,
-	__tostring = tstring.toString,
-})
 
 function tstring:add(...)
 	local v = {...}
@@ -694,6 +685,15 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b)
 		end
 	end
 end
+
+-- Make tstring into an object
+local tsmeta = {__index=tstring, __tostring = tstring.toString}
+setmetatable(tstring, {
+	__call = function(self, t)
+		setmetatable(t, tsmeta)
+		return t
+	end,
+})
 
 
 dir_to_coord = {

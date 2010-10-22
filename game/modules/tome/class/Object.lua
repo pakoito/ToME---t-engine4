@@ -412,7 +412,7 @@ function _M:getDesc(name_param)
 	local c, _ = self:getDisplayColor()
 	local desc = tstring{}
 	if not self:isIdentified() then
-		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"})
+		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
 	else
 		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
 		desc:merge(self.desc)
