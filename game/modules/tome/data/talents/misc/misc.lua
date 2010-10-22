@@ -157,6 +157,7 @@ newTalent{
 	short_name = "DUNADAN_HEAL",
 	name = "King's Gift",
 	type = {"base/race", 1},
+	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:getWil() * 0.5})
@@ -173,6 +174,7 @@ newTalent{
 	short_name = "NANDOR_SPEED",
 	name = "Grace of the Eldar",
 	type = {"base/race", 1},
+	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_SPEED, 8, {power=0.20 + self:getDex() / 80})
@@ -189,6 +191,7 @@ newTalent{
 	short_name = "DWARF_RESILIENCE",
 	name = "Resilience of the Dwarves",
 	type = {"base/race", 1},
+	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_DWARVEN_RESILIENCE, 8, {
@@ -209,6 +212,7 @@ newTalent{
 	short_name = "HOBBIT_LUCK",
 	name = "Luck of the Little Folk",
 	type = {"base/race", 1},
+	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_HOBBIT_LUCK, 5, {
@@ -228,6 +232,7 @@ newTalent{
 	short_name = "NOLDOR_WRATH",
 	name = "Wrath of the Eldar",
 	type = {"base/race", 1},
+	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_NOLDOR_WRATH, 5, {power=7 + self:getWil(10)})
@@ -244,6 +249,7 @@ newTalent{
 	short_name = "ORC_FURY",
 	name = "Orcish Fury",
 	type = {"base/race", 1},
+	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
 		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
