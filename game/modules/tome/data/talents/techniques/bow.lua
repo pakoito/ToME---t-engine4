@@ -31,7 +31,7 @@ newTalent{
 newTalent{
 	name = "Piercing Arrow",
 	type = {"technique/archery-bow", 2},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	cooldown = 8,
 	stamina = 15,
@@ -52,7 +52,7 @@ newTalent{
 newTalent{
 	name = "Dual Arrows",
 	type = {"technique/archery-bow", 3},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	cooldown = 8,
 	stamina = 15,
@@ -74,7 +74,7 @@ newTalent{
 newTalent{
 	name = "Volley of Arrows",
 	type = {"technique/archery-bow", 4},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	cooldown = 12,
 	stamina = 35,

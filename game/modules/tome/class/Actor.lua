@@ -1412,6 +1412,9 @@ function _M:getTalentFullDescription(t, addlevel)
 	if speed then d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, ""..(speed * 100).."% of base", true)
 	else d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, "instantaneous", true)
 	end
+	local uspeed = "1 turn"
+	if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
+	d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 
 	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF}, t.info(self, t), true)
 

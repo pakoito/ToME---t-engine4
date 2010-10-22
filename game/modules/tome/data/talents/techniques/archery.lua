@@ -21,7 +21,7 @@
 newTalent{
 	name = "Shoot",
 	type = {"technique/archery-base", 1},
-	no_energy = true,
+	no_energy = "fake",
 	hide = true,
 	points = 1,
 	range = 20,
@@ -41,7 +41,7 @@ newTalent{
 newTalent{
 	name = "Steady Shot",
 	type = {"technique/archery-training", 1},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	random_ego = "attack",
 	cooldown = 3,
@@ -139,7 +139,7 @@ newTalent{
 newTalent{
 	name = "Critical Shot",
 	type = {"technique/archery-training", 4},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	random_ego = "attack",
 	cooldown = 14,
@@ -163,7 +163,6 @@ newTalent{
 newTalent{
 	name = "Ammo Creation",
 	type = {"technique/archery-utility", 1},
-	no_energy = true,
 	points = 5,
 	cooldown = 200,
 	stamina = 30,
@@ -201,7 +200,7 @@ newTalent{
 newTalent{
 	name = "Crippling Shot",
 	type = {"technique/archery-utility", 2},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
@@ -230,7 +229,7 @@ newTalent{
 newTalent{
 	name = "Pinning Shot",
 	type = {"technique/archery-utility", 3},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
@@ -259,7 +258,7 @@ newTalent{
 newTalent{
 	name = "Scatter Shot",
 	type = {"technique/archery-utility", 4},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	random_ego = "attack",
 	cooldown = 14,
