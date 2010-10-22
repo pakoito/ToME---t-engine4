@@ -267,9 +267,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and not target.dead and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) and rng.percent(20 + self:getTalentLevel(self.T_ARCANE_COMBAT) * (1 + self:getDex(9, true))) then
 		local spells = {}
 		if self:knowTalent(self.T_FLAME) then spells[#spells+1] = self.T_FLAME end
-		if self:knowTalent(self.T_FLAMESHOCK) then spells[#spells+1] = self.T_FLAMESHOCK end
 		if self:knowTalent(self.T_LIGHTNING) then spells[#spells+1] = self.T_LIGHTNING end
-		if self:knowTalent(self.T_CHAIN_LIGHTNING) then spells[#spells+1] = self.T_CHAIN_LIGHTNING end
 		local tid = rng.table(spells)
 		if tid then
 			print("[ARCANE COMBAT] autocast ",self:getTalentFromId(tid).name)

@@ -33,7 +33,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows one to use a melee weapon to focus spells, granting %d%% chance per melee attack to deliver a Flame, Flameshock, Lightning, or Chain Lightning spell as a free action on the target.
+		return ([[Allows one to use a melee weapon to focus spells, granting %d%% chance per melee attack to deliver a Flame, or Lightning spell as a free action on the target.
 		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling-down.
 		The chance increases with dexterity.]]):
 		format(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true)))
