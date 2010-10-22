@@ -651,7 +651,7 @@ function _M:setupCommands()
 		MOVE_LEFT_DOWN = function() self.player:moveDir(1) end,
 		MOVE_RIGHT_UP = function() self.player:moveDir(9) end,
 		MOVE_RIGHT_DOWN = function() self.player:moveDir(3) end,
-		MOVE_STAY = function() self.player:useEnergy() end,
+		MOVE_STAY = function() if self:enoughEnergy() then self.player:useEnergy() end end,
 
 		RUN_LEFT = function() self.player:runInit(4) end,
 		RUN_RIGHT = function() self.player:runInit(6) end,
