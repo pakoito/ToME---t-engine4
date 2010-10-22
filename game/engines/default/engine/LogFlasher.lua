@@ -62,7 +62,8 @@ function _M:call(style, str, ...)
 	local base = ""
 	if #self.log > 0 then base = table.remove(self.log) end
 
-	local lines = (base .. " " .. str:format(...)):splitLines(self.w - 4, self.font)
+	str = str:format(...)
+	local lines = (base .. " " .. str):splitLines(self.w - 4, self.font)
 	for i = 1, #lines do
 		table.insert(self.log, lines[i])
 	end

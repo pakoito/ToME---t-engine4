@@ -455,13 +455,13 @@ end
 
 tstring = {}
 tstring.is_tstring = true
+local tsmeta = {__index=tstring}
 
 setmetatable(tstring, {
 	__call = function(self, t)
-		setmetatable(t, getmetatable(self))
+		setmetatable(t, tsmeta)
 		return t
 	end,
-	__index = tstring,
 	__tostring = tstring.toString,
 })
 
@@ -510,26 +510,21 @@ function string.toTString(str)
 		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
 		if nr and ng and nb then
 			tstr:add({"color", nr:parseHex(), ng:parseHex(), nb:parseHex()})
-			print(" ** add", "color", nr:parseHex(), ng:parseHex(), nb:parseHex())
 		elseif col then
 			tstr:add({"color", col})
-			print(" ** add", "color", col)
 		elseif uid and mo then
 			tstr:add({"uid", tonumber(uid)})
-			print(" ** add", "uid", uid)
 		elseif fontstyle then
 			tstr:add({"font", fontstyle})
-			print(" ** add", "font", fontstyle)
 		elseif v == "\n" then
 			tstr:add(true)
-			print(" ** add", true)
 		else
 			tstr:add(v)
-			print(" ** add", v)
 		end
 	end
 	return tstr
 end
+function string:toString() return self end
 
 --- Tablestrings degrade "peacefully" into normal formated strings
 function tstring:toString()
@@ -550,6 +545,10 @@ function tstring:toString()
 	end
 	return table.concat(ret)
 end
+function tstring:toTString() return self end
+
+--- Tablestrings can not be formated, this just returns self
+function tstring:format() return self end
 
 function tstring:splitLines(max_width, font)
 	local space_w = font:size(" ")

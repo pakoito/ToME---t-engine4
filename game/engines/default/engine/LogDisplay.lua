@@ -18,9 +18,10 @@
 -- darkgod@te4.org
 
 require "engine.class"
+require "engine.ui.Base"
 
 --- Module that handles message history ina mouse wheel scrollable zone
-module(..., package.seeall, class.make)
+module(..., package.seeall, class.inherit(engine.ui.Base))
 
 --- Creates the log zone
 function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
@@ -35,7 +36,7 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.font_h = self.font:lineSkip()
 	self.log = {}
 	getmetatable(self).__call = _M.call
-	self.max = max or 4000
+	self.max_log = max or 4000
 	self.scroll = 0
 	self.changed = true
 
@@ -46,8 +47,8 @@ end
 function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.w, self.h = math.floor(w), math.floor(h)
-	self.surface = core.display.newSurface(w, h)
-	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
+	self.fw, self.fh = self.w - 4, self.font:lineSkip()
+	self.max_display = math.floor(self.h / self.fh)
 	self.changed = true
 
 	if self.bg_image then
@@ -58,7 +59,18 @@ function _M:resize(x, y, w, h)
 		for i = 0, w, fw do for j = 0, h, fh do
 			self.bg_surface:merge(fill, i, j)
 		end end
+		self.bg_texture, self.bg_texture_w, self.bg_texture_h = self.bg_surface:glTexture()
 	end
+
+	local sb, sb_w, sb_h = self:getImage("ui/scrollbar.png")
+	local ssb, ssb_w, ssb_h = self:getImage("ui/scrollbar-sel.png")
+
+	self.scrollbar = { bar = {}, sel = {} }
+	self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
+	local s = core.display.newSurface(sb_w, self.h)
+	s:erase(200,0,0)
+	for i = 0, self.h do s:merge(sb, 0, i) end
+	self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h, s:glTexture()
 end
 
 --- Appends text to the log
@@ -66,14 +78,14 @@ end
 -- log = LogDisplay.new(...)<br/>
 -- log("foo %s", s)
 function _M:call(str, ...)
-	local lines = str:format(...):splitLines(self.w - 4, self.font)
-	for i = 1, #lines do
-		print("[LOG]", lines[i])
-		table.insert(self.log, 1, {lines[i], reset=(i==#lines)})
-	end
-	while #self.log > self.max do
+	str = str:format(...)
+	print("[LOG]", str)
+	local tstr = str:toTString()
+	table.insert(self.log, 1, tstr)
+	while #self.log > self.max_log do
 		table.remove(self.log)
 	end
+	self.max = #self.log
 	self.changed = true
 end
 
@@ -90,35 +102,49 @@ function _M:getLines(number)
 	if from > #self.log then from = #self.log end
 	local lines = { }
 	for i = from, 1, -1 do
-		lines[#lines+1] = self.log[i][1]
+		lines[#lines+1] = tostring(self.log[i][1])
 	end
 	return lines
 end
 
 function _M:display()
 	-- If nothing changed, return the same surface as before
-	if not self.changed then return self.surface end
+	if not self.changed then return end
 	self.changed = false
 
-	-- Erase and the display the map
-	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
-	if self.bg_surface then self.surface:merge(self.bg_surface, 0, 0) end
-	local i, dh = 1, 0
-	local r, g, b = self.color[1], self.color[2], self.color[3]
-	local buffer = (self.h % self.font_h) / 2
-	for i = math.floor(self.h / self.font_h), 1, -1 do
-		if self.log[self.scroll + i] then
-			r, g, b = self.surface:drawColorStringBlended(self.font, self.log[self.scroll + i][1], 0, self.h - buffer - (i) * self.font_h, r, g, b)
-			if self.log[self.scroll + i].reset then r, g, b = self.color[1], self.color[2], self.color[3] end
+	-- Erase and the display
+	self.dlist = {}
+	local h = 0
+	for z = 1 + self.scroll, #self.log do
+		local stop = false
+		local tstr = self.log[z]
+		local gen = tstring.makeLineTextures(tstr, self.w - 4, self.font)
+		for i = #gen, 1, -1 do
+			self.dlist[#self.dlist+1] = gen[i]
+			h = h + self.fh
+			if h > self.h - self.fh then stop=true break end
 		end
+		if stop then break end
 	end
-	self.surface:updateTexture(self.texture)
-	return self.surface
+	return
 end
 
 function _M:toScreen()
 	self:display()
-	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
+	if self.bg_texture then self.bg_texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg_texture_w, self.bg_texture_h) end
+	local h = self.display_y + self.h -  self.fh
+	for i = 1, #self.dlist do
+		local item = self.dlist[i]
+		item._tex:toScreenFull(self.display_x, h, self.fw, self.fh, item._tex_w, item._tex_h)
+		h = h - self.fh
+	end
+
+	if true then
+		local pos = self.scroll * (self.h - self.fh) / (self.max - self.max_display + 1)
+
+		self.scrollbar.bar.tex:toScreenFull(self.display_x + self.w - self.scrollbar.bar.w, self.display_y, self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.texw, self.scrollbar.bar.texh)
+		self.scrollbar.sel.tex:toScreenFull(self.display_x + self.w - self.scrollbar.sel.w, self.display_y + self.h - self.scrollbar.sel.h - pos, self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.texw, self.scrollbar.sel.texh)
+	end
 end
 
 --- Scroll the zone
