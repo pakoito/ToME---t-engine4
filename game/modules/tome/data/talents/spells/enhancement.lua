@@ -31,7 +31,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
 		return {
-			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = self:combatTalentSpellDamage(t, 5, 20)}),
+			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = self:combatTalentSpellDamage(t, 5, 40)}),
 			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = self:combatTalentSpellDamage(t, 5, 14)}),
 		}
 	end,
@@ -42,7 +42,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %d fire damage per melee attack and increasing all fire damage by %d%%.]]):
-		format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 20)), self:combatTalentSpellDamage(t, 5, 14))
+		format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 40)), self:combatTalentSpellDamage(t, 5, 14))
 	end,
 }
 
@@ -61,7 +61,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%%.]]):format(self:combatTalentSpellDamage(t, 10, 60))
+		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%% for 10 turns.]]):format(self:combatTalentSpellDamage(t, 10, 60))
 	end,
 }
 
@@ -79,7 +79,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 		return {
-			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = self:combatTalentSpellDamage(t, 3, 15)}),
+			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = self:combatTalentSpellDamage(t, 3, 20)}),
 			per = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = self:combatTalentSpellDamage(t, 5, 14)}),
 		}
 	end,
@@ -90,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.]]):
-		format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 3, 15)), self:combatTalentSpellDamage(t, 5, 14))
+		format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 3, 20)), self:combatTalentSpellDamage(t, 5, 14))
 	end,
 }
 
