@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-for i = 1, 2 do
+for i = 1, 4 do
 newEntity{ base = "BASE_SCROLL",
 	define_as = "SUNWALL_LORE_NOTE"..i,
 	name = "Loremaster Verutir's note", lore="sunwall-note-"..i, unique="Loremaster Verutir's note "..i,

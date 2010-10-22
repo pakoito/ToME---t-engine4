@@ -38,3 +38,19 @@ newLore{
 	lore = [[And boy were all the rumors about unreliable adventurers true. I'd heard that many, many escorted people die when their adventurer flees and protects himself. It is TRUE. Once I got an escort, I headed off in the right direction immediately. However, for some reason, he did not immediately follow, let alone lead. Didn't he know the way to go? Foolish man. Why am I offering my special trainings to someone who doesn't even know where the local portals are! Fortunately I survived, but no thanks to him. I won't even mention his snoring...
 This Thanchir guy really really needs to find a more urban spot with accessible public transportation (no adventurers please!) However, once I could get him to talk, he does know quite a bit. Apparently, he claims some distant kinship to the first elf in these parts. They arrived by boat from some legendary land called "Middle Earth". He says that it definitely exists, but could provide no real evidence. This should be investigated further]],
 }
+
+newLore{
+	id = "sunwall-note-3",
+	category = "history of the Sunwall",
+	name = "Loremaster Verutir's note",
+	lore = [[However, I have been repeatedly told by the powers that be, that I need to get on with this and turn in another report on how a different race got here. So, I will temporarily pause my researches on whether or not Middle Earth is real or just an elf legend. (Can't trust everything they say despite their long memories.) Instead, I am on to meet the keeper of the Eastern Historical Society who has the best collection of lore about how humans got here. As such, I will be travelling to northern Vor to use their archives.
+And yes, unfortunately I will be travelling by adventurer again. By all the gods, why don't I get a better budget, this is absolutely terrible. It has been a particularly long walk. Longer than I thought it would be truthfully, so I have run out of food. Foolish I know, but I figured I could ask the escort for some of his. The snobby piece of troll-liver says he doesn't eat! Now talk about a terrible lie. Did he really think that would fool me? This Eastern Historical Society had better be good...]],
+}
+
+newLore{
+	id = "sunwall-note-4",
+	category = "history of the Sunwall",
+	name = "Loremaster Verutir's note",
+	lore = [[Finally arrived in Vor safe and mostly sound. (Though I do have some burns on my stomach from mage fire and my coat is a complete wreck. I wonder if I can expense a new coat.) However, the Eastern Historical Society is everything I could have hoped. Who can doubt that humans are the superior race! You'd never see an elf or an orc keep neat paper records like this!
+In short: Aethidry was the first human to map out these shores. EHS has his map preserved in good crackly yellow parchment. However, he travelled on and later died on distant shores, so he was neither the first human to arrive here or the one who organized the first settlement. Some historians guess that the first human to arrive in the east was one Vaeryn Gorthol. At the least, many of the first explorers mention him as a precursor, so he may well have been. A few of the important first settlers were Oweodry Arandur, Aethor (or perhaps Aethur) the Wronged and Bloran the Black.]],
+}
