@@ -111,7 +111,11 @@ function _M:use(item)
 		save:delete()
 		save:close()
 		world:saveWorld()
-		util.showMainMenu()
+		if item.subaction == "none" then
+			util.showMainMenu()
+		elseif item.subaction == "restart" then
+			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true, "auto_quickbirth=true")
+		end
 	elseif act == "dump" then
 		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
 	elseif act == "cheat" then
@@ -174,7 +178,8 @@ function _M:generateList()
 	end)
 
 	list[#list+1] = {name="Character dump", action="dump"}
-	list[#list+1] = {name="Exit to main menu", action="exit"}
+	list[#list+1] = {name="Restart the same character", action="exit", subaction="restart"}
+	list[#list+1] = {name="Exit to main menu", action="exit", subaction="none"}
 
 	self.list = list
 end

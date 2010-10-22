@@ -410,24 +410,27 @@ static int lua_exit_engine(lua_State *L)
 	return 0;
 }
 extern bool reboot_lua, reboot_new;
-extern char *reboot_engine, *reboot_engine_version, *reboot_module, *reboot_name;
+extern char *reboot_engine, *reboot_engine_version, *reboot_module, *reboot_name, *reboot_einfo;
 static int lua_reboot_lua(lua_State *L)
 {
 	if (reboot_engine) free(reboot_engine);
 	if (reboot_engine_version) free(reboot_engine_version);
 	if (reboot_module) free(reboot_module);
 	if (reboot_name) free(reboot_name);
+	if (reboot_einfo) free(reboot_einfo);
 
 	reboot_engine = (char *)luaL_checkstring(L, 1);
 	reboot_engine_version = (char *)luaL_checkstring(L, 2);
 	reboot_module = (char *)luaL_checkstring(L, 3);
 	reboot_name = (char *)luaL_checkstring(L, 4);
 	reboot_new = lua_toboolean(L, 5);
+	reboot_einfo = (char *)luaL_checkstring(L, 6);
 
 	if (reboot_engine) reboot_engine = strdup(reboot_engine);
 	if (reboot_engine_version) reboot_engine_version = strdup(reboot_engine_version);
 	if (reboot_module) reboot_module = strdup(reboot_module);
 	if (reboot_name) reboot_name = strdup(reboot_name);
+	if (reboot_einfo) reboot_einfo = strdup(reboot_einfo);
 
 	reboot_lua = TRUE;
 	return 0;

@@ -49,7 +49,7 @@ int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
 bool reboot_lua = FALSE, reboot_new = FALSE;
-char *reboot_engine = NULL, *reboot_engine_version = NULL, *reboot_module = NULL, *reboot_name = NULL;
+char *reboot_engine = NULL, *reboot_engine_version = NULL, *reboot_module = NULL, *reboot_name = NULL, *reboot_einfo = NULL;
 bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
@@ -693,7 +693,8 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		if (reboot_module) lua_pushstring(L, reboot_module); else lua_pushnil(L);
 		if (reboot_name) lua_pushstring(L, reboot_name); else lua_pushnil(L);
 		lua_pushboolean(L, reboot_new);
-		docall(L, 5, 0);
+		if (reboot_einfo) lua_pushstring(L, reboot_einfo); else lua_pushnil(L);
+		docall(L, 6, 0);
 	}
 }
 
@@ -724,6 +725,7 @@ int main(int argc, char *argv[])
 		char *arg = argv[i];
 		if (!strncmp(arg, "-M", 2)) reboot_module = strdup(arg+2);
 		if (!strncmp(arg, "-u", 2)) reboot_name = strdup(arg+2);
+		if (!strncmp(arg, "-E", 2)) reboot_einfo = strdup(arg+2);
 		if (!strncmp(arg, "-n", 2)) reboot_new = TRUE;
 	}
 

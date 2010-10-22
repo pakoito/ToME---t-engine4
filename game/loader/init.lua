@@ -29,6 +29,15 @@ local load load = function(...)
 	__load_module = args[3] or "boot"
 	__player_name = args[4] or "player"
 	__player_new = args[5] and true or false
+	if args[6] then
+		local f = loadstring(args[6])
+		__module_extra_info = {}
+		setfenv(f, __module_extra_info)
+		pcall(f)
+		for k, e in pairs(__module_extra_info) do print(" * Module extra info", k, ":=:", e) end
+	else
+		__module_extra_info = {}
+	end
 
 	print("Reboot using", req_engine, req_version, __load_module, __player_name, __player_new)
 

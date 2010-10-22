@@ -125,12 +125,17 @@ end
 
 function _M:on_register()
 	if self.quickbirth then
-		self:yesnoPopup("Quick Birth", "Do you want to recreate the same character?", function(ret)
-			if ret then
-				self.do_quickbirth = true
-				self:quickBirth()
-			end
-		end, "Recreate", "New character")
+		if __module_extra_info.auto_quickbirth then
+			self.do_quickbirth = true
+			self:quickBirth()
+		else
+			self:yesnoPopup("Quick Birth", "Do you want to recreate the same character?", function(ret)
+				if ret then
+					self.do_quickbirth = true
+					self:quickBirth()
+				end
+			end, "Recreate", "New character")
+		end
 	end
 end
 
