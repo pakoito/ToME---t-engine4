@@ -156,12 +156,13 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_FLAME] = 1,
-		[ActorTalents.T_FIERY_HANDS] = 1,
+		[ActorTalents.T_ARCANE_COMBAT] = 1,
 		[ActorTalents.T_STUNNING_BLOW] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
 		max_life = 100,
+		talent_cd_reduction={[ActorTalents.T_FLAME]=-3, [ActorTalents.T_LIGHTNING]=-3, },
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true},
