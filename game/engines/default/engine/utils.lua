@@ -456,6 +456,15 @@ end
 tstring = {}
 tstring.is_tstring = true
 
+setmetatable(tstring, {
+	__call = function(self, t)
+		setmetatable(t, getmetatable(self))
+		return t
+	end,
+	__index = tstring,
+	__tostring = tstring.toString,
+})
+
 function tstring:add(...)
 	local v = {...}
 	for i = 1, #v do
@@ -487,6 +496,39 @@ function tstring.from(str)
 	else
 		return str
 	end
+end
+
+--- Parse a string and return a tstring
+function string.toTString(str)
+	local tstr = tstring{}
+	local list = str:split(("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#") + lpeg.P"\n", true)
+	for i = 1, #list do
+		v = list[i]
+		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
+		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
+		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
+		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
+		if nr and ng and nb then
+			tstr:add({"color", nr:parseHex(), ng:parseHex(), nb:parseHex()})
+			print(" ** add", "color", nr:parseHex(), ng:parseHex(), nb:parseHex())
+		elseif col then
+			tstr:add({"color", col})
+			print(" ** add", "color", col)
+		elseif uid and mo then
+			tstr:add({"uid", tonumber(uid)})
+			print(" ** add", "uid", uid)
+		elseif fontstyle then
+			tstr:add({"font", fontstyle})
+			print(" ** add", "font", fontstyle)
+		elseif v == "\n" then
+			tstr:add(true)
+			print(" ** add", true)
+		else
+			tstr:add(v)
+			print(" ** add", v)
+		end
+	end
+	return tstr
 end
 
 --- Tablestrings degrade "peacefully" into normal formated strings
@@ -653,15 +695,6 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b)
 		end
 	end
 end
-
-setmetatable(tstring, {
-	__call = function(self, t)
-		setmetatable(t, getmetatable(self))
-		return t
-	end,
-	__index = tstring,
-	__tostring = tstring.toString,
-})
 
 
 dir_to_coord = {
