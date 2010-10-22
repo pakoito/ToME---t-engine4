@@ -25,9 +25,19 @@ local DamageType = require "engine.DamageType"
 newAI("sandworm_tunneler", function(self)
 	-- Get a spot
 	if not self.ai_state.spot_x then
-		local s = rng.table(game.level.spots)
-		self.ai_state.spot_x = s.x
-		self.ai_state.spot_y = s.y
+		if game.level.default_up and rng.chance(#game.level.spots + 2) then
+			-- Go for the stairs
+			self.ai_state.spot_x = game.level.default_up.x
+			self.ai_state.spot_y = game.level.default_up.y
+		elseif game.level.default_down and rng.chance(#game.level.spots + 2) then
+			-- Go for the stairs
+			self.ai_state.spot_x = game.level.default_down.x
+			self.ai_state.spot_y = game.level.default_down.y
+		else
+			local s = rng.table(game.level.spots)
+			self.ai_state.spot_x = s.x
+			self.ai_state.spot_y = s.y
+		end
 	end
 
 	-- Move toward it, digging your way to it

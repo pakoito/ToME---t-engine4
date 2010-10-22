@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	require = techs_req1,
 	sustain_stamina = 20,
+	no_energy = true,
 	cooldown = 5,
 	activate = function(self, t)
 		return {}
