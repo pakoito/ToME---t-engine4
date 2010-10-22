@@ -52,18 +52,24 @@ newTalent{
 newTalent{
 	name = "Shadow Feed",
 	type = {"cunning/shadow-magic", 3},
+	mode = "sustained",
 	points = 5,
-	random_ego = "utility",
 	cooldown = 5,
-	stamina = 100,
+	sustain_stamina = 40,
 	require = cuns_req3,
 	range = 20,
-	action = function(self, t)
-		self:incMana(40 + self:getTalentLevel(t) * 12)
+	activate = function(self, t)
+		local power = self:getTalentLevel(t) / 14
+		return {
+			regen = self:addTemporaryValue("mana_regen", power),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("mana_regen", p.regen)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Regenerates %d mana at the cost of 100 stamina.]]):format(40 + self:getTalentLevel(t) * 12)
+		return ([[Regenerates %0.2f mana per turn while active.]]):format(self:getTalentLevel(t) / 14)
 	end,
 }
 
