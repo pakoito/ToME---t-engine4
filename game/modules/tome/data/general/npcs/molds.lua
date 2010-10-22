@@ -76,3 +76,35 @@ newEntity{ base = "BASE_NPC_MOLD",
 	combat = { dam=5, atk=15, apr=10 },
 	resolvers.talents{ [Talents.T_SPORE_POISON]=1 },
 }
+
+newEntity{ base = "BASE_NPC_MOLD",
+	unique = true,
+	type = "undead", subtype = "molds",
+	name = "Z'quikzshl the skeletal mold",
+	display = 'm', color=colors.PURPLE,
+	desc = [[Steeped in fungal malevolance, this mold refused to die.  How a mold becomes a skeleton, though, is beyond you.  Are those its own bones, or the bones of hapless adventurers?]],
+
+	level_range = {10, nil}, exp_worth = 5,
+	rarity = 1,
+	max_life = resolvers.rngavg(120,150),
+	combat = { dam=resolvers.mbonus(30, 20), atk=25, apr=15 },
+
+	rank = 4,
+	size_category = 2,
+
+	summon = {
+		{type="immovable", subtype="molds", number=4, hasxp=false},
+	},
+
+	resolvers.talents{
+		[Talents.T_SUMMON]=1,
+		[Talents.T_BONE_SPEAR]=4,
+		[Talents.T_BONE_GRAB]=3,
+		[Talents.T_SPORE_BLIND]=5,
+		[Talents.T_SPORE_POISON]=5,
+		[Talents.T_ROTTING_DISEASE]=5,
+		[Talents.T_DECREPITUDE_DISEASE]=5,
+		[Talents.T_WEAKNESS_DISEASE]=5,
+		[Talents.T_GRAB]=5,
+	}
+}
