@@ -106,8 +106,8 @@ function _M:transfer(src, dest, item, nb)
 		local o = src:removeObject(src_inven, item)
 		dest:addObject(dest_inven, o)
 	end
-	self:sortInven(store)
-	who:sortInven(inven)
+	src:sortInven(src_inven)
+	dest:sortInven(dest_inven)
 end
 
 function _M:doBuy(who, o, item, nb, store_dialog)

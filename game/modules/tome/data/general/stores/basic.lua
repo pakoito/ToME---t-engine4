@@ -22,6 +22,7 @@ newEntity{
 	name = "general store",
 	display = '1', color=colors.LIGHT_UMBER,
 	store = {
+		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -41,6 +42,7 @@ newEntity{
 	name = "armour smith",
 	display = '2', color=colors.UMBER,
 	store = {
+		purse = 25,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -57,6 +59,7 @@ newEntity{
 	name = "weapon smith",
 	display = '3', color=colors.UMBER,
 	store = {
+		purse = 25,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -74,6 +77,7 @@ newEntity{
 	name = "alchemist store",
 	display = '4', color=colors.LIGHT_BLUE,
 	store = {
+		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -90,6 +94,7 @@ newEntity{
 	name = "scribe store",
 	display = '5', color=colors.WHITE,
 	store = {
+		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -107,6 +112,7 @@ newEntity{
 	name = "gem store",
 	display = '9', color=colors.BLUE,
 	store = {
+		purse = 30,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -123,6 +129,7 @@ newEntity{
 	name = "staves and wands store",
 	display = '6', color=colors.RED,
 	store = {
+		purse = 25,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -142,6 +149,7 @@ newEntity{
 	name = "jewelry store",
 	display = '2', color=colors.BLUE,
 	store = {
+		purse = 20,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
@@ -159,6 +167,7 @@ newEntity{
 	name = "rare goods",
 	display = '7', color=colors.BLUE,
 	store = {
+		purse = 35,
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,

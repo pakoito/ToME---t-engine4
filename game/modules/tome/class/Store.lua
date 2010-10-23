@@ -30,9 +30,12 @@ function _M:loadStores(f)
 end
 
 function _M:init(t, no_default)
-	t.buy_percent = t.buy_percent or 10
-	t.sell_percent = t.sell_percent or 100
+	t.store.buy_percent = t.store.buy_percent or 10
+	t.store.sell_percent = t.store.sell_percent or 100
+	t.store.purse = t.store.purse or 20
 	Store.init(self, t, no_default)
+
+	self.name = self.name .. (" (Max buy %0.2f gold)"):format(self.store.purse)
 
 	if self.store and self.store.restock_after then self.store.restock_after = self.store.restock_after * 10 end
 end
@@ -44,9 +47,9 @@ end
 -- @param nb number of items (if stacked) to buy
 -- @return true if allowed to buy
 function _M:tryBuy(who, o, item, nb)
-	local price = o:getPrice() * self.sell_percent / 100
+	local price = o:getPrice() * self.store.sell_percent / 100
 	if who.money >= price * nb then
-		return nb, price * nb  --FINISH ME !!!!
+		return nb, price * nb
 	else
 		Dialog:simplePopup("Not enough gold", "You do not have enough gold!")
 	end
@@ -59,8 +62,9 @@ end
 -- @param nb number of items (if stacked) to sell
 -- @return true if allowed to sell
 function _M:trySell(who, o, item, nb)
-	local price = o:getPrice() * self.buy_percent / 100
+	local price = o:getPrice() * self.store.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
+	price = math.min(price * nb, self.store.purse)
 	return nb, price
 end
 
@@ -73,7 +77,7 @@ end
 -- @return true if allowed to buy
 function _M:onBuy(who, o, item, nb, before)
 	if before then return end
-	local price = o:getPrice() * self.sell_percent / 100
+	local price = o:getPrice() * self.store.sell_percent / 100
 	if who.money >= price * nb then
 		who:incMoney(- price * nb)
 	end
@@ -89,17 +93,19 @@ end
 function _M:onSell(who, o, item, nb, before)
 	if before then o:identify(true) return end
 
-	local price = o:getPrice() * self.buy_percent / 100
+	local price = o:getPrice() * self.store.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
-	who:incMoney(price * nb)
+	price = math.min(price * nb, self.store.purse)
+	who:incMoney(price)
 end
 
 --- Override the default
 function _M:doBuy(who, o, item, nb, store_dialog)
 	nb = math.min(nb, o:getNumber())
-	nb = self:tryBuy(who, o, item, nb)
+	local price
+	nb, price = self:tryBuy(who, o, item, nb)
 	if nb then
-		Dialog:yesnoPopup("Buy", ("Buy %d %s for %0.2f gold"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
+		Dialog:yesnoPopup("Buy", ("Buy %d %s for %0.2f gold"):format(nb, o:getName{do_color=true, no_count=true}, price), function(ok) if ok then
 			self:onBuy(who, o, item, nb, true)
 			self:transfer(self, who, item, nb)
 			self:onBuy(who, o, item, nb, false)
@@ -111,9 +117,10 @@ end
 --- Override the default
 function _M:doSell(who, o, item, nb, store_dialog)
 	nb = math.min(nb, o:getNumber())
-	nb = self:trySell(who, o, item, nb)
+	local price
+	nb, price = self:trySell(who, o, item, nb)
 	if nb then
-		Dialog:yesnoPopup("Sell", ("Sell %d %s for %0.2f gold"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
+		Dialog:yesnoPopup("Sell", ("Sell %d %s for %0.2f gold"):format(nb, o:getName{do_color=true, no_count=true}, price), function(ok) if ok then
 			self:onSell(who, o, item, nb, true)
 			self:transfer(who, self, item, nb)
 			self:onSell(who, o, item, nb, false)
@@ -129,11 +136,11 @@ end
 -- @return a string (possibly multiline) describing the object
 function _M:descObject(who, what, o)
 	if what == "buy" then
-		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Buy for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.sell_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Buy for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.store.sell_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
 		desc:merge(o:getDesc())
 		return desc
 	else
-		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Sell for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.buy_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Sell for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.store.buy_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
 		desc:merge(o:getDesc())
 		return desc
 	end
@@ -146,9 +153,9 @@ end
 -- @return a string describing the price
 function _M:descObjectPrice(who, what, o)
 	if what == "buy" then
-		return o:getPrice() * self.sell_percent / 100, who.money
+		return o:getPrice() * self.store.sell_percent / 100, who.money
 	else
-		return o:getPrice() * self.buy_percent / 100, who.money
+		return o:getPrice() * self.store.buy_percent / 100, who.money
 	end
 end
 

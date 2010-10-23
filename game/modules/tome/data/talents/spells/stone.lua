@@ -37,29 +37,27 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 20, 120)), nil)
+		self:projectile(tg, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
 		game:playSoundNear(self, "talents/earth")
-		--missile #2 (Talent Level 3 Bonus Missile)
-		if self:getTalentLevel(t) >= 3 then
-			local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
-			local x, y = self:getTarget(tg2)
-			if not x or not y then return nil end
-			self:projectile(tg2, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 20, 120)), nil)
-			game:playSoundNear(self, "talents/earth")
-		else end
-		--missile #3 (Talent Level 5 Bonus Missile)
+		--missile #2
+		local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
+		local x, y = self:getTarget(tg2)
+		if not x or not y then return nil end
+		self:projectile(tg2, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
+		game:playSoundNear(self, "talents/earth")
+		--missile #3 (Talent Level 4 Bonus Missile)
 		if self:getTalentLevel(t) >= 5 then
 			local tg3 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 			local x, y = self:getTarget(tg3)
 			if not x or not y then return nil end
-			self:projectile(tg3, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 20, 120)), nil)
+			self:projectile(tg3, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
 			game:playSoundNear(self, "talents/earth")
 		else end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures stalactite shaped rocks that you fire individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage over six turns.
-		At talent level 1 you conjure a single missile, at talent level 3 two missiles, and at talent level 5 three missiles.
+		return ([[Conjures stalactite shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage over six turns.
+		At talent level 1 you conjure two missile with an additional missile at talent level 5.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 120)/2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 120)/2))
 	end,
 }
