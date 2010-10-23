@@ -29,6 +29,7 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -95,6 +96,7 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -164,6 +166,7 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -238,6 +241,7 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)

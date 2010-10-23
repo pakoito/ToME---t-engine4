@@ -60,15 +60,6 @@ newTalent{
 			local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), talent=t}
 			target:project(tg, target.x, target.y, DamageType.SLIME, 18 + self:getWil(22) * self:getTalentLevel(t), {type="slime"})
 			target:die()
-		elseif target.name == "benevolent spirit" then
-			local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), talent=t}
-			target:project(tg, target.x, target.y, function(tx, ty)
-				local a = game.level.map(tx, ty, Map.ACTOR)
-				if a and self:reactionToward(a) >= 0 then
-					a:heal(10 + self:getWil(30) * self:getTalentLevel(t))
-				end
-			end, nil, {type="acid"})
-			target:die()
 		else
 			game.logPlayer("You may not detonate this summon.")
 			return nil
@@ -81,7 +72,6 @@ newTalent{
 		Only some summons can be detonated:
 		- Fire Imp: Explodes into a fireball
 		- Jelly: Explodes into a ball of slowing slime
-		- Benevolent Spirit: Explodes into a ball of healing
 		The effect improves with your Willpower.]]):format()
 	end,
 }

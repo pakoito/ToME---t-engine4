@@ -1591,6 +1591,7 @@ function _M:canBe(what)
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	if what == "teleport" and rng.percent(100 * (self:attr("teleport_immune") or 0)) then return false end
 	if what == "worldport" and game.zone.no_worldport then return false end
+	if what == "summon" and self:attr("suppress_summon") then return false end
 	return true
 end
 

@@ -303,6 +303,8 @@ newTalent{
 	range = 20,
 	direct_hit = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+
 		local filters = self.summon or {{type=self.type, subtype=self.subtype, number=1, hasxp=true, lastfor=20}}
 		if #filters == 0 then return end
 		local filter = rng.table(filters)

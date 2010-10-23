@@ -1795,6 +1795,23 @@ newEffect{
 }
 
 newEffect{
+	name = "NO_SUMMON",
+	desc = "Suppress Summon",
+	long_desc = function(self, eff) return "You can not summon." end,
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# attunes to the damage.", "+Resolve" end,
+	on_lose = function(self, err) return "#Target# is no longer attuned.", "-Resolve" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("suppress_summon", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("suppress_summon", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "RESOLVE",
 	desc = "Resolve",
 	long_desc = function(self, eff) return ("You gain %d%% resistance against %s."):format(eff.res, DamageType:get(eff.damtype).name) end,

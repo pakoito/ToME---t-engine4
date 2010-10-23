@@ -459,6 +459,8 @@ newEntity{
 	},
 	max_power = 100, power_regen = 1,
 	use_power = { name = "summon spiders", power = 80, use = function(self, who)
+		if not who:canBe("summon") then game.logPlayer(who, "You can not summon, you are suppressed!") return end
+
 		local NPC = require "mod.class.NPC"
 		local list = NPC:loadList("/data/general/npcs/spider.lua")
 

@@ -156,6 +156,7 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -225,6 +226,7 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -283,71 +285,32 @@ newTalent{
 }
 
 newTalent{
-	name = "Benevolent Spirit",
+	name = "Suppress Summoning",
 	type = {"wild-gift/summon-utility", 3},
 	require = gifts_req3,
 	points = 5,
-	random_ego = "attack",
-	message = "@Source@ summons a Benevolent Spirit!",
-	equilibrium = 8,
+	equilibrium = 15,
 	cooldown = 18,
-	range = 20,
+	range = function(self, t) return 4 + self:getTalentLevel(t) * 3 end,
 	requires_target = true,
 	action = function(self, t)
-		if checkMaxSummon(self) then return end
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		target = game.level.map(tx, ty, Map.ACTOR)
-		if target == self then target = nil end
-
-		-- Find space
-		local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
-		if not x then
-			game.logPlayer(self, "Not enough space to summon!")
-			return
-		end
-
-		local NPC = require "mod.class.NPC"
-		local m = NPC.new{
-			type = "spirit", subtype = "lesser",
-			display = "G", color=colors.LIGHT_GREEN,
-			name = "benevolent spirit", faction = self.faction,
-			desc = [[]],
-			autolevel = "none",
-			ai = "summoned", ai_real = "dumb_heal_simple", ai_state = { talent_in=1, },
-			stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5,  wil=10 + self:getTalentLevel(t) * 2, con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
-			level_range = {self.level, self.level}, exp_worth = 0,
-
-			max_life = resolvers.rngavg(5,10),
-			life_rating = 8,
-			infravision = 20,
-
-			combat_armor = 0, combat_def = 0,
-			combat = { dam=1, atk=1, },
-
-			resolvers.talents{
-				[self.T_HEAL_OTHER]=self:getTalentLevelRaw(t),
-				[self.T_REGENERATE_OTHER]=self:getTalentLevelRaw(t),
-			},
-
-			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-			ai_target = {actor=target}
-		}
-
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
+		local dur = math.floor(5 + self:getTalentLevel(t))
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			if not target:checkHit(self:combatMindpower(), target:combatMentalResist(), 10) then game.logSeen(target, "%s resists the suppression!", target.name:capitalize()) return end
+			target:setEffect(target.EFF_NO_SUMMON, dur, {})
+			game.level.map:particleEmitter(px, py, 1, "summon")
+		end)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Benevolent Spirit to heal your allies and yourself.
-		It will get %d magic and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Disrupts the local area, preventing any summons, including yours, for %d turns.
+		This talent will only prevent new summons, it does not remove existing ones.]]):
+		format(math.floor(5 + self:getTalentLevel(t)))
 	end,
 }
 

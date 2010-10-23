@@ -112,6 +112,8 @@ newTalent{
 	},
 	requires_target = true,
 	action = function(self, t)
+		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 		if not x then
