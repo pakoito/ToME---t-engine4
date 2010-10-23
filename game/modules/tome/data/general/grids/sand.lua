@@ -50,7 +50,7 @@ newEntity{
 					if a then
 						game.logPlayer(a, "You are crushed by the collapsing tunnel! You suffocate!")
 						a:suffocate(30, self)
-						engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self, self.x, self.y, engine.DamageType.PHYSICAL, a.life / 2)
+						engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self, self.x, self.y, engine.DamageType.PHYSICAL, a.life / 4)
 					end
 				end
 			end

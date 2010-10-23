@@ -841,3 +841,34 @@ newDamageType{
 	hideMessage=true,
 	hideFlyer=true
 }
+
+-- Physical + Stun Chance
+newDamageType{
+	name = "physical stun", type = "PHYSICAL_STUN",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(25) then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2, {src=src})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Physical Damage/Cut Split
+newDamageType{
+	name = "split bleed", type = "SPLIT_BLEED",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 12)
+		dam = dam - dam / 12
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:canBe("cut") then
+			-- Set on fire!
+			target:setEffect(target.EFF_CUT, 5, {src=src, power=dam / 11})
+		end
+	end,
+}

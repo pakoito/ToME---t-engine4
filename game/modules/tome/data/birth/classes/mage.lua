@@ -33,6 +33,7 @@ newBirthDescriptor{
 			Pyromancer = function() return profile.mod.allow_build.mage_pyromancer and "allow" or "disallow" end,
 			Cryomancer = function() return profile.mod.allow_build.mage_cryomancer and "allow" or "disallow" end,
 			Tempest = function() return profile.mod.allow_build.mage_tempest and "allow" or "disallow" end,
+			Geomancer = function() return profile.mod.allow_build.mage_geomancer and "allow" or "disallow" end,
 		},
 	},
 	copy = {
@@ -316,5 +317,56 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = -4,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Geomancer",
+	desc = {
+		"A Geomancer is an archmage specialized in earth and stone magic.",
+		"They gain access to the special Stone talents whose main purpose is to crush and destroy.",
+		"They can even learn to pierce through physical resistance and immunity.",
+		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
+		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. They however usually refuse to have anything to do with Necromancy.",
+		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
+		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
+	},
+	stats = { mag=5, wil=3, cun=1, },
+	talents_types = {
+		["spell/arcane"]={true, 0.2},
+		["spell/earth"]={true, 0.3},
+		["spell/stone"]={true, 0.4},
+		["spell/water"]={true, 0.2},
+		["spell/phantasm"]={true, 0.3},
+		["spell/temporal"]={false, 0.3},
+		["spell/meta"]={false, 0.3},
+		["spell/divination"]={true, 0.3},
+		["spell/conveyance"]={true, 0.3},
+		["cunning/survival"]={false, -0.1},
+	},
+	talents = {
+		[ActorTalents.T_ARCANE_POWER] = 1,
+		[ActorTalents.T_STONE_SKIN] = 1,
+		[ActorTalents.T_STALACTITIC_MISSILES] = 1,
+		[ActorTalents.T_PHASE_DOOR] = 1,
+		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
+	},
+	copy = {
+		-- All mages are of angolwen faction
+		faction = "angolwen",
+		max_life = 90,
+		life_rating = -4,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
+		},
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+		},
 	},
 }

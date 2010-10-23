@@ -26,7 +26,7 @@ newLore{
 	name = "note from the Master",
 	lore = [[MINIONS: Perhaps you feel your Master has been lax or absent? Well, I shall amend that. I have been studying an object of great import. It is of much greater interest than your foolish unlives. But do not think that I will let you get away with things because of this.
 
-Skeletons, you have been getting noticeably behind in your adventurer slaughtering quotas. The next skeleton archer I see drinking coffee and chatting with the wights shall be rended limb from limb and fed to the orcs. Also, as a punishment for your general laxness, 1,000 skeletons shall be remanded down to Amun Sul as punishment. A further 250 shall be slaughtered. These orders to be carried out by myself tomorrow at 3am.]],
+Skeletons, you have been getting noticeably behind in your adventurer slaughtering quotas. The next skeleton archer I see drinking coffee and chatting with the wights shall be rent limb from limb and fed to the orcs. Also, as a punishment for your general laxness, 1,000 skeletons shall be remanded down to Amun Sul as punishment. A further 250 shall be slaughtered. These orders to be carried out by myself tomorrow at 3am.]],
 }
 
 newLore{

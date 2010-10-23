@@ -86,7 +86,7 @@ function _M:interact(who)
 		else
 			if o:getNumber() > 1 then
 				local q
-				q = GetQuantity.new(nil, nil, o:getNumber(), o:getNumber(), function(qty) print("plop", qty) self:doSell(who, o, item, qty, d) end)
+				q = GetQuantity.new(nil, nil, o:getNumber(), o:getNumber(), function(qty) self:doSell(who, o, item, qty, d) end)
 				game:registerDialog(q)
 			else
 				self:doSell(who, o, item, 1, d)
@@ -100,22 +100,23 @@ function _M:interact(who)
 	game:registerDialog(d)
 end
 
+function _M:transfer(src, dest, item, nb)
+	local src_inven, dest_inven = src:getInven("INVEN"), dest:getInven("INVEN")
+	for i = 1, nb do
+		local o = src:removeObject(src_inven, item)
+		dest:addObject(dest_inven, o)
+	end
+	self:sortInven(store)
+	who:sortInven(inven)
+end
+
 function _M:doBuy(who, o, item, nb, store_dialog)
-	local max_nb = o:getNumber()
-	nb = math.min(nb, max_nb)
+	nb = math.min(nb, o:getNumber())
 	nb = self:tryBuy(who, o, item, nb)
 	if nb then
 		Dialog:yesnoPopup("Buy", ("Buy %d %s"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
 			self:onBuy(who, o, item, nb, true)
-			local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
-			for i = 1, nb do
-				local o = self:removeObject(store, item)
-				who:addObject(inven, o)
-			end
-			self:sortInven(store)
-			who:sortInven(inven)
-			self.changed = true
-			who.changed = true
+			self:transfer(self, who, item, nb)
 			self:onBuy(who, o, item, nb, false)
 			if store_dialog then store_dialog:updateStore() end
 		end end, "Buy", "Cancel")
@@ -123,21 +124,12 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 end
 
 function _M:doSell(who, o, item, nb, store_dialog)
-	local max_nb = o:getNumber()
-	nb = math.min(nb, max_nb)
+	nb = math.min(nb, o:getNumber())
 	nb = self:trySell(who, o, item, nb)
 	if nb then
 		Dialog:yesnoPopup("Sell", ("Sell %d %s"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
 			self:onSell(who, o, item, nb, true)
-			local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
-			for i = 1, nb do
-				local o = who:removeObject(inven, item)
-				self:addObject(store, o)
-			end
-			self:sortInven(store)
-			who:sortInven(inven)
-			self.changed = true
-			who.changed = true
+			self:transfer(who, self, item, nb)
 			self:onSell(who, o, item, nb, false)
 			if store_dialog then store_dialog:updateStore() end
 		end end, "Sell", "Cancel")

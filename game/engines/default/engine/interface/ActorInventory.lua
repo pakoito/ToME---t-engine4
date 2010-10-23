@@ -409,6 +409,7 @@ function _M:sortInven(inven)
 			return ta < tb
 		end
 	end)
+	self.changed = true
 end
 
 --- Finds an object by name in an inventory

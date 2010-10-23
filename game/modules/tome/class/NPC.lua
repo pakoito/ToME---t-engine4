@@ -80,7 +80,7 @@ function _M:onTakeHit(value, src)
 		self.ai_target.actor = src
 	end
 
-	if Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
+	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
 		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 5, true)
 	end
 
@@ -88,7 +88,7 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:die(src)
-	if Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
+	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
 		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 15, true)
 	end
 

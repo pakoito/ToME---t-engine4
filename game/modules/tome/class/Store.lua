@@ -30,7 +30,6 @@ function _M:loadStores(f)
 end
 
 function _M:init(t, no_default)
-	t.allow_sell = function() Dialog:simplePopup("Can not sell", "Do you really think I will buy your filthy wreckages found in the wilds? Ah!") end
 	t.buy_percent = t.buy_percent or 10
 	t.sell_percent = t.sell_percent or 100
 	Store.init(self, t, no_default)
@@ -47,7 +46,7 @@ end
 function _M:tryBuy(who, o, item, nb)
 	local price = o:getPrice() * self.sell_percent / 100
 	if who.money >= price * nb then
-		return nb
+		return nb, price * nb  --FINISH ME !!!!
 	else
 		Dialog:simplePopup("Not enough gold", "You do not have enough gold!")
 	end
@@ -62,7 +61,7 @@ end
 function _M:trySell(who, o, item, nb)
 	local price = o:getPrice() * self.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
-	return nb
+	return nb, price
 end
 
 --- Called on object purchase
@@ -93,6 +92,34 @@ function _M:onSell(who, o, item, nb, before)
 	local price = o:getPrice() * self.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
 	who:incMoney(price * nb)
+end
+
+--- Override the default
+function _M:doBuy(who, o, item, nb, store_dialog)
+	nb = math.min(nb, o:getNumber())
+	nb = self:tryBuy(who, o, item, nb)
+	if nb then
+		Dialog:yesnoPopup("Buy", ("Buy %d %s for %0.2f gold"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
+			self:onBuy(who, o, item, nb, true)
+			self:transfer(self, who, item, nb)
+			self:onBuy(who, o, item, nb, false)
+			if store_dialog then store_dialog:updateStore() end
+		end end, "Buy", "Cancel")
+	end
+end
+
+--- Override the default
+function _M:doSell(who, o, item, nb, store_dialog)
+	nb = math.min(nb, o:getNumber())
+	nb = self:trySell(who, o, item, nb)
+	if nb then
+		Dialog:yesnoPopup("Sell", ("Sell %d %s for %0.2f gold"):format(nb, o:getName{do_color=true, no_count=true}), function(ok) if ok then
+			self:onSell(who, o, item, nb, true)
+			self:transfer(who, self, item, nb)
+			self:onSell(who, o, item, nb, false)
+			if store_dialog then store_dialog:updateStore() end
+		end end, "Sell", "Cancel")
+	end
 end
 
 --- Called to describe an object, being to sell or to buy

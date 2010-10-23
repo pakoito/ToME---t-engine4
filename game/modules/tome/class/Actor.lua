@@ -292,6 +292,10 @@ function _M:move(x, y, force)
 		end end
 	end
 
+	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
+		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
+	end
+
 	return moved
 end
 

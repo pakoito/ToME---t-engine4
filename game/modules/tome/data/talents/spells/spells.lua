@@ -24,6 +24,7 @@ newTalentType{ no_silence=true, is_spell=true, type="spell/arcane", name = "arca
 newTalentType{ no_silence=true, is_spell=true, type="spell/fire", name = "fire", description = "Harness the power of fire to burn your foes to ashes." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/wildfire", name = "wildfire", description = "Harness the power of wildfire to burn your foes to ashes." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/earth", name = "earth", description = "Harness the power of the earth to protect and destroy." }
+newTalentType{ no_silence=true, is_spell=true, type="spell/stone", name = "stone", description = "Harness the power of the stone to protect and destroy." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/water", name = "water", description = "Harness the power of water to drown your foes." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/ice", name = "ice", description = "Harness the power of ice to freeze and shatter your foes." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/air", name = "air", description = "Harness the power of the air to fry your foes." }
@@ -75,6 +76,7 @@ load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/fire.lua")
 load("/data/talents/spells/wildfire.lua")
 load("/data/talents/spells/earth.lua")
+load("/data/talents/spells/stone.lua")
 load("/data/talents/spells/water.lua")
 load("/data/talents/spells/ice.lua")
 load("/data/talents/spells/air.lua")
