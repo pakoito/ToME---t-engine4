@@ -808,6 +808,11 @@ function _M:die(src)
 		t.on_kill(src, t)
 	end
 
+	if src and src.isTalentActive and src:isTalentActive(src.T_FORAGE) then
+		local t = src:getTalentFromId(src.T_FORAGE)
+		t.on_kill(src, t, self)
+	end
+
 	if src and src.hasEffect and src:hasEffect(self.EFF_UNSTOPPABLE) then
 		local p = src:hasEffect(self.EFF_UNSTOPPABLE)
 		p.kills = p.kills + 1

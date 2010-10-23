@@ -161,39 +161,55 @@ newTalent{
 -------------------------------- Utility -----------------------------------
 
 newTalent{
-	name = "Ammo Creation",
+	name = "Forage",
 	type = {"technique/archery-utility", 1},
+	mode = "sustained",
 	points = 5,
-	cooldown = 200,
-	stamina = 30,
+	cooldown = 30,
+	sustain_stamina = 30,
 	require = techs_dex_req1,
-	action = function(self, t)
+	on_kill = function(self, t, who)
+		-- Can not work without a correct weapon
 		if not self:getInven("MAINHAND") then return nil end
 		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or not weapon.archery then
-			game.logPlayer("You must wield your archery weapon to forage.")
-			return nil
-		end
+		if not weapon or not weapon.archery then return nil end
+
+		-- Bad luck!
+		if not rng.percent(1 + self:getTalentLevelRaw(t) / 2) then return nil end
 
 		local st = "arrow"
 		if weapon.archery == "sling" then st = "shot" end
 		local ego = math.ceil(5 + (self:getTalentLevel(t) * 5))
+		local greater_ego = nil
+		if rng.percent(math.ceil(5 + (self:getTalentLevel(t) * 1))) then
+			ego = 100
+			greater_ego = function(e) if e.greater_ego then return true end end
+		end
 
-		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st, ego_chance=ego}, nil, true)
-		if o and rng.percent(10 + self:getTalentLevel(t) * 10) then
+		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st, ego_filter={ego_chance=ego, special=greater_ego}}, nil, true)
+		if o then
 			o:identify(true)
 			o:forAllStack(function(so) so.cost = 0 end)
 			self:addObject(self.INVEN_INVEN, o)
 			game.zone:addEntity(game.level, o, "object")
-			game.logPlayer(self, "You create some ammo: %s", o:getName())
-		else
-			game.logPlayer(self, "You found nothing!")
+			game.logPlayer(self, "#LIGHT_BLUE#You create some ammo: %s", o:getName{do_color=true})
 		end
 		return true
 	end,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
 	info = function(self, t)
-		return ([[Forage in your immediate environment to try to make ammo for your current weapon.
-		There is an additional %d%% chance to get exceptional ammo.]]):format(math.ceil(5 + (self:getTalentLevel(t) * 5)))
+		return ([[Each time you kill a creature you have %d%% chances to forage in your immediate environment to try to make ammo for your current weapon.
+		At level 3 there is an additional %d%% chance to get superior ammo.
+		At level 5 there is an additional %d%% chance to get exceptional ammo.]]):format(
+			1 + self:getTalentLevelRaw(t) / 2,
+			math.ceil(5 + (self:getTalentLevel(t) * 5)),
+			math.ceil(5 + (self:getTalentLevel(t) * 1))
+		)
 	end,
 }
 

@@ -22,7 +22,7 @@ local Savefile = require "engine.Savefile"
 local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
 local Astar = require "engine.Astar"
-local print = function() end
+--local print = function() end
 
 --- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
 module(..., package.seeall, class.make)
@@ -247,7 +247,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 
 	if filter then e.force_ego = filter.force_ego end
 
-	e = self:finishEntity(level, type, e, filter and filter.ego_chance)
+	e = self:finishEntity(level, type, e, (filter and filter.ego_filter) or (filter and filter.ego_chance))
 	e.__forced_level = filter and filter.add_levels
 
 	return e
@@ -274,12 +274,19 @@ function _M:makeEntityByName(level, type, name)
 end
 
 --- Finishes generating an entity
-function _M:finishEntity(level, type, e, ego_chance)
+function _M:finishEntity(level, type, e, ego_filter)
 	e = e:clone()
 	e:resolve()
 	-- Add "ego" properties, sometimes
 	if not e.unique and e.egos and (e.force_ego or e.egos_chance) then
 		local egos_list = {}
+
+		local ego_chance = 0
+		if _G.type(ego_filter) == "number" then ego_chance = ego_filter; ego_filter = nil
+		elseif _G.type(ego_filter) == "table" then ego_chance = ego_filter.ego_chance or 0
+		else ego_filter = nil
+		end
+
 		if not e.force_ego then
 			if _G.type(e.egos_chance) == "number" then e.egos_chance = {e.egos_chance} end
 			-- Pick an ego, then an other and so until we get no more
@@ -290,7 +297,15 @@ function _M:finishEntity(level, type, e, ego_chance)
 				picked_etype[etype] = true
 				if _G.type(etype) == "number" then etype = "" end
 				local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
+
+				-- Filter the egos if needed
+				if ego_filter then
+					local list = {}
+					for z = 1, #egos do list[#list+1] = egos[z].e end
+					egos = self:computeRarities(type, list, level, function(e) return self:checkFilter(e, ego_filter) end, ego_filter.add_levels, ego_filter.special_rarity)
+				end
 				egos_list[#egos_list+1] = self:pickEntity(egos)
+
 				if egos_list[#egos_list] then print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", egos_list[#egos_list].name) else print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", #egos_list) end
 
 				etype = rng.tableIndex(e.egos_chance, picked_etype)
