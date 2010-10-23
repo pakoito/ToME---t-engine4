@@ -97,6 +97,7 @@ newTalent{
 				table.mergeAdd(o.wielder, gem.imbue_powers, true)
 				o.been_imbued = true
 				game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
+				o.name = o.name .. " ("..gem.name..")"
 			end)
 		end)
 		return true
