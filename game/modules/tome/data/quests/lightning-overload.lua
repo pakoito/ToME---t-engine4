@@ -34,8 +34,8 @@ end
 
 on_grant = function(self, who)
 	-- Darken the level
-	game.level.map._map:setShown(0.3, 0.3, 0.3, 1)
-	game.level.map._map:setObscure(0.3*0.6, 0.3*0.6, 0.3*0.6, 1)
+	game.level.map:setShown(0.3, 0.3, 0.3, 1)
+	game.level.map:setObscure(0.3*0.6, 0.3*0.6, 0.3*0.6, 1)
 	game.level.level = util.bound(game.player.level, 12, 20)
 
 	-- Add random lightning firing off
@@ -104,8 +104,8 @@ end
 
 reenter_bree = function(self)
 	if (self:isCompleted() or self:isEnded()) and not self:isCompleted("restored-bree") then
-		game.level.map._map:setShown(1, 1, 1, 1)
-		game.level.map._map:setObscure(1*0.6, 1*0.6, 1*0.6, 1)
+		game.level.map:setShown(1, 1, 1, 1)
+		game.level.map:setObscure(1*0.6, 1*0.6, 1*0.6, 1)
 		game.level.data.background = nil
 
 		game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "restored-bree")

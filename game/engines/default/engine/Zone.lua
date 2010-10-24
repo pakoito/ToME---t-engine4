@@ -501,9 +501,6 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	elseif level_data.persistant then
 		-- Try to load from a savefile
 		level = savefile_pipe:doLoad(game.save_name, "level", nil, self.short_name, lev)
---		local save = Savefile.new(game.save_name)
---		level = save:loadLevel(self.short_name, lev)
---		save:close()
 
 		if level then
 			-- Setup the level in the game
