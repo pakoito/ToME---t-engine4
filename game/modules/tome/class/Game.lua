@@ -658,7 +658,7 @@ function _M:setupCommands()
 				a.faction = "enemies"
 				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
 --]]
-				game.level.map:particleEmitter(self.player.x, self.player.y, 1, "breath_fire")
+				game.level.map:particleEmitter(self.player.x, self.player.y, 1, "breath_cold", {radius=6, tx=10, ty=2})
 			end
 		end,
 	}

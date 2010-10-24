@@ -53,7 +53,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 30,
-	cooldown = 18,
+--	cooldown = 18,
 	tactical = {
 		ATTACKAREA = 10,
 	},
@@ -63,7 +63,8 @@ newTalent{
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t) + 2, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 120))}, {type="flame"})
+		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t) + 2, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 120))})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,

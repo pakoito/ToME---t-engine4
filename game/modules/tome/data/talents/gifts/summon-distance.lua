@@ -56,7 +56,8 @@ newTalent{
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ACID, 30 + self:getWil(50) * self:getTalentLevel(t), {type="acid"})
+		self:project(tg, x, y, DamageType.ACID, 30 + self:getWil(50) * self:getTalentLevel(t))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_acid", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
@@ -84,7 +85,8 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = 30 + self:getWil(80) * self:getTalentLevel(t)
-		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3), {type="lightning_explosion"})
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
@@ -115,7 +117,8 @@ newTalent{
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.POISON, 30 + self:getWil(70) * self:getTalentLevel(t), {type="slime"})
+		self:project(tg, x, y, DamageType.POISON, 30 + self:getWil(70) * self:getTalentLevel(t))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_slime", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,

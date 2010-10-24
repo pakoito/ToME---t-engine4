@@ -58,10 +58,10 @@ return { generator = function()
 		dir = a, dirv = 0, dira = 0,
 		vel = rng.float(vel * 0.6, vel * 1.2), velv = 0, vela = 0,
 
-		r = rng.range(200, 255)/255,   rv = 0, ra = 0,
-		g = rng.range(120, 170)/255,   gv = 0.005, ga = 0.0005,
-		b = rng.range(0, 10)/255,      bv = 0, ba = 0,
-		a = rng.range(25, 220)/255,    av = static and -0.034 or 0, aa = 0.005,
+		r = 0,  rv = 0, ra = 0,
+		g = rng.range(80, 200)/255,      gv = 0, ga = 0,
+		b = 0,      bv = 0, ba = 0,
+		a = rng.range(80, 220)/255,   av = 0, aa = 0,
 	}
 end, },
 function(self)
