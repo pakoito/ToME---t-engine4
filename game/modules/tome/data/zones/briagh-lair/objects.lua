@@ -20,7 +20,7 @@
 load("/data/general/objects/objects.lua")
 
 newEntity{ base = "BASE_GEM",
-	define_as = "RESONATING_DIAMOND",
+	define_as = "RESONATING_DIAMOND", no_unique_lore=true,
 	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique=true, identified=true,
 
 	on_pickup = function(self, who)

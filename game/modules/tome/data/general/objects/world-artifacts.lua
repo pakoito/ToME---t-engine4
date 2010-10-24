@@ -37,6 +37,7 @@ newEntity{ base = "BASE_STAFF",
 		dam = 15,
 		apr = 4,
 		dammod = {mag=1.5},
+		damtype = DamageType.ARCANE,
 	},
 	wielder = {
 		combat_spellpower = 10,

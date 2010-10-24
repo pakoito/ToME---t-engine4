@@ -85,7 +85,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 	desc = [[Steeped in fungal malevolance, this mold refused to die.  How a mold becomes a skeleton, though, is beyond you.  Are those its own bones, or the bones of hapless adventurers?]],
 
 	level_range = {10, nil}, exp_worth = 5,
-	rarity = 1,
+	rarity = 50,
 	max_life = resolvers.rngavg(120,150),
 	combat = { dam=resolvers.mbonus(30, 20), atk=25, apr=15 },
 

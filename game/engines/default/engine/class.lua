@@ -64,6 +64,10 @@ function inherit(base, ...)
 			if obj.init then obj:init(...) end
 			return obj
 		end
+		c.castAs = function(o)
+			o.__CLASSNAME = c._NAME
+			setmetatable(o, {__index=c})
+		end
 		return c
 	end
 end

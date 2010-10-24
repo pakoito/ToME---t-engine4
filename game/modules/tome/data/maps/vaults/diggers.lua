@@ -23,7 +23,7 @@ defineTile(';', "FLOOR", nil, nil, nil, {room_map={special=false, room=false, ca
 defineTile('.', "FLOOR")
 defineTile('^', "FLOOR", nil, nil, {random_filter={}})
 defineTile('X', "HARDWALL")
-defineTile('#', "HARDWALL")
+defineTile('#', "WALL")
 defineTile('!', "DOOR_VAULT")
 defineTile('+', "DOOR")
 defineTile('o', "FLOOR", nil, {random_filter={add_levels=5}})

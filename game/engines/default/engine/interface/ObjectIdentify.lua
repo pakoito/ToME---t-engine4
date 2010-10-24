@@ -69,6 +69,7 @@ function _M:identify(id)
 			game.object_known_types[so.type][so.subtype][so.name] = id
 		end
 	end)
+	self:check("on_identify")
 end
 
 --- Get the unided name

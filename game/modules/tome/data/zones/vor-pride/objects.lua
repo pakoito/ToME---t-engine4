@@ -51,7 +51,7 @@ newEntity{ base = "BASE_LEATHER_CAP",
 
 -- Artifact, randomly dropped in Vor Pride, and only there
 newEntity{ base = "BASE_SCROLL", subtype="tome",
-	name = "Tome of Wildfire", unided_name = "burning book", unique=true,
+	name = "Tome of Wildfire", unided_name = "burning book", unique=true, no_unique_lore=true,
 	color = colors.VIOLET,
 	level_range = {35, 45},
 	rarity = 200,
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 
 -- Artifact, randomly dropped in Vor Pride, and only there
 newEntity{ base = "BASE_SCROLL", subtype="tome",
-	name = "Tome of Uttercold", unided_name = "frozen book", unique=true,
+	name = "Tome of Uttercold", unided_name = "frozen book", unique=true, no_unique_lore=true,
 	color = colors.VIOLET,
 	level_range = {35, 45},
 	rarity = 200,

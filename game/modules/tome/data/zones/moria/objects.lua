@@ -20,7 +20,7 @@
 load("/data/general/objects/objects.lua")
 
 newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_MINAS_TIRITH",
-	name = "Sealed Scroll of Minas Tirith", identified=true, unique=true,
+	name = "Sealed Scroll of Minas Tirith", identified=true, unique=true, no_unique_lore=true,
 	fire_proof = true,
 
 	use_simple = { name="open the seal and read the message", use = function(self, who)
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_WARAXE",
 
 newEntity{ base = "BASE_GEM",
 	define_as = "RESONATING_DIAMOND_WEST",
-	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West", identified=true,
+	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West", identified=true, no_unique_lore=true,
 
 	on_drop = function(self, who)
 		if who == game.player then
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_GEM",
 }
 
 newEntity{ define_as = "ATHAME_WEST",
-	quest=true, unique="Blood-Runed Athame West", identified=true,
+	quest=true, unique="Blood-Runed Athame West", identified=true, no_unique_lore=true,
 	type = "misc", subtype="misc",
 	unided_name = "athame",
 	name = "Blood-Runed Athame",

@@ -100,7 +100,7 @@ If used near a portal it could probably activate it.]],
 
 -- The orb of many ways, allows usage of Farportals
 newEntity{ define_as = "ORB_MANY_WAYS_DEMON",
-	unique = "Orb of Many Ways Demon", quest=true,
+	unique = "Orb of Many Ways Demon", quest=true, no_unique_lore=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "swirling orb", identified=true,
 	name = "Orb of Many Ways",
@@ -255,7 +255,7 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 ---------------------------- Various quest starters
 
 -- This one starts a quest it has a level and rarity so it can drop randomly, but there are palces where it is more likely to appear
-newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome",
+newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_unique_lore=true,
 	unique = true, quest=true,
 	unided_name = "ancient tome",
 	name = "Ancient Tome titled 'Gems and their uses'",
@@ -273,7 +273,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome",
 	end,
 }
 
-newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome",
+newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", no_unique_lore=true,
 	unique = true, quest=true, identified=true,
 	name = "Scroll of Summoning (Limmir the Jeweler)",
 	color = colors.VIOLET,

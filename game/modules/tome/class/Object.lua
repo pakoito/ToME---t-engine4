@@ -415,7 +415,12 @@ function _M:getDesc(name_param)
 		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
 	else
 		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
-		desc:merge(self.desc)
+		desc:add(true)
+		desc:add({"color", "ANTIQUE_WHITE"})
+		desc:merge(self.desc:toTString())
+		desc:add(true)
+		desc:add(true)
+		desc:add({"color", "WHITE"})
 	end
 
 	local reqs = self:getRequirementDesc(game.player)
@@ -477,4 +482,12 @@ function _M:canStack(o)
 	-- Can only stack known things
 	if not self:isIdentified() or not o:isIdentified() then return false end
 	return engine.Object.canStack(self, o)
+end
+
+--- On identification, add to lore
+function _M:on_identify()
+	if self.unique and self.desc and not self.no_unique_lore then
+		game.player:additionalLore(self:getName(), "artifacts", self.desc)
+		game.player:learnLore(self:getName())
+	end
 end

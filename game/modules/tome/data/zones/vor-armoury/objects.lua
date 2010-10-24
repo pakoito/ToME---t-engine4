@@ -47,7 +47,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ define_as = "ATHAME",
-	quest=true, unique=true, identified=true,
+	quest=true, unique=true, identified=true, no_unique_lore=true,
 	type = "misc", subtype="misc",
 	unided_name = "athame",
 	name = "Blood-Runed Athame",

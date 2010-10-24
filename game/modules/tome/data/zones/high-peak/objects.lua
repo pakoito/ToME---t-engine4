@@ -23,7 +23,7 @@ load("/data/general/objects/lore-sunwall.lua")
 local Stats = require "engine.interface.ActorStats"
 
 -- The staff of absorption, the reason the game exists!
-newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
+newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF", no_unique_lore=true,
 	unique = true,
 	name = "Awakened Staff of Absorption", identified=true,
 	display = "\\", color=colors.VIOLET, image = "object/staff_dragonbone.png",

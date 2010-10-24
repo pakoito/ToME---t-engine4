@@ -50,16 +50,28 @@ function _M:newLore(t)
 end
 
 function _M:init(t)
+	self.additional_lore = {}
+	self.additional_lore_nb = 0
 	self.lore_known = self.lore_known or {}
 end
 
+function _M:knownLore(lore)
+	return self.lore_known[lore] and true or false
+end
+
 function _M:getLore(lore)
-	assert(self.lore_defs[lore], "bad lore id "..lore)
-	return self.lore_defs[lore]
+	assert(self.lore_defs[lore] or self.additional_lore[lore], "bad lore id "..lore)
+	return self.lore_defs[lore] or self.additional_lore[lore]
+end
+
+function _M:additionalLore(name, category, lore)
+	if self.additional_lore[name] then return end
+	self.additional_lore_nb = self.additional_lore_nb + 1
+	self.additional_lore[name] = {id=name, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
 end
 
 function _M:learnLore(lore)
-	if not self.lore_known[lore] then
+	if not self:knownLore(lore) then
 		local l = self:getLore(lore)
 		Dialog:simpleLongPopup("Lore found: #0080FF#"..l.name, "#ANTIQUE_WHITE#"..l.lore, 400)
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)

@@ -27,7 +27,7 @@ module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, actor)
 	self.actor = actor
-	local total = #actor.lore_defs
+	local total = #actor.lore_defs + actor.additional_lore_nb
 	local nb = 0
 	for id, data in pairs(actor.lore_known) do nb = nb + 1 end
 
@@ -66,6 +66,7 @@ function _M:generateList()
 		list[#list+1] = { name=l.name, desc=l.lore, cat=l.category, order=l.order }
 		i = i + 1
 	end
+	-- Add known artifacts
 	table.sort(list, function(a, b) return a.order < b.order end)
 	self.list = list
 end

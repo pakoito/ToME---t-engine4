@@ -18,20 +18,3 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
-
-newEntity{ base = "BASE_WAND",
-	define_as = "ROD_SPYDRIC_POISON",
-	name = "Rod of Spydric Poison", color=colors.LIGHT_GREEN, unique=true,
-	cost = 50,
-	elec_proof = true,
-
-	max_power = 75, power_regen = 1,
-	use_power = { name = "shoot a bolt of spyric poison", power = 25,
-		use = function(self, who)
-			local tg = {type="bolt", range=12, talent=t}
-			local x, y = who:getTarget(tg)
-			if not x or not y then return nil end
-			who:project(tg, x, y, engine.DamageType.SPYDRIC_POISON, {dam=200 + who:getMag() * 4, dur=6}, {type="slime"})
-		end
-	},
-}

@@ -26,6 +26,7 @@ local Stats = require"engine.interface.ActorStats"
 newEntity{ base = "BASE_RING",
 	define_as = "PRIDE_GLORY", rarity=false,
 	name = "Glory of the Pride", unique=true,
+	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is incribed in the orc tongue, the black speech.]],
 	unided_name = "deep black ring",
 	cost = 500,
 	material_level = 5,

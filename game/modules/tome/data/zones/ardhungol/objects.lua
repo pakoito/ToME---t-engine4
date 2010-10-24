@@ -23,6 +23,7 @@ load("/data/general/objects/lore-sunwall.lua")
 newEntity{ base = "BASE_WAND",
 	define_as = "ROD_SPYDRIC_POISON",
 	name = "Rod of Spydric Poison", color=colors.LIGHT_GREEN, unique=true,
+	desc = [[This rod carved out of a giant spider fang continuously drips venom.]],
 	cost = 50,
 	elec_proof = true,
 

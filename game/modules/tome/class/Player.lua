@@ -202,11 +202,13 @@ function _M:updateMainShader()
 		elseif self:attr("invisible") then game.fbo_shader:setUniform("colorize", {0.4,0.5,0.7})
 		elseif self:attr("unstoppable") then game.fbo_shader:setUniform("colorize", {1,0.2,0})
 		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("colorize", {0.2,0.3,1})
+--		elseif game:hasDialogUp() then game.fbo_shader:setUniform("colorize", {0.9,0.9,0.9})
 		else game.fbo_shader:setUniform("colorize", {0,0,0}) -- Disable
 		end
 
 		-- Blur shader
 		if self:attr("confused") then game.fbo_shader:setUniform("blur", 2)
+--		elseif game:hasDialogUp() then game.fbo_shader:setUniform("blur", 3)
 		else game.fbo_shader:setUniform("blur", 0) -- Disable
 		end
 

@@ -23,7 +23,7 @@ local Stats = require "engine.interface.ActorStats"
 
 newEntity{ base = "BASE_GEM",
 	define_as = "RESONATING_DIAMOND_WEST2",
-	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West2", identified=true,
+	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West2", identified=true, no_unique_lore=true,
 
 	on_drop = function(self, who)
 		if who == game.player then
@@ -39,7 +39,7 @@ newEntity{ base = "BASE_GEM",
 }
 
 newEntity{ define_as = "ATHAME_WEST2",
-	quest=true, unique="Blood-Runed Athame West2", identified=true,
+	quest=true, unique="Blood-Runed Athame West2", identified=true, no_unique_lore=true,
 	type = "misc", subtype="misc",
 	unided_name = "athame",
 	name = "Blood-Runed Athame",
@@ -63,7 +63,7 @@ newEntity{ define_as = "ATHAME_WEST2",
 
 -- The orb of many ways, allows usage of Farportals
 newEntity{ define_as = "ORB_MANY_WAYS2",
-	unique = "Orb of Many Ways2", quest=true,
+	unique = "Orb of Many Ways2", quest=true, no_unique_lore=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "swirling orb",
 	name = "Orb of Many Ways",

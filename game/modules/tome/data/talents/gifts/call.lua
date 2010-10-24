@@ -34,7 +34,7 @@ newTalent{
 			if actor and actor ~= self then seen = true end
 		end, nil)
 		if seen then
-			game.log("There's too much going on for you to use Meditation right now!")
+			game.logPlayer(self, "There's too much going on for you to use Meditation right now!")
 			return
 		end
 		self:setEffect(self.EFF_STUNNED, 17 - self:getTalentLevel(t), {})

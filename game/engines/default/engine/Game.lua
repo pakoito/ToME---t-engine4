@@ -193,7 +193,6 @@ function _M:replaceDialog(src, dest)
 		if dest.mouse then dest.mouse:setCurrent() end
 	end
 	if dest.on_register then dest:on_register(src) end
-	if self.onRegisterDialog then self:onRegisterDialog(dest, src) end
 end
 
 --- Undisplay a dialog, removing its own keyhandler if needed
