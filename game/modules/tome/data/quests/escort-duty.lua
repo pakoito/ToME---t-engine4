@@ -258,6 +258,17 @@ desc = function(self, who)
 	return table.concat(desc, "\n")
 end
 
+on_status_change = function(self, who, status, sub)
+	if status == self.FAILED then
+		for uid, e in pairs(game.level.entities) do
+			if e.quest_id and e.quest_id == self.id then
+				e:disappear()
+				e:removed()
+			end
+		end
+	end
+end
+
 local function getPortalSpot(npc, dist, min_dist)
 	local astar = Astar.new(game.level.map, npc)
 	local poss = {}

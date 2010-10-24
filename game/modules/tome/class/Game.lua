@@ -352,6 +352,8 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		if nz then zone = nz end
 	end
 
+	if self.zone and self.level then self.player:onLeaveLevel(self.zone, self.level) end
+
 	local old_lev = (self.level and not zone) and self.level.level or -1000
 	if keep_old_lev then old_lev = self.level.level end
 	if zone then

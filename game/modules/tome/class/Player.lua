@@ -110,6 +110,16 @@ function _M:onEnterLevel(zone, level)
 	end
 end
 
+function _M:onLeaveLevel(zone, level)
+	-- Fail past escort quests
+	local eid = "escort-duty-"..zone.short_name.."-"..level.level
+	if self.quests and self.quests[eid] then
+		local q = self.quests[eid]
+		q.abandoned = true
+		self:setQuestStatus(eid, q.FAILED)
+	end
+end
+
 function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
