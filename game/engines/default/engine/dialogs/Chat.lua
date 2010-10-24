@@ -79,7 +79,7 @@ function _M:use(item, a)
 			return
 		end
 	end
-	if a.jump then
+	if a.jump and not self.killed then
 		self.cur_id = a.jump
 		self:regen()
 	else
@@ -92,6 +92,7 @@ function _M:regen()
 	local d = new(self.chat, self.cur_id)
 	d.__showup = false
 	game:replaceDialog(self, d)
+	self.next_dialog = d
 end
 function _M:resolveAuto()
 --[[

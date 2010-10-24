@@ -103,8 +103,8 @@ function _M:finish()
 		end
 	end
 	for i, tid in ipairs(reset) do
-		self.actor:forceUseTalent(tid, {ignore_energy=true, ingore_cd=true})
-		self.actor:forceUseTalent(tid, {ignore_energy=true, ingore_cd=true})
+		self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true})
+		self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true})
 	end
 end
 

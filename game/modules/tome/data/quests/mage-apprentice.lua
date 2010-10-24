@@ -41,7 +41,7 @@ on_status_change = function(self, who, status, sub)
 	end
 end
 
-collect_staff = function(self, who, dialog)
+collect_staff = function(self, npc, who, dialog)
 	who:showEquipInven("Offer which item?",
 		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_ANGMAR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
 		function(o, inven, item)
@@ -49,7 +49,8 @@ collect_staff = function(self, who, dialog)
 			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
 				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to consume, flames bursting out of his mouth, life seems to be drained away from him and in an instant he collapses in a lifeless husk.")
 				who:setQuestStatus(self, self.FAILED)
-				game:unregisterDialog(dialog)
+				game:unregisterDialog(dialog.next_dialog)
+				npc:die()
 				return true
 			end
 
@@ -58,7 +59,7 @@ collect_staff = function(self, who, dialog)
 			who:removeObject(who:getInven(inven), item)
 			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
 			who:sortInven(who:getInven(inven))
-			dialog:regen()
+			dialog.next_dialog:regen()
 			return true
 		end
 	)

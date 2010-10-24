@@ -96,7 +96,7 @@ newTalent{
 			display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
 			always_remember = true,
 			can_pass = {pass_wall=1},
-			does_block_move = true,
+			block_move = true,
 			block_sight = false,
 			temporary = 4 + self:getTalentLevel(t),
 			x = x, y = y,

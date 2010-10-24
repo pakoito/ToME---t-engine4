@@ -70,5 +70,10 @@ function _M:loaded()
 	gl = self.__particles_gl[gl]
 
 	self.update = fct
-	self.ps = core.particles.newEmitter(max or 1000, no_stop, config.settings.particles_density or 100, def, gl)
+	-- Make a gas cloud
+	if def.gas then
+		self.ps = core.gas.newEmitter(def.gas.w, def.gas.h, config.settings.particles_density or 100, def, gl)
+	else
+		self.ps = core.particles.newEmitter(max or 1000, no_stop, config.settings.particles_density or 100, def, gl)
+	end
 end

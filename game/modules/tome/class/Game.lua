@@ -641,6 +641,7 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
+--[[
 				local a = mod.class.NPC.new{}
 				a:replaceWith(self.player:cloneFull())
 				mod.class.NPC.castAs(a)
@@ -656,6 +657,8 @@ function _M:setupCommands()
 				a.ai_state = {talent_in=1}
 				a.faction = "enemies"
 				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
+--]]
+				game.level.map:particleEmitter(self.player.x, self.player.y, 1, "breath_fire")
 			end
 		end,
 	}

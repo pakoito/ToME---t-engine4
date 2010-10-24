@@ -25,7 +25,7 @@ Good day to you, fellow traveler!]],
 		{"I have something for you!",
 			jump="welcome",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end,
-			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(player, dialog) end
+			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(npc, player, dialog) end
 		},
 		{"I found this staff; it looks powerful. Maybe it would be enough?",
 			jump="angmar_fall",
