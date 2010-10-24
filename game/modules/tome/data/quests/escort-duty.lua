@@ -260,6 +260,7 @@ end
 
 on_status_change = function(self, who, status, sub)
 	if status == self.FAILED then
+		-- Remove the actor is we failed
 		for uid, e in pairs(game.level.entities) do
 			if e.quest_id and e.quest_id == self.id then
 				e:disappear()

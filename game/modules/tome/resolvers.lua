@@ -218,7 +218,6 @@ end
 function resolvers.calc.charges(tt, e)
 	e.max_power = rng.range(tt[1], tt[2])
 	e.power = e.max_power
-	print("creatin wand", e.name, e.egoed, e.max_power, e.cost_per_charge)
 	e.recharge_cost = (e.cost_per_charge or 0) * 4
 	e.cost = e.cost + (e.cost_per_charge or 0) * e.max_power
 	e.show_charges = true

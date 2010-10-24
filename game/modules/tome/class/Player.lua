@@ -113,7 +113,7 @@ end
 function _M:onLeaveLevel(zone, level)
 	-- Fail past escort quests
 	local eid = "escort-duty-"..zone.short_name.."-"..level.level
-	if self.quests and self.quests[eid] then
+	if self.quests and self.quests[eid] and not self:hasQuest(eid):isEnded() then
 		local q = self.quests[eid]
 		q.abandoned = true
 		self:setQuestStatus(eid, q.FAILED)
