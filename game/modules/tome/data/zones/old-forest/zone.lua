@@ -28,6 +28,8 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
+	color_shown = {0.6, 0.6, 0.6, 1},
+	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 1},
 	ambiant_music = "Woods of Eremae.ogg",
 	generator =  {
 		map = {
@@ -67,4 +69,15 @@ return {
 			}, },
 		},
 	},
+
+	post_process = function(level)
+		local Map = require "engine.Map"
+		level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
+	end,
+
+	foreground = function(level, x, y)
+		local Map = require "engine.Map"
+		level.foreground_particle:update()
+		level.foreground_particle.ps:toScreen(x, y, true, 1)
+	end,
 }

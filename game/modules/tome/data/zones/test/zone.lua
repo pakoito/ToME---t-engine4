@@ -65,9 +65,9 @@ return {
 		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
 	end,
 
-	background = function(level)
+	background = function(level, x, y)
 		local Map = require "engine.Map"
 		level.background_particle:update()
-		level.background_particle.ps:toScreen(Map.display_x, Map.display_y, true, 1)
+		level.background_particle.ps:toScreen(x, y, true, 1)
 	end,
 }

@@ -490,16 +490,15 @@ function _M:display()
 			self.player:playerFOV()
 		end
 
-		-- Level background
-		if self.level.data.background then
-			self.level.data.background(self.level)
-		end
-
 		-- Display using Framebuffer, sotaht we can use shaders and all
 		if self.fbo then
 			self.fbo:use(true)
+
+			if self.level.data.background then self.level.data.background(self.level, 0, 0) end
 			self.level.map:display(0, 0)
 			self.target:display(0, 0)
+			if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0) end
+
 			self.fbo:use(false)
 			_2DNoise:bind(1, false)
 			self.fbo:toScreen(
@@ -510,8 +509,10 @@ function _M:display()
 
 		-- Basic display
 		else
+			if self.level.data.background then self.level.data.background(self.level, self.level.map.display_x, self.level.map.display_y) end
 			self.level.map:display()
 			self.target:display()
+			if self.level.data.foreground then self.level.data.foreground(self.level, self.level.map.display_x, self.level.map.display_y) end
 		end
 
 		if not self.zone_name_s then
