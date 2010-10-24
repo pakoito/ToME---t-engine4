@@ -51,6 +51,10 @@ newTalent{
 		elseif combat.damtype == DamageType.BLIGHT then    explosion = "slime"               particle = "bolt_slime"     trail = "slimetrail"
 		end
 
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+
 		-- Compute damage
 		local dam = self:combatDamage(combat)
 		local damrange = self:combatDamageRange(combat)
@@ -58,9 +62,6 @@ newTalent{
 		dam = self:spellCrit(dam)
 		dam = dam * self:combatTalentWeaponDamage(t, 0.4, 1.1)
 
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
 		self:projectile(tg, x, y, combat.damtype, dam, {type=explosion})
 
 		game:playSoundNear(self, "talents/arcane")
