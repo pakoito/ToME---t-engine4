@@ -21,7 +21,7 @@ dir = math.rad(110)
 
 return { generator = function()
 	local x, y = rng.range(-width/2, width), rng.range(-height/2, height)
-	local vel = rng.float(32, 48)
+	local vel = rng.float(60, 120)
 
 	return {
 		life = 30,
