@@ -54,7 +54,6 @@ function _M:cleanActor(actor)
 
 	-- Go through all spell effects
 	for eff_id, p in pairs(actor.tmp) do
-
 		local e = actor.tempeffect_def[eff_id]
 		effs[#effs+1] = {"effect", eff_id}
 	end
@@ -155,9 +154,9 @@ function _M:use(item)
 		self.actor:removeObject(inven, item)
 		game.logPlayer(self.actor, "#YELLOW#Your %s is consumed and disappears! You come back to life!", o:getName{do_colour=true})
 
-		self:cleanActor()
-		self:restoreRessources()
-		self:resurrectBasic()
+		self:cleanActor(self.actor)
+		self:restoreRessources(self.actor)
+		self:resurrectBasic(self.actor)
 	end
 end
 
