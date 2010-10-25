@@ -19,10 +19,11 @@
 
 require "engine.class"
 local ActorAI = require "engine.interface.ActorAI"
+local MonsterCombat = require "mod.class.interface.MonsterCombat"
 local Faction = require "engine.Faction"
 require "mod.class.Actor"
 
-module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI))
+module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI, MonsterCombat))
 
 function _M:init(t, no_default)
 	mod.class.Actor.init(self, t, no_default)

@@ -23,4 +23,4 @@ local Grids = require("mod.class.info.Grids")
 local list = Grids:parse("/data/angband_edits/terrain.txt")
 
 -- Feed them to the zone
-for i = 1, #list do newEntity(list[i]) end
+for i = 1, #list do if list[i].name then newEntity(list[i]) end end

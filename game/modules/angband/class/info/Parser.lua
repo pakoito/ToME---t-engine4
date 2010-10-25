@@ -81,10 +81,12 @@ function _M:parseLine(l, line_nb, ret, e)
 	if linfo.addtable then
 		e[linfo.addtable] = e[linfo.addtable] or {}
 		table.insert(e[linfo.addtable], {})
+	elseif linfo.intable then
+		e[linfo.intable] = e[linfo.intable] or {}
 	end
 
 	do
-		local e = (linfo.addtable) and e[linfo.addtable][#e[linfo.addtable]] or e
+		local e = (linfo.addtable) and e[linfo.addtable][#e[linfo.addtable]] or ((linfo.intable) and e[linfo.intable] or e)
 		if linfo.unsplit then
 			table.remove(data, 1)
 			if linfo.concat then e[linfo[1]] = (e[linfo[1]] or "")..table.concat(data, ":")

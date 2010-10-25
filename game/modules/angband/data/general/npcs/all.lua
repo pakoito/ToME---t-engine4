@@ -23,4 +23,4 @@ local Monsters = require("mod.class.info.Monsters")
 local list = Monsters:parse("/data/angband_edits/monster.txt")
 
 -- Feed them to the zone
-for i = 1, #list do newEntity(list[i]) end
+for i = 1, #list do if list[i].name then newEntity(list[i]) end end

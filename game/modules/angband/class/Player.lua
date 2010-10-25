@@ -29,6 +29,7 @@ local ActorTalents = require "engine.interface.ActorTalents"
 local DeathDialog = require "mod.dialogs.DeathDialog"
 local Astar = require"engine.Astar"
 local DirectPath = require"engine.DirectPath"
+require "mod.class.interface.Combat"
 
 --- Defines the player
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
@@ -38,7 +39,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerRest,
 	engine.interface.PlayerRun,
 	engine.interface.PlayerMouse,
-	engine.interface.PlayerHotkeys
+	engine.interface.PlayerHotkeys,
+	mod.class.interface.Combat
 ))
 
 function _M:init(t, no_default)
@@ -89,11 +91,16 @@ end
 function _M:playerFOV()
 	-- Clean FOV before computing it
 	game.level.map:cleanFOV()
+
+	-- Compute ESP FOV, using cache
+	self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true, true)
+
 	-- Compute both the normal and the lite FOV, using cache
 	self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
 		game.level.map:apply(x, y, fovdist[sqdist])
 	end, true, false, true)
-	self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
+	if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
+	else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
 end
 
 --- Called before taking a hit, overload mod.class.Actor:onTakeHit() to stop resting and running

@@ -28,7 +28,6 @@ require "engine.interface.ActorStats"
 require "engine.interface.ActorTalents"
 require "engine.interface.ActorResource"
 require "engine.interface.ActorFOV"
-require "mod.class.interface.Combat"
 local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(
@@ -40,8 +39,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorStats,
 	engine.interface.ActorTalents,
 	engine.interface.ActorResource,
-	engine.interface.ActorFOV,
-	mod.class.interface.Combat
+	engine.interface.ActorFOV
 ))
 
 function _M:init(t, no_default)
@@ -51,6 +49,9 @@ function _M:init(t, no_default)
 	-- Default regen
 	t.power_regen = t.power_regen or 1
 	t.life_regen = t.life_regen or 0.25 -- Life regen real slow
+
+	t.esp = {}
+	t.speed = t.speed or 0
 
 	-- Default melee barehanded damage
 	self.combat = { dam=1 }
@@ -64,6 +65,8 @@ function _M:init(t, no_default)
 	engine.interface.ActorStats.init(self, t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorFOV.init(self, t)
+
+	self:computeEnergyMod()
 end
 
 function _M:act()
@@ -93,6 +96,70 @@ function _M:move(x, y, force)
 	end
 	self.did_energy = nil
 	return moved
+end
+
+local extract_energy =
+{
+	     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+	     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+	     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+	     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+	     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+	     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+	     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+	     2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+	     2,  2,  2,  2,  2,  2,  2,  3,  3,  3,
+	     3,  3,  3,  3,  3,  4,  4,  4,  4,  4,
+	     5,  5,  5,  5,  6,  6,  7,  7,  8,  9,
+	    10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+	    20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+	    30, 31, 32, 33, 34, 35, 36, 36, 37, 37,
+	    38, 38, 39, 39, 40, 40, 40, 41, 41, 41,
+	    42, 42, 42, 43, 43, 43, 44, 44, 44, 44,
+	    45, 45, 45, 45, 45, 46, 46, 46, 46, 46,
+	    47, 47, 47, 47, 47, 48, 48, 48, 48, 48,
+	    49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+	    49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+}
+
+--- Compute energy mod based on speed
+function _M:computeEnergyMod()
+	self.energy.mod = extract_energy[self.speed + 111] / 10
+end
+
+--- Called when a temporary value changes (added or deleted)
+-- Takes care to compute energy mod
+-- @param prop the property changing
+-- @param sub the sub element of the property if it is a table, or nil
+-- @param v the value of the change
+function _M:onTemporaryValueChange(prop, sub, v)
+	if prop == "speed" then
+		self:computeEnergyMod()
+	end
+end
+
+--- How much experience is this actor worth
+-- @param target to whom is the exp rewarded
+-- @return the experience rewarded
+function _M:worthExp(target)
+	return self.exp_worth
+end
+
+--- Reveals location surrounding the actor
+function _M:magicMap(radius, x, y)
+	x = x or self.x
+	y = y or self.y
+	radius = math.floor(radius)
+
+	local ox, oy
+
+	self.x, self.y, ox, oy = x, y, self.x, self.y
+	self:computeFOV(radius, "block_sense", function(x, y)
+		game.level.map.remembers(x, y, true)
+		game.level.map.has_seens(x, y, true)
+	end, true, true, true)
+
+	self.x, self.y = ox, oy
 end
 
 function _M:tooltip()
@@ -276,7 +343,6 @@ function _M:canBe(what)
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
-	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	return true
 end

@@ -36,4 +36,4 @@ local PlayerRaces = require("mod.class.info.PlayerRaces")
 local list = PlayerRaces:parse("/data/angband_edits/p_race.txt")
 
 -- Feed them to the zone
-for i = 1, #list do newEntity(list[i]) end
+for i = 1, #list do if list[i].name then newBirthDescriptor(list[i]) end end

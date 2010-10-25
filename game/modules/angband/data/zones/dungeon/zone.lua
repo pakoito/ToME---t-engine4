@@ -21,7 +21,9 @@ return {
 	name = "Angband",
 	level_range = {1, 1},
 	max_level = 50,
-	width = 198, height = 66,
+	all_remembered = true,
+	all_lited = true,
+	width = 98, height = 66,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -36,7 +38,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {80, 100},
+			nb_npc = {30, 40},
 		},
 	},
 	levels =

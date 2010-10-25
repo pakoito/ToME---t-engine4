@@ -20,14 +20,38 @@
 local Stats = require "engine.interface.ActorStats"
 
 newEffect{
-	name = "ACIDBURN",
-	desc = "Burning from acid",
+	name = "POISONED",
+	desc = "Poisoned",
+	long_desc = function(self, eff) return ("The target is poisoned, doing 1 damage per turn.") end,
+	type = "poison",
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# is poisoned!", "+Poison" end,
+	on_lose = function(self, err) return "#Target# stops being poisoned.", "-Poison" end,
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = dur + new_eff.dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src, self.x, self.y, DamageType.PHYSICAL, 1)
+	end,
+}
+
+newEffect{
+	name = "CUT",
+	desc = "Bleeding",
+	long_desc = function(self, eff) return ("Huge cut that bleeds blood, doing %d damage per turn."):format((eff.dur > 200) and 3 or ((eff.dur > 100) and 2 or 1)) end,
 	type = "physical",
 	status = "detrimental",
-	parameters = { power=1 },
-	on_gain = function(self, err) return "#Target# is covered in acid!", "+Acid" end,
-	on_lose = function(self, err) return "#Target# is free from the acid.", "-Acid" end,
+	parameters = { },
+	on_gain = function(self, err) return "#Target# starts to bleed.", "+Bleeds" end,
+	on_lose = function(self, err) return "#Target# stops bleeding.", "-Bleeds" end,
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = dur + new_eff.dur
+		return old_eff
+	end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.ACID).projector(eff.src or self, self.x, self.y, DamageType.ACID, eff.power)
+		local dam = (eff.dur > 200) and 3 or ((eff.dur > 100) and 2 or 1)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src, self.x, self.y, DamageType.PHYSICAL, dam)
 	end,
 }

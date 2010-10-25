@@ -26,26 +26,19 @@ module(..., package.seeall, class.inherit(Parser))
 -- Tell the parser what fields to retrieve & match
 info_format =
 {
-	N = { "ang_id", "name", new_entity=true },
-	G = { "display", "color" },
-	I = { "speed", "life", "sight", "ac", "alertness", all_numbers=true },
-	W = { "level", "rarity", "_", "exp", all_numbers=true },
-	B = { "method", "effect", "damage", ignore_count=true, addtable="blows", },
-	S = { "spells", flags_parse="spells" },
-	F = { "flags", flags_parse="self" },
-	D = { "desc", ignore_count=true, unsplit=true, concat=true },
-
-	N = { "race_ang_id", "name" },
-	S = { "str", "int", "wis", "dex", "con", "chr", all_numbers=true },
-	R = { "dis", "dev", "sav", "stl", "srh", "fos", "thn", "thb", "throw", "dig", all_numbers=true },
-	X = { "hitdie", "expbase", "infra", all_numbers=true },
-	I = { "history", "agebase", "agemod", all_numbers=true },
-	H = { "hgtmale", "modhgtmale", "hgtfemale", "modhgtfemale", all_numbers=true },
-	W = { "wgtmale", "modwgtmale", "wgtfemale", "modwgtfemale", all_numbers=true },
+	N = { "race_ang_id", "name", new_entity=true },
+	S = { "str", "int", "wis", "dex", "con", "cha", intable="stats", all_numbers=true },
+	R = { "skill_dis", "skill_dev", "skill_sav", "skill_stl", "skill_srh", "skill_fos", "skill_thn", "skill_thb", "skill_throw", "skill_dig", intable="copy", all_numbers=true },
+	X = { "hitdie", "expbase", "infra", intable="copy", all_numbers=true },
+	I = { "history", "agebase", "agemod", intable="__unused", all_numbers=true },
+	H = { "hgtmale", "modhgtmale", "hgtfemale", "modhgtfemale", intable="__unused", all_numbers=true },
+	W = { "wgtmale", "modwgtmale", "wgtfemale", "modwgtfemale", intable="__unused", all_numbers=true },
 	F = { "racial flags", flags_parse="copy" },
 	C = { "classes (numeric)" },
 }
 
 function _M:callback(e)
 	e.type = "race"
+	e.desc = ""
+	print("callback", e.name)
 end

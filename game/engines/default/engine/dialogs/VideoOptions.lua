@@ -63,15 +63,15 @@ function _M:generateList()
 	local i = 0
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Display resolution."}
-	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Resolution#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Resolution#WHITE##{normal}#", status=function(item)
 		return config.settings.window.size
 	end, fct=function(item)
 		local menu = require("engine.dialogs.DisplayResolution").new(function() self.c_list:drawItem(item) end)
 		game:registerDialog(menu)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Controls the particle effects density.\nThis option allows to change the density of the many particle effects in the game.\nIf the game is slow when displaying spell effects try to lower this setting.#WHITE#"}
-	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Particle effects density#WHITE##{normal}#", status=function(item)
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Controls the particle effects density.\nThis option allows to change the density of the many particle effects in the game.\nIf the game is slow when displaying spell effects try to lower this setting.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Particle effects density#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.particles_density)
 	end, fct=function(item)
 		game:registerDialog(GetQuantity.new("Enter density", "From 0 to 100", config.settings.particles_density, 100, function(qty)
@@ -81,8 +81,8 @@ function _M:generateList()
 		end))
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates antialiased texts.\nTexts will look nicer but it can be slower on some computers.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
-	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Antialiased texts#WHITE##{normal}#", status=function(item)
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Activates antialiased texts.\nTexts will look nicer but it can be slower on some computers.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Antialiased texts#WHITE##{normal}#", status=function(item)
 		return tostring(core.display.getTextBlended() and "enabled" or "disabled")
 	end, fct=function(item)
 		local state = not core.display.getTextBlended()
@@ -91,8 +91,8 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates framebuffers.\nThis option allows for some special graphical effects.\nIf you encounter weird graphical glitches try to disable it.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
-	list[#list+1] = { zone=zone, name="#GOLD##{bold}#Framebuffers#WHITE##{normal}#", status=function(item)
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Activates framebuffers.\nThis option allows for some special graphical effects.\nIf you encounter weird graphical glitches try to disable it.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Framebuffers#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.fbo_active and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.fbo_active = not config.settings.fbo_active
@@ -100,8 +100,8 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Activates OpenGL Shaders.\nThis option allows for some special graphical effects.\nIf you encounter weird graphical glitches try to disable it.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
-	list[#list+1] = { zone=zone, name="#GOLD##{bold}#OpenGL Shaders#WHITE##{normal}#", status=function(item)
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Activates OpenGL Shaders.\nThis option allows for some special graphical effects.\nIf you encounter weird graphical glitches try to disable it.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#OpenGL Shaders#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.shaders_active and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.shaders_active = not config.settings.shaders_active

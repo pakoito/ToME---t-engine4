@@ -95,7 +95,7 @@ function _M:newGame()
 	self:setupDisplayMode()
 
 	self.creating_player = true
-	local birth = Birther.new(self.player, {"base" }, function()
+	local birth = Birther.new(self.player, {"base", "race" }, function()
 		self:changeLevel(1, "dungeon")
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
@@ -168,6 +168,8 @@ function _M:changeLevel(lev, zone)
 		self.player:move(self.level.default_down.x, self.level.default_down.y, true)
 	end
 	self.level:addEntity(self.player)
+
+	self.level.map:setZoom(1.2, self.player.x, self.player.y)
 end
 
 function _M:getPlayer()
