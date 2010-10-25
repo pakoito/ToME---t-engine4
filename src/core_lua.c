@@ -2022,6 +2022,33 @@ static int lua_file_read(lua_State *L)
 	return 1;
 }
 
+// This will return empty lines if you've got DOS-style "\r\n" endlines!
+//  extra credit for handling buffer overflows and EOF more gracefully.
+static int lua_file_readline(lua_State *L)
+{
+	PHYSFS_file **f = (PHYSFS_file**)auxiliar_checkclass(L, "physfs{file}", 1);
+	char buf[1024];
+	char *ptr = buf;
+	int bufsize = 1024;
+	int total = 0;
+
+	if (PHYSFS_eof(*f)) return 0;
+
+	bufsize--;  /* allow for null terminating char */
+	while ((total < bufsize) && (PHYSFS_read(*f, ptr, 1, 1) == 1))
+	{
+		if ((*ptr == '\r') || (*ptr == '\n'))
+			break;
+		ptr++;
+		total++;
+	}
+
+	*ptr = '\0';  // null terminate it.
+	lua_pushstring(L, buf);
+	return 1;
+}
+
+
 static int lua_file_write(lua_State *L)
 {
 	PHYSFS_file **f = (PHYSFS_file**)auxiliar_checkclass(L, "physfs{file}", 1);
@@ -2234,6 +2261,7 @@ static const struct luaL_reg fsfile_reg[] =
 	{"__gc", lua_close_file},
 	{"close", lua_close_file},
 	{"read", lua_file_read},
+	{"readLine", lua_file_readline},
 	{"write", lua_file_write},
 	{NULL, NULL},
 };

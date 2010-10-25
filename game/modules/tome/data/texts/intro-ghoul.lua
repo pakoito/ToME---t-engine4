@@ -20,11 +20,10 @@
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You have died ages ago, but that did not stop you, you were raised as an undead ghoul.
 
-After wandering aimlessly for eons you found a goal: to become a force to be reckoned with in this world.
-You have decided to venture into the old and wild places of the world, looking for ancient treasures and enough power to carve your way in blood through the world!
+Your necromancer master has plans for you, but something is wrong, you seem to have kept your free will.
+Get rid of this evil mage and try to find a place in the world.
 
-You have come to a land called Rhudaur, on the western steppes of the Misty Mountains, far away from your home, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
-To the east lies another dangerous place: the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead.
+You has been raised in a place caleld the Paths of the Dead, on the south the Misty Mountains. Leave this forsaken place and try your luck in old forgotten places.
 
 After days of travel, you have found the forest and entered it, what will you find there?...
 ]]
