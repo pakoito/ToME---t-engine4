@@ -37,7 +37,7 @@ function _M:init(class, max_before_wait)
 
 	self.saveclass = class or "engine.Savefile"
 	self.pipe = {}
-	self.max_before_wait = max_before_wait or 3
+	self.max_before_wait = max_before_wait or 4
 	self.co = nil
 end
 
@@ -47,6 +47,9 @@ end
 -- @param object the object to save
 -- @param class a class name, if different from the default one
 function _M:push(savename, type, object, class)
+	print("<<<<", savename, type, object, class, "::", game.onSavefilePush) FIX ME
+	if game.onSavefilePush then game:onSavefilePush(savename, type, object, class) end
+
 	class = class or self.saveclass
 	local Savefile = require(class)
 	local id = Savefile["nameSave"..type:lower():capitalize()](Savefile, object)

@@ -944,6 +944,13 @@ function _M:saveGame()
 	self.log("Saving game...")
 end
 
+--- When a zone or level is saved, also save the main game
+function _M:onSavefilePush(savename, type, object, class)
+	print("=====", savename, type, object, class)
+	if type ~= "zone" or type ~= "level" then return end
+	self:saveGame()
+end
+
 function _M:setAllowedBuild(what, notify)
 	-- Do not unlock things in easy mode
 	--if self.difficulty == self.DIFFICULTY_EASY then return end
