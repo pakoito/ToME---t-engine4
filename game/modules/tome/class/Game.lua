@@ -346,6 +346,8 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		return
 	end
 
+	local left_zone = self.zone
+
 	if self.zone and self.zone.on_leave then
 		local nl, nz = self.zone.on_leave(lev, old_lev, zone)
 		if nl then lev = nl end
@@ -442,6 +444,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	end
 	self.zone_name_s = nil
 	self.level.map:redisplay()
+
+	-- Autosave
+	if left_zone and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
 end
 
 function _M:getPlayer()
@@ -942,13 +947,6 @@ function _M:saveGame()
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
 	self.log("Saving game...")
-end
-
---- When a zone or level is saved, also save the main game
-function _M:onSavefilePush(savename, type, object, class)
-	print("=====", savename, type, object, class)
-	if type ~= "zone" or type ~= "level" then return end
-	self:saveGame()
 end
 
 function _M:setAllowedBuild(what, notify)

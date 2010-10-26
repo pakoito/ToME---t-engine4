@@ -33,6 +33,8 @@ local Actor = require "mod.class.Actor"
 local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
+local PlayerDisplay = require "mod.class.PlayerDisplay"
+
 local HotkeysDisplay = require "engine.HotkeysDisplay"
 local ActorsSeenDisplay = require "engine.ActorsSeenDisplay"
 local LogDisplay = require "engine.LogDisplay"
@@ -57,12 +59,15 @@ end
 
 function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
-	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, {30,30,30})
-	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
-	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, {30,30,0})
+	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5, self.h * 0.2, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
+	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
+	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
+	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
+	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
+	self:createSeparators()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
 	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
@@ -114,6 +119,12 @@ function _M:loaded()
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, true, false)
 	self.key = engine.KeyBind.new()
+end
+
+function _M:createSeparators()
+	self.bottom_separator, self.bottom_separator_w, self.bottom_separator_h = self:createVisualSeparator("horizontal", self.w)
+	self.split_separator, self.split_separator_w, self.split_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.2))
+	self.player_separator, self.player_separator_w, self.player_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.8) - 20)
 end
 
 function _M:setupDisplayMode()
@@ -215,19 +226,28 @@ function _M:display()
 		-- Display the targetting system if active
 		self.target:display()
 
-		-- And the minimap
-		self.level.map:minimapDisplay(self.w - 200, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 0.6)
+		-- Minimap display
+		self.minimap_bg:toScreenFull(0, 20, 200, 200, self.minimap_bg_w, self.minimap_bg_h)
+		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
 	end
 
 	-- We display the player's interface
 	self.flash:toScreen()
 	self.logdisplay:toScreen()
+	self.player_display:toScreen()
 	if self.show_npc_list then
 		self.npcs_display:toScreen()
 	else
 		self.hotkeys_display:toScreen()
 	end
 	if self.player then self.player.changed = false end
+
+	-- Separators
+	self.bottom_separator:toScreenFull(0, 20 - 3, self.w, 6, self.bottom_separator_w, self.bottom_separator_h)
+	self.bottom_separator:toScreenFull(0, self.h * 0.8 - 3, self.w, 6, self.bottom_separator_w, self.bottom_separator_h)
+	self.split_separator:toScreenFull(self.w * 0.5 - 3 - 15, self.h * 0.8, 6, self.h * 0.2, self.split_separator_w, self.split_separator_h)
+	self.split_separator:toScreenFull(self.w * 0.5 - 3, self.h * 0.8, 6, self.h * 0.2, self.split_separator_w, self.split_separator_h)
+	self.player_separator:toScreenFull(200 - 3, 20, 6, self.h * 0.8 - 20, self.player_separator_w, self.player_separator_h)
 
 	-- Tooltip is displayed over all else
 	self:targetDisplayTooltip()
@@ -392,6 +412,10 @@ function _M:setupMouse(reset)
 		if button == "wheelup" then self.logdisplay:scrollUp(1) end
 		if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
 	end, {button=true})
+	-- Tooltip over the player pane
+	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h, function(button, mx, my, xrel, yrel, bx, by, event)
+		self.player_display.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
+	end)
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		self.hotkeys_display:onMouse(button, mx, my, event == "button", function(text) self.tooltip:displayAtMap(nil, nil, self.w, self.h, tostring(text)) end)
@@ -414,4 +438,33 @@ function _M:saveGame()
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	self.log("Saving game...")
+end
+
+--------------------------------------------------------------
+-- UI stuff
+--------------------------------------------------------------
+
+--- Create a visual separator
+local _sep_left = core.display.loadImage("/data/gfx/ui/separator-left.png") _sep_left:alpha()
+local _sep_right = core.display.loadImage("/data/gfx/ui/separator-right.png") _sep_right:alpha()
+local _sep_horiz = core.display.loadImage("/data/gfx/ui/separator-hori.png") _sep_horiz:alpha()
+local _sep_top = core.display.loadImage("/data/gfx/ui/separator-top.png") _sep_top:alpha()
+local _sep_bottom = core.display.loadImage("/data/gfx/ui/separator-bottom.png") _sep_bottom:alpha()
+local _sep_vert = core.display.loadImage("/data/gfx/ui/separator-vert.png") _sep_vert:alpha()
+function _M:createVisualSeparator(dir, size)
+	if dir == "horizontal" then
+		local sep = core.display.newSurface(size, 6)
+		sep:erase(0, 0, 0)
+		sep:merge(_sep_left, 0, 0)
+		for i = 7, size - 7, 9 do sep:merge(_sep_horiz, i, 0) end
+		sep:merge(_sep_right, size - 6, 0)
+		return sep:glTexture()
+	else
+		local sep = core.display.newSurface(6, size)
+		sep:erase(0, 0, 0)
+		sep:merge(_sep_top, 0, 0)
+		for i = 7, size - 7, 9 do sep:merge(_sep_vert, 0, i) end
+		sep:merge(_sep_bottom, 0, size - 6)
+		return sep:glTexture()
+	end
 end

@@ -47,7 +47,6 @@ end
 -- @param object the object to save
 -- @param class a class name, if different from the default one
 function _M:push(savename, type, object, class)
-	print("<<<<", savename, type, object, class, "::", game.onSavefilePush) FIX ME
 	if game.onSavefilePush then game:onSavefilePush(savename, type, object, class) end
 
 	class = class or self.saveclass

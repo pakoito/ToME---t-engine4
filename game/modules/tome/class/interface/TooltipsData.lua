@@ -71,7 +71,7 @@ Equilibrium represents your standing in the grand balance of nature.
 The closer it is to 0 the more in-balance you are. Being out of equilibrium will negatively affect your ability to use Wild Gifts.
 ]]
 
-TOOLTIP_VIM = [[#GOLD#Hate#LAST#
+TOOLTIP_HATE = [[#GOLD#Hate#LAST#
 Hate represents your inner rage against all that lives and dares face you.
 It slowly decreases and is replenished by killing creatures.
 All afflicted talents are based on Hate, the higher hate is the more effective the talents are.
