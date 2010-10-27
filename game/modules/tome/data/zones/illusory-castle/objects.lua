@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-far-east.lua")
 
 -- Artifact, droped (and used!) by the Shade of Angmar
 newEntity{ base = "BASE_STAFF",

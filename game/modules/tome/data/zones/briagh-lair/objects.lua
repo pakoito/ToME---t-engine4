@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-far-east.lua")
 
 newEntity{ base = "BASE_GEM",
 	define_as = "RESONATING_DIAMOND", no_unique_lore=true,

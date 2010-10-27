@@ -251,37 +251,3 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 		inc_stats = { [Stats.STAT_STR] = 6, },
 	},
 }
-
----------------------------- Various quest starters
-
--- This one starts a quest it has a level and rarity so it can drop randomly, but there are palces where it is more likely to appear
-newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_unique_lore=true,
-	unique = true, quest=true,
-	unided_name = "ancient tome",
-	name = "Ancient Tome titled 'Gems and their uses'",
-	level_range = {30, 40}, rarity = 120,
-	color = colors.VIOLET,
-	is_magic_device = false,
-	fire_proof = true,
-	not_in_stores = true,
-
-	on_pickup = function(self, who)
-		if who == game.player then
-			self:identify(true)
-			who:grantQuest("master-jeweler")
-		end
-	end,
-}
-
-newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", no_unique_lore=true,
-	unique = true, quest=true, identified=true,
-	name = "Scroll of Summoning (Limmir the Jeweler)",
-	color = colors.VIOLET,
-	fire_proof = true,
-	is_magic_device = false,
-
-	max_power = 1, power_regen = 1,
-	use_power = { name = "summon Limmir the jeweler at the center of the lake of the moon", power = 1,
-		use = function(self, who) who:hasQuest("master-jeweler"):summon_limmir(who) end
-	},
-}

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-far-east.lua")
 
 newEntity{ base = "BASE_RING",
 	define_as = "RING_LOST_LOVE", rarity=false,
