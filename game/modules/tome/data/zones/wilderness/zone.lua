@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Middle-earth",
+	name = "Maj'Eyal",
 	level_range = {1, 1},
 	max_level = 1,
 	width = 200, height = 130,
@@ -30,7 +30,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "wilderness/arda-west",
+			map = "wilderness/maj-eyal",
 		},
 	}
 }
