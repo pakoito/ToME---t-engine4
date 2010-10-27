@@ -41,7 +41,7 @@ newAI("sandworm_tunneler", function(self)
 	end
 
 	-- Move toward it, digging your way to it
-	local l = line.new(self.x, self.y, self.ai_state.spot_x, self.ai_state.spot_y)
+	local l = line.new(self.x, self.y, self.ai_state.spot_x or self.x, self.ai_state.spot_y or self.y)
 	local lx, ly = l()
 	if not lx then
 		self.ai_state.spot_x = nil
