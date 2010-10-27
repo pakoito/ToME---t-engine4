@@ -109,6 +109,10 @@ configuration "linux"
 	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
+	postbuildcommands {
+		"cp bin/Debug/t-engine t-engine",
+	}
+
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
