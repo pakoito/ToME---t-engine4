@@ -18,22 +18,23 @@
 -- darkgod@te4.org
 
 ---------------------------------------------------------
---                       Hobbits                       --
+--                      Halflings                      --
 ---------------------------------------------------------
 newBirthDescriptor{
 	type = "race",
-	name = "Hobbit",
+	name = "Halfling",
 	desc = {
-		"Hobbits, or halflings, are a race of very short stature, rarely exceeding four feet in height.",
-		"Most of them are happy to live a quiet life of farming and gardening, but a few have an adventurous heart.",
-		"Hobbits are agile, lucky, and resilient but lacking in strength.",
+		"Halflings, are a race of very short stature, rarely exceeding four feet in height.",
+		"Most of them are happy to live a quiet life of farming and gardening, yet they are not to be taken lightly.",
+		"Halfling armies have brought many kingdoms to their knees and they kept a balance of power with the human kingdoms during the Age of Allure.",
+		"Halflings are agile, lucky, and resilient but lacking in strength.",
 	},
 	descriptor_choices =
 	{
 		subrace =
 		{
 			__ALL__ = "disallow",
-			Hobbit = "allow",
+			Halfling = "allow",
 		},
 		class =
 		{
@@ -42,26 +43,26 @@ newBirthDescriptor{
 	},
 	copy = {
 		faction = "shire",
-		type = "humanoid", subtype="hobbit",
-		default_wilderness = {43, 18},
+		type = "humanoid", subtype="halfling",
+		default_wilderness = {26, 7},
 		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
-		starting_intro = "hobbit",
+		starting_quest = "start-allied",
+		starting_intro = "halfling",
 	},
-	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
+	random_escort_possibilities = { {"trollshaws", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"iron-throne", 1, 1}, {"eruan", 1, 3}, },
 }
 
 ---------------------------------------------------------
---                       Hobbits                       --
+--                      Halflings                      --
 ---------------------------------------------------------
 newBirthDescriptor
 {
 	type = "subrace",
 	name = "Hobbit",
 	desc = {
-		"Hobbits, or halflings, are a race of very short stature, rarely exceeding four feet in height.",
-		"Most of them are happy to live a quiet life of farming and gardening, but a few have an adventurous heart.",
-		"Hobbits are agile, lucky, and resilient but lacking in strength.",
+		"Halflings, are a race of very short stature, rarely exceeding four feet in height.",
+		"Most of them are happy to live a quiet life of farming and gardening, yet they are not to be taken lightly.",
+		"Halfling armies have brought many kingdoms to their knees and they kept a balance of power with the human kingdoms during the Age of Allure.",
 		"They possess the #GOLD#Luck of the Little Folk#WHITE# which allows them to increase their critical strike chance for a few turns.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * -3 Strength, +3 Dexterity, +1 Constitution",
@@ -73,7 +74,7 @@ newBirthDescriptor
 	stats = { str=-3, dex=3, con=1, cun=3, lck=5, },
 	experience = 1.20,
 	talents = {
-		[ActorTalents.T_HOBBIT_LUCK]=1,
+		[ActorTalents.T_HALFLING_LUCK]=1,
 	},
 	copy = {
 		life_rating = 12,

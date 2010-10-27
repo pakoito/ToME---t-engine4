@@ -49,13 +49,13 @@ newBirthDescriptor{
 		},
 		-- Force undead faction to undead
 		resolvers.genericlast(function(e) e.faction = "undead" end),
-		default_wilderness = {34, 49},
+		default_wilderness = {37, 33},
 		starting_zone = "paths-of-the-dead",
 		starting_level = 8, starting_level_force_down = true,
 		starting_quest = "start-undead",
 		undead = 1,
 	},
-	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
+	random_escort_possibilities = { {"trollshaws", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"iron-throne", 1, 1}, {"eruan", 1, 3}, },
 }
 
 newBirthDescriptor
@@ -141,7 +141,6 @@ newBirthDescriptor
 	},
 	copy = {
 		type = "undead", subtype="skeleton",
-		default_wilderness = {43, 18},
 		starting_intro = "skeleton",
 		life_rating=12,
 		poison_immune = 1,

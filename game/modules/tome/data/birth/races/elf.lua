@@ -24,35 +24,31 @@ newBirthDescriptor{
 	type = "race",
 	name = "Elf",
 	desc = {
-		"Quendi are Elves, the first children of Eru.",
-		"The first Elves awoke by Cuiviénen, the Water of Awakening in the far east of Middle-earth, long Ages before the Rising of the Sun or Moon.",
-		"Unlike Men, the Elves are not subject to death by old age.",
+		"The Second race to have awaken, thousands of years after the Sher'Tul.",
+		"Elves are split into three subrace, of which only two remain in the current age.",
+		"They are tolerated by most races but not usualy well liked, due to their role in the Spellblaze.",
+		"Unlike other races elves are not subject to death by old age.",
 	},
 	descriptor_choices =
 	{
 		subrace =
 		{
-			Nandor = "allow",
-			Noldor = "allow",
+			Shalore = "allow",
+			Thalore = "allow",
 			__ALL__ = "disallow",
 		},
 		subclass =
 		{
-			['Sun Paladin'] = "allow",
+			['Anorithil'] = "allow",
 		},
 	},
-	talents = {
---		[ActorTalents.T_IMPROVED_MANA_I]=1,
-	},
 	copy = {
-		faction = "eryn-lasgalen",
 		type = "humanoid", subtype="elf",
-		default_wilderness = {43, 18},
+		default_wilderness = {26, 7},
 		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
-		starting_intro = "elf",
+		starting_quest = "start-allied",
 	},
-	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
+	random_escort_possibilities = { {"trollshaws", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"iron-throne", 1, 1}, {"eruan", 1, 3}, },
 }
 
 ---------------------------------------------------------
@@ -61,11 +57,11 @@ newBirthDescriptor{
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Nandor",
+	name = "Shalore",
 	desc = {
-		"Elves who turned aside from the Great Journey in the early days and settled in th east of the Misty Mountains.",
-		"Both the Wood-Elves of Mirkwood and the Elves of Lórien are Nandor.",
-		"They posses the #GOLD#Grace of the Eldar#WHITE# talent which allows them a boost of speed every once in a while.",
+		"Shaloren elves have close ties with the magic of the world, they produced in the past many great mages.",
+		"Yet they remain quiet and try to prevent the teaching of magic to their people, for fear of an otehr Spellblaze.",
+		"They posses the #GOLD#Grace of the Eternals#WHITE# talent which allows them a boost of speed every once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * -2 Strength, +1 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +3 Willpower, +1 Cunning",
@@ -74,8 +70,10 @@ newBirthDescriptor
 	},
 	stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
 	experience = 1.3,
-	talents = { [ActorTalents.T_NANDOR_SPEED]=1 },
+	talents = { [ActorTalents.T_SHALOREN_SPEED]=1 },
 	copy = {
+		faction = "shalore",
+		starting_intro = "shalore",
 		life_rating = 9,
 	},
 	experience = 1.35,
@@ -84,11 +82,12 @@ newBirthDescriptor
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Noldor",
+	name = "Thalore",
 	desc = {
-		"The Noldor were the High Elves most enamoured of knowledge and the making of things. After the theft of the Silmarils, many Noldor forsook the blessed land and returned to Middle Earth, but for their sins en-route they were placed under the Doom of the Valar. After the Doom was lifted, most of the Noldor sailed west, but a few still remain in Middle Earth.",
-		"They are implacable foes of the servants of Morgoth, wherever they may be found.",
-		"They possess the #GOLD#Wrath of the Eldar#WHITE# talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
+		"Thaloren elves have spend most of the ages hidden within their forests, seldom leaving them.",
+		"The ages of the world passed by and yet they remained unchanged.",
+		"Their natural affinity for nature and their reclusion have made them great protectors of the natural order, often opposing their Shaloren brothers.",
+		"They possess the #GOLD#Wrath of the Eternals#WHITE# talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +3 Dexterity, +1 Constitution",
 		"#LIGHT_BLUE# * -2 Magic, +1 Willpower, +0 Cunning",
@@ -97,8 +96,10 @@ newBirthDescriptor
 	},
 	stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
 	experience = 1.3,
-	talents = { [ActorTalents.T_NOLDOR_WRATH]=1 },
+	talents = { [ActorTalents.T_THALOREN_WRATH]=1 },
 	copy = {
+		faction = "thalore",
+		starting_intro = "thalore",
 		life_rating = 11,
 	},
 	experience = 1.35,

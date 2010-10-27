@@ -51,6 +51,8 @@ newBirthDescriptor{
 		{
 			-- Nobdoy can be a sun paladin but humans & elves
 			['Sun Paladin'] = "disallow",
+			-- Nobdoy can be a sun paladin but elves
+			['Anorithil'] = "disallow",
 		},
 	},
 	talents = {},

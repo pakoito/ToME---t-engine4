@@ -24,29 +24,28 @@ newBirthDescriptor{
 	type = "race",
 	name = "Human",
 	desc = {
-		"The Edain, humans, are one of the youngest of the races of Arda.",
+		"The humans ",
 	},
 	descriptor_choices =
 	{
 		subrace =
 		{
-			["Bree-man"] = "allow",
-			["Dúnadan"] = "allow",
-			Rohirrim = "allow",
-			Beorning = "allow",
+			["Cornac"] = "allow",
+			["Higher"] = "allow",
 			__ALL__ = "disallow",
 		},
 		subclass =
 		{
 			['Sun Paladin'] = "allow",
+			['Anorithil'] = "allow",
 		},
 	},
 	talents = {},
 	copy = {
-		faction = "reunited-kingdom",
+		faction = "allied-kingdoms",
 		type = "humanoid", subtype="human",
 	},
-	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
+	random_escort_possibilities = { {"trollshaws", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"iron-throne", 1, 1}, {"eruan", 1, 3}, },
 }
 
 ---------------------------------------------------------
@@ -55,36 +54,37 @@ newBirthDescriptor{
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Dúnadan",
+	name = "Higher",
 	desc = {
-		"The greatest of the Edain, humans in all respects but stronger, smarter, and wiser.",
+		"Highers are a special branch of humans that have been imbued with latent magic since the Age of Allure.",
+		"They usualy do not breed with other humans, trying to keep their blood 'pure'.",
 		"They possess the #GOLD#Gift of Kings#WHITE# which allows them to regenerate their wounds once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +1 Dexterity, +0 Constitution",
-		"#LIGHT_BLUE# * +0 Magic, +1 Willpower, +1 Cunning",
+		"#LIGHT_BLUE# * +1 Magic, +1 Willpower, +0 Cunning",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
 		"#GOLD#Experience penality:#LIGHT_BLUE# 15%",
 	},
-	stats = { str=1, cun=1, dex=1, wil=1 },
+	stats = { str=1, mag=1, dex=1, wil=1 },
 	experience = 1.15,
 	talents = {
-		[ActorTalents.T_DUNADAN_HEAL]=1,
+		[ActorTalents.T_HIGHER_HEAL]=1,
 	},
 	copy = {
 		lite_rating = 11,
-		default_wilderness = {43, 18},
+		default_wilderness = {26, 7},
 		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
-		starting_intro = "dunadan",
+		starting_quest = "start-allied",
+		starting_intro = "higher",
 	},
 }
 
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Bree-man",
+	name = "Cornac",
 	desc = {
-		"Humans hailing from the northen town of Bree. A common kind of man, unremarkable in all respects.",
+		"Cornacians are average humans from the northern parts of the Allied Kingdoms.",
 		"Humans are an inherently very adaptable race and as such they gain a #GOLD#talent category point#WHITE# at birth(others only gain one at level 10, 20 and 30).",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
@@ -95,44 +95,9 @@ newBirthDescriptor
 	experience = 1.0,
 	copy = {
 		unused_talents_types = 1,
-		default_wilderness = {43, 18},
+		default_wilderness = {26, 7},
 		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
-		starting_intro = "bree-man",
+		starting_quest = "start-allied",
+		starting_intro = "cornac",
 	},
 }
-
-
---[[
-newBirthDescriptor
-{
-	type = "subrace"
-	name = "Rohirrim"
-	desc = {
-		"Humans from the land of Rohan, who ride the great Mearas.",
-	}
-	stats = { [A_STR]=1, [A_INT]=1, [A_WIS]=0, [A_DEX]=3, [A_CON]=1, [A_CHR]=2, }
-	experience = 70
-	levels =
-	{
-		[ 1] = { SPEED=3 }
-	}
-	skills =
-	{
-		["Weaponmastery"]   = { mods.add(0)   , mods.add(200)  }
-		["Riding"]          = { mods.add(5000), mods.add(600)  }
-	}
-}
-newBirthDescriptor
-{
-	type = "subrace",
-	name = "Beorning",
-	desc = {
-		"A race of shapeshifter men.",
-		"They have the unique power of being able to polymorph into bear form.",
-	},
-	stats = { str=2, con=2, dex=-1, cun=-3, },
-	experience = 1.8,
-	talents = {},
-}
-]]

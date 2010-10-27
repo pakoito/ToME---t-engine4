@@ -18,34 +18,30 @@
 -- darkgod@te4.org
 
 name = "T.o.M.E"
-long_name = "Tales of Middle Earth: The Fourth Age"
+long_name = "Tales of Maj'Eyal: Age of Ascendancy"
 short_name = "tome"
 author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://tome.te4.org/"
-version = {3,9,13}
-engine = {0,9,13,"te4"}
+version = {3,9,14}
+engine = {0,9,14,"te4"}
 description = [[
-Morgoth is banned to the Void. Sauron has been vanquished, the #ff0000#One Ring#ffffff# destroyed.
-The nations of Men, Dwarves, Elves and Hobbits are freed from the tyranny of the Rings.
+Welcome to Maj'Eyal.
 
-For over one hundred twenty years, peace prevailed in the West under the
-rule of the High King of the Reunited Kingdom, #14fffc#Aragorn II Elessar#ffffff# and his wife #14fffc#Arwen Evenstar#ffffff#.
-The High King died of old age two years ago, and his son, #14fffc#Eldarion#ffffff#, is now king.
+This is the Age of Ascendancy, after over ten thousand years of strife, pain and chaos the known world is at last at relative peace.
+The #FF0000#Spellblaze#WHITE# last effects are now tamed, the land slowly heals itself and the civilisations rebuild themselves after the Age of Pyre.
 
-#14fffc#Elrond and Galadriel#ffffff#, the great leaders of the Elves, left Middle-earth for Valinor.
-But many elves still dwell in Middle-earth, for some of them love this land for which they fought so hard.
+It has been one hundred and twenty two years since the Allied Kingdoms have been established under the rule of #14fffc#Toknor#ffffff# and his wife #14fffc#Mirvenia#ffffff#.
+Together they ruled the kingdoms with fairness and brought prosperity to both halflings and humans.
+The King died of old age fourteen years ago, and his son, #14fffc#Tolak#ffffff#, is now king.
 
-In the the Lonely Mountain, the dwarves prosper along with their human allies of Dale
-under the guidance of #14fffc#Thorin III Stonehelm#ffffff#, the King under the Mountain.
+The elven kingdoms are quiet. The Shaloran elves in their home of Elvala are trying to make the world forget about their role in the Spellblaze and are living happy lifes under the leadership of #14fffc#Aranion Gayaeil#ffffff#.
+The Thaloran elves keep to their ancient tradition of living in the woods, ruled as always by #14fffc#Nessilla Tantaelen#ffffff# the wise.
 
-In the Shire, life is... as usual, simple and full of joy and pipeweed! If such thing as ruling exists for Hobbits, then it is #14fffc#Thain Faramir I and Mayor Tolman Gardner#ffffff# that should handle it.
+The dwarves of the Iron Throne have started a careful trade relationship with the Allied Kingdoms for nearly one hundred year, yet not much is known about them, not even their leader.
 
-This is a golden age, or at least it should be....
+While the people of Maj'Eyal know that the mages helped put an end to the terrors of the Spellblaze, they also did not forget that it was magic that started those events. As such mages are still shuned from society, if not downright hunted down.
+Still, this is a golden age, civilizations are leaking the wounds of thousands of years of conflict, even the humans and the halflings have made lasting peace.
 
-Trouble is brewing in the east. Rumours in Lake-town near the Lonely Mountain have it
-that some power is growing in the far east, and Orcs sightings have started to multiply.
-
-However, you do not think this concerns you---for you have set out to discover wonders, explore old places, and venture into the unknown for wealth and glory.
-But beware, the eastern troubles could be yours all too soon....
+You are an adventurer, set out to discover wonders, explore old places, and venture into the unknown for wealth and glory.
 ]]
 starter = "mod.load"

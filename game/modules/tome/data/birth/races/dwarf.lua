@@ -24,8 +24,8 @@ newBirthDescriptor{
 	type = "race",
 	name = "Dwarf",
 	desc = {
-		"The children of Aule, a strong but small race.",
-		"Miners and fighters of legend.",
+		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne",
+		"They are a sturdy race and are known for their masterwork, yet they are not well loved, having left other races to fend for themselves in past conflicts.",
 		"Female dwarves remain a mystery and as such may not be played."
 	},
 	descriptor_choices =
@@ -42,14 +42,14 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
-		faction = "lonely-mountain",
+		faction = "iron-throne",
 		type = "humanoid", subtype="dwarf",
-		default_wilderness = {43, 18},
+		default_wilderness = {26, 7},
 		starting_zone = "trollshaws",
-		starting_quest = "start-dunadan",
+		starting_quest = "start-allied",
 		starting_intro = "dwarf",
 	},
-	random_escort_possibilities = { {"trollshaws", 2, 5}, {"tower-amon-sul", 1, 4}, {"carn-dum", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"moria", 1, 1}, {"eruan", 1, 3}, },
+	random_escort_possibilities = { {"trollshaws", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"iron-throne", 1, 1}, {"eruan", 1, 3}, },
 }
 
 ---------------------------------------------------------
@@ -60,8 +60,9 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Dwarf",
 	desc = {
-		"The children of Aule, a strong but small race.",
-		"Miners and fighters of legend.",
+		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne",
+		"They are a sturdy race and are known for their masterwork, yet they are not well loved, having left other races to fend for themselves in past conflicts.",
+		"Female dwarves remain a mystery and as such may not be played.",
 		"They possess the #GOLD#Resilience of the Dwarves#WHITE# which allows them to increase their armour, physical and spell saves for a few turns.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +4 Strength, -2 Dexterity, +3 Constitution",

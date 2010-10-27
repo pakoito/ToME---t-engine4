@@ -86,7 +86,7 @@ function _M:run()
 	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
 	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
-	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Fourth Age of Middle-earth.\nThe time is %02d:%02d.", 122)
+	self.calendar = Calendar.new("/data/calendar_rivendell.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
@@ -98,7 +98,7 @@ function _M:run()
 	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
 	self.logPlayer = function(e, style, ...) if e == self.player then self.log(style, ...) end end
 
-	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Middle Earth!")
+	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Maj'Eyal!")
 
 	-- Setup inputs
 	self:setupCommands()

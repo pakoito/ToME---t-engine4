@@ -152,9 +152,9 @@ newTalent{
 	The spell will take time to activate, you must be out of sight of any creature when you cast it and when the teleportation takes effect.]]
 }
 
--- Dunadan's power, a "weak" regeneration
+-- Highers's power, a "weak" regeneration
 newTalent{
-	short_name = "DUNADAN_HEAL",
+	short_name = "HIGHER_HEAL",
 	name = "King's Gift",
 	type = {"base/race", 1},
 	no_energy = true,
@@ -169,10 +169,10 @@ newTalent{
 	end,
 }
 
--- Nandor's power, a temporary speedup
+-- Shaloren's power, a temporary speedup
 newTalent{
-	short_name = "NANDOR_SPEED",
-	name = "Grace of the Eldar",
+	short_name = "SHALOREN_SPEED",
+	name = "Grace of the Eternals",
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
@@ -181,7 +181,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Call upon the grace of the Eldar to increase your general speed by %d%% for 8 turns.
+		return ([[Call upon the grace of the Eternals to increase your general speed by %d%% for 8 turns.
 		The speed bonus will increase with the Dexterity stat]]):format((0.20 + self:getDex() / 80) * 100)
 	end,
 }
@@ -207,9 +207,9 @@ newTalent{
 	end,
 }
 
--- Hobbit's power, temporary crit bonus
+-- Halflings's power, temporary crit bonus
 newTalent{
-	short_name = "HOBBIT_LUCK",
+	short_name = "HALFLING_LUCK",
 	name = "Luck of the Little Folk",
 	type = {"base/race", 1},
 	no_energy = true,
@@ -227,9 +227,9 @@ newTalent{
 	end,
 }
 
--- Noldor's power: temporary damage increase and damage reduction
+-- Thaloren's power: temporary damage increase and damage reduction
 newTalent{
-	short_name = "NOLDOR_WRATH",
+	short_name = "THALOREN_WRATH",
 	name = "Wrath of the Eldar",
 	type = {"base/race", 1},
 	no_energy = true,

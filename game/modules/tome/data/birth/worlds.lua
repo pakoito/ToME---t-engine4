@@ -58,17 +58,10 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "world",
 	name = "Arda",
-	display_name = "Free People: The Fourth Age",
+	display_name = "",
 	desc =
 	{
---[[
-		"Arda, the World.",
-		"It was shaped into being ages ago by the Music of the Ainur.",
-		"It is home of elves, men, dwarves and hobbits, but also evil orcs, trolls and dragons.",
-		"Since the downfall of Sauron, the lands have known relative peace.",
-		"Until recently it was the only world known to exist.",
-]]
-		"The Free People of Middle-earth: Humans, Hobbits, Elves and Dwarves.",
+		"The people of Maj'Eyal: Humans, halflings, Elves and Dwarves.",
 		"The West has been at relative peace for over one hundred year and people are prospering again.",
 		"You are an adventurer, setting out to find lost treasure and glory.",
 		"But what lurks in the shadow of the world?",

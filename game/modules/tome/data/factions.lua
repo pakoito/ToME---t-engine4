@@ -19,17 +19,17 @@
 
 -- CSV export
 local src = [[
-,Enemies,Undead,Reunited Kingdom,Shire,Lonely Mountain,Eryn Lasgalen,Angolwen,Tol Falas,,Silmaril Guardians|H,Water lair|H,Assassin lair|H,,Sunwall|H,Orc Pride,,Sandworm Burrowers,,Blue Wizards
+,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,Angolwen,Tol Falas,,Guardians of the Tide|H,Water lair|H,Assassin lair|H,,Sunwall|H,Orc Pride,,Sandworm Burrowers,,Sorcerers
 Enemies,,,,,,,,,,,,,,,,,,,
 Undead,-1,,,,,,,,,,,,,,,,,,
-Reunited Kingdom,-1,-1,,,,,,,,,,,,,,,,,
-Shire,-1,-1,1,,,,,,,,,,,,,,,,
-Lonely Mountain,-1,-1,0.5,1,,,,,,,,,,,,,,,
-Eryn Lasgalen,-1,-1,0.5,1,0.3,,,,,,,,,,,,,,
+Allied Kingdoms,-1,-1,,,,,,,,,,,,,,,,,
+Shalorë,-1,-1,0.5,,,,,,,,,,,,,,,,
+Thalorë,-1,-1,0.7,0.2,,,,,,,,,,,,,,,
+Iron Throne,-1,-1,0.2,0.2,0.2,,,,,,,,,,,,,,
 Angolwen,-1,-1,,,,,,,,,,,,,,,,,
 Tol Falas,,-1,-1,-1,-1,-1,-1,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,
-Silmaril Guardians|H,,,,,,,,,,,,,,,,,,,
+Guardians of the Tide|H,,,,,,,,,,,,,,,,,,,
 Water lair|H,-1,,,,,,,,,-1,,,,,,,,,
 Assassin lair|H,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,
@@ -38,7 +38,7 @@ Orc Pride,,-1,-1,-1,-1,-1,-1,-1,,,,,,-1,,,,,
 ,,,,,,,,,,,,,,,,,,,
 Sandworm Burrowers,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,
-Blue Wizards,,-1,-1,-1,-1,-1,-1,-1,,,,,,-1,1,,,,
+Sorcerers,,-1,-1,-1,-1,-1,-1,-1,,,,,,-1,1,,,,
 ]]
 
 local facts = {}

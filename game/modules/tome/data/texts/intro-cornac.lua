@@ -17,14 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "Realtime Example Module"
-long_name = "Realtime Example Module for T-Engine4"
-short_name = "example_realtime"
-author = { "DarkGod", "darkgod@te4.org" }
-homepage = "http://te4.org/modules:example"
-version = {1,0,0}
-engine = {0,9,14,"te4"}
-description = [[
-This is *NOT* a game, just an example/template to make your own using the T-Engine4.
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
+You are a native of the northern region of the Allied Kingdom, a peaceful land that both humans and halflings call home.
+Humans are the most common race of the land, and you are one of them. In an attempt to prove your worth, you have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
+
+You have come to a land called Rhudaur, just east of Bree, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+To the east lies another dangerous place: the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead.
+
+After days of travel, you have found the forest and entered it, what will you find there?...
 ]]
-starter = "mod.load"
