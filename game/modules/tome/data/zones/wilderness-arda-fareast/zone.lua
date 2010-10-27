@@ -23,10 +23,10 @@ return {
 	max_level = 1,
 	width = 100, height = 100,
 --	all_remembered = true,
-	all_lited = true,
+--	all_lited = true,
 	persistant = "memory",
 	wilderness = true,
---	wilderness_see_radius = 3,
+	wilderness_see_radius = 4,
 	ambiant_music = "Far away.ogg",
 	generator =  {
 		map = {

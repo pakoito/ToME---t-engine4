@@ -235,6 +235,10 @@ local fovdist = {}
 for i = 0, 30 * 30 do
 	fovdist[i] = math.max((20 - math.sqrt(i)) / 14, 0.6)
 end
+local wild_fovdist = {}
+for i = 0, 10 * 10 do
+	wild_fovdist[i] = math.max((5 - math.sqrt(i)) / 1.4, 0.6)
+end
 
 function _M:playerFOV()
 	-- Clean FOV before computing it
@@ -245,10 +249,7 @@ function _M:playerFOV()
 	if not self:attr("blind") then
 		-- Compute both the normal and the lite FOV, using cache
 		if game.zone.wilderness_see_radius then
-			self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
-					game.level.map:apply(x, y, fovdist[sqdist])
-			end, true, false, true)
-			self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
+			self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, wild_fovdist[sqdist]) end, true, true, true)
 		else
 			self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
 				game.level.map:apply(x, y, fovdist[sqdist])

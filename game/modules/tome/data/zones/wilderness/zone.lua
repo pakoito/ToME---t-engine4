@@ -22,11 +22,12 @@ return {
 	level_range = {1, 1},
 	max_level = 1,
 	width = 200, height = 130,
-	all_remembered = true,
-	all_lited = true,
+--	all_remembered = true,
+--	all_lited = true,
 	persistant = "memory",
 	ambiant_music = "Remembrance.ogg",
 	wilderness = true,
+	wilderness_see_radius = 4,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
