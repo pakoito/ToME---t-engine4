@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Welcome @playername@ to Minas Tirith. Traveler, please be quick as my time is precious.]],
+	text = [[Welcome @playername@ to Last Hope. Traveler, please be quick as my time is precious.]],
 	answers = {
 		{"I have found a strange staff in my travels (#LIGHT_GREEN#*describe it in detail*#LAST#)  It looked very old and very powerful. I dared not use it.", jump="found_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.PENDING) end},
-		{"The hunt for the staff took me to a continent far to the east, accessible only by magic portal. I've recently returned by just such a portal, and I come bearing instructions on how to construct a similar portal here in Minas Tirith to make the return journey possible. I'm sure the elves there would welcome trade with the west.", jump="east_portal", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and not q:isCompleted("talked-elder") end},
+		{"The hunt for the staff took me to a continent far to the east, accessible only by magic portal. I've recently returned by just such a portal, and I come bearing instructions on how to construct a similar portal here in Last Hope to make the return journey possible. I'm sure the elves there would welcome trade with the west.", jump="east_portal", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and not q:isCompleted("talked-elder") end},
 		{"Nothing, excuse me. Bye!"},
 	}
 }
@@ -83,14 +83,14 @@ newChat{ id="east_portal",
 }
 
 newChat{ id="east_portal_winner",
-	text = [[Excellent! Well then, concerning this fascinating portal. I'm afraid that men have largely forgotten whatever they once knew about the great magics of old. I know of only one man in Gondor who might be able to help you, a wise man and recent arrival to Minas Tirith named Tannen. He claims to hail from Angolwen, a supposed haven for practitioners of magic and mysticism. He arrived just months ago with fabulous wealth and has already constructed his own tower on the north edge of the city. I know little of him, but if he is to be believed, then he is your best hope.]],
+	text = [[Excellent! Well then, concerning this fascinating portal. I'm afraid that men have largely forgotten whatever they once knew about the great magics of old. I know of only one man in these lands who might be able to help you, a wise man and recent arrival to Last Hope named Tannen. He claims to hail from Angolwen, a supposed haven for practitioners of magic and mysticism. He arrived just months ago with fabulous wealth and has already constructed his own tower on the north edge of the city. I know little of him, but if he is to be believed, then he is your best hope.]],
 	answers = {
 		{"Thank you.", action=function(npc, player) player:setQuestStatus("east-portal", engine.Quest.COMPLETED, "talked-elder") end},
 	}
 }
 
 newChat{ id="east_portal_hunt",
-	text = [[In that case, let us proceed as quickly as possible. Now, concerning this fascinating portal. I'm afraid that men have largely forgotten whatever they once knew about the great magics of old. I know of only one man in Gondor who might be able to help you, a wise man and recent arrival to Minas Tirith named Tannen. He claims to hail from Angolwen, a supposed haven for practitioners of magic and mysticism. He arrived just months ago with fabulous wealth and has already constructed his own tower on the north edge of the city. I know little of him, but if he is to be believed, then he is your best hope.]],
+	text = [[In that case, let us proceed as quickly as possible. Now, concerning this fascinating portal. I'm afraid that men have largely forgotten whatever they once knew about the great magics of old. I know of only one man in these lands who might be able to help you, a wise man and recent arrival to Last Hope named Tannen. He claims to hail from Angolwen, a supposed haven for practitioners of magic and mysticism. He arrived just months ago with fabulous wealth and has already constructed his own tower on the north edge of the city. I know little of him, but if he is to be believed, then he is your best hope.]],
 	answers = {
 		{"Thank you.", action=function(npc, player) player:setQuestStatus("east-portal", engine.Quest.COMPLETED, "talked-elder") end},
 	}

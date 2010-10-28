@@ -166,9 +166,9 @@ tannen_exit = function(self, player)
 	game.zone:addEntity(game.level, g, "terrain", 12, 12)
 end
 
-back_to_minas_tirith = function(self)
-	-- TP minas tirith
-	game:changeLevel(1, "town-minas-tirith")
+back_to_last_hope = function(self)
+	-- TP last hope
+	game:changeLevel(1, "town-last-hope")
 	-- Move to the portal spot
 	game.player:move(12, 43, true)
 	-- Remove tannen
@@ -187,5 +187,5 @@ back_to_minas_tirith = function(self)
 	local Chat = require("engine.Chat")
 	local chat = Chat.new("east-portal-end", g, game.player)
 	chat:invoke()
-	game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Minas Tirith.")
+	game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Last Hope.")
 end

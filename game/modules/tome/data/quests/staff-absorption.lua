@@ -28,22 +28,22 @@ desc = function(self, who)
 	elseif self:isCompleted("ambush-finished") and not self:isCompleted("survived-ukruk") then
 		desc[#desc+1] = "On your way out of Tol Falas you were ambushed by a band of orcs and left for dead."
 		desc[#desc+1] = "They asked about the staff and stole it from you."
-		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Minas Tirith to report those events!"
+		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Last Hope to report those events!"
 	elseif self:isCompleted("ambush-finished") and self:isCompleted("survived-ukruk") then
-		desc[#desc+1] = "On your way out of Tol Falas you were ambushed by a band of orcs."
+		desc[#desc+1] = "On your way out of Last Hope you were ambushed by a band of orcs."
 		desc[#desc+1] = "They asked about the staff and stole it from you."
 		desc[#desc+1] = "You told them nothing and vanquished them."
-		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Minas Tirith to report those events!"
+		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Last Hope to report those events!"
 	else
 		desc[#desc+1] = "In its remains, you found a strange staff. It radiates power and danger and you dare not use it yourself."
-		desc[#desc+1] = "You should bring it to the elders of Minas Tirith in the south east."
+		desc[#desc+1] = "You should bring it to the elders of Last Hope in the south east."
 	end
 	return table.concat(desc, "\n")
 end
 
 on_grant = function(self, who)
 	game.logPlayer(who, "#00FFFF#You can feel the power of this staff just by carrying it. This is both ancient and dangerous.")
-	game.logPlayer(who, "#00FFFF#It should be shown to the wise elders in Minas Tirith!")
+	game.logPlayer(who, "#00FFFF#It should be shown to the wise elders in Last Hope!")
 end
 
 start_ambush = function(self, who)
@@ -69,7 +69,7 @@ start_ambush = function(self, who)
 		o:removed()
 
 		game.logPlayer(self, "#VIOLET#You wake up after a few hours, surprised to be alive, but the staff is gone!")
-		game.logPlayer(self, "#VIOLET#Go at once to Minas Tirith to report those events!")
+		game.logPlayer(self, "#VIOLET#Go at once to Last Hope to report those events!")
 
 		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
 
@@ -85,7 +85,7 @@ killed_ukruk = function(self, who)
 	game.player.die = nil
 
 	game.logPlayer(self, "#VIOLET#You are surprised to still be alive.")
-	game.logPlayer(self, "#VIOLET#Go at once to Minas Tirith to report those events!")
+	game.logPlayer(self, "#VIOLET#Go at once to Last Hope to report those events!")
 
 	game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
 

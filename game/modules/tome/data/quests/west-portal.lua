@@ -74,13 +74,13 @@ end
 create_portal = function(self, npc, player)
 	-- Farportal
 	local g = mod.class.Grid.new{
-		name = "Farportal: Minas Tirith",
+		name = "Farportal: Last Hope",
 		display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
 		notice = true,
 		always_remember = true,
 		show_tooltip = true,
 		desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use.
-This one seems to go near the town of Minas Tirith in the West.]],
+This one seems to go near the town of Last Hope in Maj'Eyal.]],
 
 		orb_portal = {
 			change_level = 1,
@@ -88,7 +88,7 @@ This one seems to go near the town of Minas Tirith in the West.]],
 			change_wilderness = {
 				x = 60, y = 54,
 			},
-			message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the outskirts of Minas Tirith, with no trace of the portal...",
+			message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the outskirts of Last Hope, with no trace of the portal...",
 			on_use = function(self, who)
 			end,
 		},

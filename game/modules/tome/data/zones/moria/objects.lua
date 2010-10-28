@@ -19,12 +19,12 @@
 
 load("/data/general/objects/objects.lua")
 
-newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_MINAS_TIRITH",
-	name = "Sealed Scroll of Minas Tirith", identified=true, unique=true, no_unique_lore=true,
+newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_LAST_HOPE",
+	name = "Sealed Scroll of Last Hope", identified=true, unique=true, no_unique_lore=true,
 	fire_proof = true,
 
 	use_simple = { name="open the seal and read the message", use = function(self, who)
-		game:registerDialog(require("engine.dialogs.ShowText").new(self:getName{do_color=true}, "message-minas-tirith", {playername=who.name}, game.w * 0.6))
+		game:registerDialog(require("engine.dialogs.ShowText").new(self:getName{do_color=true}, "message-last-hope", {playername=who.name}, game.w * 0.6))
 	end}
 }
 

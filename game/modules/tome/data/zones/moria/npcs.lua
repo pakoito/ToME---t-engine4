@@ -106,13 +106,13 @@ newEntity{ define_as = "GOLBUG",
 	end,
 }
 
--- The messager sent by minas tirith
+-- The messager sent by last-hope
 newEntity{ define_as = "HARNO",
 	type = "humanoid", subtype = "human", unique = true,
 	faction = "reunited-kingdom",
-	name = "Harno, Herald of Minas Tirith",
+	name = "Harno, Herald of Last Hope",
 	display = "@", color=colors.LIGHT_BLUE,
-	desc = [[This is one of the heralds of Minas Tirith, he seems to be looking for you.]],
+	desc = [[This is one of the heralds of Last Hope, he seems to be looking for you.]],
 	energy = {mod=2},
 	level_range = {40, 40}, exp_worth = 0,
 	max_life = 150, life_rating = 12,
@@ -126,7 +126,7 @@ newEntity{ define_as = "HARNO",
 		{type="weapon", subtype="knife", autoreq=true},
 		{type="weapon", subtype="knife", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=1, {type="scroll", subtype="scroll", defined="NOTE_FROM_MINAS_TIRITH"} },
+	resolvers.drops{chance=100, nb=1, {type="scroll", subtype="scroll", defined="NOTE_FROM_LAST_HOPE"} },
 
 	stun_immune = 1,
 	see_invisible = 100,
@@ -134,7 +134,7 @@ newEntity{ define_as = "HARNO",
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player", ai_move="move_astar", },
 
-	can_talk = "message-minas-tirith",
+	can_talk = "message-last-hope",
 	can_talk_only_once = true,
 
 	on_die = function(self, who)

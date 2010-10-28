@@ -1,4 +1,4 @@
--- ToME - Tales of Maj'Eyal
+x-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ quickEntity('M', {name='tunneled hills', show_tooltip=true, display='^', color=c
 
 quickEntity('1', {show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"})
-quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), resolvers.chatfeature("minas-tirith-weapon-store"), image="terrain/wood_store_weapon.png"})
+quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), resolvers.chatfeature("last-hope-weapon-store"), image="terrain/wood_store_weapon.png"})
 quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
 quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), resolvers.chatfeature("magic-store"), image="terrain/wood_store_book.png"})
 quickEntity('6', {show_tooltip=true, name="Closed store", display='6', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
@@ -48,9 +48,9 @@ quickEntity('a', {show_tooltip=true, name="Closed store", display='*', color=col
 quickEntity('b', {show_tooltip=true, name="Hall of the King", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('e', {show_tooltip=true, name="Rare goods", display='*', color=colors.AQUAMARINE, resolvers.store("LOST_MERCHANT"), resolvers.chatfeature("minas-tirith-lost-merchant"), image="terrain/wood_store_weapon.png"})
+quickEntity('e', {show_tooltip=true, name="Rare goods", display='*', color=colors.AQUAMARINE, resolvers.store("LOST_MERCHANT"), resolvers.chatfeature("last-hope-lost-merchant"), image="terrain/wood_store_weapon.png"})
 
-quickEntity('E', {show_tooltip=true, name="The Elder", display='*', color=colors.VIOLET, resolvers.chatfeature("minas-tirith-elder"), image="terrain/wood_store_closed.png"})
+quickEntity('E', {show_tooltip=true, name="The Elder", display='*', color=colors.VIOLET, resolvers.chatfeature("last-hope-elder"), image="terrain/wood_store_closed.png"})
 quickEntity('f', {show_tooltip=true, name="Tannen's Tower", display='*', color=colors.VIOLET, resolvers.chatfeature("tannen"), image="terrain/wood_store_closed.png"})
 
 startx = 95

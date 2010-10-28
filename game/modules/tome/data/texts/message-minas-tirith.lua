@@ -22,14 +22,14 @@ local delivered_staff = game.player:resolveSource():isQuestStatus("staff-absorpt
 if delivered_staff then
 return [[@playername@, this message is of utmost importance.
 
-The staff you left at Minas Tirith is gone, a raid of orcs ambushed the guards that were transporting it to a secret vault.
+The staff you left at Last Hope is gone, a raid of orcs ambushed the guards that were transporting it to a secret vault.
 Our troups managed to capture one of the orcs and made him talk.
 He did not knew much, but he did speak about "masters" in the far east.
 He spoke about Golbug, this seems to be a warmaster in the Moria, leading the raid to send the "package" through a portal.
 
 This calls for urgency, should you find this Golbug or the portal please investigate.
 
-               #GOLD#-- Eldarion, High King of the Reunited Kingdom]]
+               #GOLD#-- Tolak, King of the Allied Kingdoms]]
 
 else
 
@@ -44,5 +44,5 @@ He spoke about meeting with Golbug, this seems to be a warmaster in the Moria, t
 
 This calls for urgency, should you find this Golbug or the portal please investigate.
 
-               #GOLD#-- Eldarion, High King of the Reunited Kingdom]]
+               #GOLD#-- Tolak, King of the Allied Kingdoms]]
 end

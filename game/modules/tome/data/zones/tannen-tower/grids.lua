@@ -43,18 +43,18 @@ newEntity{
 
 newEntity{
 	define_as = "PORTAL_BACK",
-	name = "Portal to Minas Tirith",
+	name = "Portal to Last Hope",
 	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[This portal seems to be connected with Minas Tirith, you could probably use it to go back.]],
+	desc = [[This portal seems to be connected with Last Hope, you could probably use it to go back.]],
 
 	on_move = function(self, x, y, who)
 		if who == game.player then
-			require("engine.ui.Dialog"):yesnoPopup("Back and there again", "Enter the portal back to Minas Tirith?", function(ret)
+			require("engine.ui.Dialog"):yesnoPopup("Back and there again", "Enter the portal back to Last Hope?", function(ret)
 				if not ret then
-					game.player:hasQuest("east-portal"):back_to_minas_tirith()
+					game.player:hasQuest("east-portal"):back_to_last_hope()
 				end
 			end, "Stay", "Enter")
 		end
