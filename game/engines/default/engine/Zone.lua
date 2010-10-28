@@ -233,7 +233,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 		if type == "actor" then base_list = self.npc_list
 		elseif type == "object" then base_list = self.object_list
 		elseif type == "trap" then base_list = self.trap_list
-		else return nil end
+		else base_list = level:getEntitiesList(type) if not base_list then return nil end end
 		local list = self:computeRarities(type, base_list, level, function(e) return self:checkFilter(e, filter) end, filter.add_levels, filter.special_rarity)
 		e = self:pickEntity(list)
 		print("[MAKE ENTITY] prob list generation", e and e.name, "from list size", #list)

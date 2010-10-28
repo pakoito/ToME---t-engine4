@@ -385,7 +385,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 	loaded = loaded or {}
 	loaded[file] = true
 
-	setfenv(f, setmetatable({
+	local newenv newenv = {
 		class = self,
 		loaded = loaded,
 		resolvers = resolvers,
@@ -416,7 +416,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 				t.base = nil
 			end
 
-			local e = self.new(t, no_default)
+			local e = newenv.class.new(t, no_default)
 
 			if mod then mod(e) end
 
@@ -429,7 +429,8 @@ function _M:loadList(file, no_default, res, mod, loaded)
 		loadList = function(f, new_mod)
 			return self:loadList(f, no_default, nil, new_mod or mod, loaded)
 		end,
-	}, {__index=_G}))
+	}
+	setfenv(f, setmetatable(newenv, {__index=_G}))
 	f()
 
 	return res

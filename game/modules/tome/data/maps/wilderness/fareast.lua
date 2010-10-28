@@ -40,7 +40,7 @@ quickEntity('1', {always_remember = true, show_tooltip=true, name="Gates of Morn
 local p = getMap():particleEmitter(43, 25, 3, "istari_shield_map")
 
 -- Load encounters for this map
-prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounters/arda-fareast.lua")
+prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounters/fareast.lua")
 addData{ encounters = {
 	chance=function(who)
 		local harmless_chance = 1 + who:getLck(7)

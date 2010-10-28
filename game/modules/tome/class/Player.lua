@@ -120,6 +120,11 @@ function _M:onLeaveLevel(zone, level)
 	end
 end
 
+-- Wilderness encounter
+function _M:onWorldEncounter(self)
+	print("PLAYER ENCOUNTER")
+end
+
 function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
@@ -151,6 +156,7 @@ function _M:move(x, y, force)
 
 		self.wild_x, self.wild_y = self.x, self.y
 		local g = game.level.map(self.x, self.y, Map.TERRAIN)
+
 		if g and g.can_encounter and game.level.data.encounters then
 			local type = game.level.data.encounters.chance(self)
 			if type then
@@ -164,6 +170,8 @@ function _M:move(x, y, force)
 				end
 			end
 		end
+
+		game.state:worldDirectorAI()
 	end
 
 	return moved

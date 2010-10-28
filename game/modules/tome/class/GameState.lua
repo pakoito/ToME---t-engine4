@@ -81,3 +81,22 @@ function _M:zoneCheckBackupGuardian()
 		self.allow_backup_guardians[game.zone.short_name] = nil
 	end
 end
+
+local wda_cache = {}
+
+--- Runs the worldmap directory AI
+function _M:worldDirectorAI()
+	if not game.level.data.wda or not game.level.data.wda.script then return end
+	local script = wda_cache[game.level.data.wda.script]
+	if not script then
+		local f, err = loadfile("/data/wda/"..game.level.data.wda.script..".lua")
+		if not f then error(err) end
+		wda_cache[game.level.data.wda.script] = f
+		script = f
+	end
+
+	game.level.level = game.player.level
+	setfenv(script, setmetatable({wda=game.level.data.wda}, {__index=_G}))
+	local ok, err = pcall(script)
+	if not ok and err then error(err) end
+end

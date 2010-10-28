@@ -64,6 +64,11 @@ function _M:loadMap(file)
 			local list = require(class):loadList(file)
 			self.level:setEntitiesList(type, list)
 		end,
+		prepareEntitiesRaritiesList = function(type, class, file)
+			local list = require(class):loadList(file)
+			list = game.zone:computeRarities(type, list, game.level, nil)
+			self.level:setEntitiesList(type, list)
+		end,
 		setStatusAll = function(s) self.status_all = s end,
 		addData = function(t)
 			table.merge(self.level.data, t, true)

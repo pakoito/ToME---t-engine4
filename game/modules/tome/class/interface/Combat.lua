@@ -43,7 +43,7 @@ function _M:bumpInto(target)
 			local chat = Chat.new(self.can_talk, self, target)
 			chat:invoke()
 			if target.can_talk_only_once then target.can_talk = nil end
-		elseif self.move_others then
+		elseif self.move_others and not target.cant_be_moved then
 			-- Displace
 			local tx, ty, sx, sy = target.x, target.y, self.x, self.y
 			target.x = nil target.y = nil

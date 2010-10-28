@@ -68,16 +68,67 @@ end
 
 -- Load encounters for this map
 prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounters/maj-eyal.lua")
-addData{ encounters = {
-	chance=function(who)
-		local harmless_chance = 1 + who:getLck(7)
-		local hostile_chance = 5
-		if rng.percent(hostile_chance) then return "hostile"
-		elseif rng.percent(harmless_chance) then return "harmless"
+prepareEntitiesList("encounters_npcs", "mod.class.WorldNPC", "/data/general/encounters/maj-eyal-npcs.lua")
+addData{
+	wda = { script="maj-eyal", },
+	encounters = {
+		chance=function(who)
+			local harmless_chance = 1 + who:getLck(7)
+			local hostile_chance = 5
+			if rng.percent(hostile_chance) then return "hostile"
+			elseif rng.percent(harmless_chance) then return "harmless"
+			end
 		end
-	end}
+	},
 }
 
+-- addSpot section
+addSpot({35, 33}, "patrol", "allied-kingdoms")
+addSpot({23, 10}, "patrol", "allied-kingdoms")
+addSpot({15, 33}, "patrol", "allied-kingdoms")
+addSpot({40, 12}, "patrol", "allied-kingdoms")
+addSpot({40, 13}, "patrol", "allied-kingdoms")
+addSpot({63, 5}, "patrol", "allied-kingdoms")
+addSpot({58, 32}, "patrol", "allied-kingdoms")
+addSpot({22, 20}, "hostile", "random")
+addSpot({23, 20}, "hostile", "random")
+addSpot({24, 20}, "hostile", "random")
+addSpot({22, 21}, "hostile", "random")
+addSpot({23, 21}, "hostile", "random")
+addSpot({24, 21}, "hostile", "random")
+addSpot({22, 22}, "hostile", "random")
+addSpot({23, 22}, "hostile", "random")
+addSpot({24, 22}, "hostile", "random")
+addSpot({54, 7}, "hostile", "random")
+addSpot({55, 7}, "hostile", "random")
+addSpot({56, 7}, "hostile", "random")
+addSpot({54, 8}, "hostile", "random")
+addSpot({55, 8}, "hostile", "random")
+addSpot({56, 8}, "hostile", "random")
+addSpot({54, 9}, "hostile", "random")
+addSpot({55, 9}, "hostile", "random")
+addSpot({56, 9}, "hostile", "random")
+addSpot({43, 36}, "hostile", "random")
+addSpot({44, 36}, "hostile", "random")
+addSpot({45, 36}, "hostile", "random")
+addSpot({43, 37}, "hostile", "random")
+addSpot({44, 37}, "hostile", "random")
+addSpot({45, 37}, "hostile", "random")
+addSpot({43, 38}, "hostile", "random")
+addSpot({44, 38}, "hostile", "random")
+addSpot({45, 38}, "hostile", "random")
+addSpot({8, 25}, "hostile", "random")
+addSpot({9, 25}, "hostile", "random")
+addSpot({10, 25}, "hostile", "random")
+addSpot({8, 26}, "hostile", "random")
+addSpot({9, 26}, "hostile", "random")
+addSpot({10, 26}, "hostile", "random")
+addSpot({8, 27}, "hostile", "random")
+addSpot({9, 27}, "hostile", "random")
+addSpot({10, 27}, "hostile", "random")
+addSpot({35, 29})
+
+-- ASCII map section
 return [[
 ==========""""""""""""""""""""""""""""""""""""""""""""""""m###########
 ========""""""""""""""""""""""""""""""""""""""""""""""""mmm###########
