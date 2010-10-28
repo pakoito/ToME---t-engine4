@@ -38,9 +38,9 @@ on_grant = function(self, who)
 		change_level=1, change_zone="town-lumberjack-village",
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.level, g, "terrain", 57, 34)
+	game.zone:addEntity(game.level, g, "terrain", 60, 17)
 
-	game.logPlayer(game.player, "He points in the direction of the old Mirkwood forest to the north.")
+	game.logPlayer(game.player, "He points in the direction of the Riljek forest to the north.")
 
 	self.lumberjacks_died = 0
 end

@@ -22,7 +22,7 @@ newEntity{
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {1, 10},
 	rarity = 3,
-	coords = {{ x=10, y=23, likelymap={
+	coords = {{ x=10, y=18, likelymap={
 		[[    11111111   ]],
 		[[ 1111111111111 ]],
 		[[111111111111111]],
@@ -153,7 +153,7 @@ newEntity{
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {5, 15},
 	rarity = 8,
-	coords = {{ x=51, y=40, likelymap={
+	coords = {{ x=61, y=15, likelymap={
 		[[    11111111   ]],
 		[[ 1111111111111 ]],
 		[[111111111111111]],

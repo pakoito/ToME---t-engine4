@@ -31,7 +31,7 @@ If you'd like to learn our ways, I could tell you where our guild's training cam
 }
 
 newChat{ id="ok",
-	text = [[#LIGHT_GREEN#*The fighter hands you a map. It shows a location to the north of Mirkwood forest.*#WHITE#
+	text = [[#LIGHT_GREEN#*The fighter hands you a map. It shows a location to the south of the Thaloren forest.*#WHITE#
 Excellent. When you feel ready, come seek us for your training. I look forward to it!]],
 	answers = {
 		{"I will, thank you.", action=function(npc, player) player:grantQuest("antimagic") end},

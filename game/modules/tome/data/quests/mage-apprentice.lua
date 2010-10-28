@@ -121,8 +121,8 @@ access_angolwen = function(self, player)
 	}
 	g:resolve() g:resolve(nil, true)
 	p:resolve() p:resolve(nil, true)
-	game.zone:addEntity(game.level, g, "terrain", 14, 27)
-	game.zone:addEntity(game.level, p, "terrain", 16, 27)
+	game.zone:addEntity(game.level, g, "terrain", 10, 18)
+	game.zone:addEntity(game.level, p, "terrain", 12, 18)
 
 	game:setAllowedBuild("mage", true)
 	world:gainAchievement("THE_SECRET_CITY", player)

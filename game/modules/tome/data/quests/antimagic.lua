@@ -35,9 +35,9 @@ on_grant = function(self, who)
 		change_level=1, change_zone="town-antimagic",
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.level, g, "terrain", 56, 18)
+	game.zone:addEntity(game.level, g, "terrain", 49, 10)
 
-	game.logPlayer(game.player, "He points in the direction of the old Mirkwood forest on the other side of the Misty Mountains.")
+	game.logPlayer(game.player, "He points in the direction of the thaloren forest near the Daikara.")
 end
 
 on_status_change = function(self, who, status, sub)
