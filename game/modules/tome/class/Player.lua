@@ -121,8 +121,10 @@ function _M:onLeaveLevel(zone, level)
 end
 
 -- Wilderness encounter
-function _M:onWorldEncounter(self)
-	print("PLAYER ENCOUNTER")
+function _M:onWorldEncounter(target)
+	if target.on_encounter then
+		game.state:handleWorldEncounter(target)
+	end
 end
 
 function _M:move(x, y, force)

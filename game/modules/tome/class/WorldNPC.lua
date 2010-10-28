@@ -53,6 +53,10 @@ function _M:bumpInto(target)
 	end
 end
 
+function _M:takeHit()
+	return nil
+end
+
 function _M:encounterAttack(target)
 	if target.player then target:onWorldEncounter(self) return end
 

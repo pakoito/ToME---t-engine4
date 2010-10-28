@@ -100,3 +100,64 @@ function _M:worldDirectorAI()
 	local ok, err = pcall(script)
 	if not ok and err then error(err) end
 end
+
+function _M:spawnWorldAmbush(enc)
+	local gen = { class = "engine.generator.map.Forest",
+		edge_entrances = {4,6},
+		sqrt_percent = 50,
+		zoom = 10,
+		floor = "GRASS",
+		wall = "TREE",
+		down = "DOWN",
+		up = "UP_WILDERNESS",
+	}
+	local g = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
+	if not g.can_encounter then return false end
+
+	if g.can_encounter == "desert" then gen.floor = "SAND" gen.wall = "PALMTREE" end
+
+	local zone = engine.Zone.new("ambush", {
+		name = "Ambush!",
+		level_range = {game.player.level, game.player.level},
+		level_scheme = "player",
+		max_level = 1,
+		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+		width = enc.width or 20, height = enc.height or 20,
+		all_lited = true,
+		ambiant_music = "last",
+		generator =  {
+			map = gen,
+			actor = { class = "engine.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },
+		},
+
+		npc_list = mod.class.NPC:loadList("/data/general/npcs/all.lua", nil, nil, function(e) e.make_escort=nil end),
+		grid_list = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua", "/data/general/grids/sand.lua"},
+		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
+		trap_list = {},
+		post_process = function(level)
+			-- Find a good starting location, on the opposite side of the exit
+			local sx, sy = level.map.w-1, rng.range(0, level.map.h-1)
+			level.spots[#level.spots+1] = {
+				check_connectivity = "entrance",
+				x = sx,
+				y = sy,
+			}
+			level.default_down = level.default_up
+			level.default_up = {x=sx, y=sy}
+		end,
+	})
+	game.player:runStop()
+	game.player.energy.value = game.energy_to_act
+	game.paused = true
+	game:changeLevel(1, zone)
+	engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed!")
+end
+
+function _M:handleWorldEncounter(target)
+	local enc = target.on_encounter
+	if type(enc) == "function" then return enc() end
+	if type(enc) == "table" then
+		if enc.type == "ambush" then target:die() self:spawnWorldAmbush(enc)
+		end
+	end
+end
