@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Mount Doom",
+	name = "Charred Scar",
 	level_range = {30, 35},
 	level_scheme = "player",
 	max_level = 1,
@@ -35,7 +35,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "zones/mount-doom",
+			map = "zones/charred-scar",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
@@ -60,17 +60,17 @@ return {
 
 	on_enter = function(lev, old_lev, newzone)
 		if newzone then
-			game.player:grantQuest("mount-doom")
+			game.player:grantQuest("charred-scar")
 		end
 	end,
 
 	on_turn = function(self)
-		require("mod.class.generator.actor.MountDoom").new(self, game.level.map, game.level, {}):tick()
+		require("mod.class.generator.actor.CharredScar").new(self, game.level.map, game.level, {}):tick()
 		game.level.turn_counter = game.level.turn_counter - 1
 		game.player.changed = true
 		if game.level.turn_counter < 0 then
-			game.player:hasQuest("mount-doom"):setStatus(engine.Quest.COMPLETED, "not-stopped")
-			game.player:hasQuest("mount-doom"):start_fyrk()
+			game.player:hasQuest("charred-scar"):setStatus(engine.Quest.COMPLETED, "not-stopped")
+			game.player:hasQuest("charred-scar"):start_fyrk()
 		end
 	end,
 }
