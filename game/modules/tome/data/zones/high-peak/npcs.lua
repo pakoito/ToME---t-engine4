@@ -114,7 +114,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 
 	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "alatar-dead")
+		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "elandar-dead")
 	end,
 }
 
@@ -186,7 +186,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
 
 	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "pallando-dead")
+		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "argoniel-dead")
 	end,
 }
 
@@ -194,7 +194,7 @@ newEntity{
 newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	type = "humanoid", subtype = "human",
 	display = "p",
-	faction = "blue-wizards",
+	faction = "sorcerers",
 	name = "Fallen Sun Paladin Aeryn", color=colors.VIOLET, unique = true,
 	desc = [[A beautiful woman, clad in a shining plate armour. Power radiates from her.]],
 	level_range = {56, 56}, exp_worth = 2,

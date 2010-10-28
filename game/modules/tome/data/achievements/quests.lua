@@ -76,23 +76,23 @@ newAchievement{
 	desc = [[Won ToME by closing the Void portal using yourself as a sacrifice.]],
 }
 newAchievement{
-	name = "Tactical master", id = "ISTARI_NO_PORTAL",
+	name = "Tactical master", id = "SORCERER_NO_PORTAL",
 	desc = [[Fought the two Sorcerers without closing any invocation portals.]],
 }
 newAchievement{
-	name = "Portal destroyer", id = "ISTARI_ONE_PORTAL",
+	name = "Portal destroyer", id = "SORCERER_ONE_PORTAL",
 	desc = [[Fought the two Sorcerers and closed one invocation portal.]],
 }
 newAchievement{
-	name = "Portal reaver", id = "ISTARI_TWO_PORTAL",
+	name = "Portal reaver", id = "SORCERER_TWO_PORTAL",
 	desc = [[Fought the two Sorcerers and closed two invocation portals.]],
 }
 newAchievement{
-	name = "Portal ender", id = "ISTARI_THREE_PORTAL",
+	name = "Portal ender", id = "SORCERER_THREE_PORTAL",
 	desc = [[Fought the two Sorcerers and closed three invocation portals.]],
 }
 newAchievement{
-	name = "Portal master", id = "ISTARI_FOUR_PORTAL",
+	name = "Portal master", id = "SORCERER_FOUR_PORTAL",
 	desc = [[Fought the two Sorcerers and closed four invocation portals.]],
 }
 

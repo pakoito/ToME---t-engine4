@@ -21,18 +21,18 @@
 name = "The Doom of the World!"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You were sent to the Charred Scar at the haert of which lies a huge volcano. In the Age of Pyre it destroyed the old Sher'Tul ruins that stood there, absorbing much of their latent magic."
+	desc[#desc+1] = "You were sent to the Charred Scar at the heart of which lies a huge volcano. In the Age of Pyre it destroyed the old Sher'Tul ruins that stood there, absorbing much of their latent magic."
 	desc[#desc+1] = "This place is still full of that power and the orcs intend to absorb this power using the Staff of Absorption!"
 	desc[#desc+1] = "Whatever their plan may be, they must be stopped at all cost."
 	desc[#desc+1] = "The volcano is attacked by orcs, a few Sun Paladins made it there with you, they will hold the line at the cost of their lives to buy you some time."
 	desc[#desc+1] = "Honor their sacrifice, do not let the orcs finish their work!"
 	if self:isCompleted("not-stopped") then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "You arrived too late, the place has been drained of its power and the blue wizards have left."
+		desc[#desc+1] = "You arrived too late, the place has been drained of its power and the sorcerers have left."
 		desc[#desc+1] = "Use the portal to go back to the Far East, you *MUST* stop them, no matter the cost."
 	elseif self:isCompleted("stopped") then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "You arrived in time and interrupted the ritual, the blue wizards have departed."
+		desc[#desc+1] = "You arrived in time and interrupted the ritual, the sorcerers have departed."
 		desc[#desc+1] = "Use the portal to go back to the Far East, you *MUST* stop them, no matter the cost."
 	end
 	return table.concat(desc, "\n")
@@ -44,8 +44,8 @@ start_fyrk = function(self)
 
 	local alatar, pallando
 	for uid, e in pairs(game.level.entities) do
-		if e.define_as == "ALATAR" then alatar = e
-		elseif e.define_as == "PALLANDO" then pallando = e end
+		if e.define_as == "ELANDAR" then alatar = e
+		elseif e.define_as == "ADRONIEL" then pallando = e end
 	end
 
 	if alatar then game.level:removeEntity(alatar) alatar.dead = true end

@@ -26,7 +26,7 @@ defineTile('@', "FLOOR", nil, "SUN_PALADIN_DEFENDER_RODMOUR")
 defineTile('o', "FLOOR", nil, "URUK-HAI_ATTACK")
 
 defineTile('1', "LAVA_FLOOR", nil, "ELANDAR")
-defineTile('2', "LAVA_FLOOR", nil, "ARDONIEL")
+defineTile('2', "LAVA_FLOOR", nil, "ARGONIEL")
 
 subGenerator{
 	x = 0, y = 23, w = 12, h = 401,

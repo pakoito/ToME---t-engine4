@@ -34,9 +34,9 @@ desc = function(self, who)
 	if self:isCompleted("killed-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and killed her.#LAST#" end
 	if self:isCompleted("spared-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and spared her.#LAST#" end
 
-	if game.winner and game.winner == "full" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the blue wizards before the Void portal could open.#LAST#" end
-	if game.winner and game.winner == "aeryn-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the blue wizards and Aeryn sacrified herself to close the Void portal.#LAST#" end
-	if game.winner and game.winner == "self-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the blue wizards and sacrified yourself to close the Void portal.#LAST#" end
+	if game.winner and game.winner == "full" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers before the Void portal could open.#LAST#" end
+	if game.winner and game.winner == "aeryn-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers and Aeryn sacrified herself to close the Void portal.#LAST#" end
+	if game.winner and game.winner == "self-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers and sacrified yourself to close the Void portal.#LAST#" end
 
 	return table.concat(desc, "\n")
 end
@@ -46,7 +46,7 @@ end
 
 on_status_change = function(self, who, status, sub)
 	if sub then
-		if self:isCompleted("alatar-dead") and self:isCompleted("pallando-dead") then
+		if self:isCompleted("elandar-dead") and self:isCompleted("argoniel-dead") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
 
 			-- Remove all remaining hostiles
