@@ -66,3 +66,15 @@ newEntity{
 	ai = "world_hostile", ai_state = {chase_distance=3},
 	on_encounter = {type="ambush", width=10, height=10, nb={3,5}, filters={{type="animal", subtype="canine"}}},
 }
+
+newEntity{
+	name = "dragon",
+	type = "hostile", subtype = "dragon", cant_be_moved=true,
+	display = 'D', color = colors.RED,
+	level_range = {12, nil},
+	sight = 3,
+	rarity = 12,
+	unit_power = 7,
+	ai = "world_hostile", ai_state = {chase_distance=3},
+	on_encounter = {type="ambush", width=10, height=10, nb={1,1}, filters={{type="dragon"}}},
+}

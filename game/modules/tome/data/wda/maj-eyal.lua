@@ -35,7 +35,7 @@ if wda.cur_patrols < 3 then
 end
 
 -- Spawn some hostiles
-if wda.cur_hostiles < 1 and rng.percent(5) then
+if wda.cur_hostiles < 4 and rng.percent(5) then
 	local e = game.zone:makeEntity(game.level, "encounters_npcs", {type="hostile"}, nil, true)
 	if e then
 		local spot = game.level:pickSpot{type="hostile", "random"}
