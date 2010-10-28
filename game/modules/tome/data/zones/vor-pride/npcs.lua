@@ -78,8 +78,8 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("orc-pride", engine.Quest.COMPLETED, "vor")
-		if not game.player:hasQuest("pre-mount-doom") then
-			game.player:grantQuest("pre-mount-doom")
+		if not game.player:hasQuest("pre-charred-scar") then
+			game.player:grantQuest("pre-charred-scar")
 		end
 	end,
 }

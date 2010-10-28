@@ -19,7 +19,7 @@
 
 local function void_portal_open(npc, player)
 	-- Mount doom was succesfull
-	if player:hasQuest("mount-doom") and player:hasQuest("mount-doom"):isCompleted("stopped") then return false end
+	if player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted("stopped") then return false end
 	return true
 end
 local function aeryn_alive(npc, player)

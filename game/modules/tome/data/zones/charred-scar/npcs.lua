@@ -206,8 +206,8 @@ newEntity{
 
 	on_acquire_target = function(self, who)
 		self:doEmote("Damn you, you only postpone your death! Fyrk!", 60)
-		game.player:hasQuest("mount-doom"):setStatus(engine.Quest.COMPLETED, "stopped")
-		game.player:hasQuest("mount-doom"):start_fyrk()
+		game.player:hasQuest("charred-scar"):setStatus(engine.Quest.COMPLETED, "stopped")
+		game.player:hasQuest("charred-scar"):start_fyrk()
 	end,
 }
 

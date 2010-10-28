@@ -52,7 +52,7 @@ quickEntity('D', {always_remember = true, show_tooltip=true, name="A path into t
 quickEntity('E', {always_remember = true, show_tooltip=true, name="A mysterious hole in the beach", 	display='>', color={r=200, g=255, b=55}, notice = true, change_level=1, change_zone="sandworm-lair"})
 quickEntity('F', {always_remember = true, show_tooltip=true, name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tol-falas"})
 quickEntity('G', {always_remember = true, show_tooltip=true, name="Passageway into Daikara",display='>', color=colors.UMBER, notice = true, change_level=1, change_zone="daikara"})
-quickEntity('H', {always_remember = true, show_tooltip=true, name='Charred Scar', display='>', color=colors.RED, back_color=colors.LIGHT_DARK, image="terrain/volcano1.png", notice = true, change_level=1, change_zone="mount-doom"})
+quickEntity('H', {always_remember = true, show_tooltip=true, name='Charred Scar', display='>', color=colors.RED, back_color=colors.LIGHT_DARK, image="terrain/volcano1.png", notice = true, change_level=1, change_zone="charred-scar"})
 
 quickEntity('1', {always_remember = true, show_tooltip=true, name="Derth (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-derth"})
 quickEntity('2', {always_remember = true, show_tooltip=true, name="Last Hope (Town)", desc="Capital city of the Allied Kingdoms ruled by King Tolak", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-last-hope"})

@@ -27,7 +27,7 @@ end
 
 on_grant = function(self, who)
 	local aeryn = {name="High Sun Paladin Aeryn"}
-	local chat = engine.Chat.new("pre-mount-doom", aeryn, who)
+	local chat = engine.Chat.new("pre-charred-scar", aeryn, who)
 	chat:invoke()
 
 	-- Reveal  entrance

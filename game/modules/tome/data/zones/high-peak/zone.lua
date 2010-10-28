@@ -64,7 +64,7 @@ return {
 
 		-- if we failed at mount doom (or did not do it at all) the gate of morning is destroyed and Aeryn turned to the service of the istari
 		if level.level == 15 then
-			local mtdm = game.player:hasQuest("mount-doom")
+			local mtdm = game.player:hasQuest("charred-scar")
 			if not mtdm or mtdm:isCompleted("not-stopped") then
 				game.player:hasQuest("high-peak"):failed_mount_doom(level)
 			end

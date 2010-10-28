@@ -65,5 +65,5 @@ newEntity{ define_as = "SUN_PALADIN_GUREN",
 	},
 	resolvers.sustains_at_birth(),
 
-	can_talk = "pre-mount-doom-eruan",
+	can_talk = "pre-charred-scar-eruan",
 }

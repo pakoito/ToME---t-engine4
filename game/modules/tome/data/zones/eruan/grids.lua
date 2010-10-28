@@ -36,7 +36,7 @@ This one seems to go to the west, to Mount Doom, in the land of Mordor. A fiery 
 
 	orb_portal = {
 		change_level = 1,
-		change_zone = "mount-doom",
+		change_zone = "charred-scar",
 		message = "#VIOLET#You enter the swirling portal while it fades away and in the blink of an eye you set foot on hellish land, the heart of a volcano...",
 		on_preuse = function(self, who)
 			-- Find all portals and deactivate them
@@ -46,7 +46,7 @@ This one seems to go to the west, to Mount Doom, in the land of Mordor. A fiery 
 			end end end
 		end,
 		on_use = function(self, who)
-			who:setQuestStatus("pre-mount-doom", engine.Quest.DONE)
+			who:setQuestStatus("pre-charred-scar", engine.Quest.DONE)
 		end,
 	},
 }

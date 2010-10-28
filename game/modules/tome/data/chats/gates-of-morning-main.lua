@@ -23,7 +23,7 @@ newChat{ id="welcome",
 		{"Tell me more about the Gates of Morning.", jump="explain-gates"},
 		{"I need help in my hunt for clues about the staff.", jump="clues", cond=function(npc, player) return not player:hasQuest("orc-pride") end},
 		{"I have destroyed the leaders of all the Orc Prides.", jump="prides-dead", cond=function(npc, player) return player:isQuestStatus("orc-pride", engine.Quest.COMPLETED) end},
-		{"I am back from Mount Doom, where the orcs took the staff.", jump="mount-doom", cond=function(npc, player) return player:hasQuest("mount-doom") and player:hasQuest("mount-doom"):isCompleted() end},
+		{"I am back from the Charred Scar, where the orcs took the staff.", jump="charred-scar", cond=function(npc, player) return player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted() end},
 		{"Sorry, I have to go!"},
 	}
 }
@@ -75,31 +75,31 @@ The known bastions of the Pride are:
 	},
 }
 
-newChat{ id="mount-doom",
+newChat{ id="charred-scar",
 	text = [[I have heard about that; good men lost their lives for this. I hope it was worth it.]],
 	answers = {
-		{"Yes, my lady, they delayed the orcs so that I could get to the heart of the volcano. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="mount-doom-success",
-			cond=function(npc, player) return player:isQuestStatus("mount-doom", engine.Quest.COMPLETED, "stopped") end,
+		{"Yes, my lady, they delayed the orcs so that I could get to the heart of the volcano. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="charred-scar-success",
+			cond=function(npc, player) return player:isQuestStatus("charred-scar", engine.Quest.COMPLETED, "stopped") end,
 		},
-		{"I am afraid I was too late, but I still have some valuable information. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="mount-doom-fail",
-			cond=function(npc, player) return player:isQuestStatus("mount-doom", engine.Quest.COMPLETED, "not-stopped") end,
+		{"I am afraid I was too late, but I still have some valuable information. *#LIGHT_GREEN#Tell her what happened#WHITE#*", jump="charred-scar-fail",
+			cond=function(npc, player) return player:isQuestStatus("charred-scar", engine.Quest.COMPLETED, "not-stopped") end,
 		},
 	},
 }
 
-newChat{ id="mount-doom-success",
-	text = [[Blue Wizards? I have never heard of them. There were rumours about a new master of the Pride, but it seems they have two.
+newChat{ id="charred-scar-success",
+	text = [[Sorcerers? I have never heard of them. There were rumours about a new master of the Pride, but it seems they have two.
 Thank you for everything. You must continue your hunt now that you know what to look for.]],
 	answers = {
-		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("mount-doom", engine.Quest.DONE) end}
+		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("charred-scar", engine.Quest.DONE) end}
 	},
 }
 
-newChat{ id="mount-doom-fail",
-	text = [[Blue Wizards? I have never heard of them. There were rumours about a new master of the Pride, but it seems they have two.
+newChat{ id="charred-scar-fail",
+	text = [[Sorcerers? I have never heard of them. There were rumours about a new master of the Pride, but it seems they have two.
 I am afraid with the power they gained today they will be even harder to stop, but we do not have a choice.]],
 	answers = {
-		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("mount-doom", engine.Quest.DONE) end}
+		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("charred-scar", engine.Quest.DONE) end}
 	},
 }
 
