@@ -26,11 +26,11 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ define_as = "SHADE_OF_SARUMAN",
+newEntity{ define_as = "SHADE_OF_TELOS",
 	type = "undead", subtype = "ghost", unique = true,
-	name = "The Shade of Saruman",
+	name = "The Shade of Telos",
 	display = "G", color=colors.VIOLET,
-	desc = [[Everybody though Saruman dead and his spirit destroyed, but it seems he still lingers in his old place of power.]],
+	desc = [[Everybody though Telos dead and his spirit destroyed, but it seems he still lingers in his old place of power.]],
 	level_range = {38, nil}, exp_worth = 3,
 	max_life = 250, life_rating = 22, fixed_rating = true,
 	rank = 4,
@@ -58,8 +58,8 @@ newEntity{ define_as = "SHADE_OF_SARUMAN",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, },
 	resolvers.equip{
-		{type="weapon", subtype="staff", defined="SARUMAN_TOP_HALF", autoreq=true},
-		{type="weapon", subtype="staff", defined="SARUMAN_BOTTOM_HALF", autoreq=true},
+		{type="weapon", subtype="staff", defined="TELOS_TOP_HALF", autoreq=true},
+		{type="weapon", subtype="staff", defined="TELOS_BOTTOM_HALF", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=2, {type="wand"} },
 

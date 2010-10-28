@@ -22,11 +22,11 @@ load("/data/general/objects/objects.lua")
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{ base = "BASE_STAFF",
-	define_as = "SARUMAN_TOP_HALF", rarity=false,
+	define_as = "TELOS_TOP_HALF", rarity=false,
 	slot_forbid = false,
 	twohanded = false,
-	name = "Saruman's Staff Top Half", unique=true,
-	desc = [[The top part of Saruman's broken staff.]],
+	name = "Telos's Staff Top Half", unique=true,
+	desc = [[The top part of Telos's broken staff.]],
 	require = { stat = { mag=35 }, },
 	cost = 500,
 	combat = {
@@ -46,9 +46,9 @@ newEntity{ base = "BASE_STAFF",
 newEntity{ base = "BASE_STAFF",
 	slot = "OFFHAND", slot_forbid = false,
 	twohanded = false, add_name=false,
-	define_as = "SARUMAN_BOTTOM_HALF", rarity=false,
-	name = "Saruman's Staff Bottom Half", unique=true,
-	desc = [[The bottom part of Saruman's broken staff.]],
+	define_as = "TELOS_BOTTOM_HALF", rarity=false,
+	name = "Telos's Staff Bottom Half", unique=true,
+	desc = [[The bottom part of Telos's broken staff.]],
 	require = { stat = { mag=35 }, },
 	cost = 500,
 	wielder = {
