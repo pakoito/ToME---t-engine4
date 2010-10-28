@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Paths of the Dead",
+	name = "Blighted Ruins",
 	level_range = {1, 8},
 	level_scheme = "player",
 	max_level = 8,
@@ -72,7 +72,7 @@ return {
 			no_level_connectivity = true,
 			generator = { map = {
 				class = "engine.generator.map.Static",
-				map = "zones/paths-of-the-dead-last",
+				map = "zones/blighted-ruins-last",
 			}, },
 		},
 	},

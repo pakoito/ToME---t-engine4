@@ -18,13 +18,13 @@
 -- darkgod@te4.org
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
-You are a member of the proud race of the Dwarves.
-Hailing from the dwarven kingdom under the Lonely Mountain you have decided to take to the road and start a new life of adventuring.
+You are a member of the proud, but secretive, race of the Dwarves.
+Hailing from the dwarven strongholds of the Iron Throne you have decided to take to the road and start a new life of adventuring.
 
 You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 
-You have come to a land called Rhudaur, on the western steppes of the Misty Mountains, far away from your home, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
-To the east lies another dangerous place: the ruined tower of Amon Sûl. You heard the caves below were infested by vermin and undead.
+You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+To the east lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below were infested by vermin and undead.
 
 After days of travel, you have found the forest and entered it, what will you find there?...
 ]]
