@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Ruins of Orthanc",
+	name = "Ruins of Telmur",
 	level_range = {35, 40},
 	level_scheme = "player",
 	max_level = 5,
