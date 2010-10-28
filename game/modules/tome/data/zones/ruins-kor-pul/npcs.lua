@@ -60,8 +60,8 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("ANGMAR_FURY", 5, 35, ".. yes I tell you! The old tower of Amon Sûl is still haunted!")
-		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "amon-sul")
+		game.state:activateBackupGuardian("ANGMAR_FURY", 5, 35, ".. yes I tell you! The old ruins opf Kor'Pul are still haunted!")
+		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "kor-pul")
 	end,
 }
 

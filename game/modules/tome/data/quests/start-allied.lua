@@ -21,11 +21,11 @@
 name = "Of trolls and damp caves"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "Explore the caves below the tower of Amon Sûl and the Trollshaws in search of treasure and glory!\n"
-	if self:isCompleted("amon-sul") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored Amon Sûl and vanquished the Shade of Angmar.#WHITE#"
+	desc[#desc+1] = "Explore the caves below the ruins of Kor'Pul and the Trollshaws in search of treasure and glory!\n"
+	if self:isCompleted("kor-pul") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ruins of Kor'Pul and vanquished the Shade.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* You must explore Amon Sûl and find out what lurks there and what treasures are to be gained!#WHITE#"
+		desc[#desc+1] = "#SLATE#* You must explore the ruins of Kor'Pul and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end
 	if self:isCompleted("trollshaws") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Trollshaws and vanquished the Bill the Stone Troll.#WHITE#"
@@ -37,7 +37,7 @@ end
 
 on_status_change = function(self, who, status, sub)
 	if sub then
-		if self:isCompleted("amon-sul") and self:isCompleted("trollshaws") then
+		if self:isCompleted("kor-pul") and self:isCompleted("trollshaws") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
 			who:grantQuest("starter-zones")
 		end

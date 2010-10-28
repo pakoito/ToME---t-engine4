@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Tower of Amon Sûl",
+	name = "Ruins of Kor'Pul",
 	level_range = {1, 5},
 	level_scheme = "player",
 	max_level = 5,
@@ -68,7 +68,7 @@ return {
 		[5] = {
 			generator = { map = {
 				class = "engine.generator.map.Static",
-				map = "zones/tower-amon-sul-last",
+				map = "zones/ruins-kor-pul-last",
 			}, },
 		},
 	},
