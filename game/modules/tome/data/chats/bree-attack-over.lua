@@ -37,7 +37,7 @@ newChat{ id="quest",
 	text = [[Thank you! You have saved many people today!
 I have heard of rumours of a reclusive town of wise and powerful men somewhere in the blue mountains, maybe they could help? If they even exist...]],
 	answers = {
-		{"I will not let you down.", action=function(npc, player) player:hasQuest("lightning-overload"):done_bree() end},
+		{"I will not let you down.", action=function(npc, player) player:hasQuest("lightning-overload"):done_derth() end},
 	}
 }
 

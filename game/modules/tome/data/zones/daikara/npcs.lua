@@ -67,9 +67,9 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("MASSOK", 7, 43, "I have heard there is a dargon hunter in Carn Dûm that is unhappy about the wyrm being already dead.")
+		game.state:activateBackupGuardian("MASSOK", 7, 43, "I have heard there is a dargon hunter in the Daikara that is unhappy about the wyrm being already dead.")
 		game.player:resolveSource():grantQuest("starter-zones")
-		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "carn-dum")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "daikara")
 	end,
 }
 

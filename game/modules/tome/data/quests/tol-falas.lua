@@ -21,7 +21,7 @@
 name = "The Island of Dread"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have heard that in the bay of Belfalas, far to the south of Bree, lies the ruined tower of Tol Falas."
+	desc[#desc+1] = "You have heard that in the bay of Belfalas, near the Charred Scar, to the south, lies the ruined tower of Tol Falas."
 	desc[#desc+1] = "There are disturbing rumors of greater undeads and nobody who reached it ever returned."
 	desc[#desc+1] = "Perhaps you should explore it and find the truth, and the treasures, for yourself!"
 	return table.concat(desc, "\n")

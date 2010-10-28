@@ -17,15 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/gwelgoroth.lua", function(e) if e.rarity then e.bree_rarity, e.rarity = e.rarity, nil end end)
+load("/data/general/npcs/gwelgoroth.lua", function(e) if e.rarity then e.derth_rarity, e.rarity = e.rarity, nil end end)
 
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "BASE_NPC_BREE_TOWN",
+	define_as = "BASE_NPC_DERTH_TOWN",
 	type = "humanoid", subtype = "human",
 	display = "p", color=colors.WHITE,
-	faction = "reunited-kingdom",
+	faction = "allied-kingdoms",
 
 	combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
 
@@ -44,8 +44,8 @@ newEntity{
 	stats = { str=12, dex=8, mag=6, con=10 },
 }
 
-newEntity{ base = "BASE_NPC_BREE_TOWN",
-	name = "bree guard", color=colors.LIGHT_UMBER,
+newEntity{ base = "BASE_NPC_DERTH_TOWN",
+	name = "derth guard", color=colors.LIGHT_UMBER,
 	desc = [[A stern looking guard, he will not let you disturb the town.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
@@ -58,10 +58,10 @@ newEntity{ base = "BASE_NPC_BREE_TOWN",
 	resolvers.talents{ [Talents.T_RUSH]=1, [Talents.T_PERFECT_STRIKE]=1, },
 }
 
-newEntity{ base = "BASE_NPC_BREE_TOWN",
-	name = "hobbit slinger", color=colors.UMBER,
-	subtype = "hobbit",
-	desc = [[A hobbit, with a sling. Beware.]],
+newEntity{ base = "BASE_NPC_DERTH_TOWN",
+	name = "halfling slinger", color=colors.UMBER,
+	subtype = "halfling",
+	desc = [[A halfling, with a sling. Beware.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_BREE_TOWN",
 	resolvers.equip{ {type="weapon", subtype="sling", autoreq=true}, {type="ammo", subtype="shot", autoreq=true} },
 }
 
-newEntity{ base = "BASE_NPC_BREE_TOWN",
+newEntity{ base = "BASE_NPC_DERTH_TOWN",
 	name = "human farmer", color=colors.WHITE,
 	desc = [[A weather worn human farmer.]],
 	level_range = {1, nil}, exp_worth = 1,
@@ -80,10 +80,10 @@ newEntity{ base = "BASE_NPC_BREE_TOWN",
 	combat_armor = 2, combat_def = 0,
 }
 
-newEntity{ base = "BASE_NPC_BREE_TOWN",
-	name = "hobbit gardener", color=colors.WHITE,
-	subtype = "hobbit",
-	desc = [[A hobbit, he seems to be looking for plants.]],
+newEntity{ base = "BASE_NPC_DERTH_TOWN",
+	name = "halfling gardener", color=colors.WHITE,
+	subtype = "halfling",
+	desc = [[A halfling, he seems to be looking for plants.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(30,40),

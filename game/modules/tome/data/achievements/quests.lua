@@ -119,7 +119,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Eye of the storm", id = "EYE_OF_THE_STORM",
-	desc = [[Freed Bree from the onslaught of the mad Tempest, Urkis.]],
+	desc = [[Freed Derth from the onslaught of the mad Tempest, Urkis.]],
 }
 newAchievement{
 	name = "Antimagic!", id = "ANTIMAGIC",

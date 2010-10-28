@@ -20,9 +20,9 @@
 name = "Storming the city"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "As you came to Bree you saw a huge dark cloud over the small town."
+	desc[#desc+1] = "As you came to Derth you saw a huge dark cloud over the small town."
 	desc[#desc+1] = "When you entered you were greeted by an army of air elementals slaughtering the population."
-	if self:isCompleted("saved-bree") then
+	if self:isCompleted("saved-derth") then
 		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the blue mountains, to the south west."
 	end
 	if self:isCompleted("tempest-located") then
@@ -52,7 +52,7 @@ on_grant = function(self, who)
 	-- Populate with nice air elementals
 	self.max_count = 0
 	for i = 1, 12 do
-		local m = game.zone:makeEntity(game.level, "actor", {special_rarity="bree_rarity"}, nil, true)
+		local m = game.zone:makeEntity(game.level, "actor", {special_rarity="derth_rarity"}, nil, true)
 		if m then
 			local x, y = rng.range(10, game.level.map.w - 11), rng.range(10, game.level.map.h - 11)
 			local tries = 0
@@ -71,7 +71,7 @@ on_grant = function(self, who)
 	end
 	self.kill_count = 0
 
-	require("engine.ui.Dialog"):simpleLongPopup("Danger...", "As you arrive in Bree you notice a huge dark cloud hovering over the town.\nYou hear screams coming from the central place.", 400)
+	require("engine.ui.Dialog"):simpleLongPopup("Danger...", "As you arrive in Derth you notice a huge dark cloud hovering over the town.\nYou hear screams coming from the central place.", 400)
 end
 
 on_status_change = function(self, who, status, sub)
@@ -87,13 +87,13 @@ kill_one = function(self)
 
 	if self.kill_count >= self.max_count then
 		local Chat = require "engine.Chat"
-		local chat = Chat.new("bree-attack-over", {name="Scared hobbit"}, game.player)
+		local chat = Chat.new("derth-attack-over", {name="Scared hobbit"}, game.player)
 		chat:invoke()
 	end
 end
 
-done_bree = function(self)
-	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "saved-bree")
+done_derth = function(self)
+	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "saved-derth")
 end
 
 teleport_urkis = function(self)
@@ -102,13 +102,13 @@ teleport_urkis = function(self)
 The storm is raging of your head.]], 400)
 end
 
-reenter_bree = function(self)
-	if (self:isCompleted() or self:isEnded()) and not self:isCompleted("restored-bree") then
+reenter_derth = function(self)
+	if (self:isCompleted() or self:isEnded()) and not self:isCompleted("restored-derth") then
 		game.level.map:setShown(1, 1, 1, 1)
 		game.level.map:setObscure(1*0.6, 1*0.6, 1*0.6, 1)
 		game.level.data.background = nil
 
-		game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "restored-bree")
-		require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the mages have kept their word.\nBree is free of the storm could.", 400)
+		game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "restored-derth")
+		require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the mages have kept their word.\nDerth is free of the storm could.", 400)
 	end
 end

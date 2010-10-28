@@ -46,7 +46,7 @@ return {
 		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then
 			game.player:grantQuest("lightning-overload")
 		elseif game.player:hasQuest("lightning-overload") then
-			game.player:hasQuest("lightning-overload"):reenter_bree()
+			game.player:hasQuest("lightning-overload"):reenter_derth()
 		end
 	end
 }
