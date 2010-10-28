@@ -40,11 +40,12 @@ newEntity{
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.NPC.new{
+		local g = mod.class.WorldNPC.new{
 			name="Novice mage",
 			type="humanoid", subtype="elf", faction="angolwen",
 			display='@', color=colors.RED,
 			can_talk = "mage-apprentice-quest",
+			unit_power = 300,
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "actor", x, y)

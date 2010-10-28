@@ -26,6 +26,7 @@ require "mod.class.Actor"
 module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI))
 
 function _M:init(t, no_default)
+	if type(t.cant_be_moved) == "nil" then t.cant_be_moved = true end
 	mod.class.Actor.init(self, t, no_default)
 	ActorAI.init(self, t)
 end

@@ -21,7 +21,7 @@ class = require("mod.class.WorldNPC")
 
 newEntity{
 	name = "Allied Kingdoms human patrol",
-	type = "patrol", subtype = "allied kingdoms", cant_be_moved=true,
+	type = "patrol", subtype = "allied kingdoms",
 	display = 'p', color = colors.LIGHT_UMBER,
 	faction = "allied-kingdoms",
 	level_range = {1, nil},
@@ -33,7 +33,7 @@ newEntity{
 
 newEntity{
 	name = "Allied Kingdoms halfling patrol",
-	type = "patrol", subtype = "allied kingdoms", cant_be_moved=true,
+	type = "patrol", subtype = "allied kingdoms",
 	display = 'p', color = colors.UMBER,
 	faction = "allied-kingdoms",
 	level_range = {1, nil},
@@ -45,7 +45,7 @@ newEntity{
 
 newEntity{
 	name = "lone bear",
-	type = "hostile", subtype = "animal", cant_be_moved=true,
+	type = "hostile", subtype = "animal",
 	display = 'q', color = colors.UMBER,
 	level_range = {1, nil},
 	sight = 3,
@@ -57,7 +57,7 @@ newEntity{
 
 newEntity{
 	name = "pack of wolves",
-	type = "hostile", subtype = "animal", cant_be_moved=true,
+	type = "hostile", subtype = "animal",
 	display = 'c', color = colors.RED, image="npc/canine_w.png",
 	level_range = {1, nil},
 	sight = 3,
@@ -69,7 +69,7 @@ newEntity{
 
 newEntity{
 	name = "dragon",
-	type = "hostile", subtype = "dragon", cant_be_moved=true,
+	type = "hostile", subtype = "dragon",
 	display = 'D', color = colors.RED,
 	level_range = {12, nil},
 	sight = 3,
