@@ -19,7 +19,7 @@
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a Shaloren elf, the elven race with the closest ties to magic, and you are despised.
-While your people is at peace with the other kingdoms, many people have not forgot it was your race that created the terrible Spellblaze, thousands of years ago.
+While your people are at peace with the other kingdoms, many have not forgotten it was your race that created the terrible Spellblaze, thousands of years ago.
 Magic is frowed upon, even in your own country.
 
 You have decided to venture into the old and wild places looking for ancient treasures and glory.
