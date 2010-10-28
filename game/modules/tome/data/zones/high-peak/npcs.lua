@@ -190,7 +190,7 @@ newEntity{
 	end,
 }
 
--- Aeryn trying to kill the player if mount doom quest failed
+-- Aeryn trying to kill the player if charred scar quest failed
 newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	type = "humanoid", subtype = "human",
 	display = "p",

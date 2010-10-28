@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 local function void_portal_open(npc, player)
-	-- Mount doom was succesfull
+	-- Charred scar was succesfull
 	if player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted("stopped") then return false end
 	return true
 end
 local function aeryn_alive(npc, player)
-	-- Mount doom was succesfull
+	-- Charred scar was succesfull
 	if player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted("stopped") then return true end
 
 	-- Spared aeryn

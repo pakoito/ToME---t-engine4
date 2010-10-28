@@ -25,14 +25,14 @@ load("/data/general/grids/mountain.lua")
 
 
 newEntity{
-	define_as = "MOUNT_DOOM_PORTAL",
-	name = "Farportal: Mount Doom",
+	define_as = "CHARRED_SCAR_PORTAL",
+	name = "Farportal: Charred Scar",
 	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use. You have no idea if it is even two-way.
-This one seems to go to the west, to Mount Doom, in the land of Mordor. A fiery volcano that can only spell death...]],
+This one seems to go to the west, to Charred Scar. A fiery volcano that can only spell death...]],
 
 	orb_portal = {
 		change_level = 1,
@@ -42,7 +42,7 @@ This one seems to go to the west, to Mount Doom, in the land of Mordor. A fiery 
 			-- Find all portals and deactivate them
 			for i = -4, 4 do for j = -4, 4 do if game.level.map:isBound(who.x + i, who.y + j) then
 				local g = game.level.map(who.x + i, who.y + j, engine.Map.TERRAIN)
-				if g.define_as and g.define_as == "MOUNT_DOOM_PORTAL" then g.orb_portal = nil end
+				if g.define_as and g.define_as == "CHARRED_SCAR_PORTAL" then g.orb_portal = nil end
 			end end end
 		end,
 		on_use = function(self, who)

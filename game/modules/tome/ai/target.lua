@@ -61,8 +61,8 @@ newAI("target_player_radius", function(self)
 	end
 end)
 
--- Special targetting for mount doom, select a normal target, if none is found go for the player
-newAI("mount_doom_target", function(self)
+-- Special targetting for charred scar, select a normal target, if none is found go for the player
+newAI("charred_scar_target", function(self)
 	if self:runAI("target_simple") then return true end
 	self.ai_target.actor = game.player
 	return true

@@ -62,7 +62,7 @@ return {
 		game.player:grantQuest("high-peak")
 		for uid, e in pairs(level.entities) do e.faction="blue-wizards" end
 
-		-- if we failed at mount doom (or did not do it at all) the gate of morning is destroyed and Aeryn turned to the service of the istari
+		-- if we failed at charred scar (or did not do it at all) the gate of morning is destroyed and Aeryn turned to the service of the istari
 		if level.level == 15 then
 			local mtdm = game.player:hasQuest("charred-scar")
 			if not mtdm or mtdm:isCompleted("not-stopped") then

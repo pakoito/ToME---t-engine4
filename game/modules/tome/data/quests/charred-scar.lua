@@ -17,12 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Ruysh mount doom
+-- Ruysh Charred scar
 name = "The Doom of the World!"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You were sent to Mount Doom, in the ancient land of Mordor, where the One Ring was once forged by Sauron and destroyed by Frodo Baggins."
-	desc[#desc+1] = "This place is still full of the power of the ring and the orcs intend to absorb this power using the Staff of Absorption!"
+	desc[#desc+1] = "You were sent to the Charred Scar at the haert of which lies a huge volcano. In the Age of Pyre it destroyed the old Sher'Tul ruins that stood there, absorbing much of their latent magic."
+	desc[#desc+1] = "This place is still full of that power and the orcs intend to absorb this power using the Staff of Absorption!"
 	desc[#desc+1] = "Whatever their plan may be, they must be stopped at all cost."
 	desc[#desc+1] = "The volcano is attacked by orcs, a few Sun Paladins made it there with you, they will hold the line at the cost of their lives to buy you some time."
 	desc[#desc+1] = "Honor their sacrifice, do not let the orcs finish their work!"
@@ -58,10 +58,10 @@ start_fyrk = function(self)
 	game.zone:addEntity(game.level, fyrk, "actor", 6, 455)
 
 	if self:isCompleted("not-stopped") then
-		game.logPlayer(game.player, "#VIOLET#A portal activates in the distance, you hear the orcs shout 'The Blue Wizards have departed, follow them!'")
+		game.logPlayer(game.player, "#VIOLET#A portal activates in the distance, you hear the orcs shout 'The Sorcerers have departed, follow them!'")
 	else
-		game.logPlayer(game.player, "#VIOLET#The Blue Wizards flee through a portal, as you prepare to follow them a huge faeros appears to block the way.")
-		world:gainAchievement("MOUNT_DOOM_SUCCESS", game.player)
+		game.logPlayer(game.player, "#VIOLET#The Sorcerers flee through a portal, as you prepare to follow them a huge faeros appears to block the way.")
+		world:gainAchievement("CHARRED_SCAR_SUCCESS", game.player)
 	end
 	game.player:setQuestStatus("charred-scar", engine.Quest.COMPLETED)
 end
