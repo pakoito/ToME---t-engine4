@@ -89,7 +89,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "gondorian ", prefix=true, instant_resolve=true,
+	name = "shaloran ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,
 	rarity = 10,
