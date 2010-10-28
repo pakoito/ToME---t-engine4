@@ -57,7 +57,7 @@ return {
 	},
 	on_enter = function(lev, old_lev, newzone)
 		if newzone and not game.level.shown_warning then
-			require("engine.ui.Dialog"):simplePopup("Orthanc", "As you approch the tower you notice it is utterly destroyed, only the basement remaining.")
+			require("engine.ui.Dialog"):simplePopup("Telmur", "As you approch the tower you notice it is utterly destroyed, only the basement remaining.")
 			game.level.shown_warning = true
 		end
 	end,
