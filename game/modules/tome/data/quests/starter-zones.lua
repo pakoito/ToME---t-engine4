@@ -41,7 +41,7 @@ desc = function(self, who)
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Sandworm Lair and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end
-	if self:isCompleted("carn-dum") then
+	if self:isCompleted("daikara") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Daikara and vanquished the Dragon.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Daikara and find out what lurks there and what treasures are to be gained!#WHITE#"

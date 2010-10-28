@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Carn Dûm",
+	name = "Daikara",
 	level_range = {7, 12},
 	level_scheme = "player",
 	max_level = 7,
