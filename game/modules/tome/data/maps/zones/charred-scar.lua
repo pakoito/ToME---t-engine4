@@ -30,7 +30,7 @@ defineTile('2', "LAVA_FLOOR", nil, "PALLANDO")
 
 subGenerator{
 	x = 0, y = 23, w = 12, h = 401,
-	generator = "mod.class.generator.map.MountDoom",
+	generator = "mod.class.generator.map.CharredScar",
 	data = {
 		start = 6,
 		stop = 6,
