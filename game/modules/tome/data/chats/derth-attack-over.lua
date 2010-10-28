@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A hobbit comes forth from his hidding place.*#WHITE#
+	text = [[#LIGHT_GREEN#*A halfling comes forth from his hiding place.*#WHITE#
 You killed them all? Are we safe now? Oh please tell me this was a bad dream!]],
 	answers = {
 		{"Be at easy, I have dispatched those monstrosities. Do you know where they came from or what they wanted?", jump="quest"},

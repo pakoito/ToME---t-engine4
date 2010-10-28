@@ -215,7 +215,7 @@ newTalent{
 	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
-		self:setEffect(self.EFF_HOBBIT_LUCK, 5, {
+		self:setEffect(self.EFF_HALFLING_LUCK, 5, {
 			physical=10 + self:getCun() / 2,
 			spell=10 + self:getCun() / 2,
 		})

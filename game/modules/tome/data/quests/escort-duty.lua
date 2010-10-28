@@ -100,7 +100,7 @@ local possible_types = {
 		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I fought too many battles, I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the repented thief",
-			type = "humanoid", subtype = "hobbit",
+			type = "humanoid", subtype = "halfling",
 			display = "@", color=colors.BLUE,
 			desc = [[He looks tired and wounded.]],
 			autolevel = "rogue",

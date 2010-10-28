@@ -35,7 +35,7 @@ newEntity{ define_as = "TROLL_BILL",
 	type = "giant", subtype = "troll", unique = true,
 	name = "Bill the Stone Troll",
 	display = "T", color=colors.VIOLET, image="npc/troll_bill.png",
-	desc = [[Big, brawny, powerful and with a taste for hobbit. He has friends called Bert and Tom.
+	desc = [[Big, brawny, powerful and with a taste for halfling. He has friends called Bert and Tom.
 	He is wielding a small tree trunk and towering toward you.
 	He should have turned to stone long ago, how could he still walk?!]],
 	level_range = {7, 20}, exp_worth = 2,

@@ -498,8 +498,8 @@ newEffect{
 }
 
 newEffect{
-	name = "HOBBIT_LUCK",
-	desc = "Hobbit's Luck",
+	name = "HALFLING_LUCK",
+	desc = "Halflings's Luck",
 	long_desc = function(self, eff) return ("The target luck and cunning combine to grant it %d%% more combat critical chances and %d%% more spell critical chances."):format(eff.physical, eff.spell) end,
 	type = "physical",
 	status = "beneficial",
