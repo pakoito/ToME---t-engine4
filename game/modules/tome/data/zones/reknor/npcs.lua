@@ -109,7 +109,7 @@ newEntity{ define_as = "GOLBUG",
 -- The messager sent by last-hope
 newEntity{ define_as = "HARNO",
 	type = "humanoid", subtype = "human", unique = true,
-	faction = "reunited-kingdom",
+	faction = "allied-kingdoms",
 	name = "Harno, Herald of Last Hope",
 	display = "@", color=colors.LIGHT_BLUE,
 	desc = [[This is one of the heralds of Last Hope, he seems to be looking for you.]],

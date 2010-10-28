@@ -26,7 +26,6 @@ newBirthDescriptor{
 	desc = {
 		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne",
 		"They are a sturdy race and are known for their masterwork, yet they are not well loved, having left other races to fend for themselves in past conflicts.",
-		"Female dwarves remain a mystery and as such may not be played."
 	},
 	descriptor_choices =
 	{
@@ -34,11 +33,6 @@ newBirthDescriptor{
 		{
 			__ALL__ = "disallow",
 			Dwarf = "allow",
-		},
-		sex =
-		{
-			__ALL__ = "disallow",
-			Male = "allow",
 		},
 	},
 	copy = {
@@ -62,7 +56,6 @@ newBirthDescriptor
 	desc = {
 		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne",
 		"They are a sturdy race and are known for their masterwork, yet they are not well loved, having left other races to fend for themselves in past conflicts.",
-		"Female dwarves remain a mystery and as such may not be played.",
 		"They possess the #GOLD#Resilience of the Dwarves#WHITE# which allows them to increase their armour, physical and spell saves for a few turns.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +4 Strength, -2 Dexterity, +3 Constitution",
