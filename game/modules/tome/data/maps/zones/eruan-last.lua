@@ -20,7 +20,7 @@
 defineTile('.', "SAND")
 defineTile('#', "PALMTREE")
 defineTile('~', "DEEP_WATER")
-defineTile('&', "MOUNT_DOOM_PORTAL")
+defineTile('&', "CHARRED_SCAR_PORTAL")
 defineTile('s', "SAND", nil, "SUN_PALADIN_GUREN")
 
 subGenerator{

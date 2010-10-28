@@ -125,7 +125,7 @@ newEntity{
 	open_door = true,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_target="mount_doom_target", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_target="charred_scar_target", talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 }

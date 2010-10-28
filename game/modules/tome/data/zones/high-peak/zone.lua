@@ -66,7 +66,7 @@ return {
 		if level.level == 15 then
 			local mtdm = game.player:hasQuest("charred-scar")
 			if not mtdm or mtdm:isCompleted("not-stopped") then
-				game.player:hasQuest("high-peak"):failed_mount_doom(level)
+				game.player:hasQuest("high-peak"):failed_charred_scar(level)
 			end
 		end
 	end,

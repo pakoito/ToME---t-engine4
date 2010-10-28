@@ -50,7 +50,7 @@ newAchievement{
 	desc = [[Killed Golbug the Destroyer.]],
 }
 newAchievement{
-	name = "Race through fire", id = "MOUNT_DOOM_SUCCESS",
+	name = "Race through fire", id = "CHARRED_SCAR_SUCCESS",
 	desc = [[Raced through the fires of the Charred Scar to stop the Sorcerers.]],
 }
 newAchievement{

@@ -100,7 +100,7 @@ function end_end_combat(self)
 	end
 end
 
-function failed_mount_doom(self, level)
+function failed_charred_scar(self, level)
 	local aeryn = game.zone:makeEntityByName(level, "actor", "FALLEN_SUN_PALADIN_AERYN")
 	game.zone:addEntity(level, aeryn, "actor", level.default_down.x, level.default_down.y)
 	game.logPlayer(game.player, "#LIGHT_RED#As you enter the level you hear a familiar voice.")
