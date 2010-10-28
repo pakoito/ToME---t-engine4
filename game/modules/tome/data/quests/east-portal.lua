@@ -27,10 +27,10 @@ desc = function(self, who)
 	end
 
 	if self:isCompleted("gave-orb") then
-		desc[#desc+1] = "You gave the Orb of Many Ways to Tannen for study while you look for the athame and diamond in the Moria."
+		desc[#desc+1] = "You gave the Orb of Many Ways to Tannen for study while you look for the athame and diamond in Reknor."
 	end
 	if self:isCompleted("withheld-orb") then
-		desc[#desc+1] = "You kept the Orb of Many Ways despite Tannen's request to study it. You must now look for the athame and diamond in the Moria."
+		desc[#desc+1] = "You kept the Orb of Many Ways despite Tannen's request to study it. You must now look for the athame and diamond in Reknor."
 	end
 	if self:isCompleted("open-orthanc") then
 		desc[#desc+1] = "You brought back the diamond and athame to Tannen who asked you to check the tower of Orthanc, looking for a text of portals, although he is not sure it is even there. He told you to come back in a few days."

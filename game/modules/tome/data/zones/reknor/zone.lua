@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Mines of Moria",
+	name = "Lost Dwarven Kingdom of Reknor",
 	level_range = {18, 23},
 	level_scheme = "player",
 	max_level = 4,
@@ -65,7 +65,7 @@ return {
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",
-					map = "zones/moria-last",
+					map = "zones/reknor-last",
 				},
 				actor = { nb_npc = {3, 3}, },
 				object = { nb_object = {8, 10}, },

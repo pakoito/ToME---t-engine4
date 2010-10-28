@@ -21,20 +21,20 @@
 name = "Let's hunt some Orc"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "The elder in Last Hope sent you to the mines of Moria, deep under the misty mountains, to investigate the orc presence."
+	desc[#desc+1] = "The elder in Last Hope sent you to the old dwarven kingdom of Reknor, deep under the misty mountains, to investigate the orc presence."
 	desc[#desc+1] = "Find out if they are in any way linked to the lost staff."
 	desc[#desc+1] = "But be careful, even the dwarves did not venture in the old halls for many years."
 	return table.concat(desc, "\n")
 end
 
 on_grant = function(self, who)
-	-- Reveal moria entrance
+	-- Reveal reknor entrance
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
-		name="A gate into the mines of Moria",
+		name="A gate into the old kingdom of Reknor",
 		display='>', color=colors.UMBER,
 		notice = true,
-		change_level=1, change_zone="moria"
+		change_level=1, change_zone="reknor"
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 44, 28)

@@ -24,7 +24,7 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of Moria, no "rarity" field means it will not be randomly generated
+-- The boss of Reknor, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "GOLBUG",
 	type = "humanoid", subtype = "orc", unique = true,
 	faction = "orc-pride",
@@ -92,7 +92,7 @@ newEntity{ define_as = "GOLBUG",
 	end,
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("LITHFENGEL", 4, 35, "They say that after it has been confirmed orcs still inhabited the Moria, they found a mighty demon there.", function(gen)
+		game.state:activateBackupGuardian("LITHFENGEL", 4, 35, "They say that after it has been confirmed orcs still inhabited Reknor, they found a mighty demon there.", function(gen)
 			if gen then require("engine.ui.Dialog"):simpleLongPopup("Danger...", "When last you saw it, this cavern was littered with the corpses of orcs that you had slain. Now many, many more corpses carpet the floor, all charred and reeking of sulfur. An orange glow dimly illuminates the far reaches of the cavern to the east.", 400) end
 		end)
 

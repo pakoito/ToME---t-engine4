@@ -65,7 +65,7 @@ But do not let me trouble you; you brought important news and you are lucky to b
 }
 
 newChat{ id="orc_hunt",
-	text = [[We have heard rumours from the dwarves that there may still be an orc presence deep in the mines of Moria.
+	text = [[We have heard rumours from the dwarves that there may still be an orc presence deep in the old kingdom of Reknor, in the Iron Throne.
 I know you have been through a lot, but we need somebody to investigate and determine if there is a connection with the staff.]],
 	answers = {
 		{"I will check the mines.", action=function(npc, player)

@@ -25,7 +25,7 @@ return [[@playername@, this message is of utmost importance.
 The staff you left at Last Hope is gone, a raid of orcs ambushed the guards that were transporting it to a secret vault.
 Our troups managed to capture one of the orcs and made him talk.
 He did not knew much, but he did speak about "masters" in the far east.
-He spoke about Golbug, this seems to be a warmaster in the Moria, leading the raid to send the "package" through a portal.
+He spoke about Golbug, this seems to be a warmaster in Reknor, leading the raid to send the "package" through a portal.
 
 This calls for urgency, should you find this Golbug or the portal please investigate.
 
@@ -40,7 +40,7 @@ It turns out to be a powerful object indeed, able to absorb the power of places,
 This must not fall in the wrong hands, which certainly include orc hands.
 While you where gone one of our patrols met a group of orcs led by Ukruk, we could not stop them but we managed to capture one of them.
 He did not knew much, but he did speak about "masters" in the far east.
-He spoke about meeting with Golbug, this seems to be a warmaster in the Moria, to send the "package" through a portal.
+He spoke about meeting with Golbug, this seems to be a warmaster in Reknor, to send the "package" through a portal.
 
 This calls for urgency, should you find this Golbug or the portal please investigate.
 

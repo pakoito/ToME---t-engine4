@@ -19,7 +19,7 @@
 
 local function check_materials_gave_orb(npc, player)
 	local q = player:hasQuest("east-portal")
-	if not q or not q:isCompleted("gotomoria") or not q:isCompleted("gave-orb") then return false end
+	if not q or not q:isCompleted("gotoreknor") or not q:isCompleted("gave-orb") then return false end
 
 	local gem_o, gem_item, gem_inven_id = player:findInAllInventories("Resonating Diamond")
 	local athame_o, athame_item, athame_inven_id = player:findInAllInventories("Blood-Runed Athame")
@@ -28,7 +28,7 @@ end
 
 local function check_materials_withheld_orb(npc, player)
 	local q = player:hasQuest("east-portal")
-	if not q or not q:isCompleted("gotomoria") or not q:isCompleted("withheld-orb") then return false end
+	if not q or not q:isCompleted("gotoreknor") or not q:isCompleted("withheld-orb") then return false end
 
 	local gem_o, gem_item, gem_inven_id = player:findInAllInventories("Resonating Diamond")
 	local athame_o, athame_item, athame_inven_id = player:findInAllInventories("Blood-Runed Athame")
@@ -46,7 +46,7 @@ else
 newChat{ id="welcome",
 	text = [[How may I be of service, good @playerdescriptor.race@?]],
 	answers = {
-		{"[Relate to him the story of the staff and the Orb of Many Ways and the portals.]", jump="east_portal1", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and q:isCompleted("talked-elder") and not q:isCompleted("gotomoria") end},
+		{"[Relate to him the story of the staff and the Orb of Many Ways and the portals.]", jump="east_portal1", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and q:isCompleted("talked-elder") and not q:isCompleted("gotoreknor") end},
 		{"I have the diamond and the athame. [Hand over the Athame and Diamond]", jump="has_material_gave_orb", cond=check_materials_gave_orb},
 		{"I have the diamond and the athame. [Hand over the Athame and Diamond]", jump="has_material_withheld_orb", cond=check_materials_withheld_orb},
 		{"Thieving, murderous wretch. Prepare to die!", jump="fake_orb_end", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and q:isCompleted("tricked-demon") end},
@@ -81,7 +81,7 @@ newChat{ id="east_portal3",
 }
 
 newChat{ id="east_portal4",
-	text = [[If the orcs created a portal in the depths of Moria, they must have had access to such items. And if these items cannot pass through the portal they created, then it stands to reason that they must still be in Maj'Eyal. I would search Moria, starting near the portal itself. Perhaps they did not move the Athame and Diamond far after its creation.]],
+	text = [[If the orcs created a portal in the depths of Reknor, they must have had access to such items. And if these items cannot pass through the portal they created, then it stands to reason that they must still be in Maj'Eyal. I would search Reknor, starting near the portal itself. Perhaps they did not move the Athame and Diamond far after its creation.]],
 	answers = {
 		{"I'll get searching. Thank you.", jump="east_portal5"},
 	}
@@ -98,14 +98,14 @@ newChat{ id="east_portal5",
 newChat{ id="gave_orb",
 	text = [[Thank you. I will treat it with the utmost care.]],
 	answers = {
-		{"Farewell. I'll return with the Athame and Diamond.", action=function(npc, player) player:hasQuest("east-portal"):setStatus(engine.Quest.COMPLETED, "gotomoria") end},
+		{"Farewell. I'll return with the Athame and Diamond.", action=function(npc, player) player:hasQuest("east-portal"):setStatus(engine.Quest.COMPLETED, "gotoreknor") end},
 	}
 }
 
 newChat{ id="withheld_orb",
 	text = [[Very well. There is no hurry. But I will need to spend a number of days studying it before we can create your portal.]],
 	answers = {
-		{"I understand. I'll return with the Athame and Diamond.", action=function(npc, player) player:hasQuest("east-portal"):setStatus(engine.Quest.COMPLETED, "gotomoria") end},
+		{"I understand. I'll return with the Athame and Diamond.", action=function(npc, player) player:hasQuest("east-portal"):setStatus(engine.Quest.COMPLETED, "gotoreknor") end},
 	}
 }
 

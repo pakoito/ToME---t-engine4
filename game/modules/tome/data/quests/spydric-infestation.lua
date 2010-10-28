@@ -30,7 +30,7 @@ desc = function(self, who)
 end
 
 on_grant = function(self, who)
-	-- Reveal moria entrance
+	-- Reveal entrance
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
 		name="A way into the carvers of Ardhungol",
