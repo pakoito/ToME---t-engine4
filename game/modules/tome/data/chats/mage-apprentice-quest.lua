@@ -28,9 +28,9 @@ Good day to you, fellow traveler!]],
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(npc, player, dialog) end
 		},
 		{"I found this staff; it looks powerful. Maybe it would be enough?",
-			jump="angmar_fall",
-			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_angmar(player) end,
-			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_angmar(player, dialog) end
+			jump="kor_fall",
+			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_kor(player) end,
+			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_kor(player, dialog) end
 		},
 		-- Reward for non-mages: access to Angolwen
 		{"So you have enough magical items now?",
@@ -80,7 +80,7 @@ In any case, I must collect 15 magic staves, rings or amulets and I have yet to 
 	}
 }
 
-newChat{ id="angmar_fall",
+newChat{ id="kor_fall",
 	text = [[Let me examine it.
 Oh yes, my friend, this is indeed a powerful staff! I think that it alone should suffice to complete my quest! Many thanks!]],
 	answers = {

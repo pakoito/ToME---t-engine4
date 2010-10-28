@@ -47,7 +47,6 @@ return {
 			class = "engine.generator.actor.Random",
 --			nb_npc = {20*5, 20*5},
 			nb_npc = {0, 0},
---			guardian = "SHADE_OF_ANGMAR", -- The gardian is set in the static map
 		},
 		object = {
 			class = "engine.generator.object.Random",

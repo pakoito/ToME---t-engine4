@@ -20,7 +20,7 @@
 defineTile('.', "FLOOR")
 defineTile('#', "WALL")
 defineTile('+', "DOOR")
-defineTile('s', "FLOOR", nil, "SHADE_OF_ANGMAR")
+defineTile('s', "FLOOR", nil, "SHADE")
 
 subGenerator{
 	x = 0, y = 0, w = 50, h = 43,

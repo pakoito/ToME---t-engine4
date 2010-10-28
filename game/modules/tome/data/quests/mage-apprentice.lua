@@ -43,7 +43,7 @@ end
 
 collect_staff = function(self, npc, who, dialog)
 	who:showEquipInven("Offer which item?",
-		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_ANGMAR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
+		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_KOR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
 		function(o, inven, item)
 			-- Special handling for the staff of absorption
 			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
@@ -70,14 +70,14 @@ can_offer = function(self, who)
 
 	for inven_id, inven in pairs(who.inven) do
 		for item, o in ipairs(inven) do
-			if (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_ANGMAR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") then return true end
+			if (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_KOR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") then return true end
 		end
 	end
 end
 
-collect_staff_angmar = function(self, who, dialog)
+collect_staff_kor = function(self, who, dialog)
 	who:showEquipInven("Offer which item?",
-		function(o) return o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_ANGMAR" end,
+		function(o) return o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_KOR" end,
 		function(o, inven, item)
 			self.nb_collect = self.nb_collect + 15
 			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
@@ -90,14 +90,14 @@ collect_staff_angmar = function(self, who, dialog)
 	)
 end
 
-can_offer_angmar = function(self, who)
+can_offer_kor = function(self, who)
 	if self.nb_collect >= 15 then return end
 	-- Only works after mages are unlocked
 --	if not profile.mod.allow_build.mage then return end
 
 	for inven_id, inven in pairs(who.inven) do
 		for item, o in ipairs(inven) do
-			if o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_ANGMAR" then return true end
+			if o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_KOR" then return true end
 		end
 	end
 end

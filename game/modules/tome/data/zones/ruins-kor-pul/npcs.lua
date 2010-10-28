@@ -28,9 +28,9 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
-newEntity{ define_as = "SHADE_OF_ANGMAR",
+newEntity{ define_as = "SHADE",
 	type = "undead", subtype = "skeleton", unique = true,
-	name = "The Shade of Angmar",
+	name = "The Shade",
 	display = "s", color=colors.VIOLET,
 	shader = "unique_glow",
 	desc = [[This skeleton looks nasty. There is red flames in its empty eye sockets. It wield a nasty sword and towers toward you, throwing spells.]],
@@ -48,7 +48,7 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_ANGMAR", autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
+	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_KOR", autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
@@ -60,15 +60,15 @@ newEntity{ define_as = "SHADE_OF_ANGMAR",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("ANGMAR_FURY", 5, 35, ".. yes I tell you! The old ruins opf Kor'Pul are still haunted!")
+		game.state:activateBackupGuardian("KOR_FURY", 5, 35, ".. yes I tell you! The old ruins opf Kor'Pul are still haunted!")
 		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "kor-pul")
 	end,
 }
 
 -- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
-newEntity{ define_as = "ANGMAR_FURY",
+newEntity{ define_as = "KOR_FURY",
 	type = "undead", subtype = "ghost", unique = true,
-	name = "Angmar's Fury",
+	name = "Kor's Fury",
 	display = "G", color=colors.VIOLET,
 	desc = [[The shade's colossal will keeps it anchored to this world, now as a vengeful, insane spirit.]],
 	level_range = {38, nil}, exp_worth = 3,

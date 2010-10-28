@@ -19,10 +19,10 @@
 
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped (and used!) by the Shade of Angmar
+-- Artifact, droped (and used!) by the Shade
 newEntity{ base = "BASE_STAFF",
-	define_as = "STAFF_ANGMAR", rarity=false,
-	name = "Angmar's Fall", unique=true,
+	define_as = "STAFF_KOR", rarity=false,
+	name = "Kor's Fall", unique=true,
 	desc = [[Made from the bones of of many creatures this staff glows with power. You can feel its evilness as you touch it.]],
 	require = { stat = { mag=25 }, },
 	cost = 5,
