@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Bree",
+	name = "Derth",
 	level_range = {1, 1},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	max_level = 1,
@@ -30,7 +30,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "towns/bree",
+			map = "towns/derth",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

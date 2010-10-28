@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Minas Tirith",
+	name = "Last Hope",
 	level_range = {15, 15},
 	max_level = 1,
 	width = 196, height = 80,
@@ -29,7 +29,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "towns/minas-tirith",
+			map = "towns/last-hope",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
