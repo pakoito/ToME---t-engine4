@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,10 @@
 name = "Back and there again"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have created a portal back to Middle-earth, you should try to talk to someone in Minas Tirith about establishing a link back."
+	desc[#desc+1] = "You have created a portal back to Maj'Eyal, you should try to talk to someone in Last Hope about establishing a link back."
 
 	if self:isCompleted("talked-elder") then
-		desc[#desc+1] = "You talked to the Elder in Minas Tirith who in turn told you to talk to Tannen, who lives in the north of the city."
+		desc[#desc+1] = "You talked to the Elder in Last Hope who in turn told you to talk to Tannen, who lives in the north of the city."
 	end
 
 	if self:isCompleted("gave-orb") then

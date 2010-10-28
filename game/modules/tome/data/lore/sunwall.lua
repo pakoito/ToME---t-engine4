@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -36,14 +36,14 @@ newLore{
 	category = "history of the Sunwall",
 	name = "Loremaster Verutir's note",
 	lore = [[And boy were all the rumors about unreliable adventurers true. I'd heard that many, many escorted people die when their adventurer flees and protects himself. It is TRUE. Once I got an escort, I headed off in the right direction immediately. However, for some reason, he did not immediately follow, let alone lead. Didn't he know the way to go? Foolish man. Why am I offering my special trainings to someone who doesn't even know where the local portals are! Fortunately I survived, but no thanks to him. I won't even mention his snoring...
-This Thanchir guy really really needs to find a more urban spot with accessible public transportation (no adventurers please!) However, once I could get him to talk, he does know quite a bit. Apparently, he claims some distant kinship to the first elf in these parts. They arrived by boat from some legendary land called "Middle Earth". He says that it definitely exists, but could provide no real evidence. This should be investigated further]],
+This Thanchir guy really really needs to find a more urban spot with accessible public transportation (no adventurers please!) However, once I could get him to talk, he does know quite a bit. Apparently, he claims some distant kinship to the first elf in these parts. They arrived by boat from some legendary land called "Maj'Eyal". He says that it definitely exists, but could provide no real evidence. This should be investigated further]],
 }
 
 newLore{
 	id = "sunwall-note-3",
 	category = "history of the Sunwall",
 	name = "Loremaster Verutir's note",
-	lore = [[However, I have been repeatedly told by the powers that be, that I need to get on with this and turn in another report on how a different race got here. So, I will temporarily pause my researches on whether or not Middle Earth is real or just an elf legend. (Can't trust everything they say despite their long memories.) Instead, I am on to meet the keeper of the Eastern Historical Society who has the best collection of lore about how humans got here. As such, I will be travelling to northern Vor to use their archives.
+	lore = [[However, I have been repeatedly told by the powers that be, that I need to get on with this and turn in another report on how a different race got here. So, I will temporarily pause my researches on whether or not Maj'Eyal is real or just an elf legend. (Can't trust everything they say despite their long memories.) Instead, I am on to meet the keeper of the Eastern Historical Society who has the best collection of lore about how humans got here. As such, I will be travelling to northern Vor to use their archives.
 And yes, unfortunately I will be travelling by adventurer again. By all the gods, why don't I get a better budget, this is absolutely terrible. It has been a particularly long walk. Longer than I thought it would be truthfully, so I have run out of food. Foolish I know, but I figured I could ask the escort for some of his. The snobby piece of troll-liver says he doesn't eat! Now talk about a terrible lie. Did he really think that would fool me? This Eastern Historical Society had better be good...]],
 }
 

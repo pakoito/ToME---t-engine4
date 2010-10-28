@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -90,9 +90,9 @@ Oh yes, my friend, this is indeed a powerful staff! I think that it alone should
 
 newChat{ id="thanks",
 	text = [[Ah yes! I am so glad! I will be able to go back to Angolw...err... Oh well, I guess I can tell you; you deserve it for helping me.
-During the dark years of Sauron's reign, more than one hundred years ago, Gandalf the Grey worried that magic might disappear with him and be lost to mortals should they need it again.
-So he set a secret plan into action and taught a small group of elves and men its usage in order to carry out a specific task: to build a secret place where magic would be kept alive.
-His plan worked and the group built a town called Angolwen in the Blue Mountains. #LIGHT_GREEN#*He marks it on your map, along with a portal to access it*#WHITE#
+During the dark years of the Spellhunt, many thousands years ago, Linaniil, the great mage of the Kor'Krul worried that magic might disappear with her generation and be lost to mortals should they need it again.
+So she set a secret plan into action and built a secret place where magic would be kept alive.
+Her plan worked and the group built a town called Angolwen in the western mountains. #LIGHT_GREEN#*He marks it on your map, along with a portal to access it*#WHITE#
 Not many people are accepted there but I will arrange for you to be allowed inside.]],
 	answers = {
 		{"Oh! How could such a place be kept secret for so long... This is interesting indeed, thank you for your trust!",

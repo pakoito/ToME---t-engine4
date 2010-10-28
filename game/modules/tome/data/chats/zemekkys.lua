@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A slot in the door opens and a pair of wild eyes peer out.*#WHITE#
 What do you want, @playerdescriptor.race@?]],
 	answers = {
-		{"Paladin Aeryn told me that you could help me. I need to get to Middle Earth.", jump="help", cond=function(npc, player) return not player:hasQuest("west-portal") end},
+		{"Paladin Aeryn told me that you could help me. I need to get to Maj'Eyal.", jump="help", cond=function(npc, player) return not player:hasQuest("west-portal") end},
 		{"I found the Blood-Runed Athame, but there was no Resonating Diamond.", jump="athame", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("athame") and not player:hasQuest("west-portal"):isCompleted("gem") end},
 		{"I have a Resonating Diamond.", jump="complete", cond=function(npc, player) return player:hasQuest("west-portal") and player:hasQuest("west-portal"):isCompleted("gem") end},
 		{"Sorry, I have to go!"},
@@ -54,16 +54,16 @@ What do you want, @playerdescriptor.race@?]],
 -- Give quest
 -----------------------------------------------------------------
 newChat{ id="help",
-	text = [[Pfaugh! Her goal in life is to waste my time! Middle Earth? Why not Narnia or Chicago? Just as easy to send you someplace entirely fictional as Middle Earth. Go away.
+	text = [[Pfaugh! Her goal in life is to waste my time! Maj'Eyal? Why not Narnia or Chicago? Just as easy to send you someplace entirely fictional as Maj'Eyal. Go away.
 #LIGHT_GREEN#*Slot slams shut.*#WHITE#]],
 	answers = {
-		{"I got here from Middle Earth, didn't I? I have this magic Orb I looted from a dead orc, see, and...", jump="offer"},
+		{"I got here from Maj'Eyal, didn't I? I have this magic Orb I looted from a dead orc, see, and...", jump="offer"},
 	}
 }
 
 newChat{ id="offer",
 	text = [[#LIGHT_GREEN#*Slot opens.*#WHITE#
-Orb, you say? That you used to travel here from Middle Earth? Surely you don't possess the Orb of Many Ways! It's been lost for ages!]],
+Orb, you say? That you used to travel here from Maj'Eyal? Surely you don't possess the Orb of Many Ways! It's been lost for ages!]],
 	answers = {
 		{"[Hold up the orb]", jump="offer2"},
 	}

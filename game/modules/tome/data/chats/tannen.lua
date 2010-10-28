@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -67,7 +67,7 @@ newChat{ id="east_portal1",
 }
 
 newChat{ id="east_portal2",
-	text = [[Truly, it is the work of a great master. Perhaps Gandalf himself had a hand in its making. And you say you come bearing instructions in its usage?]],
+	text = [[Truly, it is the work of a great master. Perhaps Linaniil herself had a hand in its making. And you say you come bearing instructions in its usage?]],
 	answers = {
 		{"I do. [Show him Zemekkys's scribbled notes]", jump="east_portal3"},
 	}
@@ -81,7 +81,7 @@ newChat{ id="east_portal3",
 }
 
 newChat{ id="east_portal4",
-	text = [[If the orcs created a portal in the depths of Moria, they must have had access to such items. And if these items cannot pass through the portal they created, then it stands to reason that they must still be in Middle Earth. I would search Moria, starting near the portal itself. Perhaps they did not move the Athame and Diamond far after its creation.]],
+	text = [[If the orcs created a portal in the depths of Moria, they must have had access to such items. And if these items cannot pass through the portal they created, then it stands to reason that they must still be in Maj'Eyal. I would search Moria, starting near the portal itself. Perhaps they did not move the Athame and Diamond far after its creation.]],
 	answers = {
 		{"I'll get searching. Thank you.", jump="east_portal5"},
 	}

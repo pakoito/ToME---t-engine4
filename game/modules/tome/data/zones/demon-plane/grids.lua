@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -52,15 +52,15 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[This portal seems to be connected with Middle-earth, you could probably use it to go back.]],
+	desc = [[This portal seems to be connected with Maj'Eyal, you could probably use it to go back.]],
 
 	on_move = function(self, x, y, who)
 		if who == game.player then
-			require("engine.ui.Dialog"):yesnoPopup("Back and there again", "Enter the portal back to Middle-earth? (Warning loot Draebor first)", function(ret)
+			require("engine.ui.Dialog"):yesnoPopup("Back and there again", "Enter the portal back to Maj'Eyal? (Warning loot Draebor first)", function(ret)
 				if not ret then
 					who.wild_x, who.wild_y = 72, 23
 					game:changeLevel(1, "wilderness")
-					game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Middle-earth, on the eastern side of the Mirkwood forest.")
+					game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Maj'Eyal, on the eastern side of the Mirkwood forest.")
 				end
 			end, "Stay", "Enter")
 		end

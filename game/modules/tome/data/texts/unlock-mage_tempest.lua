@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,10 @@
 
 return "New Class: #LIGHT_GREEN#Tempest",
 [[
-Magic has not disappeared from Middle-earth with the downfall of Sauron and the departing of Gandalf the Grey.
+Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
 
-Before the war of the ring, Gandalf, fearing that he might die leaving his task incomplete, started a secret plan with a group of trusted elves and men to form a place of knowledge, hidden from all.
-This place is Angolwen, the City of Magic, and for over one hundred years has taught magic to preserve and expand it.
+During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a save heaven for the few remaining mages of all races.
+This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
 
 You have uncovered the secrets of the storm magic and can now create new characters with the #LIGHT_GREEN#Tempest class#WHITE#.
 

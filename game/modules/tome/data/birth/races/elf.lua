@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -104,15 +104,3 @@ newBirthDescriptor
 	},
 	experience = 1.35,
 }
---[[
-newBirthDescriptor
-{
-	type = "subrace",
-	name = "Avari",
-	desc = {
-		"The Avari are those elves who refused the summons of Orome to come to Valinor, and stayed behind in Middle-earth instead.",
-	},
-	stats = { str=-1, mag=1, wil=1, cun=3, dex=2, con=0 },
-	experience = 1.1,
-}
-]]

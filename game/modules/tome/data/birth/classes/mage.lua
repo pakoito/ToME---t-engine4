@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -102,7 +102,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Alchemist",
 	desc = {
-		"An Alchemist is a dabbler in magic, while 'true' magic is thought to have been lost with the departure of Gandalf and the fall of Saruman.",
+		"An Alchemist is a dabbler in magic, while 'true' magic is thought to have been lost during the Spellhunt.",
 		"Alchemists have an empirical knowledge of magic, which they can not use directly but through focuses.",
 		"A focus is usualy a gem which they can imbue with power to throw at their foes, exploding in fires, acid, ...",
 		"Alchemists are also known for their golem craft and are usually accompanied by such a construct which acts as a bodyguard.",

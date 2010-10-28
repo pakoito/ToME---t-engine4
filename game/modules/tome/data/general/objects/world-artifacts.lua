@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -1007,7 +1007,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	unique = true,
 	name = "Rope Belt of Radagast",
 	unided_name = "short length of rope",
-	desc = [[The simplest of belts, worn for centuries by Radagast the Brown as he tended the birds and beasts of Middle Earth. Some of the wisdom and power of the Istari has settled permanently into its fibers.]],
+	desc = [[The simplest of belts, worn for centuries by Radagast the Brown as he tended the birds and beasts of Maj'Eyal. Some of the wisdom and power of the Istari has settled permanently into its fibers.]],
 	color = colors.LIGHT_RED,
 	level_range = {20, 30},
 	rarity = 200,

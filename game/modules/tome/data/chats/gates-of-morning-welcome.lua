@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a beautiful woman clad in shining golden armour*#WHITE#
 Stop! You are clearly a stranger! Where do you come from? The Gates of Morning are the last bastion of freedom in these lands, so who are you? A spy?]],
 	answers = {
-		{"My lady, I am indeed a stranger in those lands. I come from the west, from Middle-earth.", jump="from",
+		{"My lady, I am indeed a stranger in those lands. I come from the west, from Maj'Eyal.", jump="from",
 		  cond=function(npc, player) return not player:hasQuest("spydric-infestation") end},
 		{"The spiders will not cause you any more problems, my lady.", jump="access",
 		  cond=function(npc, player) return player:hasQuest("spydric-infestation") and player:hasQuest("spydric-infestation"):isCompleted() end},
@@ -30,7 +30,7 @@ Stop! You are clearly a stranger! Where do you come from? The Gates of Morning a
 }
 
 newChat{ id="from",
-	text = [[Middle-earth! We Sun Paladins have not heard from there for thousands of years... perhaps the Anorithil know more...
+	text = [[Maj'Eyal! We Sun Paladins have not heard from there for thousands of years... perhaps the Anorithil know more...
 In any event, what is your purpose here?]],
 	answers = {
 		{"It seems that I am stranded in these unfamiliar lands. #LIGHT_GREEN#*Tell her about your hunt for orcs.*#WHITE#", jump="orcs"},

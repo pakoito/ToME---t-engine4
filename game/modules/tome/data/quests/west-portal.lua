@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 name = "There and back again"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "Zemekkys in the Gates of Morning can build a portal back to Middle-earth for you."
+	desc[#desc+1] = "Zemekkys in the Gates of Morning can build a portal back to Maj'Eyal for you."
 
 	if self:isCompleted("athame") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have found a Blood-Runed Athame.#WHITE#"
@@ -35,7 +35,7 @@ desc = function(self, who)
 
 	if self:isCompleted() then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "#LIGHT_GREEN#* The portal to Middle-earth is now functional and can be used to go back, although, as all portals, it is one-way only.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* The portal to Maj'Eyal is now functional and can be used to go back, although, as all portals, it is one-way only.#WHITE#"
 	end
 
 	return table.concat(desc, "\n")
