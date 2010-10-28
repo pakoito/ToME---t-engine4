@@ -31,7 +31,7 @@ This one seems to go to the Far East.]],
 
 	orb_portal = {
 		change_level = 1,
-		change_zone = "wilderness-arda-fareast",
+		change_zone = "wilderness-fareast",
 		change_wilderness = {
 			x = 9, y = 5,
 		},
@@ -43,7 +43,7 @@ This one seems to go to the Far East.]],
 
 newEntity{
 	define_as = "WEST_PORTAL",
-	name = "Farportal: Misty Mountains",
+	name = "Farportal: Iron Throne",
 	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
 	notice = true,
 	always_remember = true,
@@ -55,7 +55,7 @@ This one seems to go to the Misty Mountains in the West.]],
 		change_level = 1,
 		change_zone = "wilderness",
 		change_wilderness = {
-			x = 41, y = 33,
+			x = 62, y = 7,
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the slopes of the Misty Mountains, with no trace of the portal...",
 		on_use = function(self, who)

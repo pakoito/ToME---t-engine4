@@ -33,7 +33,7 @@ newEntity{
 	always_remember = true,
 	notice = true,
 	change_level = 1,
-	change_zone = "wilderness-arda-fareast",
+	change_zone = "wilderness-fareast",
 }
 
 newEntity{

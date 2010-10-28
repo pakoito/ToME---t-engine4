@@ -38,7 +38,7 @@ newBirthDescriptor{
 		world =
 		{
 			Tutorial = "disallow",
-			Arda = "allow",
+			["Maj'Eyal"] = "allow",
 			Ents = "disallow",
 			Spydre = "disallow",
 			Orcs = "disallow",

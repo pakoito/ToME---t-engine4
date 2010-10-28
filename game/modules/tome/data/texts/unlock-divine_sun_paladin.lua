@@ -19,7 +19,7 @@
 
 return "New Class: #LIGHT_GREEN#Sun Paladin (Divine)",
 [[
-In the uttermost east of Arda, on the continent known as the Far East, dwells the last remnants of the free people, fighting the Orc Pride and the many perils of the Far East.
+In the uttermost east, on the continent known only as the Far East, dwells the last remnants of elves and humans, fighting the Orc Pride and the many perils of the Far East.
 
 Sun Paladins are humans warriors who are trained in special magic to manipulate the Sun powers.
 Paragons of all that is good they are nonetheless terrible in their battle against the Pride.

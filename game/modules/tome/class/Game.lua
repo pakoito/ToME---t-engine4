@@ -600,8 +600,8 @@ function _M:setupCommands()
 				self.player.inc_damage.all = 100000
 --				self:changeLevel(5, "gorbat-pride")
 --				self:changeLevel(1, "town-gates-of-morning")
-				self:changeLevel(1, "wilderness-arda-fareast")
-				self.memory_levels["wilderness-arda-fareast-1"] = self.level
+				self:changeLevel(1, "wilderness-fareast")
+				self.memory_levels["wilderness-fareast-1"] = self.level
 				self.player:grantQuest("spydric-infestation")
 				self.player:setQuestStatus("spydric-infestation", engine.Quest.COMPLETED)
 				self.player:grantQuest("orc-pride")

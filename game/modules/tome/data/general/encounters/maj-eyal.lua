@@ -218,7 +218,7 @@ newEntity{
 
 		local g = mod.class.NPC.new{
 			name="Merwionna, Elven camp leader",
-			type="humanoid", subtype="elf", faction="eryn-lasgalen",
+			type="humanoid", subtype="elf", faction="shaloren",
 			display='@', color=colors.LIGHT_BLUE,
 			can_talk = "ringil-exchange",
 		}

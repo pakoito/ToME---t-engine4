@@ -106,7 +106,7 @@ function failed_charred_scar(self, level)
 	game.logPlayer(game.player, "#LIGHT_RED#As you enter the level you hear a familiar voice.")
 	game.logPlayer(game.player, "#LIGHT_RED#Fallen Sun Paladin Aeryn: '%s YOU BROUGHT ONLY DESTRUCTION TO THE SUNWALL! YOU WILL PAY!'", game.player.name:upper())
 
-	local wild = game.memory_levels["wilderness-arda-fareast-1"].map(66, 35, engine.Map.TERRAIN)
+	local wild = game.memory_levels["wilderness-fareast-1"].map(66, 35, engine.Map.TERRAIN)
 	wild.name = "Ruins of the Gates of Morning"
 	wild.desc = "The sunwall was destroyed while you were trapped in the High Peak."
 	wild.change_level = nil

@@ -79,7 +79,7 @@ This one seems to go near the Gates of Morning in the Far East.]],
 
 		orb_portal = {
 			change_level = 1,
-			change_zone = "wilderness-arda-fareast",
+			change_zone = "wilderness-fareast",
 			change_wilderness = {
 				x = 65, y = 35,
 			},

@@ -19,7 +19,7 @@
 
 return "New Class: #LIGHT_GREEN#Anorithil (Divine)",
 [[
-In the uttermost east of Arda, on the continent known as the Far East, dwells the last remnants of the free people, fighting the Orc Pride and the many perils of the Far East.
+In the uttermost east, on the continent known only as the Far East, dwells the last remnants of elves and humans, fighting the Orc Pride and the many perils of the Far East.
 
 Anorithil are elven mages who are trained in special magic to manipulate the Sun and Moon powers.
 They have learned to harness the powers of both shadows and light in their battle against the Pride.

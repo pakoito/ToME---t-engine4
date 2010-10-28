@@ -19,8 +19,7 @@
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a member of the feared race of the Orcs.
-For ages your kind has served Morgoth and his lieutenant Sauron, but they have all been vanquished by the free people.
-Now as come the time for your revenge, a new power is rising in the far east of Arda, and you are one of its soldiers!
+BLAH BLAH BLAH
 
 You have been sent to a remote island on the south-west coast of the Far East to crush an outpost of the Sun Wall, the last remaining bastion of men, elves and dwarves on this continent.
 

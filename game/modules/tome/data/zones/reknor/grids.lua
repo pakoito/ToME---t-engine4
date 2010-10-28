@@ -27,11 +27,11 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use. You have no idea if it is even two-way.
-This one seems to go to the Far East, a continent of Arda of which only rumours are known...]],
+This one seems to go to the Far East, a continent of which only rumours are known...]],
 
 	orb_portal = {
 		change_level = 1,
-		change_zone = "wilderness-arda-fareast",
+		change_zone = "wilderness-fareast",
 		change_wilderness = {
 			x = 9, y = 5,
 		},

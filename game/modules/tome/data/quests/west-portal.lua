@@ -51,7 +51,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="vor-armoury"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 62, 14)
+	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 62, 14)
 
 	game.logPlayer(game.player, "Zemekkys points the location of Vor Armoury on your map.")
 end
@@ -66,7 +66,7 @@ wyrm_lair = function(self, who)
 		change_level=1, change_zone="briagh-lair"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 67, 49)
+	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 67, 49)
 
 	game.logPlayer(game.player, "Zemekkys points the location of Briagh lair on your map.")
 end

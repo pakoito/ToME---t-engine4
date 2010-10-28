@@ -31,7 +31,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "wilderness/arda-fareast",
+			map = "wilderness/fareast",
 		},
 	},
 	on_enter = function()

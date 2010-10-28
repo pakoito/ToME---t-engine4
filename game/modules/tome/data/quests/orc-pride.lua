@@ -68,7 +68,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="rak-shor-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 38, 49)
+	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 38, 49)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
@@ -79,7 +79,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="vor-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 63, 14)
+	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 63, 14)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
@@ -90,7 +90,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="gorbat-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 43, 53)
+	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 43, 53)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
@@ -101,7 +101,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="grushnak-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-arda-fareast-1"], g, "terrain", 50, 21)
+	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 50, 21)
 
 	game.logPlayer(game.player, "Aeryn points the known locations on your map.")
 end
