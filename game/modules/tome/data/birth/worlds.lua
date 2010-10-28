@@ -57,11 +57,11 @@ newBirthDescriptor{
 -- Player worlds/campaigns
 newBirthDescriptor{
 	type = "world",
-	name = "Arda",
+	name = "Maj'Eyal",
 	display_name = "",
 	desc =
 	{
-		"The people of Maj'Eyal: Humans, halflings, Elves and Dwarves.",
+		"The people of Maj'Eyal: Humans, Halflings, Elves and Dwarves.",
 		"The West has been at relative peace for over one hundred year and people are prospering again.",
 		"You are an adventurer, setting out to find lost treasure and glory.",
 		"But what lurks in the shadow of the world?",
@@ -74,9 +74,7 @@ newBirthDescriptor{
 			Human = "allow",
 			Elf = "allow",
 			Dwarf = "allow",
-			Hobbit = "allow",
-			Orc = function() return profile.mod.allow_build.orc and "allow" or "disallow" end,
-			Troll = function() return profile.mod.allow_build.troll and "allow" or "disallow" end,
+			Halfling = "allow",
 			Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
 		},
 

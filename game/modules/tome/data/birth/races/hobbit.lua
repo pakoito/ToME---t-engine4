@@ -58,7 +58,7 @@ newBirthDescriptor{
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Hobbit",
+	name = "Halfling",
 	desc = {
 		"Halflings, are a race of very short stature, rarely exceeding four feet in height.",
 		"Most of them are happy to live a quiet life of farming and gardening, yet they are not to be taken lightly.",

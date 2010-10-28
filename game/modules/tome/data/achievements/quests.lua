@@ -35,7 +35,7 @@ newAchievement{
 }
 newAchievement{
 	name = "A dangerous secret",
-	desc = [[Found the mysterious staff and told Minas Tirith about it.]],
+	desc = [[Found the mysterious staff and told Last Hope about it.]],
 }
 newAchievement{
 	name = "The secret city",
@@ -51,7 +51,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Race through fire", id = "MOUNT_DOOM_SUCCESS",
-	desc = [[Raced through the fires of Mount Doom to stop the Blue Wizards.]],
+	desc = [[Raced through the fires of the Charred Scar to stop the Sorcerers.]],
 }
 newAchievement{
 	name = "Arachnophobia", id = "SPYDRIC_INFESTATION",
@@ -77,23 +77,23 @@ newAchievement{
 }
 newAchievement{
 	name = "Tactical master", id = "ISTARI_NO_PORTAL",
-	desc = [[Fought the two Istari without closing any invocation portals.]],
+	desc = [[Fought the two Sorcerers without closing any invocation portals.]],
 }
 newAchievement{
 	name = "Portal destroyer", id = "ISTARI_ONE_PORTAL",
-	desc = [[Fought the two Istari and closed one invocation portal.]],
+	desc = [[Fought the two Sorcerers and closed one invocation portal.]],
 }
 newAchievement{
 	name = "Portal reaver", id = "ISTARI_TWO_PORTAL",
-	desc = [[Fought the two Istari and closed two invocation portals.]],
+	desc = [[Fought the two Sorcerers and closed two invocation portals.]],
 }
 newAchievement{
 	name = "Portal ender", id = "ISTARI_THREE_PORTAL",
-	desc = [[Fought the two Istari and closed three invocation portals.]],
+	desc = [[Fought the two Sorcerers and closed three invocation portals.]],
 }
 newAchievement{
 	name = "Portal master", id = "ISTARI_FOUR_PORTAL",
-	desc = [[Fought the two Istari and closed four invocation portals.]],
+	desc = [[Fought the two Sorcerers and closed four invocation portals.]],
 }
 
 -------------- Other quests
@@ -127,9 +127,9 @@ newAchievement{
 }
 newAchievement{
 	name = "There and back again", id = "WEST_PORTAL",
-	desc = [[Opened a portal to Middle-earth from the Far East.]],
+	desc = [[Opened a portal to Maj'Eyal from the Far East.]],
 }
 newAchievement{
 	name = "Back and there again", id = "EAST_PORTAL",
-	desc = [[Opened a portal to the Far East from Middle-earth.]],
+	desc = [[Opened a portal to the Far East from Maj'Eyal.]],
 }
