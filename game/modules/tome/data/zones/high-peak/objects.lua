@@ -30,7 +30,7 @@ newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF", no_unique
 	encumber = 7,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.
-The Istari seem to have awakened its power.]],
+The Sorcerers seem to have awakened its power.]],
 
 	require = { stat = { mag=60 }, },
 	combat = {

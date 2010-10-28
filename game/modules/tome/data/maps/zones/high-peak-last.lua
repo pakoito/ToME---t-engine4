@@ -33,8 +33,8 @@ defineTile('E', "PORTAL_ELEMENTS", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('U', "PORTAL_UNDEAD", nil, nil, nil, {lite=true, no_teleport=true})
 
 -- Bosses
-defineTile('A', "FLOOR", nil, "ALATAR", nil, {lite=true, no_teleport=true})
-defineTile('P', "FLOOR", nil, "PALLANDO", nil, {lite=true, no_teleport=true})
+defineTile('A', "FLOOR", nil, "ELANDAR", nil, {lite=true, no_teleport=true})
+defineTile('P', "FLOOR", nil, "ARDONIEL", nil, {lite=true, no_teleport=true})
 
 subGenerator{
 	x = 0, y = 23, w = 50, h = 52,

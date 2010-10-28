@@ -36,7 +36,7 @@ quickEntity('B', {always_remember = true, show_tooltip=true, name="High Peak", d
 
 quickEntity('1', {always_remember = true, show_tooltip=true, name="Gates of Morning", desc="A massive hole in the Sun Wall", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
 
--- The shield protecting the istari hideout
+-- The shield protecting the sorcerer hideout
 local p = getMap():particleEmitter(43, 25, 3, "istari_shield_map")
 
 -- Load encounters for this map

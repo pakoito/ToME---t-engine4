@@ -154,7 +154,7 @@ newEntity{
 		message = "#VIOLET#You enter the swirling portal and appear in a large room with other portals and the two wizards.",
 		on_use = function()
 			local Chat = require "engine.Chat"
-			local chat = Chat.new("istari-fight", {name="Alatar, the Blue"}, game.player)
+			local chat = Chat.new("sorcerer-fight", {name="Elandar"}, game.player)
 			chat:invoke()
 			game.player:hasQuest("high-peak"):start_end_combat()
 		end,

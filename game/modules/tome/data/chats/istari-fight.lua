@@ -39,9 +39,9 @@ local function aeryn_comes(npc, player)
 		game.player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "aeryn-helps")
 		game.logPlayer(player, "High Sun Paladin Aeryn appears next to you!")
 
-		-- The istari focus her first
+		-- The sorcerer focus her first
 		for uid, e in pairs(game.level.entities) do
-			if e.define_as and (e.define_as == "ALATAR" or e.define_as == "PALLANDO") then
+			if e.define_as and (e.define_as == "ELANDAR" or e.define_as == "ARGONIEL") then
 				e:setTarget(aeryn)
 			end
 		end
@@ -49,7 +49,7 @@ local function aeryn_comes(npc, player)
 end
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*The two istari stands before you, shining like the sun.*#WHITE#
+	text = [[#LIGHT_GREEN#*The two sorcerers stands before you, shining like the sun.*#WHITE#
 Ah! Our guest is finally here. I take it you found the peak entertaining?]],
 	answers = {
 		{"Spare me the small talk. I am here to stop you!", jump="explain"},
@@ -59,7 +59,7 @@ Ah! Our guest is finally here. I take it you found the peak entertaining?]],
 
 newChat{ id="explain",
 	text = [[Oh, but all we want is to help people. We have come to the self-evident conclusion that common people are just unfit to govern themselves, always bickering, arguing...
-Since the fall of Sauron there is no threat to unite them!]],
+Since the last invasion of the orcs there has been no threat to unite them!]],
 	answers = {
 		{"So you have decided to become the threat yourselves?", jump="explain2"},
 	}
@@ -74,9 +74,9 @@ newChat{ id="explain2",
 
 if void_portal_open(nil, game.player) then
 newChat{ id="explain3",
-	text = [[Isn't it obvious? The greatest of them, the black foe of the world. Melkor the great, whom you may know as Morgoth!
+	text = [[The Creator. The God who made this world, He who watched silently as the races fought and burnt the land.
+He who felt great sorrow for this world. He who shall now shatter the barriers of this world to remake it, only better!
 The staff has allowed us to drain enough energy from this world to open the portal to the Void and summon him through!
-We will bring forth the Last Battle, Dagor Dagorath, as was prophesied to happen when the world was made.
 It is already too late. He is coming through as we speak -- it is only a matter of hours!]],
 	answers = {
 		{"I *WILL* stop you! The world will not end today!", jump="aeryn", action=aeryn_comes, cond=aeryn_alive},
@@ -85,9 +85,9 @@ It is already too late. He is coming through as we speak -- it is only a matter 
 }
 else
 newChat{ id="explain3",
-	text = [[Isn't it obvious? The greatest of them, the black foe of the world. Melkor the great, whom you may know as Morgoth!
+	text = [[The Creator. The God who made this world, He who watched silently as the races fought and burnt the land.
+He who felt great sorrow for this world. He who shall now shatter the barriers of this world to remake it, only better!
 The staff will allow us to drain enough energy from this world to open the portal to the Void and summon him through!
-We will bring forth the Last Battle, Dagor Dagorath, as was prophesied to happen when the world was made.
 You cannot stop us now!]],
 	answers = {
 		{"I *WILL* stop you! The world will not end today!", jump="aeryn", action=aeryn_comes, cond=aeryn_alive},

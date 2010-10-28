@@ -51,13 +51,13 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- Alatar & Palando, the final bosses
 newEntity{
-	define_as = "ALATAR",
-	type = "humanoid", subtype = "istari",
-	name = "Alatar the Blue",
+	define_as = "ELANDAR",
+	type = "humanoid", subtype = "sorcerer",
+	name = "Elandar",
 	display = "@", color=colors.AQUAMARINE,
-	faction = "blue-wizards",
+	faction = "sorcerers",
 
-	desc = [[Lost to the memory of the West, the Blue Wizards have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	desc = [[The renegates mages from Angolwen, the Sorcerers have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {75, 75}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
@@ -119,13 +119,13 @@ newEntity{
 }
 
 newEntity{
-	define_as = "PALLANDO",
-	type = "humanoid", subtype = "istari",
-	name = "Pallando the Blue",
+	define_as = "ARGONIEL",
+	type = "humanoid", subtype = "sorcerer",
+	name = "Argoniel",
 	display = "@", color=colors.ROYAL_BLUE,
-	faction = "blue-wizards",
+	faction = "sorcerers",
 
-	desc = [[Lost to the memory of the West, the Blue Wizards have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	desc = [[The renegates mages from Angolwen, the Sorcerers have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {75, 75}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
@@ -253,7 +253,7 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	resolvers.sustains_at_birth(),
 }
 
--- Aeryn coming back to help the player in the fight with the Istari
+-- Aeryn coming back to help the player in the fight with the Sorcerers
 newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	type = "humanoid", subtype = "human",
 	display = "p",

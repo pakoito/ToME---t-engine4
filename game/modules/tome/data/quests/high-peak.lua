@@ -23,11 +23,11 @@ desc = function(self, who)
 
 	if not self:isCompleted() then
 		desc[#desc+1] = "You have vanquished the masters of the Orc Pride, now you must venture inside the most dangerous place of this world, the High Peak."
-		desc[#desc+1] = "Seek the Blue Wizards and stop them before they bend the world to their will."
+		desc[#desc+1] = "Seek the Sorcerers and stop them before they bend the world to their will."
 		desc[#desc+1] = "To enter you will need the four orbs of command to remove the shield over the peak."
 		desc[#desc+1] = "The entrance to the peak passes through a place called 'the slime tunnels', probably located inside or near Grushnak Pride."
 	else
-		desc[#desc+1] = "You have reached the summit of the High Peak, entered the sanctum of the Istari and destroyed them, freeing the world from the threat of evil."
+		desc[#desc+1] = "You have reached the summit of the High Peak, entered the sanctum of the Sorcerers and destroyed them, freeing the world from the threat of evil."
 		desc[#desc+1] = "You have won the game!"
 	end
 
@@ -58,7 +58,7 @@ on_status_change = function(self, who, status, sub)
 			self:end_end_combat()
 
 			local Chat = require"engine.Chat"
-			local chat = Chat.new("istari-end", {name="Endgame"}, game.player)
+			local chat = Chat.new("sorcerer-end", {name="Endgame"}, game.player)
 			chat:invoke()
 		end
 	end
@@ -92,11 +92,11 @@ function end_end_combat(self)
 	if self:isCompleted("closed-portal-dragon") then nb_portal = nb_portal + 1 end
 	if self:isCompleted("closed-portal-elemental") then nb_portal = nb_portal + 1 end
 	if self:isCompleted("closed-portal-undead") then nb_portal = nb_portal + 1 end
-	if nb_portal == 0 then world:gainAchievement("ISTARI_NO_PORTAL", game.player)
-	elseif nb_portal == 1 then world:gainAchievement("ISTARI_ONE_PORTAL", game.player)
-	elseif nb_portal == 2 then world:gainAchievement("ISTARI_TWO_PORTAL", game.player)
-	elseif nb_portal == 3 then world:gainAchievement("ISTARI_THREE_PORTAL", game.player)
-	elseif nb_portal == 4 then world:gainAchievement("ISTARI_FOUR_PORTAL", game.player)
+	if nb_portal == 0 then world:gainAchievement("SORCERER_NO_PORTAL", game.player)
+	elseif nb_portal == 1 then world:gainAchievement("SORCERER_ONE_PORTAL", game.player)
+	elseif nb_portal == 2 then world:gainAchievement("SORCERER_TWO_PORTAL", game.player)
+	elseif nb_portal == 3 then world:gainAchievement("SORCERER_THREE_PORTAL", game.player)
+	elseif nb_portal == 4 then world:gainAchievement("SORCERER_FOUR_PORTAL", game.player)
 	end
 end
 

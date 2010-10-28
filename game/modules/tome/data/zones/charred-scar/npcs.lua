@@ -156,13 +156,13 @@ newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "URUK-HAI_ATTACK",
 
 
 newEntity{
-	define_as = "ALATAR",
-	type = "humanoid", subtype = "istari",
-	name = "Alatar the Blue",
+	define_as = "ELANDAR",
+	type = "humanoid", subtype = "sorcerer",
+	name = "Elandar",
 	display = "@", color=colors.AQUAMARINE,
-	faction = "blue-wizards",
+	faction = "sorcererss",
 
-	desc = [[Lost to the memory of the West, the Blue Wizards have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	desc = [[The renegates mages from Angolwen, the Sorcerers have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {70, 70}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
@@ -212,13 +212,13 @@ newEntity{
 }
 
 newEntity{
-	define_as = "PALLANDO",
-	type = "humanoid", subtype = "istari",
-	name = "Pallando the Blue",
+	define_as = "ARGONIEL",
+	type = "humanoid", subtype = "sorcerer",
+	name = "Argoniel",
 	display = "@", color=colors.LIGHT_BLUE,
-	faction = "blue-wizards",
+	faction = "sorcerers",
 
-	desc = [[Lost to the memory of the West, the Blue Wizards have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
+	desc = [[The renegates mages from Angolwen, the Sorcerers have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {70, 70}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
