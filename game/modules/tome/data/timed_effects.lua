@@ -659,6 +659,14 @@ newEffect{
 	activate = function(self, eff)
 		game.level.map.changed = true
 	end,
+	on_timeout = function(self, eff)
+		-- Track an actor if it's not dead
+		if eff.track and not eff.track.dead then
+			eff.x = eff.track.x
+			eff.y = eff.track.y
+			game.level.map.changed = true
+		end
+	end,
 	deactivate = function(self, eff)
 		game.level.map.changed = true
 	end,

@@ -62,7 +62,7 @@ newTalent{
 
 		local dur = math.floor(10 + self:getTalentLevel(t) * 3)
 		local radius = math.floor(4 + self:getTalentLevel(t) * 3)
-		self:setEffect(self.EFF_ARCANE_EYE, dur, {x=x, y=y, radius=radius, true_seeing=self:getTalentLevel(t) >= 5})
+		self:setEffect(self.EFF_ARCANE_EYE, dur, {x=x, y=y, track=game.level.map(x, y, Map.ACTOR), radius=radius, true_seeing=self:getTalentLevel(t) >= 5})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -72,6 +72,7 @@ newTalent{
 		It does not require light to do so but it can not see through walls.
 		Casting the eye does not take a turn.
 		Only one arcane eye can exist at any given time.
+		At level 4 if cast on a creature it will follow it until it expires or until the creature dies.
 		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.
 		]]):format(math.floor(10 + self:getTalentLevel(t) * 3), math.floor(4 + self:getTalentLevel(t) * 3))
 	end,
