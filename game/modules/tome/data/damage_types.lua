@@ -38,6 +38,12 @@ setDefaultProjector(function(src, x, y, type, dam)
 		end
 		print("[PROJECTOR] after difficulty dam", dam)
 
+		-- Preemptive shielding
+		if target.isTalentActive and target:isTalentActive(target.T_PREMONITION) then
+			local t = target:getTalentFromId(target.T_PREMONITION)
+			t.on_damage(target, target.T_PREMONITION, type)
+		end
+
 		-- Increases damage
 		if src.inc_damage then
 			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)
@@ -58,6 +64,7 @@ setDefaultProjector(function(src, x, y, type, dam)
 		end
 		print("[PROJECTOR] after resists dam", dam)
 
+		-- Static reduce damage
 		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
 			dam = t.on_damage(target, target.T_ANTIMAGIC_SHIELD, type, dam)

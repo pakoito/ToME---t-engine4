@@ -1515,7 +1515,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 
 	-- Check for stealth. Checks against the target cunning and level
 	if actor:attr("stealth") and actor ~= self then
-		local def = self.level / 2 + self:getCun(25)
+		local def = self.level / 2 + self:getCun(25) + (self:attr("see_stealth") or 0)
 		local hit, chance = self:checkHit(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
 			return false, chance

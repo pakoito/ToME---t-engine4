@@ -1918,3 +1918,20 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "PREMONITION_SHIELD",
+	desc = "Premonition Shield",
+	long_desc = function(self, eff) return ("Reduces %s damage received by %d%%."):format(DamageType:get(eff.damtype).name, eff.resist) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# casts a protective shield just in time!", "+Premonition Shield" end,
+	on_lose = function(self, err) return "The protective shield of #Target# disappears.", "-Premonition Shield" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {[eff.damtype]=eff.resist})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}

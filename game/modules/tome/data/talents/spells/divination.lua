@@ -18,29 +18,35 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Sense",
+	name = "Keen Senses",
 	type = {"spell/divination", 1},
 	require = spells_req1,
+	mode = "sustained",
 	points = 5,
-	random_ego = "utility",
-	mana = 10,
-	cooldown = 10,
-	action = function(self, t)
-		local rad = 10 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
-		self:setEffect(self.EFF_SENSE, 2, {
-			range = rad,
-			actor = 1,
-			object = (self:getTalentLevel(t) >= 2) and 1 or 0,
-			trap = (self:getTalentLevel(t) >= 5) and 1 or 0,
-		})
+	sustain_mana = 40,
+	cooldown = 30,
+	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
+		return {
+			invis = self:addTemporaryValue("see_invisible", self:combatTalentSpellDamage(t, 2, 45)),
+			stealth = self:addTemporaryValue("see_stealth", self:combatTalentSpellDamage(t, 2, 20)),
+			crit = self:addTemporaryValue("combat_spellcrit", self:combatTalentSpellDamage(t, 2, 12)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("see_invisible", p.invis)
+		self:removeTemporaryValue("see_stealth", p.stealth)
+		self:removeTemporaryValue("combat_spellcrit", p.crit)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sense foes around you in a radius of %d.
-		At level 2 it detects objects.
-		At level 5 it detects traps.
-		The radius will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
+		return ([[You focus your senses, getting informations from moments in the future.
+		Improves see invisible +%d.
+		Improves see through stealth +%d.
+		Improves critical spell chance +%d%%.
+		The effects will improve with the Magic stat]]):format(
+			self:combatTalentSpellDamage(t, 2, 45), self:combatTalentSpellDamage(t, 2, 20), self:combatTalentSpellDamage(t, 2, 12)
+		)
 	end,
 }
 
@@ -97,30 +103,33 @@ newTalent{
 }
 
 newTalent{
-	name = "Telepathy",
+	name = "Premonition",
 	type = {"spell/divination", 4},
 	mode = "sustained",
 	require = spells_req4,
 	points = 5,
-	sustain_mana = 200,
+	sustain_mana = 120,
 	cooldown = 30,
+	on_damage = function(self, t, damtype)
+		if damtype == DamageType.PHYSICAL then return end
+
+		if not self:hasEffect(self.EFF_PREMONITION_SHIELD) then
+			self:setEffect(self.EFF_PREMONITION_SHIELD, 5, {damtype=damtype, resist=10 + self:combatTalentSpellDamage(t, 2, 25)})
+			game.logPlayer(self, "#OLIVE_DRAB#Your premonition allows you to raise a shield just in time!")
+		end
+	end,
 	activate = function(self, t)
-		-- There is an implicit +10, as it is the default radius
-		local rad = self:combatTalentSpellDamage(t, 2, 10)
 		game:playSoundNear(self, "talents/spell_generic")
 		return {
-			esp = self:addTemporaryValue("esp", {range=rad, all=1}),
-			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("esp", p.esp)
-		self:removeTemporaryValue("mana_regen", p.drain)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows you to sense the presence of foes, in a radius of %d.
-		This powerful spell will continuously drain mana while active.
-		The bonus will increase with the Magic stat]]):format(10 + self:combatTalentSpellDamage(t, 2, 10))
+		return ([[Echos of the future flashes before your eyes, allowing you to sense some incomming attacks.
+		If the attack is elemental or magical you will erect a temporary shield that reduces all damage of this type by %d%% for 5 turns.
+		This effect can only happen once every 5 turns.
+		The bonus will increase with the Magic stat]]):format(10 + self:combatTalentSpellDamage(t, 2, 25), 5)
 	end,
 }
