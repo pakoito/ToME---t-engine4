@@ -73,8 +73,7 @@ newTalent{
 		Casting the eye does not take a turn.
 		Only one arcane eye can exist at any given time.
 		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.
-		]]):
-		format(math.floor(10 + self:getTalentLevel(t) * 3), math.floor(4 + self:getTalentLevel(t) * 3))
+		]]):format(math.floor(10 + self:getTalentLevel(t) * 3), math.floor(4 + self:getTalentLevel(t) * 3))
 	end,
 }
 
