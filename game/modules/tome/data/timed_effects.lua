@@ -649,6 +649,22 @@ newEffect{
 }
 
 newEffect{
+	name = "ARCANE_EYE",
+	desc = "Arcane Eye",
+	long_desc = function(self, eff) return ("You have an arcane eye observing for you in a radius of %d."):format(eff.radius) end,
+	type = "magical",
+	status = "beneficial",
+	cancel_on_level_change = true,
+	parameters = { range=10, actor=1, object=0, trap=0 },
+	activate = function(self, eff)
+		game.level.map.changed = true
+	end,
+	deactivate = function(self, eff)
+		game.level.map.changed = true
+	end,
+}
+
+newEffect{
 	name = "ALL_STAT",
 	desc = "All stats increase",
 	long_desc = function(self, eff) return ("All primary stats of the target are increased by %d."):format(eff.power) end,

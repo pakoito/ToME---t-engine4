@@ -108,6 +108,13 @@ function _M:onEnterLevel(zone, level)
 	if self.random_escort_levels and self.random_escort_levels[zone.short_name] and self.random_escort_levels[zone.short_name][level.level] then
 		self:grantQuest("escort-duty")
 	end
+
+	-- Cancel effects
+	local effs = {}
+	for eff_id, p in pairs(self.tmp) do
+		if self.tempeffect_def[eff_id].cancel_on_level_change then effs[#effs+1] = eff_id end
+	end
+	for i, eff_id in ipairs(effs) do self:removeEffect(eff_id) end
 end
 
 function _M:onLeaveLevel(zone, level)
@@ -139,6 +146,7 @@ function _M:move(x, y, force)
 			if obj.auto_pickup then
 				self:pickupFloor(i, true)
 			else
+				if self:attr("auto_id_mundane") and obj:getPowerRank() <= 1 then obj:identify(true) end
 				nb = nb + 1
 				i = i + 1
 			end
@@ -249,6 +257,7 @@ local wild_fovdist = {}
 for i = 0, 10 * 10 do
 	wild_fovdist[i] = math.max((5 - math.sqrt(i)) / 1.4, 0.6)
 end
+local arcane_eye_true_seeing = function() return true, 100 end
 
 function _M:playerFOV()
 	-- Clean FOV before computing it
@@ -293,6 +302,20 @@ function _M:playerFOV()
 		end, true, true, true)
 	end
 
+	-- Handle arcane eye
+	if self:hasEffect(self.EFF_ARCANE_EYE) then
+		local eff = self:hasEffect(self.EFF_ARCANE_EYE)
+		local map = game.level.map
+
+		core.fov.calc_circle(
+			eff.x, eff.y, eff.radius, function(_, x, y) if map:checkAllEntities(x, y, "block_sight", self) then return true end end,
+			function(_, x, y)
+				local t = map(x, y, map.ACTOR)
+				if t and (eff.true_seeing or self:canSee(t)) then map.seens(x, y, 1) end
+			end,
+			cache and map._fovcache["block_sight"]
+		)
+	end
 
 	-- Handle Preternatural Senses talent, a simple FOV, using cache.
 	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then

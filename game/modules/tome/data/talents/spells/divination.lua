@@ -25,9 +25,6 @@ newTalent{
 	random_ego = "utility",
 	mana = 10,
 	cooldown = 10,
-	tactical = {
-		ATTACK = 10,
-	},
 	action = function(self, t)
 		local rad = 10 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
 		self:setEffect(self.EFF_SENSE, 2, {
@@ -48,58 +45,36 @@ newTalent{
 }
 
 newTalent{
-	name = "Identify",
+	name = "Arcane Eye",
 	type = {"spell/divination", 2},
 	require = spells_req2,
 	points = 5,
-	random_ego = "utility",
-	mana = 20,
+	mana = 15,
+	cooldown = 10,
+	no_energy = true,
 	action = function(self, t)
-		local rad = math.floor(0 + (self:getTalentLevel(t) - 4))
+		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=100, requires_knowledge=false}
+		x, y = self:getTarget(tg)
+		if not x then return nil end
+		-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+		-- but we cant ...
+		local _ _, x, y = self:canProject(tg, x, y)
 
-		if self:getTalentLevel(t) < 3 then
-			self:showEquipInven("Identify object", function(o) return not o:isIdentified() end, function(o)
-				o:identify(true)
-				game.logPlayer(self, "You identify: %s", o:getName{do_color=true})
-				return true
-			end)
-			return true
-		end
-
-		if self:getTalentLevel(t) >= 3 then
-			for inven_id, inven in pairs(self.inven) do
-				for i, o in ipairs(inven) do
-					o:identify(true)
-				end
-			end
-			game.logPlayer(self, "You identify all your inventory.")
-		end
-
-		if self:getTalentLevel(t) >= 4 then
-			local idfloor = function(x, y)
-				local idx = 1
-				while true do
-					local o = game.level.map:getObject(x, y, idx)
-					if not o then break end
-					o:identify(true)
-					idx = idx + 1
-				end
-			end
-			local rad = math.floor(0 + (self:getTalentLevel(t) - 4))
-			if rad == 0 then idfloor(self.x, self.y)
-			else self:project({type="ball", radius=rad}, self.x, self.y, idfloor)
-			end
-
-			game.logPlayer(who, "You identify everything around you.")
-		end
-
+		local dur = math.floor(10 + self:getTalentLevel(t) * 3)
+		local radius = math.floor(4 + self:getTalentLevel(t) * 3)
+		self:setEffect(self.EFF_ARCANE_EYE, dur, {x=x, y=y, radius=radius, true_seeing=self:getTalentLevel(t) >= 5})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Identify the powers and nature of an object.
-		At level 3 it identifies all the objects in your possession.
-		At level 4 it identifies all the objects on the floor in a radius of %d.]]):format(math.floor(0 + (self:getTalentLevel(t) - 4)))
+		return ([[Summons an etheral magical eye at the designated location that lasts for %d turns.
+		The eye can not be seen or attacked by other creatures and posses magical vision that allows it to see any creature in a %d range around it.
+		It does not require light to do so but it can not see through walls.
+		Casting the eye does not take a turn.
+		Only one arcane eye can exist at any given time.
+		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.
+		]]):
+		format(math.floor(10 + self:getTalentLevel(t) * 3), math.floor(4 + self:getTalentLevel(t) * 3))
 	end,
 }
 
@@ -112,12 +87,12 @@ newTalent{
 	mana = 20,
 	cooldown = 20,
 	action = function(self, t)
-		self:magicMap(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
+		self:magicMap(5 + self:combatTalentSpellDamage(t, 2, 12))
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Form a map of your surroundings in your mind in a radius of %d.]]):format(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
+		return ([[Form a map of your surroundings in your mind in a radius of %d.]]):format(5 + self:combatTalentSpellDamage(t, 2, 12))
 	end,
 }
 
@@ -131,7 +106,7 @@ newTalent{
 	cooldown = 30,
 	activate = function(self, t)
 		-- There is an implicit +10, as it is the default radius
-		local rad = self:combatSpellpower(0.1) * self:getTalentLevel(t)
+		local rad = self:combatTalentSpellDamage(t, 2, 10)
 		game:playSoundNear(self, "talents/spell_generic")
 		return {
 			esp = self:addTemporaryValue("esp", {range=rad, all=1}),
@@ -146,6 +121,6 @@ newTalent{
 	info = function(self, t)
 		return ([[Allows you to sense the presence of foes, in a radius of %d.
 		This powerful spell will continuously drain mana while active.
-		The bonus will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1) * self:getTalentLevel(t))
+		The bonus will increase with the Magic stat]]):format(10 + self:combatTalentSpellDamage(t, 2, 10))
 	end,
 }

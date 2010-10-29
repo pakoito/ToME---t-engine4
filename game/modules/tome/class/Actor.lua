@@ -1416,7 +1416,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ""..self:getTalentRange(t), true)
 	else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)
 	end
-	if t.cooldown then d:add({"color",0x6f,0xff,0x83}, "Cooldown: ", {"color",0xFF,0xFF,0xFF}, ""..util.getval(t.cooldown, self, t), true) end
+	if self:getTalentCooldown(t) then d:add({"color",0x6f,0xff,0x83}, "Cooldown: ", {"color",0xFF,0xFF,0xFF}, ""..self:getTalentCooldown(t), true) end
 	local speed = self:getTalentProjectileSpeed(t)
 	if speed then d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, ""..(speed * 100).."% of base", true)
 	else d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, "instantaneous", true)
@@ -1432,18 +1432,23 @@ function _M:getTalentFullDescription(t, addlevel)
 	return d
 end
 
---- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction
--- @param t the talent to cooldown
-function _M:startTalentCooldown(t)
+function _M:getTalentCooldown(t)
 	if not t.cooldown then return end
 	local cd = t.cooldown
 	if type(cd) == "function" then cd = cd(self, t) end
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
 	if t.is_spell then
-		self.talents_cd[t.id] = math.ceil(cd * (1 - self.spell_cooldown_reduction or 0))
+		return math.ceil(cd * (1 - self.spell_cooldown_reduction or 0))
 	else
-		self.talents_cd[t.id] = cd
+		return cd
 	end
+end
+
+--- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction
+-- @param t the talent to cooldown
+function _M:startTalentCooldown(t)
+	if not t.cooldown then return end
+	self.talents_cd[t.id] = self:getTalentCooldown(t)
 	self.changed = true
 end
 

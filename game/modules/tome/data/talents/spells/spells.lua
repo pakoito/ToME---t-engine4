@@ -31,13 +31,13 @@ newTalentType{ no_silence=true, is_spell=true, type="spell/air", name = "air", d
 newTalentType{ no_silence=true, is_spell=true, type="spell/storm", name = "storm", description = "Harness the power of the storm to incinerate your foes." }
 
 -- Various other magic schools
-newTalentType{ no_silence=true, is_spell=true, type="spell/conveyance", name = "conveyance", generic = true, description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
-newTalentType{ no_silence=true, is_spell=true, type="spell/nature", name = "nature", generic = true, description = "Summons the power of nature to rejuvenate yourself and the world." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/meta", name = "meta", description = "Meta spells alter the working of magic itself." }
-newTalentType{ no_silence=true, is_spell=true, type="spell/divination", name = "divination", generic = true, description = "Divination allows the caster to sense its surroundings, find hidden things." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/temporal", name = "temporal", description = "The school of time manipulation." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
+newTalentType{ no_silence=true, is_spell=true, type="spell/conveyance", name = "conveyance", generic = true, description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
+newTalentType{ no_silence=true, is_spell=true, type="spell/divination", name = "divination", generic = true, description = "Divination allows the caster to sense its surroundings, find hidden things." }
+newTalentType{ no_silence=true, is_spell=true, type="spell/nature", name = "nature", generic = true, description = "Summons the power of nature to rejuvenate yourself and the world." }
 
 -- Alchemist spells
 newTalentType{ no_silence=true, is_spell=true, type="spell/explosives", name = "explosive admixtures", description = "Manipulate gems to turn them into explosive magical bombs." }

@@ -101,14 +101,6 @@ function _M:saveObject(obj, zip)
 		local tbl = table.remove(self.process)
 		self.tables[tbl] = self:getFileName(tbl)
 		zip:add(self:getFileName(tbl), tbl:save())
-		-- If run from a coroutine, we pause every object
-		if self.coroutine then
-			local coret = coroutine.yield()
-			if coret and type(coret) == "string" and coret == "cancel" then
-				print("[SAVE] abording")
-				break
-			end
-		end
 	end
 	return self.tables[obj]
 end

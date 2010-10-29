@@ -168,6 +168,9 @@ local function basicSerialize(o, t)
 end
 
 local function serialize_data(outf, name, value, saved, filter, allow, savefile, force)
+	-- If run from a coroutine, we pause every table
+	if savefile.coroutine then coroutine.yield() end
+
 	saved = saved or {}       -- initial value
 	outf(name, " = ")
 	local tvalue = type(value)
