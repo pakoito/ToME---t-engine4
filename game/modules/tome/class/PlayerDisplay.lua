@@ -152,7 +152,13 @@ function _M:display()
 		self:mouseTooltip(self.TOOLTIP_HATE, s:drawColorStringBlended(self.font, ("#F53CBE#Hate:    #ffffff#%.1f/%d"):format(player:getHate(), 10), x, h, 255, 255, 255)) h = h + self.font_h
 	end
 
-	if savefile_pipe.saving then h = h + self.font_h s:drawColorStringBlended(self.font, "#YELLOW#Saving...", x, h, 255, 255, 255) h = h + self.font_h end
+	if savefile_pipe.saving then
+		h = h + self.font_h
+		s:erase(0x68 / 6, 0x72 / 6, 0x00 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
+		s:erase(0x95 / 3, 0xa2 / 3, 0x80 / 3, 255, self.bars_x, h, self.bars_w * savefile_pipe.current_nb / savefile_pipe.total_nb, self.font_h)
+		s:drawColorStringBlended(self.font, ("#YELLOW#Saving...: %d%%"):format(100 * savefile_pipe.current_nb / savefile_pipe.total_nb), x, h, 255, 255, 255)
+		h = h + self.font_h
+	end
 
 	h = h + self.font_h
 	for tid, act in pairs(player.sustain_talents) do

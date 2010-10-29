@@ -113,31 +113,34 @@ function _M:clone(t)
 end
 
 
-local function clonerecursfull(clonetable, d, allow_cloned)
+local function clonerecursfull(clonetable, d)
+	local nb = 0
+	local add
 	local n = {}
 	clonetable[d] = n
 
 	for k, e in pairs(d) do
 		local nk, ne = k, e
 		if clonetable[k] then nk = clonetable[k]
-		elseif type(k) == "table" then nk = clonerecursfull(clonetable, k)
+		elseif type(k) == "table" then nk, add = clonerecursfull(clonetable, k) nb = nb + add
 		end
 
 		if clonetable[e] then ne = clonetable[e]
-		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne = clonerecursfull(clonetable, e)
+		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne, add = clonerecursfull(clonetable, e) nb = nb + add
 		end
 		n[nk] = ne
 	end
 	setmetatable(n, getmetatable(d))
 	if n.cloned and n.__CLASSNAME then n:cloned(d) end
-	return n
+	if n.__CLASSNAME then nb = nb + 1 end
+	return n, nb
 end
 
 --- Clones the object, all subobjects without cloning twice a subobject
-function _M:cloneFull(allow_cloned)
+-- @return the clone and the number of cloned objects
+function _M:cloneFull()
 	local clonetable = {}
-	local n = clonerecursfull(clonetable, self, allow_cloned)
-	return n
+	return clonerecursfull(clonetable, self)
 end
 
 --- Replaces the object with an other, by copying (not deeply)

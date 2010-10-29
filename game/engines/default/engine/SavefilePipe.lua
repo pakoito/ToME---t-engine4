@@ -39,6 +39,8 @@ function _M:init(class, max_before_wait)
 	self.pipe = {}
 	self.max_before_wait = max_before_wait or 4
 	self.co = nil
+	self.current_nb = 0
+	self.total_nb = 1
 end
 
 --- Push a savefile request
@@ -53,7 +55,13 @@ function _M:push(savename, type, object, class)
 	local Savefile = require(class)
 	local id = Savefile["nameSave"..type:lower():capitalize()](Savefile, object)
 
-	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=object:cloneFull(), baseobject=object, class=class, saveversion=game:saveVersion("new")}
+	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
+
+	local clone, nb = object:cloneFull()
+	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new")}
+	local total_nb = 0
+	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
+	self.total_nb = total_nb
 	if not self.co or coroutine.status(self.co) == "dead" then
 		self.co = coroutine.create(function() return self:doThread() end)
 		game:registerCoroutine("savefilepipe", self.co)
@@ -78,7 +86,7 @@ function _M:doThread()
 		local Savefile = require(p.class)
 		local o = p.object
 
-		print("[SAVEFILE PIPE] new save running in the pipe:", p.savename, p.type, "::", p.id, "::", p.baseobject, "=>", p.object)
+		print("[SAVEFILE PIPE] new save running in the pipe:", p.savename, p.type, "::", p.id, "::", p.baseobject, "=>", p.object, "("..p.nb_objects..")")
 
 		local save = Savefile.new(p.savename, true)
 		o.__saved_saveversion = p.saveversion
@@ -101,7 +109,10 @@ function _M:forceWait()
 	popup.__showup = nil
 	core.display.forceRedraw()
 
+	local cnt = 0
 	while coroutine.status(self.co) ~= "dead" do
+		cnt = cnt + 1
+		if cnt == 1000 then core.display.forceRedraw() if game:getPlayer() then game:getPlayer().changed = true end cnt = 0 end
 		coroutine.resume(self.co)
 	end
 

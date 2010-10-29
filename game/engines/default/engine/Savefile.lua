@@ -101,6 +101,7 @@ function _M:saveObject(obj, zip)
 		local tbl = table.remove(self.process)
 		self.tables[tbl] = self:getFileName(tbl)
 		zip:add(self:getFileName(tbl), tbl:save())
+		savefile_pipe.current_nb = savefile_pipe.current_nb + 1
 	end
 	return self.tables[obj]
 end

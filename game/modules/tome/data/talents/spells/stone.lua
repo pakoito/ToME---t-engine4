@@ -82,8 +82,6 @@ newTalent{
 			particle = self:addParticles(Particles.new("stone_skin", 1)),
 			move = self:addTemporaryValue("never_move", 1),
 			knock = self:addTemporaryValue("knockback_immune", kb),
-			detect = self:addTemporaryValue("detect_range", rad),
-			tremor = self:addTemporaryValue("detect_actor", 1),
 			cdred = self:addTemporaryValue("talent_cd_reduction", {
 				[self.T_STALACTITIC_MISSILES] = cdr,
 				[self.T_STRIKE] = cdr,
@@ -100,8 +98,6 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("never_move", p.move)
 		self:removeTemporaryValue("knockback_immune", p.knock)
-		self:removeTemporaryValue("detect_actor", p.tremor)
-		self:removeTemporaryValue("detect_range", p.detect)
 		self:removeTemporaryValue("talent_cd_reduction", p.cdred)
 		self:removeTemporaryValue("resists", p.res)
 		return true
@@ -111,9 +107,8 @@ newTalent{
 		Your stoned form and your affinity with the earth while the spell is active has the following effects:
 		* Reduces the cooldown of Stalactitic Missiles, Earthquake, and Strike by %d
 		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Physical Resistance, and %d%% Knockback Resistance
-		* Sense foes around you in a radius of %d.
 		Resistances and Sense radius scale with the Magic Stat.]])
-		:format((self:getTalentLevel(t)/2), self:combatTalentSpellDamage(t, 5, 80), self:combatTalentSpellDamage(t, 5, 50), self:combatTalentSpellDamage(t, 5, 20), (self:getTalentLevel(t)*10), (5 + self:combatSpellpower(0.1) * self:getTalentLevel(t)))
+		:format((self:getTalentLevel(t)/2), self:combatTalentSpellDamage(t, 5, 80), self:combatTalentSpellDamage(t, 5, 50), self:combatTalentSpellDamage(t, 5, 20), (self:getTalentLevel(t)*10))
 	end,
 }
 

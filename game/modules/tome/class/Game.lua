@@ -462,6 +462,7 @@ function _M:tick()
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
+	if savefile_pipe.saving then self.player.changed = true end
 	if self.paused and not savefile_pipe.saving then return true end
 end
 
