@@ -24,6 +24,4 @@ Your necromancer master has plans for you, but something is wrong, you seem to h
 Get rid of this evil mage and try to find a place in the world.
 
 You has been raised in a place called the Blighted Scar, on the northern border of the Shaloren lands. Leave this forsaken place and try your luck in old forgotten places.
-
-After days of travel, you have found the forest and entered it, what will you find there?...
 ]]
