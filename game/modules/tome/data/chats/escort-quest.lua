@@ -40,8 +40,8 @@ local reward_types = {
 			["spell/divination"] = 0.7,
 		},
 		talents = {
-			[Talents.T_SENSE] = 1,
-			[Talents.T_IDENTIFY] = 1,
+			[Talents.T_ARCANE_EYE] = 1,
+			[Talents.T_PREMONITION] = 1,
 			[Talents.T_VISION] = 1,
 		},
 		stats = {

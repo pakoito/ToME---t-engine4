@@ -43,6 +43,7 @@ newTalent{
 		if dam < target.max_life * (20 + (30 - self:getTalentLevelRaw(t) * 5)) / 100 then return end
 
 		local weapon = target:getInven("MAINHAND")
+		if type(weapon) == "boolean" then weapon = nil end
 		if weapon then weapon = weapon[1] and weapon[1].combat end
 		if not weapon or type(weapon) ~= "table" then weapon = nil end
 		weapon = weapon or target.combat

@@ -46,6 +46,7 @@ newAI("move_escort", function(self)
 		local tx, ty = self.escort_target.x, self.escort_target.y
 		local a = Astar.new(game.level.map, self)
 		local path = self.escort_path
+		if path and path[1] and math.floor(core.fov.distance(self.x, self.y, path[1].x, path[1].y)) > 1 then self.escort_path = nil path = nil end
 		if not path or #path == 0 then path = a:calc(self.x, self.y, tx, ty) end
 		if not path then
 			return self:runAI("move_simple")

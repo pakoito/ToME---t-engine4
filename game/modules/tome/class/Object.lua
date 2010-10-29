@@ -381,6 +381,8 @@ function _M:getTextualDesc()
 
 	if w.healing_factor then desc:add(("Increases all healing by %d%%"):format(w.healing_factor * 100), true) end
 
+	if w.belt_slots then desc:add(("Allows to put %d small objects in the belt."):format(w.belt_slots), true) end
+
 	end
 
 	if self.wielder then
