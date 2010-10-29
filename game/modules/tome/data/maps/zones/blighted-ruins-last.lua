@@ -29,7 +29,7 @@ subGenerator{
 	generator = "engine.generator.map.Roomer",
 	data = {
 		nb_rooms = 10,
-		rooms = {"simple", "pilar"},
+		rooms = {"random_room"},
 		['.'] = "FLOOR",
 		['#'] = "WALL",
 		up = "UP",

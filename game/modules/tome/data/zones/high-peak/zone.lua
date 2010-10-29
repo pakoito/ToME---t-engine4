@@ -34,7 +34,7 @@ return {
 		map = {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
-			rooms = {"simple", "pilar", {"pit",3}, {"lesser_vault",3}, {"greater_vault",5}},
+			rooms = {"random_room", {"pit",3}, {"lesser_vault",3}, {"greater_vault",5}},
 			rooms_config = {pit={filters={{type="orc"}, {type="naga"}, {type="dragon"}, {type="demon"}}}},
 			lesser_vaults_list = {"circle"},
 			lite_room_chance = 10,

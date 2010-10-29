@@ -37,7 +37,11 @@ function _M:init(data)
 	end
 end
 
+local rooms_cache = {}
+
 function _M:loadRoom(file)
+	if rooms_cache[file] then return rooms_cache[file] end
+
 	local f, err = loadfile("/data/rooms/"..file..".lua")
 	if not f and err then error(err) end
 	setfenv(f, setmetatable({
@@ -49,6 +53,7 @@ function _M:loadRoom(file)
 	-- We got a room generator function, save it for later
 	if type(ret) == "function" then
 		print("loaded room generator",file,ret)
+		rooms_cache[file] = ret
 		return ret
 	end
 
@@ -66,6 +71,7 @@ function _M:loadRoom(file)
 	end
 	print("loaded room",file,t.w,t.h)
 
+	rooms_cache[file] = t
 	return t
 end
 

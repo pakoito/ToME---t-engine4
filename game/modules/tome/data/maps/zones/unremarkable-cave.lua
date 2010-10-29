@@ -29,7 +29,7 @@ subGenerator{
 	data = {
 		edge_entrances = {4,6},
 		nb_rooms = 13,
-		rooms = {"simple", "pilar"},
+		rooms = {"random_room"},
 		['.'] = "FLOOR",
 		['#'] = "WALL",
 		up = "UP_WILDERNESS_FAR_EAST",
