@@ -747,6 +747,16 @@ function _M:useCommandOrb(o)
 	self:setQuestStatus("orb-command", engine.Quest.COMPLETED, o.define_as)
 end
 
+--- Notify of object pickup
+function _M:on_pickup_object(o)
+	-- Grant the artifact quest
+	if o.unique and not o.lore and not o:isIdentified() then self:grantQuest("first-artifact") end
+
+	if self:attr("auto_id_mundane") and o:getPowerRank() <= 1 then
+		o:identify(true)
+	end
+end
+
 --- Tell us when we are targetted
 function _M:on_targeted(act)
 	if self:attr("invisible") or self:attr("stealth") then

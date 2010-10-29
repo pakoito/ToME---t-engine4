@@ -37,7 +37,7 @@ quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=col
 quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), image="terrain/wood_store_weapon.png"})
 quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
 quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), image="terrain/wood_store_book.png"})
-quickEntity('6', {show_tooltip=true, name="Closed store", display='6', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('6', {show_tooltip=true, name="Elisa the Scryer", display='6', color=colors.LIGHT_BLUE, resolvers.chatfeature("elisa-shop"), image="terrain/wood_store_scroll.png"})
 quickEntity('7', {show_tooltip=true, name="Closed store", display='7', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('8', {show_tooltip=true, name="Closed store", display='8', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('9', {show_tooltip=true, name="Gem Store", display='9', color=colors.BLUE, resolvers.store("GEMSTORE"), image="terrain/wood_store_gem.png"})

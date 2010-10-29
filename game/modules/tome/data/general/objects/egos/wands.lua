@@ -27,7 +27,6 @@ newEntity{
 
 --[[
 *detection
-*identify
 *light
 *teleportation
 *trap destruction
@@ -63,32 +62,6 @@ newEntity{
 
 	use_power = { name = "light the area", power = 3, use = function(self, who)
 		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.engine.DamageType.LITE, 1)
-		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return nil, true
-	end}
-}
-
-newEntity{
-	name = " of identify", suffix=true, instant_resolve=true,
-	level_range = {10, 50},
-	rarity = 8,
-	cost_per_charge = 0.5,
-
-	use_power = { name = "identify objects", power = 4, use = function(self, who)
-		if who:getMag() < 28 then
-			who:showEquipInven("Identify object", function(o) return not o:isIdentified() end, function(o)
-				o:identify(true)
-				game.logPlayer(who, "You identify: %s", o:getName{do_color=true})
-				return true
-			end)
-		else
-			for inven_id, inven in pairs(who.inven) do
-				for i, o in ipairs(inven) do
-					o:identify(true)
-				end
-			end
-			game.logPlayer(who, "You identify all your inventory.")
-		end
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
 	end}

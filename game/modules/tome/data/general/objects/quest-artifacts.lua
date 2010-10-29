@@ -251,3 +251,34 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 		inc_stats = { [Stats.STAT_STR] = 6, },
 	},
 }
+
+-- Scrying
+newEntity{ define_as = "ORB_SCRYING",
+	unique = true, quest=true,
+	type = "jewelry", subtype="orb",
+	unided_name = "orb of scrying",
+	name = "Orb of Scrying",
+	display = "*", color=colors.VIOLET, image = "object/ruby.png",
+	encumber = 1,
+	desc = [[This orb was given to you by Elisa the halfling scryer, it will automatically identify normal and rare items for you and can be activated to contact Elisa for rarer items.]],
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+
+	max_power = 1, power_regen = 1,
+	use_power = { name = "use the orb", power = 1,
+		use = function(self, who)
+			local Chat = require("engine.Chat")
+			local chat = Chat.new("elisa-orb-scrying", {name="Elisa the Scyer"}, who)
+			chat:invoke()
+		end
+	},
+
+	carrier = {
+		auto_id_mundane = 1,
+	},
+}

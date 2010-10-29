@@ -69,50 +69,6 @@ newEntity{
 	end,
 }
 
-newEntity{
-	define_as = "NECROMANCER",
-	type = "humanoid", subtype = "human",
-	display = "p", color=colors.DARK_GREY,
-	name = "Necromancer", color=colors.DARK_GREY,
-	desc = [[An human dressed in black robes. He mumbles is a harsh tongue. He seems to think you are his slave.]],
-	level_range = {1, nil}, exp_worth = 1,
-
-	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
-
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, CLOAK=1, QUIVER=1 },
-	resolvers.drops{chance=20, nb=1, {} },
-	resolvers.drops{chance=10, nb=1, {type="money"} },
-	infravision = 20,
-	lite = 2,
-
-	rank = 2,
-	size_category = 2,
-
-	open_door = true,
-
-	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
-	energy = { mod=1 },
-	stats = { str=10, dex=8, mag=16, con=6 },
-
-	max_life = resolvers.rngavg(70,80), life_rating = 7,
-	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloak", defined="CLOAK_DECEPTION", autoreq=true},
-	},
-
-	resolvers.talents{
-		[Talents.T_SOUL_ROT]=1,
-	},
-
-	die = function(self, src)
-		self.die = function() end
-		local Chat = require "engine.Chat"
-		local chat = Chat.new("undead-start-kill", self, game.player)
-		chat:invoke()
-	end,
-}
-
 newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HALF_BONE_GIANT",
 	name = "Half-Finished Bone Giant", color=colors.VIOLET, unique=true,
 	desc = [[A towering creature, made from the bones of hundreds of dead bodies. It is covered by an unholy aura.
