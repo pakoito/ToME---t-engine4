@@ -20,7 +20,7 @@
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 #LIGHT_GREEN#Welcome to ToME 4!#LAST#
 
-This tutorial will present you with a short quest to familiarise yourself with the game.
+This tutorial will present you with a short quest to familiarize yourself with the game.
 You are a human adventurer sent into the forest by the local village to dispose of the "Lone Wolf".
 
 This tutorial character is more powerful than a normal starting character and has infinite lifes.
