@@ -88,25 +88,37 @@ function _M:loadMap(file)
 	if not ret and err then error(err) end
 	if type(ret) == "string" then ret = ret:split("\n") end
 
-	local m = { w=ret[1]:len(), h=#ret }
+	local m = { w=#(ret[1]), h=#ret }
+
+	local function populate(i, j, c)
+		local ii, jj = i, j
+
+		if rotate == "flipx" then ii, jj = m.w - i + 1, j
+		elseif rotate == "flipy" then ii, jj = i, m.h - j + 1
+		elseif rotate == "90" then ii, jj = j, m.w - i + 1
+		elseif rotate == "180" then ii, jj = m.w - i + 1, m.h - j + 1
+		elseif rotate == "270" then ii, jj = m.h - j + 1, i
+		end
+
+		m[ii] = m[ii] or {}
+		m[ii][jj] = c
+	end
 
 	-- Read the map
 	local rotate = util.getval(g.rotates or "default")
-	for j, line in ipairs(ret) do
-		local i = 1
-		for c in line:gmatch(".") do
-			local ii, jj = i, j
-
-			if rotate == "flipx" then ii, jj = m.w - i + 1, j
-			elseif rotate == "flipy" then ii, jj = i, m.h - j + 1
-			elseif rotate == "90" then ii, jj = j, m.w - i + 1
-			elseif rotate == "180" then ii, jj = m.w - i + 1, m.h - j + 1
-			elseif rotate == "270" then ii, jj = m.h - j + 1, i
+	if type(ret[1]) == "string" then
+		for j, line in ipairs(ret) do
+			local i = 1
+			for c in line:gmatch(".") do
+				populate(i, j, c)
+				i = i + 1
 			end
-
-			m[ii] = m[ii] or {}
-			m[ii][jj] = c
-			i = i + 1
+		end
+	else
+		for j, line in ipairs(ret) do
+			for i, c in ipairs(line) do
+				populate(i, j, c)
+			end
 		end
 	end
 
