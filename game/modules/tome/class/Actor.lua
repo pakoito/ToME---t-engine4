@@ -350,8 +350,10 @@ function _M:doQuake(tg, x, y)
 	local locs = {}
 	local ms = {}
 	self:project(tg, x, y, function(tx, ty)
-		locs[#locs+1] = {x=tx,y=ty}
-		ms[#ms+1] = {map=game.level.map.map[tx + ty * w], attrs=game.level.map.attrs[tx + ty * w]}
+		if not game.level.map.attrs(tx, ty, "no_teleport") then
+			locs[#locs+1] = {x=tx,y=ty}
+			ms[#ms+1] = {map=game.level.map.map[tx + ty * w], attrs=game.level.map.attrs[tx + ty * w]}
+		end
 	end)
 
 	while #locs > 0 do
@@ -368,7 +370,7 @@ function _M:doQuake(tg, x, y)
 	end
 	game.level.map:cleanFOV()
 	game.level.map.changed = true
---	game.level.map:redisplay()
+	game.level.map:redisplay()
 end
 
 --- Reveals location surrounding the actor

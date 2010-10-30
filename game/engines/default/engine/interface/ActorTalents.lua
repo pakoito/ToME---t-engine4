@@ -493,7 +493,7 @@ function _M:cooldownTalents()
 	for tid, c in pairs(self.talents_cd) do
 		self.changed = true
 		self.talents_cd[tid] = self.talents_cd[tid] - 1
-		if self.talents_cd[tid] == 0 then
+		if self.talents_cd[tid] <= 0 then
 			self.talents_cd[tid] = nil
 			if self.onTalentCooledDown then self:onTalentCooledDown(tid) end
 		end

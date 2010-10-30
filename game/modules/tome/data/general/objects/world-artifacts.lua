@@ -346,10 +346,9 @@ newEntity{ base = "BASE_LONGSWORD",
 
 newEntity{ base = "BASE_LEATHER_BOOT",
 	unique = true,
-	name = "Boots of Tom Bombadil",
+	name = "Eden's Guile",
 	unided_name = "pair of yellow boots",
-	desc = [[Old Tom Bombadil is a merry fellow.
-Bright blue his jacket is, and his boots are yellow.]],
+	desc = [[]],
 	color = colors.YELLOW,
 	level_range = {1, 20},
 	rarity = 200,
