@@ -42,7 +42,7 @@ desc = function(self, who)
 	if self:isCompleted("grushnak") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Grushnak.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* Grushnak Pride, on the eastern slope of the High Peak.#WHITE#"
+		desc[#desc+1] = "#SLATE#* Grushnak Pride, near a small mountain range in the north west.#WHITE#"
 	end
 	if self:isCompleted("gorbat") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed Gorbat.#WHITE#"
@@ -68,7 +68,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="rak-shor-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 38, 49)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 142, 50)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
@@ -79,7 +79,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="vor-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 63, 14)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 168, 8)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
@@ -90,7 +90,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="gorbat-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 43, 53)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 147, 54)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
@@ -101,7 +101,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="grushnak-pride"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 50, 21)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 135, 10)
 
 	game.logPlayer(game.player, "Aeryn points the known locations on your map.")
 end

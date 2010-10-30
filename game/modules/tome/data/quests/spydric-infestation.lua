@@ -39,6 +39,6 @@ on_grant = function(self, who)
 		change_level=1, change_zone="ardhungol"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 66, 32)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 162, 28)
 	game.logPlayer(game.player, "High Sun Paladin Aeryn marks the location of Ardhungol on your map.")
 end

@@ -79,7 +79,7 @@ This one seems to go near the Gates of Morning in the Far East.]],
 
 		orb_portal = {
 			change_level = 1,
-			change_zone = "wilderness-fareast",
+			change_zone = "wilderness",
 			change_wilderness = {
 				x = 65, y = 35,
 			},
@@ -127,15 +127,15 @@ open_orthanc = function(self, player)
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
-		name="Entrance into the tower of Orthanc",
+		name="Entrance into Telmur, tower of Telos",
 		display='>', color=colors.RED,
 		notice = true,
-		change_level=1, change_zone="orthanc"
+		change_level=1, change_zone="telmur"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 43, 40)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 55, 23)
 
-	game.logPlayer(game.player, "Tannen points the location of Orthanc on your map.")
+	game.logPlayer(game.player, "Tannen points the location of Telmur on your map.")
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "open-orthanc")
 	self.wait_turn = game.turn + game.calendar.DAY * 3
 end

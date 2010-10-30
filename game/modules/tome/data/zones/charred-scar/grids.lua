@@ -55,7 +55,7 @@ newEntity{
 
 	orb_portal = {
 		change_level = 1,
-		change_zone = "wilderness-fareast",
+		change_zone = "wilderness",
 		change_wilderness = {
 			x = 9, y = 5,
 		},

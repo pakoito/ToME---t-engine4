@@ -39,6 +39,6 @@ on_grant = function(self, who)
 		change_level=1, change_zone="eruan"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 56, 51)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 155, 48)
 	game.logPlayer(game.player, "Aeryn explained where the orcs were spotted.")
 end

@@ -46,7 +46,7 @@ newBirthDescriptor{
 	copy = {
 		faction = "orc-pride",
 		type = "humanoid", subtype="troll",
-		default_wilderness = {26, 7, "wilderness-fareast"},
+		default_wilderness = {26, 7, "wilderness"},
 		starting_zone = "trollshaws",
 		starting_quest = "start-dunadan",
 		starting_intro = "dwarf",

@@ -37,6 +37,6 @@ on_grant = function(self, who)
 		change_level=1, change_zone="reknor"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 44, 28)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 68, 17)
 	game.logPlayer(game.player, "The elder points the mines on your map, to the north on the western side of the misty mountains.")
 end

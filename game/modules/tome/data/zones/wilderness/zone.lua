@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 return {
-	name = "Maj'Eyal",
+	name = "Eyal",
 	level_range = {1, 1},
 	max_level = 1,
-	width = 200, height = 130,
---	all_remembered = true,
---	all_lited = true,
+	width = 170, height = 70,
+	all_remembered = true,
+	all_lited = true,
 	persistant = "memory",
 	ambiant_music = "Remembrance.ogg",
 	wilderness = true,

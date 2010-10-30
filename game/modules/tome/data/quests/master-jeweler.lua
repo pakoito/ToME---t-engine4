@@ -63,7 +63,7 @@ start_search = function(self, who)
 		change_level=1, change_zone="valley-moon-caverns"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-fareast-1"], g, "terrain", 48, 53)
+	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 150, 55)
 
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED, "search-valley")
 	game.logPlayer(game.player, "Limmir points the entrance to a cave on your map, this is supposed to be the way to the valley.")
