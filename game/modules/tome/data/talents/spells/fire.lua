@@ -53,7 +53,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 30,
---	cooldown = 18,
+	cooldown = 18,
 	tactical = {
 		ATTACKAREA = 10,
 	},

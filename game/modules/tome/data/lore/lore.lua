@@ -20,3 +20,4 @@
 load("/data/lore/trollshaws.lua")
 load("/data/lore/tol-falas.lua")
 load("/data/lore/sunwall.lua")
+load("/data/lore/spellhunt.lua")

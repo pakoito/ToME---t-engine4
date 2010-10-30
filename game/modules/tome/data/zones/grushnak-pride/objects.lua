@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects-far-east.lua")
-load("/data/general/objects/lore-sunwall.lua")
+load("/data/general/objects/lore/sunwall.lua")
 
 local Talents = require"engine.interface.ActorTalents"
 local Stats = require"engine.interface.ActorStats"

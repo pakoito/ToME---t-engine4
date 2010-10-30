@@ -573,7 +573,7 @@ function tstring:splitLines(max_width, font)
 			ret[#ret+1] = v
 		elseif tv == "table" and v[1] == "uid" then
 			local e = __uids[v[2]]
-			if e then
+			if e and game.level then
 				local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
 				if surf then
 					local w, h = surf:getSize()

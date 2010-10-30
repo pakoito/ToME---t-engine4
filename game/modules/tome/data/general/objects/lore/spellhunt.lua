@@ -17,23 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-far-east.lua")
-load("/data/general/objects/lore/sunwall.lua")
-
-newEntity{ base = "BASE_WAND",
-	define_as = "ROD_SPYDRIC_POISON",
-	name = "Rod of Spydric Poison", color=colors.LIGHT_GREEN, unique=true,
-	desc = [[This rod carved out of a giant spider fang continuously drips venom.]],
-	cost = 50,
-	elec_proof = true,
-
-	max_power = 75, power_regen = 1,
-	use_power = { name = "shoot a bolt of spyric poison", power = 25,
-		use = function(self, who)
-			local tg = {type="bolt", range=12, talent=t}
-			local x, y = who:getTarget(tg)
-			if not x or not y then return nil end
-			who:project(tg, x, y, engine.DamageType.SPYDRIC_POISON, {dam=200 + who:getMag() * 4, dur=6}, {type="slime"})
-		end
-	},
+newEntity{ base = "BASE_SCROLL",
+	name = "memories of archmage Varil", lore="spellhunt-note-1", unique=true,
+	desc = [[A collection of thoughts and memories of the archmage Varil, during the Age of Dusk]],
+	rarity = 20,
+	is_magic_device = false,
+	encumberance = 0,
 }
