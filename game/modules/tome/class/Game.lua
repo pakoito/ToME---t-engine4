@@ -665,7 +665,7 @@ function _M:setupCommands()
 				a.faction = "enemies"
 				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
 --]]
-				game.level.map:particleEmitter(self.player.x, self.player.y, 1, "breath_cold", {radius=6, tx=10, ty=2})
+				self:changeLevel(2, "tempest-peak")
 			end
 		end,
 	}
@@ -944,6 +944,9 @@ end
 
 --- Requests the game to save
 function _M:saveGame()
+	self.player:runStop("saving")
+	self.player:restStop("saving")
+
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
