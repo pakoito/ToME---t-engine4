@@ -58,36 +58,41 @@ quickEntity('E', {always_remember = true, show_tooltip=true, name="A mysterious 
 quickEntity('F', {always_remember = true, show_tooltip=true, name="The entry to the old tower of Tol Falas",display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="tol-falas"})
 quickEntity('G', {always_remember = true, show_tooltip=true, name="Passageway into Daikara",display='>', color=colors.UMBER, notice = true, change_level=1, change_zone="daikara"})
 quickEntity('H', {always_remember = true, show_tooltip=true, name='Charred Scar Volcano', display='>', color=colors.RED, back_color=colors.LIGHT_DARK, image="terrain/volcano1.png", notice = true, change_level=1, change_zone="charred-scar"})
-quickEntity('I', {always_remember = true, show_tooltip=true, name="Sun Wall Outpost (Town)", display='*', color=colors.GOLD, notice = true, change_level=1, change_zone="town-sunwall-outpost"})
+quickEntity('I', {always_remember = true, show_tooltip=true, name="Sunwall Outpost (Town)", display='*', color=colors.GOLD, notice = true, change_level=1, change_zone="town-sunwall-outpost"})
 quickEntity('J', {always_remember = true, show_tooltip=true, name="High Peak", display='>', color=colors.VIOLET, notice = true, change_level=1, change_zone="high-peak"})
 
 quickEntity('1', {always_remember = true, show_tooltip=true, name="Derth (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-derth"})
 quickEntity('2', {always_remember = true, show_tooltip=true, name="Last Hope (Town)", desc="Capital city of the Allied Kingdoms ruled by King Tolak", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-last-hope"})
 quickEntity('4', {always_remember = true, show_tooltip=true, name="Shatur (Town)", desc="Capital city of Thaloren lands, ruled by Nessilla Tantaelen", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true})
 quickEntity('5', {always_remember = true, show_tooltip=true, name="Elvala (Town)", desc="Capital city of Shaloren lands, ruled by Aranion Gayaeil", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true})
-quickEntity('6', {always_remember = true, show_tooltip=true, name="Gates of Morning", desc="A massive hole in the Sunwall", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
+quickEntity('6', {always_remember = true, show_tooltip=true, name="Gates of Morning (Town)", desc="A massive hole in the Sunwall.", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
 
 -- Angolwen is only know from the start to mages
 if game.player:knowTalent(game.player.T_TELEPORT_ANGOLWEN) then
-	quickEntity('3', {always_remember = true, show_tooltip=true, name="Angolwen, the hidden city of magic", desc="Secret place of magic, set apart from the world to protect it.", display='*', color=colors.WHITE, back_color=colors.UMBER, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-angolwen"})
+	quickEntity('3', {always_remember = true, show_tooltip=true, name="Angolwen, the hidden city of magic", desc="Secret place of magic, set apart from the world to protect it.\nLead by the Supreme Archmage Linaniil.", display='*', color=colors.WHITE, back_color=colors.UMBER, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-angolwen"})
 else
 	quickEntity('3', '^')
 end
 
+-- The shield protecting the sorcerer hideout
+local p = getMap():particleEmitter(152, 13, 3, "istari_shield_map")
+
 -- Load encounters for this map
 prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounters/maj-eyal.lua")
+prepareEntitiesList("encounters_fareast", "mod.class.Encounter", "/data/general/encounters/fareast.lua")
 prepareEntitiesList("encounters_npcs", "mod.class.WorldNPC", "/data/general/encounters/maj-eyal-npcs.lua")
 addData{
 	wda = { script="maj-eyal", },
 	encounters = {
 		chance=function(who)
 			local harmless_chance = 1 + who:getLck(7)
-			local hostile_chance = 5
+			local hostile_chance = 2
 			if rng.percent(hostile_chance) then return "hostile"
 			elseif rng.percent(harmless_chance) then return "harmless"
 			end
 		end
 	},
+	istari_shield = p,
 }
 
 -- addSpot section

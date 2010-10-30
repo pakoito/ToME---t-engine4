@@ -37,6 +37,7 @@ This one seems to go to the Far East, a continent of which only rumours are know
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on an unfamiliar land, with no trace of the portal...",
 		on_use = function(self, who)
+			game.state:goneEast()
 			who:setQuestStatus("wild-wild-east", engine.Quest.DONE)
 		end,
 	},
