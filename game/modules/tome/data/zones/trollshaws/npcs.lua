@@ -63,7 +63,7 @@ newEntity{ define_as = "TROLL_BILL",
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollshaws were safer now!")
-		game.player:resolveSource():setQuestStatus("start-dunadan", engine.Quest.COMPLETED, "trollshaws")
+		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollshaws")
 	end,
 }
 
