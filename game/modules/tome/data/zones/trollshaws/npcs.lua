@@ -35,9 +35,8 @@ newEntity{ define_as = "TROLL_BILL",
 	type = "giant", subtype = "troll", unique = true,
 	name = "Bill the Stone Troll",
 	display = "T", color=colors.VIOLET, image="npc/troll_bill.png",
-	desc = [[Big, brawny, powerful and with a taste for halfling. He has friends called Bert and Tom.
-	He is wielding a small tree trunk and towering toward you.
-	He should have turned to stone long ago, how could he still walk?!]],
+	desc = [[Big, brawny, powerful and with a taste for halfling.
+He is wielding a small tree trunk and towering toward you.]],
 	level_range = {7, 20}, exp_worth = 2,
 	max_life = 250, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
@@ -53,10 +52,10 @@ newEntity{ define_as = "TROLL_BILL",
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
-		[Talents.T_STUN]=2,
+		[Talents.T_RUSH]=3,
 		[Talents.T_KNOCKBACK]=1,
-		[Talents.T_DISARM]=3,
 	},
+	inc_damage = { all = -50 },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
