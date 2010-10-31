@@ -52,7 +52,7 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "vor-armoury"}
+	local spot = level:pickSpot{type="zone-pop", subtype="vor-armoury"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game.logPlayer(game.player, "Zemekkys points the location of Vor Armoury on your map.")
@@ -69,7 +69,7 @@ wyrm_lair = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "briagh"}
+	local spot = level:pickSpot{type="zone-pop", subtype="briagh"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game.logPlayer(game.player, "Zemekkys points the location of Briagh lair on your map.")

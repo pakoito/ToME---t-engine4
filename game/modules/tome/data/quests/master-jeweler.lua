@@ -64,7 +64,7 @@ start_search = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "valley-moon-caverns"}
+	local spot = level:pickSpot{type="zone-pop", subtype="valley-moon-caverns"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED, "search-valley")

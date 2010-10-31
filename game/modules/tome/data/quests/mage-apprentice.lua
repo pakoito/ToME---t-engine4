@@ -122,9 +122,9 @@ access_angolwen = function(self, player)
 	g:resolve() g:resolve(nil, true)
 	p:resolve() p:resolve(nil, true)
 	local level = game.level
-	local spot = level:pickSpot{type="quest-pop", "angolwen"}
+	local spot = level:pickSpot{type="zone-pop", subtype="angolwen"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
-	spot = level:pickSpot{type="quest-pop", "angolwen-portal"}
+	spot = level:pickSpot{type="zone-pop", subtype="angolwen-portal"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game:setAllowedBuild("mage", true)

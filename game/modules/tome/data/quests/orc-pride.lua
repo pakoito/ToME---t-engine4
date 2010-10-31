@@ -69,7 +69,7 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "rak-shor-pride"}
+	local spot = level:pickSpot{type="zone-pop", subtype="rak-shor-pride"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	-- Reveal entrances
@@ -82,7 +82,7 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "vor-pride"}
+	local spot = level:pickSpot{type="zone-pop", subtype="vor-pride"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	-- Reveal entrances
@@ -95,7 +95,7 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "gorbat-pride"}
+	local spot = level:pickSpot{type="zone-pop", subtype="gorbat-pride"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	-- Reveal entrances
@@ -108,7 +108,7 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "grushnak-pride"}
+	local spot = level:pickSpot{type="zone-pop", subtype="grushnak-pride"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game.logPlayer(game.player, "Aeryn points the known locations on your map.")

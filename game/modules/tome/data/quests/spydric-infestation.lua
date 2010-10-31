@@ -40,7 +40,7 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="quest-pop", "ardhungol"}
+	local spot = level:pickSpot{type="zone-pop", subtype="ardhungol"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 	game.logPlayer(game.player, "High Sun Paladin Aeryn marks the location of Ardhungol on your map.")
 end

@@ -39,7 +39,7 @@ on_grant = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.level
-	local spot = level:pickSpot{type="quest-pop", "lumberjack-town"}
+	local spot = level:pickSpot{type="zone-pop", subtype="lumberjack-town"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game.logPlayer(game.player, "He points in the direction of the Riljek forest to the north.")
