@@ -90,7 +90,6 @@ addData{
 	},
 }
 
-
 -- addSpot section
 addSpot({33, 40}, "patrol", "allied-kingdoms")
 addSpot({24, 17}, "patrol", "allied-kingdoms")
@@ -135,6 +134,7 @@ addSpot({153, 19}, "farportal-end", "fareast")
 addSpot({162, 31}, "farportal-end", "gates-of-morning")
 addSpot({59, 39}, "farportal-end", "last-hope")
 addSpot({68, 22}, "farportal-end", "iron-throne")
+addSpot({59, 13}, "farportal-end", "demon-plane-arrival")
 
 -- addZone section
 addZone({1, 1, 78, 46}, "zonename", "Maj'Eyal")
