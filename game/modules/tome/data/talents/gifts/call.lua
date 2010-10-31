@@ -23,7 +23,6 @@ newTalent{
 	require = gifts_req1,
 	points = 5,
 	message = "@Source@ meditates on nature.",
-	equilibrium = 0,
 	cooldown = 150,
 	range = 20,
 	action = function(self, t)
