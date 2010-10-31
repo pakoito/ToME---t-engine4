@@ -1478,8 +1478,8 @@ function _M:worthExp(target)
 	if self.rank == 1 then mult = 0.2
 	elseif self.rank == 2 then mult = 0.4
 	elseif self.rank == 3 then mult = 3
-	elseif self.rank == 4 then mult = 30
-	elseif self.rank >= 5 then mult = 40
+	elseif self.rank == 4 then mult = 60
+	elseif self.rank >= 5 then mult = 120
 	end
 
 	return self.level * mult * self.exp_worth
