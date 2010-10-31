@@ -94,6 +94,7 @@ function _M:loadMap(file)
 
 	local m = { w=#(ret[1]), h=#ret }
 
+	local rotate = util.getval(g.rotates or "default")
 	local function populate(i, j, c)
 		local ii, jj = i, j
 
@@ -109,7 +110,6 @@ function _M:loadMap(file)
 	end
 
 	-- Read the map
-	local rotate = util.getval(g.rotates or "default")
 	if type(ret[1]) == "string" then
 		for j, line in ipairs(ret) do
 			local i = 1
@@ -176,6 +176,7 @@ function _M:generate(lev, old_lev)
 	local spots = {}
 
 	for i = 1, self.gen_map.w do for j = 1, self.gen_map.h do
+		print(i,j)
 		local c = self.gen_map[i][j]
 		local g = self:resolve("grid", c)
 		if g then
