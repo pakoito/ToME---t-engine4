@@ -160,7 +160,7 @@ newEntity{
 	type = "humanoid", subtype = "sorcerer",
 	name = "Elandar",
 	display = "@", color=colors.AQUAMARINE,
-	faction = "sorcererss",
+	faction = "sorcerers",
 
 	desc = [[The renegates mages from Angolwen, the Sorcerers have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {70, 70}, exp_worth = 15,
