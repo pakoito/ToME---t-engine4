@@ -24,12 +24,12 @@ return {
 	level_range = {1, 1},
 	max_level = 1,
 	width = 170, height = 100,
-	all_remembered = true,
-	all_lited = true,
+--	all_remembered = true,
+--	all_lited = true,
 	persistant = "memory",
 	ambiant_music = "Remembrance.ogg",
 	wilderness = true,
---	wilderness_see_radius = 4,
+	wilderness_see_radius = 4,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
@@ -41,6 +41,11 @@ return {
 			if z.type == "zonename" then
 				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
 					game.level.map.attrs(x, y, "zonename", z.subtype)
+				end end
+			elseif z.type == "world-encounter" then
+				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
+					if not game.level.map.attrs(x, y, "world-encounter") then game.level.map.attrs(x, y, "world-encounter", {}) end
+					game.level.map.attrs(x, y, "world-encounter")[z.subtype] = true
 				end end
 			end
 		end

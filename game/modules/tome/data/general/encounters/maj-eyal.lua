@@ -21,20 +21,8 @@ newEntity{
 	name = "Novice mage",
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {1, 10},
-	rarity = 3,
-	coords = {{ x=10, y=18, likelymap={
-		[[    11111111   ]],
-		[[ 1111111111111 ]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[ 1111111111111 ]],
-		[[   111111111   ]],
-	}}},
+	rarity = 1,
+	on_world_encounter = "angolwen",
 	-- Spawn the novice mage near the player
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
@@ -130,7 +118,6 @@ newEntity{
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {30, 40},
 	rarity = 8,
-	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
@@ -154,27 +141,7 @@ newEntity{
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {5, 15},
 	rarity = 8,
-	coords = {{ x=61, y=15, likelymap={
-		[[    11111111   ]],
-		[[ 1111111111111 ]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[111111111111111]],
-		[[ 1111111111111 ]],
-		[[   111111111   ]],
-	}}},
+	on_world_encounter = "lumberjack-cursed",
 	on_encounter = function(self, who)
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("lumberjack-quest", {name="Half-dead lumberjack"}, who)
@@ -188,7 +155,6 @@ newEntity{
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {15, 25},
 	rarity = 7,
-	coords = {{ x=0, y=0, w=100, h=100}},
 	special_filter = function(self)
 		local p = game.player
 		if p.level < 15 then return false end

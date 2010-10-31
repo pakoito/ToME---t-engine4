@@ -63,13 +63,13 @@ newAI("move_world_patrol", function(self)
 		self.ai_state.route = game.level:pickSpot{type="patrol", subtype=self.ai_state.route_kind}
 		local a = Astar.new(game.level.map, self)
 		self.ai_state.route_path = a:calc(self.x, self.y, self.ai_state.route.x, self.ai_state.route.y)
---		print(self.name, "Selecting route!", self.ai_state.route_path, "from", self.x, self.y, "to", self.ai_state.route.x, self.ai_state.route.y)
+		print(self.name, "Selecting route!", self.ai_state.route_path, "from", self.x, self.y, "to", self.ai_state.route.x, self.ai_state.route.y)
 	else
 		local path = self.ai_state.route_path
---		print("Using route", self.ai_state.route_path)
+		print("Using route", self.ai_state.route_path)
 		if not path or not path[1] or (path[1] and math.floor(core.fov.distance(self.x, self.y, path[1].x, path[1].y)) > 1) then
 			self.ai_state.route_path = nil self.ai_state.route = nil
---			print("Nulling!", path, path and path[1], path and path[1] and math.floor(core.fov.distance(self.x, self.y, path[1].x, path[1].y)))
+			print("Nulling!", path, path and path[1], path and path[1] and math.floor(core.fov.distance(self.x, self.y, path[1].x, path[1].y)))
 			return true
 		else
 			local ret = self:move(path[1].x, path[1].y)

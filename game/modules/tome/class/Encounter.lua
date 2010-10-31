@@ -23,13 +23,12 @@ require "engine.Entity"
 module(..., package.seeall, class.inherit(engine.Entity))
 
 function _M:init(t, no_default)
-	assert(t.coords, "no encounter coords")
 	assert(t.level_range, "no encounter level_range")
 	assert(t.on_encounter, "no encounter on_encounter")
 
 	engine.Entity.init(self, t, no_default)
 
-	self:parseCoords()
+	if self.coords then self:parseCoords() end
 end
 
 function _M:parseCoords()
@@ -59,8 +58,12 @@ end
 function _M:checkFilter(filter)
 	if self.special_filter and not self.special_filter(self) then return false end
 
-	if filter.mapx and filter.mapy then
+	if filter.mapx and filter.mapy and self.on_map then
 		if not self.on_map[filter.mapx.."x"..filter.mapy] then return false end
+	end
+	if filter.mapx and filter.mapy and self.on_world_encounter then
+		local we = game.level.map.attrs(filter.mapx, filter.mapy, "world-encounter")
+		if not we or not we[self.on_world_encounter] then return false end
 	end
 	return true
 end

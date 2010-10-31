@@ -86,6 +86,10 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic)
 	local cache = self.map._fovcache.path_caches[self.actor:getPathString()]
 	local checkPos
 	if cache then
+		if not (self.map:isBound(tx, ty) and ((use_has_seen and not self.map.has_seens(tx, ty)) or not cache:get(tx, ty))) then
+			print("Astar fail: destination unreachable")
+			return nil
+		end
 		checkPos = function(node, nx, ny)
 			local nnode = self:toSingle(nx, ny)
 			if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not cache:get(nx, ny)) then
@@ -104,6 +108,10 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic)
 			end
 		end
 	else
+		if not (self.map:isBound(tx, ty) and ((use_has_seen and not self.map.has_seens(tx, ty)) or not self.map:checkEntity(tx, ty, Map.TERRAIN, "block_move", self.actor, nil, true))) then
+			print("Astar fail: destination unreachable")
+			return nil
+		end
 		checkPos = function(node, nx, ny)
 			local nnode = self:toSingle(nx, ny)
 			if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not self.map:checkEntity(nx, ny, Map.TERRAIN, "block_move", self.actor, nil, true)) then

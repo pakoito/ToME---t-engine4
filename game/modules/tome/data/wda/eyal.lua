@@ -75,7 +75,7 @@ if zone == "Maj'Eyal" then
 
 	-- Spawn some hostiles
 	if wda.cur_hostiles < 4 and rng.percent(5) then
-		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="hostile", subtype="maj eyal"}, nil, true)
+		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="hostile"}, nil, true)
 		if e then
 			local spot = game.level:pickSpot{type="hostile", subtype="maj-eyal"}
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
@@ -142,7 +142,7 @@ elseif zone == "Far East" then
 
 	-- Spawn some hostiles
 	if wda.cur_hostiles < 4 and rng.percent(5) then
-		local e = game.zone:makeEntity(game.level, "fareast_encounters_npcs", {type="hostile", subtype="fareast"}, nil, true)
+		local e = game.zone:makeEntity(game.level, "fareast_encounters_npcs", {type="hostile"}, nil, true)
 		if e then
 			local spot = game.level:pickSpot{type="hostile", subtype="fareast"}
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then

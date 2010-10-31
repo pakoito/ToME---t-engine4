@@ -148,6 +148,8 @@ addZone({7, 54, 75, 86}, "zonename", "Tar'Eyal")
 addZone({11, 51, 21, 54}, "zonename", "Tar'Eyal")
 addZone({64, 52, 66, 53}, "zonename", "Tar'Eyal")
 addZone({11, 87, 16, 94}, "zonename", "Tar'Eyal")
+addZone({54, 23, 65, 37}, "world-encounter", "lumberjack-cursed")
+addZone({3, 15, 19, 33}, "world-encounter", "angolwen")
 
 -- ASCII map section
 return {
