@@ -57,7 +57,7 @@ newEntity{
 		change_level = 1,
 		change_zone = "wilderness",
 		change_wilderness = {
-			x = 9, y = 5,
+			spot = {type="farportal-end", subtype="fareast"},
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to the far east.",
 	},

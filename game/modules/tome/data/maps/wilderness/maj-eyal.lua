@@ -132,6 +132,10 @@ addSpot({50, 9}, "zone-pop", "antimagic")
 addSpot({10, 18}, "zone-pop", "angolwen")
 addSpot({12, 18}, "zone-pop", "angolwen-portal")
 addSpot({152, 13}, "zone-pop", "high-peak")
+addSpot({153, 19}, "farportal-end", "fareast")
+addSpot({162, 31}, "farportal-end", "gates-of-morning")
+addSpot({57, 33}, "farportal-end", "last-hope")
+addSpot({66, 16}, "farportal-end", "iron-throne")
 
 -- addZone section
 addZone({0, 0, 73, 40}, "zonename", "Maj'Eyal")

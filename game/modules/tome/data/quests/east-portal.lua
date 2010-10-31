@@ -81,7 +81,7 @@ This one seems to go near the Gates of Morning in the Far East.]],
 			change_level = 1,
 			change_zone = "wilderness",
 			change_wilderness = {
-				x = 65, y = 35,
+				spot = {type="farportal-end", subtype="gates-of-morning"},
 			},
 			message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in sight of the Gates of Morning, with no trace of the portal...",
 			on_use = function(self, who)

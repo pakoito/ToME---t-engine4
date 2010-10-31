@@ -33,7 +33,7 @@ This one seems to go to the Far East.]],
 		change_level = 1,
 		change_zone = "wilderness",
 		change_wilderness = {
-			x = 9, y = 5,
+			spot = {type="farportal-end", subtype="fareast"},
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the Far East, with no trace of the portal...",
 		on_use = function(self, who)
@@ -55,7 +55,7 @@ This one seems to go to the Misty Mountains in the West.]],
 		change_level = 1,
 		change_zone = "wilderness",
 		change_wilderness = {
-			x = 62, y = 7,
+			spot = {type="farportal-end", subtype="iron-throne"},
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the slopes of the Misty Mountains, with no trace of the portal...",
 		on_use = function(self, who)

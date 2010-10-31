@@ -33,7 +33,7 @@ This one seems to go to the Far East, a continent of which only rumours are know
 		change_level = 1,
 		change_zone = "wilderness",
 		change_wilderness = {
-			x = 9, y = 5,
+			spot = {type="farportal-end", subtype="fareast"},
 		},
 		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on an unfamiliar land, with no trace of the portal...",
 		on_use = function(self, who)
