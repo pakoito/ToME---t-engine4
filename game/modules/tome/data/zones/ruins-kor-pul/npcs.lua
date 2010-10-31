@@ -52,9 +52,10 @@ newEntity{ define_as = "SHADE",
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
-		[Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
-		[Talents.T_STAMINA_POOL]=1, [Talents.T_WEAPONS_MASTERY]=3, [Talents.T_STUNNING_BLOW]=1,
+		[Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
+		[Talents.T_WEAPONS_MASTERY]=3,
 	},
+	inc_damage = {all=-30},
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
