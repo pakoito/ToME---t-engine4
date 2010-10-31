@@ -44,7 +44,7 @@ newBirthDescriptor{
 	copy = {
 		faction = "shire",
 		type = "humanoid", subtype="halfling",
-		default_wilderness = {26, 7},
+		default_wilderness = {28, 13},
 		starting_zone = "trollshaws",
 		starting_quest = "start-allied",
 		starting_intro = "halfling",

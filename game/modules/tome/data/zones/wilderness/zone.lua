@@ -23,7 +23,7 @@ return {
 	variable_zone_name = true,
 	level_range = {1, 1},
 	max_level = 1,
-	width = 170, height = 70,
+	width = 170, height = 100,
 	all_remembered = true,
 	all_lited = true,
 	persistant = "memory",
@@ -33,7 +33,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "wilderness/maj-eyal",
+			map = "wilderness/eyal",
 		},
 	},
 	post_process = function(level)

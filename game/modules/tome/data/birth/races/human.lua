@@ -75,7 +75,7 @@ newBirthDescriptor
 	},
 	copy = {
 		lite_rating = 11,
-		default_wilderness = {26, 7},
+		default_wilderness = {28, 13},
 		starting_zone = "trollshaws",
 		starting_quest = "start-allied",
 		starting_intro = "higher",
@@ -98,7 +98,7 @@ newBirthDescriptor
 	experience = 1.0,
 	copy = {
 		unused_talents_types = 1,
-		default_wilderness = {26, 7},
+		default_wilderness = {28, 13},
 		starting_zone = "trollshaws",
 		starting_quest = "start-allied",
 		starting_intro = "cornac",

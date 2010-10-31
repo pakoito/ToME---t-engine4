@@ -209,67 +209,67 @@
   </data>
  </layer>
  <objectgroup name="addSpot" width="170" height="100">
-  <object name="Allied kingdoms patrol" x="1122" y="1060" width="26" height="24">
+  <object name="Allied kingdoms patrol" x="1059" y="1284" width="26" height="24">
    <properties>
     <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
-  <object name="Allied kingdoms patrol" x="740" y="326" width="26" height="24">
+  <object name="Allied kingdoms patrol" x="770" y="546" width="26" height="24">
    <properties>
     <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
-  <object name="Allied kingdoms patrol" x="486" y="1062" width="26" height="24">
+  <object name="Allied kingdoms patrol" x="546" y="1253" width="26" height="24">
    <properties>
     <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
-  <object name="Allied kingdoms patrol" x="1282" y="392" width="26" height="24">
+  <object name="Allied kingdoms patrol" x="1314" y="577" width="26" height="24">
    <properties>
     <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
-  <object name="Allied kingdoms patrol" x="2018" y="162" width="26" height="24">
+  <object name="Allied kingdoms patrol" x="2081" y="354" width="26" height="24">
    <properties>
     <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
-  <object name="Allied kingdoms patrol" x="1856" y="1030" width="26" height="24">
+  <object name="Allied kingdoms patrol" x="1921" y="1219" width="26" height="24">
    <properties>
     <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
-  <object name="small hostiles" x="870" y="778" width="48" height="40">
+  <object name="small hostiles" x="806" y="846" width="48" height="40">
    <properties>
     <property name="subtype" value="&quot;random&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
-  <object name="small hostiles" x="1736" y="234" width="46" height="42">
+  <object name="small hostiles" x="1799" y="425" width="46" height="42">
    <properties>
     <property name="subtype" value="&quot;random&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
-  <object name="small hostiles" x="1384" y="1194" width="50" height="48">
+  <object name="small hostiles" x="1444" y="1385" width="50" height="48">
    <properties>
     <property name="subtype" value="&quot;random&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
-  <object name="small hostiles" x="262" y="814" width="52" height="44">
+  <object name="small hostiles" x="226" y="813" width="52" height="44">
    <properties>
     <property name="subtype" value="&quot;random&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
-  <object name="Teknor" x="2148" y="518" width="24" height="20">
+  <object name="Reknor" x="2212" y="710" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;reknor&quot;"/>
     <property name="type" value="&quot;zone-pop&quot;"/>
@@ -305,13 +305,13 @@
     <property name="type" value="&quot;zone-pop&quot;"/>
    </properties>
   </object>
-  <object name="Lumberjack Town" x="1890" y="517" width="24" height="20">
+  <object name="Lumberjack Town" x="1953" y="708" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;lumberjack-town&quot;"/>
     <property name="type" value="&quot;zone-pop&quot;"/>
    </properties>
   </object>
-  <object name="Telmur" x="1603" y="742" width="24" height="20">
+  <object name="Telmur" x="1667" y="935" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;telmur&quot;"/>
     <property name="type" value="&quot;zone-pop&quot;"/>
@@ -347,19 +347,19 @@
     <property name="type" value="&quot;zone-pop&quot;"/>
    </properties>
   </object>
-  <object name="Antimagic Town" x="1602" y="295" width="24" height="20">
+  <object name="Antimagic Town" x="1637" y="520" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;antimagic&quot;"/>
     <property name="type" value="&quot;zone-pop&quot;"/>
    </properties>
   </object>
-  <object name="Angolwen" x="323" y="581" width="24" height="20">
+  <object name="Angolwen" x="386" y="774" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;angolwen&quot;"/>
     <property name="type" value="&quot;zone-pop&quot;"/>
    </properties>
   </object>
-  <object name="Angolwen Portal" x="387" y="582" width="24" height="20">
+  <object name="Angolwen Portal" x="451" y="774" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;angolwen-portal&quot;"/>
     <property name="type" value="&quot;zone-pop&quot;"/>
@@ -383,39 +383,45 @@
     <property name="type" value="&quot;farportal-end&quot;"/>
    </properties>
   </object>
-  <object name="Last Hope portal arrival" x="1827" y="1061" width="24" height="20">
+  <object name="Last Hope portal arrival" x="1891" y="1254" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;last-hope&quot;"/>
     <property name="type" value="&quot;farportal-end&quot;"/>
    </properties>
   </object>
-  <object name="Iron Throne portal arrival" x="2115" y="519" width="24" height="20">
+  <object name="Iron Throne portal arrival" x="2179" y="712" width="24" height="20">
    <properties>
     <property name="subtype" value="&quot;iron-throne&quot;"/>
     <property name="type" value="&quot;farportal-end&quot;"/>
    </properties>
   </object>
+  <object name="Demon Plane portal arrival" x="1891" y="424" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;demon-plane-arrival&quot;"/>
+    <property name="type" value="&quot;farportal-end&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone" width="170" height="100" visible="0">
-  <object name="Maj'Eyal" x="14" y="10" width="2348" height="1290">
+  <object name="Maj'Eyal" x="34" y="40" width="2488" height="1456">
    <properties>
     <property name="subtype" value="&quot;Maj'Eyal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="Maj'Eyal" x="194" y="1318" width="372" height="84">
+  <object name="Maj'Eyal" x="264" y="1508" width="372" height="84">
    <properties>
     <property name="subtype" value="&quot;Maj'Eyal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="Maj'Eyal" x="810" y="1258" width="208" height="270">
+  <object name="Maj'Eyal" x="872" y="1456" width="208" height="270">
    <properties>
     <property name="subtype" value="&quot;Maj'Eyal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="Maj'Eyal" x="1606" y="1356" width="306" height="174">
+  <object name="Maj'Eyal" x="1668" y="1544" width="306" height="174">
    <properties>
     <property name="subtype" value="&quot;Charred Scar&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
@@ -427,19 +433,25 @@
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="Far East" x="170" y="1548" width="2190" height="696">
+  <object name="Far East" x="230" y="1736" width="2192" height="1044">
    <properties>
     <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="Far East" x="292" y="1446" width="332" height="94">
+  <object name="Far East" x="370" y="1634" width="332" height="94">
    <properties>
     <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="Far East" x="1996" y="1476" width="78" height="56">
+  <object name="Far East" x="2064" y="1670" width="78" height="56">
+   <properties>
+    <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Far East" x="354" y="2786" width="184" height="252">
    <properties>
     <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
