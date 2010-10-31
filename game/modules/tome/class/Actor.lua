@@ -1472,7 +1472,7 @@ end
 -- @param target to whom is the exp rewarded
 -- @return the experience rewarded
 function _M:worthExp(target)
-	if not target.level or self.level < target.level - 3 then return 0 end
+	if not target.level or self.level < target.level - 7 then return 0 end
 
 	local mult = 0.3
 	if self.rank == 1 then mult = 0.3
