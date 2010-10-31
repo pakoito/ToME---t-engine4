@@ -401,6 +401,30 @@
     <property name="type" value="&quot;farportal-end&quot;"/>
    </properties>
   </object>
+  <object name="Sunwall patrol" x="5188" y="1028" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Sunwall patrol" x="5250" y="1348" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Sunwall patrol" x="5218" y="582" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Sunwall patrol" x="4836" y="964" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone" width="170" height="100" visible="0">
   <object name="Maj'Eyal" x="34" y="40" width="2488" height="1456">

@@ -17,35 +17,108 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Maj'Eyal worldmap directory AI
+-- Eyal worldmap directory AI
 
-wda.cur_patrols = wda.cur_patrols or 0
-wda.cur_hostiles = wda.cur_hostiles or 0
+-- Select the zone
+local Map = require "engine.Map"
+local zone = game.zone.display_name()
+if not wda.zones[zone] then wda.zones[zone] = {} end
+wda = wda.zones[zone]
 
--- Spawn some patrols
-if wda.cur_patrols < 3 then
-	local e = game.zone:makeEntity(game.level, "encounters_npcs", {type="patrol"}, nil, true)
-	if e then
-		local spot = game.level:pickSpot{type="patrol", "allied-kingdoms"}
-		if spot and not game.level.map(spot.x, spot.y, engine.Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
-			print("Spawned allied kingdom patrol", spot.x, spot.y, e.name)
-			game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
-			wda.cur_patrols = wda.cur_patrols + 1
-			e.on_die = function() game.level.data.wda.cur_patrols = game.level.data.wda.cur_patrols - 1 end
-		end
+game.level.level = game.player.level
+
+local encounter_chance = function(who)
+	local harmless_chance = 1 + who:getLck(7)
+	local hostile_chance = 2
+	if rng.percent(hostile_chance) then return "hostile"
+	elseif rng.percent(harmless_chance) then return "harmless"
 	end
 end
 
--- Spawn some hostiles
-if wda.cur_hostiles < 4 and rng.percent(5) then
-	local e = game.zone:makeEntity(game.level, "encounters_npcs", {type="hostile"}, nil, true)
-	if e then
-		local spot = game.level:pickSpot{type="hostile", "random"}
-		if spot and not game.level.map(spot.x, spot.y, engine.Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
-			print("Spawned hostile", spot.x, spot.y, e.name)
-			game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
-			wda.cur_hostiles = wda.cur_hostiles + 1
-			e.on_die = function() game.level.data.wda.cur_hostiles = game.level.data.wda.cur_hostiles - 1 end
+---------------------------------------------------------------------
+-- Maj'Eyal
+---------------------------------------------------------------------
+if zone == "Maj'Eyal" then
+	wda.cur_patrols = wda.cur_patrols or 0
+	wda.cur_hostiles = wda.cur_hostiles or 0
+
+	-- Spawn random encounters
+	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
+	if g and g.can_encounter then
+		local type = encounter_chance(game.player)
+		if type then
+			game.level:setEntitiesList("maj_eyal_encounters_rng", game.zone:computeRarities("maj_eyal_encounters_rng", game.level:getEntitiesList("maj_eyal_encounters"), game.level, nil))
+			local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_rng", {type=type, mapx=game.player.x, mapy=game.player.y, nb_tries=10})
+			if e then
+				if e:check("on_encounter", game.player) then
+					e:added()
+				end
+			end
+		end
+	end
+
+	-- Spawn some patrols
+	if wda.cur_patrols < 3 then
+		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="patrol"}, nil, true)
+		if e then
+			local spot = game.level:pickSpot{type="patrol", "allied-kingdoms"}
+			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
+				print("Spawned allied kingdom patrol", spot.x, spot.y, e.name)
+				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
+				wda.cur_patrols = wda.cur_patrols + 1
+				e.world_zone = zone
+				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_patrols = game.level.data.wda.zones[self.world_zone].cur_patrols - 1 end
+			end
+		end
+	end
+
+	-- Spawn some hostiles
+	if wda.cur_hostiles < 4 and rng.percent(5) then
+		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="hostile"}, nil, true)
+		if e then
+			local spot = game.level:pickSpot{type="hostile", "random"}
+			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
+				print("Spawned hostile", spot.x, spot.y, e.name)
+				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
+				wda.cur_hostiles = wda.cur_hostiles + 1
+				e.world_zone = zone
+				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_hostiles = game.level.data.wda.zones[self.world_zone].cur_hostiles - 1 end
+			end
+		end
+	end
+
+---------------------------------------------------------------------
+-- Var'Eyal (Far East)
+---------------------------------------------------------------------
+elseif zone == "Far East" then
+	wda.cur_patrols = wda.cur_patrols or 0
+	wda.cur_hostiles = wda.cur_hostiles or 0
+
+	-- Spawn some patrols
+	if wda.cur_patrols < 3 then
+		local e = game.zone:makeEntity(game.level, "encounters_npcs", {type="patrol"}, nil, true)
+		if e then
+			local spot = game.level:pickSpot{type="patrol", "sunwall"}
+			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
+				print("Spawned sunwall patrol", spot.x, spot.y, e.name)
+				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
+				wda.cur_patrols = wda.cur_patrols + 1
+				e.on_die = function() game.level.data.wda.cur_patrols = game.level.data.wda.cur_patrols - 1 end
+			end
+		end
+	end
+
+	-- Spawn some hostiles
+	if wda.cur_hostiles < 4 and rng.percent(5) then
+		local e = game.zone:makeEntity(game.level, "encounters_npcs", {type="hostile"}, nil, true)
+		if e then
+			local spot = game.level:pickSpot{type="hostile", "random"}
+			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
+				print("Spawned hostile", spot.x, spot.y, e.name)
+				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
+				wda.cur_hostiles = wda.cur_hostiles + 1
+				e.on_die = function() game.level.data.wda.cur_hostiles = game.level.data.wda.cur_hostiles - 1 end
+			end
 		end
 	end
 end

@@ -163,24 +163,7 @@ function _M:move(x, y, force)
 	if game.zone.wilderness then
 		-- Cheat with time
 		game.turn = game.turn + 1000
-
 		self.wild_x, self.wild_y = self.x, self.y
-		local g = game.level.map(self.x, self.y, Map.TERRAIN)
-
-		if g and g.can_encounter and game.level.data.encounters then
-			local type = game.level.data.encounters.chance(self)
-			if type then
-				game.level.level = self.level
-				game.level:setEntitiesList("encounters_rng", game.zone:computeRarities("encounters_rng", game.level:getEntitiesList("encounters"), game.level, nil))
-				local e = game.zone:makeEntity(game.level, "encounters_rng", {type=type, mapx=self.x, mapy=self.y, nb_tries=10})
-				if e then
-					if e:check("on_encounter", self) then
-						e:added()
-					end
-				end
-			end
-		end
-
 		game.state:worldDirectorAI()
 	end
 

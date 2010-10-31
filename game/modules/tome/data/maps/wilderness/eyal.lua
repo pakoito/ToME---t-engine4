@@ -74,20 +74,11 @@ else
 end
 
 -- Load encounters for this map
-prepareEntitiesList("encounters", "mod.class.Encounter", "/data/general/encounters/maj-eyal.lua")
-prepareEntitiesList("encounters_fareast", "mod.class.Encounter", "/data/general/encounters/fareast.lua")
-prepareEntitiesList("encounters_npcs", "mod.class.WorldNPC", "/data/general/encounters/maj-eyal-npcs.lua")
+prepareEntitiesList("maj_eyal_encounters", "mod.class.Encounter", "/data/general/encounters/maj-eyal.lua")
+prepareEntitiesList("maj_eyal_encounters_npcs", "mod.class.WorldNPC", "/data/general/encounters/maj-eyal-npcs.lua")
+prepareEntitiesList("fareast_encounters", "mod.class.Encounter", "/data/general/encounters/fareast.lua")
 addData{
-	wda = { script="maj-eyal", },
-	encounters = {
-		chance=function(who)
-			local harmless_chance = 1 + who:getLck(7)
-			local hostile_chance = 2
-			if rng.percent(hostile_chance) then return "hostile"
-			elseif rng.percent(harmless_chance) then return "harmless"
-			end
-		end
-	},
+	wda = { script="maj-eyal", zones={} },
 }
 
 -- addSpot section
