@@ -371,7 +371,11 @@ end
 function _M:onTakeoff(o)
 	if o.wielded then
 		for k, id in pairs(o.wielded) do
-			self:removeTemporaryValue(k, id)
+			if type(id) == "table" then
+				self:removeTemporaryValue(id[1], id[2])
+			else
+				self:removeTemporaryValue(k, id)
+			end
 		end
 	end
 	o.wielded = nil

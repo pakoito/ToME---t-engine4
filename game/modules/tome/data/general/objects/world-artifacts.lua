@@ -792,6 +792,31 @@ newEntity{ base = "BASE_CLOAK",
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
 	unique = true,
+	name = "Vestments of the Conclave", color = colors.DARK_GREY,
+	unided_name = "tattered robe",
+	desc = [[An ancient set of robes that has survived from the Age of Allure. Primal magic forces inhabit it.
+It was made by humans for humans, only they can harness the true power of the robes.]],
+	level_range = {12, 22},
+	rarity = 220,
+	cost = 150,
+	material_level = 3,
+	wielder = {
+		inc_damage = {[DamageType.ARCANE]=10},
+		inc_stats = { [Stats.STAT_MAG] = 3 },
+		combat_spellcrit = 3,
+	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Human" then
+			self.wielded._special1 = {"inc_stats", who:addTemporaryValue("inc_stats", { [Stats.STAT_MAG] = 2, [Stats.STAT_CUN] = 5, }) }
+			self.wielded._special2 = {"inc_damage", who:addTemporaryValue("inc_damage", {[DamageType.ARCANE]=5}) }
+			self.wielded._special3 = {"combat_spellcrit", who:addTemporaryValue("combat_spellcrit", 2) }
+			game.logPlayer(who, "#LIGHT_BLUE#You feel as surge of power as you wear the vestments of the old human Conclave!")
+		end
+	end,
+}
+
+newEntity{ base = "BASE_CLOTH_ARMOR",
+	unique = true,
 	name = "Robe of the Archmage", color = colors.RED,
 	unided_name = "glittering robe",
 	desc = [[A plain elven-silk robe. It would be unremarkable if not the for sheer power it radiates.]],
@@ -928,9 +953,9 @@ newEntity{ base = "BASE_BATTLEAXE",
 	},
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.race == "Dwarf" then
-			self.wielded._special1 = who:addTemporaryValue("inc_stats", { [Stats.STAT_CON] = 4, [Stats.STAT_DEX] = 4, })
-			self.wielded._special2 = who:addTemporaryValue("stun_immune", 0.5)
-			self.wielded._special2 = who:addTemporaryValue("knockback_immune", 0.5)
+			self.wielded._special1 = {"inc_stats", who:addTemporaryValue("inc_stats", { [Stats.STAT_CON] = 4, [Stats.STAT_DEX] = 4, }) }
+			self.wielded._special2 = {"stun_immune", who:addTemporaryValue("stun_immune", 0.5) }
+			self.wielded._special3 = {"knockback_immune", who:addTemporaryValue("knockback_immune", 0.5) }
 			game.logPlayer(who, "#LIGHT_BLUE#You feel as surge of power as you wield the axe of your ancestors!")
 		end
 	end,
