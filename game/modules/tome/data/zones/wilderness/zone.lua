@@ -44,5 +44,9 @@ return {
 				end end
 			end
 		end
+
+		-- The shield protecting the sorcerer hideout
+		local spot = level:pickSpot{type="zone-pop", subtype="high-peak"}
+		local p = level.map:particleEmitter(spot.x, spot.y, 3, "istari_shield_map")
 	end,
 }
