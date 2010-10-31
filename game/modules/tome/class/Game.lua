@@ -136,6 +136,10 @@ function _M:newGame()
 
 	self.always_target = true
 
+	local birth_done = function()
+		for i = 1, 25 do self.state:generateRandart() end
+	end
+
 	self.creating_player = true
 	local birth; birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		-- Save for quick birth
@@ -164,6 +168,7 @@ function _M:newGame()
 				savefile_pipe:push("", "entity", self.player)
 				self.creating_player = false
 
+				birth_done()
 				self.player:check("on_birth_done")
 			end, true))
 		end
@@ -196,6 +201,7 @@ function _M:newGame()
 			self.player:grantQuest(self.player.starting_quest)
 			self.creating_player = false
 
+			birth_done()
 			self.player:check("on_birth_done")
 		else
 			-- Continue as normal
@@ -641,7 +647,7 @@ function _M:setupCommands()
 				for i, e in ipairs(self.zone.object_list) do
 					if e.unique and e.define_as ~= "VOICE_SARUMAN" and e.define_as ~= "ORB_MANY_WAYS_DEMON" then
 						local a = self.zone:finishEntity(self.level, "object", e)
---						a.no_unique_lore = true -- to not spam
+						a.no_unique_lore = true -- to not spam
 						a:identify(true)
 						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)
 					end

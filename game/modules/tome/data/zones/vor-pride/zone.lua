@@ -19,7 +19,7 @@
 
 return {
 	name = "Vor Pride",
-	level_range = {35, 40},
+	level_range = {35, 45},
 	level_scheme = "player",
 	max_level = 5,
 	decay = {300, 800},

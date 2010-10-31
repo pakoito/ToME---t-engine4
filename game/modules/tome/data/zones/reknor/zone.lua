@@ -19,7 +19,7 @@
 
 return {
 	name = "Lost Dwarven Kingdom of Reknor",
-	level_range = {18, 23},
+	level_range = {18, 27},
 	level_scheme = "player",
 	max_level = 4,
 	decay = {300, 800},

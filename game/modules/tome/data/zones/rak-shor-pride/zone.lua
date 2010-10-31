@@ -19,7 +19,7 @@
 
 return {
 	name = "Rak'shor Pride",
-	level_range = {30, 35},
+	level_range = {30, 40},
 	level_scheme = "player",
 	max_level = 5,
 	decay = {300, 800},

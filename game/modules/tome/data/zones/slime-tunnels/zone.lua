@@ -19,7 +19,7 @@
 
 return {
 	name = "Slime Tunnels",
-	level_range = {45, 50},
+	level_range = {45, 55},
 	level_scheme = "player",
 	max_level = 1,
 	decay = {300, 800},

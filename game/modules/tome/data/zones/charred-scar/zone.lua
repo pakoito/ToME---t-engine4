@@ -19,7 +19,7 @@
 
 return {
 	name = "Charred Scar",
-	level_range = {30, 35},
+	level_range = {30, 40},
 	level_scheme = "player",
 	max_level = 1,
 	decay = {300, 800},

@@ -19,7 +19,7 @@
 
 return {
 	name = "The Maze",
-	level_range = {7, 12},
+	level_range = {7, 16},
 	level_scheme = "player",
 	max_level = 7,
 	decay = {300, 800},

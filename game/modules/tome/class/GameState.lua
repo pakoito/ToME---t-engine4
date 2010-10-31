@@ -87,17 +87,26 @@ function _M:zoneCheckBackupGuardian()
 end
 
 --- A boss refused to drop his artifact! Bastard! Add it to the world pool
-function _M:addWorldArtifact(define, config)
-	local o = game.zone.object_list[define]
-	o.level_range = config.level_range
-	o.rarity = config.rarity
-	self.world_artifacts_pool[define] = o
+function _M:addWorldArtifact(o)
+	self.world_artifacts_pool[#self.world_artifacts_pool+1] = o
 end
 
 --- Load all refused boss artifacts
 -- This is caleld from the world-artifacts.lua file
 function _M:getWorldArtifacts()
 	return self.world_artifacts_pool
+end
+
+--- Generate randarts for this state
+function _M:generateRandart()
+	local base = game.zone:makeEntity(game.level, "object", {ego_chance=-1000, special=function(e) return (not e.unique and e.slot and e.slot ~= "INBELT") and true or false end}, nil, true)
+	if not base then return end
+	local o = base:cloneFull()
+	print("Creating randart using base "..o.name) FIX ME
+	o.randart = true
+	o.rarity = rng.range(200, 290)
+
+	self:addWorldArtifact(o)
 end
 
 local wda_cache = {}

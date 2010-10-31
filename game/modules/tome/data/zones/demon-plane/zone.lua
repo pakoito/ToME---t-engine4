@@ -19,7 +19,7 @@
 
 return {
 	name = "Demon Plane",
-	level_range = {35, 40},
+	level_range = {35, 45},
 	level_scheme = "player",
 	max_level = 1,
 	decay = {300, 800},
