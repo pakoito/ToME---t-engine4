@@ -176,7 +176,6 @@ function _M:generate(lev, old_lev)
 	local spots = {}
 
 	for i = 1, self.gen_map.w do for j = 1, self.gen_map.h do
-		print(i,j)
 		local c = self.gen_map[i][j]
 		local g = self:resolve("grid", c)
 		if g then
