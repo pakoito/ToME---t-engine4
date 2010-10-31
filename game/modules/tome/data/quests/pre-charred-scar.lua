@@ -39,6 +39,8 @@ on_grant = function(self, who)
 		change_level=1, change_zone="eruan"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 155, 48)
+	local level = game.memory_levels["wilderness-1"]
+	local spot = level:pickSpot{type="quest-pop", "eruan"}
+	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 	game.logPlayer(game.player, "Aeryn explained where the orcs were spotted.")
 end

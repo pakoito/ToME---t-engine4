@@ -121,8 +121,11 @@ access_angolwen = function(self, player)
 	}
 	g:resolve() g:resolve(nil, true)
 	p:resolve() p:resolve(nil, true)
-	game.zone:addEntity(game.level, g, "terrain", 10, 18)
-	game.zone:addEntity(game.level, p, "terrain", 12, 18)
+	local level = game.level
+	local spot = level:pickSpot{type="quest-pop", "angolwen"}
+	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	spot = level:pickSpot{type="quest-pop", "angolwen-portal"}
+	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game:setAllowedBuild("mage", true)
 	world:gainAchievement("THE_SECRET_CITY", player)

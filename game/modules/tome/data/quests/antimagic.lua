@@ -35,7 +35,9 @@ on_grant = function(self, who)
 		change_level=1, change_zone="town-antimagic",
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.level, g, "terrain", 49, 10)
+	local level = game.level
+	local spot = level:pickSpot{type="quest-pop", "antimagic"}
+	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game.logPlayer(game.player, "He points in the direction of the thaloren forest near the Daikara.")
 end

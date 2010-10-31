@@ -133,7 +133,9 @@ open_orthanc = function(self, player)
 		change_level=1, change_zone="telmur"
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.memory_levels["wilderness-1"], g, "terrain", 55, 23)
+	local level = game.memory_levels["wilderness-1"]
+	local spot = level:pickSpot{type="quest-pop", "telmur"}
+	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game.logPlayer(game.player, "Tannen points the location of Telmur on your map.")
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "open-orthanc")

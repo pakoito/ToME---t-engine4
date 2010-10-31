@@ -60,11 +60,13 @@ function _M:knownLore(lore)
 end
 
 function _M:getLore(lore)
+	self.additional_lore = self.additional_lore or {}
 	assert(self.lore_defs[lore] or self.additional_lore[lore], "bad lore id "..lore)
 	return self.lore_defs[lore] or self.additional_lore[lore]
 end
 
 function _M:additionalLore(name, category, lore)
+	self.additional_lore = self.additional_lore or {}
 	if self.additional_lore[name] then return end
 	self.additional_lore_nb = self.additional_lore_nb + 1
 	self.additional_lore[name] = {id=name, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
