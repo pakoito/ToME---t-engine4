@@ -102,7 +102,7 @@ function _M:generateRandart()
 	local base = game.zone:makeEntity(game.level, "object", {ego_chance=-1000, special=function(e) return (not e.unique and e.slot and e.slot ~= "INBELT") and true or false end}, nil, true)
 	if not base then return end
 	local o = base:cloneFull()
-	print("Creating randart using base "..o.name) FIX ME
+	print("Creating randart using base "..o.name)
 	o.randart = true
 	o.rarity = rng.range(200, 290)
 
