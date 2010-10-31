@@ -40,7 +40,7 @@ else
 end
 
 desc[#desc+1] = ""
-desc[#desc+1] = "Maj'Eyal will once more know peace, most of its inhabitant will never know they even were on the verge of destruction, but then this is what being a true hero means, to do the right thing even though nobody will know about it."
+desc[#desc+1] = "Maj'Eyal will once more know peace, most of its inhabitants will never know they even were on the verge of destruction, but then this is what being a true hero means, to do the right thing even though nobody will know about it."
 
 if game.player.winner ~= "self-sacrifice" then
 	desc[#desc+1] = ""
