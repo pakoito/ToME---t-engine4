@@ -300,7 +300,7 @@ function _M:finishEntity(level, type, e, ego_filter)
 			if _G.type(e.egos_chance) == "number" then e.egos_chance = {e.egos_chance} end
 			-- Pick an ego, then an other and so until we get no more
 			local picked_etype = {}
-			local etype = rng.tableIndex(e.egos_chance, picked_etype)
+			local etype = e.ego_first_type and e.ego_first_type or rng.tableIndex(e.egos_chance, picked_etype)
 			local echance = etype and e.egos_chance[etype]
 			while etype and rng.percent(util.bound(echance + (ego_chance or 0), 0, 100)) do
 				picked_etype[etype] = true

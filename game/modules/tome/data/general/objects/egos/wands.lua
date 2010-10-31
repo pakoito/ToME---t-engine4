@@ -148,6 +148,32 @@ newEntity{
 }
 
 newEntity{
+	name = " of conjuration", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 6,
+	cost_per_charge = 0.5,
+
+	use_power = { name = "fire a bolt of a random element", power = 6, use = function(self, who)
+		local tg = {type="bolt", range=10 + who:getMag(10)}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = (45 + who:getMag(25)) * self.material_level
+		local elem = rng.table{
+			{engine.DamageType.FIRE, "flame"},
+			{engine.DamageType.COLD, "freeze"},
+			{engine.DamageType.LIGHTNING, "lightning_explosion"},
+			{engine.DamageType.ACID, "acid"},
+			{engine.DamageType.NATURE, "slime"},
+			{engine.DamageType.BLIGHT, "slime"},
+		}
+		who:project(tg, x, y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})
+		game:playSoundNear(who, "talents/fire")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
 	name = " of healing", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
 	rarity = 10,

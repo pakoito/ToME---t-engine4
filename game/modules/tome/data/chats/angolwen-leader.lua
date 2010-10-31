@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A tall elven woman stands before you, her fair skin radiates incredible power throught her white robe.*#WHITE#
+	text = [[#LIGHT_GREEN#*A tall woman stands before you, her fair skin radiates incredible power throught her white robe.*#WHITE#
 I am Linaniil of the Kar'Krul. Welcome to our city, @playerdescriptor.subclass@. What may I do for you?]],
 	answers = {
 		{"I require all the help I can get, not for my sake but for the town of Derth, in the north east of here.", jump="save-derth", cond=function(npc, player) local q = player:hasQuest("lightning-overload") return q and q:isCompleted("saved-derth") and not q:isCompleted("tempest-located") end},
