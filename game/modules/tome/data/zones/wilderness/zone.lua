@@ -18,7 +18,9 @@
 -- darkgod@te4.org
 
 return {
-	name = "Eyal",
+	name = "World of Eyal",
+	display_name = function() return game.level.map.attrs(game.player.x, game.player.y, "zonename") or "Eyal" end,
+	variable_zone_name = true,
 	level_range = {1, 1},
 	max_level = 1,
 	width = 170, height = 70,
@@ -33,5 +35,14 @@ return {
 			class = "engine.generator.map.Static",
 			map = "wilderness/maj-eyal",
 		},
-	}
+	},
+	post_process = function(level)
+		for _, z in ipairs(level.custom_zones) do
+			if z.type == "zonename" then
+				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
+					game.level.map.attrs(x, y, "zonename", z.subtype)
+				end end
+			end
+		end
+	end,
 }

@@ -82,6 +82,10 @@ function _M:loadMap(file)
 		addSpot = function(dst, type, subtype)
 			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], type=type or "static", subtype=subtype or "static"}
 		end,
+		addZone = function(dst, type, subtype)
+			self.level.custom_zones = self.level.custom_zones or {}
+			self.level.custom_zones[#self.level.custom_zones+1] = {x1=dst[1], y1=dst[2], x2=dst[3], y2=dst[4], type=type or "static", subtype=subtype or "static"}
+		end,
 	}
 	setfenv(f, setmetatable(g, {__index=_G}))
 	local ret, err = f()

@@ -184,6 +184,9 @@ function _M:move(x, y, force)
 		game.state:worldDirectorAI()
 	end
 
+	-- Update zone name
+	if game.zone.variable_zone_name then game:updateZoneName() end
+
 	return moved
 end
 

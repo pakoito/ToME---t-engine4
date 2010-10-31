@@ -453,6 +453,27 @@ function _M:getPlayer()
 	return self.player
 end
 
+--- Update the zone name, if needed
+function _M:updateZoneName()
+	local name
+	if self.zone.display_name then
+		name = self.zone.display_name()
+	else
+		local lev = self.level.level
+		if self.level.data.reverse_level_display then lev = 1 + self.level.data.max_level - lev end
+		name = ("%s (%d)"):format(self.zone.name, lev)
+	end
+	if self.zone_name_s and self.old_zone_name == name then return end
+
+	self.player_display.font:setStyle("bold")
+	local s = core.display.drawStringBlendedNewSurface(self.player_display.font, name, unpack(colors.simple(colors.GOLD)))
+	self.player_display.font:setStyle("normal")
+	self.zone_name_w, self.zone_name_h = s:getSize()
+	self.zone_name_s, self.zone_name_tw, self.zone_name_th = s:glTexture()
+	self.old_zone_name = name
+	print("Updating zone name", name)
+end
+
 function _M:tick()
 	if self.level then
 		self:targetOnTick()
@@ -521,15 +542,7 @@ function _M:display()
 			if self.level.data.foreground then self.level.data.foreground(self.level, self.level.map.display_x, self.level.map.display_y) end
 		end
 
-		if not self.zone_name_s then
-			self.player_display.font:setStyle("bold")
-			local lev = self.level.level
-			if self.level.data.reverse_level_display then lev = 1 + self.level.data.max_level - lev end
-			local s = core.display.drawStringBlendedNewSurface(self.player_display.font, ("%s (%d)"):format(self.zone.name, lev), unpack(colors.simple(colors.GOLD)))
-			self.player_display.font:setStyle("normal")
-			self.zone_name_w, self.zone_name_h = s:getSize()
-			self.zone_name_s, self.zone_name_tw, self.zone_name_th = s:glTexture()
-		end
+		if not self.zone_name_s then self:updateZoneName() end
 		self.zone_name_s:toScreenFull(
 			self.level.map.display_x + self.level.map.viewport.width - self.zone_name_w,
 			self.level.map.display_y + self.level.map.viewport.height - self.zone_name_h,
