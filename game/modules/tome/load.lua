@@ -129,7 +129,7 @@ ActorLevel.exp_chart = function(level)
 	end
 	return math.ceil(exp)
 end
--- [[
+--[[
 local tnb, tznb = 0, 0
 for i = 2, 50 do
 	local nb = math.ceil(ActorLevel.exp_chart(i) / i)
