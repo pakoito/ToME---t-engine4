@@ -41,6 +41,7 @@ end
 if zone == "Maj'Eyal" then
 	wda.cur_patrols = wda.cur_patrols or 0
 	wda.cur_hostiles = wda.cur_hostiles or 0
+	print("==== Maj'Eyal", wda.cur_patrols, wda.cur_hostiles)
 
 	-- Spawn random encounters
 	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
@@ -59,9 +60,9 @@ if zone == "Maj'Eyal" then
 
 	-- Spawn some patrols
 	if wda.cur_patrols < 3 then
-		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="patrol"}, nil, true)
+		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="patrol", subtype="allied kingdoms"}, nil, true)
 		if e then
-			local spot = game.level:pickSpot{type="patrol", "allied-kingdoms"}
+			local spot = game.level:pickSpot{type="patrol", subtype="allied-kingdoms"}
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
 				print("Spawned allied kingdom patrol", spot.x, spot.y, e.name)
 				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
@@ -74,9 +75,9 @@ if zone == "Maj'Eyal" then
 
 	-- Spawn some hostiles
 	if wda.cur_hostiles < 4 and rng.percent(5) then
-		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="hostile"}, nil, true)
+		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="hostile", subtype="maj eyal"}, nil, true)
 		if e then
-			local spot = game.level:pickSpot{type="hostile", "random"}
+			local spot = game.level:pickSpot{type="hostile", subtype="maj-eyal"}
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
 				print("Spawned hostile", spot.x, spot.y, e.name)
 				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
@@ -92,32 +93,64 @@ if zone == "Maj'Eyal" then
 ---------------------------------------------------------------------
 elseif zone == "Far East" then
 	wda.cur_patrols = wda.cur_patrols or 0
+	wda.cur_orc_patrols = wda.cur_orc_patrols or 0
 	wda.cur_hostiles = wda.cur_hostiles or 0
+	print("==== Fareast", wda.cur_patrols, wda.cur_orc_patrols, wda.cur_hostiles)
+
+	-- Spawn random encounters
+	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
+	if g and g.can_encounter then
+		local type = encounter_chance(game.player)
+		if type then
+			game.level:setEntitiesList("fareast_encounters_rng", game.zone:computeRarities("fareast_encounters_rng", game.level:getEntitiesList("fareast_encounters"), game.level, nil))
+			local e = game.zone:makeEntity(game.level, "fareast_encounters_rng", {type=type, mapx=game.player.x, mapy=game.player.y, nb_tries=10})
+			if e then
+				if e:check("on_encounter", game.player) then
+					e:added()
+				end
+			end
+		end
+	end
 
 	-- Spawn some patrols
-	if wda.cur_patrols < 3 then
-		local e = game.zone:makeEntity(game.level, "encounters_npcs", {type="patrol"}, nil, true)
+	if wda.cur_patrols < 2 then
+		local e = game.zone:makeEntity(game.level, "fareast_encounters_npcs", {type="patrol", subtype="sunwall"}, nil, true)
 		if e then
-			local spot = game.level:pickSpot{type="patrol", "sunwall"}
+			local spot = game.level:pickSpot{type="patrol", subtype="sunwall"}
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
 				print("Spawned sunwall patrol", spot.x, spot.y, e.name)
 				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
 				wda.cur_patrols = wda.cur_patrols + 1
-				e.on_die = function() game.level.data.wda.cur_patrols = game.level.data.wda.cur_patrols - 1 end
+				e.world_zone = zone
+				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_patrols = game.level.data.wda.zones[self.world_zone].cur_patrols - 1 end
+			end
+		end
+	end
+	if wda.cur_orc_patrols < 4 then
+		local e = game.zone:makeEntity(game.level, "fareast_encounters_npcs", {type="patrol", subtype="orc pride"}, nil, true)
+		if e then
+			local spot = game.level:pickSpot{type="patrol", subtype="orc-pride"}
+			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
+				print("Spawned sunwall patrol", spot.x, spot.y, e.name)
+				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
+				wda.cur_orc_patrols = wda.cur_orc_patrols + 1
+				e.world_zone = zone
+				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_orc_patrols = game.level.data.wda.zones[self.world_zone].cur_orc_patrols - 1 end
 			end
 		end
 	end
 
 	-- Spawn some hostiles
 	if wda.cur_hostiles < 4 and rng.percent(5) then
-		local e = game.zone:makeEntity(game.level, "encounters_npcs", {type="hostile"}, nil, true)
+		local e = game.zone:makeEntity(game.level, "fareast_encounters_npcs", {type="hostile", subtype="fareast"}, nil, true)
 		if e then
-			local spot = game.level:pickSpot{type="hostile", "random"}
+			local spot = game.level:pickSpot{type="hostile", subtype="fareast"}
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
 				print("Spawned hostile", spot.x, spot.y, e.name)
 				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
 				wda.cur_hostiles = wda.cur_hostiles + 1
-				e.on_die = function() game.level.data.wda.cur_hostiles = game.level.data.wda.cur_hostiles - 1 end
+				e.world_zone = zone
+				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_hostiles = game.level.data.wda.zones[self.world_zone].cur_hostiles - 1 end
 			end
 		end
 	end

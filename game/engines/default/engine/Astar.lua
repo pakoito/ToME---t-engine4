@@ -126,8 +126,10 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic)
 	while next(open) do
 		-- Find lowest of f_score
 		local node, lowest = nil, 999999999999999
-		for n, _ in pairs(open) do
+		local n, _ = next(open)
+		while n do
 			if f_score[n] < lowest then node = n; lowest = f_score[n] end
+			n, _ = next(open, n)
 		end
 
 		if node == stop then return self:createPath(came_from, stop) end

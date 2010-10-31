@@ -247,25 +247,25 @@
   </object>
   <object name="small hostiles" x="806" y="846" width="48" height="40">
    <properties>
-    <property name="subtype" value="&quot;random&quot;"/>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
   <object name="small hostiles" x="1799" y="425" width="46" height="42">
    <properties>
-    <property name="subtype" value="&quot;random&quot;"/>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
   <object name="small hostiles" x="1444" y="1385" width="50" height="48">
    <properties>
-    <property name="subtype" value="&quot;random&quot;"/>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
   <object name="small hostiles" x="226" y="813" width="52" height="44">
    <properties>
-    <property name="subtype" value="&quot;random&quot;"/>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
     <property name="type" value="&quot;hostile&quot;"/>
    </properties>
   </object>
@@ -422,6 +422,42 @@
   <object name="Sunwall patrol" x="4836" y="964" width="26" height="24">
    <properties>
     <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4518" y="1636" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4708" y="1699" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="5218" y="1538" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="5347" y="293" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4963" y="548" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4227" y="292" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
