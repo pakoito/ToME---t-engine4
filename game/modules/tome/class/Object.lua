@@ -163,7 +163,12 @@ function _M:getDisplayColor()
 		else
 			return {0, 255, 128}, "#00FF80#"
 		end
-	elseif self.unique then return {255, 255, 0}, "#FFFF00#"
+	elseif self.unique then
+		if self.randart then
+			return {255, 0x77, 0}, "#FF7700#"
+		else
+			return {255, 215, 0}, "#FFD700#"
+		end
 	else return {255, 255, 255}, "#FFFFFF#"
 	end
 end

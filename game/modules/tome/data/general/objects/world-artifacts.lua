@@ -815,7 +815,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 newEntity{ base = "BASE_GEM",
 	unique = true,
 	unided_name = "scintillating white crystal",
-	name = "Saruman's Staff Crystal", subtype = "multi-hued",
+	name = "Telos's Staff Crystal", subtype = "multi-hued",
 	color = colors.WHITE, image="object/diamond.png",
 	level_range = {35, 45},
 	desc = [[A closer look at this pure white crystal reveals that it is really a plethora of colors swirling and scintillating]],
@@ -835,7 +835,7 @@ newEntity{ base = "BASE_GEM",
 	max_power = 1, power_regen = 1,
 	use_power = { name = "combine with a staff", power = 1, use = function(self, who, gem_inven, gem_item)
 		who:showInventory("Fuse with which staff?", who:getInven("INVEN"), function(o) return o.type == "weapon" and o.subtype == "staff" and not o.egoed and not o.unique end, function(o, item)
-			local voice = game.zone:makeEntityByName(game.level, "object", "VOICE_SARUMAN")
+			local voice = game.zone:makeEntityByName(game.level, "object", "VOICE_TELOS")
 			if voice then
 				local oldname = o:getName{do_color=true}
 
@@ -861,13 +861,13 @@ newEntity{ base = "BASE_GEM",
 }
 
 -- The staff that goes with the crystal above, it will not be generated randomly it is created by the crystal
-newEntity{ base = "BASE_STAFF", define_as = "VOICE_SARUMAN",
+newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
 	unique = true,
-	name = "Voice of Saruman",
+	name = "Voice of Telos",
 	unided_name = "scintillating white staff",
 	color = colors.VIOLET,
 	rarity = false,
-	desc = [[A closer look at this pure white staff reveals that it is really a plethora of colors swirling and scintillating. Although Saruman's power was weakened at the end of the third age, this staff still is a force to be reckoned with.]],
+	desc = [[A closer look at this pure white staff reveals that it is really a plethora of colors swirling and scintillating.]],
 	cost = 500,
 	material_level = 5,
 
@@ -887,6 +887,7 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_SARUMAN",
 newEntity{ base = "BASE_WAND",
 	unided_name = "glowing rod",
 	name = "Gwai's Burninator", color=colors.LIGHT_RED, unique=true,
+	desc = [[Gwai, a pyromanceress that lived during the Spellhunt, was cornered by group of mage hunters. She fought to her last breath and is said to have killed at least ten people with this wand before she fell.]],
 	cost = 50,
 	rarity = 220,
 	level_range = {15, 30},
@@ -1191,6 +1192,28 @@ newEntity{ base = "BASE_GREATSWORD",
 	},
 	wielder = {
 		melee_project={[DamageType.LIGHT] = 40, [DamageType.DARKNESS] = 40},
+	},
+}
+
+newEntity{ base = "BASE_WARAXE",
+	unique = true,
+	define_as = "WARAXE_DRAMBORLEG", rarity = false, unided_name = "razor sharp war axe",
+	name = "Dramborleg, the waraxe of Tuor", color = colors.LIGHT_BLUE,
+	desc = [[The mighty axe of Tuor can cleave through armor like the sharpest swords, yet hit with all the impact of a heavy club. its name means 'Thudder Sharp'.]],
+	require = { stat = { str=42 }, },
+	material_level = 5,
+	combat = {
+		dam = 58,
+		apr = 16,
+		physcrit = 7,
+		dammod = {str=1},
+		damrange = 1.4,
+		damtype = DamageType.PHYSICALBLEED,
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, },
+		see_invisible = 5,
+		inc_damage = { [DamageType.PHYSICAL]=10 },
 	},
 }
 

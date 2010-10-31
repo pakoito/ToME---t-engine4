@@ -641,7 +641,7 @@ function _M:setupCommands()
 				for i, e in ipairs(self.zone.object_list) do
 					if e.unique and e.define_as ~= "VOICE_SARUMAN" and e.define_as ~= "ORB_MANY_WAYS_DEMON" then
 						local a = self.zone:finishEntity(self.level, "object", e)
-						a.no_unique_lore = true -- to not spam
+--						a.no_unique_lore = true -- to not spam
 						a:identify(true)
 						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)
 					end

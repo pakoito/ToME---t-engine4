@@ -21,24 +21,3 @@ local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
 -- This file describes artifacts not bound to a special location or quest, but still special(they do not get randomly generated)
-newEntity{ base = "BASE_WARAXE",
-	unique = true,
-	define_as = "WARAXE_DRAMBORLEG", rarity = false, unided_name = "razor sharp war axe",
-	name = "Dramborleg, the waraxe of Tuor", color = colors.LIGHT_BLUE,
-	desc = [[The mighty axe of Tuor can cleave through armor like the sharpest swords, yet hit with all the impact of a heavy club. its name means 'Thudder Sharp'.]],
-	require = { stat = { str=42 }, },
-	material_level = 5,
-	combat = {
-		dam = 58,
-		apr = 16,
-		physcrit = 7,
-		dammod = {str=1},
-		damrange = 1.4,
-		damtype = DamageType.PHYSICALBLEED,
-	},
-	wielder = {
-		inc_stats = { [Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, },
-		see_invisible = 5,
-		inc_damage = { [DamageType.PHYSICAL]=10 },
-	},
-}
