@@ -78,7 +78,7 @@ prepareEntitiesList("maj_eyal_encounters", "mod.class.Encounter", "/data/general
 prepareEntitiesList("maj_eyal_encounters_npcs", "mod.class.WorldNPC", "/data/general/encounters/maj-eyal-npcs.lua")
 prepareEntitiesList("fareast_encounters", "mod.class.Encounter", "/data/general/encounters/fareast.lua")
 addData{
-	wda = { script="maj-eyal", zones={} },
+	wda = { script="eyal", zones={} },
 }
 
 -- addSpot section
