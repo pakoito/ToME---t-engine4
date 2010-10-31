@@ -52,18 +52,3 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 		who:setQuestStatus("start-undead", engine.Quest.COMPLETED, "black-cloak")
 	end,
 }
-
-newEntity{ base = "BASE_LITE", define_as = "UNDEATH_PHIAL",
-	unided_name = "phial filled with darkness", unique = true,
-	name = "Phial of Undead", color=colors.DARK_GREY,
-	desc = [[This phial seems filled with darkness, yet it cleanses your thoughts.]],
-	rarity = false,
-	encumber = 2,
-	cost = 50,
-	material_level = 2,
-
-	wielder = {
-		lite = 1,
-		infravision = 6,
-	},
-}

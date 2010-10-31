@@ -49,7 +49,7 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 
 	resolvers.equip{
 		{type="weapon", subtype="greatmaul", ego_change=100, autoreq=true},
-		{type="armor", subtype="light", defined="CHROMATIC_HARNESS", random_art_replace={chance=75, rarity=250, level_range={40, 50}}, autoreq=true},
+		{type="armor", subtype="light", defined="CHROMATIC_HARNESS", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_DRAGON"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },

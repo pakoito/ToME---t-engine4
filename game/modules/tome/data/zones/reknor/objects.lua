@@ -28,27 +28,6 @@ newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_LAST_HOPE",
 	end}
 }
 
-newEntity{ base = "BASE_WARAXE",
-	define_as = "MALEDICTION", rarity=false,
-	unided_name = "pestilent waraxe",
-	name = "Malediction", unique=true,
-	desc = [[The land withers and crumbles wherever this cursed axe rests.]],
-	require = { stat = { str=55 }, },
-	cost = 375,
-	combat = {
-		dam = 55,
-		apr = 15,
-		physcrit = 10,
-		dammod = {str=1},
-		damrange = 1.2,
-	},
-	wielder = {
-		life_regen = -0.3,
-		inc_damage = { [DamageType.BLIGHT] = 20 },
-		melee_project={[DamageType.BLIGHT] = 20},
-	},
-}
-
 newEntity{ base = "BASE_GEM",
 	define_as = "RESONATING_DIAMOND_WEST",
 	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West", identified=true, no_unique_lore=true,

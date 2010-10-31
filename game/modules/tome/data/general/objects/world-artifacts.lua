@@ -30,7 +30,7 @@ end
 newEntity{ base = "BASE_STAFF",
 	unique = true,
 	name = "Staff of Destruction",
-	unided_name = "ash staff",
+	unided_name = "darkness infused staff",
 	level_range = {20, 25},
 	color=colors.VIOLET,
 	rarity = 100,

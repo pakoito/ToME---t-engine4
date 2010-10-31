@@ -52,7 +52,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 
 	resolvers.equip{
 		{type="weapon", subtype="staff", ego_change=100, autoreq=true},
-		{type="armor", subtype="cloth", defined="BLACK_ROBE", random_art_replace={chance=75, rarity=250, level_range={40, 50}}, autoreq=true},
+		{type="armor", subtype="cloth", defined="BLACK_ROBE", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
 	resolvers.drops{chance=100, nb=1, {defined="ORB_UNDEATH"} },

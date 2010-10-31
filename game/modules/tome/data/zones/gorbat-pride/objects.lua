@@ -19,23 +19,3 @@
 
 load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
-
-local Talents = require("engine.interface.ActorTalents")
-local Stats = require"engine.interface.ActorStats"
-
-newEntity{ base = "BASE_LIGHT_ARMOR",
-	define_as = "CHROMATIC_HARNESS", rarity=false,
-	name = "Chromatic Harness", unique=true,
-	unided_name = "multi-hued leather armour", color=colors.VIOLET,
-	desc = [[This leather harness shines of multiple colors, quickly shifting through them in a seemingly chaotic manner.]],
-	cost = 500,
-	material_level = 5,
-	wielder = {
-		talent_cd_reduction={[Talents.T_ICE_BREATH]=3, [Talents.T_FIRE_BREATH]=3, [Talents.T_SAND_BREATH]=3, },
-		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 4, [Stats.STAT_DEX] = 3, [Stats.STAT_LCK] = 10, },
-		poison_immune = 0.7,
-		combat_armor = 10,
-		esp = { dragon = 1 },
-		fatigue = 10,
-	},
-}

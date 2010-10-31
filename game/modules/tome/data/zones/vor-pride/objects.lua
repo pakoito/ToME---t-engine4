@@ -22,33 +22,6 @@ load("/data/general/objects/lore/sunwall.lua")
 
 local Stats = require"engine.interface.ActorStats"
 
-newEntity{ base = "BASE_LEATHER_CAP",
-	define_as = "CROWN_ELEMENTS", rarity=false,
-	name = "Crown of the Elements", unique=true,
-	unided_name = "jeweled crown", color=colors.DARK_GREY,
-	desc = [[Jeweled crown]],
-	cost = 500,
-	material_level = 5,
-	wielder = {
-		inc_stats = { [Stats.STAT_CON] = 5, [Stats.STAT_WIL] = 3, },
-		resists={
-			[DamageType.FIRE] = 15,
-			[DamageType.COLD] = 15,
-			[DamageType.ACID] = 15,
-			[DamageType.LIGHTNING] = 15,
-		},
-		melee_project={
-			[DamageType.FIRE] = 10,
-			[DamageType.COLD] = 10,
-			[DamageType.ACID] = 10,
-			[DamageType.LIGHTNING] = 10,
-		},
-		see_invisible = 15,
-		combat_armor = 5,
-		fatigue = 5,
-	},
-}
-
 -- Artifact, randomly dropped in Vor Pride, and only there
 newEntity{ base = "BASE_SCROLL", subtype="tome",
 	name = "Tome of Wildfire", unided_name = "burning book", unique=true, no_unique_lore=true,

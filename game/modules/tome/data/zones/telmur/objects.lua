@@ -22,29 +22,6 @@ load("/data/general/objects/objects.lua")
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{ base = "BASE_STAFF",
-	define_as = "TELOS_TOP_HALF", rarity=false,
-	slot_forbid = false,
-	twohanded = false,
-	name = "Telos's Staff (Top Half)", unique=true,
-	desc = [[The top part of Telos's broken staff.]],
-	require = { stat = { mag=35 }, },
-	encumberance = 2.5,
-	cost = 500,
-	combat = {
-		dam = 35,
-		apr = 0,
-		physcrit = 1.5,
-		dammod = {mag=1.0},
-	},
-	wielder = {
-		combat_spellpower = 25,
-		combat_spellcrit = 5,
-		combat_mentalresist = 8,
-		inc_stats = { [Stats.STAT_WIL] = 5, },
-	},
-}
-
-newEntity{ base = "BASE_STAFF",
 	slot = "OFFHAND", slot_forbid = false,
 	twohanded = false, add_name=false,
 	define_as = "TELOS_BOTTOM_HALF", rarity=false,

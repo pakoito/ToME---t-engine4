@@ -23,39 +23,6 @@ load("/data/general/objects/mummy-wrappings.lua")
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
-newEntity{ base = "BASE_LONGSWORD",
-	define_as = "LONGSWORD_RINGIL", rarity=false, unided_name = "glittering longsword",
-	name = "Ringil, the glittering sword of Fingolfin", unique=true,
-	desc = [[The sword of Fingolfin, said to have glittered like ice. With it he wounded Morgoth in single combat after the Dagor Bragollach.]],
-	require = { stat = { str=35 }, },
-	cost = 2000,
-	material_level = 5,
-	combat = {
-		dam = 45,
-		apr = 10,
-		physcrit = 10,
-		dammod = {str=1},
-		damrange = 1.4,
-	},
-	wielder = {
-		lite = 1,
-		see_invisible = 2,
-		resists={[DamageType.COLD] = 25},
-		inc_damage = { [DamageType.COLD] = 20 },
-		melee_project={[DamageType.ICE] = 15},
-	},
-	max_power = 18, power_regen = 1,
-	use_power = { name = "generate a burst of ice", power = 8,
-		use = function(self, who)
-			local tg = {type="ball", range=0, radius=4, friendlyfire=false}
-			who:project(tg, who.x, who.y, engine.DamageType.ICE, 10 + (who:getMag() + who:getWil()) / 2, {type="freeze"})
-			game:playSoundNear(who, "talents/ice")
-			game.logSeen(who, "%s invokes the power of Ringil!", who.name:capitalize())
-			return true
-		end
-	},
-}
-
 -- Random artifact
 newEntity{ base = "BASE_MUMMY_WRAPPING",
 	unique = true,
@@ -81,3 +48,4 @@ newEntity{ base = "BASE_MUMMY_WRAPPING",
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_SPIT_POISON, level = 2, power = 50 },
 }
+

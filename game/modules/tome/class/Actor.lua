@@ -749,7 +749,7 @@ function _M:die(src)
 				for i, o in ipairs(inven) do
 					-- Handle boss wielding artifacts
 					if o.__special_boss_drop and rng.percent(o.__special_boss_drop.chance) then
-						print("Refusing to drop "..self.name.." artifact "..o.name)
+						print("Refusing to drop "..self.name.." artifact "..o.name.." with chance "..o.__special_boss_drop.chance)
 
 						-- Do not drop
 						o.no_drop = true
@@ -757,9 +757,6 @@ function _M:die(src)
 						-- Drop a random artifact instead
 						local ro = game.zone:makeEntity(game.level, "object", {unique=true}, nil, true)
 						if ro then game.zone:addEntity(game.level, ro, "object", self.x, self.y) end
-
-						-- Add to the pool
-						game.state:addWorldArtifact(o.define_as, o.__special_boss_drop)
 					end
 
 					if not o.no_drop then

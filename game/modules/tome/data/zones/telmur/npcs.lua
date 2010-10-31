@@ -58,7 +58,7 @@ newEntity{ define_as = "SHADE_OF_TELOS",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, },
 	resolvers.equip{
-		{type="weapon", subtype="staff", defined="TELOS_TOP_HALF", random_art_replace={chance=75, rarity=190, level_range={40, 50}}, autoreq=true},
+		{type="weapon", subtype="staff", defined="TELOS_TOP_HALF", random_art_replace={chance=75}, autoreq=true},
 		{type="weapon", subtype="staff", defined="TELOS_BOTTOM_HALF", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=2, {type="wand"} },

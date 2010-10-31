@@ -26,12 +26,18 @@ function resolvers.calc.equip(t, e)
 	print("Equipment resolver for", e.name)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
-		print("Equipment resolver", e.name, filter.type, filter.subtype)
+		print("Equipment resolver", e.name, filter.type, filter.subtype, filter.defined)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
 		else
-			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
+			local forced
+			o, forced = game.zone:makeEntityByName(game.level, "object", filter.defined, filter.random_art_replace and true or false)
+			-- If we forced the generation this means it was already found
+			if forced then
+				print("Serving unique "..o.name.." but forcing replacement drop")
+				filter.random_art_replace.chance = 100
+			end
 		end
 		if o then
 			print("Zone made us an equipment according to filter!", o:getName())

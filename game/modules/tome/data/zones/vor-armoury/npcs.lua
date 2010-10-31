@@ -52,7 +52,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GNARG",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1 },
 
 	resolvers.equip{
-		{type="weapon", subtype="greatsword", defined="MURDERBLADE", random_art_replace={chance=75, rarity=250, level_range={35, 45}}, autoreq=true},
+		{type="weapon", subtype="greatsword", defined="MURDERBLADE", random_art_replace={chance=75}, autoreq=true},
 		{type="armor", subtype="massive", ego_change=100, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },

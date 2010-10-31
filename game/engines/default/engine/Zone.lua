@@ -256,7 +256,7 @@ end
 
 --- Find a given entity and resolve it
 -- @return the fully resolved entity, ready to be used on a level. Or nil if a filter was given an nothing found
-function _M:makeEntityByName(level, type, name)
+function _M:makeEntityByName(level, type, name, force_unique)
 	resolvers.current_level = self.base_level + level.level - 1
 
 	local e
@@ -267,11 +267,19 @@ function _M:makeEntityByName(level, type, name)
 	end
 	if not e then return nil end
 
-	if e.unique and game.uniques[e.__CLASSNAME.."/"..e.unique] then print("refused unique", e.name, e.__CLASSNAME.."/"..e.unique) return nil end
+	local forced = false
+	if e.unique and game.uniques[e.__CLASSNAME.."/"..e.unique] then
+		if not force_unique then
+			print("refused unique", e.name, e.__CLASSNAME.."/"..e.unique)
+			return nil
+		else
+			forced = true
+		end
+	end
 
 	e = self:finishEntity(level, type, e)
 
-	return e
+	return e, forced
 end
 
 --- Finishes generating an entity

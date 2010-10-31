@@ -19,30 +19,3 @@
 
 load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
-
-local Talents = require"engine.interface.ActorTalents"
-local Stats = require"engine.interface.ActorStats"
-
-newEntity{ base = "BASE_RING",
-	define_as = "PRIDE_GLORY", rarity=false,
-	name = "Glory of the Pride", unique=true,
-	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is incribed in the orc tongue, the black speech.]],
-	unided_name = "deep black ring",
-	cost = 500,
-	material_level = 5,
-	wielder = {
-		max_mana = -40,
-		max_stamina = 40,
-		stun_immune = 1,
-		confusion_immune = 1,
-		combat_atk = 10,
-		combat_dam = 10,
-		combat_def = 5,
-		combat_armor = 10,
-		fatigue = -15,
-		talent_cd_reduction={
-			[Talents.T_RUSH]=15,
-		},
-		inc_damage={ [DamageType.PHYSICAL] = 8, },
-	},
-}

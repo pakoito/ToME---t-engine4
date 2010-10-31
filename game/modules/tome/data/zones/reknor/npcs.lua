@@ -167,7 +167,7 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="waraxe", defined="MALEDICTION", random_art_replace={chance=75, rarity=200, level_range={35, 45}}, autoreq=true},
+		{type="weapon", subtype="waraxe", defined="MALEDICTION", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=1, {defined="ATHAME_WEST"} },
