@@ -276,7 +276,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 
 	resolvers.equip{
-		{type="jewelry", subtype="amulet", defined="FIERY_CHOKER"},
+		{type="jewelry", subtype="amulet", defined="FIERY_CHOKER", random_art_replace={chance=75, rarity=200, level_range={35, 45}}},
 	},
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },

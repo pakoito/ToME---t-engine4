@@ -47,7 +47,7 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	resolvers.equip{
 		{type="weapon", subtype="staff", ego_change=100, autoreq=true},
 		{type="armor", subtype="cloth", ego_change=100, autoreq=true},
-		{type="armor", subtype="head", defined="CROWN_ELEMENTS", autoreq=true},
+		{type="armor", subtype="head", defined="CROWN_ELEMENTS", random_art_replace={chance=75, rarity=250, level_range={40, 50}}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_ELEMENTS"} },
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },

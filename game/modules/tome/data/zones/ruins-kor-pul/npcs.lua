@@ -48,7 +48,7 @@ newEntity{ define_as = "SHADE",
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_KOR", autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
+	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_KOR", random_art_replace={chance=75, rarity=150, level_range={1, 10}}, autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
@@ -98,7 +98,7 @@ newEntity{ define_as = "KOR_FURY",
 	resolvers.equip{
 		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
 		{type="armor", subtype="light", autoreq=true},
-		{type="jewelry", subtype="amulet", defined="VOX", autoreq=true},
+		{type="jewelry", subtype="amulet", defined="VOX", random_art_replace={chance=75, rarity=220, level_range={40, 50}}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 

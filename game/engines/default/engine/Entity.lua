@@ -423,6 +423,12 @@ function _M:loadList(file, no_default, res, mod, loaded)
 			res[#res+1] = e
 			if t.define_as then res[t.define_as] = e end
 		end,
+		importEntity = function(t)
+			local e = t:cloneFull()
+			if mod then mod(e) end
+			res[#res+1] = e
+			if t.define_as then res[t.define_as] = e end
+		end,
 		load = function(f, new_mod)
 			self:loadList(f, no_default, res, new_mod or mod, loaded)
 		end,

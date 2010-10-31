@@ -747,9 +747,26 @@ function _M:die(src)
 		if not self.no_drops then
 			for inven_id, inven in pairs(self.inven) do
 				for i, o in ipairs(inven) do
+					-- Handle boss wielding artifacts
+					if o.__special_boss_drop and rng.percent(o.__special_boss_drop.chance) then
+						print("Refusing to drop "..self.name.." artifact "..o.name)
+
+						-- Do not drop
+						o.no_drop = true
+
+						-- Drop a random artifact instead
+						local ro = game.zone:makeEntity(game.level, "object", {unique=true}, nil, true)
+						if ro then game.zone:addEntity(game.level, ro, "object", self.x, self.y) end
+
+						-- Add to the pool
+						game.state:addWorldArtifact(o.define_as, o.__special_boss_drop)
+					end
+
 					if not o.no_drop then
 						o.droppedBy = self.name
 						game.level.map:addObject(self.x, self.y, o)
+					else
+						o:removed()
 					end
 				end
 			end

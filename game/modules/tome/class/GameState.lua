@@ -26,12 +26,15 @@ function _M:init(t, no_default)
 	engine.Entity.init(self, t, no_default)
 
 	self.allow_backup_guardians = {}
+	self.world_artifacts_pool = {}
 end
 
+--- Discovered the far east
 function _M:goneEast()
 	self.gone_east = true
 end
 
+--- Setup a backup guardian for the given zone
 function _M:activateBackupGuardian(guardian, on_level, zonelevel, rumor, action)
 	if self.gone_east then return end
 	print("Zone guardian dead, setting up backup guardian", guardian, zonelevel)
@@ -46,6 +49,7 @@ function _M:activateBackupGuardian(guardian, on_level, zonelevel, rumor, action)
 	}
 end
 
+--- Activate a backup guardian & settings, if available
 function _M:zoneCheckBackupGuardian()
 	if not self.gone_east then print("Not gone east, no backup guardian") return end
 
@@ -80,6 +84,20 @@ function _M:zoneCheckBackupGuardian()
 		if data.action then data.action(true) end
 		self.allow_backup_guardians[game.zone.short_name] = nil
 	end
+end
+
+--- A boss refused to drop his artifact! Bastard! Add it to the world pool
+function _M:addWorldArtifact(define, config)
+	local o = game.zone.object_list[define]
+	o.level_range = config.level_range
+	o.rarity = config.rarity
+	self.world_artifacts_pool[define] = o
+end
+
+--- Load all refused boss artifacts
+-- This is caleld from the world-artifacts.lua file
+function _M:getWorldArtifacts()
+	return self.world_artifacts_pool
 end
 
 local wda_cache = {}

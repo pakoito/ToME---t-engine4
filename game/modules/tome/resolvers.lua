@@ -56,6 +56,10 @@ function resolvers.calc.equip(t, e)
 			game.zone:addEntity(game.level, o, "object")
 
 			if t[1].id then o:identify(t[1].id) end
+
+			if filter.random_art_replace then
+				o.__special_boss_drop = filter.random_art_replace
+			end
 		end
 	end
 	-- Delete the origin field
@@ -115,6 +119,10 @@ function resolvers.calc.drops(t, e)
 			game.zone:addEntity(game.level, o, "object")
 
 			if t.id then o:identify(t.id) end
+
+			if filter.random_art_replace then
+				o.__special_boss_drop = filter.random_art_replace
+			end
 		end
 	end
 	-- Delete the origin field

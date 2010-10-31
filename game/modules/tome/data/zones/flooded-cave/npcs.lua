@@ -50,7 +50,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	resists = { [DamageType.COLD] = 60, [DamageType.LIGHTNING] = 20, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="TRIDENT_TIDES", autoreq=true} },
+	resolvers.drops{chance=100, nb=1, {defined="TRIDENT_TIDES", random_art_replace={chance=50, rarity=250, level_range={30, 40}}, autoreq=true} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=10, {type="money"} },
 

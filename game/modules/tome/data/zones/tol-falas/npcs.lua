@@ -51,7 +51,7 @@ newEntity{ define_as = "THE_MASTER",
 	equipment = resolvers.equip{
 		{type="weapon", subtype="greatsword", ego_chance=100, autoreq=true},
 		{type="armor", subtype="heavy", ego_chance=50, autoreq=true},
-		{type="jewelry", subtype="amulet", defined="AMULET_DREAD", autoreq=true},
+		{type="jewelry", subtype="amulet", defined="AMULET_DREAD", random_art_replace={chance=75, rarity=210, level_range={25, 35}}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=1, {type="weapon", subtype="staff", defined="STAFF_ABSORPTION"} },
@@ -127,7 +127,7 @@ newEntity{ define_as = "PALE_DRAKE",
 		{type="armor", subtype="cloth", ego_chance=50, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
-	resolvers.drops{chance=100, nb=1, {defined="RUNED_SKULL"} },
+	resolvers.drops{chance=100, nb=1, {defined="RUNED_SKULL", random_art_replace={chance=75, rarity=250, level_range={40, 50}}} },
 
 	summon = {
 		{type="undead", subtype="bone giant", special_rarity="bonegiant_rarity", number=2, hasxp=true},

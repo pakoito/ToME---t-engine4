@@ -50,7 +50,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	resolvers.equip{
 		{type="weapon", subtype="battleaxe", autoreq=true},
-		{type="armor", subtype="head", defined="HELM_OF_HAMMERHAND", autoreq=true},
+		{type="armor", subtype="head", defined="HELM_OF_HAMMERHAND", random_art_replace={chance=75, rarity=200, level_range={12, 22}}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "NIMISIL",
 	instakill_immune = 1,
 
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
-	resolvers.drops{chance=100, nb=1, {defined="LUNAR_SHIELD"} },
+	resolvers.drops{chance=100, nb=1, {defined="LUNAR_SHIELD", random_art_replace={chance=75, rarity=220, level_range={40, 50}}} },
 
 	combat_armor = 25, combat_def = 33,
 

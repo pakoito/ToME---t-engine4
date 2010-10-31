@@ -49,8 +49,8 @@ newEntity{ define_as = "TROLL_BILL",
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="greatmaul", defined="GREATMAUL_BILL_TRUNK", autoreq=true}, },
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.equip{ {type="weapon", subtype="greatmaul", defined="GREATMAUL_BILL_TRUNK", random_art_replace={chance=75, rarity=150, level_range={1, 10}}, autoreq=true}, },
+	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
 		[Talents.T_STUN]=2,
@@ -87,7 +87,7 @@ newEntity{ define_as = "ALUIN",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
 		{type="weapon", subtype="waraxe", ego_chance=100, autoreq=true},
-		{type="armor", subtype="shield", defined="SANGUINE_SHIELD", autoreq=true},
+		{type="armor", subtype="shield", defined="SANGUINE_SHIELD", random_art_replace={chance=65, rarity=220, level_range={35, 45}}, autoreq=true},
 		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },

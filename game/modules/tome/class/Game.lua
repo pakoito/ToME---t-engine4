@@ -678,7 +678,7 @@ function _M:setupCommands()
 				a.faction = "enemies"
 				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
 --]]
-				self:changeLevel(2, "tempest-peak")
+				self:changeLevel(5)
 			end
 		end,
 	}

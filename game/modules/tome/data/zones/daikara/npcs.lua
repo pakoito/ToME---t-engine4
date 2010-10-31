@@ -47,7 +47,7 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 	resists = { [DamageType.FIRE] = -20, [DamageType.COLD] = 100 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="FROST_TREADS"}, },
+	resolvers.drops{chance=100, nb=1, {defined="FROST_TREADS", random_art_replace={chance=75, rarity=150, level_range={12, 22}}}, },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=10, {type="money"} },
 
@@ -101,7 +101,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
 	resolvers.equip{
 		{type="weapon", subtype="battleaxe", ego_change=100, autoreq=true},
 		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
-		{type="armor", subtype="head", defined="RUNED_SKULL", autoreq=true},
+		{type="armor", subtype="head", defined="RUNED_SKULL", random_art_replace={chance=75, rarity=250, level_range={45, 50}}, autoreq=true},
 		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },

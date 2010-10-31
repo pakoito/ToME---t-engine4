@@ -55,7 +55,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 --		Commented because this can generate rings of invis or amulets of telepathy and drain the life of the boss
 --		{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true},
 --		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
-		{type="jewelry", subtype="ring", defined="PRIDE_GLORY", autoreq=true},
+		{type="jewelry", subtype="ring", defined="PRIDE_GLORY", random_art_replace={chance=75, rarity=250, level_range={40, 50}}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_DESTRUCTION"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
