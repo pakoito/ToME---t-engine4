@@ -1474,12 +1474,12 @@ end
 function _M:worthExp(target)
 	if not target.level or self.level < target.level - 3 then return 0 end
 
-	local mult = 2
-	if self.rank == 1 then mult = 2
-	elseif self.rank == 2 then mult = 2
-	elseif self.rank == 3 then mult = 3.5
-	elseif self.rank == 4 then mult = 6
-	elseif self.rank >= 5 then mult = 6.5
+	local mult = 0.2
+	if self.rank == 1 then mult = 0.2
+	elseif self.rank == 2 then mult = 0.4
+	elseif self.rank == 3 then mult = 3
+	elseif self.rank == 4 then mult = 30
+	elseif self.rank >= 5 then mult = 40
 	end
 
 	return self.level * mult * self.exp_worth

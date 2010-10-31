@@ -117,7 +117,7 @@ ActorStats:defineStat("Luck",		"lck", 50, 1, 100, "Luck defines your character's
 ActorLevel:defineMaxLevel(nil)
 ActorLevel.exp_chart = function(level)
 	local exp = 10
-	local mult = 12
+	local mult = 8
 	local min = 3
 	for i = 2, level do
 		exp = exp + level * mult
@@ -129,7 +129,7 @@ ActorLevel.exp_chart = function(level)
 	end
 	return math.ceil(exp)
 end
---[[
+-- [[
 local tnb, tznb = 0, 0
 for i = 2, 50 do
 	local nb = math.ceil(ActorLevel.exp_chart(i) / i)
