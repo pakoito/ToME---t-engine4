@@ -206,7 +206,7 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
-			temporary = 8 + self:getTalentLevel(t),
+			temporary = 8 + self:getTalentLevel(self.T_TRAP_MASTERY),
 			x = x, y = y,
 			canAct = false,
 			energy = {value=0},
@@ -269,7 +269,7 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
-			temporary = 8 + self:getTalentLevel(t),
+			temporary = 8 + self:getTalentLevel(self.T_TRAP_MASTERY),
 			x = x, y = y,
 			canAct = false,
 			energy = {value=0},
@@ -338,7 +338,7 @@ newTalent{
 				return true, rng.chance(25)
 			end,
 			summoner = self, summoner_gain_exp = true,
-			temporary = 8 + self:getTalentLevel(t),
+			temporary = 8 + self:getTalentLevel(self.T_TRAP_MASTERY),
 			x = x, y = y,
 			canAct = false,
 			energy = {value=0},
@@ -399,7 +399,7 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
-			temporary = 5 + self:getTalentLevel(t),
+			temporary = 5 + self:getTalentLevel(self.T_TRAP_MASTERY),
 			x = x, y = y,
 			canAct = false,
 			energy = {value=0},
@@ -460,7 +460,7 @@ newTalent{
 				return true, true
 			end,
 			summoner = self, summoner_gain_exp = true,
-			temporary = 5 + self:getTalentLevel(t),
+			temporary = 5 + self:getTalentLevel(self.T_TRAP_MASTERY),
 			x = x, y = y,
 			canAct = false,
 			energy = {value=0},
