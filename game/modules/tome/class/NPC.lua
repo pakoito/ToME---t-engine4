@@ -34,6 +34,7 @@ function _M:act()
 	while self:enoughEnergy() and not self.dead do
 		-- Do basic actor stuff
 		if not mod.class.Actor.act(self) then return end
+		local old_energy = self.energy.value
 
 		-- Compute FOV, if needed
 		self:doFOV()
@@ -47,6 +48,7 @@ function _M:act()
 		end
 
 		if not self.energy.used then self:useEnergy() end
+		if old_energy == self.energy.value then break end -- Prevent infinite loops
 	end
 end
 
