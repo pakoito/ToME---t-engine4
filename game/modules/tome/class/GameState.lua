@@ -136,7 +136,7 @@ function _M:generateRandart(add)
 	-- Make up a name
 	local ng = NameGenerator.new(randart_name_rules.female)
 	local name = o.name.." '"..ng:generate().."'"
-	o.define_as = o.name:upper():gsub("[^A-Z]", "_")
+	o.define_as = name:upper():gsub("[^A-Z]", "_")
 
 	o.unique = name
 	o.randart = true
@@ -178,6 +178,7 @@ function _M:generateRandart(add)
 		local p = powers[i]:clone()
 		if p.points <= hpoints then
 			p:resolve(nil, nil, o)
+			p.__CLASSNAME = nil
 			table.mergeAddAppendArray(o, p, true)
 			print(" * adding power: "..p.name)
 		end
@@ -196,6 +197,7 @@ function _M:generateRandart(add)
 		local p = bias_powers[i]:clone()
 		if p.points <= hpoints then
 			p:resolve(nil, nil, o)
+			p.__CLASSNAME = nil
 			table.mergeAddAppendArray(o, p, true)
 			print(" * adding power: "..p.name)
 		end
