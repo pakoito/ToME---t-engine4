@@ -516,6 +516,7 @@ newEntity{ define_as = "RUNED_SKULL",
 	display = "*", color=colors.RED,
 	level_range = {40, 50},
 	rarity = 390,
+	cost = 150,
 	encumber = 3,
 	desc = [[Dull red runes are etched all over this blackened skull.]],
 

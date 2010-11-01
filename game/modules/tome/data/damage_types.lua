@@ -329,6 +329,7 @@ newDamageType{
 			dam = dam - init_dam
 			target:setEffect(target.EFF_BURNING, dur, {src=src, power=dam / dur})
 		end
+		return init_dam
 	end,
 }
 
@@ -385,10 +386,11 @@ newDamageType{
 newDamageType{
 	name = "ice", type = "ICE",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		local realdam = DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
 		if rng.percent(25) then
 			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, 2)
 		end
+		return realdam
 	end,
 }
 
@@ -445,7 +447,7 @@ newDamageType{
 newDamageType{
 	name = "acid blind", type = "ACID_BLIND",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam)
+		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(25) then
 			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
@@ -454,6 +456,7 @@ newDamageType{
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
 		end
+		return realdam
 	end,
 }
 
@@ -462,7 +465,7 @@ newDamageType{
 	name = "lightning daze", type = "LIGHTNING_DAZE",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
-		DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
+		local realdam = DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.daze) then
 			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
@@ -475,6 +478,7 @@ newDamageType{
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
 		end
+		return realdam
 	end,
 }
 

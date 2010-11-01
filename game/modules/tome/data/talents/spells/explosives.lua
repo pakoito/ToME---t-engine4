@@ -64,14 +64,16 @@ newTalent{
 		end
 		local dam_done = 0
 
+		local tmp = {}
 		local grids = self:project(tg, x, y, function(tx, ty)
 			local d = dam
 			-- Protect yourself
 			if tx == self.x and ty == self.y then d = dam * (1 - prot) end
 			-- Protect the golem
 			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
+			if d == 0 then return end
 
-			DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d))
+			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			if ammo.alchemist_bomb.splash then
@@ -150,7 +152,8 @@ newTalent{
 		self.resists[DamageType.ACID] = self.resists[DamageType.ACID] - 3
 	end,
 	info = function(self, t)
-		return ([[Improves your resistance against the elemental damage of your own bombs by %d%%, and against external ones by %d%%.]]):
+		return ([[Improves your resistance against the elemental damage of your own bombs by %d%%, and against external ones by %d%%.
+		At talent level 5 it also protects you against all side effects of your bombs.]]):
 		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
 	end,
 }
@@ -206,8 +209,9 @@ newTalent{
 			if tx == self.x and ty == self.y then d = dam * (1 - prot) end
 			-- Protect the golem
 			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
+			if d == 0 then return end
 
-			DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
+			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			if ammo.alchemist_bomb.splash then
