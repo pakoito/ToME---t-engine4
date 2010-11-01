@@ -154,8 +154,8 @@ function _M:generateRandart(add)
 	end
 
 	-- Determine power
-	local points = lev * 0.65 + rng.range(5, 15)
-	local nb_powers = 2 + rng.range(1, lev / 5)
+	local points = lev * 0.7 + rng.range(5, 15)
+	local nb_powers = 2 + rng.dice(math.max(1, lev / 10), 2)
 	local powers = {}
 	print("Creating randart "..o.name.." with level "..lev)
 
