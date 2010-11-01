@@ -30,6 +30,7 @@ newEntity{
 	rarity = 5,
 	metallic = true,
 	desc = [[A suit of armour made of metal plates.]],
+	randart_able = { attack=10, physical=10, spell=10, def=80, misc=10 },
 	egos = "/data/general/objects/egos/massive-armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

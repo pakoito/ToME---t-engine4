@@ -128,6 +128,12 @@ function _M:newGame()
 
 	-- Create the entity to store various game state things
 	self.state = GameState.new{}
+	local birth_done = function()
+		for i = 1, 50 do
+			local o = self.state:generateRandart(true)
+			self.zone.object_list[#self.zone.object_list+1] = o
+		end
+	end
 
 	-- Load for quick birth
 	local save = Savefile.new(self.save_name)
@@ -135,10 +141,6 @@ function _M:newGame()
 	save:close()
 
 	self.always_target = true
-
-	local birth_done = function()
-		for i = 1, 25 do self.state:generateRandart() end
-	end
 
 	self.creating_player = true
 	local birth; birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
@@ -684,7 +686,7 @@ function _M:setupCommands()
 				a.faction = "enemies"
 				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
 --]]
-				self:changeLevel(5)
+--				self.state:generateRandart(false)
 			end
 		end,
 	}

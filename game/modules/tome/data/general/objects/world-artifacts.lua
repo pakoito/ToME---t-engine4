@@ -20,10 +20,10 @@
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
---- Load boss artifacts that failed to be dropped
+--- Load additional artifacts
 for def, e in pairs(game.state:getWorldArtifacts()) do
 	importEntity(e)
-	print("Importing failed boss drop "..e.name.." into world artifacts")
+	print("Importing "..e.name.." into world artifacts")
 end
 
 -- This file describes artifacts not bound to a special location, they can be found anywhere

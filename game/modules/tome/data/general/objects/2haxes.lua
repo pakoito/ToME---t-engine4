@@ -30,6 +30,7 @@ newEntity{
 	combat = { talented = "axe", damrange = 1.5, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Massive two-handed battleaxes.]],
 	twohanded = true,
+	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

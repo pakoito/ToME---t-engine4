@@ -25,6 +25,7 @@ newEntity{
 	encumber = 0.1,
 	rarity = 6,
 	desc = [[Rings can have magical properties.]],
+	randart_able = { attack=40, physical=40, spell=40, def=40, misc=40 },
 	-- Most rings are ego items
 	egos = "/data/general/objects/egos/rings.lua", egos_chance = resolvers.mbonus(50, 40),
 }

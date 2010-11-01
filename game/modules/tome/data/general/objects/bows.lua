@@ -28,6 +28,7 @@ newEntity{
 	combat = { talented = "bow", damrange = 1.4, sound = "actions/arrow", sound_miss = "actions/arrow",},
 	archery = "bow",
 	desc = [[Longbows are used to shoot arrows at your foes.]],
+	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/bow.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

@@ -41,7 +41,6 @@ end
 if zone == "Maj'Eyal" then
 	wda.cur_patrols = wda.cur_patrols or 0
 	wda.cur_hostiles = wda.cur_hostiles or 0
-	print("==== Maj'Eyal", wda.cur_patrols, wda.cur_hostiles)
 
 	-- Spawn random encounters
 	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
@@ -95,7 +94,6 @@ elseif zone == "Far East" then
 	wda.cur_patrols = wda.cur_patrols or 0
 	wda.cur_orc_patrols = wda.cur_orc_patrols or 0
 	wda.cur_hostiles = wda.cur_hostiles or 0
-	print("==== Fareast", wda.cur_patrols, wda.cur_orc_patrols, wda.cur_hostiles)
 
 	-- Spawn random encounters
 	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
