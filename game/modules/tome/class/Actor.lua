@@ -1124,7 +1124,12 @@ end
 
 --- Equilibrium check
 function _M:equilibriumChance(eq)
-	local chance = math.sqrt((eq or 0) + self:getEquilibrium()) / 60
+	eq = (eq or 0) + self:getEquilibrium()
+	local wil = self:getWil()
+	-- Do not fail if below willpower
+	if eq < wil then return true, 100 end
+	eq = eq - wil
+	local chance = math.sqrt(eq) / 60
 	print("[Equilibrium] Use chance: ", 100 - chance * 100, "::", self:getEquilibrium())
 	return rng.percent(100 - chance * 100), 100 - chance * 100
 end
