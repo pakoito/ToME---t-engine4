@@ -36,8 +36,29 @@ newTalent{
 			game.logPlayer(self, "There's too much going on for you to use Meditation right now!")
 			return
 		end
+
+		-- Deactivate all sustains to get a real reduction
+		local reset = {}
+		for tid, act in pairs(self.sustain_talents) do
+			if act then reset[#reset+1] = tid end
+		end
+		for i, tid in ipairs(reset) do
+			self:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true})
+		end
+
 		self:setEffect(self.EFF_STUNNED, 17 - self:getTalentLevel(t), {})
 		self:incEquilibrium(-10 - self:getWil(50) * self:getTalentLevel(t))
+
+		-- Reactive talents
+		for i, tid in ipairs(reset) do
+			local t = self:getTalentFromId(tid)
+			if t.no_sustain_autoreset then
+				game.logPlayer(self, "#LIGHT_BLUE#Warning: Talent %s is no more sustained.", t.name)
+			else
+				self:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true})
+			end
+		end
+
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,

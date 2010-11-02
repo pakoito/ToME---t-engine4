@@ -42,14 +42,14 @@ start_fyrk = function(self)
 	game.zone.on_turn = nil
 	game.level.turn_counter = nil
 
-	local alatar, pallando
+	local elandar, argoniel
 	for uid, e in pairs(game.level.entities) do
-		if e.define_as == "ELANDAR" then alatar = e
-		elseif e.define_as == "ADRONIEL" then pallando = e end
+		if e.define_as == "ELANDAR" then elandar = e
+		elseif e.define_as == "ARGONIEL" then argoniel = e end
 	end
 
-	if alatar then game.level:removeEntity(alatar) alatar.dead = true end
-	if pallando then game.level:removeEntity(pallando) pallando.dead = true end
+	if elandar then game.level:removeEntity(elandar) elandar.dead = true end
+	if argoniel then game.level:removeEntity(argoniel) argoniel.dead = true end
 
 	local portal = game.zone:makeEntityByName(game.level, "grid", "FAR_EAST_PORTAL")
 	game.zone:addEntity(game.level, portal, "grid", 6, 455)

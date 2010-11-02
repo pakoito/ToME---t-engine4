@@ -1201,7 +1201,7 @@ function _M:preUseTalent(ab, silent, fake)
 	-- But it is not affected by fatigue
 	if (ab.equilibrium or ab.sustain_equilibrium) and not fake then
 		-- Fail ? lose energy and 1/10 more equilibrium
-		if not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
+		if not self:attr("no_equilibrium_fail") and not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
 			self:incEquilibrium((ab.equilibrium or ab.sustain_equilibrium) / 10)
 			self:useEnergy()
@@ -1350,7 +1350,9 @@ function _M:forceUseTalent(t, def)
 	local oldenergy = self.energy.value
 	if def.ignore_energy then self.energy.value = 10000 end
 
+	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", 1) end
 	self:useTalent(t, nil, def.force_level, def.ignore_cd, def.force_target)
+	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
 
 	if def.ignore_energy then
 		game.paused = oldpause
