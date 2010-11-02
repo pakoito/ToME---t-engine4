@@ -18,13 +18,14 @@
 -- darkgod@te4.org
 
 return {
-	{ 1, "Yestarë", },
-	{ 54, "Tuilë" },
-	{ 72, "Lairë" },
-	{ 54, "Yávië" },
-	{ 3, "Enderi" },
-	{ 54, "Quellë" },
-	{ 72, "Hrívë" },
-	{ 54, "Coirë" },
-	{ 1, "Mettarë" },
+	{ 2, "Wintertide", },
+	{ 10, "Allure" },
+	{ 80, "Regrowth" },
+	{ 80, "Pyre" },
+	{ 10, "Mirth" },
+	{ 3, "Summertide" },
+	{ 10, "Flare" },
+	{ 80, "Dusk" },
+	{ 80, "Haze" },
+	{ 10, "Decay" },
 }

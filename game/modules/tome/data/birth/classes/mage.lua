@@ -34,6 +34,7 @@ newBirthDescriptor{
 			Cryomancer = function() return profile.mod.allow_build.mage_cryomancer and "allow" or "disallow" end,
 			Tempest = function() return profile.mod.allow_build.mage_tempest and "allow" or "disallow" end,
 			Geomancer = function() return profile.mod.allow_build.mage_geomancer and "allow" or "disallow" end,
+			Maelstrom = function() return profile.mod.allow_build.mage_maelstrom and "allow" or "disallow" end,
 		},
 	},
 	copy = {
@@ -353,6 +354,55 @@ newBirthDescriptor{
 		[ActorTalents.T_STONE_SKIN] = 1,
 		[ActorTalents.T_STALACTITIC_MISSILES] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
+		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
+	},
+	copy = {
+		-- All mages are of angolwen faction
+		faction = "angolwen",
+		max_life = 90,
+		life_rating = -4,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
+		},
+		resolvers.inventory{ id=true,
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+		},
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Maelstrom",
+	desc = {
+		"A Maelstrom is an archmage specialized in elemental magic.",
+		"They gain access to all special elemental talents but have a restricted selection of other spells.",
+		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
+		"All archmagi have been trained in the secret town of Angolwen and posses a unique spell to teleport to it directly.",
+		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
+	},
+	stats = { mag=5, wil=3, cun=1, },
+	talents_types = {
+		["spell/fire"]={true, 0.3},
+		["spell/wildfire"]={true, 0.3},
+		["spell/air"]={true, 0.3},
+		["spell/storm"]={true, 0.3},
+		["spell/earth"]={true, 0.3},
+		["spell/stone"]={true, 0.3},
+		["spell/water"]={true, 0.3},
+		["spell/ice"]={true, 0.3},
+		["spell/conveyance"]={true, 0},
+		["cunning/survival"]={false, -0.1},
+	},
+	talents = {
+		[ActorTalents.T_ICE_SHARDS] = 1,
+		[ActorTalents.T_FLAME] = 1,
+		[ActorTalents.T_STALACTITIC_MISSILES] = 1,
+		[ActorTalents.T_NOVA] = 1,
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
 	copy = {
