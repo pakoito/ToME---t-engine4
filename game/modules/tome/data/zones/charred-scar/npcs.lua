@@ -130,8 +130,8 @@ newEntity{
 	stats = { str=20, dex=8, mag=6, con=16 },
 }
 
-newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "URUK-HAI_ATTACK",
-	name = "uruk-hai", color=colors.DARK_RED,
+newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "ORC_ATTACK",
+	name = "orc", color=colors.DARK_RED,
 	desc = [[A fierce soldier-orc.]],
 	level_range = {42, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(120,140),

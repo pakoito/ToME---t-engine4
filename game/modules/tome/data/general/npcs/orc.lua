@@ -47,7 +47,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_ORC",
 	define_as = "HILL_ORC_WARRIOR",
-	name = "hill orc warrior", color=colors.LIGHT_UMBER,
+	name = "orc warrior", color=colors.LIGHT_UMBER,
 	desc = [[He is a hardy, well-weathered survivor.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_NPC_ORC",
 
 newEntity{ base = "BASE_NPC_ORC",
 	define_as = "HILL_ORC_ARCHER",
-	name = "hill orc archer", color=colors.UMBER,
+	name = "orc archer", color=colors.UMBER,
 	desc = [[He is a hardy, well-weathered survivor.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
@@ -78,8 +78,8 @@ newEntity{ base = "BASE_NPC_ORC",
 	},
 }
 
-newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI",
-	name = "uruk-hai", color=colors.DARK_RED,
+newEntity{ base = "BASE_NPC_ORC", define_as = "ORC",
+	name = "orc soldier", color=colors.DARK_RED,
 	desc = [[A fierce soldier-orc.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 2,
@@ -92,8 +92,8 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI",
 	resolvers.talents{ [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_CRUSH]=2, },
 }
 
-newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI_FIRE_WYRMIC",
-	name = "fiery wyrmic uruk-hai", color=colors.RED,
+newEntity{ base = "BASE_NPC_ORC", define_as = "ORC_FIRE_WYRMIC",
+	name = "fiery orc wyrmic", color=colors.RED,
 	desc = [[A fierce soldier-orc trained in the discipline of dragons.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 6,
@@ -106,7 +106,7 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI_FIRE_WYRMIC",
 	combat_armor = 2, combat_def = 0,
 
 	make_escort = {
-		{type="humanoid", subtype="orc", name="uruk-hai", number=resolvers.mbonus(3, 2)},
+		{type="humanoid", subtype="orc", name="orc soldier", number=resolvers.mbonus(3, 2)},
 	},
 
 	resolvers.talents{
@@ -117,7 +117,7 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "URUK-HAI_FIRE_WYRMIC",
 }
 
 newEntity{ base = "BASE_NPC_ORC",
-	name = "icy wyrmic uruk-hai", color=colors.BLUE, define_as = "URUK-HAI_ICE_WYRMIC",
+	name = "icy orc wyrmic", color=colors.BLUE, define_as = "ORC_ICE_WYRMIC",
 	desc = [[A fierce soldier-orc trained in the discipline of dragons.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 6,
@@ -130,7 +130,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	combat_armor = 2, combat_def = 0,
 
 	make_escort = {
-		{type="humanoid", subtype="orc", name="uruk-hai", number=resolvers.mbonus(3, 2)},
+		{type="humanoid", subtype="orc", name="orc soldier", number=resolvers.mbonus(3, 2)},
 	},
 
 	resolvers.talents{

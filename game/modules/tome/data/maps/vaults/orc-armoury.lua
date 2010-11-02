@@ -31,10 +31,10 @@ defineTile('!', "DOOR_VAULT")
 defineTile('#', "HARDWALL")
 
 defineTile('a', 'FLOOR', nil, {random_filter={name='hill orc archer', add_levels=15}})
-defineTile('i', 'FLOOR', nil, {random_filter={name='icy wyrmic uruk-hai', add_levels=10}}) -- will be generated with escorts, so leave some space free
-defineTile('f', 'FLOOR', nil, {random_filter={name='fiery wyrmic uruk-hai', add_levels=10}}) -- will be generated with escorts, so leave some space free
-defineTile('o', 'FLOOR', nil, {random_filter={name='uruk-hai', add_levels=10}})
-defineTile('O', 'FLOOR', nil, {random_filter={name='uruk-hai', add_levels=20}})
+defineTile('i', 'FLOOR', nil, {random_filter={name='icy orc wyrmic', add_levels=10}}) -- will be generated with escorts, so leave some space free
+defineTile('f', 'FLOOR', nil, {random_filter={name='fiery orc wyrmic', add_levels=10}}) -- will be generated with escorts, so leave some space free
+defineTile('o', 'FLOOR', nil, {random_filter={name='orc', add_levels=10}})
+defineTile('O', 'FLOOR', nil, {random_filter={name='orc', add_levels=20}})
 defineTile('n', 'FLOOR', nil, {random_filter={name='orc master assassin', add_levels=10}})
 defineTile('N', 'FLOOR', nil, {random_filter={name='orc grand master assassin', add_levels=15}})
 

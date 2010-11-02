@@ -46,7 +46,7 @@ function _M:tick()
 end
 
 function _M:generateOne()
-	local m = self.zone:makeEntityByName(self.level, "actor", "URUK-HAI_ATTACK")
+	local m = self.zone:makeEntityByName(self.level, "actor", "ORC_ATTACK")
 	if m then
 		local x = rng.range(3, 8)
 		local y = 0

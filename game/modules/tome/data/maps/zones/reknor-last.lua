@@ -27,10 +27,10 @@ defineTile('*', "FLOOR", "MONEY_BIG")
 defineTile('&', "FAR_EAST_PORTAL")
 
 defineTile('O', "FLOOR", nil, "GOLBUG")
-defineTile('a', "FLOOR", nil, "HILL_ORC_ARCHER")
-defineTile('o', "FLOOR", nil, "URUK-HAI")
-defineTile('f', "FLOOR", nil, "URUK-HAI_FIRE_WYRMIC")
-defineTile('i', "FLOOR", nil, "URUK-HAI_ICE_WYRMIC")
+defineTile('a', "FLOOR", nil, "ORC_ARCHER")
+defineTile('o', "FLOOR", nil, "ORC")
+defineTile('f', "FLOOR", nil, "ORC_FIRE_WYRMIC")
+defineTile('i', "FLOOR", nil, "ORC_ICE_WYRMIC")
 
 startx = 0
 starty = 13

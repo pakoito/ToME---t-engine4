@@ -33,7 +33,7 @@ newBirthDescriptor{
 		subrace =
 		{
 			__ALL__ = "disallow",
-			["Uruk-hai"] = "allow",
+			["Orc"] = "allow",
 		},
 		sex =
 		{
@@ -67,7 +67,7 @@ newBirthDescriptor{
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Uruk-hai",
+	name = "Orc",
 	desc = {
 		"",
 	},

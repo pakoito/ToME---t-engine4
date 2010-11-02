@@ -47,7 +47,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai figther", color=colors.UMBER,
+	name = "orc figther", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a shield and a deadly axe.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai elite figther", color=colors.UMBER,
+	name = "orc elite figther", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a shield and a deadly axe.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 3,
@@ -99,7 +99,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai berserker", color=colors.UMBER,
+	name = "orc berserker", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a huge axe.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 1,
@@ -121,7 +121,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 }
 
 newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
-	name = "uruk-hai elite berserker", color=colors.UMBER,
+	name = "orc elite berserker", color=colors.UMBER,
 	desc = [[An orc clad in a massive armour, wielding a huge axe.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 3,
