@@ -321,7 +321,7 @@ newEffect{
 newEffect{
 	name = "DAZED",
 	desc = "Dazed",
-	long_desc = function(self, eff) return "The target is dazed, redering it unable to act. Any damage will remove teh daze." end,
+	long_desc = function(self, eff) return "The target is dazed, redering it unable to act. Any damage will remove the daze." end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -332,6 +332,27 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("dazed", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "MEDITATION",
+	desc = "Meditation",
+	long_desc = function(self, eff) return "The target is meditating, any damage will stop it." end,
+	type = "mental",
+	status = "detrimental",
+	parameters = {},
+	on_timeout = function(self, eff)
+		self:incEquilibrium(-eff.per_turn)
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("dazed", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("dazed", eff.tmpid)
+		if eff.dur <= 0 then
+			self:incEquilibrium(-eff.final)
+		end
 	end,
 }
 

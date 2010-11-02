@@ -46,8 +46,11 @@ newTalent{
 			self:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true})
 		end
 
-		self:setEffect(self.EFF_STUNNED, 17 - self:getTalentLevel(t), {})
-		self:incEquilibrium(-10 - self:getWil(50) * self:getTalentLevel(t))
+		local dur = 17 - self:getTalentLevel(t)
+		local e = 10 + self:getWil(50) * self:getTalentLevel(t)
+		local tt = e / 2
+		local pt = (e - tt) / dur
+		self:setEffect(self.EFF_MEDITATION, dur, {per_turn=e, final=tt})
 
 		-- Reactive talents
 		for i, tid in ipairs(reset) do
@@ -63,10 +66,16 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Meditate on your link with Nature. You are considered stunned for %d turns and regenerate %d equilibrium.
+		local dur = 17 - self:getTalentLevel(t)
+		local e = 10 + self:getWil(50) * self:getTalentLevel(t)
+		local tt = e / 2
+		local pt = (e - tt) / dur
+		return ([[Meditate on your link with Nature. You are considered dazed for %d turns
+		Each turn you regenerate %d equilibrium and %d at the end.
+		If you are hit while meditating you will stop.
 		Meditating require peace and quiet and may not be cast with hostile creatures in sight.
 		The effect will increase with your Willpower stat.]]):
-		format(17 - self:getTalentLevel(t), 10 + self:getWil(50) * self:getTalentLevel(t))
+		format(17 - self:getTalentLevel(t), pt, tt)
 	end,
 }
 
