@@ -65,11 +65,11 @@ function _M:getLore(lore)
 	return self.lore_defs[lore] or self.additional_lore[lore]
 end
 
-function _M:additionalLore(name, category, lore)
+function _M:additionalLore(id, name, category, lore)
 	self.additional_lore = self.additional_lore or {}
-	if self.additional_lore[name] then return end
+	if self.additional_lore[id] then return end
 	self.additional_lore_nb = self.additional_lore_nb + 1
-	self.additional_lore[name] = {id=name, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
+	self.additional_lore[id] = {id=id, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
 end
 
 function _M:learnLore(lore)

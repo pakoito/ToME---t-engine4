@@ -503,7 +503,7 @@ end
 --- On identification, add to lore
 function _M:on_identify()
 	if self.unique and self.desc and not self.no_unique_lore then
-		game.player:additionalLore(self:getName(), "artifacts", self.desc)
-		game.player:learnLore(self:getName())
+		game.player:additionalLore(self.unique, self:getName(), "artifacts", self.desc)
+		game.player:learnLore(self.unique)
 	end
 end
