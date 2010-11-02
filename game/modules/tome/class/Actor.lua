@@ -711,6 +711,7 @@ function _M:onTakeHit(value, src)
 			-- Find a place around to clone
 			local a = self:clone()
 			a.life = math.max(1, a.life - value / 2)
+			a.clone_on_hit.chance = math.ceil(a.clone_on_hit.chance / 2)
 			a.energy.val = 0
 			a.exp_worth = 0.1
 			a.inven = {}
