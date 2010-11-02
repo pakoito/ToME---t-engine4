@@ -23,9 +23,10 @@ local Talents = require "engine.interface.ActorTalents"
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
 newEntity{ base = "BASE_LONGSWORD",
-	define_as = "LONGSWORD_RINGIL", rarity=false, unided_name = "glittering longsword",
-	name = "Ringil, the glittering sword of Fingolfin", unique=true,
-	desc = [[The sword of Fingolfin, said to have glittered like ice. With it he wounded Morgoth in single combat after the Dagor Bragollach.]],
+	define_as = "LONGSWORD_WINTERTIDE", rarity=false, unided_name = "glittering longsword",
+	name = "Wintertide", unique=true,
+	desc = [[The air seems to freeze around the blade of this sword, draining all heat from the area.
+It is said the Conclave created this weapon for their warmaster during the dark times of the first allure war.]],
 	require = { stat = { str=35 }, },
 	level_range = {35, 45},
 	rarity = 280,
@@ -51,7 +52,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			local tg = {type="ball", range=0, radius=4, friendlyfire=false}
 			who:project(tg, who.x, who.y, engine.DamageType.ICE, 10 + (who:getMag() + who:getWil()) / 2, {type="freeze"})
 			game:playSoundNear(who, "talents/ice")
-			game.logSeen(who, "%s invokes the power of Ringil!", who.name:capitalize())
+			game.logSeen(who, "%s invokes the power of %s!", who.name:capitalize(), self.name)
 			return true
 		end
 	},
@@ -226,9 +227,9 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_HELM",
-	define_as = "HELM_OF_HAMMERHAND",
-	name = "Steel Helm of Hammerhand", unique=true,
-	desc = [[A great helm as steady as the heroes of the Westdike. Mighty were the blows of Helm, the Hammerhand!]],
+	define_as = "HELM_OF_GARKUL",
+	name = "Steel Helm of Garkul", unique=true,
+	desc = [[A great helm that belonged to Garkul the Devourer, one of the greatest orcs to live.]],
 	require = { stat = { str=16 }, },
 	level_range = {12, 22},
 	rarity = 200,
@@ -278,9 +279,9 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	define_as = "OLD_MAN_WILLOW_SHIELD",
-	name = "Old Man Willow's Barkwood", unique=true,
-	desc = [[The barkwood of the Old Man's Willow, made into roughly the shape of a shield.]],
+	define_as = "WILLOWRATH_SHIELD",
+	name = "Willowrath's Barkwood", unique=true,
+	desc = [[The barkwood of the Willowrath, made into roughly the shape of a shield.]],
 	require = { stat = { str=25 }, },
 	level_range = {12, 2},
 	rarity = 200,
@@ -575,11 +576,10 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_WHIP",
-	define_as = "WHIP_GOTHMOG",
+	define_as = "WHIP_URH_ROK",
 	unided_name = "fiery whip",
-	name = "Whip of Gothmog, High Captain of the Balrogs", color=colors.PURPLE, unique = true,
-	desc = [[With this unbearably bright whip of flame, the Balrog Gothmog has become known for never having lost in combat.
-But nothing lasts forever and he was finally defeated by Echtelion in the First Age. His whip must have been taken by the other balrogs from his corpse.]],
+	name = "Whip of Urh'Rok", color=colors.PURPLE, unique = true,
+	desc = [[With this unbearably bright whip of flame, the demon master Urh'Rok has become known for never having lost in combat.]],
 	require = { stat = { dex=48 }, },
 	level_range = {40, 50},
 	rarity = 390,

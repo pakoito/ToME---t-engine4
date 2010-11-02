@@ -30,15 +30,12 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated
-newEntity{ define_as = "OLD_MAN_WILLOW",
+newEntity{ define_as = "WILLOWRATH",
 	type = "giant", subtype = "huorn", unique = true,
-	name = "Old Man Willow",
+	name = "Willowrath",
 	display = "#", color=colors.OLIVE_DRAB,
 	desc = [[The ancient grey willow tree, ruler of the Old Forest. He despises
-	trespassers in his territory.  "...a huge willow-tree, old and hoary
-	Enormous it looked, its sprawling branches going up like racing arms
-	with may long-fingered hands, its knotted and twisted trunk gaping in
-	wide fissures that creaked faintly as the boughs moved."]],
+	trespassers in his territory.]],
 	level_range = {12, 35}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
@@ -55,7 +52,7 @@ newEntity{ define_as = "OLD_MAN_WILLOW",
 	resists = { [DamageType.FIRE] = -50 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="OLD_MAN_WILLOW_SHIELD", random_art_replace={chance=75}, autoreq=true}, },
+	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="WILLOWRATH_SHIELD", random_art_replace={chance=75}, autoreq=true}, },
 	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
@@ -91,7 +88,7 @@ newEntity{ define_as = "SNAPROOT", -- backup guardian
 	type = "giant", subtype = "ent", unique = true,
 	name = "Snaproot",
 	display = "#", color=VIOLET,
-	desc = [[This ancient Ent's bark is scorched almost black. It sees humanity as a scourge, to be purged.]],
+	desc = [[This ancient Treant's bark is scorched almost black. It sees humanity as a scourge, to be purged.]],
 	level_range = {50, 75}, exp_worth = 3,
 
 	max_life = 1000, life_rating = 40, fixed_rating = true,

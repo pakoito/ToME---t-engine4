@@ -142,3 +142,39 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	},
 	resolvers.sustains_at_birth(),
 }
+
+newEntity{ base = "BASE_NPC_MAJOR_DEMON",
+	name = "daelach", color=colors.PURPLE, -- Shadow flame
+	desc = [[You can only discern the real shape of this demon, its body is surrounded by a cloud of fiery darkness.
+It moves switftly toward you, casting terrible spells and swinging its weapons at you.]],
+	level_range = {39, nil}, exp_worth = 1,
+	rarity = 6,
+	rank = 3,
+	energy = {mod=1.3},
+	size_category = 4,
+	autolevel = "warriormage",
+	life_rating = 25,
+	combat_armor = 12, combat_def = 20,
+	mana_regen = 100, positive_regen = 100, negative_regen = 100, equilibrium_regen = -100, vim_regen = 100,
+
+	resolvers.equip{ {type="weapon", subtype="longsword", autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="waraxe", autoreq=true}, },
+
+	resists={all = resolvers.mbonus(25, 20)},
+
+	stun_immune = 1,
+	blind_immune = 1,
+	knockback_immune = 1,
+
+	resolvers.talents{
+		[Talents.T_CORRUPTED_STRENGTH]=5,
+		[Talents.T_DISARM]=5,
+		[Talents.T_RUSH]=8,
+		[Talents.T_WEAPON_COMBAT]=8,
+		[Talents.T_WEAPONS_MASTERY]=7,
+		[Talents.T_FIRE_STORM]=5,
+		[Talents.T_FIREBEAM]=5,
+		[Talents.T_SHADOW_BLAST]=5,
+		[Talents.T_TWILIGHT_SURGE]=5,
+	},
+}

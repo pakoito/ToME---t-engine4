@@ -50,7 +50,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	resolvers.equip{
 		{type="weapon", subtype="battleaxe", autoreq=true},
-		{type="armor", subtype="head", defined="HELM_OF_HAMMERHAND", random_art_replace={chance=75}, autoreq=true},
+		{type="armor", subtype="head", defined="HELM_OF_GARKUL", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 

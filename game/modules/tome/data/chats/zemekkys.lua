@@ -82,14 +82,14 @@ I blow myself up quite enough already without that thing in the house, thank you
 Besides, I still can't help you unless you have a Blood-Runed Athame to etch a portal.
 Er, and that portal must be etched on a piece of prepared Resonating Marble.
 The Gates of the Morning has a slab of Marble that once could have served, but a number of, uh, incidents have taken their toll.
-It'll require a Resonating Diamond to get it properly prepared. Oh, and I want 200 gold.]],
+It'll require a Resonating Diamond to get it properly prepared. Oh, and I want 100 gold.]],
 	answers = {
 		{"Where can I find all that?", jump="quest"},
 	}
 }
 
 newChat{ id="quest",
-	text = [[Try your purse for the 200 gold. As for an Athame and a Resonating Diamond, I assume the orcs have some if they're cooking up portals to use that Orb on. Try the Vor Armory. It so happens that I know a back way in. Never mind why.]],
+	text = [[Try your purse for the 100 gold. As for an Athame and a Resonating Diamond, I assume the orcs have some if they're cooking up portals to use that Orb on. Try the Vor Armory. It so happens that I know a back way in. Never mind why.]],
 	answers = {
 		{"Thank you.", action=function(npc, player)
 			player:grantQuest("west-portal")
@@ -124,9 +124,9 @@ newChat{ id="athame3",
 -- Return gem
 -----------------------------------------------------------------
 newChat{ id="complete",
-	text = [[[Yes? You got the athame, the gem and 200 gold?]],
+	text = [[[Yes? You got the athame, the gem and 100 gold?]],
 	answers = {
-		{"[Give him the gem, the athame and 200 gold]", jump="complete2", cond=check_materials, action=remove_materials},
+		{"[Give him the gem, the athame and 100 gold]", jump="complete2", cond=check_materials, action=remove_materials},
 		{"Sorry it seems I miss some stuff. I will be back."},
 	}
 }

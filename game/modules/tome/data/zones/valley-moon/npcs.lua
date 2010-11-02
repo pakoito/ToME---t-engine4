@@ -45,7 +45,7 @@ newEntity{ define_as = "CORRUPTED_BALROG",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="whip", defined="WHIP_GOTHMOG", random_art_replace={chance=75}, autoreq=true},
+		{type="weapon", subtype="whip", defined="WHIP_URH_ROK", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 

@@ -21,7 +21,7 @@
 name = "Let's hunt some Orc"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "The elder in Last Hope sent you to the old dwarven kingdom of Reknor, deep under the misty mountains, to investigate the orc presence."
+	desc[#desc+1] = "The elder in Last Hope sent you to the old dwarven kingdom of Reknor, deep under the Iron Throne, to investigate the orc presence."
 	desc[#desc+1] = "Find out if they are in any way linked to the lost staff."
 	desc[#desc+1] = "But be careful, even the dwarves did not venture in the old halls for many years."
 	return table.concat(desc, "\n")

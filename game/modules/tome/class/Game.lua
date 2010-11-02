@@ -963,11 +963,14 @@ function _M:onQuit()
 	end
 end
 
---- Requests the game to save
-function _M:saveGame()
+--- When a save is being made, stop running/resting
+function _M:onSavefilePush()
 	self.player:runStop("saving")
 	self.player:restStop("saving")
+end
 
+--- Requests the game to save
+function _M:saveGame()
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()

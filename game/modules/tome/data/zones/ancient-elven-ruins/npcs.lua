@@ -46,7 +46,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="longsword", defined="LONGSWORD_RINGIL", random_art_replace={chance=75}, autoreq=true},
+		{type="weapon", subtype="longsword", defined="LONGSWORD_WINTERTIDE", random_art_replace={chance=75}, autoreq=true},
 		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
 		{type="armor", subtype="mummy", ego_chance=100, autoreq=true},
 	},

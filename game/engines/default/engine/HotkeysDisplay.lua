@@ -156,7 +156,7 @@ function _M:onMouse(button, mx, my, click, on_over)
 						text:merge(self.actor:getTalentFullDescription(t))
 					elseif a.hotkey[i] and a.hotkey[i][1] == "inventory" then
 						local o = a:findInAllInventories(a.hotkey[i][2])
-						text = o:getDesc()
+						if o then text = o:getDesc() else text = "Missing!" end
 					end
 					on_over(text)
 				end
