@@ -298,9 +298,10 @@ newTalent{
 
 newTalent{
 	name = "Summon",
-	type = {"other/other", 1},
-	cooldown = 4,
+	type = {"wild-gift/other", 1},
+	cooldown = 1,
 	range = 20,
+	equilibrium = 18,
 	direct_hit = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -336,6 +337,10 @@ newTalent{
 				end
 			end
 		end
+
+		-- Apply summon destabilization
+		self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=4})
+
 		return true
 	end,
 	info = function(self, t)

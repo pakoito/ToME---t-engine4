@@ -1203,6 +1203,30 @@ newEffect{
 }
 
 newEffect{
+	name = "SUMMON_DESTABILIZATION",
+	desc = "Summoning Destabilization",
+	long_desc = function(self, eff) return ("The more the target summons creatures the longer it will take to summon more (+%d turns)."):format(eff.power) end,
+	type = "other", -- Type "other" so that nothing can dispel it
+	status = "detrimental",
+	parameters = { power=10 },
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the destabilizations
+		old_eff.dur = new_eff.dur
+		old_eff.power = old_eff.power + new_eff.power
+		-- Need to remove and re-add the talents CD
+		self:removeTemporaryValue("talent_cd_reduction", old_eff.effid)
+		old_eff.effid = self:addTemporaryValue("talent_cd_reduction", { [self.T_SUMMON] = -old_eff.power })
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.effid = self:addTemporaryValue("talent_cd_reduction", { [self.T_SUMMON] = -eff.power })
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("talent_cd_reduction", eff.effid)
+	end,
+}
+
+newEffect{
 	name = "FREE_ACTION",
 	desc = "Free Action",
 	long_desc = function(self, eff) return ("The target gains %d%% stun, daze and pinning immunity."):format(eff.power * 100) end,
