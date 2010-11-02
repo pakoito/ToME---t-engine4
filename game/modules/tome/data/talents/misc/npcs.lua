@@ -339,7 +339,7 @@ newTalent{
 		end
 
 		-- Apply summon destabilization
-		self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=4})
+		self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=5})
 
 		return true
 	end,
