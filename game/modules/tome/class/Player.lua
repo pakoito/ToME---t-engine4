@@ -731,7 +731,7 @@ function _M:useOrbPortal(portal)
 	else
 		if portal.change_wilderness then
 			if portal.change_wilderness.spot then
-				local spot = game.memory_levels[portal.change_zone.."-"..portal.change_level]:pickSpot(portal.change_wilderness.spot)
+				local spot = game.memory_levels[portal.change_wilderness.level_name or (portal.change_zone.."-"..portal.change_level)]:pickSpot(portal.change_wilderness.spot)
 				self.wild_x = spot and spot.x or 0
 				self.wild_y = spot and spot.y or 0
 			else
@@ -740,6 +740,8 @@ function _M:useOrbPortal(portal)
 			end
 		end
 		game:changeLevel(portal.change_level, portal.change_zone)
+
+		if portal.after_zone_teleport then self:move(portal.after_zone_teleport.x, portal.after_zone_teleport.y, true) end
 	end
 
 	if portal.message then game.logPlayer(self, portal.message) end

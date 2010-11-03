@@ -71,6 +71,10 @@ newEntity{ define_as = "FILLAREL",
 		self.energy.value = game.energy_to_act self:useTalent(self.T_CHANT_OF_FORTITUDE)
 	end,
 
+	on_die = function(self, who)
+		game.player:hasQuest("strange-new-world"):fillarel_dies(self)
+	end,
+
 	seen_by = function(self, who)
 		if not self.has_been_seen and who.player then
 			local Chat = require("engine.Chat")
@@ -121,6 +125,10 @@ newEntity{ define_as = "CORRUPTOR",
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+
+	on_die = function(self, who)
+		game.player:hasQuest("strange-new-world"):krogar_dies(self)
+	end,
 
 	can_talk = "unremarkable-cave-krogar",
 }

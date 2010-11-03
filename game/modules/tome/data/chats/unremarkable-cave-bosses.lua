@@ -27,6 +27,7 @@ local function attack_krogar(npc, player)
 	fillarel.inc_damage = {all=-80}
 	fillarel:setTarget(krogar)
 	krogar:setTarget(filarel)
+	game.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "sided-fillarel")
 end
 
 local function attack_fillarel(npc, player)
@@ -39,18 +40,22 @@ local function attack_fillarel(npc, player)
 	krogar.inc_damage = {all=-80}
 	fillarel:setTarget(krogar)
 	krogar:setTarget(filarel)
+	game.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "sided-krogar")
 end
+
+game.player:grantQuest("strange-new-world")
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A beautiful elven woman in golden robes stands before you, facing an orc clad in mail.*#WHITE#
 Fillarel: "Abandon this fight, orc! You cannot win: I stand with the power of the sun and the shadows of the moon."
 Krogar: "Ha! It's only been one hour and you already look tired, my 'lady'."
 #LIGHT_GREEN#*As you enter the room they notice you.*#WHITE#
-Fillarel: "You! @playerdescriptor.race@! help me defeat this monster or be gone with you!"
+Fillarel: "You! @playerdescriptor.race@! help me defeat this monster or be gone!"
 Krogar: "Ah, looking for help? Bah. @playerdescriptor.race@, kill this wench for me and I shall reward you!"]],
 	answers = {
 		{"[attack Krogar]", action=attack_krogar},
-		{"[attack Fillarel]", action=attack_fillarel},
+-- Not available yet
+--		{"[attack Fillarel]", action=attack_fillarel},
 	}
 }
 return "welcome"

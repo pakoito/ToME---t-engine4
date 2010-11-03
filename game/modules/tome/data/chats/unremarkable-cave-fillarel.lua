@@ -21,7 +21,6 @@ newChat{ id="welcome",
 	text = [[Thank you, @playername@. I hate to admit it, but you saved my life.]],
 	answers = {
 		{"At your service. But may I ask what you were doing in this dark place?", jump="what"},
-		{"It was only natural, my lady."},
 	}
 }
 
@@ -29,7 +28,15 @@ newChat{ id="what",
 	text = [[I am an Anorithil, a mage of the Sun and Moon; we fight all that is evil. I was with a group of sun paladins; we came from the Gates of Morning to the east.
 My companions were ... were slaughtered by orcs, and I nearly died as well. Thank you again for your help.]],
 	answers = {
-		{"It was only natural, my lady.", action=function(npc, player) game:setAllowedBuild("divine") game:setAllowedBuild("divine_anorithil", true) end},
+		{"It was my pleasure. But may I ask a favor myself? I am not from these lands, I used a farportal guarded by orcs deep bellow the Iron Throne and was brought here.", action=function(npc, player) game:setAllowedBuild("divine") game:setAllowedBuild("divine_anorithil", true) end, jump="sunwall"},
+	}
+}
+
+newChat{ id="sunwall",
+	text = [[Yes I noticed you were not from here. Your only hope is the Gates of Morning, the last bastion of freedom in this orc territory. When you leave the caves head south east, you can not miss it.
+Tell High Sun Paladin Aeryn that you met me, I'll send word to let you pass.]],
+	answers = {
+		{"Thank you, I will talk with Aeryn.", action=function(npc, player) game.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "helped-fillarel") end},
 	}
 }
 

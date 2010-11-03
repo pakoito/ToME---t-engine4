@@ -50,12 +50,12 @@ newAchievement{
 	desc = [[Killed Golbug the Destroyer.]],
 }
 newAchievement{
-	name = "Race through fire", id = "CHARRED_SCAR_SUCCESS",
-	desc = [[Raced through the fires of the Charred Scar to stop the Sorcerers.]],
+	name = "Brave new world", id = "STRANGE_NEW_WORLD",
+	desc = [[Gone to the Far East and took side in the war.]],
 }
 newAchievement{
-	name = "Arachnophobia", id = "SPYDRIC_INFESTATION",
-	desc = [[Destroyed the spydric menace.]],
+	name = "Race through fire", id = "CHARRED_SCAR_SUCCESS",
+	desc = [[Raced through the fires of the Charred Scar to stop the Sorcerers.]],
 }
 newAchievement{
 	name = "Orcrist", id = "ORC_PRIDE",
@@ -132,4 +132,8 @@ newAchievement{
 newAchievement{
 	name = "Back and there again", id = "EAST_PORTAL",
 	desc = [[Opened a portal to the Far East from Maj'Eyal.]],
+}
+newAchievement{
+	name = "Arachnophobia", id = "SPYDRIC_INFESTATION",
+	desc = [[Destroyed the spydric menace.]],
 }
