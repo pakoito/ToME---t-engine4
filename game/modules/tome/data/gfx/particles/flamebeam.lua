@@ -17,29 +17,32 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local nb = 12
-local dir
-local radius = radius or 6
+-- Make the ray
+local ray = {}
+local tiles = math.ceil(math.sqrt(tx*tx+ty*ty))
+local tx = tx * engine.Map.tile_w
+local ty = ty * engine.Map.tile_h
+ray.dir = math.atan2(ty, tx)
+ray.size = math.sqrt(tx*tx+ty*ty)
 
+-- Populate the beam based on the forks
 return { generator = function()
-	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
-	local ad = rng.float(0, 360)
-	local a = math.rad(ad)
-	local r = 0
-	local x = r * math.cos(a)
-	local y = r * math.sin(a)
-	local static = rng.percent(40)
-	local vel = sradius * ((24 - nb * 1.4) / 24) / 12
+	local a = ray.dir
+	local r = rng.range(1, ray.size - 32)
+
+	local ra = a + (rng.chance(2) and math.rad(-90) or math.rad(90))
+	local rr = rng.float(2, engine.Map.tile_w * 0.60)
+
+	local vel = rng.float(1.2, 6)
 
 	return {
-		trail = 1,
-		life = 12,
-		size = 12 - (12 - nb) * 0.7, sizev = 0, sizea = 0,
+		life = 32 / vel,
+		size = rng.float(4, 10), sizev = -0.1, sizea = 0,
 
-		x = x, xv = 0, xa = 0,
-		y = y, yv = 0, ya = 0,
-		dir = a, dirv = 0, dira = 0,
-		vel = rng.float(vel * 0.6, vel * 1.2), velv = 0, vela = 0,
+		x = r * math.cos(a) + rr * math.cos(ra), xv = 0, xa = 0,
+		y = r * math.sin(a) + rr * math.sin(ra), yv = 0, ya = 0,
+		dir = ray.dir, dirv = 0, dira = 0,
+		vel = vel, velv = -0.1, vela = 0.01,
 
 		r = rng.range(200, 255)/255,   rv = 0, ra = 0,
 		g = rng.range(120, 170)/255,   gv = 0.005, ga = 0.0005,
@@ -48,12 +51,10 @@ return { generator = function()
 	}
 end, },
 function(self)
-	if nb > 0 then
-		local i = math.min(nb, 6)
-		i = (i * i) * radius
-		self.ps:emit(i)
-		nb = nb - 1
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 6 then
+		self.ps:emit(6*tiles)
 	end
 end,
-30*radius*7*12,
+14*30*tiles,
 "particle_cloud"

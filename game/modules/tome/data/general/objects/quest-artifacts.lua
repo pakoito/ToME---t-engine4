@@ -38,6 +38,7 @@ Light around it seems to dim and you can feel its tremendous power simply by tou
 		apr = 4,
 		atk = 20,
 		dammod = {mag=1},
+		damtype = DamageType.ARCANE,
 	},
 	wielder = {
 		combat_spellpower = 20,
