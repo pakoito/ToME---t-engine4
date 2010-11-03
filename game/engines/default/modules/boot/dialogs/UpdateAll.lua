@@ -138,6 +138,7 @@ function _M:updateAll()
 
 				-- Download engine
 				fs.mkdir("/tmp-dl/modules")
+				fs.mkdir("/modules")
 				local fname = ("/tmp-dl/modules/boot-%s-%d.%d.%d.team"):format(eversion[4], eversion[1], eversion[2], eversion[3])
 				local f = fs.open(fname, "w")
 
@@ -167,6 +168,7 @@ function _M:updateAll()
 			local mod = next.mod
 
 			fs.mkdir("/tmp-dl/modules")
+			fs.mkdir("/modules")
 			local fname = ("/tmp-dl/modules/%s-%d.%d.%d.team"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
 			local f = fs.open(fname, "w")
 
