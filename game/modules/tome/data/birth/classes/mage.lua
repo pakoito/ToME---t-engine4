@@ -325,7 +325,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Geomancer",
 	desc = {
-		"A Geomancer is an archmage specialized in earth and stone magic.",
+		"A Geomancer is an archmage specialized in earth magic.",
 		"They gain access to the special Stone talents whose main purpose is to crush and destroy.",
 		"They can even learn to pierce through physical resistance and immunity.",
 		"Most archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",

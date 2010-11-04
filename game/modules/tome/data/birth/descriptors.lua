@@ -112,10 +112,10 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
-	name = "Easy",
+	name = "Discovery",
 	desc =
 	{
-		"Easy game setting",
+		"Discovery game mode",
 		"All damage done to the player decreased by 30%",
 		"All healing for the player increased by 10%",
 		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
