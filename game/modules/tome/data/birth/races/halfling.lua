@@ -42,7 +42,7 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
-		faction = "shire",
+		faction = "allied-kingdoms",
 		type = "humanoid", subtype="halfling",
 		default_wilderness = {28, 13},
 		starting_zone = "trollshaws",

@@ -52,7 +52,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of the Shire", suffix=true,
+	name = " of Eldoral", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -62,7 +62,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of the Sindar", suffix=true,
+	name = " of the Shaloren", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -72,7 +72,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of Lonely Mountain", suffix=true,
+	name = " of Iron Throne", suffix=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
