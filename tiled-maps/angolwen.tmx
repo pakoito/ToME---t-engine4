@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="9">
+   <properties>
+    <property name="display" value="."/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="_"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="t"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="117">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="159">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="&lt;"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="@"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2YzQ2DMAyFObNEx2CGLpR5emWA/k5XVU0kyzLBJMR2Ih+eoECT9/EIJgnTNAWXy7geYP8Vt29w7GPAY05z1IXYp47NBjzvceypB46flo37v6DrtD1zeTBHD/5zz1mP/jFL4tD24hz/cX2JW20vnodzWNMoHNbGOa7F3NpsLQ/nsMURop/c75E5rI3zXvOg+j3CkZt/SDJQfXI5MAOey0qw4Hkb7PMoR/J/JVhaM6wEB2fdAN93yJBEneeohONZ2Rb8T/K/ECzcNks5RsjD4vgo5cAsuTYl3lc1HGGjL436UcvBabNFPaee67PX8KQ4bhlpcRz9TmzNITX/GJVjHYTj7Dxq+EfgsDbOJfNoXT8kOKzKOWzJ4rpPaRbwu13bU0kOieMOOHrMZYQ8IIvme79HfQGWdg7AECcAAA==
+  </data>
+ </layer>
+</map>
