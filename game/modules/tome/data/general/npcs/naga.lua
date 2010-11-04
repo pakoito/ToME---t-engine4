@@ -47,7 +47,7 @@ newEntity{
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga myrmidon", color=colors.DARK_UMBER, image="npc/naga_myrmidon.png",
 	desc = [[A naga warrior, wielding a menacing trident.
-Myrmidons are the most devoted warriors, following the orders of Maglor whatever they may be.]],
+Myrmidons are the most devoted warriors of the nagas.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(120,150), life_rating = 16,

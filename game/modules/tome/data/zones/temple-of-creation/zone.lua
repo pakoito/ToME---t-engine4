@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Caverns of Ossë",
+	name = "Temple of Creation",
 	level_range = {30, 40},
 	level_scheme = "player",
 	max_level = 3,
@@ -61,7 +61,7 @@ return {
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",
-					map = "zones/caverns-osse-first",
+					map = "zones/temple-of-creation-first",
 				},
 				actor = {
 					nb_npc = {10, 10},
@@ -73,7 +73,7 @@ return {
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",
-					map = "zones/caverns-osse-last",
+					map = "zones/temple-of-creation-last",
 				},
 				actor = {
 					nb_npc = {7, 7},
