@@ -54,7 +54,7 @@ newTalent{
 	require = gifts_req2,
 	points = 5,
 	equilibrium = 20,
-	cooldown = 12,
+	cooldown = 10,
 	range = function(self, t) return 4 + self:getTalentLevel(t) * 2 end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}
@@ -129,7 +129,7 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 
-			local base = self:combatTalentMindDamage(t, 20, 130)
+			local base = self:combatTalentMindDamage(t, 20, 230)
 			local mana = base * 2
 			local vim = base
 			local positive = base / 2
@@ -152,7 +152,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local base = self:combatTalentMindDamage(t, 20, 130)
+		local base = self:combatTalentMindDamage(t, 20, 230)
 		local mana = base * 2
 		local vim = base
 		local positive = base / 2
