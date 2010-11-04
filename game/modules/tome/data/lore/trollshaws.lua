@@ -34,7 +34,7 @@ newLore{
 	category = "trollshaws",
 	name = "tattered paper scrap (trollshaws)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
-"11th of YestarÃ«
+"11th of Allure, year 121«
 Saw an absolutely gigantic troll, but fortunately I threw him off my scent."]],
 }
 
