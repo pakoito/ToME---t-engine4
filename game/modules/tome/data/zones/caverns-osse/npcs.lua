@@ -23,14 +23,12 @@ load("/data/general/npcs/naga.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ define_as = "MAGLOR",
+newEntity{ define_as = "SLASUL",
 	type = "humanoid", subtype = "naga", unique = true,
-	name = "Maglor, Last Son of Fëanor the Maker",
-	faction="silmaril-guardians",
+	name = "Slasul",
+	faction="temple-of-creation",
 	display = "@", color=colors.VIOLET,
-	desc = [[Maglor elven body was wrapped by thousands of years under the water, gills have grown on his neck, palms have formed between his fingers.
-The most horrible thing though is his legs, they have fused into a snake tail, granting him fast movement underwater.
-He wears a mace and a shield.]],
+	desc = [[This powerful naga is at home in the Temple of Creation and unlike his followers he uses a mace and a shield.]],
 	energy = {mod = 1.7},
 	level_range = {30, 50}, exp_worth = 4,
 	max_life = 350, life_rating = 19, fixed_rating = true,
@@ -87,9 +85,9 @@ He wears a mace and a shield.]],
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("maglor", engine.Quest.COMPLETED, "kill-maglor")
-		game.player:resolveSource():hasQuest("maglor"):portal_back()
+		game.player:resolveSource():setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "kill-slasul")
+		game.player:resolveSource():hasQuest("temple-of-creation"):portal_back()
 	end,
 
-	can_talk = "maglor",
+	can_talk = "slasul",
 }

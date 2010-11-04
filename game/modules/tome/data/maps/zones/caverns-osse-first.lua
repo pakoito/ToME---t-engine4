@@ -22,7 +22,6 @@ defineTile('.', "WATER_FLOOR")
 defineTile('#', "WATER_WALL")
 defineTile('^', "WATER_FLOOR", nil, nil, {random_filter={}})
 defineTile('M', "WATER_FLOOR", nil, {random_filter={}})
-defineTile('@', "WATER_FLOOR", nil, "MAGLOR")
 
 startx = 21
 starty = 14

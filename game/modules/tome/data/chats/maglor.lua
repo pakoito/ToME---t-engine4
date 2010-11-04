@@ -24,21 +24,20 @@ end
 -----------------------------------------------------------------------
 -- Default
 -----------------------------------------------------------------------
-if not game.player:isQuestStatus("maglor", engine.Quest.COMPLETED, "maglor-story") then
+if not game.player:isQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "slasul-story") then
 
 newChat{ id="welcome",
-	text = [[What is this? Why have you entered my sanctuary and slain its guardians?
-Speak or die, for I am Maglor, son of Fëanor and I shall guard the Silmaril for all of eternity!]],
+	text = [[What is this? Why have you entered my temple and slain my followers?
+Speak or die, for I am Slasul and you shall not disrupt my plans.]],
 	answers = {
 		{"[attack]", action=attack("So be it... Die now!")},
-		{"I want the Silmaril!", action=attack("The Oath shall be fullfilled once more...")},
 		{"I was sent by Ukllmswwik to stop your mad schemes to control all underwater life!", jump="quest"},
 	}
 }
 
 newChat{ id="quest",
 	text = [[I see, so the dragon sent you. He told you I am insane, I assume?
-But which of us is truly evil?  Myself, fulfilling a sacred oath, secluded in this sanctuary, or you, who comes here to kill me, destroying my friends and planning to take the Silmaril?
+But which of us is truly evil? Myself, working to better my people, doing no harm to anyone, or you, who comes here to kill me, destroying my friends and planning to do the same to me?
 Who is the insane one?]],
 	answers = {
 		{"Your feeble attempt to sway me from the side of good will not work. Pay for you sins!", action=attack("If you refuse to see reason, you leave me no choice!")},
@@ -49,12 +48,12 @@ Who is the insane one?]],
 newChat{ id="givequest",
 	text = [[Spare me?#LIGHT_GREEN#*He laughs.*#WHITE#
 Do not be so hasty to assume YOU are in a position to offer mercy to ME!
-Yet I shall tell you my story. As I was drowning, Ossë came to me. He told me that nobody should ever see the Silmaril again, but he did not want to destroy it for it held the last shining light of the First Age.
-So he made a pact with me: he would save me and allow me to fullfil my oath by being its guardian, at the bottom of the sea, for all eternity.
-Recently, that water dragon that sent you here started sending "agents" to retrieve the jewel. I can only imagine his goals, but they are clearly not peaceful.
-The Silmaril shall never leave this sanctuary!]],
+Yet I shall tell you my story. You surface dwellers do not know much about nagas, but let me tell you this: our current condition was not our choice.
+When Nalore sank, many of us died, so we resorted to using the magic of this temple. It worked, it saved us, and yet we are cursed. Cursed in this form by the terrible magic.
+If you do not believe anything else of what I say, please believe at least this: the Sher'Tul are hidding, not gone, and they are not benevolent entities.
+Recently, that water dragon that sent you here started sending "agents" to secure the temple. I can only imagine his goals, but they are clearly not peaceful.]],
 	answers = {
-		{"You do not sound mad to me ... could Ukllmswwik have lied?", jump="portal_back", action=function(npc, player) player:setQuestStatus("maglor", engine.Quest.COMPLETED, "maglor-story") end},
+		{"You do not sound mad to me ... could Ukllmswwik have lied?", jump="portal_back", action=function(npc, player) player:setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "slasul-story") end},
 		{"I will not be deceived by your lies! I will make your pay for your victims!", action=attack("As you wish. It did not have to come to it...")},
 	}
 }
@@ -62,7 +61,7 @@ The Silmaril shall never leave this sanctuary!]],
 newChat{ id="portal_back",
 	text = [[Use this portal, it will bring you back to his cave; ask him the truth.]],
 	answers = {
-		{"I will make him pay for his treachery.", action=function(npc, player) player:hasQuest("maglor"):portal_back() end},
+		{"I will make him pay for his treachery.", action=function(npc, player) player:hasQuest("temple-of-creation"):portal_back() end},
 	}
 }
 
@@ -74,8 +73,7 @@ newChat{ id="welcome",
 	text = [[Thank you for listening to me.]],
 	answers = {
 		{"[attack]", action=attack("So be it... Die now!")},
-		{"I want the Silmaril!", action=attack("The Oath shall be fullfilled once more...")},
-		{"Farewell, Guardian."},
+		{"Farewell, Slasul."},
 	}
 }
 end

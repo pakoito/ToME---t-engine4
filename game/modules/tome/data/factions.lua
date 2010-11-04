@@ -19,7 +19,7 @@
 
 -- CSV export
 local src = [[
-,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,Angolwen,Tol Falas,,Guardians of the Tide|H,Water lair|H,Assassin lair|H,,Sunwall|H,Orc Pride,,Sandworm Burrowers,,Sorcerers
+,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,Angolwen,Tol Falas,,Temple of Creation|H,Water lair|H,Assassin lair|H,,Sunwall|H,Orc Pride,,Sandworm Burrowers,,Sorcerers
 Enemies,,,,,,,,,,,,,,,,,,,
 Undead,-1,,,,,,,,,,,,,,,,,,
 Allied Kingdoms,-1,-1,,,,,,,,,,,,,,,,,
@@ -29,7 +29,7 @@ Iron Throne,-1,-1,0.2,0.2,0.2,,,,,,,,,,,,,,
 Angolwen,-1,-1,,,,,,,,,,,,,,,,,
 Tol Falas,,-1,-1,-1,-1,-1,-1,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,
-Guardians of the Tide|H,,,,,,,,,,,,,,,,,,,
+Temple of Creation|H,,,,,,,,,,,,,,,,,,,
 Water lair|H,-1,,,,,,,,,-1,,,,,,,,,
 Assassin lair|H,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,

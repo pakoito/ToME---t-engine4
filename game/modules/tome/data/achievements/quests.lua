@@ -102,8 +102,8 @@ newAchievement{
 	desc = [[Rescued the merchant from the assassin lord.]],
 }
 newAchievement{
-	name = "Fëanor's bane", id = "MAGLOR_DEAD",
-	desc = [[Killed Maglor, Last Son of Fëanor the Maker.]],
+	name = "Destroyer of the creation", id = "SLASUL_DEAD",
+	desc = [[Killed Slasul.]],
 }
 newAchievement{
 	name = "Flooder", id = "UKLLMSWWIK_DEAD",

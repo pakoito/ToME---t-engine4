@@ -73,7 +73,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("maglor", engine.Quest.COMPLETED, "kill-drake")
+		game.player:resolveSource():setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "kill-drake")
 	end,
 
 	can_talk = "ukllmswwik",

@@ -17,28 +17,28 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "The Guardian of the Sea"
+name = "The Temple of Creation"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "Ukllmswwik asked you to take his portal to the caverns of Ossë and kill Maglor who has turned mad."
-	if self:isCompleted("maglor-story") then
-		desc[#desc+1] = "Maglor told you his side of the story, now you must decide, which of them is corrupt?"
+	desc[#desc+1] = "Ukllmswwik asked you to take his portal to the temple of Creation and kill Slasul who has turned mad."
+	if self:isCompleted("slasul-story") then
+		desc[#desc+1] = "Slasul told you his side of the story, now you must decide, which of them is corrupt?"
 	end
 
-	if self:isCompleted("kill-maglor") and self:isCompleted("kill-drake") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have killed both Ukllmswwik and Maglor, betraying them both.#WHITE#"
-	elseif self:isCompleted("kill-maglor") and not self:isCompleted("kill-drake") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have sided with Ukllmswwik and killed Maglor.#WHITE#"
-	elseif not self:isCompleted("kill-maglor") and self:isCompleted("kill-drake") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have sided with Maglor and killed Ukllmswwik.#WHITE#"
+	if self:isCompleted("kill-slasul") and self:isCompleted("kill-drake") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have killed both Ukllmswwik and Slasul, betraying them both.#WHITE#"
+	elseif self:isCompleted("kill-slasul") and not self:isCompleted("kill-drake") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have sided with Ukllmswwik and killed Slasul.#WHITE#"
+	elseif not self:isCompleted("kill-slasul") and self:isCompleted("kill-drake") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have sided with Slasul and killed Ukllmswwik.#WHITE#"
 	end
 	return table.concat(desc, "\n")
 end
 
 on_status_change = function(self, who, status, sub)
-	if sub and (sub == "kill-maglor" or sub == "kill-drake") then
+	if sub and (sub == "kill-slasul" or sub == "kill-drake") then
 		who:setQuestStatus(self.id, engine.Quest.DONE)
-		if sub == "kill-maglor" then world:gainAchievement("MAGLOR_DEAD", game.player)
+		if sub == "kill-slasul" then world:gainAchievement("SLASUL_DEAD", game.player)
 		elseif sub == "kill-drake" then world:gainAchievement("UKLLMSWWIK_DEAD", game.player) end
 	end
 end
@@ -46,10 +46,10 @@ end
 on_grant = function(self, who)
 	local g = mod.class.Grid.new{
 		show_tooltip=true,
-		name="Portal to the Caverns of Ossë",
+		name="Portal to the temple of Creation",
 		display='>', color=colors.VIOLET,
 		notice = true,
-		change_level=1, change_zone="caverns-osse"
+		change_level=1, change_zone="temple-of-creation"
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 34, 6)
