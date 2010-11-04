@@ -112,7 +112,8 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
-	name = "Discovery",
+	name = "Easy",
+	display_name = "Discovery",
 	desc =
 	{
 		"Discovery game mode",
