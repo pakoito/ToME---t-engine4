@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 return {
-	name = "Ziguranth training camp",
+	name = "Zigur",
 	level_range = {15, 30},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	max_level = 1,
-	width = 25, height = 25,
+	width = 50, height = 50,
 	persistant = "zone",
 	no_worldport = true,
 	all_remembered = true,
@@ -31,7 +31,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "towns/antimagic",
+			map = "towns/zigur",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
@@ -42,8 +42,4 @@ return {
 			nb_object = {0, 0},
 		},
 	},
-	on_enter = function(_, _, newzone)
-		local q = game.player:hasQuest("antimagic")
-		if q:isStatus(q.PENDING) then q:start_event() end
-	end
 }
