@@ -61,7 +61,7 @@ newTalent{
 	type = {"spell/storm",2},
 	require = spells_req2,
 	points = 5,
-	mana = 12,
+	mana = 8,
 	cooldown = 3,
 	tactical = {
 		ATTACK = 10,
@@ -125,7 +125,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mode = "sustained",
-	sustain_mana = 80,
+	sustain_mana = 50,
 	cooldown = 30,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")

@@ -42,6 +42,7 @@ newEntity{
 
 	open_door = true,
 
+	cut_immune = 1,
 	blind_immune = 1,
 	fear_immune = 1,
 	see_invisible = 2,

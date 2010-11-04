@@ -41,6 +41,7 @@ newTalent{
 			self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)), {type="flame"})
 		else
 			self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)))
+			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 		end
 		game:playSoundNear(self, "talents/fire")

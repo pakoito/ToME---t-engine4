@@ -48,7 +48,7 @@ newTalent{
 	type = {"spell/wildfire",2},
 	require = spells_req2,
 	points = 5,
-	mana = 50,
+	mana = 35,
 	cooldown = 16,
 	tactical = {
 		ATTACKAREA = 40,
@@ -81,7 +81,7 @@ newTalent{
 	type = {"spell/wildfire",3},
 	require = spells_req3,
 	points = 5,
-	mana = 50,
+	mana = 40,
 	cooldown = 14,
 	tactical = {
 		ATTACKAREA = 10,
@@ -126,7 +126,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mode = "sustained",
-	sustain_mana = 80,
+	sustain_mana = 50,
 	cooldown = 30,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")

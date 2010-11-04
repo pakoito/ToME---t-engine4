@@ -82,7 +82,7 @@ newTalent{
 	type = {"spell/ice",3},
 	require = spells_req3,
 	points = 5,
-	mana = 35,
+	mana = 25,
 	cooldown = 15,
 	tactical = {
 		ATTACKAREA = 10,
@@ -135,7 +135,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mode = "sustained",
-	sustain_mana = 80,
+	sustain_mana = 50,
 	cooldown = 30,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
