@@ -32,7 +32,7 @@ on_grant = function(self, who)
 
 	-- Reveal  entrance
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="The arid wastes of Erúan",
 		display='>', color=colors.UMBER,
 		notice = true,

@@ -126,7 +126,7 @@ open_orthanc = function(self, player)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Entrance into Telmur, tower of Telos",
 		display='>', color=colors.RED,
 		notice = true,
@@ -180,7 +180,7 @@ back_to_last_hope = function(self)
 	local g = mod.class.NPC.new{
 		name="Meranas, Herald of Angolwen",
 		type="humanoid", subtype="human", faction="angolwen",
-		display='@', color=colors.RED,
+		display='p', color=colors.RED,
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "actor", 12, 42)

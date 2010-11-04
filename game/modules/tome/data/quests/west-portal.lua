@@ -44,7 +44,7 @@ end
 on_grant = function(self, who)
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Backdoor to the Vor Armoury",
 		display='>', color=colors.UMBER,
 		notice = true,
@@ -61,7 +61,7 @@ end
 wyrm_lair = function(self, who)
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Entrance into the sandpit of Briagh",
 		display='>', color=colors.YELLOW,
 		notice = true,

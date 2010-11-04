@@ -104,7 +104,7 @@ end
 
 access_angolwen = function(self, player)
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Angolwen, the hidden city of magic",
 		desc="Secret place of magic, set apart from the world to protect it.",
 		display='*', color=colors.WHITE, image="terrain/town1.png",
@@ -112,7 +112,7 @@ access_angolwen = function(self, player)
 		change_level=1, change_zone="town-angolwen"
 	}
 	local p = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Portal to Angolwen",
 		desc="The city of magic lies inside the mountains to the west, either a spell or a portal is needed to access it.",
 		display='*', color=colors.VIOLET, image="terrain/grass_teleport.png",

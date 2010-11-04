@@ -61,7 +61,7 @@ end
 on_grant = function(self, who)
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Entrance to Rak'shor Pride bastion",
 		display='>', color=colors.UMBER,
 		notice = true,
@@ -74,7 +74,7 @@ on_grant = function(self, who)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Entrance to Vor Pride bastion",
 		display='>', color=colors.UMBER,
 		notice = true,
@@ -87,7 +87,7 @@ on_grant = function(self, who)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Entrance to Gorbat Pride bastion",
 		display='>', color=colors.UMBER,
 		notice = true,
@@ -100,7 +100,7 @@ on_grant = function(self, who)
 
 	-- Reveal entrances
 	local g = mod.class.Grid.new{
-		show_tooltip=true,
+		show_tooltip=true, always_remember = true,
 		name="Entrance to Grushnak Pride caverns",
 		display='>', color=colors.UMBER,
 		notice = true,
