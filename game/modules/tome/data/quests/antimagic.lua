@@ -34,23 +34,19 @@ on_status_change = function(self, who, status, sub)
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		world:gainAchievement("ANTIMAGIC", game.player)
 		game.player:learnTalentType("wild-gift/antimagic", true)
-		local stair = game.zone:makeEntityByName(game.level, "terrain", "UP_WILDERNESS")
-		game.zone:addEntity(game.level, stair, "terrain", game.player.x, game.player.y)
 	end
 end
 
 ten_levels_ok = function(self, who)
-	if who.level >= self.start_level + 10 then return true end
+	if not self:isEnded() then
+		if who.level >= self.start_level + 10 then return true end
+	end
 end
 
 -- Start the event, summon the first challenger
 start_event = function(self)
 	local spot = game.level:pickSpot{type="quest", subtype="arena"}
 	game.player:move(spot.x, spot.y, true)
-
-	local Chat = require "engine.Chat"
-	local chat = Chat.new("antimagic-start", {name="Grim-looking fighter"}, game.player)
-	chat:invoke()
 
 	self.wave = 1
 	self:add_foe(true, true, 1)
@@ -70,15 +66,18 @@ next_combat = function(self)
 		local spot = game.level:pickSpot{type="quest", subtype="outside-arena"}
 		game.player:move(spot.x, spot.y, true)
 
-		local Chat = require "engine.Chat"
-		local chat = Chat.new("antimagic-end", {name="Grim-looking fighter"}, game.player)
-		chat:invoke()
+		if not self:isEnded() then
+			local Chat = require "engine.Chat"
+			local chat = Chat.new("antimagic-end", {name="Grim-looking fighter"}, game.player)
+			chat:invoke()
+		end
 	end
 end
 
 add_foe = function(self, next_wave, first, foe_idx)
-	local spot = game.level:pickSpot{type="portal"}
-	while not spot do spot = game.level:pickSpot{type="portal"} end
+	local spot = game.level:pickSpot{type="portal", subtype="portal"}
+	while not spot do spot = game.level:pickSpot{type="portal", subtype="portal"} end
+	print("==================== spot", spot.x, spot.y)
 
 	local foes = {
 		[1] = {
@@ -114,7 +113,7 @@ add_foe = function(self, next_wave, first, foe_idx)
 				end
 			end
 			-- Tone down the corruptor
-			if foe_idx == 4 then m.inc_damage.all = -50 end
+			if foe_idx == 4 then m.inc_damage.all = -30 end
 			m:setTarget(game.player)
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			if first then game.logSeen(m, "#VIOLET#A foe is summoned to the arena!")

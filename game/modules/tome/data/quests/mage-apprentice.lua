@@ -103,6 +103,8 @@ can_offer_kor = function(self, who)
 end
 
 access_angolwen = function(self, player)
+	if player:hasQuest("antimagic") and not player:hasQuest("antimagic"):isEnded() then player:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
+
 	local g = mod.class.Grid.new{
 		show_tooltip=true, always_remember = true,
 		name="Angolwen, the hidden city of magic",
@@ -134,6 +136,8 @@ access_angolwen = function(self, player)
 end
 
 ring_gift = function(self, player)
+	if player:hasQuest("antimagic") and not player:hasQuest("antimagic"):isEnded() then player:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
+
 	local o = game.zone:makeEntity(game.level, "object", {type="jewelry", subtype="ring", force_ego={"RING_ARCANE_POWER","RING_BURNING","RING_FREEZING","RING_SHOCK","RING_MAGIC"}}, player.level + 3, true)
 	if o then
 		o:identify(true)

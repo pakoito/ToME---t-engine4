@@ -44,6 +44,17 @@ starty = 49
 endx = 24
 endy = 49
 
+-- addSpot section
+addSpot({32, 7}, "portal", "portal")
+addSpot({39, 8}, "portal", "portal")
+addSpot({38, 15}, "portal", "portal")
+addSpot({32, 15}, "portal", "portal")
+addSpot({35, 11}, "quest", "arena")
+addSpot({28, 12}, "quest", "outside-arena")
+
+-- addZone section
+
+-- ASCII map section
 return [[
 ~~~~~~~~~~~~~~~~~~~~~~~~~ttttttttttttttttttttttttt
 ~~~~~~~~~~~~~~~~~~~~~~~~~ttttttttttt..tttttttttttt

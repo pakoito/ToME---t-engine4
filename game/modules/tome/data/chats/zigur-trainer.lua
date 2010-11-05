@@ -24,7 +24,7 @@ if game.player:hasQuest("antimagic") then
 newChat{ id="welcome",
 	text = [[Welcome back ]]..sex..[[.]],
 	answers = {
-		{"I am ready for the test", jump="test"},
+		{"I am ready for the test", jump="test", cond=function(npc, player) return player:hasQuest("antimagic"):ten_levels_ok(player) end},
 		{"I have got to go."},
 	}
 }
@@ -45,8 +45,7 @@ Return to us when your power has grown ten times without using any spells, scrol
 end
 
 newChat{ id="ok",
-	text = [[#LIGHT_GREEN#*The fighter hands you a map. It shows a location to the south of the Thaloren forest.*#WHITE#
-Excellent. When you feel ready, come seek us for your training. I look forward to it!]],
+	text = [[Excellent. Come back soon!]],
 	answers = {
 		{"I will, thank you.", action=function(npc, player) player:grantQuest("antimagic") end},
 	}

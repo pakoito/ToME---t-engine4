@@ -1253,7 +1253,7 @@ function _M:postUseTalent(ab, ret)
 
 	-- Count talents that count as spells
 	if ab.is_spell then
-		self:attr("casted_spells", 1)
+		if self:hasQuest("antimagic") and not self:hasQuest("antimagic"):isEnded() then self:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
 		self:antimagicBackslash(4 + self:getTalentLevelRaw(ab))
 	end
 
