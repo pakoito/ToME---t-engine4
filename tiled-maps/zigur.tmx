@@ -154,5 +154,17 @@
     <property name="type" value="portal"/>
    </properties>
   </object>
+  <object name="POP" x="1127" y="360" width="18" height="18">
+   <properties>
+    <property name="subtype" value="arena"/>
+    <property name="type" value="quest"/>
+   </properties>
+  </object>
+  <object name="POP" x="901" y="390" width="18" height="18">
+   <properties>
+    <property name="subtype" value="outside-arena"/>
+    <property name="type" value="quest"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

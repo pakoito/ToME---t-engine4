@@ -26,20 +26,7 @@ desc = function(self, who)
 end
 
 on_grant = function(self, who)
-	-- Reveal entrances
-	local g = mod.class.Grid.new{
-		show_tooltip=true, always_remember = true,
-		name="Ziguranth training ground",
-		display='*', color=colors.WHITE,
-		notice = true, image="terrain/town1.png",
-		change_level=1, change_zone="town-antimagic",
-	}
-	g:resolve() g:resolve(nil, true)
-	local level = game.level
-	local spot = level:pickSpot{type="zone-pop", subtype="antimagic"}
-	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
-
-	game.logPlayer(game.player, "He points in the direction of the thaloren forest near the Daikara.")
+	self.start_level = who.level
 end
 
 on_status_change = function(self, who, status, sub)
@@ -52,8 +39,15 @@ on_status_change = function(self, who, status, sub)
 	end
 end
 
+ten_levels_ok = function(self, who)
+	if who.level >= self.start_level + 10 then return true end
+end
+
 -- Start the event, summon the first challenger
 start_event = function(self)
+	local spot = game.level:pickSpot{type="quest", subtype="arena"}
+	game.player:move(spot.x, spot.y, true)
+
 	local Chat = require "engine.Chat"
 	local chat = Chat.new("antimagic-start", {name="Grim-looking fighter"}, game.player)
 	chat:invoke()
@@ -73,6 +67,9 @@ next_combat = function(self)
 	elseif self.wave < 9 then
 		self:add_foe(true, false, 4)
 	else
+		local spot = game.level:pickSpot{type="quest", subtype="outside-arena"}
+		game.player:move(spot.x, spot.y, true)
+
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("antimagic-end", {name="Grim-looking fighter"}, game.player)
 		chat:invoke()

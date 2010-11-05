@@ -19,16 +19,30 @@
 
 local sex = game.player.female and "Sister" or "Brother"
 
+if game.player:hasQuest("antimagic") then
+
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A grim-looking fighter approaches you, clad in mail armour and a large olive cloak. He doesn't appear hostile - his sword is sheathed.*#WHITE#
-]]..sex..[[, I see that you trust the work of wizards as much as I. Our guild, the Ziguranth, has been watching you, @playerdescriptor.race@, and we believe that you have potential.
-We see that the hermetic arts have always been at the root of each and every trial this land has endured, and we also see that one day it will bring about our destruction, so we have decided to take action, training ourselves to combat those who wield the arcane.
-If you'd like to learn our ways, I could tell you where our guild's training camp is located...]],
+	text = [[Welcome back ]]..sex..[[.]],
 	answers = {
-		{"Seems good. Where is this camp?", jump="ok"},
-		{"I'm... not sure I'm interested.", jump="ko"},
+		{"I am ready for the test", jump="test"},
+		{"I have got to go."},
 	}
 }
+
+else
+
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*A grim-looking fighter stands there, clad in mail armour and a large olive cloak. He doesn't appear hostile - his sword is sheathed.*#WHITE#
+]]..sex..[[, our guild, the Ziguranth, has been watching you, @playerdescriptor.race@, and we believe that you have potential.
+We see that the hermetic arts have always been at the root of each and every trial this land has endured, and we also see that one day it will bring about our destruction, so we have decided to take action, training ourselves to combat those who wield the arcane.
+We can train you, you you need to prove you are pure from the eldritch forces.
+Return to us when your power has grown ten times without using any spells, scrolls or other magic devices. Come back here, you will be tested and then we will train you.]],
+	answers = {
+		{"Ok, I will return then.", jump="ok"},
+		{"I'm not interested.", jump="ko"},
+	}
+}
+end
 
 newChat{ id="ok",
 	text = [[#LIGHT_GREEN#*The fighter hands you a map. It shows a location to the south of the Thaloren forest.*#WHITE#
@@ -41,7 +55,16 @@ Excellent. When you feel ready, come seek us for your training. I look forward t
 newChat{ id="ko",
 	text = [[Very well. I will say that this is disappointing, but it is your choice. Farewell.]],
 	answers = {
-		{"Farewell."},
+		{"Farewell.", action=function(npc, player) player:grantQuest("antimagic") player:setQuestStatus("antimagic", engine.Quest.FAILED) end},
+	}
+}
+
+newChat{ id="test",
+	text = [[#VIOLET#*You are grabbed by two olive-clad warriors and thrown into a crude arena!*
+#LIGHT_GREEN#*You hear the voice of the fighter ring above you.*#WHITE#
+]]..sex..[[! Your training begins! I want to see you prove your superiority over the works of magic! Fight!]],
+	answers = {
+		{"But wha.. [you notice your first opponent is already there]", action=function(npc, player) player:hasQuest("antimagic"):start_event() end},
 	}
 }
 
