@@ -128,10 +128,15 @@ function _M:createSeparators()
 end
 
 function _M:setupDisplayMode()
-	print("[DISPLAY MODE] 32x32 ASCII/background")
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, true, false)
 	Map:resetTiles()
 	Map.tiles.use_images = false
+
+	if self.level then
+		self.level.map:recreate()
+		engine.interface.GameTargeting.init(self)
+		self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+	end
 end
 
 function _M:save()

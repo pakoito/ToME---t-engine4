@@ -60,6 +60,5 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("spydric-infestation", engine.Quest.COMPLETED)
-		game.player.gates_of_morning_access = true
 	end,
 }
