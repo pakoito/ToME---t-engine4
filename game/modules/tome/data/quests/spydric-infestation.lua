@@ -20,11 +20,11 @@
 name = "Eight legs of wonder"
 desc = function(self, who)
 	local desc = {}
-	if not self:isCompleted() then
-		desc[#desc+1] = "Enter the caverns of Ardhungol and clear the source of the spider infestation there."
+	if not self:isCompleted() and not self:isEnded() then
+		desc[#desc+1] = "Enter the caverns of Ardhungol and look for sun paladin Rashim."
 		desc[#desc+1] = "But be careful, those are not small spiders..."
 	else
-		desc[#desc+1] = "#LIGHT_GREEN#You have killed Ungolë in Ardhungol, return to High Sun Paladin Aeryn."
+		desc[#desc+1] = "#LIGHT_GREEN#You have killed Ungolë in Ardhungol and saved the sun paladin."
 	end
 	return table.concat(desc, "\n")
 end
@@ -42,5 +42,21 @@ on_grant = function(self, who)
 	local level = game.memory_levels["wilderness-1"]
 	local spot = level:pickSpot{type="zone-pop", subtype="ardhungol"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
-	game.logPlayer(game.player, "High Sun Paladin Aeryn marks the location of Ardhungol on your map.")
+	game.logPlayer(game.player, "She marks the location of Ardhungol on your map.")
+end
+
+portal_back = function(self, who)
+	who:setQuestStatus(self.id, engine.Quest.COMPLETED)
+
+	-- Reveal entrance
+	local g = mod.class.Grid.new{
+		show_tooltip=true, always_remember = true,
+		name="Portal back to the Gates of Morning",
+		display='>', color=colors.GOLD,
+		notice = true,
+		change_level=1, change_zone="town-gates-of-morning"
+	}
+	g:resolve() g:resolve(nil, true)
+	game.zone:addEntity(game.level, g, "terrain", who.x, who.y)
+	game.logPlayer(who, "A portal appears right under you and Rashim rushes through.")
 end

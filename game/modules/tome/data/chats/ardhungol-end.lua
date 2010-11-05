@@ -17,24 +17,22 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-far-east.lua")
-load("/data/general/objects/lore/sunwall.lua")
-
-newEntity{ base = "BASE_WAND",
-	define_as = "ROD_SPYDRIC_POISON",
-	unided_name = "poison dripping wand",
-	name = "Rod of Spydric Poison", color=colors.LIGHT_GREEN, unique=true,
-	desc = [[This rod carved out of a giant spider fang continuously drips venom.]],
-	cost = 50,
-	elec_proof = true,
-
-	max_power = 75, power_regen = 1,
-	use_power = { name = "shoot a bolt of spyric poison", power = 25,
-		use = function(self, who)
-			local tg = {type="bolt", range=12, talent=t}
-			local x, y = who:getTarget(tg)
-			if not x or not y then return nil end
-			who:project(tg, x, y, engine.DamageType.SPYDRIC_POISON, {dam=200 + who:getMag() * 4, dur=6}, {type="slime"})
-		end
-	},
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*As the monstrous spider fell you see something.. moving in her belly until it explodes! A tall black man steps out of the spewed guts, surrounded by a golden light.*#WHITE#
+By the sun! I thought I would never again see a friendly face!
+Thank you, I am Rashim, and I am in your debt.
+]],
+	answers = {
+		{"I have been sent by your wife, she was worried for you.", jump="leave"},
+	}
 }
+
+newChat{ id="leave",
+	text = [[Ah my dear heart!
+Well now that I am free I will create a portal to the Gates of Morning, I think I saw enough spiders for the rest of my life.]],
+	answers = {
+		{"Lead the way!", action=function(npc, player) player:hasQuest("spydric-infestation"):portal_back(player) end},
+	}
+}
+
+return "welcome"

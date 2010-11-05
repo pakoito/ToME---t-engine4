@@ -54,8 +54,6 @@ They roam the lands freely, ever assaulting us.
 			player:setQuestStatus("strange-new-world", engine.Quest.DONE)
 			npc:move(46, 27, true)
 			npc.can_talk = "gates-of-morning-main"
-			game:setAllowedBuild("divine")
-			game:setAllowedBuild("divine_sun_paladin", true)
 		end},
 	}
 }

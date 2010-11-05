@@ -45,6 +45,17 @@ defineTile('j', "GRASS", nil, mod.class.NPC.new{
 	can_quest = true,
 })
 
+defineTile('s', "FLOOR", nil, mod.class.NPC.new{
+	type = "humanoid", subtype = "human",
+	display = "p", color=colors.GOLD,
+	name = "Melnela",
+	size_category = 3, rank = 2,
+	ai = "simple",
+	faction = "sunwall",
+	can_talk = "ardhungol-start",
+	can_quest = true,
+})
+
 quickEntity('1', {show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
 quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"}, {no_teleport=true})
 quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), image="terrain/wood_store_weapon.png"}, {no_teleport=true})
@@ -80,7 +91,7 @@ MMMMMM                          O             MMMM
 MMMMMM     #####                O             MMMM
 MMMMMM    ######                O            MMMMM
 MMMMM     #####3OOO            OO    ###    MMMMMM
-MMMMM     ######  OOOO         O     ###    MMMMMM
+MMMMM     ######  OOOO       s O     ###    MMMMMM
 MMMMM      #####     OOOOO     O     #e#    MMMMMM
 MMMMM                    OOOO  O      O     MMMMMM
 MMMMM                       OOOO      O      MMMMM

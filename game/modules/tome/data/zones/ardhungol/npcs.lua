@@ -43,6 +43,7 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=1, {type="wand", subtype="wand", defined="ROD_SPYDRIC_POISON"} },
+	resolvers.drops{chance=100, nb=1, {unique=true} },
 
 	resolvers.talents{
 		[Talents.T_KNOCKBACK]=4,
@@ -59,6 +60,8 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("spydric-infestation", engine.Quest.COMPLETED)
+		local Chat = require"engine.Chat"
+		local chat = Chat.new("ardhungol-end", {name="Sun Paladin Rashim"}, game.player:resolveSource())
+		chat:invoke()
 	end,
 }
