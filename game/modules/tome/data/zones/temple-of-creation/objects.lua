@@ -24,16 +24,13 @@ local Talents = require "engine.interface.ActorTalents"
 local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
--- Artifact, droped (and used!) by Bill the Stone Troll
-
 newEntity{ base = "BASE_LITE",
-	define_as = "WATER_SILMARIL",
-	name = "The Water Silmaril", unique=true,
+	define_as = "ELDRITCH_PEARL",
+	name = "", unique=true,
 	display ='*', color = colors.AQUAMARINE,
-	desc = [[Thousands of years deep into the sea have infused the powerful Silmaril with the fury of rushing water. It pulses light.]],
+	desc = [[Thousands of years spent inside the temple of creation have infused this pearl with the fury of rushing water. It pulses light.]],
 
 	-- No cost, it's invaluable
-
 	wielder = {
 		lite = 6,
 		can_breath = {water=1},

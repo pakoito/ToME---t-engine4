@@ -54,7 +54,7 @@ newEntity{ define_as = "SLASUL",
 		{type="weapon", subtype="mace", ego_chance=100, autoreq=true},
 		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
 		{type="armor", subtype="heavy", ego_chance=100, autoreq=true},
-		{type="jewelry", subtype="lite", defined="WATER_SILMARIL", autoreq=true},
+		{type="jewelry", subtype="lite", defined="ELDRITCH_PEARL", autoreq=true},
 	},
 	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
