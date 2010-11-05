@@ -41,8 +41,21 @@ PROJECTILE = 500
 --- The place of an object entity in a map grid
 OBJECT = 1000
 
---- The order of display for grid seen
-searchOrder = { TERRAIN, TRAP, OBJECT, ACTOR }
+--- The order of checks for checkAllEntities
+searchOrder = { ACTOR, TERRAIN, PROJECTILE, TRAP, OBJECT }
+searchOrderSort = function(a, b)
+	if a == ACTOR then return true
+	elseif b == ACTOR then return false
+	elseif a == TERRAIN then return true
+	elseif b == TERRAIN then return false
+	elseif a == PROJECTILE then return true
+	elseif b == PROJECTILE then return false
+	elseif a == TRAP then return true
+	elseif b == TRAP then return false
+	elseif a == OBJECT then return true
+	elseif b == OBJECT then return false
+	else return a < b end
+end
 
 color_shown   = { 1, 1, 1, 1 }
 color_obscure = { 1, 1, 1, 0.6 }
@@ -412,10 +425,12 @@ function _M:updateMap(x, y)
 	-- Update entities checker for this spot
 	-- This is to improve speed, we create a function for each spot that checks entities it knows are there
 	-- This avoid a costly for iteration over a pairs() and this allows luajit to compile only code that is needed
-	local ce = {}
+	local ce, sort = {}, {}
 	local fstr = [[if m[%s] then p = m[%s]:check(what, x, y, ...) if p then return p end end ]]
 	ce[#ce+1] = [[return function(self, x, y, what, ...) local p local m = self.map[x + y * self.w] ]]
-	for idx, e in pairs(self.map[x + y * self.w]) do ce[#ce+1] = fstr:format(idx, idx) end
+	for idx, e in pairs(self.map[x + y * self.w]) do sort[#sort+1] = idx end
+	table.sort(sort, searchOrderSort)
+	for i = 1, #sort do ce[#ce+1] = fstr:format(sort[i], sort[i]) end
 	ce[#ce+1] = [[end]]
 	local ce = table.concat(ce)
 	self._check_entities[x + y * self.w] = self._check_entities_store[ce] or loadstring(ce)()
