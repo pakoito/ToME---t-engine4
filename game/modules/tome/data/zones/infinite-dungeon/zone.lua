@@ -26,7 +26,7 @@ return {
 	width = 70, height = 70,
 --	all_remembered = true,
 --	all_lited = true,
---	persistant = "zone",
+	no_worldport = true,
 	ambiant_music = "Swashing the buck.ogg",
 	generator =  {
 		map = {
