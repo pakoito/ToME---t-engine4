@@ -130,8 +130,13 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
+		-- Give the orb of knowledge
+		resolvers.inventory{ id=true, {defined="ORB_KNOWLEDGE"}},
+		resolvers.generic(function(e) e.hotkey[12] = {"inventory", "Orb of Knowledge"} end),
 		-- Override normal stuff
 		before_starting_zone = function(self)
+			self.starting_level = 1
+			self.starting_level_force_down = nil
 			self.starting_zone = "infinite-dungeon"
 			self.starting_quest = "infinite-dungeon"
 			self.starting_intro = "infinite-dungeon"
