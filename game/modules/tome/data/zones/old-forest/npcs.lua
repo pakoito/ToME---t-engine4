@@ -31,6 +31,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "WILLOWRATH",
+	allow_infinite_dungeon = true,
 	type = "giant", subtype = "huorn", unique = true,
 	name = "Willowrath",
 	display = "#", color=colors.OLIVE_DRAB,
@@ -75,6 +76,7 @@ newEntity{ define_as = "WILLOWRATH",
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
+	allow_infinite_dungeon = true,
 	name = "cute little bunny", color=colors.SALMON,
 	desc = [[It looks at you with cute little eyes before jumping at you with razor sharp teeth.]],
 	level_range = {1, 15}, exp_worth = 3,
@@ -85,6 +87,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 }
 
 newEntity{ define_as = "SNAPROOT", -- backup guardian
+	allow_infinite_dungeon = true,
 	type = "giant", subtype = "ent", unique = true,
 	name = "Snaproot",
 	display = "#", color=VIOLET,

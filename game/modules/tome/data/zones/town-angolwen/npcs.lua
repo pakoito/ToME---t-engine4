@@ -20,6 +20,7 @@
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
+	allow_infinite_dungeon = true,
 	type = "humanoid", subtype = "human",
 	display = "p",
 	faction = "angolwen",

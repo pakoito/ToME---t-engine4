@@ -96,6 +96,51 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "world",
+	name = "Infinite",
+	display_name = "Infinite Dungeon: The Neverending Descent",
+	desc =
+	{
+		"Play as your favorite race and class and venture into the infinite dungeon.",
+		"The only limit of how far you can go is your own skill!",
+	},
+	descriptor_choices =
+	{
+		race =
+		{
+			__ALL__ = "disallow",
+			Human = "allow",
+			Elf = "allow",
+			Dwarf = "allow",
+			Halfling = "allow",
+			Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
+		},
+
+		class =
+		{
+			__ALL__ = "allow",
+			Mage = "allow",
+			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
+			Wilder = function() return (
+				profile.mod.allow_build.wilder_summoner or
+				profile.mod.allow_build.wilder_wyrmic
+				) and "allow" or "disallow"
+			end,
+			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
+			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
+		},
+	},
+	copy = {
+		-- Override normal stuff
+		before_starting_zone = function(self)
+			self.starting_zone = "infinite-dungeon"
+			self.starting_quest = "infinite-dungeon"
+			self.starting_intro = "infinite-dungeon"
+		end,
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
 	name = "Orcs",
 	display_name = "Orcs: The Rise to Power",
 	desc =

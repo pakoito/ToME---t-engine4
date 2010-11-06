@@ -27,6 +27,7 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "SHADE_OF_TELOS",
+	allow_infinite_dungeon = true,
 	type = "undead", subtype = "ghost", unique = true,
 	name = "The Shade of Telos",
 	display = "G", color=colors.VIOLET,

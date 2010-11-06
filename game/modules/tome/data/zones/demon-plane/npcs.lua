@@ -24,6 +24,7 @@ load("/data/general/npcs/minor-demon.lua", rarity(0))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "DRAEBOR",
+	allow_infinite_dungeon = true,
 	type = "demon", subtype = "minor", unique = true,
 	name = "Draebor, the Imp",
 	display = "u", color=colors.VIOLET,

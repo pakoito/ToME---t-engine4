@@ -29,6 +29,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss , no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "GREATER_MUMMY_LORD",
+	allow_infinite_dungeon = true,
 	type = "undead", subtype = "mummy", unique = true,
 	name = "Greater Mummy Lord",
 	display = "Z", color=colors.VIOLET,
@@ -78,6 +79,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 
 -- Some mummy minions
 newEntity{ base = "BASE_NPC_MUMMY",
+	allow_infinite_dungeon = true,
 	name = "ancient elven mummy", color=colors.ANTIQUE_WHITE,
 	desc = [[An animated corpse in mummy wrappings.]],
 	level_range = {7, 50}, exp_worth = 1,
@@ -100,6 +102,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 }
 
 newEntity{ base = "BASE_NPC_MUMMY",
+	allow_infinite_dungeon = true,
 	name = "animated mummy wrappings", color=colors.SLATE, display='[',
 	desc = [[An animated mummy wrappings, without a corpse inside... It seems like it can not move.]],
 	level_range = {7, 50}, exp_worth = 1,
@@ -122,6 +125,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 }
 
 newEntity{ base = "BASE_NPC_MUMMY",
+	allow_infinite_dungeon = true,
 	name = "rotting mummy", color=colors.TAN,
 	desc = [[An rotting animated corpse in mummy wrappings.]],
 	level_range = {7, 50}, exp_worth = 1,

@@ -26,6 +26,7 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
+	allow_infinite_dungeon = true,
 	name = "Vor, Grand Geomancer of the Pride", color=colors.VIOLET, unique = true,
 	desc = [[An old orc, wearing multi-colored robes. Ice shards fly around him, leaving a trail of fire and lightning bursts.]],
 	level_range = {40, 50}, exp_worth = 2,

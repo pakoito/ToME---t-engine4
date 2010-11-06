@@ -262,6 +262,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_FAEROS", define_as = "FYRK",
+	allow_infinite_dungeon = true,
 	name = "Fyrk, Faeros High Guard", color=colors.VIOLET,
 	desc = [[Faeros are highly intelligent fire elementals, rarely seen outside volcanos they are probably not native to this world.
 This one looks even nastier and looks toward you with what seems to be disdain. Flames swirly all around him.]],

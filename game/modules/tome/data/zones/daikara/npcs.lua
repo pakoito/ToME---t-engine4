@@ -28,6 +28,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "RANTHA_THE_WORM",
+	allow_infinite_dungeon = true,
 	type = "dragon", subtype = "ice", unique = true,
 	name = "Rantha the Worm",
 	display = "D", color=colors.VIOLET,
@@ -74,6 +75,7 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 }
 
 newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
+	allow_infinite_dungeon = true,
 	name = "Massok the Dragonslayer", color=colors.VIOLET, unique = true,
 	desc = [[A huge and heavily-scarred orc with a humungous sword. His helm is fashioned from a dragon skull.]],
 	level_range = {45, 55}, exp_worth = 3,

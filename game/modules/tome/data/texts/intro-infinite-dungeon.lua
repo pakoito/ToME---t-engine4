@@ -17,8 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/water.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/lava.lua")
-load("/data/general/grids/sand.lua")
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
+You have arrived in the infinite dungeon.
+Your life outside did not satisfy you, so you came here looking for adventure.
+While you know this is a one way trip you hope to go in a blaze of glory!
+
+Go forth, venture into the depths of the dungeon and see how far you can get before the end.
+]]

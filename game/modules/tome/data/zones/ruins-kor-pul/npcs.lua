@@ -29,6 +29,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "SHADE",
+	allow_infinite_dungeon = true,
 	type = "undead", subtype = "skeleton", unique = true,
 	name = "The Shade",
 	display = "s", color=colors.VIOLET,
@@ -68,6 +69,7 @@ newEntity{ define_as = "SHADE",
 
 -- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "KOR_FURY",
+	allow_infinite_dungeon = true,
 	type = "undead", subtype = "ghost", unique = true,
 	name = "Kor's Fury",
 	display = "G", color=colors.VIOLET,

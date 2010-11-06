@@ -22,6 +22,7 @@ load("/data/general/npcs/sandworm.lua", rarity(0))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "BRIAGH",
+	allow_infinite_dungeon = true,
 	type = "dragon", subtype = "sand", unique = true,
 	name = "Briagh, Great Sand Wyrm",
 	display = "D", color=colors.VIOLET,

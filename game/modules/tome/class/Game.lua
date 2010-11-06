@@ -149,6 +149,7 @@ function _M:newGame()
 		save:saveQuickBirth(self.player.descriptor)
 		save:close()
 
+		self.player:check("before_starting_zone")
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
 		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)

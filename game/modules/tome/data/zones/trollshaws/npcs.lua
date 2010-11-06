@@ -32,6 +32,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "TROLL_BILL",
+	allow_infinite_dungeon = true,
 	type = "giant", subtype = "troll", unique = true,
 	name = "Bill the Stone Troll",
 	display = "T", color=colors.VIOLET, image="npc/troll_bill.png",
@@ -67,6 +68,7 @@ He is wielding a small tree trunk and towering toward you.]],
 }
 
 newEntity{ define_as = "ALUIN",
+	allow_infinite_dungeon = true,
 	type = "humanoid", subtype = "human", unique = true,
 	name = "Aluin the Fallen",
 	display = "p", color=colors.VIOLET,

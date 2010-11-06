@@ -33,6 +33,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of the maze, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "MINOTAUR_MAZE",
+	allow_infinite_dungeon = true,
 	type = "giant", subtype = "minotaur", unique = true,
 	name = "Minotaur of the Labyrinth",
 	display = "H", color=colors.VIOLET,
@@ -75,6 +76,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 }
 
 newEntity{ base = "BASE_NPC_SPIDER", define_as = "NIMISIL",
+	allow_infinite_dungeon = true,
 	name = "Nimisil", color=colors.VIOLET,
 	desc = [[Covered by eerie luminescent growths and protuberances, this spider now haunts the maze's silent passageways.]],
 	level_range = {43, nil}, exp_worth = 3,

@@ -26,6 +26,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of Reknor, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "GOLBUG",
+	allow_infinite_dungeon = true,
 	type = "humanoid", subtype = "orc", unique = true,
 	faction = "orc-pride",
 	name = "Golbug the Destroyer",
@@ -144,6 +145,7 @@ newEntity{ define_as = "HARNO",
 }
 
 newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
+	allow_infinite_dungeon = true,
 	type = "demon", subtype = "major", unique = true,
 	name = "Lithfengel",
 	display = "U", color=colors.VIOLET,

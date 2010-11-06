@@ -24,6 +24,7 @@ load("/data/general/npcs/naga.lua", rarity(0))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "SLASUL",
+	allow_infinite_dungeon = true,
 	type = "humanoid", subtype = "naga", unique = true,
 	name = "Slasul",
 	faction="temple-of-creation",

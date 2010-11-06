@@ -20,12 +20,13 @@
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "BEN_CRUTHDAR",
+	allow_infinite_dungeon = true,
 	type = "humanoid", subtype = "human", unique = true,
 	name = "Ben Cruthdar, the Cursed",
 	display = "p", color=colors.VIOLET,
 	desc = [[This madman looks extremely dangerous, he wields a big axe and means to use it.
 A gloomy aura emanates from him.]],
-	level_range = {10, 12}, exp_worth = 2,
+	level_range = {10, 18}, exp_worth = 2,
 	max_life = 250, life_rating = 15, fixed_rating = true,
 	max_stamina = 85,
 	stats = { str=20, dex=15, wil=18, con=20 },

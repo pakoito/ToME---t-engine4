@@ -22,7 +22,6 @@ load("/data/general/npcs/major-demon.lua", rarity(3))
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "CORRUPTED_BALROG",
 	type = "demon", subtype = "major", unique = true,
 	name = "Corrupted Balrog",

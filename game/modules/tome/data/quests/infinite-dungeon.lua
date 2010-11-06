@@ -17,8 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/water.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/lava.lua")
-load("/data/general/grids/sand.lua")
+name = "The Infinite Dungeon"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "You have entered the Infinite Dungeon, there is no coming back now."
+	desc[#desc+1] = "Go deep, fight, win and die in a blaze of glory!"
+	return table.concat(desc, "\n")
+end

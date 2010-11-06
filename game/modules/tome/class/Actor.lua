@@ -1484,15 +1484,28 @@ end
 function _M:worthExp(target)
 	if not target.level or self.level < target.level - 7 then return 0 end
 
-	local mult = 0.6
-	if self.rank == 1 then mult = 0.6
-	elseif self.rank == 2 then mult = 0.8
-	elseif self.rank == 3 then mult = 3
-	elseif self.rank == 4 then mult = 60
-	elseif self.rank >= 5 then mult = 120
-	end
+	-- HHHHAACKKK ! Use a normal scheme for the game except in the infinite dungeon
+	if game.zone.short_name ~= "infinite-dungeon" then
+		local mult = 0.6
+		if self.rank == 1 then mult = 0.6
+		elseif self.rank == 2 then mult = 0.8
+		elseif self.rank == 3 then mult = 3
+		elseif self.rank == 4 then mult = 60
+		elseif self.rank >= 5 then mult = 120
+		end
 
-	return self.level * mult * self.exp_worth
+		return self.level * mult * self.exp_worth
+	else
+		local mult = 2
+		if self.rank == 1 then mult = 2
+		elseif self.rank == 2 then mult = 2
+		elseif self.rank == 3 then mult = 3.5
+		elseif self.rank == 4 then mult = 6
+		elseif self.rank >= 5 then mult = 6.5
+		end
+
+		return self.level * mult * self.exp_worth
+	end
 end
 
 --- Suffocate a bit, lose air

@@ -25,6 +25,7 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
+	allow_infinite_dungeon = true,
 	name = "Grushnak, Battlemaster of the Pride", color=colors.VIOLET, unique = true,
 	desc = [[An old orc, covered in battle scars, he looks fierce and very, very, dangerous.]],
 	level_range = {45, 55}, exp_worth = 2,

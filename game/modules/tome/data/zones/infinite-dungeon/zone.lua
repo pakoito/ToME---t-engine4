@@ -22,9 +22,8 @@ return {
 	level_range = {1, 1},
 	level_scheme = "player",
 	max_level = 1000000000,
-	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return math.floor((zone.base_level + level.level-1) * 1.7) + e:getRankLevelAdjust() + rng.range(-1,2) end,
-	width = 100, height = 100,
+	width = 70, height = 70,
 	all_remembered = true,
 	all_lited = true,
 --	persistant = "zone",
@@ -32,20 +31,19 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
-			nb_rooms = 10,
---			rooms = {"simple", "pilar", {"money_vault",5}},
-			rooms = {"random_room", "greater_vault"},
-			rooms_config = {pit={filters={{type="undead"}}}},
+			nb_rooms = 14,
+			rooms = {"random_room", {"pit",3}, {"greater_vault",7}},
+			rooms_config = {pit={filters={}}},
 			lite_room_chance = 50,
 			['.'] = "FLOOR",
 			['#'] = "WALL",
-			up = "UP",
+			up = "FLOOR",
 			down = "DOWN",
 			door = "DOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {24, 34},
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -56,12 +54,7 @@ return {
 			nb_trap = {6, 9},
 		},
 	},
-	levels =
-	{
-		[1] = {
-			generator = { map = {
-				up = "UP_WILDERNESS",
-			}, },
-		},
-	},
+	post_process = function(level)
+		for uid, e in pairs(level.entities) do e.faction="enemies" end
+	end,
 }

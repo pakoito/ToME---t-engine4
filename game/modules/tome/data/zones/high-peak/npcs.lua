@@ -192,6 +192,7 @@ newEntity{
 
 -- Aeryn trying to kill the player if charred scar quest failed
 newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
+	allow_infinite_dungeon = true,
 	type = "humanoid", subtype = "human",
 	display = "p",
 	faction = "sorcerers",

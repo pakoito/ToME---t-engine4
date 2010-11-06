@@ -51,6 +51,7 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 
 -- The boss of the sandworm lair, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "SANDWORM_QUEEN",
+	allow_infinite_dungeon = true,
 	type = "vermin", subtype = "sandworm", unique = true,
 	name = "Sandworm Queen",
 	display = "w", color=colors.VIOLET,
@@ -107,6 +108,7 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 
 -- The boss of the sandworm lair, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "CORRUPTED_SAND_WYRM",
+	allow_infinite_dungeon = true,
 	type = "dragon", subtype = "sand", unique = true,
 	name = "Corrupted Sand Wyrm",
 	display = "D", color=colors.VIOLET,

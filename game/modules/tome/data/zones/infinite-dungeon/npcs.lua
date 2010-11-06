@@ -17,4 +17,36 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- Do not use shades
+load("/data/general/npcs/shade.lua", function(e) e.rarity = nil end)
+
+-- Load all others
 load("/data/general/npcs/all.lua")
+load("/data/general/npcs/bone-giant.lua")
+load("/data/general/npcs/faeros.lua")
+load("/data/general/npcs/gwelgoroth.lua")
+load("/data/general/npcs/mummy.lua")
+load("/data/general/npcs/ritch.lua")
+
+-- Load the bosses of all other zones
+local function loadOuter(file)
+	local oldload, oldloadif
+	oldload, load = load, function() end
+	oldloadif, loadIfNot = load, function() end
+	oldload(file, function(e)
+		if e.allow_infinite_dungeon and not e.rarity then
+			e.rarity = 25
+			e.on_die = nil
+			e.can_talk = nil
+			e.on_acquire_target = nil
+			print("========================= FOUND boss", e.name)
+		end
+	end)
+	load = oldload
+	loadIfNot = oldloadif
+end
+
+for i, zone in ipairs(fs.list("/data/zones/")) do
+	local file = "/data/zones/"..zone.."/npcs.lua"
+	if fs.exists(file) and zone ~= "infinite-dungeon" then loadOuter(file) end
+end

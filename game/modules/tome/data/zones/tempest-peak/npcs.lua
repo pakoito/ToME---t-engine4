@@ -27,6 +27,7 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "URKIS",
+	allow_infinite_dungeon = true,
 	type = "humanoid", subtype = "human", unique = true,
 	name = "Urkis, the High Tempest",
 	display = "p", color=colors.VIOLET,

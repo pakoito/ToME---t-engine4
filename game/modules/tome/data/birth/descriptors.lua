@@ -39,6 +39,7 @@ newBirthDescriptor{
 		{
 			Tutorial = "disallow",
 			["Maj'Eyal"] = "allow",
+			["Infinite"] = "allow",
 			Ents = "disallow",
 			Spydre = "disallow",
 			Orcs = "disallow",

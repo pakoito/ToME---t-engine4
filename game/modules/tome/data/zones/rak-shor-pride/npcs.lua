@@ -29,6 +29,7 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
+	allow_infinite_dungeon = true,
 	name = "Rak'shor, Grand Necromancer of the Pride", color=colors.VIOLET, unique = true,
 	desc = [[An old orc, wearing black robes. He commands his undead armies to destroy you.]],
 	level_range = {35, 50}, exp_worth = 2,
