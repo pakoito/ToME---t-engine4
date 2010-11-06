@@ -433,7 +433,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 			self:loadList(f, no_default, res, new_mod or mod, loaded)
 		end,
 		loadList = function(f, new_mod)
-			return self:loadList(f, no_default, nil, new_mod or mod, loaded)
+			return self:loadList(f, no_default, nil, new_mod or mod, nil)
 		end,
 	}
 	setfenv(f, setmetatable(newenv, {__index=_G}))

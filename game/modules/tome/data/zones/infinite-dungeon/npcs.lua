@@ -17,9 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Do not use shades
-load("/data/general/npcs/shade.lua", function(e) e.rarity = nil end)
-
 -- Load all others
 load("/data/general/npcs/all.lua")
 load("/data/general/npcs/bone-giant.lua")
@@ -30,20 +27,20 @@ load("/data/general/npcs/ritch.lua")
 
 -- Load the bosses of all other zones
 local function loadOuter(file)
-	local oldload, oldloadif
-	oldload, load = load, function() end
-	oldloadif, loadIfNot = load, function() end
-	oldload(file, function(e)
+	local list = loadList(file, function(e)
 		if e.allow_infinite_dungeon and not e.rarity then
 			e.rarity = 25
 			e.on_die = nil
 			e.can_talk = nil
 			e.on_acquire_target = nil
-			print("========================= FOUND boss", e.name)
 		end
 	end)
-	load = oldload
-	loadIfNot = oldloadif
+	for i, e in ipairs(list) do
+		if e.allow_infinite_dungeon then
+			importEntity(e)
+			print("========================= Importing boss", e.name)
+		end
+	end
 end
 
 for i, zone in ipairs(fs.list("/data/zones/")) do
