@@ -195,7 +195,7 @@ newEntity{ base = "BASE_POTION",
 	rarity = 7,
 	cost = 3,
 
-	use_simple = { name="cure poison", use = function(self, who)
+	use_simple = { name="cure diseases", use = function(self, who)
 		local target = who
 		local effs = {}
 		local known = false

@@ -33,7 +33,7 @@ newEntity{ base = "BASE_STAFF",
 	unided_name = "darkness infused staff",
 	level_range = {20, 25},
 	color=colors.VIOLET,
-	rarity = 100,
+	rarity = 170,
 	desc = [[This unique looking staff is carved with runes of destruction.]],
 	cost = 200,
 	material_level = 3,
@@ -52,6 +52,60 @@ newEntity{ base = "BASE_STAFF",
 			[DamageType.FIRE] = resolvers.mbonus(25, 8),
 			[DamageType.LIGHTNING] = resolvers.mbonus(25, 8),
 		},
+	},
+}
+
+newEntity{ base = "BASE_STAFF",
+	unique = true,
+	name = "Penitence",
+	unided_name = "glowing staff",
+	level_range = {10, 18},
+	color=colors.VIOLET,
+	rarity = 200,
+	desc = [[A powerful staff sent in secret to Angolwen by the Shaloren, to aid their fighting of the plagues following the Spellblaze.]],
+	cost = 200,
+	material_level = 2,
+
+	require = { stat = { mag=24 }, },
+	combat = {
+		dam = 10,
+		apr = 4,
+		dammod = {mag=1.2},
+		damtype = DamageType.ARCANE,
+	},
+	wielder = {
+		combat_spellpower = 15,
+		combat_spellcrit = 10,
+		resists = {
+			[DamageType.BLIGHT] = 30,
+		},
+	},
+	max_power = 60, power_regen = 1,
+	use_power = { name = "cure diseases", power = 50,
+		use = function(self, who)
+			local target = who
+			local effs = {}
+			local known = false
+
+			-- Go through all spell effects
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.type == "disease" then
+					effs[#effs+1] = {"effect", eff_id}
+				end
+			end
+
+			for i = 1, 3 + math.floor(who:getMag() / 10) do
+				if #effs == 0 then break end
+				local eff = rng.tableRemove(effs)
+
+				if eff[1] == "effect" then
+					target:removeEffect(eff[2])
+					known = true
+				end
+			end
+			game.logSeen(who, "%s is cured of diseases!", who.name:capitalize())
+		end
 	},
 }
 
@@ -159,6 +213,22 @@ newEntity{ base = "BASE_RING",
 			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.PHYSICAL, 100 + who:getMag() * 2)
 			game.logSeen(who, "%s uses the %s!", who.name:capitalize(), self:getName())
 		end
+	},
+}
+
+newEntity{ base = "BASE_RING",
+	unique = true,
+	name = "Feathersteel Amulet", color = colors.WHITE,
+	unided_name = "light amulet",
+	desc = [[The weight of the world seems a little lighter with this amulet around your neck.]],
+	level_range = {5, 15},
+	rarity = 200,
+	cost = 90,
+	material_level = 2,
+
+	wielder = {
+		max_encumber = 20,
+		fatigue = -20,
 	},
 }
 
@@ -1166,7 +1236,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 	desc = [[Beautifully detailed with images of King Toknor's defence of Last Hope. Despair fills the hearts of even the blackest villains at the sight of it.]],
 	color = colors.WHITE,
 	level_range = {45, 50},
-	rarity = 350,
+	rarity = 390,
 	require = { stat = { str=48 }, },
 	cost = 800,
 	material_level = 5,
@@ -1185,6 +1255,30 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 		stun_immune = 0.5,
 		knockback_immune = 0.5,
 		lite = 1,
+	},
+}
+
+newEntity{ base = "BASE_MASSIVE_ARMOR",
+	unique = true,
+	name = "Cuirass of the Thronesmen",
+	unided_name = "",
+	desc = [[This heavy dwarven-steel armour was created in the deepest forges of the Iron Throne. While it grants incomparable protection, it demands that you rely only on your own strength.]],
+	color = colors.WHITE,
+	level_range = {35, 40},
+	rarity = 320,
+	require = { stat = { str=44 }, },
+	cost = 500,
+	material_level = 4,
+	wielder = {
+		inc_stats = { [Stats.STAT_CON] = 6, },
+		resists = {
+			[DamageType.FIRE] = 25,
+		},
+		combat_def = 20,
+		combat_armor = 29,
+		stun_immune = 0.5,
+		knockback_immune = 0.5,
+		healing_factor = -0.4,
 	},
 }
 

@@ -36,7 +36,6 @@ return {
 			lite_room_chance = 20,
 			rooms = {"forest_clearing", {"money_vault",5}, {"pit",7}, {"greater_vault",8}},
 			rooms_config = {pit={filters={{subtype="orc"},{subtype="troll"}}}},
-			greater_vaults_list = {"dragon-loot"},
 			['.'] = "UNDERGROUND_FLOOR",
 			['#'] = {"UNDERGROUND_TREE","UNDERGROUND_TREE2","UNDERGROUND_TREE3","UNDERGROUND_TREE4","UNDERGROUND_TREE5","UNDERGROUND_TREE6","UNDERGROUND_TREE7","UNDERGROUND_TREE8","UNDERGROUND_TREE9","UNDERGROUND_TREE10","UNDERGROUND_TREE11","UNDERGROUND_TREE12","UNDERGROUND_TREE13","UNDERGROUND_TREE14","UNDERGROUND_TREE15","UNDERGROUND_TREE16","UNDERGROUND_TREE17","UNDERGROUND_TREE18","UNDERGROUND_TREE19","UNDERGROUND_TREE20",},
 			up = "UP",
