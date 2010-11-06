@@ -62,7 +62,7 @@ end
 function _M:generateOne()
 	local m
 	if not self.level.balroged and self.level.turn_counter < 100 * 10 then
-		m = self.zone:makeEntityByName(self.level, "actor", "CORRUPTED_BALROG")
+		m = self.zone:makeEntityByName(self.level, "actor", "CORRUPTED_DAELACH")
 		self.level.balroged = true
 	else
 		m = self.zone:makeEntity(self.level, "actor", {type="demon"}, nil, true)

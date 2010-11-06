@@ -24,8 +24,8 @@ return {
 	max_level = 1000000000,
 	actor_adjust_level = function(zone, level, e) return math.floor((zone.base_level + level.level-1) * 1.7) + e:getRankLevelAdjust() + rng.range(-1,2) end,
 	width = 70, height = 70,
-	all_remembered = true,
-	all_lited = true,
+--	all_remembered = true,
+--	all_lited = true,
 --	persistant = "zone",
 	ambiant_music = "Swashing the buck.ogg",
 	generator =  {
@@ -55,6 +55,7 @@ return {
 		},
 	},
 	post_process = function(level)
+		-- Everything hates you in the infinite dungeon!
 		for uid, e in pairs(level.entities) do e.faction="enemies" end
 	end,
 }

@@ -22,9 +22,9 @@ load("/data/general/npcs/major-demon.lua", rarity(3))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ define_as = "CORRUPTED_BALROG",
+newEntity{ define_as = "CORRUPTED_DAELACH",
 	type = "demon", subtype = "major", unique = true,
-	name = "Corrupted Balrog",
+	name = "Corrupted Daelach",
 	display = "U", color=colors.VIOLET,
 	desc = [[Shadow and flames. The huge beast of fire moves speedily toward you, its huge shadowy wings deployed.]],
 	level_range = {40, 55}, exp_worth = 2,
