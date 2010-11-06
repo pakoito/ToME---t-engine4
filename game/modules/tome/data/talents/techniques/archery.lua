@@ -168,6 +168,7 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 30,
 	require = techs_dex_req1,
+	no_npc_use = true,
 	on_kill = function(self, t, who)
 		-- Can not work without a correct weapon
 		if not self:getInven("MAINHAND") then return nil end

@@ -722,6 +722,8 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
+	if self.on_takehit then value = self:check("on_takehit", value, src) end
+
 	return value
 end
 

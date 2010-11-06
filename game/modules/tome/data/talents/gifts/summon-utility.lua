@@ -323,6 +323,7 @@ newTalent{
 	cooldown = 10,
 	range = 20,
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)

@@ -50,6 +50,7 @@ newTalent{
 		MOVE = 10,
 	},
 	range = 20,
+	no_npc_use = true,
 	action = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE]
 		if not eff then
@@ -80,6 +81,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	negative_sustain = 20,
+	no_npc_use = true,
 	tactical = {
 		MOVE = 10,
 	},
@@ -156,6 +158,7 @@ newTalent{
 	},
 	requires_target = true,
 	range = 10,
+	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)

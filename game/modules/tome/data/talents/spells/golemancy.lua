@@ -76,6 +76,7 @@ newTalent{
 	points = 1,
 	cooldown = 20,
 	mana = 10,
+	no_npc_use = true,
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
@@ -173,6 +174,7 @@ newTalent{
 	range = 10,
 	mana = 5,
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -207,6 +209,7 @@ newTalent{
 	range = 10,
 	mana = 5,
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -264,6 +267,7 @@ newTalent{
 	range = 10,
 	mana = 5,
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -319,6 +323,7 @@ newTalent{
 	points = 5,
 	mana = 10,
 	cooldown = 20,
+	no_npc_use = true,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then

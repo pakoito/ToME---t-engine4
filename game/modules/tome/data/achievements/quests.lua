@@ -137,3 +137,7 @@ newAchievement{
 	name = "Arachnophobia", id = "SPYDRIC_INFESTATION",
 	desc = [[Destroyed the spydric menace.]],
 }
+newAchievement{
+	name = "Clone War", id = "SHADOW_CLONE",
+	desc = [[Destroyed your own Shade.]],
+}

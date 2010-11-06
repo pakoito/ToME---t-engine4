@@ -43,3 +43,26 @@ newEntity{
 		return true
 	end,
 }
+
+newEntity{
+	name = "Shadow Crypt",
+	type = "hostile", subtype = "special", unique = true,
+	level_range = {34, 45},
+	rarity = 6,
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Entrance to a dark crypt",
+			display='>', color=colors.GREY,
+			notice = true,
+			change_level=1, change_zone="shadow-crypt"
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to a dark crypt. Fetid wind seems to come out of it.")
+		return true
+	end
+}

@@ -26,6 +26,7 @@ newTalent{
 		return math.ceil(5 + self:getDex(12))
 	end,
 	mana = 30,
+	no_npc_use = true,
 	make_gem = function(self, t, base_define)
 		local nb = rng.range(40, 80)
 		local gem = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_" .. base_define)
@@ -63,6 +64,7 @@ newTalent{
 	points = 5,
 	mana = 5,
 	cooldown = 20,
+	no_npc_use = true,
 	action = function(self, t)
 		self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
 			self:removeObject(inven, item)
@@ -89,6 +91,7 @@ newTalent{
 	points = 5,
 	mana = 80,
 	cooldown = 100,
+	no_npc_use = true,
 	action = function(self, t)
 		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
 			self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)
@@ -115,6 +118,7 @@ newTalent{
 	mana = 20,
 	points = 5,
 	range = 1,
+	no_npc_use = true,
 	action = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
 		if not ammo or ammo:getNumber() < 5 then

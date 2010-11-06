@@ -541,5 +541,11 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
+  <object name="Shadow crypt" x="4357" y="1381" width="284" height="407">
+   <properties>
+    <property name="subtype" value="&quot;shadow-crypt&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

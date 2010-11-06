@@ -58,6 +58,7 @@ newTalent{
 	mana = 15,
 	cooldown = 10,
 	no_energy = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=100, requires_knowledge=false}
 		x, y = self:getTarget(tg)
@@ -92,6 +93,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 20,
 	cooldown = 20,
+	no_npc_use = true,
 	action = function(self, t)
 		self:magicMap(5 + self:combatTalentSpellDamage(t, 2, 12))
 		game:playSoundNear(self, "talents/spell_generic")

@@ -61,6 +61,16 @@ newAI("target_player_radius", function(self)
 	end
 end)
 
+-- Target the player if within sense radius or if in sight
+newAI("target_simple_or_player_radius", function(self)
+	if self:runAI("target_simple") then return true end
+
+	if core.fov.distance(self.x, self.y, game.player.x, game.player.y) < self.ai_state.sense_radius then
+		self.ai_target.actor = game.player
+		return true
+	end
+end)
+
 -- Special targetting for charred scar, select a normal target, if none is found go for the player
 newAI("charred_scar_target", function(self)
 	if self:runAI("target_simple") then return true end

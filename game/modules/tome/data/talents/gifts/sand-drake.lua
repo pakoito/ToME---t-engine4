@@ -30,6 +30,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -68,6 +69,7 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = 20,
+	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t) / 2, talent=t, no_restrict=true}
 		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=self:combatDamage() * 0.8, dist=4})

@@ -686,7 +686,7 @@ function _M:setupCommands()
 				a.faction = "enemies"
 				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
 --]]
---				self.state:generateRandart(false)
+				self:changeLevel(3, "shadow-crypt")
 			end
 		end,
 	}

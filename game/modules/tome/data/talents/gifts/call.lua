@@ -25,6 +25,7 @@ newTalent{
 	message = "@Source@ meditates on nature.",
 	cooldown = 150,
 	range = 20,
+	no_npc_use = true,
 	action = function(self, t)
 		local seen = false
 		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
@@ -89,6 +90,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 	cooldown = 20,
 	range = 1,
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local tg = {default_target=self, type="hit", nowarning=true, range=self:getTalentRange(t), first_target="friend"}
 		local x, y, target = self:getTarget(tg)
@@ -117,6 +119,7 @@ newTalent{
 	cooldown = 10,
 	range = 100,
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=math.ceil(3 + self:getTalentLevel(t))}
 		if not x then return nil end

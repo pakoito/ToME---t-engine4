@@ -66,6 +66,7 @@ newTalent{
 	range = 10,
 	mana = 5,
 	requires_target = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -119,6 +120,7 @@ newTalent{
 	points = 5,
 	mana = 40,
 	cooldown = 60,
+	no_npc_use = true,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then

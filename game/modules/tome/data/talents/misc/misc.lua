@@ -125,6 +125,7 @@ newTalent{
 	name = "Teleport: Angolwen",
 	type = {"base/class", 1},
 	cooldown = 1000,
+	no_npc_use = true,
 	no_silence=true, is_spell=true,
 	action = function(self, t)
 		if not self:canBe("worldport") then

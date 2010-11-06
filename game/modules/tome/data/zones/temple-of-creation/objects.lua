@@ -26,7 +26,7 @@ local DamageType = require "engine.DamageType"
 
 newEntity{ base = "BASE_LITE",
 	define_as = "ELDRITCH_PEARL",
-	name = "", unique=true,
+	name = "Eldritch Pearl", unique=true,
 	display ='*', color = colors.AQUAMARINE,
 	desc = [[Thousands of years spent inside the temple of creation have infused this pearl with the fury of rushing water. It pulses light.]],
 
