@@ -547,7 +547,7 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Infinite Dungeon" x="1499" y="197" width="124" height="85">
+  <object name="Infinite Dungeon" x="1503" y="109" width="186" height="169">
    <properties>
     <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
@@ -565,13 +565,13 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Infinite Dungeon" x="735" y="101" width="124" height="85">
+  <object name="Infinite Dungeon" x="735" y="101" width="216" height="149">
    <properties>
     <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Infinite Dungeon" x="1897" y="1353" width="212" height="147">
+  <object name="Infinite Dungeon" x="1893" y="1317" width="216" height="185">
    <properties>
     <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
