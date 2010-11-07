@@ -148,7 +148,7 @@ newEntity{ base = "BASE_NPC_XORN", define_as="TEST",
 newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
 	name = "Harkor'Zun", color=colors.VIOLET, unique=true,
 	desc = [[A gigantic demon composed of elemental Earth resembling a twisted Xarn but much much larger.  It doesn't seem pleased with your presence.]],
-	level_range = {30, nil}, exp_worth = 2,
+	level_range = {23, nil}, exp_worth = 2,
 	rank = 3.5,
 	size_category = 5,
 	autolevel = "warriormage",
@@ -172,4 +172,10 @@ newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
 		[Talents.T_STONE_SKIN]=5,
 	},
 	resolvers.sustains_at_birth(),
+
+	on_die = function(self)
+		if profile.mod.allow_build.mage then
+			game:setAllowedBuild("mage_geomancer", true)
+		end
+	end,
 }
