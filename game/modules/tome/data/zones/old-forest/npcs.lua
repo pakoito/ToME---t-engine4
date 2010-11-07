@@ -30,13 +30,12 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of trollshaws, no "rarity" field means it will not be randomly generated
-newEntity{ define_as = "WILLOWRATH",
+newEntity{ define_as = "WRATHROOT",
 	allow_infinite_dungeon = true,
 	type = "giant", subtype = "huorn", unique = true,
-	name = "Willowrath",
+	name = "Wrathroot",
 	display = "#", color=colors.OLIVE_DRAB,
-	desc = [[The ancient grey willow tree, ruler of the Old Forest. He despises
-	trespassers in his territory.]],
+	desc = [[The ancient grey willow tree, ruler of the Old Forest. He despises trespassers in his territory.]],
 	level_range = {12, 35}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,

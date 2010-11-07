@@ -53,8 +53,8 @@ end, },
 function(self)
 	self.nb = (self.nb or 0) + 1
 	if self.nb < 6 then
-		self.ps:emit(6*tiles)
+		self.ps:emit(9*tiles)
 	end
 end,
-14*30*tiles,
+32*9*tiles,
 "particle_cloud"

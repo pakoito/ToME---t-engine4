@@ -24,8 +24,8 @@ return {
 	max_level = 1,
 	actor_adjust_level = function(zone, level, e) return math.floor((zone.base_level + level.level-1) * 1.2) + e:getRankLevelAdjust() + rng.range(-1,2) end,
 	width = 50, height = 50,
-	all_remembered = true,
-	all_lited = true,
+--	all_remembered = true,
+--	all_lited = true,
 	ambiant_music = "Far Away.ogg",
 	generator =  {
 		map = {
