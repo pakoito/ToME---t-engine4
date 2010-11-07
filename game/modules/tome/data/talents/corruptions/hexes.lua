@@ -28,7 +28,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=2, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
@@ -58,7 +58,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=2, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
@@ -88,7 +88,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=2, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
