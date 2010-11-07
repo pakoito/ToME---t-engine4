@@ -17,9 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/lore/trollshaws.lua")
-load("/data/lore/daikara.lua")
-load("/data/lore/tol-falas.lua")
-load("/data/lore/infinite-dungeon.lua")
-load("/data/lore/sunwall.lua")
-load("/data/lore/spellhunt.lua")
+load("/data/general/traps/elemental.lua")
+load("/data/general/traps/alarm.lua")
+load("/data/general/traps/natural_forest.lua")

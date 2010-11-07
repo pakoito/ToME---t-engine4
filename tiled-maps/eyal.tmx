@@ -547,5 +547,35 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
+  <object name="Infinite Dungeon" x="1499" y="197" width="124" height="85">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="2401" y="195" width="122" height="119">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="1953" y="259" width="124" height="85">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="735" y="101" width="124" height="85">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="1897" y="1353" width="212" height="147">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

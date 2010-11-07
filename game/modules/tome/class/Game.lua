@@ -687,7 +687,7 @@ function _M:setupCommands()
 				a.faction = "enemies"
 				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
 --]]
-				self:changeLevel(3, "shadow-crypt")
+				self:changeLevel(1, "ruined-dungeon")
 			end
 		end,
 	}

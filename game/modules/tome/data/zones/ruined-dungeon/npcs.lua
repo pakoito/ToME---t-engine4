@@ -17,9 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/lore/trollshaws.lua")
-load("/data/lore/daikara.lua")
-load("/data/lore/tol-falas.lua")
-load("/data/lore/infinite-dungeon.lua")
-load("/data/lore/sunwall.lua")
-load("/data/lore/spellhunt.lua")
+-- Load all others
+load("/data/general/npcs/all.lua")
+load("/data/general/npcs/bone-giant.lua")
+load("/data/general/npcs/faeros.lua")
+load("/data/general/npcs/gwelgoroth.lua")
+load("/data/general/npcs/mummy.lua")
+load("/data/general/npcs/ritch.lua")

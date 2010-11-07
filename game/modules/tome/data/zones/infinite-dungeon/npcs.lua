@@ -45,5 +45,5 @@ end
 
 for i, zone in ipairs(fs.list("/data/zones/")) do
 	local file = "/data/zones/"..zone.."/npcs.lua"
-	if fs.exists(file) and zone ~= "infinite-dungeon" then loadOuter(file) end
+	if fs.exists(file) and not zone:find("infinite%-dungeon") then loadOuter(file) end
 end

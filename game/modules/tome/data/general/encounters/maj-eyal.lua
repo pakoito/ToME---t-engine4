@@ -150,180 +150,26 @@ newEntity{
 	end,
 }
 
---[[
 newEntity{
-	name = "Departing Elves",
+	name = "Ruined Dungeon",
 	type = "harmless", subtype = "special", unique = true,
-	level_range = {30, 50},
+	level_range = {10, 30},
 	rarity = 1,
-	coords = {{ x=0, y=0, w=100, h=100}},
+	on_world_encounter = "infinite-dungeon",
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.NPC.new{
-			name="Merwionna, Elven camp leader",
-			type="humanoid", subtype="elf", faction="shaloren",
-			display='@', color=colors.LIGHT_BLUE,
-			can_talk = "ringil-exchange",
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Entrance to a ruined dungeon",
+			display='>', color={r=255, g=0, b=0},
+			notice = true,
+			change_level=1, change_zone="ruined-dungeon"
 		}
 		g:resolve() g:resolve(nil, true)
-		game.zone:addEntity(game.level, g, "actor", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You notice a small camp of travelling elves.")
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to a ruined dungeon. The air around it feels stale.")
 		return true
 	end,
 }
-]]
----------------------------- Hostiles -----------------------------
-
--- Ambushed!
---[[
-newEntity{
-	name = "Bear ambush",
-	type = "hostile", subtype = "ambush",
-	level_range = {10, 50},
-	rarity = 8,
-	coords = {{ x=0, y=0, w=40, h=40}},
-	on_encounter = function(self, who)
-		local zone = engine.Zone.new("ambush", {
-			name = "Ambush!",
-			level_range = {1, 50},
-			level_scheme = "player",
-			max_level = 1,
-			actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-			width = 20, height = 20,
-			all_lited = true,
-			ambiant_music = "last",
-			generator =  {
-				map = {
-					class = "engine.generator.map.Heightmap",
-					floor = "GRASS",
-					up = "UP_WILDERNESS",
-				},
-				actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
-				trap = { class = "engine.generator.trap.Random", nb_trap = {0, 0}, },
-			},
-
-			npc_list = mod.class.NPC:loadList("/data/general/npcs/bear.lua"),
-			grid_list = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua"},
-			object_list = mod.class.Object:loadList("/data/general/objects/general.lua"),
-			trap_list = {},
-		})
-		game:changeLevel(1, zone)
-		engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed by bears!")
-		return true
-	end,
-}
-
-newEntity{
-	name = "bandits ambush",
-	type = "hostile", subtype = "ambush",
-	level_range = {5, 50},
-	rarity = 8,
-	coords = {{ x=0, y=0, w=40, h=40}},
-	on_encounter = function(self, who)
-		local zone = engine.Zone.new("ambush", {
-			name = "Ambush!",
-			level_range = {1, 50},
-			level_scheme = "player",
-			max_level = 1,
-			actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-			width = 20, height = 20,
-			all_lited = true,
-			ambiant_music = "last",
-			generator =  {
-				map = {
-					class = "engine.generator.map.Heightmap",
-					floor = "GRASS",
-					up = "UP_WILDERNESS",
-				},
-				actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
-				trap = { class = "engine.generator.trap.Random", nb_trap = {0, 0}, },
-			},
-
-			npc_list = mod.class.NPC:loadList("/data/general/npcs/thieve.lua"),
-			grid_list = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua"},
-			object_list = mod.class.Object:loadList("/data/general/objects/general.lua"),
-			trap_list = {},
-		})
-		game:changeLevel(1, zone)
-		engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed by a party of bandits!")
-		return true
-	end,
-}
-
-newEntity{
-	name = "Snake ambush",
-	type = "hostile", subtype = "ambush",
-	level_range = {3, 50},
-	rarity = 5,
-	coords = {{ x=0, y=0, w=40, h=40}},
-	on_encounter = function(self, who)
-		local zone = engine.Zone.new("ambush", {
-			name = "Ambush!",
-			level_range = {1, 50},
-			level_scheme = "player",
-			max_level = 1,
-			actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-			width = 20, height = 20,
-			all_lited = true,
-			ambiant_music = "last",
-			generator =  {
-				map = {
-					class = "engine.generator.map.Heightmap",
-					floor = "GRASS",
-					up = "UP_WILDERNESS",
-				},
-				actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
-				trap = { class = "engine.generator.trap.Random", nb_trap = {0, 0}, },
-			},
-
-			npc_list = mod.class.NPC:loadList("/data/general/npcs/snake.lua"),
-			grid_list = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua"},
-			object_list = mod.class.Object:loadList("/data/general/objects/general.lua"),
-			trap_list = {},
-		})
-		game:changeLevel(1, zone)
-		engine.ui.Dialog:simplePopup("Ambush!", "You setp in a nest of snakes!")
-		return true
-	end,
-}
-newEntity{
-	name = "Ant ambush",
-	type = "hostile", subtype = "ambush",
-	level_range = {3, 50},
-	rarity = 5,
-	coords = {{ x=0, y=0, w=40, h=40}},
-	on_encounter = function(self, who)
-		local zone = engine.Zone.new("ambush", {
-			name = "Ambush!",
-			level_range = {1, 50},
-			level_scheme = "player",
-			max_level = 1,
-			actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-			width = 50, height = 50,
-			all_lited = true,
-			all_remembered = true,
-			ambiant_music = "last",
-			generator =  {
-				map = {
-					class = "engine.generator.map.GOL",
-					floor = "GRASS",
-					wall = "TREE",
-					up = "UP_WILDERNESS",
-				},
-				actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
-				trap = { class = "engine.generator.trap.Random", nb_trap = {0, 0}, },
-			},
-
-			npc_list = mod.class.NPC:loadList("/data/general/npcs/ant.lua"),
-			grid_list = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua"},
-			object_list = mod.class.Object:loadList("/data/general/objects/general.lua"),
-			trap_list = {},
-		})
-		game:changeLevel(1, zone)
-		engine.ui.Dialog:simplePopup("Ambush!", "You step in a nest of ants!")
-		return true
-	end,
-}
-]]

@@ -158,5 +158,5 @@ function _M:pickSpot(filter)
 	for i, spot in ipairs(self.spots) do
 		if game.zone:checkFilter(spot, filter) then list[#list+1] = spot end
 	end
-	return rng.table(list)
+	return rng.table(list), list
 end

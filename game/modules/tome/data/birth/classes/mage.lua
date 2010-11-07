@@ -286,9 +286,9 @@ newBirthDescriptor{
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
 		["spell/arcane"]={true, 0.2},
-		["spell/earth"]={true, 0.3},
+		["spell/earth"]={true, 0.2},
 		["spell/storm"]={true, 0.4},
-		["spell/air"]={true, 0.2},
+		["spell/air"]={true, 0.3},
 		["spell/phantasm"]={true, 0.3},
 		["spell/temporal"]={false, 0.3},
 		["spell/meta"]={false, 0.3},
