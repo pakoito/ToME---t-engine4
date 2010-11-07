@@ -138,6 +138,7 @@ function _M:generateRandart(add)
 	local name = o.name.." '"..ng:generate().."'"
 	o.define_as = name:upper():gsub("[^A-Z]", "_")
 
+	o.unided_name = "glowing "..o.unided_name
 	o.unique = name
 	o.randart = true
 	o.no_unique_lore = true
