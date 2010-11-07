@@ -661,6 +661,8 @@ function _M:playerUseItem(object, item, inven)
 						self:sortInven(self:getInven(inven))
 					end
 				end
+				self:breakStealth()
+				self:breakLightningSpeed()
 				return true
 			end
 
