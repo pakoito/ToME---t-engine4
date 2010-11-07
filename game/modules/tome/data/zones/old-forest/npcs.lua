@@ -34,7 +34,7 @@ newEntity{ define_as = "WRATHROOT",
 	allow_infinite_dungeon = true,
 	type = "giant", subtype = "huorn", unique = true,
 	name = "Wrathroot",
-	display = "#", color=colors.OLIVE_DRAB,
+	display = "#", color=colors.VIOLET,
 	desc = [[The ancient grey willow tree, ruler of the Old Forest. He despises trespassers in his territory.]],
 	level_range = {12, 35}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
@@ -52,7 +52,7 @@ newEntity{ define_as = "WRATHROOT",
 	resists = { [DamageType.FIRE] = -50 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="WILLOWRATH_SHIELD", random_art_replace={chance=75}, autoreq=true}, },
+	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="WRATHROOT_SHIELD", random_art_replace={chance=75}, autoreq=true}, },
 	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{

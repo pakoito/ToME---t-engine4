@@ -18,3 +18,14 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+for i = 1, 5 do
+newEntity{ base = "BASE_SCROLL",
+	define_as = "NOTE"..i,
+	name = "journal page", lore="old-forest-note-"..i,
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}
+end

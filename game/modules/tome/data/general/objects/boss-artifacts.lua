@@ -279,9 +279,9 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	define_as = "WILLOWRATH_SHIELD",
-	name = "Willowrath's Barkwood", unique=true,
-	desc = [[The barkwood of the Willowrath, made into roughly the shape of a shield.]],
+	define_as = "WRATHROOT_SHIELD",
+	name = "Wrathroot's Barkwood", unique=true,
+	desc = [[The barkwood of Wrathroot, made into roughly the shape of a shield.]],
 	require = { stat = { str=25 }, },
 	level_range = {12, 2},
 	rarity = 200,

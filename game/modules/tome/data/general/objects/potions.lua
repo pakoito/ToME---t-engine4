@@ -265,7 +265,7 @@ newEntity{ base = "BASE_POTION",
 	color = colors.YELLOW,
 	level_range = {15, 40},
 	rarity = 10,
-	cost = 1.5,
+	cost = 10,
 
 	use_simple = { name="become invisible for a while", use = function(self, who)
 		who:setEffect(who.EFF_INVISIBILITY, 5 + who:getMag(10), {power=10 + who:getMag(5)})

@@ -73,6 +73,9 @@ return {
 	post_process = function(level)
 		local Map = require "engine.Map"
 		level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
+
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
 	end,
 
 	foreground = function(level, x, y)

@@ -19,7 +19,8 @@
 
 load("/data/lore/trollshaws.lua")
 load("/data/lore/daikara.lua")
-load("/data/lore/tol-falas.lua")
+load("/data/lore/old-forest.lua")
 load("/data/lore/infinite-dungeon.lua")
+load("/data/lore/tol-falas.lua")
 load("/data/lore/sunwall.lua")
 load("/data/lore/spellhunt.lua")
