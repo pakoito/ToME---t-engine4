@@ -1745,4 +1745,5 @@ function _M:addedToLevel(level, x, y)
 		end
 		self.make_escort = nil
 	end
+	self:check("on_added_to_level", level, x, y)
 end

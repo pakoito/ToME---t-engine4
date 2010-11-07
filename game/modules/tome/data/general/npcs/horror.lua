@@ -76,7 +76,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 	end,
 }
 
-newEntity{ base="BASE_NPC_HORROR", define_as = "TEST",
+newEntity{ base="BASE_NPC_HORROR",
 	name = "Grgglck the Devouring Darkness", unique = true,
 	color = colors.DARK_GREY,
 	rarity = 50,

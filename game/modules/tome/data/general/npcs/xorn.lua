@@ -84,3 +84,92 @@ newEntity{ base = "BASE_NPC_XORN",
 	combat = { damtype=DamageType.ACID },
 	resolvers.talents{ [Talents.T_CONSTRICT]=4, [Talents.T_RUSH]=2, },
 }
+
+newEntity{ base = "BASE_NPC_XORN", define_as="TEST",
+	name = "The Fragmented Essence of Harkor'Zun", color=colors.VIOLET, unique=true,
+	desc = [[Fragmented essence...  maybe it'd be best if it stayed fragmented.]],
+	level_range = {17, nil}, exp_worth = 0,
+	rank = 3.5,
+	size_category = 4,
+	rarity = 50,
+	max_life = 230, life_rating = 12,
+	combat_armor = 15, combat_def = 10,
+	combat = { damtype=DamageType.ACID },
+
+	stun_immune = 1,
+
+	-- Come in 5!
+	on_added_to_level = function(self)
+		self.add_max_life = self.max_life * 0.2
+		local all = {[self]=true}
+		for i = 1, 4 do
+			local x, y = util.findFreeGrid(self.x, self.y, 15, true, {[engine.Map.ACTOR]=true})
+			if x and y then
+				local m = self:clone()
+				m.on_added_to_level = nil
+				m.x, m.y = nil, nil
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				all[m] = true
+			end
+		end
+		for m, _ in pairs(all) do m.all_fragments = all end
+	end,
+	on_die = function(self, who)
+		local nb_alive = 0
+		-- Buf others
+		for m, _ in pairs(self.all_fragments) do
+			if not m.dead then
+				nb_alive = nb_alive + 1
+				game.logSeen(self, "#AQUAMARINE#%s absorbs the energy of the destroyed fragment!", self.name)
+				m.max_life = m.max_life + m.add_max_life
+				m:heal(m.add_max_life)
+				m.inc_damage.all = (m.inc_damage.all or 0) + 20
+			end
+		end
+		-- Only one left?
+		if nb_alive == 1 then
+			local x, y
+			for m, _ in pairs(self.all_fragments) do
+				if not m.dead then x, y = m.x, m.y; m:die(who) end
+			end
+			local m = game.zone:makeEntityByName(game.level, "actor", "FULL_HARKOR_ZUN")
+			if m then
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				game.level.map:particleEmitter(x, y, 1, "teleport")
+				game.logSeen(self, "#AQUAMARINE#%s is infused with all the energies of the fragments. The real Harkor'Zun is reconstitued!", m.name)
+			end
+		end
+	end,
+
+	resolvers.talents{ [Talents.T_CONSTRICT]=4, [Talents.T_RUSH]=2, },
+}
+
+-- Does not appear randomly, it is summoned by killing the fragments
+newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
+	name = "Harkor'Zun", color=colors.VIOLET, unique=true,
+	desc = [[A gigantic demon composed of elemental Earth resembling a twisted Xarn but much much larger.  It doesn't seem pleased with your presence.]],
+	level_range = {30, nil}, exp_worth = 2,
+	rank = 3.5,
+	size_category = 5,
+	autolevel = "warriormage",
+	stats = { str=20, dex=8, mag=25, con=16 },
+	max_life = 460, life_rating=24,
+	combat_armor = 20, combat_def = 10,
+	combat = { dam=resolvers.mbonus(46, 30), atk=35, apr=18, dammod={str=1}, damtype=DamageType.ACID },
+
+	silence_immune = 1,
+	stun_immune = 1,
+	demon = 1,
+	resolvers.drops{chance=100, nb=1, {unique=true} },
+	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_CONSTRICT]=4,
+		[Talents.T_RUSH]=4,
+		[Talents.T_EARTHQUAKE]=5,
+		[Talents.T_STALACTITIC_MISSILES]=5,
+		[Talents.T_CRYSTALLINE_FOCUS]=5,
+		[Talents.T_STONE_SKIN]=5,
+	},
+	resolvers.sustains_at_birth(),
+}
