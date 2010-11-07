@@ -30,7 +30,7 @@ I am Linaniil of the Kar'Krul. Welcome to our city, @playerdescriptor.subclass@.
 newChat{ id="save-derth",
 	text = [[Yes we have noticed the devastation that happened there. I have sent some friends to dispose of the cloud but the real threat is not there.
 We know who created this abomination: Urkis. He is a Tempest, a powerful archmage who can control the storms.
-A few years ago he has gone rogue, cutting himself from Angolwen. He remained quiet so we were reluctant to go against him openly, but it seems we have no choice now.
+A few years ago he went rogue, cutting himself from Angolwen. He remained quiet so we were reluctant to go against him openly, but it seems we have no choice now.
 The removal of the cloud will take much time, in the meanwhile we can, if you are willing, send you to Urkis lair to try stop him.
 I will not lie to you, we can send you there but this could be a death trap, and we have no way of knowing if there is a way for you to exit his lair as he lives on top of a tall peak in the Daikara mountains.]],
 	answers = {

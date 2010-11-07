@@ -99,7 +99,7 @@ end
 teleport_urkis = function(self)
 	game:changeLevel(1, "tempest-peak")
 	require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[You step out on unfamiliar grounds, you are nearly on top of one of the highest peaks you can see.
-The storm is raging of your head.]], 400)
+The storm is raging above your head.]], 400)
 end
 
 reenter_derth = function(self)
