@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_dungeon32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_dungeon32.gif" width="288" height="320"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="#"/>
+    <property name="value" value="&quot;WALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="+"/>
+    <property name="value" value="&quot;DOOR&quot;"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="display" value="&lt;"/>
+    <property name="value" value="&quot;UP_WILDERNESS&quot;"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="display" value="!"/>
+    <property name="value" value="&quot;LOCK&quot;"/>
+   </properties>
+  </tile>
+  <tile id="51">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;OLD_FLOOR&quot;"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="*"/>
+    <property name="value" value="&quot;PORTAL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="70">
+   <properties>
+    <property name="display" value="&gt;"/>
+    <property name="value" value="&quot;INFINITE&quot;"/>
+   </properties>
+  </tile>
+  <tile id="75">
+   <properties>
+    <property name="display" value="&amp;"/>
+    <property name="value" value="&quot;OLD_WALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="84">
+   <properties>
+    <property name="display" value="&gt;"/>
+    <property name="value" value="&quot;INFINITE&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="91" name="dg_features32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_features32.gif" width="288" height="416"/>
+ </tileset>
+ <tileset firstgid="208" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="1"/>
+    <property name="value" value="&quot;LORE1&quot;"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="2"/>
+    <property name="value" value="&quot;LORE2&quot;"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="3"/>
+    <property name="value" value="&quot;LORE3&quot;"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="4"/>
+    <property name="value" value="&quot;LORE4&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2YS27DMAxEla1XOUPPUMBHyCaHb5MLFV4EMBRT/MxQagwtCMeGJfFxSErOpZRyAex+YDfhObJOtm3+fRtsckwOlON5Eo5P1UNjifSr1nwjWKI9dwTHnmWzr2LbNyQ/l4Nna5ADYdfGWWLL0APV0sKRnVesOKAcqNV+a3kr5fZSZP5sjrqWGHqM4GAwaBw9eifqv5Ujm4EVr5qj5z7GjsVoHybH5PgPdlTDjN49OeK+a+cS9LyG+KW9j+rRi6O1Tg+OiH7bO/vvN228R6/IO9F8XMv7f5hIbls5NJN8Wk+uB1IfGRxIfSB5Y6nzCGu2nYlDsh77IDrewmXVgxXDT+BoabkK8zIZmX5b4uYdn8nhWbfVO/ZajeJg5MFIPX5JHKx4ROdi9h6px7TuW3U4OobWa2t9r1+LUzdLDC3Xo99ejsgez+TQNIn6xOCQ9mKLDvt5X2eqh8On+psH5dB08dRGzdWymsMyRuOQdPH2qqy8stRcJPbomlGOH0cMmXHycHjyarNrgm8j7Q9PRrZcECcAAA==
+  </data>
+ </layer>
+ <objectgroup name="addSpot" width="50" height="50">
+  <object name="Portal" x="1349" y="261" width="21" height="21">
+   <properties>
+    <property name="subtype" value="portal"/>
+    <property name="type" value="portal"/>
+   </properties>
+  </object>
+  <object name="Portal" x="1446" y="869" width="21" height="21">
+   <properties>
+    <property name="subtype" value="portal"/>
+    <property name="type" value="portal"/>
+   </properties>
+  </object>
+  <object name="Portal" x="1476" y="1093" width="21" height="21">
+   <properties>
+    <property name="subtype" value="portal"/>
+    <property name="type" value="portal"/>
+   </properties>
+  </object>
+  <object name="Portal" x="100" y="1188" width="21" height="21">
+   <properties>
+    <property name="subtype" value="portal"/>
+    <property name="type" value="portal"/>
+   </properties>
+  </object>
+  <object name="Portal" x="100" y="420" width="21" height="21">
+   <properties>
+    <property name="subtype" value="portal"/>
+    <property name="type" value="portal"/>
+   </properties>
+  </object>
+  <object name="Portal" x="36" y="871" width="21" height="21">
+   <properties>
+    <property name="subtype" value="portal"/>
+    <property name="type" value="portal"/>
+   </properties>
+  </object>
+  <object name="Sealed door" x="677" y="261" width="22" height="22">
+   <properties>
+    <property name="subtype" value="&quot;sealed&quot;"/>
+    <property name="type" value="&quot;door&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="addZone" width="50" height="50" visible="0">
+  <object name="no teleport" x="518" y="5" width="339" height="278">
+   <properties>
+    <property name="subtype" value="no-teleport"/>
+    <property name="type" value="no-teleport"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Object" width="50" height="50">
+  <object name="loot" x="548" y="36" width="54" height="119">
+   <properties>
+    <property name="display" value="$"/>
+    <property name="value" value="{random_filter={add_levels=5,ego_chance=70}}"/>
+   </properties>
+  </object>
+  <object name="loot" x="773" y="36" width="54" height="119">
+   <properties>
+    <property name="display" value="$"/>
+    <property name="value" value="{random_filter={add_levels=5,ego_chance=70}}"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
