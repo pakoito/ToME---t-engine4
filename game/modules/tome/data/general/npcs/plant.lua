@@ -49,7 +49,7 @@ newEntity{ base = "BASE_NPC_PLANT",
 }
 
 newEntity{ base = "BASE_NPC_PLANT",
-	name = "huorn", color=colors.GREEN,
+	name = "treant", color=colors.GREEN,
 	desc = "A very strong near-sentient tree, which has become hostile to other living things.",
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 2,
