@@ -157,5 +157,11 @@
     <property name="value" value="{random_filter={add_levels=5,ego_chance=70}}"/>
    </properties>
   </object>
+  <object name="loot" x="674" y="97" width="24" height="25">
+   <properties>
+    <property name="display" value="%"/>
+    <property name="value" value="{random_filter={add_levels=5,unique=true}}"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
