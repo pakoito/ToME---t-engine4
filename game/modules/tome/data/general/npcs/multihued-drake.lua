@@ -131,7 +131,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	},
 }
 
-newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE", define_as="TEST",
+newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	unique = true,
 	name = "Ureslak the Prismatic", color=colors.VIOLET, display="D",
 	desc = [[A huge multi-hued drake. It seems to shift color rapidly.]],

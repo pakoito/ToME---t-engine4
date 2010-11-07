@@ -100,6 +100,9 @@ function _M:run()
 
 	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Maj'Eyal!")
 
+	-- List of stuff to do on tick end
+	self.on_tick_end = {}
+
 	-- Setup inputs
 	self:setupCommands()
 	self:setupMouse()
@@ -492,8 +495,21 @@ function _M:tick()
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
+
+	-- Run tick end stuff
+	if #self.on_tick_end > 0 then
+		for i = 1, #self.on_tick_end do self.on_tick_end[i]() end
+		self.on_tick_end = {}
+	end
+
 	if savefile_pipe.saving then self.player.changed = true end
 	if self.paused and not savefile_pipe.saving then return true end
+end
+
+--- Register things to do on tick end
+-- This is used for recall spells to let the tick finish before switching levels
+function _M:onTickEnd(f)
+	self.on_tick_end[#self.on_tick_end+1] = f
 end
 
 --- Called every game turns

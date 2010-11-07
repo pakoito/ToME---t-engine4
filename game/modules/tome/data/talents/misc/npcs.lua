@@ -1002,3 +1002,42 @@ newTalent{
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 170), 20 + self:getTalentLevel(t) * 10, self:combatTalentSpellDamage(t, 10, 220))
 	end,
 }
+
+newTalent{
+	name = "Invoke Tentacle",
+	type = {"wild-gift/other", 1},
+	cooldown = 1,
+	range = 20,
+	direct_hit = true,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+
+		-- Find space
+		local x, y = util.findFreeGrid(tx, ty, 3, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to invoke!")
+			return
+		end
+
+		-- Find an actor with that filter
+		local m = game.zone:makeEntityByName(game.level, "actor", "GRGGLCK_TENTACLE")
+		if m then
+			m.exp_worth = 0
+			m:resolve()
+
+			m.summoner = self
+			m.summon_time = 10
+
+			game.zone:addEntity(game.level, m, "actor", x, y)
+
+			game.logSeen(self, "%s spawns one of its tentacle!", self.name:capitalize())
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Invoke your tentacles on your victim.]])
+	end,
+}

@@ -1825,8 +1825,10 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		if self:canBe("worldport") then
-			game.logPlayer(self, "You are yanked out of this place!")
-			game:changeLevel(1, game.player.last_wilderness)
+			game:onTickEnd(function()
+				game.logPlayer(self, "You are yanked out of this place!")
+				game:changeLevel(1, game.player.last_wilderness)
+			end)
 		else
 			game.logPlayer(self, "Space restabilizes around you.")
 		end
@@ -1855,8 +1857,10 @@ newEffect{
 		end
 
 		if self:canBe("worldport") then
-			game.logPlayer(self, "You are yanked out of this place!")
-			game:changeLevel(1, "town-angolwen")
+			game:onTickEnd(function()
+				game.logPlayer(self, "You are yanked out of this place!")
+				game:changeLevel(1, "town-angolwen")
+			end)
 		else
 			game.logPlayer(self, "Space restabilizes around you.")
 		end

@@ -26,7 +26,7 @@ newLore{
 	category = "ruined dungeon",
 	name = "clue (ruined dungeon)",
 	lore = [[There is an inscription here:
-#{italic}#"The river flows in its bed of stone...#{normal}#]],
+#{italic}#The river flows in its bed of stone...#{normal}#]],
 }
 
 newLore{
@@ -35,7 +35,7 @@ newLore{
 	name = "clue (ruined dungeon)",
 	lore = [[There is an inscription here:
 #{italic}#...The feather flies gently in the wind.
-The tree's root run deep...#{normal}#]],
+The tree's roots run deep...#{normal}#]],
 }
 
 newLore{
