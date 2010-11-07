@@ -96,7 +96,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 }
 
 newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
-	name = "greater multi-hued wyrm", color=colors.VIOLET, display="D",
+	name = "greater multi-hued wyrm", color=colors.PURPLE, display="D",
 	desc = [[An old and powerful multi-hued drake, armed with many deadly breath weapons and nasty claws.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 8,
@@ -129,4 +129,72 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 		[Talents.T_LIGHTNING_BREATH]=13,
 		[Talents.T_ACID_BREATH]=13,
 	},
+}
+
+newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE", define_as="TEST",
+	unique = true,
+	name = "Ureslak the Prismatic", color=colors.VIOLET, display="D",
+	desc = [[A huge multi-hued drake. It seems to shift color rapidly.]],
+	level_range = {35, nil}, exp_worth = 2,
+	rarity = 50,
+	rank = 3.5,
+	max_life = resolvers.rngavg(320,350),
+	combat_armor = 33, combat_def = 40,
+	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(10, 5), [DamageType.COLD]=resolvers.mbonus(10, 5), [DamageType.LIGHTNING]=resolvers.mbonus(10, 5), [DamageType.ACID]=resolvers.mbonus(10, 5)},
+	combat = { dam=resolvers.rngavg(35,150), atk=resolvers.rngavg(25,130), apr=32, dammod={str=1.1} },
+
+	no_auto_resists = true,
+	color_switch = 2,
+	resists = { all=50, [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },
+	resolvers.talents{ [Talents.T_FIRE_BREATH]=15, [Talents.T_FLAME]=7 },
+
+	stats = { str=20, dex=20, mag=80, con=16 },
+
+	talent_cd_reduction={[Talents.T_MANATHRUST]=4},
+
+	colors = {
+		{"red", {
+			resists = { all=50, [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },
+			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_FIRE_BREATH]=15, [Talents.T_FLAME]=7 },
+		}},
+		{"white", {
+			resists = { all=50, [DamageType.COLD] = 100, [DamageType.FIRE] = -100 },
+			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_ICE_BREATH]=15, [Talents.T_ICE_SHARDS]=7 },
+		}},
+		{"blue", {
+			resists = { all=50, [DamageType.LIGHTNING] = 100, [DamageType.PHYSICAL] = -100 },
+			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_LIGHTNING_BREATH]=15, [Talents.T_SHOCK]=7 },
+		}},
+		{"green", {
+			resists = { all=50, [DamageType.NATURE] = 100, [DamageType.BLIGHT] = -100 },
+			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_POISON_BREATH]=15, [Talents.T_SPIT_POISON]=7 },
+		}},
+		{"dark", {
+			resists = { all=50, [DamageType.DARKNESS] = 100, [DamageType.LIGHT] = -100 },
+			talents = { [Talents.T_NEGATIVE_POOL]=1, [Talents.T_STARFALL]=7, [Talents.T_MOONLIGHT_RAY]=7 },
+		}},
+		{"violet", {
+			resists = { all=-50 },
+			talents = { [Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=12 },
+		}},
+	},
+
+	on_act = function(self)
+		self.color_switch = self.color_switch - 1
+		if self.color_switch <= 0 then
+			self.color_switch = 2
+			-- Reset cooldowns
+			self.talents_cd = {}
+			self:incEquilibrium(-100)
+			self:incMana(100)
+			self:incNegative(100)
+
+			-- Assign talents & resists
+			local t = rng.table(self.colors)
+			self.resists = t[2].resists
+			self.talents = t[2].talents
+			self.changed = true
+			game.logSeen(self, "#YELLOW#%s's skin turns %s!", self.name:capitalize(), t[1])
+		end
+	end,
 }

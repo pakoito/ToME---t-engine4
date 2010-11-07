@@ -51,7 +51,7 @@ newEntity{ base="BASE_NPC_BIRD", define_as = "NPC_PHOENIX",
 	max_mana = 1000,
 	mana_regen = 20,
 	life_regen = -15,
-	rank = 4,
+	rank = 3.5,
 	no_breath = 1,
 	size_category = 3,
 

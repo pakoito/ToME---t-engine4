@@ -248,6 +248,8 @@ function _M:act()
 	-- Ok reset the seen cache
 	self:resetCanSeeCache()
 
+	if self.on_act then self:on_act() end
+
 	return true
 end
 
@@ -406,6 +408,7 @@ function _M:getRankStatAdjust()
 	if self.rank == 1 then return -1
 	elseif self.rank == 2 then return -0.5
 	elseif self.rank == 3 then return 0
+	elseif self.rank == 3.5 then return 1
 	elseif self.rank == 4 then return 1
 	elseif self.rank >= 5 then return 1
 	else return 0
@@ -416,6 +419,7 @@ function _M:getRankLevelAdjust()
 	if self.rank == 1 then return -1
 	elseif self.rank == 2 then return 0
 	elseif self.rank == 3 then return 1
+	elseif self.rank == 3.5 then return 2
 	elseif self.rank == 4 then return 3
 	elseif self.rank >= 5 then return 4
 	else return 0
@@ -427,6 +431,7 @@ function _M:getRankLifeAdjust(value)
 	if self.rank == 1 then return value * (level_adjust - 0.2)
 	elseif self.rank == 2 then return value * (level_adjust - 0.1)
 	elseif self.rank == 3 then return value * (level_adjust + 0.1)
+	elseif self.rank == 3.5 then return value * (level_adjust + 0.3)
 	elseif self.rank == 4 then return value * (level_adjust + 0.3)
 	elseif self.rank >= 5 then return value * (level_adjust + 0.5)
 	else return 0
@@ -437,6 +442,7 @@ function _M:getRankResistAdjust()
 	if self.rank == 1 then return 0.4, 0.9
 	elseif self.rank == 2 then return 0.5, 1.5
 	elseif self.rank == 3 then return 0.8, 1.5
+	elseif self.rank == 3.5 then return 0.9, 1.5
 	elseif self.rank == 4 then return 0.9, 1.5
 	elseif self.rank >= 5 then return 0.9, 1.5
 	else return 0
@@ -448,6 +454,7 @@ function _M:TextRank()
 	if self.rank == 1 then rank, color = "critter", "#C0C0C0#"
 	elseif self.rank == 2 then rank, color = "normal", "#ANTIQUE_WHITE#"
 	elseif self.rank == 3 then rank, color = "elite", "#YELLOW#"
+	elseif self.rank == 3.5 then rank, color = "unique", "#SANDY_BROWN#"
 	elseif self.rank == 4 then rank, color = "boss", "#ORANGE#"
 	elseif self.rank >= 5 then rank, color = "elite boss", "#GOLD#"
 	end
@@ -795,14 +802,14 @@ function _M:die(src)
 			hateMessage = "#F53CBE#You have taken the life of an experienced foe!"
 		end
 
-		if self.rank == 3 then
-			-- elite bonus
-			hateGain = hateGain * 2
-			hateMessage = "#F53CBE#An elite foe has fallen to your hate!"
-		elseif self.rank >= 4 then
+		if self.rank >= 4 then
 			-- boss bonus
 			hateGain = hateGain * 4
 			hateMessage = "#F53CBE#Your hate has conquered a great adversary!"
+		elseif self.rank >= 3 then
+			-- elite bonus
+			hateGain = hateGain * 2
+			hateMessage = "#F53CBE#An elite foe has fallen to your hate!"
 		end
 		hateGain = math.min(hateGain, 10)
 
@@ -1490,6 +1497,7 @@ function _M:worthExp(target)
 		if self.rank == 1 then mult = 0.6
 		elseif self.rank == 2 then mult = 0.8
 		elseif self.rank == 3 then mult = 3
+		elseif self.rank == 3.5 then mult = 15
 		elseif self.rank == 4 then mult = 60
 		elseif self.rank >= 5 then mult = 120
 		end
@@ -1500,6 +1508,7 @@ function _M:worthExp(target)
 		if self.rank == 1 then mult = 2
 		elseif self.rank == 2 then mult = 2
 		elseif self.rank == 3 then mult = 3.5
+		elseif self.rank == 3.5 then mult = 5
 		elseif self.rank == 4 then mult = 6
 		elseif self.rank >= 5 then mult = 6.5
 		end
@@ -1644,6 +1653,7 @@ function _M:updateEffectDuration(dur, what)
 	-- Rank reduction: below elite = none; elite = 1, boss = 2, elite boss = 3
 	local rankmod = 0
 	if self.rank == 3 then rankmod = 25
+	elseif self.rank == 3.5 then rankmod = 40
 	elseif self.rank == 4 then rankmod = 45
 	elseif self.rank == 5 then rankmod = 75
 	end

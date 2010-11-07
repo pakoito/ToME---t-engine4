@@ -670,24 +670,8 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
---[[
-				local a = mod.class.NPC.new{}
-				a:replaceWith(self.player:cloneFull())
-				mod.class.NPC.castAs(a)
-				engine.interface.ActorAI.init(a, a)
-				a.no_drops = true
-				a.energy.value = 0
-				a.player = nil
-				a.rank = 4
-				a.name = "Shadow of "..a.name
-				a.color_r = 150 a.color_g = 150 a.color_b = 150
-				a._mo:invalidate()
-				a.ai = "dumb_talented_simple"
-				a.ai_state = {talent_in=1}
-				a.faction = "enemies"
-				self.zone:addEntity(self.level, a, "actor", self.player.x+1, self.player.y)
---]]
-				self:changeLevel(1, "ruined-dungeon")
+				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
+				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 			end
 		end,
 	}
