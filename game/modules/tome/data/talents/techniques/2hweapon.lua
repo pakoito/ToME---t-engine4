@@ -64,6 +64,8 @@ newTalent{
 		end
 
 		return {
+			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t))
+			pin = self:addTemporaryValue("pin_immune", 0.1 * self:getTalentLevel(t))
 			dam = self:addTemporaryValue("combat_dam", 5 + self:getStr(7) * self:getTalentLevel(t)),
 			atk = self:addTemporaryValue("combat_atk", 5 + self:getDex(7) * self:getTalentLevel(t)),
 			def = self:addTemporaryValue("combat_def", -10),
@@ -72,6 +74,8 @@ newTalent{
 	end,
 
 	deactivate = function(self, t, p)
+		self:removeTemporaryValue("stun_immune", p.stun)
+		self:removeTemporaryValue("pin_immune", p.pin)
 		self:removeTemporaryValue("combat_def", p.def)
 		self:removeTemporaryValue("combat_armor", p.armor)
 		self:removeTemporaryValue("combat_atk", p.atk)
@@ -79,8 +83,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enters an aggressive battle stance, increasing attack by %d and damage by %d at the cost of %d defense and %d armor.]]):
-		format(5 + self:getDex(7) * self:getTalentLevel(t), 5 + self:getStr(7) * self:getTalentLevel(t), -5 - 2 * (self:getTalentLevelRaw(t)-1), -5 - 2 * (self:getTalentLevelRaw(t)-1))
+		return ([[Enters an aggressive battle stance, increasing attack by %d and damage by %d at the cost of %d defense and %d armor.
+		While berserking you are naerly unstoppable, granting %d%% stun and pinning resistance.]]):
+		format(
+			5 + self:getDex(7) * self:getTalentLevel(t), 5 + self:getStr(7) * self:getTalentLevel(t), -5 - 2 * (self:getTalentLevelRaw(t)-1), -5 - 2 * (self:getTalentLevelRaw(t)-1),
+			0.1 * self:getTalentLevel(t)
+		)
 	end,
 }
 
