@@ -747,7 +747,14 @@ function _M:die(src)
 
 	-- Gives the killer some exp for the kill
 	if src and src.resolveSource and src:resolveSource().gainExp then
-		src:resolveSource():gainExp(self:worthExp(src:resolveSource()))
+		local killer = src:resolveSource()
+		killer:gainExp(self:worthExp(killer))
+		-- Hack: even if the boss dies from something else, give the player exp
+		if not killer.player and self.rank > 3 then
+			game.logPlayer(game.player, "You feel a surge of power as a powerful creature falls nearby.")
+			killer = game.player:resolveSource()
+			killer:gainExp(self:worthExp(killer))
+		end
 	end
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
