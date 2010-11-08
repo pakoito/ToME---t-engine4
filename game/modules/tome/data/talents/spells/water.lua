@@ -111,7 +111,8 @@ newTalent{
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
 			function(e)
-				e.radius = e.radius + 1
+				e.radius = e.radius + 0.5
+				return true
 			end,
 			false
 		)

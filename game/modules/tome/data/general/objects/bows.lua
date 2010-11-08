@@ -137,7 +137,7 @@ newEntity{
 	archery_ammo = "bow",
 	desc = [[Arrows are used with bows to pierce your foes to death.]],
 	generate_stack = resolvers.rngavg(100,200),
-	egos = "/data/general/objects/egos/ammo.lua", egos_chance = 100,
+	egos = "/data/general/objects/egos/ammo.lua", egos_chance = {100, resolvers.mbonus(30, 5)},
 	stacking = true,
 }
 
