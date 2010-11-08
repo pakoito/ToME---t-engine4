@@ -84,7 +84,7 @@ This specimen look like it was hastily assembled and is not really complete yet.
 	resolvers.sustains_at_birth(),
 
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
-	resolvers.drops{chance=100, nb=1, {defined="UNDEATH_PHIAL", random_art_replace={chance=75}} },
+	resolvers.drops{chance=100, nb=1, {defined="WINTERTIDE_PHIAL", random_art_replace={chance=75}} },
 
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
 

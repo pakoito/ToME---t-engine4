@@ -58,12 +58,12 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 	},
 }
 
-newEntity{ base = "BASE_LITE", define_as = "UNDEATH_PHIAL",
+newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
 	unided_name = "phial filled with darkness", unique = true,
-	name = "Phial of Undead", color=colors.DARK_GREY,
+	name = "Wintertide Phial", color=colors.DARK_GREY,
 	desc = [[This phial seems filled with darkness, yet it cleanses your thoughts.]],
 	level_range = {1, 10},
-	rarity = 220,
+	rarity = 200,
 	encumber = 2,
 	cost = 50,
 	material_level = 2,
