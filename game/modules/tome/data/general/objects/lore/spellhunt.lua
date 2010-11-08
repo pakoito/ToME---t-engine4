@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{ base = "BASE_SCROLL",
+newEntity{ base = "BASE_LORE",
 	name = "memories of archmage Varil", lore="spellhunt-note-1", unique=true,
 	desc = [[A collection of thoughts and memories of the archmage Varil, during the Age of Dusk]],
 	rarity = 20,

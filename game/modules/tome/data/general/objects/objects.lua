@@ -81,6 +81,7 @@ loadIfNot("/data/general/objects/mounts.lua")
 
 -- Lore
 loadIfNot("/data/general/objects/lore/spellhunt.lua")
+loadIfNot("/data/general/objects/lore/fun.lua")
 
 -- Artifacts
 loadIfNot("/data/general/objects/world-artifacts.lua")

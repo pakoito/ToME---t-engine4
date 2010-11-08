@@ -17,15 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
-
-for i = 1, 5 do
 newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "journal page", lore="old-forest-note-"..i,
-	desc = [[A paper scrap, left by an adventurer.]],
-	rarity = false,
-	is_magic_device = false,
+	name = "trollish poem, first part", lore="troll-poem-1", unique=true,
+	desc = [[A poem written by a ... troll?]],
+	rarity = 20,
 	encumberance = 0,
 }
-end
+
+newEntity{ base = "BASE_LORE",
+	name = "trollish poem, second part", lore="troll-poem-2", unique=true,
+	desc = [[A poem written by a ... troll?]],
+	rarity = 20,
+	encumberance = 0,
+}

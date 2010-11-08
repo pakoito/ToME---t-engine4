@@ -20,7 +20,7 @@
 load("/data/general/objects/objects.lua")
 
 for i = 1, 5 do
-newEntity{ base = "BASE_SCROLL",
+newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "tattered paper scrap", lore="trollshaws-note-"..i,
 	desc = [[A paper scrap, left by an adventurer.]],

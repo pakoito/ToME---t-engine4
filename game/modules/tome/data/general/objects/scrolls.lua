@@ -34,6 +34,15 @@ newEntity{
 	egos = "/data/general/objects/egos/scrolls.lua", egos_chance = resolvers.mbonus(10, 5),
 }
 
+newEntity{
+	define_as = "BASE_LORE",
+	type = "scroll", subtype="lore",
+	unided_name = "scroll", id_by_type = true,
+	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll-lore.png",
+	encumber = 0.1,
+	desc = [[This parchement contains some lore.]],
+}
+
 newEntity{ base = "BASE_SCROLL",
 	name = "scroll of light",
 	level_range = {1, 40},
