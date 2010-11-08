@@ -160,6 +160,12 @@ function _M:checkFilter(e, filter)
 	if filter.subtype and filter.subtype ~= e.subtype then return false end
 	if filter.name and filter.name ~= e.name then return false end
 	if filter.unique and not e.unique then return false end
+	if filter.properties then
+		for i = 1, #filter.properties do if not e[filter.properties[i]] then return false end end
+	end
+	if filter.not_properties then
+		for i = 1, #filter.not_properties do if e[filter.not_properties[i]] then return false end end
+	end
 	if e.checkFilter and not e:checkFilter(filter) then return false end
 	if filter.special and not filter.special(e) then return false end
 	if filter.max_ood and resolvers.current_level and e.level_range and resolvers.current_level + filter.max_ood < e.level_range[1] then print("Refused max_ood", e.name, e.level_range[1]) return false end

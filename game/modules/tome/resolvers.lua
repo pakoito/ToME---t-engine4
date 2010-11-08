@@ -112,6 +112,13 @@ function resolvers.calc.drops(t, e)
 	-- Iterate of object requests, try to create them and drops them
 	for i = 1, (t.nb or 1) do
 		local filter = t[rng.range(1, #t)]
+
+		-- Make sure if we request uniques we do not get lore, it would be kinda deceptive
+		if filter.unique then
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "lore"
+		end
+
 		print("Drops resolver", e.name, filter.type, filter.subtype, filter.defined)
 		local o
 		if not filter.defined then
