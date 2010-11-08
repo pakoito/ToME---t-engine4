@@ -23,21 +23,23 @@ load("/data/general/objects/lore/sunwall.lua")
 local Stats = require "engine.interface.ActorStats"
 
 -- The staff of absorption, the reason the game exists!
-newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF", no_unique_lore=true,
-	unique = true,
+newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
+	unique = true, godslayer=true,
 	name = "Awakened Staff of Absorption", identified=true,
 	display = "\\", color=colors.VIOLET, image = "object/staff_dragonbone.png",
 	encumber = 7,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.
-The Sorcerers seem to have awakened its power.]],
+The Sorcerers seem to have awakened its power.
+#{italic}#"And lo they came to Amakthel himself, and thousands were killed in the assault on his throne, and three of the Godslayers were broken beneath his feet. But Falion with his dying breath pierced the great god on his knee with the icy sword Arkil, and seeing his opportunity Caldizar, leader of the Godslayers, advanced with the Staff of Absorption and struck a terrifying blow against Amakthel. So fell the greatest of the gods by the hands of his own children, and his face was forced into the dust."#{normal}#]],
 
 	require = { stat = { mag=60 }, },
 	combat = {
-		dam = 50,
-		apr = 4,
-		atk = 20,
-		dammod = {mag=1},
+		dam = 80,
+		apr = 60,
+		atk = 30,
+		dammod = {mag=1.3},
+		damtype = DamageType.ARCANE,
 	},
 	wielder = {
 		combat_spellpower = 48,
@@ -48,8 +50,8 @@ The Sorcerers seem to have awakened its power.]],
 		inc_stats = { [Stats.STAT_MAG] = 10, [Stats.STAT_WIL] = 10 },
 	},
 
-	max_power = 1000, power_regen = 1,
-	use_power = { name = "absorb energies", power = 1000,
+	max_power = 500, power_regen = 1,
+	use_power = { name = "absorb energies", power = 500,
 		use = function(self, who)
 			local tg = {type="hit", range=8
 			}

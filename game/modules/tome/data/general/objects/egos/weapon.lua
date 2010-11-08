@@ -19,6 +19,8 @@
 
 --load("/data/general/objects/egos/charged-attack.lua")
 
+local Stats = require "engine.interface.ActorStats"
+
 newEntity{
 	name = "flaming ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},

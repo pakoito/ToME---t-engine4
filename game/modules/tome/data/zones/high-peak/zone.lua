@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Taragoël, the High Peak",
+	name = "High Peak",
 	level_range = {55, 80},
 	level_scheme = "player",
 	max_level = 15,
