@@ -25,7 +25,9 @@ newLore{
 	id = "troll-poem-1",
 	category = "misc",
 	name = "trollish poem (part one)",
-	lore = [[#{italic}#Club club club,
+	lore = [[#{bold}#"Me Likes to Club"
+
+#{italic}#Club club club,
 Grab some grub!
 When hunger hits,
 Me likes to club!

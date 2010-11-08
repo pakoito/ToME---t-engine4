@@ -20,6 +20,7 @@
 newEntity{ base = "BASE_LORE",
 	name = "trollish poem, first part", lore="troll-poem-1", unique=true,
 	desc = [[A poem written by a ... troll?]],
+	level_range = {1, 50},
 	rarity = 20,
 	encumberance = 0,
 }
@@ -27,6 +28,7 @@ newEntity{ base = "BASE_LORE",
 newEntity{ base = "BASE_LORE",
 	name = "trollish poem, second part", lore="troll-poem-2", unique=true,
 	desc = [[A poem written by a ... troll?]],
+	level_range = {1, 50},
 	rarity = 20,
 	encumberance = 0,
 }
