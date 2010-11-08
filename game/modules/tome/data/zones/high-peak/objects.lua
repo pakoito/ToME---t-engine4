@@ -26,7 +26,7 @@ local Stats = require "engine.interface.ActorStats"
 newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
 	unique = true, godslayer=true,
 	name = "Awakened Staff of Absorption", identified=true,
-	display = "\\", color=colors.VIOLET, image = "object/staff_dragonbone.png",
+	display = "\\", color=colors.VIOLET, image = "object/staff_absorption.png",
 	encumber = 7,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.
@@ -53,8 +53,7 @@ The Sorcerers seem to have awakened its power.
 	max_power = 500, power_regen = 1,
 	use_power = { name = "absorb energies", power = 500,
 		use = function(self, who)
-			local tg = {type="hit", range=8
-			}
+			local tg = {type="hit", range=8}
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
 			local _ _, x, y = who:canProject(tg, x, y)
