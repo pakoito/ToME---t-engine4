@@ -143,3 +143,85 @@ newEntity{
 		return nil, true
 	end}
 }
+
+newEntity{
+	name = "shielding ", prefix=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		blind_immune = 0.15,
+		confusion_immune = 0.15,
+	},
+}
+
+newEntity{
+	name = "insulating ", prefix=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = "grounding ", prefix=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		stun_immune = 0.1,
+	},
+}
+
+newEntity{
+	name = "stabilizing ", prefix=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		stun_immune = 0.15,
+		knockback_immune = 0.15,
+	},
+}
+
+newEntity{
+	name = "cleansing ", prefix=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 9,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		poison_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+		disease_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+	},
+}
+
+newEntity{
+	name = "vitalizing ", prefix=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		inc_stats={
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end),
+		},
+		combat_physresist = 5,
+		max_life = resolvers.mbonus_material(50, 30, function(e, v) return v * 0.1 end),
+		life_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return v * 10, v end),
+		max_stamina = 20,
+	},
+}
