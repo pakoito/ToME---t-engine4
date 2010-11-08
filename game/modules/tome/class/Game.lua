@@ -662,7 +662,7 @@ function _M:setupCommands()
 			if config.settings.tome.cheat then
 				self.player:incStat("str", 100) self.player:incStat("dex", 100) self.player:incStat("mag", 100) self.player:incStat("wil", 100) self.player:incStat("cun", 100) self.player:incStat("con", 100)
 				self.player:learnTalent(self.player.T_HEAVY_ARMOUR_TRAINING, true) self.player:learnTalent(self.player.T_MASSIVE_ARMOUR_TRAINING, true)
--- [[
+--[[
 				for i, e in ipairs(self.zone.object_list) do
 					if e.unique and e.define_as ~= "VOICE_SARUMAN" and e.define_as ~= "ORB_MANY_WAYS_DEMON" then
 						local a = self.zone:finishEntity(self.level, "object", e)
@@ -672,9 +672,9 @@ function _M:setupCommands()
 					end
 				end
 --]]
---[[
+-- [[
 				for i = 1, 50 do
-					local a = self.zone:makeEntity(self.level, "object", {type="wand"}, nil, true)
+					local a = self.zone:makeEntity(self.level, "object", {type="ammo"}, nil, true)
 					if a then
 						a:identify(true)
 						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)

@@ -72,7 +72,6 @@ newBirthDescriptor{
 	copy = {
 		equipment = resolvers.equip{ id=true,
 			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true},
-			{type="ammo", subtype="arrow", name="elm arrow", ego_chance=-1000, autoreq=true},
 		},
 	},
 }
@@ -112,7 +111,6 @@ newBirthDescriptor{
 	copy = {
 		equipment = resolvers.equip{ id=true,
 			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true},
-			{type="ammo", subtype="shot", name="iron shot", ego_chance=-1000, autoreq=true},
 		},
 	},
 }

@@ -52,14 +52,18 @@ function _M:archeryAcquireTargets(tg, params)
 	-- Find targets to know how many ammo we use
 	local targets = {}
 	if params.one_shot then
-		local ammo
-		if self:doesPackRat() then
-			ammo = self:getInven("QUIVER")[1]
+		local a
+		if not ammo.infinite then
+			if self:doesPackRat() then
+				a = self:getInven("QUIVER")[1]
+			else
+				a = self:removeObject(self:getInven("QUIVER"), 1)
+			end
 		else
-			ammo = self:removeObject(self:getInven("QUIVER"), 1)
+			a = ammo
 		end
-		if ammo then
-			targets = {{x=x, y=y, ammo=ammo.combat}}
+		if a then
+			targets = {{x=x, y=y, ammo=a.combat}}
 		end
 	else
 		local limit_shots = params.limit_shots
@@ -75,14 +79,18 @@ function _M:archeryAcquireTargets(tg, params)
 			end
 
 			for i = 1, params.multishots or 1 do
-				local ammo
-				if self:doesPackRat() then
-					game.logPlayer(self, "Pack Rat!")
-					ammo = self:getInven("QUIVER")[1]
+				local a
+				if not ammo.infinite then
+					if self:doesPackRat() then
+						game.logPlayer(self, "Pack Rat!")
+						a = self:getInven("QUIVER")[1]
+					else
+						a = self:removeObject(self:getInven("QUIVER"), 1)
+					end
 				else
-					ammo = self:removeObject(self:getInven("QUIVER"), 1)
+					a = ammo
 				end
-				if ammo then targets[#targets+1] = {x=tx, y=ty, ammo=ammo.combat}
+				if a then targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
 				else break end
 			end
 		end)
@@ -97,7 +105,7 @@ function _M:archeryAcquireTargets(tg, params)
 
 		if sound then game:playSoundNear(targets[1], sound) end
 
-		if ammo:getNumber() < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25 then
+		if not ammo.infinite and (ammo:getNumber() < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25) then
 			game.logPlayer(self, "You only have %d %s left!", ammo:getNumber(), ammo.name)
 		end
 
@@ -212,8 +220,13 @@ function _M:hasArcheryWeapon()
 	if not weapon or not weapon.archery then
 		return nil, "no shooter"
 	end
-	if not ammo or not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
-		return nil, "bad or no ammo"
+	if not ammo then
+		-- Launchers provide infinite basic ammo
+		ammo = {name="default", infinite=true, combat=weapon.basic_ammo}
+	else
+		if not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
+			return nil, "bad ammo"
+		end
 	end
 	return weapon, ammo
 end

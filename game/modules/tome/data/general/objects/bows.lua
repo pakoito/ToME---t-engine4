@@ -25,8 +25,9 @@ newEntity{
 	display = "}", color=colors.UMBER, image = resolvers.image_material("longbow", "wood"),
 	encumber = 4,
 	rarity = 5,
-	combat = { talented = "bow", damrange = 1.4, sound = "actions/arrow", sound_miss = "actions/arrow",},
+	combat = { talented = "bow", sound = "actions/arrow", sound_miss = "actions/arrow",},
 	archery = "bow",
+	basic_ammo = { talented = "bow", damrange = 1.4},
 	desc = [[Longbows are used to shoot arrows at your foes.]],
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/bow.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
@@ -42,6 +43,12 @@ newEntity{ base = "BASE_LONGBOW",
 		range = 8,
 		physspeed = 0.8,
 	},
+	basic_ammo = {
+		dam = resolvers.rngavg(7,12),
+		apr = 5,
+		physcrit = 1,
+		dammod = {dex=0.7, str=0.5},
+	},
 }
 
 newEntity{ base = "BASE_LONGBOW",
@@ -53,6 +60,12 @@ newEntity{ base = "BASE_LONGBOW",
 	combat = {
 		range = 10,
 		physspeed = 0.8,
+	},
+	basic_ammo = {
+		dam = resolvers.rngavg(15,22),
+		apr = 7,
+		physcrit = 1.5,
+		dammod = {dex=0.7, str=0.5},
 	},
 }
 
@@ -66,6 +79,12 @@ newEntity{ base = "BASE_LONGBOW",
 		range = 12,
 		physspeed = 0.8,
 	},
+	basic_ammo = {
+		dam = resolvers.rngavg(28,37),
+		apr = 10,
+		physcrit = 2,
+		dammod = {dex=0.7, str=0.5},
+	},
 }
 
 newEntity{ base = "BASE_LONGBOW",
@@ -77,6 +96,12 @@ newEntity{ base = "BASE_LONGBOW",
 	combat = {
 		range = 15,
 		physspeed = 0.8,
+	},
+	basic_ammo = {
+		dam = resolvers.rngavg(40,47),
+		apr = 14,
+		physcrit = 2.5,
+		dammod = {dex=0.7, str=0.5},
 	},
 }
 
@@ -90,6 +115,12 @@ newEntity{ base = "BASE_LONGBOW",
 		range = 18,
 		physspeed = 0.8,
 	},
+	basic_ammo = {
+		dam = resolvers.rngavg(50, 57),
+		apr = 18,
+		physcrit = 3,
+		dammod = {dex=0.7, str=0.5},
+	},
 }
 
 ------------------ AMMO -------------------
@@ -101,12 +132,12 @@ newEntity{
 	add_name = " (#COMBAT#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("arrow", "wood"),
 	encumber = 0.03,
-	rarity = 5,
+	rarity = 11,
 	combat = { talented = "bow", damrange = 1.4},
 	archery_ammo = "bow",
 	desc = [[Arrows are used with bows to pierce your foes to death.]],
 	generate_stack = resolvers.rngavg(100,200),
-	egos = "/data/general/objects/egos/ammo.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
+	egos = "/data/general/objects/egos/ammo.lua", egos_chance = 100,
 	stacking = true,
 }
 

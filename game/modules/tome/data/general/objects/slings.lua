@@ -26,6 +26,7 @@ newEntity{
 	rarity = 5,
 	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },
 	archery = "sling",
+	basic_ammo = { talented = "sling", damrange = 1.2},
 	desc = [[Slings are used to shoot pebbles at your foes.]],
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/sling.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
@@ -41,6 +42,12 @@ newEntity{ base = "BASE_SLING",
 		range = 8,
 		physspeed = 0.8,
 	},
+	basic_ammo = {
+		dam = resolvers.rngavg(7,12),
+		apr = 1,
+		physcrit = 4,
+		dammod = {dex=0.7, cun=0.5},
+	},
 }
 
 newEntity{ base = "BASE_SLING",
@@ -52,6 +59,12 @@ newEntity{ base = "BASE_SLING",
 	combat = {
 		range = 10,
 		physspeed = 0.8,
+	},
+	basic_ammo = {
+		dam = resolvers.rngavg(15,22),
+		apr = 2,
+		physcrit = 4.5,
+		dammod = {dex=0.7, cun=0.5},
 	},
 }
 
@@ -65,6 +78,12 @@ newEntity{ base = "BASE_SLING",
 		range = 12,
 		physspeed = 0.8,
 	},
+	basic_ammo = {
+		dam = resolvers.rngavg(28,37),
+		apr = 3,
+		physcrit = 5,
+		dammod = {dex=0.7, cun=0.5},
+	},
 }
 
 newEntity{ base = "BASE_SLING",
@@ -76,6 +95,12 @@ newEntity{ base = "BASE_SLING",
 	combat = {
 		range = 15,
 		physspeed = 0.8,
+	},
+	basic_ammo = {
+		dam = resolvers.rngavg(40,47),
+		apr = 5,
+		physcrit = 5.5,
+		dammod = {dex=0.7, cun=0.5},
 	},
 }
 
@@ -89,6 +114,12 @@ newEntity{ base = "BASE_SLING",
 		range = 18,
 		physspeed = 0.8,
 	},
+	basic_ammo = {
+		dam = resolvers.rngavg(50, 57),
+		apr = 6,
+		physcrit = 7,
+		dammod = {dex=0.7, cun=0.5},
+	},
 }
 
 ------------------ AMMO -------------------
@@ -100,12 +131,12 @@ newEntity{
 	add_name = " (#COMBAT#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("shot", "metal"),
 	encumber = 0.03,
-	rarity = 5,
+	rarity = 11,
 	combat = { talented = "sling", damrange = 1.2},
 	archery_ammo = "sling",
 	desc = [[Shots are used with slings to pummel your foes to death.]],
 	generate_stack = resolvers.rngavg(100,200),
-	egos = "/data/general/objects/egos/ammo.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
+	egos = "/data/general/objects/egos/ammo.lua", egos_chance = 100,
 	stacking = true,
 }
 

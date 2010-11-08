@@ -216,31 +216,33 @@ function _M:getTextualDesc()
 	-- Stop here if unided
 	if not self:isIdentified() then return desc end
 
-	if self.combat then
+	local desc_combat = function(combat)
 		local dm = {}
-		for stat, i in pairs(self.combat.dammod or {}) do
+		for stat, i in pairs(combat.dammod or {}) do
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
-		desc:add(("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(self.combat.dam or 0, self.combat.damrange or 1.1, table.concat(dm, ','), self.combat.atk or 0, self.combat.apr or 0, self.combat.physcrit or 0), true)
-		desc:add("Damage type: "..DamageType:get(self.combat.damtype or DamageType.PHYSICAL).name, true)
-		if self.combat.range then desc:add("Firing range: "..self.combat.range, true) end
+		if #dm > 0 or (combat.dam or 0) ~= 0 or combat.damrange or (combat.atk or 0) ~= 0 or (combat.apr or 0) ~= 0 or (combat.physcrit or 0) ~= 0 then
+			desc:add(("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(combat.dam or 0, combat.damrange or 1.1, table.concat(dm, ','), combat.atk or 0, combat.apr or 0, combat.physcrit or 0), true)
+			desc:add("Damage type: "..DamageType:get(combat.damtype or DamageType.PHYSICAL).name, true)
+		end
+		if combat.range then desc:add("Firing range: "..combat.range, true) end
 
-		if self.combat.talent_on_hit then
-			for tid, data in pairs(self.combat.talent_on_hit) do
+		if combat.talent_on_hit then
+			for tid, data in pairs(combat.talent_on_hit) do
 				desc:add(("Talent on hit(melee): %d%% chance %s (level %d)."):format(data.chance, self:getTalentFromId(tid).name, data.level), true)
 			end
 		end
 
-		if self.combat.special_on_hit then
-			desc:add("Special effect on hit: "..self.combat.special_on_hit.desc, true)
+		if combat.special_on_hit then
+			desc:add("Special effect on hit: "..combat.special_on_hit.desc, true)
 		end
 
-		if self.combat.no_stealth_break then
+		if combat.no_stealth_break then
 			desc:add("When used from stealth a simple attack with it will not break stealth.", true)
 		end
 
-		if self.combat.travel_speed then
-			desc:add("Increase travel speed by "..self.combat.travel_speed.."%", true)
+		if combat.travel_speed then
+			desc:add("Increase travel speed by "..combat.travel_speed.."%", true)
 		end
 	end
 
@@ -390,6 +392,13 @@ function _M:getTextualDesc()
 
 	if w.belt_slots then desc:add(("Allows to put %d small objects in the belt."):format(w.belt_slots), true) end
 
+	end
+
+	if self.combat then desc_combat(self.combat) end
+
+	if self.basic_ammo then
+		desc:add({"color","YELLOW"}, "Default ammo(infinite):", {"color", "LAST"}, true)
+		desc_combat(self.basic_ammo)
 	end
 
 	if self.wielder then
