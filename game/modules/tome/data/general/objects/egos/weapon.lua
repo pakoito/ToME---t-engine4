@@ -113,9 +113,8 @@ newEntity{
 
 newEntity{
 	name = " of torment", suffix=true, instant_resolve=true,
-	level_range = {1, 50},
-	greater_ego = true,
-	rarity = 16,
+	level_range = {15, 50},
+	rarity = 18,
 	cost = 22,
 	combat = {
 		special_on_hit = {desc="10% chance to torment the target", fct=function(combat, who, target)
@@ -133,5 +132,43 @@ newEntity{
 			elseif eff == "teleport" then target:teleportRandom(target.x, target.y, 10)
 			end
 		end},
+	},
+}
+
+newEntity{
+	name = " of rage", suffix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 25,
+	cost = 35,
+	wielder = {
+		inc_damage = {
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.7 end),
+		},
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			[Stats.STAT_STR] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+		},
+		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 10, v end),
+	},
+	combat = {
+		apr = resolvers.mbonus_material(8, 1, function(e, v) return v * 0.3 end),
+		atk = resolvers.mbonus_material(10, 2, function(e, v) return v * 0.3 end),
+	},
+}
+
+newEntity{
+	name = " of corruption", suffix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 35,
+	wielder = {
+		melee_project={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end),
+		},
+		see_invisible = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.2 end),
+		combat_physcrit = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.4 end),
 	},
 }
