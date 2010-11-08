@@ -952,58 +952,6 @@ newTalent{
 }
 
 newTalent{
-	name = "Blood Grasp",
-	type = {"corruption/other", 1},
-	points = 5,
-	cooldown = 5,
-	vim = 20,
-	range = 20,
-	proj_speed = 20,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_blood"}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.DRAINLIFE, {dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 220)), healfactor=0.5}, {type="blood"})
-		game:playSoundNear(self, "talents/slime")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Projects a bolt of corrupted blood doing %0.2f blight damage and healing the caster for half the damage done.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 220))
-	end,
-}
-newTalent{
-	name = "Blood Spray",
-	type = {"corruption/other", 1},
-	points = 5,
-	cooldown = 7,
-	vim = 24,
-	range = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
-	direct_hit = true,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="cone", range=0, radius=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.CORRUPTED_BLOOD, {
-			dam = self:spellCrit(self:combatTalentSpellDamage(t, 10, 170)),
-			disease_chance = 20 + self:getTalentLevel(t) * 10,
-			disease_dam = self:spellCrit(self:combatTalentSpellDamage(t, 10, 220)) / 6,
-			disease_power = self:combatTalentSpellDamage(t, 10, 20),
-			dur = 6,
-		}, {type="blood"})
-		game:playSoundNear(self, "talents/slime")
-		return true
-	end,
-	info = function(self, t)
-		return ([[You extract corrupted blood from your own body, hitting everything in a frontal cone for %0.2f blight damage.
-		Each affected creature has a %d%% chance of being infected by a random disease doing %0.2f blight damage over 6 turns.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 170), 20 + self:getTalentLevel(t) * 10, self:combatTalentSpellDamage(t, 10, 220))
-	end,
-}
-
-newTalent{
 	name = "Invoke Tentacle",
 	type = {"wild-gift/other", 1},
 	cooldown = 1,

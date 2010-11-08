@@ -64,8 +64,8 @@ newTalent{
 		end
 
 		return {
-			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t))
-			pin = self:addTemporaryValue("pin_immune", 0.1 * self:getTalentLevel(t))
+			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t)),
+			pin = self:addTemporaryValue("pin_immune", 0.1 * self:getTalentLevel(t)),
 			dam = self:addTemporaryValue("combat_dam", 5 + self:getStr(7) * self:getTalentLevel(t)),
 			atk = self:addTemporaryValue("combat_atk", 5 + self:getDex(7) * self:getTalentLevel(t)),
 			def = self:addTemporaryValue("combat_def", -10),

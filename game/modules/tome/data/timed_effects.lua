@@ -1712,6 +1712,21 @@ newEffect{
 }
 
 newEffect{
+	name = "BLOOD_FURY",
+	desc = "Bloodfury",
+	long_desc = function(self, eff) return ("The target's blight damage is increased by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_damage", {[DamageType.BLIGHT] = eff.power, [DamageType.ACID] = eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "UNSTOPPABLE",
 	desc = "Unstoppable",
 	long_desc = function(self, eff) return "The target is unstoppable! It refuses to die." end,
@@ -1982,5 +1997,19 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "CORROSIVE_WORM",
+	desc = "Corrosive Worm",
+	long_desc = function(self, eff) return ("Target is infected with a corrosive worm doing %0.2f acid damage per turn."):format(eff.dam) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { dam=1, explosion=10 },
+	on_gain = function(self, err) return "#Target# is infected by a corrosive worm.", "+Corrosive Worm" end,
+	on_lose = function(self, err) return "#Target# is free from the corrosive worm.", "-Corrosive Worm" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.ACID).projector(eff.src or self, self.x, self.y, DamageType.ACID, eff.dam)
 	end,
 }

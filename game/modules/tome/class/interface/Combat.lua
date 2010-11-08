@@ -578,9 +578,14 @@ function _M:spellCrit(dam, add_chance)
 
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * 1.5
+		dam = dam * (1.5 + (self.combat_critical_power or 0))
 		crit = true
 		game.logSeen(self, "%s's spell looks more powerful!", self.name:capitalize())
+
+		if self:isTalentActive(self.T_BLOOD_FURY) then
+			local t = self:getTalentFromId(self.T_BLOOD_FURY)
+			t.on_crit(self, t)
+		end
 	end
 	return dam, crit
 end

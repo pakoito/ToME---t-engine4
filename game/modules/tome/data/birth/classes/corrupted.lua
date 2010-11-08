@@ -29,6 +29,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "disallow",
 			Reaver = function() return profile.mod.allow_build.corrupter_reaver and "allow" or "disallow" end,
+			Corruptor = function() return profile.mod.allow_build.corrupter_corruptor and "allow" or "disallow" end,
 		},
 	},
 	copy = {
@@ -79,9 +80,9 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "subclass",
-	name = "Blood Mage",
+	name = "Corruptor",
 	desc = {
-		"A blood mage is a terrible foe, wielding dark magics that can sap the very soul of her targets.",
+		"A corruptor is a terrible foe, wielding dark magics that can sap the very soul of her targets.",
 		"They can harness the blight of evil, crushing their sould, stealing their life force to replenish themselves.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stats modifiers:",
@@ -95,15 +96,17 @@ newBirthDescriptor{
 		["corruption/hexes"]={false, 0.3},
 		["corruption/curses"]={false, 0.3},
 		["corruption/bone"]={true, 0.3},
+		["corruption/plague"]={true, 0.3},
+		["corruption/shadowflame"]={true, 0.3},
 		["corruption/blood"]={true, 0.3},
-		["corruption/udun"]={true, 0.3},
-		["corruption/blood"]={true, 0.3},
+		["corruption/soul"]={true, 0.3},
+		["corruption/blight"]={true, 0.3},
 	},
 	talents = {
-		[ActorTalents.T_CORRUPTED_STRENGTH] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_BLOOD_SACRIFICE] = 1,
-		[ActorTalents.T_REND] = 1,
+		[ActorTalents.T_BLOOD_GRASP] = 1,
+		[ActorTalents.T_BONE_SPEAR] = 1,
+		[ActorTalents.T_VIRULENT_DISEASE] = 1,
 	},
 	copy = {
 		resolvers.equip{ id=true,

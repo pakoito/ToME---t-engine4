@@ -844,6 +844,18 @@ newDamageType{
 	end,
 }
 
+-- blood boild, blight damage + slow
+newDamageType{
+	name = "blood boil", type = "BLOOD_BOIL",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target.undead and not target.construct then
+			target:setEffect(target.EFF_SLOW, 4, {power=0.2})
+		end
+	end,
+}
+
 -- life leech (used cursed gloom skill)
 newDamageType{
 	name = "life leech",

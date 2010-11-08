@@ -851,6 +851,11 @@ function _M:die(src)
 		p.kills = p.kills + 1
 	end
 
+	if self:hasEffect(self.EFF_CORROSIVE_WORM) then
+		local p = self:hasEffect(self.EFF_CORROSIVE_WORM)
+		p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.ACID, p.explosion, {type="acid"})
+	end
+
 	-- Increase vim
 	if src and src.attr and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
 

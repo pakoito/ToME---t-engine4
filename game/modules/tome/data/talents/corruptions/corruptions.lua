@@ -25,6 +25,10 @@ newTalentType{ no_silence=true, is_spell=true, type="corruption/curses", name = 
 newTalentType{ no_silence=true, is_spell=true, type="corruption/plague", name = "plage", description = "Spread diseases to your foes." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/scourge", name = "scourge", description = "Bring pain and destruction to the world." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/blood", name = "blood", description = "Harness the power of blood, both your own and your foes." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/blight", name = "blight", description = "Bring corruption and decay to all who oppose you." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/soul", name = "soul", description = "Touch the very soul of your victims." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/shadowflame", name = "Shadowflame", description = "Harness the power of the demonic shadowflame." }
 
 -- Generic requires for corruptions based on talent level
 corrs_req1 = {
@@ -75,3 +79,5 @@ load("/data/talents/corruptions/reaving-combat.lua")
 load("/data/talents/corruptions/bone.lua")
 load("/data/talents/corruptions/curses.lua")
 load("/data/talents/corruptions/hexes.lua")
+load("/data/talents/corruptions/blood.lua")
+load("/data/talents/corruptions/blight.lua")

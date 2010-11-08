@@ -136,7 +136,7 @@ newEntity{
 	archery_ammo = "sling",
 	desc = [[Shots are used with slings to pummel your foes to death.]],
 	generate_stack = resolvers.rngavg(100,200),
-	egos = "/data/general/objects/egos/ammo.lua", egos_chance = 100,
+	egos = "/data/general/objects/egos/ammo.lua", egos_chance = {100, resolvers.mbonus(30, 5)},
 	stacking = true,
 }
 
