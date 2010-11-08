@@ -22,6 +22,7 @@ return {
 	level_range = {15, 15},
 	max_level = 1,
 	width = 196, height = 80,
+	decay = {300, 800},
 	persistant = "zone",
 	all_remembered = true,
 	all_lited = true,

@@ -23,8 +23,9 @@ return {
 	level_scheme = "player",
 	max_level = 8,
 	decay = {300, 800},
-	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + (zone.max_level - level.level) + rng.range(-1,2) end,
-	level_adjust_level = function(zone, level) return zone.base_level + (zone.max_level - level.level) end,
+	-- 8 levels but actors gain one level every 2 levels
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + math.floor((zone.max_level - level.level) / 2) + rng.range(-1,2) end,
+	level_adjust_level = function(zone, level) return zone.base_level + math.floor((zone.max_level - level.level) / 2) end,
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
