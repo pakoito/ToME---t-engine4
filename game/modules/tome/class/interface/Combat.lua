@@ -93,7 +93,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		-- All weapons in main hands
 		if self:getInven(self.INVEN_MAINHAND) then
 			for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
-				if o.combat then
+				if o.combat and not o.archery then
 					print("[ATTACK] attacking with", o.name)
 					local s, h = self:attackTargetWith(target, o.combat, damtype, mult)
 					speed = math.max(speed or 0, s)
@@ -114,7 +114,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 				offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH) / 9))
 			end
 			for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
-				if o.combat then
+				if o.combat and not o.archery then
 					print("[ATTACK] attacking with", o.name)
 					local s, h = self:attackTargetWith(target, o.combat, damtype, offmult)
 					speed = math.max(speed or 0, s)
