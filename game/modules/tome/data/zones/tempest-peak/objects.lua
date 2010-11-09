@@ -21,6 +21,7 @@ load("/data/general/objects/objects.lua")
 
 newEntity{ base = "BASE_WAND",
 	define_as = "ROD_OF_RECALL",
+	unided_name = "unstable wand",
 	name = "Rod of Recall", color=colors.LIGHT_BLUE, unique=true,
 	desc = "This rod is made entirely of mithril, infused with raw magical energies it can bend space itself.",
 	cost = 100,

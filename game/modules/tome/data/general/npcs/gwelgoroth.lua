@@ -24,7 +24,7 @@ newEntity{
 	type = "elemental", subtype = "air",
 	display = "E", color=colors.AQUAMARINE,
 
-	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.FIRE },
+	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.LIGHTNING },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_NPC_GWELGOROTH",
 	rarity = 3,
 	max_life = resolvers.rngavg(70,80), life_rating = 10,
 	combat_armor = 0, combat_def = 20,
-	on_melee_hit = { [DamageType.FIRE] = resolvers.mbonus(20, 10), },
+	on_melee_hit = { [DamageType.LIGHTNING] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
 		[Talents.T_LIGHTNING]=4,
@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_GWELGOROTH",
 	rank = 3,
 	max_life = resolvers.rngavg(70,80),
 	combat_armor = 0, combat_def = 20,
-	on_melee_hit = { [DamageType.FIRE] = resolvers.mbonus(20, 10), },
+	on_melee_hit = { [DamageType.LIGHTNING] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
 		[Talents.T_LIGHTNING]=5,
