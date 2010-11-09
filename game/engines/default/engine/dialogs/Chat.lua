@@ -71,6 +71,7 @@ function _M:use(item, a)
 	if not a then return end
 
 	print("[CHAT] selected", a[1], a.action, a.jump)
+	if a.switch_npc then self.chat:switchNPC(a.switch_npc) end
 	if a.action then
 		local id = a.action(self.npc, self.player, self)
 		if id then

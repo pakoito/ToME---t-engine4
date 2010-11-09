@@ -79,7 +79,7 @@ He who felt great sorrow for this world. He who shall now shatter the barriers o
 The staff has allowed us to drain enough energy from this world to open the portal to the Void and summon him through!
 It is already too late. He is coming through as we speak -- it is only a matter of hours!]],
 	answers = {
-		{"I *WILL* stop you! The world will not end today!", jump="aeryn", action=aeryn_comes, cond=aeryn_alive},
+		{"I *WILL* stop you! The world will not end today!", jump="aeryn", switch_npc={name="High Sun Paladin Aeryn"}, action=aeryn_comes, cond=aeryn_alive},
 		{"I *WILL* stop you! The world will not end today!", cond=aeryn_dead},
 	}
 }
@@ -90,7 +90,7 @@ He who felt great sorrow for this world. He who shall now shatter the barriers o
 The staff will allow us to drain enough energy from this world to open the portal to the Void and summon him through!
 You cannot stop us now!]],
 	answers = {
-		{"I *WILL* stop you! The world will not end today!", jump="aeryn", action=aeryn_comes, cond=aeryn_alive},
+		{"I *WILL* stop you! The world will not end today!", jump="aeryn", switch_npc={name="High Sun Paladin Aeryn"}, action=aeryn_comes, cond=aeryn_alive},
 		{"I *WILL* stop you! The world will not end today!", cond=aeryn_dead},
 	}
 }

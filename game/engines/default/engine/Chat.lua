@@ -24,6 +24,7 @@ require "engine.dialogs.Chat"
 module(..., package.seeall, class.make)
 
 function _M:init(name, npc, player, data)
+	self.quick_replies = 0
 	self.chats = {}
 	self.npc = npc
 	self.player = player
@@ -38,6 +39,13 @@ function _M:init(name, npc, player, data)
 	self.default_id = f()
 end
 
+--- Switch the NPC talking
+function _M:switchNPC(npc)
+	local old = self.npc
+	self.npc = npc
+	return old
+end
+
 --- Adds a chat to the list of possible chats
 function _M:addChat(c)
 	assert(c.id, "no chat id")
@@ -45,6 +53,15 @@ function _M:addChat(c)
 	assert(c.answers, "no chat answers")
 	self.chats[c.id] = c
 	print("[CHAT] loaded", c.id, c)
+
+	-- Parse answsers looking for quick replies
+	for i, a in ipairs(c.answers) do
+		if a.quick_reply then
+			a.jump = "quick_reply"..self.quick_replies
+			self:addChat{id="quick_reply"..self.quick_replies, text=a.quick_reply, answers={{"[leave]"}}}
+			self.quick_replies = self.quick_replies + 1
+		end
+	end
 end
 
 --- Invokes a chat

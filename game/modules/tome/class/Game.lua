@@ -663,7 +663,7 @@ function _M:setupCommands()
 			if config.settings.tome.cheat then
 				self.player:incStat("str", 100) self.player:incStat("dex", 100) self.player:incStat("mag", 100) self.player:incStat("wil", 100) self.player:incStat("cun", 100) self.player:incStat("con", 100)
 				self.player:learnTalent(self.player.T_HEAVY_ARMOUR_TRAINING, true) self.player:learnTalent(self.player.T_MASSIVE_ARMOUR_TRAINING, true)
---[[
+-- [[
 				for i, e in ipairs(self.zone.object_list) do
 					if e.unique and e.define_as ~= "VOICE_SARUMAN" and e.define_as ~= "ORB_MANY_WAYS_DEMON" then
 						local a = self.zone:finishEntity(self.level, "object", e)
@@ -673,7 +673,7 @@ function _M:setupCommands()
 					end
 				end
 --]]
--- [[
+--[[
 				for i = 1, 50 do
 					local a = self.zone:makeEntity(self.level, "object", {type="ammo"}, nil, true)
 					if a then
@@ -689,7 +689,9 @@ function _M:setupCommands()
 			if config.settings.tome.cheat then
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
-				self:changeLevel(5, "crypt-kryl-feijan")
+				self:changeLevel(1, "town-last-hope")
+				game.player:grantQuest("kryl-feijan-escape")
+				game.player:setQuestStatus("kryl-feijan-escape", engine.Quest.DONE)
 			end
 		end,
 	}

@@ -49,6 +49,7 @@ quickEntity('b', {show_tooltip=true, name="Hall of the King", display='*', color
 quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('e', {show_tooltip=true, name="Rare goods", display='*', color=colors.AQUAMARINE, resolvers.store("LOST_MERCHANT"), resolvers.chatfeature("last-hope-lost-merchant"), image="terrain/wood_store_weapon.png"})
+quickEntity('g', {show_tooltip=true, name="Rich merchant", display='*', color=colors.AQUAMARINE, resolvers.chatfeature("last-hope-melinda-father"), image="terrain/wood_store_closed.png"})
 
 quickEntity('E', {show_tooltip=true, name="The Elder", display='*', color=colors.VIOLET, resolvers.chatfeature("last-hope-elder"), image="terrain/wood_store_closed.png"})
 quickEntity('f', {show_tooltip=true, name="Tannen's Tower", display='*', color=colors.VIOLET, resolvers.chatfeature("tannen"), image="terrain/wood_store_closed.png"})
@@ -72,7 +73,7 @@ return {
 [[#^^^-------##sssSss---OOO--#OOO--s--OOOOO--###---                                               ]],
 [[#^^^######---##sss--s--OOO-OOO--StS--OOOOO---##---                                              ]],
 [[#^^^^----###---##--ssS--OOOOO#--ssss--OOOOOO--##---                                             ]],
-[[#^^--------###----ssSs#--OOO-##-#####--OOOOOO--##---            ----                            ]],
+[[#^^--------###----ssSs#--OOO-##-##g##--OOOOOO--##---            ----                            ]],
 [[#^ ----------##--#sts#--OOOO--#---------OOOOOO--#------       --------                          ]],
 [[#^^-----------###-#s#--OOOOOO-##-#sssss--OOOOOO,#####---     -----------                        ]],
 [[#^^-------------##-#--OOO-OOO--#--ssssss--OOOOO,,,,,#----  ---ssssssss---                       ]],
