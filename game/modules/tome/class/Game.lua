@@ -361,7 +361,8 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	local left_zone = self.zone
 
 	if self.zone and self.zone.on_leave then
-		local nl, nz = self.zone.on_leave(lev, old_lev, zone)
+		local nl, nz, stop = self.zone.on_leave(lev, old_lev, zone)
+		if stop then return end
 		if nl then lev = nl end
 		if nz then zone = nz end
 	end
@@ -688,7 +689,7 @@ function _M:setupCommands()
 			if config.settings.tome.cheat then
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
-				self:changeLevel(1, "high-peak")
+				self:changeLevel(5, "crypt-kryl-feijan")
 			end
 		end,
 	}

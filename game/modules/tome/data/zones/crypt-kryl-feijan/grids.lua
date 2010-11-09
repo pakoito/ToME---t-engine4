@@ -17,24 +17,22 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newAI("summoned", function(self)
-	-- Run out of time ?
-	if self.summon_time then
-		self.summon_time = self.summon_time - 1
-		if self.summon_time <= 0 then
-			game.logPlayer(self.summoner, "#PINK#Your summoned %s disappears.", self.name)
-			self:die()
-		end
-	end
+load("/data/general/grids/basic.lua")
 
-	-- Do the normal AI, otherwise follows summoner
-	if self.ai_target.actor == self.summoner then self.ai_target.actor = nil end
-	if self:runAI(self.ai_state.ai_target or "target_simple") then
-		return self:runAI(self.ai_real)
-	else
-		self.ai_target.actor = self.summoner
-		local ret = self:runAI(self.ai_real)
-		self.ai_target.actor = nil
-		return ret
-	end
-end)
+newEntity{
+	define_as = "LOCK",
+	name = "sealed door", image = "terrain/sealed_door.png",
+	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	does_block_move = true,
+}
+
+newEntity{
+	define_as = "PENTAGRAM",
+	name = "demonic symbol", image = "terrain/floor_pentagram.png",
+	display = ';', color=colors.RED, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+}

@@ -17,24 +17,19 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newAI("summoned", function(self)
-	-- Run out of time ?
-	if self.summon_time then
-		self.summon_time = self.summon_time - 1
-		if self.summon_time <= 0 then
-			game.logPlayer(self.summoner, "#PINK#Your summoned %s disappears.", self.name)
-			self:die()
+name = "The Sect of Kryl-Feijan"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "You discovered a sect worshiping a demon named Kryl-Feijan in a crypt."
+	desc[#desc+1] = "They were trying to bring it back into the world using a human sacrifice."
+	if self:isStatus(self.DONE) then
+		desc[#desc+1] = "You have defeated the acolytes and saved the woman. She told you she is the daugther of a rich merchant of Last Hope."
+	elseif self:isStatus(self.FAILED) then
+		if self.not_saved then
+			desc[#desc+1] = "You have failed to protect her when escorting her out of the crypt."
+		else
+			desc[#desc+1] = "You have failed to defeat the acolytes in time - the woman got torn apart by the demon growing inside her."
 		end
 	end
-
-	-- Do the normal AI, otherwise follows summoner
-	if self.ai_target.actor == self.summoner then self.ai_target.actor = nil end
-	if self:runAI(self.ai_state.ai_target or "target_simple") then
-		return self:runAI(self.ai_real)
-	else
-		self.ai_target.actor = self.summoner
-		local ret = self:runAI(self.ai_real)
-		self.ai_target.actor = nil
-		return ret
-	end
-end)
+	return table.concat(desc, "\n")
+end

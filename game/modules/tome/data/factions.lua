@@ -19,26 +19,27 @@
 
 -- CSV export
 local src = [[
-,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,Angolwen,Tol Falas,,Temple of Creation|H,Water lair|H,Assassin lair|H,,Sunwall|H,Orc Pride,,Sandworm Burrowers,,Sorcerers
-Enemies,,,,,,,,,,,,,,,,,,,
-Undead,-1,,,,,,,,,,,,,,,,,,
-Allied Kingdoms,-1,-1,,,,,,,,,,,,,,,,,
-Shalorë,-1,-1,0.5,,,,,,,,,,,,,,,,
-Thalorë,-1,-1,0.7,0.2,,,,,,,,,,,,,,,
-Iron Throne,-1,-1,0.2,0.2,0.2,,,,,,,,,,,,,,
-Angolwen,-1,-1,,,,,,,,,,,,,,,,,
-Tol Falas,,-1,-1,-1,-1,-1,-1,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,
-Temple of Creation|H,,,,,,,,,,,,,,,,,,,
-Water lair|H,-1,,,,,,,,,-1,,,,,,,,,
-Assassin lair|H,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,
-Sunwall|H,-1,-1,,,,,,-1,,,,-1,,,,,,,
-Orc Pride,,-1,-1,-1,-1,-1,-1,-1,,,,,,-1,,,,,
-,,,,,,,,,,,,,,,,,,,
-Sandworm Burrowers,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,
-Sorcerers,,-1,-1,-1,-1,-1,-1,-1,,,,,,-1,1,,,,
+,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,Angolwen,Tol Falas,,Temple of Creation|H,Water lair|H,Assassin lair|H,,Sunwall|H,Orc Pride,,Sandworm Burrowers,Victim,,Sorcerers
+Enemies,,,,,,,,,,,,,,,,,,,,
+Undead,-1,,,,,,,,,,,,,,,,,,,
+Allied Kingdoms,-1,-1,,,,,,,,,,,,,,,,,,
+Shalore,-1,-1,0.5,,,,,,,,,,,,,,,,,
+Thalore,-1,-1,0.7,0.2,,,,,,,,,,,,,,,,
+Iron Throne,-1,-1,0.2,0.2,0.2,,,,,,,,,,,,,,,
+Angolwen,-1,-1,,,,,,,,,,,,,,,,,,
+Tol Falas,,-1,-1,-1,-1,-1,-1,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+Temple of Creation|H,,,,,,,,,,,,,,,,,,,,
+Water lair|H,-1,,,,,,,,,-1,,,,,,,,,,
+Assassin lair|H,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+Sunwall|H,-1,-1,,,,,,-1,,,,-1,,,,,,,,
+Orc Pride,,-1,-1,-1,-1,-1,-1,-1,,,,,,-1,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+Sandworm Burrowers,,,,,,,,,,,,,,,,,,,,
+Victim,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+Sorcerers,,-1,-1,-1,-1,-1,-1,-1,,,,,,-1,1,,,,,
 ]]
 
 local facts = {}

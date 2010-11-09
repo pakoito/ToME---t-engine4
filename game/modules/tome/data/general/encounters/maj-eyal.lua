@@ -114,6 +114,27 @@ newEntity{
 }
 
 newEntity{
+	name = "Sect of Kryl-Faijan",
+	type = "hostile", subtype = "special", unique = true,
+	level_range = {24, 35},
+	rarity = 7,
+	coords = {{ x=0, y=0, w=100, h=100}},
+	on_encounter = function(self, who)
+		who:runStop()
+		engine.ui.Dialog:yesnoPopup("Encounter", "You find an entrance to an old crypt. You hear the muffled cries of a woman coming from inside.", function(ok)
+			if not ok then
+				game.logPlayer(who, "#LIGHT_BLUE#You carefully get away without making a sound.")
+			else
+				game:changeLevel(1, "crypt-kryl-feijan")
+				game.logPlayer(who, "#LIGHT_RED#You carefully open the door and enter the underground crypt...")
+				game.logPlayer(who, "#LIGHT_RED#As you enter you notice the door has no visible handle on the inside. You are stuck here!")
+			end
+		end, "Enter the crypt", "Leave carefully")
+		return true
+	end,
+}
+
+newEntity{
 	name = "Ancient Elven Ruins",
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {30, 40},
