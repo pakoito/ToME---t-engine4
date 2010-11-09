@@ -687,11 +687,8 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
---				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
---				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
-				self:changeLevel(1, "town-last-hope")
-				game.player:grantQuest("kryl-feijan-escape")
-				game.player:setQuestStatus("kryl-feijan-escape", engine.Quest.DONE)
+				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
+				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 			end
 		end,
 	}

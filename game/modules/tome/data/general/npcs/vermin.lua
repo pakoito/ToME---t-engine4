@@ -35,6 +35,7 @@ newEntity{
 	rank = 1,
 	size_category = 1,
 	blind_immune = 1,
+	life_rating = 6,
 }
 
 newEntity{ base = "BASE_NPC_WORM",
@@ -55,4 +56,15 @@ newEntity{ base = "BASE_NPC_WORM",
 	combat = { dam=1, atk=15, apr=100 },
 
 	resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_MULTIPLY]=1 },
+}
+
+newEntity{ base = "BASE_NPC_WORM",
+	name = "carrion worm mass", color=colors.SANDY_BROWN,
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 4,
+	max_life = resolvers.rngavg(5,9),
+	combat = { dam=1, atk=15, apr=100 },
+
+	autolevel = "warriormage",
+	resolvers.talents{ [Talents.T_CRAWL_POISON]=2, [Talents.T_ROTTING_DISEASE]=4, [Talents.T_MULTIPLY]=1 },
 }

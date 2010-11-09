@@ -76,6 +76,53 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 	end,
 }
 
+newEntity{ base = "BASE_NPC_HORROR",
+	name = "worm that walks", color=colors.SANDY_BROWN, define_as="TEST",
+	desc = [[A maggot filled robe with a vaguely humanoid shape.]],
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 5,
+	max_life = 120,
+	life_rating = 16,
+	rank = 3,
+
+	see_invisible = 100,
+	instakill_immune = 1,
+	stun_immune = 1,
+	blind_immune = 1,
+
+	resists = { [DamageType.PHYSICAL] = 50, [DamageType.FIRE] = -50},
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.drops{chance=20, nb=1, {} },
+	resolvers.equip{
+		{type="weapon", subtype="sword", autoreq=true},
+		{type="weapon", subtype="waraxe", autoreq=true},
+		{type="armor", subtype="robe", autoreq=true}
+	},
+
+	resolvers.talents{
+		[Talents.T_BONE_GRAB]=4,
+		[Talents.T_DRAIN]=5,
+		[Talents.T_CORRUPTED_STRENGTH]=3,
+		[Talents.T_VIRULENT_DISEASE]=3,
+		[Talents.T_CURSE_OF_DEATH]=5,
+		[Talents.T_REND]=4,
+		[Talents.T_BLOODLUST]=3,
+		[Talents.T_RUIN]=2,
+
+		[Talents.T_WEAPON_COMBAT]=5,
+		[Talents.T_WEAPONS_MASTERY]=3,
+	},
+	resolvers.sustains_at_birth(),
+
+	summon = {
+		{type="vermin", subtype="worms", name="carrion worm mass", number=2, hasxp=false},
+	},
+	make_escort = {
+		{type="vermin", subtype="worms", name="carrion worm mass", number=2},
+	},
+}
+
 newEntity{ base="BASE_NPC_HORROR",
 	name = "Grgglck the Devouring Darkness", unique = true,
 	color = colors.DARK_GREY,
@@ -97,7 +144,7 @@ You can discern a huge ruond mouth covered in razor-sharp teeth.]],
 	combat = { dam=resolvers.mbonus(100, 15), atk=500, apr=0, dammod={str=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-        resolvers.drops{chance=100, nb=1, {unique=true} },
+		  resolvers.drops{chance=100, nb=1, {unique=true} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resists = { all=500 },

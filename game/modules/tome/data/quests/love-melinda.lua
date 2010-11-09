@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "Melinda, "
+name = "Melinda, lucky girl"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "After rescuing Melinda from Kryl-Feijan and the cultists you met her again in Last Hope."

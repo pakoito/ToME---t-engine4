@@ -85,7 +85,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	resolvers.talents{ [Talents.T_CONSTRICT]=4, [Talents.T_RUSH]=2, },
 }
 
-newEntity{ base = "BASE_NPC_XORN", define_as="TEST",
+newEntity{ base = "BASE_NPC_XORN",
 	name = "The Fragmented Essence of Harkor'Zun", color=colors.VIOLET, unique=true,
 	desc = [[Fragmented essence...  maybe it'd be best if it stayed fragmented.]],
 	level_range = {17, nil}, exp_worth = 0,
