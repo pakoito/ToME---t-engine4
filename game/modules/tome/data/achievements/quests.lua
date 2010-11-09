@@ -42,6 +42,10 @@ newAchievement{
 	desc = [[Discovered the truth about mages.]],
 }
 newAchievement{
+	name = "Against all odds", id = "KILL_UKRUK",
+	desc = [[Killed Ukruk in the ambush.]],
+}
+newAchievement{
 	name = "Sliders",
 	desc = [[Activated a portal using the Orb of Many Ways.]],
 }

@@ -25,7 +25,7 @@ newEntity{
 	type = "armor", subtype="hands",
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
-	image = resolvers.image_material("gauntlets", "metal"),
+	image = resolvers.image_material("hgloves", "metal"),
 	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
 	encumber = 1.5,
 	rarity = 9,

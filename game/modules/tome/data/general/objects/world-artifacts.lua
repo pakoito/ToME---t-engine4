@@ -575,7 +575,7 @@ newEntity{ base = "BASE_HELM",
 	level_range = {20, 28},
 	rarity = 240,
 	cost = 700,
-	material_level = 4,
+	material_level = 3,
 	wielder = {
 		lite = 1,
 		combat_armor = 6,
@@ -990,6 +990,8 @@ newEntity{ base = "BASE_WAND",
 	elec_proof = true,
 	add_name = false,
 
+	material_level = 5,
+
 	max_power = 75, power_regen = 1,
 	use_power = { name = "shoot a cone of fire", power = 30,
 		use = function(self, who)
@@ -1161,7 +1163,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	level_range = {5, 14},
 	rarity = 120,
 	cost = 75,
-	material_level = 2,
+	material_level = 3,
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = 3,  },
 		resists = {

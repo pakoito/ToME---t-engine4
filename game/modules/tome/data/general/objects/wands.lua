@@ -21,7 +21,7 @@ newEntity{
 	define_as = "BASE_WAND",
 	type = "wand", subtype="wand",
 	unided_name = "wand", id_by_type = true,
-	display = "-", color=colors.WHITE,
+	display = "-", color=colors.WHITE, image = resolvers.image_material("wand", "wood"),
 	encumber = 2,
 	rarity = 18,
 	add_name = "#CHARGES#",
