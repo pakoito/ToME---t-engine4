@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="90" height="40" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_dungeon32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_dungeon32.gif" width="288" height="320"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="display" value="!"/>
+   </properties>
+  </tile>
+  <tile id="57">
+   <properties>
+    <property name="display" value="."/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="91" name="dg_edging232" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_edging232.gif" width="256" height="544"/>
+  <tile id="72">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="90" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3VMQ6AIAxAUZy8k9f1oq4uhmKAonnDG0noLwlbKWUDAAAAhjoqsu/3F7XOtd72Em8cbR7dUfZcq2nt3CJ7tpX07Krz2M7njc7zO+96T+mcPdtKdP5OZ/9gvPOI7tmzraS189N5jeOt375Pjft0zr4fAAAAAADfcgHdN7nCQDgAAA==
+  </data>
+ </layer>
+ <objectgroup name="Actor" width="90" height="40">
+  <object name="woman" x="615" y="549" width="19" height="20">
+   <properties>
+    <property name="display" value="@"/>
+   </properties>
+  </object>
+  <object name="acolyte" x="230" y="488" width="20" height="17">
+   <properties>
+    <property name="display" value="A"/>
+   </properties>
+  </object>
+  <object name="acolyte" x="614" y="647" width="20" height="17">
+   <properties>
+    <property name="display" value="A"/>
+   </properties>
+  </object>
+  <object name="acolyte" x="613" y="485" width="20" height="17">
+   <properties>
+    <property name="display" value="A"/>
+   </properties>
+  </object>
+  <object name="acolyte" x="229" y="647" width="20" height="17">
+   <properties>
+    <property name="display" value="A"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="addSpot" width="90" height="40">
+  <object name="locked door" x="771" y="550" width="23" height="22">
+   <properties>
+    <property name="subtype" value="&quot;locked-door&quot;"/>
+    <property name="type" value="&quot;locked-door&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
