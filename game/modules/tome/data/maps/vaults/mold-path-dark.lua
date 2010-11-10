@@ -27,10 +27,10 @@ defineTile('X', {"HARDTREE_DARK1","HARDTREE_DARK2","HARDTREE_DARK3","HARDTREE_DA
 defineTile('~', "POISON_SHALLOW_WATER")
 defineTile('!', "ROCK_VAULT")
 
-defineTile('m', nil, {random_filter={subtype="molds", add_levels=2}})
-defineTile('j', nil, {random_filter={subtype="oozes", add_levels=2}})
+defineTile('m', "GRASS_DARK1", nil, {random_filter={subtype="molds", add_levels=2}})
+defineTile('j', "GRASS_DARK1", nil, {random_filter={subtype="oozes", add_levels=2}})
 
-defineTile('$', {random_filter={add_levels=5, ego_chance=25}})
+defineTile('$', "GRASS_DARK1", {random_filter={add_levels=5, ego_chance=25}})
 
 startx = 19
 starty = 7
