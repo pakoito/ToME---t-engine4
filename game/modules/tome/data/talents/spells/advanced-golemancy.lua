@@ -95,6 +95,7 @@ newTalent{
 
 		-- Attack & daze
 		golem:project({type="ball", radius=2, friendlyfire=false}, tx, ty, function(xx, yy)
+			if xx == mover.x and yy == mover.y then return end
 			local target = game.level.map(xx, yy, Map.ACTOR)
 			if target and golem:attackTarget(target, nil, golem:combatTalentWeaponDamage(t, 0.4, 1.1), true) then
 				if target:checkHit(golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
