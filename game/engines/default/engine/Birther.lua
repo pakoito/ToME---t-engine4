@@ -90,7 +90,7 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 		{name="", width=92, display_prop="display_name"},
 	}, list={}, fct=function(item, sel, button, event)
 		self.sel = sel
-		if event == "button" and button == "left" then self:next()
+		if (event == "key" or event == "button") and button == "left" then self:next()
 		elseif event == "button" and button == "right" then self:prev()
 		end
 	end, select=function(item, sel) self.sel = sel self:select(item) end}

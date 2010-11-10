@@ -552,7 +552,7 @@ function _M:doDrop(inven, item)
 		return
 	end
 	self:dropFloor(inven, item, true, true)
-	self:sortInven()
+	self:sortInven(inven)
 	self:useEnergy()
 	self.changed = true
 end

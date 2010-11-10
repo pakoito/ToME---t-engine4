@@ -314,6 +314,19 @@ function _M:getPathString()
 	return ps
 end
 
+--- Drop no-teleport items
+function _M:dropNoTeleportObjects()
+	for inven_id, inven in pairs(self.inven) do
+		for item = #inven, 1, -1 do
+			local o = inven[item]
+			if o.no_teleport then
+				self:dropFloor(inven, item, false, true)
+				game.logPlayer(self, "#LIGHT_RED#Your %s is immunte to the teleportation and drops to the floor!", o:getName{do_color=true})
+			end
+		end
+	end
+end
+
 --- Blink through walls
 function _M:probabilityTravel(x, y, dist)
 	if game.zone.wilderness then return true end
@@ -327,6 +340,7 @@ function _M:probabilityTravel(x, y, dist)
 		dist = dist - 1
 	end
 	if game.level.map:isBound(tx, ty) and not game.level.map:checkAllEntities(tx, ty, "block_move", self) and not game.level.map.attrs(tx, ty, "no_teleport") then
+		self:dropNoTeleportObjects()
 		return engine.Actor.move(self, tx, ty, false)
 	end
 	return true
@@ -343,7 +357,14 @@ function _M:teleportRandom(x, y, dist, min_dist)
 	if game.level.data.no_teleport_south and y + dist > self.y then
 		y = self.y - dist
 	end
-	return engine.Actor.teleportRandom(self, x, y, dist, min_dist)
+	local ox, oy = self.x, self.y
+	local ret = engine.Actor.teleportRandom(self, x, y, dist, min_dist)
+	if self.x ~= ox or self.y ~= oy then
+		self.x, self.y, ox, oy = ox, oy, self.x, self.y
+		self:dropNoTeleportObjects()
+		self.x, self.y, ox, oy = ox, oy, self.x, self.y
+	end
+	return ret
 end
 
 --- Quake a zone
