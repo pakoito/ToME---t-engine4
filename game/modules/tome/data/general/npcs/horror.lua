@@ -39,41 +39,28 @@ newEntity{
 	size_category = 3,
 }
 
-newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
-	name = "Grgglck's Tentacle",
-	color = colors.GREY,
-	desc = [[This is one of Grgglck's tentacle, it looks more vulnerable than the main body.]],
-	level_range = {20, nil}, exp_worth = 0,
-	max_life = 100, life_rating = 3, fixed_rating = true,
-	equilibrium_regen = -20,
-	rank = 3,
-	no_breath = 1,
-	size_category = 2,
+newEntity{ base = "BASE_NPC_DEMON",
+	name = "wretchling", color=colors.GREEN,
+	desc = "Acid oozes all over this small demon's skin.  Beware, they tend to hunt in packs.",
+	level_range = {16, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	size_category = 1,
+	autolevel = "caster",
+	combat_armor = 1, combat_def = 0,
+	combat = {dam=resolvers.mbonus(55, 15), apr=10, atk=resolvers.mbonus(50, 15), damtype=DamageType.ACID, dammod={mag=1}},
 
-	stun_immune = 1,
-	knockback_immune = 1,
-	teleport_immune = 1,
+	resists={[DamageType.ACID] = 100},
 
-	resists = { all=50, [DamageType.DARKNESS] = 100 },
+	resolvers.talents{
+		[Talents.T_RUSH]=6,
+		[Talents.T_ACID_BLOOD]=3,
+		[Talents.T_CORROSIVE_VAPOUR]=3,
+	},
 
-	combat = { dam=resolvers.mbonus(25, 15), atk=500, apr=500, dammod={str=1} },
-
-	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
-
-	on_act = function(self)
-		if self.summoner.dead then
-			self:die()
-			game.logSeen(self, "#AQUAMARINE#With Grgglck's death its tentacle also falls lifeless on the ground!")
-		end
-	end,
-
-	on_die = function(self, who)
-		if self.summoner and not self.summoner.dead then
-			game.logSeen(self, "#AQUAMARINE#As %s falls you notice that %s seems to shudder in pain!", self.name, self.summoner.name)
-			self.summoner:takeHit(self.max_life, who)
-		end
-	end,
+	make_escort = {
+		{type="demon", subtype="minor", name="wretchling", number=rng.range(1, 4), no_subescort=true},
+	},
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -123,6 +110,73 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 }
 
+newEntity{ base = "BASE_NPC_HORROR",
+	name = "bloated horror", color=colors.WHITE,
+	desc ="A bulbous humanoid form floats here. It's bald, child-like head is disproportionately large compared to it's body and its skin is pock-marked in nasty red sores.",
+	level_range = {27, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	size_category = 4,
+	autolevel = "caster",
+	combat_armor = 1, combat_def = 0,
+	combat = {dam=resolvers.mbonus(25, 15), apr=0, atk=resolvers.mbonus(30, 15), dammod={mag=0.6}},
+
+	never_move = 1,
+
+	resists = {all = 35, [DamageType.LIGHT] = -30},
+
+	resolvers.talents{
+		[Talents.T_FEATHER_WIND]=5,
+		[Talents.T_PHASE_DOOR]=2,
+		[Talents.T_MIND_DISRUPTION]=4,
+		[Talents.T_MIND_SEAR]=4,
+		[Talents.T_TELEKINETIC_BLAST]=4,
+	},
+
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	name = "nightmare horror", color=colors.DARK_GREY,
+	desc ="A shifting form of darkest night that seems to reflect your deepest fears.",
+	level_range = {30, nil}, exp_worth = 1,
+	negative_regen = 10,
+	rarity = 7,
+	rank = 3,
+	life_rating = 7,
+	autolevel = "warriormage",
+	stats = { str=15, dex=20, mag=20, wil=20, con=15 },
+	combat_armor = 1, combat_def = 10,
+	combat = { dam=20, atk=20, apr=50, dammod={str=0.6}, damtype=DamageType.DARKNESS},
+
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+
+	can_pass = {pass_wall=70},
+	resists = {all = 35, [DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
+
+	blind_immune = 1,
+	see_invisible = 80,
+	no_breath = 1,
+
+	resolvers.talents{
+		[Talents.T_STALK]=5,
+		[Talents.T_GLOOM]=3,
+		[Talents.T_WEAKNESS]=3,
+		[Talents.T_TORMENT]=3,
+		[Talents.T_DOMINATE]=3,
+		[Talents.T_BLINDSIDE]=3,
+		[Talents.T_LIFE_LEECH]=5,
+		[Talents.T_SHADOW_BLAST]=4,
+		[Talents.T_HYMN_OF_SHADOWS]=3,
+	},
+
+	resolvers.sustains_at_birth(),
+}
+
+------------------------------------------------------------------------
+-- Uniques
+------------------------------------------------------------------------
+
 newEntity{ base="BASE_NPC_HORROR",
 	name = "Grgglck the Devouring Darkness", unique = true,
 	color = colors.DARK_GREY,
@@ -160,4 +214,41 @@ You can discern a huge ruond mouth covered in razor-sharp teeth.]],
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
+}
+
+newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
+	name = "Grgglck's Tentacle",
+	color = colors.GREY,
+	desc = [[This is one of Grgglck's tentacle, it looks more vulnerable than the main body.]],
+	level_range = {20, nil}, exp_worth = 0,
+	max_life = 100, life_rating = 3, fixed_rating = true,
+	equilibrium_regen = -20,
+	rank = 3,
+	no_breath = 1,
+	size_category = 2,
+
+	stun_immune = 1,
+	knockback_immune = 1,
+	teleport_immune = 1,
+
+	resists = { all=50, [DamageType.DARKNESS] = 100 },
+
+	combat = { dam=resolvers.mbonus(25, 15), atk=500, apr=500, dammod={str=1} },
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
+
+	on_act = function(self)
+		if self.summoner.dead then
+			self:die()
+			game.logSeen(self, "#AQUAMARINE#With Grgglck's death its tentacle also falls lifeless on the ground!")
+		end
+	end,
+
+	on_die = function(self, who)
+		if self.summoner and not self.summoner.dead then
+			game.logSeen(self, "#AQUAMARINE#As %s falls you notice that %s seems to shudder in pain!", self.name, self.summoner.name)
+			self.summoner:takeHit(self.max_life, who)
+		end
+	end,
 }
