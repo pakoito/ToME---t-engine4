@@ -320,8 +320,10 @@ function _M:getSaveDescription()
 		name = player.name,
 		description = ([[%s the level %d %s %s.
 Difficulty: %s
+Campaign: %s
 Exploring level %d of %s.]]):format(
 		player.name, player.level, player.descriptor.subrace, player.descriptor.subclass,
+		player.descriptor.world,
 		player.descriptor.difficulty,
 		self.level.level, self.zone.name
 		),
