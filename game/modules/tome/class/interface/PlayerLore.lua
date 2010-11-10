@@ -77,7 +77,7 @@ function _M:learnLore(lore)
 		local l = self:getLore(lore)
 		Dialog:simpleLongPopup("Lore found: #0080FF#"..l.name, "#ANTIQUE_WHITE#"..l.lore, 400)
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)
-		game.logPlayer(self, "#ANTIQUE_WHITE#%s", l.lore)
+		game.logPlayer(self, "#ANTIQUE_WHITE#%s", util.getval(l.lore))
 		game.logPlayer(self, "You can read all your collected lore in the game menu, by pressing Escape.")
 	end
 

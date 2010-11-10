@@ -77,4 +77,22 @@ return {
 			}, },
 		},
 	},
+	on_enter = function(_, _, newzone)
+		if newzone and not game.zone.created_lore then
+			local levels = {2,3,4,5,6,7}
+			game.zone.created_lore = {}
+			for i = 1, 4 do
+				local lev = rng.tableRemove(levels)
+				game.zone.created_lore[lev] = i
+				print("Lore "..i.." on level "..lev)
+			end
+		end
+	end,
+	post_process = function(level)
+		-- Put lore near the up stairs
+		if game.zone.created_lore and game.zone.created_lore[level.level] then
+			-- Place a lore note on the level
+			game:placeRandomLoreObject("NOTE"..game.zone.created_lore[level.level])
+		end
+	end,
 }

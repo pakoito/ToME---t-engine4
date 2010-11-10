@@ -63,7 +63,7 @@ function _M:generateList()
 	local i = 0
 	for id, _ in pairs(self.actor.lore_known) do
 		local l = self.actor:getLore(id)
-		list[#list+1] = { name=l.name, desc=l.lore, cat=l.category, order=l.order }
+		list[#list+1] = { name=l.name, desc=util.getval(l.lore), cat=l.category, order=l.order }
 		i = i + 1
 	end
 	-- Add known artifacts
