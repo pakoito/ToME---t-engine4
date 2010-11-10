@@ -18,3 +18,15 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+for i = 1, 6 do
+newEntity{ base = "BASE_LORE",
+	define_as = "FOUNDATION_NOTE"..i,
+	subtype = "last hope foundation", unique=true, no_unique_lore=true,
+	name = "The Diaries of King Toknor the Brave ("..i..")", lore="last-hope-foundation-note-"..i,
+	desc = [[A part of the history of Last Hope, and king Toknor the Brave.]],
+	rarity = false,
+	encumberance = 0,
+	cost = 2,
+}
+end

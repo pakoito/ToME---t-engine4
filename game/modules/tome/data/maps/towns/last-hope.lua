@@ -46,13 +46,15 @@ quickEntity('9', {show_tooltip=true, name="Closed store", display='9', color=col
 quickEntity('0', {show_tooltip=true, name="Closed store", display='0', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('a', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('b', {show_tooltip=true, name="Hall of the King", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+quickEntity('c', {show_tooltip=true, name="Library", display='*', color=colors.LIGHT_RED, resolvers.store("LAST_HOPE_LIBRARY"), image="terrain/wood_store_book.png"})
 quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('e', {show_tooltip=true, name="Rare goods", display='*', color=colors.AQUAMARINE, resolvers.store("LOST_MERCHANT"), resolvers.chatfeature("last-hope-lost-merchant"), image="terrain/wood_store_weapon.png"})
 quickEntity('g', {show_tooltip=true, name="Rich merchant", display='*', color=colors.AQUAMARINE, resolvers.chatfeature("last-hope-melinda-father"), image="terrain/wood_store_closed.png"})
 
 quickEntity('E', {show_tooltip=true, name="The Elder", display='*', color=colors.VIOLET, resolvers.chatfeature("last-hope-elder"), image="terrain/wood_store_closed.png"})
 quickEntity('f', {show_tooltip=true, name="Tannen's Tower", display='*', color=colors.VIOLET, resolvers.chatfeature("tannen"), image="terrain/wood_store_closed.png"})
+
+quickEntity('@', {show_tooltip=true, name="King Tolak Statue", display='@', color=colors.LIGHT_BLUE, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("last-hope-tolak-statue") end return true end})
 
 startx = 95
 starty = 45
@@ -75,7 +77,7 @@ return {
 [[#^^^^----###---##--ssS--OOOOO#--ssss--OOOOOO--##---                                             ]],
 [[#^^--------###----ssSs#--OOO-##-##g##--OOOOOO--##---            ----                            ]],
 [[#^ ----------##--#sts#--OOOO--#---------OOOOOO--#------       --------                          ]],
-[[#^^-----------###-#s#--OOOOOO-##-#sssss--OOOOOO,#####---     -----------                        ]],
+[[#^^-----------###-#sc--OOOOOO-##-#sssss--OOOOOO,#####---     -----------                        ]],
 [[#^^-------------##-#--OOO-OOO--#--ssssss--OOOOO,,,,,#----  ---ssssssss---                       ]],
 [[#^^--------------#---OOO-t-OOO-##-#SStSS--OOOOOO,##,#---------ssssssss----                      ]],
 [[#^^^--#----------##-OOO-sssOOO--#--ssssss-OOOOOO--#,#####-----SStSSSSS-----                     ]],
@@ -88,7 +90,7 @@ return {
 [[#^^############-OOO--##-StSSS-OOO-#-ssss--OOOOO--T-#----,,##---ssssssss-O--------               ]],
 [[#^^^#########---OOO---#-sssss-OOO-#-ssss--OOOOOO---#,,,,,##----SSSSStSS-O---------              ]],
 [[#^^#########----OOO---#-###6#-OOO-#-##e#---OOOOOO--#######-----ssssssss-O----------             ]],
-[[#^^^#######-----OOO---#-------OOO-#---------OOOOOOOOOOOOOOOOO--########-O-----------            ]],
+[[#^^^#######---@-OOO---#-------OOO-#---------OOOOOOOOOOOOOOOOO--########-O-----------            ]],
 [[#^^#######bOOOOOOOO-^^^^^^^^^^MMM^^^^^^^^^^^^OOOOOOOOOOOOOOOOOOOOOOOOOOOO-----------            ]],
 [[#^^#######bOOOOOOO############III############^OOOOOOOOOOOOOOOOOOOOOOOOOOOOO---------            ]],
 [[#^ #######bOOOOOOO############III############^OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO---------           ]],

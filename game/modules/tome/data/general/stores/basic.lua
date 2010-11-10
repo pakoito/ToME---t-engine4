@@ -161,7 +161,7 @@ newEntity{
 	},
 }
 
------------ Lost Merchant
+----------- Last Hope
 newEntity{
 	define_as = "LOST_MERCHANT",
 	name = "rare goods",
@@ -176,6 +176,29 @@ newEntity{
 		max_fill = 20,
 		filters = {
 			{ego_chance=80, id=true, ignore={type="money"}},
+		},
+	},
+}
+
+newEntity{
+	define_as = "LAST_HOPE_LIBRARY",
+	name = "library",
+	display = '*', color=colors.LIGHT_RED,
+	store = {
+		purse = 5,
+		restock_after = 1000,
+		empty_before_restock = true,
+		buy_percent = 10,
+		sell_percent = 140,
+		min_fill = 40,
+		max_fill = 40,
+		filters = {
+			{id=true, defined="FOUNDATION_NOTE1"},
+			{id=true, defined="FOUNDATION_NOTE2"},
+			{id=true, defined="FOUNDATION_NOTE3"},
+			{id=true, defined="FOUNDATION_NOTE4"},
+			{id=true, defined="FOUNDATION_NOTE5"},
+			{id=true, defined="FOUNDATION_NOTE6"},
 		},
 	},
 }

@@ -107,7 +107,13 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 	if nb then
 		Dialog:yesnoPopup("Buy", ("Buy %d %s for %0.2f gold"):format(nb, o:getName{do_color=true, no_count=true}, price), function(ok) if ok then
 			self:onBuy(who, o, item, nb, true)
-			self:transfer(self, who, item, nb)
+			-- Learn lore ?
+			if who.player and o.lore then
+				self:removeObject(self:getInven("INVEN"), item)
+				who:learnLore(o.lore)
+			else
+				self:transfer(self, who, item, nb)
+			end
 			self:onBuy(who, o, item, nb, false)
 			if store_dialog then store_dialog:updateStore() end
 		end end, "Buy", "Cancel")

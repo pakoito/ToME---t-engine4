@@ -36,7 +36,7 @@ newEntity{
 
 newEntity{
 	define_as = "BASE_LORE",
-	type = "scroll", subtype="lore",
+	type = "lore", subtype="lore",
 	unided_name = "scroll", id_by_type = true,
 	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll-lore.png",
 	encumber = 0.1,

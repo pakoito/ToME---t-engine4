@@ -497,7 +497,7 @@ end
 
 --- Called when trying to pickup
 function _M:on_prepickup(who, idx)
-	if self.lore then
+	if who.player and self.lore then
 		game.level.map:removeObject(who.x, who.y, idx)
 		who:learnLore(self.lore)
 		return true
