@@ -39,30 +39,6 @@ newEntity{
 	size_category = 3,
 }
 
-newEntity{ base = "BASE_NPC_DEMON",
-	name = "wretchling", color=colors.GREEN,
-	desc = "Acid oozes all over this small demon's skin.  Beware, they tend to hunt in packs.",
-	level_range = {16, nil}, exp_worth = 1,
-	rarity = 1,
-	rank = 2,
-	size_category = 1,
-	autolevel = "caster",
-	combat_armor = 1, combat_def = 0,
-	combat = {dam=resolvers.mbonus(55, 15), apr=10, atk=resolvers.mbonus(50, 15), damtype=DamageType.ACID, dammod={mag=1}},
-
-	resists={[DamageType.ACID] = 100},
-
-	resolvers.talents{
-		[Talents.T_RUSH]=6,
-		[Talents.T_ACID_BLOOD]=3,
-		[Talents.T_CORROSIVE_VAPOUR]=3,
-	},
-
-	make_escort = {
-		{type="demon", subtype="minor", name="wretchling", number=rng.range(1, 4), no_subescort=true},
-	},
-}
-
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "worm that walks", color=colors.SANDY_BROWN, define_as="TEST",
 	desc = [[A maggot filled robe with a vaguely humanoid shape.]],

@@ -142,12 +142,12 @@ newEffect{
 		self.color_b = 155
 		game.level.map:updateMap(self.x, self.y)
 
-		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tmpid = self:addTemporaryValue("encased_in_ice", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
 		eff.dur = self:updateEffectDuration(eff.dur, "freeze")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("stunned", eff.tmpid)
+		self:removeTemporaryValue("encased_in_ice", eff.tmpid)
 		self:removeTemporaryValue("frozen", eff.frozid)
 		self.color_r = eff.old_r
 		self.color_g = eff.old_g
@@ -221,6 +221,24 @@ newEffect{
 }
 
 newEffect{
+	name = "STUNNED",
+	desc = "Stunned",
+	long_desc = function(self, eff) return "The target is stunned, preventing any actions." end,
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is stunned!", "+Stunned" end,
+	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "stun")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stunned", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "SPYDRIC_POISON",
 	desc = "Spydric Poison",
 	long_desc = function(self, eff) return ("The target is poisoned, doing %0.2f nature damage per turn and preventing any movements (but can still act freely)."):format(eff.power) end,
@@ -238,24 +256,6 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("never_move", eff.tmpid)
-	end,
-}
-
-newEffect{
-	name = "STUNNED",
-	desc = "Stunned",
-	long_desc = function(self, eff) return "The target is stunned, preventing any actions." end,
-	type = "physical",
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is stunned!", "+Stunned" end,
-	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("stunned", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("stunned", eff.tmpid)
 	end,
 }
 

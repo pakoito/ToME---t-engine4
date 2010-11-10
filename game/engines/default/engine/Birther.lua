@@ -85,12 +85,14 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 	self.c_random = Button.new{text="Random", width=math.floor(self.iw / 2 - 40), fct=function() self:randomSelect() end}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
 
-	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10 - self.c_random.h, scrollbar=true, columns={
+	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10 - self.c_random.h, scrollbar=true, all_clicks=true, columns={
 		{name="", width=8, display_prop="char"},
 		{name="", width=92, display_prop="display_name"},
-	}, list={}, fct=function(item, sel)
+	}, list={}, fct=function(item, sel, button, event)
 		self.sel = sel
-		self:next()
+		if event == "button" and button == "left" then self:next()
+		elseif event == "button" and button == "right" then self:prev()
+		end
 	end, select=function(item, sel) self.sel = sel self:select(item) end}
 
 	self.cur_order = 1
