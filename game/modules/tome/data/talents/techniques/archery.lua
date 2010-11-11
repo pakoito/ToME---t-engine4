@@ -165,7 +165,7 @@ newTalent{
 	type = {"technique/archery-utility", 1},
 	points = 5,
 	cooldown = 15,
-	stamina = 10,
+	stamina = 15,
 	require = techs_dex_req1,
 	archery_onreach = function(self, t, x, y)
 		local rad = 1
