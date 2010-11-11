@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 }
 
 newEntity{ base = "BASE_NPC_GHOST",
-	name = "dreadmaster", color=colors.YELLOW, image="npc/dreadmaster.png",
+	name = "dreadmaster", color=colors.YELLOW, image="npc/dreadmaster.png", define_as = "TEST",
 	desc = [[It is an unlife of power almost unequalled. An affront to existence, its very touch abuses and disrupts the flow of life, and its unearthly limbs, of purest black, crush rock and flesh with ease.]],
 	level_range = {32, nil}, exp_worth = 1,
 	rarity = 15,
@@ -85,13 +85,13 @@ newEntity{ base = "BASE_NPC_GHOST",
 
 	summon = {{type="undead", subtype="ghost", name="dead", number=3, hasxp=false}, },
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_PHASE_DOOR]=2,
-		[Talents.T_BLUR_SIGHT]=4,
+--		[Talents.T_SUMMON]=1,
+--		[Talents.T_PHASE_DOOR]=2,
+--		[Talents.T_BLUR_SIGHT]=4,
 		[Talents.T_DISPERSE_MAGIC]=3,
-		[Talents.T_SILENCE]=2,
-		[Talents.T_MIND_DISRUPTION]=3,
-		[Talents.T_BURNING_HEX]=5,
+--		[Talents.T_SILENCE]=2,
+--		[Talents.T_MIND_DISRUPTION]=3,
+--		[Talents.T_BURNING_HEX]=5,
 	},
 }
 

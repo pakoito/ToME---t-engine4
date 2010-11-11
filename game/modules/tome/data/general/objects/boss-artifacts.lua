@@ -23,7 +23,7 @@ local Talents = require "engine.interface.ActorTalents"
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
 newEntity{ base = "BASE_LONGSWORD",
-	define_as = "LONGSWORD_WINTERTIDE", rarity=false, unided_name = "glittering longsword",
+	define_as = "LONGSWORD_WINTERTIDE", rarity=false, unided_name = "glittering longsword", image="object/artifact/wintertide.png",
 	name = "Wintertide", unique=true,
 	desc = [[The air seems to freeze around the blade of this sword, draining all heat from the area.
 It is said the Conclave created this weapon for their warmaster during the dark times of the first allure war.]],
@@ -59,7 +59,7 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 }
 
 newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
-	unided_name = "phial filled with darkness", unique = true,
+	unided_name = "phial filled with darkness", unique = true, image="object/artifact/wintertide_phial.png",
 	name = "Wintertide Phial", color=colors.DARK_GREY,
 	desc = [[This phial seems filled with darkness, yet it cleanses your thoughts.]],
 	level_range = {1, 10},
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
 
 newEntity{ base = "BASE_AMULET",
 	define_as = "FIERY_CHOKER", rarity=false,
-	name = "Fiery Choker", unique=true,
+	name = "Fiery Choker", unique=true, image="object/artifact/fiery_chocker.png",
 	desc = [[A choker made of pure flame, forever shifting patterns around the neck of its wearer. Its fire seems to not harm the wearer.]],
 	level_range = {32, 42},
 	rarity = 220,
@@ -100,7 +100,7 @@ newEntity{ base = "BASE_AMULET",
 -- Artifact, droped by Rantha
 newEntity{ base = "BASE_LEATHER_BOOT",
 	define_as = "FROST_TREADS",
-	name = "Frost Treads", unique=true,
+	name = "Frost Treads", unique=true, image="object/artifact/frost_threads.png",
 	desc = [[A pair of leather boots. Cold to the touch, they radiate a cold blue light.]],
 	require = { stat = { dex=16 }, },
 	level_range = {10, 18},
@@ -202,7 +202,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 
 newEntity{ base = "BASE_RING",
 	define_as = "PRIDE_GLORY", rarity=false,
-	name = "Glory of the Pride", unique=true,
+	name = "Glory of the Pride", unique=true, image="object/artifact/glory_of_the_pride.png",
 	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is incribed in the orc tongue, the black speech.]],
 	unided_name = "deep black ring",
 	level_range = {40, 50},
@@ -228,7 +228,7 @@ newEntity{ base = "BASE_RING",
 
 newEntity{ base = "BASE_HELM",
 	define_as = "HELM_OF_GARKUL",
-	name = "Steel Helm of Garkul", unique=true,
+	name = "Steel Helm of Garkul", unique=true, image="object/artifact/helm_of_garkul.png",
 	desc = [[A great helm that belonged to Garkul the Devourer, one of the greatest orcs to live.]],
 	require = { stat = { str=16 }, },
 	level_range = {12, 22},

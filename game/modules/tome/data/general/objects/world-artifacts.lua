@@ -235,7 +235,7 @@ newEntity{ base = "BASE_RING",
 
 newEntity{ base = "BASE_LITE",
 	unique = true,
-	name = "Summertide Phial",
+	name = "Summertide Phial", image="object/artifact/summertide_phial.png",
 	unided_name = "glowing phial",
 	level_range = {1, 10},
 	color=colors.YELLOW,

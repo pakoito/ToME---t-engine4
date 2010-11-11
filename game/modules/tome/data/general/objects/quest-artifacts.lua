@@ -27,7 +27,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	unided_name = "dark runed staff",
 	name = "Staff of Absorption",
 	level_range = {30, 30},
-	display = "\\", color=colors.VIOLET, image = "object/staff_dragonbone.png",
+	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.]],

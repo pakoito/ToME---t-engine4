@@ -42,7 +42,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
-	name = "worm that walks", color=colors.SANDY_BROWN, define_as="TEST",
+	name = "worm that walks", color=colors.SANDY_BROWN,
 	desc = [[A maggot filled robe with a vaguely humanoid shape.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 5,
@@ -155,7 +155,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 ------------------------------------------------------------------------
 -- Headless horror and its eyes
 ------------------------------------------------------------------------
-newEntity{ base = "BASE_NPC_HORROR", define_as = "TEST",
+newEntity{ base = "BASE_NPC_HORROR",
 	name = "headless horror", color=colors.TAN,
 	desc ="A headless gangly humanoid with a large distended stomach.",
 	level_range = {30, nil}, exp_worth = 1,
