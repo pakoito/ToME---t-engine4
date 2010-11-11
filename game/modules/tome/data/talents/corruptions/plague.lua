@@ -95,7 +95,7 @@ newTalent{
 		end)
 
 		if #diseases > 0 then
-			self:project({type="ball", radius=1, range=self:getTalentRange(t)}, x, y, function(px, py)
+			self:project({type="ball", radius=1 + math.floor(self:getTalentLevelRaw(t) / 2), range=self:getTalentRange(t)}, x, y, function(px, py)
 				local target = game.level.map(px, py, engine.Map.ACTOR)
 				if not target or target == source or target == self then return end
 
@@ -110,9 +110,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Make your target's diseases burst, doing %0.2f blight damage for each disease it is infected with.
-		This will also spread the diseases to any nearby foes in a radius of 1.
+		This will also spread the diseases to any nearby foes in a radius of %d.
 		The damage will increase with your Magic stat.]]):
-		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 85)))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 85)), 1 + math.floor(self:getTalentLevelRaw(t) / 2))
 	end,
 }
 
