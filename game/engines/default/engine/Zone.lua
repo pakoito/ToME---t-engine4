@@ -586,6 +586,16 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	level.default_down = {x=dx, y=dy}
 	level.spots = spots
 
+	-- Add the entities we are told to
+	for i = 0, map.w - 1 do for j = 0, map.h - 1 do
+		if map.room_map[i] and map.room_map[i][j] and map.room_map[i][j].add_entities then
+			for z = 1, #map.room_map[i][j].add_entities do
+				local ae = map.room_map[i][j].add_entities[z]
+				self:addEntity(level, ae[2], ae[1], i, j)
+			end
+		end
+	end end
+
 	-- Generate objects
 	if level_data.generator.object and level_data.generator.object.class then
 		local generator = self:getGenerator("object", level, spots)
@@ -603,16 +613,6 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		local generator = self:getGenerator("actor", level, spots)
 		generator:generate()
 	end
-
-	-- Add the entities we are told to
-	for i = 0, map.w - 1 do for j = 0, map.h - 1 do
-		if map.room_map[i] and map.room_map[i][j] and map.room_map[i][j].add_entities then
-			for z = 1, #map.room_map[i][j].add_entities do
-				local ae = map.room_map[i][j].add_entities[z]
-				self:addEntity(level, ae[2], ae[1], i, j)
-			end
-		end
-	end end
 
 	-- Adjust shown & obscure colors
 	if level_data.color_shown then map:setShown(unpack(level_data.color_shown)) end

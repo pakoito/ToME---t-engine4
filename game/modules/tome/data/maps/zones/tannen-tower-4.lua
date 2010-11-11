@@ -51,11 +51,14 @@ addData{post_process = function(level)
 	-- Need to kill them all
 	for uid, a in pairs(level.entities) do
 		if a.faction and game.player:reactionToward(a) < 0 then
-			level.nb_to_open = level.nb_to_open + 1
 			a.old_on_die = a.on_die
 			a.on_die = function(self, who)
-				game.level.nb_to_open = game.level.nb_to_open - 1
-				if game.level.nb_to_open <= 0 then game.level.open_doors() end
+				local nb = 0
+				for uid, a in pairs(game.level.entities) do
+					if a.faction and game.player:reactionToward(a) < 0 and not a.dead then nb = nb + 1 end
+				end
+				if nb <= 0 then game.level.open_doors() end
+				a:check("old_on_die")
 			end
 		end
 	end

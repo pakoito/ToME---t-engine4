@@ -174,7 +174,7 @@ back_to_last_hope = function(self)
 	-- Move to the portal spot
 	game.player:move(12, 43, true)
 	-- Remove tannen
-	game.level.map(10, 16, engine.Map.TERRAIN, game.level.map(10, 15, engine.Map.TERRAIN))
+	game.level.map(10, 6, engine.Map.TERRAIN, game.level.map(10, 5, engine.Map.TERRAIN))
 
 	-- Add the mage
 	local g = mod.class.NPC.new{
