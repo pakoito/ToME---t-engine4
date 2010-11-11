@@ -37,6 +37,8 @@ newEntity{
 	max_life = resolvers.rngavg(10,20),
 	rank = 2,
 	size_category = 3,
+
+	no_breath = 1,
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -147,6 +149,210 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 
 	resolvers.sustains_at_birth(),
+}
+
+
+------------------------------------------------------------------------
+-- Headless horror and its eyes
+------------------------------------------------------------------------
+newEntity{ base = "BASE_NPC_HORROR", define_as = "TEST",
+	name = "headless horror", color=colors.TAN,
+	desc ="A headless gangly humanoid with a large distended stomach.",
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 3,
+	rank = 3,
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	combat = { dam=20, atk=20, apr=10, dammod={str=1} },
+	combat = {damtype=DamageType.PHYSICAL},
+	no_auto_resists = true,
+
+	-- Should get resists based on eyes generated, 30% all per eye and 100% to the eyes element.  Should lose said resists when the eyes die.
+
+	-- Should be blind but see through the eye escorts
+	--blind= 1,
+
+	resolvers.talents{
+		[Talents.T_MANA_CLASH]=5,
+		[Talents.T_GRAB]=5,
+	},
+
+	-- Add eyes
+	on_added_to_level = function(self)
+		local eyes = {}
+		for i = 1, 3 do
+			local x, y = util.findFreeGrid(self.x, self.y, 15, true, {[engine.Map.ACTOR]=true})
+			if x and y then
+				local m = game.zone:makeEntity(game.level, "actor", {properties={"is_eldritch_eye"}, special_rarity="_eldritch_eye_rarity"}, nil, true)
+				if m then
+					m.summoner = self
+					game.zone:addEntity(game.level, m, "actor", x, y)
+					eyes[m] = true
+
+					-- Grant resist
+					local damtype = next(m.resists)
+					self.resists[damtype] = 100
+					self.resists.all = (self.resists.all or 0) + 30
+				end
+			end
+		end
+		self.eyes = eyes
+	end,
+
+	-- Needs an on death affect that kills off any remaining eyes.
+	on_die = function(self, src)
+		local nb = 0
+		for eye, _ in pairs(self.eyes) do
+			if not eye.dead then eye:die(src) nb = nb + 1 end
+		end
+		if nb > 0 then
+			game.logSeen(self, "#AQUAMARINE#As %s falls all its eyes fall to the ground!", self.name)
+		end
+	end,
+}
+
+newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
+	name = "eldritch eye", color=colors.SLATE, is_eldritch_eye=true,
+	desc ="A small bloadshot eye floats here.",
+	level_range = {30, nil}, exp_worth = 1,
+	life_rating = 7,
+	rank = 2,
+	size_category = 1,
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	combat_armor = 1, combat_def = 0,
+	levitation = 1,
+	no_auto_resists = true,
+	talent_cd_reduction = {all=100},
+
+	on_die = function(self, src)
+		if not self.summoner then return end
+		game.logSeen(self, "#AQUAMARINE#As %s falls %s seems to weaken!", self.name, self.summoner.name)
+		local damtype = next(self.resists)
+		self.summoner.resists.all = (self.summoner.resists.all or 0) - 30
+		self.summoner[damtype] = nil
+
+		-- Blind the main horror if no more eyes
+		local nb = 0
+		for eye, _ in pairs(self.summoner.eyes) do
+			if not eye.dead then nb = nb + 1 end
+		end
+		if nb == 0 then
+			local sx, sy = game.level.map:getTileToScreen(self.summoner.x, self.summoner.y)
+			game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, "+Blind", {255,100,80})
+			self.summoner.blind = 1
+			game.logSeen(self.summoner, "%s is blinded by the loss of all its eyes.", self.summoner.name:capitalize())
+		end
+	end,
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--fire
+	_eldritch_eye_rarity = 1,
+	vim_regen = 100,
+	resists = {[DamageType.FIRE] = 80},
+	resolvers.talents{
+		[Talents.T_BURNING_HEX]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--cold
+	_eldritch_eye_rarity = 1,
+	mana_regen = 100,
+	resists = {[DamageType.COLD] = 80},
+	resolvers.talents{
+		[Talents.T_FREEZE]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--earth
+	_eldritch_eye_rarity = 1,
+	mana_regen = 100,
+	resists = {[DamageType.PHYSICAL] = 80},
+	resolvers.talents{
+		[Talents.T_STRIKE]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--arcane
+	_eldritch_eye_rarity = 1,
+	mana_regen = 100,
+	resists = {[DamageType.ARCANE] = 80},
+	resolvers.talents{
+		[Talents.T_MANATHRUST]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--acid
+	_eldritch_eye_rarity = 1,
+	equilibrium_regen = -100,
+	resists = {[DamageType.ACID] = 80},
+	resolvers.talents{
+		[Talents.T_HYDRA]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--dark
+	_eldritch_eye_rarity = 1,
+	vim_regen = 100,
+	resists = {[DamageType.DARKNESS] = 80},
+	resolvers.talents{
+		[Talents.T_CURSE_OF_DEATH]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--light
+	_eldritch_eye_rarity = 1,
+	resists = {[DamageType.LIGHT] = 80},
+	resolvers.talents{
+		[Talents.T_SEARING_LIGHT]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--lightning
+	_eldritch_eye_rarity = 1,
+	mana_regen = 100,
+	resists = {[DamageType.LIGHTNING] = 80},
+	resolvers.talents{
+		[Talents.T_LIGHTNING]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--blight
+	_eldritch_eye_rarity = 1,
+	vim_regen = 100,
+	resists = {[DamageType.BLIGHT] = 80},
+	resolvers.talents{
+		[Talents.T_VIRULENT_DISEASE]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--nature
+	_eldritch_eye_rarity = 1,
+	equilibrium_regen = -100,
+	resists = {[DamageType.NATURE] = 80},
+	resolvers.talents{
+		[Talents.T_SPIT_POISON]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
+	--mind
+	_eldritch_eye_rarity = 1,
+	mana_regen = 100,
+	resists = {[DamageType.MIND] = 80},
+	resolvers.talents{
+		[Talents.T_MIND_DISRUPTION]=3,
+	},
 }
 
 ------------------------------------------------------------------------

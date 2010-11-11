@@ -1506,6 +1506,7 @@ function _M:getTalentCooldown(t)
 	local cd = t.cooldown
 	if type(cd) == "function" then cd = cd(self, t) end
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
+	if self.talent_cd_reduction.all then cd = cd - self.talent_cd_reduction.all end
 	if t.is_spell then
 		return math.ceil(cd * (1 - self.spell_cooldown_reduction or 0))
 	else
