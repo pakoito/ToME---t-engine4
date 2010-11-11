@@ -666,8 +666,8 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b)
 			s:drawStringBlended(font, v, x + w, y + h, r, g, b, true)
 			w = w + fontoldsize(font, v)
 		elseif tv == "boolean" then
-			w = 0
-			h = h + fh
+--			w = 0
+--			h = h + fh
 			max_lines = max_lines - 1
 			if max_lines <= 0 then break end
 		else

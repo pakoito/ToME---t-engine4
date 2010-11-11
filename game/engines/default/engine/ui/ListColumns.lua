@@ -109,7 +109,8 @@ function _M:drawItem(item)
 			local s = col.surface
 
 			s:erase(0, 0, 0, 0)
-			text:drawOnSurface(s, fw - ls_w - rs_w, 1, self.font, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3])
+			-- We use 1000 and do not cut lines to make sure it draws as much as possible
+			text:drawOnSurface(s, 10000, nil, self.font, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3])
 			item._tex = item._tex or {}
 			item._tex[j] = {s:glTexture()}
 		end
