@@ -167,7 +167,7 @@ function _M:getDisplayColor()
 		if self.randart then
 			return {255, 0x77, 0}, "#FF7700#"
 		elseif self.godslayer then
-			return {0xDC, 0xF7, 0x25}, "#dcf725#"
+			return {0xAA, 0xD5, 0x00}, "#AAD500#"
 		else
 			return {255, 215, 0}, "#FFD700#"
 		end
