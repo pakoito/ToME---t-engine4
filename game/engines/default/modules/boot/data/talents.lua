@@ -95,7 +95,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE,rng.range(10, 20) * self:getTalentLevel(t), {type="flame"})
+		self:project(tg, x, y, DamageType.FIRE,rng.range(10, 20) * self:getTalentLevel(t))
 		game.level.map:particleEmitter(self.x, self.y, tg.range, "flame", {tx=x-self.x, ty=y-self.y})
 		return true
 	end,
