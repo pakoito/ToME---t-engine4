@@ -251,11 +251,19 @@ available_resolutions =
 	["1024x768"] = {1024, 768, false},
 	["1200x1024"] = {1200, 1024, false},
 	["1600x1200"] = {1600, 1200, false},
-	["800x600 Fullscreen"] = {800, 600, true},
-	["1024x768 Fullscreen"] = {1024, 768, true},
-	["1200x1024 Fullscreen"] = {1200, 1024, true},
-	["1600x1200 Fullscreen"] = {1600, 1200, true},
+--	["800x600 Fullscreen"] = {800, 600, true},
+--	["1024x768 Fullscreen"] = {1024, 768, true},
+--	["1200x1024 Fullscreen"] = {1200, 1024, true},
+--	["1600x1200 Fullscreen"] = {1600, 1200, true},
 }
+local list = core.display.getModesList()
+for _, m in ipairs(list) do
+	local ms = m.w.."x"..m.h.." Fullscreen"
+	if m.w >= 800 and m.h >= 600 and not available_resolutions[ms] then
+		available_resolutions[ms] = {m.w, m.h, true}
+	end
+end
+
 --- Change screen resolution
 function _M:setResolution(res, force)
 	local r = available_resolutions[res]

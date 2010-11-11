@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 -- Engine Version
-engine.version = {0,9,14,"te4",5}
+engine.version = {0,9,14,"te4",6}
 engine.require_c_core = engine.version[5]
 engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
 

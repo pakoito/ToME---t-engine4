@@ -1464,6 +1464,59 @@ static int get_text_aa(lua_State *L)
 	return 1;
 }
 
+static sdl_get_modes_list(lua_State *L)
+{
+	SDL_PixelFormat format;
+	SDL_Rect **modes;
+	int loops = 0;
+	int bpp = 0;
+	int nb = 1;
+	lua_newtable(L);
+	do
+	{
+		//format.BitsPerPixel seems to get zeroed out on my windows box
+		switch(loops)
+		{
+			case 0://32 bpp
+				format.BitsPerPixel = 32;
+				bpp = 32;
+				break;
+			case 1://24 bpp
+				format.BitsPerPixel = 24;
+				bpp = 24;
+				break;
+			case 2://16 bpp
+				format.BitsPerPixel = 16;
+				bpp = 16;
+				break;
+		}
+
+		//get available fullscreen/hardware modes
+		modes = SDL_ListModes(&format, SDL_FULLSCREEN);
+		if (modes)
+		{
+			int i;
+			for(i=0; modes[i]; ++i)
+			{
+				printf("Available resolutions: %dx%dx%d\n", modes[i]->w, modes[i]->h, bpp/*format.BitsPerPixel*/);
+				lua_pushnumber(L, nb++);
+				lua_newtable(L);
+
+				lua_pushstring(L, "w");
+				lua_pushnumber(L, modes[i]->w);
+				lua_settable(L, -3);
+
+				lua_pushstring(L, "h");
+				lua_pushnumber(L, modes[i]->h);
+				lua_settable(L, -3);
+
+				lua_settable(L, -3);
+			}
+		}
+	}while(++loops != 3);
+	return 1;
+}
+
 static const struct luaL_reg displaylib[] =
 {
 	{"setTextBlended", set_text_aa},
@@ -1483,6 +1536,7 @@ static const struct luaL_reg displaylib[] =
 	{"loadImage", sdl_load_image},
 	{"setWindowTitle", sdl_set_window_title},
 	{"setWindowSize", sdl_set_window_size},
+	{"getModesList", sdl_get_modes_list},
 	{NULL, NULL},
 };
 
@@ -2292,7 +2346,7 @@ int luaopen_core(lua_State *L)
 
 	luaL_openlib(L, "core.game", gamelib, 0);
 	lua_pushstring(L, "VERSION");
-	lua_pushnumber(L, 5);
+	lua_pushnumber(L, 6);
 	lua_settable(L, -3);
 
 	luaL_openlib(L, "rng", rnglib, 0);
