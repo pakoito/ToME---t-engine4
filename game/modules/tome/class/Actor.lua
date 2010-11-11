@@ -192,13 +192,6 @@ function _M:act()
 		t.do_regenLife(self, t)
 	end
 	self:regenResources()
-	--if self.hate and self.hate > 0 then
-	--	-- hate goes down more based on time since last kill
-	--	self.hate_time_since_kill = math.min((self.hate_time_since_kill or 0) + 1, 130)
-	--	if self.hate_time_since_kill > 30 then
-	--		self.hate = math.max(self.hate - (0.015 * (self.hate_time_since_kill - 30) / 100), 0)
-	--	end
-	--end
 	-- Compute timed effects
 	self:timedEffects()
 
