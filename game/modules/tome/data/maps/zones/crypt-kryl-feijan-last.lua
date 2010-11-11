@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setStatusAll{lite=true}
+
 defineTile('.', "FLOOR")
 defineTile('#', "WALL")
 defineTile('+', "DOOR")
