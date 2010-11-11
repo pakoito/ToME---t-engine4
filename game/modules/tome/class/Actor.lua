@@ -225,7 +225,16 @@ function _M:act()
 		t.do_gloom(self, t)
 	end
 
-	if self:attr("stunned") then self.energy.value = self.energy.value - (game.energy_to_act * (100 - (self:attr("stun_immune") or 0))) end
+	if self:attr("stunned") then
+		self.stunned_counter = (self.stunned_counter or 0) + (self:attr("stun_immune") or 0) * 100
+		if self.stunned_counter < 100 then
+			self.energy.value = 0
+		else
+			-- We are saved for this turn
+			self.stunned_counter = self.stunned_counter - 100
+			game.logSeen(self, "%s temporarily fights the stun.", self.name:capitalize())
+		end
+	end
 	if self:attr("encased_in_ice") then self.energy.value = 0 end
 	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end

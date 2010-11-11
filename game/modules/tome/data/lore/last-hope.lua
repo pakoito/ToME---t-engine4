@@ -104,3 +104,25 @@ newLore{
 By royal decree it is under absolute conditions forbidden to show racial prejudice against humans or halflings. There shall be no preference of price or service, and no discrimination of trade or business or employment. No halfling shall be named fur-toes, midget or shortbum, and no human shall be named lanklegs, cloudhead or stumpfoot.
 The penalty for disobedience shall be flogging. Intolerance will not be tolerated!]],
 }
+
+newLore{
+	id = "last-hope-toknor-statue",
+	category = "last hope",
+	name = "All Hail King Toknor the Brace!",
+	lore = [[Born the 23th Allure, Year of Pyre 682
+Died the 2th Summertide, Year of Ascendancy 108
+
+King of Kings, Founder of Last Hope, Purger of Orcs, Father of the Age of Ascendancy. Great is the memory of the warrior who fought for peace, and won.
+Quoth King Toknor: "I have lived for the future, a future of peace and prosperity, a future free for all. How happy I am to see that future now... Aye, and it is brighter than any sword, and stronger than any armour, and more enduring than any war. Though warrior I am in flesh and mind, my heart belongs to peace."]],
+}
+
+newLore{
+	id = "last-hope-mirvenia-statue",
+	category = "last hope",
+	name = "All Hail Queen Mirvenia the Inspirer!",
+	lore = [[Born the 5th Flare, Year of Pyre 688
+Died the 2th Summertide, Year of Ascendancy 113
+
+Saviour of the Battle of Last Hope, Bringer of Unity, Soother of Hearts and Minds. Greatly is missed the alchemist that could change sorrow to joy, despair to hope, defeat to victory.
+Quoth Queen Mirvenia: "Nothing moves me more than seeing the sun set over Last Hope, seeing all the joy and beauty we have brought here bathed in glorious light. At moments like this I still feel him next to me, and I know I have lived a good life. Today has been a good day... Today I think I shall die."]],
+}

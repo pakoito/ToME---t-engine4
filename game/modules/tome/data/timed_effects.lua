@@ -210,6 +210,8 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Burning Shock" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		-- Start the stun counter only if this is the first stun
+		if self.stunned == 1 then self.stunned_counter = (self:attr("stun_immune") or 0) * 100 end
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	on_timeout = function(self, eff)
@@ -217,6 +219,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
+		if not self:attr("stunned") then self.stunned_counter = nil end
 	end,
 }
 
@@ -231,10 +234,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		-- Start the stun counter only if this is the first stun
+		if self.stunned == 1 then self.stunned_counter = (self:attr("stun_immune") or 0) * 100 end
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
+		if not self:attr("stunned") then self.stunned_counter = nil end
 	end,
 }
 
@@ -1452,11 +1458,14 @@ newEffect{
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		-- Start the stun counter only if this is the first stun
+		if self.stunned == 1 then self.stunned_counter = (self:attr("stun_immune") or 0) * 100 end
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("stunned", eff.tmpid)
+		if not self:attr("stunned") then self.stunned_counter = nil end
 	end,
 }
 
