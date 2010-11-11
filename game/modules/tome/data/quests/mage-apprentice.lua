@@ -42,7 +42,7 @@ on_status_change = function(self, who, status, sub)
 end
 
 collect_staff = function(self, npc, who, dialog)
-	who:showEquipInven("Offer which item?",
+	who:showInventory("Offer which item?", who:getInven("INVEN"),
 		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_KOR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
 		function(o, inven, item)
 			-- Special handling for the staff of absorption
@@ -76,7 +76,7 @@ can_offer = function(self, who)
 end
 
 collect_staff_kor = function(self, who, dialog)
-	who:showEquipInven("Offer which item?",
+	who:showInventory("Offer which item?", who:getInven("INVEN"),
 		function(o) return o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_KOR" end,
 		function(o, inven, item)
 			self.nb_collect = self.nb_collect + 15
