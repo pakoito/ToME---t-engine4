@@ -301,6 +301,19 @@ newDamageType{
 	end,
 }
 newDamageType{
+	name = "blindness", type = "BLINDPHYSICAL",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatAttack(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {})
+			else
+				game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
+			end
+		end
+	end,
+}
+newDamageType{
 	name = "blinding ink", type = "BLINDING_INK",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)

@@ -161,56 +161,37 @@ newTalent{
 -------------------------------- Utility -----------------------------------
 
 newTalent{
-	name = "Forage",
+	name = "Flare",
 	type = {"technique/archery-utility", 1},
-	mode = "sustained",
 	points = 5,
-	cooldown = 30,
-	sustain_stamina = 30,
+	cooldown = 15,
+	stamina = 10,
 	require = techs_dex_req1,
-	no_npc_use = true,
-	on_kill = function(self, t, who)
-		-- Can not work without a correct weapon
-		if not self:getInven("MAINHAND") then return nil end
-		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or not weapon.archery then return nil end
-
-		-- Bad luck!
-		if not rng.percent(1 + self:getTalentLevelRaw(t) / 2) then return nil end
-
-		local st = "arrow"
-		if weapon.archery == "sling" then st = "shot" end
-		local ego = math.ceil(5 + (self:getTalentLevel(t) * 5))
-		local greater_ego = nil
-		if rng.percent(math.ceil(5 + (self:getTalentLevel(t) * 1))) then
-			ego = 100
-			greater_ego = function(e) if e.greater_ego then return true end end
+	archery_onreach = function(self, t, x, y)
+		local rad = 1
+		if self:getTalentLevel(t) >= 3 then rad = rad + 1 end
+		if self:getTalentLevel(t) >= 5 then rad = rad + 1 end
+		local tg = {type="ball", x=x, y=y, radius=rad}
+		self:project(tg, x, y, DamageType.LITE, 1)
+		if self:getTalentLevel(t) >= 3 then
+			tg.friendlyfire = false
+			self:project(tg, self.x, self.y, DamageType.BLINDPHYSICAL, 3)
 		end
-
-		local o = game.zone:makeEntity(game.level, "object", {type="ammo", subtype=st, ego_filter={ego_chance=ego, special=greater_ego}}, nil, true)
-		if o then
-			o:identify(true)
-			o:forAllStack(function(so) so.cost = 0 end)
-			self:addObject(self.INVEN_INVEN, o)
-			game.zone:addEntity(game.level, o, "object")
-			game.logPlayer(self, "#LIGHT_BLUE#You create some ammo: %s", o:getName{do_color=true})
-		end
-		return true
+		game.level.map:particleEmitter(x, y, tg.radius, "ball_light", {radius=tg.radius})
 	end,
-	activate = function(self, t)
-		return {}
-	end,
-	deactivate = function(self, t, p)
+	action = function(self, t)
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
+		if not targets then return end
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 0.5, 1.2), damtype=DamageType.FIRE})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Each time you kill a creature you have %d%% chances to forage in your immediate environment to try to make ammo for your current weapon.
-		At level 3 there is an additional %d%% chance to get superior ammo.
-		At level 5 there is an additional %d%% chance to get exceptional ammo.]]):format(
-			1 + self:getTalentLevelRaw(t) / 2,
-			math.ceil(5 + (self:getTalentLevel(t) * 5)),
-			math.ceil(5 + (self:getTalentLevel(t) * 1))
-		)
+		local rad = 1
+		if self:getTalentLevel(t) >= 3 then rad = rad + 1 end
+		if self:getTalentLevel(t) >= 5 then rad = rad + 1 end
+		return ([[You fire a flame shot, doing %d%% fire damage and lighting up the target area in a radius of %d.
+		At level 3 it also has a chance to blind for 3 turns.]]):
+		format(self:combatTalentWeaponDamage(t, 0.7, 1.2) * 100, rad)
 	end,
 }
 

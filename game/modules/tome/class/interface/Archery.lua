@@ -118,11 +118,13 @@ end
 --- Archery projectile code
 local function archery_projectile(tx, ty, tg, self)
 	local weapon, ammo = tg.archery.weapon, tg.archery.ammo
+	local talent = self:getTalentFromId(tg.talent_id)
 
 	local target = game.level.map(tx, ty, game.level.map.ACTOR)
+	if talent.archery_onreach then
+		talent.archery_onreach(self, talent, tx, ty)
+	end
 	if not target then return end
-
-	local talent = self:getTalentFromId(tg.talent_id)
 
 	local damtype = tg.archery.damtype or ammo.damtype or engine.DamageType.PHYSICAL
 	local mult = tg.archery.mult or 1

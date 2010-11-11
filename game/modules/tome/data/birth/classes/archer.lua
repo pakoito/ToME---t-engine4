@@ -64,7 +64,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
-		[ActorTalents.T_FORAGE] = 1,
+		[ActorTalents.T_FLARE] = 1,
 		[ActorTalents.T_STEADY_SHOT] = 1,
 		[ActorTalents.T_BOW_MASTERY] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
@@ -103,7 +103,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
-		[ActorTalents.T_FORAGE] = 1,
+		[ActorTalents.T_FLARE] = 1,
 		[ActorTalents.T_STEADY_SHOT] = 1,
 		[ActorTalents.T_SLING_MASTERY] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
