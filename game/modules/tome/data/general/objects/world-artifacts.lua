@@ -1175,6 +1175,35 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	},
 }
 
+newEntity{ base = "BASE_LIGHT_ARMOR",
+	unique = true,
+	name = "Behemoth Hide",
+	unided_name = "tough weathered hide",
+	desc = [[A rough hide made from a massive beast.  Seeing as it's so weathered but useable, maybe it's a bit special...]],
+	color = colors.BROWN,
+	level_range = {12, 22},
+	rarity = 210,
+	require = { stat = { str=18 }, },
+	cost = 250,
+	material_level = 3,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_CON] = 2 },
+
+		combat_armor = 6,
+		combat_def = 4,
+		combat_def_ranged = 8,
+
+		max_encumber = 20,
+		life_regen = 0.7,
+		stamina_regen = 0.7,
+		fatigue = 10,
+		max_stamina = 43,
+		max_life = 45,
+		knockback_immune = 0.1,
+		size_category = 1,
+	},
+}
+
 newEntity{ base = "BASE_HEAVY_ARMOR",
 	unique = true,
 	name = "Iron Mail of Bloodletting",

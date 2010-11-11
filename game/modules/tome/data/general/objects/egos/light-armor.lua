@@ -32,3 +32,15 @@ newEntity{
 		life_regen = resolvers.mbonus_material(60, 15, function(e, v) v=v/10 return v * 10, v end),
 	},
 }
+
+newEntity{
+	name = "nimble", prefix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = true,
+	rarity = 22,
+	cost = 35,
+	wielder = {
+		combat_def_ranged = resolvers.mbonus_material(8, 2, function(e, v) return v * 1 end),
+		movement_speed = -0.1,
+		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end), },
+}
