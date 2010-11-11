@@ -236,6 +236,8 @@ function _M:worldDirectorAI()
 end
 
 function _M:spawnWorldAmbush(enc)
+	game:onTickEnd(function()
+
 	local gen = { class = "engine.generator.map.Forest",
 		edge_entrances = {4,6},
 		sqrt_percent = 50,
@@ -285,6 +287,8 @@ function _M:spawnWorldAmbush(enc)
 	game.paused = true
 	game:changeLevel(1, zone)
 	engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed!")
+
+	end)
 end
 
 function _M:handleWorldEncounter(target)

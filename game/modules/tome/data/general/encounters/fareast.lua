@@ -22,7 +22,6 @@ newEntity{
 	type = "harmless", subtype = "special", unique = true,
 	level_range = {30, 40},
 	rarity = 1,
-	coords = {{ x=0, y=0, w=100, h=100}},
 	special_filter = function(self)
 		return self:findSpotGeneric(game.player, function(map, x, y) local enc = map:checkAllEntities(x, y, "can_encounter") return enc and enc == "water" end) and true or false
 	end,
