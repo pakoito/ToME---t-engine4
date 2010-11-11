@@ -85,13 +85,13 @@ newEntity{ base = "BASE_NPC_GHOST",
 
 	summon = {{type="undead", subtype="ghost", name="dead", number=3, hasxp=false}, },
 	resolvers.talents{
---		[Talents.T_SUMMON]=1,
---		[Talents.T_PHASE_DOOR]=2,
---		[Talents.T_BLUR_SIGHT]=4,
+		[Talents.T_SUMMON]=1,
+		[Talents.T_PHASE_DOOR]=2,
+		[Talents.T_BLUR_SIGHT]=4,
 		[Talents.T_DISPERSE_MAGIC]=3,
---		[Talents.T_SILENCE]=2,
---		[Talents.T_MIND_DISRUPTION]=3,
---		[Talents.T_BURNING_HEX]=5,
+		[Talents.T_SILENCE]=2,
+		[Talents.T_MIND_DISRUPTION]=3,
+		[Talents.T_BURNING_HEX]=5,
 	},
 }
 

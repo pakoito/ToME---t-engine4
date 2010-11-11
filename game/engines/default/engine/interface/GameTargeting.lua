@@ -206,7 +206,7 @@ end
 -- @param typ the targeting parameters
 function _M:targetGetForPlayer(typ)
 	if self.target.forced then return unpack(self.target.forced) end
-	if coroutine.running() then
+	if coroutine.running() and typ then
 		local msg
 		if type(typ) == "string" then msg, typ = typ, nil
 		elseif type(typ) == "table" then
