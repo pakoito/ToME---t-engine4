@@ -37,6 +37,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You transform into pure lightning, moving %d%% faster for %d turns.
+		Also provides 30%% physical damage resistance and 100%% lightning resistance.
 		Any actions other than moving will stop this effect.]]):format(400 + self:getTalentLevel(t) * 70, math.ceil(6 + self:getTalentLevel(t) * 1.2))
 	end,
 }

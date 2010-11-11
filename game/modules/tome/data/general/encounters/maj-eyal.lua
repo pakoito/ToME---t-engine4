@@ -92,8 +92,10 @@ newEntity{
 						},
 						post_process = function(level)
 							for uid, e in pairs(level.entities) do
-								if e.faction ~= "allied-kingdoms" then e.faction="assassin-lair" end
-								if not e.can_talk then e.can_talk = "assassin-lord-thieves" end
+								if e.faction ~= "allied-kingdoms" then
+									e.faction="assassin-lair"
+									e.cant_be_moved = true
+								end
 							end
 						end,
 					}, },

@@ -33,12 +33,12 @@ newEntity{ base = "TRAP_ALARM",
 		for i = x - 20, x + 20 do for j = y - 20, y + 20 do if game.level.map:isBound(i, j) then
 			local actor = game.level.map(i, j, game.level.map.ACTOR)
 			if actor and not actor.player then
-				if who:reactionToward(actor) >= 0 then
+				if who:reactionToward(actor) > 0 then
 					local tx, ty, a = who:getTarget()
 					if a then
 						actor:setTarget(a)
 					end
-				else
+				elseif who:reactionToward(actor) < 0 then
 					actor:setTarget(who)
 				end
 			end

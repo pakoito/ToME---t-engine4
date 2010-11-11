@@ -29,6 +29,7 @@ defineTile('P', "FLOOR", nil, mod.class.NPC.new{
 	display = "p", color=colors.VIOLET,
 	name = "Assassin Lord",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	cant_be_moved = true,
 
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.equip{
@@ -76,6 +77,7 @@ defineTile('@', "FLOOR", nil, mod.class.NPC.new{
 	faction = "allied-kingdoms",
 	can_talk = "lost-merchant",
 	is_merchant = true,
+	cant_be_moved = true,
 })
 
 startx = 2
