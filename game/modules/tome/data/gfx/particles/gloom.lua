@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+base_size = 32
+
 local toggle = false
 
 return { generator = function()

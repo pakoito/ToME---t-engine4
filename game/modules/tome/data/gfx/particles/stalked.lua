@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+base_size = 32
+
 return { generator = function()
 	local ad = 90 * rng.range(0, 3)
 	local a = math.rad(ad)

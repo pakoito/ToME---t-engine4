@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+base_size = 32
+
 local starts = {}
 for i = 1, 4 do
 	starts[#starts+1] = { a = math.rad(rng.range(0, 360)), r = rng.range(6, 20) }

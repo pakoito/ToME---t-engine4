@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+base_size = 32
+
 local toggle = false
 
 return { generator = function()
@@ -25,7 +27,7 @@ return { generator = function()
 	local dir = math.rad(ad)
 	local r = rng.range(6, 14)
 	local dirchance = rng.chance(2)
-	
+
 	return {
 		trail = 1,
 		life = 35,

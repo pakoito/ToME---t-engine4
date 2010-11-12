@@ -337,6 +337,12 @@ end
 function _M:recreate()
 	self:makeCMap()
 	self.changed = true
+
+	-- Update particles to the correct size
+	for e, _ in pairs(self.particles) do
+		e:loaded()
+	end
+
 	self:redisplay()
 end
 
@@ -956,7 +962,7 @@ function _M:displayParticles()
 
 		-- Dont bother with obviously out of screen stuff
 		if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), self.zoom)
+			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom)
 		end
 
 		if not alive then

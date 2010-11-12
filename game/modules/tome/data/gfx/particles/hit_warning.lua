@@ -16,6 +16,9 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+
+base_size = 32
+
 angle = angle or 0
 return { generator = function()
 	local ad = rng.range(-30, 30) + angle
