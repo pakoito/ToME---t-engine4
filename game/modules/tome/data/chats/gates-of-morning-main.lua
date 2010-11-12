@@ -44,7 +44,7 @@ newChat{ id="sunwall_west",
 	text = [[Ahh, so they survived? That is good news...]],
 	answers = {
 		{"Go on.", jump="sunwall_west2"},
-		{"Well, actually...", jump="sunwall_west2"},
+		{"Well, actually...", jump="sunwall_west2", cond=function(npc, player) return game.state.found_sunwall_west_died end},
 	},
 }
 
