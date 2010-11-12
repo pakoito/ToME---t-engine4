@@ -223,7 +223,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
-		if crit then game.logSeen(self, "%s performs a critical stike!", self.name:capitalize()) end
+		if crit then game.logSeen(self, "%s performs a critical strike!", self.name:capitalize()) end
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
 	else

@@ -172,6 +172,7 @@ local possible_types = {
 			inc_damage = {all=-50},
 
 			reward_type = "sun_paladin",
+			sunwall_query = true,
 		},
 	},
 	{ name="lost anorithil", random="female", chance=70,
@@ -198,6 +199,7 @@ local possible_types = {
 			inc_damage = {all=-50},
 
 			reward_type = "anorithil",
+			sunwall_query = true,
 		},
 	},
 	{ name="worried loremaster", random="female", chance=30,
@@ -318,6 +320,7 @@ on_grant = function(self, who)
 	self.kind.actor.quest_id = self.id
 	self.kind.actor.escort_quest = true
 	self.kind.actor.on_die = function(self, who)
+		if self.sunwall_query then game.state.found_sunwall_west_died = true end
 		game.logPlayer(game.player, "#LIGHT_RED#%s is dead, quest failed!", self.name:capitalize())
 		game.player:setQuestStatus(self.quest_id, engine.Quest.FAILED)
 		game.player:hasQuest(self.quest_id).killing_npc = who and who.name or "something"
@@ -361,4 +364,9 @@ on_grant = function(self, who)
 
 	local Chat = require "engine.Chat"
 	Chat.new("escort-quest-start", npc, game.player, {text=self.kind.text}):invoke()
+
+	-- Check if we found sunpaladins/anorithils before going east
+	if npc.sunwall_query then
+		game.state.found_sunwall_west = true
+	end
 end

@@ -21,6 +21,7 @@ newChat{ id="welcome",
 	text = [[Thank you for your help. What may I do for you?]],
 	answers = {
 		{"Tell me more about the Gates of Morning.", jump="explain-gates"},
+		{"Before I came here, I happened upon members of the Sunwall in Maj'Eyal. Do you know of this?.", jump="sunwall_west", cond=function(npc, player) return game.state.found_sunwall_west and not npc.been_asked_sunwall_west end, action=function(npc, player) npc.been_asked_sunwall_west = true end},
 		{"I need help in my hunt for clues about the staff.", jump="clues", cond=function(npc, player) return not player:hasQuest("orc-pride") end},
 		{"I have destroyed the leaders of all the Orc Prides.", jump="prides-dead", cond=function(npc, player) return player:isQuestStatus("orc-pride", engine.Quest.COMPLETED) end},
 		{"I am back from the Charred Scar, where the orcs took the staff.", jump="charred-scar", cond=function(npc, player) return player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted() end},
@@ -36,6 +37,25 @@ The elves invited them to stay with them in the Gates of Morning, in the Sunwall
 Their name comes from the earliest days of the world, when the world was flat and the Sun came out of a gigantic cavern in the Sunwall.]],
 	answers = {
 		{"Thank you, my lady.", jump="welcome"},
+	},
+}
+
+newChat{ id="sunwall_west",
+	text = [[Ahh, so they survived? That is good news...]],
+	answers = {
+		{"Go on.", jump="sunwall_west2"},
+		{"Well, actually...", jump="sunwall_west2"},
+	},
+}
+
+newChat{ id="sunwall_west2",
+	text = [[The people you saw are likely the volunteers of Zemekky's early experiments regarding the farportals.
+He is a mage who resides here in the Sunwall, eccentric but skilled, who believes that creation of a new farportal to Maj'Eyal is possible.
+Aside from a few early attempts with questionable results, he hasn't had much luck. Still, it's gladdening to hear that the volunteers for his experiments live, regardless of their location. We are all still under the same sun, after all.
+
+Actually... maybe it would benefit you if you meet Zemekkys. He would surely be intrigued by that Orb of Many Ways you possess. He lives in a small house just to the north.]],
+	answers = {
+		{"Maybe I'll visit him. Thank you.", jump="welcome"},
 	},
 }
 

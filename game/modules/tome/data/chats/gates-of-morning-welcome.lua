@@ -28,7 +28,7 @@ Stop! You are clearly a stranger! Where do you come from? The Gates of Morning a
 }
 
 newChat{ id="from",
-	text = [[Maj'Eyal! We Sun Paladins have not heard from there for hundredss of years... perhaps the Anorithil know more...
+	text = [[Maj'Eyal! For many years have we tried to contact your people, we always failed.
 In any event, what is your purpose here?]],
 	answers = {
 		{"It seems that I am stranded in these unfamiliar lands. #LIGHT_GREEN#*Tell her about your hunt for orcs and your encounter with Fillarel.*#WHITE#", jump="orcs"},
