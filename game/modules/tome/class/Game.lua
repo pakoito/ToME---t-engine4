@@ -207,6 +207,9 @@ function _M:newGame()
 			self.player:grantQuest(self.player.starting_quest)
 			self.creating_player = false
 
+			-- Add all items
+			self.player:inventoryApplyAll(function(inven, item, o) game:addEntity(o) end)
+
 			birth_done()
 			self.player:check("on_birth_done")
 		else
