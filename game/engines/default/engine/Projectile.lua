@@ -202,7 +202,7 @@ function _M:act()
 					radius_x, radius_y = self.old_x, self.old_y
 				end
 				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, radius_x, radius_y, self.tmp_proj)
-				game.level:removeEntity(self)
+				game.level:removeEntity(self, true)
 				self.dead = true
 			end
 		elseif self.homing then
@@ -210,7 +210,7 @@ function _M:act()
 			self.homing.count = self.homing.count - 1
 			if (self.x == self.homing.target.x and self.y == self.homing.target.y) or self.homing.count <= 0 then
 				self.homing.on_hit(self, self.src, self.homing.target)
-				game.level:removeEntity(self)
+				game.level:removeEntity(self, true)
 				self.dead = true
 			else
 				self.homing.on_move(self, self.src)
@@ -225,7 +225,7 @@ end
 function _M:on_move(x, y, target)
 	if self.project and self.project.def.typ.stop_block then
 		self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj)
-		game.level:removeEntity(self)
+		game.level:removeEntity(self, true)
 		self.dead = true
 	end
 end

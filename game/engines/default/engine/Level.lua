@@ -54,8 +54,8 @@ function _M:addEntity(e, after)
 end
 
 --- Removes an entity from the level
-function _M:removeEntity(e)
-	if not self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") not present on the level") end
+function _M:removeEntity(e, no_warning)
+	if not no_warning and not self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") not present on the level") end
 	self.entities[e.uid] = nil
 	for i = 1, #self.e_array do
 		if self.e_array[i] == e then

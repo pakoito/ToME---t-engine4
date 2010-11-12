@@ -28,7 +28,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LITE",
-	name = "brass lantern", color=colors.LIGHT_UMBER,
+	name = "brass lantern", color=colors.UMBER,
 	desc = [[A brass container with a wick emerging from it, protected from draughts by a sheet of greased paper. It can be carried by a handle.]],
 	level_range = {1, 20},
 	rarity = 7,
@@ -42,13 +42,13 @@ newEntity{ base = "BASE_LITE",
 }
 
 newEntity{ base = "BASE_LITE",
-	name = "dwarven lantern", color=colors.LIGHT_UMBER,
-	desc = [[Made by the Dwarves, this lantern provides light in the darkest recesses of the earth.]],
+	name = "alchemist's lamp", color=colors.LIGHT_UMBER,
+	desc = [[A normal brass lantern, enhanced by alchemy to make it brighter.]],
 	level_range = {20, 35},
 	rarity = 10,
 	encumber = 1,
-	cost = 2,
-	material_level = 3,
+	cost = 3,
+	material_level = 5,
 
 	wielder = {
 		lite = 3,
@@ -56,8 +56,8 @@ newEntity{ base = "BASE_LITE",
 }
 
 newEntity{ base = "BASE_LITE",
-	name = "fëanorian lamp", color=colors.GOLD,
-	desc = [[Made by the descendants of the Noldo craftsman, this lamp contains a part of the flame which burned inside Fëanor.]],
+	name = "dwarven lantern", color=colors.GOLD,
+	desc = [[Made by the Dwarves, this lantern provides light in the darkest recesses of the earth.]],
 	level_range = {35, 50},
 	rarity = 12,
 	encumber = 1,
@@ -68,3 +68,4 @@ newEntity{ base = "BASE_LITE",
 		lite = 4,
 	},
 }
+

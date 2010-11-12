@@ -77,7 +77,6 @@ end
 add_foe = function(self, next_wave, first, foe_idx)
 	local spot = game.level:pickSpot{type="portal", subtype="portal"}
 	while not spot do spot = game.level:pickSpot{type="portal", subtype="portal"} end
-	print("==================== spot", spot.x, spot.y)
 
 	local foes = {
 		[1] = {
