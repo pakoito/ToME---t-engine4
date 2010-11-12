@@ -82,7 +82,7 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 				fov.actors_dist[#fov.actors_dist+1] = a
 				a.__sqdist = sqdist
 				a:check("seen_by", self)
-				a:updateFOV(self, t.sqdist)
+--				a:updateFOV(self, t.sqdist)
 			end
 		end, cache and game.level.map._fovcache[block])
 
@@ -117,6 +117,7 @@ function _M:updateFOV(a, sqdist)
 	fov.actors[a] = t
 --	print("Updated FOV for", self.uid, self.name, ":: seen ", #fov.actors_dist, "actors closeby; from", a, sqdist)
 	table.sort(fov.actors_dist, function(a, b) if a and b then return fov.actors[a].sqdist < fov.actors[b].sqdist elseif a then return 1 else return nil end end)
+--	table.sort(fov.actors_dist, "__sqdist")
 	self.fov_last_change = game.turn
 end
 

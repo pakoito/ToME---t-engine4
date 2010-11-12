@@ -159,7 +159,6 @@ newBirthDescriptor{
 		[ActorTalents.T_ARCANE_COMBAT] = 1,
 		[ActorTalents.T_STUNNING_BLOW] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_MANA_GEM] = 1,
 	},
 	copy = {
 		max_life = 100,

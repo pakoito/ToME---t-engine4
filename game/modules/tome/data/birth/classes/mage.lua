@@ -41,9 +41,6 @@ newBirthDescriptor{
 		mana_regen = 0.5,
 		mana_rating = 7,
 	},
-	talents = {
-		[ActorTalents.T_MANA_GEM] = 1,
-	}
 }
 
 newBirthDescriptor{

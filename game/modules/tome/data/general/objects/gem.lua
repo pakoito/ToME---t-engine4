@@ -39,6 +39,12 @@ local function newGem(name, image, cost, rarity, color, min_level, max_level, ti
 		mana_consume = mana_consume,
 		material_level = tier,
 		imbue_powers = imbue,
+
+		use_simple = { name="restore mana over 5 turns", use = function(self, who)
+			who:setEffect(who.EFF_MANAFLOW, 5, {power=(self.mana_consume + who:getMag()) / 5})
+			game.logSeen(who, "%s crushs a %s to regain mana!", who.name:capitalize(), self:getName{no_count=true})
+			return "destroy", true
+		end},
 	}
 	-- Alchemist gems, not lootable, only created by talents
 	newEntity{ base = "BASE_GEM", define_as = "ALCHEMIST_GEM_"..name:upper(),

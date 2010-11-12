@@ -396,6 +396,10 @@ function _M:getTextualDesc()
 
 	if self.combat then desc_combat(self.combat) end
 
+	if self.no_teleport then
+		desc:add("It is immune to teleportation, if you teleport it will fall on the ground.", true)
+	end
+
 	if self.basic_ammo then
 		desc:add({"color","YELLOW"}, "Default ammo(infinite):", {"color", "LAST"}, true)
 		desc_combat(self.basic_ammo)

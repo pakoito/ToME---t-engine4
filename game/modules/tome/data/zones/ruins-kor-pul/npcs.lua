@@ -118,5 +118,5 @@ newEntity{ define_as = "KOR_FURY",
 	},
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=50, talent_in=1, },
 }

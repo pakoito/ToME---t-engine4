@@ -110,7 +110,6 @@ newBirthDescriptor{
 		[ActorTalents.T_SHADOW_COMBAT] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
-		[ActorTalents.T_MANA_GEM] = 1,
 	},
 	copy = {
 		resolvers.inventory{ id=true,
