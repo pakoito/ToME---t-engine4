@@ -207,7 +207,7 @@ function _M:newGame()
 			self.player:grantQuest(self.player.starting_quest)
 			self.creating_player = false
 
-			-- Add all items
+			-- Add all items so they regen correctly
 			self.player:inventoryApplyAll(function(inven, item, o) game:addEntity(o) end)
 
 			birth_done()
