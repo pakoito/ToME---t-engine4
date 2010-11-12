@@ -217,7 +217,7 @@ newEntity{ base = "BASE_RING",
 	},
 }
 
-newEntity{ base = "BASE_RING",
+newEntity{ base = "BASE_AMULET",
 	unique = true,
 	name = "Feathersteel Amulet", color = colors.WHITE,
 	unided_name = "light amulet",
