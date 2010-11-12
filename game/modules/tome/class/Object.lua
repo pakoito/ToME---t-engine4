@@ -433,7 +433,7 @@ function _M:getTextualDesc()
 	end
 
 	if self.mana_consume then
-		desc:add({"color","YELLOW"}, "When consumed using the correct talent:", {"color", "LAST"}, true)
+		desc:add({"color","YELLOW"}, "When consumed:", {"color", "LAST"}, true)
 		desc:add(("Restores at least %d mana."):format(self.mana_consume), true)
 	end
 

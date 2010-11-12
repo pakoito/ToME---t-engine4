@@ -112,6 +112,9 @@ newBirthDescriptor{
 		[ActorTalents.T_LETHALITY] = 1,
 	},
 	copy = {
+		resolvers.generic(function(e)
+			e.hotkey[10] = {"inventory", "agate"}
+		end),
 		resolvers.inventory{ id=true,
 			{type="gem", name="agate"},
 			{type="gem", name="agate"},

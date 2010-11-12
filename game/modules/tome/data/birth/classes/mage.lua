@@ -40,6 +40,14 @@ newBirthDescriptor{
 	copy = {
 		mana_regen = 0.5,
 		mana_rating = 7,
+		resolvers.generic(function(e)
+			e.hotkey[10] = {"inventory", "agate"}
+		end),
+		resolvers.inventory{ id=true,
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+		},
 	},
 }
 
@@ -85,11 +93,6 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
-		},
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {
@@ -139,9 +142,6 @@ newBirthDescriptor{
 			{type="gem",},
 			{type="gem",},
 			{type="gem",},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
 		},
 		resolvers.generic(function(self)
 			-- Make and wield some alchemist gems
@@ -205,11 +205,6 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-		},
 	},
 	copy_add = {
 		life_rating = -4,
@@ -257,11 +252,6 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
-		},
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {
@@ -311,11 +301,6 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
-		},
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {
@@ -367,11 +352,6 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-		},
 	},
 }
 
@@ -416,11 +396,6 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
-		},
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
 		},
 	},
 }
