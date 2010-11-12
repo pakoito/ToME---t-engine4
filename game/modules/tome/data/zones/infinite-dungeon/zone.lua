@@ -43,7 +43,8 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {24, 34},
+			nb_npc = {29, 39},
+			filters = { {max_ood=10}, },
 		},
 		object = {
 			class = "engine.generator.object.Random",

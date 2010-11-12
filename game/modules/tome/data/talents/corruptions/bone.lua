@@ -121,7 +121,8 @@ newTalent{
 	direct_hit = true,
 	absorb = function(self, t, p)
 		game.logPlayer(self, "Your bone shield absorbs the damage!")
-		self:removeParticles(table.remove(p.particles))
+		local pid = table.remove(p.particles)
+		if pid then self:removeParticles(pid) end
 		if #p.particles <= 0 then
 			self:forceUseTalent(t.id, {ignore_energy=true})
 		end
