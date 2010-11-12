@@ -79,6 +79,10 @@ end
 -- @param src who did it
 function _M:gainPersonalAchievement(silent, id, src, ...)
 	local a = self.achiev_defs[id]
+
+	-- World achievements can not be gained multiple times
+	if a.mode == "world" then return end
+
 	if src.resolveSource then src = src:resolveSource() end
 
 	src.achievements = src.achievements or {}
