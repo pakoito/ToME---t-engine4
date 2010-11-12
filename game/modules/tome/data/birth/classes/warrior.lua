@@ -159,6 +159,7 @@ newBirthDescriptor{
 		[ActorTalents.T_ARCANE_COMBAT] = 1,
 		[ActorTalents.T_STUNNING_BLOW] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_MANA_GEM] = 1,
 	},
 	copy = {
 		max_life = 100,
@@ -168,8 +169,9 @@ newBirthDescriptor{
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {

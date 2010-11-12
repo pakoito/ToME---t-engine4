@@ -153,6 +153,29 @@ newTalent{
 	The spell will take time to activate, you must be out of sight of any creature when you cast it and when the teleportation takes effect.]]
 }
 
+-- All mana users get to destroy gems to suck up mana
+newTalent{
+	short_name = "MANA_GEM",
+	name = "Mana Gem",
+	type = {"base/class", 1},
+	cooldown = 8,
+	no_npc_use = true,
+	is_spell=true,
+	action = function(self, t)
+		self:showEquipInven("Crush which gem?", function(o) return not o.unique and not o.quest and o.mana_consume and o.type == "gem" end, function(o, inven, item)
+			self:removeObject(inven, item)
+			self:incMana(o.mana_consume + self:getMag() * 1.3)
+			game.logPlayer(self, "You absorb the mana of your %s.", o:getName{do_color=true, no_count=false})
+			return true
+		end)
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = [[Crush a gem to free the magical energies contained inside to restore some of your own mana.
+	Different gems provide different amounts of mana.
+	The amount regenerated also increases with the Magic stat.]]
+}
+
 -- Highers's power, a "weak" regeneration
 newTalent{
 	short_name = "HIGHER_HEAL",

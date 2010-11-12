@@ -110,11 +110,13 @@ newBirthDescriptor{
 		[ActorTalents.T_SHADOW_COMBAT] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
+		[ActorTalents.T_MANA_GEM] = 1,
 	},
 	copy = {
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana"},
-			{type="potion", subtype="potion", name="potion of lesser mana"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 }

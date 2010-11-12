@@ -428,6 +428,11 @@ function _M:getTextualDesc()
 		if a.leech then desc:add(("Life regen %d%% of max life"):format(a.leech), true) end
 	end
 
+	if self.mana_consume then
+		desc:add({"color","YELLOW"}, "When consumed using the correct talent:", {"color", "LAST"}, true)
+		desc:add(("Restores at least %d mana."):format(self.mana_consume), true)
+	end
+
 	local use_desc = self:getUseDesc()
 	if use_desc then desc:add(use_desc) end
 

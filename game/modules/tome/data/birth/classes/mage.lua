@@ -40,10 +40,10 @@ newBirthDescriptor{
 	copy = {
 		mana_regen = 0.5,
 		mana_rating = 7,
-		resolvers.generic(function(e)
-			e.hotkey[10] = {"inventory", "potion of lesser mana"}
-		end),
 	},
+	talents = {
+		[ActorTalents.T_MANA_GEM] = 1,
+	}
 }
 
 newBirthDescriptor{
@@ -90,8 +90,9 @@ newBirthDescriptor{
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {
@@ -141,8 +142,9 @@ newBirthDescriptor{
 			{type="gem",},
 			{type="gem",},
 			{type="gem",},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 		resolvers.generic(function(self)
 			-- Make and wield some alchemist gems
@@ -207,8 +209,9 @@ newBirthDescriptor{
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {
@@ -259,8 +262,9 @@ newBirthDescriptor{
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {
@@ -312,8 +316,9 @@ newBirthDescriptor{
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 	copy_add = {
@@ -366,8 +371,9 @@ newBirthDescriptor{
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 }
@@ -415,8 +421,9 @@ newBirthDescriptor{
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
 		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
+			{type="gem", name="agate"},
 		},
 	},
 }

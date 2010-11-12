@@ -109,7 +109,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Put all your strength into your weapon blows, creating shattering impacts that deal %d%% weapon damage to all nearby foes.
-		The impact damage will also affect you.
 		Each blow will drain 15 stamina.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.1, 0.45))
 	end,
