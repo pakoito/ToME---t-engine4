@@ -34,6 +34,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	sustain_positive = 20,
+	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,
 	},
@@ -74,6 +75,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	sustain_positive = 20,
+	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,
 	},
@@ -112,6 +114,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	sustain_positive = 20,
+	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,
 	},
@@ -155,6 +158,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	sustain_positive = 20,
+	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,
 	},

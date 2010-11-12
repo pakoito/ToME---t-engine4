@@ -1116,6 +1116,9 @@ function _M:learnTalent(t_id, force, nb)
 
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
+
+	if t.dont_provide_pool then return true end
+
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and t.mana or t.sustain_mana then
 		self:learnTalent(self.T_MANA_POOL, true)
 		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1
