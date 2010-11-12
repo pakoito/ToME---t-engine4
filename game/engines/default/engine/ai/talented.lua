@@ -31,7 +31,7 @@ newAI("dumb_talented", function(self)
 		   not self:isTalentCoolingDown(t) and
 		   target_dist <= self:getTalentRange(t)
 		   and self:preUseTalent(t, true, true) and
-		   self:canProject({type=t.direct_hit and "hit" or "bolt"}, self.ai_target.actor.x, self.ai_target.actor.y) and
+		   self:canProject({type=util.getval(t.direct_hit, self, t) and "hit" or "bolt"}, self.ai_target.actor.x, self.ai_target.actor.y) and
 		   self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y)
 		   then
 			avail[#avail+1] = tid
