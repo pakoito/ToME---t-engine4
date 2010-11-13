@@ -274,3 +274,11 @@ function resolvers.calc.sustains_at_birth(_, e)
 		end
 	end
 end
+
+--- Help creating randarts
+function resolvers.randartmax(v, max)
+	return {__resolver="randartmax", v=v, max=max}
+end
+function resolvers.calc.randartmax(t, e)
+	return t.v
+end

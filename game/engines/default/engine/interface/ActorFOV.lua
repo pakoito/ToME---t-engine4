@@ -82,7 +82,7 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 				fov.actors_dist[#fov.actors_dist+1] = a
 				a.__sqdist = sqdist
 				a:check("seen_by", self)
---				a:updateFOV(self, t.sqdist)
+				a:updateFOV(self, t.sqdist)
 			end
 		end, cache and game.level.map._fovcache[block])
 

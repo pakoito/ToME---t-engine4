@@ -144,12 +144,11 @@ function _M:generateRandart(add)
 	o.no_unique_lore = true
 	o.rarity = rng.range(200, 290)
 
+	local allthemes = {'misc','psionic','sorcerous','nature','brawny','lightning','arcane','light','physical','def','tireless','unyielding','dark','nimble','spell','cold','fire','venom','attack'}
 	local pthemes = table.listify(o.randart_able)
-	local themes = {}
-	local no_theme = true
+	local themes = {[rng.table(allthemes)] = true}
 	for i = 1, #pthemes do if rng.percent(pthemes[i][2]) then themes[pthemes[i][1]] = true no_theme = false end end
 	local themes_fct = function(e)
-		if no_theme then return true end
 		for theme, _ in pairs(e.theme) do if themes[theme] then return true end end
 		return false
 	end
@@ -159,6 +158,7 @@ function _M:generateRandart(add)
 	local nb_powers = 2 + rng.dice(math.max(1, lev / 10), 2)
 	local powers = {}
 	print("Creating randart "..o.name.." with level "..lev)
+	print(" == using themes", table.concat(table.keys(themes), ','))
 
 	-- Select some powers
 	for i = 1, nb_powers do
@@ -170,6 +170,26 @@ function _M:generateRandart(add)
 		end
 	end
 
+	local function merger(dst, src)
+		for k, e in pairs(src) do
+			if type(e) == "table" then
+				if e.__resolver and e.__resolver == "randartmax" then
+					dst[k] = (dst[k] or 0) + e.v
+					if dst[k] > e.max then
+						dst[k] = e.max
+					end
+				else
+					if not dst[k] then dst[k] = {} end
+					merger(dst[k], e)
+				end
+			elseif type(e) == "number" then
+				dst[k] = (dst[k] or 0) + e
+			else
+				error("Type "..type(e).. " for randart property unsupported!")
+			end
+		end
+	end
+
 	-- Distribute points
 	local hpoints = math.ceil(points / 2)
 	local i = 0
@@ -178,13 +198,16 @@ function _M:generateRandart(add)
 
 		local p = powers[i]:clone()
 		if p.points <= hpoints then
-			p:resolve(nil, nil, o)
-			p.__CLASSNAME = nil
-			table.mergeAddAppendArray(o, p, true)
-			print(" * adding power: "..p.name)
+			if p.wielder then
+				o.wielder = o.wielder or {}
+				merger(o.wielder, p.wielder)
+			end
+			if p.copy then merger(o, p.copy) end
+--			print(" * adding power: "..p.name)
 		end
 		hpoints = hpoints - p.points
 	end
+	o:resolve() o:resolve(nil, true)
 
 	-- Bias toward some powers
 	local bias_powers = {}
@@ -196,13 +219,15 @@ function _M:generateRandart(add)
 		i = util.boundWrap(i + 1, 1, #bias_powers)
 
 		local p = bias_powers[i]:clone()
-		if p.points <= hpoints then
-			p:resolve(nil, nil, o)
-			p.__CLASSNAME = nil
-			table.mergeAddAppendArray(o, p, true)
-			print(" * adding power: "..p.name)
+		if p.points <= hpoints * 2 then
+			if p.wielder then
+				o.wielder = o.wielder or {}
+				merger(o.wielder, p.wielder)
+			end
+			if p.copy then merger(o, p.copy) end
+--			print(" * adding power: "..p.name)
 		end
-		hpoints = hpoints - p.points
+		hpoints = hpoints - p.points * 2
 	end
 
 	-- Setup the name

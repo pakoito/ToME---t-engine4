@@ -290,7 +290,7 @@ function _M:resolve(t, last, on_entity)
 	t = t or self
 	for k, e in pairs(t) do
 		if type(e) == "table" and e.__resolver and (not e.__resolve_last or last) then
-			t[k] = resolvers.calc[e.__resolver](e, on_entity or self, self)
+			t[k] = resolvers.calc[e.__resolver](e, on_entity or self, self, t, k)
 		elseif type(e) == "table" and not e.__CLASSNAME then
 			self:resolve(e, last, on_entity)
 		end

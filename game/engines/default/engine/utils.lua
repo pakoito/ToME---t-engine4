@@ -108,6 +108,12 @@ function table.listify(t)
 	return tt
 end
 
+function table.keys(t)
+	local tt = {}
+	for k, e in pairs(t) do tt[#tt+1] = k end
+	return tt
+end
+
 function table.update(dst, src, deep)
 	for k, e in pairs(src) do
 		if deep and dst[k] and type(e) == "table" and type(dst[k]) == "table" and not e.__CLASSNAME then
