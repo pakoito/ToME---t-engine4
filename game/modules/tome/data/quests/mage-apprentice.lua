@@ -44,7 +44,7 @@ end
 collect_staff = function(self, npc, who, dialog)
 	who:showInventory("Offer which item?", who:getInven("INVEN"),
 		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_KOR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
-		function(o, inven, item)
+		function(o, item)
 			-- Special handling for the staff of absorption
 			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
 				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to consume, flames bursting out of his mouth, life seems to be drained away from him and in an instant he collapses in a lifeless husk.")
@@ -56,7 +56,7 @@ collect_staff = function(self, npc, who, dialog)
 
 			self.nb_collect = self.nb_collect + 1
 			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
-			who:removeObject(who:getInven(inven), item)
+			who:removeObject(who:getInven("INVEN"), item)
 			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
 			who:sortInven(who:getInven(inven))
 			dialog.next_dialog:regen()
@@ -78,10 +78,10 @@ end
 collect_staff_kor = function(self, who, dialog)
 	who:showInventory("Offer which item?", who:getInven("INVEN"),
 		function(o) return o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_KOR" end,
-		function(o, inven, item)
+		function(o, item)
 			self.nb_collect = self.nb_collect + 15
 			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
-			who:removeObject(who:getInven(inven), item)
+			who:removeObject(who:getInven("INVEN"), item)
 			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
 			who:sortInven(who:getInven(inven))
 			dialog:regen()
@@ -127,7 +127,7 @@ access_angolwen = function(self, player)
 	local spot = level:pickSpot{type="zone-pop", subtype="angolwen"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 	spot = level:pickSpot{type="zone-pop", subtype="angolwen-portal"}
-	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	game.zone:addEntity(level, p, "terrain", spot.x, spot.y)
 
 	game:setAllowedBuild("mage", true)
 	world:gainAchievement("THE_SECRET_CITY", player)
