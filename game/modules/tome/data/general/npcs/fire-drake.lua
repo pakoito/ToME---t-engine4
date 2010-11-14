@@ -94,7 +94,7 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 
 	summon = {
-		{type="dragon", name="fire drake", number=3, hasxp=false},
+		{type="dragon", name="fire drake", number=1, hasxp=false},
 --		{type="dragon", name="fire wyrm", number=1, hasxp=false},
 	},
 

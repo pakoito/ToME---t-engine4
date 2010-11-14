@@ -21,6 +21,7 @@ newEntity{
 	define_as = "SAND",
 	name = "sand", image = "terrain/sand.png",
 	display = '.', color={r=203,g=189,b=72}, back_color={r=93,g=79,b=22},
+	grow = "SANDWALL_STABLE",
 }
 
 newEntity{
@@ -50,7 +51,7 @@ newEntity{
 					if a then
 						game.logPlayer(a, "You are crushed by the collapsing tunnel! You suffocate!")
 						a:suffocate(30, self)
-						engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self, self.x, self.y, engine.DamageType.PHYSICAL, a.life / 4)
+						engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self, self.x, self.y, engine.DamageType.PHYSICAL, a.life / 2)
 					end
 				end
 			end

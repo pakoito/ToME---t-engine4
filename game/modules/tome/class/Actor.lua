@@ -132,6 +132,7 @@ function _M:init(t, no_default)
 	t.vim_regen = t.vim_regen or 0 -- Vim does not regen
 	t.positive_regen = t.positive_regen or -0.2 -- Positive energy slowly decays
 	t.negative_regen = t.negative_regen or -0.2 -- Positive energy slowly decays
+	t.paradox_regen = t.paradox_regen or 0 -- Paradox does not regen
 
 	t.max_positive = t.max_positive or 50
 	t.max_negative = t.max_negative or 50
@@ -148,6 +149,10 @@ function _M:init(t, no_default)
 	-- Equilibrium has a default very high max, as bad effects happen even before reaching it
 	t.max_equilibrium = t.max_equilibrium or 100000
 	t.equilibrium = t.equilibrium or 0
+
+	-- Paradox has a default very high max, as bad effects happen even before reaching it
+	t.max_paradox = t.max_paradox or 100000
+	t.paradox = t.paradox or 300
 
 	t.money = t.money or 0
 
@@ -300,7 +305,12 @@ function _M:move(x, y, force)
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
-
+	
+	if moved and self:hasEffect(self.EFF_FRICTION) then
+		local p = self:hasEffect(self.EFF_FRICTION)
+		DamageType:get(DamageType.FIREBURN).projector(p.src, self.x, self.y, DamageType.FIREBURN, p.dam)
+	end
+	
 	return moved
 end
 
@@ -752,8 +762,33 @@ function _M:onTakeHit(value, src)
 			value = value / 2
 		end
 	end
-
+	
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
+	
+	-- Chronomancy
+	if self:knowTalent(self.T_AVOID_FATE) then
+		local af = .6 - (self:getTalentLevel(self.T_AVOID_FATE)/20)
+		print ("af->", af)
+		local av = self.max_life * af
+		if value >= self.life and self.life >= av then
+			value = self.life - 1
+			game.logSeen(self, "%s has avoided a fatal blow!!", self.name:capitalize())
+		end
+	end
+
+	if self:attr("damage_smearing") and value >= 10 then
+		self:setEffect(self.EFF_SMEARED, 5, {src=src, power=value/6})
+		value = value / 6
+	end
+	
+	-- Second Life
+	--if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
+	--	local sl = self.max_life * (self:getTalentLevel(self.T_SECOND_LIFE)/10)
+	--	value = 0
+	--	if sl =< self.life then
+	--		self.life = sl
+	--	end	
+--	end
 
 	return value
 end
@@ -1147,7 +1182,10 @@ function _M:learnTalent(t_id, force, nb)
 		self:learnTalent(self.T_HATE_POOL, true)
 		self.resource_pool_refs[self.T_HATE_POOL] = (self.resource_pool_refs[self.T_HATE_POOL] or 0) + 1
 	end
-
+	if t.type[1]:find("^chronomancy/") and not self:knowTalent(self.T_PARADOX_POOL) then
+		self:learnTalent(self.T_PARADOX_POOL, true)
+		self.resource_pool_refs[self.T_PARADOX_POOL] = (self.resource_pool_refs[self.T_PARADOX_POOL] or 0) + 1
+	end
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
 		self:learnTalent(self.T_SHOOT, true)
@@ -1263,6 +1301,21 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 	end
 
+	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
+	-- But it is not affected by fatigue
+	if (ab.paradox or ab.sustain_paradox) and not fake then
+		local pa = ab.paradox or ab.sustain_paradox
+		local chance = math.pow (((self:getParadox() - self:getWil()) /200), 2)
+		-- Fail ? lose energy and 1/10 more paradox
+		print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
+		if rng.percent(chance) then
+			game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name)
+			self:incParadox(pa / 2)
+			self:useEnergy()
+			return false
+		end
+	end
+
 	-- Confused ? lose a turn!
 	if self:attr("confused") and not fake then
 		if rng.percent(self:attr("confused")) then
@@ -1339,6 +1392,9 @@ function _M:postUseTalent(ab, ret)
 			if ab.sustain_hate then
 				trigger = true; self.max_hate = self.max_hate - ab.sustain_hate
 			end
+			if ab.sustain_paradox then
+				self:incParadox(ab.sustain_paradox)
+			end
 		else
 			if ab.sustain_mana then
 				trigger = true; self.max_mana = self.max_mana + ab.sustain_mana
@@ -1360,6 +1416,9 @@ function _M:postUseTalent(ab, ret)
 			end
 			if ab.sustain_hate then
 				trigger = true; self.max_hate = self.max_hate + ab.sustain_hate
+			end
+			if ab.sustain_paradox then
+				self:incParadox(-ab.sustain_paradox)
 			end
 		end
 	else
@@ -1385,6 +1444,10 @@ function _M:postUseTalent(ab, ret)
 		-- Equilibrium is not affected by fatigue
 		if ab.equilibrium then
 			self:incEquilibrium(ab.equilibrium)
+		end
+		-- Paradox is not affected by fatigue but it's cost does increase exponentially
+		if ab.paradox then
+			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 100)))
 		end
 	end
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
@@ -1485,7 +1548,8 @@ function _M:getTalentFullDescription(t, addlevel)
 	if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100), true) end
 	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100), true) end
 	if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate), true) end
-	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ""..self:getTalentRange(t), true)
+	if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 100))), true) end
+	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
 	else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)
 	end
 	if self:getTalentCooldown(t) then d:add({"color",0x6f,0xff,0x83}, "Cooldown: ", {"color",0xFF,0xFF,0xFF}, ""..self:getTalentCooldown(t), true) end

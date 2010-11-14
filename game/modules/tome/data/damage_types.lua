@@ -910,3 +910,78 @@ newDamageType{
 		end
 	end,
 }
+
+-- Chronomancy damage types
+ newDamageType{
+	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
+}
+
+-- Gravity damage
+newDamageType{
+	name = "CRUSHING", type = "CRUSHING",
+	projector = function(src, x, y, type, dam)
+		local dur = 3
+		local perc = 0
+		if _G.type(dam) == "table" then dam, dur, perc = dam.dam, dam.dur, (dam.initial or perc) end
+		local init_dam = dam * perc / 100
+		if init_dam > 0 then DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, init_dam) end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("pin") then
+			target:setEffect(target.EFF_PINNED, 3, {})
+			dam = dam - init_dam
+			target:setEffect(target.EFF_CRUSHED, dur, {src=src, power=dam / dur})
+		else
+			dam = dam - init_dam
+			target:setEffect(target.EFF_CRUSHED, dur, {src=src, power=dam / dur})
+		end
+	end,
+}
+
+newDamageType{
+	name = "pulse", type = "PULSE",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not tmp[target] then
+			tmp[target] = true
+			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, 3)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the pulse!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "gravity", type = "GRAVITY",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 20) then
+				target:setEffect(target.EFF_SLOW, 2, {power=.3})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "grow", type = "GROW",
+	projector = function(src, x, y, typ, dam)
+		local feat = game.level.map(x, y, Map.TERRAIN)
+		if feat then
+			if feat.grow then
+				local newfeat_name, newfeat, silence = feat.grow, nil, false
+				if type(feat.dig) == "function" then newfeat_name, newfeat, silence = feat.grow(src, x, y, feat) end
+				game.level.map(x, y, Map.TERRAIN, newfeat or game.zone.grid_list[newfeat_name])
+				if not silence then
+					game.logSeen({x=x,y=y}, "%s turns into %s.", feat.name:capitalize(), (newfeat or game.zone.grid_list[newfeat_name]).name)
+				end
+			end
+		end
+	end,
+}

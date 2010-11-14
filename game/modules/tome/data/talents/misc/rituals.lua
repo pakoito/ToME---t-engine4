@@ -18,23 +18,13 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Rituals Capacity",
-	type = {"rituals/rituals", 1},
-	points = 5,
-	mode = "passive",
-	info = function(self, t)
-		return ([[Allows you to learn up to %d rituals.]]):
-		format(1.7 * math.ceil(self:getTalentLevel(t)))
+	name = "Healing Infusion",
+	type = {"inscriptions/inscriptions", 1},
+	points = 1,
+	action = function(self, t)
+		return use_glyph(self, t, 1)
 	end,
-}
-
-newTalent{
-	name = "Rituals Study",
-	type = {"rituals/rituals", 1},
-	points = 5,
-	mode = "passive",
 	info = function(self, t)
-		return ([[Allows you to learn rituals of level %d at most.]]):
-		format(math.ceil(self:getTalentLevelRaw(t)))
+		return ([[]])
 	end,
 }

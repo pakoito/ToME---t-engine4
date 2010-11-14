@@ -51,7 +51,6 @@ newTalent{
 	require = gifts_req2,
 	mode = "sustained",
 	points = 5,
-	sustain_equilibrium = 30,
 	cooldown = 10,
 	range = 20,
 	tactical = {

@@ -21,6 +21,7 @@ newEntity{
 	define_as = "SLIME_FLOOR",
 	name = "slimy floor", image = "terrain/slime_floor.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color=colors.GREEN,
+	grow = "SLIME_WALL",
 }
 
 newEntity{

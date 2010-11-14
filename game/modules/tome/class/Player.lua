@@ -266,7 +266,9 @@ function _M:playerFOV()
 		-- Handle infravision/heightened_senses which allow to see outside of lite radius but with LOS
 		if self:attr("infravision") or self:attr("heightened_senses") then
 			local rad = (self.heightened_senses or 0) + (self.infravision or 0)
+			local rad2 = math.max(1, rad/4)
 			self:computeFOV(rad, "block_sight", function(x, y) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, 1) end end, true, true, true)
+			self:computeFOV(rad2, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
 		end
 	end
 

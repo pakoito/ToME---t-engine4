@@ -151,7 +151,11 @@ function _M:display()
 		s:erase(colors.GREY.r / 2, colors.GREY.g / 2, colors.GREY.b / 2, 255, self.bars_x, h, self.bars_w * player:getHate() / 10, self.font_h)
 		self:mouseTooltip(self.TOOLTIP_HATE, s:drawColorStringBlended(self.font, ("#F53CBE#Hate:    #ffffff#%.1f/%d"):format(player:getHate(), 10), x, h, 255, 255, 255)) h = h + self.font_h
 	end
-
+	if player:knowTalent(player.T_PARADOX_POOL) then
+		s:erase(176 / 5, 196 / 5, 222 / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
+		s:erase(176 / 2, 196 / 2, 222 / 2, 255, self.bars_x, h, self.bars_w * math.min(1, math.log(1 + player:getParadox() / 100)), self.font_h)
+		self:mouseTooltip(self.TOOLTIP_PARADOX, s:drawColorStringBlended(self.font, ("#LIGHT_STEEL_BLUE#Paradox:    #ffffff#%d"):format(player:getParadox()), 0, h, 255, 255, 255)) h = h + self.font_h
+	end
 	if savefile_pipe.saving then
 		h = h + self.font_h
 		s:erase(0x68 / 6, 0x72 / 6, 0x00 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)

@@ -21,6 +21,7 @@ newEntity{
 	define_as = "GRASS",
 	name = "grass", image = "terrain/grass.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	grow = "TREE",
 }
 
 for i = 1, 20 do
@@ -57,6 +58,7 @@ newEntity{
 	define_as = "GRASS_DARK1",
 	name = "grass", image = "terrain/grass_dark1.png",
 	display = '.', color=colors.GREEN, back_color={r=44,g=95,b=43},
+	grow = "TREE_DARK",
 }
 
 for i = 1, 20 do
@@ -93,6 +95,7 @@ newEntity{
 	define_as = "FLOWER",
 	name = "flower", image = "terrain/grass_flower3.png",
 	display = ';', color=colors.YELLOW, back_color={r=44,g=95,b=43},
+	grow = "TREE"
 }
 
 newEntity{

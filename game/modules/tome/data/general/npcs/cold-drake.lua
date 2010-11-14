@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	combat = { dam=resolvers.rngavg(25,40), atk=25, apr=25, dammod={str=1.1} },
 
 	summon = {
-		{type="dragon", name="cold drake", number=3, hasxp=false},
+		{type="dragon", name="cold drake", number=1, hasxp=false},
 --		{type="dragon", name="ice wyrm", number=1, hasxp=false},
 	},
 

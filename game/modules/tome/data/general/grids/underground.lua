@@ -21,6 +21,7 @@ newEntity{
 	define_as = "UNDERGROUND_FLOOR",
 	name = "floor", image = "terrain/underground_floor.png",
 	display = '.', color=colors.LIGHT_UMBER, back_color=colors.UMBER,
+	grow = "UNDERGROUND_TREE",
 }
 
 for i = 1, 20 do

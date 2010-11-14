@@ -109,7 +109,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	resists = { [DamageType.PHYSICAL] = 40, [DamageType.FIRE] = 40, [DamageType.COLD] = 40, [DamageType.ACID] = 40, [DamageType.LIGHTNING] = 40, },
 
 	summon = {
-		{type="dragon", name="multi-hued drake", number=3, hasxp=false},
+		{type="dragon", name="multi-hued drake", number=1, hasxp=false},
 --		{type="dragon", name="greater multi-hued wyrm", number=1, hasxp=false},
 	},
 

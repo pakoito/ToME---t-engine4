@@ -20,7 +20,7 @@
 -- race & classes
 newTalentType{ type="base/class", name = "class", hide = true, description = "The basic talents defining a class." }
 newTalentType{ type="base/race", name = "race", hide = true, description = "The various racial bonuses a character can have." }
-newTalentType{ no_silence=true, is_spell=true, type="rituals/rituals", name = "rituals", hide = true, description = "Rituals are not class abilities, you must find them or learn them from other people." }
+newTalentType{ no_silence=true, type="inscriptions/inscriptions", name = "inscriptions", hide = true, description = "Inscriptions are not class abilities, you must find them or learn them from other people." }
 
 -- Load other misc things
 load("/data/talents/misc/npcs.lua")
@@ -72,6 +72,14 @@ newTalent{
 	name = "Hate Pool",
 	type = {"base/class", 1},
 	info = "Allows you to have a hate pool.",
+	mode = "passive",
+	hide = true,
+}
+
+newTalent{
+	name = "Paradox Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a paradox pool.",
 	mode = "passive",
 	hide = true,
 }

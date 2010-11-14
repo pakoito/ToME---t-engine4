@@ -2034,3 +2034,147 @@ newEffect{
 		DamageType:get(DamageType.ACID).projector(eff.src or self, self.x, self.y, DamageType.ACID, eff.dam)
 	end,
 }
+
+--Chronomancy Effects
+
+newEffect{
+	name = "DAMPENING_FIELD",
+	desc = "Dampening Field",
+	long_desc = function(self, eff) return ("An inertial field that provides %d%% stun, daze, knockback, and physical damage resistance."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is surrounded by a dampening field.", "+Dampening Field" end,
+	on_lose = function(self, err) return "The field around #Target# disappates.", "-Dampening Field" end,
+	activate = function(self, eff)
+		local effect = eff.power / 100
+		eff.particle = self:addParticles(Particles.new("golden_shield", 1))
+		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
+		eff.stun = self:addTemporaryValue("stun_immune", effect)
+		eff.daze = self:addTemporaryValue("daze_immune", effect)
+		eff.knock = self:addTemporaryValue("knockback_immune", effect)
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("stun_immune", eff.stun)
+		self:removeTemporaryValue("daze_immune", eff.daze)
+		self:removeTemporaryValue("knockback_immune", eff.knock)
+		self:removeTemporaryValue("resists", eff.phys)
+	end,
+}
+
+newEffect{
+	name = "ENTROPIC_SHIELD",
+	desc = "Entropic Shield",
+	long_desc = function(self, eff) return ("Huge cut that bleeds blood, doing %0.2f physical damage per turn."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is surrounded by an entropic shield.", "+Entropic Shield" end,
+	on_lose = function(self, err) return "The entropic shield around #Target# disappates.", "-Entropic Shield" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("time_shield", 1))
+		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
+		eff.proj = self:addTemporaryValue("slow_projectiles", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("resists", eff.phys)
+		self:removeTemporaryValue("slow_projectiles", eff.proj)
+	end,
+}
+
+newEffect{
+	name = "DAMAGE_SMEARING",
+	desc = "Damage Smearing",
+	long_desc = function(self, eff) return ("Passes damage recieved in the present off onto the future self."):format(eff.power) end,
+	type = "time",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "The fabric of time alters around #target#.", "+Damage Smearing" end,
+	on_lose = function(self, err) return "The fabric of time around #target# stabilizes.", "-Damage Smearing" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("damage_smearing", eff.power)
+		--- Warning there can be only one time shield active at once for an actor
+		eff.particle = self:addParticles(Particles.new("time_shield", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("damage_smearing", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "SMEARED",
+	desc = "Smeared",
+	long_desc = function(self, eff) return ("Damage recieved in the past is returned as %0.2f arcane damage per turn."):format(eff.power) end,
+	type = "time",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is taking damage recieved in the past!", "+Smeared" end,
+	on_lose = function(self, err) return "#Target# stops taking damage recieved in the past.", "-Smeared" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.power)
+	end,
+}
+
+newEffect{
+	name = "CRUSHED",
+	desc = "Crushed",
+	long_desc = function(self, eff) return ("Intense gravity that pins and deals %0.2f physical damage per turn."):format(eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is being crushed!", "+Crushed" end,
+	on_lose = function(self, err) return "#Target# stops being crushed.", "-Crushed" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src, self.x, self.y, DamageType.PHYSICAL, eff.power)
+	end,
+}
+
+newEffect{
+	name = "FRICTION",
+	desc = "Friction",
+	long_desc = function(self, eff) return ("Each time the target moves it takes %0.2f fire damage over three turns."):format(eff.dam) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = {dam=10},
+	on_gain = function(self, err) return "The effect of friction on #Target# has been amplified!", "+Friction" end,
+	on_lose = function(self, err) return "The effect of friction on #Target# has returned to normal.", "-Friction" end,
+}
+
+newEffect{
+	name = "STOP",
+	desc = "Stop",
+	long_desc = function(self, eff) return ("The target is slowed but gradually recovering speed."):format(eff.chance) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# is stopped!", "+Stop" end,
+	on_lose = function(self, err) return "#Target# has fully recovered from being stopped.", "-Stop" end,
+	-- Recover each turn
+	activate = function(self, eff)
+		eff.dur = self:updateEffectDuration(eff.dur, "stop")
+	end,
+	on_timeout = function(self, eff)
+		self:addTemporaryValue("energy", {mod= eff.power*eff.dur})
+	end,
+}

@@ -80,7 +80,7 @@ newBirthDescriptor{
 
 		class =
 		{
-			__ALL__ = "allow",
+			__ALL__ = "disallow",
 			Mage = "allow",
 			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
 			Wilder = function() return (
@@ -90,6 +90,7 @@ newBirthDescriptor{
 			end,
 			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
 			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
+			Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
 		},
 	},
 }
@@ -117,7 +118,7 @@ newBirthDescriptor{
 
 		class =
 		{
-			__ALL__ = "allow",
+			__ALL__ = "disallow",
 			Mage = "allow",
 			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
 			Wilder = function() return (
@@ -127,6 +128,7 @@ newBirthDescriptor{
 			end,
 			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
 			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
+			Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
 		},
 	},
 	copy = {

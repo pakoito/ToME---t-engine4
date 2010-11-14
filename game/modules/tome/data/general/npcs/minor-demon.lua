@@ -109,3 +109,27 @@ newEntity{ base = "BASE_NPC_DEMON",
 		{type="armor", subtype="heavy", autoreq=true}
 	},
 }
+
+newEntity{ base = "BASE_NPC_DEMON",
+	name = "wretchling", color=colors.GREEN,
+	desc = "Acid oozes all over this small demon's skin.  Beware, they tend to hunt in packs.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 3,
+	rank = 2,
+	size_category = 1,
+	autolevel = "caster",
+	combat_armor = 1, combat_def = 0,
+	combat = {damtype=DamageType.ACID},
+
+	resists={[DamageType.ACID] = 100},
+
+	resolvers.talents{
+		[Talents.T_RUSH]=6,
+		[Talents.T_ACID_BLOOD]=3,
+		[Talents.T_CORROSIVE_VAPOUR]=3,
+	},
+	
+	make_escort = {
+		{type="demon", subtype="minor", name="wretchling", number=3, no_subescort=true},
+	},
+}

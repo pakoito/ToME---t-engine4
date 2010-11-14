@@ -77,6 +77,12 @@ It slowly decreases and is replenished by killing creatures.
 All afflicted talents are based on Hate, the higher hate is the more effective the talents are.
 ]]
 
+TOOLTIP_PARADOX = [[#GOLD#Paradox#LAST#
+Paradox represents how much damage you've caused to the spacetime continuum.
+As your Paradox grows your spells will cost more to use and have greater effect; but they'll also become more difficult to control.
+Your control over chronomancy spells increases with your Willpower.
+]]
+
 TOOLTIP_LEVEL = [[#GOLD#Level and experience#LAST#
 Each time you kill a creature that is over your own level - 5 you gain some experience.
 When you reach enough experience you advance to the next level. There is a maximum of 50 levels you can gain.

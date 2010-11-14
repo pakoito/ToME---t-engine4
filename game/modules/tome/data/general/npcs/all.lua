@@ -69,3 +69,4 @@ loadIfNot("/data/general/npcs/vampire.lua")
 loadIfNot("/data/general/npcs/vermin.lua")
 loadIfNot("/data/general/npcs/wight.lua")
 loadIfNot("/data/general/npcs/xorn.lua")
+

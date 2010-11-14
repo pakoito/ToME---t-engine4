@@ -549,7 +549,9 @@ function _M:physicalCrit(dam, weapon, target)
 	if target:attr("combat_critical") then
 		chance = chance + target:attr("combat_critical")
 	end
-
+	if target:knowTalent(target.T_PROBABILITY_SHIELD) then
+		chance = chance - target:getTalentLevel(target.T_PROBABILITY_SHIELD)
+	end
 	if target:hasHeavyArmor() and target:knowTalent(target.T_HEAVY_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_HEAVY_ARMOUR_TRAINING) * 1.9
 	end
@@ -578,7 +580,7 @@ function _M:spellCrit(dam, add_chance)
 
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * (1.5 + (self.combat_critical_power or 0))
+		dam = dam * (1.5 + (self:getTalentLevel(self.T_PERFECT_AIM) / 10 or 0)+(self.combat_critical_power or 0))
 		crit = true
 		game.logSeen(self, "%s's spell looks more powerful!", self.name:capitalize())
 

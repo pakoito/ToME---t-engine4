@@ -21,6 +21,7 @@ newEntity{
 	define_as = "ROCKY_GROUND",
 	name = "rocky ground", image = "terrain/rocky_ground.png",
 	display = '.', color=colors.UMBER, back_color=colors.LIGHT_UMBER,
+	grow = "MOUNTAIN_WALL",
 }
 
 newEntity{
