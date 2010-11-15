@@ -24,8 +24,8 @@ newTalentType{ no_silence=true, type="inscriptions/infusions", name = "infusions
 newTalentType{ no_silence=true, is_spell=true, type="inscriptions/runes", name = "runes", hide = true, description = "Runes are not class abilities, you must find them or learn them from other people." }
 
 -- Load other misc things
+load("/data/talents/misc/inscriptions.lua")
 load("/data/talents/misc/npcs.lua")
-load("/data/talents/misc/rituals.lua")
 
 newTalent{
 	name = "Mana Pool",
