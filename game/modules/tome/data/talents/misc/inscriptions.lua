@@ -29,6 +29,25 @@ end
 -- Infusions
 -----------------------------------------------------------------------
 newInscription{
+	name = "Infusion: Regeneration",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_REGENERATION, data.dur, {power=(data.heal + data.inc_stat) / data.dur})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the infusion to heal yourself for %d life over %d turns.]]):format(data.heal + data.inc_stat, data.dur)
+	end,
+}
+
+newInscription{
 	name = "Infusion: Healing",
 	type = {"inscriptions/infusions", 1},
 	points = 1,

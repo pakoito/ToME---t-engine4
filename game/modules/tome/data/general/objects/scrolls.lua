@@ -75,7 +75,7 @@ newEntity{
 
 newEntity{ base = "BASE_INFUSION",
 	name = "healing infusion",
-	level_range = {1, 50},
+	level_range = {7, 50},
 	rarity = 9,
 	cost = 10,
 	material_level = 1,
@@ -86,8 +86,29 @@ newEntity{ base = "BASE_INFUSION",
 		use_stat_mod = 2,
 	},
 
-	use_simple = { name="inscribe your skin with an infusion that allows you to randomly teleport.", use = function(self, who, inven, item)
+	use_simple = { name="inscribe your skin with an infusion that allows you to instantly heal your wounds.", use = function(self, who, inven, item)
 		if who:setInscription(nil, "INFUSION:_HEALING", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_INFUSION",
+	name = "regeneration infusion",
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	material_level = 1,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(9, 12),
+		dur = 5,
+		heal = resolvers.mbonus(500, 60),
+		use_stat_mod = 2.1,
+	},
+
+	use_simple = { name="inscribe your skin with an infusion that allows you to regenerate your wounds over a few turns.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "INFUSION:_REGENERATION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
 	end}
