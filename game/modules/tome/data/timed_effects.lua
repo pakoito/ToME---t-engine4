@@ -752,6 +752,46 @@ newEffect{
 }
 
 newEffect{
+	name = "STRENGTH",
+	desc = "Strength",
+	long_desc = function(self, eff) return ("Strength, dexterity and constitution increased by %d."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=1 },
+	activate = function(self, eff)
+		eff.stat = self:addTemporaryValue("inc_stats",
+		{
+			[Stats.STAT_STR] = eff.power,
+			[Stats.STAT_DEX] = eff.power,
+			[Stats.STAT_CON] = eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.stat)
+	end,
+}
+
+newEffect{
+	name = "WILL",
+	desc = "Will",
+	long_desc = function(self, eff) return ("Willpower, cunning and magic increased by %d."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=1 },
+	activate = function(self, eff)
+		eff.stat = self:addTemporaryValue("inc_stats",
+		{
+			[Stats.STAT_MAG] = eff.power,
+			[Stats.STAT_WIL] = eff.power,
+			[Stats.STAT_CUN] = eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.stat)
+	end,
+}
+
+newEffect{
 	name = "DISPLACEMENT_SHIELD",
 	desc = "Displacement Shield",
 	long_desc = function(self, eff) return ("The target is surrounded by a space distortion that random sends (%d%% chance) incomming damage to an other target (%s)."):format(eff.chance, eff.target.name or "unknown") end,

@@ -89,7 +89,7 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local what = table.concat(table.keys(data.what), ", ")
-		return ([[Activate the infusion to cure yourself of %s effects and reduce all damage taken by %d%% for %D turns.]]):format(what, data.power+data.inc_stat, data.dur)
+		return ([[Activate the infusion to cure yourself of %s effects and reduce all damage taken by %d%% for %d turns.]]):format(what, data.power+data.inc_stat, data.dur)
 	end,
 }
 
@@ -112,14 +112,10 @@ newInscription{
 	end,
 }
 
------------------------------------------------------------------------
--- Runes
------------------------------------------------------------------------
 newInscription{
-	name = "Rune: Light",
-	type = {"inscriptions/runes", 1},
+	name = "Infusion: Sun",
+	type = {"inscriptions/infusions", 1},
 	points = 1,
-	is_spell = true,
 	cooldown = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.cooldown
@@ -132,10 +128,51 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to brighten the area in a radius of %d. It also destealth any stealth creatures.]]):format(data.range + data.inc_stat)
+		return ([[Activate the infusion to brighten the area in a radius of %d. It also destealth any stealth creatures.]]):format(data.range + data.inc_stat)
 	end,
 }
 
+newInscription{
+	name = "Infusion: Strength",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_STRENGTH, data.dur, {power=data.power + data.inc_stat})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the infusion to increase strength, dexterity and constitution by %d for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+	end,
+}
+
+newInscription{
+	name = "Infusion: Will",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_WILL, data.dur, {power=data.power + data.inc_stat})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the infusion to increase willpower, cunning and magic by %d for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+	end,
+}
+
+-----------------------------------------------------------------------
+-- Runes
+-----------------------------------------------------------------------
 newInscription{
 	name = "Rune: Phase Door",
 	type = {"inscriptions/runes", 1},

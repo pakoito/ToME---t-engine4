@@ -191,7 +191,7 @@ newEntity{ base = "BASE_SCROLL",
 ]]
 
 newEntity{ base = "BASE_INFUSION",
-	name = "infusion of healing",
+	name = "healing infusion",
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 10,
@@ -211,7 +211,7 @@ newEntity{ base = "BASE_INFUSION",
 }
 
 newEntity{ base = "BASE_INFUSION",
-	name = "infusion of the wild",
+	name = "wild infusion",
 	level_range = {1, 50},
 	rarity = 12,
 	cost = 20,
@@ -220,8 +220,8 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_data = resolvers.generic(function(e)
 		return {
 			cooldown = rng.range(10, 15),
-			dur = rng.mbonus(4, 4),
-			power = rng.mbonus(30, 20),
+			dur = rng.mbonus(4, 4, resolvers.mbonus_max_level),
+			power = rng.mbonus(30, 20, resolvers.mbonus_max_level),
 			use_stat_mod = 0.1,
 			what = {
 				poison = true,
@@ -243,7 +243,7 @@ newEntity{ base = "BASE_INFUSION",
 }
 
 newEntity{ base = "BASE_INFUSION",
-	name = "infusion of movement",
+	name = "movement infusion",
 	level_range = {10, 50},
 	rarity = 9,
 	cost = 30,
@@ -262,8 +262,70 @@ newEntity{ base = "BASE_INFUSION",
 	end}
 }
 
+newEntity{ base = "BASE_INFUSION",
+	name = "sun infusion",
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	material_level = 1,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(6, 12),
+		range = resolvers.mbonus(5, 5),
+		use_stat_mod = 0.05,
+	},
+
+	use_simple = { name="inscribe your skin with an infusion that allows you to channel the power of the sun to light the surrounding area and reveal stealthed creatures.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "INFUSION:_SUN", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_INFUSION",
+	name = "strength infusion",
+	level_range = {25, 50},
+	rarity = 12,
+	cost = 40,
+	material_level = 3,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(20, 30),
+		dur = resolvers.mbonus(7, 7),
+		power = resolvers.mbonus(4, 4),
+		use_stat_mod = 0.04,
+	},
+
+	use_simple = { name="inscribe your skin with an infusion that allows you to improve your physical stats for some turns.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "INFUSION:_STRENGTH", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_INFUSION",
+	name = "will infusion",
+	level_range = {25, 50},
+	rarity = 12,
+	cost = 40,
+	material_level = 3,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(20, 30),
+		dur = resolvers.mbonus(7, 7),
+		power = resolvers.mbonus(4, 4),
+		use_stat_mod = 0.04,
+	},
+
+	use_simple = { name="inscribe your skin with an infusion that allows you to improve your mental stats for some turns.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "INFUSION:_WILL", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
 newEntity{ base = "BASE_RUNE",
-	name = "rune of phase door",
+	name = "phase door rune",
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 10,
@@ -283,7 +345,7 @@ newEntity{ base = "BASE_RUNE",
 }
 
 newEntity{ base = "BASE_RUNE",
-	name = "rune of controlled phase door",
+	name = "controlled phase door rune",
 	level_range = {35, 50},
 	rarity = 14,
 	cost = 50,
@@ -303,7 +365,7 @@ newEntity{ base = "BASE_RUNE",
 }
 
 newEntity{ base = "BASE_RUNE",
-	name = "rune of teleportation",
+	name = "teleportation rune",
 	level_range = {10, 50},
 	rarity = 9,
 	cost = 10,
@@ -323,7 +385,7 @@ newEntity{ base = "BASE_RUNE",
 }
 
 newEntity{ base = "BASE_RUNE",
-	name = "rune of shielding",
+	name = "shielding rune",
 	level_range = {12, 50},
 	rarity = 9,
 	cost = 20,
@@ -344,7 +406,7 @@ newEntity{ base = "BASE_RUNE",
 }
 
 newEntity{ base = "BASE_RUNE",
-	name = "rune of invisibility",
+	name = "invisibility rune",
 	level_range = {18, 50},
 	rarity = 12,
 	cost = 40,
@@ -366,7 +428,7 @@ newEntity{ base = "BASE_RUNE",
 }
 
 newEntity{ base = "BASE_RUNE",
-	name = "rune of speed",
+	name = "speed rune",
 	level_range = {23, 50},
 	rarity = 12,
 	cost = 40,
@@ -388,7 +450,7 @@ newEntity{ base = "BASE_RUNE",
 }
 
 newEntity{ base = "BASE_RUNE",
-	name = "rune of vision",
+	name = "vision rune",
 	level_range = {15, 50},
 	rarity = 10,
 	cost = 30,
@@ -404,26 +466,6 @@ newEntity{ base = "BASE_RUNE",
 
 	use_simple = { name="inscribe your skin with a rune that allows you to see invisible a some turns and map the area surrounding you.", use = function(self, who, inven, item)
 		if who:setInscription(nil, "RUNE:_VISION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
-}
-
-newEntity{ base = "BASE_RUNE",
-	name = "rune of light",
-	level_range = {1, 50},
-	rarity = 9,
-	cost = 10,
-	material_level = 1,
-
-	inscription_data = {
-		cooldown = resolvers.rngrange(6, 12),
-		range = resolvers.mbonus(5, 5),
-		use_stat_mod = 0.05,
-	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to light the surrounding area and reveal stealthed creatures.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_LIGHT", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
 	end}
