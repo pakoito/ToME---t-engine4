@@ -76,8 +76,9 @@ function _M:setInscription(id, name, data, cooldown, vocal, src)
 end
 
 function _M:getInscriptionData(name)
-	assert(self.inscriptions_data[name], "unknown inscription "..name)
-	local d = table.clone(self.inscriptions_data[name])
+	local fake = self.__inscription_data_fake
+	assert(fake or self.inscriptions_data[name], "unknown inscription "..name)
+	local d = table.clone(fake or self.inscriptions_data[name])
 	d.inc_stat = 0
 	if d.use_stat and d.use_stat_mod then d.inc_stat = self:getStat(d.use_stat) * d.use_stat_mod end
 	return d

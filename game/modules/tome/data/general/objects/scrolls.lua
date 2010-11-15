@@ -46,7 +46,13 @@ newEntity{
 	is_magic_device = true,
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
 	desc = [[Natural infusions allow you to inscribe an infusion onto your body, granting you an on-demand ability.]],
-	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(10, 5),
+	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
+
+	use_simple = { name="inscribe your skin with the infusion.", use = function(self, who, inven, item)
+		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
 }
 
 newEntity{
@@ -61,7 +67,13 @@ newEntity{
 	is_magic_device = true,
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
 	desc = [[Magical runes allow you to inscribe a rune onto your body, granting you an on-demand ability.]],
-	egos = "/data/general/objects/egos/runes.lua", egos_chance = resolvers.mbonus(10, 5),
+	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
+
+	use_simple = { name="inscribe your skin with the rune.", use = function(self, who, inven, item)
+		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
 }
 
 newEntity{
@@ -85,12 +97,7 @@ newEntity{ base = "BASE_INFUSION",
 		heal = resolvers.mbonus(300, 40),
 		use_stat_mod = 2,
 	},
-
-	use_simple = { name="inscribe your skin with an infusion that allows you to instantly heal your wounds.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_HEALING", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "INFUSION:_HEALING",
 }
 
 newEntity{ base = "BASE_INFUSION",
@@ -106,12 +113,7 @@ newEntity{ base = "BASE_INFUSION",
 		heal = resolvers.mbonus(500, 60),
 		use_stat_mod = 2.1,
 	},
-
-	use_simple = { name="inscribe your skin with an infusion that allows you to regenerate your wounds over a few turns.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_REGENERATION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "INFUSION:_REGENERATION",
 }
 
 newEntity{ base = "BASE_INFUSION",
@@ -124,8 +126,8 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_data = resolvers.generic(function(e)
 		return {
 			cooldown = rng.range(10, 15),
-			dur = rng.mbonus(4, 4, resolvers.mbonus_max_level),
-			power = rng.mbonus(30, 20, resolvers.mbonus_max_level),
+			dur = rng.mbonus(4, resolvers.current_level, resolvers.mbonus_max_level) + 4,
+			power = rng.mbonus(30, resolvers.current_level, resolvers.mbonus_max_level) + 20,
 			use_stat_mod = 0.1,
 			what = {
 				poison = true,
@@ -138,12 +140,7 @@ newEntity{ base = "BASE_INFUSION",
 			}
 		}
 	end),
-
-	use_simple = { name="inscribe your skin with an infusion that allows you to cure yourself and reduce damage taken for a few turns.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_WILD", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "INFUSION:_WILD",
 }
 
 newEntity{ base = "BASE_INFUSION",
@@ -158,12 +155,7 @@ newEntity{ base = "BASE_INFUSION",
 		dur = resolvers.mbonus(5, 2),
 		use_stat_mod = 0.05,
 	},
-
-	use_simple = { name="inscribe your skin with an infusion that allows you to become immune to movement imparing effects.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_MOVEMENT", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "INFUSION:_MOVEMENT",
 }
 
 newEntity{ base = "BASE_INFUSION",
@@ -178,12 +170,7 @@ newEntity{ base = "BASE_INFUSION",
 		range = resolvers.mbonus(5, 5),
 		use_stat_mod = 0.05,
 	},
-
-	use_simple = { name="inscribe your skin with an infusion that allows you to channel the power of the sun to light the surrounding area and reveal stealthed creatures.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_SUN", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "INFUSION:_SUN",
 }
 
 newEntity{ base = "BASE_INFUSION",
@@ -199,12 +186,7 @@ newEntity{ base = "BASE_INFUSION",
 		power = resolvers.mbonus(4, 4),
 		use_stat_mod = 0.04,
 	},
-
-	use_simple = { name="inscribe your skin with an infusion that allows you to improve your physical stats for some turns.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_STRENGTH", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "INFUSION:_STRENGTH",
 }
 
 newEntity{ base = "BASE_INFUSION",
@@ -220,12 +202,7 @@ newEntity{ base = "BASE_INFUSION",
 		power = resolvers.mbonus(4, 4),
 		use_stat_mod = 0.04,
 	},
-
-	use_simple = { name="inscribe your skin with an infusion that allows you to improve your mental stats for some turns.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_WILL", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "INFUSION:_WILL",
 }
 
 newEntity{ base = "BASE_RUNE",
@@ -240,12 +217,7 @@ newEntity{ base = "BASE_RUNE",
 		range = resolvers.mbonus(10, 5),
 		use_stat_mod = 0.07,
 	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to randomly teleport.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_PHASE_DOOR", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "RUNE:_PHASE_DOOR",
 }
 
 newEntity{ base = "BASE_RUNE",
@@ -260,12 +232,7 @@ newEntity{ base = "BASE_RUNE",
 		range = resolvers.mbonus(6, 5),
 		use_stat_mod = 0.05,
 	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to teleport in a directed manner over a short range.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_CONTROLLED_PHASE_DOOR", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "RUNE:_CONTROLLED_PHASE_DOOR",
 }
 
 newEntity{ base = "BASE_RUNE",
@@ -280,12 +247,7 @@ newEntity{ base = "BASE_RUNE",
 		range = resolvers.mbonus(100, 20),
 		use_stat_mod = 1,
 	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to randomly teleport on a big range.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_TELEPORTATION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "RUNE:_TELEPORTATION",
 }
 
 newEntity{ base = "BASE_RUNE",
@@ -301,12 +263,7 @@ newEntity{ base = "BASE_RUNE",
 		power = resolvers.mbonus(400, 50),
 		use_stat_mod = 2.3,
 	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to summon a protective shield.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_SHIELDING", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "RUNE:_SHIELDING",
 }
 
 newEntity{ base = "BASE_RUNE",
@@ -323,12 +280,7 @@ newEntity{ base = "BASE_RUNE",
 		use_stat_mod = 0.08,
 		nb_uses = resolvers.mbonus(7, 4),
 	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to become invisible for a few turns.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_INVISIBILITY", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "RUNE:_INVISIBILITY",
 }
 
 newEntity{ base = "BASE_RUNE",
@@ -345,12 +297,7 @@ newEntity{ base = "BASE_RUNE",
 		use_stat_mod = 0.3,
 		nb_uses = resolvers.mbonus(7, 4),
 	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to increase your global speed for a few turns.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_SPEED", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "RUNE:_SPEED",
 }
 
 newEntity{ base = "BASE_RUNE",
@@ -367,10 +314,5 @@ newEntity{ base = "BASE_RUNE",
 		power = resolvers.mbonus(20, 10),
 		use_stat_mod = 0.14,
 	},
-
-	use_simple = { name="inscribe your skin with a rune that allows you to see invisible a some turns and map the area surrounding you.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "RUNE:_VISION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
+	inscription_talent = "RUNE:_VISION",
 }

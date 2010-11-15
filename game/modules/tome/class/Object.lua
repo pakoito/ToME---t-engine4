@@ -437,6 +437,16 @@ function _M:getTextualDesc()
 		desc:add(("Restores at least %d mana."):format(self.mana_consume), true)
 	end
 
+	if self.inscription_data and self.inscription_talent then
+		game.player.__inscription_data_fake = self.inscription_data
+		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
+		local tdesc = game.player:getTalentFullDescription(t)
+		game.player.__inscription_data_fake = nil
+		desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
+		desc:merge(tdesc)
+		desc:add(true)
+	end
+
 	local use_desc = self:getUseDesc()
 	if use_desc then desc:add(use_desc) end
 
