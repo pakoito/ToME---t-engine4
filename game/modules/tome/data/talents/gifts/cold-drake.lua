@@ -52,6 +52,7 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	cooldown = 10,
+	sustain_equilibrium = 30,
 	range = 20,
 	tactical = {
 		DEFEND = 10,
