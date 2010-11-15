@@ -81,8 +81,8 @@ newEntity{
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
-		min_fill = 40,
-		max_fill = 60,
+		min_fill = 2,
+		max_fill = 4,
 		filters = {
 			{type="scroll", subtype="infusion", id=true},
 		},
@@ -98,8 +98,8 @@ newEntity{
 		restock_after = 1000,
 		empty_before_restock = true,
 		buy_percent = 10,
-		min_fill = 40,
-		max_fill = 60,
+		min_fill = 2,
+		max_fill = 4,
 		filters = {
 			{type="scroll", subtype="rune", id=true},
 		},
