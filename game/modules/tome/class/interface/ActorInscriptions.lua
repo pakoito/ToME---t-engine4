@@ -62,6 +62,7 @@ function _M:setInscription(id, name, data, cooldown, vocal, src)
 
 	-- Learn new talent
 	name = name.."_"..id
+	data.__id = id
 	self.inscriptions_data[name] = data
 	self.inscriptions[id] = name
 	print("Inscribing on "..self.name..": "..tostring(name))
@@ -80,4 +81,20 @@ function _M:getInscriptionData(name)
 	d.inc_stat = 0
 	if d.use_stat and d.use_stat_mod then d.inc_stat = self:getStat(d.use_stat) * d.use_stat_mod end
 	return d
+end
+
+function _M:usedInscription(name)
+	assert(self.inscriptions_data[name], "unknown inscription "..name)
+	local d = self.inscriptions_data[name]
+	if not d.nb_uses then return end
+	d.nb_uses = d.nb_uses - 1
+	if d.nb_uses <= 0 then
+		local t = self:getTalentFromId(self["T_"..name])
+		game.logPlayer(self, "Your %s is depleted!", t.name)
+		game:onTickEnd(function()
+			self:unlearnTalent(self["T_"..name])
+			self.inscriptions[d.__id] = nil
+			self.inscriptions_data[name] = nil
+		end)
+	end
 end

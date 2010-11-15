@@ -25,6 +25,9 @@ local newInscription = function(t)
 	end
 end
 
+-----------------------------------------------------------------------
+-- Infusions
+-----------------------------------------------------------------------
 newInscription{
 	name = "Infusion: Healing",
 	type = {"inscriptions/infusions", 1},
@@ -44,6 +47,72 @@ newInscription{
 	end,
 }
 
+newInscription{
+	name = "Infusion: Cure",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+
+		local target = self
+		local effs = {}
+		local known = false
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if data.what[e.type] then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, 1 do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+				known = true
+			end
+		end
+		if known then
+			game.logSeen(self, "%s is cured!", self.name:capitalize())
+		end
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local what = table.concat(table.keys(data.what), ", ")
+		return ([[Activate the infusion to cure yourself of %s effects.]]):format(what)
+	end,
+}
+
+newInscription{
+	name = "Infusion: Movement",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_FREE_ACTION, data.dur + data.inc_stat, {power=1})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the infusion to prevent stuns, dazes and pinning effects for %d turns.]]):format(data.dur + data.inc_stat)
+	end,
+}
+
+-----------------------------------------------------------------------
+-- Runes
+-----------------------------------------------------------------------
 newInscription{
 	name = "Rune: Phase Door",
 	type = {"inscriptions/runes", 1},
@@ -67,6 +136,28 @@ newInscription{
 }
 
 newInscription{
+	name = "Rune: Teleportation",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+		self:teleportRandom(self.x, self.y, data.range + data.inc_stat, 15)
+		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to teleport randomly in a range of %d with a minimun range of 15.]]):format(data.range + data.inc_stat)
+	end,
+}
+
+newInscription{
 	name = "Rune: Shielding",
 	type = {"inscriptions/runes", 1},
 	points = 1,
@@ -83,5 +174,47 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to create a protective shield at most absorbing %d damage for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+	end,
+}
+
+newInscription{
+	name = "Rune: Invisibility",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat})
+		self:usedInscription(t.short_name)
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to become invisible (power %d) for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+	end,
+}
+
+newInscription{
+	name = "Rune: Speed",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_SPEED, data.dur, {power=(data.power + data.inc_stat) / 100})
+		self:usedInscription(t.short_name)
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to increase your global speed by %d%% for %d turns.]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
