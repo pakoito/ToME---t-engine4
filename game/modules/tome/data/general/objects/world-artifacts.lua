@@ -283,28 +283,6 @@ This star is the culmination of their craft. Light radiates from its ever shifti
 newEntity{
 	unique = true,
 	type = "potion", subtype="potion",
-	name = "Ever-Refilling Potion of Healing",
-	unided_name = "strange potion",
-	level_range = {35, 40},
-	display = '!', color=colors.VIOLET, image="object/potion-0x3-violet.png",
-	encumber = 0.4,
-	rarity = 150,
-	desc = [[Bottle containing healing magic. But the more you drink from it, the more it refills!]],
-	cost = 80,
-
-	max_power = 100, power_regen = 1,
-	use_power = { name = "heal", power = 80,
-		use = function(self, who)
-			who:heal(150 + who:getMag())
-			game.logSeen(who, "%s quaffs an %s!", who.name:capitalize(), self:getName())
-			return nil, true
-		end
-	},
-}
-
-newEntity{
-	unique = true,
-	type = "potion", subtype="potion",
 	name = "Blood of Life",
 	unided_name = "bloody phial",
 	level_range = {1, 50},

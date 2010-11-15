@@ -76,10 +76,6 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
-		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of lesser mana", ego_chance=-1000},
-		},
 	},
 	copy_add = {
 		life_rating = -4,

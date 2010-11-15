@@ -29,8 +29,7 @@ newEntity{
 		min_fill = 40,
 		max_fill = 60,
 		filters = {
-			{type="potion", id=true},
-			{type="scroll", id=true},
+--			{type="scroll", id=true},
 		},
 --		fixed = {
 --		},

@@ -17,24 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-setStatusAll{no_teleport=true}
-
-rotates = {"default", "90", "180", "270", "flipx", "flipy"}
-
-defineTile(',', "GRASS")
-defineTile(';', "FLOWER")
-defineTile('#', "WALL")
-defineTile('X', "TREE")
-defineTile('x', "DOOR_VAULT")
-
-defineTile('s', "FLOOR", {random_filter={type="scroll", ego_chance=25}}, {random_filter={name="rattlesnake"}})
-
-return {
-[[,,,,,,,,,]],
-[[,#####,,,]],
-[[;#sss#,X,]],
-[[,#sssx,,,]],
-[[,#sss#,,,]],
-[[,#####;,,]],
-[[,,,,,,,,,]],
+newEntity{
+	define_as = "BASE_POTION",
+	slot = "INBELT", use_no_wear=true,
+	type = "potion", subtype="potion",
+	unided_name = "potion", id_by_type = true,
+	display = "!", color=colors.WHITE, image="object/potion-0x0.png",
+	use_sound = "actions/quaff",
+	encumber = 0.2,
+	stacking = true,
+	acid_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
+	desc = [[Magical potions can have wildly different effects, from healing to killing you, beware! Most of them function better with a high Magic score]],
+	egos = "/data/general/objects/egos/potions.lua", egos_chance = resolvers.mbonus(10, 5),
 }

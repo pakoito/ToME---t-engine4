@@ -45,7 +45,6 @@ return {
 		object = {
 			class = "engine.generator.object.Random",
 			nb_object = {4, 6},
-			filters = { {type="potion" }, {type="potion" }, {type="potion" }, {type="scroll" }, {}, {} }
 		},
 		trap = {
 			class = "engine.generator.trap.Random",

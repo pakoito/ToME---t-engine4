@@ -31,7 +31,7 @@ defineTile('!', "DOOR_VAULT")
 defineTile('p', "FLOOR", nil, {random_filter={name="rogue", add_levels=3}})
 defineTile('P', "FLOOR", nil, {random_filter={name="bandit", add_levels=5}})
 
-defineTile('&', "FLOOR", {random_filter={type="potion"}})
+defineTile('&', "FLOOR", {random_filter={type="scroll"}})
 defineTile('$', "FLOOR", "MONEY_SMALL")
 defineTile('*', "FLOOR", {random_filter={type="gem"}})
 

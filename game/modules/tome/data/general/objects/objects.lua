@@ -28,7 +28,7 @@ loadIfNot("/data/general/objects/gem.lua")
 loadIfNot("/data/general/objects/lites.lua")
 
 -- Usable stuff
---loadIfNot("/data/general/objects/potions.lua")
+loadIfNot("/data/general/objects/potions.lua")
 loadIfNot("/data/general/objects/scrolls.lua")
 loadIfNot("/data/general/objects/wands.lua")
 

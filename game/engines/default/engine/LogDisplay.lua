@@ -102,7 +102,7 @@ function _M:getLines(number)
 	if from > #self.log then from = #self.log end
 	local lines = { }
 	for i = from, 1, -1 do
-		lines[#lines+1] = tostring(self.log[i][1])
+		lines[#lines+1] = tostring(self.log[i])
 	end
 	return lines
 end

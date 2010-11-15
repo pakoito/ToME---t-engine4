@@ -25,5 +25,6 @@ A basic tactic in ToME4 is to try to never get surrounded, do not hesitate to ba
 After the combat you will probably be low on health, you can rest for a while to regain lost health and ressources.
 Either press 'r' or right-click on yourself to rest. You will rest until fully restored or until a creature disturbs you.
 
-Now take a few steps backwards to only have to fight one snake at a time and you should survive. Remember to use your talents and maybe a potion of healing if need be.
+Now take a few steps backwards to only have to fight one snake at a time and you should survive.
+Remember to use your talents, infusions and runes to win the fight.
 ]]

@@ -29,7 +29,7 @@ defineTile("T", "GRASS", nil, "TUTORIAL_NPC_TROLL", nil)
 defineTile("L", "GRASS", nil, "TUTORIAL_NPC_LONE_WOLF", nil)
 defineTile("1", "GRASS", nil, nil, "TUTORIAL_MELEE")
 defineTile("|", "GRASS", {random_filter={name="elm arrow"}}, nil, nil)
-defineTile("2", "GRASS", {random_filter={name="potion of lesser healing"}}, nil, "TUTORIAL_OBJECTS")
+defineTile("2", "GRASS", {random_filter={name="regeneration infusion"}}, nil, "TUTORIAL_OBJECTS")
 defineTile("3", "GRASS", nil, nil, "TUTORIAL_TALENTS")
 defineTile("4", "GRASS", nil, nil, "TUTORIAL_LEVELUP")
 defineTile("~", "DEEP_WATER", nil, nil, nil)
@@ -40,9 +40,9 @@ defineTile("8", "GRASS", nil, nil, "TUTORIAL_RANGED")
 defineTile("9", "GRASS", nil, nil, "TUTORIAL_QUESTS")
 defineTile("j", "GRASS", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
 defineTile(" ", "DEEP_WATER", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
-defineTile("!", "GRASS", {random_filter={name="potion of lesser healing"}}, nil, nil)
+defineTile("!", "GRASS", {random_filter={name="healing infusion"}}, nil, nil)
 defineTile('"', "DEEP_WATER", nil, {random_filter={type="immovable", subtype="jelly", max_ood=2}}, nil)
-defineTile("#", "DEEP_WATER", {random_filter={name="potion of lesser healing"}}, nil, nil)
+defineTile("#", "DEEP_WATER", {random_filter={name="shielding rune"}}, nil, nil)
 
 return [[
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~&&&&&&&&&&&&&&&&&
@@ -53,11 +53,11 @@ return [[
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&~~~,,,&&&&&&&&
 &&&&&&&&&,,,,,&&&&&&&&&&&&&&&&&&~~&&~~~&&,,,&&&&&&
 &&&&&&&&,T,,,,,,,,,,,,&&&&&&&&&&~~~~~~~&&&&,&&&&&&
-&&&&&&&&!T,,,,,,,,,,,,,&&&&&&&&&~~~~~~&&&&&,&&&&&&
-&&&&&&&&!T,,T,,,,,,,,,,&&&&&&&&&~~~&~~&&&&&,&&&&&&
+&&&&&&&&,T,,,,,,,,,,,,,&&&&&&&&&~~~~~~&&&&&,&&&&&&
+&&&&&&&&,T,,T,,,,,,,,,,&&&&&&&&&~~~&~~&&&&&,&&&&&&
 &&&&&&&,,,,,T,,,,,,,,,,,&&&&&&&&&~~~~&&&s&,,&&&&&&
-&&&&&&&,!T,,T,,,,,,,,,,,,,,&&&&&,~&~~&&&,,,,&&&&&&
-&&&&&&&&!T,,,,,,,,,,,,,,,&,&&&,,,~~~~&&,,,,,!&&&&&
+&&&&&&&,,T,,T,,,,,,,,,,,,,,&&&&&,~&~~&&&,,,,&&&&&&
+&&&&&&&&,T,,,,,,,,,,,,,,,&,&&&,,,~~~~&&,,,,,!&&&&&
 &&&&&&&&,T,,,,,,,,,,,,,,&&,|)8,&&&~~&&&&,,,,,&&&&&
 &&&&&&&&,,,,,,,,,,,,,,,&&&&&&&&&&&&&&&&&,,,,,&&&&&
 &&&&&&&&&,,,,,,,,,,,,,&&&&&&&&&&,,,,,,,,7,,,&&&&&&
@@ -68,7 +68,7 @@ return [[
 &&&&&&&&&&&&&&&9&&&&&&&&&&&&&,&&&&&&&&&&&&&&&&&&&&
 &&&&&&&&&&&&&&,,&&&&&&&&&&&&,,&&&&&&&&&&&&&&&&&&&&
 &&&&&&&&&&&&&,,&&&&&&&&&&&&&,&&&&&&&&,,,,,,,&&&&&&
-&&&&&&&&&&&&&,&&&&&&&&&&&&&&!&&&&&&&,,j,,,,,,&&&&&
+&&&&&&&&&&&&&,&&&&&&&&&&&&&&,&&&&&&&,,j,,,,,,&&&&&
 &&&&&&&&&&&&&,&&&&&&&&&&&&&&,&&&&&&,,,2,,,,,,1,,,,
 &&&&&&&&&,,,,,,&&&&&&&&&&&&&,&&&,,,,,,j,,,,,&&&&&&
 &&&&&&&&,,,,,,,,&&&&&&&&&&&&,&&&,&&&,,,,,,,,&&&&&&

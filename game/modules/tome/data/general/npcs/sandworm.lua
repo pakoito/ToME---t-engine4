@@ -37,7 +37,7 @@ newEntity{
 	size_category = 2,
 	blind_immune = 1,
 
-	drops = resolvers.drops{chance=20, nb=1, {type="potion"}, {type="scroll"} },
+	drops = resolvers.drops{chance=5, nb=1, {type="scroll"} },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },

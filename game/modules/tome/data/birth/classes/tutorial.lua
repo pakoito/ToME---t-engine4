@@ -64,7 +64,6 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true},
 			{type="armor", subtype="shield", name="iron shield", autoreq=true},
---			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
 		},
 	},
 }

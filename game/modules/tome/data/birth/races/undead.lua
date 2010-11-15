@@ -43,10 +43,6 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
-		resolvers.inventory{ id=true,
-			{type="potion", subtype="potion", name="potion of cure disease", ego_chance=-1000},
-			{type="potion", subtype="potion", name="potion of cure disease", ego_chance=-1000},
-		},
 		-- Force undead faction to undead
 		resolvers.genericlast(function(e) e.faction = "undead" end),
 		default_wilderness = {39, 38},
@@ -54,6 +50,8 @@ newBirthDescriptor{
 		starting_level = 8, starting_level_force_down = true,
 		starting_quest = "start-undead",
 		undead = 1,
+		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
+		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=12, what={poison=true}, dur=4, power=20}),
 	},
 	random_escort_possibilities = { {"trollshaws", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"tol-falas", 1, 8}, {"iron-throne", 1, 1}, },
 }
