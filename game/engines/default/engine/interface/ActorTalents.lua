@@ -487,6 +487,13 @@ function _M:getTalentProjectileSpeed(t)
 	return t.proj_speed
 end
 
+--- Returns display name
+function _M:getTalentDisplayName(t)
+	if not t.display_name then return t.name end
+	if type(t.display_name) == "function" then return t.display_name(self, t) end
+	return t.display_name
+end
+
 --- Cooldown all talents by one
 -- This should be called in your actors "act()" method
 function _M:cooldownTalents()

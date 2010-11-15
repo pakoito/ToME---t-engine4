@@ -19,6 +19,7 @@
 
 local iname = iname
 local idata = idata
+local obj = obj
 local inven = inven
 local item = item
 local answers = {}
@@ -27,7 +28,7 @@ for i = 1, player.max_inscriptions do
 	local name = player.inscriptions[i]
 	local t = player:getTalentFromId("T_"..name)
 	answers[#answers+1] = {t.name, action=function(npc, player)
-		player:setInscription(i, iname, idata, true, true)
+		player:setInscription(i, iname, idata, true, true, {obj=obj})
 		player:removeObject(inven, item)
 	end}
 end

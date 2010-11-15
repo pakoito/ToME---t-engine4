@@ -63,6 +63,7 @@ function _M:setInscription(id, name, data, cooldown, vocal, src)
 	-- Learn new talent
 	name = name.."_"..id
 	data.__id = id
+	if src and src.obj then data.item_name = src.obj:getName{do_color=true, no_count=true}:toTString() end
 	self.inscriptions_data[name] = data
 	self.inscriptions[id] = name
 	print("Inscribing on "..self.name..": "..tostring(name))

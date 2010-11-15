@@ -21,6 +21,17 @@ local newInscription = function(t)
 	for i = 1, 10 do
 		local tt = table.clone(t)
 		tt.short_name = tt.name:upper():gsub("[ ]", "_").."_"..i
+		tt.display_name = function(self, t)
+			local data = self:getInscriptionData(t.short_name)
+			if data.item_name then
+				local n = tstring{t.name, " ["}
+				n:merge(data.item_name)
+				n:add("]")
+				return n
+			else
+				return t.name
+			end
+		end
 		newTalent(tt)
 	end
 end
