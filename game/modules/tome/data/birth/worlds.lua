@@ -81,6 +81,9 @@ newBirthDescriptor{
 		class =
 		{
 			__ALL__ = "disallow",
+			Warrior = "allow",
+			Archer = "allow",
+			Rogue = "allow",
 			Mage = "allow",
 			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
 			Wilder = function() return (
@@ -119,6 +122,9 @@ newBirthDescriptor{
 		class =
 		{
 			__ALL__ = "disallow",
+			Warrior = "allow",
+			Archer = "allow",
+			Rogue = "allow",
 			Mage = "allow",
 			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
 			Wilder = function() return (
