@@ -282,3 +282,12 @@ end
 function resolvers.calc.randartmax(t, e)
 	return t.v
 end
+
+--- Inscription resolver
+function resolvers.inscription(name, data)
+	return {__resolver="inscription", name, data}
+end
+function resolvers.calc.inscription(t, e)
+	e:setInscription(nil, t[1], t[2], false, false)
+	return nil
+end

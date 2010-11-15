@@ -35,6 +35,36 @@ newEntity{
 }
 
 newEntity{
+	define_as = "BASE_INFUSION",
+	type = "scroll", subtype="infusion",
+	unided_name = "infusion", id_by_type = true,
+	display = "?", color=colors.WHITE, image="object/scroll.png",
+	encumber = 0.1,
+	use_sound = "actions/read",
+	use_no_blind = true,
+	use_no_silence = true,
+	is_magic_device = true,
+	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
+	desc = [[Natural infusions allow you to inscribe an infusion onto your body, granting you an on-demand ability.]],
+	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(10, 5),
+}
+
+newEntity{
+	define_as = "BASE_RUNE",
+	type = "scroll", subtype="rune",
+	unided_name = "rune", id_by_type = true,
+	display = "?", color=colors.WHITE, image="object/scroll.png",
+	encumber = 0.1,
+	use_sound = "actions/read",
+	use_no_blind = true,
+	use_no_silence = true,
+	is_magic_device = true,
+	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
+	desc = [[Magical runes allow you to inscribe a rune onto your body, granting you an on-demand ability.]],
+	egos = "/data/general/objects/egos/runes.lua", egos_chance = resolvers.mbonus(10, 5),
+}
+
+newEntity{
 	define_as = "BASE_LORE",
 	type = "lore", subtype="lore", not_in_stores=true,
 	unided_name = "scroll", identified=true,
@@ -43,6 +73,7 @@ newEntity{
 	desc = [[This parchement contains some lore.]],
 }
 
+--[[
 newEntity{ base = "BASE_SCROLL",
 	name = "scroll of light",
 	level_range = {1, 40},
@@ -155,5 +186,64 @@ newEntity{ base = "BASE_SCROLL",
 		who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=power})
 		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
+	end}
+}
+]]
+
+newEntity{ base = "BASE_INFUSION",
+	name = "infusion of healing",
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	material_level = 1,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(4, 12),
+		heal = resolvers.mbonus(200, 40),
+	},
+
+	use_simple = { name="inscribe your skin with a rune that allows you to randomly teleport.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "INFUSION:_HEALING", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_RUNE",
+	name = "rune of phase door",
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	material_level = 1,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(5, 9),
+		range = resolvers.mbonus(10, 5),
+	},
+
+	use_simple = { name="inscribe your skin with a rune that allows you to randomly teleport.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "RUNE:_PHASE_DOOR", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_RUNE",
+	name = "rune of shielding",
+	level_range = {12, 50},
+	rarity = 9,
+	cost = 20,
+	material_level = 3,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(14, 24),
+		dur = resolvers.mbonus(5, 3),
+		power = resolvers.mbonus(350, 50),
+	},
+
+	use_simple = { name="inscribe your skin with a rune that allows you to summon a protective shield.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "RUNE:_SHIELDING", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
 	end}
 }

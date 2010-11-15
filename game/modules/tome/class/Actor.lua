@@ -33,6 +33,7 @@ require "engine.interface.BloodyDeath"
 require "engine.interface.ActorFOV"
 require "mod.class.interface.Combat"
 require "mod.class.interface.Archery"
+require "mod.class.interface.ActorInscriptions"
 local Faction = require "engine.Faction"
 local Map = require "engine.Map"
 local DamageType = require "engine.DamageType"
@@ -51,6 +52,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorQuest,
 	engine.interface.BloodyDeath,
 	engine.interface.ActorFOV,
+	mod.class.interface.ActorInscriptions,
 	mod.class.interface.Combat,
 	mod.class.interface.Archery
 ))
@@ -169,6 +171,7 @@ function _M:init(t, no_default)
 	engine.interface.ActorStats.init(self, t)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorFOV.init(self, t)
+	mod.class.interface.ActorInscriptions.init(self, t)
 
 	self:resetCanSeeCache()
 end
@@ -305,12 +308,12 @@ function _M:move(x, y, force)
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
-	
+
 	if moved and self:hasEffect(self.EFF_FRICTION) then
 		local p = self:hasEffect(self.EFF_FRICTION)
 		DamageType:get(DamageType.FIREBURN).projector(p.src, self.x, self.y, DamageType.FIREBURN, p.dam)
 	end
-	
+
 	return moved
 end
 
@@ -762,9 +765,9 @@ function _M:onTakeHit(value, src)
 			value = value / 2
 		end
 	end
-	
+
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
-	
+
 	-- Chronomancy
 	if self:knowTalent(self.T_AVOID_FATE) then
 		local af = .6 - (self:getTalentLevel(self.T_AVOID_FATE)/20)
@@ -780,14 +783,14 @@ function _M:onTakeHit(value, src)
 		self:setEffect(self.EFF_SMEARED, 5, {src=src, power=value/6})
 		value = value / 6
 	end
-	
+
 	-- Second Life
 	--if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
 	--	local sl = self.max_life * (self:getTalentLevel(self.T_SECOND_LIFE)/10)
 	--	value = 0
 	--	if sl =< self.life then
 	--		self.life = sl
-	--	end	
+	--	end
 --	end
 
 	return value
@@ -1572,6 +1575,7 @@ function _M:getTalentCooldown(t)
 	if not t.cooldown then return end
 	local cd = t.cooldown
 	if type(cd) == "function" then cd = cd(self, t) end
+	if not cd then return end
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
 	if self.talent_cd_reduction.all then cd = cd - self.talent_cd_reduction.all end
 	if t.is_spell then
