@@ -643,6 +643,23 @@ newEffect{
 }
 
 newEffect{
+	name = "PAIN_SUPPRESSION",
+	desc = "Pain Suppression",
+	long_desc = function(self, eff) return ("The target ignores pain, reducing all damage taken by %d%%."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# lessen the pain.", "+Pain Suppression" end,
+	on_lose = function(self, err) return "#Target# feels pain.", "-Pain Suppression" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("resists", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.pid)
+	end,
+}
+
+newEffect{
 	name = "TIME_PRISON",
 	desc = "Time Prison",
 	long_desc = function(self, eff) return "The target is removed from the normal time stream, unable to act but unable to take anydamage." end,

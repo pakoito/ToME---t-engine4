@@ -110,9 +110,49 @@ newInscription{
 	end,
 }
 
+newInscription{
+	name = "Infusion: Pain Suppression",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_PAIN_SUPPRESSION, data.dur, {power=data.power + data.inc_stat})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the infusion to reduce the pain you suffer, reducing all damage taken by %d%% for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+	end,
+}
+
 -----------------------------------------------------------------------
 -- Runes
 -----------------------------------------------------------------------
+newInscription{
+	name = "Rune: Light",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:project({type="ball", range=0, friendlyfire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.LITE, 1)
+		self:project({type="ball", range=0, friendlyfire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to brighten the area in a radius of %d. It also destealth any stealth creatures.]]):format(data.range + data.inc_stat)
+	end,
+}
+
 newInscription{
 	name = "Rune: Phase Door",
 	type = {"inscriptions/runes", 1},
@@ -132,6 +172,34 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to teleport randomly in a range of %d.]]):format(data.range + data.inc_stat)
+	end,
+}
+
+newInscription{
+	name = "Rune: Controlled Phase Door",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = {type="ball", nolock=true, no_restrict=true, nowarning=true, range=data.range + data.inc_stat, radius=3}
+		x, y = self:getTarget(tg)
+		if not x then return nil end
+		-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+		-- but we cant ...
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+		self:teleportRandom(x, y, 3)
+		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to teleport in a range of %d.]]):format(data.range + data.inc_stat)
 	end,
 }
 
@@ -216,5 +284,35 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to increase your global speed by %d%% for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+	end,
+}
+
+newInscription{
+	name = "Rune: Vision",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	cooldown = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.cooldown
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:magicMap(data.range, self.x, self.y, function(x, y)
+			local g = game.level.map(x, y, Map.TERRAIN)
+			if g and (g.always_remember or g:check("block_move")) then
+				for i = -1, 1 do for j = -1, 1 do
+					local g2 = game.level.map(x + i, y + j, Map.TERRAIN)
+					if g2 and not g2:check("block_move") then return true end
+				end end
+			end
+		end)
+		self:setEffect(self.EFF_SEE_INVISIBLE, data.dur, {power=data.power + data.inc_stat})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to get a vision of the area surrounding you (%d radius) and to allow you to see invisible (power %d) for %d turns.]]):
+		format(data.range, data.power + data.inc_stat, data.dur)
 	end,
 }

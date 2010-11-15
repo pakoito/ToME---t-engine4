@@ -30,7 +30,7 @@ newTalent = function(t)
 			t.image = core.display.loadImage("data/gfx/talents/"..name..".png")
 			assert(t.image, "talent auto image requested by not found for: "..t.name)
 		else
-			t.image = core.display.loadImage("data/gfx/talents/"..t.image..".png")
+			t.image = core.display.loadImage("data/gfx/"..t.image..".png")
 			assert(t.image, "talent image requested by not found for: "..t.name)
 		end
 		t.image_texture = t.image:glTexture()

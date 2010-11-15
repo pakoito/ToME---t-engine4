@@ -255,6 +255,17 @@ newDamageType{
 	end,
 }
 
+-- Break stealth
+newDamageType{
+	name = "break stealth", type = "BREAK_STEALTH",
+	projector = function(src, x, y, type, dam)
+		-- Dont lit magically unlit grids
+		local a = game.level.map(x, y, Map.ACTOR)
+		if a and a:isTalentActive(a.T_STEALTH) then
+			a:breakStealth()
+		end
+	end,
+}
 
 -- Silence
 newDamageType{

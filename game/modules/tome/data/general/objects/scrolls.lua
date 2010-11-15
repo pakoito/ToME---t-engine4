@@ -151,7 +151,7 @@ newEntity{ base = "BASE_SCROLL",
 
 	use_simple = { name="map the area directly around you", use = function(self, who)
 		who:magicMap(20)
-		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
+		game.logSeen(who, "%s reads a %s!", who.name:capitalize(), self:getName{no_count=true})
 		return "destroy", true
 	end}
 }
@@ -245,13 +245,34 @@ newEntity{ base = "BASE_INFUSION",
 	material_level = 3,
 
 	inscription_data = {
-		cooldown = resolvers.rngrange(4, 12),
+		cooldown = resolvers.rngrange(10, 15),
 		dur = resolvers.mbonus(5, 2),
 		use_stat_mod = 0.05,
 	},
 
 	use_simple = { name="inscribe your skin with a infusion that allows you to become immune to movement imparing effects.", use = function(self, who, inven, item)
 		if who:setInscription(nil, "INFUSION:_MOVEMENT", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_INFUSION",
+	name = "infusion of pain suppression",
+	level_range = {15, 50},
+	rarity = 9,
+	cost = 30,
+	material_level = 3,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(9, 12),
+		dur = resolvers.mbonus(4, 4),
+		power = resolvers.mbonus(30, 20),
+		use_stat_mod = 0.1,
+	},
+
+	use_simple = { name="inscribe your skin with a infusion that allows you to reduce damage taken for a few turns.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "INFUSION:_PAIN_SUPPRESSION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
 	end}
@@ -272,6 +293,26 @@ newEntity{ base = "BASE_RUNE",
 
 	use_simple = { name="inscribe your skin with a rune that allows you to randomly teleport.", use = function(self, who, inven, item)
 		if who:setInscription(nil, "RUNE:_PHASE_DOOR", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_RUNE",
+	name = "rune of controlled phase door",
+	level_range = {35, 50},
+	rarity = 14,
+	cost = 50,
+	material_level = 4,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(7, 12),
+		range = resolvers.mbonus(6, 5),
+		use_stat_mod = 0.05,
+	},
+
+	use_simple = { name="inscribe your skin with a rune that allows you to teleport in a directed manner over a short range.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "RUNE:_CONTROLLED_PHASE_DOOR", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
 	end}
@@ -357,6 +398,48 @@ newEntity{ base = "BASE_RUNE",
 
 	use_simple = { name="inscribe your skin with a rune that allows you to increase your global speed for a few turns.", use = function(self, who, inven, item)
 		if who:setInscription(nil, "RUNE:_SPEED", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_RUNE",
+	name = "rune of vision",
+	level_range = {15, 50},
+	rarity = 10,
+	cost = 30,
+	material_level = 2,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(20, 30),
+		range = resolvers.mbonus(10, 8),
+		dur = resolvers.mbonus(20, 12),
+		power = resolvers.mbonus(20, 10),
+		use_stat_mod = 0.14,
+	},
+
+	use_simple = { name="inscribe your skin with a rune that allows you to see invisible a some turns and map the area surrounding you.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "RUNE:_VISION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{ base = "BASE_RUNE",
+	name = "rune of light",
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	material_level = 1,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(6, 12),
+		range = resolvers.mbonus(5, 5),
+		use_stat_mod = 0.05,
+	},
+
+	use_simple = { name="inscribe your skin with a rune that allows you to light the surrounding area and reveal stealthed creatures.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "RUNE:_LIGHT", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
 	end}

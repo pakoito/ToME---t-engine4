@@ -33,7 +33,7 @@ newEntity{
 *flame
 *lightning
 digging (very rare)
-healing
+*healing
 
 ]]
 
