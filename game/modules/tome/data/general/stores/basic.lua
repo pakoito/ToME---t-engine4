@@ -74,7 +74,7 @@ newEntity{
 
 newEntity{
 	define_as = "POTION",
-	name = "alchemist store",
+	name = "infusion store",
 	display = '4', color=colors.LIGHT_BLUE,
 	store = {
 		purse = 10,
@@ -84,14 +84,14 @@ newEntity{
 		min_fill = 40,
 		max_fill = 60,
 		filters = {
-			{type="potion", id=true},
+			{type="scroll", subtype="infusion", id=true},
 		},
 	},
 }
 
 newEntity{
 	define_as = "SCROLL",
-	name = "scribe store",
+	name = "rune store",
 	display = '5', color=colors.WHITE,
 	store = {
 		purse = 10,
@@ -101,7 +101,7 @@ newEntity{
 		min_fill = 40,
 		max_fill = 60,
 		filters = {
-			{type="scroll", id=true},
+			{type="scroll", subtype="rune", id=true},
 		},
 	},
 }

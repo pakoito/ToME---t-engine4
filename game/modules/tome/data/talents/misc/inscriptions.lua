@@ -206,7 +206,7 @@ newInscription{
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local tg = {type="ball", nolock=true, no_restrict=true, nowarning=true, range=data.range + data.inc_stat, radius=3}
+		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=data.range + data.inc_stat, radius=3, requires_knowledge=false}
 		x, y = self:getTarget(tg)
 		if not x then return nil end
 		-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
