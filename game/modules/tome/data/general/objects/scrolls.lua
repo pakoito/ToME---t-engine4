@@ -203,7 +203,7 @@ newEntity{ base = "BASE_INFUSION",
 		use_stat_mod = 2,
 	},
 
-	use_simple = { name="inscribe your skin with a infusion that allows you to randomly teleport.", use = function(self, who, inven, item)
+	use_simple = { name="inscribe your skin with an infusion that allows you to randomly teleport.", use = function(self, who, inven, item)
 		if who:setInscription(nil, "INFUSION:_HEALING", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
@@ -211,27 +211,32 @@ newEntity{ base = "BASE_INFUSION",
 }
 
 newEntity{ base = "BASE_INFUSION",
-	name = "infusion of cure",
+	name = "infusion of the wild",
 	level_range = {1, 50},
-	rarity = 9,
-	cost = 10,
+	rarity = 12,
+	cost = 20,
 	material_level = 1,
 
 	inscription_data = resolvers.generic(function(e)
 		return {
-			cooldown = rng.range(4, 8),
-			poison = true,
-			disease = rng.percent(40),
-			curse = rng.percent(40),
-			hex = rng.percent(40),
-			magical = rng.percent(40),
-			physical = rng.percent(40),
-			mental = rng.percent(40),
+			cooldown = rng.range(10, 15),
+			dur = rng.mbonus(4, 4),
+			power = rng.mbonus(30, 20),
+			use_stat_mod = 0.1,
+			what = {
+				poison = true,
+				disease = rng.percent(40) and true or nil,
+				curse = rng.percent(40) and true or nil,
+				hex = rng.percent(40) and true or nil,
+				magical = rng.percent(40) and true or nil,
+				physical = rng.percent(40) and true or nil,
+				mental = rng.percent(40) and true or nil,
+			}
 		}
 	end),
 
-	use_simple = { name="inscribe your skin with a infusion that allows you to cure yourself.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_CURE", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+	use_simple = { name="inscribe your skin with an infusion that allows you to cure yourself and reduce damage taken for a few turns.", use = function(self, who, inven, item)
+		if who:setInscription(nil, "INFUSION:_WILD", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
 	end}
@@ -250,29 +255,8 @@ newEntity{ base = "BASE_INFUSION",
 		use_stat_mod = 0.05,
 	},
 
-	use_simple = { name="inscribe your skin with a infusion that allows you to become immune to movement imparing effects.", use = function(self, who, inven, item)
+	use_simple = { name="inscribe your skin with an infusion that allows you to become immune to movement imparing effects.", use = function(self, who, inven, item)
 		if who:setInscription(nil, "INFUSION:_MOVEMENT", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return "destroy", true
-		end
-	end}
-}
-
-newEntity{ base = "BASE_INFUSION",
-	name = "infusion of pain suppression",
-	level_range = {15, 50},
-	rarity = 9,
-	cost = 30,
-	material_level = 3,
-
-	inscription_data = {
-		cooldown = resolvers.rngrange(9, 12),
-		dur = resolvers.mbonus(4, 4),
-		power = resolvers.mbonus(30, 20),
-		use_stat_mod = 0.1,
-	},
-
-	use_simple = { name="inscribe your skin with a infusion that allows you to reduce damage taken for a few turns.", use = function(self, who, inven, item)
-		if who:setInscription(nil, "INFUSION:_PAIN_SUPPRESSION", self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
 		end
 	end}

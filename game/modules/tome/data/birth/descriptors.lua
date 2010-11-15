@@ -85,7 +85,7 @@ newBirthDescriptor{
 			{type="scroll", subtype="rune", name="rune of invisibility", ego_chance=-1000},
 		},
 		resolvers.inscription("INFUSION:_HEALING", {cooldown=10, heal=50}),
-		resolvers.inscription("INFUSION:_CURE", {cooldown=7, what={poison=true}}),
+		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=20}),
 	},
 }
 

@@ -48,9 +48,10 @@ newInscription{
 }
 
 newInscription{
-	name = "Infusion: Cure",
+	name = "Infusion: Wild",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
+	no_energy = true,
 	cooldown = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.cooldown
@@ -82,12 +83,13 @@ newInscription{
 		if known then
 			game.logSeen(self, "%s is cured!", self.name:capitalize())
 		end
+		self:setEffect(self.EFF_PAIN_SUPPRESSION, data.dur, {power=data.power + data.inc_stat})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local what = table.concat(table.keys(data.what), ", ")
-		return ([[Activate the infusion to cure yourself of %s effects.]]):format(what)
+		return ([[Activate the infusion to cure yourself of %s effects and reduce all damage taken by %d%% for %D turns.]]):format(what, data.power+data.inc_stat, data.dur)
 	end,
 }
 
@@ -107,25 +109,6 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to prevent stuns, dazes and pinning effects for %d turns.]]):format(data.dur + data.inc_stat)
-	end,
-}
-
-newInscription{
-	name = "Infusion: Pain Suppression",
-	type = {"inscriptions/infusions", 1},
-	points = 1,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
-	action = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_PAIN_SUPPRESSION, data.dur, {power=data.power + data.inc_stat})
-		return true
-	end,
-	info = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to reduce the pain you suffer, reducing all damage taken by %d%% for %d turns.]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
 

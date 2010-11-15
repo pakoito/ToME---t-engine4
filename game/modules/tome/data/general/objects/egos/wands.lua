@@ -176,10 +176,10 @@ newEntity{
 newEntity{
 	name = " of healing", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
-	rarity = 10,
-	cost_per_charge = 2,
+	rarity = 20,
+	cost_per_charge = 4,
 
-	use_power = { name = "heal", power = 7, use = function(self, who)
+	use_power = { name = "heal", power = 12, use = function(self, who)
 		local tg = {default_target=who, type="hit", nowarning=true, range=6 + who:getMag(4), first_target="friend"}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
