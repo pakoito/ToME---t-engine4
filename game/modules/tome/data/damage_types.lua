@@ -357,6 +357,15 @@ newDamageType{
 	end,
 }
 
+-- Darkness + Fire
+newDamageType{
+	name = "shadowflame", type = "SHADOWFLAME",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam / 2)
+		DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam / 2)
+	end,
+}
+
 -- Darkness + Stun
 newDamageType{
 	name = "darkstun", type = "DARKSTUN",
@@ -816,6 +825,21 @@ newDamageType{
 		if _G.type(dam) == "number" then dam = {dam=dam, vim=0.2} end
 		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
 		src:incVim(realdam * dam.vim)
+	end,
+}
+
+-- Demonfire: heal demon; damage others
+newDamageType{
+	name = "demonfire", type = "DEMONFIRE",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target.demon then
+			target:heal(dam)
+			return -dam
+		elseif target then
+			DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
+			return dam
+		end
 	end,
 }
 

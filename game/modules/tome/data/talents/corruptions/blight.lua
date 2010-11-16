@@ -131,31 +131,39 @@ newTalent{
 }
 
 newTalent{
-	name = "Blight Storm",
+	name = "Poison Storm",
 	type = {"corruption/blight", 4},
-	mode = "sustained",
 	require = corrs_req4,
 	points = 5,
-	sustain_vim = 60,
+	vim = 36,
 	cooldown = 30,
-	on_crit = function(self, t)
-		self:setEffect(self.EFF_BLOOD_FURY, 5, {power=self:combatTalentSpellDamage(t, 10, 30)})
-	end,
-	activate = function(self, t)
+	tactical = {
+		ATTACKAREA = 20,
+	},
+	action = function(self, t)
+		local duration = 5 + self:getTalentLevel(t)
+		local radius = 4
+		local dam = self:combatTalentSpellDamage(t, 12, 130)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			DamageType.POISON, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=20, color_bg=220, color_bb=70},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			false
+		)
 		game:playSoundNear(self, "talents/slime")
-		local ret = {
-			per = self:addTemporaryValue("combat_spellcrit", self:combatTalentSpellDamage(t, 10, 24)),
-		}
-		return ret
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_spellcrit", p.per)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate on the corruption you bring, increasing your spell critical chance by %d%%.
-		Each time your spells are critical you enter a blood rage for 5 turns, increasing your blight damage by %d%%.
-		The damage will increase with your Magic stat.]]):
-		format(self:combatTalentSpellDamage(t, 10, 24), self:combatTalentSpellDamage(t, 10, 30))
+		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for doing %0.2f nature damage in 6 turns in a radius of 4 for %d turns.
+		Poisoning is cumulative, the longer they stay in they higher the poison they take.
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), 5 + self:getTalentLevel(t))
 	end,
 }

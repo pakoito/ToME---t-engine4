@@ -2235,3 +2235,24 @@ newEffect{
 		self:addTemporaryValue("energy", {mod= eff.power*eff.dur})
 	end,
 }
+
+newEffect{
+	name = "WRAITHFORM",
+	desc = "Wraithform",
+	long_desc = function(self, eff) return ("Turn into a wraith, allowing to pass walls(but not natural obstacles), granting %d defense and %d armour."):format(eff.def, eff.armor) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# turns into a wraith.", "+Wraithform" end,
+	on_lose = function(self, err) return "#Target# returns to normal.", "-Wraithform" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("can_pass", {pass_wall=20})
+		eff.defid = self:addTemporaryValue("combat_def", eff.def)
+		eff.armid = self:addTemporaryValue("combat_armor", eff.armor)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("can_pass", eff.tmpid)
+		self:removeTemporaryValue("combat_def", eff.defid)
+		self:removeTemporaryValue("combat_armor", eff.armid)
+	end,
+}
