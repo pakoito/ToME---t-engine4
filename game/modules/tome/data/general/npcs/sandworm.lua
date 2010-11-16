@@ -78,3 +78,79 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 		[Talents.T_KNOCKBACK]=2,
 	},
 }
+
+newEntity{ base = "BASE_NPC_SANDWORM",
+	name = "gigantic sandworm tunneler", color=colors.LIGHT_UMBER,
+	desc = "The ground shakes as this huge worm burrows towards you, it's gigantic mouth just as capable of devouring flesh as stone.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 2,
+	size_category = 4,
+	max_life = 120, life_rating = 13,
+	combat_armor = 1, combat_def = 0,
+	combat = { dam=resolvers.mbonus(55, 15), atk=15, apr=0, dammod={str=1} },
+
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+	stats = { str=30, dex=7, mag=3, con=3 },
+
+	no_breath = 1,
+
+	can_pass = {pass_wall=20},
+	move_project = {[DamageType.DIG]=1},
+
+	resolvers.talents{
+		[Talents.T_RUSH]=5,
+		[Talents.T_GRAB]=5,
+	},
+}
+
+newEntity{ base = "BASE_NPC_SANDWORM",
+	name = "gigantic gravity worm", color=colors.UMBER,
+	desc = "Space and time seem to bend around this huge worm.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 5,
+	max_life = 100, life_rating = 14,
+	combat_armor = 1, combat_def = 0,
+	combat = { dam=resolvers.mbonus(45, 15), atk=15, apr=0, dammod={str=1} },
+
+	stats = { str=20, dex=7, mag=30, con=3 },
+	autolevel = "warriormage",
+
+	resolvers.talents{
+		[Talents.T_CRUSHING_WEIGHT]=5,
+		[Talents.T_GRAVITY_SPIKE]=5,
+		[Talents.T_DAMAGE_SMEARING]=5,
+	},
+}
+
+newEntity{ base = "BASE_NPC_SANDWORM",
+	name = "gigantic corrosive tunneler", color=colors.GREEN,
+	desc = "This huge worm burrows through the earth using it's powerful corrosive saliva.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 3,
+	size_category = 4,
+	max_life = 80, life_rating = 10,
+	combat_armor = 1, combat_def = 0,
+	combat = { dam=resolvers.mbonus(55, 15), atk=15, apr=50, damtype=DamageType.ACID, dammod={str=1} },
+	resists={[DamageType.ACID] = 100},
+
+	stats = { str=30, dex=7, mag=3, con=3 },
+
+	no_breath = 1,
+
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+	move_project = {[DamageType.DIG]=1},
+
+	resolvers.talents{
+		[Talents.T_ACID_BLOOD]=3,
+	},
+
+	on_die = function(self, src)
+		game.level.map:addEffect(self,
+			self.x, self.y, 5,
+			engine.DamageType.ACID, self:getStr(90),
+			3,
+			5, nil,
+			{type="vapour"}
+		)
+	end,
+}
