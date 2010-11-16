@@ -43,7 +43,6 @@ newEntity{
 	use_sound = "actions/read",
 	use_no_blind = true,
 	use_no_silence = true,
-	is_magic_device = true,
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
 	desc = [[Natural infusions allow you to inscribe an infusion onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
