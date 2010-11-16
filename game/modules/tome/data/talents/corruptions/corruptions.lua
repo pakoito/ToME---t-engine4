@@ -27,7 +27,7 @@ newTalentType{ no_silence=true, is_spell=true, type="corruption/scourge", name =
 newTalentType{ no_silence=true, is_spell=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/blood", name = "blood", description = "Harness the power of blood, both your own and your foes." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/blight", name = "blight", description = "Bring corruption and decay to all who oppose you." }
-newTalentType{ no_silence=true, is_spell=true, type="corruption/soul", name = "soul", description = "Touch the very soul of your victims." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/vim", name = "vim", description = "Touch the very essence of your victims." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/shadowflame", name = "Shadowflame", description = "Harness the power of the demonic shadowflame." }
 
 -- Generic requires for corruptions based on talent level
@@ -82,3 +82,4 @@ load("/data/talents/corruptions/hexes.lua")
 load("/data/talents/corruptions/blood.lua")
 load("/data/talents/corruptions/blight.lua")
 load("/data/talents/corruptions/shadowflame.lua")
+load("/data/talents/corruptions/vim.lua")

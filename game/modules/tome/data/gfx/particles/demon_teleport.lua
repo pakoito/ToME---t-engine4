@@ -19,22 +19,42 @@
 
 base_size = 32
 
-return {
-	base = 1000,
+return { generator = function()
+	local ad = rng.float(0, 360)
+	local dir = math.rad(ad)
 
-	angle = { 0, 360 }, anglev = { 2000, 5000 }, anglea = { 20, 60 },
+	if rng.chance(2) then
+		return {
+			x = math.cos(dir) * 2, y = math.sin(dir) * 2,
+			dir = dir, vel = rng.float(2, 5),
 
-	life = { 20, 30 },
-	size = { 3, 7 }, sizev = {0, 0}, sizea = {0, 0},
+			life = rng.range(20, 30),
+			size = rng.range(3, 7), sizev = 0, sizea = 0,
 
-	r = {200, 255}, rv = {0, 0}, ra = {0, 0},
-	g = {120, 170}, gv = {0, 0}, ga = {0, 0},
-	b = {0,   100}, bv = {0, 0}, ba = {0, 0},
-	a = {255, 255}, av = {0, 0}, aa = {0, 0},
+			r = rng.range(200, 255)/255, rv = 0, ra = 0,
+			g = rng.range(120, 170)/255, gv = 0, ga = 0,
+			b = rng.range(0,   100)/255, bv = 0, ba = 0,
+			a = 1, av = 0, aa = 0,
+		}
+	else
+		return {
+			x = math.cos(dir) * 5, y = math.sin(dir) * 5,
+			dir = dir, vel = rng.float(2, 5),
 
-}, function(self)
+			life = rng.range(20, 30),
+			size = rng.range(3, 7), sizev = 0, sizea = 0,
+
+			r = rng.range(0, 40)/255,   rv = 0, ra = 0,
+			g = rng.range(0, 40)/255,   gv = 0.005, ga = 0.0005,
+			b = rng.range(0, 40)/255,      bv = 0, ba = 0,
+			a = 1,    av = 0, aa = 0.005,
+		}
+	end
+end, },
+function(self)
 	self.nb = (self.nb or 0) + 1
 	if self.nb < 6 then
 		self.ps:emit(100)
 	end
-end
+end,
+600

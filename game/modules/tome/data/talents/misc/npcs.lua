@@ -894,29 +894,6 @@ newTalent{
 }
 
 newTalent{
-	name = "Soul Rot",
-	type = {"corruption/other", 1},
-	points = 5,
-	cooldown = 3,
-	vim = 10,
-	range = 20,
-	proj_speed = 10,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.BLIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 20, 250)), {type="slime"})
-		game:playSoundNear(self, "talents/slime")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 20, 250))
-	end,
-}
-
-newTalent{
 	name = "Blightzone",
 	type = {"corruption/other", 1},
 	points = 5,

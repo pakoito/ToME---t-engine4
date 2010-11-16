@@ -1,0 +1,167 @@
+-- ToME - Tales of Maj'Eyal
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+newTalent{
+	name = "Soul Rot",
+	type = {"corruption/vim", 1},
+	points = 5,
+	cooldown = 4,
+	vim = 10,
+	range = 20,
+	proj_speed = 10,
+	requires_target = true,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.BLIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 20, 250), self:getTalentLevel(t) * 5), {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
+		This spell has an improved critical strike chance of +%0.2f%%.
+		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 20, 250), self:getTalentLevel(t) * 5)
+	end,
+}
+
+newTalent{
+	name = "Vimtouch",
+	type = {"corruption/vim", 2},
+	require = corrs_req2,
+	points = 5,
+	cooldown = 10,
+	vim = 30,
+	range = 20,
+	requires_target = true,
+	action = function(self, t)
+		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 28, 120))
+		local nb = self:getTalentLevelRaw(t)
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+
+			DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, dam)
+
+			local effs = {}
+
+			-- Go through all spell effects
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.type == "magical" or e.type == "physical" then
+					effs[#effs+1] = {"effect", eff_id}
+				end
+			end
+
+			-- Go through all sustained spells
+			for tid, act in pairs(target.sustain_talents) do
+				if act then
+					effs[#effs+1] = {"talent", tid}
+				end
+			end
+
+			for i = 1, nb do
+				if #effs == 0 then break end
+				local eff = rng.tableRemove(effs)
+
+				if eff[1] == "effect" then
+					target:removeEffect(eff[2])
+				else
+					target:forceUseTalent(eff[2], {ignore_energy=true})
+				end
+			end
+		end, nil, {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Project a corrupted blast of power that deals %0.2f blight damage and removes %d magical or physical effects from any creatures caught in the area.
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 120)), self:getTalentLevelRaw(t))
+	end,
+}
+
+newTalent{
+	name = "Soul Drain",
+	type = {"corruption/vim", 3},
+	require = corrs_req3,
+	points = 5,
+	cooldown = 10,
+	vim = 12,
+	range = 20,
+	requires_target = true,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			target:setEffect(target.EFF_CORROSIVE_WORM, 10, {src=self, dam=self:combatTalentSpellDamage(t, 10, 60), explosion=self:spellCrit(self:combatTalentSpellDamage(t, 10, 230))})
+		end)
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Infect your target with a corrosive worm that deals %0.2f acid damage per turn.
+		If the target dies while the worm is inside it will explode doing %0.2f acid damage in a radius of 4.
+		The damage will increase with Magic stat.]]):
+		format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 60)), damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 230)))
+	end,
+}
+
+newTalent{
+	name = "??????",
+	type = {"corruption/vim", 4},
+	require = corrs_req4,
+	points = 5,
+	vim = 36,
+	cooldown = 30,
+	tactical = {
+		ATTACKAREA = 20,
+	},
+	action = function(self, t)
+		local duration = 5 + self:getTalentLevel(t)
+		local radius = 4
+		local dam = self:combatTalentSpellDamage(t, 12, 130)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			DamageType.POISON, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=20, color_bg=220, color_bb=70},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			false
+		)
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for doing %0.2f nature damage in 6 turns in a radius of 4 for %d turns.
+		Poisoning is cumulative, the longer they stay in they higher the poison they take.
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), 5 + self:getTalentLevel(t))
+	end,
+}
