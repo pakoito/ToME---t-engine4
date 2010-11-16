@@ -119,6 +119,7 @@ newInscription{
 	name = "Infusion: Movement",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
+	no_energy = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_FREE_ACTION, data.dur + data.inc_stat, {power=1})
@@ -134,6 +135,7 @@ newInscription{
 	name = "Infusion: Sun",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
+	no_energy = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:project({type="ball", range=0, friendlyfire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.LITE, 1)
@@ -150,6 +152,7 @@ newInscription{
 	name = "Infusion: Strength",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
+	no_energy = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_STRENGTH, data.dur, {power=data.power + data.inc_stat})
@@ -165,6 +168,7 @@ newInscription{
 	name = "Infusion: Will",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
+	no_energy = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_WILL, data.dur, {power=data.power + data.inc_stat})
@@ -244,6 +248,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	no_energy = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, data.dur, {power=data.power + data.inc_stat})
