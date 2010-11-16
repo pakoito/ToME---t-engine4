@@ -61,6 +61,7 @@ on_grant = function(self, who)
 				tries = tries + 1
 			end
 			if tries < 100 then
+				m.quest = true
 				m.on_die = function(self)
 					game.player:hasQuest("lightning-overload"):kill_one()
 				end
