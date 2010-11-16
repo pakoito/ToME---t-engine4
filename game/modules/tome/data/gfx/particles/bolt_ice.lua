@@ -17,43 +17,35 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local nb = 12
-local dir
-local radius = radius or 6
-
 return { generator = function()
+	local radius = 0
 	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
 	local ad = rng.float(0, 360)
 	local a = math.rad(ad)
-	local r = 0
+	local r = rng.float(0, sradius / 4)
 	local x = r * math.cos(a)
 	local y = r * math.sin(a)
+	local bx = math.floor(x / engine.Map.tile_w)
+	local by = math.floor(y / engine.Map.tile_h)
 	local static = rng.percent(40)
-	local vel = sradius * ((24 - nb * 1.4) / 24) / 12
 
 	return {
 		trail = 1,
-		life = 12,
-		size = 12 - (12 - nb) * 0.7, sizev = 0, sizea = 0,
+		life = 6,
+		size = 3, sizev = 0, sizea = 0,
 
 		x = x, xv = 0, xa = 0,
 		y = y, yv = 0, ya = 0,
 		dir = a, dirv = 0, dira = 0,
-		vel = rng.float(vel * 0.6, vel * 1.2), velv = 0, vela = 0,
+		vel = sradius / 2 / 6, velv = 0, vela = 0,
 
 		r = 0,   rv = 0, ra = 0,
-		g = rng.range(80, 255)/255,   gv = 0, ga = 0,
-		b = 0,      bv = 0, ba = 0,
-		a = rng.range(25, 220)/255,   av = 0, aa = 0,
+		g = rng.range(170, 210)/255,   gv = 0, ga = 0,
+		b = rng.range(200, 255)/255,   gv = 0, ga = 0,
+		a = rng.range(230, 225)/255,   av = 0, aa = 0,
 	}
 end, },
 function(self)
-	if nb > 0 then
-		local i = math.min(nb, 6)
-		i = (i * i) * radius
-		self.ps:emit(i)
-		nb = nb - 1
-	end
+	self.ps:emit(30)
 end,
-30*radius*7*12,
-"particle_cloud"
+30*6

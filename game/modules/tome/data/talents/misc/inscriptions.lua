@@ -32,6 +32,10 @@ local newInscription = function(t)
 				return t.name
 			end
 		end
+		tt.cooldown = function(self, t)
+			local data = self:getInscriptionData(t.short_name)
+			return data.cooldown
+		end
 		newTalent(tt)
 	end
 end
@@ -43,10 +47,6 @@ newInscription{
 	name = "Infusion: Regeneration",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_REGENERATION, data.dur, {power=(data.heal + data.inc_stat) / data.dur})
@@ -62,10 +62,6 @@ newInscription{
 	name = "Infusion: Healing",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:heal(data.heal + data.inc_stat)
@@ -82,10 +78,6 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 
@@ -127,10 +119,6 @@ newInscription{
 	name = "Infusion: Movement",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_FREE_ACTION, data.dur + data.inc_stat, {power=1})
@@ -146,10 +134,6 @@ newInscription{
 	name = "Infusion: Sun",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:project({type="ball", range=0, friendlyfire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.LITE, 1)
@@ -166,10 +150,6 @@ newInscription{
 	name = "Infusion: Strength",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_STRENGTH, data.dur, {power=data.power + data.inc_stat})
@@ -185,10 +165,6 @@ newInscription{
 	name = "Infusion: Will",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_WILL, data.dur, {power=data.power + data.inc_stat})
@@ -208,10 +184,6 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
@@ -230,10 +202,6 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=data.range + data.inc_stat, radius=3, requires_knowledge=false}
@@ -258,10 +226,6 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
@@ -280,10 +244,6 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, data.dur, {power=data.power + data.inc_stat})
@@ -300,10 +260,6 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat})
@@ -321,10 +277,6 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_SPEED, data.dur, {power=(data.power + data.inc_stat) / 100})
@@ -342,10 +294,6 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	cooldown = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.cooldown
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:magicMap(data.range, self.x, self.y, function(x, y)
@@ -364,5 +312,106 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to get a vision of the area surrounding you (%d radius) and to allow you to see invisible (power %d) for %d turns.]]):
 		format(data.range, data.power + data.inc_stat, data.dur)
+	end,
+}
+
+newInscription{
+	name = "Rune: Heat Beam",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	range = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.range
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.FIREBURN, {dur=5, initial=0, dam=data.power + data.inc_stat})
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/fire")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to fire a beam of heat doing %0.2f fire damage over 5 turns.]]):format(damDesc(self, DamageType.FIRE, data.power + data.inc_stat))
+	end,
+}
+
+newInscription{
+	name = "Rune: Frozen Spear",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	range = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.range
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_ice", trail="icetrail"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
+		game:playSoundNear(self, "talents/ice")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to fire a bolt of ice doing %0.2f cold damage with a chance to freeze the target.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+	end,
+}
+
+newInscription{
+	name = "Rune: Acid Wave",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	range = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.range
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		self:projectile(tg, self.x, self.y, DamageType.ACID, data.power + data.inc_stat)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to fire a self centered acid wave, doing %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat))
+	end,
+}
+
+newInscription{
+	name = "Rune: Lightning",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	range = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.range
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = data.power + data.inc_stat
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/lightning")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local dam = damDesc(self, DamageType.LIGHTNING, data.power + data.inc_stat)
+		return ([[Activate the rune to fire a beam of lightning, doing %0.2f to %0.2f lightning damage.]]):format(dam / 3, dam)
 	end,
 }

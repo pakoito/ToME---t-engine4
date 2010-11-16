@@ -205,6 +205,23 @@ function resolvers.calc.mbonus_material(t, e)
 	return v
 end
 
+--- Random bonus based on level and material quality
+resolvers.current_level = 1
+function resolvers.mbonusl(max, add, pricefct)
+	return {__resolver="mbonus", max, add, pricefct}
+end
+function resolvers.calc.mbonus(t, e)
+	local v = rng.mbonus(t[1], resolvers.current_level, resolvers.mbonus_max_level) + (t[2] or 0)
+
+	if e.cost and t[3] then
+		local ap, nv = t[3](e, v)
+		e.cost = e.cost + ap
+		v = nv or v
+	end
+
+	return v
+end
+
 --- Generic resolver, takes a function, executes at the end
 function resolvers.genericlast(fct)
 	return {__resolver="genericlast", __resolve_last=true, fct}

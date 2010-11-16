@@ -160,6 +160,8 @@ function _M:generateRandart(add)
 	print("Creating randart "..o.name.." with level "..lev)
 	print(" == using themes", table.concat(table.keys(themes), ','))
 
+	o.cost = o.cost + points * 7
+
 	-- Select some powers
 	for i = 1, nb_powers do
 		local list = game.zone:computeRarities("powers", powers_list, game.level, themes_fct)
