@@ -285,6 +285,7 @@ function _M:playerFOV()
 			end
 
 			if ok then
+				if self.detect_function then self.detect_function(self, x, y) end
 				game.level.map.seens(x, y, 1)
 			end
 		end, true, true, true)

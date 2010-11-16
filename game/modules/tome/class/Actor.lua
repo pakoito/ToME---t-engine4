@@ -795,6 +795,11 @@ function _M:onTakeHit(value, src)
 	--	end
 --	end
 
+	if self:knowTalent(self.T_LEECH) and src.hasEffect and src:hasEffect(src.EFF_VIMSENSE) then
+		self:incVim(3 + self:getTalentLevel(self.T_LEECH) * 0.7)
+		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s vim.", src.name:capitalize())
+	end
+
 	return value
 end
 

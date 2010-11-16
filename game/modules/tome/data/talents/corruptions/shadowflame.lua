@@ -120,9 +120,13 @@ newTalent{
 	cooldown = 60,
 	no_sustain_autoreset = true,
 	no_npc_use = true,
+	range = 10,
 	activate = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		if not tx or not ty or not target then return nil end
+		target = game.level.map(tx, ty, Map.ACTOR)
 		if not tx or not ty or not target then return nil end
 
 		game:playSoundNear(self, "talents/flame")

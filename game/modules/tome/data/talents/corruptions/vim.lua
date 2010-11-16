@@ -42,126 +42,93 @@ newTalent{
 }
 
 newTalent{
-	name = "Vimtouch",
+	name = "Vimsense",
 	type = {"corruption/vim", 2},
 	require = corrs_req2,
 	points = 5,
-	cooldown = 10,
-	vim = 30,
-	range = 20,
+	cooldown = 25,
+	vim = 25,
 	requires_target = true,
+	no_npc_use = true,
+	action = function(self, t)
+		local rad = 10
+		self:setEffect(self.EFF_SENSE, 3 + self:getTalentLevel(t), {
+			range = rad,
+			actor = 1,
+			on_detect = function(self, x, y)
+				local a = game.level.map(x, y, engine.Map.ACTOR)
+				if not a or self:reactionToward(a) >= 0 then return end
+				a:setTarget(game.player)
+				a:setEffect(a.EFF_VIMSENSE, 2, {power=self:combatTalentSpellDamage(t, 10, 45)})
+			end,
+		})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Feel the very existence of creatures around you for %d turns in a radius of 10.
+		The evil touch will reduce their blight resistance by %d%% but also make them aware of you.
+		The damage will increase with Magic stat.]]):format(3 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 45))
+	end,
+}
+
+newTalent{
+	name = "Leech",
+	type = {"corruption/vim", 3},
+	require = corrs_req3,
+	mode = "passive",
+	points = 5,
+	info = function(self, t)
+		return ([[Each time a creature affected by vimsense hurts you you regain %0.2f vim.]]):
+		format(3 + self:getTalentLevel(t) * 0.7)
+	end,
+}
+
+newTalent{
+	name = "Dark Portal",
+	type = {"corruption/vim", 4},
+	require = corrs_req4,
+	points = 5,
+	vim = 30,
+	cooldown = 15,
+	tactical = {
+		ATTACKAREA = 5,
+	},
+	range = 15,
 	action = function(self, t)
 		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 28, 120))
-		local nb = self:getTalentLevelRaw(t)
+		local actors = {}
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
-			if not target then return end
-
-			DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, dam)
-
-			local effs = {}
-
-			-- Go through all spell effects
-			for eff_id, p in pairs(target.tmp) do
-				local e = target.tempeffect_def[eff_id]
-				if e.type == "magical" or e.type == "physical" then
-					effs[#effs+1] = {"effect", eff_id}
-				end
-			end
-
-			-- Go through all sustained spells
-			for tid, act in pairs(target.sustain_talents) do
-				if act then
-					effs[#effs+1] = {"talent", tid}
-				end
-			end
-
-			for i = 1, nb do
-				if #effs == 0 then break end
-				local eff = rng.tableRemove(effs)
-
-				if eff[1] == "effect" then
-					target:removeEffect(eff[2])
-				else
-					target:forceUseTalent(eff[2], {ignore_energy=true})
-				end
-			end
-		end, nil, {type="slime"})
-		game:playSoundNear(self, "talents/slime")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Project a corrupted blast of power that deals %0.2f blight damage and removes %d magical or physical effects from any creatures caught in the area.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 120)), self:getTalentLevelRaw(t))
-	end,
-}
-
-newTalent{
-	name = "Soul Drain",
-	type = {"corruption/vim", 3},
-	require = corrs_req3,
-	points = 5,
-	cooldown = 10,
-	vim = 12,
-	range = 20,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, function(px, py)
-			local target = game.level.map(px, py, Map.ACTOR)
-			if not target then return end
-			target:setEffect(target.EFF_CORROSIVE_WORM, 10, {src=self, dam=self:combatTalentSpellDamage(t, 10, 60), explosion=self:spellCrit(self:combatTalentSpellDamage(t, 10, 230))})
+			if not target or target == self then return end
+			if not target:canBe("teleport") then game.logSeen("%s resists the portal!") return end
+			actors[#actors+1] = target
 		end)
-		game:playSoundNear(self, "talents/slime")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Infect your target with a corrosive worm that deals %0.2f acid damage per turn.
-		If the target dies while the worm is inside it will explode doing %0.2f acid damage in a radius of 4.
-		The damage will increase with Magic stat.]]):
-		format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 60)), damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 230)))
-	end,
-}
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, 1, "demon_teleport")
+		game.level.map:particleEmitter(self.x, self.y, 1, "demon_teleport")
 
-newTalent{
-	name = "??????",
-	type = {"corruption/vim", 4},
-	require = corrs_req4,
-	points = 5,
-	vim = 36,
-	cooldown = 30,
-	tactical = {
-		ATTACKAREA = 20,
-	},
-	action = function(self, t)
-		local duration = 5 + self:getTalentLevel(t)
-		local radius = 4
-		local dam = self:combatTalentSpellDamage(t, 12, 130)
-		-- Add a lasting map effect
-		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.POISON, dam,
-			radius,
-			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=20, color_bg=220, color_bb=70},
-			function(e)
-				e.x = e.src.x
-				e.y = e.src.y
-				return true
-			end,
-			false
-		)
+		for i, a in ipairs(actors) do
+			local tx, ty = util.findFreeGrid(self.x, self.y, 20, true, {[Map.ACTOR]=true})
+			if tx and ty then a:move(tx, ty, true) end
+			if a:canBe("disease") then
+				local diseases = {{self.EFF_WEAKNESS_DISEASE, "str"}, {self.EFF_ROTTING_DISEASE,"con"}, {self.EFF_DECREPITUDE_DISEASE,"dex"}}
+				local disease = rng.table(diseases)
+				a:setEffect(disease[1], 6, {src=self, dam=self:combatTalentSpellDamage(t, 12, 80), [disease[2]]=self:combatTalentSpellDamage(t, 5, 25)})
+			end
+		end
+
+		local tx, ty = util.findFreeGrid(x, y, 20, true, {[Map.ACTOR]=true})
+		if tx and ty then self:move(tx, ty, true) end
+
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for doing %0.2f nature damage in 6 turns in a radius of 4 for %d turns.
-		Poisoning is cumulative, the longer they stay in they higher the poison they take.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), 5 + self:getTalentLevel(t))
+		return ([[Open a dark portal to the target zone, all creatures caught inside will be teleported to your location and you to theirs.
+		All creatures(except you) traversing the portal will catch a random disease doing %0.2f blight damage per turn for 6 turns.
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 12, 80)))
 	end,
 }

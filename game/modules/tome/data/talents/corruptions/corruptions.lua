@@ -19,6 +19,7 @@
 
 -- Corruptions
 newTalentType{ no_silence=true, is_spell=true, type="corruption/sanguisuge", name = "sanguisuge", generic = true, description = "Manipulate the life force to power your own dark powers." }
+newTalentType{ no_silence=true, is_spell=true, type="corruption/vim", name = "vim", generic = true, description = "Touch the very essence of your victims." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/bone", name = "bone", description = "Harness the power of bones." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/hexes", name = "hexes", description = "Hex your foes, hindering and crippling them." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/curses", name = "curses", description = "Curse your foes, hindering and crippling them." }
@@ -27,7 +28,6 @@ newTalentType{ no_silence=true, is_spell=true, type="corruption/scourge", name =
 newTalentType{ no_silence=true, is_spell=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/blood", name = "blood", description = "Harness the power of blood, both your own and your foes." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/blight", name = "blight", description = "Bring corruption and decay to all who oppose you." }
-newTalentType{ no_silence=true, is_spell=true, type="corruption/vim", name = "vim", description = "Touch the very essence of your victims." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/shadowflame", name = "Shadowflame", description = "Harness the power of the demonic shadowflame." }
 
 -- Generic requires for corruptions based on talent level

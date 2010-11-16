@@ -411,6 +411,21 @@ newEffect{
 }
 
 newEffect{
+	name = "VIMSENSE",
+	desc = "Vimsense",
+	long_desc = function(self, eff) return ("Reduces blight resistance by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {[DamageType.BLIGHT]=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "SPEED",
 	desc = "Speed",
 	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
@@ -694,6 +709,7 @@ newEffect{
 		eff.aid = self:addTemporaryValue("detect_actor", eff.actor)
 		eff.oid = self:addTemporaryValue("detect_object", eff.object)
 		eff.tid = self:addTemporaryValue("detect_trap", eff.trap)
+		self.detect_function = eff.on_detect
 		game.level.map.changed = true
 	end,
 	deactivate = function(self, eff)
@@ -701,6 +717,7 @@ newEffect{
 		self:removeTemporaryValue("detect_actor", eff.aid)
 		self:removeTemporaryValue("detect_object", eff.oid)
 		self:removeTemporaryValue("detect_trap", eff.tid)
+		self.detect_function = nil
 	end,
 }
 
