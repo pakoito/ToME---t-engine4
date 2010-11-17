@@ -122,6 +122,11 @@ newTalent{
 	no_npc_use = true,
 	range = 10,
 	activate = function(self, t)
+		if game.zone.is_demon_plane then
+			game.logPlayer(self, "This spell can not be used from within the demon place.")
+			return
+		end
+
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
@@ -148,6 +153,7 @@ newTalent{
 			level.source_level = oldlevel
 			game.zone = zone
 			game.level = level
+			game.zone_name_s = nil
 
 			local x1, y1 = util.findFreeGrid(4, 6, 20, true, {[Map.ACTOR]=true})
 			if x1 then
@@ -168,7 +174,13 @@ newTalent{
 				if target.demon_plane_on_die then target.demon_plane_on_die(...) end
 			end
 
-			game.logPlayer(self, "#LIGHT_RED#You are taken to the demon plane!")
+			self.demon_plane_on_die = self.on_die
+			self.on_die = function(...)
+				self:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
+				if self.demon_plane_on_die then self.demon_plane_on_die(...) end
+			end
+
+			game.logPlayer(game.player, "#LIGHT_RED#You are taken to the demon plane!")
 		end)
 
 		local ret = {
@@ -193,14 +205,17 @@ newTalent{
 			local zone = game.level.source_zone
 			local level = game.level.source_level
 
-			oldlevel:removeEntity(self)
-			level:addEntity(self)
+			if not self.dead then
+				oldlevel:removeEntity(self)
+				level:addEntity(self)
+			end
 
 			game.zone = zone
 			game.level = level
+			game.zone_name_s = nil
 
 			local x1, y1 = util.findFreeGrid(p.x, p.y, 20, true, {[Map.ACTOR]=true})
-			if x1 then
+			if x1 and not self.dead then
 				self:move(x1, y1, true)
 				game.level.map:particleEmitter(x1, y1, 1, "demon_teleport")
 			end
@@ -216,10 +231,14 @@ newTalent{
 
 			-- Add objects back
 			for i, o in ipairs(objs) do
-				game.level.map:addObject(game.player.x, game.player.y, o)
+				if self.dead then
+					game.level.map:addObject(p.target.x, p.target.y, o)
+				else
+					game.level.map:addObject(self.x, self.y, o)
+				end
 			end
 
-			game.logPlayer(self, "#LIGHT_RED#You are brought back from the demon plane!")
+			game.logPlayer(game.player, "#LIGHT_RED#You are brought back from the demon plane!")
 		end)
 
 		return true
@@ -230,6 +249,7 @@ newTalent{
 		While in the demon plane a constant aura of flames will burn both of you (unless you are a demon) for %0.2f fire damage.
 		When the spell ends only you and the target (if still alive) are taken back to your home plane, all summons are left in the demon plane.
 		Objects will be moved as well.
+		This spell has no effect if cast when already inside the demon plane.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 140)))
 	end,
 }

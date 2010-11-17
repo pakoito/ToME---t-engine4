@@ -42,16 +42,18 @@ newTalent{
 		--missile #2
 		local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 		local x, y = self:getTarget(tg2)
-		if not x or not y then return nil end
-		self:projectile(tg2, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
-		game:playSoundNear(self, "talents/earth")
+		if x and y then
+			self:projectile(tg2, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
+			game:playSoundNear(self, "talents/earth")
+		end
 		--missile #3 (Talent Level 4 Bonus Missile)
 		if self:getTalentLevel(t) >= 5 then
 			local tg3 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 			local x, y = self:getTarget(tg3)
-			if not x or not y then return nil end
-			self:projectile(tg3, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
-			game:playSoundNear(self, "talents/earth")
+			if x and y then
+				self:projectile(tg3, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
+				game:playSoundNear(self, "talents/earth")
+			end
 		else end
 		return true
 	end,

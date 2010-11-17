@@ -29,6 +29,7 @@ return {
 --	all_lited = true,
 	persistant = "zone",
 	no_worldport = true,
+	is_demon_plane = true,
 	ambiant_music = "Straight Into Ambush.ogg",
 	generator =  {
 		map = {

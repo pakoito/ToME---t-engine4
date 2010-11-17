@@ -27,12 +27,13 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	no_worldport = true,
+	is_demon_plane = true,
 	ambiant_music = "Straight Into Ambush.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",
 			zoom = 3,
-			sqrt_percent = 30,
+			sqrt_percent = 45,
 			noise = "fbm_perlin",
 			floor = "LAVA_FLOOR",
 			wall = "LAVA_WALL",
