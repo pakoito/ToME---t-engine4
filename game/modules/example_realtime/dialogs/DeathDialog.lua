@@ -124,7 +124,7 @@ end
 function _M:generateList()
 	local list = {}
 
-	if config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
+	if config.settings.tome and config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Exit to main menu", action="exit"}
