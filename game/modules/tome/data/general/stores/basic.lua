@@ -105,7 +105,6 @@ newEntity{
 	},
 }
 
-
 newEntity{
 	define_as = "GEMSTORE",
 	name = "gem store",
@@ -123,6 +122,10 @@ newEntity{
 	},
 }
 
+
+-------------------------------------------------------------
+-- Angolwen
+-------------------------------------------------------------
 newEntity{
 	define_as = "ANGOLWEN_STAFF_WAND",
 	name = "staves and wands store",
@@ -160,7 +163,29 @@ newEntity{
 	},
 }
 
------------ Last Hope
+newEntity{
+	define_as = "ANGOLWEN_SCROLL",
+	name = "rune store and library",
+	display = '5', color=colors.WHITE,
+	store = {
+		purse = 10,
+		restock_after = 1000,
+		empty_before_restock = true,
+		buy_percent = 10,
+		min_fill = 2,
+		max_fill = 4,
+		filters = {
+			{type="scroll", subtype="rune", id=true},
+		},
+		fixed = {
+			{id=true, defined="LINANIIL_LECTURE"},
+		},
+	},
+}
+
+-------------------------------------------------------------
+-- Last Hope
+-------------------------------------------------------------
 newEntity{
 	define_as = "LOST_MERCHANT",
 	name = "rare goods",

@@ -69,6 +69,20 @@ function _M:loadup(level, zone)
 			print("[STORE] stocking up: ", e.name)
 		end
 	end
+
+	for i = 1, #(s.fixed or {}) do
+		local filter = s.fixed[i]
+		local e
+		if not filter.defined then e = zone:makeEntity(level, "object", filter, nil, true)
+		else e = zone:makeEntityByName(level, "object", filter.defined) end
+		if e and not e.not_in_stores then
+			if filter.id then e:identify(filter.id) end
+			self:addObject(inven, e)
+			zone:addEntity(level, e, "object")
+			print("[STORE] stocking up: ", e.name)
+		end
+	end
+
 	self:sortInven(inven)
 	self.last_filled = game.turn
 end

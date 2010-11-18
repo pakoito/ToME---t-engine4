@@ -41,10 +41,11 @@ function _M:simplePopup(title, text, fct, no_leave)
 end
 
 --- Requests a simple, press any key, dialog
-function _M:simpleLongPopup(title, text, w, fct, no_leave)
+function _M:simpleLongPopup(title, text, w, fct, no_leave, force_height)
 	local list = text:splitLines(w - 10, self.font)
 	local d = new(title, 1, 1)
-	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=self.font_h * #list, text=text}}}
+	local h = math.min(force_height and (force_height * game.h) or 999999999, self.font_h * #list)
+	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h, scrollbar=(h < self.font_h * #list) and true or false, text=text}}}
 	if not no_leave then
 		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
 		local close = require("engine.ui.Button").new{text="Close", fct=function() d.key:triggerVirtual("EXIT") end}

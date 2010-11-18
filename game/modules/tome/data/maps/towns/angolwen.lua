@@ -28,7 +28,7 @@ quickEntity('_', {show_tooltip=true, name='cobblestone road', display='.', color
 
 quickEntity('2', {show_tooltip=true, name="Jewelry", display='2', color=colors.BLUE, resolvers.store("ANGOLWEN_JEWELRY"), resolvers.chatfeature("jewelry-store"), image="terrain/wood_store_gem.png"})
 quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
-quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), image="terrain/wood_store_book.png"})
+quickEntity('5', {show_tooltip=true, name="Library", display='5', color=colors.WHITE, resolvers.store("ANGOLWEN_SCROLL"), image="terrain/wood_store_book.png"})
 quickEntity('6', {show_tooltip=true, name="Staves & Wands", display='6', color=colors.RED, resolvers.store("ANGOLWEN_STAFF_WAND"), resolvers.chatfeature("magic-store"), image="terrain/wood_store_closed.png"})
 
 defineTile('@', "GRASS", nil, "SUPREME_ARCHMAGE_LINANIIL")

@@ -18,3 +18,14 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+newEntity{ base = "BASE_LORE",
+	define_as = "LINANIIL_LECTURE",
+	subtype = "lecture on humility", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = "Lecture on Humility by Archmage Linaniil", lore="angolwen-linaniil-lecture",
+	desc = [[Lecture on Humility by Archmage Linaniil. A tale of the first ages and the Spellblaze.]],
+	rarity = false,
+	encumberance = 0,
+	cost = 2,
+}
+
