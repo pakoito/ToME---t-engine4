@@ -56,9 +56,13 @@ local function makeGolem()
 		energy = { mod=1 },
 		stats = { str=14, dex=12, mag=10, con=12 },
 
+		-- No natural exp gain
+		gainExp = function() end,
+
 		keep_inven_on_death = true,
 --		no_auto_resists = true,
 		open_door = true,
+		cut_immune = 1,
 		blind_immune = 1,
 		fear_immune = 1,
 		poison_immune = 1,
