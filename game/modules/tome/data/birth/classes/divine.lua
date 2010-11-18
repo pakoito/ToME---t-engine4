@@ -117,7 +117,7 @@ newBirthDescriptor{
 		max_life = 90,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="robe", autoreq=true},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true}
 		},
 	},
 }

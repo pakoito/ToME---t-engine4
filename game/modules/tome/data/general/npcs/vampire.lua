@@ -71,7 +71,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
-	name = "lesser vampire", color=colors.SLATE,
+	name = "lesser vampire", color=colors.SLATE, image = "npc/lesser_vampire.png",
 	desc=[[This vampire has only just begun it's new life, it has not yet fathomed its newfound power.  Yet it still has its thirst for blood.]],
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 1,
@@ -82,7 +82,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
-	name = "vampire", color=colors.SLATE,
+	name = "vampire", color=colors.SLATE, image = "npc/vampire.png",
 	desc=[[It is a humanoid with an aura of power. You notice a sharp set of front teeth.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 1,
@@ -93,7 +93,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
-	name = "master vampire", color=colors.GREEN,
+	name = "master vampire", color=colors.GREEN, image = "npc/master_vampire.png",
 	desc=[[It is a humanoid form dressed in robes. Power emanates from its chilling frame.]],
 	level_range = {23, nil}, exp_worth = 1,
 	rarity = 1,
@@ -104,7 +104,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
-	name = "elder vampire", color=colors.RED,
+	name = "elder vampire", color=colors.RED, image = "npc/elder_vampire.png",
 	desc=[[A terrible robed undead figure, this creature has existed in its unlife for many centuries by stealing the life of others.
 It can summon the very shades of its victims from beyond the grave to come enslaved to its aid.]],
 	level_range = {26, nil}, exp_worth = 1,
@@ -118,7 +118,7 @@ It can summon the very shades of its victims from beyond the grave to come ensla
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
-	name = "vampire lord", color=colors.BLUE,
+	name = "vampire lord", color=colors.BLUE, image = "npc/vampire_lord.png",
 	desc=[[A foul wind chills your bones as this ghastly figure approaches.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 4,

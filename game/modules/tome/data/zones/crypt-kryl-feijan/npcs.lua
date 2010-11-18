@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/elven-demonologist.lua", rarity(0))
+load("/data/general/npcs/elven-caster.lua", rarity(0))
 load("/data/general/npcs/elven-warrior.lua", rarity(0))
 load("/data/general/npcs/minor-demon.lua", rarity(5))
 load("/data/general/npcs/major-demon.lua", function(e) e.rarity = nil end)

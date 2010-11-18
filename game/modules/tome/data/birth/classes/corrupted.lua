@@ -83,7 +83,8 @@ newBirthDescriptor{
 	name = "Corruptor",
 	desc = {
 		"A corruptor is a terrible foe, wielding dark magics that can sap the very soul of her targets.",
-		"They can harness the blight of evil, crushing their sould, stealing their life force to replenish themselves.",
+		"They can harness the blight of evil, crushing their soul, stealing their life force to replenish themselves.",
+		"The most powerful corruptors can even take on some demonic aspects for themselves.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +2 Constitution",
@@ -93,26 +94,25 @@ newBirthDescriptor{
 	talents_types = {
 		["cunning/survival"]={false, 0},
 		["corruption/sanguisuge"]={true, 0.3},
-		["corruption/hexes"]={false, 0.3},
-		["corruption/curses"]={false, 0.3},
-		["corruption/bone"]={true, 0.3},
+		["corruption/hexes"]={true, 0.3},
+		["corruption/curses"]={true, 0.3},
+		["corruption/bone"]={false, 0.3},
 		["corruption/plague"]={true, 0.3},
-		["corruption/shadowflame"]={true, 0.3},
+		["corruption/shadowflame"]={false, 0.3},
 		["corruption/blood"]={true, 0.3},
-		["corruption/soul"]={true, 0.3},
+		["corruption/vim"]={true, 0.3},
 		["corruption/blight"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_BLOOD_SACRIFICE] = 1,
 		[ActorTalents.T_BLOOD_GRASP] = 1,
-		[ActorTalents.T_BONE_SPEAR] = 1,
-		[ActorTalents.T_VIRULENT_DISEASE] = 1,
+		[ActorTalents.T_SOUL_ROT] = 1,
+		[ActorTalents.T_PACIFICATION_HEX] = 1,
 	},
 	copy = {
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true},
-			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true}
 		},
 	},
 }

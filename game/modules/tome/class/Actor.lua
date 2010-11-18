@@ -250,6 +250,9 @@ function _M:act()
 	local equilibrium_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "equilibrium_level")
 	if equilibrium_level then self:incEquilibrium(equilibrium_level) end
 
+	-- Do stuff to things standing in the fire
+	game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "on_stand", self)
+
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
 

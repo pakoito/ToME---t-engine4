@@ -36,7 +36,7 @@ return {
 			zoom = 4,
 			sqrt_percent = 45,
 			noise = "fbm_perlin",
-			floor = "BURNT_GROUND",
+			floor = {"BURNT_GROUND1","BURNT_GROUND2","BURNT_GROUND3","BURNT_GROUND4",},
 			wall = {"BURNT_TREE1","BURNT_TREE2","BURNT_TREE3","BURNT_TREE4","BURNT_TREE5","BURNT_TREE6","BURNT_TREE7","BURNT_TREE8","BURNT_TREE9","BURNT_TREE10","BURNT_TREE11","BURNT_TREE12","BURNT_TREE13","BURNT_TREE14","BURNT_TREE15","BURNT_TREE16","BURNT_TREE17","BURNT_TREE18","BURNT_TREE19","BURNT_TREE20",},
 			up = "UP",
 			down = "DOWN",
@@ -49,7 +49,6 @@ return {
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
-			guardian = "GRAND_CORRUPTOR",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -60,15 +59,18 @@ return {
 			nb_trap = {0, 0},
 		},
 	},
-	post_process = function(level)
-		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
-	end,
 	levels =
 	{
 		[1] = {
 			generator = { map = {
 				up = "UP_WILDERNESS",
+			}, },
+		},
+		[2] = {
+			width = 65, height = 50,
+			generator = { map = {
+				class = "engine.generator.map.Static",
+				map = "zones/mark-spellblaze-last",
 			}, },
 		},
 	},

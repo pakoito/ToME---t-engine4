@@ -34,7 +34,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ define_as = "THE_MASTER",
 	allow_infinite_dungeon = true,
 	faction = "tol-falas",
-	type = "undead", subtype = "vampire", unique = true,
+	type = "undead", subtype = "vampire", unique = true, image = "npc/the_master.png",
 	name = "The Master",
 	display = "V", color=colors.VIOLET,
 	desc = [[This elder vampire seems to be in control here and does not seem very happy about you.]],

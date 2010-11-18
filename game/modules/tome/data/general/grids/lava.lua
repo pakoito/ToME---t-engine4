@@ -24,7 +24,7 @@ newEntity{
 	shader = "lava",
 	mindam = resolvers.mbonus(5, 15),
 	maxdam = resolvers.mbonus(10, 30),
-	on_move = function(self, x, y, who)
+	on_stand = function(self, x, y, who)
 		local DT = engine.DamageType
 		local dam = DT:get(DT.FIRE).projector(self, x, y, DT.FIRE, rng.range(self.mindam, self.maxdam))
 		if dam > 0 then game.logPlayer(who, "The laval burns you!") end
