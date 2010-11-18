@@ -230,7 +230,7 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 	end
 end
 
-function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
+function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 	local grids = {}
 	local function addGrid(x, y)
 		if not grids[x] then grids[x] = {} end
@@ -238,20 +238,20 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp)
 	end
 
 	if typ.ball and typ.ball > 0 then
-		core.fov.calc_circle(lx, ly, typ.ball, function(_, px, py)
+		core.fov.calc_circle(rx, ry, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
-		addGrid(lx, ly)
+		addGrid(rx, ry)
 	elseif typ.cone and typ.cone > 0 then
 		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
-		core.fov.calc_beam(lx, ly, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
+		core.fov.calc_beam(rx, ry, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
-		addGrid(lx, ly)
+		addGrid(rx, ry)
 	else
 		-- Deam damage: single
 		addGrid(lx, ly)

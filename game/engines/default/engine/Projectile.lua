@@ -203,7 +203,7 @@ function _M:act()
 				end
 				game.level:removeEntity(self)
 				self.dead = true
-				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, radius_x, radius_y, self.tmp_proj)
+				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, radius_x, radius_y)
 			end
 		elseif self.homing then
 			self:moveDirection(self.homing.target.x, self.homing.target.y)

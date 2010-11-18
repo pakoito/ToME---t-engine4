@@ -89,7 +89,7 @@ function _M:display(dispx, dispy)
 
 	-- Correct the explosion source position if we exploded on terrain
 	local radius_x, radius_y
-	if self.target_type.block_path then
+	if self.target_type.block_path and self.target_type.radius and self.target_type.radius > 0 then
 		_, radius_x, radius_y = self.target_type:block_path(stopx, stopy)
 	end
 	if not radius_x then
@@ -138,7 +138,7 @@ function _M:getType(t)
 			if not typ.no_restrict then
 				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then return true end
 				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
-				-- If we explode do to something other than terrain, then we should explode ON the tile, not before it
+				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
 				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
 			end
