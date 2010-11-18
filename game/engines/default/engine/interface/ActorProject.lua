@@ -263,6 +263,10 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		end
 	end
 	if particles and type(particles) == "function" then
-		particles(self, tg, lx, ly, grids)
+		if (typ.ball and typ.ball > 0) or (typ.cone and typ.cone > 0) then
+			particles(self, tg, rx, ry, grids)
+		else
+			particles(self, tg, lx, ly, grids)
+		end
 	end
 end
