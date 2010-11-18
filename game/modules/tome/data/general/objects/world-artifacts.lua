@@ -588,8 +588,6 @@ newEntity{ base = "BASE_KNIFE",
 		physcrit = 8,
 		dammod = {dex=0.55,cun=0.35},
 		no_stealth_break = true,
-	},
-	wielder = {
 		melee_project={[DamageType.RANDOM_SILENCE] = 10},
 	},
 }
@@ -609,13 +607,13 @@ newEntity{ base = "BASE_KNIFE",
 		apr = 15,
 		physcrit = 5,
 		dammod = {dex=0.45,str=0.45},
+		melee_project={[DamageType.DARKNESS] = 20},
 	},
 	wielder = {
 		lite = -1,
 		inc_damage={
 			[DamageType.DARKNESS] = 5,
 		},
-		melee_project={[DamageType.DARKNESS] = 20},
 	},
 }
 
@@ -634,13 +632,13 @@ newEntity{ base = "BASE_KNIFE",
 		apr = 7,
 		physcrit = 13,
 		dammod = {dex=0.45,str=0.45},
+		melee_project={[DamageType.LIGHT] = 20},
 	},
 	wielder = {
 		lite = 1,
 		inc_damage={
 			[DamageType.LIGHT] = 5,
 		},
-		melee_project={[DamageType.LIGHT] = 20},
 	},
 }
 
@@ -692,12 +690,12 @@ newEntity{ base = "BASE_GREATMAUL",
 		physcrit = 4,
 		dammod = {str=1.2},
 		talent_on_hit = { [Talents.T_FLAMESHOCK] = {level=3, chance=10} },
+		melee_project={[DamageType.FIRE] = 30},
 	},
 	wielder = {
 		inc_damage={
 			[DamageType.PHYSICAL] = 15,
 		},
-		melee_project={[DamageType.FIRE] = 30},
 	},
 }
 
@@ -1005,10 +1003,10 @@ newEntity{ base = "BASE_WARAXE",
 		apr = 4.5,
 		physcrit = 7,
 		dammod = {str=1},
+		melee_project={[DamageType.COLD] = 25},
 	},
 	wielder = {
 		combat_atk = 15,
-		melee_project={[DamageType.COLD] = 25},
 	},
 }
 
@@ -1025,10 +1023,10 @@ newEntity{ base = "BASE_WHIP",
 		atk = 10,
 		physcrit = 5,
 		dammod = {dex=1},
+		melee_project={[DamageType.POISON] = 22},
 	},
 	wielder = {
 		see_invisible = 9,
-		melee_project={[DamageType.POISON] = 22},
 	},
 }
 
@@ -1296,8 +1294,6 @@ newEntity{ base = "BASE_GREATSWORD",
 			elseif eff == "confusion" then target:setEffect(target.EFF_CONFUSED, 3, {power=75})
 			end
 		end},
-	},
-	wielder = {
 		melee_project={[DamageType.LIGHT] = 40, [DamageType.DARKNESS] = 40},
 	},
 }

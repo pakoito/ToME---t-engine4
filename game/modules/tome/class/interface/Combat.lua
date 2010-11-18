@@ -239,6 +239,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Melee project
+	if hitted and not target.dead and weapon.melee_project then for typ, dam in pairs(weapon.melee_project) do
+		if dam > 0 then
+			DamageType:get(typ).projector(self, target.x, target.y, typ, dam)
+		end
+	end end
 	if hitted and not target.dead then for typ, dam in pairs(self.melee_project) do
 		if dam > 0 then
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam)

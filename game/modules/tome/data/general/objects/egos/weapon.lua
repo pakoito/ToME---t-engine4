@@ -25,7 +25,7 @@ newEntity{
 	name = "flaming ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
-	wielder = {
+	combat = {
 		melee_project={[DamageType.FIRE] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.64 end)},
 	},
 }
@@ -33,7 +33,7 @@ newEntity{
 	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 5,
-	wielder = {
+	combat = {
 		melee_project={[DamageType.ICE] = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.7 end)},
 	},
 }
@@ -41,7 +41,7 @@ newEntity{
 	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
-	wielder = {
+	combat = {
 		melee_project={[DamageType.ACID] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end)},
 	},
 }
@@ -49,7 +49,7 @@ newEntity{
 	name = "shocking ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
-	wielder = {
+	combat = {
 		melee_project={[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end)},
 	},
 }
@@ -57,7 +57,7 @@ newEntity{
 	name = "poisonous ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
-	wielder = {
+	combat = {
 		melee_project={[DamageType.POISON] = resolvers.mbonus_material(45, 6, function(e, v) return v * 0.5 end)},
 	},
 }
@@ -66,7 +66,7 @@ newEntity{
 	name = "slime-covered ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
-	wielder = {
+	combat = {
 		melee_project={[DamageType.SLIME] = resolvers.mbonus_material(45, 6, function(e, v) return v * 0.9 end)},
 	},
 }
@@ -93,7 +93,7 @@ newEntity{
 	greater_ego = true,
 	rarity = 25,
 	cost = 35,
-	wielder = {
+	combat = {
 		melee_project={
 			[DamageType.FIRE] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end),
 			[DamageType.ICE] = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.7 end),
@@ -165,11 +165,13 @@ newEntity{
 	greater_ego = true,
 	rarity = 20,
 	cost = 35,
-	wielder = {
+	combat = {
 		melee_project={
 			[DamageType.BLIGHT] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end),
 		},
+	},
+	wielder = {
 		see_invisible = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.2 end),
 		combat_physcrit = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.4 end),
 	},

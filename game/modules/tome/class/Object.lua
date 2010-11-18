@@ -244,6 +244,14 @@ function _M:getTextualDesc()
 		if combat.travel_speed then
 			desc:add("Increase travel speed by "..combat.travel_speed.."%", true)
 		end
+
+		if combat.melee_project then
+			local rs = {}
+			for typ, dam in pairs(combat.melee_project) do
+				rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
+			end
+			desc:add(("Damage on strike(melee): %s."):format(table.concat(rs, ',')), true)
+		end
 	end
 
 	local desc_wielder = function(w)

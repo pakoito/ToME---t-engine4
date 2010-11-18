@@ -38,13 +38,13 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.4,
+		melee_project={[DamageType.ICE] = 15},
 	},
 	wielder = {
 		lite = 1,
 		see_invisible = 2,
 		resists={[DamageType.COLD] = 25},
 		inc_damage = { [DamageType.COLD] = 20 },
-		melee_project={[DamageType.ICE] = 15},
 	},
 	max_power = 18, power_regen = 1,
 	use_power = { name = "generate a burst of ice", power = 8,
@@ -164,6 +164,10 @@ Tridents require the exotic weapons mastery talent to correctly use.]],
 		physcrit = 15,
 		dammod = {str=1.3},
 		damrange = 1.4,
+		melee_project={
+			[DamageType.COLD] = 15,
+			[DamageType.NATURE] = 20,
+		},
 	},
 
 	wielder = {
@@ -171,10 +175,6 @@ Tridents require the exotic weapons mastery talent to correctly use.]],
 		see_invisible = 2,
 		resists={[DamageType.COLD] = 25},
 		inc_damage = { [DamageType.COLD] = 20 },
-		melee_project={
-			[DamageType.COLD] = 15,
-			[DamageType.NATURE] = 20,
-		},
 	},
 
 	max_power = 150, power_regen = 1,
@@ -356,11 +356,11 @@ newEntity{ base = "BASE_WARAXE",
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.2,
+		melee_project={[DamageType.BLIGHT] = 20},
 	},
 	wielder = {
 		life_regen = -0.3,
 		inc_damage = { [DamageType.BLIGHT] = 20 },
-		melee_project={[DamageType.BLIGHT] = 20},
 	},
 }
 
