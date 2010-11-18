@@ -128,7 +128,7 @@ newEntity{ base = "BASE_NPC_DEMON",
 		[Talents.T_ACID_BLOOD]=3,
 		[Talents.T_CORROSIVE_VAPOUR]=3,
 	},
-	
+
 	make_escort = {
 		{type="demon", subtype="minor", name="wretchling", number=3, no_subescort=true},
 	},

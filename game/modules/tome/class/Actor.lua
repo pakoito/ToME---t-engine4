@@ -120,6 +120,7 @@ function _M:init(t, no_default)
 
 	-- Resistances
 	t.resists = t.resists or {}
+	t.resists_cap = t.resists_cap or { all = 100 }
 	t.resists_pen = t.resists_pen or {}
 
 	-- % Increase damage

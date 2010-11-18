@@ -66,6 +66,8 @@ function _M:init(t, no_default)
 	-- Dont give free resists & higher stat max to players
 	t.no_auto_resists = true
 	t.no_auto_high_stats = true
+	t.resists_cap = t.resists_cap or {}
+	t.resists_cap.all = t.resists_cap.all or 70
 
 	t.lite = t.lite or 0
 

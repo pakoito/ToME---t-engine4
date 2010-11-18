@@ -144,7 +144,7 @@ function _M:drawDialog(s)
 	if player.inc_damage.all then self:mouseTooltip(self.TOOLTIP_INC_DAMAGE_ALL, s:drawColorStringBlended(self.font, ("All damage: #00ff00#%3d%%"):format(player.inc_damage.all), w, h, 255, 255, 255)) h = h + self.font_h end
 	for i, t in ipairs(DamageType.dam_def) do
 		if player.inc_damage[DamageType[t.type]] and player.inc_damage[DamageType[t.type]] ~= 0 then
-			self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s damage: #00ff00#%3d%%"):format(t.name:capitalize(), player.inc_damage[DamageType[t.type]]), w, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s damage: #00ff00#%3d%%"):format(t.name:capitalize(), player.inc_damage[DamageType[t.type]] + (player.inc_damage.all or 0)), w, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 
@@ -161,10 +161,10 @@ function _M:drawDialog(s)
 	self:mouseTooltip(self.TOOLTIP_MENTAL_SAVE, s:drawColorStringBlended(self.font, ("Mental Save:   #00ff00#%3d"):format(player:combatMentalResist()), w, h, 255, 255, 255)) h = h + self.font_h
 
 	h = h + self.font_h
-	if player.resists.all then self:mouseTooltip(self.TOOLTIP_RESIST_ALL, s:drawColorStringBlended(self.font, ("All Resists: #00ff00#%3d%%"):format(player.resists.all), w, h, 255, 255, 255)) h = h + self.font_h end
+	if player.resists.all then self:mouseTooltip(self.TOOLTIP_RESIST_ALL, s:drawColorStringBlended(self.font, ("All Resists(cap): #00ff00#%3d%%(%3d%%)"):format(player.resists.all, player.resists_cap.all or 0), w, h, 255, 255, 255)) h = h + self.font_h end
 	for i, t in ipairs(DamageType.dam_def) do
 		if player.resists[DamageType[t.type]] and player.resists[DamageType[t.type]] ~= 0 then
-			self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("%s Resist: #00ff00#%3d%%"):format(t.name:capitalize(), player.resists[DamageType[t.type]]), w, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("%s Resist(cap): #00ff00#%3d%%(%3d%%)"):format(t.name:capitalize(), player.resists[DamageType[t.type]] + (player.resists.all or 0), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)), w, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 
@@ -334,7 +334,7 @@ function _M:dump()
 	if player.inc_damage.all then nl(makelabel("All damage", player.inc_damage.all.."%")) end
 	for i, t in ipairs(DamageType.dam_def) do
 		if player.inc_damage[DamageType[t.type]] and player.inc_damage[DamageType[t.type]] ~= 0 then
-			nl(makelabel(t.name:capitalize().." damage", player.inc_damage[DamageType[t.type]].."%"))
+			nl(makelabel(t.name:capitalize().." damage", (player.inc_damage[DamageType[t.type]] + (player.inc_damage.all or 0)).."%"))
 		end
 	end
 
@@ -344,10 +344,10 @@ function _M:dump()
 	nl(makelabel("Mental Save",player:combatMentalResist() ..""))
 
 	nl()
-	if player.resists.all then nl(("All Resists: %3d%%"):format(player.resists.all)) end
+	if player.resists.all then nl(("All Resists: %3d%%"):format(player.resists.all, player.resists_cap.all or 0)) end
 	for i, t in ipairs(DamageType.dam_def) do
 		if player.resists[DamageType[t.type]] and player.resists[DamageType[t.type]] ~= 0 then
-			nl(("%s Resist: %3d%%"):format(t.name:capitalize(), player.resists[DamageType[t.type]]))
+			nl(("%s Resist(cap): %3d%%(%3d%%)"):format(t.name:capitalize(), player.resists[DamageType[t.type]] + (player.resists.all or 0), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)))
 		end
 	end
 

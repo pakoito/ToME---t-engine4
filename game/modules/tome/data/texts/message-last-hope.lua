@@ -38,7 +38,7 @@ return [[@playername@, this message is of utmost importance.
 Our elders searched the old texts looking for clues about the staff you talked about.
 It turns out to be a powerful object indeed, able to absorb the power of places, and beings.
 This must not fall in the wrong hands, which certainly include orc hands.
-While you where gone one of our patrols met a group of orcs led by Ukruk, we could not stop them but we managed to capture one of them.
+While you were gone one of our patrols met a group of orcs led by Ukruk, we could not stop them but we managed to capture one of them.
 He did not knew much, but he did speak about "masters" in the far east.
 He spoke about meeting with Golbug, this seems to be a warmaster in Reknor, to send the "package" through a portal.
 
