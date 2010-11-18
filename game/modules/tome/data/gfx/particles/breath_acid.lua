@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local nb = 12
-local dir
+local dir = 0
 local spread = spread or 55/2
 local radius = radius or 6
 

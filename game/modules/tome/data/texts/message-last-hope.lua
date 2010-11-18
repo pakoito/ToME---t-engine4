@@ -27,7 +27,7 @@ Our troups managed to capture one of the orcs and made him talk.
 He did not knew much, but he did speak about "masters" in the far east.
 He spoke about Golbug, this seems to be a warmaster in Reknor, leading the raid to send the "package" through a portal.
 
-This calls for urgency, should you find this Golbug or the portal please investigate.
+This calls for urgency; should you find this Golbug or the portal please investigate.
 
                #GOLD#-- Tolak, King of the Allied Kingdoms]]
 
@@ -42,7 +42,7 @@ While you were gone one of our patrols met a group of orcs led by Ukruk, we coul
 He did not knew much, but he did speak about "masters" in the far east.
 He spoke about meeting with Golbug, this seems to be a warmaster in Reknor, to send the "package" through a portal.
 
-This calls for urgency, should you find this Golbug or the portal please investigate.
+This calls for urgency; should you find this Golbug or the portal please investigate.
 
                #GOLD#-- Tolak, King of the Allied Kingdoms]]
 end
