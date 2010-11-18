@@ -616,9 +616,9 @@ function _M:onTakeHit(value, src)
 
 			-- Explode!
 			game.logSeen(self, "%s unleashes the stored damage in retribution!", self.name:capitalize())
-			local tg = {type="ball", range=0, radius=self:getTalentRange(self.T_RETRIBUTION), friendlyfire=false, talent=t}
+			local tg = {type="ball", range=0, radius=self:getTalentRange(self:getTalentFromId(self.T_RETRIBUTION)), friendlyfire=false, talent=t}
 			local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, dam)
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
+			game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 		end
 	end
 
