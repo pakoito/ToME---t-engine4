@@ -76,7 +76,7 @@ newTalent{
 		-- Second attack with shield
 		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 
-		-- Light Burst 
+		-- Light Burst
 		if hit then
 			local tg = {type="ball", range=1, friendlyfire=true, radius=2 + self:getTalentLevel(t) / 2, talent=t}
 			self:project(tg, x, y, DamageType.LITE, 1)
@@ -101,7 +101,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	sustain_positive = 20,
-	cooldown = 10, 
+	cooldown = 10,
 	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	tactical = {
 		DEFEND = 10,
@@ -112,7 +112,7 @@ newTalent{
 			game.logPlayer(self, "You cannot use Retribution without a shield!")
 			return nil
 		end
-		local power = self:combatTalentSpellDamage(t, 50, 170)
+		local power = self:combatTalentSpellDamage(t, 28, 170)
 		self.retribution_absorb = power
 		self.retribution_strike = power
 		game:playSoundNear(self, "talents/generic")
@@ -142,7 +142,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	sustain_positive = 60,
-	cooldown = 50, 
+	cooldown = 50,
 	tactical = {
 		DEFEND = 10,
 	},

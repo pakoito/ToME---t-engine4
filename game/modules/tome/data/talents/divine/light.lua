@@ -23,7 +23,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	random_ego = "defensive",
-	cooldown = 40,
+	cooldown = 10,
 	positive = -10,
 	tactical = {
 		HEAL = 10,
@@ -80,14 +80,14 @@ newTalent{
 	points = 5,
 	random_ego = "defensive",
 	positive = -20,
-	cooldown = 60,
+	cooldown = 15,
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=self:combatTalentSpellDamage(t, 30, 170)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=self:combatTalentSpellDamage(t, 30, 270)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A protective shield forms around you, negating %d damage.]]):format(self:combatTalentSpellDamage(t, 30, 170))
+		return ([[A protective shield forms around you that lasts for up to 10 turns, negating %d damage.]]):format(self:combatTalentSpellDamage(t, 30, 270))
 	end,
 }
 
