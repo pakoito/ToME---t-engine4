@@ -880,6 +880,17 @@ newDamageType{
 	end,
 }
 
+newDamageType{
+	name = "healing power", type = "HEALING_POWER",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/100)})
+			target:heal(dam, src)
+		end
+	end,
+}
+
 -- Corrupted blood, blight damage + potential diseases
 newDamageType{
 	name = "corrupted blood", type = "CORRUPTED_BLOOD",

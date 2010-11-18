@@ -595,11 +595,32 @@ function _M:onTakeHit(value, src)
 		self.stalker:removeEffect(self.EFF_STALKER)
 		self:removeEffect(self.EFF_STALKED)
 	end
+	
+	if self:attr("retribution") then
+	-- Absorb damage into the retribution
+		if value / 2 <= self.retribution_absorb then
+			self.retribution_absorb = self.retribution_absorb - (value / 2)
+			value = value / 2
+		else
+			self.retribution_absorb = 0
+			value = value - self.retribution_absorb
+			local dam = self.retribution_strike
+ 
+			-- Deactivate without loosing energy
+			self:forceUseTalent(self.T_RETRIBUTION, {ignore_energy=true})
 
 	if self:attr("invulnerable") then
 		return 0
 	end
 
+			-- Explode!
+			game.logSeen(self, "%s unleashes the stored damage in retribution!", self.name:capitalize())
+			local tg = {type="ball", range=0, radius=self:getTalentRange(self.T_RETRIBUTION), friendlyfire=false, talent=t}
+			local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, dam)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
+		end
+	end
+	
 	if self:attr("disruption_shield") then
 		local mana = self:getMana()
 		local mana_val = value * self:attr("disruption_shield")
@@ -789,20 +810,29 @@ function _M:onTakeHit(value, src)
 		value = value / 6
 	end
 
-	-- Second Life
-	--if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
-	--	local sl = self.max_life * (self:getTalentLevel(self.T_SECOND_LIFE)/10)
-	--	value = 0
-	--	if sl =< self.life then
-	--		self.life = sl
-	--	end
---	end
+	if value > 0 and self:isTalentActive(self.T_SHIELD_OF_LIGHT) then
+		self:heal(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 1, 25), self)
+		self:incPositive(-3)
+		if self:getPositive() <= 0 then
+			self:forceUseTalent(self.T_SHIELD_OF_LIGHT, {ignore_energy=true})
+		end
+	end
+	
+	
+ 	-- Second Life
+	if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
+		local sl = self.max_life * (0.05 + self:getTalentLevelRaw(self.T_SECOND_LIFE)/25)
+		value = 0
+		self.life = sl
+		game.logSeen(self, "%s has been saved by a blast of positive energy!", self.name:capitalize())
+		self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
+	end
 
 	if self:knowTalent(self.T_LEECH) and src.hasEffect and src:hasEffect(src.EFF_VIMSENSE) then
 		self:incVim(3 + self:getTalentLevel(self.T_LEECH) * 0.7)
 		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s vim.", src.name:capitalize())
 	end
-
+	
 	return value
 end
 

@@ -58,7 +58,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
-			DamageType.HEAL, dam,
+			DamageType.HEALING_POWER, dam,
 			radius,
 			5, nil,
 			{type="healing_vapour"},
@@ -68,8 +68,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A magical zone of Sunlight appears around you, healing all that stand within.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30))
+		return ([[A magical zone of Sunlight appears around you, healing all within a radius of 3 for %0.2f per turn and increasing healing effects on those within by %d%%.  The effect lasts %d turns.
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30), self:combatTalentSpellDamage(t, 4, 30), self:getTalentLevel(t) + 2)
 	end,
 }
 
@@ -92,19 +92,25 @@ newTalent{
 }
 
 newTalent{
-	name = "Second Life",
+	name = "Providence",
 	type = {"divine/light", 4},
 	require = spells_req4,
 	points = 5,
-	cooldown = 100,
-	positive = -30,
+	random_ego = "defensive",
+	positive = -20,
+	cooldown = 30,
 	tactical = {
-		ATTACK = 10,
+		HEAL = 10,
 	},
 	action = function(self, t)
+		local dur = 5 + self:getTalentLevel(t)
+		self:setEffect(self.EFF_PROVIDENCE, dur, {power=self:combatTalentSpellDamage(t, 5, 25)})
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		return ([[NOT FINISHED]])
+		return ([[Places you under light's protection, regenerating your body for %d life and removing a single negative effect from you each turn for %d turns.
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 25), 5 + self:getTalentLevel(t))
 	end,
 }
+

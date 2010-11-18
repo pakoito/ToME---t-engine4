@@ -162,7 +162,8 @@ newTalent{
 }
 
 newTalent{
-	name = "Darkgod stole my talent name",
+	name = "Premonition",
+	short_name = "CHRONOMANCY_PREMOMNITION",
 	type = {"chronomancy/chronomancy", 4},
 	require = chrono_req4,
 	points = 5,

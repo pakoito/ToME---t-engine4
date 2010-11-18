@@ -56,7 +56,7 @@ newTalent{
 	paradox = 5,
 	cooldown = 10,
 	tactical = {
-		ATTACK = 10,
+		ATTACKAREA = 10,
 	},
 	range = 10,
 	direct_hit = true,
@@ -95,6 +95,9 @@ newTalent{
 	random_ego = "attack",
 	paradox = 6,
 	cooldown = 12,
+	tactical = {
+		ATTACKAREA = 10,
+	},
 	range = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="ball", radius=self:getTalentRange(t), friendlyfire=false}

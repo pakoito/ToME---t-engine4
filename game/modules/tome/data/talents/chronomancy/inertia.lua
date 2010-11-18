@@ -99,7 +99,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Reduces the targets global speed by %d%%.  The target will slowly recover all of its speed over %d turns.  
+		return ([[***BROKEN DO NOT CAST*** Reduces the targets global speed by %d%%.  The target will slowly recover all of its speed over %d turns.  
 		The chance will increase with Magic stat.]]):format(100, 3 + self:getTalentLevel(t))
 	end,
 }

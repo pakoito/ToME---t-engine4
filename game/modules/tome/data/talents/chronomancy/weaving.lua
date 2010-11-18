@@ -125,7 +125,7 @@ newTalent{
 				self:useEnergy()
 				self.temporary = self.temporary - 1
 				if self.temporary <= 0 then
-					 game.logSeen(self, "Reality asserts itself and forces the wormhole shut.")
+					game.logSeen(self, "Reality asserts itself and forces the wormhole shut.")
 					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
 					game.level:removeEntity(self)
 				end

@@ -2273,3 +2273,53 @@ newEffect{
 		self:removeTemporaryValue("combat_armor", eff.armid)
 	end,
 }
+
+newEffect{
+	name = "EMPOWERED_HEALING",
+	desc = "Empowered Healing",
+	long_desc = function(self, eff) return ("Increases the effectiveness of all healing the target receives."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power= 0.1 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("healing_factor", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("healing_factor", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "PROVIDENCE",
+	desc = "Providence",
+	long_desc = function(self, eff) return "The target is under protection." end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {},
+	on_timeout = function(self, eff)
+		local effs = {}
+				-- Go through all spell effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, 1 do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				self:removeEffect(eff[2])
+				known = true
+			end
+		end
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("life_regen", eff.tmpid)
+	end,
+}

@@ -62,7 +62,8 @@ newBirthDescriptor{
 		["divine/sun"]={true, 0},
 		["divine/chants"]={true, 0.3},
 		["divine/combat"]={true, 0.3},
-		["divine/light"]={false, 0},
+		["divine/light"]={true, 0.3},
+		["divine/guardian"]={false, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_SEARING_LIGHT] = 1,

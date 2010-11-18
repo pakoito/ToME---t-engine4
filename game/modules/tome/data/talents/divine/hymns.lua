@@ -32,8 +32,9 @@ newTalent{
 	mode = "sustained",
 	require = divi_req1,
 	points = 5,
-	cooldown = 30,
+	cooldown = 12,
 	sustain_negative = 20,
+	no_energy = true,
 	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,
@@ -71,8 +72,9 @@ newTalent{
 	mode = "sustained",
 	require = divi_req2,
 	points = 5,
-	cooldown = 30,
+	cooldown = 12,
 	sustain_negative = 20,
+	no_energy = true,
 	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,
@@ -109,8 +111,9 @@ newTalent{
 	mode = "sustained",
 	require = divi_req3,
 	points = 5,
-	cooldown = 30,
+	cooldown = 12,
 	sustain_negative = 20,
+	no_energy = true,
 	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,
@@ -151,8 +154,9 @@ newTalent{
 	mode = "sustained",
 	require = divi_req4,
 	points = 5,
-	cooldown = 30,
+	cooldown = 12,
 	sustain_negative = 20,
+	no_energy = true,
 	dont_provide_pool = true,
 	tactical = {
 		BUFF = 10,

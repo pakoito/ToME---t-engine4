@@ -18,8 +18,9 @@
 -- darkgod@te4.org
 
 -- Corruptions
+newTalentType{ no_silence=true, is_spell=true, type="divine/guardian", name = "guardian", description = "Your devotion grants you additional protection." }
 newTalentType{ no_silence=true, is_spell=true, type="divine/chants", name = "chants", generic = true, description = "Chant the glory of the sun." }
-newTalentType{ no_silence=true, is_spell=true, type="divine/light", name = "light", description = "Invoke the power of light to heal and mend." }
+newTalentType{ no_silence=true, is_spell=true, type="divine/light", name = "light", generic = true, description = "Invoke the power of light to heal and mend." }
 newTalentType{ no_silence=true, is_spell=true, type="divine/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
 newTalentType{ no_silence=true, is_spell=true, type="divine/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
 newTalentType{ no_silence=true, is_spell=true, type="divine/glyphs", name = "glyphs", description = "Bind the holy powers into glyphs to trap your foes." }
@@ -56,6 +57,7 @@ load("/data/talents/divine/sun.lua")
 load("/data/talents/divine/combat.lua")
 load("/data/talents/divine/light.lua")
 load("/data/talents/divine/glyphs.lua")
+load("/data/talents/divine/guardian.lua")
 
 load("/data/talents/divine/twilight.lua")
 load("/data/talents/divine/hymns.lua")
