@@ -18,3 +18,12 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+newEntity{ base = "BASE_LORE",
+	define_as = "DRAFT_LETTER",
+	name = "draft letter", lore="grand-corruptor-draft",
+	desc = [[A letter.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}

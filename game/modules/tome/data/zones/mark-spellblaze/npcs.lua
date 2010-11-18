@@ -41,6 +41,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 		{type="armor", subtype="cloth", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {unique=true} },
+	resolvers.drops{chance=100, nb=1, {defined="DRAFT_LETTER"} },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	combat_armor = 0, combat_def = 0,
