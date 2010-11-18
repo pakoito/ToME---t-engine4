@@ -19,7 +19,7 @@
 
 return {
 	name = "Zigur",
-	level_range = {15, 30},
+	level_range = {15, 40},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	max_level = 1,
 	width = 50, height = 50,

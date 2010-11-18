@@ -33,7 +33,7 @@ I do not know, I was tending my crop just outside the town when I heard screamin
 	}
 }
 
-newChat{ id="quest",
+newChat{ id="quest2",
 	text = [[Thank you! You have saved many people today!
 I have heard of rumours of a reclusive town of wise and powerful men somewhere in the blue mountains, maybe they could help? If they even exist...]],
 	answers = {

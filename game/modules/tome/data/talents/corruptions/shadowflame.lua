@@ -172,12 +172,14 @@ newTalent{
 			target.on_die = function(...)
 				target.demon_plane_trapper:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
 				if target.demon_plane_on_die then target.demon_plane_on_die(...) end
+				target.on_die, target.demon_plane_on_die = target.demon_plane_on_die, nil
 			end
 
 			self.demon_plane_on_die = self.on_die
 			self.on_die = function(...)
 				self:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
 				if self.demon_plane_on_die then self.demon_plane_on_die(...) end
+				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
 			end
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are taken to the demon plane!")
@@ -217,12 +219,14 @@ newTalent{
 			local x1, y1 = util.findFreeGrid(p.x, p.y, 20, true, {[Map.ACTOR]=true})
 			if x1 and not self.dead then
 				self:move(x1, y1, true)
+				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
 				game.level.map:particleEmitter(x1, y1, 1, "demon_teleport")
 			end
 			if not p.target.dead then
 				local x2, y2 = util.findFreeGrid(p.x, p.y, 20, true, {[Map.ACTOR]=true})
 				if x2 then
 					p.target:move(x2, y2, true)
+					p.target.on_die, p.target.demon_plane_on_die = p.target.demon_plane_on_die, nil
 					game.level.map:particleEmitter(x2, y2, 1, "demon_teleport")
 				end
 				if oldlevel:hasEntity(p.target) then oldlevel:removeEntity(p.target) end

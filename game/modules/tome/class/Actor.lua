@@ -595,7 +595,11 @@ function _M:onTakeHit(value, src)
 		self.stalker:removeEffect(self.EFF_STALKER)
 		self:removeEffect(self.EFF_STALKED)
 	end
-	
+
+	if self:attr("invulnerable") then
+		return 0
+	end
+
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -605,13 +609,9 @@ function _M:onTakeHit(value, src)
 			self.retribution_absorb = 0
 			value = value - self.retribution_absorb
 			local dam = self.retribution_strike
- 
+
 			-- Deactivate without loosing energy
 			self:forceUseTalent(self.T_RETRIBUTION, {ignore_energy=true})
-
-	if self:attr("invulnerable") then
-		return 0
-	end
 
 			-- Explode!
 			game.logSeen(self, "%s unleashes the stored damage in retribution!", self.name:capitalize())
@@ -620,7 +620,7 @@ function _M:onTakeHit(value, src)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 		end
 	end
-	
+
 	if self:attr("disruption_shield") then
 		local mana = self:getMana()
 		local mana_val = value * self:attr("disruption_shield")
@@ -817,9 +817,9 @@ function _M:onTakeHit(value, src)
 			self:forceUseTalent(self.T_SHIELD_OF_LIGHT, {ignore_energy=true})
 		end
 	end
-	
-	
- 	-- Second Life
+
+
+	-- Second Life
 	if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
 		local sl = self.max_life * (0.05 + self:getTalentLevelRaw(self.T_SECOND_LIFE)/25)
 		value = 0
@@ -830,9 +830,10 @@ function _M:onTakeHit(value, src)
 
 	if self:knowTalent(self.T_LEECH) and src.hasEffect and src:hasEffect(src.EFF_VIMSENSE) then
 		self:incVim(3 + self:getTalentLevel(self.T_LEECH) * 0.7)
+		self:heal(5 + self:getTalentLevel(self.T_LEECH) * 3)
 		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s vim.", src.name:capitalize())
 	end
-	
+
 	return value
 end
 

@@ -25,6 +25,7 @@ newEntity{
 	define_as = "BASE_NPC_ELVEN_WARRIOR",
 	type = "humanoid", subtype = "elf",
 	display = "p", color=colors.UMBER,
+	faction = "rhalore",
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
 
@@ -34,7 +35,7 @@ newEntity{
 	infravision = 20,
 	lite = 2,
 
-	life_rating = 11,
+	life_rating = 15,
 	rank = 2,
 	size_category = 3,
 

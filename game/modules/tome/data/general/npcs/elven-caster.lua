@@ -25,6 +25,7 @@ newEntity{
 	define_as = "BASE_NPC_ELVEN_CASTER",
 	type = "humanoid", subtype = "elf",
 	display = "p", color=colors.UMBER,
+	faction = "rhalore",
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
 
@@ -39,6 +40,7 @@ newEntity{
 	size_category = 3,
 
 	open_door = true,
+	silence_immune = 0.5,
 
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
 
@@ -76,7 +78,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 1,
 	vim_regen = 20,
-	max_life = resolvers.rngavg(100, 110), life_rating = 13,
+	max_life = resolvers.rngavg(100, 110),
 	resolvers.equip{
 		{type="weapon", subtype="staff", autoreq=true},
 		{type="armor", subtype="cloth", autoreq=true},
@@ -99,7 +101,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	rarity = 3,
 	rank = 3,
 	vim_regen = 20,
-	max_life = resolvers.rngavg(100, 110), life_rating = 15,
+	max_life = resolvers.rngavg(100, 110), life_rating = 12,
 	resolvers.equip{
 		{type="weapon", subtype="staff", autoreq=true},
 		{type="armor", subtype="cloth", autoreq=true},

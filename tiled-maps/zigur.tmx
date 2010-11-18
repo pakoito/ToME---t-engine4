@@ -166,5 +166,53 @@
     <property name="type" value="&quot;quest&quot;"/>
    </properties>
   </object>
+  <object name="rhaloren" x="489" y="1001" width="176" height="144">
+   <properties>
+    <property name="subtype" value="&quot;rhaloren&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+  <object name="ziguranth" x="900" y="520" width="52" height="49">
+   <properties>
+    <property name="subtype" value="&quot;ziguranth&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+  <object name="ziguranth" x="772" y="232" width="52" height="49">
+   <properties>
+    <property name="subtype" value="&quot;ziguranth&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+  <object name="ziguranth" x="293" y="421" width="52" height="49">
+   <properties>
+    <property name="subtype" value="&quot;ziguranth&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+  <object name="ziguranth" x="325" y="965" width="52" height="49">
+   <properties>
+    <property name="subtype" value="&quot;ziguranth&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+  <object name="ziguranth" x="583" y="679" width="52" height="49">
+   <properties>
+    <property name="subtype" value="&quot;ziguranth&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+  <object name="ziguranth" x="933" y="1127" width="52" height="49">
+   <properties>
+    <property name="subtype" value="&quot;ziguranth&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+  <object name="ziguranth" x="996" y="741" width="52" height="49">
+   <properties>
+    <property name="subtype" value="&quot;ziguranth&quot;"/>
+    <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

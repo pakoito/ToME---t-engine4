@@ -44,16 +44,18 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	combat_armor = 0, combat_def = 0,
+	silence_immune = 0.5,
+
 	resolvers.talents{
-		[Talents.T_BONE_SHIELD]=5,
-		[Talents.T_BLOOD_SPRAY]=5,
-		[Talents.T_SOUL_ROT]=5,
-		[Talents.T_BLOOD_GRASP]=5,
-		[Talents.T_BLOOD_BOIL]=5,
-		[Talents.T_BLOOD_FURY]=5,
-		[Talents.T_BONE_SPEAR]=5,
+		[Talents.T_BONE_SHIELD]=3,
+		[Talents.T_BLOOD_SPRAY]=4,
+		[Talents.T_SOUL_ROT]=3,
+		[Talents.T_BLOOD_GRASP]=4,
+		[Talents.T_BLOOD_BOIL]=3,
+		[Talents.T_BLOOD_FURY]=4,
+		[Talents.T_BONE_SPEAR]=3,
 		[Talents.T_VIRULENT_DISEASE]=5,
-		[Talents.T_DARKFIRE]=5,
+		[Talents.T_DARKFIRE]=4,
 		[Talents["T_FLAME_OF_URH'ROK"]]=5,
 		[Talents.T_DEMON_PLANE]=5,
 		[Talents.T_CYST_BURST]=4,
@@ -61,4 +63,24 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 		[Talents.T_WRAITHFORM]=5,
 	},
 	resolvers.sustains_at_birth(),
+
+	on_takehit = function(self, value, src)
+		if not self.chatted and (self.life - value) < self.max_life * 0.4 then
+			self.chatted = true
+			-- Check for magical knowledge
+			local has_spells = 0
+			for tid, lev in pairs(game.player.talents) do
+				local t = game.player:getTalentFromId(tid)
+				if t.is_spell then has_spells = has_spells + lev end
+			end
+			print("Player has a total of "..has_spells.." spell levels")
+			if not game.player:hasQuest("antimagic") and has_spells > 10 then
+				local Chat = require "engine.Chat"
+				local chat = Chat.new("corruptor-quest", self, game.player)
+				chat:invoke()
+				return 0
+			end
+		end
+		return value
+	end,
 }

@@ -695,7 +695,8 @@ function _M:setupCommands()
 			if config.settings.tome.cheat then
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
-				self:changeLevel(2, "mark-spellblaze")
+--				self:changeLevel(2, "mark-spellblaze")
+				self.player:grantQuest("anti-antimagic")
 			end
 		end,
 	}

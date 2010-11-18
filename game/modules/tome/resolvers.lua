@@ -143,8 +143,8 @@ function resolvers.calc.drops(t, e)
 end
 
 --- Resolves drops creation for an actor
-function resolvers.store(def)
-	return {__resolver="store", def}
+function resolvers.store(def, faction)
+	return {__resolver="store", def, faction}
 end
 --- Actually resolve the drops creation
 function resolvers.calc.store(t, e)
@@ -152,11 +152,13 @@ function resolvers.calc.store(t, e)
 
 	e.on_move = function(self, x, y, who)
 		if who.player then
+			if self.store_faction and who:reactionToward({faction=self.store_faction}) < 0 then return end
 			self.store:loadup(game.level, game.zone)
 			self.store:interact(who)
 		end
 	end
 	e.store = game:getStore(t)
+	e.store_faction = t[2]
 	print("[STORE] created for entity", t, e, e.name)
 
 	-- Delete the origin field
@@ -164,8 +166,8 @@ function resolvers.calc.store(t, e)
 end
 
 --- Resolves chat creation for an actor
-function resolvers.chatfeature(def)
-	return {__resolver="chatfeature", def}
+function resolvers.chatfeature(def, faction)
+	return {__resolver="chatfeature", def, faction}
 end
 --- Actually resolve the drops creation
 function resolvers.calc.chatfeature(t, e)
@@ -173,12 +175,14 @@ function resolvers.calc.chatfeature(t, e)
 
 	e.on_move = function(self, x, y, who)
 		if who.player then
+			if self.chat_faction and who:reactionToward({faction=self.chat_faction}) < 0 then return end
 			local Chat = require("engine.Chat")
 			local chat = Chat.new(self.chat, self, who)
 			chat:invoke()
 		end
 	end
 	e.chat = t
+	e.chat_faction = t[2]
 
 	-- Delete the origin field
 	return nil

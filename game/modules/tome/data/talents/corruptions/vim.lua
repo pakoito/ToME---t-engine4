@@ -79,8 +79,8 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[Each time a creature affected by vimsense hurts you you regain %0.2f vim.]]):
-		format(3 + self:getTalentLevel(t) * 0.7)
+		return ([[Each time a creature affected by vimsense hurts you you regain %0.2f vim and %0.2f health.]]):
+		format(3 + self:getTalentLevel(t) * 0.7, 5 + self:getTalentLevel(t) * 3)
 	end,
 }
 

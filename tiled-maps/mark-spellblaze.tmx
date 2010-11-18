@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="65" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="42">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="{&quot;BURNT_GROUND1&quot;,&quot;BURNT_GROUND2&quot;,&quot;BURNT_GROUND3&quot;,&quot;BURNT_GROUND4&quot;,}"/>
+   </properties>
+  </tile>
+  <tile id="114">
+   <properties>
+    <property name="display" value="~"/>
+    <property name="value" value="&quot;LAVA&quot;"/>
+   </properties>
+  </tile>
+  <tile id="147">
+   <properties>
+    <property name="display" value="#"/>
+    <property name="value" value="{&quot;BURNT_TREE1&quot;,&quot;BURNT_TREE2&quot;,&quot;BURNT_TREE3&quot;,&quot;BURNT_TREE4&quot;,&quot;BURNT_TREE5&quot;,&quot;BURNT_TREE6&quot;,&quot;BURNT_TREE7&quot;,&quot;BURNT_TREE8&quot;,&quot;BURNT_TREE9&quot;,&quot;BURNT_TREE10&quot;,&quot;BURNT_TREE11&quot;,&quot;BURNT_TREE12&quot;,&quot;BURNT_TREE13&quot;,&quot;BURNT_TREE14&quot;,&quot;BURNT_TREE15&quot;,&quot;BURNT_TREE16&quot;,&quot;BURNT_TREE17&quot;,&quot;BURNT_TREE18&quot;,&quot;BURNT_TREE19&quot;,&quot;BURNT_TREE20&quot;,}"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="dg_edging232" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_edging232.gif" width="256" height="544"/>
+  <tile id="72">
+   <properties>
+    <property name="display" value="+"/>
+    <property name="value" value="&quot;ALTAR&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="65" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2aWwoDMQhFs59Z3mwl2y30o5SGkBi1lMK5XhDm9TEeHc1jWmPo+sIoKgYvX3r7+DUeW9dIDHrb+3gd7lN0irXKt+CNuwoDy2Y+FFVfOMddncGJC0WjX9HeQFEk96kMZr9Vx4mZekhi4BkH7LhQlM0BOgO1mlgMcj1RkcE9nb+fp2jsASsW92AzD4qsdbTbMAUGj2b7T2UwWjHQYrCrBTsGar2xGJw5UORlMF/v/3jZHyk7VyAyiM4ZaAxqzuRbU6QzyBpFke9fgYG156zA4OT/6j5FkfwnM4j8d0FlkMkBBQaKNbHGB3a8FWpi5UExKAb+nrDai6IoGnsVBrV+4LcnlwbOk8gyAAA=
+  </data>
+ </layer>
+ <objectgroup name="Actor" width="65" height="50">
+  <object name="boss" x="1795" y="740" width="24" height="21">
+   <properties>
+    <property name="display" value="@"/>
+    <property name="value" value="&quot;GRAND_CORRUPTOR&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

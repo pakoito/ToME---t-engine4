@@ -196,3 +196,27 @@ newEntity{
 		return true
 	end,
 }
+
+newEntity{
+	name = "Mark of the Spellblaze",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {22, 33},
+	rarity = 4,
+	on_world_encounter = "mark-spellblaze",
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Mark of the Spellblaze",
+			display='>', color=colors.VIOLET,
+			notice = true,
+			change_level=1, change_zone="mark-spellblaze"
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		game.logPlayer(who, "#LIGHT_BLUE#You notice an area where the effects of the spellblaze seem to persist still.")
+		return true
+	end,
+}

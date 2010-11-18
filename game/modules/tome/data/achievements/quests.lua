@@ -130,6 +130,10 @@ newAchievement{
 	desc = [[Completed antimagic training in the Ziguranth camp.]],
 }
 newAchievement{
+	name = "Anti-Antimagic!", id = "ANTI_ANTIMAGIC",
+	desc = [[Destroyed the Ziguranth camp with your Rhaloren allies.]],
+}
+newAchievement{
 	name = "There and back again", id = "WEST_PORTAL",
 	desc = [[Opened a portal to Maj'Eyal from the Far East.]],
 }

@@ -471,6 +471,12 @@
     <property name="type" value="&quot;patrol&quot;"/>
    </properties>
   </object>
+  <object name="Zigur" x="1443" y="901" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;zigur&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone" width="170" height="100" visible="0">
   <object name="Maj'Eyal" x="34" y="40" width="2488" height="1456">
@@ -574,6 +580,12 @@
   <object name="Infinite Dungeon" x="1893" y="1317" width="216" height="185">
    <properties>
     <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Mark of the Spellblaze" x="1222" y="1128" width="502" height="344">
+   <properties>
+    <property name="subtype" value="&quot;mark-spellblaze&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
