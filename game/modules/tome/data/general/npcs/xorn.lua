@@ -85,7 +85,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	resolvers.talents{ [Talents.T_CONSTRICT]=4, [Talents.T_RUSH]=2, },
 }
 
-newEntity{ base = "BASE_NPC_XORN",
+newEntity{ base = "BASE_NPC_XORN", define_as="TEST",
 	name = "The Fragmented Essence of Harkor'Zun", color=colors.VIOLET, unique=true,
 	desc = [[Fragmented essence...  maybe it'd be best if it stayed fragmented.]],
 	level_range = {17, nil}, exp_worth = 0,
@@ -97,11 +97,12 @@ newEntity{ base = "BASE_NPC_XORN",
 	combat = { damtype=DamageType.ACID },
 
 	stun_immune = 1,
+	can_pass = {pass_wall=0}, -- We restore it after generation, to amke sure it does not birth in walls
 
 	-- Come in 5!
 	on_added_to_level = function(self)
 		self.add_max_life = self.max_life * 0.2
-		local all = {[self]=true}
+		local all = {self}
 		for i = 1, 4 do
 			local x, y = util.findFreeGrid(self.x, self.y, 15, true, {[engine.Map.ACTOR]=true})
 			if x and y then
@@ -109,15 +110,18 @@ newEntity{ base = "BASE_NPC_XORN",
 				m.on_added_to_level = nil
 				m.x, m.y = nil, nil
 				game.zone:addEntity(game.level, m, "actor", x, y)
-				all[m] = true
+				all[#all+1] = m
 			end
 		end
-		for m, _ in pairs(all) do m.all_fragments = all end
+		for _, m in ipairs(all) do
+			m.all_fragments = all
+			m.can_pass = {pass_wall=20} -- Restore passwall
+		end
 	end,
 	on_die = function(self, who)
 		local nb_alive = 0
 		-- Buf others
-		for m, _ in pairs(self.all_fragments) do
+		for _, m in ipairs(self.all_fragments) do
 			if not m.dead then
 				nb_alive = nb_alive + 1
 				game.logSeen(self, "#AQUAMARINE#%s absorbs the energy of the destroyed fragment!", self.name)
@@ -129,7 +133,7 @@ newEntity{ base = "BASE_NPC_XORN",
 		-- Only one left?
 		if nb_alive == 1 then
 			local x, y
-			for m, _ in pairs(self.all_fragments) do
+			for _, m in ipairs(self.all_fragments) do
 				if not m.dead then x, y = m.x, m.y; m:die(who) end
 			end
 			local m = game.zone:makeEntityByName(game.level, "actor", "FULL_HARKOR_ZUN")
