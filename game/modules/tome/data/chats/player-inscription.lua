@@ -22,23 +22,38 @@ local idata = idata
 local obj = obj
 local inven = inven
 local item = item
+local replace_same = replace_same
 local answers = {}
 
 for i = 1, player.max_inscriptions do
 	local name = player.inscriptions[i]
 	local t = player:getTalentFromId("T_"..name)
-	answers[#answers+1] = {t.name, action=function(npc, player)
-		player:setInscription(i, iname, idata, true, true, {obj=obj})
-		player:removeObject(inven, item)
-	end, on_select=function(npc, player)
-		game.tooltip_x, game.tooltip_y = 1, 1
-		game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..t.name.."#LAST#\n"..tostring(player:getTalentFullDescription(t, 1)))
-	end, }
+	if not replace_same or replace_same.."_"..i == name then
+		answers[#answers+1] = {t.name, action=function(npc, player)
+			player:setInscription(i, iname, idata, true, true, {obj=obj}, replace_same)
+			player:removeObject(inven, item)
+		end, on_select=function(npc, player)
+			game.tooltip_x, game.tooltip_y = 1, 1
+			game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..t.name.."#LAST#\n"..tostring(player:getTalentFullDescription(t, 1)))
+		end, }
+	end
 end
+
+if player.inscriptions_slots_added < 2 and player.unused_talents_types > 0 then
+	answers[#answers+1] = {"Buy a new slot with one #{bold}#talent category point#{normal}#.", action=function(npc, player)
+		player.unused_talents_types = player.unused_talents_types - 1
+		player.max_inscriptions = player.max_inscriptions + 1
+		player.inscriptions_slots_added = player.inscriptions_slots_added + 1
+		player:setInscription(nil, iname, idata, true, true, {obj=obj})
+	end}
+end
+
 answers[#answers+1] = {"Cancel"}
 
 newChat{ id="welcome",
-	text = [[You have reached your maximun number of inscriptions(infusions/runes).
+	text = replace_same and [[You have too many of this type of inscription. You can only override an existing one.]]
+	or [[You have reached your maximun number of inscriptions(infusions/runes).
+If you have unassigned #{bold}#talent category point#{normal}# you can use one to create a new slot.
 You can replace an existing one or cancel.]],
 	answers = answers,
 }

@@ -28,9 +28,30 @@ function _M:init(t)
 	self.inscriptions = {}
 	self.inscriptions_data = {}
 	self.max_inscriptions = 3
+	self.inscriptions_slots_added = 0
 end
 
-function _M:setInscription(id, name, data, cooldown, vocal, src)
+function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same)
+	-- Count occurences
+	local nb_same = 0
+	for i = 1, self.max_inscriptions do
+		if self.inscriptions[i] and self.inscriptions[i] == name.."_"..i then nb_same = nb_same + 1 end
+	end
+	if nb_same >= 2 and not bypass_max_same then
+		if vocal then game.logPlayer(self, "You already have too many of this inscription.") end
+		-- Replace chat
+		if self.player and src then
+			local t = self:getTalentFromId(self["T_"..name.."_1"])
+			src.player = self
+			src.iname = name
+			src.idata = data
+			src.replace_same = name
+			local chat = Chat.new("player-inscription", {name=t.name}, self, src)
+			chat:invoke()
+		end
+		return
+	end
+
 	-- Find a spot
 	if not id then
 		for i = 1, self.max_inscriptions do
