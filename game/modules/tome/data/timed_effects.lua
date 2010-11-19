@@ -716,6 +716,7 @@ newEffect{
 		eff.iid = self:addTemporaryValue("invulnerable", 1)
 		eff.particle = self:addParticles(Particles.new("time_prison", 1))
 		self.energy.value = 0
+		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	on_timeout = function(self, eff)
 		self.energy.value = 0

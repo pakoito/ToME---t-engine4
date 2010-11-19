@@ -372,7 +372,7 @@ You can discern a huge ruond mouth covered in razor-sharp teeth.]],
 	rank = 3.5,
 	no_breath = 1,
 	size_category = 4,
-	movement_speed = 0.5,
+	movement_speed = 1.2,
 
 	stun_immune = 1,
 	knockback_immune = 1,
