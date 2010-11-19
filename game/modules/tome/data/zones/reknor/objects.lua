@@ -57,3 +57,14 @@ newEntity{ define_as = "ATHAME_WEST",
 		end
 	end,
 }
+
+for i = 1, 4 do
+newEntity{ base = "BASE_LORE",
+	define_as = "IRON_THRONE_PROFIT"..i, unique=true,
+	name = "Iron Throne Profits History", lore="iron-throne-profits-"..i,
+	desc = [[A journal of the profits history of the Iron Throne dwarves.]],
+	rarity = 20,
+	is_magic_device = false,
+	encumberance = 0,
+}
+end

@@ -29,10 +29,11 @@ newEntity{ base="BASE_NPC_MAJOR_DEMON", define_as = "KRYL_FEIJAN",
 	level_range = {29, nil}, exp_worth = 2,
 	rank = 3.5,
 	size_category = 4,
-	max_life = 250, life_rating = 21, fixed_rating = true,
+	max_life = 250, life_rating = 22, fixed_rating = true,
 	infravision = 20,
 	stats = { str=15, dex=10, cun=42, mag=16, con=14 },
 	move_others=true,
+	vim_regen = 20,
 
 	instakill_immune = 1,
 	poison_immune = 1,
@@ -46,12 +47,18 @@ newEntity{ base="BASE_NPC_MAJOR_DEMON", define_as = "KRYL_FEIJAN",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
-	combat = { dam=resolvers.mbonus(66, 20), atk=50, apr=30, dammod={str=1.1} },
+	combat = { dam=resolvers.mbonus(86, 20), atk=50, apr=30, dammod={str=1.1} },
 
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
+		[Talents.T_DARKFIRE]=4,
+		[Talents["T_FLAME_OF_URH'ROK"]]=5,
 		[Talents.T_SOUL_ROT]=5,
+		[Talents.T_BLOOD_BOIL]=5,
+		[Talents.T_FLAME]=5,
+		[Talents.T_DANCING_FLAMES]=5,
+		[Talents.T_WILDFIRE]=5,
 		[Talents.T_BLOOD_GRASP]=5,
 		[Talents.T_DARKNESS]=3,
 		[Talents.T_EVASION]=5,
