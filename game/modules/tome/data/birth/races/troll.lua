@@ -52,7 +52,7 @@ newBirthDescriptor{
 		starting_intro = "dwarf",
 		life_rating=10,
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
-		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=20}),
+		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
 	},
 	experience = 1.1,
 }

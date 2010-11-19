@@ -126,7 +126,7 @@ newEntity{ base = "BASE_INFUSION",
 		return {
 			cooldown = rng.range(10, 15),
 			dur = rng.mbonus(4, resolvers.current_level, resolvers.mbonus_max_level) + 4,
-			power = rng.mbonus(30, resolvers.current_level, resolvers.mbonus_max_level) + 20,
+			power = rng.mbonus(20, resolvers.current_level, resolvers.mbonus_max_level) + 10,
 			use_stat_mod = 0.1,
 			what = {
 				poison = true,
