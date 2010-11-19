@@ -84,7 +84,7 @@ newTalent{
 	range = 20,
 	activate = function(self, t)
 		cancelChants(self)
-		local power = self:combatTalentSpellDamage(t, 5, 35)
+		local power = self:combatTalentSpellDamage(t, 5, 23)
 		local dam = self:combatTalentSpellDamage(t, 5, 25)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
@@ -104,7 +104,7 @@ newTalent{
 		return ([[Chant the glory of the sun, granting you %d%% physical damage resistance.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 35), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
+		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 23), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -124,7 +124,7 @@ newTalent{
 	range = 20,
 	activate = function(self, t)
 		cancelChants(self)
-		local power = self:combatTalentSpellDamage(t, 5, 35)
+		local power = self:combatTalentSpellDamage(t, 5, 20)
 		local dam = self:combatTalentSpellDamage(t, 5, 25)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
@@ -149,7 +149,7 @@ newTalent{
 		return ([[Chant the glory of the sun, granting you %d%% elemental resistances.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 35), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
+		The resistance and damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 20), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
