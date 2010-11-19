@@ -18,7 +18,8 @@
 -- darkgod@te4.org
 
 local newInscription = function(t)
-	for i = 1, 10 do
+	-- Warning, up that if more than 5 inscriptions are ever allowed
+	for i = 1, 5 do
 		local tt = table.clone(t)
 		tt.short_name = tt.name:upper():gsub("[ ]", "_").."_"..i
 		tt.display_name = function(self, t)
@@ -418,5 +419,21 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		local dam = damDesc(self, DamageType.LIGHTNING, data.power + data.inc_stat)
 		return ([[Activate the rune to fire a beam of lightning, doing %0.2f to %0.2f lightning damage.]]):format(dam / 3, dam)
+	end,
+}
+
+newInscription{
+	name = "Rune: Manasurge",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_MANASURGE, data.dur, {power=(data.mana + data.inc_stat) / data.dur})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to unleash a manasurge upon yourself, regenerating %d mana over %d turns.]]):format(data.mana + data.inc_stat, data.dur)
 	end,
 }

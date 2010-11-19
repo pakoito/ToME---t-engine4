@@ -448,11 +448,6 @@ function _M:getTextualDesc()
 		if a.leech then desc:add(("Life regen %d%% of max life"):format(a.leech), true) end
 	end
 
-	if self.mana_consume then
-		desc:add({"color","YELLOW"}, "When consumed:", {"color", "LAST"}, true)
-		desc:add(("Restores at least %d mana."):format(self.mana_consume), true)
-	end
-
 	if self.inscription_data and self.inscription_talent then
 		game.player.__inscription_data_fake = self.inscription_data
 		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")

@@ -45,13 +45,42 @@ newEffect{
 
 newEffect{
 	name = "MANAFLOW",
-	desc = "Surging mana",
+	desc = "Manaflow",
 	long_desc = function(self, eff) return ("The mana surge engulfs the target, regenerating %0.2f mana per turn."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# starts to surge mana.", "+Manaflow" end,
 	on_lose = function(self, err) return "#Target# stops surging mana.", "-Manaflow" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the mana
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+
+		self:removeTemporaryValue("mana_regen", old_eff.tmpid)
+		old_eff.tmpid = self:addTemporaryValue("mana_regen", old_eff.power)
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("mana_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("mana_regen", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "MANASURGE",
+	desc = "Surging mana",
+	long_desc = function(self, eff) return ("The mana surge engulfs the target, regenerating %0.2f mana per turn."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# starts to surge mana.", "+Manasurge" end,
+	on_lose = function(self, err) return "#Target# stops surging mana.", "-Manasurge" end,
 	on_merge = function(self, old_eff, new_eff)
 		-- Merge the mana
 		local olddam = old_eff.power * old_eff.dur

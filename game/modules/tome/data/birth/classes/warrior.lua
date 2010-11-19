@@ -167,14 +167,7 @@ newBirthDescriptor{
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true},
 		},
-		resolvers.generic(function(e)
-			e.hotkey[10] = {"inventory", "agate"}
-		end),
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-		},
+		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=80}),
 	},
 	copy_add = {
 		life_rating = 2,

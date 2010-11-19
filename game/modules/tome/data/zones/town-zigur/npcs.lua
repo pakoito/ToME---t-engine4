@@ -26,7 +26,7 @@ local Talents = require("engine.interface.ActorTalents")
 -- For the corruptors attack
 load("/data/general/npcs/elven-caster.lua", function(e) if e.rarity then e.rarity, e.corruptor_rarity = nil, e.rarity end end)
 newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
-	name = "Grand Corruptor", color=colors.VIOLET, unique = true,
+	name = "Grand Corruptor", color=colors.VIOLET, unique = "Grand Corruptor Zigur",
 	desc = [[An elven corruptor, drawn to these blighted lands.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rank = 3.5,

@@ -88,7 +88,7 @@ newTalent{
 	points = 5,
 	random_ego = "utility",
 	mana = 0,
-	cooldown = 300,
+	cooldown = 40,
 	tactical = {
 		MANA = 20,
 	},

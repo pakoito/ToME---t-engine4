@@ -40,14 +40,7 @@ newBirthDescriptor{
 	copy = {
 		mana_regen = 0.5,
 		mana_rating = 7,
-		resolvers.generic(function(e)
-			e.hotkey[10] = {"inventory", "agate"}
-		end),
-		resolvers.inventory{ id=true,
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-			{type="gem", name="agate"},
-		},
+		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=80}),
 	},
 }
 

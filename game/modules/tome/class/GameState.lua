@@ -92,14 +92,14 @@ function _M:addWorldArtifact(o)
 	self.world_artifacts_pool[o.define_as] = o
 end
 
---- Load all refused boss artifacts
--- This is caleld from the world-artifacts.lua file
+--- Load all added artifacts
+-- This is called from the world-artifacts.lua file
 function _M:getWorldArtifacts()
 	return self.world_artifacts_pool
 end
 
 local randart_name_rules = {
-	male = {
+	default2 = {
 		phonemesVocals = "a, e, i, o, u, y",
 		phonemesConsonants = "b, c, ch, ck, cz, d, dh, f, g, gh, h, j, k, kh, l, m, n, p, ph, q, r, rh, s, sh, t, th, ts, tz, v, w, x, z, zh",
 		syllablesStart = "Aer, Al, Am, An, Ar, Arm, Arth, B, Bal, Bar, Be, Bel, Ber, Bok, Bor, Bran, Breg, Bren, Brod, Cam, Chal, Cham, Ch, Cuth, Dag, Daim, Dair, Del, Dr, Dur, Duv, Ear, Elen, Er, Erel, Erem, Fal, Ful, Gal, G, Get, Gil, Gor, Grin, Gun, H, Hal, Han, Har, Hath, Hett, Hur, Iss, Khel, K, Kor, Lel, Lor, M, Mal, Man, Mard, N, Ol, Radh, Rag, Relg, Rh, Run, Sam, Tarr, T, Tor, Tul, Tur, Ul, Ulf, Unr, Ur, Urth, Yar, Z, Zan, Zer",
@@ -107,7 +107,7 @@ local randart_name_rules = {
 		syllablesEnd = "bar, bers, blek, chak, chik, dan, dar, das, dig, dil, din, dir, dor, dur, fang, fast, gar, gas, gen, gorn, grim, gund, had, hek, hell, hir, hor, kan, kath, khad, kor, lach, lar, ldil, ldir, leg, len, lin, mas, mnir, ndil, ndur, neg, nik, ntir, rab, rach, rain, rak, ran, rand, rath, rek, rig, rim, rin, rion, sin, sta, stir, sus, tar, thad, thel, tir, von, vor, yon, zor",
 		rules = "$s$v$35m$10m$e",
 	},
-	female = {
+	default = {
 		phonemesVocals = "a, e, i, o, u, y",
 		syllablesStart = "Ad, Aer, Ar, Bel, Bet, Beth, Ce'N, Cyr, Eilin, El, Em, Emel, G, Gl, Glor, Is, Isl, Iv, Lay, Lis, May, Ner, Pol, Por, Sal, Sil, Vel, Vor, X, Xan, Xer, Yv, Zub",
 		syllablesMiddle = "bre, da, dhe, ga, lda, le, lra, mi, ra, ri, ria, re, se, ya",
@@ -133,17 +133,6 @@ function _M:generateRandart(add, base, lev)
 	if not base then game.level.level = oldlev return end
 	local o = base:cloneFull()
 
-	-- Make up a name
-	local ng = NameGenerator.new(randart_name_rules.female)
-	local name = o.name.." '"..ng:generate().."'"
-	o.define_as = name:upper():gsub("[^A-Z]", "_")
-
-	o.unided_name = "glowing "..o.unided_name
-	o.unique = name
-	o.randart = true
-	o.no_unique_lore = true
-	o.rarity = rng.range(200, 290)
-
 	local allthemes = {'misc','psionic','sorcerous','nature','brawny','lightning','arcane','light','physical','def','tireless','unyielding','dark','nimble','spell','cold','fire','venom','attack'}
 	local pthemes = table.listify(o.randart_able)
 	local themes = {[rng.table(allthemes)] = true}
@@ -152,6 +141,25 @@ function _M:generateRandart(add, base, lev)
 		for theme, _ in pairs(e.theme) do if themes[theme] then return true end end
 		return false
 	end
+
+	-- Make up a name
+	local ng = NameGenerator.new(randart_name_rules[rng.table(table.listify(themes))] or (rng.chance(2) and randart_name_rules.default or randart_name_rules.default2))
+	local name
+	local namescheme = rng.range(1, 3)
+	if namescheme == 1 then
+		name = o.name.." '"..ng:generate().."'"
+	elseif namescheme == 2 then
+		name = ng:generate().." the "..o.name
+	else
+		name = ng:generate()
+	end
+	o.define_as = name:upper():gsub("[^A-Z]", "_")
+
+	o.unided_name = "glowing "..o.unided_name
+	o.unique = name
+	o.randart = true
+	o.no_unique_lore = true
+	o.rarity = rng.range(200, 290)
 
 	-- Determine power
 	local points = lev * 0.7 + rng.range(5, 15)
