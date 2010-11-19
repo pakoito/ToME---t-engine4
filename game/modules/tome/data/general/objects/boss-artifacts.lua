@@ -523,7 +523,7 @@ newEntity{ define_as = "RUNED_SKULL",
 
 	carrier = {
 		combat_spellpower = 7,
-		on_melee_hit = {[DamageType.FIREKNOCKBACK]=25},
+		on_melee_hit = {[DamageType.FIRE]=25},
 	},
 }
 
