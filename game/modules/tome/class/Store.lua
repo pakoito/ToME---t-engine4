@@ -30,8 +30,8 @@ function _M:loadStores(f)
 end
 
 function _M:init(t, no_default)
-	t.allow_sell = function() require("engine.ui.Dialog"):simplePopup("Can not sell", "The shopkeeper is not interrested in buying your items.") return false end
-	t.store.buy_percent = t.store.buy_percent or 10
+--	t.allow_sell = function() require("engine.ui.Dialog"):simplePopup("Can not sell", "The shopkeeper is not interrested in buying your items.") return false end
+	t.store.buy_percent = t.store.buy_percent or 5
 	t.store.sell_percent = t.store.sell_percent or 100
 	t.store.purse = t.store.purse or 20
 	Store.init(self, t, no_default)
