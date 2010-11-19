@@ -63,7 +63,7 @@ return {
 			require("engine.ui.Dialog"):simplePopup("Crypt", "The chanting grows louder. You hear a sudden high-pitched scream.")
 		elseif lev == 5 then
 			require("engine.ui.Dialog"):simpleLongPopup("Crypt", "You see a female human lying unconcious on a black altar, twisted sigils scored into her naked flesh.\nAround her are several figures in dark robes.\As they notice you one calls out 'Intruder! Protect the seed of Kryl-Feijan!'", 400)
-			game.level.turn_counter = 25 * 10
+			game.level.turn_counter = 30 * 10
 			game.player:grantQuest("kryl-feijan-escape")
 		end
 	end,
