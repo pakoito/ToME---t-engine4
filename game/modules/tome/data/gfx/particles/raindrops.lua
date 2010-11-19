@@ -32,8 +32,8 @@ return { generator = function()
 		dir = dir, dirv = blur, dira = 0,
 		vel = vel, velv = 0, vela = 0,
 
-		r = 0.6, rv = 0, ra = 0,
-		g = 0.7, gv = 0, ga = 0,
+		r = 0.2, rv = 0, ra = 0,
+		g = 0.5, gv = 0, ga = 0,
 		b = 0.7, bv = 0, ba = 0,
 		a = rng.float(0.6, 0.9), av = 0, aa = 0,
 	}
