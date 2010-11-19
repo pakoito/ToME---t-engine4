@@ -25,7 +25,7 @@ local Stats = require "engine.interface.ActorStats"
 -- The staff of absorption, the reason the game exists!
 newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
 	unique = true, godslayer=true,
-	name = "Awakened Staff of Absorption", identified=true,
+	name = "Awakened Staff of Absorption", identified=true, force_lore_artifact=true,
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
@@ -50,8 +50,8 @@ The Sorcerers seem to have awakened its power.
 		inc_stats = { [Stats.STAT_MAG] = 10, [Stats.STAT_WIL] = 10 },
 	},
 
-	max_power = 500, power_regen = 1,
-	use_power = { name = "absorb energies", power = 500,
+	max_power = 200, power_regen = 1,
+	use_power = { name = "absorb energies", power = 200,
 		use = function(self, who)
 			local tg = {type="hit", range=8}
 			local x, y = who:getTarget(tg)

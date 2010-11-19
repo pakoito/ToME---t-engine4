@@ -535,6 +535,10 @@ function _M:on_prepickup(who, idx)
 		who:learnLore(self.lore)
 		return true
 	end
+	if who.player and self.force_lore_artifact then
+		game.player:additionalLore(self.unique, self:getName(), "artifacts", self.desc)
+		game.player:learnLore(self.unique)
+	end
 end
 
 --- Can it stacks with others of its kind ?
