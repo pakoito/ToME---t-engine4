@@ -23,7 +23,7 @@ return {
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	max_level = 1,
 	width = 196, height = 80,
-	decay = {300, 800},
+	decay = {300, 800, only={object=true}, no_respawn=true},
 	persistant = "zone",
 	all_remembered = true,
 	all_lited = true,

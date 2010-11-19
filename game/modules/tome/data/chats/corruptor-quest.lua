@@ -52,8 +52,7 @@ Let us join forces and crush the fools!]],
 newChat{ id="quest3",
 	text = [[Good. Before your... untimely arrival we were preparing an attack on the Ziguranth main training camp, on the southern beach of the sea of Sash.
 Come with us, let's destroy them!
-Take this stone, it should help counter the antimagic powers of the Ziguranth.
-And now I will open a portal to Zigur and the massacre shall begin!]],
+I will open a portal to Zigur and the massacre shall begin!]],
 	answers = {
 		{"I am ready!", action=function(npc, player)
 			if game.zone.short_name ~= "mark-spellblaze" then return "quest3" end
