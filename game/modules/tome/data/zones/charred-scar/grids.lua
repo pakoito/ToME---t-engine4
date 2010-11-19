@@ -33,6 +33,7 @@ newEntity{
 	always_remember = true,
 	does_block_move = true,
 	block_sight = true,
+	no_prob_travel = true,
 	air_level = -20,
 }
 

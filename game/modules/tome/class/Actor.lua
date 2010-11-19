@@ -354,6 +354,7 @@ function _M:probabilityTravel(x, y, dist)
 	local tx, ty = x, y
 	while game.level.map:isBound(tx, ty) and game.level.map:checkAllEntities(tx, ty, "block_move", self) and dist > 0 do
 		if game.level.map.attrs(tx, ty, "no_teleport") then break end
+		if game.level.map:checkAllEntities(tx, ty, "no_prob_travel", self) then break end
 		tx = tx + dirx
 		ty = ty + diry
 		dist = dist - 1

@@ -706,7 +706,7 @@ function _M:setupCommands()
 			if config.settings.tome.cheat then
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
-				self:changeLevel(15, "high-peak")
+				self:changeLevel(1, "charred-scar")
 				game.player:magicMap(50)
 --				self.player:grantQuest("anti-antimagic")
 			end
