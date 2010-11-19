@@ -1321,6 +1321,95 @@ It is said the wielder will slowly grow mad, this however has never been proven 
 	},
 }
 
+newEntity{ base = "BASE_GAUNTLETS",
+	unique = true,
+	name = "Stone Gauntlets of Harkor'Zun",
+	unided_name = "dark stone gauntlets",
+	desc = [[Fashioned in ancient times by cultists of Harkor'Zun, these heavy granite gauntlets where designed to protect the wearer from the wrath of their dark master.]],
+	level_range = {20, 30},
+	rarity = 210,
+	encumber = 14,
+	metallic = false,
+	cost = 150,
+	material_level = 4,
+	wielder = {
+		fatigue = 20,
+		resists = {[DamageType.ACID] = 20},
+		resists = {[DamageType.PHYSICAL] = 10},
+		resists_cap = {[DamageType.ACID] = 10},
+		resists_cap = {[DamageType.PHYSICAL] = 5},
+	},
+}
+
+newEntity{ base = "BASE_AMULET",
+	unique = true,
+	name = "Zemekkys' Broken Hourglass", color = colors.WHITE,
+	unided_name = "a broken hourglass",
+	desc = [[This small broken hourglass hangs from a thin gold chain.  The glass is cracked and the sand has long since escaped.]],
+	level_range = {30, 40},
+	rarity = 300,
+	cost = 200,
+	material_level = 4,
+	metallic = false,
+	wielder = {
+		inc_stats = { [Stats.STAT_WIL] = 4, },
+		inc_damage = { [DamageType.TEMPORAL]= 10 },
+		resists = { [DamageType.TEMPORAL] = 20 },
+		resists_cap = { [DamageType.TEMPORAL] = 10 },
+	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_WORMHOLE, level = 2, power = 60 },
+}
+
+newEntity{ base = "BASE_AMULET",
+	unique = true,
+	name = "Unflinching Eye", color = colors.WHITE,
+	unided_name = "a bloodshot eye",
+	desc = [[Someone has strung a thick black chord through this large bloodshot eyeball, allowing it to be worn around the neck if you so chose.]],
+	level_range = {30, 40},
+	rarity = 300,
+	cost = 300,
+	material_level = 4,
+	metallic = false,
+	wielder = {
+		infravision = 4,
+		resists = { [DamageType.LIGHT] = -25 },
+		resists_cap = { [DamageType.LIGHT] = -25 },
+		blind_immune = 1
+	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_ARCANE_EYE, level = 2, power = 60 },
+}
+
+newEntity{ base = "BASE_CLOAK",
+	unique = true,
+	name = "Ureslak's Molted Scales",
+	unided_name = "scaley multi-hued cloak",
+	desc = [[This cloak is fashioned from the scales of some large reptillian creature.  It appears to reflect every color of the visible light spectrum.]],
+	level_range = {40, 50},
+	rarity = 400,
+	cost = 300,
+	material_level = 2,
+	wielder = {
+		resists_cap = {
+			[DamageType.FIRE] = 5,
+			[DamageType.COLD] = 5,
+			[DamageType.LIGHTNING] = 5,
+			[DamageType.NATURE] = 5,
+			[DamageType.DARKNESS] = 5,
+			[DamageType.ARCANE] = -30,
+		},
+		resists = {
+			[DamageType.FIRE] = 10,
+			[DamageType.COLD] = 10,
+			[DamageType.LIGHTNING] = 10,
+			[DamageType.NATURE] = 10,
+			[DamageType.DARKNESS] = 10,
+			[DamageType.ARCANE] = -30,
+		},
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,

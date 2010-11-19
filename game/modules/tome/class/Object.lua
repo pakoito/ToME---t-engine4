@@ -299,6 +299,14 @@ function _M:getTextualDesc()
 		desc:add(("Increases resistances: %s."):format(table.concat(rs, ',')), true)
 	end
 
+	if w.resists_cap then
+		local rs = {}
+		for res, i in pairs(w.resists_cap) do
+			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
+		end
+		desc:add(("Increases resistances cap: %s."):format(table.concat(rs, ',')), true)
+	end
+
 	if w.inc_damage then
 		local rs = {}
 		for res, i in pairs(w.inc_damage) do
