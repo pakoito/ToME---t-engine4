@@ -77,7 +77,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "galvorn battleaxe",
+	name = "stralite battleaxe",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -91,7 +91,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "mithril battleaxe",
+	name = "voratun battleaxe",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

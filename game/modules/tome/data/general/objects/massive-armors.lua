@@ -74,7 +74,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "galvorn plate armour",
+	name = "stralite plate armour",
 	level_range = {30, 40},
 	cost = 40,
 	material_level = 4,
@@ -87,7 +87,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "mithril plate armour",
+	name = "voratun plate armour",
 	level_range = {40, 50},
 	require = { stat = { str=60 }, },
 	cost = 50,

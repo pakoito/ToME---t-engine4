@@ -29,7 +29,7 @@ defineTile('T', "PALMTREE")
 defineTile('1', "SAND", nil, {random_filter={name="fire imp", add_levels=4}})
 defineTile('2', "SAND", nil, {random_filter={name="quasit", add_levels=4}})
 defineTile('U', "SAND", nil, {random_filter={name="uruivellas", add_levels=12}})
-defineTile('$', "SAND", {random_filter={name="mithril ring",ego_chance=100}})
+defineTile('$', "SAND", {random_filter={name="voratun ring",ego_chance=100}})
 
 return {
 [[..T............T.TT.]],

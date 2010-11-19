@@ -183,7 +183,7 @@ newEntity{ base = "BASE_SHOT",
 }
 
 newEntity{ base = "BASE_SHOT",
-	name = "galvorn shot",
+	name = "stralite shot",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 0.25,
@@ -197,7 +197,7 @@ newEntity{ base = "BASE_SHOT",
 }
 
 newEntity{ base = "BASE_SHOT",
-	name = "mithril shot",
+	name = "voratun shot",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 0.35,

@@ -75,7 +75,7 @@ newEntity{ base = "BASE_KNIFE",
 }
 
 newEntity{ base = "BASE_KNIFE",
-	name = "galvorn dagger",
+	name = "stralite dagger",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 25,
@@ -89,7 +89,7 @@ newEntity{ base = "BASE_KNIFE",
 }
 
 newEntity{ base = "BASE_KNIFE",
-	name = "mithril dagger",
+	name = "voratun dagger",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 35,

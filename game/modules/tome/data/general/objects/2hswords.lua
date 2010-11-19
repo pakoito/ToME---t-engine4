@@ -77,7 +77,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "galvorn greatsword",
+	name = "stralite greatsword",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -91,7 +91,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	name = "mithril greatsword",
+	name = "voratun greatsword",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

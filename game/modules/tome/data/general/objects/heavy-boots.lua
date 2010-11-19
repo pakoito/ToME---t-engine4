@@ -57,7 +57,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 }
 
 newEntity{ base = "BASE_HEAVY_BOOTS",
-	name = "pair of mithril boots",
+	name = "pair of voratun boots",
 	level_range = {40, 50},
 	cost = 10,
 	material_level = 5,

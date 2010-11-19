@@ -57,7 +57,7 @@ newEntity{ base = "BASE_HELM",
 }
 
 newEntity{ base = "BASE_HELM",
-	name = "mithril helm",
+	name = "voratun helm",
 	level_range = {40, 50},
 	cost = 10,
 	material_level = 5,

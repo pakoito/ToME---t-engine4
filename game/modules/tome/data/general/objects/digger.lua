@@ -72,7 +72,7 @@ newEntity{ base = "BASE_DIGGER",
 }
 
 newEntity{ base = "BASE_DIGGER",
-	name = "mithril pickaxe",
+	name = "voratun pickaxe",
 	level_range = {40, 50},
 	cost = 3,
 	material_level = 5,

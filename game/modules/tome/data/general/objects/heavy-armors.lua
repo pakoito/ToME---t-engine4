@@ -74,7 +74,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "galvorn mail armour",
+	name = "stralite mail armour",
 	level_range = {30, 40},
 	cost = 40,
 	material_level = 4,
@@ -87,7 +87,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "mithril mail armour",
+	name = "voratun mail armour",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 50,

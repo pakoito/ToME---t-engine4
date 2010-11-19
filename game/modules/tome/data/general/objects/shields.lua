@@ -92,7 +92,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	name = "galvorn shield",
+	name = "stralite shield",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -111,7 +111,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	name = "mithril shield",
+	name = "voratun shield",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

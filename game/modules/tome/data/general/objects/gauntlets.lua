@@ -56,7 +56,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 }
 
 newEntity{ base = "BASE_GAUNTLETS",
-	name = "mithril gauntlets",
+	name = "voratun gauntlets",
 	level_range = {40, 50},
 	cost = 10,
 	material_level = 5,
