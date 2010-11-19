@@ -116,6 +116,7 @@ return {
 			width = 90,
 			height = 40,
 			no_level_connectivity = true,
+			no_worldport = true,
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",
