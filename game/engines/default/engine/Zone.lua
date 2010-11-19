@@ -459,7 +459,7 @@ function _M:leaveLevel(no_close, lev, old_lev)
 	if not no_close and game.level and game.level.map then
 		game:leaveLevel(game.level, lev, old_lev)
 
-		if type(game.level.data.persistant) == "string" and game.level.data.persistant == "zone" then
+		if type(game.level.data.persistant) == "string" and game.level.data.persistant == "zone" and not self.save_per_level then
 			print("[LEVEL] persisting to zone memory", game.level.id)
 			self.memory_levels = self.memory_levels or {}
 			self.memory_levels[game.level.level] = game.level
@@ -470,9 +470,6 @@ function _M:leaveLevel(no_close, lev, old_lev)
 		elseif game.level.data.persistant then
 			print("[LEVEL] persisting to disk file", game.level.id)
 			savefile_pipe:push(game.save_name, "level", game.level)
---			local save = Savefile.new(game.save_name)
---			save:saveLevel(game.level)
---			save:close()
 		else
 			game.level:removed()
 		end
@@ -491,7 +488,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 
 	local level
 	-- Load persistant level?
-	if type(level_data.persistant) == "string" and level_data.persistant == "zone" then
+	if type(level_data.persistant) == "string" and level_data.persistant == "zone" and not self.save_per_level then
 		self.memory_levels = self.memory_levels or {}
 		level = self.memory_levels[lev]
 

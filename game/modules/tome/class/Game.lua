@@ -386,6 +386,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		else
 			self.zone = zone
 		end
+		if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
 	end
 	self.zone:getLevel(self, lev, old_lev)
 
@@ -472,7 +473,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	self.level.map:redisplay()
 
 	-- Autosave
-	if left_zone and left_zone.short_name ~= "wilderness" and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
+	if config.settings.tome.autosave and left_zone and left_zone.short_name ~= "wilderness" and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
 end
 
 function _M:getPlayer()
@@ -706,7 +707,8 @@ function _M:setupCommands()
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 --				self:changeLevel(2, "mark-spellblaze")
-				self.player:grantQuest("anti-antimagic")
+--				self.player:grantQuest("anti-antimagic")
+				game.player[{foo=1,plop=4}]=3
 			end
 		end,
 	}
@@ -893,6 +895,7 @@ function _M:setupCommands()
 				{ "Character Sheet", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },
 				"keybinds",
 				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
+				{"Game Options", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GameOptions").new()) end},
 				"video",
 				"sound",
 				"save",

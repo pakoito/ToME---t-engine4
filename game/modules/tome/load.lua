@@ -178,4 +178,7 @@ for i, t in ipairs(stype_tot) do
 end
 ------------------------------------------------------------------------
 
+-- Init autosaves
+if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
+
 return {require "mod.class.Game", require "mod.class.World"}

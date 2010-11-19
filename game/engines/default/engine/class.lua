@@ -160,6 +160,7 @@ end
 -- LOAD & SAVE
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
+local basictableid = 0
 local function basicSerialize(o, t)
 	if t == "number" or t == "boolean" then
 		return tostring(o)
@@ -205,6 +206,10 @@ local function serialize_data(outf, name, value, saved, filter, allow, savefile,
 					if tk == "table" and k.__CLASSNAME then
 						savefile:addToProcess(k)
 						fieldname = string.format("%s[loadObject('%s')]", name, savefile:getFileName(k))
+					elseif tk == "table" and not k.__CLASSNAME then
+						basictableid = basictableid + 1
+						serialize_data(outf, "subdata"..basictableid, k, nil, {}, false, savefile, true)
+						fieldname = string.format("%s[subdata%d]", name, basictableid)
 					else
 						fieldname = string.format("%s[%s]", name, basicSerialize(k, tk))
 					end
