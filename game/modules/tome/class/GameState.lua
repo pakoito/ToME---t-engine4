@@ -117,17 +117,17 @@ local randart_name_rules = {
 }
 
 --- Generate randarts for this state
-function _M:generateRandart(add)
+function _M:generateRandart(add, base, lev)
 	if not self.randart_powers then self.randart_powers = engine.Object:loadList("/data/general/objects/random-artifacts.lua") end
 	local powers_list = self.randart_powers
 
 	-- Setup level
-	local lev = rng.range(5, 50)
+	lev = lev or rng.range(5, 50)
 	local oldlev = game.level.level
 	game.level.level = lev
 
 	-- Get a base object
-	local base = game.zone:makeEntity(game.level, "object", {ego_chance=-1000, special=function(e)
+	base = base or game.zone:makeEntity(game.level, "object", {ego_chance=-1000, special=function(e)
 		return (not e.unique and e.randart_able) and true or false
 	end}, nil, true)
 	if not base then game.level.level = oldlev return end

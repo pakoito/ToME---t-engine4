@@ -62,7 +62,7 @@ function _M:generateList()
 	local list = {}
 	local i = 0
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Autosaves the whole game when switching zones. This is safer but can make playing a bit slower while it saves.#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Autosaves the whole game when switching zones. This is safer but can make playing a bit slower while it saves. Savefiles will also be somewhat bigger.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Autosave when leaving a zone#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.autosave and "enabled" or "disabled")
 	end, fct=function(item)

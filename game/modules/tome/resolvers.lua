@@ -142,6 +142,37 @@ function resolvers.calc.drops(t, e)
 	return nil
 end
 
+--- Resolves drops creation for an actor; drops a created on the fly randart
+function resolvers.drop_randart(t)
+	return {__resolver="drop_randart", __resolve_last=true, t}
+end
+--- Actually resolve the drops creation
+function resolvers.calc.drop_randart(t, e)
+	t = t[1]
+	local filter = t.filter
+
+	print("Randart Drops resolver")
+	local base = nil
+	if filter then
+		if not filter.defined then
+			base = game.zone:makeEntity(game.level, "object", filter, nil, true)
+		else
+			base = game.zone:makeEntityByName(game.level, "object", filter.defined)
+		end
+	end
+
+	local o = game.state:generateRandart(false, base, resolvers.current_level)
+	if o then
+		print("Zone made us a randart drop according to filter!", o:getName{force_id=true})
+		e:addObject(e.INVEN_INVEN, o)
+		game.zone:addEntity(game.level, o, "object")
+
+		if t.id then o:identify(t.id) end
+	end
+	-- Delete the origin field
+	return nil
+end
+
 --- Resolves drops creation for an actor
 function resolvers.store(def, faction)
 	return {__resolver="store", def, faction}

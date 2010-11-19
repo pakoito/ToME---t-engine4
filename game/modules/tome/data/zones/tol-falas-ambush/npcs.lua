@@ -28,7 +28,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	color=colors.VIOLET,
 	desc = [[This ugly orc looks really nasty and vicious. He is obviously looking for something and bears an unknown symbol on his shield.]],
 	level_range = {30, 50}, exp_worth = 2,
-	max_life = 1500, life_rating = 15, fixed_rating = true,
+	max_life = 1500, life_rating = 18, fixed_rating = true,
 	rank = 4,
 	size_category = 3,
 	infravision = 20,
@@ -40,11 +40,13 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	combat_spellresist = 70,
 	combat_mentalresist = 70,
 	combat_physresist = 70,
+	see_invisible = 38,
 
 	resolvers.equip{
 		{type="weapon", subtype="longsword", ego_chance=100, autoreq=true},
 		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
 	},
+	resolvers.drop_randart{},
 
 	resolvers.talents{
 		[Talents.T_WEAPONS_MASTERY]=10, [Talents.T_ASSAULT]=5, [Talents.T_OVERPOWER]=5, [Talents.T_RUSH]=5,
