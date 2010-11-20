@@ -43,4 +43,5 @@ newEntity{
 		combat_def_ranged = resolvers.mbonus_material(8, 2, function(e, v) return v * 1 end),
 		movement_speed = -0.1,
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end), },
+	},
 }

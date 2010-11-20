@@ -27,7 +27,7 @@ newEntity{
 	rarity = 5,
 	desc = [[A suit of armour made of leather.]],
 	randart_able = { attack=20, physical=20, spell=20, def=60, misc=40 },
-	egos = "/data/general/objects/egos/armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
+	egos = "/data/general/objects/egos/light-armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
