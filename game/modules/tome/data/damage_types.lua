@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 -- The basic stuff used to damage a grid
-setDefaultProjector(function(src, x, y, type, dam)
+setDefaultProjector(function(src, x, y, type, dam, no_martyr)
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
 		local rsrc = src.resolveSource and src:resolveSource() or src
@@ -107,8 +107,8 @@ setDefaultProjector(function(src, x, y, type, dam)
 			end
 		end
 
-		if src.attr and src:attr("martyrdom") then
-			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100)
+		if src.attr and src:attr("martyrdom") and not no_martyr then
+			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100, true)
 		end
 
 		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
