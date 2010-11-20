@@ -600,8 +600,8 @@ newEffect{
 }
 
 newEffect{
-	name = "NOLDOR_WRATH",
-	desc = "Wrath of the Eldar",
+	name = "ETERNAL_WRATH",
+	desc = "Wrath of the Eternals",
 	long_desc = function(self, eff) return ("The target calls upon its inner ressources, improving all damage by %d%% and reducing all damage taken by %d%%."):format(eff.power, eff.power) end,
 	type = "physical",
 	status = "beneficial",
@@ -716,7 +716,6 @@ newEffect{
 		eff.iid = self:addTemporaryValue("invulnerable", 1)
 		eff.particle = self:addParticles(Particles.new("time_prison", 1))
 		self.energy.value = 0
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	on_timeout = function(self, eff)
 		self.energy.value = 0
@@ -2351,5 +2350,333 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("life_regen", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "FEED_HATE",
+	desc = "Feeding Hate",
+	long_desc = function(self, eff) return ("%s is feeding %0.2f hate from %s."):format(self.name:capitalize(), eff.hateGain, eff.target.name) end,
+	type = "mental",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		eff.hateGainId = self:addTemporaryValue("hate_regen", eff.hateGain)
+
+		eff.extension = eff.extension or 0
+		eff.isSevered = false
+	end,
+	deactivate = function(self, eff)
+		if eff.hateGainId then self:removeTemporaryValue("hate_regen", eff.hateGainId) end
+
+		if eff.particles then
+			-- remove old particle emitter
+			eff.particles.x = nil
+			eff.particles.y = nil
+			game.level.map:removeParticleEmitter(eff.particles)
+			eff.particles = nil
+		end
+	end,
+	on_timeout = function(self, eff)
+		if eff.isSevered then
+			eff.extension = eff.extension - 1
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_HATE)
+			end
+		elseif eff.target.dead or not self:hasLOS(eff.target.x, eff.target.y) then
+			eff.isSevered = true
+
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+				eff.particles = nil
+			end
+
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_HATE)
+			end
+		else
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+			end
+			-- add updated particle emitter
+			local dx, dy = eff.target.x - self.x, eff.target.y - self.y
+			eff.particles = Particles.new("feed_hate", math.max(math.abs(dx), math.abs(dy)), { tx=dx, ty=dy })
+			eff.particles.x = self.x
+			eff.particles.y = self.y
+			game.level.map:addParticleEmitter(eff.particles)
+		end
+	end,
+}
+
+newEffect{
+	name = "FEED_HEALTH",
+	desc = "Feeding Health",
+	long_desc = function(self, eff)
+		if eff.lifeRegenGain and eff.lifeRegenGain > 0 then
+			return ("#Target# is feeding %d constitution and %0.1f life per turn from %s."):format(eff.constitutionGain, eff.lifeRegenGain, eff.target.name)
+		else
+			return ("#Target# is feeding %d constitution from %s."):format(eff.constitutionGain, eff.target.name)
+		end
+	end,
+	type = "mental",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		eff.constitutionGainId = self:addTemporaryValue("inc_stats",
+		{
+			[Stats.STAT_CON] = eff.constitutionGain,
+		})
+		eff.constitutionLossId = eff.target:addTemporaryValue("inc_stats",
+		{
+			[Stats.STAT_CON] = -eff.constitutionGain,
+		})
+
+		if eff.lifeRegenGain and eff.lifeRegenGain > 0 then
+			eff.lifeRegenGainId = self:addTemporaryValue("life_regen", eff.lifeRegenGain)
+			eff.lifeRegenLossId = eff.target:addTemporaryValue("life_regen", -eff.lifeRegenGain)
+		end
+
+		eff.extension = eff.extension or 0
+		eff.isSevered = false
+	end,
+	deactivate = function(self, eff)
+		if eff.constitutionGainId then self:removeTemporaryValue("inc_stats", eff.constitutionGainId) end
+		if eff.constitutionLossId then eff.target:removeTemporaryValue("inc_stats", eff.constitutionLossId) end
+		if eff.lifeRegenGainId then self:removeTemporaryValue("life_regen", eff.lifeRegenGainId) end
+		if eff.lifeRegenLossId then eff.target:removeTemporaryValue("life_regen", eff.lifeRegenLossId) end
+
+		if eff.particles then
+			-- remove old particle emitter
+			eff.particles.x = nil
+			eff.particles.y = nil
+			game.level.map:removeParticleEmitter(eff.particles)
+			eff.particles = nil
+		end
+	end,
+	on_timeout = function(self, eff)
+		if eff.isSevered then
+			eff.extension = eff.extension - 1
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_HEALTH)
+			end
+		elseif eff.target.dead or not self:hasLOS(eff.target.x, eff.target.y) then
+			eff.isSevered = true
+
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+				eff.particles = nil
+			end
+
+			eff.target:removeTemporaryValue("inc_stats", eff.constitutionLossId)
+			eff.constitutionLossId = nil
+			eff.target:removeTemporaryValue("life_regen", eff.lifeRegenLossId)
+			eff.lifeRegenLossId = nil
+
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_HEALTH)
+			end
+		else
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+			end
+			-- add updated particle emitter
+			local dx, dy = eff.target.x - self.x, eff.target.y - self.y
+			eff.particles = Particles.new("feed_health", math.max(math.abs(dx), math.abs(dy)), { tx=dx, ty=dy })
+			eff.particles.x = self.x
+			eff.particles.y = self.y
+			game.level.map:addParticleEmitter(eff.particles)
+		end
+	end,
+}
+
+newEffect{
+	name = "FEED_POWER",
+	desc = "Feeding Power",
+	long_desc = function(self, eff)
+		return ("%s is feeding %d%% increased damage from %s."):format(self.name:capitalize(), eff.damageGain, eff.target.name)
+	end,
+	type = "mental",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		eff.damageGainId = self:addTemporaryValue("inc_damage", {all=eff.damageGain})
+		eff.damageLossId = eff.target:addTemporaryValue("inc_damage", {all=eff.damageLoss})
+		eff.extension = eff.extension or 0
+		eff.isSevered = false
+	end,
+	deactivate = function(self, eff)
+		if eff.damageGainId then self:removeTemporaryValue("inc_damage", eff.damageGainId) end
+		if eff.damageLossId then eff.target:removeTemporaryValue("inc_damage", eff.damageLossId) end
+
+		if eff.particles then
+			-- remove old particle emitter
+			eff.particles.x = nil
+			eff.particles.y = nil
+			game.level.map:removeParticleEmitter(eff.particles)
+			eff.particles = nil
+		end
+	end,
+	on_timeout = function(self, eff)
+		if eff.isSevered then
+			eff.extension = eff.extension - 1
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_POWER)
+			end
+		elseif eff.target.dead or not self:hasLOS(eff.target.x, eff.target.y) then
+			eff.isSevered = true
+
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+				eff.particles = nil
+			end
+
+			eff.target:removeTemporaryValue("inc_damage", eff.damageLossId)
+			eff.damageLossId = nil
+
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_POWER)
+			end
+		else
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+			end
+			-- add updated particle emitter
+			local dx, dy = eff.target.x - self.x, eff.target.y - self.y
+			eff.particles = Particles.new("feed_power", math.max(math.abs(dx), math.abs(dy)), { tx=dx, ty=dy })
+			eff.particles.x = self.x
+			eff.particles.y = self.y
+			game.level.map:addParticleEmitter(eff.particles)
+		end
+	end,
+}
+
+newEffect{
+	name = "FEED_STRENGTHS",
+	desc = "Feeding Strengths",
+	long_desc = function(self, eff) return ("%s is feeding %d%% or resistances %s."):format(self.name:capitalize(), eff.resistGain, eff.target.name) end,
+	type = "mental",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		local gainList = {}
+		local lossList = {}
+		for id, resist in pairs(eff.target.resists) do
+			if resist > 0 then
+				local amount = eff.resistGain * 0.01 * resist
+				gainList[id] = amount
+				lossList[id] = -amount
+			end
+		end
+
+		eff.resistGainId = self:addTemporaryValue("resists", gainList)
+		eff.resistLossId = eff.target:addTemporaryValue("resists", lossList)
+
+		eff.extension = eff.extension or 0
+		eff.isSevered = false
+	end,
+	deactivate = function(self, eff)
+		if eff.resistGainId then self:removeTemporaryValue("resists", eff.resistGainId) end
+		if eff.resistLossId then eff.target:removeTemporaryValue("resists", eff.resistLossId) end
+
+		if eff.particles then
+			-- remove old particle emitter
+			eff.particles.x = nil
+			eff.particles.y = nil
+			game.level.map:removeParticleEmitter(eff.particles)
+			eff.particles = nil
+		end
+	end,
+	on_timeout = function(self, eff)
+		if eff.isSevered then
+			eff.extension = eff.extension - 1
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_STRENGTHS)
+			end
+		elseif eff.target.dead or not self:hasLOS(eff.target.x, eff.target.y) then
+			eff.isSevered = true
+
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+				eff.particles = nil
+			end
+
+			if eff.resistLossId then self:removeTemporaryValue("resists", eff.resistLossId) end
+			eff.resistLossId = nil
+
+			if eff.extension <= 0 then
+				self:removeEffect(self.EFF_FEED_STRENGTHS)
+			end
+		else
+			if eff.particles then
+				-- remove old particle emitter
+				eff.particles.x = nil
+				eff.particles.y = nil
+				game.level.map:removeParticleEmitter(eff.particles)
+			end
+			-- add updated particle emitter
+			local dx, dy = eff.target.x - self.x, eff.target.y - self.y
+			eff.particles = Particles.new("feed_strengths", math.max(math.abs(dx), math.abs(dy)), { tx=dx, ty=dy })
+			eff.particles.x = self.x
+			eff.particles.y = self.y
+			game.level.map:addParticleEmitter(eff.particles)
+		end
+	end,
+}
+
+newEffect{
+	name = "AGONY",
+	desc = "Agony",
+	type = "mental",
+	status = "detrimental",
+	parameters = { damage=10, mindpower=10, range=10, minPercent=10 },
+	on_gain = function(self, err) return "#Target# is writhing in agony!", "+Agony" end,
+	on_lose = function(self, err) return "#Target# is no longer writhing in agony.", "-Agony" end,
+	activate = function(self, eff)
+		eff.power = 0
+	end,
+	deactivate = function(self, eff)
+		if eff.particle then self:removeParticles(eff.particle) end
+	end,
+	on_timeout = function(self, eff)
+		local power = 1 - (math.min(eff.range, core.fov.distance(eff.source.x, eff.source.y, self.x, self.y)) / eff.range)
+		if power > 0 then
+			if self:checkHit(eff.mindpower, self:combatMentalResist(), 0, 95, 5) then
+				local damage = math.floor(eff.damage * power)
+				if damage > 0 then
+					DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, damage)
+				end
+			else
+				return true
+			end
+		end
+
+		if math.floor(power * 10) + 1 ~= eff.power then
+			eff.power = math.floor(power * 10) + 1
+			if eff.particle then self:removeParticles(eff.particle) end
+			if eff.power > 0 then
+				eff.particle = self:addParticles(Particles.new("agony", 1, { power = eff.power }))
+			end
+		end
 	end,
 }

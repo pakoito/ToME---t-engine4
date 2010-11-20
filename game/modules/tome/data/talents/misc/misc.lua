@@ -240,16 +240,16 @@ newTalent{
 -- Thaloren's power: temporary damage increase and damage reduction
 newTalent{
 	short_name = "THALOREN_WRATH",
-	name = "Wrath of the Eldar",
+	name = "Wrath of the Eternals",
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
-		self:setEffect(self.EFF_NOLDOR_WRATH, 5, {power=7 + self:getWil(10)})
+		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10)})
 		return true
 	end,
 	info = function(self)
-		return ([[Call upon the power of the ancient Noldor, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
+		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
 		The bonus will increase with the Willpower stat]]):format(7 + self:getWil(10), 7 + self:getWil(10))
 	end,
 }

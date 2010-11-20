@@ -1,4 +1,4 @@
--- ToME - Tales of Maj'Eyal
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,23 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Cursed
+-- Afflictions
+newTalentType{ type="cursed/cursed-form", name = "cursed form", description = "You are wracked with the dark energies of the curse." }
 newTalentType{ type="cursed/slaughter", name = "slaughter", description = "Your axe yearns for its next victim." }
 newTalentType{ type="cursed/endless-hunt", name = "endless hunt", description = "Each day you lift your weary body and begin the unending hunt." }
 newTalentType{ type="cursed/gloom", name = "gloom", description = "All those in your sight must share your despair." }
-newTalentType{ type="cursed/rampage", name = "rampage", description = "Let loose the hate that has grown within." }
-
--- Doomed
-newTalentType{ type="cursed/dark-sustenance", name = "dark sustenance", generic = true, description = "Invoke the powerful force of your will." }
-newTalentType{ type="cursed/force-of-will", name = "force of will", description = "Invoke the powerful force of your will." }
-newTalentType{ type="cursed/darkness", name = "darkness", description = "Harness the power of darkness to envelop your foes." }
-newTalentType{ type="cursed/shadows", name = "shades", description = "Summon shadows from the darkness to aid you." }
-newTalentType{ type="cursed/punishments", name = "punishments", description = "Your hate becomes punishment in the minds of your foes." }
-
--- Generic
-newTalentType{ type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
+newTalentType{ type="cursed/rampage", name = "rampage", generic = true, description = "Let loose the hate that has grown within." }
 newTalentType{ type="cursed/dark-figure", name = "dark figure", generic = true, description = "Life as an outcast has given you time to reflect on your misfortunes." }
 
+-- Generic requires for corruptions based on talent level
 cursed_wil_req1 = {
 	stat = { wil=function(level) return 12 + (level-1) * 2 end },
 	level = function(level) return 0 + (level-1)  end,
@@ -76,37 +68,9 @@ cursed_str_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
-cursed_mag_req1 = {
-	stat = { mag=function(level) return 12 + (level-1) * 2 end },
-	level = function(level) return 0 + (level-1)  end,
-}
-cursed_mag_req2 = {
-	stat = { mag=function(level) return 20 + (level-1) * 2 end },
-	level = function(level) return 4 + (level-1)  end,
-}
-cursed_mag_req3 = {
-	stat = { mag=function(level) return 28 + (level-1) * 2 end },
-	level = function(level) return 8 + (level-1)  end,
-}
-cursed_mag_req4 = {
-	stat = { mag=function(level) return 36 + (level-1) * 2 end },
-	level = function(level) return 12 + (level-1)  end,
-}
-cursed_mag_req5 = {
-	stat = { mag=function(level) return 44 + (level-1) * 2 end },
-	level = function(level) return 16 + (level-1)  end,
-}
-
+load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/slaughter.lua")
 load("/data/talents/cursed/endless-hunt.lua")
 load("/data/talents/cursed/gloom.lua")
 load("/data/talents/cursed/rampage.lua")
-
-load("/data/talents/cursed/force-of-will.lua")
-load("/data/talents/cursed/dark-sustenance.lua")
-load("/data/talents/cursed/shadows.lua")
-load("/data/talents/cursed/darkness.lua")
-load("/data/talents/cursed/punishments.lua")
-
-load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/dark-figure.lua")

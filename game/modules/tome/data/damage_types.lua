@@ -50,6 +50,19 @@ setDefaultProjector(function(src, x, y, type, dam)
 			dam = dam + (dam * inc / 100)
 		end
 
+		-- dark vision increases damage done in the dark
+		if src.knowTalent and src:knowTalent(src.T_DARK_VISION) then
+			local t = src:getTalentFromId(src.T_DARK_VISION)
+			local damageIncrease = t.getDamageIncrease(src, t)
+			if damageIncrease > 0
+					and not game.level.map.lites(x, y) -- not lit
+					and core.fov.distance(src.x, src.y, target.x, target.y) > (src.lite or 0) -- outside of lite radius
+					and game.level.map:checkAllEntities(x, y, "creepingDark") then -- creeping dark square
+				dam = dam + (dam * damageIncrease / 100)
+				logPlayer(src, "Dark Vision Damage!")
+			end
+		end
+
 		-- Reduce damage with resistance
 		if target.resists then
 			local pen = 0

@@ -226,6 +226,21 @@ function _M:act()
 	    local t = self:getTalentFromId(self.T_GLOOM)
 		t.do_gloom(self, t)
 	end
+	-- this handles cursed call shadows turn based effects
+	if self:isTalentActive(self.T_CALL_SHADOWS) then
+	    local t = self:getTalentFromId(self.T_CALL_SHADOWS)
+		t.do_callShadows(self, t)
+	end
+	-- this handles cursed deflection turn based effects
+	if self:isTalentActive(self.T_DEFLECTION) then
+	    local t = self:getTalentFromId(self.T_DEFLECTION)
+		t.do_act(self, t, self:isTalentActive(self.T_DEFLECTION))
+	end
+	-- this handles doomed unseen forces turn based effects
+	if self.unseenForces then
+		local t = self:getTalentFromId(self.T_UNSEEN_FORCES)
+		t.do_unseenForces(self, t)
+	end
 
 	if self:attr("stunned") then
 		self.stunned_counter = (self.stunned_counter or 0) + (self:attr("stun_immune") or 0) * 100
@@ -694,6 +709,11 @@ function _M:onTakeHit(value, src)
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
 		value = 0
+	end
+
+	if self:isTalentActive(self.T_DEFLECTION) then
+		local t = self:getTalentFromId(self.T_DEFLECTION)
+		value = t.do_onTakeHit(self, t, self:isTalentActive(self.T_DEFLECTION), value)
 	end
 
 	-- Mount takes some damage ?

@@ -25,7 +25,7 @@ newTalent{
 	name = "Unnatural Body",
 	type = {"cursed/cursed-form", 1},
 	mode = "passive",
-	require = cursed_str_req1,
+	require = cursed_wil_req1,
 	points = 5,
 	on_learn = function(self, t)
 		return true
@@ -77,7 +77,7 @@ newTalent{
 --newTalent{
 --	name = "Obsession",
 --	type = {"cursed/cursed-form", 2},
---	require = cursed_str_req2,
+--	require = cursed_wil_req2,
 --	mode = "passive",
 --	points = 5,
 --	on_learn = function(self, t)
@@ -94,7 +94,7 @@ newTalent{
 --newTalent{
 --	name = "Suffering",
 --	type = {"cursed/cursed-form", 2},
---	require = cursed_str_req2,
+--	require = cursed_wil_req2,
 --	mode = "passive",
 --	points = 5,
 --	on_learn = function(self, t)
@@ -119,7 +119,7 @@ newTalent{
 	name = "Seethe",
 	type = {"cursed/cursed-form", 2},
 	random_ego = "utility",
-	require = cursed_str_req2,
+	require = cursed_wil_req2,
 	points = 5,
 	cooldown = 400,
 	action = function(self, t)
@@ -142,7 +142,7 @@ newTalent{
 	name = "Relentless",
 	type = {"cursed/cursed-form", 3},
 	mode = "passive",
-	require = cursed_str_req3,
+	require = cursed_wil_req3,
 	points = 5,
 	on_learn = function(self, t)
 		self:attr("fear_immune", 0.15)
@@ -166,7 +166,7 @@ newTalent{
 newTalent{
 	name = "Enrage",
 	type = {"cursed/cursed-form", 4},
-	require = cursed_str_req4,
+	require = cursed_wil_req4,
 	points = 5,
 	rage = 0.1,
 	cooldown = 50,

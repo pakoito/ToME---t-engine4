@@ -30,6 +30,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "disallow",
 			Cursed = function() return profile.mod.allow_build.afflicted_cursed and "allow" or "disallow" end,
+			Doomed = function() return profile.mod.allow_build.afflicted_doomed and "allow" or "disallow" end,
 		},
 	},
 	copy = {
@@ -75,5 +76,46 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = 2,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Doomed",
+	desc = {
+		"The Doomed are fallen mages who once wielded powerful magic wrought by ambition and dark bargains.",
+		"They now possess only a twisted shadow of that power as they struggle to keep it from consuming them.",
+		"Only time will tell if they can choose a new path or are dooomed forever.",
+		"The Doomed do not heal naturally but can feed from their enemies as they release hidden forces, darkness and punishments upon them.",
+		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stats modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +4 Magic, +4 Willpower, +0 Cunning",
+	},
+	stats = { wil=4, mag=4, },
+	talents_types = {
+		["cursed/dark-sustenance"]={true, 0.3},
+		["cursed/force-of-will"]={true, 0.3},
+		["cursed/punishments"]={true, 0.3},
+		["cursed/shadows"]={true, 0.3},
+		["cursed/darkness"]={true, 0.3},
+		["cursed/cursed-form"]={true, 0.0},
+		["cursed/dark-figure"]={false, 0.0},
+	},
+	talents = {
+		[ActorTalents.T_UNNATURAL_BODY] = 1,
+		[ActorTalents.T_FEED_HATE] = 1,
+		[ActorTalents.T_WILLFUL_STRIKE] = 1,
+	},
+	copy = {
+		max_life = 90,
+		life_regen = 0,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
+		},
+	},
+	copy_add = {
+		life_rating = -2,
 	},
 }

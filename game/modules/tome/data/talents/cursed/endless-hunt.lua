@@ -68,8 +68,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local damMult = self:combatTalentWeaponDamage(t, 0.1, 0.5)
-		return ([[Combine strength and will to overpower your opponent. A failed save versus will will add %d%% melee damage to your attacks for 4 turns.]]):format(damMult * 100)
+		local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.5)
+		return ([[Combine strength and will to overpower your opponent with a vicious attack. A failed save versus willpower will multiply all melee damage by %d%% for 4 turns.]]):format(damMult * 100)
 	end,
 }
 

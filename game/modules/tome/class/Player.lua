@@ -272,6 +272,35 @@ function _M:playerFOV()
 			self:computeFOV(rad, "block_sight", function(x, y) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, 1) end end, true, true, true)
 			self:computeFOV(rad2, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
 		end
+		
+		-- Handle dark vision; same as infravision, but also sees past creeping dark
+		-- this is treated as a sense, but is filtered by custom LOS code
+		if self:knowTalent(self.T_DARK_VISION) then
+			local t = self:getTalentFromId(self.T_DARK_VISION)
+			local range = self:getTalentRange(t)
+			self:computeFOV(range, "block_sense", function(x, y)
+				local actor = game.level.map(x, y, game.level.map.ACTOR)
+				if actor then
+					-- modified actor:hasLOS()
+					local l = line.new(self.x, self.y, x, y)
+					local lx, ly = l()
+					while lx and ly do
+						if game.level.map:checkAllEntities(lx, ly, "block_sight") then
+							if not game.level.map:checkAllEntities(lx, ly, "creepingDark") then break end
+							print("see creepingDark")
+						end
+
+						lx, ly = l()
+					end
+					-- Ok if we are at the end reset lx and ly for the next code
+					if not lx and not ly then lx, ly = x, y end
+
+					if lx == x and ly == y then
+						game.level.map.seens(x, y, 1)
+					end
+				end
+			end, true, true, true)
+		end
 	end
 
 	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
