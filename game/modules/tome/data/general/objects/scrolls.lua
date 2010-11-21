@@ -390,8 +390,8 @@ newEntity{ base = "BASE_RUNE",
 	inscription_data = {
 		cooldown = resolvers.rngrange(20, 30),
 		dur = 10,
-		mana = resolvers.mbonus(180, 60, function(e, v) return v * 0.09 end),
-		use_stat_mod = 1.8,
+		mana = resolvers.mbonus(1200, 600, function(e, v) return v * 0.003 end),
+		use_stat_mod = 4,
 	},
 	inscription_talent = "RUNE:_MANASURGE",
 }

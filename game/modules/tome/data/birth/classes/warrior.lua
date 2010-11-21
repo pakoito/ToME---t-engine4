@@ -167,7 +167,7 @@ newBirthDescriptor{
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true},
 		},
-		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=80}),
+		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
 	},
 	copy_add = {
 		life_rating = 2,

@@ -429,11 +429,12 @@ newInscription{
 	is_spell = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_MANASURGE, data.dur, {power=(data.mana + data.inc_stat) / data.dur})
+		self:incMana((data.mana + data.inc_stat) / 20)
+		self:setEffect(self.EFF_MANASURGE, data.dur, {power=self.mana_regen * (data.mana + data.inc_stat) / 100})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to unleash a manasurge upon yourself, regenerating %d mana over %d turns.]]):format(data.mana + data.inc_stat, data.dur)
+		return ([[Activate the rune to unleash a manasurge upon yourself, increasing mana regeneration by %d%% for %d turns and instantly restoring %d mana.]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
 	end,
 }

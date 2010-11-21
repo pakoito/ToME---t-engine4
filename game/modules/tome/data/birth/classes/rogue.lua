@@ -112,6 +112,6 @@ newBirthDescriptor{
 		[ActorTalents.T_LETHALITY] = 1,
 	},
 	copy = {
-		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=80}),
+		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
 	},
 }

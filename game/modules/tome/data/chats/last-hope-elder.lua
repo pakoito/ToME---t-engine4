@@ -38,7 +38,7 @@ The staff you describe reminds me of an artifact of great power from ancient tim
 }
 
 newChat{ id="given_staff",
-	text = [[I am truly astonished by your strength; surviving that encounter was an epic feat. Please take this as a token of my gratitude for your services.
+	text = [[I am truly astonished by your strength; surviving that encounter was an epic feat.
 As for the orcs, it is deeply troubling.  We have not seen any for eighty years... could they have come from the far east?
 Anyway, thank you again, @playername@, for your help.]],
 	answers = {
