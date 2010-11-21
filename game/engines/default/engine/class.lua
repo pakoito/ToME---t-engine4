@@ -112,35 +112,9 @@ function _M:clone(t)
 	return n
 end
 
-
-local function clonerecursfull(clonetable, d)
-	local nb = 0
-	local add
-	local n = {}
-	clonetable[d] = n
-
-	for k, e in pairs(d) do
-		local nk, ne = k, e
-		if clonetable[k] then nk = clonetable[k]
-		elseif type(k) == "table" then nk, add = clonerecursfull(clonetable, k) nb = nb + add
-		end
-
-		if clonetable[e] then ne = clonetable[e]
-		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne, add = clonerecursfull(clonetable, e) nb = nb + add
-		end
-		n[nk] = ne
-	end
-	setmetatable(n, getmetatable(d))
-	if n.cloned and n.__CLASSNAME then n:cloned(d) end
-	if n.__CLASSNAME then nb = nb + 1 end
-	return n, nb
-end
-
 --- Clones the object, all subobjects without cloning twice a subobject
 -- @return the clone and the number of cloned objects
 function _M:cloneFull()
---	local clonetable = {}
---	return clonerecursfull(clonetable, self)
 	return core.serial.cloneFull(self)
 end
 
@@ -161,76 +135,6 @@ end
 -- LOAD & SAVE
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
-local basictableid = 0
-local function basicSerialize(o, t)
-	if t == "number" or t == "boolean" then
-		return tostring(o)
-	elseif t == "function" then
-		return string.format("loadstring(%q)", string.dump(o))
-	else   -- assume it is a string
-		return string.format("%q", o)
-	end
-end
-
-local function serialize_data(outf, name, value, saved, filter, allow, savefile, force)
-	-- If run from a coroutine, we pause every table
-	if savefile.coroutine then coroutine.yield() end
-
-	saved = saved or {}       -- initial value
-	outf(name, " = ")
-	local tvalue = type(value)
-	if tvalue == "number" or tvalue == "string" or tvalue == "boolean" or tvalue == "function" then
-		outf(basicSerialize(value, tvalue), "\n")
-	elseif tvalue == "table" then
-		if not force and value.__CLASSNAME then
-			savefile:addToProcess(value)
-			outf("loadObject('", savefile:getFileName(value), "')\n")
-		elseif saved[value] then    -- value already saved?
-			outf(saved[value], "\n")  -- use its previous name
-		else
-			saved[value] = name   -- save name for next time
-			outf("{}\n")     -- create a new table
-
-			-- If we are the base table, decalre ourselves
-			if name == "data" then
-				outf('setLoaded("'..savefile:getFileName(value)..'", data)\n')
-			end
-
-			local k, v = next(value)
-			local tk
-			local fieldname
-			while k do
---				print(allow, k , filter[k], v, "will dump", (not allow and not filter[k]) or (allow and filter[k]))
-				if (not allow and not filter[k]) or (allow and filter[k]) then
-					-- Special case to handle index by objects
-					tk = type(k)
-					if tk == "table" and k.__CLASSNAME then
-						savefile:addToProcess(k)
-						fieldname = string.format("%s[loadObject('%s')]", name, savefile:getFileName(k))
-					elseif tk == "table" and not k.__CLASSNAME then
-						basictableid = basictableid + 1
-						serialize_data(outf, "subdata"..basictableid, k, nil, {}, false, savefile, true)
-						fieldname = string.format("%s[subdata%d]", name, basictableid)
-					else
-						fieldname = string.format("%s[%s]", name, basicSerialize(k, tk))
-					end
-					serialize_data(outf, fieldname, v, saved, {new=true}, false, savefile, false)
-				end
-				k, v = next(value, k)
-			end
-		end
-	else
-		error("cannot save a " .. tvalue .. " ("..name..")")
-	end
-end
-
-local function serialize(data, filter, allow, savefile)
-	local tbl = {}
-	local outf = function(...) local args={...} for i = 1, #args do tbl[#tbl+1] = args[i] end end
-	serialize_data(outf, "data", data, nil, filter, allow, savefile, true)
-	table.insert(tbl, "return data\n")
-	return tbl
-end
 
 function _M:save(filter, allow)
 	filter = filter or {}
@@ -245,9 +149,6 @@ function _M:save(filter, allow)
 	end
 	local mt = getmetatable(self)
 	setmetatable(self, {})
---	local res = table.concat(serialize(self, filter, allow, engine.Savefile.current_save))
-	local res = ""
-
 	local savefile = engine.Savefile.current_save
 	local s = core.serial.new(
 		-- Zip to write to
@@ -266,7 +167,6 @@ function _M:save(filter, allow)
 	s:toZip(self)
 
 	setmetatable(self, mt)
-	return res
 end
 
 _M.LOAD_SELF = {}
