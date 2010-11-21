@@ -108,7 +108,7 @@ newEffect{
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# starts to regenerating heath quickly.", "+Regen" end,
+	on_gain = function(self, err) return "#Target# starts to regenerating health quickly.", "+Regen" end,
 	on_lose = function(self, err) return "#Target# stops regenerating health quickly.", "-Regen" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
