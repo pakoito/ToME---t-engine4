@@ -46,3 +46,16 @@ This one seems to go to the Far East, a continent of which only rumours are know
 		end,
 	},
 }
+
+newEntity{
+	define_as = "IRON_THRONE_EDICT",
+	name = "Iron Throne Edict", lore="iron-throne-reknor-edict",
+	desc = [["AN EDICT TO ALL CITIZENS OF THE IRON THRONE. LONG MAY OUR EMPIRE ENDURE"]],
+	image = "terrain/marble_floor.png",
+	display = '_', color=colors.GREEN, back_color=colors.DARK_GREY,
+	add_displays = {class.new{image="terrain/signpost.png"}},
+	always_remember = true,
+	on_move = function(self, x, y, who)
+		if who.player then who:learnLore(self.lore) end
+	end,
+}

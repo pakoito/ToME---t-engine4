@@ -68,3 +68,21 @@ newEntity{ base = "BASE_LORE",
 	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_LORE",
+	define_as = "IRON_THRONE_LEDGER", unique=true,
+	name = "Iron Throne trade ledger", lore="iron-throne-trade-ledger",
+	desc = [[A trade ledger of the Iron Throne dwarves.]],
+	rarity = 40,
+	is_magic_device = false,
+	encumberance = 0,
+}
+
+newEntity{ base = "BASE_LORE",
+	define_as = "IRON_THRONE_LAST_WORDS", unique=true,
+	name = "Iron Throne Reknor expedition, last words", lore="iron-throne-last-words",
+	desc = [[Last words of a dwarven expedition to secure Reknor.]],
+	rarity = 40,
+	is_magic_device = false,
+	encumberance = 0,
+}

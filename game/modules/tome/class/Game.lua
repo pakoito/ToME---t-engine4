@@ -708,7 +708,7 @@ function _M:setupCommands()
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 --				game.player:magicMap(50)
 --				self.player:grantQuest("anti-antimagic")
-				for i = 1,5 do game.player:learnLore("tol-falas-note-"..i) end
+				game:changeLevel(1,"reknor")
 			end
 		end,
 	}

@@ -32,3 +32,19 @@ newEntity{ base = "BASE_LORE",
 	rarity = 20,
 	encumberance = 0,
 }
+
+newEntity{ base = "BASE_LORE",
+	name = "necromancer poem, first part", lore="necromancer-poem-1", unique=true,
+	desc = [[A poem written by a ... necromancer?]],
+	level_range = {15, 50},
+	rarity = 20,
+	encumberance = 0,
+}
+
+newEntity{ base = "BASE_LORE",
+	name = "necromancer poem, second part", lore="necromancer-poem-2", unique=true,
+	desc = [[A poem written by a ... necromancer?]],
+	level_range = {15, 50},
+	rarity = 20,
+	encumberance = 0,
+}

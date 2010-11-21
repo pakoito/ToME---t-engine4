@@ -67,3 +67,55 @@ newLore{
 #{bold}#115: #{normal}#Noted a return of an orcish presence in the collapsed caverns beneath the Iron Throne. Also increased reports of horrors and demons affecting mining operations. Key strategic decision taken: these must be kept hidden from the other races. Uncertainty will only destabilise the markets. Increase stockpiles of weapons and armour, especially voratun and stralite materials, in case of new war trade.
 #{bold}#120: #{normal}#Orcish raid has stolen many of our stockpiled weapons. Pressures on mining operations have increased, cutting off key stralite veins. Resource protection measures need increasing, whilst threat must be contained beneath us. Profits are stable, but under heavy threat.]],
 }
+
+newLore{
+	id = "iron-throne-reknor-edict",
+	category = "iron throne",
+	name = "Iron Throne Edict",
+	lore = [[#{bold}#AN EDICT TO ALL CITIZENS OF THE IRON THRONE. LONG MAY OUR EMPIRE ENDURE.#{normal}#
+
+The rumours you have heard are true. It is with a heavy heart that I confirm one of our mines, Reknor, has been overtaken and inhabited by a large and organised orcish force. How such a decisive and total failure on our part to stop this threat remains a mystery - the source of the orcish invasion remains unknown. A battalion of soldiers will form a defensive perimeter around Reknor until a force to retake the mine and exterminate the orcs can be mustered. All civilians residing within the surrounding halls are to be evacuated.
+
+This is a grave and unprecedented issue, so I decree an oath of silence to be laid upon all citizens of the Iron Throne, regardless of class and station: NO NEWS OF THIS INVASION MUST REACH FOREIGN EARS. We must maintain an image of stability and strength with the Allied Kingdom, as any signs of weakness or internal strife would be catastrophic to our alliance and future trade agreements. Any citizen found divulging this information to any outside party will be punished with exile. Rest assured, I will personally send messages to those outside the Throne who can be trusted with this information, and I trust this orcish intrusion shall be dealt with swiftly and decisively. So speaks the ruler of the Iron Throne, long may our empire endure.]]
+}
+
+newLore{
+	id = "iron-throne-trade-ledger",
+	category = "iron throne",
+	name = "Iron Throne trade ledger",
+	lore = [[#{bold}#IRON THRONE TRADE LEDGER - Allied Kingdom#{normal}#
+#{italic}#Age of Ascendancy, 121#{normal}#
+
+#{bold}#Last Hope - Exports#{normal}#
+      Steel Plate Armour (Human) - 500pcs.
+      Steel Plate Armour (Halfling) - 460pcs.
+      Steel Armaments -
+      * Longswords - 170pcs.
+      * Spears - 200pcs.
+      * Maces - 150pcs.
+      Crafts, Sundries - 2,200pcs.
+
+#{bold}#Derth - Exports#{normal}#
+      Iron Hatchets - 50pcs.
+      Tools, Sundries - 65pcs.
+
+#{bold}#Last Hope - Imports#{normal}#
+      Gold - 500,000pcs.
+      Grains, Etc. - 1,000tons
+
+#{bold}#CONFIDENTIAL: Angolwen - Exports#{normal}#
+      Garnets - 50pcs.
+      Rubies - 40pcs.
+      Diamonds - 20pcs.
+
+low diamond yield this year - +50% charge? ziguranth raided our last ang. caravan - more guards? - D.
+yes to diamonds. arm our merchants in the caravan, no extra guards. profits are thin enough as it is! - S.]]
+}
+
+
+newLore{
+	id = "iron-throne-last-words",
+	category = "iron throne",
+	name = "Iron Throne Reknor expdition, last words",
+	lore = [[...We are lost. The orcish forces are too great. No matter how many our squad slays, yet more surge from the depths. Where are the cursed creatures coming from?! We have spied their leader, but have had no hope in killing him; he is a beast, a destroyer, burning with fire infernal and ice cruel and chilling. The power these orcs wield now fills me with dread... perhaps they have found new, mighty allies? This news must reach our ruler. My comrades... I am sorry. I will flee once the opportunity arises, but know that your sacrifices will not be in vain. Long may our empire endure.]]
+}

@@ -62,3 +62,45 @@ Grab some grub!
 When hunger hits,
 Me likes to club!#{normal}#]],
 }
+
+newLore{
+	id = "necromancer-poem-1",
+	category = "misc",
+	name = "necromancer poem (part one)",
+	lore = [[#{bold}#"The Necromancer's Canticle"
+
+#{italic}#Saved from coffin, casket, urn
+Darkness falls, but life returns!
+Flesh may fall and bone may burn
+But soul remains, for which we yearn
+
+Those we return to life's esteem
+We see their hearts, their eyes do gleam
+They rave! They kill! They gnash! They scream!
+So full of joy! Their greatest dream!
+
+Returning those that we amend
+They hurry home, a distant friend
+But do they cheer? Do they commend?
+They yell! Does rotting flesh offend?
+
+...#{normal}#]],
+}
+
+newLore{
+	id = "necromancer-poem-2",
+	category = "misc",
+	name = "necromancer poem (part two)",
+	lore = [[#{italic}#...
+
+We bring life to lifeless bone
+But do they smile? Do they condone?
+They sit upon their golden thrones
+They shun us, spurn us, make unknown
+
+Fools! Sit high in golden tower
+From your lofty perch you glower
+Time will come when you will cower
+We rule death, we wield the power
+#{normal}#]],
+}

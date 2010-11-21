@@ -118,7 +118,7 @@ newTalent{
 
 		-- Acid splash !
 		if hit1 or hit2 then
-			local tg = {type="ball", range=0, radius=1, friendlyfire=false, talent=t}
+			local tg = {type="ball", range=0, radius=1, friendlyfire=false, talent=t, x=target.x, y=target.y}
 			self:project(tg, target.x, target.y, DamageType.ACID, self:spellCrit(self:combatTalentSpellDamage(t, 10, 130)))
 		end
 
