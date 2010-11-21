@@ -125,7 +125,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of spell resistance", suffix=true,
+	name = " of spell save", suffix=true,
 	level_range = {1, 30},
 	rarity = 6,
 	cost = 2,
@@ -135,7 +135,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of physical resistance", suffix=true,
+	name = " of physical save", suffix=true,
 	level_range = {1, 30},
 	rarity = 6,
 	cost = 2,
