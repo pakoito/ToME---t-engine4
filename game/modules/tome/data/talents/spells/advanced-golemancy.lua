@@ -73,6 +73,7 @@ newTalent{
 			game.logPlayer(self, "Your golem is currently inactive.")
 			return
 		end
+		if mover:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
 		local tg = {type="ball", radius=2, friendlyfire=false, range=self:getTalentRange(t)}
 		game.target.source_actor = mover

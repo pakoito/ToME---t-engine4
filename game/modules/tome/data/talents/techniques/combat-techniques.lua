@@ -62,6 +62,8 @@ newTalent{
 	requires_target = true,
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	action = function(self, t)
+		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
