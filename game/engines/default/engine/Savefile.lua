@@ -95,12 +95,14 @@ function _M:getFileName(o)
 end
 
 function _M:saveObject(obj, zip)
+	self.current_save_zip = zip
 	self.current_save_main = obj
 	self:addToProcess(obj)
 	while #self.process > 0 do
 		local tbl = table.remove(self.process)
 		self.tables[tbl] = self:getFileName(tbl)
-		zip:add(self:getFileName(tbl), tbl:save())
+--		zip:add(self:getFileName(tbl), tbl:save(nil, nil, self))
+		tbl:save()
 		savefile_pipe.current_nb = savefile_pipe.current_nb + 1
 	end
 	return self.tables[obj]

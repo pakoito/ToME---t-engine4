@@ -231,7 +231,7 @@ local function serialize(data, filter, allow, savefile)
 	return tbl
 end
 
-function _M:save(filter, allow, savefile)
+function _M:save(filter, allow)
 	filter = filter or {}
 	if self._no_save_fields then table.merge(filter, self._no_save_fields) end
 	if not allow then
@@ -244,7 +244,26 @@ function _M:save(filter, allow, savefile)
 	end
 	local mt = getmetatable(self)
 	setmetatable(self, {})
-	local res = table.concat(serialize(self, filter, allow, engine.Savefile.current_save))
+--	local res = table.concat(serialize(self, filter, allow, engine.Savefile.current_save))
+	local res = ""
+
+	local savefile = engine.Savefile.current_save
+	local s = core.serial.new(
+		-- Zip to write to
+		savefile.current_save_zip,
+		-- Namer
+		function(t) return savefile:getFileName(t) end,
+		-- Processor
+		function(t) savefile:addToProcess(t) end,
+		-- Allowed table
+		allow and filter or nil,
+		-- Disallowed table
+		not allow and filter or nil,
+		-- 2nd disallowed table
+		self._no_save_fields
+	)
+	s:table(self)
+
 	setmetatable(self, mt)
 	return res
 end

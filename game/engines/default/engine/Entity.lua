@@ -441,3 +441,13 @@ function _M:loadList(file, no_default, res, mod, loaded)
 
 	return res
 end
+
+
+--[[
+local t = _M.new{plop=1, foo="aze", truc="muche", resists={all=1, plop=78}, f=function() print("plop") end}
+local e2 = _M.new{m2="m2!!", mmm=7}
+t.e2 = e2
+local s = core.serial.new()
+s:table(t)
+os.exit()
+]]

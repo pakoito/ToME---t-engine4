@@ -38,6 +38,7 @@
 #include "core_lua.h"
 #include "getself.h"
 #include "music.h"
+#include "serial.h"
 #include "te4-xmpp.h"
 #include "main.h"
 
@@ -606,6 +607,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_sound(L);
 		luaopen_noise(L);
 		luaopen_shaders(L);
+		luaopen_serial(L);
 
 		// Make the uids repository
 		lua_newtable(L);
