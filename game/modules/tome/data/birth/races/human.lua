@@ -76,7 +76,7 @@ newBirthDescriptor
 		[ActorTalents.T_HIGHER_HEAL]=1,
 	},
 	copy = {
-		lite_rating = 11,
+		life_rating = 11,
 		default_wilderness = {28, 13},
 		starting_zone = "trollshaws",
 		starting_quest = "start-allied",
