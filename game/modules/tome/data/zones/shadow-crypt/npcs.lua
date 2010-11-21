@@ -26,7 +26,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 	name = "Rak'Shor Cultist", color=colors.VIOLET, unique = true,
-	desc = [[An old orc, wearing black robes. He seems to be responsable for the creation of the shades.]],
+	desc = [[An old orc, wearing black robes. He seems to be responsible for the creation of the shades.]],
 	level_range = {35, 50}, exp_worth = 2,
 	rank = 4,
 	max_life = 150, life_rating = 17, fixed_rating = true,
