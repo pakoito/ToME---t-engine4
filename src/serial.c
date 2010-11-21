@@ -285,6 +285,17 @@ static int serial_clonefull_recurs(lua_State *L, int idx)
 		ktype = lua_type(L, -2);
 		etype = lua_type(L, -1);
 
+		// Forbid cloning of fields named __threads
+		if (ktype == LUA_TSTRING)
+		{
+			const char *s = lua_tostring(L, -2);
+			if (!strcmp(s, "__threads"))
+			{
+				lua_pop(L, 1);
+				continue;
+			}
+		}
+
 		if (ktype == LUA_TTABLE)
 		{
 			// Check clonetable first
