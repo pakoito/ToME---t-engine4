@@ -51,7 +51,6 @@ newEntity{ define_as = "URKIS",
 	},
 	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=1, {unique=true} },
-	resolvers.drops{chance=100, nb=1, {defined="ROD_OF_RECALL"} },
 
 	resists = { [DamageType.LIGHTNING] = 100, },
 

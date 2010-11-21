@@ -185,7 +185,7 @@ function _M:changeLevel(lev, zone)
 	end
 	self.level:addEntity(self.player)
 
-	self.level.map:setZoom(1.2, self.player.x, self.player.y)
+--	self.level.map:setZoom(1.2, self.player.x, self.player.y)
 end
 
 function _M:getPlayer()

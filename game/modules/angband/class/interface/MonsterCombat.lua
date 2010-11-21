@@ -102,7 +102,7 @@ local effects = {
 	end },
 	POISON = { power=5, act=function(self, target, dam, ac)
 		DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam)
-		if target:canBe("poison") then target:setEffect(target.EFF_POISON, rng.range(1, self.level) + 5, {src=self}) end
+		if target:canBe("poison") then target:setEffect(target.EFF_POISONED, rng.range(1, self.level) + 5, {src=self}) end
 	end },
 }
 
