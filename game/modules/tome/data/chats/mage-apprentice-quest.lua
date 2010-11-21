@@ -27,10 +27,10 @@ Good day to you, fellow traveler!]],
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(npc, player, dialog) end
 		},
-		{"I found this staff; it looks powerful. Maybe it would be enough?",
-			jump="kor_fall",
-			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_kor(player) end,
-			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_kor(player, dialog) end
+		{"I found this artefact; it looks powerful. Maybe it would be enough?",
+			jump="unique",
+			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_unique(player) end,
+			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_unique(player, dialog) end
 		},
 		-- Reward for non-mages: access to Angolwen
 		{"So you have enough magical items now?",
@@ -56,7 +56,7 @@ newChat{ id="quest",
 }
 newChat{ id="quest2",
 	text = [[Well, if you insist...
-I am a novice mage, as you might have noticed, and my goal is to be accepted by the elves of Angolwen and be taught the secrets of the arcane.]],
+I am a novice mage, as you might have noticed, and my goal is to be accepted by the people of Angolwen and be taught the secrets of the arcane.]],
 	answers = {
 		{"Who are the elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
 		{"Ah yes, Angolwen, I have called it home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
@@ -65,7 +65,7 @@ I am a novice mage, as you might have noticed, and my goal is to be accepted by 
 }
 newChat{ id="quest3",
 	text = [[The keepers of ar... err, I do not think I am supposed to talk about them ... sorry, my friend...
-In any case, I must collect 15 magic staves, rings or amulets, and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
+In any case, I must collect 10 magic staves, rings or amulets, and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
 	answers = {
 		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
@@ -80,9 +80,9 @@ In any case, I must collect 15 magic staves, rings or amulets and I have yet to 
 	}
 }
 
-newChat{ id="kor_fall",
+newChat{ id="unique",
 	text = [[Let me examine it.
-Oh yes, my friend, this is indeed a powerful staff! I think that it alone should suffice to complete my quest! Many thanks!]],
+Oh yes, my friend, this is indeed a powerful artefect! I think that it alone should suffice to complete my quest! Many thanks!]],
 	answers = {
 		{"Well, I can not use it anyway.", jump="welcome"},
 	}

@@ -24,7 +24,7 @@ desc = function(self, who)
 	desc[#desc+1] = "He asked for your help should you collect some that you do not use."
 	if self:isCompleted() then
 	else
-		desc[#desc+1] = "#SLATE#* "..self.nb_collect.."/15#WHITE#"
+		desc[#desc+1] = "#SLATE#* "..self.nb_collect.."/10#WHITE#"
 	end
 	return table.concat(desc, "\n")
 end
@@ -43,7 +43,13 @@ end
 
 collect_staff = function(self, npc, who, dialog)
 	who:showInventory("Offer which item?", who:getInven("INVEN"),
-		function(o) return (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_KOR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") end,
+		function(o) return
+			(
+				(o.type == "weapon" and o.subtype == "staff") or
+				(o.type == "jewelry" and o.subtype == "ring") or
+				(o.type == "jewelry" and o.subtype == "amulet")
+			) and not o.unique
+		end,
 		function(o, item)
 			-- Special handling for the staff of absorption
 			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
@@ -55,7 +61,7 @@ collect_staff = function(self, npc, who, dialog)
 			end
 
 			self.nb_collect = self.nb_collect + 1
-			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
+			if self.nb_collect >= 10 then who:setQuestStatus(self, self.COMPLETED) end
 			who:removeObject(who:getInven("INVEN"), item)
 			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
 			who:sortInven(who:getInven(inven))
@@ -66,21 +72,30 @@ collect_staff = function(self, npc, who, dialog)
 end
 
 can_offer = function(self, who)
-	if self.nb_collect >= 15 then return end
+	if self.nb_collect >= 10 then return end
 
 	for inven_id, inven in pairs(who.inven) do
 		for item, o in ipairs(inven) do
-			if (o.type == "weapon" and o.subtype == "staff" and (not o.define_as or o.define_as ~= "STAFF_KOR")) or (o.type == "jewelry" and o.subtype == "ring") or (o.type == "jewelry" and o.subtype == "amulet") then return true end
+			if (
+				(o.type == "weapon" and o.subtype == "staff") or
+				(o.type == "jewelry" and o.subtype == "ring") or
+				(o.type == "jewelry" and o.subtype == "amulet")
+			) and not o.unique then return true end
 		end
 	end
 end
 
-collect_staff_kor = function(self, who, dialog)
+collect_staff_unique = function(self, who, dialog)
 	who:showInventory("Offer which item?", who:getInven("INVEN"),
-		function(o) return o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_KOR" end,
+		function(o) return (
+				(o.type == "weapon" and o.subtype == "staff") or
+				(o.type == "jewelry" and o.subtype == "ring") or
+				(o.type == "jewelry" and o.subtype == "amulet")
+			) and o.unique
+		end,
 		function(o, item)
-			self.nb_collect = self.nb_collect + 15
-			if self.nb_collect >= 15 then who:setQuestStatus(self, self.COMPLETED) end
+			self.nb_collect = self.nb_collect + 10
+			if self.nb_collect >= 10 then who:setQuestStatus(self, self.COMPLETED) end
 			who:removeObject(who:getInven("INVEN"), item)
 			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
 			who:sortInven(who:getInven(inven))
@@ -90,14 +105,18 @@ collect_staff_kor = function(self, who, dialog)
 	)
 end
 
-can_offer_kor = function(self, who)
-	if self.nb_collect >= 15 then return end
+can_offer_unique = function(self, who)
+	if self.nb_collect >= 10 then return end
 	-- Only works after mages are unlocked
 --	if not profile.mod.allow_build.mage then return end
 
 	for inven_id, inven in pairs(who.inven) do
 		for item, o in ipairs(inven) do
-			if o.type == "weapon" and o.subtype == "staff" and o.define_as == "STAFF_KOR" then return true end
+			if (
+				(o.type == "weapon" and o.subtype == "staff") or
+				(o.type == "jewelry" and o.subtype == "ring") or
+				(o.type == "jewelry" and o.subtype == "amulet")
+			) and o.unique then return true end
 		end
 	end
 end
