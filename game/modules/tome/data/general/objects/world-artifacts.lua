@@ -776,7 +776,7 @@ newEntity{ base = "BASE_HELM",
 		fatigue = 10,
 	},
 	max_power = 45, power_regen = 1,
-	use_talent = { id = Talents.T_WARSHOUT, level = 2, power = 80 },
+	use_talent = { id = Talents.T_WARSHOUT, level = 2, power = 45 },
 }
 
 newEntity{ base = "BASE_GLOVES",

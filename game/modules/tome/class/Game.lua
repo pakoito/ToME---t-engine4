@@ -706,9 +706,9 @@ function _M:setupCommands()
 			if config.settings.tome.cheat then
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
-				self:changeLevel(game.level.level+1)
 --				game.player:magicMap(50)
 --				self.player:grantQuest("anti-antimagic")
+				for i = 1,5 do game.player:learnLore("tol-falas-note-"..i) end
 			end
 		end,
 	}
