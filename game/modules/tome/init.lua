@@ -34,13 +34,13 @@ It has been one hundred and twenty two years since the Allied Kingdoms have been
 Together they ruled the kingdoms with fairness and brought prosperity to both halflings and humans.
 The King died of old age fourteen years ago, and his son, #14fffc#Tolak#ffffff#, is now king.
 
-The elven kingdoms are quiet. The Shaloran elves in their home of Elvala are trying to make the world forget about their role in the Spellblaze and are living happy lifes under the leadership of #14fffc#Aranion Gayaeil#ffffff#.
+The elven kingdoms are quiet. The Shaloran elves in their home of Elvala are trying to make the world forget about their role in the Spellblaze and are living happy lives under the leadership of #14fffc#Aranion Gayaeil#ffffff#.
 The Thaloran elves keep to their ancient tradition of living in the woods, ruled as always by #14fffc#Nessilla Tantaelen#ffffff# the wise.
 
-The dwarves of the Iron Throne have started a careful trade relationship with the Allied Kingdoms for nearly one hundred year, yet not much is known about them, not even their leader.
+The dwarves of the Iron Throne have started a careful trade relationship with the Allied Kingdoms for nearly one hundred years, yet not much is known about them, not even their leader.
 
 While the people of Maj'Eyal know that the mages helped put an end to the terrors of the Spellblaze, they also did not forget that it was magic that started those events. As such mages are still shuned from society, if not downright hunted down.
-Still, this is a golden age, civilizations are leaking the wounds of thousands of years of conflict, even the humans and the halflings have made lasting peace.
+Still, this is a golden age, civilizations are healing the wounds of thousands of years of conflict, even the humans and the halflings have made lasting peace.
 
 You are an adventurer, set out to discover wonders, explore old places, and venture into the unknown for wealth and glory.
 ]]

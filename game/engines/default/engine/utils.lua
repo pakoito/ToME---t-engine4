@@ -129,11 +129,12 @@ end
 function string.ordinal(number)
 	local suffix = "th"
 	number = tonumber(number)
-	if number == 1 then
+	local base = number % 10
+	if base == 1 then
 		suffix = "st"
-	elseif number == 2 then
+	elseif base == 2 then
 		suffix = "nd"
-	elseif number == 3 then
+	elseif base == 3 then
 		suffix = "rd"
 	end
 	return number..suffix

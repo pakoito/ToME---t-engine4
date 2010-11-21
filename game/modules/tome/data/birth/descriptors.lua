@@ -85,7 +85,7 @@ newBirthDescriptor{
 		"You will be guided by a helpful spirit while learning.",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",
-		"No achievements possible.",
+		"No main game achievements possible.",
 	},
 	descriptor_choices =
 	{

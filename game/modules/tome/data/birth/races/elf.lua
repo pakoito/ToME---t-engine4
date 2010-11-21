@@ -25,7 +25,7 @@ newBirthDescriptor{
 	name = "Elf",
 	desc = {
 		"The Second race to have awaken, thousands of years after the Sher'Tul.",
-		"Elves are split into three subrace, of which only two remain in the current age.",
+		"Elves are split into three subraces, of which only two remain in the current age.",
 		"They are tolerated by most races but not usualy well liked, due to their role in the Spellblaze.",
 		"Unlike other races elves are not subject to death by old age.",
 	},
@@ -62,7 +62,7 @@ newBirthDescriptor
 	name = "Shalore",
 	desc = {
 		"Shaloren elves have close ties with the magic of the world, they produced in the past many great mages.",
-		"Yet they remain quiet and try to prevent the teaching of magic to their people, for fear of an otehr Spellblaze.",
+		"Yet they remain quiet and try to prevent the teaching of magic to their people, for fear of an other Spellblaze.",
 		"They posses the #GOLD#Grace of the Eternals#WHITE# talent which allows them a boost of speed every once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * -2 Strength, +1 Dexterity, +0 Constitution",
