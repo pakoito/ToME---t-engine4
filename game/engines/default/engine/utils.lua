@@ -978,6 +978,7 @@ function util.browserOpenUrl(url)
 	return false
 end
 
+-- Ultra weird, this is used by the C serialization code because I'm too dumb to make lua_dump() work on windows ...
 function __dump_fct(f)
 	return string.format("%q", string.dump(f))
 end

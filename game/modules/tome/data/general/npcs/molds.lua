@@ -89,7 +89,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 	max_life = resolvers.rngavg(120,150),
 	combat = { dam=resolvers.mbonus(30, 20), atk=25, apr=15 },
 
-	rank = 4,
+	rank = 3.5,
 	size_category = 2,
 
 	summon = {
