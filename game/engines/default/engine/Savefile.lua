@@ -104,6 +104,8 @@ function _M:saveObject(obj, zip)
 --		zip:add(self:getFileName(tbl), tbl:save(nil, nil, self))
 		tbl:save()
 		savefile_pipe.current_nb = savefile_pipe.current_nb + 1
+
+		if self.coroutine then coroutine.yield() end
 	end
 	return self.tables[obj]
 end

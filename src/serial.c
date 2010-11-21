@@ -181,7 +181,7 @@ static bool basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 	}
 }
 
-static int serial_table(lua_State *L)
+static int serial_tozip(lua_State *L)
 {
 	serial_type *s = (serial_type*)auxiliar_checkclass(L, "core{serial}", 1);
 
@@ -266,16 +266,117 @@ static int serial_table(lua_State *L)
 	return 1;
 }
 
+#define CLONETABLE 2
+
+static int serial_clonefull_recurs(lua_State *L, int idx)
+{
+	int ktype, etype;
+	int nb = 0;
+	lua_newtable(L);
+
+	// Store in the clonetable
+	lua_pushvalue(L, idx - 1);
+	lua_pushvalue(L, -2);
+	lua_rawset(L, CLONETABLE);
+
+	lua_pushnil(L);  /* first key */
+	while (lua_next(L, idx - 2) != 0)
+	{
+		ktype = lua_type(L, -2);
+		etype = lua_type(L, -1);
+
+		if (ktype == LUA_TTABLE)
+		{
+			// Check clonetable first
+			lua_pushvalue(L, -2);
+			lua_gettable(L, CLONETABLE);
+			if (lua_isnil(L, -1))
+			{
+				// If not found, clone it
+				lua_pop(L, 1);
+				nb += serial_clonefull_recurs(L, -2);
+			}
+		}
+		else
+		{
+			lua_pushvalue(L, -2);
+		}
+
+		if (etype == LUA_TTABLE)
+		{
+			// Check clonetable first
+			lua_pushvalue(L, -2);
+			lua_gettable(L, CLONETABLE);
+			if (lua_isnil(L, -1))
+			{
+				// If not found, clone it
+				lua_pop(L, 1);
+				nb += serial_clonefull_recurs(L, -2);
+			}
+		}
+		else
+		{
+			lua_pushvalue(L, -2);
+		}
+
+		// Now set in the new table
+		lua_rawset(L, -5);
+
+		/* removes 'value'; keeps 'key' for next iteration */
+		lua_pop(L, 1);
+	}
+
+	// Setup metatable
+	if (lua_getmetatable(L, idx - 1))
+	{
+		lua_setmetatable(L, -2); // -2 because -1 was the newtable before we push the metatable
+	}
+
+	// Check for class
+	lua_pushstring(L, "__CLASSNAME");
+	lua_rawget(L, -2);
+	if (lua_isstring(L, -1))
+	{
+		lua_pop(L, 1);
+		nb++;
+
+		lua_getfield(L, -1, "cloned");
+		if (lua_isfunction(L, -1))
+		{
+			lua_pushvalue(L, -2);
+			lua_pushvalue(L, idx-2);
+			lua_call(L, 2, 0);
+		}
+		else lua_pop(L, 1);
+	}
+	else lua_pop(L, 1);
+
+	return nb;
+}
+
+static int serial_clonefull(lua_State *L)
+{
+	luaL_checktype(L, 1, LUA_TTABLE);
+	lua_newtable(L); // idx 2 == clonetable
+
+	lua_pushvalue(L, 1);
+	int nb = serial_clonefull_recurs(L, -1);
+
+	lua_pushnumber(L, nb);
+	return 2;
+}
+
 static const struct luaL_reg seriallib[] =
 {
 	{"new", serial_new},
+	{"cloneFull", serial_clonefull},
 	{NULL, NULL},
 };
 
 static const struct luaL_reg serial_reg[] =
 {
 	{"__gc", serial_free},
-	{"table", serial_table},
+	{"toZip", serial_tozip},
 	{NULL, NULL},
 };
 

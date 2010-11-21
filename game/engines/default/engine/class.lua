@@ -139,8 +139,9 @@ end
 --- Clones the object, all subobjects without cloning twice a subobject
 -- @return the clone and the number of cloned objects
 function _M:cloneFull()
-	local clonetable = {}
-	return clonerecursfull(clonetable, self)
+--	local clonetable = {}
+--	return clonerecursfull(clonetable, self)
+	return core.serial.cloneFull(self)
 end
 
 --- Replaces the object with an other, by copying (not deeply)
@@ -262,7 +263,7 @@ function _M:save(filter, allow)
 		-- 2nd disallowed table
 		self._no_save_fields
 	)
-	s:table(self)
+	s:toZip(self)
 
 	setmetatable(self, mt)
 	return res
