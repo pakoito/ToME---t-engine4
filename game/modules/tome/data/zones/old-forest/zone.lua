@@ -28,8 +28,8 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
-	color_shown = {0.6, 0.6, 0.6, 1},
-	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 1},
+	color_shown = {0.5, 0.5, 0.5, 1},
+	color_obscure = {0.5*0.6, 0.5*0.6, 0.5*0.6, 1},
 	ambiant_music = "Woods of Eremae.ogg",
 	generator =  {
 		map = {
@@ -38,12 +38,12 @@ return {
 			edge_entrances = {6,4},
 			rooms = {"forest_clearing", {"lesser_vault",8}},
 			rooms_config = {forest_clearing={pit_chance=5, filters={{type="insect", subtype="ant"}, {type="insect"}, {type="animal", subtype="snake"}, {type="animal", subtype="canine"}}}},
-			lesser_vaults_list = {"honey_glade_dark", "troll-hideout-dark", "mage-hideout-dark", "thief-hideout-dark", "plantlife-dark", "mold-path-dark"},
-			['.'] = "GRASS_DARK1",
-			['#'] = {"TREE_DARK1","TREE_DARK2","TREE_DARK3","TREE_DARK4","TREE_DARK5","TREE_DARK6","TREE_DARK7","TREE_DARK8","TREE_DARK9","TREE_DARK10","TREE_DARK11","TREE_DARK12","TREE_DARK13","TREE_DARK14","TREE_DARK15","TREE_DARK16","TREE_DARK17","TREE_DARK18","TREE_DARK19","TREE_DARK20",},
+			lesser_vaults_list = {"honey_glade", "troll-hideout", "mage-hideout", "thief-hideout", "plantlife", "mold-path"},
+			['.'] = "GRASS",
+			['#'] = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
 			up = "UP",
 			down = "DOWN",
-			door = "GRASS_DARK1",
+			door = "GRASS",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
