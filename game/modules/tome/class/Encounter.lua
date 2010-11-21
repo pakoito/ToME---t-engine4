@@ -65,6 +65,7 @@ function _M:checkFilter(filter)
 		local we = game.level.map.attrs(filter.mapx, filter.mapy, "world-encounter")
 		if not we or not we[self.on_world_encounter] then return false end
 	end
+	if self.min_level and game.player.level < self.min_level then print("==============") return false end
 	return true
 end
 
