@@ -33,10 +33,10 @@ else
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A grim-looking fighter stands there, clad in mail armour and a large olive cloak. He doesn't appear hostile - his sword is sheathed.*#WHITE#
-]]..sex..[[, our guild, the Ziguranth, has been watching you, @playerdescriptor.race@, and we believe that you have potential.
+]]..sex..[[, our guild has been watching you and we believe that you have potential.
 We see that the hermetic arts have always been at the root of each and every trial this land has endured, and we also see that one day it will bring about our destruction, so we have decided to take action, training ourselves to combat those who wield the arcane.
-We can train you, you you need to prove you are pure from the eldritch forces.
-Return to us when your power has grown ten times without using any spells, scrolls or other magic devices. Come back here, you will be tested and then we will train you.]],
+We can train you, but you need to prove you are pure from the eldritch forces.
+Return to us when your power has grown ten times without using any spells, runes or other magic devices. Come back here, you will be tested and then we will train you.]],
 	answers = {
 		{"Ok, I will return then.", jump="ok"},
 		{"I'm not interested.", jump="ko"},
