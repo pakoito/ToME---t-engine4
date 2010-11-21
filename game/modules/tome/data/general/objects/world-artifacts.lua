@@ -233,6 +233,52 @@ newEntity{ base = "BASE_AMULET",
 	},
 }
 
+newEntity{ base = "BASE_AMULET",
+	unique = true,
+	name = "Daneth's Neckguard", color = colors.STEEL_BLUE,
+	unided_name = "a thick steel gorget",
+	desc = [[A thick steel gorget designed to protect it's wearer from fatal attacks the to the neck.  This particular gorget was worn by the halfling General Daneth Tendermourn during the pyre wars and judging by the marks along it's surface may have saved the General's life on more then one occassion.]],
+	level_range = {20, 30},
+	rarity = 300,
+	cost = 300,
+	encumber = 2,
+	material_level = 2,
+	wielder = {
+		combat_armor = 10,
+		fatigue = 10,
+		inc_stats = {
+			[Stats.STAT_STR] = 4,
+			[Stats.STAT_CON] = 4,
+		},
+	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_JUGGERNAUT, level = 2, power = 30 },
+}
+
+newEntity{ base = "BASE_AMULET",
+	unique = true,
+	name = "Garkul's Teeth", color = colors.YELLOW,
+	unided_name = "a necklace made of teeth",
+	desc = [[Hundreds of humanoid teeth have been strung together on multiple strands of thin leather, creating this tribalish necklace.  One would have to assume that these are not the teeth of Garkul the Devourer but rather the teeth of Garkul's many fallen enemies.]],
+	level_range = {40, 50},
+	rarity = 300,
+	cost = 1000,
+	material_level = 4,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = 6,
+		},
+		talents_types_mastery = {
+			["technique/2hweapon-cripple"] = 0.1,
+			["technique/2hweapon-offense"] = 0.1,
+			["technique/warcries"] = 0.1,
+			["technique/bloodthirst"] = 0.1,
+		}
+	},
+	max_power = 48, power_regen = 1,
+	use_talent = { id = Talents.T_SHATTERING_SHOUT, level = 4, power = 24 },
+}
+
 newEntity{ base = "BASE_LITE",
 	unique = true,
 	name = "Summertide Phial", image="object/artifact/summertide_phial.png",
