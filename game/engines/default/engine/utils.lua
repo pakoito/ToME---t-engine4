@@ -977,3 +977,7 @@ function util.browserOpenUrl(url)
 	end
 	return false
 end
+
+function __dump_fct(f)
+	return string.format("%q", string.dump(f))
+end

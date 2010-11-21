@@ -680,7 +680,7 @@ int main(int argc, char *argv[])
 	init_gen_rand(time(NULL));
 
 	// Change to line buffering
-	setvbuf(stdout, (char *) NULL, _IOLBF, 0);
+//	setvbuf(stdout, (char *) NULL, _IOLBF, 0);
 
 	// Parse arguments
 	int i;
