@@ -86,16 +86,8 @@ static void add_process(lua_State *L, serial_type *s, int idx)
 #define writeZip(s, data) { /*printf("%s", data);*/ zipWriteInFileInZip(s->zf, data, strlen(data)); }
 #define writeZipFixed(s, data, len) { /*printf("%s", data);*/ zipWriteInFileInZip(s->zf, data, len); }
 
-static int dump_function(lua_State *L, const void* p, size_t sz, void* ud)
-{
-	serial_type *s = (serial_type*)ud;
-//	fwrite(p, sz, 1, stdout);
-	zipWriteInFileInZip(s->zf, p, sz);
-}
-
 static void dump_string(serial_type *s, const char *str, size_t l)
 {
-	writeZipFixed(s, "\"", 1);
 	while (l--) {
 		switch (*str) {
 		case '"': case '\\': case '\n': {
@@ -118,27 +110,37 @@ static void dump_string(serial_type *s, const char *str, size_t l)
 		}
 		str++;
 	}
-	writeZipFixed(s, "\"", 1);
+}
+
+static int dump_function(lua_State *L, const void* p, size_t sz, void* ud)
+{
+	serial_type *s = (serial_type*)ud;
+//	fwrite(p, sz, 1, stdout);
+//	zipWriteInFileInZip(s->zf, p, sz);
+	dump_string(s, p, sz);
 }
 
 static bool basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 {
 	if (type == LUA_TBOOLEAN) {
-		if (lua_toboolean(L, idx)) { writeZip(s, "true"); }
-		else { writeZip(s, "false"); }
+		if (lua_toboolean(L, idx)) { writeZipFixed(s, "true", 4); }
+		else { writeZipFixed(s, "false", 5); }
 	} else if (type == LUA_TNUMBER) {
 		lua_pushvalue(L, idx);
-		const char *n = lua_tostring(L, -1);
-		writeZip(s, n);
+		size_t len;
+		const char *n = lua_tolstring(L, -1, &len);
+		writeZipFixed(s, n, len);
 		lua_pop(L, 1);
 	} else if (type == LUA_TSTRING) {
 		size_t len;
 		const char *str = lua_tolstring(L, idx, &len);
+		writeZipFixed(s, "\"", 1);
 		dump_string(s, str, len);
+		writeZipFixed(s, "\"", 1);
 	} else if (type == LUA_TFUNCTION) {
-		writeZip(s, "loadstring[[");
+		writeZipFixed(s, "loadstring(\"", 12);
 		lua_dump(L, dump_function, s);
-		writeZip(s, "]]");
+		writeZipFixed(s, "\")", 2);
 	} else if (type == LUA_TTABLE) {
 		lua_pushstring(L, "__CLASSNAME");
 		lua_rawget(L, idx - 1);
@@ -146,9 +148,9 @@ static bool basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 		if (!lua_isnil(L, -1))
 		{
 			lua_pop(L, 1);
-			writeZip(s, "loadObject('");
+			writeZipFixed(s, "loadObject('", 12);
 			writeZip(s, get_name(L, s, idx));
-			writeZip(s, "')");
+			writeZipFixed(s, "')", 2);
 			add_process(L, s, idx);
 		}
 		// This is just a table, save it
@@ -157,7 +159,7 @@ static bool basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 			lua_pop(L, 1);
 			int ktype, etype;
 
-			writeZip(s, "{");
+			writeZipFixed(s, "{", 1);
 			/* table is in the stack at index 't' */
 			lua_pushnil(L);  /* first key */
 
@@ -165,16 +167,16 @@ static bool basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 			{
 				ktype = lua_type(L, -2);
 				etype = lua_type(L, -1);
-				writeZip(s, "[");
+				writeZipFixed(s, "[", 1);
 				basic_serialize(L, s, ktype, -2);
-				writeZip(s, "]=");
+				writeZipFixed(s, "]=", 2);
 				basic_serialize(L, s, etype, -1);
-				writeZip(s, ",\n");
+				writeZipFixed(s, ",\n", 2);
 
 				/* removes 'value'; keeps 'key' for next iteration */
 				lua_pop(L, 1);
 			}
-			writeZip(s, "}\n");
+			writeZipFixed(s, "}\n", 2);
 		}
 	} else {
 		printf("*WARNING* can not save value of type %s\n", lua_typename(L, type));
@@ -220,10 +222,10 @@ static int serial_tozip(lua_State *L)
 		return 2;
 	}
 
-	writeZip(s, "d={}\n");
-	writeZip(s, "setLoaded('");
+	writeZipFixed(s, "d={}\n", 5);
+	writeZipFixed(s, "setLoaded('", 11);
 	writeZip(s, get_name(L, s, -2));
-	writeZip(s, "', d)\n");
+	writeZipFixed(s, "', d)\n", 6);
 	while (lua_next(L, -2) != 0)
 	{
 		skip = FALSE;
@@ -248,17 +250,17 @@ static int serial_tozip(lua_State *L)
 
 		if (!skip)
 		{
-			writeZip(s, "d[");
+			writeZipFixed(s, "d[", 2);
 			basic_serialize(L, s, ktype, -2);
-			writeZip(s, "]=");
+			writeZipFixed(s, "]=", 2);
 			basic_serialize(L, s, etype, -1);
-			writeZip(s, "\n");
+			writeZipFixed(s, "\n", 1);
 		}
 
 		/* removes 'value'; keeps 'key' for next iteration */
 		lua_pop(L, 1);
 	}
-	writeZip(s, "\nreturn d");
+	writeZipFixed(s, "\nreturn d", 9);
 
 	zipCloseFileInZip(s->zf);
 
