@@ -32,6 +32,7 @@ module(..., package.seeall, class.make)
 function _M:bumpInto(target)
 	local reaction = self:reactionToward(target)
 	if reaction < 0 then
+		if target.encounterAttack and self.player then self:onWorldEncounter(target) return end
 		return self:attackTarget(target)
 	elseif reaction >= 0 then
 		-- Talk ?

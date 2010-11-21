@@ -165,7 +165,7 @@ newTalent{
 -- Highers's power, a "weak" regeneration
 newTalent{
 	short_name = "HIGHER_HEAL",
-	name = "King's Gift",
+	name = "Gift of the Pureborn",
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
@@ -174,7 +174,7 @@ newTalent{
 		return true
 	end,
 	info = function(self)
-		return ([[Call upon the gift of the Kings to regenerate your body for %d life every turn for 10 turns.
+		return ([[Call upon the gift of the pureborn to regenerate your body for %d life every turn for 10 turns.
 		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.5)
 	end,
 }
