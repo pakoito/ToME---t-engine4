@@ -68,7 +68,7 @@ function _M:push(savename, type, object, class)
 	end
 
 	-- Refuse to continue, make the user wait
-	if #self.pipe >= self.max_before_wait then
+	if #self.pipe >= self.max_before_wait or not config.settings.background_saves then
 		self:forceWait()
 	end
 end
@@ -88,7 +88,7 @@ function _M:doThread()
 
 		print("[SAVEFILE PIPE] new save running in the pipe:", p.savename, p.type, "::", p.id, "::", p.baseobject, "=>", p.object, "("..p.nb_objects..")")
 
-		local save = Savefile.new(p.savename, true)
+		local save = Savefile.new(p.savename, config.settings.background_saves)
 		o.__saved_saveversion = p.saveversion
 		save["save"..p.type:lower():capitalize()](save, o, true)
 		save:close()

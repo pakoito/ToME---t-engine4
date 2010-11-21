@@ -62,6 +62,15 @@ function _M:generateList()
 	local list = {}
 	local i = 0
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Saves in the background, allowing you to continue playing. If disabled you will have to wait until the saving is done, but it will be faster.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Save in the background#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.background_saves and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.background_saves = not config.settings.background_saves
+		game:saveSettings("background_saves", ("background_saves = %s\n"):format(tostring(config.settings.background_saves)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Autosaves the whole game when switching zones. This is safer but can make playing a bit slower while it saves. Savefiles will also be somewhat bigger.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Autosave when leaving a zone#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.autosave and "enabled" or "disabled")
