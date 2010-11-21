@@ -18,25 +18,25 @@
 -- darkgod@te4.org
 
 -- Physical combat
-newTalentType{ type="technique/2hweapon-offense", name = "two-handed weapons", description = "Specialized two-handed techniques." }
-newTalentType{ type="technique/2hweapon-cripple", name = "two-handed weapons", description = "Specialized two-handed techniques." }
-newTalentType{ type="technique/shield-offense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
-newTalentType{ type="technique/shield-defense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
-newTalentType{ type="technique/dualweapon-training", name = "dual wielding", description = "Specialized dual wielding techniques." }
-newTalentType{ type="technique/dualweapon-attack", name = "dual wielding", description = "Specialized dual wielding techniques." }
-newTalentType{ type="technique/archery-base", name = "archery - base", description = "Ability to shoot, you should never this this." }
-newTalentType{ type="technique/archery-bow", name = "archery - bows", description = "Specialized bow techniques." }
-newTalentType{ type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
-newTalentType{ type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
-newTalentType{ type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
-newTalentType{ type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
-newTalentType{ type="technique/warcries", name = "warcries", no_silence = true, description = "Master the warcries to improve yourself and weaken others." }
-newTalentType{ type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
-newTalentType{ type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
-newTalentType{ type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
-newTalentType{ type="technique/combat-techniques-passive", name = "combat techniques", description = "Generic combat oriented techniques." }
-newTalentType{ type="technique/combat-training", name = "combat training", generic = true, description = "Teaches to use various armors and improves health." }
-newTalentType{ type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
+newTalentType{ allow_random=true, type="technique/2hweapon-offense", name = "two-handed weapons", description = "Specialized two-handed techniques." }
+newTalentType{ allow_random=true, type="technique/2hweapon-cripple", name = "two-handed weapons", description = "Specialized two-handed techniques." }
+newTalentType{ allow_random=true, type="technique/shield-offense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
+newTalentType{ allow_random=true, type="technique/shield-defense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
+newTalentType{ allow_random=true, type="technique/dualweapon-training", name = "dual wielding", description = "Specialized dual wielding techniques." }
+newTalentType{ allow_random=true, type="technique/dualweapon-attack", name = "dual wielding", description = "Specialized dual wielding techniques." }
+newTalentType{ allow_random=true, type="technique/archery-base", name = "archery - base", description = "Ability to shoot, you should never this this." }
+newTalentType{ allow_random=true, type="technique/archery-bow", name = "archery - bows", description = "Specialized bow techniques." }
+newTalentType{ allow_random=true, type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
+newTalentType{ allow_random=true, type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
+newTalentType{ allow_random=true, type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
+newTalentType{ allow_random=true, type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
+newTalentType{ allow_random=true, type="technique/warcries", name = "warcries", no_silence = true, description = "Master the warcries to improve yourself and weaken others." }
+newTalentType{ allow_random=true, type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
+newTalentType{ allow_random=true, type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
+newTalentType{ allow_random=true, type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
+newTalentType{ allow_random=true, type="technique/combat-techniques-passive", name = "combat techniques", description = "Generic combat oriented techniques." }
+newTalentType{ allow_random=true, type="technique/combat-training", name = "combat training", generic = true, description = "Teaches to use various armors and improves health." }
+newTalentType{ allow_random=true, type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
 
 -- Generic requires for techs based on talent level
 -- Uses STR

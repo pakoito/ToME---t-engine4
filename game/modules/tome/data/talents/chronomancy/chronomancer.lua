@@ -18,19 +18,19 @@
 -- darkgod@te4.org
 
 -- Paradox Mage SpellsnewTalentType
-newTalentType{ no_silence=true, type="chronomancy/advanced-timetravel", name = "Advanced Time Travel", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/chronomancy", name = "chronomancy", generic = true, description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/energy", name = "energy", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/entropy", name = "entropy", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/gravity", name = "gravity", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/inertia", name = "inertia", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/matter", name = "matter", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/paradox", name = "paradox", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/probability", name = "probability", generic = true, description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/temporal-combat", name = "Temporal Combat", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/threading", name = "threading", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/timetravel", name = "Time Travel", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
-newTalentType{ no_silence=true, type="chronomancy/weaving", name = "weaving", generic = true, description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/advanced-timetravel", name = "Advanced Time Travel", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/chronomancy", name = "chronomancy", generic = true, description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/energy", name = "energy", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/entropy", name = "entropy", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/gravity", name = "gravity", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/inertia", name = "inertia", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/matter", name = "matter", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/paradox", name = "paradox", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/probability", name = "probability", generic = true, description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/temporal-combat", name = "Temporal Combat", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/threading", name = "threading", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/timetravel", name = "Time Travel", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, type="chronomancy/weaving", name = "weaving", generic = true, description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
 
 
 -- Generic requires for chronomancy spells based on talent level

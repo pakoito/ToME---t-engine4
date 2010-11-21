@@ -18,17 +18,17 @@
 -- darkgod@te4.org
 
 -- Wild Gifts
-newTalentType{ type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
-newTalentType{ type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it.\nUsing a magical device or a spell will put all antimagic talents on cooldown for a few turns." }
-newTalentType{ type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
-newTalentType{ type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
-newTalentType{ type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }
-newTalentType{ type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your aid." }
-newTalentType{ type="wild-gift/slime", name = "slime aspect", generic = true, description = "Through dedicated consumption of slime mold juice, you have gained an affinity with slime molds." }
-newTalentType{ type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
-newTalentType{ type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
-newTalentType{ type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
-newTalentType{ type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
+newTalentType{ allow_random=true, type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
+newTalentType{ allow_random=true, type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it.\nUsing a magical device or a spell will put all antimagic talents on cooldown for a few turns." }
+newTalentType{ allow_random=true, type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, type="wild-gift/slime", name = "slime aspect", generic = true, description = "Through dedicated consumption of slime mold juice, you have gained an affinity with slime molds." }
+newTalentType{ allow_random=true, type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
+newTalentType{ allow_random=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
+newTalentType{ allow_random=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
+newTalentType{ allow_random=true, type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {

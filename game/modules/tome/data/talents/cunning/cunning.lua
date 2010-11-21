@@ -18,14 +18,14 @@
 -- darkgod@te4.org
 
 -- Cunning talents
-newTalentType{ type="cunning/stealth", name = "stealth", description = "Allows the user to enter stealth." }
-newTalentType{ type="cunning/trapping", name = "trapping", description = "The knowledge of trap laying and assorted trickeries." }
-newTalentType{ type="cunning/traps", name = "traps", description = "Collection of known traps." }
-newTalentType{ type="cunning/dirty", name = "dirty fighting", description = "Teaches various talents to cripple your foes." }
-newTalentType{ type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
-newTalentType{ type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
-newTalentType{ type="cunning/survival", name = "survival", generic = true, description = "The knowledge of the dangers of the world, and how to best avoid them." }
-newTalentType{ type="cunning/packing", name = "packing", generic = true, description = "Learn to optimize your carrying capacity and even how to protect fragile items." }
+newTalentType{ allow_random=true, type="cunning/stealth", name = "stealth", description = "Allows the user to enter stealth." }
+newTalentType{ allow_random=true, type="cunning/trapping", name = "trapping", description = "The knowledge of trap laying and assorted trickeries." }
+newTalentType{ allow_random=true, type="cunning/traps", name = "traps", description = "Collection of known traps." }
+newTalentType{ allow_random=true, type="cunning/dirty", name = "dirty fighting", description = "Teaches various talents to cripple your foes." }
+newTalentType{ allow_random=true, type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
+newTalentType{ allow_random=true, type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
+newTalentType{ allow_random=true, type="cunning/survival", name = "survival", generic = true, description = "The knowledge of the dangers of the world, and how to best avoid them." }
+newTalentType{ allow_random=true, type="cunning/packing", name = "packing", generic = true, description = "Learn to optimize your carrying capacity and even how to protect fragile items." }
 
 -- Generic requires for cunning based on talent level
 cuns_req1 = {

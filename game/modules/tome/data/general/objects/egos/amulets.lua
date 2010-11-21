@@ -49,45 +49,10 @@ newEntity{
 	cost = 2,
 	wielder = {},
 	resolvers.generic(function(e)
-		local tts = {
-			"cunning/dirty",
-			"cunning/lethality",
-			"cunning/stealth",
-			"cunning/survival",
-			"spell/air",
-			"spell/arcane",
-			"spell/conveyance",
-			"spell/divination",
-			"spell/earth",
-			"spell/fire",
-			"spell/meta",
-			"spell/nature",
-			"spell/phantasm",
-			"spell/temporal",
-			"spell/water",
-			"technique/2hweapon-cripple",
-			"technique/2hweapon-offense",
-			"technique/archery-bow",
-			"technique/archery-sling",
-			"technique/archery-training",
-			"technique/archery-utility",
-			"technique/combat-techniques-active",
-			"technique/combat-techniques-passive",
-			"technique/combat-training",
-			"technique/dualweapon-attack",
-			"technique/dualweapon-training",
-			"technique/shield-defense",
-			"technique/shield-offense",
-			"wild-gift/call",
-			"wild-gift/cold-drake",
-			"wild-gift/fire-drake",
-			"wild-gift/sand-drake",
-			"wild-gift/slime",
-			"wild-gift/summon-augmentation",
-			"wild-gift/summon-distance",
-			"wild-gift/summon-melee",
-			"wild-gift/summon-utility",
-		}
+		local tts = {}
+		for i, def in ipairs(engine.interface.ActorTalents.talents_types_def) do
+			if def.allow_random then tts[#tts+1] = def.type end
+		end
 		local tt = tts[rng.range(1, #tts)]
 
 		e.wielder.talents_types_mastery = {}
