@@ -55,7 +55,8 @@ addData{post_process = function(level)
 			a.on_die = function(self, who)
 				local nb = 0
 				for uid, a in pairs(game.level.entities) do
-					if a.faction and game.player:reactionToward(a) < 0 and not a.dead then nb = nb + 1 end
+					local ga = game.level.map(a.x, a.y, engine.Map.ACTOR)
+					if a.faction and game.player:reactionToward(a) < 0 and ga and ga == a and not a.dead then nb = nb + 1 end
 				end
 				if nb <= 0 then game.level.open_doors() end
 				a:check("old_on_die")

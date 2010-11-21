@@ -75,7 +75,7 @@ else
 end
 
 -- Zigur is only know from the start to non casters
-if not game.player:knowTalent(game.player.T_MANA_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_NEGATIVE_POOL) then
+if not game.player:knowTalent(game.player.T_MANA_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_NEGATIVE_POOL) and not game.player:knowTalent(game.player.T_POSITIVE_POOL) then
 	quickEntity('zigur', {always_remember = true, show_tooltip=true, name="Zigur (Town)", desc="Ziguranth main training ground", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-zigur"})
 else
 	quickEntity('zigur', ')')
