@@ -326,8 +326,8 @@ Difficulty: %s
 Campaign: %s
 Exploring level %d of %s.]]):format(
 		player.name, player.level, player.descriptor.subrace, player.descriptor.subclass,
-		player.descriptor.world,
 		player.descriptor.difficulty,
+		player.descriptor.world,
 		self.level.level, self.zone.name
 		),
 	}
