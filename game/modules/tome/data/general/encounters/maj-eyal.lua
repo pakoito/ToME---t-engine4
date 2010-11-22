@@ -124,7 +124,7 @@ newEntity{
 	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)
 		who:runStop()
-		engine.ui.Dialog:yesnoPopup("Encounter", "You find an entrance to an old crypt. You hear the muffled cries of a woman coming from inside.", function(ok)
+		engine.ui.Dialog:yesnoLongPopup("Encounter", "You find an entrance to an old crypt. An aura of terrible evil emanates from this place, you feel threatened just standing there.\nYou hear the muffled cries of a woman coming from inside.", 400, function(ok)
 			if not ok then
 				game.logPlayer(who, "#LIGHT_BLUE#You carefully get away without making a sound.")
 			else
