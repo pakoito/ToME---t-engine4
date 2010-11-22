@@ -56,6 +56,7 @@ shaders_active = true
 particles_density = 100
 background_saves = true
 mouse_cursor = true
+display_fps = 30
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then
@@ -97,3 +98,6 @@ profile = engine.PlayerProfile.new()
 savefile_pipe = engine.SavefilePipe.new()
 
 util.showMainMenu(true)
+
+-- Setup FPS
+core.game.setFPS(config.settings.display_fps)

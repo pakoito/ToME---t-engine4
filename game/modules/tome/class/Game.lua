@@ -546,7 +546,7 @@ function _M:onTurn()
 	end
 end
 
-function _M:display()
+function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameTurnBased.display(self) return end
 
@@ -562,7 +562,7 @@ function _M:display()
 			self.fbo:use(true)
 
 			if self.level.data.background then self.level.data.background(self.level, 0, 0) end
-			self.level.map:display(0, 0)
+			self.level.map:display(0, 0, nb_keyframes)
 			self.target:display(0, 0)
 			if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0) end
 
@@ -577,7 +577,7 @@ function _M:display()
 		-- Basic display
 		else
 			if self.level.data.background then self.level.data.background(self.level, self.level.map.display_x, self.level.map.display_y) end
-			self.level.map:display()
+			self.level.map:display(nil, nil, nb_keyframes)
 			self.target:display()
 			if self.level.data.foreground then self.level.data.foreground(self.level, self.level.map.display_x, self.level.map.display_y) end
 		end
@@ -596,7 +596,7 @@ function _M:display()
 	end
 
 	-- We display the player's interface
-	self.flash:toScreen()
+	self.flash:toScreen(nb_keyframe)
 	self.logdisplay:toScreen()
 	self.player_display:toScreen()
 	if self.show_npc_list then
@@ -616,7 +616,7 @@ function _M:display()
 	-- Icons
 	self:displayUIIcons()
 
-	engine.GameTurnBased.display(self)
+	engine.GameTurnBased.display(self, nb_keyframes)
 
 	-- Tooltip is displayed over all else, even dialogs
 	self:targetDisplayTooltip(self.w, self.h)

@@ -55,16 +55,16 @@ function _M:empty()
 	self.flyers = {}
 end
 
-function _M:display()
+function _M:display(nb_keyframes)
 	if not next(self.flyers) then return end
 
 	local dels = {}
 
 	for fl, _ in pairs(self.flyers) do
 		fl.t:toScreenFull(fl.x, fl.y, fl.w, fl.h, fl.tw, fl.th)
-		fl.x = fl.x + fl.xvel
-		fl.y = fl.y + fl.yvel
-		fl.duration = fl.duration - 1
+		fl.x = fl.x + fl.xvel * nb_keyframes
+		fl.y = fl.y + fl.yvel * nb_keyframes
+		fl.duration = fl.duration - nb_keyframes
 
 		-- Delete the flyer
 		if fl.duration == 0 then

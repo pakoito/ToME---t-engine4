@@ -500,7 +500,8 @@ end
 
 --- Displays the map on a surface
 -- @return a surface containing the drawn map
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframe)
+	nb_keyframes = nb_keyframes or 1
 	local ox, oy = self.display_x, self.display_y
 	self.display_x, self.display_y = x or self.display_x, y or self.display_y
 
@@ -534,9 +535,9 @@ function _M:display(x, y)
 		end end
 	end
 
-	self:displayParticles()
+	self:displayParticles(nb_keyframe)
 	self:displayEffects()
-	self:displayEmotes()
+	self:displayEmotes(nb_keyframe)
 
 	self.display_x, self.display_y = ox, oy
 
@@ -952,18 +953,19 @@ function _M:removeParticleEmitter(e)
 end
 
 --- Display the particle emiters, called by self:display()
-function _M:displayParticles()
+function _M:displayParticles(nb_keyframes)
 	local del = {}
 	local e = next(self.particles)
 	while e do
-		local alive = false
+		local alive = true
 
-		alive = not e.update(e)
+		for i = 1, nb_keyframes do alive = not e.update(e) end
 
 		-- Dont bother with obviously out of screen stuff
 		if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom)
+			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom, nb_keyframes)
 		end
+		if nb_keyframes == 0 then alive = true end
 
 		if not alive then
 			del[#del+1] = e
@@ -997,7 +999,7 @@ function _M:removeEmote(e)
 end
 
 --- Display the emotes, called by self:display()
-function _M:displayEmotes()
+function _M:displayEmotes(nb_keyframes)
 	local del = {}
 	local e = next(self.emotes)
 	while e do
@@ -1009,9 +1011,12 @@ function _M:displayEmotes()
 			)
 		end
 
-		if e:update() then
-			del[#del+1] = e
-			e.dead = true
+		for i = 1, nb_keyframes do
+			if e:update() then
+				del[#del+1] = e
+				e.dead = true
+				break
+			end
 		end
 
 		e = next(self.emotes, e)

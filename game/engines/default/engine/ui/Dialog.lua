@@ -341,7 +341,7 @@ function _M:makeKeyChar(i)
 	end
 end
 
-function _M:toScreen(x, y)
+function _M:toScreen(x, y, nb_keyframes)
 	-- Draw with only the texture
 	if self.__showup then
 		local eff = self.__showup_effect or "pop"
@@ -352,12 +352,12 @@ function _M:toScreen(x, y)
 				zoom = 1 + zoom * 0.5
 			end
 			self.tex:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.tex_w * zoom, self.tex_h * zoom)
-			self.__showup = self.__showup + 1
+			self.__showup = self.__showup + nb_keyframes
 			if self.__showup >= 11 then self.__showup = nil end
 		else
 			local zoom = self.__showup / 7
 			self.tex:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.tex_w * zoom, self.tex_h * zoom)
-			self.__showup = self.__showup + 1
+			self.__showup = self.__showup + nb_keyframes
 			if self.__showup >= 7 then self.__showup = nil end
 		end
 	else

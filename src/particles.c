@@ -272,6 +272,8 @@ static int particles_to_screen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	bool show = lua_toboolean(L, 4);
 	float zoom = luaL_checknumber(L, 5);
+	int keyframes = luaL_checknumber(L, 6);
+	int kf;
 	int w = 0;
 	int i, j;
 	bool alive = FALSE;
@@ -333,37 +335,40 @@ static int particles_to_screen(lua_State *L)
 				glEnd();
 			}
 
-			if (p->life != PARTICLE_ETERNAL) p->life--;
-
-			p->ox = p->x;
-			p->oy = p->y;
-
-			p->x += p->xv;
-			p->y += p->yv;
-
-			if (p->vel)
+			for (kf = 0; kf < keyframes; kf++)
 			{
-				p->x += cos(p->dir) * p->vel;
-				p->y += sin(p->dir) * p->vel;
+				if (p->life != PARTICLE_ETERNAL) p->life--;
+
+				p->ox = p->x;
+				p->oy = p->y;
+
+				p->x += p->xv;
+				p->y += p->yv;
+
+				if (p->vel)
+				{
+					p->x += cos(p->dir) * p->vel;
+					p->y += sin(p->dir) * p->vel;
+				}
+
+				p->dir += p->dirv;
+				p->vel += p->velv;
+				p->r += p->rv;
+				p->g += p->gv;
+				p->b += p->bv;
+				p->a += p->av;
+				p->size += p->sizev;
+
+				p->xv += p->xa;
+				p->yv += p->ya;
+				p->dirv += p->dira;
+				p->velv += p->vela;
+				p->rv += p->ra;
+				p->gv += p->ga;
+				p->bv += p->ba;
+				p->av += p->aa;
+				p->sizev += p->sizea;
 			}
-
-			p->dir += p->dirv;
-			p->vel += p->velv;
-			p->r += p->rv;
-			p->g += p->gv;
-			p->b += p->bv;
-			p->a += p->av;
-			p->size += p->sizev;
-
-			p->xv += p->xa;
-			p->yv += p->ya;
-			p->dirv += p->dira;
-			p->velv += p->vela;
-			p->rv += p->ra;
-			p->gv += p->ga;
-			p->bv += p->ba;
-			p->av += p->aa;
-			p->sizev += p->sizea;
 		}
 	}
 

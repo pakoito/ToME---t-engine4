@@ -99,7 +99,8 @@ function _M:display()
 	return self.surface
 end
 
-function _M:toScreen()
+function _M:toScreen(nb_keyframe)
+	nb_keyframe = nb_keyframe or 1
 	self.changed = false
 
 	-- Erase and the display the map
@@ -112,6 +113,6 @@ function _M:toScreen()
 	end
 	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
 
-	if self.flashing > 0 then self.flashing = self.flashing - 1
+	if self.flashing > 0 then self.flashing = self.flashing - nb_keyframe
 	elseif self.changed then self:getNext(true) end
 end

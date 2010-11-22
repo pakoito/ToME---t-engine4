@@ -24,6 +24,7 @@
 extern int resizeWindow(int width, int height);
 extern void do_resize(int w, int h, bool fullscreen);
 extern void setupRealtime(float freq);
+extern void setupDisplayTimer(int fps);
 extern bool fbo_active;
 extern bool multitexture_active;
 

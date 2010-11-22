@@ -446,6 +446,12 @@ static int lua_set_realtime(lua_State *L)
 	setupRealtime(freq);
 	return 0;
 }
+static int lua_set_fps(lua_State *L)
+{
+	float freq = luaL_checknumber(L, 1);
+	setupDisplayTimer(freq);
+	return 0;
+}
 static int lua_sleep(lua_State *L)
 {
 	int ms = luaL_checknumber(L, 1);
@@ -460,6 +466,7 @@ static const struct luaL_reg gamelib[] =
 	{"getTime", lua_get_time},
 	{"sleep", lua_sleep},
 	{"setRealtime", lua_set_realtime},
+	{"setFPS", lua_set_fps},
 	{NULL, NULL},
 };
 
@@ -2395,7 +2402,7 @@ int luaopen_core(lua_State *L)
 
 	luaL_openlib(L, "core.game", gamelib, 0);
 	lua_pushstring(L, "VERSION");
-	lua_pushnumber(L, 7);
+	lua_pushnumber(L, 8);
 	lua_settable(L, -3);
 
 	luaL_openlib(L, "rng", rnglib, 0);

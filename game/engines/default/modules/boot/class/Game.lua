@@ -230,16 +230,16 @@ function _M:onTurn()
 	self.level.map:processEffects()
 end
 
-function _M:display()
+function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
-	if self.change_res_dialog then engine.GameEnergyBased.display(self) return end
+	if self.change_res_dialog then engine.GameEnergyBased.display(self, nb_keyframes) return end
 
 	-- If background anim is stopped, thigns are much simplied
 	if self.stopped then
 		if self.background then self.background:toScreenFull(0, 0, self.w, self.h, self.background_w, self.background_h) end
 		self.tooltip:display()
 		self.tooltip:toScreen(5, 5)
-		engine.GameEnergyBased.display(self)
+		engine.GameEnergyBased.display(self, nb_keyframes)
 		return
 	end
 
@@ -253,11 +253,11 @@ function _M:display()
 			self.player:playerFOV()
 		end
 
-		self.level.map:display()
+		self.level.map:display(nil, nil, nb_keyframes)
 	end
 
 	-- Draw it here, inside the FBO
-	self.flyers:display()
+	self.flyers:display(nb_keyframes)
 
 	-- Display using Framebuffer, sotaht we can use shaders and all
 	if self.fbo then
@@ -277,7 +277,7 @@ function _M:display()
 
 	local old = self.flyers
 	self.flyers = nil
-	engine.GameEnergyBased.display(self)
+	engine.GameEnergyBased.display(self, nb_keyframes)
 	self.flyers = old
 end
 

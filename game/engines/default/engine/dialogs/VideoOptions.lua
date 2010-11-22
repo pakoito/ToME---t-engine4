@@ -70,6 +70,18 @@ function _M:generateList()
 		game:registerDialog(menu)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Request this display refresh rate.\nSet it lower to reduce CPU load, higher to increase interface responsiveness.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Requested FPS#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.display_fps)
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Enter density", "From 5 to 60", config.settings.display_fps, 60, function(qty)
+			game:saveSettings("display_fps", ("display_fps = %d\n"):format(qty))
+			config.settings.display_fps = qty
+			core.game.setFPS(qty)
+			self.c_list:drawItem(item)
+		end), 5)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Controls the particle effects density.\nThis option allows to change the density of the many particle effects in the game.\nIf the game is slow when displaying spell effects try to lower this setting.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Particle effects density#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.particles_density)

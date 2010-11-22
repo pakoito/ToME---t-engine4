@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include <sys/time.h>
 #include "lua.h"
 #include "lauxlib.h"
@@ -59,6 +60,7 @@ int mouse_cursor_tex = 0, mouse_cursor_tex_ref = LUA_NOREF;
 int mouse_cursor_down_tex = 0, mouse_cursor_down_tex_ref = LUA_NOREF;
 int mouse_cursor_ox = 0, mouse_cursor_oy = 0;
 int mousex = 0, mousey = 0;
+SDL_TimerID display_timer_id = NULL;
 SDL_TimerID realtime_timer_id = NULL;
 
 /* OpenGL capabilities */
@@ -266,7 +268,7 @@ void on_tick()
 	}
 }
 
-void call_draw()
+void call_draw(int nb_keyframes)
 {
 	if (current_game != LUA_NOREF)
 	{
@@ -275,7 +277,8 @@ void call_draw()
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-		docall(L, 1, 0);
+		lua_pushnumber(L, (nb_keyframes < 0) ? 0 : nb_keyframes);
+		docall(L, 2, 0);
 	}
 
 	/* Mouse pointer */
@@ -299,92 +302,42 @@ void on_redraw()
 {
 	static int Frames = 0;
 	static int T0     = 0;
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	call_draw();
-
-	SDL_GL_SwapBuffers();
+	static float nb_keyframes = 0;
+	static int last_keyframe = 0;
+	static float reference_fps = 30;
+	static int count_keyframes = 0;
 
 	/* Gather our frames per second */
 	Frames++;
 	{
 		int t = SDL_GetTicks();
-		if (t - T0 >= 10000) {
+		if (t - T0 >= 1000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
-			printf("%d frames in %g seconds = %g FPS\n", Frames, seconds, fps);
+			reference_fps = fps;
+			printf("%d frames in %g seconds = %g FPS (%d keyframes)\n", Frames, seconds, fps, count_keyframes);
 			T0 = t;
 			Frames = 0;
+			last_keyframe = 0;
+			nb_keyframes = 0;
+			count_keyframes = 0;
 		}
 	}
-}
 
-void gl_selall(GLint hits, GLuint *buff)
-{
-	GLuint *p;
-	int i;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 
-	call_draw();
+	float step = 30 / reference_fps;
+	nb_keyframes += step;
 
-	p = buff;
-	for (i = 0; i < 6 * 4; i++)
-	{
-		printf("Slot %d: - Value: %d\n", i, p[i]);
-	}
+	int nb = ceilf(nb_keyframes);
+	count_keyframes += nb - last_keyframe;
+//	printf("keyframes: %f / %f by %f => %d\n", nb_keyframes, reference_fps, step, nb - (last_keyframe));
+	call_draw(nb - last_keyframe);
 
-	printf("Buff size: %x\n", (GLbyte)buff[0]);
-}
+	SDL_GL_SwapBuffers();
 
-void list_hits(GLint hits, GLuint *names)
-{
-	int i;
-
-	/*
-	 For each hit in the buffer are allocated 4 bytes:
-	 1. Number of hits selected (always one,
-	 beacuse when we draw each object
-	 we use glLoadName, so we replace the
-	 prevous name in the stack)
-	 2. Min Z
-	 3. Max Z
-	 4. Name of the hit (glLoadName)
-	 */
-
-	printf("%d hits:\n", hits);
-
-	for (i = 0; i < hits; i++)
-		printf(	"Number: %d\n"
-			"Min Z: %d\n"
-			"Max Z: %d\n"
-			"Name on stack: %d\n",
-			(GLubyte)names[i * 4],
-			(GLubyte)names[i * 4 + 1],
-			(GLubyte)names[i * 4 + 2],
-			(GLubyte)names[i * 4 + 3]
-			);
-
-	printf("\n");
-
-	if (current_game != LUA_NOREF)
-	{
-		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-		lua_pushstring(L, "onPickUI");
-		lua_gettable(L, -2);
-		lua_remove(L, -2);
-		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-		lua_newtable(L);
-
-		for (i = 0; i < hits; i++)
-		{
-			lua_pushnumber(L, i+1);
-			lua_pushnumber(L, names[i * 4 + 3]);
-			lua_settable(L, -3);
-		}
-		docall(L, 2, 0);
-	}
-
+	last_keyframe = nb;
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -497,6 +450,14 @@ void setupRealtime(float freq)
 		printf("[ENGINE] Switching to realtime, interval %d ms\n", (int)interval);
 	}
 }
+
+void setupDisplayTimer(int fps)
+{
+	if (display_timer_id) SDL_RemoveTimer(display_timer_id);
+	display_timer_id = SDL_AddTimer(1000 / fps, redraw_timer, NULL);
+	printf("[ENGINE] Setting requested FPS to %d (%d ms)\n", fps, 1000 / fps);
+}
+
 
 /* general OpenGL initialization function */
 int initGL()
@@ -668,7 +629,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 	}
 	else if (state == 2)
 	{
-		SDL_WM_SetCaption("T4Engine", NULL);
+		SDL_WM_SetCaption("T-Engine4", NULL);
 
 		// Now we can open lua lanes, the physfs paths are set and it can load it's lanes-keeper.lua file
 		luaopen_lanes(L);
@@ -764,6 +725,8 @@ int main(int argc, char *argv[])
 		fbo_active = FALSE;
 	}
 
+//	setupDisplayTimer(30);
+
 	boot_lua(2, FALSE, argc, argv);
 
 //	start_xmpp_thread();
@@ -772,8 +735,6 @@ int main(int argc, char *argv[])
 
 	// Filter events, to catch the quit event
 	SDL_SetEventFilter(event_filter);
-
-	SDL_AddTimer(30, redraw_timer, NULL);
 
 	SDL_Event event;
 	while (!exit_engine)

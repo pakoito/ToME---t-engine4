@@ -203,9 +203,9 @@ function _M:onTurn()
 	self.level.map:processEffects()
 end
 
-function _M:display()
+function _M:display(nb_keyframe)
 	-- If switching resolution, blank everything but the dialog
-	if self.change_res_dialog then engine.GameTurnBased.display(self) return end
+	if self.change_res_dialog then engine.GameTurnBased.display(self, nb_keyframe) return end
 
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
@@ -214,7 +214,7 @@ function _M:display()
 			self.player:playerFOV()
 		end
 
-		self.level.map:display()
+		self.level.map:display(nil, nil, nb_keyframe)
 
 		-- Display the targetting system if active
 		self.target:display()
@@ -224,7 +224,7 @@ function _M:display()
 	end
 
 	-- We display the player's interface
-	self.flash:toScreen()
+	self.flash:toScreen(nb_keyframe)
 	self.logdisplay:toScreen()
 	if self.show_npc_list then
 		self.npcs_display:toScreen()
@@ -236,7 +236,7 @@ function _M:display()
 	-- Tooltip is displayed over all else
 	self:targetDisplayTooltip()
 
-	engine.GameTurnBased.display(self)
+	engine.GameTurnBased.display(self, nb_keyframe)
 end
 
 --- Setup the keybinds

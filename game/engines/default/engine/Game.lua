@@ -124,14 +124,16 @@ end
 
 --- Displays the screen
 -- Called by the engine core to redraw the screen every frame
-function _M:display()
+-- @param nb_keyframes The number of elapsed keyframes since last draw (this can be 0). This is set by the engine
+function _M:display(nb_keyframes)
+	nb_keyframes = nb_keyframes or 1
 	if self.flyers then
-		self.flyers:display()
+		self.flyers:display(nb_keyframes)
 	end
 
 	for i, d in ipairs(self.dialogs) do
 		d:display()
-		d:toScreen(d.display_x, d.display_y)
+		d:toScreen(d.display_x, d.display_y, nb_keyframes)
 	end
 end
 
