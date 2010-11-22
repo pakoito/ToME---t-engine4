@@ -40,5 +40,5 @@ on_grant = function(self, who)
 	local level = game.memory_levels["wilderness-1"]
 	local spot = level:pickSpot{type="zone-pop", subtype="reknor"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
-	game.logPlayer(game.player, "The elder points to the mines on your map, to the north on the western side of the misty mountains.")
+	game.logPlayer(game.player, "The elder points to Reknor on your map, to the north on the western side of the Iron Throne.")
 end

@@ -52,7 +52,7 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use. You have no idea if it is even two-way.
-This one seems to go to the Misty Mountains in the West.]],
+This one seems to go to the Iron Throne in the West.]],
 
 	orb_portal = {
 		change_level = 1,
@@ -60,7 +60,7 @@ This one seems to go to the Misty Mountains in the West.]],
 		change_wilderness = {
 			spot = {type="farportal-end", subtype="iron-throne"},
 		},
-		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the slopes of the Misty Mountains, with no trace of the portal...",
+		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the slopes of the Iron Throne, with no trace of the portal...",
 		on_use = function(self, who)
 		end,
 	},

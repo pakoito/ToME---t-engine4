@@ -32,7 +32,7 @@ desc = function(self, who)
 	if self:isCompleted("withheld-orb") then
 		desc[#desc+1] = "You kept the Orb of Many Ways despite Tannen's request to study it. You must now look for the athame and diamond in Reknor."
 	end
-	if self:isCompleted("open-orthanc") then
+	if self:isCompleted("open-telmur") then
 		desc[#desc+1] = "You brought back the diamond and athame to Tannen who asked you to check the tower of Telmur, looking for a text of portals, although he is not sure it is even there. He told you to come back in a few days."
 	end
 	if self:isCompleted("ask-east") then
@@ -121,7 +121,7 @@ remove_materials = function(self, player)
 	athame_o:removed()
 end
 
-open_orthanc = function(self, player)
+open_telmur = function(self, player)
 	self:remove_materials(player)
 
 	-- Reveal entrances
@@ -138,7 +138,7 @@ open_orthanc = function(self, player)
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	game.logPlayer(game.player, "Tannen points to the location of Telmur on your map.")
-	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "open-orthanc")
+	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "open-telmur")
 	self.wait_turn = game.turn + game.calendar.DAY * 3
 end
 

@@ -50,7 +50,7 @@ newChat{ id="welcome",
 		{"I have the diamond and the athame. [Hand over the Athame and Diamond]", jump="has_material_gave_orb", cond=check_materials_gave_orb},
 		{"I have the diamond and the athame. [Hand over the Athame and Diamond]", jump="has_material_withheld_orb", cond=check_materials_withheld_orb},
 		{"Thieving, murderous wretch. Prepare to die!", jump="fake_orb_end", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and q:isCompleted("tricked-demon") end},
-		{"How fares your research? Are we ready to create the portal?", jump="wait_end", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and q:isCompleted("open-orthanc") end},
+		{"How fares your research? Are we ready to create the portal?", jump="wait_end", cond=function(npc, player) local q = player:hasQuest("east-portal"); return q and q:isCompleted("open-telmur") end},
 		{"Nothing, excuse me. Bye!"},
 	}
 }
@@ -115,7 +115,7 @@ newChat{ id="withheld_orb",
 newChat{ id="has_material_gave_orb",
 	text = [[Excellent. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Telmur, which the men of sholtar sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields," return with it and your odds of surviving our portal attempt will go up drastically.]],
 	answers = {
-		{"Thank you, and farewell.", action=function(npc, player) player:hasQuest("east-portal"):open_orthanc(player) end},
+		{"Thank you, and farewell.", action=function(npc, player) player:hasQuest("east-portal"):open_telmur(player) end},
 	}
 }
 
@@ -151,7 +151,7 @@ newChat{ id="no_orb_loan3",
 newChat{ id="orb_loan",
 	text = [[Fear not. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Telmur, which the men of sholtar sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields", return with it and your odds of surviving our portal attempt will go up drastically.]],
 	answers = {
-		{"Thank you, and farewell.", action=function(npc, player) player:hasQuest("east-portal"):open_orthanc(player) end},
+		{"Thank you, and farewell.", action=function(npc, player) player:hasQuest("east-portal"):open_telmur(player) end},
 	}
 }
 
