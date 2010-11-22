@@ -55,35 +55,35 @@ newEntity{ theme={physical=true, brawny=true}, name="phys crit magnitude", point
 ----------------------------------------------------------------
 -- Melee damage projection
 ----------------------------------------------------------------
-newEntity{ theme={attack=true, venom=true}, name="acid melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.ACID] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, venom=true}, name="acid melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ACID] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, lightning=true}, name="lightning melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.LIGHTNING] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, lightning=true}, name="lightning melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.LIGHTNING] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, fire=true}, name="fire melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.FIRE] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, fire=true}, name="fire melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.FIRE] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, cold=true}, name="cold melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.COLD] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, cold=true}, name="cold melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.COLD] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, light=true}, name="light melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.LIGHT] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, light=true}, name="light melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.LIGHT] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, dark=true}, name="dark melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.DARKNESS] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, dark=true}, name="dark melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.DARKNESS] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, venom=true}, name="blight melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.BLIGHT] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, venom=true}, name="blight melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.BLIGHT] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, nature=true}, name="nature melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.NATURE] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, nature=true}, name="nature melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.NATURE] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, arcane=true}, name="arcane melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.ARCANE] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, arcane=true}, name="arcane melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ARCANE] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={attack=true, venom=true}, name="poison melee", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.POISON] = resolvers.randartmax(3, 45), }, },
+newEntity{ theme={attack=true, venom=true}, name="poison melee", points = 1, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.POISON] = resolvers.randartmax(1, 20), }, },
 }
 
 
