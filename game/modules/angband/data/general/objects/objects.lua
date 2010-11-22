@@ -23,4 +23,4 @@ local Objects = require("mod.class.info.Objects")
 local list = Objects:parse("/data/angband_edits/object.txt")
 
 -- Feed them to the zone
-for i = 1, #list do if list[i].name then newEntity(list[i]) end end
+for i = 1, #list do if list[i].name then newEntity(list[i]) print(list[i].name, list[i].rarity) end end

@@ -43,4 +43,14 @@ function _M:callback(e)
 	e.type = "class"
 	e.desc = ""
 	print("callback", e.name)
+
+	e.copy = e.copy or {}
+	for i, item in ipairs(e.starting_items) do
+		local nb = rng.range(tonumber(item.min) or 1, tonumber(item.max) or 1)
+		for j = 1, nb do
+			e.copy[#e.copy+1] = resolvers.inventory{ id=true, {type=item.tval, special=function(e)
+				return e.name == item.sval or e.name == "& "..item.sval
+			end} }
+		end
+	end
 end

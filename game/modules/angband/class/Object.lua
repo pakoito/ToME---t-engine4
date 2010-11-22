@@ -33,6 +33,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorTalents
 ))
 
+_M._noalpha = true
+
 function _M:init(t, no_default)
 	t.encumber = t.encumber or 0
 
@@ -465,7 +467,7 @@ function _M:getDesc(name_param)
 		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
 		desc:add(true)
 		desc:add({"color", "ANTIQUE_WHITE"})
-		desc:merge(self.desc:toTString())
+		desc:merge((self.desc or ""):toTString())
 		desc:add(true)
 		desc:add(true)
 		desc:add({"color", "WHITE"})

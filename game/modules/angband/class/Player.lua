@@ -23,6 +23,7 @@ require "engine.interface.PlayerRest"
 require "engine.interface.PlayerRun"
 require "engine.interface.PlayerMouse"
 require "engine.interface.PlayerHotkeys"
+require "engine.interface.ActorInventory"
 local Map = require "engine.Map"
 local Dialog = require "engine.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -40,6 +41,7 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerRun,
 	engine.interface.PlayerMouse,
 	engine.interface.PlayerHotkeys,
+	engine.interface.ActorInventory,
 	mod.class.interface.Combat
 ))
 
@@ -56,7 +58,10 @@ function _M:init(t, no_default)
 
 	t.lite = t.lite or 0
 
+	t.body = { INVEN=23, WEAPON=1, SHOOTER=1, FINGER=2, NECK=1, LITE=1, BODY=1, CLOAK=1, HEAD=1, SHIELD=1, HANDS=1, FEET=1, QUIVER=1 }
+
 	mod.class.Actor.init(self, t, no_default)
+	engine.interface.ActorInventory.init(self, t)
 	engine.interface.PlayerHotkeys.init(self, t)
 
 	self.descriptor = {}
@@ -139,6 +144,219 @@ function _M:onTalentCooledDown(tid)
 	game.flyers:add(x, y, 30, -0.3, -3.5, ("%s available"):format(t.name:capitalize()), {0,255,00})
 	game.log("#00ff00#Talent %s is ready to use.", t.name)
 end
+
+function _M:getMaxEncumbrance()
+	local add = 0
+	if self:knowTalent(self.T_BURDEN_MANAGEMENT) then
+		add = add + 20 + self:getTalentLevel(self.T_BURDEN_MANAGEMENT) * 15
+	end
+	return math.floor(40 + self:getStr() * 1.8 + (self.max_encumber or 0) + add)
+end
+
+function _M:getEncumbrance()
+	local enc = 0
+
+	local fct = function(so) enc = enc + so.encumber end
+	if self:knowTalent(self.T_EFFICIENT_PACKING) then
+		local reduction = 1 - self:getTalentLevel(self.T_EFFICIENT_PACKING) * 0.1
+		fct = function(so)
+			if so.encumber <= 1 then
+				enc = enc + so.encumber * reduction
+			else
+				enc = enc + so.encumber
+			end
+		end
+	end
+
+	-- Compute encumbrance
+	for inven_id, inven in pairs(self.inven) do
+		for item, o in ipairs(inven) do
+			o:forAllStack(fct)
+		end
+	end
+--	print("Total encumbrance", enc)
+	return math.floor(enc)
+end
+
+function _M:checkEncumbrance()
+	-- Compute encumbrance
+	local enc, max = self:getEncumbrance(), self:getMaxEncumbrance()
+
+	-- We are pinned to the ground if we carry too much
+	if not self.encumbered and enc > max then
+		game.logPlayer(self, "#FF0000#You carry too much--you are encumbered!")
+		game.logPlayer(self, "#FF0000#Drop some of your items.")
+		self.encumbered = self:addTemporaryValue("never_move", 1)
+	elseif self.encumbered and enc <= max then
+		self:removeTemporaryValue("never_move", self.encumbered)
+		self.encumbered = nil
+		game.logPlayer(self, "#00FF00#You are no longer encumbered.")
+	end
+end
+
+--- Call when an object is added
+function _M:onAddObject(o)
+	engine.interface.ActorInventory.onAddObject(self, o)
+
+	self:checkEncumbrance()
+end
+
+--- Call when an object is removed
+function _M:onRemoveObject(o)
+	engine.interface.ActorInventory.onRemoveObject(self, o)
+
+	self:checkEncumbrance()
+end
+
+function _M:doDrop(inven, item)
+	if game.zone.wilderness then
+		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
+			-- The test is reversed because the buttons are reversed, to prevent mistakes
+			if not ret then
+				local o = self:removeObject(inven, item, true)
+				game.logPlayer(self, "You destroy %s.", o:getName{do_colour=true, do_count=true})
+				self:sortInven()
+				self:useEnergy()
+			end
+		end, "Cancel", "Destroy")
+		return
+	end
+	self:dropFloor(inven, item, true, true)
+	self:sortInven(inven)
+	self:useEnergy()
+	self.changed = true
+end
+
+function _M:doWear(inven, item, o)
+	self:removeObject(inven, item, true)
+	local ro = self:wearObject(o, true, true)
+	if ro then
+		if type(ro) == "table" then self:addObject(inven, ro) end
+	elseif not ro then
+		self:addObject(inven, o)
+	end
+	self:sortInven()
+	self:useEnergy()
+	self.changed = true
+end
+
+function _M:doTakeoff(inven, item, o)
+	if self:takeoffObject(inven, item) then
+		self:addObject(self.INVEN_INVEN, o)
+	end
+	self:sortInven()
+	self:useEnergy()
+	self.changed = true
+end
+
+function _M:getEncumberTitleUpdator(title)
+	return function()
+		local enc, max = self:getEncumbrance(), self:getMaxEncumbrance()
+		return ("%s - Encumbered %d/%d"):format(title, enc, max)
+	end
+end
+
+function _M:playerPickup()
+	-- If 2 or more objects, display a pickup dialog, otehrwise just picks up
+	if game.level.map:getObject(self.x, self.y, 2) then
+		local titleupdator = self:getEncumberTitleUpdator("Pickup")
+		local d d = self:showPickupFloor(titleupdator(), nil, function(o, item)
+			self:pickupFloor(item, true)
+			self.changed = true
+			d.title = titleupdator()
+			d:used()
+		end)
+	else
+		self:pickupFloor(1, true)
+		self:sortInven()
+		self:useEnergy()
+	self.changed = true
+	end
+end
+
+function _M:playerDrop()
+	local inven = self:getInven(self.INVEN_INVEN)
+	local titleupdator = self:getEncumberTitleUpdator("Drop object")
+	self:showInventory(titleupdator(), inven, nil, function(o, item)
+		self:doDrop(inven, item)
+	end)
+end
+
+function _M:playerWear()
+	local inven = self:getInven(self.INVEN_INVEN)
+	local titleupdator = self:getEncumberTitleUpdator("Wield/wear object")
+	self:showInventory(titleupdator(), inven, function(o)
+		return o:wornInven() and self:getInven(o:wornInven())  and true or false
+	end, function(o, item)
+		self:doWear(inven, item, o)
+	end)
+end
+
+function _M:playerTakeoff()
+	local titleupdator = self:getEncumberTitleUpdator("Take off object")
+	self:showEquipment(titleupdator(), nil, function(o, inven, item)
+		self:doTakeoff(inven, item, o)
+	end)
+end
+
+function _M:playerUseItem(object, item, inven)
+	if game.zone.wilderness then game.logPlayer(self, "You cannot use items on the world map.") return end
+
+	local use_fct = function(o, inven, item)
+		local co = coroutine.create(function()
+			self.changed = true
+			local ret, id = o:use(self, nil, inven, item)
+			if id then
+				o:identify(true)
+			end
+			if ret and ret == "destroy" then
+				-- Count magic devices
+				if o.is_magic_device then
+					if self:hasQuest("antimagic") and not self:hasQuest("antimagic"):isEnded() then self:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
+					self:antimagicBackslash(4 + (o.material_level or 1))
+				end
+
+				if not o.unique and self:doesPackRat() then
+					game.logPlayer(self, "Pack Rat!")
+				else
+					if o.multicharge and o.multicharge > 1 then
+						o.multicharge = o.multicharge - 1
+					else
+						local _, del = self:removeObject(self:getInven(inven), item)
+						if del then
+							game.log("You have no more %s.", o:getName{no_count=true, do_color=true})
+						else
+							game.log("You have %s.", o:getName{do_color=true})
+						end
+						self:sortInven(self:getInven(inven))
+					end
+				end
+				self:breakStealth()
+				self:breakLightningSpeed()
+				return true
+			end
+
+			self:breakStealth()
+			self:breakLightningSpeed()
+			self.changed = true
+		end)
+		local ok, ret = coroutine.resume(co)
+		if not ok and ret then print(debug.traceback(co)) error(ret) end
+		return true
+	end
+
+	if object and item then return use_fct(object, inven, item) end
+
+	local titleupdator = self:getEncumberTitleUpdator("Use object")
+	self:showEquipInven(titleupdator(),
+		function(o)
+			return o:canUseObject()
+		end,
+		use_fct,
+		true
+	)
+end
+
 
 function _M:levelup()
 	mod.class.Actor.levelup(self)

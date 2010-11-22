@@ -42,6 +42,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorFOV
 ))
 
+_M._noalpha = true
+
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.combat_armor = 0
@@ -144,13 +146,6 @@ function _M:onTemporaryValueChange(prop, sub, v)
 	if prop == "speed" then
 		self:computeEnergyMod()
 	end
-end
-
---- How much experience is this actor worth
--- @param target to whom is the exp rewarded
--- @return the experience rewarded
-function _M:worthExp(target)
-	return self.exp_worth
 end
 
 --- Reveals location surrounding the actor
@@ -312,12 +307,7 @@ end
 -- @param target to whom is the exp rewarded
 -- @return the experience rewarded
 function _M:worthExp(target)
-	if not target.level or self.level < target.level - 3 then return 0 end
-
-	local mult = 2
-	if self.unique then mult = 6
-	elseif self.egoed then mult = 3 end
-	return self.level * mult * self.exp_worth
+	return self.exp_worth * self.level / target.level
 end
 
 --- Can the actor see the target actor

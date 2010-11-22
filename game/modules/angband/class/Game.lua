@@ -117,7 +117,7 @@ function _M:loaded()
 	engine.GameTurnBased.loaded(self)
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", }
 	Map:setViewerActor(self.player)
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, false)
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, true)
 	self.key = engine.KeyBind.new()
 end
 
@@ -128,7 +128,7 @@ function _M:createSeparators()
 end
 
 function _M:setupDisplayMode()
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, false)
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, true)
 	Map:resetTiles()
 	Map.tiles.use_images = false
 
@@ -341,6 +341,36 @@ function _M:setupCommands()
 
 		REST = function()
 			self.player:restInit()
+		end,
+
+		PICKUP_FLOOR = function()
+			self.player:playerPickup()
+		end,
+		DROP_FLOOR = function()
+			self.player:playerDrop()
+		end,
+		SHOW_INVENTORY = function()
+			local d
+			local titleupdator = self.player:getEncumberTitleUpdator("Inventory")
+			d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
+				if not o then return end
+				local ud = require("mod.dialogs.UseItemDialog").new(event == "button", self.player, o, item, inven, function(_, _, _, stop)
+					d:generateList()
+					d.title = titleupdator()
+					if stop then self:unregisterDialog(d) end
+				end)
+				self:registerDialog(ud)
+			end)
+		end,
+		SHOW_EQUIPMENT = "SHOW_INVENTORY",
+		WEAR_ITEM = function()
+			self.player:playerWear()
+		end,
+		TAKEOFF_ITEM = function()
+			self.player:playerTakeoff()
+		end,
+		USE_ITEM = function()
+			self.player:playerUseItem()
 		end,
 
 		USE_TALENTS = function()

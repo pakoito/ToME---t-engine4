@@ -48,6 +48,7 @@ function _M:callback(e)
 		end)
 	end
 	e.color = colors[self.color_codes[e.color]]
+	e.back_color = colors.BLACK
 	e.level_range = {e.level, e.level}
 	e.speed = (e.speed or 110) - 110
 	if e.blows then

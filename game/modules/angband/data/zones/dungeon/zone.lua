@@ -40,6 +40,10 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {30, 40},
 		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_object = {5, 8},
+		},
 	},
 	levels =
 	{

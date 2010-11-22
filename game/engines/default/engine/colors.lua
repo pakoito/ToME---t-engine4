@@ -25,6 +25,7 @@ end
 
 function colors.simple(c) return {c.r, c.g, c.b} end
 
+defineColor('BLACK', 0, 0, 0)
 defineColor('WHITE', 0xFF, 0xFF, 0xFF)
 defineColor('SLATE', 0x8C, 0x8C, 0x8C)
 defineColor('ORANGE', 0xFF, 0x77, 0x00)

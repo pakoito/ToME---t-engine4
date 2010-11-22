@@ -29,9 +29,27 @@ local ActorAI = require "engine.interface.ActorAI"
 local ActorLevel = require "engine.interface.ActorLevel"
 local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local Birther = require "engine.Birther"
+local ActorInventory = require "engine.interface.ActorInventory"
 
 -- Usefull keybinds
 KeyBind:load("move,hotkeys,inventory,actions,interface,debug")
+
+-- Additional entities resolvers
+dofile("/mod/resolvers.lua")
+
+-- Body parts
+ActorInventory:defineInventory("WEAPON", "Weapon", true, "Most weapons are wielded in the main hand.")
+ActorInventory:defineInventory("SHOOTER", "Shooter", true, "You can use shields or a second weapon in your off-hand, if you have the talents for it.")
+ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.")
+ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.")
+ActorInventory:defineInventory("LITE", "Light source", true, "A light source allows you to see in the dark places of the world.")
+ActorInventory:defineInventory("BODY", "Main armor", true, "Armor protects you from physical attacks. The heavier the armor the more it hinders the use of talents and spells.")
+ActorInventory:defineInventory("CLOAK", "Cloak", true, "A cloak can simply keep you warm or grant you wonderous powers should you find a magical one.")
+ActorInventory:defineInventory("HEAD", "On head", true, "You can wear helmets or crowns on your head")
+ActorInventory:defineInventory("SHIELD", "Shield", true, "Various gloves can be worn on your hands.")
+ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be worn on your hands.")
+ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.")
+ActorInventory:defineInventory("QUIVER", "Quiver", true, "Your readied ammo.")
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
