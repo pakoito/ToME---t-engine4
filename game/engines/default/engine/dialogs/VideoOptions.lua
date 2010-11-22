@@ -109,5 +109,15 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Use the custom cursor.\nDisabling it will use your normal operating system cursor.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Mouse cursor#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.mouse_cursor and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.mouse_cursor = not config.settings.mouse_cursor
+		game:updateMouseCursor()
+		game:saveSettings("mouse_cursor", ("mouse_cursor = %s\n"):format(tostring(config.settings.mouse_cursor)))
+		self.c_list:drawItem(item)
+	end,}
+
 	self.list = list
 end

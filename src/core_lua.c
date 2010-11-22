@@ -1303,6 +1303,54 @@ static int sdl_redraw_screen(lua_State *L)
 	return 0;
 }
 
+extern int mouse_cursor_tex, mouse_cursor_tex_ref;
+extern int mouse_cursor_down_tex, mouse_cursor_down_tex_ref;
+extern int mouse_cursor_ox, mouse_cursor_oy;
+static int sdl_set_mouse_cursor(lua_State *L)
+{
+	mouse_cursor_ox = luaL_checknumber(L, 1);
+	mouse_cursor_oy = luaL_checknumber(L, 2);
+
+	/* Down */
+	if (mouse_cursor_down_tex_ref != LUA_NOREF)
+	{
+		luaL_unref(L, LUA_REGISTRYINDEX, mouse_cursor_down_tex_ref);
+		mouse_cursor_down_tex_ref = LUA_NOREF;
+	}
+
+	if (lua_isnil(L, 4))
+	{
+		mouse_cursor_down_tex = 0;
+	}
+	else
+	{
+		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
+		mouse_cursor_down_tex = *t;
+		mouse_cursor_down_tex_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+
+	/* Default */
+	if (mouse_cursor_tex_ref != LUA_NOREF)
+	{
+		luaL_unref(L, LUA_REGISTRYINDEX, mouse_cursor_tex_ref);
+		mouse_cursor_tex_ref = LUA_NOREF;
+	}
+
+	if (lua_isnil(L, 3))
+	{
+		mouse_cursor_tex = 0;
+		SDL_ShowCursor(SDL_ENABLE);
+	}
+	else
+	{
+		SDL_ShowCursor(SDL_DISABLE);
+		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 3);
+		mouse_cursor_tex = *t;
+		mouse_cursor_tex_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	return 0;
+}
+
 /**************************************************************
  * Framebuffer Objects
  **************************************************************/
@@ -1537,6 +1585,7 @@ static const struct luaL_reg displaylib[] =
 	{"setWindowTitle", sdl_set_window_title},
 	{"setWindowSize", sdl_set_window_size},
 	{"getModesList", sdl_get_modes_list},
+	{"setMouseCursor", sdl_set_mouse_cursor},
 	{NULL, NULL},
 };
 

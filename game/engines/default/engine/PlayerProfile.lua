@@ -214,6 +214,8 @@ function _M:rpc(data)
 		local th = lanes.gen("*", handler)(data)
 		-- Tell the game to monitor this thread and end it when it's done
 		game:registerThread(th, l)
+
+		return th, l
 	else
 		print("[ONLINE PROFILE] rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
 		local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
@@ -225,10 +227,7 @@ end
 
 function _M:getNews()
 	print("[ONLINE PROFILE] get news")
-	local data = self:rpc{action="GetNews"}
-	if not data then print("[ONLINE PROFILE] no news") return end
-	print("[ONLINE PROFILE] news ", data.title)
-	return data
+	return self:rpc{action="GetNews", async=true}
 end
 
 function _M:tryAuth()

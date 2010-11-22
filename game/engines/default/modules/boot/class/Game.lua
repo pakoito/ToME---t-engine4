@@ -54,7 +54,7 @@ function _M:init()
 
 	self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 400)
 
-	self.refuse_threads = true
+--	self.refuse_threads = true
 	self.normal_key = self.key
 	self.stopped = config.settings.boot_menu_background
 
@@ -89,45 +89,21 @@ function _M:run()
 
 	-- Get news
 	if not self.news then
-		self.news = profile:getNews()
+		self.news = {
+			title = "Welcome to T-Engine and the Tales of Maj'Eyal",
+			text = [[From this interface you can create new characters for the game modules you want to play.
 
-		if self.news then
-			local f = loadstring(self.news.text)
-			if f then
-				local env = {}
-				setfenv(f, env)
-				pcall(f)
-				if env.text and env.version then
-					self.news.text = env.text
-					print("Latest engine version available: ", env.version[4], env.version[1], env.version[2], env.version[3])
-					self.latest_engine_version = env.version
-					if env.link then self.news.link = env.link end
-				else
-					self.news = nil
-				end
-			end
-		end
-
-		if not self.news then
-			self.news = {
-				title = 'Welcome to T-Engine and the Tales of Middle-earth',
-				text = [[From this interface you can create new characters for the game modules you want to play.
-
-#GOLD#"Tales of Middle-earth"#WHITE# is the default game module, you can also install more by selecting "Install a game module" or by going to http://te4.org/
+#GOLD#"Tales of Maj'Eyal"#WHITE# is the default game module, you can also install more by selecting "Install a game module" or by going to http://te4.org/
 
 When inside a module remember you can press Escape to bring up a menu to change keybindings, resolution and other module specific options.
 
 Remember that in most roguelikes death is usually permanent so be careful!
 
 Now go and have some fun!]]
-			}
-		end
+		}
 
-		if self.news.link then
-			self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
-		else
-			self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
-		end
+		self:serverNews()
+		self:updateNews()
 	end
 
 --	self:installNewEngine()
@@ -142,12 +118,6 @@ Now go and have some fun!]]
 		local w, h = self.s_log:getSize()
 		self.mouse:registerZone(self.w - w, self.h - h, w, h, function(button)
 			if button == "left" then util.browserOpenUrl(self.logged_url) end
-		end, {button=true})
-	end
-
-	if self.news.link then
-		self.mouse:registerZone(5, self.tooltip.h - 30, self.tooltip.w, 30, function(button)
-			if button == "left" then util.browserOpenUrl(self.news.link) end
 		end, {button=true})
 	end
 end
@@ -223,6 +193,20 @@ end
 
 function _M:getPlayer()
 	return self.player
+end
+
+function _M:updateNews()
+	if self.news.link then
+		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
+	else
+		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
+	end
+
+	if self.news.link then
+		self.mouse:registerZone(5, self.tooltip.h - 30, self.tooltip.w, 30, function(button)
+			if button == "left" then util.browserOpenUrl(self.news.link) end
+		end, {button=true})
+	end
 end
 
 function _M:tick()
@@ -377,4 +361,38 @@ function _M:createProfile(loginItem)
 	else
 		Dialog:simplePopup("Profile Failed to authenticate!", "Try logging in in a few moments", function() end )
 	end
+end
+
+function _M:serverNews()
+	local co = coroutine.create(function()
+		local th, l = profile:getNews()
+		if not th or not l then return end
+
+		local ret = l:receive(0, "final")
+		while not ret do
+			coroutine.yield()
+			ret = l:receive(0, "final")
+		end
+
+		self.news = ret
+		local f = loadstring(self.news.text)
+		if f then
+			local env = {}
+			setfenv(f, env)
+			pcall(f)
+			if env.text and env.version then
+				self.news.text = env.text
+				print("Latest engine version available: ", env.version[4], env.version[1], env.version[2], env.version[3])
+				self.latest_engine_version = env.version
+				if env.link then self.news.link = env.link end
+			else
+				self.news = nil
+			end
+		end
+
+		if self.news then
+			self:updateNews()
+		end
+	end)
+	game:registerCoroutine("getnews", co)
 end

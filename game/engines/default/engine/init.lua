@@ -55,6 +55,7 @@ fbo_active = true
 shaders_active = true
 particles_density = 100
 background_saves = true
+mouse_cursor = true
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then

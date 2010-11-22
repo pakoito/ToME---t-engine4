@@ -55,6 +55,10 @@ bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
 bool tickPaused = FALSE;
+int mouse_cursor_tex = 0, mouse_cursor_tex_ref = LUA_NOREF;
+int mouse_cursor_down_tex = 0, mouse_cursor_down_tex_ref = LUA_NOREF;
+int mouse_cursor_ox = 0, mouse_cursor_oy = 0;
+int mousex = 0, mousey = 0;
 SDL_TimerID realtime_timer_id = NULL;
 
 /* OpenGL capabilities */
@@ -205,6 +209,9 @@ void on_event(SDL_Event *event)
 		}
 		break;
 	case SDL_MOUSEMOTION:
+		mousex = event->motion.x;
+		mousey = event->motion.y;
+
 		if (current_mousehandler != LUA_NOREF)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
@@ -269,6 +276,22 @@ void call_draw()
 		lua_remove(L, -2);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		docall(L, 1, 0);
+	}
+
+	/* Mouse pointer */
+	if (mouse_cursor_tex && mouse_cursor_down_tex)
+	{
+		int x = mousex + mouse_cursor_ox;
+		int y = mousey + mouse_cursor_oy;
+		int down = SDL_GetMouseState(NULL, NULL);
+		glBindTexture(GL_TEXTURE_2D, down ? mouse_cursor_down_tex : mouse_cursor_tex);
+		glColor4f(1, 1, 1, 1);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
+		glTexCoord2f(0,1); glVertex2f(0  + x, 32 + y);
+		glTexCoord2f(1,1); glVertex2f(32 + x, 32 + y);
+		glTexCoord2f(1,0); glVertex2f(32 + x, 0  + y);
+		glEnd();
 	}
 }
 
