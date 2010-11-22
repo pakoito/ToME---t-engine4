@@ -272,7 +272,7 @@ function _M:playerFOV()
 			self:computeFOV(rad, "block_sight", function(x, y) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, 1) end end, true, true, true)
 			self:computeFOV(rad2, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
 		end
-		
+
 		-- Handle dark vision; same as infravision, but also sees past creeping dark
 		-- this is treated as a sense, but is filtered by custom LOS code
 		if self:knowTalent(self.T_DARK_VISION) then
@@ -802,7 +802,7 @@ end
 --- Notify of object pickup
 function _M:on_pickup_object(o)
 	-- Grant the artifact quest
-	if o.unique and not o.lore and not o:isIdentified() then self:grantQuest("first-artifact") end
+	if o.unique and not o.lore and not o:isIdentified() and not game.zone.infinite_dungeon then self:grantQuest("first-artifact") end
 
 	if self:attr("auto_id_mundane") and o:getPowerRank() <= 1 then
 		o:identify(true)

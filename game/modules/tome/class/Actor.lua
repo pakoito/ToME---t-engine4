@@ -1663,7 +1663,7 @@ function _M:worthExp(target)
 	if not target.level or self.level < target.level - 7 then return 0 end
 
 	-- HHHHAACKKK ! Use a normal scheme for the game except in the infinite dungeon
-	if game.zone.short_name ~= "infinite-dungeon" then
+	if not game.zone.infinite_dungeon then
 		local mult = 0.6
 		if self.rank == 1 then mult = 0.6
 		elseif self.rank == 2 then mult = 0.8

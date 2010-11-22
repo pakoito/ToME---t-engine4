@@ -27,6 +27,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	no_worldport = true,
+	infinite_dungeon = true,
 	ambiant_music = "Swashing the buck.ogg",
 	generator =  {
 		map = {
