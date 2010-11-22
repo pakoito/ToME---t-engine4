@@ -29,7 +29,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is poisoned!", "+Poison" end,
 	on_lose = function(self, err) return "#Target# stops being poisoned.", "-Poison" end,
 	on_merge = function(self, old_eff, new_eff)
-		old_eff.dur = dur + new_eff.dur
+		old_eff.dur = old_eff.dur + new_eff.dur
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
@@ -47,7 +47,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# starts to bleed.", "+Bleeds" end,
 	on_lose = function(self, err) return "#Target# stops bleeding.", "-Bleeds" end,
 	on_merge = function(self, old_eff, new_eff)
-		old_eff.dur = dur + new_eff.dur
+		old_eff.dur = old_eff.dur + new_eff.dur
 		return old_eff
 	end,
 	on_timeout = function(self, eff)

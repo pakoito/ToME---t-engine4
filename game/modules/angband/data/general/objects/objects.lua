@@ -17,23 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newBirthDescriptor{
-	type = "base",
-	name = "base",
-	desc = {
-	},
-	experience = 1.0,
+local Objects = require("mod.class.info.Objects")
 
-	copy = {
-		max_level = 50,
-		max_life = 25,
-	},
-}
+-- Parse the angband monster definition
+local list = Objects:parse("/data/angband_edits/object.txt")
 
-local PlayerRaces = require("mod.class.info.PlayerRaces")
-local list = PlayerRaces:parse("/data/angband_edits/p_race.txt")
-for i = 1, #list do if list[i].name then newBirthDescriptor(list[i]) end end
-
-local PlayerClasses = require("mod.class.info.PlayerClasses")
-local list = PlayerClasses:parse("/data/angband_edits/p_class.txt")
-for i = 1, #list do if list[i].name then newBirthDescriptor(list[i]) end end
+-- Feed them to the zone
+for i = 1, #list do if list[i].name then newEntity(list[i]) end end

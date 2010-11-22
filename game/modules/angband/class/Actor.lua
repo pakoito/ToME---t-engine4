@@ -91,7 +91,15 @@ end
 function _M:move(x, y, force)
 	local moved = false
 	if force or self:enoughEnergy() then
-		moved = engine.Actor.move(self, x, y, force)
+		-- Never move but tries to attack ? ok
+		if not force and self:attr("never_move") then
+			-- A bit weird, but this simple asks the collision code to detect an attack
+			if not game.level.map:checkAllEntities(x, y, "block_move", self, true) then
+				game.logPlayer(self, "You are unable to move!")
+			end
+		else
+			moved = engine.Actor.move(self, x, y, force)
+		end
 		if not force and moved and not self.did_energy then self:useEnergy() end
 	end
 	self.did_energy = nil

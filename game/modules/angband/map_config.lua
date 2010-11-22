@@ -19,7 +19,7 @@
 
 local Map = require "engine.Map"
 
-Map.zdepth = 2
+Map.zdepth = 4
 
 -- Setup the map to only display one entity
 Map.updateMapDisplay = function(self, x, y, mos)
@@ -43,12 +43,12 @@ Map.updateMapDisplay = function(self, x, y, mos)
 	if t then
 		-- Handles trap being known
 		if not self.actor_player or t:knownBy(self.actor_player) then
-			t:getMapObjects(self.tiles, mos, 1)
+			t:getMapObjects(self.tiles, mos, 2)
 			mm = mm + Map.MM_TRAP
 		end
 	end
 	if o then
-		o:getMapObjects(self.tiles, mos, 1)
+		o:getMapObjects(self.tiles, mos, 3)
 		if self.object_stack_count then
 			local mo = o:getMapStackMO(self, x, y)
 			if mo then mos[2] = mo end
@@ -60,7 +60,7 @@ Map.updateMapDisplay = function(self, x, y, mos)
 		if not self.actor_player or self.actor_player:canSee(a) then
 			local r = self.actor_player:reactionToward(a)
 			mm = mm + (r > 0 and Map.MM_FRIEND or (r == 0 and Map.MM_NEUTRAL or Map.MM_HOSTILE))
-			a:getMapObjects(self.tiles, mos, 1)
+			a:getMapObjects(self.tiles, mos, 4)
 		end
 	end
 	return mm
