@@ -21,8 +21,8 @@ newBirthDescriptor{
 	type = "class",
 	name = "Divine",
 	desc = {
-		"Divine class is composed of worshippers of many various gods and entities.",
-		"They range from the worship of the Sun, the Moon, powerful spirits, ...",
+		"Divine classes are composed of worshippers of many various gods and entities.",
+		"They include the worship of the Sun, the Moon, powerful spirits, ...",
 	},
 	descriptor_choices =
 	{
@@ -46,7 +46,7 @@ newBirthDescriptor{
 		"Sun Paladins hail from the Gates of Morning, the last bastion of the free people in the Far East.",
 		"Their way of life is well represented by their motto 'We walk in the dark places no others will enter. We stand on the bridge, and no one may pass.'",
 		"They can channel the power of the Sun to smite all who seek to destroy the Sunwall.",
-		"Competent in both weapon and shield combat and magic they usually burn their foes from afar before engaging in melee.",
+		"Competent in both weapon and shield combat and magic, they usually burn their foes from afar before engaging in melee.",
 		"Their most important stats are: Strength and Magic",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",
@@ -91,7 +91,7 @@ newBirthDescriptor{
 		"Anorithils hail from the Gates of Morning, the last bastion of the free people in the Far East.",
 		"Their way of life is well represented by their motto 'We are Grey. We stand between the darkness and the light.'",
 		"They can channel the power of the Sun and the Moon to burn and tear apart all who seek to destroy the Sunwall.",
-		"Masters of sun and moon magic they usually burn their foes with sun rays before calling the fury of the stars.",
+		"Masters of Sun and Moon magic, they usually burn their foes with Sun rays before calling the fury of the stars.",
 		"Their most important stats are: Magic and Cunning",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",

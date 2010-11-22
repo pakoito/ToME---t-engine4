@@ -21,11 +21,11 @@
 name = "Into the darkness"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "It is time to explore some new places dark, forgotten and dangerous ones."
+	desc[#desc+1] = "It is time to explore some new places -- dark, forgotten and dangerous ones."
 	desc[#desc+1] = "The Old Forest is just south-east of the town of Derth."
 	desc[#desc+1] = "The Maze is west of Derth."
 	desc[#desc+1] = "The Sandworm Lair is to the far west of Derth, near the sea."
-	desc[#desc+1] = "The Daikara is to the eastern borders of the Thaloren forest."
+	desc[#desc+1] = "The Daikara is on the eastern borders of the Thaloren forest."
 	if self:isCompleted("old-forest") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Old Forest and vanquished the Old Man Willow.#WHITE#"
 	else

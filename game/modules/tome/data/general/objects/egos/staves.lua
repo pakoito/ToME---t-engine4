@@ -125,3 +125,23 @@ newEntity{
 		inc_damage={ [DamageType.BLIGHT] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
 	},
 }
+
+newEntity{
+	name = "sunbathed ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.LIGHT] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+	},
+}
+
+newEntity{
+	name = "shadow ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.DARKNESS] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+	},
+}

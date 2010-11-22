@@ -24,7 +24,7 @@ newBirthDescriptor{
 	type = "race",
 	name = "Dwarf",
 	desc = {
-		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne",
+		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne.",
 		"They are a sturdy race and are known for their masterwork, yet they are not well loved, having left other races to fend for themselves in past conflicts.",
 	},
 	descriptor_choices =
@@ -56,7 +56,7 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Dwarf",
 	desc = {
-		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne",
+		"Dwarves are a secretive people, hailing from their underground homes of the Iron Throne.",
 		"They are a sturdy race and are known for their masterwork, yet they are not well loved, having left other races to fend for themselves in past conflicts.",
 		"They possess the #GOLD#Resilience of the Dwarves#WHITE# which allows them to increase their armour, physical and spell saves for a few turns.",
 		"#GOLD#Stats modifiers:",

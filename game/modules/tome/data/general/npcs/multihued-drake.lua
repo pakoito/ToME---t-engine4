@@ -45,7 +45,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	name = "multi-hued drake hatchling", color=colors.PURPLE, display="d",
-	desc = [[A drake hatchling, not too powerful in itself, but it usually comes with its brothers and sisters.]],
+	desc = [[A drake hatchling, not too powerful by itself, but it usually comes with its brothers and sisters.]],
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 1,
 	rank = 1, size_category = 2,

@@ -24,7 +24,7 @@ newEntity{
 	encumber = 0,
 	rarity = 5,
 	identified = true,
-	desc = [[All that glitters is not gold, all that is gold does not glitter.]],
+	desc = [[All that glitters is not gold; all that is gold does not glitter.]],
 	on_prepickup = function(self, who, id)
 		who:incMoney(self.money_value / 10)
 		game.logPlayer(who, "You pickup %0.2f gold pieces.", self.money_value / 10)

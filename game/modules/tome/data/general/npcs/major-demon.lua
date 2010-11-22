@@ -87,8 +87,8 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "uruivellas", color=colors.LIGHT_RED, -- Hot strength
-	desc = [[This demon would look like a minautor, if minautors had a fiery aura surrounding them and horns all over the body.
-Oh and it is twice as big too.]],
+	desc = [[This demon would look like a minotaur, if a minotaur had a fiery aura surrounding it and horns all over the body.
+Oh, and it is twice as big, too.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,
@@ -116,7 +116,7 @@ Oh and it is twice as big too.]],
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "thaurhereg", color=colors.RED, -- Terrible blood
-	desc = [[This terrible demon is covered in blood, it flows *on* its skin in ever changing patterns that disturb you simply by looking at it.]],
+	desc = [[This terrible demon is covered in blood, which flows *on* its skin in ever changing patterns that disturb you simply when looking at it.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,
@@ -145,8 +145,8 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "daelach", color=colors.PURPLE, -- Shadow flame
-	desc = [[You can only discern the real shape of this demon, its body is surrounded by a cloud of fiery darkness.
-It moves switftly toward you, casting terrible spells and swinging its weapons at you.]],
+	desc = [[You can only guess at the real shape of this demon. Its body is surrounded by a cloud of fiery darkness.
+It moves swiftly toward you, casting terrible spells and swinging its weapons at you.]],
 	level_range = {39, nil}, exp_worth = 1,
 	rarity = 6,
 	rank = 3,

@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Wilder",
 	desc = {
-		"Wilders are one with nature, in one manner or another. There are as many different wilders as there are aspects of nature.",
+		"Wilders are one with nature, in one manner or another. There are as many different Wilders as there are aspects of nature.",
 		"They can take on the aspects of creatures, summon creatures to them, feel the druidic call, ...",
 	},
 	descriptor_choices =
@@ -41,7 +41,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Summoner",
 	desc = {
-		"Summoners never fight alone, they are always ready to summon one of their many minions to fight at their side.",
+		"Summoners never fight alone. They are always ready to summon one of their many minions to fight at their side.",
 		"Summons can range from a combat hound to a fire drake.",
 		"Their most important stats are: Willpower and Cunning",
 		"#GOLD#Stats modifiers:",

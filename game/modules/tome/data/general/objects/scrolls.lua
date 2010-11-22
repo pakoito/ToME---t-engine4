@@ -44,7 +44,7 @@ newEntity{
 	use_no_blind = true,
 	use_no_silence = true,
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
-	desc = [[Natural infusions allow you to inscribe an infusion onto your body, granting you an on-demand ability.]],
+	desc = [[Natural infusions may be grafted onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
 
 	use_simple = { name="inscribe your skin with the infusion.", use = function(self, who, inven, item)
@@ -65,7 +65,7 @@ newEntity{
 	use_no_silence = true,
 	is_magic_device = true,
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
-	desc = [[Magical runes allow you to inscribe a rune onto your body, granting you an on-demand ability.]],
+	desc = [[Magical runes may be inscribes onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
 
 	use_simple = { name="inscribe your skin with the rune.", use = function(self, who, inven, item)

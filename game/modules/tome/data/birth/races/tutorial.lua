@@ -47,7 +47,7 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Tutorial Human",
 	desc = {
-		"Humans hailing from the northen town of Derth. A common kind of man, unremarkable in all respects.",
+		"A Human hailing from the northern town of Derth. A common kind of man, unremarkable in all respects.",
 	},
 	copy = {
 		default_wilderness = {1, 1, "wilderness-tutorial"},

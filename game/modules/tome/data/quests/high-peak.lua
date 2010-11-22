@@ -22,9 +22,9 @@ desc = function(self, who)
 	local desc = {}
 
 	if not self:isCompleted() then
-		desc[#desc+1] = "You have vanquished the masters of the Orc Pride, now you must venture inside the most dangerous place of this world, the High Peak."
+		desc[#desc+1] = "You have vanquished the masters of the Orc Pride. Now you must venture inside the most dangerous place of this world: the High Peak."
 		desc[#desc+1] = "Seek the Sorcerers and stop them before they bend the world to their will."
-		desc[#desc+1] = "To enter you will need the four orbs of command to remove the shield over the peak."
+		desc[#desc+1] = "To enter, you will need the four orbs of command to remove the shield over the peak."
 		desc[#desc+1] = "The entrance to the peak passes through a place called 'the slime tunnels', probably located inside or near Grushnak Pride."
 	else
 		desc[#desc+1] = "You have reached the summit of the High Peak, entered the sanctum of the Sorcerers and destroyed them, freeing the world from the threat of evil."
@@ -110,7 +110,7 @@ function failed_charred_scar(self, level)
 	local spot = level:pickSpot{type="zone-pop", subtype="ruined-gates-of-morning"}
 	local wild = game.memory_levels["wilderness-1"].map(spot.x, spot.y, engine.Map.TERRAIN)
 	wild.name = "Ruins of the Gates of Morning"
-	wild.desc = "The sunwall was destroyed while you were trapped in the High Peak."
+	wild.desc = "The Sunwall was destroyed while you were trapped in the High Peak."
 	wild.change_level = nil
 	wild.change_zone = nil
 	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "gates-of-morning-destroyed")

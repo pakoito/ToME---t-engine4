@@ -21,9 +21,9 @@
 name = "Let's hunt some Orc"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "The elder in Last Hope sent you to the old dwarven kingdom of Reknor, deep under the Iron Throne, to investigate the orc presence."
+	desc[#desc+1] = "The elder in Last Hope sent you to the old Dwarven kingdom of Reknor, deep under the Iron Throne, to investigate the orc presence."
 	desc[#desc+1] = "Find out if they are in any way linked to the lost staff."
-	desc[#desc+1] = "But be careful, even the dwarves did not venture in the old halls for many years."
+	desc[#desc+1] = "But be careful -- even the Dwarves have not ventured in these old halls for many years."
 	return table.concat(desc, "\n")
 end
 
@@ -40,5 +40,5 @@ on_grant = function(self, who)
 	local level = game.memory_levels["wilderness-1"]
 	local spot = level:pickSpot{type="zone-pop", subtype="reknor"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
-	game.logPlayer(game.player, "The elder points the mines on your map, to the north on the western side of the misty mountains.")
+	game.logPlayer(game.player, "The elder points to the mines on your map, to the north on the western side of the misty mountains.")
 end

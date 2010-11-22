@@ -162,7 +162,7 @@ newEntity{ base = "BASE_NPC_OOZE",
 --[[
 newEntity{ base = "BASE_NPC_OOZE",
 	name = "morphic ooze", color=colors.GREY,
-	desc = "Its shape change every few seconds.",
+	desc = "Its shape changes every few seconds.",
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 1,
 	rank = 3,

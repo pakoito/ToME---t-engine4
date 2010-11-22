@@ -809,7 +809,7 @@ newDamageType{
 		if target then
 			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) then
 				target:gainExp(-dam.dam*2)
-				game.logSeen(target, "%s drains %s experience!", src.name:capitalize(), target.name)
+				game.logSeen(target, "%s drains experience from %s!", src.name:capitalize(), target.name)
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -826,7 +826,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			src:heal(realdam * dam.healfactor)
-			game.logSeen(target, "%s drains %s life!", src.name:capitalize(), target.name)
+			game.logSeen(target, "%s drains life from %s!", src.name:capitalize(), target.name)
 		end
 	end,
 }

@@ -21,10 +21,10 @@ name = "Strange new world"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "You arrived through the farportal in a cave, probably in the Far East."
-	desc[#desc+1] = "Upon arrival you met an elf and an orc fighting."
+	desc[#desc+1] = "Upon arrival you met an Elf and an orc fighting."
 
 	if self:isCompleted("sided-fillarel") then
-		desc[#desc+1] = "You decided to side with the elven lady."
+		desc[#desc+1] = "You decided to side with the Elven lady."
 	elseif self:isCompleted("sided-krogar") then
 		desc[#desc+1] = "You decided to side with the orc."
 	end
@@ -49,6 +49,6 @@ fillarel_dies = function(self, npc)
 	if self:isCompleted("sided-krogar") then game.player:setQuestStatus(self.id, self.COMPLETED, "helped-krogar")
 	else
 		game.player:setQuestStatus(self.id, self.COMPLETED, "helped-fillarel")
-		npc:doEmote(game.player.descriptor.race.." go to the south west, tell Aeryn what happened to me!", 120)
+		npc:doEmote(game.player.descriptor.race.." go to the south west, and tell Aeryn what happened to me!", 120)
 	end
 end

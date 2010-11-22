@@ -62,7 +62,7 @@ newBirthDescriptor{
 	desc =
 	{
 		"The people of Maj'Eyal: Humans, Halflings, Elves and Dwarves.",
-		"The known world has been at relative peace for over one hundred year and people are prospering again.",
+		"The known world has been at relative peace for over one hundred years, and people are prospering again.",
 		"You are an adventurer, setting out to find lost treasure and glory.",
 		"But what lurks in the shadow of the world?",
 	},

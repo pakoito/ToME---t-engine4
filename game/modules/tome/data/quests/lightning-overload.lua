@@ -23,10 +23,10 @@ desc = function(self, who)
 	desc[#desc+1] = "As you came to Derth you saw a huge dark cloud over the small town."
 	desc[#desc+1] = "When you entered you were greeted by an army of air elementals slaughtering the population."
 	if self:isCompleted("saved-derth") then
-		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the blue mountains, to the south west."
+		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the blue mountains, to the southwest."
 	end
 	if self:isCompleted("tempest-located") then
-		desc[#desc+1] = " * You have learned the real threat comes from a rogue archmage, a Tempest: Urkis. The mages of Angolwen are ready to teleport you there."
+		desc[#desc+1] = " * You have learned the real threat comes from a rogue Archmage, a Tempest named Urkis. The mages of Angolwen are ready to teleport you there."
 	end
 
 	return table.concat(desc, "\n")
@@ -88,7 +88,7 @@ kill_one = function(self)
 
 	if self.kill_count >= self.max_count then
 		local Chat = require "engine.Chat"
-		local chat = Chat.new("derth-attack-over", {name="Scared halfling"}, game.player)
+		local chat = Chat.new("derth-attack-over", {name="Scared Halfling"}, game.player)
 		chat:invoke()
 	end
 end
@@ -99,7 +99,7 @@ end
 
 teleport_urkis = function(self)
 	game:changeLevel(1, "tempest-peak")
-	require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[You step out on unfamiliar grounds, you are nearly on top of one of the highest peaks you can see.
+	require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[You step out on unfamiliar grounds. You are nearly on top of one of the highest peaks you can see.
 The storm is raging above your head.]], 400)
 end
 
@@ -110,6 +110,6 @@ reenter_derth = function(self)
 		game.level.data.background = nil
 
 		game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "restored-derth")
-		require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the mages have kept their word.\nDerth is free of the storm could.", 400)
+		require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the mages have kept their word.\nDerth is free of the storm cloud.", 400)
 	end
 end

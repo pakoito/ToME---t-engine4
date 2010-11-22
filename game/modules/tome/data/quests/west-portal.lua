@@ -35,7 +35,7 @@ desc = function(self, who)
 
 	if self:isCompleted() then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "#LIGHT_GREEN#* The portal to Maj'Eyal is now functional and can be used to go back, although, as all portals, it is one-way only.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* The portal to Maj'Eyal is now functional and can be used to go back, although, like all portals, it is one-way only.#WHITE#"
 	end
 
 	return table.concat(desc, "\n")
@@ -55,7 +55,7 @@ on_grant = function(self, who)
 	local spot = level:pickSpot{type="zone-pop", subtype="vor-armoury"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
-	game.logPlayer(game.player, "Zemekkys points the location of Vor Armoury on your map.")
+	game.logPlayer(game.player, "Zemekkys points to the location of Vor Armoury on your map.")
 end
 
 wyrm_lair = function(self, who)
@@ -72,7 +72,7 @@ wyrm_lair = function(self, who)
 	local spot = level:pickSpot{type="zone-pop", subtype="briagh"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
-	game.logPlayer(game.player, "Zemekkys points the location of Briagh lair on your map.")
+	game.logPlayer(game.player, "Zemekkys points to the location of Briagh lair on your map.")
 end
 
 create_portal = function(self, npc, player)

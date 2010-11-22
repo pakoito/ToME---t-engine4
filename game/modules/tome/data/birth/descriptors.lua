@@ -81,7 +81,7 @@ newBirthDescriptor{
 	selection_default = not profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"Tutorial mode, start with a simplified character and discover the game in a simple quest.",
+		"Tutorial mode: start with a simplified character and discover the game in a simple quest.",
 		"You will be guided by a helpful spirit while learning.",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",

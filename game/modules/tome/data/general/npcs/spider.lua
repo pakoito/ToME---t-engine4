@@ -176,7 +176,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 -- the bretheren of Ungoliant :D  tough and deadly, probably too tough, but meh <evil laughter>
 newEntity{ base = "BASE_NPC_SPIDER",
 	name = "ungolmor", color={0,0,0},  -- spider night, don't change the color
-	desc = [[Largest of all the spiderkin, it's folds of skin seem nigh impenetrable.]],
+	desc = [[Largest of all the spiderkin, its folds of skin seem nigh impenetrable.]],
 	level_range = {38, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = 120,
@@ -201,7 +201,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 
 newEntity{ base = "BASE_NPC_SPIDER",
 	name = "losselhing", color=colors.LIGHT_BLUE,  -- snow star spider
-	desc = [[The air seems to freeze solid around this frigid spider]],
+	desc = [[The air seems to freeze solid around this frigid spider.]],
 	level_range = {27, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = 120,

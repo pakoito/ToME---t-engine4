@@ -20,7 +20,7 @@
 name = "The Infinite Dungeon"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have entered the Infinite Dungeon, there is no coming back now."
-	desc[#desc+1] = "Go deep, fight, win and die in a blaze of glory!"
+	desc[#desc+1] = "You have entered the Infinite Dungeon. There is no coming back now."
+	desc[#desc+1] = "Go deep, fight, win or die in a blaze of glory!"
 	return table.concat(desc, "\n")
 end

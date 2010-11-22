@@ -74,7 +74,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 
 newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	name = "elven blood mage", color=colors.ORCHID,
-	desc = [[An elven blood mage, dressing in dark, bloodied, robes.]],
+	desc = [[An elven blood mage, dressing in dark, bloodied robes.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 1,
 	vim_regen = 20,

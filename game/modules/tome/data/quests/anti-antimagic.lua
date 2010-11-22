@@ -24,7 +24,7 @@ desc = function(self, who)
 	if self:isStatus(self.FAILED) then
 		desc[#desc+1] = "The Grand Corruptor died during the attack before he had time to teach you his ways."
 	elseif self:isStatus(self.DONE) then
-		desc[#desc+1] = "The defencers of Zigur were crushed, the Ziguranth scattered and weakened."
+		desc[#desc+1] = "The defenders of Zigur were crushed, the Ziguranth scattered and weakened."
 	end
 
 	return table.concat(desc, "\n")
@@ -86,7 +86,7 @@ on_status_change = function(self, who, status, sub)
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		world:gainAchievement("ANTI_ANTIMAGIC", game.player)
 		game.player:learnTalentType("corruption/vim", true)
-		game.logPlayer(game.player, "#LIGHT_GREEN#The Grand Corruptor gazes upon you, you feel knowledge flowing in your mind. You can now train some corruptions powers.")
+		game.logPlayer(game.player, "#LIGHT_GREEN#The Grand Corruptor gazes upon you. You feel knowledge flowing in your mind. You can now train some corruption powers.")
 		game:setAllowedBuild("corrupter")
 		game:setAllowedBuild("corrupter_corruptor", true)
 	end

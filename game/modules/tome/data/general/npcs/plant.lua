@@ -41,7 +41,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_PLANT",
 	name = "giant venus flytrap", color=colors.GREEN,
-	desc = "This flesh eating plant has grown to enormous proportions and seeks to quell its hunger",
+	desc = "This flesh-eating plant has grown to enormous proportions and seeks to quell its hunger",
 	level_range = {7, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_PLANT",
 
 newEntity{ base = "BASE_NPC_PLANT",
 	name = "honey tree", color=colors.UMBER,
-	desc = "As you approach it, you hear a high pitched buzzing sound.",
+	desc = "As you approach it, you hear a high-pitched buzzing sound.",
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(100,130),

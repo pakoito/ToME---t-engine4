@@ -46,7 +46,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Rogue",
 	desc = {
-		"Rogues are masters of tricks. A rogue can get behind you unnoticed and stab you in the back for tremendous damage.",
+		"Rogues are masters of tricks. A Rogue can get behind you unnoticed and stab you in the back for tremendous damage.",
 		"Rogues usually prefer to dual-wield daggers. They can also become trapping experts, from detecting and disarming traps to setting them.",
 		"Their most important stats are: Dexterity and Cunning",
 		"#GOLD#Stats modifiers:",
@@ -80,7 +80,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Shadowblade",
 	desc = {
-		"Shadowblades are a blend of rogues that are touched by the gift of magic; able to kill with their daggers under a veil of stealth while casting spells to enhance their performance and survival.",
+		"Shadowblades are Rogues that are touched by the gift of magic, able to kill with their daggers under a veil of stealth while casting spells to enhance their performance and survival.",
 		"Their use of magic is innate and not really studied; as such they do not naturally regenerate mana and must use external means of recharging.",
 		"They use the schools of Phantasm, Temporal, Divination and Conveyance magic to enhance their arts.",
 		"Their most important stats are: Dexterity, Cunning and Magic",

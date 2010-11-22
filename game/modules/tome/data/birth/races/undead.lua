@@ -24,7 +24,7 @@ newBirthDescriptor{
 	type = "race",
 	name = "Undead",
 	desc = {
-		"Undeads are humanoids (humans, elves, dwarves, ...) that have been brought back to life by the corruption of dark magics.",
+		"Undead are humanoids (humans, elves, dwarves, ...) that have been brought back to life by the corruption of dark magics.",
 		"Undead can take many forms, from ghouls to vampires and liches.",
 	},
 	descriptor_choices =
@@ -68,7 +68,7 @@ newBirthDescriptor
 		"- stun resistance",
 		"- fear immunity",
 		"- special ghoul talents: ghoulish leap, gnaw and retch",
-		"The rotting body of ghouls also forces them to act a bit slower than most creatures.",
+		"The rotting bodies of ghouls also force them to act a bit slower than most creatures.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, +1 Dexterity, +5 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, -2 Willpower, -2 Cunning",

@@ -24,16 +24,16 @@ desc = function(self, who)
 	desc[#desc+1] = "You were sent to the Charred Scar at the heart of which lies a huge volcano. In the Age of Pyre it destroyed the old Sher'Tul ruins that stood there, absorbing much of their latent magic."
 	desc[#desc+1] = "This place is still full of that power and the orcs intend to absorb this power using the Staff of Absorption!"
 	desc[#desc+1] = "Whatever their plan may be, they must be stopped at all cost."
-	desc[#desc+1] = "The volcano is attacked by orcs, a few Sun Paladins made it there with you, they will hold the line at the cost of their lives to buy you some time."
-	desc[#desc+1] = "Honor their sacrifice, do not let the orcs finish their work!"
+	desc[#desc+1] = "The volcano is attacked by orcs. A few Sun Paladins made it there with you. They will hold the line at the cost of their lives to buy you some time."
+	desc[#desc+1] = "Honor their sacrifice; do not let the orcs finish their work!"
 	if self:isCompleted("not-stopped") then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "You arrived too late, the place has been drained of its power and the sorcerers have left."
-		desc[#desc+1] = "Use the portal to go back to the Far East, you *MUST* stop them, no matter the cost."
+		desc[#desc+1] = "You arrived too late. The place has been drained of its power and the sorcerers have left."
+		desc[#desc+1] = "Use the portal to go back to the Far East. You *MUST* stop them, no matter the cost."
 	elseif self:isCompleted("stopped") then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "You arrived in time and interrupted the ritual, the sorcerers have departed."
-		desc[#desc+1] = "Use the portal to go back to the Far East, you *MUST* stop them, no matter the cost."
+		desc[#desc+1] = "You arrived in time and interrupted the ritual. The sorcerers have departed."
+		desc[#desc+1] = "Use the portal to go back to the Far East. You *MUST* stop them, no matter the cost."
 	end
 	return table.concat(desc, "\n")
 end
@@ -58,9 +58,9 @@ start_fyrk = function(self)
 	game.zone:addEntity(game.level, fyrk, "actor", 6, 455)
 
 	if self:isCompleted("not-stopped") then
-		game.logPlayer(game.player, "#VIOLET#A portal activates in the distance, you hear the orcs shout 'The Sorcerers have departed, follow them!'")
+		game.logPlayer(game.player, "#VIOLET#A portal activates in the distance. You hear the orcs shout, 'The Sorcerers have departed! Follow them!'")
 	else
-		game.logPlayer(game.player, "#VIOLET#The Sorcerers flee through a portal, as you prepare to follow them a huge faeros appears to block the way.")
+		game.logPlayer(game.player, "#VIOLET#The Sorcerers flee through a portal. As you prepare to follow them, a huge faeros appears to block the way.")
 		world:gainAchievement("CHARRED_SCAR_SUCCESS", game.player)
 	end
 	game.player:setQuestStatus("charred-scar", engine.Quest.COMPLETED)

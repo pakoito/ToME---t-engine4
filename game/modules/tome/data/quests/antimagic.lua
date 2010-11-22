@@ -20,7 +20,7 @@
 name = "The Curse of Magic"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You met a warrior who invited you join the group called the Ziguranth he belongs to that is dedicated to combat magic."
+	desc[#desc+1] = "You met a warrior who invited you join the group called the Ziguranth, dedicated to opposing magic."
 
 	return table.concat(desc, "\n")
 end
@@ -116,7 +116,7 @@ add_foe = function(self, next_wave, first, foe_idx)
 			m:setTarget(game.player)
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			if first then game.logSeen(m, "#VIOLET#A foe is summoned to the arena!")
-			else game.logSeen(m, "#VIOLET#An other foe is summoned to the arena!") end
+			else game.logSeen(m, "#VIOLET#Another foe is summoned to the arena!") end
 		end
 	end
 end

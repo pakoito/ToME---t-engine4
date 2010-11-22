@@ -29,7 +29,7 @@ desc = function(self, who)
 end
 
 on_grant = function(self, who)
-	game.logPlayer(who, "#VIOLET#This tome seems to be about the power of gems, maybe you should bring it to the jeweler in the Gates of Morning.")
+	game.logPlayer(who, "#VIOLET#This tome seems to be about the power of gems. Maybe you should bring it to the jeweler in the Gates of Morning.")
 end
 
 has_tome = function(self, who)
@@ -68,7 +68,7 @@ start_search = function(self, who)
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED, "search-valley")
-	game.logPlayer(game.player, "Limmir points the entrance to a cave on your map, this is supposed to be the way to the valley.")
+	game.logPlayer(game.player, "Limmir points to the entrance to a cave on your map. This is supposed to be the way to the valley.")
 
 	local o = game.zone:makeEntityByName(game.level, "object", "JEWELER_SUMMON")
 	if o then who:addObject(who:getInven("INVEN"), o) end

@@ -20,10 +20,10 @@
 name = "Scrying for dummies"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have found an object that seems to be unique, it looks like it has hidden powers within."
-	desc[#desc+1] = "Go to the town of Derth, to the south of the Trollshaws, and talk to the local scryer, maybe she can be of help."
+	desc[#desc+1] = "You have found an object that seems to be unique. It looks like it has hidden powers within."
+	desc[#desc+1] = "Go to the town of Derth, to the south of the Trollshaws, and talk to the local scryer. Maybe she can be of help."
 	if self:isCompleted() then
-		desc[#desc+1] = "You have talked to the halfling Elisa the Scryer, she was quite friendly and gave you an orb of scrying which will identify all normal items automatically and can be used to contact her should you find more special items."
+		desc[#desc+1] = "You have talked to the Halfling Elisa the Scryer. She was quite friendly, and gave you an orb of scrying which will identify all normal items automatically and can be used to contact her should you find more special items."
 	end
 	return table.concat(desc, "\n")
 end

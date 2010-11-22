@@ -24,7 +24,7 @@ newEntity{
 	type = "insect", subtype = "ritch",
 	display = "I", color=colors.RED,
 	desc = [[Ritchs are giant insects native to the arid wastes of the southern parts of the Far East.
-Vicous predators they inject corrupting diseases in their foes and they sharp claws cut through most armours.]],
+Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
 
 	combat = { dam=resolvers.rngavg(30,35), atk=16, apr=70, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
 

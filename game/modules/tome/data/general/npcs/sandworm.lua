@@ -47,14 +47,14 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "sandworm",
-	desc = [[A huge worm coloured as the sand it inhabits. It seems quite unhappy about you being in its lair..]],
+	desc = [[A huge worm coloured as the sand it inhabits. It seems quite unhappy about you being in its lair.]],
 	rarity = 1,
 }
 
 newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "sandworm destroyer",
 	color={r=169,g=168,b=52},
-	desc = [[A huge worm coloured as the sand it inhabits. This particular sandworm seems to have been bred for one purpose only, the eradication of everything that is non-sandworm, such as ... you.]],
+	desc = [[A huge worm coloured as the sand it inhabits. This particular sandworm seems to have been bred for one purpose only: the eradication of everything that is non-sandworm, such as... you.]],
 	rarity = 3,
 
 	resolvers.talents{
@@ -81,7 +81,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 
 newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "gigantic sandworm tunneler", color=colors.LIGHT_UMBER,
-	desc = "The ground shakes as this huge worm burrows towards you, it's gigantic mouth just as capable of devouring flesh as stone.",
+	desc = "The ground shakes as this huge worm burrows towards you, its gigantic mouth just as capable of devouring flesh as stone.",
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 2,
 	size_category = 4,
@@ -124,7 +124,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 
 newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "gigantic corrosive tunneler", color=colors.GREEN,
-	desc = "This huge worm burrows through the earth using it's powerful corrosive saliva.",
+	desc = "This huge worm burrows through the earth using its powerful corrosive saliva.",
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 3,
 	size_category = 4,

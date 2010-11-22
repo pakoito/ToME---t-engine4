@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Corrupter",
 	desc = {
-		"Corrupters are touched by the mark of evil, they are a blight on the world. Working to promote the cause of evil, they serve their masters, or themselves become masters.",
+		"Corrupters are touched by the mark of evil. They are a blight on the world. Working to promote the cause of evil, they serve their masters, or themselves become masters.",
 	},
 	descriptor_choices =
 	{
@@ -82,8 +82,8 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Corruptor",
 	desc = {
-		"A corruptor is a terrible foe, wielding dark magics that can sap the very soul of her targets.",
-		"They can harness the blight of evil, crushing their soul, stealing their life force to replenish themselves.",
+		"A corruptor is a terrible foe, wielding dark magics that can sap the very soul of her target.",
+		"They can harness the blight of evil, crushing souls, stealing life force to replenish themselves.",
 		"The most powerful corruptors can even take on some demonic aspects for themselves.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stats modifiers:",

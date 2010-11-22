@@ -118,9 +118,10 @@ static int dump_function(lua_State *L, const void* p, size_t sz, void* ud)
 //	fwrite(p, sz, 1, stdout);
 //	zipWriteInFileInZip(s->zf, p, sz);
 	dump_string(s, p, sz);
+	return 0;
 }
 
-static bool basic_serialize(lua_State *L, serial_type *s, int type, int idx)
+static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 {
 	if (type == LUA_TBOOLEAN) {
 		if (lua_toboolean(L, idx)) { writeZipFixed(s, "true", 4); }
@@ -138,24 +139,9 @@ static bool basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 		dump_string(s, str, len);
 		writeZipFixed(s, "\"", 1);
 	} else if (type == LUA_TFUNCTION) {
-/*
 		writeZipFixed(s, "loadstring(\"", 12);
 		lua_dump(L, dump_function, s);
 		writeZipFixed(s, "\")", 2);
-*/
-		lua_getglobal(L, "__dump_fct");
-		lua_pushvalue(L, idx-1);
-		lua_call(L, 1, 1);
-
-		size_t len;
-		const char *str = lua_tolstring(L, -1, &len);
-
-		writeZipFixed(s, "loadstring(", 11);
-		writeZipFixed(s, str, len);
-		writeZipFixed(s, ")", 1);
-		
-		lua_pop(L, 1);
-
 	} else if (type == LUA_TTABLE) {
 		lua_pushstring(L, "__CLASSNAME");
 		lua_rawget(L, idx - 1);

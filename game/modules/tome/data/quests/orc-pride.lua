@@ -31,7 +31,7 @@ desc = function(self, who)
 	if self:isCompleted("eastport") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have killed the master of Easport.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* A group of corrupted humans live in Eastport on the southern costline, they have contact with the Pride.#WHITE#"
+		desc[#desc+1] = "#SLATE#* A group of corrupted Humans live in Eastport on the southern costline. They have contact with the Pride.#WHITE#"
 	end
 ]]
 	if self:isCompleted("vor") then
@@ -111,7 +111,7 @@ on_grant = function(self, who)
 	local spot = level:pickSpot{type="zone-pop", subtype="grushnak-pride"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
-	game.logPlayer(game.player, "Aeryn points the known locations on your map.")
+	game.logPlayer(game.player, "Aeryn points to the known locations on your map.")
 end
 
 on_status_change = function(self, who, status, sub)

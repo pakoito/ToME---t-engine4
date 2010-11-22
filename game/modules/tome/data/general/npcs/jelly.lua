@@ -100,7 +100,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 
 newEntity{ base = "BASE_NPC_JELLY",
 	unique = true,
-	name = "Malevolent Dimentional Jelly", color=colors.VIOLET, image="npc/jelly-darkgrey.png",
+	name = "Malevolent Dimensional Jelly", color=colors.VIOLET, image="npc/jelly-darkgrey.png",
 	desc = "A strange black blob on the dungeon floor, through it you seem to be able to see other times and places. As you stare you see things moving out of it.",
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 50,

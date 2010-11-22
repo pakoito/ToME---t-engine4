@@ -24,9 +24,9 @@ newBirthDescriptor{
 	type = "race",
 	name = "Orc",
 	desc = {
-		"Since their creation by Morgoth the Orcs have been the pawns of the forces of darkness.",
-		"While both Sauron and Morgoth were destroy, the orcs survived and found a new master in the Far East.",
-		"Orcs are a ruthless warriors, yet they are not dumb and some are terribly cunning.",
+		"Since their creation by Morgoth, the Orcs have been the pawns of the forces of darkness.",
+		"While both Sauron and Morgoth were destroyed, the orcs survived and found a new master in the Far East.",
+		"Orcs are a ruthless warriors, yet they are not dumb, and some are terribly cunning.",
 	},
 	descriptor_choices =
 	{

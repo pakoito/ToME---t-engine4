@@ -51,7 +51,7 @@ newTalent{
 newTalent{
 	name = "Equilibrium Pool",
 	type = {"base/class", 1},
-	info = "Allows you to have an equilibrium pool. Equilibrium is used to mesure your balance with nature and the use of wild gifts.",
+	info = "Allows you to have an equilibrium pool. Equilibrium is used to measure your balance with nature and the use of wild gifts.",
 	mode = "passive",
 	hide = true,
 }
@@ -159,7 +159,7 @@ newTalent{
 	info = [[Allows a mage to teleport to the secret town of Angolwen.
 	You have studied the magic arts there and have been granted a special portal spell to teleport there.
 	Nobody must learn about this spell and so it should never be used while seen by any creatures.
-	The spell will take time to activate, you must be out of sight of any creature when you cast it and when the teleportation takes effect.]]
+	The spell will take time to activate. You must be out of sight of any creature when you cast it and when the teleportation takes effect.]]
 }
 
 -- Highers's power, a "weak" regeneration

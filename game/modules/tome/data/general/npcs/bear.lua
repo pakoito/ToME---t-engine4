@@ -57,7 +57,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 
 newEntity{ base = "BASE_NPC_BEAR",
 	name = "black bear", color={50,50,50},
-	desc = [[Do you smell like honey? 'cause this bear wants honey.]],
+	desc = [[Do you smell like honey? 'Cause this bear wants honey.]],
 	level_range = {6, nil}, exp_worth = 1,
 	rarity = 2,
 	max_life = resolvers.rngavg(90,100),

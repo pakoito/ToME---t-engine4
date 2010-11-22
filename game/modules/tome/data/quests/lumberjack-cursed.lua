@@ -20,7 +20,7 @@
 name = "The beast within"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You met an half mad lumberjack fleeing a small village, rambling about untold horrors lurking there, slaughtering people."
+	desc[#desc+1] = "You met a half-mad lumberjack fleeing a small village, rambling about untold horrors lurking there, slaughtering people."
 	if self.lumberjacks_died > 0 then
 		desc[#desc+1] = self.lumberjacks_died.." lumberjacks have died."
 	end

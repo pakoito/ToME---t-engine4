@@ -74,7 +74,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 
 newEntity{ base = "BASE_NPC_CANINE",
 	name = "white wolf", color=colors.WHITE, image="npc/canine_ww.png",
-	desc = [[A large and muscled wolf from the northern wastes. Its breath is cold and icy and its fur coated in frost.]],
+	desc = [[A large and muscled wolf from the northern wastes. Its breath is cold and icy, and its fur coated in frost.]],
 	level_range = {4, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(70,100),

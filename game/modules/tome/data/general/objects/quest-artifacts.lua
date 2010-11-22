@@ -74,7 +74,7 @@ newEntity{ define_as = "ORB_MANY_WAYS",
 	level_range = {30, 30},
 	display = "*", color=colors.VIOLET, image = "object/pearl.png",
 	encumber = 1,
-	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
+	desc = [[The orb projects images of distant places, some that seem to be not of this world, switching rapidly.
 If used near a portal it could probably activate it.]],
 
 	max_power = 30, power_regen = 1,
@@ -108,7 +108,7 @@ newEntity{ define_as = "ORB_MANY_WAYS_DEMON",
 	level_range = {30, 30},
 	display = "*", color=colors.VIOLET, image = "object/pearl.png",
 	encumber = 1,
-	desc = [[The orb projects images of distance places, some that seem to not be of this world, switching rapidly.
+	desc = [[The orb projects images of distant places, some that seem to be not of this world, switching rapidly.
 If used near a portal it could probably activate it.]],
 
 	max_power = 30, power_regen = 1,
@@ -150,7 +150,7 @@ newEntity{ define_as = "ORB_UNDEATH",
 	level_range = {50, 50},
 	display = "*", color=colors.VIOLET, image = "object/pearl.png",
 	encumber = 1,
-	desc = [[Dark visions fill you mind as you lift the orb. It is cold to the touch.]],
+	desc = [[Dark visions fill your mind as you lift the orb. It is cold to the touch.]],
 
 	on_drop = function(self, who)
 		if who == game.player then
@@ -261,7 +261,7 @@ newEntity{ define_as = "ORB_SCRYING",
 	name = "Orb of Scrying",
 	display = "*", color=colors.VIOLET, image = "object/ruby.png",
 	encumber = 1,
-	desc = [[This orb was given to you by Elisa the halfling scryer, it will automatically identify normal and rare items for you and can be activated to contact Elisa for rarer items.]],
+	desc = [[This orb was given to you by Elisa the Halfling scryer. It will automatically identify normal and rare items for you and can be activated to contact Elisa for rarer items.]],
 
 	on_drop = function(self, who)
 		if who == game.player then

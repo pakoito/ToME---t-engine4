@@ -24,10 +24,10 @@ newBirthDescriptor{
 	type = "race",
 	name = "Human",
 	desc = {
-		"The humans are one of the main race on Maj'Eyal, along the halflings. For many thousands of years they fought each other until events, and great people, unified all the human and halfling nations under one rule.",
-		"Humans of this Allied Kingdoms have known peace for over a century now.",
-		"Humans are split into two categories, the Highers and the rest. Highers have latent magic in their blood which gives them higher attributes and senses along with a longer life.",
-		"The rest of humanity is gifted with quick learning nad mastery, they can do and become anything they desire.",
+		"The humans are one of the main races on Maj'Eyal, along the halflings. For many thousands of years they fought each other until events, and great people, unified all the human and halfling nations under one rule.",
+		"Humans of these Allied Kingdoms have known peace for over a century now.",
+		"Humans are split into two categories: the Highers, and the rest. Highers have latent magic in their blood which gives them higher attributes and senses along with a longer life.",
+		"The rest of humanity is gifted with quick learning and mastery. They can do and become anything they desire.",
 	},
 	descriptor_choices =
 	{
@@ -62,7 +62,7 @@ newBirthDescriptor
 	name = "Higher",
 	desc = {
 		"Highers are a special branch of humans that have been imbued with latent magic since the Age of Allure.",
-		"They usualy do not breed with other humans, trying to keep their blood 'pure'.",
+		"They usually do not breed with other humans, trying to keep their blood 'pure'.",
 		"They possess the #GOLD#Gift of Kings#WHITE# which allows them to regenerate their wounds once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +1 Dexterity, +0 Constitution",
@@ -90,7 +90,7 @@ newBirthDescriptor
 	name = "Cornac",
 	desc = {
 		"Cornacians are average humans from the northern parts of the Allied Kingdoms.",
-		"Humans are an inherently very adaptable race and as such they gain a #GOLD#talent category point#WHITE# at birth(others only gain one at level 10, 20 and 30).",
+		"Humans are an inherently very adaptable race and as such they gain a #GOLD#talent category point#WHITE# at birth (others only gain one at levels 10, 20 and 30).",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",

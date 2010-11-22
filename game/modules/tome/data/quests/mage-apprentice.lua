@@ -53,7 +53,7 @@ collect_staff = function(self, npc, who, dialog)
 		function(o, item)
 			-- Special handling for the staff of absorption
 			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
-				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to consume, flames bursting out of his mouth, life seems to be drained away from him and in an instant he collapses in a lifeless husk.")
+				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to scream, flames bursting out of his mouth. Life seems to be drained away from him, and in an instant he collapses in a lifeless husk.")
 				who:setQuestStatus(self, self.FAILED)
 				game:unregisterDialog(dialog.next_dialog)
 				npc:die()
@@ -135,7 +135,7 @@ access_angolwen = function(self, player)
 	local p = mod.class.Grid.new{
 		show_tooltip=true, always_remember = true,
 		name="Portal to Angolwen",
-		desc="The city of magic lies inside the mountains to the west, either a spell or a portal is needed to access it.",
+		desc="The city of magic lies inside the mountains to the west. Either a spell or a portal is needed to access it.",
 		display='*', color=colors.VIOLET, image="terrain/grass_teleport.png",
 		notice = true,
 		change_level=1, change_zone="town-angolwen"

@@ -45,7 +45,7 @@ local name_rules = {
 
 local possible_types = {
 	{ name="lost warrior", random="male", chance=70,
-		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I fought too many battles, I fear I will not make it. Would you help me?]],
+		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			type = "humanoid", subtype = "human",
 			display = "@", color=colors.UMBER,
@@ -71,7 +71,7 @@ local possible_types = {
 		},
 	},
 	{ name="injured seer", random="female", chance=70,
-		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I will not be able to continue the road alone. Would you help me?]],
+		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I will not be able to continue the road alone. Would you help me?]],
 		actor = {
 			name = "%s, the injured seer",
 			type = "humanoid", subtype = "elf", female=true,
@@ -97,7 +97,7 @@ local possible_types = {
 		},
 	},
 	{ name="repented thief", random="male", chance=70,
-		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I fought too many battles, I fear I will not make it. Would you help me?]],
+		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the repented thief",
 			type = "humanoid", subtype = "halfling",
@@ -123,7 +123,7 @@ local possible_types = {
 		},
 	},
 	{ name="lone alchemist", random="male", chance=70,
-		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I fought too many battles, I fear I will not make it. Would you help me?]],
+		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lone alchemist",
 			type = "humanoid", subtype = "human",
@@ -149,7 +149,7 @@ local possible_types = {
 		},
 	},
 	{ name="lost sun paladin", random="female", chance=70,
-		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I fought too many battles, I fear I will not make it. Would you help me?]],
+		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lost sun paladin",
 			type = "humanoid", subtype = "human", female=true,
@@ -176,7 +176,7 @@ local possible_types = {
 		},
 	},
 	{ name="lost anorithil", random="female", chance=70,
-		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I fought too many battles, I fear I will not make it. Would you help me?]],
+		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lost anorithil",
 			type = "humanoid", subtype = "human", female=true,
@@ -203,7 +203,7 @@ local possible_types = {
 		},
 	},
 	{ name="worried loremaster", random="female", chance=30,
-		text = [[Please help me! I am afraid I lost myself in this place, I know there is a recall portal left around there by a friend, but I fought too many battles, I fear I will not make it. Would you help me?]],
+		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the worried loremaster",
 			type = "humanoid", subtype = "human", female=true,
@@ -250,7 +250,7 @@ desc = function(self, who)
 		end
 	elseif self:isStatus(engine.Quest.FAILED) then
 		if self.abandoned then
-			desc[#desc+1] = "You abandonned "..self.kind.name.." to death."
+			desc[#desc+1] = "You abandoned "..self.kind.name.." to death."
 		else
 			desc[#desc+1] = "You failed to protect the "..self.kind.name.." from death by "..(self.killing_npc or "???").."."
 		end

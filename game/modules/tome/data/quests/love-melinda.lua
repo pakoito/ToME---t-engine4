@@ -22,7 +22,7 @@ desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "After rescuing Melinda from Kryl-Feijan and the cultists you met her again in Last Hope."
 	if who.female then
-		desc[#desc+1] = "You talked for a while and it seems she has a crush for you, even if you are yourself a woman."
+		desc[#desc+1] = "You talked for a while and it seems she has a crush for you, even though you are yourself a woman."
 	else
 		desc[#desc+1] = "You talked for a while and it seems she has a crush for you."
 	end

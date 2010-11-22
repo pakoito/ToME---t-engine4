@@ -22,7 +22,7 @@ desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "Ukllmswwik asked you to take his portal to the temple of Creation and kill Slasul who has turned mad."
 	if self:isCompleted("slasul-story") then
-		desc[#desc+1] = "Slasul told you his side of the story, now you must decide, which of them is corrupt?"
+		desc[#desc+1] = "Slasul told you his side of the story. Now you must decide: which of them is corrupt?"
 	end
 
 	if self:isCompleted("kill-slasul") and self:isCompleted("kill-drake") then

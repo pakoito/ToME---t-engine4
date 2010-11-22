@@ -24,10 +24,10 @@ newBirthDescriptor{
 	type = "race",
 	name = "Elf",
 	desc = {
-		"The Second race to have awaken, thousands of years after the Sher'Tul.",
+		"The Second race to awaken, thousands of years after the Sher'Tul.",
 		"Elves are split into three subraces, of which only two remain in the current age.",
-		"They are tolerated by most races but not usualy well liked, due to their role in the Spellblaze.",
-		"Unlike other races elves are not subject to death by old age.",
+		"They are tolerated by most races but not usually well liked, due to their role in the Spellblaze.",
+		"Unlike other races, Elves are not subject to death by old age.",
 	},
 	descriptor_choices =
 	{
@@ -61,9 +61,9 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Shalore",
 	desc = {
-		"Shaloren elves have close ties with the magic of the world, they produced in the past many great mages.",
-		"Yet they remain quiet and try to prevent the teaching of magic to their people, for fear of an other Spellblaze.",
-		"They posses the #GOLD#Grace of the Eternals#WHITE# talent which allows them a boost of speed every once in a while.",
+		"Shaloren Elves have close ties with the magic of the world, and produced in the past many great mages.",
+		"Yet they remain quiet and try to prevent the teaching of magic to their people, for fear of another Spellblaze.",
+		"They possess the #GOLD#Grace of the Eternals#WHITE# talent which allows them a boost of speed every once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * -2 Strength, +1 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +3 Willpower, +1 Cunning",
@@ -86,9 +86,9 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Thalore",
 	desc = {
-		"Thaloren elves have spend most of the ages hidden within their forests, seldom leaving them.",
+		"Thaloren elves have spent most of the ages hidden within their forests, seldom leaving them.",
 		"The ages of the world passed by and yet they remained unchanged.",
-		"Their natural affinity for nature and their reclusion have made them great protectors of the natural order, often opposing their Shaloren brothers.",
+		"Their affinity for nature and their reclusion have made them great protectors of the natural order, often opposing their Shaloren brothers.",
 		"They possess the #GOLD#Wrath of the Eternals#WHITE# talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +3 Dexterity, +1 Constitution",

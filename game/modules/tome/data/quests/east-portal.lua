@@ -20,7 +20,7 @@
 name = "Back and there again"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have created a portal back to Maj'Eyal, you should try to talk to someone in Last Hope about establishing a link back."
+	desc[#desc+1] = "You have created a portal back to Maj'Eyal. You should try to talk to someone in Last Hope about establishing a link back."
 
 	if self:isCompleted("talked-elder") then
 		desc[#desc+1] = "You talked to the Elder in Last Hope who in turn told you to talk to Tannen, who lives in the north of the city."
@@ -42,10 +42,10 @@ desc = function(self, who)
 		desc[#desc+1] = "You brought back the diamond and athame to Tannen who asked you to come back in a few days."
 	end
 	if self:isCompleted("tricked-demon") then
-		desc[#desc+1] = "Tannen has tricked you! He swapped the orb for a false one that brought you to a demonic plane. Find the exit, get revenge!"
+		desc[#desc+1] = "Tannen has tricked you! He swapped the orb for a false one that brought you to a demonic plane. Find the exit, and get revenge!"
 	end
 	if self:isCompleted("trapped") then
-		desc[#desc+1] = "Tannen revealed the vile scum he really is and trapped you in his tower."
+		desc[#desc+1] = "Tannen revealed himself as the vile scum he really is and trapped you in his tower."
 	end
 
 	if self:isCompleted() then
@@ -137,7 +137,7 @@ open_orthanc = function(self, player)
 	local spot = level:pickSpot{type="zone-pop", subtype="telmur"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
-	game.logPlayer(game.player, "Tannen points the location of Telmur on your map.")
+	game.logPlayer(game.player, "Tannen points to the location of Telmur on your map.")
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "open-orthanc")
 	self.wait_turn = game.turn + game.calendar.DAY * 3
 end

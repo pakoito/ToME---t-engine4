@@ -22,7 +22,7 @@ newEntity{
 	slot = "LITE",
 	type = "lite", subtype="lite", image = resolvers.image_material("lite", {"brass","","dwarven","","faenorian"}),
 	display = "~",
-	desc = [[Lite up the dark places of the world!]],
+	desc = [[Light up the dark places of the world!]],
 	randart_able = { attack=10, physical=10, spell=10, def=30, misc=40 },
 	egos = "/data/general/objects/egos/lite.lua", egos_chance = { prefix=resolvers.mbonus(15, 3), suffix=resolvers.mbonus(15, 3) },
 }

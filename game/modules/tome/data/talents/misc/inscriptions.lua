@@ -145,7 +145,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to brighten the area in a radius of %d. It also destealth any stealth creatures.]]):format(data.range + data.inc_stat)
+		return ([[Activate the infusion to brighten the area in a radius of %d. It also reveals any stealthy creatures.]]):format(data.range + data.inc_stat)
 	end,
 }
 
@@ -240,7 +240,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to teleport randomly in a range of %d with a minimun range of 15.]]):format(data.range + data.inc_stat)
+		return ([[Activate the rune to teleport randomly in a range of %d with a minimum range of 15.]]):format(data.range + data.inc_stat)
 	end,
 }
 
@@ -257,7 +257,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to create a protective shield at most absorbing %d damage for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+		return ([[Activate the rune to create a protective shield absorbing at most %d damage for %d turns.]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
 
@@ -390,7 +390,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a self centered acid wave, doing %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat))
+		return ([[Activate the rune to fire a self-centered acid wave, doing %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat))
 	end,
 }
 

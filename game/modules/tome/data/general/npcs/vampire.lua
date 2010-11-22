@@ -40,7 +40,7 @@ newEntity{
 	define_as = "BASE_NPC_VAMPIRE",
 	type = "undead", subtype = "vampire",
 	display = "V", color=colors.WHITE,
-	desc = [[These ancient cursed beings often take upon the form of a bat and attack its prey.]],
+	desc = [[These ancient cursed beings often take the form of a bat and attack their prey.]],
 
 	combat = { dam=resolvers.mbonus(30, 10), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
 
@@ -72,7 +72,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
 	name = "lesser vampire", color=colors.SLATE, image = "npc/lesser_vampire.png",
-	desc=[[This vampire has only just begun it's new life, it has not yet fathomed its newfound power.  Yet it still has its thirst for blood.]],
+	desc=[[This vampire has only just begun its new life. It has not yet fathomed its newfound power, yet it still has a thirst for blood.]],
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(40,50),

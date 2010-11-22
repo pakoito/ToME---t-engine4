@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Chronomancer",
 	desc = {
-		"With one foot literally in the past and one in the future Chronomancers manipulate the present at a whim and wield a power that only bows to nature's own need to keep the balance. The wake in spacetime they leave behind them makes their own chronomantic abilites that much stronger and that much harder to control.  The wise Chronomancer learns to maintain the balance between their own thirst for cosmic power and the universe's need to flow undisturbed.  For the hole they tear that amplifies their own abilities just may be the same hole that one day swallows them.",
+		"With one foot literally in the past and one in the future Chronomancers manipulate the present at a whim and wield a power that only bows to nature's own need to keep the balance. The wake in spacetime they leave behind them makes their own Chronomantic abilites that much stronger and that much harder to control.  The wise Chronomancer learns to maintain the balance between his own thirst for cosmic power and the universe's need to flow undisturbed, for the hole he tears that amplifies his own abilities just may be the same hole that one day swallows his.",
 	},
 	descriptor_choices =
 	{
@@ -43,7 +43,7 @@ newBirthDescriptor{
 	desc = {
 		"A Paradox Mage studies the very fabric of spacetime, learning not just to bend it but shape it and remake it.",
 		"Most Paradox Mages lack basic skills that others take for granted (like general fighting sense), but they make up for it through control of cosmic forces.",
-		"Paradox Mages start off with knowledge of all but the most complex chronomantic schools.",
+		"Paradox Mages start off with knowledge of all but the most complex Chronomantic schools.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
@@ -86,10 +86,10 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Temporal Warden",
 	desc = {
-		"The Temporal Warden is a warrior who has learned to use some of the less intricate chronomantic schools.",
-		"Competent in two-handed weapon useage as well as chronomancy they seek to control the battle field while engaging in hand to hand combat.",
-		"Having split their studies between chronomancy and martial training Temporal Warden's have learned to blend the two into one but will never learn the more advanced chronomantic schools.",
-		"Temporal Warden's start play with an excellent grasp on the school of Gravity and Temporal Combat as well as an understanding of Time Travel and Spacetime Weaving.  While they have knowledge of the schools of Inertia, Matter, and Probability they won't be able to advance in them until later.",
+		"The Temporal Wardens are warriors who have learned to use some of the less intricate Chronomantic schools.",
+		"Competent in two-handed weapon usage as well as Chronomancy, they seek to control the battlefield while engaging in hand-to-hand combat.",
+		"Having split their studies between Chronomancy and martial training, Temporal Wardens have learned to blend the two into one but will never learn the more advanced Chronomantic schools.",
+		"Temporal Wardens start play with an excellent grasp on the schools of Gravity and Temporal Combat as well as an understanding of Time Travel and Spacetime Weaving.  While they have knowledge of the schools of Inertia, Matter, and Probability, they won't be able to advance in them until later.",
 		"Their most important stats are: Strength, Magic, and Willpower",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",

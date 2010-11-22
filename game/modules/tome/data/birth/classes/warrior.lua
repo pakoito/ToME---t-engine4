@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Warrior",
 	desc = {
-		"Warriors train in all aspects of physical combat. They can be a juggernaut of destruction wielding a two-handed greatsword, or a massive iron-clad protector with a shield.",
+		"Warriors train in all aspects of physical combat. They can be juggernauts of destruction wielding a two-handed greatsword, or massive iron-clad protectors with a shield.",
 	},
 	descriptor_choices =
 	{
@@ -42,8 +42,8 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Fighter",
 	desc = {
-		"A Fighter specializes in weapon and shield combat, rarely leaving the cover of their many protective techniques.",
-		"A good Fighter is able to withstand terrible attacks from all sides, protected by their shield, and when the time comes they lash out at their foes with incredible strength.",
+		"A Fighter specializes in weapon and shield combat, rarely leaving the cover of her many protective techniques.",
+		"A good Fighter is able to withstand terrible attacks from all sides, protected by her shield, and when the time comes lash out at her foes with incredible strength.",
 		"Their most important stats are: Strength and Dexterity",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +2 Dexterity, +2 Constitution",
@@ -86,8 +86,8 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Berserker",
 	desc = {
-		"A Berserker wields huge two-handed weapons of destruction, bringing pain and death to their foes as they cleaves them in two.",
-		"A Berserker usually forfeits all ideas of self-defense to concentrate on what they do best: killing things.",
+		"A Berserker wields huge two-handed weapons of destruction, bringing pain and death to his foes as he cleaves them in two.",
+		"A Berserker usually forfeits all ideas of self-defense to concentrate on what he does best: killing things.",
 		"Their most important stats are: Strength and Constitution",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +1 Dexterity, +3 Constitution",

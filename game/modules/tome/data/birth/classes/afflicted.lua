@@ -41,7 +41,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Cursed",
 	desc = {
-		"Through ignorance, greed or folly the cursed served some dark design and are now doomed to pay for their sins.",
+		"Through ignorance, greed or folly the Cursed served some dark design and are now doomed to pay for their sins.",
 		"Their only master now is the hatred they carry for every living thing.",
 		"Drawing strength from the death of all they encounter, the cursed become terrifying combatants.",
 		"Worse, any who approach the cursed can be driven mad by their terrible aura.",
