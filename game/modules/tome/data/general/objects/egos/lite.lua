@@ -40,7 +40,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of Elbereth", suffix=true, instant_resolve=true,
+	name = " of the sun", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
 	rarity = 9,
