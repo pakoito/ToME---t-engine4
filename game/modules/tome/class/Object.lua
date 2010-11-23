@@ -141,6 +141,12 @@ function _M:descAttribute(attr)
 		else
 			return ""
 		end
+	elseif attr == "INSCRIPTION" then
+		game.player.__inscription_data_fake = self.inscription_data
+		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
+		local desc = t.short_info(game.player, t)
+		game.player.__inscription_data_fake = nil
+		return ("%s"):format(desc)
 	end
 end
 

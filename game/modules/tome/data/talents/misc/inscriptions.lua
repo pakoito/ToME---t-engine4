@@ -57,6 +57,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to heal yourself for %d life over %d turns.]]):format(data.heal + data.inc_stat, data.dur)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[heal %d over %d turns]]):format(data.heal + data.inc_stat, data.dur)
+	end,
 }
 
 newInscription{
@@ -71,6 +75,10 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to heal yourself for %d life.]]):format(data.heal + data.inc_stat)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[heal %d]]):format(data.heal + data.inc_stat)
 	end,
 }
 
@@ -114,6 +122,11 @@ newInscription{
 		local what = table.concat(table.keys(data.what), ", ")
 		return ([[Activate the infusion to cure yourself of %s effects and reduce all damage taken by %d%% for %d turns.]]):format(what, data.power+data.inc_stat, data.dur)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local what = table.concat(table.keys(data.what), ", ")
+		return ([[resist %d%%; cure %s]]):format(data.power + data.inc_stat, what)
+	end,
 }
 
 newInscription{
@@ -129,6 +142,10 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to prevent stuns, dazes and pinning effects for %d turns.]]):format(data.dur + data.inc_stat)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d turns]]):format(data.dur + data.inc_stat)
 	end,
 }
 
@@ -147,6 +164,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to brighten the area in a radius of %d. It also reveals any stealthy creatures.]]):format(data.range + data.inc_stat)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[radius %d]]):format(data.range + data.inc_stat)
+	end,
 }
 
 newInscription{
@@ -163,6 +184,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to increase strength, dexterity and constitution by %d for %d turns.]]):format(data.power + data.inc_stat, data.dur)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[+%d for %d turns]]):format(data.power + data.inc_stat, data.dur)
+	end,
 }
 
 newInscription{
@@ -178,6 +203,10 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to increase willpower, cunning and magic by %d for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[+%d for %d turns]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
 
@@ -199,6 +228,10 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to teleport randomly in a range of %d.]]):format(data.range + data.inc_stat)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[range %d]]):format(data.range + data.inc_stat)
 	end,
 }
 
@@ -224,6 +257,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to teleport in a range of %d.]]):format(data.range + data.inc_stat)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[range %d]]):format(data.range + data.inc_stat)
+	end,
 }
 
 newInscription{
@@ -242,6 +279,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to teleport randomly in a range of %d with a minimum range of 15.]]):format(data.range + data.inc_stat)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[range %d]]):format(data.range + data.inc_stat)
+	end,
 }
 
 newInscription{
@@ -259,6 +300,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to create a protective shield absorbing at most %d damage for %d turns.]]):format(data.power + data.inc_stat, data.dur)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[absorb %d for %d turns]]):format(data.power + data.inc_stat, data.dur)
+	end,
 }
 
 newInscription{
@@ -274,7 +319,12 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to become invisible (power %d) for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+		return ([[Activate the rune to become invisible (power %d) for %d turns.
+		Charges remaining: %d]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[power %d for %d turns; %d charges]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
 	end,
 }
 
@@ -291,7 +341,12 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to increase your global speed by %d%% for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+		return ([[Activate the rune to increase your global speed by %d%% for %d turns.
+		Charges remaining: %d]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[speed %d%% for %d turns; %d charges]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
 	end,
 }
 
@@ -319,6 +374,10 @@ newInscription{
 		return ([[Activate the rune to get a vision of the area surrounding you (%d radius) and to allow you to see invisible (power %d) for %d turns.]]):
 		format(data.range, data.power + data.inc_stat, data.dur)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[radius %d%]]):format(data.range)
+	end,
 }
 
 newInscription{
@@ -345,6 +404,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to fire a beam of heat doing %0.2f fire damage over 5 turns.]]):format(damDesc(self, DamageType.FIRE, data.power + data.inc_stat))
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d fire damage]]):format(damDesc(self, DamageType.FIRE, data.power + data.inc_stat))
+	end,
 }
 
 newInscription{
@@ -369,6 +432,10 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to fire a bolt of ice doing %0.2f cold damage with a chance to freeze the target.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d cold damage]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+	end,
 }
 
 newInscription{
@@ -391,6 +458,10 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to fire a self-centered acid wave, doing %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat))
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d acid damage]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat))
 	end,
 }
 
@@ -420,6 +491,10 @@ newInscription{
 		local dam = damDesc(self, DamageType.LIGHTNING, data.power + data.inc_stat)
 		return ([[Activate the rune to fire a beam of lightning, doing %0.2f to %0.2f lightning damage.]]):format(dam / 3, dam)
 	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d lightning damage]]):format(damDesc(self, DamageType.LIGHTNING, data.power + data.inc_stat))
+	end,
 }
 
 newInscription{
@@ -436,5 +511,9 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to unleash a manasurge upon yourself, increasing mana regeneration by %d%% for %d turns and instantly restoring %d mana.]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d%% regen over %d turns; %d instant mana]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
 	end,
 }
