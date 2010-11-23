@@ -24,13 +24,13 @@ local Talents = require "engine.interface.ActorTalents"
 -- Spellcasting
 ----------------------------------------------------------------
 newEntity{ theme={spell=true, sorcerous=true}, name="spellpower", points = 1, rarity = 8, level_range = {1, 50},
-	wielder = { combat_spellpower = resolvers.randartmax(2, 50), },
+	wielder = { combat_spellpower = resolvers.randartmax(1, 28), },
 }
 newEntity{ theme={spell=true, sorcerous=true}, name="spellcrit", points = 1, rarity = 10, level_range = {1, 50},
 	wielder = { combat_spellcrit = resolvers.randartmax(1, 15), },
 }
 newEntity{ theme={spell=true, sorcerous=true}, name="spell crit magnitude", points = 1, rarity = 15, level_range = {1, 50},
-	wielder = { combat_critical_power = resolvers.randartmax(3, 30), },
+	wielder = { combat_critical_power = resolvers.randartmax(1, 12), },
 }
 
 ----------------------------------------------------------------
@@ -49,7 +49,7 @@ newEntity{ theme={physical=true, nimble=true}, name="phys atk", points = 1, rari
 	wielder = { combat_atk = resolvers.randartmax(1, 15), },
 }
 newEntity{ theme={physical=true, brawny=true}, name="phys crit magnitude", points = 1, rarity = 15, level_range = {1, 50},
-	wielder = { combat_critical_power = resolvers.randartmax(3, 30),   },
+	wielder = { combat_critical_power = resolvers.randartmax(1, 12),   },
 }
 
 ----------------------------------------------------------------

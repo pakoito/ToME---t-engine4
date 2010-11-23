@@ -163,7 +163,7 @@ function _M:generateRandart(add, base, lev)
 
 	-- Get a base object
 	base = base or game.zone:makeEntity(game.level, "object", {ego_chance=-1000, special=function(e)
-		return (not e.unique and e.randart_able) and true or false
+		return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 2) and true or false
 	end}, nil, true)
 	if not base then game.level.level = oldlev return end
 	local o = base:cloneFull()
@@ -177,12 +177,34 @@ function _M:generateRandart(add, base, lev)
 		return false
 	end
 
-	-- Make up a name
-	local themenames = {}
-	for i, tn in ipairs(table.keys(themes)) do
-		if randart_name_rules[tn] then themenames[#themenames+1] = tn end
+	-----------------------------------------------------------
+	-- Determine power
+	-----------------------------------------------------------
+	local points = lev * 0.7 + rng.range(5, 15)
+	local nb_powers = 2 + rng.dice(math.max(1, lev / 10), 2)
+	local powers = {}
+
+	o.cost = o.cost + points * 7
+
+	-- Select some powers
+	local power_themes = {}
+	for i = 1, nb_powers do
+		local list = game.zone:computeRarities("powers", powers_list, game.level, themes_fct)
+		local p = game.zone:pickEntity(list)
+		if p then
+			for t, _ in pairs(p.theme) do if themes[t] and randart_name_rules[t] then power_themes[t] = (power_themes[t] or 0) + 1 end end
+			powers[p.name] = p
+			powers[#powers+1] = p
+		end
 	end
-	local themename = rng.table(themenames)
+	power_themes = table.listify(power_themes)
+	table.sort(power_themes, function(a, b) return a[2] < b[2] end)
+
+	-----------------------------------------------------------
+	-- Make up a name
+	-----------------------------------------------------------
+	local themename = power_themes[#power_themes]
+	themename = themename and themename[1] or nil
 	local ngd = NameGenerator.new(rng.chance(2) and randart_name_rules.default or randart_name_rules.default2)
 	local ngt = (themename and randart_name_rules[themename] and NameGenerator.new(randart_name_rules[themename])) or ngd
 	local name
@@ -196,34 +218,20 @@ function _M:generateRandart(add, base, lev)
 	elseif namescheme == 4 then
 		name = ngd:generate().." the "..ngt:generate()
 	end
-	print("============== Made ", name, "with", themename)
 	o.define_as = name:upper():gsub("[^A-Z]", "_")
 
-	o.unided_name = "glowing "..o.unided_name
+	o.unided_name = rng.table{"glowing","scintillating","rune-covered","unblemished","jewel-encrusted"}.." "..o.unided_name
 	o.unique = name
 	o.randart = true
 	o.no_unique_lore = true
 	o.rarity = rng.range(200, 290)
 
-	-- Determine power
-	local points = lev * 0.7 + rng.range(5, 15)
-	local nb_powers = 2 + rng.dice(math.max(1, lev / 10), 2)
-	local powers = {}
-	print("Creating randart "..o.name.." with level "..lev)
-	print(" == using themes", table.concat(table.keys(themes), ','))
+	print("Creating randart "..name.."("..o.unided_name..") with "..(themename or "nil").." with level "..lev)
+	print(" * using themes", table.concat(table.keys(themes), ','))
 
-	o.cost = o.cost + points * 7
-
-	-- Select some powers
-	for i = 1, nb_powers do
-		local list = game.zone:computeRarities("powers", powers_list, game.level, themes_fct)
-		local p = game.zone:pickEntity(list)
-		if p then
-			powers[p.name] = p
-			powers[#powers+1] = p
-		end
-	end
-
+	-----------------------------------------------------------
+	-- Impue powers in the randart
+	-----------------------------------------------------------
 	local function merger(dst, src)
 		for k, e in pairs(src) do
 			if type(e) == "table" then
