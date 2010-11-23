@@ -45,6 +45,7 @@ if player.inscriptions_slots_added < 2 and player.unused_talents_types > 0 then
 		player.max_inscriptions = player.max_inscriptions + 1
 		player.inscriptions_slots_added = player.inscriptions_slots_added + 1
 		player:setInscription(nil, iname, idata, true, true, {obj=obj})
+		player:removeObject(inven, item)
 	end}
 end
 
