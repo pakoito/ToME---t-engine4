@@ -33,7 +33,7 @@ newTalent{
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_spellcrit", p.per)
+		self:removeTemporaryValue("combat_critical_power", p.per)
 		return true
 	end,
 	info = function(self, t)
