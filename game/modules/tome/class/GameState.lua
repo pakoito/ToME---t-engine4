@@ -157,7 +157,7 @@ function _M:generateRandart(add, base, lev)
 	local powers_list = self.randart_powers
 
 	-- Setup level
-	lev = lev or rng.range(5, 50)
+	lev = lev or rng.range(12, 50)
 	local oldlev = game.level.level
 	game.level.level = lev
 
