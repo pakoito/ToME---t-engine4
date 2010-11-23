@@ -41,7 +41,7 @@ But which of us is truly evil? Myself, working to better my people, doing no har
 Who is the insane one?]],
 	answers = {
 		{"Your feeble attempt to sway me from the side of good will not work. Pay for you sins!", action=attack("If you refuse to see reason, you leave me no choice!")},
-		{"Your words are ... disturbing. Why should I spare you?", jump="givequest"},
+		{"Your words are... disturbing. Why should I spare you?", jump="givequest"},
 	}
 }
 
@@ -50,16 +50,16 @@ newChat{ id="givequest",
 Do not be so hasty to assume YOU are in a position to offer mercy to ME!
 Yet I shall tell you my story. You surface dwellers do not know much about nagas, but let me tell you this: our current condition was not our choice.
 When Nalore sank, many of us died, so we resorted to using the magic of this temple. It worked, it saved us, and yet we are cursed. Cursed in this form by the terrible magic.
-If you do not believe anything else of what I say, please believe at least this: the Sher'Tul are hidding, not gone, and they are not benevolent entities.
+If you do not believe anything else of what I say, please believe at least this: the Sher'Tul are hiding, not gone, and they are not benevolent entities.
 Recently, that water dragon that sent you here started sending "agents" to secure the temple. I can only imagine his goals, but they are clearly not peaceful.]],
 	answers = {
 		{"You do not sound mad to me ... could Ukllmswwik have lied?", jump="portal_back", action=function(npc, player) player:setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "slasul-story") end},
-		{"I will not be deceived by your lies! I will make your pay for your victims!", action=attack("As you wish. It did not have to come to it...")},
+		{"I will not be deceived by your lies! I will make your pay for your victims!", action=attack("As you wish. It did not have to come to this...")},
 	}
 }
 
 newChat{ id="portal_back",
-	text = [[Use this portal, it will bring you back to his cave; ask him the truth.]],
+	text = [[Use this portal. It will bring you back to his cave; ask him the truth.]],
 	answers = {
 		{"I will make him pay for his treachery.", action=function(npc, player) player:hasQuest("temple-of-creation"):portal_back() end},
 	}

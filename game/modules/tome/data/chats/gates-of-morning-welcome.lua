@@ -28,7 +28,7 @@ Stop! You are clearly a stranger! Where do you come from? The Gates of Morning a
 }
 
 newChat{ id="from",
-	text = [[Maj'Eyal! For many years have we tried to contact your people, we always failed.
+	text = [[Maj'Eyal! For many years have we tried to contact your people. We always failed.
 In any event, what is your purpose here?]],
 	answers = {
 		{"It seems that I am stranded in these unfamiliar lands. #LIGHT_GREEN#*Tell her about your hunt for orcs and your encounter with Fillarel.*#WHITE#", jump="orcs"},
@@ -37,7 +37,7 @@ In any event, what is your purpose here?]],
 }
 
 newChat{ id="sun-paladins",
-	text = [[We are the mighty warriors of the Sunwall, channeling the power of the sun and merging it with martial training.
+	text = [[We are the mighty warriors of the Sunwall, channeling the power of the Sun and merging it with martial training.
 For hundreds of years, we stood between the Orc Pride and the free people. Our numbers are diminishing, but we will stand firm until our last breath.]],
 	answers = {
 		{"You have a noble spirit, my lady.", jump="from"},
@@ -45,9 +45,9 @@ For hundreds of years, we stood between the Orc Pride and the free people. Our n
 }
 
 newChat{ id="orcs",
-	text = [[Orcs! Ah! Well then this is your lucky day. This whole continent is swarming with Orcs. They have united as the Orc Pride and, according to rumor, their masters are powerful.
+	text = [[Orcs! Ah! Well then this is your lucky day. This whole continent is swarming with Orcs. They have united as the Orc Pride and, according to rumour, their masters are powerful.
 They roam the lands freely, ever assaulting us.
-@playername@, you have helped one of ours, I grant you access to the Gates of Morning and name you friend of the Sunwall.]],
+@playername@, you have helped one of ours. I grant you access to the Gates of Morning and name you friend of the Sunwall.]],
 	answers = {
 		{"Thank you, my lady.", action=function(npc, player)
 			world:gainAchievement("STRANGE_NEW_WORLD", game.player)

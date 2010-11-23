@@ -37,7 +37,7 @@ end
 
 if game.player:hasQuest("east-portal") and game.player:hasQuest("east-portal").wait_turn and game.player:hasQuest("east-portal").wait_turn > game.turn then
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*Nobody answers, Tannen is probably still busy studying the orb.*#WHITE#]],
+	text = [[#LIGHT_GREEN#*Nobody answers. Tannen is probably still busy studying the orb.*#WHITE#]],
 	answers = {
 		{"[leave]"},
 	}
@@ -74,7 +74,7 @@ newChat{ id="east_portal2",
 }
 
 newChat{ id="east_portal3",
-	text = [[#LIGHT_GREEN#*He spends a few minutes reading*#WHITE# Ah! I see. I did not at first grasp this Zemekkys's methods, but I see now that they are sound, and it is simply his penmanship that needs improvement. We can manage to reproduce his work here, but, as he says, we will need the Blood-Runed Athame and a Resonating Diamond. ]],
+	text = [[#LIGHT_GREEN#*He spends a few minutes reading*#WHITE# Ah! I see. I did not at first grasp this Zemekkys's methods, but I see now that they are sound, and it is simply his penmanship that needs improvement. We can manage to reproduce his work here, but, as he says, we will need the Blood-Runed Athame and a Resonating Diamond.]],
 	answers = {
 		{"Have you any idea where they might be found?", jump="east_portal4"},
 	}
@@ -113,7 +113,7 @@ newChat{ id="withheld_orb",
 -- back with materials
 ---------------------------------------------------------------
 newChat{ id="has_material_gave_orb",
-	text = [[Excellent. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Telmur, which the men of sholtar sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields," return with it and your odds of surviving our portal attempt will go up drastically.]],
+	text = [[Excellent. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Telmur, which the men of Sholtar sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields," return with it and your odds of surviving our portal attempt will go up drastically.]],
 	answers = {
 		{"Thank you, and farewell.", action=function(npc, player) player:hasQuest("east-portal"):open_telmur(player) end},
 	}
@@ -142,14 +142,14 @@ newChat{ id="no_orb_loan2",
 }
 
 newChat{ id="no_orb_loan3",
-	text = [[[#LIGHT_GREEN#*He stops pacing and returns the Orb to you.*#WHITE# I believe I know most of what I need to. But I need a few details cleared up. You'll have to return to this elven chronomancer and ask him whether he meant an inverted probabilistic field or a reverted probabilistic field. I dare not guess, as the result could be quite unpleasant for you.]],
+	text = [[[#LIGHT_GREEN#*He stops pacing and returns the Orb to you.*#WHITE# I believe I know most of what I need to. But I need a few details cleared up. You'll have to return to this Elven Chronomancer and ask him whether he meant an inverted probabilistic field or a reverted probabilistic field. I dare not guess, as the result could be quite unpleasant for you.]],
 	answers = {
 		{"I'll return with the answer.", action=function(npc, player) player:hasQuest("east-portal"):ask_east(player) end},
 	}
 }
 
 newChat{ id="orb_loan",
-	text = [[Fear not. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Telmur, which the men of sholtar sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields", return with it and your odds of surviving our portal attempt will go up drastically.]],
+	text = [[Fear not. Return in a few days, and I'll have everything prepared. Oh, take this #LIGHT_GREEN#*He hands you a key*#WHITE#. It opens the ruins of Telmur, which the men of Sholtar sealed many years ago. If you happen to find a text in the ruins entitled "Inverted and Reverted Probabilistic Fields", return with it and your odds of surviving our portal attempt will go up drastically.]],
 	answers = {
 		{"Thank you, and farewell.", action=function(npc, player) player:hasQuest("east-portal"):open_telmur(player) end},
 	}

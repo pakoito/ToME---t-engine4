@@ -31,7 +31,7 @@ end
 ---------- If the void portal has been openned
 if void_portal_open(nil, game.player) then
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*The two sorcerers stand dead before you.*#WHITE#
+	text = [[#LIGHT_GREEN#*The two Sorcerers lie dead before you.*#WHITE#
 #LIGHT_GREEN#*Their bodies vanish in small cloud of mist, quickly fading away.*#WHITE#
 But the portal to the Void is already open. It must be closed before the Creator can come through or all will have been in vain!
 After searching the remains of the Sorcerers you find a note explaining that the portal can only be closed with a sentient being's sacrifice.]],
@@ -59,7 +59,7 @@ Please, make sure the world is safe.]],
 ----------- If the void portal is still closed
 else
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*The two sorcerer stand dead before you.*#WHITE#
+	text = [[#LIGHT_GREEN#*The two Sorcerers lie dead before you.*#WHITE#
 #LIGHT_GREEN#*Their bodies vanish in some immaterial mist.*#WHITE#
 You have won the game!
 Both Maj'Eyal and the Far East are safe from the dark schemes of the Sorcerers and their God.]],
@@ -70,7 +70,7 @@ Both Maj'Eyal and the Far East are safe from the dark schemes of the Sorcerers a
 }
 
 newChat{ id="aeryn-ok",
-	text = [[I cannot believe we succceeded. I was prepared to die and yet I live.
+	text = [[I cannot believe we succeeded. I was prepared to die and yet I live.
 I might have underestimated you. You did more than we could have hoped for!]],
 	answers = {
 		{"We both did.", action=function(npc, player) player:hasQuest("high-peak"):win("full") end},

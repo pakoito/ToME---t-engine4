@@ -40,7 +40,7 @@ end
 -----------------------------------------------------------------
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A slot in the door opens and a pair of wild eyes peer out.*#WHITE#
+	text = [[#LIGHT_GREEN#*A slot in the door opens and a pair of wild eyes peers out.*#WHITE#
 What do you want, @playerdescriptor.race@?]],
 	answers = {
 		{"Paladin Aeryn told me that you could help me. I need to get to Maj'Eyal.", jump="help", cond=function(npc, player) return not player:hasQuest("west-portal") end},
@@ -70,7 +70,7 @@ Orb, you say? That you used to travel here from Maj'Eyal? Surely you don't posse
 }
 newChat{ id="offer2",
 	text = [[#LIGHT_GREEN#*His eyes widen.*#WHITE#
-Great Socks of Feanor! It IS the Orb! Maybe we can get you home after all. Or maybe we can get you embedded in magma a thousand leagues straight down.]],
+Great Socks of Aeryn! It IS the Orb! Maybe we can get you home after all. Or maybe we can get you embedded in magma a thousand leagues straight down.]],
 	answers = {
 		{"Can I come in?", jump="offer3"},
 	}
@@ -80,7 +80,7 @@ newChat{ id="offer3",
 	text = [[You think I'm letting some filthy @playerdescriptor.race@ in my house with the Orb of Many Ways?
 I blow myself up quite enough already without that thing in the house, thank you.
 Besides, I still can't help you unless you have a Blood-Runed Athame to etch a portal.
-Er, and that portal must be etched on a piece of prepared Resonating Marble.
+Err, and that portal must be etched on a piece of prepared Resonating Marble.
 The Gates of the Morning has a slab of Marble that once could have served, but a number of, uh, incidents have taken their toll.
 It'll require a Resonating Diamond to get it properly prepared. Oh, and I want 100 gold.]],
 	answers = {
@@ -124,14 +124,14 @@ newChat{ id="athame3",
 -- Return gem
 -----------------------------------------------------------------
 newChat{ id="complete",
-	text = [[[Yes? You got the athame, the gem and 100 gold?]],
+	text = [[[Yes? You got the Athame, the gem and 100 gold?]],
 	answers = {
 		{"[Give him the gem, the athame and 100 gold]", jump="complete2", cond=check_materials, action=remove_materials},
-		{"Sorry it seems I miss some stuff. I will be back."},
+		{"Sorry, it seems I lack some stuff. I will be back."},
 	}
 }
 newChat{ id="complete2",
-	text = [[#LIGHT_GREEN#*The door opens and a shabby elf emerges.*#WHITE#
+	text = [[#LIGHT_GREEN#*The door opens and a shabby Elf emerges.*#WHITE#
 Off we go to prepare the portal!]],
 	answers = {
 		{"[follow him]", action=function(npc, player) player:hasQuest("west-portal"):create_portal(npc, player) end},

@@ -42,9 +42,9 @@ local function auto_id(npc, player)
 		text = [[Let's see what have you got here...
 ]]..table.concat(list, "\n")..[[
 
-That is very nice @playername@!]],
+That is very nice, @playername@!]],
 		answers = {
-			{"Thank you Elisa!"},
+			{"Thank you, Elisa!"},
 		}
 	}
 
@@ -55,17 +55,17 @@ end
 newChat{ id="welcome",
 	text = [[Oh, hi @playername@, have you got something new to show me?]],
 	answers = {
-		{"Yes Elisa, could you have a look at those objects please? [show her the items the orb could not identify]", cond=can_auto_id, action=auto_id},
-		{"Err, no sorry, I just wanted to hear a friendly voice.", jump="friend"},
+		{"Yes, Elisa, could you have a look at these objects please? [show her the items the orb could not identify]", cond=can_auto_id, action=auto_id},
+		{"Err, no... sorry, I just wanted to hear a friendly voice.", jump="friend"},
 		{"Not yet sorry!"},
 	}
 }
 
 newChat{ id="friend",
 	text = [[#LIGHT_GREEN#*You hear something akin to a muffled giggle*#WHITE#
-Oh you are #{bold}#SOOOO#{normal}# cute!]],
+Oh, you are #{bold}#SOOOO#{normal}# cute!]],
 	answers = {
-		{"Goodbye Elisa!"},
+		{"Goodbye, Elisa!"},
 	}
 }
 

@@ -43,10 +43,10 @@ So, now you will kill me and complete the cycle of destruction?]],
 newChat{ id="what",
 	text = [[You.. you do not know?
 A few hours after you entered this place a raid of orcs fell upon us. They were not alone -- demons walked among them. We were overwhelmed! Utterly destroyed!
-My land is no more! All because you could not stop them at the Charred Scar! You failed us! People died to protect you and you failed!
+My land is no more! All because you could not stop them at the Charred Scar! You failed us! People died to protect you, and you failed!
 #LIGHT_GREEN#*She starts to weep...*#WHITE#]],
 	answers = {
-		{"I know my mistakes and I intend to correct them. Please let me pass. I cannot save your people but I can make their death mean something!", action=spare},
+		{"I know my mistakes and I intend to correct them. Please let me pass. I cannot save your people, but I can make their deaths mean something!", action=spare},
 		{"[kill her]", action=kill},
 	}
 }

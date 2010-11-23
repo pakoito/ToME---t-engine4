@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*Ben stands defeated ar your feet*#WHITE#
-T..thank you for.. *cough*.. saving me from the curse.
-I did no.. not want for this to...
+	text = [[#LIGHT_GREEN#*Ben lies defeated at your feet*#WHITE#
+T...thank you for... *cough*... saving me from the curse.
+I did no... not want for this to...
 #LIGHT_GREEN#*he coughs one last time and dies, a smile on his face as his curse is gone.*#WHITE#]],
 	answers = {
 		{"Rest in peace.", action=function(npc, player) player:setQuestStatus("lumberjack-cursed", engine.Quest.COMPLETED) end},

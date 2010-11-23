@@ -28,7 +28,7 @@ newLore{
 	lore = [[#{italic}#From the notes of Darwood Oakton, explorer:
 #{bold}#CHAPTER ONE: THE SHER'TUL
 
-#{normal}#The Sher'Tul. Who were they? Where did they come from? Where did they go? The mysteries surrounding this crucible race are almost infinite. What little scraps of information we have regarding them allude to a mighty and world-spanning civilisation, wielding power and magic unthinkable. Now however, all that remains of them are forgotten, wind-swept ruins, the tiniest minutia of their technology sealed away in the studies of reclusive sages. Does their mystery not call to your curious nature as it does mine, gentle reader?]],
+#{normal}#The Sher'Tul. Who were they? Where did they come from? Where did they go? The mysteries surrounding this crucible race are almost infinite. What little scraps of information we have regarding them allude to a mighty and world-spanning civilisation, wielding power and magic unthinkable. Now, however, all that remains of them are forgotten, wind-swept ruins, the tiniest minutiae of their technology sealed away in the studies of reclusive sages. Does their mystery not call to your curious nature as it does mine, gentle reader?]],
 }
 
 newLore{
@@ -38,7 +38,7 @@ newLore{
 	lore = [[#{italic}#From the notes of Darwood Oakton, explorer:
 #{bold}#CHAPTER TWO: THE OLD FOREST
 
-#{normal}#What is there to be said about a place like "the old forest"? It is a forest, and it is old. By it's unimaginative moniker you can guess how important this place is to the people of Derth; the only locals who commonly venture under its boughs are novice alchemists in search of ingredients, plus the odd hunter with his sights set low. However, the story of this old forest now takes a more interesting twist... Rumours are growing of trees roaming in its depths, moving as you or I would. Some even claim that they now possess the spark of sentience. The Sher'Tul were rumoured to hold the power of animism... is this mere coincidence?]],
+#{normal}#What is there to be said about a place like "the old forest"? It is a forest, and it is old. By its unimaginative moniker you can guess how important this place is to the people of Derth; the only locals who commonly venture under its boughs are novice alchemists in search of ingredients, plus the odd hunter with his sights set low. However, the story of this old forest now takes a more interesting twist... Rumours are growing of trees roaming in its depths, moving as you or I would. Some even claim that they now possess the spark of sentience. The Sher'Tul were rumoured to hold the power of animism... is this mere coincidence?]],
 }
 
 newLore{
@@ -48,7 +48,7 @@ newLore{
 	lore = [[#{italic}#From the notes of Darwood Oakton, explorer:
 #{bold}#CHAPTER THREE: ANCIENT RUINS
 
-#{normal}#My inquiries have paid off! It took much searching, and even more arm-twisting and cajoling once I had found my man, but a local lumberjack who plies his trade in the old forest has divulged to me an amazing secret! He speaks of ruins within the forest, a location where the living trees seem to congregate in larger numbers. He would not speak much of the place, he seemed to believe it cursed, but I did manage to squeeze out of him the appearance of the ruins. There is no longer any doubt in my mind now: They belong to the Sher'Tul!]],
+#{normal}#My inquiries have paid off! It took much searching, and even more arm-twisting and cajoling once I had found my man, but a local lumberjack who plies his trade in the old forest has divulged to me an amazing secret! He speaks of ruins within the forest, a location where the living trees seem to congregate in larger numbers. He would not speak much of the place, and seemed to believe it cursed, but I did manage to squeeze out of him the appearance of the ruins. There is no longer any doubt in my mind now: They belonged to the Sher'Tul!]],
 }
 
 newLore{

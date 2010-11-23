@@ -18,24 +18,24 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A halfling comes forth from his hiding place.*#WHITE#
-You killed them all? Are we safe now? Oh please tell me this was a bad dream!]],
+	text = [[#LIGHT_GREEN#*A Halfling comes forth from his hiding place.*#WHITE#
+You killed them all? Are we safe now? Oh, please tell me this was a bad dream!]],
 	answers = {
-		{"Be at ease, I have dispatched those monstrosities. Do you know where they came from or what they wanted?", jump="quest"},
+		{"Be at ease. I have dispatched those monstrosities. Do you know where they came from or what they wanted?", jump="quest"},
 	}
 }
 
 newChat{ id="quest",
 	text = [[From nowhere! From the sky!
-I do not know, I was tending my crop just outside the town when I heard screaming. As I entered the town I saw the dark cloud over here, those .. those .. things where coming from it in blasts of lightning!]],
+I do not know. I was tending my crop just outside the town when I heard screaming. As I entered the town, I saw the dark cloud over here. Those... those... things were coming from it in blasts of lightning!]],
 	answers = {
-		{"It seems they have stopped coming for now, I will look for somebody who could help dispose of this nefarious cloud.", jump="quest2"},
+		{"It seems they have stopped coming for now. I will look for somebody who could help dispose of this nefarious cloud.", jump="quest2"},
 	}
 }
 
 newChat{ id="quest2",
 	text = [[Thank you! You have saved many people today!
-I have heard of rumours of a reclusive town of wise and powerful men somewhere in the blue mountains, maybe they could help? If they even exist...]],
+I have heard of rumours of a reclusive town of wise and powerful men somewhere in the blue mountains. Maybe they could help? If they even exist...]],
 	answers = {
 		{"I will not let you down.", action=function(npc, player) player:hasQuest("lightning-overload"):done_derth() end},
 	}

@@ -19,7 +19,7 @@
 
 if not game.player:hasQuest("spydric-infestation") then
 newChat{ id="welcome",
-	text = [[I have heard you are a great hero of the west? Could you help me please?]],
+	text = [[I have heard you are a great hero of the west? Could you help me, please?]],
 	answers = {
 		{"Maybe, what is it about?", jump="quest", cond=function(npc, player) return not player:hasQuest("spydric-infestation") end},
 		{"I have got enough problems sorry."},
@@ -27,26 +27,26 @@ newChat{ id="welcome",
 }
 else
 newChat{ id="welcome",
-	text = [[Welcome back @playername@.]],
+	text = [[Welcome back, @playername@.]],
 	answers = {
-		{"I have found your husband, I take it he made it home safely?", jump="done", cond=function(npc, player) return player:isQuestStatus("spydric-infestation", engine.Quest.COMPLETED) end},
-		{"I got to go, bye."},
+		{"I have found your husband. I take it he made it home safely?", jump="done", cond=function(npc, player) return player:isQuestStatus("spydric-infestation", engine.Quest.COMPLETED) end},
+		{"I've got to go. Bye."},
 	}
 }
 end
 
 newChat{ id="quest",
-	text = [[My husband, Rashim, is a sun paladin, he was sent to clear the spider lair of ardhungol to the north of this town.
-It has been three days now, he should be back by now. I have a feeling something terrible has happened to him, please find him.
+	text = [[My husband, Rashim, is a Sun Paladin. He was sent to clear the spider lair of Ardhungol to the north of this town.
+It has been three days now. He should be back by now. I have a feeling something terrible has happened to him. Please find him.
 He should have a magical stone given by the Anorithil to create a portal back here, yet he did not use it!]],
 	answers = {
 		{"I will see if I can find him.", action=function(npc, player) player:grantQuest("spydric-infestation") end},
-		{"Spiders? Eww sorry but he is probably dead now."},
+		{"Spiders? Eww, sorry, but he is probably dead now."},
 	}
 }
 
 newChat{ id="done",
-	text = [[Yes yes he did! He said he would have died if not for you.]],
+	text = [[Yes, yes he did! He said he would have died if not for you.]],
 	answers = {
 		{"It was nothing.", action=function(npc, player)
 			player:setQuestStatus("spydric-infestation", engine.Quest.DONE)

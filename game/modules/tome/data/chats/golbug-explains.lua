@@ -22,7 +22,7 @@ newChat{ id="welcome",
 @playerdescriptor.race@! You should never have come! Your doom awaits!
 The Orc Pride will never yield to anybody! They have their precious and there is nothing you can do.]],
 	answers = {
-		{"The Orc Pride obeys a master? I see ... 'pride' indeed!", jump="mock"},
+		{"The Orc Pride obeys a master? I see... 'pride' indeed!", jump="mock"},
 		{"#LIGHT_GREEN#[Attack]"},
 	}
 }

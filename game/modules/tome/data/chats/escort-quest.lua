@@ -196,7 +196,7 @@ Please let me reward you:]],
 }
 
 newChat{ id="done",
-	text = [[There you go, farewell!]],
+	text = [[There you go. Farewell!]],
 	answers = {
 		{"Thank you."},
 	},

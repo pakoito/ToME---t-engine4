@@ -32,7 +32,7 @@ local function recharge(npc, player)
 end
 
 newChat{ id="welcome",
-	text = [[Welcome @playername@ to my shop.]],
+	text = [[Welcome, @playername@, to my shop.]],
 	answers = {
 		{"Let me see your wares.", action=function(npc, player)
 			npc.store:loadup(game.level, game.zone)

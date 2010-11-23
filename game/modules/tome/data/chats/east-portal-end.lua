@@ -18,13 +18,13 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A robed human is waiting for you when you step out of the portal.*#WHITE#
+	text = [[#LIGHT_GREEN#*A robed Human is waiting for you when you step out of the portal.*#WHITE#
 Well met, @playername@!
 I am Meranas, Herald of Angolwen. I have come here at the request of King Eldarion, who worried when you didn't return.
 We have been watching Tannen for some time, and were pleased to see you reveal his true nature-- and stop him. For this we are grateful, and I think we can pay you back.
-We have studied his portal research and if you give me the components I will create the portal for you, here and now!]],
+We have studied his portal research, and if you give me the components I will create the portal for you, here and now!]],
 	answers = {
-		{"Yes, Tannen was not exactly friendly. I thank you for your help. Here are the components. [hand him the diamon and the athame]", action=function(npc, player) player:hasQuest("east-portal"):create_portal(npc, player) end},
+		{"Yes, Tannen was not exactly friendly. I thank you for your help. Here are the components. [hand him the diamond and the athame]", action=function(npc, player) player:hasQuest("east-portal"):create_portal(npc, player) end},
 	}
 }
 

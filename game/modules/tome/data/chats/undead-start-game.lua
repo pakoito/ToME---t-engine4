@@ -18,16 +18,16 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*Before you stands a human clothed in black robes. He seems to be ignoring you.*#WHITE#
+	text = [[#LIGHT_GREEN#*Before you stands a Human clothed in black robes. He seems to be ignoring you.*#WHITE#
 #LIGHT_GREEN#*You stand inside some kind of summoning circle, which prevents you from moving.*#WHITE#
-Oh yes! YES one more for my collection. My collection yes. A powerful one indeed!]],
+Oh yes! YES, one more for my collection. My collection, yes. A powerful one indeed!]],
 	answers = {
 		{"[listen]", jump="welcome2"},
 	}
 }
 
 newChat{ id="welcome2",
-	text = [[A powerful tool aginst my enemies. Yes yes. They all hate me, but I will show them my power!
+	text = [[A powerful tool aginst my enemies. Yes, yes. They all hate me, but I will show them my power!
 I will show them! SHOW THEM!]],
 	answers = {
 		{"I am not a tool! RELEASE ME!", jump="welcome3"},

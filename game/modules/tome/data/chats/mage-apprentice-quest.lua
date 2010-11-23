@@ -48,7 +48,7 @@ Good day to you, fellow traveler!]],
 }
 
 newChat{ id="quest",
-	text = [[Ahh, my story is a sad one ... I should not trouble you with it, my friend.]],
+	text = [[Ahh, my story is a sad one... I should not trouble you with it, my friend.]],
 	answers = {
 		{"It is no trouble at all! Please tell me!", jump="quest2"},
 		{"Ok, bye then!"},
@@ -58,13 +58,13 @@ newChat{ id="quest2",
 	text = [[Well, if you insist...
 I am a novice mage, as you might have noticed, and my goal is to be accepted by the people of Angolwen and be taught the secrets of the arcane.]],
 	answers = {
-		{"Who are the elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
+		{"Who are the Elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
 		{"Ah yes, Angolwen, I have called it home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
 		{"Well, good luck, bye!"},
 	}
 }
 newChat{ id="quest3",
-	text = [[The keepers of ar... err, I do not think I am supposed to talk about them ... sorry, my friend...
+	text = [[The keepers of ar... err, I do not think I am supposed to talk about them... sorry, my friend...
 In any case, I must collect 10 magic staves, rings or amulets, and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
 	answers = {
 		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
@@ -84,18 +84,18 @@ newChat{ id="unique",
 	text = [[Let me examine it.
 Oh yes, my friend, this is indeed a powerful artefect! I think that it alone should suffice to complete my quest! Many thanks!]],
 	answers = {
-		{"Well, I can not use it anyway.", jump="welcome"},
+		{"Well, I cannot use it anyway.", jump="welcome"},
 	}
 }
 
 newChat{ id="thanks",
 	text = [[Ah yes! I am so glad! I will be able to go back to Angolw...err... Oh well, I guess I can tell you; you deserve it for helping me.
-During the dark years of the Spellhunt, many thousands years ago, Linaniil, the great mage of the Kor'Krul worried that magic might disappear with her generation and be lost to mortals should they need it again.
+During the dark years of the Spellhunt, many thousands of years ago, Linaniil, the great mage of the Kor'Krul, worried that magic might disappear with her generation and be lost to mortals should they need it again.
 So she set a secret plan into action and built a secret place where magic would be kept alive.
 Her plan worked and the group built a town called Angolwen in the western mountains. #LIGHT_GREEN#*He marks it on your map, along with a portal to access it*#WHITE#
 Not many people are accepted there but I will arrange for you to be allowed inside.]],
 	answers = {
-		{"Oh! How could such a place be kept secret for so long... This is interesting indeed, thank you for your trust!",
+		{"Oh! How could such a place be kept secret for so long... This is interesting indeed. Thank you for your trust!",
 			action = function(npc, player)
 				player:hasQuest("mage-apprentice"):access_angolwen(player)
 				npc:die()

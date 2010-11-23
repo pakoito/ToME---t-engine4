@@ -20,14 +20,14 @@ local q = game.player:hasQuest("lost-merchant")
 if q and q:isStatus(q.COMPLETED, "saved") then
 
 newChat{ id="welcome",
-	text = [[Ah my good friend @playername@!
+	text = [[Ah, my good friend @playername@!
 Thanks to you I made it safely to this great city! I am planning to open my shop soon, but since I am in your debt, perhaps I could open early for you if you are in need of rare goods.]],
 	answers = {
 		{"Yes please, let me see your wares.", action=function(npc, player)
 			npc.store:loadup(game.level, game.zone)
 			npc.store:interact(player)
 		end},
-		{"Sorry I have to go!"},
+		{"Sorry, I have to go!"},
 	}
 }
 

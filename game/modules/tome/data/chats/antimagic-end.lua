@@ -20,7 +20,7 @@
 newChat{ id="welcome",
 	text = [[Excellent! You truly prove that no mage-wrought flame or storm can stand against blade and arrow! Come, learn our ways. You are ready.]],
 	answers = {
-		{"Thank you, I shall not let magic triumph! #LIGHT_GREEN#[you are taught the secrets of antimagic]", action=function(npc, player) player:setQuestStatus("antimagic", engine.Quest.COMPLETED) end},
+		{"Thank you. I shall not let magic triumph! #LIGHT_GREEN#[you are taught the secrets of antimagic]", action=function(npc, player) player:setQuestStatus("antimagic", engine.Quest.COMPLETED) end},
 	}
 }
 

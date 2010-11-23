@@ -30,10 +30,10 @@ newChat{ id="welcome",
 }
 
 newChat{ id="explain-gates",
-	text = [[There are two main groups in the population here, humans and elves.
+	text = [[There are two main groups in the population here, Humans and Elves.
 Humans came here in the second age. Our ancestors were part of an expedition from Numenor to explore the world. Their ship was wrecked and the survivors landed on this continent.
-They came across a group of elves fighting against the orc pride and helped them.
-The elves invited them to stay with them in the Gates of Morning, in the Sunwall mountains.
+They came across a group of Elves fighting against the orc pride and helped them.
+The Elves invited them to stay with them in the Gates of Morning, in the Sunwall mountains.
 Their name comes from the earliest days of the world, when the world was flat and the Sun came out of a gigantic cavern in the Sunwall.]],
 	answers = {
 		{"Thank you, my lady.", jump="welcome"},
@@ -49,9 +49,9 @@ newChat{ id="sunwall_west",
 }
 
 newChat{ id="sunwall_west2",
-	text = [[The people you saw are likely the volunteers of Zemekky's early experiments regarding the farportals.
+	text = [[The people you saw are likely the volunteers of Zemekkys' early experiments regarding the farportals.
 He is a mage who resides here in the Sunwall, eccentric but skilled, who believes that creation of a new farportal to Maj'Eyal is possible.
-Aside from a few early attempts with questionable results, he hasn't had much luck. Still, it's gladdening to hear that the volunteers for his experiments live, regardless of their location. We are all still under the same sun, after all.
+Aside from a few early attempts with questionable results, he hasn't had much luck. Still, it's gladdening to hear that the volunteers for his experiments live, regardless of their location. We are all still under the same Sun, after all.
 
 Actually... maybe it would benefit you if you meet Zemekkys. He would surely be intrigued by that Orb of Many Ways you possess. He lives in a small house just to the north.]],
 	answers = {

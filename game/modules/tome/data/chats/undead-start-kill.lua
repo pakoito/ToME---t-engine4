@@ -26,7 +26,7 @@ Please spare me! I am pitiful. I will not stop you. Let me leave!]],
 }
 
 newChat{ id="welcome2",
-	text = [[But but you were my.. you..
+	text = [[But but you were my... you...
 You need me! What do you think you will do on the surface? Everything you will meet will try to destroy you.
 You are strong but you cannot resist them all!]],
 	answers = {
@@ -41,7 +41,7 @@ You are strong but you cannot resist them all!]],
 
 newChat{ id="what",
 	text = [[I can give you a cloak that will conceal your true nature!
-With it all people will see when they look at you is a normal average human. You can go about your business.
+With it all people will see when they look at you is a normal average Human. You can go about your business.
 Please!]],
 	answers = {
 		{"Thanks for the information. Now you may die. [kill him]", action=function(npc, player)

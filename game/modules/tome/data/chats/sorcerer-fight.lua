@@ -49,7 +49,7 @@ local function aeryn_comes(npc, player)
 end
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*The two sorcerers stands before you, shining like the sun.*#WHITE#
+	text = [[#LIGHT_GREEN#*The two Sorcerers stands before you, shining like the Sun.*#WHITE#
 Ah! Our guest is finally here. I take it you found the peak entertaining?]],
 	answers = {
 		{"Spare me the small talk. I am here to stop you!", jump="explain"},
@@ -66,7 +66,7 @@ Since the last invasion of the orcs there has been no threat to unite them!]],
 }
 
 newChat{ id="explain2",
-	text = [[Us? Ah no, we are merely instruments for the Master. We have planned for His return.]],
+	text = [[Us? Ah, no, we are merely instruments for the Master. We have planned for His return.]],
 	answers = {
 		{"And 'Him' would be?", jump="explain3"},
 	}
@@ -76,7 +76,7 @@ if void_portal_open(nil, game.player) then
 newChat{ id="explain3",
 	text = [[The Creator. The God who made this world, He who watched silently as the races fought and burnt the land.
 He who felt great sorrow for this world. He who shall now shatter the barriers of this world to remake it, only better!
-The staff has allowed us to drain enough energy from this world to open the portal to the Void and summon him through!
+The staff has allowed us to drain enough energy from this world to open the portal to the Void and summon Him through!
 It is already too late. He is coming through as we speak -- it is only a matter of hours!]],
 	answers = {
 		{"I *WILL* stop you! The world will not end today!", jump="aeryn", switch_npc={name="High Sun Paladin Aeryn"}, action=aeryn_comes, cond=aeryn_alive},
@@ -87,7 +87,7 @@ else
 newChat{ id="explain3",
 	text = [[The Creator. The God who made this world, He who watched silently as the races fought and burnt the land.
 He who felt great sorrow for this world. He who shall now shatter the barriers of this world to remake it, only better!
-The staff will allow us to drain enough energy from this world to open the portal to the Void and summon him through!
+The staff will allow us to drain enough energy from this world to open the portal to the Void and summon Him through!
 You cannot stop us now!]],
 	answers = {
 		{"I *WILL* stop you! The world will not end today!", jump="aeryn", switch_npc={name="High Sun Paladin Aeryn"}, action=aeryn_comes, cond=aeryn_alive},

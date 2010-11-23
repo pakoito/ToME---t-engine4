@@ -34,15 +34,15 @@ else
 ------------------------------------------------------------------
 
 newChat{ id="welcome",
-	text = [[@playername@! My daugther's savior!]],
+	text = [[@playername@! My daughter's savior!]],
 	answers = {
-		{"Hi, I was just checking in to see if Melinda is alright.", jump="reward", cond=function(npc, player) return not npc.rewarded_for_saving_melinda end, action=function(npc, player) npc.rewarded_for_saving_melinda = true end},
-		{"Sorry I have to go!"},
+		{"Hi, I was just checking in to see if Melinda is all right.", jump="reward", cond=function(npc, player) return not npc.rewarded_for_saving_melinda end, action=function(npc, player) npc.rewarded_for_saving_melinda = true end},
+		{"Sorry, I have to go!"},
 	}
 }
 
 newChat{ id="reward",
-	text = [[Please take this, it is nothing compared to the life of my child. Oh and she wanted to thank you in person, I will call her.]],
+	text = [[Please take this. It is nothing compared to the life of my child. Oh, and she wanted to thank you in person; I will call her.]],
 	answers = {
 		{"Thank you.", jump="melinda", switch_npc={name="Melinda"}, action=function(npc, player)
 			local ro = game.zone:makeEntity(game.level, "object", {unique=true, not_properties={"lore"}}, nil, true)
@@ -55,9 +55,9 @@ newChat{ id="reward",
 	}
 }
 newChat{ id="melinda",
-	text = [[@playername@! #LIGHT_GREEN#*She jumps of joy and hugs you while her father returns to his shop.*#WHITE#]],
+	text = [[@playername@! #LIGHT_GREEN#*She jumps for joy and hugs you while her father returns to his shop.*#WHITE#]],
 	answers = {
-		{"I am glad to see you are fine, it seems your scars are healing quite well.", jump="scars", cond=function(npc, player)
+		{"I am glad to see you are fine. It seems your scars are healing quite well.", jump="scars", cond=function(npc, player)
 			if player.undead then return false end
 			return true
 		end,},
@@ -70,62 +70,62 @@ newChat{ id="melinda",
 ------------------------------------------------------------------
 newChat{ id="scars",
 	text = [[#LIGHT_GREEN#*She presses on her lower belly in a provocative way.*#WHITE#
-See, you can touch it, it is fine. No pain anymore! This is thanks to you my.. dear friend.]],
+See, you can touch it. It is fine. No pain anymore! This is thanks to you my... dear friend.]],
 	answers = {
-		{"I am sorry I do not think your father would approve, be well my lady.", quick_reply="I think he would, but is this is what you wish, goodbye and farewell."},
-		{"#LIGHT_GREEN#[touch the spot she indicates] Yes it seems alright", jump="touch_male", cond=function(npc, player) return player.male end},
-		{"#LIGHT_GREEN#[touch the spot she indicates] Yes it seems alright", jump="touch_female", cond=function(npc, player) return player.female end},
+		{"I am sorry. I do not think your father would approve. Be well, my lady.", quick_reply="I think he would, but if this is what you wish, goodbye and farewell."},
+		{"#LIGHT_GREEN#[touch the spot she indicates] Yes, it seems all right", jump="touch_male", cond=function(npc, player) return player.male end},
+		{"#LIGHT_GREEN#[touch the spot she indicates] Yes, it seems all right", jump="touch_female", cond=function(npc, player) return player.female end},
 	}
 }
 
 newChat{ id="touch_male",
 	text = [[#LIGHT_GREEN#*She blushes a bit.*#WHITE#
 Your touch feels soft, and yet I can sense so much power in you.
-This feels good, I can try to forget what those.. other men.. did to me.]],
+This feels good. I can try to forget what those... other men... did to me.]],
 	answers = {
-		{"I am there if you want to talk about it, I saw them, I saw what they did. I can understand.", jump="request_explain"},
-		{"I am no demon worshipper, I will not hurt you.", jump="reassurance"},
-		{"You will get over it, do not worry. Goodbye Melinda, farewell.", quick_reply="It will be hard, but I know I will. Goodbye."},
+		{"I am here if you want to talk about it. I saw them; I saw what they did. I can understand.", jump="request_explain"},
+		{"I am no demon worshipper. I will not hurt you.", jump="reassurance"},
+		{"You will get over it. Do not worry. Goodbye, Melinda, farewell.", quick_reply="It will be hard, but I know I will. Goodbye."},
 	}
 }
 
 newChat{ id="touch_female",
 	text = [[#LIGHT_GREEN#*She blushes a bit.*#WHITE#
-I.. I did not know another woman's touch could feel so.. soft on my skin.
-This feels good, I can try to forget what those.. men.. did to me.]],
+I... I did not know another woman's touch could feel so... soft on my skin.
+This feels good. I can try to forget what those... men... did to me.]],
 	answers = {
-		{"I am there if you want to talk about it, I saw them, I saw what they did. I can understand.", jump="request_explain"},
-		{"I am no demon worshipper, I will not hurt you.", jump="reassurance"},
-		{"You will get over it, do not worry. Goodbye Melinda, farewell.", quick_reply="It will be hard, but I know I will. Goodbye."},
+		{"I am here if you want to talk about it. I saw them; I saw what they did. I can understand.", jump="request_explain"},
+		{"I am no demon worshipper. I will not hurt you.", jump="reassurance"},
+		{"You will get over it. Do not worry. Goodbye, Melinda, farewell.", quick_reply="It will be hard, but I know I will. Goodbye."},
 	}
 }
 
 newChat{ id="request_explain",
 	text = [[#LIGHT_GREEN#*She seems lost in her thoughts for a while, her eyes reflecting the terror she knew.*#WHITE#
-Thank you for your kindness, but I am not ready to talk about it yet, it is so fresh and vivid in my mind!
+Thank you for your kindness, but I am not ready to talk about it yet. It is so fresh and vivid in my mind!
 #LIGHT_GREEN#*She starts to cry.*#WHITE#]],
 	answers = {
-		{"#LIGHT_GREEN#[take her in your arms] Everything is alright now, you are safe.", jump="hug"},
-		{"Snap out of it! You are safe here.", quick_reply="Yes, yes. Well thank you, goodbye."},
+		{"#LIGHT_GREEN#[take her in your arms] Everything is all right now. You are safe.", jump="hug"},
+		{"Snap out of it! You are safe here.", quick_reply="Yes, yes. Well, thank you, goodbye."},
 	}
 }
 
 newChat{ id="reassurance",
-	text = [[#LIGHT_GREEN#*She looks deeply in your eyes.*#WHITE#
-I know you are not, when you rescued me from the horrors I knew instantly I could trust you. You might say it was fear but I like to think I touched you, and you touched me.]],
+	text = [[#LIGHT_GREEN#*She looks deeply into your eyes.*#WHITE#
+I know you are not. When you rescued me from the horrors, I knew instantly I could trust you. You might say it was fear, but I like to think I touched you, and you touched me.]],
 	answers = {
-		{"#LIGHT_GREEN#[take her in your arms] Everything is alright now, you are safe.", jump="hug"},
-		{"Wohh wait a minute, I am glad to have saved you but that is all.", quick_reply="Oh, sorry I was not myself. Goodbye."},
+		{"#LIGHT_GREEN#[take her in your arms] Everything is all right now. You are safe.", jump="hug"},
+		{"Woah, wait a minute. I am glad to have saved you, but that is all.", quick_reply="Oh, sorry, I was not myself. Goodbye."},
 	}
 }
 
 newChat{ id="hug",
 	text = [[#LIGHT_GREEN#*You take Melinda in your arms and press her against you. The warmth of the contact lightens your heart.*#WHITE#
-I feel safe in your arms. Please, I know you must leave but promise to come back soon and hold me again.]],
+I feel safe in your arms. Please, I know you must leave, but promise to come back soon and hold me again.]],
 	answers = {
 		{"I think I would enjoy that very much. #LIGHT_GREEN#[kiss her]#WHITE#", action=function(npc, player) player:grantQuest("love-melinda") end},
-		{"That tought will carry me in the dark places I shall walk. #LIGHT_GREEN#[kiss her]#WHITE#", action=function(npc, player) player:grantQuest("love-melinda") end},
-		{"Oh I am sorry I think you are mistaken, I was only trying to confort you.", quick_reply="Oh, sorry I was not myself. Goodbye then, farewell."},
+		{"That thought will carry me in the dark places I shall walk. #LIGHT_GREEN#[kiss her]#WHITE#", action=function(npc, player) player:grantQuest("love-melinda") end},
+		{"Oh, I am sorry. I think you are mistaken. I was only trying to comfort you.", quick_reply="Oh, sorry, I was not myself. Goodbye, then. Farewell."},
 	}
 }
 

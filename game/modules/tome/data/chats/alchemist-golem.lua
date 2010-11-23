@@ -19,7 +19,7 @@
 
 local change_weapon = function(npc, player)
 	local inven = player:getInven("INVEN")
-	player:showInventory("Select a two handed weapon for your golem.", inven, function(o) return o.type == "weapon" and o.twohanded end, function(o, item)
+	player:showInventory("Select a two-handed weapon for your golem.", inven, function(o) return o.type == "weapon" and o.twohanded end, function(o, item)
 		player:removeObject(inven, item, true)
 		local ro = npc:wearObject(o, true, true)
 		if ro then
