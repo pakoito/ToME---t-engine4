@@ -66,3 +66,58 @@ newLore{
 
 To the rest of you, there will be punishment. An adventurer got down to my bedroom and surprised me. I, Myself, was hurt and almost had to use My special power. All is well now and I am as dangerous as ever, but you shall suffer for letting him get so low. The next minion I see shall be toasted with my marshmallows. Where then were the special pits of doom I organized? Where were the poisons of my wights or the diseases of my ghouls? Indeed, I should slaughter all of you, and I would, but those who were most foully remiss were already slaughtered by the adventurer. The rest of you? Beware My wrath.]],
 }
+
+newLore{
+	id = "tol-falas-poem-level-2",
+	category = "tol falas",
+	name = "A smudged poem chalked on a dark piece of slate",
+	lore = [[Master of life, Master of death,
+All fall to a word
+From his dreaded breath!
+
+Master of staff, Master of steel,
+None can withstand
+His ruthless zeal!
+
+Master of magic, Master of fire,
+Pity the fool
+That stirs his great ire!
+
+Master of strength, Master of will,
+Dare not oppose him
+Or your blood will spill!
+
+Master of shadows beyond mortal thought,
+Against undying death all are as naught.]],
+}
+
+newLore{
+	id = "tol-falas-poem-level-5",
+	category = "tol falas",
+	name = "A poem written in scribbled, child-like writing",
+	lore = [[Me like Master,
+He's a real laster,
+He is faster
+than a caster,
+Can bring disaster,
+Need more'n a plaster
+After his attackaster...
+
+Alabaster... raster... pastor? Grr, need more brains...]],
+}
+
+newLore{
+	id = "tol-falas-poem-level-7",
+	category = "tol falas",
+	name = "A poem written in an elegant gothic script",
+	lore = [[No staff will save thee
+Against the blindness of pride
+Death will catch thee up]],
+}
+
+newLore{
+	id = "tol-falas-poem-master",
+	category = "tol falas",
+	name = "a note about undead poetry from the Master",
+	lore = [[As an aside, I notice one of my skeletons has amused himself by writing a poem about me. Whilst my first reaction was to have his bones crunched into dust and what remained of his undead soul sent to the darkest depths of the abyss, I do now realise that there is some merit to this. Every great leader needs tales penned of his brilliant conquest. Therefore I now command you all to write more poetry in my honour, praising my amazing powers, unrivalled leadership, unconquerable strength, etc etc. Any that fail to produce works of sufficient standard shall be annihilated.]],
+}

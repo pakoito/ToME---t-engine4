@@ -18,3 +18,27 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+newEntity{ base = "BASE_LORE",
+	define_as = "UNDEAD_POEM_LEVEL_2",
+	name = "paper scrap", lore="tol-falas-poem-level-2",
+	desc = [[A smudged poem chalked on a dark piece of slate]],
+	rarity = false,
+	encumberance = 0,
+}
+
+newEntity{ base = "BASE_LORE",
+	define_as = "UNDEAD_POEM_LEVEL_5",
+	name = "paper scrap", lore="tol-falas-poem-level-5",
+	desc = [[A poem written in scribbled, child-like writing]],
+	rarity = false,
+	encumberance = 0,
+}
+
+newEntity{ base = "BASE_LORE",
+	define_as = "UNDEAD_POEM_LEVEL_7",
+	name = "paper scrap", lore="tol-falas-poem-level-7",
+	desc = [[A poem written in an elegant gothic script]],
+	rarity = false,
+	encumberance = 0,
+}

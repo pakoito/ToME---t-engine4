@@ -137,7 +137,7 @@ function _M:move(x, y, force)
 			map.particles[e] = true
 		end
 	end
-	for i = 1, #del do self.particles[del[i]] = nil end
+	for i = 1, #del do self.__particles[del[i]] = nil end
 
 	-- Move emote
 	if self.__emote then
