@@ -30,10 +30,10 @@ load("/data/general/npcs/bone-giant.lua", function(e) if e.rarity then e.bonegia
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of Tol Falas, no "rarity" field means it will not be randomly generated
+-- The boss of Dreadfell, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "THE_MASTER",
 	allow_infinite_dungeon = true,
-	faction = "tol-falas",
+	faction = "dreadfell",
 	type = "undead", subtype = "vampire", unique = true, image = "npc/the_master.png",
 	name = "The Master",
 	display = "V", color=colors.VIOLET,
@@ -95,8 +95,8 @@ newEntity{ define_as = "THE_MASTER",
 		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been month since the hero cleansed Tol Falas, yet rumours are growing: evil is back.")
 
 		world:gainAchievement("VAMPIRE_CRUSHER", game.player:resolveSource())
-		game.player:resolveSource():grantQuest("tol-falas")
-		game.player:resolveSource():setQuestStatus("tol-falas", engine.Quest.DONE)
+		game.player:resolveSource():grantQuest("dreadfell")
+		game.player:resolveSource():setQuestStatus("dreadfell", engine.Quest.DONE)
 
 		local ud = {}
 		if not profile.mod.allow_build.undead_skeleton then ud[#ud+1] = "undead_skeleton" end
@@ -107,10 +107,10 @@ newEntity{ define_as = "THE_MASTER",
 	end,
 }
 
--- The boss of Tol Falas, no "rarity" field means it will not be randomly generated
+-- The boss of Dreadfell, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "PALE_DRAKE",
 	allow_infinite_dungeon = true,
-	faction = "tol-falas",
+	faction = "dreadfell",
 	type = "undead", subtype = "skeleton", unique = true,
 	name = "Pale Drake",
 	display = "s", color=colors.VIOLET,

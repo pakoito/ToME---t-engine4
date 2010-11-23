@@ -32,7 +32,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
-			map = "zones/tol-falas-ambush",
+			map = "zones/dreadfell-ambush",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

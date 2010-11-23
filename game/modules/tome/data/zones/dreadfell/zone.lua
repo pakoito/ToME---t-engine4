@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Tol Falas",
+	name = "Dreadfell",
 	level_range = {15, 26},
 	level_scheme = "player",
 	max_level = 9,
@@ -59,12 +59,12 @@ return {
 		},
 	},
 	post_process = function(level)
-		for uid, e in pairs(level.entities) do e.faction="tol-falas" end
+		for uid, e in pairs(level.entities) do e.faction="dreadfell" end
 
 		-- Put lore near the up stairs
 		if game.zone.created_lore and game.zone.created_lore[level.level] then
 			local post = game.zone:makeEntityByName(level, "terrain", "LORE_NOTE")
-			post.lore = "tol-falas-note-"..game.zone.created_lore[level.level]
+			post.lore = "dreadfell-note-"..game.zone.created_lore[level.level]
 
 			local x, y = rng.range(0, level.map.w-1), rng.range(0, level.map.h-1)
 			local tries = 0
@@ -80,7 +80,7 @@ return {
 		-- Put lore near the up stairs
 		if level.level == 3 then
 			local post = game.zone:makeEntityByName(level, "terrain", "LORE_NOTE")
-			post.lore = "tol-falas-poem-master"
+			post.lore = "dreadfell-poem-master"
 
 			local x, y = rng.range(0, level.map.w-1), rng.range(0, level.map.h-1)
 			local tries = 0
@@ -121,7 +121,7 @@ return {
 		if not newzone then return end
 		-- Ambushed!
 		if game.player:isQuestStatus("staff-absorption", engine.Quest.PENDING) and not game.player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush") then
-			return 1, "tol-falas-ambush"
+			return 1, "dreadfell-ambush"
 		end
 	end,
 }
