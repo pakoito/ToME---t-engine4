@@ -561,10 +561,10 @@ function _M:display(nb_keyframes)
 		if self.fbo then
 			self.fbo:use(true)
 
-			if self.level.data.background then self.level.data.background(self.level, 0, 0) end
+			if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
 			self.level.map:display(0, 0, nb_keyframes)
 			self.target:display(0, 0)
-			if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0) end
+			if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 
 			self.fbo:use(false)
 			_2DNoise:bind(1, false)
@@ -576,10 +576,10 @@ function _M:display(nb_keyframes)
 
 		-- Basic display
 		else
-			if self.level.data.background then self.level.data.background(self.level, self.level.map.display_x, self.level.map.display_y) end
+			if self.level.data.background then self.level.data.background(self.level, self.level.map.display_x, self.level.map.display_y, nb_keyframes) end
 			self.level.map:display(nil, nil, nb_keyframes)
 			self.target:display()
-			if self.level.data.foreground then self.level.data.foreground(self.level, self.level.map.display_x, self.level.map.display_y) end
+			if self.level.data.foreground then self.level.data.foreground(self.level, self.level.map.display_x, self.level.map.display_y, nb_keyframes) end
 		end
 
 		if not self.zone_name_s then self:updateZoneName() end

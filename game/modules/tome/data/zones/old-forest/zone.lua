@@ -78,9 +78,9 @@ return {
 		game:placeRandomLoreObject("NOTE"..level.level)
 	end,
 
-	foreground = function(level, x, y)
+	foreground = function(level, x, y, nb_keyframes)
 		local Map = require "engine.Map"
-		level.foreground_particle:update()
-		level.foreground_particle.ps:toScreen(x, y, true, 1)
+		for i = 1, nb_keyframes do level.foreground_particle:update() end
+		level.foreground_particle.ps:toScreen(x, y, true, 1, nb_keyframes)
 	end,
 }
