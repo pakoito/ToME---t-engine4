@@ -43,7 +43,7 @@ newEntity{
 	use_sound = "actions/read",
 	use_no_blind = true,
 	use_no_silence = true,
-	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
+	fire_destroy = {{100,1}, {200,2}, {400,5}, {600,10}, {1200,20}},
 	desc = [[Natural infusions may be grafted onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
 
