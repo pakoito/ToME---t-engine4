@@ -376,7 +376,7 @@ newInscription{
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[radius %d%]]):format(data.range)
+		return ([[radius %d]]):format(data.range)
 	end,
 }
 

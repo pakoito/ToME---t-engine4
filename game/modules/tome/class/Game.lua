@@ -692,7 +692,7 @@ function _M:setupCommands()
 --]]
 -- [[
 				for i = 1, 50 do
-					local a = self.zone:makeEntity(self.level, "object", {type="scroll", ego_chance=100, add_levels=50}, nil, true)
+					local a = self.zone:makeEntity(self.level, "object", {type="scroll", ego_chance=-100, add_levels=50}, nil, true)
 					if a then
 						a:identify(true)
 						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)

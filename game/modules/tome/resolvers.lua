@@ -240,7 +240,26 @@ function resolvers.calc.mbonus_material(t, e)
 	return v
 end
 
---- Random bonus based on level and material quality
+--- Random bonus based on level, more strict
+resolvers.current_level = 1
+function resolvers.mbonus_level(max, add, pricefct, step)
+	return {__resolver="mbonus_level", max, add, step or 10, pricefct}
+end
+function resolvers.calc.mbonus_level(t, e)
+	local ml = 1 + math.floor((resolvers.current_level - 1) / t[3])
+	local maxl = 1 + math.floor((resolvers.mbonus_max_level - 1) / t[3])
+	local v = math.ceil(rng.mbonus(t[1], resolvers.current_level, resolvers.mbonus_max_level) * ml / maxl) + (t[2] or 0)
+
+	if e.cost and t[4] then
+		local ap, nv = t[4](e, v)
+		e.cost = e.cost + ap
+		v = nv or v
+	end
+
+	return v
+end
+
+--- Random bonus based on level
 resolvers.current_level = 1
 function resolvers.mbonusl(max, add, pricefct)
 	return {__resolver="mbonus", max, add, pricefct}
