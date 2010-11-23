@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Object = require "mod.class.Object"
 local Parser = require "mod.class.info.Parser"
 local lpeg = require "lpeg"
 
@@ -30,7 +31,7 @@ info_format =
 	G = { "display", "color" },
 	I = { "tval", "sval", "pval", all_numbers=true },
 	W = { "depth", "__", "weight", "cost", all_numbers=true },
-	P = { "ac", "damage", "to_hit", "to_dam", "to_ac", all_numbers=true },
+	P = { "ac", "damage", "to_hit", "to_dam", "to_ac" },
 	A = { "rarity", "min_to_max" },
 	C = { "charges", all_numbers=true },
 	M = { "chance of being generated in a pile", "dice for number of items" },
@@ -39,52 +40,26 @@ info_format =
 	D = { "desc", ignore_count=true, unsplit=true, concat=true },
 }
 
-tval_table = {
-	[1] = {"skeleton"},
-	[2] = {"bottle"},
-	[3] = {"junk"},
-	[5] = {"spike"},
-	[7] = {"chest"},
-	[16] = {"shot", slot="QUIVER"},
-	[17] = {"arrow", slot="QUIVER"},
-	[18] = {"bolt", slot="QUIVER"},
-	[19] = {"bow", slot="SHOOTER"},
-	[20] = {"digging"},
-	[21] = {"hafted", slot="WEAPON"},
-	[22] = {"polearm", slot="WEAPON"},
-	[23] = {"sword", slot="WEAPON"},
-	[30] = {"boots", slot="FEET"},
-	[31] = {"gloves", slot="HANDS"},
-	[32] = {"helm", slot="HEAD"},
-	[33] = {"crown", slot="HEAD"},
-	[34] = {"shield", slot="SHIELD"},
-	[35] = {"cloak", slot="CLOAK"},
-	[36] = {"soft armor", slot="BODY"},
-	[37] = {"hard armor", slot="BODY"},
-	[38] = {"drag armor", slot="BODY"},
-	[39] = {"light", slot="LITE"},
-	[40] = {"amulet", slot="NECK"},
-	[45] = {"ring", slot="FINGER"},
-	[55] = {"staff", slot="WEAPON"},
-	[65] = {"wand"},
-	[66] = {"rod"},
-	[70] = {"scroll"},
-	[75] = {"potion"},
-	[77] = {"flask"},
-	[80] = {"food"},
-	[90] = {"magic book"},
-	[91] = {"prayer book"},
-	[100] = {"gold"},
-}
-
 function _M:callback(e)
 	e.define_as = e.name:upper():gsub("[^A-Z0-9]", "_")
 
 	e.color = colors[self.color_codes[e.color]]
 	e.back_color = colors.BLACK
-	e.type = tval_table[e.tval] and tval_table[e.tval][1] or "misc"
+	e.type = Object.tval_table[e.tval] and Object.tval_table[e.tval][1] or "misc"
 	e.subtype = e.type
-	if tval_table[e.tval] and tval_table[e.tval].slot then e.slot = tval_table[e.tval].slot end
+	if Object.tval_table[e.tval] and Object.tval_table[e.tval].slot then e.slot = Object.tval_table[e.tval].slot end
+
+	e.ac = tonumber(e.ac)
+	e.to_ac = tonumber(e.to_ac)
+	e.to_hit = tonumber(e.to_hit)
+	e.to_dam = tonumber(e.to_dam)
+
+	if e.damage then
+		local _, _, mind, maxd = e.damage:find("^(%d+)d(%d+)")
+		print("===============", e.damage, mind, maxd)
+		e.damage = nil
+		if mind and maxd then e.damage = {tonumber(mind), tonumber(maxd)} end
+	end
 
 	e.rarity = tonumber(e.rarity)
 	if e.min_to_max then

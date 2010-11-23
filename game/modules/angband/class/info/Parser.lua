@@ -92,8 +92,8 @@ function _M:parseLine(l, line_nb, ret, e)
 			if linfo.concat then e[linfo[1]] = (e[linfo[1]] or "")..table.concat(data, ":")
 			else e[linfo[1]] = table.concat(data, ":") end
 		elseif linfo.flags_parse then
-			local f = {}
-			if linfo.flags_parse ~= "self" then e[linfo.flags_parse] = f else f = e end
+			local f
+			if linfo.flags_parse ~= "self" then e[linfo.flags_parse] = e[linfo.flags_parse] or {} f = e[linfo.flags_parse] else f = e end
 			self:parseFlags(f, data[2])
 		else
 			for i = 2, #data do

@@ -31,7 +31,7 @@ info_format =
 	C = { "skill_dis", "skill_dev", "skill_sav", "skill_stl", "skill_srh", "skill_fos", "skill_thn", "skill_thb", "skill_throw", "skill_dig", intable="copy", all_numbers=true },
 	X = { "xskill_dis", "xskill_dev", "xskill_sav", "xskill_stl", "xskill_srh", "xskill_fos", "xskill_thn", "xskill_thb", "xskill_throw", "xskill_dig", intable="copy", all_numbers=true },
 	I = { "mhp", "exp", "sense_base", "sense_div", intable="copy", all_numbers=true },
-	A = { "max_attacks", "min_weight", "att_multiply",intable="copy", all_numbers=true },
+	A = { "max_attacks", "min_weight", "att_multiply", intable="copy", all_numbers=true },
 	M = { "spellbook tval", "spell-stat", "first-level", "max weight", intable="copy", all_numbers=true },
 	B = { "spell number", "level", "mana", "fail", "exp", ignore_count=true, addtable="spells", },
 	T = { "title", addtable="titles", },

@@ -152,5 +152,6 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 			5, nil,
 			{type="vapour"}
 		)
+		game.logSeen(self, "%s explodes in an acidic cloud.", self.name:capitalize())
 	end,
 }

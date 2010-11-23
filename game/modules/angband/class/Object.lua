@@ -165,6 +165,44 @@ function _M:getDisplayColor()
 	end
 end
 
+_M.tval_table = {
+	[1] = {"skeleton"},
+	[2] = {"bottle"},
+	[3] = {"junk"},
+	[5] = {"spike"},
+	[7] = {"chest"},
+	[16] = {"shot", slot="QUIVER", show_weapon=true},
+	[17] = {"arrow", slot="QUIVER", show_weapon=true},
+	[18] = {"bolt", slot="QUIVER", show_weapon=true},
+	[19] = {"bow", slot="SHOOTER"},
+	[20] = {"digging"},
+	[21] = {"hafted", slot="WEAPON", show_weapon=true},
+	[22] = {"polearm", slot="WEAPON", show_weapon=true},
+	[23] = {"sword", slot="WEAPON", show_weapon=true},
+	[30] = {"boots", slot="FEET"},
+	[31] = {"gloves", slot="HANDS"},
+	[32] = {"helm", slot="HEAD"},
+	[33] = {"crown", slot="HEAD"},
+	[34] = {"shield", slot="SHIELD"},
+	[35] = {"cloak", slot="CLOAK"},
+	[36] = {"soft armor", slot="BODY"},
+	[37] = {"hard armor", slot="BODY"},
+	[38] = {"drag armor", slot="BODY"},
+	[39] = {"light", slot="LITE"},
+	[40] = {"amulet", slot="NECK"},
+	[45] = {"ring", slot="FINGER"},
+	[55] = {"staff", slot="WEAPON"},
+	[65] = {"wand"},
+	[66] = {"rod"},
+	[70] = {"scroll"},
+	[75] = {"potion"},
+	[77] = {"flask"},
+	[80] = {"food"},
+	[90] = {"magic book"},
+	[91] = {"prayer book"},
+	[100] = {"gold"},
+}
+
 --- Gets the full name of the object
 function _M:getName(t)
 	t = t or {}
@@ -182,6 +220,11 @@ function _M:getName(t)
 		name = name .. self.add_name:gsub("#([^#]+)#", function(attr)
 			return self:descAttribute(attr)
 		end)
+	end
+
+	local tval = self.tval_table[self.tval] or {"misc"}
+	if tval.show_weapon and self.damage then
+		name = name.." ("..self.damage[1].."d"..self.damage[2]..")"
 	end
 
 	if not t.do_color then
