@@ -103,6 +103,16 @@ function _M:drawDialog(s)
 	self:mouseTooltip(self.TOOLTIP_CUN, s:drawColorStringBlended(self.font, ("CUN: #00ff00#%3d"):format(player:getCun()), w, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_CON, s:drawColorStringBlended(self.font, ("CON: #00ff00#%3d"):format(player:getCon()), w, h, 255, 255, 255)) h = h + self.font_h
 
+	h = h + self.font_h
+	local nb_inscriptions = 0
+	for i = 1, player.max_inscriptions do if player.inscriptions[i] then nb_inscriptions = nb_inscriptions + 1 end end
+	self:mouseTooltip(self.TOOLTIP_INSCRIPTIONS, s:drawColorStringBlended(self.font, ("#AQUAMARINE#Inscriptions (%d/%d)"):format(nb_inscriptions, player.max_inscriptions), w, h, 255, 255, 255)) h = h + self.font_h
+	for i = 1, player.max_inscriptions do if player.inscriptions[i] then
+		local t = player:getTalentFromId("T_"..player.inscriptions[i])
+		local desc = player:getTalentFullDescription(t)
+		self:mouseTooltip("#GOLD##{bold}#"..t.name.."#{normal}##WHITE#\n"..tostring(desc), s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(t.name), w, h, 255, 255, 255)) h = h + self.font_h
+	end end
+
 	h = 0
 	w = 200
 	-- All weapons in main hands
@@ -388,7 +398,6 @@ function _M:dump()
 	nl()
 	nl("  [Talents Chart]")
 	nl()
-
 	for i, tt in ipairs(player.talents_types_def) do
 		 local ttknown = player:knowTalentType(tt.type)
 		if not (player.talents_types[tt.type] == nil) and ttknown then
@@ -409,6 +418,18 @@ function _M:dump()
 			end
 		end
 	end
+
+	-- Inscriptins
+	local nb_inscriptions = 0
+	for i = 1, player.max_inscriptions do if player.inscriptions[i] then nb_inscriptions = nb_inscriptions + 1 end end
+	nl()
+	nl(("  [Inscriptions (%d/%d)]"):format(nb_inscriptions, player.max_inscriptions))
+	nl()
+	for i = 1, player.max_inscriptions do if player.inscriptions[i] then
+		local t = player:getTalentFromId("T_"..player.inscriptions[i])
+		local desc = player:getTalentFullDescription(t)
+		nl(("%s"):format(t.name))
+	end end
 
 	 -- Current Effects
 

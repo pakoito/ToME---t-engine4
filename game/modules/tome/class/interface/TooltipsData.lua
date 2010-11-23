@@ -94,6 +94,11 @@ Each object you carry has an encumberance value, your maximun carrying capacity 
 You can not move while encumbered, drop some items.
 ]]
 
+TOOLTIP_INSCRIPTIONS = [[#GOLD#Inscriptions#LAST#
+The people of Eyal have found a way to create herbal infusions and runes that can be inscribed on the skin of a creature.
+Those inscriptions give the bearer always accessible powers. Usualy most people have a simple regeneration infusion, but there are other kind of potion inscriptions.
+]]
+
 -------------------------------------------------------------
 -- Stats
 -------------------------------------------------------------
