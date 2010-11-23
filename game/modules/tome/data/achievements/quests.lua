@@ -31,7 +31,7 @@ newAchievement{
 --------------- Main objectives
 newAchievement{
 	name = "Vampire crusher",
-	desc = [[Destroyed the Master in its lair of Tol Falas.]],
+	desc = [[Destroyed the Master in its lair of the Dreadfell.]],
 }
 newAchievement{
 	name = "A dangerous secret",

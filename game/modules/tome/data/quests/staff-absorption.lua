@@ -21,12 +21,12 @@
 name = "A mysterious staff"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "Deep in the tower of Tol Falas you fought and destroyed the Master, a powerful vampire."
+	desc[#desc+1] = "Deep in the Dreadfell you fought and destroyed the Master, a powerful vampire."
 	if self:isCompleted("ambush") then
-		desc[#desc+1] = "On your way out of Tol Falas you were ambushed by a band of orcs."
+		desc[#desc+1] = "On your way out of the Dreadfell you were ambushed by a band of orcs."
 		desc[#desc+1] = "They asked about the staff."
 	elseif self:isCompleted("ambush-finished") and not self:isCompleted("survived-ukruk") then
-		desc[#desc+1] = "On your way out of Tol Falas you were ambushed by a band of orcs and left for dead."
+		desc[#desc+1] = "On your way out of the Dreadfell you were ambushed by a band of orcs and left for dead."
 		desc[#desc+1] = "They asked about the staff and stole it from you."
 		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Last Hope to report those events!"
 	elseif self:isCompleted("ambush-finished") and self:isCompleted("survived-ukruk") then
@@ -47,7 +47,7 @@ on_grant = function(self, who)
 end
 
 start_ambush = function(self, who)
-	game.logPlayer(who, "#VIOLET#As you come out of Tol Falas, you encounter a band of orcs!")
+	game.logPlayer(who, "#VIOLET#As you come out of the Dreadfell, you encounter a band of orcs!")
 	who:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush")
 
 	-- Next time the player dies (and he WILL die) he wont really die
@@ -77,7 +77,7 @@ start_ambush = function(self, who)
 	end
 
 	local Chat = require("engine.Chat")
-	local chat = Chat.new("tol-falas-ambush", {name="Ukruk the Fierce"}, who)
+	local chat = Chat.new("dreadfell-ambush", {name="Ukruk the Fierce"}, who)
 	chat:invoke()
 end
 

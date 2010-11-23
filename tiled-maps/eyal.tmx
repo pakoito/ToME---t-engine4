@@ -169,7 +169,7 @@
   </tile>
   <tile id="7">
    <properties>
-    <property name="display" value="tol-falas"/>
+    <property name="display" value="dreadfell"/>
    </properties>
   </tile>
   <tile id="8">

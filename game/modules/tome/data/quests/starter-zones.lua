@@ -53,7 +53,7 @@ on_status_change = function(self, who, status, sub)
 	if sub then
 		if self:isCompleted("old-forest") and self:isCompleted("maze") and self:isCompleted("sandworm-lair") and self:isCompleted("daikara") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
-			who:grantQuest("tol-falas")
+			who:grantQuest("dreadfell")
 		end
 	end
 end

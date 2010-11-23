@@ -92,7 +92,7 @@ newEntity{ define_as = "THE_MASTER",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been month since the hero cleansed Tol Falas, yet rumours are growing: evil is back.")
+		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been month since the hero cleansed the Dreadfell, yet rumours are growing: evil is back.")
 
 		world:gainAchievement("VAMPIRE_CRUSHER", game.player:resolveSource())
 		game.player:resolveSource():grantQuest("dreadfell")
@@ -114,7 +114,7 @@ newEntity{ define_as = "PALE_DRAKE",
 	type = "undead", subtype = "skeleton", unique = true,
 	name = "Pale Drake",
 	display = "s", color=colors.VIOLET,
-	desc = [[A malevolent skeleton archmage that has taken control of Tol Falas since the Master's demise.]],
+	desc = [[A malevolent skeleton archmage that has taken control of the Dreadfell since the Master's demise.]],
 	level_range = {40, 50}, exp_worth = 3,
 	max_life = 450, life_rating = 21, fixed_rating = true,
 	rank = 4,

@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newChat{ id="ambush",
-	text = [[#VIOLET#*As you come out of Tol Falas, you encounter a band of orcs*#LAST#
+	text = [[#VIOLET#*As you come out of the Dreadfell, you encounter a band of orcs*#LAST#
 You! Give us the staff NOW and we might offer you a quick death!]],
 	answers = {
 		{"What are you talking about?", jump="what"},
