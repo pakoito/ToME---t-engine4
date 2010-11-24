@@ -97,7 +97,7 @@ newInscription{
 		-- Go through all spell effects
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if data.what[e.type] then
+			if data.what[e.type] and e.status == "detrimental" then
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end
