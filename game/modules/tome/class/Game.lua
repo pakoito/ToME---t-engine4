@@ -766,7 +766,7 @@ function _M:setupCommands()
 		HOTKEY_THIRD_5 = not_wild(function() self.player:activateHotkey(29) end),
 		HOTKEY_THIRD_6 = not_wild(function() self.player:activateHotkey(30) end),
 		HOTKEY_THIRD_7 = not_wild(function() self.player:activateHotkey(31) end),
-		HOTKEY_THIRD_8 = not_wild(function() self.player:activateHotkey(31) end),
+		HOTKEY_THIRD_8 = not_wild(function() self.player:activateHotkey(32) end),
 		HOTKEY_THIRD_9 = not_wild(function() self.player:activateHotkey(33) end),
 		HOTKEY_THIRD_10 = not_wild(function() self.player:activateHotkey(34) end),
 		HOTKEY_THIRD_11 = not_wild(function() self.player:activateHotkey(35) end),
