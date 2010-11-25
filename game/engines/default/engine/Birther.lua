@@ -71,7 +71,18 @@ function _M:init(actor, order, at_end, quickbirth, w, h)
 	self.quickbirth = quickbirth
 	self.actor = actor
 	self.order = order
-	self.at_end = at_end
+	if order.get_name then
+		self.at_end = function()
+			game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
+				game:setPlayerName(text)
+				at_end()
+			end, function()
+				util.showMainMenu()
+			end))
+		end
+	else
+		self.at_end = at_end
+	end
 
 	Dialog.init(self, "Character Creation: "..actor.name, w or 600, h or 400)
 

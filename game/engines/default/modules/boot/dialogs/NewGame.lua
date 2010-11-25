@@ -72,9 +72,13 @@ function _M:generateList()
 			if not mod.is_boot then
 				mod.name = tstring{{"font","bold"}, {"color","GOLD"}, mod.name, {"font","normal"}}
 				mod.fct = function(mod)
-					game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
-					Module:instanciate(mod, text, true)
-					end))
+					if mod.no_get_name then
+						Module:instanciate(mod, "player", true)
+					else
+						game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
+							Module:instanciate(mod, text, true)
+						end))
+					end
 				end
 				mod.version_txt = ("%d.%d.%d"):format(mod.version[1], mod.version[2], mod.version[3])
 				mod.zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="#{bold}##GOLD#"..mod.long_name.."#WHITE##{normal}#\n\n"..mod.description}

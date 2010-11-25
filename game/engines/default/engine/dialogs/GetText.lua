@@ -25,8 +25,9 @@ local Textbox = require "engine.ui.Textbox"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, text, min, max, action)
+function _M:init(title, text, min, max, action, cancel)
 	self.action = action
+	self.cancel = cancel
 	self.min = min or 2
 	self.max = max or 25
 
@@ -46,7 +47,7 @@ function _M:init(title, text, min, max, action)
 	self:setupUI(true, true)
 
 	self.key:addBinds{
-		EXIT = function() game:unregisterDialog(self) end,
+		EXIT = function() if self.cancel then self.cancel() end game:unregisterDialog(self) end,
 	}
 end
 

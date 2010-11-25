@@ -123,6 +123,7 @@ function _M:loadModuleProfile(short_name)
 	self.modules[short_name] = self.modules[short_name] or {}
 	for i, file in ipairs(fs.list(d)) do
 		if file:find(".profile$") then
+			local f, err = loadfile(d..file)
 			if not f and err then
 				print("Error loading data profile", file, err)
 			else
