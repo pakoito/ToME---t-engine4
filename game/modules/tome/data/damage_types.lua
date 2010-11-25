@@ -119,6 +119,7 @@ setDefaultProjector(function(src, x, y, type, dam, no_martyr)
 end)
 
 local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)
+	do return end -- Disabled for now
 	if not inven then return end
 
 	local reduction = 1
