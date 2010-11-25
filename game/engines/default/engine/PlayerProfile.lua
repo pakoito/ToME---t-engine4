@@ -90,7 +90,7 @@ end
 function _M:loadData(f, where)
 	setfenv(f, where)
 	local ok, err = pcall(f)
-	if not ok and err then error(err) end
+	if not ok and err then print("Error executing data", err) end
 end
 
 --- Loads profile generic profile from disk
@@ -101,11 +101,14 @@ function _M:loadGenericProfile()
 
 		if file:find(".profile$") then
 			local f, err = loadfile(d..file)
-			if not f and err then error(err) end
-			local field = file:gsub(".profile$", "")
-			self.generic[field] = self.generic[field] or {}
-			self:loadData(f, self.generic[field])
-			if not self.generic[field].__uuid then self.generic[field].__uuid = util.uuid() end
+			if not f and err then
+				print("Error loading data profile", file, err)
+			else
+				local field = file:gsub(".profile$", "")
+				self.generic[field] = self.generic[field] or {}
+				self:loadData(f, self.generic[field])
+				if not self.generic[field].__uuid then self.generic[field].__uuid = util.uuid() end
+			end
 		end
 	end
 
@@ -120,12 +123,14 @@ function _M:loadModuleProfile(short_name)
 	self.modules[short_name] = self.modules[short_name] or {}
 	for i, file in ipairs(fs.list(d)) do
 		if file:find(".profile$") then
-			local f, err = loadfile(d..file)
-			if not f and err then error(err) end
-			local field = file:gsub(".profile$", "")
-			self.modules[short_name][field] = self.modules[short_name][field] or {}
-			self:loadData(f, self.modules[short_name][field])
-			if not self.modules[short_name][field].__uuid then self.modules[short_name][field].__uuid = util.uuid() end
+			if not f and err then
+				print("Error loading data profile", file, err)
+			else
+				local field = file:gsub(".profile$", "")
+				self.modules[short_name][field] = self.modules[short_name][field] or {}
+				self:loadData(f, self.modules[short_name][field])
+				if not self.modules[short_name][field].__uuid then self.modules[short_name][field].__uuid = util.uuid() end
+			end
 		end
 	end
 
@@ -144,10 +149,10 @@ function _M:saveGenericProfile(name, data, nosync)
 
 	-- Check for readability
 	local f, err = loadstring(data)
+	if not f then print("[PROFILES] cannot save generic data ", name, data, "it does not parse:") print(err) return end
 	setfenv(f, {})
-	if not f then print("[PROFILES] cannot save generic data ", name, data, "it does not parse:") error(err) end
 	local ok, err = pcall(f)
-	if not ok and err then print("[PROFILES] cannot save generic data", name, data, "it does not parse") error(err) end
+	if not ok and err then print("[PROFILES] cannot save generic data", name, data, "it does not parse") print(err) return end
 
 	local restore = fs.getWritePath()
 	fs.setWritePath(engine.homepath)
@@ -167,10 +172,10 @@ function _M:saveModuleProfile(name, data, module, nosync)
 
 	-- Check for readability
 	local f, err = loadstring(data)
+	if not f then print("[PROFILES] cannot save module data ", name, data, "it does not parse:") print(err) return end
 	setfenv(f, {})
-	if not f then print("[PROFILES] cannot save module data ", name, data, "it does not parse:") error(err) end
 	local ok, err = pcall(f)
-	if not ok and err then print("[PROFILES] cannot save module data", name, data, "it does not parse") error(err) end
+	if not ok and err then print("[PROFILES] cannot save module data", name, data, "it does not parse") print(err) return end
 
 	local restore = fs.getWritePath()
 	fs.setWritePath(engine.homepath)
@@ -247,16 +252,19 @@ function _M:getConfigs(module)
 
 		local field = name
 		local f, err = loadstring(val)
-		if not f and err then error(err) end
-		if module == "generic" then
-			self.generic[field] = self.generic[field] or {}
-			self:loadData(f, self.generic[field])
-			self:saveGenericProfile(field, self.generic[field], true)
+		if not f and err then
+			print("Error loading profile config: ", err)
 		else
-			self.modules[module] = self.modules[module] or {}
-			self.modules[module][field] = self.modules[module][field] or {}
-			self:loadData(f, self.modules[module][field])
-			self:saveModuleProfile(field, self.modules[module][field], module, true)
+			if module == "generic" then
+				self.generic[field] = self.generic[field] or {}
+				self:loadData(f, self.generic[field])
+				self:saveGenericProfile(field, self.generic[field], true)
+			else
+				self.modules[module] = self.modules[module] or {}
+				self.modules[module][field] = self.modules[module][field] or {}
+				self:loadData(f, self.modules[module][field])
+				self:saveModuleProfile(field, self.modules[module][field], module, true)
+			end
 		end
 	end
 end
