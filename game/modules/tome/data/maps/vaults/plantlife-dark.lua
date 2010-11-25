@@ -26,8 +26,8 @@ defineTile('#', {"TREE_DARK1","TREE_DARK2","TREE_DARK3","TREE_DARK4","TREE_DARK5
 defineTile('X', {"HARDTREE_DARK1","HARDTREE_DARK2","HARDTREE_DARK3","HARDTREE_DARK4","HARDTREE_DARK5","HARDTREE_DARK6","HARDTREE_DARK7","HARDTREE_DARK8","HARDTREE_DARK9","HARDTREE_DARK10","HARDTREE_DARK11","HARDTREE_DARK12","HARDTREE_DARK13","HARDTREE_DARK14","HARDTREE_DARK15","HARDTREE_DARK16","HARDTREE_DARK17","HARDTREE_DARK18","HARDTREE_DARK19","HARDTREE_DARK20"})
 defineTile('!', "ROCK_VAULT")
 
-defineTile('V', "GRASS_DARK1", nil, {random_filter={name="poison vine"}})
-defineTile('H', "GRASS_DARK1", {random_filter={add_levels=5, ego_chance=50}}, {random_filter={name="huorn", add_levels=3}})
+defineTile('V', "GRASS_DARK1", nil, {random_filter={name="poison ivy"}})
+defineTile('H', "GRASS_DARK1", {random_filter={add_levels=5, ego_chance=50}}, {random_filter={name="treant", add_levels=3}})
 
 startx = 4
 starty = 6

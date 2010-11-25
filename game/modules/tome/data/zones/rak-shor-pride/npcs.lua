@@ -52,7 +52,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
 	resolvers.equip{
-		{type="weapon", subtype="staff", ego_change=100, autoreq=true},
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
 		{type="armor", subtype="cloth", defined="BLACK_ROBE", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
