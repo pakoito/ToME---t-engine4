@@ -26,6 +26,7 @@ newEntity{
 	display = '_', color=colors.GREEN, back_color=colors.DARK_GREY,
 	add_displays = {class.new{image="terrain/signpost.png"}},
 	always_remember = true,
+	notice = true,
 	lore = "infinite-dungeon-"..i,
 	on_move = function(self, x, y, who)
 		if not who.player then return end
@@ -36,29 +37,6 @@ newEntity{
 	end,
 }
 end
-
-newEntity{
-	define_as = "PORTAL",
-	name = "orb", image = "terrain/maze_teleport.png",
-	display = '*', color=colors.VIOLET, back_color=colors.DARK_GREY,
-	always_remember = true,
-	on_move = function(self, x, y, who)
-		if not who.player then return end
-		local text = "???"
-		if self.portal_type == "water" then text = "The orb seems to drip water."
-		elseif self.portal_type == "earth" then text = "The orb is covered in dust."
-		elseif self.portal_type == "wind" then text = "The orb is floating in the air."
-		elseif self.portal_type == "nature" then text = "Small seeds seem to be growing inside the orb."
-		elseif self.portal_type == "arcane" then text = "The orb swirls with magical energies."
-		elseif self.portal_type == "fire" then text = "Flames burst out of the orb."
-		end
-		require("engine.ui.Dialog"):yesnoLongPopup("Strange Orb", text.."\nDo you touch it?", 400, function(ret)
-			if ret then
-				game.level.data.touch_orb(self.portal_type, x, y)
-			end
-		end)
-	end,
-}
 
 newEntity{
 	define_as = "INFINITE",
@@ -85,7 +63,9 @@ newEntity{
 	define_as = "PORTAL",
 	name = "orb", image = "terrain/maze_teleport.png",
 	display = '*', color=colors.VIOLET, back_color=colors.DARK_GREY,
-	always_remember = true, force_clone=true,
+	force_clone=true,
+	always_remember = true,
+	notice = true,
 	on_move = function(self, x, y, who)
 		if not who.player then return end
 		local text = "???"
