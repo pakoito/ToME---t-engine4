@@ -93,8 +93,8 @@ newEntity{ base = "BASE_INFUSION",
 
 	inscription_data = {
 		cooldown = resolvers.rngrange(5, 10),
-		heal = resolvers.mbonus_level(300, 40, function(e, v) return v * 0.06 end),
-		use_stat_mod = 2,
+		heal = resolvers.mbonus_level(400, 40, function(e, v) return v * 0.06 end),
+		use_stat_mod = 2.7,
 	},
 	inscription_talent = "INFUSION:_HEALING",
 }
@@ -109,8 +109,8 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_data = {
 		cooldown = resolvers.rngrange(12, 17),
 		dur = 5,
-		heal = resolvers.mbonus_level(500, 60, function(e, v) return v * 0.06 end),
-		use_stat_mod = 2.1,
+		heal = resolvers.mbonus_level(550, 60, function(e, v) return v * 0.06 end),
+		use_stat_mod = 3.4,
 	},
 	inscription_talent = "INFUSION:_REGENERATION",
 }
@@ -259,8 +259,8 @@ newEntity{ base = "BASE_RUNE",
 	inscription_data = {
 		cooldown = resolvers.rngrange(14, 24),
 		dur = resolvers.mbonus_level(5, 3),
-		power = resolvers.mbonus_level(400, 50, function(e, v) return v * 0.06 end),
-		use_stat_mod = 2.3,
+		power = resolvers.mbonus_level(500, 50, function(e, v) return v * 0.06 end),
+		use_stat_mod = 3,
 	},
 	inscription_talent = "RUNE:_SHIELDING",
 }
