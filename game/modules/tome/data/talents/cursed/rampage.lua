@@ -26,7 +26,14 @@ newTalent{
 	type = {"cursed/rampage", 1},
 	require = cursed_str_req1,
 	points = 5,
-	cooldown = 150,
+	cooldown = function(self, t)
+		local tReflexes = self:getTalentFromId(self.T_REFLEXES)
+		if tReflexes then
+			return t.getCooldown(self, t)
+		else
+			return 150
+		end
+	end,
 	hate = 0.5,
 	action = function(self, t, hateLoss)
 		local hateLoss = 0
@@ -115,12 +122,8 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		local tRampage = self:getTalentFromId(self.T_RAMPAGE)
-		tRampage.cooldown = tRampage.cooldown - 10
 	end,
 	on_unlearn = function(self, t)
-		local tRampage = self:getTalentFromId(self.T_RAMPAGE)
-		tRampage.cooldown = tRampage.cooldown + 10
 	end,
 	getCooldown = function(self, t) return 150 - math.floor(10 * self:getTalentLevelRaw(t)) end,
 	getSpeed = function(self, t) return 10 * self:getTalentLevel(t) end,

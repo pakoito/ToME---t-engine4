@@ -21,6 +21,10 @@ local Object = require "engine.Object"
 local Map = require "engine.Map"
 local canCreep, doCreep, createDark
 
+local function combatTalentDamage(self, t, min, max)
+	return self:combatTalentSpellDamage(t, min, max, self.combat_spellpower + self:getMag())
+end
+
 function canCreep(x, y, ignoreCreepingDark)
 	-- not on map
 	if not game.level.map:isBound(x, y) then return false end
@@ -260,13 +264,13 @@ newTalent{
 	range = 5,
 	requires_target = true,
 	getRadius = function(self, t)
-		return 2 + self:getTalentLevel(t) / 2
+		return 3
 	end,
 	getDarkCount = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t))
+		return 3 + math.floor(self:getTalentLevel(t) * 1.8)
 	end,
 	getDamage = function(self, t)
-		return self:combatTalentSpellDamage(t, 20, 60)
+		return combatTalentDamage(self, t, 25, 70)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -296,7 +300,7 @@ newTalent{
 			local selection = rng.range(i, #locations)
 			locations[i], locations[selection] = locations[selection], locations[i]
 
-			createDark(self, locations[i][1], locations[i][2], damage, 5, 2 + self:getMag(4), 70, 0)
+			createDark(self, locations[i][1], locations[i][2], damage, 8, 2 + self:getMag(6), 70, 0)
 		end
 
 		game:playSoundNear(self, "talents/breath")
@@ -306,7 +310,8 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
-		return ([[Creeping dark spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage. Improves with the Magic stat.]]):format(darkCount, radius, damage)
+		return ([[Creeping dark spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage.
+		Damage improves with the Magic stat and spellpower.]]):format(darkCount, radius, damage)
 	end,
 }
 
@@ -318,7 +323,7 @@ newTalent{
 	mode = "passive",
 	random_ego = "attack",
 	range = function(self, t)
-		return 2 + self:getTalentLevel(t) * 2
+		return math.floor(2 + self:getTalentLevel(t) * 2)
 	end,
 	getDamageIncrease = function(self, t)
 		local level = self:getTalentLevel(t)
@@ -352,7 +357,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
-		return self:combatTalentSpellDamage(t, 20, 200)
+		return combatTalentDamage(self, t, 20, 200)
 	end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -384,7 +389,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Sends a torrent of searing darkness through your foes doing %d damage with a chance to blind them for 3 turns.
-		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.DARKNESS, damage))
+		The damage will increase with the Magic stat and spellpower.]]):format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
@@ -396,12 +401,12 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	hate =  1.2,
-	range = 6,
+	range = 10,
 	getPinDuration = function(self, t)
 		return 1 + math.floor(self:getTalentLevel(t) / 2)
 	end,
 	getDamage = function(self, t)
-		return self:combatTalentSpellDamage(t, 40, 80)
+		return combatTalentDamage(self, t, 40, 80)
 	end,
 	action = function(self, t)
 		if self.dark_tendrils then return false end
@@ -413,7 +418,7 @@ newTalent{
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
 
-		createDarkTendrils(self, self.x, self.y, target, damage, 10, pinDuration)
+		createDarkTendrils(self, self.x, self.y, target, damage, 12, pinDuration)
 
 		return true
 	end,
@@ -421,6 +426,6 @@ newTalent{
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Send tendrils of creeping dark out to attack your target and pin them for %d turns. The darkness does %d damage per turn.
-		The damage will increase with the Magic stat.]]):format(pinDuration, damage)
+		The damage will increase with the Magic stat and spellpower.]]):format(pinDuration, damage)
 	end,
 }

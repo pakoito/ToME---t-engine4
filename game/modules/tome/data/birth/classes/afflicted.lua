@@ -116,6 +116,5 @@ newBirthDescriptor{
 		},
 	},
 	copy_add = {
-		life_rating = -2,
 	},
 }

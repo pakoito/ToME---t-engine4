@@ -57,11 +57,11 @@ newTalent{
 		local extension = t.getExtension(self, t)
 		local extensionText = ""
 		if extension > 0 then
-			return ([[Draws %0.2f hate per turn from a targeted foe as long as the foe remains in your line of sight.
-			Improves with the Willpower stat.]]):format(hateGain)
-		else
 			return ([[Draws %0.2f hate per turn from a targeted foe as long as the foe remains in your line of sight. You will continue to gain hate for %d turns after the link is severed.
 			Improves with the Willpower stat.]]):format(hateGain, extension)
+		else
+			return ([[Draws %0.2f hate per turn from a targeted foe as long as the foe remains in your line of sight.
+			Improves with the Willpower stat.]]):format(hateGain)
 		end
 	end,
 }

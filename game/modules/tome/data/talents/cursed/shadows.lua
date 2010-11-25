@@ -84,23 +84,53 @@ local function createShadow(self, level, duration, target)
 		name = "shadow",
 		desc = [[]],
 		display = 'b', color=colors.BLACK,
-		faction = self.faction,
-		level_range = {level, level},
-		exp_worth=0,
-		autolevel = "none",
-		max_life = resolvers.rngavg(5,10), life_rating = 2,
-		infravision = 20,
-		rank = 2,
-		size_category = 2,
-		energy = { mod=1 },
-		blind_immune = 1,
-		see_invisible = 30,
-		undead = 1,
-		combat_armor = 0, combat_def = 3 + level * 0.1,
-		combat = { dam=resolvers.rngavg(1 * level, 4 + level), atk=10 + 1.5 * level, apr=10, dammod={dex=0.3, mag=0.3} },
+		
 		summoner = self,
 		summoner_gain_exp=true,
 		summon_time = duration,
+		faction = self.faction,
+		size_category = 2,
+		rank = 2,
+		autolevel = "none",
+		level_range = {level, level},
+		exp_worth=0,
+		
+		max_life = resolvers.rngavg(15,20), life_rating = 4,
+		energy = { mod=1 },
+		stats = {
+			str=10 + math.floor(level * 0.2),
+			dex=15 + math.floor(level * 0.8),
+			mag=15 + math.floor(level * 0.5),
+			wil=10 + math.floor(level * 0.4),
+			cun=10 + math.floor(level * 0.2),
+			con=5,
+		},
+		combat_armor = 0, combat_def = 3 + level * 0.1,
+		combat = {
+			dam=14 + level * 2,
+			atk=10 + 1.5 * level * 2,
+			apr=10,
+			dammod={dex=0.3, mag=0.3}
+		},
+		evasion = 40,
+		resolvers.talents{
+			[self.T_SHADOW_PHASE_DOOR]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_SHADOW_BLINDSIDE]=math.max(5, math.floor(1 + level * 0.1)),
+		},
+		
+		undead = 1,
+		no_breath = 1,
+		stone_immune = 1,
+		confusion_immune = 1,
+		fear_immune = 1,
+		teleport_immune = 1,
+		disease_immune = 1,
+		poison_immune = 1,
+		stun_immune = 1,
+		blind_immune = 1,
+		see_invisible = 80,
+		resists = {[DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100, [DamageType.PHYSICAL] = 30},
+		
 		ai = "shadow",
 		ai_state = {
 			summoner_range = 10,
@@ -119,18 +149,6 @@ local function createShadow(self, level, duration, target)
 			actor=target,
 			x = nil,
 			y = nil
-		},
-		stats = {
-			str=10 + math.floor(level * 0.2),
-			dex=15 + math.floor(level * 0.8),
-			mag=15 + math.floor(level * 0.5),
-			wil=10 + math.floor(level * 0.4),
-			cun=10 + math.floor(level * 0.2),
-			con=5,
-		},
-		resolvers.talents{
-			[self.T_SHADOW_PHASE_DOOR]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_SHADOW_BLINDSIDE]=math.max(5, math.floor(1 + level * 0.1)),
 		},
 		feed = function(self, t)
 			self.ai_state.feed_temp1 = self:addTemporaryValue("combat_atk", t.getCombatAtk(self.summoner, t))
@@ -162,7 +180,7 @@ newTalent{
 		DEFEND = 10,
 	},
 	getLevel = function(self, t)
-		return math.max(1, self.level - 2 + self:getMag(4))
+		return self.level --return math.max(1, self.level - 2 + self:getMag(4))
 	end,
 	getMaxShadows = function(self, t)
 		return math.max(1, math.floor(self:getTalentLevel(t) * 0.55))
@@ -191,7 +209,7 @@ newTalent{
 		
 		self.shadows.remainingCooldown = self.shadows.remainingCooldown - 1
 		if self.shadows.remainingCooldown > 0 then return false end
-		self.shadows.remainingCooldown = 25
+		self.shadows.remainingCooldown = 10
 			
 		local shadowCount = 0
 		for _, e in pairs(game.level.entities) do
@@ -255,7 +273,7 @@ newTalent{
 		return self:getTalentLevel(t)
 	end,
 	getBlindsideChance = function(self, t)
-		return 15 + self:getTalentLevel(t) * 12
+		return math.min(100, 15 + self:getTalentLevel(t) * 12)
 	end,
 	action = function(self, t)
 		local target = { type="hit", range=self:getTalentRange(t) }
@@ -317,7 +335,7 @@ newTalent{
 			end
 		end
 		
-		local regenId = self:addTemporaryValue("hate_regen", -0.035)
+		local regenId = self:addTemporaryValue("hate_regen", -0.02)
 	
 		return { regenId = regenId }
 	end,
@@ -336,7 +354,7 @@ newTalent{
 		local combatAtk = t.getCombatAtk(self, t)
 		local incDamage = t.getIncDamage(self, t)
 		local blindsideChance = t.getBlindsideChance(self, t)
-		return ([[Feed your hate to your shadows increasing their attack by %d%%, damage by %d%% and chance of using blindside to %d%%. While active your hate loss will increase.]]):format(combatAtk, incDamage, blindsideChance)
+		return ([[Feed your hate to your shadows increasing their attack by %d%%, damage by %d%% and chance of using blindside to %d%%. While active you will lose hate faster.]]):format(combatAtk, incDamage, blindsideChance)
 	end,
 }
 

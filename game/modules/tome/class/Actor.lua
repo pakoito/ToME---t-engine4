@@ -236,10 +236,10 @@ function _M:act()
 	    local t = self:getTalentFromId(self.T_DEFLECTION)
 		t.do_act(self, t, self:isTalentActive(self.T_DEFLECTION))
 	end
-	-- this handles doomed unseen forces turn based effects
-	if self.unseenForces then
-		local t = self:getTalentFromId(self.T_UNSEEN_FORCES)
-		t.do_unseenForces(self, t)
+	-- this handles doomed unseen force turn based effects
+	if self.unseenForce then
+		local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
+		t.do_unseenForce(self, t)
 	end
 
 	if self:attr("stunned") then

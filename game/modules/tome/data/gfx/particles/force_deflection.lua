@@ -32,7 +32,7 @@ return { generator = function()
 	return {
 		trail = 1,
 		life = 10,
-		size = rng.float(1, 3), sizev = 0, sizea = 0,
+		size = rng.float(2, 4), sizev = 0, sizea = 0,
 
 		x = distance * math.cos(angle), xv = 0, xa = 0,
 		y = distance * math.sin(angle), yv = 0, ya = 0,
