@@ -29,13 +29,13 @@ newTalent{
 	},
 	range = 20,
 	action = function(self, t)
-		self:incNegative(20 + 20 * self:getTalentLevel(t))
+		self:incNegative(20 + 15 * self:getTalentLevel(t))
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		return ([[You stand between the darkness and the light, allowing you to convert 15 positive energy into %d negative energy.]]):
-		format(20 + 10 * self:getTalentLevel(t))
+		format(20 + 15 * self:getTalentLevel(t))
 	end,
 }
 
