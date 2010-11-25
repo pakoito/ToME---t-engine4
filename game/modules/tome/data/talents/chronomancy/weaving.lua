@@ -36,7 +36,7 @@ newTalent{
 	end,
 }
 
-  newTalent{
+newTalent{
 	name = "Wormhole",
 	type = {"chronomancy/weaving", 2},
 	require = temporal_req2,
@@ -103,7 +103,7 @@ newTalent{
 		local entrance = mod.class.Trap.new{
 			name = "wormhole",
 			type = "annoy", subtype="teleport", id_by_type=true, unided_name = "trap",
-			image = "talents/wormhole.png",
+			image = "terrain/wormhole.png",
 			display = '&', color_r=255, color_g=255, color_b=255, back_color=colors.STEEL_BLUE,
 			message = "@Target@ moves through the wormhole.",
 		triggered = function(self, x, y, who)

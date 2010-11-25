@@ -122,7 +122,7 @@ newTalent{
 	action = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
 		if not ammo or ammo:getNumber() < 5 then
-			game.logPlayer(self, "You need to ready 2 alchemist gems in your quiver.")
+			game.logPlayer(self, "You need to ready 5 alchemist gems in your quiver.")
 			return
 		end
 
