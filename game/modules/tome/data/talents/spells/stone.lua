@@ -109,7 +109,7 @@ newTalent{
 		Your stoned form and your affinity with the earth while the spell is active has the following effects:
 		* Reduces the cooldown of Stalactitic Missiles, Earthquake, and Strike by %d
 		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Physical Resistance, and %d%% Knockback Resistance
-		Resistances and Sense radius scale with the Magic Stat.]])
+		Resistances scale with the Magic Stat.]])
 		:format((self:getTalentLevel(t)/2), self:combatTalentSpellDamage(t, 5, 80), self:combatTalentSpellDamage(t, 5, 50), self:combatTalentSpellDamage(t, 5, 20), (self:getTalentLevel(t)*10))
 	end,
 }

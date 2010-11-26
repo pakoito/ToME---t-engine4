@@ -73,14 +73,14 @@ newEntity{
 	rarity = 14,
 	cost_per_charge = 1,
 
-	use_power = { name = "try to disarm any known traps", power = 6, use = function(self, who)
+	use_power = { name = "try to disarm any known traps in a line", power = 6, use = function(self, who)
 		local tg = {type="beam", range=2 + who:getMag(2)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
 		who:project(tg, x, y, function(px, py)
 			local trap = game.level.map(px, py, engine.Map.TRAP)
 			if not trap then return end
-			local inc = self.material_level * 5 + who:getMag(30)
+			local inc = self.material_level * 10 + who:getMag(80)
 			who:attr("can_disarm", 1)
 			who:attr("disarm_bonus", inc)
 
