@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Stalactitic Missiles",
+	name = "Earthen Missiles",
 	type = {"spell/stone",1},
 	require = spells_req1,
 	points = 5,
@@ -58,7 +58,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures stalactite shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage over six turns.
+		return ([[Conjures missile shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage over six turns.
 		At talent level 1 you conjure two missile with an additional missile at talent level 5.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 120)/2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 120)/2))
 	end,
@@ -85,7 +85,7 @@ newTalent{
 			move = self:addTemporaryValue("never_move", 1),
 			knock = self:addTemporaryValue("knockback_immune", kb),
 			cdred = self:addTemporaryValue("talent_cd_reduction", {
-				[self.T_STALACTITIC_MISSILES] = cdr,
+				[self.T_EARTHEN_MISSILES] = cdr,
 				[self.T_STRIKE] = cdr,
 				[self.T_EARTHQUAKE] = cdr,
 			}),
@@ -107,7 +107,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You root yourself into the earth and transform your flesh into stone.  While this spell is sustained you may not move and any forced movement will end the effect.
 		Your stoned form and your affinity with the earth while the spell is active has the following effects:
-		* Reduces the cooldown of Stalactitic Missiles, Earthquake, and Strike by %d
+		* Reduces the cooldown of Earthen Missiles, Earthquake, and Strike by %d
 		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Physical Resistance, and %d%% Knockback Resistance
 		Resistances scale with the Magic Stat.]])
 		:format((self:getTalentLevel(t)/2), self:combatTalentSpellDamage(t, 5, 80), self:combatTalentSpellDamage(t, 5, 50), self:combatTalentSpellDamage(t, 5, 20), (self:getTalentLevel(t)*10))

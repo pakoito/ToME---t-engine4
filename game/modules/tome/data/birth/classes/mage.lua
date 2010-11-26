@@ -332,7 +332,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_ARCANE_POWER] = 1,
 		[ActorTalents.T_STONE_SKIN] = 1,
-		[ActorTalents.T_STALACTITIC_MISSILES] = 1,
+		[ActorTalents.T_EARTHEN_MISSILES] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
@@ -377,7 +377,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_ICE_SHARDS] = 1,
 		[ActorTalents.T_FLAME] = 1,
-		[ActorTalents.T_STALACTITIC_MISSILES] = 1,
+		[ActorTalents.T_EARTHEN_MISSILES] = 1,
 		[ActorTalents.T_NOVA] = 1,
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
