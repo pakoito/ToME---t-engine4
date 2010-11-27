@@ -102,9 +102,9 @@ newTalent{
 		return ([[Call upon the essence of the supreme demon overlord Urh'Rok to turn into a demon.
 		While in demon form you gain %d%% fire resistance, %d%% darkness resistance and your global speed is increased by %d%%.
 		The flames of the demon plane will heal you while in demon form.
-		The bonuses will increase with Magic stat.]]):
+		The resistances and heal will increase with Magic stat.]]):
 		format(
-			self:combatTalentSpellDamage(t, 20, 30), self:combatTalentSpellDamage(t, 20, 30),
+			self:combatTalentSpellDamage(t, 20, 30), self:combatTalentSpellDamage(t, 20, 35),
 			self:getTalentLevel(t) * 3
 		)
 	end,

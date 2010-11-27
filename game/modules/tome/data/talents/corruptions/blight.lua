@@ -97,7 +97,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Project a corrupted blast of power that deals %0.2f blight damage and removes %d magical or physical effects from any creatures caught in the area.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 120)), self:getTalentLevelRaw(t))
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 120)), self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -123,7 +123,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Infect your target with a corrosive worm that deals %0.2f acid damage per turn.
+		return ([[Infect your target with a corrosive worm that deals %0.2f acid damage per turn for 10 turns.
 		If the target dies while the worm is inside it will explode doing %0.2f acid damage in a radius of 4.
 		The damage will increase with Magic stat.]]):
 		format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 60)), damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 230)))
@@ -164,6 +164,6 @@ newTalent{
 	info = function(self, t)
 		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for doing %0.2f nature damage in 6 turns in a radius of 4 for %d turns.
 		Poisoning is cumulative, the longer they stay in they higher the poison they take.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), 5 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), 5 + self:getTalentLevel(t))
 	end,
 }

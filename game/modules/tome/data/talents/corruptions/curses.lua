@@ -42,8 +42,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, decreasing its defense and saves by %d.
-		The defense and saves will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 30))
+		return ([[Curses your target, decreasing its defense and saves by %d for 10 turns.
+		The defense and saves will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 30, 60))
 	end,
 }
 
@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, decreasing all damage done by %d%%.
+		return ([[Curses your target, decreasing all damage done by %d%% for 10 turns.
 		The damage will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 30))
 	end,
 }
@@ -102,7 +102,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, stopping any natural healing and dealing %0.2f darkness damage each turn.
+		return ([[Curses your target, stopping any natural healing and dealing %0.2f darkness damage each turn for 10 turns.
 		The resistances will decrease with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 70)))
 	end,
 }
@@ -132,7 +132,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, decreasing all its resistances by %d%%.
+		return ([[Curses your target, decreasing all its resistances by %d%% for 10 turns.
 		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 60))
 	end,
 }

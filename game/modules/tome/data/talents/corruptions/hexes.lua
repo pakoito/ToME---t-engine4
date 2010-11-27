@@ -42,7 +42,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target, dazing it for 3 turns and giving %d%% chance to daze it again each turn.
+		return ([[Hexes your target, dazing it for 3 turns and giving %d%% chance to daze it again each turn for 20 turns.
 		The chance will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 30, 50))
 	end,
 }
@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target. Each time it uses a resource (stamina, mana, vim, ...) it takes %0.2f fire damage.
+		return ([[Hexes your target for 20 turns. Each time it uses a resource (stamina, mana, vim, ...) it takes %0.2f fire damage.
 		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 4, 90)))
 	end,
 }
@@ -102,7 +102,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target. Each time it does damage it takes %d%% of the same damage.
+		return ([[Hexes your target. Each time it does damage it takes %d%% of the same damage for 20 turns.
 		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 4, 20))
 	end,
 }

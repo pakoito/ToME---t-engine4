@@ -220,7 +220,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Infects the target with a very contagious disease doing %0.2f damage per turn for 6 turns.
-		If any blight damage from non-diseases hits the target, the epidemic will activate and spread diseases to nearby targets.]]):
+		If any blight damage from non-diseases hits the target, the epidemic will activate and spread diseases to nearby targets.
+		The damage will increase with your Magic stat.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 50)))
 	end,
 }

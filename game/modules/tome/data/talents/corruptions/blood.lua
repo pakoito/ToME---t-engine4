@@ -91,7 +91,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Make the blood of all creatures around you boil, doing %0.2f blight damage and slowing them by 20%%.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 190)))
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 190)))
 	end,
 }
 

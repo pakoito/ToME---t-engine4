@@ -27,7 +27,9 @@ newTalent{
 		self:attr("allow_any_dual_weapons", 1)
 	end,
 	on_unlearn = function(self, t)
-		self:attr("allow_any_dual_weapons", -1)
+		if not self:knowTalent(t) then
+			self:attr("allow_any_dual_weapons", -1)
+		end
 	end,
 	info = function(self, t)
 		return ([[Allows you to dual wield any type of one handed weapons and increases the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - self:getTalentLevel(t) / 9))
@@ -85,7 +87,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Your blood turns into an acidic mixture. When you get hit the attacker is splashed with acid.
 		This deals %0.2f acid damage each turn for 5 turns and reduces the attacker attack by %d.
-		At level 3 it will also reduce armour by %d.]]):
+		At level 3 it will also reduce armour by %dfor 5 turns.
+		The damage will increase with your Magic stat.]]):
 		format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 5, 30)), self:combatTalentSpellDamage(t, 15, 35), self:combatTalentSpellDamage(t, 15, 40))
 	end,
 }
