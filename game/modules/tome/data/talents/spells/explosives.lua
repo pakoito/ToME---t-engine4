@@ -75,10 +75,10 @@ newTalent{
 
 			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
 			if ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end
+			if not target then return end
 			if ammo.alchemist_bomb.stun and rng.percent(ammo.alchemist_bomb.stun.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, ammo.alchemist_bomb.stun.dur, {})
 			end
@@ -213,10 +213,10 @@ newTalent{
 
 			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
 			if ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end
+			if not target then return end
 			if ammo.alchemist_bomb.stun and rng.percent(ammo.alchemist_bomb.stun.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, ammo.alchemist_bomb.stun.dur, {})
 			end
