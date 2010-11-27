@@ -89,8 +89,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.
-		If the last attack hits, the target is knocked back. The chance for knock back increases with talent level.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150)), 2 + self:getTalentLevel(t) / 2)
+		return ([[Hits the target with your weapon and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150)), 2 + self:getTalentLevel(t) / 2)
 	end,
 }
 
