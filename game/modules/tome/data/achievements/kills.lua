@@ -70,3 +70,9 @@ newAchievement{
 		if self.nb >= 6 then return true end
 	end,
 }
+
+newAchievement{
+	name = "Earth Master", id = "GEOMANCER",
+	desc = [[Killed Harkor'Zun and unlocked the Geomancer class]],
+	mode = "player",
+}

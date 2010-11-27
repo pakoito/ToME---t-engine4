@@ -183,6 +183,7 @@ newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
 	on_die = function(self)
 		if profile.mod.allow_build.mage then
 			game:setAllowedBuild("mage_geomancer", true)
+			world:gainAchievement("GEOMANCER", game.player)
 		end
 	end,
 }
