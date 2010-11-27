@@ -700,7 +700,7 @@ function _M:onTakeHit(value, src)
 			game.logSeen(self, "The displacement shield teleports the damage to %s!", self.displacement_shield_target.name)
 			self.displacement_shield = self.displacement_shield - value
 			self.displacement_shield_target:takeHit(value, src)
-			self:removeEffect(self.EFF_BONE_SHIELD)
+			self:removeEffect(self.EFF_DISPLACEMENT_SHIELD)
 			value = 0
 		end
 	end
