@@ -686,6 +686,7 @@ function _M:setupCommands()
 						local a = self.zone:finishEntity(self.level, "object", e)
 						a.no_unique_lore = true -- to not spam
 						a:identify(true)
+						if a.name == a.unided_name then print("=================", a.name) end
 						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)
 					end
 				end
