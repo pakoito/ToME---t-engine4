@@ -548,7 +548,7 @@ end
 
 function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
-	if self.change_res_dialog then engine.GameTurnBased.display(self) return end
+	if self.change_res_dialog then engine.GameTurnBased.display(self, nb_keyframes) return end
 
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then

@@ -67,7 +67,7 @@ function _M:display(nb_keyframes)
 		fl.duration = fl.duration - nb_keyframes
 
 		-- Delete the flyer
-		if fl.duration == 0 then
+		if fl.duration <= 0 then
 			dels[#dels+1] = fl
 		end
 	end
