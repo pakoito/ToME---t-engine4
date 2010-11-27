@@ -93,7 +93,7 @@ newTalent{
 	cooldown = 100,
 	no_npc_use = true,
 	action = function(self, t)
-		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
+		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
 			self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)
 				self:removeObject(self:getInven("INVEN"), gem_item)
 				o.wielder = o.wielder or {}
