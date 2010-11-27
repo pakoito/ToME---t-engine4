@@ -123,20 +123,9 @@ newTalent{
 }
 
 newTalent{
-	name = "Explosion Expert",
+	name = "Alchemist Protection",
 	type = {"spell/explosives", 2},
 	require = spells_req2,
-	mode = "passive",
-	points = 5,
-	info = function(self, t)
-		return ([[Your alchemist bombs now affect a radius of %d around them.]]):format(self:getTalentLevelRaw(t))
-	end,
-}
-
-newTalent{
-	name = "Alchemist Protection",
-	type = {"spell/explosives", 3},
-	require = spells_req3,
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
@@ -155,6 +144,17 @@ newTalent{
 		return ([[Improves your resistance against the elemental damage of your own bombs by %d%%, and against external ones by %d%%.
 		At talent level 5 it also protects you against all side effects of your bombs.]]):
 		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
+	end,
+}
+
+newTalent{
+	name = "Explosion Expert",
+	type = {"spell/explosives", 3},
+	require = spells_req3,
+	mode = "passive",
+	points = 5,
+	info = function(self, t)
+		return ([[Your alchemist bombs now affect a radius of %d around them.]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 

@@ -101,7 +101,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you infravision up to %d grids.
 		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
-		The resistance and damage will increase with the Magic stat]]):format(math.floor(5 + self:getTalentLevel(t)), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
+		The damage will increase with the Magic stat]]):format(math.floor(5 + self:getTalentLevel(t)), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
