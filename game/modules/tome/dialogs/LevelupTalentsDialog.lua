@@ -390,7 +390,7 @@ end
 
 function _M:learnType(tt, v)
 	if v then
-		if self.actor:knowTalentType(tt) and self.actor.__increased_talent_types[tt] and self.actor.__increased_talent_types[tt] >= 2 then
+		if self.actor:knowTalentType(tt) and self.actor.__increased_talent_types[tt] and self.actor.__increased_talent_types[tt] >= 1 then
 			self:simplePopup("Impossible", "You can only improve a category mastery twice!")
 			return
 		end
@@ -402,7 +402,7 @@ function _M:learnType(tt, v)
 			self.actor:learnTalentType(tt)
 		else
 			self.actor.__increased_talent_types[tt] = (self.actor.__increased_talent_types[tt] or 0) + 1
-			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) + 0.1)
+			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) + 0.2)
 		end
 		self.actor.unused_talents_types = self.actor.unused_talents_types - 1
 	else
@@ -421,7 +421,7 @@ function _M:learnType(tt, v)
 
 		if (self.actor.__increased_talent_types[tt] or 0) > 0 then
 			self.actor.__increased_talent_types[tt] = (self.actor.__increased_talent_types[tt] or 0) - 1
-			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) - 0.1)
+			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) - 0.2)
 			self.actor.unused_talents_types = self.actor.unused_talents_types + 1
 		else
 			self.actor:unlearnTalentType(tt)
