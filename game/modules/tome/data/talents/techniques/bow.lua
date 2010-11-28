@@ -39,6 +39,8 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:hasArcheryWeapon("bow") then game.logPlayer(self, "You must wield a bow!") return nil end
+
 		local targets = self:archeryAcquireTargets({type="beam"}, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, {type="beam"}, {mult=self:combatTalentWeaponDamage(t, 1, 1.5), apr=1000})
@@ -60,6 +62,8 @@ newTalent{
 	range = 20,
 	requires_target = true,
 	action = function(self, t)
+		if not self:hasArcheryWeapon("bow") then game.logPlayer(self, "You must wield a bow!") return nil end
+
 		local tg = {type="ball", radius=1}
 		local targets = self:archeryAcquireTargets(tg, {limit_shots=2})
 		if not targets then return end
@@ -83,6 +87,8 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
+		if not self:hasArcheryWeapon("bow") then game.logPlayer(self, "You must wield a bow!") return nil end
+
 		local tg = {type="ball", radius=2 + self:getTalentLevel(t)/3, friendlyfire=false}
 		local targets = self:archeryAcquireTargets(tg)
 		if not targets then return end

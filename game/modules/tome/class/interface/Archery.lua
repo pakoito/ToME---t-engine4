@@ -210,7 +210,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 end
 
 --- Check if the actor has a bow or sling and corresponding ammo
-function _M:hasArcheryWeapon()
+function _M:hasArcheryWeapon(type)
 	if self:attr("disarmed") then
 		return nil, "disarmed"
 	end
@@ -230,5 +230,6 @@ function _M:hasArcheryWeapon()
 			return nil, "bad ammo"
 		end
 	end
+	if type and weapon.archery ~= type then return nil, "bad type" end
 	return weapon, ammo
 end
