@@ -957,19 +957,28 @@ function _M:displayParticles(nb_keyframes)
 	local del = {}
 	local e = next(self.particles)
 	while e do
-		local alive = true
+		if nb_keyframes == 0 then
+			-- Just display it, not updating, no emiting
+			if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
+				alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom)
+			end
+		else
+			-- Update more, if needed
+			for i = 1, nb_keyframes do
+				local alive = not e.update(e)
 
-		for i = 1, nb_keyframes do alive = not e.update(e) end
+				-- Only draw the first keyframe
+				if i == 1 and alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
+					alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom, nb_keyframes)
+				end
+				-- Update the particles enough times
+				e.ps:update()
 
-		-- Dont bother with obviously out of screen stuff
-		if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-			alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom, nb_keyframes)
-		end
-		if nb_keyframes == 0 then alive = true end
-
-		if not alive then
-			del[#del+1] = e
-			e.dead = true
+				if i == 1 and not alive then
+					del[#del+1] = e
+					e.dead = true
+				end
+			end
 		end
 
 		e = next(self.particles, e)

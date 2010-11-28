@@ -272,7 +272,6 @@ static int particles_to_screen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	bool show = lua_toboolean(L, 4);
 	float zoom = luaL_checknumber(L, 5);
-	int keyframes = luaL_checknumber(L, 6);
 	int kf;
 	int w = 0;
 	int i, j;
@@ -334,41 +333,64 @@ static int particles_to_screen(lua_State *L)
 				}
 				glEnd();
 			}
+		}
+	}
 
-			for (kf = 0; kf < keyframes; kf++)
+	// Restore normal display
+	glColor4f(1, 1, 1, 1);
+
+	lua_pushboolean(L, alive || ps->no_stop);
+	return 1;
+}
+
+static int particles_update(lua_State *L)
+{
+	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
+	int w = 0;
+	int i, j;
+	bool alive = FALSE;
+
+	glBindTexture(GL_TEXTURE_2D, ps->texture);
+
+	for (w = 0; w < ps->nb; w++)
+	{
+		particle_type *p = &ps->particles[w];
+
+		if (p->life > 0)
+		{
+			alive = TRUE;
+
+			if (p->life != PARTICLE_ETERNAL) p->life--;
+
+			p->ox = p->x;
+			p->oy = p->y;
+
+			p->x += p->xv;
+			p->y += p->yv;
+
+			if (p->vel)
 			{
-				if (p->life != PARTICLE_ETERNAL) p->life--;
-
-				p->ox = p->x;
-				p->oy = p->y;
-
-				p->x += p->xv;
-				p->y += p->yv;
-
-				if (p->vel)
-				{
-					p->x += cos(p->dir) * p->vel;
-					p->y += sin(p->dir) * p->vel;
-				}
-
-				p->dir += p->dirv;
-				p->vel += p->velv;
-				p->r += p->rv;
-				p->g += p->gv;
-				p->b += p->bv;
-				p->a += p->av;
-				p->size += p->sizev;
-
-				p->xv += p->xa;
-				p->yv += p->ya;
-				p->dirv += p->dira;
-				p->velv += p->vela;
-				p->rv += p->ra;
-				p->gv += p->ga;
-				p->bv += p->ba;
-				p->av += p->aa;
-				p->sizev += p->sizea;
+				p->x += cos(p->dir) * p->vel;
+				p->y += sin(p->dir) * p->vel;
 			}
+
+			p->dir += p->dirv;
+			p->vel += p->velv;
+			p->r += p->rv;
+			p->g += p->gv;
+			p->b += p->bv;
+			p->a += p->av;
+			p->size += p->sizev;
+
+			p->xv += p->xa;
+			p->yv += p->ya;
+			p->dirv += p->dira;
+			p->velv += p->vela;
+			p->rv += p->ra;
+			p->gv += p->ga;
+			p->bv += p->ba;
+			p->av += p->aa;
+			p->sizev += p->sizea;
 		}
 	}
 
@@ -391,6 +413,7 @@ static const struct luaL_reg particles_reg[] =
 	{"close", particles_free},
 	{"emit", particles_emit},
 	{"toScreen", particles_to_screen},
+	{"update", particles_update},
 	{NULL, NULL},
 };
 
