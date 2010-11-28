@@ -124,7 +124,7 @@ newTalent{
 		local pid = table.remove(p.particles)
 		if pid then self:removeParticles(pid) end
 		if #p.particles <= 0 then
-			if self:isTalentActive(t) then self:forceUseTalent(t.id, {ignore_energy=true}) end
+			if self:isTalentActive(t.id) then self:forceUseTalent(t.id, {ignore_energy=true}) end
 		end
 	end,
 	activate = function(self, t)
