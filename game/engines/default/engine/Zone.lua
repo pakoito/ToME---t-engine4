@@ -22,7 +22,7 @@ local Savefile = require "engine.Savefile"
 local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
 local Astar = require "engine.Astar"
-local print = function() end
+--local print = function() end
 
 --- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
 module(..., package.seeall, class.make)
@@ -41,6 +41,7 @@ function _M:setup(t)
 	self.grid_class = require(t.grid_class or "engine.Grid")
 	self.trap_class = require(t.trap_class or "engine.Trap")
 	self.object_class = require(t.object_class or "engine.Object")
+	self.on_setup = t.on_setup
 end
 
 --- Loads a zone definition
@@ -59,6 +60,8 @@ function _M:init(short_name, dynamic)
 			self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
 			self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
 		end
+
+		if self.on_setup then self:on_setup() end
 
 		-- Determine a zone base level
 		self.base_level = self.level_range[1]

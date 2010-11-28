@@ -163,7 +163,7 @@ newEntity{
 	faction = "sorcerers",
 
 	desc = [[The renegates mages from Angolwen, the Sorcerers have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
-	level_range = {70, 70}, exp_worth = 15,
+	level_range = {70, nil}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
 	mana_regen = 10,
@@ -219,7 +219,7 @@ newEntity{
 	faction = "sorcerers",
 
 	desc = [[The renegates mages from Angolwen, the Sorcerers have setup in the Far East, slowly growing corrupt. Now they must be stopped.]],
-	level_range = {70, 70}, exp_worth = 15,
+	level_range = {70, nil}, exp_worth = 15,
 	max_life = 1000, life_rating = 36, fixed_rating = true,
 	max_mana = 10000,
 	mana_regen = 10,

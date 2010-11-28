@@ -40,13 +40,6 @@ newTalent = function(t)
 end
 
 damDesc = function(self, type, dam)
-	-- Difficulty settings
-	if game.difficulty == game.DIFFICULTY_NIGHTMARE then
-		if self:resolveSource().player then dam = dam * 0.7 end
-	elseif game.difficulty == game.DIFFICULTY_INSANE then
-		if self:resolveSource().player then dam = dam * 0.5 end
-	end
-
 	-- Increases damage
 	if self.inc_damage then
 		local inc = (self.inc_damage.all or 0) + (self.inc_damage[type] or 0)

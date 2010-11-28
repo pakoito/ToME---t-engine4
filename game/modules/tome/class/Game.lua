@@ -155,6 +155,7 @@ function _M:newGame()
 		self.player:check("before_starting_zone")
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
+		if self.player.__game_difficulty then self.difficulty = self.player.__game_difficulty end
 		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
@@ -201,6 +202,7 @@ function _M:newGame()
 
 			-- Load the player directly
 			self.player:replaceWith(qb)
+			if self.player.__game_difficulty then self.difficulty = self.player.__game_difficulty end
 			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 			Map:setViewerFaction(self.player.faction)
 			self.player:removeQuest(self.player.starting_quest)
@@ -225,7 +227,22 @@ function _M:loaded()
 	engine.GameTurnBased.loaded(self)
 	engine.interface.GameMusic.loaded(self)
 	engine.interface.GameSound.loaded(self)
-	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap"}
+	Zone:setup{
+		npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap",
+		on_setup = function(zone)
+			-- Increases zone level for higher difficulties
+			if not zone.__applied_difficulty then
+				zone.__applied_difficulty = true
+				if self.difficulty == self.DIFFICULTY_NIGHTMARE then
+					zone.level_range[1] = math.ceil(zone.level_range[1] * 1.4) + 5
+					zone.level_range[2] = math.ceil(zone.level_range[2] * 1.4) + 5
+				elseif self.difficulty == self.DIFFICULTY_INSANE then
+					zone.level_range[1] = zone.level_range[1] * 2 + 10
+					zone.level_range[2] = zone.level_range[2] * 2 + 10
+				end
+			end
+		end,
+	}
 	Map:setViewerActor(self.player)
 	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
 	if self.player then self.player.changed = true end

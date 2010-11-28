@@ -98,7 +98,7 @@ newBirthDescriptor{
 	copy = {
 		no_birth_levelup = true,
 		easy_mode_lifes = 99999,
-		resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end)
+		__game_difficulty = 1,
 	},
 }
 newBirthDescriptor{
@@ -119,7 +119,7 @@ newBirthDescriptor{
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
 	copy = {
-		resolvers.generic(function() game.difficulty = game.DIFFICULTY_EASY end),
+		__game_difficulty = 1,
 		easy_mode_lifes = 1,
 	},
 }
@@ -137,7 +137,7 @@ newBirthDescriptor{
 		race = { ["Tutorial Human"] = "forbid", },
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
-	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_NORMAL end) },
+	copy = { __game_difficulty = 2 },
 }
 newBirthDescriptor{
 	type = "difficulty",
@@ -145,16 +145,14 @@ newBirthDescriptor{
 	desc =
 	{
 		"Hard game setting",
-		"All damage done to the player increased by 30%",
-		"All damage done by the player decreased by 30%",
-		"All healing for the player decreased by 20%",
+		"All zone levels increased by 40% + 5",
 	},
 	descriptor_choices =
 	{
 		race = { ["Tutorial Human"] = "forbid", },
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
-	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_NIGHTMARE end) },
+	copy = { __game_difficulty = 3 },
 }
 newBirthDescriptor{
 	type = "difficulty",
@@ -162,9 +160,7 @@ newBirthDescriptor{
 	desc =
 	{
 		"Absolutely unfair game setting",
-		"All damage done to the player increased by 50%",
-		"All damage done by the player decreased by 50%",
-		"All healing for the player decreased by 40%",
+		"All zone levels increased by 100% + 10",
 		"Player rank is normal instead of elite",
 	},
 	descriptor_choices =
@@ -172,7 +168,7 @@ newBirthDescriptor{
 		race = { ["Tutorial Human"] = "forbid", },
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
-	copy = { resolvers.generic(function() game.difficulty = game.DIFFICULTY_INSANE end), rank=2 },
+	copy = { __game_difficulty = 4, rank=2 },
 }
 
 
