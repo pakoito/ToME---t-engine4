@@ -55,7 +55,7 @@ return {
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_object = {6, 9},
+			nb_trap = {6, 9},
 		},
 	},
 	levels =
@@ -74,6 +74,9 @@ return {
 				actor = {
 					nb_npc = {7, 7},
 					post_generation = function(e) e.faction="water-lair" end,
+				},
+				trap = {
+					nb_trap = {0, 0},
 				},
 			},
 		},
