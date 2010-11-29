@@ -270,17 +270,13 @@ static int serial_tozip(lua_State *L)
 }
 
 #define CLONETABLE 2
+#define CLONETABLE_LIST 3
 
 static int serial_clonefull_recurs(lua_State *L, int idx)
 {
 	int ktype, etype;
 	int nb = 0;
-	lua_newtable(L);
-
-	// Store in the clonetable
-	lua_pushvalue(L, idx - 1);
-	lua_pushvalue(L, -2);
-	lua_rawset(L, CLONETABLE);
+	// We are called with the newtable on top of the stack
 
 	lua_pushnil(L);  /* first key */
 	while (lua_next(L, idx - 2) != 0)
@@ -303,12 +299,20 @@ static int serial_clonefull_recurs(lua_State *L, int idx)
 		{
 			// Check clonetable first
 			lua_pushvalue(L, -2);
-			lua_gettable(L, CLONETABLE);
+			lua_rawget(L, CLONETABLE);
 			if (lua_isnil(L, -1))
 			{
 				// If not found, clone it
 				lua_pop(L, 1);
-				nb += serial_clonefull_recurs(L, -2);
+				lua_newtable(L);
+
+				// Store in the clonetable
+				lua_pushvalue(L, -3);
+				lua_pushvalue(L, -2);
+				lua_rawset(L, CLONETABLE);
+				lua_pushvalue(L, -3);
+				lua_pushvalue(L, -2);
+				lua_rawset(L, CLONETABLE_LIST);
 			}
 		}
 		else
@@ -320,12 +324,20 @@ static int serial_clonefull_recurs(lua_State *L, int idx)
 		{
 			// Check clonetable first
 			lua_pushvalue(L, -2);
-			lua_gettable(L, CLONETABLE);
+			lua_rawget(L, CLONETABLE);
 			if (lua_isnil(L, -1))
 			{
 				// If not found, clone it
 				lua_pop(L, 1);
-				nb += serial_clonefull_recurs(L, -2);
+				lua_newtable(L);
+
+				// Store in the clonetable
+				lua_pushvalue(L, -3);
+				lua_pushvalue(L, -2);
+				lua_rawset(L, CLONETABLE);
+				lua_pushvalue(L, -3);
+				lua_pushvalue(L, -2);
+				lua_rawset(L, CLONETABLE_LIST);
 			}
 		}
 		else
@@ -371,15 +383,35 @@ static int serial_clonefull_recurs(lua_State *L, int idx)
 static int serial_clonefull(lua_State *L)
 {
 	luaL_checktype(L, 1, LUA_TTABLE);
-	lua_newtable(L); // idx 2 == clonetable
+	lua_newtable(L); // idx 2 == clonetable_all
+	lua_newtable(L); // idx 3 == clonetable
 
-	printf("<TOP %d\n", lua_gettop(L));
-
+	// Store in the clonetable
 	lua_pushvalue(L, 1);
-	int nb = serial_clonefull_recurs(L, -1);
+	lua_newtable(L);
+	lua_rawset(L, CLONETABLE);
+	lua_pushvalue(L, 1);
+	lua_newtable(L);
+	lua_rawset(L, CLONETABLE_LIST);
+
+	int nb = 0;
+	lua_pushnil(L);  /* first key */
+	while (lua_next(L, CLONETABLE_LIST) != 0)
+	{
+//		printf("<TOP %d\n", lua_gettop(L));
+		nb += serial_clonefull_recurs(L, -1);
+//		printf(">TOP %d // %d\n", lua_gettop(L), nb);
+
+		// Remove from list
+		lua_pop(L, 1); // remove value
+		lua_pushnil(L); // set to nil
+		lua_rawset(L, CLONETABLE_LIST);
+
+		// Reset the next()
+		lua_pushnil(L);
+	}
 
 	lua_pushnumber(L, nb);
-	printf(">TOP %d\n", lua_gettop(L));
 	return 2;
 }
 
