@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.combat_spellpower + self:getWil())
+	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
 end
 
 newTalent{
@@ -116,7 +116,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local maxTriggerCount = t.getMaxTriggerCount(self, t)
 		return ([[You mark the ground at your feed with a terrible curse. Anyone passing the mark suffers %d mind damage. The mark lasts for %d turns but the will weaken each time it is triggered.
-		The damage will increase with the Willpower stat and spellpower.]]):format(damDesc(self, DamageType.MIND, damage), duration, maxTriggerCount)
+		The damage will increase with the Willpower stat.]]):format(damDesc(self, DamageType.MIND, damage), duration, maxTriggerCount)
 	end,
 }
 
@@ -159,7 +159,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[You unleash your hateful mind on any who dare approach you. %d mind damage is spread between everyone in range.
-		The damage will increase with the Willpower stat and spellpower.]]):format(damDesc(self, DamageType.MIND, damage))
+		The damage will increase with the Willpower stat.]]):format(damDesc(self, DamageType.MIND, damage))
 	end,
 }
 
@@ -204,7 +204,7 @@ newTalent{
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Unleash agony upon your target. The pain will grow as the near you inflicing up to %d damage. They will suffer for %d turns unless they manage to resist. (+%d%% mindpower)
-		The damage will increase with the Willpower stat and spellpower.]]):format(damDesc(self, DamageType.MIND, damage), duration, mindpower)
+		The damage will increase with the Willpower stat.]]):format(damDesc(self, DamageType.MIND, damage), duration, mindpower)
 	end,
 }
 

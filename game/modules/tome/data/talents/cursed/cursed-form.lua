@@ -70,7 +70,11 @@ newTalent{
 		local healPerKill = t.getHealPerKill(self, t)
 		local regenRate = t.getRegenRate(self, t)
 		local resist = -18 + (self:getTalentLevel(t) * 3)
-		return ([[Your body is now fed by your hatred. With each kill, you regenerate %d%% of your victim's life at a rate of %0.1f life per turn. As your hate fades and grows the damage you sustain is adjusted by %d%% to %d%%.]]):format(healPerKill, regenRate, resist, resist + 18)
+		
+		local modifier1, modifier2 = "more", "more"
+		if resist > 0 then modifier1 = "less" end
+		if resist + 18 > 0 then modifier2 = "less" end
+		return ([[Your body's strength is fed by your hatred. With each kill you regenerate %d%% of your victim's life at a rate of %0.1f life per turn. You also take %d%% %s damage (at 0 Hate) to %d%% %s damage (at 10+ Hate).]]):format(healPerKill, regenRate, math.abs(resist), modifier1, math.abs(resist + 18), modifier2)
 	end,
 }
 

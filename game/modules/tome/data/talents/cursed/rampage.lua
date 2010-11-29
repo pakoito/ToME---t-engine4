@@ -29,7 +29,7 @@ newTalent{
 	cooldown = function(self, t)
 		local tReflexes = self:getTalentFromId(self.T_REFLEXES)
 		if tReflexes then
-			return t.getCooldown(self, t)
+			return tReflexes.getCooldown(self, tReflexes)
 		else
 			return 150
 		end
@@ -74,11 +74,11 @@ newTalent{
 	end,
 	getHateLoss = function(self, t) return 0.5 - 0.05 * self:getTalentLevelRaw(t) end,
 	getCritical = function(self, t) return 10 + 8 * self:getTalentLevel(t) end,
-	onTakeHit = function(t, self, percentDamage)
-		if percentDamage < 10 then return false end
+	onTakeHit = function(t, self, fractionDamage)
+		if fractionDamage < 0.08 then return false end
 		if self:hasEffect(self.EFF_RAMPAGE) then return false end
-		if rng.percent(1 + self:getTalentLevel(t) * 0.4) then
-			action(self, t, 0)
+		if rng.percent(3) then
+			t.action(self, t, 0)
 			return true
 		end
 	end,
@@ -90,8 +90,8 @@ newTalent{
 		end
 		local hateLoss = t.getHateLoss(self, t)
 		local critical = t.getCritical(self, t)
-		return ([[You enter into a terrible rampage for %d turns, destroying everything in your path. There is a small chance you will rampage when you take significant damage.
-		(%0.2f hate loss per turn, +%d%% to %d%% hate-based critical chance)]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
+		return ([[You enter into a terrible rampage for %d turns, destroying everything in your path. There is also a small chance when you are hit that you will rampage.
+		%0.2f hate loss per turn. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) critical chance.]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
 	end,
 }
 
@@ -111,7 +111,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Add brutality to your rampage.
-		(Rampage lasts %d turns, +%d%% to %d%% hate-based damage)]]):format(duration, damage * 0.1, damage * 1.0)
+		Rampage lasts %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.]]):format(duration, damage * 0.1, damage * 1.0)
 	end,
 }
 
@@ -131,7 +131,7 @@ newTalent{
 		local cooldown = t.getCooldown(self, t)
 		local speed = t.getSpeed(self, t)
 		return ([[Add reflexes to your rampage.
-		(Rampage cooldown is %d turns, +%d%% to %d%% speed)]]):format(cooldown, speed * 0.1, speed * 1.0)
+		Rampage cooldown is %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) speed.]]):format(cooldown, speed * 0.1, speed * 1.0)
 	end,
 }
 
@@ -151,6 +151,6 @@ newTalent{
 		local attack = t.getAttack(self, t)
 		local evasion = t.getEvasion(self, t)
 		return ([[Add instincts to your rampage.
-		(+%d%% to %d%% hate-based attack, +%d%% to %d%% hate-based evasion)]]):format(attack * 0.1, attack * 1.0, evasion * 0.1, evasion * 1.0)
+		+%d%% (at 0 Hate) to %d%% (at 10+ Hate) attack. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) evasion.]]):format(attack * 0.1, attack * 1.0, evasion * 0.1, evasion * 1.0)
 	end,
 }

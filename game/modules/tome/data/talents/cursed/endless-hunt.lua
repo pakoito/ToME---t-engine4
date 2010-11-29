@@ -69,7 +69,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.5)
-		return ([[Combine strength and will to overpower your opponent with a vicious attack. A failed save versus willpower will multiply all melee damage by %d%% for 4 turns.]]):format(damMult * 100)
+		return ([[Combine strength and will to overpower your opponent with a vicious attack. If your opponent fails to save versus willpower then all of your melee hits will do %d%% damage against them for for 4 turns.]]):format(damMult * 100)
 	end,
 }
 
@@ -84,7 +84,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local maxRange = 2 + math.floor(self:getTalentLevel(t) * 1.5)
-		return ([[Your preternatural senses aid you in your hunt for the next victim. You sense foes in a hate-based radius of %d to %d.]]):format(2, maxRange)
+		return ([[Your preternatural senses aid you in your hunt for the next victim. You sense foes in a radius of %d (at 0 Hate) to %d (at 10+ Hate).]]):format(2, maxRange)
 	end,
 }
 
@@ -123,7 +123,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9)
-		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% to %d%% hate-based damage.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100)
+		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100)
 	end,
 }
 

@@ -17,7 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newTalent{ short_name = "SHADOW_PHASE_DOOR",
+newTalent{
+	short_name = "SHADOW_PHASE_DOOR",
 	name = "Phase Door",
 	type = {"spell/other",1},
 	points = 5,
@@ -42,7 +43,8 @@ newTalent{ short_name = "SHADOW_PHASE_DOOR",
 	end,
 }
 
-newTalent{ short_name = "SHADOW_BLINDSIDE",
+newTalent{
+	short_name = "SHADOW_BLINDSIDE",
 	name = "Blindside",
 	type = {"spell/other", 1},
 	points = 5,
@@ -107,15 +109,19 @@ local function createShadow(self, level, duration, target)
 		},
 		combat_armor = 0, combat_def = 3 + level * 0.1,
 		combat = {
-			dam=14 + level * 2,
+			dam=8 + level * 2,
 			atk=10 + 1.5 * level * 2,
 			apr=10,
 			dammod={dex=0.3, mag=0.3}
 		},
-		evasion = 40,
+		evasion = 30,
+		mana = 100,
 		resolvers.talents{
 			[self.T_SHADOW_PHASE_DOOR]=math.max(5, math.floor(1 + level * 0.1)),
 			[self.T_SHADOW_BLINDSIDE]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_LIGHTNING]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_SHOCK]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_HEAL]=math.max(5, math.floor(1 + level * 0.1)),
 		},
 		
 		undead = 1,
@@ -129,7 +135,7 @@ local function createShadow(self, level, duration, target)
 		stun_immune = 1,
 		blind_immune = 1,
 		see_invisible = 80,
-		resists = {[DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100, [DamageType.PHYSICAL] = 30},
+		resists = {[DamageType.LIGHT] = -100, [DamageType.DARKNESS] = 100},
 		
 		ai = "shadow",
 		ai_state = {
@@ -143,13 +149,33 @@ local function createShadow(self, level, duration, target)
 			shadow_wall_time = 0,
 			
 			blindside_chance = 15,
-			phasedoor_chance = 5
+			phasedoor_chance = 5,
+			attack_spell_chance = 5,
 		},
 		ai_target = {
 			actor=target,
 			x = nil,
 			y = nil
 		},
+		healSelf = function(self)
+			self:useTalent(self.T_HEAL)
+		end,
+		canAttackSpell = function(self)
+			local target = self.ai_target.actor
+			return target and math.floor(core.fov.distance(self.x, self.y, target.x, target.y)) <= 1
+		end,
+		attackSpell = function(self)
+			if self:canAttackSpell() then
+				local choice = rng.range(1, 2)
+				if choice == 1 then
+					return self:useTalent(self.T_LIGHTNING)
+				else
+					return self:useTalent(self.T_SHOCK)
+				end
+			else
+				return false
+			end
+		end,
 		feed = function(self, t)
 			self.ai_state.feed_temp1 = self:addTemporaryValue("combat_atk", t.getCombatAtk(self.summoner, t))
 			self.ai_state.feed_temp2 = self:addTemporaryValue("inc_damage", {all=t.getIncDamage(self.summoner, t)})
@@ -273,15 +299,18 @@ newTalent{
 		return self:getTalentLevel(t)
 	end,
 	getBlindsideChance = function(self, t)
-		return math.min(100, 15 + self:getTalentLevel(t) * 12)
+		return math.min(100, 30 + self:getTalentLevel(t) * 10)
+	end,
+	getAttackSpellChance = function(self, t)
+		return math.min(100, 5 + self:getTalentLevel(t) * 5)
 	end,
 	action = function(self, t)
 		local target = { type="hit", range=self:getTalentRange(t) }
 		local x, y, target = self:getTarget(target)
 		if not x or not y or not target then return nil end
 
-		local duration = t.getDuration(self, t)
 		local blindsideChance = t.getBlindsideChance(self, t)
+		local attackSpellChance = t.getAttackSpellChance(self, t)
 		local shadowCount = 0
 		for _, e in pairs(game.level.entities) do
 			if e.summoner and e.summoner == self and e.subtype == "shadow" then
@@ -290,8 +319,8 @@ newTalent{
 				e.ai_target.y = nil
 				e.ai_target.actor = target
 				e.ai_target.focus_on_target = true
-				e.ai_target.turns_on_target = duration
 				e.ai_target.blindside_chance = blindsideChance
+				e.ai_target.attack_spell_chance = attackSpellChance
 				
 				shadowCount = shadowCount + 1
 			end
@@ -308,7 +337,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local blindsideChance = t.getBlindsideChance(self, t)
-		return ([[Focus your shadows on a single target for %d turns. There is a %d%% chance they will blindside the target.]]):format(duration, blindsideChance)
+		local attackSpellChance = t.getAttackSpellChance(self, t)
+		return ([[Focus your shadows on a single target. There is a %d%% chance they will blindside the target and a %d%% chance they will use an attack spell.]]):format(blindsideChance, attackSpellChance)
 	end,
 }
 

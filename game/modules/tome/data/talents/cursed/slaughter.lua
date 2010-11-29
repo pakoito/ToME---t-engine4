@@ -49,7 +49,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local multiplier = (0.17 + .23 * self:getTalentLevel(t))
-		return ([[Slashes wildly at your target adding up to %d%% hate-based damage.]]):format(multiplier * 100)
+		return ([[Slashes wildly at your target for 100%% (at 0 Hate) to %d%% (at 10+ Hate) damage.]]):format(multiplier * 100 + 100)
 	end,
 }
 
@@ -94,7 +94,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
-		return ([[Assault nearby foes with 4 fast attacks for %d%% to %d%% hate-based damage each.]]):format(multiplier * 50, multiplier * 100)
+		return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each.]]):format(multiplier * 50, multiplier * 100)
 	end,
 }
 
@@ -198,7 +198,7 @@ newTalent{
 		else
 			size = "Small"
 		end
-		return ([[Charge through your opponents, attacking anyone near your path for %d%% to %d%% hate-based damage. %s opponents may be knocked from your path.]]):format(multiplier * 30, multiplier * 100, size)
+		return ([[Charge through your opponents, attacking anyone near your path for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. %s opponents may be knocked from your path.]]):format(multiplier * 30, multiplier * 100, size)
 	end,
 }
 
@@ -239,6 +239,6 @@ newTalent{
 	info = function(self, t)
 		local chance = 28 + self:getTalentLevel(t) * 7
 		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
-		return ([[Every swing of your axe has a %d%% chance of striking a second target for %d%% to %d%% hate-based damage.]]):format(chance, multiplier * 50, multiplier * 100)
+		return ([[Every swing of your axe has a %d%% chance of striking a second target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.]]):format(chance, multiplier * 50, multiplier * 100)
 	end,
 }

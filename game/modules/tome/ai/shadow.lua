@@ -19,6 +19,10 @@
 
 local Astar = require "engine.Astar"
 
+local function clearTarget(self)
+	self.ai_target.actor, self.ai_target.x, self.ai_target.y, self.ai_target.blindside_chance, self.ai_target.attack_spell_chance, self.turns_on_target, self.focus_on_target = nil, nil, nil, nil, nil, 0, false
+end
+
 local function shadowChooseActorTarget(self)
 	
 	-- taken from "target_simple" but selects a target the summoner can see within the shadow's max range from the summoner
@@ -29,7 +33,7 @@ local function shadowChooseActorTarget(self)
 	local actors = {}
 	for i = 1, #arr do
 		act = self.summoner.fov.actors_dist[i]
-		if act and self.summoner:reactionToward(act) < 0 and not act.dead and
+		if act and act ~= self.summoner and self.summoner:reactionToward(act) < 0 and not act.dead and
 			(
 				-- If it has lite we can always see it
 				(act.lite > 0)
@@ -71,9 +75,18 @@ local function shadowMoveToActorTarget(self)
 			end
 		end
 	end
-		
-	-- reset target next turn if we are attacking (unless we have been focused)
-	if core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y) <= 1 then
+	
+	if self:canAttackSpell() then
+		-- use the attack spell chance if it was assigned; otherwise, use the normal chance
+		local attackSpellChance = self.ai_target.attack_spell_chance or self.ai_state.attack_spell_chance
+		self.ai_target.attack_spell_chance = nil
+		if rng.percent(attackSpellChance) and self:attackSpell() then
+			return true
+		end
+	end
+	
+	-- chance to reset target next turn if we are attacking (unless we have been focused)
+	if math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)) <= 1 and rng.percent(20) then
 		--game.logPlayer(self.summoner, "#PINK#%s is about to attack.", self.name:capitalize())
 		if not self.ai_state.focus_on_target then
 			self.ai_state.target_time = self.ai_state.target_timeout
@@ -182,7 +195,7 @@ newAI("shadow", function(self)
 	
 	-- shadow wall
 	if self.ai_state.shadow_wall then
-		self.ai_target.actor, self.ai_target.x, self.ai_target.y, self.turns_on_target, self.focus_on_target = nil, nil, nil, 0, false
+		clearTarget(self)
 	
 		if self.ai_state.shadow_wall_time <= 0 then
 			self.ai_state.shadow_wall = false
@@ -227,7 +240,7 @@ newAI("shadow", function(self)
 	if core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.ai_state.summoner_range then
 		--game.logPlayer(self.summoner, "#PINK#%s is out of range.", self.name:capitalize())
 		
-		self.ai_target.actor, self.ai_target.x, self.ai_target.y, self.turns_on_target, self.focus_on_target = nil, nil, nil, 0, false
+		clearTarget(self)
 		
 		-- phase door into range
 		self:useTalent(self.T_SHADOW_PHASE_DOOR)
@@ -239,7 +252,13 @@ newAI("shadow", function(self)
 	if (self.turns_on_target or 0) >= 10 then
 		--game.logPlayer(self.summoner, "#PINK#%s is out of time for target.", self.name:capitalize())
 		
-		self.ai_target.actor, self.ai_target.x, self.ai_target.y, self.turns_on_target, self.focus_on_target = nil, nil, nil, 0, false
+		clearTarget(self)
+	end
+	
+	-- chance to heal
+	if self.life < self.max_life * 0.75 and rng.percent(5) then
+		self:healSelf()
+		return true
 	end
 	
 	-- move to live target?
@@ -256,13 +275,14 @@ newAI("shadow", function(self)
 		end
 	end
 	
-	-- no current target..choose a new one
-	self.ai_target.actor, self.ai_target.x, self.ai_target.y, self.turns_on_target, self.focus_on_target = nil, nil, nil, 0, false
+	-- no current target..start a new action
+	clearTarget(self)
 	
-	-- choose an actor target?
-	if rng.percent(50) and shadowChooseActorTarget(self) then
+	-- choose an actor target? this determines their aggressiveness
+	if rng.percent(65) and shadowChooseActorTarget(self) then
 		--game.logPlayer(self.summoner, "#PINK#%s choose an actor.", self.name:capitalize())
 		
+		-- start moving to the target
 		if shadowMoveToActorTarget(self) then
 			return true
 		end

@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 local canCreep, doCreep, createDark
 
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.combat_spellpower + self:getMag())
+	return self:combatTalentSpellDamage(t, min, max, self.level + self:getMag())
 end
 
 function canCreep(x, y, ignoreCreepingDark)
@@ -84,7 +84,7 @@ function createDark(summoner, x, y, damage, duration, creep, creepChance, initia
 
 			-- apply damage to anything inside the darkness
 			local actor = game.level.map(self.x, self.y, Map.ACTOR)
-			if actor and actor ~= self.summoner then
+			if actor and actor ~= self.summoner and (not actor.summoner or actor.summoner ~= self.summoner) then
 				self.summoner:project(actor, actor.x, actor.y, engine.DamageType.DARKNESS, damage)
 				--DamageType:get(DamageType.DARKNESS).projector(self.summoner, actor.x, actor.y, DamageType.DARKNESS, damage)
 			end
@@ -267,10 +267,10 @@ newTalent{
 		return 3
 	end,
 	getDarkCount = function(self, t)
-		return 3 + math.floor(self:getTalentLevel(t) * 1.8)
+		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 25, 70)
+		return combatTalentDamage(self, t, 15, 50)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -300,7 +300,7 @@ newTalent{
 			local selection = rng.range(i, #locations)
 			locations[i], locations[selection] = locations[selection], locations[i]
 
-			createDark(self, locations[i][1], locations[i][2], damage, 8, 2 + self:getMag(6), 70, 0)
+			createDark(self, locations[i][1], locations[i][2], damage, 8, 4, 70, 0)
 		end
 
 		game:playSoundNear(self, "talents/breath")
@@ -311,7 +311,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
 		return ([[Creeping dark spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage.
-		Damage improves with the Magic stat and spellpower.]]):format(darkCount, radius, damage)
+		Damage improves with the Magic stat.]]):format(darkCount, radius, damage)
 	end,
 }
 
@@ -389,7 +389,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Sends a torrent of searing darkness through your foes doing %d damage with a chance to blind them for 3 turns.
-		The damage will increase with the Magic stat and spellpower.]]):format(damDesc(self, DamageType.DARKNESS, damage))
+		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
@@ -426,6 +426,6 @@ newTalent{
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Send tendrils of creeping dark out to attack your target and pin them for %d turns. The darkness does %d damage per turn.
-		The damage will increase with the Magic stat and spellpower.]]):format(pinDuration, damage)
+		The damage will increase with the Magic stat.]]):format(pinDuration, damage)
 	end,
 }

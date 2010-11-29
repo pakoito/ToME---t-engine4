@@ -17,8 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.combat_spellpower + self:getWil())
+	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
 end
 
 -- damage: initial physical damage and used for fractional knockback damage
@@ -129,7 +130,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		return ([[Focusing your hate you strike your foe with unseen force for up to %d damage and %d knockback.
-		Damage increases with the Willpower stat and spellpower but decreases with range.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
+		Damage increases with the Willpower stat but decreases with range.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }
 
@@ -195,7 +196,7 @@ newTalent{
 	info = function(self, t)
 		local maxDamage = t.getMaxDamage(self, t)
 		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage but first your hate must slowly feed your strength.
-		The maximum damage deflected increases with the Willpower stat and spellpower.]]):format(maxDamage)
+		The maximum damage deflected increases with the Willpower stat.]]):format(maxDamage)
 	end,
 }
 
@@ -208,10 +209,10 @@ newTalent{
 	cooldown = 10,
 	hate = 1.5,
 	range = function(self, t)
-		return math.floor(8 + self:getTalentLevel(t))
+		return 6
 	end,
 	getRadius = function(self, t)
-		return math.floor(2 + self:getTalentLevel(t) / 2)
+		return math.floor(2 + self:getTalentLevel(t) / 3)
 	end,
 	getDamage = function(self, t)
 		return combatTalentDamage(self, t, 20, 160)
@@ -253,7 +254,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		return ([[You rage coalesces at a single point and then explodes outward blasting enemies within a radius of %d in all directions. The blast causes %d damage and %d knockback at the center that decreases with distance.
-		Damage increases with the Willpower stat and spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback)
+		Damage increases with the Willpower stat.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }
 
@@ -269,7 +270,7 @@ newTalent{
 	},
 	direct_hit = true,
 	range = function(self, t)
-		return math.floor(5 + self:getTalentLevel(t))
+		return math.floor(4 + self:getTalentLevel(t) / 2)
 	end,
 	getDuration = function(self, t)
 		return 5 + math.floor(self:getTalentLevel(t))
@@ -334,10 +335,10 @@ newTalent{
 		local secondHitChance = t.getSecondHitChance(self, t)
 		if secondHitChance > 0 then
 			return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. There is a %d%% chance of a second strike.
-			Damage increases with the Willpower stat and spellpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
+			Damage increases with the Willpower stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
 		else
 			return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. At higher levels there is a chance of a second strike.
-			Damage increases with the Willpower stat and spellpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
+			Damage increases with the Willpower stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
 		end
 	end,
 }
