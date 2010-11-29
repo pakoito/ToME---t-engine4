@@ -54,7 +54,10 @@ newEntity{
 						engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self, self.x, self.y, engine.DamageType.PHYSICAL, a.life / 2)
 					end
 				end
-			end
+			end,
+			dig = function(src, x, y, old)
+				self.temporary = 20
+			end,
 		}
 		sand.summoner_gain_exp = true
 		sand.summoner = src
