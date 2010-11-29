@@ -356,7 +356,7 @@ static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, 
 		// Check if dead
 		lua_pushstring(L, "dead");
 		lua_gettable(L, -2);
-		if (!lua_isnil(L, -1)) { lua_pop(L, 3); return; }
+		if (lua_toboolean(L, -1)) { lua_pop(L, 3); return; }
 		lua_pop(L, 1);
 
 		// Set sqdist in the actor for faster sorting
@@ -381,9 +381,6 @@ static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, 
 		lua_pushstring(L, "sqdist");
 		lua_pushnumber(L, sqdist);
 		lua_rawset(L, -3);
-		lua_pushstring(L, "dist");
-		lua_pushnumber(L, dist);
-		lua_rawset(L, -3);
 
 		// Set the actor table
 		lua_pushvalue(L, -2);
@@ -395,6 +392,14 @@ static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, 
 		lua_pushnumber(L, def->dist_idx);
 		lua_pushvalue(L, -3);
 		lua_rawset(L, STACK_DIST);
+
+		// Call seen_by, if possible
+		lua_pushstring(L, "updateFOV");
+		lua_gettable(L, -3);
+		lua_pushvalue(L, -3);
+		lua_pushvalue(L, STACK_SELF);
+		lua_pushnumber(L, sqdist);
+		lua_call(L, 3, 0);
 
 		// Call seen_by, if possible
 		lua_pushstring(L, "seen_by");
