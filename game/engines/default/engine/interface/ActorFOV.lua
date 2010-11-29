@@ -118,8 +118,6 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 
 		-- Sort actors by distance (squared but we do not care)
 		table.sort(fov.actors_dist, "__sqdist")
---		table.sort(fov.actors_dist, function(a, b) return a.__sqdist < b.__sqdist end)
---		for i = 1, #fov.actors_dist do fov.actors_dist[i].i = i end
 --		print("Computed FOV for", self.uid, self.name, ":: seen ", #fov.actors_dist, "actors closeby")
 
 		self.fov = fov

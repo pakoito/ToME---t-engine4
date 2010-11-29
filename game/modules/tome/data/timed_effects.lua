@@ -840,7 +840,7 @@ newEffect{
 newEffect{
 	name = "DISPLACEMENT_SHIELD",
 	desc = "Displacement Shield",
-	long_desc = function(self, eff) return ("The target is surrounded by a space distortion that randomly sends (%d%% chance) incoming damage to another target (%s)."):format(eff.chance, eff.target.name or "unknown") end,
+	long_desc = function(self, eff) return ("The target is surrounded by a space distortion that randomly sends (%d%% chance) incoming damage to another target (%s). Absorbs %d/%d damage before it crumbles."):format(eff.chance, eff.target.name or "unknown", self.displacement_shield, eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10, target=nil, chance=25 },
@@ -870,7 +870,7 @@ newEffect{
 newEffect{
 	name = "DAMAGE_SHIELD",
 	desc = "Damage Shield",
-	long_desc = function(self, eff) return ("The target is surrounded by a magical shield, absorbing %d damage before it crumbles."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is surrounded by a magical shield, absorbing %d/%d damage before it crumbles."):format(self.damage_shield_absorb, eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=100 },
@@ -892,7 +892,7 @@ newEffect{
 newEffect{
 	name = "TIME_SHIELD",
 	desc = "Time Shield",
-	long_desc = function(self, eff) return ("The target is surrounded by a time distortion, absorbing %d damage and sending it forward in time."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is surrounded by a time distortion, absorbing %d/%d damage and sending it forward in time."):format(self.time_shield_absorb, eff.power) end,
 	type = "time", -- Type "time" so that very little should be able to dispel it
 	status = "beneficial",
 	parameters = { power=10 },
