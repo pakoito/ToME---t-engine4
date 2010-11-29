@@ -120,6 +120,9 @@ Now go and have some fun!]]
 			if button == "left" then util.browserOpenUrl(self.logged_url) end
 		end, {button=true})
 	end
+
+	-- Setup FPS
+	core.game.setFPS(config.settings.display_fps)
 end
 
 function _M:newGame()

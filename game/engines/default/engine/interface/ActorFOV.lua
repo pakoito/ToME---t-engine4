@@ -60,7 +60,37 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 			apply(x, y, dx, dy, sqdist)
 		end, cache and game.level.map._fovcache[block])
 
-	-- FOV + storage
+	-- FOV + storage + fast C code
+	elseif not no_store and cache and game.level.map._fovcache[block] then
+		local fov = {actors={}, actors_dist={}}
+		setmetatable(fov.actors, {__mode='k'})
+		setmetatable(fov.actors_dist, {__mode='v'})
+
+		-- Use the fast C code
+		local map = game.level.map
+		core.fov.calc_default_fov(
+			self.x, self.y,
+			radius,
+			block,
+			game.level.map._fovcache[block],
+			fov.actors, fov.actors_dist,
+			map.map, map.w, map.h,
+			Map.ACTOR,
+			self.distance_map,
+			game.turn,
+			self,
+			apply
+		)
+
+		table.sort(fov.actors_dist, "__sqdist")
+--		print("Computed FOV for", self.uid, self.name, ":: seen ", #fov.actors_dist, "actors closeby")
+
+		self.fov = fov
+		self.fov_last_x = self.x
+		self.fov_last_y = self.y
+		self.fov_last_turn = game.turn
+		self.fov_last_change = game.turn
+		self.fov_computed = true
 	elseif not no_store then
 		local fov = {actors={}, actors_dist={}}
 		setmetatable(fov.actors, {__mode='k'})
@@ -72,7 +102,7 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 		end, function(_, x, y, dx, dy, sqdist)
 			if apply then apply(x, y, dx, dy, sqdist) end
 
-			if self.__do_distance_map then self:distanceMap(x, y, game.turn + radius - math.sqrt(sqdist)) end
+			if self.__do_distance_map then self.distance_map[x + y * game.level.map.w] = game.turn + radius - math.sqrt(sqdist) end
 
 			-- Note actors
 			local a = map(x, y, Map.ACTOR)
@@ -82,7 +112,7 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 				fov.actors_dist[#fov.actors_dist+1] = a
 				a.__sqdist = sqdist
 				a:check("seen_by", self)
-				a:updateFOV(self, t.sqdist)
+--				a:updateFOV(self, t.sqdist)
 			end
 		end, cache and game.level.map._fovcache[block])
 
@@ -121,7 +151,6 @@ function _M:updateFOV(a, sqdist)
 	self.fov_last_change = game.turn
 end
 
---- Unused
 function _M:distanceMap(x, y, v)
 	if v == nil then
 		return self.distance_map[x + y * game.level.map.w]

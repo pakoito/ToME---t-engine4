@@ -140,6 +140,7 @@ end
 function _M:cloneFull()
 	local clonetable = {}
 	return clonerecursfull(clonetable, self)
+--	return core.serial.cloneFull(self)
 end
 
 --- Replaces the object with an other, by copying (not deeply)

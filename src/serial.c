@@ -373,10 +373,13 @@ static int serial_clonefull(lua_State *L)
 	luaL_checktype(L, 1, LUA_TTABLE);
 	lua_newtable(L); // idx 2 == clonetable
 
+	printf("<TOP %d\n", lua_gettop(L));
+
 	lua_pushvalue(L, 1);
 	int nb = serial_clonefull_recurs(L, -1);
 
 	lua_pushnumber(L, nb);
+	printf(">TOP %d\n", lua_gettop(L));
 	return 2;
 }
 

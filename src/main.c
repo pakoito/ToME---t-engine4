@@ -579,6 +579,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		L = lua_open();  /* create state */
 		luaL_openlibs(L);  /* open libraries */
 		luaopen_core(L);
+		luaopen_fov(L);
 		luaopen_socket_core(L);
 		luaopen_mime_core(L);
 		luaopen_struct(L);
