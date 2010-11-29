@@ -890,6 +890,9 @@ It was made by humans for Humans; only they can harness the true power of the ro
 	},
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.race == "Human" then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
 			self.wielded._special1 = {"inc_stats", who:addTemporaryValue("inc_stats", { [Stats.STAT_MAG] = 2, [Stats.STAT_CUN] = 5, }) }
 			self.wielded._special2 = {"inc_damage", who:addTemporaryValue("inc_damage", {[DamageType.ARCANE]=5}) }
 			self.wielded._special3 = {"combat_spellcrit", who:addTemporaryValue("combat_spellcrit", 2) }
@@ -1038,6 +1041,8 @@ newEntity{ base = "BASE_BATTLEAXE",
 	},
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.race == "Dwarf" then
+			local Stats = require "engine.interface.ActorStats"
+
 			self.wielded._special1 = {"inc_stats", who:addTemporaryValue("inc_stats", { [Stats.STAT_CON] = 4, [Stats.STAT_DEX] = 4, }) }
 			self.wielded._special2 = {"stun_immune", who:addTemporaryValue("stun_immune", 0.5) }
 			self.wielded._special3 = {"knockback_immune", who:addTemporaryValue("knockback_immune", 0.5) }

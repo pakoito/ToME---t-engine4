@@ -38,7 +38,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
+			nb_npc = {100, 100},
 		},
 --[[
 		object = {
@@ -59,7 +59,7 @@ return {
 			}, },
 		},
 	},
-
+--[[
 	post_process = function(level)
 		local Map = require "engine.Map"
 		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
@@ -70,4 +70,5 @@ return {
 		for i = 1, nb_keyframes do level.background_particle:update() end
 		level.background_particle.ps:toScreen(x, y, true, 1, nb_keyframes)
 	end,
+]]
 }
