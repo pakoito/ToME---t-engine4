@@ -129,6 +129,6 @@ newTalent{
 	info = function(self, t)
 		return ([[Open a dark portal to the target zone, all creatures caught inside will be teleported to your location and you to theirs.
 		All creatures(except you) traversing the portal will catch a random disease doing %0.2f blight damage per turn for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 12, 80), self:combatTalentSpellDamage(t, 5, 25)))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 12, 80)), self:combatTalentSpellDamage(t, 5, 25))
 	end,
 }
