@@ -67,8 +67,11 @@ return {
 
 	background = function(level, x, y, nb_keyframes)
 		local Map = require "engine.Map"
-		for i = 1, nb_keyframes do level.background_particle:update() end
-		level.background_particle.ps:toScreen(x, y, true, 1, nb_keyframes)
+		for i = 1, nb_keyframes do
+			level.background_particle:update()
+			if i == 1 then level.background_particle.ps:toScreen(x, y, true, 1) end
+			level.background_particle.ps:update()
+		end
 	end,
 ]]
 }
