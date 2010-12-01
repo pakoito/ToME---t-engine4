@@ -106,7 +106,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Surround yourself with a shield that will absorb at most %d magical or elemental damage per attacks.
+		return ([[Surround yourself with a shield that will absorb at most %d magical or elemental damage per attack.
 		Each time damage is absorbed your equilibrium increases and a check is made, if it fails the shield will crumble.
 		The effect will increase with your Willpower stat.]]):
 		format(self:combatTalentMindDamage(t, 20, 80))
