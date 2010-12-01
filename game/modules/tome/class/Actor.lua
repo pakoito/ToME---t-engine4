@@ -871,16 +871,19 @@ function _M:die(src)
 	engine.interface.ActorLife.die(self, src)
 
 	-- Gives the killer some exp for the kill
+	local killer = nil
 	if src and src.resolveSource and src:resolveSource().gainExp then
-		local killer = src:resolveSource()
+		killer = src:resolveSource()
 		killer:gainExp(self:worthExp(killer))
-		-- Hack: even if the boss dies from something else, give the player exp
-		if not killer.player and self.rank > 3 then
-			game.logPlayer(game.player, "You feel a surge of power as a powerful creature falls nearby.")
-			killer = game.player:resolveSource()
-			killer:gainExp(self:worthExp(killer))
-		end
 	end
+
+	-- Hack: even if the boss dies from something else, give the player exp
+	if (not killer or not killer.player) and self.rank > 3 then
+		game.logPlayer(game.player, "You feel a surge of power as a powerful creature falls nearby.")
+		killer = game.player:resolveSource()
+		killer:gainExp(self:worthExp(killer))
+	end
+
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
 
