@@ -1578,7 +1578,7 @@ function _M:antimagicBackslash(turns)
 			if t.mode == "activated" then
 				self.talents_cd[tid] = (self.talents_cd[tid] or 0) + turns
 			elseif t.mode == "sustained" then
-				self:forceUseTalent(tid, {ignore_energy=true})
+				if self:isTalentActive(tid) then self:forceUseTalent(tid, {ignore_energy=true}) end
 				self.talents_cd[tid] = (self.talents_cd[tid] or 0) + turns
 			end
 			done = true
