@@ -51,7 +51,7 @@ function _M:init()
 	self.c_version = Textzone.new{auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
 
 	if profile.auth then
-		self.logged_url = "http://te4.org/players/"..profile.auth.page
+		self.logged_url = "http://te4.org/users/"..profile.auth.page
 		local str = "#FFFF00#Online Profile: "..profile.auth.name.."[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
 		self.c_auth = Textzone.new{auto_width=true, auto_height=true, text=str}
 	end

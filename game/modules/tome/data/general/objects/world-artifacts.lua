@@ -190,7 +190,7 @@ newEntity{ base = "BASE_RING",
 	},
 }
 
-newEntity{ base = "BASE_RING",
+newEntity{ base = "BASE_AMULET",
 	unique = true,
 	name = "Spellblaze Echos", color = colors.DARK_GREY,
 	unided_name = "deep black amulet",

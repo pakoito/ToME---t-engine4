@@ -213,7 +213,7 @@ function _M:updateNews()
 end
 
 function _M:tick()
-	if self.stopped then return end
+	if self.stopped then engine.Game.tick(self) return false end
 	if self.level then
 		engine.GameEnergyBased.tick(self)
 		-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
@@ -331,7 +331,7 @@ This allows you to:
 * Cool statistics for each module to help sharpen your gameplay style
 * Help the game developers balance and refine the game
 
-Later on you will have an online profile page you can show to people to brag.
+You will also have a user page on http://te4.org/ where you can show off your achievements to your friends.
 This is all optional, you are not forced to use this feature at all, but the developers would thank you if you did as it will
 make balancing easier.
 Online profile requires an internet connection, if not available it will wait and sync when it finds one.]]

@@ -297,7 +297,7 @@ end
 
 function _M:newProfile(Login, Name, Password, Email)
 	print("[ONLINE PROFILE] profile options ", Login, Email, Name, Password)
-	local data = self:rpc{action="NewProfile", login=Login, email=Email, name=Name, pass=Password}
+	local data = self:rpc{action="NewProfile2", login=Login, email=Email, name=Name, pass=Password}
 	if not data then print("[ONLINE PROFILE] could not create") return end
 	print("[ONLINE PROFILE] profile id ", data.id)
 	self:performlogin(Login, Password, Name, Email)

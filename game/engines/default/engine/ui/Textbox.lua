@@ -31,6 +31,7 @@ function _M:init(t)
 	self.max_len = t.max_len or 999
 	self.fct = assert(t.fct, "no textbox fct")
 	self.chars = assert(t.chars, "no textbox chars")
+	self.filter = t.filter or function(c) return c end
 
 	self.tmp = {}
 	for i = 1, #self.text do self.tmp[#self.tmp+1] = self.text:sub(i, i) end
@@ -121,10 +122,12 @@ function _M:generate()
 		end,
 		__TEXTINPUT = function(c)
 			if #self.tmp < self.max_len then
-				table.insert(self.tmp, self.cursor, c)
-				self.cursor = self.cursor + 1
-				self.scroll = util.scroll(self.cursor, self.scroll, self.max_display)
-				self:updateText()
+				if self.filter(c) then
+					table.insert(self.tmp, self.cursor, self.filter(c))
+					self.cursor = self.cursor + 1
+					self.scroll = util.scroll(self.cursor, self.scroll, self.max_display)
+					self:updateText()
+				end
 			end
 		end,
 	}

@@ -34,8 +34,18 @@ function _M:init(dialogdef, profile_help_text)
 
 	self.c_desc = Textzone.new{width=math.floor(self.iw - 10), auto_height=true, text=self.profile_help_text}
 
+	local login_filter = function(c)
+		if c:find("^[a-z0-9]$") then return c end
+		if c:find("^[A-Z]$") then return c:lower() end
+		return nil
+	end
+	local pass_filter = function(c)
+		if c == '\t' then return nil end
+		return c
+	end
+
 	if self.justlogin then
-		self.c_login = Textbox.new{title="Login: ", text="", chars=30, max_len=20, fct=function(text) self:okclick() end}
+		self.c_login = Textbox.new{title="Username: ", text="", chars=30, max_len=20, fct=function(text) self:okclick() end}
 		self.c_pass = Textbox.new{title="Password: ", text="", chars=30, max_len=20, hide=true, fct=function(text) self:okclick() end}
 		local ok = require("engine.ui.Button").new{text="Login", fct=function() self:okclick() end}
 		local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}
@@ -49,10 +59,10 @@ function _M:init(dialogdef, profile_help_text)
 		}
 		self:setFocus(self.c_login)
 	else
-		self.c_login = Textbox.new{title="Login: ", text="", chars=30, max_len=20, fct=function(text) self:okclick() end}
-		self.c_pass = Textbox.new{title="Password: ", text="", chars=30, max_len=20, hide=true, fct=function(text) self:okclick() end}
-		self.c_email = Textbox.new{title="Email: ", text="", chars=30, max_len=60, fct=function(text) self:okclick() end}
-		self.c_name = Textbox.new{title="Name: ", text="", chars=30, max_len=60, fct=function(text) self:okclick() end}
+		self.c_login = Textbox.new{title="Username: ", text="", chars=30, max_len=20, filter=login_filter, fct=function(text) self:okclick() end}
+		self.c_pass = Textbox.new{title="Password: ", text="", chars=30, max_len=20, hide=true, filter=pass_filter, fct=function(text) self:okclick() end}
+		self.c_pass2 = Textbox.new{title="Password again: ", text="", chars=30, max_len=20, hide=true, filter=pass_filter, fct=function(text) self:okclick() end}
+		self.c_email = Textbox.new{title="Email: ", text="", chars=30, max_len=60, filter=pass_filter, fct=function(text) self:okclick() end}
 		local ok = require("engine.ui.Button").new{text="Create", fct=function() self:okclick() end}
 		local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}
 
@@ -60,8 +70,8 @@ function _M:init(dialogdef, profile_help_text)
 			{left=0, top=0, ui=self.c_desc},
 			{left=0, top=self.c_desc.h, ui=self.c_login},
 			{left=0, top=self.c_desc.h+self.c_login.h+5, ui=self.c_pass},
-			{left=0, top=self.c_desc.h+self.c_login.h+self.c_pass.h+10, ui=self.c_email},
-			{left=0, top=self.c_desc.h+self.c_login.h+self.c_pass.h+self.c_email.h+15, ui=self.c_name},
+			{left=0, top=self.c_desc.h+self.c_login.h+self.c_pass.h+5, ui=self.c_pass2},
+			{left=0, top=self.c_desc.h+self.c_login.h+self.c_pass.h+self.c_pass2.h+10, ui=self.c_email},
 			{left=0, bottom=0, ui=ok},
 			{right=0, bottom=0, ui=cancel},
 		}
@@ -76,8 +86,25 @@ end
 
 
 function _M:okclick()
+	if self.c_pass2 and self.c_pass.text ~= self.c_pass2.text then
+		self:simplePopup("Password", "Password mismatch!")
+		return
+	end
+	if self.c_login.text:len() < 3 then
+		self:simplePopup("Username", "Your username is too short")
+		return
+	end
+	if self.c_pass.text:len() < 4 then
+		self:simplePopup("Password", "Your password is too short")
+		return
+	end
+	if self.c_email and (self.c_email.text:len() < 6 or not self.c_email.text:find("@")) then
+		self:simplePopup("Email", "Your email seems invalid")
+		return
+	end
+
 	game:unregisterDialog(self)
-	game:createProfile({login=self.c_login.text, pass=self.c_pass.text, email=self.c_email and self.c_email.text, name=self.c_name and self.c_name.text})
+	game:createProfile({login=self.c_login.text, pass=self.c_pass.text, email=self.c_email and self.c_email.text})
 end
 
 function _M:cancelclick()

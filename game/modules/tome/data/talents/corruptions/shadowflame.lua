@@ -133,7 +133,7 @@ newTalent{
 		if not tx or not ty or not target then return nil end
 		target = game.level.map(tx, ty, Map.ACTOR)
 		if not tx or not ty or not target then return nil end
-		if not target.player and not self.player then return nil end
+		if not (target.player and target.game_ender) and not (self.player and self.game_ender) then return nil end
 
 		game:playSoundNear(self, "talents/flame")
 		local dam = self:combatTalentSpellDamage(t, 12, 140)
