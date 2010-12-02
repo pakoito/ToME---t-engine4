@@ -957,12 +957,12 @@ function _M:displayParticles(nb_keyframes)
 	local del = {}
 	local e = next(self.particles)
 	while e do
-		if nb_keyframes == 0 then
+		if nb_keyframes == 0 and e.x and e.y then
 			-- Just display it, not updating, no emiting
 			if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
 				alive = e.ps:toScreen(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom)
 			end
-		else
+		elseif e.x and e.y then
 			-- Update more, if needed
 			for i = 1, nb_keyframes do
 				local alive = not e.update(e)
@@ -979,6 +979,9 @@ function _M:displayParticles(nb_keyframes)
 					e.dead = true
 				end
 			end
+		else
+			del[#del+1] = e
+			e.dead = true
 		end
 
 		e = next(self.particles, e)
