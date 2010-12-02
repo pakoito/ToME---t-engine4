@@ -149,7 +149,7 @@
   </tile>
   <tile id="3">
    <properties>
-    <property name="display" value="trollshaws"/>
+    <property name="display" value="trollmire"/>
    </properties>
   </tile>
   <tile id="4">
