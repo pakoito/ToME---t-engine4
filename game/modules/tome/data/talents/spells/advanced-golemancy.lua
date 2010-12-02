@@ -21,7 +21,7 @@ newTalent{
 	name = "Golem Power",
 	type = {"spell/advanced-golemancy", 1},
 	mode = "passive",
-	require = spells_req1,
+	require = spells_req_high1,
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(self.T_WEAPON_COMBAT, true)
@@ -40,7 +40,7 @@ newTalent{
 	name = "Golem Resilience",
 	type = {"spell/advanced-golemancy", 2},
 	mode = "passive",
-	require = spells_req2,
+	require = spells_req_high2,
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(self.T_HEALTH, true)
@@ -60,7 +60,7 @@ newTalent{
 newTalent{
 	name = "Golem: Pound",
 	type = {"spell/advanced-golemancy", 3},
-	require = spells_req3,
+	require = spells_req_high3,
 	points = 5,
 	cooldown = 15,
 	range = 10,
@@ -118,7 +118,7 @@ newTalent{
 newTalent{
 	name = "Mount Golem",
 	type = {"spell/advanced-golemancy",4},
-	require = spells_req4,
+	require = spells_req_high4,
 	points = 5,
 	mana = 40,
 	cooldown = 60,

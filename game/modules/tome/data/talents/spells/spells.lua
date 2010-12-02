@@ -71,6 +71,26 @@ spells_req5 = {
 	stat = { mag=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 }
+spells_req_high1 = {
+	stat = { mag=function(level) return 22 + (level-1) * 2 end },
+	level = function(level) return 10 + (level-1)  end,
+}
+spells_req_high2 = {
+	stat = { mag=function(level) return 30 + (level-1) * 2 end },
+	level = function(level) return 14 + (level-1)  end,
+}
+spells_req_high3 = {
+	stat = { mag=function(level) return 38 + (level-1) * 2 end },
+	level = function(level) return 18 + (level-1)  end,
+}
+spells_req_high4 = {
+	stat = { mag=function(level) return 46 + (level-1) * 2 end },
+	level = function(level) return 22 + (level-1)  end,
+}
+spells_req_high5 = {
+	stat = { mag=function(level) return 54 + (level-1) * 2 end },
+	level = function(level) return 26 + (level-1)  end,
+}
 
 load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/fire.lua")
