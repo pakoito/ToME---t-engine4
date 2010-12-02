@@ -143,9 +143,9 @@ function _M:init(t, no_default)
 	t.negative = t.negative or 0
 
 	t.hate_rating = t.hate_rating or 0.2
-	t.hate_regen = t.hate_regen or -0.035
+	t.hate_regen = t.hate_regen or 0
 	t.max_hate = t.max_hate or 10
-	t.absolute_max_hate = t.absolute_max_hate or 15
+	t.absolute_max_hate = t.absolute_max_hate or 14
 	t.hate = t.hate or 10
 	t.hate_per_kill = t.hate_per_kill or 0.8
 
@@ -201,6 +201,13 @@ function _M:act()
 		t.do_regenLife(self, t)
 	end
 	self:regenResources()
+	-- Hate decay
+	if self:knowTalent(self.T_HATE_POOL) and self.hate > 0 then
+		-- hate loss speeds up as hate increases
+		local hateChange = -math.max(0.02, 0.07 * math.pow(self.hate / 10, 2))
+		self:incHate(hateChange)
+	end
+	
 	-- Compute timed effects
 	self:timedEffects()
 
@@ -1676,9 +1683,9 @@ function _M:worthExp(target)
 		elseif self.rank >= 5 then mult = 120
 		end
 
-		return self.level * mult * self.exp_worth
+		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1)
 	else
-		local mult = 2
+		local mult = 2 + (self.exp_kill_multiplier or 0)
 		if self.rank == 1 then mult = 2
 		elseif self.rank == 2 then mult = 2
 		elseif self.rank == 3 then mult = 3.5
@@ -1687,7 +1694,7 @@ function _M:worthExp(target)
 		elseif self.rank >= 5 then mult = 6.5
 		end
 
-		return self.level * mult * self.exp_worth
+		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1)
 	end
 end
 

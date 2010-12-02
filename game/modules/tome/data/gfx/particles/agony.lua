@@ -23,7 +23,7 @@ local distributionOffset = math.rad(rng.range(0, 360))
 
 return { generator = function()
 	local life = 20
-	local size = 2
+	local size = 3
 	local angle = math.rad(rng.range(0, 360))
 	local distribution = (math.sin(angle + distributionOffset) + 1) / 2
 	local distance = engine.Map.tile_w * rng.float(0.2, 0.2 + 0.08 * power)

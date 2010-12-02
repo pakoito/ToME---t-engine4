@@ -56,6 +56,7 @@ newBirthDescriptor{
 		["cursed/slaughter"]={true, 0.0},
 		["cursed/endless-hunt"]={true, 0.0},
 		["cursed/cursed-form"]={true, 0.0},
+		["cursed/traveler"]={true, 0.0},
 		["technique/combat-training"]={true, 0.3},
 		["cunning/survival"]={false, 0.0},
 		["cursed/rampage"]={false, 0.0},
@@ -86,7 +87,8 @@ newBirthDescriptor{
 		"The Doomed are fallen mages who once wielded powerful magic wrought by ambition and dark bargains.",
 		"They now possess only a twisted shadow of that power as they struggle to keep it from consuming them.",
 		"Only time will tell if they can choose a new path or are dooomed forever.",
-		"The Doomed do not heal naturally but can feed from their enemies as they release hidden forces, darkness and punishments upon them.",
+		"The Doomed strike from behind a veil of darkness or a host of shadows.",
+		"They feed upon their enemies as they unleash powerful forces and terrible punishments.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
@@ -100,6 +102,7 @@ newBirthDescriptor{
 		["cursed/shadows"]={true, 0.3},
 		["cursed/darkness"]={true, 0.3},
 		["cursed/cursed-form"]={true, 0.0},
+		["cursed/traveler"]={true, 0.0},
 		["cursed/dark-figure"]={false, 0.0},
 	},
 	talents = {
@@ -109,7 +112,6 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 90,
-		life_regen = 0,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},

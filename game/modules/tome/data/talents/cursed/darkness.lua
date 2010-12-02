@@ -259,7 +259,7 @@ newTalent{
 	require = cursed_mag_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 12,
+	cooldown = 14,
 	hate = 1,
 	range = 5,
 	requires_target = true,
@@ -270,7 +270,7 @@ newTalent{
 		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 50)
+		return combatTalentDamage(self, t, 18, 50)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -310,7 +310,7 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
-		return ([[Creeping dark spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage.
+		return ([[Creeping dark slowly spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage and blocks the sight of any who do not possess Dark Vision or some other magical means of seeing.
 		Damage improves with the Magic stat.]]):format(darkCount, radius, damage)
 	end,
 }
@@ -357,7 +357,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 200)
+		return combatTalentDamage(self, t, 25, 240)
 	end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -372,10 +372,12 @@ newTalent{
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target then
 					self:project(target, target.x, target.y, DamageType.DARKNESS, self:spellCrit(damage))
-					if not target.dead and target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
-						target:setEffect(target.EFF_BLINDED, 3, {})
-						target:setTarget(nil)
-						game.logSeen(target, "%s stumbles in the darkness!", target.name:capitalize())
+					if rng.percent(15) then
+						if not target.dead and target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
+							target:setEffect(target.EFF_BLINDED, 3, {})
+							target:setTarget(nil)
+							--game.logSeen(target, "%s stumbles in the darkness!", target.name:capitalize())
+						end
 					end
 				end
 			end,
@@ -388,7 +390,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Sends a torrent of searing darkness through your foes doing %d damage with a chance to blind them for 3 turns.
+		return ([[Sends a torrent of searing darkness through your foes doing %d damage. There is a small chance the rushing darkness will blind them for 3 turns and cause them to forget their target.
 		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
@@ -425,7 +427,7 @@ newTalent{
 	info = function(self, t)
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Send tendrils of creeping dark out to attack your target and pin them for %d turns. The darkness does %d damage per turn.
+		return ([[Send tendrils of creeping dark out to attack your target and pin them in the darkness for %d turns. The darkness does %d damage per turn.
 		The damage will increase with the Magic stat.]]):format(pinDuration, damage)
 	end,
 }

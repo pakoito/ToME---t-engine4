@@ -280,8 +280,7 @@ newTalent{
 	info = function(self, t)
 		local maxShadows = t.getMaxShadows(self, t)
 		local level = t.getLevel(self, t)
-		return ([[Calls up to %d level %d shadow(s) to aid you in your battles. Each shadow costs 1 hate to summon.
-		The level of the shadows will increase with the Magic stat.]]):format(maxShadows, level)
+		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Each shadow costs 1 hate to summon and will be equal in level to you when it appears.]]):format(maxShadows, level)
 	end,
 }
 

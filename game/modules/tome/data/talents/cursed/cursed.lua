@@ -33,6 +33,7 @@ newTalentType{ allow_random=true, type="cursed/punishments", name = "punishments
 -- Generic
 newTalentType{ allow_random=true, type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
 newTalentType{ allow_random=true, type="cursed/dark-figure", name = "dark figure", generic = true, description = "Life as an outcast has given you time to reflect on your misfortunes." }
+newTalentType{ allow_random=true, type="cursed/traveler", name = "traveler", generic = true, description = "You have become accustomed to the hard life of a lone traveler." }
 
 cursed_wil_req1 = {
 	stat = { wil=function(level) return 12 + (level-1) * 2 end },
@@ -110,3 +111,4 @@ load("/data/talents/cursed/punishments.lua")
 
 load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/dark-figure.lua")
+load("/data/talents/cursed/traveler.lua")
