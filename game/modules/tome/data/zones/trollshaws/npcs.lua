@@ -30,7 +30,6 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of trollshaws, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "TROLL_BILL",
 	allow_infinite_dungeon = true,
 	type = "giant", subtype = "troll", unique = true,
@@ -63,8 +62,8 @@ He is wielding a small tree trunk and towering toward you.]],
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollshaws were safer now!")
-		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollshaws")
+		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
+		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
 		if who and who.level and who.level == 1 then
 			world:gainAchievement("KILL_BILL", game.player)
 		end

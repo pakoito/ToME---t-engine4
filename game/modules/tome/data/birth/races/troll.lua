@@ -47,7 +47,7 @@ newBirthDescriptor{
 		faction = "orc-pride",
 		type = "humanoid", subtype="troll",
 		default_wilderness = {26, 7, "wilderness"},
-		starting_zone = "trollshaws",
+		starting_zone = "trollmire",
 		starting_quest = "start-dunadan",
 		starting_intro = "dwarf",
 		life_rating=10,

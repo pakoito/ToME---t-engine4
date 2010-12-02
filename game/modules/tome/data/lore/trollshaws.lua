@@ -18,46 +18,46 @@
 -- darkgod@te4.org
 
 --------------------------------------------------------------------------
--- Trollshaws
+-- Trollmire
 --------------------------------------------------------------------------
 
 newLore{
-	id = "trollshaws-note-1",
-	category = "trollshaws",
-	name = "tattered paper scrap (trollshaws)",
+	id = "trollmire-note-1",
+	category = "trollmire",
+	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
 "...is a gorgeous glade, but I could swear that looked like a part of a human femur."]],
 }
 
 newLore{
-	id = "trollshaws-note-2",
-	category = "trollshaws",
-	name = "tattered paper scrap (trollshaws)",
+	id = "trollmire-note-2",
+	category = "trollmire",
+	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
 "11th of Allure, year 121«
 Saw an absolutely gigantic troll, but fortunately I threw him off my scent."]],
 }
 
 newLore{
-	id = "trollshaws-note-3",
-	category = "trollshaws",
-	name = "tattered paper scrap (trollshaws)",
+	id = "trollmire-note-3",
+	category = "trollmire",
+	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
 "...ack again, but he's just a stupid old troll. It'll be easy to not let him get wind of me."]],
 }
 
 newLore{
-	id = "trollshaws-note-4",
-	category = "trollshaws",
-	name = "tattered paper scrap (trollshaws)",
+	id = "trollmire-note-4",
+	category = "trollmire",
+	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
 "...initely found his treasure stash further on, but had to turn back. If you get this, HELP!"]],
 }
 
 newLore{
-	id = "trollshaws-note-5",
-	category = "trollshaws",
-	name = "tattered paper scrap (trollshaws)",
+	id = "trollmire-note-5",
+	category = "trollmire",
+	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
 "...writing this in a tree and he's at the bottom of it. Waiting. His club is the size of a tall dwarf. Don't think I'm going to make it."]],
 }

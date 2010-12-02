@@ -24,7 +24,7 @@ You have choosen a rare path for yourself, the path of adventuring, whose loneli
 
 Inspired by the stories of dragons, gold, and the treasures to be found in ancient ruins. You have decided to venture into the old and wild places of the world, looking for fame and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
 To the east lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below were infested by vermin and undead.
 
 After days of travel, you have found the forest and entered it, what will you find there?...

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/lore/trollshaws.lua")
+load("/data/lore/trollmire.lua")
 load("/data/lore/daikara.lua")
 load("/data/lore/old-forest.lua")
 load("/data/lore/infinite-dungeon.lua")

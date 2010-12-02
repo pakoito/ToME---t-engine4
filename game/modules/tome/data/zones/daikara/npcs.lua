@@ -26,7 +26,6 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
--- The boss of trollshaws, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "RANTHA_THE_WORM",
 	allow_infinite_dungeon = true,
 	type = "dragon", subtype = "ice", unique = true,

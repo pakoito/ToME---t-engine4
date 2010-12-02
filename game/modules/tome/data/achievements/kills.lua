@@ -79,6 +79,6 @@ newAchievement{
 
 newAchievement{
 	name = "Kill Bill!", id = "KILL_BILL",
-	desc = [[Killed Bill in the Trollshaws with a level one character]],
+	desc = [[Killed Bill in the Trollmire with a level one character]],
 	mode = "player",
 }

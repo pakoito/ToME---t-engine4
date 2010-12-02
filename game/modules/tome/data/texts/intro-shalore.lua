@@ -24,7 +24,7 @@ Magic is frowed upon, even in your own country.
 
 You have decided to venture into the old and wild places looking for ancient treasures and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollshaws. It is an old forest infested with trolls and all kinds of wild animals.
+You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
 To the east lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below were infested by vermin and undead.
 
 After days of travel, you have found the forest and entered it, what will you find there?...
