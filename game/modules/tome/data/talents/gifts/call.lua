@@ -57,7 +57,7 @@ newTalent{
 		for i, tid in ipairs(reset) do
 			local t = self:getTalentFromId(tid)
 			if t.no_sustain_autoreset then
-				game.logPlayer(self, "#LIGHT_BLUE#Warning: Talent %s is no more sustained.", t.name)
+				game.logPlayer(self, "#LIGHT_BLUE#Warning: Talent %s is no longer sustained.", t.name)
 			else
 				self:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true})
 			end
@@ -75,7 +75,7 @@ newTalent{
 		Each turn you regenerate %d equilibrium and %d at the end.
 		If you are hit while meditating you will stop.
 		Meditating require peace and quiet and may not be cast with hostile creatures in sight.
-		The effect will increase with your Willpower stat.]]):
+		The effects will increase with your Willpower stat.]]):
 		format(17 - self:getTalentLevel(t), pt, tt)
 	end,
 }
@@ -103,8 +103,8 @@ newTalent{ short_name = "NATURE_TOUCH",
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d.
-		The effect will increase with your Willpower stat.]]):
+		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d(heal doesnt work on undead).
+		Heal will increase with your Willpower stat.]]):
 		format(20 + self:getWil(50) * self:getTalentLevel(t))
 	end,
 }

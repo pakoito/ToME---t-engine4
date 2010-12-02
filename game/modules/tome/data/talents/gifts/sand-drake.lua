@@ -51,7 +51,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When your target is below %d%% life you can try to swallow it, killing it automatically and regaining life and equilibrium.]]):
+		return ([[When your target is below %d%% life you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.]]):
 		format(10 + 3 * self:getTalentLevel(t))
 	end,
 }
@@ -77,8 +77,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damaging and knocking back your foes.
-		The damage will increase with the Strength stat]]):format(2 + self:getTalentLevel(t) / 2)
+		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damaging them for %d and knocking back up to 4 titles away.
+		The damage will increase with the Strength stat]]):format(2 + self:getTalentLevel(t) / 2, self:combatDamage() * 0.8)
 	end,
 }
 

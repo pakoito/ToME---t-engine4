@@ -62,8 +62,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your mighty blows inspire utter terror on your foes. Any melee strike you do that deals more than %d%% of the target's total life puts them in a mortal terror, dazing them for 5 turns.
-		Your critical strike chance also increase by %d%%.]]):
-		format(20 + (30 - self:getTalentLevelRaw(t) * 5), self:getTalentLevelRaw(t) * 3)
+		Your critical strike chance also increase by %d%%.
+		Daze chance increase with your Strength stat.]]):
+		format(20 + (30 - self:getTalentLevelRaw(t) * 5), self:getTalentLevelRaw(t) * 2.8)
 	end,
 }
 

@@ -100,6 +100,7 @@ newBirthDescriptor
 	experience = 1.0,
 	copy = {
 		unused_talents_types = 1,
+		life_rating = 10,
 		default_wilderness = {28, 13},
 		starting_zone = "trollshaws",
 		starting_quest = "start-allied",

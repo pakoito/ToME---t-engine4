@@ -71,7 +71,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Boost your life and stamina by %d%% for %d turns by uttering your battle shout.]]):format(5 + self:getTalentLevelRaw(t) * 2, 10 + self:getTalentLevelRaw(t))
+		return ([[Boost your life and stamina by %d%% for %d turns by uttering your battle shout.]]):format( 10 + self:getTalentLevelRaw(t), 5 + self:getTalentLevelRaw(t) * 2)
 	end,
 }
 
@@ -97,7 +97,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your battle cry shatters the will of your foes, lowering their defense by %d for 7 turns, making them easier to hit.]]):
+		return ([[Your battle cry shatters the will of your foes, lowering their defense by %d for 7 turns, making them easier to hit.
+		Lowering defense chance increase with your Strength stat.]]):
 		format(7 * self:getTalentLevel(t))
 	end,
 }

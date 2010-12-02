@@ -62,7 +62,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Breathe acid on your foes, doing %d damage.
+		return ([[Breathe acid on your foes, doing %0.2f damage.
 		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.ACID, 30 + self:getWil(50) * self:getTalentLevel(t)))
 	end,
 }
@@ -94,8 +94,8 @@ newTalent{
 		return ([[Breathe lightning on your foes, doing %d to %d damage.
 		The damage will increase with the Willpower stat]]):
 		format(
-			damDesc(self, DamageType.LIGHTNING, (30 + self:getWil(70) * self:getTalentLevel(t)) / 3),
-			damDesc(self, DamageType.LIGHTNING, 30 + self:getWil(70) * self:getTalentLevel(t))
+			damDesc(self, DamageType.LIGHTNING, (30 + self:getWil(80) * self:getTalentLevel(t)) / 3),
+			damDesc(self, DamageType.LIGHTNING, 30 + self:getWil(80) * self:getTalentLevel(t))
 		)
 	end,
 }
@@ -124,7 +124,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Breathe poison on your foes, doing %d damage over a few turns.
-		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.NATURE, 10 + self:getWil(70) * self:getTalentLevel(t)))
+		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.NATURE, 30 + self:getWil(70) * self:getTalentLevel(t)))
 	end,
 }
 
@@ -194,8 +194,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Fire Imp to burn your foes to death. Fire Imps are really weak in melee and die easily, but they can burn your foes from afar.
-		It will get %d magic and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Fire Imp for %d turns to burn your foes to death. Fire Imps are really weak in melee and die easily, but they can burn your foes from afar.
+		It will get %d magic, %d willpower and %d constitution.
+		Magic stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		10 + self:getTalentLevel(t) * 2, 
+		10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
 
@@ -267,8 +272,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a 3-headed Hydra to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
-		It will get %d willpower and %d constitution.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a 3-headed Hydra for %d turns to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
+		It will get %d willpower and %d constitution and 18 strength.
+		Willpower stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
 
@@ -341,8 +350,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Warper to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathursts and time prisons at your foes.
-		It will get %d magic and %d willpower.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Warper for %d turns to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathursts and time prisons at your foes.
+		It will get %d magic, %d willpower and %d constitution.
+		Magic stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		10 + self:getTalentLevel(t) * 2, 
+		10 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
 	end,
 }
 
@@ -416,7 +430,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Fire Drake to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
-		It will get %d strength and %d constitution.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Fire Drake for %d turns to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
+		It will get %d strength, %d constitution and 38 willpower.
+		Strength stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
 	end,
 }

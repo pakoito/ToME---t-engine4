@@ -32,7 +32,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Concentrate on the battle, ignoring some of the damage you take.
-		Improves physical damage reduction by %d%%.]]):format(self:getTalentLevelRaw(t) * 5)
+		Improves physical damage reduction by %d%% for 20 turns.]]):format(self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -58,8 +58,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Take an offensive stance. As you walk through your foes, you knock them all back in an frontal arc (up to %d grids).
-		This consumes stamina rapidly.]]):
-		format(self:getTalentLevel(t))
+		This consumes stamina rapidly(-15 stamina/turn).]]):
+		format(math.floor(self:getTalentLevel(t)))
 	end,
 }
 
@@ -110,6 +110,6 @@ newTalent{
 	info = function(self, t)
 		return ([[Put all your strength into your weapon blows, creating shattering impacts that deal %d%% weapon damage to all nearby foes.
 		Each blow will drain 15 stamina.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.1, 0.45))
+		format(100 * self:combatTalentWeaponDamage(t, 0.2, 0.6))
 	end,
 }

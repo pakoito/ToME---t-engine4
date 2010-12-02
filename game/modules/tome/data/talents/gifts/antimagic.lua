@@ -39,7 +39,7 @@ newTalent{
 		return ([[You stand in the way of magical damage. That which does not kill you makes you stronger.
 		Each time you are hit by a magical damage you get a %d%% resistance to this elemental for 7 turns.
 		If antimagic shield is not active you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium by %d and increasing your stamina by %d.
-		The effect will increase with your Willpower stat.]]):
+		The effects will increase with your Willpower stat.]]):
 		format(
 			self:combatTalentMindDamage(t, 10, 40),
 			1 + self:combatTalentMindDamage(t, 10, 5),
@@ -96,7 +96,6 @@ newTalent{
 	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
-		local power = 10 + 5 * self:getTalentLevel(t)
 		return {
 			am = self:addTemporaryValue("antimagic_shield", self:combatTalentMindDamage(t, 20, 80)),
 		}
@@ -107,8 +106,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Surround yourself with a shield that will absorb at most %d magical or elemental damage per attack.
-		Each time damage is absorbed your equilibrium increases and a check is made, if it fails the shield will crumble.
-		The effect will increase with your Willpower stat.]]):
+		Each time damage is absorbed your equilibrium increases by 1 for every 30 points of damage and a check is made, if it fails the shield will crumble.
+		Damage shield can absorb will increase with your Willpower stat.]]):
 		format(self:combatTalentMindDamage(t, 20, 80))
 	end,
 }
@@ -159,7 +158,7 @@ newTalent{
 		local negative = base / 2
 
 		return ([[Drain %d mana, %d vim, %d positive and negative energies from your target, triggering a chain reaction that explodes in a burst of arcane damage.
-		The damage done is 130%% of the mana drained, 260%% of the vim drained, 530%% of the positive or negative enrgy drained, whichever is higher.
+		The damage done is 130%% of the mana drained, 260%% of the vim drained, 520%% of the positive or negative enrgy drained, whichever is higher.
 		The effect will increase with your Willpower stat.]]):
 		format(mana, vim, positive, negative)
 	end,

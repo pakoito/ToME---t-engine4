@@ -54,7 +54,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire a shot into your target's eyes, blinding it for %d turns and doing %d%% damage.]]):format(2 + self:getTalentLevelRaw(t), 100 * self:combatTalentWeaponDamage(t, 1, 1.5))
+		return ([[You fire a shot into your target's eyes, blinding it for %d turns and doing %d%% damage.
+		Blind chance increase with your Dexterity stat.]])
+		:format(2 + self:getTalentLevelRaw(t), 
+		100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 
@@ -85,7 +88,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire a mighty shot at your target doing %d%% damage and knocking it back.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
+		return ([[You fire a mighty shot at your target doing %d%% damage and knocking it back.
+		Knockback chance increase with your Dexterity stat.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 

@@ -63,7 +63,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You summon a powerful gust of wind, knocking back your foes and damaging them for %d.]]):format(15 + self:getStr() * 0.1 * self:getTalentLevel(t))
+		return ([[You summon a powerful gust of wind, knocking back your foes up to 4 titles away and damaging them for %d.
+		The damage will increase with the Strength stat]]):format(15 + self:getStr() * 0.1 * self:getTalentLevel(t))
 	end,
 }
 

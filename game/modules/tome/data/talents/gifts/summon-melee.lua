@@ -79,8 +79,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a War Hound to attack your foes. War hounds are good basic melee attackers.
-		It will get %d strength and %d dexterity.]]):format(10 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a War Hound for %d turns to attack your foes. War hounds are good basic melee attackers.
+		It will get %d strength, %d dexterity, 5 magic and %d constitution.
+		Strength stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		10 + self:getWil() * self:getTalentLevel(t) / 5, 
+		10 + self:getTalentLevel(t) * 2, 
+		15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
 
@@ -149,8 +154,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Jelly to attack your foes. Jellies do not move, but are great to block a passage.
-		It will get %d constitution and %d strength.]]):format(10 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Jelly for %d turns to attack your foes. Jellies do not move, but are great to block a passage.
+		It will get %d constitution and %d strength.
+		Constitution stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		10 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE) * 3, 
+		10 + self:getTalentLevel(t) * 2)
        end,
 }
 
@@ -224,8 +233,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Minotaur to attack your foes. Minotaurs cannot stay summoned for long, but they deal a lot of damage.
-		It will get %d strength and %d constitution.]]):format(25 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Minotaur for %d turns to attack your foes. Minotaurs cannot stay summoned for long, but they deal a lot of damage.
+		It will get %d strength, %d constitution and 18 dexterity.
+		Strength stat will increase with your Willpower stat.]])
+		:format(self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		25 + self:getWil() * self:getTalentLevel(t) / 5, 
+		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
 
@@ -300,7 +313,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Stone Golem to attack your foes. Stone golems are formidable foes that can shake the ground with their might.
-		It will get %d strength and %d constitution.]]):format(25 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Stone Golem for %d turns to attack your foes. Stone golems are formidable foes that can shake the ground with their might.
+		It will get %d strength, %d constitution and 18 dexterity.
+		Strength stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		25 + self:getWil() * self:getTalentLevel(t) / 5, 
+		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }

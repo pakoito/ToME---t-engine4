@@ -63,7 +63,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to hit the right spot, increasing your armor penetration by %d.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 20)
+		return ([[You have learned to hit the right spot, increasing your armor penetration by %d.
+		Armor penetration will increase with your Dexterity stat.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 20)
 	end,
 }
 
@@ -95,7 +96,7 @@ newTalent{
 	info = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		weapon = weapon or {}
-		return ([[Increases attack speed by %d%%, but drains stamina quickly.]]):format(self:combatSpeed(weapon.combat) * (self:getTalentLevel(t) * 9))
+		return ([[Increases attack speed by %d%%, but drains stamina quickly(-6 stamina/turn).]]):format(self:combatSpeed(weapon.combat) * (self:getTalentLevel(t) * 9))
 	end,
 }
 
@@ -141,7 +142,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit with your offhand weapon for %d%% damage. If the attack hits, the target is stunned and you hit it with your mainhand weapon.]]):format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.7))
+		return ([[Hit with your offhand weapon for %d%% damage. If the attack hits, the target is stunned for %d turns and you hit it with your mainhand weapon doing %d%% damage.
+		Stun chance increase with your Dexterity stat.]])
+		:format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.7),
+		2 + self:getTalentLevel(t),
+		100 * self:combatTalentWeaponDamage(t, 0.7, 1.7))
 	end,
 }
 

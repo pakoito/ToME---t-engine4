@@ -94,7 +94,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.]]):
+		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.
+		The effects will increase with your Dexterity stat.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10), 4 + self:getTalentLevel(t) * self:getDex(10),
 		3 + self:getTalentLevel(t) * self:getDex(10), 7 + self:getTalentLevel(t) * self:getDex(10),
 		self:getTalentLevelRaw(t) * 10)
@@ -132,7 +133,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), damage(%d), and critical chance(%d).]]):
-		format(self:getTalentLevelRaw(t) * 9, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
+		format(self:getTalentLevel(t) * 9, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }
 
@@ -191,7 +192,7 @@ newTalent{
 		if self:getTalentLevel(t) >= 5 then rad = rad + 1 end
 		return ([[You fire a flame shot, doing %d%% fire damage and lighting up the target area in a radius of %d.
 		At level 3 it also has a chance to blind for 3 turns.]]):
-		format(self:combatTalentWeaponDamage(t, 0.7, 1.2) * 100, rad)
+		format(self:combatTalentWeaponDamage(t, 0.5, 1.2) * 100, rad)
 	end,
 }
 
@@ -220,7 +221,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire a crippling shot, doing %d%% damage and reducing your target's speed by %0.2f for 7 turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.5) * 100, util.bound((5 + 5 * self:getTalentLevel(t)) / 100, 0.1, 0.4))
+		return ([[You fire a crippling shot, doing %d%% damage and reducing your target's speed by %d%% for 7 turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.5) * 100, util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4))
 	end,
 }
 
@@ -249,7 +250,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100, 2 + self:getTalentLevelRaw(t))
+		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.
+		Pinning chance increase with your Dexterity stat.]])
+		:format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100, 
+		2 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -279,6 +283,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 2 + self:getTalentLevelRaw(t))
+		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.
+		Stun chance increase with your Dexterity stat.]])
+		:format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 
+		2 + self:getTalentLevelRaw(t))
 	end,
 }

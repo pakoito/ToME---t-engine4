@@ -209,8 +209,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Turtle to distract your foes. Turtles are resilient, but not very powerful. However, they will periodically force any foes to attack them and can protect themselves with their shell.
-		It will get %d constitution and %d dexterity.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Turtle for %d turns to distract your foes. Turtles are resilient, but not very powerful. However, they will periodically force any foes to attack them and can protect themselves with their shell.
+		It will get %d constitution, %d dexterity and 18 willpower.
+		Constitution stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		15 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, 
+		10 + self:getTalentLevel(t) * 2)
 	end,
 }
 
@@ -279,8 +283,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Spider to harass your foes. Spiders can poison your foes and throw webs to pin them to the ground.
-		It will get %d dexterity and %d strength.]]):format(15 + self:getWil() * self:getTalentLevel(t) / 5, 10 + self:getTalentLevel(t) * 2)
+		return ([[Summon a Spider for %d turns to harass your foes. Spiders can poison your foes and throw webs to pin them to the ground.
+		It will get %d dexterity, %d strength, 18 willpower and %d constitution.
+		Dexterity stat will increase with your Willpower stat.]])
+		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		10 + self:getTalentLevel(t) * 2,
+		10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
 

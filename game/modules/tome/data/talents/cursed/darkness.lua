@@ -260,7 +260,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 14,
-	hate = 1,
+	hate = 1.5,
 	range = 5,
 	requires_target = true,
 	getRadius = function(self, t)
@@ -270,7 +270,7 @@ newTalent{
 		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 18, 50)
+		return combatTalentDamage(self, t, 18, 45)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -357,7 +357,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 25, 240)
+		return combatTalentDamage(self, t, 20, 200)
 	end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}

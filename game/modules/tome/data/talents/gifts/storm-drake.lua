@@ -73,7 +73,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Generate an electrical field around you in a radius of 1. Any foe caught inside will lose %d%% of its current life.
-		This effect can not kill creatures.]]):format(self:combatTalentMindDamage(t, 10, 45))
+		This effect can not kill creatures.
+		Life loss will increase with the Willpower stat.]]):format(self:combatTalentMindDamage(t, 10, 45))
 	end,
 }
 
@@ -175,7 +176,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You breathe lightning in a frontal cone. Any target caught in the area will take %0.2f to %0.2f lightning damage and can be dazed for a few turns.
+		return ([[You breathe lightning in a frontal cone. Any target caught in the area will take %0.2f to %0.2f lightning damage and can be dazed for 3 turns.
 		The damage will increase with the Strength stat]]):format(
 			damDesc(self, DamageType.LIGHTNING, 40 + self:getStr(80) * self:getTalentLevel(t)) / 3,
 			damDesc(self, DamageType.LIGHTNING, 40 + self:getStr(80) * self:getTalentLevel(t))

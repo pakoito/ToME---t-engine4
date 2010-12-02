@@ -34,7 +34,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Induces a killing rage in one of your summons, increasing its stats by %d.]]):format(2+math.floor(self:getTalentLevel(t) * 2))
+		return ([[Induces a killing rage in one of your summons, increasing all its stats by %d for 5 turns.]]):format(2+math.floor(self:getTalentLevel(t) * 2))
 	end,
 }
 
@@ -68,11 +68,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Destroys one of your summons, make it detonate.
+		return ([[Destroys one of your summons, make it detonate in radius of %d.
 		Only some summons can be detonated:
-		- Fire Imp: Explodes into a fireball
-		- Jelly: Explodes into a ball of slowing slime
-		The effect improves with your Willpower.]]):format()
+		- Fire Imp: Explodes into a fireball doing %0.2f fire damage
+		- Jelly: Explodes into a ball of slowing slime doing 0.2f damage and slowing for 3 turns for 30%%
+		The effects improves with your Willpower.]]):format(1 + self:getTalentLevelRaw(t),damDesc(self, DamageType.FIRE, 28 + self:getWil(32) * self:getTalentLevel(t)),damDesc(self, DamageType.SLIME, 18 + self:getWil(22) * self:getTalentLevel(t)))
 	end,
 }
 

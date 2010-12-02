@@ -23,7 +23,7 @@ newTalent{
 	require = cursed_wil_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 4,
+	cooldown = 8,
 	range = 15,
 	requires_target = true,
 	getHateGain = function(self, t)
@@ -72,7 +72,7 @@ newTalent{
 	require = cursed_wil_req2,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 4,
+	cooldown = 8,
 	range = 15,
 	requires_target = true,
 	getConstitutionGain = function(self, t, target)
@@ -86,7 +86,7 @@ newTalent{
 		end
 	end,
 	getLifeRegenGain = function(self, t, target)
-		return self.max_life * (self:getWil(0.005) + self:getTalentLevel(t) * 0.005)
+		return self.max_life * (0.003 + self:getWil(0.005) + self:getTalentLevel(t) * 0.005)
 	end,
 	getExtension = function(self, t)
 		return math.floor(self:getTalentLevel(t) - 1)
@@ -132,7 +132,7 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 4,
+	cooldown = 8,
 	range = 15,
 	requires_target = true,
 	getDamageGain = function(self, t)
@@ -180,7 +180,7 @@ newTalent{
 	require = cursed_wil_req4,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 4,
+	cooldown = 8,
 	range = 15,
 	requires_target = true,
 	getResistGain = function(self, t)

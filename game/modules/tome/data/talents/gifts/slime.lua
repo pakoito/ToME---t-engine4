@@ -43,7 +43,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Releases poisonous spores at the target doing %d%% weapon damage.]]):format(100 * (1.5 + self:getTalentLevel(t) / 4))
+		return ([[Releases poisonous spores at the target bypasing his armor and doing %d%% weapon damage.]]):format(damDesc(self, DamageType.POISON, 100 * (1.5 + self:getTalentLevel(t) / 4)))
 	end,
 }
 
@@ -72,7 +72,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hit you for %d acid damage.]]):format(damDesc(self, DamageType.ACID, 10 + 5 * self:getTalentLevel(t)))
+		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, 10 + 5 * self:getTalentLevel(t)))
 	end,
 }
 
@@ -99,7 +99,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down for 3 turns.
+		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down by 30%% for 3 turns.
 		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3))
 	end,
 }
@@ -133,7 +133,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d.
-		The process is quite a strain on your body and you will be stunned for %d turns.]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.3, util.bound(5 - self:getTalentLevel(t) / 2, 2, 7))
+		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d with error margin of %d.
+		The process is quite a strain on your body and you will be stunned for %d turns.]]):format(20 + self:getTalentLevel(t),7 - self:getTalentLevel(t), util.bound(5 - self:getTalentLevel(t) / 2, 2, 7))
 	end,
 }

@@ -56,8 +56,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with two shield strikes, stunning it and doing %d%% shield damage.
-		The damage multiplier increases with your strength and the duration with talent level.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 2.1, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
+		return ([[Hits the target with two shield strikes doing %d%% and %d%% shield damage. If it hits second time it stuns target for %d turns
+		The damage multiplier increases with your Strength and second strike with Shield Expertise talent level.]])
+		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.7),
+		100 * self:combatTalentWeaponDamage(t, 1.2, 2.1, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
+		2 + self:getTalentLevel(t) / 2)
 	end,
 }
 
@@ -112,8 +115,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon and two shield strikes doing %d%% damage, trying to overpower your target.
-		If the last attack hits, the target is knocked back. The chance for knock back increases with talent level.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
+		return ([[Hits the target with your weapon doing %d%% and two shield strikes doing %d%% damage, trying to overpower your target.
+		If the last attack hits, the target is knocked back. The chance for knock back increases with talent level.]])
+		:format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3), 100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 	end,
 }
 
@@ -236,7 +240,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage. The defense and armor increase is based on dexterity.
 		At level 5 it also makes you immune to stunning and knockback.]]):format(
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
 		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
 		)
 	end,
@@ -289,7 +293,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move. The increase in defense and life is based on dexterity.]]):
-		format(5 + self:getDex(4) * self:getTalentLevel(t), 10 * self:getTalentLevel(t))
+		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move. 
+		The increase in defense is based on Dexterity and life on Constitution.]]):
+		format(5 + self:getDex(4) * self:getTalentLevel(t), 
+		(10 + self:getCon() * 0.25) * self:getTalentLevel(t))
 	end,
 }
