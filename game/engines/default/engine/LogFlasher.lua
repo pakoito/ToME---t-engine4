@@ -78,9 +78,11 @@ function _M:getNext(remove)
 	local line = self.log[1]
 
 	self.surface:erase(0,0,0,0)
+	local old_style = self.font:getStyle()
 	if line then
 		self.surface:drawColorStringBlended(self.font, line, 0, 0, self.color[1], self.color[2], self.color[3], true)
 	end
+	self.font:setStyle(old_style)
 	self.surface:updateTexture(self.texture)
 	self.changed = true
 end

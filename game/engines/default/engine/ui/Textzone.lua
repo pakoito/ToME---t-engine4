@@ -64,6 +64,7 @@ function _M:generate()
 	end
 
 	-- Draw the list items
+	local old_style = self.font:getStyle()
 	self.list = {}
 	local r, g, b = 255, 255, 255
 	local s = core.display.newSurface(fw, fh)
@@ -89,6 +90,8 @@ function _M:generate()
 		for i = 0, self.h - fh do s:merge(sb, 0, i) end
 		self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h - fh, s:glTexture()
 	end
+
+	self.font:setStyle(old_style)
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)

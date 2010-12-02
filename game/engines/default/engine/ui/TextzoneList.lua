@@ -73,6 +73,8 @@ function _M:generate()
 end
 
 function _M:createItem(item, text)
+	local old_style = self.font:getStyle()
+
 	-- Handle normal text
 	if type(text) == "string" then
 		local list = text:splitLines(self.w, self.font)
@@ -116,6 +118,7 @@ function _M:createItem(item, text)
 			max_display = max_display,
 		}
 	end
+	self.font:setStyle(old_style)
 end
 
 function _M:switchItem(item, create_if_needed)

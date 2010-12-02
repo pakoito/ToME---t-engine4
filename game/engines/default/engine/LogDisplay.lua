@@ -115,6 +115,7 @@ function _M:display()
 	-- Erase and the display
 	self.dlist = {}
 	local h = 0
+	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #self.log do
 		local stop = false
 		local tstr = self.log[z]
@@ -126,6 +127,7 @@ function _M:display()
 		end
 		if stop then break end
 	end
+	self.font:setStyle(old_style)
 	return
 end
 
