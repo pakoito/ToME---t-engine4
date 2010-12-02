@@ -32,6 +32,7 @@ local entities_load_functions = {}
 _M.__mo_repo = {}
 _M.__mo_final_repo = {}
 _M._no_save_fields = {}
+_M.__position_aware = false -- Subclasses can change it to know where they are on the map
 
 -- Setup the uids & MO repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
 setmetatable(__uids, {__mode="v"})
