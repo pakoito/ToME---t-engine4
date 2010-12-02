@@ -39,6 +39,7 @@ function _M:init(savefile, coroutine)
 	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
 	self.save_dir = "/save/"..self.short_name.."/"
 	self.quickbirth_file = "/save/"..self.short_name..".quickbirth"
+	self.hotkeys_file = "/save/"..self.short_name..".hotkeys"
 	self.load_dir = "/tmp/loadsave/"
 
 	self.coroutine = coroutine
@@ -169,6 +170,20 @@ function _M:loadQuickBirth()
 	return nil
 end
 
+function _M:loadQuickHotkeys()
+	local f = loadfile(self.hotkeys_file)
+	print("[HOTKEYS]", f)
+	if f then
+		--Call the file body inside its own private environment
+		local def = {}
+		setfenv(f, def)
+		if pcall(f) then
+			return def
+		end
+	end
+	return nil
+end
+
 --- Get a savename for a game
 function _M:nameSaveGame(game)
 	return "game.teag"
@@ -207,6 +222,18 @@ function _M:saveGame(game, no_dialog)
 	f:close()
 
 	if not no_dialog then game:unregisterDialog(popup) end
+
+	-- A buit hacky, save hotkeys, this will do untilI can make it better for multiplayer stuff
+	local f = fs.open(self.hotkeys_file, "w")
+	if game:getPlayer().hotkey then
+		f:write("quickhotkeys = {}\n")
+		for i, known_t_id in pairs(game:getPlayer().hotkey) do
+			if known_t_id[1] == "talent" then
+				f:write(("quickhotkeys[%q] = %i\n"):format(tostring(known_t_id[2]) , i))
+			end
+		end
+	end
+	f:close()
 end
 
 --- Get a savename for a zone

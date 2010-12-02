@@ -36,16 +36,16 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		if self:reactionToward(target) >= 0 then
-			logPlayer(self, "You can only gain sustenance from your foes!");
+			game.logPlayer(self, "You can only gain sustenance from your foes!");
 		end
-		
+
 		-- remove old effect
 		if self:hasEffect(self.EFF_FEED_HATE) then
 			self:removeEffect(self.EFF_FEED_HATE)
 		end
-		
+
 		local hateGain = t.getHateGain(self, t)
 		local extension = t.getExtension(self, t)
 		self:setEffect(self.EFF_FEED_HATE, 99999, { target=target, hateGain=hateGain, extension=extension })
@@ -95,16 +95,16 @@ newTalent{
 		local tg = { type="hit", range=self:getTalentRange(t) }
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		if self:reactionToward(target) >= 0 then
-			logPlayer(self, "You can only gain sustenance from your foes!");
+			game.logPlayer(self, "You can only gain sustenance from your foes!");
 		end
-		
+
 		-- remove old effect
 		if self:hasEffect(self.EFF_FEED_HEALTH) then
 			self:removeEffect(self.EFF_FEED_HEALTH)
 		end
-		
+
 		local constitutionGain = t.getConstitutionGain(self, t, target)
 		local lifeRegenGain = t.getLifeRegenGain(self, t)
 		local extension = t.getExtension(self, t)
@@ -145,16 +145,16 @@ newTalent{
 		local tg = { type="hit", range=self:getTalentRange(t) }
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		if self:reactionToward(target) >= 0 then
-			logPlayer(self, "You can only gain sustenance from your foes!");
+			game.logPlayer(self, "You can only gain sustenance from your foes!");
 		end
-		
+
 		-- remove old effect
 		if self:hasEffect(self.EFF_FEED_POWER) then
 			self:removeEffect(self.EFF_FEED_POWER)
 		end
-		
+
 		local damageGain = t.getDamageGain(self, t)
 		local extension = t.getExtension(self, t)
 		self:setEffect(self.EFF_FEED_POWER, 99999, { target=target, damageGain=damageGain, extension=extension })
@@ -193,16 +193,16 @@ newTalent{
 		local tg = { type="hit", range=self:getTalentRange(t) }
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		if self:reactionToward(target) >= 0 then
-			logPlayer(self, "You can only gain sustenance from your foes!");
+			game.logPlayer(self, "You can only gain sustenance from your foes!");
 		end
-		
+
 		-- remove old effect
 		if self:hasEffect(self.EFF_FEED_STRENGTHS) then
 			self:removeEffect(self.EFF_FEED_STRENGTHS)
 		end
-		
+
 		local resistGain = t.getResistGain(self, t)
 		local extension = t.getExtension(self, t)
 		self:setEffect(self.EFF_FEED_STRENGTHS, 99999, { target=target, resistGain=resistGain, extension=extension })

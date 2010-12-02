@@ -211,6 +211,25 @@ function _M:numberKnownTalent(type, exlude_id)
 	return nb
 end
 
+function _M:sortHotkeys()
+	print("[SORTING HOTKEYS]")
+	if self.hotkey then
+		for i = 1, 36 do
+			if self.hotkey[i] then
+				self.hotkey[i] = nil
+			end
+		end
+		if self.quickhotkeys then
+			for known_t_id, i in pairs(self.quickhotkeys) do
+				if self.talents[known_t_id] then
+					print("[SORTING HOTKEYS] pairing",known_t_id,i)
+					self.hotkey[i] = {"talent", known_t_id}
+				end
+			end
+		end
+	end
+end
+
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
@@ -222,13 +241,25 @@ function _M:learnTalent(t_id, force, nb)
 		if not ok and err then return nil, err end
 	end
 
+	local found = false
 	if not self.talents[t_id] then
 		-- Auto assign to hotkey
 		if t.mode ~= "passive" and self.hotkey then
-			for i = 1, 36 do
-				if not self.hotkey[i] then
-					self.hotkey[i] = {"talent", t_id}
-					break
+			if self.quickhotkeys then
+				hk = self.quickhotkeys[t_id]
+				print("[quickhotkeys] are",hk)
+				if self.quickhotkeys[t_id] then
+					print("[quickhotkeys] found")
+					self.hotkey[hk] = {"talent", t_id}
+					found = true
+				end
+			end
+			if not found then
+				for i = 1, 36 do
+					if not self.hotkey[i] then
+						self.hotkey[i] = {"talent", t_id}
+						break
+					end
 				end
 			end
 		end

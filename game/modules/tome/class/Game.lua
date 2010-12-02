@@ -140,9 +140,10 @@ function _M:newGame()
 
 	-- Load for quick birth
 	local save = Savefile.new(self.save_name)
-	local quickbirth = save:loadQuickBirth()
+	local quickbirth = save:loadQuickBirth()	
+	local quickhotkeys = save:loadQuickHotkeys()
 	save:close()
-
+	
 	self.always_target = true
 
 	self.creating_player = true
@@ -183,6 +184,8 @@ function _M:newGame()
 		if self.player.no_birth_levelup then birthend()
 		else self.player:playerLevelup(birthend) end
 	end, quickbirth, 720, 500)
+	
+	
 
 	-- Load a full player instead of a simpler quickbirthing, if possible
 	birth.quickBirth = function(b)
@@ -214,12 +217,13 @@ function _M:newGame()
 
 			birth_done()
 			self.player:check("on_birth_done")
+			self.player.quickhotkeys=quickhotkeys.quickhotkeys
+			self.player:sortHotkeys()
 		else
 			-- Continue as normal
 			return Birther.quickBirth(b)
 		end
 	end
-
 	self:registerDialog(birth)
 end
 
