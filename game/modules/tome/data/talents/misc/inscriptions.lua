@@ -37,6 +37,15 @@ local newInscription = function(t)
 			local data = self:getInscriptionData(t.short_name)
 			return data.cooldown
 		end
+		tt.old_info = tt.info
+		tt.info = function(self, t)
+			local ret = t.old_info(self, t)
+			local data = self:getInscriptionData(t.short_name)
+			if data.use_stat and data.use_stat_mod then
+				ret = ret..("\nIts effects scale with your %s stat."):format(self.stats_def[data.use_stat].name)
+			end
+			return ret
+		end
 		newTalent(tt)
 	end
 end

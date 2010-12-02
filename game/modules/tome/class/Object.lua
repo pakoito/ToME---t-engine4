@@ -461,9 +461,6 @@ function _M:getTextualDesc()
 		game.player.__inscription_data_fake = nil
 		desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
 		desc:merge(tdesc)
-		if self.inscription_data.use_stat and self.inscription_data.use_stat_mod then
-			desc:add(("Its effects scale with your %s stat."):format(Stats.stats_def[self.inscription_data.use_stat].name), true)
-		end
 		desc:add(true)
 	end
 
