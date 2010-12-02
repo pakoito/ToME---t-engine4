@@ -246,9 +246,9 @@ function _M:learnTalent(t_id, force, nb)
 		-- Auto assign to hotkey
 		if t.mode ~= "passive" and self.hotkey then
 			if self.quickhotkeys then
-				hk = self.quickhotkeys[t_id]
+				local hk = self.quickhotkeys[t_id]
 				print("[quickhotkeys] are",hk)
-				if self.quickhotkeys[t_id] then
+				if self.quickhotkeys[t_id] and not self.hotkey[hk] then
 					print("[quickhotkeys] found")
 					self.hotkey[hk] = {"talent", t_id}
 					found = true
