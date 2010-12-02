@@ -340,11 +340,13 @@ newBirthDescriptor{
 		-- All mages are of angolwen faction
 		faction = "angolwen",
 		max_life = 90,
-		life_rating = -4,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
+	},
+	copy_add = {
+		life_rating = -4,
 	},
 }
 
