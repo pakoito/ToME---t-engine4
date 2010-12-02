@@ -111,4 +111,4 @@ load("/data/talents/cursed/punishments.lua")
 
 load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/dark-figure.lua")
-load("/data/talents/cursed/traveler.lua")
+--load("/data/talents/cursed/traveler.lua")
