@@ -73,8 +73,8 @@ newTalent{
 			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
 			if d == 0 then return end
 
-			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			local target = game.level.map(tx, ty, Map.ACTOR)
+			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			if ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end
@@ -211,8 +211,8 @@ newTalent{
 			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
 			if d == 0 then return end
 
-			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			local target = game.level.map(tx, ty, Map.ACTOR)
+			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
 			if ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end
