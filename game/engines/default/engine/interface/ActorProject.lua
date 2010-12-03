@@ -140,18 +140,29 @@ function _M:canProject(t, x, y)
 
 	-- Stop at range or on block
 	local lx, ly = x, y
+	local stop_radius_x, stop_radius_y = self.x, self.y
 	local l = line.new(self.x, self.y, x, y)
 	lx, ly = l()
 	while lx and ly do
 		if typ.block_path and typ:block_path(lx, ly) then break end
+		stop_radius_x, stop_radius_y = lx, ly
 
 		lx, ly = l()
 	end
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly then lx, ly = x, y end
 
+	-- Correct the explosion source position if we exploded on terrain
+	local radius_x, radius_y
+	if typ.block_path then
+		_, radius_x, radius_y = typ:block_path(lx, ly)
+	end
+	if not radius_x then
+		radius_x, radius_y = stop_radius_x, stop_radius_y
+	end
+
 	if lx == x and ly == y then return true, lx, ly end
-	return false, lx, ly
+	return false, lx, ly, radius_x, radius_y
 end
 
 _M.projectile_class = "engine.Projectile"
