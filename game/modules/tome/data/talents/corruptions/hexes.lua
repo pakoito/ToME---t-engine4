@@ -125,14 +125,15 @@ newTalent{
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 25) then
-				target:setEffect(target.EFF_DOMINATION_HEX, 2 + self:getTalentLevel(t), {faction=self.faction})
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 25) and target:canBe("instakill") then
+				target:setEffect(target.EFF_DOMINATION_HEX, 2 + self:getTalentLevel(t), {src=self})
 			end
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target, forcing it to be your thrall for %d turns.]]):format(2 + self:getTalentLevel(t))
+		return ([[Hexes your target, forcing it to be your thrall for %d turns.
+		If you damage the target it will be free from the hex.]]):format(2 + self:getTalentLevel(t))
 	end,
 }

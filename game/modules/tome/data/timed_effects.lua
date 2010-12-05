@@ -1496,7 +1496,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the hex.", "-Domination hex" end,
 	activate = function(self, eff)
 		eff.olf_faction = self.faction
-		self.faction = eff.faction
+		self.faction = eff.src.faction
 	end,
 	deactivate = function(self, eff)
 		self.faction = eff.olf_faction
@@ -2659,7 +2659,7 @@ newEffect{
 		if eff.particle then self:removeParticles(eff.particle) end
 	end,
 	on_timeout = function(self, eff)
-		
+
 		local power = 1 - (math.min(eff.range, core.fov.distance(eff.source.x, eff.source.y, self.x, self.y)) / eff.range)
 		if power > 0 then
 			if self:checkHit(eff.mindpower, self:combatMentalResist(), 0, 95, 5) then
@@ -2671,12 +2671,12 @@ newEffect{
 				return true
 			end
 		end
-		
+
 		if self.dead then
 			if eff.particle then self:removeParticles(eff.particle) end
 			return
 		end
-		
+
 		if math.floor(power * 10) + 1 ~= eff.power then
 			eff.power = math.floor(power * 10) + 1
 			if eff.particle then self:removeParticles(eff.particle) end

@@ -126,6 +126,10 @@ newTalent{
 			game.logPlayer(self, "This spell can not be used from within the demon place.")
 			return
 		end
+		if not self:canBe("worldport") then
+			game.logPlayer(self, "The spell fizzles...")
+			return
+		end
 
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)

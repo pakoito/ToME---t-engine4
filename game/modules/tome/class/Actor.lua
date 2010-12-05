@@ -207,7 +207,7 @@ function _M:act()
 		local hateChange = -math.max(0.02, 0.07 * math.pow(self.hate / 10, 2))
 		self:incHate(hateChange)
 	end
-	
+
 	-- Compute timed effects
 	self:timedEffects()
 
@@ -618,6 +618,11 @@ function _M:onTakeHit(value, src)
 	if self.stalker and src and self.stalker == src then
 		self.stalker:removeEffect(self.EFF_STALKER)
 		self:removeEffect(self.EFF_STALKED)
+	end
+
+	-- Remove domination hex
+	if self:hasEffect(self.EFF_DOMINATION_HEX) and src and src == self:hasEffect(self.EFF_DOMINATION_HEX).src then
+		self:removeEffect(self.EFF_DOMINATION_HEX)
 	end
 
 	if self:attr("invulnerable") then
@@ -1640,7 +1645,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF}, t.info(self, t), true)
 
 	self.talents[t.id] = old
-	
+
 	return d
 end
 
