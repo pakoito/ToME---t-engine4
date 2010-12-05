@@ -19,12 +19,12 @@
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a member of the proud, but secretive, race of the Dwarves.
-Hailing from the dwarven strongholds of the Iron Throne you have decided to take to the road and start a new life of adventuring.
+Hailing from the Dwarven strongholds of the Iron Throne, you have decided to take to the road and start a new life of adventuring.
 
 You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
-To the east lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below were infested by vermin and undead.
+You have come to a land called the derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
+To the west lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below it were infested by vermin and undead.
 
-After days of travel, you have found the forest and entered it, what will you find there?...
+After days of travel, you have found the forest and entered it. What will you find there...?
 ]]

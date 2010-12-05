@@ -22,6 +22,7 @@ local http = require "socket.http"
 local url = require "socket.url"
 local ltn12 = require "ltn12"
 local lanes = require "lanes"
+local Dialog = require "engine.ui.Dialog"
 require "Json2"
 
 ------------------------------------------------------------
@@ -333,4 +334,23 @@ function _M:checkFirstRun()
 		self:saveGenericProfile("firstrun", firstrun, false)
 	end
 	return result
+end
+
+function _M:registerNewCharacter(module)
+	if not self.auth then return end
+	local dialog = Dialog:simplePopup("Registering character", "Character is being registered on http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
+	local data = self:rpc{action="RegisterNewCharacter", login=self.login, hash=self.auth.hash, module=module}
+	game:unregisterDialog(dialog)
+	if not data then return end
+	print("[ONLINE PROFILE] new character UUID ", data.uuid)
+	return data.uuid
+end
+
+function _M:registerSaveChardump(module, uuid, title, data)
+	if not self.auth then return end
+	local dialog = Dialog:simplePopup("Uploading character data", "Character sheet is being uploaded to http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
+	local data = self:rpc{action="SaveChardump", login=self.login, hash=self.auth.hash, module=module, uuid=uuid, title=title, data=data}
+	game:unregisterDialog(dialog)
+	if not data or not data.ok then return end
+	print("[ONLINE PROFILE] saved character ", uuid)
 end

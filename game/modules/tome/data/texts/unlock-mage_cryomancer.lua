@@ -21,16 +21,16 @@ return "New Class: #LIGHT_GREEN#Cryomancer",
 [[
 Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a save heaven for the few remaining mages of all races.
+During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
 This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
 
 You have uncovered the secrets of the ice magic and can now create new characters with the #LIGHT_GREEN#Cryomancer class#WHITE#.
 
-Cryomancers are specialized archmages, attuned to the magical properties of ice.
+Cryomancers are specialized archmagi, attuned to the magical properties of ice.
 Class features:#YELLOW#
 - Cast potent ice spells to freeze your foes.
 - Freeze your foes and make them shatter into pieces.
-- Learn to master the Uttercold, a cold so cold it can pierce even those resistant to normal cold.
+- Learn to master the Uttercold, a cold so deep it can pierce even those resistant to normal cold.
 - Manipulate the forces of magic themselves#WHITE#
 
 All mages use mana to cast their spells.

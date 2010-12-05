@@ -26,6 +26,7 @@ require "engine.interface.PlayerSlide"
 require "engine.interface.PlayerMouse"
 require "mod.class.interface.PlayerStats"
 require "mod.class.interface.PlayerLore"
+require "mod.class.interface.PlayerDumpJSON"
 local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -44,7 +45,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerMouse,
 	engine.interface.PlayerSlide,
 	mod.class.interface.PlayerStats,
-	mod.class.interface.PlayerLore
+	mod.class.interface.PlayerLore,
+	mod.class.interface.PlayerDumpJSON
 ))
 
 function _M:init(t, no_default)

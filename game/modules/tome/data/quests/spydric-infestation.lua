@@ -33,7 +33,7 @@ on_grant = function(self, who)
 	-- Reveal entrance
 	local g = mod.class.Grid.new{
 		show_tooltip=true, always_remember = true,
-		name="A way into the carvers of Ardhungol",
+		name="A way into the caverns of Ardhungol",
 		display='>', color=colors.GREEN,
 		notice = true,
 		change_level=1, change_zone="ardhungol"

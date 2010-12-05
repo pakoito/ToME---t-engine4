@@ -18,14 +18,14 @@
 -- darkgod@te4.org
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
-You are a Shaloren elf, the elven race with the closest ties to magic, and you are despised.
+You are of the Shaloren, the Elven race with the closest ties to magic, and you are despised.
 While your people are at peace with the other kingdoms, many have not forgotten it was your race that created the terrible Spellblaze, thousands of years ago.
 Magic is frowed upon, even in your own country.
 
 You have decided to venture into the old and wild places looking for ancient treasures and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
-To the east lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below were infested by vermin and undead.
+You have come to a land called the derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
+To the west lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below it were infested by vermin and undead.
 
-After days of travel, you have found the forest and entered it, what will you find there?...
+After days of travel, you have found the forest and entered it. What will you find there...?
 ]]

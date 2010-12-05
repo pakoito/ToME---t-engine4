@@ -64,7 +64,7 @@ newBirthDescriptor{
 		"The people of Maj'Eyal: Humans, Halflings, Elves and Dwarves.",
 		"The known world has been at relative peace for over one hundred years, and people are prospering again.",
 		"You are an adventurer, setting out to find lost treasure and glory.",
-		"But what lurks in the shadow of the world?",
+		"But what lurks in the shadows of the world?",
 	},
 	descriptor_choices =
 	{
@@ -105,7 +105,7 @@ newBirthDescriptor{
 	desc =
 	{
 		"Play as your favorite race and class and venture into the infinite dungeon.",
-		"The only limit of how far you can go is your own skill!",
+		"The only limit to how far you can go is your own skill!",
 	},
 	descriptor_choices =
 	{
@@ -177,7 +177,7 @@ newBirthDescriptor{
 	display_name = "Spydrë: Legacy of Ungoliant",
 	desc =
 	{
-		"Spydrë is home to the essence of spiders. The mighty Ungoliant of Arda actually originating from this world.",
+		"Spydrë is home to the essence of spiders. The mighty Ungoliant of Arda actually originated from this world.",
 		"It is home to uncounted numbers of spider races, all fighting for supremacy of all the lands.",
 		"Some humanoids also live there, but they are usually the prey, not the hunter.",
 	},

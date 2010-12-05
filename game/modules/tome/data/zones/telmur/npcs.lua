@@ -31,7 +31,7 @@ newEntity{ define_as = "SHADE_OF_TELOS",
 	type = "undead", subtype = "ghost", unique = true,
 	name = "The Shade of Telos",
 	display = "G", color=colors.VIOLET,
-	desc = [[Everybody though Telos dead and his spirit destroyed, but it seems he still lingers in his old place of power.]],
+	desc = [[Everybody thought Telos dead and his spirit destroyed, but it seems he still lingers in his old place of power.]],
 	level_range = {38, nil}, exp_worth = 3,
 	max_life = 250, life_rating = 22, fixed_rating = true,
 	rank = 4,
@@ -81,6 +81,6 @@ newEntity{ define_as = "SHADE_OF_TELOS",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 
 	on_die = function(self, who)
-		require("engine.ui.Dialog"):simpleLongPopup("Back and there again", 'As the shade dissipates you see no sign of the text entitled "Inverted and Reverted Probabilistic Fields". You should go back to Tannen.', 400)
+		require("engine.ui.Dialog"):simpleLongPopup("Back and there again", 'As the shade dissipates, you see no sign of the text entitled "Inverted and Reverted Probabilistic Fields". You should go back to Tannen.', 400)
 	end,
 }

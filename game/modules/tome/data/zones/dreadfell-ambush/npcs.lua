@@ -57,7 +57,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		world:gainAchievement("KILLED_UKRUK", game.player)
+		world:gainAchievement("KILL_UKRUK", game.player)
 		game.player:resolveSource():hasQuest("staff-absorption"):killed_ukruk(game.player:resolveSource())
 	end,
 }

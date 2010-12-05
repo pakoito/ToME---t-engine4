@@ -131,10 +131,7 @@ function _M:drawDialog(s)
 	-- All wpeaons in off hands
 	-- Offhand atatcks are with a damage penality, taht can be reduced by talents
 	if player:getInven(player.INVEN_OFFHAND) then
-		local offmult = (mult or 1) / 2
-		if player:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
-			offmult = (mult or 1) / (2 - (player:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
-		end
+		local offmult = player:getOffHandMult()
 		for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
 			if o.combat then
 				self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Attack (Off Hand): #00ff00#%3d"):format(player:combatAttack(o.combat)), w, h, 255, 255, 255)) h = h + self.font_h
@@ -314,10 +311,7 @@ function _M:dump()
 	-- All wpeaons in off hands
 	-- Offhand atatcks are with a damage penality, taht can be reduced by talents
 	if player:getInven(player.INVEN_OFFHAND) then
-		local offmult = (mult or 1) / 2
-		if player:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
-			offmult = (mult or 1) / (2 - (player:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
-		end
+		local offmult = player:getOffHandMult()
 		for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
 			if o.combat then
 				nl()

@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
-You are a Higher, the most powerful and respected lineage of men. Many of your kind serve as high counsellors in various Allied Kingdoms cities.
-Not you. You want more, you need to prove your worth and make own place in the world. You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
+You are one of the Higher, the most powerful and respected lineage of men. Many of your kind serve as high counsellors in various Allied Kingdoms cities.
+Not you. You want more; you need to prove your worth and make own place in the world. You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
-To the east lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below were infested by vermin and undead.
+You have come to a land called the derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
+To the west lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below it were infested by vermin and undead.
 
 ]]

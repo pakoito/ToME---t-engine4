@@ -89,7 +89,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 			a.on_die = function(self)
 				world:gainAchievement("SHADOW_CLONE", game.player)
 				game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
-				game.logSeen(who, "As your shade dies the magical veil protecting the stairs out vanishes.")
+				game.logSeen(who, "As your shade dies, the magical veil protecting the stairs out vanishes.")
 			end
 
 			-- Remove some talents
@@ -107,7 +107,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 			if x and y then
 				game.zone:addEntity(game.level, a, "actor", x, y)
 
-				game.logPlayer(game.player, "#GREY#The cultist looks deep in your eyes, you feel torn apart!")
+				game.logPlayer(game.player, "#GREY#The cultist looks deep in your eyes. You feel torn apart!")
 				self:doEmote("Ra'kk kor merk ZUR!!!", 120)
 				self.copied_player = true
 			end

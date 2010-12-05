@@ -21,7 +21,7 @@ return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a member of the feared race of the Orcs.
 BLAH BLAH BLAH
 
-You have been sent to a remote island on the south-west coast of the Far East to crush an outpost of the Sun Wall, the last remaining bastion of men, elves and dwarves on this continent.
+You have been sent to a remote island on the southwest coast of the Far East to crush an outpost of the Sunwall, the last remaining bastion of men, elves and dwarves on this continent.
 
 A little to the south lies the outpost. Your task: destroy it and bathe in the blood of its people!
 ]]

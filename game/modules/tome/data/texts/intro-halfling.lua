@@ -18,14 +18,14 @@
 -- darkgod@te4.org
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
-You are a halfling of Derth. Most people take halflings for paeceful gardeners that never leave the borders of their crops.
-Yet history has taught them that halflings are a force to be reckonned with, they still maintain a powerful army.
-You have choosen a rare path for yourself, the path of adventuring, whose loneliness does not usualy fit your people.
+You are a Halfling of Derth. Most people take Halflings for peaceful crop-growers that never leave the borders of their gardens.
+Yet history has taught that Halflings are a force to be reckoned with. They still maintain a powerful army.
+You have choosen a rare path for yourself: the path of adventuring, whose loneliness does not usually fit your people.
 
-Inspired by the stories of dragons, gold, and the treasures to be found in ancient ruins. You have decided to venture into the old and wild places of the world, looking for fame and glory.
+Inspired by the stories of dragons, gold, and the treasures to be found in ancient ruins, you have decided to venture into the old and wild places of the world, looking for fame and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloran forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
-To the east lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below were infested by vermin and undead.
+You have come to a land called the derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
+To the west lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below it were infested by vermin and undead.
 
-After days of travel, you have found the forest and entered it, what will you find there?...
+After days of travel, you have found the forest and entered it. What will you find there...?
 ]]

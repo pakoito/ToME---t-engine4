@@ -21,12 +21,12 @@ return "New Class: #LIGHT_GREEN#Archmage",
 [[
 Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a save heaven for the few remaining mages of all races.
+During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
 This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
 
 You have been told this story and can now create new characters with the #LIGHT_GREEN#Archmage class#WHITE#.
 
-Archmages are the pinacle of spellcasters, attuned to the magical properties of the world.
+Archmagi are the pinnacle of spellcasters, attuned to the magical properties of the world.
 Class features:#YELLOW#
 - Cast elemental spells to burn your foes to death or freeze them
 - Summon the powers of Space and Time to protect and cripple

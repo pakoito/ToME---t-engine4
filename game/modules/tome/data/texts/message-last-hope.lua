@@ -22,12 +22,12 @@ local delivered_staff = game.player:resolveSource():isQuestStatus("staff-absorpt
 if delivered_staff then
 return [[@playername@, this message is of utmost importance.
 
-The staff you left at Last Hope is gone, a raid of orcs ambushed the guards that were transporting it to a secret vault.
-Our troups managed to capture one of the orcs and made him talk.
-He did not knew much, but he did speak about "masters" in the far east.
-He spoke about Golbug, this seems to be a warmaster in Reknor, leading the raid to send the "package" through a portal.
+The staff you left at Last Hope is gone. A raid of orcs ambushed the guards that were transporting it to a secret vault.
+Our troops managed to capture one of the orcs and made him talk.
+He did not know much, but he did speak about "masters" in the Far East.
+He spoke about Golbug -- this seems to be a warmaster in Reknor -- leading a raid to send a "package" through a portal.
 
-This calls for urgency; should you find this Golbug or the portal please investigate.
+This calls for urgency; should you find this Golbug or the portal, please investigate.
 
                #GOLD#-- Tolak, King of the Allied Kingdoms]]
 
@@ -35,14 +35,14 @@ else
 
 return [[@playername@, this message is of utmost importance.
 
-Our elders searched the old texts looking for clues about the staff you talked about.
+Our elders searched the old texts looking for clues about the staff of which you spoke.
 It turns out to be a powerful object indeed, able to absorb the power of places, and beings.
-This must not fall in the wrong hands, which certainly include orc hands.
-While you were gone one of our patrols met a group of orcs led by Ukruk, we could not stop them but we managed to capture one of them.
-He did not knew much, but he did speak about "masters" in the far east.
-He spoke about meeting with Golbug, this seems to be a warmaster in Reknor, to send the "package" through a portal.
+This must not fall in the wrong hands, which certainly include orcish hands.
+While you were gone, one of our patrols met a group of orcs led by Ukruk. We could not stop them, but we managed to capture one of them.
+He did not know much, but he did speak about "masters" in the Far East.
+He spoke about meeting with Golbug -- this seems to be a warmaster in Reknor -- to send a "package" through a portal.
 
-This calls for urgency; should you find this Golbug or the portal please investigate.
+This calls for urgency; should you find this Golbug or the portal, please investigate.
 
                #GOLD#-- Tolak, King of the Allied Kingdoms]]
 end

@@ -21,12 +21,12 @@ return "New Class: #LIGHT_GREEN#Pyromancer",
 [[
 Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a save heaven for the few remaining mages of all races.
+During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
 This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
 
 You have uncovered the secrets of the fire magic and can now create new characters with the #LIGHT_GREEN#Pyromancer class#WHITE#.
 
-Pyromancers are specialized archmages, attuned to the magical properties of fire.
+Pyromancers are specialized archmagi, attuned to the magical properties of fire.
 Class features:#YELLOW#
 - Cast potent fire spells to burn your foes to ashes.
 - Set all your foes ablaze and make the fire consume them.

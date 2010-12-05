@@ -21,16 +21,16 @@ return "New Class: #LIGHT_GREEN#Geomancer",
 [[
 Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a save heaven for the few remaining mages of all races.
+During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
 This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
 
 You have uncovered the secrets of the stone magic by killing the earth elemental Harkor'Zun and can now create new characters with the #LIGHT_GREEN#Geomancer class#WHITE#.
 
-Geomancers are specialized archmages, attuned to the magical properties of stone.
+Geomancers are specialized archmagi, attuned to the magical properties of stone.
 Class features:#YELLOW#
 - Turn your body into stone, making you immovable but providing many benefits.
 - Unleash earthquakes on your foes.
-- Learn to master the Crystaline Focus, making your physical attacks so powerful they can damage even those resistant to normal physical damage.
+- Learn to master the Crystalline Focus, making your physical attacks so powerful they can damage even those resistant to normal physical damage.
 - Manipulate the forces of magic themselves#WHITE#
 
 All mages use mana to cast their spells.

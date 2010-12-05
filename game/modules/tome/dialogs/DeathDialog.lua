@@ -31,6 +31,8 @@ function _M:init(actor)
 	self.actor = actor
 	Dialog.init(self, "Death!", 500, 300)
 
+	actor:saveUUID()
+
 	self:generateList()
 
 	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=[[You have #LIGHT_RED#died#LAST#!

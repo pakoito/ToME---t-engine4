@@ -18,20 +18,20 @@
 -- darkgod@te4.org
 
 return "New Class: #LIGHT_GREEN#Cursed (Afflicted)",
-[[Through ignorance, greed or folly the cursed served some dark design and are now doomed to pay for their sins.
+[[Through ignorance, greed or folly, the Cursed served some dark design and are now doomed to pay for their sins.
 Their only master now is the hatred they carry for every living thing.
-Drawing strength from the death of all they encounter, the cursed become terrifying combatants.
-Worse, any who approach the cursed can be driven mad by their terrible aura.
-Some of them however strive to redeem their faults by using their cursed powers to battle evil.
+Drawing strength from the death of all they encounter, the Cursed become terrifying combatants.
+Worse, any who approach the Cursed can be driven mad by their terrible aura.
+Some of them, however, strive to redeem their faults by using their Cursed powers to battle evil.
 
 You have "lifted" the curse of Ben Cruthdar. You can now create new characters with the #LIGHT_GREEN#Cursed class#WHITE#.
 
-Cursed are heavy melee warriors, fighting with a two handed battle-axe and focusing all their hatred in their blows.
+Cursed are heavy melee warriors, fighting with a battle-axe and focusing all their hatred into their blows.
 Class features:#YELLOW#
 - Engulf your foes in your Gloom, weakening, confusing, stunning and damaging them
-- Hunt your prey, tracking them and marking their death
-- Powerful two-handed melee combatant#WHITE#
+- Hunt your prey, tracking them and marking them for death
+- Powerful melee combatant#WHITE#
 
-Cursed uses hate, a resource that grows as you kill your foes and decreases while standing idle.
+The Cursed use hate, a resource that grows as they kill their foes and decreases while standing idle.
 Most of their talents are more effective with high hate.
 ]]

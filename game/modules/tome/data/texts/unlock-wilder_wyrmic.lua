@@ -22,7 +22,7 @@ return "New Class: #LIGHT_GREEN#Wyrmic (Wilder)",
 Some people, either through training or magic, can take on the defining aspects of the dragon-kin themselves.
 You have consumed a magic that allows you to gain such a power. You can now also create new characters with the #LIGHT_GREEN#Wyrmic class#WHITE#.
 
-Wyrmics are Wilders, they are at home in the wilds and draw their power from their connection with the dragons.
+Wyrmics are Wilders, who are at home in the wilds and draw their power from their connection with the dragons.
 Class features:#YELLOW#
 - Take on the aspects of fire, cold, and sand-drakes
 - Breath weapons: fire, ice, and sand

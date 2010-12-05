@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 return "New Class: #LIGHT_GREEN#Corruptor (Corrupter)",
-[[Every power has a dark side, so does the arcane forces.
-Corruptors are mages that dwells in dark, blighted, demonic magic to attain their goals.
-Not all of them are evil though, some are simple selfish and concerned only with their own power.
+[[Every power has a dark side, including the arcane forces.
+Corruptors are mages that deal in dark, blighted, demonic magic to attain their goals.
+Not all of them are evil, though; some are simply selfish and concerned only with their own power.
 
-you have been taugh their ways by the Grand Corruptor and can now create new characters with the #LIGHT_GREEN#Corruptor class#WHITE#.
+You have been taught their ways by the Grand Corruptor and can now create new characters with the #LIGHT_GREEN#Corruptor class#WHITE#.
 
 Corruptors are spellcasters, ranged attackers using magic.
 Class features:#YELLOW#
@@ -31,6 +31,6 @@ Class features:#YELLOW#
 - Sap the life of your victims to heal yourself
 - Master demonic energies to burn and destroy. You can even summon a part of the demon plane.#WHITE#
 
-Corruptors use "vim" to use their special abilities.
-Vim is the life force of all being, it does not regenerate and can only be stolen from your foes.
+Corruptors use "vim" to power their special abilities.
+Vim is the life force of all beings. It does not regenerate, and can only be stolen from your foes.
 ]]

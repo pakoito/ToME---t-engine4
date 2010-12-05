@@ -26,7 +26,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	allow_infinite_dungeon = true,
 	name = "Ungolë", color=colors.VIOLET, unique = true,
-	desc = [[A huge spider, shed in darkness, with red glowing eyes darting at you. She looks hungry.]],
+	desc = [[A huge spider, shrouded in darkness, with red glowing eyes darting at you. She looks hungry.]],
 	level_range = {30, nil}, exp_worth = 2,
 	max_life = 450, life_rating = 15, fixed_rating = true,
 	stats = { str=25, dex=10, cun=47, mag=10, con=20 },

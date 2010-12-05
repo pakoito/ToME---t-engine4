@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 return "New Class: #LIGHT_GREEN#Reaver (Corrupter)",
-[[Under a veil of darkness and blight comes the Reavers.
-The foot soldiers of evil forces, reavers are found everywhere.
-Very rarely a reaver will realise the wrongness of her way and use her powers to atone for her crimes.
+[[Under a veil of darkness and blight come the Reavers.
+The foot soldiers of evil forces, Reavers are found everywhere.
+Very rarely a Reaver will realise the wrongness of her way and use her powers to atone for her crimes.
 
 You have slain numerous humanoids and can now create new characters with the #LIGHT_GREEN#Reaver class#WHITE#.
 
@@ -31,6 +31,6 @@ Class features:#YELLOW#
 - Accomplish deadly melee moves of utmost evil
 - Harness the power of bones to attack and protect#WHITE#
 
-Reavers use "vim" to use their special abilities.
-Vim is the life force of all being, it does not regenerate and can only be stolen from your foes.
+Reavers use "vim" to power their special abilities.
+Vim is the life force of all beings. It does not regenerate, and can only be stolen from your foes.
 ]]

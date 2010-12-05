@@ -21,12 +21,12 @@ return "New Class: #LIGHT_GREEN#Tempest",
 [[
 Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a save heaven for the few remaining mages of all races.
+During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
 This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
 
 You have uncovered the secrets of the storm magic and can now create new characters with the #LIGHT_GREEN#Tempest class#WHITE#.
 
-Tempests are specialized archmages, attuned to the magical properties of lightning.
+Tempests are specialized archmagi, attuned to the magical properties of lightning.
 Class features:#YELLOW#
 - Cast potent lightning spells to zap your foes to death.
 - Unleash hurricanes and novas on your foes, making them all explode.

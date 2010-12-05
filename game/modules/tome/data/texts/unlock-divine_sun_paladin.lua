@@ -19,10 +19,10 @@
 
 return "New Class: #LIGHT_GREEN#Sun Paladin (Divine)",
 [[
-In the uttermost east, on the continent known only as the Far East, dwells the last remnants of elves and humans, fighting the Orc Pride and the many perils of the Far East.
+In the uttermost east, on the continent known only as the Far East, dwell the last remnants of Elves and Humans, fighting the Orc Pride and the many perils of the Far East.
 
-Sun Paladins are humans warriors who are trained in special magic to manipulate the Sun powers.
-Paragons of all that is good they are nonetheless terrible in their battle against the Pride.
+Sun Paladins are warriors who are trained in special magic to focus the powers of the Sun.
+Paragons of all that is good, they are nonetheless terrible in their battle against the Pride.
 Their motto is: "We walk in the dark places no others will enter. We stand on the bridge, and no one may pass."
 
 You have discovered the Gates of Morning and can now create new characters with the #LIGHT_GREEN#Sun Paladin class#WHITE#.
@@ -34,6 +34,6 @@ Class features:#YELLOW#
 - Channel the power of the Sun through your weapon
 - Become a walking fortress, protected by your shield#WHITE#
 
-Sun Paladins use "positive energy" to use their special abilities.
+Sun Paladins use "positive energy" to power their special abilities.
 It is filled by some of their spells and depleted by others, making them alternate their talents.
 ]]

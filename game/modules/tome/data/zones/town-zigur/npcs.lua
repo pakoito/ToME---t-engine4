@@ -27,7 +27,7 @@ local Talents = require("engine.interface.ActorTalents")
 load("/data/general/npcs/elven-caster.lua", function(e) if e.rarity then e.rarity, e.corruptor_rarity = nil, e.rarity end end)
 newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	name = "Grand Corruptor", color=colors.VIOLET, unique = "Grand Corruptor Zigur",
-	desc = [[An elven corruptor, drawn to these blighted lands.]],
+	desc = [[An Elven corruptor, drawn to these blighted lands.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rank = 3.5,
 	vim_regen = 40,
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 load("/data/general/npcs/ziguranth.lua", function(e) if e.rarity then e.rarity, e.ziguranth_rarity = nil, e.rarity end end)
 newEntity{ base = "BASE_NPC_ZIGURANTH", define_as = "PROTECTOR_MYSSIL",
 	name = "Protector Myssil", color=colors.VIOLET, unique = true,
-	desc = [[An halfling ziguranth, clad in dark steel plates. She is *NOT* happy to see you.]],
+	desc = [[A Halfling ziguranth, clad in dark steel plates. She is *NOT* happy to see you.]],
 	female = true, subtype = "halfling",
 	level_range = {30, nil}, exp_worth = 1,
 	rank = 3.5,

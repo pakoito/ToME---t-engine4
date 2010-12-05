@@ -92,7 +92,7 @@ newEntity{ define_as = "THE_MASTER",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been month since the hero cleansed the Dreadfell, yet rumours are growing: evil is back.")
+		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been months since the hero cleansed the Dreadfell, yet rumours are growing: evil is back.")
 
 		world:gainAchievement("VAMPIRE_CRUSHER", game.player:resolveSource())
 		game.player:resolveSource():grantQuest("dreadfell")

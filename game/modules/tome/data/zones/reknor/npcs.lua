@@ -113,7 +113,7 @@ newEntity{ define_as = "HARNO",
 	faction = "allied-kingdoms",
 	name = "Harno, Herald of Last Hope",
 	display = "@", color=colors.LIGHT_BLUE,
-	desc = [[This is one of the heralds of Last Hope, he seems to be looking for you.]],
+	desc = [[This is one of the heralds of Last Hope. He seems to be looking for you.]],
 	energy = {mod=2},
 	level_range = {40, 40}, exp_worth = 0,
 	max_life = 150, life_rating = 12,
@@ -149,7 +149,7 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 	type = "demon", subtype = "major", unique = true,
 	name = "Lithfengel",
 	display = "U", color=colors.VIOLET,
-	desc = [[A terrible demon of decay and atrophy, drawn to the energy of the farportal. A Balrog of blight!]],
+	desc = [[A terrible demon of decay and atrophy, drawn to the energy of the farportal. A beast of blight!]],
 	level_range = {35, nil}, exp_worth = 3,
 	max_life = 400, life_rating = 25, fixed_rating = true,
 	rank = 4,
@@ -192,7 +192,7 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 
 	on_die = function(self, who)
 		if who.resolveSource and who:resolveSource().player and who:resolveSource():hasQuest("east-portal") then
-			require("engine.ui.Dialog"):simpleLongPopup("Back and there again", "A careful examination of the balrog's body turns up a Blood-Runed Athame and a Resonating Diamond, both covered in soot and gore but otherwise in good condition.", 400)
+			require("engine.ui.Dialog"):simpleLongPopup("Back and there again", "A careful examination of the demon's body turns up a Blood-Runed Athame and a Resonating Diamond, both covered in soot and gore but otherwise in good condition.", 400)
 		end
 	end,
 }

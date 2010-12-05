@@ -30,7 +30,7 @@ newEntity{
 	type = "humanoid", subtype = "human",
 	display = "p", color=colors.DARK_GREY,
 	name = "Necromancer", color=colors.DARK_GREY,
-	desc = [[An human dressed in black robes. He mumbles is a harsh tongue. He seems to think you are his slave.]],
+	desc = [[A Human dressed in black robes. He mumbles is a harsh tongue. He seems to think you are his slave.]],
 	level_range = {1, nil}, exp_worth = 1,
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HALF_BONE_GIANT",
 	allow_infinite_dungeon = true,
 	name = "Half-Finished Bone Giant", color=colors.VIOLET, unique=true,
 	desc = [[A towering creature, made from the bones of hundreds of dead bodies. It is covered by an unholy aura.
-This specimen look like it was hastily assembled and is not really complete yet.]],
+This specimen looks like it was hastily assembled and is not really complete yet.]],
 	level_range = {7, nil}, exp_worth = 1,
 	rank = 4,
 	max_life = resolvers.rngavg(100,120), life_rating = 14,

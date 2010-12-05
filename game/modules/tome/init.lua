@@ -27,20 +27,20 @@ engine = {0,9,16,"te4"}
 description = [[
 Welcome to Maj'Eyal.
 
-This is the Age of Ascendancy, after over ten thousand years of strife, pain and chaos the known world is at last at relative peace.
-The #FF0000#Spellblaze#WHITE# last effects are now tamed, the land slowly heals itself and the civilisations rebuild themselves after the Age of Pyre.
+This is the Age of Ascendancy. After over ten thousand years of strife, pain and chaos the known world is at last at relative peace.
+The last effects of the #FF0000#Spellblaze#WHITE# have been tamed. The land slowly heals itself and the civilisations rebuild themselves after the Age of Pyre.
 
-It has been one hundred and twenty two years since the Allied Kingdoms have been established under the rule of #14fffc#Toknor#ffffff# and his wife #14fffc#Mirvenia#ffffff#.
-Together they ruled the kingdoms with fairness and brought prosperity to both halflings and humans.
-The King died of old age fourteen years ago, and his son, #14fffc#Tolak#ffffff#, is now king.
+It has been one hundred and twenty-two years since the Allied Kingdoms were established under the rule of #14fffc#Toknor#ffffff# and his wife #14fffc#Mirvenia#ffffff#.
+Together they ruled the kingdoms with fairness and brought prosperity to both Halflings and Humans.
+The King died of old age fourteen years ago, and his son #14fffc#Tolak#ffffff# is now King.
 
-The elven kingdoms are quiet. The Shaloran elves in their home of Elvala are trying to make the world forget about their role in the Spellblaze and are living happy lives under the leadership of #14fffc#Aranion Gayaeil#ffffff#.
-The Thaloran elves keep to their ancient tradition of living in the woods, ruled as always by #14fffc#Nessilla Tantaelen#ffffff# the wise.
+The Elven kingdoms are quiet. The Shaloren Elves in their home of Elvala are trying to make the world forget about their role in the Spellblaze and are living happy lives under the leadership of #14fffc#Aranion Gayaeil#ffffff#.
+The Thaloren Elves keep to their ancient tradition of living in the woods, ruled as always by #14fffc#Nessilla Tantaelen#ffffff# the wise.
 
-The dwarves of the Iron Throne have started a careful trade relationship with the Allied Kingdoms for nearly one hundred years, yet not much is known about them, not even their leader.
+The Dwarves of the Iron Throne have maintained a careful trade relationship with the Allied Kingdoms for nearly one hundred years, yet not much is known about them, not even their leader's name.
 
-While the people of Maj'Eyal know that the mages helped put an end to the terrors of the Spellblaze, they also did not forget that it was magic that started those events. As such mages are still shuned from society, if not downright hunted down.
-Still, this is a golden age, civilizations are healing the wounds of thousands of years of conflict, even the humans and the halflings have made lasting peace.
+While the people of Maj'Eyal know that the mages helped put an end to the terrors of the Spellblaze, they also did not forget that it was magic that started those events. As such, mages are still shunned from society, if not outright hunted down.
+Still, this is a golden age. Civilisations are healing the wounds of thousands of years of conflict, and the Humans and the Halflings have made a lasting peace.
 
 You are an adventurer, set out to discover wonders, explore old places, and venture into the unknown for wealth and glory.
 ]]

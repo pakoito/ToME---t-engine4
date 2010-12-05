@@ -136,14 +136,17 @@ function _M:newGame()
 			local o = self.state:generateRandart(true)
 			self.zone.object_list[#self.zone.object_list+1] = o
 		end
+
+		-- Register the character online if possible
+		self.player:getUUID()
 	end
 
 	-- Load for quick birth
 	local save = Savefile.new(self.save_name)
-	local quickbirth = save:loadQuickBirth()	
+	local quickbirth = save:loadQuickBirth()
 	local quickhotkeys = save:loadQuickHotkeys()
 	save:close()
-	
+
 	self.always_target = true
 
 	self.creating_player = true
@@ -184,8 +187,8 @@ function _M:newGame()
 		if self.player.no_birth_levelup then birthend()
 		else self.player:playerLevelup(birthend) end
 	end, quickbirth, 720, 500)
-	
-	
+
+
 
 	-- Load a full player instead of a simpler quickbirthing, if possible
 	birth.quickBirth = function(b)
@@ -730,7 +733,8 @@ function _M:setupCommands()
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 --				game.player:magicMap(50)
 --				self.player:grantQuest("anti-antimagic")
-				game:changeLevel(1,"test")
+--				game:changeLevel(1,"test")
+				game.player:saveUUID()
 			end
 		end,
 	}
@@ -1020,6 +1024,7 @@ function _M:saveGame()
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
+	game.player:saveUUID()
 	self.log("Saving game...")
 end
 

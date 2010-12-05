@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
-You have arrived in the infinite dungeon.
+You have arrived in the Infinite Dungeon.
 Your life outside did not satisfy you, so you came here looking for adventure.
-While you know this is a one way trip you hope to go in a blaze of glory!
+While you know this is a one way trip, you hope to go in a blaze of glory!
 
 Go forth, venture into the depths of the dungeon and see how far you can get before the end.
 ]]
