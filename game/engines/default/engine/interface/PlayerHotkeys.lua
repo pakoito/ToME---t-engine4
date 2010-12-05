@@ -30,6 +30,36 @@ function _M:init(t)
 	self.hotkey_page = 1
 end
 
+function _M:sortHotkeys()
+	print("[SORTING HOTKEYS]")
+
+	local old = self.hotkey
+	self.hotkey = {}
+
+	if self.quickhotkeys then
+		for known_t_id, i in pairs(self.quickhotkeys) do
+			if self.talents[known_t_id] then
+				print("[SORTING HOTKEYS] pairing",known_t_id,i)
+				self.hotkey[i] = {"talent", known_t_id}
+				-- Remove from old
+				for z = 1, 36 do if old[z] and old[z][1] == "talent" and old[z][2] == known_t_id then old[z] = nil break end end
+			end
+		end
+	end
+
+	-- Readd all the rest
+	for j = 1, 36 do
+		if old[j] then
+			for i = 1, 36 do if not self.hotkey[i] then
+				self.hotkey[i] = old[j]
+				print("[SORTING HOTKEYS] added back", old[j][2], i)
+				break
+			end end
+		end
+	end
+	self.changed = true
+end
+
 --- Uses an hotkeyed talent
 -- This requires the ActorTalents interface to use talents and a method player:playerUseItem(o, item, inven) to use inventory objects
 function _M:activateHotkey(id)

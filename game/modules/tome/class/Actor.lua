@@ -1640,7 +1640,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF}, t.info(self, t), true)
 
 	self.talents[t.id] = old
-
+	
 	return d
 end
 

@@ -81,6 +81,10 @@ newTalent{
 	cooldown = 20,
 	mana = 10,
 	no_npc_use = true,
+	getHeal = function(self, t) 
+		local ammo = self:hasAlchemistWeapon()
+		return self:combatTalentSpellDamage(t, 15, 350, (ammo.alchemist_power + self:combatSpellpower()) / 2)
+	end,
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
@@ -130,7 +134,7 @@ newTalent{
 				return
 			end
 			for i = 1, 2 do self:removeObject(self:getInven("QUIVER"), 1) end
-			self.alchemy_golem:heal(self:combatTalentSpellDamage(t, 15, 350, (ammo.alchemist_power + self:combatSpellpower()) / 2))
+			self.alchemy_golem:heal(t.getHeal(self, t))
 
 		-- resurrect the golem
 		elseif not self:hasEffect(self.EFF_GOLEM_MOUNT) then
@@ -157,12 +161,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local ammo = self:hasAlchemistWeapon()
-		local heal = 0
-		if ammo then self:combatTalentSpellDamage(t, 15, 150, (ammo.alchemist_power + self:combatSpellpower()) / 2) end
+		local heal = t.getHeal(self, t)
 		return ([[Interract with your golem
 		- If it is destroyed you will take some time to reconstruct it (takes 15 alchemist gems).
-		- If it is alive you will be able to talk to it, change its weapon and armour or heal it (%d; takes 2 alchemist gems)]]):
+		- If it is alive you will be able to talk to it, change its weapon and armour or repair it for %d (takes 2 alchemist gems)]]):
 		format(heal)
 	end,
 }
@@ -214,6 +216,7 @@ newTalent{
 	mana = 5,
 	requires_target = true,
 	no_npc_use = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -245,7 +248,7 @@ newTalent{
 
 		-- Attack ?
 		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > 1 then return true end
-		local hit = golem:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.6), true)
+		local hit = golem:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		-- Try to knockback !
 		if hit then
@@ -259,7 +262,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your golem rushes to the target, knocking it back and doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6))
+		local damage = t.getDamage(self, t)
+		return ([[Your golem rushes to the target, knocking it back and doing %d%% damage.
+		Knockback chance will increase with talent level]]):format(100 * damage)
 	end,
 }
 
@@ -273,6 +278,8 @@ newTalent{
 	mana = 5,
 	requires_target = true,
 	no_npc_use = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
+	getPinDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -304,12 +311,12 @@ newTalent{
 
 		-- Attack ?
 		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > 1 then return true end
-		local hit = golem:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.6), true)
+		local hit = golem:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		-- Try to knockback !
 		if hit then
 			if target:checkHit(golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {})
+				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
 			end
@@ -318,7 +325,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your golem rushes to the target, crushing it and doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6))
+		local damage = t.getDamage(self, t)
+		local duration = t.getPinDuration(self, t)
+		return ([[Your golem rushes to the target, crushing it to the ground for %d turns and doing %d%% damage.
+		Pinning chance will increase with talent level.]]):
+		format(duration, 100 * damage)
 	end,
 }
 
@@ -330,6 +341,7 @@ newTalent{
 	mana = 10,
 	cooldown = 20,
 	no_npc_use = true,
+	getPower = function(self, t) return self:combatTalentSpellDamage(t, 15, 50) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -344,7 +356,7 @@ newTalent{
 			return
 		end
 
-		golem:setEffect(golem.EFF_MIGHTY_BLOWS, 5, {power=self:combatTalentSpellDamage(t, 15, 50)})
+		golem:setEffect(golem.EFF_MIGHTY_BLOWS, 5, {power=t.getPower(self, t)})
 		if golem == mover then
 			golem:move(x, y, true)
 		end
@@ -352,6 +364,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You invoke your golem to your side, granting it a temporary melee power increase of %d for 5 turns.]]):format(self:combatTalentSpellDamage(t, 15, 50))
+		power=t.getPower(self, t)
+		return ([[You invoke your golem to your side, granting it a temporary melee power increase of %d for 5 turns.]]):
+		format(power)
 	end,
 }

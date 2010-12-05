@@ -28,11 +28,13 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	getFireDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 40) end,
+	getFireDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
 		return {
-			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = self:combatTalentSpellDamage(t, 5, 40)}),
-			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = self:combatTalentSpellDamage(t, 5, 14)}),
+			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = t.getFireDamage(self, t)}),
+			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -41,8 +43,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %d fire damage per melee attack and increasing all fire damage by %d%%.]]):
-		format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 40)), self:combatTalentSpellDamage(t, 5, 14))
+		local firedamage = t.getFireDamage(self, t)
+		local firedamageinc = t.getFireDamageIncrease(self, t)
+		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %0.2f fire damage per melee attack and increasing all fire damage by %d%%.
+		The effects will increase with your Magic stat.]]):
+		format(damDesc(self, DamageType.FIRE, firedamage), firedamageinc)
 	end,
 }
 
@@ -55,13 +60,17 @@ newTalent{
 	mana = 45,
 	require = spells_req2,
 	range = 20,
+	getPhysicalReduction = function(self, t) return self:combatTalentSpellDamage(t, 10, 60) end,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		self:setEffect(self.EFF_EARTHEN_BARRIER, 10, {power=self:combatTalentSpellDamage(t, 10, 60)})
+		self:setEffect(self.EFF_EARTHEN_BARRIER, 10, {power=t.getPhysicalReduction(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%% for 10 turns.]]):format(self:combatTalentSpellDamage(t, 10, 60))
+		local reduction = t.getPhysicalReduction(self, t)
+		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%% for 10 turns.
+		Damage reduction will increase with your Magic stat.]]):
+		format(reduction)
 	end,
 }
 
@@ -76,11 +85,13 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	getIceDamage = function(self, t) return self:combatTalentSpellDamage(t, 3, 20) end,
+	getIceDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 		return {
-			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = self:combatTalentSpellDamage(t, 3, 20)}),
-			per = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = self:combatTalentSpellDamage(t, 5, 14)}),
+			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = t.getIceDamage(self, t)}),
+			per = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = t.getIceDamageIncrease(self, t)}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -89,8 +100,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.]]):
-		format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 3, 20)), self:combatTalentSpellDamage(t, 5, 14))
+		local icedamage = t.getIceDamage(self, t)
+		local icedamageinc = t.getIceDamageIncrease(self, t)
+		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.
+		The effects will increase with your Magic stat.]]):
+		format(damDesc(self, DamageType.COLD, icedamage), icedamageinc)
 	end,
 }
 
@@ -105,9 +119,10 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getStatIncrease = function(self, t) return math.min(math.floor(self:combatTalentSpellDamage(t, 2, 10)), 11) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = math.min(math.floor(self:combatTalentSpellDamage(t, 2, 10)), 11)
+		local power = t.getStatIncrease(self, t)
 		return {
 			stats = self:addTemporaryValue("inc_stats", {
 				[self.STAT_STR] = power,
@@ -124,7 +139,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You concentrate on your inner self, increasing your stats each by %d.]]):
-		format(math.min(math.floor(self:combatTalentSpellDamage(t, 2, 10)), 11))
+		local statinc = t.getStatIncrease(self, t)
+		return ([[You concentrate on your inner self, increasing your stats each by %d up to +11.
+		Stats increase will improve with your Magic stat.]]):
+		format(statinc)
 	end,
 }

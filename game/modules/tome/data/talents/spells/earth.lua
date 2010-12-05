@@ -30,11 +30,11 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getArmor = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
-		local power = self:combatTalentSpellDamage(t, 10, 20)
 		return {
-			armor = self:addTemporaryValue("combat_armor", power),
+			armor = self:addTemporaryValue("combat_armor", t.getArmor(self, t)),
 			particle = self:addParticles(Particles.new("stone_skin", 1)),
 		}
 	end,
@@ -44,8 +44,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local armor = t.getArmor(self, t)
 		return ([[The caster's skin grows as hard as stone, granting %d bonus to armor.
-		The bonus to armor will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 20))
+		The bonus to armor will increase with the Magic stat]]):
+		format(armor)
 	end,
 }
 
@@ -59,18 +61,21 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	requires_target = true,
+	getRange = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		for i = 1, self:getTalentLevelRaw(t) do
+		for i = 1, t.getRange(self, t) do
 			self:project(tg, x, y, DamageType.DIG, 1)
 		end
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Digs up to %d grids into walls, trees or other impassable terrain]]):format(self:getTalentLevelRaw(t))
+		local range = t.getRange(self, t)
+		return ([[Digs up to %d grids into walls, trees or other impassable terrain]]):
+		format(range)
 	end,
 }
 
@@ -89,17 +94,19 @@ newTalent{
 	reflectable = true,
 	proj_speed = 6,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 170) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(self:combatTalentSpellDamage(t, 8, 170)))
+		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(t.getDamage(self, t)))
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 170)))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
 
@@ -113,6 +120,7 @@ newTalent{
 	range = 20,
 	reflectable = true,
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
+	getDuration = function(self, t) return 2 + self:combatTalentSpellDamage(t, 5, 12) end,
 	action = function(self, t)
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
@@ -135,7 +143,7 @@ newTalent{
 					can_pass = {pass_wall=1},
 					block_move = true,
 					block_sight = true,
-					temporary = 2 + self:combatTalentSpellDamage(t, 5, 12),
+					temporary = t.getDuration(self, t),
 					x = x + i, y = y + j,
 					canAct = false,
 					act = function(self)
@@ -164,7 +172,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Entomb yourself in a wall of stone for %d turns.
-		At level 4 it becomes targettable.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
+		At level 4 it becomes targettable.
+		Duration will improve with your Magic stat.]]):
+		format(duration)
 	end,
 }

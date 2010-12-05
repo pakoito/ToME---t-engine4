@@ -29,6 +29,8 @@ newTalent{
 		ESCAPE = 4,
 	},
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
+	getRange = function(self, t) return 10 + self:combatSpellpower(0.1) end,
+	getRadius = function(self, t) return 7 - self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local target = self
 		if self:getTalentLevel(t) >= 4 then
@@ -53,15 +55,16 @@ newTalent{
 		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
 		local x, y = self.x, self.y
-		local rad = 10 + self:combatSpellpower(0.1)
+		local rad = t.getRange(self, t)
+		local radius = t.getRadius(self, t)
 		if self:getTalentLevel(t) >= 5 then
-			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=10 + self:combatSpellpower(0.1), radius=7 - self:getTalentLevelRaw(t), requires_knowledge=false}
+			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=rad, radius=radius, requires_knowledge=false}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
 			local _ _, x, y = self:canProject(tg, x, y)
-			rad = 7 - self:getTalentLevelRaw(t)
+			rad = radius
 
 			-- Check LOS
 			if not self:hasLOS(x, y) and rng.percent(35) then
@@ -82,10 +85,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Teleports you randomly with a small range (%d).
+		local radius = t.getRadius(self, t)
+		local range = t.getRange(self, t)
+		return ([[Teleports you randomly with a small range of up to %d grids.
 		At level 4 it allows you to specify which creature to teleport.
 		At level 5 it allows you to choose the target area (radius %d). If the target area is not in line of sight there is a chance the spell will fizzle.
-		The range will increase with the Magic stat]]):format(10 + self:combatSpellpower(0.1), 7 - self:getTalentLevelRaw(t))
+		The range will increase with the Magic stat]]):format(range, radius)
 	end,
 }
 
@@ -101,6 +106,8 @@ newTalent{
 		ESCAPE = 8,
 	},
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
+	getRange = function(self, t) return 100 + self:combatSpellpower(1) end,
+	getRadius = function(self, t) return 20 - self:getTalentLevel(t) end,
 	action = function(self, t)
 		local target = self
 
@@ -128,18 +135,18 @@ newTalent{
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
-			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=100 + self:combatSpellpower(1), radius=20 - self:getTalentLevel(t), requires_knowledge=false}
+			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=t.getRange(self, t), radius=t.getRadius(self, t), requires_knowledge=false}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
 			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
 			-- but we cant ...
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, 20 - self:getTalentLevel(t))
+			target:teleportRandom(x, y, t.getRadius(self, t))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		else
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, 100 + self:combatSpellpower(0.1), 15)
+			target:teleportRandom(x, y, t.getRange(self, t), 15)
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
 
@@ -151,10 +158,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local range = t.getRange(self, t)
+		local radius = t.getRadius(self, t)
 		return ([[Teleports you randomly with a large range (%d), with a minimum range of 15.
 		At level 4 it allows you to choose the target area (radius %d).
 		At level 5 it allows you to specify which creature to teleport.
-		The range will increase with the Magic stat]]):format(100 + self:combatSpellpower(0.1), 20 - self:getTalentLevel(t))
+		The range will increase with the Magic stat]]):format(range, radius)
 	end,
 }
 
@@ -170,23 +179,27 @@ newTalent{
 	},
 	range = 10,
 	requires_target = true,
+	getTransferChange = function(self, t) return 20 + self:getTalentLevel(t) * 5 end,
+	getMaxAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 20, 210) end,
+	getDuration = function(self, t) return util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target then return nil end
 
-		local dur = util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25)
-		local power = self:combatTalentSpellDamage(t, 20, 210)
-		local chance = 20 + self:getTalentLevel(t) * 5
-		self:setEffect(self.EFF_DISPLACEMENT_SHIELD, dur, {power=power, target=target, chance=chance})
+		self:setEffect(self.EFF_DISPLACEMENT_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), target=target, chance=t.getTransferChange(self, t)})
 		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
 	info = function(self, t)
+		local chance = t.getTransferChange(self, t)
+		local maxabsorb = t.getMaxAbsorb(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[This intricate spell erects a space distortion around the caster that is linked to another one around a target.
 		Any time the caster should take damage there is a %d%% chance that it will instead be warped by the shield and hit the designated target.
 		Once the maximum damage (%d) is absorbed, the time runs out (%d turns), or the target dies, the shield will crumble.
-		The duration and max absorption will increase with the Magic stat]]):format(20 + self:getTalentLevel(t) * 5, self:combatTalentSpellDamage(t, 20, 210), util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25))
+		Max damage shield can absorb will increase with the Magic stat]]):
+		format(chance, maxabsorb, duration)
 	end,
 }
 
@@ -201,11 +214,11 @@ newTalent{
 	tactical = {
 		MOVEMENT = 20,
 	},
+	getRange = function(self, t) return math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/teleport")
-		local power = math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
 		return {
-			prob_travel = self:addTemporaryValue("prob_travel", power),
+			prob_travel = self:addTemporaryValue("prob_travel", t.getRange(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -213,7 +226,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local range = t.getRange(self, t)
 		return ([[When you hit a solid surface this spell tears down the laws of probability to make you instantly appear on the other side.
-		Teleports up to %d grids.]]):format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
+		Teleports up to %d grids.
+		Range will improve with your Magic stat.]]):
+		format(range)
 	end,
 }

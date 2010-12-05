@@ -32,15 +32,16 @@ newTalent{
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 290) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		if self:getTalentLevel(t) >= 5 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		if self:getTalentLevel(t) < 5 then
-			self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)), {type="flame"})
+			self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)), {type="flame"})
 		else
-			self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(self:combatTalentSpellDamage(t, 25, 290)))
+			self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)))
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 		end
@@ -48,9 +49,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
 		At level 5 it will create a beam of flames.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 25, 290)))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.FIRE, damage))
 	end,
 }
 
@@ -67,18 +70,23 @@ newTalent{
 	},
 	range = 1,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
+	getStunDuration = function(self, t) return self:getTalentLevelRaw(t) + 2 end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=self:getTalentLevelRaw(t) + 2, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 120))})
+		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=t.getStunDuration(self, t), dam=self:spellCrit(t.getDamage(self, t))})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local stunduration = t.getStunDuration(self, t)
 		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be stunned for %d turns.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 10, 120)), self:getTalentLevelRaw(t) + 2)
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.FIRE, damage), stunduration)
 	end,
 }
 
@@ -97,19 +105,24 @@ newTalent{
 	proj_speed = 4,
 	direct_hit = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
+	getRadius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(self:combatTalentSpellDamage(t, 28, 280)), function(self, tg, x, y, grids)
+		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
 			game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, grids=grids, tx=x, ty=y})
 		end)
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local radius = t.getRadius(self, t)
 		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 28, 280)), 1 + self:getTalentLevelRaw(t))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.FIRE, damage), radius)
 	end,
 }
 
@@ -127,18 +140,18 @@ newTalent{
 	range = 20,
 	direct_hit = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
+	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local duration = 5 + self:getTalentLevel(t)
 		local radius = 5
-		local dam = self:combatTalentSpellDamage(t, 15, 80)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			x, y, duration,
-			DamageType.FIRE, dam,
+			x, y, t.getDamage(self, t),
+			DamageType.FIRE, t.getDamage(self, t),
 			radius,
 			5, nil,
 			{type="inferno"},
@@ -149,7 +162,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDamage(self, t)
 		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of 5 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 15, 80)), 5 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.FIRE, damage), duration)
 	end,
 }

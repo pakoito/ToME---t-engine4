@@ -32,11 +32,12 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 290) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 20, 290))
+		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
@@ -44,8 +45,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 20, 290) / 3), damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 20, 290)))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.LIGHTNING, damage / 3), 
+		damDesc(self, DamageType.LIGHTNING, damage))
 	end,
 }
 
@@ -64,12 +68,14 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 200) end,
+	getTargetCount = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local fx, fy = self:getTarget(tg)
 		if not fx or not fy then return nil end
 
-		local nb = 3 + self:getTalentLevelRaw(t)
+		local nb = t.getTargetCount(self, t)
 		local affected = {}
 		local first = nil
 
@@ -108,7 +114,7 @@ newTalent{
 		for i, actor in ipairs(targets) do
 			local tgr = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t, x=sx, y=sy}
 			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
-			local dam = self:spellCrit(self:combatTalentSpellDamage(t, 10, 200))
+			local dam = self:spellCrit(t.getDamage(self, t))
 			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(rng.avg(dam / 3, dam, 3), dam, 5))
 			game.level.map:particleEmitter(sx, sy, math.max(math.abs(actor.x-sx), math.abs(actor.y-sy)), "lightning", {tx=actor.x-sx, ty=actor.y-sy, nb_particles=150, life=6})
 			sx, sy = actor.x, actor.y
@@ -119,14 +125,14 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local targets = t.getTargetCount(self, t)
 		return ([[Invokes a forking beam of lightning doing %0.2f to %0.2f damage and forking to another target.
-		It can hit up to %d targets and will never hit the same one twice; nor will it hit the caster.
+		It can hit up to %d targets up to 10 grids apart and will never hit the same one twice; nor will it hit the caster.
 		The damage will increase with the Magic stat]]):
-		format(
-			damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 10, 200) / 3),
-			damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 10, 200)),
-			3 + self:getTalentLevelRaw(t)
-		)
+		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
+			damDesc(self, DamageType.LIGHTNING, damage),
+			targets)
 	end,
 }
 
@@ -141,11 +147,13 @@ newTalent{
 	tactical = {
 		MOVEMENT = 10,
 	},
+	getEncumberance = function(self, t) return math.floor(self:combatTalentSpellDamage(t, 10, 110)) end,
+	getRangedDefence = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			encumb = self:addTemporaryValue("max_encumber", math.floor(self:combatTalentSpellDamage(t, 10, 110))),
-			def = self:addTemporaryValue("combat_def_ranged", self:combatTalentSpellDamage(t, 4, 30)),
+			encumb = self:addTemporaryValue("max_encumber", t.getEncumberance(self, t)),
+			def = self:addTemporaryValue("combat_def_ranged", t.getRangedDefence(self, t)),
 			lev = self:addTemporaryValue("levitation", 1),
 		}
 		self:checkEncumbrance()
@@ -159,9 +167,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local encumberance = t.getEncumberance(self, t)
+		local rangedef = t.getRangedDefence(self, t)
 		return ([[A gentle wind circles around the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
 		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.]]):
-		format(self:getTalentLevel(t) * self:combatSpellpower(0.15), 6 + self:combatSpellpower(0.07) * self:getTalentLevel(t))
+		format(encumberance, rangedef)
 	end,
 }
 
@@ -178,6 +188,9 @@ newTalent{
 	},
 	range = 5,
 	direct_hit = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
+	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	getManaDrain = function(self, t) return -1.2 * self:getTalentLevelRaw(t) end,
 	do_storm = function(self, t)
 		if self:getMana() <= 0 then
 			self:forceUseTalent(t.id, {ignore_energy=true})
@@ -195,12 +208,12 @@ newTalent{
 
 		-- Randomly take targets
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		for i = 1, math.floor(self:getTalentLevel(t)) do
+		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 15, 80)), 3))
+			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(t.getDamage(self, t)), 3))
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
 			game:playSoundNear(self, "talents/lightning")
 		end
@@ -209,7 +222,7 @@ newTalent{
 		game:playSoundNear(self, "talents/thunderstorm")
 		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
 		return {
-			drain = self:addTemporaryValue("mana_regen", -1.2 * self:getTalentLevelRaw(t)),
+			drain = self:addTemporaryValue("mana_regen", t.getManaDrain(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -218,9 +231,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local targetcount = t.getTargetCount(self, t)
+		local damage = t.getDamage(self, t)
+		local manadrain = t.getManaDrain(self, t)
 		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerful spell will continuously drain mana while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 15, 80)))
+		This powerful spell will continuously drain %0.1f mana while active.
+		The damage will increase with the Magic stat]]):
+		format(targetcount, damDesc(self, DamageType.LIGHTNING, damage),-manadrain)
 	end,
 }

@@ -30,17 +30,19 @@ newTalent{
 	proj_speed = 20,
 	direct_hit = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 220) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, {dur=5, initial=0, dam=self:spellCrit(self:combatTalentSpellDamage(t, 25, 220))}, {type="flame"})
+		self:project(tg, x, y, DamageType.FIREBURN, {dur=5, initial=0, dam=t.getDamage(self, t)}, {type="flame"})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[Turn part of your target into fire, burning the rest for %0.2f fire damage over 5 turns.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 25, 220)))
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, damage))
 	end,
 }
 
@@ -54,6 +56,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
+	getDuration = function(self, t) return 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
 		local x, y = self:getTarget(tg)
@@ -61,7 +64,7 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local e = Object.new{
 				block_sight=true,
-				temporary = 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t),
+				temporary = t.getDuration(self, t),
 				x = px, y = py,
 				canAct = false,
 				act = function(self)
@@ -83,7 +86,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Throw a smoke bomb, blocking line of sight. The smoke dissipates after %d turns.]]):format(2 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
+		local duration = t.getDuration(self, t)
+		return ([[Throw a smoke bomb, blocking line of sight. The smoke dissipates after %d turns.
+		Duration will increase with your Magic stat.]]):
+		format(duration)
 	end,
 }
 
@@ -98,15 +104,14 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 20,
 	},
+	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
 	action = function(self, t)
-		local duration = 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t)
-		local radius = 3
-		local dam = self:combatTalentSpellDamage(t, 5, 90)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.FIRE, dam,
-			radius,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.FIRE, t.getDamage(self, t),
+			3,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=30},
 			function(e)
@@ -120,8 +125,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[A furious fire storm rages around the caster doing %0.2f fire damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 90)), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.FIRE, damage), duration)
 	end,
 }
 
@@ -137,6 +145,10 @@ newTalent{
 	range = 1,
 	proj_speed = 2.4,
 	range = 12,
+	getFireDamageOnHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
+	getResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 45) end,
+	getFireDamageInSight = function(self, t) return sself:combatTalentSpellDamage(t, 15, 70) end,
+	getManaDrain = function(self, t) return -0.4 * self:getTalentLevelRaw(t) end,
 	do_fire = function(self, t)
 		if self:getMana() <= 0 then
 			self:forceUseTalent(t.id, {ignore_energy=true})
@@ -159,20 +171,17 @@ newTalent{
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self:projectile(tg, a.x, a.y, DamageType.FIRE, self:spellCrit(self:combatTalentSpellDamage(t, 15, 70)), {type="flame"})
+			self:projectile(tg, a.x, a.y, DamageType.FIRE, self:spellCrit(t.getFireDamageInSight(self, t)), {type="flame"})
 			game:playSoundNear(self, "talents/fire")
 		end
 	end,
 	activate = function(self, t)
-		local res = self:combatTalentSpellDamage(t, 5, 45)
-		local dam = self:combatTalentSpellDamage(t, 5, 25)
-
 		game:playSoundNear(self, "talents/fireflash")
 		game.logSeen(self, "#FF8000#%s turns into pure flame!", self.name:capitalize())
 		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.FIRE]=dam}),
-			res = self:addTemporaryValue("resists", {[DamageType.FIRE] = res}),
-			drain = self:addTemporaryValue("mana_regen", -0.4 * self:getTalentLevelRaw(t)),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.FIRE]=t.getFireDamageOnHit(self, t)}),
+			res = self:addTemporaryValue("resists", {[DamageType.FIRE] = t.getResistance(self, t)}),
+			drain = self:addTemporaryValue("mana_regen", t.getManaDrain(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -183,13 +192,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local onhitdam = t.getFireDamageOnHit(self, t)
+		local insightdam = t.getFireDamageInSight(self, t)
+		local res = t.getResistance(self, t)
+		local manadrain = t.getManaDrain(self, t)
 		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage and projecting random slow-moving fire bolts at targets in sight doing %0.2f fire damage.
-		This powerful spell drains mana while active.
+		This powerful spell drains %0.2f mana while active.
 		The damage will increase with Magic stat.]]):
-		format(
-			self:combatTalentSpellDamage(t, 5, 45),
-			damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 5, 25)),
-			damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 15, 70))
-		)
+		format(res,onhitdam,insightdam,-manadrain)
 	end,
 }

@@ -24,15 +24,18 @@ newTalent{
 	require = spells_req_high1,
 	points = 5,
 	on_learn = function(self, t)
-		self.alchemy_golem:learnTalent(self.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:learnTalent(self.T_WEAPONS_MASTERY, true)
+		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true)
 	end,
 	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(self.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:unlearnTalent(self.T_WEAPONS_MASTERY, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
 	end,
 	info = function(self, t)
-		return ([[Improves your golem proficiency with two handed weapons.]])
+		local attack = self:getTalentFromId(Talents.T_WEAPON_COMBAT).getAttack(self, t)
+		local damage = self:getTalentFromId(Talents.T_WEAPONS_MASTERY).getDamage(self, t)
+		return ([[Improves your golem proficiency with weapons. Increasing its attack by %d and damage by %d%%.]]):
+		format(attack, 100 * damage)
 	end,
 }
 
@@ -43,17 +46,21 @@ newTalent{
 	require = spells_req_high2,
 	points = 5,
 	on_learn = function(self, t)
-		self.alchemy_golem:learnTalent(self.T_HEALTH, true)
-		self.alchemy_golem:learnTalent(self.T_HEAVY_ARMOUR_TRAINING, true)
-		self.alchemy_golem:learnTalent(self.T_MASSIVE_ARMOUR_TRAINING, true)
+		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:learnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
+		self.alchemy_golem:learnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
 	end,
 	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(self.T_HEALTH, true)
-		self.alchemy_golem:unlearnTalent(self.T_HEAVY_ARMOUR_TRAINING, true)
-		self.alchemy_golem:unlearnTalent(self.T_MASSIVE_ARMOUR_TRAINING, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
 	end,
 	info = function(self, t)
-		return ([[Improves your golem armour training and health.]])
+		local health = self:getTalentFromId(Talents.T_HEALTH).getHealth(self, t)
+		local heavyarmor = self:getTalentFromId(Talents.T_HEAVY_ARMOUR_TRAINING).getArmor(self, t)
+		local massivearmor = self:getTalentFromId(Talents.T_MASSIVE_ARMOUR_TRAINING).getArmor(self, t)
+		return ([[Improves your golem armour training and health. Increases armor by %d when wearing heavy armor or by %d when wearing massive armor also increases health by %d.]]):
+		format(heavyarmor, massivearmor, health)
 	end,
 }
 
@@ -67,6 +74,15 @@ newTalent{
 	mana = 5,
 	requires_target = true,
 	no_npc_use = true,
+	getGolemDamage = function(self, t)
+		if self.alchemy_golem then
+			local golem = getGolem(self)
+			return golem:combatTalentWeaponDamage(t, 0.4, 1.1) 
+		else
+			return 0
+		end
+	end,
+	getDazeDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -98,9 +114,9 @@ newTalent{
 		golem:project({type="ball", radius=2, friendlyfire=false}, tx, ty, function(xx, yy)
 			if xx == mover.x and yy == mover.y then return end
 			local target = game.level.map(xx, yy, Map.ACTOR)
-			if target and golem:attackTarget(target, nil, golem:combatTalentWeaponDamage(t, 0.4, 1.1), true) then
+			if target and golem:attackTarget(target, nil, t.getGolemDamage(self, t), true) then
 				if target:checkHit(golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, 2 + self:getTalentLevel(t), {})
+					target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {})
 				else
 					game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
 				end
@@ -110,8 +126,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your golem rushes to the target, pounding the area, dazing all for %d turns and doing %d%% damage.]]):
-		format(2 + self:getTalentLevel(t), 100 * self:combatTalentWeaponDamage(t, 0.4, 1.1))
+		local duration = t.getDazeDuration(self, t)
+		local damage = t.getGolemDamage(self, t)
+		return ([[Your golem rushes to the target, pounding the area of radius 2, dazing all foes for %d turns and doing %d%% damage.
+		Daze chance increases with talent level.]]):
+		format(duration, 100 * damage)
 	end,
 }
 
@@ -123,6 +142,7 @@ newTalent{
 	mana = 40,
 	cooldown = 60,
 	no_npc_use = true,
+	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t) * 4) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -138,12 +158,13 @@ newTalent{
 		local mount = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_GOLEM_MOUNT")
 		if not mount then return end
 		mount.mount.actor = golem
-		self:setEffect(self.EFF_GOLEM_MOUNT, 5 + math.ceil(self:getTalentLevel(t) * 4), {mount=mount})
+		self:setEffect(self.EFF_GOLEM_MOUNT, t.getDuration(self, t), {mount=mount})
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Mount inside your golem, directly controlling it and splitting the damage between it and yourself for %d turns.]]):
-		format(5 + math.ceil(self:getTalentLevel(t) * 4))
+		local duration = t.getDuration(self, t)
+		return ([[Mount inside your golem, directly controlling it for %d turns also golem absorb 75%% of the damage taken.]]):
+		format(duration)
 	end,
 }

@@ -25,12 +25,15 @@ newTalent{
 	points = 5,
 	sustain_mana = 40,
 	cooldown = 30,
+	getSeeInvisible = function(self, t) return self:combatTalentSpellDamage(t, 2, 45) end,
+	getSeeStealth = function(self, t) return self:combatTalentSpellDamage(t, 2, 20) end,
+	getCriticalChance = function(self, t) return self:combatTalentSpellDamage(t, 2, 12) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		return {
-			invis = self:addTemporaryValue("see_invisible", self:combatTalentSpellDamage(t, 2, 45)),
-			stealth = self:addTemporaryValue("see_stealth", self:combatTalentSpellDamage(t, 2, 20)),
-			crit = self:addTemporaryValue("combat_spellcrit", self:combatTalentSpellDamage(t, 2, 12)),
+			invis = self:addTemporaryValue("see_invisible", t.getSeeInvisible(self, t)),
+			stealth = self:addTemporaryValue("see_stealth", t.getSeeStealth(self, t)),
+			crit = self:addTemporaryValue("combat_spellcrit", t.getCriticalChance(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -40,13 +43,15 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local seeinvisible = t.getSeeInvisible(self, t)
+		local seestealth = t.getSeeStealth(self, t)
+		local criticalchance = t.getCriticalChance(self, t)
 		return ([[You focus your senses, getting informations from moments in the future.
 		Improves see invisible +%d.
 		Improves see through stealth +%d.
 		Improves critical spell chance +%d%%.
-		The effects will improve with the Magic stat]]):format(
-			self:combatTalentSpellDamage(t, 2, 45), self:combatTalentSpellDamage(t, 2, 20), self:combatTalentSpellDamage(t, 2, 12)
-		)
+		The effects will improve with the Magic stat]]):
+		format(seeinvisible, seestealth, criticalchance)
 	end,
 }
 
@@ -59,6 +64,8 @@ newTalent{
 	cooldown = 10,
 	no_energy = true,
 	no_npc_use = true,
+	getDuration = function(self, t) return math.floor(10 + self:getTalentLevel(t) * 3) end,
+	getRadius = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 3) end,
 	action = function(self, t)
 		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=100, requires_knowledge=false}
 		x, y = self:getTarget(tg)
@@ -67,21 +74,21 @@ newTalent{
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 
-		local dur = math.floor(10 + self:getTalentLevel(t) * 3)
-		local radius = math.floor(4 + self:getTalentLevel(t) * 3)
-		self:setEffect(self.EFF_ARCANE_EYE, dur, {x=x, y=y, track=game.level.map(x, y, Map.ACTOR), radius=radius, true_seeing=self:getTalentLevel(t) >= 5})
+		self:setEffect(self.EFF_ARCANE_EYE, t.getDuration(self, t), {x=x, y=y, track=game.level.map(x, y, Map.ACTOR), radius=t.getRadius(self, t), true_seeing=self:getTalentLevel(t) >= 5})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
+		local radius = t.getRadius(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Summons an etheral magical eye at the designated location that lasts for %d turns.
 		The eye can not be seen or attacked by other creatures and posses magical vision that allows it to see any creature in a %d range around it.
 		It does not require light to do so but it can not see through walls.
 		Casting the eye does not take a turn.
 		Only one arcane eye can exist at any given time.
 		At level 4 if cast on a creature it will follow it until it expires or until the creature dies.
-		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.
-		]]):format(math.floor(10 + self:getTalentLevel(t) * 3), math.floor(4 + self:getTalentLevel(t) * 3))
+		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.]]):
+		format(duration, radius)
 	end,
 }
 
@@ -94,13 +101,16 @@ newTalent{
 	mana = 20,
 	cooldown = 20,
 	no_npc_use = true,
+	getRadius = function(self, t) return 5 + self:combatTalentSpellDamage(t, 2, 12) end,
 	action = function(self, t)
-		self:magicMap(5 + self:combatTalentSpellDamage(t, 2, 12))
+		self:magicMap(t.getRadius(self, t))
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Form a map of your surroundings in your mind in a radius of %d.]]):format(5 + self:combatTalentSpellDamage(t, 2, 12))
+		local radius = t.getRadius(self, t)
+		return ([[Form a map of your surroundings in your mind in a radius of %d.]]):
+		format(radius)
 	end,
 }
 
@@ -112,11 +122,12 @@ newTalent{
 	points = 5,
 	sustain_mana = 120,
 	cooldown = 30,
+	getResist = function(self, t) return 10 + self:combatTalentSpellDamage(t, 2, 25) end,
 	on_damage = function(self, t, damtype)
 		if damtype == DamageType.PHYSICAL then return end
 
 		if not self:hasEffect(self.EFF_PREMONITION_SHIELD) then
-			self:setEffect(self.EFF_PREMONITION_SHIELD, 5, {damtype=damtype, resist=10 + self:combatTalentSpellDamage(t, 2, 25)})
+			self:setEffect(self.EFF_PREMONITION_SHIELD, 5, {damtype=damtype, resist=t.getResist(self, t)})
 			game.logPlayer(self, "#OLIVE_DRAB#Your premonition allows you to raise a shield just in time!")
 		end
 	end,
@@ -129,9 +140,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local resist = t.getResist(self, t)
 		return ([[Echos of the future flashes before your eyes, allowing you to sense some incomming attacks.
 		If the attack is elemental or magical you will erect a temporary shield that reduces all damage of this type by %d%% for 5 turns.
-		This effect can only happen once every 5 turns.
-		The bonus will increase with the Magic stat]]):format(10 + self:combatTalentSpellDamage(t, 2, 25), 5)
+		This effect can only happen once every 5 turns and happens before damage is taken.
+		The bonus will increase with the Magic stat]]):format(resist)
 	end,
 }

@@ -220,8 +220,10 @@ function _M:newGame()
 
 			birth_done()
 			self.player:check("on_birth_done")
-			self.player.quickhotkeys=quickhotkeys.quickhotkeys
-			self.player:sortHotkeys()
+			if quickhotkeys then
+				self.player.quickhotkeys = quickhotkeys.quickhotkeys
+				self.player:sortHotkeys()
+			end
 		else
 			-- Continue as normal
 			return Birther.quickBirth(b)
