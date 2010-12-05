@@ -52,8 +52,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Carve %d to %d alchemist gems out of natural gems.
-		Alchemists gems are used for lots of other spells.]]):format(40, 80)
+		return ([[Carve 40 to 80 alchemist gems out of natural gems.
+		Alchemists gems are used for lots of other spells.
+		Each gem type posses different effect.]]):format()
 	end,
 }
 
@@ -80,7 +81,14 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Extract magical gems from metal weapons and armours. The higher your skill the higher level items you can work with.]])
+		local material = ""
+		if self:getTalentLevelRaw(t) >=1 then material=material.."	-Iron\n" end
+		if self:getTalentLevelRaw(t) >=2 then material=material.."	-Steel\n" end
+		if self:getTalentLevelRaw(t) >=3 then material=material.."	-Dwarven-steel\n" end
+		if self:getTalentLevelRaw(t) >=4 then material=material.."	-Stralite\n" end
+		if self:getTalentLevelRaw(t) >=5 then material=material.."	-Voratun" end
+		return ([[Extract magical gems from metal weapons and armours. At this skill level you can work with:
+		%s]]):format(material)
 	end,
 }
 
@@ -119,6 +127,7 @@ newTalent{
 	points = 5,
 	range = 1,
 	no_npc_use = true,
+	getRange = function(self, t) return math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
 		if not ammo or ammo:getNumber() < 5 then
@@ -132,15 +141,15 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 
 		for i = 1, 5 do self:removeObject(self:getInven("QUIVER"), 1) end
-		local power = math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t))
-		self:probabilityTravel(x, y, power)
+		self:probabilityTravel(x, y, t.getRange(self, t))
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
+		local range = t.getRange(self, t)
 		return ([[Crush 5 alchemists gems into dust to mark an impassable terrain. You immediately enter it and appear on the other side of the obstacle.
 		Works up to %d grids away.]]):
-		format(math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)))
+		format(range)
 	end,
 }
 
@@ -156,6 +165,7 @@ newTalent{
 		else return math.floor(self:getTalentLevel(t)) end
 	end,
 	requires_target = true,
+	getDuration = function(self, t) return math.floor((3 + self:getTalentLevel(t)) / 1.5) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
@@ -166,7 +176,7 @@ newTalent{
 			if not target then return end
 
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stone") and target:canBe("instakill") then
-				target:setEffect(target.EFF_STONED, math.floor((3 + self:getTalentLevel(t)) / 1.5), {})
+				target:setEffect(target.EFF_STONED, t.getDuration(self, t), {})
 				game.level.map:particleEmitter(tx, ty, 1, "archery")
 			end
 		end)
@@ -174,10 +184,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Touch your foe and turn it to stone for %d turns.
 		Stoned creatures are unable to act or regen life and are very brittle.
 		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
 		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
-		At level 3 it will become a beam.]]):format(math.floor((3 + self:getTalentLevel(t)) / 1.5))
+		At level 3 it will become a beam.]]):
+		format(duration)
 	end,
 }

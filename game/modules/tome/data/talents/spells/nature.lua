@@ -29,14 +29,17 @@ newTalent{
 	tactical = {
 		HEAL = 10,
 	},
+	getRegeneration = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_REGENERATION, 10, {power=self:combatTalentSpellDamage(t, 5, 25)})
+		self:setEffect(self.EFF_REGENERATION, 10, {power=t.getRegeneration(self, t)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
+		local regen = t.getRegeneration(self, t)
 		return ([[Call upon the forces of nature to regenerate your body for %d life every turn for 10 turns.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 25))
+		The life healed will increase with the Magic stat]]):
+		format(regen)
 	end,
 }
 
@@ -51,14 +54,17 @@ newTalent{
 	tactical = {
 		HEAL = 10,
 	},
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 220) end,
 	action = function(self, t)
-		self:heal(self:spellCrit(self:combatTalentSpellDamage(t, 40, 220)), self)
+		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
+		local heal = t.getHeal(self, t)
 		return ([[Call upon the forces of nature to heal your body for %d life.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 40, 220))
+		The life healed will increase with the Magic stat]]):
+		format(heal)
 	end,
 }
 
@@ -70,6 +76,7 @@ newTalent{
 	random_ego = "defensive",
 	mana = 30,
 	cooldown = 15,
+	getCureCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local target = self
 		local effs = {}
@@ -82,7 +89,7 @@ newTalent{
 			end
 		end
 
-		for i = 1, math.floor(self:getTalentLevel(t)) do
+		for i = 1, t.getCureCount(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
 
@@ -95,7 +102,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the forces of nature to cure your body of %d poisons and diseases (at level 3).]]):format(math.floor(self:getTalentLevel(t)))
+		local curecount = t.getCureCount(self, t)
+		return ([[Call upon the forces of nature to cure your body of %d poisons and diseases (at level 3).]]):
+		format(curecount)
 	end,
 }
 
@@ -111,6 +120,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	requires_target = true,
+	getSummonTime = function(self, t) return util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.10), 5, 90) end,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 
@@ -150,7 +160,7 @@ newTalent{
 			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, physspeed=2 },
 
 			summoner = self,
-			summon_time = util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.10), 5, 90),
+			summon_time = t.getSummonTime(self, t),
 		}
 
 		bear:resolve()
@@ -160,7 +170,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the forces of nature to summon a bear ally for %d turns.
-		The power of the ally will increase with the Magic stat]]):format(util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.10), 5, 90))
+		local summon_time = t.getSummonTime(self, t)
+		return ([[Call upon the forces of nature to summon a bear ally for %d turns.]]):
+		format(summon_time)
 	end,
 }

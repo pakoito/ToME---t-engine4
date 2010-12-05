@@ -236,7 +236,7 @@ newTalent{
 		local manadrain = t.getManaDrain(self, t)
 		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerful spell will continuously drain %0.1f mana while active.
+		This powerful spell will continuously drain %0.2f mana while active.
 		The damage will increase with the Magic stat]]):
 		format(targetcount, damDesc(self, DamageType.LIGHTNING, damage),-manadrain)
 	end,

@@ -25,20 +25,23 @@ newTalent{
 	points = 5,
 	mana = 5,
 	cooldown = 14,
+	getRadius = function(self, t) return 5 + self:getTalentLevel(t) end,
+	getBlindPower = function(self, t) return 3 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=true, radius=5 + self:getTalentLevel(t), talent=t}
+		local tg = {type="ball", range=0, friendlyfire=true, radius=t.getRadius(self, t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		if self:getTalentLevel(t) >= 3 then
 			tg.friendlyfire = false
-			self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
+			self:project(tg, self.x, self.y, DamageType.BLIND, t.getBlindPower(self, t))
 		end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
+		local radius = t.getRadius(self, t)
 		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
-		At level 3 it also blinds all who see it (except the caster).
-		The radius will increase with the Magic stat]]):format(5 + self:getTalentLevel(t))
+		At level 3 it also blinds all who see it (except the caster).]]):
+		format(radius)
 	end,
 }
 
@@ -53,12 +56,12 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	activate = function(self, t)
-		local power = self:combatTalentSpellDamage(t, 4, 30)
 		game:playSoundNear(self, "talents/heal")
 		return {
 			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
-			def = self:addTemporaryValue("combat_def", power),
+			def = self:addTemporaryValue("combat_def", t.getDefense(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -67,8 +70,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local defence = t.getDefense(self, t)
 		return ([[The caster's image blurs, granting %d bonus to defense.
-		The bonus will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30))
+		The bonus will increase with the Magic stat]]):
+		format(defence)
 	end,
 }
 
@@ -83,12 +88,12 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	activate = function(self, t)
-		local power = self:combatTalentSpellDamage(t, 10, 50)
 		game:playSoundNear(self, "talents/heal")
 		return {
 			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ARCANE]=power}),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ARCANE]=t.getDamage(self, t)}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -97,8 +102,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[The caster is surrounded by a phantasmal shield. If hit in melee, the shield will deal %d arcane damage to the attacker.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.ARCANE, self:combatTalentSpellDamage(t, 10, 50)))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.ARCANE, damage))
 	end,
 }
 
@@ -113,11 +120,11 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getInvisibilityPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	activate = function(self, t)
-		local power = self:combatTalentSpellDamage(t, 10, 30)
 		game:playSoundNear(self, "talents/heal")
 		return {
-			invisible = self:addTemporaryValue("invisible", power),
+			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
 			drain = self:addTemporaryValue("mana_regen", -5),
 		}
 	end,
@@ -127,9 +134,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local invisi = t.getInvisibilityPower(self, t)
 		return ([[The caster fades from sight, granting %d bonus to invisibility.
 		Beware, you should take off your light, otherwise you will still be easily spotted.
-		This powerful spell constantly drains your mana while active.
-		The bonus will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 30))
+		This powerful spell constantly drains your 5 mana while active.
+		The bonus will increase with the Magic stat]]):
+		format(invisi)
 	end,
 }

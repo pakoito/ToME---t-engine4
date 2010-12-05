@@ -30,6 +30,7 @@ newTalent{
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
+	getDamageMod = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1.1) end,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
@@ -62,7 +63,7 @@ newTalent{
 		local damrange = self:combatDamageRange(combat)
 		dam = rng.range(dam, dam * damrange)
 		dam = self:spellCrit(dam)
-		dam = dam * self:combatTalentWeaponDamage(t, 0.4, 1.1)
+		dam = dam * t.getDamageMod(self, t)
 
 		self:projectile(tg, x, y, damtype, dam, {type=explosion})
 
@@ -70,9 +71,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damagemod = t.getDamageMod(self, t)
 		return ([[Channel raw mana through your staff, projecting a bolt of your staff's damage type doing %d%% staff damage.
 		This attack always has a 100%% chance to hit and ignores target armour.]]):
-		format(self:combatTalentWeaponDamage(t, 0.4, 1.1) * 100)
+		format(damagemod * 100)
 	end,
 }
 
@@ -82,8 +84,11 @@ newTalent{
 	mode = "passive",
 	require = spells_req2,
 	points = 5,
+	getDamage = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) end,
 	info = function(self, t)
-		return ([[Increases damage done with staves by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
+		local damage = t.getDamage(self, t)
+		return ([[Increases damage done with staves by %d%%.]]):
+		format(100 * damage)
 	end,
 }
 
@@ -98,6 +103,7 @@ newTalent{
 	tactical = {
 		DEFEND = 20,
 	},
+	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
 	activate = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
@@ -105,7 +111,7 @@ newTalent{
 			return
 		end
 
-		local power = self:combatTalentSpellDamage(t, 10, 20)
+		local power = t.getDefense(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			dam = self:addTemporaryValue("combat_dam", -power / 2),
@@ -118,8 +124,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local defense = t.getDefense(self, t)
 		return ([[Adopt a defensive posture, reducing your staff attack power by %d and increasing your defense by %d.]]):
-		format(self:combatTalentSpellDamage(t, 10, 20) / 2, self:combatTalentSpellDamage(t, 10, 20))
+		format(defense / 2, defense)
 	end,
 }
 
@@ -134,6 +141,8 @@ newTalent{
 		ATTACK = 10,
 	},
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
+	getDazeDuration = function(self, t) return 4 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
@@ -145,12 +154,12 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.5))
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getDamage(self, t))
 
 		-- Try to stun !
 		if hit then
 			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, 4 + self:getTalentLevel(t), {})
+				target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {})
 			else
 				game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
 			end
@@ -159,6 +168,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit a target for %d%% melee damage and daze it for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 4 + self:getTalentLevel(t))
+		local damage = t.getDamage(self, t)
+		local dazedur = t.getDazeDuration(self, t)
+		return ([[Hit a target for %d%% melee damage and daze it for %d turns.
+		Daze chance will improve with talent level.]]):
+		format(100 * damage, dazedur)
 	end,
 }

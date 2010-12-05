@@ -31,19 +31,18 @@ newTalent{
 	range = 15,
 	direct_hit = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
+	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local duration = self:getTalentLevel(t) + 2
-		local radius = 3
-		local dam = self:combatTalentSpellDamage(t, 4, 50)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			x, y, duration,
-			DamageType.ACID, dam,
-			radius,
+			x, y, t.getDuration(self, t),
+			DamageType.ACID, t.getDamage(self, t),
+			3,
 			5, nil,
 			{type="vapour"},
 			nil, self:spellFriendlyFire()
@@ -52,8 +51,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Corrosive fumes rise from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 4, 50)), self:getTalentLevel(t) + 2)
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.ACID, damage), duration)
 	end,
 }
 
@@ -72,18 +74,20 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 12, 180) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.COLD, self:spellCrit(self:combatTalentSpellDamage(t, 12, 180)), {type="freeze"})
+		self:project(tg, x, y, DamageType.COLD, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
 		self:project(tg, x, y, DamageType.FREEZE, 3)
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Condenses ambient water on a target, freezing it for a short while and damaging it for %0.2f.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 12, 180)))
+		local damage = t.getDamage(self, t)
+		return ([[Condenses ambient water on a target, freezing it for 3 turns and damaging it for %0.2f.
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, damage))
 	end,
 }
 
@@ -99,15 +103,14 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	direct_hit = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
+	getDuration = function(self, t) return 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t) end,
 	action = function(self, t)
-		local duration = 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t)
-		local radius = 1
-		local dam = self:combatTalentSpellDamage(t, 5, 90)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.WAVE, dam,
-			radius,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.WAVE, t.getDamage(self, t),
+			1,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
 			function(e)
@@ -120,8 +123,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[A wall of water rushes out from the caster doing %0.2f cold damage and %0.2f physical damage as well as knocking back targets each turn for %d turns.
-	        The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 90)/2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 5, 90)/2), 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t))
+	        The damage and duration will increase with the Magic stat]]):
+			format(damDesc(self, DamageType.COLD, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2), duration)
 	end,
 }
 
@@ -136,15 +142,14 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 20,
 	},
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
+	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local duration = 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t)
-		local radius = 3
-		local dam = self:combatTalentSpellDamage(t, 5, 90)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.ICE, dam,
-			radius,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.ICE, t.getDamage(self, t),
+			3,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
 			function(e)
@@ -158,8 +163,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		It has 25%% chance to freeze damaged targets.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 90)), 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t))
+		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
 }

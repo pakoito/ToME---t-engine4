@@ -30,9 +30,10 @@ newTalent{
 	},
 	direct_hit = true,
 	range = function(self, t) return math.floor(2 + self:getTalentLevel(t) * 0.7) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 170) end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
-		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 28, 170))
+		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
 		local x, y = self.x, self.y
 		-- Lightning ball gets a special treatment to make it look neat
@@ -50,7 +51,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local dam = damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 28, 170))
+		local dam = damDesc(self, DamageType.LIGHTNING, t.getDamage(self, t))
 		return ([[A lightning emanates from you in a circual wave, doing %0.2f to %0.2f lightning damage and possibly dazing them.
 		The damage will increase with the Magic stat]]):format(dam / 3, dam)
 	end,
@@ -68,18 +69,21 @@ newTalent{
 	},
 	range = 20,
 	reflectable = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 200) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_lightning", trail="lightningtrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:combatTalentSpellDamage(t, 25, 200)
+		local dam = t.getDamage(self, t)
 		self:projectile(tg, x, y, DamageType.LIGHTNING_DAZE, {daze=100, dam=self:spellCrit(rng.avg(dam / 3, dam, 3))}, {type="lightning_explosion"})
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of lightning, doing %0.2f lightning damage and dazing the target.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 25, 200)))
+		local damage = t.getDamage(self, t)
+		return ([[Conjures up a bolt of lightning, doing %0.2f to %0.2f lightning damage and dazing the target for 3 turns.
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.LIGHTNING, damage/3), damDesc(self, DamageType.LIGHTNING, damage))
 	end,
 }
 
@@ -96,12 +100,17 @@ newTalent{
 	},
 	range = 20,
 	direct_hit = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 150) end,
+	getChance = function(self, t) return 30 + self:getTalentLevel(t) * 5 end,
+	getRadius = function(self, t) 
+			local radius = 2
+			if self:getTalentLevel(t) >= 3 then radius = 3 end
+			return radius
+		end,
 	do_hurricane = function(self, t, target)
-		if not rng.percent(30 + self:getTalentLevel(t) * 5) then return end
+		if not rng.percent(t.getChance(self, t)) then return end
 
-		local rad = 2
-		if self:getTalentLevel(t) >= 3 then rad = 3 end
-		target:setEffect(target.EFF_HURRICANE, 10, {src=self, dam=self:combatTalentSpellDamage(t, 25, 150), radius=rad})
+		target:setEffect(target.EFF_HURRICANE, 10, {src=self, dam=t.getDamage(self, t), radius=t.getRadius(self, t) })
 		game:playSoundNear(self, "talents/thunderstorm")
 	end,
 	activate = function(self, t)
@@ -111,11 +120,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local dam = damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 25, 150))
-		return ([[Each time one of your lightning spell dazes a target it has %d%% chances to creates a chain reaction that summons a mighty Hurricane around the target.
+		local damage = t.getDamage(self, t)
+		local chance = t.getChance(self, t)
+		local radius = t.getRadius(self, t) 
+		return ([[Each time one of your lightning spell dazes a target it has %d%% chances to creates a chain reaction that summons a mighty Hurricane that last for 10 turns around the target with radius of %d.
 		Each turn all creatures around it will take %0.2f to %0.2f lightning damage.
 		Only 2 hurricanes can exist at the same time.
-		The damage will increase with the Magic stat]]):format(30 + self:getTalentLevel(t) * 5, dam / 3, dam)
+		The damage will increase with the Magic stat]]):format(chance, radius, damage / 3, damage)
 	end,
 }
 
@@ -127,11 +138,13 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 50,
 	cooldown = 30,
+	getLightningDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
+	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")
 		return {
-			dam = self:addTemporaryValue("inc_damage", {[DamageType.LIGHTNING] = self:getTalentLevelRaw(t) * 2}),
-			resist = self:addTemporaryValue("resists_pen", {[DamageType.LIGHTNING] = self:getTalentLevelRaw(t) * 10}),
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.LIGHTNING] = t.getLightningDamageIncrease(self, t)}),
+			resist = self:addTemporaryValue("resists_pen", {[DamageType.LIGHTNING] = t.getResistPenalty(self, t)}),
 			particle = self:addParticles(Particles.new("tempest", 1)),
 		}
 	end,
@@ -142,7 +155,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damageinc = t.getLightningDamageIncrease(self, t)
+		local ressistpen = t.getResistPenalty(self, t)
 		return ([[Surround yourself with a Tempest, increasing all your lightning damage by %d%% and ignoring %d%% lightning resistance of your targets.]])
-		:format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 10)
+		:format(damageinc, ressistpen)
 	end,
 }

@@ -32,8 +32,11 @@ newTalent{
 	mode = "passive",
 	require = spells_req1,
 	points = 5,
+	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.07 end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive fire, increasing damage by %d%%, and setting foes ablaze.]]):format(self:getTalentLevel(t) * 7)
+		local daminc = t.getIncrease(self, t)
+		return ([[When you throw your alchemist bombs you infuse them with explosive fire, increasing damage by %d%%, and setting foes ablaze.]]):
+		format(100 * daminc)
 	end,
 }
 
@@ -45,6 +48,7 @@ newTalent{
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
+	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
 	activate = function(self, t)
 		cancelInfusions(self)
 		game:playSoundNear(self, "talents/arcane")
@@ -57,7 +61,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive acid that can blind, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		local daminc = t.getIncrease(self, t)
+		return ([[When you throw your alchemist bombs you infuse them with explosive acid that can blind, increasing damage by %d%%.]]):
+		format(daminc)
 	end,
 }
 
@@ -69,6 +75,7 @@ newTalent{
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
+	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
 	activate = function(self, t)
 		cancelInfusions(self)
 		game:playSoundNear(self, "talents/arcane")
@@ -81,7 +88,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with lightning that can daze, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		local daminc = t.getIncrease(self, t)
+		return ([[When you throw your alchemist bombs you infuse them with lightning that can daze, increasing damage by %d%%.]]):
+		format(daminc)
 	end,
 }
 
@@ -93,6 +102,7 @@ newTalent{
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
+	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
 	activate = function(self, t)
 		cancelInfusions(self)
 		game:playSoundNear(self, "talents/arcane")
@@ -105,6 +115,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with frost that can freeze, increasing damage by %d%%.]]):format(self:getTalentLevel(t) * 5)
+		local daminc = t.getIncrease(self, t)
+		return ([[When you throw your alchemist bombs you infuse them with frost that can freeze, increasing damage by %d%%.]]):
+		format(daminc)
 	end,
 }

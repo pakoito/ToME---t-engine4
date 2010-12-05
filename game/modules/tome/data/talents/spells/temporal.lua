@@ -32,17 +32,20 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	getDuration = function(self, t) return 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.TIME_PRISON, 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t), {type="manathrust"})
+		self:project(tg, x, y, DamageType.TIME_PRISON, t.getDuration(self, t), {type="manathrust"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act nor be harmed.
-		The duration will increase with the Magic stat]]):format(4 + self:combatSpellpower(0.03) * self:getTalentLevel(t))
+		The duration will increase with the Magic stat]]):
+		format(duration)
 	end,
 }
 
@@ -62,16 +65,19 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
+	getSlow = function(self, t) return self:getTalentLevel(t) * 0.07 end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + self:getTalentLevel(t) * 0.07), {type="manathrust"})
+		self:projectile(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + t.getSlow(self, t)), {type="manathrust"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.]]):format(self:getTalentLevel(t) * 7)
+		local slow = t.getSlow(self, t)
+		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.]]):
+		format(100 * slow)
 	end,
 }
 
@@ -86,9 +92,10 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
+	getHaste = function(self, t) return self:getTalentLevel(t) * 0.07 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = 1 - 1 / (1 + self:getTalentLevel(t) * 0.07)
+		local power = 1 - 1 / (1 + t.getHaste(self, t))
 		return {
 			speed = self:addTemporaryValue("energy", {mod=power}),
 		}
@@ -98,7 +105,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Increases the caster's global speed by %d%%.]]):format(self:getTalentLevel(t) * 7)
+		local haste = t.getHaste(self, t)
+		return ([[Increases the caster's global speed by %d%%.]]):
+		format(100 * haste)
 	end,
 }
 
@@ -113,16 +122,19 @@ newTalent{
 		DEFENSE = 10,
 	},
 	range = 20,
+	getMaxAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 50, 170) end,
+	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
 	action = function(self, t)
-		local dur = util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15)
-		local power = self:combatTalentSpellDamage(t, 50, 170)
-		self:setEffect(self.EFF_TIME_SHIELD, dur, {power=power})
+		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t)})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
+		local maxabsorb = t.getMaxAbsorb(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[This intricate spell erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
 		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (5 turns).
-		The duration and max absorption will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 50, 170), util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15))
+		Max absorption will increase with the Magic stat]]):
+		format(maxabsorb, duration)
 	end,
 }

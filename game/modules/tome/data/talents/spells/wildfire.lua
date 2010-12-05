@@ -30,16 +30,18 @@ newTalent{
 	},
 	direct_hit = true,
 	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 180) end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
-		local grids = self:project(tg, self.x, self.y, DamageType.FIREKNOCKBACK, {dist=3, dam=self:spellCrit(self:combatTalentSpellDamage(t, 28, 180))})
+		local grids = self:project(tg, self.x, self.y, DamageType.FIREKNOCKBACK, {dist=3, dam=self:spellCrit(t.getDamage(self, t))})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[A wave of fire emanates from you, knocking back anything caught inside and setting them ablaze and doing %0.2f fire damage over 3 turns.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 28, 180)))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, damage))
 	end,
 }
 
@@ -54,12 +56,14 @@ newTalent{
 		ATTACKAREA = 40,
 	},
 	range = 20,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 240) end,
+	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
 	action = function(self, t)
-		local max = math.ceil(self:getTalentLevel(t) + 2)
+		local max = t.getTargetCount(self, t)
 		for i, act in ipairs(self.fov.actors_dist) do
 			if self:reactionToward(act) < 0 then
 				local tg = {type="hit", friendlyfire=false, talent=t}
-				local grids = self:project(tg, act.x, act.y, DamageType.FIREBURN, {dur=8, initial=0, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 240))})
+				local grids = self:project(tg, act.x, act.y, DamageType.FIREBURN, {dur=8, initial=0, dam=self:spellCrit(t.getDamage(self, t))})
 				game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_fire", {radius=1})
 
 				max = max - 1
@@ -70,9 +74,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local targetcount = t.getTargetCount(self, t)
 		return ([[Surround yourself in flames, setting all those in your line of sight ablaze and doing %0.2f fire damage over 8 turns.
 		At most it will affect %d foes.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 10, 240)), math.ceil(self:getTalentLevel(t) + 2))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, damage), targetcount)
 	end,
 }
 
@@ -88,12 +94,13 @@ newTalent{
 	},
 	range = 14,
 	requires_target = true,
+	getMultiplier = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1.5) end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2, friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
-		local mult = self:combatTalentWeaponDamage(t, 0.5, 1.5)
+		local mult = t.getMultiplier(self, t)
 
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
@@ -115,8 +122,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local mult = t.getMultiplier(self, t)
 		return ([[Disrupts all fires in a radius. All targets that were burning will combust, doing all the remaining burn damage instantly.
-		The combustion effect will deal %d%% of the normal burn damage.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100)
+		The combustion effect will deal %d%% of the normal burn damage.]]):format(mult * 100)
 	end,
 }
 
@@ -128,11 +136,13 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 50,
 	cooldown = 30,
+	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
+	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
 		return {
-			dam = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = self:getTalentLevelRaw(t) * 2}),
-			resist = self:addTemporaryValue("resists_pen", {[DamageType.FIRE] = self:getTalentLevelRaw(t) * 10}),
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
+			resist = self:addTemporaryValue("resists_pen", {[DamageType.FIRE] = t.getMaxAbsorb(self, t)}),
 			particle = self:addParticles(Particles.new("wildfire", 1)),
 		}
 	end,
@@ -143,7 +153,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damageinc = t.getFireDamageIncrease(self, t)
+		local ressistpen = t.getResistPenalty(self, t)
 		return ([[Surround yourself with Wildfire, increasing all your fire damage by %d%% and ignoring %d%% fire resistance of your targets.]])
-		:format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 10)
+		:format(damageinc, ressistpen)
 	end,
 }

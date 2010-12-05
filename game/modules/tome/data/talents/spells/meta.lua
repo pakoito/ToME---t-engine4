@@ -28,6 +28,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 3 end,
 	range = 20,
+	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local target = self
 
@@ -55,7 +56,7 @@ newTalent{
 			end
 		end
 
-		for i = 1, math.floor(self:getTalentLevel(t)) do
+		for i = 1, t.getRemoveCount(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
 
@@ -69,9 +70,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local count = t.getRemoveCount(self, t)
 		return ([[Removes up to %d magical effects (both good and bad) from the target.
-		At level 3 it can be targetted.
-		]]):format(self:getTalentLevel(t))
+		At level 3 it can be targetted.]]):
+		format(count)
 	end,
 }
 
@@ -81,9 +83,11 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	mode = "passive",
+	getChance = function(self, t) return self:getTalentLevelRaw(t) * 20 end,
 	info = function(self, t)
+		local chance = t.getChance(self, t)
 		return ([[You learn to shape your area spells, allowing you to carve a hole in them to avoid damaging yourself.  The chance of success is %d%%.]]):
-		format(self:getTalentLevelRaw(t) * 20)
+		format(chance)
 	end,
 }
 
@@ -98,11 +102,11 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
+	getCooldownReduction = function(self, t) return util.bound(self:getTalentLevelRaw(t) / 15, 0.05, 0.3) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = util.bound(self:getTalentLevelRaw(t) / 15, 0.05, 0.3)
 		return {
-			cd = self:addTemporaryValue("spell_cooldown_reduction", power),
+			cd = self:addTemporaryValue("spell_cooldown_reduction", t.getCooldownReduction(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -110,8 +114,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Reduces the cooldown of all spells by %d%%.
-		The reduction increases with the Magic stat]]):format(util.bound(self:getTalentLevelRaw(t) / 15, 0.05, 0.3) * 100)
+		local cooldownred = t.getCooldownReduction(self, t)
+		return ([[Reduces the cooldown of all spells by %d%%.]]):
+		format(cooldownred * 100)
 	end,
 }
 
@@ -122,16 +127,17 @@ newTalent{
 	points = 5,
 	mana = 70,
 	cooldown = 50,
+	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
+	getMaxLevel = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		local nb = math.ceil(self:getTalentLevel(t) + 2)
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= self:getTalentLevelRaw(t) and tt.type[1]:find("^spell/") then
+			if tt.type[2] <= t.getMaxLevel(self, t) and tt.type[1]:find("^spell/") then
 				tids[#tids+1] = tid
 			end
 		end
-		for i = 1, nb do
+		for i = 1, t.getTalentCount(self, t) do
 			if #tids == 0 then break end
 			local tid = rng.tableRemove(tids)
 			self.talents_cd[tid] = nil
@@ -141,7 +147,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local talentcount = t.getTalentCount(self, t)
+		local maxlevel = t.getMaxLevel(self, t)
 		return ([[Your mastery of the arcane flows allow you to reset the cooldown of %d of your spells of level %d or less.]]):
-		format(math.ceil(self:getTalentLevel(t) + 2), self:getTalentLevelRaw(t))
+		format(talentcount, maxlevel)
 	end,
 }

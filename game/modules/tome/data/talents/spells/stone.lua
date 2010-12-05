@@ -33,34 +33,41 @@ newTalent{
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 120) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
+		local damage = t.getDamage(self, t)
+		self:projectile(tg, x, y, DamageType.SPLIT_BLEED, self:spellCrit(damage), nil)
 		game:playSoundNear(self, "talents/earth")
 		--missile #2
 		local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 		local x, y = self:getTarget(tg2)
 		if x and y then
-			self:projectile(tg2, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
+			self:projectile(tg2, x, y, DamageType.SPLIT_BLEED, self:spellCrit(damage), nil)
 			game:playSoundNear(self, "talents/earth")
 		end
-		--missile #3 (Talent Level 4 Bonus Missile)
+		--missile #3 (Talent Level 5 Bonus Missile)
 		if self:getTalentLevel(t) >= 5 then
 			local tg3 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 			local x, y = self:getTarget(tg3)
 			if x and y then
-				self:projectile(tg3, x, y, DamageType.SPLIT_BLEED, self:spellCrit(self:combatTalentSpellDamage(t, 15, 120)), nil)
+				self:projectile(tg3, x, y, DamageType.SPLIT_BLEED, self:spellCrit(damage), nil)
 				game:playSoundNear(self, "talents/earth")
 			end
 		else end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures missile shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage over six turns.
-		At talent level 1 you conjure two missile with an additional missile at talent level 5.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 120)/2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 120)/2))
+		local count = 2
+		if self:getTalentLevel(t) >= 5 then
+			count = count + 1
+		end 
+		local damage = t.getDamage(self, t)
+		return ([[Conjures %d missile shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage every turn for 5 turns.
+		At talent level 5 you can conjure one additional missle.
+		The damage will increase with the Magic stat]]):format(count,damDesc(self, DamageType.PHYSICAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/12))
 	end,
 }
 
@@ -72,27 +79,27 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 70,
 	cooldown = 12,
+	getFireRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 80) end,
+	getLightningRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
+	getPhysicalRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 20) end,
+	getKnockbackRes = function(self, t) return self:getTalentLevel(t)/10 end,
+	getCooldownReduction = function(self, t) return self:getTalentLevel(t)/2 end,
 	activate = function(self, t)
-		local fire = self:combatTalentSpellDamage(t, 5, 80)
-		local light = self:combatTalentSpellDamage(t, 5, 50)
-		local phys = self:combatTalentSpellDamage(t, 5, 20)
-		local kb = self:getTalentLevel(t)/10
-		local cdr = self:getTalentLevel(t)/2
-		local rad = 5 + self:combatSpellpower(0.1) * self:getTalentLevel(t)
+		local cdr = t.getCooldownReduction(self, t)
 		game:playSoundNear(self, "talents/earth")
 		return {
 			particle = self:addParticles(Particles.new("stone_skin", 1)),
 			move = self:addTemporaryValue("never_move", 1),
-			knock = self:addTemporaryValue("knockback_immune", kb),
+			knock = self:addTemporaryValue("knockback_immune", t.getKnockbackRes(self, t)),
 			cdred = self:addTemporaryValue("talent_cd_reduction", {
 				[self.T_EARTHEN_MISSILES] = cdr,
 				[self.T_STRIKE] = cdr,
 				[self.T_EARTHQUAKE] = cdr,
 			}),
 			res = self:addTemporaryValue("resists", {
-				[DamageType.FIRE] = fire,
-				[DamageType.LIGHTNING] = light,
-				[DamageType.PHYSICAL] = phys,
+				[DamageType.FIRE] = t.getFireRes(self, t),
+				[DamageType.LIGHTNING] = t.getLightningRes(self, t),
+				[DamageType.PHYSICAL] = t.getPhysicalRes(self, t),
 			}),
 		}
 	end,
@@ -105,12 +112,17 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local fireres = t.getFireRes(self, t)
+		local lightningres = t.getLightningRes(self, t)
+		local physicalres = t.getPhysicalRes(self, t)
+		local cooldownred = t.getCooldownReduction(self, t)
+		local knockbackres = t.getKnockbackRes(self, t)
 		return ([[You root yourself into the earth and transform your flesh into stone.  While this spell is sustained you may not move and any forced movement will end the effect.
 		Your stoned form and your affinity with the earth while the spell is active has the following effects:
 		* Reduces the cooldown of Earthen Missiles, Earthquake, and Strike by %d
 		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Physical Resistance, and %d%% Knockback Resistance
 		Resistances scale with the Magic Stat.]])
-		:format((self:getTalentLevel(t)/2), self:combatTalentSpellDamage(t, 5, 80), self:combatTalentSpellDamage(t, 5, 50), self:combatTalentSpellDamage(t, 5, 20), (self:getTalentLevel(t)*10))
+		:format(cooldownred, fireres, lightningres, physicalres, knockbackres*100)
 	end,
 }
 
@@ -128,19 +140,19 @@ newTalent{
 	range = 20,
 	direct_hit = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
+	getDuration = function(self, t) return 3 + self:getTalentLevel(t) end,
+	getRadius = function(self, t) return 2 + (self:getTalentLevel(t)/2) end,
 	action = function(self, t)
-		local duration = 3 + self:getTalentLevel(t)
-		local radius = 2 + (self:getTalentLevel(t)/2)
-		local dam = self:combatTalentSpellDamage(t, 15, 70)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			x, y, duration,
-			DamageType.PHYSICAL_STUN, dam,
-			radius,
+			x, y, t.getDuration(self, t),
+			DamageType.PHYSICAL_STUN, t.getDamage(self, t),
+			t.getRadius(self, t),
 			5, nil,
 			{type="quake"},
 			nil, self:spellFriendlyFire()
@@ -150,8 +162,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local radius = t.getRadius(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Causes a violent earthquake that deals %0.2f physical damage in a radius of %d each turn for %d turns and potentially stuns all creatures it affects.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 15, 70)), 2 + (self:getTalentLevel(t)/2), 3 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
 	end,
 }
 
@@ -163,11 +179,13 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 50,
 	cooldown = 30,
+	getPhysicalDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
+	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
 		return {
-			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = self:getTalentLevelRaw(t) * 2}),
-			resist = self:addTemporaryValue("resists_pen", {[DamageType.PHYSICAL] = self:getTalentLevelRaw(t) * 10}),
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = t.getPhysicalDamageIncrease(self, t)}),
+			resist = self:addTemporaryValue("resists_pen", {[DamageType.PHYSICAL] = t.getResistPenalty(self, t)}),
 			particle = self:addParticles(Particles.new("crystalline_focus", 1)),
 		}
 	end,
@@ -178,7 +196,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damageinc = t.getPhysicalDamageIncrease(self, t)
+		local ressistpen = t.getResistPenalty(self, t)
 		return ([[Concentrate on maintaining a Crystalline Focus, increasing all your physical damage by %d%% and ignoring %d%% physical resistance of your targets.]])
-		:format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 10)
+		:format(damageinc, ressistpen)
 	end,
 }
