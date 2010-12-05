@@ -121,11 +121,13 @@ newTalent{
 	direct_hit = true,
 	absorb = function(self, t, p)
 		game.logPlayer(self, "Your bone shield absorbs the damage!")
-		local pid = table.remove(p.particles)
-		if pid then self:removeParticles(pid) end
-		if #p.particles <= 0 then
-			if self:isTalentActive(t.id) then self:forceUseTalent(t.id, {ignore_energy=true}) end
-		end
+		game:onTickEnd(function() -- Happens on tick end to avoid problems
+			local pid = table.remove(p.particles)
+			if pid then self:removeParticles(pid) end
+			if #p.particles <= 0 then
+				if self:isTalentActive(t.id) then self:forceUseTalent(t.id, {ignore_energy=true}) end
+			end
+		end)
 	end,
 	activate = function(self, t)
 		local nb = math.floor(self:getTalentLevel(t))
