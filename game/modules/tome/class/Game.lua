@@ -138,7 +138,7 @@ function _M:newGame()
 		end
 
 		-- Register the character online if possible
-		self.player:getUUID()
+--		self.player:getUUID()
 	end
 
 	-- Load for quick birth
@@ -1026,7 +1026,7 @@ function _M:saveGame()
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
-	game.player:saveUUID()
+--	game.player:saveUUID()
 	self.log("Saving game...")
 end
 
