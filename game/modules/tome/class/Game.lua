@@ -389,6 +389,15 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		return
 	end
 
+	if game.player:isTalentActive(game.player.T_JUMPGATE) then
+		game.player:forceUseTalent(game.player.T_JUMPGATE, {ignore_energy=true})
+	end
+	
+	if game.player:isTalentActive(game.player.T_JUMPGATE_TWO) then
+		game.player:forceUseTalent(game.player.T_JUMPGATE_TWO, {ignore_energy=true})
+	end
+	
+	
 	local left_zone = self.zone
 
 	if self.zone and self.zone.on_leave then

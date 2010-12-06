@@ -106,7 +106,7 @@ newTalent{
 			image = "terrain/wormhole.png",
 			display = '&', color_r=255, color_g=255, color_b=255, back_color=colors.STEEL_BLUE,
 			message = "@Target@ moves through the wormhole.",
-		triggered = function(self, x, y, who)
+			triggered = function(self, x, y, who)
 			local tx, ty = util.findFreeGrid(self.dest.x, self.dest.y, 5, true, {[engine.Map.ACTOR]=true})
 				if not tx or not who:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") then
 					game.logPlayer(who, "You try to enter the wormhole but a violent force pushes you back.")

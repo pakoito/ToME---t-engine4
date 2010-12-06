@@ -191,6 +191,11 @@ function _M:act()
 			end
 		end
 	end
+	
+	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
+		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})
+		game.logSeen(self, "%s's darkness can no longer hold back the light!", self.name:capitalize())
+	end
 
 	-- Cooldown talents
 	self:cooldownTalents()
@@ -845,8 +850,13 @@ function _M:onTakeHit(value, src)
 	end
 
 	if value > 0 and self:isTalentActive(self.T_SHIELD_OF_LIGHT) then
-		self:heal(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 1, 25), self)
-		self:incPositive(-3)
+		self:heal(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 5, 25), self)
+		if value <= 2 then
+			drain = value
+		else
+			drain = 2
+		end
+		self:incPositive(- drain)
 		if self:getPositive() <= 0 then
 			self:forceUseTalent(self.T_SHIELD_OF_LIGHT, {ignore_energy=true})
 		end

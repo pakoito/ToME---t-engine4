@@ -600,6 +600,12 @@ function _M:spellCrit(dam, add_chance)
 			local t = self:getTalentFromId(self.T_BLOOD_FURY)
 			t.on_crit(self, t)
 		end
+		
+		if self:isTalentActive(self.T_CORONA) then
+			local t = self:getTalentFromId(self.T_CORONA)
+			t.on_crit(self, t)	
+		end
+
 	end
 	return dam, crit
 end

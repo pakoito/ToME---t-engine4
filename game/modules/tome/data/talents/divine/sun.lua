@@ -84,13 +84,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Invokes a Sun flare, blinding your foes and lighting up your immediate area.
+		return ([[Invokes a radius %d Sun flare, blinding your foes for %d turns and lighting up your immediate area.
 		At level 3 it will start dealing %0.2f light damage.
 		The damage will increase with the Magic stat]]):
-		format(
-			damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 4, 80))
-		)
-	end,
+		format(2 + self:getTalentLevel(t) / 2, 3 + self:getTalentLevel(t),damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 4, 80)))
+   end,
 }
 
 newTalent{
@@ -148,7 +146,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures a furious burst of Sunlight, dealing %0.2f light damage to all those around you in a radius of 4.
+		return ([[Conjures a furious burst of Sunlight, dealing %0.2f light damage to all those around you in a radius of 3.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 10, 160)))
 	end,
 }

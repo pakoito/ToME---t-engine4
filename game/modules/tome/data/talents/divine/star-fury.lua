@@ -125,8 +125,8 @@ newTalent{
 		It also regenerates both your negative and positive energies.
 		The damage will increase with the Magic stat]]):
 		format(
-			damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 10, 100)),
-			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 10, 100)),
+			damDesc(self, DamageType.LIGHT, 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)),
+			damDesc(self, DamageType.DARKNESS, 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)),
 			self:getTalentRange(t)
 		)
 	end,
@@ -158,7 +158,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A star falls onto the target, stunning all and doing %0.2f darkness damage.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 28, 170)))
-	end,
-}
+		return ([[A star falls into area of radius %d, stunning all for 4 turns and doing %0.2f darkness damage.
+		The damage will increase with the Magic stat
+		]]):format(1 + math.floor(self:getTalentLevelRaw(t) / 3), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 28, 170)))
+   end,
+   }

@@ -103,14 +103,14 @@ newTalent{
 		HEAL = 10,
 	},
 	action = function(self, t)
-		local dur = 5 + self:getTalentLevel(t)
-		self:setEffect(self.EFF_PROVIDENCE, dur, {power=self:combatTalentSpellDamage(t, 5, 25)})
+		local dur = 2 + math.ceil(self:getTalentLevel(t))
+		self:setEffect(self.EFF_PROVIDENCE, dur, {power=self:combatTalentSpellDamage(t, 10, 50)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Places you under light's protection, regenerating your body for %d life and removing a single negative effect from you each turn for %d turns.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 5, 25), 5 + self:getTalentLevel(t))
+		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50), math.ceil(2 + self:getTalentLevel(t)))
 	end,
 }
 

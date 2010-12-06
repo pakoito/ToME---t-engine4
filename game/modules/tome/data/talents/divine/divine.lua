@@ -27,6 +27,9 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/g
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/hymns", name = "hymns", generic = true, description = "Chant the glory of the moon." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/circles", name = "circles", description = "Bind the power of the moon into circles at your feet." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/eclipse", name = "eclipse", description = "The moment of the Eclipse is the moment of Truth, when Sun and Moon are in tandem and the energies of the world hang in balance. Intense focus allows the greatest Anorithils to harness these energies to unleash devastating forces.." }
+
 
 newTalentType{ no_silence=true, is_spell=true, type="divine/other", name = "other", description = "Various divine talents." }
 
@@ -82,3 +85,5 @@ load("/data/talents/divine/guardian.lua")
 load("/data/talents/divine/twilight.lua")
 load("/data/talents/divine/hymns.lua")
 load("/data/talents/divine/star-fury.lua")
+load("/data/talents/divine/eclipse.lua")
+load("/data/talents/divine/circles.lua")

@@ -326,6 +326,7 @@ newTalent{
 
 				m.summoner = self
 				m.summon_time = filter.lastfor
+				m.faction = self.faction 
 
 				game.zone:addEntity(game.level, m, "actor", x, y)
 

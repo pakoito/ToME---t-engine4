@@ -2687,3 +2687,85 @@ newEffect{
 		end
 	end,
 }
+
+
+newEffect{
+	name = "TOTALITY",
+	desc = "Totality",
+	long_desc = function(self, eff) return ("The target's light and darkness spell penetration has been increased by %d%%."):format(eff.power, eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.penet = self:addTemporaryValue("resists_pen", {
+			[DamageType.DARKNESS] = eff.power,
+			[DamageType.LIGHT] = eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists_pen", eff.penet)
+	end,
+}
+
+-- Circles
+
+newEffect{
+	name = "SANCTITY",
+	desc = "Sanctity",
+	long_desc = function(self, eff) return ("The target is protected from silence effects.") end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.silence = self:addTemporaryValue("silence_immune", 1)	
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("silence_immune", eff.silence)
+	end,
+}
+
+newEffect{
+	name = "SHIFTING_SHADOWS",
+	desc = "Shifting Shadows",
+	long_desc = function(self, eff) return ("The target's defense is increased by %d."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {power = 1},
+	activate = function(self, eff)
+		eff.defense = self:addTemporaryValue("combat_def", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_def", eff.defense)
+	end,
+}
+
+newEffect{
+	name = "BLAZING_LIGHT",
+	desc = "Blazing Light",
+	long_desc = function(self, eff) return ("The target is gaining %d positive energy each turn."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {power = 1},
+	activate = function(self, eff)
+		eff.pos = self:addTemporaryValue("positive_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("positive_regen", eff.pos)
+	end,
+}
+
+newEffect{
+	name = "WARDING",
+	desc = "Warding",
+	long_desc = function(self, eff) return ("Projectiles aimed at the target are slowed by %d%%."):format (eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {power = 1},
+	activate = function(self, eff)
+		eff.ward = self:addTemporaryValue("slow_projectiles", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("slow_projectiles", eff.ward)
+	end,
+}
+

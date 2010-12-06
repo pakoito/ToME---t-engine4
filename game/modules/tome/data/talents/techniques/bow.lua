@@ -25,7 +25,7 @@ newTalent{
 	mode = "passive",
 	info = function(self, t)
 		return ([[Increases damage done with bows by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
-	end,
+	end, 
 }
 
 newTalent{

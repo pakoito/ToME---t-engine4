@@ -59,6 +59,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	combat_armor = 4, combat_def = 0,
 }
 
+
 newEntity{ base = "BASE_NPC_TROLL",
 	name = "stone troll", color=colors.DARK_SLATE_GRAY, image="npc/troll_s.png",
 	desc = [[A giant troll with scabrous black skin. With a shudder, you notice the belt of dwarf skulls around his massive waist.]],

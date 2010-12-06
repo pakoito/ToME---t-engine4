@@ -283,7 +283,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatMindpower() * 0.7, target:combatMentalResist(), 0, 95, 15) then
+			if target:checkHit(src:combatMindpower() * 0.7, target:combatMentalResist(), 0, 95, 15) and target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, math.ceil(dam), {})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
@@ -298,7 +298,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam) then
-			if target:checkHit(src:combatAttackDex() * 0.7, target:combatPhysicalResist(), 0, 95, 15) then
+			if target:checkHit(src:combatAttackDex() * 0.7, target:combatPhysicalResist(), 0, 95, 15) and target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, 4, {})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
@@ -1017,7 +1017,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 20) then
-				target:setEffect(target.EFF_SLOW, 2, {power=.3})
+				target:setEffect(target.EFF_SLOW, 1, {power=.3}, true)
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1036,6 +1036,73 @@ newDamageType{
 				game.level.map(x, y, Map.TERRAIN, newfeat or game.zone.grid_list[newfeat_name])
 				if not silence then
 					game.logSeen({x=x,y=y}, "%s turns into %s.", feat.name:capitalize(), (newfeat or game.zone.grid_list[newfeat_name]).name)
+				end
+			end
+		end
+	end,
+}
+
+-- Circles
+newDamageType{
+	name = "sanctity", type = "SANCTITY",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target == src then
+				target:setEffect(target.EFF_SANCTITY, 1, {power=dam})
+			elseif target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_SILENCED, 2, {}, true)
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "shiftingshadows", type = "SHIFTINGSHADOWS",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target == src then
+				target:setEffect(target.EFF_SHIFTING_SHADOWS, 1, {power= dam})
+			else
+				DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "blazinglight", type = "BLAZINGLIGHT",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target == src then
+				target:setEffect(target.EFF_BLAZING_LIGHT, 1, {power= 1 + (dam / 4)})
+			else
+				DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
+				DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "warding", type = "WARDING",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target == src then
+				target:setEffect(target.EFF_WARDING, 1, {power=dam})
+			elseif target ~= src then
+				DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam )
+				DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)
+				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+					target:knockback(src.x, src.y, 1)
+					game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+				else
+					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end
 			end
 		end

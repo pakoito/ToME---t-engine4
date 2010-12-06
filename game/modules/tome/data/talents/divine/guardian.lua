@@ -46,7 +46,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Infuse your shield with light energy, healing you for %0.2f each time you take damage.
-		Each heal will drain 3 positive energy. The spell ends when energy reaches 0.
+		Each heal will drain up to 2 positive energy. The spell ends when energy reaches 0.
 		The healing done will increase with the Magic stat]]):format(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 1, 25))
 	end,
 }
@@ -81,7 +81,7 @@ newTalent{
 			local tg = {type="ball", range=1, friendlyfire=true, radius=2 + self:getTalentLevel(t) / 2, talent=t}
 			self:project(tg, x, y, DamageType.LITE, 1)
 			tg.friendlyfire = false
-			local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150))
+			local grids = self:project(tg, x, y, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150))
 			game.level.map:particleEmitter(x, y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=x, ty=y, max_alpha=80})
 			game:playSoundNear(self, "talents/flame")
 		end
@@ -89,8 +89,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150)), 2 + self:getTalentLevel(t) / 2)
+		return ([[Hits the target with your weapon and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.
+	]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150)), 2 + self:getTalentLevel(t) / 2)
 	end,
 }
 

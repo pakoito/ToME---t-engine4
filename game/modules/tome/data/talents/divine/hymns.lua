@@ -144,7 +144,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you %d%% stun, blindness and confusion resistances.
 		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
-		The damage will increase with the Magic stat]]):format(100 * (0.2 + self:getTalentLevel(t) / 10), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
+		The resistances and damage will increase with the Magic stat]]):format(100 * (0.2 + self:getTalentLevel(t) / 10), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 25)))
 	end,
 }
 
@@ -208,7 +208,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Conjures a shroud of dancing shadows with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random shadow beam will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerful spell will continuously drain negative energy while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 7, 80)))
+		This powerful spell will continuously drain %d negative energy while active.
+		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 7, 80)), self:getTalentLevelRaw(t))
 	end,
 }

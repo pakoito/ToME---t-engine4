@@ -76,7 +76,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Designate a target as martyr for 10 turns. When the martyr deals damage it also damages itself for %d%% of its damage dealt.
 		The damage percent will increase with the Magic stat]]):
-		format(8 * self:getTalentLevelRaw(t))
+		format(	8 * self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -122,9 +122,9 @@ newTalent{
 	cooldown = 10,
 	positive = 10,
 	tactical = {
-		ATTACKAREA = 10,
+		ATTACK = 10,
 	},
-	range = 3,
+	range = 1,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
