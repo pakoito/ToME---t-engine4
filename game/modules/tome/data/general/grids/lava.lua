@@ -27,7 +27,7 @@ newEntity{
 	on_stand = function(self, x, y, who)
 		local DT = engine.DamageType
 		local dam = DT:get(DT.FIRE).projector(self, x, y, DT.FIRE, rng.range(self.mindam, self.maxdam))
-		if dam > 0 then game.logPlayer(who, "The laval burns you!") end
+		if dam > 0 then game.logPlayer(who, "The lava burns you!") end
 	end,
 }
 
