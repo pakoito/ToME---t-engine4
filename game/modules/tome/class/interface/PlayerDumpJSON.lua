@@ -18,8 +18,8 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local DamageType = require "engine.DamageType"
 local base = require "engine.interface.PlayerDumpJSON"
+local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(class.make{}, base))
 
