@@ -206,7 +206,7 @@ function _M:getName(t)
 		end
 	else
 		local _, c = self:getDisplayColor()
-		local ds = self:getDisplayString()
+		local ds = t.no_image and "" or self:getDisplayString()
 		if qty == 1 or t.no_count then return c..ds..name.."#LAST#"
 		else return c..qty.." "..ds..name.."#LAST#"
 		end

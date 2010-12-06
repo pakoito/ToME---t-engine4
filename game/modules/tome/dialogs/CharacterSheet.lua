@@ -51,6 +51,17 @@ function _M:mouseTooltip(text, _, _, _, w, h, x, y)
 	}, true)
 end
 
+function _M:mouseLink(link, text, _, _, _, w, h, x, y)
+	self:mouseZones({
+		{ x=x, y=y, w=w, h=h, fct=function(button)
+			game.tooltip_x, game.tooltip_y = 1, 1; game.tooltip:displayAtMap(nil, nil, game.w, game.h, text)
+			if button == "left" then
+				util.browserOpenUrl(link)
+			end
+		end},
+	}, true)
+end
+
 function _M:drawDialog(s)
 	self.mouse:reset()
 	self:mouseZones({
@@ -60,8 +71,17 @@ function _M:drawDialog(s)
 	local player = self.actor
 	local cur_exp, max_exp = player.exp, player:getExpChart(player.level+1)
 
+	local basey = 0
 	local h = 0
 	local w = 0
+	if player.__te4_uuid and profile.auth and profile.auth.drupid then
+		local path = "http://te4.org/characters/"..profile.auth.drupid.."/tome/"..player.__te4_uuid
+		self:mouseLink(path, "You can find your character sheet online", s:drawColorStringBlended(self.font, "Online URL: #LIGHT_BLUE##{underline}#"..path.."#{normal}#", w, h, 255, 255, 255)) h = h + self.font_h
+		basey = self.font_h + 9
+	end
+
+	h = basey
+	w = 0
 	s:drawStringBlended(self.font, "Sex:   "..(player.descriptor.sex or (player.female and "Female" or "Male")), w, h, 0, 200, 255) h = h + self.font_h
 	s:drawStringBlended(self.font, "Race:  "..(player.descriptor.subrace or player.type:capitalize()), w, h, 0, 200, 255) h = h + self.font_h
 	s:drawStringBlended(self.font, "Class: "..(player.descriptor.subclass or player.subtype:capitalize()), w, h, 0, 200, 255) h = h + self.font_h
@@ -113,7 +133,7 @@ function _M:drawDialog(s)
 		self:mouseTooltip("#GOLD##{bold}#"..t.name.."#{normal}##WHITE#\n"..tostring(desc), s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(t.name), w, h, 255, 255, 255)) h = h + self.font_h
 	end end
 
-	h = 0
+	h = basey
 	w = 200
 	-- All weapons in main hands
 	if player:getInven(player.INVEN_MAINHAND) then
@@ -155,7 +175,7 @@ function _M:drawDialog(s)
 		end
 	end
 
-	h = 0
+	h = basey
 	w = 400
 	self:mouseTooltip(self.TOOLTIP_FATIGUE, s:drawColorStringBlended(self.font, ("Fatigue:        #00ff00#%3d%%"):format(player.fatigue), w, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_ARMOR,   s:drawColorStringBlended(self.font, ("Armor:          #00ff00#%3d"):format(player:combatArmor()), w, h, 255, 255, 255)) h = h + self.font_h
@@ -189,7 +209,7 @@ function _M:drawDialog(s)
 	immune_type = "instakill_immune" immune_name = "Instadeath Resistance" if player:attr(immune_type) then self:mouseTooltip(self.TOOLTIP_SPECIFIC_IMMUNE, s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255)) h = h + self.font_h end
 	immune_type = "teleport_immune" immune_name = "Teleport Resistance" if player:attr(immune_type) then self:mouseTooltip(self.TOOLTIP_SPECIFIC_IMMUNE, s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255)) h = h + self.font_h end
 
-	h = 0
+	h = basey
 	w = 600
 	s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Current effects:", w, h, 255, 255, 255) h = h + self.font_h
 	for tid, act in pairs(player.sustain_talents) do

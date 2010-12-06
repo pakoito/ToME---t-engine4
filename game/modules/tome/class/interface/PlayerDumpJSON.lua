@@ -18,45 +18,24 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "Json2"
 local DamageType = require "engine.DamageType"
+local base = require "engine.interface.PlayerDumpJSON"
 
-module(..., package.seeall, class.make)
+module(..., package.seeall, class.inherit(class.make{}, base))
 
-function _M:getUUID()
-	local uuid = profile:registerNewCharacter(game.__mod_info.short_name)
-	if uuid then
-		self.__te4_uuid = uuid
-	end
-end
-
-function _M:saveUUID()
-	if not self.__te4_uuid then return end
-	local title, data = self:dumpToJSON()
-	if not data or not title then return end
-	profile:registerSaveChardump(game.__mod_info.short_name, self.__te4_uuid, title, data)
-end
-
-function _M:dumpToJSON()
-	if not self.__te4_uuid then return end
+function _M:dumpToJSON(js)
+	if not base.dumpToJSON(self, js) then return end
 
 	local nb_inscriptions = 0
 	for i = 1, self.max_inscriptions do if self.inscriptions[i] then nb_inscriptions = nb_inscriptions + 1 end end
 
-	local js = {}
-
-	js.sections = {
-		{display="character", table="char"},
-		{display="primary stats", table="stats"},
-		{display="resources", table="resources"},
-		{display=("inscriptions (%d/%d)"):format(nb_inscriptions, self.max_inscriptions), table="inscriptions"},
-		{display="offense", table="offense"},
-		{display="defense", table="defense"},
-	}
-
 	local cur_exp, max_exp = self.exp, self:getExpChart(self.level+1)
 	local title = ("%s the %s %s"):format(self.name, self.descriptor.subrace, self.descriptor.subclass)
-	js.char = {
+
+	-------------------------------------------------------------------
+	-- Character
+	-------------------------------------------------------------------
+	js:newSection("character", "char", "pairs", "add", {
 		{ game = string.format("%s (version %d.%d.%d)", game.__mod_info.long_name, game.__mod_info.version[1], game.__mod_info.version[2], game.__mod_info.version[3]) },
 		{ name = self.name },
 		{ sex = self.descriptor.sex },
@@ -67,36 +46,58 @@ function _M:dumpToJSON()
 		{ exp = string.format("%d%%", 100 * cur_exp / max_exp) },
 		{ gold = string.format("%d", self.money) },
 		{ died = string.format("%d times (now %s)", self.died_times or 0, self.dead and "dead" or "alive") },
-	}
+	})
 
-	js.stats = {
+	-------------------------------------------------------------------
+	-- Stats
+	-------------------------------------------------------------------
+	js:newSection("primary stats", "stats", "pairs", "break", {
 		{ strength = self:getStr() },
 		{ dexterity = self:getDex() },
 		{ magic = self:getMag() },
 		{ willpower = self:getWil() },
 		{ cunning = self:getCun() },
 		{ constitution = self:getCon() },
-	}
+	})
 
-	js.resources = { {life=string.format("%d/%d", self.life, self.max_life)} }
-	if self:knowTalent(self.T_STAMINA_POOL) then js.resources[#js.resources+1] = {stamina=string.format("%d/%d", self.stamina, self.max_stamina)} end
-	if self:knowTalent(self.T_MANA_POOL) then js.resources[#js.resources+1] = {mana=string.format("%d/%d", self.mana, self.max_mana)} end
-	if self:knowTalent(self.T_POSITIVE_POOL) then js.resources[#js.resources+1] = {positive=string.format("%d/%d", self.positive, self.max_positive)} end
-	if self:knowTalent(self.T_NEGATIVE_POOL) then js.resources[#js.resources+1] = {negative=string.format("%d/%d", self.negative, self.max_negative)} end
-	if self:knowTalent(self.T_VIM_POOL) then js.resources[#js.resources+1] = {vim=string.format("%d/%d", self.vim, self.max_vim)} end
-	if self:knowTalent(self.T_EQUILIBRIUM_POOL) then js.resources[#js.resources+1] = {equilibrium=string.format("%d", self.equilibrium)} end
-	if self:knowTalent(self.T_HATE_POOL) then js.resources[#js.resources+1] = {hate=string.format("%0.2f/%0.2f", self.hate, self.max_hate)} end
+	-------------------------------------------------------------------
+	-- Resources
+	-------------------------------------------------------------------
+	local r = js:newSection("resources", "resources", "pairs", "add")
+	r[#r+1] = {life=string.format("%d/%d", self.life, self.max_life)}
+	if self:knowTalent(self.T_STAMINA_POOL) then r[#r+1] = {stamina=string.format("%d/%d", self.stamina, self.max_stamina)} end
+	if self:knowTalent(self.T_MANA_POOL) then r[#r+1] = {mana=string.format("%d/%d", self.mana, self.max_mana)} end
+	if self:knowTalent(self.T_POSITIVE_POOL) then r[#r+1] = {positive=string.format("%d/%d", self.positive, self.max_positive)} end
+	if self:knowTalent(self.T_NEGATIVE_POOL) then r[#r+1] = {negative=string.format("%d/%d", self.negative, self.max_negative)} end
+	if self:knowTalent(self.T_VIM_POOL) then r[#r+1] = {vim=string.format("%d/%d", self.vim, self.max_vim)} end
+	if self:knowTalent(self.T_EQUILIBRIUM_POOL) then r[#r+1] = {equilibrium=string.format("%d", self.equilibrium)} end
+	if self:knowTalent(self.T_HATE_POOL) then r[#r+1] = {hate=string.format("%0.2f/%0.2f", self.hate, self.max_hate)} end
 
-	js.inscriptions = {}
+	-------------------------------------------------------------------
+	-- Inscriptions
+	-------------------------------------------------------------------
+	local ins = js:newSection(("inscriptions (%d/%d)"):format(nb_inscriptions, self.max_inscriptions), "inscriptions", "pairs", "break")
 	for i = 1, self.max_inscriptions do if self.inscriptions[i] then
 		local t = self:getTalentFromId("T_"..self.inscriptions[i])
 		local desc = self:getTalentFullDescription(t)
 		local p = t.name:split(": ")
-		js.inscriptions[#js.inscriptions+1] = {[p[1]] = p[2]}
+		ins[#ins+1] = {[p[1]] = p[2]}
 	end end
 
-	js.offense = {}
-	local c = js.offense
+	-------------------------------------------------------------------
+	-- Winner
+	-------------------------------------------------------------------
+	if self.winner then
+		local win = js:newSection("winner", "win", "text", nil)
+		for i, line in ipairs(self.winner_text) do
+			win[#win+1] = line:removeColorCodes()
+		end
+	end
+
+	-------------------------------------------------------------------
+	-- Offense
+	-------------------------------------------------------------------
+	local c = js:newSection("offense", "offense", "pairs", "add")
 	if self:getInven(self.INVEN_MAINHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
 			if o.combat then
@@ -131,6 +132,138 @@ function _M:dumpToJSON()
 		end
 	end
 
-	print(json.encode(js))
-	return title, json.encode(js)
+	-------------------------------------------------------------------
+	-- Defense
+	-------------------------------------------------------------------
+	local d = js:newSection("defense", "defense", "pairs", "break")
+	d[#d+1] = { ["fatigue"] = self.fatigue }
+	d[#d+1] = { ["armour"] = self:combatArmor() }
+	d[#d+1] = { ["defense"] = self:combatDefense() }
+	d[#d+1] = { ["ranged defense"] = self:combatDefenseRanged() }
+	d[#d+1] = { ["physical save"] = self:combatPhysicalResist() }
+	d[#d+1] = { ["spell save"] = self:combatSpellResist() }
+	d[#d+1] = { ["mental save"] = self:combatMentalResist() }
+	if self.resists.all then d[#d+1] = { ["all resists(cap)"] = string.format("%3d%%(%3d%%)", self.resists.all, self.resists_cap.all or 0) } end
+	for i, t in ipairs(DamageType.dam_def) do
+		if self.resists[DamageType[t.type]] and self.resists[DamageType[t.type]] ~= 0 then
+			d[#d+1] = { [t.name.." resist(cap)"] =  string.format("%3d%%(%3d%%)", self.resists[DamageType[t.type]] + (self.resists.all or 0), (self.resists_cap[DamageType[t.type]] or 0) + (self.resists_cap.all or 0)) }
+		end
+	end
+	immune_type = "poison_immune" immune_name = "Poison Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "cut_immune" immune_name = "Bleed Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "confusion_immune" immune_name = "Confusion Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "blind_immune" immune_name = "Blind Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "silence_immune" immune_name = "Silence Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "disarm_immune" immune_name = "Disarm Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "pin_immune" immune_name = "Pinning Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "stun_immune" immune_name = "Stun Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "fear_immune" immune_name = "Fear Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "knockback_immune" immune_name = "Knockback Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "stone_immune" immune_name = "Stoning Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "instakill_immune" immune_name = "Instadeath Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+	immune_type = "teleport_immune" immune_name = "Teleport Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
+
+	-------------------------------------------------------------------
+	-- Effects
+	-------------------------------------------------------------------
+	local tdef = js:newSection("talents", "talents", "pairs", "add")
+	for i, tt in ipairs(self.talents_types_def) do
+		local ttknown = self:knowTalentType(tt.type)
+		if not (self.talents_types[tt.type] == nil) and ttknown then
+			local cat = tt.type:gsub("/.*", "")
+			local catname = ("%s / %s"):format(cat:capitalize(), tt.name:capitalize())
+			tdef[#tdef+1] = { [catname] = ("(mastery %.02f)"):format(self:getTalentTypeMastery(tt.type)) }
+
+			-- Find all talents of this school
+			if (ttknown) then
+				for j, t in ipairs(tt.talents) do
+					if not t.hide then
+						local typename = "class"
+						if t.generic then typename = "generic" end
+						local skillname = ("<ul><li>%s (%s)</li></ul>"):format(t.name, typename)
+						tdef[#tdef+1] = { [skillname] = ("%d/%d"):format(self:getTalentLevelRaw(t.id), t.points) }
+					end
+				end
+			end
+		end
+	end
+
+	-------------------------------------------------------------------
+	-- Effects
+	-------------------------------------------------------------------
+	local e = js:newSection("current effects", "effects", "pairs", "add")
+	for tid, act in pairs(self.sustain_talents) do
+		if act then
+			local t = self:getTalentFromId(tid)
+			e[#e+1] = { Talent = t.name }
+		end
+	end
+	for eff_id, p in pairs(self.tmp) do
+		local e = self.tempeffect_def[eff_id]
+		local desc = e.long_desc(self, p)
+		if e.status == "detrimental" then
+			e[#e+1] = { ["detrimental effect"] = e.desc }
+		else
+			e[#e+1] = { ["beneficial effect"] = e.desc }
+		end
+	end
+
+	-------------------------------------------------------------------
+	-- Quests
+	-------------------------------------------------------------------
+	local quests = js:newSection("quests", "quests", "pairs", "add")
+	for id, q in pairs(self.quests or {}) do
+		quests[#quests+1] = { [q.status_text[q.status]] = {val=q.name, tooltip=q:desc(self)} }
+	end
+	table.sort(quests, function(a, b) local _, aname = next(a) local _, bname = next(b) return aname.val < bname.val end)
+
+	-------------------------------------------------------------------
+	-- Achievements
+	-------------------------------------------------------------------
+	local achs = js:newSection("achievements", "achievements", "pairs", "break")
+	for id, data in pairs(self.achievements or {}) do
+		local a = world:getAchievementFromId(id)
+		achs[#achs+1] = { [a.name] = {val=game.calendar:getTimeDate(data.turn, "%s %s %s year of Ascendancy at %02d:%02d"), tooltip=a.desc} }
+	end
+	table.sort(achs, function(a, b) local aname = next(a) local bname = next(b) return aname < bname end)
+
+	-------------------------------------------------------------------
+	-- Equip
+	-------------------------------------------------------------------
+	local equip = js:newSection("equipment", "equip", "pairs", "add")
+	for inven_id =  1, #self.inven_def do
+		if self.inven[inven_id] and self.inven_def[inven_id].is_worn then
+			for item, o in ipairs(self.inven[inven_id]) do
+				local desc = tostring(o:getDesc())
+				equip[#equip+1] = { [self.inven_def[inven_id].name] = { val=o:getName{do_color=true, no_image=true}, tooltip=desc, bg="000000" } }
+			end
+		end
+	end
+
+	-------------------------------------------------------------------
+	-- Inventory
+	-------------------------------------------------------------------
+	local inven = js:newSection("inventory", "inven", "list", "break")
+	for item, o in ipairs(self.inven[self.INVEN_INVEN]) do
+		local desc = tostring(o:getDesc())
+		inven[#inven+1] = { val=o:getName{do_color=true, no_image=true}, tooltip=desc, bg="000000" }
+	end
+
+	-------------------------------------------------------------------
+	-- Log
+	-------------------------------------------------------------------
+	local log = js:newSection("last messages", "log", "text", nil)
+	log[#log+1] = { val=table.concat(game.logdisplay:getLines(30), "#LAST#\n"), bg="000000" }
+
+	-- Cleanup numbers
+	for _, sec in ipairs(js.sections) do
+		if sec.type == "pairs" then
+			for __, line in ipairs(js[sec.table]) do
+				local k, e = next(line)
+				if type(e) == "number" then line[k] = math.floor(e) end
+			end
+		end
+	end
+
+	return title
 end

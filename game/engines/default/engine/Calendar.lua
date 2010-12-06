@@ -49,10 +49,10 @@ function _M:init(definition, datestring, start_year, start_day)
 	self.start_day = start_day or 1
 end
 
-function _M:getTimeDate(turn)
+function _M:getTimeDate(turn, dstr)
 	local doy, year = self:getDayOfYear(turn)
 	local hour, min = self:getTimeOfDay(turn)
-	return self.datestring:format(tostring(self:getDayOfMonth(doy)):ordinal(), self:getMonthName(doy), tostring(year):ordinal(), hour, min)
+	return (dstr or self.datestring):format(tostring(self:getDayOfMonth(doy)):ordinal(), self:getMonthName(doy), tostring(year):ordinal(), hour, min)
 end
 
 function _M:getDayOfYear(turn)

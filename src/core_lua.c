@@ -31,6 +31,7 @@
 #include "physfsrwops.h"
 #include "SFMT.h"
 #include "mzip.h"
+#include "zlib.h"
 #include "main.h"
 #include "useshader.h"
 #include <math.h>
@@ -2108,6 +2109,73 @@ static const struct luaL_reg fszipfile_reg[] =
 	{NULL, NULL},
 };
 
+/******************************************************************
+ ******************************************************************
+ *                            ZLIB                                *
+ ******************************************************************
+ ******************************************************************/
+
+static int lua_zlib_compress(lua_State *L)
+{
+	uLongf len;
+	const char *data = luaL_checklstring(L, 1, (size_t*)&len);
+	uLongf reslen = len * 1.1 + 12;
+	char *res = malloc(reslen);
+	z_stream zi;
+
+	zi.next_in = data;
+	zi.avail_in = len;
+	zi.total_in = 0;
+
+	zi.total_out = 0;
+
+	zi.zalloc = NULL;
+	zi.zfree = NULL;
+	zi.opaque = NULL;
+
+	deflateInit2(&zi, Z_BEST_COMPRESSION, Z_DEFLATED, 15 + 16, 8, Z_DEFAULT_STRATEGY);
+
+	int deflateStatus;
+	do {
+		zi.next_out = res + zi.total_out;
+
+		// Calculate the amount of remaining free space in the output buffer
+		// by subtracting the number of bytes that have been written so far
+		// from the buffer's total capacity
+		zi.avail_out = reslen - zi.total_out;
+
+		/* deflate() compresses as much data as possible, and stops/returns when
+		 the input buffer becomes empty or the output buffer becomes full. If
+		 deflate() returns Z_OK, it means that there are more bytes left to
+		 compress in the input buffer but the output buffer is full; the output
+		 buffer should be expanded and deflate should be called again (i.e., the
+		 loop should continue to rune). If deflate() returns Z_STREAM_END, the
+		 end of the input stream was reached (i.e.g, all of the data has been
+		 compressed) and the loop should stop. */
+		deflateStatus = deflate(&zi, Z_FINISH);
+	}
+	while (deflateStatus == Z_OK);
+
+	if (deflateStatus == Z_STREAM_END)
+	{
+		lua_pushlstring(L, res, zi.total_out);
+		free(res);
+		return 1;
+	}
+	else
+	{
+		free(res);
+		return 0;
+	}
+}
+
+
+static const struct luaL_reg zliblib[] =
+{
+	{"compress", lua_zlib_compress},
+	{NULL, NULL},
+};
+
 int luaopen_core(lua_State *L)
 {
 	auxiliar_newclass(L, "physfs{file}", fsfile_reg);
@@ -2120,6 +2188,7 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "core.display", displaylib, 0);
 	luaL_openlib(L, "core.mouse", mouselib, 0);
 	luaL_openlib(L, "core.key", keylib, 0);
+	luaL_openlib(L, "core.zlib", zliblib, 0);
 
 	luaL_openlib(L, "core.game", gamelib, 0);
 	lua_pushstring(L, "VERSION");
