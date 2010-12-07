@@ -101,9 +101,11 @@ newAI("move_world_hostile", function(self)
 			end
 		end end
 		local g = rng.table(gs)
-		self.ai_state.wander_x, self.ai_state.wander_y = g[1], g[2]
-		tx, ty = self.ai_state.wander_x, self.ai_state.wander_y
---		print("Hostile selected random wander", tx, ty)
+		if g then
+			self.ai_state.wander_x, self.ai_state.wander_y = g[1], g[2]
+			tx, ty = self.ai_state.wander_x, self.ai_state.wander_y
+--			print("Hostile selected random wander", tx, ty)
+		end
 	end
 
 	if tx and ty then
