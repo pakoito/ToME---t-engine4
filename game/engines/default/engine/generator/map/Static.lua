@@ -79,12 +79,16 @@ function _M:loadMap(file)
 		checkConnectivity = function(dst, src, type, subtype)
 			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], check_connectivity=src, type=type or "static", subtype=subtype or "static"}
 		end,
-		addSpot = function(dst, type, subtype)
-			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], type=type or "static", subtype=subtype or "static"}
+		addSpot = function(dst, type, subtype, additional)
+			local spot = {x=dst[1], y=dst[2], type=type or "static", subtype=subtype or "static"}
+			table.update(spot, additional)
+			self.spots[#self.spots+1] = spot
 		end,
-		addZone = function(dst, type, subtype)
+		addZone = function(dst, type, subtype, additional)
+			local zone = {x1=dst[1], y1=dst[2], x2=dst[3], y2=dst[4], type=type or "static", subtype=subtype or "static"}
+			table.update(zone, additional)
 			self.level.custom_zones = self.level.custom_zones or {}
-			self.level.custom_zones[#self.level.custom_zones+1] = {x1=dst[1], y1=dst[2], x2=dst[3], y2=dst[4], type=type or "static", subtype=subtype or "static"}
+			self.level.custom_zones[#self.level.custom_zones+1] = zone
 		end,
 	}
 	setfenv(f, setmetatable(g, {__index=_G}))
