@@ -264,7 +264,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Your golem rushes to the target, knocking it back and doing %d%% damage.
-		Knockback chance will increase with talent level]]):format(100 * damage)
+		Knockback chance will increase with talent level.]]):format(100 * damage)
 	end,
 }
 

@@ -28,10 +28,9 @@ newTalent{
 	spellpower_increase = { 5, 9, 13, 16, 18 },
 	getSpellpowerIncrease = function(self, t) return t.spellpower_increase[self:getTalentLevelRaw(t)] end,
 	activate = function(self, t)
-		local power = t.getSpellpowerIncrease(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
-			power = self:addTemporaryValue("combat_spellpower", power),
+			power = self:addTemporaryValue("combat_spellpower", t.getSpellpowerIncrease(self, t)),
 			particle = self:addParticles(Particles.new("arcane_power", 1)),
 		}
 	end,

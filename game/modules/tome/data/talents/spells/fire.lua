@@ -150,7 +150,7 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			x, y, t.getDamage(self, t),
+			x, y, t.getDuration(self, t),
 			DamageType.FIRE, t.getDamage(self, t),
 			radius,
 			5, nil,

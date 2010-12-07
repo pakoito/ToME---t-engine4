@@ -23,9 +23,12 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req1,
+	getCriticalChance = function(self, t) return 1 + self:getTalentLevel(t) * 1.3 end,
 	info = function(self, t)
+		local critchance = t.getCriticalChance(self, t)
 		return ([[You have learned to find and hit the weak spots. Your strikes have a %0.2f%% greater chance to be critical hits.
-		Also, when using knives, you now use your cunning score instead of your strength for bonus damage.]]):format(1 + self:getTalentLevel(t) * 1.3)
+		Also, when using knives, you now use your cunning score instead of your strength for bonus damage.]]):
+		format(critchance)
 	end,
 }
 
@@ -38,25 +41,29 @@ newTalent{
 	stamina = 15,
 	require = cuns_req2,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.4) end,
+	getArmorPierce = function(self, t) return 4 + (self:getTalentLevel(t) * self:getCun()) / 20 end,
+	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.4), true)
+		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if hitted then
-			local dur = 5 + math.ceil(self:getTalentLevel(t))
-			local power = 4 + (self:getTalentLevel(t) * self:getCun()) / 20
-			self:setEffect(self.EFF_DEADLY_STRIKES, dur, {power=power})
+			self:setEffect(self.EFF_DEADLY_STRIKES, t.getDuration(self, t), {power=t.getArmorPierce(self, t)})
 		end
 
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local apr = t.getArmorPierce(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[You hit your target doing %d%% damage. If your attack hits, you gain %d armour penetration for %d turns.
 		The APR will increase with Cunning.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.4), 4 + (self:getTalentLevel(t) * self:getCun()) / 20, 5 + math.ceil(self:getTalentLevel(t)))
+		format(100 * damage, apr, duration)
 	end,
 }
 
@@ -68,15 +75,18 @@ newTalent{
 	cooldown = 60,
 	stamina = 25,
 	require = cuns_req3,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * 1.5) end,
+	getDamage = function(self, t) return self:getWil(70) end,
 	action = function(self, t)
-		local dur = 3 + math.ceil(self:getTalentLevel(t) * 1.5)
-		local power = self:getWil(70)
-		self:setEffect(self.EFF_WILLFUL_COMBAT, dur, {power=power})
+		self:setEffect(self.EFF_WILLFUL_COMBAT, t.getDuration(self, t), {power=t.getDamage(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[For %d turns you put all your will into your blows, adding %d (based on Willpower) damage to each strike.]]):
-		format(3 + math.ceil(self:getTalentLevel(t) * 1.5), self:getWil(70))
+		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[For %d turns you put all your will into your blows, adding %d damage to each strike.
+		Damage will improve with your Willpower stat.]]):
+		format(duration, damage)
 	end,
 }
 
@@ -87,16 +97,18 @@ newTalent{
 	points = 5,
 	stamina = 50,
 	cooldown = 50,
+	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
+	getMaxLevel = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local nb = math.ceil(self:getTalentLevel(t) + 2)
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= self:getTalentLevelRaw(t) and (tt.type[1]:find("^cunning/")  or tt.type[1]:find("^technique/")) then
+			if tt.type[2] <= t.getMaxLevel(self, t) and (tt.type[1]:find("^cunning/")  or tt.type[1]:find("^technique/")) then
 				tids[#tids+1] = tid
 			end
 		end
-		for i = 1, nb do
+		for i = 1, t.getTalentCount(self, t) do
 			if #tids == 0 then break end
 			local tid = rng.tableRemove(tids)
 			self.talents_cd[tid] = nil
@@ -105,7 +117,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your quick wits allow you to reset the cooldown of %d of your combat talents of level %d or less.]]):
-		format(math.ceil(self:getTalentLevel(t) + 2), self:getTalentLevelRaw(t))
+		local talentcount = t.getTalentCount(self, t)
+		local maxlevel = t.getMaxLevel(self, t)
+		return ([[Your quick wits allow you to reset the cooldown of %d of your combat talents(cunning or technique) of level %d or less.]]):
+		format(talentcount, maxlevel)
 	end,
 }

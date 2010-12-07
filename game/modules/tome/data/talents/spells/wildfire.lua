@@ -142,7 +142,7 @@ newTalent{
 		game:playSoundNear(self, "talents/fire")
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
-			resist = self:addTemporaryValue("resists_pen", {[DamageType.FIRE] = t.getMaxAbsorb(self, t)}),
+			resist = self:addTemporaryValue("resists_pen", {[DamageType.FIRE] = t.getResistPenalty(self, t)}),
 			particle = self:addParticles(Particles.new("wildfire", 1)),
 		}
 	end,

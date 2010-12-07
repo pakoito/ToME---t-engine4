@@ -28,16 +28,18 @@ newTalent{
 	stamina = 10,
 	require = cuns_req1,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.2, 0.7) end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.2, 0.7), true)
+		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if hitted then
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 3 + math.ceil(self:getTalentLevel(t)), {})
+				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -46,8 +48,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.2, 0.7), 3 + math.ceil(self:getTalentLevel(t)))
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.
+		Stun chance increase with talent level and your Dexterity stat.]]):
+		format(100 * damage, duration)
 	end,
 }
 
@@ -57,9 +62,11 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req2,
+	getCriticalChance = function(self, t) return self:getTalentLevel(t) * 10 end,
 	info = function(self, t)
+		local chance = t.getCriticalChance(self, t)
 		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.]]):
-		format(self:getTalentLevel(t) * 10)
+		format(chance)
 	end,
 }
 newTalent{
@@ -71,6 +78,7 @@ newTalent{
 	stamina = 50,
 	require = cuns_req3,
 	requires_target = true,
+	getDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -79,8 +87,7 @@ newTalent{
 		local hitted = self:attackTarget(target, nil, 0, true)
 
 		if hitted then
-			local dur = 1 + self:getTalentLevel(t)
-			self:setEffect(self.EFF_EVASION, dur, {chance=50})
+			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
 
 			-- Displace
 			local tx, ty, sx, sy = target.x, target.y, self.x, self.y
@@ -93,9 +100,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Using a series of tricks and maneuvers, you switch places with your target.
-		Switching places will confuse your foes for a few turns, granting you evasion(50%%) for %d turns.]]):
-		format(1 + self:getTalentLevel(t))
+		Switching places will confuse your foes, granting you evasion(50%%) for %d turns.]]):
+		format(duration)
 	end,
 }
 
@@ -108,12 +116,16 @@ newTalent{
 	stamina = 30,
 	require = cuns_req4,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 1.4) end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getAttackPenalty = function(self, t) return 10 + self:getTalentLevel(t) * 3 end,
+	getDamagePenalty = function(self, t) return 10 + self:getTalentLevel(t) * 4 end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.9, 1.4), true)
+		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if hitted then
 			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
@@ -122,9 +134,9 @@ newTalent{
 					tw = tw[1] and tw[1].combat
 				end
 				tw = tw or target.combat
-				local atk = target:combatAttack(tw) * (10 + self:getTalentLevel(t) * 3) / 100
-				local dam = target:combatDamage(tw) * (10 + self:getTalentLevel(t) * 4) / 100
-				target:setEffect(target.EFF_CRIPPLE, 3 + math.ceil(self:getTalentLevel(t)), {atk=atk, dam=dam})
+				local atk = target:combatAttack(tw) * (t.getAttackPenalty(self, t)) / 100
+				local dam = target:combatDamage(tw) * (t.getDamagePenalty(self, t)) / 100
+				target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam})
 			else
 				game.logSeen(target, "%s is not crippled!", target.name:capitalize())
 			end
@@ -133,7 +145,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% attack and %d%% damage.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.9, 1.4), 3 + math.ceil(self:getTalentLevel(t)), 10 + self:getTalentLevel(t) * 3, 10 + self:getTalentLevel(t) * 4)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local attackpen = t.getAttackPenalty(self, t)
+		local damagepen = t.getDamagePenalty(self, t)
+		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% attack and %d%% damage.
+		Hit chance improves with talent level and your Dexterity stat.]]):
+		format(100 * damage, duration, attackpen, damagepen)
 	end,
 }

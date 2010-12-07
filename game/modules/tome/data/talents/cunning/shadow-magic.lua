@@ -25,6 +25,8 @@ newTalent{
 	require = cuns_req1,
 	sustain_stamina = 20,
 	cooldown = 5,
+	getDamage = function(self, t) return 3 + self:getTalentLevel(t) * 2 end,
+	getManaCost = function(self, t) return 1 + self:getTalentLevelRaw(t) / 1.5 end,
 	activate = function(self, t)
 		return {}
 	end,
@@ -32,8 +34,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Channel raw magical energy into your melee attacks, each doing %d darkness damage and costing %.2f mana.]]):
-		format(damDesc(self, DamageType.DARKNESS, 3 + self:getTalentLevel(t) * 2), 1 + self:getTalentLevelRaw(t) / 1.5)
+		local damage = t.getDamage(self, t)
+		local manacost = t.getManaCost(self, t)
+		return ([[Channel raw magical energy into your melee attacks, each doing %.2f darkness damage and costing %.2f mana.]]):
+		format(damDesc(self, DamageType.DARKNESS, damage), manacost)
 	end,
 }
 
@@ -43,9 +47,11 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req2,
+	getSpellpower = function(self, t) return 15 + self:getTalentLevel(t) * 3 end,
 	info = function(self, t)
+		local spellpower = t.getSpellpower(self, t)
 		return ([[The user gains a bonus to spellpower equal to %d%% of their cunning.]]):
-		format(15 + self:getTalentLevel(t) * 3)
+		format(spellpower)
 	end,
 }
 
@@ -58,10 +64,10 @@ newTalent{
 	sustain_stamina = 40,
 	require = cuns_req3,
 	range = 20,
+	getManaRegen = function(self, t) return self:getTalentLevel(t) / 14 end,
 	activate = function(self, t)
-		local power = self:getTalentLevel(t) / 14
 		return {
-			regen = self:addTemporaryValue("mana_regen", power),
+			regen = self:addTemporaryValue("mana_regen", t.getManaRegen(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -69,7 +75,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Regenerates %0.2f mana per turn while active.]]):format(self:getTalentLevel(t) / 14)
+		local manaregen = t.getManaRegen(self, t)
+		return ([[Regenerates %0.2f mana per turn while active.]]):
+		format(manaregen)
 	end,
 }
 
@@ -84,6 +92,7 @@ newTalent{
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	direct_hit = true,
 	requires_target = true,
+	getDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 
@@ -107,7 +116,7 @@ newTalent{
 		-- Attack ?
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, 2 + self:getTalentLevel(t), {})
+				target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {})
 			else
 				game.logSeen(target, "%s is not dazed!", target.name:capitalize())
 			end
@@ -115,8 +124,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Step through the shadows to your target, dazing it for %d turns.
 		Dazed targets can not act, but any damage will free them.]]):
-		format(2 + self:getTalentLevel(t))
+		format(duration)
 	end,
 }
