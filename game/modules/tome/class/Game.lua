@@ -392,12 +392,12 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if game.player:isTalentActive(game.player.T_JUMPGATE) then
 		game.player:forceUseTalent(game.player.T_JUMPGATE, {ignore_energy=true})
 	end
-	
+
 	if game.player:isTalentActive(game.player.T_JUMPGATE_TWO) then
 		game.player:forceUseTalent(game.player.T_JUMPGATE_TWO, {ignore_energy=true})
 	end
-	
-	
+
+
 	local left_zone = self.zone
 
 	if self.zone and self.zone.on_leave then
@@ -740,12 +740,11 @@ function _M:setupCommands()
 		end,
 		[{"_g","ctrl"}] = function()
 			if config.settings.tome.cheat then
---				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
---				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
+				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
+				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 --				game.player:magicMap(50)
 --				self.player:grantQuest("anti-antimagic")
 --				game:changeLevel(1,"test")
-				game.player:saveUUID()
 			end
 		end,
 	}

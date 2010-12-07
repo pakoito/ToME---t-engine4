@@ -262,7 +262,7 @@ newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
 	mana_regen = 100,
 	resists = {[DamageType.COLD] = 80},
 	resolvers.talents{
-		[Talents.T_FREEZE]=3,
+		[Talents.T_ICE_SHARDS]=3,
 	},
 }
 
@@ -355,6 +355,72 @@ newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
 	},
 }
 
+newEntity{ base = "BASE_NPC_HORROR",
+	name = "luminous horror", color=colors.YELLOW,
+	desc ="A lanky humanoid shape composed of yellow light.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 2,
+	autolevel = "caster",
+	combat_armor = 1, combat_def = 10,
+	combat = { dam=5, atk=15, apr=20, dammod={wil=0.6}, damtype=DamageType.LIGHT},
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+
+	resists = {all = 35, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
+
+	blind_immune = 1,
+	see_invisible = 10,
+
+	resolvers.talents{
+		[Talents.T_CHANT_OF_FORTITUDE]=3,
+		[Talents.T_SEARING_LIGHT]=3,
+		[Talents.T_FIREBEAM]=3,
+		[Talents.T_PROVIDENCE]=3,
+		[Talents.T_HEALING_LIGHT]=3,
+		[Talents.T_BARRIER]=3,
+	},
+
+	resolvers.sustains_at_birth(),
+
+	make_escort = {
+		{type="horror", subtype="eldritch", name="luminous horror", number=2},
+	},
+}
+
+newEntity{ base = "BASE_NPC_HORROR", define_as="TEST",
+	name = "radiant horror", color=colors.GOLD,
+	desc ="A lanky four-armed humanoid shape composed of bright golden light.  It's so bright it's hard to look at and you can feel heat radiating outward from it.",
+	level_range = {35, nil}, exp_worth = 1,
+	rarity = 8,
+	rank = 3,
+	autolevel = "caster",
+	max_life = resolvers.rngavg(220,250),
+	combat_armor = 1, combat_def = 10,
+	combat = { dam=20, atk=30, apr=40, dammod={wil=1}, damtype=DamageType.LIGHT},
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+
+	resists = {all = 40, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
+
+	blind_immune = 1,
+	see_invisible = 20,
+
+	resolvers.talents{
+		[Talents.T_CHANT_OF_FORTITUDE]=10,
+		[Talents.T_CIRCLE_OF_BLAZING_LIGHT]=10,
+		[Talents.T_SEARING_LIGHT]=10,
+		[Talents.T_FIREBEAM]=10,
+		[Talents.T_SUNBURST]=10,
+		[Talents.T_SUN_FLARE]=10,
+		[Talents.T_PROVIDENCE]=10,
+		[Talents.T_HEALING_LIGHT]=10,
+		[Talents.T_BARRIER]=10,
+	},
+
+	resolvers.sustains_at_birth(),
+
+	make_escort = {
+		{type="horror", subtype="eldritch", name="luminous horror", number=1, no_subescort=true},
+	},
+}
 ------------------------------------------------------------------------
 -- Uniques
 ------------------------------------------------------------------------
