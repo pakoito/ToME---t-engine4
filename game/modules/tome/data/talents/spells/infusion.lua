@@ -63,7 +63,7 @@ newTalent{
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
 		return ([[When you throw your alchemist bombs you infuse them with explosive acid that can blind, increasing damage by %d%%.]]):
-		format(daminc)
+		format(100 * daminc)
 	end,
 }
 
@@ -90,7 +90,7 @@ newTalent{
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
 		return ([[When you throw your alchemist bombs you infuse them with lightning that can daze, increasing damage by %d%%.]]):
-		format(daminc)
+		format(100 * daminc)
 	end,
 }
 
@@ -117,6 +117,6 @@ newTalent{
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
 		return ([[When you throw your alchemist bombs you infuse them with frost that can freeze, increasing damage by %d%%.]]):
-		format(daminc)
+		format(100 * daminc)
 	end,
 }

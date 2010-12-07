@@ -147,7 +147,7 @@ newTalent{
 	range = 12,
 	getFireDamageOnHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 45) end,
-	getFireDamageInSight = function(self, t) return sself:combatTalentSpellDamage(t, 15, 70) end,
+	getFireDamageInSight = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	getManaDrain = function(self, t) return -0.4 * self:getTalentLevelRaw(t) end,
 	do_fire = function(self, t)
 		if self:getMana() <= 0 then
