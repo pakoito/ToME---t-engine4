@@ -35,7 +35,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Preemptive shielding
 		if target.isTalentActive and target:isTalentActive(target.T_PREMONITION) then
 			local t = target:getTalentFromId(target.T_PREMONITION)
-			t.on_damage(target, target.T_PREMONITION, type)
+			t.on_damage(target, t, type)
 		end
 
 		-- Increases damage
@@ -74,7 +74,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Static reduce damage
 		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
-			dam = t.on_damage(target, target.T_ANTIMAGIC_SHIELD, type, dam)
+			dam = t.on_damage(target, t, type, dam)
 		end
 
 		print("[PROJECTOR] final dam", dam)
