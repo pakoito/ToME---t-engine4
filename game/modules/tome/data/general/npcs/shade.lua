@@ -77,16 +77,17 @@ newEntity{
 		-- Give some talents
 		local rtals = {
 			{tid=e.T_SUMMON, level=1},
-			{tid=e.T_DRAIN, level=4},
-			{tid=e.T_EMPATHIC_HEX, level=3},
-			{tid=e.T_MIND_SEAR, level=4},
-			{tid=e.T_VIRULENT_DISEASE, level=4},
-			{tid=e.T_CYST_BURST, level=3},
+			{tid=e.T_WILLFUL_STRIKE, level=5},
+			{tid=e.T_REPROACH, level=5},
+			{tid=e.T_ENRAGE, level=4},
+			{tid=e.T_FEED_STRENGTHS, level=4},
+			{tid=e.T_FEED_POWER, level=4},
 		}
 		for i = 1, 3 do
 			local t = rng.tableRemove(rtals)
 			e.talents[t.tid] = t.level
 		end
+		e:incStat("wil", 25)
 	end),
 }
 

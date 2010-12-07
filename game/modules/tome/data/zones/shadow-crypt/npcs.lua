@@ -70,14 +70,14 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 		-- When the bone shield is taken down, copy the player
 		if not self:isTalentActive(self.T_BONE_SHIELD) and not self.copied_player then
 			local a = mod.class.NPC.new{}
-			a:replaceWith(game.player:cloneFull())
+			a:replaceWith(game.player:resolveSource():cloneFull())
 			mod.class.NPC.castAs(a)
 			engine.interface.ActorAI.init(a, a)
 			a.no_drops = true
 			a.energy.value = 0
 			a.player = nil
 			a.rank = 4
-			a.name = "Shade of "..a.name
+			a.name = "Doomed Shade of "..a.name
 			a.color_r = 150 a.color_g = 150 a.color_b = 150
 			a._mo:invalidate()
 			a.ai = "dumb_talented_simple"
@@ -88,6 +88,8 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 			a.life = a.max_life
 			a.on_die = function(self)
 				world:gainAchievement("SHADOW_CLONE", game.player)
+				game:setAllowedBuild("afflicted")
+				game:setAllowedBuild("afflicted_doomed", true)
 				game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
 				game.logSeen(who, "As your shade dies, the magical veil protecting the stairs out vanishes.")
 			end
@@ -102,6 +104,19 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 				if t.mode == "sustained" and a:isTalentActive(t.id) then a:forceUseTalent(t.id, {ignore_energy=true}) end
 				a.talents[t.id] = nil
 			end
+
+			-- Add some
+			a.talents[a.T_UNNATURAL_BODY] = 7
+			a.talents[a.T_RELENTLESS] = 7
+			a.talents[a.T_ENRAGE] = 5
+			a.talents[a.T_FEED_HEALTH] = 5
+			a.talents[a.T_FEED_POWER] = 5
+			a.talents[a.T_FEED_STRENGTHS] = 5
+			a.talents[a.T_DARK_TENDRILS] = 5
+			a.talents[a.T_WILLFUL_STRIKE] = 7
+			a.talents[a.T_REPROACH] = 5
+			a.talents[a.T_CALL_SHADOWS] = 5
+			a:incStat("wil", a.level)
 
 			local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[engine.Map.ACTOR]=true})
 			if x and y then

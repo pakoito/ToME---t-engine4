@@ -2621,7 +2621,7 @@ newEffect{
 				eff.particles = nil
 			end
 
-			if eff.resistLossId then self:removeTemporaryValue("resists", eff.resistLossId) end
+			if eff.resistLossId then eff.target:removeTemporaryValue("resists", eff.resistLossId) end
 			eff.resistLossId = nil
 
 			if eff.extension <= 0 then
