@@ -618,7 +618,10 @@ function _M:onTakeHit(value, src)
 	if self:hasEffect(self.EFF_DAZED) then
 		self:removeEffect(self.EFF_DAZED)
 	end
-
+	-- Un-meditate
+	if self:hasEffect(self.EFF_MEDITATION) then
+		self:removeEffect(self.EFF_MEDITATION)
+	end
 	-- remove stalking if there is an interaction
 	if self.stalker and src and self.stalker == src then
 		self.stalker:removeEffect(self.EFF_STALKER)
