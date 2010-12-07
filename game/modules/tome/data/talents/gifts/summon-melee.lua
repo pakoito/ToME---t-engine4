@@ -313,7 +313,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Stone Golem for %d turns to attack your foes. Stone golems are formidable foes that can shake the ground with their might.
+		return ([[Summon a Stone Golem for %d turns to attack your foes. Stone golems are formidable foes that can become unstoppable foes.
 		It will get %d strength, %d constitution and 18 dexterity.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
