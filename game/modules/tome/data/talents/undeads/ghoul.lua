@@ -24,12 +24,16 @@ newTalent{
 	require = undeads_req1,
 	points = 5,
 	on_learn = function(self, t)
-		self:incStat(self.STAT_STR, 2)
-		self:incStat(self.STAT_CON, 2)
+		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] + 2
+		self:onStatChange(self.STAT_STR, 2)
+		self.inc_stats[self.STAT_CON] = self.inc_stats[self.STAT_CON] + 2
+		self:onStatChange(self.STAT_CON, 2)
 	end,
 	on_unlearn = function(self, t)
-		self:incStat(self.STAT_STR, -2)
-		self:incStat(self.STAT_CON, -2)
+		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] - 2
+		self:onStatChange(self.STAT_STR, -2)
+		self.inc_stats[self.STAT_CON] = self.inc_stats[self.STAT_CON] - 2
+		self:onStatChange(self.STAT_CON, -2)
 	end,
 	info = function(self, t)
 		return ([[Improves your ghoulish body, increasing strength and constitution by %d.]]):format(2 * self:getTalentLevelRaw(t))

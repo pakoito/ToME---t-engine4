@@ -191,7 +191,7 @@ function _M:act()
 			end
 		end
 	end
-	
+
 	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
 		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})
 		game.logSeen(self, "%s's darkness can no longer hold back the light!", self.name:capitalize())

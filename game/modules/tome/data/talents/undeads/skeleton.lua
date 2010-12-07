@@ -24,12 +24,16 @@ newTalent{
 	require = undeads_req1,
 	points = 5,
 	on_learn = function(self, t)
-		self:incStat(self.STAT_STR, 2)
-		self:incStat(self.STAT_DEX, 2)
+		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] + 2
+		self:onStatChange(self.STAT_STR, 2)
+		self.inc_stats[self.STAT_DEX] = self.inc_stats[self.STAT_DEX] + 2
+		self:onStatChange(self.STAT_DEX, 2)
 	end,
 	on_unlearn = function(self, t)
-		self:incStat(self.STAT_STR, -2)
-		self:incStat(self.STAT_DEX, -2)
+		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] - 2
+		self:onStatChange(self.STAT_STR, -2)
+		self.inc_stats[self.STAT_DEX] = self.inc_stats[self.STAT_DEX] - 2
+		self:onStatChange(self.STAT_DEX, -2)
 	end,
 	info = function(self, t)
 		return ([[Improves your skeletal condition, increasing strength and dexterity by %d.]]):format(2 * self:getTalentLevelRaw(t))
