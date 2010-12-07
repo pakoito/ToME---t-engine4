@@ -819,9 +819,9 @@ newDamageType{
 	name = "drain life", type = "DRAINLIFE",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, healfactor=0.4} end
+		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill
 		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
+		if target and realdam > 0 then
 			src:heal(realdam * dam.healfactor)
 			game.logSeen(target, "%s drains life from %s!", src.name:capitalize(), target.name)
 		end
