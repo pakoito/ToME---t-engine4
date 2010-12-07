@@ -187,12 +187,13 @@ newTalent{
 	no_energy = true,
 	cooldown = 50,
 	action = function(self, t)
-		self:setEffect(self.EFF_SPEED, 8, {power=0.20 + self:getDex() / 80})
+		local power = 0.1 + self:getDex() / 210
+		self:setEffect(self.EFF_SPEED, 8, {power=1 - 1 / (1 + power)})
 		return true
 	end,
 	info = function(self)
 		return ([[Call upon the grace of the Eternals to increase your general speed by %d%% for 8 turns.
-		The speed bonus will increase with the Dexterity stat]]):format((0.20 + self:getDex() / 80) * 100)
+		The speed bonus will increase with the Dexterity stat]]):format((0.1 + self:getDex() / 210) * 100)
 	end,
 }
 

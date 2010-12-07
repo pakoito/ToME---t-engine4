@@ -2717,7 +2717,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.silence = self:addTemporaryValue("silence_immune", 1)	
+		eff.silence = self:addTemporaryValue("silence_immune", 1)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("silence_immune", eff.silence)
