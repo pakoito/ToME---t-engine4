@@ -83,8 +83,8 @@ newTalent{
 		It will get %d strength, %d dexterity, 5 magic and %d constitution.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		10 + self:getWil() * self:getTalentLevel(t) / 5, 
-		10 + self:getTalentLevel(t) * 2, 
+		10 + self:getWil() * self:getTalentLevel(t) / 5,
+		10 + self:getTalentLevel(t) * 2,
 		15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
@@ -158,7 +158,7 @@ newTalent{
 		It will get %d constitution and %d strength.
 		Constitution stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		10 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE) * 3, 
+		10 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE) * 3,
 		10 + self:getTalentLevel(t) * 2)
        end,
 }
@@ -237,7 +237,7 @@ newTalent{
 		It will get %d strength, %d constitution and 18 dexterity.
 		Strength stat will increase with your Willpower stat.]])
 		:format(self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		25 + self:getWil() * self:getTalentLevel(t) / 5, 
+		25 + self:getWil() * self:getTalentLevel(t) / 5,
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
@@ -278,7 +278,7 @@ newTalent{
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
-			max_stamina = 100,
+			max_stamina = 800,
 			life_rating = 13,
 			max_life = resolvers.rngavg(50,80),
 			infravision = 20,
@@ -292,7 +292,7 @@ newTalent{
 
 			combat_armor = 25, combat_def = -20,
 			combat = { dam=resolvers.rngavg(25,50), atk=20, apr=5, dammod={str=0.9} },
-			resolvers.talents{ [Talents.T_QUAKE]=3, [Talents.T_STUN]=3, },
+			resolvers.talents{ [Talents.T_UNSTOPPABLE]=3, [Talents.T_STUN]=3, },
 
 			inc_damage = table.clone(self.inc_damage, true),
 
@@ -317,7 +317,7 @@ newTalent{
 		It will get %d strength, %d constitution and 18 dexterity.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		25 + self:getWil() * self:getTalentLevel(t) / 5, 
+		25 + self:getWil() * self:getTalentLevel(t) / 5,
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }

@@ -433,7 +433,7 @@ function _M:doQuake(tg, x, y)
 
 		game.level.map.map[l.x + l.y * w] = m.map
 		game.level.map.attrs[l.x + l.y * w] = m.attrs
-		for z, e in pairs(m.map) do
+		for z, e in pairs(m.map or {}) do
 			if e.move then
 				e.x = nil e.y = nil e:move(l.x, l.y, true)
 			end
