@@ -100,25 +100,35 @@ function _M:dumpToJSON(js)
 	local c = js:newSection("offense", "offense", "pairs", "add")
 	if self:getInven(self.INVEN_MAINHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
-			if o.combat then
-				c[#c+1] = { ["attack (main hand)"] = string.format("%d", self:combatAttack(o.combat)) }
-				c[#c+1] = { ["damage (main hand)"] = string.format("%d", self:combatDamage(o.combat)) }
-				c[#c+1] = { ["APR (main hand)"] = string.format("%d", self:combatAPR(o.combat)) }
-				c[#c+1] = { ["crit(main hand)"] = string.format("%d%%", self:combatCrit(o.combat)) }
-				c[#c+1] = { ["speed(main hand)"] = string.format("%0.2f", self:combatSpeed(o.combat)) }
+			local mean, dam = o.combat, o.combat
+			if o.archery and mean then
+				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
 			end
+			if mean and dam then
+				c[#c+1] = { ["attack (main hand)"] = string.format("%d", self:combatAttack(mean)) }
+				c[#c+1] = { ["damage (main hand)"] = string.format("%d", self:combatDamage(dam)) }
+				c[#c+1] = { ["APR (main hand)"] = string.format("%d", self:combatAPR(dam)) }
+				c[#c+1] = { ["crit (main hand)"] = string.format("%d%%", self:combatCrit(dam)) }
+				c[#c+1] = { ["speed (main hand)"] = string.format("%0.2f", self:combatSpeed(mean)) }
+			end
+			if mean.range then c[#c+1] = { ["range (main hand)"] = mean.range } end
 		end
 	end
 	if self:getInven(self.INVEN_OFFHAND) then
 		local offmult = self:getOffHandMult()
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
-			if o.combat then
-				c[#c+1] = { ["attack (off hand)"] = string.format("%d", self:combatAttack(o.combat)) }
-				c[#c+1] = { ["damage (off hand)"] = string.format("%d", self:combatDamage(o.combat) * offmult) }
-				c[#c+1] = { ["APR (off hand)"] = string.format("%d", self:combatAPR(o.combat)) }
-				c[#c+1] = { ["crit(off hand)"] = string.format("%d%%", self:combatCrit(o.combat)) }
-				c[#c+1] = { ["speed(off hand)"] = string.format("%0.2f", self:combatSpeed(o.combat)) }
+			local mean, dam = o.combat, o.combat
+			if o.archery and mean then
+				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
 			end
+			if mean and dam then
+				c[#c+1] = { ["attack (off hand)"] = string.format("%d", self:combatAttack(mean)) }
+				c[#c+1] = { ["damage (off hand)"] = string.format("%d", self:combatDamage(dam) * offmult) }
+				c[#c+1] = { ["APR (off hand)"] = string.format("%d", self:combatAPR(dam)) }
+				c[#c+1] = { ["crit(off hand)"] = string.format("%d%%", self:combatCrit(dam)) }
+				c[#c+1] = { ["speed(off hand)"] = string.format("%0.2f", self:combatSpeed(mean)) }
+			end
+			if mean.range then c[#c+1] = { ["range (main hand)"] = mean.range } end
 		end
 	end
 	c[#c+1] = { spellpower = self:combatSpellpower() }

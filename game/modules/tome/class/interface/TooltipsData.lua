@@ -148,6 +148,9 @@ TOOLTIP_COMBAT_SPEED = [[#GOLD#Attack speed#LAST#
 Attack speed represents how fast your attacks are compared to a normal turn.
 The lower it is the faster your attacks are.
 ]]
+TOOLTIP_COMBAT_RANGE = [[#GOLD#Firing range#LAST#
+The maximun distance your weapon can reach.
+]]
 
 -------------------------------------------------------------
 -- Defense
