@@ -63,7 +63,7 @@ on_grant = function(self, who)
 			if tries < 100 then
 				m.quest = true
 				m.on_die = function(self)
-					game.player:hasQuest("lightning-overload"):kill_one()
+					game.player:resolveSource():hasQuest("lightning-overload"):kill_one()
 				end
 				game.zone:addEntity(game.level, m, "actor", x, y)
 				self.max_count = self.max_count + 1
@@ -79,7 +79,7 @@ on_status_change = function(self, who, status, sub)
 	if self:isCompleted() then
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		game:setAllowedBuild("mage_tempest", true)
-		world:gainAchievement("EYE_OF_THE_STORM", game.player)
+		world:gainAchievement("EYE_OF_THE_STORM", game.player:resolveSource())
 	end
 end
 
