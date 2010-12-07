@@ -40,7 +40,7 @@ on_grant = function(self, who)
 	game.player:resetToFull()
 	local effs = {}
 	for eff_id, p in pairs(game.player.tmp) do
-		local e = actor.tempeffect_def[eff_id]
+		local e = game.player.tempeffect_def[eff_id]
 		if e.status == "detrimental" then effs[#effs+1] = {"effect", eff_id} end
 	end
 	while #effs > 0 do
