@@ -19,11 +19,11 @@
 
 -- Maj'Eyal, the main continent
 
-quickEntity('~', {always_remember = true, show_tooltip=true, name='the sea of Eyal', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, shader = "water_ocean", textures = { function() return _3DNoise, true end }, })
-quickEntity('-', {always_remember = true, show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter=true, equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity('*', {always_remember = true, show_tooltip=true, name='lake of Nur', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity(')', {always_remember = true, show_tooltip=true, name='sea of Sash', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity('(', {always_remember = true, show_tooltip=true, name='lake', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity('~', {always_remember = true, show_tooltip=true, name='the sea of Eyal', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", shader = "water_ocean", textures = { function() return _3DNoise, true end }, })
+quickEntity('-', {always_remember = true, show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity('*', {always_remember = true, show_tooltip=true, name='lake of Nur', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity(')', {always_remember = true, show_tooltip=true, name='sea of Sash', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
+quickEntity('(', {always_remember = true, show_tooltip=true, name='lake', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
 
 quickEntity('q', {always_remember = true, show_tooltip=true, name='volcanic mountains', display='^', color=colors.LIGHT_UMBER, back_color=colors.UMBER, image="terrain/volcano2.png", block_move=true})
 quickEntity('^', {always_remember = true, show_tooltip=true, name='mountains', display='^', color=colors.LIGHT_UMBER, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
