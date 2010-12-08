@@ -61,7 +61,8 @@ newTalent{
 	info = function(self, t)
 		local stealthpower = t.getStealthPower(self, t)
 		local radius = t.getRadius(self, t)
-		return ([[Enters stealth mode(with efficency of %d), making you harder to detect.
+		return ([[Enters stealth mode (with efficiency of %d), making you harder to detect.
+		The efficiency increases with Cunning.
 		Stealth cannot work with heavy or massive armours.
 		While in stealth mode, light radius is reduced to 0.
 		There must be no foes in sight in a radius of %d around you to enter stealth.]]):
