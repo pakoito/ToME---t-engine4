@@ -37,8 +37,9 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 
-		if self:reactionToward(target) >= 0 then
+		if self:reactionToward(target) >= 0 or target.summoner == self then
 			game.logPlayer(self, "You can only gain sustenance from your foes!");
+			return nil
 		end
 
 		-- remove old effect
@@ -96,8 +97,9 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 
-		if self:reactionToward(target) >= 0 then
+		if self:reactionToward(target) >= 0 or target.summoner == self then
 			game.logPlayer(self, "You can only gain sustenance from your foes!");
+			return nil
 		end
 
 		-- remove old effect
@@ -146,8 +148,9 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 
-		if self:reactionToward(target) >= 0 then
+		if self:reactionToward(target) >= 0 or target.summoner == self then
 			game.logPlayer(self, "You can only gain sustenance from your foes!");
+			return nil
 		end
 
 		-- remove old effect
@@ -194,8 +197,9 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 
-		if self:reactionToward(target) >= 0 then
+		if self:reactionToward(target) >= 0 or target.summoner == self then
 			game.logPlayer(self, "You can only gain sustenance from your foes!");
+			return nil
 		end
 
 		-- remove old effect

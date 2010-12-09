@@ -168,8 +168,10 @@ function _M:display()
 	for tid, act in pairs(player.sustain_talents) do
 		if act then
 			local t = player:getTalentFromId(tid)
-			local desc = "#GOLD##{bold}#"..t.name.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
-			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(t.name), x, h, 255, 255, 255)) h = h + self.font_h
+			local displayName = t.name
+			if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
+			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
+			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(displayName), x, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 	for eff_id, p in pairs(player.tmp) do

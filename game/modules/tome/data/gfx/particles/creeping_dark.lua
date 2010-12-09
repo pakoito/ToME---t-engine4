@@ -40,7 +40,7 @@ return { generator = function()
 		r = 0 / 255,  rv = 0, ra = 0,
 		g = 0 / 255,  gv = 0, ga = 0,
 		b = 0 / 255,  bv = 0, ba = 0,
-		a = rng.range(64, 160) / 255,  av = -1 / 255, aa = 0
+		a = rng.range(64, 120) / 255,  av = -1 / 255, aa = 0
 	}
 end, },
 function(self)

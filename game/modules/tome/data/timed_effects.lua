@@ -1704,7 +1704,7 @@ newEffect{
 		if eff.critical or 0 > 0 then eff.criticalId = self:addTemporaryValue("combat_physcrit", eff.critical) end
 		if eff.damage or 0 > 0 then eff.damageId = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=eff.damage}) end
 		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("energy", {mod=eff.speed * 0.01}) end
-		if eff.attack or 0 > 0 then eff.attackId = self:addTemporaryValue("combat_atk", self.combat_atk * eff.attack * 0.01) end
+		if eff.attack or 0 > 0 then eff.attackId = self:addTemporaryValue("combat_atk", self:combatAttack() * eff.attack * 0.01) end
 		if eff.evasion or 0 > 0 then eff.evasionId = self:addTemporaryValue("evasion", eff.evasion) end
 
 		eff.particle = self:addParticles(Particles.new("rampage", 1))

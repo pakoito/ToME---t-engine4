@@ -150,6 +150,9 @@ newTalent{
 	getMaxDamage = function(self, t)
 		return combatTalentDamage(self, t, 20, 160)
 	end,
+	getDisplayName = function(self, t, p)
+		return ("Deflection (%d)"):format(p.value)
+	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		return {

@@ -95,7 +95,7 @@ local function shadowMoveToActorTarget(self)
 	
 	-- move to target
 	if self:runAI("move_dmap") then
-		self.turns_on_target = self.turns_on_target + 1
+		self.turns_on_target = (self.turns_on_target or 0) + 1
 		
 		--game.logPlayer(self.summoner, "#PINK#%s -> move_dmap", self.name:capitalize())
 		return true
@@ -174,7 +174,7 @@ local function shadowMoveToLocationTarget(self)
 		end
 
 		self:move(tx, ty)
-		self.turns_on_target = self.turns_on_target + 1
+		self.turns_on_target = (self.turns_on_target or 0) + 1
 		
 		--game.logPlayer(self.summoner, "#PINK#%s -> move", self.name:capitalize())
 		return true
@@ -192,6 +192,11 @@ newAI("shadow", function(self)
 		self:die()
 	end
 	self.summon_time = self.summon_time - 1
+	
+	-- make sure no one has turned us against our summoner
+	if self.ai_target.actor == self.summoner then
+		clearTarget(self)
+	end
 	
 	-- shadow wall
 	if self.ai_state.shadow_wall then

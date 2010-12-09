@@ -256,6 +256,7 @@ newTalent{
 		if self.hate < 1 then
 			-- not enough hate..just wait for another try
 			game.logPlayer(self, "You hate is too low to call another shadow!", deflectDamage)
+			return false
 		end
 		self:incHate(-1)
 

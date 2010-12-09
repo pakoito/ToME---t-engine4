@@ -77,6 +77,8 @@ newTalent{
 		local lifeLeeched = 0
 		local attackStrength = 0.3 + self:getTalentLevel(tGloom) * 0.12
 		local tormentHit = false
+		
+		if game.zone.wilderness then return end
 
 		local doTorment = false
 		local resetTorment = false

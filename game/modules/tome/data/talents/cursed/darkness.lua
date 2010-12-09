@@ -25,7 +25,7 @@ local function combatTalentDamage(self, t, min, max)
 	return self:combatTalentSpellDamage(t, min, max, self.level + self:getMag())
 end
 
-function canCreep(x, y, ignoreCreepingDark)
+local function canCreep(x, y, ignoreCreepingDark)
 	-- not on map
 	if not game.level.map:isBound(x, y) then return false end
 	 -- already dark
@@ -38,7 +38,7 @@ function canCreep(x, y, ignoreCreepingDark)
 	return true
 end
 
-function doCreep(self, useCreep)
+local function doCreep(self, useCreep)
 	local start = rng.range(0, 8)
 	for i = start, start + 8 do
 		local x = self.x + (i % 3) - 1
@@ -63,7 +63,7 @@ function doCreep(self, useCreep)
 	end
 end
 
-function createDark(summoner, x, y, damage, duration, creep, creepChance, initialCreep)
+local function createDark(summoner, x, y, damage, duration, creep, creepChance, initialCreep)
 	local e = Object.new{
 		name = "creeping dark",
 		block_sight=true,
@@ -85,7 +85,7 @@ function createDark(summoner, x, y, damage, duration, creep, creepChance, initia
 			-- apply damage to anything inside the darkness
 			local actor = game.level.map(self.x, self.y, Map.ACTOR)
 			if actor and actor ~= self.summoner and (not actor.summoner or actor.summoner ~= self.summoner) then
-				self.summoner:project(actor, actor.x, actor.y, engine.DamageType.DARKNESS, damage)
+				self.summoner:project(actor, actor.x, actor.y, engine.DamageType.DARKNESS, self.damage)
 				--DamageType:get(DamageType.DARKNESS).projector(self.summoner, actor.x, actor.y, DamageType.DARKNESS, damage)
 			end
 
@@ -142,7 +142,7 @@ function createDark(summoner, x, y, damage, duration, creep, creepChance, initia
 	end
 end
 
-function createDarkTendrils(summoner, x, y, target, damage, duration, pinDuration)
+local function createDarkTendrils(summoner, x, y, target, damage, duration, pinDuration)
 
 	local e = Object.new{
 		name = "dark tendril",
@@ -259,7 +259,7 @@ newTalent{
 	require = cursed_mag_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 14,
+	cooldown = 20,
 	hate = 1.5,
 	range = 5,
 	requires_target = true,

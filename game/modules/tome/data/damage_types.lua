@@ -53,7 +53,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					and core.fov.distance(src.x, src.y, target.x, target.y) > (src.lite or 0) -- outside of lite radius
 					and game.level.map:checkAllEntities(x, y, "creepingDark") then -- creeping dark square
 				dam = dam + (dam * damageIncrease / 100)
-				logPlayer(src, "Dark Vision Damage!")
+				game.logPlayer(src, "You strike in the darkness. (+%d damage)", damageIncrease)
 			end
 		end
 
