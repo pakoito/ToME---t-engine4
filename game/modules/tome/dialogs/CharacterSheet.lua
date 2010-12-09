@@ -149,7 +149,7 @@ function _M:drawDialog(s)
 				self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT,   s:drawColorStringBlended(self.font, ("Crit  (Main Hand): #00ff00#%3d%%"):format(player:combatCrit(dam)), w, h, 255, 255, 255)) h = h + self.font_h
 				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed (Main Hand): #00ff00#%0.2f"):format(player:combatSpeed(mean)), w, h, 255, 255, 255)) h = h + self.font_h
 			end
-			if mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
+			if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 		end
 	end
 	h = h + self.font_h
@@ -169,7 +169,7 @@ function _M:drawDialog(s)
 				self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT  , s:drawColorStringBlended(self.font, ("Crit   (Off Hand): #00ff00#%3d%%"):format(player:combatCrit(dam)), w, h, 255, 255, 255)) h = h + self.font_h
 				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED , s:drawColorStringBlended(self.font, ("Speed  (Off Hand): #00ff00#%0.2f"):format(player:combatSpeed(mean)), w, h, 255, 255, 255)) h = h + self.font_h
 			end
-			if mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Off Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
+			if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Off Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 		end
 	end
 	h = h + self.font_h
@@ -293,7 +293,7 @@ function _M:dump()
 				strings[4] = ("Crit  (Main Hand): %3d%%"):format(player:combatCrit(dam))
 				strings[5] = ("Speed (Main Hand): %0.2f"):format(player:combatSpeed(mean))
 			end
-			if mean.range then strings[6] = ("Range (Main Hand): %3d"):format(mean.range) end
+			if mean and mean.range then strings[6] = ("Range (Main Hand): %3d"):format(mean.range) end
 		end
 	end
 
@@ -360,7 +360,7 @@ function _M:dump()
 				nl(("Crit   (Off Hand): %3d%%"):format(player:combatCrit(dam)))
 				nl(("Speed  (Off Hand): %0.2f"):format(player:combatSpeed(mean)))
 			end
-			if mean.range then strings[6] = ("Range (Off Hand): %3d"):format(mean.range) end
+			if mean and mean.range then strings[6] = ("Range (Off Hand): %3d"):format(mean.range) end
 		end
 	end
 

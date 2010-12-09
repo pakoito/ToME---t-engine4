@@ -270,6 +270,7 @@ void on_tick()
 
 void call_draw(int nb_keyframes)
 {
+	if (nb_keyframes > 30) nb_keyframes = 30;
 	if (current_game != LUA_NOREF)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);

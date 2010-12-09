@@ -111,7 +111,7 @@ function _M:dumpToJSON(js)
 				c[#c+1] = { ["crit (main hand)"] = string.format("%d%%", self:combatCrit(dam)) }
 				c[#c+1] = { ["speed (main hand)"] = string.format("%0.2f", self:combatSpeed(mean)) }
 			end
-			if mean.range then c[#c+1] = { ["range (main hand)"] = mean.range } end
+			if mean and mean.range then c[#c+1] = { ["range (main hand)"] = mean.range } end
 		end
 	end
 	if self:getInven(self.INVEN_OFFHAND) then
@@ -128,7 +128,7 @@ function _M:dumpToJSON(js)
 				c[#c+1] = { ["crit(off hand)"] = string.format("%d%%", self:combatCrit(dam)) }
 				c[#c+1] = { ["speed(off hand)"] = string.format("%0.2f", self:combatSpeed(mean)) }
 			end
-			if mean.range then c[#c+1] = { ["range (main hand)"] = mean.range } end
+			if mean and mean.range then c[#c+1] = { ["range (main hand)"] = mean.range } end
 		end
 	end
 	c[#c+1] = { spellpower = self:combatSpellpower() }

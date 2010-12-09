@@ -955,6 +955,7 @@ end
 
 --- Display the particle emiters, called by self:display()
 function _M:displayParticles(nb_keyframes)
+	nb_keyframes = nb_keyframes or 1
 	local del = {}
 	local e = next(self.particles)
 	while e do
