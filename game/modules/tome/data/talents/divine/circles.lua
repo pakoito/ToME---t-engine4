@@ -29,15 +29,15 @@ newTalent{
 		ATTACK = 10,
 		BUFF = 10,
 	},
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
 	action = function(self, t)
-		local duration = 3 + math.ceil(self:getTalentLevel(t))
-		radius = 2 + math.floor(self:getTalentLevelRaw(t)/2)
-		local dam = self:combatTalentSpellDamage(t, 4, 30)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.SHIFTINGSHADOWS, dam,
-			radius,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.SHIFTINGSHADOWS, t.getDamage(self, t),
+			t.getRadius(self, t),
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=60, color_bg=10, color_bb=60},
 			nil, self:spellFriendlyFire(true)
@@ -46,8 +46,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Creates a radius %d circle at your feet that increases your defense by %d and deals %0.2f darkness damage per turn to everyone else with in its radius.  The circle lasts %d turns.
-		The duration will increase with the Magic stat.]]):format(2 + math.floor(self:getTalentLevelRaw(t)/2), self:combatTalentSpellDamage(t, 4, 30), (damDesc (self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 4, 30))), 3 + math.ceil(self:getTalentLevel(t)))
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local radius = t.getRadius(self, t)
+		return ([[Creates a circle of radius %d at your feet, it increase your defense by %d and deals %0.2f darkness damage per turn to everyone else with in its radius.  The circle lasts %d turns.
+		The damage will increase with the Magic stat.]]):
+		format(radius, damage, (damDesc (self, DamageType.DARKNESS, damage)), duration)
 	end,
 }
 
@@ -62,16 +66,17 @@ newTalent{
 		ATTACK = 10,
 		BUFF = 10,
 	},
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 2, 15) end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
 	action = function(self, t)
-		local duration = 3 + math.ceil(self:getTalentLevel(t))
-		radius = 2 + math.floor(self:getTalentLevelRaw(t)/2)
-		local dam = self:combatTalentSpellDamage(t, 2, 15) 
+		local radius = t.getRadius(self, t)
 		local tg = {type="ball", range=0, friendlyfire=true, radius=radius, talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.BLAZINGLIGHT, dam,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.BLAZINGLIGHT, t.getDamage(self, t),
 			radius,
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=250, color_bg=200, color_bb=10},
@@ -81,8 +86,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Creates a radius %d circle at your feet that lights up affected tiles, increases your positive energy by %d each turn, and deals %0.2f light damage and %0.2f fire damage per turn to everyone else with in its radius.  The circle lasts %d turns.
-		The duration will increase with the Magic stat.]]):format(2 + math.floor(self:getTalentLevelRaw(t)/2), 1 + (self:combatTalentSpellDamage(t, 2, 15) / 4), (damDesc (self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 2, 15))), (damDesc (self, DamageType.FIRE, self:combatTalentSpellDamage(t, 2, 15))), 3 + math.ceil(self:getTalentLevel(t)))
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local radius = t.getRadius(self, t)
+		return ([[Creates a circle of radius %d at your feet, it lights up affected tiles, increases your positive energy by %d each turn, and deals %0.2f light damage and %0.2f fire damage per turn to everyone else within its radius.  The circle lasts %d turns.
+		The damage will increase with the Magic stat.]]):
+		format(radius, 1 + (damage / 4), (damDesc (self, DamageType.LIGHT, damage)), (damDesc (self, DamageType.FIRE, damage)), duration)
 	end,
 }
 
@@ -98,15 +107,14 @@ newTalent{
 		ATTACK = 10,
 		BUFF = 10,
 	},
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
 	action = function(self, t)
-		local duration = 3 + math.ceil(self:getTalentLevel(t))
-		radius = 2 + math.floor(self:getTalentLevelRaw(t)/2)
-		local dam = 1
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.SANCTITY, dam,
-			radius,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.SANCTITY, 1,
+			t.getRadius(self, t),
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=150, color_bg=10, color_bb=200},
 			nil, self:spellFriendlyFire(true)
@@ -115,8 +123,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Creates a radius %d circle at your feet that protects you from silence effects while you remain in its radius and silences everyone else who enters.  The circle lasts %d turns.
-		The duration will increase with the Magic stat.]]):format(2 + math.floor(self:getTalentLevelRaw(t)/2), 3 + math.ceil(self:getTalentLevel(t)))
+		local duration = t.getDuration(self, t)
+		local radius = t.getRadius(self, t)
+		return ([[Creates a circle of radius %d at your feet, it protects you from silence effects while you remain in its radius and silences everyone else who enters.  The circle lasts %d turns.]]):
+		format(radius, getDuration)
 	end,
 }
 
@@ -132,15 +142,15 @@ newTalent{
 		ATTACK = 10,
 		BUFF = 10,
 	},
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 2, 20)  end,
 	action = function(self, t)
-		local duration = 3 + math.ceil(self:getTalentLevel(t))
-		radius = 2 + math.floor(self:getTalentLevelRaw(t)/2)
-		local dam = self:combatTalentSpellDamage(t, 2, 20) 
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.WARDING, dam,
-			radius,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.WARDING, t.getDamage(self, t),
+			t.getRadius(self, t),
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=200, color_bg=200, color_bb=200},
 			nil, self:spellFriendlyFire(true)
@@ -149,8 +159,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Creates a radius %d circle at your feet that slows incoming projectiles %d%% and attempts to push all creatures other then yourself out of its radius, inflicting %0.2f light damage and %0.2f darkness damage per turn as it does so.  The circle lasts %d turns.
-		The duration will increase with the Magic stat.]]):format(2 + math.floor(self:getTalentLevelRaw(t)/2), self:combatTalentSpellDamage(t, 2, 20), (damDesc (self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 2, 20))), (damDesc (self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 2, 20))), 3 + math.ceil(self:getTalentLevel(t)))
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local radius = t.getRadius(self, t)
+		return ([[Creates a circle of radius %d at your feet, it slows incoming projectiles %d%% and attempts to push all creatures other then yourself out of its radius, inflicting %0.2f light damage and %0.2f darkness damage per turn as it does so.  The circle lasts %d turns.
+		The slow effect and damage will increase with the Magic stat.]]):
+		format(radius, damage, (damDesc (self, DamageType.LIGHT, damage)), (damDesc (self, DamageType.DARKNESS, damage)), duration)
 	end,
 }
 

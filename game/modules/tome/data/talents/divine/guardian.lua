@@ -29,6 +29,7 @@ newTalent{
 		BUFF = 10,
 	},
 	range = 20,
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -45,9 +46,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local heal = t.getHeal(self, t)
 		return ([[Infuse your shield with light energy, healing you for %0.2f each time you take damage.
 		Each heal will drain up to 2 positive energy. The spell ends when energy reaches 0.
-		The healing done will increase with the Magic stat]]):format(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 1, 25))
+		The healing done will increase with the Magic stat]]):
+		format(heal)
 	end,
 }
 
@@ -59,6 +62,10 @@ newTalent{
 	cooldown = 8,
 	positive = 20,
 	requires_target = true,
+	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3) end,
+	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
+	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 150) end,
+	getRadius = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -72,16 +79,16 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		-- First attack with weapon
-		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3), true)
+		self:attackTarget(target, nil, t.getWeaponDamage(self, t), true)
 		-- Second attack with shield
-		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
+		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, t.getShieldDamage(self, t))
 
 		-- Light Burst
 		if hit then
-			local tg = {type="ball", range=1, friendlyfire=true, radius=2 + self:getTalentLevel(t) / 2, talent=t}
+			local tg = {type="ball", range=1, friendlyfire=true, radius=t.getRadius(self, t), talent=t}
 			self:project(tg, x, y, DamageType.LITE, 1)
 			tg.friendlyfire = false
-			local grids = self:project(tg, x, y, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150))
+			local grids = self:project(tg, x, y, DamageType.LIGHT, t.getLightDamage(self, t))
 			game.level.map:particleEmitter(x, y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=x, ty=y, max_alpha=80})
 			game:playSoundNear(self, "talents/flame")
 		end
@@ -89,8 +96,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.
-	]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 20, 150)), 2 + self:getTalentLevel(t) / 2)
+		local weapondamage = t.getWeaponDamage(self, t)
+		local shielddamage = t.getShieldDamage(self, t)
+		local lightdamage = t.getLightDamage(self, t)
+		local radius = t.getRadius(self, t)
+		return ([[Hits the target with your weapon doing %d%% damage and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.
+		Light damage will increase with your Magic stat.]]):
+		format(100 * weapondamage, 100 * shielddamage, damDesc(self, DamageType.LIGHT, lightdamage), radius)
 	end,
 }
 
@@ -106,13 +118,14 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 170) end,
 	activate = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
 			game.logPlayer(self, "You cannot use Retribution without a shield!")
 			return nil
 		end
-		local power = self:combatTalentSpellDamage(t, 28, 170)
+		local power = t.getDamage(self, t)
 		self.retribution_absorb = power
 		self.retribution_strike = power
 		game:playSoundNear(self, "talents/generic")
@@ -127,8 +140,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You start absorbing half of all damage you take into your shield.  Once you're shield has absorbed %0.2f damage it will explode in a burst of light, inflicting damage in a radius of %d.
-		The amount absorbed will increase with the Magic stat.]]):format(damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 28, 170)), 1 + self:getTalentLevelRaw(t))
+		local damage = t.getDamage(self, t)
+		return ([[You start absorbing half of all damage you take into your shield.  Once you're shield has absorbed %0.2f damage it will explode in a burst of light, inflicting damage equal to absorbed damage in a radius of %d.
+		The amount absorbed will increase with the Magic stat.]]):
+		format(damDesc(self, DamageType.LIGHT, damage), self:getTalentRange(t))
 	end,
 }
 
@@ -146,6 +161,7 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getLife = function(self, t) return self.max_life * (0.05 + self:getTalentLevel(t)/25) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
@@ -158,7 +174,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Any attack that would drop you below 1 hit point triggers Second Life, deactivating the talent and setting your hit points to %d.]]):format(self.max_life * (0.05 + self:getTalentLevel(self.T_SECOND_LIFE)/25))
+		return ([[Any attack that would drop you below 1 hit point triggers Second Life, deactivating the talent and setting your hit points to %d.]]):
+		format(t.getLife(self, t))
 	end,
 }
 

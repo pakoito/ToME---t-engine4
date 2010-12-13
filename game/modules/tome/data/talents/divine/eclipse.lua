@@ -46,22 +46,26 @@ newTalent{
 	},
 	positive = 10,
 	negative = 10,
+	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getResistancePenetration = function(self, t) return 5 + (self:getCun() / 10) * self:getTalentLevel(t) end,
+	getCooldownReduction = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
-		local dur = 4 + math.ceil(self:getTalentLevel(t))
-		local power = 5 + (self:getCun() / 10) * self:getTalentLevel(t)
-		self:setEffect(self.EFF_TOTALITY, dur, {power=power})
+		self:setEffect(self.EFF_TOTALITY, t.getDuration(self, t), {power=t.getResistancePenetration(self, t)})
 		for tid, cd in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
 			if tt.type[1]:find("^divine/") then
-				self.talents_cd[tid] = cd - (1 + math.ceil(self:getTalentLevel(t)))
+				self.talents_cd[tid] = cd - t.getCooldownReduction(self, t)
 			end
 		end
 		return true
 	end,
 	info = function(self, t)
+		local penetration = t.getDuration(self, t)
+		local duration = t.getResistancePenetration(self, t)
+		local cooldownreduction = t.getCooldownReduction(self, t)
 		return ([[Increases your light and darkness resistance penetration by %d%% for %d turns and brings all your divine talents on cooldown, %d turns closer to being off cooldown.
-		The resistance penetration will increase with your Cunning stat.
-		]]):format(5 + (self:getCun() / 10) * self:getTalentLevel(t), 4 + math.ceil(self:getTalentLevel(t)), 1 + math.ceil(self:getTalentLevel(t)))
+		The resistance penetration will increase with your Cunning stat.]]):
+		format(penetration, duration, cooldownreduction)
 	end,
 }
 
@@ -75,6 +79,9 @@ newTalent{
 	range = 10,
 	sustain_negative = 10,
 	sustain_positive = 10,
+	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
+	getDarknessDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	on_crit = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
@@ -87,7 +94,7 @@ newTalent{
 		
 		-- Randomly take targets
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}}
-		for i = 1, math.floor(self:getTalentLevel(t)) do
+		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
@@ -95,11 +102,11 @@ newTalent{
 		local corona = rng.range(1, 100)
 			if corona > 50 then
 				local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_light"}}
-				self:projectile(tg, a.x, a.y, DamageType.LIGHT, (self:combatTalentSpellDamage(t, 15, 70)), {type="light"})
+				self:projectile(tg, a.x, a.y, DamageType.LIGHT, t.getLightDamage(self, t), {type="light"})
 				self:incPositive(-2)
 			else
 				local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_dark"}}
-				self:projectile(tg, a.x, a.y, DamageType.DARKNESS, (self:combatTalentSpellDamage(t, 15, 70)), {type="shadow"})
+				self:projectile(tg, a.x, a.y, DamageType.DARKNESS, t.getDarknessDamage(self, t), {type="shadow"})
 				self:incNegative(-2)				
 			end
 		end
@@ -113,9 +120,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local targetcount = t.getTargetCount(self, t)
+		local lightdamage = t.getLightDamage(self, t)
+		local darknessdamage = t.getDarknessDamage(self, t)
 		return ([[Each time one of your spells is a critical you project a bolt of light or shadow at %d targets in a radius of 10, doing %0.2f light damage or %0.2f darkness damage.
 		The damage scales with the Magic stat and each bolt fired will cost 2 positive or negative energy respectively.]]):
-		format(self:getTalentLevel(t), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 15, 70)), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 15, 70)))
+		format(targetcount, damDesc(self, DamageType.LIGHT, lightdamage), damDesc(self, DamageType.DARKNESS, darknessdamage))
 	end,
 }
 
@@ -130,12 +140,15 @@ newTalent{
 	tactical = {
 		DEFEND = 10,
 	},
+	getInvisibilityPower = function(self, t) return 5 + (self:getCun() / 15) * self:getTalentLevel(t) end,
+	getEnergyConvert = function(self, t) return 6 - (self:getTalentLevelRaw(t)) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,
+	getRadius = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
 	activate = function(self, t)
-		local power = 5 + (self:getCun() / 15) * self:getTalentLevel(t)
-		local timer = 6 - (self:getTalentLevelRaw(t))
+		local timer = t.getEnergyConvert(self, t)
 		game:playSoundNear(self, "talents/heal")
 		return {
-			invisible = self:addTemporaryValue("invisible", power),
+			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
 			fill = self:addTemporaryValue("positive_regen", timer),
 			drain = self:addTemporaryValue("negative_regen", - timer),
 		}
@@ -144,18 +157,23 @@ newTalent{
 		self:removeTemporaryValue("invisible", p.invisible)
 		self:removeTemporaryValue("positive_regen", p.fill)
 		self:removeTemporaryValue("negative_regen", p.drain)
-		local tg = {type="ball", range=0, friendlyfire=true, radius= 2 + self:getTalentLevel(t) / 2, talent=t}
+		local tg = {type="ball", range=0, friendlyfire=true, radius= t.getRadius(self, t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		tg.friendlyfire = false
-		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 10, 100) + self.positive))
+		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(t.getDamage(self, t) + self.positive))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y, max_alpha=80})
 		game:playSoundNear(self, "talents/flame")
 		self.positive = 0
 		return true
 	end,
 	info = function(self, t)
+		local invisibilitypower = t.getInvisibilityPower(self, t)
+		local convert = t.getEnergyConvert(self, t)
+		local damage = t.getDamage(self, t)
+		local radius = t.getRadius(self, t)
 		return ([[This powerful spell grants you %d bonus invisibility, but converts %d negative energy into positive energy each turn.  Once your positive energy exceeds your negative energy, or you deactivate the talent, the effect ends in an explosion of light, converting all of your positive energy into damage and inflicting an additional %0.2f damage on everything in a radius of %d.
 		You may not cast Twilight while this spell is active and you should take off your light source otherwise you will still easily be spotted.
-		The invsibility bonus will increase with your Cunning stat and the explosion damage will increase with the Magic Stat..]]):format(5 + (self:getCun() / 15) * self:getTalentLevel(t), 6 - (self:getTalentLevelRaw(t)), damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 10, 100)), 2 + self:getTalentLevel(t) / 2)
+		The invsibility bonus will increase with your Cunning stat and the explosion damage will increase with the Magic Stat..]]):
+		format(invisibilitypower, convert, damDesc(self, DamageType.LIGHT, damage), radius)
 	end,
 }

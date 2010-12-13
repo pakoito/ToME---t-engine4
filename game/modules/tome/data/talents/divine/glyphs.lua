@@ -29,6 +29,8 @@ newTalent{
 	positive = -10,
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
+	getDazeDuration = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
+	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -37,7 +39,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = 3 + self:getTalentLevelRaw(t)
+		local dam = t.getDamage(self, t)
 		local trap = Trap.new{
 			name = "glyph of paralysis",
 			type = "elemental", id_by_type=true, unided_name = "trap",
@@ -51,7 +53,7 @@ newTalent{
 				who:setEffect(who.EFF_DAZED, self.dam, {})
 				return true
 			end,
-			temporary = 5 + self:getTalentLevel(t),
+			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
@@ -74,8 +76,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local dazeduration = t.getDazeDuration(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[You bind light in a glyph on the floor. All targets passing by will be dazed for %d turns.
-		The glyph lasts for %d turns.]]):format(3 + self:getTalentLevelRaw(t), 5 + self:getTalentLevel(t))
+		The glyph lasts for %d turns.]]):format(dazeduration, duration)
 	end,
 }
 
@@ -89,6 +93,8 @@ newTalent{
 	cooldown = 20,
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
+	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t) end,
+	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -97,7 +103,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t)
+		local dam = t.getDamage(self, t)
 		local sp = self:combatSpellpower()
 		local trap = Trap.new{
 			name = "glyph of repulsion",
@@ -116,7 +122,7 @@ newTalent{
 				self.x, self.y = ox, oy
 				return true
 			end,
-			temporary = 5 + self:getTalentLevel(t),
+			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
@@ -140,9 +146,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[You bind light in a glyph on the floor. All targets passing by will be hit by a blast of light doing %0.2f damage and knocked back.
 		The glyph lasts for %d turns.
-		The damage will increase with the Magic stat]]):format(15 + self:combatSpellpower(0.12) * self:getTalentLevel(t), 5 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):
+		format(damage, duration)
 	end,
 }
 
@@ -156,6 +165,8 @@ newTalent{
 	positive = -10,
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
+	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t) end,
+	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -164,7 +175,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t)
+		local dam = t.getDamage(self, t)
 		local trap = Trap.new{
 			name = "glyph of explosion",
 			type = "elemental", id_by_type=true, unided_name = "trap",
@@ -179,7 +190,7 @@ newTalent{
 				game.level.map:particleEmitter(x, y, 1, "sunburst", {radius=1, tx=x, ty=y})
 				return true
 			end,
-			temporary = 5 + self:getTalentLevel(t),
+			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
@@ -202,9 +213,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You bind light in a glyph on the floor. All targets passing by will trigger a radius 1 blast of light doing %0.2f damage.
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[You bind light in a glyph on the floor. All targets passing by will trigger blast of light doing %0.2f damage.
 		The glyph lasts for %d turns.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHT, 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t)), 5 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.LIGHT, damage), duration)
 	end,
 }
 
@@ -218,6 +232,8 @@ newTalent{
 	positive = -10,
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
+	getSlow = function(self, t) return self:getTalentLevel(t) * 0.07 + 0.2 end,
+	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -226,7 +242,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = -1 + 1 / (1 + (self:getTalentLevel(t) * 0.07 + 0.2))
+		local dam = -1 + 1 / (1 + (t.getSlow(self, t)))
 		local trap = Trap.new{
 			name = "glyph of fatigue",
 			type = "elemental", id_by_type=true, unided_name = "trap",
@@ -240,7 +256,7 @@ newTalent{
 				who:setEffect(who.EFF_SLOW, 5, {power=-self.dam})
 				return true
 			end,
-			temporary = 5 + self:getTalentLevel(t),
+			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
 			canAct = false,
 			energy = {value=0},
@@ -263,7 +279,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local slow = t.getSlow(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[You bind light in a glyph on the floor. All targets passing by will be slowed by %d%%.
-		The glyph lasts for %d turns.]]):format(self:getTalentLevel(t) * 7 + 20, 5 + self:getTalentLevel(t))
+		The glyph lasts for %d turns.]]):format(100 * slow, duration)
 	end,
 }

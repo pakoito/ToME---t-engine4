@@ -30,19 +30,21 @@ newTalent{
 		BUFF = 10,
 	},
 	range = 20,
+	getNegativeGain = function(self, t) return 20 + self:getTalentLevel(t) * self:getCun(40) end,
 	action = function(self, t)
 		if self:isTalentActive(self.T_DARKEST_LIGHT) then
 			game.logPlayer(self, "You can't use Twilight while Darkest Light is active.")
 			return
 		end
-		self:incNegative(20 + self:getTalentLevel(t) * self:getCun(40))
+		self:incNegative(t.getNegativeGain(self, t))
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
+		local neggain = t.getNegativeGain(self, t)
 		return ([[You stand between the darkness and the light, allowing you to convert 15 positive energy into %d negative energy.
 		The effect will increase with the Cunning stat.]]):
-		format(20 + self:getTalentLevel(t) * self:getCun(40))
+		format(neggain)
 	end,
 }
 
@@ -159,16 +161,19 @@ newTalent{
 	range = 3,
 	direct_hit = true,
 	requires_target = true,
+	getConfuseDuration = function(self, t) return math.floor(self:getTalentLevel(t) + self:getCun(5)) + 2 end,
+	getConfuseEfficency = function(self, t) return 50 + self:getTalentLevelRaw(t)*10 end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), talent=t, friendlyfire=false}
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
-			dur = math.floor(self:getTalentLevel(t) + self:getCun(5)) + 2,
-			dam = 50 + self:getTalentLevelRaw(t)*10
+			dur = t.getConfuseDuration(self, t),
+			dam = t.getConfuseEfficency(self, t)
 		})
 		game:playSoundNear(self, "talents/flame")
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getConfuseDuration(self, t)
 		return ([[Let out a mental cry that shatters the will of your targets, confusing them for %d turns.
 		The duration will improve with the Cunning stat.]]):
 		format(math.floor(self:getTalentLevel(t) + self:getCun(5)) + 2)
@@ -189,6 +194,7 @@ newTalent{
 	requires_target = true,
 	range = 10,
 	no_npc_use = true,
+	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t)+self:getCun(10)) + 3 end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -220,7 +226,7 @@ newTalent{
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
-			summon_time = math.ceil(self:getTalentLevel(t)+self:getCun(10)) + 3,
+			summon_time = t.getDuration(self, t),
 			ai_target = {actor=target},
 			ai = "summoned", ai_real = target.ai,
 			resists = { all = modifier, [DamageType.DARKNESS] = 50, [DamageType.LIGHT] = - 50, },
@@ -246,6 +252,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
 		local allowed = 2 + math.ceil(self:getTalentLevelRaw(t) / 2 )
 		if allowed < 4 then
 			size = "medium"
@@ -254,8 +261,9 @@ newTalent{
 		else
 			size = "huge"
 		end
-		return ([[Creates a shadowy copy of a target up to size %s. The copy will attack its progenitor immediately.
-		It stays for %d turns and its duration, life, and resistances scale with the Cunning stat.]]):format(size, math.ceil(self:getTalentLevel(t)+self:getCun(10)) + 3)
+		return ([[Creates a shadowy copy of a target up to %s size. The copy will attack its progenitor immediately.
+		It stays for %d turns and its duration, life and resistances scale with the Cunning stat.]]):
+		format(size, duration)
 	end,
 }
 

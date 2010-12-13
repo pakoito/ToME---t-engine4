@@ -29,6 +29,7 @@ newTalent{
 		BUFF = 10,
 	},
 	range = 20,
+	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:getTalentLevel(t) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
@@ -39,9 +40,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[Infuse your weapon of the power of the Sun, doing %0.2f light damage with each hit.
 		Each hit will drain 3 positive energy. The spell ends when energy reaches 0.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHT, 7 + self:combatSpellpower(0.092) * self:getTalentLevel(t)))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.LIGHT, damage))
 	end,
 }
 
@@ -59,6 +62,7 @@ newTalent{
 	range = 6,
 	reflectable = true,
 	requires_target = true,
+	getReturnDamage = function(self, t) return 8 * self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -67,16 +71,16 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:checkHit(self:combatSpellpower(), target:combatMentalResist(), 0, 95, 15)then
-			target:setEffect(self.EFF_MARTYRDOM, 10, {power=8 * self:getTalentLevelRaw(t)})
+			target:setEffect(self.EFF_MARTYRDOM, 10, {power=t.getReturnDamage(self, t)})
 		else
 			return
 		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Designate a target as martyr for 10 turns. When the martyr deals damage it also damages itself for %d%% of its damage dealt.
-		The damage percent will increase with the Magic stat]]):
-		format(	8 * self:getTalentLevelRaw(t))
+		local returndamage = t.getReturnDamage(self, t)
+		return ([[Designate a target as martyr for 10 turns. When the martyr deals damage it also damages itself for %d%% of its damage dealt.]]):
+		format(returndamage)
 	end,
 }
 
@@ -93,6 +97,7 @@ newTalent{
 	},
 	requires_target = true,
 	range = function(self, t) return 2 + self:getStr(12) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -100,16 +105,17 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1.1, 1.9), true)
+			self:attackTarget(target, nil, t.getDamage(self, t), true)
 		else
 			return
 		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[In a pure display of power you project a melee attack up to a range of %d, doing %d%% damage.
+		local damage = t.getDamage(self, t)
+		return ([[In a pure display of power you project a melee attack, doing %d%% damage.
 		The range will increase with the Strength stat]]):
-		format(self:getTalentRange(t), 100 * self:combatTalentWeaponDamage(t, 1.1, 1.9))
+		format(100 * damage)
 	end,
 }
 
@@ -126,16 +132,18 @@ newTalent{
 	},
 	range = 1,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, DamageType.LIGHT, self:combatTalentWeaponDamage(t, 1.1, 1.9), true)
+		self:attackTarget(target, DamageType.LIGHT, t.getDamage(self, t), true)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate the power of the sun in a single blow doing %d%% light damage.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 1.1, 1.9))
+		local damage = t.getDamage(self, t)
+		return ([[Concentrate the power of the sun in a single blow doing %d%% weapon damage as light damage.]]):
+		format(100 * damage)
 	end,
 }

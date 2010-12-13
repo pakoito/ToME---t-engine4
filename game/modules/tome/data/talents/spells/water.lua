@@ -34,7 +34,7 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=3}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)

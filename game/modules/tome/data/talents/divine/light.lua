@@ -28,14 +28,17 @@ newTalent{
 	tactical = {
 		HEAL = 10,
 	},
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 20, 240) end,
 	action = function(self, t)
-		self:heal(self:spellCrit(self:combatTalentSpellDamage(t, 20, 240)), self)
+		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
+		local heal = t.getHeal(self, t)
 		return ([[An invigorating ray of Sunlight shines on you, healing your body for %d life.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 240))
+		The life healed will increase with the Magic stat]]):
+		format(heal)
 	end,
 }
 
@@ -50,16 +53,15 @@ newTalent{
 	tactical = {
 		HEAL = 10,
 	},
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
+	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local duration = self:getTalentLevel(t) + 2
-		local radius = 3
-		local dam = self:combatTalentSpellDamage(t, 4, 30)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.HEALING_POWER, dam,
-			radius,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.HEALING_POWER, t.getHeal(self, t),
+			3,
 			5, nil,
 			{type="healing_vapour"},
 			nil, true
@@ -68,8 +70,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local heal = t.getHeal(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[A magical zone of Sunlight appears around you, healing all within a radius of 3 for %0.2f per turn and increasing healing effects on those within by %d%%.  The effect lasts %d turns.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 4, 30), self:combatTalentSpellDamage(t, 4, 30), self:getTalentLevel(t) + 2)
+		The life healed will increase with the Magic stat]]):
+		format(heal, heal, duration)
 	end,
 }
 
@@ -81,13 +86,17 @@ newTalent{
 	random_ego = "defensive",
 	positive = -20,
 	cooldown = 15,
+	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 270) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=self:combatTalentSpellDamage(t, 30, 270)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getAbsorb(self, t)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A protective shield forms around you that lasts for up to 10 turns, negating %d damage.]]):format(self:combatTalentSpellDamage(t, 30, 270))
+		local absorb = t.getAbsorb(self, t)
+		return ([[A protective shield forms around you that lasts for up to 10 turns, negating %d damage.
+		Max damage barrier can absorb will increase with your Magic stat.]]):
+		format(absorb)
 	end,
 }
 
@@ -102,15 +111,19 @@ newTalent{
 	tactical = {
 		HEAL = 10,
 	},
+	getRegeneration = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
-		local dur = 2 + math.ceil(self:getTalentLevel(t))
-		self:setEffect(self.EFF_PROVIDENCE, dur, {power=self:combatTalentSpellDamage(t, 10, 50)})
+		self:setEffect(self.EFF_PROVIDENCE, t.getDuration(self, t), {power=t.getRegeneration(self, t)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
+		local regen = t.getRegeneration(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Places you under light's protection, regenerating your body for %d life and removing a single negative effect from you each turn for %d turns.
-		The life healed will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 10, 50), math.ceil(2 + self:getTalentLevel(t)))
+		The life healed will increase with the Magic stat]]):
+		format(regen, duration)
 	end,
 }
 

@@ -32,19 +32,22 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 14, 230) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(self:combatTalentSpellDamage(t, 14, 230)))
+		self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "shadow_beam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/flame")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[Calls the power of the Moon into a beam of shadows doing %0.2f damage.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 14, 230)))
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
@@ -62,20 +65,20 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	requires_target = true,
+	getDamageOnSpot = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 120) end,
+	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local duration = self:getTalentLevel(t) + 2
-		local radius = 3
-		local dam = self:combatTalentSpellDamage(t, 4, 50)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius, friendlyfire=self:spellFriendlyFire()}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=3, friendlyfire=self:spellFriendlyFire()}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
-		local grids = self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(self:combatTalentSpellDamage(t, 5, 120)), {type="shadow"})
+		local grids = self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)), {type="shadow"})
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			x, y, duration,
-			DamageType.DARKNESS, dam,
-			radius,
+			x, y, t.getDuration(self, t),
+			DamageType.DARKNESS, t.getDamage(self, t),
+			3,
 			5, nil,
 			{type="shadow_zone"},
 			nil, self:spellFriendlyFire()
@@ -87,13 +90,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDuration(self, t)
+		local damageonspot = t.getDamageOnSpot(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field that does %0.2f darkness damage per turn for %d turns.
 		The damage will increase with the Magic stat]]):
-		format(
-			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 5, 120)),
-			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 4, 50)),
-			self:getTalentLevel(t) + 2
-		)
+		format(damDesc(self, DamageType.DARKNESS, damage),damDesc(self, DamageType.DARKNESS, damageonspot),duration)
 	end,
 }
 
@@ -111,24 +113,24 @@ newTalent{
 	},
 	range = 2,
 	direct_hit = true,
+	getLightDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
+	getDarknessDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), talent=t, friendlyfire=false}
-		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)))
-		self:project(tg, self.x, self.y, DamageType.DARKNESS, self:spellCrit(10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)))
+		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(t.getLightDamage(self, t)))
+		self:project(tg, self.x, self.y, DamageType.DARKNESS, self:spellCrit(t.getDarknessDamage(self, t)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "shadow_flash", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 
 		game:playSoundNear(self, "talents/flame")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage in a radius of %d.
+		local lightdam = t.getLightDamage(self, t)
+		local darknessdam = t.getDarknessDamage(self, t)
+		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage.
 		It also regenerates both your negative and positive energies.
 		The damage will increase with the Magic stat]]):
-		format(
-			damDesc(self, DamageType.LIGHT, 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)),
-			damDesc(self, DamageType.DARKNESS, 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t)),
-			self:getTalentRange(t)
-		)
+		format(damDesc(self, DamageType.LIGHT, lightdam),damDesc(self, DamageType.DARKNESS, darknessdam))
 	end,
 }
 
@@ -146,11 +148,13 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
+	getRadius = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t) / 3) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 170) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + math.floor(self:getTalentLevelRaw(t) / 3), friendlyfire=self:spellFriendlyFire(), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local grids = self:project(tg, x, y, DamageType.DARKSTUN, self:spellCrit(self:combatTalentSpellDamage(t, 28, 170)))
+		local grids = self:project(tg, x, y, DamageType.DARKSTUN, self:spellCrit(t.getDamage(self, t)))
 
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "shadow_flash", {radius=tg.radius, grids=grids, tx=x, ty=y})
@@ -158,8 +162,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local radius = t.getRadius(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[A star falls into area of radius %d, stunning all for 4 turns and doing %0.2f darkness damage.
-		The damage will increase with the Magic stat
-		]]):format(1 + math.floor(self:getTalentLevelRaw(t) / 3), damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 28, 170)))
+		The damage will increase with the Magic stat.]]):
+		format(radius, damDesc(self, DamageType.DARKNESS, damage))
    end,
    }
