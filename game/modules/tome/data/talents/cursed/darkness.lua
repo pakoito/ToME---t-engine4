@@ -25,7 +25,7 @@ local function combatTalentDamage(self, t, min, max)
 	return self:combatTalentSpellDamage(t, min, max, self.level + self:getMag())
 end
 
-local function canCreep(x, y, ignoreCreepingDark)
+function canCreep(x, y, ignoreCreepingDark)
 	-- not on map
 	if not game.level.map:isBound(x, y) then return false end
 	 -- already dark
@@ -38,7 +38,7 @@ local function canCreep(x, y, ignoreCreepingDark)
 	return true
 end
 
-local function doCreep(self, useCreep)
+function doCreep(self, useCreep)
 	local start = rng.range(0, 8)
 	for i = start, start + 8 do
 		local x = self.x + (i % 3) - 1
@@ -63,7 +63,7 @@ local function doCreep(self, useCreep)
 	end
 end
 
-local function createDark(summoner, x, y, damage, duration, creep, creepChance, initialCreep)
+function createDark(summoner, x, y, damage, duration, creep, creepChance, initialCreep)
 	local e = Object.new{
 		name = "creeping dark",
 		block_sight=true,
