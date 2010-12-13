@@ -531,6 +531,12 @@ function _M:getOffHandMult(mult)
 	return offmult
 end
 
+--- Gets fatigue
+function _M:combatFatigue()
+	if self.fatigue < 0 then return 0 end
+	return self.fatigue
+end
+
 --- Gets spellcrit
 function _M:combatSpellCrit()
 	return self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
@@ -600,10 +606,10 @@ function _M:spellCrit(dam, add_chance)
 			local t = self:getTalentFromId(self.T_BLOOD_FURY)
 			t.on_crit(self, t)
 		end
-		
+
 		if self:isTalentActive(self.T_CORONA) then
 			local t = self:getTalentFromId(self.T_CORONA)
-			t.on_crit(self, t)	
+			t.on_crit(self, t)
 		end
 
 	end

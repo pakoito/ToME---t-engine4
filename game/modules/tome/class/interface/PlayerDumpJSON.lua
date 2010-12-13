@@ -146,7 +146,7 @@ function _M:dumpToJSON(js)
 	-- Defense
 	-------------------------------------------------------------------
 	local d = js:newSection("defense", "defense", "pairs", "break")
-	d[#d+1] = { ["fatigue"] = self.fatigue }
+	d[#d+1] = { ["fatigue"] = self:combatFatigue() }
 	d[#d+1] = { ["armour"] = self:combatArmor() }
 	d[#d+1] = { ["defense"] = self:combatDefense() }
 	d[#d+1] = { ["ranged defense"] = self:combatDefenseRanged() }

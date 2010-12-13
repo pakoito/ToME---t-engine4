@@ -1357,11 +1357,11 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		end
 	else
-		if ab.mana and self:getMana() < ab.mana * (100 + 2 * self.fatigue) / 100 then
+		if ab.mana and self:getMana() < ab.mana * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
 		end
-		if ab.stamina and self:getStamina() < ab.stamina * (100 + self.fatigue) / 100 then
+		if ab.stamina and self:getStamina() < ab.stamina * (100 + self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
 		end
@@ -1369,15 +1369,15 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough vim to use %s.", ab.name) end
 			return false
 		end
-		if ab.positive and self:getPositive() < ab.positive * (100 + self.fatigue) / 100 then
+		if ab.positive and self:getPositive() < ab.positive * (100 + self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough positive energy to use %s.", ab.name) end
 			return false
 		end
-		if ab.negative and self:getNegative() < ab.negative * (100 + self.fatigue) / 100 then
+		if ab.negative and self:getNegative() < ab.negative * (100 + self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough negative energy to use %s.", ab.name) end
 			return false
 		end
-		if ab.hate and self:getHate() < ab.hate * (100 + self.fatigue) / 100 then
+		if ab.hate and self:getHate() < ab.hate * (100 + self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
 			return false
 		end
@@ -1517,23 +1517,23 @@ function _M:postUseTalent(ab, ret)
 		end
 	else
 		if ab.mana then
-			trigger = true; self:incMana(-ab.mana * (100 + 2 * self.fatigue) / 100)
+			trigger = true; self:incMana(-ab.mana * (100 + 2 * self:combatFatigue()) / 100)
 		end
 		if ab.stamina then
-			trigger = true; self:incStamina(-ab.stamina * (100 + self.fatigue) / 100)
+			trigger = true; self:incStamina(-ab.stamina * (100 + self:combatFatigue()) / 100)
 		end
 		-- Vim is not affected by fatigue
 		if ab.vim then
 			trigger = true; self:incVim(-ab.vim)
 		end
 		if ab.positive then
-			trigger = true; self:incPositive(-ab.positive * (100 + self.fatigue) / 100)
+			trigger = true; self:incPositive(-ab.positive * (100 + self:combatFatigue()) / 100)
 		end
 		if ab.negative then
-			trigger = true; self:incNegative(-ab.negative * (100 + self.fatigue) / 100)
+			trigger = true; self:incNegative(-ab.negative * (100 + self:combatFatigue()) / 100)
 		end
 		if ab.hate then
-			trigger = true; self:incHate(-ab.hate * (100 + self.fatigue) / 100)
+			trigger = true; self:incHate(-ab.hate * (100 + self:combatFatigue()) / 100)
 		end
 		-- Equilibrium is not affected by fatigue
 		if ab.equilibrium then
@@ -1635,12 +1635,12 @@ function _M:getTalentFullDescription(t, addlevel)
 	else d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Activated", true)
 	end
 
-	if t.mana or t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_mana or t.mana * (100 + 2 * self.fatigue) / 100), true) end
-	if t.stamina or t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina or t.stamina * (100 + self.fatigue) / 100), true) end
+	if t.mana or t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_mana or t.mana * (100 + 2 * self:combatFatigue()) / 100), true) end
+	if t.stamina or t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina or t.stamina * (100 + self:combatFatigue()) / 100), true) end
 	if t.equilibrium or t.sustain_equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(t.equilibrium or t.sustain_equilibrium), true) end
 	if t.vim or t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.sustain_vim or t.vim), true) end
-	if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive or t.positive * (100 + self.fatigue) / 100), true) end
-	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self.fatigue) / 100), true) end
+	if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive or t.positive * (100 + self:combatFatigue()) / 100), true) end
+	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self:combatFatigue()) / 100), true) end
 	if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate), true) end
 	if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 100))), true) end
 	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
