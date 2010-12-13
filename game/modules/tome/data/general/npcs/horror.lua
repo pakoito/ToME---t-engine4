@@ -382,7 +382,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resolvers.sustains_at_birth(),
 
 	make_escort = {
-		{type="horror", subtype="eldritch", name="luminous horror", number=2},
+		{type="horror", subtype="eldritch", name="luminous horror", number=2, no_subescort=true},
 	},
 }
 
