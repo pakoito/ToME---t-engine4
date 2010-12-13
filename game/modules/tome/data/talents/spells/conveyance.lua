@@ -34,6 +34,7 @@ newTalent{
 	action = function(self, t)
 		local target = self
 		if self:getTalentLevel(t) >= 4 then
+			game.logPlayer(self, "Selects a target to teleport...")
 			local tg = {default_target=self, type="hit", nowarning=true, range=10, first_target="friend"}
 			local tx, ty = self:getTarget(tg)
 			if tx then
@@ -58,6 +59,7 @@ newTalent{
 		local rad = t.getRange(self, t)
 		local radius = t.getRadius(self, t)
 		if self:getTalentLevel(t) >= 5 then
+			game.logPlayer(self, "Selects a teleport location...")
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=rad, radius=radius, requires_knowledge=false}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
@@ -112,6 +114,7 @@ newTalent{
 		local target = self
 
 		if self:getTalentLevel(t) >= 5 then
+			game.logPlayer(self, "Selects a target to teleport...")
 			local tg = {default_target=self, type="hit", nowarning=true, range=10, first_target="friend"}
 			local tx, ty = self:getTarget(tg)
 			if tx then
@@ -135,6 +138,7 @@ newTalent{
 
 		local x, y = self.x, self.y
 		if self:getTalentLevel(t) >= 4 then
+			game.logPlayer(self, "Selects a teleport location...")
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=t.getRange(self, t), radius=t.getRadius(self, t), requires_knowledge=false}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
