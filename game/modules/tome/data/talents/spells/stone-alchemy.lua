@@ -114,7 +114,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Imbue an body armour with a gem, granting it additional powers.
+		return ([[Imbue a body armour with a gem, granting it additional powers.
 		You can only imbue items once, and it is permanent.]])
 	end,
 }
