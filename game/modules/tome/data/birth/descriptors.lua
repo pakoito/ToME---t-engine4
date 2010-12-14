@@ -146,6 +146,7 @@ newBirthDescriptor{
 	{
 		"Hard game setting",
 		"All zone levels increased by 40% + 5",
+		"All damage done to the player increased by 30%",
 	},
 	descriptor_choices =
 	{
@@ -161,6 +162,7 @@ newBirthDescriptor{
 	{
 		"Absolutely unfair game setting",
 		"All zone levels increased by 100% + 10",
+		"All damage done to the player increased by 60%",
 		"Player rank is normal instead of elite",
 	},
 	descriptor_choices =

@@ -159,7 +159,7 @@ function _M:newGame()
 		self.player:check("before_starting_zone")
 		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
-		if self.player.__game_difficulty then self.difficulty = self.player.__game_difficulty end
+		if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
@@ -208,7 +208,7 @@ function _M:newGame()
 
 			-- Load the player directly
 			self.player:replaceWith(qb)
-			if self.player.__game_difficulty then self.difficulty = self.player.__game_difficulty end
+			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 			Map:setViewerFaction(self.player.faction)
 			self.player:removeQuest(self.player.starting_quest)
@@ -230,6 +230,10 @@ function _M:newGame()
 		end
 	end
 	self:registerDialog(birth)
+end
+
+function _M:setupDifficulty(d)
+	self.difficulty = d
 end
 
 function _M:loaded()
