@@ -340,7 +340,7 @@ function _M:setupMiniMap()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{difficulty=true, persistant_actors=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, persistant_actors=true, to_re_add_actors=true}, true)
 end
 
 function _M:getSaveDescription()
@@ -364,7 +364,7 @@ function _M:getStore(def)
 end
 
 function _M:leaveLevel(level, lev, old_lev)
-	self.to_re_add_actors = {}
+	self.to_re_add_actors = self.to_re_add_actors or {}
 	if level:hasEntity(self.player) then
 		level.exited = level.exited or {}
 		if lev > old_lev then
@@ -469,17 +469,20 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		self.player:move(x, y, true)
 	end
 	self.player.changed = true
-	if self.to_re_add_actors then for act, _ in pairs(self.to_re_add_actors) do
+	if self.to_re_add_actors and not self.zone.wilderness then for act, _ in pairs(self.to_re_add_actors) do
 		local x, y = util.findFreeGrid(self.player.x, self.player.y, 20, true, {[Map.ACTOR]=true})
 		if x then act:move(x, y, true) end
 	end end
 
 	-- Re add entities
 	self.level:addEntity(self.player)
-	if self.to_re_add_actors then for act, _ in pairs(self.to_re_add_actors) do
-		self.level:addEntity(act)
-		act:setTarget(nil)
-	end end
+	if self.to_re_add_actors and not self.zone.wilderness then
+		for act, _ in pairs(self.to_re_add_actors) do
+			self.level:addEntity(act)
+			act:setTarget(nil)
+		end
+		self.to_re_add_actors = nil
+	end
 
 	if self.zone.on_enter then
 		self.zone.on_enter(lev, old_lev, zone)

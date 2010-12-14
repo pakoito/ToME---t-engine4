@@ -30,7 +30,7 @@ function _M:dumpToJSON(js)
 	for i = 1, self.max_inscriptions do if self.inscriptions[i] then nb_inscriptions = nb_inscriptions + 1 end end
 
 	local cur_exp, max_exp = self.exp, self:getExpChart(self.level+1)
-	local title = ("%s the %d %s %s"):format(self.name, self.level, self.descriptor.subrace, self.descriptor.subclass)
+	local title = ("%s the level %d %s %s"):format(self.name, self.level, self.descriptor.subrace, self.descriptor.subclass)
 
 	-------------------------------------------------------------------
 	-- Character
