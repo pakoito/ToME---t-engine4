@@ -167,7 +167,7 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
-	long_desc = function(self, eff) return "The target is encased in ice, completly unable to act." end,
+	long_desc = function(self, eff) return "The target is encased in ice, completly unable to act. The ice increases all your resistances by 20%." end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -186,10 +186,12 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("encased_in_ice", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
 		eff.dur = self:updateEffectDuration(eff.dur, "freeze")
+		eff.resistsid = self:addTemporaryValue("resists", {all=20})
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("encased_in_ice", eff.tmpid)
 		self:removeTemporaryValue("frozen", eff.frozid)
+		self:removeTemporaryValue("resists", eff.resistsid)
 		self.color_r = eff.old_r
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b
