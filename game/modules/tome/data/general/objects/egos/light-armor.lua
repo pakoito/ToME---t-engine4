@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{
-	name = "nimble", prefix=true, instant_resolve=true,
+	name = "nimble ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,
 	rarity = 22,
