@@ -167,12 +167,12 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
-	long_desc = function(self, eff) return "The target is frozen in ice, completly unable to act." end,
+	long_desc = function(self, eff) return "The target is encased in ice, completly unable to act." end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#Target# is frozen!", "+Frozen" end,
-	on_lose = function(self, err) return "#Target# warms up.", "-Frozen" end,
+	on_gain = function(self, err) return "#Target# is encased in ice!", "+Frozen" end,
+	on_lose = function(self, err) return "#Target# is free from the ice.", "-Frozen" end,
 	activate = function(self, eff)
 		-- Change color
 		eff.old_r = self.color_r
@@ -2365,7 +2365,7 @@ newEffect{
 		if eff.hateGain and eff.hateGain > 0 then
 			eff.hateGainId = self:addTemporaryValue("hate_regen", eff.hateGain)
 		end
-		
+
 		-- health
 		if eff.constitutionGain and eff.constitutionGain > 0 then
 			eff.constitutionGainId = self:addTemporaryValue("inc_stats",
@@ -2381,13 +2381,13 @@ newEffect{
 			eff.lifeRegenGainId = self:addTemporaryValue("life_regen", eff.lifeRegenGain)
 			eff.lifeRegenLossId = eff.target:addTemporaryValue("life_regen", -eff.lifeRegenGain)
 		end
-		
+
 		-- power
 		if eff.damageGain and eff.damageGain > 0 then
 			eff.damageGainId = self:addTemporaryValue("inc_damage", {all=eff.damageGain})
 			eff.damageLossId = eff.target:addTemporaryValue("inc_damage", {all=eff.damageLoss})
 		end
-		
+
 		-- strengths
 		if eff.resistGain and eff.resistGain > 0 then
 			local gainList = {}
@@ -2410,17 +2410,17 @@ newEffect{
 	deactivate = function(self, eff)
 		-- hate
 		if eff.hateGainId then self:removeTemporaryValue("hate_regen", eff.hateGainId) end
-		
+
 		-- health
 		if eff.constitutionGainId then self:removeTemporaryValue("inc_stats", eff.constitutionGainId) end
 		if eff.constitutionLossId then eff.target:removeTemporaryValue("inc_stats", eff.constitutionLossId) end
 		if eff.lifeRegenGainId then self:removeTemporaryValue("life_regen", eff.lifeRegenGainId) end
 		if eff.lifeRegenLossId then eff.target:removeTemporaryValue("life_regen", eff.lifeRegenLossId) end
-		
+
 		-- power
 		if eff.damageGainId then self:removeTemporaryValue("inc_damage", eff.damageGainId) end
 		if eff.damageLossId then eff.target:removeTemporaryValue("inc_damage", eff.damageLossId) end
-		
+
 		-- strengths
 		if eff.resistGainId then self:removeTemporaryValue("resists", eff.resistGainId) end
 		if eff.resistLossId then eff.target:removeTemporaryValue("resists", eff.resistLossId) end
