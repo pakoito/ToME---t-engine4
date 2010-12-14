@@ -195,7 +195,7 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 3,
+	cooldown = 6,
 	hate =  0.5,
 	range = 12,
 	getDuration = function(self, t)
@@ -235,6 +235,54 @@ newTalent{
 }
 
 newTalent{
+	name = "Madness",
+	type = {"cursed/punishments", 4},
+	mode = "passive",
+	require = cursed_wil_req4,
+	points = 5,
+	getMindpower = function(self, t)
+		return math.sqrt(self:getTalentLevel(t)) * 0.4 * combatPower(self, t)
+	end,
+	getChance = function(self, t)
+		return 25
+	end,
+	doMadness = function(self, t, src)
+		local mindpower = t.getMindpower(src, t)
+		local chance = t.getChance(src, t)
+		
+		if self and src and self:reactionToward(src) < 0 and self:checkHit(mindpower, self:combatMentalResist(), 0, chance, 5) then
+			local effect = rng.range(1, 3)
+			if effect == 1 then
+				-- confusion
+				if self:canBe("confusion") and not self:hasEffect(self.EFF_MADNESS_CONFUSED) then
+					self:setEffect(self.EFF_MADNESS_CONFUSED, 2, {power=70})
+					hit = true
+				end
+			elseif effect == 2 then
+				-- stun
+				if self:canBe("stun") and not self:hasEffect(self.EFF_MADNESS_STUNNED) then
+					self:setEffect(self.EFF_MADNESS_STUNNED, 2, {})
+					hit = true
+				end
+			elseif effect == 3 then
+				-- slow
+				if self:canBe("slow") and not self:hasEffect(self.EFF_MADNESS_SLOW) then
+					self:setEffect(self.EFF_MADNESS_SLOW, 2, {power=0.3})
+					hit = true
+				end
+			end
+		end
+	end,
+	info = function(self, t)
+		local mindpower = t.getMindpower(self, t)
+		local chance = t.getChance(self, t)
+		return ([[Every time you inflict mental damage there is a %d%% chance that your foe must save against your mindpower or go mad. Madness can briefly cause them to become confused, slowed or stunned. (%d mindpower vs mental resistance).
+		The mindpower will increase with the Willpower stat.]]):format(chance, mindpower)
+	end,
+}
+
+--[[
+newTalent{
 	name = "Tortured Sanity",
 	type = {"cursed/punishments", 4},
 	require = cursed_wil_req4,
@@ -265,7 +313,7 @@ newTalent{
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target and self:reactionToward(target) < 0 then
 					if target:canBe("stun") and rng.percent(chance) then
-						if target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 5) then
+						if target:checkHit(mindpower, target:combatMentalResist(), 0, 95, 5) then
 							target:setEffect(target.EFF_DAZED, duration, {src=self})
 							game.level.map:particleEmitter(x, y, 1, "cursed_ground", {})
 						else
@@ -282,8 +330,8 @@ newTalent{
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Your will reaches into the minds of all nearby enemies and tortures their sanity. Anyone within range who fails a mental save has a %d%% chance of being dazed for %d turns (%d mindpower vs mental resistance).
-		The mindpower will increase with the Willpower stat.]]):format(chance, duration, mindpower)
+		return ([Your will reaches into the minds of all nearby enemies and tortures their sanity. Anyone within range who fails a mental save has a %d%% chance of being dazed for %d turns (%d mindpower vs mental resistance).
+		The mindpower will increase with the Willpower stat.]):format(chance, duration, mindpower)
 	end,
 }
-
+]]

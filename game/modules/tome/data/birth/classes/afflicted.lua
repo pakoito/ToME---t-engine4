@@ -107,7 +107,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_UNNATURAL_BODY] = 1,
-		[ActorTalents.T_FEED_HATE] = 1,
+		[ActorTalents.T_FEED] = 1,
 		[ActorTalents.T_WILLFUL_STRIKE] = 1,
 	},
 	copy = {

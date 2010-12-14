@@ -52,7 +52,7 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_ELEMENTS"} },
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
-	resolvers.drops{chance=1020, nb=1, {defined="NOTE_LORE"} },
+	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resolvers.talents{
