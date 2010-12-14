@@ -56,7 +56,7 @@ newTalent{
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=3}
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),

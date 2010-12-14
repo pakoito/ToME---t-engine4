@@ -45,7 +45,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/in
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/golemancy-base", name = "golemancy", hide = true, description = "Learn to craft and upgrade your golem." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/advanced-golemancy", name = "advanced-golemancy", description = "Advanced golem operations." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/fire-alchemy", name = "fire alchemy", description = "Alchemical control over fire.é" }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/fire-alchemy", name = "fire alchemy", description = "Alchemical control over fire." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy-base", name = "stone alchemy", hide = true, description = "Manipulate gems, imbue their powers into other objects." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy", name = "stone alchemy", generic = true, description = "Alchemical control over stone and gems." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }

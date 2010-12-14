@@ -75,12 +75,14 @@ newTalent{
 	requires_target = true,
 	no_npc_use = true,
 	getGolemDamage = function(self, t)
+		local damage = 0
 		if self.alchemy_golem then
 			local golem = getGolem(self)
-			return golem:combatTalentWeaponDamage(t, 0.4, 1.1) 
-		else
-			return 0
+			if golem then
+				return golem:combatTalentWeaponDamage(t, 0.4, 1.1) 
+			end
 		end
+		return damage
 	end,
 	getDazeDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	action = function(self, t)

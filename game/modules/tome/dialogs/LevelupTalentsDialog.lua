@@ -391,7 +391,7 @@ end
 function _M:learnType(tt, v)
 	if v then
 		if self.actor:knowTalentType(tt) and self.actor.__increased_talent_types[tt] and self.actor.__increased_talent_types[tt] >= 1 then
-			self:simplePopup("Impossible", "You can only improve a category mastery twice!")
+			self:simplePopup("Impossible", "You can only improve a category mastery once!")
 			return
 		end
 		if self.actor.unused_talents_types == 0 then

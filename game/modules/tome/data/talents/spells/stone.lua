@@ -144,6 +144,7 @@ newTalent{
 	getDuration = function(self, t) return 3 + self:getTalentLevel(t) end,
 	getRadius = function(self, t) return 2 + (self:getTalentLevel(t)/2) end,
 	action = function(self, t)
+		local radius = t.getRadius(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -152,7 +153,7 @@ newTalent{
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
 			DamageType.PHYSICAL_STUN, t.getDamage(self, t),
-			t.getRadius(self, t),
+			radius,
 			5, nil,
 			{type="quake"},
 			nil, self:spellFriendlyFire()

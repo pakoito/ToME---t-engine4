@@ -121,7 +121,7 @@ newEffect{
 newEffect{
 	name = "BURNING",
 	desc = "Burning",
-	long_desc = function(self, eff) return ("The target is on fire, doing %0.2f fire damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -144,7 +144,7 @@ newEffect{
 newEffect{
 	name = "POISONED",
 	desc = "Poisoned",
-	long_desc = function(self, eff) return ("The target is poisoned, doing %0.2f nature damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn."):format(eff.power) end,
 	type = "poison",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -243,7 +243,7 @@ newEffect{
 newEffect{
 	name = "BURNING_SHOCK",
 	desc = "Burning Shock",
-	long_desc = function(self, eff) return ("The target is on fire, doing %0.2f fire damage per turn and making it unable to act."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn and making it unable to act."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -288,7 +288,7 @@ newEffect{
 newEffect{
 	name = "SPYDRIC_POISON",
 	desc = "Spydric Poison",
-	long_desc = function(self, eff) return ("The target is poisoned, doing %0.2f nature damage per turn and preventing any movements (but can still act freely)."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn and preventing any movements (but can still act freely)."):format(eff.power) end,
 	type = "poison",
 	status = "detrimental",
 	parameters = {power=10},
@@ -457,7 +457,7 @@ newEffect{
 newEffect{
 	name = "SPEED",
 	desc = "Speed",
-	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
+	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format(eff.power * 100) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=0.1 },
@@ -474,7 +474,7 @@ newEffect{
 newEffect{
 	name = "SLOW",
 	desc = "Slow",
-	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
+	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format( eff.power * 100) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { power=0.1 },
@@ -1052,7 +1052,7 @@ newEffect{
 newEffect{
 	name = "MIGHTY_BLOWS",
 	desc = "Migth Blows",
-	long_desc = function(self, eff) return ("The target's combat damage rating is improved by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's combat damage is improved by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -1156,7 +1156,7 @@ newEffect{
 newEffect{
 	name = "CRIPPLE",
 	desc = "Cripple",
-	long_desc = function(self, eff) return ("The target is crippled, reducing attack by %d and damage rating by %d."):format(eff.atk, eff.dam) end,
+	long_desc = function(self, eff) return ("The target is crippled, reducing attack by %d and damage by %d."):format(eff.atk, eff.dam) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { atk=10, dam=10 },
@@ -1175,7 +1175,7 @@ newEffect{
 newEffect{
 	name = "WILLFUL_COMBAT",
 	desc = "Willful Combat",
-	long_desc = function(self, eff) return ("The target puts all its willpower into its blows, improving damage rating by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target puts all its willpower into its blows, improving damage by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -1419,7 +1419,7 @@ newEffect{
 newEffect{
 	name = "ACID_SPLASH",
 	desc = "Acid Splash",
-	long_desc = function(self, eff) return ("The target has been splashed with acid, doing %0.2f acid damage per turn, reducing armour by %d and attack by %d."):format(eff.dam, eff.armor or 0, eff.atk) end,
+	long_desc = function(self, eff) return ("The target has been splashed with acid, taking %0.2f acid damage per turn, reducing armour by %d and attack by %d."):format(eff.dam, eff.armor or 0, eff.atk) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -1544,7 +1544,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_SLOW",
 	desc = "Slowed by the gloom",
-	long_desc = function(self, eff) return ("The gloom reduces the target's global speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
+	long_desc = function(self, eff) return ("The gloom reduces the target's global speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
 	status = "detrimental",
 	parameters = { power=0.1 },
@@ -1670,7 +1670,7 @@ newEffect{
 newEffect{
 	name = "DOMINATED",
 	desc = "Dominated",
-	long_desc = function(self, eff) return "The target is dominated, increasing damage done to it by its master." end,
+	long_desc = function(self, eff) return ("The target is dominated, increasing damage done to it by its master by %d%%."):format(eff.dominatedDamMult * 100) end,
 	type = "mental",
 	status = "detrimental",
 	on_gain = function(self, err) return "#F53CBE##Target# has been dominated!", "+Dominated" end,
@@ -1838,7 +1838,7 @@ newEffect{
 newEffect{
 	name = "BLOOD_FURY",
 	desc = "Bloodfury",
-	long_desc = function(self, eff) return ("The target's blight damage is increased by %d%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's blight and acid damage is increased by %d%%."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -1853,7 +1853,7 @@ newEffect{
 newEffect{
 	name = "UNSTOPPABLE",
 	desc = "Unstoppable",
-	long_desc = function(self, eff) return "The target is unstoppable! It refuses to die." end,
+	long_desc = function(self, eff) return ("The target is unstoppable! It refuses to die, at the end it will heal it for %d."):format(eff.kills * eff.hp_per_kill * self.max_life / 100) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { hp_per_kill=2 },
@@ -2009,7 +2009,7 @@ newEffect{
 newEffect{
 	name = "NO_SUMMON",
 	desc = "Suppress Summon",
-	long_desc = function(self, eff) return "You cannot summon." end,
+	long_desc = function(self, eff) return "Your summons are suppressed by some force." end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -2127,7 +2127,7 @@ newEffect{
 newEffect{
 	name = "CORROSIVE_WORM",
 	desc = "Corrosive Worm",
-	long_desc = function(self, eff) return ("Target is infected with a corrosive worm doing %0.2f acid damage per turn."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("Target is infected with a corrosive worm taking %0.2f acid damage per turn."):format(eff.dam) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { dam=1, explosion=10 },
@@ -2306,7 +2306,7 @@ newEffect{
 newEffect{
 	name = "EMPOWERED_HEALING",
 	desc = "Empowered Healing",
-	long_desc = function(self, eff) return ("Increases the effectiveness of all healing the target receives."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Increases the effectiveness of all healing the target receives by %d%%."):format(eff.power * 100) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power= 0.1 },
@@ -2321,7 +2321,7 @@ newEffect{
 newEffect{
 	name = "PROVIDENCE",
 	desc = "Providence",
-	long_desc = function(self, eff) return "The target is under protection." end,
+	long_desc = function(self, eff) return ("The target is under protection also his life regeneration is boosted by %d."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = {},
@@ -2580,7 +2580,7 @@ newEffect{
 newEffect{
 	name = "TOTALITY",
 	desc = "Totality",
-	long_desc = function(self, eff) return ("The target's light and darkness spell penetration has been increased by %d%%."):format(eff.power, eff.power) end,
+	long_desc = function(self, eff) return ("The target's light and darkness spell penetration has been increased by %d%%."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },

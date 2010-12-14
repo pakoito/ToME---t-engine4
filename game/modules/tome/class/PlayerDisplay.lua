@@ -176,11 +176,12 @@ function _M:display()
 	end
 	for eff_id, p in pairs(player.tmp) do
 		local e = player.tempeffect_def[eff_id]
+		local dur = p.dur + 1
 		local desc = e.long_desc(player, p)
 		if e.status == "detrimental" then
-			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_RED#%s"):format(e.desc), x, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_RED#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
 		else
-			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(e.desc), x, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 

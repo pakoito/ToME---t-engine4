@@ -559,10 +559,11 @@ function _M:tooltip(x, y, seen_by)
 	end
 	for eff_id, p in pairs(self.tmp) do
 		local e = self.tempeffect_def[eff_id]
+		local dur = p.dur + 1
 		if e.status == "detrimental" then
-			effs[#effs+1] = ("- #LIGHT_RED#%s"):format(e.desc)
+			effs[#effs+1] = ("- #LIGHT_RED#%s(%d)"):format(e.desc,dur)
 		else
-			effs[#effs+1] = ("- #LIGHT_GREEN#%s"):format(e.desc)
+			effs[#effs+1] = ("- #LIGHT_GREEN#%s(%d)"):format(e.desc,dur)
 		end
 	end
 
