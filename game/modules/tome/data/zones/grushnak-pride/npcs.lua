@@ -60,6 +60,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_DESTRUCTION"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
 
 	make_escort = {
 		{type="orc", no_subescort=true, number=resolvers.mbonus(6, 5)},

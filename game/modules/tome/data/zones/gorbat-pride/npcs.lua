@@ -54,6 +54,7 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_DRAGON"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
 
 	talent_cd_reduction={[Talents.T_ICE_BREATH]=3, [Talents.T_FIRE_BREATH]=3, [Talents.T_SAND_BREATH]=3, },
 	equilibrium_regen = -8,

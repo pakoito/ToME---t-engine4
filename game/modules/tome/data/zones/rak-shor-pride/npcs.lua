@@ -57,6 +57,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	},
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
 	resolvers.drops{chance=100, nb=1, {defined="ORB_UNDEATH"} },
+	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	summon = {

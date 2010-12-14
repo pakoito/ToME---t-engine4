@@ -19,3 +19,12 @@
 
 load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
+
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE_LORE",
+	name = "draft note", lore="grushnak-pride-note",
+	desc = [[A note.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}

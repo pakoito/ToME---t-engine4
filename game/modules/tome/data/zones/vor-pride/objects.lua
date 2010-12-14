@@ -65,3 +65,12 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 		return "destroy", true
 	end}
 }
+
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE_LORE",
+	name = "draft note", lore="vor-pride-note",
+	desc = [[A note.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}
