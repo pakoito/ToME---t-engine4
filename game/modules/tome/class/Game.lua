@@ -124,6 +124,12 @@ function _M:run()
 	if self.level then self:setupDisplayMode() end
 end
 
+--- Checks if the current character is "tainted" by cheating
+function _M:isTainted()
+	if config.settings.cheat then return true end
+	return (game.player and game.player.__cheated) and true or false
+end
+
 function _M:newGame()
 	self.player = Player.new{name=self.player_name, game_ender=true}
 	Map:setViewerActor(self.player)
@@ -136,6 +142,8 @@ function _M:newGame()
 			local o = self.state:generateRandart(true)
 			self.zone.object_list[#self.zone.object_list+1] = o
 		end
+
+		if config.settings.cheat then self.player.__cheated = true end
 
 		-- Register the character online if possible
 		self.player:getUUID()
@@ -187,8 +195,6 @@ function _M:newGame()
 		if self.player.no_birth_levelup then birthend()
 		else self.player:playerLevelup(birthend) end
 	end, quickbirth, 720, 500)
-
-
 
 	-- Load a full player instead of a simpler quickbirthing, if possible
 	birth.quickBirth = function(b)
@@ -262,6 +268,7 @@ function _M:loaded()
 	self.key = engine.KeyBind.new()
 
 	if self.always_target then Map:setViewerFaction(self.player.faction) end
+	if self.player and config.settings.cheat then self.player.__cheated = true end
 end
 
 function _M:createSeparators()
@@ -687,7 +694,7 @@ function _M:setupCommands()
 
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function()
-			if config.settings.tome.cheat then
+			if config.settings.cheat then
 				self.player:forceLevelup(50)
 				self.player.no_breath = 1
 				self.player.invulnerable = 1
@@ -709,7 +716,7 @@ function _M:setupCommands()
 			end
 		end,
 		[{"_z","ctrl"}] = function()
-			if config.settings.tome.cheat then
+			if config.settings.cheat then
 				self.player:forceLevelup(50)
 				self.player.no_breath = 1
 				self.player.invulnerable = 1
@@ -719,7 +726,7 @@ function _M:setupCommands()
 			end
 		end,
 		[{"_f","ctrl"}] = function()
-			if config.settings.tome.cheat then
+			if config.settings.cheat then
 				self.player:incStat("str", 100) self.player:incStat("dex", 100) self.player:incStat("mag", 100) self.player:incStat("wil", 100) self.player:incStat("cun", 100) self.player:incStat("con", 100)
 				self.player:learnTalent(self.player.T_HEAVY_ARMOUR_TRAINING, true) self.player:learnTalent(self.player.T_MASSIVE_ARMOUR_TRAINING, true)
 -- [[
@@ -746,7 +753,7 @@ function _M:setupCommands()
 			end
 		end,
 		[{"_g","ctrl"}] = function()
-			if config.settings.tome.cheat then
+			if config.settings.cheat then
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 --				self.player:grantQuest("anti-antimagic")
@@ -910,7 +917,7 @@ function _M:setupCommands()
 		end,
 		-- Lua console
 		LUA_CONSOLE = function()
-			if config.settings.tome.cheat then
+			if config.settings.cheat then
 				self:registerDialog(DebugConsole.new())
 			end
 		end,

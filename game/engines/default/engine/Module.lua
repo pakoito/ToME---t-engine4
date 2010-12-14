@@ -186,6 +186,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		return
 	end
 
+	if mod.short_name == "boot" then profile.hash_valid = true end
+
 	profile.generic.modules_loaded = profile.generic.modules_loaded or {}
 	profile.generic.modules_loaded[mod.short_name] = (profile.generic.modules_loaded[mod.short_name] or 0) + 1
 
@@ -198,6 +200,32 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	local M, W = mod.load()
 	_G.game = M.new()
 	_G.game:setPlayerName(name)
+
+	-- Check MD5sum with the server
+	local md5 = require "md5"
+	local md5s = {}
+	local function fp(dir)
+		for i, file in ipairs(fs.list(dir)) do
+			local f = dir.."/"..file
+			if fs.isdir(f) then
+				fp(f)
+			elseif f:find("%.lua$") then
+				local fff = fs.open(f, "r")
+				if fff then
+					local data = fff:read(10485760)
+					md5s[#md5s+1] = f..":"..md5.sumhexa(data)
+					fff:close()
+				end
+			end
+		end
+	end
+	local t = core.game.getTime()
+	fp("/mod")
+	fp("/data")
+	fp("/engine")
+	table.sort(md5s)
+	local fmd5 = md5.sumhexa(table.concat(md5s))
+	print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
 
 	-- Load the world, or make a new one
 	if W then
@@ -221,6 +249,14 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- And now run it!
 	_G.game:run()
+
+	-- Disable the profile if ungood
+	if mod.short_name ~= "boot" then
+		local ok, err = profile:checkModuleHash(("%s-%d.%d.%d"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3]), fmd5)
+		if not ok then
+			game.log("#LIGHT_RED#Profile disabled due to %s.", err)
+		end
+	end
 end
 
 --- Setup write dir for a module

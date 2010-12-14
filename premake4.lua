@@ -81,7 +81,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -250,3 +250,10 @@ project "lxp"
 	targetname "lxp"
 
 	files { "src/lxp/*.c", }
+
+project "luamd5"
+	kind "StaticLib"
+	language "C"
+	targetname "luamd5"
+
+	files { "src/luamd5/*.c", }

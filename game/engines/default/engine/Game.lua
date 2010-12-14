@@ -110,6 +110,11 @@ end
 function _M:run()
 end
 
+--- Checks if the current character is "tainted" by cheating
+function _M:isTainted()
+	return false
+end
+
 --- Sets the current level
 -- @param level an engine.Level (or subclass) object
 function _M:setLevel(level)

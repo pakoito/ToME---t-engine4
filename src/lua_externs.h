@@ -11,3 +11,4 @@ int luaopen_shaders(lua_State *L);
 int luaopen_struct(lua_State *L);
 int luaopen_noise(lua_State *L);
 int luaopen_lxp(lua_State *L);
+int luaopen_md5_core (lua_State *L);

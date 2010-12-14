@@ -165,7 +165,7 @@ end
 function _M:generateList()
 	local list = {}
 
-	if config.settings.tome and config.settings.tome.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
+	if config.settings.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if self.actor:attr("easy_mode_lifes") then list[#list+1] = {name=("Resurrect with easy mode (%d left)"):format(self.actor.easy_mode_lifes), action="easy_mode"} end
 	if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
 	if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones and resurrect (Skeleton ability)", action="skeleton"} end

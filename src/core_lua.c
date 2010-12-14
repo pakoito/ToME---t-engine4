@@ -1764,6 +1764,15 @@ static int lua_fs_exists(lua_State *L)
 	return 1;
 }
 
+static int lua_fs_isdir(lua_State *L)
+{
+	const char *file = luaL_checkstring(L, 1);
+
+	lua_pushboolean(L, PHYSFS_isDirectory(file));
+
+	return 1;
+}
+
 static int lua_fs_mkdir(lua_State *L)
 {
 	const char *dir = luaL_checkstring(L, 1);
@@ -2077,6 +2086,7 @@ static const struct luaL_reg fslib[] =
 	{"exists", lua_fs_exists},
 	{"rename", lua_fs_rename},
 	{"mkdir", lua_fs_mkdir},
+	{"isdir", lua_fs_isdir},
 	{"delete", lua_fs_delete},
 	{"list", lua_fs_list},
 	{"setWritePath", lua_fs_set_write_dir},

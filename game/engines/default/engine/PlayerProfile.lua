@@ -246,7 +246,7 @@ function _M:tryAuth()
 end
 
 function _M:getConfigs(module)
-	if not self.auth then return end
+	if not self.auth or not self.hash_valid then return end
 	local data = self:rpc{action="GetConfigs", login=self.login, hash=self.auth.hash, module=module}
 	if not data then print("[ONLINE PROFILE] get configs") return end
 	for name, val in pairs(data) do
@@ -272,7 +272,7 @@ function _M:getConfigs(module)
 end
 
 function _M:setConfigs(module, name, val)
-	if not self.auth then return end
+	if not self.auth or not self.hash_valid then return end
 	if name == "online" then return end
 
 	if type(val) ~= "string" then val = serialize(val) end
@@ -283,7 +283,7 @@ function _M:setConfigs(module, name, val)
 end
 
 function _M:syncOnline(module)
-	if not self.auth then return end
+	if not self.auth or not self.hash_valid then return end
 	local sync = self.generic
 	if module ~= "generic" then sync = self.modules[module] end
 	if not sync then return end
@@ -337,7 +337,7 @@ function _M:checkFirstRun()
 end
 
 function _M:registerNewCharacter(module)
-	if not self.auth then return end
+	if not self.auth or not self.hash_valid then return end
 	local dialog = Dialog:simplePopup("Registering character", "Character is being registered on http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
 	local data = self:rpc{action="RegisterNewCharacter", login=self.login, hash=self.auth.hash, module=module}
 	game:unregisterDialog(dialog)
@@ -347,10 +347,22 @@ function _M:registerNewCharacter(module)
 end
 
 function _M:registerSaveChardump(module, uuid, title, data)
-	if not self.auth then return end
+	if not self.auth or not self.hash_valid then return end
 	local dialog = Dialog:simplePopup("Uploading character data", "Character sheet is being uploaded to http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
 	local data = self:rpc{action="SaveChardump", login=self.login, hash=self.auth.hash, module=module, uuid=uuid, title=title, data=data}
 	game:unregisterDialog(dialog)
 	if not data or not data.ok then return end
 	print("[ONLINE PROFILE] saved character ", uuid)
+end
+
+function _M:checkModuleHash(module, md5)
+	self.hash_valid = false
+	if not self.auth then return nil, "no online profile active" end
+	if config.settings.cheat then return nil, "cheat mode active" end
+	if game and game:isTainted() then return nil, "savefile tainted" end
+	local data = self:rpc{action="CheckModuleHash", login=self.login, hash=self.auth.hash, module=module, md5=md5}
+	if not data or not data.ok then return nil, "bad game version" end
+	print("[ONLINE PROFILE] module hash is valid")
+	self.hash_valid = true
+	return true
 end
