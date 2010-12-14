@@ -757,10 +757,11 @@ newDamageType{
 newDamageType{
 	name = "% chances to confuse", type = "RANDOM_CONFUSION",
 	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(dam) then
+		if target and rng.percent(dam.dam) then
 			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) and target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, dam, {power=75})
+				target:setEffect(target.EFF_CONFUSED, dam.dam, {power=75})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
