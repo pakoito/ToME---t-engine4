@@ -82,6 +82,14 @@ return {
 			no_level_connectivity = true,
 		},
 	},
+	post_process = function(level)
+		if level.level == 1 then
+			game:placeRandomLoreObject("NOTE1")
+		elseif level.level == 2 then
+			game:placeRandomLoreObject("NOTE2")
+			game:placeRandomLoreObject("NOTE3")
+		end
+	end,
 
 	on_enter = function(lev, old_lev, newzone)
 		if newzone then

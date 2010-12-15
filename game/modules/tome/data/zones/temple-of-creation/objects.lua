@@ -26,6 +26,7 @@ local DamageType = require "engine.DamageType"
 
 newEntity{ base = "BASE_LITE",
 	define_as = "ELDRITCH_PEARL",
+	unided_name = "bright pearl",
 	name = "Eldritch Pearl", unique=true,
 	display ='*', color = colors.AQUAMARINE,
 	desc = [[Thousands of years spent inside the temple of creation have infused this pearl with the fury of rushing water. It pulses light.]],
@@ -49,4 +50,22 @@ newEntity{ base = "BASE_LITE",
 
 	max_power = 150, power_regen = 1,
 	use_talent = { id = Talents.T_TIDAL_WAVE, level=4, power = 80 },
+}
+
+for i = 1, 3 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "tract", lore="temple-creation-note-"..i,
+	desc = [[Tract, revealing the history of the Nagas.]],
+	rarity = false,
+	encumberance = 0,
+}
+end
+
+newEntity{ base = "BASE_LORE",
+	define_as = "SLASUL_NOTE",
+	name = "note", lore="temple-creation-note-4",
+	desc = [[A note.]],
+	rarity = false,
+	encumberance = 0,
 }
