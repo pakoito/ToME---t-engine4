@@ -1,6 +1,28 @@
+-- TE4 - T-Engine 4
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
 print("TE4Online starting...")
 
-require "socket"
+local Client = require "xmpp.Client"
 
-local sock = socket.connect("te4.org", 5122)
-if not sock then return end
+while true do
+	local c = Client.new()
+	local ok, err = pcall(c.run, c)
+	if not ok and err then print("TE4Online error: ", err) end
+end
