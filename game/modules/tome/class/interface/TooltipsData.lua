@@ -118,7 +118,7 @@ TOOLTIP_WIL = [[#GOLD#Willpower#LAST#
 Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to resist mental attacks.
 ]]
 TOOLTIP_CUN = [[#GOLD#Cunning#LAST#
-Cunning defines your character's ability to learn, think, and react. It allows you to learn many worldly abilities, and increases your mental resistance, armor penetration, and critical chance.
+Cunning defines your character's ability to learn, think, and react. It allows you to learn many worldly abilities, and increases your mental resistance and critical chance.
 ]]
 TOOLTIP_STRDEXCON = "#AQUAMARINE#Physical stats#LAST#\n---\n"..TOOLTIP_STR.."\n---\n"..TOOLTIP_DEX.."\n---\n"..TOOLTIP_CON
 TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---\n"..TOOLTIP_WIL.."\n---\n"..TOOLTIP_CUN
