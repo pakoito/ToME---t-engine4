@@ -76,7 +76,14 @@ function _M:generateList()
 						Module:instanciate(mod, "player", true)
 					else
 						game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
-							Module:instanciate(mod, text, true)
+							local savename = text:gsub("[^a-zA-Z0-9_-.]", "_")
+							if fs.exists(("/%s/save/%s/game.teag"):format(mod.short_name, savename)) then
+								Dialog:yesnoPopup("Override character?", "There is already a character with this name, do you want to override it?", function(ret)
+									if not ret then Module:instanciate(mod, text, true) end
+								end, "No", "Yes")
+							else
+								Module:instanciate(mod, text, true)
+							end
 						end))
 					end
 				end
