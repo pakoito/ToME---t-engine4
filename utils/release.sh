@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if test $# -lt 5 ; then
+	echo "Usage: release.sh [engine version for teae] [tome version for team] [version for public] [long engine version] [long tome version]"
+	exit
+fi
 
 # Check validity
 find game/ bootstrap/ -name '*lua' | xargs -n1 luac -p
@@ -8,9 +12,11 @@ if test $? -ne 0 ; then
 	exit 1
 fi
 
-ver="$1"
-tomename="$2"
-tename="$3"
+ever="$1"
+tver="$2"
+ver="$3"
+tomename="$4"
+tename="$5"
 
 rm -rf tmp
 mkdir tmp
@@ -23,7 +29,18 @@ mkdir t-engine4-linux32-"$ver"
 echo "******************** Src"
 cd t-engine4-src-"$ver"
 cp -a ../../bootstrap/  ../../game/ ../../C* ../../premake4.lua ../../src/ .
+rm -rf game/modules/angband
 find . -name '*~' -or -name '.svn' | xargs rm -rf
+
+# create teae/teams
+cd game/engines
+te4_pack_engine.sh default/ te4-"$ever"
+mv -i te4-*.teae boot-te4-*.team /var/www/te4.org/htdocs/dl/engines
+cd ../modules
+te4_pack_module.sh tome "$tver"
+mv -i tome*.team /var/www/te4.org/htdocs/dl/modules/tome/
+cd ../../
+
 cd ..
 tar cvjf t-engine4-src-"$ver".tar.bz2 t-engine4-src-"$ver"
 
@@ -32,6 +49,7 @@ echo "******************** Windows"
 cd t-engine4-windows-"$ver"
 cp -a ../../bootstrap/  ../../game/ ../../C* ../../dlls/* .
 find . -name '*~' -or -name '.svn' | xargs rm -rf
+rm -rf game/modules/angband
 cd ..
 zip -r -9 t-engine4-windows-"$ver".zip t-engine4-windows-"$ver"
 
@@ -40,6 +58,7 @@ echo "******************** linux32"
 cd t-engine4-linux32-"$ver"
 cp -a ../../bootstrap/  ../../game/ ../../C* ../../linux-bin/* .
 find . -name '*~' -or -name '.svn' | xargs rm -rf
+rm -rf game/modules/angband
 cd ..
 tar -cvjf t-engine4-linux32-"$ver".tar.bz2 t-engine4-linux32-"$ver"
 
