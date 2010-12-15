@@ -142,7 +142,7 @@ newChat{ id="no_orb_loan2",
 }
 
 newChat{ id="no_orb_loan3",
-	text = [[[#LIGHT_GREEN#*He stops pacing and returns the Orb to you.*#WHITE# I believe I know most of what I need to. But I need a few details cleared up. You'll have to return to this Elven Chronomancer and ask him whether he meant an inverted probabilistic field or a reverted probabilistic field. I dare not guess, as the result could be quite unpleasant for you.]],
+	text = [[#LIGHT_GREEN#*He stops pacing and returns the Orb to you.*#WHITE# I believe I know most of what I need to. But I need a few details cleared up. You'll have to return to this Elven Chronomancer and ask him whether he meant an inverted probabilistic field or a reverted probabilistic field. I dare not guess, as the result could be quite unpleasant for you.]],
 	answers = {
 		{"I'll return with the answer.", action=function(npc, player) player:hasQuest("east-portal"):ask_east(player) end},
 	}

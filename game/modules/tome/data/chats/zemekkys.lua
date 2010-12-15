@@ -124,7 +124,7 @@ newChat{ id="athame3",
 -- Return gem
 -----------------------------------------------------------------
 newChat{ id="complete",
-	text = [[[Yes? You got the Athame, the gem and 100 gold?]],
+	text = [[Yes? You got the Athame, the gem and 100 gold?]],
 	answers = {
 		{"[Give him the gem, the athame and 100 gold]", jump="complete2", cond=check_materials, action=remove_materials},
 		{"Sorry, it seems I lack some stuff. I will be back."},
