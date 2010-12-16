@@ -22,15 +22,15 @@ name = "Of trolls and damp caves"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "Explore the caves below the ruins of Kor'Pul and the Trollmire in search of treasure and glory!\n"
-	if self:isCompleted("kor-pul") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ruins of Kor'Pul and vanquished the Shade.#WHITE#"
-	else
-		desc[#desc+1] = "#SLATE#* You must explore the ruins of Kor'Pul and find out what lurks there and what treasures are to be gained!#WHITE#"
-	end
 	if self:isCompleted("trollmire") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Trollmire and vanquished the Bill the Troll.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Trollmire and find out what lurks there and what treasures are to be gained!#WHITE#"
+	end
+	if self:isCompleted("kor-pul") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ruins of Kor'Pul and vanquished the Shade.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* You must explore the ruins of Kor'Pul and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end
 	return table.concat(desc, "\n")
 end
