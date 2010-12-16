@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_DEMON",
 	resists={[DamageType.FIRE] = resolvers.mbonus(12, 5)},
 
 	resolvers.talents{
-		[Talents.T_FIRE_IMP_BOLT]=4,
+		[Talents.T_RITCH_FLAMESPITTER_BOLT]=4,
 		[Talents.T_PHASE_DOOR]=2,
 	},
 }

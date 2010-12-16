@@ -74,7 +74,7 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 		[Talents.T_ACIDIC_SKIN]=7,
 
 		[Talents.T_WARPER]=7,
-		[Talents.T_FIRE_IMP]=10,
+		[Talents.T_RITCH_FLAMESPITTER]=10,
 		[Talents.T_RESILIENCE]=5,
 
 		[Talents.T_HOWL]=5,

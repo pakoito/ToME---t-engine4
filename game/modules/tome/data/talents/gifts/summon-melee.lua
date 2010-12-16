@@ -55,13 +55,14 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			stats = { str=10 + self:getWil() * self:getTalentLevel(t) / 5, dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
+			energy = { mod=1.2 },
 
 			max_life = resolvers.rngavg(25,50),
 			life_rating = 6,
 			infravision = 20,
 
 			combat_armor = 2, combat_def = 4,
-			combat = { dam=resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
+			combat = { dam=self:getTalentLevel() * 10 + resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
 
 			inc_damage = table.clone(self.inc_damage, true),
 

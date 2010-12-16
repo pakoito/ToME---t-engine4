@@ -62,7 +62,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_WAR_HOUND] = 1,
-		[ActorTalents.T_FIRE_IMP] = 1,
+		[ActorTalents.T_RITCH_FLAMESPITTER] = 1,
 		[ActorTalents.T_MEDITATION] = 1,
 		[ActorTalents.T_TRAP_DETECTION] = 1,
 	},

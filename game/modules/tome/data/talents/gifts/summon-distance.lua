@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newTalent{ short_name = "FIRE_IMP_BOLT",
+newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 	name = "Fire Bolt",
 	type = {"spell/other",1},
 	points = 5,
@@ -129,12 +129,12 @@ newTalent{
 }
 
 newTalent{
-	name = "Fire Imp",
+	name = "Ritch Flamespitter",
 	type = {"wild-gift/summon-distance", 1},
 	require = gifts_req1,
 	points = 5,
 	random_ego = "attack",
-	message = "@Source@ summons a Fire Imp!",
+	message = "@Source@ summons a Ritch Flamespitter!",
 	equilibrium = 2,
 	cooldown = 10,
 	range = 20,
@@ -158,9 +158,9 @@ newTalent{
 
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
-			type = "demon", subtype = "lesser",
-			display = "u", color=colors.RED,
-			name = "fire imp", faction = self.faction,
+			type = "insect", subtype = "ritch",
+			display = "I", color=colors.LIGHT_RED,
+			name = "right firespitter", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
@@ -176,9 +176,10 @@ newTalent{
 
 			max_mana = 150,
 			resolvers.talents{
-				[self.T_FIRE_IMP_BOLT]=self:getTalentLevelRaw(t),
+				[self.T_RITCH_FLAMESPITTER_BOLT]=self:getTalentLevelRaw(t),
 			},
 			inc_damage = table.clone(self.inc_damage, true),
+			resists = { [DamageType.FIRE] = self:getTalentLevel(t)*10 },
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
@@ -194,12 +195,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Fire Imp for %d turns to burn your foes to death. Fire Imps are really weak in melee and die easily, but they can burn your foes from afar.
+		return ([[Summon a Ritch Flamespitter for %d turns to burn your foes to death. Flamespitters are really weak in melee and die easily, but they can burn your foes from afar.
 		It will get %d magic, %d willpower and %d constitution.
 		Magic stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5, 
-		10 + self:getTalentLevel(t) * 2, 
+		15 + self:getWil() * self:getTalentLevel(t) / 5,
+		10 + self:getTalentLevel(t) * 2,
 		10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
@@ -276,7 +277,7 @@ newTalent{
 		It will get %d willpower and %d constitution and 18 strength.
 		Willpower stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		15 + self:getWil() * self:getTalentLevel(t) / 5,
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
@@ -354,8 +355,8 @@ newTalent{
 		It will get %d magic, %d willpower and %d constitution.
 		Magic stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5, 
-		10 + self:getTalentLevel(t) * 2, 
+		15 + self:getWil() * self:getTalentLevel(t) / 5,
+		10 + self:getTalentLevel(t) * 2,
 		10 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
 	end,
 }
@@ -434,7 +435,7 @@ newTalent{
 		It will get %d strength, %d constitution and 38 willpower.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		15 + self:getWil() * self:getTalentLevel(t) / 5,
 		20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
 	end,
 }
