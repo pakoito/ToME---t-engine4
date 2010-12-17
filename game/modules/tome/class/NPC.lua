@@ -75,6 +75,30 @@ function _M:seen_by(who)
 	self:setTarget(who.ai_target.actor)
 end
 
+--- Check if we are angered
+-- @param src the angerer
+-- @param set true if value is the finite value, false if it is an increment
+-- @param value the value to add/substract
+function _M:checkAngered(src, set, value)
+	if not src.resolveSource then return end
+
+	local rsrc = src:resolveSource()
+	local rid = rsrc.unique or rsrc.name
+	if not self.reaction_actor then self.reaction_actor = {} end
+
+	local was_hostile = self:reactionToward(src) < 0
+
+	if not set then
+		self.reaction_actor[rid] = util.bound((self.reaction_actor[rid] or 0) + value, -200, 200)
+	else
+		self.reaction_actor[rid] = util.bound(value, -200, 200)
+	end
+
+	if not was_hostile and self:reactionToward(src) < 0 then
+		self:doEmote("Kill him!", 30)
+	end
+end
+
 --- Called by ActorLife interface
 -- We use it to pass aggression values to the AIs
 function _M:onTakeHit(value, src)
@@ -87,17 +111,13 @@ function _M:onTakeHit(value, src)
 --	end
 	-- Get angry if attacked by a friend
 	if src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
-		local rsrc = src:resolveSource()
-		local rid = rsrc.unique or rsrc.name
-		if not self.reaction_actor then self.reaction_actor = {} end
-		self.reaction_actor[rid] = math.max(-200, (self.reaction_actor[rid] or 0) - 50)
+		self:checkAngered(src, false, -50)
 
 		-- Call for help if we become hostile
 		for i = 1, #self.fov.actors_dist do
 			local act = self.fov.actors_dist[i]
 			if act and self:reactionToward(act) > 0 and not act.dead then
-				if not act.reaction_actor then act.reaction_actor = {} end
-				act.reaction_actor[rid] = math.min(act.reaction_actor[rid] or 0, self.reaction_actor[rid])
+				act:checkAngered(src, false, -50)
 			end
 		end
 	end
@@ -111,16 +131,15 @@ function _M:die(src)
 	end
 
 	-- Get angry if attacked by a friend
-	if src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
+	if src.resolveSource and src.faction then
 		local rsrc = src:resolveSource()
 		local rid = rsrc.unique or rsrc.name
 
 		-- Call for help if we become hostile
 		for i = 1, #self.fov.actors_dist do
 			local act = self.fov.actors_dist[i]
-			if act and self:reactionToward(act) > 0 and not act.dead then
-				if not act.reaction_actor then act.reaction_actor = {} end
-				act.reaction_actor[rid] = math.min(act.reaction_actor[rid] or 0, -101)
+			if act and act:reactionToward(rsrc) >= 0 and self:reactionToward(act) > 0 and not act.dead then
+				act:checkAngered(src, false, -101)
 			end
 		end
 	end
