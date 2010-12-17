@@ -126,7 +126,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = t.getRadius(self, t)
 		return ([[Creates a circle of radius %d at your feet, it protects you from silence effects while you remain in its radius and silences everyone else who enters.  The circle lasts %d turns.]]):
-		format(radius, getDuration)
+		format(radius, duration)
 	end,
 }
 
