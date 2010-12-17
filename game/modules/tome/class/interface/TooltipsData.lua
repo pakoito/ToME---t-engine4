@@ -151,6 +151,11 @@ The lower it is the faster your attacks are.
 TOOLTIP_COMBAT_RANGE = [[#GOLD#Firing range#LAST#
 The maximun distance your weapon can reach.
 ]]
+TOOLTIP_COMBAT_AMMO = [[#GOLD#Ammo remaining#LAST#
+This is the amount of ammo you have left.
+Bows and sling have a "basic" infinite ammo so you can fire even when this reaches 0.
+Alchemists use gems to throw bombs, they require ammo.
+]]
 
 -------------------------------------------------------------
 -- Defense
