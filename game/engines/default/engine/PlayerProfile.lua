@@ -297,7 +297,7 @@ function _M:syncOnline(module)
 end
 
 function _M:newProfile(Login, Name, Password, Email)
-	print("[ONLINE PROFILE] profile options ", Login, Email, Name, Password)
+	print("[ONLINE PROFILE] profile options ", Login, Email, Name)
 	local data = self:rpc{action="NewProfile2", login=Login, email=Email, name=Name, pass=Password}
 	if not data then print("[ONLINE PROFILE] could not create") return end
 	print("[ONLINE PROFILE] profile id ", data.id)
@@ -307,7 +307,7 @@ end
 function _M:performlogin(login, pass, name, email)
 	self.login=login
 	self.pass=pass
-	print("[ONLINE PROFILE] attempting log in ", self.login, self.pass)
+	print("[ONLINE PROFILE] attempting log in ", self.login)
 	self:tryAuth()
 	if (profile.auth) then
 		self.generic.online = { login=login, pass=pass,name=name or "", email=email or "" }

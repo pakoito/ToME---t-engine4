@@ -365,7 +365,7 @@ function _M:getTextualDesc()
 		desc:add(("Allows you to breathe in: %s."):format(table.concat(ts, ',')), true)
 	end
 
-	if w.combat_critical_power then desc:add(("Increases critical damage modifier: +%d%%."):format(w.combat_critical_power), true) end
+	if w.combat_critical_power then desc:add(("Increases critical damage modifier: +%0.2f%%."):format(w.combat_critical_power), true) end
 
 	if w.disarm_bonus then desc:add(("Increases trap disarming bonus: %d."):format(w.disarm_bonus), true) end
 	if w.inc_stealth then desc:add(("Increases stealth bonus: %d."):format(w.inc_stealth), true) end

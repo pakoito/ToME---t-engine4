@@ -106,7 +106,7 @@ function _M:archeryAcquireTargets(tg, params)
 		if sound then game:playSoundNear(targets[1], sound) end
 
 		if not ammo.infinite and (ammo:getNumber() < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25) then
-			game.logPlayer(self, "You only have %d %s left!", ammo:getNumber(), ammo.name)
+			game.logPlayer(self, "You only have %s left!", ammo:getName{do_color=true})
 		end
 
 		return targets
