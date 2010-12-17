@@ -63,7 +63,7 @@ newBirthDescriptor
 	desc = {
 		"Highers are a special branch of humans that have been imbued with latent magic since the Age of Allure.",
 		"They usually do not breed with other humans, trying to keep their blood 'pure'.",
-		"They possess the #GOLD#Gift of Kings#WHITE# which allows them to regenerate their wounds once in a while.",
+		"They possess the #GOLD#Gift of the Pureborn#WHITE# which allows them to regenerate their wounds once in a while.",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +1 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +1 Magic, +1 Willpower, +0 Cunning",
