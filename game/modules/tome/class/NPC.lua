@@ -85,11 +85,21 @@ function _M:onTakeHit(value, src)
 --	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
 --		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 5, true)
 --	end
-	if src.resolveSource then
+	-- Get angry if attacked by a friend
+	if src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
 		local rsrc = src:resolveSource()
 		local rid = rsrc.unique or rsrc.name
 		if not self.reaction_actor then self.reaction_actor = {} end
-		self.reaction_actor[rid] = (self.reaction_actor[rid] or 0) - 50
+		self.reaction_actor[rid] = math.max(-200, (self.reaction_actor[rid] or 0) - 50)
+
+		-- Call for help if we become hostile
+		for i = 1, #self.fov.actors_dist do
+			local act = self.fov.actors_dist[i]
+			if act and self:reactionToward(act) > 0 and not act.dead then
+				if not act.reaction_actor then act.reaction_actor = {} end
+				act.reaction_actor[rid] = math.min(act.reaction_actor[rid] or 0, self.reaction_actor[rid])
+			end
+		end
 	end
 
 	return mod.class.Actor.onTakeHit(self, value, src)
@@ -98,6 +108,21 @@ end
 function _M:die(src)
 	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
 		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank, true)
+	end
+
+	-- Get angry if attacked by a friend
+	if src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
+		local rsrc = src:resolveSource()
+		local rid = rsrc.unique or rsrc.name
+
+		-- Call for help if we become hostile
+		for i = 1, #self.fov.actors_dist do
+			local act = self.fov.actors_dist[i]
+			if act and self:reactionToward(act) > 0 and not act.dead then
+				if not act.reaction_actor then act.reaction_actor = {} end
+				act.reaction_actor[rid] = math.min(act.reaction_actor[rid] or 0, -101)
+			end
+		end
 	end
 
 	-- Self resurrect, mouhaha!
