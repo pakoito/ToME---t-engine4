@@ -156,7 +156,8 @@ function _M:display()
 		s:erase(176 / 2, 196 / 2, 222 / 2, 255, self.bars_x, h, self.bars_w * math.min(1, math.log(1 + player:getParadox() / 100)), self.font_h)
 		self:mouseTooltip(self.TOOLTIP_PARADOX, s:drawColorStringBlended(self.font, ("#LIGHT_STEEL_BLUE#Paradox:    #ffffff#%d"):format(player:getParadox()), 0, h, 255, 255, 255)) h = h + self.font_h
 	end
-	local ammo = player:getInven("QUIVER")[1]
+	local quiver = player:getInven("QUIVER")
+	local ammo = quiver and quiver[1]
 	if ammo then
 		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, s:drawColorStringBlended(self.font, ("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(ammo:getNumber()), 0, h, 255, 255, 255)) h = h + self.font_h
 	end

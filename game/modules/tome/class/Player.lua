@@ -55,6 +55,7 @@ function _M:init(t, no_default)
 	t.color_g=t.color_g or 230
 	t.color_b=t.color_b or 230
 
+	t.unique = "player"
 	t.player = true
 	t.open_door = true
 	t.type = t.type or "humanoid"

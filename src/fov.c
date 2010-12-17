@@ -49,6 +49,7 @@ struct lua_fovcache
 
 struct lua_fov
 {
+	lua_State *L;
 	fov_settings_type fov_settings;
 	int apply_ref;
 	int opaque_ref;
@@ -63,15 +64,15 @@ static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *sr
 	if (dx*dx + dy*dy <= radius*radius + 1)
 	{
 		// circular view - can be changed if you like
-		lua_rawgeti(L, LUA_REGISTRYINDEX, fov->apply_ref);
-		if (fov->cache) lua_rawgeti(L, LUA_REGISTRYINDEX, fov->cache_ref);
-		else lua_pushnil(L);
-		lua_pushnumber(L, x);
-		lua_pushnumber(L, y);
-		lua_pushnumber(L, dx);
-		lua_pushnumber(L, dy);
-		lua_pushnumber(L, dx*dx + dy*dy);
-		lua_call(L, 6, 0);
+		lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->apply_ref);
+		if (fov->cache) lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->cache_ref);
+		else lua_pushnil(fov->L);
+		lua_pushnumber(fov->L, x);
+		lua_pushnumber(fov->L, y);
+		lua_pushnumber(fov->L, dx);
+		lua_pushnumber(fov->L, dy);
+		lua_pushnumber(fov->L, dx*dx + dy*dy);
+		lua_call(fov->L, 6, 0);
 	}
 }
 
@@ -86,14 +87,14 @@ static bool map_opaque(void *m, int x, int y)
 	}
 	else
 	{
-		lua_rawgeti(L, LUA_REGISTRYINDEX, fov->opaque_ref);
-		if (fov->cache) lua_rawgeti(L, LUA_REGISTRYINDEX, fov->cache_ref);
-		else lua_pushnil(L);
-		lua_pushnumber(L, x);
-		lua_pushnumber(L, y);
-		lua_call(L, 3, 1);
-		bool res = lua_toboolean(L, -1);
-		lua_pop(L, 1);
+		lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->opaque_ref);
+		if (fov->cache) lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->cache_ref);
+		else lua_pushnil(fov->L);
+		lua_pushnumber(fov->L, x);
+		lua_pushnumber(fov->L, y);
+		lua_call(fov->L, 3, 1);
+		bool res = lua_toboolean(fov->L, -1);
+		lua_pop(fov->L, 1);
 		return res;
 	}
 }
@@ -117,6 +118,7 @@ static int lua_new_fov(lua_State *L)
 
 	struct lua_fov *fov = (struct lua_fov*)lua_newuserdata(L, sizeof(struct lua_fov));
 	auxiliar_setclass(L, "fov{core}", -1);
+	fov->L = L;
 	fov->apply_ref = apply_ref;
 	fov->opaque_ref = opaque_ref;
 	fov->cache_ref = cache_ref;
@@ -168,6 +170,7 @@ static int lua_fov_calc_circle(lua_State *L)
 		fov.cache_ref = LUA_NOREF;
 		fov.cache = NULL;
 	}
+	fov.L = L;
 	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
@@ -204,6 +207,7 @@ static int lua_fov_calc_beam(lua_State *L)
 		fov.cache_ref = LUA_NOREF;
 		fov.cache = NULL;
 	}
+	fov.L = L;
 	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.cache = NULL;
@@ -328,91 +332,91 @@ static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, 
 		// Distance Map
 		if (def->do_dmap)
 		{
-			lua_pushnumber(L, x + y * def->w);
-			lua_pushnumber(L, def->turn + radius - dist);
-			lua_rawset(L, STACK_DMAP);
+			lua_pushnumber(fov->L, x + y * def->w);
+			lua_pushnumber(fov->L, def->turn + radius - dist);
+			lua_rawset(fov->L, STACK_DMAP);
 		}
 
 		// Apply
 		if (def->do_apply)
 		{
-			lua_pushvalue(L, STACK_APPLY);
-			lua_pushnumber(L, x);
-			lua_pushnumber(L, y);
-			lua_pushnumber(L, dx);
-			lua_pushnumber(L, dy);
-			lua_pushnumber(L, sqdist);
-			lua_call(L, 5, 0);
+			lua_pushvalue(fov->L, STACK_APPLY);
+			lua_pushnumber(fov->L, x);
+			lua_pushnumber(fov->L, y);
+			lua_pushnumber(fov->L, dx);
+			lua_pushnumber(fov->L, dy);
+			lua_pushnumber(fov->L, sqdist);
+			lua_call(fov->L, 5, 0);
 		}
 
 		// Get entity
-		lua_pushnumber(L, x + y * def->w);
-		lua_rawget(L, STACK_MAP);
-		if (!lua_istable(L, -1)) { lua_pop(L, 1); return; }
-		lua_pushnumber(L, def->entity);
-		lua_rawget(L, -2);
-		if (!lua_istable(L, -1)) { lua_pop(L, 2); return; }
+		lua_pushnumber(fov->L, x + y * def->w);
+		lua_rawget(fov->L, STACK_MAP);
+		if (!lua_istable(fov->L, -1)) { lua_pop(fov->L, 1); return; }
+		lua_pushnumber(fov->L, def->entity);
+		lua_rawget(fov->L, -2);
+		if (!lua_istable(fov->L, -1)) { lua_pop(fov->L, 2); return; }
 
 		// Check if dead
-		lua_pushstring(L, "dead");
-		lua_gettable(L, -2);
-		if (lua_toboolean(L, -1)) { lua_pop(L, 3); return; }
-		lua_pop(L, 1);
+		lua_pushstring(fov->L, "dead");
+		lua_gettable(fov->L, -2);
+		if (lua_toboolean(fov->L, -1)) { lua_pop(fov->L, 3); return; }
+		lua_pop(fov->L, 1);
 
 		// Set sqdist in the actor for faster sorting
-		lua_pushstring(L, "__sqdist");
-		lua_pushnumber(L, sqdist);
-		lua_rawset(L, -3);
+		lua_pushstring(fov->L, "__sqdist");
+		lua_pushnumber(fov->L, sqdist);
+		lua_rawset(fov->L, -3);
 
 		// Make a table to hold data
-		lua_newtable(L);
-		lua_pushstring(L, "x");
-		lua_pushnumber(L, x);
-		lua_rawset(L, -3);
-		lua_pushstring(L, "y");
-		lua_pushnumber(L, y);
-		lua_rawset(L, -3);
-		lua_pushstring(L, "dx");
-		lua_pushnumber(L, dx);
-		lua_rawset(L, -3);
-		lua_pushstring(L, "dy");
-		lua_pushnumber(L, dy);
-		lua_rawset(L, -3);
-		lua_pushstring(L, "sqdist");
-		lua_pushnumber(L, sqdist);
-		lua_rawset(L, -3);
+		lua_newtable(fov->L);
+		lua_pushstring(fov->L, "x");
+		lua_pushnumber(fov->L, x);
+		lua_rawset(fov->L, -3);
+		lua_pushstring(fov->L, "y");
+		lua_pushnumber(fov->L, y);
+		lua_rawset(fov->L, -3);
+		lua_pushstring(fov->L, "dx");
+		lua_pushnumber(fov->L, dx);
+		lua_rawset(fov->L, -3);
+		lua_pushstring(fov->L, "dy");
+		lua_pushnumber(fov->L, dy);
+		lua_rawset(fov->L, -3);
+		lua_pushstring(fov->L, "sqdist");
+		lua_pushnumber(fov->L, sqdist);
+		lua_rawset(fov->L, -3);
 
 		// Set the actor table
-		lua_pushvalue(L, -2);
-		lua_pushvalue(L, -2);
-		lua_rawset(L, STACK_ACTOR);
+		lua_pushvalue(fov->L, -2);
+		lua_pushvalue(fov->L, -2);
+		lua_rawset(fov->L, STACK_ACTOR);
 
 		// Set the dist table
 		def->dist_idx++;
-		lua_pushnumber(L, def->dist_idx);
-		lua_pushvalue(L, -3);
-		lua_rawset(L, STACK_DIST);
+		lua_pushnumber(fov->L, def->dist_idx);
+		lua_pushvalue(fov->L, -3);
+		lua_rawset(fov->L, STACK_DIST);
 
 		// Call seen_by, if possible
-		lua_pushstring(L, "updateFOV");
-		lua_gettable(L, -3);
-		lua_pushvalue(L, -3);
-		lua_pushvalue(L, STACK_SELF);
-		lua_pushnumber(L, sqdist);
-		lua_call(L, 3, 0);
+		lua_pushstring(fov->L, "updateFOV");
+		lua_gettable(fov->L, -3);
+		lua_pushvalue(fov->L, -3);
+		lua_pushvalue(fov->L, STACK_SELF);
+		lua_pushnumber(fov->L, sqdist);
+		lua_call(fov->L, 3, 0);
 
 		// Call seen_by, if possible
-		lua_pushstring(L, "seen_by");
-		lua_gettable(L, -3);
-		if (lua_isfunction(L, -1))
+		lua_pushstring(fov->L, "seen_by");
+		lua_gettable(fov->L, -3);
+		if (lua_isfunction(fov->L, -1))
 		{
-			lua_pushvalue(L, -3);
-			lua_pushvalue(L, STACK_SELF);
-			lua_call(L, 2, 0);
+			lua_pushvalue(fov->L, -3);
+			lua_pushvalue(fov->L, STACK_SELF);
+			lua_call(fov->L, 2, 0);
 		}
-		else lua_pop(L, 1);
+		else lua_pop(fov->L, 1);
 
-		lua_pop(L, 3);
+		lua_pop(fov->L, 3);
 	}
 }
 
@@ -431,6 +435,7 @@ static int lua_fov_calc_default_fov(lua_State *L)
 	int radius = luaL_checknumber(L, 3);
 	// 4 Block
 	struct lua_fov fov;
+	fov.L = L;
 	fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 5);
 	// 6, 7 = actor, actor_dist
 	// 8 map

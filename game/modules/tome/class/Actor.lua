@@ -463,6 +463,19 @@ function _M:magicMap(radius, x, y, checker)
 	self.x, self.y = ox, oy
 end
 
+--- What is our reaction toward the target
+-- This can modify faction reaction using specific actor to actor reactions
+function _M:reactionToward(target, no_reflection)
+	local v = engine.Actor.reactionToward(self, target)
+
+	if self.reaction_actor and self.reaction_actor[target.unique or target.name] then v = v + self.reaction_actor[target.unique or target.name] end
+
+	-- Take the lowest of the two just in case
+	if not no_reflection and target.reactionToward then v = math.min(v, target:reactionToward(self, true)) end
+
+	return util.bound(v, -100, 100)
+end
+
 function _M:incMoney(v)
 	self.money = self.money + v
 	if self.money < 0 then self.money = 0 end
@@ -546,9 +559,14 @@ end
 
 function _M:tooltip(x, y, seen_by)
 	if seen_by and not seen_by:canSee(self) then return end
-	local factcolor, factstate, factlevel = "#ANTIQUE_WHITE#", "neutral", self:reactionToward(game.player)
+	local factcolor, factstate, factlevel = "#ANTIQUE_WHITE#", "neutral", Faction:factionReaction(self.faction, game.player.faction)
 	if factlevel < 0 then factcolor, factstate = "#LIGHT_RED#", "hostile"
 	elseif factlevel > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
+	end
+
+	local pfactcolor, pfactstate, pfactlevel = "#ANTIQUE_WHITE#", "neutral", self:reactionToward(game.player)
+	if pfactlevel < 0 then pfactcolor, pfactstate = "#LIGHT_RED#", "hostile"
+	elseif pfactlevel > 0 then pfactcolor, pfactstate = "#LIGHT_GREEN#", "friendly"
 	end
 
 	local rank, rank_color = self:TextRank()
@@ -583,6 +601,7 @@ Resists: %s
 Size: #ANTIQUE_WHITE#%s
 %s
 Faction: %s%s (%s, %d)
+Personal reaction: %s%s, %d
 %s]]):format(
 	self:getDisplayString(), rank_color, self.name,
 	self.type:capitalize(), self.subtype:capitalize(),
@@ -601,6 +620,7 @@ Faction: %s%s (%s, %d)
 	self:TextSizeCategory(),
 	self.desc or "",
 	factcolor, Faction.factions[self.faction].name, factstate, factlevel,
+	pfactcolor, pfactstate, pfactlevel,
 	table.concat(effs, "\n")
 	)
 end

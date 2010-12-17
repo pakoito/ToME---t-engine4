@@ -182,10 +182,10 @@ newEffect{
 		self.color_r = 0
 		self.color_g = 255
 		self.color_b = 155
-		if not self.add_displays then
-			self.add_displays = { Entity.new{image='npc/iceblock.png', display=' ', display_on_seen=true } }
-			eff.added_display = true
-		end
+--		if not self.add_displays then
+--			self.add_displays = { Entity.new{image='npc/iceblock.png', display=' ', display_on_seen=true } }
+--			eff.added_display = true
+--		end
 		if self._mo then self._mo:invalidate() end
 		game.level.map:updateMap(self.x, self.y)
 
@@ -201,7 +201,7 @@ newEffect{
 		self.color_r = eff.old_r
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b
-		if eff.added_display then self.add_displays = nil end
+--		if eff.added_display then self.add_displays = nil end
 		if self._mo then self._mo:invalidate() end
 	end,
 }

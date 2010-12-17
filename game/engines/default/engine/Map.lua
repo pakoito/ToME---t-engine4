@@ -522,7 +522,8 @@ function _M:display(x, y, nb_keyframe)
 				if e and (not self.actor_player or self.actor_player:canSee(e)) then
 					-- Tactical overlay ?
 					if e.faction then
-						friend = Faction:factionReaction(self.view_faction, e.faction)
+						if not self.actor_player then friend = Faction:factionReaction(self.view_faction, e.faction)
+						else friend = self.actor_player:reactionToward(e) end
 						if friend > 0 then
 							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (i - self.mx) * self.tile_w * self.zoom, self.display_y + (j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 						elseif friend < 0 then

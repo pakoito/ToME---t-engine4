@@ -82,8 +82,14 @@ function _M:onTakeHit(value, src)
 		self.ai_target.actor = src
 	end
 
-	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
-		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 5, true)
+--	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
+--		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 5, true)
+--	end
+	if src.resolveSource then
+		local rsrc = src:resolveSource()
+		local rid = rsrc.unique or rsrc.name
+		if not self.reaction_actor then self.reaction_actor = {} end
+		self.reaction_actor[rid] = (self.reaction_actor[rid] or 0) - 50
 	end
 
 	return mod.class.Actor.onTakeHit(self, value, src)
@@ -91,7 +97,7 @@ end
 
 function _M:die(src)
 	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
-		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 15, true)
+		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank, true)
 	end
 
 	-- Self resurrect, mouhaha!
