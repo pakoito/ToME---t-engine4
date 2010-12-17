@@ -19,6 +19,7 @@
 
 return {
 	name = "Angolwen",
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	level_range = {20, 20},
 	max_level = 1,
 	width = 50, height = 50,
@@ -35,7 +36,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
+			nb_npc = {10, 10},
 		},
 		object = {
 			class = "engine.generator.object.Random",

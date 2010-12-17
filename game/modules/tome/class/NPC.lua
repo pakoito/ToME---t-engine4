@@ -118,7 +118,7 @@ function _M:onTakeHit(value, src)
 		-- Call for help if we become hostile
 		for i = 1, #self.fov.actors_dist do
 			local act = self.fov.actors_dist[i]
-			if act and act ~= self and self:reactionToward(act) > 0 and not act.dead then
+			if act and act ~= self and self:reactionToward(act) > 0 and not act.dead and act.checkAngered then
 				act:checkAngered(src, false, -50)
 			end
 		end
@@ -140,7 +140,7 @@ function _M:die(src)
 		-- Call for help if we become hostile
 		for i = 1, #self.fov.actors_dist do
 			local act = self.fov.actors_dist[i]
-			if act and act ~= self and act:reactionToward(rsrc) >= 0 and self:reactionToward(act) > 0 and not act.dead then
+			if act and act ~= self and act:reactionToward(rsrc) >= 0 and self:reactionToward(act) > 0 and not act.dead and act.checkAngered then
 				act:checkAngered(src, false, -101)
 			end
 		end

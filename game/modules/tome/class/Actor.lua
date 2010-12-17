@@ -1350,7 +1350,7 @@ function _M:preUseTalent(ab, silent, fake)
 		return false
 	end
 
-	if not self:enoughEnergy() then return false end
+	if not self:enoughEnergy() and not fake then return false end
 
 	if ab.mode == "sustained" then
 		if ab.sustain_mana and self.max_mana < ab.sustain_mana and not self:isTalentActive(ab.id) then

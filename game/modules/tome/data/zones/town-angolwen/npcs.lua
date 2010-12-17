@@ -39,6 +39,7 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 	teleport_immune = 1,
 	move_others=true,
 	combat_spellpower = 30,
+	anger_emote = "Remove @himher@!",
 
 	open_door = true,
 
@@ -78,4 +79,98 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 	resolvers.sustains_at_birth(),
 
 	can_talk = "angolwen-leader",
+}
+
+newEntity{
+	define_as = "BASE_NPC_ANGOLWEN_TOWN",
+	type = "humanoid", subtype = "human",
+	display = "p", color=colors.WHITE,
+	faction = "angolwen",
+	anger_emote = "Catch @himher@!",
+
+	combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+	lite = 3,
+
+	life_rating = 11,
+	rank = 2,
+	size_category = 3,
+
+	open_door = true,
+
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	energy = { mod=1 },
+	stats = { str=8, dex=8, mag=16, wil=18, con=10 },
+}
+
+newEntity{ base = "BASE_NPC_ANGOLWEN_TOWN",
+	name = "apprentice mage", color=colors.RED,
+	desc = [[An apprentice, learning the ways of the arcane arts.]],
+	level_range = {1, nil}, exp_worth = 1,
+	rarity = 3,
+	max_life = resolvers.rngavg(70,80),
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloth", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{ [Talents.T_MANATHRUST]=2, [Talents.T_FREEZE]=1, },
+}
+
+newEntity{ base = "BASE_NPC_ANGOLWEN_TOWN",
+	name = "pyromancer", color=colors.LIGHT_RED,
+	desc = [[An archmage specialized in fire magic.]],
+	level_range = {1, nil}, exp_worth = 1,
+	rarity = 3,
+	max_life = resolvers.rngavg(70,80),
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloth", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{ [Talents.T_FLAME]=3, [Talents.T_WILDFIRE]=3, [Talents.T_DANCING_FIRES]=3, [Talents.T_BLASTWAVE]=3, },
+}
+
+newEntity{ base = "BASE_NPC_ANGOLWEN_TOWN",
+	name = "cryomancer", color=colors.LIGHT_BLUE,
+	desc = [[An archmage specialized in ice magic.]],
+	level_range = {1, nil}, exp_worth = 1,
+	rarity = 3,
+	max_life = resolvers.rngavg(70,80),
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloth", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{ [Talents.T_ICE_SHARDS]=3, [Talents.T_UTTERCOLD]=3, [Talents.T_FREEZE]=3, [Talents.T_FROZEN_GROUND]=3, },
+}
+
+newEntity{ base = "BASE_NPC_ANGOLWEN_TOWN",
+	name = "geomancer", color=colors.UMBER,
+	desc = [[An archmage specialized in earth magic.]],
+	level_range = {1, nil}, exp_worth = 1,
+	rarity = 3,
+	max_life = resolvers.rngavg(70,80),
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloth", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{ [Talents.T_EARTHEN_MISSILES]=3, [Talents.T_CRYSTALLINE_FOCUS]=3, [Talents.T_BODY_OF_STONE]=3, [Talents.T_STRIKE]=3, },
+}
+
+newEntity{ base = "BASE_NPC_ANGOLWEN_TOWN",
+	name = "tempest", color=colors.WHITE,
+	desc = [[An archmage specialized in lightning magic.]],
+	level_range = {1, nil}, exp_worth = 1,
+	rarity = 3,
+	max_life = resolvers.rngavg(70,80),
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{type="armor", subtype="cloth", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+	resolvers.talents{ [Talents.T_LIGHTNING]=3, [Talents.T_TEMPEST]=3, [Talents.T_HURRICANE]=3, [Talents.T_SHOCK]=3, },
 }
