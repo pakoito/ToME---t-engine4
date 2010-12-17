@@ -26,6 +26,7 @@ newEntity{
 	type = "humanoid", subtype = "human",
 	display = "p", color=colors.WHITE,
 	faction = "allied-kingdoms",
+	anger_emote = "Catch @himher@!",
 
 	combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
 

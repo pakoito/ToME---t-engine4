@@ -95,7 +95,9 @@ function _M:checkAngered(src, set, value)
 	end
 
 	if not was_hostile and self:reactionToward(src) < 0 then
-		self:doEmote("Kill him!", 30)
+		if self.anger_emote then
+			self:doEmote(self.anger_emote:gsub("@himher@", src.female and "her" or "him"), 30)
+		end
 	end
 end
 
@@ -116,7 +118,7 @@ function _M:onTakeHit(value, src)
 		-- Call for help if we become hostile
 		for i = 1, #self.fov.actors_dist do
 			local act = self.fov.actors_dist[i]
-			if act and self:reactionToward(act) > 0 and not act.dead then
+			if act and act ~= self and self:reactionToward(act) > 0 and not act.dead then
 				act:checkAngered(src, false, -50)
 			end
 		end
@@ -138,7 +140,7 @@ function _M:die(src)
 		-- Call for help if we become hostile
 		for i = 1, #self.fov.actors_dist do
 			local act = self.fov.actors_dist[i]
-			if act and act:reactionToward(rsrc) >= 0 and self:reactionToward(act) > 0 and not act.dead then
+			if act and act ~= self and act:reactionToward(rsrc) >= 0 and self:reactionToward(act) > 0 and not act.dead then
 				act:checkAngered(src, false, -101)
 			end
 		end
