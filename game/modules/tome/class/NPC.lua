@@ -112,7 +112,7 @@ function _M:onTakeHit(value, src)
 --		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 5, true)
 --	end
 	-- Get angry if attacked by a friend
-	if src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
+	if src ~= self and src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
 		self:checkAngered(src, false, -50)
 
 		-- Call for help if we become hostile
@@ -133,7 +133,7 @@ function _M:die(src)
 	end
 
 	-- Get angry if attacked by a friend
-	if src.resolveSource and src.faction then
+	if src ~= self and src.resolveSource and src.faction then
 		local rsrc = src:resolveSource()
 		local rid = rsrc.unique or rsrc.name
 

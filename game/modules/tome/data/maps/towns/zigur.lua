@@ -35,9 +35,9 @@ defineTile("?", "OLD_FLOOR")
 defineTile(":", "FLOOR")
 quickEntity("'", {show_tooltip=true, name="Open gates", display="'", color=colors.UMBER, image="terrain/stone_store_open.png"})
 
-quickEntity('1', {show_tooltip=true, name="Trainer", display='1', color=colors.UMBER, resolvers.chatfeature("zigur-trainer", "zigur"), image="terrain/stone_store_training.png"})
-quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR", "zigur"), image="terrain/stone_store_armor.png"})
-quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON", "zigur"), image="terrain/stone_store_weapon.png"})
+quickEntity('1', {show_tooltip=true, name="Trainer", display='1', color=colors.UMBER, chat_faction="zigur", resolvers.chatfeature("zigur-trainer", "zigur"), image="terrain/stone_store_training.png"})
+quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, store_faction="zigur", resolvers.store("ARMOR", "zigur"), image="terrain/stone_store_armor.png"})
+quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, store_faction="zigur", resolvers.store("WEAPON", "zigur"), image="terrain/stone_store_weapon.png"})
 
 startx = 24
 starty = 49
