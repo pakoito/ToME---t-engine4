@@ -865,8 +865,9 @@ function _M:setupCommands()
 			d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
 				if not o then return end
 				local ud = require("mod.dialogs.UseItemDialog").new(event == "button", self.player, o, item, inven, function(_, _, _, stop)
-					d:generateList()
 					d.title = titleupdator()
+					d:generate()
+					d:generateList()
 					if stop then self:unregisterDialog(d) end
 				end)
 				self:registerDialog(ud)
