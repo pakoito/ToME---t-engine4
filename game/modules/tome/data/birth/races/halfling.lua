@@ -48,6 +48,7 @@ newBirthDescriptor{
 		starting_zone = "trollmire",
 		starting_quest = "start-allied",
 		starting_intro = "halfling",
+		size_category = 2,
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
 		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
 	},

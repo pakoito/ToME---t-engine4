@@ -108,9 +108,6 @@ function _M:onTakeHit(value, src)
 		self.ai_target.actor = src
 	end
 
---	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
---		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank * 5, true)
---	end
 	-- Get angry if attacked by a friend
 	if src ~= self and src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
 		self:checkAngered(src, false, -50)
