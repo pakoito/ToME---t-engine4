@@ -524,7 +524,7 @@ static int gl_draw_quad(lua_State *L)
 	else
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-	glColor4f(r, g, b, a);
+	tglColor4f(r, g, b, a);
 	glBegin( GL_QUADS );                 /* Draw A Quad              */
 	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
 	glTexCoord2f(0,1); glVertex2f(0  + x, h + y);
@@ -532,7 +532,7 @@ static int gl_draw_quad(lua_State *L)
 	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
 	glEnd( );                            /* Done Drawing The Quad    */
 
-	glColor4f(1, 1, 1, 1);
+	tglColor4f(1, 1, 1, 1);
 	return 0;
 }
 
@@ -673,10 +673,12 @@ static void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
 
 	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, realw, realh, 0, texture_format, GL_UNSIGNED_BYTE, NULL);
 
+#ifdef _DEBUG
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR) {
 		printf("make_texture_for_surface: glTexImage2D : %s\n",gluErrorString(err));
 	}
+#endif
 }
 
 // copy pixels into previous allocated surface
@@ -685,10 +687,12 @@ static void copy_surface_to_texture(SDL_Surface *s) {
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, s->w, s->h, texture_format, GL_UNSIGNED_BYTE, s->pixels);
 
+#ifdef _DEBUG
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR) {
 		printf("copy_surface_to_texture : glTexSubImage2D : %s\n",gluErrorString(err));
 	}
+#endif
 }
 
 static int sdl_surface_toscreen(lua_State *L)
@@ -702,7 +706,7 @@ static int sdl_surface_toscreen(lua_State *L)
 		float g = luaL_checknumber(L, 5);
 		float b = luaL_checknumber(L, 6);
 		float a = luaL_checknumber(L, 7);
-		glColor4f(r, g, b, a);
+		tglColor4f(r, g, b, a);
 	}
 
 	GLuint t;
@@ -715,7 +719,7 @@ static int sdl_surface_toscreen(lua_State *L)
 
 	glDeleteTextures(1, &t);
 
-	if (lua_isnumber(L, 4)) glColor4f(1, 1, 1, 1);
+	if (lua_isnumber(L, 4)) tglColor4f(1, 1, 1, 1);
 
 	return 0;
 }
@@ -732,7 +736,7 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 		float g = luaL_checknumber(L, 6);
 		float b = luaL_checknumber(L, 7);
 		float a = luaL_checknumber(L, 8);
-		glColor4f(r, g, b, a);
+		tglColor4f(r, g, b, a);
 	}
 
 	glBindTexture(GL_TEXTURE_2D, *t);
@@ -740,7 +744,7 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
 
-	if (lua_isnumber(L, 5)) glColor4f(1, 1, 1, 1);
+	if (lua_isnumber(L, 5)) tglColor4f(1, 1, 1, 1);
 
 	return 0;
 }
@@ -826,7 +830,7 @@ static int sdl_texture_toscreen(lua_State *L)
 		float g = luaL_checknumber(L, 7);
 		float b = luaL_checknumber(L, 8);
 		float a = luaL_checknumber(L, 9);
-		glColor4f(r, g, b, a);
+		tglColor4f(r, g, b, a);
 	}
 
 	glBindTexture(GL_TEXTURE_2D, *t);
@@ -837,7 +841,7 @@ static int sdl_texture_toscreen(lua_State *L)
 	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
 	glEnd( );                            /* Done Drawing The Quad    */
 
-	if (lua_isnumber(L, 6)) glColor4f(1, 1, 1, 1);
+	if (lua_isnumber(L, 6)) tglColor4f(1, 1, 1, 1);
 	return 0;
 }
 
@@ -856,7 +860,7 @@ static int sdl_texture_toscreen_full(lua_State *L)
 		float g = luaL_checknumber(L, 10);
 		float b = luaL_checknumber(L, 11);
 		float a = luaL_checknumber(L, 12);
-		glColor4f(r, g, b, a);
+		tglColor4f(r, g, b, a);
 	}
 
 	glBindTexture(GL_TEXTURE_2D, *t);
@@ -870,7 +874,7 @@ static int sdl_texture_toscreen_full(lua_State *L)
 	glTexCoord2f(texw,0); glVertex2f(w + x, 0  + y);
 	glEnd( );
 
-	if (lua_isnumber(L, 8)) glColor4f(1, 1, 1, 1);
+	if (lua_isnumber(L, 8)) tglColor4f(1, 1, 1, 1);
 	return 0;
 }
 
@@ -884,9 +888,9 @@ static int sdl_texture_bind(lua_State *L)
 	{
 		if (multitexture_active && shaders_active)
 		{
-			glActiveTexture(GL_TEXTURE0+i);
+			tglActiveTexture(GL_TEXTURE0+i);
 			glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t);
-			glActiveTexture(GL_TEXTURE0);
+			tglActiveTexture(GL_TEXTURE0);
 		}
 	}
 	else
@@ -968,13 +972,13 @@ static int sdl_texture_outline(lua_State *L)
 	/* Reset The View */
 	glLoadIdentity( );
 
-	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+	tglClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
 	CHECKGL(glLoadIdentity());
 
 	/* Render to buffer */
 	CHECKGL(glBindTexture(GL_TEXTURE_2D, *t));
-	CHECKGL(glColor4f(r, g, b, a));
+	CHECKGL(tglColor4f(r, g, b, a));
 	glBegin(GL_QUADS);
 	glTexCoord2f(0,0); glVertex3f(0+x, 0+y, -1);
 	glTexCoord2f(1,0); glVertex3f(w+x, 0+y, -1);
@@ -982,7 +986,7 @@ static int sdl_texture_outline(lua_State *L)
 	glTexCoord2f(0,1); glVertex3f(0+x, h+y, -1);
 	glEnd();
 
-	CHECKGL(glColor4f(1, 1, 1, 1));
+	CHECKGL(tglColor4f(1, 1, 1, 1));
 	glBegin(GL_QUADS);
 	glTexCoord2f(0,0); glVertex3f(0, 0, 0);
 	glTexCoord2f(1,0); glVertex3f(w, 0, 0);
@@ -1004,7 +1008,7 @@ static int sdl_texture_outline(lua_State *L)
 	CHECKGL(glPopMatrix());
 	glMatrixMode( GL_MODELVIEW );
 
-	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+	tglClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 	return 1;
 }
@@ -1163,7 +1167,7 @@ static int gl_fbo_use(lua_State *L)
 		// Reset The View
 		glLoadIdentity();
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		tglClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	else
@@ -1196,7 +1200,7 @@ static int gl_fbo_toscreen(lua_State *L)
 		g = luaL_checknumber(L, 8);
 		b = luaL_checknumber(L, 9);
 		a = luaL_checknumber(L, 10);
-		glColor4f(r, g, b, a);
+		tglColor4f(r, g, b, a);
 	}
 	if (lua_isuserdata(L, 6))
 	{
@@ -1214,7 +1218,7 @@ static int gl_fbo_toscreen(lua_State *L)
 	glEnd( );                            /* Done Drawing The Quad    */
 
 	if (lua_isuserdata(L, 6)) glUseProgramObjectARB(0);
-	if (lua_isnumber(L, 7)) glColor4f(1, 1, 1, 1);
+	if (lua_isnumber(L, 7)) tglColor4f(1, 1, 1, 1);
 	glEnable(GL_BLEND);
 	return 0;
 }

@@ -63,3 +63,15 @@ void sdlDrawImage(SDL_Surface *dest, SDL_Surface *image, int x, int y)
         if (errcode)
           printf("ERROR! SDL_BlitSurface failed! (%d,%s)\n",errcode,SDL_GetError());
 }
+
+
+// Current gl color, to remove the need to call glColor4f when undeeded
+float gl_c_r = 1;
+float gl_c_g = 1;
+float gl_c_b = 1;
+float gl_c_a = 1;
+float gl_c_cr = 0;
+float gl_c_cg = 0;
+float gl_c_cb = 0;
+float gl_c_ca = 1;
+GLenum gl_c_texture_unit = GL_TEXTURE0;

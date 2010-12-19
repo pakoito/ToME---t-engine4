@@ -199,13 +199,13 @@ static int map_objects_toscreen(lua_State *L)
 	{
 		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
 
-		glColor4f(1, 1, 1, 1);
+		tglColor4f(1, 1, 1, 1);
 
 		int z;
 		if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
 		for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 		{
-			if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
+			if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
 			glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 		}
 
@@ -268,7 +268,7 @@ static int map_objects_display(lua_State *L)
 	/* Reset The View */
 	glLoadIdentity( );
 
-	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+	tglClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
 	CHECKGL(glLoadIdentity());
 
@@ -280,13 +280,13 @@ static int map_objects_display(lua_State *L)
 	{
 		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
 
-		glColor4f(1, 1, 1, 1);
+		tglColor4f(1, 1, 1, 1);
 
 		int z;
 		if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
 		for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 		{
-			if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
+			if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
 			glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 		}
 
@@ -321,7 +321,7 @@ static int map_objects_display(lua_State *L)
 	CHECKGL(glPopMatrix());
 	glMatrixMode( GL_MODELVIEW );
 
-	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+	tglClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 
 	// Now register the texture to lua
@@ -622,15 +622,13 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		}
 	}
 
-	glLoadName(m->uid);
-
-	glColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
+	tglColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
 
 	int z;
 	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
 	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 	{
-		if (multitexture_active && shaders_active) glActiveTexture(GL_TEXTURE0+z);
+		if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
 		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 	}
 	DO_QUAD(dx + m->dx, dy + m->dy, z, m->scale);
@@ -677,7 +675,7 @@ static int map_to_screen(lua_State *L)
 	}
 
 	// Restore normal display
-	glColor4f(1, 1, 1, 1);
+	tglColor4f(1, 1, 1, 1);
 
 	/* Disables Depth Testing, we do not need it for the rest of the display */
 	glDisable(GL_DEPTH_TEST);
@@ -710,7 +708,7 @@ static int minimap_to_screen(lua_State *L)
 			{
 				if (map->grids_seens[i][j])
 				{
-					glColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a * transp);
+					tglColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a * transp);
 					if ((map->minimap[i][j] & MM_LEVEL_CHANGE) && map->mm_level_change)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_level_change);
@@ -794,7 +792,7 @@ static int minimap_to_screen(lua_State *L)
 				}
 				else
 				{
-					glColor4f(map->obscure_r, map->obscure_g, map->obscure_b, map->obscure_a * transp);
+					tglColor4f(map->obscure_r, map->obscure_g, map->obscure_b, map->obscure_a * transp);
 					if ((map->minimap[i][j] & MM_LEVEL_CHANGE) && map->mm_level_change)
 					{
 						glBindTexture(GL_TEXTURE_2D, map->mm_level_change);
@@ -831,7 +829,7 @@ static int minimap_to_screen(lua_State *L)
 	}
 
 	// Restore normal display
-	glColor4f(1, 1, 1, 1);
+	tglColor4f(1, 1, 1, 1);
 	return 0;
 }
 

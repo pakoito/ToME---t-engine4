@@ -375,7 +375,7 @@ static int gas_to_screen(lua_State *L)
 			coef = CLAMP(0.0f, 1.0f, coef);
 			if (coef > 0.1)
 			{
-				glColor4f(coef, 0, 0, coef);
+				tglColor4f(coef, 0, 0, coef);
 
 				glBegin(GL_QUADS);
 				i = x + dx * 4;
@@ -390,7 +390,7 @@ static int gas_to_screen(lua_State *L)
 	}
 
 	// Restore normal display
-	glColor4f(1, 1, 1, 1);
+	tglColor4f(1, 1, 1, 1);
 
 	lua_pushboolean(L, 1);
 	return 1;

@@ -289,7 +289,7 @@ static int particles_to_screen(lua_State *L)
 
 			if (show)
 			{
-				glColor4f(p->r, p->g, p->b, p->a);
+				tglColor4f(p->r, p->g, p->b, p->a);
 				glBegin(GL_QUADS);
 				if (!p->trail)
 				{
@@ -337,7 +337,7 @@ static int particles_to_screen(lua_State *L)
 	}
 
 	// Restore normal display
-	glColor4f(1, 1, 1, 1);
+	tglColor4f(1, 1, 1, 1);
 
 	lua_pushboolean(L, alive || ps->no_stop);
 	return 1;
@@ -395,7 +395,7 @@ static int particles_update(lua_State *L)
 	}
 
 	// Restore normal display
-	glColor4f(1, 1, 1, 1);
+	tglColor4f(1, 1, 1, 1);
 
 	lua_pushboolean(L, alive || ps->no_stop);
 	return 1;

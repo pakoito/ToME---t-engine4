@@ -289,7 +289,7 @@ void call_draw(int nb_keyframes)
 		int y = mousey + mouse_cursor_oy;
 		int down = SDL_GetMouseState(NULL, NULL);
 		glBindTexture(GL_TEXTURE_2D, down ? mouse_cursor_down_tex : mouse_cursor_tex);
-		glColor4f(1, 1, 1, 1);
+		tglColor4f(1, 1, 1, 1);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
 		glTexCoord2f(0,1); glVertex2f(0  + x, 32 + y);
@@ -467,7 +467,7 @@ int initGL()
 //	glShadeModel( GL_SMOOTH );
 
 	/* Set the background black */
-	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+	tglClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 	/* Depth buffer setup */
 	glClearDepth( 1.0f );
@@ -482,7 +482,7 @@ int initGL()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 //	glDisable(GL_DEPTH_TEST);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	tglColor4f(1.0f,1.0f,1.0f,1.0f);
 //	glAlphaFunc(GL_GREATER,0.1f);
 
 	return( TRUE );
@@ -502,7 +502,7 @@ int resizeWindow(int width, int height)
 
 	ratio = ( GLfloat )width / ( GLfloat )height;
 
-//	glActiveTexture(GL_TEXTURE0);
+//	tglActiveTexture(GL_TEXTURE0);
 	glEnable(GL_TEXTURE_2D);
 
 	/* Setup our viewport. */
@@ -523,7 +523,7 @@ int resizeWindow(int width, int height)
 	glLoadIdentity( );
 
 //	glEnable(GL_ALPHA_TEST);
-//	glColor4f(1.0f,1.0f,1.0f,1.0f);
+//	tglColor4f(1.0f,1.0f,1.0f,1.0f);
 
 	return( TRUE );
 }
