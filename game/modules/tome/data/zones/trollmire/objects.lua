@@ -44,7 +44,7 @@ This seems to be what the troll was keeping as "treasure". You have heard of suc
 		use = function(self, who)
 			if who:canBe("worldport") then
 				who:setEffect(who.EFF_RECALL, 40, {})
-				game.logPlayer(who, "Space around you starts to disolve...")
+				game.logPlayer(who, "Space around you starts to dissolve...")
 			else
 				game.logPlayer(who, "The rod emits a strange noise, glows briefly and returns to normal.")
 			end
