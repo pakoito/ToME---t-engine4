@@ -62,7 +62,7 @@ newTalent{
 			infravision = 20,
 
 			combat_armor = 2, combat_def = 4,
-			combat = { dam=self:getTalentLevel() * 10 + resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
+			combat = { dam=self:getTalentLevel(t) * 10 + resolvers.rngavg(12,25), atk=10, apr=10, dammod={str=0.8} },
 
 			inc_damage = table.clone(self.inc_damage, true),
 
