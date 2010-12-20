@@ -67,4 +67,5 @@ function _M:roomMapAddEntity(i, j, type, e)
 	self.map.room_map[i][j].add_entities = self.map.room_map[i][j].add_entities or {}
 	local rm = self.map.room_map[i][j].add_entities
 	rm[#rm+1] = {type, e}
+	e:added() -- we do it here to make sure uniques are uniques
 end

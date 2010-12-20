@@ -386,14 +386,14 @@ end
 -- @param typ the type of entity, one of "actor", "object", "trap" or "terrain"
 -- @param x the coordinates where to add it. This CAN be null in which case it wont be added to the map
 -- @param y the coordinates where to add it. This CAN be null in which case it wont be added to the map
-function _M:addEntity(level, e, typ, x, y)
+function _M:addEntity(level, e, typ, x, y, no_added)
 	if typ == "actor" then
 		-- We are additing it, this means there is no old position
 		e.x = nil
 		e.y = nil
 		if x and y then e:move(x, y, true) end
 		level:addEntity(e)
-		e:added()
+		if not no_added then e:added() end
 		-- Levelup ?
 		if self.actor_adjust_level and e.forceLevelup then
 			local newlevel = self:actor_adjust_level(level, e)
@@ -406,13 +406,13 @@ function _M:addEntity(level, e, typ, x, y)
 		if x and y then e:move(x, y, true) end
 		if e.src then level:addEntity(e, e.src)
 		else level:addEntity(e) end
-		e:added()
+		if not no_added then e:added() end
 	elseif typ == "object" then
 		if x and y then level.map:addObject(x, y, e) end
-		e:added()
+		if not no_added then e:added() end
 	elseif typ == "trap" then
 		if x and y then level.map(x, y, Map.TRAP, e) end
-		e:added()
+		if not no_added then e:added() end
 	elseif typ == "terrain" or typ == "grid" then
 		if x and y then level.map(x, y, Map.TERRAIN, e) end
 	end
@@ -591,7 +591,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		if map.room_map[i] and map.room_map[i][j] and map.room_map[i][j].add_entities then
 			for z = 1, #map.room_map[i][j].add_entities do
 				local ae = map.room_map[i][j].add_entities[z]
-				self:addEntity(level, ae[2], ae[1], i, j)
+				self:addEntity(level, ae[2], ae[1], i, j, true)
 			end
 		end
 	end end
