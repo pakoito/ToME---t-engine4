@@ -42,7 +42,7 @@ newEntity{
 
 	no_breath = 1,
 	poison_immune = 1,
-	desease_immune = 1,
+	disease_immune = 1,
 }
 
 newEntity{ base = "BASE_NPC_GWELGOROTH",
