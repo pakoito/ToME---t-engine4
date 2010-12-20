@@ -664,8 +664,8 @@ function _M:onTakeHit(value, src)
 			self.retribution_absorb = self.retribution_absorb - (value / 2)
 			value = value / 2
 		else
-			self.retribution_absorb = 0
 			value = value - self.retribution_absorb
+			self.retribution_absorb = 0
 			local dam = self.retribution_strike
 
 			-- Deactivate without loosing energy
@@ -707,8 +707,8 @@ function _M:onTakeHit(value, src)
 			self.time_shield_absorb = self.time_shield_absorb - value
 			value = 0
 		else
-			self.time_shield_absorb = 0
 			value = value - self.time_shield_absorb
+			self.time_shield_absorb = 0
 		end
 
 		-- If we are at the end of the capacity, release the time shield damage
@@ -724,8 +724,8 @@ function _M:onTakeHit(value, src)
 			self.damage_shield_absorb = self.damage_shield_absorb - value
 			value = 0
 		else
-			self.damage_shield_absorb = 0
 			value = value - self.damage_shield_absorb
+			self.damage_shield_absorb = 0
 		end
 
 		-- If we are at the end of the capacity, release the time shield damage
