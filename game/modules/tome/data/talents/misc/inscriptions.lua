@@ -514,7 +514,7 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:incMana((data.mana + data.inc_stat) / 20)
-		if self.mana_regen <= 0 then
+		if self.mana_regen > 0 then
 			self:setEffect(self.EFF_MANASURGE, data.dur, {power=self.mana_regen * (data.mana + data.inc_stat) / 100})
 		else
 			if self.mana_regen < 0 then
