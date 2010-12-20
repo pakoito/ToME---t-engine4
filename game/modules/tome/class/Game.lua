@@ -521,6 +521,23 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	self.zone_name_s = nil
 	self.level.map:redisplay()
 
+	-- Level feeling
+	local feeling
+	if self.level.special_feeling then
+		feeling = self.level.special_feeling
+	else
+		local lev = self.zone.base_level + self.level.level - 1
+		if self.zone.level_adjust_level then lev = self.zone.level_adjust_level(self.level) end
+		local diff = lev - game.player.level
+		if diff >= 5 then feeling = "You feel a thrill of terror and your heart begins to pound in your chest. You feel terribly threatened upon entering this area."
+		elseif diff >= 2 then feeling = "You feel mildly anxious, and walk with caution."
+		elseif diff >= -2 then feeling = nil
+		elseif diff >= -5 then feeling = "You feel very confident walking into this place."
+		else feeling = "You stride into this area without a second thought, while stifling a yawn. You feel your time might be better spent elsewhere."
+		end
+	end
+	if feeling then game.log("#TEAL#%s", feeling) end
+
 	-- Autosave
 	if config.settings.tome.autosave and left_zone and left_zone.short_name ~= "wilderness" and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
 end
