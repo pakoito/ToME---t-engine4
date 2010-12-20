@@ -81,6 +81,10 @@ end
 -- @param value the value to add/substract
 function _M:checkAngered(src, set, value)
 	if not src.resolveSource then return end
+	if not src.faction then return end
+
+	-- Cant anger at our own faction unless it's the silly player
+	if self.faction == src.faction and not src.player then return end
 
 	local rsrc = src:resolveSource()
 	local rid = rsrc.unique or rsrc.name
@@ -109,7 +113,7 @@ function _M:onTakeHit(value, src)
 	end
 
 	-- Get angry if attacked by a friend
-	if src ~= self and src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
+	if src and src ~= self and src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
 		self:checkAngered(src, false, -50)
 
 		-- Call for help if we become hostile
@@ -130,7 +134,7 @@ function _M:die(src)
 	end
 
 	-- Get angry if attacked by a friend
-	if src ~= self and src.resolveSource and src.faction then
+	if src and src ~= self and src.resolveSource and src.faction then
 		local rsrc = src:resolveSource()
 		local rid = rsrc.unique or rsrc.name
 

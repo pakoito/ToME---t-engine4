@@ -514,7 +514,15 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:incMana((data.mana + data.inc_stat) / 20)
-		self:setEffect(self.EFF_MANASURGE, data.dur, {power=self.mana_regen * (data.mana + data.inc_stat) / 100})
+		if self.mana_regen <= 0 then
+			self:setEffect(self.EFF_MANASURGE, data.dur, {power=self.mana_regen * (data.mana + data.inc_stat) / 100})
+		else
+			if self.mana_regen < 0 then
+				game.logPlayer(self, "Your negative mana regeneration rate is unaffected by the rune.")
+			else
+				game.logPlayer(self, "Your inexistant mana regeneration rate is unaffected by the rune.")
+			end
+		end
 		return true
 	end,
 	info = function(self, t)
