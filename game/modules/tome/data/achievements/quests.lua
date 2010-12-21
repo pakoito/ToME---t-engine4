@@ -149,3 +149,7 @@ newAchievement{
 	name = "Clone War", id = "SHADOW_CLONE",
 	desc = [[Destroyed your own Shade.]],
 }
+newAchievement{
+	name = "Home sweet home", id = "SHERTUL_FORTRESS",
+	desc = [[Dispatched the Weirdling Beast and taken possession of Yiilkgur, the Sher'Tul Fortress for your own usage.]],
+}

@@ -774,8 +774,8 @@ function _M:setupCommands()
 --				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
 --				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
 --				self.player:grantQuest("anti-antimagic")
-				game:changeLevel(3,"shadow-crypt")
-				game.player:magicMap(50)
+				game:changeLevel(1,"shertul-fortress")
+--				game.player:magicMap(50)
 			end
 		end,
 	}
@@ -859,7 +859,7 @@ function _M:setupCommands()
 					self.log("You cannot go into the wilds with the following effects: %s", table.concat(stop, ", "))
 				else
 					-- Do not unpause, the player is allowed first move on next level
-					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev)
+					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev, e.force_down)
 				end
 			else
 				self.log("There is no way out of this level here.")

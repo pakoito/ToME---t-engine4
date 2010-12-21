@@ -18,15 +18,15 @@
 -- darkgod@te4.org
 
 return {
-	name = "Old Forest",
-	level_range = {7, 16},
+	name = "Lake of Nur",
+	level_range = {15, 25},
 	level_scheme = "player",
-	max_level = 7,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
 --	all_remembered = true,
-	all_lited = true,
+--	all_lited = true,
 	persistant = "zone",
 	color_shown = {0.5, 0.5, 0.5, 1},
 	color_obscure = {0.5*0.6, 0.5*0.6, 0.5*0.6, 1},
@@ -35,63 +35,92 @@ return {
 		map = {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
-			edge_entrances = {4,6},
-			rooms = {"forest_clearing", {"lesser_vault",8}},
-			rooms_config = {forest_clearing={pit_chance=5, filters={{type="insect", subtype="ant"}, {type="insect"}, {type="animal", subtype="snake"}, {type="animal", subtype="canine"}}}},
-			lesser_vaults_list = {"honey_glade", "troll-hideout", "mage-hideout", "thief-hideout", "plantlife", "mold-path"},
-			['.'] = "GRASS",
-			['#'] = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
+			rooms = {"random_room"},
+			lite_room_chance = 0,
+			['.'] = "WATER_FLOOR",
+			['#'] = "WATER_WALL",
 			up = "UP",
 			down = "DOWN",
-			door = "GRASS",
+			door = "WATER_DOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
-			guardian = "WRATHROOT",
+			nb_npc = {20, 25},
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			class = "engine.generator.object.Random",
 			nb_object = {6, 9},
-			filters = { {} }
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {9, 15},
+			nb_trap = {6, 9},
 		},
 	},
 	levels =
 	{
 		[1] = {
-			generator = { map = {
-				up = "UP_WILDERNESS",
-			}, },
+			all_lited = true,
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/lake-nur",
+				},
+				actor = {
+					nb_npc = {0, 0},
+				},
+				object = {
+					nb_object = {0, 0},
+				},
+				trap = {
+					nb_trap = {0, 0},
+				},
+			},
 		},
-		[7] = {
-			generator =  { map = {
-				edge_entrances = {4,2},
-				down = "LAKE_NUR",
-				force_last_stair = true,
-			}, },
+		[2] = {
+			generator = {
+				actor = {
+					filters = {{special_rarity="water_rarity"}},
+				},
+			},
+		},
+		[3] = {
+			generator = {
+				map = {
+					['.'] = "FLOOR",
+					['#'] = "WALL",
+					up = "UP",
+					door = "DOOR",
+					down = "SHERTUL_FORTRESS",
+					force_last_stair = true,
+				},
+			},
 		},
 	},
-
 	post_process = function(level)
+		if level.level > 1 then return end
 		local Map = require "engine.Map"
 		level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
-
-		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
 	end,
 
 	foreground = function(level, x, y, nb_keyframes)
+		if level.level > 1 then return end
 		local Map = require "engine.Map"
 
 		for i = 1, nb_keyframes do
 			level.foreground_particle:update()
 			if i == 1 then level.foreground_particle.ps:toScreen(x, y, true, 1) end
 			level.foreground_particle.ps:update()
+		end
+	end,
+
+	on_enter = function(lev, old_lev, newzone)
+		local Dialog = require("engine.ui.Dialog")
+		if lev == 2 and not game.level.shown_warning then
+			Dialog:simplePopup("Lake of Nur", "You descend into the submerged ruins. The walls look extremely ancient, yet you feel power within this place.")
+			game.level.shown_warning = true
+		elseif lev == 3 and not game.level.shown_warning then
+			Dialog:simplePopup("Lake of Nur", "As you descend to the next level you traverse a kind of magical barrier keeping the water away. You hear terrible screams.")
+			game.level.shown_warning = true
 		end
 	end,
 }

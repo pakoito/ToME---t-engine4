@@ -18,14 +18,22 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
 
 newEntity{
 	define_as = "LAKE_NUR",
-	name = "way to the lake of Nur",
-	display = '>', color_r=255, color_g=255, color_b=0,
+	name = "stair back to the lake of Nur",
+	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
-	change_level = 1, change_zone = "lake-nur",
+	change_level = 3, change_zone = "lake-nur", force_down = true,
+}
+
+newEntity{
+	define_as = "SEALED_DOOR",
+	name = "sealed door", image = "terrain/sealed_door.png",
+	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	does_block_move = true,
 }

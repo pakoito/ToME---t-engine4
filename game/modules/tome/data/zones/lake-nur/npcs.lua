@@ -17,15 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
+load("/data/general/npcs/aquatic_critter.lua", function(e) if e.rarity then e.water_rarity, e.rarity = e.rarity, nil end end)
+load("/data/general/npcs/aquatic_demon.lua", function(e) if e.rarity then e.water_rarity, e.rarity = e.rarity, nil end end)
+load("/data/general/npcs/horror.lua", rarity(0))
+load("/data/general/npcs/snake.lua", rarity(3))
+load("/data/general/npcs/plant.lua", rarity(3))
 
-newEntity{
-	define_as = "LAKE_NUR",
-	name = "way to the lake of Nur",
-	display = '>', color_r=255, color_g=255, color_b=0,
-	notice = true,
-	always_remember = true,
-	change_level = 1, change_zone = "lake-nur",
-}
+local Talents = require("engine.interface.ActorTalents")

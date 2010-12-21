@@ -167,5 +167,5 @@ newTalent{
 		return ([[A star falls into area of radius %d, stunning all for 4 turns and doing %0.2f darkness damage.
 		The damage will increase with the Magic stat.]]):
 		format(radius, damDesc(self, DamageType.DARKNESS, damage))
-   end,
-   }
+	end,
+}

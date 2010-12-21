@@ -20,12 +20,22 @@
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
+load("/data/general/grids/sand.lua")
 
 newEntity{
-	define_as = "LAKE_NUR",
-	name = "way to the lake of Nur",
-	display = '>', color_r=255, color_g=255, color_b=0,
+	define_as = "OLD_FOREST",
+	name = "way to the old forest",
+	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
-	change_level = 1, change_zone = "lake-nur",
+	change_level = 7, change_zone = "old-forest", force_down = true,
+}
+
+newEntity{
+	define_as = "SHERTUL_FORTRESS",
+	name = "entrance to the Sher'Tul ruins",
+	display = '>', color=colors.PURPLE,
+	notice = true,
+	always_remember = true,
+	change_level = 1, change_zone = "shertul-fortress",
 }

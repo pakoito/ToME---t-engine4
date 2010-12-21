@@ -17,15 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
+load("/data/general/objects/objects.lua")
 
-newEntity{
-	define_as = "LAKE_NUR",
-	name = "way to the lake of Nur",
-	display = '>', color_r=255, color_g=255, color_b=0,
-	notice = true,
-	always_remember = true,
-	change_level = 1, change_zone = "lake-nur",
+newEntity{ base = "BASE_LORE",
+	define_as = "LINANIIL_LECTURE",
+	subtype = "lecture on humility", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = "Lecture on Humility by Archmage Linaniil", lore="angolwen-linaniil-lecture",
+	desc = [[Lecture on Humility by Archmage Linaniil. A tale of the first ages and the Spellblaze.]],
+	rarity = false,
+	encumberance = 0,
+	cost = 2,
 }
+

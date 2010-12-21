@@ -17,15 +17,4 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
-
-newEntity{
-	define_as = "LAKE_NUR",
-	name = "way to the lake of Nur",
-	display = '>', color_r=255, color_g=255, color_b=0,
-	notice = true,
-	always_remember = true,
-	change_level = 1, change_zone = "lake-nur",
-}
+load("/data/general/traps/water.lua")
