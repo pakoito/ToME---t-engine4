@@ -79,6 +79,7 @@ function _M:learnLore(lore)
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)
 		game.logPlayer(self, "#ANTIQUE_WHITE#%s", util.getval(l.lore))
 		game.logPlayer(self, "You can read all your collected lore in the game menu, by pressing Escape.")
+		if l.on_learn then l.on_learn(self) end
 	end
 
 	self.lore_known[lore] = true

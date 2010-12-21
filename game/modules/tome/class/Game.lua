@@ -859,6 +859,7 @@ function _M:setupCommands()
 					self.log("You cannot go into the wilds with the following effects: %s", table.concat(stop, ", "))
 				else
 					-- Do not unpause, the player is allowed first move on next level
+					if e.change_level_check and e:change_level_check(game.player) then return end
 					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev, e.force_down)
 				end
 			else

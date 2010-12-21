@@ -79,8 +79,8 @@ newLore{
 #{bold}#CHAPTER FIVE: NEEDS MUST...
 
 #{normal}#I ...
-#{italic}The note seems unfinished, blood tarnishes most of it. You find a small gem with it, it seems to be some kind of key.
-#{normal}]],
+#{italic}#The note seems unfinished, blood tarnishes most of it. You find a small gem with it, it seems to be some kind of key.
+#{normal}#]],
 	on_learn = function(who)
 		game.player:grantQuest("shertul-fortress")
 	end,

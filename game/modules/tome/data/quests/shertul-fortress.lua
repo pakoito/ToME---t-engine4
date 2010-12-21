@@ -17,15 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
-
-for i = 1, 6 do
-newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "journal page", lore="old-forest-note-"..i,
-	desc = [[A paper scrap, left by an adventurer.]],
-	rarity = false,
-	is_magic_device = false,
-	encumberance = 0,
-}
+name = "Sher'Tul Fortress"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "You found notes from an explorer inside the Old Forest. He spoke about Sher'Tul ruins sunken below the surface of the lake of Nur, at the forest's center."
+	desc[#desc+1] = "With one of the notes there was a small gem that looks like a key."
+	if self:isCompleted("entered") then
+		desc[#desc+1] = "You used the key inside the ruins of Nur and found a way into the fortress of old."
+	end
+	return table.concat(desc, "\n")
 end
