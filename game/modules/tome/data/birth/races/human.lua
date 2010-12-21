@@ -70,7 +70,7 @@ newBirthDescriptor
 		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
 		"#GOLD#Experience penality:#LIGHT_BLUE# 15%",
 	},
-	stats = { str=1, mag=1, dex=1, wil=1 },
+	inc_stats = { str=1, mag=1, dex=1, wil=1 },
 	experience = 1.15,
 	talents = {
 		[ActorTalents.T_HIGHER_HEAL]=1,

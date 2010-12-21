@@ -47,15 +47,16 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 	self.c_points = Textzone.new{width=math.floor(self.iw / 2 - 10), auto_height=true, no_color_bleed=true, text=_points_text:format(self.actor.unused_stats)}
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, columns={
-		{name="Stat", width=70, display_prop="name"},
-		{name="Value", width=30, display_prop="val"},
+		{name="Stat", width=50, display_prop="name"},
+		{name="Base", width=25, display_prop="base"},
+		{name="Value", width=25, display_prop="val"},
 	}, list={
-		{name="Strength", val=self.actor:getStr(), stat_id=self.actor.STAT_STR},
-		{name="Dexterity", val=self.actor:getDex(), stat_id=self.actor.STAT_DEX},
-		{name="Magic", val=self.actor:getMag(), stat_id=self.actor.STAT_MAG},
-		{name="Willpower", val=self.actor:getWil(), stat_id=self.actor.STAT_WIL},
-		{name="Cunning", val=self.actor:getCun(), stat_id=self.actor.STAT_CUN},
-		{name="Constitution", val=self.actor:getCon(), stat_id=self.actor.STAT_CON},
+		{name="Strength",     base=self.actor:getStr(nil, nil, true), val=self.actor:getStr(), stat_id=self.actor.STAT_STR},
+		{name="Dexterity",    base=self.actor:getDex(nil, nil, true), val=self.actor:getDex(), stat_id=self.actor.STAT_DEX},
+		{name="Magic",        base=self.actor:getMag(nil, nil, true), val=self.actor:getMag(), stat_id=self.actor.STAT_MAG},
+		{name="Willpower",    base=self.actor:getWil(nil, nil, true), val=self.actor:getWil(), stat_id=self.actor.STAT_WIL},
+		{name="Cunning",      base=self.actor:getCun(nil, nil, true), val=self.actor:getCun(), stat_id=self.actor.STAT_CUN},
+		{name="Constitution", base=self.actor:getCon(nil, nil, true), val=self.actor:getCon(), stat_id=self.actor.STAT_CON},
 	}, fct=function(item, _, v)
 		self:incStat(v == "left" and 1 or -1)
 	end, select=function(item, sel) self.sel = sel self.c_desc:switchItem(item, self.actor.stats_def[item.stat_id].description) end}
@@ -132,6 +133,7 @@ function _M:incStat(v)
 	local sel = self.sel
 	self.actor:incStat(sel, v)
 	self.actor.unused_stats = self.actor.unused_stats - v
+	self.c_list.list[sel].base = self.actor:getStat(sel, nil, nil, true)
 	self.c_list.list[sel].val = self.actor:getStat(sel)
 	self.c_list:generate()
 	self.c_list.sel = sel

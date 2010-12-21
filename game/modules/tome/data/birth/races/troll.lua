@@ -39,7 +39,7 @@ newBirthDescriptor{
 			Male = "allow",
 		},
 	},
-	stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
+	inc_stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
 	talents = {
 --		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},

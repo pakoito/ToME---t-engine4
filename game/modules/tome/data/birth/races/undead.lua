@@ -84,7 +84,7 @@ newBirthDescriptor
 			Male = "allow",
 		},
 	},
-	stats = { str=3, con=5, wil=-2, mag=0, dex=1, cun=-2 },
+	inc_stats = { str=3, con=5, wil=-2, mag=0, dex=1, cun=-2 },
 	talents_types = {
 		["undead/ghoul"]={true, 0.1},
 	},
@@ -130,7 +130,7 @@ newBirthDescriptor
 			Male = "allow",
 		},
 	},
-	stats = { str=3, con=0, wil=0, mag=0, dex=4, cun=0 },
+	inc_stats = { str=3, con=0, wil=0, mag=0, dex=4, cun=0 },
 	talents_types = {
 		["undead/skeleton"]={true, 0.1},
 	},

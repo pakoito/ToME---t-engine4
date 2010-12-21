@@ -70,7 +70,7 @@ newBirthDescriptor
 		"#GOLD#Life per levels:#LIGHT_BLUE# 9",
 		"#GOLD#Experience penality:#LIGHT_BLUE# 35%",
 	},
-	stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
+	inc_stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
 	experience = 1.3,
 	talents = { [ActorTalents.T_SHALOREN_SPEED]=1 },
 	copy = {
@@ -96,7 +96,7 @@ newBirthDescriptor
 		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
 		"#GOLD#Experience penality:#LIGHT_BLUE# 35%",
 	},
-	stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
+	inc_stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
 	experience = 1.3,
 	talents = { [ActorTalents.T_THALOREN_WRATH]=1 },
 	copy = {

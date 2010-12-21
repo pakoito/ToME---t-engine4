@@ -65,7 +65,7 @@ newBirthDescriptor
 		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
 		"#GOLD#Experience penality:#LIGHT_BLUE# 25%",
 	},
-	stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
+	inc_inc_stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
 	talents = {
 		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},

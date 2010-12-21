@@ -43,8 +43,8 @@ function _M:defineStat(name, short_name, default_value, min, max, desc)
 	self.stats_def[#self.stats_def].id = #self.stats_def
 	self.stats_def[short_name] = self.stats_def[#self.stats_def]
 	self["STAT_"..short_name:upper()] = #self.stats_def
-	self["get"..short_name:lower():capitalize()] = function(self, scale, raw)
-		return self:getStat(_M["STAT_"..short_name:upper()], scale, raw)
+	self["get"..short_name:lower():capitalize()] = function(self, scale, raw, no_inc)
+		return self:getStat(_M["STAT_"..short_name:upper()], scale, raw, no_inc)
 	end
 end
 
@@ -78,6 +78,23 @@ function _M:incStat(stat, val)
 	else
 		self.stats[stat] = math.max(math.min(self.stats[stat] + val, _M.stats_def[stat].max), _M.stats_def[stat].min)
 	end
+	if self:getStat(stat) ~= old then
+		self:onStatChange(stat, self:getStat(stat) - old)
+	end
+	self.changed = true
+	return self:getStat(stat) - old
+end
+
+--- Increases a stat additional value
+-- @param stat the stat id to change
+-- @param val the increment to add/substract
+function _M:incIncStat(stat, val)
+	if type(stat) == "string" then
+		stat = _M.stats_def[stat].id
+	end
+
+	local old = self:getStat(stat)
+	self.inc_stats[stat] = self.inc_stats[stat] + val
 	if self:getStat(stat) ~= old then
 		self:onStatChange(stat, self:getStat(stat) - old)
 	end

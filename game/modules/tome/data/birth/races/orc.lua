@@ -45,7 +45,7 @@ newBirthDescriptor{
 			Mage = "disallow",
 		},
 	},
-	stats = { str=4, con=1, wil=2, mag=-2, dex=-2 },
+	inc_stats = { str=4, con=1, wil=2, mag=-2, dex=-2 },
 	talents = {
 		[ActorTalents.T_ORC_FURY]=1,
 	},
