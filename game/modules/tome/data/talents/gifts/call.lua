@@ -41,7 +41,10 @@ newTalent{
 		-- Deactivate all sustains to get a real reduction
 		local reset = {}
 		for tid, act in pairs(self.sustain_talents) do
-			if act then reset[#reset+1] = tid end
+			local t = self:getTalentFromId(tid)
+			if t.sustain_equilibrium then
+				if act then reset[#reset+1] = tid end
+			end
 		end
 		for i, tid in ipairs(reset) do
 			self:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true})
