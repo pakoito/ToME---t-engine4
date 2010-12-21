@@ -147,6 +147,7 @@ addSpot({167, 9}, "patrol", "orc-pride")
 addSpot({155, 17}, "patrol", "orc-pride")
 addSpot({132, 9}, "patrol", "orc-pride")
 addSpot({45, 28}, "zone-pop", "zigur")
+addSpot({32, 23}, "zone-pop", "shertul-fortress")
 
 -- addZone section
 addZone({1, 1, 78, 46}, "zonename", "Maj'Eyal")
@@ -166,7 +167,7 @@ addZone({75, 6, 78, 9}, "world-encounter", "infinite-dungeon")
 addZone({61, 8, 64, 10}, "world-encounter", "infinite-dungeon")
 addZone({22, 3, 29, 7}, "world-encounter", "infinite-dungeon")
 addZone({59, 41, 65, 46}, "world-encounter", "infinite-dungeon")
-addZone({38, 35, 53, 45}, "world-encounter", "mark-spellblaze")
+addZone({38, 35, 53, 46}, "world-encounter", "mark-spellblaze")
 
 -- ASCII map section
 return {

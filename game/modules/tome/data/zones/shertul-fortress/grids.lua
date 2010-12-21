@@ -37,3 +37,11 @@ newEntity{
 	block_sight = true,
 	does_block_move = true,
 }
+
+newEntity{
+	define_as = "TELEPORT_OUT",
+	name = "teleportation circle to the surface", image = "terrain/maze_teleport.png",
+	display = '>', color_r=255, color_g=0, color_b=255,
+	notice = true, show_tooltip = true,
+	change_level = 1, change_zone = "wilderness",
+}

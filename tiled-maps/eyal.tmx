@@ -477,6 +477,12 @@
     <property name="type" value="&quot;zone-pop&quot;"/>
    </properties>
   </object>
+  <object name="Sher'Tul Fortress portal" x="1027" y="741" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;shertul-fortress&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone" width="170" height="100" visible="0">
   <object name="Maj'Eyal" x="34" y="40" width="2488" height="1456">

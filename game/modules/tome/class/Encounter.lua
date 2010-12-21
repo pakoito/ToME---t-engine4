@@ -86,7 +86,7 @@ function _M:findSpot(who, what)
 	what = what or "block_move"
 	local spots = {}
 	for i = -1, 1 do for j = -1, 1 do if i ~= 0 or j ~= 0 then
-		if not game.level.map:checkAllEntities(who.x + i, who.y + j, what, who) and game.level.map:checkAllEntities(who.x + i, who.y + j, "can_encounter", who) then
+		if not game.level.map:checkAllEntities(who.x + i, who.y + j, what, who) and game.level.map:checkAllEntities(who.x + i, who.y + j, "can_encounter", who) and not game.level.map:checkAllEntities(who.x + i, who.y + j, "change_level") then
 			spots[#spots+1] = {who.x + i, who.y + j}
 		end
 	end end end

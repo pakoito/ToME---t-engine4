@@ -33,9 +33,13 @@ defineTile(".", "OLD_FLOOR")
 -- addSpot section
 addSpot({11, 15}, "door", "weirdling")
 addSpot({18, 17}, "portal", "back")
+addSpot({1, 15}, "stair", "up")
 
 -- addZone section
 addZone({10, 0, 29, 29}, "no-teleport")
+addZone({12, 12, 18, 17}, "zonename", "Control Room")
+addZone({1, 10, 9, 19}, "zonename", "Storage Room")
+addZone({13, 7, 17, 10}, "zonename", "Teleportation Control")
 
 -- ASCII map section
 return [[

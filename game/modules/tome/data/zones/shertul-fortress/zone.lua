@@ -19,6 +19,12 @@
 
 return {
 	name = "Yiilkgur, the Sher'Tul Fortress",
+	display_name = function(x, y)
+		local zn = game.level.map.attrs(x or game.player.x, y or game.player.y, "zonename")
+		if zn then return "Yiilkgur, the Sher'Tul Fortress ("..zn..")"
+		else return "Yiilkgur, the Sher'Tul Fortress" end
+	end,
+	variable_zone_name = true,
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	level_range = {18, 25},
 	max_level = 1,
@@ -50,6 +56,10 @@ return {
 			if z.type == "no-teleport" then
 				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
 					game.level.map.attrs(x, y, "no_teleport", true)
+				end end
+			elseif z.type == "zonename" then
+				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
+					game.level.map.attrs(x, y, "zonename", z.subtype)
 				end end
 			end
 		end

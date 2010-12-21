@@ -71,11 +71,30 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	resolvers.sustains_at_birth(),
 
 	on_die = function()
+		local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
 		local spot = game.level:pickSpot{type="door", subtype="weirdling"}
 		if spot then
-			local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
 			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
-			game.log("#LIGHT_RED#As the Weirdling beast falls it shrieks one last time and the door behind it shatters and exlpodes, revealing the room behind it.")
+			game.log("#LIGHT_RED#As the Weirdling beast falls it shrieks one last time and the door behind it shatters and exlpodes, revealing the room behind it. The stair up vanishes!")
 		end
+		local spot = game.level:pickSpot{type="stair", subtype="up"}
+		if spot then
+			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+		end
+
+		-- Update the worldmap with a shortcut to here
+		local g = mod.class.Grid.new{
+			show_tooltip=true, always_remember = true,
+			name="Teleportation portal to the Sher'Tul Fortress",
+			display='>', color=colors.ANTIQUE_WHITE,
+			notice = true,
+			change_level=1, change_zone="shertul-fortress"
+		}
+		g:resolve() g:resolve(nil, true)
+		local level = game.memory_levels["wilderness-1"]
+		local spot = level:pickSpot{type="zone-pop", subtype="shertul-fortress"}
+		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+		game.player.wild_x = spot.x
+		game.player.wild_y = spot.y
 	end,
 }
