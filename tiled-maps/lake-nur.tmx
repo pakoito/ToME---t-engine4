@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_dungeon32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_dungeon32.gif" width="288" height="320"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="#"/>
+    <property name="value" value="&quot;WATER_WALL&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="91" name="dg_features32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_features32.gif" width="288" height="416"/>
+  <tile id="83">
+   <properties>
+    <property name="display" value="&lt;"/>
+    <property name="value" value="&quot;OLD_FOREST&quot;"/>
+   </properties>
+  </tile>
+  <tile id="84">
+   <properties>
+    <property name="display" value="&gt;"/>
+    <property name="value" value="&quot;DOWN&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="208" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="9">
+   <properties>
+    <property name="display" value="-"/>
+    <property name="value" value="&quot;GRASS&quot;"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;SAND&quot;"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="~"/>
+    <property name="value" value="&quot;WATER_FLOOR&quot;"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="T"/>
+    <property name="value" value="{&quot;TREE&quot;,&quot;TREE2&quot;,&quot;TREE3&quot;,&quot;TREE4&quot;,&quot;TREE5&quot;,&quot;TREE6&quot;,&quot;TREE7&quot;,&quot;TREE8&quot;,&quot;TREE9&quot;,&quot;TREE10&quot;,&quot;TREE11&quot;,&quot;TREE12&quot;,&quot;TREE13&quot;,&quot;TREE14&quot;,&quot;TREE15&quot;,&quot;TREE16&quot;,&quot;TREE17&quot;,&quot;TREE18&quot;,&quot;TREE19&quot;,&quot;TREE20&quot;}"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="display" value="*"/>
+    <property name="value" value="&quot;WATER_DOOR&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2YzQ3DIAxG4ZKZO1U7T6UM0DF6ikotQ2zwnywOn9QqEN6zKUpz1FIOwzyL7XrSeZdfvFmwnAUP5uHNCpl7n6FDzxHz1K4nhWU0Bo6njJH0mGHi7jVJHzjvU/5DZV6tC7eGPSbI3+a6rs1Budb7PuIfZdWFcw/KXp31oPpJ1eZu347uJe2o2WtsvsS+s3bBzqa2h14e3L3W8/DuB7c/cLzW71/bxZtNysmbR8rJm2FnZ2cnY2oTb5btkMMjwxrWPbdaU+N5PIPDjm0ynHWXhzeDZD+8OaImw3/q9j0fd294s2Me3HnRPGaS6dy09oDP2BLP3F78keo64xClvrPnCJcrYl9WWKJ4zNb0tTg/iofUfGkXyEU5dyM5tDyPes+V5f2NZr7RhiAUECcAAA==
+  </data>
+ </layer>
+</map>
