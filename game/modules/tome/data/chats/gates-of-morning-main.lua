@@ -31,10 +31,9 @@ newChat{ id="welcome",
 
 newChat{ id="explain-gates",
 	text = [[There are two main groups in the population here, Humans and Elves.
-Humans came here in the second age. Our ancestors were part of an expedition from Numenor to explore the world. Their ship was wrecked and the survivors landed on this continent.
-They came across a group of Elves fighting against the orc pride and helped them.
-The Elves invited them to stay with them in the Gates of Morning, in the Sunwall mountains.
-Their name comes from the earliest days of the world, when the world was flat and the Sun came out of a gigantic cavern in the Sunwall.]],
+Humans came here in the Age of Pyre. Our ancestors were part of a Mardrop expedition to find what had happened to the Naloren lands that sunk under the sea. Their ship was wrecked and the survivors landed on this continent.
+They came across a group of elves, seemingly native to those lands, and befriended them - founding the Sunwall and the Gates of Morning.
+Then the orc pride came and we have been fighting for our survival ever since.]],
 	answers = {
 		{"Thank you, my lady.", jump="welcome"},
 	},
