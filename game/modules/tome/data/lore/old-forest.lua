@@ -70,3 +70,18 @@ newLore{
 
 #{normal}#Before I continue, I must make one thing clear: I am no great friend to the mages. Some powers simply were not meant for mortal hands or minds. As history has taught us time and again, from the sudden disappearance of the Sher'Tul to the Spellblaze and the plagues it brought in its wake, magic is wont to cause more harm than good. But I fear it is a necessity for my current task. During my stay in Derth a fellow traveller and I have become fast friends, often drinking together in the local tavern. I can't put my finger on it, but I believe him to be a mage; he has an unexplainable feeling of power surrounding him, not to mention a rather ostentatious hat. I wonder what his thoughts would be on the art of water-breathing...?]],
 }
+
+newLore{
+	id = "old-forest-note-6",
+	category = "old forest",
+	name = "journal entry (old forest)",
+	lore = [[#{italic}#From the notes of Darwood Oakton, explorer:
+#{bold}#CHAPTER FIVE: NEEDS MUST...
+
+#{normal}#I ...
+#{italic}The note seems unfinished, blood tarnishes most of it. You find a small gem with it, it seems to be some kind of key.
+#{normal}]],
+	on_learn = function(who)
+		game.player:grantQuest("shertul-fortress")
+	end,
+}
