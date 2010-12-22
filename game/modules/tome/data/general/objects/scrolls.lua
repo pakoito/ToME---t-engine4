@@ -173,7 +173,7 @@ newEntity{ base = "BASE_INFUSION",
 }
 
 newEntity{ base = "BASE_INFUSION",
-	name = "strength infusion",
+	name = "heroism infusion",
 	level_range = {25, 50},
 	rarity = 16,
 	cost = 40,
@@ -185,11 +185,11 @@ newEntity{ base = "BASE_INFUSION",
 		power = resolvers.mbonus_level(4, 4, function(e, v) return v * 3 end),
 		use_stat_mod = 0.04,
 	},
-	inscription_talent = "INFUSION:_STRENGTH",
+	inscription_talent = "INFUSION:_HEROISM",
 }
 
 newEntity{ base = "BASE_INFUSION",
-	name = "will infusion",
+	name = "mind power infusion",
 	level_range = {25, 50},
 	rarity = 16,
 	cost = 40,
@@ -201,7 +201,7 @@ newEntity{ base = "BASE_INFUSION",
 		power = resolvers.mbonus_level(4, 4, function(e, v) return v * 3 end),
 		use_stat_mod = 0.04,
 	},
-	inscription_talent = "INFUSION:_WILL",
+	inscription_talent = "INFUSION:_MIND_POWER",
 }
 
 newEntity{ base = "BASE_RUNE",

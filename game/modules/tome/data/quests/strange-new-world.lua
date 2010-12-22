@@ -30,9 +30,9 @@ desc = function(self, who)
 	end
 
 	if self:isCompleted("helped-fillarel") then
-		desc[#desc+1] = "Fillarel told you to go to the south west and meet with High Sun Paladin Aeryn."
+		desc[#desc+1] = "Fillarel told you to go to the south east and meet with High Sun Paladin Aeryn."
 	elseif self:isCompleted("helped-krogar") then
-		desc[#desc+1] = "Krogar told you to go to the east and look for the Kruk Pride."
+		desc[#desc+1] = "Krogar told you to go to the west and look for the Kruk Pride."
 	end
 	return table.concat(desc, "\n")
 end
@@ -49,6 +49,6 @@ fillarel_dies = function(self, npc)
 	if self:isCompleted("sided-krogar") then game.player:setQuestStatus(self.id, self.COMPLETED, "helped-krogar")
 	else
 		game.player:setQuestStatus(self.id, self.COMPLETED, "helped-fillarel")
-		npc:doEmote(game.player.descriptor.race.." go to the south west, and tell Aeryn what happened to me!", 120)
+		npc:doEmote(game.player.descriptor.race.." go to the south east, and tell Aeryn what happened to me!", 120)
 	end
 end

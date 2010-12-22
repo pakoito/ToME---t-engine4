@@ -180,7 +180,7 @@ newInscription{
 }
 
 newInscription{
-	name = "Infusion: Strength",
+	name = "Infusion: Heroism",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
@@ -200,7 +200,7 @@ newInscription{
 }
 
 newInscription{
-	name = "Infusion: Will",
+	name = "Infusion: Mind Power",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
