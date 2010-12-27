@@ -736,10 +736,10 @@ function _M:setupCommands()
 			if config.settings.cheat then
 				self.player:forceLevelup(50)
 				self.player.no_breath = 1
-				self.player.invulnerable = 1
+--				self.player.invulnerable = 1
 				self.player.esp.all = 1
 				self.player.esp.range = 50
-				self.player.inc_damage.all = 100000
+--				self.player.inc_damage.all = 100000
 			end
 		end,
 		[{"_f","ctrl"}] = function()

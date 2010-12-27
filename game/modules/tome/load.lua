@@ -68,6 +68,7 @@ dofile("/mod/resolvers.lua")
 -- Body parts
 ActorInventory:defineInventory("MAINHAND", "In main hand", true, "Most weapons are wielded in the main hand.")
 ActorInventory:defineInventory("OFFHAND", "In off hand", true, "You can use shields or a second weapon in your off-hand, if you have the talents for it.")
+ActorInventory:defineInventory("PSIONIC_FOCUS", "Psionic Focus", true, "Object help in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers.")
 ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.")
 ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.")
 ActorInventory:defineInventory("LITE", "Light source", true, "A light source allows you to see in the dark places of the world.")
@@ -103,8 +104,9 @@ ActorResource:defineResource("Positive", "positive", ActorTalents.T_POSITIVE_POO
 ActorResource:defineResource("Negative", "negative", ActorTalents.T_NEGATIVE_POOL, "negative_regen", "Negative energy represents your reserve of negative power. It slowly decreases.")
 ActorResource:defineResource("Hate", "hate", ActorTalents.T_HATE_POOL, "hate_regen", "Hate represents the level of frenzy of a cursed soul.")
 ActorResource:defineResource("Paradox", "paradox", ActorTalents.T_PARADOX_POOL, "paradox_regen", "Paradox represents how much damage you've done to the space-time continuum. A high Paradox score makes Chronomancy less reliable and more dangerous to use but also amplifies the effects.")
-
+ActorResource:defineResource("Psi", "psi", ActorTalents.T_PSI_POOL, "psi_regen", "Psi represents the power available to your mind.")
 -- Actor stats
+
 ActorStats:defineStat("Strength",	"str", 10, 1, 100, "Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to resist physical effects, and carrying capacity.")
 ActorStats:defineStat("Dexterity",	"dex", 10, 1, 100, "Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks, and your damage with light or ranged weapons.")
 ActorStats:defineStat("Magic",		"mag", 10, 1, 100, "Magic defines your character's ability to manipulate the magical energy of the world. It increases your spell power, and the effect of spells and other magic items.")

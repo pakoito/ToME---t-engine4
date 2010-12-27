@@ -2667,3 +2667,104 @@ newEffect{
 	end,
 }
 
+newEffect{
+	name = "QUICKNESS",
+	desc = "Quick",
+	long_desc = function(self, eff) return ("Increases run speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
+	type = "mental",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# speeds up.", "+Quick" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Quick" end,
+	activate = function(self, eff)
+		--eff.tmpid = self:addTemporaryValue("movement_speed", {mod=-eff.power})
+		self.movement_speed = (self.movement_speed or 0) - eff.power
+	end,
+	deactivate = function(self, eff)
+		--self:removeTemporaryValue("movement_speed", eff.tmpid)
+		self.movement_speed = self.movement_speed + eff.power
+	end,
+}
+newEffect{
+	name = "PSIFRENZY",
+	desc = "Frenzied Psi-fighting",
+	long_desc = function(self, eff) return ("Causes telekinetically-wielded weapons to hit up to %d targets each turn."):format(eff.power) end,
+	type = "mental",
+	status = "beneficial",
+	parameters = {dam=10},
+	on_gain = function(self, err) return "#Target# enters a frenzy!", "+Frenzy" end,
+	on_lose = function(self, err) return "#Target# is no longer frenzied.", "-Frenzy" end,
+}
+
+newEffect{
+	name = "KINSPIKE_SHIELD",
+	desc = "Spiked Kinetic Shield",
+	long_desc = function(self, eff) return ("The target erects a powerful kinetic shield capable of absorbing %d physical or acid damage before it crumbles."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=100 },
+	on_gain = function(self, err) return "A powerful kinetic shield forms around #target#.", "+Shield" end,
+	on_lose = function(self, err) return "The powerful kinetic shield around #target# crumbles.", "-Shield" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("kinspike_shield", eff.power)
+		self.kinspike_shield_absorb = eff.power
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("kinspike_shield", eff.tmpid)
+		self.kinspike_shield_absorb = nil
+	end,
+}
+newEffect{
+	name = "THERMSPIKE_SHIELD",
+	desc = "Spiked Thermal Shield",
+	long_desc = function(self, eff) return ("The target erects a powerful thermal shield capable of absorbing %d thermal damage before it crumbles."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=100 },
+	on_gain = function(self, err) return "A powerful thermal shield forms around #target#.", "+Shield" end,
+	on_lose = function(self, err) return "The powerful thermal shield around #target# crumbles.", "-Shield" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("thermspike_shield", eff.power)
+		self.thermspike_shield_absorb = eff.power
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("thermspike_shield", eff.tmpid)
+		self.thermspike_shield_absorb = nil
+	end,
+}
+newEffect{
+	name = "CHARGESPIKE_SHIELD",
+	desc = "Spiked Charged Shield",
+	long_desc = function(self, eff) return ("The target erects a powerful charged shield capable of absorbing %d lightning or blight damage before it crumbles."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=100 },
+	on_gain = function(self, err) return "A powerful charged shield forms around #target#.", "+Shield" end,
+	on_lose = function(self, err) return "The powerful charged shield around #target# crumbles.", "-Shield" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("chargespike_shield", eff.power)
+		self.chargespike_shield_absorb = eff.power
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("chargespike_shield", eff.tmpid)
+		self.chargespike_shield_absorb = nil
+	end,
+}
+
+newEffect{
+	name = "CONTROL",
+	desc = "Perfect control",
+	long_desc = function(self, eff) return ("The target's combat attack and crit chance are improved by %d and %d%%, respectively."):format(eff.power, 0.3*eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.attack = self:addTemporaryValue("combat_atk", eff.power)
+		eff.crit = self:addTemporaryValue("combat_physcrit", 0.3*eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.attack)
+		self:removeTemporaryValue("combat_physcrit", eff.crit)
+	end,
+}
+

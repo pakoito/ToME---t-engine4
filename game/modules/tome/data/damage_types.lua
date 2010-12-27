@@ -81,6 +81,37 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = t.on_damage(target, t, type, dam)
 		end
 
+		-- Static reduce damage for psionic kinetic shield
+		if target.isTalentActive and target:isTalentActive(target.T_KINETIC_SHIELD) then
+			local t = target:getTalentFromId(target.T_KINETIC_SHIELD)
+			dam = t.ks_on_damage(target, t, type, dam)
+		end
+		-- Static reduce damage for psionic spiked kinetic shield
+		if target:attr("kinspike_shield") then
+			local t = target:getTalentFromId(target.T_KINETIC_SHIELD)
+			dam = t.kss_on_damage(target, t, type, dam)
+		end
+		-- Static reduce damage for psionic thermal shield
+		if target.isTalentActive and target:isTalentActive(target.T_THERMAL_SHIELD) then
+			local t = target:getTalentFromId(target.T_THERMAL_SHIELD)
+			dam = t.ts_on_damage(target, t, type, dam)
+		end
+		-- Static reduce damage for psionic spiked thermal shield
+		if target:attr("thermspike_shield") then
+			local t = target:getTalentFromId(target.T_THERMAL_SHIELD)
+			dam = t.tss_on_damage(target, t, type, dam)
+		end
+		-- Static reduce damage for psionic charged shield
+		if target.isTalentActive and target:isTalentActive(target.T_CHARGED_SHIELD) then
+			local t = target:getTalentFromId(target.T_CHARGED_SHIELD)
+			dam = t.cs_on_damage(target, t, type, dam)
+		end
+		-- Static reduce damage for psionic spiked charged shield
+		if target:attr("chargespike_shield") then
+			local t = target:getTalentFromId(target.T_CHARGED_SHIELD)
+			dam = t.css_on_damage(target, t, type, dam)
+		end
+
 		print("[PROJECTOR] final dam", dam)
 
 		local flash = game.flash.NEUTRAL
@@ -1114,6 +1145,38 @@ newDamageType{
 				else
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "batter", type = "BATTER",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, 2)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "mindslow", type = "MINDSLOW",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Freeze it, if we pass the test
+			local sx, sy = game.level.map:getTileToScreen(x, y)
+			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 20) then
+				target:setEffect(target.EFF_SLOW, 4, {power=dam})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
 		end
 	end,

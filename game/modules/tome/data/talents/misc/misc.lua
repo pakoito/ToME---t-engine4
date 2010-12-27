@@ -27,6 +27,15 @@ newTalentType{ is_spell=true, type="inscriptions/runes", name = "runes", hide = 
 load("/data/talents/misc/inscriptions.lua")
 load("/data/talents/misc/npcs.lua")
 
+--mindslayer resource
+newTalent{
+	name = "Psi Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have an energy pool. Energy is used to perform psionic manipulations.",
+	mode = "passive",
+	hide = true,
+}
+
 newTalent{
 	name = "Mana Pool",
 	type = {"base/class", 1},

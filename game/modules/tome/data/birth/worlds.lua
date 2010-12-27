@@ -81,6 +81,8 @@ newBirthDescriptor{
 		class =
 		{
 			__ALL__ = "disallow",
+			-- currently psionics consist only of mindslayers
+			Psionic = "allow",
 			Warrior = "allow",
 			Archer = "allow",
 			Rogue = "allow",
@@ -94,6 +96,7 @@ newBirthDescriptor{
 			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
 			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
 			Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
+			Psionic = function() return profile.mod.allow_build.psionic and "allow" or "disallow" end,
 		},
 	},
 }
@@ -122,6 +125,8 @@ newBirthDescriptor{
 		class =
 		{
 			__ALL__ = "disallow",
+			-- currently psionics consist only of mindslayers
+			Psionic = "allow",
 			Warrior = "allow",
 			Archer = "allow",
 			Rogue = "allow",
@@ -135,6 +140,7 @@ newBirthDescriptor{
 			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
 			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
 			Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
+			Psionic = function() return profile.mod.allow_build.psionic and "allow" or "disallow" end,
 		},
 	},
 	copy = {

@@ -156,6 +156,12 @@ function _M:display()
 		s:erase(176 / 2, 196 / 2, 222 / 2, 255, self.bars_x, h, self.bars_w * math.min(1, math.log(1 + player:getParadox() / 100)), self.font_h)
 		self:mouseTooltip(self.TOOLTIP_PARADOX, s:drawColorStringBlended(self.font, ("#LIGHT_STEEL_BLUE#Paradox:    #ffffff#%d"):format(player:getParadox()), 0, h, 255, 255, 255)) h = h + self.font_h
 	end
+	if player:knowTalent(player.T_PSI_POOL) then
+		s:erase(colors.BLUE.r / 5, colors.BLUE.g / 5, colors.BLUE.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
+		s:erase(colors.BLUE.r / 2, colors.BLUE.g / 2, colors.BLUE.b / 2, 255, self.bars_x, h, self.bars_w * player:getPsi() / player.max_psi, self.font_h)
+		self:mouseTooltip(self.TOOLTIP_PSI, s:drawColorStringBlended(self.font, ("#7fffd4#Psi:     #ffffff#%d/%d"):format(player:getPsi(), player.max_psi), x, h, 255, 255, 255)) h = h + self.font_h
+	end
+
 	local quiver = player:getInven("QUIVER")
 	local ammo = quiver and quiver[1]
 	if ammo then

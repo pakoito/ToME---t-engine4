@@ -83,6 +83,12 @@ As your Paradox grows your spells will cost more to use and have greater effect;
 Your control over chronomancy spells increases with your Willpower.
 ]]
 
+TOOLTIP_PSI = [[#GOLD#Psi#LAST#
+Psi represents how much energy your mind can harness. Like matter, it can be neither created nor destroyed.
+It does not regenerate naturally. You must absorb energy through shields or through various other talents.
+Your capacity for storing energy is determined by your Willpower.
+]]
+
 TOOLTIP_LEVEL = [[#GOLD#Level and experience#LAST#
 Each time you kill a creature that is over your own level - 5 you gain some experience.
 When you reach enough experience you advance to the next level. There is a maximum of 50 levels you can gain.

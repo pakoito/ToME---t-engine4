@@ -106,6 +106,7 @@ function _M:init(t, no_default)
 	t.vim_rating = t.vim_rating or 4
 	t.stamina_rating = t.stamina_rating or 3
 	t.positive_negative_rating = t.positive_negative_rating or 3
+	t.psi_rating = t.psi_rating or 1
 
 	t.esp = t.esp or {range=10}
 
@@ -136,6 +137,7 @@ function _M:init(t, no_default)
 	t.positive_regen = t.positive_regen or -0.2 -- Positive energy slowly decays
 	t.negative_regen = t.negative_regen or -0.2 -- Positive energy slowly decays
 	t.paradox_regen = t.paradox_regen or 0 -- Paradox does not regen
+	t.psi_regen = t.psi_regen or 0 -- Energy does not regen
 
 	t.max_positive = t.max_positive or 50
 	t.max_negative = t.max_negative or 50
@@ -177,16 +179,40 @@ function _M:init(t, no_default)
 	self:resetCanSeeCache()
 end
 
+function _M:useEnergy(val)
+	engine.Actor.useEnergy(self, val)
+
+	-- Do not fire those talents if this is not turn's end
+	if self:enoughEnergy() then return end
+	if self:isTalentActive(self.T_KINETIC_AURA) then
+		local t = self:getTalentFromId(self.T_KINETIC_AURA)
+		t.do_kineticaura(self, t)
+	end
+	if self:isTalentActive(self.T_THERMAL_AURA) then
+		local t = self:getTalentFromId(self.T_THERMAL_AURA)
+		t.do_thermalaura(self, t)
+	end
+	if self:isTalentActive(self.T_CHARGED_AURA) then
+		local t = self:getTalentFromId(self.T_CHARGED_AURA)
+		t.do_chargedaura(self, t)
+	end
+	if self:isTalentActive(self.T_BEYOND_THE_FLESH) then
+		local t = self:getTalentFromId(self.T_BEYOND_THE_FLESH)
+		t.do_tkautoattack(self, t)
+	end
+
+end
+
 function _M:act()
 	if not engine.Actor.act(self) then return end
 
 	self.changed = true
 
 	-- If ressources are too low, disable sustains
-	if self.mana < 1 or self.stamina < 1 then
+	if self.mana < 1 or self.stamina < 1 or self.psi < 1 then
 		for tid, _ in pairs(self.sustain_talents) do
 			local t = self:getTalentFromId(tid)
-			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) then
+			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) or (t.sustain_psi and self.psi < 1) then
 				self:forceUseTalent(tid, {ignore_energy=true})
 			end
 		end
@@ -253,6 +279,23 @@ function _M:act()
 		local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
 		t.do_unseenForce(self, t)
 	end
+	-- Conduit talent prevents all auras from cooling down
+	if self:isTalentActive(self.T_CONDUIT) then
+		local auras = self:isTalentActive(self.T_CONDUIT)
+		if auras.k_aura_on then
+			local t_kinetic_aura = self:getTalentFromId(self.T_KINETIC_AURA)
+			self.talents_cd[self.T_KINETIC_AURA] = t_kinetic_aura.cooldown(self, t)
+		end
+		if auras.t_aura_on then
+			local t_thermal_aura = self:getTalentFromId(self.T_THERMAL_AURA)
+			self.talents_cd[self.T_THERMAL_AURA] = t_thermal_aura.cooldown(self, t)
+		end
+		if auras.c_aura_on then
+			local t_charged_aura = self:getTalentFromId(self.T_CHARGED_AURA)
+			self.talents_cd[self.T_CHARGED_AURA] = t_charged_aura.cooldown(self, t)
+		end
+	end
+
 
 	if self:attr("stunned") then
 		self.stunned_counter = (self.stunned_counter or 0) + (self:attr("stun_immune") or 0) * 100
@@ -1080,6 +1123,7 @@ function _M:resetToFull()
 	self.stamina = self.max_stamina
 	self.equilibrium = 0
 	self.air = self.max_air
+	self.psi = self.max_psi
 end
 
 function _M:levelup()
@@ -1135,6 +1179,7 @@ function _M:levelup()
 	self:incMaxStamina(self.stamina_rating)
 	self:incMaxPositive(self.positive_negative_rating)
 	self:incMaxNegative(self.positive_negative_rating)
+	self:incMaxPsi(self.psi_rating)
 	if self.max_hate < self.absolute_max_hate then
 		local amount = math.min(self.hate_rating, self.absolute_max_hate - self.max_hate)
 		self:incMaxHate(amount)
@@ -1158,6 +1203,7 @@ function _M:onStatChange(stat, v)
 	elseif stat == self.STAT_WIL then
 		self:incMaxMana(5 * v)
 		self:incMaxStamina(2 * v)
+		self:incMaxPsi(1 * v)
 	elseif stat == self.STAT_STR then
 		self:checkEncumbrance()
 	end
@@ -1301,6 +1347,10 @@ function _M:learnTalent(t_id, force, nb)
 		self:learnTalent(self.T_PARADOX_POOL, true)
 		self.resource_pool_refs[self.T_PARADOX_POOL] = (self.resource_pool_refs[self.T_PARADOX_POOL] or 0) + 1
 	end
+	if t.type[1]:find("^psionic/") and not self:knowTalent(self.T_PSI_POOL) then
+		self:learnTalent(self.T_PSI_POOL, true)
+		self.resource_pool_refs[self.T_PSI_POOL] = (self.resource_pool_refs[self.T_PSI_POOL] or 0) + 1
+	end
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
 		self:learnTalent(self.T_SHOOT, true)
@@ -1377,6 +1427,10 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough hate to activate %s.", ab.name) end
 			return false
 		end
+		if ab.sustain_psi and self.max_psi < ab.sustain_psi and not self:isTalentActive(ab.id) then
+			if not silent then game.logPlayer(self, "You do not have enough energy to activate %s.", ab.name) end
+			return false
+		end
 	else
 		if ab.mana and self:getMana() < ab.mana * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
@@ -1400,6 +1454,10 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 		if ab.hate and self:getHate() < ab.hate * (100 + self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
+			return false
+		end
+		if ab.psi and self:getPsi() < ab.psi * (100 + 2 * self.fatigue) / 100 then
+			if not silent then game.logPlayer(self, "You do not have enough energy to cast %s.", ab.name) end
 			return false
 		end
 	end
@@ -1510,6 +1568,9 @@ function _M:postUseTalent(ab, ret)
 			if ab.sustain_paradox then
 				self:incParadox(ab.sustain_paradox)
 			end
+			if ab.sustain_psi then
+				trigger = true; self.max_psi = self.max_psi - ab.sustain_psi
+			end
 		else
 			if ab.sustain_mana then
 				trigger = true; self.max_mana = self.max_mana + ab.sustain_mana
@@ -1534,6 +1595,9 @@ function _M:postUseTalent(ab, ret)
 			end
 			if ab.sustain_paradox then
 				self:incParadox(-ab.sustain_paradox)
+			end
+			if ab.sustain_psi then
+				trigger = true; self.max_psi = self.max_psi + ab.sustain_psi
 			end
 		end
 	else
@@ -1563,6 +1627,9 @@ function _M:postUseTalent(ab, ret)
 		-- Paradox is not affected by fatigue but it's cost does increase exponentially
 		if ab.paradox then
 			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 100)))
+		end
+		if ab.psi then
+			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self.fatigue) / 100)
 		end
 	end
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
@@ -1664,6 +1731,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self:combatFatigue()) / 100), true) end
 	if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate), true) end
 	if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 100))), true) end
+	if t.psi or t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_psi or t.psi * (100 + 2 * self.fatigue) / 100), true) end
 	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
 	else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)
 	end
