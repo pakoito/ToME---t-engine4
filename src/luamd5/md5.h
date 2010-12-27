@@ -8,7 +8,7 @@
 #ifndef md5_h
 #define md5_h
 
-#include <lua.h>
+#include "../lua/lua.h"
 
 
 #define HASHSIZE       16
