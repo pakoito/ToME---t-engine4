@@ -381,7 +381,7 @@ end
 function _M:heal(value, src)
 	-- Difficulty settings
 	if game.difficulty == game.DIFFICULTY_EASY then
-		value = value * 1.1
+		value = value * 1.3
 	end
 
 	mod.class.Actor.heal(self, value, src)

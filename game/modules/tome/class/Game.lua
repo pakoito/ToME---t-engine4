@@ -64,8 +64,9 @@ module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface
 -- Difficulty settings
 DIFFICULTY_EASY = 1
 DIFFICULTY_NORMAL = 2
-DIFFICULTY_NIGHTMARE = 3
-DIFFICULTY_INSANE = 4
+DIFFICULTY_HARDCORE = 3
+DIFFICULTY_NIGHTMARE = 4
+DIFFICULTY_INSANE = 5
 
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)

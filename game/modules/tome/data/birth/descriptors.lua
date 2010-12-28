@@ -107,9 +107,9 @@ newBirthDescriptor{
 	display_name = "Discovery",
 	desc =
 	{
-		"Discovery game mode",
+		"Easy game mode",
 		"All damage done to the player decreased by 30%",
-		"All healing for the player increased by 10%",
+		"All healing for the player increased by 30%",
 		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
 		"Achievements are not granted.",
 	},
@@ -129,24 +129,26 @@ newBirthDescriptor{
 	selection_default = profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"Normal game setting",
-		"No changes to the rules.",
+		"Normal game mode",
+		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
 	},
 	descriptor_choices =
 	{
 		race = { ["Tutorial Human"] = "forbid", },
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
-	copy = { __game_difficulty = 2 },
+	copy = {
+		__game_difficulty = 2,
+		easy_mode_lifes = 1,
+	},
 }
 newBirthDescriptor{
 	type = "difficulty",
-	name = "Nightmare",
+	name = "Hardcore",
 	desc =
 	{
-		"Hard game setting",
-		"All zone levels increased by 40% + 5",
-		"All damage done to the player increased by 30%",
+		"Normal game setting",
+		"Only one life, unless ways to self-resurrect are found in-game.",
 	},
 	descriptor_choices =
 	{
@@ -157,10 +159,28 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
+	name = "Nightmare",
+	desc =
+	{
+		"Hard game setting",
+		"Only one life, unless ways to self-resurrect are found in-game.",
+		"All zone levels increased by 40% + 5",
+		"All damage done to the player increased by 30%",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
+	},
+	copy = { __game_difficulty = 4 },
+}
+newBirthDescriptor{
+	type = "difficulty",
 	name = "Insane",
 	desc =
 	{
 		"Absolutely unfair game setting",
+		"Only one life, unless ways to self-resurrect are found in-game.",
 		"All zone levels increased by 100% + 10",
 		"All damage done to the player increased by 60%",
 		"Player rank is normal instead of elite",
@@ -170,7 +190,7 @@ newBirthDescriptor{
 		race = { ["Tutorial Human"] = "forbid", },
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
-	copy = { __game_difficulty = 4, rank=2 },
+	copy = { __game_difficulty = 5, rank=2 },
 }
 
 
