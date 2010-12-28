@@ -152,9 +152,9 @@ newTalent{
 				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, d.params.dam * d.params.dur)
 			end
 
-			if #diseases >  0 and target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 8) and target:canBe("stun") then
+			if #diseases > 0 and target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 8) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, dur, {})
-			else
+			elseif #diseases > 0 then
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
 			game.level.map:particleEmitter(px, py, 1, "slime")
