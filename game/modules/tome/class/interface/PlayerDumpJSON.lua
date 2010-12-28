@@ -275,5 +275,17 @@ function _M:dumpToJSON(js)
 		end
 	end
 
-	return title
+	local tags = {
+		game = game.__mod_info.version_name,
+		level = self.level,
+		name = self.name,
+		difficulty = self.descriptor.difficulty,
+		campaign = self.descriptor.world,
+		race = self.descriptor.subrace,
+		class = self.descriptor.subclass,
+		dead = self.dead and "dead" or nil,
+		winner = self.winner and "winner" or nil,
+	}
+
+	return title, tags
 end

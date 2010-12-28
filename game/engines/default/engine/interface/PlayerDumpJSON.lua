@@ -43,11 +43,11 @@ function _M:saveUUID()
 			return self[table]
 		end,
 	}})
-	local title = self:dumpToJSON(data)
+	local title, tags = self:dumpToJSON(data)
 	data = json.encode(data)
 	if not data or not title then return end
 
-	profile:registerSaveChardump(game.__mod_info.short_name, self.__te4_uuid, title, core.zlib.compress(data))
+	profile:registerSaveChardump(game.__mod_info.short_name, self.__te4_uuid, title, tags, core.zlib.compress(data))
 end
 
 --- Override this method to define dump sections

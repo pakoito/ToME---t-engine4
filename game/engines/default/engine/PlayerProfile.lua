@@ -346,10 +346,10 @@ function _M:registerNewCharacter(module)
 	return data.uuid
 end
 
-function _M:registerSaveChardump(module, uuid, title, data)
+function _M:registerSaveChardump(module, uuid, title, tags, data)
 	if not self.auth or not self.hash_valid then return end
 	local dialog = Dialog:simplePopup("Uploading character data", "Character sheet is being uploaded to http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
-	local data = self:rpc{action="SaveChardump", login=self.login, hash=self.auth.hash, module=module, uuid=uuid, title=title, data=data}
+	local data = self:rpc{action="SaveChardump", login=self.login, hash=self.auth.hash, module=module, uuid=uuid, title=title, tags=tags, data=data}
 	game:unregisterDialog(dialog)
 	if not data or not data.ok then return end
 	print("[ONLINE PROFILE] saved character ", uuid)

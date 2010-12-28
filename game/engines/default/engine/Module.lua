@@ -188,6 +188,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	if mod.short_name == "boot" then profile.hash_valid = true end
 
+	mod.version_name = ("%s-%d.%d.%d"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
+
 	profile.generic.modules_loaded = profile.generic.modules_loaded or {}
 	profile.generic.modules_loaded[mod.short_name] = (profile.generic.modules_loaded[mod.short_name] or 0) + 1
 
@@ -252,7 +254,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- Disable the profile if ungood
 	if mod.short_name ~= "boot" then
-		local ok, err = profile:checkModuleHash(("%s-%d.%d.%d"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3]), fmd5)
+		local ok, err = profile:checkModuleHash(mod.version_name, fmd5)
 		if not ok then
 			game.log("#LIGHT_RED#Profile disabled due to %s.", err)
 		end
