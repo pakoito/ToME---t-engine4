@@ -72,7 +72,7 @@ return {
 			generator =  { map = {
 				edge_entrances = {4,2},
 				down = "LAKE_NUR",
-				force_last_stair = true,
+--				force_last_stair = true,
 			}, },
 		},
 	},
