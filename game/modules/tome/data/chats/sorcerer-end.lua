@@ -38,6 +38,7 @@ After searching the remains of the Sorcerers you find a note explaining that the
 	answers = {
 		{"Aeryn, I am sorry but one of us needs to be sacrificed for the world to go on. #LIGHT_GREEN#[sacrifice Aeryn for the sake of the world]", jump="aeryn-sacrifice", cond=aeryn_alive},
 		{"I will close it #LIGHT_GREEN#[sacrifice yourself for the sake of the world]", action=function(npc, player)
+			player.no_resurrect = true
 			player:die(player)
 			player:hasQuest("high-peak"):win("self-sacrifice")
 		end},
