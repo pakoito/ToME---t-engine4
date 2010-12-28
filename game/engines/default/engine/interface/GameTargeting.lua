@@ -32,6 +32,16 @@ function _M:init()
 	self.target.target.entity = self.player
 	self.old_tmx, self.old_tmy = 0, 0
 	self.target_style = "lock"
+
+	-- Allow scrolling when targetting
+	self.target.on_set_target = function(self, how)
+		if self.key ~= self.targetmode_key then return end
+		local dx, dy = game.level.map:moveViewSurround(self.target.x, self.target.y, 1, 1)
+		if how == "mouse" then
+			local cx, cy = core.mouse.get()
+			core.mouse.set(cx - game.level.map.tile_w * dx, cy - game.level.map.tile_h * dy)
+		end
+	end
 end
 
 --- Maintain the current target each tick
@@ -184,7 +194,7 @@ function _M:targetMouse(button, mx, my, xrel, yrel, event)
 	if self.key == self.targetmode_key then
 		-- Target with mouse
 		if button == "none" and xrel and yrel and event == "motion" then
-			self.target:setSpot(tmx, tmy)
+			self.target:setSpot(tmx, tmy, "mouse")
 		-- Accept target
 		elseif button == "left" and not xrel and not yrel and event == "button" then
 			self:targetMode(false, false)

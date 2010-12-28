@@ -52,6 +52,13 @@ static int lua_get_mouse(lua_State *L)
 
 	return 2;
 }
+static int lua_set_mouse(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	SDL_WarpMouse(x, y);
+	return 0;
+}
 extern int current_mousehandler;
 static int lua_set_current_mousehandler(lua_State *L)
 {
@@ -68,6 +75,7 @@ static int lua_set_current_mousehandler(lua_State *L)
 static const struct luaL_reg mouselib[] =
 {
 	{"get", lua_get_mouse},
+	{"set", lua_set_mouse},
 	{"set_current_handler", lua_set_current_mousehandler},
 	{NULL, NULL},
 };

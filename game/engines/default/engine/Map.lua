@@ -685,6 +685,7 @@ end
 
 --- Sets the current view area if x and y are out of bounds
 function _M:moveViewSurround(x, y, marginx, marginy)
+	local omx, omy = self.mx, self.my
 	if self.mx + marginx >= x or self.mx + self.viewport.mwidth - marginx <= x then
 		self.mx = x - math.floor(self.viewport.mwidth / 2)
 		self.changed = true
@@ -694,6 +695,7 @@ function _M:moveViewSurround(x, y, marginx, marginy)
 		self.changed = true
 	end
 	self:checkMapViewBounded()
+	return self.mx - omx, self.my - omy
 end
 
 --- Checks the map is bound to the screen (no "empty space" if the map is big enough)

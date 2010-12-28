@@ -344,9 +344,6 @@ end
 
 function _M:initTargeting()
 	engine.interface.GameTargeting.init(self)
-	self.target.on_set_target = function(self)
---		if game.key == game.targetmode_key then game.level.map:moveViewSurround(self.target.x, self.target.y, 8, 8) end
-	end
 end
 
 
