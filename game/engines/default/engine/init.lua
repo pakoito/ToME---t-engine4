@@ -92,7 +92,7 @@ engine.interface.GameMusic:soundSystemStatus(config.settings.sound.enabled, true
 core.sound.activateMusicCallback()
 
 -- Load profile configs
-profile = engine.PlayerProfile.new()
+profile = engine.PlayerProfile.new(__request_profile or "default")
 
 -- Create a savefile pipe
 savefile_pipe = engine.SavefilePipe.new()

@@ -38,6 +38,7 @@ local load load = function(...)
 	else
 		__module_extra_info = {}
 	end
+	__request_profile = args[7] or "default"
 
 	print("Reboot using", req_engine, req_version, __load_module, __player_name, __player_new)
 

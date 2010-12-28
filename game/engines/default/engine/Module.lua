@@ -21,6 +21,7 @@ require "engine.class"
 local lanes = require "lanes"
 local Dialog = require "engine.ui.Dialog"
 local Savefile = require "engine.Savefile"
+require "engine.PlayerProfile"
 
 --- Handles dialog windows
 module(..., package.seeall, class.make)
@@ -118,24 +119,26 @@ function _M:loadDefinition(dir, team)
 		end
 
 		-- Make a function to activate it
-		mod.load = function()
-			core.display.setWindowTitle(mod.long_name)
-			self:setupWrite(mod)
-			if not team then
-				fs.mount(fs.getRealPath(dir), "/mod", false)
-				fs.mount(fs.getRealPath(dir).."/data/", "/data", false)
-				if fs.exists(dir.."/engine") then fs.mount(fs.getRealPath(dir).."/engine/", "/engine", false) end
-			else
-				local src = fs.getRealPath(team)
+		mod.load = function(mode)
+			if mode == "setup" then
+				core.display.setWindowTitle(mod.long_name)
+				self:setupWrite(mod)
+				if not team then
+					fs.mount(fs.getRealPath(dir), "/mod", false)
+					fs.mount(fs.getRealPath(dir).."/data/", "/data", false)
+					if fs.exists(dir.."/engine") then fs.mount(fs.getRealPath(dir).."/engine/", "/engine", false) end
+				else
+					local src = fs.getRealPath(team)
 
-				fs.mount(src, "/", false)
+					fs.mount(src, "/", false)
+				end
+			elseif mode == "init" then
+				local m = require(mod.starter)
+				m[1].__session_time_played_start = os.time()
+				m[1].__mod_info = mod
+				print("[MODULE LOADER] loading module", mod.long_name, "["..mod.starter.."]", "::", m[1] and m[1].__CLASSNAME, m[2] and m[2].__CLASSNAME)
+				return m[1], m[2]
 			end
-			profile:loadModuleProfile(mod.short_name)
-			local m = require(mod.starter)
-			m[1].__session_time_played_start = os.time()
-			m[1].__mod_info = mod
-			print("[MODULE LOADER] loading module", mod.long_name, "["..mod.starter.."]", "::", m[1] and m[1].__CLASSNAME, m[2] and m[2].__CLASSNAME)
-			return m[1], m[2]
 		end
 
 		print("Loaded module definition for "..mod.version_string.." using engine "..eng_req)
@@ -198,10 +201,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Turn based by default
 	core.game.setRealtime(0)
 
-	-- Ok run the module
-	local M, W = mod.load()
-	_G.game = M.new()
-	_G.game:setPlayerName(name)
+	-- Init the module directories
+	mod.load("setup")
 
 	-- Check MD5sum with the server
 	local md5 = require "md5"
@@ -228,6 +229,19 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	table.sort(md5s)
 	local fmd5 = md5.sumhexa(table.concat(md5s))
 	print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
+	local hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
+
+	-- If bad hash, switch to dev profile
+	if not hash_valid then
+		print("[PROFILE] switching to dev profile")
+		_G.profile = engine.PlayerProfile.new("dev")
+	end
+	profile:loadModuleProfile(mod.short_name)
+
+	-- Init the module code
+	local M, W = mod.load("init")
+	_G.game = M.new()
+	_G.game:setPlayerName(name)
 
 	-- Load the world, or make a new one
 	if W then
@@ -254,9 +268,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- Disable the profile if ungood
 	if mod.short_name ~= "boot" then
-		local ok, err = profile:checkModuleHash(mod.version_name, fmd5)
-		if not ok then
-			game.log("#LIGHT_RED#Profile disabled due to %s.", err)
+		if not hash_valid then
+			game.log("#LIGHT_RED#Profile disabled(switching to development profile) due to %s.", hash_err)
 		end
 	end
 end

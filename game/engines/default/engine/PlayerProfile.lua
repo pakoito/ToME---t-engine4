@@ -246,7 +246,7 @@ function _M:tryAuth()
 end
 
 function _M:getConfigs(module)
-	if not self.auth or not self.hash_valid then return end
+	if not self.auth then return end
 	local data = self:rpc{action="GetConfigs", login=self.login, hash=self.auth.hash, module=module}
 	if not data then print("[ONLINE PROFILE] get configs") return end
 	for name, val in pairs(data) do
@@ -272,7 +272,7 @@ function _M:getConfigs(module)
 end
 
 function _M:setConfigs(module, name, val)
-	if not self.auth or not self.hash_valid then return end
+	if not self.auth then return end
 	if name == "online" then return end
 
 	if type(val) ~= "string" then val = serialize(val) end
@@ -283,7 +283,7 @@ function _M:setConfigs(module, name, val)
 end
 
 function _M:syncOnline(module)
-	if not self.auth or not self.hash_valid then return end
+	if not self.auth then return end
 	local sync = self.generic
 	if module ~= "generic" then sync = self.modules[module] end
 	if not sync then return end
