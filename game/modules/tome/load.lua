@@ -180,7 +180,8 @@ for i, t in ipairs(stype_tot) do
 end
 ------------------------------------------------------------------------
 
--- Init autosaves
+-- Init settings
 if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
+if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 3 end
 
 return {require "mod.class.Game", require "mod.class.World"}

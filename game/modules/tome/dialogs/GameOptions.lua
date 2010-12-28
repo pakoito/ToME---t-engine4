@@ -88,5 +88,17 @@ function _M:generateList()
 		game:saveSettings("tome.save_zone_levels", ("tome.save_zone_levels = %s\n"):format(tostring(config.settings.tome.save_zone_levels)))
 		self.c_list:drawItem(item)
 	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Make the movement of creatures and projectiles 'smooth'. When set to 0 movement will be instantaneous.\nThe higher this value the slower the movements will appear.\n\nNote: This does not affect the turn-based idea of the game, you can move again while your character is still moving, it will correctly update and compute a new animation."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Smooth creatures movement#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.smooth_move)
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Enter movement speed(lower is faster)", "From 0 to 60", config.settings.tome.smooth_move, 60, function(qty)
+			game:saveSettings("tome.smooth_move", ("tome.smooth_move = %d\n"):format(qty))
+			config.settings.tome.smooth_move = qty
+			self.c_list:drawItem(item)
+		end))
+	end,}
+
 	self.list = list
 end

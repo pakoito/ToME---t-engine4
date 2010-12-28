@@ -389,8 +389,8 @@ function _M:move(x, y, force)
 		DamageType:get(DamageType.FIREBURN).projector(p.src, self.x, self.y, DamageType.FIREBURN, p.dam)
 	end
 
-	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) then
-		self:setMoveAnim(ox, oy, 3)
+	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
+		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move)
 	end
 
 	return moved
