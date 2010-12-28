@@ -81,12 +81,19 @@ function _M:act()
 end
 
 function _M:move(x, y, force)
+	local ox, oy = self.x, self.y
 	local moved = false
+
 	if force or self:enoughEnergy() then
 		moved = engine.Actor.move(self, x, y, force)
 		if not force and moved and not self.did_energy then self:useEnergy() end
 	end
 	self.did_energy = nil
+
+	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) then
+		self:setMoveAnim(ox, oy, 3)
+	end
+
 	return moved
 end
 
