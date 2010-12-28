@@ -19,7 +19,7 @@
 
 load("/data/general/objects/objects.lua")
 
-for i = 1, 5 do
+for i = 1, 6 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "journal page", lore="old-forest-note-"..i,
