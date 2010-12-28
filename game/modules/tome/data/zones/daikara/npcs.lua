@@ -102,7 +102,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
 	resolvers.equip{
 		{type="weapon", subtype="battleaxe", ego_change=100, autoreq=true},
 		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
-		{type="armor", subtype="head", defined="RUNED_SKULL", random_art_replace={chance=75}, autoreq=true},
+		{type="armor", subtype="head", defined="DRAGON_SKULL", random_art_replace={chance=75}, autoreq=true},
 		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },

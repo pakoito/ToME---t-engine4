@@ -126,7 +126,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 }
 
 newEntity{ base = "BASE_HELM",
-	define_as = "RUNED_SKULL",
+	define_as = "DRAGON_SKULL",
 	name = "Dragonskull Helm", unique=true, unided_name="skull helm",
 	desc = [[Traces of a dragon's power still remain in this bleached and cracked skull.]],
 	require = { stat = { mag=24 }, },

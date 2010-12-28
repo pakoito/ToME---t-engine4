@@ -19,7 +19,7 @@
 
 return {
 	name = "Erúan",
-	level_range = {30, 35},
+	level_range = {30, 45},
 	level_scheme = "player",
 	max_level = 5,
 	decay = {300, 800},
