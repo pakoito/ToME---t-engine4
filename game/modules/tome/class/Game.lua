@@ -528,7 +528,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		feeling = self.level.special_feeling
 	else
 		local lev = self.zone.base_level + self.level.level - 1
-		if self.zone.level_adjust_level then lev = self.zone.level_adjust_level(self.level) end
+		if self.zone.level_adjust_level then lev = self.zone:level_adjust_level(self.level) end
 		local diff = lev - game.player.level
 		if diff >= 5 then feeling = "You feel a thrill of terror and your heart begins to pound in your chest. You feel terribly threatened upon entering this area."
 		elseif diff >= 2 then feeling = "You feel mildly anxious, and walk with caution."
