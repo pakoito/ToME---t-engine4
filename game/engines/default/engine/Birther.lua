@@ -67,7 +67,7 @@ end
 
 
 --- Instanciates a birther for the given actor
-function _M:init(actor, order, at_end, quickbirth, w, h)
+function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.quickbirth = quickbirth
 	self.actor = actor
 	self.order = order
@@ -84,7 +84,7 @@ function _M:init(actor, order, at_end, quickbirth, w, h)
 		self.at_end = at_end
 	end
 
-	Dialog.init(self, "Character Creation: "..actor.name, w or 600, h or 400)
+	Dialog.init(self, title and title or ("Character Creation: "..actor.name), w or 600, h or 400)
 
 	self.descriptors = {}
 

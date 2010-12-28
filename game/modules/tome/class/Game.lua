@@ -158,8 +158,10 @@ function _M:newGame()
 
 	self.always_target = true
 
+	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
+
 	self.creating_player = true
-	local birth; birth = Birther.new(self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
+	local birth; birth = Birther.new("Character Creation: "..self.player.name.." ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
 		-- Save for quick birth
 		local save = Savefile.new(self.save_name)
 		save:saveQuickBirth(self.player.descriptor)
@@ -1114,6 +1116,41 @@ function _M:placeRandomLoreObject(define)
 	end
 end
 
+--- Returns the current number of birth unlocks and the max
+function _M:countBirthUnlocks()
+	local nb = 0
+	local max = 0
+	local list = {
+		campaign_infinite_dungeon = true,
+
+		undead_ghoul = true,
+		undead_skeleton = true,
+
+		mage = true,
+		mage_tempest = true,
+		mage_geomancer = true,
+		mage_pyromancer = true,
+		mage_cryomancer = true,
+
+		divine_anorithil = true,
+		divine_sun_paladin = true,
+
+		wilder_wyrmic = true,
+		wilder_summoner = true,
+
+		corrupter_reaver = true,
+		corrupter_corruptor = true,
+
+		afflicted_cursed = true,
+		afflicted_doomed = true,
+	}
+
+	for name, _ in pairs(list) do
+		max = max + 1
+		if profile.mod.allow_build[name] then nb = nb + 1 end
+	end
+	return nb, max
+end
 
 --------------------------------------------------------------
 -- UI stuff
