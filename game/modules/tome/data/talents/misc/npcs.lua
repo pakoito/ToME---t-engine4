@@ -48,6 +48,7 @@ newTalent{
 		a.exp_worth = 0.1
 		a.inven = {}
 		a.x, a.y = nil, nil
+		a._mo = nil
 		if a.can_multiply <= 0 then a:unlearnTalent(t.id) end
 
 		print("[MULTIPLY]", x, y, "::", game.level.map(x,y,Map.ACTOR))
@@ -326,7 +327,7 @@ newTalent{
 
 				m.summoner = self
 				m.summon_time = filter.lastfor
-				m.faction = self.faction 
+				m.faction = self.faction
 
 				game.zone:addEntity(game.level, m, "actor", x, y)
 
