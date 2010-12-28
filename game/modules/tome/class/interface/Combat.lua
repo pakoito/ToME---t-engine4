@@ -408,7 +408,12 @@ end
 --- Gets the attack
 function _M:combatAttack(weapon)
 	weapon = weapon or self.combat or {}
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(50) - 5) + (self:getDex(50) - 5) + (self:getLck() - 50) * 0.4
+	local stats
+	if self.use_psi_combat then stats = (self:getWil(50) - 5) + (self:getCun(50) - 5)
+	else stats = (self:getStr(50) - 5) + (self:getDex(50) - 5)
+	end
+
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + stats + (self:getLck() - 50) * 0.4
 end
 
 --- Gets the attack using only strength
@@ -468,6 +473,8 @@ function _M:combatDamage(weapon)
 	local dammod = weapon.dammod or {str=0.6}
 	for stat, mod in pairs(dammod) do
 		if sub_con_to_str and stat == "str" then stat = "cun" end
+		if self.use_psi_combat and stat == "str" then stat = "wil" end
+		if self.use_psi_combat and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
 	end
 
