@@ -29,9 +29,9 @@ You destroyed your own doomed shadow. You can now create new characters with the
 Doomed are short range spellcasters.
 Class features:#YELLOW#
 - Engulf your foes in darkness
-- Summon shadows to fight for your
+- Summon shadows to fight for you
 - Unleash your hatred in raw physical form
-- Feed of the life of your foes#WHITE#
+- Feed off the life of your foes#WHITE#
 
 The Doomed use hate, a resource that grows as they kill their foes and decreases while standing idle.
 Most of their talents are more effective with high hate.

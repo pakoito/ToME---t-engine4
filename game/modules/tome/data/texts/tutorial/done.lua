@@ -19,8 +19,8 @@
 
 return [[#GOLD#Congratulations !#WHITE#
 
-You have completed this small tutorial, you should now know the basics of ToME4. You are ready to step forward into the world to find glory, treaures and be mercilessly slaughtered by hordes of creatures you thought you could handle!
-During this tutorial you met some creatures that where adjusted to the need of the teachings, beware, in the real world trolls are not usualy this nice!
+You have completed this small tutorial, you should now know the basics of ToME4. You are ready to step forward into the world to find glory, treasures and be mercilessly slaughtered by hordes of creatures you thought you could handle!
+During this tutorial you met some creatures that were adjusted to the need of the teachings, beware, in the real world trolls are not usualy this nice!
 
 If you need a reminder of which key does what you can always access the game menu by pressing #GOLD#Escape#WHITE# and checking the key binds (you can also adjust them to your needs).
 

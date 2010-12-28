@@ -31,6 +31,6 @@ Then you can use the shoot talent to fire an arrow, the target interface will po
 * Click on your bow and arrows, wield them
 * Close inventory and shoot!
 
-You have been given then Shoot talent, that allows to fire a bow (or a sling).
+You have been given the Shoot talent, that allows to fire a bow (or a sling).
 In front of you lies a bow and some arrows, pick them up, take off your weapon and shield, wield the bow and the arrows and go fight the trolls to the west.
 ]]

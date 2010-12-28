@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return [[You have found a nest of snakes!
-As you fought the previous ones you know they are not very strong individualy but if you let them surround you you might be in trouble!
+As you fought the previous ones you know they are not very strong individually but if you let them surround you you might be in trouble!
 A basic tactic in ToME4 is to try to never get surrounded, do not hesitate to backtrack a bit to get into a safer spot.
 #GOLD#Always control the fight.#WHITE#
 

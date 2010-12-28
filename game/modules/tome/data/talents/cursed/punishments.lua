@@ -40,7 +40,7 @@ newTalent{
 	getMindpower = function(self, t)
 		return combatPower(self, t)
 	end,
-	action = function(self, t)		
+	action = function(self, t)
 		local targets = {}
 		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
 		for x, yy in pairs(grids) do
@@ -51,16 +51,16 @@ newTalent{
 				end
 			end
 		end
-		
+
 		if #targets == 0 then return false end
-		
+
 		local damage = t.getDamage(self, t) / #targets
 		local mindpower = t.getMindpower(self, t)
 		for i, t in ipairs(targets) do
 			self:project({type="hit", x=t.x,y=t.y}, t.x, t.y, DamageType.MIND, { dam=damage, mindpower=mindpower })
 			game.level.map:particleEmitter(t.x, t.y, 1, "reproach", { dx = self.x - t.x, dy = self.y - t.y })
 		end
-		
+
 		game:playSoundNear(self, "talents/fire")
 
 		return true
@@ -102,13 +102,13 @@ newTalent{
 		--if not x or not y then return nil end
 		--local _ _, x, y = self:canProject(tg, x, y)
 		local x, y  = self.x, self.y
-		
+
 		local damage = t.getDamage(self, t)
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
 		local stunDuration = t.getStunDuration(self, t)
 		local maxTriggerCount = t.getMaxTriggerCount(self, t)
-		
+
 		local existingTrap = game.level.map:checkAllEntities(x, y, "cursedGround")
 		if existingTrap then
 			existingTrap.triggerCount = 0
@@ -149,13 +149,13 @@ newTalent{
 				self.summoner:project({type="ball", x=x,y=y, radius=0}, x, y, engine.DamageType.MIND, { dam=damage, mindpower=mindpower })
 				game.level.map:particleEmitter(x, y, 1, "cursed_ground", {})
 				self.triggerCount = self.triggerCount + 1
-				
+
 				if self.stunDuration > self.triggerCount and not who.dead and who:checkHit(self.mindpower, who:combatMentalResist(), 0, 95, 5) and who:canBe("stun") then
 					who:setEffect(who.EFF_STUNNED, self.stunDuration - self.triggerCount, {})
 				else
 					game.logSeen(who, "%s resists the stun!", who.name:capitalize())
 				end
-				
+
 				return true, self.triggerCount >= self.maxTriggerCount
 			end,
 			act = function(self)
@@ -212,7 +212,7 @@ newTalent{
 		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		local damage = t.getDamage(self, t)
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
@@ -222,14 +222,14 @@ newTalent{
 			damage = damage,
 			range = range,
 		})
-			
+
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Unleash agony upon your target. The pain will grow as the near you inflicing up to %d damage. They will suffer for %d turns unless they manage to resist. (%d mindpower vs mental resistance)
+		return ([[Unleash agony upon your target. The pain will grow as they near you inflicting up to %d damage. They will suffer for %d turns unless they manage to resist. (%d mindpower vs mental resistance)
 		The damage and mindpower will increase with the Willpower stat.]]):format(damDesc(self, DamageType.MIND, damage), duration, mindpower)
 	end,
 }
@@ -249,7 +249,7 @@ newTalent{
 	doMadness = function(self, t, src)
 		local mindpower = t.getMindpower(src, t)
 		local chance = t.getChance(src, t)
-		
+
 		if self and src and self:reactionToward(src) < 0 and self:checkHit(mindpower, self:combatMentalResist(), 0, chance, 5) then
 			local effect = rng.range(1, 3)
 			if effect == 1 then
@@ -307,7 +307,7 @@ newTalent{
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		
+
 		local grids = self:project(tg, self.x, self.y,
 			function(x, y, target, self)
 				local target = game.level.map(x, y, Map.ACTOR)
@@ -323,7 +323,7 @@ newTalent{
 				end
 			end,
 			nil, nil)
-			
+
 		return true
 	end,
 	info = function(self, t)

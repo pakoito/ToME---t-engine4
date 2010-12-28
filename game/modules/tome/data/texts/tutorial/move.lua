@@ -27,7 +27,7 @@ return [[Moving in ToME4 can be done using either the keyboard, the mouse or bot
 #GOLD#Mouse:#WHITE#
 - Click on a spot on the map to move there
 - If there are no monsters and the way is known you will run there
-- If there are unknown or interresting grids along the way you may stop
+- If there are unknown or interesting grids along the way you may stop
 - If there is a hostile creature in sight you will only move one grid per click, to prevent stupid deaths
 - Clicking on yourself will make you stay put for a turn (doing nothing)
 

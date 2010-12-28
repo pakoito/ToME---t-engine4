@@ -26,7 +26,7 @@ Your inventory is split in two zones: your equiped items and your backpack.
 
 Now pickup the infusion you have found. Infusions and Runes are special items that allow you to bind a power on your own body.
 Infusions come from the powers of nature while runes from the powers of magic.
-Simply the infusion from your inventory, it will inscribe your skin and allow you to regenerate your life at will.
+Simply use the infusion from your inventory, it will inscribe your skin and allow you to regenerate your life at will.
 You can only have a finite number of inscriptions on your body, but they can easily be replaced.
 Then move on to the west.
 ]]
