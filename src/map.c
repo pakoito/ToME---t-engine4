@@ -57,6 +57,8 @@ static int map_object_new(lua_State *L)
 	obj->on_remember = lua_toboolean(L, 4);
 	obj->on_unknown = lua_toboolean(L, 5);
 
+	obj->move_max = 0;
+
 	obj->valid = TRUE;
 	obj->dx = luaL_checknumber(L, 6);
 	obj->dy = luaL_checknumber(L, 7);
@@ -151,6 +153,51 @@ static int map_object_invalid(lua_State *L)
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	obj->valid = FALSE;
 	return 0;
+}
+
+static int map_object_set_move_anim(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	// If at rest use satrting point
+	if (!obj->move_max)
+	{
+		obj->oldx = luaL_checknumber(L, 2);
+		obj->oldy = luaL_checknumber(L, 3);
+	}
+	// If already moving, compute starting point
+	else
+	{
+		float nx = luaL_checknumber(L, 4);
+		float ny = luaL_checknumber(L, 5);
+		float adx = nx - obj->oldx;
+		float ady = ny - obj->oldy;
+		obj->oldx = adx * obj->move_step / (float)obj->move_max + obj->oldx;
+		obj->oldy = ady * obj->move_step / (float)obj->move_max + obj->oldy;
+	}
+	obj->move_step = 0;
+	obj->move_max = luaL_checknumber(L, 6);
+	return 0;
+}
+
+
+static int map_object_get_move_anim(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	int i = luaL_checknumber(L, 2);
+	int j = luaL_checknumber(L, 3);
+	if (!obj->move_max)
+	{
+		lua_pushnumber(L, 0);
+		lua_pushnumber(L, 0);
+	}
+	else
+	{
+		float adx = (float)i - obj->oldx;
+		float ady = (float)j - obj->oldy;
+		lua_pushnumber(L, (adx * obj->move_step / (float)obj->move_max - adx));
+		lua_pushnumber(L, (ady * obj->move_step / (float)obj->move_max - ady));
+	}
+	return 2;
 }
 
 static int map_object_is_valid(lua_State *L)
@@ -595,8 +642,8 @@ static int map_set_scroll(lua_State *L)
 }
 
 
-inline void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure) ALWAYS_INLINE;
-void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure)
+inline void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure, int nb_keyframes) ALWAYS_INLINE;
+void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure, int nb_keyframes)
 {
 	float r, g, b;
 	if (!obscure)
@@ -622,6 +669,22 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		}
 	}
 
+	// Handle move anim
+	float animdx = 0, animdy = 0;
+	if (m->move_max)
+	{
+		m->move_step += nb_keyframes;
+		if (m->move_step >= m->move_max) m->move_max = 0; // Reset once in place
+
+		if (m->move_max)
+		{
+			float adx = (float)i - m->oldx;
+			float ady = (float)j - m->oldy;
+			animdx = map->tile_w * (adx * m->move_step / (float)m->move_max - adx);
+			animdy = map->tile_h * (ady * m->move_step / (float)m->move_max - ady);
+		}
+	}
+
 	tglColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
 
 	int z;
@@ -631,7 +694,7 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
 		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 	}
-	DO_QUAD(dx + m->dx, dy + m->dy, z, m->scale);
+	DO_QUAD(dx + m->dx + animdx, dy + m->dy + animdy, z, m->scale);
 
 	if (m->shader) glUseProgramObjectARB(0);
 }
@@ -641,6 +704,7 @@ static int map_to_screen(lua_State *L)
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
+	int nb_keyframes = luaL_checknumber(L, 4);
 	int i = 0, j = 0, z = 0;
 
 	/* Enables Depth Testing */
@@ -663,11 +727,11 @@ static int map_to_screen(lua_State *L)
 				{
 					if (map->grids_seens[i][j])
 					{
-						display_map_quad(map, dx, dy, z, mo, i, j, map->shown_a * map->grids_seens[i][j], FALSE);
+						display_map_quad(map, dx, dy, z, mo, i, j, map->shown_a * map->grids_seens[i][j], FALSE, nb_keyframes);
 					}
 					else
 					{
-						display_map_quad(map, dx, dy, z, mo, i, j, map->obscure_a, TRUE);
+						display_map_quad(map, dx, dy, z, mo, i, j, map->obscure_a, TRUE, nb_keyframes);
 					}
 				}
 			}
@@ -874,6 +938,8 @@ static const struct luaL_reg map_object_reg[] =
 	{"invalidate", map_object_invalid},
 	{"isValid", map_object_is_valid},
 	{"onSeen", map_object_on_seen},
+	{"setMoveAnim", map_object_set_move_anim},
+	{"getMoveAnim", map_object_get_move_anim},
 	{NULL, NULL},
 };
 

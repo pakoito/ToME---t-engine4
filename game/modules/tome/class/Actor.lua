@@ -340,6 +340,7 @@ end
 
 function _M:move(x, y, force)
 	local moved = false
+	local ox, oy = self.x, self.y
 
 	if force or self:enoughEnergy() then
 		-- Confused ?
@@ -386,6 +387,10 @@ function _M:move(x, y, force)
 	if moved and self:hasEffect(self.EFF_FRICTION) then
 		local p = self:hasEffect(self.EFF_FRICTION)
 		DamageType:get(DamageType.FIREBURN).projector(p.src, self.x, self.y, DamageType.FIREBURN, p.dam)
+	end
+
+	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) then
+		self:setMoveAnim(ox, oy, 3)
 	end
 
 	return moved

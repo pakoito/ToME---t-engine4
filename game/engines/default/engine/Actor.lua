@@ -135,6 +135,8 @@ function _M:move(x, y, force)
 			e.x = x
 			e.y = y
 			map.particles[e] = true
+			-- Give it our main _mo for display coords
+			e._mo = self._mo
 		end
 	end
 	for i = 1, #del do self.__particles[del[i]] = nil end

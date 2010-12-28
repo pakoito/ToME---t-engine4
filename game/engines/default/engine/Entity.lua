@@ -224,6 +224,21 @@ function _M:getMapObjects(tiles, mos, z)
 	until not mo
 end
 
+--- Setup movement animation for the entity
+-- The entity is supposed to posses a correctly set x and y pair of fields - set to the current (new) position
+function _M:setMoveAnim(oldx, oldy, speed)
+	if not self._mo then return end
+	self._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed)
+
+	if not self.add_displays then return end
+
+	for i = 1, #self.add_displays do
+		if self.add_displays[i]._mo then
+			self.add_displays[i]._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed)
+		end
+	end
+end
+
 --- Get the entity image as an sdl surface and texture for the given tiles and size
 -- @param tiles a Tiles instance that will handle the tiles (usualy pass it the current Map.tiles)
 -- @param w the width

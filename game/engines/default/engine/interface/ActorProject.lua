@@ -25,6 +25,8 @@ local DamageType = require "engine.DamageType"
 --- Handles actors projecting damage to zones/targets
 module(..., package.seeall, class.make)
 
+_M.projectile_class = "engine.Projectile"
+
 function _M:init(t)
 end
 
@@ -164,8 +166,6 @@ function _M:canProject(t, x, y)
 	if lx == x and ly == y then return true, lx, ly end
 	return false, lx, ly, radius_x, radius_y
 end
-
-_M.projectile_class = "engine.Projectile"
 
 --- Project damage to a distance using a moving projectile
 -- @param t a type table describing the attack, passed to engine.Target:getType() for interpretation
