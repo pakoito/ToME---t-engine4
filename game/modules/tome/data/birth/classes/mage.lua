@@ -30,11 +30,11 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Archmage = function() return profile.mod.allow_build.mage and "allow" or "disallow" end,
 			Alchemist = "allow",
-			Pyromancer = function() return profile.mod.allow_build.mage_pyromancer and "allow" or "disallow" end,
-			Cryomancer = function() return profile.mod.allow_build.mage_cryomancer and "allow" or "disallow" end,
-			Tempest = function() return profile.mod.allow_build.mage_tempest and "allow" or "disallow" end,
-			Geomancer = function() return profile.mod.allow_build.mage_geomancer and "allow" or "disallow" end,
-			Maelstrom = function() return profile.mod.allow_build.mage_maelstrom and "allow" or "disallow" end,
+--			Pyromancer = function() return profile.mod.allow_build.mage_pyromancer and "allow" or "disallow" end,
+--			Cryomancer = function() return profile.mod.allow_build.mage_cryomancer and "allow" or "disallow" end,
+--			Tempest = function() return profile.mod.allow_build.mage_tempest and "allow" or "disallow" end,
+--			Geomancer = function() return profile.mod.allow_build.mage_geomancer and "allow" or "disallow" end,
+--			Maelstrom = function() return profile.mod.allow_build.mage_maelstrom and "allow" or "disallow" end,
 		},
 	},
 	copy = {
@@ -87,6 +87,12 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
 		},
+		resolvers.generic(function(self)
+			if profile.mod.allow_build.mage_pyromancer then self:learnTalentType("spell/wildfire", false, 1.3) end
+			if profile.mod.allow_build.mage_cryomancer then self:learnTalentType("spell/ice", false, 1.3) end
+			if profile.mod.allow_build.mage_geomancer then self:learnTalentType("spell/stone", false, 1.3) end
+			if profile.mod.allow_build.mage_tempest then self:learnTalentType("spell/storm", false, 1.3) end
+		end),
 	},
 	copy_add = {
 		life_rating = -4,

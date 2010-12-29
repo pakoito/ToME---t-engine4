@@ -244,3 +244,45 @@ function load(str, delayloading)
 	end
 	return obj
 end
+
+--- "Reloads" a cloneFull result object
+-- This will make sure each object and subobject method :loaded() is called
+function _M:cloneReloaded()
+	local delay_load = {}
+	local seen = {}
+
+	local function reload(obj)
+--		print("setting obj class", obj.__CLASSNAME)
+		setmetatable(obj, {__index=require(obj.__CLASSNAME)})
+		if obj.loaded then
+--			print("loader found for class", obj, obj.__CLASSNAME)
+			if not obj.loadNoDelay then
+				delay_load[#delay_load+1] = obj
+			else
+				obj:loaded()
+			end
+		end
+	end
+
+	local function recurs(t)
+		if seen[t] then return end
+		seen[t] = true
+		for k, e in pairs(t) do
+			if type(k) == "table" then
+				recurs(k)
+				if k.__CLASSNAME then reload(k) end
+			end
+			if type(e) == "table" then
+				recurs(e)
+				if e.__CLASSNAME then reload(e) end
+			end
+		end
+	end
+
+	-- Start reloading
+	recurs(self)
+	reload(self)
+
+	-- Computed delayed loads
+	for i = 1, #delay_load do delay_load[i]:loaded() end
+end

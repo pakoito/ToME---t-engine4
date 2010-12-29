@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-	
+
 newTalent{
 	name = "Backtrack",
 	type = {"chronomancy/timetravel", 1},
@@ -122,53 +122,39 @@ newTalent{
 	type = {"chronomancy/timetravel", 4},
 	require = chrono_req4,
 	points = 5,
-	mode = "sustained",
-	sustain_mana = 170,
-	cooldown = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
-	range = 5,
-	do_storm = function(self, t)
-		if self:getMana() <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(self.T_THUNDERSTORM)
-			self.energy.value = old
-			return
+	paradox = 100,
+	cooldown = 100,
+	no_npc_use = true,
+	on_learn = function(self, t)
+		self:attr("level_cloning", 1)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("level_cloning", -1)
+	end,
+	action = function(self, t)
+		if not game.level.backup then
+			game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 		end
 
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
+		game:onTickEnd(function()
+			local level = game.level.backup
+			level:cloneReloaded()
+			-- Look for the "old" player
+			for uid, e in pairs(level.entities) do
+				if e.game_ender then
+					game.level = level
+					game.player:replaceWith(e)
+					game.player:move(game.player.x, game.player.y, true)
+					game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
+
+					-- Manualy start the cooldown of the "old player"
+					game.player:startTalentCooldown(t)
+					return
+				end
 			end
-		end end
 
-		-- Randomly take targets
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		for i = 1, math.floor(self:getTalentLevel(t)) do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 15, 80)), 3))
-			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
-			game:playSoundNear(self, "talents/lightning")
-		end
-	end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/thunderstorm")
-		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
-		return {
-			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		game.logSeen(self, "#0080FF#The furious lightning storm around %s calms down and disappears.", self.name)
-		self:removeTemporaryValue("mana_regen", p.drain)
+			game.logPlayer(self, "#LIGHT_RED#The space time continuum seems to be too disturted to use.")
+		end)
 		return true
 	end,
 	info = function(self, t)

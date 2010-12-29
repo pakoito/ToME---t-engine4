@@ -20,7 +20,7 @@
 newTalent{
 	name = "Nova",
 	type = {"spell/storm",1},
-	require = spells_req1,
+	require = spells_req_high1,
 	points = 5,
 	mana = 12,
 	cooldown = 8,
@@ -34,7 +34,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local dam = self:spellCrit(t.getDamage(self, t))
-		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
+		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, {daze=75, rng.avg(dam / 3, dam, 3)})
 		local x, y = self.x, self.y
 		-- Lightning ball gets a special treatment to make it look neat
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
@@ -52,7 +52,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = damDesc(self, DamageType.LIGHTNING, t.getDamage(self, t))
-		return ([[A lightning emanates from you in a circual wave, doing %0.2f to %0.2f lightning damage and possibly dazing them.
+		return ([[A lightning emanates from you in a circual wave, doing %0.2f to %0.2f lightning damage and possibly dazing them (75%% chance).
 		The damage will increase with the Magic stat]]):format(dam / 3, dam)
 	end,
 }
@@ -60,7 +60,7 @@ newTalent{
 newTalent{
 	name = "Shock",
 	type = {"spell/storm",2},
-	require = spells_req2,
+	require = spells_req_high2,
 	points = 5,
 	mana = 8,
 	cooldown = 3,
@@ -90,7 +90,7 @@ newTalent{
 newTalent{
 	name = "Hurricane",
 	type = {"spell/storm",3},
-	require = spells_req3,
+	require = spells_req_high3,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 100,
@@ -102,7 +102,7 @@ newTalent{
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 150) end,
 	getChance = function(self, t) return 30 + self:getTalentLevel(t) * 5 end,
-	getRadius = function(self, t) 
+	getRadius = function(self, t)
 			local radius = 2
 			if self:getTalentLevel(t) >= 3 then radius = 3 end
 			return radius
@@ -122,7 +122,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local chance = t.getChance(self, t)
-		local radius = t.getRadius(self, t) 
+		local radius = t.getRadius(self, t)
 		return ([[Each time one of your lightning spell dazes a target it has %d%% chances to creates a chain reaction that summons a mighty Hurricane that last for 10 turns around the target with radius of %d.
 		Each turn all creatures around it will take %0.2f to %0.2f lightning damage.
 		Only 2 hurricanes can exist at the same time.
@@ -133,7 +133,7 @@ newTalent{
 newTalent{
 	name = "Tempest",
 	type = {"spell/storm",4},
-	require = spells_req4,
+	require = spells_req_high4,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 50,

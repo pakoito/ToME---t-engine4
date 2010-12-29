@@ -17,22 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return "New Class: #LIGHT_GREEN#Cryomancer",
-[[
-Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
+return "New Talent Category: #LIGHT_GREEN#Ice",
+[[Since the dawn of time mages have experimented with the elements.
+While most mages are content using the Water school, a few of them took their research deeper and created Ice magic.
+At its core lies the Uttercold, a cold so cold it can even damage creatures normaly immune.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
-This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
+You have mastered ice magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Ice talents#WHITE#.
 
-You have uncovered the secrets of the ice magic and can now create new characters with the #LIGHT_GREEN#Cryomancer class#WHITE#.
-
-Cryomancers are specialized archmagi, attuned to the magical properties of ice.
-Class features:#YELLOW#
-- Cast potent ice spells to freeze your foes.
-- Freeze your foes and make them shatter into pieces.
-- Learn to master the Uttercold, a cold so deep it can pierce even those resistant to normal cold.
-- Manipulate the forces of magic themselves#WHITE#
-
-All mages use mana to cast their spells.
-It slowly replenishes over time.
+Talents:
+- #YELLOW#Ice Shards: #WHITE#Fires slow moving ice crystals at a target area, each hit has a chance to freeze
+- #YELLOW#Frozen Ground: #WHITE#Unleash a nova of ice on the ground, stopping the movements of anything caught inside
+- #YELLOW#Shatter: #WHITE#Shatters all frozen creatures in your sight, dealing increased damage or even killing them
+- #YELLOW#Uttercold: #WHITE#Master the Uttercold and pierce even through cold immunities
 ]]

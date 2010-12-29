@@ -541,6 +541,8 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	-- Autosave
 	if config.settings.tome.autosave and left_zone and left_zone.short_name ~= "wilderness" and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
+
+	self.player:onEnterLevelEnd(self.zone, self.level)
 end
 
 function _M:getPlayer()

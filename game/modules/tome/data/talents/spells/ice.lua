@@ -20,7 +20,7 @@
 newTalent{
 	name = "Ice Shards",
 	type = {"spell/ice",1},
-	require = spells_req1,
+	require = spells_req_high1,
 	points = 5,
 	mana = 12,
 	cooldown = 3,
@@ -58,7 +58,7 @@ newTalent{
 newTalent{
 	name = "Frozen Ground",
 	type = {"spell/ice",2},
-	require = spells_req2,
+	require = spells_req_high2,
 	points = 5,
 	mana = 25,
 	cooldown = 10,
@@ -85,7 +85,7 @@ newTalent{
 newTalent{
 	name = "Shatter",
 	type = {"spell/ice",3},
-	require = spells_req3,
+	require = spells_req_high3,
 	points = 5,
 	mana = 25,
 	cooldown = 15,
@@ -142,7 +142,7 @@ newTalent{
 newTalent{
 	name = "Uttercold",
 	type = {"spell/ice",4},
-	require = spells_req4,
+	require = spells_req_high4,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 50,

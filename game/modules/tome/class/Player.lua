@@ -122,6 +122,20 @@ function _M:onEnterLevel(zone, level)
 	for i, eff_id in ipairs(effs) do self:removeEffect(eff_id) end
 end
 
+function _M:onEnterLevelEnd(zone, level)
+	-- Clone level when they are made, for chronomancy
+	if self:attr("level_cloning") then
+		local d = Dialog:simplePopup("Chronomancy", "Folding the space time structure...")
+		d.__showup = nil
+		core.display.forceRedraw()
+
+		local clone = level:cloneFull()
+		level.backup = clone
+
+		game:unregisterDialog(d)
+	end
+end
+
 function _M:onLeaveLevel(zone, level)
 	-- Fail past escort quests
 	local eid = "escort-duty-"..zone.short_name.."-"..level.level

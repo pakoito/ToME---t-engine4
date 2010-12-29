@@ -20,7 +20,7 @@
 newTalent{
 	name = "Earthen Missiles",
 	type = {"spell/stone",1},
-	require = spells_req1,
+	require = spells_req_high1,
 	points = 5,
 	random_ego = "attack",
 	mana = 10,
@@ -63,7 +63,7 @@ newTalent{
 		local count = 2
 		if self:getTalentLevel(t) >= 5 then
 			count = count + 1
-		end 
+		end
 		local damage = t.getDamage(self, t)
 		return ([[Conjures %d missile shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage every turn for 5 turns.
 		At talent level 5 you can conjure one additional missle.
@@ -74,7 +74,7 @@ newTalent{
 newTalent{
 	name = "Body of Stone",
 	type = {"spell/stone",2},
-	require = spells_req2,
+	require = spells_req_high2,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 70,
@@ -129,7 +129,7 @@ newTalent{
 newTalent{
 	name = "Earthquake",
 	type = {"spell/stone",3},
-	require = spells_req3,
+	require = spells_req_high3,
 	points = 5,
 	random_ego = "attack",
 	mana = 50,
@@ -175,7 +175,7 @@ newTalent{
 newTalent{
 	name = "Crystalline Focus",
 	type = {"spell/stone",4},
-	require = spells_req4,
+	require = spells_req_high4,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 50,

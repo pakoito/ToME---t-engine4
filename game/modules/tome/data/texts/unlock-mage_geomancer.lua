@@ -17,22 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return "New Class: #LIGHT_GREEN#Geomancer",
-[[
-Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
+return "New Talent Category: #LIGHT_GREEN#Stone",
+[[Since the dawn of time mages have experimented with the elements.
+While most mages are content using the Earth school, a few of them took their research deeper and created Stone magic.
+At its core lies the Crystalline Focus, which can create attacks so sharp they can cut throught physical immunity.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
-This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
+You have mastered stone magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Stone talents#WHITE#.
 
-You have uncovered the secrets of the stone magic by killing the earth elemental Harkor'Zun and can now create new characters with the #LIGHT_GREEN#Geomancer class#WHITE#.
-
-Geomancers are specialized archmagi, attuned to the magical properties of stone.
-Class features:#YELLOW#
-- Turn your body into stone, making you immovable but providing many benefits.
-- Unleash earthquakes on your foes.
-- Learn to master the Crystalline Focus, making your physical attacks so powerful they can damage even those resistant to normal physical damage.
-- Manipulate the forces of magic themselves#WHITE#
-
-All mages use mana to cast their spells.
-It slowly replenishes over time.
+Talents:
+- #YELLOW#Earthen Missiles: #WHITE#Fires multiple missiles of stone indepentanly to targets
+- #YELLOW#Body of Stone: #WHITE#Turn into stone, reducing the cooldown of many stone/earth talents
+- #YELLOW#Earthquake: #WHITE#Create a localized earthquake, stunning all in the area
+- #YELLOW#Crystalline Focus: #WHITE#Master the Stone and pierce even through physical immunities
 ]]

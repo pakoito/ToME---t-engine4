@@ -17,22 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return "New Class: #LIGHT_GREEN#Tempest",
-[[
-Magic has not disappeared from Maj'Eyal with the end of the Spellhunt.
+return "New Talent Category: #LIGHT_GREEN#Storm",
+[[Since the dawn of time mages have experimented with the elements.
+While most mages are content using the Air school, a few of them took their research deeper and created Storm magic.
+At its core lies the Tempest, a storm so powerful it can even damage creatures normaly immune.
 
-During the Age of Dusk, as the Spellhunt was nearing its end, a powerful mage of the Kar'Krul, Linaniil, created a safe haven for the few remaining mages of all races.
-This place is Angolwen, the City of Magic, and for over two thousands years has taught magic to preserve and expand it.
+You have mastered storm magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Storm talents#WHITE#.
 
-You have uncovered the secrets of the storm magic and can now create new characters with the #LIGHT_GREEN#Tempest class#WHITE#.
-
-Tempests are specialized archmagi, attuned to the magical properties of lightning.
-Class features:#YELLOW#
-- Cast potent lightning spells to zap your foes to death.
-- Unleash hurricanes and novas on your foes, making them all explode.
-- Learn to master the Tempest, a lightning so powerful it can damage even those resistant to normal lightning.
-- Manipulate the forces of magic themselves#WHITE#
-
-All mages use mana to cast their spells.
-It slowly replenishes over time.
+Talents:
+- #YELLOW#Nova: #WHITE#Unleash of lightning nova around you, dazing and damaging creatures caught inside
+- #YELLOW#Shock: #WHITE#Fire a fast bolt of lightning, dazing the target
+- #YELLOW#Hurricane: #WHITE#Call down a Hurricane on any creature you daze, creating a lightning storm around each of them
+- #YELLOW#Tempest: #WHITE#Master the Tempest and pierce even through lightning immunities
 ]]

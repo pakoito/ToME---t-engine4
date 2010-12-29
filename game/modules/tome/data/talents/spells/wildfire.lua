@@ -20,7 +20,7 @@
 newTalent{
 	name = "Blastwave",
 	type = {"spell/wildfire",1},
-	require = spells_req1,
+	require = spells_req_high1,
 	points = 5,
 	mana = 12,
 	cooldown = 5,
@@ -48,7 +48,7 @@ newTalent{
 newTalent{
 	name = "Dancing Fires",
 	type = {"spell/wildfire",2},
-	require = spells_req2,
+	require = spells_req_high2,
 	points = 5,
 	mana = 35,
 	cooldown = 16,
@@ -85,7 +85,7 @@ newTalent{
 newTalent{
 	name = "Combust",
 	type = {"spell/wildfire",3},
-	require = spells_req3,
+	require = spells_req_high3,
 	points = 5,
 	mana = 40,
 	cooldown = 14,
@@ -131,7 +131,7 @@ newTalent{
 newTalent{
 	name = "Wildfire",
 	type = {"spell/wildfire",4},
-	require = spells_req4,
+	require = spells_req_high4,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 50,
