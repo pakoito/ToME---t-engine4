@@ -520,7 +520,7 @@ newInscription{
 			if self.mana_regen < 0 then
 				game.logPlayer(self, "Your negative mana regeneration rate is unaffected by the rune.")
 			else
-				game.logPlayer(self, "Your inexistant mana regeneration rate is unaffected by the rune.")
+				game.logPlayer(self, "Your nonexistant mana regeneration rate is unaffected by the rune.")
 			end
 		end
 		return true

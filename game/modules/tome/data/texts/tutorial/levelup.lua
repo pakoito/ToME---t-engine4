@@ -20,7 +20,7 @@
 game.player:forceLevelup(2)
 
 return [[In ToME4 a character power depends on her/his level: players can get up to level 50.
-Each level brings some more amount of life and ressources (like stamina, mana, ...) and different kind of points that can be used to improve your character in vairous ways:
+Each level brings some more amount of life and ressources (like stamina, mana, ...) and different kind of points that can be used to improve your character in various ways:
 * #GOLD#Stat points#WHITE#: They allow you to raise the six main stats: Strength, Dexterity, Magic, Willpower, Cunning and Constitution. You get 3 points per levels.
 * #GOLD#Class talent points#WHITE#: They allow you to improve a class talent (denoted as such in the talent interface). Class talents define the core functions of your class. You get 1 point per level except every 5 levels where you gain 2.
 * #GOLD#Generic talent points#WHITE#: They allow you to improve a generic talent (denoted as such in the talent interface). Generic talents provide utility/more power but are not always specific to your class. You get 1 point per level except every 5 levels where you gain 0.
