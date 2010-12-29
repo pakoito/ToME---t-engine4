@@ -39,8 +39,8 @@ return {
 			['.'] = "ROCKY_GROUND",
 			['T'] = "ROCKY_SNOWY_TREE",
 			['#'] = "MOUNTAIN_WALL",
-			up = "UP",
-			down = "DOWN",
+			up = "ROCKY_UP2",
+			down = "ROCKY_DOWN8",
 			door = "ROCKY_GROUND",
 		},
 		actor = {
@@ -66,7 +66,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "ROCKY_UP_WILDERNESS",
 			}, },
 		},
 	},

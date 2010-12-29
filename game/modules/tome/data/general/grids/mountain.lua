@@ -58,3 +58,82 @@ newEntity{
 	block_esp = true,
 	air_level = -20,
 }
+
+-----------------------------------------
+-- Rocky exits
+-----------------------------------------
+newEntity{
+	define_as = "ROCKY_UP_WILDERNESS",
+	name = "exit to the worldmap", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+}
+
+newEntity{
+	define_as = "ROCKY_UP8",
+	name = "way to the previous level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "ROCKY_UP2",
+	name = "way to the previous level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "ROCKY_UP4",
+	name = "way to the previous level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "ROCKY_UP6",
+	name = "way to the previous level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+
+newEntity{
+	define_as = "ROCKY_DOWN8",
+	name = "way to the next level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "ROCKY_DOWN2",
+	name = "way to the next level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "ROCKY_DOWN4",
+	name = "way to the next level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "ROCKY_DOWN6",
+	name = "way to the next level", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
