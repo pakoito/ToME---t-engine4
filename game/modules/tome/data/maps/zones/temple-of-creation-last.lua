@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-defineTile('<', "UP")
+defineTile('<', "WATER_UP")
 defineTile(' ', "WATER_FLOOR")
 defineTile('+', "WATER_DOOR")
 defineTile('#', "WATER_WALL")

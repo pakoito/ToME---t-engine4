@@ -28,7 +28,7 @@ defineTile("~", "WATER_FLOOR")
 defineTile("*", "WATER_DOOR")
 defineTile("<", "OLD_FOREST")
 defineTile("-", "GRASS")
-defineTile(">", "DOWN")
+defineTile(">", "WATER_DOWN")
 defineTile(".", "SAND")
 defineTile("T", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
 

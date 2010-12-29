@@ -33,8 +33,8 @@ subGenerator{
 		noise = "fbm_perlin",
 		floor = "SAND",
 		wall = "PALMTREE",
-		up = "UP",
-		down = "DOWN",
+		up = "SAND_UP8",
+		down = "SAND_DOWN2",
 		do_ponds =  {
 			nb = {0, 2},
 			size = {w=25, h=25},

@@ -20,7 +20,7 @@
 setStatusAll{no_teleport=true}
 
 quickEntity('^', {show_tooltip=true, name='mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true, block_sight=true})
-quickEntity('<', {show_tooltip=true, name='portal back', display='<', color=colors.WHITE, change_level=1, change_zone=game.player.last_wilderness}, nil, {type="portal", subtype="back"})
+quickEntity('<', {show_tooltip=true, name='portal back', display='<', color=colors.WHITE, change_level=1, change_zone=game.player.last_wilderness, image="terrain/sand.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}}}, nil, {type="portal", subtype="back"})
 defineTile('t', {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
 quickEntity('~', {show_tooltip=true, name='lake', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", shader = "water", textures = { function() return _3DNoise, true end }})
 quickEntity('.', {show_tooltip=true, name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})

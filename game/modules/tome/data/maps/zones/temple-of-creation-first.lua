@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-defineTile('>', "DOWN")
+defineTile('>', "WATER_DOWN")
 defineTile('.', "WATER_FLOOR")
 defineTile('#', "WATER_WALL")
 defineTile('^', "WATER_FLOOR", nil, nil, {random_filter={}})

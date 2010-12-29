@@ -28,8 +28,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			Archmage = function() return profile.mod.allow_build.mage and "allow" or "disallow" end,
 			Alchemist = "allow",
+			Archmage = function() return profile.mod.allow_build.mage and "allow" or "disallow" end,
 --			Pyromancer = function() return profile.mod.allow_build.mage_pyromancer and "allow" or "disallow" end,
 --			Cryomancer = function() return profile.mod.allow_build.mage_cryomancer and "allow" or "disallow" end,
 --			Tempest = function() return profile.mod.allow_build.mage_tempest and "allow" or "disallow" end,

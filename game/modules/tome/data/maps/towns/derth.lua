@@ -17,7 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-quickEntity('<', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness"})
+quickEntity('<', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness", image="terrain/stone_road1.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}}})
+quickEntity('>', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness", image="terrain/stone_road1.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}}})
 quickEntity('S', {name='brick roof top', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
 quickEntity('s', {name='brick roof', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
 quickEntity('t', {name='brick roof chimney', display='#', color=colors.LIGHT_RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
@@ -72,7 +73,7 @@ return {
 [[      ,-TT-.-sssssss---,-----SSSSSS--.------.-..--,,,-ssss--,#####---.-T^^   ]],
 [[     ,--T-..-##5####----,----ssssss-..........--ssss,-ssss--,------...-^^^  ^]],
 [[     ,-  OOOO--OOOOO----,----#c##4#-.---.,----,-SStS,-SSSS--,-----..---^^   ^]],
-[[<OO  ,-T-OssOOOO---OOOOOOOOO--OOOO--.-T-.-sss--,ssss,-ssss---,---..--T^^     ]],
+[[>OO  ,-T-OssOOOO---OOOOOOOOO--OOOO--.-T-.-sss--,ssss,-ssss---,---..--T^^     ]],
 [[  OOOOOOOOSt.---------ssss-OOOO--OOOO---.-StS--,#0##,-ssss---,---.---^^     ^]],
 [[   ,,-T--.ss.-sssss---ssss,---------OOOO.-sss---,,,,,-####--,---..-T^^   ^ ^ ]],
 [[   ,,-T--.##.-SStSS---####,------------OO-###-ssssss-,,,---,----.--T^^   ^   ]],

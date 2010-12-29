@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local def = {lite=true}
-defineTile('<', "UP_WILDERNESS", nil, nil, nil, def)
+defineTile('<', "GRASS_UP_WILDERNESS", nil, nil, nil, def)
 defineTile('.', "FLOOR", nil, nil, nil, def)
 defineTile(';', "GRASS", nil, nil, nil, def)
 defineTile('+', "DOOR", nil, nil, nil, def)
