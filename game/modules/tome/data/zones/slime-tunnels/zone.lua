@@ -48,12 +48,4 @@ return {
 			nb_trap = {4, 10},
 		},
 	},
-	levels =
-	{
-		[1] = {
-			generator = { map = {
-				up = "UP_GRUSHNAK",
-			}, },
-		},
-	},
 }
