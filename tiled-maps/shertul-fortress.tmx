@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="30" height="30" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="60" height="60" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="dg_dungeon32" tilewidth="32" tileheight="32">
   <image source="gfx/dg_dungeon32.gif" width="288" height="320"/>
   <tile id="6">
@@ -33,60 +33,60 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Terrain" width="30" height="30">
+ <layer name="Terrain" width="60" height="60">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA92UQQ7AIAgEuXntY5r0E/7/PT2ZNEbtLiLUHjgYyA4stFlE8iZxNsKi9g/cut7L5/zI78otkYg+o+aN2u8ud9XSXclFdJm7YvdR17dyiOZbjz0Oyh29Ga2V3ANkJzLfq4/22eKuroGe9va9viPEd9Y/9L/B7MCbi3qo8dlq3ijurM/ae7bgMrNGc2f3y3LZHr/ItYgbeV3MphAOAAA=
+   H4sIAAAAAAAAA+3YSw7CMAxF0cw6ZTGV2IT3vx5GTKIkfimf2M0dHKGqBuU2pUJYKcUAAAAAABCcDd+YjYpefX712v/Va8JcVLv1vh0T1ydzL99feut5E+YiaPXcsVfpmXleRb6fR/vXOqe0qNdmVat33OsdHUfZ41HDHXsfYvMxeb43v7p3t/tZub+93qfzmVGfV72uTxoi721vrd7+jlrO6jWTnXtbx8p7Mrm6v7v1mjOTAf9v0FvPr177r3sz/J6kFwAAAAAAZPICqQoJjkA4AAA=
   </data>
  </layer>
- <objectgroup name="Actor" width="30" height="30">
-  <object name="Weirdling Beast" x="295" y="485" width="20" height="20">
+ <objectgroup name="Actor" width="60" height="60">
+  <object name="Weirdling Beast" x="295" y="933" width="20" height="20">
    <properties>
     <property name="display" value="h"/>
     <property name="value" value="&quot;WEIRDLING_BEAST&quot;"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addSpot" width="30" height="30">
-  <object name="" x="357" y="485" width="19" height="23">
+ <objectgroup name="addSpot" width="60" height="60">
+  <object name="" x="357" y="933" width="19" height="23">
    <properties>
     <property name="subtype" value="&quot;weirdling&quot;"/>
     <property name="type" value="&quot;door&quot;"/>
    </properties>
   </object>
-  <object name="" x="582" y="549" width="21" height="21">
+  <object name="" x="582" y="997" width="21" height="21">
    <properties>
     <property name="subtype" value="&quot;back&quot;"/>
     <property name="type" value="&quot;portal&quot;"/>
    </properties>
   </object>
-  <object name="" x="36" y="481" width="19" height="23">
+  <object name="" x="36" y="929" width="19" height="23">
    <properties>
     <property name="subtype" value="&quot;up&quot;"/>
     <property name="type" value="&quot;stair&quot;"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone" width="30" height="30" visible="0">
-  <object name="no teleport" x="332" y="11" width="620" height="941">
+ <objectgroup name="addZone" width="60" height="60" visible="0">
+  <object name="no teleport" x="332" y="459" width="620" height="941">
    <properties>
     <property name="type" value="&quot;no-teleport&quot;"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone" width="30" height="30">
-  <object name="room" x="391" y="394" width="207" height="172">
+ <objectgroup name="addZone" width="60" height="60">
+  <object name="room" x="391" y="842" width="207" height="172">
    <properties>
     <property name="subtype" value="&quot;Control Room&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="room" x="37" y="322" width="274" height="313">
+  <object name="room" x="37" y="770" width="274" height="313">
    <properties>
     <property name="subtype" value="&quot;Storage Room&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="room" x="420" y="228" width="149" height="117">
+  <object name="room" x="420" y="676" width="149" height="117">
    <properties>
     <property name="subtype" value="&quot;Teleportation Control&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
