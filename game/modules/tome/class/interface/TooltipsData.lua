@@ -109,7 +109,7 @@ Those inscriptions give the bearer always accessible powers. Usualy most people 
 -- Stats
 -------------------------------------------------------------
 TOOLTIP_STR = [[#GOLD#Strength#LAST#
-Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to resist physical effects, and carrying capacity.
+Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to hit, your chance to resist physical effects, and carrying capacity.
 ]]
 TOOLTIP_DEX = [[#GOLD#Dexterity#LAST#
 Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks, and your damage with light weapons.
