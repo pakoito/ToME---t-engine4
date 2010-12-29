@@ -57,7 +57,18 @@ newEntity{
 	always_remember = true,
 	show_tooltip=true,
 	name="Entrance to the High Peak",
-	display='>', color=colors.VIOLET,
+	display='>', color=colors.VIOLET, image = "terrain/stair_up_wild.png",
 	notice = true,
 	change_level=1, change_zone="high-peak",
+}
+
+newEntity{
+	define_as = "UP_GRUSHNAK",
+	name = "exit to Grushnak Pride", image = "terrain/slime_floor.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 5,
+	change_zone = "grushnak-pride",
+	force_down = true,
 }
