@@ -24,7 +24,7 @@ load("/data/general/grids/sand.lua")
 
 newEntity{
 	define_as = "OLD_FOREST",
-	name = "way to the old forest",
+	name = "way to the old forest", image = "terrain/way_next_8.png",
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -34,7 +34,7 @@ newEntity{
 newEntity{
 	define_as = "SHERTUL_FORTRESS",
 	name = "entrance to the Sher'Tul ruins",
-	display = '>', color=colors.PURPLE,
+	display = '>', color=colors.PURPLE, image = "terrain/stair_down.png",
 	notice = true,
 	always_remember = true,
 	change_level = 1, change_zone = "shertul-fortress",

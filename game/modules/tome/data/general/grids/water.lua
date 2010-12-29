@@ -108,3 +108,34 @@ newEntity{
 	always_remember = true,
 	air_level = -5, air_condition="water",
 }
+
+-----------------------------------------
+-- Dungeony exits
+-----------------------------------------
+newEntity{
+	define_as = "WATER_UP_WILDERNESS",
+	name = "exit to the worldmap", image = "terrain/water_stair_up_wild.png",
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+}
+
+newEntity{
+	define_as = "WATER_UP", image = "terrain/water_stair_up.png",
+	name = "previous level",
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+
+newEntity{
+	define_as = "WATER_DOWN", image = "terrain/water_stair_down.png",
+	name = "next level",
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}

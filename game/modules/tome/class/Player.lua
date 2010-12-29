@@ -162,6 +162,9 @@ function _M:move(x, y, force)
 		elseif nb == 1 then
 			game.logSeen(self, "There is an item here: %s", game.level.map:getObject(self.x, self.y, 1):getName{do_color=true})
 		end
+
+		local g = game.level.map(self.x, self.y, game.level.map.TERRAIN)
+		if g and g.change_level then game.logPlayer(self, "#YELLOW_GREEN#There is "..g.name:a_an().." here (press '<', '>' or right click to use).") end
 	end
 
 	-- Update wilderness coords

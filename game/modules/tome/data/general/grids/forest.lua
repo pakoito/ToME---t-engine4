@@ -125,3 +125,82 @@ newEntity{
 	door_opened = "GRASS_DARK1",
 	dig = "GRASS_DARK1",
 }
+
+-----------------------------------------
+-- Grassy exits
+-----------------------------------------
+newEntity{
+	define_as = "GRASS_UP_WILDERNESS",
+	name = "exit to the worldmap", image = "terrain/grass.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+}
+
+newEntity{
+	define_as = "GRASS_UP8",
+	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "GRASS_UP2",
+	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "GRASS_UP4",
+	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "GRASS_UP6",
+	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+
+newEntity{
+	define_as = "GRASS_DOWN8",
+	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "GRASS_DOWN2",
+	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "GRASS_DOWN4",
+	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "GRASS_DOWN6",
+	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}

@@ -38,8 +38,8 @@ return {
 			noise = "fbm_perlin",
 			floor = "SAND",
 			wall = "PALMTREE",
-			up = "UP",
-			down = "DOWN",
+			up = "SAND_UP8",
+			down = "SAND_DOWN2",
 			do_ponds =  {
 				nb = {0, 2},
 				size = {w=25, h=25},
@@ -68,7 +68,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS_FAR_EAST",
+				up = "SAND_UP_WILDERNESS",
 			}, },
 		},
 		[5] = {

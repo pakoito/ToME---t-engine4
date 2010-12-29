@@ -94,3 +94,107 @@ newEntity{
 	block_sight = true,
 	dig = "SAND",
 }
+
+-----------------------------------------
+-- Sandy exits
+-----------------------------------------
+newEntity{
+	define_as = "SAND_UP_WILDERNESS",
+	name = "exit to the worldmap", image = "terrain/sand.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+}
+
+newEntity{
+	define_as = "SAND_UP8",
+	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "SAND_UP2",
+	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "SAND_UP4",
+	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "SAND_UP6",
+	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+
+newEntity{
+	define_as = "SAND_DOWN8",
+	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "SAND_DOWN2",
+	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "SAND_DOWN4",
+	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "SAND_DOWN6",
+	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+
+newEntity{
+	define_as = "SAND_LADDER_DOWN",
+	name = "ladder to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/ladder_down.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "SAND_LADDER_UP",
+	name = "ladder to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "SAND_LADDER_UP_WILDERNESS",
+	name = "ladder to worldmap", image = "terrain/sand.png", add_displays = {class.new{image="terrain/ladder_up_wild.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+}

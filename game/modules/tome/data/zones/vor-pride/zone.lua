@@ -38,8 +38,8 @@ return {
 			floor = "FLOOR",
 			external_floor = "FLOOR",
 			wall = "WALL",
-			up = "UP",
-			down = "DOWN",
+			up = "FLAT_UP6",
+			down = "FLAT_DOWN4",
 			door = "DOOR",
 
 			nb_rooms = {0,0,0,1},
@@ -64,7 +64,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS_FAR_EAST",
+				up = "FLAT_UP_WILDERNESS",
 			}, },
 		},
 	},

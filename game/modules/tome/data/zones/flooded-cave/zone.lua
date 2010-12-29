@@ -39,8 +39,8 @@ return {
 			min_floor = 1200,
 			floor = "WATER_FLOOR",
 			wall = "WATER_WALL",
-			up = "UP",
-			down = "DOWN",
+			up = "WATER_UP",
+			down = "WATER_DOWN",
 			door = "WATER_FLOOR",
 		},
 		actor = {
@@ -62,7 +62,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS_FAR_EAST",
+				up = "WATER_UP_WILDERNESS",
 			}, },
 		},
 		[2] = {

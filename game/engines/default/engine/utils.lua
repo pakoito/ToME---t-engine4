@@ -140,6 +140,12 @@ function string.ordinal(number)
 	return number..suffix
 end
 
+function string.a_an(str)
+	local first = str:sub(1, 1)
+	if first == "a" or first == "e" or first == "i" or first == "o" or first == "u" or first == "y" then return "an "..str
+	else return "a "..str end
+end
+
 function string.capitalize(str)
 	if #str > 1 then
 		return string.upper(str:sub(1, 1))..str:sub(2)

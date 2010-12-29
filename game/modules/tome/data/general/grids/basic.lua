@@ -17,18 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-----------------------------------------
+-- Dungeony exits
+-----------------------------------------
 newEntity{
 	define_as = "UP_WILDERNESS",
-	name = "exit to the wilds",
-	display = '<', color_r=255, color_g=0, color_b=255,
-	always_remember = true,
-	notice = true,
-	change_level = 1,
-	change_zone = "wilderness",
-}
-newEntity{
-	define_as = "UP_WILDERNESS_FAR_EAST",
-	name = "exit to the wilds",
+	name = "exit to the worldmap", image = "terrain/stair_up_wild.png",
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
 	notice = true,
@@ -37,7 +31,7 @@ newEntity{
 }
 
 newEntity{
-	define_as = "UP",
+	define_as = "UP", image = "terrain/stair_up.png",
 	name = "previous level",
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -46,7 +40,7 @@ newEntity{
 }
 
 newEntity{
-	define_as = "DOWN",
+	define_as = "DOWN", image = "terrain/stair_down.png",
 	name = "next level",
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -54,6 +48,88 @@ newEntity{
 	change_level = 1,
 }
 
+-----------------------------------------
+-- Outworld exits
+-----------------------------------------
+newEntity{
+	define_as = "FLAT_UP_WILDERNESS",
+	name = "exit to the worldmap", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+}
+
+newEntity{
+	define_as = "FLAT_UP8",
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "FLAT_UP2",
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "FLAT_UP4",
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "FLAT_UP6",
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+
+newEntity{
+	define_as = "FLAT_DOWN8",
+	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "FLAT_DOWN2",
+	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "FLAT_DOWN4",
+	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "FLAT_DOWN6",
+	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+
+-----------------------------------------
+-- Basic floors
+-----------------------------------------
 newEntity{
 	define_as = "FLOOR",
 	name = "floor", image = "terrain/marble_floor.png",

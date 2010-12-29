@@ -711,6 +711,7 @@ function _M:setupCommands()
 	local not_wild = function(f) return function() if self.zone and not self.zone.wilderness then f() else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
 
 	self.key:addCommands{
+		[{"_a","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
 		[{"_d","ctrl"}] = function()
 			if config.settings.cheat then
 				self.player:forceLevelup(50)

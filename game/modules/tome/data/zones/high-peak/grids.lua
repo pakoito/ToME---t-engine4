@@ -163,3 +163,13 @@ newEntity{
 		end,
 	},
 }
+
+newEntity{
+	define_as = "HIGH_PEAK_UP", image = "terrain/stair_up.png",
+	name = "next level",
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+

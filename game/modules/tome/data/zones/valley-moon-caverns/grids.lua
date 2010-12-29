@@ -22,7 +22,7 @@ load("/data/general/grids/basic.lua")
 newEntity{
 	define_as = "UP_VALLEY",
 	name = "exit to the lost valley",
-	display = '<', color_r=255, color_g=0, color_b=255,
+	display = '<', color_r=255, color_g=0, color_b=255, image = "terrain/stair_up_wild.png",
 	always_remember = true,
 	notice = true,
 	change_level = 3,

@@ -39,8 +39,8 @@ return {
 			rooms = {"forest_clearing"},
 			['.'] = "SAND",
 			['#'] = "SANDWALL",
-			up = "UP",
-			down = "DOWN",
+			up = "SAND_LADDER_UP",
+			down = "SAND_LADDER_DOWN",
 			door = "SAND",
 		},
 		actor = {
@@ -64,7 +64,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "SAND_LADDER_UP_WILDERNESS",
 			}, },
 		},
 	},

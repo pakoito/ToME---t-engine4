@@ -41,8 +41,8 @@ return {
 			lesser_vaults_list = {"honey_glade", "troll-hideout", "mage-hideout", "thief-hideout", "plantlife", "mold-path"},
 			['.'] = "GRASS",
 			['#'] = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
-			up = "UP",
-			down = "DOWN",
+			up = "GRASS_UP4",
+			down = "GRASS_DOWN6",
 			door = "GRASS",
 		},
 		actor = {
@@ -65,7 +65,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "GRASS_UP_WILDERNESS",
 			}, },
 		},
 		[7] = {

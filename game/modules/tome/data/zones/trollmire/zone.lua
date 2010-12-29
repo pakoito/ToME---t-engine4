@@ -38,8 +38,8 @@ return {
 			noise = "fbm_perlin",
 			floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
 			wall = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
-			up = "UP",
-			down = "DOWN",
+			up = "GRASS_UP4",
+			down = "GRASS_DOWN6",
 			do_ponds =  {
 				nb = {0, 2},
 				size = {w=25, h=25},
@@ -74,7 +74,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "GRASS_UP_WILDERNESS",
 			}, },
 		},
 	},

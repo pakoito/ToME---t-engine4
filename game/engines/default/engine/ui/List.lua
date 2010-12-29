@@ -147,6 +147,11 @@ function _M:generate()
 	}
 end
 
+function _M:select(i)
+	self.sel = util.bound(i, 1, #self.list)
+	self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+end
+
 function _M:onUse(...)
 	local item = self.list[self.sel]
 	if not item then return end

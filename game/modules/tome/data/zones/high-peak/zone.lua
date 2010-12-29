@@ -42,7 +42,7 @@ return {
 			['.'] = "FLOOR",
 			['#'] = "WALL",
 			up = "FLOOR",
-			down = "DOWN",
+			down = "HIGH_PEAK_UP",
 			door = "DOOR",
 		},
 		actor = {

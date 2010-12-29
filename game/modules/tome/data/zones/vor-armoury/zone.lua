@@ -61,7 +61,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS_FAR_EAST",
+				up = "UP_WILDERNESS",
 			},
 			trap = {nb_object = {20, 20},},
 			},

@@ -19,7 +19,7 @@
 
 defineTile('#', "SLIME_WALL")
 defineTile('.', "SLIME_FLOOR")
-defineTile('<', "UP_WILDERNESS_FAR_EAST")
+defineTile('<', "UP_WILDERNESS")
 defineTile('+', "PEAK_DOOR")
 
 subGenerator{

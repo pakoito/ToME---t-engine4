@@ -39,8 +39,8 @@ return {
 			lite_room_chance = 0,
 			['.'] = "WATER_FLOOR",
 			['#'] = "WATER_WALL",
-			up = "UP",
-			down = "DOWN",
+			up = "WATER_UP",
+			down = "WATER_DOWN",
 			door = "WATER_DOOR",
 		},
 		actor = {

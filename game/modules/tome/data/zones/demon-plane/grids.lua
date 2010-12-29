@@ -47,7 +47,7 @@ newEntity{
 
 newEntity{
 	define_as = "PORTAL_BACK",
-	name = "Demonic Portal",
+	name = "Demonic Portal", image = "terrain/demon_portal.png",
 	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
 	notice = true,
 	always_remember = true,
