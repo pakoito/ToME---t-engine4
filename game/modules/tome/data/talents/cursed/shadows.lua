@@ -32,7 +32,7 @@ newTalent{
 		else
 			x, y, range = self.summoner.x, self.summoner.y, self.ai_state.location_range
 		end
-		
+
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport_out")
 		self:teleportRandom(x, y, range)
 		game.level.map:particleEmitter(x, y, 1, "teleport_in")
@@ -86,7 +86,8 @@ local function createShadow(self, level, duration, target)
 		name = "shadow",
 		desc = [[]],
 		display = 'b', color=colors.BLACK,
-		
+
+		never_anger = true,
 		summoner = self,
 		summoner_gain_exp=true,
 		summon_time = duration,
@@ -96,7 +97,7 @@ local function createShadow(self, level, duration, target)
 		autolevel = "none",
 		level_range = {level, level},
 		exp_worth=0,
-		
+
 		max_life = resolvers.rngavg(15,20), life_rating = 4,
 		energy = { mod=1 },
 		stats = {
@@ -123,7 +124,7 @@ local function createShadow(self, level, duration, target)
 			[self.T_SHOCK]=math.max(5, math.floor(1 + level * 0.1)),
 			[self.T_HEAL]=math.max(5, math.floor(1 + level * 0.1)),
 		},
-		
+
 		undead = 1,
 		no_breath = 1,
 		stone_immune = 1,
@@ -136,7 +137,7 @@ local function createShadow(self, level, duration, target)
 		blind_immune = 1,
 		see_invisible = 80,
 		resists = {[DamageType.LIGHT] = -100, [DamageType.DARKNESS] = 100},
-		
+
 		ai = "shadow",
 		ai_state = {
 			summoner_range = 10,
@@ -147,7 +148,7 @@ local function createShadow(self, level, duration, target)
 			focus_on_target = false,
 			shadow_wall = false,
 			shadow_wall_time = 0,
-			
+
 			blindside_chance = 15,
 			phasedoor_chance = 5,
 			attack_spell_chance = 5,
@@ -221,7 +222,7 @@ newTalent{
 				e.summon_time = 0
 			end
 		end
-		
+
 		return true
 	end,
 	do_callShadows = function(self, t)
@@ -230,28 +231,28 @@ newTalent{
 				remainingCooldown = 0
 			}
 		end
-		
+
 		if game.zone.wilderness then return false end
-		
+
 		self.shadows.remainingCooldown = self.shadows.remainingCooldown - 1
 		if self.shadows.remainingCooldown > 0 then return false end
 		self.shadows.remainingCooldown = 10
-			
+
 		local shadowCount = 0
 		for _, e in pairs(game.level.entities) do
 			if e.summoner and e.summoner == self and e.subtype == "shadow" then shadowCount = shadowCount + 1 end
 		end
-	
+
 		if shadowCount >= t.getMaxShadows(self, t) then
 			return false
 		end
-		
+
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 8, true, {[Map.ACTOR]=true})
 		if not x then
 			return false
 		end
-		
+
 		-- use hate
 		if self.hate < 1 then
 			-- not enough hate..just wait for another try
@@ -262,7 +263,7 @@ newTalent{
 
 		level = t.getLevel(self, t)
 		local shadow = createShadow(self, level, 100, nil)
-		
+
 		-- feed the shadow
 		if self:isTalentActive(T_FEED_SHADOWS) then
 			local t = self:getTalentFromId(T_FEED_SHADOWS)
@@ -321,11 +322,11 @@ newTalent{
 				e.ai_target.focus_on_target = true
 				e.ai_target.blindside_chance = blindsideChance
 				e.ai_target.attack_spell_chance = attackSpellChance
-				
+
 				shadowCount = shadowCount + 1
 			end
 		end
-		
+
 		if shadowCount > 0 then
 			game.logPlayer(self, "#PINK#The shadows converge on %s!", target.name)
 			return true
@@ -364,9 +365,9 @@ newTalent{
 				e:feed(t)
 			end
 		end
-		
+
 		local regenId = self:addTemporaryValue("hate_regen", -0.02)
-	
+
 		return { regenId = regenId }
 	end,
 	deactivate = function(self, t, p)
@@ -375,9 +376,9 @@ newTalent{
 				e:unfeed(t)
 			end
 		end
-		
+
 		self:removeTemporaryValue("hate_regen", p.regenId)
-	
+
 		return true
 	end,
 	info = function(self, t)
@@ -399,17 +400,17 @@ newTalent{
 		return 2 + self:getTalentLevel(t) * 2
 	end,
 	action = function(self, t)
-		
+
 		local duration = t.getDuration(self, t)
 		local shadowCount = 0
 		for _, e in pairs(game.level.entities) do
 			if e.summoner and e.summoner == self and e.subtype == "shadow" then
 				e:shadowWall(t, duration)
-				
+
 				shadowCount = shadowCount + 1
 			end
 		end
-		
+
 		if shadowCount > 0 then
 			game.logPlayer(self, "#PINK#The shadows form around %s!", self.name)
 			return true

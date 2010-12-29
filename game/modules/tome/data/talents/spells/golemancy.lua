@@ -32,6 +32,7 @@ local function makeGolem()
 		display = 'g', color=colors.WHITE,
 		level_range = {1, 50}, exp_worth=0,
 		life_rating = 13,
+		never_anger = true,
 
 		combat = { dam=10, atk=10, apr=0, dammod={str=1} },
 
@@ -81,7 +82,7 @@ newTalent{
 	cooldown = 20,
 	mana = 10,
 	no_npc_use = true,
-	getHeal = function(self, t) 
+	getHeal = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
 		return self:combatTalentSpellDamage(t, 15, 350, (ammo.alchemist_power + self:combatSpellpower()) / 2)
 	end,

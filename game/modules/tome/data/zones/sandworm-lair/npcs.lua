@@ -39,6 +39,7 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	max_life = 10000,
 	faction = "sandworm-burrowers",
 	energy = {mod=1},
+	never_anger = true,
 
 	invulnerable = 1,
 	move_body = 1,

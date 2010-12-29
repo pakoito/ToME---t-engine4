@@ -82,6 +82,8 @@ end
 function _M:checkAngered(src, set, value)
 	if not src.resolveSource then return end
 	if not src.faction then return end
+	if self.never_anger then return end
+	if self.summoner and self.summoner == src then return end
 
 	-- Cant anger at our own faction unless it's the silly player
 	if self.faction == src.faction and not src.player then return end
