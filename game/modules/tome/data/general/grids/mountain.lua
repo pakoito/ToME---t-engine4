@@ -38,7 +38,7 @@ newEntity{
 
 newEntity{
 	define_as = "ROCKY_SNOWY_TREE",
-	name = "rocky mountain", image = "terrain/rocky_snowy_tree.png",
+	name = "snowy tree", image = "terrain/rocky_snowy_tree.png",
 	display = '#', color=colors.WHITE, back_color=colors.LIGHT_UMBER,
 	always_remember = true,
 	can_pass = {pass_tree=1},
