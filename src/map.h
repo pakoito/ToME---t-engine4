@@ -38,7 +38,7 @@ typedef struct {
 	bool on_unknown;
 	bool valid;
 	float oldx, oldy;
-	int move_step, move_max;
+	int move_step, move_max, move_blur;
 	long uid;
 } map_object;
 

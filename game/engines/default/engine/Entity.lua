@@ -226,15 +226,33 @@ end
 
 --- Setup movement animation for the entity
 -- The entity is supposed to posses a correctly set x and y pair of fields - set to the current (new) position
-function _M:setMoveAnim(oldx, oldy, speed)
+-- @param oldx the coords from where the animation will seem to come from
+-- @param oldy the coords from where the animation will seem to come from
+-- @param speed the number of frames the animation lasts (frames are normalized to 30/sec no matter the actual FPS)
+-- @param blur apply a motion blur effect of this number of frames
+function _M:setMoveAnim(oldx, oldy, speed, blur)
 	if not self._mo then return end
-	self._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed)
+	self._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur)
 
 	if not self.add_displays then return end
 
 	for i = 1, #self.add_displays do
 		if self.add_displays[i]._mo then
-			self.add_displays[i]._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed)
+			self.add_displays[i]._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur)
+		end
+	end
+end
+
+--- Reset movement animation for the entity - removes any anim
+function _M:resetMoveAnim()
+	if not self._mo then return end
+	self._mo:resetMoveAnim()
+
+	if not self.add_displays then return end
+
+	for i = 1, #self.add_displays do
+		if self.add_displays[i]._mo then
+			self.add_displays[i]._mo:resetMoveAnim()
 		end
 	end
 end

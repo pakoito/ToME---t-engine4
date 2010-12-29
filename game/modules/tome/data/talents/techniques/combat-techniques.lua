@@ -80,7 +80,12 @@ newTalent{
 			lx, ly = l()
 		end
 
+		local ox, oy = self.x, self.y
 		self:move(tx, ty, true)
+		if config.settings.tome.smooth_move > 0 then
+			self:resetMoveAnim()
+			self:setMoveAnim(ox, oy, 8, 5)
+		end
 
 		-- Attack ?
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then

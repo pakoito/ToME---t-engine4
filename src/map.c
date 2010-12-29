@@ -155,6 +155,12 @@ static int map_object_invalid(lua_State *L)
 	return 0;
 }
 
+static int map_object_reset_move_anim(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	obj->move_max = 0;
+}
+
 static int map_object_set_move_anim(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
@@ -176,6 +182,7 @@ static int map_object_set_move_anim(lua_State *L)
 	}
 	obj->move_step = 0;
 	obj->move_max = luaL_checknumber(L, 6);
+	obj->move_blur = lua_tonumber(L, 7); // defaults to 0
 	return 0;
 }
 
@@ -669,6 +676,16 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		}
 	}
 
+	// Setup for display
+	a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
+	int z;
+	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
+	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
+	{
+		if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
+		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+	}
+
 	// Handle move anim
 	float animdx = 0, animdy = 0;
 	if (m->move_max)
@@ -680,22 +697,35 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		{
 			float adx = (float)i - m->oldx;
 			float ady = (float)j - m->oldy;
+
+			// Motion bluuuurr!
+			if (m->move_blur)
+			{
+				int step;
+				for (z = 1; z <= m->move_blur; z++)
+				{
+					step = m->move_step - z;
+					if (step >= 0)
+					{
+						animdx = map->tile_w * (adx * step / (float)m->move_max - adx);
+						animdy = map->tile_h * (ady * step / (float)m->move_max - ady);
+						tglColor4f(r, g, b, a * 2 / (3 + z));
+						DO_QUAD(dx + m->dx + animdx, dy + m->dy + animdy, 0, m->scale);
+					}
+				}
+			}
+
+			// Final step
 			animdx = map->tile_w * (adx * m->move_step / (float)m->move_max - adx);
 			animdy = map->tile_h * (ady * m->move_step / (float)m->move_max - ady);
 		}
 	}
 
-	tglColor4f(r, g, b, (a > 1) ? 1 : ((a < 0) ? 0 : a));
+	// Final display
+	tglColor4f(r, g, b, a);
+	DO_QUAD(dx + m->dx + animdx, dy + m->dy + animdy, 0, m->scale);
 
-	int z;
-	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
-	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
-	{
-		if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
-		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
-	}
-	DO_QUAD(dx + m->dx + animdx, dy + m->dy + animdy, z, m->scale);
-
+	// Unbind any shaders
 	if (m->shader) glUseProgramObjectARB(0);
 }
 
@@ -938,6 +968,7 @@ static const struct luaL_reg map_object_reg[] =
 	{"invalidate", map_object_invalid},
 	{"isValid", map_object_is_valid},
 	{"onSeen", map_object_on_seen},
+	{"resetMoveAnim", map_object_reset_move_anim},
 	{"setMoveAnim", map_object_set_move_anim},
 	{"getMoveAnim", map_object_get_move_anim},
 	{NULL, NULL},

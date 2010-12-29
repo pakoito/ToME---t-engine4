@@ -710,77 +710,11 @@ function _M:setupCommands()
 	-- Helper function to not allow some actions on the wilderness map
 	local not_wild = function(f) return function() if self.zone and not self.zone.wilderness then f() else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
 
+	-- Debug mode
 	self.key:addCommands{
 		[{"_a","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
-		[{"_d","ctrl"}] = function()
-			if config.settings.cheat then
-				self.player:forceLevelup(50)
-				self.player.no_breath = 1
-				self.player.invulnerable = 1
-				self.player.esp.all = 1
-				self.player.esp.range = 50
-				self.player.inc_damage.all = 100000
-				self.player.wild_x = 162
-				self.player.wild_y = 31
---				self:changeLevel(5, "gorbat-pride")
---				self:changeLevel(1, "town-gates-of-morning")
-				self:changeLevel(1, "wilderness")
-				self.memory_levels["wilderness-1"] = self.level
-				self.player:grantQuest("strange-new-world")
-				self.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "helped-fillarel")
-				self.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED)
-				self.player:grantQuest("orc-pride")
-				self.player:setQuestStatus("orc-pride", engine.Quest.COMPLETED)
---				self.player:grantQuest("escort-duty")
-			end
-		end,
-		[{"_z","ctrl"}] = function()
-			if config.settings.cheat then
-				self.player:forceLevelup(50)
-				self.player.no_breath = 1
---				self.player.invulnerable = 1
-				self.player.esp.all = 1
-				self.player.esp.range = 50
---				self.player.inc_damage.all = 100000
-			end
-		end,
-		[{"_f","ctrl"}] = function()
-			if config.settings.cheat then
-				self.player:incStat("str", 100) self.player:incStat("dex", 100) self.player:incStat("mag", 100) self.player:incStat("wil", 100) self.player:incStat("cun", 100) self.player:incStat("con", 100)
-				self.player:learnTalent(self.player.T_HEAVY_ARMOUR_TRAINING, true) self.player:learnTalent(self.player.T_MASSIVE_ARMOUR_TRAINING, true)
--- [[
-				for i, e in ipairs(self.zone.object_list) do
-					if e.unique and e.define_as ~= "VOICE_SARUMAN" and e.define_as ~= "ORB_MANY_WAYS_DEMON" then
-						local a = self.zone:finishEntity(self.level, "object", e)
-						a.no_unique_lore = true -- to not spam
-						a:identify(true)
-						if a.name == a.unided_name then print("=================", a.name) end
-						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)
-					end
-				end
---]]
---[[
-				for i = 1, 50 do
-					local a = self.zone:makeEntity(self.level, "object", {type="ammo", ego_chance=0, add_levels=50}, nil, true)
-					if a then
-						a:identify(true)
-						self.zone:addEntity(self.level, a, "object", self.player.x, self.player.y)
-					end
-				end
---]]
-				self.logPlayer(self.player, "All world artifacts created.")
-			end
-		end,
-		[{"_g","ctrl"}] = function()
-			if config.settings.cheat then
---				local m = game.zone:makeEntityByName(game.level, "actor", "TEST")
---				game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y+1)
---				self.player:grantQuest("anti-antimagic")
-				game:changeLevel(1,"shertul-fortress")
---				game.player:magicMap(50)
-			end
-		end,
 	}
+
 	self.key:addBinds
 	{
 		-- Movements

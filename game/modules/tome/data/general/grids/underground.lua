@@ -38,3 +38,28 @@ newEntity{
 	dig = "UNDERGROUND_FLOOR",
 }
 end
+
+newEntity{
+	define_as = "UNDERGROUND_LADDER_DOWN",
+	name = "ladder to the next level", image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_down.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+newEntity{
+	define_as = "UNDERGROUND_LADDER_UP",
+	name = "ladder to the previous level", image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+}
+newEntity{
+	define_as = "UNDERGROUND_LADDER_UP_WILDERNESS",
+	name = "ladder to worldmap", image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_up_wild.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+}

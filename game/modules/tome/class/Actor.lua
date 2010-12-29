@@ -390,10 +390,23 @@ function _M:move(x, y, force)
 	end
 
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
-		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move)
+		local blur = 0
+		if self:attr("lightning_speed") then blur = 3 end
+		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)
 	end
 
 	return moved
+end
+
+--- Knock back the actor
+-- Overloaded to add move anim
+function _M:knockback(srcx, srcy, dist, recursive)
+	local ox, oy = self.x, self.y
+	engine.Actor.knockback(self, srcx, srcy, dist, recursive)
+	if config.settings.tome.smooth_move > 0 then
+		self:resetMoveAnim()
+		self:setMoveAnim(ox, oy, 9, 5)
+	end
 end
 
 --- Get the "path string" for this actor
