@@ -90,7 +90,7 @@ function _M:okclick()
 		self:simplePopup("Password", "Password mismatch!")
 		return
 	end
-	if self.c_login.text:len() < 3 then
+	if self.c_login.text:len() < 2 then
 		self:simplePopup("Username", "Your username is too short")
 		return
 	end

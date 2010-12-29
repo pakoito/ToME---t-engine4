@@ -134,6 +134,7 @@ newTalent{
 	action = function(self, t)
 		if not game.level.backup then
 			game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
+			return
 		end
 
 		game:onTickEnd(function()
