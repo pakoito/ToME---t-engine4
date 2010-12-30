@@ -34,7 +34,7 @@ function _M:init(chat, id)
 
 	self:generateList()
 
-	self.c_desc = Textzone.new{width=self.iw - 10, height=1, auto_height=true, no_color_bleed=true, text=self.text.."\n"}
+	self.c_desc = Textzone.new{width=self.iw - 10, height=1, auto_height=true, text=self.text.."\n"}
 
 	self:generateList()
 

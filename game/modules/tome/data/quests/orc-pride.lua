@@ -29,9 +29,9 @@ desc = function(self, who)
 	end
 --[[
 	if self:isCompleted("eastport") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have killed the master of Easport.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have killed the master of Eastport.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* A group of corrupted Humans live in Eastport on the southern costline. They have contact with the Pride.#WHITE#"
+		desc[#desc+1] = "#SLATE#* A group of corrupted Humans live in Eastport on the southern coastline. They have contact with the Pride.#WHITE#"
 	end
 ]]
 	if self:isCompleted("vor") then

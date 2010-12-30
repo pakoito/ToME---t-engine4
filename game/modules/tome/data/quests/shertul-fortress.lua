@@ -25,5 +25,20 @@ desc = function(self, who)
 	if self:isCompleted("entered") then
 		desc[#desc+1] = "You used the key inside the ruins of Nur and found a way into the fortress of old."
 	end
+	if self:isCompleted("weirdling") then
+		desc[#desc+1] = "The Weirdling Beast is dead, freeing the way into the fortress itself."
+	end
+	if self:isCompleted("butler") then
+		desc[#desc+1] = "You have activated what seems to be a ... butler? with your rod of recall."
+	end
 	return table.concat(desc, "\n")
+end
+
+spawn_butler = function(self)
+	local spot = game.level:pickSpot{type="spawn", subtype="butler"}
+	local butler = game.zone:makeEntityByName(game.level, "actor", "BUTLER")
+	game.zone:addEntity(game.level, butler, "actor", spot.x, spot.y)
+	game.level.map:particleEmitter(spot.x, spot.y, 1, "demon_teleport")
+
+	game.player:setQuestStatus(self.id, self.COMPLETED, "butler")
 end

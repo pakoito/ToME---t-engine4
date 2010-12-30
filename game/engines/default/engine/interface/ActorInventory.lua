@@ -78,7 +78,7 @@ function _M:getInven(id)
 end
 
 --- Adds an object to an inventory
--- @return false if the object could not be added
+-- @return false if the object could not be added otherwise true and the inventory index where it is now
 function _M:addObject(inven_id, o)
 	local inven
 	if type(inven_id) == "number" then
@@ -103,7 +103,7 @@ function _M:addObject(inven_id, o)
 
 	self:onAddObject(o)
 
-	return true
+	return true, #inven
 end
 
 --- Rerturns the position of an item in the given inventory, or nil
@@ -207,9 +207,14 @@ function _M:dropFloor(inven, item, vocal, all)
 		return
 	end
 	if o:check("on_drop", self) then return false end
+
 	o = self:removeObject(inven, item, all)
-	game.level.map:addObject(self.x, self.y, o)
+	local ok, idx = game.level.map:addObject(self.x, self.y, o)
+
 	if vocal then game.logSeen(self, "%s drops on the floor: %s.", self.name:capitalize(), o:getName{do_color=true}) end
+	if ok and game.level.map.attrs(self.x, self.y, "on_drop") then
+		game.level.map.attrs(self.x, self.y, "on_drop")(self, self.x, self.y, idx, o)
+	end
 	return true
 end
 

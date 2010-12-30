@@ -38,7 +38,7 @@
   <tile id="1">
    <properties>
     <property name="display" value="#"/>
-    <property name="value" value="&quot;BIGWALL&quot;"/>
+    <property name="value" value="&quot;HARD_BIGWALL&quot;"/>
    </properties>
   </tile>
   <tile id="27">
@@ -62,10 +62,10 @@
  </tileset>
  <layer name="Terrain" width="60" height="60">
   <data encoding="base64" compression="zlib">
-   eJzt1sENgzAMhWFuvXYYpC7BCJ0ja2TC7lJxQEKRYwK0yC/8h3doaCt/shMyDcMwNebdQVqteDWDFy9e3eDFi1c3ePHiPZYRr7w3OS5vPYt6xyKe1/uuqndPevD23t+77d+t3l9hiuKNkH9413syGWvz52ysRfAu9Rz1RjqbPW9Zj+ctzxo1r1VPzWvVXM7qVlLlv6/wrn0t8zw/exk9itjbxdtSU+3MsuqOPs/PxpoeBy1LPkG8rfPcS3/Pnldq+/fM+8iqOxm/93LV3dnz7rlvlO8TtXn+5X3ybt5srFkzr+yNHLx48eoGL168usGLF69u8OLFqxu8ePHqBi/enrxfNJC/pg==
+   eJzt1sENwyAMBVBuvXYYpC6REToHa2TC7lLlEAkhYozVgn/4h69KtJX8YjDZQgibMu8bRGulFzP00ksvbuill17c0EsvvbZEeuG9SXBJ6zuoNxaRvNJvUb09uYP37v1d7fy2ej/C5MXrIf/w1s6kdm2296zH6vU0myVvWY/kLWcNmrdWz5W3VvPeaU0TvblPs5+P716VHnns7enV1HQ1s1pzyJv5MDyVNT2MljMfJ17tfs77G7NPtP5a5lXuRTu/lvtI6m+q/F/KqHdnyduaz6XP2lsP+1nzPinVuLK3dw3RKz2HUa5feq37lF7/3t67ZuZdO7u/HkKvbj6jhl566cUNvfTSixt66aUXN/TSSy9uVvN+AbgwtF4=
   </data>
  </layer>
- <objectgroup name="Actor" width="60" height="60">
+ <objectgroup color="#ff0000" name="Actor" width="60" height="60">
   <object name="Weirdling Beast" x="295" y="933" width="20" height="20">
    <properties>
     <property name="display" value="h"/>
@@ -73,7 +73,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup color="#55ff7f" name="addSpot" width="60" height="60">
+ <objectgroup color="#55ff7f" name="addSpot#spots" width="60" height="60">
   <object x="357" y="933" width="19" height="23">
    <properties>
     <property name="subtype" value="&quot;weirdling&quot;"/>
@@ -98,6 +98,12 @@
     <property name="type" value="&quot;portal&quot;"/>
    </properties>
   </object>
+  <object name="butler" x="740" y="804" width="21" height="21">
+   <properties>
+    <property name="subtype" value="&quot;butler&quot;"/>
+    <property name="type" value="&quot;spawn&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone#rooms" width="60" height="60" visible="0">
   <object name="control room" x="673" y="738" width="412" height="408">
@@ -106,15 +112,16 @@
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="room" x="37" y="770" width="274" height="313">
-   <properties>
-    <property name="subtype" value="&quot;Storage Room&quot;"/>
-    <property name="type" value="&quot;zonename&quot;"/>
-   </properties>
-  </object>
   <object name="arrival room" x="517" y="837" width="83" height="215">
    <properties>
     <property name="subtype" value="&quot;Portal Room&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="storage room" x="418" y="1186" width="348" height="152">
+   <properties>
+    <property name="sort_drops" value="true"/>
+    <property name="subtype" value="&quot;Storage Room&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>

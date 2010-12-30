@@ -51,7 +51,7 @@ return {
 		},
 	},
 	post_process = function(level)
-		-- Setup no teleport
+		-- Setup zones
 		for _, z in ipairs(level.custom_zones) do
 			if z.type == "no-teleport" then
 				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
@@ -68,6 +68,12 @@ return {
 					ty = z.y2 - z.y1,
 				})
 			end
+			if z.sort_drops then
+				level.data.drop_zone = z
+				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
+					game.level.map.attrs(x, y, "on_drop", function(...) game.level.data.process_drops(...) end)
+				end end
+			end
 		end
 	end,
 	on_enter = function(lev, old_lev, zone)
@@ -80,5 +86,35 @@ return {
 			Dialog:simplePopup("Yiilkgur", "This level seems to be removed from the rest of the ruins. The air is fresh and the level is lighted. You hear the distant crackling of magical energies.")
 			game.level.shown_warning = true
 		end
+	end,
+
+	-- Handle drop sorting
+	process_drops = function(who, dx, dy, idx, o)
+		if not game.level.data.drop_zone then return end
+		local map = game.level.map
+		local z = game.level.data.drop_zone
+		local typ = o.type.."/"..o.subtype
+
+		map:removeObject(dx, dy, idx)
+
+		-- Scan the room for spot
+		for x = z.x1, z.x2 do for y = z.y1, z.y2 do
+			local gtyp = map.attrs(x, y, "sort_drop_type")
+			if not gtyp or gtyp == typ or map:getObjectTotal(x, y) == 0 then
+				map.attrs(x, y, "sort_drop_type", typ)
+				map:addObject(x, y, o)
+				map:particleEmitter(x, y, 1, "demon_teleport")
+
+				if  map:getObjectTotal(x, y) == 1 then
+					game.logPlayer(who, "Your %s is magically sorted by the storage room.", o:getName{do_color=true})
+				else
+					game.logPlayer(who, "Your %s is magically sorted by the storage room and put in a pile with the others items of the same type.", o:getName{do_color=true})
+				end
+				return
+			end
+		end end
+
+		game.logPlayer(who, "It seems the room has no more space to sort your %s.", o:getName{do_color=true})
+		map:addObject(dx, dy, o) -- Add the object back, no room, so dont loose it
 	end,
 }

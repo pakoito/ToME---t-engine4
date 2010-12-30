@@ -71,6 +71,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	resolvers.sustains_at_birth(),
 
 	on_die = function()
+		-- Open the door, destroy the stairs
 		local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
 		local spot = game.level:pickSpot{type="door", subtype="weirdling"}
 		if spot then
@@ -82,13 +83,19 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 		end
 
+		-- Change the in/out spots for later
+		local spot = game.level:pickSpot{type="portal", subtype="back"}
+		if spot then game.level.default_up.x, game.level.default_up.y = spot.x, spot.y end
+		local spot = game.level:pickSpot{type="portal", subtype="back"}
+		if spot then game.level.default_down.x, game.level.default_down.y = spot.x, spot.y end
+
 		-- Update the worldmap with a shortcut to here
 		local g = mod.class.Grid.new{
 			show_tooltip=true, always_remember = true,
 			name="Teleportation portal to the Sher'Tul Fortress",
-			display='>', color=colors.ANTIQUE_WHITE,
+			display='>', color=colors.ANTIQUE_WHITE, image = "terrain/maze_teleport.png",
 			notice = true,
-			change_level=1, change_zone="shertul-fortress"
+			change_level=1, change_zone="shertul-fortress",
 		}
 		g:resolve() g:resolve(nil, true)
 		local level = game.memory_levels["wilderness-1"]
@@ -96,5 +103,21 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.player.wild_x = spot.x
 		game.player.wild_y = spot.y
+
+		-- Update quest
+		game.player:setQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "weirdling")
 	end,
+}
+
+newEntity{ base = "BASE_NPC_HORROR", define_as="BUTLER",
+	subtype = "Sher'Tul",
+	name = "Fortress Shadow", color=colors.GREY,
+	desc = "The shadow created by the fortress, it resembles somewhat the horrors you saw previously, but it is not the same.",
+	level_range = {19, nil}, exp_worth = 3,
+	rank = 3,
+	max_life = 300, life_rating = 16,
+	invulnerable = 1, never_move = 1,
+	faction = "neutral",
+	never_anger = 1,
+	can_talk = "shertul-fortress-butler",
 }

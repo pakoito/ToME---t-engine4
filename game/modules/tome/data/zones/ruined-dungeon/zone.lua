@@ -70,6 +70,8 @@ return {
 		end
 	end,
 	touch_orb = function(type, sx, sy)
+		if game.level.orbs_used then return end
+
 		local Dialog = require("engine.ui.Dialog")
 		local order = {"water", "earth", "wind", "nature", "arcane", "fire"}
 		local o = game.level.orbs_touched
@@ -103,6 +105,7 @@ return {
 			local spot = game.level:pickSpot{type="door", subtype="sealed"}
 			local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
 			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+			game.level.orbs_used = true
 		else
 			Dialog:simplePopup("Strange Orb", "The orb glows brightly.")
 		end

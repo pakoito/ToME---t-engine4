@@ -23,7 +23,7 @@ desc = function(self, who)
 	desc[#desc+1] = "You discovered a sect worshiping a demon named Kryl-Feijan in a crypt."
 	desc[#desc+1] = "They were trying to bring it back into the world using a human sacrifice."
 	if self:isStatus(self.DONE) then
-		desc[#desc+1] = "You have defeated the acolytes and saved the woman. She told you she is the daugther of a rich merchant of Last Hope."
+		desc[#desc+1] = "You have defeated the acolytes and saved the woman. She told you she is the daughter of a rich merchant of Last Hope."
 	elseif self:isStatus(self.FAILED) then
 		if self.not_saved then
 			desc[#desc+1] = "You have failed to protect her when escorting her out of the crypt."

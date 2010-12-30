@@ -92,6 +92,7 @@ function _M:generateList()
 	list[#list+1] = {name="Reveal all map", action="magic_map"}
 	list[#list+1] = {name="Godmode", action="godmode"}
 	list[#list+1] = {name="Create all artifacts", action="all_arts"}
+	list[#list+1] = {name="Grant/Alter Quests", dialog="GrantQuest"}
 
 	local chars = {}
 	for i, v in ipairs(list) do

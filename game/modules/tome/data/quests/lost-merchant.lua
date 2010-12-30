@@ -28,7 +28,7 @@ end
 on_status_change = function(self, who, status, sub)
 	if sub and sub == "evil" then
 		game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
-		game.logPlayer(who, "A stair out appears at your feet. The Lord says: 'And rememeber, you are MINE. I will call you.'")
+		game.logPlayer(who, "A stairway out appears at your feet. The Lord says: 'And remember, you are MINE. I will call you.'")
 	end
 
 	if self:isCompleted() then

@@ -38,6 +38,13 @@ newEntity{
 	does_block_move = true,
 }
 
+newEntity{ base = "BIGWALL",
+	define_as = "HARD_BIGWALL",
+	block_sense = true,
+	block_esp = true,
+	dig = false,
+}
+
 newEntity{
 	define_as = "TELEPORT_OUT",
 	name = "teleportation circle to the surface", image = "terrain/maze_teleport.png",
@@ -54,17 +61,18 @@ newEntity{
 	always_remember = true,
 	block_move = function(self, x, y, e, act, couldpass)
 		if e and e.player and act then
-
+			local chat = require("engine.Chat").new("shertul-fortress-command-orb", self, e)
+			chat:invoke()
 		end
 		return true
 	end,
 }
 
-newEntity{ base = "BIGWALL",
+newEntity{ base = "HARD_BIGWALL",
 	define_as = "GREEN_DRAPPING",
 	add_displays = {class.new{image="terrain/green_drapping.png"}},
 }
-newEntity{ base = "BIGWALL",
+newEntity{ base = "HARD_BIGWALL",
 	define_as = "PURPLE_DRAPPING",
 	add_displays = {class.new{image="terrain/purple_drapping.png"}},
 }

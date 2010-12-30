@@ -896,7 +896,7 @@ function _M:addObject(x, y, o)
 	while self(x, y, i) do i = i + 1 end
 	-- Fill it
 	self(x, y, i, o)
-	return true
+	return true, i - self.OBJECT + 1
 end
 
 function _M:getObject(x, y, i)

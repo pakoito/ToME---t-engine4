@@ -59,7 +59,7 @@ end
 
 portal_back = function(self, who)
 	if self:isCompleted("portal-back") then return end
-	-- Do it on the quets object directly to not trigger a message to the player
+	-- Do it on the quests object directly to not trigger a message to the player
 	self:setStatus(engine.Quest.COMPLETED, "portal-back", who)
 
 	local g = mod.class.Grid.new{
