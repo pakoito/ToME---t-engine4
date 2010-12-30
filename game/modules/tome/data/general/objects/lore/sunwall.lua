@@ -25,6 +25,6 @@ newEntity{ base = "BASE_LORE",
 	level_range = {1, 50},
 	rarity = 50,
 	is_magic_device = false,
-	encumberance = 0,
+	encumber = 0,
 }
 end

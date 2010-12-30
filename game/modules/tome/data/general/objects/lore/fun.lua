@@ -22,7 +22,7 @@ newEntity{ base = "BASE_LORE",
 	desc = [[A poem written by a... troll?]],
 	level_range = {1, 50},
 	rarity = 20,
-	encumberance = 0,
+	encumber = 0,
 }
 
 newEntity{ base = "BASE_LORE",
@@ -30,7 +30,7 @@ newEntity{ base = "BASE_LORE",
 	desc = [[A poem written by a... troll?]],
 	level_range = {1, 50},
 	rarity = 20,
-	encumberance = 0,
+	encumber = 0,
 }
 
 newEntity{ base = "BASE_LORE",
@@ -38,7 +38,7 @@ newEntity{ base = "BASE_LORE",
 	desc = [[A poem written by a... Necromancer?]],
 	level_range = {15, 50},
 	rarity = 20,
-	encumberance = 0,
+	encumber = 0,
 }
 
 newEntity{ base = "BASE_LORE",
@@ -46,5 +46,5 @@ newEntity{ base = "BASE_LORE",
 	desc = [[A poem written by a... Necromancer?]],
 	level_range = {15, 50},
 	rarity = 20,
-	encumberance = 0,
+	encumber = 0,
 }
