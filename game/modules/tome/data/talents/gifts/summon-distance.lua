@@ -160,7 +160,7 @@ newTalent{
 		local m = NPC.new{
 			type = "insect", subtype = "ritch",
 			display = "I", color=colors.LIGHT_RED,
-			name = "ritch firespitter", faction = self.faction,
+			name = "ritch flamespitter", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },

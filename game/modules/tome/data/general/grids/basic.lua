@@ -148,6 +148,19 @@ newEntity{
 	air_level = -20,
 	dig = "FLOOR",
 }
+
+newEntity{
+	define_as = "BIGWALL",
+	name = "wall", image = "terrain/bigwall.png",
+	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+	always_remember = true,
+	does_block_move = true,
+	can_pass = {pass_wall=1},
+	block_sight = true,
+	air_level = -20,
+	dig = "FLOOR",
+}
+
 newEntity{
 	define_as = "HARDWALL",
 	name = "wall", image = "terrain/granite_wall1.png",

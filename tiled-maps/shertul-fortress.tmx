@@ -28,14 +28,41 @@
   </tile>
   <tile id="75">
    <properties>
-    <property name="display" value="#"/>
+    <property name="display" value="="/>
     <property name="value" value="&quot;OLD_WALL&quot;"/>
    </properties>
   </tile>
  </tileset>
+ <tileset firstgid="91" name="tome-terrains" tilewidth="32" tileheight="32">
+  <image source="gfx/tome-terrains.png" width="256" height="544"/>
+  <tile id="1">
+   <properties>
+    <property name="display" value="#"/>
+    <property name="value" value="&quot;BIGWALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="display" value="G"/>
+    <property name="value" value="&quot;GREEN_DRAPPING&quot;"/>
+   </properties>
+  </tile>
+  <tile id="52">
+   <properties>
+    <property name="display" value="P"/>
+    <property name="value" value="&quot;PURPLE_DRAPPING&quot;"/>
+   </properties>
+  </tile>
+  <tile id="130">
+   <properties>
+    <property name="display" value="*"/>
+    <property name="value" value="&quot;COMMAND_ORB&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
  <layer name="Terrain" width="60" height="60">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3YSw7CMAxF0cw6ZTGV2IT3vx5GTKIkfimf2M0dHKGqBuU2pUJYKcUAAAAAABCcDd+YjYpefX712v/Va8JcVLv1vh0T1ydzL99feut5E+YiaPXcsVfpmXleRb6fR/vXOqe0qNdmVat33OsdHUfZ41HDHXsfYvMxeb43v7p3t/tZub+93qfzmVGfV72uTxoi721vrd7+jlrO6jWTnXtbx8p7Mrm6v7v1mjOTAf9v0FvPr177r3sz/J6kFwAAAAAAZPICqQoJjkA4AAA=
+  <data encoding="base64" compression="zlib">
+   eJzt1sENgzAMhWFuvXYYpC7BCJ0ja2TC7lJxQEKRYwK0yC/8h3doaCt/shMyDcMwNebdQVqteDWDFy9e3eDFi1c3ePHiPZYRr7w3OS5vPYt6xyKe1/uuqndPevD23t+77d+t3l9hiuKNkH9413syGWvz52ysRfAu9Rz1RjqbPW9Zj+ctzxo1r1VPzWvVXM7qVlLlv6/wrn0t8zw/exk9itjbxdtSU+3MsuqOPs/PxpoeBy1LPkG8rfPcS3/Pnldq+/fM+8iqOxm/93LV3dnz7rlvlO8TtXn+5X3ybt5srFkzr+yNHLx48eoGL168usGLF69u8OLFqxu8ePHqBi/enrxfNJC/pg==
   </data>
  </layer>
  <objectgroup name="Actor" width="60" height="60">
@@ -46,35 +73,34 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addSpot" width="60" height="60">
-  <object name="" x="357" y="933" width="19" height="23">
+ <objectgroup color="#55ff7f" name="addSpot" width="60" height="60">
+  <object x="357" y="933" width="19" height="23">
    <properties>
     <property name="subtype" value="&quot;weirdling&quot;"/>
     <property name="type" value="&quot;door&quot;"/>
    </properties>
   </object>
-  <object name="" x="582" y="997" width="21" height="21">
+  <object name="portal back" x="549" y="997" width="21" height="21">
    <properties>
     <property name="subtype" value="&quot;back&quot;"/>
     <property name="type" value="&quot;portal&quot;"/>
    </properties>
   </object>
-  <object name="" x="36" y="929" width="19" height="23">
+  <object x="36" y="929" width="19" height="23">
    <properties>
     <property name="subtype" value="&quot;up&quot;"/>
     <property name="type" value="&quot;stair&quot;"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup name="addZone" width="60" height="60" visible="0">
-  <object name="no teleport" x="332" y="459" width="620" height="941">
+  <object name="portal back" x="549" y="869" width="21" height="21">
    <properties>
-    <property name="type" value="&quot;no-teleport&quot;"/>
+    <property name="subtype" value="&quot;back&quot;"/>
+    <property name="type" value="&quot;portal&quot;"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone" width="60" height="60">
-  <object name="room" x="391" y="842" width="207" height="172">
+ <objectgroup name="addZone#rooms" width="60" height="60" visible="0">
+  <object name="control room" x="673" y="738" width="412" height="408">
    <properties>
     <property name="subtype" value="&quot;Control Room&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
@@ -86,10 +112,31 @@
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="room" x="420" y="676" width="149" height="117">
+  <object name="arrival room" x="517" y="837" width="83" height="215">
    <properties>
-    <property name="subtype" value="&quot;Teleportation Control&quot;"/>
+    <property name="subtype" value="&quot;Portal Room&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#ff55ff" name="addZone#particles" width="60" height="60">
+  <object name="flamewall" x="484" y="900" width="148" height="23">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="flamewall" x="485" y="969" width="141" height="20">
+   <properties>
+    <property name="reverse" value="true"/>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="flamewall" x="867" y="933" width="53" height="54">
+   <properties>
+    <property name="subtype" value="&quot;house_orbcontrol&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
    </properties>
   </object>
  </objectgroup>

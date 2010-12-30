@@ -28,7 +28,7 @@ return {
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	level_range = {18, 25},
 	max_level = 1,
-	width = 30, height = 30,
+	width = 60, height = 60,
 	persistant = "zone",
 --	all_remembered = true,
 	all_lited = true,
@@ -61,6 +61,12 @@ return {
 				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
 					game.level.map.attrs(x, y, "zonename", z.subtype)
 				end end
+			elseif z.type == "particle" then
+				if z.reverse then z.x1, z.x2, z.y1, z.y2 = z.x2, z.x1, z.y2, z.y1 end
+				level.map:particleEmitter(z.x1, z.y1, math.max(z.x2-z.x1, z.y2-z.y1) + 1, z.subtype, {
+					tx = z.x2 - z.x1,
+					ty = z.y2 - z.y1,
+				})
 			end
 		end
 	end,

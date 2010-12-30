@@ -30,7 +30,7 @@ newEntity{
 
 newEntity{
 	define_as = "SEALED_DOOR",
-	name = "sealed door", image = "terrain/sealed_door.png",
+	name = "sealed door", image = "terrain/stone_wall_door.png",
 	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
 	notice = true,
 	always_remember = true,
@@ -44,4 +44,27 @@ newEntity{
 	display = '>', color_r=255, color_g=0, color_b=255,
 	notice = true, show_tooltip = true,
 	change_level = 1, change_zone = "wilderness",
+}
+
+newEntity{
+	define_as = "COMMAND_ORB",
+	name = "Sher'Tul Control Orb", image = "terrain/maze_floor.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	display = '*', color=colors.PURPLE,
+	notice = true,
+	always_remember = true,
+	block_move = function(self, x, y, e, act, couldpass)
+		if e and e.player and act then
+
+		end
+		return true
+	end,
+}
+
+newEntity{ base = "BIGWALL",
+	define_as = "GREEN_DRAPPING",
+	add_displays = {class.new{image="terrain/green_drapping.png"}},
+}
+newEntity{ base = "BIGWALL",
+	define_as = "PURPLE_DRAPPING",
+	add_displays = {class.new{image="terrain/purple_drapping.png"}},
 }
