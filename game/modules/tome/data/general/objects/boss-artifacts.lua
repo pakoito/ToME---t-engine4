@@ -426,7 +426,7 @@ newEntity{ base = "BASE_STAFF",
 	require = { stat = { mag=35 }, },
 	level_range = {40, 50},
 	rarity = 210,
-	encumberance = 2.5,
+	encumber = 2.5,
 	cost = 500,
 	combat = {
 		dam = 35,
