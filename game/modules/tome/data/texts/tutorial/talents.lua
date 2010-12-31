@@ -31,7 +31,7 @@ Hotkeys by default are the 1 to 0 keys and can also be used with items.
 You can use a talent either by pressing its hotkey, selecting it from the talents list, clicking on it in the lower right corner or right-clicking on the map.
 Talents belong to three types:
 * #GOLD#Active#WHITE#: A talent that activated when you use it and has an instantaneous effect.
-* #GOLD#Sustained#WHITE#: A talent that must be turned on and lasts until it is turned off. Usualy this will reduce your maximum ressource available (stamina in this case).
+* #GOLD#Sustained#WHITE#: A talent that must be turned on and lasts until it is turned off. Usually this will reduce your maximum resource available (stamina in this case).
 * #GOLD#Passive#WHITE#: A talent that provides an ever-present benefit.
 
 Some talents require a target, when you use them the interface will chance to let you select the target:
@@ -39,6 +39,6 @@ Some talents require a target, when you use them the interface will chance to le
 * #GOLD#Using the mouse#WHITE#: Moving your mouse will move the target around. Left-click will confirm it.
 
 Now go forward and try using your talents:
-* #GOLD#Shield Pummel#WHITE#: This talent will attack the target trying to stun it, redering it unable to harm you for a few turns.
+* #GOLD#Shield Pummel#WHITE#: This talent will attack the target trying to stun it, rendering it unable to harm you for a few turns.
 * #GOLD#Shield Wall#WHITE#: This talent will increase your defense and armour but reduce your attack and damage.
 ]]

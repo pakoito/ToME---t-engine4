@@ -65,7 +65,7 @@ function _M:zoneCheckBackupGuardian()
 	if self.allow_backup_guardians[game.zone.short_name] and self.allow_backup_guardians[game.zone.short_name].on_level == game.level.level then
 		local data = self.allow_backup_guardians[game.zone.short_name]
 
-		-- Place the guardian, we do not check for connectivity, vault or whatever, the player is suppoed to be strong enough to get there
+		-- Place the guardian, we do not check for connectivity, vault or whatever, the player is supposed to be strong enough to get there
 		local m = game.zone:makeEntityByName(game.level, "actor", data.guardian)
 		if m then
 			local x, y = rng.range(0, game.level.map.w - 1), rng.range(0, game.level.map.h - 1)
@@ -230,7 +230,7 @@ function _M:generateRandart(add, base, lev)
 	print(" * using themes", table.concat(table.keys(themes), ','))
 
 	-----------------------------------------------------------
-	-- Impue powers in the randart
+	-- Imbue powers in the randart
 	-----------------------------------------------------------
 	local function merger(dst, src)
 		for k, e in pairs(src) do

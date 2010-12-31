@@ -19,7 +19,7 @@
 
 load("/data/general/objects/objects.lua")
 
--- Artifact, droped by the sandworm queen
+-- Artifact, dropped by the sandworm queen
 newEntity{
 	define_as = "SANDQUEEN_HEART",
 	type = "corpse", subtype = "heart",

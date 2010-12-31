@@ -22,7 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	name = "Weirdling Beast", color=colors.VIOLET,
-	desc = "A roughtly humanoid creature, with tentacles-like appendices in the place of arms and legs. You gasp in horror as you notice it has no head. Putrid warts form quickly on its skin and explode as quickly.",
+	desc = "A roughly humanoid creature, with tentacles-like appendices in the place of arms and legs. You gasp in horror as you notice it has no head. Putrid warts form quickly on its skin and explode as quickly.",
 	level_range = {19, nil}, exp_worth = 3,
 	rank = 3.5,
 	autolevel = "warriormage",
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 		local spot = game.level:pickSpot{type="door", subtype="weirdling"}
 		if spot then
 			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
-			game.log("#LIGHT_RED#As the Weirdling beast falls it shrieks one last time and the door behind it shatters and exlpodes, revealing the room behind it. The stair up vanishes!")
+			game.log("#LIGHT_RED#As the Weirdling beast falls it shrieks one last time and the door behind it shatters and explodes, revealing the room behind it. The stair up vanishes!")
 		end
 		local spot = game.level:pickSpot{type="stair", subtype="up"}
 		if spot then

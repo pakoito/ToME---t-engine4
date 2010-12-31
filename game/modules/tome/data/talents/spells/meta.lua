@@ -72,7 +72,7 @@ newTalent{
 	info = function(self, t)
 		local count = t.getRemoveCount(self, t)
 		return ([[Removes up to %d magical effects (both good and bad) from the target.
-		At level 3 it can be targetted.]]):
+		At level 3 it can be targeted.]]):
 		format(count)
 	end,
 }

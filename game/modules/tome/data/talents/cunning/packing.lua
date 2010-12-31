@@ -60,7 +60,7 @@ newTalent{
 		self:checkEncumbrance()
 	end,
 	info = function(self, t)
-		return ([[Learn to manage heavy burdens using cunning balance, increasing your maximun encumbrance by %d.]]):
+		return ([[Learn to manage heavy burdens using cunning balance, increasing your maximum encumbrance by %d.]]):
 		format(20 + self:getTalentLevel(t) * 15)
 	end,
 }

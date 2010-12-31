@@ -83,7 +83,7 @@ newEntity{ define_as = "GOLBUG",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	on_acquire_target = function(self, who)
-		-- Doesnt matter who, jsut assume the player is there
+		-- Doesn't matter who, just assume the player is there
 		if not self.has_chatted then
 			self.has_chatted = true
 			local Chat = require("engine.Chat")
@@ -107,7 +107,7 @@ newEntity{ define_as = "GOLBUG",
 	end,
 }
 
--- The messager sent by last-hope
+-- The messenger sent by last-hope
 newEntity{ define_as = "HARNO",
 	type = "humanoid", subtype = "human", unique = true,
 	faction = "allied-kingdoms",

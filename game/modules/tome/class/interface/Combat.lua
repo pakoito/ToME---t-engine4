@@ -105,8 +105,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 				end
 			end
 		end
-		-- All wpeaons in off hands
-		-- Offhand atatcks are with a damage penality, taht can be reduced by talents
+		-- All weapons in off hands
+		-- Offhand attacks are with a damage penalty, that can be reduced by talents
 		if self:getInven(self.INVEN_OFFHAND) then
 			local offmult = self:getOffHandMult(mult)
 			for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
@@ -180,7 +180,7 @@ function _M:checkHit(atk, def, min, max, factor)
 	return rng.percent(hit), hit
 end
 
---- Try to totaly evade an attack
+--- Try to totally evade an attack
 function _M:checkEvasion(target)
 	if not target:attr("evasion") then return end
 

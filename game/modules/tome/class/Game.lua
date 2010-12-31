@@ -575,7 +575,7 @@ function _M:tick()
 		self:targetOnTick()
 
 		engine.GameTurnBased.tick(self)
-		-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
+		-- Fun stuff: this can make the game realtime, although calling it in display() will make it work better
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
@@ -626,7 +626,7 @@ function _M:display(nb_keyframes)
 			self.player:playerFOV()
 		end
 
-		-- Display using Framebuffer, sotaht we can use shaders and all
+		-- Display using Framebuffer, so that we can use shaders and all
 		if self.fbo then
 			self.fbo:use(true)
 
@@ -973,7 +973,7 @@ function _M:mouseRightClick(mx, my)
 	self:registerDialog(MapMenu.new(mx, my, tmx, tmy))
 end
 
---- Ask if we realy want to close, if so, save the game first
+--- Ask if we really want to close, if so, save the game first
 function _M:onQuit()
 	self.player:runStop("quitting")
 	self.player:restStop("quitting")

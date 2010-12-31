@@ -63,7 +63,7 @@ newTalent{
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=rad, radius=radius, requires_knowledge=false}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
-			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+			-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 			-- but we cant ...
 			local _ _, x, y = self:canProject(tg, x, y)
 			rad = radius
@@ -142,7 +142,7 @@ newTalent{
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=t.getRange(self, t), radius=t.getRadius(self, t), requires_knowledge=false}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
-			-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+			-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 			-- but we cant ...
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")

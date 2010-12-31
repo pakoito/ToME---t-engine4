@@ -86,7 +86,7 @@ newBirthDescriptor{
 	desc = {
 		"The Doomed are fallen mages who once wielded powerful magic wrought by ambition and dark bargains.",
 		"They now possess only a twisted shadow of that power as they struggle to keep it from consuming them.",
-		"Only time will tell if they can choose a new path or are dooomed forever.",
+		"Only time will tell if they can choose a new path or are doomed forever.",
 		"The Doomed strike from behind a veil of darkness or a host of shadows.",
 		"They feed upon their enemies as they unleash powerful forces and terrible punishments.",
 		"Their most important stats are: Magic and Willpower",

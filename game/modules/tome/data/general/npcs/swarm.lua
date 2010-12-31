@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
-	name = "hummerhorn", color=colors.YELLOW, image="npc/hommerhorn.png",
+	name = "hummerhorn", color=colors.YELLOW, image="npc/hummerhorn.png",
 	desc = "A giant buzzing wasp, its stinger drips venom.",
 	level_range = {16, nil}, exp_worth = 1,
 	rarity = 4,

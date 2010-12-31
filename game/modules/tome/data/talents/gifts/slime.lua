@@ -43,7 +43,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Releases poisonous spores at the target bypasing his armor and doing %d%% weapon damage.]]):format(damDesc(self, DamageType.POISON, 100 * (1.5 + self:getTalentLevel(t) / 4)))
+		return ([[Releases poisonous spores at the target bypassing his armor and doing %d%% weapon damage.]]):format(damDesc(self, DamageType.POISON, 100 * (1.5 + self:getTalentLevel(t) / 4)))
 	end,
 }
 
@@ -120,7 +120,7 @@ newTalent{
 	action = function(self, t)
 		local x, y = self:getTarget{type="ball", range=20 + self:getTalentLevel(t), radius=math.min(0, 5 - self:getTalentLevel(t))}
 		if not x then return nil end
-		-- Target code doesnot restrict the self coordinates to the range, it lets the poject function do it
+		-- Target code does not restrict the self coordinates to the range, it lets the project function do it
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")

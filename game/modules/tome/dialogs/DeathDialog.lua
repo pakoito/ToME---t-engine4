@@ -78,14 +78,14 @@ function _M:cleanActor(actor)
 	end
 end
 
---- Restore ressources
+--- Restore resources
 function _M:restoreRessources(actor)
 	actor:resetToFull()
 
 	actor.energy.value = game.energy_to_act
 end
 
---- Basic resurection
+--- Basic resurrection
 function _M:resurrectBasic(actor)
 	actor.dead = false
 	actor.died = (actor.died or 0) + 1

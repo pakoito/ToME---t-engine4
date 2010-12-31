@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Archer",
 	desc = {
-		"Archers are dextrous ranged fighters, able to pin their foes to the ground and rain down a carpet of arrows on them.",
+		"Archers are dexterous ranged fighters, able to pin their foes to the ground and rain down a carpet of arrows on them.",
 	},
 	descriptor_choices =
 	{
@@ -41,7 +41,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Archer",
 	desc = {
-		"Archers are dextrous ranged fighters, able to pin their foes to the ground and rain down a carpet of arrows on them.",
+		"Archers are dexterous ranged fighters, able to pin their foes to the ground and rain down a carpet of arrows on them.",
 		"Skilled archers can fire special shots that pierce, cripple or pin their foes.",
 		"Their most important stats are: Dexterity and Strength",
 		"#GOLD#Stats modifiers:",

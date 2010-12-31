@@ -25,7 +25,7 @@ load("/data/general/npcs/ghost.lua", rarity(3))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
 
--- Not normaly appearing, used for the Pale Drake summons
+-- Not normally appearing, used for the Pale Drake summons
 load("/data/general/npcs/bone-giant.lua", function(e) if e.rarity then e.bonegiant_rarity = e.rarity; e.rarity = nil end end)
 
 local Talents = require("engine.interface.ActorTalents")

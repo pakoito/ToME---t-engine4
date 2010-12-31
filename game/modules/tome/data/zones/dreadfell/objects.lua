@@ -38,7 +38,7 @@ newEntity{ base = "BASE_LORE",
 newEntity{ base = "BASE_LORE",
 	define_as = "UNDEAD_POEM_LEVEL_7",
 	name = "paper scrap", lore="dreadfell-poem-level-7",
-	desc = [[A poem written in an elegant gothic script]],
+	desc = [[A poem written in an elegant Gothic script]],
 	rarity = false,
 	encumberance = 0,
 }

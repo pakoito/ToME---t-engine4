@@ -23,7 +23,7 @@ Hailing from the Dwarven strongholds of the Iron Throne, you have decided to tak
 
 You have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
+You have come to a land called the Derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
 To the west lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below it were infested by vermin and undead.
 
 After days of travel, you have found the forest and entered it. What will you find there...?

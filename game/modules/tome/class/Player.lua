@@ -106,7 +106,7 @@ function _M:onBirth(birther)
 end
 
 function _M:onEnterLevel(zone, level)
-	-- Save where we enterred
+	-- Save where we entered
 	self.entered_level = {x=self.x, y=self.y}
 
 	-- Fire random escort quest
@@ -514,7 +514,7 @@ function _M:restCheck()
 	self:incStamina(self.stamina_regen * perc)
 	self:incMana(self.mana_regen * perc)
 
-	-- Check ressources, make sure they CAN go up, otherwise we will never stop
+	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then
 		if self.air_regen < 0 then return false, "loosing breath!" end
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
@@ -529,25 +529,25 @@ function _M:restCheck()
 end
 
 --- Can we continue running?
--- We can run if no hostiles are in sight, and if we no interresting terrains are next to us
+-- We can run if no hostiles are in sight, and if we no interesting terrains are next to us
 function _M:runCheck()
 	local spotted = spotHostiles(self)
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
 	if self.air_regen < 0 then return false, "losing breath!" end
 
-	-- Notice any noticable terrain
+	-- Notice any noticeable terrain
 	local noticed = false
 	self:runScan(function(x, y)
-		-- Only notice interresting terrains
+		-- Only notice interesting terrains
 		local grid = game.level.map(x, y, Map.TERRAIN)
 		if grid and grid.notice then noticed = "interesting terrain" end
 
-		-- Objects are always interresting
+		-- Objects are always interesting
 		local obj = game.level.map:getObject(x, y, 1)
 		if obj then noticed = "object seen" end
 
-		-- Traps are always interresting if known
+		-- Traps are always interesting if known
 		local trap = game.level.map(x, y, Map.TRAP)
 		if trap and trap:knownBy(self) then noticed = "trap spotted" end
 	end)
@@ -637,7 +637,7 @@ function _M:getEncumberTitleUpdator(title)
 end
 
 function _M:playerPickup()
-	-- If 2 or more objects, display a pickup dialog, otehrwise just picks up
+	-- If 2 or more objects, display a pickup dialog, otherwise just picks up
 	if game.level.map:getObject(self.x, self.y, 2) then
 		local titleupdator = self:getEncumberTitleUpdator("Pickup")
 		local d d = self:showPickupFloor(titleupdator(), nil, function(o, item)
@@ -825,7 +825,7 @@ function _M:on_pickup_object(o)
 	end
 end
 
---- Tell us when we are targetted
+--- Tell us when we are targeted
 function _M:on_targeted(act)
 	if self:attr("invisible") or self:attr("stealth") then
 		if self:canSee(act) and game.level.map.seens(act.x, act.y) then

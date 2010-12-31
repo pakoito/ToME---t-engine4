@@ -27,7 +27,7 @@ newEntity{
 	on_move = function(self, x, y, who)
 		local DT = engine.DamageType
 		local dam = DT:get(DT.DEMONFIRE).projector(self, x, y, DT.DEMONFIRE, game.level.demonfire_dam or 1)
-		if dam > 0 then game.logPlayer(who, "The laval burns you!")
+		if dam > 0 then game.logPlayer(who, "The lava burns you!")
 		elseif dam < 0 then game.logPlayer(who, "The lava heals you!") end
 	end,
 }

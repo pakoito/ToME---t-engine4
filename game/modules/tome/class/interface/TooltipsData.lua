@@ -23,7 +23,7 @@ module(..., package.seeall, class.make)
 
 
 -------------------------------------------------------------
--- Ressources
+-- Resources
 -------------------------------------------------------------
 TOOLTIP_GOLD = [[#GOLD#Gold#LAST#
 Money!
@@ -34,7 +34,7 @@ You can gain money by looting it from your foes, by selling items and by doing s
 TOOLTIP_LIFE = [[#GOLD#Life#LAST#
 This is your life force, when you take damage this is reduced more and more.
 If it reaches below zero you die.
-Death is usualy permanent so beware!
+Death is usually permanent so beware!
 It is increased by Constitution.]]
 
 TOOLTIP_AIR = [[#GOLD#Air#LAST#
@@ -96,13 +96,13 @@ Each time you level you gain stat and talent points to use to improve your chara
 ]]
 
 TOOLTIP_ENCUMBERED = [[#GOLD#Encumberance#LAST#
-Each object you carry has an encumberance value, your maximun carrying capacity is determined by your strength.
+Each object you carry has an encumberance value, your maximum carrying capacity is determined by your strength.
 You can not move while encumbered, drop some items.
 ]]
 
 TOOLTIP_INSCRIPTIONS = [[#GOLD#Inscriptions#LAST#
 The people of Eyal have found a way to create herbal infusions and runes that can be inscribed on the skin of a creature.
-Those inscriptions give the bearer always accessible powers. Usualy most people have a simple regeneration infusion, but there are other kind of potion inscriptions.
+Those inscriptions give the bearer always accessible powers. Usually most people have a simple regeneration infusion, but there are other kind of potion inscriptions.
 ]]
 
 -------------------------------------------------------------
@@ -155,7 +155,7 @@ Attack speed represents how fast your attacks are compared to a normal turn.
 The lower it is the faster your attacks are.
 ]]
 TOOLTIP_COMBAT_RANGE = [[#GOLD#Firing range#LAST#
-The maximun distance your weapon can reach.
+The maximum distance your weapon can reach.
 ]]
 TOOLTIP_COMBAT_AMMO = [[#GOLD#Ammo remaining#LAST#
 This is the amount of ammo you have left.
@@ -172,7 +172,7 @@ It represents the fatigue created by wearing heavy equipment.
 Not all talents are affected, notably Wild Gifts are not.
 ]]
 TOOLTIP_ARMOR = [[#GOLD#Armour#LAST#
-Armour value is a flat damage reduction substracted from every incoming melee and ranged physical attacks.
+Armour value is a flat damage reduction subtracted from every incoming melee and ranged physical attacks.
 This is countered by armour penetration and is applied before all kinds of critical damage increase, talent multipliers and damage multiplier, thus making even small amounts have greater effects.
 ]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#
@@ -222,12 +222,12 @@ TOOLTIP_INC_DAMAGE = [[#GOLD#Damage increase: specific#LAST#
 All damage of this type that you deal, through any means, is increased by this percentage.
 ]]
 TOOLTIP_RESIST_ALL = [[#GOLD#Damage resistance: all#LAST#
-All damage you receieve, through any means, is decreased by this percentage.
+All damage you receive, through any means, is decreased by this percentage.
 This stacks with individual damage type resistances.
 ]]
 TOOLTIP_RESIST = [[#GOLD#Damage resistance: specific#LAST#
 All damage of this type that you receive, through any means, is reduced by this percentage.
 ]]
 TOOLTIP_SPECIFIC_IMMUNE = [[#GOLD#Effect resistance chance#LAST#
-This represents your chance to completly avoid the effect in question.
+This represents your chance to completely avoid the effect in question.
 ]]

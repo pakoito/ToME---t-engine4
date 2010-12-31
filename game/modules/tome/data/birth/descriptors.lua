@@ -50,9 +50,9 @@ newBirthDescriptor{
 		},
 		subclass =
 		{
-			-- Nobdoy can be a sun paladin but humans & elves
+			-- Nobody can be a sun paladin but humans & elves
 			['Sun Paladin'] = "disallow",
-			-- Nobdoy can be a sun paladin but elves
+			-- Nobody can be a sun paladin but elves
 			['Anorithil'] = "disallow",
 		},
 	},

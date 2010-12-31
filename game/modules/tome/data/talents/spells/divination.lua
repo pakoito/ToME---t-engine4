@@ -70,7 +70,7 @@ newTalent{
 		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=100, requires_knowledge=false}
 		x, y = self:getTarget(tg)
 		if not x then return nil end
-		-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 
@@ -81,7 +81,7 @@ newTalent{
 	info = function(self, t)
 		local radius = t.getRadius(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Summons an etheral magical eye at the designated location that lasts for %d turns.
+		return ([[Summons an ethereal magical eye at the designated location that lasts for %d turns.
 		The eye can not be seen or attacked by other creatures and posses magical vision that allows it to see any creature in a %d range around it.
 		It does not require light to do so but it can not see through walls.
 		Casting the eye does not take a turn.
@@ -141,7 +141,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
-		return ([[Echos of the future flashes before your eyes, allowing you to sense some incomming attacks.
+		return ([[Echos of the future flashes before your eyes, allowing you to sense some incoming attacks.
 		If the attack is elemental or magical you will erect a temporary shield that reduces all damage of this type by %d%% for 5 turns.
 		This effect can only happen once every 5 turns and happens before damage is taken.
 		The bonus will increase with the Magic stat]]):format(resist)

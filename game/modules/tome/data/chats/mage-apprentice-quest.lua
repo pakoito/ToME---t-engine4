@@ -82,7 +82,7 @@ In any case, I must collect 15 magic staves, rings or amulets and I have yet to 
 
 newChat{ id="unique",
 	text = [[Let me examine it.
-Oh yes, my friend, this is indeed a powerful artefect! I think that it alone should suffice to complete my quest! Many thanks!]],
+Oh yes, my friend, this is indeed a powerful artefact! I think that it alone should suffice to complete my quest! Many thanks!]],
 	answers = {
 		{"Well, I cannot use it anyway.", jump="welcome"},
 	}

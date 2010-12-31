@@ -26,7 +26,7 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 	type = "armor", subtype="cloak",
 	unided_name = "black cloak", image = "object/artifact/black_cloak.png",
 	name = "Cloak of Deception",
-	display = ")", color=colors.DARk_GREY,
+	display = ")", color=colors.DARK_GREY,
 	encumber = 1,
 	desc = [[A black cloak, with subtle illusion enchantments woven in its very fabric.]],
 

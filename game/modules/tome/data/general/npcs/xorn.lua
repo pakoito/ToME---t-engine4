@@ -97,7 +97,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	combat = { damtype=DamageType.ACID },
 
 	stun_immune = 1,
-	can_pass = {pass_wall=0}, -- We restore it after generation, to amke sure it does not birth in walls
+	can_pass = {pass_wall=0}, -- We restore it after generation, to make sure it does not birth in walls
 
 	-- Come in 5!
 	on_added_to_level = function(self)
@@ -120,7 +120,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	end,
 	on_die = function(self, who)
 		local nb_alive = 0
-		-- Buf others
+		-- Buff others
 		for _, m in ipairs(self.all_fragments) do
 			if not m.dead then
 				nb_alive = nb_alive + 1
@@ -140,7 +140,7 @@ newEntity{ base = "BASE_NPC_XORN",
 			if m then
 				game.zone:addEntity(game.level, m, "actor", x, y)
 				game.level.map:particleEmitter(x, y, 1, "teleport")
-				game.logSeen(self, "#AQUAMARINE#%s is infused with all the energies of the fragments. The real Harkor'Zun is reconstitued!", m.name)
+				game.logSeen(self, "#AQUAMARINE#%s is infused with all the energies of the fragments. The real Harkor'Zun is reconstituted!", m.name)
 			end
 		end
 	end,

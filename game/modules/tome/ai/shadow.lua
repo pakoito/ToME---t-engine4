@@ -47,7 +47,7 @@ local function shadowChooseActorTarget(self)
 	end
 		
 	if #actors > 0 then
-		--game.logPlayer(self.summoner, "#PINK#%s has choosen an actor.", self.name:capitalize())
+		--game.logPlayer(self.summoner, "#PINK#%s has chosen an actor.", self.name:capitalize())
 		self.ai_target.actor = actors[rng.range(1, #actors)]
 		self:check("on_acquire_target", act)
 		act:check("on_targeted", self)

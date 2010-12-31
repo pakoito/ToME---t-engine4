@@ -27,7 +27,7 @@ Their motto is: "I am Grey. I stand between the candle and the star. We are Grey
 
 You have helped one of them and can now create new characters with the #LIGHT_GREEN#Anorithil class#WHITE#.
 
-Anorithil are pure spellcasters that rely on posivite and negative energies.
+Anorithil are pure spellcasters that rely on positive and negative energies.
 Class features:#YELLOW#
 - Burn your foes from afar with the light and fire of the Sun
 - Head into battle enhanced by your powerful Sun Chants and Moon Hymns

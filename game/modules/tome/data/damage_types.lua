@@ -180,12 +180,12 @@ newDamageType{
 	name = "physical", type = "PHYSICAL",
 }
 
--- Arcane is basic (usualy) unresistable damage
+-- Arcane is basic (usually) unresistable damage
 newDamageType{
 	name = "arcane", type = "ARCANE", text_color = "#PURPLE#",
 	antimagic_resolve = true,
 }
--- The elemental damges
+-- The elemental damages
 newDamageType{
 	name = "fire", type = "FIRE", text_color = "#LIGHT_RED#",
 	antimagic_resolve = true,
@@ -224,7 +224,7 @@ newDamageType{
 		return realdam
 	end,
 }
--- Acid detroys potions
+-- Acid destroys potions
 newDamageType{
 	name = "acid", type = "ACID", text_color = "#GREEN#",
 	antimagic_resolve = true,
@@ -491,7 +491,7 @@ newDamageType{
 	end,
 }
 
--- Freezes target, chcks for spellresistance
+-- Freezes target, checks for spellresistance
 newDamageType{
 	name = "freeze", type = "FREEZE",
 	projector = function(src, x, y, type, dam)
@@ -907,7 +907,7 @@ newDamageType{
 	end,
 }
 
--- Holy light, damage demon/undead; heal ohers
+-- Holy light, damage demon/undead; heal others
 newDamageType{
 	name = "holy light", type = "HOLY_LIGHT",
 	projector = function(src, x, y, type, dam)
@@ -956,7 +956,7 @@ newDamageType{
 	end,
 }
 
--- blood boild, blight damage + slow
+-- blood boiled, blight damage + slow
 newDamageType{
 	name = "blood boil", type = "BLOOD_BOIL",
 	projector = function(src, x, y, type, dam)

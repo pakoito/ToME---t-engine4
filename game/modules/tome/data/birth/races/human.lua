@@ -68,7 +68,7 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +1 Strength, +1 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +1 Magic, +1 Willpower, +0 Cunning",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 11",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 15%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 15%",
 	},
 	inc_stats = { str=1, mag=1, dex=1, wil=1 },
 	experience = 1.15,
@@ -95,7 +95,7 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 10",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 0%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 0%",
 	},
 	experience = 1.0,
 	copy = {

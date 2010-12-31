@@ -187,7 +187,7 @@ newTalent{
 	type = {"chronomancy/weaving", 4},
 	require = temporal_req4,
 	points = 5,
-	message = "@Source@ rearranges history to make it more consistant.",
+	message = "@Source@ rearranges history to make it more consistent.",
 	cooldown = 200,
 	action = function(self, t)
 		local percent = ((self:getWil()/10) * self:getTalentLevel(t))

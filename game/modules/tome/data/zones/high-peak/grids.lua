@@ -95,7 +95,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	desc = [[An invocation portal, perpetually summoning beings through it.]],
 	orb_portal = {
 		summon = "undead",
 		special = invocation_close,
@@ -109,7 +109,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	desc = [[An invocation portal, perpetually summoning beings through it.]],
 	orb_portal = {
 		summon = "elemental",
 		special = invocation_close,
@@ -123,7 +123,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	desc = [[An invocation portal, perpetually summoning beings through it.]],
 	orb_portal = {
 		summon = "dragon",
 		special = invocation_close,
@@ -137,7 +137,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[An invocation portal, perpetualy summoning beings through it.]],
+	desc = [[An invocation portal, perpetually summoning beings through it.]],
 	orb_portal = {
 		summon = "demon",
 		special = invocation_close,

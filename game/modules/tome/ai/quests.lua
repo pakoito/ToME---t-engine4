@@ -21,7 +21,7 @@ local Astar = require "engine.Astar"
 
 -- AI for the escort quest
 -- the NPC will run on the given path up to the end and then start summoning
--- This alows him to buildup his distancemap to make demons follow him
+-- This allows him to buildup his distancemap to make demons follow him
 newAI("move_quest_limmir", function(self)
 	if self.limmir_target then
 		local tx, ty = self.limmir_target.x, self.limmir_target.y

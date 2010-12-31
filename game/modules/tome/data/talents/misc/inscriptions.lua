@@ -254,7 +254,7 @@ newInscription{
 		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=data.range + data.inc_stat, radius=3, requires_knowledge=false}
 		x, y = self:getTarget(tg)
 		if not x then return nil end
-		-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")

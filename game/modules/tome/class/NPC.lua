@@ -78,7 +78,7 @@ end
 --- Check if we are angered
 -- @param src the angerer
 -- @param set true if value is the finite value, false if it is an increment
--- @param value the value to add/substract
+-- @param value the value to add/subtract
 function _M:checkAngered(src, set, value)
 	if not src.resolveSource then return end
 	if not src.faction then return end

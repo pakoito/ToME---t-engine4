@@ -153,8 +153,8 @@ function _M:drawDialog(s)
 		end
 	end
 	h = h + self.font_h
-	-- All wpeaons in off hands
-	-- Offhand atatcks are with a damage penality, taht can be reduced by talents
+	-- All weapons in off hands
+	-- Offhand attacks are with a damage penalty, that can be reduced by talents
 	if player:getInven(player.INVEN_OFFHAND) then
 		local offmult = player:getOffHandMult()
 		for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
@@ -343,8 +343,8 @@ function _M:dump()
 		nl()
 	end
 
-	-- All wpeaons in off hands
-	-- Offhand atatcks are with a damage penality, taht can be reduced by talents
+	-- All weapons in off hands
+	-- Offhand attacks are with a damage penalty, that can be reduced by talents
 	if player:getInven(player.INVEN_OFFHAND) then
 		local offmult = player:getOffHandMult()
 		for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
@@ -453,7 +453,7 @@ function _M:dump()
 		end
 	end
 
-	-- Inscriptins
+	-- Inscriptions
 	local nb_inscriptions = 0
 	for i = 1, player.max_inscriptions do if player.inscriptions[i] then nb_inscriptions = nb_inscriptions + 1 end end
 	nl()

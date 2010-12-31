@@ -46,7 +46,7 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
---			guardian = "SHADE", -- The gardian is set in the static map
+--			guardian = "SHADE", -- The guardian is set in the static map
 		},
 		object = {
 			class = "engine.generator.object.Random",

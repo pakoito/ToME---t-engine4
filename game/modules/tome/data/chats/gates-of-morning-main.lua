@@ -85,7 +85,7 @@ The known bastions of the Pride are:
 - Gorbat Pride, in a mountain range in the southern desert
 - Vor Pride, in the northeast
 - Grushnak Pride, on the eastern slope of the High Peak]],
--- - A group of corrupted humans live in Eastport on the southen costline; they have contact with the Pride
+-- - A group of corrupted humans live in Eastport on the southern coastline; they have contact with the Pride
 	answers = {
 		{"I will investigate them.", jump="welcome", action=function(npc, player)
 			player:setQuestStatus("orc-hunt", engine.Quest.DONE)

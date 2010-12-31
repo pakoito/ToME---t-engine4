@@ -59,7 +59,7 @@ WorldAchievements:loadDefinition("/data/achievements/")
 -- Lore
 PlayerLore:loadDefinition("/data/lore/lore.lua")
 
--- Usefull keybinds
+-- Useful keybinds
 KeyBind:load("move,hotkeys,inventory,actions,interface,debug")
 
 -- Additional entities resolvers

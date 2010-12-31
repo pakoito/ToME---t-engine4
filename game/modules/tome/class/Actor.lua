@@ -39,7 +39,7 @@ local Map = require "engine.Map"
 local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(
-	-- a ToME actor is a complex beast it uses may inetrfaces
+	-- a ToME actor is a complex beast it uses may interfaces
 	engine.Actor,
 	engine.interface.ActorInventory,
 	engine.interface.ActorTemporaryEffects,
@@ -208,7 +208,7 @@ function _M:act()
 
 	self.changed = true
 
-	-- If ressources are too low, disable sustains
+	-- If resources are too low, disable sustains
 	if self.mana < 1 or self.stamina < 1 or self.psi < 1 then
 		for tid, _ in pairs(self.sustain_talents) do
 			local t = self:getTalentFromId(tid)
@@ -242,7 +242,7 @@ function _M:act()
 	-- Compute timed effects
 	self:timedEffects()
 
-	-- Handle thunderstorm, even if the actor is stunned or incampacited it still works
+	-- Handle thunderstorm, even if the actor is stunned or incapacitated it still works
 	if self:isTalentActive(self.T_THUNDERSTORM) then
 		local t = self:getTalentFromId(self.T_THUNDERSTORM)
 		t.do_storm(self, t)
@@ -428,7 +428,7 @@ function _M:dropNoTeleportObjects()
 			local o = inven[item]
 			if o.no_teleport then
 				self:dropFloor(inven, item, false, true)
-				game.logPlayer(self, "#LIGHT_RED#Your %s is immunte to the teleportation and drops to the floor!", o:getName{do_color=true})
+				game.logPlayer(self, "#LIGHT_RED#Your %s is immune to the teleportation and drops to the floor!", o:getName{do_color=true})
 			end
 		end
 	end
@@ -456,10 +456,10 @@ end
 
 --- Teleports randomly to a passable grid
 -- This simply calls the default actor teleportRandom but first checks for space-time stability
--- @param x the coord of the teleporatation
--- @param y the coord of the teleporatation
+-- @param x the coord of the teleportation
+-- @param y the coord of the teleportation
 -- @param dist the radius of the random effect, if set to 0 it is a precise teleport
--- @param min_dist the minimun radius of of the effect, will never teleport closer. Defaults to 0 if not set
+-- @param min_dist the minimum radius of of the effect, will never teleport closer. Defaults to 0 if not set
 -- @return true if the teleport worked
 function _M:teleportRandom(x, y, dist, min_dist)
 	if game.level.data.no_teleport_south and y + dist > self.y then
@@ -743,7 +743,7 @@ function _M:onTakeHit(value, src)
 	if self:attr("disruption_shield") then
 		local mana = self:getMana()
 		local mana_val = value * self:attr("disruption_shield")
-		-- We have enough to absord the full hit
+		-- We have enough to absorb the full hit
 		if mana_val <= mana then
 			self:incMana(-mana_val)
 			self.disruption_shield_absorb = self.disruption_shield_absorb + value
@@ -2020,7 +2020,7 @@ function _M:projected(tx, ty, who, t, x, y, damtype, dam, particles)
 	return false
 end
 
---- Called when we are targetted by a projectile
+--- Called when we are targeted by a projectile
 function _M:on_projectile_target(x, y, p)
 	if self:attr("slow_projectiles") then
 		print("Projectile slowing down from", p.energy.mod)

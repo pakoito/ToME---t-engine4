@@ -20,7 +20,7 @@
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
--- This one starts a quest it has a level and rarity so it can drop randomly, but there are palces where it is more likely to appear
+-- This one starts a quest it has a level and rarity so it can drop randomly, but there are places where it is more likely to appear
 newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_unique_lore=true,
 	unique = true, quest=true,
 	unided_name = "ancient tome",

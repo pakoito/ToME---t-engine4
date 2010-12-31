@@ -32,7 +32,7 @@ function _M:init(t)
 end
 
 function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same)
-	-- Count occurences
+	-- Count occurrences
 	local nb_same = 0
 	for i = 1, self.max_inscriptions do
 		if self.inscriptions[i] and self.inscriptions[i] == name.."_"..i then nb_same = nb_same + 1 end

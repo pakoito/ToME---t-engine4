@@ -163,7 +163,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Interract with your golem
+		return ([[Interact with your golem
 		- If it is destroyed you will take some time to reconstruct it (takes 15 alchemist gems).
 		- If it is alive you will be able to talk to it, change its weapon and armour or repair it for %d (takes 2 alchemist gems)]]):
 		format(heal)

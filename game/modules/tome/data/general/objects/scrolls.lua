@@ -81,7 +81,7 @@ newEntity{
 	unided_name = "scroll", identified=true,
 	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll-lore.png",
 	encumber = 0.1,
-	desc = [[This parchement contains some lore.]],
+	desc = [[This parchment contains some lore.]],
 }
 
 newEntity{ base = "BASE_INFUSION",

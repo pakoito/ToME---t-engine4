@@ -351,7 +351,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Warper for %d turns to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathursts and time prisons at your foes.
+		return ([[Summon a Warper for %d turns to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathrusts and time prisons at your foes.
 		It will get %d magic, %d willpower and %d constitution.
 		Magic stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),

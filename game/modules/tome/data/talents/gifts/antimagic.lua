@@ -158,7 +158,7 @@ newTalent{
 		local negative = base / 2
 
 		return ([[Drain %d mana, %d vim, %d positive and negative energies from your target, triggering a chain reaction that explodes in a burst of arcane damage.
-		The damage done is 130%% of the mana drained, 260%% of the vim drained, 520%% of the positive or negative enrgy drained, whichever is higher.
+		The damage done is 130%% of the mana drained, 260%% of the vim drained, 520%% of the positive or negative energy drained, whichever is higher.
 		The effect will increase with your Willpower stat.]]):
 		format(mana, vim, positive, negative)
 	end,

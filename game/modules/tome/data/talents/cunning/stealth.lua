@@ -106,7 +106,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[You have learned how to be stealthly even when in plain sight of your foes, with a %d%% chance of success. This also resets the cooldown of your stealth talent.]]):
+		return ([[You have learned how to be stealthy even when in plain sight of your foes, with a %d%% chance of success. This also resets the cooldown of your stealth talent.]]):
 		format(chance)
 	end,
 }

@@ -174,7 +174,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Entomb yourself in a wall of stone for %d turns.
-		At level 4 it becomes targettable.
+		At level 4 it becomes targetable.
 		Duration will improve with your Magic stat.]]):
 		format(duration)
 	end,

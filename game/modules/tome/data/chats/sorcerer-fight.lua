@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 local function void_portal_open(npc, player)
-	-- Charred scar was succesfull
+	-- Charred scar was successful
 	if player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted("stopped") then return false end
 	return true
 end
 local function aeryn_alive(npc, player)
-	-- Charred scar was succesfull
+	-- Charred scar was successful
 	if player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted("stopped") then return true end
 
 	-- Spared aeryn
@@ -97,7 +97,7 @@ You cannot stop us now!]],
 end
 
 newChat{ id="aeryn",
-	text = [[#LIGHT_GREEN#*The air whirls at your side and suddently High Sun Paladin Aeryn appears!*#WHITE#
+	text = [[#LIGHT_GREEN#*The air whirls at your side and suddenly High Sun Paladin Aeryn appears!*#WHITE#
 Then you shall not fight alone! Together we shall stop them, or die trying!]],
 	answers = {
 		{"I am glad to have you at my side, my Lady. Let's hunt some wizards!"},

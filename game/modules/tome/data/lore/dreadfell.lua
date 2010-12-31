@@ -109,7 +109,7 @@ Alabaster... raster... pastor? Grr, need more brains...]],
 newLore{
 	id = "dreadfell-poem-level-7",
 	category = "dreadfell",
-	name = "A poem written in an elegant gothic script",
+	name = "A poem written in an elegant Gothic script",
 	lore = [[No staff will save thee
 Against the blindness of pride
 Death will catch thee up]],

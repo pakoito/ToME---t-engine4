@@ -43,7 +43,7 @@ function _M:init(t, no_default)
 end
 
 --- Can this object act at all
--- Most object will want to anwser false, only recharging and stuff needs them
+-- Most object will want to answer false, only recharging and stuff needs them
 function _M:canAct()
 	if self.power_regen or self.use_talent then return true end
 	return false

@@ -21,7 +21,7 @@ return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a native of the northern region of the Allied Kingdoms, a peaceful land that both Humans and Halflings call home. You hail from the small town called Derth.
 Humans are the most common race of the land, and you are one of them. In an attempt to prove your worth, you have decided to venture into the old and wild places of the world, looking for ancient treasures and glory.
 
-You have come to a land called the derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
+You have come to a land called the Derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
 To the west lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below it were infested by vermin and undead.
 
 After days of travel, you have found the forest and entered it. What will you find there...?

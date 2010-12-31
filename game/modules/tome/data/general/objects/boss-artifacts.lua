@@ -98,7 +98,7 @@ newEntity{ base = "BASE_AMULET",
 	},
 }
 
--- Artifact, droped by Rantha
+-- Artifact, dropped by Rantha
 newEntity{ base = "BASE_LEATHER_BOOT",
 	define_as = "FROST_TREADS",
 	unided_name = "icy covered boots",
@@ -206,7 +206,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 newEntity{ base = "BASE_RING",
 	define_as = "PRIDE_GLORY", rarity=false,
 	name = "Glory of the Pride", unique=true, image="object/artifact/glory_of_the_pride.png",
-	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is incribed in the orc tongue, the black speech.]],
+	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is inscribed in the orc tongue, the black speech.]],
 	unided_name = "deep black ring",
 	level_range = {40, 50},
 	rarity = 280,

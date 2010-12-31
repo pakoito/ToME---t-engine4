@@ -105,7 +105,7 @@ newBirthDescriptor{
 	desc = {
 		"An Alchemist is a dabbler in magic, while 'true' magic is thought to have been lost during the Spellhunt.",
 		"Alchemists have an empirical knowledge of magic, which they can not use directly but through focuses.",
-		"A focus is usualy a gem which they can imbue with power to throw at their foes, exploding in fires, acid, ...",
+		"A focus is usually a gem which they can imbue with power to throw at their foes, exploding in fires, acid, ...",
 		"Alchemists are also known for their golem craft and are usually accompanied by such a construct which acts as a bodyguard.",
 		"Their most important stats are: Magic and Dexterity",
 		"#GOLD#Stats modifiers:",

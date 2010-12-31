@@ -168,7 +168,7 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
-	long_desc = function(self, eff) return "The target is encased in ice, completly unable to act. The ice increases all your resistances by 20%." end,
+	long_desc = function(self, eff) return "The target is encased in ice, completely unable to act. The ice increases all your resistances by 20%." end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -1061,7 +1061,7 @@ newEffect{
 
 newEffect{
 	name = "MIGHTY_BLOWS",
-	desc = "Migth Blows",
+	desc = "Mighty Blows",
 	long_desc = function(self, eff) return ("The target's combat damage is improved by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
@@ -1915,8 +1915,8 @@ newEffect{
 		end
 		eff.life_regen = self:addTemporaryValue("life_regen", 25)	         -- gives it a 10 life regen, should I increase this?
 		eff.mana_regen = self:addTemporaryValue("mana_regen", -9.75)          -- makes the mana regen realistic
-		eff.never_move = self:addTemporaryValue("never_move", 1)	 -- egg form shouldnt move
-		eff.silence = self:addTemporaryValue("silence", 1)		          -- egg shouldnt cast spells
+		eff.never_move = self:addTemporaryValue("never_move", 1)	 -- egg form should not move
+		eff.silence = self:addTemporaryValue("silence", 1)		          -- egg should not cast spells
 		eff.combat = self.combat
 		self.combat = nil						               -- egg shouldn't melee
 	end,
@@ -2184,7 +2184,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is surrounded by an entropic shield.", "+Entropic Shield" end,
-	on_lose = function(self, err) return "The entropic shield around #Target# disappates.", "-Entropic Shield" end,
+	on_lose = function(self, err) return "The entropic shield around #Target# dissipates.", "-Entropic Shield" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
@@ -2200,7 +2200,7 @@ newEffect{
 newEffect{
 	name = "DAMAGE_SMEARING",
 	desc = "Damage Smearing",
-	long_desc = function(self, eff) return ("Passes damage recieved in the present off onto the future self."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Passes damage received in the present off onto the future self."):format(eff.power) end,
 	type = "time",
 	status = "beneficial",
 	parameters = { power=10 },

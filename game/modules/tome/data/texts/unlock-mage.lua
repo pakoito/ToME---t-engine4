@@ -30,7 +30,7 @@ Archmagi are the pinnacle of spellcasters, attuned to the magical properties of 
 Class features:#YELLOW#
 - Cast elemental spells to burn your foes to death or freeze them
 - Summon the powers of Space and Time to protect and cripple
-- Dabble in Phanstasms and Illusions
+- Dabble in Phantasms and Illusions
 - Manipulate the forces of magic themselves#WHITE#
 
 All mages use mana to cast their spells.

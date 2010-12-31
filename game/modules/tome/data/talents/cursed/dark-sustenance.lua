@@ -99,7 +99,7 @@ newTalent{
 	info = function(self, t)
 		local constitutionGain = t.getConstitutionGain(self, t)
 		local lifeRegenGain = t.getLifeRegenGain(self, t)
-		return ([[Enhances your feeding by transfering %d constitution and %0.1f life per turn from a targeted foe to you.
+		return ([[Enhances your feeding by transferring %d constitution and %0.1f life per turn from a targeted foe to you.
 		Improves with the Willpower stat.]]):format(constitutionGain, lifeRegenGain)
 	end,
 }

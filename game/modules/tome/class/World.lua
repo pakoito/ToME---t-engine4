@@ -45,7 +45,7 @@ function _M:achievementWho(src)
 end
 
 --- Gain an achievement
--- @param id the achivement to gain
+-- @param id the achievement to gain
 -- @param src who did it
 function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]

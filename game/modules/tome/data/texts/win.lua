@@ -33,10 +33,10 @@ end
 
 if game.player:isQuestStatus("high-peak", engine.Quest.COMPLETED, "gates-of-morning-destroyed") then
 	desc[#desc+1] = ""
-	desc[#desc+1] = "The Gates of Morning have been destroyed and the Sunwall has fallen. The last remnants of the free people in the Far East will surely disminish and soon only orcs will inhabit this land."
+	desc[#desc+1] = "The Gates of Morning have been destroyed and the Sunwall has fallen. The last remnants of the free people in the Far East will surely diminish, and soon only orcs will inhabit this land."
 else
 	desc[#desc+1] = ""
-	desc[#desc+1] = "The orc presence in the Far East has greatly been disminished by the loss of their leaders and the destruction of the Sorcerers. The free people of the Sunwall will be able to prosper and thrive on this land."
+	desc[#desc+1] = "The orc presence in the Far East has greatly been diminished by the loss of their leaders and the destruction of the Sorcerers. The free people of the Sunwall will be able to prosper and thrive on this land."
 end
 
 desc[#desc+1] = ""

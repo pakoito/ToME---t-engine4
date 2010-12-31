@@ -106,7 +106,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d(heal doesnt work on undead).
+		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d(heal does not work on undead).
 		Heal will increase with your Willpower stat.]]):
 		format(20 + self:getWil(50) * self:getTalentLevel(t))
 	end,

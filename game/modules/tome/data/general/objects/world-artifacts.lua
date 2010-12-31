@@ -411,7 +411,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	level_range = {40, 45},
 	color=colors.AQUAMARINE,
 	rarity = 250,
-	desc = [[Mages sometimes have funny ideas. Archmage Varil once learned how to handle a sword and found he prefered wielding it instead of his staff.]],
+	desc = [[Mages sometimes have funny ideas. Archmage Varil once learned how to handle a sword and found he preferred wielding it instead of his staff.]],
 	cost = 1000,
 
 	require = { stat = { mag=28, str=28, dex=28 }, },

@@ -19,7 +19,7 @@
 
 local Talents = require("engine.interface.ActorTalents")
 
--- Shades are very special, tehy are not monsters on their own, they are shades of some other monster
+-- Shades are very special, they are not monsters on their own, they are shades of some other monster
 
 newEntity{
 	define_as = "BASE_NPC_SHADE",

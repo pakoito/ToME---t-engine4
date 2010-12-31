@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 require "engine.Generator"
 local Random = require "engine.generator.actor.Random"
 
---- Very specialized generator that puts sandworms in interresting spots to dig tunnels
+--- Very specialized generator that puts sandworms in interesting spots to dig tunnels
 module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, level, spots)
@@ -33,7 +33,7 @@ function _M:init(zone, map, level, spots)
 end
 
 function _M:generate()
-	-- Make the random generaor place normal actors
+	-- Make the random generator place normal actors
 	self.random:generate()
 
 	-- Now place sandworm tunnelers

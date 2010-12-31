@@ -138,7 +138,7 @@ newTalent{
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target then return end
 
-			-- List all diseas
+			-- List all diseases
 			local diseases = {}
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
@@ -179,7 +179,7 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	do_spread = function(self, t, carrier)
-		-- List all diseas
+		-- List all diseases
 		local diseases = {}
 		for eff_id, p in pairs(carrier.tmp) do
 			local e = carrier.tempeffect_def[eff_id]

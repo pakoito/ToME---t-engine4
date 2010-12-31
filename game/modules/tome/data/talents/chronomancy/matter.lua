@@ -43,7 +43,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Attempts to pull the target apart at a molecular level, inflicing %d temporal damage and %d physical damage.
+		return ([[Attempts to pull the target apart at a molecular level, inflicting %d temporal damage and %d physical damage.
 		The damage will increase with the Magic stat]]):format (damDesc(self, DamageType.TEMPORAL, (self:combatTalentSpellDamage(t, 10, 115)*getParadoxModifier(self, pm))), damDesc(self, DamageType.PHYSICAL, (self:combatTalentSpellDamage(t, 10, 115)*getParadoxModifier(self, pm))))
 	end,
 }

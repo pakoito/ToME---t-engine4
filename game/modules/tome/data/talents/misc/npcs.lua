@@ -80,7 +80,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Crawl onto the target, convering it in poison.]])
+		return ([[Crawl onto the target, covering it in poison.]])
 	end,
 }
 
@@ -103,7 +103,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Crawl onto the target, convering it in acid.]])
+		return ([[Crawl onto the target, covering it in acid.]])
 	end,
 }
 

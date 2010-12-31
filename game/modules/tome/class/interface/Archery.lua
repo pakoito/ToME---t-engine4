@@ -37,7 +37,7 @@ function _M:archeryAcquireTargets(tg, params)
 	end
 	params = params or {}
 
-	print("[ARCHERY AQUIRE TARGETS WITH]", weapon.name, ammo.name)
+	print("[ARCHERY ACQUIRE TARGETS WITH]", weapon.name, ammo.name)
 	local realweapon = weapon
 	weapon = weapon.combat
 

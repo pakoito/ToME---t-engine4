@@ -33,7 +33,7 @@ return function(gen, id, lev, old_lev)
 			gen.map.room_map[i][j].room = id
 		end end
 
-		-- Mark the outer walls are piercable
+		-- Mark the outer walls as pierceable
 		for i = x, x + w - 1 do
 			gen.map.room_map[i][y].special = false
 			gen.map.room_map[i][y].room = nil

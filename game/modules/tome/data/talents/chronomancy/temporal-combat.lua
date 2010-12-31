@@ -104,7 +104,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You gain a moment of clarity, perfoming a near perfect strike for %d%% weapon damage that rarely misses and is an automcatic critical hit if it lands.
+		return ([[You gain a moment of clarity, performing a near perfect strike for %d%% weapon damage that rarely misses and is an automatic critical hit if it lands.
 		]]):format(100 * (self:combatTalentWeaponDamage(t, 1.1, 1.9)*getParadoxModifier(self, pm)))
 	end,
 }

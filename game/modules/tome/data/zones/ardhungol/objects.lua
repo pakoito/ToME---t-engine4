@@ -29,7 +29,7 @@ newEntity{ base = "BASE_WAND",
 	elec_proof = true,
 
 	max_power = 75, power_regen = 1,
-	use_power = { name = "shoot a bolt of spyric poison", power = 25,
+	use_power = { name = "shoot a bolt of spydric poison", power = 25,
 		use = function(self, who)
 			local tg = {type="bolt", range=12, talent=t}
 			local x, y = who:getTarget(tg)

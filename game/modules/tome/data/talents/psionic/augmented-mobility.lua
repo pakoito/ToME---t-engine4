@@ -107,7 +107,7 @@ newTalent{
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
 		x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		-- Target code doesnot restrict the target coordinates to the range, it lets the poject function do it
+		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, Map.ACTOR, "block_move") then

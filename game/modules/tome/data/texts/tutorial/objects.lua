@@ -22,7 +22,7 @@ You can only carry a certain amount of items, depending on your Strength: this i
 You can see your inventory by pressing 'i' or by right-clicking on yourself.
 You can pickup items from the ground by pressing ',' or right clicking on yourself while you are over items.
 
-Your inventory is split in two zones: your equiped items and your backpack.
+Your inventory is split in two zones: your equipped items and your backpack.
 
 Now pickup the infusion you have found. Infusions and Runes are special items that allow you to bind a power on your own body.
 Infusions come from the powers of nature while runes from the powers of magic.

@@ -21,10 +21,10 @@ require "engine.class"
 local WA = require "engine.interface.WorldAchievements"
 local table = table
 
---- Handles archievements in a world
+--- Handles achievements in a world
 module(..., package.seeall, class.inherit({}, WA))
 
---- Make a new achivement with a name and desc
+--- Make a new achievement with a name and desc
 function _M:newAchievement(t)
 	t.id = t.id or t.name
 	t.id = t.id:upper():gsub("[ ]", "_")

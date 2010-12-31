@@ -27,7 +27,7 @@ Oh yes! YES, one more for my collection. My collection, yes. A powerful one inde
 }
 
 newChat{ id="welcome2",
-	text = [[A powerful tool aginst my enemies. Yes, yes. They all hate me, but I will show them my power!
+	text = [[A powerful tool against my enemies. Yes, yes. They all hate me, but I will show them my power!
 I will show them! SHOW THEM!]],
 	answers = {
 		{"I am not a tool! RELEASE ME!", jump="welcome3"},

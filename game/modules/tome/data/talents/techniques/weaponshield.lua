@@ -156,7 +156,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your shield doing %d%% damage. If it hits, you follow up with two weapon strikes which are automatic critrical hits.]]):
+		return ([[Hits the target with your shield doing %d%% damage. If it hits, you follow up with two weapon strikes which are automatic critical hits.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 1, 1.5, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 	end,
 }

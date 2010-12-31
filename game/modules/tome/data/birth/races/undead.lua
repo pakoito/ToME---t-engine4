@@ -73,8 +73,8 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +3 Strength, +1 Dexterity, +5 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, -2 Willpower, -2 Cunning",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 14",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 100%",
-		"#GOLD#Speed penality:#LIGHT_BLUE# -20%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 100%",
+		"#GOLD#Speed penalty:#LIGHT_BLUE# -20%",
 	},
 	descriptor_choices =
 	{
@@ -109,7 +109,7 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Skeleton",
 	desc = {
-		"Skeletons are animated bones, undead creatures both strong and dextrous.",
+		"Skeletons are animated bones, undead creatures both strong and dexterous.",
 		"They have access to #GOLD#special skeleton talents#WHITE# and a wide range of undead abilities:",
 		"- poison immunity",
 		"- bleeding immunity",
@@ -120,7 +120,7 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +3 Strength, +4 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 		"#GOLD#Life per levels:#LIGHT_BLUE# 12",
-		"#GOLD#Experience penality:#LIGHT_BLUE# 100%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 100%",
 	},
 	descriptor_choices =
 	{
