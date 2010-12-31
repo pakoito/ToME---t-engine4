@@ -41,4 +41,6 @@ spawn_butler = function(self)
 	game.level.map:particleEmitter(spot.x, spot.y, 1, "demon_teleport")
 
 	game.player:setQuestStatus(self.id, self.COMPLETED, "butler")
+
+	world:gainAchievement("SHERTUL_FORTRESS", game.player)
 end

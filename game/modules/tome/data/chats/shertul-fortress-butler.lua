@@ -68,7 +68,7 @@ You shake your head as the vision disipates, your normal sight comes back slowly
 newChat{ id="godslayers",
 	text = [[They had to. They forged terrible weapons of war. They won.]],
 	answers = {
-		{"But then were are they now if they won?", jump="where"},
+		{"But then where are they now if they won?", jump="where"},
 	}
 }
 

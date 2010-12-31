@@ -37,7 +37,6 @@ end
 on_status_change = function(self, who, status, sub)
 	if self:isCompleted() then
 		who:setQuestStatus(self.id, engine.Quest.DONE)
-		world:gainAchievement("ANTIMAGIC", game.player)
 		game.player:learnTalentType("wild-gift/antimagic", true)
 	end
 end
