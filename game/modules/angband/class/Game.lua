@@ -115,9 +115,9 @@ end
 
 function _M:loaded()
 	engine.GameTurnBased.loaded(self)
-	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", }
+	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", ood_factor=7}
 	Map:setViewerActor(self.player)
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, true)
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 12, 16, "/data/font/FSEX300.ttf", 16, false, true)
 	self.key = engine.KeyBind.new()
 end
 
@@ -128,7 +128,7 @@ function _M:createSeparators()
 end
 
 function _M:setupDisplayMode()
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, true)
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 12, 16, "/data/font/FSEX300.ttf", 16, false, true)
 	Map:resetTiles()
 	Map.tiles.use_images = false
 
