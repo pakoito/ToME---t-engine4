@@ -446,7 +446,17 @@ getmetatable(tmps).__index.size = function(font, str)
 		elseif col then
 			-- Ignore
 		elseif uid and mo and game.level then
-			-- Ignore
+			uid = tonumber(uid)
+			mo = tonumber(mo)
+			local e = __uids[uid]
+			if e then
+				local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
+				if surf then
+					local w, h = surf:getSize()
+					mw = mw + w
+					if h > mh then mh = h end
+				end
+			end
 		elseif fontstyle then
 			font:setStyle(fontstyle)
 			fstyle = fontstyle
@@ -557,7 +567,8 @@ function tstring:format() return self end
 function tstring:splitLines(max_width, font)
 	local space_w = font:size(" ")
 	local ret = tstring{}
-	local cur_size =0
+	local cur_size = 0
+	local max_w = 0
 	local v, tv
 	for i = 1, #self do
 		v = self[i]
@@ -577,6 +588,7 @@ function tstring:splitLines(max_width, font)
 					else
 						ret[#ret+1] = true
 						ret[#ret+1] = vv
+						max_w = math.max(max_w, cur_size)
 						cur_size = w
 					end
 				end
@@ -596,6 +608,7 @@ function tstring:splitLines(max_width, font)
 					else
 						ret[#ret+1] = true
 						ret[#ret+1] = vv
+						max_w = math.max(max_w, cur_size)
 						cur_size = w
 					end
 				end
@@ -607,7 +620,8 @@ function tstring:splitLines(max_width, font)
 			ret[#ret+1] = v
 		end
 	end
-	return ret
+	max_w = math.max(max_w, cur_size)
+	return ret, max_w
 end
 
 function tstring:makeLineTextures(max_width, font)
@@ -649,6 +663,7 @@ function tstring:makeLineTextures(max_width, font)
 					local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
 					if surf then
 						local sw = surf:getSize()
+						s:merge(surf, w, h)
 						w = w + sw
 					end
 				end
@@ -664,7 +679,7 @@ function tstring:makeLineTextures(max_width, font)
 	return texs
 end
 
-function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b)
+function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b, no_alpha, on_word)
 	local list = self:splitLines(max_width, font)
 	max_lines = util.bound(max_lines or #list, 1, #list)
 	local fh = font:lineSkip()
@@ -672,15 +687,21 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b)
 	r, g, b = r or 255, g or 255, b or 255
 	local oldr, oldg, oldb = r, g, b
 	local v, tv
+	local on_word_w, on_word_h
 	for i = 1, #list do
 		v = list[i]
 		tv = type(v)
 		if tv == "string" then
-			s:drawStringBlended(font, v, x + w, y + h, r, g, b, true)
-			w = w + fontoldsize(font, v)
+			if on_word then on_word_w, on_word_h = on_word(v, w, h, fh) end
+			if on_word_w and on_word_h then
+				w, h = on_word_w, on_word_h
+			else
+				s:drawStringBlended(font, v, x + w, y + h, r, g, b, not no_alpha)
+				w = w + fontoldsize(font, v)
+			end
 		elseif tv == "boolean" then
---			w = 0
---			h = h + fh
+			w = 0
+			h = h + fh
 			max_lines = max_lines - 1
 			if max_lines <= 0 then break end
 		else
@@ -694,6 +715,16 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b)
 				r, g, b = v[2], v[3], v[4]
 			elseif v[1] == "font" then
 				font:setStyle(v[2])
+			elseif v[1] == "uid" then
+				local e = __uids[v[2]]
+				if e then
+					local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
+					if surf then
+						local sw = surf:getSize()
+						s:merge(surf, w, h)
+						w = w + sw
+					end
+				end
 			end
 		end
 	end
