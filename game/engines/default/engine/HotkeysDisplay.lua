@@ -114,7 +114,7 @@ function _M:display()
 			end
 		end
 
-		txt = ("%2d) %-"..(self.max_char_w-4-24).."s Key: %s"):format(i, txt, ts[4])
+		txt = ("%1d/%2d) %-"..(self.max_char_w-4-24).."s Key: %s"):format(a.hotkey_page, i - (a.hotkey_page-1) * 12, txt, ts[4])
 		local w, h = self.font:size(txt)
 		if self.cur_sel and self.cur_sel == i then self.surface:erase(0, 50, 120, nil, x, y, w+4, h+4) end
 		self.surface:drawStringBlended(self.font, txt, x+2, y+2, color[1], color[2], color[3])

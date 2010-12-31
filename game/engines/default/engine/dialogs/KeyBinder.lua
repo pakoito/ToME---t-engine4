@@ -67,10 +67,10 @@ function _M:use(item)
 	local d = engine.Dialog.new(title, w + 8, h + 25, nil, nil, nil, font)
 	d:keyCommands{__DEFAULT=function(sym, ctrl, shift, alt, meta, unicode)
 		-- Modifier keys are not treated
-		if sym == KeyBind._LCTRL or sym == KeyBind._RCTRL or
+		if not t.single_key and (sym == KeyBind._LCTRL or sym == KeyBind._RCTRL or
 		   sym == KeyBind._LSHIFT or sym == KeyBind._RSHIFT or
 		   sym == KeyBind._LALT or sym == KeyBind._RALT or
-		   sym == KeyBind._LMETA or sym == KeyBind._RMETA then
+		   sym == KeyBind._LMETA or sym == KeyBind._RMETA) then
 			return
 		end
 
@@ -140,6 +140,7 @@ function _M:generateList(key_source, force_all)
 			name = tstring{{"font","italic"}, {"color","AQUAMARINE"}, k.name, {"font","normal"}},
 			sortname = k.name;
 			type = k.type,
+			single_key = k.single_key,
 			bind1 = function(item) return KeyBind:getBindTable(k)[1] end,
 			bind2 = function(item) return KeyBind:getBindTable(k)[2] end,
 			b1 = function(item) return KeyBind:formatKeyString(util.getval(item.bind1, item)) end,
