@@ -28,7 +28,7 @@ newLore{
 	lore = [[#{italic}#From the notes of Darwood Oakton, explorer:
 #{bold}#CHAPTER ONE: THE SHER'TUL
 
-#{normal}#The Sher'Tul. Who were they? Where did they come from? Where did they go? The mysteries surrounding this crucible race are almost infinite. What little scraps of information we have regarding them allude to a mighty and world-spanning civilisation, wielding power and magic unthinkable. Now, however, all that remains of them are forgotten, wind-swept ruins, the tiniest minutiae of their technology sealed away in the studies of reclusive sages. Does their mystery not call to your curious nature as it does mine, gentle reader?]],
+#{normal}#The Sher'Tul. Who were they? Where did they come from? Where did they go? The mysteries surrounding this ancient race are almost infinite. What little scraps of information we have regarding them allude to a mighty and world-spanning civilisation, wielding power and magic unthinkable. Now, however, all that remains of them are forgotten, wind-swept ruins, the tiniest minutiae of their technology sealed away in the studies of reclusive sages. Does their mystery not call to your curious nature as it does mine, gentle reader?]],
 }
 
 newLore{
