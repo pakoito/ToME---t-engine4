@@ -43,11 +43,19 @@ info_format =
 function _M:callback(e)
 	e.define_as = e.name:upper():gsub("[^A-Z0-9]", "_")
 
+	local ttval = Object.tval_table[e.tval]
+
 	e.color = colors[self.color_codes[e.color]]
 	e.back_color = colors.BLACK
-	e.type = Object.tval_table[e.tval] and Object.tval_table[e.tval][1] or "misc"
+	e.type = ttval and ttval[1] or "misc"
 	e.subtype = e.type
-	if Object.tval_table[e.tval] and Object.tval_table[e.tval].slot then e.slot = Object.tval_table[e.tval].slot end
+	if ttval then
+		if ttval.slot then e.slot = ttval.slot end
+		if ttval.flags then table.merge(e, ttval.flags, true) end
+		if ttval.wielder then e.wielder = e.wielder or {} table.merge(e.wielder, ttval.wielder, true) end
+		if ttval.random_color then e.color = colors[rng.table(table.values(color_codes))] end
+		if ttval.name_gen then e.name = ttval.name_gen(e) end
+	end
 
 	e.ac = tonumber(e.ac)
 	e.to_ac = tonumber(e.to_ac)
@@ -56,7 +64,6 @@ function _M:callback(e)
 
 	if e.damage then
 		local _, _, mind, maxd = e.damage:find("^(%d+)d(%d+)")
-		print("===============", e.damage, mind, maxd)
 		e.damage = nil
 		if mind and maxd then e.damage = {tonumber(mind), tonumber(maxd)} end
 	end

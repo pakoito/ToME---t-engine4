@@ -20,14 +20,14 @@
 return {
 	name = "Angband",
 	level_range = {1, 1},
-	max_level = 50,
-	all_remembered = true,
-	all_lited = true,
+	max_level = 127,
+--	all_remembered = true,
+--	all_lited = true,
 	width = 98, height = 66,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
-			nb_rooms = 10,
+			nb_rooms = 15,
 			rooms = {"simple", "pilar"},
 			lite_room_chance = 100,
 			['.'] = "OPEN_FLOOR",
@@ -42,7 +42,7 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {5, 8},
+			nb_object = {15, 18},
 		},
 	},
 	levels =

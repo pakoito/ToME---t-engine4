@@ -27,6 +27,8 @@ newBirthDescriptor{
 	copy = {
 		max_level = 50,
 		max_life = 25,
+		resolvers.inventory{ id=true, {type="food", name="& Ration~ of Food"} },
+		resolvers.inventory{ id=true, {type="light", name="& Wooden Torch~"} },
 	},
 }
 

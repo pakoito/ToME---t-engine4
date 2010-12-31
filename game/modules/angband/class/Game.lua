@@ -266,6 +266,11 @@ function _M:setupCommands()
 	self.normal_key = self.key
 	self:targetSetupKey()
 
+	-- Debug mode
+	self.key:addCommands{
+		[{"_a","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
+	}
+
 	-- One key handled for normal function
 	self.key:addBinds
 	{

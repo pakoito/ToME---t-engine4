@@ -47,4 +47,5 @@ function _M:callback(e)
 	end
 	if not e.boring then e.always_remember = true end
 	if e.door then e.door_opened = "OPEN_DOOR" end
+
 end

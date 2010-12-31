@@ -97,6 +97,15 @@ function _M:playerFOV()
 	-- Clean FOV before computing it
 	game.level.map:cleanFOV()
 
+	if not self:attr("blind") then
+		-- Compute both the normal and the lite FOV, using cache
+		self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
+			game.level.map:apply(x, y, fovdist[sqdist])
+		end, true, false, true)
+		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
+		else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
+	end
+
 	-- Compute ESP FOV, using cache
 	self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true, true)
 
