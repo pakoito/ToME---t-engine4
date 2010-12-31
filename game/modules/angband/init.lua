@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "Angband"
+name = "Angband/TE4"
 long_name = "Angband for T-Engine4"
 short_name = "angband"
 author = { "DarkGod", "darkgod@te4.org" }

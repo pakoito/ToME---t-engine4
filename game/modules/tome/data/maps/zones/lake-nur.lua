@@ -19,8 +19,8 @@
 
 startx = 28
 starty = 0
-stopx = 29
-stopy = 45
+endx = 29
+endy = 45
 
 -- defineTile section
 defineTile("#", "WATER_WALL")
