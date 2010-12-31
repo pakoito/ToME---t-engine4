@@ -300,7 +300,7 @@ function _M:setupDisplayMode(reboot)
 		Map.tiles.use_images = true
 	elseif self.gfxmode == 2 then
 		print("[DISPLAY MODE] 16x16 GFX")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, true, true)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, true, true)
 		Map:resetTiles()
 		Map.tiles.use_images = true
 	elseif self.gfxmode == 3 then
@@ -310,7 +310,8 @@ function _M:setupDisplayMode(reboot)
 		Map.tiles.use_images = false
 	elseif self.gfxmode == 4 then
 		print("[DISPLAY MODE] 16x16 ASCII")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, false, false)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, false)
+--		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 14, 20, "/data/font/FSEX300.ttf", 16, false, false)
 		Map:resetTiles()
 		Map.tiles.use_images = false
 	elseif self.gfxmode == 5 then
@@ -320,7 +321,7 @@ function _M:setupDisplayMode(reboot)
 		Map.tiles.use_images = false
 	elseif self.gfxmode == 6 then
 		print("[DISPLAY MODE] 16x16 ASCII/background")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, nil, 14, true, true)
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, true, true)
 		Map:resetTiles()
 		Map.tiles.use_images = false
 	else

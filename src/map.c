@@ -34,9 +34,9 @@
 #define DO_QUAD(dx, dy, dz, zoom) {\
 		glBegin(GL_QUADS); \
 		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz)); \
-		glTexCoord2f(1,0); glVertex3f(map->tile_w * (zoom) + (dx), (dy),			(dz)); \
-		glTexCoord2f(1,1); glVertex3f(map->tile_w * (zoom) + (dx), map->tile_h * (zoom) + (dy),	(dz)); \
-		glTexCoord2f(0,1); glVertex3f((dx), map->tile_h * (zoom) + (dy),			(dz)); \
+		glTexCoord2f(map->tex_tile_w,0); glVertex3f(map->tile_w * (zoom) + (dx), (dy),			(dz)); \
+		glTexCoord2f(map->tex_tile_w,map->tex_tile_h); glVertex3f(map->tile_w * (zoom) + (dx), map->tile_h * (zoom) + (dy),	(dz)); \
+		glTexCoord2f(0,map->tex_tile_h); glVertex3f((dx), map->tile_h * (zoom) + (dy),			(dz)); \
 		glEnd(); }
 
 static int map_object_new(lua_State *L)
@@ -425,6 +425,15 @@ static int map_new(lua_State *L)
 	map->zdepth = zdepth;
 	map->tile_w = tile_w;
 	map->tile_h = tile_h;
+
+	// In case we can't support NPOT textures round up to nearest POT
+	int realw=1;
+	int realh=1;
+	while (realw < tile_w) realw *= 2;
+	while (realh < tile_h) realh *= 2;
+	map->tex_tile_w = (GLfloat)tile_w / realw;
+	map->tex_tile_h = (GLfloat)tile_h / realh;
+
 	map->mx = mx;
 	map->my = my;
 	map->mwidth = mwidth;

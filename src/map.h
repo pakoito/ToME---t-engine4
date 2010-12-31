@@ -61,6 +61,7 @@ typedef struct {
 	int h;
 	int zdepth;
 	int tile_w, tile_h;
+	GLfloat tex_tile_w, tex_tile_h;
 
 	// Scrolling
 	int mx, my, mwidth, mheight;
