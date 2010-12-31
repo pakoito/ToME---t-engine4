@@ -37,7 +37,7 @@ return {
 			nb_rooms = 10,
 			rooms = {"random_room"},
 			lite_room_chance = 0,
-			['.'] = "WATER_FLOOR",
+			['.'] = {"WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR_BUBBLE"},
 			['#'] = "WATER_WALL",
 			up = "WATER_UP",
 			down = "WATER_DOWN",

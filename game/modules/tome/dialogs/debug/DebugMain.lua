@@ -54,7 +54,6 @@ function _M:use(item)
 	local stop = false
 	if act == "godmode" then
 		game.player:forceLevelup(50)
-		game.player.no_breath = 1
 		game.player.invulnerable = 1
 		game.player.esp.all = 1
 		game.player.esp.range = 50
