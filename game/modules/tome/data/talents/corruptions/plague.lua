@@ -97,7 +97,7 @@ newTalent{
 		if #diseases > 0 then
 			self:project({type="ball", radius=1 + math.floor(self:getTalentLevelRaw(t) / 2), range=self:getTalentRange(t)}, x, y, function(px, py)
 				local target = game.level.map(px, py, engine.Map.ACTOR)
-				if not target or target == source or target == self then return end
+				if not target or target == source or target == self or (self:reactionToward(target) >= 0) then return end
 
 				local disease = rng.table(diseases)
 				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con})
@@ -206,7 +206,7 @@ newTalent{
 		-- Try to rot !
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
-			if not target then return end
+			if not target or (self:reactionToward(target) >= 0) then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
 				target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:combatTalentSpellDamage(t, 15, 50)})
 			else
