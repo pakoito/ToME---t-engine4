@@ -42,7 +42,7 @@ newAI("move_snake", function(self)
 		else
 			local rd = rng.range(1, 3)
 			if rd == 1 then
-				-- nothing, we move in the coerct direction
+				-- nothing, we move in the correct direction
 			elseif rd == 2 then
 				-- move to the left
 				local dir = util.getDir(tx, ty, self.x, self.y)

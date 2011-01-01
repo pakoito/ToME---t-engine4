@@ -19,7 +19,7 @@
 
 require "engine.class"
 
---- Abstract binary space partionning
+--- Abstract binary space partitioning
 -- Can be used to generator levels and so on
 module(..., package.seeall, class.make)
 

@@ -24,7 +24,7 @@ local Map = require "engine.Map"
 local Astar = require "engine.Astar"
 local print = function() end
 
---- Defines a zone: a set of levels, with depth, nps, objects, level generator, ...
+--- Defines a zone: a set of levels, with depth, npcs, objects, level generator, ...
 module(..., package.seeall, class.make)
 
 --- Setup classes to use for level generation
@@ -208,7 +208,7 @@ function _M:getEgosList(level, type, group, class)
 	local list = level:getEntitiesList(type.."/"..group)
 	if list then return list end
 
-	-- otehrwise loads it and store it
+	-- otherwise loads it and store it
 	list = require(class):loadList(group, true)
 	level:setEntitiesList(type.."/"..group, list)
 
@@ -381,7 +381,7 @@ end
 
 --- Do the various stuff needed to setup an entity on the level
 -- Grids do not really need that, this is mostly done for traps, objects and actors<br/>
--- This will do all the corect initializations and setup required
+-- This will do all the correct initializations and setup required
 -- @param level the level on which to add the entity
 -- @param e the entity to add
 -- @param typ the type of entity, one of "actor", "object", "trap" or "terrain"

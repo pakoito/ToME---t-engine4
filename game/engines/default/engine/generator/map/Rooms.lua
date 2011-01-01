@@ -55,7 +55,7 @@ function _M:doRooms(room, no, tab)
 		end
 		self.map(room.x + sx, room.y + sy, Map.TERRAIN, self.door)
 	else
-		-- Final room, select an interresting "spot"
+		-- Final room, select an interesting "spot"
 		local spotx, spoty = rng.range(room.x, room.x + room.w - 1), rng.range(room.y, room.y + room.h - 1)
 		table.insert(self.spots, {x=spotx, y=spoty})
 	end

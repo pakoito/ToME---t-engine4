@@ -21,7 +21,7 @@ require "config"
 require "engine.class"
 require "engine.Key"
 
---- Receieves keypresses and acts upon them
+--- Receives keypresses and acts upon them
 module(..., package.seeall, class.inherit(engine.Key))
 
 function _M:init()
@@ -34,7 +34,7 @@ function _M:init()
 	self:addCommand(self._RETURN, {"alt"}, function() core.display.fullscreen() end)
 end
 
---- Adds the profiler keybind (ctrl, alt, chift, p)
+--- Adds the profiler keybind (ctrl, alt, shift, p)
 function _M:setupProfiler()
 	-- Profiler
 	self:addCommand(self._p, {"ctrl","alt","shift"}, function()
@@ -90,7 +90,7 @@ function _M:reset()
 	self.on_input = false
 end
 
---- Adds a key/command combinaison
+--- Adds a key/command combination
 -- @param sym the key to handle
 -- @param mods a table with the mod keys needed, i.e: {"ctrl", "alt"}
 -- @param fct the function to call when the key is pressed
@@ -145,7 +145,7 @@ function _M:addCommands(t)
 	end
 end
 
---- Receieves any unbound keys as UTF8 characters (if possible)
+--- Receives any unbound keys as UTF8 characters (if possible)
 -- @param fct the function to call for each key, get a single parameter to pass the UTF8 string
 function _M:setTextInput(fct)
 	self.on_input = fct
@@ -153,7 +153,7 @@ end
 
 --- Loads a locale converter
 -- WARNING: This only converts the "sym" key, *NOT* the unicode key
--- @param file the locale convertion file to load
+-- @param file the locale conversion file to load
 function _M:loadLocaleConvertion(file)
 	local f, err = loadfile(file)
 	if not f and err then error(err) end

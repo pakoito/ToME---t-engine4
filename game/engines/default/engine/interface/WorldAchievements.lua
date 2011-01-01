@@ -20,7 +20,7 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 
---- Handles archievements in a world
+--- Handles achievements in a world
 module(..., package.seeall, class.make)
 
 _M.achiev_defs = {}
@@ -39,10 +39,10 @@ function _M:loadDefinition(dir)
 	end
 end
 
---- Make a new achivement with a name and desc
+--- Make a new achievement with a name and desc
 function _M:newAchievement(t)
-	assert(t.name, "no achivement name")
-	assert(t.desc, "no achivement desc")
+	assert(t.name, "no achievement name")
+	assert(t.desc, "no achievement desc")
 
 	t.mode = t.mode or "none"
 	t.id = t.id or t.name
@@ -75,7 +75,7 @@ end
 
 --- Gain Personal achievement for player only
 -- @param silent suppress the message to the player
--- @param id the achivement to gain
+-- @param id the achievement to gain
 -- @param src who did it
 function _M:gainPersonalAchievement(silent, id, src, ...)
 	local a = self.achiev_defs[id]
@@ -97,7 +97,7 @@ function _M:gainPersonalAchievement(silent, id, src, ...)
 end
 
 --- Gain an achievement
--- @param id the achivement to gain
+-- @param id the achievement to gain
 -- @param src who did it
 function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]

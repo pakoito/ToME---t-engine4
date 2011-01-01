@@ -67,7 +67,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 		if typ.block_path and typ:block_path(lx, ly) then break end
 		stop_radius_x, stop_radius_y = lx, ly
 
-		-- Deam damage: beam
+		-- Deal damage: beam
 		if typ.line then addGrid(lx, ly) end
 
 		lx, ly = l()
@@ -98,7 +98,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 		end, function()end, nil)
 		addGrid(lx, ly)
 	else
-		-- Deam damage: single
+		-- Deal damage: single
 		addGrid(lx, ly)
 	end
 
@@ -209,7 +209,7 @@ function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 		-- End of the map
 		if lx < 0 or lx >= game.level.map.w or ly < 0 or ly >= game.level.map.h then return lx, ly, false, true end
 
-		-- Deam damage: beam
+		-- Deal damage: beam
 		if typ.line and (lx ~= tgtx or ly ~= tgty) then return lx, ly, true, false end
 	end
 	-- Ok if we are at the end
@@ -264,7 +264,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		end, function()end, nil)
 		addGrid(rx, ry)
 	else
-		-- Deam damage: single
+		-- Deal damage: single
 		addGrid(lx, ly)
 	end
 

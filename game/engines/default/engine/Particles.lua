@@ -27,7 +27,7 @@ _M.particles_def = {}
 
 _M.__particles_gl = { particle = core.display.loadImage("/data/gfx/particle.png"):glTexture() }
 
---- Make a particle emiter
+--- Make a particle emitter
 function _M:init(def, radius, args)
 	self.args = args
 	self.def = def

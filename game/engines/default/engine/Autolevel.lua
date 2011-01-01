@@ -20,7 +20,7 @@
 require "engine.class"
 
 --- Handles autoleveling schemes
--- Proably used mainly for NPCS, although it could also be used for player allies
+-- Probably used mainly for NPCS, although it could also be used for player allies
 -- or players themselves for lazy players/modules
 module(..., package.seeall, class.make)
 

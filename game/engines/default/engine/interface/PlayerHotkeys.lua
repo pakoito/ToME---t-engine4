@@ -47,7 +47,7 @@ function _M:sortHotkeys()
 		end
 	end
 
-	-- Readd all the rest
+	-- Read all the rest
 	for j = 1, 36 do
 		if old[j] then
 			for i = 1, 36 do if not self.hotkey[i] then
@@ -101,7 +101,7 @@ function _M:setHotkeyPage(v)
 	self.changed = true
 end
 
--- Autoadd talents to hotkeys
+-- Auto-add talents to hotkeys
 function _M:hotkeyAutoTalents()
 	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)

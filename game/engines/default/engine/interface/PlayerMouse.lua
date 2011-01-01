@@ -53,7 +53,7 @@ function _M:mouseMove(tmx, tmy, spotHostiles)
 
 		local a = Astar.new(game.level.map, self)
 		local path = a:calc(self.x, self.y, tmx, tmy, true)
-		-- No Astar path ? jsut be dumb and try direct line
+		-- No Astar path ? just be dumb and try direct line
 		if not path then
 			local d = DirectPath.new(game.level.map, self)
 			path = d:calc(self.x, self.y, tmx, tmy, true)
@@ -101,11 +101,11 @@ function _M:mouseScrollMap(map, xrel, yrel)
 end
 
 --- Handles global mouse event
--- This will handle events like this:<ul>
--- <li>Left click: player mouse movement</li>
--- <li>Shift + left click: map scroll</li>
--- <li>Any other click: pass on the click as a key event, to allow actiosnto be bound to the mouse</li>
--- </ul>
+-- This will handle events like this:
+-- Left click: player mouse movement
+-- Shift + left click: map scroll
+-- Any other click: pass on the click as a key event, to allow actions to be bound to the mouse
+-- 
 -- @param key the Key object to which to pass the event if not treated, this should be your game default key handler probably
 -- @param allow_move true if this will allow player movement (you should use it to check that you are not in targetting mode)
 function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel, event)

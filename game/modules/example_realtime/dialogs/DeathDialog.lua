@@ -80,7 +80,7 @@ function _M:cleanActor()
 	end
 end
 
---- Restore ressources
+--- Restore resources
 function _M:restoreRessources()
 	self.actor.life = self.actor.max_life
 	self.actor.power = self.actor.max_power
@@ -88,7 +88,7 @@ function _M:restoreRessources()
 	self.actor.energy.value = game.energy_to_act
 end
 
---- Basic resurection
+--- Basic resurrection
 function _M:resurrectBasic()
 	self.actor.dead = false
 	self.actor.died = (self.actor.died or 0) + 1

@@ -47,7 +47,7 @@ newDamageType{
 	name = "physical", type = "PHYSICAL",
 }
 
--- Acid detroys potions
+-- Acid destroys potions
 newDamageType{
 	name = "acid", type = "ACID", text_color = "#GREEN#",
 }

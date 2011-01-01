@@ -96,7 +96,7 @@ end
 
 function _M:displayDebug(symbs)
 	symbs = symbs or "abcdefghijklmnopqrstwxyzABCDEFGHIJKLMNOPQRSTWXYZ"
-	print("Dispalying heightmap", self.w, self.h)
+	print("Displaying heightmap", self.w, self.h)
 	for j = 1, self.h do
 		local str = ""
 		for i = 1, self.w do

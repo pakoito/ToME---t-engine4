@@ -63,7 +63,7 @@ function _M:restStep()
 end
 
 --- Can we continue resting ?
--- Rewrite this method to check for mana, life, whatever. By default we alawys return false so resting will never work
+-- Rewrite this method to check for mana, life, whatever. By default we always return false so resting will never work
 -- @return true if we can continue to rest, false otherwise
 function _M:restCheck()
 	return false, "player:restCheck() method not defined"

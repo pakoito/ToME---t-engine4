@@ -119,7 +119,7 @@ end
 function _M:levelup()
 	self.max_life = self.max_life + 2
 
-	-- Healp up on new level
+	-- Heal upon new level
 	self.life = self.max_life
 end
 

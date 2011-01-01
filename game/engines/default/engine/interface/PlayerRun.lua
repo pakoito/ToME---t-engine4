@@ -163,7 +163,7 @@ function _M:runStep()
 end
 
 --- Can we continue running ?
--- Rewrite this method to hostiles, interresting terrain, whatever.
+-- Rewrite this method to hostiles, interesting terrain, whatever.
 -- This method should be called by its submethod, it tries to detect changes in the terrain.<br/>
 -- It will also try to follow tunnels when they simply change direction.
 -- @return true if we can continue to run, false otherwise

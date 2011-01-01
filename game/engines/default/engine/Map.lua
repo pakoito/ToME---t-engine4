@@ -115,8 +115,8 @@ mm_blocks = {
 
 --- Sets the viewport size
 -- Static
--- @param x screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
--- @param y screen coordonate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
+-- @param x screen coordinate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
+-- @param y screen coordinate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
 -- @param w width
 -- @param h height
 -- @param tile_w width of a single tile
@@ -135,7 +135,7 @@ function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidis
 end
 
 --- Sets zoom level
--- @param zoom nil to reset to default, ortherwise a number to increment the zoom with
+-- @param zoom nil to reset to default, otherwise a number to increment the zoom with
 -- @param tmx make sure this coords are visible after zoom (can be nil)
 -- @param tmy make sure this coords are visible after zoom (can be nil)
 function _M:setZoom(zoom, tmx, tmy)
@@ -162,7 +162,7 @@ end
 -- By default it is 0.6, 0.6, 0.6, 1
 function _M:setObscure(r, g, b, a)
 	self.color_obscure = {r, g, b, a}
-	-- If we are used on a real map, set it localy
+	-- If we are used on a real map, set it locally
 	if self._map then self._map:setObscure(unpack(self.color_obscure)) end
 end
 
@@ -170,7 +170,7 @@ end
 -- By default it is 1, 1, 1, 1
 function _M:setShown(r, g, b, a)
 	self.color_shown= {r, g, b, a}
-	-- If we are used on a real map, set it localy
+	-- If we are used on a real map, set it locally
 	if self._map then self._map:setShown(unpack(self.color_shown)) end
 end
 
@@ -183,7 +183,7 @@ function _M:resetTiles()
 end
 
 --- Defines the faction of the person seeing the map
--- Usualy this will be the player's faction. If you do not want to use tactical display, dont use it
+-- Usually this will be the player's faction. If you do not want to use tactical display, dont use it
 function _M:setViewerFaction(faction, friend, neutral, enemy)
 	self.view_faction = faction
 	self.faction_friend = "tactical_friend.png"
@@ -192,7 +192,7 @@ function _M:setViewerFaction(faction, friend, neutral, enemy)
 end
 
 --- Defines the actor that sees the map
--- Usualy this will be the player. This is used to determine invisibility/...
+-- Usually this will be the player. This is used to determine invisibility/...
 function _M:setViewerActor(player)
 	self.actor_player = player
 end
@@ -259,7 +259,7 @@ end
 
 --- Adds a "path string" to the map
 -- "Path strings" are strings defining what terrain an actor can cross. Their format is left to the module to decide (by overloading Actor:getPathString() )<br/>
--- They are totally optional as they re only used to compute A* paths adn the likes and even then the algorithms still work without them, only slower<br/>
+-- They are totally optional as they re only used to compute A* paths and the likes and even then the algorithms still work without them, only slower<br/>
 -- If you use them the block_move function of your Grid class must be able to handle either an actor or a "path string" as their third argument
 function _M:addPathString(ps)
 	for i, eps in ipairs(self.path_strings) do
@@ -551,7 +551,7 @@ function _M:display(x, y, nb_keyframe)
 	self.clean_fov = true
 end
 
---- Sets checks if a grid lets sigth pass through
+--- Sets checks if a grid lets sight pass through
 -- Used by FOV code
 function _M:opaque(x, y)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
@@ -619,7 +619,7 @@ function _M:checkAllEntities(x, y, what, ...)
 end
 
 --- Check all entities of the grid for a property, discarding the results
--- This will iterate over all entities without stoping.
+-- This will iterate over all entities without stopping.
 -- No guaranty is given about the iteration order
 -- @param x position
 -- @param y position
@@ -958,7 +958,7 @@ function _M:removeParticleEmitter(e)
 	return true
 end
 
---- Display the particle emiters, called by self:display()
+--- Display the particle emitters, called by self:display()
 function _M:displayParticles(nb_keyframes)
 	nb_keyframes = nb_keyframes or 1
 	local adx, ady
@@ -968,7 +968,7 @@ function _M:displayParticles(nb_keyframes)
 		if e._mo then adx, ady = e._mo:getMoveAnim(e.x, e.y) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
 
 		if nb_keyframes == 0 and e.x and e.y then
-			-- Just display it, not updating, no emiting
+			-- Just display it, not updating, no emitting
 			if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
 				alive = e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom)
 			end

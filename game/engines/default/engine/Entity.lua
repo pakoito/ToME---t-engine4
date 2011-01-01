@@ -20,7 +20,7 @@
 
 --- A game entity
 -- An entity is anything that goes on a map, terrain features, objects, monsters, player, ...
--- Usually there is no need to use it directly, and it is betetr to use specific engine.Grid, engine.Actor or engine.Object
+-- Usually there is no need to use it directly, and it is better to use specific engine.Grid, engine.Actor or engine.Object
 -- classes. Most modules will want to subclass those anyway to add new comportments
 local Shader = require "engine.Shader"
 
@@ -258,7 +258,7 @@ function _M:resetMoveAnim()
 end
 
 --- Get the entity image as an sdl surface and texture for the given tiles and size
--- @param tiles a Tiles instance that will handle the tiles (usualy pass it the current Map.tiles)
+-- @param tiles a Tiles instance that will handle the tiles (usually pass it the current Map.tiles)
 -- @param w the width
 -- @param h the height
 -- @return the sdl surface and the texture
@@ -299,7 +299,7 @@ function _M:getDisplayString(tstr)
 end
 
 --- Displays an entity somewhere on screen, outside the map
--- @param tiles a Tiles instance that will handle the tiles (usualy pass it the current Map.tiles, it will if this is null)
+-- @param tiles a Tiles instance that will handle the tiles (usually pass it the current Map.tiles, it will if this is null)
 -- @param w the width
 -- @param h the height
 -- @return the sdl surface and the texture
@@ -317,8 +317,8 @@ function _M:toScreen(tiles, x, y, w, h)
 end
 
 --- Resolves an entity
--- This is called when generatingthe final clones of an entity for use in a level.<br/>
--- This can be used to make random enchants on objects, random properties on actors, ...<br/>
+-- This is called when generating the final clones of an entity for use in a level.
+-- This can be used to make random enchants on objects, random properties on actors, ...
 -- by default this only looks for properties with a table value containing a __resolver field
 function _M:resolve(t, last, on_entity)
 	t = t or self
@@ -340,7 +340,7 @@ function _M:resolve(t, last, on_entity)
 				self.unique = self.name
 			end
 		else
-			-- Handle ided if possible
+			-- Handle IDed if possible
 			if self.resolveIdentify then self:resolveIdentify() end
 		end
 	end
@@ -355,9 +355,9 @@ function _M:added()
 	end
 end
 
---- Call when the entity is actually removed from existance
+--- Call when the entity is actually removed from existence
 -- This helps ensuring uniqueness of uniques.
--- This recursively remvoes inventories too, if you need anythign special, overload this
+-- This recursively removes inventories too, if you need anything special, overload this
 function _M:removed()
 	if self.inven then
 		for _, inven in pairs(self.inven) do

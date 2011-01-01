@@ -80,7 +80,7 @@ function _M:isQuestStatus(quest, status, sub)
 	return q:isStatus(status, sub)
 end
 
---- Removes the quest completly from the actor.
+--- Removes the quest completely from the actor.
 -- USE WITH CAUTION
 function _M:removeQuest(id)
 	if not self.quests then return false end

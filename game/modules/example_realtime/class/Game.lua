@@ -185,7 +185,7 @@ function _M:tick()
 		self:targetOnTick()
 
 		engine.GameEnergyBased.tick(self)
-		-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
+		-- Fun stuff: this can make the game realtime, although calling it in display() will make it work better
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
@@ -372,7 +372,7 @@ function _M:setupCommands()
 
 		LOOK_AROUND = function()
 			self.flash:empty(true)
-			self.flash(self.flash.GOOD, "Looking around... (direction keys to select interresting things, shift+direction keys to move freely)")
+			self.flash(self.flash.GOOD, "Looking around... (direction keys to select interesting things, shift+direction keys to move freely)")
 			local co = coroutine.create(function() self.player:getTarget{type="hit", no_restrict=true, range=2000} end)
 			local ok, err = coroutine.resume(co)
 			if not ok and err then print(debug.traceback(co)) error(err) end
@@ -402,7 +402,7 @@ function _M:setupMouse(reset)
 	self.mouse:setCurrent()
 end
 
---- Ask if we realy want to close, if so, save the game first
+--- Ask if we really want to close, if so, save the game first
 function _M:onQuit()
 	self.player:restStop()
 

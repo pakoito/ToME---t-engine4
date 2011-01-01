@@ -33,7 +33,7 @@ function _M:init(level, map)
 end
 
 --- Adds an entity to the level
--- Only entities that need to act need to be added. Terrain features do not need this usualy
+-- Only entities that need to act need to be added. Terrain features do not need this usually
 function _M:addEntity(e, after)
 	if self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") already present on the level") end
 	self.entities[e.uid] = e
@@ -88,7 +88,7 @@ function _M:loaded()
 	self.entities = nes
 end
 
---- Setup an entity list for the level, this allwos the Zone to pick objects/actors/...
+--- Setup an entity list for the level, this allows the Zone to pick objects/actors/...
 function _M:setEntitiesList(type, list)
 	self.entities_list[type] = list
 	print("Stored entities list", type, list)

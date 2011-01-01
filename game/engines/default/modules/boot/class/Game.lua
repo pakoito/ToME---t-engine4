@@ -216,7 +216,7 @@ function _M:tick()
 	if self.stopped then engine.Game.tick(self) return false end
 	if self.level then
 		engine.GameEnergyBased.tick(self)
-		-- Fun stuff: this can make the game realtime, although callit it in display() will make it work better
+		-- Fun stuff: this can make the game realtime, although calling it in display() will make it work better
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
 	end
@@ -237,7 +237,7 @@ function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameEnergyBased.display(self, nb_keyframes) return end
 
-	-- If background anim is stopped, thigns are much simplied
+	-- If background anim is stopped, things are greatly simplified
 	if self.stopped then
 		if self.background then self.background:toScreenFull(0, 0, self.w, self.h, self.background_w, self.background_h) end
 		self.tooltip:display()
@@ -262,7 +262,7 @@ function _M:display(nb_keyframes)
 	-- Draw it here, inside the FBO
 	self.flyers:display(nb_keyframes)
 
-	-- Display using Framebuffer, sotaht we can use shaders and all
+	-- Display using Framebuffer, so that we can use shaders and all
 	if self.fbo then
 		self.fbo:use(false)
 		_2DNoise:bind(1, false)
@@ -314,7 +314,7 @@ function _M:commandLineArgs(args)
 	end
 end
 
---- Ask if we realy want to close, if so, save the game first
+--- Ask if we really want to close, if so, save the game first
 function _M:onQuit()
 	if self.is_quitting then return end
 	self.is_quitting = Dialog:yesnoPopup("Quit", "Really exit T-Engine/ToME?", function(ok)

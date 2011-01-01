@@ -220,7 +220,7 @@ function _M:triggerVirtual(virtual)
 	self.virtuals[virtual]()
 end
 
---- Adds a key/command combinaison
+--- Adds a key/command combination
 -- @param sym the key to handle
 -- @param mods a table with the mod keys needed, i.e: {"ctrl", "alt"}
 -- @param fct the function to call when the key is pressed
@@ -228,7 +228,7 @@ function _M:addBind(virtual, fct)
 	self.virtuals[virtual] = fct
 end
 
---- Adds a key/command combinaison
+--- Adds a key/command combination
 -- @param sym the key to handle
 -- @param mods a table with the mod keys needed, i.e: {"ctrl", "alt"}
 -- @param fct the function to call when the key is pressed

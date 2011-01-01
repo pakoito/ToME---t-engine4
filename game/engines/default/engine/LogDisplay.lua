@@ -20,7 +20,7 @@
 require "engine.class"
 require "engine.ui.Base"
 
---- Module that handles message history ina mouse wheel scrollable zone
+--- Module that handles message history in a mouse wheel scrollable zone
 module(..., package.seeall, class.inherit(engine.ui.Base))
 
 --- Creates the log zone

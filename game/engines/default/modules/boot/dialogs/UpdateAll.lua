@@ -37,7 +37,7 @@ All those components will be updated:
 ]]}
 
 	self.c_list = ListColumns.new{width=self.iw, height=self.ih - self.c_desc.h, scrollbar=true, columns={
-		{name="Compoment", width=80, display_prop="name"},
+		{name="Component", width=80, display_prop="name"},
 		{name="Version", width=20, display_prop="version_string"},
 	}, list=self.list or {}, fct=function(item) end, select=function(item, sel) end}
 

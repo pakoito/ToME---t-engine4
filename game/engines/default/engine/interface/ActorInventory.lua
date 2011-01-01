@@ -106,7 +106,7 @@ function _M:addObject(inven_id, o)
 	return true, #inven
 end
 
---- Rerturns the position of an item in the given inventory, or nil
+--- Returns the position of an item in the given inventory, or nil
 function _M:itemPosition(inven, o)
 	inven = self:getInven(inven)
 	for i, p in ipairs(inven) do
@@ -162,7 +162,7 @@ function _M:removeObject(inven, item, no_unstack)
 		table.remove(inven, item)
 	end
 
-	-- Do whatever is needed when takingoff this object
+	-- Do whatever is needed when taking off this object
 	if inven.worn then
 		self:onTakeoff(o)
 		o:check("on_takeoff", self)
@@ -393,7 +393,7 @@ function _M:sortInven(inven)
 
 	-- Stack objects first, from bottom
 	for i = #inven, 1, -1 do
-		-- If it is stackable, look for obejcts before it that it could stack into
+		-- If it is stackable, look for objects before it that it could stack into
 		if inven[i]:stackable() then
 			for j = i - 1, 1, -1 do
 				if inven[j]:stack(inven[i]) then

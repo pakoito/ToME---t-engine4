@@ -117,7 +117,7 @@ function _M:tunnel(x1, y1, x2, y2, id)
 				print(feat, "tunnel crossing can_open", nx,ny)
 				for i = -1, 1 do for j = -1, 1 do if self.map:isBound(nx + i, ny + j) and self.map.room_map[nx + i][ny + j].can_open then
 					self.map.room_map[nx + i][ny + j].can_open = false
-					print(feat, "forbiding crossing at ", nx+i,ny+j)
+					print(feat, "forbidding crossing at ", nx+i,ny+j)
 				end end end
 				tun[#tun+1] = {nx,ny,true}
 				x1, y1 = nx, ny
@@ -291,7 +291,7 @@ function _M:generate(lev, old_lev)
 		end
 	end
 
-	-- Find out "interresting" spots
+	-- Find out "interesting" spots
 	for i, r in ipairs(rooms) do
 		spots[#spots+1] = {x=rooms[i].cx, y=rooms[i].cy, type="room", subtype=rooms[i].room.name}
 	end

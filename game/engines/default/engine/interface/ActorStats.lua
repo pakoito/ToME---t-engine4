@@ -66,7 +66,7 @@ end
 
 --- Increases a stat
 -- @param stat the stat id to change
--- @param val the increment to add/substract
+-- @param val the increment to add/subtract
 function _M:incStat(stat, val)
 	if type(stat) == "string" then
 		stat = _M.stats_def[stat].id
@@ -87,7 +87,7 @@ end
 
 --- Increases a stat additional value
 -- @param stat the stat id to change
--- @param val the increment to add/substract
+-- @param val the increment to add/subtract
 function _M:incIncStat(stat, val)
 	if type(stat) == "string" then
 		stat = _M.stats_def[stat].id

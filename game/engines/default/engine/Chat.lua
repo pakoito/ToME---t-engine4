@@ -54,7 +54,7 @@ function _M:addChat(c)
 	self.chats[c.id] = c
 	print("[CHAT] loaded", c.id, c)
 
-	-- Parse answsers looking for quick replies
+	-- Parse answers looking for quick replies
 	for i, a in ipairs(c.answers) do
 		if a.quick_reply then
 			a.jump = "quick_reply"..self.quick_replies

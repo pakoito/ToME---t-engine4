@@ -117,7 +117,7 @@ end
 -- Hit: simple project in LOS<br/>
 -- Beam: hits everything in LOS<br/>
 -- Bolt: hits first thing in path<br/>
--- Ball: hits everything in a ball aounrd the target<br/>
+-- Ball: hits everything in a ball around the target<br/>
 -- Cone: hits everything in a cone in the direction<br/>
 -- @param t.radius The radius of the ball/cone AoE
 -- @param t.cone_angle The angle for the cone AoE (default 55°)

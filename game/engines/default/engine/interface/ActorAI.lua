@@ -26,7 +26,7 @@ module(..., package.seeall, class.make)
 
 _M.ai_def = {}
 
---- Deinfe AI
+--- Define AI
 function _M:newAI(name, fct)
 	_M.ai_def[name] = fct
 end
@@ -74,7 +74,7 @@ function _M:aiCanPass(x, y)
 	-- Nothing blocks, just go on
 	if not game.level.map:checkAllEntities(x, y, "block_move", self, true) then return true end
 
-	-- If there is an otehr actor, check hostility, if hostile, we move to attack
+	-- If there is an other actor, check hostility, if hostile, we move to attack
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target and self:reactionToward(target) < 0 then return true end
 
@@ -100,7 +100,7 @@ function _M:moveDirection(x, y)
 
 			local list = coords[dir]
 			local l = {}
-			-- Find posiblities
+			-- Find possibilities
 			for i = 1, #list do
 				local dx, dy = self.x + dir_to_coord[list[i]][1], self.y + dir_to_coord[list[i]][2]
 				if self:aiCanPass(dx, dy) then
@@ -147,7 +147,7 @@ function _M:setTarget(target)
 end
 
 --- Returns the seen coords of the target
--- This will usualy return the exact coords, but if the target is only partialy visible (or not at all)
+-- This will usually return the exact coords, but if the target is only partially visible (or not at all)
 -- it will return estimates, to throw the AI a bit off
 -- @param target the target we are tracking
 -- @return x, y coords to move/cast to

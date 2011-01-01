@@ -53,7 +53,7 @@ function _M:resolve(t, last, on_entity)
 end
 
 --- Can this object act at all
--- Most object will want to anwser false, only recharging and stuff needs them
+-- Most object will want to answer false, only recharging and stuff needs them
 function _M:canAct()
 	return false
 end

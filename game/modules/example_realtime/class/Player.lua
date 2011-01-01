@@ -165,22 +165,22 @@ end
 function _M:restCheck()
 	if spotHostiles(self) then return false, "hostile spotted" end
 
-	-- Check ressources, make sure they CAN go up, otherwise we will never stop
+	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if self:getPower() < self:getMaxPower() and self.power_regen > 0 then return true end
 	if self.life < self.max_life and self.life_regen> 0 then return true end
 
-	return false, "all resources and life at maximun"
+	return false, "all resources and life at maximum"
 end
 
 --- Can we continue running?
--- We can run if no hostiles are in sight, and if we no interresting terrains are next to us
+-- We can run if no hostiles are in sight, and if we no interesting terrains are next to us
 function _M:runCheck()
 	if spotHostiles(self) then return false, "hostile spotted" end
 
-	-- Notice any noticable terrain
+	-- Notice any noticeable terrain
 	local noticed = false
 	self:runScan(function(x, y)
-		-- Only notice interresting terrains
+		-- Only notice interesting terrains
 		local grid = game.level.map(x, y, Map.TERRAIN)
 		if grid and grid.notice then noticed = "interesting terrain" end
 	end)

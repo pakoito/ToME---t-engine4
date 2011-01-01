@@ -59,12 +59,12 @@ function _M:removeParticles(ps)
 end
 
 --- Moves a projectile on the map
--- *WARNING*: changing x and y properties manualy is *WRONG* and will blow up in your face. Use this method. Always.
+-- *WARNING*: changing x and y properties manually is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto
 -- @param x coord of the destination
 -- @param y coord of the destination
 -- @param force if true do not check for the presence of an other entity. *Use wisely*
--- @return true if a move was *ATTEMPTED*. This means the actor will proably want to use energy
+-- @return true if a move was *ATTEMPTED*. This means the actor will probably want to use energy
 function _M:move(x, y, force)
 	if self.dead then return true end
 	local map = game.level.map
@@ -167,7 +167,7 @@ function _M:moveDirection(x, y)
 
 			local list = coords[dir]
 			local l = {}
-			-- Find posiblities
+			-- Find possibilities
 			for i = 1, #list do
 				local dx, dy = self.x + dir_to_coord[list[i]][1], self.y + dir_to_coord[list[i]][2]
 				if not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then

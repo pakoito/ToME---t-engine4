@@ -28,7 +28,7 @@ module(..., package.seeall, class.inherit(engine.Game))
 --- Setup the game
 -- @param keyhandler the default keyhandler for this game
 -- @energy_to_act how much energy does an entity need to act
--- @energy_per_tick how much energy does an entity recieves per game tick. This is multiplied by the entity energy.mod property
+-- @energy_per_tick how much energy does an entity receives per game tick. This is multiplied by the entity energy.mod property
 function _M:init(keyhandler, energy_to_act, energy_per_tick)
 	self.energy_to_act, self.energy_per_tick = energy_to_act or 1000, energy_per_tick or 100
 	engine.Game.init(self, keyhandler)

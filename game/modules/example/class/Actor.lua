@@ -132,7 +132,7 @@ function _M:levelup()
 
 	self:incMaxPower(3)
 
-	-- Healp up on new level
+	-- Heal upon new level
 	self.life = self.max_life
 	self.power = self.max_power
 end

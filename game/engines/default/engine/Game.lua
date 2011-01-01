@@ -385,7 +385,7 @@ function _M:cancelCoroutine(id)
 end
 
 --- Save a thread into the thread pool
--- Threads will be auto join'ed when the module exits or when it can<br/>
+-- Threads will be auto joined when the module exits or when it can
 -- ALL THREADS registered *MUST* return true when they exit
 function _M:registerThread(th, linda)
 	print("[THREAD] registering", th, linda, #self.__threads+1)

@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
--- Deactaivte too many prints
+-- Deactivate too many prints
 local print = function() end
 
 function _M:init(zone, map, level, data)
@@ -83,7 +83,7 @@ function _M:loadTiles(tileset)
 		if not ts.no_random then tiles[#tiles+1] = t end
 		if ts.define_as then tiles[ts.define_as] = t end
 
-		-- X symetric tile definition
+		-- X symmetric tile definition
 		if ts.base and ts.symetric and ts.symetric == "x" then
 			local ts = tiles[ts.base]
 			local mx, my = #ts, #ts[1]
@@ -95,7 +95,7 @@ function _M:loadTiles(tileset)
 			end end
 			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
-		-- Y symetric tile definition
+		-- Y symmetric tile definition
 		elseif ts.base and ts.symetric and ts.symetric == "y" then
 			local ts = tiles[ts.base]
 			local mx, my = #ts, #ts[1]
@@ -207,7 +207,7 @@ function _M:findMatchingTiles(st, dir, type)
 
 	-- Examine all the size of the tile, and only the sides (for >1 base size tiles)
 	-- This is extremely convoluted but the idea is simplistic:
-	-- check each combinaison of position of tiles and find matching ones
+	-- check each combination of position of tiles and find matching ones
 	for stw = 1, st.sizew do for sth = 1, st.sizeh do if stw == 1 or stw == st.sizew or sth == 1 or sth == st.sizeh then
 		local stwr, sthr = (stw-1) * self.block.w, (sth-1) * self.block.h
 

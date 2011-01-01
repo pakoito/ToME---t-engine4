@@ -38,7 +38,7 @@ function _M:init(t, no_default)
 end
 
 --- Fill the store with goods
--- @param level the level to generate for (inctance of type engine.Level)
+-- @param level the level to generate for (instance of type engine.Level)
 -- @param zone the zone to generate for
 function _M:loadup(level, zone)
 	local s = self.store
@@ -88,7 +88,7 @@ function _M:loadup(level, zone)
 end
 
 --- Actor interacts with the store
--- @param who the actor who interracts
+-- @param who the actor who interacts
 function _M:interact(who)
 	local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
 	local d; d = ShowStore.new("Store: "..self.name, store, inven, nil, nil, function(what, o, item)

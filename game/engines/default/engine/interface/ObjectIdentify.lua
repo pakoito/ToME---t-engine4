@@ -30,7 +30,7 @@ function _M:init(t)
 	end
 end
 
---- Defines the default ided status
+--- Defines the default IDed status
 function _M:resolveIdentify()
 	if not self.unided_name then
 		self.unided_name = self.name

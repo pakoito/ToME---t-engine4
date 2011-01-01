@@ -93,7 +93,7 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic)
 		checkPos = function(node, nx, ny)
 			local nnode = self:toSingle(nx, ny)
 			if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not cache:get(nx, ny)) then
-				local tent_g_score = g_score[node] + 1 -- we can adjust hre for difficult passable terrain
+				local tent_g_score = g_score[node] + 1 -- we can adjust here for difficult passable terrain
 				local tent_is_better = false
 				if not open[nnode] then open[nnode] = true; tent_is_better = true
 				elseif tent_g_score < g_score[nnode] then tent_is_better = true
@@ -115,7 +115,7 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic)
 		checkPos = function(node, nx, ny)
 			local nnode = self:toSingle(nx, ny)
 			if not closed[nnode] and self.map:isBound(nx, ny) and ((use_has_seen and not self.map.has_seens(nx, ny)) or not self.map:checkEntity(nx, ny, Map.TERRAIN, "block_move", self.actor, nil, true)) then
-				local tent_g_score = g_score[node] + 1 -- we can adjust hre for difficult passable terrain
+				local tent_g_score = g_score[node] + 1 -- we can adjust here for difficult passable terrain
 				local tent_is_better = false
 				if not open[nnode] then open[nnode] = true; tent_is_better = true
 				elseif tent_g_score < g_score[nnode] then tent_is_better = true

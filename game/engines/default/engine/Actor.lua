@@ -98,12 +98,12 @@ function _M:setEmote(e)
 end
 
 --- Moves an actor on the map
--- *WARNING*: changing x and y properties manualy is *WRONG* and will blow up in your face. Use this method. Always.
+-- *WARNING*: changing x and y properties manually is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto
 -- @param x coord of the destination
 -- @param y coord of the destination
 -- @param force if true do not check for the presence of an other entity. *Use wisely*
--- @return true if a move was *ATTEMPTED*. This means the actor will proably want to use energy
+-- @return true if a move was *ATTEMPTED*. This means the actor will probably want to use energy
 function _M:move(x, y, force)
 	if self.dead then return true end
 	local map = game.level.map
@@ -188,10 +188,10 @@ function _M:getPathString()
 end
 
 --- Teleports randomly to a passable grid
--- @param x the coord of the teleporatation
--- @param y the coord of the teleporatation
+-- @param x the coord of the teleportation
+-- @param y the coord of the teleportation
 -- @param dist the radius of the random effect, if set to 0 it is a precise teleport
--- @param min_dist the minimun radius of of the effect, will never teleport closer. Defaults to 0 if not set
+-- @param min_dist the minimum radius of of the effect, will never teleport closer. Defaults to 0 if not set
 -- @return true if the teleport worked
 function _M:teleportRandom(x, y, dist, min_dist)
 	local poss = {}
@@ -424,8 +424,8 @@ function _M:attr(prop, v, fix)
 end
 
 --- Are we within a certain distance of the target
--- @param x the spot we test for near-ness
--- @param y the spot we test for near-ness
+-- @param x the spot we test for nearness
+-- @param y the spot we test for nearness
 -- @param radius how close we should be (defaults to 1)
 function _M:isNear(x, y, radius)
 	radius = radius or 1

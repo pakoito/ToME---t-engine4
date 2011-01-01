@@ -180,7 +180,7 @@ end
 --- Called before an talent is used
 -- Redefine as needed
 -- @param ab the talent (not the id, the table)
--- @param silent no messages will be outputed
+-- @param silent no messages will be outputted
 -- @param fake no actions are taken, only checks
 -- @return true to continue, false to stop
 function _M:preUseTalent(talent, silent, fake)

@@ -154,10 +154,10 @@ end
 
 function _M:quickBirth()
 	if not self.do_quickbirth then return end
-	-- Aborth quickbirth if stage not found
+	-- Abort quickbirth if stage not found
 	if not self.quickbirth[self.current_type] then self.do_quickbirth = false end
 
-	-- Find the corect descriptor
+	-- Find the correct descriptor
 	for i, d in ipairs(self.list) do
 		if self.quickbirth[self.current_type] == d.name then
 			print("[QUICK BIRTH] using", d.name, "for", self.current_type)
@@ -167,7 +167,7 @@ function _M:quickBirth()
 		end
 	end
 
-	-- Abord if not found
+	-- Abort if not found
 	self.do_quickbirth = false
 end
 

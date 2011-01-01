@@ -34,7 +34,7 @@ _M.current_save = false
 
 --- Init a savefile
 -- @param savefile the name of the savefile, usually the player's name. It will be sanitized so dont bother doing it
--- @param coroutine if true the saveing will yield sometimes to let other code run
+-- @param coroutine if true the saving will yield sometimes to let other code run
 function _M:init(savefile, coroutine)
 	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
 	self.save_dir = "/save/"..self.short_name.."/"
@@ -223,7 +223,7 @@ function _M:saveGame(game, no_dialog)
 
 	if not no_dialog then game:unregisterDialog(popup) end
 
-	-- A buit hacky, save hotkeys, this will do untilI can make it better for multiplayer stuff
+	-- A bit hacky, save hotkeys, this will do until I can make it better for multiplayer stuff
 	local f = fs.open(self.hotkeys_file, "w")
 	if game:getPlayer().hotkey then
 		f:write("quickhotkeys = {}\n")

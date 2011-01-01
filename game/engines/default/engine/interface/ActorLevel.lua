@@ -20,7 +20,7 @@
 require "engine.class"
 
 --- Interface to add leveling capabilities to actors
--- Defines the exp property, which is the current experience, level which is the current level and exp_worth which is a multiplicator
+-- Defines the exp property, which is the current experience, level which is the current level and exp_worth which is a multiplier
 -- to the monster level default exp
 module(..., package.seeall, class.make)
 
@@ -65,7 +65,7 @@ function _M:defineExperienceChart(chart)
 end
 
 --- Defines the max level attainable
--- @param max the maximun level. Can be nil to not have a limit
+-- @param max the maximum level. Can be nil to not have a limit
 -- Static!
 function _M:defineMaxLevel(max)
 	_M.actors_max_level = max
@@ -83,7 +83,7 @@ function _M:getExpChart(level)
 end
 
 --- Gains some experience
--- If a levelup happens it calls self:levelup(), modules are encourraged to rewrite it to do whatever is needed.
+-- If a levelup happens it calls self:levelup(), modules are encouraged to rewrite it to do whatever is needed.
 function _M:gainExp(value)
 	self.changed = true
 	self.exp = math.max(0, self.exp + value)
@@ -105,7 +105,7 @@ function _M:worthExp(target)
 	return self.level * self.exp_worth
 end
 
---- Method called when leveing up, module author rewrite it to do as you please
+--- Method called when leveling up, module author rewrite it to do as you please
 function _M:levelup()
 end
 

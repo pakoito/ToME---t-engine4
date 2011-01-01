@@ -101,7 +101,7 @@ function _M:drawDialog(s, w, h)
 	-- Draw the current command
 	s:drawStringBlended(self.font, self.line, 0, dh, 255, 255, 255)
 	dh = dh - self.font:lineSkip()
-	-- Now draw the history with any ofset
+	-- Now draw the history with any offset
 	while dh > buffer do
 		if not self.history[i] then break end
 		s:drawStringBlended(self.font, self.history[i], 0, dh, 255, 255, 255)

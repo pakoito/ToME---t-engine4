@@ -168,7 +168,7 @@ function string.bookCapitalize(str)
 	for i = 1, #words do
 		local word = words[i]
 
-		-- Don't capitalize certain words unless they are at the begining
+		-- Don't capitalize certain words unless they are at the beginning
 		-- of the string.
 		if i == 1 or (word ~= "of" and word ~= "the" and word ~= "and" and word ~= "a" and word ~= "an")
 		then

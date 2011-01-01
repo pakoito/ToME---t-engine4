@@ -297,7 +297,7 @@ _SYSREQ		= 317
 _BREAK		= 318
 _MENU		= 319
 _POWER		= 320		-- Power Macintosh power key
-_EURO		= 321		-- Some european keyboards
+_EURO		= 321		-- Some European keyboards
 _UNDO		= 322		-- Atari keyboard has Undo
 
 __DEFAULT 	= -10000
