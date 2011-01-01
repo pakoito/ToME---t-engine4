@@ -34,7 +34,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local dam = self:spellCrit(t.getDamage(self, t))
-		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, {daze=75, rng.avg(dam / 3, dam, 3)})
+		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, {daze=75, dam=rng.avg(dam / 3, dam, 3)})
 		local x, y = self.x, self.y
 		-- Lightning ball gets a special treatment to make it look neat
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2

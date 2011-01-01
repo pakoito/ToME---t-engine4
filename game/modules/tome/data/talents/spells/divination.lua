@@ -64,6 +64,7 @@ newTalent{
 	cooldown = 10,
 	no_energy = true,
 	no_npc_use = true,
+	requires_target = true,
 	getDuration = function(self, t) return math.floor(10 + self:getTalentLevel(t) * 3) end,
 	getRadius = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 3) end,
 	action = function(self, t)
