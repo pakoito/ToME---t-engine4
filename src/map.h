@@ -39,6 +39,7 @@ typedef struct {
 	bool valid;
 	float oldx, oldy;
 	int move_step, move_max, move_blur;
+	enum {DL_NONE, DL_TRUE_LAST, DL_TRUE} display_last;
 	long uid;
 } map_object;
 
@@ -49,6 +50,8 @@ typedef struct {
 	bool **grids_lites;
 	unsigned char **minimap;
 	GLuint mm_floor, mm_block, mm_object, mm_trap, mm_friend, mm_neutral, mm_hostile, mm_level_change;
+
+	int mo_list_ref;
 
 	int minimap_gridsize;
 

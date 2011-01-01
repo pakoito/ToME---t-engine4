@@ -192,7 +192,8 @@ static int map_object_get_move_anim(lua_State *L)
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	int i = luaL_checknumber(L, 2);
 	int j = luaL_checknumber(L, 3);
-	if (!obj->move_max)
+
+	if (!obj->move_max || obj->display_last == DL_NONE)
 	{
 		lua_pushnumber(L, 0);
 		lua_pushnumber(L, 0);
@@ -426,6 +427,10 @@ static int map_new(lua_State *L)
 	map->tile_w = tile_w;
 	map->tile_h = tile_h;
 
+	// Make up the map objects list, thus we can iterate them later
+	lua_newtable(L);
+	map->mo_list_ref = luaL_ref(L, LUA_REGISTRYINDEX); // Ref the table
+
 	// In case we can't support NPOT textures round up to nearest POT
 	int realw=1;
 	int realh=1;
@@ -478,6 +483,8 @@ static int map_free(lua_State *L)
 	free(map->grids_remembers);
 	free(map->grids_lites);
 	free(map->minimap);
+
+	luaL_unref(L, LUA_REGISTRYINDEX, map->mo_list_ref);
 
 	lua_pushnumber(L, 1);
 	return 1;
@@ -564,14 +571,37 @@ static int map_set_grid(lua_State *L)
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	unsigned char mm = lua_tonumber(L, 4);
 
+	// Get the mo list
+	lua_rawgeti(L, LUA_REGISTRYINDEX, map->mo_list_ref);
+
 	int i;
 	for (i = 0; i < map->zdepth; i++)
 	{
+		// Remove the old object if any from the mo list
+		// We use the pointer value directly as an index
+		if (map->grids[x][y][i])
+		{
+			lua_pushnumber(L, (long)map->grids[x][y][i]);
+			lua_pushnil(L);
+			lua_settable(L, 6); // Access the list of all mos for the map
+		}
+
 		lua_pushnumber(L, i + 1);
-		lua_gettable(L, -2);
+		lua_gettable(L, 5); // Access the table of mos for this spot
 		map->grids[x][y][i] = lua_isnoneornil(L, -1) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", -1);
+
+		// Set the object in the mo list
+		// We use the pointer value directly as an index
+		lua_pushnumber(L, (long)map->grids[x][y][i]);
+		lua_pushvalue(L, -2);
+		lua_settable(L, 6); // Access the list of all mos for the map
+
+		// Remove the mo and get the next
 		lua_pop(L, 1);
 	}
+
+	// Pop the mo list
+	lua_pop(L, 1);
 
 	map->minimap[x][y] = mm;
 	return 0;
@@ -697,10 +727,12 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 
 	// Handle move anim
 	float animdx = 0, animdy = 0;
+	if (m->display_last == DL_NONE) m->move_max = 0;
 	if (m->move_max)
 	{
 		m->move_step += nb_keyframes;
 		if (m->move_step >= m->move_max) m->move_max = 0; // Reset once in place
+		if (m->display_last == DL_NONE) m->display_last = DL_TRUE;
 
 		if (m->move_max)
 		{
@@ -736,6 +768,8 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 
 	// Unbind any shaders
 	if (m->shader) glUseProgramObjectARB(0);
+
+	m->display_last = DL_TRUE;
 }
 
 static int map_to_screen(lua_State *L)
@@ -775,6 +809,17 @@ static int map_to_screen(lua_State *L)
 				}
 			}
 		}
+	}
+
+	// "Decay" displayed status for all mos
+	lua_rawgeti(L, LUA_REGISTRYINDEX, map->mo_list_ref);
+	lua_pushnil(L);
+	while (lua_next(L, -2) != 0)
+	{
+		map_object *mo = (map_object*)auxiliar_checkclass(L, "core{mapobj}", -1);
+		if (mo->display_last == DL_TRUE) mo->display_last = DL_TRUE_LAST;
+		else if (mo->display_last == DL_TRUE_LAST) mo->display_last = DL_NONE;
+		lua_pop(L, 1); // Remove value, keep key for next iteration
 	}
 
 	// Restore normal display

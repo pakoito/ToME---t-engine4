@@ -27,6 +27,7 @@ extern void setupRealtime(float freq);
 extern void setupDisplayTimer(int fps);
 extern bool fbo_active;
 extern bool multitexture_active;
+extern long total_keyframes;
 
 #endif
 

@@ -300,6 +300,7 @@ void call_draw(int nb_keyframes)
 	}
 }
 
+long total_keyframes = 0;
 void on_redraw()
 {
 	static int Frames = 0;
@@ -334,6 +335,7 @@ void on_redraw()
 
 	int nb = ceilf(nb_keyframes);
 	count_keyframes += nb - last_keyframe;
+	total_keyframes += nb - last_keyframe;
 //	printf("keyframes: %f / %f by %f => %d\n", nb_keyframes, reference_fps, step, nb - (last_keyframe));
 	call_draw(nb - last_keyframe);
 
