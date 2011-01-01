@@ -85,7 +85,11 @@ function _M:generateList()
 	for item, o in ipairs(self.inven) do
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
-			list[#list+1] = { id=i, char=char, name=o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+
+			local enc = 0
+			o:forAllStack(function(o) enc=enc+o.encumber end)
+
+			list[#list+1] = { id=i, char=char, name=o:getName(), color=o:getDisplayColor(), object=o, item=item, cat=o.subtype, encumberance=enc, desc=o:getDesc() }
 			list.chars[char] = #list
 			i = i + 1
 		end

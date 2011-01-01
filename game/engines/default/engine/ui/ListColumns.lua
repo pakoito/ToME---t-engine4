@@ -100,7 +100,12 @@ function _M:drawItem(item)
 		if not col.direct_draw then
 			local fw, fh = col.fw, self.fh
 
-			local text = item[col.display_prop or col.sort]
+			local text
+			if type(col.display_prop) == "function" then
+				text = col.display_prop(item)
+			else
+				text = item[col.display_prop or col.sort]
+			end
 			if type(text) ~= "table" or not text.is_tstring then
 				text = util.getval(text, item)
 				if type(text) ~= "table" then text = tstring.from(tostring(text)) end

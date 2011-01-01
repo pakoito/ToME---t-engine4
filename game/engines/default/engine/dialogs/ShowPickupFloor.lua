@@ -113,7 +113,11 @@ function _M:generateList()
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
 			list.chars[char] = i
-			list[#list+1] = { char=char, name=o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=o.encumber, desc=o:getDesc() }
+
+			local enc = 0
+			o:forAllStack(function(o) enc=enc+o.encumber end)
+
+			list[#list+1] = { char=char, name=o:getName(), color=o:getDisplayColor(), object=o, item=i, cat=o.subtype, encumberance=enc, desc=o:getDesc() }
 			i = i + 1
 		end
 		idx = idx + 1
