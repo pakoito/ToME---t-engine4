@@ -154,7 +154,7 @@ end
 --- Loads a locale converter
 -- WARNING: This only converts the "sym" key, *NOT* the unicode key
 -- @param file the locale conversion file to load
-function _M:loadLocaleConvertion(file)
+function _M:loadLocaleConversion(file)
 	local f, err = loadfile(file)
 	if not f and err then error(err) end
 	setfenv(f, setmetatable({

@@ -62,9 +62,9 @@ function _M:backSpace()
 --[[
 	if (self.cursorPosition==0) then return end
 	local temptext = self.text:sub(1, self.cursorPosition - 1)
-	if self.cursorPosition < self.maximumCurosrPosition then temptext = temptext..self.text:sub(self.cursorPosition + 1, self.text:len()) end
+	if self.cursorPosition < self.maximumCursorPosition then temptext = temptext..self.text:sub(self.cursorPosition + 1, self.text:len()) end
 	self.text =  temptext
-	self.maximumCurosrPosition = self.maximumCurosrPosition - 1
+	self.maximumCursorPosition = self.maximumCursorPosition - 1
 	self.cursorPosition = self.cursorPosition - 1
 ]]
 	local b = tostring(self.text)
@@ -91,7 +91,7 @@ function _M:textInput(c)
 --[[
 	if self.text:len() < self.max then
 		local temp=nil
-		if self.cursorPosition < self.maximumCurosrPosition then temp=self.text:sub(self.cursorPosition + 1, self.text:len()) end
+		if self.cursorPosition < self.maximumCursorPosition then temp=self.text:sub(self.cursorPosition + 1, self.text:len()) end
 		self.text = self.text:sub(1,self.cursorPosition) .. c
 		if temp then self.text=self.text..temp end
 		self.owner.changed = true

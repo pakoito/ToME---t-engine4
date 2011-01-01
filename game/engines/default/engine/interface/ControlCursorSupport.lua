@@ -30,13 +30,13 @@ module(..., package.seeall, class.make)
 
 function _M:startCursor()
 	self.cursorPosition = 0
-	self.maximumCurosrPosition = 0
+	self.maximumCursorPosition = 0
 	self.focused = false
 end
 
 function _M:moveRight(x, add)
-	if add and self.cursorPosition + x > self.maximumCurosrPosition then self.maximumCurosrPosition = self.cursorPosition + x end
-	if self.cursorPosition + x <= self.maximumCurosrPosition then
+	if add and self.cursorPosition + x > self.maximumCursorPosition then self.maximumCursorPosition = self.cursorPosition + x end
+	if self.cursorPosition + x <= self.maximumCursorPosition then
 		self.cursorPosition = self.cursorPosition + x
 	end
 end

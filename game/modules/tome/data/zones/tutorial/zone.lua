@@ -27,8 +27,8 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Woods of Eremae.ogg",
+	persistent = "zone",
+	ambient_music = "Woods of Eremae.ogg",
 	no_level_connectivity = true,
 	generator =  {
 		map = {

@@ -27,8 +27,8 @@ return {
 	width = 40, height = 40,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "The Ancients.ogg",
+	persistent = "zone",
+	ambient_music = "The Ancients.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Maze",

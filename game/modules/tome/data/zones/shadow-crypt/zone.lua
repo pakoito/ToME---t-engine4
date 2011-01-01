@@ -27,10 +27,10 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	color_shown = {0.6, 0.6, 0.6, 1},
 	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 1},
-	ambiant_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
+	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.TileSet",

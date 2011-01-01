@@ -27,8 +27,8 @@ return {
 	width = 70, height = 70,
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "elven_town.ogg",
+	persistent = "zone",
+	ambient_music = "elven_town.ogg",
 	-- Apply a bluish tint to all the map
 	color_shown = {0.5, 1, 0.8, 1},
 	color_obscure = {0.5*0.6, 1*0.6, 0.8*0.6, 0.6},

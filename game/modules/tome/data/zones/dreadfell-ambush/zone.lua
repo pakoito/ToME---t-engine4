@@ -27,8 +27,8 @@ return {
 	no_worldport = true,
 --	all_remembered = true,
 	all_lited = true,
---	persistant = true,
-	ambiant_music = "Hold the Line.ogg",
+--	persistent = true,
+	ambient_music = "Hold the Line.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

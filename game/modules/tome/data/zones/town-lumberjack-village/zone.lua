@@ -23,11 +23,11 @@ return {
 	max_level = 1,
 	width = 25, height = 25,
 	decay = {300, 800, only={object=true}, no_respawn=true},
-	persistant = "zone",
+	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Virtue lost.ogg",
+	persistent = "zone",
+	ambient_music = "Virtue lost.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

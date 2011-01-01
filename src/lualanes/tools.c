@@ -1196,7 +1196,7 @@ void luaG_inter_copy( lua_State* L, lua_State *L2, uint_t n )
     }
 
     /*
-    * Remove the cache table. Persistant caching would cause i.e. multiple
+    * Remove the cache table. persistent caching would cause i.e. multiple
     * messages passed in the same table to use the same table also in receiving
     * end.
     */

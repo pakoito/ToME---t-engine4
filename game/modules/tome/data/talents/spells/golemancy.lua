@@ -89,7 +89,7 @@ newTalent{
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
-			game.persistant_actors[self.alchemy_golem] = 1
+			game.persistent_actors[self.alchemy_golem] = 1
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction
 			self.alchemy_golem.name = "golem (servant of "..self.name..")"

@@ -27,8 +27,8 @@ return {
 	width = 70, height = 70,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "a_lomos_del_dragon_blanco.ogg",
+	persistent = "zone",
+	ambient_music = "a_lomos_del_dragon_blanco.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.TileSet",

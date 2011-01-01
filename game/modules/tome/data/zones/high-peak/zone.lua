@@ -27,9 +27,9 @@ return {
 	width = 50, height = 75,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	no_worldport = true,
-	ambiant_music = "Through the Dark Portal.ogg",
+	ambient_music = "Through the Dark Portal.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

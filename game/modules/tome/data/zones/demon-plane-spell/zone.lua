@@ -28,7 +28,7 @@ return {
 	all_lited = true,
 	no_worldport = true,
 	is_demon_plane = true,
-	ambiant_music = "Straight Into Ambush.ogg",
+	ambient_music = "Straight Into Ambush.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

@@ -73,7 +73,7 @@ function _M:init()
 	engine.interface.GameMusic.init(self)
 	engine.interface.GameSound.init(self)
 
-	self.persistant_actors = {}
+	self.persistent_actors = {}
 	-- Pause at birth
 	self.paused = true
 
@@ -353,7 +353,7 @@ function _M:setupMiniMap()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{difficulty=true, persistant_actors=true, to_re_add_actors=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, persistent_actors=true, to_re_add_actors=true}, true)
 end
 
 function _M:getSaveDescription()
@@ -386,7 +386,7 @@ function _M:leaveLevel(level, lev, old_lev)
 			level.exited.up = {x=self.player.x, y=self.player.y}
 		end
 		level.last_turn = self.turn
-		for act, _ in pairs(self.persistant_actors) do
+		for act, _ in pairs(self.persistent_actors) do
 			if level:hasEntity(act) then
 				level:removeEntity(act)
 				self.to_re_add_actors[act] = true
@@ -503,9 +503,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	self.player:onEnterLevel(self.zone, self.level)
 
-	if self.level.data.ambiant_music then
-		if self.level.data.ambiant_music ~= "last" then
-			self:playMusic(self.level.data.ambiant_music)
+	if self.level.data.ambient_music then
+		if self.level.data.ambient_music ~= "last" then
+			self:playMusic(self.level.data.ambient_music)
 		end
 	else
 		self:stopMusic()

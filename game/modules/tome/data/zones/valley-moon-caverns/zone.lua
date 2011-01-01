@@ -27,7 +27,7 @@ return {
 	width = 70, height = 70,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	-- Apply a darkish tint to all the map
 	color_shown = {0.7, 0.7, 0.7, 1},
 	color_obscure = {0.7*0.6, 0.7*0.6, 0.7*0.6, 1},

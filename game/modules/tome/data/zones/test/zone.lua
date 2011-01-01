@@ -27,7 +27,7 @@ return {
 	width = 90, height = 90,
 	all_remembered = true,
 	all_lited = true,
---	persistant = "zone",
+--	persistent = "zone",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

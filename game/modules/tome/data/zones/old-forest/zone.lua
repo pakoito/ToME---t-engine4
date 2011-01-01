@@ -27,10 +27,10 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	color_shown = {0.5, 0.5, 0.5, 1},
 	color_obscure = {0.5*0.6, 0.5*0.6, 0.5*0.6, 1},
-	ambiant_music = "Woods of Eremae.ogg",
+	ambient_music = "Woods of Eremae.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

@@ -25,10 +25,10 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
-	persistant = "zone",
+	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	ambiant_music = "Bazaar of Tal-Mashad.ogg",
+	ambient_music = "Bazaar of Tal-Mashad.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Town",

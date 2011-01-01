@@ -27,8 +27,8 @@ return {
 	width = 250, height = 30,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Thrall's Theme.ogg",
+	persistent = "zone",
+	ambient_music = "Thrall's Theme.ogg",
 	no_level_connectivity = true,
 	generator =  {
 		map = {

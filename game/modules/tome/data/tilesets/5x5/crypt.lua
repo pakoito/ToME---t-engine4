@@ -94,7 +94,7 @@ tiles =
 [[###.....##]],
 [[#######'##]],
 },
-{type="room", base="BIG_CRYPT", symetric="x"},
+{type="room", base="BIG_CRYPT", symmetric="x"},
 {type="room", base="BIG_CRYPT", rotation="90"},
 {type="room", base="BIG_CRYPT", rotation="270"},
 

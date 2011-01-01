@@ -347,7 +347,7 @@ function _M:spawnWorldAmbush(enc)
 		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 		width = enc.width or 20, height = enc.height or 20,
 		all_lited = true,
-		ambiant_music = "last",
+		ambient_music = "last",
 		generator =  {
 			map = gen,
 			actor = { class = "engine.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },

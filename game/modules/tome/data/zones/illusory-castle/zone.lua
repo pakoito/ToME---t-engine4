@@ -27,7 +27,7 @@ return {
 	width = 120, height = 120,
 	all_remembered = true,
 	all_lited = true,
---	persistant = "zone",
+--	persistent = "zone",
 	generator =  {
 		map = {
 --			class = "engine.generator.map.Rooms",

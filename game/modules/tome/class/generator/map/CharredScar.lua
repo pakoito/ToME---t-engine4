@@ -35,12 +35,12 @@ function _M:generate(lev, old_lev)
 
 	local ln = 0
 	local path = core.noise.new(1)
-	local widness = core.noise.new(1)
+	local wideness = core.noise.new(1)
 
 	local i = self.data.start
 	local dir = true
 	for j = 0, self.map.h - 1 do
-		local wd = widness:fbm_perlin(20 * j / self.map.h, 4)
+		local wd = wideness:fbm_perlin(20 * j / self.map.h, 4)
 		wd = math.ceil(((wd + 1) / 2) * 4)
 		for ii = i - wd, i + wd do if self.map:isBound(ii, j) then self.map(ii, j, Map.TERRAIN, self:resolve(".")) end end
 

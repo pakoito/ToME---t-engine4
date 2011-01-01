@@ -27,10 +27,10 @@ return {
 	width = 30, height = 30,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	color_shown = {0.6, 0.6, 0.6, 1},
 	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 1},
-	ambiant_music = "Dark Secrets.ogg",
+	ambient_music = "Dark Secrets.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

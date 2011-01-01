@@ -203,12 +203,12 @@ end
 
 --- Returns how many talents of this type the actor knows
 -- @param type the talent type to count
--- @param exlude_id if not nil the count will ignore this talent id
-function _M:numberKnownTalent(type, exlude_id)
+-- @param exclude_id if not nil the count will ignore this talent id
+function _M:numberKnownTalent(type, exclude_id)
 	local nb = 0
 	for id, _ in pairs(self.talents) do
 		local t = _M.talents_def[id]
-		if t.type[1] == type and (not exlude_id or exlude_id ~= id) then nb = nb + 1 end
+		if t.type[1] == type and (not exclude_id or exclude_id ~= id) then nb = nb + 1 end
 	end
 	return nb
 end

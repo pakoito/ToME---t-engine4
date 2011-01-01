@@ -27,8 +27,8 @@ return {
 	width = 20, height = 20,
 	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Remembrance.ogg",
+	persistent = "zone",
+	ambient_music = "Remembrance.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

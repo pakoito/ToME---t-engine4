@@ -23,10 +23,10 @@ return {
 	max_level = 1,
 	width = 196, height = 80,
 	decay = {300, 800, only={object=true}, no_respawn=true},
-	persistant = "zone",
+	persistent = "zone",
 	all_remembered = true,
 	all_lited = true,
-	ambiant_music = "For the king and the country!.ogg",
+	ambient_music = "For the king and the country!.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

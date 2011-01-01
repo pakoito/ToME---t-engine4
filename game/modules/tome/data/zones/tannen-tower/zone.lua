@@ -27,9 +27,9 @@ return {
 	width = 25, height = 25,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	no_level_connectivity = true,
-	ambiant_music = "Remembrance.ogg",
+	ambient_music = "Remembrance.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

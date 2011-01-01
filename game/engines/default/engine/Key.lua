@@ -276,7 +276,7 @@ _F15		= 296
 -- Key state modifier keys
 _NUMLOCK		= 300
 _CAPSLOCK		= 301
-_SCROLLOCK		= 302
+_SCROLLLOCK		= 302
 _RSHIFT		= 303
 _LSHIFT		= 304
 _RCTRL		= 305

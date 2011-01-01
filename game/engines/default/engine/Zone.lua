@@ -77,9 +77,9 @@ function _M:init(short_name, dynamic)
 end
 
 --- Leaves a zone
--- Saves the zone to a .teaz file if requested with persistant="zone" flag
+-- Saves the zone to a .teaz file if requested with persistent="zone" flag
 function _M:leave()
-	if type(self.persistant) == "string" and self.persistant == "zone" then
+	if type(self.persistent) == "string" and self.persistent == "zone" then
 		savefile_pipe:push(game.save_name, "zone", self)
 --		local save = Savefile.new(game.save_name)
 --		save:saveZone(self)
@@ -463,15 +463,15 @@ function _M:leaveLevel(no_close, lev, old_lev)
 	if not no_close and game.level and game.level.map then
 		game:leaveLevel(game.level, lev, old_lev)
 
-		if type(game.level.data.persistant) == "string" and game.level.data.persistant == "zone" and not self.save_per_level then
+		if type(game.level.data.persistent) == "string" and game.level.data.persistent == "zone" and not self.save_per_level then
 			print("[LEVEL] persisting to zone memory", game.level.id)
 			self.memory_levels = self.memory_levels or {}
 			self.memory_levels[game.level.level] = game.level
-		elseif type(game.level.data.persistant) == "string" and game.level.data.persistant == "memory" then
+		elseif type(game.level.data.persistent) == "string" and game.level.data.persistent == "memory" then
 			print("[LEVEL] persisting to memory", game.level.id)
 			game.memory_levels = game.memory_levels or {}
 			game.memory_levels[game.level.id] = game.level
-		elseif game.level.data.persistant then
+		elseif game.level.data.persistent then
 			print("[LEVEL] persisting to disk file", game.level.id)
 			savefile_pipe:push(game.save_name, "level", game.level)
 		else
@@ -491,8 +491,8 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	local level_data = self:getLevelData(lev)
 
 	local level
-	-- Load persistant level?
-	if type(level_data.persistant) == "string" and level_data.persistant == "zone" and not self.save_per_level then
+	-- Load persistent level?
+	if type(level_data.persistent) == "string" and level_data.persistent == "zone" and not self.save_per_level then
 		self.memory_levels = self.memory_levels or {}
 		level = self.memory_levels[lev]
 
@@ -503,7 +503,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
-	elseif type(level_data.persistant) == "string" and level_data.persistant == "memory" then
+	elseif type(level_data.persistent) == "string" and level_data.persistent == "memory" then
 		game.memory_levels = game.memory_levels or {}
 		level = game.memory_levels[self.short_name.."-"..lev]
 
@@ -514,7 +514,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
-	elseif level_data.persistant then
+	elseif level_data.persistent then
 		-- Try to load from a savefile
 		level = savefile_pipe:doLoad(game.save_name, "level", nil, self.short_name, lev)
 

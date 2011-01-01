@@ -27,7 +27,7 @@ return {
 	width = 140, height = 140,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Cavern",

@@ -84,7 +84,7 @@ function _M:loadTiles(tileset)
 		if ts.define_as then tiles[ts.define_as] = t end
 
 		-- X symmetric tile definition
-		if ts.base and ts.symetric and ts.symetric == "x" then
+		if ts.base and ts.symmetric and ts.symmetric == "x" then
 			local ts = tiles[ts.base]
 			local mx, my = #ts, #ts[1]
 			for j = 1, my do for ri = 1, mx do
@@ -96,7 +96,7 @@ function _M:loadTiles(tileset)
 			t.sizew, t.sizeh = mx / d.base.w, my / d.base.h
 
 		-- Y symmetric tile definition
-		elseif ts.base and ts.symetric and ts.symetric == "y" then
+		elseif ts.base and ts.symmetric and ts.symmetric == "y" then
 			local ts = tiles[ts.base]
 			local mx, my = #ts, #ts[1]
 			for rj = 1, my do for i = 1, mx do

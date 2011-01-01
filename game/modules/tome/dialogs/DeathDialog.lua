@@ -79,7 +79,7 @@ function _M:cleanActor(actor)
 end
 
 --- Restore resources
-function _M:restoreRessources(actor)
+function _M:restoreResources(actor)
 	actor:resetToFull()
 
 	actor.energy.value = game.energy_to_act
@@ -123,14 +123,14 @@ function _M:use(item)
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER !")
 
 		self:cleanActor(self.actor)
-		self:restoreRessources(self.actor)
+		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
 	elseif act == "blood_life" then
 		self.actor.blood_life = false
 		game.logPlayer(self.actor, "#LIGHT_RED#The Blood of Life rushes through your dead body. You come back to life!")
 
 		self:cleanActor(self.actor)
-		self:restoreRessources(self.actor)
+		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
 	elseif act == "easy_mode" then
 		self.actor:attr("easy_mode_lifes", -1)
@@ -142,14 +142,14 @@ function _M:use(item)
 		self:resurrectBasic(self.actor)
 
 		for uid, e in pairs(game.level.entities) do
-			self:restoreRessources(e)
+			self:restoreResources(e)
 		end
 	elseif act == "skeleton" then
 		self.actor:attr("re-assembled", 1)
 		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish out pain to your foes!")
 
 		self:cleanActor(self.actor)
-		self:restoreRessources(self.actor)
+		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
 	elseif act:find("^consume") then
 		local inven, item, o = item.inven, item.item, item.object
@@ -157,7 +157,7 @@ function _M:use(item)
 		game.logPlayer(self.actor, "#YELLOW#Your %s is consumed and disappears! You come back to life!", o:getName{do_colour=true})
 
 		self:cleanActor(self.actor)
-		self:restoreRessources(self.actor)
+		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
 	end
 end

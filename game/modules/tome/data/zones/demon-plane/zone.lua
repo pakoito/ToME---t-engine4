@@ -27,10 +27,10 @@ return {
 	width = 65, height = 65,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	no_worldport = true,
 	is_demon_plane = true,
-	ambiant_music = "Straight Into Ambush.ogg",
+	ambient_music = "Straight Into Ambush.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

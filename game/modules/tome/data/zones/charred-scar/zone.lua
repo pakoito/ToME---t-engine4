@@ -27,11 +27,11 @@ return {
 	width = 12, height = 500,
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
+	persistent = "zone",
 	no_level_connectivity = true,
 	no_worldport = true,
 	no_teleport_south = true,
-	ambiant_music = "Hold the Line.ogg",
+	ambient_music = "Hold the Line.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

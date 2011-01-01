@@ -29,8 +29,8 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Dark Secrets.ogg",
+	persistent = "zone",
+	ambient_music = "Dark Secrets.ogg",
 	no_worldport = true,
 	generator =  {
 		map = {

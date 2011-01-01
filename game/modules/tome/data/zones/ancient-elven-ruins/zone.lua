@@ -27,8 +27,8 @@ return {
 	width = 30, height = 30,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
+	persistent = "zone",
+	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.TileSet",

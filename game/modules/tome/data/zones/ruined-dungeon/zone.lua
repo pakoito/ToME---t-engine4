@@ -26,8 +26,8 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Far Away.ogg",
+	persistent = "zone",
+	ambient_music = "Far Away.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

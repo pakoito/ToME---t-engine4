@@ -24,11 +24,11 @@ return {
 	max_level = 1,
 	width = 50, height = 50,
 	decay = {300, 800, only={object=true}, no_respawn=true},
-	persistant = "zone",
+	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
-	persistant = "zone",
-	ambiant_music = "Dreaming of Flying.ogg",
+	persistent = "zone",
+	ambient_music = "Dreaming of Flying.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

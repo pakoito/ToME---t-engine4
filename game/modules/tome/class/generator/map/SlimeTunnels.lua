@@ -70,7 +70,7 @@ function _M:generate(lev, old_lev)
 		self:makePath(sp.x, sp.y, ep.x, ep.y, 0, 0.25, points)
 	end
 
-	-- Place pedestrals
+	-- Place pedestals
 	local orbs = {"ORB_UNDEATH", "ORB_DRAGON", "ORB_ELEMENTS", "ORB_DESTRUCTION"}
 	for i = 1, 4 do
 		local orb = rng.tableRemove(orbs)

@@ -25,10 +25,10 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
-	persistant = "zone",
+	persistent = "zone",
 --	all_remembered = true,
 --	all_lited = true,
-	ambiant_music = "Thrall's Theme.ogg",
+	ambient_music = "Thrall's Theme.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

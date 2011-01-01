@@ -26,8 +26,8 @@ return {
 	width = 170, height = 100,
 --	all_remembered = true,
 --	all_lited = true,
-	persistant = "memory",
-	ambiant_music = "Remembrance.ogg",
+	persistent = "memory",
+	ambient_music = "Remembrance.ogg",
 	wilderness = true,
 	wilderness_see_radius = 4,
 	generator =  {

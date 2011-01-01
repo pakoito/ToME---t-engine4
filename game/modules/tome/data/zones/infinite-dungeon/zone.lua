@@ -28,7 +28,7 @@ return {
 --	all_lited = true,
 	no_worldport = true,
 	infinite_dungeon = true,
-	ambiant_music = "Swashing the buck.ogg",
+	ambient_music = "Swashing the buck.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
