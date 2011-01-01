@@ -48,8 +48,8 @@ local function makeGolem()
 		},
 
 		resolvers.equip{
-			{type="weapon", subtype="battleaxe", autoreq=true},
-			{type="armor", subtype="heavy", autoreq=true}
+			{type="weapon", subtype="battleaxe", autoreq=true, id=true},
+			{type="armor", subtype="heavy", autoreq=true, id=true}
 		},
 
 		autolevel = "alchemy-golem",
