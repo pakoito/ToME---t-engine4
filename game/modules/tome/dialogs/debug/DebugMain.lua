@@ -77,7 +77,7 @@ function _M:use(item)
 		game.level.map:liteAll(0, 0, game.level.map.w, game.level.map.h)
 		game.level.map:rememberAll(0, 0, game.level.map.w, game.level.map.h)
 	elseif act == "change_level" then
-		game:registerDialog(GetQuantity.new("Zone: "..game.zone.name, "Level 1-"..game.zone.max_level.max, game.level.level, game.zone.max_level, function(qty)
+		game:registerDialog(GetQuantity.new("Zone: "..game.zone.name, "Level 1-"..game.zone.max_level, game.level.level, game.zone.max_level, function(qty)
 			game:changeLevel(qty)
 		end), 1)
 	end
@@ -92,6 +92,7 @@ function _M:generateList()
 	list[#list+1] = {name="Godmode", action="godmode"}
 	list[#list+1] = {name="Create all artifacts", action="all_arts"}
 	list[#list+1] = {name="Grant/Alter Quests", dialog="GrantQuest"}
+	list[#list+1] = {name="Summon Creature", dialog="SummonCreature"}
 
 	local chars = {}
 	for i, v in ipairs(list) do

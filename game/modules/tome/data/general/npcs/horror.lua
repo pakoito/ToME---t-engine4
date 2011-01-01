@@ -456,12 +456,23 @@ You can discern a huge round mouth covered in razor-sharp teeth.]],
 		[Talents.T_MOONLIGHT_RAY]=4,
 		[Talents.T_PACIFICATION_HEX]=4,
 		[Talents.T_BURNING_HEX]=4,
-		[Talents.T_INVOKE_TENTACLE]=1,
 	},
 	resolvers.sustains_at_birth(),
 
+	-- Invoke tentacles every few turns
+	on_act = function(self)
+		if not self.ai_target.actor or self.ai_target.actor.dead then return end
+		if not self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y) then return end
+
+		self.last_tentacle = self.last_tentacle or (game.turn - 60)
+		if game.turn - self.last_tentacle >= 60 then -- Summon a tentacle every 6 turns
+			self:forceUseTalent(self.T_INVOKE_TENTACLE, {no_energy=true})
+			self.last_tentacle = game.turn
+		end
+	end,
+
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 }
 
 newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",

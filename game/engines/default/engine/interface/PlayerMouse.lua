@@ -120,10 +120,10 @@ function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel, even
 		self:mouseScrollMap(game.level.map, xrel, yrel)
 		moving_around = true
 	-- Zoom map
---	elseif button == "wheelup" then
---		game.level.map:setZoom(0.1, tmx, tmy)
---	elseif button == "wheeldown" then
---		game.level.map:setZoom(-0.1, tmx, tmy)
+	elseif config.settings.cheat and button == "wheelup" then
+		game.level.map:setZoom(0.1, tmx, tmy)
+	elseif config.settings.cheat and button == "wheeldown" then
+		game.level.map:setZoom(-0.1, tmx, tmy)
 	-- Pass any other buttons to the keybinder
 	elseif button ~= "none" and not xrel and not yrel and event == "button" then
 		key:receiveKey(button, core.key.modState("ctrl") and true or false, core.key.modState("shift") and true or false, core.key.modState("alt") and true or false, core.key.modState("meta") and true or false, nil, false, true)
