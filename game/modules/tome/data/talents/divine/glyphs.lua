@@ -86,7 +86,7 @@ newTalent{
 newTalent{
 	name = "Glyph of Repulsion",
 	type = {"divine/glyphs", 2},
-	require = spells_req2,
+	require = divi_req_high2,
 	random_ego = "attack",
 	points = 5,
 	positive = -10,
