@@ -47,6 +47,7 @@ return {
 			class = "mod.class.generator.actor.Sandworm",
 			nb_npc = {20, 30},
 			guardian = "SANDWORM_QUEEN",
+			guardian_no_connectivity = true,
 			-- Number of tunnelers + 2 (one per stair)
 			nb_tunnelers = 7,
 		},
