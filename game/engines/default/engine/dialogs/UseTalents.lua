@@ -140,8 +140,8 @@ function _M:generateList()
 			if self.actor:knowTalent(t.id) and t.mode ~= "passive" then
 				local typename = "talent"
 				local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
-				if self.actor:isTalentCoolingDown(t) then status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"} end
-				if t.mode == "sustained" then status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"} end
+				if self.actor:isTalentCoolingDown(t) then status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"}
+				elseif t.mode == "sustained" then status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"} end
 				list[#list+1] = { char=self:makeKeyChar(letter), name=t.name.." ("..typename..")", status=status, talent=t.id, desc=self.actor:getTalentFullDescription(t) }
 				list.chars[self:makeKeyChar(letter)] = list[#list]
 				if not self.sel then self.sel = #list + 1 end
