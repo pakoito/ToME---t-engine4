@@ -31,7 +31,7 @@ newTalent{
 newTalent{
 	name = "Eye Shot",
 	type = {"technique/archery-sling", 2},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	cooldown = 8,
 	stamina = 15,
@@ -56,7 +56,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You fire a shot into your target's eyes, blinding it for %d turns and doing %d%% damage.
 		Blind chance increase with your Dexterity stat.]])
-		:format(2 + self:getTalentLevelRaw(t), 
+		:format(2 + self:getTalentLevelRaw(t),
 		100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
@@ -64,7 +64,7 @@ newTalent{
 newTalent{
 	name = "Inertial Shot",
 	type = {"technique/archery-sling", 3},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	cooldown = 8,
 	stamina = 15,
@@ -96,7 +96,7 @@ newTalent{
 newTalent{
 	name = "Multishot",
 	type = {"technique/archery-sling", 4},
-	no_energy = true,
+	no_energy = "fake",
 	points = 5,
 	cooldown = 12,
 	stamina = 35,
