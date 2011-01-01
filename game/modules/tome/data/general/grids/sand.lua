@@ -56,7 +56,8 @@ newEntity{
 				end
 			end,
 			dig = function(src, x, y, old)
-				self.temporary = 20
+				old.temporary = 20
+				return nil, old, true
 			end,
 		}
 		sand.summoner_gain_exp = true
