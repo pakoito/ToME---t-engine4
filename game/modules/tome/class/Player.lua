@@ -82,6 +82,7 @@ function _M:init(t, no_default)
 	mod.class.interface.PlayerLore.init(self, t)
 
 	self.descriptor = {}
+	self.died_times = {}
 end
 
 function _M:onBirth(birther)
@@ -410,7 +411,7 @@ function _M:die(src)
 		game.paused = true
 		self.energy.value = game.energy_to_act
 		self.killedBy = src
-		self.died_times = (self.died_times or 0) + 1
+		self.died_times[#self.died_times+1] = {name=src.name, level=self.level, turn=game.turn}
 		self:registerDeath(self.killedBy)
 		game:registerDialog(DeathDialog.new(self))
 	else

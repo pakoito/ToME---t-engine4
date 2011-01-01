@@ -35,6 +35,14 @@ function _M:dumpToJSON(js)
 	-------------------------------------------------------------------
 	-- Character
 	-------------------------------------------------------------------
+	local deaths = "no deaths recorded"
+	if #self.died_times > 0 then
+		deaths = "<ul>"
+		for i, reason in ipairs(self.died_times) do
+			deaths = deaths..string.format("<li>Killed by %s at level %d on the %s</li>", reason.name or "unknown", reason.level, game.calendar:getTimeDate(reason.turn, "%s %s %s year of Ascendancy at %02d:%02d"))
+		end
+		deaths = deaths.."</ul>"
+	end
 	js:newSection("character", "char", "pairs", "add", {
 		{ game = string.format("%s (version %d.%d.%d)", game.__mod_info.long_name, game.__mod_info.version[1], game.__mod_info.version[2], game.__mod_info.version[3]) },
 		{ name = self.name },
@@ -45,7 +53,7 @@ function _M:dumpToJSON(js)
 		{ level = self.level },
 		{ exp = string.format("%d%%", 100 * cur_exp / max_exp) },
 		{ gold = string.format("%d", self.money) },
-		{ died = string.format("%d times (now %s)", self.died_times or 0, self.dead and "dead" or "alive") },
+		{ died = { val=string.format("%d times (now %s)", #self.died_times or 0, self.dead and "dead" or "alive"), tooltip=deaths } },
 	})
 
 	-------------------------------------------------------------------
