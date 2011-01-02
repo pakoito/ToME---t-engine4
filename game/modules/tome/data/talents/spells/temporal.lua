@@ -18,9 +18,41 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Time Shield",
-	type = {"spell/temporal", 1},
+	name = "Congeal Time",
+	type = {"spell/temporal",1},
 	require = spells_req1,
+	points = 5,
+	random_ego = "utility",
+	mana = 20,
+	cooldown = 30,
+	tactical = {
+		ATTACK = 10,
+	},
+	reflectable = true,
+	proj_speed = 2,
+	range = 10,
+	direct_hit = true,
+	requires_target = true,
+	getSlow = function(self, t) return self:getTalentLevel(t) * 0.08 end,
+	action = function(self, t)
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + t.getSlow(self, t)), {type="manathrust"})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local slow = t.getSlow(self, t)
+		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.]]):
+		format(100 * slow)
+	end,
+}
+
+newTalent{
+	name = "Time Shield",
+	type = {"spell/temporal", 2},
+	require = spells_req2,
 	points = 5,
 	mana = 50,
 	cooldown = 30,
@@ -46,71 +78,9 @@ newTalent{
 }
 
 newTalent{
-	name = "Congeal Time",
-	type = {"spell/temporal",2},
-	require = spells_req2,
-	points = 5,
-	random_ego = "utility",
-	mana = 20,
-	cooldown = 30,
-	tactical = {
-		ATTACK = 10,
-	},
-	reflectable = true,
-	proj_speed = 2,
-	range = 10,
-	direct_hit = true,
-	requires_target = true,
-	getSlow = function(self, t) return self:getTalentLevel(t) * 0.07 end,
-	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + t.getSlow(self, t)), {type="manathrust"})
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
-	info = function(self, t)
-		local slow = t.getSlow(self, t)
-		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.]]):
-		format(100 * slow)
-	end,
-}
-
-newTalent{
-	name = "Essence of Speed",
-	type = {"spell/temporal",3},
-	require = spells_req3,
-	points = 5,
-	mode = "sustained",
-	sustain_mana = 250,
-	cooldown = 30,
-	tactical = {
-		BUFF = 10,
-	},
-	getHaste = function(self, t) return self:getTalentLevel(t) * 0.07 end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/spell_generic")
-		local power = 1 - 1 / (1 + t.getHaste(self, t))
-		return {
-			speed = self:addTemporaryValue("energy", {mod=power}),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("energy", p.speed)
-		return true
-	end,
-	info = function(self, t)
-		local haste = t.getHaste(self, t)
-		return ([[Increases the caster's global speed by %d%%.]]):
-		format(100 * haste)
-	end,
-}
-
-newTalent{
 	name = "Time Prison",
-	type = {"spell/temporal", 4},
-	require = spells_req4,
+	type = {"spell/temporal", 3},
+	require = spells_req3,
 	points = 5,
 	random_ego = "utility",
 	mana = 140,
@@ -138,3 +108,34 @@ newTalent{
 		format(duration)
 	end,
 }
+
+newTalent{
+	name = "Essence of Speed",
+	type = {"spell/temporal",4},
+	require = spells_req4,
+	points = 5,
+	mode = "sustained",
+	sustain_mana = 250,
+	cooldown = 30,
+	tactical = {
+		BUFF = 10,
+	},
+	getHaste = function(self, t) return self:getTalentLevel(t) * 0.07 end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic")
+		local power = 1 - 1 / (1 + t.getHaste(self, t))
+		return {
+			speed = self:addTemporaryValue("energy", {mod=power}),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("energy", p.speed)
+		return true
+	end,
+	info = function(self, t)
+		local haste = t.getHaste(self, t)
+		return ([[Increases the caster's global speed by %d%%.]]):
+		format(100 * haste)
+	end,
+}
+
