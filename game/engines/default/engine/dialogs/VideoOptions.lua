@@ -75,6 +75,7 @@ function _M:generateList()
 		return tostring(config.settings.display_fps)
 	end, fct=function(item)
 		game:registerDialog(GetQuantity.new("Enter density", "From 5 to 60", config.settings.display_fps, 60, function(qty)
+			qty = util.bound(qty, 5, 60)
 			game:saveSettings("display_fps", ("display_fps = %d\n"):format(qty))
 			config.settings.display_fps = qty
 			core.game.setFPS(qty)

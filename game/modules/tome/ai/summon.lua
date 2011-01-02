@@ -21,6 +21,7 @@ newAI("summoned", function(self)
 	-- Run out of time ?
 	if self.summon_time then
 		self.summon_time = self.summon_time - 1
+		print("==========",self.summon_time)
 		if self.summon_time <= 0 then
 			game.logPlayer(self.summoner, "#PINK#Your summoned %s disappears.", self.name)
 			self:die()

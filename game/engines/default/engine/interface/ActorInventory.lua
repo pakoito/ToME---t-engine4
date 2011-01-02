@@ -121,6 +121,7 @@ end
 
 --- Picks an object from the floor
 function _M:pickupFloor(i, vocal, no_sort)
+	if not self:getInven(self.INVEN_INVEN) then return end
 	local o = game.level.map:getObject(self.x, self.y, i)
 	if o then
 		local prepickup = o:check("on_prepickup", self, i)
@@ -390,6 +391,7 @@ end
 function _M:sortInven(inven)
 	if not inven then inven = self.inven[self.INVEN_INVEN] end
 	inven = self:getInven(inven)
+	if not inven then return end
 
 	-- Stack objects first, from bottom
 	for i = #inven, 1, -1 do

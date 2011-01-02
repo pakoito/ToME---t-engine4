@@ -117,8 +117,9 @@ function _M:setPlayer(actor)
 end
 
 function _M:findSuitablePlayer(type)
-	for actor, def in pairs(self.members) do
-		if def.control == "full" and (not type or def.type == type) then
+	for i, actor in ipairs(self.m_list) do
+		local def = self.members[actor]
+		if def.control == "full" and (not type or def.type == type) and not actor.dead then
 			self:setPlayer(actor)
 			return true
 		end
