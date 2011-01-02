@@ -963,6 +963,11 @@ end
 function _M:die(src)
 	engine.interface.ActorLife.die(self, src)
 
+	-- Remove from the party if needed
+	if self.remove_from_party_on_death then
+		game.party:removeMember(self, true)
+	end
+
 	-- Gives the killer some exp for the kill
 	local killer = nil
 	if src and src.resolveSource and src:resolveSource().gainExp then

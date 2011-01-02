@@ -78,6 +78,25 @@ function checkMaxSummon(self)
 	end
 end
 
+function setupSummon(self, m)
+	if self.player and self:knowTalent(self.T_SUMMON_CONTROL) then
+		m.remove_from_party_on_death = true
+		game.party:addMember(m, {
+			control="full",
+			type="summon",
+			title="Summon",
+			on_control = function(self)
+				local summoner = self.summoner
+				self:setEffect(self.EFF_SUMMON_CONTROL, 1000, {incdur=2 + summoner:getTalentLevel(self.T_SUMMON_CONTROL) * 3, res=summoner:getCun(7, true) * summoner:getTalentLevelRaw(self.T_SUMMON_CONTROL)})
+				self:hotkeyAutoTalents()
+			end,
+			on_uncontrol = function(self)
+				self:removeEffect(self.EFF_SUMMON_CONTROL)
+			end,
+		})
+	end
+end
+
 load("/data/talents/gifts/summon-melee.lua")
 load("/data/talents/gifts/summon-distance.lua")
 load("/data/talents/gifts/summon-utility.lua")

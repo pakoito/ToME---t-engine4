@@ -178,8 +178,9 @@ end
 function _M:resetTiles()
 	Entity:invalidateAllMO()
 	self.tiles = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, self.allow_backcolor)
+	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, false, false)
 	self.tilesTactic = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, false)
-	self.tilesSurface = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, true)
+	self.tilesEffects = Tiles.new(self.tile_w, self.tile_h, self.fontname, self.fontsize, true, true)
 end
 
 --- Defines the faction of the person seeing the map
@@ -829,7 +830,7 @@ function _M:displayEffects()
 	for i, e in ipairs(self.effects) do
 		-- Dont bother with obviously out of screen stuff
 		if e.overlay and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-			local s = self.tilesSurface:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, e.overlay.alpha)
+			local s = self.tilesEffects:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, e.overlay.alpha)
 
 			-- Now display each grids
 			for lx, ys in pairs(e.grids) do

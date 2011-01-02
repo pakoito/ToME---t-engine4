@@ -55,22 +55,17 @@ function _M:init(t, no_default)
 	t.color_g=t.color_g or 230
 	t.color_b=t.color_b or 230
 
-	t.unique = "player"
+	t.unique = t.unique or "player"
 	t.player = true
-	t.open_door = true
+	if type(t.open_door) == "nil" then t.open_door = true end
 	t.type = t.type or "humanoid"
 	t.subtype = t.subtype or "player"
 	t.faction = t.faction or "players"
 
 	if t.fixed_rating == nil then t.fixed_rating = true end
 
-	t.move_others = true
-
 	-- Dont give free resists & higher stat max to players
-	t.no_auto_resists = true
-	t.no_auto_high_stats = true
 	t.resists_cap = t.resists_cap or {}
-	t.resists_cap.all = t.resists_cap.all or 70
 
 	t.lite = t.lite or 0
 
@@ -406,7 +401,11 @@ function _M:heal(value, src)
 end
 
 function _M:die(src)
-	if self.game_ender then
+	local game_ender = self.game_ender
+	-- Look for an other possible player in the party, otherwise we are done !
+	if not game_ender then game_ender = not game.party:findSuitablePlayer() end
+
+	if game_ender then
 		engine.interface.ActorLife.die(self, src)
 		game.paused = true
 		self.energy.value = game.energy_to_act

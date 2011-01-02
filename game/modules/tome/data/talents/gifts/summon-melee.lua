@@ -75,6 +75,7 @@ newTalent{
 		m:forceLevelup(self.level)
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
+		setupSummon(self, m)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -150,6 +151,7 @@ newTalent{
 		m:forceLevelup(self.level)
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
+		setupSummon(self, m)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -229,6 +231,7 @@ newTalent{
 		m:forceLevelup(self.level)
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
+		setupSummon(self, m)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -309,6 +312,7 @@ newTalent{
 		m:forceLevelup(self.level)
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
+		setupSummon(self, m)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true

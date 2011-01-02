@@ -204,6 +204,7 @@ newTalent{
 		m:forceLevelup(self.level)
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
+		setupSummon(self, m)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -213,7 +214,7 @@ newTalent{
 		It will get %d constitution, %d dexterity and 18 willpower.
 		Constitution stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, 
+		15 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
 		10 + self:getTalentLevel(t) * 2)
 	end,
 }
@@ -278,6 +279,7 @@ newTalent{
 		m:forceLevelup(self.level)
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "summon")
+		setupSummon(self, m)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -287,7 +289,7 @@ newTalent{
 		It will get %d dexterity, %d strength, 18 willpower and %d constitution.
 		Dexterity stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5, 
+		15 + self:getWil() * self:getTalentLevel(t) / 5,
 		10 + self:getTalentLevel(t) * 2,
 		10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
@@ -327,59 +329,13 @@ newTalent{
 	name = "Summon Control",
 	type = {"wild-gift/summon-utility", 4},
 	require = gifts_req4,
+	mode = "passive",
 	points = 5,
-	equilibrium = 2,
-	cooldown = 10,
-	range = 20,
-	requires_target = true,
-	no_npc_use = true,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t, first_target="friend"}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty or not target then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		target = game.level.map(tx, ty, Map.ACTOR)
-		if not target or target == self then return nil end
-		if not target.summoner or target.summoner ~= game.player or not target.wild_gift_summon then return nil end
-
-		local ot = target
-		target = mod.class.Player.new(target)
-		target.changed = true
-		target.energy.value = 0
-		target:hotkeyAutoTalents()
-		target.talents[self.T_SUMMON_END] = 1
-		target.hotkey[10] = {"talent",self.T_SUMMON_END}
-		target.summon_time = target.summon_time + 2 + self:getTalentLevel(t) * 3
-		target.unused_stats = 0
-		target.unused_talents = 0
-		target.unused_generics = 0
-		target.unused_talents_types = 0
-		ot:replaceWith(target)
-		game.player.player = nil
-		game.paused = false
-		game.player = ot
-		game.hotkeys_display.actor = ot
-		game.target.source_actor = ot
-		Map:setViewerActor(ot)
-		game.level.map:moveViewSurround(ot.x, ot.y, 8, 8)
-
-		ot.die = function(self)
-			game.level:removeEntity(self)
-			self.dead = true
-			game.player = self.summoner
-			game.player.player = true
-			game.hotkeys_display.actor = self.summoner
-			game.target.source_actor = self.summoner
-			engine.Map:setViewerActor(self.summoner)
-			game.paused = false
-			game.level.map:moveViewSurround(self.summoner.x, self.summoner.y, 8, 8)
-		end
-
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
 	info = function(self, t)
-		return ([[Take direct control of one of your summons.
-		When taking control, your summon has its lifetime increased by %d turns.]]):format(2 + self:getTalentLevel(t) * 3)
+		return ([[Allows you to take direct control of any of your summons.
+		The summons will appear on the interface, a simple click on them will let you switch control.
+		You can also press control+tab to switch.
+		When taking control, your summon has its lifetime increased by %d turns and takes %d%% less damage.
+		The damage reduction is based on your Cunning.]]):format(2 + self:getTalentLevel(t) * 3, self:getCun(7, true) * self:getTalentLevelRaw(t))
 	end,
 }

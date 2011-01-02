@@ -61,6 +61,12 @@ newBirthDescriptor{
 	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1, MOUNT = 1 },
 
 	copy = {
+		-- Some basic stuff
+		move_others = true,
+		no_auto_resists = true,
+		no_auto_high_stats = true,
+		resists_cap = {all=70},
+
 		-- Mages are unheard of at first, nobody but them regenerates mana
 		mana_rating = 6,
 		mana_regen = 0,

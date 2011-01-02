@@ -38,10 +38,7 @@ local Store = require "mod.class.Store"
 local Trap = require "mod.class.Trap"
 local Grid = require "mod.class.Grid"
 local Actor = require "mod.class.Actor"
-local ActorStats = require "engine.interface.ActorStats"
-local ActorResource = require "engine.interface.ActorResource"
-local ActorTalents = require "engine.interface.ActorTalents"
-local ActorAI = require "engine.interface.ActorAI"
+local Party = require "mod.class.Party"
 local Player = require "mod.class.Player"
 local NPC = require "mod.class.NPC"
 
@@ -132,7 +129,10 @@ function _M:isTainted()
 end
 
 function _M:newGame()
-	self.player = Player.new{name=self.player_name, game_ender=true}
+	self.party = Party.new()
+	local player = Player.new{name=self.player_name, game_ender=true}
+	self.party:addMember(player, {control="full", type="player", title="Main character", main=true})
+	self.party:setPlayer(player)
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
 
@@ -353,7 +353,7 @@ function _M:setupMiniMap()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{difficulty=true, persistent_actors=true, to_re_add_actors=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, persistent_actors=true, to_re_add_actors=true, party=true}, true)
 end
 
 function _M:getSaveDescription()
@@ -716,6 +716,9 @@ function _M:setupCommands()
 	-- Debug mode
 	self.key:addCommands{
 		[{"_a","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
+		[{"_d","ctrl"}] = function() if config.settings.cheat then
+			game.party:setPlayer(game.player.alchemy_golem)
+		end end,
 	}
 
 	self.key:addBinds
@@ -781,6 +784,17 @@ function _M:setupCommands()
 		HOTKEY_NEXT_PAGE = not_wild(function() self.player:nextHotkeyPage() self.log("Hotkey page %d is now displayed.", self.player.hotkey_page) end),
 --		HOTKEY_HOTPAGE2 = function(sym, ctrl, shift, alt, meta, unicode, isup) self.player:setHotkeyPage(isup and 1 or 2) end,
 --		HOTKEY_HOTPAGE3 = function(sym, ctrl, shift, alt, meta, unicode, isup) self.player:setHotkeyPage(isup and 1 or 3) end,
+
+		-- Party commands
+		SWITCH_PARTY_1 = not_wild(function() self.party:setPlayer(1) end),
+		SWITCH_PARTY_2 = not_wild(function() self.party:setPlayer(2) end),
+		SWITCH_PARTY_3 = not_wild(function() self.party:setPlayer(3) end),
+		SWITCH_PARTY_4 = not_wild(function() self.party:setPlayer(4) end),
+		SWITCH_PARTY_5 = not_wild(function() self.party:setPlayer(5) end),
+		SWITCH_PARTY_6 = not_wild(function() self.party:setPlayer(6) end),
+		SWITCH_PARTY_7 = not_wild(function() self.party:setPlayer(7) end),
+		SWITCH_PARTY_8 = not_wild(function() self.party:setPlayer(8) end),
+		SWITCH_PARTY = not_wild(function() self:registerDialog(require("mod.dialogs.PartySelect").new()) end),
 
 		-- Actions
 		CHANGE_LEVEL = function()

@@ -450,6 +450,23 @@ newEffect{
 }
 
 newEffect{
+	name = "SUMMON_CONTROL",
+	desc = "Summon Control",
+	long_desc = function(self, eff) return ("Reduces damage received by %d%% and increases summon time by %d."):format(eff.res, eff.incdur) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { res=10, incdur=10 },
+	activate = function(self, eff)
+		eff.resid = self:addTemporaryValue("resists", {all=eff.res})
+		eff.durid = self:addTemporaryValue("summon_time", eff.incdur)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.resid)
+		self:removeTemporaryValue("summon_time", eff.durid)
+	end,
+}
+
+newEffect{
 	name = "VIMSENSE",
 	desc = "Vimsense",
 	long_desc = function(self, eff) return ("Reduces blight resistance by %d%%."):format(eff.power) end,

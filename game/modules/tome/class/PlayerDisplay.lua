@@ -46,6 +46,7 @@ function _M:resize(x, y, w, h)
 	self.surface = core.display.newSurface(w, h)
 	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 
+	self.portrait = core.display.loadImage("/data/gfx/ui/party-portrait.png")
 	local tex_bg = core.display.loadImage("/data/gfx/ui/player-display.png")
 	local tex_up = core.display.loadImage("/data/gfx/ui/player-display-top.png")
 	local bw, bh = tex_bg:getSize()
@@ -58,8 +59,13 @@ function _M:resize(x, y, w, h)
 	self.bg_surface:merge(tex_up, 0, 0)
 end
 
-function _M:mouseTooltip(text, _, _, _, w, h, x, y)
-	self.mouse:registerZone(x, y, w, h, function(button) game.tooltip_x, game.tooltip_y = 1, 1; game.tooltip:displayAtMap(nil, nil, game.w, game.h, text) end)
+function _M:mouseTooltip(text, _, _, _, w, h, x, y, click)
+	self.mouse:registerZone(x, y, w, h, function(button, mx, my, xrel, yrel, bx, by, event)
+		game.tooltip_x, game.tooltip_y = 1, 1; game.tooltip:displayAtMap(nil, nil, game.w, game.h, text)
+		if click and event == "button" and button == "left" then
+			click()
+		end
+	end)
 end
 
 -- Displays the stats
@@ -110,11 +116,11 @@ function _M:display()
 	s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, self.bars_x, h, self.bars_w * player.life / player.max_life, self.font_h)
 	self:mouseTooltip(self.TOOLTIP_LIFE, s:drawColorStringBlended(self.font, ("#c00000#Life:    #ffffff#%d/%d"):format(player.life, player.max_life), x, h, 255, 255, 255)) h = h + self.font_h
 
-	if player.alchemy_golem and not player.alchemy_golem.dead then
-		s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, self.bars_x, h, self.bars_w * player.alchemy_golem.life / player.alchemy_golem.max_life, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_LIFE, s:drawColorStringBlended(self.font, ("#c00000#Golem:   #ffffff#%d/%d"):format(player.alchemy_golem.life, player.alchemy_golem.max_life), x, h, 255, 255, 255)) h = h + self.font_h
-	end
+--	if player.alchemy_golem and not player.alchemy_golem.dead then
+--		s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, self.bars_x, h, self.bars_w, self.font_h)
+--		s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, self.bars_x, h, self.bars_w * player.alchemy_golem.life / player.alchemy_golem.max_life, self.font_h)
+--		self:mouseTooltip(self.TOOLTIP_LIFE, s:drawColorStringBlended(self.font, ("#c00000#Golem:   #ffffff#%d/%d"):format(player.alchemy_golem.life, player.alchemy_golem.max_life), x, h, 255, 255, 255)) h = h + self.font_h
+--	end
 
 	if player:knowTalent(player.T_STAMINA_POOL) then
 		s:erase(0xff / 6, 0xcc / 6, 0x80 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
@@ -166,6 +172,33 @@ function _M:display()
 	local ammo = quiver and quiver[1]
 	if ammo then
 		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, s:drawColorStringBlended(self.font, ("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(ammo:getNumber()), 0, h, 255, 255, 255)) h = h + self.font_h
+	end
+
+	-- Other party members
+	if #game.party.m_list >= 2 then
+		local w = 0
+		for i = 1, #game.party.m_list do
+			local a = game.party.m_list[i]
+			if a ~= player then
+				local def = game.party.members[a]
+				s:merge(self.portrait, w, h)
+				s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, w+2, h+2, 32, 32)
+				local hl = 32 * math.max(0, a.life) / a.max_life
+				s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, w+2, h+34-hl, 32, hl)
+
+				local es = game.level.map.tilesSurface:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image, a._noalpha and 255, a.ascii_outline)
+				s:merge(es, w+2, h+2)
+
+				self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#"..def.title, nil, nil, nil, w+36, h+36, w, h, function()
+					if def.control == "full" then
+						game.party:setPlayer(a)
+					end
+				end)
+				w = w + 36
+				if w + 36 > self.w then w = 0 h = h + 36 end
+			end
+		end
+		h = h + 36
 	end
 
 	if savefile_pipe.saving then

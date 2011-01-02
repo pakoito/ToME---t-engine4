@@ -60,7 +60,7 @@ WorldAchievements:loadDefinition("/data/achievements/")
 PlayerLore:loadDefinition("/data/lore/lore.lua")
 
 -- Useful keybinds
-KeyBind:load("move,hotkeys,inventory,actions,interface,debug")
+KeyBind:load("move,hotkeys,inventory,actions,interface,tome,debug")
 
 -- Additional entities resolvers
 dofile("/mod/resolvers.lua")

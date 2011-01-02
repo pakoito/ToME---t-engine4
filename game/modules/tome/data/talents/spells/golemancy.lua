@@ -89,7 +89,7 @@ newTalent{
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
-			game.party:addMember(self.alchemy_golem, "full")
+			game.party:addMember(self.alchemy_golem, {control="full", type="golem", title="Golem"})
 			game.persistent_actors[self.alchemy_golem] = 1
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction
