@@ -176,15 +176,15 @@ newTalent{
 	type = {"spell/conveyance", 3},
 	require = spells_req3,
 	points = 5,
-	mana = 80,
-	cooldown = 100,
+	mana = 70,
+	cooldown = 35,
 	tactical = {
 		DEFENSE = 10,
 	},
 	range = 10,
 	requires_target = true,
 	getTransferChange = function(self, t) return 20 + self:getTalentLevel(t) * 5 end,
-	getMaxAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 20, 210) end,
+	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 20, 350) end,
 	getDuration = function(self, t) return util.bound(10 + math.floor(self:getTalentLevel(t) * 3), 10, 25) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}

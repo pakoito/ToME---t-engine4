@@ -119,11 +119,12 @@ newTalent{
 	require = spells_req4, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
+	cooldown = 30,
 	sustain_mana = 150,
 	tactical = {
 		DEFEND = 10,
 	},
-	getManaRatio = function(self, t) return math.max(0.8, 3 - (self:combatSpellpower(1) * self:getTalentLevel(t)) / 280) end,
+	getManaRatio = function(self, t) return 3 - self:combatTalentSpellDamage(t, 10, 200) / 100 end,
 	activate = function(self, t)
 		local power = t.getManaRatio(self, t)
 		self.disruption_shield_absorb = 0

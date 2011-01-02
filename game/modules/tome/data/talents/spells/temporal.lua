@@ -18,34 +18,30 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Time Prison",
+	name = "Time Shield",
 	type = {"spell/temporal", 1},
 	require = spells_req1,
 	points = 5,
-	random_ego = "utility",
-	mana = 30,
+	mana = 50,
 	cooldown = 30,
 	tactical = {
 		DEFENSE = 10,
 	},
 	range = 20,
-	direct_hit = true,
-	reflectable = true,
-	requires_target = true,
-	getDuration = function(self, t) return 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t) end,
+	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 50, 350) end,
+	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.TIME_PRISON, t.getDuration(self, t), {type="manathrust"})
+		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t)})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
+		local maxabsorb = t.getMaxAbsorb(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act nor be harmed.
-		The duration will increase with the Magic stat]]):
-		format(duration)
+		return ([[This intricate spell erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
+		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (5 turns).
+		Max absorption will increase with the Magic stat]]):
+		format(maxabsorb, duration)
 	end,
 }
 
@@ -112,29 +108,33 @@ newTalent{
 }
 
 newTalent{
-	name = "Time Shield",
+	name = "Time Prison",
 	type = {"spell/temporal", 4},
 	require = spells_req4,
 	points = 5,
-	mana = 150,
-	cooldown = 200,
+	random_ego = "utility",
+	mana = 140,
+	cooldown = 40,
 	tactical = {
 		DEFENSE = 10,
 	},
 	range = 20,
-	getMaxAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 50, 170) end,
-	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
+	direct_hit = true,
+	reflectable = true,
+	requires_target = true,
+	getDuration = function(self, t) return 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t)})
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.TIME_PRISON, t.getDuration(self, t), {type="manathrust"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		local maxabsorb = t.getMaxAbsorb(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[This intricate spell erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
-		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (5 turns).
-		Max absorption will increase with the Magic stat]]):
-		format(maxabsorb, duration)
+		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act nor be harmed.
+		The duration will increase with the Magic stat]]):
+		format(duration)
 	end,
 }

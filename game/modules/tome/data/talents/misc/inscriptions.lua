@@ -527,7 +527,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to unleash a manasurge upon yourself, increasing mana regeneration by %d%% for %d turns and instantly restoring %d mana.]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
+		return ([[Activate the rune to unleash a manasurge upon yourself, increasing mana regeneration by %d%% over %d turns and instantly restoring %d mana.]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
