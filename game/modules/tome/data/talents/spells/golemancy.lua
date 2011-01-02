@@ -60,6 +60,12 @@ local function makeGolem()
 		-- No natural exp gain
 		gainExp = function() end,
 
+		unused_stats = 0,
+		unused_talents = 0,
+		unused_generics = 0,
+		unused_talents_types = 0,
+
+		no_talent_points_on_levelup = true,
 		keep_inven_on_death = true,
 --		no_auto_resists = true,
 		open_door = true,

@@ -79,6 +79,10 @@ function checkMaxSummon(self)
 end
 
 function setupSummon(self, m)
+	self.unused_stats = 0
+	self.unused_talents = 0
+	self.unused_generics = 0
+	self.unused_talents_types = 0
 	if self.player and self:knowTalent(self.T_SUMMON_CONTROL) then
 		m.remove_from_party_on_death = true
 		game.party:addMember(m, {
