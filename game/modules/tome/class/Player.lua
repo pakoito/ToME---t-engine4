@@ -401,6 +401,9 @@ function _M:heal(value, src)
 end
 
 function _M:die(src)
+	self:runStop("died")
+	self:restStop("died")
+
 	local game_ender = self.game_ender
 	-- Look for an other possible player in the party, otherwise we are done !
 	if not game_ender then game_ender = not game.party:findSuitablePlayer() end
