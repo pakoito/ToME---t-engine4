@@ -60,7 +60,7 @@ local possible_types = {
 			resolvers.talents{ [Talents.T_STUNNING_BLOW]=1, },
 			lite = 4,
 			rank = 2,
-			exp_worth = 0,
+			exp_worth = 1,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 12,
@@ -86,7 +86,7 @@ local possible_types = {
 			resolvers.talents{ [Talents.T_MANATHRUST]=1, },
 			lite = 4,
 			rank = 2,
-			exp_worth = 0,
+			exp_worth = 1,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 11,
@@ -112,7 +112,7 @@ local possible_types = {
 			resolvers.talents{ [Talents.T_DIRTY_FIGHTING]=1, },
 			lite = 4,
 			rank = 2,
-			exp_worth = 0,
+			exp_worth = 1,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 11,
@@ -138,7 +138,7 @@ local possible_types = {
 			resolvers.talents{ [Talents.T_HEAT]=1, },
 			lite = 4,
 			rank = 2,
-			exp_worth = 0,
+			exp_worth = 1,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 11,
@@ -164,7 +164,7 @@ local possible_types = {
 			resolvers.talents{ [Talents.T_CHANT_OF_FORTRESS]=1, },
 			lite = 4,
 			rank = 2,
-			exp_worth = 0,
+			exp_worth = 1,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 12,
@@ -191,7 +191,7 @@ local possible_types = {
 			resolvers.talents{ [Talents.T_HYMN_OF_PERSEVERANCE]=1, },
 			lite = 4,
 			rank = 2,
-			exp_worth = 0,
+			exp_worth = 1,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 11,
@@ -218,7 +218,7 @@ local possible_types = {
 			resolvers.talents{ [Talents.T_MIND_SEAR]=1, },
 			lite = 4,
 			rank = 2,
-			exp_worth = 0,
+			exp_worth = 1,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 10,
