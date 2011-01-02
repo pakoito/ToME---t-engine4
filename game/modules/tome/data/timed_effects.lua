@@ -464,6 +464,9 @@ newEffect{
 		self:removeTemporaryValue("resists", eff.resid)
 		self:removeTemporaryValue("summon_time", eff.durid)
 	end,
+	on_timeout = function(self, eff)
+		eff.dur = self.summon_time
+	end,
 }
 
 newEffect{
