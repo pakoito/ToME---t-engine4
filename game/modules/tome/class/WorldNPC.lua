@@ -113,23 +113,20 @@ function _M:tooltip(x, y, seen_by)
 
 	local rank, rank_color = self:TextRank()
 
-	return ([[%s%s%s
-%s / %s
-Rank: %s%s
-#00ffff#Level: %d
-%s
-Faction: %s%s (%s, %d)
-Target: %s
-UID: %d]]):format(
-	self:getDisplayString(), rank_color, self.name,
-	self.type:capitalize(), self.subtype:capitalize(),
-	rank_color, rank,
-	self.level,
-	self.desc or "",
-	factcolor, Faction.factions[self.faction].name, factstate, factlevel,
-	self.ai_target.actor and self.ai_target.actor.name or "none",
-	self.uid
+	local ts = tstring{}
+	ts:add({"uid",self.uid}) ts:merge(rank_color:toTString()) ts:add(self.name, {"color", "WHITE"}, true)
+	ts:add(self.type:capitalize(), " / ", self.subtype:capitalize(), true)
+	ts:add("Rank: ") ts:merge(rank_color:toTString()) ts:add(rank, {"color", "WHITE"}, true)
+	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
+	ts:add(self.desc, true)
+	ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true)
+	ts:add(
+		("Killed by you: "):format(killed), true,
+		"Target: ", self.ai_target.actor and self.ai_target.actor.name or "none", true,
+		"UID: "..self.uid
 	)
+
+	return ts
 end
 
 function _M:die(src)
