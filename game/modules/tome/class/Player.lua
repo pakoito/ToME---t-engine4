@@ -589,6 +589,17 @@ function _M:hotkeyInventory(name)
 	end
 end
 
+--- Show combined equipment/inventory dialog
+-- Overload to make it use the tooltip
+function _M:showEquipInven(title, filter, action)
+	return mod.class.Actor.showEquipInven(self, title, filter, action, function(item)
+		if item.last_display_x then
+			game.tooltip_x, game.tooltip_y = {}, 1
+			game.tooltip:displayAtMap(nil, nil, item.last_display_x, item.last_display_y, item.desc)
+		end
+	end)
+end
+
 function _M:doDrop(inven, item)
 	if game.zone.wilderness then
 		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)

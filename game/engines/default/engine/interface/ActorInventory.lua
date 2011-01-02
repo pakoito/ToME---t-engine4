@@ -222,8 +222,8 @@ end
 -- @param inven the inventory (from self:getInven())
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
-function _M:showEquipInven(title, filter, action, allow_keybind)
-	local d = ShowEquipInven.new(title, self, filter, action, allow_keybind and self)
+function _M:showEquipInven(title, filter, action, on_select)
+	local d = ShowEquipInven.new(title, self, filter, action, on_select)
 	game:registerDialog(d)
 	return d
 end
@@ -232,8 +232,8 @@ end
 -- @param inven the inventory (from self:getInven())
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
-function _M:showInventory(title, inven, filter, action, allow_keybind)
-	local d = ShowInventory.new(title, inven, filter, action, allow_keybind and self)
+function _M:showInventory(title, inven, filter, action)
+	local d = ShowInventory.new(title, inven, filter, action)
 	game:registerDialog(d)
 	return d
 end
@@ -241,8 +241,8 @@ end
 --- Show equipment dialog
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
-function _M:showEquipment(title, filter, action, allow_keybind)
-	local d = ShowEquipment.new(title, self, filter, action, allow_keybind and self)
+function _M:showEquipment(title, filter, action)
+	local d = ShowEquipment.new(title, self, filter, action)
 	game:registerDialog(d)
 	return d
 end

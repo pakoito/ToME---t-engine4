@@ -56,8 +56,12 @@ function _M:targetDisplayTooltip(dx, dy)
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display a tooltip if available
 		if self.tooltip_x then
-			local tmx, tmy = self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)
-			self.tooltip:displayAtMap(tmx, tmy, dx, dy)
+			if type(self.tooltip_x) == "table" then
+				self.tooltip:toScreen(self.tooltip.last_display_x, self.tooltip.last_display_y)
+			else
+				local tmx, tmy = self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)
+				self.tooltip:displayAtMap(tmx, tmy, dx, dy)
+			end
 		end
 
 		-- Move target around

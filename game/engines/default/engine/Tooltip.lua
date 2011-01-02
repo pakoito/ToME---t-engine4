@@ -39,13 +39,10 @@ end
 
 --- Set the tooltip text
 function _M:set(str, ...)
-	self.text = str:format(...):splitLines(self.max, self.font)
-	self.w, self.h = 0, 0
-	for i, l in ipairs(self.text) do
-		local w, h = self.font:size(l)
-		if w > self.w then self.w = w end
-		self.h = self.h + self.font_h
-	end
+	if type(str) == "string" then str = str:format(...):toTString()
+	else str = str:toTString() end
+	self.text, self.w = str:splitLines(self.max, self.font)
+	self.h = self.text:countLines() * self.font_h
 	self.w = math.min(self.w, self.max) + 8
 	self.h = self.h + 8
 	self.changed = true
@@ -85,20 +82,13 @@ function _M:display()
 		self.surface:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_4.png"), self.w - 3, i)
 	end
 
-	local i = 1
-	local y = 0
-	local r, g, b = self.color[1], self.color[2], self.color[3], nil
-	for ii, l in ipairs(self.text) do
-		if self.text[i] == "---" then
-			self:drawWBorder(self.surface, 4, 4 + y + 0.5 * self.font_h, self.w - 8)
-			i = i + 1
-			y = y + self.font_h
-		else
-			r, g, b = self.surface:drawColorStringBlended(self.font, self.text[i], 4, 4 + y, self.color[1], self.color[2], self.color[3])
-			i = i + 1
-			y = y + self.font_h
+	self.text:drawOnSurface(self.surface, 100000, nil, self.font, 4, 4, self.color[1], self.color[2], self.color[3], true, function(v, w, h)
+		if v == "---" then
+			self:drawWBorder(self.surface, 4, 4 + h + 0.5 * self.font_h, self.w - 8)
+			return 0, h
 		end
-	end
+	end)
+
 	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 end
 
@@ -121,7 +111,11 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 
 	if text then
 		if text ~= self.old_text then
-			self:set("%s", text)
+			if type(text) == "string" then
+				self:set("%s", text)
+			else
+				self:set(text)
+			end
 			self:display()
 			self.old_text = text
 		end
@@ -139,7 +133,12 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 			tt[#tt+1] = (seen or remember) and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip", game.level.map.actor_player) or nil
 			tt[#tt+1] = (seen or remember) and game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip", game.level.map.actor_player) or nil
 			if #tt > 0 then
-				self:set("%s", table.concat(tt, "\n---\n"))
+				local ts = tstring{}
+				for i = 1, #tt do
+					ts:merge(tt[i]:toTString())
+					if i < #tt then ts:add(true, "---", true) end
+				end
+				self:set(ts)
 				self:display()
 			else
 				self:erase()
@@ -148,12 +147,14 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 	end
 
 	if self.texture then
-		mx = mx - self.w / 2 + game.level.map.tile_w / 2
-		my = my - self.h
+--		mx = mx - self.w / 2 + game.level.map.tile_w / 2
+--		my = my - self.h
 		if mx < 0 then mx = 0 end
 		if my < 0 then my = 0 end
 		if mx > game.w - self.w then mx = game.w - self.w end
 		if my > game.h - self.h then my = game.h - self.h end
+		self.last_display_x = mx
+		self.last_display_y = my
 		self.texture:toScreenFull(mx, my, self.w, self.h, self.texture_w, self.texture_h)
 	end
 end

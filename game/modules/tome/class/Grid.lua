@@ -76,12 +76,12 @@ function _M:tooltip(x, y)
 	if self.show_tooltip then
 		local name = ((self.show_tooltip == true) and self.name or self.show_tooltip)
 		if self.desc then
-			return self:getDisplayString()..name.."\n"..self.desc
+			return tstring{{"uid", self.uid}, name, true, self.desc}
 		else
-			return self:getDisplayString()..name
+			return tstring{{"uid", self.uid}, name}
 		end
 	else
-		return self:getDisplayString()..self.name
+		return tstring{{"uid", self.uid}, self.name}
 	end
 end
 

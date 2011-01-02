@@ -494,6 +494,7 @@ function tstring:add(...)
 end
 
 function tstring:merge(v)
+	if not v then return end
 	for i = 1, #v do
 		self[#self+1] = v[i]
 	end
@@ -585,6 +586,7 @@ function tstring:splitLines(max_width, font)
 				local vv = ls[i]
 				if vv == "\n" then
 					ret[#ret+1] = true
+					max_w = math.max(max_w, cur_size)
 					cur_size = 0
 				else
 					local w, h = fontoldsize(font, vv)
@@ -610,16 +612,17 @@ function tstring:splitLines(max_width, font)
 					local w, h = surf:getSize()
 					if cur_size + w < max_width then
 						cur_size = cur_size + w
-						ret[#ret+1] = vv
+						ret[#ret+1] = v
 					else
 						ret[#ret+1] = true
-						ret[#ret+1] = vv
+						ret[#ret+1] = v
 						max_w = math.max(max_w, cur_size)
 						cur_size = w
 					end
 				end
 			end
 		elseif tv == "boolean" then
+			max_w = math.max(max_w, cur_size)
 			cur_size = 0
 			ret[#ret+1] = v
 		else
@@ -669,7 +672,7 @@ function tstring:makeLineTextures(max_width, font)
 					local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
 					if surf then
 						local sw = surf:getSize()
-						s:merge(surf, w, h)
+						s:merge(surf, w, 0)
 						w = w + sw
 					end
 				end
@@ -698,7 +701,7 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b, no_
 		v = list[i]
 		tv = type(v)
 		if tv == "string" then
-			if on_word then on_word_w, on_word_h = on_word(v, w, h, fh) end
+			if on_word then on_word_w, on_word_h = on_word(v, w, h) end
 			if on_word_w and on_word_h then
 				w, h = on_word_w, on_word_h
 			else
@@ -727,7 +730,7 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b, no_
 					local surf = e:getEntityFinalSurface(game.level.map.tiles, font:lineSkip(), font:lineSkip())
 					if surf then
 						local sw = surf:getSize()
-						s:merge(surf, w, h)
+						s:merge(surf, x + w, y + h)
 						w = w + sw
 					end
 				end

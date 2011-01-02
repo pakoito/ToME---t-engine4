@@ -26,16 +26,18 @@ local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, actor, filter, action)
+function _M:init(title, actor, filter, action, on_select)
 	self.action = action
 	self.filter = filter
 	self.actor = actor
+	self.on_select = on_select
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
-	self:maxH()
+--	self:maxH()
+	self.max_h = 0
 
-	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
+--	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
 
 	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
@@ -58,9 +60,9 @@ function _M:init(title, actor, filter, action)
 	self:loadUI{
 		{left=0, top=0, ui=self.c_equip},
 		{right=0, top=0, ui=self.c_inven},
-		{left=0, bottom=0, ui=self.c_desc},
-		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - self.c_desc.h - 10}},
-		{left=5, bottom=self.c_desc.h, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+--		{left=0, bottom=0, ui=self.c_desc},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+--		{left=5, bottom=self.c_desc.h, ui=Separator.new{dir="vertical", size=self.iw - 10}},
 	}
 	self:setFocus(self.c_inven)
 	self:setupUI()
@@ -138,7 +140,8 @@ end
 
 function _M:select(item)
 	if item then
-		self.c_desc:switchItem(item, item.desc)
+--		self.c_desc:switchItem(item, item.desc)
+		if self.on_select then self.on_select(item) end
 	end
 end
 

@@ -300,6 +300,8 @@ function _M:display(x, y)
 			else
 				item._tex[j][1]:toScreenFull(x, y, col.fw, self.fh, item._tex[j][2], item._tex[j][3])
 			end
+			item.last_display_x = x
+			item.last_display_y = y
 			y = y + self.fh
 		end
 

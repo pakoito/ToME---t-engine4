@@ -200,14 +200,14 @@ function _M:tooltip(x, y, seen_by)
 	local str = mod.class.Actor.tooltip(self, x, y, seen_by)
 	if not str then return end
 	local killed = game.player.all_kills and (game.player.all_kills[self.name] or 0) or 0
-	return str..([[
 
-Killed by you: %d
-Target: %s
-UID: %d]]):format(
-	killed,
-	self.ai_target.actor and self.ai_target.actor.name or "none",
-	self.uid)
+	str:add(
+		true,
+		("Killed by you: "):format(killed), true,
+		"Target: ", self.ai_target.actor and self.ai_target.actor.name or "none", true,
+		"UID: "..self.uid
+	)
+	return str
 end
 
 --- Make emotes appear in the log too

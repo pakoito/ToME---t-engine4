@@ -634,58 +634,38 @@ function _M:tooltip(x, y, seen_by)
 
 	local rank, rank_color = self:TextRank()
 
-	local effs = {}
-	for tid, act in pairs(self.sustain_talents) do
-		if act then effs[#effs+1] = ("- #LIGHT_GREEN#%s"):format(self:getTalentFromId(tid).name) end
-	end
-	for eff_id, p in pairs(self.tmp) do
-		local e = self.tempeffect_def[eff_id]
-		local dur = p.dur + 1
-		if e.status == "detrimental" then
-			effs[#effs+1] = ("- #LIGHT_RED#%s(%d)"):format(e.desc,dur)
-		else
-			effs[#effs+1] = ("- #LIGHT_GREEN#%s(%d)"):format(e.desc,dur)
-		end
-	end
-
 	local resists = {}
 	for t, v in pairs(self.resists) do
 		resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
 	end
 
-	return ([[%s%s%s
-%s / %s
-Rank: %s%s
-#00ffff#Level: %d
-Exp: %d/%d
-#ff0000#HP: %d (%d%%)
-Stats: %d /  %d / %d / %d / %d / %d
-Resists: %s
-Size: #ANTIQUE_WHITE#%s
-%s
-Faction: %s%s (%s, %d)
-Personal reaction: %s%s, %d
-%s]]):format(
-	self:getDisplayString(), rank_color, self.name,
-	self.type:capitalize(), self.subtype:capitalize(),
-	rank_color, rank,
-	self.level,
-	self.exp,
-	self:getExpChart(self.level+1) or "---",
-	self.life, self.life * 100 / self.max_life,
-	self:getStr(),
-	self:getDex(),
-	self:getMag(),
-	self:getWil(),
-	self:getCun(),
-	self:getCon(),
-	table.concat(resists, ','),
-	self:TextSizeCategory(),
-	self.desc or "",
-	factcolor, Faction.factions[self.faction].name, factstate, factlevel,
-	pfactcolor, pfactstate, pfactlevel,
-	table.concat(effs, "\n")
-	)
+	local ts = tstring{}
+	ts:add({"uid",self.uid}) ts:merge(rank_color:toTString()) ts:add(self.name, {"color", "WHITE"}, true)
+	ts:add(self.type:capitalize(), " / ", self.subtype:capitalize(), true)
+	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
+	ts:add(("Exp: %d/%d"):format(self.exp, self:getExpChart(self.level+1) or "---"), true)
+	ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
+	ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getMag(), self:getWil(), self:getCun(), self:getCon()), true)
+	ts:add("Resists: ", table.concat(resists, ','), true)
+	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
+	ts:add(self.desc, true)
+	ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true)
+	ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(factstate, factlevel), {"color", "WHITE"}, true)
+
+	for tid, act in pairs(self.sustain_talents) do
+		if act then ts:add("- ", {"color", "LIGHT_GREEN"}, self:getTalentFromId(tid).name, {"color", "WHITE"}, true) end
+	end
+	for eff_id, p in pairs(self.tmp) do
+		local e = self.tempeffect_def[eff_id]
+		local dur = p.dur + 1
+		if e.status == "detrimental" then
+			if act then ts:add("- ", {"color", "LIGHT_RED"}, ("%s(%d)"):format(e.desc,dur), {"color", "WHITE"}, true) end
+		else
+			if act then ts:add("- ", {"color", "LIGHT_GREEN"}, ("%s(%d)"):format(e.desc,dur), {"color", "WHITE"}, true) end
+		end
+	end
+
+	return ts
 end
 
 --- Called before healing

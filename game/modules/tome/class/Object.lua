@@ -93,7 +93,7 @@ end
 
 --- Returns a tooltip for the object
 function _M:tooltip()
-	return tostring(self:getDesc{do_color=true})
+	return self:getDesc{do_color=true}
 end
 
 --- Describes an attribute, to expand object name
@@ -472,12 +472,15 @@ end
 
 --- Gets the full desc of the object
 function _M:getDesc(name_param)
-	local c, _ = self:getDisplayColor()
 	local desc = tstring{}
+	name_param = name_param or {}
+	name_param.do_color = true
 	if not self:isIdentified() then
-		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
+		desc:merge(self:getName(name_param):toTString())
+		desc:add({"color", "WHITE"}, true)
 	else
-		desc:add({"color", unpack(c)}, self:getName(name_param), {"color", "WHITE"}, true)
+		desc:merge(self:getName(name_param):toTString())
+		desc:add({"color", "WHITE"}, true)
 		desc:add(true)
 		desc:add({"color", "ANTIQUE_WHITE"})
 		desc:merge(self.desc:toTString())
