@@ -98,7 +98,9 @@ function _M:resurrectBasic(actor)
 	game.level:addEntity(actor)
 	game:unregisterDialog(self)
 	game.level.map:redisplay()
+	actor.energy.value = game.energy_to_act
 	actor.changed = true
+	game.paused = true
 
 	world:gainAchievement("UNSTOPPABLE", actor)
 end

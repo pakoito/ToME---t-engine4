@@ -98,7 +98,7 @@ function _M:dumpToJSON(js)
 	if self.winner then
 		local win = js:newSection("winner", "win", "text", nil)
 		for i, line in ipairs(self.winner_text) do
-			win[#win+1] = line:removeColorCodes()
+			win[#win+1] = { val=line:removeColorCodes(), bg="000000"}
 		end
 	end
 
