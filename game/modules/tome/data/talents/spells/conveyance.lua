@@ -29,7 +29,7 @@ newTalent{
 		ESCAPE = 4,
 	},
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
-	getRange = function(self, t) return 10 + self:combatSpellpower(0.1) end,
+	getRange = function(self, t) return 4 + self:combatTalentSpellDamage(t, 10, 15) end,
 	getRadius = function(self, t) return 7 - self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local target = self
@@ -70,8 +70,9 @@ newTalent{
 
 			-- Check LOS
 			if not self:hasLOS(x, y) and rng.percent(35) then
-				game.logPlayer(self, "The spell fizzles!")
-				return true
+				game.logPlayer(self, "The targetted phase door fizzles and works randomly!")
+				x, y = self.x, self.y
+				rad = t.getRange(self, t)
 			end
 		end
 
