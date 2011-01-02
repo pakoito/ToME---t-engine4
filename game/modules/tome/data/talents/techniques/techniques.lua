@@ -24,7 +24,7 @@ newTalentType{ allow_random=true, type="technique/shield-offense", name = "weapo
 newTalentType{ allow_random=true, type="technique/shield-defense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
 newTalentType{ allow_random=true, type="technique/dualweapon-training", name = "dual wielding", description = "Specialized dual wielding techniques." }
 newTalentType{ allow_random=true, type="technique/dualweapon-attack", name = "dual wielding", description = "Specialized dual wielding techniques." }
-newTalentType{ allow_random=true, type="technique/archery-base", name = "archery - base", description = "Ability to shoot, you should never this this." }
+newTalentType{ allow_random=true, type="technique/archery-base", name = "archery - base", description = "Ability to shoot." }
 newTalentType{ allow_random=true, type="technique/archery-bow", name = "archery - bows", description = "Specialized bow techniques." }
 newTalentType{ allow_random=true, type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
 newTalentType{ allow_random=true, type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }

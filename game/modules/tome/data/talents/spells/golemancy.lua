@@ -84,11 +84,12 @@ newTalent{
 	no_npc_use = true,
 	getHeal = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
-		return self:combatTalentSpellDamage(t, 15, 350, (ammo.alchemist_power + self:combatSpellpower()) / 2)
+		return self:combatTalentSpellDamage(t, 15, 350, ((ammo and ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 	end,
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
+			game.party:addMember(self.alchemy_golem, "full")
 			game.persistent_actors[self.alchemy_golem] = 1
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction

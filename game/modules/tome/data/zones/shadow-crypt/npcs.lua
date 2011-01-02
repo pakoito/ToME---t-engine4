@@ -84,7 +84,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 			a.ai_state = {talent_in=1}
 			a.faction = self.faction
 			a.inc_damage.all = (a.inc_damage.all or 0) - 40
-			a.max_life = a.max_life * 1.8
+			a.max_life = a.max_life * 1.2
 			a.life = a.max_life
 			a.on_die = function(self)
 				world:gainAchievement("SHADOW_CLONE", game.player)
