@@ -471,6 +471,15 @@ function _M:unlearnTalentType(tt)
 	return true
 end
 
+--- Gets a talent cooldown
+-- @param t the talent to get cooldown
+function _M:getTalentCooldown(t)
+	if not t.cooldown then return end
+	local cd = t.cooldown
+	if type(cd) == "function" then cd = cd(self, t) end
+	return cd
+end
+
 --- Starts a talent cooldown
 -- @param t the talent to cooldown
 function _M:startTalentCooldown(t)
