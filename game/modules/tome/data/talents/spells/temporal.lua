@@ -38,7 +38,7 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLOW, -1 + 1 / (1 + t.getSlow(self, t)), {type="manathrust"})
+		self:projectile(tg, x, y, DamageType.SLOW, 1 - 1 / (1 + t.getSlow(self, t)), {type="manathrust"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
