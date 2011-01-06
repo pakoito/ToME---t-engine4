@@ -394,7 +394,7 @@ function _M:learnType(tt, v)
 			self:simplePopup("Impossible", "You can only improve a category mastery once!")
 			return
 		end
-		if self.actor.unused_talents_types == 0 then
+		if self.actor.unused_talents_types <= 0 then
 			self:simplePopup("Not enough talent category points", "You have no category points left!")
 			return
 		end

@@ -89,7 +89,7 @@ function _M:dumpToJSON(js)
 		local t = self:getTalentFromId("T_"..self.inscriptions[i])
 		local desc = self:getTalentFullDescription(t)
 		local p = t.name:split(": ")
-		ins[#ins+1] = {[p[1]] = p[2]}
+		ins[#ins+1] = {[p[1]] = {val=p[2], tooltip=desc}}
 	end end
 
 	-------------------------------------------------------------------
