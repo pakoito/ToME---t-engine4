@@ -33,7 +33,7 @@ newEntity{
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
-	dig = "GRASS",
+	dig = "BURNT_GROUND1",
 }
 end
 

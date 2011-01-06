@@ -50,6 +50,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/st
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy", name = "stone alchemy", generic = true, description = "Alchemical control over stone and gems." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
 newTalentType{ type="golem/fighting", name = "fighting", description = "Golem melee capacity." }
+newTalentType{ type="golem/arcane", name = "arcane", description = "Golem arcane capacity." }
 
 -- Generic requires for spells based on talent level
 spells_req1 = {
@@ -117,3 +118,4 @@ load("/data/talents/spells/advanced-golemancy.lua")
 load("/data/talents/spells/staff-combat.lua")
 load("/data/talents/spells/fire-alchemy.lua")
 load("/data/talents/spells/stone-alchemy.lua")
+load("/data/talents/spells/golem.lua")

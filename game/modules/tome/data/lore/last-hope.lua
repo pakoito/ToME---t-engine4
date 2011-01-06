@@ -108,7 +108,7 @@ The penalty for disobedience shall be flogging. Intolerance will not be tolerate
 newLore{
 	id = "last-hope-toknor-statue",
 	category = "last hope",
-	name = "All Hail King Toknor the Brace!",
+	name = "All Hail King Toknor the Brave!",
 	lore = [[Born the 23th Allure, Year of Pyre 682
 Died the 2th Summertide, Year of Ascendancy 108
 

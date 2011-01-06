@@ -56,6 +56,7 @@ local function makeGolem()
 
 		talents_types = {
 			["golem/fighting"] = true,
+			["golem/arcane"] = true,
 		},
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
 
@@ -218,7 +219,7 @@ newTalent{
 	name = "Golem Power",
 	type = {"spell/golemancy", 1},
 	mode = "passive",
-	require = spells_req_high1,
+	require = spells_req1,
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
@@ -240,7 +241,7 @@ newTalent{
 	name = "Golem Resilience",
 	type = {"spell/golemancy", 2},
 	mode = "passive",
-	require = spells_req_high2,
+	require = spells_req2,
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
@@ -302,7 +303,7 @@ newTalent{
 newTalent{
 	name = "Mount Golem",
 	type = {"spell/golemancy",4},
-	require = spells_req_high4,
+	require = spells_req4,
 	points = 5,
 	mana = 40,
 	cooldown = 60,

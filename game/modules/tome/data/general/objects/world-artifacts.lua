@@ -458,7 +458,6 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 	use_power = { name = "boost speed", power = 50,
 		use = function(self, who)
 			who:setEffect(who.EFF_SPEED, 8, {power=0.20 + who:getCun() / 80})
-			game.logSeen(who, "%s speeds up!", who.name:capitalize())
 		end
 	},
 }

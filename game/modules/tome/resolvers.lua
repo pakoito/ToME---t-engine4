@@ -261,7 +261,7 @@ end
 
 --- Random bonus based on level
 resolvers.current_level = 1
-function resolvers.mbonusl(max, add, pricefct)
+function resolvers.mbonus(max, add, pricefct)
 	return {__resolver="mbonus", max, add, pricefct}
 end
 function resolvers.calc.mbonus(t, e)

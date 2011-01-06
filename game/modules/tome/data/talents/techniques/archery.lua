@@ -164,6 +164,7 @@ newTalent{
 newTalent{
 	name = "Flare",
 	type = {"technique/archery-utility", 1},
+	no_energy = "fake",
 	points = 5,
 	cooldown = 15,
 	stamina = 15,
@@ -252,7 +253,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.
 		Pinning chance increase with your Dexterity stat.]])
-		:format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100, 
+		:format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100,
 		2 + self:getTalentLevelRaw(t))
 	end,
 }
@@ -285,7 +286,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.
 		Stun chance increase with your Dexterity stat.]])
-		:format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 
+		:format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100,
 		2 + self:getTalentLevelRaw(t))
 	end,
 }
