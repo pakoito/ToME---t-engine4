@@ -77,6 +77,7 @@ You can discern great beauty under the stains of blood covering her skin.]],
 	ai = "summoned", ai_real = "move_dmap", ai_state = { ai_target="target_player", talent_in=4, },
 	stats = { str=8, dex=7, mag=8, con=12 },
 	faction = "victim",
+	never_anger = true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	lite = 4,
