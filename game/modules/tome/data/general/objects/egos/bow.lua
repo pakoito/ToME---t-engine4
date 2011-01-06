@@ -77,7 +77,7 @@ newEntity{
 }
 
 newEntity{
-	name = "sindar ", prefix=true, instant_resolve=true,
+	name = "thaloren ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 24,

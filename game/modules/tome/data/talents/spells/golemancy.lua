@@ -262,8 +262,8 @@ newTalent{
 
 newTalent{
 	name = "Invoke Golem",
-	type = {"spell/golemancy",4},
-	require = spells_req4,
+	type = {"spell/golemancy",3},
+	require = spells_req3,
 	points = 5,
 	mana = 10,
 	cooldown = 20,

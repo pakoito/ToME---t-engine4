@@ -166,7 +166,7 @@ newTalent{
 
 newTalent{
 	name = "Pound", short_name = "GOLEM_POUND",
-	type = {"golem/fighting", 3},
+	type = {"golem/fighting", 4},
 	require = techs_req4,
 	points = 5,
 	cooldown = 15,
