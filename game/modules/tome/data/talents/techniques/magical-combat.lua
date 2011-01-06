@@ -26,6 +26,43 @@ newTalent{
 	sustain_stamina = 20,
 	no_energy = true,
 	cooldown = 5,
+	do_trigger = function(self, t, target)
+		if rng.percent(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true))) then
+			local spells = {}
+			if self:knowTalent(self.T_FLAME) then spells[#spells+1] = self.T_FLAME end
+			if self:knowTalent(self.T_LIGHTNING) then spells[#spells+1] = self.T_LIGHTNING end
+			local tid = rng.table(spells)
+			if tid then
+				-- Extending beam target, assumes a maximum range of 20
+				local current_angle = math.atan2((target.y - self.y), (target.x - self.x)) + math.pi
+				target_x = self.x - math.floor(0.5 + (20 * math.cos(current_angle)))
+				target_y = self.y - math.floor(0.5 + (20 * math.sin(current_angle)))
+				local l = line.new(self.x, self.y, target_x, target_y)
+				local lx, ly = l()
+				target_x, target_y = lx, ly
+				-- Check for terrain and friendly actors
+				while lx and ly do
+					local actor = game.level.map(lx, ly, engine.Map.ACTOR)
+					if actor and (self:reactionToward(actor) >= 0) then
+						break
+					elseif game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then
+						target_x, target_y = lx, ly
+						break
+					end
+					target_x, target_y = lx, ly
+					lx, ly = l()
+				end
+				print("[ARCANE COMBAT] autocast ",self:getTalentFromId(tid).name)
+				local old_cd = self:isTalentCoolingDown(self:getTalentFromId(tid))
+				self:forceUseTalent(tid, {ignore_energy=true, force_target={x=target_x, y=target_y, __no_self=true}})
+				-- Do not setup a cooldown
+				if not old_cd then
+					self.talents_cd[tid] = nil
+				end
+				self.changed = true
+			end
+		end
+	end,
 	activate = function(self, t)
 		return {}
 	end,
