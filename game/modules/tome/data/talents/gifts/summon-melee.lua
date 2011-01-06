@@ -71,11 +71,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -147,11 +143,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -227,11 +219,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -308,11 +296,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true

@@ -28,9 +28,9 @@ require "engine.interface.ActorLevel"
 require "engine.interface.ActorStats"
 require "engine.interface.ActorTalents"
 require "engine.interface.ActorResource"
-require "engine.interface.ActorQuest"
 require "engine.interface.BloodyDeath"
 require "engine.interface.ActorFOV"
+require "mod.class.interface.ActorPartyQuest"
 require "mod.class.interface.Combat"
 require "mod.class.interface.Archery"
 require "mod.class.interface.ActorInscriptions"
@@ -49,9 +49,9 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorStats,
 	engine.interface.ActorTalents,
 	engine.interface.ActorResource,
-	engine.interface.ActorQuest,
 	engine.interface.BloodyDeath,
 	engine.interface.ActorFOV,
+	mod.class.interface.ActorPartyQuest,
 	mod.class.interface.ActorInscriptions,
 	mod.class.interface.Combat,
 	mod.class.interface.Archery
@@ -1136,8 +1136,8 @@ function _M:resetToFull()
 end
 
 function _M:levelup()
-	self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
-	if not self.no_talent_points_on_levelup then
+	if not self.no_points_on_levelup then
+		self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
 		self.unused_talents = self.unused_talents + 1
 		self.unused_generics = self.unused_generics + 1
 		if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
@@ -1146,6 +1146,8 @@ function _M:levelup()
 		if self.level == 10 or  self.level == 20 or  self.level == 30 then
 			self.unused_talents_types = self.unused_talents_types + 1
 		end
+	elseif type(self.no_points_on_levelup) == "function" then
+		self:no_points_on_levelup()
 	end
 
 	-- Gain some basic resistances
@@ -1205,6 +1207,40 @@ function _M:levelup()
 
 	-- Force levelup of the golem
 	if self.alchemy_golem then self.alchemy_golem:forceLevelup(self.level) end
+
+	-- Notify party levelups
+	if game.party:hasMember(self) then
+		local x, y = game.level.map:getTileToScreen(self.x, self.y)
+		game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
+		game.log("#00ffff#Welcome to level %d [%s].", self.level, self.name:capitalize())
+		local more = "Press G to use them."
+		if game.player ~= self then more = "Select "..self.name.. " in the party list and press G to use them." end
+		if self.unused_stats > 0 then game.log("%s has %d stat point(s) to spend. %s", self.name:capitalize(), self.unused_stats, more) end
+		if self.unused_talents > 0 then game.log("%s has %d class talent point(s) to spend. %s", self.name:capitalize(), self.unused_talents, more) end
+		if self.unused_generics > 0 then game.log("%s has %d generic talent point(s) to spend. %s", self.name:capitalize(), self.unused_generics, more) end
+		if self.unused_talents_types > 0 then game.log("%s has %d category point(s) to spend. %s", self.name:capitalize(), self.unused_talents_types, more) end
+
+		if self.level == 10 then world:gainAchievement("LEVEL_10", self) end
+		if self.level == 20 then world:gainAchievement("LEVEL_20", self) end
+		if self.level == 30 then world:gainAchievement("LEVEL_30", self) end
+		if self.level == 40 then world:gainAchievement("LEVEL_40", self) end
+		if self.level == 50 then world:gainAchievement("LEVEL_50", self) end
+
+		if (game.difficulty == game.DIFFICULTY_EASY or game.difficulty == game.DIFFICULTY_NORMAL) and (
+			self.level == 2 or
+			self.level == 3 or
+			self.level == 5 or
+			self.level == 7 or
+			self.level == 10 or
+			self.level == 14 or
+			self.level == 18 or
+			self.level == 24 or
+			self.level == 30 or
+			self.level == 40
+			) then
+			self.easy_mode_lifes = (self.easy_mode_lifes or 0) + 1
+		end
+	end
 end
 
 --- Notifies a change of stat value

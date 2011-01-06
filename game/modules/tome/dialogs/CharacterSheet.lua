@@ -486,7 +486,7 @@ function _M:dump()
 	-- Quests, Active and Completed
 
 	local first = true
-	for id, q in pairs(player.quests or {}) do
+	for id, q in pairs(game.party.quests or {}) do
 		if q:isEnded() then
 			if first then
 					nl()
@@ -495,12 +495,12 @@ function _M:dump()
 					first=false
 			end
 			nl(" -- ".. q.name)
-			nl(q:desc(player):gsub("#.-#", "   "))
+			nl(q:desc(game.party):gsub("#.-#", "   "))
 		end
 	end
 
 	 first=true
-	for id, q in pairs(player.quests or {}) do
+	for id, q in pairs(game.party.quests or {}) do
 		if not q:isEnded() then
 			if first then
 					first=false
@@ -509,7 +509,7 @@ function _M:dump()
 					nl()
 				end
 			nl(" -- ".. q.name)
-			nl(q:desc(player):gsub("#.-#", "   "))
+			nl(q:desc(game.party):gsub("#.-#", "   "))
 		end
 	end
 

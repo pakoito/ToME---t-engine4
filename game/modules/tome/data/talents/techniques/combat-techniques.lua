@@ -124,6 +124,7 @@ newTalent{
 	random_ego = "utility",
 	cooldown = 55,
 	stamina = 25,
+	no_energy = true,
 	require = techs_strdex_req4,
 	action = function(self, t)
 		self:setEffect(self.EFF_SPEED, 5, {power=1 - (1 / (1 + self:getTalentLevel(t) * 0.06))})

@@ -25,13 +25,20 @@ module(..., package.seeall, class.make)
 
 --- Init inscriptions
 function _M:init(t)
-	self.inscriptions = {}
-	self.inscriptions_data = {}
-	self.max_inscriptions = 3
-	self.inscriptions_slots_added = 0
+	self.inscriptions = self.inscriptions or {}
+	self.inscriptions_data = self.inscriptions_data or {}
+	self.max_inscriptions = self.max_inscriptions or 3
+	self.inscriptions_slots_added = self.inscriptions_slots_added or 0
 end
 
 function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same)
+	-- Check allowance
+	local t = self:getTalentFromId(self["T_"..name.."_1"])
+	if self.inscription_restrictions and not self.inscription_restrictions[t.type[1]] then
+		if vocal then game.logPlayer(self, "You are unable to use this kind of inscription.") end
+		return
+	end
+
 	-- Count occurrences
 	local nb_same = 0
 	for i = 1, self.max_inscriptions do

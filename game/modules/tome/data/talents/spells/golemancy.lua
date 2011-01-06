@@ -45,6 +45,8 @@ local function makeGolem()
 			[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
 			[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
 			[Talents.T_WEAPON_COMBAT]=2,
+			[Talents.T_STAMINA_POOL]=1,
+			[Talents.T_GOLEM_KNOCKBACK]=1,
 		},
 
 		resolvers.equip{
@@ -52,20 +54,53 @@ local function makeGolem()
 			{type="armor", subtype="heavy", autoreq=true, id=true}
 		},
 
-		autolevel = "alchemy-golem",
-		ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
+		talents_types = {
+			["golem/fighting"] = true,
+		},
+		inscription_restrictions = { ["inscriptions/runes"] = true, },
+
+		hotkey = {},
+		hotkey_page = 1,
+
+		ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
 		energy = { mod=1 },
-		stats = { str=14, dex=12, mag=10, con=12 },
+		stats = { str=14, dex=12, mag=12, con=12 },
 
 		-- No natural exp gain
 		gainExp = function() end,
+		forceLevelup = function(self) if self.summoner then return mod.class.Actor.forceLevelup(self, self.summoner.level) end end,
+
+		-- Break control when losing LOS
+		on_act = function(self)
+			if game.player ~= self then return end
+			if not self:hasLOS(self.summoner.x, self.summoner.y) then
+				if not self:hasEffect(self.EFF_GOLEM_OFS) then
+					self:setEffect(self.EFF_GOLEM_OFS, 5, {})
+				end
+			else
+				if self:hasEffect(self.EFF_GOLEM_OFS) then
+					self:removeEffect(self.EFF_GOLEM_OFS)
+				end
+			end
+		end,
+
+		on_can_control = function(self, vocal)
+			if not self:hasLOS(self.summoner.x, self.summoner.y) then
+				if vocal then game.logPlayer(game.player, "Your golem is out of sight, you can not establish direct control.") end
+				return false
+			end
+			return true
+		end,
 
 		unused_stats = 0,
 		unused_talents = 0,
 		unused_generics = 0,
 		unused_talents_types = 0,
 
-		no_talent_points_on_levelup = true,
+		no_points_on_levelup = function(self)
+			self.unused_stats = self.unused_stats + 2
+			if self.level >= 2 and self.level % 3 == 0 then self.unused_talents = self.unused_talents + 1 end
+		end,
 		keep_inven_on_death = true,
 --		no_auto_resists = true,
 		open_door = true,
@@ -177,168 +212,52 @@ newTalent{
 }
 
 newTalent{
-	name = "Golem: Taunt", short_name = "GOLEM_TAUNT",
+	name = "Golem Power",
 	type = {"spell/golemancy", 1},
-	require = spells_req1,
+	mode = "passive",
+	require = spells_req_high1,
 	points = 5,
-	cooldown = function(self, t)
-		return 20 - self:getTalentLevelRaw(t) * 2
+	on_learn = function(self, t)
+		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true)
 	end,
-	range = 10,
-	mana = 5,
-	requires_target = true,
-	no_npc_use = true,
-	action = function(self, t)
-		local mover, golem = getGolem(self)
-		if not golem then
-			game.logPlayer(self, "Your golem is currently inactive.")
-			return
-		end
-
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		game.target.source_actor = mover
-		local x, y, target = self:getTarget(tg)
-		game.target.source_actor = self
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > self:getTalentRange(t) then return nil end
-
-		mover:setTarget(target)
-		target:setTarget(mover)
-		game.logPlayer(self, "Your golem provokes %s to attack it.", target.name:capitalize())
-
-		return true
+	on_unlearn = function(self, t)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
 	end,
 	info = function(self, t)
-		return ([[Orders your golem to taunt a target, forcing it to attack the golem.]]):format()
+		local attack = self:getTalentFromId(Talents.T_WEAPON_COMBAT).getAttack(self, t)
+		local damage = self:getTalentFromId(Talents.T_WEAPONS_MASTERY).getDamage(self, t)
+		return ([[Improves your golem proficiency with weapons. Increasing its attack by %d and damage by %d%%.]]):
+		format(attack, 100 * damage)
 	end,
 }
 
 newTalent{
-	name = "Golem: Knockback",
+	name = "Golem Resilience",
 	type = {"spell/golemancy", 2},
-	require = spells_req2,
+	mode = "passive",
+	require = spells_req_high2,
 	points = 5,
-	cooldown = 10,
-	range = 10,
-	mana = 5,
-	requires_target = true,
-	no_npc_use = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
-	action = function(self, t)
-		local mover, golem = getGolem(self)
-		if not golem then
-			game.logPlayer(self, "Your golem is currently inactive.")
-			return
-		end
-		if mover:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
-
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		game.target.source_actor = mover
-		local x, y, target = self:getTarget(tg)
-		game.target.source_actor = self
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > self:getTalentRange(t) then return nil end
-
-		mover:setTarget(target)
-
-		local l = line.new(mover.x, mover.y, x, y)
-		local lx, ly = l()
-		local tx, ty = mover.x, mover.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", mover) then break end
-			tx, ty = lx, ly
-			lx, ly = l()
-		end
-
-		mover:move(tx, ty, true)
-
-		-- Attack ?
-		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > 1 then return true end
-		local hit = golem:attackTarget(target, nil, t.getDamage(self, t), true)
-
-		-- Try to knockback !
-		if hit then
-			if target:checkHit(golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
-				target:knockback(mover.x, mover.y, 3)
-			else
-				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
-			end
-		end
-
-		return true
+	on_learn = function(self, t)
+		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:learnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
+		self.alchemy_golem:learnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
+	end,
+	on_unlearn = function(self, t)
+		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Your golem rushes to the target, knocking it back and doing %d%% damage.
-		Knockback chance will increase with talent level.]]):format(100 * damage)
+		local health = self:getTalentFromId(Talents.T_HEALTH).getHealth(self, t)
+		local heavyarmor = self:getTalentFromId(Talents.T_HEAVY_ARMOUR_TRAINING).getArmor(self, t)
+		local massivearmor = self:getTalentFromId(Talents.T_MASSIVE_ARMOUR_TRAINING).getArmor(self, t)
+		return ([[Improves your golem armour training and health. Increases armor by %d when wearing heavy armor or by %d when wearing massive armor also increases health by %d.]]):
+		format(heavyarmor, massivearmor, health)
 	end,
 }
 
-newTalent{
-	name = "Golem: Crush",
-	type = {"spell/golemancy", 3},
-	require = spells_req3,
-	points = 5,
-	cooldown = 10,
-	range = 10,
-	mana = 5,
-	requires_target = true,
-	no_npc_use = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
-	getPinDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
-	action = function(self, t)
-		local mover, golem = getGolem(self)
-		if not golem then
-			game.logPlayer(self, "Your golem is currently inactive.")
-			return
-		end
-		if mover:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
-
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		game.target.source_actor = mover
-		local x, y, target = self:getTarget(tg)
-		game.target.source_actor = self
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > self:getTalentRange(t) then return nil end
-
-		mover:setTarget(target)
-
-		local l = line.new(mover.x, mover.y, x, y)
-		local lx, ly = l()
-		local tx, ty = mover.x, mover.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", mover) then break end
-			tx, ty = lx, ly
-			lx, ly = l()
-		end
-
-		mover:move(tx, ty, true)
-
-		-- Attack ?
-		if math.floor(core.fov.distance(mover.x, mover.y, x, y)) > 1 then return true end
-		local hit = golem:attackTarget(target, nil, t.getDamage(self, t), true)
-
-		-- Try to knockback !
-		if hit then
-			if target:checkHit(golem:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {})
-			else
-				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
-			end
-		end
-
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local duration = t.getPinDuration(self, t)
-		return ([[Your golem rushes to the target, crushing it to the ground for %d turns and doing %d%% damage.
-		Pinning chance will increase with talent level.]]):
-		format(duration, 100 * damage)
-	end,
-}
 
 newTalent{
 	name = "Invoke Golem",
@@ -374,5 +293,40 @@ newTalent{
 		power=t.getPower(self, t)
 		return ([[You invoke your golem to your side, granting it a temporary melee power increase of %d for 5 turns.]]):
 		format(power)
+	end,
+}
+
+newTalent{
+	name = "Mount Golem",
+	type = {"spell/golemancy",4},
+	require = spells_req_high4,
+	points = 5,
+	mana = 40,
+	cooldown = 60,
+	no_npc_use = true,
+	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t) * 4) end,
+	action = function(self, t)
+		local mover, golem = getGolem(self)
+		if not golem then
+			game.logPlayer(self, "Your golem is currently inactive.")
+			return
+		end
+		if math.floor(core.fov.distance(self.x, self.y, golem.x, golem.y)) > 1 then
+			game.logPlayer(self, "You are too far away from your golem.")
+			return
+		end
+
+		-- Create the mount item
+		local mount = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_GOLEM_MOUNT")
+		if not mount then return end
+		mount.mount.actor = golem
+		self:setEffect(self.EFF_GOLEM_MOUNT, t.getDuration(self, t), {mount=mount})
+
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Mount inside your golem, directly controlling it for %d turns also golem absorb 75%% of the damage taken.]]):
+		format(duration)
 	end,
 }

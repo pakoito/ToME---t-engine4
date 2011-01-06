@@ -26,8 +26,8 @@ local Dialog = require "engine.ui.Dialog"
 module(..., package.seeall, class.make)
 
 function _M:init(t)
-	self.hotkey = {}
-	self.hotkey_page = 1
+	self.hotkey = self.hotkey or {}
+	self.hotkey_page = self.hotkey_page or 1
 end
 
 function _M:sortHotkeys()

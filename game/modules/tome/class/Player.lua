@@ -135,8 +135,8 @@ end
 function _M:onLeaveLevel(zone, level)
 	-- Fail past escort quests
 	local eid = "escort-duty-"..zone.short_name.."-"..level.level
-	if self.quests and self.quests[eid] and not self:hasQuest(eid):isEnded() then
-		local q = self.quests[eid]
+	if self:hasQuest(eid) and not self:hasQuest(eid):isEnded() then
+		local q = self:hasQuest(eid)
 		q.abandoned = true
 		self:setQuestStatus(eid, q.FAILED)
 	end
@@ -155,22 +155,24 @@ function _M:move(x, y, force)
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
 
 		-- Autopickup money
-		local i, nb = 1, 0
-		local obj = game.level.map:getObject(self.x, self.y, i)
-		while obj do
-			if obj.auto_pickup then
-				self:pickupFloor(i, true)
-			else
-				if self:attr("auto_id_mundane") and obj:getPowerRank() <= 1 then obj:identify(true) end
-				nb = nb + 1
-				i = i + 1
+		if self:getInven(self.INVEN_INVEN) then
+			local i, nb = 1, 0
+			local obj = game.level.map:getObject(self.x, self.y, i)
+			while obj do
+				if obj.auto_pickup then
+					self:pickupFloor(i, true)
+				else
+					if self:attr("auto_id_mundane") and obj:getPowerRank() <= 1 then obj:identify(true) end
+					nb = nb + 1
+					i = i + 1
+				end
+				obj = game.level.map:getObject(self.x, self.y, i)
 			end
-			obj = game.level.map:getObject(self.x, self.y, i)
-		end
-		if nb >= 2 then
-			game.logSeen(self, "There is more than one object lying here.")
-		elseif nb == 1 then
-			game.logSeen(self, "There is an item here: %s", game.level.map:getObject(self.x, self.y, 1):getName{do_color=true})
+			if nb >= 2 then
+				game.logSeen(self, "There is more than one object lying here.")
+			elseif nb == 1 then
+				game.logSeen(self, "There is an item here: %s", game.level.map:getObject(self.x, self.y, 1):getName{do_color=true})
+			end
 		end
 
 		local g = game.level.map(self.x, self.y, game.level.map.TERRAIN)
@@ -448,39 +450,6 @@ function _M:onTalentCooledDown(tid)
 	local x, y = game.level.map:getTileToScreen(self.x, self.y)
 	game.flyers:add(x, y, 30, -0.3, -3.5, ("%s available"):format(t.name:capitalize()), {0,255,00})
 	game.log("#00ff00#Talent %s is ready to use.", t.name)
-end
-
-function _M:levelup()
-	mod.class.Actor.levelup(self)
-
-	local x, y = game.level.map:getTileToScreen(self.x, self.y)
-	game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
-	game.log("#00ffff#Welcome to level %d.", self.level)
-	if self.unused_stats > 0 then game.log("You have %d stat point(s) to spend. Press G to use them.", self.unused_stats) end
-	if self.unused_talents > 0 then game.log("You have %d class talent point(s) to spend. Press G to use them.", self.unused_talents) end
-	if self.unused_generics > 0 then game.log("You have %d generic talent point(s) to spend. Press G to use them.", self.unused_generics) end
-	if self.unused_talents_types > 0 then game.log("You have %d category point(s) to spend. Press G to use them.", self.unused_talents_types) end
-
-	if self.level == 10 then world:gainAchievement("LEVEL_10", self) end
-	if self.level == 20 then world:gainAchievement("LEVEL_20", self) end
-	if self.level == 30 then world:gainAchievement("LEVEL_30", self) end
-	if self.level == 40 then world:gainAchievement("LEVEL_40", self) end
-	if self.level == 50 then world:gainAchievement("LEVEL_50", self) end
-
-	if (game.difficulty == game.DIFFICULTY_EASY or game.difficulty == game.DIFFICULTY_NORMAL) and (
-		self.level == 2 or
-		self.level == 3 or
-		self.level == 5 or
-		self.level == 7 or
-		self.level == 10 or
-		self.level == 14 or
-		self.level == 18 or
-		self.level == 24 or
-		self.level == 30 or
-		self.level == 40
-		) then
-		self.easy_mode_lifes = (self.easy_mode_lifes or 0) + 1
-	end
 end
 
 --- Tries to get a target from the user
@@ -852,17 +821,17 @@ end
 
 ------ Quest Events
 function _M:on_quest_grant(quest)
-	game.logPlayer(self, "#LIGHT_GREEN#Accepted quest '%s'! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
+	game.logPlayer(game.player, "#LIGHT_GREEN#Accepted quest '%s'! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
 end
 
 function _M:on_quest_status(quest, status, sub)
 	if sub then
-		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' status updated! #WHITE#(Press 'j' to see the quest log)", quest.name)
+		game.logPlayer(game.player, "#LIGHT_GREEN#Quest '%s' status updated! #WHITE#(Press 'j' to see the quest log)", quest.name)
 	elseif status == engine.Quest.COMPLETED then
-		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' completed! #WHITE#(Press 'j' to see the quest log)", quest.name)
+		game.logPlayer(game.player, "#LIGHT_GREEN#Quest '%s' completed! #WHITE#(Press 'j' to see the quest log)", quest.name)
 	elseif status == engine.Quest.DONE then
-		game.logPlayer(self, "#LIGHT_GREEN#Quest '%s' is done! #WHITE#(Press 'j' to see the quest log)", quest.name)
+		game.logPlayer(game.player, "#LIGHT_GREEN#Quest '%s' is done! #WHITE#(Press 'j' to see the quest log)", quest.name)
 	elseif status == engine.Quest.FAILED then
-		game.logPlayer(self, "#LIGHT_RED#Quest '%s' is failed! #WHITE#(Press 'j' to see the quest log)", quest.name)
+		game.logPlayer(game.player, "#LIGHT_RED#Quest '%s' is failed! #WHITE#(Press 'j' to see the quest log)", quest.name)
 	end
 end

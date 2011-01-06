@@ -59,6 +59,7 @@ function _M:use(item)
 	local act = item.action
 
 	if act == "move_to" then game.player:mouseMove(self.tmx, self.tmy)
+	elseif act == "control" then game.party:setPlayer(item.actor)
 	elseif act == "change_level" then game.key:triggerVirtual("CHANGE_LEVEL")
 	elseif act == "pickup" then game.key:triggerVirtual("PICKUP_FLOOR")
 	elseif act == "character_sheet" then game.key:triggerVirtual("SHOW_CHARACTER_SHEET")
@@ -91,6 +92,7 @@ function _M:generateList()
 	if g and g.change_level and self.on_player then list[#list+1] = {name="Change level", action="change_level", color=colors.simple(colors.VIOLET)} end
 	if o and self.on_player then list[#list+1] = {name="Pickup item", action="pickup", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if g and not self.on_player then list[#list+1] = {name="Move to", action="move_to", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if a and not self.on_player and game.party:canControl(a, false) then list[#list+1] = {name="Control", action="control", color=colors.simple(colors.ANTIQUE_WHITE), actor=a} end
 	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Character Sheet", action="character_sheet", color=colors.simple(colors.ANTIQUE_WHITE)} end

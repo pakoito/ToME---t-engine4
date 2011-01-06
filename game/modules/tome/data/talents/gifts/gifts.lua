@@ -78,15 +78,15 @@ function checkMaxSummon(self)
 	end
 end
 
-function setupSummon(self, m)
+function setupSummon(self, m, x, y)
 	m.unused_stats = 0
 	m.unused_talents = 0
 	m.unused_generics = 0
 	m.unused_talents_types = 0
-	if self.player and self:knowTalent(self.T_SUMMON_CONTROL) then
+	if self.player then
 		m.remove_from_party_on_death = true
 		game.party:addMember(m, {
-			control="full",
+			control=self:knowTalent(self.T_SUMMON_CONTROL) and "full" or "no",
 			type="summon",
 			title="Summon",
 			on_control = function(self)
@@ -99,6 +99,11 @@ function setupSummon(self, m)
 			end,
 		})
 	end
+
+	m:resolve() m:resolve(nil, true)
+	m:forceLevelup(self.level)
+	game.zone:addEntity(game.level, m, "actor", x, y)
+	game.level.map:particleEmitter(x, y, 1, "summon")
 end
 
 load("/data/talents/gifts/summon-melee.lua")

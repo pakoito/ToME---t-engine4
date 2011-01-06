@@ -230,7 +230,7 @@ function _M:dumpToJSON(js)
 	-- Quests
 	-------------------------------------------------------------------
 	local quests = js:newSection("quests", "quests", "pairs", "add")
-	for id, q in pairs(self.quests or {}) do
+	for id, q in pairs(game.party.quests or {}) do
 		quests[#quests+1] = { [q.status_text[q.status]] = {val=q.name, tooltip=q:desc(self)} }
 	end
 	table.sort(quests, function(a, b) local _, aname = next(a) local _, bname = next(b) return aname.val < bname.val end)

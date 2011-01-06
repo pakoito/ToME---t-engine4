@@ -19,9 +19,9 @@
 
 newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 	name = "Fire Bolt",
-	type = {"spell/other",1},
+	type = {"wild-gift/other",1},
 	points = 5,
-	mana = 10,
+	equilibrium = 2,
 	range = 20,
 	reflectable = true,
 	requires_target = true,
@@ -174,7 +174,6 @@ newTalent{
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=1, atk=1, },
 
-			max_mana = 150,
 			resolvers.talents{
 				[self.T_RITCH_FLAMESPITTER_BOLT]=self:getTalentLevelRaw(t),
 			},
@@ -186,11 +185,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -252,7 +247,6 @@ newTalent{
 			combat_armor = 7, combat_def = 0,
 			combat = { dam=12, atk=5, },
 
-			max_mana = 150,
 			resolvers.talents{
 				[self.T_LIGHTNING_BREATH_HYDRA]=self:getTalentLevelRaw(t),
 				[self.T_ACID_BREATH]=self:getTalentLevelRaw(t),
@@ -265,11 +259,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -331,7 +321,6 @@ newTalent{
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=1, atk=1, },
 
-			max_mana = 150,
 			resolvers.talents{
 				[self.T_TIME_PRISON]=self:getTalentLevelRaw(t),
 				[self.T_MANATHRUST]=self:getTalentLevelRaw(t),
@@ -344,11 +333,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -425,11 +410,7 @@ newTalent{
 			ai_target = {actor=target}
 		}
 
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "summon")
-		setupSummon(self, m)
+		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true

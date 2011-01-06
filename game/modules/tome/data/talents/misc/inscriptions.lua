@@ -19,7 +19,7 @@
 
 local newInscription = function(t)
 	-- Warning, up that if more than 5 inscriptions are ever allowed
-	for i = 1, 5 do
+	for i = 1, 6 do
 		local tt = table.clone(t)
 		tt.short_name = tt.name:upper():gsub("[ ]", "_").."_"..i
 		tt.display_name = function(self, t)

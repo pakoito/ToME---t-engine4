@@ -35,10 +35,16 @@ end
 --- Adds an entity to the level
 -- Only entities that need to act need to be added. Terrain features do not need this usually
 function _M:addEntity(e, after)
+	if e._fake_level_entity then
+		e._fake_level_entity(self, "add", after)
+		return
+	end
+
 	if self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") already present on the level") end
 	self.entities[e.uid] = e
+	if e.addEntityOrder then after = e:addEntityOrder(level) end
 	if not after or not self:hasEntity(after) then
-	table.insert(self.e_array, e)
+		table.insert(self.e_array, e)
 	else
 		print("Adding entity", e.uid, "after", after.uid)
 		local pos = nil
@@ -48,13 +54,25 @@ function _M:addEntity(e, after)
 				break
 			end
 		end
-		table.insert(self.e_array, pos+1, e)
+		if pos then
+			table.insert(self.e_array, pos+1, e)
+		else
+			table.insert(self.e_array, e)
+		end
 	end
 	game:addEntity(e)
 end
 
 --- Removes an entity from the level
 function _M:removeEntity(e)
+	if e._fake_level_entity then
+		-- Tells it to delete itself if needed
+		if e.deleteFromMap then e:deleteFromMap(self.map) end
+
+		e._fake_level_entity(self, "remove")
+		return
+	end
+
 	if not self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") not present on the level") end
 	self.entities[e.uid] = nil
 	for i = 1, #self.e_array do
@@ -64,12 +82,14 @@ function _M:removeEntity(e)
 		end
 	end
 	game:removeEntity(e)
+
 	-- Tells it to delete itself if needed
 	if e.deleteFromMap then e:deleteFromMap(self.map) end
 end
 
 --- Is the entity on the level?
 function _M:hasEntity(e)
+	if e._fake_level_entity then return e._fake_level_entity(self, "has") end
 	return self.entities[e.uid]
 end
 

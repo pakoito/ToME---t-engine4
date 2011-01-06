@@ -1237,6 +1237,30 @@ newEffect{
 }
 
 newEffect{
+	name = "GOLEM_OFS",
+	desc = "Golem out of sight",
+	long_desc = function(self, eff) return "The golem is out of sight of the alchemist, direct control will be lost!" end,
+	type = "other",
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#LIGHT_RED##Target# is out of sight of its master, direct control will break!.", "+Out of sight" end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+	on_timeout = function(self, eff)
+		if game.player ~= self then return true end
+
+		if eff.dur <= 1 then
+			game:onTickEnd(function()
+				game.logPlayer(self, "#LIGHT_RED#You lost sight of your golem for too long, direct control is broken!")
+				game.party:setPlayer(self.summoner)
+			end)
+		end
+	end,
+}
+
+newEffect{
 	name = "GOLEM_MOUNT",
 	desc = "Golem Mount",
 	long_desc = function(self, eff) return "The target is inside his golem." end,

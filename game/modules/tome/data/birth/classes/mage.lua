@@ -112,7 +112,6 @@ newBirthDescriptor{
 		["spell/explosives"]={true, 0.3},
 		["spell/infusion"]={true, 0.3},
 		["spell/golemancy"]={true, 0.3},
-		["spell/advanced-golemancy"]={false, 0.3},
 		["spell/stone-alchemy"]={true, 0.3},
 		["spell/fire-alchemy"]={false, 0.3},
 		["spell/staff-combat"]={true, 0.3},

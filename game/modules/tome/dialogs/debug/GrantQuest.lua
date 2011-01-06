@@ -53,8 +53,8 @@ function _M:use(item)
 	game:unregisterDialog(self)
 
 --	if not item.hasit then
-	game.player.quests[item.quest] = nil
-	game.player:grantQuest(item.quest)
+	game.party:removeQuest(item.quest)
+	game.party:grantQuest(item.quest)
 --	else
 --	game:registerDialog(GetQuantity.new("Quest: "..item.name, "Level "..item.min.."-"..item.max, 1, item.max, function(qty)
 --		game:changeLevel(qty, item.zone)

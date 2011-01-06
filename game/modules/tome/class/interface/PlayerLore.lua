@@ -50,8 +50,8 @@ function _M:newLore(t)
 end
 
 function _M:init(t)
-	self.additional_lore = {}
-	self.additional_lore_nb = 0
+	self.additional_lore = self.additional_lore or {}
+	self.additional_lore_nb = self.additional_lore_nb or 0
 	self.lore_known = self.lore_known or {}
 end
 

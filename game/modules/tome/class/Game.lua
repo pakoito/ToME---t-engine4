@@ -93,7 +93,7 @@ function _M:run()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
 	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
-	self.logPlayer = function(e, style, ...) if e == self.player then self.log(style, ...) end end
+	self.logPlayer = function(e, style, ...) if e == self.player or e == self.party then self.log(style, ...) end end
 
 	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Maj'Eyal!")
 
@@ -871,11 +871,11 @@ function _M:setupCommands()
 		end,
 
 		SHOW_QUESTS = function()
-			self:registerDialog(require("engine.dialogs.ShowQuests").new(self.player))
+			self:registerDialog(require("engine.dialogs.ShowQuests").new(self.party:findMember{main=true}))
 		end,
 
 		SHOW_CHARACTER_SHEET = function()
-			self:registerDialog(require("mod.dialogs.CharacterSheet").new(self.player))
+			self:registerDialog(require("mod.dialogs.CharacterSheet").new(self.party:findMember{main=true}))
 		end,
 
 		-- Show time

@@ -49,6 +49,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/fi
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy-base", name = "stone alchemy", hide = true, description = "Manipulate gems, imbue their powers into other objects." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy", name = "stone alchemy", generic = true, description = "Alchemical control over stone and gems." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
+newTalentType{ type="golem/fighting", name = "fighting", description = "Golem melee capacity." }
 
 -- Generic requires for spells based on talent level
 spells_req1 = {

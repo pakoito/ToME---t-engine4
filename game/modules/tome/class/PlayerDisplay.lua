@@ -175,7 +175,7 @@ function _M:display()
 	end
 
 	-- Other party members
-	if #game.party.m_list >= 2 then
+	if #game.party.m_list >= 2 and game.level then
 		local w = 0
 		for i = 1, #game.party.m_list do
 			local a = game.party.m_list[i]
@@ -189,7 +189,7 @@ function _M:display()
 				local es = game.level.map.tilesSurface:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image, a._noalpha and 255, a.ascii_outline)
 				s:merge(es, w+2, h+2)
 
-				self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#"..def.title, nil, nil, nil, w+36, h+36, w, h, function()
+				self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Level: "..a.level.."\n"..def.title, nil, nil, nil, w+36, h+36, w, h, function()
 					if def.control == "full" then
 						game.party:setPlayer(a)
 					end
