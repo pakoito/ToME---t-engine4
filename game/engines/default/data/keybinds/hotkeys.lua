@@ -79,7 +79,7 @@ defineAction{
 	name = "Hotkey 10",
 }
 defineAction{
-	default = { "sym:41:false:false:false:false" },
+	default = { "sym:45:false:false:false:false" },
 	type = "HOTKEY_11",
 	group = "hotkeys",
 	name = "Hotkey 11",
@@ -153,7 +153,7 @@ defineAction{
 	name = "Secondary Hotkey 10",
 }
 defineAction{
-	default = { "sym:41:true:false:false:false" },
+	default = { "sym:45:true:false:false:false" },
 	type = "HOTKEY_SECOND_11",
 	group = "hotkeys",
 	name = "Secondary Hotkey 11",
@@ -227,7 +227,7 @@ defineAction{
 	name = "Third Hotkey 10",
 }
 defineAction{
-	default = { "sym:41:false:true:false:false" },
+	default = { "sym:45:false:true:false:false" },
 	type = "HOTKEY_THIRD_11",
 	group = "hotkeys",
 	name = "Third Hotkey 11",
