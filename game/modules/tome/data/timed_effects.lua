@@ -568,6 +568,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("blind", eff.tmpid)
+		if game.level then game.level.map.changed = true end
 	end,
 }
 
