@@ -23,22 +23,22 @@ load("/data/general/grids/slime.lua")
 
 newEntity{
 	define_as = "ORB_DRAGON",
-	name = "orb pedestral (dragon)", image = "terrain/orb_pedestral.png",
+	name = "orb pedestal (dragon)", image = "terrain/orb_pedestal.png",
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_UNDEATH",
-	name = "orb pedestral (undeath)", image = "terrain/orb_pedestral.png",
+	name = "orb pedestal (undeath)", image = "terrain/orb_pedestal.png",
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_ELEMENTS",
-	name = "orb pedestral (elements)", image = "terrain/orb_pedestral.png",
+	name = "orb pedestal (elements)", image = "terrain/orb_pedestal.png",
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_DESTRUCTION",
-	name = "orb pedestral (destruction)", image = "terrain/orb_pedestral.png",
+	name = "orb pedestal (destruction)", image = "terrain/orb_pedestal.png",
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 

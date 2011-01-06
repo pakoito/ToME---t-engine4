@@ -793,7 +793,7 @@ function _M:useCommandOrb(o)
 		return
 	end
 
-	game.logPlayer(self, "You use the %s on the pedestral. There is a distant 'clonk' sound.", o:getName{do_colour=true})
+	game.logPlayer(self, "You use the %s on the pedestal. There is a distant 'clonk' sound.", o:getName{do_colour=true})
 	self:grantQuest("orb-command")
 	self:setQuestStatus("orb-command", engine.Quest.COMPLETED, o.define_as)
 end
