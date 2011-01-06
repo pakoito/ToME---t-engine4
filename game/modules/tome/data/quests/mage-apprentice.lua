@@ -73,15 +73,14 @@ end
 
 can_offer = function(self, who)
 	if self.nb_collect >= 10 then return end
+	if not who:getInven("INVEN") then return end
 
-	for inven_id, inven in pairs(who.inven) do
-		for item, o in ipairs(inven) do
-			if (
-				(o.type == "weapon" and o.subtype == "staff") or
-				(o.type == "jewelry" and o.subtype == "ring") or
-				(o.type == "jewelry" and o.subtype == "amulet")
-			) and not o.unique then return true end
-		end
+	for item, o in ipairs(who:getInven("INVEN")) do
+		if (
+			(o.type == "weapon" and o.subtype == "staff") or
+			(o.type == "jewelry" and o.subtype == "ring") or
+			(o.type == "jewelry" and o.subtype == "amulet")
+		) and not o.unique then return true end
 	end
 end
 
@@ -107,17 +106,14 @@ end
 
 can_offer_unique = function(self, who)
 	if self.nb_collect >= 10 then return end
-	-- Only works after mages are unlocked
---	if not profile.mod.allow_build.mage then return end
+	if not who:getInven("INVEN") then return end
 
-	for inven_id, inven in pairs(who.inven) do
-		for item, o in ipairs(inven) do
-			if (
-				(o.type == "weapon" and o.subtype == "staff") or
-				(o.type == "jewelry" and o.subtype == "ring") or
-				(o.type == "jewelry" and o.subtype == "amulet")
-			) and o.unique then return true end
-		end
+	for item, o in ipairs(who:getInven("INVEN")) do
+		if (
+			(o.type == "weapon" and o.subtype == "staff") or
+			(o.type == "jewelry" and o.subtype == "ring") or
+			(o.type == "jewelry" and o.subtype == "amulet")
+		) and o.unique then return true end
 	end
 end
 
