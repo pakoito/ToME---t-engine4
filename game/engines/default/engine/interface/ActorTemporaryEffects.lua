@@ -150,3 +150,15 @@ function _M:removeEffect(eff, silent)
 	end
 	if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end
 end
+
+--- Removes the effect
+function _M:removeAllEffects()
+	local todel = {}
+	for eff, p in pairs(self.tmp) do
+		todel[#todel+1] = eff
+	end
+
+	while #todel > 0 do
+		self:removeEffect(table.remove(todel))
+	end
+end

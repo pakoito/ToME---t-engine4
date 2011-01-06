@@ -73,7 +73,7 @@ In any case, I must collect 10 magic staves, rings or amulets, and I have yet to
 }
 newChat{ id="quest3_mage",
 	text = [[I hope I will too ...
-In any case, I must collect 15 magic staves, rings or amulets and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
+In any case, I must collect 10 magic staves, rings or amulets and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
 	answers = {
 		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},

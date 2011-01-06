@@ -198,6 +198,8 @@ newTalent{
 				return
 			end
 			game.zone:addEntity(game.level, self.alchemy_golem, "actor", x, y)
+			self.alchemy_golem:setTarget(nil)
+			self.alchemy_golem:removeAllEffects()
 		end
 
 		game:playSoundNear(self, "talents/arcane")

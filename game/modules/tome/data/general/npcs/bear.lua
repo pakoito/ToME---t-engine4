@@ -46,7 +46,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
-	name = "brown bear", color=colors.UMBER,
+	name = "brown bear", color=colors.UMBER, image = "npc/brown_bear.png",
 	desc = [[The weakest of bears, covered in brown shaggy fur.]],
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 1,
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
-	name = "black bear", color={50,50,50},
+	name = "black bear", color={50,50,50}, image = "npc/black_bear.png",
 	desc = [[Do you smell like honey? 'Cause this bear wants honey.]],
 	level_range = {6, nil}, exp_worth = 1,
 	rarity = 2,
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
-	name = "cave bear", color=colors.DARK_SLATE_GRAY,
+	name = "cave bear", color=colors.DARK_SLATE_GRAY, image = "npc/cave_bear.png",
 	desc = [[It has come down from its cave foraging for food. Unfortunately, it found you.]],
 	level_range = {7, nil}, exp_worth = 1,
 	rarity = 3,
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
-	name = "war bear", color=colors.DARK_UMBER,
+	name = "war bear", color=colors.DARK_UMBER, image = "npc/war_bear.png",
 	desc = [[Bears with tusks, trained to kill.]],
 	level_range = {7, nil}, exp_worth = 1,
 	rarity = 3,
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
-	name = "grizzly bear", color=colors.LIGHT_UMBER,
+	name = "grizzly bear", color=colors.LIGHT_UMBER, image = "npc/grizzly_bear.png",
 	desc = [[A huge, beastly bear, more savage than most of its kind.]],
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 4,
@@ -99,7 +99,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 }
 
 newEntity{ base = "BASE_NPC_BEAR",
-	name = "polar bear", color=colors.WHITE,
+	name = "polar bear", color=colors.WHITE, image = "npc/polar_bear.png",
 	desc = [[This huge white bear has wandered south in search of food.]],
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 6,
