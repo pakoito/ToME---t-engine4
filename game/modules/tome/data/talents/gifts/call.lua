@@ -54,7 +54,7 @@ newTalent{
 		local e = 10 + self:getWil(50) * self:getTalentLevel(t)
 		local tt = e / 2
 		local pt = (e - tt) / dur
-		self:setEffect(self.EFF_MEDITATION, dur, {per_turn=e, final=tt})
+		self:setEffect(self.EFF_MEDITATION, dur, {per_turn=pt, final=tt})
 
 		-- Reactive talents
 		for i, tid in ipairs(reset) do
