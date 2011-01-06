@@ -101,6 +101,7 @@ local function makeGolem()
 			self.unused_stats = self.unused_stats + 2
 			if self.level >= 2 and self.level % 3 == 0 then self.unused_talents = self.unused_talents + 1 end
 		end,
+
 		keep_inven_on_death = true,
 --		no_auto_resists = true,
 		open_door = true,
