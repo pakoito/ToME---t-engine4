@@ -109,7 +109,8 @@ function _M:makeTrees(base, max)
 	else
 		tbl = { makeTree(1, 16), }
 	end
-	table.sort(tbl, function(a,b) return a.display_y < b.display_y end)
+	table.sort(tbl, function(a,b) return a.display_scale < b.display_scale end)
+	for i = 1, #tbl do tbl[i].z = 16 + i - 1 end
 	return tbl
 end
 

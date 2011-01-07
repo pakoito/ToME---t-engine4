@@ -34,6 +34,7 @@ local Astar = require "engine.Astar"
 local DirectPath = require "engine.DirectPath"
 local Shader = require "engine.Shader"
 
+local NicerTiles = require "mod.class.NicerTiles"
 local GameState = require "mod.class.GameState"
 local Store = require "mod.class.Store"
 local Trap = require "mod.class.Trap"
@@ -321,6 +322,7 @@ function _M:setupDisplayMode(reboot)
 	Map.tiles.use_images = true
 	if gfx.tiles == "ascii" then Map.tiles.use_images = false Map.tiles.force_back_color = {r=0, g=0, b=0, a=255} end
 	if gfx.tiles == "ascii_full" then Map.tiles.use_images = false end
+	if gfx.tiles == "shockbolt" then Map.tiles.nicer_tiles = true end
 
 	if self.level then
 		self.level.map:recreate()
@@ -432,6 +434,10 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
 	end
 	self.zone:getLevel(self, lev, old_lev)
+
+	-- Post process walls
+	local nt = NicerTiles.new()
+	nt:postProcessLevelTiles(self.level)
 
 	-- Check if we need to switch the current guardian
 	self.state:zoneCheckBackupGuardian()

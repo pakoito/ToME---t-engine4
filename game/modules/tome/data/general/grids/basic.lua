@@ -31,7 +31,7 @@ newEntity{
 }
 
 newEntity{
-	define_as = "UP", image = "terrain/stair_up.png",
+	define_as = "UP", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/stair_up.png"}},
 	name = "previous level",
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -40,7 +40,7 @@ newEntity{
 }
 
 newEntity{
-	define_as = "DOWN", image = "terrain/stair_down.png",
+	define_as = "DOWN", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/stair_down.png"}},
 	name = "next level",
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -137,10 +137,14 @@ newEntity{
 	grow = "WALL",
 }
 
+-----------------------------------------
+-- Walls
+-----------------------------------------
 newEntity{
 	define_as = "WALL",
 	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+	nice_tiler = { method="wall3d", north="WALL_NORTH", south="WALL_SOUTH", north_south="WALL_NORTH_SOUTH" },
 	always_remember = true,
 	does_block_move = true,
 	can_pass = {pass_wall=1},
@@ -148,7 +152,25 @@ newEntity{
 	air_level = -20,
 	dig = "FLOOR",
 }
+newEntity{ base = "WALL",
+	define_as = "WALL_NORTH",
+	image = "terrain/granite_wall1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+}
+newEntity{ base = "WALL",
+	define_as = "WALL_NORTH_SOUTH",
+	image = "terrain/granite_wall2.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+}
+newEntity{ base = "WALL",
+	define_as = "WALL_SOUTH",
+	image = "terrain/granite_wall2.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+}
 
+-----------------------------------------
+-- Big Walls
+-----------------------------------------
 newEntity{
 	define_as = "BIGWALL",
 	name = "wall", image = "terrain/bigwall.png",
@@ -161,10 +183,14 @@ newEntity{
 	dig = "FLOOR",
 }
 
+-----------------------------------------
+-- Hard Walls
+-----------------------------------------
 newEntity{
 	define_as = "HARDWALL",
 	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+	nice_tiler = { method="wall3d", north="WALL_NORTH", south="WALL_SOUTH", north_south="WALL_NORTH_SOUTH" },
 	always_remember = true,
 	does_block_move = true,
 	block_sight = true,
@@ -172,16 +198,70 @@ newEntity{
 	block_esp = true,
 	air_level = -20,
 }
+newEntity{ base = "HARDWALL",
+	define_as = "HARDWALL_NORTH",
+	image = "terrain/granite_wall1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+}
+newEntity{ base = "HARDWALL",
+	define_as = "HARDWALL_NORTH_SOUTH",
+	image = "terrain/granite_wall2.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+}
+newEntity{ base = "HARDWALL",
+	define_as = "HARDWALL_SOUTH",
+	image = "terrain/granite_wall2.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+}
 
+
+-----------------------------------------
+-- Doors
+-----------------------------------------
 newEntity{
 	define_as = "DOOR",
 	name = "door", image = "terrain/granite_door1.png",
 	display = '+', color_r=238, color_g=154, color_b=77, back_color=colors.DARK_UMBER,
+	nice_tiler = { method="door3d", north_south="DOOR_VERT", west_east="DOOR_NORTH_SOUTH" },
 	notice = true,
 	always_remember = true,
 	block_sight = true,
 	door_opened = "DOOR_OPEN",
 	dig = "DOOR_OPEN",
+}
+newEntity{
+	define_as = "DOOR_OPEN",
+	name = "open door", image="terrain/granite_door1_open.png",
+	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
+	always_remember = true,
+	door_closed = "DOOR",
+}
+
+newEntity{ base = "DOOR",
+	define_as = "DOOR_NORTH_SOUTH",
+	image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+	door_opened = "DOOR_NORTH_SOUTH_OPEN",
+}
+newEntity{ base = "DOOR_OPEN",
+	define_as = "DOOR_NORTH_SOUTH_OPEN",
+	image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_open.png", z=17}, class.new{image="terrain/granite_wall3.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+	door_closed = "DOOR_NORTH_SOUTH",
+}
+
+newEntity{ base = "DOOR",
+	define_as = "DOOR_VERT",
+	image = "terrain/granite_door1_vert.png", add_displays = {class.new{image="terrain/granite_door1_vert_north.png", z=18, display_y=-engine.Map.tile_h}},
+	door_opened = "DOOR_OPEN_VERT",
+	nice_tiler = false,
+	dig = "DOOR_OPEN_VERT",
+}
+newEntity{ base = "DOOR_OPEN",
+	define_as = "DOOR_OPEN_VERT",
+	image = "terrain/granite_door1_open_vert.png", add_displays = {class.new{image="terrain/granite_door1_open_vert_north.png", z=18, display_y=-engine.Map.tile_h}},
+	nice_tiler = false,
+	door_closed = "DOOR_VERT",
 }
 
 newEntity{
@@ -198,14 +278,9 @@ newEntity{
 	dig = "DOOR_OPEN",
 }
 
-newEntity{
-	define_as = "DOOR_OPEN",
-	name = "open door", image = "terrain/granite_door1_open.png",
-	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
-	always_remember = true,
-	door_closed = "DOOR",
-}
-
+-----------------------------------------
+-- Ol
+-----------------------------------------
 newEntity{
 	define_as = "OLD_FLOOR",
 	name = "floor", image = "terrain/maze_floor.png",
