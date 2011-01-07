@@ -29,7 +29,7 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
-	range = 20,
+	range = 10,
 	getNegativeGain = function(self, t) return 20 + self:getTalentLevel(t) * self:getCun(40) end,
 	action = function(self, t)
 		if self:isTalentActive(self.T_DARKEST_LIGHT) then
@@ -192,7 +192,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	requires_target = true,
-	range = 10,
+	range = 5,
 	no_npc_use = true,
 	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t)+self:getCun(10)) + 3 end,
 	action = function(self, t)

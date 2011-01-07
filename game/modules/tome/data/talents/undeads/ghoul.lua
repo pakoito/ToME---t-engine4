@@ -50,7 +50,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	direct_hit = true,
-	range = function(self, t) return math.floor(5 + self:getTalentLevel(t) * 1.2) end,
+	range = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 1.2) end,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}

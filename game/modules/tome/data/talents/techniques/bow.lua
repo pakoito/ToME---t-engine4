@@ -25,7 +25,7 @@ newTalent{
 	mode = "passive",
 	info = function(self, t)
 		return ([[Increases damage done with bows by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
-	end, 
+	end,
 }
 
 newTalent{
@@ -36,7 +36,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req2,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:hasArcheryWeapon("bow") then game.logPlayer(self, "You must wield a bow!") return nil end
@@ -59,7 +59,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req3,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:hasArcheryWeapon("bow") then game.logPlayer(self, "You must wield a bow!") return nil end
@@ -83,7 +83,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 35,
 	require = techs_dex_req4,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)

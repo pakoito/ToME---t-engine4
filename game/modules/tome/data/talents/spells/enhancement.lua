@@ -59,7 +59,7 @@ newTalent{
 	cooldown = 25,
 	mana = 45,
 	require = spells_req2,
-	range = 20,
+	range = 10,
 	getPhysicalReduction = function(self, t) return self:combatTalentSpellDamage(t, 10, 60) end,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")

@@ -24,7 +24,7 @@ newTalent{
 	no_energy = "fake",
 	hide = true,
 	points = 1,
-	range = 20,
+	range = 10,
 	message = "@Source@ shoots!",
 	requires_target = true,
 	action = function(self, t)
@@ -47,7 +47,7 @@ newTalent{
 	cooldown = 3,
 	stamina = 8,
 	require = techs_dex_req1,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
@@ -146,7 +146,7 @@ newTalent{
 	cooldown = 14,
 	stamina = 35,
 	require = techs_dex_req4,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
@@ -206,7 +206,7 @@ newTalent{
 	cooldown = 10,
 	stamina = 15,
 	require = techs_dex_req2,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
@@ -235,7 +235,7 @@ newTalent{
 	cooldown = 10,
 	stamina = 15,
 	require = techs_dex_req3,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("pin") then
@@ -267,7 +267,7 @@ newTalent{
 	cooldown = 14,
 	stamina = 15,
 	require = techs_dex_req4,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then

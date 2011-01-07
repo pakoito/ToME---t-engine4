@@ -28,7 +28,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -58,7 +58,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}

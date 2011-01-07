@@ -50,7 +50,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	vim = 30,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}
@@ -108,7 +108,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	vim = 12,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}

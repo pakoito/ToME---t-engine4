@@ -197,7 +197,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	hate =  0.5,
-	range = 12,
+	range = 7,
 	getDuration = function(self, t)
 		return 8 + math.floor(self:getTalentLevel(t) * 1.4)
 	end,

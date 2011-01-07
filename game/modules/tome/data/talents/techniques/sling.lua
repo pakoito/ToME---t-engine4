@@ -36,7 +36,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req2,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
@@ -69,7 +69,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 15,
 	require = techs_dex_req3,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
@@ -101,7 +101,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 35,
 	require = techs_dex_req4,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:hasArcheryWeapon("sling") then game.logPlayer(self, "You must wield a sling!") return nil end

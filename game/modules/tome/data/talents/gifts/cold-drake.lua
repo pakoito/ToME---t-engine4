@@ -53,7 +53,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	sustain_equilibrium = 30,
-	range = 20,
+	range = 10,
 	tactical = {
 		DEFEND = 10,
 	},
@@ -81,7 +81,7 @@ newTalent{
 	random_ego = "defensive",
 	equilibrium = 10,
 	cooldown = 30,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}

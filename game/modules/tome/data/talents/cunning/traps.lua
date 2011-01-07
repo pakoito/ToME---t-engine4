@@ -19,7 +19,7 @@
 
 local Map = require "engine.Map"
 
-local trap_range = function(self, t) return 0 + math.floor(self:getTalentLevel(self.T_TRAP_LAUNCHER) * 2.2) end
+local trap_range = function(self, t) return 0 + math.floor(self:getTalentLevel(self.T_TRAP_LAUNCHER) * 1.2) end
 
 ----------------------------------------------------------------
 -- Trapping
@@ -80,7 +80,7 @@ newTalent{
 	stamina = 15,
 	no_break_stealth = true,
 	require = cuns_req2,
-	range = function(self, t) return math.ceil(self:getTalentLevel(t) * 1.5 + 5) end,
+	range = function(self, t) return math.ceil(self:getTalentLevel(t) + 5) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -146,19 +146,19 @@ newTalent{
 	reflectable = true,
 	proj_speed = 10,
 	requires_target = true,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.STICKY_SMOKE, math.ceil(self:getTalentLevel(t) * 2.5), {type="slime"})
+		self:projectile(tg, x, y, DamageType.STICKY_SMOKE, math.ceil(self:getTalentLevel(t) * 1.2), {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Throws a vial of sticky smoke that explodes on your foe, reducing its vision range by %d for 5 turns.
 		This can be used while stealthed.]]):
-		format(math.ceil(self:getTalentLevel(t) * 2.5))
+		format(math.ceil(self:getTalentLevel(t) * 1.2))
 	end,
 }
 

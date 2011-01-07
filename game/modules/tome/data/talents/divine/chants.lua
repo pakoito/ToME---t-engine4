@@ -39,7 +39,7 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
-	range = 20,
+	range = 10,
 	getResists = function(self, t) return self:combatTalentSpellDamage(t, 5, 70) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
@@ -85,7 +85,7 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
-	range = 20,
+	range = 10,
 	getPhysicalResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 23) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
@@ -128,7 +128,7 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
-	range = 20,
+	range = 10,
 	getResists = function(self, t) return self:combatTalentSpellDamage(t, 5, 20) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
@@ -177,7 +177,7 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
-	range = 20,
+	range = 10,
 	getLightDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)

@@ -28,7 +28,7 @@ newTalent{
 	tactical = {
 		BUFF = 10,
 	},
-	range = 20,
+	range = 10,
 	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:getTalentLevel(t) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -96,7 +96,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	requires_target = true,
-	range = function(self, t) return 2 + self:getStr(12) end,
+	range = function(self, t) return 2 + self:getStr(8) end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}

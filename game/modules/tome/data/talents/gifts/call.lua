@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	message = "@Source@ meditates on nature.",
 	cooldown = 150,
-	range = 20,
+	range = 10,
 	no_npc_use = true,
 	action = function(self, t)
 		local seen = false
@@ -144,7 +144,7 @@ newTalent{
 	points = 5,
 	equilibrium = 20,
 	cooldown = 50,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		local nb = math.ceil(self:getTalentLevel(t) + 2)
 		local tids = {}

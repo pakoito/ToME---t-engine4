@@ -28,7 +28,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -58,7 +58,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -123,7 +123,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)

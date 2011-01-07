@@ -276,7 +276,7 @@ function _M:playerFOV()
 		if game.zone.wilderness_see_radius then
 			self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, wild_fovdist[sqdist]) end, true, true, true)
 		else
-			self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
+			self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
 				game.level.map:apply(x, y, fovdist[sqdist])
 			end, true, false, true)
 			if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)

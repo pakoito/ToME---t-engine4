@@ -75,7 +75,7 @@ newTalent{ short_name="SPIDER_WEB",
 	points = 5,
 	equilibrium = 5,
 	cooldown = 3,
-	range=10,
+	range=7,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
@@ -100,7 +100,7 @@ newTalent{ short_name="HEAL_OTHER",
 	points = 5,
 	equilibrium = 5,
 	cooldown = 4,
-	range=14,
+	range=7,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -125,7 +125,7 @@ newTalent{ short_name="REGENERATE_OTHER",
 	points = 5,
 	equilibrium = 5,
 	cooldown = 10,
-	range=14,
+	range=7,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -153,7 +153,7 @@ newTalent{
 	message = "@Source@ summons a Turtle!",
 	equilibrium = 2,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -224,7 +224,7 @@ newTalent{
 	message = "@Source@ summons a Spider!",
 	equilibrium = 5,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -294,7 +294,7 @@ newTalent{
 	points = 5,
 	equilibrium = 15,
 	cooldown = 18,
-	range = function(self, t) return 4 + self:getTalentLevel(t) * 3 end,
+	range = function(self, t) return 4 + self:getTalentLevel(t) end,
 	requires_target = true,
 	action = function(self, t)
 		local dur = math.floor(5 + self:getTalentLevel(t))

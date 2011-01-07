@@ -27,7 +27,7 @@ newTalent{
 	tactical = {
 		DEFENSE = 10,
 	},
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		self:setEffect(self.EFF_DAMPENING_FIELD, 10, {power=self:combatTalentSpellDamage(t, 5, 40) * getParadoxModifier(self, pm)})
@@ -47,7 +47,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 10,
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -78,7 +78,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	paradox = 5,
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -99,7 +99,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[***BROKEN DO NOT CAST*** Reduces the targets global speed by %d%%.  The target will slowly recover all of its speed over %d turns.  
+		return ([[***BROKEN DO NOT CAST*** Reduces the targets global speed by %d%%.  The target will slowly recover all of its speed over %d turns.
 		The chance will increase with Magic stat.]]):format(100, 3 + self:getTalentLevel(t))
 	end,
 }

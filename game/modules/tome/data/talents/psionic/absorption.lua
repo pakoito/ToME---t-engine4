@@ -21,7 +21,7 @@ local function getGemLevel(self)
 		local gem_level = 0
 		if not self:getInven("PSIONIC_FOCUS")[1] then return gem_level end
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item.type == "gem" then 
+		if tk_item.type == "gem" then
 			gem_level = tk_item.material_level
 		else
 			gem_level = 0
@@ -50,8 +50,8 @@ newTalent{
 	points = 5,
 	sustain_psi = 30,
 	cooldown = 20,
-	range = 25,
-	
+	range = 10,
+
 	--called when damage gets absorbed by kinetic shield
 	ks_on_damage = function(self, t, damtype, dam)
 		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
@@ -60,7 +60,7 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.PHYSICAL and damtype ~= DamageType.ACID then return total_dam end
-		
+
 		if dam <= self.kinetic_shield then
 			self:incPsi(2 + dam/mast)
 			dam = 0
@@ -68,7 +68,7 @@ newTalent{
 			self:incPsi(2 + self.kinetic_shield/mast)
 			dam = dam - self.kinetic_shield
 		end
-		
+
 		return dam + guaranteed_dam
 	end,
 
@@ -106,7 +106,7 @@ newTalent{
 				dam = dam - self.kinspike_shield_absorb
 				self.kinspike_shield_absorb = 0
 			end
-	
+
 			if self.kinspike_shield_absorb <= 0 then
 				game.logPlayer(self, "Your spiked kinetic shield crumbles under the damage!")
 				self:removeEffect(self.EFF_KINSPIKE_SHIELD)
@@ -139,8 +139,8 @@ newTalent{
 	points = 5,
 	sustain_psi = 30,
 	cooldown = 20,
-	range = 25,
-	
+	range = 10,
+
 	--called when damage gets absorbed by thermal shield
 	ts_on_damage = function(self, t, damtype, dam)
 		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
@@ -149,7 +149,7 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.FIRE and damtype ~= DamageType.COLD then return total_dam end
-		
+
 		if dam <= self.thermal_shield then
 			self:incPsi(2 + dam/mast)
 			dam = 0
@@ -194,7 +194,7 @@ newTalent{
 				dam = dam - self.thermspike_shield_absorb
 				self.thermspike_shield_absorb = 0
 			end
-	
+
 			if self.thermspike_shield_absorb <= 0 then
 				game.logPlayer(self, "Your spiked thermal shield crumbles under the damage!")
 				self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
@@ -225,8 +225,8 @@ newTalent{
 	points = 5,
 	sustain_psi = 30,
 	cooldown = 20,
-	range = 25,
-	
+	range = 10,
+
 	--called when damage gets absorbed by charged shield
 	cs_on_damage = function(self, t, damtype, dam)
 		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
@@ -235,7 +235,7 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.LIGHTNING and damtype ~= DamageType.BLIGHT then return total_dam end
-		
+
 		if dam <= self.charged_shield then
 			self:incPsi(2 + dam/mast)
 			dam = 0
@@ -279,7 +279,7 @@ newTalent{
 				dam = dam - self.chargespike_shield_absorb
 				self.chargespike_shield_absorb = 0
 			end
-	
+
 			if self.chargespike_shield_absorb <= 0 then
 				game.logPlayer(self, "Your spiked charged shield crumbles under the damage!")
 				self:removeEffect(self.EFF_CHARGESPIKE_SHIELD)

@@ -76,7 +76,7 @@ newTalent{
 	require = divi_req3,
 	points = 5,
 	proj_speed = 3,
-	range = 10,
+	range = 6,
 	sustain_negative = 10,
 	sustain_positive = 10,
 	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
@@ -91,7 +91,7 @@ newTalent{
 				tgts[#tgts+1] = a
 			end
 		end end
-		
+
 		-- Randomly take targets
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}}
 		for i = 1, t.getTargetCount(self, t) do
@@ -107,7 +107,7 @@ newTalent{
 			else
 				local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_dark"}}
 				self:projectile(tg, a.x, a.y, DamageType.DARKNESS, t.getDarknessDamage(self, t), {type="shadow"})
-				self:incNegative(-2)				
+				self:incNegative(-2)
 			end
 		end
 	end,

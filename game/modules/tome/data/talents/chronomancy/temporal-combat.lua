@@ -44,7 +44,7 @@ newTalent{
 	}
 
 
-   newTalent{
+newTalent{
 	name = "Kinetic Folding",
 	type = {"chronomancy/temporal-combat", 2},
 	require = temporal_req2,
@@ -56,7 +56,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 10,
+	range = 6,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

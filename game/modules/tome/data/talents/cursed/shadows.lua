@@ -22,7 +22,7 @@ newTalent{
 	name = "Phase Door",
 	type = {"spell/other",1},
 	points = 5,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		local x, y, range
 		if self.ai_state.shadow_wall then
@@ -49,7 +49,7 @@ newTalent{
 	type = {"spell/other", 1},
 	points = 5,
 	random_ego = "attack",
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -294,7 +294,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	hate = 1,
-	range = 10,
+	range = 6,
 	requires_target = true,
 	getDuration = function(self, t)
 		return self:getTalentLevel(t)

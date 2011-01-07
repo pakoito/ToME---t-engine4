@@ -27,7 +27,7 @@ newTalent{
 	cooldown = 7,
 	direct_hit = true,
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 3 end,
-	range = 20,
+	range = 10,
 	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local target = self

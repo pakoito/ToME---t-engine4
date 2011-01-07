@@ -47,7 +47,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 			local hitTarget = false
 
 			local tCreepingDarkness = self.summoner:getTalentFromId(summoner.T_CREEPING_DARKNESS)
-			
+
 			if self.finalizing then
 				if self.duration <= 0 or self.target.dead or self.x ~= self.target.x or self.y ~= self.target.y then
 					game.logSeen(self, "The dark tendrils dissipate.")
@@ -148,7 +148,7 @@ newTalent{
 	hate = 1.5,
 	range = 5,
 	requires_target = true,
-	
+
 	-- implementation of creeping darkness..used in various locations, but stored here
 	canCreep = function(x, y, ignoreCreepingDark)
 		-- not on map
@@ -220,9 +220,9 @@ newTalent{
 					--game.level.map:redisplay()
 				else
 					self.duration = self.duration - 1
-					
+
 					local tCreepingDarkness = self.summoner:getTalentFromId(self.summoner.T_CREEPING_DARKNESS)
-					
+
 					if self.canCreep and self.creep > 0 and rng.percent(self.creepChance) then
 						if not tCreepingDarkness.doCreep(tCreepingDarkness, self, true) then
 							-- doCreep failed..pass creep on to a neighbor and stop creeping
@@ -269,7 +269,7 @@ newTalent{
 			end
 		end
 	end,
-	
+
 	getRadius = function(self, t)
 		return 3
 	end,
@@ -359,7 +359,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 6,
+	range = 5,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -410,7 +410,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	hate =  1.2,
-	range = 10,
+	range = 6,
 	getPinDuration = function(self, t)
 		return 1 + math.floor(self:getTalentLevel(t) / 2)
 	end,

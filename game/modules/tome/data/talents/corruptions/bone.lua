@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	vim = 13,
 	cooldown = 4,
-	range = 20,
+	range = 10,
 	random_ego = "attack",
 	direct_hit = true,
 	requires_target = true,
@@ -50,7 +50,7 @@ newTalent{
 	points = 5,
 	vim = 28,
 	cooldown = 15,
-	range = 15,
+	range = 7,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}

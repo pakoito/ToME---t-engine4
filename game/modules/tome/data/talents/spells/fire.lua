@@ -28,7 +28,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
@@ -101,7 +101,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 15,
+	range = 7,
 	proj_speed = 4,
 	direct_hit = true,
 	requires_target = true,
@@ -137,7 +137,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 40,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,

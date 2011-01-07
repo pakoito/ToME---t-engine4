@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	vim = 0,
 	cooldown = 30,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		if self.max_life * 0.2 >= self.life then
 			game.logPlayer(self, "Doing this would kill you.")
@@ -67,7 +67,7 @@ newTalent{
 	reflectable = true,
 	proj_speed = 15,
 	requires_target = true,
-	range = function(self, t) return 3 * self:getTalentLevelRaw(t) end,
+	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)
@@ -91,7 +91,7 @@ newTalent{
 	points = 5,
 	sustain_vim = 30,
 	cooldown = 30,
-	range = 20,
+	range = 10,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
@@ -119,7 +119,7 @@ newTalent{
 	points = 5,
 	vim = 40,
 	cooldown = 20,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		self:setEffect(self.EFF_LIFE_TAP, 7, {power=math.ceil(6 + self:getTalentLevel(t) * 2)})
 		game:playSoundNear(self, "talents/spell_generic2")

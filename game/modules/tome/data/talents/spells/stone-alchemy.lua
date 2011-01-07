@@ -22,9 +22,6 @@ newTalent{
 	type = {"spell/stone-alchemy-base", 1},
 	require = spells_req1,
 	points = 1,
-	range = function(self, t)
-		return math.ceil(5 + self:getDex(12))
-	end,
 	mana = 30,
 	no_npc_use = true,
 	make_gem = function(self, t, base_define)

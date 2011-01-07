@@ -61,7 +61,7 @@ newTalent{
 		ATTACK = 4,
 	},
 	requires_target = true,
-	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
+	range = function(self, t) return math.floor(5 + self:getTalentLevelRaw(t)) end,
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 

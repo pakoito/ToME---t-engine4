@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	vim = 20,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -54,7 +54,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	vim = 20,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -84,7 +84,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	vim = 20,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -114,7 +114,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	vim = 20,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	direct_hit = true,
 	action = function(self, t)

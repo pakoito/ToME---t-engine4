@@ -28,7 +28,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -48,7 +48,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.LIGHTNING, damage / 3), 
+		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
 		damDesc(self, DamageType.LIGHTNING, damage))
 	end,
 }
@@ -64,7 +64,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,

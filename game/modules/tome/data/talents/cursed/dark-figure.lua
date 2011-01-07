@@ -30,7 +30,7 @@ newTalent{
 	hate = 0.1,
 	getRadius = function(self, t) return 3 + math.floor((self:getTalentLevelRaw(t) - 1) / 2) end,
 	getDuration = function(self, t) return 5 + math.floor(self:getTalentLevel(t) * 2) end,
-	range = 10,
+	range = 6,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -127,7 +127,7 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	range = function(self, t) return 18 - math.floor(self:getTalentLevel(t) * 1.4) end,
+	range = function(self, t) return 9 - math.floor(self:getTalentLevel(t) * 0.7) end,
 	info = function(self, t)
 		local range = t.range(self, t)
 		return ([[You hide your terrible nature behind a pitiful figure. Those that see you from a distance of %d will ignore you.]]):format(range)

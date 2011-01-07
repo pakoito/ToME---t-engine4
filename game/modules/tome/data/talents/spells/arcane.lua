@@ -57,7 +57,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
 	reflectable = true,
 	requires_target = true,

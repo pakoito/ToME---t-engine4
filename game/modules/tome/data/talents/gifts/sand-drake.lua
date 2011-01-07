@@ -68,7 +68,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 20,
+	range = 10,
 	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t) / 2, talent=t, no_restrict=true}
@@ -89,7 +89,7 @@ newTalent{
 	points = 5,
 	equilibrium = 50,
 	cooldown = 30,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		self:setEffect(self.EFF_BURROW, 5 + self:getTalentLevel(t) * 3, {})
 		return true

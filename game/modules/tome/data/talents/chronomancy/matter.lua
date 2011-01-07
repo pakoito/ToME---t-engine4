@@ -28,7 +28,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -55,7 +55,7 @@ newTalent{
 	points = 5,
 	random_ego = "utility",
 	paradox = 10,
-	range = function(self, t) return self:getTalentLevel(t)*2 end,
+	range = function(self, t) return self:getTalentLevel(t)+1 end,
 	cooldown = function(self, t) return 20 - (self:getTalentLevel(t) *2) end,
 	reflectable = true,
 	requires_target = true,
@@ -89,7 +89,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -128,7 +128,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 15,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)

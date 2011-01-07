@@ -26,7 +26,7 @@ newTalent{
 	points = 5,
 	equilibrium = 10,
 	cooldown = 26,
-	range = 20,
+	range = 10,
 	tactical = {
 		ATTACK = 10,
 	},
@@ -86,7 +86,7 @@ newTalent{
 	equilibrium = 14,
 	cooldown = 15,
 	proj_speed = 2, -- This is purely indicative
-	range = function(self, t) return 6 + math.ceil(self:getTalentLevel(t) * 2) end,
+	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t}

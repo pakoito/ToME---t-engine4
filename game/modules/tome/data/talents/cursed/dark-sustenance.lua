@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
-	range = 15,
+	range = 7,
 	requires_target = true,
 	getHateGain = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:getWil(0.15)
@@ -43,24 +43,24 @@ newTalent{
 		if self:hasEffect(self.EFF_FEED_HATE) then
 			self:removeEffect(self.EFF_FEED_HATE)
 		end
-		
+
 		local hateGain = t.getHateGain(self, t)
 		local constitutionGain = 0
 		local lifeRegenGain = 0
 		local damageGain = 0
 		local resistGain = 0
-		
+
 		local tFeedHealth = self:getTalentFromId(self.T_FEED_HEALTH)
 		if tFeedHealth and self:getTalentLevelRaw(tFeedHealth) > 0 then
 			constitutionGain = tFeedHealth.getConstitutionGain(self, tFeedHealth, target)
 			lifeRegenGain = tFeedHealth.getLifeRegenGain(self, tFeedHealth)
 		end
-		
+
 		local tFeedPower = self:getTalentFromId(self.T_FEED_POWER)
 		if tFeedPower and self:getTalentLevelRaw(tFeedPower) > 0 then
 			damageGain = tFeedPower.getDamageGain(self, tFeedPower, target)
 		end
-		
+
 		local tFeedStrengths = self:getTalentFromId(self.T_FEED_STRENGTHS)
 		if tFeedStrengths and self:getTalentLevelRaw(tFeedStrengths) > 0 then
 			resistGain = tFeedStrengths.getResistGain(self, tFeedStrengths, target)

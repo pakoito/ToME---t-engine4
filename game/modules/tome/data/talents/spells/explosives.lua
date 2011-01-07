@@ -25,7 +25,7 @@ newTalent{
 	mana = 5,
 	cooldown = 4,
 	range = function(self, t)
-		return math.ceil(5 + self:getDex(12))
+		return math.ceil(5 + self:getDex(6))
 	end,
 	direct_hit = true,
 	requires_target = true,
@@ -170,7 +170,7 @@ newTalent{
 	mana = 40,
 	cooldown = 10,
 	range = function(self, t)
-		return math.ceil(5 + self:getDex(12))
+		return math.ceil(5 + self:getDex(6))
 	end,
 	direct_hit = true,
 	requires_target = true,

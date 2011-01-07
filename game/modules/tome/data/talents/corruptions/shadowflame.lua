@@ -44,7 +44,7 @@ newTalent{
 	cooldown = 10,
 	vim = 20,
 	requires_target = true,
-	range = 15,
+	range = 6,
 	proj_speed = 4,
 	direct_hit = true,
 	requires_target = true,
@@ -120,7 +120,7 @@ newTalent{
 	cooldown = 60,
 	no_sustain_autoreset = true,
 	no_npc_use = true,
-	range = 10,
+	range = 5,
 	activate = function(self, t)
 		if game.zone.is_demon_plane then
 			game.logPlayer(self, "This spell can not be used from within the demon place.")

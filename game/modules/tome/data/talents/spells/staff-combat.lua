@@ -26,7 +26,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 10,
+	range = 6,
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
@@ -140,6 +140,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
+	range = 1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
 	getDazeDuration = function(self, t) return 4 + self:getTalentLevel(t) end,

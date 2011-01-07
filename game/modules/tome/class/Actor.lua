@@ -92,7 +92,7 @@ function _M:init(t, no_default)
 
 	t.healing_factor = t.healing_factor or 1
 
-	t.sight = t.sight or 20
+	t.sight = t.sight or 10
 
 	t.resource_pool_refs = t.resource_pool_refs or {}
 

@@ -49,7 +49,7 @@ newTalent{
 	random_ego = "utility",
 	cooldown = 20,
 	action = function(self, t)
-		local rad = 10 + self:getCun(10) * self:getTalentLevel(t)
+		local rad = 5 + self:getCun(10) * self:getTalentLevel(t)
 		self:setEffect(self.EFF_SENSE, 3 + self:getTalentLevel(t), {
 			range = rad,
 			actor = 1,
@@ -104,7 +104,7 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	cooldown = 30,
-	range = 20,
+	range = 10,
 	sustain_stamina = 120,
 	activate = function(self, t)
 		return {

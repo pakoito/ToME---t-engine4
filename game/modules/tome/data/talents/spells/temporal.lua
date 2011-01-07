@@ -30,7 +30,7 @@ newTalent{
 	},
 	reflectable = true,
 	proj_speed = 2,
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	requires_target = true,
 	getSlow = function(self, t) return self:getTalentLevel(t) * 0.08 end,
@@ -59,7 +59,7 @@ newTalent{
 	tactical = {
 		DEFENSE = 10,
 	},
-	range = 20,
+	range = 10,
 	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 50, 350) end,
 	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
 	action = function(self, t)
@@ -88,7 +88,7 @@ newTalent{
 	tactical = {
 		DEFENSE = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,

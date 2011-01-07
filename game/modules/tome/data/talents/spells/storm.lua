@@ -67,7 +67,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	reflectable = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 200) end,
 	action = function(self, t)
@@ -98,7 +98,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 150) end,
 	getChance = function(self, t) return 30 + self:getTalentLevel(t) * 5 end,

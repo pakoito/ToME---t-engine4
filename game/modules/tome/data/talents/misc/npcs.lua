@@ -33,7 +33,7 @@ newTalent{
 	name = "Multiply",
 	type = {"other/other", 1},
 	cooldown = 3,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		if not self.can_multiply or self.can_multiply <= 0 then print("no more multiply")  return nil end
 
@@ -301,7 +301,7 @@ newTalent{
 	name = "Summon",
 	type = {"wild-gift/other", 1},
 	cooldown = 1,
-	range = 20,
+	range = 10,
 	equilibrium = 18,
 	direct_hit = true,
 	action = function(self, t)
@@ -446,7 +446,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	mana = 16,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -470,7 +470,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	reflectable = true,
 	requires_target = true,
 	action = function(self, t)
@@ -496,7 +496,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -581,7 +581,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -605,7 +605,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -632,7 +632,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		local dur = 2 + self:getTalentLevel(t)
@@ -673,11 +673,11 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t), talent=t}
+		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t) / 1.5, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
@@ -705,7 +705,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -732,7 +732,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	message = "@Source@ howls",
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	action = function(self, t)
 		local rad = self:getTalentLevel(t) + 5
@@ -766,7 +766,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	message = "@Source@ shrieks.",
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	action = function(self, t)
 		local rad = self:getTalentLevel(t) + 5
@@ -833,7 +833,7 @@ newTalent{
 	points = 5,
 	cooldown = 2,
 	equilibrium = 5,
-	range = 15,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -856,7 +856,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	equilibrium = 5,
-	range = 15,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -878,7 +878,7 @@ newTalent{
 	points = 5,
 	cooldown = 2,
 	equilibrium = 5,
-	range = 15,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -901,7 +901,7 @@ newTalent{
 	points = 5,
 	cooldown = 13,
 	vim = 27,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -934,7 +934,7 @@ newTalent{
 	name = "Invoke Tentacle",
 	type = {"wild-gift/other", 1},
 	cooldown = 1,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}

@@ -23,7 +23,7 @@ newTalent{
 	points = 5,
 	cooldown = 4,
 	vim = 10,
-	range = 20,
+	range = 10,
 	proj_speed = 10,
 	requires_target = true,
 	action = function(self, t)
@@ -94,7 +94,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 5,
 	},
-	range = 15,
+	range = 7,
 	action = function(self, t)
 		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

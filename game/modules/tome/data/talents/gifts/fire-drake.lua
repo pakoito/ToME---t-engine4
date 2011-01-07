@@ -79,7 +79,7 @@ newTalent{
 	tactical = {
 		ATTACKAREA = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)

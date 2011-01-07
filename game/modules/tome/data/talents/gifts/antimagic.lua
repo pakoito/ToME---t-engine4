@@ -55,7 +55,7 @@ newTalent{
 	points = 5,
 	equilibrium = 20,
 	cooldown = 10,
-	range = function(self, t) return 4 + self:getTalentLevel(t) * 2 end,
+	range = function(self, t) return 4 + self:getTalentLevel(t) * 1.5 end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}
 		self:project(tg, self.x, self.y, DamageType.SILENCE, 3 + math.floor(self:getTalentLevel(t) / 2))
@@ -76,7 +76,7 @@ newTalent{
 	points = 5,
 	sustain_equilibrium = 30,
 	cooldown = 20,
-	range = 25,
+	range = 10,
 	on_damage = function(self, t, damtype, dam)
 		if not DamageType:get(damtype).antimagic_resolve then return dam end
 
@@ -119,7 +119,7 @@ newTalent{
 	points = 5,
 	equilibrium = 10,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

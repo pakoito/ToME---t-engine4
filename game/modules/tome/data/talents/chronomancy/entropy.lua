@@ -31,7 +31,7 @@ newTalent{
 	},
 	reflectable = true,
 	proj_speed = 4,
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -59,7 +59,7 @@ newTalent{
 	tactical = {
 		DEFENSE = 10,
 	},
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		self:setEffect(self.EFF_ENTROPIC_SHIELD, 10, {power=self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm)})
@@ -84,7 +84,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	reflectable = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}

@@ -32,7 +32,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 		self:project(target, target.x, target.y, DamageType.PHYSICAL, damage)
 		game.level.map:particleEmitter(target.x, target.y, 1, "force_hit", {power=power, dx=target.x - sourceX, dy=target.y - sourceY})
 	end
-	
+
 	-- knockback?
 	if not target.dead and knockback and knockback > 0 and target:canBe("knockback") and (target.never_move or 0) < 1 then
 		-- give direct hit a direction?
@@ -41,7 +41,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 			sourceX = sourceX + dir_to_coord[newDirection][1]
 			sourceY = sourceY + dir_to_coord[newDirection][2]
 		end
-	
+
 		local lineFunction = line.new(sourceX, sourceY, target.x, target.y, true)
 		local finalX, finalY = target.x, target.y
 		local knockbackCount = 0
@@ -49,7 +49,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 		while knockback > 0 do
 			blocked = true
 			local x, y = lineFunction(true)
-			
+
 			if not game.level.map:isBound(x, y) or game.level.map:checkAllEntities(x, y, "block_move", target) then
 				-- blocked
 				local nextTarget = game.level.map(x, y, Map.ACTOR)
@@ -64,17 +64,17 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 				else
 					game.logPlayer(self, "%s was smashed!", target.name:capitalize())
 				end
-				
+
 				-- take partial damage
 				local blockDamage = damage * knockback * knockbackDamage / 100
 				self:project(target, target.x, target.y, DamageType.PHYSICAL, blockDamage)
-				
+
 				if nextTarget then
 					-- start a new force hit with the knockback damage and current knockback
-					
+
 					forceHit(self, nextTarget, sourceX, sourceY, blockDamage, knockback, knockbackDamage, power / 2)
 				end
-				
+
 				knockback = 0
 			else
 				-- allow move
@@ -83,11 +83,11 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 				knockbackCount = knockbackCount + 1
 			end
 		end
-		
+
 		if not blocked and knockbackCount > 0 then
 			game.logPlayer(self, "%s was blasted back %d spaces!", target.name:capitalize())
 		end
-		
+
 		if not target.dead and (finalX ~= target.x or finalY ~= target.y) then
 			target:move(finalX, finalY, true)
 		end
@@ -103,7 +103,7 @@ newTalent{
 	cooldown = 4,
 	hate = 0.5,
 	range = function(self, t)
-		return 6
+		return 4
 	end,
 	getDamage = function(self, t)
 		return combatTalentDamage(self, t, 20, 160)
@@ -113,13 +113,13 @@ newTalent{
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
-		
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		local distance = math.max(1, math.floor(core.fov.distance(self.x, self.y, x, y)))
-		
+
 		local power = (1 - ((distance - 1) / range))
 		local damage = t.getDamage(self, t) * power
 		local knockback = t.getKnockback(self, t)
@@ -168,9 +168,9 @@ newTalent{
 		local maxDamage = t.getMaxDamage(self, t)
 		if p.value < maxDamage and self.hate >= 0.05 then
 			self:incHate(-0.05)
-			
+
 			p.value = math.min(p.value + maxDamage / 50, maxDamage)
-			
+
 			t.updateParticles(self, t, p)
 		end
 	end,
@@ -182,7 +182,7 @@ newTalent{
 				damage = damage - deflectDamage
 				p.value = math.max(0, p.value - deflectDamage)
 				t.updateParticles(self, t, p)
-				
+
 				game.logPlayer(self, "You have deflected %d incoming damage!", deflectDamage)
 			end
 		end
@@ -212,7 +212,7 @@ newTalent{
 	cooldown = 10,
 	hate = 1.5,
 	range = function(self, t)
-		return 6
+		return 4
 	end,
 	getRadius = function(self, t)
 		return math.floor(2 + self:getTalentLevel(t) / 3)
@@ -228,11 +228,11 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
-		
+
 		local tg = {type="ball", nolock=true, pass_terrain=false, friendly_fire=false, nowarning=true, range=range, radius=radius, talent=t}
 		local blastX, blastY = self:getTarget(tg)
 		if not blastX or not blastY then return nil end
-		
+
 		local grids = self:project(tg, blastX, blastY,
 			function(x, y, target, self)
 				-- your will ignores friendly targets (except for knockback hits)
@@ -249,7 +249,7 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, blastX, blastY)
 		game.level.map:particleEmitter(x, y, tg.radius, "force_blast", {radius=tg.radius})
 		game:playSoundNear(self, "talents/fireflash")
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -273,7 +273,7 @@ newTalent{
 	},
 	direct_hit = true,
 	range = function(self, t)
-		return math.floor(4 + self:getTalentLevel(t) / 2)
+		return math.floor(4 + self:getTalentLevel(t) / 2.3)
 	end,
 	getDuration = function(self, t)
 		return 5 + math.floor(self:getTalentLevel(t))
@@ -287,14 +287,14 @@ newTalent{
 	getSecondHitChance = function(self, t)
 		local level = self:getTalentLevel(t)
 		if level < 4 then return 0 end
-		
+
 		return 5 + (level - 4) * 10
 	end,
 	action = function(self, t)
 		game.logSeen(self, "An unseen force begin to swirl around %s!", self.name)
 		local duration = t.getDuration(self, t)
 		local particles = self:addParticles(Particles.new("force_area", 1, { radius = self:getTalentRange(t) }))
-		
+
 		self.unseenForce = { duration = duration, particles = particles }
 		return true
 	end,
@@ -309,21 +309,21 @@ newTalent{
 				end
 			end
 		end
-		
+
 		if #targets > 0 then
 			local damage = t.getDamage(self, t)
 			local knockback = t.getKnockback(self, t)
-		
+
 			local hitCount = 1
 			if rng.percent(t.getSecondHitChance(self, t)) then hitCount = hitCount + 1 end
-		
+
 			-- Randomly take targets
 			for i = 1, hitCount do
 				local target, index = rng.table(targets)
 				forceHit(self, target, target.x, target.y, damage, knockback, 15, 0.6)
 			end
 		end
-		
+
 		self.unseenForce.duration = self.unseenForce.duration - 1
 		if self.unseenForce.duration <= 0 then
 			self:removeParticles(self.unseenForce.particles)

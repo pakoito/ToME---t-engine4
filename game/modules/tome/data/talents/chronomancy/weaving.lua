@@ -169,7 +169,7 @@ newTalent{
 	tactical = {
 		DEFENSE = 10,
 	},
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		local dur = util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15)*getParadoxModifier(self, pm)
 		self:setEffect(self.EFF_DAMAGE_SMEARING, dur, {power=10})

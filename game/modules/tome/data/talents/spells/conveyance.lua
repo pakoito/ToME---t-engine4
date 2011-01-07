@@ -182,7 +182,7 @@ newTalent{
 	tactical = {
 		DEFENSE = 10,
 	},
-	range = 10,
+	range = 8,
 	requires_target = true,
 	getTransferChange = function(self, t) return 20 + self:getTalentLevel(t) * 5 end,
 	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 20, 350) end,

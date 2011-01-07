@@ -40,7 +40,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 5,
 	material_level = 1,
 	combat = {
-		range = 8,
+		range = 6,
 		physspeed = 0.8,
 	},
 	basic_ammo = {
@@ -58,7 +58,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 10,
 	material_level = 2,
 	combat = {
-		range = 10,
+		range = 7,
 		physspeed = 0.8,
 	},
 	basic_ammo = {
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 15,
 	material_level = 3,
 	combat = {
-		range = 12,
+		range = 8,
 		physspeed = 0.8,
 	},
 	basic_ammo = {
@@ -94,7 +94,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 25,
 	material_level = 4,
 	combat = {
-		range = 15,
+		range = 9,
 		physspeed = 0.8,
 	},
 	basic_ammo = {
@@ -112,7 +112,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 35,
 	material_level = 5,
 	combat = {
-		range = 18,
+		range = 10,
 		physspeed = 0.8,
 	},
 	basic_ammo = {

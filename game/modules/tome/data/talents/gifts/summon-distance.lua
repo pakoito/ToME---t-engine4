@@ -22,7 +22,7 @@ newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 	type = {"wild-gift/other",1},
 	points = 5,
 	equilibrium = 2,
-	range = 20,
+	range = 10,
 	reflectable = true,
 	requires_target = true,
 	action = function(self, t)
@@ -137,7 +137,7 @@ newTalent{
 	message = "@Source@ summons a Ritch Flamespitter!",
 	equilibrium = 2,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -210,7 +210,7 @@ newTalent{
 	message = "@Source@ summons a 3-headed hydra!",
 	equilibrium = 5,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -283,7 +283,7 @@ newTalent{
 	message = "@Source@ summons a Warper!",
 	equilibrium = 8,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -358,7 +358,7 @@ newTalent{
 	message = "@Source@ summons a Fire Drake!",
 	equilibrium = 15,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end

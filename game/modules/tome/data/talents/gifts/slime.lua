@@ -87,7 +87,7 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 20,
+	range = 10,
 	direct_hit = true,
 	proj_speed = 8,
 	action = function(self, t)
@@ -116,7 +116,7 @@ newTalent{
 		MOVEMENT = 10,
 	},
 	requires_target = true,
-	range = 20,
+	range = 10,
 	action = function(self, t)
 		local x, y = self:getTarget{type="ball", range=20 + self:getTalentLevel(t), radius=math.min(0, 5 - self:getTalentLevel(t))}
 		if not x then return nil end

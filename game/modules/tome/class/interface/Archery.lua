@@ -43,7 +43,7 @@ function _M:archeryAcquireTargets(tg, params)
 
 	local tg = tg or {type="bolt"}
 
-	if not tg.range then tg.range=weapon.range or 10 end
+	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display='/'}
 	tg.speed = (tg.speed or 20) * (ammo.travel_speed or 100) / 100
 	local x, y = self:getTarget(tg)
@@ -197,7 +197,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 	local tg = tg or {type="bolt"}
 	tg.talent = tg.talent or talent
 
-	if not tg.range then tg.range=weapon.range or 10 end
+	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display='/'}
 	tg.speed = (tg.speed or 20) * (ammo.travel_speed or 100) / 100
 	tg.archery = params or {}

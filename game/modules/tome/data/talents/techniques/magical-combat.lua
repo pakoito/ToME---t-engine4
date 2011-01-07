@@ -33,10 +33,10 @@ newTalent{
 			if self:knowTalent(self.T_LIGHTNING) then spells[#spells+1] = self.T_LIGHTNING end
 			local tid = rng.table(spells)
 			if tid then
-				-- Extending beam target, assumes a maximum range of 20
+				-- Extending beam target, assumes a maximum range of 10
 				local current_angle = math.atan2((target.y - self.y), (target.x - self.x)) + math.pi
-				target_x = self.x - math.floor(0.5 + (20 * math.cos(current_angle)))
-				target_y = self.y - math.floor(0.5 + (20 * math.sin(current_angle)))
+				target_x = self.x - math.floor(0.5 + (10 * math.cos(current_angle)))
+				target_y = self.y - math.floor(0.5 + (10 * math.sin(current_angle)))
 				local l = line.new(self.x, self.y, target_x, target_y)
 				local lx, ly = l()
 				target_x, target_y = lx, ly
@@ -97,7 +97,7 @@ newTalent{
 	cooldown = 5,
 	sustain_stamina = 40,
 	require = techs_req3,
-	range = 20,
+	range = 10,
 	activate = function(self, t)
 		local power = self:getTalentLevel(t) / 14
 		return {

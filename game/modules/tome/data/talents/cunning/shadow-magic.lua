@@ -63,7 +63,7 @@ newTalent{
 	cooldown = 5,
 	sustain_stamina = 40,
 	require = cuns_req3,
-	range = 20,
+	range = 10,
 	getManaRegen = function(self, t) return self:getTalentLevel(t) / 14 end,
 	activate = function(self, t)
 		return {

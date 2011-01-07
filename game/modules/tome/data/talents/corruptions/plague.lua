@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 3,
 	random_ego = "attack",
 	requires_target = true,
-	range = function(self, t) return 5 + math.floor(self:getTalentLevel(t) * 1.3) end,
+	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -64,7 +64,7 @@ newTalent{
 	points = 5,
 	vim = 18,
 	cooldown = 9,
-	range = 15,
+	range = 7,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -123,7 +123,7 @@ newTalent{
 	points = 5,
 	vim = 35,
 	cooldown = 15,
-	range = 10,
+	range = 6,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -176,7 +176,7 @@ newTalent{
 	points = 5,
 	vim = 20,
 	cooldown = 13,
-	range = 10,
+	range = 6,
 	requires_target = true,
 	do_spread = function(self, t, carrier)
 		-- List all diseases

@@ -62,9 +62,9 @@ function _M:doFOV()
 --	end
 	-- If the actor has no special vision we can use the default cache
 	if not self.special_vision then
-		self:computeFOV(self.sight or 20, "block_sight", nil, nil, nil, true)
+		self:computeFOV(self.sight or 10, "block_sight", nil, nil, nil, true)
 	else
-		self:computeFOV(self.sight or 20, "block_sight")
+		self:computeFOV(self.sight or 10, "block_sight")
 	end
 end
 

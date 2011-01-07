@@ -26,7 +26,7 @@ newTalent{
 	message = "@Source@ summons a War Hound!",
 	equilibrium = 3,
 	cooldown = 15,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -96,7 +96,7 @@ newTalent{
 	message = "@Source@ summons a Jelly!",
 	equilibrium = 5,
 	cooldown = 10,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -167,7 +167,7 @@ newTalent{
 	message = "@Source@ summons a Minotaur!",
 	equilibrium = 10,
 	cooldown = 15,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -243,7 +243,7 @@ newTalent{
 	message = "@Source@ summons an Stone Golem!",
 	equilibrium = 15,
 	cooldown = 20,
-	range = 20,
+	range = 10,
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
