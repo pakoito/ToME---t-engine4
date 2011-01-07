@@ -28,6 +28,9 @@ module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.Acto
 function _M:init(t, no_default)
 	mod.class.Actor.init(self, t, no_default)
 	ActorAI.init(self, t)
+
+	-- Grab default image name if none is set
+	if not self.image then self.image = "npc/"..self.subtype.."_"..self.name:lower():gsub("[^a-z0-9]", "_")..".png" end
 end
 
 function _M:act()
