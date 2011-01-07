@@ -64,7 +64,7 @@ function _M:takeHit(value, src)
 	self.life = self.life - value
 	self.changed = true
 	if self.life <= 0 then
-		game.logSeen(self, "%s killed %s!", src.name:capitalize(), self.name)
+		game.logSeen(self, "#{bold}#%s killed %s!#{normal}#", src.name:capitalize(), self.name)
 		return self:die(src)
 	end
 end
