@@ -257,7 +257,7 @@ end
 -- Precompute FOV form, for speed
 local fovdist = {}
 for i = 0, 30 * 30 do
-	fovdist[i] = math.max((20 - math.sqrt(i)) / 14, 0.6)
+	fovdist[i] = math.max((20 - math.sqrt(i)) / 17, 0.6)
 end
 local wild_fovdist = {}
 for i = 0, 10 * 10 do
