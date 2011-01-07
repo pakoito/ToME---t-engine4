@@ -123,9 +123,8 @@ mm_blocks = {
 -- @param tile_h height of a single tile
 -- @param fontname font parameters, can be nil
 -- @param fontsize font parameters, can be nil
-function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, multidisplay, allow_backcolor)
+function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, allow_backcolor)
 	self.allow_backcolor = allow_backcolor
-	self.multidisplay = multidisplay
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.viewport = {width=math.floor(w), height=math.floor(h), mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
 	self.tile_w, self.tile_h = tile_w, tile_h
