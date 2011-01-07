@@ -314,7 +314,7 @@ function _M:act()
 	-- Suffocate ?
 	local air_level, air_condition = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level"), game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_condition")
 	if air_level then
-		if not air_condition or not self.can_breath[air_condition] then
+		if not air_condition or not self.can_breath[air_condition] or self.can_breath[air_condition] <= 0 then
 			self:suffocate(-air_level, self)
 		end
 	end
