@@ -23,12 +23,22 @@ local List = require "engine.ui.List"
 
 module(..., package.seeall, class.inherit(Dialog))
 
+local tiles_packs = {
+	shockbolt = {name= "Shockbolt", order=1},
+	mushroom = {name= "Mushroom", order=2},
+	altefcat = {name= "Altefcat/Gervais", order=3},
+	ascii = {name= "ASCII", order=4},
+	ascii_full = {name= "ASCII with background", order=5},
+}
+
 function _M:init()
+	self.cur_sel = "main"
 	self:generateList()
+	self.changed = false
 
 	Dialog.init(self, "Change graphic mode", 300, 20)
 
-	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
+	self.c_list = List.new{width=self.iw, nb_items=5, list=self.list, fct=function(item) self:use(item) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
@@ -37,25 +47,51 @@ function _M:init()
 	self:setupUI(false, true)
 
 	self.key:addBinds{
-		EXIT = function() game:unregisterDialog(self) end,
+		EXIT = function()
+			if self.changed then game:setupDisplayMode(true) end
+			game:unregisterDialog(self)
+		end,
 	}
 end
 
 function _M:use(item)
 	if not item then return end
-	game.gfxmode = item.mode
-	game:setupDisplayMode(true)
-	game:unregisterDialog(self)
+
+	if item.sub and item.val then
+		config.settings.tome.gfx[item.sub] = item.val
+		self.changed = true
+		item.change_sel = "main"
+	end
+
+	if item.change_sel then
+		self.cur_sel = item.change_sel
+		self:generateList()
+		self.c_list.list = self.list
+		self.c_list:generate()
+	end
 end
 
 function _M:generateList()
-	local list = {
-		{name="32x32 Graphical",		mode=1},
-		{name="16x16 Graphical",		mode=2},
-		{name="32x32 ASCII",			mode=3},
-		{name="16x16 ASCII",			mode=4},
-		{name="32x32 ASCII with background",	mode=5},
-		{name="16x16 ASCII with background",	mode=6},
-	}
+	local list
+
+	if self.cur_sel == "main" then
+		list = {
+			{name="Select style [current: "..tiles_packs[config.settings.tome.gfx.tiles].name.."]", change_sel="tiles"},
+			{name="Select tiles size [current: "..config.settings.tome.gfx.size.."]", change_sel="size"},
+		}
+	elseif self.cur_sel == "tiles" then
+		list = {}
+		for s, n in pairs(tiles_packs) do
+			list[#list+1] = {name=n.name, order=n.order, sub="tiles", val=s}
+		end
+		table.sort(list, function(a, b) return a.order < b.order end)
+	elseif self.cur_sel == "size" then
+		list = {
+			{name="64x64", sub="size", val="64x64"},
+			{name="32x32", sub="size", val="32x32"},
+			{name="16x16", sub="size", val="16x16"},
+		}
+	end
+
 	self.list = list
 end

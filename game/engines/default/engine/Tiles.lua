@@ -26,6 +26,7 @@ module(..., package.seeall, class.make)
 prefix = "/data/gfx/"
 base_prefix = "/data/gfx/"
 use_images = true
+force_back_color = nil
 
 function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
 	self.allow_backcolor = allow_backcolor
@@ -43,6 +44,8 @@ function _M:loadImage(image)
 end
 
 function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
+	if self.force_back_color then br, bg, bb, alpha = self.force_back_color.r, self.force_back_color.g, self.force_back_color.b, self.force_back_color.a end
+
 	alpha = alpha or 0
 	local dochar = char
 	local fgidx = 65536 * fr + 256 * fg + fb

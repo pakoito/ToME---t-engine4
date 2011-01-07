@@ -270,7 +270,7 @@ function _M:loaded()
 		end,
 	}
 	Map:setViewerActor(self.player)
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
+	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true)
 	if self.player then self.player.changed = true end
 	self.key = engine.KeyBind.new()
 
@@ -285,8 +285,8 @@ function _M:createSeparators()
 end
 
 function _M:setupDisplayMode(reboot)
-	self.gfxmode = self.gfxmode or (config.settings.tome and config.settings.tome.gfxmode) or 1
-	self:saveSettings("tome.gfxmode", ("tome.gfxmode = %d\n"):format(self.gfxmode))
+	local gfx = config.settings.tome.gfx
+	self:saveSettings("tome.gfx", ('tome.gfx = {tiles=%q, size=%q}\n'):format(gfx.tiles, gfx.size))
 
 	if reboot then
 		self.change_res_dialog = true
@@ -295,42 +295,33 @@ function _M:setupDisplayMode(reboot)
 	end
 
 	-- Show a count for stacked objects
-	Tiles.prefix = "/data/gfx/shockbolt/"
 	Map.object_stack_count = true
-	if self.gfxmode == 1 then
-		print("[DISPLAY MODE] 32x32 GFX")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
-		Map:resetTiles()
-		Map.tiles.use_images = true
-	elseif self.gfxmode == 2 then
-		print("[DISPLAY MODE] 16x16 GFX")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, true, true)
-		Map:resetTiles()
-		Map.tiles.use_images = true
-	elseif self.gfxmode == 3 then
-		print("[DISPLAY MODE] 32x32 ASCII")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, false, false)
-		Map:resetTiles()
-		Map.tiles.use_images = false
-	elseif self.gfxmode == 4 then
-		print("[DISPLAY MODE] 16x16 ASCII")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, false, false)
---		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 14, 20, "/data/font/FSEX300.ttf", 16, false, false)
-		Map:resetTiles()
-		Map.tiles.use_images = false
-	elseif self.gfxmode == 5 then
-		print("[DISPLAY MODE] 32x32 ASCII/background")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true, true)
-		Map:resetTiles()
-		Map.tiles.use_images = false
-	elseif self.gfxmode == 6 then
-		print("[DISPLAY MODE] 16x16 ASCII/background")
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, true, true)
-		Map:resetTiles()
-		Map.tiles.use_images = false
-	else
-		print("[DISPLAY MODE] ????", self.gfxmode)
+
+	-- Select tiles
+	Tiles.prefix = "/data/gfx/"
+	if gfx.tiles ~= "mushroom" then
+		Tiles.prefix = "/data/gfx/"..gfx.tiles.."/"
 	end
+	print("[DISPLAY MODE] Tileset: "..gfx.tiles)
+	print("[DISPLAY MODE] Size: "..gfx.size)
+
+	local do_bg = true
+
+	if gfx.size == "64x64" then
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 64, 64, nil, 44, do_bg)
+		Map:resetTiles()
+	elseif gfx.size == "32x32" then
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, do_bg)
+		Map:resetTiles()
+	elseif gfx.size == "16x16" then
+		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
+		Map:resetTiles()
+	end
+
+	Map.tiles.use_images = true
+	if gfx.tiles == "ascii" then Map.tiles.use_images = false Map.tiles.force_back_color = {r=0, g=0, b=0, a=255} end
+	if gfx.tiles == "ascii_full" then Map.tiles.use_images = false end
+
 	if self.level then
 		self.level.map:recreate()
 		self:initTargeting()
@@ -896,13 +887,6 @@ function _M:setupCommands()
 			if config.settings.cheat then
 				self:registerDialog(DebugConsole.new())
 			end
-		end,
-
-		-- Switch gfx modes
-		SWITCH_GFX = function()
-			self.gfxmode = self.gfxmode or 1
-			self.gfxmode = util.boundWrap(self.gfxmode + 1, 1, 6)
-			self:setupDisplayMode(true)
 		end,
 
 		-- Toggle monster list
