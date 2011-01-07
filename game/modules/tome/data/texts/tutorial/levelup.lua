@@ -19,16 +19,17 @@
 
 game.player:forceLevelup(2)
 
-return [[In ToME4 a character power depends on her/his level: players can get up to level 50.
-Each level brings some more amount of life and resources (like stamina, mana, ...) and different kind of points that can be used to improve your character in various ways:
-* #GOLD#Stat points#WHITE#: They allow you to raise the six main stats: Strength, Dexterity, Magic, Willpower, Cunning and Constitution. You get 3 points per levels.
-* #GOLD#Class talent points#WHITE#: They allow you to improve a class talent (denoted as such in the talent interface). Class talents define the core functions of your class. You get 1 point per level except every 5 levels where you gain 2.
-* #GOLD#Generic talent points#WHITE#: They allow you to improve a generic talent (denoted as such in the talent interface). Generic talents provide utility/more power but are not always specific to your class. You get 1 point per level except every 5 levels where you gain 0.
-* #GOLD#Category talent points#WHITE#: They allow you to improve your mastery of a talent category (thus improving the power of all talents inside) or to learn a new talent category.
+return [[In ToME4 a character's power depends on her/his level: players can get up to level 50.
 
-Levels are gained by accumulating experience, the most classic form of experience gain is to kill an hostile creature whose level is not too low compared to yours.
+Each level brings more life and resources (like stamina, mana, etc.) and different kinds of points that can improve your character:
+* #GOLD#Stat points#WHITE#: They allow you to raise the six main stats: Strength, Dexterity, Magic, Willpower, Cunning and Constitution. You get 3 points per level.
+* #GOLD#Class talent points#WHITE#: Class talents define the core functions of your class. You gain 1 point every level, plus 1 extra point on multiples of 5.
+* #GOLD#Generic talent points#WHITE#: Generic talents provide utility and/or more power, but are not always specific to your class. You gain 1 point on levels that aren't multiples of 5.
+* #GOLD#Category talent points#WHITE#: They allow you to improve your mastery of a talent category (increasing the power of all talents inside) or to learn a new talent category.
 
-To get to the character levelup screen either press 'G' or right-click on yourself.
+Levels are gained when experience reaches 100%. You gain experience from killing a hostile creature whose level is similar to yours.
+
+To open the character levelup screen either press 'shift+G' or right-click on yourself.
 
 Now open the levelup screen and assign your points.
 ]]

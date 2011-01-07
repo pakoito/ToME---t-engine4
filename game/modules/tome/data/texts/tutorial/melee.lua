@@ -17,19 +17,18 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Melee attacks are very easy to do, you simply move in the direction of your foe and if it is hostile you will attack it.
-If it is not hostile you will either talk to it or switch places with it.
+return [[Melee attacks work like movement. Just move in your foe's direction, or click it, to attack it.
+If it is not hostile you will talk to it, or switch places with it.
 
-Attacks thus work just like movement, using the keyboard or the mouse.
-Melee combat depends on various stats:
-* #GOLD#Attack#WHITE#: Your chance to hit
-* #GOLD#Defense#WHITE#: Your chance to avoid attacks
-* #GOLD#Armour#WHITE#: Flat reduction to damage done
-* #GOLD#Damage#WHITE#: How much damage you do per blow
-* #GOLD#Armour Penetration#WHITE#: How much of the target's armour you can ignore
+Melee combat mainly uses five stats:
+* #GOLD#Attack#WHITE#: Your chance to hit.
+* #GOLD#Damage#WHITE#: How much damage you do per blow.
+* #GOLD#Defense#WHITE#: Your chance to avoid attacks.
+* #GOLD#Armour#WHITE#: Flat reduction to damage done.
+* #GOLD#Armour Penetration#WHITE#: How much of the target's armour you can ignore.
 
-You can see those stats, along many others, in the character sheet.
-Either press 'C' or right-click on your character to see the character sheet.
+You can view those stats, and many others, in the character sheet.
+Press 'C' or right-click your character to open the character sheet.
 
 You have spotted some hostile jellies guarding an item.
 Attack them!

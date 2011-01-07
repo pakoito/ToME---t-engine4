@@ -104,7 +104,7 @@ newGem("Lapis Lazuli",	"object/lapis_lazuli.png",3,	12,	"blue",		20,	30, 3, 50,
 	{ combat_def=6 },
 	{ mana=30 }
 )
-newGem("Garnets",	"object/garnet.png",3,	12,	"red",		20,	30, 3, 50,
+newGem("Garnet",	"object/garnet.png",3,	12,	"red",		20,	30, 3, 50,
 	{ inc_damage = {all=6} },
 	{ leech=5 }
 )

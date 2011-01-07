@@ -17,14 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[You have found a nest of snakes!
-As you fought the previous ones you know they are not very strong individually but if you let them surround you you might be in trouble!
-A basic tactic in ToME4 is to try to never get surrounded, do not hesitate to backtrack a bit to get into a safer spot.
+return [[You have found a nest of snakes! If you let them surround you, you might be in trouble!
+A basic tactic is to never get surrounded, do not hesitate to backtrack a bit to a safer spot.
+
 #GOLD#Always control the fight.#WHITE#
 
 After the combat you will probably be low on health, you can rest for a while to regain lost health and resources.
-Either press 'r' or right-click on yourself to rest. You will rest until fully restored or until a creature disturbs you.
+Either press 'R' or right-click on yourself to rest. You will rest until fully restored or until a creature disturbs you.
 
-Now take a few steps backwards to only have to fight one snake at a time and you should survive.
+Now take a few steps back so you only have to fight one snake at a time, and you should survive.
 Remember to use your talents, infusions and runes to win the fight.
 ]]

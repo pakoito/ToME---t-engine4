@@ -45,6 +45,7 @@ local function makeGolem()
 			[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
 			[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
 			[Talents.T_WEAPON_COMBAT]=2,
+			[Talents.T_MANA_POOL]=1,
 			[Talents.T_STAMINA_POOL]=1,
 			[Talents.T_GOLEM_KNOCKBACK]=1,
 		},

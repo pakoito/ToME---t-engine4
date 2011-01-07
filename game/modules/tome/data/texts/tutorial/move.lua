@@ -17,21 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[Moving in ToME4 can be done using either the keyboard, the mouse or both.
+return [[Movement is simple. You can use the keyboard, the mouse, or both.
 
 #GOLD#Keyboard:#WHITE#
-- Press the arrow keys or the keypad to move in the given direction.
-- Press shift + the arrow keys or the keypad to run in the given direction.
-- Press 5 on the keypad to stay put for a turn (doing nothing)
+- Press the arrow keys or keypad to move in the given direction.
+- Press shift + the arrow keys or keypad to run in the given direction.
+- Press 5 on the keypad to stay put for a turn (doing nothing).
 
 #GOLD#Mouse:#WHITE#
-- Click on a spot on the map to move there
-- If there are no monsters and the way is known you will run there
-- If there are unknown or interesting grids along the way you may stop
-- If there is a hostile creature in sight you will only move one grid per click, to prevent stupid deaths
-- Clicking on yourself will make you stay put for a turn (doing nothing)
+- Click on a spot on the map to move there.
+- If there are no monsters and the way is known you will run there.
+- If there are unknown or interesting grids along the way you may stop.
+- If there is a hostile creature in sight you will only move one grid per click, to prevent stupid deaths.
+- Clicking on yourself will make you stay put for a turn (doing nothing).
 
-You can also scroll the map by shift+dragging with your mouse, this is very useful if you have a small resolution, seeing far away can prevent many deaths.
+You can scroll the map by pressing shift and click+dragging with your mouse, or pressing "L" and using shift+the movement keys.
 
-Now close this dialog and go to the west (left) until you arrive in a bigger area.
+Now close this dialog and go west (left) until you arrive in a bigger area.
 ]]

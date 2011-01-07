@@ -17,13 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return [[During your adventures in the world you will find quests.
-A quest can come either automatically from an action, from finding an item, from speaking to somebody, ...
+return [[During your adventures you will find quests.
+A quest can come from performing an action, finding an item, speaking to somebody, and more.
 
-You can view your current quests either by pressing 'j' or right-clicking on yourself.
+You can view your current quests by pressing 'j' or right-clicking yourself.
 
-Once a quest is finished or failed it will disappear from the quest log. A lot of quests in ToME are optional, if you do not think you can survive one, do not do it.
+Once a quest is finished or failed it will disappear from the quest log. Most quests in ToME are optional, if you don't think you can survive one, don't do it.
 
-When this tutorial started you where tasked to kill the Lone Wolf, you are nearing its position.
+When this tutorial started you were tasked to kill the Lone Wolf, you are nearing its position.
 #GOLD#Beware and fight with honour!#WHITE#
 ]]

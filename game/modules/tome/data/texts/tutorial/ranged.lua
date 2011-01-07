@@ -22,15 +22,16 @@ if not game.player.tutored_levels2 then
 	game.player.tutored_levels2 = true
 end
 
-return [[Ranged combat can take many forms, but most of the time it resolves either around firing arrows or slinging spells.
-Archery requires a bow and some arrows. You must wield the bow (it requires both hands) and put the arrows in your quiver.
-Then you can use the shoot talent to fire an arrow, the target interface will pop-up, just like for any other talents.
-* Open your inventory
-* Click on your sword, take it off
-* Click on your shield, take it off
-* Click on your bow and arrows, wield them
-* Close inventory and shoot!
+return [[Ranged combat typically revolves around firing arrows, slinging stones, or casting spells. 
+You have been given a bow, which you wield with both hands.
+You have infinite normal arrows, but you can add special arrows to your quiver for extra damage and/or effects.
+To fire an arrow, use the shoot talent. The target interface will pop-up, just like for other talents.
 
-You have been given the Shoot talent, that allows to fire a bow (or a sling).
-In front of you lies a bow and some arrows, pick them up, take off your weapon and shield, wield the bow and the arrows and go fight the trolls to the west.
+To equip your bow and arrows:
+* Open your inventory.
+* Select your sword, take it off.
+* Select your shield, take it off.
+* Select your bow and arrows, wield them.
+
+There are trolls to the west. Go use your bow and arrows to kill them!
 ]]

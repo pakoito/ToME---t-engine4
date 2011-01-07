@@ -238,7 +238,7 @@ newTalent{
 	type = {"golem/arcane", 1},
 	require = spells_req1,
 	points = 5,
-	cooldown = 10,
+	cooldown = 3,
 	range = 10,
 	mana = 10,
 	requires_target = true,
@@ -276,7 +276,7 @@ newTalent{
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 		elseif typ == 2 then
-			self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+			self:project(tg, x, y, DamageType.LIGHTNING, self:spellCrit(t.getDamage(self, t)))
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
 		else
