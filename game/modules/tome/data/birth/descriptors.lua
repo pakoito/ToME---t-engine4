@@ -76,6 +76,9 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="lite", subtype="lite", name="brass lantern"},
 		},
+		make_tile = function(e)
+			e.image = "player/"..e.descriptor.subrace:lower().."_"..e.descriptor.subclass:lower()..".png"
+		end,
 	},
 }
 

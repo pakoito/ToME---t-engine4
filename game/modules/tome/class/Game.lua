@@ -26,6 +26,7 @@ local KeyBind = require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local DamageType = require "engine.DamageType"
 local Zone = require "engine.Zone"
+local Tiles = require "engine.Tiles"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
 local Birther = require "engine.Birther"
@@ -161,6 +162,9 @@ function _M:newGame()
 
 	self.creating_player = true
 	local birth; birth = Birther.new("Character Creation: "..self.player.name.." ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
+		self.player:check("make_tile")
+		self.player.make_tile = nil
+
 		-- Save for quick birth
 		local save = Savefile.new(self.save_name)
 		save:saveQuickBirth(self.player.descriptor)
@@ -291,6 +295,7 @@ function _M:setupDisplayMode(reboot)
 	end
 
 	-- Show a count for stacked objects
+	Tiles.prefix = "/data/gfx/shockbolt/"
 	Map.object_stack_count = true
 	if self.gfxmode == 1 then
 		print("[DISPLAY MODE] 32x32 GFX")

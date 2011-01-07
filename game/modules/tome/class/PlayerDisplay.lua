@@ -44,9 +44,12 @@ function _M:resize(x, y, w, h)
 	self.bars_x = self.font_w * 9
 	self.bars_w = self.w - self.bars_x - 5
 	self.surface = core.display.newSurface(w, h)
+	self.surface_line = core.display.newSurface(w, self.font_h)
+	self.surface_portrait = core.display.newSurface(36, 36)
 	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 
 	self.portrait = core.display.loadImage("/data/gfx/ui/party-portrait.png")
+	self.portrait_unsel = core.display.loadImage("/data/gfx/ui/party-portrait-unselect.png")
 	local tex_bg = core.display.loadImage("/data/gfx/ui/player-display.png")
 	local tex_up = core.display.loadImage("/data/gfx/ui/player-display-top.png")
 	local bw, bh = tex_bg:getSize()
@@ -57,9 +60,13 @@ function _M:resize(x, y, w, h)
 		i = i + bh
 	end
 	self.bg_surface:merge(tex_up, 0, 0)
+	self.bg = {self.bg_surface:glTexture()}
+	self.bg.w, self.bg.h = self.bg_surface:getSize()
+
+	self.items = {}
 end
 
-function _M:mouseTooltip(text, _, _, _, w, h, x, y, click)
+function _M:mouseTooltip(text, w, h, x, y, click)
 	self.mouse:registerZone(x, y, w, h, function(button, mx, my, xrel, yrel, bx, by, event)
 		game.tooltip_x, game.tooltip_y = 1, 1; game.tooltip:displayAtMap(nil, nil, game.w, game.h, text)
 		if click and event == "button" and button == "left" then
@@ -68,132 +75,87 @@ function _M:mouseTooltip(text, _, _, _, w, h, x, y, click)
 	end)
 end
 
+function _M:makeTexture(text, x, y, r, g, b, max_w)
+	local s = self.surface_line
+	s:erase(0, 0, 0, 0)
+	s:drawColorStringBlended(self.font, text, 0, 0, r, g, b, true, max_w)
+
+	local item = { s:glTexture() }
+	item.x = x
+	item.y = y
+	item.w = self.w
+	item.h = self.font_h
+	self.items[#self.items+1] = item
+
+	return item.w, item.h, item.x, item.y
+end
+
+function _M:makeTextureBar(text, nfmt, val, max, x, y, r, g, b, bar_col, bar_bgcol)
+	local s = self.surface_line
+	s:erase(0, 0, 0, 0)
+	s:erase(bar_bgcol.r, bar_bgcol.g, bar_bgcol.b, 255, self.bars_x, h, self.bars_w, self.font_h)
+	s:erase(bar_col.r, bar_col.g, bar_col.b, 255, self.bars_x, h, self.bars_w * val / max, self.font_h)
+
+	s:drawColorStringBlended(self.font, text, 0, 0, r, g, b, true)
+	s:drawColorStringBlended(self.font, (nfmt or "%d/%d"):format(val, max), self.bars_x, 0, r, g, b)
+
+	local item = { s:glTexture() }
+	item.x = x
+	item.y = y
+	item.w = self.w
+	item.h = self.font_h
+	self.items[#self.items+1] = item
+
+	return item.w, item.h, item.x, item.y
+end
+
+function _M:makePortrait(a, current, x, y)
+	local s = self.surface_portrait
+	local def = game.party.members[a]
+	s:erase(0, 0, 0, 255)
+	s:merge(current and self.portrait or self.portrait_unsel, 0, 0)
+	s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, 2, 2, 32, 32)
+	local hl = 32 * math.max(0, a.life) / a.max_life
+	s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, 2, 34-hl, 32, hl)
+
+	self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Level: "..a.level.."\n"..def.title, 36, 36, x, y, function()
+		if def.control == "full" then
+			game.party:setPlayer(a)
+		end
+	end)
+
+	local item = { s:glTexture() }
+	item.x = x
+	item.y = y
+	item.w = 36
+	item.h = 36
+	self.items[#self.items+1] = item
+
+	local item = function(dx, dy)
+		a:toScreen(nil, dx+x+2, dy+y+2, 32, 32)
+	end
+	self.items[#self.items+1] = item
+end
+
 -- Displays the stats
 function _M:display()
 	local player = game.player
-	if not player or not player.changed then return self.surface end
+	if not player or not player.changed or not game.level then return end
 
 	self.mouse:reset()
-	local s = self.surface
-
-	if self.bg_surface then
-		s:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
-		s:merge(self.bg_surface, 0, 0)
-	else
-		s:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
-	end
+	self.items = {}
 
 	local cur_exp, max_exp = player.exp, player:getExpChart(player.level+1)
-
 	local h = 6
 	local x = 2
-	self:mouseTooltip(self.TOOLTIP_LEVEL, s:drawColorStringBlended(self.font, "Level: #00ff00#"..player.level, x, h, 255, 255, 255)) h = h + self.font_h
-	self:mouseTooltip(self.TOOLTIP_LEVEL, s:drawColorStringBlended(self.font, ("Exp:  #00ff00#%2d%%"):format(100 * cur_exp / max_exp), x, h, 255, 255, 255)) h = h + self.font_h
-	self:mouseTooltip(self.TOOLTIP_GOLD, s:drawColorStringBlended(self.font, ("Gold: #00ff00#%0.2f"):format(player.money or 0), x, h, 255, 255, 255)) h = h + self.font_h
 
-	h = h + self.font_h
-
-	if game.level and game.level.turn_counter then
-		s:drawColorStringBlended(self.font, ("Turns remaining: %d"):format(game.level.turn_counter / 10), x, h, 255, 0, 0) h = h + self.font_h
-		h = h + self.font_h
-	end
-
-	if player:getAir() < player.max_air then
-		self:mouseTooltip(self.TOOLTIP_AIR, s:drawColorStringBlended(self.font, ("Air level: %d/%d"):format(player:getAir(), player.max_air), x, h, 255, 0, 0)) h = h + self.font_h
-		h = h + self.font_h
-	end
-
-	if player:attr("encumbered") then
-		self:mouseTooltip(self.TOOLTIP_ENCUMBERED, s:drawColorStringBlended(self.font, "Encumbered!", x, h, 255, 0, 0)) h = h + self.font_h
-		h = h + self.font_h
-	end
-
-	self:mouseTooltip(self.TOOLTIP_STRDEXCON, s:drawColorStringBlended(self.font, ("Str/Dex/Con: #00ff00#%3d/%3d/%3d"):format(player:getStr(), player:getDex(), player:getCon()), x, h, 255, 255, 255)) h = h + self.font_h
-	self:mouseTooltip(self.TOOLTIP_MAGWILCUN, s:drawColorStringBlended(self.font, ("Mag/Wil/Cun: #00ff00#%3d/%3d/%3d"):format(player:getMag(), player:getWil(), player:getCun()), x, h, 255, 255, 255)) h = h + self.font_h
-	h = h + self.font_h
-
-	s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, self.bars_x, h, self.bars_w, self.font_h)
-	s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, self.bars_x, h, self.bars_w * player.life / player.max_life, self.font_h)
-	self:mouseTooltip(self.TOOLTIP_LIFE, s:drawColorStringBlended(self.font, ("#c00000#Life:    #ffffff#%d/%d"):format(player.life, player.max_life), x, h, 255, 255, 255)) h = h + self.font_h
-
---	if player.alchemy_golem and not player.alchemy_golem.dead then
---		s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, self.bars_x, h, self.bars_w, self.font_h)
---		s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, self.bars_x, h, self.bars_w * player.alchemy_golem.life / player.alchemy_golem.max_life, self.font_h)
---		self:mouseTooltip(self.TOOLTIP_LIFE, s:drawColorStringBlended(self.font, ("#c00000#Golem:   #ffffff#%d/%d"):format(player.alchemy_golem.life, player.alchemy_golem.max_life), x, h, 255, 255, 255)) h = h + self.font_h
---	end
-
-	if player:knowTalent(player.T_STAMINA_POOL) then
-		s:erase(0xff / 6, 0xcc / 6, 0x80 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(0xff / 3, 0xcc / 3, 0x80 / 3, 255, self.bars_x, h, self.bars_w * player:getStamina() / player.max_stamina, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_STAMINA, s:drawColorStringBlended(self.font, ("#ffcc80#Stamina: #ffffff#%d/%d"):format(player:getStamina(), player.max_stamina), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_MANA_POOL) then
-		s:erase(0x7f / 5, 0xff / 5, 0xd4 / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(0x7f / 2, 0xff / 2, 0xd4 / 2, 255, self.bars_x, h, self.bars_w * player:getMana() / player.max_mana, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_MANA, s:drawColorStringBlended(self.font, ("#7fffd4#Mana:    #ffffff#%d/%d"):format(player:getMana(), player.max_mana), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
-		s:erase(0x00 / 5, 0xff / 5, 0x74 / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(0x00 / 2, 0xff / 2, 0x74 / 2, 255, self.bars_x, h, self.bars_w * math.min(1, math.log(1 + player:getEquilibrium() / 100)), self.font_h)
-		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, s:drawColorStringBlended(self.font, ("#00ff74#Equi:    #ffffff#%d"):format(player:getEquilibrium()), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_POSITIVE_POOL) then
-		s:erase(colors.GOLD.r / 5, colors.GOLD.g / 5, colors.GOLD.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(colors.GOLD.r / 2, colors.GOLD.g / 2, colors.GOLD.b / 2, 255, self.bars_x, h, self.bars_w * player:getPositive() / player.max_positive, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_POSITIVE, s:drawColorStringBlended(self.font, ("#7fffd4#Positive:#ffffff#%d/%d"):format(player:getPositive(), player.max_positive), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_NEGATIVE_POOL) then
-		s:erase(colors.GREY.r / 5, colors.GREY.g / 5, colors.GREY.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(colors.GREY.r / 2, colors.GREY.g / 2, colors.GREY.b / 2, 255, self.bars_x, h, self.bars_w * player:getNegative() / player.max_negative, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_NEGATIVE, s:drawColorStringBlended(self.font, ("#7fffd4#Negative:#ffffff#%d/%d"):format(player:getNegative(), player.max_negative), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_VIM_POOL) then
-		s:erase(0x90 / 6, 0x40 / 6, 0x10 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(0x90 / 3, 0x40 / 3, 0x10 / 3, 255, self.bars_x, h, self.bars_w * player:getVim() / player.max_vim, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_VIM, s:drawColorStringBlended(self.font, ("#904010#Vim:     #ffffff#%d/%d"):format(player:getVim(), player.max_vim), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_HATE_POOL) then
-		s:erase(colors.GREY.r / 5, colors.GREY.g / 5, colors.GREY.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(colors.GREY.r / 2, colors.GREY.g / 2, colors.GREY.b / 2, 255, self.bars_x, h, self.bars_w * player:getHate() / 10, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_HATE, s:drawColorStringBlended(self.font, ("#F53CBE#Hate:    #ffffff#%.1f/%d"):format(player:getHate(), 10), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_PARADOX_POOL) then
-		s:erase(176 / 5, 196 / 5, 222 / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(176 / 2, 196 / 2, 222 / 2, 255, self.bars_x, h, self.bars_w * math.min(1, math.log(1 + player:getParadox() / 100)), self.font_h)
-		self:mouseTooltip(self.TOOLTIP_PARADOX, s:drawColorStringBlended(self.font, ("#LIGHT_STEEL_BLUE#Paradox:    #ffffff#%d"):format(player:getParadox()), 0, h, 255, 255, 255)) h = h + self.font_h
-	end
-	if player:knowTalent(player.T_PSI_POOL) then
-		s:erase(colors.BLUE.r / 5, colors.BLUE.g / 5, colors.BLUE.b / 5, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(colors.BLUE.r / 2, colors.BLUE.g / 2, colors.BLUE.b / 2, 255, self.bars_x, h, self.bars_w * player:getPsi() / player.max_psi, self.font_h)
-		self:mouseTooltip(self.TOOLTIP_PSI, s:drawColorStringBlended(self.font, ("#7fffd4#Psi:     #ffffff#%d/%d"):format(player:getPsi(), player.max_psi), x, h, 255, 255, 255)) h = h + self.font_h
-	end
-
-	local quiver = player:getInven("QUIVER")
-	local ammo = quiver and quiver[1]
-	if ammo then
-		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, s:drawColorStringBlended(self.font, ("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(ammo:getNumber()), 0, h, 255, 255, 255)) h = h + self.font_h
-	end
-
-	-- Other party members
+	-- Party members
 	if #game.party.m_list >= 2 and game.level then
 		local w = 0
 		for i = 1, #game.party.m_list do
 			local a = game.party.m_list[i]
 			if a ~= player then
-				local def = game.party.members[a]
-				s:merge(self.portrait, w, h)
-				s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, w+2, h+2, 32, 32)
-				local hl = 32 * math.max(0, a.life) / a.max_life
-				s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, w+2, h+34-hl, 32, hl)
-
-				local es = game.level.map.tilesSurface:get(a.display, a.color_r, a.color_g, a.color_b, a.color_br, a.color_bg, a.color_bb, a.image, a._noalpha and 255, a.ascii_outline)
-				s:merge(es, w+2, h+2)
-
-				self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Level: "..a.level.."\n"..def.title, nil, nil, nil, w+36, h+36, w, h, function()
-					if def.control == "full" then
-						game.party:setPlayer(a)
-					end
-				end)
+				self:makePortrait(a, false, w, h)
 				w = w + 36
 				if w + 36 > self.w then w = 0 h = h + 36 end
 			end
@@ -201,11 +163,105 @@ function _M:display()
 		h = h + 36
 	end
 
+	-- Player
+	self:makePortrait(player, true, 0, h)
+	self.font:setStyle("bold")
+	self:makeTexture(("%s#{normal}#"):format(player.name), 38, h + (36 - self.font_h) / 2, colors.GOLD.r, colors.GOLD.g, colors.GOLD.b, self.w - 40) h = h + self.font_h
+	self.font:setStyle("normal")
+	h = h + 36
+
+	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture("Level: #00ff00#"..player.level, x, h, 255, 255, 255)) h = h + self.font_h
+	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture(("Exp:  #00ff00#%2d%%"):format(100 * cur_exp / max_exp), x, h, 255, 255, 255)) h = h + self.font_h
+	self:mouseTooltip(self.TOOLTIP_GOLD, self:makeTexture(("Gold: #00ff00#%0.2f"):format(player.money or 0), x, h, 255, 255, 255)) h = h + self.font_h
+
+	h = h + self.font_h
+
+	if game.level and game.level.turn_counter then
+		self:makeTexture(("Turns remaining: %d"):format(game.level.turn_counter / 10), x, h, 255, 0, 0) h = h + self.font_h
+		h = h + self.font_h
+	end
+
+	if player:getAir() < player.max_air then
+		self:mouseTooltip(self.TOOLTIP_AIR, self:makeTexture(("Air level: %d/%d"):format(player:getAir(), player.max_air), x, h, 255, 0, 0)) h = h + self.font_h
+		h = h + self.font_h
+	end
+
+	if player:attr("encumbered") then
+		self:mouseTooltip(self.TOOLTIP_ENCUMBERED, self:makeTexture("Encumbered!", x, h, 255, 0, 0)) h = h + self.font_h
+		h = h + self.font_h
+	end
+
+	self:mouseTooltip(self.TOOLTIP_STRDEXCON, self:makeTexture(("Str/Dex/Con: #00ff00#%3d/%3d/%3d"):format(player:getStr(), player:getDex(), player:getCon()), x, h, 255, 255, 255)) h = h + self.font_h
+	self:mouseTooltip(self.TOOLTIP_MAGWILCUN, self:makeTexture(("Mag/Wil/Cun: #00ff00#%3d/%3d/%3d"):format(player:getMag(), player:getWil(), player:getCun()), x, h, 255, 255, 255)) h = h + self.font_h
+	h = h + self.font_h
+
+	self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Life:", nil, player.life, player.max_life, x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
+
+	if player:knowTalent(player.T_STAMINA_POOL) then
+		self:mouseTooltip(self.TOOLTIP_STAMINA, self:makeTextureBar("#ffcc80#Stamina:", nil, player:getStamina(), player.max_stamina, x, h, 255, 255, 255, {r=0xff / 3, g=0xcc / 3, b=0x80 / 3}, {r=0xff / 6, g=0xcc / 6, b=0x80 / 6})) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_MANA_POOL) then
+		self:mouseTooltip(self.TOOLTIP_MANA, self:makeTextureBar("#7fffd4#Mana:", nil, player:getMana(), player.max_mana, x, h, 255, 255, 255,
+			{r=0x7f / 2, g=0xff / 2, b=0xd4 / 2},
+			{r=0x7f / 5, g=0xff / 5, b=0xd4 / 5}
+		)) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
+		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d"):format(player:getEquilibrium()), math.min(1, math.log(1 + player:getEquilibrium() / 100)), 100, x, h, 255, 255, 255,
+			{r=0x00 / 2, g=0xff / 2, b=0x74 / 2},
+			{r=0x00 / 5, g=0xff / 5, b=0x74 / 5}
+		)) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_POSITIVE_POOL) then
+		self:mouseTooltip(self.TOOLTIP_POSITIVE, self:makeTextureBar("#7fffd4#Positive:", nil, player:getPositive(), player.max_positive, x, h, 255, 255, 255,
+			{r=colors.GOLD.r / 2, g=colors.GOLD.g / 2, b=colors.GOLD.b / 2},
+			{r=colors.GOLD.r / 5, g=colors.GOLD.g / 5, b=colors.GOLD.b / 5}
+		)) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_NEGATIVE_POOL) then
+		self:mouseTooltip(self.TOOLTIP_NEGATIVE, self:makeTextureBar("#7fffd4#Negative:", nil, player:getNegative(), player.max_negative, x, h, 255, 255, 255,
+			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
+			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
+		)) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_VIM_POOL) then
+		self:mouseTooltip(self.TOOLTIP_VIM, self:makeTextureBar("#904010#Vim:", nil, player:getVim(), player.max_vim, x, h, 255, 255, 255,
+			{r=0x90 / 3, g=0x40 / 3, b=0x10 / 3},
+			{r=0x90 / 6, g=0x40 / 6, b=0x10 / 6}
+		)) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_HATE_POOL) then
+		self:mouseTooltip(self.TOOLTIP_HATE, self:makeTextureBar("#F53CBE#Hate:", "%0.1f/%d", player:getHate(), 10, x, h, 255, 255, 255,
+			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
+			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
+		)) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_PARADOX_POOL) then
+		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("%d"):format(player:getParadox()), math.min(1, math.log(1 + player:getParadox() / 100)), 100, x, h, 255, 255, 255,
+			{r=176 / 2, 196 / 2, 222 / 2},
+			{r=176 / 5, 196 / 5, 222 / 5}
+		)) h = h + self.font_h
+	end
+	if player:knowTalent(player.T_PSI_POOL) then
+		self:mouseTooltip(self.TOOLTIP_PSI, self:makeTextureBar("#7fffd4#Psi:", nil, player:getPsi(), player.max_psi, x, h, 255, 255, 255,
+			{r=colors.BLUE.r / 2, g=colors.BLUE.g / 2, b=colors.BLUE.b / 2},
+			{r=colors.BLUE.r / 5, g=colors.BLUE.g / 5, b=colors.BLUE.b / 5}
+		)) h = h + self.font_h
+	end
+
+	local quiver = player:getInven("QUIVER")
+	local ammo = quiver and quiver[1]
+	if ammo then
+		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, self:makeTexture(("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(ammo:getNumber()), 0, h, 255, 255, 255)) h = h + self.font_h
+	end
+
 	if savefile_pipe.saving then
 		h = h + self.font_h
-		s:erase(0x68 / 6, 0x72 / 6, 0x00 / 6, 255, self.bars_x, h, self.bars_w, self.font_h)
-		s:erase(0x95 / 3, 0xa2 / 3, 0x80 / 3, 255, self.bars_x, h, self.bars_w * savefile_pipe.current_nb / savefile_pipe.total_nb, self.font_h)
-		s:drawColorStringBlended(self.font, ("#YELLOW#Saving...: %d%%"):format(100 * savefile_pipe.current_nb / savefile_pipe.total_nb), x, h, 255, 255, 255)
+		self:makeTextureBar("#YELLOW#Saving...:", "%d%%", 100 * savefile_pipe.current_nb / savefile_pipe.total_nb, 100, x, h, 255, 255, 255,
+			{r=0x95 / 3, g=0xa2 / 3,b= 0x80 / 3},
+			{r=0x68 / 6, g=0x72 / 6, b=0x00 / 6}
+		)
+
 		h = h + self.font_h
 	end
 
@@ -216,7 +272,7 @@ function _M:display()
 			local displayName = t.name
 			if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
 			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
-			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(displayName), x, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s"):format(displayName), x, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 	for eff_id, p in pairs(player.tmp) do
@@ -224,17 +280,23 @@ function _M:display()
 		local dur = p.dur + 1
 		local desc = e.long_desc(player, p)
 		if e.status == "detrimental" then
-			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_RED#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_RED#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
 		else
-			self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
-
-	s:updateTexture(self.texture)
-	return s
 end
 
 function _M:toScreen()
 	self:display()
-	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
+
+	self.bg[1]:toScreenFull(self.display_x, self.display_y, self.bg.w, self.bg.h, self.bg[2], self.bg[3])
+	for i = 1, #self.items do
+		local item = self.items[i]
+		if type(item) == "table" then
+			item[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, item.w, item.h, item[2], item[3])
+		else
+			item(self.display_x, self.display_y)
+		end
+	end
 end

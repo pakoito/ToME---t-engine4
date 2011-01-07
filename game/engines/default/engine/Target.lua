@@ -30,7 +30,7 @@ function _M:init(map, source_actor)
 	self.active = false
 	self.target_type = {}
 
-	self.cursor = core.display.loadImage(engine.Tiles.prefix.."target_cursor.png"):glTexture()
+	self.cursor = engine.Tiles:loadImage("target_cursor.png"):glTexture()
 
 	self.sr = core.display.newSurface(map.tile_w, map.tile_h)
 	self.sr:erase(255, 0, 0, 90)

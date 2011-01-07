@@ -24,6 +24,7 @@ require "engine.class"
 module(..., package.seeall, class.make)
 
 prefix = "/data/gfx/"
+base_prefix = "/data/gfx/"
 use_images = true
 
 function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
@@ -33,6 +34,12 @@ function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
 	self.font = core.display.newFont(fontname or "/data/font/VeraMoBd.ttf", fontsize or 14)
 	self.repo = {}
 	self.texture_store = {}
+end
+
+function _M:loadImage(image)
+	local s = core.display.loadImage(self.prefix..image)
+	if not s then s = core.display.loadImage(self.base_prefix..image) end
+	return s
 end
 
 function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
@@ -56,6 +63,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
 		if (self.use_images or not dochar) and image then
 			print("Loading tile", image)
 			s = core.display.loadImage(self.prefix..image)
+			if not s then s = core.display.loadImage(self.base_prefix..image) end
 			if s then is_image = true end
 		end
 		if not s then
