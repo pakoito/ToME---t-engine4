@@ -20,6 +20,7 @@
 setStatusAll{no_teleport=true}
 
 defineTile('.', "FLOOR")
+defineTile('#', "WALL")
 defineTile('X', "HARDWALL")
 defineTile('!', "DOOR_VAULT")
 defineTile('D', "DOOR")
@@ -40,5 +41,8 @@ return {
 [[.XXX^XXX.]],
 [[..XX!XX..]],
 [[...X^X...]],
+[[.........]],
+[[.#..#..#.]],
+[[.........]],
 [[.........]],
 }

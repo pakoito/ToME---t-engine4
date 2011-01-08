@@ -101,9 +101,10 @@ function _M:loadDefinition(dir, team)
 --	print("Loading module definition from", team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
 	if mod_def then
 		-- Call the file body inside its own private environment
-		local mod = {}
+		local mod = {rng=rng}
 		setfenv(mod_def, mod)
 		mod_def()
+		mod.rng = nil
 
 		if not mod.long_name or not mod.name or not mod.short_name or not mod.version or not mod.starter then
 			print("Bad module definition", mod.long_name, mod.name, mod.short_name, mod.version, mod.starter)

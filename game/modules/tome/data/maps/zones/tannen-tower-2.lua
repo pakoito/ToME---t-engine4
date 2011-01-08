@@ -42,8 +42,8 @@ XXX..XX.....X.....XX..XXX
 XXX.XX......+......XX.XXX
 XX..X.......X.......X..XX
 XX.XX.......X.......XX.XX
-XX.X.......XXX.......X.XX
-X..X......+X.XX......X..X
+XX.X......XXXX.......X.XX
+X..X......+..XX......X..X
 X.XX.....XX...XX.....XX.X
 X.XXXXXXXX..<..XXX+XXXX.X
 X.XX.....XX...XX.....XX.X

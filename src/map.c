@@ -688,11 +688,11 @@ static int map_set_scroll(lua_State *L)
 }
 
 
-inline void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure, int nb_keyframes) ALWAYS_INLINE;
-void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, bool obscure, int nb_keyframes)
+inline void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes) ALWAYS_INLINE;
+void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes)
 {
 	float r, g, b;
-	if (!obscure)
+	if (seen)
 	{
 		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
 		{
@@ -702,6 +702,9 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		{
 			r = map->shown_r; g = map->shown_g; b = map->shown_b;
 		}
+		r *= seen;
+		g *= seen;
+		b *= seen;
 	}
 	else
 	{
@@ -751,7 +754,7 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 						animdx = map->tile_w * (adx * step / (float)m->move_max - adx);
 						animdy = map->tile_h * (ady * step / (float)m->move_max - ady);
 						tglColor4f(r, g, b, a * 2 / (3 + z));
-						DO_QUAD(dx + m->dx + animdx, dy + m->dy + animdy, 0, m->scale);
+						DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, 0, m->scale);
 					}
 				}
 			}
@@ -764,7 +767,7 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 
 	// Final display
 	tglColor4f(r, g, b, a);
-	DO_QUAD(dx + m->dx + animdx, dy + m->dy + animdy, 0, m->scale);
+	DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, 0, m->scale);
 
 	// Unbind any shaders
 	if (m->shader) glUseProgramObjectARB(0);
@@ -785,9 +788,9 @@ static int map_to_screen(lua_State *L)
 
 	for (z = 0; z < map->zdepth; z++)
 	{
-		for (i = map->mx; i < map->mx + map->mwidth; i++)
+		for (j = map->my; j < map->my + map->mheight; j++)
 		{
-			for (j = map->my; j < map->my + map->mheight; j++)
+			for (i = map->mx; i < map->mx + map->mwidth; i++)
 			{
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 
@@ -800,11 +803,11 @@ static int map_to_screen(lua_State *L)
 				{
 					if (map->grids_seens[i][j])
 					{
-						display_map_quad(map, dx, dy, z, mo, i, j, map->shown_a * map->grids_seens[i][j], FALSE, nb_keyframes);
+						display_map_quad(map, dx, dy, z, mo, i, j, map->shown_a, map->grids_seens[i][j], nb_keyframes);
 					}
 					else
 					{
-						display_map_quad(map, dx, dy, z, mo, i, j, map->obscure_a, TRUE, nb_keyframes);
+						display_map_quad(map, dx, dy, z, mo, i, j, map->obscure_a, 0, nb_keyframes);
 					}
 				}
 			}

@@ -58,7 +58,7 @@ searchOrderSort = function(a, b)
 end
 
 color_shown   = { 1, 1, 1, 1 }
-color_obscure = { 1, 1, 1, 0.6 }
+color_obscure = { 0.6, 0.6, 0.6, 1 }
 
 -- The minimap data
 MM_FLOOR = 1

@@ -29,6 +29,13 @@ end
 
 function _M:getTile(name)
 	if not name then return end
+
+	if type(name) == "table" then
+		local n = name[1]
+		if rng.percent(name[2]) then n = n..rng.range(name[3], name[4]) end
+		name = n
+	end
+
 	if self.repo[name] then return self.repo[name]
 	else
 		self.repo[name] = game.zone:makeEntityByName(game.level, "terrain", name)
@@ -43,11 +50,9 @@ function _M:replace(i, j, g)
 end
 
 function _M:postProcessLevelTiles(level)
-	if not Map.tiles.nicer_tiles then return end
-
 	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
 		local g = level.map(i, j, Map.TERRAIN)
-		if g.nice_tiler then
+		if g and Map.tiles.nicer_tiles and g.nice_tiler then
 			self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler)
 		end
 	end end
@@ -58,25 +63,37 @@ function _M:postProcessLevelTiles(level)
 	end
 end
 
--- Make walls have a pseudo 3D effect
+--- Make walls have a pseudo 3D effect
 function _M:niceTileWall3d(level, i, j, g, nt)
-	local gn = level.map(i, j-1, Map.TERRAIN) or {define_as = g.define_as}
-	local gs = level.map(i, j+1, Map.TERRAIN) or {define_as = g.define_as}
+	local s = level.map:checkEntity(i, j, Map.TERRAIN, "block_move") and true or false
+	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move") and true or false
+	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move") and true or false
+	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "block_move") and true or false
+	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "block_move") and true or false
 
-	if gs.define_as ~= g.define_as and gn.define_as ~= g.define_as then self:replace(i, j, self:getTile(nt.north_south))
-	elseif gs.define_as ~= g.define_as then self:replace(i, j, self:getTile(nt.south))
-	elseif gn.define_as ~= g.define_as then self:replace(i, j, self:getTile(nt.north))
+	local gnc = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
+	local gsc = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
+
+	if gs ~= s and gn ~= s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.small_pillar))
+	elseif gs ~= s and gn ~= s and gw ~= s and ge == s then self:replace(i, j, self:getTile(nt.pillar_4))
+	elseif gs ~= s and gn ~= s and gw == s and ge ~= s then self:replace(i, j, self:getTile(nt.pillar_6))
+	elseif gs == s and gn ~= s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.pillar_8))
+	elseif gs ~= s and gn == s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.pillar_2))
+	elseif gsc ~= s and gnc ~= s then self:replace(i, j, self:getTile(nt.north_south))
+	elseif gsc ~= s then self:replace(i, j, self:getTile(nt.south))
+	elseif gnc ~= s then self:replace(i, j, self:getTile(nt.north))
+	elseif nt.inner then self:replace(i, j, self:getTile(nt.inner))
 	end
 end
 
--- Make doors have a pseudo 3D effect
+--- Make doors have a pseudo 3D effect
 function _M:niceTileDoor3d(level, i, j, g, nt)
-	local gn = level.map(i, j-1, Map.TERRAIN)
-	local gs = level.map(i, j+1, Map.TERRAIN)
-	local gw = level.map(i-1, j, Map.TERRAIN)
-	local ge = level.map(i+1, j, Map.TERRAIN)
+	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move") and true or false
+	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move") and true or false
+	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "block_move") and true or false
+	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "block_move") and true or false
 
-	if gs and gs:check("block_move", i, j+1) and gn and gn:check("block_move", i, j-1) then self:replace(i, j, self:getTile(nt.north_south))
-	elseif gw and gw:check("block_move", i, j-1) and ge and ge:check("block_move", i+1, j) then self:replace(i, j, self:getTile(nt.west_east))
+	if gs and gn then self:replace(i, j, self:getTile(nt.north_south))
+	elseif gw and ge then self:replace(i, j, self:getTile(nt.west_east))
 	end
 end

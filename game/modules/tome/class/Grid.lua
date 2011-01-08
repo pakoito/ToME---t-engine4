@@ -92,8 +92,8 @@ function _M:makeTrees(base, max)
 		return engine.Entity.new{
 			z = z,
 			display_scale = rng.float(0.5 + inb / 6, 1.3),
-			display_x = rng.range(-engine.Map.tile_w / 3 * nb / 3, engine.Map.tile_w / 3 * nb / 3),
-			display_y = rng.range(-engine.Map.tile_h / 3 * nb / 3, engine.Map.tile_h / 3 * nb / 3),
+			display_x = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
+			display_y = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
 			display_on_seen = true,
 			display_on_remember = true,
 			image = (base or "terrain/tree_alpha")..rng.range(1,max or 5)..".png",
@@ -121,8 +121,8 @@ function _M:makeShells(base, max)
 		return engine.Entity.new{
 			z = z,
 			display_scale = rng.float(0.1 + inb / 6, 0.2),
-			display_x = rng.range(-engine.Map.tile_w / 3 * nb / 3, engine.Map.tile_w / 3 * nb / 3),
-			display_y = rng.range(-engine.Map.tile_h / 3 * nb / 3, engine.Map.tile_h / 3 * nb / 3),
+			display_x = rng.range(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
+			display_y = rng.range(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
 			display_on_seen = true,
 			display_on_remember = true,
 			image = (base or "terrain/tree_alpha")..rng.range(1,max or 5)..".png",
