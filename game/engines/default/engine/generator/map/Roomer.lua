@@ -33,6 +33,7 @@ function _M:init(zone, map, level, data)
 	self.grid_list = zone.grid_list
 
 	RoomsLoader.init(self, data)
+	self.possible_doors = {}
 end
 
 --- Random tunnel dir
@@ -72,6 +73,44 @@ function _M:markTunnel(x, y, xdir, ydir, id)
 		if self.map:isBound(x+xd, y+yd) and not self.map.room_map[x+xd][y+yd].tunnel then self.map.room_map[x+xd][y+yd].tunnel = id print("mark tunnel", x+xd, y+yd , id) end
 	end
 	if not self.map.room_map[x][y].tunnel then self.map.room_map[x][y].tunnel = id print("mark tunnel", x, y , id) end
+	self.map.room_map[x][y].real_tunnel = true
+end
+
+--- Can we create a door (will it lead anywhere)
+function _M:canDoor(x, y)
+	local g1 = self.map:checkEntity(x-1, y+1, Map.TERRAIN, "block_move")
+	local g2 = self.map:checkEntity(x  , y+1, Map.TERRAIN, "block_move")
+	local g3 = self.map:checkEntity(x+1, y+1, Map.TERRAIN, "block_move")
+	local g4 = self.map:checkEntity(x-1, y  , Map.TERRAIN, "block_move")
+	local g6 = self.map:checkEntity(x+1, y  , Map.TERRAIN, "block_move")
+	local g7 = self.map:checkEntity(x-1, y-1, Map.TERRAIN, "block_move")
+	local g8 = self.map:checkEntity(x  , y-1, Map.TERRAIN, "block_move")
+	local g9 = self.map:checkEntity(x+1, y-1, Map.TERRAIN, "block_move")
+
+	local w1 = not g1
+	local w2 = not g2
+	local w3 = not g3
+	local w4 = not g4
+	local w6 = not g6
+	local w7 = not g7
+	local w8 = not g8
+	local w9 = not g9
+
+	print("============", x, y, "::", w1,w2,w3,w4,w6,w7,w8,w9)
+	print(("%s%s%s"):format(w7 and "X" or " ", w8 and "X" or " ", w9 and "X" or " "))
+	print(("%s%s%s"):format(w4 and "X" or " "," ", w6 and "X" or " "))
+	print(("%s%s%s"):format(w1 and "X" or " ", w2 and "X" or " ", w3 and "X" or " "))
+
+	if
+		(not w1 and not w4 and not w6 and not w3 and w2 and w8) or
+		(not w7 and not w8 and not w1 and not w2 and w4 and w6) or
+		(not w8 and not w9 and not w2 and not w3 and w6 and w4) or
+		(not w4 and not w7 and not w6 and not w9 and w8 and w2)
+		then
+
+		return true
+	end
+	return false
 end
 
 --- Tunnel from x1,y1 to x2,y2
@@ -151,11 +190,11 @@ function _M:tunnel(x1, y1, x2, y2, id)
 		tries = tries - 1
 	end
 
+	local doors = {}
 	for _, t in ipairs(tun) do
 		local nx, ny = t[1], t[2]
-		if t[3] and self.data.door and rng.percent(self.data.door_chance) then
-			self.map(nx, ny, Map.TERRAIN, self:resolve("door"))
-		elseif not t[4] then
+		if t[3] and self.data.door then self.possible_doors[#self.possible_doors+1] = t end
+		if not t[4] then
 			self.map(nx, ny, Map.TERRAIN, self:resolve('.'))
 		end
 	end
@@ -288,6 +327,14 @@ function _M:generate(lev, old_lev)
 				ex, ey = t[2][1], t[2][2]
 			end
 			self:tunnel(sx, sy, ex, ey, t.id)
+		end
+	end
+
+	-- Put doors where possible
+	for _, t in ipairs(self.possible_doors) do
+		local nx, ny = t[1], t[2]
+		if rng.percent(self.data.door_chance) and self:canDoor(nx, ny) then
+			self.map(nx, ny, Map.TERRAIN, self:resolve("door"))
 		end
 	end
 
