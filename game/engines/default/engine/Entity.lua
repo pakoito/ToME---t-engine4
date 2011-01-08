@@ -384,6 +384,108 @@ function _M:check(prop, ...)
 	end
 end
 
+--- Computes a "temporary" value into a property
+-- Example: You cant to give an actor a boost to life_regen, but you do not want it to be permanent<br/>
+-- You cannot simply increase life_regen, so you use this method which will increase it AND
+-- store the increase. it will return an "increase id" that can be passed to removeTemporaryValue()
+-- to remove the effect.
+-- @param prop the property to affect
+-- @param v the value to add (only numbers supported for now)
+-- @param noupdate if true the actual property is not changed and needs to be changed by the caller
+-- @return an id that can be passed to removeTemporaryValue() to delete this value
+function _M:addTemporaryValue(prop, v, noupdate)
+	if not self.compute_vals then self.compute_vals = {n=0} end
+
+	local t = self.compute_vals
+	local id = t.n + 1
+	while t[id] ~= nil do id = id + 1 end
+	t[id] = v
+	t.n = id
+
+	-- Update the base prop
+	if not noupdate then
+		if type(v) == "number" then
+			-- Simple addition
+			self[prop] = (self[prop] or 0) + v
+			self:onTemporaryValueChange(prop, nil, v)
+			print("addTmpVal", prop, v, " :=: ", #t, id)
+		elseif type(v) == "table" then
+			for k, e in pairs(v) do
+				self[prop][k] = (self[prop][k] or 0) + e
+				self:onTemporaryValueChange(prop, k, e)
+				print("addTmpValTable", prop, k, e, " :=: ", #t, id)
+				if #t == 0 then print("*******************************WARNING") end
+			end
+--		elseif type(v) == "boolean" then
+--			-- False has precedence over true
+--			if v == false then
+--				self[prop] = false
+--			elseif self[prop] ~= false then
+--				self[prop] = true
+--			end
+		else
+			error("unsupported temporary value type: "..type(v))
+		end
+	end
+
+	return id
+end
+
+--- Removes a temporary value, see addTemporaryValue()
+-- @param prop the property to affect
+-- @param id the id of the increase to delete
+-- @param noupdate if true the actual property is not changed and needs to be changed by the caller
+function _M:removeTemporaryValue(prop, id, noupdate)
+	local oldval = self.compute_vals[id]
+	print("removeTempVal", prop, oldval, " :=: ", id)
+	self.compute_vals[id] = nil
+	if not noupdate then
+		if type(oldval) == "number" then
+			self[prop] = self[prop] - oldval
+			self:onTemporaryValueChange(prop, nil, -oldval)
+			print("delTmpVal", prop, oldval)
+		elseif type(oldval) == "table" then
+			for k, e in pairs(oldval) do
+				self[prop][k] = self[prop][k] - e
+				self:onTemporaryValueChange(prop, k, -e)
+				print("delTmpValTable", prop, k, e)
+			end
+--		elseif type(oldval) == "boolean" then
+		else
+			error("unsupported temporary value type: "..type(oldval))
+		end
+	end
+end
+
+--- Called when a temporary value changes (added or deleted)
+-- This does nothing by default, you can overload it to react to changes
+-- @param prop the property changing
+-- @param sub the sub element of the property if it is a table, or nil
+-- @param v the value of the change
+function _M:onTemporaryValueChange(prop, sub, v)
+end
+
+--- Increases/decreases an attribute
+-- The attributes are just actor properties, but this ensures they are numbers and not booleans
+-- thus making them compatible with temporary values system
+-- @param prop the property to use
+-- @param v the value to add, if nil this the function return
+-- @param fix forces the value to v, do not add
+-- @return nil if v was specified. If not then it returns the current value if it exists and is not 0 otherwise returns nil
+function _M:attr(prop, v, fix)
+	if v then
+		if fix then self[prop] = v
+		else self[prop] = (self[prop] or 0) + v
+		end
+	else
+		if self[prop] and self[prop] ~= 0 then
+			return self[prop]
+		else
+			return nil
+		end
+	end
+end
+
 --- Loads a list of entities from a definition file
 -- @param file the file to load from
 -- @param no_default if true then no default values will be assigned
