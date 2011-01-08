@@ -100,7 +100,7 @@ newEntity{
 
 newEntity{
 	define_as = "ROCK_VAULT",
-	name = "huge lose rock", image = "terrain/rock_grass.png",
+	name = "huge lose rock", image = "terrain/grass.png", add_displays = {class.new{image="terrain/rock_grass.png"}},
 	display = '+', color=colors.GREY, back_color={r=44,g=95,b=43},
 	notice = true,
 	always_remember = true,
