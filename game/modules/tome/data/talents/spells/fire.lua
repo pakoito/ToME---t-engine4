@@ -163,7 +163,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local duration = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of 5 each turn for %d turns.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.FIRE, damage), duration)
