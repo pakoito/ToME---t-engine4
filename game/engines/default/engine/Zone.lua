@@ -252,8 +252,13 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	-- No filter
 	else
 		local list = level:getEntitiesList(type)
-		e = self:pickEntity(list)
-		if not e then return nil end
+		local tries = filter and filter.nb_tries or 50 -- A little crude here too but we only check 50 times, this is simply to prevent duplicate uniques
+		while tries > 0 do
+			e = self:pickEntity(list)
+			if e and self:checkFilter(e, nil) then break end
+			tries = tries - 1
+		end
+		if tries == 0 then return nil end
 	end
 
 	if filter then e.force_ego = filter.force_ego end
