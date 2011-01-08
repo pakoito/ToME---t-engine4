@@ -406,6 +406,17 @@ newDamageType{
 		return init_dam
 	end,
 }
+newDamageType{
+	name = "fireburn", type = "GOLEM_FIREBURN",
+	projector = function(src, x, y, type, dam)
+		local realdam = 0
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target ~= src and target ~= src.summoner then
+			realdam = DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam)
+		end
+		return realdam
+	end,
+}
 
 -- Darkness + Fire
 newDamageType{

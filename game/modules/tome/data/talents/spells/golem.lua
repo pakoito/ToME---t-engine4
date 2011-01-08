@@ -90,21 +90,27 @@ newTalent{
 	stamina = 5,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = {type="ball", radius=self:getTalentLevelRaw(t) / 2, range=self:getTalentRange(t)}
 		local olds = game.target.source_actor
 		game.target.source_actor = self
-		local x, y, target = self:getTarget(tg)
+		local x, y = self:getTarget(tg)
 		game.target.source_actor = olds
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if not x or not y then return nil end
 
-		if self.ai_target then self.ai_target.target = target end
-		target:setTarget(self)
-		game.logSeen(self, "%s provokes %s to attack it.", self.name:capitalize(), target.name)
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+
+			if self:reactionToward(target) < 0 then
+				if self.ai_target then self.ai_target.target = target end
+				target:setTarget(self)
+				game.logSeen(self, "%s provokes %s to attack it.", self.name:capitalize(), target.name)
+			end
+		end)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Orders your golem to taunt a target, forcing it to attack the golem.]]):format()
+		return ([[Orders your golem to taunt targets in a radius of %d, forcing it to attack the golem.]]):format(self:getTalentLevelRaw(t) / 2 + 1)
 	end,
 }
 
@@ -242,7 +248,7 @@ newTalent{
 	range = 7,
 	mana = 10,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 200) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 220) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -297,39 +303,9 @@ newTalent{
 }
 
 newTalent{
-	name = "Molten Skin", short_name = "GOLEM_MOLTEN_SKIN",
+	name = "", short_name = "GOLEM_CRUSH2",
 	type = {"golem/arcane", 2},
 	require = spells_req2,
-	points = 5,
-	cooldown = function(self, t)
-		return 20 - self:getTalentLevelRaw(t) * 2
-	end,
-	range = 10,
-	mana = 5,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local olds = game.target.source_actor
-		game.target.source_actor = self
-		local x, y, target = self:getTarget(tg)
-		game.target.source_actor = olds
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
-
-		if self.ai_target then self.ai_target.target = target end
-		target:setTarget(self)
-		game.logSeen(self, "%s provokes %s to attack it.", self.name:capitalize(), target.name)
-		return true
-	end,
-	info = function(self, t)
-		return ([[Orders your golem to taunt a target, forcing it to attack the golem.]]):format()
-	end,
-}
-
-newTalent{
-	name = "", short_name = "GOLEM_CRUSH2",
-	type = {"golem/arcane", 3},
-	require = spells_req3,
 	points = 5,
 	cooldown = 10,
 	range = 10,
@@ -387,61 +363,73 @@ newTalent{
 }
 
 newTalent{
-	name = "Pound", short_name = "GOLEM_POUND2",
-	type = {"golem/arcane", 4},
-	require = spells_req4,
+	name = "Arcane Pull", short_name = "GOLEM_ARCANE_PULL",
+	type = {"golem/arcane", 3},
+	require = spells_req3,
 	points = 5,
 	cooldown = 15,
-	range = 10,
-	mana = 5,
+	range = function(self, t) return 3 + self:getTalentLevel(t) / 2 end,
+	mana = 20,
 	requires_target = true,
-	getGolemDamage = function(self, t)
-		return self:combatTalentWeaponDamage(t, 0.4, 1.1)
-	end,
-	getDazeDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
-
-		local tg = {type="ball", radius=2, friendlyfire=false, range=self:getTalentRange(t)}
-		local olds = game.target.source_actor
-		game.target.source_actor = self
-		local x, y, target = self:getTarget(tg)
-		game.target.source_actor = olds
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
-
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		local tx, ty = self.x, self.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
-			tx, ty = lx, ly
-			lx, ly = l()
-		end
-
-		if self.ai_target then self.ai_target.target = target end
-
-		-- Attack & daze
-		self:project({type="ball", radius=2, friendlyfire=false}, tx, ty, function(xx, yy)
-			if xx == self.x and yy == self.y then return end
-			local target = game.level.map(xx, yy, Map.ACTOR)
-			if target and self:attackTarget(target, nil, t.getGolemDamage(self, t), true) then
-				if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {})
-				else
-					game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
-				end
+		local tg = {type="ball", range=0, friendlyfire=false, radius=self:getTalentRange(t), talent=t}
+		local done = {}
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+			if tx and ty and target:canBe("teleport") and self:reactionToward(target) < 0 and not done[target] then
+				target:move(tx, ty, true)
+				game.logSeen(target, "%s is pulled by %s!", target.name:capitalize(), self.name)
+				DamageType:get(DamageType.ARCANE).projector(self, tx, ty, DamageType.ARCANE, self:combatTalentSpellDamage(t, 12, 120))
+				done[target] = true
 			end
 		end)
-
 		return true
 	end,
 	info = function(self, t)
-		local duration = t.getDazeDuration(self, t)
-		local damage = t.getGolemDamage(self, t)
-		return ([[Your golem rushes to the target, pounding the area of radius 2, dazing all foes for %d turns and doing %d%% damage.
-		Daze chance increases with talent level.]]):
-		format(duration, 100 * damage)
+		return ([[Your golem pulls all foes around toward itself, also dealing %0.2f arcane damage.]]):
+		format(self:combatTalentSpellDamage(t, 12, 120))
+	end,
+}
+
+newTalent{
+	name = "Molten Skin", short_name = "GOLEM_MOLTEN_SKIN",
+	type = {"golem/arcane", 4},
+	require = spells_req4,
+	points = 5,
+	mana = 60,
+	cooldown = 15,
+	tactical = {
+		ATTACKAREA = 20,
+	},
+	action = function(self, t)
+		local duration = 5 + self:getTalentLevel(t)
+		local radius = 3
+		local dam = self:combatTalentSpellDamage(t, 12, 120)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			DamageType.GOLEM_FIREBURN, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=30},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			false
+		)
+		self:setEffect(self.EFF_MOLTEN_SKIN, duration, {power=30 + self:combatTalentSpellDamage(t, 12, 60)})
+		game:playSoundNear(self, "talents/fire")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Turns the golem skin into molten rock. The heat generated sets ablaze all creatures inside a radius of 3 for doing %0.2f fire damage in 3 turns for %d turns.
+		Burning is cumulative, the longer they stay in they higher the fire damage they take.
+		In addition the golem gains %d%% fire resistance.
+		Molten Skin damage will not affect the golem's master.
+		The damage and resistance will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 120)), 5 + self:getTalentLevel(t), 30 + self:combatTalentSpellDamage(t, 12, 60))
 	end,
 }

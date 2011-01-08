@@ -450,6 +450,25 @@ newEffect{
 }
 
 newEffect{
+	name = "MOLTEN_SKIN",
+	desc = "Molten Skin",
+	long_desc = function(self, eff) return ("Reduces fire damage received by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target#'s skin turns into molten lava.", "+Molten Skin" end,
+	on_lose = function(self, err) return "#Target#'s skin returns to normal.", "-Molten Skin" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("wildfire", 1))
+		eff.tmpid = self:addTemporaryValue("resists", {[DamageType.FIRE]=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "SUMMON_CONTROL",
 	desc = "Summon Control",
 	long_desc = function(self, eff) return ("Reduces damage received by %d%% and increases summon time by %d."):format(eff.res, eff.incdur) end,
