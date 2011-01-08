@@ -28,7 +28,7 @@ Entity.ascii_outline = {x=2, y=2, r=0, g=0, b=0, a=0.8}
 local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
 local Faction = require "engine.Faction"
-
+local Map = require "engine.Map"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -184,5 +184,6 @@ end
 if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
 if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 3 end
 if not config.settings.tome.gfx then config.settings.tome.gfx = {size="32x32", tiles="mushroom"} end
+Map.smooth_scroll = config.settings.tome.smooth_move
 
 return {require "mod.class.Game", require "mod.class.World"}

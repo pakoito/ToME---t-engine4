@@ -332,7 +332,7 @@ function _M:spawnWorldAmbush(enc)
 		floor = "GRASS",
 		wall = "TREE",
 		down = "DOWN",
-		up = "UP_WILDERNESS",
+		up = "GRASS_UP_WILDERNESS",
 	}
 	local g = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
 	if not g.can_encounter then return false end

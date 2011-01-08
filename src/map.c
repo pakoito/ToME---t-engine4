@@ -190,20 +190,30 @@ static int map_object_set_move_anim(lua_State *L)
 static int map_object_get_move_anim(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
-	int i = luaL_checknumber(L, 2);
-	int j = luaL_checknumber(L, 3);
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 2);
+	int i = luaL_checknumber(L, 3);
+	int j = luaL_checknumber(L, 4);
+
+	float mapdx = 0, mapdy = 0;
+	if (map->move_max)
+	{
+		float adx = (float)map->mx - map->oldmx;
+		float ady = (float)map->my - map->oldmy;
+		mapdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx);
+		mapdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady);
+	}
 
 	if (!obj->move_max || obj->display_last == DL_NONE)
 	{
-		lua_pushnumber(L, 0);
-		lua_pushnumber(L, 0);
+		lua_pushnumber(L, mapdx);
+		lua_pushnumber(L, mapdy);
 	}
 	else
 	{
 		float adx = (float)i - obj->oldx;
 		float ady = (float)j - obj->oldy;
-		lua_pushnumber(L, (adx * obj->move_step / (float)obj->move_max - adx));
-		lua_pushnumber(L, (ady * obj->move_step / (float)obj->move_max - ady));
+		lua_pushnumber(L, mapdx + (adx * obj->move_step / (float)obj->move_max - adx));
+		lua_pushnumber(L, mapdy + (ady * obj->move_step / (float)obj->move_max - ady));
 	}
 	return 2;
 }
@@ -681,6 +691,15 @@ static int map_set_scroll(lua_State *L)
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
+	int smooth = luaL_checknumber(L, 4);
+
+	if (smooth)
+	{
+		map->oldmx = map->mx;
+		map->oldmy = map->my;
+		map->move_step = 0;
+		map->move_max = smooth;
+	}
 
 	map->mx = x;
 	map->my = y;
@@ -775,6 +794,8 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 	m->display_last = DL_TRUE;
 }
 
+#define MIN(a,b) ((a < b) ? a : b)
+
 static int map_to_screen(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
@@ -786,11 +807,39 @@ static int map_to_screen(lua_State *L)
 	/* Enables Depth Testing */
 	glEnable(GL_DEPTH_TEST);
 
+	// Smooth scrolling
+	float animdx = 0, animdy = 0;
+	if (map->move_max)
+	{
+		map->move_step += nb_keyframes;
+		if (map->move_step >= map->move_max)
+		{
+			map->move_max = 0; // Reset once in place
+			map->oldmx = map->mx;
+			map->oldmy = map->my;
+		}
+
+		if (map->move_max)
+		{
+			float adx = (float)map->mx - map->oldmx;
+			float ady = (float)map->my - map->oldmy;
+			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx);
+			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady);
+		}
+	}
+	x -= animdx;
+	y -= animdy;
+
+	// Always display some more of the map to make sure we always see it all
+	int smx = MIN(map->mx, map->oldmx) - 1;
+	int smy = MIN(map->my, map->oldmy) - 1;
+	int emx = smx + abs(map->mx - map->oldmx) + 2;
+	int emy = smy + abs(map->my - map->oldmy) + 2;
 	for (z = 0; z < map->zdepth; z++)
 	{
-		for (j = map->my; j < map->my + map->mheight; j++)
+		for (j = smy; j < emy + map->mheight; j++)
 		{
-			for (i = map->mx; i < map->mx + map->mwidth; i++)
+			for (i = smx; i < emx + map->mwidth; i++)
 			{
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 

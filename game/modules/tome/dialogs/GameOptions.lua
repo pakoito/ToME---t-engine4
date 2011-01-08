@@ -96,6 +96,7 @@ function _M:generateList()
 		game:registerDialog(GetQuantity.new("Enter movement speed(lower is faster)", "From 0 to 60", config.settings.tome.smooth_move, 60, function(qty)
 			game:saveSettings("tome.smooth_move", ("tome.smooth_move = %d\n"):format(qty))
 			config.settings.tome.smooth_move = qty
+			engine.Map.smooth_scroll = qty
 			self.c_list:drawItem(item)
 		end))
 	end,}

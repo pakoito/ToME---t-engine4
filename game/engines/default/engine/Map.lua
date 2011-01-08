@@ -59,6 +59,7 @@ end
 
 color_shown   = { 1, 1, 1, 1 }
 color_obscure = { 0.6, 0.6, 0.6, 1 }
+smooth_scroll = 0
 
 -- The minimap data
 MM_FLOOR = 1
@@ -525,7 +526,7 @@ function _M:display(x, y, nb_keyframe)
 					if e.faction then
 						if not self.actor_player then friend = Faction:factionReaction(self.view_faction, e.faction)
 						else friend = self.actor_player:reactionToward(e) end
-						if e._mo then adx, ady = e._mo:getMoveAnim(i, j) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
+						if e._mo then adx, ady = e._mo:getMoveAnim(self._map, i, j) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
 						if friend > 0 then
 							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 						elseif friend < 0 then
@@ -709,7 +710,7 @@ function _M:checkMapViewBounded()
 	if self.w < self.viewport.mwidth then self.mx = math.floor((self.w - self.viewport.mwidth) / 2) end
 	if self.h < self.viewport.mheight then self.my = math.floor((self.h - self.viewport.mheight) / 2) end
 
-	self._map:setScroll(self.mx, self.my)
+	self._map:setScroll(self.mx, self.my, self.smooth_scroll)
 end
 
 --- Gets the tile under the mouse
@@ -965,7 +966,7 @@ function _M:displayParticles(nb_keyframes)
 	local del = {}
 	local e = next(self.particles)
 	while e do
-		if e._mo then adx, ady = e._mo:getMoveAnim(e.x, e.y) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
+		if e._mo then adx, ady = e._mo:getMoveAnim(self._map, e.x, e.y) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
 
 		if nb_keyframes == 0 and e.x and e.y then
 			-- Just display it, not updating, no emitting

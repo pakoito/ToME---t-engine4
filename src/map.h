@@ -68,6 +68,8 @@ typedef struct {
 
 	// Scrolling
 	int mx, my, mwidth, mheight;
+	float oldmx, oldmy;
+	int move_step, move_max;
 } map_type;
 
 #endif
