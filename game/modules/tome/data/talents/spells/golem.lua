@@ -303,62 +303,24 @@ newTalent{
 }
 
 newTalent{
-	name = "", short_name = "GOLEM_CRUSH2",
+	name = "Reflective Skin", short_name = "GOLEM_REFLECTIVE_SKIN",
 	type = {"golem/arcane", 2},
 	require = spells_req2,
 	points = 5,
-	cooldown = 10,
+	cooldown = 30,
 	range = 10,
-	mana = 5,
+	mana = 20,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
-	getPinDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
-
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local olds = game.target.source_actor
-		game.target.source_actor = self
-		local x, y, target = self:getTarget(tg)
-		game.target.source_actor = olds
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
-
-		if self.ai_target then self.ai_target.target = target end
-
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		local tx, ty = self.x, self.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
-			tx, ty = lx, ly
-			lx, ly = l()
-		end
-
-		self:move(tx, ty, true)
-
-		-- Attack ?
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return true end
-		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
-
-		-- Try to knockback !
-		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {})
-			else
-				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
-			end
-		end
-
+		self:setEffect(self.EFF_REFLECTIVE_SKIN, 15, {power=20 + self:combatTalentSpellDamage(t, 12, 40)})
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local duration = t.getPinDuration(self, t)
-		return ([[Your golem rushes to the target, crushing it to the ground for %d turns and doing %d%% damage.
-		Pinning chance will increase with talent level.]]):
-		format(duration, 100 * damage)
+		return ([[Your golem's skin shimmers with eldritch energies.
+		Any damage it takes is partly reflected (%d%%) to the attacker.
+		The golem still takes full damage.
+		Damage returned will increase with the Magic stat.]]):
+		format(20 + self:combatTalentSpellDamage(t, 12, 40))
 	end,
 }
 

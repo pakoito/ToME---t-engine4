@@ -139,6 +139,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if src.attr and src:attr("martyrdom") and not no_martyr then
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100, tmp, true)
 		end
+		if target.attr and target:attr("reflect_damage") and not no_martyr and target.x and target.y then
+			DamageType.defaultProjector(target, target.x, target.y, type, dam * target.reflect_damage / 100, tmp, true)
+		end
 
 		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
 

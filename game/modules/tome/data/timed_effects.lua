@@ -467,6 +467,22 @@ newEffect{
 		self:removeTemporaryValue("resists", eff.tmpid)
 	end,
 }
+newEffect{
+	name = "REFLECTIVE_SKIN",
+	desc = "Reflective Skin",
+	long_desc = function(self, eff) return ("Magicaly returns %d%% of any damage done to the attacker."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target#'s skin starts to shimmer.", "+Reflective Skin" end,
+	on_lose = function(self, err) return "#Target#'s skin returns to normal.", "-Reflective Skin" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("reflect_damage", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("reflect_damage", eff.tmpid)
+	end,
+}
 
 newEffect{
 	name = "SUMMON_CONTROL",

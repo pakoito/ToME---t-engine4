@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Golem Power2",
+	name = "Mana Tap",
 	type = {"spell/advanced-golemancy", 1},
 	mode = "passive",
 	require = spells_req_high1,
@@ -40,7 +40,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Golem Resilience2",
+	name = "Life Tap", short_name = "GOLEMANCY_LIFE_TAP",
 	type = {"spell/advanced-golemancy", 2},
 	mode = "passive",
 	require = spells_req_high2,
@@ -66,14 +66,13 @@ newTalent{
 
 
 newTalent{
-	name = "Invoke Golem2",
+	name = "Gem Golem",
 	type = {"spell/advanced-golemancy",3},
 	require = spells_req3,
 	points = 5,
 	mana = 10,
 	cooldown = 20,
 	no_npc_use = true,
-	getPower = function(self, t) return self:combatTalentSpellDamage(t, 15, 50) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -103,36 +102,35 @@ newTalent{
 }
 
 newTalent{
-	name = "Mount Golem2",
+	name = "Runic Golem",
 	type = {"spell/advanced-golemancy",4},
 	require = spells_req_high4,
+	mode = "passive",
 	points = 5,
-	mana = 40,
-	cooldown = 60,
 	no_npc_use = true,
-	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t) * 4) end,
-	action = function(self, t)
-		local mover, golem = getGolem(self)
-		if not golem then
-			game.logPlayer(self, "Your golem is currently inactive.")
-			return
+	on_learn = function(self, t)
+		self.alchemy_golem.life_regen = self.alchemy_golem.life_regen + 1
+		self.alchemy_golem.mana_regen = self.alchemy_golem.mana_regen + 1
+		self.alchemy_golem.stamina_regen = self.alchemy_golem.stamina_regen + 1
+		local lev = self:getTalentLevelRaw(t)
+		if lev == 1 or lev == 3 or lev == 5 then
+			self.alchemy_golem.max_inscriptions = self.alchemy_golem.max_inscriptions + 1
+			self.alchemy_golem.inscriptions_slots_added = self.alchemy_golem.inscriptions_slots_added + 1
 		end
-		if math.floor(core.fov.distance(self.x, self.y, golem.x, golem.y)) > 1 then
-			game.logPlayer(self, "You are too far away from your golem.")
-			return
+	end,
+	on_unlearn = function(self, t)
+		self.alchemy_golem.life_regen = self.alchemy_golem.life_regen - 1
+		self.alchemy_golem.mana_regen = self.alchemy_golem.mana_regen - 1
+		self.alchemy_golem.stamina_regen = self.alchemy_golem.stamina_regen - 1
+		local lev = self:getTalentLevelRaw(t)
+		if lev == 0 or lev == 2 or lev == 4 then
+			self.alchemy_golem.max_inscriptions = self.alchemy_golem.max_inscriptions - 1
+			self.alchemy_golem.inscriptions_slots_added = self.alchemy_golem.inscriptions_slots_added - 1
 		end
-
-		-- Create the mount item
-		local mount = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_GOLEM_MOUNT")
-		if not mount then return end
-		mount.mount.actor = golem
-		self:setEffect(self.EFF_GOLEM_MOUNT, t.getDuration(self, t), {mount=mount})
-
-		return true
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Mount inside your golem, directly controlling it for %d turns also golem absorb 75%% of the damage taken.]]):
-		format(duration)
+		return ([[Increases your golem's life, mana and stamina regeneration rates by %0.2f.
+		At level 1, 3 and 5 the golem also gains a new rune slot.]]):
+		format(self:getTalentLevelRaw(t))
 	end,
 }

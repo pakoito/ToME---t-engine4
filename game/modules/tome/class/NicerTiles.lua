@@ -97,3 +97,8 @@ function _M:niceTileDoor3d(level, i, j, g, nt)
 	elseif gw and ge then self:replace(i, j, self:getTile(nt.west_east))
 	end
 end
+
+--- Randomize tiles
+function _M:niceTileReplace(level, i, j, g, nt)
+	self:replace(i, j, self:getTile(nt.base))
+end
