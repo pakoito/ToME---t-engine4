@@ -91,9 +91,9 @@ end
 function _M:init(t)
 	self.talents = t.talents or {}
 	self.talents_types = t.talents_types or {}
-	self.talents_types_mastery = {}
-	self.talents_cd = {}
-	self.sustain_talents = {}
+	self.talents_types_mastery = self.talents_types_mastery  or {}
+	self.talents_cd = self.talents_cd or {}
+	self.sustain_talents = self.sustain_talents or {}
 end
 
 --- Make the actor use the talent

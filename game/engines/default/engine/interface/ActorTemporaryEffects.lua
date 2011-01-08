@@ -57,7 +57,7 @@ end
 
 
 function _M:init(t)
-	self.tmp = {}
+	self.tmp = self.tmp or {}
 end
 
 --- Counts down timed effects, call from your actors "act" method

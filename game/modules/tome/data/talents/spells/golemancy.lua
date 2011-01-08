@@ -77,7 +77,7 @@ local function makeGolem()
 			if game.player ~= self then return end
 			if not self:hasLOS(self.summoner.x, self.summoner.y) then
 				if not self:hasEffect(self.EFF_GOLEM_OFS) then
-					self:setEffect(self.EFF_GOLEM_OFS, 5, {})
+					self:setEffect(self.EFF_GOLEM_OFS, 8, {})
 				end
 			else
 				if self:hasEffect(self.EFF_GOLEM_OFS) then

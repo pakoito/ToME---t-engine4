@@ -49,7 +49,7 @@ end
 
 function _M:init(t)
 	self.ai_state = self.ai_state or {}
-	self.ai_target = {}
+	self.ai_target = self.ai_target or {}
 	self:autoLoadedAI()
 end
 
