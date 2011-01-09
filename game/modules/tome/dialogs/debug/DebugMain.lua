@@ -59,6 +59,7 @@ function _M:use(item)
 		game.player.esp.range = 50
 		game.player.no_breath = 1
 		game.player.invulnerable = 1
+		game.player.money = 500
 		game.player.esp.all = 1
 		game.player.esp.range = 50
 		game.player.inc_damage.all = 100000

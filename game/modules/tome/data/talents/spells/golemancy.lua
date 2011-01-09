@@ -36,7 +36,7 @@ local function makeGolem()
 
 		combat = { dam=10, atk=10, apr=0, dammod={str=1} },
 
-		body = { INVEN = 50, MAINHAND=1, OFFHAND=1, BODY=1,},
+		body = { INVEN = 1000, MAINHAND=1, BODY=1, GEM=2 },
 		infravision = 20,
 		rank = 3,
 		size_category = 4,
@@ -169,7 +169,7 @@ newTalent{
 
 		-- talk to the golem
 		if game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem.life >= self.alchemy_golem.max_life then
-			local chat = Chat.new("alchemist-golem", self.alchemy_golem, self)
+			local chat = Chat.new("alchemist-golem", self.alchemy_golem, self, {golem=self.alchemy_golem, player=self})
 			chat:invoke()
 
 		-- heal the golem
@@ -263,7 +263,6 @@ newTalent{
 	end,
 }
 
-
 newTalent{
 	name = "Invoke Golem",
 	type = {"spell/golemancy",3},
@@ -295,7 +294,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		power=t.getPower(self, t)
+		local power=t.getPower(self, t)
 		return ([[You invoke your golem to your side, granting it a temporary melee power increase of %d for 5 turns.]]):
 		format(power)
 	end,

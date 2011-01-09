@@ -16,63 +16,16 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+local Chat = require "engine.Chat"
 
 newTalent{
 	name = "Mana Tap",
 	type = {"spell/advanced-golemancy", 1},
-	mode = "passive",
 	require = spells_req_high1,
 	points = 5,
-	on_learn = function(self, t)
-		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true)
-	end,
-	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
-	end,
-	info = function(self, t)
-		local attack = self:getTalentFromId(Talents.T_WEAPON_COMBAT).getAttack(self, t)
-		local damage = self:getTalentFromId(Talents.T_WEAPONS_MASTERY).getDamage(self, t)
-		return ([[Improves your golem proficiency with weapons. Increasing its attack by %d and damage by %d%%.]]):
-		format(attack, 100 * damage)
-	end,
-}
-
-newTalent{
-	name = "Life Tap", short_name = "GOLEMANCY_LIFE_TAP",
-	type = {"spell/advanced-golemancy", 2},
-	mode = "passive",
-	require = spells_req_high2,
-	points = 5,
-	on_learn = function(self, t)
-		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
-		self.alchemy_golem:learnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
-		self.alchemy_golem:learnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
-	end,
-	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
-	end,
-	info = function(self, t)
-		local health = self:getTalentFromId(Talents.T_HEALTH).getHealth(self, t)
-		local heavyarmor = self:getTalentFromId(Talents.T_HEAVY_ARMOUR_TRAINING).getArmor(self, t)
-		local massivearmor = self:getTalentFromId(Talents.T_MASSIVE_ARMOUR_TRAINING).getArmor(self, t)
-		return ([[Improves your golem armour training and health. Increases armor by %d when wearing heavy armor or by %d when wearing massive armor also increases health by %d.]]):
-		format(heavyarmor, massivearmor, health)
-	end,
-}
-
-
-newTalent{
-	name = "Gem Golem",
-	type = {"spell/advanced-golemancy",3},
-	require = spells_req3,
-	points = 5,
-	mana = 10,
-	cooldown = 20,
-	no_npc_use = true,
+	mana = 0,
+	cooldown = 14,
+	getPower = function(self, t) return 40 + self:combatTalentSpellDamage(t, 15, 150) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -80,24 +33,58 @@ newTalent{
 			return
 		end
 
-		-- Find space
-		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-		if not x then
-			game.logPlayer(self, "Not enough space to invoke!")
-			return
-		end
-
-		golem:setEffect(golem.EFF_MIGHTY_BLOWS, 5, {power=t.getPower(self, t)})
-		if golem == mover then
-			golem:move(x, y, true)
-		end
+		local power = math.min(t.getPower(self, t), golem:getMana())
+		golem:incMana(-power)
+		self:incMana(power)
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		power=t.getPower(self, t)
-		return ([[You invoke your golem to your side, granting it a temporary melee power increase of %d for 5 turns.]]):
+		local power=t.getPower(self, t)
+		return ([[You tap into your golem's mana pool to replenish your own. Drains %d mana.]]):
 		format(power)
+	end,
+}
+
+newTalent{
+	name = "Life Tap", short_name = "GOLEMANCY_LIFE_TAP",
+	type = {"spell/advanced-golemancy", 2},
+	require = spells_req_high2,
+	points = 5,
+	mana = 25,
+	cooldown = 12,
+	getPower = function(self, t) return 70 + self:combatTalentSpellDamage(t, 15, 450) end,
+	action = function(self, t)
+		local mover, golem = getGolem(self)
+		if not golem then
+			game.logPlayer(self, "Your golem is currently inactive.")
+			return
+		end
+
+		local power = math.min(t.getPower(self, t), golem.life)
+		golem.life = golem.life - power -- Direct hit, bypass all checks
+		golem.changed = true
+		self:heal(power)
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		local power=t.getPower(self, t)
+		return ([[You tap into your golem's life energies to replenish your own. Drains %d life.]]):
+		format(power)
+	end,
+}
+
+newTalent{
+	name = "Gem Golem",
+	type = {"spell/advanced-golemancy",3},
+	require = spells_req3,
+	mode = "passive",
+	points = 5,
+	info = function(self, t)
+		return ([[Insert a pair of gems into your golem, providing it with the gem bonuses and changing its melee attack damage type.
+		Gem level usable: %d
+		Gem changing is done when refitting your golem (use Refit Golem at full life).]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 
