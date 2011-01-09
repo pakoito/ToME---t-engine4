@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 quickEntity('^', {show_tooltip=true, name='mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true, block_sight=true})
-quickEntity('<', {show_tooltip=true, name='portal back', display='<', color=colors.WHITE, change_level=1, change_zone=game.player.last_wilderness, image="terrain/worldmap.png",}, nil, {type="portal", subtype="back"})
+quickEntity('<', {show_tooltip=true, name='portal back', display='<', color=colors.WHITE, change_level=1, change_zone=game.player.last_wilderness, image="terrain/stone_road1.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}},}, nil, {type="portal", subtype="back"})
 quickEntity('t', {show_tooltip=true, name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha2.png"}}})
-quickEntity('*', {show_tooltip=true, name='magical rock', display='#', color=colors.GREY, back_color={r=44,g=95,b=43}, block_move=true, block_sight=true, image="terrain/rock_grass.png"})
+quickEntity('*', {show_tooltip=true, name='magical rock', display='#', color=colors.GREY, back_color={r=44,g=95,b=43}, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/rock_grass.png"}}})
 quickEntity('~', {show_tooltip=true, name='fountain', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", shader = "water", textures = { function() return _3DNoise, true end }})
 quickEntity('.', {show_tooltip=true, name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
 quickEntity('-', {show_tooltip=true, name='cultivated fields', display=';', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/cultivation.png", equilibrium_level=-10})

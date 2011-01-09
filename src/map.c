@@ -199,8 +199,8 @@ static int map_object_get_move_anim(lua_State *L)
 	{
 		float adx = (float)map->mx - map->oldmx;
 		float ady = (float)map->my - map->oldmy;
-		mapdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx);
-		mapdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady);
+		mapdx = -(adx * map->move_step / (float)map->move_max - adx);
+		mapdy = -(ady * map->move_step / (float)map->move_max - ady);
 	}
 
 	if (!obj->move_max || obj->display_last == DL_NONE)
@@ -699,7 +699,6 @@ static int map_set_scroll(lua_State *L)
 		map->oldmy = map->my;
 		map->move_step = 0;
 		map->move_max = smooth;
-		printf("set %ldx%ld => %d x %d\n", map->oldmx, map->oldmy, x, y);
 	}
 
 	map->mx = x;
@@ -828,9 +827,8 @@ static int map_to_screen(lua_State *L)
 			float ady = (float)map->my - map->oldmy;
 			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx);
 			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady);
-			mx = map->mx - (int)(adx * map->move_step / (float)map->move_max - adx);
-			my = map->my - (int)(ady * map->move_step / (float)map->move_max - ady);
-			printf("scroll %dx%d :: %dx%d :: %dx%d\n", mx,my, map->mx, map->my, adx, ady);
+			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx);
+			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady);
 		}
 	}
 	x -= animdx;
@@ -839,9 +837,9 @@ static int map_to_screen(lua_State *L)
 	// Always display some more of the map to make sure we always see it all
 	for (z = 0; z < map->zdepth; z++)
 	{
-		for (j = my - 1; j < my + map->mheight + 1; j++)
+		for (j = my - 1; j < my + map->mheight + 2; j++)
 		{
-			for (i = mx - 1; i < mx + map->mwidth + 1; i++)
+			for (i = mx - 1; i < mx + map->mwidth + 2; i++)
 			{
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 
