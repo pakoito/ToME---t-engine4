@@ -48,9 +48,11 @@ end
 function _M:addPond(x, y, spots)
 	local noise = core.noise.new(2, self.do_ponds.size.w, self.do_ponds.size.h)
 	local nmap = {}
+	local pmap = {}
 	local lowest = {v=100, x=nil, y=nil}
 	for i = 1, self.do_ponds.size.w do
 		nmap[i] = {}
+		pmap[i] = {}
 		for j = 1, self.do_ponds.size.h do
 			nmap[i][j] = noise:fbm_simplex(self.do_ponds.zoom * i / self.do_ponds.size.w, self.do_ponds.zoom * j / self.do_ponds.size.h, self.do_ponds.octave)
 			if nmap[i][j] < lowest.v then lowest.v = nmap[i][j]; lowest.x = i; lowest.y = j end
@@ -76,7 +78,7 @@ function _M:addPond(x, y, spots)
 			local stop = true
 			for _ = 1, #self.do_ponds.pond do
 				if nmap[lx][ly] < split * self.do_ponds.pond[_][1] then
-					self.map(lx-1+x, ly-1+y, Map.TERRAIN, self:resolve(self.do_ponds.pond[_][2], self.grid_list, true))
+					pmap[lx][ly] = self.do_ponds.pond[_][2]
 					stop = false
 					break
 				end
@@ -85,7 +87,6 @@ function _M:addPond(x, y, spots)
 			lx, ly = l()
 		end
 	end
-
 	for i = 1, self.do_ponds.size.w do
 		quadrant(i, 1)
 		quadrant(i, self.do_ponds.size.h)
@@ -93,6 +94,39 @@ function _M:addPond(x, y, spots)
 	for i = 1, self.do_ponds.size.h do
 		quadrant(1, i)
 		quadrant(self.do_ponds.size.w, i)
+	end
+
+	-- Smooth the pond
+	for i = 1, self.do_ponds.size.w do
+		for j = 1, self.do_ponds.size.h do
+			if not pmap[i][j] then
+				local nb = 0
+				for ii = -1, 1 do for jj = -1, 1 do if (ii ~= 0 or jj ~= 0) and pmap[i+ii] then
+					if pmap[i+ii][j+jj] then nb = nb + 1 end
+				end end end
+				if nb >= 4 then pmap[i][j] = self.do_ponds.pond[1][2] end
+			end
+		end
+	end
+	for i = 1, self.do_ponds.size.w do
+		for j = 1, self.do_ponds.size.h do
+			if pmap[i][j] then
+				local nb = 0
+				for ii = -1, 1 do for jj = -1, 1 do if (ii ~= 0 or jj ~= 0) and pmap[i+ii] then
+					if pmap[i+ii][j+jj] then nb = nb + 1 end
+				end end end
+				if nb <= 3 then pmap[i][j] = nil end
+			end
+		end
+	end
+
+	-- Draw the pond
+	for i = 1, self.do_ponds.size.w do
+		for j = 1, self.do_ponds.size.h do
+			if pmap[i][j] then
+				self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve(pmap[i][j], self.grid_list, true))
+			end
+		end
 	end
 
 	spots[#spots+1] = {x=x, y=y, type="pond", subtype="pond"}

@@ -24,7 +24,7 @@ rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 defineTile('.', "FLOOR")
 defineTile(',', "GRASS")
 defineTile(';', "FLOWER")
-defineTile('~', "SHALLOW_WATER")
+defineTile('~', "DEEP_WATER")
 defineTile('#', "WALL")
 defineTile('X', "TREE")
 defineTile('+', "DOOR")

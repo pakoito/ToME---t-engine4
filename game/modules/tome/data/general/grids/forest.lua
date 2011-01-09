@@ -19,6 +19,7 @@
 
 newEntity{
 	define_as = "GRASS",
+	type = "floor", subtype = "grass",
 	name = "grass", image = "terrain/grass.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	grow = "TREE",
@@ -27,6 +28,7 @@ newEntity{
 for i = 1, 20 do
 newEntity{
 	define_as = "TREE"..(i > 1 and i or ""),
+	type = "wall", subtype = "grass",
 	name = "tree",
 	image = "terrain/grass.png",
 	add_displays = class:makeTrees("terrain/tree_alpha"),
@@ -42,6 +44,7 @@ end
 for i = 1, 20 do
 newEntity{
 	define_as = "HARDTREE"..(i > 1 and i or ""),
+	type = "wall", subtype = "grass",
 	name = "tall thick tree",
 	image = "terrain/grass.png",
 	add_displays = class:makeTrees("terrain/tree_alpha"),
@@ -56,6 +59,7 @@ end
 
 newEntity{
 	define_as = "GRASS_DARK1",
+	type = "floor", subtype = "grass",
 	name = "grass", image = "terrain/grass_dark1.png",
 	display = '.', color=colors.GREEN, back_color={r=44,g=95,b=43},
 	grow = "TREE_DARK",
@@ -64,6 +68,7 @@ newEntity{
 for i = 1, 20 do
 newEntity{
 	define_as = "TREE_DARK"..i,
+	type = "wall", subtype = "grass",
 	name = "tree", image = "terrain/grass_dark1.png",
 	force_clone = true,
 	add_displays = class:makeTrees("terrain/tree_dark_alpha"),
@@ -79,6 +84,7 @@ end
 for i = 1, 20 do
 newEntity{
 	define_as = "HARDTREE_DARK"..i,
+	type = "wall", subtype = "grass",
 	name = "tall thick tree", image = "terrain/grass_dark1.png",
 	force_clone = true,
 	add_displays = class:makeTrees("terrain/tree_dark_alpha"),
@@ -93,6 +99,7 @@ end
 
 newEntity{
 	define_as = "FLOWER",
+	type = "floor", subtype = "grass",
 	name = "flower", image = "terrain/grass_flower3.png",
 	display = ';', color=colors.YELLOW, back_color={r=44,g=95,b=43},
 	grow = "TREE"
@@ -100,6 +107,7 @@ newEntity{
 
 newEntity{
 	define_as = "ROCK_VAULT",
+	type = "wall", subtype = "grass",
 	name = "huge lose rock", image = "terrain/grass.png", add_displays = {class.new{image="terrain/rock_grass.png"}},
 	display = '+', color=colors.GREY, back_color={r=44,g=95,b=43},
 	notice = true,
@@ -114,6 +122,7 @@ newEntity{
 
 newEntity{
 	define_as = "ROCK_VAULT_DARK",
+	type = "wall", subtype = "grass",
 	name = "huge loose rock", image = "terrain/rock_grass_dark.png",
 	display = '+', color=colors.GREY, back_color={r=44,g=95,b=43},
 	notice = true,
@@ -131,6 +140,7 @@ newEntity{
 -----------------------------------------
 newEntity{
 	define_as = "GRASS_UP_WILDERNESS",
+	type = "floor", subtype = "grass",
 	name = "exit to the worldmap", image = "terrain/grass.png", add_displays = {class.new{image="terrain/worldmap.png"}},
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
@@ -141,6 +151,7 @@ newEntity{
 
 newEntity{
 	define_as = "GRASS_UP8",
+	type = "floor", subtype = "grass",
 	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -149,6 +160,7 @@ newEntity{
 }
 newEntity{
 	define_as = "GRASS_UP2",
+	type = "floor", subtype = "grass",
 	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -157,6 +169,7 @@ newEntity{
 }
 newEntity{
 	define_as = "GRASS_UP4",
+	type = "floor", subtype = "grass",
 	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -165,6 +178,7 @@ newEntity{
 }
 newEntity{
 	define_as = "GRASS_UP6",
+	type = "floor", subtype = "grass",
 	name = "way to the previous level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -174,6 +188,7 @@ newEntity{
 
 newEntity{
 	define_as = "GRASS_DOWN8",
+	type = "floor", subtype = "grass",
 	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -182,6 +197,7 @@ newEntity{
 }
 newEntity{
 	define_as = "GRASS_DOWN2",
+	type = "floor", subtype = "grass",
 	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -190,6 +206,7 @@ newEntity{
 }
 newEntity{
 	define_as = "GRASS_DOWN4",
+	type = "floor", subtype = "grass",
 	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -198,6 +215,7 @@ newEntity{
 }
 newEntity{
 	define_as = "GRASS_DOWN6",
+	type = "floor", subtype = "grass",
 	name = "way to the next level", image = "terrain/grass.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,

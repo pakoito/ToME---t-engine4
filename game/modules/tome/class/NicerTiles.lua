@@ -102,3 +102,34 @@ end
 function _M:niceTileReplace(level, i, j, g, nt)
 	self:replace(i, j, self:getTile(nt.base))
 end
+
+--- Make water have nice transition to other stuff
+function _M:niceTileWater(level, i, j, g, nt)
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or "water"
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or "water"
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "subtype") or "water"
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "subtype") or "water"
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "subtype") or "water"
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "subtype") or "water"
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "subtype") or "water"
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "subtype") or "water"
+
+	-- Sides
+	if     g4=="water" and g6=="water" and g8=="grass" then self:replace(i, j, self:getTile(nt.grass8))
+	elseif g4=="water" and g6=="water" and g2=="grass" then self:replace(i, j, self:getTile(nt.grass2))
+	elseif g8=="water" and g2=="water" and g4=="grass" then self:replace(i, j, self:getTile(nt.grass4))
+	elseif g8=="water" and g2=="water" and g6=="grass" then self:replace(i, j, self:getTile(nt.grass6))
+	-- Corners
+	elseif g4=="grass" and g7=="grass" and g8=="grass" then self:replace(i, j, self:getTile(nt.grass7))
+	elseif g4=="grass" and g1=="grass" and g2=="grass" then self:replace(i, j, self:getTile(nt.grass1))
+	elseif g2=="grass" and g3=="grass" and g6=="grass" then self:replace(i, j, self:getTile(nt.grass3))
+	elseif g6=="grass" and g9=="grass" and g8=="grass" then self:replace(i, j, self:getTile(nt.grass9))
+	-- Inner corners
+	elseif g4=="water" and g7=="grass" and g8=="water" then self:replace(i, j, self:getTile(nt.inner_grass3))
+	elseif g4=="water" and g1=="grass" and g2=="water" then self:replace(i, j, self:getTile(nt.inner_grass9))
+	elseif g2=="water" and g3=="grass" and g6=="water" then self:replace(i, j, self:getTile(nt.inner_grass7))
+	elseif g6=="water" and g9=="grass" and g8=="water" then self:replace(i, j, self:getTile(nt.inner_grass1))
+	-- Full
+	elseif g1=="water" and g2=="water" and g3=="water" and g4=="water" and g6=="water" and g7=="water" and g8=="water" and g9=="water" then self:replace(i, j, self:getTile(nt.water))
+	end
+end

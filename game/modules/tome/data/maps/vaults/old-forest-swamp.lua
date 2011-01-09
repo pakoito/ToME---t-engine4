@@ -21,8 +21,8 @@ setStatusAll{no_teleport=true}
 
 defineTile(',', "GRASS")
 defineTile(';', "GRASS_DARK1")
-defineTile('~', "SHALLOW_WATER")
-defineTile('%', "POISON_SHALLOW_WATER")
+defineTile('~', "DEEP_WATER")
+defineTile('%', "POISON_DEEP_WATER")
 
 defineTile('$', "GRASS_DARK1", {random_filter={add_levels=25, type="money"}})
 defineTile('*', "GRASS", {random_filter={add_levels=25, type="gem"}})

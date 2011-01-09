@@ -21,7 +21,7 @@ setStatusAll{no_teleport=true}
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 defineTile('.', "FLOOR")
-defineTile('~', "SHALLOW_WATER")
+defineTile('~', "DEEP_WATER")
 defineTile('#', "HARDWALL")
 defineTile('%', "WALL")
 defineTile('+', "DOOR")
