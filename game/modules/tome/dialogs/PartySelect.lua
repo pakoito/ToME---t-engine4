@@ -43,15 +43,14 @@ function _M:use(item)
 	if not item then return end
 	game:unregisterDialog(self)
 
-	game.party:setPlayer(item.actor)
+	game.party:select(item.actor)
 end
 
 function _M:generateList()
 	local list = {}
 
 	for i, act in ipairs(game.party.m_list) do
-		local def = game.party.members[act]
-		if def.control == "full" and not act.dead then
+		if game.party:canControl(act) or game.party:canOrder(act) then
 			list[#list+1] = {name=act.name, actor=act}
 		end
 	end

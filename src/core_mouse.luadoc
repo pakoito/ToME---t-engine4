@@ -1,0 +1,19 @@
+--- T-Engine mouse API
+
+module "core.mouse
+--	{"get", lua_get_mouse},
+--- Finds the position of the mouse cursor.
+-- @return The x, y position (in pixels???) of the mouse cursor.
+function get ()
+
+--	{"set", lua_set_mouse},
+--- Moves the mouse cursor.
+-- @param x The x-pixel-coordinate to move the mouse to.
+-- @param y The y-pixel-coordinate to move the mouse to.
+function set (x, y)
+
+--	{"set_current_handler", lua_set_current_mousehandler},
+--- Sets the Lua mouse handler.
+-- The mouse events are then collected by the C core and passed to handler.
+-- @param handler The Lua handler object.
+function set_current_handler (handler)

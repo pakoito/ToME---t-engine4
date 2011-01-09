@@ -1,0 +1,75 @@
+--- T-Engine random number generator API
+-- Uses the SIMD oriented Fast Mersenne Twister.
+
+module "rng"
+--	{"float", rng_float},
+--- Select a random floating point number from a uniform distribution.
+-- @param min The lower limit of the distribution.
+-- @param max The upper limit of the distribution.
+-- @return The randomly selected number.
+function float (min, max)
+
+--	{"__call", rng_call},
+-- GOING TO LEAVE THIS ONE OUT
+-- @param arg1 The upper limit if no arg2, otherwise the lower limit.
+-- @param arg2 The upper limit, or nothing.
+-- @return 
+function __call (arg1, arg2)
+
+--	{"range", rng_range},
+--- Select a random integer from a uniform distribution.
+-- @param min The lower limit of the distribution.
+-- @param max The upper limit of the distribution.
+-- @return The randomly selected integer.
+function range (min, max)
+
+--	{"avg", rng_avg},
+--- The average of several repeated calls to the range function.
+-- @param min The lower limit of the distribution.
+-- @param max The upper limir of the distribution.
+-- @param size The number of samples (default 2).
+-- @return The average from size samples.
+-- @see range
+function avg (min, max, size)
+
+--	{"dice", rng_dice},
+--- The sum of a series of dice rolls.
+-- @param rolls The number of rolls of dice to simulate. (3 in 3d6)
+-- @param sides How many sides the dice has. (6 in 3d6)
+-- @return The sum of the dice rolls.
+function dice (rolls, sides)
+
+--	{"seed", rng_seed},
+--- Set the seed for the random number generator.
+-- The RNG will be re-initialized after setting the seed.
+-- @param new_seed The new seed, unless the number is negative in which case the clock time will be used.
+function seed (new_seed)
+
+--	{"chance", rng_chance},
+--- Decide if a one in X chance occurs.
+-- @param odds The X in "1 in X".  As the X increases, the odds of success decrease accordingly, with a 100/X% chance of returning true.
+-- @return A boolean representing success.
+function chance (odds)
+
+--	{"percent", rng_percent},
+--- Decide if something should occur based on a percent chance.
+-- @param success The percent chance (0-100) to return true.
+-- @return A boolean representing success.
+function percent (success)
+
+--	{"normal", rng_normal},
+--- Select an integer from a normal distribution.
+-- @param mean The mean of the normal distribution
+-- @param stdev The standard deviation of the normal distribution.
+-- @return The selected integer.
+-- @see normalFloat
+function normal (mean, stdev)
+
+--	{"normalFloat", rng_normal_float},
+--- Select a floating point number from a normal distribution.
+-- Uses the Box-Muller transform.
+-- @param mean The mean of the normal distribution
+-- @param stdev The standard deviation of the normal distribution.
+-- @return The selected floating point number.
+-- @see normal
+function normalFloat (mean, stdev)

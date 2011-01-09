@@ -1,0 +1,14 @@
+--- T-Engine key API
+module "core.key"
+
+--	{"set_current_handler", lua_set_current_keyhandler},
+--- Sets the Lua keyboard handler.
+-- The keyboard events are then collected by the C core and passed to handler.
+-- @param handler The Lua handler object.
+function set_current_handler (handler)
+
+--	{"modState", lua_get_mod_state},
+--- Check if a modifier key is being pressed.
+-- @param mod The modifier to check for: "ctrl", "shift", "alt" or "meta".
+-- @return A boolean telling whether the modifier is pressed (true) or not (false).
+function modState (mod)

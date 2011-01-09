@@ -1,0 +1,137 @@
+--- T-Engine display API
+
+module "core.display"
+
+--	{"setTextBlended", set_text_aa},
+--- Set the anti-aliasing status of fonts.
+-- @param status Enable anti-aliasing if true.
+function setTextBlended (status)
+
+--	{"getTextBlended", get_text_aa},
+--- Get the anti-aliasing status of fonts.
+function getTextBlended ()
+
+--	{"forceRedraw", sdl_redraw_screen},
+--- Forces redrawing of the T-Engine display.
+function forceRedraw ()
+
+--	{"fullscreen", sdl_fullscreen},
+--- Toggle fullscreen mode.
+function fullscreen ()
+
+--	{"size", sdl_screen_size},
+--- Set the fullscreen dimensions.
+-- @param width Width in pixels.
+-- @param height Height in pixels.
+function size (width, height)
+
+--	{"newFont", sdl_new_font},
+--- Load a TrueType font.
+-- @param path Font file path relative to the module directory.
+-- @param size The font size.
+-- @return The font userdata.
+function newFont (path, size)
+
+--	{"newSurface", sdl_new_surface},
+--- Create a new SDL surface.
+-- @param width Surface width in pixels.
+-- @param height Surface height in pixels.
+-- @return An SDL surface userdata.
+function newSurface ()
+
+--	{"newTile", sdl_new_tile},
+--- Create a new SDL surface based on a tile.
+-- @param width Surface width in pixels.
+-- @param height Surface height in pixels.
+-- @param font A TrueType font userdata.
+-- @param char An ASCII character to display in the tile.
+-- @param x Horizontal offset to draw the character on the tile (in pixels).
+-- @param y Vertical offset to draw the character on the tile (in pixels).
+-- @param fr Foreground red color (0-255).
+-- @param fg Foreground green color (0-255).
+-- @param fb Foreground blue color (0-255).
+-- @param br Background red color (0-255).
+-- @param bg Background green color (0-255).
+-- @param bb Background blue color (0-255).
+-- @param alpha Alpha factor (0-1).
+-- @return An SDL surface userdata.
+function newTile (width, height, font, char, x, y, fr, fg, fb, br, bg, bb, alpha)
+
+--	{"newFBO", gl_new_fbo},
+--- Creates a new frame buffer object (FBO).
+-- @param width Width of the FBO (in pixels).
+-- @param height Height of the FBO (in pixels).
+-- @return The FBO userdata.
+function newFBO (width, height)
+
+--	{"drawQuad", gl_draw_quad},
+--- Draw a rectangle.
+-- @param x Horizontal offset to start the rectangle (in pixels).
+-- @param y Vertical offset to start the rectangle (in pixels).
+-- @param w Width in pixels.
+-- @param h Height in pixels.
+-- @param r Red color (0-255).
+-- @param g Green color (0-255).
+-- @param b Blue color (0-255).
+-- @param a Alpha factor (0-1).
+-- @param txt Optional OpenGL texture userdata.
+function drawQuad (x, y, w, h, r, g, b, a, txt)
+
+--	{"FBOActive", gl_fbo_is_active},
+--- Check if Frame Buffer Objects are active.
+-- @return Boolean, true if FBOs are active.
+function FBOActive ()
+
+--	{"disableFBO", gl_fbo_disable},
+--- Disable Frame Buffer Objects.
+function disableFBO ()
+
+--	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
+--- Create a SDL surface of a string.
+-- @param font TrueType font userdata.
+-- @param string String to put on the surface.
+-- @param r Red color of the font (0-255).
+-- @param g Green color of the font (0-255).
+-- @param b Blue color of the font (0-255).
+-- @return An SDL surface userdata.
+function drawStringNewSurface (font, string, r, g, b)
+
+--	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
+--- Creates a SDL surface of an anti-aliased string, if possible.
+-- @param font TrueType font userdata.
+-- @param string String to put on the surface.
+-- @param r Red color of the font (0-255).
+-- @param g Green color of the font (0-255).
+-- @param b Blue color of the font (0-255).
+-- @return An SDL surface userdata.
+function drawStringBlendedNewSurface (font, string, r, g, b)
+
+--	{"loadImage", sdl_load_image},
+--- Creates a SDL surface from an image.
+-- @param path Image path relative to the module directory.
+-- @return An SDL surface.
+function loadImage (path)
+
+--	{"setWindowTitle", sdl_set_window_title},
+--- Set the window's title.
+-- @param title The string to use as a title.
+function setWindowTitle (title)
+
+--	{"setWindowSize", sdl_set_window_size},
+--- Set the window dimensions.
+-- @param width Width in pixels.
+-- @param height Height in pixels.
+function setWindowSize (width, height)
+
+--	{"getModesList", sdl_get_modes_list},
+--- Find potential window sizes.
+-- @return A table of tables containing {w=width, h=height}.
+function getModesList ()
+
+--	{"setMouseCursor", sdl_set_mouse_cursor},
+--- Set images for the mouse cursor.
+-- @param ox Horizontal offset (in pixels) of the surface relative to the cursor position.
+-- @param ox Veritcal offset (in pixels) of the surface relative to the cursor position.
+-- @param surface_up SDL surface to use when the mouse button is up.
+-- @param surface_down SDL surface to use when the mouse button is down.
+function setMouseCursor (ox, oy, surface_up, surface_down)

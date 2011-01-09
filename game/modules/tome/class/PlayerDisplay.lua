@@ -120,7 +120,7 @@ function _M:makePortrait(a, current, x, y)
 
 	self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Level: "..a.level.."\n"..def.title, 36, 36, x, y, function()
 		if def.control == "full" then
-			game.party:setPlayer(a)
+			game.party:select(a)
 		end
 	end)
 

@@ -787,14 +787,14 @@ function _M:setupCommands()
 --		HOTKEY_HOTPAGE3 = function(sym, ctrl, shift, alt, meta, unicode, isup) self.player:setHotkeyPage(isup and 1 or 3) end,
 
 		-- Party commands
-		SWITCH_PARTY_1 = not_wild(function() self.party:setPlayer(1) end),
-		SWITCH_PARTY_2 = not_wild(function() self.party:setPlayer(2) end),
-		SWITCH_PARTY_3 = not_wild(function() self.party:setPlayer(3) end),
-		SWITCH_PARTY_4 = not_wild(function() self.party:setPlayer(4) end),
-		SWITCH_PARTY_5 = not_wild(function() self.party:setPlayer(5) end),
-		SWITCH_PARTY_6 = not_wild(function() self.party:setPlayer(6) end),
-		SWITCH_PARTY_7 = not_wild(function() self.party:setPlayer(7) end),
-		SWITCH_PARTY_8 = not_wild(function() self.party:setPlayer(8) end),
+		SWITCH_PARTY_1 = not_wild(function() self.party:select(1) end),
+		SWITCH_PARTY_2 = not_wild(function() self.party:select(2) end),
+		SWITCH_PARTY_3 = not_wild(function() self.party:select(3) end),
+		SWITCH_PARTY_4 = not_wild(function() self.party:select(4) end),
+		SWITCH_PARTY_5 = not_wild(function() self.party:select(5) end),
+		SWITCH_PARTY_6 = not_wild(function() self.party:select(6) end),
+		SWITCH_PARTY_7 = not_wild(function() self.party:select(7) end),
+		SWITCH_PARTY_8 = not_wild(function() self.party:select(8) end),
 		SWITCH_PARTY = not_wild(function() self:registerDialog(require("mod.dialogs.PartySelect").new()) end),
 
 		-- Actions

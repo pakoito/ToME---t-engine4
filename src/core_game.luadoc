@@ -1,0 +1,37 @@
+--- T-Engine game API
+
+module "core.game"
+
+--	{"reboot", lua_reboot_lua},
+--- Reboot the Lua environment.
+function reboot ()
+	
+--	{"set_current_game", lua_set_current_game},
+--- Sets the current game.
+-- This allows the Lua code to be notified to tick, display and handle quitting.
+-- @param game The Lua game object.
+function set_current_game (game)
+
+--	{"exit_engine", lua_exit_engine},
+--- Tell the C core to quit.
+function exit_engine ()
+
+--	{"getTime", lua_get_time},
+--- Returns the SDL time.
+-- @return The SDL time.
+function getTime ()
+
+--	{"sleep", lua_sleep},
+--- Put the engine to sleep.
+-- @param ms The number of milliseconds to sleep for.
+function sleep (ms)
+
+--	{"setRealtime", lua_set_realtime},
+--- Set the game's frames-per-second rate.
+-- @param fps The frames-per-second.
+function setRealTime (fps)
+
+--	{"setFPS", lua_set_fps},
+--- Set the display's frames-per-second rate.
+-- @param fps The frames-per-second.
+function setFPS (fps)

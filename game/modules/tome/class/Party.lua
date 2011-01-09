@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Entity"
 local Map = require "engine.Map"
+local PartyOrder = require "mod.dialogs.PartyOrder"
 
 module(..., package.seeall, class.inherit(
 	engine.Entity
@@ -162,6 +163,70 @@ function _M:findSuitablePlayer(type)
 			self:setPlayer(actor)
 			return true
 		end
+	end
+	return false
+end
+
+function _M:canOrder(actor, order, vocal)
+	if not actor then return false end
+	if actor == game.player then return false end
+
+	if not self.members[actor] then
+--		print("[PARTY] error trying to order, not a member of party: ", actor.uid, actor.name)
+		return false
+	end
+	if self.members[actor].control ~= "full" or self.members[actor].control ~= "order" or not self.members[actor].orders then
+--		print("[PARTY] error trying to order, not controlable: ", actor.uid, actor.name)
+		return false
+	end
+	if actor.dead or (game.level and not game.level:hasEntity(actor)) then
+		if vocal then game.logPlayer(game.player, "Can not give orders to this creature.") end
+		return false
+	end
+	if actor.on_can_order and not actor:on_can_order(vocal) then return false end
+	if order and not self.members[actor].orders[order] then
+--		print("[PARTY] error trying to order, unknown order: ", actor.uid, actor.name)
+		return false
+	end
+	return true
+end
+
+function _M:giveOrders(actor)
+	if type(actor) == "number" then actor = self.m_list[actor] end
+
+	local ok, err = self:canOrder(actor, nil, true)
+	if not ok then return nil, err end
+
+	local def = self.members[actor]
+
+	game:registerDialog(PartyOrder.new(actor, def))
+
+	return true
+end
+
+function _M:giveOrder(actor, order)
+	if type(actor) == "number" then actor = self.m_list[actor] end
+
+	local ok, err = self:canOrder(actor, order, true)
+	if not ok then return nil, err end
+
+	local def = self.members[actor]
+
+	if order == "leash" then
+	elseif order == "behavior" then
+--		game:registerDialog(require
+	end
+
+	return true
+end
+
+function _M:select(actor)
+	if not actor then return false end
+	if type(actor) == "number" then actor = self.m_list[actor] end
+	if actor == game.player then return false end
+
+	if self:canControl(actor) then return self:setPlayer(actor)
+	elseif self:canOrder(actor) then return self:giveOrders(actor)
 	end
 	return false
 end
