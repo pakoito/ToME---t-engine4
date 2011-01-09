@@ -338,20 +338,24 @@ on_grant = function(self, who)
 	-- Spawn the portal, far enough from the escort
 	local gx, gy = getPortalSpot(npc, 150, 10)
 	if not gx then return true end
-	local g = mod.class.Grid.new{
-		show_tooltip=true,
-		name="Recall Portal: "..npc.name,
-		display='&', color=colors.VIOLET,
-		notice = true,
-		on_move = function(self, x, y, who)
-			if not who.escort_quest then return end
-			game.player:setQuestStatus(who.quest_id, engine.Quest.DONE)
-			local Chat = require "engine.Chat"
-			Chat.new("escort-quest", who, game.player, {npc=who}):invoke()
-			who:disappear()
-			who:removed()
-		end,
-	}
+	local g = game.level.map(gx, gy, engine.Map.TERRAIN)
+	g = g:cloneFull()
+	g.show_tooltip = true
+	g.name = "Recall Portal: "..npc.name
+	g.display = '&'
+	g.color = colors.VIOLET
+	g.add_displays = g.add_displays or {}
+	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/maze_teleport.png"}
+	g.notice = true
+	g.on_move = function(self, x, y, who)
+		if not who.escort_quest then return end
+		game.player:setQuestStatus(who.quest_id, engine.Quest.DONE)
+		local Chat = require "engine.Chat"
+		Chat.new("escort-quest", who, game.player, {npc=who}):invoke()
+		who:disappear()
+		who:removed()
+	end
+
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", gx, gy)
 	npc.escort_target = {x=gx, y=gy}
