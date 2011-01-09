@@ -89,6 +89,19 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		mult = (mult or 1) * (target.dominatedDamMult or 1)
 	end
 
+	-- Change attack type if using gems
+	if not damtype and self:getInven(self.INVEN_GEM) then
+		local gems = self:getInven(self.INVEN_GEM)
+		local types = {}
+		for i = 1, #gems do
+		print("============", i, gems[i] and gems[i].attack_type)
+			if gems[i] and gems[i].attack_type then types[#types+1] = gems[i].attack_type end
+		end
+		if #types > 0 then
+			damtype = rng.table(types)
+		end
+	end
+
 	local break_stealth = false
 	if not self:attr("disarmed") then
 		-- All weapons in main hands

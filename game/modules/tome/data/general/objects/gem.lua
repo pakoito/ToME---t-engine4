@@ -29,6 +29,16 @@ newEntity{
 	desc = [[Gems can be sold for money or used in arcane rituals.]],
 }
 
+local colors_attacks = {
+	black = DamageType.ACID,
+	blue = DamageType.LIGHTNING,
+	green = DamageType.NATURE,
+	red = DamageType.FIRE,
+	violet = DamageType.ARCANE,
+	white = DamageType.COLD,
+	yellow = DamageType.LIGHT,
+}
+
 local function newGem(name, image, cost, rarity, color, min_level, max_level, tier, power, imbue, bomb)
 	-- Gems, randomly lootable
 	newEntity{ base = "BASE_GEM", define_as = "GEM_"..name:upper(),
@@ -39,6 +49,7 @@ local function newGem(name, image, cost, rarity, color, min_level, max_level, ti
 		material_level = tier,
 		imbue_powers = imbue,
 		wielder = imbue,
+		attack_type = colors_attacks[color],
 	}
 	-- Alchemist gems, not lootable, only created by talents
 	newEntity{ base = "BASE_GEM", define_as = "ALCHEMIST_GEM_"..name:upper(),
