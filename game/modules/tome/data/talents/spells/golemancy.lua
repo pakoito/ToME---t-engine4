@@ -301,36 +301,42 @@ newTalent{
 }
 
 newTalent{
-	name = "Mount Golem",
+	name = "Golem Portal",
 	type = {"spell/golemancy",4},
 	require = spells_req4,
 	points = 5,
 	mana = 40,
-	cooldown = 60,
-	no_npc_use = true,
-	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t) * 4) end,
+	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
 			game.logPlayer(self, "Your golem is currently inactive.")
 			return
 		end
-		if math.floor(core.fov.distance(self.x, self.y, golem.x, golem.y)) > 1 then
-			game.logPlayer(self, "You are too far away from your golem.")
-			return
-		end
 
-		-- Create the mount item
-		local mount = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_GOLEM_MOUNT")
-		if not mount then return end
-		mount.mount.actor = golem
-		self:setEffect(self.EFF_GOLEM_MOUNT, t.getDuration(self, t), {mount=mount})
+		local chance = self:getTalentLevelRaw(t) * 15 + 25
+		local px, py = self.x, self.y
+		local gx, gy = golem.x, golem.y
+
+		self:move(gx, gy, true)
+		golem:move(px, py, true)
+		self:move(gx, gy, true)
+		golem:move(px, py, true)
+		game.level.map:particleEmitter(px, py, 1, "teleport")
+		game.level.map:particleEmitter(gx, gy, 1, "teleport")
+
+		for uid, e in pairs(game.level.entities) do
+			local _, _, tgt = e:getTarget()
+			if e:reactionToward(self) < 0 and tgt == self and rng.percent(chance) then
+				e:setTarget(golem)
+				game.logSeen(e, "%s focuses on %s.", e.name:capitalize(), golem.name)
+			end
+		end
 
 		return true
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Mount inside your golem, directly controlling it for %d turns also golem absorb 75%% of the damage taken.]]):
-		format(duration)
+		return ([[Teleport to your golem and your golem to your place. Your foes will be confused and those that were attacking you will have %d%% chances to target your golem instead.]]):
+		format(self:getTalentLevelRaw(t) * 15 + 25)
 	end,
 }

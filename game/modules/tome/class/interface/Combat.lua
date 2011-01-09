@@ -94,7 +94,6 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		local gems = self:getInven(self.INVEN_GEM)
 		local types = {}
 		for i = 1, #gems do
-		print("============", i, gems[i] and gems[i].attack_type)
 			if gems[i] and gems[i].attack_type then types[#types+1] = gems[i].attack_type end
 		end
 		if #types > 0 then
