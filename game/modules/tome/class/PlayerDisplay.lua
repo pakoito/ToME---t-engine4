@@ -257,7 +257,7 @@ function _M:display()
 
 	if savefile_pipe.saving then
 		h = h + self.font_h
-		self:makeTextureBar("#YELLOW#Saving...:", "%d%%", 100 * savefile_pipe.current_nb / savefile_pipe.total_nb, 100, x, h, 255, 255, 255,
+		self:makeTextureBar("Saving:", "%d%%", 100 * savefile_pipe.current_nb / savefile_pipe.total_nb, 100, x, h, colors.YELLOW.r, colors.YELLOW.g, colors.YELLOW.b,
 			{r=0x95 / 3, g=0xa2 / 3,b= 0x80 / 3},
 			{r=0x68 / 6, g=0x72 / 6, b=0x00 / 6}
 		)

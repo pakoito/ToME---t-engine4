@@ -46,7 +46,7 @@ end
 
 newEntity{
 	define_as = "ALTAR",
-	name = "corrupted alter", image = "terrain/floor_pentagram.png",
+	name = "corrupted alter", image = "terrain/grass_burnt1.png", add_displays = {class.new{image = "terrain/floor_pentagram.png"}},
 	display = ';', color=colors.RED, back_color=colors.DARK_UMBER,
 	notice = true,
 	always_remember = true,

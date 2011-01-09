@@ -97,7 +97,7 @@ function _M:mouseScrollMap(map, xrel, yrel)
 		map.my = map.my + 1
 		derivy = derivy + map.tile_h
 	end
-	map._map:setScroll(map.mx, map.my)
+	map._map:setScroll(map.mx, map.my, 0)
 end
 
 --- Handles global mouse event
@@ -105,7 +105,7 @@ end
 -- Left click: player mouse movement
 -- Shift + left click: map scroll
 -- Any other click: pass on the click as a key event, to allow actions to be bound to the mouse
--- 
+--
 -- @param key the Key object to which to pass the event if not treated, this should be your game default key handler probably
 -- @param allow_move true if this will allow player movement (you should use it to check that you are not in targetting mode)
 function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel, event)

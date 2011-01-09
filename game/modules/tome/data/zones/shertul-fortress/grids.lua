@@ -47,7 +47,7 @@ newEntity{ base = "BIGWALL",
 
 newEntity{
 	define_as = "TELEPORT_OUT",
-	name = "teleportation circle to the surface", image = "terrain/maze_teleport.png",
+	name = "teleportation circle to the surface", image = "terrain/maze_floor.png", add_displays = {class.new{image="terrain/maze_teleport.png"}},
 	display = '>', color_r=255, color_g=0, color_b=255,
 	notice = true, show_tooltip = true,
 	change_level = 1, change_zone = "wilderness",
