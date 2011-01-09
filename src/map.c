@@ -695,8 +695,20 @@ static int map_set_scroll(lua_State *L)
 
 	if (smooth)
 	{
-		map->oldmx = map->mx;
-		map->oldmy = map->my;
+		// Not moving, use starting point
+		if (!map->move_max)
+		{
+			map->oldmx = map->mx;
+			map->oldmy = map->my;
+		}
+		// Already moving, compute starting point
+		else
+		{
+			float adx = map->mx - map->oldmx;
+			float ady = map->my - map->oldmy;
+			map->oldmx = -adx * map->move_step / (float)map->move_max + map->mx;
+			map->oldmy = -ady * map->move_step / (float)map->move_max + map->my;
+		}
 		map->move_step = 0;
 		map->move_max = smooth;
 	}

@@ -515,8 +515,8 @@ function _M:display(x, y, nb_keyframe)
 		local z
 		local adx, ady
 		local friend
-		for i = self.mx, self.mx + self.viewport.mwidth - 1 do
-		for j = self.my, self.my + self.viewport.mheight - 1 do
+		for i = self.mx, self.mx + self.viewport.mwidth do
+		for j = self.my, self.my + self.viewport.mheight do
 			local z = i + j * self.w
 
 			if self.seens[z] then
@@ -687,6 +687,28 @@ end
 --- Sets the current view area if x and y are out of bounds
 function _M:moveViewSurround(x, y, marginx, marginy)
 	local omx, omy = self.mx, self.my
+
+	if marginx * 2 > self.viewport.mwidth then
+		self.mx = x - math.floor(self.viewport.mwidth / 2)
+		self.changed = true
+	elseif self.mx + marginx >= x then
+		self.mx = x - marginx
+		self.changed = true
+	elseif self.mx + self.viewport.mwidth - marginx <= x then
+		self.mx = x - self.viewport.mwidth + marginx
+		self.changed = true
+	end
+	if marginy * 2 > self.viewport.mheight then
+		self.my = y - math.floor(self.viewport.mheight / 2)
+		self.changed = true
+	elseif self.my + marginy >= y then
+		self.my = y - marginy
+		self.changed = true
+	elseif self.my + self.viewport.mheight - marginy <= y then
+		self.my = y - self.viewport.mheight + marginy
+		self.changed = true
+	end
+--[[
 	if self.mx + marginx >= x or self.mx + self.viewport.mwidth - marginx <= x then
 		self.mx = x - math.floor(self.viewport.mwidth / 2)
 		self.changed = true
@@ -695,6 +717,7 @@ function _M:moveViewSurround(x, y, marginx, marginy)
 		self.my = y - math.floor(self.viewport.mheight / 2)
 		self.changed = true
 	end
+]]
 	self:checkMapViewBounded()
 	return self.mx - omx, self.my - omy
 end
