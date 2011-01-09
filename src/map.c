@@ -699,6 +699,7 @@ static int map_set_scroll(lua_State *L)
 		map->oldmy = map->my;
 		map->move_step = 0;
 		map->move_max = smooth;
+		printf("set %ldx%ld => %d x %d\n", map->oldmx, map->oldmy, x, y);
 	}
 
 	map->mx = x;
@@ -809,6 +810,8 @@ static int map_to_screen(lua_State *L)
 
 	// Smooth scrolling
 	float animdx = 0, animdy = 0;
+	int mx = map->mx;
+	int my = map->my;
 	if (map->move_max)
 	{
 		map->move_step += nb_keyframes;
@@ -825,21 +828,20 @@ static int map_to_screen(lua_State *L)
 			float ady = (float)map->my - map->oldmy;
 			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx);
 			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady);
+			mx = map->mx - (int)(adx * map->move_step / (float)map->move_max - adx);
+			my = map->my - (int)(ady * map->move_step / (float)map->move_max - ady);
+			printf("scroll %dx%d :: %dx%d :: %dx%d\n", mx,my, map->mx, map->my, adx, ady);
 		}
 	}
 	x -= animdx;
 	y -= animdy;
 
 	// Always display some more of the map to make sure we always see it all
-	int smx = MIN(map->mx, map->oldmx) - 1;
-	int smy = MIN(map->my, map->oldmy) - 1;
-	int emx = smx + abs(map->mx - map->oldmx) + 2;
-	int emy = smy + abs(map->my - map->oldmy) + 2;
 	for (z = 0; z < map->zdepth; z++)
 	{
-		for (j = smy; j < emy + map->mheight; j++)
+		for (j = my - 1; j < my + map->mheight + 1; j++)
 		{
-			for (i = smx; i < emx + map->mwidth; i++)
+			for (i = mx - 1; i < mx + map->mwidth + 1; i++)
 			{
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 
