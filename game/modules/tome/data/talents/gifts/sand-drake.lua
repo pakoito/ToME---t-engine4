@@ -25,7 +25,7 @@ newTalent{
 	equilibrium = 4,
 	cooldown = 20,
 	range = 1,
-	message = "@Source@ swallows its target!",
+	message = "@Source@ tries to swallow @target@!",
 	tactical = {
 		ATTACK = 10,
 	},
@@ -41,7 +41,7 @@ newTalent{
 		if not hit then return true end
 
 		if (target.life * 100 / target.max_life > 10 + 3 * self:getTalentLevel(t)) and not target.dead then
-			return nil
+			return true
 		end
 
 		if (target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) or target.dead) and target:canBe("instakill") then
