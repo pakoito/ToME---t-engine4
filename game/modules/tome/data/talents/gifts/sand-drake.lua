@@ -23,7 +23,7 @@ newTalent{
 	require = gifts_req1,
 	points = 5,
 	equilibrium = 4,
-	cooldown = 20,
+	cooldown = 10,
 	range = 1,
 	message = "@Source@ tries to swallow @target@!",
 	tactical = {
