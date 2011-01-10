@@ -61,6 +61,9 @@ function _M:getUseDesc()
 end
 
 function _M:useObject(who, ...)
+	-- Make sure the object is registered with the game, if need be
+	if not game:hasEntity(self) then game:addEntity(self) end
+
 	if self.use_power then
 		if self.power >= self.use_power.power then
 			local rets = { self.use_power.use(self, who, ...) }

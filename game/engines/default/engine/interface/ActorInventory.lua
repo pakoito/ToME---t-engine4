@@ -103,6 +103,9 @@ function _M:addObject(inven_id, o)
 
 	self:onAddObject(o)
 
+	-- Make sure the object is registered with the game, if need be
+	if not game:hasEntity(o) then game:addEntity(o) end
+
 	return true, #inven
 end
 
@@ -170,6 +173,9 @@ function _M:removeObject(inven, item, no_unstack)
 	end
 
 	self:onRemoveObject(o)
+
+	-- Make sure the object is registered with the game, if need be
+	if not game:hasEntity(o) then game:addEntity(o) end
 
 	return o, finish
 end

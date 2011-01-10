@@ -121,3 +121,8 @@ function _M:removeEntity(e)
 	if not self.entities[e.uid] then error("Entity "..e.uid.." not present in the game") end
 	self.entities[e.uid] = nil
 end
+
+--- Does the game have this entity ?
+function _M:hasEntity(e)
+	return self.entities[e.uid]
+end

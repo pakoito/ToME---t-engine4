@@ -52,6 +52,13 @@ function _M:resolve(t, last, on_entity)
 	end
 end
 
+--- Loaded, we add ourself back to the game
+function _M:loaded()
+	engine.Entity.loaded(self)
+
+	if not game:hasEntity(self) then game:addEntity(self) end
+end
+
 --- Can this object act at all
 -- Most object will want to answer false, only recharging and stuff needs them
 function _M:canAct()
