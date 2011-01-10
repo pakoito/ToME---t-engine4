@@ -59,7 +59,7 @@ function _M:addMember(actor, def)
 	actor:replaceWith(require("mod.class.PartyMember").new(actor))
 
 	-- Notify the UI
-	game.player.changed = true
+	if game.player then game.player.changed = true end
 end
 
 function _M:removeMember(actor, silent)

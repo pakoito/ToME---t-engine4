@@ -265,9 +265,11 @@ newTalent{
 	info = function(self, t)
 		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's armour is reduced by %d for %d turns.
 		Armor reduction chance increase with your Strength stat.]])
-		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 
-		5*self:getTalentLevel(t),
-		4 + self:getTalentLevel(t))
+		:format(
+			100 * self:combatTalentWeaponDamage(t, 1, 1.5),
+			5 * self:getTalentLevel(t),
+			4 + self:getTalentLevel(t)
+		)
 	end,
 }
 
@@ -307,9 +309,11 @@ newTalent{
 	info = function(self, t)
 		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's attack power is reduced by %d for %d turns.
 		Attack power reduction chance increase with your Strength stat.]])
-		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 
-		3*self:getTalentLevel(t),
-		4 + self:getTalentLevel(t))
+		:format(
+			100 * self:combatTalentWeaponDamage(t, 1, 1.5),
+			3 * self:getTalentLevel(t),
+			4 + self:getTalentLevel(t)
+		)
 	end,
 }
 

@@ -22,7 +22,7 @@ newTalent{
 	type = {"wild-gift/sand-drake", 1},
 	require = gifts_req1,
 	points = 5,
-	equilibrium = 10,
+	equilibrium = 4,
 	cooldown = 20,
 	range = 1,
 	message = "@Source@ swallows its target!",
@@ -37,12 +37,15 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
-		if target.life * 100 / target.max_life > 10 + 3 * self:getTalentLevel(t) then
+		local hit = self:attackTarget(target, DamageType.NATURE, self:combatTalentWeaponDamage(t, 1, 1.5), true)
+		if not hit then return true end
+
+		if (target.life * 100 / target.max_life > 10 + 3 * self:getTalentLevel(t)) and not target.dead then
 			return nil
 		end
 
-		if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("instakill") then
-			target:die(self)
+		if (target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) or target.dead) and target:canBe("instakill") then
+			if not target.dead then target:die(self) end
 			self:incEquilibrium(-target.level - 5)
 			self:heal(target.level * 2 + 5)
 		else
@@ -51,8 +54,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When your target is below %d%% life you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.]]):
-		format(10 + 3 * self:getTalentLevel(t))
+		return ([[Attack the target for %d%% nature weapon damage.
+		If the attack brings your target below %d%% life (or kills it) you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 10 + 3 * self:getTalentLevel(t))
 	end,
 }
 
