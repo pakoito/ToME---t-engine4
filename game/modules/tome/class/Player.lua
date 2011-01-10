@@ -417,7 +417,13 @@ function _M:die(src)
 		self.killedBy = src
 		self.died_times[#self.died_times+1] = {name=src.name, level=self.level, turn=game.turn}
 		self:registerDeath(self.killedBy)
-		game:registerDialog(DeathDialog.new(self))
+		if self.death_dialog then
+			game:registerDialog(require("mod.class."..self.death_dialog).new(self))
+		else
+			game:registerDialog(DeathDialog.new(self))
+		end
+
+		game.player:saveUUID()
 	else
 		mod.class.Actor.die(self, src)
 	end
