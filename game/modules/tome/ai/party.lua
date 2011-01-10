@@ -17,26 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newChat{ id="welcome",
-	text = text,
-	answers =
-	{
-		{"Lead on; I will protect you.", action=function(npc, player)
-			npc.ai_state.tactic_leash = 100
-			game.party:addMember(npc, {
-				control="order",
-				type="escort",
-				title="Escort",
-				orders = {escort_portal=true, escort_rest=true},
-			})
-		end},
-		{"Go away; I do not care for the weak.", action=function(npc, player)
-			npc:disappear()
-			npc:removed()
-			player:hasQuest(npc.quest_id).abandoned = true
-			player:setQuestStatus(npc.quest_id, engine.Quest.FAILED)
-		end},
-	},
-}
+newAI("party_member", function(self)
+	local master = game.player
 
-return "welcome"
+	-- Stay close to the party master
+	if math.floor(core.fov.distance(self.x, self.y, master.x, master.y)) > self.ai_state.tactic_leash then
+		self:setTarget(master)
+		print("[PARTY AI] leashing to master", self.name)
+		return self:runAI(self.ai_state.ai_move or "move_simple")
+	end
+
+	-- When passive only accept targets from the master
+--	if self.ai_state.tactic_behavior == "passive" then
+
+--	end
+
+	-- Run normal AI
+	return self:runAI(self.ai_state.ai_party)
+end)

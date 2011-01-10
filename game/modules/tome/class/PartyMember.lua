@@ -17,26 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newChat{ id="welcome",
-	text = text,
-	answers =
-	{
-		{"Lead on; I will protect you.", action=function(npc, player)
-			npc.ai_state.tactic_leash = 100
-			game.party:addMember(npc, {
-				control="order",
-				type="escort",
-				title="Escort",
-				orders = {escort_portal=true, escort_rest=true},
-			})
-		end},
-		{"Go away; I do not care for the weak.", action=function(npc, player)
-			npc:disappear()
-			npc:removed()
-			player:hasQuest(npc.quest_id).abandoned = true
-			player:setQuestStatus(npc.quest_id, engine.Quest.FAILED)
-		end},
-	},
-}
+require "engine.class"
+require "mod.class.NPC"
 
-return "welcome"
+module(..., package.seeall, class.inherit(mod.class.NPC))
+
+function _M:init(t, no_default)
+	mod.class.NPC.init(self, t, no_default)
+
+	-- Set correct AI
+	if self.ai ~= "party_member" then
+		self.ai_state.ai_party = self.ai
+		self.ai = "party_member"
+	end
+end
+
+function _M:tooltip(x, y, seen_by)
+	local str = mod.class.NPC.tooltip(self, x, y, seen_by)
+	if not str then return end
+
+	str:add(
+		true,
+		{"color", "TEAL"},
+		("Behavior: %s"):format(self.ai_state.tactic_behavior), true,
+		("Action radius: %d"):format(self.ai_state.tactic_leash), true
+	)
+	return str
+end

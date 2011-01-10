@@ -79,3 +79,59 @@ defineAction{
 	group = "party",
 	name = "Switch control to character 8",
 }
+
+defineAction{
+	default = { "sym:282:true:false:false:false" },
+	type = "ORDER_PARTY_1",
+	group = "party",
+	name = "Give order to character 1",
+}
+
+defineAction{
+	default = { "sym:283:true:false:false:false" },
+	type = "ORDER_PARTY_2",
+	group = "party",
+	name = "Give order to character 2",
+}
+
+defineAction{
+	default = { "sym:284:true:false:false:false" },
+	type = "ORDER_PARTY_3",
+	group = "party",
+	name = "Give order to character 3",
+}
+
+defineAction{
+	default = { "sym:285:true:false:false:false" },
+	type = "ORDER_PARTY_4",
+	group = "party",
+	name = "Give order to character 4",
+}
+
+defineAction{
+	default = { "sym:286:true:false:false:false" },
+	type = "ORDER_PARTY_5",
+	group = "party",
+	name = "Give order to character 5",
+}
+
+defineAction{
+	default = { "sym:287:true:false:false:false" },
+	type = "ORDER_PARTY_6",
+	group = "party",
+	name = "Give order to character 6",
+}
+
+defineAction{
+	default = { "sym:288:true:false:false:false" },
+	type = "ORDER_PARTY_7",
+	group = "party",
+	name = "Give order to character 7",
+}
+
+defineAction{
+	default = { "sym:289:true:false:false:false" },
+	type = "ORDER_PARTY_8",
+	group = "party",
+	name = "Give order to character 8",
+}

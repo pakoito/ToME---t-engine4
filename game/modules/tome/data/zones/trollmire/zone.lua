@@ -41,7 +41,7 @@ return {
 			up = "GRASS_UP4",
 			down = "GRASS_DOWN6",
 			do_ponds =  {
-				nb = {1, 2},
+				nb = {0, 2},
 				size = {w=25, h=25},
 				pond = {{0.6, "DEEP_WATER"}, {0.8, "DEEP_WATER"}},
 			},

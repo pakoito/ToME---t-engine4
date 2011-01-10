@@ -36,7 +36,7 @@ desc = function(self, who)
 		desc[#desc+1] = "You brought back the diamond and athame to Tannen who asked you to check the tower of Telmur, looking for a text of portals, although he is not sure it is even there. He told you to come back in a few days."
 	end
 	if self:isCompleted("ask-east") then
-		desc[#desc+1] = "You brought back the diamond and athame to Tannen who asked you to check contact Zemekkys to ask some delicate questions."
+		desc[#desc+1] = "You brought back the diamond and athame to Tannen who asked you to contact Zemekkys to ask some delicate questions."
 	end
 	if self:isCompleted("just-wait") then
 		desc[#desc+1] = "You brought back the diamond and athame to Tannen who asked you to come back in a few days."

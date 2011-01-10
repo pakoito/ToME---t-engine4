@@ -22,6 +22,15 @@ local Astar = require "engine.Astar"
 -- AI for the escort quest
 -- the NPC will run toward the portal, if hostiles are in sight he attacks them
 newAI("escort_quest", function(self)
+	if self.ai_state.tactic_escort_rest then
+		self.ai_state.tactic_escort_rest = self.ai_state.tactic_escort_rest - 1
+		-- Rest
+		if self.ai_state.tactic_escort_rest > 0 then self:useEnergy() return true
+		-- Cooldown
+		elseif self.ai_state.tactic_escort_rest < -20 then self.ai_state.tactic_escort_rest = nil
+		end
+	end
+
 	if self:runAI("target_simple") then
 		-- One in "talent_in" chance of using a talent
 		if rng.chance(self.ai_state.talent_in or 6) and self:reactionToward(self.ai_target.actor) < 0 then

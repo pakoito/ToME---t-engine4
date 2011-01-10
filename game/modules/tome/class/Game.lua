@@ -796,6 +796,14 @@ function _M:setupCommands()
 		SWITCH_PARTY_7 = not_wild(function() self.party:select(7) end),
 		SWITCH_PARTY_8 = not_wild(function() self.party:select(8) end),
 		SWITCH_PARTY = not_wild(function() self:registerDialog(require("mod.dialogs.PartySelect").new()) end),
+		ORDER_PARTY_1 = not_wild(function() self.party:giveOrders(1) end),
+		ORDER_PARTY_2 = not_wild(function() self.party:giveOrders(2) end),
+		ORDER_PARTY_3 = not_wild(function() self.party:giveOrders(3) end),
+		ORDER_PARTY_4 = not_wild(function() self.party:giveOrders(4) end),
+		ORDER_PARTY_5 = not_wild(function() self.party:giveOrders(5) end),
+		ORDER_PARTY_6 = not_wild(function() self.party:giveOrders(6) end),
+		ORDER_PARTY_7 = not_wild(function() self.party:giveOrders(7) end),
+		ORDER_PARTY_8 = not_wild(function() self.party:giveOrders(8) end),
 
 		-- Actions
 		CHANGE_LEVEL = function()

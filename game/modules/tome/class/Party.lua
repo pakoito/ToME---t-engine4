@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Entity"
 local Map = require "engine.Map"
+local GetQuantity = require "engine.dialogs.GetQuantity"
 local PartyOrder = require "mod.dialogs.PartyOrder"
 
 module(..., package.seeall, class.inherit(
@@ -45,10 +46,20 @@ function _M:addMember(actor, def)
 	self.m_list[#self.m_list+1] = actor
 	def.index = #self.m_list
 
+	actor.ai_state = actor.ai_state or {}
+	actor.ai_state.tactic_behavior = actor.ai_state.tactic_behavior or "defensive"
+	actor.ai_state.tactic_leash = actor.ai_state.tactic_leash or 10
+
 	actor.addEntityOrder = function(self, level)
 		print("[PARTY] New member, add after", self.name, game.party.m_list[1].name)
 		return game.party.m_list[1] -- Make the sure party is always consecutive in the level entities list
 	end
+
+	-- Turn NPCs into party members
+	actor:replaceWith(require("mod.class.PartyMember").new(actor))
+
+	-- Notify the UI
+	game.player.changed = true
 end
 
 function _M:removeMember(actor, silent)
@@ -67,6 +78,9 @@ function _M:removeMember(actor, silent)
 	for i = 1, #self.m_list do
 		self.members[self.m_list[i]].index = i
 	end
+
+	-- Notify the UI
+	game.player.changed = true
 end
 
 function _M:hasMember(actor)
@@ -172,11 +186,11 @@ function _M:canOrder(actor, order, vocal)
 	if actor == game.player then return false end
 
 	if not self.members[actor] then
---		print("[PARTY] error trying to order, not a member of party: ", actor.uid, actor.name)
+		print("[PARTY] error trying to order, not a member of party: ", actor.uid, actor.name)
 		return false
 	end
-	if self.members[actor].control ~= "full" or self.members[actor].control ~= "order" or not self.members[actor].orders then
---		print("[PARTY] error trying to order, not controlable: ", actor.uid, actor.name)
+	if (self.members[actor].control ~= "full" and self.members[actor].control ~= "order") or not self.members[actor].orders then
+		print("[PARTY] error trying to order, not controlable: ", actor.uid, actor.name)
 		return false
 	end
 	if actor.dead or (game.level and not game.level:hasEntity(actor)) then
@@ -185,7 +199,7 @@ function _M:canOrder(actor, order, vocal)
 	end
 	if actor.on_can_order and not actor:on_can_order(vocal) then return false end
 	if order and not self.members[actor].orders[order] then
---		print("[PARTY] error trying to order, unknown order: ", actor.uid, actor.name)
+		print("[PARTY] error trying to order, unknown order: ", actor.uid, actor.name)
 		return false
 	end
 	return true
@@ -213,8 +227,40 @@ function _M:giveOrder(actor, order)
 	local def = self.members[actor]
 
 	if order == "leash" then
+		game:registerDialog(GetQuantity.new("Set action radius: "..actor.name, "Set the maximun distance this creature can go from the party master", actor.ai_state.tactic_leash, actor.ai_state.tactic_leash_max or 100, function(qty)
+			actor.ai_state.tactic_leash = util.bound(qty, 1, actor.ai_state.tactic_leash_max or 100)
+			game.logPlayer(game.player, "%s maximun action radius set to %d.", actor.name:capitalize(), actor.ai_state.tactic_leash)
+		end), 1)
 	elseif order == "behavior" then
---		game:registerDialog(require
+		game:registerDialog(require("mod.dialogs.orders."..order:capitalize()).new(actor, def))
+
+	-------------------------------------------
+	-- Escort specifics
+	-------------------------------------------
+	elseif order == "escort_rest" then
+		-- Rest for a few turns
+		if actor.ai_state.tactic_escort_rest then actor:doEmote("No, we must hurry!", 40) return true end
+		actor.ai_state.tactic_escort_rest = rng.range(6, 10)
+		actor:doEmote("Ok, but not for long.", 40)
+	elseif order == "escort_portal" then
+		local dist = core.fov.distance(actor.escort_target.x, actor.escort_target.y, actor.x, actor.y)
+		if dist < 8 then dist = "very close"
+		elseif dist < 16 then dist = "close"
+		else dist = "still far away"
+		end
+
+		local dir
+		if     actor.escort_target.x < actor.x and actor.escort_target.y < actor.y then dir = "north-west"
+		elseif actor.escort_target.x > actor.x and actor.escort_target.y < actor.y then dir = "north-east"
+		elseif actor.escort_target.x < actor.x and actor.escort_target.y > actor.y then dir = "south-west"
+		elseif actor.escort_target.x > actor.x and actor.escort_target.y > actor.y then dir = "south-east"
+		elseif actor.escort_target.x > actor.x and actor.escort_target.y == actor.y then dir = "east"
+		elseif actor.escort_target.x < actor.x and actor.escort_target.y == actor.y then dir = "west"
+		elseif actor.escort_target.x == actor.x and actor.escort_target.y < actor.y then dir = "north"
+		elseif actor.escort_target.x == actor.x and actor.escort_target.y > actor.y then dir = "south"
+		end
+
+		actor:doEmote(("The portal is %s, to the %s."):format(dist, dir), 45)
 	end
 
 	return true
