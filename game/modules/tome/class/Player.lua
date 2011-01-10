@@ -418,7 +418,7 @@ function _M:die(src)
 		self.died_times[#self.died_times+1] = {name=src.name, level=self.level, turn=game.turn}
 		self:registerDeath(self.killedBy)
 		if self.death_dialog then
-			game:registerDialog(require("mod.class."..self.death_dialog).new(self))
+			game:registerDialog(require("mod.dialogs."..self.death_dialog).new(self))
 		else
 			game:registerDialog(DeathDialog.new(self))
 		end
