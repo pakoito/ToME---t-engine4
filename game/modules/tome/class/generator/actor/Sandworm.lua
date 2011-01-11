@@ -43,12 +43,12 @@ function _M:generate()
 		while used[idx] do s, idx = rng.table(self.spots) end
 		used[idx] = true
 
-		self:placeWorm(s)
+--		self:placeWorm(s)
 	end
 
 	-- Always add one near the stairs
 	self:placeWorm(self.level.default_up)
-	self:placeWorm(self.level.default_down)
+--	self:placeWorm(self.level.default_down)
 end
 
 function _M:placeWorm(s)

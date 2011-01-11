@@ -20,6 +20,55 @@
 local Object = require "engine.Object"
 local DamageType = require "engine.DamageType"
 
+--- Random tunnel dir
+local function randDir()
+	local dirs = {4,6,8,2}
+	local d = dir_to_coord[dirs[rng.range(1, #dirs)]]
+	return d[1], d[2]
+end
+
+--- Find the direction in which to tunnel
+local function tunnelDir(x1, y1, x2, y2)
+	local xdir = (x1 == x2) and 0 or ((x1 < x2) and 1 or -1)
+	local ydir = (y1 == y2) and 0 or ((y1 < y2) and 1 or -1)
+	if xdir ~= 0 and ydir ~= 0 then
+		if rng.percent(50) then xdir = 0
+		else ydir = 0
+		end
+	end
+	return xdir, ydir
+end
+
+local function tunnel(self, x1, y1, x2, y2)
+	if x1 == x2 and y1 == y2 then return end
+	-- Disable the many prints of tunnelling
+--	local print = function()end
+
+	local xdir, ydir = tunnelDir(x1, y1, x2, y2)
+--	print("tunneling from",x1, y1, "to", x2, y2, "initial dir", xdir, ydir)
+
+	local startx, starty = x1, y1
+
+	if rng.percent(30) then
+		if rng.percent(10) then xdir, ydir = randDir()
+		else xdir, ydir = tunnelDir(x1, y1, x2, y2)
+		end
+	end
+
+	local nx, ny = x1 + xdir, y1 + ydir
+	while true do
+		if self.map:isBound(nx, ny) then break end
+
+		if rng.percent(10) then xdir, ydir = randDir()
+		else xdir, ydir = tunnelDir(x1, y1, x2, y2)
+		end
+		nx, ny = x1 + xdir, y1 + ydir
+	end
+	print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
+
+	return nx, ny
+end
+
 -- Very special AI for sandworm tunnelers in the sandworm lair
 -- Does not care about a target, simple crawl toward a level spot and when there, go for the next
 newAI("sandworm_tunneler", function(self)
@@ -41,8 +90,7 @@ newAI("sandworm_tunneler", function(self)
 	end
 
 	-- Move toward it, digging your way to it
-	local l = line.new(self.x, self.y, self.ai_state.spot_x or self.x, self.ai_state.spot_y or self.y)
-	local lx, ly = l()
+	local lx, ly = tunnel(game.level, self.x, self.y, self.ai_state.spot_x, self.ai_state.spot_y)
 	if not lx then
 		self.ai_state.spot_x = nil
 		self.ai_state.spot_y = nil

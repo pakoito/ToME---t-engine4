@@ -125,14 +125,14 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_CURSE_VULNERABILITY, 10, {power=self:combatTalentSpellDamage(t, 10, 60)})
+				target:setEffect(target.EFF_CURSE_VULNERABILITY, 7, {power=self:combatTalentSpellDamage(t, 10, 40)})
 			end
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Curses your target, decreasing all its resistances by %d%% for 10 turns.
-		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 60))
+		return ([[Curses your target, decreasing all its resistances by %d%% for 7 turns.
+		The resistances will decrease with Magic stat.]]):format(self:combatTalentSpellDamage(t, 10, 40))
 	end,
 }

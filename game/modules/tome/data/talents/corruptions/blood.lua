@@ -109,7 +109,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local ret = {
-			per = self:addTemporaryValue("combat_spellcrit", self:combatTalentSpellDamage(t, 10, 24)),
+			per = self:addTemporaryValue("combat_spellcrit", self:combatTalentSpellDamage(t, 10, 14)),
 		}
 		return ret
 	end,
@@ -121,6 +121,6 @@ newTalent{
 		return ([[Concentrate on the corruption you bring, increasing your spell critical chance by %d%%.
 		Each time your spells are critical you enter a blood rage for 5 turns, increasing your blight and acid damage by %d%%.
 		The damage will increase with your Magic stat.]]):
-		format(self:combatTalentSpellDamage(t, 10, 24), self:combatTalentSpellDamage(t, 10, 30))
+		format(self:combatTalentSpellDamage(t, 10, 14), self:combatTalentSpellDamage(t, 10, 30))
 	end,
 }
