@@ -33,7 +33,7 @@ newEntity{
 	name = "sand", image = "terrain/sand.png",
 	display = '.', color={r=203,g=189,b=72}, back_color={r=93,g=79,b=22},
 	grow = "SANDWALL_STABLE",
-	nice_tiler = { method="replace", base={"SAND", 10, 1, 11}},
+	nice_tiler = { method="replace", base={"UNDERGROUND_SAND", 10, 1, 11}},
 }
 for i = 1, 11 do newEntity{ base = "UNDERGROUND_SAND", define_as = "UNDERGROUND_SAND"..i, image = "terrain/sand_"..i..".png"} end
 
@@ -83,7 +83,7 @@ newEntity{
 		game.level:addEntity(sand)
 		return nil, sand, true
 	end,
---[[
+-- [[
 	nice_tiler = { method="roundwall3d",
 		inner={"SANDWALL", 10, 1, 6},
 		wall8={"SANDWALL_8", 100, 1, 6},
@@ -100,7 +100,7 @@ newEntity{
 		inner_wall9={"SANDWALL_9_INNER", 100, 1, 1},
 --		north_south="SANDWALL_NORTH_SOUTH",
 	},
-]]
+--]]
 }
 
 for i = 1, 6 do
