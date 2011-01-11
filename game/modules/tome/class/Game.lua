@@ -718,7 +718,18 @@ function _M:setupCommands()
 	self.key:addCommands{
 		[{"_a","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
 		[{"_d","ctrl"}] = function() if config.settings.cheat then
-			game.party:setPlayer(game.player.alchemy_golem)
+			print(game.level.map(game.player.x, game.player.y, Map.TERRAIN).define_as, game.level.map(game.player.x, game.player.y, Map.TERRAIN).image)
+			local add = game.level.map(game.player.x, game.player.y, Map.TERRAIN).add_displays
+			if add then for i, e in ipairs(add) do print(" -", e.image) end end
+		end end,
+		[{"_f","ctrl"}] = function() if config.settings.cheat then
+			local nt = NicerTiles.new()
+			nt:handle(self.level, game.player.x, game.player.y)
+			nt:replaceAll(self.level)
+		end end,
+		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			local nt = NicerTiles.new()
+			nt:postProcessLevelTiles(self.level)
 		end end,
 	}
 

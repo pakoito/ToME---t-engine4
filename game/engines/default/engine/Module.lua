@@ -217,7 +217,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 				local fff = fs.open(f, "r")
 				if fff then
 					local data = fff:read(10485760)
-					md5s[#md5s+1] = f..":"..md5.sumhexa(data)
+					if data and data ~= "" then
+						md5s[#md5s+1] = f..":"..md5.sumhexa(data)
+					end
 					fff:close()
 				end
 			end

@@ -49,18 +49,26 @@ function _M:replace(i, j, g)
 	end
 end
 
-function _M:postProcessLevelTiles(level)
-	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
-		local g = level.map(i, j, Map.TERRAIN)
-		if g and Map.tiles.nicer_tiles and g.nice_tiler then
-			self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler)
-		end
-	end end
+function _M:handle(level, i, j)
+	local g = level.map(i, j, Map.TERRAIN)
+	if g and Map.tiles.nicer_tiles and g.nice_tiler then
+		self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler)
+	end
+end
 
+function _M:replaceAll(level)
 	for i = 1, #self.repl do
 		local r = self.repl[i]
 		level.map(r[1], r[2], Map.TERRAIN, r[3])
 	end
+end
+
+function _M:postProcessLevelTiles(level)
+	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
+		self:handle(level, i, j)
+	end end
+
+	self:replaceAll(level)
 end
 
 --- Make walls have a pseudo 3D effect
@@ -83,6 +91,42 @@ function _M:niceTileWall3d(level, i, j, g, nt)
 	elseif gsc ~= s then self:replace(i, j, self:getTile(nt.south))
 	elseif gnc ~= s then self:replace(i, j, self:getTile(nt.north))
 	elseif nt.inner then self:replace(i, j, self:getTile(nt.inner))
+	end
+end
+
+--- Make walls have a pseudo 3D effect & rounded corners
+function _M:niceTileRoundwall3d(level, i, j, g, nt)
+	local s = level.map:checkEntity(i, j, Map.TERRAIN, "block_move") and true or false
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move") and true or false
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move") and true or false
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "block_move") and true or false
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "block_move") and true or false
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "block_move") and true or false
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "block_move") and true or false
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "block_move") and true or false
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "block_move") and true or false
+
+	print(g7,g8,g9)
+	print(g4,s,g6)
+	print(g1,g2,g3)
+
+	-- Full
+	if g1==s and g2==s and g3==s and g4==s and g6==s and g7==s and g8==s and g9==s then self:replace(i, j, self:getTile(nt.inner))
+	-- Corners
+	elseif g4~=s and g7~=s and g8~=s then self:replace(i, j, self:getTile(nt.wall7))
+	elseif g4~=s and g1~=s and g2~=s then self:replace(i, j, self:getTile(nt.wall1))
+	elseif g2~=s and g3~=s and g6~=s then self:replace(i, j, self:getTile(nt.wall3))
+	elseif g6~=s and g9~=s and g8~=s then self:replace(i, j, self:getTile(nt.wall9))
+	-- Sides
+	elseif g4==s and g6==s and g8~=s then self:replace(i, j, self:getTile(nt.wall8))
+	elseif g4==s and g6==s and g2~=s then self:replace(i, j, self:getTile(nt.wall2))
+	elseif g8==s and g2==s and g4~=s then self:replace(i, j, self:getTile(nt.wall4))
+	elseif g8==s and g2==s and g6~=s then self:replace(i, j, self:getTile(nt.wall6))
+	-- Inner corners
+	elseif g4==s and g7~=s and g8==s then self:replace(i, j, self:getTile(nt.inner_wall3))
+	elseif g4==s and g1~=s and g2==s then self:replace(i, j, self:getTile(nt.inner_wall9))
+	elseif g2==s and g3~=s and g6==s then self:replace(i, j, self:getTile(nt.inner_wall7))
+	elseif g6==s and g9~=s and g8==s then self:replace(i, j, self:getTile(nt.inner_wall1))
 	end
 end
 

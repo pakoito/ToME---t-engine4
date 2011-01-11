@@ -43,7 +43,7 @@ newEntity{ base = "TRAP_NATURAL_FOREST",
 }
 
 newEntity{ base = "TRAP_NATURAL_FOREST",
-	name = "poison vine", auto_id = true,
+	name = "poison vine", auto_id = true, image = "trap/poison_vines01.png",
 	detect_power = 8, disarm_power = 2,
 	rarity = 3, level_range = {1, 50},
 	color=colors.GREEN,

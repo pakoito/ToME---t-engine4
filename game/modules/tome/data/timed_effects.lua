@@ -186,8 +186,8 @@ newEffect{
 --			self.add_displays = { Entity.new{image='npc/iceblock.png', display=' ', display_on_seen=true } }
 --			eff.added_display = true
 --		end
-		if self._mo then self._mo:invalidate() end
-		game.level.map:updateMap(self.x, self.y)
+--		if self._mo then self._mo:invalidate() end
+--		game.level.map:updateMap(self.x, self.y)
 
 		eff.tmpid = self:addTemporaryValue("encased_in_ice", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
@@ -202,7 +202,7 @@ newEffect{
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b
 --		if eff.added_display then self.add_displays = nil end
-		if self._mo then self._mo:invalidate() end
+--		if self._mo then self._mo:invalidate() end
 	end,
 }
 
