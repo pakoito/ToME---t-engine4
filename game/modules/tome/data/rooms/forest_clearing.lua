@@ -92,7 +92,7 @@ return function(gen, id)
 				end
 			end
 		else
-			return make_hmap(self, x, y, is_lit) end
+			return make_hmap(self, x, y, is_lit)
 		end
 
 		-- Materialize the map

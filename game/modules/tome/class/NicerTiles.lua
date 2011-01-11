@@ -96,15 +96,15 @@ end
 
 --- Make walls have a pseudo 3D effect & rounded corners
 function _M:niceTileRoundwall3d(level, i, j, g, nt)
-	local s = level.map:checkEntity(i, j, Map.TERRAIN, "block_move") and true or false
-	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move") and true or false
-	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move") and true or false
-	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "block_move") and true or false
-	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "block_move") and true or false
-	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "block_move") and true or false
-	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "block_move") and true or false
-	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "block_move") and true or false
-	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "block_move") and true or false
+	local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "type") or "wall"
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall"
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall"
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall"
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "type") or "wall"
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "type") or "wall"
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "type") or "wall"
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "type") or "wall"
 
 	-- Full
 	if g1==s and g2==s and g3==s and g4==s and g6==s and g7==s and g8==s and g9==s then self:replace(i, j, self:getTile(nt.inner))
