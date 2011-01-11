@@ -90,7 +90,7 @@ newBirthDescriptor{
 	selection_default = not profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"Tutorial mode: start with a simplified character and discover the game in a simple quest.",
+		"#GOLD##{bold}#Tutorial mode#WHITE# start with a simplified character and discover the game in a simple quest.#{normal}#",
 		"You will be guided by a helpful spirit while learning.",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",
@@ -116,7 +116,7 @@ newBirthDescriptor{
 	display_name = "Discovery",
 	desc =
 	{
-		"Easy game mode",
+		"#GOLD##{bold}#Discovery mode#WHITE# provides an easier game experience.\nUse it if you feel uneasy tackling the harder modes.#{normal}#",
 		"All damage done to the player decreased by 30%",
 		"All healing for the player increased by 30%",
 		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
@@ -135,10 +135,11 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Normal",
+	display_name = "Aventure",
 	selection_default = profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"Normal game mode",
+		"#GOLD##{bold}#Aventure mode#WHITE# provides the normal game experience but with limited extra lifes.\nUse it if you want a normal playing conditions but do not feel ready for just one life.#{normal}#",
 		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
 	},
 	descriptor_choices =
@@ -153,10 +154,10 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
-	name = "Hardcore",
+	name = "Roguelike",
 	desc =
 	{
-		"Normal game setting",
+		"#GOLD##{bold}#Roguelike mode provides the closer experience to 'classic' roguelike games. You will only have one life, you *ARE* your character.#WHITE##{normal}#",
 		"Only one life, unless ways to self-resurrect are found in-game.",
 	},
 	descriptor_choices =
@@ -168,26 +169,10 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
-	name = "Nightmare",
-	desc =
-	{
-		"Hard game setting",
-		"Only one life, unless ways to self-resurrect are found in-game.",
-		"All zone levels increased by 40% + 5",
-		"All damage done to the player increased by 30%",
-	},
-	descriptor_choices =
-	{
-		race = { ["Tutorial Human"] = "forbid", },
-		class = { ["Tutorial Adventurer"] = "forbid", },
-	},
-	copy = { __game_difficulty = 4 },
-}
-newBirthDescriptor{
-	type = "difficulty",
 	name = "Insane",
 	desc =
 	{
+		"#GOLD##{bold}#Insane mode#WHITE# the basic roguelike mode rules with add unfairness!#{normal}#",
 		"Absolutely unfair game setting",
 		"Only one life, unless ways to self-resurrect are found in-game.",
 		"All zone levels increased by 100% + 10",
