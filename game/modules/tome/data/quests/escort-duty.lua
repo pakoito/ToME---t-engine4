@@ -319,6 +319,7 @@ on_grant = function(self, who)
 	self.kind.actor.summoner = who
 	self.kind.actor.quest_id = self.id
 	self.kind.actor.escort_quest = true
+	self.kind.actor.remove_from_party_on_death = true
 	self.kind.actor.on_die = function(self, who)
 		if self.sunwall_query then game.state.found_sunwall_west_died = true end
 		game.logPlayer(game.player, "#LIGHT_RED#%s is dead, quest failed!", self.name:capitalize())
@@ -354,6 +355,7 @@ on_grant = function(self, who)
 		Chat.new("escort-quest", who, game.player, {npc=who}):invoke()
 		who:disappear()
 		who:removed()
+		game.party:removeMember(who, true)
 	end
 
 	g:resolve() g:resolve(nil, true)
