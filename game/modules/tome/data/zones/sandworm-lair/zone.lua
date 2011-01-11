@@ -37,11 +37,11 @@ return {
 			nb_rooms = 10,
 			lite_room_chance = 0,
 			rooms = {"forest_clearing"},
-			['.'] = "SAND",
+			['.'] = "UNDERGROUND_SAND",
 			['#'] = "SANDWALL",
 			up = "SAND_LADDER_UP",
 			down = "SAND_LADDER_DOWN",
-			door = "SAND",
+			door = "UNDERGROUND_SAND",
 		},
 		actor = {
 			class = "mod.class.generator.actor.Sandworm",

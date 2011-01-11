@@ -33,11 +33,11 @@ return {
 			class = "engine.generator.map.Cavern",
 			zoom = 16,
 			min_floor = 1200,
-			floor = "SAND",
+			floor = "UNDERGROUND_SAND",
 			wall = "SANDWALL_STABLE",
 			up = "SAND_LADDER_UP",
 			down = "SAND_LADDER_DOWN",
-			door = "SAND",
+			door = "UNDERGROUND_SAND",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

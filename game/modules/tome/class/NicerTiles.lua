@@ -106,10 +106,6 @@ function _M:niceTileRoundwall3d(level, i, j, g, nt)
 	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "block_move") and true or false
 	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "block_move") and true or false
 
-	print(g7,g8,g9)
-	print(g4,s,g6)
-	print(g1,g2,g3)
-
 	-- Full
 	if g1==s and g2==s and g3==s and g4==s and g6==s and g7==s and g8==s and g9==s then self:replace(i, j, self:getTile(nt.inner))
 	-- Corners
@@ -148,32 +144,40 @@ function _M:niceTileReplace(level, i, j, g, nt)
 end
 
 --- Make water have nice transition to other stuff
-function _M:niceTileWater(level, i, j, g, nt)
-	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or "water"
-	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or "water"
-	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "subtype") or "water"
-	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "subtype") or "water"
-	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "subtype") or "water"
-	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "subtype") or "water"
-	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "subtype") or "water"
-	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "subtype") or "water"
+function _M:niceTileGenericBorders(level, i, j, g, nt, type, allow)
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or type
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or type
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "subtype") or type
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "subtype") or type
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "subtype") or type
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "subtype") or type
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "subtype") or type
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "subtype") or type
 
 	-- Sides
-	if     g4=="water" and g6=="water" and g8=="grass" then self:replace(i, j, self:getTile(nt.grass8))
-	elseif g4=="water" and g6=="water" and g2=="grass" then self:replace(i, j, self:getTile(nt.grass2))
-	elseif g8=="water" and g2=="water" and g4=="grass" then self:replace(i, j, self:getTile(nt.grass4))
-	elseif g8=="water" and g2=="water" and g6=="grass" then self:replace(i, j, self:getTile(nt.grass6))
+	if     g4==type and g6==type and allow[g8] then self:replace(i, j, self:getTile(nt[g8.."8"]))
+	elseif g4==type and g6==type and allow[g2] then self:replace(i, j, self:getTile(nt[g2.."2"]))
+	elseif g8==type and g2==type and allow[g4] then self:replace(i, j, self:getTile(nt[g4.."4"]))
+	elseif g8==type and g2==type and allow[g6] then self:replace(i, j, self:getTile(nt[g6.."6"]))
 	-- Corners
-	elseif g4=="grass" and g7=="grass" and g8=="grass" then self:replace(i, j, self:getTile(nt.grass7))
-	elseif g4=="grass" and g1=="grass" and g2=="grass" then self:replace(i, j, self:getTile(nt.grass1))
-	elseif g2=="grass" and g3=="grass" and g6=="grass" then self:replace(i, j, self:getTile(nt.grass3))
-	elseif g6=="grass" and g9=="grass" and g8=="grass" then self:replace(i, j, self:getTile(nt.grass9))
+	elseif allow[g4] and allow[g7] and allow[g8] then self:replace(i, j, self:getTile(nt[g7.."7"]))
+	elseif allow[g4] and allow[g1] and allow[g2] then self:replace(i, j, self:getTile(nt[g1.."1"]))
+	elseif allow[g2] and allow[g3] and allow[g6] then self:replace(i, j, self:getTile(nt[g3.."3"]))
+	elseif allow[g6] and allow[g9] and allow[g8] then self:replace(i, j, self:getTile(nt[g9.."9"]))
 	-- Inner corners
-	elseif g4=="water" and g7=="grass" and g8=="water" then self:replace(i, j, self:getTile(nt.inner_grass3))
-	elseif g4=="water" and g1=="grass" and g2=="water" then self:replace(i, j, self:getTile(nt.inner_grass9))
-	elseif g2=="water" and g3=="grass" and g6=="water" then self:replace(i, j, self:getTile(nt.inner_grass7))
-	elseif g6=="water" and g9=="grass" and g8=="water" then self:replace(i, j, self:getTile(nt.inner_grass1))
+	elseif g4==type and allow[g7] and g8==type then self:replace(i, j, self:getTile(nt["inner_"..g7.."3"]))
+	elseif g4==type and allow[g1] and g2==type then self:replace(i, j, self:getTile(nt["inner_"..g1.."9"]))
+	elseif g2==type and allow[g3] and g6==type then self:replace(i, j, self:getTile(nt["inner_"..g3.."7"]))
+	elseif g6==type and allow[g9] and g8==type then self:replace(i, j, self:getTile(nt["inner_"..g9.."1"]))
 	-- Full
-	elseif g1=="water" and g2=="water" and g3=="water" and g4=="water" and g6=="water" and g7=="water" and g8=="water" and g9=="water" then self:replace(i, j, self:getTile(nt.water))
+	elseif g1==type and g2==type and g3==type and g4==type and g6==type and g7==type and g8==type and g9==type then self:replace(i, j, self:getTile(nt[type]))
 	end
+end
+
+function _M:niceTileWater(level, i, j, g, nt)
+	self:niceTileGenericBorders(level, i, j, g, nt, "water", {grass=true, sand=true})
+end
+
+function _M:niceTileGrassSand(level, i, j, g, nt)
+	self:niceTileGenericBorders(level, i, j, g, nt, "sand", {grass=true})
 end

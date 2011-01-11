@@ -84,11 +84,17 @@ newEntity{
 	air_level = -5, air_condition="water",
 }
 
+-----------------------------------------
+-- Water/grass
+-----------------------------------------
+
 newEntity{ base="WATER_BASE",
 	define_as = "DEEP_WATER",
 	add_displays = class:makeWater(true),
 	nice_tiler = { method="water",
-		water="WATER_GRASS_5", grass8={"WATER_GRASS_8", 100, 1, 2}, grass2={"WATER_GRASS_2", 100, 1, 2}, grass4={"WATER_GRASS_4", 100, 1, 2}, grass6={"WATER_GRASS_6", 100, 1, 2}, grass1={"WATER_GRASS_1", 100, 1, 2}, grass3={"WATER_GRASS_3", 100, 1, 2}, grass7={"WATER_GRASS_7", 100, 1, 2}, grass9={"WATER_GRASS_9", 100, 1, 2}, inner_grass1="WATER_GRASS_1I", inner_grass3="WATER_GRASS_3I", inner_grass7="WATER_GRASS_7I", inner_grass9="WATER_GRASS_9I"
+		water="WATER_GRASS_5",
+		grass8={"WATER_GRASS_8", 100, 1, 2}, grass2={"WATER_GRASS_2", 100, 1, 2}, grass4={"WATER_GRASS_4", 100, 1, 2}, grass6={"WATER_GRASS_6", 100, 1, 2}, grass1={"WATER_GRASS_1", 100, 1, 2}, grass3={"WATER_GRASS_3", 100, 1, 2}, grass7={"WATER_GRASS_7", 100, 1, 2}, grass9={"WATER_GRASS_9", 100, 1, 2}, inner_grass1="WATER_GRASS_1I", inner_grass3="WATER_GRASS_3I", inner_grass7="WATER_GRASS_7I", inner_grass9="WATER_GRASS_9I",
+		sand8={"WATER_SAND_8", 100, 1, 1}, sand2={"WATER_SAND_2", 100, 1, 1}, sand4={"WATER_SAND_4", 100, 1, 1}, sand6={"WATER_SAND_6", 100, 1, 1}, sand1={"WATER_SAND_1", 100, 1, 1}, sand3={"WATER_SAND_3", 100, 1, 1}, sand7={"WATER_SAND_7", 100, 1, 1}, sand9={"WATER_SAND_9", 100, 1, 1}, inner_sand1="WATER_SAND_1I", inner_sand3="WATER_SAND_3I", inner_sand7="WATER_SAND_7I", inner_sand9="WATER_SAND_9I",
 	},
 }
 
@@ -101,6 +107,41 @@ newEntity{base="WATER_BASE", define_as = "WATER_GRASS_3I", image="terrain/water_
 newEntity{base="WATER_BASE", define_as = "WATER_GRASS_7I", image="terrain/water_grass_7i_1.png"}
 newEntity{base="WATER_BASE", define_as = "WATER_GRASS_9I", image="terrain/water_grass_9i_1.png"}
 
+-----------------------------------------
+-- Water(ocean)/grass
+-----------------------------------------
+
+newEntity{ base="WATER_BASE",
+	define_as = "DEEP_OCEAN_WATER",
+	add_displays = class:makeWater(true),
+	nice_tiler = { method="water",
+		water="OCEAN_WATER_GRASS_5",
+		grass8={"OCEAN_WATER_GRASS_8", 100, 1, 2}, grass2={"OCEAN_WATER_GRASS_2", 100, 1, 2}, grass4={"OCEAN_WATER_GRASS_4", 100, 1, 2}, grass6={"OCEAN_WATER_GRASS_6", 100, 1, 2}, grass1={"OCEAN_WATER_GRASS_1", 100, 1, 2}, grass3={"OCEAN_WATER_GRASS_3", 100, 1, 2}, grass7={"OCEAN_WATER_GRASS_7", 100, 1, 2}, grass9={"OCEAN_WATER_GRASS_9", 100, 1, 2}, inner_grass1="OCEAN_WATER_GRASS_1I", inner_grass3="OCEAN_WATER_GRASS_3I", inner_grass7="OCEAN_WATER_GRASS_7I", inner_grass9="OCEAN_WATER_GRASS_9I",
+		sand8={"WATER_SAND_8", 100, 1, 1}, sand2={"WATER_SAND_2", 100, 1, 1}, sand4={"WATER_SAND_4", 100, 1, 1}, sand6={"WATER_SAND_6", 100, 1, 1}, sand1={"WATER_SAND_1", 100, 1, 1}, sand3={"WATER_SAND_3", 100, 1, 1}, sand7={"WATER_SAND_7", 100, 1, 1}, sand9={"WATER_SAND_9", 100, 1, 1}, inner_sand1="WATER_SAND_1I", inner_sand3="WATER_SAND_3I", inner_sand7="WATER_SAND_7I", inner_sand9="WATER_SAND_9I",
+	},
+}
+
+newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_5", image="terrain/ocean_water_grass_5_1.png"}
+for i = 1, 9 do for j = 1, 2 do
+	if i ~= 5 then newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_"..i..j, image="terrain/ocean_water_grass_"..i.."_"..j..".png"} end
+end end
+newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_1I", image="terrain/ocean_water_grass_1i_1.png"}
+newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_3I", image="terrain/ocean_water_grass_3i_1.png"}
+newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_7I", image="terrain/ocean_water_grass_7i_1.png"}
+newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_9I", image="terrain/ocean_water_grass_9i_1.png"}
+
+-----------------------------------------
+-- Water/sand
+-----------------------------------------
+
+for i = 1, 9 do for j = 1, 1 do
+	if i ~= 5 then newEntity{base="WATER_BASE", define_as = "WATER_SAND_"..i..j, image="terrain/water_sand_"..i.."_"..j..".png"} end
+end end
+newEntity{base="WATER_BASE", define_as = "WATER_SAND_1I", image="terrain/water_sand_1i_1.png"}
+newEntity{base="WATER_BASE", define_as = "WATER_SAND_3I", image="terrain/water_sand_3i_1.png"}
+newEntity{base="WATER_BASE", define_as = "WATER_SAND_7I", image="terrain/water_sand_7i_1.png"}
+newEntity{base="WATER_BASE", define_as = "WATER_SAND_9I", image="terrain/water_sand_9i_1.png"}
+
 newEntity{
 	define_as = "POISON_DEEP_WATER",
 	name = "poisoned deep water", image = "terrain/water_floor.png",
@@ -109,10 +150,6 @@ newEntity{
 	always_remember = true,
 	air_level = -5, air_condition="water",
 }
-
------------------------------------------
--- Water/grass
------------------------------------------
 
 
 -----------------------------------------
