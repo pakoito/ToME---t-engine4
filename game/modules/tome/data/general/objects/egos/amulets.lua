@@ -19,6 +19,8 @@
 
 local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
+local Talents = require "engine.interface.ActorTalents"
+
 
 --load("/data/general/objects/egos/charged-attack.lua")
 --load("/data/general/objects/egos/charged-defensive.lua")
@@ -109,16 +111,7 @@ newEntity{
 	end}
 }
 
-newEntity{
-	name = "shielding ", prefix=true,
-	level_range = {1, 50},
-	rarity = 6,
-	cost = 5,
-	wielder = {
-		blind_immune = 0.15,
-		confusion_immune = 0.15,
-	},
-}
+
 
 newEntity{
 	name = "insulating ", prefix=true,
@@ -134,7 +127,7 @@ newEntity{
 }
 
 newEntity{
-	name = "grounding ", prefix=true,
+	name = "grounding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -142,18 +135,29 @@ newEntity{
 		resists={
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
 		},
-		stun_immune = 0.1,
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
 	},
 }
 
 newEntity{
-	name = "stabilizing ", prefix=true,
+	name = "stabilizing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		stun_immune = 0.15,
-		knockback_immune = 0.15,
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "shielding ", prefix=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		blind_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		confusion_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
 	},
 }
 
@@ -184,9 +188,99 @@ newEntity{
 		inc_stats={
 			[Stats.STAT_CON] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end),
 		},
-		combat_physresist = 5,
+		combat_physresist = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
 		max_life = resolvers.mbonus_material(50, 30, function(e, v) return v * 0.1 end),
 		life_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return v * 10, v end),
-		max_stamina = 20,
+		max_stamina = resolvers.mbonus_material(20, 10, function(e, v) return v * 0.1 end),
+	},
+}
+
+
+newEntity{
+	name = " of murder", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 40,
+	wielder = {
+		combat_physcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 1.4 end),
+		combat_critical_power = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return v * 200, v end),
+		combat_atk = resolvers.mbonus_material(5, 5, function(e, v) return v * 1 end),
+		combat_apr = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.3 end),
+	},
+}
+
+
+newEntity{
+	name = " of vision", suffix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		see_invisible = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.2 end),
+		blind_immune = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+		infravision = resolvers.mbonus_material(2, 1, function(e, v) return v * 1.4 end),
+		trap_detect_power = resolvers.mbonus_material(15, 5, function(e, v) return v * 1.2 end),
+	},
+}
+
+
+newEntity{
+	name = " of healing", suffix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 60,
+	wielder = {
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		cut_immune = resolvers.mbonus_material(4, 4, function(e, v) v=v/10 return v * 8, v end),
+	},
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_HEAL, level = 3, power = 80 },
+}
+
+newEntity{
+	name = "protective ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 40,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(3, 2, function(e, v) return v * 1 end),
+		combat_def = resolvers.mbonus_material(4, 4, function(e, v) return v * 1 end),
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "enraging ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 90,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(5, 5, function(e, v) return v * 3 end),
+		inc_damage = { [DamageType.PHYSICAL] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.8 end) },
+		combat_physspeed = -0.1,
+	},
+}
+
+
+newEntity{
+	name = "archmage's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 40,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.8 end),
+		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
+		inc_damage = {
+			[DamageType.FIRE] = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.25 end),
+			[DamageType.COLD] = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.25 end),
+			[DamageType.ACID] = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.25 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.25 end),
+		},
 	},
 }

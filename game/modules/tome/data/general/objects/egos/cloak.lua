@@ -57,7 +57,10 @@ newEntity{
 	rarity = 6,
 	cost = 10,
 	wielder = {
-		inc_stats = { [Stats.STAT_DEX] = 2, [Stats.STAT_CUN] = 2, },
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end),
+			},
 	},
 }
 
@@ -67,7 +70,10 @@ newEntity{
 	rarity = 6,
 	cost = 10,
 	wielder = {
-		inc_stats = { [Stats.STAT_MAG] = 2, [Stats.STAT_WIL] = 2, },
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end),
+			},
 	},
 }
 
@@ -77,7 +83,10 @@ newEntity{
 	rarity = 6,
 	cost = 10,
 	wielder = {
-		inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_CON] = 2, },
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end),
+			},
 	},
 }
 
@@ -87,9 +96,10 @@ newEntity{
 	rarity = 6,
 	cost = 7,
 	wielder = {
-		resists={[DamageType.ACID] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.15 end)},
+		resists={[DamageType.ACID] = resolvers.mbonus_material(15, 10, function(e, v) return v * 0.15 end)},
 	},
 }
+
 
 newEntity{
 	name = " of fog", suffix=true, instant_resolve=true,
@@ -108,3 +118,112 @@ newEntity{
 		inc_stealth = resolvers.mbonus_material(10, 5, function(e, v) return v * 1, v end),
 	},
 }
+
+
+newEntity{
+	name = " of resilience", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		max_life=resolvers.mbonus_material(30, 30, function(e, v) return v * 0.1 end),
+	},
+}
+
+newEntity{
+	name = " of stability", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "enveloping ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		combat_def = resolvers.mbonus_material(4, 4, function(e, v) return v * 1 end),
+	},
+}
+
+newEntity{
+	name = " of sorcery", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 50,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			},
+		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
+	},
+}
+
+newEntity{
+	name = " of implacability", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 50,
+	wielder = {
+		pin_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+		knockback_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+		confusion_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+	},
+}
+
+newEntity{
+	name = "restorative ", prefix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 60,
+	wielder = {
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		cut_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
+		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return v * 10, v end),
+		poison_immune = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15, v/100 end),
+		
+	},
+}
+
+newEntity{
+	name = "regal ", prefix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 20,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			},
+		silence_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+	},
+}
+
+newEntity{
+	name = "wyrmwaxed ", prefix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+

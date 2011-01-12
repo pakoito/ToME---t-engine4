@@ -23,24 +23,7 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-defensive.lua")
 --load("/data/general/objects/egos/charged-utility.lua")
 
-newEntity{
-	name = " of rage", suffix=true, instant_resolve=true,
-	level_range = {20, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 10, v end),
-	},
-}
-newEntity{
-	name = " of the wilds", suffix=true, instant_resolve=true,
-	level_range = {20, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		equilibrium_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 10, v end),
-	},
-}
+
 newEntity{
 	name = " of strength (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
@@ -96,11 +79,10 @@ newEntity{
 	cost = 10,
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(2, 1, function(e, v) return v * 3 end) },
-		disease_immune = 0.3,
-		stun_immune = 0.2,
+		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) return v * 0.15, v/100 end),
+		stun_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
 	},
 }
-
 newEntity{
 	name = "prismatic ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
@@ -126,3 +108,178 @@ newEntity{
 		inc_stats = { [Stats.STAT_CUN] = 4, },
 	},
 }
+
+newEntity{
+	name = " of the depths", suffix=true,
+	level_range = {15, 50},
+	rarity = 7,
+	cost = 10,
+	wielder = {
+		can_breath = {water=1},
+	},
+}
+
+newEntity{
+	name = " of absorption", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	rarity = 10,
+	cost = 20,
+	wielder = {
+		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 3, v end),
+		equilibrium_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 3, v end),
+		mana_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 3, v end),
+	},
+}
+
+newEntity{
+	name = "miner's ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		infravision = resolvers.mbonus_material(2, 2, function(e, v) return v * 1.4 end),
+	},
+}
+
+newEntity{
+	name = "insulating ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = "grounding ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "stabilizing ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "cleansing ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 9,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		poison_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+		disease_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+	},
+}
+
+
+newEntity{
+	name = " of knowledge", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 20,
+	wielder = {
+		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+			},		
+	},
+}
+
+
+newEntity{
+	name = " of might", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 20,
+	wielder = {
+		combat_physcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 1.4 end),
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+			},		
+	},
+}
+
+newEntity{
+	name = " of trickery", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 13,
+	cost = 20,
+	wielder = {
+		combat_apr = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.3 end),
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+			},		
+	},
+}
+
+newEntity{
+	name = "warlord's ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 17,
+	cost = 50,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(6, 6, function(e, v) return v * 3 end),
+		pin_immune = resolvers.mbonus_material(3, 3, function(e, v) v=v/10 return v * 8, v end),
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			},
+	},
+}
+
+newEntity{
+	name = "defender's ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 17,
+	cost = 50,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(5, 4, function(e, v) return v * 1 end),
+		combat_def = resolvers.mbonus_material(4, 4, function(e, v) return v * 1 end),
+		combat_physresist = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.15 end),
+	},
+}
+
+newEntity{
+	name = "dragonslayer's ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 17,
+	cost = 50,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+

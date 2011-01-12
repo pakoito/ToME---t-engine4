@@ -40,29 +40,19 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1, function(e, v) return v * 3 end),
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1, function(e, v) return v * 3 end),
 		},
-		stun_immune = 0.3,
-		knockback_immune = 0.3,
-		disarm_immune=0.3,
+		stun_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
+		disarm_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
 		talent_cd_reduction={[Talents.T_RUSH]=10},
 	},
 }
 
 newEntity{
-	name = "solid ", prefix=true, instant_resolve=true,
-	level_range = {10, 30},
-	rarity = 5,
-	cost = 4,
-	wielder = {
-		combat_armor = resolvers.mbonus_material(4, 2, function(e, v) return v * 1 end),
-	},
-}
-
-newEntity{
 	name = "impenetrable ", prefix=true, instant_resolve=true,
-	level_range = {25, 50},
-	rarity = 9,
-	cost = 8,
+	level_range = {10, 50},
+	rarity = 8,
+	cost = 7,
 	wielder = {
-		combat_armor = resolvers.mbonus_material(10, 5, function(e, v) return v * 1 end),
+		combat_armor = resolvers.mbonus_material(12, 3, function(e, v) return v * 1 end),
 	},
 }

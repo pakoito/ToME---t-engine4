@@ -72,8 +72,8 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		stun_immune = 0.7,
-		knockback_immune = 0.7,
+		stun_immune = resolvers.mbonus_material(40, 30, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(40, 30, function(e, v) v=v/100 return v * 80, v end),
 	},
 }
 
@@ -96,7 +96,7 @@ newEntity{
 	rarity = 6,
 	cost = 7,
 	wielder = {
-		on_melee_hit={[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 3, function(e, v) return v * 0.6 end)},
+		on_melee_hit={[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.6 end)},
 	},
 }
 
@@ -107,8 +107,8 @@ newEntity{
 	cost = 7,
 	wielder = {
 		melee_project={
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.7 end),
-			[DamageType.ACID] = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.7 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 8, function(e, v) return v * 0.7 end),
+			[DamageType.ACID] = resolvers.mbonus_material(8, 8, function(e, v) return v * 0.7 end),
 		},
 	},
 }
@@ -119,7 +119,7 @@ newEntity{
 	rarity = 10,
 	cost = 15,
 	wielder = {
-		stamina_regen = 0.5,
+		stamina_regen = resolvers.mbonus_material(50, 20, function(e, v) v=v/100 return v * 100, v end),
 	},
 }
 
@@ -166,7 +166,7 @@ newEntity{
 		resists={
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
 		},
-		stun_immune = 0.3,
+		stun_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
 	},
 }
 
@@ -226,7 +226,7 @@ newEntity{
 	rarity = 9,
 	cost = 10,
 	wielder = {
-		max_life = resolvers.mbonus_material(40, 20, function(e, v) return v * 0.1 end),
+		max_life = resolvers.mbonus_material(40, 40, function(e, v) return v * 0.1 end),
 	},
 }
 
@@ -248,5 +248,45 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 2, function(e, v) return v * 3 end),
 		},
+	},
+}
+
+newEntity{
+	name = " of Eyal", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 30,
+	wielder = {
+		max_life=resolvers.mbonus_material(60, 40, function(e, v) return v * 0.1 end),
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = " of Toknor", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 30,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(5, 5, function(e, v) return v * 3 end),
+		combat_physcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 1.4 end),
+		combat_critical_power = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return v * 200, v end),
+	},
+}
+
+newEntity{
+	name = " of implacability", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 30,
+	wielder = {
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		pin_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		combat_armor = resolvers.mbonus_material(6, 4, function(e, v) return v * 1 end),
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return v * 1, -v end),
 	},
 }

@@ -25,23 +25,17 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
-	name = " of amplification", suffix=true, instant_resolve=true,
+	name = " of absorption", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	rarity = 5,
-	cost = 6,
+	rarity = 10,
+	cost = 20,
 	wielder = {
-		mana_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 10, v end),
+		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 3, v end),
+		equilibrium_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 3, v end),
+		mana_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 3, v end),
 	},
 }
-newEntity{
-	name = " of the wilds", suffix=true, instant_resolve=true,
-	level_range = {20, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		equilibrium_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return v * 10, v end),
-	},
-}
+
 newEntity{
 	name = " of magic (#STATBONUS#)", suffix=true,
 	level_range = {1, 50},
@@ -95,18 +89,20 @@ newEntity{
 	rarity = 10,
 	cost = 4,
 	wielder = {
-		max_mana = resolvers.mbonus_material(100, 10, function(e, v) return v * 0.2 end),
+		max_mana = resolvers.mbonus_material(70, 40, function(e, v) return v * 0.2 end),
 	},
 }
+
 newEntity{
 	name = " of seeing ", suffix=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		blind_immune = 0.5,
+		blind_immune = resolvers.mbonus_material(3, 3, function(e, v) v=v/10 return v * 8, v end),
 	},
 }
+
 
 newEntity{
 	name = "arcanist's ", prefix=true, instant_resolve=true,
@@ -122,4 +118,124 @@ newEntity{
 	},
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_MANAFLOW, level = 1, power = 80 },
+}
+
+newEntity{
+	name = "insulating ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = "grounding ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "stabilizing ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "cleansing ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 9,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		poison_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+		disease_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+	},
+}
+
+newEntity{
+	name = "runed ", prefix=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = " of knowledge", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 13,
+	cost = 20,
+	wielder = {
+		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
+		},		
+	},
+}
+
+newEntity{
+	name = " of the Spellblaze", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 20,
+	wielder = {
+		inc_damage = {
+			[DamageType.FIRE] = resolvers.mbonus_material(7, 5, function(e, v) return v * 0.25 end),
+			[DamageType.COLD] = resolvers.mbonus_material(7, 5, function(e, v) return v * 0.25 end),
+			[DamageType.ACID] = resolvers.mbonus_material(7, 5, function(e, v) return v * 0.25 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(7, 5, function(e, v) return v * 0.25 end),
+		},		
+	},
+}
+
+newEntity{
+	name = "naturalist's ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = true,
+	rarity = 11,
+	cost = 15,
+	wielder = {
+		max_life=resolvers.mbonus_material(30, 30, function(e, v) return v * 0.1 end),
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
+		talents_types_mastery = {
+			["spell/nature"] = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+		},
+	},
+}
+
+newEntity{
+	name = "soothing ", prefix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = true,
+	rarity = 17,
+	cost = 20,
+	wielder = {
+		stun_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+		confusion_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+		poison_immune = resolvers.mbonus_material(30, 10, function(e, v) return v * 0.15, v/100 end),
+	},
 }

@@ -109,7 +109,7 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	wielder = {
-		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		combat_dam = resolvers.mbonus_material(7, 3, function(e, v) return v * 3 end),
 	},
 }
 
@@ -174,5 +174,83 @@ newEntity{
 	wielder = {
 		see_invisible = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.2 end),
 		combat_physcrit = resolvers.mbonus_material(10, 4, function(e, v) return v * 0.4 end),
+	},
+}
+
+newEntity{
+	name = " of crippling", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	wielder = {
+		combat_physcrit = resolvers.mbonus_material(7, 3, function(e, v) return v * 1.4 end),
+	},
+}
+
+newEntity{
+	name = " of daylight", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	wielder = {
+		melee_project={[DamageType.LIGHT] = resolvers.mbonus_material(45, 6, function(e, v) return v * 0.9 end)},
+	},
+}
+
+newEntity{
+	name = " of defense", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	wielder = {
+		combat_def = resolvers.mbonus_material(7, 3, function(e, v) return v * 1 end),
+	},
+}
+
+newEntity{
+	name = " of ruin", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 25,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+		},
+		combat_physcrit = resolvers.mbonus_material(7, 3, function(e, v) return v * 1.4 end),
+		combat_critical_power = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return v * 200, v end),
+		combat_apr = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.3 end),
+	},
+
+}
+
+newEntity{
+	name = "quick ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 25,
+	cost = 30,
+	wielder = {
+		combat_physspeed = -0.1,
+		combat_atk = resolvers.mbonus_material(20, 2, function(e, v) return v * 0.3 end),
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+		},
+	},
+}
+
+newEntity{
+	name = "mystic ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 30,
+	wielder = {
+		combat_spellcrit = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.4 end),
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+		},
 	},
 }

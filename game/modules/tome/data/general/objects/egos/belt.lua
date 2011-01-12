@@ -27,7 +27,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		max_encumber = resolvers.mbonus_material(50, 10, function(e, v) return v * 0.4, v end),
+		max_encumber = resolvers.mbonus_material(40, 20, function(e, v) return v * 0.4, v end),
 	},
 }
 
@@ -46,32 +46,6 @@ newEntity{
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
 	end}
-}
-
-newEntity{
-	name = "slotted ", prefix=true, instant_resolve=true,
-	level_range = {10, 50},
-	rarity = 8,
-	cost = 6,
-	belt_slots = resolvers.mbonus_material(6, 3, function(e, v) return v * 1 end),
-	on_canwear = function(self, who)
-		if who:getInven(who.INVEN_INBELT) and #who:getInven(who.INVEN_INBELT) > 0 then
-			game.logPlayer(who, "You already have a slotted belt equipped. Remove your items from it, then take it off.", self:getName{do_color=true})
-			return true
-		end
-	end,
-	on_wear = function(self, who)
-		who.inven[who.INVEN_INBELT] = {max=self.belt_slots, worn=false, use_speed=0.6, id=who.INVEN_INBELT}
-	end,
-	on_cantakeoff = function(self, who)
-		if #who:getInven(who.INVEN_INBELT) > 0 then
-			game.logPlayer(who, "You can not remove %s while it still carries items.", self:getName{do_color=true})
-			return true
-		end
-	end,
-	on_takeoff = function(self, who)
-		who.inven[who.INVEN_INBELT] = nil
-	end,
 }
 
 newEntity{
@@ -122,5 +96,162 @@ newEntity{
 	wielder = {
 		combat_def_ranged = resolvers.mbonus_material(8, 2, function(e, v) return v * 1 end),
 		inc_stealth = resolvers.mbonus_material(10, 5, function(e, v) return v * 1, v end),
+	},
+}
+
+newEntity{
+	name = "insulating ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = "grounding ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "stabilizing ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "cleansing ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 9,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		poison_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+		disease_immune = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15, v/100 end),
+	},
+}
+
+newEntity{
+	name = " of magery", suffix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 50,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
+		},
+		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
+	},
+}
+
+newEntity{
+	name = " of burglary", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		disarm_bonus = resolvers.mbonus_material(25, 5, function(e, v) return v * 1.2 end),
+		trap_detect_power = resolvers.mbonus_material(25, 5, function(e, v) return v * 1.2 end),
+		infravision = resolvers.mbonus_material(2, 2, function(e, v) return v * 1.4 end),
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
+		},
+	},
+}
+
+newEntity{
+	name = " of dampening", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 50,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = " of inertia", suffix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 50,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
+		},
+		pin_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+
+newEntity{
+	name = "monstrous ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 60,
+	wielder = {
+		size_category = 1,
+		combat_dam = resolvers.mbonus_material(5, 5, function(e, v) return v * 3 end),
+		combat_critical_power = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return v * 200, v end),
+
+	},
+}
+
+newEntity{
+	name = "balancing ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 60,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
+		},
+		combat_atk = resolvers.mbonus_material(5, 5, function(e, v) return v * 3 end),
+		combat_physcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 1.4 end),
+	},
+}
+
+
+newEntity{
+	name = "protective ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 60,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(6, 4, function(e, v) return v * 1 end),
+		combat_def = resolvers.mbonus_material(4, 4, function(e, v) return v * 1 end),
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
 	},
 }

@@ -97,6 +97,7 @@ newEntity{
 	name = " of annihilation", suffix=true,
 	level_range = {1, 50},
 	greater_ego = true,
+	cost = 35,
 	rarity = 15,
 	combat = {
 		physcrit = 100,
@@ -111,6 +112,7 @@ newEntity{
 	name = " of unerring flight", suffix=true,
 	level_range = {1, 50},
 	greater_ego = true,
+	cost = 35,
 	rarity = 15,
 	combat = {
 		atk = 500,

@@ -48,3 +48,105 @@ newEntity{
 		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end), [Stats.STAT_CON] = resolvers.mbonus_material(3, 1, function(e, v) return v * 3 end) },
 	},
 }
+
+newEntity{
+	name = " of endurance", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return v * 1, -v end),
+	},
+}
+
+newEntity{
+	name = "miner's ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		infravision = resolvers.mbonus_material(2, 1, function(e, v) return v * 1.4 end),
+	},
+}
+
+newEntity{
+	name = "woodsman's ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists = { [DamageType.NATURE] = resolvers.mbonus_material(5, 10, function(e, v) return v * 0.15 end), }
+	},
+}
+
+newEntity{
+	name = " of the Iron Throne", suffix=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 15,
+	wielder = {
+		max_life = resolvers.mbonus_material(20, 20, function(e, v) return v * 0.1 end),
+		max_stamina = resolvers.mbonus_material(15, 15, function(e, v) return v * 0.1 end),
+	},
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+}
+
+newEntity{
+	name = " of Reknor", suffix=true,
+	level_range = {20, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 15,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+}
+
+newEntity{
+	name = "brutal ", prefix=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 70,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(5, 5, function(e, v) return v * 3 end),
+		combat_apr = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.3 end),
+		combat_critical_power = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return v * 200, v end),
+	},
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+}
+
+newEntity{
+	name = "builder's ", prefix=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 15,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			},
+		confusion_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+	},
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+}
+
+newEntity{
+	name = "soldier's ", prefix=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 15,
+	wielder = {
+		combat_def = resolvers.mbonus_material(4, 4, function(e, v) return v * 1 end),
+		combat_armor = resolvers.mbonus_material(3, 2, function(e, v) return v * 1 end),
+	},
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+}
+
+

@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 --load("/data/general/objects/egos/charged-attack.lua")
 --load("/data/general/objects/egos/charged-defensive.lua")
@@ -39,9 +40,10 @@ newEntity{
 	rarity = 3,
 	cost = 8,
 	wielder = {
-		max_mana = resolvers.mbonus_material(100, 10, function(e, v) return v * 0.2 end),
+		max_mana = resolvers.mbonus_material(70, 40, function(e, v) return v * 0.2 end),
 	},
 }
+
 
 newEntity{
 	name = " of might", suffix=true, instant_resolve=true,
@@ -145,3 +147,149 @@ newEntity{
 		inc_damage={ [DamageType.DARKNESS] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
 	},
 }
+
+newEntity{
+	name = " of divination", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 8,
+	cost = 8,
+	wielder = {
+		talents_types_mastery = {
+			["spell/divination"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
+		},
+	},
+}
+
+newEntity{
+	name = " of conveyance", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		talents_types_mastery = {
+			["spell/conveyance"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
+		},
+	},
+	max_power = 120, power_regen = 1,
+	use_power = { name = "teleport you anywhere on the level, randomly", power = 60, use = function(self, who)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		who:teleportRandom(who.x, who.y, 200)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return nil, true
+	end}
+}
+
+newEntity{
+	name = " of illumination", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 8,
+	cost = 8,
+	wielder = {
+		lite = 1,
+	},
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_ILLUMINATE, level = 2, power = 80 },
+}
+
+newEntity{
+	name = " of blasting", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 45,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(12, 3, function(e, v) return v * 0.6 end),
+		combat_spellcrit = resolvers.mbonus_material(4, 2, function(e, v) return v * 0.4 end),
+		inc_damage = {
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+		},
+	},
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_BLASTWAVE, level = 2, power = 80 },
+}
+
+
+newEntity{
+	name = " of warding", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 45,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(12, 3, function(e, v) return v * 0.6 end),
+		stun_immune = resolvers.mbonus_material(3, 3, function(e, v) v=v/10 return v * 8, v end),
+		combat_def = resolvers.mbonus_material(16, 4, function(e, v) return v * 1 end),
+		resists={
+			[DamageType.ARCANE] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = 4, power = 80 },
+}
+
+newEntity{
+	name = " of channeling", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 45,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(12, 3, function(e, v) return v * 0.6 end),
+		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_METAFLOW, level = 3, power = 80 },
+}
+
+newEntity{
+	name = "lifebinding ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 35,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end),
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			},
+	},
+}
+
+newEntity{
+	name = "infernal ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 35,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end),
+		see_invisible = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.2 end),
+		inc_damage = {
+			[DamageType.FIRE] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
+		},
+	},
+
+}
+
+
+newEntity{
+	name = "chronomancer's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 35,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end),
+		movement_speed = -0.1,
+		inc_damage = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
+		},
+	},
+
+}
+

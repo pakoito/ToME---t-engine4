@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Stats = require "engine.interface.ActorStats"
+
 --load("/data/general/objects/egos/charged-attack.lua")
 --load("/data/general/objects/egos/charged-defensive.lua")
 --load("/data/general/objects/egos/charged-utility.lua")
@@ -74,7 +76,7 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		on_melee_hit={[DamageType.FIRE] = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end)},
+		on_melee_hit={[DamageType.FIRE] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.6 end)},
 	},
 }
 newEntity{
@@ -83,7 +85,7 @@ newEntity{
 	rarity = 8,
 	cost = 10,
 	wielder = {
-		on_melee_hit={[DamageType.ICE] = resolvers.mbonus_material(4, 3, function(e, v) return v * 0.7 end)},
+		on_melee_hit={[DamageType.ICE] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.7 end)},
 	},
 }
 newEntity{
@@ -92,7 +94,7 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		on_melee_hit={[DamageType.ACID] = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.7 end)},
+		on_melee_hit={[DamageType.ACID] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.7 end)},
 	},
 }
 newEntity{
@@ -101,28 +103,138 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		on_melee_hit={[DamageType.LIGHTNING] = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.7 end)},
+		on_melee_hit={[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.7 end)},
+	},
+}
+
+newEntity{
+	name = " of resilience", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		max_life=resolvers.mbonus_material(60, 40, function(e, v) return v * 0.1 end),
 	},
 }
 
 newEntity{
 	name = " of deflection", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
-	greater_ego = true,
-	rarity = 15,
-	cost = 20,
+	rarity = 10,
+	cost = 10,
 	wielder = {
-		combat_def=resolvers.mbonus_material(15, 4, function(e, v) return v * 1 end),
+		combat_def=resolvers.mbonus_material(11, 4, function(e, v) return v * 1 end),
 	},
 }
 
 newEntity{
-	name = " of resilience", suffix=true, instant_resolve=true,
-	level_range = {20, 50},
+	name = "reflective ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = "brilliant ", prefix=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 8,
+	cost = 8,
+	wielder = {
+		on_melee_hit={[DamageType.LIGHT] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.7 end)},
+	},
+}
+
+newEntity{
+	name = " of crushing", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
 	greater_ego = true,
-	rarity = 15,
+	rarity = 16,
 	cost = 20,
 	wielder = {
-		max_life=resolvers.mbonus_material(100, 10, function(e, v) return v * 0.1 end),
+		pin_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		combat_dam = resolvers.mbonus_material(5, 5, function(e, v) return v * 3 end),
+		combat_physcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 1.4 end),
+	},
+}
+
+newEntity{
+	name = " of resistance", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 20,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5, function(e, v) return v * 0.15 end),
+		},
+	},
+}
+
+newEntity{
+	name = " of the night", suffix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 20,
+	wielder = {	
+		resists={
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
+		},	
+		on_melee_hit={[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.7 end)},
+		infravision = resolvers.mbonus_material(2, 1, function(e, v) return v * 1.4 end),
+	},
+}
+
+newEntity{
+	name = "impervious ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 40,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(8, 4, function(e, v) return v * 1 end),
+		stun_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return v * 8, v end),
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			},
+	},
+}
+
+newEntity{
+	name = "spellplated ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 18,
+	wielder = {
+		combat_mentalresist = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		combat_spellresist = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end),
+			},
+	},
+}
+
+newEntity{
+	name = "blood-runed ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 17,
+	cost = 30,
+	wielder = {
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			},
 	},
 }

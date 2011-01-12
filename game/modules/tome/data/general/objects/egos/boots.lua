@@ -22,10 +22,16 @@ local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
 	name = " of phasing", suffix=true, instant_resolve=true,
-	level_range = {15, 50},
+	level_range = {20, 50},
 	greater_ego = true,
-	rarity = 10,
+	rarity = 18,
 	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+		},
+	},
 	max_power = 60, power_regen = 1,
 	use_power = { name = "blink to a nearby random location", power = 35, use = function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
@@ -34,6 +40,7 @@ newEntity{
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
 	end}
+
 }
 
 newEntity{
@@ -59,24 +66,35 @@ newEntity{
 
 newEntity{
 	name = " of rushing", suffix=true, instant_resolve=true,
-	level_range = {10, 50},
+	level_range = {20, 50},
 	greater_ego = true,
-	rarity = 10,
-	cost = 20,
-
+	rarity = 18,
+	cost = 40,
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_RUSH, level = 2, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+		},
+	},
 }
 
 newEntity{
 	name = " of disengagement", suffix=true, instant_resolve=true,
-	level_range = {10, 50},
+	level_range = {20, 50},
 	greater_ego = true,
-	rarity = 10,
-	cost = 20,
+	rarity = 18,
+	cost = 40,
 
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+		},
+	},
 }
 
 newEntity{
@@ -85,8 +103,8 @@ newEntity{
 	rarity = 12,
 	cost = 12,
 	wielder = {
-		stun_immune = 0.2,
-		knockback_immune = 0.2,
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
 	},
 }
 
@@ -100,3 +118,87 @@ newEntity{
 		stamina_regen = resolvers.mbonus_material(10, 3, function(e, v) v=v/10 return v * 10, v end),
 	},
 }
+
+newEntity{
+	name = "traveler's ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		max_encumber = resolvers.mbonus_material(30, 20, function(e, v) return v * 0.4, v end),
+	},
+}
+
+
+newEntity{
+	name = "scholar's ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.8 end),
+	},
+}
+
+newEntity{
+	name = "miner's ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(6, 4, function(e, v) return v * 1 end),
+	},
+}
+
+newEntity{
+	name = "stalker's ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		infravision = resolvers.mbonus_material(2, 1, function(e, v) return v * 1.4 end),
+	},
+}
+
+newEntity{
+	name = "restorative ", prefix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 18,
+	cost = 60,
+	wielder = {
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		cut_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
+		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return v * 10, v end),
+		poison_immune = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15, v/100 end),
+
+	},
+}
+
+newEntity{
+	name = "invigorating ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 70,
+	wielder = {
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return v * 1, -v end),
+		max_life=resolvers.mbonus_material(30, 30, function(e, v) return v * 0.1 end),
+		movement_speed = -0.1,
+	},
+}
+
+newEntity{
+	name = "blood-soaked ", prefix=true, instant_resolve=true,
+	level_range = {15, 50},
+	greater_ego = true,
+	rarity = 15,
+	cost = 20,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
+		combat_apr = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.3 end),
+		pin_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+

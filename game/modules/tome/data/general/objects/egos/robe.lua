@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Stats = require "engine.interface.ActorStats"
+
 --load("/data/general/objects/egos/charged-defensive.lua")
 --load("/data/general/objects/egos/charged-utility.lua")
 
@@ -103,6 +105,157 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
 		},
-		combat_spellpower = 4,
+		combat_spellpower = resolvers.mbonus_material(4, 3, function(e, v) return v * 0.8 end),
+	},
+}
+
+newEntity{
+	name = "enchanted ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(4, 2, function(e, v) return v * 0.8 end),
+	},
+}
+
+newEntity{
+	name = "shielded ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(6, 2, function(e, v) return v * 1 end),
+	},
+}
+
+newEntity{
+	name = "spellwoven ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		combat_spellcrit = resolvers.mbonus_material(4, 2, function(e, v) return v * 0.4 end),
+	},
+}
+
+newEntity{
+	name = "runed ", prefix=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	name = "bilefire ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 50,
+	wielder = {	
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},	
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 4, function(e, v) return v * 3 end),
+			},
+		inc_damage = {
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+			[DamageType.ACID] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+		},
+	},
+}
+
+newEntity{
+	name = "stormlord's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 50,
+	wielder = {	
+		resists={
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},	
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 4, function(e, v) return v * 3 end),
+			},
+		inc_damage = {
+			[DamageType.COLD] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+		},
+	},
+}
+
+newEntity{
+	name = "radiant ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 50,
+	wielder = {	
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},	
+		lite = 1,
+		inc_damage = {
+			[DamageType.LIGHT] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+		},
+	},
+}
+
+newEntity{
+	name = " of Angolwen", suffix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 60,
+	wielder = {	
+
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 2, function(e, v) return v * 3 end),
+			},
+
+	},
+}
+
+newEntity{
+	name = " of Linaniil", suffix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 60,
+	wielder = {	
+		combat_spellpower = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.8 end),
+		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
+		max_mana = resolvers.mbonus_material(60, 40, function(e, v) return v * 0.1 end),
+		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+
+	},
+}
+
+newEntity{
+	name = " of life", suffix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = true,
+	rarity = 20,
+	cost = 60,
+	wielder = {	
+		max_life=resolvers.mbonus_material(60, 40, function(e, v) return v * 0.1 end),
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.15 end),
+		},	
+
 	},
 }
