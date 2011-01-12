@@ -80,9 +80,10 @@ end
 
 --- Restore resources
 function _M:restoreResources(actor)
-	actor:resetToFull()
-
-	actor.energy.value = game.energy_to_act
+	if actor.resetToFull then
+		actor:resetToFull()
+		actor.energy.value = game.energy_to_act
+	end
 end
 
 --- Basic resurrection
