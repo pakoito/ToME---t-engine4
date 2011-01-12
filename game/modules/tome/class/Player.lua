@@ -681,7 +681,7 @@ function _M:playerUseItem(object, item, inven)
 			if ret and ret == "destroy" then
 				-- Count magic devices
 				if o.is_magic_device then
-					if self:hasQuest("antimagic") and not self:hasQuest("antimagic"):isEnded() then self:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
+					if self:hasQuest("antimagic") and game.party:hasMember(self) and not self:hasQuest("antimagic"):isEnded() then self:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
 					self:antimagicBackslash(4 + (o.material_level or 1))
 				end
 
