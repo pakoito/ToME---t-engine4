@@ -41,7 +41,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 1, 1.7))
+		self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 1, 1.7, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 1.2, 2.1, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 
 		-- Try to stun !
@@ -58,7 +58,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Hits the target with two shield strikes doing %d%% and %d%% shield damage. If it hits second time it stuns target for %d turns
 		The damage multiplier increases with your Strength and second strike with Shield Expertise talent level.]])
-		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.7),
+		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.7, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		100 * self:combatTalentWeaponDamage(t, 1.2, 2.1, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		2 + self:getTalentLevel(t) / 2)
 	end,
@@ -293,9 +293,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move. 
+		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move.
 		The increase in defense is based on Dexterity and life on Constitution.]]):
-		format(5 + self:getDex(4) * self:getTalentLevel(t), 
+		format(5 + self:getDex(4) * self:getTalentLevel(t),
 		(10 + self:getCon() * 0.25) * self:getTalentLevel(t))
 	end,
 }
