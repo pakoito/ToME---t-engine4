@@ -135,11 +135,11 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Normal",
-	display_name = "Aventure",
+	display_name = "Adventure",
 	selection_default = profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"#GOLD##{bold}#Aventure mode#WHITE# provides the normal game experience but with limited extra lifes.\nUse it if you want a normal playing conditions but do not feel ready for just one life.#{normal}#",
+		"#GOLD##{bold}#Adventure mode#WHITE# provides the normal game experience but with limited extra lifes.\nUse it if you want a normal playing conditions but do not feel ready for just one life.#{normal}#",
 		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
 	},
 	descriptor_choices =
