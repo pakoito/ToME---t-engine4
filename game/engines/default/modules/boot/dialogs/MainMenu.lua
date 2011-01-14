@@ -72,6 +72,12 @@ function _M:switchBackground()
 	game:saveSettings("boot_menu_background", ("boot_menu_background = %s\n"):format(tostring(game.stopped)))
 	self.c_background.text = game.stopped and "Enable background" or "Disable background"
 	self.c_background:generate()
+
+	if game.stopped then
+		core.game.setRealtime(0)
+	else
+		core.game.setRealtime(8)
+	end
 end
 
 function _M:on_recover_focus()

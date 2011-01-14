@@ -57,6 +57,11 @@ function _M:init()
 --	self.refuse_threads = true
 	self.normal_key = self.key
 	self.stopped = config.settings.boot_menu_background
+	if self.stopped then
+		core.game.setRealtime(0)
+	else
+		core.game.setRealtime(8)
+	end
 
 	self:loaded()
 end
@@ -213,7 +218,7 @@ function _M:updateNews()
 end
 
 function _M:tick()
-	if self.stopped then engine.Game.tick(self) return false end
+	if self.stopped then engine.Game.tick(self) return true end
 	if self.level then
 		engine.GameEnergyBased.tick(self)
 		-- Fun stuff: this can make the game realtime, although calling it in display() will make it work better

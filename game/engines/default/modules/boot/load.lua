@@ -58,7 +58,7 @@ ActorAI:loadDefinition("/mod/ai/")
 -- Birther descriptor
 Birther:loadDefinition("/data/birth/descriptors.lua")
 
--- Switch to realtime, with 10 ticks per second
+-- Switch to realtime, with 8 ticks per second
 core.game.setRealtime(8)
 
 return {require "mod.class.Game" }
