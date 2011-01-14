@@ -18,31 +18,63 @@
 -- darkgod@te4.org
 
 newTalent{
+	name = "Automatic Stealth",
+	type = {"cunning/stealth-base", 1},
+	mode = "sustained", no_sustain_autoreset = true,
+	points = 1,
+	cooldown = 0,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
+	info = function(self, t)
+		return [[When active, automatically try to enter stealth when possible.]]
+	end,
+}
+
+newTalent{
 	name = "Stealth",
 	type = {"cunning/stealth", 1},
 	require = cuns_req1,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	cooldown = 10,
+	no_energy = true,
 	getStealthPower = function(self, t) return 4 + self:getCun(10) * self:getTalentLevel(t) end,
 	getRadius = function(self, t) return math.floor(10 - self:getTalentLevel(t) * 1.1) end,
-	activate = function(self, t)
+	on_learn = function(self, t)
+		if self:getTalentLevelRaw(t) == 1 then
+			self:learnTalent(self.T_AUTOMATIC_STEALTH, true, 1)
+		end
+	end,
+	on_unlearn = function(self, t)
+		if self:getTalentLevelRaw(t) == 0 then
+			self:unlearnTalent(self.T_AUTOMATIC_STEALTH)
+		end
+	end,
+	on_pre_use = function(self, t, silent)
+		if self:isTalentActive(t.id) then return true end
 		local armor = self:getInven("BODY")[1]
 		if armor and (armor.subtype == "heavy" or armor.subtype == "massive") then
-			game.logPlayer(self, "You cannot Stealth with such heavy armour!")
+			if not silent then game.logPlayer(self, "You cannot Stealth with such heavy armour!") end
 			return nil
 		end
 
 		-- Check nearby actors
+		if not self.x or not self.y or not game.level then return end
 		local grids = core.fov.circle_grids(self.x, self.y, t.getRadius(self, t), true)
 		for x, yy in pairs(grids) do for y in pairs(yy) do
 			local actor = game.level.map(x, y, game.level.map.ACTOR)
 			if actor and actor ~= self and actor:reactionToward(self) < 0 and not rng.percent(self.hide_chance or 0) then
-				game.logPlayer(self, "You cannot Stealth with nearby foes watching!")
+				if not silent then game.logPlayer(self, "You cannot Stealth with nearby foes watching!") end
 				return nil
 			end
 		end end
-
+		return true
+	end,
+	activate = function(self, t)
 		local res = {
 			stealth = self:addTemporaryValue("stealth", t.getStealthPower(self, t)),
 			lite = self:addTemporaryValue("lite", -1000),

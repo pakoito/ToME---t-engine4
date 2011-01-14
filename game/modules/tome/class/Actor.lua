@@ -296,6 +296,13 @@ function _M:act()
 		end
 	end
 
+	-- Auto stealth?
+	if self:isTalentActive(self.T_AUTOMATIC_STEALTH) and not self:isTalentActive(self.T_STEALTH) then
+		local t = self:getTalentFromId(self.T_STEALTH)
+		if self:preUseTalent(t, true, true) and not self:isTalentCoolingDown(t) then
+			self:useTalent(self.T_STEALTH)
+		end
+	end
 
 	if self:attr("stunned") then
 		self.stunned_counter = (self.stunned_counter or 0) + (self:attr("stun_immune") or 0) * 100
@@ -1583,6 +1590,7 @@ function _M:postUseTalent(ab, ret)
 		self:antimagicBackslash(4 + self:getTalentLevelRaw(ab))
 	end
 
+	self.changed = true
 	if not ab.no_energy then
 		if ab.is_spell then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
