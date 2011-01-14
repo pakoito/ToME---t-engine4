@@ -106,23 +106,33 @@ function _M:niceTileRoundwall3d(level, i, j, g, nt)
 	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "type") or "wall"
 	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "type") or "wall"
 
-	-- Full
-	if g1==s and g2==s and g3==s and g4==s and g6==s and g7==s and g8==s and g9==s then self:replace(i, j, self:getTile(nt.inner))
-	-- Corners
-	elseif g4~=s and g7~=s and g8~=s then self:replace(i, j, self:getTile(nt.wall7))
-	elseif g4~=s and g1~=s and g2~=s then self:replace(i, j, self:getTile(nt.wall1))
-	elseif g2~=s and g3~=s and g6~=s then self:replace(i, j, self:getTile(nt.wall3))
-	elseif g6~=s and g9~=s and g8~=s then self:replace(i, j, self:getTile(nt.wall9))
+	-- Pillar
+	if     g2 ~= s and g8 ~= s and g4 ~= s and g6 ~= s then self:replace(i, j, self:getTile(nt.pillar_small))
+	elseif g8 ~= s and g4 == s and g6 == s and g7 == s and g9 == s then self:replace(i, j, self:getTile(nt.hole8))
+	elseif g2 ~= s and g4 == s and g6 == s and g1 == s and g3 == s then self:replace(i, j, self:getTile(nt.hole2))
+	elseif g8 ~= s and g4 ~= s and g6 ~= s then self:replace(i, j, self:getTile(nt.pillar8))
+	elseif g2 ~= s and g4 ~= s and g6 ~= s then self:replace(i, j, self:getTile(nt.pillar2))
+	elseif g4 ~= s and g8 ~= s and g2 ~= s then self:replace(i, j, self:getTile(nt.pillar4))
+	elseif g6 ~= s and g8 ~= s and g2 ~= s then self:replace(i, j, self:getTile(nt.pillar6))
 	-- Sides
-	elseif g4==s and g6==s and g8~=s then self:replace(i, j, self:getTile(nt.wall8))
-	elseif g4==s and g6==s and g2~=s then self:replace(i, j, self:getTile(nt.wall2))
-	elseif g8==s and g2==s and g4~=s then self:replace(i, j, self:getTile(nt.wall4))
-	elseif g8==s and g2==s and g6~=s then self:replace(i, j, self:getTile(nt.wall6))
-	-- Inner corners
-	elseif g4==s and g7~=s and g8==s then self:replace(i, j, self:getTile(nt.inner_wall3))
-	elseif g4==s and g1~=s and g2==s then self:replace(i, j, self:getTile(nt.inner_wall9))
-	elseif g2==s and g3~=s and g6==s then self:replace(i, j, self:getTile(nt.inner_wall7))
-	elseif g6==s and g9~=s and g8==s then self:replace(i, j, self:getTile(nt.inner_wall1))
+	elseif g2 ~= s and g6 ~= s and g4 == s and g1 == s then self:replace(i, j, self:getTile(nt.wall19d))
+	elseif g2 ~= s and g4 ~= s and g6 == s and g3 == s then self:replace(i, j, self:getTile(nt.wall37d))
+	elseif g8 ~= s and g6 ~= s and g4 == s and g7 == s then self:replace(i, j, self:getTile(nt.wall73d))
+	elseif g8 ~= s and g4 ~= s and g6 == s and g9 == s then self:replace(i, j, self:getTile(nt.wall91d))
+	elseif g8 ~= s and g4 == s and g7 == s then self:replace(i, j, self:getTile(nt.wall7d))
+	elseif g8 ~= s and g6 == s and g9 == s then self:replace(i, j, self:getTile(nt.wall9d))
+	elseif g2 ~= s and g4 == s and g1 == s then self:replace(i, j, self:getTile(nt.wall1d))
+	elseif g2 ~= s and g6 == s and g3 == s then self:replace(i, j, self:getTile(nt.wall3d))
+	-- Top
+	elseif g2 ~= s and g8 ~= s then self:replace(i, j, self:getTile(nt.wall82))
+	elseif g8 ~= s and g4 ~= s then self:replace(i, j, self:getTile(nt.wall7))
+	elseif g8 ~= s and g6 ~= s then self:replace(i, j, self:getTile(nt.wall9))
+	elseif g8 ~= s then self:replace(i, j, self:getTile(nt.wall8))
+	-- Bottom
+	elseif g2 ~= s and g4 ~= s then self:replace(i, j, self:getTile(nt.wall1))
+	elseif g2 ~= s and g6 ~= s then self:replace(i, j, self:getTile(nt.wall3))
+	elseif g2 ~= s then self:replace(i, j, self:getTile(nt.wall2))
+	elseif nt.inner then self:replace(i, j, self:getTile(nt.inner))
 	end
 end
 
