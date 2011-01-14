@@ -125,20 +125,20 @@ newTalent{
 	random_ego = "utility",
 	require = cursed_wil_req2,
 	points = 5,
-	cooldown = 400,
+	cooldown = 500,
+	getHateGain = function(self, t)
+		return (math.sqrt(self:getTalentLevel(t)) - 0.5) * 2.3
+	end,
 	action = function(self, t)
-		self:incHate(2 + self:getTalentLevel(t) * 0.9)
-
-		local damage = self.max_life * 0.25
-		self:takeHit(damage, self)
-		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=2, tx=self.x, ty=self.y})
+		self:incHate(t.getHateGain(self, t))
+		
+		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=1, tx=self.x, ty=self.y})
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
-		local increase = 2 + self:getTalentLevel(t) * 0.9
-		local damage = self.max_life * 0.25
-		return ([[Focus your rage gaining %0.1f hate at the cost of %d life.]]):format(increase, damage)
+		local hateGain = t.getHateGain(self, t)
+		return ([[Focus your rage gaining %0.1f hate.]]):format(hateGain)
 	end,
 }
 

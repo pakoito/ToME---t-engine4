@@ -1025,7 +1025,7 @@ function _M:die(src)
 	end
 
 	-- Adds hate
-	if src and src.knowTalent and src:knowTalent(self.T_HATE_POOL) then
+	if src and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
 		local hateGain = src.hate_per_kill
 		local hateMessage
 
@@ -1049,6 +1049,13 @@ function _M:die(src)
 		src.hate = math.min(src.max_hate, src.hate + hateGain)
 		if hateMessage then
 			game.logPlayer(src, hateMessage.." (+%0.1f hate)", hateGain - src.hate_per_kill)
+		end
+	end
+	
+	if src and src.summoner and src.summoner_hate_per_kill then
+		if src.summoner.knowTalent and src.summoner:knowTalent(src.summoner.T_HATE_POOL) then
+			src.summoner.hate = math.min(src.summoner.max_hate, src.summoner.hate + src.summoner_hate_per_kill)
+			game.logPlayer(src.summoner, "%s feeds you hate from it's latest victim. (+%0.1f hate)", src.name:capitalize(), src.summoner_hate_per_kill)
 		end
 	end
 

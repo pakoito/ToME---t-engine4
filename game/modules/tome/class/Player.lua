@@ -133,6 +133,16 @@ function _M:onEnterLevelEnd(zone, level)
 end
 
 function _M:onLeaveLevel(zone, level)
+	-- clean up things that need to be removed before re-entering the level	
+	if self:isTalentActive(self.T_CALL_SHADOWS) then
+		local t = self:getTalentFromId(self.T_CALL_SHADOWS)
+		t.removeAllShadows(self, t)
+	end
+	
+	if self:hasEffect(self.EFF_FEED) then
+		self:removeEffect(self.EFF_FEED, true)
+	end
+
 	-- Fail past escort quests
 	local eid = "escort-duty-"..zone.short_name.."-"..level.level
 	if self:hasQuest(eid) and not self:hasQuest(eid):isEnded() then

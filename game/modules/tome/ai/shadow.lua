@@ -198,6 +198,12 @@ newAI("shadow", function(self)
 		clearTarget(self)
 	end
 	
+	-- apply feed
+	if self.summoner:knowTalent(self.summoner.T_FEED_SHADOWS) then
+		local t = self.summoner:getTalentFromId(self.summoner.T_FEED_SHADOWS)
+		self:feed(t)
+	end
+	
 	-- shadow wall
 	if self.ai_state.shadow_wall then
 		clearTarget(self)

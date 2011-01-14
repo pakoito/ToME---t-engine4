@@ -26,8 +26,8 @@ newTalentType{ allow_random=true, type="cursed/rampage", name = "rampage", descr
 -- Doomed
 newTalentType{ allow_random=true, type="cursed/dark-sustenance", name = "dark sustenance", generic = true, description = "Invoke the powerful force of your will." }
 newTalentType{ allow_random=true, type="cursed/force-of-will", name = "force of will", description = "Invoke the powerful force of your will." }
-newTalentType{ allow_random=true, type="cursed/darkness", name = "darkness", description = "Harness the power of darkness to envelop your foes." }
-newTalentType{ allow_random=true, type="cursed/shadows", name = "shades", description = "Summon shadows from the darkness to aid you." }
+newTalentType{ allow_random=true, type="cursed/darkness", is_spell=true, name = "darkness", description = "Harness the power of darkness to envelop your foes." }
+newTalentType{ allow_random=true, type="cursed/shadows", is_spell=true, name = "shades", description = "Summon shadows from the darkness to aid you." }
 newTalentType{ allow_random=true, type="cursed/punishments", name = "punishments", description = "Your hate becomes punishment in the minds of your foes." }
 
 -- Generic

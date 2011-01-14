@@ -35,20 +35,20 @@ return { generator = function()
 
 	return {
 		life = 5,
-		size = rng.range(3, 5), sizev = -0.4, sizea = 0,
+		size = rng.range(4, 6), sizev = -0.4, sizea = 0,
 
 		x = r * math.cos(angle) + math.cos(rightAngle) * offset, xv = 0, xa = 0,
 		y = r * math.sin(angle) + math.sin(rightAngle) * offset, yv = 0, ya = 0,
 		dir = angle + math.rad(180), dirv = 0, dira = 0,
 		vel = rng.range(0.3, 0.6), velv = 0, vela = 0,
 
-		r = 32 / 255, rv = 0, ra = 0,
+		r = rng.range(48, 196) / 255, rv = 0, ra = 0,
 		g = 32 / 255, gv = 0, ga = 0,
-		b = 32 / 255, bv = 0, ba = 0,
-		a = rng.range(80, 150) / 255, av = 0, aa = 0,
+		b = rng.range(48, 164) / 255, bv = 0, ba = 0,
+		a = rng.range(80, 196) / 255, av = 0, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(5*tiles)
+	self.ps:emit(3*tiles)
 end,
-5*5*tiles
+5*3*tiles

@@ -106,7 +106,7 @@ newTalent{
 		return 4
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 160)
+		return combatTalentDamage(self, t, 20, 200)
 	end,
 	getKnockback = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -129,8 +129,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
-		return ([[Focusing your hate you strike your foe with unseen force for up to %d damage and %d knockback.
-		Damage increases with the Willpower stat but decreases with range.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
+		return ([[Focusing your hate you strike your foe with unseen force for up to %d damage and %d knockback at a range of 1. Damage decreases the further you are from your target.
+		Damage increases with the Willpower stat.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }
 
@@ -148,7 +148,7 @@ newTalent{
 	no_sustain_autoreset = true,
 	direct_hit = true,
 	getMaxDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 160)
+		return combatTalentDamage(self, t, 20, 200)
 	end,
 	getDisplayName = function(self, t, p)
 		return ("Deflection (%d)"):format(p.value)
@@ -166,8 +166,8 @@ newTalent{
 	end,
 	do_act = function(self, t, p)
 		local maxDamage = t.getMaxDamage(self, t)
-		if p.value < maxDamage and self.hate >= 0.05 then
-			self:incHate(-0.05)
+		if p.value < maxDamage and self.hate >= 0.02 then
+			self:incHate(-0.02)
 
 			p.value = math.min(p.value + maxDamage / 50, maxDamage)
 
@@ -198,7 +198,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local maxDamage = t.getMaxDamage(self, t)
-		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage but first your hate must slowly feed your strength.
+		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage but first your hate must slowly feed your strength (-0.02 hate regeneration while building strength).
 		The maximum damage deflected increases with the Willpower stat.]]):format(maxDamage)
 	end,
 }
@@ -218,7 +218,7 @@ newTalent{
 		return math.floor(2 + self:getTalentLevel(t) / 3)
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 160)
+		return combatTalentDamage(self, t, 20, 200)
 	end,
 	getKnockback = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t))

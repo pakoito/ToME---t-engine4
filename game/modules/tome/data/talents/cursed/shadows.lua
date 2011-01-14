@@ -152,12 +152,15 @@ local function createShadow(self, level, duration, target)
 			blindside_chance = 15,
 			phasedoor_chance = 5,
 			attack_spell_chance = 5,
+			
+			feed_level = 0
 		},
 		ai_target = {
 			actor=target,
 			x = nil,
 			y = nil
 		},
+		
 		healSelf = function(self)
 			self:useTalent(self.T_HEAL)
 		end,
@@ -178,16 +181,24 @@ local function createShadow(self, level, duration, target)
 			end
 		end,
 		feed = function(self, t)
-			self.ai_state.feed_temp1 = self:addTemporaryValue("combat_atk", t.getCombatAtk(self.summoner, t))
-			self.ai_state.feed_temp2 = self:addTemporaryValue("inc_damage", {all=t.getIncDamage(self.summoner, t)})
-			self.ai_state.blindside_chance = t.getBlindsideChance(self.summoner, t)
-		end,
-		unfeed = function(self, t)
+			local level = self.summoner:getTalentLevel(t)
+			if self.ai_state.feed_level == level then return end
+			
+			self.ai_state.feed_level = level
+		
+			-- clear old values
 			if self.ai_state.feed_temp1 then self:removeTemporaryValue("combat_atk", self.ai_state.feed_temp1) end
 			self.ai_state.feed_temp1 = nil
 			if self.ai_state.feed_temp2 then self:removeTemporaryValue("inc_damage", self.ai_state.feed_temp2) end
 			self.ai_state.feed_temp2 = nil
-			self.ai_state.blindside_chance = 15
+			self.summoner_hate_per_kill = nil
+			
+			if level and level > 0 then
+				-- set new values			
+				self.ai_state.feed_temp1 = self:addTemporaryValue("combat_atk", t.getCombatAtk(self.summoner, t))
+				self.ai_state.feed_temp2 = self:addTemporaryValue("inc_damage", {all=t.getIncDamage(self.summoner, t)})
+				self.summoner_hate_per_kill = t.getHatePerKill(self.summoner, t)
+			end
 		end,
 		shadowWall = function(self, t, duration)
 			self.ai_state.shadow_wall = true
@@ -262,13 +273,7 @@ newTalent{
 		self:incHate(-1)
 
 		level = t.getLevel(self, t)
-		local shadow = createShadow(self, level, 100, nil)
-
-		-- feed the shadow
-		if self:isTalentActive(T_FEED_SHADOWS) then
-			local t = self:getTalentFromId(T_FEED_SHADOWS)
-			shadow:feed(t)
-		end
+		local shadow = createShadow(self, level, 1000, nil)
 
 		shadow:resolve()
 		shadow:resolve(nil, true)
@@ -278,6 +283,13 @@ newTalent{
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
+	end,
+	removeAllShadows = function(self, t)
+		for _, e in pairs(game.level.entities) do
+			if e.summoner and e.summoner == self and e.subtype == "shadow" then
+				e:die()
+			end
+		end
 	end,
 	info = function(self, t)
 		local maxShadows = t.getMaxShadows(self, t)
@@ -346,46 +358,45 @@ newTalent{
 newTalent{
 	name = "Feed Shadows",
 	type = {"cursed/shadows", 3},
-	mode = "sustained",
+	mode = "passive",
 	require = cursed_mag_req3,
 	points = 5,
-	cooldown = 10,
-	getBlindsideChance = function(self, t)
-		return 15 + self:getTalentLevel(t) * 5
-	end,
 	getIncDamage = function(self, t)
-		return 20 + self:getTalentLevel(t) * 7
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 17)
 	end,
 	getCombatAtk = function(self, t)
-		return 20 + self:getTalentLevel(t) * 5
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 17)
 	end,
-	activate = function(self, t)
-		for _, e in pairs(game.level.entities) do
-			if e.summoner and e.summoner == self and e.subtype == "shadow" then
-				e:feed(t)
+	getHatePerKill = function(self, t)
+		return (self:getTalentLevel(t) / 8) * self.hate_per_kill
+	end,
+	on_learn = function(self, t)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
 			end
 		end
-
-		local regenId = self:addTemporaryValue("hate_regen", -0.02)
-
-		return { regenId = regenId }
+		
+		return { }
 	end,
-	deactivate = function(self, t, p)
-		for _, e in pairs(game.level.entities) do
-			if e.summoner and e.summoner == self and e.subtype == "shadow" then
-				e:unfeed(t)
+	on_unlearn = function(self, t, p)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
 			end
 		end
-
-		self:removeTemporaryValue("hate_regen", p.regenId)
 
 		return true
 	end,
 	info = function(self, t)
 		local combatAtk = t.getCombatAtk(self, t)
 		local incDamage = t.getIncDamage(self, t)
-		local blindsideChance = t.getBlindsideChance(self, t)
-		return ([[Feed your hate to your shadows increasing their attack by %d%%, damage by %d%% and chance of using blindside to %d%%. While active you will lose hate faster.]]):format(combatAtk, incDamage, blindsideChance)
+		local hatePerKill = t.getHatePerKill(self, t)
+		return ([[Your hatred of all living things begins to feed your shadows. Their new viciousness gives them %d%% extra attack and %d%% extra damage and each kill they make transfers %0.2f hatred back to you.]]):format(combatAtk, incDamage, hatePerKill)
 	end,
 }
 

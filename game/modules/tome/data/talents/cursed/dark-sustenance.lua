@@ -38,6 +38,8 @@ newTalent{
 			game.logPlayer(self, "You can only gain sustenance from your foes!");
 			return nil
 		end
+		
+		print("*** targeted");
 
 		-- remove old effect
 		if self:hasEffect(self.EFF_FEED_HATE) then
@@ -66,7 +68,7 @@ newTalent{
 			resistGain = tFeedStrengths.getResistGain(self, tFeedStrengths, target)
 		end
 
-		self:setEffect(self.EFF_FEED, 99999, { target=target, hateGain=hateGain, constitutionGain=constitutionGain, lifeRegenGain=lifeRegenGain, damageGain=damageGain, resistGain=resistGain, extension=0 })
+		self:setEffect(self.EFF_FEED, 40, { target=target, hateGain=hateGain, constitutionGain=constitutionGain, lifeRegenGain=lifeRegenGain, damageGain=damageGain, resistGain=resistGain, extension=0 })
 
 		return true
 	end,

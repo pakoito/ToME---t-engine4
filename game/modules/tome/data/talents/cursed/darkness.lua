@@ -290,24 +290,34 @@ newTalent{
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 
-		local dist = math.floor(radius)
+		-- get locations in line of movement from center
 		local locations = {}
-		for darkX = x - dist, x + dist do
-			for darkY = y - dist, y + dist do
-				if t.canCreep(darkX, darkY) then
-					locations[#locations+1] = {darkX, darkY}
-				end
+		local grids = core.fov.circle_grids(x, y, radius, true)
+		for darkX, yy in pairs(grids) do for darkY, _ in pairs(grids[darkX]) do
+			print("*** pairs", darkX, darkY)
+			local l = line.new(x, y, darkX, darkY)
+			local lx, ly = l()
+			while lx and ly do
+				if game.level.map:checkAllEntities(lx, ly, "block_move") then break end
+
+				lx, ly = l()
 			end
-		end
+			if not lx and not ly then lx, ly = darkX, darkY end
+
+			if lx == darkX and ly == darkY and t.canCreep(darkX, darkY) then
+				locations[#locations+1] = {darkX, darkY}
+				print("*** locations", darkX, darkY)
+			end
+		end end
+		
 		darkCount = math.min(darkCount, #locations)
 		if darkCount == 0 then return false end
 
 		for i = 1, darkCount do
-			-- move selected locations to first indices
-			local selection = rng.range(i, #locations)
-			locations[i], locations[selection] = locations[selection], locations[i]
-
-			t.createDark(self, locations[i][1], locations[i][2], damage, 8, 4, 70, 0)
+			local location, id = rng.table(locations)
+			table.remove(locations, id)
+			print("*** dark", location[1], location[2])
+			t.createDark(self, location[1], location[2], damage, 8, 4, 70, 0)
 		end
 
 		game:playSoundNear(self, "talents/breath")
@@ -341,9 +351,9 @@ newTalent{
 	info = function(self, t)
 		local damageIncrease = t.getDamageIncrease(self, t)
 		if damageIncrease <= 0 then
-			return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark. At level 3 you begin to do extra damage to anyone in the dark.]])
+			return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark but not well enough to directly target someone. At level 3 you begin to do extra damage to anyone in the dark.]])
 		else
-			return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark. You do %d%% more damage to anyone in the dark.]]):format(damageIncrease)
+			return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark but not well enough to directly target someone. You do %d%% more damage to anyone in the dark.]]):format(damageIncrease)
 		end
 	end,
 }
@@ -370,6 +380,7 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
 
 		local damage = t.getDamage(self, t)
 
@@ -422,7 +433,7 @@ newTalent{
 
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
-		if not target then return nil end
+		if not x or not y or not target then return nil end
 
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
@@ -434,7 +445,7 @@ newTalent{
 	info = function(self, t)
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Send tendrils of creeping dark out to attack your target and pin them in the darkness for %d turns. The darkness does %d damage per turn.
+		return ([[Send tendrils of creeping dark out to attack your target and pin them in the darkness for %d turns. Creeping dark will trail behind the tendrils as they move. The darkness does %d damage per turn.
 		The damage will increase with the Magic stat.]]):format(pinDuration, damage)
 	end,
 }

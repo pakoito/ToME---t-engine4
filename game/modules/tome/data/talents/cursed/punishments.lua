@@ -74,6 +74,64 @@ newTalent{
 }
 
 newTalent{
+	name = "Hateful Whisper",
+	type = {"cursed/punishments", 2},
+	require = cursed_wil_req2,
+	points = 5,
+	random_ego = "attack",
+	cooldown = 10,
+	hate =  0.8,
+	range = 7,
+	getDuration = function(self, t)
+		return 10
+	end,
+	getDamage = function(self, t)
+		return combatTalentDamage(self, t, 20, 100)
+	end,
+	getMindpower = function(self, t)
+		return combatPower(self, t)
+	end,
+	getJumpRange = function(self, t)
+		return 0.7 + math.sqrt(self:getTalentLevel(t))
+	end,
+	getExtraJumpChance = function(self, t)
+		return 25 + 12 * math.sqrt(self:getTalentLevel(t))
+	end,
+	action = function(self, t)
+		local range = self:getTalentRange(t)
+		local tg = {type="hit", range=range}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target or target:hasEffect(target.EFF_HATEFUL_WHISPER) then return nil end
+		
+		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
+		local mindpower = t.getMindpower(self, t)
+		local jumpRange = t.getJumpRange(self, t)
+		local extraJumpChance = t.getExtraJumpChance(self, t)
+		target:setEffect(target.EFF_HATEFUL_WHISPER, duration, {
+			source = self,
+			duration = duration,
+			damage = damage,
+			mindpower = mindpower,
+			jumpRange = jumpRange,
+			extraJumpChance = extraJumpChance
+		})
+		game.level.map:particleEmitter(target.x, target.y, 1, "reproach", { dx = self.x - target.x, dy = self.y - target.y })
+
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local mindpower = t.getMindpower(self, t)
+		local jumpRange = t.getJumpRange(self, t)
+		local extraJumpChance = t.getExtraJumpChance(self, t)
+		return ([[Send a whisper filled with hate to spread throughout your foes. When first heard they will suffer %d mind damage and the whisper can travel to another victim within a range of %0.2f and begin to spread from them. There is a %d%% chance the whisper will be passed to two victims instead of one. (%d mindpower vs mental resistance)
+		The damage and mindpower will increase with the Willpower stat.]]):format(damDesc(self, DamageType.MIND, damage), jumpRange, extraJumpChance, mindpower)
+	end,
+}
+
+--[[
+newTalent{
 	name = "Cursed Ground",
 	type = {"cursed/punishments", 2},
 	require = cursed_wil_req2,
@@ -184,10 +242,11 @@ newTalent{
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
 		local stunDuration = t.getStunDuration(self, t)
-		return ([[You mark the ground at your feet with a terrible curse. Anyone passing the mark suffers %d mind damage and has a chance to be stunned for %d turns. The mark lasts for %d turns but the will weaken each time it is triggered. (%d mindpower vs mental resistance)
-		The damage and mindpower will increase with the Willpower stat.]]):format(damDesc(self, DamageType.MIND, damage), stunDuration, duration, mindpower)
+		return ([You mark the ground at your feet with a terrible curse. Anyone passing the mark suffers %d mind damage and has a chance to be stunned for %d turns. The mark lasts for %d turns but the will weaken each time it is triggered. (%d mindpower vs mental resistance)
+		The damage and mindpower will increase with the Willpower stat.]):format(damDesc(self, DamageType.MIND, damage), stunDuration, duration, mindpower)
 	end,
 }
+]]
 
 newTalent{
 	name = "Agony",
@@ -195,42 +254,43 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 6,
+	cooldown = 3,
 	hate =  0.5,
 	range = 7,
 	getDuration = function(self, t)
-		return 8 + math.floor(self:getTalentLevel(t) * 1.4)
+		return 5
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 45)
+		return combatTalentDamage(self, t, 20, 110)
 	end,
 	getMindpower = function(self, t)
-		return combatPower(self, t)
+		return combatPower(self, t, 1.2)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
 		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-
+		
 		local damage = t.getDamage(self, t)
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
 		target:setEffect(target.EFF_AGONY, duration, {
 			source = self,
-			mindpower = combatPower(self, t) * mindpower / 100,
+			mindpower = mindpower,
 			damage = damage,
-			range = range,
+			duration = duration,
 		})
 
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Unleash agony upon your target. The pain will grow as they near you inflicting up to %d damage. They will suffer for %d turns unless they manage to resist. (%d mindpower vs mental resistance)
-		The damage and mindpower will increase with the Willpower stat.]]):format(damDesc(self, DamageType.MIND, damage), duration, mindpower)
+		local maxDamage = t.getDamage(self, t)
+		local minDamage = maxDamage / duration
+		local mindpower = t.getMindpower(self, t)
+		return ([[Unleash agony upon your target. The pain will grow over the course of %d turns unless they manage to resist. The first turn will inflict %d damage and slowly increase to %d on the last turn. (%d mindpower vs mental resistance)
+		The damage and mindpower will increase with the Willpower stat.]]):format(duration, damDesc(self, DamageType.MIND, minDamage), damDesc(self, DamageType.MIND, maxDamage), mindpower)
 	end,
 }
 

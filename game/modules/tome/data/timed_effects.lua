@@ -2529,7 +2529,7 @@ newEffect{
 			if eff.extension <= 0 then
 				self:removeEffect(self.EFF_FEED)
 			end
-		elseif eff.target.dead or not self:hasLOS(eff.target.x, eff.target.y) then
+		elseif eff.target.dead or not self:hasLOS(eff.target.x, eff.target.y, "block_move") then
 			eff.isSevered = true
 
 			if eff.particles then
@@ -2563,6 +2563,7 @@ newEffect{
 newEffect{
 	name = "AGONY",
 	desc = "Agony",
+	long_desc = function(self, eff) return ("%s is writhing in agony suffering suffering from %d to %d damage over %d turns."):format(self.name:capitalize(), eff.damage / duration, eff.damage, eff.duration) end,
 	type = "mental",
 	status = "detrimental",
 	parameters = { damage=10, mindpower=10, range=10, minPercent=10 },
@@ -2575,17 +2576,16 @@ newEffect{
 		if eff.particle then self:removeParticles(eff.particle) end
 	end,
 	on_timeout = function(self, eff)
-
-		local power = 1 - (math.min(eff.range, core.fov.distance(eff.source.x, eff.source.y, self.x, self.y)) / eff.range)
-		if power > 0 then
-			if self:checkHit(eff.mindpower, self:combatMentalResist(), 0, 95, 5) then
-				local damage = math.floor(eff.damage * power)
-				if damage > 0 then
-					DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, damage)
-				end
-			else
-				return true
+		eff.turn = (eff.turn or 0) + 1
+	
+		if self:checkHit(eff.mindpower, self:combatMentalResist(), 0, 95, 5) then
+			local damage = math.floor(eff.damage * (eff.turn / eff.duration))
+			if damage > 0 then
+				DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, damage)
+				game:playSoundNear(self, "talents/fire")
 			end
+		else
+			return true
 		end
 
 		if self.dead then
@@ -2593,12 +2593,82 @@ newEffect{
 			return
 		end
 
-		if math.floor(power * 10) + 1 ~= eff.power then
-			eff.power = math.floor(power * 10) + 1
-			if eff.particle then self:removeParticles(eff.particle) end
-			eff.particle = nil
-			if eff.power > 0 then
-				eff.particle = self:addParticles(Particles.new("agony", 1, { power = eff.power }))
+		if eff.particle then self:removeParticles(eff.particle) end
+		eff.particle = nil
+		eff.particle = self:addParticles(Particles.new("agony", 1, { power = 10 * eff.turn / eff.duration }))
+	end,
+}
+
+newEffect{
+	name = "HATEFUL_WHISPER",
+	desc = "Hateful Whisper",
+	long_desc = function(self, eff) return ("%s has heard the hateful whisper."):format(self.name:capitalize()) end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# has heard the hateful whisper!", "+Hateful Whisper" end,
+	on_lose = function(self, err) return "#Target# no longer hears the hateful whisper.", "-Hateful Whisper" end,
+	activate = function(self, eff)
+		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, eff.damage)
+		
+		if self.dead then
+			-- only spread on activate if the target is dead
+			self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
+			eff.duration = 0
+		else
+			eff.particle = self:addParticles(Particles.new("hateful_whisper", 1, { }))
+		end
+		
+		game:playSoundNear(self, "talents/fire")
+	end,
+	deactivate = function(self, eff)
+		if eff.particle then self:removeParticles(eff.particle) end
+	end,
+	on_timeout = function(self, eff)
+		eff.duration = eff.duration - 1
+		if eff.duration <= 0 then return false end
+		
+		if (eff.state or 0) == 0 then
+			-- pause a turn before infecting others
+			eff.state = 1
+		elseif eff.state == 1 then
+			self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
+			eff.state = 2
+		end
+	end,
+	doSpread = function(self, eff)
+		local targets = {}
+		local grids = core.fov.circle_grids(self.x, self.y, eff.jumpRange, true)
+		for x, yy in pairs(grids) do
+			for y, _ in pairs(grids[x]) do
+				local a = game.level.map(x, y, game.level.map.ACTOR)
+				if a and eff.source:reactionToward(a) < 0 and self:hasLOS(a.x, a.y) then
+					if not a:hasEffect(a.EFF_HATEFUL_WHISPER) then
+						targets[#targets+1] = a
+					end
+				end
+			end
+		end
+
+		if #targets > 0 then
+			local hitCount = 1
+			if rng.percent(eff.extraJumpChance) then hitCount = hitCount + 1 end
+
+			-- Randomly take targets
+			for i = 1, hitCount do
+				local target = rng.tableRemove(targets)
+				target:setEffect(target.EFF_HATEFUL_WHISPER, eff.duration, {
+					source = eff.source,
+					duration = eff.duration,
+					damage = eff.damage,
+					mindpower = eff.mindpower,
+					jumpRange = eff.jumpRange,
+					extraJumpChance = eff.extraJumpChance
+				})
+				
+				game.level.map:particleEmitter(target.x, target.y, 1, "reproach", { dx = self.x - target.x, dy = self.y - target.y })
+				
+				if #targets == 0 then break end
 			end
 		end
 	end,

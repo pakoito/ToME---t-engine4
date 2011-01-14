@@ -72,7 +72,7 @@ newTalent{
 
 		return true
 	end,
-	getHateLoss = function(self, t) return 0.5 - 0.05 * self:getTalentLevelRaw(t) end,
+	getHateLoss = function(self, t) return 0.75 - 0.05 * self:getTalentLevelRaw(t) end,
 	getCritical = function(self, t) return 10 + 8 * self:getTalentLevel(t) end,
 	onTakeHit = function(t, self, fractionDamage)
 		if fractionDamage < 0.08 then return false end
