@@ -21,11 +21,11 @@ name = "The Curse of Magic"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "You met a warrior who invited you join the group called the Ziguranth, dedicated to opposing magic."
-	if who:hasQuest("antimagic"):ten_levels_ok(who:findMember{main=true}) then
+	if who:hasQuest("antimagic"):ten_levels_ok(who) then
 		desc[#desc+1] = "#SLATE#* You must report back to the warrior in Zigur.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must not use spells, runes, or magical devices.#WHITE#"
-		desc[#desc+1] = ("#SLATE#* You have gained %d of 10 levels.#WHITE#"):format(who:findMember({main=true}).level - self.start_level)
+		desc[#desc+1] = ("#SLATE#* You have gained %d of 10 levels.#WHITE#"):format(who.level - self.start_level)
 	end
 	return table.concat(desc, "\n")
 end
