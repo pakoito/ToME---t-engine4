@@ -1,4 +1,4 @@
-f-- ToME - Tales of Maj'Eyal
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ f-- ToME - Tales of Maj'Eyal
 -- darkgod@te4.org
 
 --------------------------------------------------------------------------
--- Temple of Creation
+-- Age of Allure
 --------------------------------------------------------------------------
 
 newLore{
@@ -44,6 +44,7 @@ Testing of live animals has not gone well. Thankfully I can leave the clean-up t
 
 Third test confirms it - the orb allows transition between portal gates. This is the greatest discovery of my life. We are the first research team to ever unlock such powers from a Sher'Tul ruin! Just a shame about all the animals we sent through before. I'm really starting to suspect that pronged instrument was some sort of eating device... Oh well, plenty more test animals available.
 ]]
+}
 
 newLore{
 	id = "halfling-research-note-2",
@@ -77,6 +78,7 @@ Test subject N: Survived first transition, but in coma. Died after 4 days.
 
 We're really getting somewhere here... Just a shame humans are such messy creatures! Honestly, how much intestines do they need?! Will start on the next set of subjects early in the new year.
 ]]
+}
 
 newLore{
 	id = "halfling-research-note-3",
@@ -107,6 +109,7 @@ Test subject Z: Survived both transitions. Remarkable!
 
 Subject Z currently raving, but I believe this is due to stressful conditions, not a direct corrosion of mental faculties from the portal use. Will have to study further.
 ]]
+}
 
 newLore{
 	id = "halfling-research-note-4",
@@ -131,5 +134,5 @@ Beginning to suspect subject Z has latent magical powers. Have seen him move muc
 Subject Z has vanished! This is terrible! It was not even during a portal transit. It looked like he simply stepped into his own shadow and disappeared. My research is ruined!! There will never be another subject like him!
 
 The military are annoying me to no end. I told them to find me more test subjects immediately, but they gave some excuses about enemy patrols in the area. Do they think I care about such trivial things?! And now I hear them practising their fighting in the corridors. They are even grunting and screaming in fake battle noises like stupid children. Do they not realise what an important facility this is? Can they not understand how my genius is disturbed by---
-]],
+]]
 }
