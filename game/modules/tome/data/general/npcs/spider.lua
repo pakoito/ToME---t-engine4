@@ -153,6 +153,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	level_range = {27, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = 120,
+	max_mana = 380,
 	life_rating = 12,
 	rank = 3,
 
