@@ -986,7 +986,7 @@ newEffect{
 newEffect{
 	name = "TIME_DOT",
 	desc = "Time Shield Backfire",
-	long_desc = function(self, eff) return ("The time distortion protecting the target has ended. All damage forwarded in time is now applied, doing %d%% arcane damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The time distortion protecting the target has ended. All damage forwarded in time is now applied, doing %d arcane damage per turn."):format(eff.power) end,
 	type = "time",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -2522,7 +2522,7 @@ newEffect{
 	end,
 	on_timeout = function(self, eff)
 		eff.turn = (eff.turn or 0) + 1
-	
+
 		if self:checkHit(eff.mindpower, self:combatMentalResist(), 0, 95, 5) then
 			local damage = math.floor(eff.damage * (eff.turn / eff.duration))
 			if damage > 0 then
@@ -2555,7 +2555,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# no longer hears the hateful whisper.", "-Hateful Whisper" end,
 	activate = function(self, eff)
 		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, eff.damage)
-		
+
 		if self.dead then
 			-- only spread on activate if the target is dead
 			self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
@@ -2563,7 +2563,7 @@ newEffect{
 		else
 			eff.particle = self:addParticles(Particles.new("hateful_whisper", 1, { }))
 		end
-		
+
 		game:playSoundNear(self, "talents/fire")
 	end,
 	deactivate = function(self, eff)
@@ -2572,7 +2572,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		eff.duration = eff.duration - 1
 		if eff.duration <= 0 then return false end
-		
+
 		if (eff.state or 0) == 0 then
 			-- pause a turn before infecting others
 			eff.state = 1
@@ -2610,9 +2610,9 @@ newEffect{
 					jumpRange = eff.jumpRange,
 					extraJumpChance = eff.extraJumpChance
 				})
-				
+
 				game.level.map:particleEmitter(target.x, target.y, 1, "reproach", { dx = self.x - target.x, dy = self.y - target.y })
-				
+
 				if #targets == 0 then break end
 			end
 		end
