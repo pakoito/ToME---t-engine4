@@ -133,12 +133,12 @@ function _M:onEnterLevelEnd(zone, level)
 end
 
 function _M:onLeaveLevel(zone, level)
-	-- clean up things that need to be removed before re-entering the level	
+	-- clean up things that need to be removed before re-entering the level
 	if self:isTalentActive(self.T_CALL_SHADOWS) then
 		local t = self:getTalentFromId(self.T_CALL_SHADOWS)
 		t.removeAllShadows(self, t)
 	end
-	
+
 	if self:hasEffect(self.EFF_FEED) then
 		self:removeEffect(self.EFF_FEED, true)
 	end
@@ -754,8 +754,13 @@ function _M:quickSwitchWeapons()
 	for i = 1, #ohset1 do self:addObject(oh2, ohset1[i]) end
 	for i = 1, #ohset2 do self:addObject(oh1, ohset2[i]) end
 
-	self:useEnergy()
-	game.logPlayer(self, "You switch your weapons.")
+	if not self:hasEffect(self.EFF_CELERITY) then self:useEnergy() end
+	local names = ""
+	if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}
+	elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}
+	elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
+	end
+	game.logPlayer(self, "You switch your weapons to: %s.", names)
 end
 
 function _M:playerLevelup(on_finish)

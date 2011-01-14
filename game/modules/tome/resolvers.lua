@@ -89,7 +89,7 @@ function resolvers.calc.inventory(t, e)
 		end
 		if o then
 			print("Zone made us an inventory according to filter!", o:getName())
-			e:addObject(e.INVEN_INVEN, o)
+			e:addObject(t[1].inven and e:getInven(t[1].inven) or e.INVEN_INVEN, o)
 			game.zone:addEntity(game.level, o, "object")
 
 			if t[1].id then o:identify(t[1].id) end

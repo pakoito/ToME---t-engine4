@@ -143,6 +143,15 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			DamageType.defaultProjector(target, target.x, target.y, type, dam * target.reflect_damage / 100, tmp, true)
 		end
 
+		--[[if src.attr and src:attr("threading") then
+			if target.attr and not target:attr("threaded") then
+				DamageType.defaultProjector(target, target.x, target.y, type, dam * src.threading/ 100, tmp, true)
+				target:addTemporaryValue("threaded")
+			else
+				target:removeTemporaryValue("threaded")
+			end
+		end]]
+		
 		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
 
 		if not target.dead and dam > 0 and type == DamageType.MIND and src and src.knowTalent and src:knowTalent(src.T_MADNESS) then
@@ -1049,30 +1058,13 @@ newDamageType{
 }
 
 newDamageType{
-	name = "pulse", type = "PULSE",
-	projector = function(src, x, y, type, dam, tmp)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target and not tmp[target] then
-			tmp[target] = true
-			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockback(src.x, src.y, 3)
-				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
-			else
-				game.logSeen(target, "%s resists the pulse!", target.name:capitalize())
-			end
-		end
-	end,
-}
-
-newDamageType{
 	name = "gravity", type = "GRAVITY",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 20) then
-				target:setEffect(target.EFF_SLOW, 1, {power=.3}, true)
+		if target and rng.percent(25) then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 20) and target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, 2, {})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1192,6 +1184,104 @@ newDamageType{
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "clock", type = "CLOCK",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			local dam = 5 + math.ceil(dam / 20)
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_TURN_BACK_THE_CLOCK, 3, {power=dam})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+		-- Reduce Con then deal the damage
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
+	end,
+}
+
+newDamageType{
+	name = "wasting", type = "WASTING",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		local dur = 3
+		local perc = 30
+		if _G.type(dam) == "table" then dam, dur, perc = dam.dam, dam.dur, (dam.initial or perc) end
+		local init_dam = dam * perc / 100
+		if init_dam > 0 then DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, init_dam) end
+		if target then
+			-- Set on fire!
+			dam = dam - init_dam
+			target:setEffect(target.EFF_WASTING, dur, {src=src, power=dam / dur})
+		end
+		return init_dam 
+	end,
+}
+
+newDamageType{
+	name = "stop", type = "STOP",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, dam, {})
+			else
+				game.logSeen(target, "%s has not been stopped!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "rethread", type = "RETHREAD",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		local chance = rng.range(1, 4)
+		-- Pull random effect
+		if target and chance == 1 then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, 3, {})
+			else
+				game.logSeen(target, "%s resists the daze!", target.name:capitalize())
+			end
+		elseif target and chance == 2 then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, 3, {})
+			else
+				game.logSeen(target, "%s resists the blindness!", target.name:capitalize())
+			end
+		elseif target and chance == 3 then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, 3, {})
+			else
+				game.logSeen(target, "%s resists the pin!", target.name:capitalize())
+			end
+		elseif target and chance == 4 then
+			if target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("confusion") then
+				target:setEffect(target.EFF_CONFUSED, 3, {power=60})
+			else
+				game.logSeen(target, "%s resists the confusion!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "temporal echo", type = "TEMPORAL_ECHO",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			dam = (target.max_life - target.life) * dam
+			if target.rank >= 3.5 then
+				dam = dam / 2
+			end
+			DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
 		end
 	end,
 }

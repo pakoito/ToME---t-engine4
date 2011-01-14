@@ -2231,35 +2231,9 @@ newEffect{
 --Chronomancy Effects
 
 newEffect{
-	name = "DAMPENING_FIELD",
-	desc = "Dampening Field",
-	long_desc = function(self, eff) return ("An inertial field that provides %d%% stun, daze, knockback, and physical damage resistance."):format(eff.power) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is surrounded by a dampening field.", "+Dampening Field" end,
-	on_lose = function(self, err) return "The field around #Target# dissipates.", "-Dampening Field" end,
-	activate = function(self, eff)
-		local effect = eff.power / 100
-		eff.particle = self:addParticles(Particles.new("golden_shield", 1))
-		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
-		eff.stun = self:addTemporaryValue("stun_immune", effect)
-		eff.daze = self:addTemporaryValue("daze_immune", effect)
-		eff.knock = self:addTemporaryValue("knockback_immune", effect)
-	end,
-	deactivate = function(self, eff)
-		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("stun_immune", eff.stun)
-		self:removeTemporaryValue("daze_immune", eff.daze)
-		self:removeTemporaryValue("knockback_immune", eff.knock)
-		self:removeTemporaryValue("resists", eff.phys)
-	end,
-}
-
-newEffect{
 	name = "ENTROPIC_SHIELD",
 	desc = "Entropic Shield",
-	long_desc = function(self, eff) return ("Huge cut that bleeds blood, doing %0.2f physical damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Encased in a shield that slows projectiles by %d%% and increases physical resistance by %d%%."):format(eff.power, eff.power/2) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -2267,7 +2241,7 @@ newEffect{
 	on_lose = function(self, err) return "The entropic shield around #Target# dissipates.", "-Entropic Shield" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
-		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
+		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power/2})
 		eff.proj = self:addTemporaryValue("slow_projectiles", eff.power)
 	end,
 	deactivate = function(self, eff)
@@ -2340,35 +2314,6 @@ newEffect{
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src, self.x, self.y, DamageType.PHYSICAL, eff.power)
-	end,
-}
-
-newEffect{
-	name = "FRICTION",
-	desc = "Friction",
-	long_desc = function(self, eff) return ("Each time the target moves it takes %0.2f fire damage over three turns."):format(eff.dam) end,
-	type = "magical",
-	status = "detrimental",
-	parameters = {dam=10},
-	on_gain = function(self, err) return "The effect of friction on #Target# has been amplified!", "+Friction" end,
-	on_lose = function(self, err) return "The effect of friction on #Target# has returned to normal.", "-Friction" end,
-}
-
-newEffect{
-	name = "STOP",
-	desc = "Stop",
-	long_desc = function(self, eff) return ("The target is slowed but gradually recovering speed."):format(eff.chance) end,
-	type = "magical",
-	status = "detrimental",
-	parameters = { power=0.1 },
-	on_gain = function(self, err) return "#Target# is stopped!", "+Stop" end,
-	on_lose = function(self, err) return "#Target# has fully recovered from being stopped.", "-Stop" end,
-	-- Recover each turn
-	activate = function(self, eff)
-		eff.dur = self:updateEffectDuration(eff.dur, "stop")
-	end,
-	on_timeout = function(self, eff)
-		self:addTemporaryValue("energy", {mod= eff.power*eff.dur})
 	end,
 }
 
@@ -2918,3 +2863,198 @@ newEffect{
 	end,
 }
 
+newEffect{
+	name = "TURN_BACK_THE_CLOCK",
+	desc = "Turn Back the Clock",
+	long_desc = function(self, eff) return ("The target has been returned to a much younger state, reducing all it's stats by %d."):format(eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# is returned to a much younger state!" end,
+	on_lose = function(self, err) return "#Target# has regained it's natural age." end,
+	activate = function(self, eff)
+		eff.stat = self:addTemporaryValue("inc_stats", {
+				[Stats.STAT_STR] =-eff.power,
+				[Stats.STAT_DEX] =-eff.power,
+				[Stats.STAT_CON] =-eff.power,
+				[Stats.STAT_MAG] =-eff.power,
+				[Stats.STAT_WIL] =-eff.power,
+				[Stats.STAT_CUN] =-eff.power,
+		})
+		-- Make sure the target doesn't have more life then it should
+		if self.life > self.max_life then
+			self.life = self.max_life
+		end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.stat)
+	end,
+}
+
+newEffect{
+	name = "WASTING",
+	desc = "Wasting",
+	long_desc = function(self, eff) return ("The target is wasting away and is slowed as well as taking %0.2f temporal damage per turn."):format(eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is wasting away!", "+Wasting" end,
+	on_lose = function(self, err) return "#Target# stops wasting away.", "-Wasting" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.TEMPORAL).projector(eff.src, self.x, self.y, DamageType.TEMPORAL, eff.power)
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("energy", {mod=-0.3})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("energy", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "PRESCIENCE",
+	desc = "Prescience",
+	long_desc = function(self, eff) return ("The target's awareness if fully in the present, increasing both physical and spell critical hit chance by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# seems more aware." end,
+	on_lose = function(self, err) return "#Target# awareness returns to normal." end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("combat_physcrit", eff.power)
+		eff.sid = self:addTemporaryValue("combat_spellcrit", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_physcrit", eff.pid)
+		self:removeTemporaryValue("combat_spellcrit", eff.sid)
+	end,
+}
+
+newEffect{
+	name = "FORESIGHT",
+	desc = "Foresight",
+	long_desc = function(self, eff) return ("The target has glimpsed into the future, improving all resistances by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# seems to know what's about to happen." end,
+	on_lose = function(self, err) return "#Target# hasn't looked this far into the future." end,
+	activate = function(self, eff)
+		eff.resistsid = self:addTemporaryValue("resists", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.resistsid)
+	end,
+}
+
+newEffect{
+	name = "PERFECT_AIM",
+	desc = "Perfect Aim",
+	long_desc = function(self, eff) return ("The target's aim has become precise, increasing it's critical damage multiplier by increased by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target#'s aim has taken on deadly precision!" end,
+	on_lose = function(self, err) return "#Target# doesn't seem to be aiming as well anymore." end,
+	activate = function(self, eff)
+		eff.ccpid = self:addTemporaryValue("combat_critical_power", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_critical_power", eff.ccpid)
+	end,
+}
+
+newEffect{
+	name = "PRECOGNIZANT_AIM",
+	desc = "Precognizant Aim",
+	long_desc = function(self, eff) return ("The target's physical resistance penetration has been increased by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.penet = self:addTemporaryValue("resists_pen", {
+			[DamageType.PHYSICAL] = eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists_pen", eff.penet)
+	end,
+}
+
+newEffect{
+	name = "BORROWED_TIME",
+	desc = "Borrowed Time",
+	long_desc = function(self, eff) return ("The target's physical resistance penetration has been increased by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("energy", {mod=10})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("energy", eff.tmpid)
+		self:setEffect(self.EFF_STUNNED, eff.power, {})
+	end,
+}
+
+newEffect{
+	name = "CELERITY",
+	desc = "Celerity",
+	long_desc = function(self, eff) return ("Increases movement speed by %d%%."):format(eff.power * 100) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# speeds up.", "+Celerity" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Celerity" end,
+	activate = function(self, eff)
+		--eff.tmpid = self:addTemporaryValue("movement_speed", {mod=-eff.power})
+		self.movement_speed = (self.movement_speed or 0) - eff.power
+	end,
+	deactivate = function(self, eff)
+		--self:removeTemporaryValue("movement_speed", eff.tmpid)
+		self.movement_speed = self.movement_speed + eff.power
+	end,
+}
+
+newEffect{
+	name = "STIMULANCE",
+	desc = "Stimulance",
+	long_desc = function(self, eff) return ("The target is regaining %d stamina per turn."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {power = 10},
+	on_gain = function(self, err) return "#Target# is recovering stamina.", "+Stimulance" end,
+	on_lose = function(self, err) return "#Target# is no longer recovering stamina.", "-Stimulance" end,
+	activate = function(self, eff)
+		self.stamina_regen = self.stamina_regen + eff.power
+	end,
+	deactivate = function(self, eff)
+		self.stamina_regen = self.stamina_regen - eff.power
+	end,
+}
+
+newEffect{
+	name = "GATHER_THE_THREADS",
+	desc = "Gather the Threads",
+	long_desc = function(self, eff) return ("%d%% of all damage done by the target will be inflicted again."):format(eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is gathering effects from other timelines.", "+Gather the Threads" end,
+	on_lose = function(self, err) return "#Target# is no longer manipulating the timestream.", "-Gather the Threads" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("threading", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("threading", eff.tmpid)
+	end,
+}

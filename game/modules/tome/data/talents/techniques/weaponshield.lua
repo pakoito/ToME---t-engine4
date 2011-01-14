@@ -30,6 +30,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -84,6 +85,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 22,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -130,6 +132,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 16,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -173,6 +176,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -207,6 +211,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	sustain_stamina = 50,
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -273,6 +278,7 @@ newTalent{
 	points = 5,
 	cooldown = 60,
 	sustain_stamina = 90,
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local shield = self:hasShield()
 		if not shield then

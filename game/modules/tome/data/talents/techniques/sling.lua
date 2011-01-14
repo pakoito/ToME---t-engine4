@@ -38,6 +38,7 @@ newTalent{
 	require = techs_dex_req2,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
 			target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {})
@@ -71,6 +72,7 @@ newTalent{
 	require = techs_dex_req3,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, 4)
@@ -103,6 +105,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	action = function(self, t)
 		if not self:hasArcheryWeapon("sling") then game.logPlayer(self, "You must wield a sling!") return nil end
 

@@ -386,11 +386,6 @@ function _M:move(x, y, force)
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
 
-	if moved and self:hasEffect(self.EFF_FRICTION) then
-		local p = self:hasEffect(self.EFF_FRICTION)
-		DamageType:get(DamageType.FIREBURN).projector(p.src, self.x, self.y, DamageType.FIREBURN, p.dam)
-	end
-
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
 		if self:attr("lightning_speed") then blur = 3 end
@@ -1051,7 +1046,7 @@ function _M:die(src)
 			game.logPlayer(src, hateMessage.." (+%0.1f hate)", hateGain - src.hate_per_kill)
 		end
 	end
-	
+
 	if src and src.summoner and src.summoner_hate_per_kill then
 		if src.summoner.knowTalent and src.summoner:knowTalent(src.summoner.T_HATE_POOL) then
 			src.summoner.hate = math.min(src.summoner.max_hate, src.summoner.hate + src.summoner_hate_per_kill)
@@ -1532,11 +1527,11 @@ function _M:preUseTalent(ab, silent, fake)
 	-- But it is not affected by fatigue
 	if (ab.paradox or ab.sustain_paradox) and not fake then
 		local pa = ab.paradox or ab.sustain_paradox
-		local chance = math.pow (((self:getParadox() - self:getWil()) /200), 2)
+		local chance = math.pow (((self:getParadox() - self:getWil()) /200), 2)*((100 + self:combatFatigue()) / 100)
 		-- Fail ? lose energy and 1/10 more paradox
 		print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
 		if rng.percent(chance) then
-			game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name)
+			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(pa / 2)
 			self:useEnergy()
 			return false
@@ -1551,6 +1546,9 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		end
 	end
+
+	-- Special checks
+	if ab.on_pre_use and not ab.on_pre_use(self, ab, silent, fake) then return false end
 
 	if not silent then
 		-- Allow for silent talents

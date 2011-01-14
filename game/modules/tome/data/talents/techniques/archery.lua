@@ -27,6 +27,7 @@ newTalent{
 	range = 10,
 	message = "@Source@ shoots!",
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
 		if not targets then return end
@@ -49,6 +50,7 @@ newTalent{
 	require = techs_dex_req1,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
 		if not targets then return end
@@ -68,6 +70,7 @@ newTalent{
 	require = techs_dex_req2,
 	cooldown = 30,
 	sustain_stamina = 50,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
 		local weapon = self:hasArcheryWeapon()
 		if not weapon then
@@ -110,6 +113,7 @@ newTalent{
 	require = techs_dex_req3,
 	cooldown = 30,
 	sustain_stamina = 50,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
 		local weapon = self:hasArcheryWeapon()
 		if not weapon then
@@ -148,6 +152,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
 		if not targets then return end
@@ -169,6 +174,7 @@ newTalent{
 	cooldown = 15,
 	stamina = 15,
 	require = techs_dex_req1,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onreach = function(self, t, x, y)
 		local rad = 1
 		if self:getTalentLevel(t) >= 3 then rad = rad + 1 end
@@ -208,6 +214,7 @@ newTalent{
 	require = techs_dex_req2,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
 			target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4)})
@@ -237,6 +244,7 @@ newTalent{
 	require = techs_dex_req3,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("pin") then
 			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {})
@@ -269,6 +277,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = 10,
 	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
 			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {})
