@@ -64,7 +64,7 @@ local function tunnel(self, x1, y1, x2, y2)
 		end
 		nx, ny = x1 + xdir, y1 + ydir
 	end
-	print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
+--	print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
 
 	return nx, ny
 end

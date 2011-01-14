@@ -91,6 +91,7 @@ function _M:run()
 	self:setFlyingText(self.flyers)
 	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
 	self.icons = { display_x = game.w * 0.5 - 14, display_y = game.h * 0.8 + 3, w = 12, h = game.h * 0.2}
+	self.nicer_tiles = NicerTiles.new()
 	self:createSeparators()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
@@ -436,8 +437,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	self.zone:getLevel(self, lev, old_lev)
 
 	-- Post process walls
-	local nt = NicerTiles.new()
-	nt:postProcessLevelTiles(self.level)
+	self.nicer_tiles:postProcessLevelTiles(self.level)
 
 	-- Check if we need to switch the current guardian
 	self.state:zoneCheckBackupGuardian()
@@ -723,13 +723,11 @@ function _M:setupCommands()
 			if add then for i, e in ipairs(add) do print(" -", e.image) end end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
-			local nt = NicerTiles.new()
-			nt:handle(self.level, game.player.x, game.player.y)
-			nt:replaceAll(self.level)
+			self.nicer_tiles:handle(self.level, game.player.x, game.player.y)
+			self.nicer_tiles:replaceAll(self.level)
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local nt = NicerTiles.new()
-			nt:postProcessLevelTiles(self.level)
+			self.nicer_tiles:postProcessLevelTiles(self.level)
 		end end,
 	}
 

@@ -61,10 +61,23 @@ function _M:replaceAll(level)
 		local r = self.repl[i]
 		level.map(r[1], r[2], Map.TERRAIN, r[3])
 	end
+	self.repl = {}
 end
 
 function _M:postProcessLevelTiles(level)
+	if not Map.tiles.nicer_tiles then return end
+
 	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
+		self:handle(level, i, j)
+	end end
+
+	self:replaceAll(level)
+end
+
+function _M:updateAround(level, x, y)
+	if not Map.tiles.nicer_tiles then return end
+
+	for i = x-1, x+1 do for j = y-1, y+1 do
 		self:handle(level, i, j)
 	end end
 

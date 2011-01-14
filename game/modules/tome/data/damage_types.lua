@@ -151,7 +151,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				target:removeTemporaryValue("threaded")
 			end
 		end]]
-		
+
 		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
 
 		if not target.dead and dam > 0 and type == DamageType.MIND and src and src.knowTalent and src:knowTalent(src.T_MADNESS) then
@@ -754,6 +754,7 @@ newDamageType{
 				local newfeat_name, newfeat, silence = feat.dig, nil, false
 				if type(feat.dig) == "function" then newfeat_name, newfeat, silence = feat.dig(src, x, y, feat) end
 				game.level.map(x, y, Map.TERRAIN, newfeat or game.zone.grid_list[newfeat_name])
+				game.nicer_tiles:updateAround(game.level, x, y)
 				if not silence then
 					game.logSeen({x=x,y=y}, "%s turns into %s.", feat.name:capitalize(), (newfeat or game.zone.grid_list[newfeat_name]).name)
 				end
@@ -1219,7 +1220,7 @@ newDamageType{
 			dam = dam - init_dam
 			target:setEffect(target.EFF_WASTING, dur, {src=src, power=dam / dur})
 		end
-		return init_dam 
+		return init_dam
 	end,
 }
 
