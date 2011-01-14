@@ -162,7 +162,7 @@ function _M:generateRandart(add, base, lev)
 	game.level.level = lev
 
 	-- Get a base object
-	base = base or game.zone:makeEntity(game.level, "object", {ego_chance=-1000, special=function(e)
+	base = base or game.zone:makeEntity(game.level, "object", {ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
 		return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 2) and true or false
 	end}, nil, true)
 	if not base then game.level.level = oldlev return end
@@ -180,8 +180,8 @@ function _M:generateRandart(add, base, lev)
 	-----------------------------------------------------------
 	-- Determine power
 	-----------------------------------------------------------
-	local points = lev * 0.7 + rng.range(5, 15)
-	local nb_powers = 2 + rng.dice(math.max(1, lev / 10), 2)
+	local points = math.ceil((lev * 0.7 + rng.range(5, 15)) / 2)
+	local nb_powers = 1 + rng.dice(math.max(1, lev / 17), 2)
 	local powers = {}
 
 	o.cost = o.cost + points * 7
@@ -228,6 +228,37 @@ function _M:generateRandart(add, base, lev)
 
 	print("Creating randart "..name.."("..o.unided_name..") with "..(themename or "nil").." with level "..lev)
 	print(" * using themes", table.concat(table.keys(themes), ','))
+
+	-----------------------------------------------------------
+	-- Add ego properties
+	-----------------------------------------------------------
+	if o.egos then
+		local legos = {}
+		local been_greater = false
+		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
+		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":suffix"))
+		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":"))
+		for i = 1, 2 do
+			local egos = rng.table(legos)
+			local list = {}
+			local filter = nil
+			if rng.percent(lev) and not been_greater then been_greater = true filter = function(e) return e.greater_ego end end
+			for z = 1, #egos do list[#list+1] = egos[z].e end
+			local pick_egos = game.zone:computeRarities("object", list, game.level, filter, nil, nil)
+			local ego = game.zone:pickEntity(pick_egos)
+			if ego then
+				print(" ** selected ego", ego.name)
+				ego = ego:clone()
+				ego.name = nil
+				ego.unided_name = nil
+				if ego.instant_resolve then ego:resolve(nil, nil, o) end
+				ego.instant_resolve = nil
+				ego.uid = nil
+				table.mergeAddAppendArray(o, ego, true)
+			end
+		end
+		o.egos = nil o.egos_chance = nil o.force_ego = nil
+	end
 
 	-----------------------------------------------------------
 	-- Imbue powers in the randart

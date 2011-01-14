@@ -366,7 +366,9 @@ function _M:finishEntity(level, type, e, ego_filter)
 			-- Re-resolve with the (possibly) new resolvers
 			e:resolve()
 		end
-		e.egos = nil e.egos_chance = nil e.force_ego = nil
+		if not ego_filter or not ego_filter.keep_egos then
+			e.egos = nil e.egos_chance = nil e.force_ego = nil
+		end
 	end
 
 	-- Generate a stack ?
