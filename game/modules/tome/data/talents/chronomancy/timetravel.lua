@@ -115,7 +115,7 @@ newTalent{
 		local terrain = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
 		local temporal_instability = mod.class.Object.new{
 			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
-			name = "temporal instability",
+			name = "temporal instability", type="temporal", subtype="anomaly",
 			display = '&', color=colors.LIGHT_BLUE,
 			temporary = t.getDuration(self, t),
 			canAct = false,

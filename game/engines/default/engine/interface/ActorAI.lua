@@ -132,6 +132,7 @@ function _M:doAI()
 end
 
 function _M:runAI(ai)
+	if not ai then return end
 	return _M.ai_def[ai](self)
 end
 
