@@ -230,6 +230,41 @@ function _M:generateRandart(add, base, lev)
 	print(" * using themes", table.concat(table.keys(themes), ','))
 
 	-----------------------------------------------------------
+	-- Add ego properties
+	-----------------------------------------------------------
+	if o.egos then
+		local legos = {}
+		local been_greater = false
+		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
+		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":suffix"))
+		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":"))
+		for i = 1, 2 do
+			local egos = rng.table(legos)
+			local list = {}
+			local filter = nil
+			if rng.percent(lev) and not been_greater then been_greater = true filter = function(e) return e.greater_ego end end
+			for z = 1, #egos do list[#list+1] = egos[z].e end
+			local pick_egos = game.zone:computeRarities("object", list, game.level, filter, nil, nil)
+			local ego = game.zone:pickEntity(pick_egos)
+			if ego then
+				print(" ** selected ego", ego.name)
+				ego = ego:clone()
+				if ego.instant_resolve then ego:resolve(nil, nil, o) end
+				ego.instant_resolve = nil
+				ego.uid = nil
+				ego.name = nil
+				ego.unided_name = nil
+
+				table.mergeAddAppendArray(o, ego, true)
+			end
+		end
+		o.egos = nil o.egos_chance = nil o.force_ego = nil
+		-- Re-resolve with the (possibly) new resolvers
+		o:resolve()
+		o:resolve(nil, true)
+	end
+
+	-----------------------------------------------------------
 	-- Imbue powers in the randart
 	-----------------------------------------------------------
 	local function merger(dst, src)
@@ -290,37 +325,6 @@ function _M:generateRandart(add, base, lev)
 --			print(" * adding power: "..p.name)
 		end
 		hpoints = hpoints - p.points * 2
-	end
-
-	-----------------------------------------------------------
-	-- Add ego properties
-	-----------------------------------------------------------
-	if o.egos then
-		local legos = {}
-		local been_greater = false
-		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
-		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":suffix"))
-		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":"))
-		for i = 1, 2 do
-			local egos = rng.table(legos)
-			local list = {}
-			local filter = nil
-			if rng.percent(lev) and not been_greater then been_greater = true filter = function(e) return e.greater_ego end end
-			for z = 1, #egos do list[#list+1] = egos[z].e end
-			local pick_egos = game.zone:computeRarities("object", list, game.level, filter, nil, nil)
-			local ego = game.zone:pickEntity(pick_egos)
-			if ego then
-				print(" ** selected ego", ego.name)
-				ego = ego:clone()
-				ego.name = nil
-				ego.unided_name = nil
-				if ego.instant_resolve then ego:resolve(nil, nil, o) end
-				ego.instant_resolve = nil
-				ego.uid = nil
-				table.mergeAddAppendArray(o, ego, true)
-			end
-		end
-		o.egos = nil o.egos_chance = nil o.force_ego = nil
 	end
 
 	-- Setup the name

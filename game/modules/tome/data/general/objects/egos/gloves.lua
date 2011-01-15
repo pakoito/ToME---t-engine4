@@ -148,7 +148,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of strength (#STATBONUS#)", suffix=true,
+	name = " of strength (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -158,7 +158,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of dexterity (#STATBONUS#)", suffix=true,
+	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -168,7 +168,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of magic (#STATBONUS#)", suffix=true,
+	name = " of magic (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -178,7 +178,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of iron grip", suffix=true,
+	name = " of iron grip", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 9,
 	cost = 15,
@@ -189,7 +189,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of protection", suffix=true,
+	name = " of protection", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
 	rarity = 15,
@@ -204,7 +204,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of warmaking", suffix=true,
+	name = " of warmaking", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 17,
@@ -220,7 +220,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of regeneration", suffix=true,
+	name = " of regeneration", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 18,
@@ -233,7 +233,7 @@ newEntity{
 }
 
 newEntity{
-	name = "heroic ", prefix=true,
+	name = "heroic ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
 	rarity = 20,
@@ -249,7 +249,7 @@ newEntity{
 }
 
 newEntity{
-	name = "alchemist's ", prefix=true,
+	name = "alchemist's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 17,
@@ -265,7 +265,7 @@ newEntity{
 }
 
 newEntity{
-	name = "archer's ", prefix=true,
+	name = "archer's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 17,

@@ -37,7 +37,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of magic (#STATBONUS#)", suffix=true,
+	name = " of magic (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -46,7 +46,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of willpower (#STATBONUS#)", suffix=true,
+	name = " of willpower (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -55,7 +55,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of cunning (#STATBONUS#)", suffix=true,
+	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -84,7 +84,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = "shimmering ", prefix=true,
+	name = "shimmering ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 10,
 	cost = 4,
@@ -94,7 +94,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of seeing ", suffix=true,
+	name = " of seeing ", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -192,7 +192,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
-		},		
+		},
 	},
 }
 
@@ -208,7 +208,7 @@ newEntity{
 			[DamageType.COLD] = resolvers.mbonus_material(7, 5, function(e, v) return v * 0.25 end),
 			[DamageType.ACID] = resolvers.mbonus_material(7, 5, function(e, v) return v * 0.25 end),
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(7, 5, function(e, v) return v * 0.25 end),
-		},		
+		},
 	},
 }
 

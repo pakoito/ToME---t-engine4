@@ -25,7 +25,7 @@ local DamageType = require "engine.DamageType"
 
 
 newEntity{
-	name = " of strength (#STATBONUS#)", suffix=true,
+	name = " of strength (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -34,7 +34,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of constitution (#STATBONUS#)", suffix=true,
+	name = " of constitution (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -43,7 +43,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of dexterity (#STATBONUS#)", suffix=true,
+	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -204,7 +204,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
-			},		
+			},
 	},
 }
 
@@ -220,7 +220,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
 			[Stats.STAT_CON] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
-			},		
+			},
 	},
 }
 
@@ -235,7 +235,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
-			},		
+			},
 	},
 }
 

@@ -23,6 +23,20 @@ function lpeg.anywhere (p)
 	return lpeg.P{ p + 1 * lpeg.V(1) }
 end
 
+function table.print(src, offset)
+	offset = offset or ""
+	for k, e in pairs(src) do
+		-- Deep copy subtables, but not objects!
+		if type(e) == "table" and not e.__CLASSNAME then
+			print(("%s[%s] = {"):format(offset, tostring(k)))
+			table.print(e, offset.."  ")
+			print(("%s}"):format(offset))
+		else
+			print(("%s[%s] = %s"):format(offset, tostring(k), tostring(e)))
+		end
+	end
+end
+
 function table.clone(tbl, deep)
 	local n = {}
 	for k, e in pairs(tbl) do

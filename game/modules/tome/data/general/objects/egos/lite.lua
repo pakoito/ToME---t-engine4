@@ -65,7 +65,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of revealing", suffix=true,
+	name = " of revealing", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -76,7 +76,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of clarity", suffix=true,
+	name = " of clarity", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -86,7 +86,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of health", suffix=true,
+	name = " of health", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -96,7 +96,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of guile", suffix=true,
+	name = " of guile", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -108,7 +108,7 @@ newEntity{
 }
 
 newEntity{
-	name = "burglar's ", prefix=true,
+	name = "burglar's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,
@@ -119,7 +119,7 @@ newEntity{
 }
 
 newEntity{
-	name = "guard's ", prefix=true,
+	name = "guard's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,
@@ -129,7 +129,7 @@ newEntity{
 }
 
 newEntity{
-	name = "healer's ", prefix=true,
+	name = "healer's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,
@@ -139,7 +139,7 @@ newEntity{
 }
 
 newEntity{
-	name = "guide's ", prefix=true,
+	name = "guide's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,

@@ -52,7 +52,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of Eldoral", suffix=true,
+	name = " of Eldoral", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -65,7 +65,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of the Shaloren", suffix=true,
+	name = " of the Shaloren", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -78,7 +78,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of Iron Throne", suffix=true,
+	name = " of Iron Throne", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -191,7 +191,7 @@ newEntity{
 		cut_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
 		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return v * 10, v end),
 		poison_immune = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15, v/100 end),
-		
+
 	},
 }
 
@@ -225,5 +225,3 @@ newEntity{
 		},
 	},
 }
-
-

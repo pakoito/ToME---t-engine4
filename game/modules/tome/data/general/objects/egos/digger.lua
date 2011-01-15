@@ -28,7 +28,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of strength", suffix=true,
+	name = " of strength", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 6,
 	cost = 10,
@@ -38,7 +38,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of delving", suffix=true,
+	name = " of delving", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 20,
@@ -80,7 +80,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of the Iron Throne", suffix=true,
+	name = " of the Iron Throne", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
 	rarity = 15,
@@ -93,7 +93,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of Reknor", suffix=true,
+	name = " of Reknor", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
 	rarity = 15,
@@ -108,7 +108,7 @@ newEntity{
 }
 
 newEntity{
-	name = "brutal ", prefix=true,
+	name = "brutal ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
 	rarity = 20,
@@ -122,7 +122,7 @@ newEntity{
 }
 
 newEntity{
-	name = "builder's ", prefix=true,
+	name = "builder's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 15,
@@ -137,7 +137,7 @@ newEntity{
 }
 
 newEntity{
-	name = "soldier's ", prefix=true,
+	name = "soldier's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
 	rarity = 15,

@@ -25,7 +25,7 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
-	name = " of see invisible", suffix=true,
+	name = " of see invisible", suffix=true, instant_resolve=true,
 	level_range = {1, 20},
 	rarity = 4,
 	cost = 2,
@@ -45,7 +45,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of mana (#REGEN#)", suffix=true,
+	name = " of mana (#REGEN#)", suffix=true, instant_resolve=true,
 	level_range = {10, 20},
 	rarity = 8,
 	cost = 3,
@@ -55,73 +55,79 @@ newEntity{
 }
 
 newEntity{
-	name = " of fire (#RESIST#)", suffix=true,
+	name = " of fire (#RESIST#)", suffix=true, instant_resolve=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.FIRE] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
-		resists = {[DamageType.FIRE] = resolvers.genericlast(function(e) return e.wielder.inc_damage[engine.DamageType.FIRE] end) },
+		resists = {},
+		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.FIRE] = (e.wielder.resists[engine.DamageType.FIRE] or 0) + e.wielder.inc_damage[engine.DamageType.FIRE] end),
 	},
 }
 
 newEntity{
-	name = " of frost (#RESIST#)", suffix=true,
+	name = " of frost (#RESIST#)", suffix=true, instant_resolve=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.COLD] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
-		resists = {[DamageType.COLD] = resolvers.genericlast(function(e) return e.wielder.inc_damage[engine.DamageType.COLD] end) },
+		resists = {},
+		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.COLD] = (e.wielder.resists[engine.DamageType.COLD] or 0) + e.wielder.inc_damage[engine.DamageType.COLD] end),
 	},
 }
 
 newEntity{
-	name = " of nature (#RESIST#)", suffix=true,
+	name = " of nature (#RESIST#)", suffix=true, instant_resolve=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.NATURE] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
-		resists = {[DamageType.NATURE] = resolvers.genericlast(function(e) return e.wielder.inc_damage[engine.DamageType.NATURE] end) },
+		resists = {},
+		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.NATURE] = (e.wielder.resists[engine.DamageType.NATURE] or 0) + e.wielder.inc_damage[engine.DamageType.NATURE] end),
 	},
 }
 
 newEntity{
-	name = " of lightning (#RESIST#)", suffix=true,
+	name = " of lightning (#RESIST#)", suffix=true, instant_resolve=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
-		resists = {[DamageType.LIGHTNING] = resolvers.genericlast(function(e) return e.wielder.inc_damage[engine.DamageType.LIGHTNING] end) },
+		resists = {},
+		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHTNING] = (e.wielder.resists[engine.DamageType.LIGHTNING] or 0) + e.wielder.inc_damage[engine.DamageType.LIGHTNING] end),
 	},
 }
 
 newEntity{
-	name = " of corrosion (#RESIST#)", suffix=true,
+	name = " of corrosion (#RESIST#)", suffix=true, instant_resolve=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.ACID] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
-		resists = {[DamageType.ACID] = resolvers.genericlast(function(e) return e.wielder.inc_damage[engine.DamageType.ACID] end) },
+		resists = {},
+		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.ACID] = (e.wielder.resists[engine.DamageType.ACID] or 0) + e.wielder.inc_damage[engine.DamageType.ACID] end),
 	},
 }
 
 newEntity{
-	name = " of blight (#RESIST#)", suffix=true,
+	name = " of blight (#RESIST#)", suffix=true, instant_resolve=true,
 	level_range = {10, 40},
 	rarity = 6,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
-		resists = {[DamageType.BLIGHT] = resolvers.genericlast(function(e) return e.wielder.inc_damage[engine.DamageType.BLIGHT] end) },
+		resists = {},
+		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.BLIGHT] = (e.wielder.resists[engine.DamageType.BLIGHT] or 0) + e.wielder.inc_damage[engine.DamageType.BLIGHT] end),
 	},
 }
 
 newEntity{
-	name = " of massacre (#DAMBONUS#)", suffix=true,
+	name = " of massacre (#DAMBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -131,7 +137,7 @@ newEntity{
 }
 
 newEntity{ define_as = "RING_ARCANE_POWER",
-	name = " of arcane power (#DAMBONUS#)", suffix=true,
+	name = " of arcane power (#DAMBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {6, 50},
 	rarity = 4,
 	cost = 4,
@@ -153,51 +159,51 @@ newEntity{
 }
 
 newEntity{
-	name = "brawler's ", prefix=true,
+	name = "brawler's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		combat_def = resolvers.genericlast(function(e) return e.wielder.inc_stats[engine.interface.ActorStats.STAT_STR] end),
+		resolvers.genericlast(function(e) e.wielder.combat_def = (e.wielder.combat_def or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_STR] end),
 	},
 }
 
 newEntity{
-	name = "titan's ", prefix=true,
+	name = "titan's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		combat_physresist = resolvers.genericlast(function(e) return e.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] end),
+		resolvers.genericlast(function(e) e.wielder.combat_physresist = (e.wielder.combat_physresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] end),
 	},
 }
 
 newEntity{
-	name = "duelist's ", prefix=true,
+	name = "duelist's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		combat_atk = resolvers.genericlast(function(e) return e.wielder.inc_stats[engine.interface.ActorStats.STAT_DEX] end),
+		resolvers.genericlast(function(e) e.wielder.combat_atk = (e.wielder.combat_atk or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_DEX] end),
 	},
 }
 
 newEntity{ define_as = "RING_MAGIC",
-	name = "wizard's ", prefix=true,
+	name = "wizard's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		combat_spellresist = resolvers.genericlast(function(e) return e.wielder.inc_stats[engine.interface.ActorStats.STAT_MAG] end),
+		resolvers.genericlast(function(e) e.wielder.combat_spellresist = (e.wielder.combat_spellresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_MAG] end),
 	},
 }
 
 newEntity{
-	name = "mule's ", prefix=true,
+	name = "mule's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
@@ -214,7 +220,7 @@ newEntity{
 	rarity = 12,
 	cost = 20,
 	wielder = {
-		lite = -2,	
+		lite = -2,
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 4, function(e, v) return v * 3 end),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 4, function(e, v) return v * 3 end),
@@ -248,7 +254,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 4, function(e, v) return v * 3 end),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 4, function(e, v) return v * 3 end),
-			},	
+			},
 	},
 }
 
@@ -261,7 +267,7 @@ newEntity{
 	wielder = {
 		pin_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
 		knockback_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
-		disarm_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),	
+		disarm_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
 	},
 }
 
@@ -275,7 +281,7 @@ newEntity{
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.8 end),
 		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
-		inc_damage = { [DamageType.ARCANE] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.8 end) },	
+		inc_damage = { [DamageType.ARCANE] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.8 end) },
 	},
 }
 
@@ -285,10 +291,10 @@ newEntity{
 	greater_ego = true,
 	rarity = 12,
 	cost = 50,
-	wielder = {	
+	wielder = {
 		max_life=resolvers.mbonus_material(60, 40, function(e, v) return v * 0.1 end),
 		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),	
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
 
 	},
 }

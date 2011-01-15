@@ -27,7 +27,7 @@ local Talents = require "engine.interface.ActorTalents"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
-	name = " of cunning (#STATBONUS#)", suffix=true,
+	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -36,7 +36,7 @@ newEntity{
 	},
 }
 newEntity{
-	name = " of willpower (#STATBONUS#)", suffix=true,
+	name = " of willpower (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -114,7 +114,7 @@ newEntity{
 
 
 newEntity{
-	name = "insulating ", prefix=true,
+	name = "insulating ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -151,7 +151,7 @@ newEntity{
 }
 
 newEntity{
-	name = "shielding ", prefix=true,
+	name = "shielding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -162,7 +162,7 @@ newEntity{
 }
 
 newEntity{
-	name = "cleansing ", prefix=true,
+	name = "cleansing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 9,
@@ -176,7 +176,7 @@ newEntity{
 }
 
 newEntity{
-	name = "vitalizing ", prefix=true,
+	name = "vitalizing ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
 	rarity = 15,
