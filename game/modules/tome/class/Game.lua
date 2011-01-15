@@ -351,7 +351,7 @@ function _M:setupMiniMap()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true}, true)
 end
 
 function _M:getSaveDescription()
@@ -550,6 +550,41 @@ end
 
 function _M:getPlayer()
 	return self.player
+end
+
+--- Clones the game world for chronomancy spells
+function _M:chronoClone(name)
+	local d = Dialog:simplePopup("Chronomancy", "Folding the space time structure...")
+	d.__showup = nil
+	core.display.forceRedraw()
+	game:unregisterDialog(d)
+
+	if name then
+		self._chronoworlds = self._chronoworlds or {}
+		self._chronoworlds[name] = game:cloneFull()
+	else
+		return game:cloneFull()
+	end
+end
+
+--- Restores a chronomancy clone
+function _M:chronoRestore(name)
+	local ngame
+	if type(name) == "string" then ngame = self._chronoworlds[name]
+	else ngame = name end
+	if not ngame then return false end
+
+	local d = Dialog:simplePopup("Chronomancy", "Unfolding the space time structure...")
+	d.__showup = nil
+	core.display.forceRedraw()
+	game:unregisterDialog(d)
+
+	ngame:cloneReloaded()
+	_G.game = ngame
+	game:run()
+	game.key:setCurrent()
+	game.mouse:setCurrent()
+	return true
 end
 
 --- Update the zone name, if needed

@@ -38,6 +38,7 @@ function _M:block_move(x, y, e, can_attack)
 	-- Dont bump yourself!
 	if e and e ~= self and can_attack then
 		e:attack(self)
+		return "attack"
 	end
 	return true
 end

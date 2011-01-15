@@ -120,15 +120,8 @@ end
 
 function _M:onEnterLevelEnd(zone, level)
 	-- Clone level when they are made, for chronomancy
-	if self:attr("level_cloning") then
-		local d = Dialog:simplePopup("Chronomancy", "Folding the space time structure...")
-		d.__showup = nil
-		core.display.forceRedraw()
-
-		local clone = level:cloneFull()
-		level.backup = clone
-
-		game:unregisterDialog(d)
+	if self:attr("game_cloning") then
+		game:chronoClone("on_level")
 	end
 end
 

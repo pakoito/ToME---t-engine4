@@ -181,44 +181,32 @@ newTalent{
 	paradox = 100,
 	cooldown = 100,
 	no_npc_use = true,
-	getPercent = function(self, t) return 12 - (self:getTalentLevelRaw(t) * 2) end,
+	getPercent = function(self, t) return 20 - (self:getTalentLevelRaw(t) * 2) end,
 	on_learn = function(self, t)
-		self:attr("level_cloning", 1)
+		self:attr("game_cloning", 1)
 	end,
 	on_unlearn = function(self, t)
-		self:attr("level_cloning", -1)
+		self:attr("game_cloning", -1)
 	end,
 	action = function(self, t)
-		if not game.level.backup then
-			game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
-			return
-		end
-
 		game:onTickEnd(function()
-			local level = game.level.backup
-			level:cloneReloaded()
-			-- Look for the "old" player
-			for uid, e in pairs(level.entities) do
-				if e.game_ender then
-					game.level = level
-					game.player:replaceWith(e)
-					game.player:move(game.player.x, game.player.y, true)
-					game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
-
-					-- Manualy start the cooldown of the "old player"
-					game.player:startTalentCooldown(t)
-					return
-				end
+			if not game:chronoRestore("on_level") then
+				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
+				return
 			end
+			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
 
-			game.logPlayer(self, "#LIGHT_RED#The space time continuum seems to be too disturted to use.")
+			-- Manualy start the cooldown of the "old player"
+			game.player:startTalentCooldown(t)
+			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 100)))
+			game.player.max_life = game.player.max_life * (1 - t.getPercent(self, t) / 100)
 		end)
 		return true
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[Casting this spell sends you back to the moment you entered the current dungeon level.  Traveling through time carries with it inherent penalties and doing so will permanently reduce your hit points by %d%%.
-		Not yet finished!!]])
+		return ([[Casting this spell sends you back to the moment you entered the current dungeon level.
+		Traveling through time carries with it inherent penalties and doing so will permanently reduce your hit points by %d%%.]])
 		:format(percent)
 	end,
 }

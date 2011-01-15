@@ -2794,7 +2794,7 @@ newEffect{
 newEffect{
 	name = "KINSPIKE_SHIELD",
 	desc = "Spiked Kinetic Shield",
-	long_desc = function(self, eff) return ("The target erects a powerful kinetic shield capable of absorbing %d physical or acid damage before it crumbles."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target erects a powerful kinetic shield capable of absorbing %d/%d physical or acid damage before it crumbles."):format(self.kinspike_shield_absorb, eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=100 },
@@ -2812,7 +2812,7 @@ newEffect{
 newEffect{
 	name = "THERMSPIKE_SHIELD",
 	desc = "Spiked Thermal Shield",
-	long_desc = function(self, eff) return ("The target erects a powerful thermal shield capable of absorbing %d thermal damage before it crumbles."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target erects a powerful thermal shield capable of absorbing %d/%d thermal damage before it crumbles."):format(self.thermspike_shield_absorb, eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=100 },
@@ -2830,7 +2830,7 @@ newEffect{
 newEffect{
 	name = "CHARGESPIKE_SHIELD",
 	desc = "Spiked Charged Shield",
-	long_desc = function(self, eff) return ("The target erects a powerful charged shield capable of absorbing %d lightning or blight damage before it crumbles."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target erects a powerful charged shield capable of absorbing %d/%d lightning or blight damage before it crumbles."):format(self.chargespike_shield_absorb, eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=100 },

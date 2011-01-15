@@ -371,7 +371,7 @@ function _M:move(x, y, force)
 		else
 			moved = engine.Actor.move(self, x, y, force)
 		end
-		if not force and moved and not self.did_energy then self:useEnergy(game.energy_to_act * self:combatMovementSpeed()) end
+		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then self:useEnergy(game.energy_to_act * self:combatMovementSpeed()) end
 	end
 	self.did_energy = nil
 
