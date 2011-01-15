@@ -30,7 +30,7 @@ function _M:init(t, no_default)
 	ActorAI.init(self, t)
 
 	-- Grab default image name if none is set
-	if not self.image then self.image = "npc/"..(self.type or "unknown").."_"..(self.subtype or "unknown").."_"..(self.name or "unknown"):lower():gsub("[^a-z0-9]", "_")..".png" end
+	if not self.image and self.name ~= "unknown actor" then self.image = "npc/"..(self.type or "unknown").."_"..(self.subtype or "unknown").."_"..(self.name or "unknown"):lower():gsub("[^a-z0-9]", "_")..".png" end
 end
 
 function _M:act()
@@ -207,9 +207,10 @@ function _M:tooltip(x, y, seen_by)
 	str:add(
 		true,
 		("Killed by you: "):format(killed), true,
-		"Target: ", self.ai_target.actor and self.ai_target.actor.name or "none", true,
-		"UID: "..self.uid
+		"Target: ", self.ai_target.actor and self.ai_target.actor.name or "none"
 	)
+	if config.settings.cheat then str:add(true, "UID: "..self.uid, true, self.image) end
+
 	return str
 end
 

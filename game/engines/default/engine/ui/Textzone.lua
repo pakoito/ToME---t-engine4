@@ -42,20 +42,18 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local list
-	if not self.auto_width then
-		list = self.text:splitLines(self.w, self.font)
-	else
-		list = {self.text}
-		self.w = self.font:size(self.text)
+	local text, max_w = self.text:toTString():splitLines(self.w, self.font)
+	local max_lines = text:countLines()
+	if self.auto_width then
+		self.w = max_w
 	end
 	self.scroll = 1
-	self.max = #list
+	self.max = max_lines
 
 	local fw, fh = self.w, self.font_h
 	self.fw, self.fh = fw, fh
 
-	if self.auto_height then self.h = self.fh * #list end
+	if self.auto_height then self.h = self.fh * max_lines end
 
 	self.max_display = math.floor(self.h / self.fh)
 	self.can_focus = false
@@ -64,19 +62,7 @@ function _M:generate()
 	end
 
 	-- Draw the list items
-	local old_style = self.font:getStyle()
-	self.list = {}
-	local r, g, b = 255, 255, 255
-	local s = core.display.newSurface(fw, fh)
-	for i, l in ipairs(list) do
-		s:erase()
-		r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
-		if self.no_color_bleed then r, g, b = 255, 255, 255 end
-
-		local item = {}
-		item._tex, item._tex_w, item._tex_h = s:glTexture()
-		self.list[#self.list+1] = item
-	end
+	self.list = tstring.makeLineTextures(text, self.fw, self.font)
 
 	-- Draw the scrollbar
 	if self.scrollbar then
@@ -90,8 +76,6 @@ function _M:generate()
 		for i = 0, self.h - fh do s:merge(sb, 0, i) end
 		self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h - fh, s:glTexture()
 	end
-
-	self.font:setStyle(old_style)
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)

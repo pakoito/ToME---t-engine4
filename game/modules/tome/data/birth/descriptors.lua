@@ -90,8 +90,8 @@ newBirthDescriptor{
 	selection_default = not profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"#GOLD##{bold}#Tutorial mode#WHITE# start with a simplified character and discover the game in a simple quest.#{normal}#",
-		"You will be guided by a helpful spirit while learning.",
+		"#GOLD##{bold}#Tutorial mode",
+		"#WHITE#Starts with a simplified character and discover the game in a simple quest.#{normal}#",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",
 		"No main game achievements possible.",
@@ -116,7 +116,9 @@ newBirthDescriptor{
 	display_name = "Discovery",
 	desc =
 	{
-		"#GOLD##{bold}#Discovery mode#WHITE# provides an easier game experience.\nUse it if you feel uneasy tackling the harder modes.#{normal}#",
+		"#GOLD##{bold}#Discovery mode#WHITE#",
+		"Provides an easier game experience.",
+		"Use it if you feel uneasy tackling the harder modes.#{normal}#",
 		"All damage done to the player decreased by 30%",
 		"All healing for the player increased by 30%",
 		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
@@ -139,7 +141,9 @@ newBirthDescriptor{
 	selection_default = profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"#GOLD##{bold}#Adventure mode#WHITE# provides the normal game experience but with limited extra lifes.\nUse it if you want a normal playing conditions but do not feel ready for just one life.#{normal}#",
+		"#GOLD##{bold}#Adventure mode#WHITE#",
+		"Provides the normal game experience but with limited extra lifes.",
+		"Use it if you want a normal playing conditions but do not feel ready for just one life.#{normal}#",
 		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
 	},
 	descriptor_choices =
@@ -157,7 +161,9 @@ newBirthDescriptor{
 	name = "Roguelike",
 	desc =
 	{
-		"#GOLD##{bold}#Roguelike mode provides the closer experience to 'classic' roguelike games. You will only have one life, you *ARE* your character.#WHITE##{normal}#",
+		"#GOLD##{bold}#Roguelike mode#WHITE#",
+		"Provides the closer experience to 'classic' roguelike games.",
+		"You will only have one life, you *ARE* your character.#{normal}#",
 		"Only one life, unless ways to self-resurrect are found in-game.",
 	},
 	descriptor_choices =
@@ -172,7 +178,8 @@ newBirthDescriptor{
 	name = "Insane",
 	desc =
 	{
-		"#GOLD##{bold}#Insane mode#WHITE# the basic roguelike mode rules with add unfairness!#{normal}#",
+		"#GOLD##{bold}#Insane mode#WHITE#",
+		"The basic roguelike mode rules with added unfairness!#{normal}#",
 		"Absolutely unfair game setting",
 		"Only one life, unless ways to self-resurrect are found in-game.",
 		"All zone levels increased by 100% + 10",
