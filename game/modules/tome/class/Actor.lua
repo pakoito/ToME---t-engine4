@@ -1542,6 +1542,16 @@ function _M:preUseTalent(ab, silent, fake)
 			self:incParadox(pa / 2)
 			self:useEnergy()
 			return false
+		elseif rng.percent(math.pow((self:getParadox()/400), 4)) then
+			-- Random anomaly
+			local ts = {}
+			for id, t in pairs(self.talents_def) do
+				if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
+			end
+			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
+			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
+			self:useEnergy()
+			return false
 		end
 	end
 
