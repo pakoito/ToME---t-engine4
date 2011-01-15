@@ -66,7 +66,9 @@ newTalent{
 			if tx and ty then
 				self:move(tx, ty, true)
 			end
+			game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 			self:move(tx, ty, true)
+			game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 			game:playSoundNear(self, "talents/teleport")
 		else
 			game.logSeen(self, "You cannot move there.")
