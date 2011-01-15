@@ -20,6 +20,7 @@
 local Stats = require "engine.interface.ActorStats"
 local Particles = require "engine.Particles"
 local Entity = require "engine.Entity"
+local Chat = require "engine.Chat"
 
 newEffect{
 	name = "CUT",
@@ -3079,6 +3080,53 @@ newEffect{
 				return
 			end
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
+		end)
+	end,
+}
+
+newEffect{
+	name = "SEE_THREADS",
+	desc = "See the Threads",
+	long_desc = function(self, eff) return ("You walk three different timelines, choosing the one you prefer at the end (current timeline: %d)."):format(eff.thread) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.thread = 1
+		eff.max_dur = eff.dur
+		game:onTickEnd(function()
+			game:chronoClone("see_threads_base")
+		end)
+	end,
+	deactivate = function(self, eff)
+		game:onTickEnd(function()
+			if eff.thread < 3 then
+				local worlds = game._chronoworlds
+
+				-- Clone but not the subworlds
+				game._chronoworlds = nil
+				local clone = game:chronoClone()
+
+				-- Restore the base world and resave it
+				game._chronoworlds = worlds
+				game:chronoRestore("see_threads_base", true)
+
+				-- Setup next thread
+				local eff = game.player:hasEffect(game.player.EFF_SEE_THREADS)
+				eff.thread = eff.thread + 1
+				game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to the start of the time threads!")
+
+				game._chronoworlds = worlds
+				game:chronoClone("see_threads_base")
+
+				-- Add the previous thread
+				game._chronoworlds["see_threads_"..(eff.thread-1)] = clone
+				return
+			else
+				game._chronoworlds.see_threads_base = nil
+				local chat = Chat.new("chronomancy-see-threads", {name="See the Threads"}, self, {turns=eff.max_dur})
+				chat:invoke()
+			end
 		end)
 	end,
 }

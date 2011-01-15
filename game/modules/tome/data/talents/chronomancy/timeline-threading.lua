@@ -52,10 +52,10 @@
 				return true
 			end
 		end
-			
+
 		-- Annoy them!
 		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
-				
+
 		game.level.map:remove(self.x, self.y, Map.ACTOR)
 		game.level.map:remove(target.x, target.y, Map.ACTOR)
 		game.level.map(self.x, self.y, Map.ACTOR, target)
@@ -63,8 +63,8 @@
 		self.x, self.y, target.x, target.y = target.x, target.y, self.x, self.y
 		game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
-		
-		
+
+
 		if target ~= self then
 			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		end
@@ -174,7 +174,7 @@ newTalent{
 			game.logPlayer(self, "%s resists!", target.name:capitalize())
 			return true
 		end
-		
+
 		local m = target:clone{
 			no_drops = true,
 			faction = self.faction,
@@ -198,13 +198,13 @@ newTalent{
 
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "shadow")
-		
+
 		-- force target to attack double
 		local a = game.level.map(tx, ty, Map.ACTOR)
 		if a and self:reactionToward(a) < 0 then
 			a:setTarget(m)
 		end
-		
+
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -229,59 +229,17 @@ newTalent{
 	type = {"chronomancy/timeline-threading", 4},
 	require = chrono_req_high4,
 	points = 5,
-	mode = "sustained",
-	sustain_mana = 170,
-	cooldown = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
-	range = 5,
-	do_storm = function(self, t)
-		if self:getMana() <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(self.T_THUNDERSTORM)
-			self.energy.value = old
-			return
-		end
-
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
-
-		-- Randomly take targets
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		for i = 1, math.floor(self:getTalentLevel(t)) do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 15, 80)), 3))
-			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
-			game:playSoundNear(self, "talents/lightning")
-		end
-	end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/thunderstorm")
-		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
-		return {
-			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		game.logSeen(self, "#0080FF#The furious lightning storm around %s calms down and disappears.", self.name)
-		self:removeTemporaryValue("mana_regen", p.drain)
+	paradox = 100,
+	cooldown = 100,
+	no_npc_use = true,
+	action = function(self, t)
+		self:setEffect(self.EFF_SEE_THREADS, 10, {})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
-		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerful spell will continuously drain mana while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 15, 80))
+		local percent = t.getPercent(self, t)
+		return ([[Casting this spell sends you back to the moment you entered the current dungeon level.
+		Traveling through time carries with it inherent penalties and doing so will permanently reduce your hit points by %d%%.]])
+		:format(percent)
 	end,
 }
