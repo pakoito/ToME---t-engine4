@@ -3058,3 +3058,26 @@ newEffect{
 		self:removeTemporaryValue("threading", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "PRECOGNITION",
+	desc = "Precognition",
+	long_desc = function(self, eff) return "You walk into the future, when the effects end, if you are not dead, you are brought back to the past." end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		game:onTickEnd(function()
+			game:chronoClone("precognition")
+		end)
+	end,
+	deactivate = function(self, eff)
+		game:onTickEnd(function()
+			if not game:chronoRestore("precognition") then
+				game.logSeen(self, "#LIGHT_RED#The recognition spell fizzles and cancels.")
+				return
+			end
+			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
+		end)
+	end,
+}

@@ -568,9 +568,11 @@ function _M:chronoClone(name)
 end
 
 --- Restores a chronomancy clone
-function _M:chronoRestore(name)
+function _M:chronoRestore(name, remove)
 	local ngame
-	if type(name) == "string" then ngame = self._chronoworlds[name]
+	if type(name) == "string" then
+		ngame = self._chronoworlds[name]
+		if remove then self._chronoworlds[name] = nil end
 	else ngame = name end
 	if not ngame then return false end
 

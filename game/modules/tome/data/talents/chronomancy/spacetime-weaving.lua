@@ -80,7 +80,7 @@ newTalent{
 		]]):format(range)
 	end,
 }
-	
+
 newTalent{
 	name = "Temporal Reprieve",
 	type = {"chronomancy/spacetime-weaving", 3},
@@ -105,7 +105,7 @@ newTalent{
 		format(reduction)
 	end,
 }
-	
+
 newTalent{
 	name = "Wormhole",
 	type = {"chronomancy/spacetime-weaving", 4},
@@ -214,9 +214,9 @@ newTalent{
 		exit.x = exit_x
 		exit.y = exit_y
 		game.level:addEntity(exit)
-        exit:identify(true)
-        exit:setKnown(self, true)
-        game.zone:addEntity(game.level, exit, "trap", exit_x, exit_y)
+		exit:identify(true)
+		exit:setKnown(self, true)
+		game.zone:addEntity(game.level, exit, "trap", exit_x, exit_y)
 		game.level.map:particleEmitter(exit_x, exit_y, 1, "teleport")
 		-- Linking the wormholes
 		entrance.dest = exit

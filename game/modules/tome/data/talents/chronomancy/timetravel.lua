@@ -190,7 +190,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		game:onTickEnd(function()
-			if not game:chronoRestore("on_level") then
+			if not game:chronoRestore("on_level", true) then
 				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 				return
 			end

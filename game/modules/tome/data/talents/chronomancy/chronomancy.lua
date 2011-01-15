@@ -23,7 +23,7 @@ newTalent{
 	require = chrono_req1,
 	points = 5,
 	paradox = 3,
-	cooldown = 20, 
+	cooldown = 20,
 	tactical = {
 		BUFF = 10,
 	},
@@ -75,7 +75,7 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	paradox = 5,
-	cooldown = 20, 
+	cooldown = 20,
 	tactical = {
 		DEFEND = 10,
 	},
@@ -94,23 +94,22 @@ newTalent{
 	end,
 }
 
-
 newTalent{
 	name = "Precognition",
 	type = {"chronomancy/chronomancy",4},
 	require = chrono_req4,
-	points = 5, 
+	points = 5,
 	paradox = 50,
 	cooldown = 100,
 	no_npc_use = true,
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
+		self:setEffect(self.EFF_PRECOGNITION, t.getDuration(self, t), {})
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer %d turns into the future.  Note that visions of your own death can still be fatal.
-		Not Finished!!]]):format(duration)
+		return ([[You peer %d turns into the future.  Note that visions of your own death can still be fatal.]]):format(duration)
 	end,
 }
