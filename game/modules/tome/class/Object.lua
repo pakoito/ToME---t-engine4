@@ -217,7 +217,7 @@ end
 function _M:getTextualDesc()
 	local desc = tstring{}
 
-	desc:add(("Type: %s / %s"):format(self.type, self.subtype), true)
+	desc:add(("Type: %s / %s"):format(self.type or "unknown", self.subtype or "unknown"), true)
 
 	-- Stop here if unided
 	if not self:isIdentified() then return desc end

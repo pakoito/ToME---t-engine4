@@ -1033,7 +1033,7 @@ newDamageType{
 }
 
 -- Chronomancy damage types
- newDamageType{
+newDamageType{
 	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
 }
 

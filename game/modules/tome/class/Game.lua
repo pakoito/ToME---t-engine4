@@ -474,6 +474,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 			x, y = self.level.default_down.x, self.level.default_down.y
 		end
 		-- Check if there is already an actor at that location, if so move it
+		x = x or 1 y = y or 1
 		local blocking_actor = self.level.map(x, y, engine.Map.ACTOR)
 		if blocking_actor then
 			local newx, newy = util.findFreeGrid(x, y, 20, true, {[Map.ACTOR]=true})

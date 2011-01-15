@@ -32,7 +32,7 @@ newTalent{
 	range = 1,
 	requires_target = true,
 	getPercent = function(self, t) return (20 + (self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm))) / 100 end,
-	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end, 
+	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -78,7 +78,7 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	cooldown = 6,
-	paradox = 10, 
+	paradox = 10,
 	tactical = {
 		ATTACK = 10,
 	},
@@ -107,7 +107,7 @@ newTalent{
 		else
 			return
 		end
-		
+
 		-- Keep the Actor from leveling on return
 		target.forceLevelup = false
 		-- Create an object to time the effect and store the creature
@@ -128,7 +128,7 @@ newTalent{
 					game.level:removeEntity(self)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
 					game.zone:addEntity(game.level, self.target, "actor", mx, my)
-					game.level.map:redisplay()					
+					game.level.map:redisplay()
 				end
 			end,
 			summoner_gain_exp = true,
@@ -139,7 +139,7 @@ newTalent{
 		-- Now update the display overlay
 		local overlay = engine.Entity.new{
 		--	image = "terrain/wormhole.png",
-			display = '&', color=colors.LIGHT_BLUE,
+			display = '&', color=colors.LIGHT_BLUE, image="object/temporal_instability.png",
 			display_on_seen = true,
 			display_on_remember = true,
 		}
@@ -148,7 +148,7 @@ newTalent{
 		else
 			table.append(temporal_instability.add_displays, overlay)
 		end
-		
+
 		self:project(tg, tx, ty, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		-- Remove the target and place the temporal placeholder
 		if not target.dead then
@@ -162,7 +162,7 @@ newTalent{
 		else
 			game.logSeen(target, "%s has been killed by the temporal energy!", target.name:capitalize())
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)

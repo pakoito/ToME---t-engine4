@@ -251,7 +251,7 @@ newEntity{ base = "BASE_RUNE",
 
 newEntity{ base = "BASE_RUNE",
 	name = "shielding rune",
-	level_range = {12, 50},
+	level_range = {5, 50},
 	rarity = 15,
 	cost = 20,
 	material_level = 3,
