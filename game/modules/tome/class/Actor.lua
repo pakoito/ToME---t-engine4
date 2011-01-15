@@ -1537,12 +1537,7 @@ function _M:preUseTalent(ab, silent, fake)
 		local chance = math.pow (((self:getParadox() - self:getWil()) /200), 2)*((100 + self:combatFatigue()) / 100)
 		-- Fail ? lose energy and 1/10 more paradox
 		print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
-		if rng.percent(chance) then
-			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
-			self:incParadox(pa / 2)
-			self:useEnergy()
-			return false
-		elseif rng.percent(math.pow((self:getParadox()/400), 4)) then
+		if rng.percent(math.pow((self:getParadox()/400), 4)) then
 			-- Random anomaly
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
@@ -1550,6 +1545,11 @@ function _M:preUseTalent(ab, silent, fake)
 			end
 			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
+			self:useEnergy()
+			return false
+		elseif rng.percent(chance) then
+			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
+			self:incParadox(pa / 2)
 			self:useEnergy()
 			return false
 		end
