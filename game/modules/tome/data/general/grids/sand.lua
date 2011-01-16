@@ -202,7 +202,7 @@ newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_HOLE_8"..i, im
 newEntity{
 	define_as = "PALMTREE",
 	type = "wall", subtype = "sand",
-	name = "tree", image = "terrain/sand.png",
+	name = "tree", image = "terrain/sandfloor.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
 --	add_displays = class:makeTrees("terrain/palmtree_alpha", 1),
 	add_displays = {class.new{image="terrain/palmtree_alpha1.png"}},
@@ -219,7 +219,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_UP_WILDERNESS",
 	type = "floor", subtype = "sand",
-	name = "exit to the worldmap", image = "terrain/sand.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	name = "exit to the worldmap", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/worldmap.png"}},
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
 	notice = true,
@@ -230,7 +230,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_UP8",
 	type = "floor", subtype = "sand",
-	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	name = "way to the previous level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -239,7 +239,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_UP2",
 	type = "floor", subtype = "sand",
-	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	name = "way to the previous level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -248,7 +248,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_UP4",
 	type = "floor", subtype = "sand",
-	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	name = "way to the previous level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -257,7 +257,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_UP6",
 	type = "floor", subtype = "sand",
-	name = "way to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	name = "way to the previous level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -267,7 +267,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_DOWN8",
 	type = "floor", subtype = "sand",
-	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	name = "way to the next level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -276,7 +276,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_DOWN2",
 	type = "floor", subtype = "sand",
-	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	name = "way to the next level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -285,7 +285,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_DOWN4",
 	type = "floor", subtype = "sand",
-	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	name = "way to the next level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -294,7 +294,7 @@ newEntity{
 newEntity{
 	define_as = "SAND_DOWN6",
 	type = "floor", subtype = "sand",
-	name = "way to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	name = "way to the next level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
