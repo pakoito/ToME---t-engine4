@@ -1206,7 +1206,6 @@ function _M:levelup()
 		local amount = math.min(self.hate_rating, self.absolute_max_hate - self.max_hate)
 		self:incMaxHate(amount)
 	end
-	self:updateLife()
 
 	-- Heal up on new level
 	self:resetToFull()
@@ -1257,7 +1256,8 @@ end
 --- Notifies a change of stat value
 function _M:onStatChange(stat, v)
 	if stat == self.STAT_CON then
-		self.max_life = self.max_life + 5 * v
+		self.max_life = self.max_life + 4 * v
+		self:updateConDamageReduction()
 	elseif stat == self.STAT_WIL then
 		self:incMaxMana(5 * v)
 		self:incMaxStamina(2 * v)
@@ -1265,17 +1265,16 @@ function _M:onStatChange(stat, v)
 	elseif stat == self.STAT_STR then
 		self:checkEncumbrance()
 	end
-
-	self:updateLife()
 end
 
-function _M:updateLife()
---	if self.temp_life_perc then
---		self.max_life = self.max_life - self.temp_life_perc
---	end
---	local inc = self.max_life * 0.25
---	self.temp_life_perc = inc
---	self.max_life = self.max_life + inc
+function _M:updateConDamageReduction()
+	self.resists.all = self.resists.all or 0
+	if self.temp_con_perc then
+		self.resists.all = self.resists.all - self.temp_con_perc
+	end
+	local inc = self:getCon() / 7
+	self.temp_con_perc = inc
+	self.resists.all = self.resists.all + inc
 end
 
 --- Called when a temporary value changes (added or deleted)

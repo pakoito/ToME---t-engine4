@@ -649,17 +649,17 @@ end
 
 --- Computes physical resistance
 function _M:combatPhysicalResist()
-	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.25
+	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35
 end
 
 --- Computes spell resistance
 function _M:combatSpellResist()
-	return self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.25
+	return self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35
 end
 
 --- Computes mental resistance
 function _M:combatMentalResist()
-	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.25
+	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35
 end
 
 --- Computes movement speed

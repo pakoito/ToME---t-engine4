@@ -109,22 +109,22 @@ Those inscriptions give the bearer always accessible powers. Usually most people
 -- Stats
 -------------------------------------------------------------
 TOOLTIP_STR = [[#GOLD#Strength#LAST#
-Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to hit, your chance to resist physical effects, and carrying capacity.
+Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to hit, your chance to save against physical effects, and carrying capacity.
 ]]
 TOOLTIP_DEX = [[#GOLD#Dexterity#LAST#
 Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks, and your damage with light weapons.
 ]]
 TOOLTIP_CON = [[#GOLD#Constitution#LAST#
-Constitution defines your character's ability to withstand and resist damage. It increases your maximum life and physical resistance.
+Constitution defines your character's ability to withstand and resist damage. It increases your maximum life, your chance to save against physical effects and your global damage reduction.
 ]]
 TOOLTIP_MAG = [[#GOLD#Magic#LAST#
-Magic defines your character's ability to manipulate the magical energy of the world. It increases your spell power, and the effect of spells and other magic items.
+Magic defines your character's ability to manipulate the magical energy of the world. It increases your spell power, your chance to save against magical effects, and the effect of spells and other magic items.
 ]]
 TOOLTIP_WIL = [[#GOLD#Willpower#LAST#
-Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to resist mental attacks.
+Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to your chance to save against magical and mental effects.
 ]]
 TOOLTIP_CUN = [[#GOLD#Cunning#LAST#
-Cunning defines your character's ability to learn, think, and react. It allows you to learn many worldly abilities, and increases your mental resistance and critical chance.
+Cunning defines your character's ability to learn, think, and react. It allows you to learn many worldly abilities, and increases your chance to save against mental effects and critical chance.
 ]]
 TOOLTIP_STRDEXCON = "#AQUAMARINE#Physical stats#LAST#\n---\n"..TOOLTIP_STR.."\n---\n"..TOOLTIP_DEX.."\n---\n"..TOOLTIP_CON
 TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---\n"..TOOLTIP_WIL.."\n---\n"..TOOLTIP_CUN
