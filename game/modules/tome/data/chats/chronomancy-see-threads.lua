@@ -29,6 +29,7 @@ local function select(id)
 	end
 
 	game.logPlayer(game.player, "#LIGHT_BLUE#You select the timeline and re-arrange the universe to your liking!")
+	game.level.map:particleEmitter(game.player.x, game.player.y, 1, "rewrite_universe")
 end
 
 newChat{ id="welcome",

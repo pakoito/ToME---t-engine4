@@ -3121,6 +3121,7 @@ newEffect{
 
 				-- Add the previous thread
 				game._chronoworlds["see_threads_"..(eff.thread-1)] = clone
+				game.level.map:particleEmitter(game.player.x, game.player.y, 1, "rewrite_universe")
 				return
 			else
 				game._chronoworlds.see_threads_base = nil
