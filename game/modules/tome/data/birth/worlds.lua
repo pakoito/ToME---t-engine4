@@ -53,6 +53,38 @@ newBirthDescriptor{
 	},
 }
 
+local default_eyal_descriptors = {
+	race =
+	{
+		__ALL__ = "disallow",
+		Human = "allow",
+		Elf = "allow",
+		Dwarf = "allow",
+		Halfling = "allow",
+		Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
+	},
+
+	class =
+	{
+		__ALL__ = "disallow",
+		-- currently psionics consist only of mindslayers
+		Psionic = "allow",
+		Warrior = "allow",
+		Archer = "allow",
+		Rogue = "allow",
+		Mage = "allow",
+		Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
+		Wilder = function() return (
+			profile.mod.allow_build.wilder_summoner or
+			profile.mod.allow_build.wilder_wyrmic
+			) and "allow" or "disallow"
+		end,
+		Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
+		Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
+		Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
+		Psionic = function() return profile.mod.allow_build.psionic and "allow" or "disallow" end,
+	},
+}
 
 -- Player worlds/campaigns
 newBirthDescriptor{
@@ -66,39 +98,7 @@ newBirthDescriptor{
 		"You are an adventurer, setting out to find lost treasure and glory.",
 		"But what lurks in the shadows of the world?",
 	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
-			Elf = "allow",
-			Dwarf = "allow",
-			Halfling = "allow",
-			Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
-		},
-
-		class =
-		{
-			__ALL__ = "disallow",
-			-- currently psionics consist only of mindslayers
-			Psionic = "allow",
-			Warrior = "allow",
-			Archer = "allow",
-			Rogue = "allow",
-			Mage = "allow",
-			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
-			Wilder = function() return (
-				profile.mod.allow_build.wilder_summoner or
-				profile.mod.allow_build.wilder_wyrmic
-				) and "allow" or "disallow"
-			end,
-			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
-			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
-			Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
-			Psionic = function() return profile.mod.allow_build.psionic and "allow" or "disallow" end,
-		},
-	},
+	descriptor_choices = default_eyal_descriptors,
 }
 
 newBirthDescriptor{
@@ -110,39 +110,7 @@ newBirthDescriptor{
 		"Play as your favorite race and class and venture into the infinite dungeon.",
 		"The only limit to how far you can go is your own skill!",
 	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
-			Elf = "allow",
-			Dwarf = "allow",
-			Halfling = "allow",
-			Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
-		},
-
-		class =
-		{
-			__ALL__ = "disallow",
-			-- currently psionics consist only of mindslayers
-			Psionic = "allow",
-			Warrior = "allow",
-			Archer = "allow",
-			Rogue = "allow",
-			Mage = "allow",
-			Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
-			Wilder = function() return (
-				profile.mod.allow_build.wilder_summoner or
-				profile.mod.allow_build.wilder_wyrmic
-				) and "allow" or "disallow"
-			end,
-			Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
-			Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
-			Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
-			Psionic = function() return profile.mod.allow_build.psionic and "allow" or "disallow" end,
-		},
-	},
+	descriptor_choices = default_eyal_descriptors,
 	copy = {
 		-- Give the orb of knowledge
 		resolvers.inventory{ id=true, {defined="ORB_KNOWLEDGE"}},
@@ -155,6 +123,36 @@ newBirthDescriptor{
 			self.starting_zone = "infinite-dungeon"
 			self.starting_quest = "infinite-dungeon"
 			self.starting_intro = "infinite-dungeon"
+		end,
+	},
+}
+
+newBirthDescriptor{
+	type = "world",
+	name = "Arena",
+	display_name = "The Arena: Challenge of the Master",
+	desc =
+	{
+		"Play as a lone warrior setting foot in the Arena's challenge!",
+		"You can use any class and race into it.",
+		"Check out how far you can go! Can you become the new Master of the Arena?",
+		"If so, you will battle your own champion next time!",
+	},
+	descriptor_choices = default_eyal_descriptors,
+	copy = {
+		death_dialog = "ArenaFinish",
+
+		-- Give the orb of knowledge
+		resolvers.inventory{ id=true, {defined="ORB_KNOWLEDGE"}},
+		resolvers.generic(function(e) e.hotkey[12] = {"inventory", "Orb of Knowledge"} end),
+
+		-- Override normal stuff
+		before_starting_zone = function(self)
+			self.starting_level = 1
+			self.starting_level_force_down = nil
+			self.starting_zone = "arena"
+			self.starting_quest = "arena"
+			self.starting_intro = "arena"
 		end,
 	},
 }

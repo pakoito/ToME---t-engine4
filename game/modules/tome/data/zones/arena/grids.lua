@@ -17,9 +17,27 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+load("/data/general/grids/basic.lua")
+load("/data/general/grids/sand.lua")
+
 newEntity{
-	define_as = "GRASS",
-	name = "grass", image = "terrain/grass.png",
-	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE",
+	define_as = "WALL_SEE",
+	name = "wall", image = "terrain/granite_wall1.png",
+	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+	always_remember = true,
+	does_block_move = true,
+	can_pass = {pass_wall=1},
+	block_sight = false,
+	air_level = -20,
+	dig = "FLOOR",
+}
+
+newEntity{
+	define_as = "LOCK",
+	name = "closed gate", image = "terrain/sealed_door.png",
+	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	does_block_move = true,
 }

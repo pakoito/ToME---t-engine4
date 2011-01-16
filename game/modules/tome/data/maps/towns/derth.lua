@@ -49,6 +49,21 @@ quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=col
 quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 quickEntity('e', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
 
+defineTile('r', "GRASS", nil, mod.class.NPC.new{
+	type = "humanoid", subtype = "human",
+	display = "p",
+	faction = "allied-kingdoms",
+	name = "Shady cornac man", color=colors.DARK_BLUE, unique = true,
+	instakill_immune = 1,
+	teleport_immune = 1,
+	move_others = true,
+	open_door = true,
+	size_category = 3, rank = 2,
+	ai = "simple",
+	can_talk = "arena-unlock",
+	can_quest = true,
+})
+
 startx = 76
 starty = 36
 
@@ -60,7 +75,7 @@ return {
 [[                   ,,----TTTTTT--------------TTTTTTTTTT-----,,,,,            ]],
 [[                 ,,---TTTT..................----------TTTTT------,,          ]],
 [[                ,---TTT....--ssssssss-..---..........-----TTTTTT---,,,       ]],
-[[               ,--TTT...-----SSSSSSSS--.----------,,.....------TTT----,,     ]],
+[[               ,--TTT...----rSSSSSSSS--.----------,,.....------TTT----,,     ]],
 [[             ,,--TT...-,,,,--ssssssss-..-sssssssssss,---......---TTTT--T,,   ]],
 [[           ,,---TT..-------,,##9#####-.--sssssssssss-,-------...----TT--TT,  ]],
 [[          ,---  T..--sssSsss,,,,------.--StSStSSSStS--,------.-....--TT--TT,^]],

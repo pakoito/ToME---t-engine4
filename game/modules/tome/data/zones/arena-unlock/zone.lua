@@ -17,9 +17,28 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{
-	define_as = "GRASS",
-	name = "grass", image = "terrain/grass.png",
-	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE",
+return {
+	name = "Derth (Southeast)",
+	level_range = {5, 12},
+	level_scheme = "player",
+	max_level = 1,
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+	width = 17, height = 16,
+	all_remembered = true,
+	all_lited = true,
+	persistant = "zone",
+	ambiant_music = "a_lomos_del_dragon_blanco.ogg",
+	no_level_connectivity = true,
+	generator =  {
+		map = {
+			class = "engine.generator.map.Static",
+			map = "zones/arena-unlock",
+		},
+	},
+	post_process = function(level)
+		local m = game.zone:makeEntityByName(game.level, "actor", "GLADIATOR")
+		if m then
+			game.zone:addEntity(game.level, m, "actor", 8, 2)
+		end
+	end
 }

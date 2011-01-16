@@ -1121,6 +1121,7 @@ function _M:countBirthUnlocks()
 	local max = 0
 	local list = {
 		campaign_infinite_dungeon = true,
+		campaign_arena = true,
 
 		undead_ghoul = true,
 		undead_skeleton = true,

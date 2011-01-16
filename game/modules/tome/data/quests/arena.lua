@@ -17,9 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{
-	define_as = "GRASS",
-	name = "grass", image = "terrain/grass.png",
-	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE",
-}
+name = "The Arena"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "Seeking wealth, glory, and a great fight, you challenge the Arena!"
+	desc[#desc+1] = "Can you defeat your foes and become Master of Arena?"
+	return table.concat(desc, "\n")
+end

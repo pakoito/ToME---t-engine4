@@ -265,6 +265,49 @@ function _M:display()
 		h = h + self.font_h
 	end
 
+	if game.level and game.level.arena then
+		h = h + self.font_h
+		local arena = game.level.arena
+		self:makeTexture(("-Arena mode-"), x, h, 255, 255, 255) h = h + self.font_h
+
+		if arena.score > world.arena.scores[1].score then
+			self:makeTexture(("Score(TOP): %d"):format(arena.score), x, h, 255, 255, 100) h = h + self.font_h
+		else
+			self:makeTexture(("Score: %d"):format(arena.score), x, h, 255, 255, 255) h = h + self.font_h
+		end
+		if arena.currentWave > world.arena.bestWave then
+			self:makeTexture(("Wave(TOP) %d"):format(arena.currentWave), x, h, 255, 255, 100)
+		elseif arena.currentWave > world.arena.lastScore.wave then
+			self:makeTexture(("Wave %d"):format(arena.currentWave), x, h, 100, 100, 255)
+		else
+			self:makeTexture(("Wave %d"):format(arena.currentWave), x, h, 255, 255, 255)
+		end
+		if arena.event > 0 then
+			if arena.event == 1 then
+				self:makeTexture((" [MiniBoss]"), x + (self.font_w * 13), h, 255, 255, 100)
+			elseif arena.event == 2 then
+				self:makeTexture((" [Boss]"), x + (self.font_w * 13), h, 255, 0, 255)
+			elseif arena.event == 3 then
+				self:makeTexture((" [Final]"), x + (self.font_w * 13), h, 255, 10, 15)
+			end
+		end
+		h = h + self.font_h
+		if arena.pinch == true then
+			self:makeTexture(("Bonus: %d (x%.1f)"):format(arena.bonus, arena.bonusMultiplier), x, h, 255, 50, 50) h = h + self.font_h
+		else
+			self:makeTexture(("Bonus: %d (x%.1f)"):format(arena.bonus, arena.bonusMultiplier), x, h, 255, 255, 255) h = h + self.font_h
+		end
+		if arena.display then
+			h = h + self.font_h
+			self:makeTexture(arena.display[1], x, h, 255, 0, 255) h = h + self.font_h
+			self:makeTexture(" VS", x, h, 255, 0, 255) h = h + self.font_h
+			self:makeTexture(arena.display[2], x, h, 255, 0, 255) h = h + self.font_h
+		else
+			self:makeTexture("Rank: "..arena.printRank(arena.rank, arena.ranks), x, h, 255, 255, 255) h = h + self.font_h
+		end
+		h = h + self.font_h
+	end
+
 	h = h + self.font_h
 	for tid, act in pairs(player.sustain_talents) do
 		if act then
@@ -285,6 +328,7 @@ function _M:display()
 			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
+
 end
 
 function _M:toScreen()

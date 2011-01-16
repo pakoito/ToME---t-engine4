@@ -17,9 +17,4 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{
-	define_as = "GRASS",
-	name = "grass", image = "terrain/grass.png",
-	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE",
-}
+load("/data/general/traps/elemental.lua")

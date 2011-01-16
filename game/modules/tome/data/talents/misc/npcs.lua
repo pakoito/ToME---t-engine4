@@ -968,3 +968,61 @@ newTalent{
 		return ([[Invoke your tentacles on your victim.]])
 	end,
 }
+
+newTalent{
+	short_name = "EXPLODE",
+	name = "Explode",
+	type = {"technique/other", 1},
+	points = 5,
+	message = "@Source@ explodes against @target@.",
+	cooldown = 1,
+	range = 1,
+	requires_target = true,
+	action = function(self, t)
+		local tg = {type="bolt", range=1}
+		local x, y, target = self:getTarget(tg)
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self:project(tg, x, y, DamageType.LIGHT, math.floor(self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="light"})
+		self:die(self)
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Explodes in a blinding light.]])
+	end,
+}
+
+newTalent{
+	short_name = "ELEMENTAL_BOLT",
+	name = "Elemental bolt",
+	type = {"spell/other", 1},
+	points = 5,
+	mana = 10,
+	message = "@Source@ casts Elemental Bolt!",
+	cooldown = 3,
+	range = 20,
+	proj_speed = 2,
+	requires_target = true,
+	action = function(self, t)
+		local tg = {type = "bolt", range = 20, talent = t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local elem = rng.table{
+			{DamageType.FIRE, "flame", "bolt_fire"},
+			{DamageType.COLD, "freeze", "bolt_ice"},
+			{DamageType.LIGHTNING, "lightning_explosion", "bolt_lightning"},
+			{DamageType.ACID, "acid", "bolt_acid"},
+			{DamageType.NATURE, "slime", "bolt_slime"},
+			{DamageType.BLIGHT, "blood", "bolt_blood"},
+			{DamageType.LIGHT, "light", "bolt_light"},
+			{DamageType.ARCANE, "manathrust", "bolt_arcane"},
+		}
+		tg.display={particle=elem[3]}
+		self:projectile(tg, x, y, elem[1], math.floor(self:getMag(100) * self:getTalentLevel(t)), {type=elem[2]})
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Fire a slow bolt of a random element. Damage raises with magic stat.]])
+	end,
+}

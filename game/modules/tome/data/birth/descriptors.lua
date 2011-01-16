@@ -40,6 +40,7 @@ newBirthDescriptor{
 			Tutorial = "disallow",
 			["Maj'Eyal"] = "allow",
 			Infinite = function() return profile.mod.allow_build.campaign_infinite_dungeon and "allow" or "disallow" end,
+			Arena = function() return profile.mod.allow_build.campaign_arena and "allow" or "disallow" end,
 			Ents = "disallow",
 			Spydre = "disallow",
 			Orcs = "disallow",

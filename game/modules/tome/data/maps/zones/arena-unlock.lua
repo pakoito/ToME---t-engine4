@@ -17,9 +17,31 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{
-	define_as = "GRASS",
-	name = "grass", image = "terrain/grass.png",
-	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE",
-}
+defineTile("#", "WALL")
+defineTile("+", "LOCK")
+quickEntity(':', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
+defineTile(".", "SAND")
+defineTile("-", "FLOOR")
+quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha1.png"}}})
+
+startx = 8
+starty = 12
+
+-- ASCII map section
+return [[
+:.:::T:::.::::T:T
+:#######+#######:
+:#...#.....#...#:
+:#.............#.
+:#....#...#....#:
+.##...........##T
+:#.............#:
+T#...#.....#...#:
+.#.............#:
+:##...........##:
+:#....#...#....#:
+:#.............#.
+:#...#..:..#...#:
+:#######+#######:
+:::TT:T:::T:.::.:
+]]

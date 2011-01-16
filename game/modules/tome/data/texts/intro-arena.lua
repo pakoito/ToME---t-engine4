@@ -17,9 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{
-	define_as = "GRASS",
-	name = "grass", image = "terrain/grass.png",
-	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE",
-}
+return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
+As you walk forward, you hear the increasingly loud cheers coming from outside.
+As you step into the arena, the scorching sun blinds your eyes temporarily.
+You look up, and meet your target eye to eye. The Master of the Arena, carefully examining
+the newcomer. He smirks, and starts looking at the other fighters with interest.
+Whoever defeats the Master of Arena will achieve utmost glory. 
+Determined to win, you draw your weapons and advance defiantly. 
+The public roars in anticipation....
+]]
