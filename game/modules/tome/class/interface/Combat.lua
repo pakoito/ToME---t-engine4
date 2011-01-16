@@ -341,6 +341,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		t.do_terror(self, t, target, dam)
 	end
 
+	-- Conduit (Psi)
+	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
+		local t =  self:getTalentFromId(self.T_CONDUIT)
+		t.do_combat(self, t, target)
+	end
+
 	-- Special effect
 	if hitted and not target.dead and weapon.special_on_hit and weapon.special_on_hit.fct then
 		weapon.special_on_hit.fct(weapon, self, target)
@@ -653,6 +659,11 @@ function _M:combatTalentStatDamage(t, stat, base, max)
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
 	return ((base + (self:getStat(stat))) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
+end
+
+--- Gets damage based on talent, stat, and interval
+function _M:combatTalentIntervalDamage(t, stat, min, max)
+	return (min + (1 + (self:getStat(stat) / 100) * (max / 6.5 - 1)) * self:getTalentLevel(t)) * 0.75
 end
 
 --- Computes physical resistance

@@ -37,12 +37,12 @@ newTalent{
 	psi = 20,
 	points = 5,
 	range = function(self, t)
-		local r = 3+self:getTalentLevel(t)+self:getWil(4)
+		local r = 2+self:getTalentLevelRaw(t)
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		return math.floor(r*mult)
+		r = math.floor(r*mult)
+		return math.min(r, 10)
 	end,
-	--range = function(self, t) return 3+self:getTalentLevel(t)+self:getWil(4) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -61,9 +61,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local range = self:getTalentRange(t)
 		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
 		Works on enemies up to %d squares away.]]):
-		format(3+self:getTalentLevel(t)+self:getWil(4))
+		format(range)
 	end,
 }
 
@@ -98,10 +99,11 @@ newTalent{
 	psi = 10,
 	points = 5,
 	range = function(self, t)
-		local r = 1 + self:getWil(4) + self:getTalentLevel(t)
+		local r = 2 + self:getTalentLevelRaw(t)
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		return math.floor(r*mult)
+		r = math.floor(r*mult)
+		return math.min(r, 10)
 	end,
 	action = function(self, t)
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
@@ -138,10 +140,11 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = function(self, t)
-		local r = 2 + self:getTalentLevel(t) + self:getWil(4)
+		local r = 2 + self:getTalentLevel(t)
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		return math.floor(r*mult)
+		r = math.floor(r*mult)
+		return math.min(r, 10)
 	end,
 	--range = function(self, t) return 3+self:getTalentLevel(t)+self:getWil(4) end,
 	direct_hit = true,
@@ -192,9 +195,10 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
+		local range = self:getTalentRange(t)
 		local dam = self:combatTalentMindDamage(t, 20, 600)
-		return ([[You expend massive amounts of energy to launch yourself forward at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. At high levels, you can batter through solid walls.
+		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. At high levels, you can batter through solid walls.
 		You must have a spiked kinetic shield erected in order to use this ability.]]):
-		format(2*dam/3, dam)
+		format(range, 2*dam/3, dam)
 	end,
 }

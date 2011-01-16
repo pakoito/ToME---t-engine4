@@ -48,15 +48,20 @@ newTalent{
 	end,
 	psi = 15,
 	range = function(self, t)
-		local r = 10
+		local r = 5
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		return math.floor(r*mult)
+		r = math.floor(r*mult)
+		return math.min(r, 10)
 	end,
-
-	action = function(self, t)
+	getDamage = function (self, t)
 		local gem_level = getGemLevel(self)
-		local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		return self:combatTalentIntervalDamage(t, "wil", 6, 265)*(1 + 0.3*gem_level)
+	end,
+	action = function(self, t)
+		--local gem_level = getGemLevel(self)
+		--local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		local dam = t.getDamage(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=0, friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -64,8 +69,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local gem_level = getGemLevel(self)
-		local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		--local gem_level = getGemLevel(self)
+		--local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		local dam = t.getDamage(self, t)
 		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):
 		format(dam)
@@ -85,14 +91,20 @@ newTalent{
 	end,
 	psi = 20,
 	range = function(self, t)
-		local r = 10
+		local r = 5
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		return math.floor(r*mult)
+		r = math.floor(r*mult)
+		return math.min(r, 10)
+	end,
+	getDamage = function (self, t)
+		local gem_level = getGemLevel(self)
+		return self:combatTalentIntervalDamage(t, "wil", 21, 281)*(1 + 0.3*gem_level)
 	end,
 	action = function(self, t)
-		local gem_level = getGemLevel(self)
-		local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		--local gem_level = getGemLevel(self)
+		--local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		local dam = t.getDamage(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
@@ -117,8 +129,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		local gem_level = getGemLevel(self)
-		local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		--local gem_level = getGemLevel(self)
+		--local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
+		local dam = t.getDamage(self, t)
 		return ([[Focus energies on all targets within %d squares, setting them ablaze. Does %d damage over ten turns.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):
 		format(range, dam)

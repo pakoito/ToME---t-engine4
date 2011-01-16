@@ -47,12 +47,12 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTargetWith(target, tkweapon.combat, nil, self:combatTalentWeaponDamage(t, 1.5, 3))
+		self:attackTargetWith(target, tkweapon.combat, nil, self:combatTalentWeaponDamage(t, 1.5, 2.5))
 		return true
 	end,
 	info = function(self, t)
 		return ([[Gather your will and brutally smash the target with your mainhand weapon, doing %d%% weapon damage.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 1.5, 3))
+		format(100 * self:combatTalentWeaponDamage(t, 1.5, 2.5))
 	end,
 }
 
@@ -65,8 +65,8 @@ newTalent{
 	cooldown = 0,
 	sustain_psi = 10,
 	activate = function(self, t)
-		local str_power = math.floor(0.1*self:getTalentLevel(t)*self:getWil())
-		local dex_power = math.floor(0.1*self:getTalentLevel(t)*self:getCun())
+		local str_power = math.floor(0.06*self:getTalentLevel(t)*self:getWil())
+		local dex_power = math.floor(0.06*self:getTalentLevel(t)*self:getCun())
 		return {
 			stats = self:addTemporaryValue("inc_stats", {
 				[self.STAT_STR] = str_power,
@@ -80,8 +80,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local inc = 10*self:getTalentLevel(t)
-		local str_power = math.floor(0.1*self:getTalentLevel(t)*self:getWil())
-		local dex_power = math.floor(0.1*self:getTalentLevel(t)*self:getCun())
+		local str_power = math.floor(0.06*self:getTalentLevel(t)*self:getWil())
+		local dex_power = math.floor(0.06*self:getTalentLevel(t)*self:getCun())
 		return ([[While active, you give your flesh and blood body a little aid in the form of precisely applied mental forces. Increases Strength and Dexterity by %d%% of your Willpower and Cunning, respectively.
 		Strength increased by %d
 		Dexterity increased by %d]]):
@@ -138,7 +138,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local mult = 1 + 0.1*(self:getTalentLevel(t))
-		return ([[When activated, turns off any active auras and uses your telekinetically-wielded weapon as a conduit for the energies that were being channeled through those auras.
+		return ([[When activated, turns off any active auras and uses your weapons as conduits for the energies that were being channeled through those auras.
 		Any auras used by Conduit will not start to cool down until Conduit has been deactivated. The damage from each aura applied by Conduit is multiplied by %0.2f, and does not drain energy.]]):
 		format(mult)
 	end,

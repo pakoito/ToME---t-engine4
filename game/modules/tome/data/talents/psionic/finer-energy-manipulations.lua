@@ -124,14 +124,14 @@ newTalent{
 		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and gem.material_level == 5 end, function(gem, gem_item)
 			self:removeObject(self:getInven("INVEN"), gem_item)
 			--game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
-			local quant = 30 + self:getTalentLevel(t)*self:getCun(20)
+			local quant = 30 + self:getTalentLevel(t)*self:getCun(30)
 			self:incPsi(quant)
 			self.changed = true
 		end)
 		return true
 	end,
 	info = function(self, t)
-		local quant = 30 + self:getTalentLevel(t)*self:getCun(20)
+		local quant = 30 + self:getTalentLevel(t)*self:getCun(30)
 		return ([[Matter is energy, as any good Mindslayer knows. Unfortunately, the various bonds and particles involved are just too numerous and complex to make the conversion feasible in most cases. Fortunately, the organized, crystalline structure of gems makes it possible to transform a small percentage of its matter into usable energy.
 		Turns a high-quality (material level 5) gem into %d energy. This value scales with Cunning.]]):
 		format(quant)

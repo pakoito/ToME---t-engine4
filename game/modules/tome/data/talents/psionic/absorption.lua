@@ -34,12 +34,13 @@ local function getShieldStrength(self, t)
 	if self:knowTalent(self.T_FOCUSED_CHANNELING) then
 		add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 	end
-	return 2 + (1+ self:getWil(8))*self:getTalentLevel(t) + add
+	--return 2 + (1+ self:getWil(8))*self:getTalentLevel(t) + add
+	return self:combatTalentIntervalDamage(t, "wil", 3, 60) + add
 end
 
 local function getSpikeStrength(self, t)
 	local ss = getShieldStrength(self, t)
-	return  100*self:getTalentLevel(t) + ss*math.sqrt(ss)
+	return  75*self:getTalentLevel(t) + ss*math.sqrt(ss)
 end
 
 newTalent{
@@ -49,7 +50,9 @@ newTalent{
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 30,
-	cooldown = 20,
+	cooldown = function(self, t)
+		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
+	end,
 	range = 10,
 
 	--called when damage gets absorbed by kinetic shield
@@ -122,7 +125,7 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
 		local absorb = 60 + math.min(self:getCun(50), 40)
-		return ([[Surround yourself with a shield that will absorb at most %d physical or acid damage per attack. Deactivating the shield spikes it up to a temporary %d point shield. The effect will increase with your Willpower stat.
+		return ([[Surround yourself with a shield that will absorb at most %d physical or acid damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed.
 		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
 		format(s_str, spike_str, mast, absorb)
@@ -138,7 +141,9 @@ newTalent{
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 30,
-	cooldown = 20,
+	cooldown = function(self, t)
+		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
+	end,
 	range = 10,
 
 	--called when damage gets absorbed by thermal shield
@@ -210,7 +215,7 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
 		local absorb = 60 + math.min(self:getCun(50), 40)
-		return ([[Surround yourself with a shield that will absorb at most %d thermal damage per attack. Deactivating the shield spikes it up to a temporary %d point shield. The effect will increase with your Willpower stat.
+		return ([[Surround yourself with a shield that will absorb at most %d thermal damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed.
 		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
 		format(s_str, spike_str, mast, absorb)
@@ -224,7 +229,9 @@ newTalent{
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 30,
-	cooldown = 20,
+	cooldown = function(self, t)
+		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
+	end,
 	range = 10,
 
 	--called when damage gets absorbed by charged shield
@@ -295,7 +302,7 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
 		local absorb = 60 + math.min(self:getCun(50), 40)
-		return ([[Surround yourself with a shield that will absorb at most %d lightning or blight damage per attack. Deactivating the shield spikes it up to a temporary %d point shield. The effect will increase with your Willpower stat.
+		return ([[Surround yourself with a shield that will absorb at most %d lightning or blight damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed.
 		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
 		format(s_str, spike_str, mast, absorb)
@@ -308,28 +315,6 @@ newTalent{
 	require = psi_wil_req2,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		local tKinshield = self:getTalentFromId(self.T_KINETIC_SHIELD)
-		tKinshield.cooldown = tKinshield.cooldown - 2
-
-		local tThermshield = self:getTalentFromId(self.T_THERMAL_SHIELD)
-		tThermshield.cooldown = tThermshield.cooldown - 2
-
-		local tChargeshield = self:getTalentFromId(self.T_CHARGED_SHIELD)
-		tChargeshield.cooldown = tChargeshield.cooldown - 2
-	end,
-	on_unlearn = function(self, t)
-		local tKinshield = self:getTalentFromId(self.T_KINETIC_SHIELD)
-		tKinshield.cooldown = tKinshield.cooldown + 2
-
-		local tThermshield = self:getTalentFromId(self.T_THERMAL_SHIELD)
-		tThermshield.cooldown = tThermshield.cooldown + 2
-
-		local tChargeshield = self:getTalentFromId(self.T_CHARGED_SHIELD)
-		tChargeshield.cooldown = tChargeshield.cooldown + 2
-	end,
-	getCooldown = function(self, t) return 2 * math.floor(self:getTalentLevelRaw(t)) end,
-	getMast = function(self, t) return 1 + 0.2*self:getTalentLevel(t) end,
 	info = function(self, t)
 		local cooldown = 2*self:getTalentLevelRaw(t)
 		local mast = 2*self:getTalentLevel(t)

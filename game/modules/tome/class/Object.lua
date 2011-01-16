@@ -93,7 +93,9 @@ end
 
 --- Returns a tooltip for the object
 function _M:tooltip()
-	return self:getDesc{do_color=true}
+	local str = self:getDesc{do_color=true}
+	if config.settings.cheat then str:add(true, "UID: "..self.uid, true, self.image) end
+	return str
 end
 
 --- Describes an attribute, to expand object name

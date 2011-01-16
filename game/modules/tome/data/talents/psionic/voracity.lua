@@ -107,22 +107,13 @@ newTalent{
 		local dam = 1 + 0.3*self:getTalentLevel(t)
 		local tg = {type="ball", range=0, radius=radius, friendlyfire=false}
 		self:project(tg, self.x, self.y, DamageType.FREEZE, dam)
-		-- Add a lasting map effect
-		--game.level.map:addEffect(self,
-		--	self.x, self.y, duration,
-		--	DamageType.FREEZE, dam,
-		--	radius,
-		--	5, nil,
-		--	{type="freezequake"},
-		--	nil, false
-		--)
 		return true
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
 		--local duration = self:getTalentLevel(t) + 2
-		return ([[You leech the heat out of all foes in a radius of %d, gaining %d energy for each in range. 
+		return ([[You leech the heat out of all foes in a radius of %d, gaining %d energy for each enemy frozen. 
 		The effect scales with Willpower.]]):
 		format(range, en)
 	end,

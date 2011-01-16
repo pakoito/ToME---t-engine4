@@ -126,7 +126,8 @@ newTalent{
 		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
 			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 		end
-		return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
+		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
+		return self:combatTalentIntervalDamage(t, "wil", 6, 40) + add
 	end,
 	getKnockback = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t))
@@ -162,7 +163,6 @@ newTalent{
 	deactivate = function(self, t, p)
 		local dam = 50 + 0.25 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
 		local cost = t.sustain_psi - 2*getGemLevel(self)
-		--if self:isTalentActive(self.T_CONDUIT) then return true end
 		if self:getPsi() <= cost then 
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
 			return true 
@@ -205,10 +205,11 @@ newTalent{
 		ATTACKAREA = 10,
 	},
 	range = function(self, t)
-		local r = 8
+		local r = 6
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		return math.floor(r*mult)
+		r = math.floor(r*mult)
+		return math.min(r, 10)
 	end,
 	direct_hit = true,
 	getAuraStrength = function(self, t)
@@ -216,7 +217,8 @@ newTalent{
 		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
 			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 		end
-		return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
+		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
+		return self:combatTalentIntervalDamage(t, "wil", 6, 40) + add
 	end,
 	do_thermalaura = function(self, t)
 
@@ -296,7 +298,8 @@ newTalent{
 		local r = 6
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		return math.ceil(r*mult)
+		r = math.floor(r*mult)
+		return math.min(r, 10)
 	end,
 	direct_hit = true,
 	getAuraStrength = function(self, t)
@@ -304,7 +307,8 @@ newTalent{
 		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
 			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 		end
-		return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
+		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
+		return self:combatTalentIntervalDamage(t, "wil", 6, 40) + add
 	end,
 	do_chargedaura = function(self, t)
 		local mast = 3 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
@@ -412,28 +416,6 @@ newTalent{
 	require = psi_wil_req4,
 	points = 5,
 	mode = "passive",
---	on_learn = function(self, t)
---		local t_kinaura = self:getTalentFromId(self.T_KINETIC_AURA)
---		t_kinaura.cooldown = t_kinaura.cooldown - 1
---
---		local t_thermaura = self:getTalentFromId(self.T_THERMAL_AURA)
---		t_thermaura.cooldown = t_thermaura.cooldown - 1
---
---		local t_chargeaura = self:getTalentFromId(self.T_CHARGED_AURA)
---		t_chargeaura.cooldown = t_chargeaura.cooldown - 1
---	end,
---	on_unlearn = function(self, t)
---		local t_kinaura = self:getTalentFromId(self.T_KINETIC_AURA)
---		t_kinaura.cooldown = t_kinaura.cooldown + 1
---
---		local t_thermaura = self:getTalentFromId(self.T_THERMAL_AURA)
---		t_thermaura.cooldown = t_thermaura.cooldown + 1
---
---		local t_chargeaura = self:getTalentFromId(self.T_CHARGED_AURA)
---		t_chargeaura.cooldown = t_chargeaura.cooldown + 1
---	end,
---	getCooldown = function(self, t) return 1 * math.floor(self:getTalentLevelRaw(t)) end,
---	getMast = function(self, t) return 7*self:getTalentLevel(t) end,
 	info = function(self, t)
 		local cooldown = self:getTalentLevelRaw(t)
 		local mast = (self:getTalentLevel(t) or 0)
