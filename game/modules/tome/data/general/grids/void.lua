@@ -31,8 +31,7 @@ newEntity{
 newEntity{
 	define_as = "SPACE_TURBULENCE",
 	name = "space turbulence",
-	display = '#', color=colors.WHITE,
-	shader = "space_turbulence", textures = { function() return _3DNoise, true end },
+	display = '#', color=colors.WHITE, image="terrain/temporal_instability_yellow.png",
 	always_remember = true,
 	does_block_move = true,
 	_noalpha = false,

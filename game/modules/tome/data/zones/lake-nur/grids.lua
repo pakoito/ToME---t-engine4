@@ -24,7 +24,7 @@ load("/data/general/grids/sand.lua")
 
 newEntity{
 	define_as = "OLD_FOREST",
-	name = "way to the old forest", image = "terrain/way_next_8.png",
+	name = "way to the old forest", image = "terrain/grass.png", add_displays = {class.new{image = "terrain/way_next_8.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,

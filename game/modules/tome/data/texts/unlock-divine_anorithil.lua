@@ -23,7 +23,7 @@ In the uttermost east, on the continent known only as the Far East, dwell the la
 
 Anorithil are mages who are trained in special magic to focus the powers of the Sun and Moon.
 They have learned to harness the energy of both shadows and light in their battle against the Pride.
-Their motto is: "I am Grey. I stand between the candle and the star. We are Grey. We stand between the darkness and the light."
+Their motto is: "We stand betwixt the Sun and Moon, where light and darkness meet. In the grey twilight we seek our destiny."
 
 You have helped one of them and can now create new characters with the #LIGHT_GREEN#Anorithil class#WHITE#.
 

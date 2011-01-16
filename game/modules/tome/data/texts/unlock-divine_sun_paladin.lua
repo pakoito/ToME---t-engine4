@@ -23,7 +23,7 @@ In the uttermost east, on the continent known only as the Far East, dwell the la
 
 Sun Paladins are warriors who are trained in special magic to focus the powers of the Sun.
 Paragons of all that is good, they are nonetheless terrible in their battle against the Pride.
-Their motto is: "We walk in the dark places no others will enter. We stand on the bridge, and no one may pass."
+Their motto is: "The Sun is our giver, our purity, our essence. We carry the light into dark places, and against our strength none shall pass."
 
 You have discovered the Gates of Morning and can now create new characters with the #LIGHT_GREEN#Sun Paladin class#WHITE#.
 

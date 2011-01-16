@@ -237,9 +237,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local percent = t.getPercent(self, t)
-		return ([[Casting this spell sends you back to the moment you entered the current dungeon level.
-		Traveling through time carries with it inherent penalties and doing so will permanently reduce your hit points by %d%%.]])
-		:format(percent)
+		return ([[]])
+		:format()
 	end,
 }

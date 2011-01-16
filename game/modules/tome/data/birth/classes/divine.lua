@@ -44,7 +44,7 @@ newBirthDescriptor{
 	name = "Sun Paladin",
 	desc = {
 		"Sun Paladins hail from the Gates of Morning, the last bastion of the free people in the Far East.",
-		"Their way of life is well represented by their motto 'We walk in the dark places no others will enter. We stand on the bridge, and no one may pass.'",
+		"Their way of life is well represented by their motto 'The Sun is our giver, our purity, our essence. We carry the light into dark places, and against our strength none shall pass.'",
 		"They can channel the power of the Sun to smite all who seek to destroy the Sunwall.",
 		"Competent in both weapon and shield combat and magic, they usually burn their foes from afar before engaging in melee.",
 		"Their most important stats are: Strength and Magic",
@@ -89,7 +89,7 @@ newBirthDescriptor{
 	name = "Anorithil",
 	desc = {
 		"Anorithils hail from the Gates of Morning, the last bastion of the free people in the Far East.",
-		"Their way of life is well represented by their motto 'We are Grey. We stand between the darkness and the light.'",
+		"Their way of life is well represented by their motto 'We stand betwixt the Sun and Moon, where light and darkness meet. In the grey twilight we seek our destiny.'",
 		"They can channel the power of the Sun and the Moon to burn and tear apart all who seek to destroy the Sunwall.",
 		"Masters of Sun and Moon magic, they usually burn their foes with Sun rays before calling the fury of the stars.",
 		"Their most important stats are: Magic and Cunning",
