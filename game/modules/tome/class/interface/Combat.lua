@@ -647,6 +647,14 @@ function _M:combatTalentMindDamage(t, base, max)
 	return ((base + (self:combatMindpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
 end
 
+--- Gets damage based on talent
+function _M:combatTalentStatDamage(t, stat, base, max)
+	-- Compute at "max"
+	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
+	-- Compute real
+	return ((base + (self:getStat(stat))) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
+end
+
 --- Computes physical resistance
 function _M:combatPhysicalResist()
 	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35

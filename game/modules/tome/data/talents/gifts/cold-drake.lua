@@ -141,13 +141,13 @@ newTalent{
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ICE, 30 + self:getStr(50) * self:getTalentLevel(t))
+		self:project(tg, x, y, DamageType.ICE, self:combatTalentStatDamage(t, "str", 30, 430))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_cold", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
 		return ([[You breathe ice in a frontal cone. Any target caught in the area will take %0.2f cold damage and has a 25%% to be frozen for a few turns(higher rank enemies will be frozen for a shorter time).
-		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.COLD, 30 + self:getStr(50) * self:getTalentLevel(t)))
+		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.COLD, self:combatTalentStatDamage(t, "str", 30, 430)))
 	end,
 }

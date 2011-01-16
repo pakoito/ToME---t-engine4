@@ -169,7 +169,7 @@ newTalent{
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = 40 + self:getStr(80) * self:getTalentLevel(t)
+		local dam = self:combatTalentStatDamage(t, "str", 30, 500)
 		self:project(tg, x, y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
@@ -178,8 +178,8 @@ newTalent{
 	info = function(self, t)
 		return ([[You breathe lightning in a frontal cone. Any target caught in the area will take %0.2f to %0.2f lightning damage and can be dazed for 3 turns.
 		The damage will increase with the Strength stat]]):format(
-			damDesc(self, DamageType.LIGHTNING, 40 + self:getStr(80) * self:getTalentLevel(t)) / 3,
-			damDesc(self, DamageType.LIGHTNING, 40 + self:getStr(80) * self:getTalentLevel(t))
+			damDesc(self, DamageType.LIGHTNING, self:combatTalentStatDamage(t, "str", 30, 500)) / 3,
+			damDesc(self, DamageType.LIGHTNING, self:combatTalentStatDamage(t, "str", 30, 500))
 		)
 	end,
 }

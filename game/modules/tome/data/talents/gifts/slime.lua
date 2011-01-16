@@ -94,13 +94,13 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLIME, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3, {type="slime"})
+		self:projectile(tg, x, y, DamageType.SLIME, self:combatTalentStatDamage(t, "dex", 30, 290), {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down by 30%% for 3 turns.
-		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.3))
+		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "dex", 30, 290)))
 	end,
 }
 

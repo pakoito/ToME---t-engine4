@@ -54,11 +54,11 @@ newTalent{
 
 		if target.name == "ritch flamespitter" then
 			local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), talent=t}
-			target:project(tg, target.x, target.y, DamageType.FIRE, 28 + self:getWil(32) * self:getTalentLevel(t), {type="flame"})
+			target:project(tg, target.x, target.y, DamageType.FIRE, self:combatTalentStatDamage(t, "wil", 30, 400), {type="flame"})
 			target:die()
 		elseif target.name == "black jelly" then
 			local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), talent=t}
-			target:project(tg, target.x, target.y, DamageType.SLIME, 18 + self:getWil(22) * self:getTalentLevel(t), {type="slime"})
+			target:project(tg, target.x, target.y, DamageType.SLIME, self:combatTalentStatDamage(t, "wil", 30, 300), {type="slime"})
 			target:die()
 		else
 			game.logPlayer("You may not detonate this summon.")
@@ -72,7 +72,7 @@ newTalent{
 		Only some summons can be detonated:
 		- Ritch Flamespitter: Explodes into a fireball doing %0.2f fire damage
 		- Jelly: Explodes into a ball of slowing slime doing %0.2f damage and slowing for 3 turns for 30%%
-		The effects improves with your Willpower.]]):format(1 + self:getTalentLevelRaw(t),damDesc(self, DamageType.FIRE, 28 + self:getWil(32) * self:getTalentLevel(t)),damDesc(self, DamageType.SLIME, 18 + self:getWil(22) * self:getTalentLevel(t)))
+		The effects improves with your Willpower.]]):format(1 + self:getTalentLevelRaw(t),damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "wil", 30, 400)),damDesc(self, DamageType.SLIME, self:combatTalentStatDamage(t, "wil", 30, 300)))
 	end,
 }
 

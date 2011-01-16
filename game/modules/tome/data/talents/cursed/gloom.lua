@@ -25,7 +25,7 @@ local function getWillDamage(self, t, base, max)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return (base + self:getWil()) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
+	return ((base + self:getWil()) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
 end
 
 local function checkWillFailure(self, target, minChance, maxChance, attackStrength)
@@ -77,7 +77,7 @@ newTalent{
 		local lifeLeeched = 0
 		local attackStrength = 0.3 + self:getTalentLevel(tGloom) * 0.12
 		local tormentHit = false
-		
+
 		if game.zone.wilderness then return end
 
 		local doTorment = false

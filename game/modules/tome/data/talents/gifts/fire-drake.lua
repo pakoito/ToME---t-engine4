@@ -58,13 +58,13 @@ newTalent{
 		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=15 + self:getStr() * 0.1 * self:getTalentLevel(t), dist=4})
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=self:combatTalentStatDamage(t, "str", 15, 90), dist=4})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
 		return ([[You summon a powerful gust of wind, knocking back your foes up to 4 titles away and damaging them for %d.
-		The damage will increase with the Strength stat]]):format(15 + self:getStr() * 0.1 * self:getTalentLevel(t))
+		The damage will increase with the Strength stat]]):format(self:combatTalentStatDamage(t, "str", 15, 90))
 	end,
 }
 
@@ -85,7 +85,7 @@ newTalent{
 	action = function(self, t)
 		local duration = 2 + self:getTalentLevelRaw(t)
 		local radius = 2
-		local dam = 10 + self:getWil() * 0.2 * self:getTalentLevel(t)
+		local dam = self:combatTalentStatDamage(t, "wil", 15, 120)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -104,7 +104,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Spit a cloud of flames doing %0.2f fire damage in a radius of 2 each turn for %d turns.
-		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.FIRE, 10 + self:getWil() * 0.2 * self:getTalentLevel(t)), 2 + self:getTalentLevelRaw(t))
+		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "wil", 15, 120)), 2 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -127,13 +127,13 @@ newTalent{
 		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, 30 + self:getStr(65) * self:getTalentLevel(t))
+		self:project(tg, x, y, DamageType.FIREBURN, self:combatTalentStatDamage(t, "str", 30, 450))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
 		return ([[You breathe fire in a frontal cone. Any target caught in the area will take %0.2f fire damage over 3 turns.
-		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.FIRE, 30 + self:getStr(65) * self:getTalentLevel(t)))
+		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 450)))
 	end,
 }
