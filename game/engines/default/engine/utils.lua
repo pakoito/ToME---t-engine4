@@ -647,8 +647,8 @@ function tstring:splitLines(max_width, font)
 	return ret, max_w
 end
 
-function tstring:makeLineTextures(max_width, font)
-	local list = self:splitLines(max_width, font)
+function tstring:makeLineTextures(max_width, font, no_split)
+	local list = no_split and self or self:splitLines(max_width, font)
 	local fh = font:lineSkip()
 	local s = core.display.newSurface(max_width, fh)
 	s:erase(0, 0, 0, 0)

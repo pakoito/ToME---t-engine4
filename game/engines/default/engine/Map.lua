@@ -233,6 +233,7 @@ function _M:save()
 end
 
 function _M:makeCMap()
+	--util.show_backtrace()
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.zdepth)
 	self._map:setObscure(unpack(self.color_obscure))
 	self._map:setShown(unpack(self.color_shown))
@@ -327,7 +328,6 @@ function _M:loaded()
 	self._check_entities = {}
 	self._check_entities_store = {}
 
-	self.surface = core.display.newSurface(self.viewport.width, self.viewport.height)
 	self.changed = true
 	self.finished = true
 

@@ -35,6 +35,8 @@ function _M:init(t)
 	self.auto_height = t.auto_height
 	self.auto_width = t.auto_width
 
+	if self.auto_width then self.w = 10000 end
+
 	Base.init(self, t)
 end
 
@@ -62,7 +64,7 @@ function _M:generate()
 	end
 
 	-- Draw the list items
-	self.list = tstring.makeLineTextures(text, self.fw, self.font)
+	self.list = tstring.makeLineTextures(text, self.fw, self.font, true)
 
 	-- Draw the scrollbar
 	if self.scrollbar then

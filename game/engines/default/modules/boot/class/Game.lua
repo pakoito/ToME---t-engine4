@@ -365,9 +365,9 @@ function _M:createProfile(loginItem)
 	end
 	profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
 	if (profile.auth) then
-		Dialog:simplePopup("Profile created!", "Your online profile is active now...", function() end )
+		Dialog:simplePopup(self.justlogin and "Logged in!" or "Profile created!", "Your online profile is active now...", function() end )
 	else
-		Dialog:simplePopup("Profile Failed to authenticate!", "Try logging in in a few moments", function() end )
+		Dialog:simplePopup("Profile failed to authenticate!", "Try logging in in a few moments", function() end )
 	end
 end
 

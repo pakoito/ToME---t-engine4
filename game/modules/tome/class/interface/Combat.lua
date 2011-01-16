@@ -493,7 +493,7 @@ function _M:combatDamage(weapon)
 	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)
 	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
 	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
-	return totstat / 1.5 * power * talented_mod
+	return (totstat / 1.5 * power * talented_mod) * 0.75
 end
 
 --- Gets spellpower
@@ -518,7 +518,7 @@ function _M:combatTalentSpellDamage(t, base, max, spellpower_override)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return (base + (spellpower_override or self:combatSpellpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
+	return ((base + (spellpower_override or self:combatSpellpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
 end
 
 --- Gets weapon damage mult based on talent
@@ -644,7 +644,7 @@ function _M:combatTalentMindDamage(t, base, max)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return (base + (self:combatMindpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
+	return ((base + (self:combatMindpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
 end
 
 --- Computes physical resistance
