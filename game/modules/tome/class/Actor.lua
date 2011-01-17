@@ -214,6 +214,8 @@ function _M:act()
 			local t = self:getTalentFromId(tid)
 			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) or (t.sustain_psi and self.psi < 1) then
 				self:forceUseTalent(tid, {ignore_energy=true})
+			elseif (t.sustain_psi and self.psi < 1) and t.remove_on_zero then
+				self:forceUseTalent(tid, {ignore_energy=true})
 			end
 		end
 	end

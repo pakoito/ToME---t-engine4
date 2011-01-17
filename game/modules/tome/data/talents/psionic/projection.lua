@@ -113,6 +113,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 30,
+	remove_on_zero = true,
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
 	end,
@@ -198,6 +199,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 40,
+	remove_on_zero = true,
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
 	end,
@@ -288,6 +290,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 50,
+	remove_on_zero = true,
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
 	end,
