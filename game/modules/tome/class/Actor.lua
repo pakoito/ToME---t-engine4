@@ -1239,7 +1239,7 @@ function _M:levelup()
 		if self.level == 40 then world:gainAchievement("LEVEL_40", self) end
 		if self.level == 50 then world:gainAchievement("LEVEL_50", self) end
 
-		if (game.difficulty == game.DIFFICULTY_EASY or game.difficulty == game.DIFFICULTY_NORMAL) and (
+		if game.difficulty == game.DIFFICULTY_EASY and (
 			self.level == 2 or
 			self.level == 3 or
 			self.level == 5 or
@@ -1252,6 +1252,17 @@ function _M:levelup()
 			self.level == 40
 			) then
 			self.easy_mode_lifes = (self.easy_mode_lifes or 0) + 1
+			game.logPlayer(self, "#AQUAMARINE#You have gained one more life (%d remaining).", self.easy_mode_lifes)
+		elseif game.difficulty == game.DIFFICULTY_NORMAL and (
+			self.level == 2 or
+			self.level == 5 or
+			self.level == 7 or
+			self.level == 14 or
+			self.level == 24 or
+			self.level == 35
+			) then
+			self.easy_mode_lifes = (self.easy_mode_lifes or 0) + 1
+			game.logPlayer(self, "#AQUAMARINE#You have gained one more life (%d remaining).", self.easy_mode_lifes)
 		end
 	end
 end

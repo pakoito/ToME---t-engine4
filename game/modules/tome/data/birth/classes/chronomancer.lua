@@ -28,8 +28,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			["Paradox Mage"] = "allow",
-			["Temporal Warden"] = "allow",
+			["Paradox Mage"] = function() return profile.mod.allow_build.chronomancer_paradox_mage and "allow" or "disallow" end,
+			["Temporal Warden"] = function() return profile.mod.allow_build.chronomancer_temporal_warden and "allow" or "disallow" end,
 		},
 	},
 	copy = {
