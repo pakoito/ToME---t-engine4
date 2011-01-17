@@ -536,7 +536,7 @@ newEntity{ define_as = "RUNED_SKULL",
 
 newEntity{ base = "BASE_GREATMAUL",
 	define_as = "GREATMAUL_BILL_TRUNK",
-	unided_name = "tree trunk",
+	unided_name = "tree trunk", image = "object/artifact/bill_treestump.png",
 	name = "Bill's Tree Trunk", unique=true,
 	desc = [[This is a big, nasty-looking tree trunk that Bill was using as a weapon. It could still serve this purpose, should you be strong enough to wield it!]],
 	require = { stat = { str=25 }, },
