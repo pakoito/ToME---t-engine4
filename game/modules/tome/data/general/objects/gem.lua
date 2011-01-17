@@ -119,43 +119,43 @@ newGem("Garnet",	"object/garnet.png",3,	12,	"red",		20,	30, 3, 50,
 	{ inc_damage = {all=6} },
 	{ leech=5 }
 )
-newGem("Onyx",		"object/.png",	3,	12,	"black",	20,	30, 3, 50,
+newGem("Onyx",		"object/onyx.png",	3,	12,	"black",	20,	30, 3, 50,
 	{ inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_MAG] = 3, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 3, [Stats.STAT_CON] = 3, } },
 	{ power=15 }
 )
-newGem("Amethyst",	"object/.png",2,	10,	"violet",	10,	20, 2, 35,
+newGem("Amethyst",	"object/amethyst.png",2,	10,	"violet",	10,	20, 2, 35,
 	{ inc_damage = {all=4} },
 	{ splash={type="ARCANE", dam=25}}
 )
-newGem("Opal",		"object/.png",	2,	10,	"blue",		10,	20, 2, 35,
+newGem("Opal",		"object/opal.png",	2,	10,	"blue",		10,	20, 2, 35,
 	{ inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_DEX] = 2, [Stats.STAT_MAG] = 2, [Stats.STAT_WIL] = 2, [Stats.STAT_CUN] = 2, [Stats.STAT_CON] = 2, } },
 	{ power=10 }
 )
-newGem("Topaz",		"object/.png",	2,	10,	"blue",		10,	20, 2, 35,
+newGem("Topaz",		"object/topaz.png",	2,	10,	"blue",		10,	20, 2, 35,
 	{ combat_def=4 },
 	{ range=3 }
 )
-newGem("Aquamarine",	"object/.png",2,	10,	"blue",		10,	20, 2, 35,
+newGem("Aquamarine",	"object/aquamarine.png",2,	10,	"blue",		10,	20, 2, 35,
 	{ resists = {all=4} },
 	{ mana=20 }
 )
-newGem("Ametrine",	"object/.png",1,	8,	"yellow",	1,	10, 1, 20,
+newGem("Ametrine",	"object/ametrine.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ inc_damage = {all=2} },
 	{ splash={type="LITE", dam=1} }
 )
-newGem("Zircon",	"object/.png",1,	8,	"yellow",	1,	10, 1, 20,
+newGem("Zircon",	"object/zircon.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ resists = {all=2} },
 	{ daze={chance=20, dur=3} }
 )
-newGem("Spinel",	"object/.png",1,	8,	"green",	1,	10, 1, 20,
+newGem("Spinel",	"object/spinet.png",1,	8,	"green",	1,	10, 1, 20,
 	{ combat_def=2 },
 	{ mana=10 }
 )
-newGem("Citrine",	"object/.png",1,	8,	"yellow",	1,	10, 1, 20,
+newGem("Citrine",	"object/citrine.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ lite=1 },
 	{ range=1 }
 )
-newGem("Agate",		"object/.png",	1,	8,	"black",	1,	10, 1, 20,
+newGem("Agate",		"object/agate.png",	1,	8,	"black",	1,	10, 1, 20,
 	{ inc_stats = { [Stats.STAT_STR] = 1, [Stats.STAT_DEX] = 1, [Stats.STAT_MAG] = 1, [Stats.STAT_WIL] = 1, [Stats.STAT_CUN] = 1, [Stats.STAT_CON] = 1, } },
 	{ power=5 }
 )
