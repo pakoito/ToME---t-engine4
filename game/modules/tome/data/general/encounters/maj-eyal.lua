@@ -221,7 +221,7 @@ newEntity{
 		return true
 	end,
 }
-
+--[[
 newEntity{
 	name = "Temporal Rift",
 	type = "harmless", subtype = "special", unique = true,
@@ -245,3 +245,4 @@ newEntity{
 		return true
 	end,
 }
+]]
