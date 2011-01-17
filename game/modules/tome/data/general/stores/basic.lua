@@ -25,7 +25,6 @@ newEntity{
 		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 40,
 		max_fill = 60,
 		filters = {
@@ -44,7 +43,6 @@ newEntity{
 		purse = 25,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 10,
 		max_fill = 20,
 		filters = {
@@ -61,7 +59,6 @@ newEntity{
 		purse = 25,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 10,
 		max_fill = 20,
 		filters = {
@@ -79,7 +76,6 @@ newEntity{
 		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 2,
 		max_fill = 4,
 		filters = {
@@ -96,7 +92,6 @@ newEntity{
 		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 2,
 		max_fill = 4,
 		filters = {
@@ -113,7 +108,6 @@ newEntity{
 		purse = 30,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 40,
 		max_fill = 60,
 		filters = {
@@ -134,7 +128,6 @@ newEntity{
 		purse = 25,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 15,
 		max_fill = 25,
 		filters = {
@@ -154,7 +147,6 @@ newEntity{
 		purse = 20,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 15,
 		max_fill = 25,
 		filters = {
@@ -171,7 +163,6 @@ newEntity{
 		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		min_fill = 2,
 		max_fill = 4,
 		filters = {
@@ -194,7 +185,6 @@ newEntity{
 		purse = 35,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
 		sell_percent = 140,
 		min_fill = 10,
 		max_fill = 20,
@@ -212,8 +202,7 @@ newEntity{
 		purse = 5,
 		restock_after = 1000,
 		empty_before_restock = true,
-		buy_percent = 10,
-		sell_percent = 140,
+		sell_percent = 100,
 		min_fill = 40,
 		max_fill = 40,
 		filters = {

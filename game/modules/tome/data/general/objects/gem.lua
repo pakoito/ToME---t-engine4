@@ -45,7 +45,7 @@ local function newGem(name, image, cost, rarity, color, min_level, max_level, ti
 		name = name:lower(), subtype = color,
 		color = colors[color:upper()], image=image,
 		level_range = {min_level, max_level},
-		rarity = rarity, cost = cost,
+		rarity = rarity, cost = cost * 10,
 		material_level = tier,
 		imbue_powers = imbue,
 		wielder = imbue,

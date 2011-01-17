@@ -30,8 +30,7 @@ function _M:loadStores(f)
 end
 
 function _M:init(t, no_default)
---	t.allow_sell = function() require("engine.ui.Dialog"):simplePopup("Can not sell", "The shopkeeper is not interested in buying your items.") return false end
-	t.store.buy_percent = t.store.buy_percent or 5
+	t.store.buy_percent = t.store.buy_percent or 40
 	t.store.sell_percent = t.store.sell_percent or 100
 	t.store.purse = t.store.purse or 20
 	Store.init(self, t, no_default)
@@ -39,6 +38,12 @@ function _M:init(t, no_default)
 	self.name = self.name .. (" (Max buy %0.2f gold)"):format(self.store.purse)
 
 	if self.store and self.store.restock_after then self.store.restock_after = self.store.restock_after * 10 end
+
+	if not self.store.actor_filter then
+		self.store.actor_filter = function(o)
+			return (o.type == "gem" or o.unique) and not o.quest and not o.lore
+		end
+	end
 end
 
 --- Called on object purchase try
@@ -65,7 +70,7 @@ end
 function _M:trySell(who, o, item, nb)
 	local price = o:getPrice() * self.store.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
-	price = math.min(price * nb, self.store.purse)
+	price = math.min(price * nb, self.store.purse * nb)
 	return nb, price
 end
 
@@ -96,7 +101,7 @@ function _M:onSell(who, o, item, nb, before)
 
 	local price = o:getPrice() * self.store.buy_percent / 100
 	if price <= 0 or nb <= 0 then return end
-	price = math.min(price * nb, self.store.purse)
+	price = math.min(price * nb, self.store.purse * nb)
 	who:incMoney(price)
 end
 
