@@ -48,7 +48,7 @@ newTalent{
 			if eff[1] == "effect" then
 				target:removeEffect(eff[2])
 			end
-		end		
+		end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
@@ -62,7 +62,7 @@ newTalent{
 }
 
 newTalent{
-	name = "E=MC^2",
+	name = "Temporal Wake",
 	type = {"chronomancy/energy", 2},
 	require = chrono_req_high2,
 	points = 5,
@@ -103,7 +103,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[You transform yourself into a powerful bolt of temporal lightning and move between two points dealing %0.2f to %0.2f lightning damage and %0.2f temporal damage to everything in your path.
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.LIGHTNING, damage / 6), 
+		format(damDesc(self, DamageType.LIGHTNING, damage / 6),
 		damDesc(self, DamageType.LIGHTNING, damage / 2),
 		damDesc(self, DamageType.TEMPORAL, damage / 2))
 	end,
@@ -123,7 +123,7 @@ newTalent{
 	requires_target = true,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
 	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 3 + self:getTalentLevelRaw (t) end, 
+	getRadius = function (self, t) return 3 + self:getTalentLevelRaw (t) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -159,7 +159,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 240)*getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end, 
+	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)

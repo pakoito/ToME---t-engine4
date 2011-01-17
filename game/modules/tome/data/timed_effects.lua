@@ -2078,7 +2078,7 @@ newEffect{
 	deactivate = function(self, eff)
 		local seen = false
 		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
-		core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 			local actor = game.level.map(x, y, game.level.map.ACTOR)
 			if actor and actor ~= self then seen = true end
 		end, nil)
@@ -2995,12 +2995,12 @@ newEffect{
 newEffect{
 	name = "BORROWED_TIME",
 	desc = "Borrowed Time",
-	long_desc = function(self, eff) return ("The target's physical resistance penetration has been increased by %d%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's global speed has been increased by %d%%."):format(300) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=10})
+		eff.tmpid = self:addTemporaryValue("energy", {mod=3})
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("energy", eff.tmpid)

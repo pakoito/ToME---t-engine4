@@ -17,4 +17,4 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/ant.lua", rarity(0))
+load("/data/general/npcs/telugoroth.lua", rarity(0))

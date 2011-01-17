@@ -51,6 +51,6 @@ newEntity{ define_as = "ORB_KNOWLEDGE",
 	},
 
 	carrier = {
-		auto_id_mundane = 1,
+		auto_id = 1,
 	},
 }

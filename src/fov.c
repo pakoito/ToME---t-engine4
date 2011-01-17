@@ -51,6 +51,7 @@ struct lua_fov
 {
 	lua_State *L;
 	fov_settings_type fov_settings;
+	int w, h;
 	int apply_ref;
 	int opaque_ref;
 	int cache_ref;
@@ -61,6 +62,7 @@ static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *sr
 {
 	struct lua_fov *fov = (struct lua_fov *)m;
 	radius--;
+	if (x < 0 || y < 0 || x >= fov->w || y >= fov->h) return;
 	if (dx*dx + dy*dy <= radius*radius + 1)
 	{
 		// circular view - can be changed if you like
@@ -79,10 +81,10 @@ static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *sr
 static bool map_opaque(void *m, int x, int y)
 {
 	struct lua_fov *fov = (struct lua_fov *)m;
+	if (x < 0 || y < 0 || x >= fov->w || y >= fov->h) return TRUE;
 
 	if (fov->cache)
 	{
-		if (x < 0 || y < 0 || x >= fov->cache->w || y >= fov->cache->h) return TRUE;
 		return fov->cache->cache[x + y * fov->cache->w];
 	}
 	else
@@ -99,69 +101,17 @@ static bool map_opaque(void *m, int x, int y)
 	}
 }
 
-static int lua_new_fov(lua_State *L)
-{
-	struct lua_fovcache* cache;
-	int cache_ref;
-	if (lua_isuserdata(L, 1))
-	{
-		cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 1);
-		cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	}
-	else
-	{
-		cache_ref = LUA_NOREF;
-		cache = NULL;
-	}
-	int apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-
-	struct lua_fov *fov = (struct lua_fov*)lua_newuserdata(L, sizeof(struct lua_fov));
-	auxiliar_setclass(L, "fov{core}", -1);
-	fov->L = L;
-	fov->apply_ref = apply_ref;
-	fov->opaque_ref = opaque_ref;
-	fov->cache_ref = cache_ref;
-	fov->cache = cache;
-	fov_settings_init(&(fov->fov_settings));
-	fov_settings_set_opacity_test_function(&(fov->fov_settings), map_opaque);
-	fov_settings_set_apply_lighting_function(&(fov->fov_settings), map_seen);
-
-	return 1;
-}
-
-static int lua_free_fov(lua_State *L)
-{
-	struct lua_fov *fov = (struct lua_fov*)auxiliar_checkclass(L, "fov{core}", 1);
-	fov_settings_free(&(fov->fov_settings));
-	luaL_unref(L, LUA_REGISTRYINDEX, fov->apply_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, fov->opaque_ref);
-	if (fov->cache_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, fov->cache_ref);
-	lua_pushnumber(L, 1);
-	return 1;
-}
-
-static int lua_fov(lua_State *L)
-{
-	struct lua_fov *fov = (struct lua_fov*)auxiliar_checkclass(L, "fov{core}", 1);
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
-	int radius = luaL_checknumber(L, 4);
-
-	fov_circle(&(fov->fov_settings), fov, NULL, x, y, radius+1);
-	map_seen(fov, x, y, 0, 0, radius, NULL);
-	return 0;
-}
-
 static int lua_fov_calc_circle(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
 	int y = luaL_checknumber(L, 2);
-	int radius = luaL_checknumber(L, 3);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+	int radius = luaL_checknumber(L, 5);
 	struct lua_fov fov;
-	if (lua_isuserdata(L, 6))
+	if (lua_isuserdata(L, 8))
 	{
-		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 6);
+		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 8);
 		fov.cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
 	else
@@ -173,6 +123,8 @@ static int lua_fov_calc_circle(lua_State *L)
 	fov.L = L;
 	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.w = w;
+	fov.h = h;
 
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
@@ -192,13 +144,15 @@ static int lua_fov_calc_beam(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
 	int y = luaL_checknumber(L, 2);
-	int radius = luaL_checknumber(L, 3);
-	int direction = luaL_checknumber(L, 4);
-	float angle = luaL_checknumber(L, 5);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+	int radius = luaL_checknumber(L, 5);
+	int direction = luaL_checknumber(L, 6);
+	float angle = luaL_checknumber(L, 7);
 	struct lua_fov fov;
-	if (lua_isuserdata(L, 8))
+	if (lua_isuserdata(L, 10))
 	{
-		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 8);
+		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 10);
 		fov.cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
 	else
@@ -211,6 +165,8 @@ static int lua_fov_calc_beam(lua_State *L)
 	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	fov.cache = NULL;
+	fov.w = w;
+	fov.h = h;
 	int dir = 0;
 
 	switch (direction)
@@ -455,6 +411,8 @@ static int lua_fov_calc_default_fov(lua_State *L)
 	def.do_dmap = lua_istable(L, STACK_DMAP);
 	def.do_apply = lua_isfunction(L, STACK_APPLY);
 	def.dist_idx = 0;
+	fov.w = def.w;
+	fov.h = def.h;
 
 //	printf("<TOP %d\n", lua_gettop(L));
 
@@ -473,20 +431,11 @@ static int lua_fov_calc_default_fov(lua_State *L)
 
 static const struct luaL_reg fovlib[] =
 {
-	{"new", lua_new_fov},
 	{"newCache", lua_new_fovcache},
 	{"distance", lua_distance},
 	{"calc_default_fov", lua_fov_calc_default_fov},
 	{"calc_circle", lua_fov_calc_circle},
 	{"calc_beam", lua_fov_calc_beam},
-	{NULL, NULL},
-};
-
-static const struct luaL_reg fov_reg[] =
-{
-	{"__gc", lua_free_fov},
-	{"close", lua_free_fov},
-	{"__call", lua_fov},
 	{NULL, NULL},
 };
 
@@ -499,7 +448,6 @@ static const struct luaL_reg fovcache_reg[] =
 
 int luaopen_fov(lua_State *L)
 {
-	auxiliar_newclass(L, "fov{core}", fov_reg);
 	auxiliar_newclass(L, "fov{cache}", fovcache_reg);
 	luaL_openlib(L, "core.fov", fovlib, 0);
 	return 1;

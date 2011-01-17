@@ -22,7 +22,7 @@
 local Object = require "engine.Object"
 
 newTalent{
-	name = "Anomaly: Teleport",
+	name = "Anomaly Teleport",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
@@ -62,7 +62,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Rearrange",
+	name = "Anomaly Rearrange",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
@@ -103,7 +103,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Stop",
+	name = "Anomaly Stop",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
@@ -141,7 +141,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Slow",
+	name = "Anomaly Slow",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
@@ -179,7 +179,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Haste",
+	name = "Anomaly Haste",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
@@ -216,7 +216,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Spacetime Correction",
+	name = "Anomaly Spacetime Correction",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -231,7 +231,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Spacetime Damage",
+	name = "Anomaly Spacetime Damage",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -246,17 +246,17 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Temporal Storm",
+	name = "Anomaly Temporal Storm",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
-	getDamage = function(self, t) return self:getParadox()/50 end,
+	getDamage = function(self, t) return self:getParadox()/25 end,
 	getDuration = function(self, t) return self:getParadox()/50 end,
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
-			DamageType.RETHREAD, t.getDamage(self, t),
+			DamageType.TEMPORAL, t.getDamage(self, t),
 			3,
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=200, color_bg=200, color_bb=0},
@@ -273,86 +273,95 @@ newTalent{
 	end,
 }
 
---[[newTalent{
-	name = "Anomaly: Terrain Change",
+newTalent{
+	name = "Anomaly Summon Time Elemental",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
+	range = 6,
+	direct_hit = true,
 	type_no_req = true,
+	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	getSummonTime = function(self, t) return math.floor(self:getParadox()/50) end,
 	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and a:canBe("teleport") then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		for i = 1, t.getTargetCount(self, t) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+			-- Find space
+			local x, y = util.findFreeGrid(a.x, a.y, 5, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to summon!")
+				return
+			end
+
+			local NPC = require "mod.class.NPC"
+			local m = NPC.new{
+				type = "elemental", subtype = "temporal",
+				display = "E", color=colors.YELLOW,
+				name = "Telugoroth", faction = a.faction,
+				desc = [[A temporal elemental, rarely encountered except by those who travel through time itself.  It's blurred form constantly shifts before your eyes.]],
+				combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },
+				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+				autolevel = "none",
+				energy = { mod=1.5 },
+				stats = { str=8, dex=12, mag=12, wil= 12, con=10 },
+				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
+				level_range = {self.level, self.level},
+
+				resists = { [DamageType.PHYSICAL] = 10, [DamageType.TEMPORAL] = 100, },
+
+				no_breath = 1,
+				poison_immune = 1,
+				disease_immune = 1,
+
+				max_life = resolvers.rngavg(70,80),
+				life_rating = 8,
+				infravision = 10,
+				rank = 2,
+				size_category = 3,
+
+				autolevel = "dexmage",
+
+				combat_armor = 0, combat_def = 20,
+
+				on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
+
+				resolvers.talents{
+					[Talents.T_TURN_BACK_THE_CLOCK]=3,
+				},
+
+				summoner = self, summoner_gain_exp=false,
+				summon_time = t.getSummonTime(self, t),
+			--	ai_target = {actor=target}
+			}
+
+			m:resolve() m:resolve(nil, true)
+			m:forceLevelup(self.level)
+			game.zone:addEntity(game.level, m, "actor", x, y)
+			game.level.map:particleEmitter(x, y, 1, "summon")
+
+			game:playSoundNear(self, "talents/spell_generic")
+		end
 		return true
 	end,
 	info = function(self, t)
-		return (Random Terrain in a ball.)
+		return ([[Summons a time elemental that may or may not be friendly to the caster.]])
 	end,
 }
 
 newTalent{
-	name = "Anomaly: Dig",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return (Random Terrain in a ball.)
-	end,
-}
-
-newTalent{
-	name = "Anomaly: Stat Reorder",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return (Target loses stats.)
-	end,
-}
-
-newTalent{
-	name = "Anomaly: Heal",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return (Target is healed to full life.)
-	end,
-}
-
-newTalent{
-	name = "Anomaly: Double",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return (Clones a random non-elite creature.  Clone may or may not be hostile to the caster.)
-	end,
-}
-
-newTalent{
-	name = "Anomaly: Swap",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return (Caster swaps places with a random target.)
-	end,
-}
-
-newTalent{
-	name = "Anomaly: Temporal Bubble",
+	name = "Anomaly Temporal Bubble",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
@@ -377,20 +386,98 @@ newTalent{
 			table.remove(tgts, id)
 
 			self:project(tg, a.x, a.y, DamageType.TIME_PRISON, t.getDuration(self, t), {type="manathrust"})
-		end	
+		end
 		game.logSeen(self,"%s has paused a thread in time.", self.name)
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local target = t.getTargetCount(self, t)
-		return (Places %d random targets in time prisons for %d turns.)
+		return ([[Places %d random targets in time prisons for %d turns.]])
 		:format(target, duration)
 	end,
 }
 
+--[[newTalent{
+	name = "Anomaly Terrain Change",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	type_no_req = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return (Random Terrain in a ball.)
+	end,
+}
+
 newTalent{
-	name = "Anomaly: Sex Change",
+	name = "Anomaly Dig",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	type_no_req = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return (Random Terrain in a ball.)
+	end,
+}
+
+newTalent{
+	name = "Anomaly Stat Reorder",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	type_no_req = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return (Target loses stats.)
+	end,
+}
+
+newTalent{
+	name = "Anomaly Heal",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	type_no_req = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return (Target is healed to full life.)
+	end,
+}
+
+newTalent{
+	name = "Anomaly Double",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	type_no_req = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return (Clones a random non-elite creature.  Clone may or may not be hostile to the caster.)
+	end,
+}
+
+newTalent{
+	name = "Anomaly Swap",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	type_no_req = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return (Caster swaps places with a random target.)
+	end,
+}
+
+newTalent{
+	name = "Anomaly Sex Change",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -404,7 +491,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Money Changer",
+	name = "Anomaly Money Changer",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -418,7 +505,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Spacetime Folding",
+	name = "Anomaly Spacetime Folding",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -431,20 +518,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Evil Twin",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return ()
-	end,
-}
-
-newTalent{
-	name = "Anomaly: Charge/Drain",
+	name = "Anomaly Charge/Drain",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -458,7 +532,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Vertigo",
+	name = "Anomaly Vertigo",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -472,35 +546,16 @@ newTalent{
 }
 
 newTalent{
-	name = "Anomaly: Class Change",
+	name = "Anomaly Evil Twin",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
-	no_npc_use = true,
-	action = function(self, t)
-		local classes = {"Swordmaster", "Ranger", "Rogue", "Sorcereor", "Mindcrafter", "Mimic"}
-		local class = rng.table(classes)
-		game.logSeen(self,"%s has changed the past.", self.name)
-		game.logSeen(self,"%s is now a %s.", self.name, class)
-		game.logSeen(self,"%s didn't learn chronomancy and never caused this effect.", self.name)
-		game.logSeen(self,"This never happened.")
-		return true
-	end,
-	info = function(self, t)
-		return ()
-	end,
-}
-
-newTalent{
-	name = "Anomaly: Summon Time Elemental",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	no_npc_use = true,
+	requires_target = true,
+	getSummonTime = function(self, t) return math.floor(self:getParadox()/50) end,
 	action = function(self, t)
 		return true
 	end,
 	info = function(self, t)
-		return (Summons a time elemental that may or may not be friendly to the caster.)
+		return (Clones the caster)
 	end,
 }]]

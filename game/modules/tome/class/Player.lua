@@ -165,7 +165,7 @@ function _M:move(x, y, force)
 				if obj.auto_pickup then
 					self:pickupFloor(i, true)
 				else
-					if self:attr("auto_id_mundane") and obj:getPowerRank() <= 1 then obj:identify(true) end
+					if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end
 					nb = nb + 1
 					i = i + 1
 				end
@@ -272,7 +272,7 @@ function _M:playerFOV()
 	-- Clean FOV before computing it
 	game.level.map:cleanFOV()
 	-- Compute ESP FOV, using cache
-	if not game.zone.wilderness then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y) end, true, true, true) end
+	if not game.zone.wilderness then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y, 0.6) end, true, true, true) end
 
 	if not self:attr("blind") then
 		-- Compute both the normal and the lite FOV, using cache
@@ -349,7 +349,7 @@ function _M:playerFOV()
 		local map = game.level.map
 
 		core.fov.calc_circle(
-			eff.x, eff.y, eff.radius, function(_, x, y) if map:checkAllEntities(x, y, "block_sight", self) then return true end end,
+			eff.x, eff.y, game.level.map.w, game.level.map.h, eff.radius, function(_, x, y) if map:checkAllEntities(x, y, "block_sight", self) then return true end end,
 			function(_, x, y)
 				local t = map(x, y, map.ACTOR)
 				if t and (eff.true_seeing or self:canSee(t)) then map.seens(x, y, 1) end
@@ -474,7 +474,7 @@ end
 local function spotHostiles(self)
 	local seen = false
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
-	core.fov.calc_circle(self.x, self.y, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+	core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 		local actor = game.level.map(x, y, game.level.map.ACTOR)
 		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then
 			seen = {x=x,y=y,actor=actor}
@@ -817,7 +817,7 @@ function _M:on_pickup_object(o)
 	-- Grant the artifact quest
 	if o.unique and not o.lore and not o:isIdentified() and not game.zone.infinite_dungeon then self:grantQuest("first-artifact") end
 
-	if self:attr("auto_id_mundane") and o:getPowerRank() <= 1 then
+	if self:attr("auto_id") and o:getPowerRank() <= self.auto_id then
 		o:identify(true)
 	end
 end

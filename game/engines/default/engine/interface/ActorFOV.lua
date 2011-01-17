@@ -54,7 +54,7 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 	-- Simple FOV compute no storage
 	if no_store and apply then
 		local map = game.level.map
-		core.fov.calc_circle(self.x, self.y, radius, function(_, x, y)
+		core.fov.calc_circle(self.x, self.y, map.w, map.h, radius, function(_, x, y)
 			if map:checkAllEntities(x, y, block, self) then return true end
 		end, function(_, x, y, dx, dy, sqdist)
 			apply(x, y, dx, dy, sqdist)
@@ -97,7 +97,7 @@ function _M:computeFOV(radius, block, apply, force, no_store, cache)
 		setmetatable(fov.actors_dist, {__mode='v'})
 
 		local map = game.level.map
-		core.fov.calc_circle(self.x, self.y, radius, function(_, x, y)
+		core.fov.calc_circle(self.x, self.y, map.w, map.h, radius, function(_, x, y)
 			if map:checkAllEntities(x, y, block, self) then return true end
 		end, function(_, x, y, dx, dy, sqdist)
 			if apply then apply(x, y, dx, dy, sqdist) end

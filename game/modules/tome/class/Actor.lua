@@ -504,6 +504,7 @@ function _M:doQuake(tg, x, y)
 			if e.move then
 				e.x = nil e.y = nil e:move(l.x, l.y, true)
 			end
+			game.nicer_tiles:updateAround(game.level, l.x, l.y)
 		end
 	end
 	game.level.map:cleanFOV()

@@ -282,6 +282,6 @@ newEntity{ define_as = "ORB_SCRYING",
 	},
 
 	carrier = {
-		auto_id_mundane = 1,
+		auto_id = 1,
 	},
 }

@@ -97,12 +97,12 @@ function _M:display(dispx, dispy)
 	end
 
 	if self.target_type.ball and self.target_type.ball > 0 then
-		core.fov.calc_circle(radius_x, radius_y, self.target_type.ball, function(_, px, py)
+		core.fov.calc_circle(radius_x, radius_y, game.level.map.w, game.level.map.h, self.target_type.ball, function(_, px, py)
 			self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
 		end, function()end, nil)
 	elseif self.target_type.cone and self.target_type.cone > 0 then
-		core.fov.calc_beam(radius_x, radius_y, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, px, py)
+		core.fov.calc_beam(radius_x, radius_y, game.level.map.w, game.level.map.h, self.target_type.cone, initial_dir, self.target_type.cone_angle, function(_, px, py)
 			self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 			if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
 		end, function()end, nil)
@@ -222,10 +222,10 @@ function _M:scan(dir, radius, sx, sy, filter)
 
 	if dir ~= 5 then
 		-- Get a list of actors in the direction given
-		core.fov.calc_beam(sx, sy, radius, dir, 55, checker, function()end, nil)
+		core.fov.calc_beam(sx, sy, game.level.map.w, game.level.map.h, radius, dir, 55, checker, function()end, nil)
 	else
 		-- Get a list of actors all around
-		core.fov.calc_circle(sx, sy, radius, checker, function()end, nil)
+		core.fov.calc_circle(sx, sy, game.level.map.w, game.level.map.h, radius, checker, function()end, nil)
 	end
 
 	table.sort(actors, function(a,b) return a.dist<b.dist end)

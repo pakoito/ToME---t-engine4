@@ -84,14 +84,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 		radius_x, radius_y = stop_radius_x, stop_radius_y
 	end
 	if typ.ball and typ.ball > 0 then
-		core.fov.calc_circle(radius_x, radius_y, typ.ball, function(_, px, py)
+		core.fov.calc_circle(radius_x, radius_y, game.level.map.w, game.level.map.h, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
 		addGrid(lx, ly)
 	elseif typ.cone and typ.cone > 0 then
-		core.fov.calc_beam(radius_x, radius_y, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
+		core.fov.calc_beam(radius_x, radius_y, game.level.map.w, game.level.map.h, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
@@ -249,7 +249,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 	end
 
 	if typ.ball and typ.ball > 0 then
-		core.fov.calc_circle(rx, ry, typ.ball, function(_, px, py)
+		core.fov.calc_circle(rx, ry, game.level.map.w, game.level.map.h, typ.ball, function(_, px, py)
 			-- Deal damage: ball
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
@@ -257,7 +257,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		addGrid(rx, ry)
 	elseif typ.cone and typ.cone > 0 then
 		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
-		core.fov.calc_beam(rx, ry, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
+		core.fov.calc_beam(rx, ry, game.level.map.w, game.level.map.h, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
