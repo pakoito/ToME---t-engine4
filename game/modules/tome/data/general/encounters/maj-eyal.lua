@@ -120,7 +120,7 @@ newEntity{
 	type = "hostile", subtype = "special", unique = true,
 	level_range = {24, 35},
 	rarity = 7,
-	min_level = 20,
+	min_level = 24,
 	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)
 		who:runStop()
