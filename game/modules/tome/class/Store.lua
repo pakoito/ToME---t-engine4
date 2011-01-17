@@ -41,7 +41,7 @@ function _M:init(t, no_default)
 
 	if not self.store.actor_filter then
 		self.store.actor_filter = function(o)
-			return (o.type == "gem" or o.unique) and not o.quest and not o.lore
+			return (o.type == "gem" or o.unique) and not o.quest and not o.lore and o.cost and o.cost > 0
 		end
 	end
 end
