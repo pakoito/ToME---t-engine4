@@ -25,6 +25,7 @@ newTalent{
 	points = 5,
 	mana = 5,
 	cooldown = 14,
+	tactical = { DISABLE = 2 },
 	getRadius = function(self, t) return 5 + self:getTalentLevel(t) end,
 	getBlindPower = function(self, t) return 3 + self:getTalentLevel(t) end,
 	action = function(self, t)
@@ -53,9 +54,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 30,
 	cooldown = 10,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { BUFF = 2 },
 	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
@@ -85,9 +84,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 60,
 	cooldown = 10,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { BUFF = 2 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
@@ -117,9 +114,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 200,
 	cooldown = 30,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { ESCAPE = 2, DEFEND = 2 },
 	getInvisibilityPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")

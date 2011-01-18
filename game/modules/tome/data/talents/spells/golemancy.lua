@@ -29,7 +29,7 @@ end
 local function makeGolem()
 	return require("mod.class.NPC").new{
 		type = "construct", subtype = "golem",
-		display = 'g', color=colors.WHITE, image = "player/alchemy_golem.png",
+		display = 'g', color=colors.WHITE, image = "npc/alchemist_golem.png",
 		level_range = {1, 50}, exp_worth=0,
 		life_rating = 13,
 		never_anger = true,

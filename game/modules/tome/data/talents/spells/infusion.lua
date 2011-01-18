@@ -48,6 +48,7 @@ newTalent{
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
 	activate = function(self, t)
 		cancelInfusions(self)
@@ -75,6 +76,7 @@ newTalent{
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
 	activate = function(self, t)
 		cancelInfusions(self)
@@ -102,6 +104,7 @@ newTalent{
 	sustain_mana = 30,
 	points = 5,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
 	activate = function(self, t)
 		cancelInfusions(self)

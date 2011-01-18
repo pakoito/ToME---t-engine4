@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 20,
 	cooldown = 30,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { DISABLE = 2 },
 	reflectable = true,
 	proj_speed = 2,
 	range = 6,
@@ -56,9 +54,7 @@ newTalent{
 	points = 5,
 	mana = 50,
 	cooldown = 30,
-	tactical = {
-		DEFENSE = 10,
-	},
+	tactical = { DEFEND = 2 },
 	range = 10,
 	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 50, 350) end,
 	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
@@ -85,9 +81,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 140,
 	cooldown = 40,
-	tactical = {
-		DEFENSE = 10,
-	},
+	tactical = { DISABLE = 1, ESCAPE = 3, PROTECT = 3 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -117,9 +111,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 250,
 	cooldown = 30,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	getHaste = function(self, t) return self:getTalentLevel(t) * 0.07 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")

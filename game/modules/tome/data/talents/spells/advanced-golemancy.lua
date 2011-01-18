@@ -25,6 +25,7 @@ newTalent{
 	points = 5,
 	mana = 0,
 	cooldown = 14,
+	tactical = { MANA = 2 },
 	getPower = function(self, t) return 40 + self:combatTalentSpellDamage(t, 15, 150) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)
@@ -53,6 +54,7 @@ newTalent{
 	points = 5,
 	mana = 25,
 	cooldown = 12,
+	tactical = { HEAL = 2 },
 	getPower = function(self, t) return 70 + self:combatTalentSpellDamage(t, 15, 450) end,
 	action = function(self, t)
 		local mover, golem = getGolem(self)

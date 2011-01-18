@@ -25,6 +25,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 40,
 	cooldown = 7,
+	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 3 end,
 	range = 10,
@@ -99,9 +100,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 150,
 	cooldown = 30,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	getCooldownReduction = function(self, t) return util.bound(self:getTalentLevelRaw(t) / 15, 0.05, 0.3) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
@@ -127,6 +126,7 @@ newTalent{
 	points = 5,
 	mana = 70,
 	cooldown = 50,
+	tactical = { BUFF = 2 },
 	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
 	getMaxLevel = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)

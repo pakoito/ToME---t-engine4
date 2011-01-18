@@ -175,6 +175,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req1,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
+	requires_target = true,
 	archery_onreach = function(self, t, x, y)
 		local rad = 1
 		if self:getTalentLevel(t) >= 3 then rad = rad + 1 end

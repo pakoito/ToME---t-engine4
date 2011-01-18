@@ -31,7 +31,7 @@ newTalent{
 	stamina = 5,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
-	tactical = { PAUSE = 20 },
+	tactical = { DEFEND = 2, DISABLE = 1 },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
@@ -90,7 +90,7 @@ newTalent{
 	range = 10,
 	stamina = 5,
 	requires_target = true,
-	tactical = { ATTACK = 10 },
+	tactical = { PROTECT = 3 },
 	action = function(self, t)
 		local tg = {type="ball", radius=self:getTalentLevelRaw(t) / 2, range=self:getTalentRange(t)}
 		local olds = game.target.source_actor
@@ -127,7 +127,7 @@ newTalent{
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
 	getPinDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
-	tactical = { PAUSE = 20 },
+	tactical = { DISABLE = 2 },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
@@ -190,7 +190,7 @@ newTalent{
 		return self:combatTalentWeaponDamage(t, 0.4, 1.1)
 	end,
 	getDazeDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
-	tactical = { PAUSE = 30 },
+	tactical = { DISABLE = 3 },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
@@ -253,7 +253,7 @@ newTalent{
 	mana = 10,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 220) end,
-	tactical = { ATTACK = 30 },
+	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -316,7 +316,7 @@ newTalent{
 	range = 10,
 	mana = 20,
 	requires_target = true,
-	tactical = { SURROUNDED = 30 },
+	tactical = { SURROUNDED = 3 },
 	action = function(self, t)
 		self:setEffect(self.EFF_REFLECTIVE_SKIN, 15, {power=20 + self:combatTalentSpellDamage(t, 12, 40)})
 		return true
@@ -339,7 +339,7 @@ newTalent{
 	range = function(self, t) return 3 + self:getTalentLevel(t) / 2 end,
 	mana = 20,
 	requires_target = true,
-	tactical = { ATTACKAREA = 10 },
+	tactical = { ATTACKAREA = 2 },
 	action = function(self, t)
 		local tg = {type="ball", range=0, friendlyfire=false, radius=self:getTalentRange(t), talent=t}
 		local done = {}
@@ -369,7 +369,7 @@ newTalent{
 	points = 5,
 	mana = 60,
 	cooldown = 15,
-	tactical = { ATTACKAREA = 20 },
+	tactical = { ATTACKAREA = 2 },
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
 		local radius = 3

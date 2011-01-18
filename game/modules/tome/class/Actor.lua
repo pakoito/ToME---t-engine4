@@ -119,6 +119,8 @@ function _M:init(t, no_default)
 	t.move_project = t.move_project or {}
 	t.can_breath = t.can_breath or {}
 
+	t.ai_tactic = t.ai_tactic or {}
+
 	-- Resistances
 	t.resists = t.resists or {}
 	t.resists_cap = t.resists_cap or { all = 100 }

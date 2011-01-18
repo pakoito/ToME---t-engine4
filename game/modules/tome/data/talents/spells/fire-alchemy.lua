@@ -30,6 +30,7 @@ newTalent{
 	proj_speed = 20,
 	range = 10,
 	direct_hit = true,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 220) end,
 	action = function(self, t)
@@ -56,6 +57,7 @@ newTalent{
 	cooldown = 34,
 	range = 6,
 	direct_hit = true,
+	tactical = { DISABLE = 2 },
 	requires_target = true,
 	getDuration = function(self, t) return 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t) end,
 	action = function(self, t)
@@ -102,9 +104,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 40,
 	cooldown = 30,
-	tactical = {
-		ATTACKAREA = 20,
-	},
+	tactical = { ATTACKAREA = 2 },
 	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
 	action = function(self, t)
@@ -145,6 +145,7 @@ newTalent{
 	points = 5,
 	proj_speed = 2.4,
 	range = 8,
+	tactical = { ATTACKAREA = 3 },
 	getFireDamageOnHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 45) end,
 	getFireDamageInSight = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,

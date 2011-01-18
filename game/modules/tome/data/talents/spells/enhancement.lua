@@ -25,9 +25,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 10,
 	sustain_mana = 40,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { BUFF = 2 },
 	getFireDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 40) end,
 	getFireDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
 	activate = function(self, t)
@@ -60,6 +58,7 @@ newTalent{
 	mana = 45,
 	require = spells_req2,
 	range = 10,
+	tactical = { DEFEND = 2 },
 	getPhysicalReduction = function(self, t) return self:combatTalentSpellDamage(t, 10, 60) end,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
@@ -82,9 +81,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 10,
 	sustain_mana = 40,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { BUFF = 2 },
 	getIceDamage = function(self, t) return self:combatTalentSpellDamage(t, 3, 20) end,
 	getIceDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
 	activate = function(self, t)
@@ -116,9 +113,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 10,
 	sustain_mana = 75,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { BUFF = 2 },
 	getStatIncrease = function(self, t) return math.min(math.floor(self:combatTalentSpellDamage(t, 2, 10)), 11) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")

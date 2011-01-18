@@ -27,9 +27,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 30,
 	cooldown = 10,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { BUFF = 2 },
 	getArmor = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
@@ -61,6 +59,7 @@ newTalent{
 	range = 10,
 	reflectable = true,
 	requires_target = true,
+	no_npc_use = true,
 	getRange = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
@@ -87,9 +86,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 18,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 1, DISABLE = 2, ESCAPE = 2 },
 	range = 10,
 	reflectable = true,
 	proj_speed = 6,
@@ -118,6 +115,7 @@ newTalent{
 	cooldown = 50,
 	mana = 70,
 	range = 7,
+	tactical = { DISABLE = 4, DEFEND = 3, PROTECT = 3, ESCAPE = 1 },
 	reflectable = true,
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getDuration = function(self, t) return 2 + self:combatTalentSpellDamage(t, 5, 12) end,

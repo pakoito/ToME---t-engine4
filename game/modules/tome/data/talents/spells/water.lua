@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 25,
 	cooldown = 8,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 8,
 	direct_hit = true,
 	requires_target = true,
@@ -67,9 +65,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 14,
 	cooldown = 5,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 1, DISABLE = 3 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -99,9 +95,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 55,
 	cooldown = 8,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ESCAPE = 2, ATTACKAREA = 1, DISABLE = 1 },
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
 	getDuration = function(self, t) return 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t) end,
@@ -139,9 +133,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 40,
 	cooldown = 30,
-	tactical = {
-		ATTACKAREA = 20,
-	},
+	tactical = { ATTACKAREA = 2 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
 	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
 	action = function(self, t)

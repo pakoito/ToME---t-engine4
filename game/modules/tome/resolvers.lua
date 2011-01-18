@@ -362,3 +362,31 @@ function resolvers.calc.inscription(t, e)
 	e:setInscription(nil, t[1], t[2], false, false)
 	return nil
 end
+
+--- Random inscription resolver
+function resolvers.inscriptions(nb, list)
+	return {__resolver="inscriptions", nb, list}
+end
+function resolvers.calc.inscriptions(t, e)
+	for i = 1, t[1] do
+		local name = rng.tableRemove(t[2])
+		if not name then return nil end
+		local o = game.zone:makeEntity(game.level, "object", {name=name}, nil, true)
+		if o and o.inscription_talent and o.inscription_data then
+			e:setInscription(nil, o.inscription_talent, o.inscription_data, false, false, nil, true)
+		end
+	end
+	return nil
+end
+
+--- Tactical settings made easy
+function resolvers.tactic(name)
+	return {__resolver="tactic", name}
+end
+function resolvers.calc.tactic(t, e)
+	if t[1] == "melee" then return {attack=2, attackarea=2, disable=2, escape=0, closein=2}
+	elseif t[1] == "ranged" then return {disable=1.5, escape=3, closein=0, defend=2, heal=2}
+	elseif t[1] == "tank" then return {disable=3, escape=0, closein=2, defend=2, protect=2, heal=3}
+	end
+	return {}
+end

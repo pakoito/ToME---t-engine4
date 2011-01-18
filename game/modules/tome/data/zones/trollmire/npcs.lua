@@ -56,10 +56,12 @@ He is wielding a small tree trunk and lumbering toward you.]],
 		[Talents.T_RUSH]=3,
 		[Talents.T_KNOCKBACK]=1,
 	},
-	inc_damage = { all = -50 },
+	resolvers.inscriptions(1, {"wild infusion", "healing infusion", "regeneration infusion", "heroism infusion"}),
+	inc_damage = { all = -35 },
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")

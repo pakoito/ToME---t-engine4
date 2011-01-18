@@ -25,6 +25,7 @@ newTalent{
 	sustain_mana = 50,
 	points = 5,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	spellpower_increase = { 5, 9, 13, 16, 18 },
 	getSpellpowerIncrease = function(self, t) return t.spellpower_increase[self:getTalentLevelRaw(t)] end,
 	activate = function(self, t)
@@ -54,9 +55,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 10,
 	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
 	reflectable = true,
@@ -94,9 +93,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 0,
 	cooldown = 40,
-	tactical = {
-		MANA = 20,
-	},
+	tactical = { MANA = 3 },
 	getManaRestoration = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
 	action = function(self, t)
 		if not self:hasEffect(self.EFF_MANAFLOW) then
@@ -121,9 +118,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 30,
 	sustain_mana = 150,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 2 },
 	getManaRatio = function(self, t) return 3 - self:combatTalentSpellDamage(t, 10, 200) / 100 end,
 	activate = function(self, t)
 		local power = t.getManaRatio(self, t)

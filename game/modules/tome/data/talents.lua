@@ -33,6 +33,7 @@ newTalent = function(t)
 			tacts[tact] = val
 			tacticals[tact] = true
 		end
+		t.tactical = tacts
 	end
 
 	if t.image then

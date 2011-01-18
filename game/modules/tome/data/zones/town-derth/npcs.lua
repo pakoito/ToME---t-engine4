@@ -89,3 +89,14 @@ newEntity{ base = "BASE_NPC_DERTH_TOWN",
 	rarity = 1,
 	max_life = resolvers.rngavg(30,40),
 }
+
+newEntity{ base = "BASE_NPC_DERTH_TOWN",
+	define_as ="ARENA_AGENT",
+	name = "Shady cornac man", color=colors.DARK_BLUE, unique = true,
+	level_range = {1, nil}, exp_worth = 1,
+	can_talk = "arena-unlock",
+	can_quest = true,
+	never_move = 1,
+	rarity = false,
+	max_life = resolvers.rngavg(70,80),
+}

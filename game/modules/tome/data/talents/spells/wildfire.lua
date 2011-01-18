@@ -24,10 +24,7 @@ newTalent{
 	points = 5,
 	mana = 12,
 	cooldown = 5,
-	tactical = {
-		ATTACKAREA = 10,
-		DEFEND = 4,
-	},
+	tactical = { ATTACKAREA = 2, DISABLE = 2, ESCAPE = 2 },
 	direct_hit = true,
 	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 180) end,
@@ -52,9 +49,7 @@ newTalent{
 	points = 5,
 	mana = 35,
 	cooldown = 16,
-	tactical = {
-		ATTACKAREA = 40,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 10,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 240) end,
 	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
@@ -89,9 +84,7 @@ newTalent{
 	points = 5,
 	mana = 40,
 	cooldown = 14,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 1 },
 	range = 7,
 	requires_target = true,
 	getMultiplier = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1.5) end,
@@ -136,6 +129,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 50,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)

@@ -26,9 +26,7 @@ newTalent{
 	random_ego = "defensive",
 	mana = 30,
 	cooldown = 10,
-	tactical = {
-		HEAL = 10,
-	},
+	tactical = { HEAL = 2 },
 	getRegeneration = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=t.getRegeneration(self, t)})
@@ -51,9 +49,7 @@ newTalent{
 	random_ego = "defensive",
 	mana = 60,
 	cooldown = 10,
-	tactical = {
-		HEAL = 10,
-	},
+	tactical = { HEAL = 1 },
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 220) end,
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
@@ -76,6 +72,7 @@ newTalent{
 	random_ego = "defensive",
 	mana = 30,
 	cooldown = 15,
+	tactical = { PROTECT = 1 },
 	getCureCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local target = self
@@ -116,9 +113,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 60,
 	cooldown = 100,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	getSummonTime = function(self, t) return util.bound(self:getTalentLevel(t) * self:combatSpellpower(0.10), 5, 90) end,
 	action = function(self, t)

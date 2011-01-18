@@ -266,7 +266,7 @@ newTalent{
 		local m = NPC.new{
 			type = "golem", subtype = "stone",
 			display = "g",
-			name = "stone golem", color=colors.WHITE,
+			name = "stone golem", color=colors.WHITE, image = "npc/summoner_golem.png",
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

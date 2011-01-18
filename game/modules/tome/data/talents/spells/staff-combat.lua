@@ -23,9 +23,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	mana = 5,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 1 },
 	range = 6,
 	reflectable = true,
 	proj_speed = 20,
@@ -100,9 +98,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 80,
 	cooldown = 30,
-	tactical = {
-		DEFEND = 20,
-	},
+	tactical = { BUFF = 2 },
 	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
 	activate = function(self, t)
 		local weapon = self:hasStaffWeapon()
@@ -137,9 +133,7 @@ newTalent{
 	points = 5,
 	mana = 30,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 1, DISABLE = 2, ESCAPE = 1 },
 	range = 1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,

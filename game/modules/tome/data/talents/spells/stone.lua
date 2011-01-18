@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 10,
 	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -79,6 +77,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 70,
 	cooldown = 12,
+	tactical = { BUFF = 2 },
 	getFireRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 80) end,
 	getLightningRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
 	getPhysicalRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 20) end,
@@ -134,9 +133,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 50,
 	cooldown = 30,
-	tactical = {
-		ATTACKAREA = 40,
-	},
+	tactical = { ATTACKAREA = 2, DISABLE = 3 },
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
@@ -180,6 +177,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 50,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	getPhysicalDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)

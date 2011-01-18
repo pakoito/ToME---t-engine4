@@ -25,7 +25,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 10,
 	cooldown = 8,
-	tactical = { ESCAPE = 4 },
+	tactical = { ESCAPE = 2 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRange = function(self, t) return 4 + self:combatTalentSpellDamage(t, 10, 15) end,
 	getRadius = function(self, t) return 7 - self:getTalentLevelRaw(t) end,
@@ -103,9 +103,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 20,
 	cooldown = 30,
-	tactical = {
-		ESCAPE = 8,
-	},
+	tactical = { ESCAPE = 3 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRange = function(self, t) return 100 + self:combatSpellpower(1) end,
 	getRadius = function(self, t) return 20 - self:getTalentLevel(t) end,
@@ -177,9 +175,7 @@ newTalent{
 	points = 5,
 	mana = 70,
 	cooldown = 35,
-	tactical = {
-		DEFENSE = 10,
-	},
+	tactical = { DEFEND = 2 },
 	range = 8,
 	requires_target = true,
 	getTransferChange = function(self, t) return 20 + self:getTalentLevel(t) * 5 end,
@@ -214,9 +210,7 @@ newTalent{
 	points = 5,
 	cooldown = 40,
 	sustain_mana = 200,
-	tactical = {
-		MOVEMENT = 20,
-	},
+	tactical = { ESCAPE = 1, CLOSEIN = 1 },
 	getRange = function(self, t) return math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/teleport")

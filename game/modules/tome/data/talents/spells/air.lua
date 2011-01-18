@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 10,
 	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -61,9 +59,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 40,
 	cooldown = 8,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -144,9 +140,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 10,
 	sustain_mana = 50,
-	tactical = {
-		MOVEMENT = 10,
-	},
+	tactical = { BUFF = 2 },
 	getEncumberance = function(self, t) return math.floor(self:combatTalentSpellDamage(t, 10, 110)) end,
 	getRangedDefence = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	activate = function(self, t)
@@ -183,9 +177,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 170,
 	cooldown = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 3 },
 	range = 5,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,

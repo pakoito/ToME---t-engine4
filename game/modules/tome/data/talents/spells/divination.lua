@@ -24,6 +24,7 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	sustain_mana = 40,
+	tactical = { BUFF = 2 },
 	cooldown = 30,
 	getSeeInvisible = function(self, t) return self:combatTalentSpellDamage(t, 2, 45) end,
 	getSeeStealth = function(self, t) return self:combatTalentSpellDamage(t, 2, 20) end,
@@ -123,6 +124,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 120,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	getResist = function(self, t) return 10 + self:combatTalentSpellDamage(t, 2, 25) end,
 	on_damage = function(self, t, damtype)
 		if damtype == DamageType.PHYSICAL then return end

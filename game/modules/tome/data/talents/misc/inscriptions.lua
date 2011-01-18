@@ -57,7 +57,7 @@ newInscription{
 	name = "Infusion: Regeneration",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { HEAL = 10 },
+	tactical = { HEAL = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_REGENERATION, data.dur, {power=(data.heal + data.inc_stat) / data.dur})
@@ -77,7 +77,7 @@ newInscription{
 	name = "Infusion: Healing",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { HEAL = 20 },
+	tactical = { HEAL = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:heal(data.heal + data.inc_stat)
@@ -98,7 +98,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
-	tactical = { PROTECT = 30 },
+	tactical = { DEFEND = 3 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 
@@ -146,6 +146,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
+	tactical = { DEFEND = 1 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_FREE_ACTION, data.dur + data.inc_stat, {power=1})
@@ -166,6 +167,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:project({type="ball", range=0, friendlyfire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.LITE, 1)
@@ -187,7 +189,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
-	tactical = { BUFF = 20 },
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_STRENGTH, data.dur, {power=data.power + data.inc_stat})
@@ -208,7 +210,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
-	tactical = { BUFF = 20 },
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_WILL, data.dur, {power=data.power + data.inc_stat})
@@ -232,7 +234,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { ESCAPE = 10 },
+	tactical = { ESCAPE = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
@@ -255,6 +257,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { CLOSEIN = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=data.range + data.inc_stat, radius=3, requires_knowledge=false}
@@ -283,7 +286,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { ESCAPE = 20 },
+	tactical = { ESCAPE = 3 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
@@ -307,7 +310,7 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	no_energy = true,
-	tactical = { HEAL = 30 },
+	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t)
 		return not self:hasEffect(self.EFF_DAMAGE_SHIELD)
 	end,
@@ -331,7 +334,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { SURROUNDED = 10 },
+	tactical = { DEFEND = 1, ESCAPE = 1 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat})
@@ -354,7 +357,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { SURROUNDED = 10 },
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_SPEED, data.dur, {power=(data.power + data.inc_stat) / 100})
@@ -377,6 +380,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	no_npc_use = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:magicMap(data.range, self.x, self.y, function(x, y)
@@ -407,7 +411,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { ATTACK = 10 },
+	tactical = { ATTACK = 1 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -438,7 +442,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { ATTACK = 10 },
+	tactical = { ATTACK = 1, DISABLE=1 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -467,7 +471,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { SURROUNDED = 10 },
+	tactical = { ATTACKAREA = 1 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -495,7 +499,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { ATTACK = 10 },
+	tactical = { ATTACK = 1 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -528,7 +532,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { MANA = 10 },
+	tactical = { MANA = 1 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:incMana((data.mana + data.inc_stat) / 20)

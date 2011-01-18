@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 12,
 	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 10,
 	reflectable = true,
 	proj_speed = 20,
@@ -65,9 +63,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 30,
 	cooldown = 18,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACK = 1, DISABLE = 3 },
 	range = 1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
@@ -98,9 +94,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 40,
 	cooldown = 8,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 7,
 	proj_speed = 4,
 	direct_hit = true,
@@ -134,9 +128,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 100,
 	cooldown = 30,
-	tactical = {
-		ATTACKAREA = 40,
-	},
+	tactical = { ATTACKAREA = 3 },
 	range = 10,
 	direct_hit = true,
 	requires_target = true,

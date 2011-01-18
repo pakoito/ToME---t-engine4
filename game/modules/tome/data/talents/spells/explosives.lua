@@ -29,6 +29,7 @@ newTalent{
 	end,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { ATTACKAREA = 2 },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.FIRE
@@ -174,6 +175,7 @@ newTalent{
 	end,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.SPELLKNOCKBACK
