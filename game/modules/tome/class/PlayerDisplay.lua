@@ -186,11 +186,8 @@ function _M:display()
 	self:makeTexture(("%s#{normal}#"):format(player.name), 0, h, colors.GOLD.r, colors.GOLD.g, colors.GOLD.b, self.w) h = h + self.font_h
 	self.font:setStyle("normal")
 
-	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture("Level: #00ff00#"..player.level, x, h, 255, 255, 255)) h = h + self.font_h
-	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture(("Exp:  #00ff00#%2d%%"):format(100 * cur_exp / max_exp), x, h, 255, 255, 255)) h = h + self.font_h
+	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture(("Level / Exp: #00ff00#%s / %2d%%"):format(player.level, 100 * cur_exp / max_exp), x, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_GOLD, self:makeTexture(("Gold: #00ff00#%0.2f"):format(player.money or 0), x, h, 255, 255, 255)) h = h + self.font_h
-
-	h = h + self.font_h
 
 	if game.level and game.level.turn_counter then
 		self:makeTexture(("Turns remaining: %d"):format(game.level.turn_counter / 10), x, h, 255, 0, 0) h = h + self.font_h

@@ -1007,10 +1007,10 @@ function _M:setupMouse(reset)
 		self.hotkeys_display:onMouse(button, mx, my, event == "button", function(text) self.tooltip:displayAtMap(nil, nil, self.w, self.h, text) end)
 	end)
 	-- Use icons
---	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
---		self:mouseIcon(bx, by)
---		if button == "left" then self:clickIcon(bx, by) end
---	end)
+	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
+		self:mouseIcon(bx, by)
+		if button == "left" then self:clickIcon(bx, by) end
+	end)
 	-- Tooltip over the player pane
 	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		self.player_display.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
@@ -1143,22 +1143,6 @@ end
 -- UI stuff
 --------------------------------------------------------------
 
---function _M:onPickUI(hits)
---	for i, uid in ipairs(hits) do
---		local e = __uids[uid]
---		if e then print(i, e.uid, e.name) end
---	end
---end
-
---- Create a visual separator
---[[
-local _sep_left = core.display.loadImage("/data/gfx/ui/separator-left.png") _sep_left:alpha()
-local _sep_right = core.display.loadImage("/data/gfx/ui/separator-right.png") _sep_right:alpha()
-local _sep_horiz, _sep_horiz_w, _sep_horiz_h = core.display.loadImage("/data/gfx/ui/separator-hori.png")
-local _sep_top = core.display.loadImage("/data/gfx/ui/separator-top.png") _sep_top:alpha()
-local _sep_bottom = core.display.loadImage("/data/gfx/ui/separator-bottom.png") _sep_bottom:alpha()
-local _sep_vert, _sep_vert_w, _sep_vert_h = core.display.loadImage("/data/gfx/ui/separator-vert.png") _sep_vert:alpha()
-]]
 local _sep_horiz = {core.display.loadImage("/data/gfx/ui/separator-hori.png")} _sep_horiz.tex = {_sep_horiz[1]:glTexture()}
 local _sep_vert = {core.display.loadImage("/data/gfx/ui/separator-vert.png")} _sep_vert.tex = {_sep_vert[1]:glTexture()}
 local _sep_top = {core.display.loadImage("/data/gfx/ui/separator-top.png")} _sep_top.tex = {_sep_top[1]:glTexture()}
@@ -1214,44 +1198,46 @@ function _M:displayUI()
 	_sep_top.tex[1]:toScreenFull(200 - (_sep_top[2] - _sep_vert[2]) / 2, 20 - 7, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
 	_sep_bottom.tex[1]:toScreenFull(200 - (_sep_bottom[2] - _sep_vert[2]) / 2, bottom - 25, _sep_bottom[2], _sep_bottom[3], _sep_bottom.tex[2], _sep_bottom.tex[3])
 
---	self.split_separator:toScreenFull(middle - 3 - 15, bottom, 6, bottom_h, self.split_separator_w, self.split_separator_h)
---	self.split_separator:toScreenFull(middle - 3, bottom, 6, bottom_h, self.split_separator_w, self.split_separator_h)
---	self.player_separator:toScreenFull(200 - 3, 20, 6, bottom - 20, self.player_separator_w, self.player_separator_h)
-
 end
 
 function _M:createSeparators()
---	self.bottom_separator, self.bottom_separator_w, self.bottom_separator_h = self:createVisualSeparator("horizontal", self.w)
---	self.split_separator, self.split_separator_w, self.split_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.2))
---	self.player_separator, self.player_separator_w, self.player_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.8) - 20)
+	local middle = self.w * 0.5
+	local bottom = self.h * 0.8
+	local bottom_h = self.h * 0.2
+	self.icons = {
+		display_x = middle - (_talents_icon_w) / 2,
+		display_y = bottom + _sep_horiz[3] / 2,
+		w = _talents_icon_w,
+		h = 5*_talents_icon_h
+	}
 end
 
 function _M:clickIcon(bx, by)
-	if by < 12 then
+	if by < _talents_icon_h then
 		self.show_npc_list = false
 		self.player.changed = true
-	elseif by < 24 then
+	elseif by < 2*_talents_icon_h then
 		self.show_npc_list = true
 		self.player.changed = true
-	elseif by < 36 then
+	elseif by < 3*_talents_icon_h then
 		self.key:triggerVirtual("SHOW_INVENTORY")
-	elseif by < 48 then
+	elseif by < 4*_talents_icon_h then
 		self.key:triggerVirtual("SHOW_CHARACTER_SHEET")
-	elseif by < 60 then
+	elseif by < 5*_talents_icon_h then
 		self.key:triggerVirtual("EXIT")
 	end
 end
 
 function _M:mouseIcon(bx, by)
-	if by < 12 then
+	if by < _talents_icon_h then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display talents")
-	elseif by < 24 then
+	elseif by < 2*_talents_icon_h then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display creatures")
-	elseif by < 36 then
+	elseif by < 3*_talents_icon_h then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Inventory")
-	elseif by < 48 then
+	elseif by < 4*_talents_icon_h then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Character Sheet")
-	elseif by < 60 then
+	elseif by < 5*_talents_icon_h then
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Main menu")
 	end
 end
