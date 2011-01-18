@@ -56,7 +56,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	stamina = 45,
-	cooldown = 40,
+	cooldown = function(self, t) return math.floor(40 - self:getTalentLevel(t) * 4) end,
 	tactical = {
 		ATTACK = 4,
 	},

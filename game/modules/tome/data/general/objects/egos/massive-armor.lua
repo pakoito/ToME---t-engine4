@@ -43,7 +43,7 @@ newEntity{
 		stun_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
 		knockback_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
 		disarm_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
-		talent_cd_reduction={[Talents.T_RUSH]=10},
+		talent_cd_reduction={[Talents.T_RUSH]=5},
 	},
 }
 

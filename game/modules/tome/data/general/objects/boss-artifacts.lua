@@ -223,7 +223,7 @@ newEntity{ base = "BASE_RING",
 		combat_armor = 10,
 		fatigue = -15,
 		talent_cd_reduction={
-			[Talents.T_RUSH]=15,
+			[Talents.T_RUSH]=6,
 		},
 		inc_damage={ [DamageType.PHYSICAL] = 8, },
 	},
