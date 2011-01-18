@@ -82,7 +82,7 @@ end
 function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
-	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
+	self.player_display = PlayerDisplay.new(0, 230, 200, self.h * 0.8 - 230, {30,30,0})
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
 	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167)
@@ -687,15 +687,15 @@ function _M:display(nb_keyframes)
 
 		if not self.zone_name_s then self:updateZoneName() end
 		self.zone_name_s:toScreenFull(
-			self.level.map.display_x + self.level.map.viewport.width - self.zone_name_w,
-			self.level.map.display_y + self.level.map.viewport.height - self.zone_name_h,
+			self.level.map.display_x + self.level.map.viewport.width - self.zone_name_w - 15,
+			self.level.map.display_y + self.level.map.viewport.height - self.zone_name_h - 5,
 			self.zone_name_w, self.zone_name_h,
 			self.zone_name_tw, self.zone_name_th
 		)
 
 		-- Minimap display
-		self.minimap_bg:toScreen(0, 20, 200, 200)
-		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
+		self.minimap_bg:toScreen(0, 35, 200, 200)
+		self.level.map:minimapDisplay(0, 35, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
 	end
 
 	-- We display the player's interface
