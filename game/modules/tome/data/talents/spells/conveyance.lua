@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "utility",
 	mana = 10,
 	cooldown = 8,
-	tactical = {
-		ESCAPE = 4,
-	},
+	tactical = { ESCAPE = 4 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRange = function(self, t) return 4 + self:combatTalentSpellDamage(t, 10, 15) end,
 	getRadius = function(self, t) return 7 - self:getTalentLevelRaw(t) end,

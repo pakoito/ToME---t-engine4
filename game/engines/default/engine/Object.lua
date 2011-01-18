@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Map = require "engine.Map"
 local Entity = require "engine.Entity"
 
 module(..., package.seeall, class.inherit(Entity))
@@ -211,7 +212,12 @@ function _M:getMapStackMO(map, x, y)
 	if nb > 9 then nb = "many" end
 	if stackmo[nb] then return stackmo[nb] end
 
-	local s = core.display.loadImage("/data/gfx/objstack"..nb..".png")
+	local s
+	if Map.tiles then
+		s = Map.tiles:loadImage("objstack"..nb..".png")
+	else
+		s = core.display.loadImage("/data/gfx/objstack"..nb..".png")
+	end
 	if not s then return end
 	local tex = s:glTexture()
 

@@ -57,6 +57,7 @@ newInscription{
 	name = "Infusion: Regeneration",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
+	tactical = { HEAL = 10 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_REGENERATION, data.dur, {power=(data.heal + data.inc_stat) / data.dur})
@@ -76,6 +77,7 @@ newInscription{
 	name = "Infusion: Healing",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
+	tactical = { HEAL = 20 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:heal(data.heal + data.inc_stat)
@@ -96,6 +98,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
+	tactical = { PROTECT = 30 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 
@@ -184,6 +187,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
+	tactical = { BUFF = 20 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_STRENGTH, data.dur, {power=data.power + data.inc_stat})
@@ -204,6 +208,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
+	tactical = { BUFF = 20 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_WILL, data.dur, {power=data.power + data.inc_stat})
@@ -227,6 +232,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { ESCAPE = 10 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
@@ -277,6 +283,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { ESCAPE = 20 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
@@ -300,6 +307,10 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	no_energy = true,
+	tactical = { HEAL = 30 },
+	on_pre_use = function(self, t)
+		return not self:hasEffect(self.EFF_DAMAGE_SHIELD)
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, data.dur, {power=data.power + data.inc_stat})
@@ -320,6 +331,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { SURROUNDED = 10 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat})
@@ -342,6 +354,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { SURROUNDED = 10 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_SPEED, data.dur, {power=(data.power + data.inc_stat) / 100})
@@ -394,6 +407,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { ATTACK = 10 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -424,6 +438,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { ATTACK = 10 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -452,6 +467,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { SURROUNDED = 10 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -479,6 +495,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { ATTACK = 10 },
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -511,6 +528,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	tactical = { MANA = 10 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:incMana((data.mana + data.inc_stat) / 20)

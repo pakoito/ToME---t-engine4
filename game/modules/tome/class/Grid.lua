@@ -91,7 +91,7 @@ function _M:makeTrees(base, max)
 		local inb = 4 - nb
 		return engine.Entity.new{
 			z = z,
-			display_scale = rng.float(0.5 + inb / 6, 1.3),
+			display_scale = rng.float(0.5 + inb / 6, 1.6),
 			display_x = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
 			display_y = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
 			display_on_seen = true,

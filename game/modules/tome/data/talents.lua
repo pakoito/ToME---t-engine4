@@ -17,12 +17,23 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local tacticals = {}
+
 local oldNewTalent = newTalent
 newTalent = function(t)
 	assert(engine.interface.ActorTalents.talents_types_def[t.type[1]], "No talent category "..tostring(t.type[1]).." for talent "..t.name)
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].no_silence then t.no_silence = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_spell then t.is_spell = true end
+
+	if t.tactical then
+		local tacts = {}
+		for tact, val in pairs(t.tactical) do
+			tact = tact:lower()
+			tacts[tact] = val
+			tacticals[tact] = true
+		end
+	end
 
 	if t.image then
 		if type(t.image) == "boolean" then
@@ -59,3 +70,6 @@ load("/data/talents/undeads/undeads.lua")
 load("/data/talents/cursed/cursed.lua")
 load("/data/talents/chronomancy/chronomancer.lua")
 load("/data/talents/psionic/psionic.lua")
+
+print("[TALENTS TACTICS]")
+for k, _ in pairs(tacticals) do print(" * ", k) end
