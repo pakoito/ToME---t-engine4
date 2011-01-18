@@ -132,7 +132,13 @@ end
 function _M:newGame()
 	self.party = Party.new()
 	local player = Player.new{name=self.player_name, game_ender=true}
-	self.party:addMember(player, {control="full", type="player", title="Main character", main=true})
+	self.party:addMember(player, {
+		control="full",
+		type="player",
+		title="Main character",
+		main=true,
+		orders = {follow=true},
+	})
 	self.party:setPlayer(player)
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()

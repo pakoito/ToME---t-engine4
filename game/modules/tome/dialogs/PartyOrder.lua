@@ -28,6 +28,7 @@ local orders = {
 	escort_portal = {-99, function(actor) return "Where is the portal?" end},
 	leash = {1, function(actor) return ("Set maximun wander distance [current: %d]"):format(actor.ai_state.tactic_leash) end},
 	behavior = {2, function(actor) return ("Set behavior [current: %s]"):format(actor.ai_state.tactic_behavior) end},
+	follow = {3, function(actor) return ("Follow party leader [current: %s]"):format(actor.ai_state.tactic_follow_leader and "yes" or "no") end},
 }
 
 function _M:init(actor, def)

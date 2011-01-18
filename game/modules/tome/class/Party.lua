@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Entity"
 local Map = require "engine.Map"
+local Dialog = require "engine.ui.Dialog"
 local GetQuantity = require "engine.dialogs.GetQuantity"
 local PartyOrder = require "mod.dialogs.PartyOrder"
 
@@ -231,6 +232,11 @@ function _M:giveOrder(actor, order)
 			actor.ai_state.tactic_leash = util.bound(qty, 1, actor.ai_state.tactic_leash_max or 100)
 			game.logPlayer(game.player, "%s maximun action radius set to %d.", actor.name:capitalize(), actor.ai_state.tactic_leash)
 		end), 1)
+	elseif order == "follow" then
+		Dialog:yesnoPopup("Follow leader: "..actor.name, actor.name:capitalize().." will move to follow party leader when nothing else to do?", function(ret)
+			actor.ai_state.tactic_follow_leader = ret
+			game.logPlayer(game.player, "%s will %sfollow the leader.", actor.name:capitalize(), ret and "" or "not ")
+		end)
 	elseif order == "behavior" then
 		game:registerDialog(require("mod.dialogs.orders."..order:capitalize()).new(actor, def))
 

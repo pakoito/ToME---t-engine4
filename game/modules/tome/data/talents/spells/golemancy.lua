@@ -63,6 +63,7 @@ local function makeGolem()
 
 		hotkey = {},
 		hotkey_page = 1,
+		move_others = true,
 
 		ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
 		energy = { mod=1 },
@@ -135,7 +136,7 @@ newTalent{
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
 			game.party:addMember(self.alchemy_golem, {
 				control="full", type="golem", title="Golem",
-				orders = {leash=true, }, -- behavior=true},
+				orders = {leash=true, follow=true}, -- behavior=true},
 			})
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction

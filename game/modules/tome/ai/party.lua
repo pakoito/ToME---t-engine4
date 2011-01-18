@@ -33,5 +33,13 @@ newAI("party_member", function(self)
 --	end
 
 	-- Run normal AI
-	return self:runAI(self.ai_state.ai_party)
+	local ret = self:runAI(self.ai_state.ai_party)
+
+	if not ret and self.ai_state.tactic_follow_leader then
+		self:setTarget(master)
+		print("[PARTY AI] following master", self.name)
+		return self:runAI(self.ai_state.ai_move or "move_simple")
+	else
+		return ret
+	end
 end)
