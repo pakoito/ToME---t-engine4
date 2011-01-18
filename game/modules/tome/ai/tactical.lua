@@ -107,7 +107,7 @@ newAI("use_tactical", function(self)
 		end
 
 		if avail.attack then want.attack = 1 end
-		if avail.attackarea then want.attackarea = (want.attack or 0) + nb_foes * 1.5 end
+		if avail.attackarea then want.attackarea = (want.attack or 0) + nb_foes * 0.6 end
 
 		print("tactical ai report for", self.name)
 		local res = {}
