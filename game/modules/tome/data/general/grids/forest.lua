@@ -102,8 +102,11 @@ newEntity{
 	type = "floor", subtype = "grass",
 	name = "flower", image = "terrain/grass_flower3.png",
 	display = ';', color=colors.YELLOW, back_color={r=44,g=95,b=43},
-	grow = "TREE"
+	grow = "TREE",
+	nice_tiler = { method="replace", base={"FLOWER", 100, 3, 8}},
 }
+for i = 3, 8 do newEntity{ base = "FLOWER", define_as = "FLOWER"..i, image = "terrain/grass_flower"..i..".png"} end
+
 
 newEntity{
 	define_as = "ROCK_VAULT",
