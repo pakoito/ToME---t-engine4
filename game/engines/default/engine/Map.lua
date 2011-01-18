@@ -730,10 +730,11 @@ function _M:checkMapViewBounded()
 	if self.my > self.h - self.viewport.mheight then self.my = self.h - self.viewport.mheight self.changed = true end
 
 	-- Center if smaller than map viewport
-	if self.w < self.viewport.mwidth then self.mx = math.floor((self.w - self.viewport.mwidth) / 2) end
-	if self.h < self.viewport.mheight then self.my = math.floor((self.h - self.viewport.mheight) / 2) end
+	local centered = false
+	if self.w < self.viewport.mwidth then self.mx = math.floor((self.w - self.viewport.mwidth) / 2) centered = true end
+	if self.h < self.viewport.mheight then self.my = math.floor((self.h - self.viewport.mheight) / 2) centered = true end
 
-	self._map:setScroll(self.mx, self.my, self.smooth_scroll)
+	self._map:setScroll(self.mx, self.my, centered and 0 or self.smooth_scroll)
 end
 
 --- Gets the tile under the mouse

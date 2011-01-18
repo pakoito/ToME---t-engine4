@@ -436,6 +436,7 @@ static int map_new(lua_State *L)
 	map->zdepth = zdepth;
 	map->tile_w = tile_w;
 	map->tile_h = tile_h;
+	map->move_max = 0;
 
 	// Make up the map objects list, thus we can iterate them later
 	lua_newtable(L);

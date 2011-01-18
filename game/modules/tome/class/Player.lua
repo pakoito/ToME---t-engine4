@@ -76,8 +76,8 @@ function _M:init(t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
 	mod.class.interface.PlayerLore.init(self, t)
 
-	self.descriptor = {}
-	self.died_times = {}
+	self.descriptor = self.descriptor or {}
+	self.died_times = self.died_times or {}
 end
 
 function _M:onBirth(birther)
@@ -235,7 +235,7 @@ function _M:updateMainShader()
 		end
 
 		-- Colorize shader
-		if self:attr("stealth") then game.fbo_shader:setUniform("colorize", {0.7,0.7,0.7})
+		if self:attr("stealth") then game.fbo_shader:setUniform("colorize", {0.9,0.9,0.9})
 		elseif self:attr("invisible") then game.fbo_shader:setUniform("colorize", {0.4,0.5,0.7})
 		elseif self:attr("unstoppable") then game.fbo_shader:setUniform("colorize", {1,0.2,0})
 		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("colorize", {0.2,0.3,1})

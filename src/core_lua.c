@@ -555,7 +555,10 @@ static int sdl_load_image(lua_State *L)
 	*s = IMG_Load_RW(PHYSFSRWOPS_openRead(name), TRUE);
 	if (!*s) return 0;
 
-	return 1;
+	lua_pushnumber(L, (*s)->w);
+	lua_pushnumber(L, (*s)->h);
+
+	return 3;
 }
 
 static int sdl_free_surface(lua_State *L)

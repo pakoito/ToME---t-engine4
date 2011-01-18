@@ -45,23 +45,15 @@ function _M:resize(x, y, w, h)
 	self.bars_w = self.w - self.bars_x - 5
 	self.surface = core.display.newSurface(w, h)
 	self.surface_line = core.display.newSurface(w, self.font_h)
-	self.surface_portrait = core.display.newSurface(36, 36)
+	self.surface_portrait = core.display.newSurface(40, 40)
 	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 
-	self.portrait = core.display.loadImage("/data/gfx/ui/party-portrait.png")
-	self.portrait_unsel = core.display.loadImage("/data/gfx/ui/party-portrait-unselect.png")
-	local tex_bg = core.display.loadImage("/data/gfx/ui/player-display.png")
-	local tex_up = core.display.loadImage("/data/gfx/ui/player-display-top.png")
-	local bw, bh = tex_bg:getSize()
-	self.bg_surface = core.display.newSurface(w, h)
-	local i = 0
-	while i < h do
-		self.bg_surface:merge(tex_bg, 0, i)
-		i = i + bh
-	end
-	self.bg_surface:merge(tex_up, 0, 0)
-	self.bg = {self.bg_surface:glTexture()}
-	self.bg.w, self.bg.h = self.bg_surface:getSize()
+	self.top = {core.display.loadImage("/data/gfx/ui/party_end.png")} self.top.tex = {self.top[1]:glTexture()}
+	self.party = {core.display.loadImage("/data/gfx/ui/party_top.png")} self.party.tex = {self.party[1]:glTexture()}
+	self.bg = {core.display.loadImage("/data/gfx/ui/player-display.png")} self.bg.tex = {self.bg[1]:glTexture()}
+
+	self.portrait = {core.display.loadImage("/data/gfx/ui/party-portrait.png"):glTexture()}
+	self.portrait_unsel = {core.display.loadImage("/data/gfx/ui/party-portrait-unselect.png"):glTexture()}
 
 	self.items = {}
 end
@@ -112,13 +104,11 @@ end
 function _M:makePortrait(a, current, x, y)
 	local s = self.surface_portrait
 	local def = game.party.members[a]
-	s:erase(0, 0, 0, 255)
-	s:merge(current and self.portrait or self.portrait_unsel, 0, 0)
-	s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, 2, 2, 32, 32)
+	s:erase(colors.VERY_DARK_RED.r, colors.VERY_DARK_RED.g, colors.VERY_DARK_RED.b, 255, 6, 6, 32, 32)
 	local hl = 32 * math.max(0, a.life) / a.max_life
-	s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, 2, 34-hl, 32, hl)
+	s:erase(colors.DARK_RED.r, colors.DARK_RED.g, colors.DARK_RED.b, 255, 6, 32+6-hl, 32, hl)
 
-	self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Level: "..a.level.."\n"..def.title, 36, 36, x, y, function()
+	self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Level: "..a.level.."\n"..def.title, 40, 40, x, y, function()
 		if def.control == "full" then
 			game.party:select(a)
 		end
@@ -127,13 +117,22 @@ function _M:makePortrait(a, current, x, y)
 	local item = { s:glTexture() }
 	item.x = x
 	item.y = y
-	item.w = 36
-	item.h = 36
+	item.w = 40
+	item.h = 40
 	self.items[#self.items+1] = item
 
 	local item = function(dx, dy)
 		a:toScreen(nil, dx+x+2, dy+y+2, 32, 32)
 	end
+	self.items[#self.items+1] = item
+
+	local p = current and self.portrait or self.portrait_unsel
+
+	local item = { p[1], p[2], p[3], }
+	item.x = x
+	item.y = y
+	item.w = 40
+	item.h = 40
 	self.items[#self.items+1] = item
 end
 
@@ -151,24 +150,41 @@ function _M:display()
 
 	-- Party members
 	if #game.party.m_list >= 2 and game.level then
-		local w = 0
+		self.items[#self.items+1] = {unpack(self.party.tex)}
+		self.items[#self.items].w = self.party[2]
+		self.items[#self.items].h = self.party[3]
+		self.items[#self.items].x = 0
+		self.items[#self.items].y = h
+		h = h + self.party[3] + 3
+
+		local nb = math.floor(self.w / 42)
+		local off = (self.w - nb * 42) /2
+
+		local w = (1 + nb > #game.party.m_list) and ((self.w - (#game.party.m_list - 0.5) * 42) / 2) or off
+		h = h  + 42
 		for i = 1, #game.party.m_list do
 			local a = game.party.m_list[i]
-			if a ~= player then
-				self:makePortrait(a, false, w, h)
-				w = w + 36
-				if w + 36 > self.w then w = 0 h = h + 36 end
+			self:makePortrait(a, a == player, w, h - 42)
+			w = w + 42
+			if w + 42 > self.w and i < #game.party.m_list then
+				w = (i + nb > #game.party.m_list) and ((self.w - (#game.party.m_list - i - 0.5) * 42) / 2) or off
+				h = h + 42
 			end
 		end
-		h = h + 36
+		h = h + 2
 	end
 
+	self.items[#self.items+1] = {unpack(self.top.tex)}
+	self.items[#self.items].w = self.top[2]
+	self.items[#self.items].h = self.top[3]
+	self.items[#self.items].x = 0
+	self.items[#self.items].y = h
+	h = h + self.top[3] + 5
+
 	-- Player
-	self:makePortrait(player, true, 0, h)
 	self.font:setStyle("bold")
-	self:makeTexture(("%s#{normal}#"):format(player.name), 38, h + (36 - self.font_h) / 2, colors.GOLD.r, colors.GOLD.g, colors.GOLD.b, self.w - 40) h = h + self.font_h
+	self:makeTexture(("%s#{normal}#"):format(player.name), 0, h, colors.GOLD.r, colors.GOLD.g, colors.GOLD.b, self.w) h = h + self.font_h
 	self.font:setStyle("normal")
-	h = h + 36
 
 	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture("Level: #00ff00#"..player.level, x, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture(("Exp:  #00ff00#%2d%%"):format(100 * cur_exp / max_exp), x, h, 255, 255, 255)) h = h + self.font_h
@@ -334,7 +350,7 @@ end
 function _M:toScreen()
 	self:display()
 
-	self.bg[1]:toScreenFull(self.display_x, self.display_y, self.bg.w, self.bg.h, self.bg[2], self.bg[3])
+	self.bg.tex[1]:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg.tex[2], self.bg[3] / self.bg.tex[3])
 	for i = 1, #self.items do
 		local item = self.items[i]
 		if type(item) == "table" then

@@ -81,16 +81,15 @@ end
 
 function _M:run()
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
-	self.logdisplay = LogDisplay.new(0, self.h * 0.8, self.w * 0.5 - 18, self.h * 0.2, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
+	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
 	self.player_display = PlayerDisplay.new(0, 220, 200, self.h * 0.8 - 220, {30,30,0})
-	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
-	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5, self.h * 0.8, self.w * 0.5, self.h * 0.2, "/data/gfx/ui/talents-list.png")
+	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
+	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
 	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
-	self.icons = { display_x = game.w * 0.5 - 14, display_y = game.h * 0.8 + 3, w = 12, h = game.h * 0.2}
 	self.nicer_tiles = NicerTiles.new()
 	self:createSeparators()
 
@@ -280,12 +279,6 @@ function _M:loaded()
 	if self.player and config.settings.cheat then self.player.__cheated = true end
 end
 
-function _M:createSeparators()
-	self.bottom_separator, self.bottom_separator_w, self.bottom_separator_h = self:createVisualSeparator("horizontal", self.w)
-	self.split_separator, self.split_separator_w, self.split_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.2))
-	self.player_separator, self.player_separator_w, self.player_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.8) - 20)
-end
-
 function _M:setupDisplayMode(reboot)
 	local gfx = config.settings.tome.gfx
 	self:saveSettings("tome.gfx", ('tome.gfx = {tiles=%q, size=%q}\n'):format(gfx.tiles, gfx.size))
@@ -355,7 +348,8 @@ function _M:save()
 end
 
 function _M:getSaveDescription()
-	local player = self.player:resolveSource()
+	local player = self.party:findMember{main=true}
+
 	return {
 		name = player.name,
 		description = ([[%s the level %d %s %s.
@@ -700,7 +694,7 @@ function _M:display(nb_keyframes)
 		)
 
 		-- Minimap display
-		self.minimap_bg:toScreenFull(0, 20, 200, 200, self.minimap_bg_w, self.minimap_bg_h)
+		self.minimap_bg:toScreen(0, 20, 200, 200)
 		self.level.map:minimapDisplay(0, 20, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
 	end
 
@@ -715,15 +709,8 @@ function _M:display(nb_keyframes)
 	end
 	if self.player then self.player.changed = false end
 
-	-- Separators
-	self.bottom_separator:toScreenFull(0, 20 - 3, self.w, 6, self.bottom_separator_w, self.bottom_separator_h)
-	self.bottom_separator:toScreenFull(0, self.h * 0.8 - 3, self.w, 6, self.bottom_separator_w, self.bottom_separator_h)
-	self.split_separator:toScreenFull(self.w * 0.5 - 3 - 15, self.h * 0.8, 6, self.h * 0.2, self.split_separator_w, self.split_separator_h)
-	self.split_separator:toScreenFull(self.w * 0.5 - 3, self.h * 0.8, 6, self.h * 0.2, self.split_separator_w, self.split_separator_h)
-	self.player_separator:toScreenFull(200 - 3, 20, 6, self.h * 0.8 - 20, self.player_separator_w, self.player_separator_h)
-
-	-- Icons
-	self:displayUIIcons()
+	-- UI
+	self:displayUI()
 
 	engine.GameTurnBased.display(self, nb_keyframes)
 
@@ -1020,10 +1007,10 @@ function _M:setupMouse(reset)
 		self.hotkeys_display:onMouse(button, mx, my, event == "button", function(text) self.tooltip:displayAtMap(nil, nil, self.w, self.h, text) end)
 	end)
 	-- Use icons
-	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
-		self:mouseIcon(bx, by)
-		if button == "left" then self:clickIcon(bx, by) end
-	end)
+--	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
+--		self:mouseIcon(bx, by)
+--		if button == "left" then self:clickIcon(bx, by) end
+--	end)
 	-- Tooltip over the player pane
 	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		self.player_display.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
@@ -1164,29 +1151,21 @@ end
 --end
 
 --- Create a visual separator
+--[[
 local _sep_left = core.display.loadImage("/data/gfx/ui/separator-left.png") _sep_left:alpha()
 local _sep_right = core.display.loadImage("/data/gfx/ui/separator-right.png") _sep_right:alpha()
-local _sep_horiz = core.display.loadImage("/data/gfx/ui/separator-hori.png") _sep_horiz:alpha()
+local _sep_horiz, _sep_horiz_w, _sep_horiz_h = core.display.loadImage("/data/gfx/ui/separator-hori.png")
 local _sep_top = core.display.loadImage("/data/gfx/ui/separator-top.png") _sep_top:alpha()
 local _sep_bottom = core.display.loadImage("/data/gfx/ui/separator-bottom.png") _sep_bottom:alpha()
-local _sep_vert = core.display.loadImage("/data/gfx/ui/separator-vert.png") _sep_vert:alpha()
-function _M:createVisualSeparator(dir, size)
-	if dir == "horizontal" then
-		local sep = core.display.newSurface(size, 6)
-		sep:erase(0, 0, 0)
-		sep:merge(_sep_left, 0, 0)
-		for i = 7, size - 7, 9 do sep:merge(_sep_horiz, i, 0) end
-		sep:merge(_sep_right, size - 6, 0)
-		return sep:glTexture()
-	else
-		local sep = core.display.newSurface(6, size)
-		sep:erase(0, 0, 0)
-		sep:merge(_sep_top, 0, 0)
-		for i = 7, size - 7, 9 do sep:merge(_sep_vert, 0, i) end
-		sep:merge(_sep_bottom, 0, size - 6)
-		return sep:glTexture()
-	end
-end
+local _sep_vert, _sep_vert_w, _sep_vert_h = core.display.loadImage("/data/gfx/ui/separator-vert.png") _sep_vert:alpha()
+]]
+local _sep_horiz = {core.display.loadImage("/data/gfx/ui/separator-hori.png")} _sep_horiz.tex = {_sep_horiz[1]:glTexture()}
+local _sep_vert = {core.display.loadImage("/data/gfx/ui/separator-vert.png")} _sep_vert.tex = {_sep_vert[1]:glTexture()}
+local _sep_top = {core.display.loadImage("/data/gfx/ui/separator-top.png")} _sep_top.tex = {_sep_top[1]:glTexture()}
+local _sep_bottom = {core.display.loadImage("/data/gfx/ui/separator-bottom.png")} _sep_bottom.tex = {_sep_bottom[1]:glTexture()}
+local _sep_bottoml = {core.display.loadImage("/data/gfx/ui/separator-bottom_line_end.png")} _sep_bottoml.tex = {_sep_bottoml[1]:glTexture()}
+local _sep_leftl = {core.display.loadImage("/data/gfx/ui/separator-left_line_end.png")} _sep_leftl.tex = {_sep_leftl[1]:glTexture()}
+local _sep_rightl = {core.display.loadImage("/data/gfx/ui/separator-right_line_end.png")} _sep_rightl.tex = {_sep_rightl[1]:glTexture()}
 
 local _talents_icon, _talents_icon_w, _talents_icon_h = core.display.loadImage("/data/gfx/ui/talents-icon.png"):glTexture()
 local _actors_icon, _actors_icon_w, _actors_icon_h = core.display.loadImage("/data/gfx/ui/actors-icon.png"):glTexture()
@@ -1194,13 +1173,57 @@ local _main_menu_icon, _main_menu_icon_w, _main_menu_icon_h = core.display.loadI
 local _inventory_icon, _inventory_icon_w, _inventory_icon_h = core.display.loadImage("/data/gfx/ui/inventory-icon.png"):glTexture()
 local _charsheet_icon, _charsheet_icon_w, _charsheet_icon_h = core.display.loadImage("/data/gfx/ui/charsheet-icon.png"):glTexture()
 
-function _M:displayUIIcons()
-	local x, y = self.icons.display_x, self.icons.display_y
-	_talents_icon:toScreenFull(x, y, 12, 12, _talents_icon_w, _talents_icon_h) y = y + 12
-	_actors_icon:toScreenFull(x, y, 12, 12, _actors_icon_w, _actors_icon_h) y = y + 12
-	_inventory_icon:toScreenFull(x, y, 12, 12, _inventory_icon_w, _inventory_icon_h) y = y + 12
-	_charsheet_icon:toScreenFull(x, y, 12, 12, _charsheet_icon_w, _charsheet_icon_h) y = y + 12
-	_main_menu_icon:toScreenFull(x, y, 12, 12, _main_menu_icon_w, _main_menu_icon_h) y = y + 12
+function _M:displayUI()
+	local middle = self.w * 0.5
+	local bottom = self.h * 0.8
+	local bottom_h = self.h * 0.2
+	local icon_x = middle - (_talents_icon_w) / 2
+	local icon_x2 = middle + (_talents_icon_w) / 2
+	local mid_min = icon_x - (_sep_vert[2])
+	local mid_max = icon_x2
+
+	-- Icons
+	local x, y = icon_x, bottom + _sep_horiz[3] / 2
+	_talents_icon:toScreenFull(x, y, _talents_icon_w, _talents_icon_h, _talents_icon_w, _talents_icon_h) y = y + _talents_icon_h
+	_actors_icon:toScreenFull(x, y, _actors_icon_w, _actors_icon_h, _actors_icon_w, _actors_icon_h) y = y + _actors_icon_h
+	_inventory_icon:toScreenFull(x, y, _inventory_icon_w, _inventory_icon_h, _inventory_icon_w, _inventory_icon_h) y = y + _inventory_icon_h
+	_charsheet_icon:toScreenFull(x, y, _charsheet_icon_w, _charsheet_icon_h, _charsheet_icon_w, _charsheet_icon_h) y = y + _charsheet_icon_h
+	_main_menu_icon:toScreenFull(x, y, _main_menu_icon_w, _main_menu_icon_h, _main_menu_icon_w, _main_menu_icon_h) y = y + _main_menu_icon_h
+
+	-- Separators
+	_sep_horiz.tex[1]:toScreenFull(0, 20, self.w, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
+	_sep_horiz.tex[1]:toScreenFull(0, bottom - _sep_horiz[3] / 2, self.w, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
+
+	_sep_vert.tex[1]:toScreenFull(mid_min, bottom, _sep_vert[2], bottom_h, _sep_vert.tex[2], _sep_vert.tex[3])
+	_sep_vert.tex[1]:toScreenFull(mid_max, bottom, _sep_vert[2], bottom_h, _sep_vert.tex[2], _sep_vert.tex[3])
+
+	_sep_vert.tex[1]:toScreenFull(200, 20, _sep_vert[2], bottom - 20, _sep_vert.tex[2], _sep_vert.tex[3])
+
+	-- Ornaments
+	_sep_top.tex[1]:toScreenFull(mid_min - (-_sep_vert[2] + _sep_top[2]) / 2, bottom - 14, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
+	_sep_top.tex[1]:toScreenFull(mid_max - (-_sep_vert[2] + _sep_top[2]) / 2, bottom - 14, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
+	_sep_bottoml.tex[1]:toScreenFull(mid_min - (-_sep_vert[2] + _sep_bottoml[2]) / 2, self.h - _sep_bottoml[3], _sep_bottoml[2], _sep_bottoml[3], _sep_bottoml.tex[2], _sep_bottoml.tex[3])
+	_sep_bottoml.tex[1]:toScreenFull(mid_max - (-_sep_vert[2] + _sep_bottoml[2]) / 2, self.h - _sep_bottoml[3], _sep_bottoml[2], _sep_bottoml[3], _sep_bottoml.tex[2], _sep_bottoml.tex[3])
+
+	_sep_leftl.tex[1]:toScreenFull(0, 20 - _sep_leftl[3] / 2 + 7, _sep_leftl[2], _sep_leftl[3], _sep_leftl.tex[2], _sep_leftl.tex[3])
+	_sep_leftl.tex[1]:toScreenFull(0, bottom - _sep_leftl[3] / 2, _sep_leftl[2], _sep_leftl[3], _sep_leftl.tex[2], _sep_leftl.tex[3])
+
+	_sep_rightl.tex[1]:toScreenFull(self.w - _sep_rightl[2], 20 - _sep_rightl[3] / 2 + 7, _sep_rightl[2], _sep_rightl[3], _sep_rightl.tex[2], _sep_rightl.tex[3])
+	_sep_rightl.tex[1]:toScreenFull(self.w - _sep_rightl[2], bottom - _sep_rightl[3] / 2, _sep_rightl[2], _sep_rightl[3], _sep_rightl.tex[2], _sep_rightl.tex[3])
+
+	_sep_top.tex[1]:toScreenFull(200 - (_sep_top[2] - _sep_vert[2]) / 2, 20 - 7, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
+	_sep_bottom.tex[1]:toScreenFull(200 - (_sep_bottom[2] - _sep_vert[2]) / 2, bottom - 25, _sep_bottom[2], _sep_bottom[3], _sep_bottom.tex[2], _sep_bottom.tex[3])
+
+--	self.split_separator:toScreenFull(middle - 3 - 15, bottom, 6, bottom_h, self.split_separator_w, self.split_separator_h)
+--	self.split_separator:toScreenFull(middle - 3, bottom, 6, bottom_h, self.split_separator_w, self.split_separator_h)
+--	self.player_separator:toScreenFull(200 - 3, 20, 6, bottom - 20, self.player_separator_w, self.player_separator_h)
+
+end
+
+function _M:createSeparators()
+--	self.bottom_separator, self.bottom_separator_w, self.bottom_separator_h = self:createVisualSeparator("horizontal", self.w)
+--	self.split_separator, self.split_separator_w, self.split_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.2))
+--	self.player_separator, self.player_separator_w, self.player_separator_h = self:createVisualSeparator("vertical", math.floor(self.h * 0.8) - 20)
 end
 
 function _M:clickIcon(bx, by)
