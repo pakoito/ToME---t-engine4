@@ -133,11 +133,14 @@ newAI("use_tactical", function(self)
 		res = res[1]
 		if not res then return end
 		avail = avail[res[1]]
+		table.sort(avail, function(a,b) return a.val > b.val end)
 
-		local tid = avail[rng.range(1, #avail)].tid
-		print("Tactical choice:", res[1], tid)
-		self:useTalent(tid)
-		return true
+		if avail[1] then
+			local tid = avail[1].tid
+			print("Tactical choice:", res[1], tid)
+			self:useTalent(tid)
+			return true
+		end
 	end
 end)
 
