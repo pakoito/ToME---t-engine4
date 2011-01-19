@@ -67,5 +67,6 @@ newEntity{ define_as = "BRIAGH",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=1, },
+	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=1, },
+	resolvers.inscriptions(3, {"wild infusion", "healing infusion", "regeneration infusion", "heroism infusion"}),
 }

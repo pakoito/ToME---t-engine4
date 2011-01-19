@@ -84,6 +84,9 @@ newEntity{ base = "BASE_NPC_GHOUL",
 
 	rank = 3,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	combat = { dam=30, atk=8, apr=4, dammod={str=0.6} },
 
 	summon = {

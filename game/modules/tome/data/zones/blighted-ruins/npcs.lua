@@ -86,7 +86,9 @@ This specimen looks like it was hastily assembled and is not really complete yet
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 	resolvers.drops{chance=100, nb=1, {defined="WINTERTIDE_PHIAL", random_art_replace={chance=75}} },
 
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(1, "rune"),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("start-undead", engine.Quest.COMPLETED)

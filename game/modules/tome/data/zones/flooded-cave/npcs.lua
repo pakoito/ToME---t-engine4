@@ -70,7 +70,9 @@ newEntity{ define_as = "UKLLMSWWIK",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(3, "infusion"),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "kill-drake")

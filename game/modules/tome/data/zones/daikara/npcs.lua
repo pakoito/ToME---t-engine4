@@ -64,7 +64,8 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(1, "infusion"),
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("MASSOK", 7, 43, "I have heard there is a dragon hunter in the Daikara that is unhappy about the wyrm being already dead.")
@@ -93,7 +94,9 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
 	open_door = true,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(4, {"wild infusion", "healing infusion", "regeneration infusion", "heroism infusion"}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1, FINGER=2, NECK=1 },
 

@@ -66,7 +66,9 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(2, "infusion"),
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("NIMISIL", rng.range(1, 5), 40, "Have you hard about the patrol that disappeared in the maze in the west?")
@@ -96,7 +98,8 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "NIMISIL",
 	combat = {dam=80, atk=30, apr=15, dammod={mag=1.1}, damtype="ARCANE"},
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(5, {}),
 	inc_damage = {all=40},
 
 	resolvers.talents{

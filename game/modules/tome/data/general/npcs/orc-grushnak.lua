@@ -85,6 +85,9 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	},
 	combat_armor = 0, combat_def = 5,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	resolvers.talents{
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
 		[Talents.T_WEAPON_COMBAT]=8,
@@ -133,6 +136,9 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 		{type="armor", subtype="massive", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 
 	resolvers.talents{
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,

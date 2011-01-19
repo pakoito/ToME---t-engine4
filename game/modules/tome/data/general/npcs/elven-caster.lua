@@ -101,6 +101,8 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	level_range = {26, nil}, exp_worth = 1,
 	rarity = 3,
 	rank = 3,
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
 	vim_regen = 20,
 	max_life = resolvers.rngavg(100, 110), life_rating = 12,
 	resolvers.equip{

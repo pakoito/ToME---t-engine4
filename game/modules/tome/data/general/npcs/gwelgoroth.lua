@@ -85,6 +85,8 @@ newEntity{ base = "BASE_NPC_GWELGOROTH",
 	combat_armor = 0, combat_def = 20,
 	on_melee_hit = { [DamageType.LIGHTNING] = resolvers.mbonus(20, 10), },
 
+	ai = "tactical",
+
 	resolvers.talents{
 		[Talents.T_LIGHTNING]=5,
 		[Talents.T_SHOCK]=4,

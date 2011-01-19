@@ -90,6 +90,9 @@ newEntity{ base = "BASE_NPC_RITCH",
 	size_category = 2,
 	combat_armor = 20, combat_def = 20,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
+
 	make_escort = {
 		{type="insect", subtype="ritch", number=3, no_subescort=true},
 	},

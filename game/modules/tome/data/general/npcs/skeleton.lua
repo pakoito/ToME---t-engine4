@@ -108,6 +108,9 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	ai_state = { talent_in=1, },
 	rank = 3,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
+
 	autolevel = "archer",
 	resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
 }
@@ -119,6 +122,10 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 5, combat_def = 1,
 	rank = 3,
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	resolvers.inscriptions(1, "rune"),
 	resolvers.talents{
 		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,

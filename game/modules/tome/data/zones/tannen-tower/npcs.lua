@@ -79,7 +79,10 @@ newEntity{ define_as = "TANNEN",
 	end),
 
 	autolevel = "dexmage",
-	ai = "dumb_talented_simple", ai_state = {ai_target="target_player_radius", sense_radius=400, talent_in=1, ai_move="move_astar" },
+	ai = "tactical", ai_state = {ai_target="target_player_radius", sense_radius=400, talent_in=1, ai_move="move_astar" },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(2, "infusion"),
+	resolvers.inscriptions(1, "rune"),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("east-portal", engine.Quest.COMPLETED, "tannen-dead")
@@ -126,7 +129,10 @@ It is so huge that it blocks sight beyond it.]],
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=4, },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(6, "rune"),
+
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, wil=67, con=12 },
 

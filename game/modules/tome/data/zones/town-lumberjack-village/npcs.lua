@@ -53,7 +53,9 @@ A gloomy aura emanates from him.]],
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warriorwill",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(1, "healing infusion"),
 
 	on_die = function(self, who)
 		local Chat = require "engine.Chat"

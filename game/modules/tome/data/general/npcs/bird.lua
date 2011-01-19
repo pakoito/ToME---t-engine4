@@ -55,6 +55,8 @@ newEntity{ base="BASE_NPC_BIRD", define_as = "NPC_PHOENIX",
 	no_breath = 1,
 	size_category = 3,
 
+	ai = "tactical",
+
 	stats = { str=20, dex=60, cun=60, mag=30, con=40, wil=40 },
 	combat = { dam=50, atk=50, apr=12, dammod={mag=1.3} },
 

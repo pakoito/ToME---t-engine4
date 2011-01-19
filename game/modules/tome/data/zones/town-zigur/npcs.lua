@@ -38,6 +38,10 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 		{type="armor", subtype="cloth", autoreq=true},
 	},
 
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(3, "rune"),
+
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
 		[Talents.T_BONE_SHIELD]=5,
@@ -97,6 +101,10 @@ newEntity{ base = "BASE_NPC_ZIGURANTH", define_as = "PROTECTOR_MYSSIL",
 		[Talents.T_SPIDER]=5,
 	},
 	resolvers.sustains_at_birth(),
+
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(4, "infusion"),
 
 	on_die = function(self)
 		local q = game.player:hasQuest("anti-antimagic")

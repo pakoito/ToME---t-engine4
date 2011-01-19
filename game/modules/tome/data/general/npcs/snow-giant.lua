@@ -101,5 +101,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 		{type="giant", subtype="ice", number=3},
 	},
 
+	ai = "tactical",
+
 	resolvers.drops{chance=100, nb=1, {ego_chance=10} },
 }

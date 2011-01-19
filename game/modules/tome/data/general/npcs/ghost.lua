@@ -78,6 +78,8 @@ newEntity{ base = "BASE_NPC_GHOST",
 	rank = 3,
 	max_life = resolvers.rngavg(140,170),
 
+	ai = "tactical",
+
 	combat_armor = 0, combat_def = resolvers.mbonus(10, 50),
 	invisibility = resolvers.mbonus(10, 20),
 

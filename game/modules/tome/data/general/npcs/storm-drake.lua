@@ -93,6 +93,9 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	on_melee_hit = {[DamageType.LIGHTNING]=resolvers.mbonus(25, 10)},
 	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	summon = {
 		{type="dragon", name="storm drake", number=1, hasxp=false},
 --		{type="dragon", name="storm wyrm", number=1, hasxp=false},

@@ -108,6 +108,9 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	},
 	combat_armor = 0, combat_def = 5,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
+
 	inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus(20, 10) },
 
 	resolvers.talents{

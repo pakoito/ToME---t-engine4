@@ -62,7 +62,9 @@ newEntity{ define_as = "CORRUPTED_DAELACH",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "dexmage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(3, {}),
 
 	on_die = function(self, who)
 	end,

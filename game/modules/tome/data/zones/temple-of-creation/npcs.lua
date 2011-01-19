@@ -84,7 +84,9 @@ newEntity{ define_as = "SLASUL",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(4, "infusion"),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "kill-slasul")

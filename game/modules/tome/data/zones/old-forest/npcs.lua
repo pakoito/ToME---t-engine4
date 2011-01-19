@@ -64,7 +64,9 @@ newEntity{ define_as = "WRATHROOT",
 	},
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(1, "infusion"),
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("SNAPROOT", 3, 50, "Have you heard, the old forest seems to have been claimed by a new evil!")
@@ -117,5 +119,7 @@ newEntity{ define_as = "SNAPROOT", -- backup guardian
 		[Talents.T_CRUSH]=5,
 	},
 	autolevel = "warriorwill",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(6, "infusion"),
 }

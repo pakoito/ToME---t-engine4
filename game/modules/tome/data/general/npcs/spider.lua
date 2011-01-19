@@ -159,6 +159,9 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	life_rating = 12,
 	rank = 3,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	combat_armor = 7, combat_def = 17,
 
 	resolvers.tmasteries{ ["spell/phantasm"]=0.3, ["spell/water"]=0.3, ["spell/arcane"]=0.3 },
@@ -186,6 +189,9 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	life_rating = 16,
 	rank = 3,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	combat_armor = 75, combat_def = 12,  -- perhaps too impenetrable?  though at this level people should be doing over 100 damage each hit, so it could be more :D
 
 	resolvers.tmasteries{ ["spell/nature"]=0.9 },
@@ -210,6 +216,9 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	max_life = 120,
 	life_rating = 14,
 	rank = 3,
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 
 	combat_armor = 7, combat_def = 17,
 

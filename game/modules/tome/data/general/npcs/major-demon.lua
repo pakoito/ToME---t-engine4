@@ -100,6 +100,9 @@ Oh, and it is twice as big, too.]],
 	life_rating = 20,
 	combat_armor = 26, combat_def = 0,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	resolvers.equip{ {type="weapon", subtype="battleaxe", autoreq=true}, },
 
 	resists={[DamageType.PHYSICAL] = resolvers.mbonus(15, 10), [DamageType.FIRE] = resolvers.mbonus(15, 10)},
@@ -127,6 +130,8 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	autolevel = "caster",
 	life_rating = 6,
 	combat_armor = 0, combat_def = 10,
+
+	ai = "tactical",
 
 	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true}, },
 
@@ -158,6 +163,8 @@ It moves swiftly toward you, casting terrible spells and swinging its weapons at
 	life_rating = 25,
 	combat_armor = 12, combat_def = 20,
 	mana_regen = 100, positive_regen = 100, negative_regen = 100, equilibrium_regen = -100, vim_regen = 100,
+
+	ai = "tactical",
 
 	resolvers.equip{ {type="weapon", subtype="longsword", autoreq=true}, },
 	resolvers.equip{ {type="weapon", subtype="waraxe", autoreq=true}, },

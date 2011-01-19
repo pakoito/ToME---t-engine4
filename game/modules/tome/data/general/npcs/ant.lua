@@ -170,4 +170,7 @@ newEntity{ base = "BASE_NPC_ANT",
 		{type="insect", subtype="ant", number=2, hasexp=false},
 	},
 	resolvers.talents{ [Talents.T_STUN]=3, [Talents.T_ACIDIC_SKIN]=5, [Talents.T_SUMMON]=1,},
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 }

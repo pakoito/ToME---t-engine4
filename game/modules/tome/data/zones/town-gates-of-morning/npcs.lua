@@ -42,7 +42,9 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	open_door = true,
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(3, {}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },

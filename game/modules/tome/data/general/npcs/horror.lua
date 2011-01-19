@@ -50,6 +50,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_rating = 16,
 	rank = 3,
 
+	ai = "tactical",
+
 	see_invisible = 100,
 	instakill_immune = 1,
 	stun_immune = 1,
@@ -127,7 +129,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=20, atk=20, apr=50, dammod={str=0.6}, damtype=DamageType.DARKNESS},
 
-	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
 
 	can_pass = {pass_wall=70},
 	resists = {all = 35, [DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
@@ -162,7 +164,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rarity = 3,
 	rank = 3,
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
 	combat = { dam=20, atk=20, apr=10, dammod={str=1} },
 	combat = {damtype=DamageType.PHYSICAL},
 	no_auto_resists = true,
@@ -396,7 +398,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="TEST",
 	max_life = resolvers.rngavg(220,250),
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=20, atk=30, apr=40, dammod={wil=1}, damtype=DamageType.LIGHT},
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
 
 	resists = {all = 40, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
 
@@ -472,7 +474,7 @@ You can discern a huge round mouth covered in razor-sharp teeth.]],
 	end,
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar" },
 }
 
 newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",

@@ -82,6 +82,8 @@ Tide huntresses wield both magic and hunting skills, making them terrible foes.]
 	},
 	combat_armor = 10, combat_def = 10,
 	autolevel = "warriormage",
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
 	resolvers.talents{
 		[Talents.T_SPIT_POISON]=5,
 		[Talents.T_WATER_JET]=6,
@@ -106,6 +108,8 @@ Psyrens are dangerous nagas that can directly assault your mind.]],
 	},
 	combat_armor = 5, combat_def = 10,
 	autolevel = "wildcaster",
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
 	resolvers.talents{
 		[Talents.T_MIND_DISRUPTION]=4,
 		[Talents.T_MIND_SEAR]=5,

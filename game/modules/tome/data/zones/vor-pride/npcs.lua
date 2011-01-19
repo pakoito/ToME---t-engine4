@@ -41,7 +41,9 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	open_door = true,
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(4, "rune"),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1 },
 

@@ -35,8 +35,17 @@ newAI("use_tactical", function(self)
 		   not self:isTalentActive(t.id) and
 		   self:preUseTalent(t, true, true)
 		   then
-			avail[#avail+1] = t
-			print(self.name, self.uid, "tactical ai talents can activate", t.name, tid)
+			if t.tactical then
+				for tact, val in pairs(t.tactical) do
+					if not avail[tact] then avail[tact] = {} end
+					-- Save the tactic, if the talent is instant it gets a huge bonus
+					-- Note the addition of a less than one random value, this means the sorting will randomly shift equal values
+					val = val * (1 + lvl / 5)
+					avail[tact][#avail[tact]+1] = {val=((t.no_energy==true) and val * 10 or val) + rng.float(0, 0.9), tid=tid}
+					print(self.name, self.uid, "tactical ai talents can activate", t.name, tid, tact)
+					ok = true
+				end
+			end
 		end
 	end
 	if ok then
@@ -108,7 +117,7 @@ newAI("use_tactical", function(self)
 		end
 
 		-- Need defence
-		if avail.defend then
+		if avail.defend and need_heal then
 			want.defend = 1 + need_heal / 2 + nb_foes * 0.5
 		end
 
@@ -119,10 +128,8 @@ newAI("use_tactical", function(self)
 		print("Tactical ai report for", self.name)
 		local res = {}
 		for k, v in pairs(want) do
-					print(" * "..k, v)
 			if v > 0 then
 				v = (v + v + rng.float(0, 0.9)) * (self.ai_tactic[k] or 1)
-					print(" * "..k, v)
 				if v > 0 then
 					print(" * "..k, v)
 					res[#res+1] = {k,v}
@@ -147,13 +154,28 @@ end)
 newAI("tactical", function(self)
 	local targeted = self:runAI(self.ai_state.ai_target or "target_simple")
 
+	-- Keep your distance
+	local special_move = false
+	if self.ai_tactic.safe_range and self.ai_target.actor then
+		local target_dist = math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y))
+		if self.ai_tactic.safe_range == target_dist then
+			special_move = "none"
+		elseif self.ai_tactic.safe_range > target_dist then
+			special_move = "flee_dmap"
+		end
+	end
+
 	-- One in "talent_in" chance of using a talent
 	if (not self.ai_state.no_talents or self.ai_state.no_talents == 0) and rng.chance(self.ai_state.talent_in or 2) then
 		self:runAI("use_tactical")
 	end
 
 	if targeted and not self.energy.used then
-		self:runAI(self.ai_state.ai_move or "move_simple")
+		if special_move then
+			self:runAI(special_move)
+		else
+			self:runAI(self.ai_state.ai_move or "move_simple")
+		end
 	end
 	return true
 end)

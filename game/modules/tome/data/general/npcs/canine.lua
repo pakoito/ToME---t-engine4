@@ -117,6 +117,8 @@ newEntity{ base = "BASE_NPC_CANINE",
 	combat_armor = 25, combat_def = 0,
 	combat = { dam=20, atk=20, apr=16 },
 
+	ai = "tactical",
+
 	make_escort = {
 		{type="animal", subtype="canine", name="warg", number=6},
 	},

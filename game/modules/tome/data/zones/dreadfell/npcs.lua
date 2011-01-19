@@ -89,7 +89,8 @@ newEntity{ define_as = "THE_MASTER",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(3, {"shielding rune", "shielding rune", "invisibility rune", "speed rune"}),
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been months since the hero cleansed the Dreadfell, yet rumours are growing: evil is back.")
@@ -165,5 +166,7 @@ newEntity{ define_as = "PALE_DRAKE",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(4, "rune"),
 }

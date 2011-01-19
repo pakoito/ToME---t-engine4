@@ -85,6 +85,8 @@ newEntity{ base = "BASE_NPC_FAEROS",
 	combat_armor = 0, combat_def = 20,
 	on_melee_hit = { [DamageType.FIRE] = resolvers.mbonus(20, 10), },
 
+	ai = "tactical",
+
 	resolvers.talents{
 		[Talents.T_FLAME]=4,
 		[Talents.T_FIERY_HANDS]=3,

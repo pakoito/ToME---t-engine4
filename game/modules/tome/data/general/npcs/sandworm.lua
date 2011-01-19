@@ -72,6 +72,9 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	rank = 3,
 	size_category = 5,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1,
 		[Talents.T_SAND_BREATH]=3,

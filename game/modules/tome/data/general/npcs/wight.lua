@@ -109,6 +109,9 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	max_life = resolvers.rngavg(100,150),
 	max_mana = resolvers.rngavg(300,350),
 	combat_armor = 12, combat_def = 10,
+
+	ai = "tactical",
+
 	make_escort = {
 		{type="undead", subtype="wight", number=resolvers.mbonus(2, 2)},
 	},

@@ -80,6 +80,8 @@ newEntity{ base = "BASE_NPC_ORC_VOR",
 		{type="armor", subtype="cloth", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
 	rank = 3,
 
 	resolvers.talents{
@@ -128,6 +130,9 @@ newEntity{ base = "BASE_NPC_ORC_VOR",
 	},
 	combat_armor = 0, combat_def = 5,
 	rank = 3,
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
 
 	resolvers.talents{
 		[Talents.T_FREEZE]=5,

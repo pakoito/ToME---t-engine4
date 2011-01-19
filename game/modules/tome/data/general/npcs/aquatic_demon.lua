@@ -69,6 +69,9 @@ newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 	combat_dam = 55,
 	combat = {damtype=DamageType.ICE},
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	resists={[DamageType.COLD] = resolvers.mbonus(50, 30)},
 
 	resolvers.talents{ [Talents.T_TIDAL_WAVE]=4, [Talents.T_FREEZE]=5 },

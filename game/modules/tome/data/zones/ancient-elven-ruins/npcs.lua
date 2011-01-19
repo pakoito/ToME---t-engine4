@@ -74,7 +74,8 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	undead = 1,
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(3, "rune"),
 }
 
 -- Some mummy minions
@@ -98,6 +99,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 		[Talents.T_CRUSH]=3,
 		[Talents.T_MANATHRUST]=3,
 	},
+	resolvers.inscriptions(1, "rune"),
 	drops = resolvers.drops{chance=70, nb=1, {type="money"}, {} },
 }
 
@@ -122,6 +124,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 		[Talents.T_LIGHTNING]=3,
 		[Talents.T_STRIKE]=3,
 	},
+	resolvers.inscriptions(1, "rune"),
 }
 
 newEntity{ base = "BASE_NPC_MUMMY",

@@ -80,7 +80,9 @@ newEntity{ define_as = "GOLBUG",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(3, "infusion"),
 
 	on_acquire_target = function(self, who)
 		-- Doesn't matter who, just assume the player is there
@@ -134,6 +136,7 @@ newEntity{ define_as = "HARNO",
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player", ai_move="move_astar", },
+	resolvers.inscriptions(2, {"speed rune", "speed rune"}),
 
 	can_talk = "message-last-hope",
 	can_talk_only_once = true,
@@ -188,7 +191,9 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(3, {}),
 
 	on_die = function(self, who)
 		if who.resolveSource and who:resolveSource().player and who:resolveSource():hasQuest("east-portal") then

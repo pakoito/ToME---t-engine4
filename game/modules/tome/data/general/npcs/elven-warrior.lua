@@ -71,6 +71,8 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 5,
 	rank = 3,
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 	max_life = resolvers.rngavg(100,110),
 	resolvers.equip{
 		{type="weapon", subtype="waraxe", autoreq=true},

@@ -43,7 +43,9 @@ newEntity{ base="BASE_NPC_MAJOR_DEMON", define_as = "KRYL_FEIJAN",
 	open_door = true,
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(3, {}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -104,7 +106,6 @@ newEntity{ define_as = "ACOLYTE",
 	display = "p", color=colors.LIGHT_RED,
 	desc = [[Black-robed Elves with a mad look in their eyes.]],
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, },
 	stats = { str=12, dex=17, mag=18, wil=22, con=12 },
 
 	infravision = 20,
@@ -123,6 +124,10 @@ newEntity{ define_as = "ACOLYTE",
 		[Talents.T_MANATHRUST]=3,
 	},
 	resolvers.sustains_at_birth(),
+
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(1, "rune"),
 
 	on_die = function(self)
 		if not game.level.turn_counter then return end

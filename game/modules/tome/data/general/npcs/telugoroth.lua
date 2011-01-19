@@ -85,6 +85,8 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	combat_armor = 0, combat_def = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
+	ai = "tactical",
+
 	resolvers.talents{
 		[Talents.T_TURN_BACK_THE_CLOCK]=5,
 		[Talents.T_ECHOES_FROM_THE_PAST]=4,
@@ -149,7 +151,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	max_life = resolvers.rngavg(50,70),
 	combat_armor = 0, combat_def = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_snake" },
 
 	stun_immune = 1,
 	blind_immune = 1,

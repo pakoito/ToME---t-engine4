@@ -31,7 +31,7 @@ function _M:init(t)
 	self.inscriptions_slots_added = self.inscriptions_slots_added or 0
 end
 
-function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same)
+function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same, bypass_max)
 	-- Check allowance
 	local t = self:getTalentFromId(self["T_"..name.."_1"])
 	if self.inscription_restrictions and not self.inscription_restrictions[t.type[1]] then
@@ -61,7 +61,7 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 
 	-- Find a spot
 	if not id then
-		for i = 1, self.max_inscriptions do
+		for i = 1, (bypass_max and 6 or self.max_inscriptions) do
 			if not self.inscriptions[i] then id = i break end
 		end
 	end
@@ -87,6 +87,8 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 		self:unlearnTalent(self["T_"..oldname])
 		self.inscriptions_data[oldname] = nil
 	end
+
+--	for k, e in pairs(data) do print(" ****",k,e) end
 
 	-- Learn new talent
 	name = name.."_"..id

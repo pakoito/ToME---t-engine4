@@ -65,6 +65,10 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	},
 	resolvers.sustains_at_birth(),
 
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(2, "rune"),
+
 	on_takehit = function(self, value, src)
 		if not self.chatted and (self.life - value) < self.max_life * 0.4 then
 			self.chatted = true

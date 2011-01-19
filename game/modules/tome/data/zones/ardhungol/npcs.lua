@@ -58,7 +58,8 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	},
 	resolvers.sustains_at_birth(),
 
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(5, "infusion"),
 
 	on_die = function(self, who)
 		local Chat = require"engine.Chat"

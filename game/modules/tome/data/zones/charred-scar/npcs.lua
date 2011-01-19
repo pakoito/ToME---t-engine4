@@ -70,6 +70,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_DEFENDER", define_as = "SUN_PALADIN_DEFENDER
 		[Talents.T_WEAPON_COMBAT]=10,
 		[Talents.T_HEALING_LIGHT]=4,
 	},
+	resolvers.inscriptions(1, {}),
 	on_added = function(self)
 		self.energy.value = game.energy_to_act self:useTalent(self.T_WEAPON_OF_LIGHT)
 		self.energy.value = game.energy_to_act self:useTalent(self.T_CHANT_OF_FORTRESS)
@@ -99,6 +100,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_DEFENDER", define_as = "SUN_PALADIN_DEFENDER
 		[Talents.T_WEAPON_COMBAT]=10,
 		[Talents.T_HEALING_LIGHT]=5,
 	},
+	resolvers.inscriptions(1, {}),
 	on_added = function(self)
 		self.energy.value = game.energy_to_act self:useTalent(self.T_WEAPON_OF_LIGHT)
 		self.energy.value = game.energy_to_act self:useTalent(self.T_CHANT_OF_FORTRESS)
@@ -128,6 +130,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_target="charred_scar_target", talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
+	resolvers.inscriptions(2, {}),
 }
 
 newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "ORC_ATTACK",
@@ -274,7 +277,8 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1 },
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(3, "rune"),
 
 	resolvers.equip{
 		{type="jewelry", subtype="amulet", defined="FIERY_CHOKER", random_art_replace={chance=75}},

@@ -42,7 +42,9 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 	open_door = true,
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(3, "rune"),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -80,7 +82,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 			a.name = "Doomed Shade of "..a.name
 			a.color_r = 150 a.color_g = 150 a.color_b = 150
 			a._mo:invalidate()
-			a.ai = "dumb_talented_simple"
+			a.ai = "tactical"
 			a.ai_state = {talent_in=1}
 			a.faction = self.faction
 			a.inc_damage.all = (a.inc_damage.all or 0) - 40

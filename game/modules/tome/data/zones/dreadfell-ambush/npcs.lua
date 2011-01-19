@@ -54,7 +54,9 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	combat_atk = 1000,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(6, {}),
 
 	on_die = function(self, who)
 		world:gainAchievement("KILL_UKRUK", game.player)

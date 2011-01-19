@@ -62,7 +62,6 @@ newEntity{ define_as = "SHADE",
 
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
-	ai_tactic = resolvers.tactic"",
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("KOR_FURY", 5, 35, ".. yes I tell you! The old ruins of Kor'Pul are still haunted!")
@@ -122,5 +121,7 @@ newEntity{ define_as = "KOR_FURY",
 	},
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=50, talent_in=1, },
+	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=50, talent_in=1, },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(4, "rune"),
 }

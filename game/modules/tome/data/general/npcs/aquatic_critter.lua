@@ -77,6 +77,8 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	autolevel = "warriormage",
 	resists = { [DamageType.PHYSICAL] = 60, },
 	resolvers.talents{ [Talents.T_TIDAL_WAVE]=3, [Talents.T_FREEZE]=3 },
+
+	ai = "tactical",
 }
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",

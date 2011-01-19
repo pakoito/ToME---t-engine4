@@ -118,7 +118,8 @@ newEntity{ base = "BASE_NPC_ZIGURANTH",
 	equilibrium_regen = -20,
 
 	autolevel = "warriorwill",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "tactical",
 
 	resolvers.talents{
 		[Talents.T_RESOLVE]=4,

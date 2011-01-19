@@ -99,6 +99,8 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 --		{type="dragon", name="ice wyrm", number=1, hasxp=false},
 	},
 
+	ai = "tactical",
+
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 		[Talents.T_ICE_CLAW]=5,

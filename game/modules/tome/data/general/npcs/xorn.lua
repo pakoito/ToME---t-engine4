@@ -96,6 +96,9 @@ newEntity{ base = "BASE_NPC_XORN",
 	combat_armor = 15, combat_def = 10,
 	combat = { damtype=DamageType.ACID },
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+
 	stun_immune = 1,
 	can_pass = {pass_wall=0}, -- We restore it after generation, to make sure it does not birth in walls
 
@@ -167,6 +170,9 @@ newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
 	demon = 1,
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 
 	resolvers.talents{
 		[Talents.T_CONSTRICT]=4,

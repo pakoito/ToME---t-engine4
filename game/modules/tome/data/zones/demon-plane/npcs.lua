@@ -70,7 +70,9 @@ newEntity{ define_as = "DRAEBOR",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(2, "rune"),
 
 	on_die = function(self, who)
 		require("engine.ui.Dialog"):simplePopup("Back and there again", "As the annoying imp falls a portal appears under its corpse.")

@@ -92,7 +92,9 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(2, "infusion"),
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("CORRUPTED_SAND_WYRM", 1, 45, "Did you hear? Something seems to have devoured all the last sandworms!", function(gen)
@@ -151,5 +153,6 @@ newEntity{ define_as = "CORRUPTED_SAND_WYRM",
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=1, },
+	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=1, },
+	resolvers.inscriptions(4, "infusion"),
 }

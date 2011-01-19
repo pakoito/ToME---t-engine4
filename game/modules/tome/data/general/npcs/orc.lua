@@ -108,6 +108,8 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "ORC_FIRE_WYRMIC",
 	},
 	combat_armor = 2, combat_def = 0,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(1, "infusion"),
 	make_escort = {
 		{type="humanoid", subtype="orc", name="orc soldier", number=resolvers.mbonus(3, 2)},
@@ -133,6 +135,8 @@ newEntity{ base = "BASE_NPC_ORC",
 	},
 	combat_armor = 2, combat_def = 0,
 
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(1, "infusion"),
 	make_escort = {
 		{type="humanoid", subtype="orc", name="orc soldier", number=resolvers.mbonus(3, 2)},
@@ -182,6 +186,9 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
 		{type="armor", subtype="light", autoreq=true}
 	},
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(1, "infusion"),
 	resolvers.talents{
 		[Talents.T_STEALTH]=5,
@@ -208,6 +215,9 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
 		{type="armor", subtype="light", autoreq=true}
 	},
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(3, "infusion"),
 	resolvers.talents{
 		[Talents.T_STEALTH]=5,

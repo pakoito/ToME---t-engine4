@@ -28,7 +28,8 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	autolevel = "warriormage",
 	max_life = 300, life_rating = 16,
 	combat_armor = 10, combat_def = 0,
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 

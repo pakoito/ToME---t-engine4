@@ -111,7 +111,9 @@ newEntity{
 	resolvers.sustains_at_birth(),
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(6, {"healing infusion", "regeneration infusion", "shielding rune", "invisibility rune", "movement infusion", "wild infusion", "phase door rune"}),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "elandar-dead")
@@ -183,7 +185,10 @@ newEntity{
 	resolvers.sustains_at_birth(),
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(3, {"healing infusion", "healing infusion", "shielding rune"}),
+	resolvers.inscriptions(3, {}),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "argoniel-dead")
@@ -211,7 +216,9 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	open_door = true,
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(4, {}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
@@ -279,7 +286,9 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	open_door = true,
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(4, {}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
